@@ -30,3 +30,9 @@ Makefile*
 #QtCtreator Qml
 *.qmlproject.user
 *.qmlproject.user.*
+
+# Build folders
+build-*
+
+# Compiled doxygen documentation
+doxygen/*
