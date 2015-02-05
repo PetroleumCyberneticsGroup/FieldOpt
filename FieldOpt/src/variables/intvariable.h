@@ -34,13 +34,20 @@ class IntVariable : public Variable
 {
 private:
     int m_value; //!< Current value
-    int m_min;   //!< Lower bound for value
-    int m_max;   //!< Upper bound for value
+    int m_min;   //!< Lower bound for value. Initialized to <int>::min().
+    int m_max;   //!< Upper bound for value. Initialized to <int>::max().
 
 public:
-    IntVariable(); //!< Calls parent Variable constructor. TODO: Take component as parameter.
+    IntVariable(); //!< Calls parent Variable constructor. Initializes m_min and m_max. TODO: Take component as parameter.
 
-    void setValue(int value);    //!< Set the current value. Must be within the set bounds.
+    /*!
+     * \brief Set the current value for this variable.
+     *
+     * Checks that the new value is within the bounds defined by m_min and m_max.
+     * Emits the warning signal and does not set a new value if the parameter is out of bounds.
+     * \param value The new value to be set.
+     */
+    void setValue(int value);
     void setMin(int min) { m_min = min; }            //!< Set the lower bound
     void setMax(int max) { m_max = max; }            //!< Set the upper bound
 

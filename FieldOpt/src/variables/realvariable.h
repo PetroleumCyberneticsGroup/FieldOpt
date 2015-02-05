@@ -35,13 +35,20 @@ class RealVariable : public Variable
 {
 private:
     double m_value; //!< Current value
-    double m_min;   //!< Lower bound for value
-    double m_max;   //!< Upper bound for value
+    double m_min;   //!< Lower bound for value. Initialized to <double>::min()
+    double m_max;   //!< Upper bound for value. Initialized to <double>::max()
 
 public:
-    RealVariable(); //!< Calls parent Variable constructor. TODO: Take component as parameter.
+    RealVariable(); //!< Calls parent Variable constructor. Initializes m_max and m_min. TODO: Take component as parameter.
 
-    void setValue(double value);    //!< Set the current value
+    /*!
+     * \brief Set the current value for this variable.
+     *
+     * Checks that the new value is within the bounds defined by m_min and m_max.
+     * Emits the warning signal and does not set a new value if the parameter is out of bounds.
+     * \param value The new value to be set.
+     */
+    void setValue(double value);
     void setMin(double min) { m_min = min; }            //!< Set the lower bound
     void setMax(double max) { m_max = max; }            //!< Set the upper bound
 

@@ -33,13 +33,20 @@
 class BinaryVariable : public Variable
 {
 private:
-    double m_value;
-    bool m_is_variable;
+    double m_value; //!< The current value for this variable.
+    bool m_is_variable; //!< Determines whether this variable is variable or not.
 
 public:
-    BinaryVariable() : Variable() {}
+    BinaryVariable() : Variable() {} //!< Calls the Variable constructor.
 
-    void setValue(double value);    //!< Set the current value
+    /*!
+     * \brief Set the current value for this variable.
+     *
+     * Checks that the new value is within the bounds. For binary variables, the bounds are always 0.0 and 1.0.
+     * Emits the warning signal and does not set a new value if the parameter is out of bounds.
+     * \param value The new value to be set.
+     */
+    void setValue(double value);
     void setIsVariable(bool b) { m_is_variable = b; } //!< Set whether this variable may be varied
 
     double value() { return m_value; }          //!< Get function for m_value

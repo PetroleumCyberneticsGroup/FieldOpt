@@ -32,7 +32,16 @@ class Variable : public QObject //!< Base class for all variables.
 {
     Q_OBJECT
 signals:
-    void warning(ExceptionSeverity severity, ExceptionType type, const QString message); //!< Emitted when the user does something that breaks with the model but is not critical.
+    /*!
+     * \brief Warning signal.
+     *
+     * Emitted when the user does something that breaks with the model but is not critical.
+     *
+     * \param severity The severity of the event. May be WARNING or ERROR.
+     * \param type The type of exception.
+     * \param message The message to be printed in addition to the severity and the type.
+     */
+    void warning(ExceptionSeverity severity, ExceptionType type, const QString message);
 
 private:
     QString m_name;        //!< Identifying name for the variable
@@ -54,7 +63,13 @@ public:
     // Component* parent() {return p_parent;} // TODO: Return function for parent Component
 
 protected:
-    void emitException(ExceptionSeverity severity, ExceptionType, QString message);
+    /*!
+     * \brief Convenience class used by the variable subclasses to emit messages.
+     * \param severity The severity of the event.
+     * \param type The type of exception.
+     * \param message The message to be printed.
+     */
+    void emitException(ExceptionSeverity severity, ExceptionType type, QString message);
 
 };
 
