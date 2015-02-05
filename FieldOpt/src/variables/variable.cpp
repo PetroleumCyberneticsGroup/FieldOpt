@@ -30,3 +30,13 @@ Variable::Variable()
     m_id = next_id++;
     setName("no_name");
 }
+
+void Variable::emitException(ExceptionSeverity severity, ExceptionType type, QString message)
+{
+    VariableHandler* vh = new VariableHandler;
+    connect(this, SIGNAL(warning(ExceptionSeverity, ExceptionType, QString)),
+            vh, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
+    emit warning(severity, type, message);
+    disconnect(this, SIGNAL(warning(ExceptionSeverity, ExceptionType, QString)),
+            vh, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
+}

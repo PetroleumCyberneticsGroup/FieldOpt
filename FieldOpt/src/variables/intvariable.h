@@ -38,9 +38,9 @@ private:
     int m_max;   //!< Upper bound for value
 
 public:
-    IntVariable() : Variable() {} //!< Calls parent Variable constructor. TODO: Take component as parameter.
+    IntVariable(); //!< Calls parent Variable constructor. TODO: Take component as parameter.
 
-    void setValue(int value) { m_value = value; }    //!< Set the current value
+    void setValue(int value);    //!< Set the current value. Must be within the set bounds.
     void setMin(int min) { m_min = min; }            //!< Set the lower bound
     void setMax(int max) { m_max = max; }            //!< Set the upper bound
 

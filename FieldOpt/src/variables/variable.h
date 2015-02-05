@@ -25,12 +25,14 @@
 
 #include <QString>
 #include <QObject>
+#include "exceptionhandler/exceptionhandler.h"
+#include "exceptionhandler/variablehandler.h"
 
 class Variable : public QObject //!< Base class for all variables.
 {
     Q_OBJECT
 signals:
-    void warning(QString warning); //!< Emitted when the user does something that breaks with the model but is not critical.
+    void warning(ExceptionSeverity severity, ExceptionType type, const QString message); //!< Emitted when the user does something that breaks with the model but is not critical.
 
 private:
     QString m_name;        //!< Identifying name for the variable
@@ -50,6 +52,9 @@ public:
     const QString& name() const { return m_name; } //!< Get function for m_name
     int id() { return m_id; }                      //!< Get function for m_id
     // Component* parent() {return p_parent;} // TODO: Return function for parent Component
+
+protected:
+    void emitException(ExceptionSeverity severity, ExceptionType, QString message);
 
 };
 

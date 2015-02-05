@@ -20,19 +20,23 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
-#include "binaryvariable.h"
+#include "variablehandler.h"
 
 
-
-void BinaryVariable::setValue(double value)
+void VariableHandler::handleException(ExceptionSeverity severity, ExceptionType type, const QString message)
 {
-    if (value < 0.0 || value > 1.0)
+    if (severity == ExceptionSeverity::WARNING)
     {
-        QString message = QString("Value %1 is outside the set bounds: %2 < value < %3.\n\tStaying at the old value: %4").arg(value).arg(0.0).arg(1.0).arg(m_value);
-        emitException(ExceptionSeverity::WARNING, ExceptionType::OUT_OF_BOUNDS, message);
+        printWarning(message, type);
+        return;
+    }
+    else if (severity == ExceptionSeverity::ERROR)
+    {
+        printError(message, type);
+        return;
     }
     else
     {
-        m_value = value;
+        return;
     }
 }

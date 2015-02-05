@@ -21,6 +21,27 @@
  */
 
 #include "intvariable.h"
+#include <limits>
+
+IntVariable::IntVariable() : Variable()
+{
+    m_min = std::numeric_limits<int>::min(); // Used to detect whether min has been set or not
+    m_max = std::numeric_limits<int>::max(); // Used to detect whether max has been set or not
+}
+
+void IntVariable::setValue(int value)
+{
+    if (value > m_max || value < m_min)
+    {
+        // TODO: This should maybe set the value even if its out of bounds.
+        QString message = QString("Value %1 is outside the set bounds: %2 < value < %3.\n\tStaying at the old value: %4").arg(value).arg(m_min).arg(m_max).arg(m_value);
+        emitException(ExceptionSeverity::WARNING, ExceptionType::OUT_OF_BOUNDS, message);
+    }
+    else
+    {
+        m_value = value;
+    }
+}
 
 bool IntVariable::isVariable()
 {

@@ -39,9 +39,9 @@ private:
     double m_max;   //!< Upper bound for value
 
 public:
-    RealVariable() : Variable() {} //!< Calls parent Variable constructor. TODO: Take component as parameter.
+    RealVariable(); //!< Calls parent Variable constructor. TODO: Take component as parameter.
 
-    void setValue(double value) { m_value = value; }    //!< Set the current value
+    void setValue(double value);    //!< Set the current value
     void setMin(double min) { m_min = min; }            //!< Set the lower bound
     void setMax(double max) { m_max = max; }            //!< Set the upper bound
 

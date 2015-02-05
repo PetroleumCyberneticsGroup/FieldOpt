@@ -13,14 +13,20 @@ class TestVariable : public QObject
 private slots:
     void initTestCase();
     void testInteger();
+    void testIntegerBounds();
     void testReal();
+    void testRealBounds();
     void testBinary();
+    void testBinaryBounds();
     void cleanupTestCase();
 
 private:
     IntVariable* intVariable;
+    IntVariable* intVariable2;
     RealVariable* realVariable;
+    RealVariable* realVariable2;
     BinaryVariable* binaryVariable;
+    BinaryVariable* binaryVariable2;
 };
 
 DECLARE_TEST(TestVariable)
