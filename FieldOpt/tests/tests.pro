@@ -7,3 +7,11 @@ CONFIG += console
 CONFIG -= app_bundle
 TEMPLATE = app
 LIBS += -L../src -lfieldopt
+
+HEADERS += \
+    autotest.h \
+    testvariable.h
+
+SOURCES += \
+    main.cpp \
+    testvariable.cpp
