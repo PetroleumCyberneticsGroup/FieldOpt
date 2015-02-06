@@ -42,8 +42,10 @@ public:
     /*!
      * \brief Set the current value for this variable.
      *
-     * Checks that the new value is within the bounds. For binary variables, the bounds are always 0.0 and 1.0.
-     * Emits the warning signal and does not set a new value if the parameter is out of bounds.
+     * Checks that the new value is within the bounds.
+     * For binary variables, the bounds are always 0.0 and 1.0.
+     * Emits the warning signal and sets m_value to m_max/m_min if the parameter
+     * is greater/less than the bounds.
      * \param value The new value to be set.
      */
     void setValue(double value);

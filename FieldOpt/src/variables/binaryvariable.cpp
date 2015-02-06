@@ -26,9 +26,16 @@
 
 void BinaryVariable::setValue(double value)
 {
-    if (value < 0.0 || value > 1.0)
+    if (value > 1.0)
     {
-        QString message = QString("Value %1 is outside the set bounds: %2 < value < %3.\n\tStaying at the old value: %4").arg(value).arg(0.0).arg(1.0).arg(m_value);
+        m_value = 1.0;
+        QString message = QString("Value %1 is greater than the upper bound 1.0. \n\tThe value has been set equal to 1.0.").arg(value);
+        emitException(ExceptionSeverity::WARNING, ExceptionType::OUT_OF_BOUNDS, message);
+    }
+    else if (value < 0.0)
+    {
+        m_value = 0.0;
+        QString message = QString("Value %1 is less than the lower bound 0.0. \n\tThe value has been set equal to 0.0.").arg(value);
         emitException(ExceptionSeverity::WARNING, ExceptionType::OUT_OF_BOUNDS, message);
     }
     else

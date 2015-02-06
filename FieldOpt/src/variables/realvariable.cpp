@@ -31,10 +31,15 @@ RealVariable::RealVariable() : Variable()
 
 void RealVariable::setValue(double value)
 {
-    if (value > m_max || value < m_min)
+    if (value > m_max)
     {
-        // TODO: This should maybe set the value even if its out of bounds.
-        QString message = QString("Value %1 is outside the set bounds: %2 < value < %3.\n\tStaying at the old value: %4").arg(value).arg(m_min).arg(m_max).arg(m_value);
+        m_value = m_max;
+        QString message = QString("Value %1 is greater than the set upper bound: %2.\n\tThe value has been set equal to the upper bound.").arg(value).arg(m_max);
+        emitException(ExceptionSeverity::WARNING, ExceptionType::OUT_OF_BOUNDS, message);
+    }
+    else if (value < m_min) {
+        m_value = m_min;
+        QString message = QString("Value %1 is less than the set lower bound: %2.\n\tThe value has been set equal to the lower bound.").arg(value).arg(m_max);
         emitException(ExceptionSeverity::WARNING, ExceptionType::OUT_OF_BOUNDS, message);
     }
     else
