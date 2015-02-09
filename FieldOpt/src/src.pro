@@ -14,7 +14,8 @@ HEADERS += \
     variables/realvariable.h \
     variables/binaryvariable.h \
     exceptionhandler/exceptionhandler.h \
-    exceptionhandler/variablehandler.h
+    exceptionhandler/variablehandler.h \
+    constraints/constraint.h
 
 SOURCES += \
     variables/intvariable.cpp \
@@ -22,4 +23,5 @@ SOURCES += \
     variables/realvariable.cpp \
     variables/binaryvariable.cpp \
     exceptionhandler/exceptionhandler.cpp \
-    exceptionhandler/variablehandler.cpp
+    exceptionhandler/variablehandler.cpp \
+    constraints/constraint.cpp

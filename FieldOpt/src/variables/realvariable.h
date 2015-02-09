@@ -30,6 +30,8 @@
  *
  * Continous variables are normally well control variablesm like production rate or bottom hole
  * pressure.
+ *
+ * TODO: Check that min/max bounds make sense when set. E.g. max > min
  */
 class RealVariable : public Variable
 {

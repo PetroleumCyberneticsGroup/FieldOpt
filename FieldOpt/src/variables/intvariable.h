@@ -29,6 +29,8 @@
  * \brief Class for integer type variables.
  *
  * Integer variables are primarily used for well placement.
+ *
+ * TODO: Check that min/max bounds make sense when set. E.g. max > min
  */
 class IntVariable : public Variable
 {

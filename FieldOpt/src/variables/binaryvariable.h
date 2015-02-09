@@ -29,6 +29,8 @@
  * \brief Class for binary variables.
  *
  * The value should, in principle be 0 or 1, but certain algorithms need to vary it in the interval between 0.0 and 1.0.
+ *
+ * TODO: Check that min/max bounds make sense when set. E.g. max > min
  */
 class BinaryVariable : public Variable
 {
