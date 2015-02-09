@@ -33,7 +33,7 @@ void TestVariable::testIntegerBounds()
     QVERIFY(intVariable2->value() == 28);
 
     intVariable2->setValue(31);
-    QVERIFY(intVariable2->value() == 30);
+    QVERIFY(intVariable2->value() == 31);
 }
 
 void TestVariable::testReal()
@@ -56,7 +56,7 @@ void TestVariable::testRealBounds()
     QVERIFY(realVariable2->value() == 100.0);
 
     realVariable2->setValue(360.0);
-    QVERIFY(realVariable2->value() == 200.0);
+    QVERIFY(realVariable2->value() == 360.0);
 }
 
 void TestVariable::testBinary()
@@ -77,10 +77,10 @@ void TestVariable::testBinaryBounds()
     QVERIFY(binaryVariable2->value() == 0.0);
 
     binaryVariable2->setValue(-0.1);
-    QVERIFY(binaryVariable2->value() == 0.0);
+    QVERIFY(binaryVariable2->value() == -0.1);
 
     binaryVariable2->setValue(1.1);
-    QVERIFY(binaryVariable2->value() == 1.0);
+    QVERIFY(binaryVariable2->value() == 1.1);
 }
 
 void TestVariable::cleanupTestCase()

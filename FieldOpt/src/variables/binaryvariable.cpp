@@ -28,18 +28,13 @@ void BinaryVariable::setValue(double value)
 {
     if (value > 1.0)
     {
-        m_value = 1.0;
-        QString message = QString("Value %1 is greater than the upper bound 1.0. \n\tThe value has been set equal to 1.0.").arg(value);
+        QString message = QString("Value %1 is greater than the upper bound 1.0.").arg(value);
         emitException(ExceptionSeverity::WARNING, ExceptionType::OUT_OF_BOUNDS, message);
     }
     else if (value < 0.0)
     {
-        m_value = 0.0;
-        QString message = QString("Value %1 is less than the lower bound 0.0. \n\tThe value has been set equal to 0.0.").arg(value);
+        QString message = QString("Value %1 is less than the lower bound 0.0.").arg(value);
         emitException(ExceptionSeverity::WARNING, ExceptionType::OUT_OF_BOUNDS, message);
     }
-    else
-    {
-        m_value = value;
-    }
+    m_value = value;
 }

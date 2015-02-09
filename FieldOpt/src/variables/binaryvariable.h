@@ -44,8 +44,7 @@ public:
      *
      * Checks that the new value is within the bounds.
      * For binary variables, the bounds are always 0.0 and 1.0.
-     * Emits the warning signal and sets m_value to m_max/m_min if the parameter
-     * is greater/less than the bounds.
+     * Emits the warning signal if the parameter is greater/less than the bounds.
      * \param value The new value to be set.
      */
     void setValue(double value);

@@ -33,19 +33,14 @@ void RealVariable::setValue(double value)
 {
     if (value > m_max)
     {
-        m_value = m_max;
-        QString message = QString("Value %1 is greater than the set upper bound: %2.\n\tThe value has been set equal to the upper bound.").arg(value).arg(m_max);
+        QString message = QString("Value %1 is greater than the set upper bound: %2.").arg(value).arg(m_max);
         emitException(ExceptionSeverity::WARNING, ExceptionType::OUT_OF_BOUNDS, message);
     }
     else if (value < m_min) {
-        m_value = m_min;
-        QString message = QString("Value %1 is less than the set lower bound: %2.\n\tThe value has been set equal to the lower bound.").arg(value).arg(m_max);
+        QString message = QString("Value %1 is less than the set lower bound: %2.").arg(value).arg(m_max);
         emitException(ExceptionSeverity::WARNING, ExceptionType::OUT_OF_BOUNDS, message);
     }
-    else
-    {
-        m_value = value;
-    }
+    m_value = value;
 }
 
 bool RealVariable::isVariable()
