@@ -33,12 +33,12 @@ void IntVariable::setValue(int value)
 {
     if (value > m_max)
     {
-        QString message = QString("Value %1 is greater than the set upper bound: %2.").arg(value).arg(m_max);
+        QString message = QString("Variable %1:\n\t Value %2 is greater than the set upper bound: %3.").arg(name()).arg(value).arg(m_max);
         emitException(ExceptionSeverity::WARNING, ExceptionType::OUT_OF_BOUNDS, message);
     }
     else if (value < m_min)
     {
-        QString message = QString("Value %1 is less than the set lower bound: %2.").arg(value).arg(m_max);
+        QString message = QString("Variable %1:\n\t Value %2 is less than the set lower bound: %3.").arg(name()).arg(value).arg(m_max);
         emitException(ExceptionSeverity::WARNING, ExceptionType::OUT_OF_BOUNDS, message);
     }
     m_value = value;

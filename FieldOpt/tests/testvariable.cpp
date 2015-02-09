@@ -27,6 +27,7 @@ void TestVariable::testInteger()
 
 void TestVariable::testIntegerBounds()
 {
+    intVariable2->setName("integer_variable_2");
     intVariable2->setMax(30);
     intVariable2->setMin(10);
     intVariable2->setValue(28);
@@ -50,6 +51,8 @@ void TestVariable::testReal()
 
 void TestVariable::testRealBounds()
 {
+    realVariable2->setName("real_variable_2");
+
     realVariable2->setMax(200.0);
     realVariable2->setMin(1.0);
     realVariable2->setValue(100.0);
@@ -73,6 +76,8 @@ void TestVariable::testBinary()
 
 void TestVariable::testBinaryBounds()
 {
+    binaryVariable2->setName("binary_variable_2");
+
     binaryVariable2->setValue(0.0);
     QVERIFY(binaryVariable2->value() == 0.0);
 
