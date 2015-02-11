@@ -15,7 +15,10 @@ HEADERS += \
     variables/binaryvariable.h \
     exceptionhandler/exceptionhandler.h \
     exceptionhandler/variablehandler.h \
-    constraints/constraint.h
+    constraints/constraint.h \
+    model/stream.h \
+    printers/printer.h \
+    printers/streamprinter.h
 
 SOURCES += \
     variables/intvariable.cpp \
@@ -24,4 +27,7 @@ SOURCES += \
     variables/binaryvariable.cpp \
     exceptionhandler/exceptionhandler.cpp \
     exceptionhandler/variablehandler.cpp \
-    constraints/constraint.cpp
+    constraints/constraint.cpp \
+    model/stream.cpp \
+    printers/printer.cpp \
+    printers/streamprinter.cpp

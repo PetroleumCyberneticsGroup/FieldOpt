@@ -12,9 +12,11 @@ LIBS += -L../src -lfieldopt
 HEADERS += \
     autotest.h \
     testvariable.h \
-    testconstraint.h
+    testconstraint.h \
+    teststream.h
 
 SOURCES += \
     main.cpp \
     testvariable.cpp \
-    testconstraint.cpp
+    testconstraint.cpp \
+    teststream.cpp
