@@ -19,7 +19,9 @@ HEADERS += \
     model/stream.h \
     printers/printer.h \
     printers/streamprinter.h \
-    model/components/component.h
+    model/components/component.h \
+    pressuredropcalculators/pressuredropcalculator.h \
+    pressuredropcalculators/beggsbrillcalculator.h
 
 SOURCES += \
     variables/intvariable.cpp \
@@ -32,4 +34,5 @@ SOURCES += \
     model/stream.cpp \
     printers/printer.cpp \
     printers/streamprinter.cpp \
-    model/components/component.cpp
+    model/components/component.cpp \
+    pressuredropcalculators/beggsbrillcalculator.cpp
