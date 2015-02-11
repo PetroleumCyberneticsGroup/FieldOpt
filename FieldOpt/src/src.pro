@@ -18,7 +18,8 @@ HEADERS += \
     constraints/constraint.h \
     model/stream.h \
     printers/printer.h \
-    printers/streamprinter.h
+    printers/streamprinter.h \
+    model/components/component.h
 
 SOURCES += \
     variables/intvariable.cpp \
@@ -30,4 +31,5 @@ SOURCES += \
     constraints/constraint.cpp \
     model/stream.cpp \
     printers/printer.cpp \
-    printers/streamprinter.cpp
+    printers/streamprinter.cpp \
+    model/components/component.cpp
