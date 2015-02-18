@@ -47,20 +47,20 @@ private:
     QString m_name;        //!< Identifying name for the variable
     int m_id;              //!< Unique id number for the variable
     static int next_id;    //!< Id to be set for next variable
-    //Component *p_parent;   // TODO: pointer to the component (well, pipe) that owns this variable
+    //Component *p_parent;   //!< \todo pointer to the component (well, pipe) that owns this variable
 
 public:
     /*!
      * \brief Set m_id to next_id; set m_name to "no_name".
      *
-     * TODO: Should take a Component pointer a parameter
+     * \todo Should take a Component pointer a parameter
      */
     Variable();
 
     void setName(const QString& name) { m_name = name; } //!< Set the identifying name for this variable.
     const QString& name() const { return m_name; } //!< Get function for m_name
     int id() { return m_id; }                      //!< Get function for m_id
-    // Component* parent() {return p_parent;} // TODO: Return function for parent Component
+    // Component* parent() {return p_parent;} //!< \todo Return function for parent Component
 
 protected:
     /*!

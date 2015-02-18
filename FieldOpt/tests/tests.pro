@@ -13,10 +13,12 @@ HEADERS += \
     autotest.h \
     testvariable.h \
     testconstraint.h \
-    teststream.h
+    teststream.h \
+    testbeggsbrillcalculator.h
 
 SOURCES += \
     main.cpp \
     testvariable.cpp \
     testconstraint.cpp \
-    teststream.cpp
+    teststream.cpp \
+    testbeggsbrillcalculator.cpp

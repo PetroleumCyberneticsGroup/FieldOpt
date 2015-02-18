@@ -30,7 +30,7 @@
  *
  * Integer variables are primarily used for well placement.
  *
- * TODO: Check that min/max bounds make sense when set. E.g. max > min
+ * \todo Check that min/max bounds make sense when set. E.g. max > min
  */
 class IntVariable : public Variable
 {
@@ -40,7 +40,7 @@ private:
     int m_max;   //!< Upper bound for value. Initialized to <int>::max().
 
 public:
-    IntVariable(); //!< Calls parent Variable constructor. Initializes m_min and m_max. TODO: Take component as parameter.
+    IntVariable(); //!< Calls parent Variable constructor. Initializes m_min and m_max. \todo Take component as parameter.
 
     /*!
      * \brief Set the current value for this variable.

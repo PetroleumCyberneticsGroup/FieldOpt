@@ -28,9 +28,9 @@
 /*!
  * \brief Class for constraints.
  *
- * TODO: This class will be significantly more advanced.
+ * \todo This class will be significantly more advanced.
  *
- * TODO: Check that min/max bounds make sense when set. E.g. max > min
+ * \todo Check that min/max bounds make sense when set. E.g. max > min
  */
 class Constraint
 {

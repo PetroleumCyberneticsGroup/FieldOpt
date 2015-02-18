@@ -31,7 +31,7 @@
  * Continous variables are normally well control variablesm like production rate or bottom hole
  * pressure.
  *
- * TODO: Check that min/max bounds make sense when set. E.g. max > min
+ * \todo Check that min/max bounds make sense when set. E.g. max > min
  */
 class RealVariable : public Variable
 {
@@ -41,7 +41,7 @@ private:
     double m_max;   //!< Upper bound for value. Initialized to <double>::max()
 
 public:
-    RealVariable(); //!< Calls parent Variable constructor. Initializes m_max and m_min. TODO: Take component as parameter.
+    RealVariable(); //!< Calls parent Variable constructor. Initializes m_max and m_min. \todo Take component as parameter.
 
     /*!
      * \brief Set the current value for this variable.

@@ -58,8 +58,8 @@ public:
     /*!
      * \brief Set a new Stream at position i in the Stream vector.
      *
-     * TODO: Check that the number of streams correspond to the number of schedule entries.
-     * TODO: Check that the time of the stream corresponds to the time of the schedule entry.
+     * \todo Check that the number of streams correspond to the number of schedule entries.
+     * \todo Check that the time of the stream corresponds to the time of the schedule entry.
      *
      * \param i The index to set a new Stream for.
      * \param stream The Stream to be set at index i.
