@@ -26,13 +26,23 @@
 void TestBeggsBrillCalculator::initTestCase()
 {
     stream = new Stream(0, 100, 1000, 10, 100);
+    outlet_pressure = 50.0;
     calculator = new BeggsBrillCalculator();
-    outlet_pressure = 150;
+    calculator->setAngle(20);
+    calculator->setDiameter(10);
+    calculator->setGasSpecificGravity(0.05);
+    calculator->setLength(50);
+    calculator->setOilDensity(50);
+    calculator->setOilViscosity(.5);
+    calculator->setTemperature(50);
+    calculator->setWaterDensity(70);
+    calculator->setWaterViscosity(.4);
 }
 
 void TestBeggsBrillCalculator::testPressureDrop()
 {
-    qDebug() << calculator->pressureDrop(stream, outlet_pressure, stream->inputUnits());
+    qDebug() << "Desired pressure drop: 1.26006908990326182973263";
+    QVERIFY(qFuzzyCompare(calculator->pressureDrop(stream, outlet_pressure, stream->inputUnits()), 1.26006908990326182973263));
 }
 
 void TestBeggsBrillCalculator::cleanupTestCase()
