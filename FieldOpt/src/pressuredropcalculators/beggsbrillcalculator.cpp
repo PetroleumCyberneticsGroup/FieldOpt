@@ -126,7 +126,7 @@ double BeggsBrillCalculator::gasDensity(double t, double p, double z)
 double BeggsBrillCalculator::surfaceTension(double gas_density, double liquid_density)
 {
     double dg = liquid_density - gas_density;
-    return 15.0 + 0.91 * dg;
+    return 15.0 + 0.91 * dg;  // lbf/ft
 }
 
 double BeggsBrillCalculator::gasViscosity(double p, double z)

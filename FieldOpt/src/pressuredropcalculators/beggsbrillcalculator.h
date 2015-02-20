@@ -26,7 +26,7 @@
 #include <pressuredropcalculators/pressuredropcalculator.h>
 
 /*!
- * \brief Pressure drop calculations afrer Beggs and Brill, 1973.
+ * \brief Pressure drop calculations afrer Beggs and Brill, 1973. (SPE-4007-PA)
  *
  * Brief descriptions of the equations used follow.
  *
@@ -65,6 +65,7 @@
  *
  * __Gas z-factor__
  * \todo Document gasZFactor
+ * Calculatied using the Hall and Yarborough (HY) method with residuals presented in SPE-172373-MS
  *
  * __Gas Density__
  * \f[
@@ -72,7 +73,23 @@
  * \f]
  *
  * __Surface Tension__
- * \todo Document surfaceTension
+ * Calculated using the graphical correlation of Ramey (SPE-4429-MS), ref. Whitson (1990-11-20, Minimum Lift Calculations for Gas Wells)
+ * According to Whitson, rhe following relation may be used to estimate the gas-liquid surface tension:
+ *
+ * \f[
+ *     \sigma_{wg} = 15 + 0.91 \Delta \rho_{wg}
+ * \f]
+ *
+ * or
+ *
+ * \f[
+ *     (\sigma_{wg} \Delta \rho_{wg})^{0.25} = [(15+0.91 \Delta \rho_{wg}) \Delta \rho{wg}]^{0.25}.
+ * \f]
+ *
+ * The first relation is used in the code.
+ *
+ * The units for \f$ \rho \f$ are \f$ lb\ft^3 \f$ and the units for \f$ \sigma \f$ are \f$ dynes/cm \f$.
+ *
  *
  * __Gas Viscosity__
  * \todo Document gasViscosity
