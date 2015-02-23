@@ -26,14 +26,29 @@
 #include <QVector>
 #include <QString>
 #include "model/stream.h"
+#include "exceptionhandler/componenthandler.h"
 
 /*!
  * \brief Base class for components.
  *
  * Examples of components are pipes, separators and wells etc. I.e. all parts that have a Stream attached to them.
  */
-class Component
+class Component : public QObject
 {
+    Q_OBJECT
+
+signals:
+    /*!
+     * \brief Error signal.
+     *
+     * Emitted when an error occurs.
+     *
+     * \param severity The severity of the event. May be WARNING or ERROR.
+     * \param type The type of exception.
+     * \param message The message to be printed in addition to the severity and the type.
+     */
+    void error(ExceptionSeverity severity, ExceptionType type, const QString message);
+
 private:
     QVector<Stream*> m_streams;  //!< The streams passing through the component.
     int m_id;                    //!< Unique id for the component.
@@ -73,6 +88,15 @@ public:
     int id() { return m_id; }                           //!< Get the unique id for this stream.
 
     virtual QString description() const = 0; //!< Should return a string describing the component.
+
+protected:
+    /*!
+     * \brief Convenience class used by the component subclasses to emit exceptions.
+     * \param severity The severity of the event.
+     * \param type The type of exception.
+     * \param message The message to be printed.
+     */
+    void emitException(ExceptionSeverity severity, ExceptionType type, QString message);
 };
 
 #endif // COMPONENT_H

@@ -21,7 +21,15 @@ HEADERS += \
     printers/streamprinter.h \
     model/components/component.h \
     pressuredropcalculators/pressuredropcalculator.h \
-    pressuredropcalculators/beggsbrillcalculator.h
+    pressuredropcalculators/beggsbrillcalculator.h \
+    model/components/pipe.h \
+    utilities/stringutilities.h \
+    exceptionhandler/componenthandler.h \
+    model/components/productionwell.h \
+    model/components/well.h \
+    model/wellcontrol.h \
+    model/wellconnection.h \
+    model/wellconnectionvariable.h
 
 SOURCES += \
     variables/intvariable.cpp \
@@ -35,4 +43,12 @@ SOURCES += \
     printers/printer.cpp \
     printers/streamprinter.cpp \
     model/components/component.cpp \
-    pressuredropcalculators/beggsbrillcalculator.cpp
+    pressuredropcalculators/beggsbrillcalculator.cpp \
+    model/components/pipe.cpp \
+    utilities/stringutilities.cpp \
+    exceptionhandler/componenthandler.cpp \
+    model/components/productionwell.cpp \
+    model/components/well.cpp \
+    model/wellcontrol.cpp \
+    model/wellconnection.cpp \
+    model/wellconnectionvariable.cpp

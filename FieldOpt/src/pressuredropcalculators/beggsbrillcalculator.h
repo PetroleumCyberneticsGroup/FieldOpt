@@ -30,6 +30,8 @@
  *
  * Brief descriptions of the equations used follow.
  *
+ * \todo Create FluidProperties and PipeProperties classes for holding the respective properties. Take these as a mandatory parameter in the constructor.
+ *
  * __Superficial Gas Velocity (vsg)__
  *
  * The superficialGasVelocity function uses the expression
@@ -64,8 +66,65 @@
  * \f]
  *
  * __Gas z-factor__
- * \todo Document gasZFactor
- * Calculatied using the Hall and Yarborough (HY) method with residuals presented in SPE-172373-MS
+ * Calculatied using the Hall and Yarborough (HY) method with residuals presented in SPE-172373-MS.
+ * The value is calclulated by applying Newton-Raphson's method.
+ *
+ * The pseudocritical properties are calculated as suggested by Sutton in SPE-14265.
+ *
+ * An outline of the calculations follows:
+ *
+ * 1. Calculate pseudocritical properties:
+ *
+ * \f[
+ *     T_{pc} = 169.2 + 349.5 \gamma_g - 74 \gamma_g^2
+ * \f]
+ * \f[
+ *     P_{pc} = 756.8 - 131.0 \gamma_g -  3.6 \gamma_g^2.
+ * \f]
+ *
+ * 2. Calculate pseudoreduced properties
+ * \f[
+ *     T_{pr} = \frac{T}{T_{pc}},
+ * \f]
+ * \f[
+ *     P_{pr} = \frac{P}{P_{pc}}
+ * \f]
+ * and define
+ * \f[
+ *     t = \frac{1}{T_{pr}}
+ * \f]
+ *
+ * 3. We then differentiate Hall and Yarborough's equation
+ * \f[
+ *     f(y) = -AP_{pr} + \frac{y+y^2+y^3-y^4}{(1-y)^3} - By^2 + Cy^D
+ * \f]
+ * \f[
+ *     f'(y)=\frac{\mathrm{d}f(y)}{\mathrm{d}y} = -AP_{pr} + \frac{1+4y+4y^2-4y^3+4^4}{(1-y)^4} - 2By + DCy^{-1}
+ * \f]
+ * where
+ * \f[
+ *     A = 0.06125 e^{-1.2(1-t)^2},
+ * \f]
+ * \f[
+ *     B = 14.67t - 9.76t^2 + 4.58t^3,
+ * \f]
+ * \f[
+ *     C = 90.7t - 242.2t^2 + 42.4t^3,
+ * \f]
+ * \f[
+ *     D = 2.18 + 2.82t
+ * \f]
+ *
+ * 4. Apply Newton-Raphson's method
+ * \f[
+ *     y_{n+1} = y_n - \frac{f(y_n)}{f(y_n')}
+ * \f]
+ * until \f$ f(y) < 10^{-8} \f$.
+ *
+ * 5. Finally,
+ * \f[
+ *     z = \frac{AP_{pr}}{y}
+ * \f]
  *
  * __Gas Density__
  * \f[
@@ -88,11 +147,33 @@
  *
  * The first relation is used in the code.
  *
- * The units for \f$ \rho \f$ are \f$ lb\ft^3 \f$ and the units for \f$ \sigma \f$ are \f$ dynes/cm \f$.
+ * The units for \f$ \rho \f$ are \f$ lb/ft^3 \f$ and the units for \f$ \sigma \f$ are \f$ dynes/cm \f$.
  *
  *
  * __Gas Viscosity__
- * \todo Document gasViscosity
+ * \todo The implementation does not look quite correct.
+ *
+ * The Gas Viscosity is calculated according to the Lee-Gonzales-Eakin method, presented in SPE-1340-PA, though with more acccurate coefficients.
+ *
+ * \f[
+ *     \mu = K \exp\left( X \rho^Y \right)
+ * \f]
+ * where
+ * \f[
+ *     K = \frac{(a_1 + a_2 M)T^{1.5}}{a_3 + a_4 M + T}
+ * \f]
+ * \f[
+ *     X = a_5 + \frac{a_6}{T} + a_7 M
+ * \f]
+ * \f[
+ *     Y = a_8 - a_9 X
+ * \f]
+ * where \f$ M \f$ is the molecular weight of the gas and \f$ T \f$ is the absolute temperature in degrees Rankine. The following values for the coefficients \f$ a_1-a_9 \f$ are used:
+ * \f[
+ *     a_1 = 9.379, a_2 = 0.01607, a_3 = 209.2 ,
+    a_4 = 19.26*Mg, a_5 = 3.448, a_6 = 986.4,
+    a_7 = 0.01009, a_8 = 2.447, a_9 = 0.2224
+ * \f]
  *
  * __Liquid Viscosity__
  *

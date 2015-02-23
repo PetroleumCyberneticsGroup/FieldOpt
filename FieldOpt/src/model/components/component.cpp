@@ -62,3 +62,13 @@ bool Component::setStream(int i, Stream *stream)
         return true;
     }
 }
+
+void Component::emitException(ExceptionSeverity severity, ExceptionType type, QString message)
+{
+    ComponentHandler* ch = new ComponentHandler;
+    connect(this, SIGNAL(error(ExceptionSeverity, ExceptionType, QString)),
+            ch, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
+    emit error(severity, type, message);
+    disconnect(this, SIGNAL(error(ExceptionSeverity, ExceptionType, QString)),
+               ch, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
+}
