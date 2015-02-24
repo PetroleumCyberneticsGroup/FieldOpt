@@ -30,6 +30,9 @@
 using std::tr1::shared_ptr;
 class IntVariable;
 
+/*!
+ * \brief Class representing a _variable_ well connection.
+ */
 class WellConnectionVariable
 {
 private:

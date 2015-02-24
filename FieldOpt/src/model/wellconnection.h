@@ -23,7 +23,9 @@
 #ifndef WELLCONNECTION_H
 #define WELLCONNECTION_H
 
-
+/*!
+ * \brief Class representing a well connection.
+ */
 class WellConnection
 {
 private:

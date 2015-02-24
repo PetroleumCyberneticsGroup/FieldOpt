@@ -29,7 +29,8 @@ HEADERS += \
     model/components/well.h \
     model/wellcontrol.h \
     model/wellconnection.h \
-    model/wellconnectionvariable.h
+    model/wellconnectionvariable.h \
+    model/wellpath.h
 
 SOURCES += \
     variables/intvariable.cpp \
@@ -51,4 +52,5 @@ SOURCES += \
     model/components/well.cpp \
     model/wellcontrol.cpp \
     model/wellconnection.cpp \
-    model/wellconnectionvariable.cpp
+    model/wellconnectionvariable.cpp \
+    model/wellpath.cpp
