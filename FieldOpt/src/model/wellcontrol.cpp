@@ -28,3 +28,20 @@ WellControl::WellControl(const WellControl &c)
     m_end_time = c.m_end_time;
     setControlVar(shared_ptr<RealVariable>(new RealVariable(*c.p_control_var)));
 }
+
+QString WellControl::description()
+{
+    QString str(" " + QString::number(endTime()) + " " +
+                QString::number(p_control_var->value()) + " " +
+                QString::number(p_control_var->max()) + " " +
+                QString::number(p_control_var->min()) + " ");
+
+    if(type() == BHP) str.append("BHP");
+    else if(type() == QGAS) str.append("GAS");
+    else if(type() == QOIL) str.append("OIL");
+    else if(type() == QWAT) str.append("WAT");
+
+    str.append("\n");
+
+    return str;
+}
