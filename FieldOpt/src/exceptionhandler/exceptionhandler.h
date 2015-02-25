@@ -31,7 +31,9 @@ enum class ExceptionSeverity {
 };
 
 enum class ExceptionType {
-    OUT_OF_BOUNDS
+    OUT_OF_BOUNDS,
+    INCONSISTENT,
+    CONSTRAINT_VIOLATED
 };
 
 class ExceptionHandler
@@ -54,6 +56,10 @@ private:
         switch (type) {
         case ExceptionType::OUT_OF_BOUNDS:
             return "Out of bounds.";
+        case ExceptionType::INCONSISTENT:
+            return "Inconsistent.";
+        case ExceptionType::CONSTRAINT_VIOLATED:
+            return "Constraint violated";
         default:
             return "Unknown type.";
         }

@@ -85,6 +85,7 @@ public:
     void addConnection(WellConnection *c) {m_connections.push_back(c);}  //!< Add a new connection (perforation) to the well.
     void addVariableConnection(WellConnectionVariable *vc);              //!< Add a new WellConnectionVariable to the well.
     void addControl(WellControl *c) {m_schedule.push_back(c);}           //!< Add a new control WellControl (schedule entry) to the well's schedule.
+
     void setType(Well::well_type t) {m_type = t;}                        //!< Set the type of well (injector or producer)
     void setName(const QString &n) {m_name = n;}                         //!< Set the Well name.
     void setGroup(const QString &g) {m_group = g;}                       //!< Set the group that the well belongs to.
@@ -111,7 +112,7 @@ public:
     int numberOfConnections() const {return (m_connections.size() + m_var_connections.size());}  //!< Get the number of cells that the well is connected to (i.e. the number of perforations).
     int numberOfVariableConnections() const {return m_var_connections.size();}                   //!< Get the the number of variable connections.
     int numberOfConstantConnections() const {return m_connections.size();}                       //!< Get the number of constant connections.
-    WellConnection* connection(int i) const;                                                     //!< Get the cell number of connection i.
+    WellConnection *connection(int i) const;                                                     //!< Get the cell number of connection i.
     WellConnectionVariable* variableConnection(int i) const {return m_var_connections.at(i);}    //!< Get the variable connection at position i.
     WellConnection* constantConnection(int i) const {return m_connections.at(i);}                //!< Get the constant connection at position i.
     int numberOfControls() const {return m_schedule.size();}                                     //!< Get the number of well control set points (schedule entries) for this well.
