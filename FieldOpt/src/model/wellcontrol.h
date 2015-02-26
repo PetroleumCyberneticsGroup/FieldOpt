@@ -28,6 +28,7 @@
 #include "variables/realvariable.h"
 
 using std::tr1::shared_ptr;
+class RealVariable;
 
 /*!
  * \brief Class containing information on one schedule entry for a well.

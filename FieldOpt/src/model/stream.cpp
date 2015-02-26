@@ -141,7 +141,7 @@ double Stream::pressure(Stream::units units) const
         return m_pressure;
 }
 
-Stream &Stream::operator =(Stream &rhs)
+Stream &Stream::operator =(const Stream &rhs)
 {
     if (this != &rhs)
     {
@@ -155,7 +155,7 @@ Stream &Stream::operator =(Stream &rhs)
     return *this;
 }
 
-Stream &Stream::operator +=(Stream &rhs)
+Stream &Stream::operator +=(const Stream &rhs)
 {
     setTime(rhs.time());
     setPressure(0.0);
@@ -166,7 +166,7 @@ Stream &Stream::operator +=(Stream &rhs)
     return *this;
 }
 
-const Stream Stream::operator +(Stream &rhs) const
+const Stream Stream::operator +(const Stream &rhs) const
 {
     Stream result = *this;
     result += rhs;

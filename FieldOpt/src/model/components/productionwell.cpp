@@ -118,7 +118,7 @@ void ProductionWell::updateBhpConstraint()
             p_in = p_in / tot_frac;
 
             // calculating constraint value
-            double p_wf = stream(i)->pressure(true);
+            double p_wf = stream(i)->pressure();
             if(p_wf < 0.001)
                 p_wf = 0.001;
 

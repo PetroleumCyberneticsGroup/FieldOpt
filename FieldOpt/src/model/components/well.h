@@ -98,7 +98,7 @@ public:
      * \param p
      */
     void setBhpLimit(double p) {m_bhp_limit = p;}
-    void setBhpInj(WellControl::contol_type t) {m_bhp_inj = t;}  //!< Set the default injection phase when injection well is on BHP control (BHP, QOIL, QGAS or QWAT)
+    void setBhpInj(WellControl::control_type t) {m_bhp_inj = t;}  //!< Set the default injection phase when injection well is on BHP control (BHP, QOIL, QGAS or QWAT)
     void setCost(Cost *c) {p_cost = c;}                                   //!< Set the cost of this well. \todo This is not currently implemented in the Cost class.
     void setInstallTime(shared_ptr<IntVariable> t) {p_install_time = t;}  //!< Set the install time of this well. \todo This is not currently implemented in the Cost class.
 
@@ -108,7 +108,7 @@ public:
     const QString& name() const {return m_name;}                                                 //!< Get the well name.
     const QString& group() const {return m_group;}                                               //!< Get the group that the well belongs to.
     double bhpLimit() const {return m_bhp_limit;}                                                //!< Get the BHP limit of the well.
-    WellControl::contol_type bhpInj() const {return m_bhp_inj;}                                  //!< Get the injected phase when on BHP control.
+    WellControl::control_type bhpInj() const {return m_bhp_inj;}                                  //!< Get the injected phase when on BHP control.
     int numberOfConnections() const {return (m_connections.size() + m_var_connections.size());}  //!< Get the number of cells that the well is connected to (i.e. the number of perforations).
     int numberOfVariableConnections() const {return m_var_connections.size();}                   //!< Get the the number of variable connections.
     int numberOfConstantConnections() const {return m_connections.size();}                       //!< Get the number of constant connections.

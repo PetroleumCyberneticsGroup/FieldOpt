@@ -110,7 +110,7 @@ public:
      * \param rhs Stream to set lhs equal to.
      * \return Copy of rhs.
      */
-    Stream& operator =(Stream &rhs);
+    Stream& operator =(const Stream &rhs);
 
     /*!
      * \brief Compound assignment operator.
@@ -121,7 +121,7 @@ public:
      * \param rhs Stream to be added to this stream.
      * \return Stream where the rates are equal to the sum of the lhs and the rhs Streams.
      */
-    Stream& operator +=(Stream &rhs);           //!< Compound assignment operator. Sets
+    Stream& operator +=(const Stream &rhs);           //!< Compound assignment operator. Sets
 
     /*!
      * \brief Plus operator.
@@ -132,7 +132,7 @@ public:
      * \param rhs
      * \return Left-hand-side Stream plus right-hand-side Stream with rhs units and pressure equal to 0.
      */
-    const Stream operator +(Stream &rhs) const;
+    const Stream operator +(const Stream &rhs) const;
 
     /*!
      * \brief Multiplication operator.

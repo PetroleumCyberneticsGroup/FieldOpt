@@ -27,6 +27,7 @@
 #include "model/stream.h"
 #include "model/components/component.h"
 #include "utilities/stringutilities.h"
+#include "fileio/readeres/pipereader.h"
 #include <QString>
 #include <QStringList>
 #include <QVector>

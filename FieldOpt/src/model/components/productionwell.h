@@ -28,6 +28,8 @@
 #include "variables/intvariable.h"
 #include "variables/binaryvariable.h"
 #include "constraints/constraint.h"
+#include "model/pipeconnection.h"
+#include "model/components/pipe.h"
 
 using std::tr1::shared_ptr;
 

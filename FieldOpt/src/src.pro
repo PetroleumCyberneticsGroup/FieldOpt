@@ -25,12 +25,12 @@ HEADERS += \
     model/components/pipe.h \
     utilities/stringutilities.h \
     exceptionhandler/componenthandler.h \
-    model/components/productionwell.h \
-    model/components/well.h \
     model/wellcontrol.h \
     model/wellconnection.h \
     model/wellconnectionvariable.h \
     model/wellpath.h \
+    model/components/productionwell.h \
+    model/components/well.h \
     model/cost.h \
     model/pipeconnection.h \
     fileio/readeres/pipereader.h \
@@ -53,12 +53,12 @@ SOURCES += \
     model/components/pipe.cpp \
     utilities/stringutilities.cpp \
     exceptionhandler/componenthandler.cpp \
-    model/components/productionwell.cpp \
-    model/components/well.cpp \
     model/wellcontrol.cpp \
     model/wellconnection.cpp \
     model/wellconnectionvariable.cpp \
     model/wellpath.cpp \
+    model/components/productionwell.cpp \
+    model/components/well.cpp \
     model/cost.cpp \
     model/pipeconnection.cpp \
     fileio/readeres/pipereader.cpp \

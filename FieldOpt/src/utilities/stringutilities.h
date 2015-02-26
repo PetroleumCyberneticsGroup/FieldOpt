@@ -45,14 +45,14 @@ public:
      * \param line The line to be processed
      * \return A QStringList representing the line.
      */
-    static QStringList processLine(const QString &line) const;
+    static QStringList processLine(QString &line);
 
     /*!
      * \brief Check if the line is empty (i.e. contains only whitespace)
      * \param list QStringList representing the line, created by the processLine function.
      * \return Returns true if the line contains only whitespace; otherwise false.
      */
-    static bool isEmpty(const QStringList &list) const;
+    static bool isEmpty(QStringList &list);
 };
 
 #endif // STRINGUTILITIES_H
