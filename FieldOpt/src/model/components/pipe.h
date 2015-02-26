@@ -56,7 +56,7 @@ private:
 
 public:
     Pipe() : p_calculator(0) {}  //!< Default constructor. Initializes the calculator.
-    Pipe(Pipe &p);  //!< Copy constructor.
+    Pipe(const Pipe &p);         //!< Copy constructor.
     ~Pipe();
 
     virtual Pipe* clone() = 0;                                 //!< Create a copy of the pipe.

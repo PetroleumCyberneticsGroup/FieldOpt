@@ -37,7 +37,8 @@ HEADERS += \
     fileio/readeres/reader.h \
     exceptionhandler/readerhandler.h \
     model/components/midpipe.h \
-    model/components/injectionwell.h
+    model/components/injectionwell.h \
+    model/components/endpipe.h
 
 SOURCES += \
     variables/intvariable.cpp \
@@ -67,4 +68,5 @@ SOURCES += \
     fileio/readeres/reader.cpp \
     exceptionhandler/readerhandler.cpp \
     model/components/midpipe.cpp \
-    model/components/injectionwell.cpp
+    model/components/injectionwell.cpp \
+    model/components/endpipe.cpp

@@ -22,14 +22,16 @@
 
 #include "pipe.h"
 
-Pipe::Pipe(Pipe &p)
+Pipe::Pipe(const Pipe &p)
     : Component(p)
 {
     m_number = p.m_number;
     m_file_name = p.m_file_name;
     m_schedule = p.m_schedule;
-    if (p.calculator() != 0) p_calculator = p.p_calculator->clone();
-    else p_calculator = 0;
+    if (p_calculator != 0)
+        p_calculator = p.p_calculator->clone();
+    else
+        p_calculator = 0;
 }
 
 Pipe::~Pipe()
