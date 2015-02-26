@@ -23,7 +23,8 @@
 #include "intvariable.h"
 #include <limits>
 
-IntVariable::IntVariable() : Variable()
+IntVariable::IntVariable(Component *parent) :
+    Variable(parent)
 {
     m_min = std::numeric_limits<int>::min(); // Used to detect whether min has been set or not
     m_max = std::numeric_limits<int>::max(); // Used to detect whether max has been set or not
@@ -31,16 +32,6 @@ IntVariable::IntVariable() : Variable()
 
 void IntVariable::setValue(int value)
 {
-    if (value > m_max)
-    {
-        QString message = QString("Variable %1:\n\t Value %2 is greater than the set upper bound: %3.").arg(name()).arg(value).arg(m_max);
-        emitException(ExceptionSeverity::WARNING, ExceptionType::OUT_OF_BOUNDS, message);
-    }
-    else if (value < m_min)
-    {
-        QString message = QString("Variable %1:\n\t Value %2 is less than the set lower bound: %3.").arg(name()).arg(value).arg(m_max);
-        emitException(ExceptionSeverity::WARNING, ExceptionType::OUT_OF_BOUNDS, message);
-    }
     m_value = value;
 }
 

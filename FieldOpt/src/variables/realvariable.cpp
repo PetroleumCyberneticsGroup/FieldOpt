@@ -23,7 +23,8 @@
 #include "realvariable.h"
 #include <limits>
 
-RealVariable::RealVariable() : Variable()
+RealVariable::RealVariable(Component *parent)
+    : Variable(parent)
 {
     m_max = std::numeric_limits<double>::max();
     m_min = std::numeric_limits<double>::min();
@@ -31,15 +32,6 @@ RealVariable::RealVariable() : Variable()
 
 void RealVariable::setValue(double value)
 {
-    if (value > m_max)
-    {
-        QString message = QString("Variable %1:\n\t Value %2 is greater than the set upper bound: %3.").arg(name()).arg(value).arg(m_max);
-        emitException(ExceptionSeverity::WARNING, ExceptionType::OUT_OF_BOUNDS, message);
-    }
-    else if (value < m_min) {
-        QString message = QString("Variable %1:\n\t Value %2 is less than the set lower bound: %3.").arg(name()).arg(value).arg(m_max);
-        emitException(ExceptionSeverity::WARNING, ExceptionType::OUT_OF_BOUNDS, message);
-    }
     m_value = value;
 }
 

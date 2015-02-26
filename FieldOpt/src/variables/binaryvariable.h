@@ -39,7 +39,7 @@ private:
     bool m_is_variable; //!< Determines whether this variable is variable or not.
 
 public:
-    BinaryVariable() : Variable() {} //!< Calls the Variable constructor.
+    BinaryVariable(Component *parent);  //!< Calls the Variable constructor.
 
     /*!
      * \brief Set the current value for this variable.
@@ -55,7 +55,7 @@ public:
     double value() { return m_value; }          //!< Get function for m_value
     double min() { return 0.0; }                //!< Min value for all binary variables.
     double max() { return 1.0; }                //!< Max value for all binary variables.
-    bool isVariable() { return m_is_variable; } //!< Get fuction for m_is_variable
+    virtual bool isVariable() { return m_is_variable; } //!< Get fuction for m_is_variable
 };
 
 #endif // BINARYVARIABLE_H

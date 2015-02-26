@@ -27,50 +27,28 @@
 #include <QObject>
 #include "exceptionhandler/exceptionhandler.h"
 #include "exceptionhandler/variablehandler.h"
+#include "model/components/component.h"
 
-class Variable : public QObject //!< Base class for all variables.
+class Component;
+
+class Variable //!< Base class for all variables.
 {
-    Q_OBJECT
-signals:
-    /*!
-     * \brief Warning signal.
-     *
-     * Emitted when the user does something that breaks with the model but is not critical.
-     *
-     * \param severity The severity of the event. May be WARNING or ERROR.
-     * \param type The type of exception.
-     * \param message The message to be printed in addition to the severity and the type.
-     */
-    void warning(ExceptionSeverity severity, ExceptionType type, const QString message);
 
 private:
     QString m_name;        //!< Identifying name for the variable
     int m_id;              //!< Unique id number for the variable
     static int next_id;    //!< Id to be set for next variable
-    //Component *p_parent;   //!< \todo pointer to the component (well, pipe) that owns this variable
+    Component *p_parent;   //!< Pointer to the component (well, pipe) that owns this variable
 
 public:
-    /*!
-     * \brief Set m_id to next_id; set m_name to "no_name".
-     *
-     * \todo Should take a Component pointer a parameter
-     */
-    Variable();
+    Variable(Component *parent);  //!< Set m_id to next_id; set m_name to "no_name".
 
     void setName(const QString& name) { m_name = name; } //!< Set the identifying name for this variable.
     const QString& name() const { return m_name; } //!< Get function for m_name
     int id() { return m_id; }                      //!< Get function for m_id
-    // Component* parent() {return p_parent;} //!< \todo Return function for parent Component
+    Component* parent() {return p_parent;} //!< \todo Return function for parent Component
 
-protected:
-    /*!
-     * \brief Convenience class used by the variable subclasses to emit messages.
-     * \param severity The severity of the event.
-     * \param type The type of exception.
-     * \param message The message to be printed.
-     */
-    void emitException(ExceptionSeverity severity, ExceptionType type, QString message);
-
+    virtual bool isVariable() = 0;  //!< Checks if this is a variable value, i.e. if the bounds are not equal to the value.
 };
 
 #endif // VARIABLE_H

@@ -24,17 +24,14 @@
 
 
 
+BinaryVariable::BinaryVariable(Component *parent) :
+    Variable(parent)
+{
+    m_value = 1.0;
+    m_is_variable = true;
+}
+
 void BinaryVariable::setValue(double value)
 {
-    if (value > 1.0)
-    {
-        QString message = QString("Variable %1:\n\t Value %1 is greater than the upper bound 1.0.").arg(name()).arg(value);
-        emitException(ExceptionSeverity::WARNING, ExceptionType::OUT_OF_BOUNDS, message);
-    }
-    else if (value < 0.0)
-    {
-        QString message = QString("Variable %1:\n\t Value %2 is less than the lower bound 0.0.").arg(name()).arg(value);
-        emitException(ExceptionSeverity::WARNING, ExceptionType::OUT_OF_BOUNDS, message);
-    }
     m_value = value;
 }

@@ -40,7 +40,7 @@ private:
     int m_max;   //!< Upper bound for value. Initialized to <int>::max().
 
 public:
-    IntVariable(); //!< Calls parent Variable constructor. Initializes m_min and m_max. \todo Take component as parameter.
+    IntVariable(Component *parent); //!< Calls parent Variable constructor. Initializes m_min and m_max.
 
     /*!
      * \brief Set the current value for this variable.
@@ -64,7 +64,7 @@ public:
      * A Variable is considered to be variable if the max and min bounds are _not_ equal to the value.
      * \return True if this Variable is variable, otherwise false.
      */
-     bool isVariable();
+     virtual bool isVariable();
 };
 
 #endif // INTVARIABLE_H

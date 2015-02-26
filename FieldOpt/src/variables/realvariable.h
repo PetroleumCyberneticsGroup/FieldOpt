@@ -41,7 +41,8 @@ private:
     double m_max;   //!< Upper bound for value. Initialized to <double>::max()
 
 public:
-    RealVariable(); //!< Calls parent Variable constructor. Initializes m_max and m_min. \todo Take component as parameter.
+    RealVariable(Component *parent);  //!< Calls parent Variable constructor. Initializes m_max and m_min.
+    RealVariable(const RealVariable &rv);  //!< Copy constructor
 
     /*!
      * \brief Set the current value for this variable.
@@ -64,7 +65,7 @@ public:
      * A Variable is considered to be variable if the max and min bounds are _not_ equal to the value.
      * \return True if this Variable is variable, otherwise false.
      */
-     bool isVariable();
+     virtual bool isVariable();
 
 };
 
