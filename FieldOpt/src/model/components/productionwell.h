@@ -30,6 +30,7 @@
 #include "constraints/constraint.h"
 #include "model/pipeconnection.h"
 #include "model/components/pipe.h"
+#include "model/components/midpipe.h"
 
 using std::tr1::shared_ptr;
 
@@ -38,6 +39,7 @@ class BinaryVariable;
 class PipeConnection;
 class Constraint;
 class Pipe;
+class MidPipe;
 
 class ProductionWell : public Well
 {

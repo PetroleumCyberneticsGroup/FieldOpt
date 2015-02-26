@@ -23,7 +23,7 @@
 #include "stringutilities.h"
 #include <QRegExp>
 
-QStringList StringUtilities::processLine(QString &line)
+QStringList StringUtilities::processLine(const QString &line)
 {
     QString temp = line.split("!").first();  // Remove everything after "!" (comments).
     temp = temp.trimmed();  // Remove leading and trailing whitespace.
@@ -35,7 +35,7 @@ QStringList StringUtilities::processLine(QString &line)
     return list;
 }
 
-bool StringUtilities::isEmpty(QStringList &list)
+bool StringUtilities::isEmpty(const QStringList &list)
 {
     bool empty = true;
     for (int i = 0; i < list.size(); i++)

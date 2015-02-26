@@ -35,7 +35,8 @@ HEADERS += \
     model/pipeconnection.h \
     fileio/readeres/pipereader.h \
     fileio/readeres/reader.h \
-    exceptionhandler/readerhandler.h
+    exceptionhandler/readerhandler.h \
+    model/components/midpipe.h
 
 SOURCES += \
     variables/intvariable.cpp \
@@ -63,4 +64,5 @@ SOURCES += \
     model/pipeconnection.cpp \
     fileio/readeres/pipereader.cpp \
     fileio/readeres/reader.cpp \
-    exceptionhandler/readerhandler.cpp
+    exceptionhandler/readerhandler.cpp \
+    model/components/midpipe.cpp

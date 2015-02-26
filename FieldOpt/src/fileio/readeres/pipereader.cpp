@@ -54,7 +54,7 @@ BeggsBrillCalculator *PipeReader::readBeggsBrill(QFile &file)
             if(StringUtilities::isEmpty(list))
             {
                 QString message = QString("File: %s\nKeyword:%s\nNot understood in current context. Expecting a property.")
-                        .arg(file_name.toLatin1().constData()).arg(list.join(" ").toLatin1().constData());
+                        .arg(file.fileName().toLatin1().constData()).arg(list.join(" ").toLatin1().constData());
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNKNOWN_KEYWORD, message);
             }
         }
@@ -64,7 +64,7 @@ BeggsBrillCalculator *PipeReader::readBeggsBrill(QFile &file)
     if(!ok)
     {
         QString message = QString("File: %s\nDefinition is incomplete.\nLast line: %s")
-                .arg(file_name.toLatin1().constData()).arg(list.join(" ").toLatin1().constData());
+                .arg(file.fileName().toLatin1().constData()).arg(list.join(" ").toLatin1().constData());
         emitException(ExceptionSeverity::ERROR, ExceptionType::UNKNOWN_KEYWORD, message);
     }
     // setting the parameters

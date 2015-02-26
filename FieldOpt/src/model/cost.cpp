@@ -21,6 +21,7 @@
  */
 
 #include "cost.h"
+#include <math.h>
 
 Cost::Cost() :
     m_time(0),
