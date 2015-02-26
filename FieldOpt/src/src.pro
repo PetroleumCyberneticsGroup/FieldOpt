@@ -32,7 +32,10 @@ HEADERS += \
     model/wellconnectionvariable.h \
     model/wellpath.h \
     model/cost.h \
-    model/pipeconnection.h
+    model/pipeconnection.h \
+    fileio/readeres/pipereader.h \
+    fileio/readeres/reader.h \
+    exceptionhandler/readerhandler.h
 
 SOURCES += \
     variables/intvariable.cpp \
@@ -57,4 +60,7 @@ SOURCES += \
     model/wellconnectionvariable.cpp \
     model/wellpath.cpp \
     model/cost.cpp \
-    model/pipeconnection.cpp
+    model/pipeconnection.cpp \
+    fileio/readeres/pipereader.cpp \
+    fileio/readeres/reader.cpp \
+    exceptionhandler/readerhandler.cpp

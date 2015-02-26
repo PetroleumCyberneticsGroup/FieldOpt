@@ -33,7 +33,9 @@ enum class ExceptionSeverity {
 enum class ExceptionType {
     OUT_OF_BOUNDS,
     INCONSISTENT,
-    CONSTRAINT_VIOLATED
+    CONSTRAINT_VIOLATED,
+    FILE_NOT_FOUND,
+    UNKNOWN_KEYWORD
 };
 
 class ExceptionHandler
@@ -59,7 +61,11 @@ private:
         case ExceptionType::INCONSISTENT:
             return "Inconsistent.";
         case ExceptionType::CONSTRAINT_VIOLATED:
-            return "Constraint violated";
+            return "Constraint violated.";
+        case ExceptionType::FILE_NOT_FOUND:
+            return "Unable to open file.";
+        case ExceptionType::UNKNOWN_KEYWORD:
+            return "Unknown keyword.";
         default:
             return "Unknown type.";
         }
