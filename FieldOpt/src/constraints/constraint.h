@@ -24,6 +24,7 @@
 #define CONSTRAINT_H
 
 #include <QString>
+#include <QObject>
 
 /*!
  * \brief Class for constraints.
@@ -69,7 +70,6 @@ public:
     double max() {return m_max; }             //!< Get function for m_max.
     double min() {return m_min; }             //!< Get function for m_min.
     int id() {return m_id; }                  //!< Get function for m_id.
-
 };
 
 #endif // CONSTRAINT_H

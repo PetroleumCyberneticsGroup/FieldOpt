@@ -20,34 +20,35 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
-#include "constraint.h"
+#include "constrainthandler.h"
 
-int Constraint::next_id = 0;
-
-Constraint::Constraint()
+ConstraintHandler::ConstraintHandler(QObject *parent) : QObject(parent)
 {
-    m_value = 0.0;
-    m_max = 0.0;
-    m_min = 0.0;
-    m_name = "unknown";
-    m_id = next_id++;
+
 }
 
-Constraint::Constraint(double value, double max, double min)
+ConstraintHandler::~ConstraintHandler()
 {
-    m_value = value;
-    m_max = max;
-    m_min = min;
-    m_name = "unknown";
-    m_id = next_id++;
+
 }
 
-void Constraint::emitException(ExceptionSeverity severity, ExceptionType type, QString message)
+void ConstraintHandler::handleException(ExceptionSeverity severity, ExceptionType type, QString message)
 {
-    ConstraintHandler* ch = new ConstraintHandler;
-    connect(this, SIGNAL(error(ExceptionSeverity, ExceptionType, QString)),
-            ch, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
-    emit error(severity, type, message);
-    disconnect(this, SIGNAL(error(ExceptionSeverity, ExceptionType, QString)),
-               ch, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
+    message.prepend("An exception has occured with a user defined constraint.\n");
+    if (severity == ExceptionSeverity::WARNING)
+    {
+        printWarning(message, type);
+        return;
+    }
+    else if (severity == ExceptionSeverity::ERROR)
+    {
+        printError(message, type);
+        exit(1);
+        return;
+    }
+    else
+    {
+        return;
+    }
 }
+

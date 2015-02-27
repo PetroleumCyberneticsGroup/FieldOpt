@@ -35,7 +35,8 @@ enum class ExceptionType {
     INCONSISTENT,
     CONSTRAINT_VIOLATED,
     FILE_NOT_FOUND,
-    UNKNOWN_KEYWORD
+    UNKNOWN_KEYWORD,
+    UNABLE_TO_PARSE
 };
 
 class ExceptionHandler
@@ -66,6 +67,8 @@ private:
             return "Unable to open file.";
         case ExceptionType::UNKNOWN_KEYWORD:
             return "Unknown keyword.";
+        case ExceptionType::UNABLE_TO_PARSE:
+            return "Unable to parse string.";
         default:
             return "Unknown type.";
         }

@@ -38,7 +38,9 @@ HEADERS += \
     exceptionhandler/readerhandler.h \
     model/components/midpipe.h \
     model/components/injectionwell.h \
-    model/components/endpipe.h
+    model/components/endpipe.h \
+    constraints/userconstraint.h \
+    exceptionhandler/constrainthandler.h
 
 SOURCES += \
     variables/intvariable.cpp \
@@ -69,4 +71,6 @@ SOURCES += \
     exceptionhandler/readerhandler.cpp \
     model/components/midpipe.cpp \
     model/components/injectionwell.cpp \
-    model/components/endpipe.cpp
+    model/components/endpipe.cpp \
+    constraints/userconstraint.cpp \
+    exceptionhandler/constrainthandler.cpp

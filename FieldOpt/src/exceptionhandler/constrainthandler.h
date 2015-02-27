@@ -20,34 +20,21 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
-#include "constraint.h"
+#ifndef CONSTRAINTHANDLER_H
+#define CONSTRAINTHANDLER_H
 
-int Constraint::next_id = 0;
+#include <QObject>
 
-Constraint::Constraint()
+class ConstraintHandler : public QObject
 {
-    m_value = 0.0;
-    m_max = 0.0;
-    m_min = 0.0;
-    m_name = "unknown";
-    m_id = next_id++;
-}
+    Q_OBJECT
+public:
+    explicit ConstraintHandler(QObject *parent = 0);
+    ~ConstraintHandler();
 
-Constraint::Constraint(double value, double max, double min)
-{
-    m_value = value;
-    m_max = max;
-    m_min = min;
-    m_name = "unknown";
-    m_id = next_id++;
-}
+signals:
 
-void Constraint::emitException(ExceptionSeverity severity, ExceptionType type, QString message)
-{
-    ConstraintHandler* ch = new ConstraintHandler;
-    connect(this, SIGNAL(error(ExceptionSeverity, ExceptionType, QString)),
-            ch, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
-    emit error(severity, type, message);
-    disconnect(this, SIGNAL(error(ExceptionSeverity, ExceptionType, QString)),
-               ch, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
-}
+public slots:
+};
+
+#endif // CONSTRAINTHANDLER_H
