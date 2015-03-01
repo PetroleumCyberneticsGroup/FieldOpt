@@ -41,7 +41,13 @@ HEADERS += \
     model/components/endpipe.h \
     constraints/userconstraint.h \
     exceptionhandler/constrainthandler.h \
-    model/components/separator.h
+    model/components/separator.h \
+    model/reservoir.h \
+    model/model.h \
+    model/objectives/objective.h \
+    model/objectives/cumgasobjective.h \
+    model/objectives/cumoilobjective.h \
+    exceptionhandler/objectivehandler.h
 
 SOURCES += \
     variables/intvariable.cpp \
@@ -75,4 +81,10 @@ SOURCES += \
     model/components/endpipe.cpp \
     constraints/userconstraint.cpp \
     exceptionhandler/constrainthandler.cpp \
-    model/components/separator.cpp
+    model/components/separator.cpp \
+    model/reservoir.cpp \
+    model/model.cpp \
+    model/objectives/cumgasobjective.cpp \
+    model/objectives/cumoilobjective.cpp \
+    exceptionhandler/objectivehandler.cpp \
+    model/objectives/objective.cpp
