@@ -36,7 +36,8 @@ enum class ExceptionType {
     CONSTRAINT_VIOLATED,
     FILE_NOT_FOUND,
     UNKNOWN_KEYWORD,
-    UNABLE_TO_PARSE
+    UNABLE_TO_PARSE,
+    COMPUTATION_ERROR
 };
 
 class ExceptionHandler
@@ -69,6 +70,8 @@ private:
             return "Unknown keyword.";
         case ExceptionType::UNABLE_TO_PARSE:
             return "Unable to parse string.";
+        case ExceptionType::COMPUTATION_ERROR:
+            return "Computation error.";
         default:
             return "Unknown type.";
         }

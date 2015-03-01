@@ -24,8 +24,9 @@
 #define CONSTRAINTHANDLER_H
 
 #include <QObject>
+#include "exceptionhandler.h"
 
-class ConstraintHandler : public QObject
+class ConstraintHandler : public QObject, ExceptionHandler
 {
     Q_OBJECT
 public:
