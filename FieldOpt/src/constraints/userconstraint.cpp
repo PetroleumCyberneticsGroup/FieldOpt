@@ -94,17 +94,20 @@ double UserConstraint::resolveArgumentValue(QString arg, bool *ok)
             }
         }
 
-        if(w == 0) error("Could not find a well named " + id);
+        if(w == 0) {
+            QString message = QString("Could not fin a well named %1").arg(id);
+            emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
+        }
 
         // now checking what type of rate to extract
         if(component.startsWith("G"))
-            value = w->stream(time_step)->gasRate(true);
+            value = w->stream(time_step)->gasRate();
         else if(component.startsWith("O"))
-            value = w->stream(time_step)->oilRate(true);
+            value = w->stream(time_step)->oilRate();
         else if(component.startsWith("W"))
-            value = w->stream(time_step)->waterRate(true);
+            value = w->stream(time_step)->waterRate();
         else if(component.startsWith("P"))
-            value = w->stream(time_step)->pressure(true);
+            value = w->stream(time_step)->pressure();
         else if(component.startsWith("L")) // gas lift
         {
             // checking if this is a production well
@@ -124,15 +127,20 @@ double UserConstraint::resolveArgumentValue(QString arg, bool *ok)
 
                     value = prod_well->gasLiftControl(time_step)->controlVar()->value() * routing;
                 }
-                else
-                    error("The well did not have gas lift when L was specified");
+                else {
+                    QString message = QString("The well did not have gas lift when L was specified");
+                    emitException(ExceptionSeverity::ERROR, ExceptionType::INCONSISTENT, message);
+                }
             }
-            else
-                error("L can only be specified for production wells");
-
+            else {
+                QString message = QString("L can only be specified for production wells");
+                emitException(ExceptionSeverity::ERROR, ExceptionType::INCONSISTENT, message);
+            }
         }
-        else
-            error("Type of component not recognized: " + component);
+        else {
+            QString message = QString("Type of component not recognized: %1").arg(component);
+            emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
+        }
 
     } // well
     else if(type.startsWith("PIPE"))
@@ -140,8 +148,10 @@ double UserConstraint::resolveArgumentValue(QString arg, bool *ok)
         Pipe *p = 0;
 
         int pipe_id = id.toInt(&ok_l);
-        if(!ok_l)
-            error("The pipe id could not be converted to an integer: " + id);
+        if(!ok_l) {
+            QString message = QString("The pipe id could not be converted to an integer: %1").arg(id);
+            emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
+        }
 
         // looping through the pipes, finding the correct one
         for(int i = 0; i < p_model->numberOfPipes(); ++i)
@@ -153,20 +163,24 @@ double UserConstraint::resolveArgumentValue(QString arg, bool *ok)
             }
         }
 
-        if(p == 0)
-            error("Could not find a pipe with id = " + id);
+        if(p == 0) {
+            QString message = QString("Could not find a pipe with id = %1").arg(id);
+            emitException(ExceptionSeverity::ERROR, ExceptionType::INCONSISTENT, message);
+        }
 
         // now checking what type of rate to extract
         if(component.startsWith("GAS"))
-            value = p->stream(time_step)->gasRate(true);
+            value = p->stream(time_step)->gasRate();
         else if(component.startsWith("OIL"))
-            value = p->stream(time_step)->oilRate(true);
+            value = p->stream(time_step)->oilRate();
         else if(component.startsWith("WAT"))
-            value = p->stream(time_step)->waterRate(true);
+            value = p->stream(time_step)->waterRate();
         else if(component.startsWith("P"))
-            value = p->stream(time_step)->pressure(true);
-        else
-            error("Type of component not recognized: " + component);
+            value = p->stream(time_step)->pressure();
+        else {
+            QString message = QString("Type of component not recognized: %1").arg(component);
+            emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
+        }
     } // pipe
     else if(type.startsWith("SEP"))
     {
@@ -174,8 +188,10 @@ double UserConstraint::resolveArgumentValue(QString arg, bool *ok)
         Pipe *p = 0;
 
         int pipe_id = id.toInt(&ok_l);
-        if(!ok_l)
-            error("The separator id could not be converted to an integer: " + id);
+        if(!ok_l) {
+            QString message = QString("The separator id could not be converted to an integer: %1").arg(id);
+            emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
+        }
 
         // looping through the pipes, finding the correct one
         for(int i = 0; i < p_model->numberOfPipes(); ++i)
@@ -187,14 +203,18 @@ double UserConstraint::resolveArgumentValue(QString arg, bool *ok)
             }
         }
 
-        if(p == 0)
-            error("Could not find a separator with id = " + id);
+        if(p == 0) {
+            QString message = QString("Could not find a separator with id = %1").arg(id);
+            emitException(ExceptionSeverity::ERROR, ExceptionType::INCONSISTENT, message);
+        }
 
         // now checking if it actually is a separator
         Separator *s = dynamic_cast<Separator*>(p);
 
-        if(s == 0)
-            error("Component #" + id + " is not a separator");
+        if(s == 0) {
+            QString message = QString("Component #%1 is not a separator.").arg(id);
+            emitException(ExceptionSeverity::ERROR, ExceptionType::INCONSISTENT, message);
+        }
 
         // now checking what type of rate to extract
         if(component.startsWith("GAS"))
@@ -228,8 +248,10 @@ double UserConstraint::resolveArgumentValue(QString arg, bool *ok)
             }
             value = q_remove;
         }
-        else
-            error("Type of component not recognized: " + component);
+        else {
+            QString message = QString("Type of component not recognized: %1").arg(component);
+            emitException(ExceptionSeverity::ERROR, ExceptionType::INCONSISTENT, message);
+        }
     } // separator
     else {
         QString message = QString("The type of model component was not recognized: %s").arg(type);

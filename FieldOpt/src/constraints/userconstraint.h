@@ -31,6 +31,7 @@
 #include "constraint.h"
 #include "exceptionhandler/constrainthandler.h"
 #include "model/components/well.h"
+#include "model/components/productionwell.h"
 #include "model/components/pipe.h"
 
 using std::tr1::shared_ptr;
@@ -86,6 +87,8 @@ private:
      * WELL_prod1_OIL_1
      * PIPE_1_GAS_2
      * SEP_3_REMOVED_3
+     *
+     * \todo Split resolve well/pipe/separator out into separate private functions.
      * \param arg The argument to be resolved.
      * \param ok \todo This parameter does not seem to be used for anything.
      * \return
@@ -99,11 +102,11 @@ public:
     void initialize();  //!< Sets the bounds and name, genereates the arguments string list.
     bool update();      //!< Parses the arguments and updates the m_value field in the constraint.
 
-    void setExpression(const QString &e) {m_expression = e;}
+    void setExpression(const QString &e) {m_expression = e;}  //!< Set the expression.
 
-    const QString& expression() const {return m_expression;}
-    shared_ptr<Constraint> constraint() {return p_constraint;}
-    Model* model() {return p_model;}
+    const QString& expression() const {return m_expression;}    //!< Get the expression string.
+    shared_ptr<Constraint> constraint() {return p_constraint;}  //!< Get the constraint corresponding to the user defined expression.
+    Model* model() {return p_model;}                            //!< Get the model this constraint is connected to.
 
 protected:
     /*!

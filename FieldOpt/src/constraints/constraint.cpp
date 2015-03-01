@@ -41,13 +41,3 @@ Constraint::Constraint(double value, double max, double min)
     m_name = "unknown";
     m_id = next_id++;
 }
-
-void Constraint::emitException(ExceptionSeverity severity, ExceptionType type, QString message)
-{
-    ConstraintHandler* ch = new ConstraintHandler;
-    connect(this, SIGNAL(error(ExceptionSeverity, ExceptionType, QString)),
-            ch, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
-    emit error(severity, type, message);
-    disconnect(this, SIGNAL(error(ExceptionSeverity, ExceptionType, QString)),
-               ch, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
-}
