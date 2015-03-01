@@ -33,6 +33,7 @@
 #include "model/components/well.h"
 #include "model/components/productionwell.h"
 #include "model/components/pipe.h"
+#include "model/components/separator.h"
 
 using std::tr1::shared_ptr;
 
@@ -40,6 +41,7 @@ class Model;
 class Constraint;
 class Well;
 class Pipe;
+class Separator;
 
 /*!
  * \brief Describes a constraint defined by the user in the driver file.

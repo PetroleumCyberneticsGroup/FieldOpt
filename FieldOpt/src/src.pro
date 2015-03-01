@@ -40,7 +40,8 @@ HEADERS += \
     model/components/injectionwell.h \
     model/components/endpipe.h \
     constraints/userconstraint.h \
-    exceptionhandler/constrainthandler.h
+    exceptionhandler/constrainthandler.h \
+    model/components/separator.h
 
 SOURCES += \
     variables/intvariable.cpp \
@@ -73,4 +74,5 @@ SOURCES += \
     model/components/injectionwell.cpp \
     model/components/endpipe.cpp \
     constraints/userconstraint.cpp \
-    exceptionhandler/constrainthandler.cpp
+    exceptionhandler/constrainthandler.cpp \
+    model/components/separator.cpp

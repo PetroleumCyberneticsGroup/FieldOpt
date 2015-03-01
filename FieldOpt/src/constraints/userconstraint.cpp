@@ -218,13 +218,13 @@ double UserConstraint::resolveArgumentValue(QString arg, bool *ok)
 
         // now checking what type of rate to extract
         if(component.startsWith("GAS"))
-            value = s->stream(time_step)->gasRate(true);
+            value = s->stream(time_step)->gasRate();
         else if(component.startsWith("OIL"))
-            value = s->stream(time_step)->oilRate(true);
+            value = s->stream(time_step)->oilRate();
         else if(component.startsWith("WAT"))
-            value = s->stream(time_step)->waterRate(true);
+            value = s->stream(time_step)->waterRate();
         else if(component.startsWith("P"))
-            value = s->stream(time_step)->pressure(true);
+            value = s->stream(time_step)->pressure();
         else if(component.startsWith("REM")) // the amount of water or gas removed from the separator
         {
             double q_remove = 0;
@@ -234,14 +234,14 @@ double UserConstraint::resolveArgumentValue(QString arg, bool *ok)
                 if(s->type() == Separator::WATER)
                 {
                     // how much water should be removed
-                    q_remove = s->stream(time_step)->waterRate(true) * s->removeFraction()->value();
+                    q_remove = s->stream(time_step)->waterRate() * s->removeFraction()->value();
                     if(q_remove > s->removeCapacity()->value())
                         q_remove = s->removeCapacity()->value();
                 }
                 else if(s->type() == Separator::GAS)
                 {
                     // how much gas should be removed
-                    q_remove = s->stream(time_step)->gasRate(true) * s->removeFraction()->value();
+                    q_remove = s->stream(time_step)->gasRate() * s->removeFraction()->value();
                     if(q_remove > s->removeCapacity()->value())
                         q_remove = s->removeCapacity()->value();
                 }
