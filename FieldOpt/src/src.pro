@@ -47,7 +47,8 @@ HEADERS += \
     model/objectives/objective.h \
     model/objectives/cumgasobjective.h \
     model/objectives/cumoilobjective.h \
-    exceptionhandler/objectivehandler.h
+    exceptionhandler/objectivehandler.h \
+    model/objectives/npvobjective.h
 
 SOURCES += \
     variables/intvariable.cpp \
@@ -87,4 +88,5 @@ SOURCES += \
     model/objectives/cumgasobjective.cpp \
     model/objectives/cumoilobjective.cpp \
     exceptionhandler/objectivehandler.cpp \
-    model/objectives/objective.cpp
+    model/objectives/objective.cpp \
+    model/objectives/npvobjective.cpp
