@@ -48,7 +48,8 @@ HEADERS += \
     model/objectives/cumgasobjective.h \
     model/objectives/cumoilobjective.h \
     exceptionhandler/objectivehandler.h \
-    model/objectives/npvobjective.h
+    model/objectives/npvobjective.h \
+    constraints/capacity.h
 
 SOURCES += \
     variables/intvariable.cpp \
@@ -89,4 +90,5 @@ SOURCES += \
     model/objectives/cumoilobjective.cpp \
     exceptionhandler/objectivehandler.cpp \
     model/objectives/objective.cpp \
-    model/objectives/npvobjective.cpp
+    model/objectives/npvobjective.cpp \
+    constraints/capacity.cpp
