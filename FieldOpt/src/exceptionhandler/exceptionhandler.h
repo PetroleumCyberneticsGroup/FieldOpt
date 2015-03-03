@@ -38,7 +38,8 @@ enum class ExceptionType {
     UNKNOWN_KEYWORD,
     UNABLE_TO_PARSE,
     COMPUTATION_ERROR,
-    ASSUMPTION
+    ASSUMPTION,
+    MODEL_VALIDATION
 };
 
 class ExceptionHandler
@@ -75,6 +76,8 @@ private:
             return "Computation error.";
         case ExceptionType::ASSUMPTION:
             return "Assumption.";
+        case ExceptionType::MODEL_VALIDATION:
+            return "Model validation error."
         default:
             return "Unknown type.";
         }

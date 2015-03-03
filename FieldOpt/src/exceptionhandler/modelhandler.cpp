@@ -20,23 +20,36 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
-#ifndef CONSTRAINTHANDLER_H
-#define CONSTRAINTHANDLER_H
+#include "modelhandler.h"
 
-#include <QObject>
-#include "exceptionhandler.h"
-
-class ConstraintHandler : public QObject, ExceptionHandler
+ModelHandler::ModelHandler(QObject *parent) : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit ConstraintHandler(QObject *parent = 0);
-    ~ConstraintHandler();
 
-signals:
+}
 
-public slots:
-    void handleException(ExceptionSeverity severity, ExceptionType type, QString message);
-};
+ModelHandler::~ModelHandler()
+{
 
-#endif // CONSTRAINTHANDLER_H
+}
+
+void ModelHandler::handleException(ExceptionSeverity severity, ExceptionType type, QString message)
+{
+    message.prepend("An exception has occured with a user defined constraint.\n");
+    if (severity == ExceptionSeverity::WARNING)
+    {
+        printWarning(message, type);
+        return;
+    }
+    else if (severity == ExceptionSeverity::ERROR)
+    {
+        printError(message, type);
+        exit(1);
+        return;
+    }
+    else
+    {
+        return;
+    }
+}
+
+

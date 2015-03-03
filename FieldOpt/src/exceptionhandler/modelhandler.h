@@ -20,18 +20,19 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
-#ifndef CONSTRAINTHANDLER_H
-#define CONSTRAINTHANDLER_H
+#ifndef MODELHANDLER_H
+#define MODELHANDLER_H
 
 #include <QObject>
+
 #include "exceptionhandler.h"
 
-class ConstraintHandler : public QObject, ExceptionHandler
+class ModelHandler : public QObject, ExceptionHandler
 {
     Q_OBJECT
 public:
-    explicit ConstraintHandler(QObject *parent = 0);
-    ~ConstraintHandler();
+    explicit ModelHandler(QObject *parent = 0);
+    ~ModelHandler();
 
 signals:
 
@@ -39,4 +40,4 @@ public slots:
     void handleException(ExceptionSeverity severity, ExceptionType type, QString message);
 };
 
-#endif // CONSTRAINTHANDLER_H
+#endif // MODELHANDLER_H
