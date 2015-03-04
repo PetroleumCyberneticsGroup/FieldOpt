@@ -29,6 +29,14 @@ NpvObjective::NpvObjective() :
     m_price_water(0.0)
 {}
 
+NpvObjective::NpvObjective(const NpvObjective &o)
+{
+    m_dcf = o.m_dcf;
+    m_price_gas = o.m_price_gas;
+    m_price_oil = o.m_price_oil;
+    m_price_water = o.m_price_water;
+}
+
 QString NpvObjective::description() const
 {
     QString str("START OBJECTIVE\n");

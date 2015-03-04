@@ -35,6 +35,7 @@ private:
 
 public:
     NpvObjective();  //!< Default constructor. Initializes all values to 0.0.
+    NpvObjective(const NpvObjective &o);  //!< Copy constructor.
 
     virtual Objective* clone() {return new NpvObjective(*this);}        //!< Get a copy of this objective.
     virtual QString description() const;                                //!< Get a description for the driver file.

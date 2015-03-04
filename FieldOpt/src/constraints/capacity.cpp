@@ -141,22 +141,22 @@ void Capacity::updateConstraints()
             }
             if(m_max_oil >= 0)
             {
-                double scaled_oil = (s.oilRate(true) - m_max_oil) / m_max_oil;
+                double scaled_oil = (s.oilRate() - m_max_oil) / m_max_oil;
                 m_cons_oil.at(i)->setValue(scaled_oil + 1.0);
             }
             if(m_max_gas >= 0)
             {
-                double scaled_gas = (s.gasRate(true) - m_max_gas) / m_max_gas;
+                double scaled_gas = (s.gasRate() - m_max_gas) / m_max_gas;
                 m_cons_gas.at(i)->setValue(scaled_gas + 1.0);
             }
             if(m_max_water >= 0)
             {
-                double scaled_water = (s.waterRate(true) - m_max_water) / m_max_water;
+                double scaled_water = (s.waterRate() - m_max_water) / m_max_water;
                 m_cons_water.at(i)->setValue(scaled_water + 1.0);
             }
             if(m_max_liquid >= 0)
             {
-                double scaled_liquid = (s.oilRate(true) + s.waterRate(true) - m_max_liquid) / m_max_liquid;
+                double scaled_liquid = (s.oilRate() + s.waterRate() - m_max_liquid) / m_max_liquid;
                 m_cons_liquid.at(i)->setValue(scaled_liquid + 1.0);
             }
         }

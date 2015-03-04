@@ -30,6 +30,7 @@ private:
 
 public:
         Objective() : m_value(0){}  //!< Default constructor.
+        Objective(Objective &o) {m_value = o.m_value;} //!< Copy constructor.
 
         virtual Objective* clone() = 0;  //!< Get a copy of this objective.
 

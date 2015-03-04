@@ -30,6 +30,7 @@
 
 #include "model/components/pipe.h"
 #include "constraint.h"
+#include "exceptionhandler/constrainthandler.h"
 
 using std::tr1::shared_ptr;
 

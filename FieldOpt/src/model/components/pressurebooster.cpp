@@ -128,7 +128,7 @@ void PressureBooster::updateCapacityConstraints()
     for(int i = 0; i < numberOfStreams(); ++i)
     {
         // calculating a total rate for the time step
-        double q_tot = stream(i)->oilRate(true) + stream(i)->waterRate(true) + stream(i)->gasRate(true);
+        double q_tot = stream(i)->oilRate() + stream(i)->waterRate() + stream(i)->gasRate();
 
         // calculating the constraint value
         double c = (p_capacity->value() - q_tot) / p_capacity->value();

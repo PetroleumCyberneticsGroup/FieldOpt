@@ -9,7 +9,8 @@
 class CumgasObjective : public Objective
 {
 public:
-    CumgasObjective(){};
+    CumgasObjective(){}
+    CumgasObjective(const CumgasObjective &o){}
 
     virtual Objective* clone() {return new CumgasObjective(*this);}    //!< Get a clone of this objective.
     virtual QString description() const;                               //!< Generate a description for the driver file.

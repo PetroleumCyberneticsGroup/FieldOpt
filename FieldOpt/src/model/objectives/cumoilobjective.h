@@ -7,7 +7,8 @@
 class CumoilObjective : public Objective
 {
 public:
-    CumoilObjective(){};  //!< Default constructor.
+    CumoilObjective(){}  //!< Default constructor.
+    CumoilObjective(const CumoilObjective &o){}
 
     virtual Objective* clone() {return new CumoilObjective(*this);}     //!< Get a copy of this objective.
     virtual QString description() const;                                //!< Generate a description for the driver file.
