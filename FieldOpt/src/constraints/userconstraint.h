@@ -33,6 +33,7 @@
 #include "model/components/well.h"
 #include "model/components/productionwell.h"
 #include "model/components/pipe.h"
+#include "model/model.h"
 #include "model/components/separator.h"
 
 using std::tr1::shared_ptr;

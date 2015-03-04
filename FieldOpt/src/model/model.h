@@ -5,20 +5,22 @@
 #include <QString>
 #include <QVector>
 #include <tr1/memory>
-
+#include "components/component.h"
 #include "components/well.h"
 #include "components/productionwell.h"
 #include "components/injectionwell.h"
+#include "components/pipe.h"
+#include "components/pressurebooster.h"
+#include "components/endpipe.h"
+#include "components/midpipe.h"
 #include "reservoir.h"
 #include "objectives/objective.h"
-#include "components/pipe.h"
 #include "constraints/capacity.h"
 #include "variables/intvariable.h"
 #include "variables/realvariable.h"
 #include "variables/binaryvariable.h"
 #include "constraints/constraint.h"
-#include "components/component.h"
-#include "constraints/constraint.h"
+#include "constraints/userconstraint.h"
 #include "cost.h"
 #include "exceptionhandler/modelhandler.h"
 
@@ -93,7 +95,7 @@ private:
     bool updateBoosterConstraints(); //!< Update constraints on all the capacities.
     bool updateUserDefinedConstraints();  //!< Updates the user defined constraints.
 
-    QVector<Cost*> sortCosts(QVector<Cost*> c); //!< \todo Document this.
+    QVector<Cost*> sortCosts(QVector<Cost*> c); //!< \todo Sort the costs wrt. time.
 public:
     Model();                //!< Default constructor. Sets reservoir and objective to 0, m_up_to_date to false.
     Model(const Model &m);  //!< Copy constructor.

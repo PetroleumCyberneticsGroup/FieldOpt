@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include "exceptionhandler/objectivehandler.h"
+#include "model/stream.h"
+#include "model/cost.h"
 
 /*!
  * \brief Abstract base class for objective functions.

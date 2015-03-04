@@ -34,7 +34,7 @@ ModelHandler::~ModelHandler()
 
 void ModelHandler::handleException(ExceptionSeverity severity, ExceptionType type, QString message)
 {
-    message.prepend("An exception has occured with a user defined constraint.\n");
+    message.prepend("An exception has occured in the Model class.\n");
     if (severity == ExceptionSeverity::WARNING)
     {
         printWarning(message, type);

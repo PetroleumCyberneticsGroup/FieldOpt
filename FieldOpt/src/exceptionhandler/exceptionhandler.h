@@ -77,7 +77,7 @@ private:
         case ExceptionType::ASSUMPTION:
             return "Assumption.";
         case ExceptionType::MODEL_VALIDATION:
-            return "Model validation error."
+            return "Model validation error.";
         default:
             return "Unknown type.";
         }

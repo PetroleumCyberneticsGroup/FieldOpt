@@ -50,7 +50,8 @@ HEADERS += \
     exceptionhandler/objectivehandler.h \
     model/objectives/npvobjective.h \
     constraints/capacity.h \
-    exceptionhandler/modelhandler.h
+    exceptionhandler/modelhandler.h \
+    model/components/pressurebooster.h
 
 SOURCES += \
     variables/intvariable.cpp \
@@ -93,4 +94,5 @@ SOURCES += \
     model/objectives/objective.cpp \
     model/objectives/npvobjective.cpp \
     constraints/capacity.cpp \
-    exceptionhandler/modelhandler.cpp
+    exceptionhandler/modelhandler.cpp \
+    model/components/pressurebooster.cpp

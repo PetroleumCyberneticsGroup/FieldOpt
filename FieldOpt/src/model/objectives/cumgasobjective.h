@@ -1,7 +1,7 @@
 #ifndef CUMGASOBJECTIVE_H
 #define CUMGASOBJECTIVE_H
 
-#include <model/objectives/objective.h>
+#include "model/objectives/objective.h"
 
 /*!
  * \brief Class for Objectives that maximize gas cumulative production.

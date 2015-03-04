@@ -58,11 +58,11 @@ void Pipe::initialize(const QVector<double> &schedule)
     }
 }
 
-void Pipe::calculateBranchInletPressure()
+void Pipe::calculateBranchInletPressures()
 {
     calculateInletPressure(); // Calculate inlet pressure for the top node
     for (int i = 0; i < m_feed_pipes.size(); ++i) {
-        m_feed_pipes.at(i)->calculateBranchInletPressure(); // Calculate inlet pressure for sub-branches.
+        m_feed_pipes.at(i)->calculateBranchInletPressures(); // Calculate inlet pressure for sub-branches.
     }
 }
 

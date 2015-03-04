@@ -1,6 +1,8 @@
 #ifndef RESERVOIR_H
 #define RESERVOIR_H
 
+#include <QString>
+
 /*!
  * \brief Container class for reservoirs.
  *

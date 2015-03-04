@@ -71,7 +71,7 @@ public:
      * The inlet pressures are calculated recursively downwards in the branch.
      * First for all the feed pipes connected to this pipe directly, then for all the feed pipes connected to the feed pipes of this pipe, and so on.
      */
-    void calculateBranchInletPressure();
+    void calculateBranchInletPressures();
     void cleanFeedConnections();  //!< Remove all current feed Wells and Pipes.
     void readInputFile();         //!< Read the input file containing the pressure drop tables for this pipe segment.
 
