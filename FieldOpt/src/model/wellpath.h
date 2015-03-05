@@ -30,8 +30,8 @@ private:
     bool m_lock_heel_j;  //!< Determines whether or not the j-coordinate of the heel is locked (i.e. non-variable).
     bool m_lock_heel_k;  //!< Determines whether or not the k-coordinate of the heel is locked (i.e. non-variable).
 
-    QVector<shared_ptr<IntVariable>> m_options_var;   //!< Holds variable options.
-    QVector<QPair<QString, double>> m_options_const;  //!< Holds constant options.
+    QVector<shared_ptr<IntVariable> > m_options_var;   //!< Holds variable options.
+    QVector<QPair<QString, double> > m_options_const;  //!< Holds constant options.
 
 public:
     WellPath();  //!< Default constructor. Set lock-variables to false.
