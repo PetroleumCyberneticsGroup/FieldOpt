@@ -1,9 +1,4 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2015-02-04T11:06:39
-#
-#-------------------------------------------------
-
+include(../defaults.pri)
 QT       += core
 
 QT       -= gui
@@ -11,6 +6,7 @@ QT       -= gui
 TARGET = Console
 CONFIG   += console
 CONFIG   -= app_bundle
+CONFIG += c++11
 
 # MPI Settings
 QMAKE_CXX = mpicxx
@@ -25,9 +21,20 @@ QMAKE_CXXFLAGS += $$system(mpicxx --showme:compile) -DMPICH_IGNORE_CXX_SEEK
 QMAKE_CXXFLAGS_RELEASE += $$system(mpicxx --showme:compile) -DMPICH_IGNORE_CXX_SEEK
 
 LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_mpi -lboost_serialization
+LIBS += -L../src -lfieldopt
 
 
 TEMPLATE = app
 
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    transferobjects/modelperturbation.cpp \
+    transferobjects/simulationresults.cpp \
+    simulationlauncher.cpp \
+    masterrunner.cpp
+
+HEADERS += \
+    transferobjects/modelperturbation.h \
+    transferobjects/simulationresults.h \
+    simulationlauncher.h \
+    masterrunner.h
