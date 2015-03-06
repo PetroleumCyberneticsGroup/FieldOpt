@@ -23,10 +23,21 @@
 #ifndef MASTERRUNNER_H
 #define MASTERRUNNER_H
 
+#include <boost/mpi.hpp>
+#include <string>
+#include <iostream>
+#include <boost/serialization/string.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+#include <QVector>
+
 #include "transferobjects/modelperturbation.h"
 #include "transferobjects/simulationresults.h"
 #include "optimizers/optimizer.h"
 #include "optimizers/case.h"
+#include "model/model.h"
+#include "model/coupledmodel.h"
+
+namespace mpi = boost::mpi;
 
 /*!
  * \brief The MasterRunner class is responsible for controlling the program flow.
@@ -37,9 +48,19 @@
  */
 class MasterRunner
 {
+    QVector<ModelPerturbation> perturbations;
+    QVector<SimulationResults> results;
+    Model* model;
+    mpi::communicator* world;
+
 public:
-    MasterRunner();
+    MasterRunner(mpi::communicator *comm);
     ~MasterRunner();
+
+    void initialize();
+    void perturbModel();
+    void distributePerturbations();
+    void determineOptimal();
 };
 
 #endif // MASTERRUNNER_H

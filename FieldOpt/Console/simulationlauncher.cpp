@@ -22,9 +22,23 @@
 
 #include "simulationlauncher.h"
 
-SimulationLauncher::SimulationLauncher()
+void SimulationLauncher::perturbModel()
 {
+    std::cout << "Perturbing the model before simulating." << std::endl;
+    std::cout << perturbation->toString() << std::endl;
+}
 
+void SimulationLauncher::returnResults()
+{
+    std::cout << "Returning results." << std::endl;
+    SimulationResults res = SimulationResults(perturbation->getModel_id(), 100.0+world->rank());
+    world->send(0, 1, res);
+}
+
+
+SimulationLauncher::SimulationLauncher(mpi::communicator *comm)
+{
+    world = comm;
 }
 
 SimulationLauncher::~SimulationLauncher()
@@ -32,3 +46,27 @@ SimulationLauncher::~SimulationLauncher()
 
 }
 
+void SimulationLauncher::initialize()
+{
+    model = new CoupledModel();
+}
+
+void SimulationLauncher::receivePerturbations()
+{
+    std::cout << "Receiving perturbation... ";
+    ModelPerturbation p = ModelPerturbation();
+    world->recv(0, 0, p);
+    std::cout << "Received perturbation: " << std::endl;
+    perturbation = new ModelPerturbation();
+    perturbation->setModel_id(p.getModel_id());
+    perturbation->setPerturbation_variable(p.getPerturbation_variable());
+    perturbation->setPerturbation_value(p.getPerturbation_value());
+}
+
+void SimulationLauncher::startSimulation()
+{
+    perturbModel();
+    std::cout << "Starting simulation...." << std::endl;
+    std::cout << "Simulation done." << std::endl;
+    returnResults();
+}

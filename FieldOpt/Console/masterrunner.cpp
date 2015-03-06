@@ -22,13 +22,48 @@
 
 #include "masterrunner.h"
 
-MasterRunner::MasterRunner()
+MasterRunner::MasterRunner(mpi::communicator *comm)
 {
-
+    world = comm;
 }
 
 MasterRunner::~MasterRunner()
 {
 
+}
+
+void MasterRunner::initialize()
+{
+    model = new CoupledModel();
+}
+
+void MasterRunner::perturbModel()
+{
+    perturbations.clear();
+    for (int i = 0; i < world->size()-1; ++i) {
+        ModelPerturbation p = ModelPerturbation(i, 2, i+100.0);
+        perturbations.push_back(p);
+    }
+}
+
+void MasterRunner::distributePerturbations()
+{
+    for (int i = 0; i < perturbations.size(); ++i) {
+        world->send(i+1, 0, perturbations.at(i));
+    }
+
+    results.clear();
+    for (int i = 0; i < perturbations.size(); ++i) {
+        SimulationResults res = SimulationResults();
+        world->recv(i+1, 1, res);
+        results.push_back(res);
+        std::cout << "Got result: " << std::endl;
+        std::cout << res.toString() << std::endl;
+    }
+}
+
+void MasterRunner::determineOptimal()
+{
+    std::cout << "Determining best perturbation." << std::endl;
 }
 

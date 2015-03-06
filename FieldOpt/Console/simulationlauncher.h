@@ -23,10 +23,20 @@
 #ifndef SIMULATIONLAUNCHER_H
 #define SIMULATIONLAUNCHER_H
 
+#include <iostream>
+#include <boost/mpi.hpp>
+#include <string>
+#include <iostream>
+#include <boost/serialization/string.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+
 #include "transferobjects/modelperturbation.h"
 #include "transferobjects/simulationresults.h"
 #include "model/model.h"
+#include "model/coupledmodel.h"
 #include "simulators/simulator.h"
+
+namespace mpi = boost::mpi;
 
 /*!
  * \brief The SimulationLauncher class is responsible for launching simulations.
@@ -40,12 +50,19 @@
 class SimulationLauncher
 {
 private:
-    ModelPerturbation perturbation;
+    ModelPerturbation* perturbation;
     Model* model;
+    mpi::communicator* world;
 
+    void perturbModel();
+    void returnResults();
 public:
-    SimulationLauncher();
+    SimulationLauncher(mpi::communicator *comm);
     ~SimulationLauncher();
+
+    void initialize();
+    void receivePerturbations();
+    void startSimulation();
 };
 
 #endif // SIMULATIONLAUNCHER_H
