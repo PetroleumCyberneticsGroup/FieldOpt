@@ -65,7 +65,7 @@ public:
     float getModel_fopt() const;      //!< Get the simulated FOPT.
     void setModel_fopt(float value);  //!< Set the simulated FOPT.
 
-    std::string toString();  //!< Get a string description of the current state of this object. Primarily inteded for debugging purposes.
+    std::string toString() const;  //!< Get a string description of the current state of this object. Primarily inteded for debugging purposes.
 };
 
 #endif // SIMULATIONRESULTS_H

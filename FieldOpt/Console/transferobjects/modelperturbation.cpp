@@ -59,7 +59,7 @@ void ModelPerturbation::setModel_id(int value)
     model_id = value;
 }
 
-std::string ModelPerturbation::toString()
+std::string ModelPerturbation::toString() const
 {
     std::string mid = "Model id: " + boost::lexical_cast<std::string>(model_id);
     std::string pvid = "Perturbation variable id: " + boost::lexical_cast<std::string>(perturbation_variable_id);

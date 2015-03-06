@@ -74,7 +74,7 @@ public:
     double getPerturbation_value() const;      //!< Get the value with which to perturb the model.
     void setPerturbation_value(double value);  //!< Set the value with which to perturb the model.
 
-    std::string toString();  //!< Get a string description of the current state of this object. Primarily inteded for debugging purposes.
+    std::string toString() const;  //!< Get a string description of the current state of this object. Primarily inteded for debugging purposes.
 };
 
 #endif // MODELPERTURBATION_H
