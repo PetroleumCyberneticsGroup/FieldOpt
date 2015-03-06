@@ -125,3 +125,30 @@ bool MidPipe::midpipeConnectedUpstream()
     return false;
 }
 
+double MidPipe::flowFraction(Pipe *upstream_pipe, bool *ok)
+{
+    double frac_total = 0.0;
+
+    // looping through the outlet connections
+    for(int i = 0; i < numberOfOutletConnections(); i++)
+    {
+        double frac_direct = 0;
+        // first checking if the upstream pipe is directly connected to this one
+        if(upstream_pipe->number() == outletConnection(i)->pipe()->number())
+        {
+            frac_direct = outletConnection(i)->variable()->value();
+        }
+
+        // then checking if the upstream pipe is indirectly connected to this one (this only applies to MidPipes)
+        double frac_indirect = 0;
+
+        MidPipe *p_mid = dynamic_cast<MidPipe*>(outletConnection(i)->pipe());
+        if(p_mid != 0)
+        {
+            frac_indirect = p_mid->flowFraction(upstream_pipe, ok) * outletConnection(i)->variable()->value();
+        }
+        frac_total += frac_direct + frac_indirect;
+    }
+    return frac_total;
+}
+
