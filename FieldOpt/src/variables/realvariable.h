@@ -42,7 +42,6 @@ private:
 
 public:
     RealVariable(Component *parent);  //!< Calls parent Variable constructor. Initializes m_max and m_min.
-    RealVariable(const RealVariable &rv);  //!< Copy constructor
 
     /*!
      * \brief Set the current value for this variable.

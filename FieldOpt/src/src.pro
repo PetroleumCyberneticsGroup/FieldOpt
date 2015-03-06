@@ -54,7 +54,8 @@ HEADERS += \
     model/components/pressurebooster.h \
     simulators/simulator.h \
     optimizers/optimizer.h \
-    optimizers/case.h
+    optimizers/case.h \
+    model/coupledmodel.h
 
 SOURCES += \
     variables/intvariable.cpp \
@@ -101,4 +102,5 @@ SOURCES += \
     model/components/pressurebooster.cpp \
     simulators/simulator.cpp \
     optimizers/optimizer.cpp \
-    optimizers/case.cpp
+    optimizers/case.cpp \
+    model/coupledmodel.cpp
