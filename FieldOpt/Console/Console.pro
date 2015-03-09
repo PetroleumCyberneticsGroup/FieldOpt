@@ -20,7 +20,7 @@ QMAKE_LFLAGS += $$system(mpicxx --showme:link)
 QMAKE_CXXFLAGS += $$system(mpicxx --showme:compile) -DMPICH_IGNORE_CXX_SEEK
 QMAKE_CXXFLAGS_RELEASE += $$system(mpicxx --showme:compile) -DMPICH_IGNORE_CXX_SEEK
 
-LIBS += -L/usr/lib/x86_64-linux-gnu -lboost_mpi -lboost_serialization
+LIBS += -L../fieldopt_libs/boost_1_57_0 -lboost_mpi -lboost_serialization
 LIBS += -L../src -lfieldopt
 
 
