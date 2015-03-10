@@ -7,6 +7,9 @@ cd boost_1_57_0
 ./bootstrap.sh --help
 ./bootstrap.sh --show-libraries
 ./bootstrap.sh --with-libraries=mpi,serialization --prefix=./boost
+
+# Add "using mpi ;" to the project-config.jam file
+
 ./b2
 
 module load qt
