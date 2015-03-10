@@ -36,3 +36,6 @@ build-*
 
 # Compiled doxygen documentation
 doxygen/*
+
+libs/*
+!libs/get_boost.sh
