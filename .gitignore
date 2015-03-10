@@ -37,5 +37,9 @@ build-*
 # Compiled doxygen documentation
 doxygen/*
 
+# Local boost lib
 libs/*
 !libs/get_boost.sh
+
+# Manually compiled program
+build/*
