@@ -21,7 +21,7 @@ QMAKE_CXXFLAGS += $$system(mpicxx --showme:compile) -DMPICH_IGNORE_CXX_SEEK
 QMAKE_CXXFLAGS_RELEASE += $$system(mpicxx --showme:compile) -DMPICH_IGNORE_CXX_SEEK
 
 LIBS += -L../libs/boost_1_57_0/stage/lib -lboost_mpi -lboost_serialization
-INCLUDEPATH += ../libs/boost_1_57_0
+INCLUDEPATH += ../libs/boost_1_57_0/boost
 LIBS += -L../src -lfieldopt
 
 
