@@ -1,18 +1,7 @@
-The boost library installed on Kongull is old (1.33). It does not include the required modules (which 1.55 does). Therefore it needs to be locally compiled.
-
-Get and unpack the binaries:
-wget -c 'http://sourceforge.net/projects/boost/files/boost/1.57.0/boost_1_57_0.tar.bz2/download'
-tar xf download
-cd boost_1_57_0
-./bootstrap.sh --help
-./bootstrap.sh --show-libraries
-./bootstrap.sh --with-libraries=mpi,serialization --prefix=./boost
-
-# Add "using mpi ;" to the project-config.jam file
-
-./b2
-
+module load intelcomp/13.0.1
+module load openmpi/1.6.5
+module load python/2.7.6-intel
+module load boost
 module load qt
-module load gcc/4.9.1
 qmake FieldOpt.pro -r -spec linux-g++ CONFIG+=debug "QMAKE_CXXFLAGS+=-std=c++11"
 qmake && make
