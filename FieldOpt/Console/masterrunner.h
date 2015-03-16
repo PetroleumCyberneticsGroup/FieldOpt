@@ -61,6 +61,10 @@ public:
     void perturbModel();
     void distributePerturbations();
     void determineOptimal();
+
+private:
+    void sendPerturbations();
+    void recvResults();
 };
 
 #endif // MASTERRUNNER_H
