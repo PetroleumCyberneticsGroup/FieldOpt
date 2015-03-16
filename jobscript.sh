@@ -1,10 +1,10 @@
 #!/bin/bash
 #PBS -N fieldopt_testrun
-#PBS -lnodes=1:ppn=12:default
-#PBS -lwalltime=00:1:00
-#PBS -lpmem=200MB
+#PBS -l nodes=1:ppn=12:default
+#PBS -l walltime=00:1:00
+#PBS -l pmem=200MB
 #PBS -A acc-ipt
-#PBS -q default
+#PBS -q express
 
 cd ${PBS_O_WORKDIR}/build/Console
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:../src
