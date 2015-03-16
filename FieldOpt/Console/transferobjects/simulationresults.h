@@ -23,7 +23,6 @@
 #ifndef SIMULATIONRESULTS_H
 #define SIMULATIONRESULTS_H
 
-#include <boost/serialization/access.hpp>
 #include <boost/lexical_cast.hpp>
 
 /*!
@@ -31,24 +30,12 @@
  *
  * The information should be sufficient to determine whether the perturbation was better/worse than other
  * perturbations.
- *
- * boost::serialization is used to serialize the object when transfering it with MPI.
- * This is implemented by making this class a friend of the boost::serialization::access class
- * and defining in the serialize() function which fields should be included.
  */
 class SimulationResults
 {
 private:
     int model_id;      //!< A unique id for the model perturbation.
     float model_fopt;  //!< The simulated FOPT (Field Oil Production Total) for the perturbed model.
-
-    friend class boost::serialization::access;
-    template<class Archive>
-    void serialize(Archive &ar, const unsigned int version)
-    {
-        ar & model_id;
-        ar & model_fopt;
-    }
 
 public:
     SimulationResults(){}  //!< Default constructor. Used when defining the object before receiving into it using MPI.

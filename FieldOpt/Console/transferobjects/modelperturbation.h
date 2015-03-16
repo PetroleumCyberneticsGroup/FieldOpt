@@ -23,7 +23,6 @@
 #ifndef MODELPERTURBATION_H
 #define MODELPERTURBATION_H
 
-#include <boost/serialization/access.hpp>
 #include <boost/lexical_cast.hpp>
 #include <string>
 #include <iostream>
@@ -34,10 +33,6 @@
  * The class is used to transfer information from the root-process to the child processes.
  * Each child-process reads and creates the Model object by itself, and uses the ModelPerturbation
  * object it receives to alter the model.
- *
- * boost::serialization is used to serialize the object when transfering it with MPI.
- * This is implemented by making this class a friend of the boost::serialization::access class
- * and defining in the serialize() function which fields should be included.
  */
 class ModelPerturbation
 {
@@ -45,15 +40,6 @@ private:
     int model_id;                  //!< A unique id for the model perturbation.
     int perturbation_variable_id;  //!< An id for the variable to be perturbed.
     double perturbation_value;     //!< The amount with which to perturb the model.
-
-    friend class boost::serialization::access;
-    template<class Archive>
-    void serialize(Archive &ar, const unsigned int version)
-    {
-        ar & perturbation_variable_id;
-        ar & perturbation_value;
-        ar & model_id;
-    }
 
 public:
     ModelPerturbation(){}  //!< Default constructor. Used when defining the object before receiving into it using MPI.
