@@ -56,6 +56,7 @@ private:
 
     void perturbModel();
     void returnResults();
+
 public:
     SimulationLauncher(mpi::communicator *comm);
     ~SimulationLauncher();

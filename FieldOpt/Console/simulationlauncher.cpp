@@ -32,9 +32,11 @@ void SimulationLauncher::returnResults()
 {
     std::cout << "Returning results." << std::endl;
     SimulationResults res = SimulationResults(perturbation->getModel_id(), 100.0+world->rank());
-    world->send(0, 1, res);
+    int id = res.getModel_id();
+    float fopt = res.getModel_fopt();
+    MPI_Send(&id, 1, MPI_INT, 0, 201, MPI_COMM_WORLD);
+    MPI_Send(&fopt, 1, MPI_FLOAT, 0, 202, MPI_COMM_WORLD);
 }
-
 
 SimulationLauncher::SimulationLauncher(mpi::communicator *comm)
 {
@@ -54,8 +56,14 @@ void SimulationLauncher::initialize()
 void SimulationLauncher::receivePerturbations()
 {
     std::cout << "Receiving perturbation... ";
-    ModelPerturbation p = ModelPerturbation();
-    world->recv(0, 0, p);
+    int id;
+    int var_id;
+    float var_val;
+    MPI_Recv(&id, 1, MPI_INT, 0, 101, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    MPI_Recv(&var_id, 1, MPI_INT, 0, 102, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    MPI_Recv(&var_val, 1, MPI_FLOAT, 0, 103, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    ModelPerturbation p = ModelPerturbation(id, var_id, var_val);
+
     std::cout << "Received perturbation: " << std::endl;
     perturbation = new ModelPerturbation();
     perturbation->setModel_id(p.getModel_id());

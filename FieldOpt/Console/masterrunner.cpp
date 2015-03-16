@@ -48,22 +48,41 @@ void MasterRunner::perturbModel()
 
 void MasterRunner::distributePerturbations()
 {
-    for (int i = 0; i < perturbations.size(); ++i) {
-        world->send(i+1, 0, perturbations.at(i));
-    }
+    sendPerturbations();
 
     results.clear();
-    for (int i = 0; i < perturbations.size(); ++i) {
-        SimulationResults res = SimulationResults();
-        world->recv(i+1, 1, res);
-        results.push_back(res);
-        std::cout << "Got result: " << std::endl;
-        std::cout << res.toString() << std::endl;
-    }
+    recvResults();
 }
 
 void MasterRunner::determineOptimal()
 {
     std::cout << "Determining best perturbation." << std::endl;
+}
+
+void MasterRunner::sendPerturbations()
+{
+
+    for (int i = 0; i < perturbations.size(); ++i) {
+        int id = perturbations.at(i).getModel_id();
+        int var_id = perturbations.at(i).getPerturbation_variable();
+        float var_val = perturbations.at(i).getPerturbation_value();
+        MPI_Send(&id, 1, MPI_INT, i+1, 101, MPI_COMM_WORLD);
+        MPI_Send(&var_id, 1, MPI_INT, i+1, 102, MPI_COMM_WORLD);
+        MPI_Send(&var_val, 1, MPI_FLOAT, i+1, 103, MPI_COMM_WORLD);
+    }
+}
+
+void MasterRunner::recvResults()
+{
+    for (int i = 0; i < perturbations.size(); ++i) {
+        int id;
+        float fopt;
+        MPI_Recv(&id, 1, MPI_INT, i+1, 201, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(&fopt, 1, MPI_FLOAT, i+1, 202, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        SimulationResults res = SimulationResults(id ,fopt);
+        results.push_back(res);
+        std::cout << "Got result: " << std::endl;
+        std::cout << res.toString() << std::endl;
+    }
 }
 
