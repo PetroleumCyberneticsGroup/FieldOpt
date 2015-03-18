@@ -57,8 +57,11 @@ HEADERS += \
     optimizers/case.h \
     model/coupledmodel.h \
     simulators/mrstbatchsimulator.h \
-    variables/derivative.h \
-    printers/caseprinter.h
+    optimizers/derivative.h \
+    printers/caseprinter.h \
+    optimizers/adjoint.h \
+    optimizers/adjointcollection.h \
+    model/adjointscoupledmodel.h
 
 SOURCES += \
     variables/intvariable.cpp \
@@ -108,5 +111,8 @@ SOURCES += \
     optimizers/case.cpp \
     model/coupledmodel.cpp \
     simulators/mrstbatchsimulator.cpp \
-    variables/derivative.cpp \
-    printers/caseprinter.cpp
+    optimizers/derivative.cpp \
+    printers/caseprinter.cpp \
+    optimizers/adjoint.cpp \
+    optimizers/adjointcollection.cpp \
+    model/adjointscoupledmodel.cpp

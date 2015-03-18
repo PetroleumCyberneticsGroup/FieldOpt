@@ -32,7 +32,7 @@
 #include "variables/intvariable.h"
 #include "constraints/constraint.h"
 #include "model/objectives/objective.h"
-#include "variables/derivative.h"
+#include "optimizers/derivative.h"
 #include "printers/caseprinter.h"
 
 /*!
@@ -97,7 +97,7 @@ public:
     double constraintValue(int i) const {return m_constraint_values.at(i);}
     double objectiveValue() const {return m_objective_value;}
     Derivative* constraintDerivative(int i) {return m_constraint_derivatives.at(i);}
-    Derivative* objectiveDerivative() {return p_objective_derivative;}
+    Derivative* objectiveDerivative() const {return p_objective_derivative;}  //!< This has been made const. Could cause errors.
     double infeasibility() {return m_infeasibility;}
 
     Case& operator=(const Case &rhs);

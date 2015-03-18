@@ -47,15 +47,6 @@ void Case::printToCout()
 }
 
 
-void Stream::printToCout() const
-{
-    StreamPrinter* sp = new StreamPrinter;
-    connect(this, SIGNAL(printStream(const Stream&)), sp, SLOT(printStream(const Stream&)));
-    emit printStream(*this);
-    disconnect(this, SIGNAL(printStream(const Stream&)), sp, SLOT(printStream(const Stream&)));
-}
-
-
 Case::Case(Model *m, bool cpy_output)
     : m_objective_value(0),
       p_objective_derivative(0),

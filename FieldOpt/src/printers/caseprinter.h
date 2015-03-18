@@ -27,6 +27,8 @@
 #include <QObject>
 #include "optimizers/case.h"
 
+class Case;
+
 /*!
  * \brief Printer for Case Objects.
  *

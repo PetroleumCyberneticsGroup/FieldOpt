@@ -42,18 +42,18 @@ void CasePrinter::printCase(const Case &c) const
         l5.append(QString("VAR_I_%1 = %2\n").arg(i+1).arg(c.integerVariableValue(i)));
     }
 
-    QString l5 = "";
+    QString l6 = "";
     for (int i = 0; i < c.numberOfConstraints(); ++i) {
-        l5.append(QString("CON_%1 = %2\n").arg(i+1).arg(c.constraintValue(i)));
+        l6.append(QString("CON_%1 = %2\n").arg(i+1).arg(c.constraintValue(i)));
     }
 
-     QString l6 = "";
-    if (c.p_objective_derivative != 0) {
+     QString l7 = "";
+    if (c.objectiveDerivative() != 0) {
         for (int i = 0; i < c.objectiveDerivative()->numberOfPartials(); ++i) {
-            l6.append(QString("OBJECTIVE DERIVATIVES:\n%1 = %2\n").arg(1).arg(c.objectiveDerivative()->value(i)));
+            l7.append(QString("OBJECTIVE DERIVATIVES:\n%1 = %2\n").arg(1).arg(c.objectiveDerivative()->value(i)));
         }
     }
 
-    QString message = QString("%1\n%2\n%3\n%4\n%5\n%6").arg(l1).arg(l2).arg(l3).arg(l4).arg(l5).arg(l6);
+    QString message = QString("%1\n%2\n%3\n%4\n%5\n%6\n%7").arg(l1).arg(l2).arg(l3).arg(l4).arg(l5).arg(l6).arg(l7);
     printMessage(message);
 }

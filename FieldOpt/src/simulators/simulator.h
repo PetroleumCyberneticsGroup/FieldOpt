@@ -42,7 +42,7 @@ public:
     virtual ~Simulator(){}          //!< Default constructor.
 
     virtual Simulator* clone() const = 0;  //!< Get a copy of this simulator.
-    virtual description() const = 0;       //!< Get a description of this simulator.
+    virtual QString description() const = 0;       //!< Get a description of this simulator.
 
     virtual bool generateInputFiles(Model *m) = 0;  //!< Generate the input files the specific simulator needs.
     virtual bool launchSimulator() = 0;             //!< Launch the simulator. \todo make virtual
