@@ -20,9 +20,25 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
-#include "simulator.h"
+#include "derivative.h"
 
-Simulator::Simulator(const Simulator &s)
+Derivative::Derivative() :
+    m_constraint_id(-1)
+{}
+
+Derivative::Derivative(int con_id) :
+    m_constraint_id(con_id)
+{}
+
+double Derivative::valueById(int var_id)
 {
-    m_folder = s.m_folder;
+    for(int i = 0; i < m_partial_derivatives.size(); ++i)
+    {
+        if(m_partial_derivatives.at(i).first == var_id)
+            return m_partial_derivatives.at(i).second;
+    }
+
+    return 0;
 }
+
+

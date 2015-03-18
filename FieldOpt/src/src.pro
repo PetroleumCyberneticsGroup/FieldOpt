@@ -55,7 +55,10 @@ HEADERS += \
     simulators/simulator.h \
     optimizers/optimizer.h \
     optimizers/case.h \
-    model/coupledmodel.h
+    model/coupledmodel.h \
+    simulators/mrstbatchsimulator.h \
+    variables/derivative.h \
+    printers/caseprinter.h
 
 SOURCES += \
     variables/intvariable.cpp \
@@ -103,4 +106,7 @@ SOURCES += \
     simulators/simulator.cpp \
     optimizers/optimizer.cpp \
     optimizers/case.cpp \
-    model/coupledmodel.cpp
+    model/coupledmodel.cpp \
+    simulators/mrstbatchsimulator.cpp \
+    variables/derivative.cpp \
+    printers/caseprinter.cpp

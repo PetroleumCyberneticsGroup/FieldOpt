@@ -20,9 +20,20 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
-#include "simulator.h"
+#ifndef MRSTBATCHSIMULATOR_H
+#define MRSTBATCHSIMULATOR_H
 
-Simulator::Simulator(const Simulator &s)
+#include "simulator.h"
+#include <QStringList>
+#include "model/components/well.h"
+#include "model/wellcontrol.h"
+
+
+class MrstBatchSimulator
 {
-    m_folder = s.m_folder;
-}
+public:
+    MrstBatchSimulator();
+    ~MrstBatchSimulator();
+};
+
+#endif // MRSTBATCHSIMULATOR_H

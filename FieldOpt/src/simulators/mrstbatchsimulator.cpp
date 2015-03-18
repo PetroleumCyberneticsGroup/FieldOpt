@@ -20,9 +20,15 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
-#include "simulator.h"
+#include "mrstbatchsimulator.h"
 
-Simulator::Simulator(const Simulator &s)
+MrstBatchSimulator::MrstBatchSimulator()
 {
-    m_folder = s.m_folder;
+
 }
+
+MrstBatchSimulator::~MrstBatchSimulator()
+{
+
+}
+

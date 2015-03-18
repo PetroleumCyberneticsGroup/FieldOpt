@@ -24,6 +24,7 @@
 #define SIMULATOR_H
 
 #include "model/model.h"
+#include <QString>
 
 /*!
  * \brief Abstract parent class for all simulators.
@@ -32,13 +33,23 @@
  */
 class Simulator
 {
+private:
+    QString m_folder;
 public:
-    Simulator(Model* model);
-    ~Simulator();
+    Simulator(Model* model) {}      //!< \todo Should maybe not exist
+    Simulator(){}                   //!< Default constructor. Does nothing.
+    Simulator(const Simulator &s);  //!< Copy constructor.
+    virtual ~Simulator(){}          //!< Default constructor.
 
-    bool generateInputFiles(){return true;}  //!< Generate the input files the simulator specific needs. \todo make virtual
-    bool launchSimulator(){return true;}     //!< Launch the simulator. \todo make virtual
-    bool readOutput(){return true;}          //!< Read the output files. \todo make virtual
+    virtual Simulator* clone() const = 0;  //!< Get a copy of this simulator.
+    virtual description() const = 0;       //!< Get a description of this simulator.
+
+    virtual bool generateInputFiles(Model *m) = 0;  //!< Generate the input files the specific simulator needs.
+    virtual bool launchSimulator() = 0;             //!< Launch the simulator. \todo make virtual
+    virtual bool readOutput(Model *m) = 0;          //!< Read the output files. \todo make virtual
+
+    const QString& folder() {return m_folder;}                  //!< Get the working directory.
+    void setFolder(const QString &folder) {m_folder = folder;}  //!< Set the working directory.
 };
 
 #endif // SIMULATOR_H

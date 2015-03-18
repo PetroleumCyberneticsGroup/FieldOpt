@@ -20,9 +20,27 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
-#include "simulator.h"
+#ifndef CASEPRINTER_H
+#define CASEPRINTER_H
 
-Simulator::Simulator(const Simulator &s)
+#include "printer.h"
+#include <QObject>
+#include "optimizers/case.h"
+
+/*!
+ * \brief Printer for Case Objects.
+ *
+ * Prints a representation of a Case to the console.
+ */
+class CasePrinter : public QObject, Printer
 {
-    m_folder = s.m_folder;
-}
+    Q_OBJECT
+public slots:
+    /*!
+     * \brief Print a string representation of a Case object.
+     * \param c The Case object to be printed.
+     */
+    void printCase(const Case& c) const;
+};
+
+#endif // CASEPRINTER_H
