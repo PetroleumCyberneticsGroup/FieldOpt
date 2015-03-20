@@ -20,30 +20,22 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
-#include "reader.h"
+#include "inputratevariable.h"
 
-Reader::Reader(QObject *parent) : QObject(parent)
+InputRateVariable::InputRateVariable()
+    : p_stream(0)
+{}
+
+
+bool InputRateVariable::updateStream()
 {
+    if(p_stream == 0 || p_var_oil == 0 || p_var_gas == 0 || p_var_water == 0)
+        return false;
 
-}
+    p_stream->setOilRate(p_var_oil->value());
+    p_stream->setGasRate(p_var_gas->value());
+    p_stream->setWaterRate(p_var_water->value());
 
-Reader::~Reader()
-{
-
-}
-
-void Reader::emitException(ExceptionSeverity severity, ExceptionType type, QString message)
-{
-    ReaderHandler* rh = new ReaderHandler;
-    connect(this, SIGNAL(error(ExceptionSeverity, ExceptionType, QString)),
-            rh, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
-    emit error(severity, type, message);
-    disconnect(this, SIGNAL(error(ExceptionSeverity, ExceptionType, QString)),
-               rh, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
-}
-
-void Reader::printProgress(QString message)
-{
-    cout << message << endl;
+    return true;
 }
 

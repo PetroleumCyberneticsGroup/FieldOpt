@@ -61,7 +61,11 @@ HEADERS += \
     printers/caseprinter.h \
     optimizers/adjoint.h \
     optimizers/adjointcollection.h \
-    model/adjointscoupledmodel.h
+    model/adjointscoupledmodel.h \
+    fileio/readeres/modelreader.h \
+    model/inputratevariable.h \
+    constraints/materialbalanceconstraint.h \
+    model/decoupledmodel.h
 
 SOURCES += \
     variables/intvariable.cpp \
@@ -115,4 +119,8 @@ SOURCES += \
     printers/caseprinter.cpp \
     optimizers/adjoint.cpp \
     optimizers/adjointcollection.cpp \
-    model/adjointscoupledmodel.cpp
+    model/adjointscoupledmodel.cpp \
+    fileio/readeres/modelreader.cpp \
+    model/inputratevariable.cpp \
+    constraints/materialbalanceconstraint.cpp \
+    model/decoupledmodel.cpp

@@ -25,6 +25,10 @@
 
 #include <QObject>
 #include "exceptionhandler/readerhandler.h"
+#include <iostream>
+
+using std::cout;
+using std::endl;
 
 /*!
  * \brief Reader is the parent class of all file readers. It primarily deals with handling exceptions and printing warnings/errors to the console.
@@ -56,6 +60,12 @@ protected:
      * \param message The message to be printed.
      */
     void emitException(ExceptionSeverity severity, ExceptionType type, QString message);
+
+    /*!
+     * \brief Print a message denoting progressin parsing the file.
+     * \param message The message to be printed.
+     */
+    void printProgress(QString message);
 };
 
 #endif // READER_H

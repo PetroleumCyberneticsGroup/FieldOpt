@@ -44,6 +44,13 @@
 #include "wellconnectionvariable.h"
 #include "wellpath.h"
 
+/*!
+ * \brief A model where the mass balance is always feasible.
+ *
+ * In a coupled model, the output streams from an upstream part of the project is transfered as input
+ * streams to the downstream parts of the project.
+ * This ensures that the mass balance is always honored.
+ */
 class CoupledModel : public Model
 {
 private:
