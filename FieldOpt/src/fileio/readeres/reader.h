@@ -26,6 +26,8 @@
 #include <QObject>
 #include "exceptionhandler/readerhandler.h"
 #include <iostream>
+#include <QStringList>
+#include <QString>
 
 using std::cout;
 using std::endl;
@@ -54,12 +56,25 @@ signals:
 
 protected:
     /*!
-     * \brief Convenience class used by the component subclasses to emit exceptions.
+     * \brief Convenience function used by the subclasses to emit exceptions.
      * \param severity The severity of the event.
      * \param type The type of exception.
      * \param message The message to be printed.
      */
     void emitException(ExceptionSeverity severity, ExceptionType type, QString message);
+
+    /*!
+     * \brief Convenience function used by subclasses to emit errors regarding inability to parse driver file.
+     * \param message The message to be printed.
+     * \param list The last line read.
+     */
+    void emitDriverParseError(QString message, QStringList list);
+
+    /*!
+     * \brief Convenience classes used by subclasses to emit errors regarding not-understood keywords.
+     * \param list The keyword that was not understood.
+     */
+    void emitKeywordNotUnderstoodError(QStringList list);
 
     /*!
      * \brief Print a message denoting progressin parsing the file.

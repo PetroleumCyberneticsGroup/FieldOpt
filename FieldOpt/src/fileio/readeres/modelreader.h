@@ -66,6 +66,8 @@
 #include "variables/realvariable.h"
 #include "variables/binaryvariable.h"
 
+#include "utilities/stringutilities.h"
+
 #include "model/cost.h"
 
 #include "pressuredropcalculators/beggsbrillcalculator.h"
@@ -104,6 +106,8 @@ using std::tr1::shared_ptr;
  * \todo Expand documentation.
  *
  * \todo This class includes the Runner class in ResOpt. Might need adjustments.
+ *
+ * \todo This class does way too much logic work.
  */
 class ModelReader : Reader
 {

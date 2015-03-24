@@ -29,7 +29,7 @@ ModelReader::ModelReader(const QString &driver)
 
 Model* ModelReader::readDriverFile(Runner *r)
 {
-    if(m_driver_file_name.isEmpty())
+    if(m_driver_file_name.StringUtilities::isEmpty())
         emitException(ExceptionSeverity::ERROR, ExceptionType::FILE_NOT_FOUND, QString("Could not open driver file."));
 
     m_driver_file.setFileName(m_driver_file_name);
@@ -44,7 +44,7 @@ Model* ModelReader::readDriverFile(Runner *r)
     Model *p_model = 0;
     QStringList list;
     bool ok = true;
-    list = processLine(m_driver_file.readLine());
+    list = StringUtilities::processLine(m_driver_file.readLine());
 
     // the first keyword in the driver file must specify the type of model (COUPLED, DECOUPLED)
     bool found_model_def = false;
@@ -71,13 +71,13 @@ Model* ModelReader::readDriverFile(Runner *r)
         }
         else
         {
-            if(!isEmpty(list))
+            if(!StringUtilities::isEmpty(list))
             {
                 QString message = QString("The first keyword must specify the model type.\n Possible types are COUPLED, DECOUPLEDM ADJOINTS_COUPLED.\n Last line: %1").arg(list.join(" ").toLatin1().constData());
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
             }
         }
-        list = processLine(m_driver_file.readLine());
+        list = StringUtilities::processLine(m_driver_file.readLine());
     }  // Read model type
 
     while(!m_driver_file.atEnd() && !list.at(0).startsWith("EOF"))
@@ -112,7 +112,7 @@ Model* ModelReader::readDriverFile(Runner *r)
         }
         else
         {
-            if(!isEmpty(list))
+            if(!StringUtilities::isEmpty(list))
             {
                 QString message = QString("Keyword: %1\nNot understood in current context.").arg(list.join(" ").toLatin1().constData());
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
@@ -120,7 +120,7 @@ Model* ModelReader::readDriverFile(Runner *r)
         }
 
         if(!ok) break;
-        list = processLine(m_driver_file.readLine());
+        list = StringUtilities::processLine(m_driver_file.readLine());
     }
     if(ok)
         printProgress(QString("Done reading input. All OK."));
@@ -138,14 +138,14 @@ QVector<double> ModelReader::readMasterSchedule()
     QStringList list;
     QVector<double> l_schedule;
     bool ok = true;
-    list = processLine(m_driver_file.readLine());
+    list = StringUtilities::processLine(m_driver_file.readLine());
 
     while(!m_driver_file.atEnd() && !list.at(0).startsWith("END"))
     {
-        if(!isEmpty(list))
+        if(!StringUtilities::isEmpty(list))
             l_schedule.push_back(list.at(0).toDouble(&ok));
         if(!ok) break;
-        list = processLine(m_driver_file.readLine());
+        list = StringUtilities::processLine(m_driver_file.readLine());
     }
 
 
@@ -178,7 +178,7 @@ Reservoir* ModelReader::readReservoir()
     QString l_file = "";
     double l_endtime = -1.0;
     bool ok = true;
-    list = processLine(m_driver_file.readLine());
+    list = StringUtilities::processLine(m_driver_file.readLine());
 
     while(!m_driver_file.atEnd() && !list.at(0).startsWith("END"))
     {
@@ -220,13 +220,13 @@ Reservoir* ModelReader::readReservoir()
 
         else
         {
-            if(!isEmpty(list))
+            if(!StringUtilities::isEmpty(list))
             {
                 QString message = QString("Error detected in input file.\nKeyword: %1 \nNot understood in current context.").arg(list.join(" ").toLatin1().constData());
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
             }
         }
-        list = processLine(m_driver_file.readLine());
+        list = StringUtilities::processLine(m_driver_file.readLine());
     }
 
     if(l_name.compare("") == 0)
@@ -266,7 +266,7 @@ Well* ModelReader::readWell()
     bool ok_bhp = false;
     Cost *well_cost = 0;
     shared_ptr<IntVariable> var_install;
-    list = processLine(m_driver_file.readLine());
+    list = StringUtilities::processLine(m_driver_file.readLine());
 
     while(!m_driver_file.atEnd() && !list.at(0).startsWith("END"))
     {
@@ -399,7 +399,7 @@ Well* ModelReader::readWell()
         }
         else
         {
-            if(!isEmpty(list))
+            if(!StringUtilities::isEmpty(list))
             {
                 QString message = QString("Error detected in input file.\nKeyword: %1\nNot understood in current context.").arg(list.join(" ").toLatin1().constData());
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
@@ -407,7 +407,7 @@ Well* ModelReader::readWell()
         }
 
 
-        list = processLine(m_driver_file.readLine());
+        list = StringUtilities::processLine(m_driver_file.readLine());
 
     }
 
@@ -455,7 +455,7 @@ bool ModelReader::readWellSchedule(Well *w)
     printProgress("       Reading well schedule...");
 
     QStringList list;
-    list = processLine(m_driver_file.readLine());
+    list = StringUtilities::processLine(m_driver_file.readLine());
 
     while(!m_driver_file.atEnd() && !list.at(0).startsWith("END"))
     {
@@ -504,13 +504,13 @@ bool ModelReader::readWellSchedule(Well *w)
 
         else        // wrong number of arguments on line
         {
-            if(!isEmpty(list))
+            if(!StringUtilities::isEmpty(list))
             {
                 QString message = QString("Error detected in input file.\nThe SCHEDULE entry does not have the right format.\nLast line: %1").arg(list.join(" ").toLatin1().constData());
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
             }
         }
-        list = processLine(m_driver_file.readLine());
+        list = StringUtilities::processLine(m_driver_file.readLine());
     }
     return true;
 }
@@ -521,7 +521,7 @@ bool ModelReader::readGasLiftSchedule(ProductionWell *w)
     printProgress("       Reading gas lift schedule.");
 
     QStringList list;
-    list = processLine(m_driver_file.readLine());
+    list = StringUtilities::processLine(m_driver_file.readLine());
 
     while(!m_driver_file.atEnd() && !list.at(0).startsWith("END"))
     {
@@ -562,13 +562,13 @@ bool ModelReader::readGasLiftSchedule(ProductionWell *w)
 
         else        // wrong number of arguments on line
         {
-            if(!isEmpty(list))
+            if(!StringUtilities::isEmpty(list))
             {
                 QString message = QString("Error detected in input file.\nThe GASLIFT entry does not have the right format.\nLast line: %1").arg(list.join(" ").toLatin1().constData());
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
             }
         }
-        list = processLine(m_driver_file.readLine());
+        list = StringUtilities::processLine(m_driver_file.readLine());
     }
     return true;
 }
@@ -579,7 +579,7 @@ bool ModelReader::readWellConnections(Well *w)
     printProgress("       Reading connections table.");
 
     QStringList list;
-    list = processLine(m_driver_file.readLine());
+    list = StringUtilities::processLine(m_driver_file.readLine());
 
     while(!m_driver_file.atEnd() && !list.at(0).startsWith("END"))
     {
@@ -642,13 +642,13 @@ bool ModelReader::readWellConnections(Well *w)
 
         else        // wrong number of arguments on line
         {
-            if(!isEmpty(list))
+            if(!StringUtilities::isEmpty(list))
             {
                 QString message = QString("Error detected in input file.\nThe CONNECTIONS entry does not have the right format.\nLast line: %1").arg(list.join(" ").toLatin1().constData());
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
             }
         }
-        list = processLine(m_driver_file.readLine());
+        list = StringUtilities::processLine(m_driver_file.readLine());
     }
     return true;
 }
@@ -659,7 +659,7 @@ bool ModelReader::readVariableWellConnections(Well *w)
     printProgress("       Reading variable connections table.");
 
     QStringList list;
-    list = processLine(m_driver_file.readLine());
+    list = StringUtilities::processLine(m_driver_file.readLine());
 
     while(!m_driver_file.atEnd() && !list.at(0).startsWith("END"))
     {
@@ -707,13 +707,13 @@ bool ModelReader::readVariableWellConnections(Well *w)
         }
         else        // wrong number of arguments on line
         {
-            if(!isEmpty(list))
+            if(!StringUtilities::isEmpty(list))
             {
                 QString message = QString("Error detected in input file.\nThe VARCONNECTIONS entry does not have the right format.\nLast line: %1").arg(list.join(" ").toLatin1().constData());
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
             }
         }
-        list = processLine(m_driver_file.readLine());
+        list = StringUtilities::processLine(m_driver_file.readLine());
     }
     return true;
 }
@@ -726,7 +726,7 @@ bool ModelReader::readWellPath(Well *w)
     bool ok = true;
     WellPath *wp = new WellPath();
     QStringList list;
-    list = processLine(m_driver_file.readLine());
+    list = StringUtilities::processLine(m_driver_file.readLine());
 
     while(!m_driver_file.atEnd() && !list.at(0).startsWith("END") && !list.at(1).startsWith("WELLPATH"))
     {
@@ -736,14 +736,14 @@ bool ModelReader::readWellPath(Well *w)
 
         else
         {
-            if(!isEmpty(list))
+            if(!StringUtilities::isEmpty(list))
             {
 
                 QString message = QString("Error detected in input file.\nThe WELLPATH entry does not have the right format.\nLast line: %1").arg(list.join(" ").toLatin1().constData());
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
             }
         }
-        list = processLine(m_driver_file.readLine());
+        list = StringUtilities::processLine(m_driver_file.readLine());
     }
 
 
@@ -770,7 +770,7 @@ bool ModelReader::readWellPathToe(WellPath *wp, Well *w)
 {
     printProgress("       Reading toe.");
     QStringList list;
-    list = processLine(m_driver_file.readLine());
+    list = StringUtilities::processLine(m_driver_file.readLine());
 
     while(!m_driver_file.atEnd() && !list.at(0).startsWith("END"))
     {
@@ -822,13 +822,13 @@ bool ModelReader::readWellPathToe(WellPath *wp, Well *w)
 
         else        // wrong number of arguments on line
         {
-            if(!isEmpty(list))
+            if(!StringUtilities::isEmpty(list))
             {
                 QString message = QString("Error detected in input file.\nThe WELLPATH TOE entry does not have the right format.\nLast line: %1").arg(list.join(" ").toLatin1().constData());
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
             }
         }
-        list = processLine(m_driver_file.readLine());
+        list = StringUtilities::processLine(m_driver_file.readLine());
     }
     return true;
 }
@@ -838,7 +838,7 @@ bool ModelReader::readWellPathHeel(WellPath *wp, Well *w)
 {
     printProgress("       Reading heel.");
     QStringList list;
-    list = processLine(m_driver_file.readLine());
+    list = StringUtilities::processLine(m_driver_file.readLine());
 
     while(!m_driver_file.atEnd() && !list.at(0).startsWith("END"))
     {
@@ -878,13 +878,13 @@ bool ModelReader::readWellPathHeel(WellPath *wp, Well *w)
         }
         else        // wrong number of arguments on line
         {
-            if(!isEmpty(list))
+            if(!StringUtilities::isEmpty(list))
             {
                 QString message = QString("Error detected in input file.\nThe WELLPATH HEEL entry does not have the right format.\nLast line: %1").arg(list.join(" ").toLatin1().constData());
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
             }
         }
-        list = processLine(m_driver_file.readLine());
+        list = StringUtilities::processLine(m_driver_file.readLine());
     }
     return true;
 }
@@ -895,7 +895,7 @@ bool ModelReader::readWellPathOptions(WellPath *wp, Well *w)
     printProgress("       Reading wellpath options.");
 
     QStringList list;
-    list = processLine(m_driver_file.readLine());
+    list = StringUtilities::processLine(m_driver_file.readLine());
 
     while(!m_driver_file.atEnd() && !list.at(0).startsWith("END"))
     {
@@ -947,13 +947,13 @@ bool ModelReader::readWellPathOptions(WellPath *wp, Well *w)
         }
         else        // wrong number of arguments on line
         {
-            if(!isEmpty(list))
+            if(!StringUtilities::isEmpty(list))
             {
                 QString message = QString("Error detected in input file.\nThe WELLPATH OPTION entry does not have the right format.\nLast line: %1").arg(list.join(" ").toLatin1().constData());
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
             }
         }
-        list = processLine(m_driver_file.readLine());
+        list = StringUtilities::processLine(m_driver_file.readLine());
     }
     return true;
 }
@@ -964,11 +964,11 @@ bool ModelReader::readPipeConnections(ProductionWell *w)
     printProgress("       Reading outlet pipes table.");
 
     QStringList list;
-    list = processLine(m_driver_file.readLine());
+    list = StringUtilities::processLine(m_driver_file.readLine());
 
     while(!m_driver_file.atEnd() && !list.at(0).startsWith("END"))
     {
-        if(list.size() == 2 && !isEmpty(list))        // correct number of elements (pipe#, fraction)
+        if(list.size() == 2 && !StringUtilities::isEmpty(list))        // correct number of elements (pipe#, fraction)
         {
             // checking if the line is in the right format
             bool ok1 = true;
@@ -994,7 +994,7 @@ bool ModelReader::readPipeConnections(ProductionWell *w)
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
             }
         }
-        else if(list.size() == 3 && !isEmpty(list)) // pipe#, fraction, BIN
+        else if(list.size() == 3 && !StringUtilities::isEmpty(list)) // pipe#, fraction, BIN
         {
             // checking if the third argument is BIN
             if(list.at(2).startsWith("BIN"))
@@ -1035,13 +1035,13 @@ bool ModelReader::readPipeConnections(ProductionWell *w)
 
         else        // wrong number of arguments on line
         {
-            if(!isEmpty(list))
+            if(!StringUtilities::isEmpty(list))
             {
                 QString message = QString("Error detected in input file.\nThe OUTLETPIPES does not have the right format.\nLast line: %1").arg(list.join(" ").toLatin1().constData());
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
             }
         }
-        list = processLine(m_driver_file.readLine());
+        list = StringUtilities::processLine(m_driver_file.readLine());
     }
 
     // if the well has more than one connection, they should be considered variables
@@ -1068,11 +1068,11 @@ bool ModelReader::readPipeConnections(MidPipe *p)
 
     cout << "        outlet pipes table..." << endl;
     QStringList list;
-    list = processLine(m_driver_file.readLine());
+    list = StringUtilities::processLine(m_driver_file.readLine());
 
     while(!m_driver_file.atEnd() && !list.at(0).startsWith("END"))
     {
-        if(list.size() == 2 && !isEmpty(list))        // correct number of elements (pipe#, fraction)
+        if(list.size() == 2 && !StringUtilities::isEmpty(list))        // correct number of elements (pipe#, fraction)
         {
             // checking if the line is in the right format
             bool ok1 = true;
@@ -1099,7 +1099,7 @@ bool ModelReader::readPipeConnections(MidPipe *p)
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
             }
         }
-        else if(list.size() == 3 && !isEmpty(list)) // (pipe#, fraction, BIN)
+        else if(list.size() == 3 && !StringUtilities::isEmpty(list)) // (pipe#, fraction, BIN)
         {
             // checking that the thrid item is BIN
             if(list.at(2).startsWith("BIN"))
@@ -1137,13 +1137,13 @@ bool ModelReader::readPipeConnections(MidPipe *p)
 
         else        // wrong number of arguments on line
         {
-            if(!isEmpty(list))
+            if(!StringUtilities::isEmpty(list))
             {
                 QString message = QString("Error detected in input file.\nThe OUTLETPIPES does not have the right format.\nLast line: %1").arg(list.join(" ").toLatin1().constData());
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
             }
         }
-        list = processLine(m_driver_file.readLine());
+        list = StringUtilities::processLine(m_driver_file.readLine());
     }
 
     // if the pipe has more than one connection, they should be considered variables
@@ -1175,7 +1175,7 @@ Objective* ModelReader::readObjective()
     double l_p_wat = 0.0;
     bool ok = true;
     QStringList list;
-    list = processLine(m_driver_file.readLine());
+    list = StringUtilities::processLine(m_driver_file.readLine());
 
     while(!m_driver_file.atEnd() && !list.at(0).startsWith("END"))
     {
@@ -1199,14 +1199,14 @@ Objective* ModelReader::readObjective()
 
         else
         {
-            if(!isEmpty(list))
+            if(!StringUtilities::isEmpty(list))
             {
                 QString message = QString("Error detected in input file.\nKeyword: %1\n Not understood in current context.").arg(list.join(" ").toLatin1().constData());
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
             }
         }
         if(!ok) break;
-        list = processLine(m_driver_file.readLine());
+        list = StringUtilities::processLine(m_driver_file.readLine());
     }
     // checking remaining input
 
@@ -1241,7 +1241,7 @@ Pipe* ModelReader::readPipe()
     bool l_mustroute = false;
     bool ok = true;
     QStringList list;
-    list = processLine(m_driver_file.readLine());
+    list = StringUtilities::processLine(m_driver_file.readLine());
 
     while(!m_driver_file.atEnd() && !(list.at(0).startsWith("END") && list.at(1).startsWith("PIPE")))
     {
@@ -1301,14 +1301,14 @@ Pipe* ModelReader::readPipe()
         }
         else
         {
-            if(!isEmpty(list))
+            if(!StringUtilities::isEmpty(list))
             {
                 QString message = QString("Error detected in input file.\nKeyword: %1\nNot understood in current context.").arg(list.join(" ").toLatin1().constData());
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
             }
         }
         if(!ok) break;
-        list = processLine(m_driver_file.readLine());
+        list = StringUtilities::processLine(m_driver_file.readLine());
     }
 
     // checking remaining input
@@ -1350,7 +1350,7 @@ Capacity* ModelReader::readCapacity()
     QVector<int> pipe_nums;
     bool consr_added = false;   // set true when a constraint is added to the separator
     QStringList list;
-    list = processLine(m_driver_file.readLine());
+    list = StringUtilities::processLine(m_driver_file.readLine());
 
     while(!m_driver_file.atEnd() && !list.at(0).startsWith("END"))
     {
@@ -1443,13 +1443,13 @@ Capacity* ModelReader::readCapacity()
         }
         else
         {
-            if(!isEmpty(list))
+            if(!StringUtilities::isEmpty(list))
             {
                 QString message = QString("Error detected in input file.\nKeyword: %1\nNot understood in current context.").arg(list.join(" ").toLatin1().constData());
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
             }
         }
-        list = processLine(m_driver_file.readLine());
+        list = StringUtilities::processLine(m_driver_file.readLine());
     }
     // checking remaining input
     if(!consr_added)    // no constraint
@@ -1484,7 +1484,7 @@ Pipe* ModelReader::readSeparator()
     double l_cost_capacity = -1.0;
     double l_cost_frac_exp = 1.0;
     double l_cost_cap_exp = 1.0;
-    list = processLine(m_driver_file.readLine());
+    list = StringUtilities::processLine(m_driver_file.readLine());
 
     while(!m_driver_file.atEnd() && !(list.at(0).startsWith("END") && list.at(1).startsWith("SEPARATOR")))
     {
@@ -1636,14 +1636,14 @@ Pipe* ModelReader::readSeparator()
         } // CAPACITY kwrd
         else
         {
-            if(!isEmpty(list))
+            if(!StringUtilities::isEmpty(list))
             {
                 QString message = QString("Error detected in input file.\nKeyword: %1\nNot recognized in current context.\n").arg(list.join(" ").toLatin1().constData());
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
             }
         }
         if(!ok) break;
-        list = processLine(m_driver_file.readLine());
+        list = StringUtilities::processLine(m_driver_file.readLine());
     }
 
     if(!ok)                                             // error with number reading
@@ -1699,7 +1699,7 @@ Pipe* ModelReader::readPressureBooster()
     double l_cost_cap_exp = 1.0;
     double l_cost_frac_exp = 1.0;
 
-    list = processLine(m_driver_file.readLine());
+    list = StringUtilities::processLine(m_driver_file.readLine());
     while(!m_driver_file.atEnd() && !(list.at(0).startsWith("END") && list.at(1).startsWith("BOOSTER")))
     {
         if(list.at(0).startsWith("NUMBER")) l_number = list.at(1).toInt(&ok);                   // getting the id number of the booster
@@ -1827,14 +1827,14 @@ Pipe* ModelReader::readPressureBooster()
         } // CAPACITY kwrd
         else
         {
-            if(!isEmpty(list))
+            if(!StringUtilities::isEmpty(list))
             {
                 QString message = QString("Error detected in input file.\nKeyword: %1\nNot understood in current context.").arg(list.join(" ").toLatin1().constData());
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
             }
         }
         if(!ok) break;
-        list = processLine(m_driver_file.readLine());
+        list = StringUtilities::processLine(m_driver_file.readLine());
     }
     if(!ok)                                             // error with number reading
     {
@@ -1872,4 +1872,140 @@ Pipe* ModelReader::readPressureBooster()
     p_boost->pressureVariable()->setName("Pressure variable for booster #" + QString::number(l_number));
     p_boost->capacityVariable()->setName("Capacity variable for booster #" + QString::number(l_number));
     return p_boost;
+}
+
+
+void ModelReader::readOptimizer(Runner *r)
+{
+    printProgress("Reading optimizer definition.");dl;
+    Optimizer *o = 0;
+
+    QStringList list;
+    double l_perturb = 0.0001;
+    int l_max_iter = 1;
+    int l_max_iter_cont = 100;
+    int l_parallel_runs = 1;
+    double l_term = 0.0;
+    int l_term_start = 5;
+    bool l_startingpoint_update = false;
+    QList<int> l_eropt_steps;
+    bool ok = true;
+    list = StringUtilities::processLine(m_driver_file.readLine());
+
+    while(!m_driver_file.atEnd() && !list.at(0).startsWith("END"))
+    {
+        if(list.at(0).startsWith("TYPE"))                           // getting the type
+        {
+            if(list.at(1).startsWith("BONMIN")) o = new BonminOptimizer(r);
+            else if(list.at(1).startsWith("RUNONCE")) o = new RunonceOptimizer(r);
+            else if(list.at(1).startsWith("NOMAD")) o = new NomadOptimizer(r);
+            else if(list.at(1).startsWith("IPOPT")) o = new IpoptOptimizer(r);
+            else if(list.at(1).startsWith("LSH")) o = new LshOptimizer(r);
+            else if(list.at(1).startsWith("NOIP")) o = new NomadIpoptOptimizer(r);
+            else if(list.at(1).startsWith("EROPT")) o = new EroptOptimizer(r);
+        }
+        else if(list.at(0).startsWith("ITERATIONS")) l_max_iter = list.at(1).toInt(&ok);    // getting the max number if iterations
+        else if(list.at(0).startsWith("CONT_ITER")) l_max_iter_cont = list.at(1).toInt(&ok); // getting the max number if iterations for the contienous solver
+        else if(list.at(0).startsWith("PERTURB")) l_perturb = list.at(1).toDouble(&ok);     // getting the perturbation size
+        else if(list.at(0).startsWith("STARTINGPOINT_UPDATE")) l_startingpoint_update = true;     // using the starting-point from the best sub-problem
+        else if(list.at(0).startsWith("TERMINATION"))                                       // getting the termination options
+        {
+            l_term = list.at(1).toDouble(&ok);
+            if(list.size() == 3)
+            {
+                l_term_start = list.at(2).toInt(&ok);
+            }
+        }
+        else if(list.at(0).startsWith("STEPS"))                 // list of steps for EROPT only
+        {
+            bool ok_steps = true;
+
+            for(int i = 1; i < list.size(); ++i)
+            {
+                int stp = list.at(i).toInt(&ok_steps);
+                if(!ok_steps)
+                {
+                    QString message = QString("Error detected in input file.\nCould not read STEPS in OPTIMIZER definition.\nLast line: %1").arg(list.join(" ").toLatin1().constData());
+                    emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
+                }
+                l_eropt_steps.push_back(stp);
+            }
+        }
+
+        else if(list.at(0).startsWith("PARALLEL"))                                           // getting the number of parallel runs
+        {
+            if(list.at(1).startsWith("IDEAL"))              // find the ideal number of parallel runs
+            {
+                l_parallel_runs = QThread::idealThreadCount();
+                emitException(ExceptionSeverity::WARNING, ExceptionType::ASSUMPTION, "Using IDEAL number of parallel runs.");
+            }
+            else
+            {
+                l_parallel_runs = list.at(1).toInt(&ok);   // user specified number
+                emitException(ExceptionSeverity::WARNING, ExceptionType::ASSUMPTION, "Using user-specified number of parallel runs.");
+            }
+            // checking that the number of parallel runs is at least 1
+            if(l_parallel_runs < 1) l_parallel_runs = 1;
+        }
+        else
+        {
+            if(!StringUtilities::isEmpty(list))
+            {
+                QString message = QString("Error detected in input file.\nKeyword: %1 \nNot understood in current context.").arg(list.join(" ").toLatin1().constData());
+                emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
+            }
+        }
+        list = StringUtilities::processLine(m_driver_file.readLine());
+    }
+    if(!ok || o == 0)
+    {
+        QString message = QString("Error detected in input file.\nThe optimizer was not defined properly.");
+        emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
+    }
+
+    // everything ok, setting to optimizer
+    o->setMaxIterations(l_max_iter);
+    o->setMaxIterContineous(l_max_iter_cont);
+    o->setParallelRuns(l_parallel_runs);
+    o->setPerturbationSize(l_perturb);
+    o->setStartingpointUpdate(l_startingpoint_update);
+    o->setTermination(l_term);
+    o->setTerminationStart(l_term_start);
+
+    // EROPT specific input
+    if(l_eropt_steps.size() > 0)
+    {
+        EroptOptimizer *p_eropt = dynamic_cast<EroptOptimizer*>(o);
+        if(p_eropt != 0)
+        {
+            p_eropt->setSteps(l_eropt_steps);
+        }
+        else
+        {
+            QString message = QString("Error detected in input file.\nKeyword: %1 \nIs only applicable for the EROPT optimizer.").arg(list.join(" ").toLatin1().constData());
+            emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
+        }
+    }
+    // setting optimizer to runner
+    r->setOptimizer(o);
+}
+
+
+void ModelReader::readUserDefinedConstraints(Model *m)
+{
+    printProgress("Reading user defined constraints.");
+
+    QStringList list;
+    list = StringUtilities::processLine(m_driver_file.readLine());
+
+    while(!m_driver_file.atEnd() && !list.at(0).startsWith("END"))
+    {
+        if(!StringUtilities::isEmpty(list))
+        {
+            UserConstraint *uc = new UserConstraint(m);
+            uc->setExpression(list.join(" "));
+            m->addUserDefinedConstraint(uc);
+        }
+        list = StringUtilities::processLine(m_driver_file.readLine());
+    }
 }

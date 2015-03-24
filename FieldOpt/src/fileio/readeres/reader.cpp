@@ -42,8 +42,30 @@ void Reader::emitException(ExceptionSeverity severity, ExceptionType type, QStri
                rh, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
 }
 
+void Reader::emitDriverParseError(QString message, QStringList list)
+{
+    QString m = "Error detected in driver file.\n" + message + "\nLast line:" + list.join(" ").toLatin1().constData();
+    ReaderHandler* rh = new ReaderHandler;
+    connect(this, SIGNAL(error(ExceptionSeverity, ExceptionType, QString)),
+            rh, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
+    emit error(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, m);
+    disconnect(this, SIGNAL(error(ExceptionSeverity, ExceptionType, QString)),
+               rh, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
+}
+
+void Reader::emitKeywordNotUnderstoodError(QStringList list)
+{
+    QString m = list.join(" ").toLatin1().constData();
+    ReaderHandler* rh = new ReaderHandler;
+    connect(this, SIGNAL(error(ExceptionSeverity, ExceptionType, QString)),
+            rh, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
+    emit error(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, m);
+    disconnect(this, SIGNAL(error(ExceptionSeverity, ExceptionType, QString)),
+               rh, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
+}
+
 void Reader::printProgress(QString message)
 {
-    cout << message << endl;
+    cout << message.toLatin1().constData() << endl;
 }
 
