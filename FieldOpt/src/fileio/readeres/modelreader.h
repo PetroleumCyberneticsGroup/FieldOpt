@@ -108,6 +108,12 @@ using std::tr1::shared_ptr;
  * \todo This class includes the Runner class in ResOpt. Might need adjustments.
  *
  * \todo This class does way too much logic work.
+ *
+ * \todo This class used to take Runner as a parameter to the readOptimizer() function. The fields this used to set in the Runner is moved to the Model. This needs to be accounted for.
+ *
+ * \todo Optimizer used to be created here. This needs to be done elsewhere.
+ *
+ * \todo Simulator used to be created here. This needs to be done elsewhere.
  */
 class ModelReader : Reader
 {
@@ -170,12 +176,12 @@ private:
     Capacity* readCapacity();                     //!< Reads a CAPACITY definition from the driver file
     Pipe* readSeparator();                        //!< Reads a SEPARATOR definition from the driver file
     Pipe* readPressureBooster();                  //!< Reads a BOOSTER definition from the driver file
-    void readOptimizer(Runner *r);                //!< Reads the optimizer section of the driver file, and sets the optimizer for the runner.
+    void readOptimizer(Model *m);                //!< Reads the optimizer section of the driver file, and sets the optimizer for the runner.
     void readUserDefinedConstraints(Model *m);    //!< Reads the CONSTRAINTS section of the driver file
 
 public:
     ModelReader(const QString &driver);                           //!< Default constructor. Sets the driver file path.
-    Model* readDriverFile(Runner *r);                             //!< Read the driver file, and sets up all the data structures
+    Model* readDriverFile();                             //!< Read the driver file, and sets up all the data structures
     void setDriverFilePath(const QString &path) {m_path = path;}  //!< Set the driver file path.
     const QString& driverFilePath() {return m_path;}              //!< Get the driver file path.
 };

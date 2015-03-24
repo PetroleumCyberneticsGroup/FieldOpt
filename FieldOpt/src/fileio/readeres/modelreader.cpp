@@ -27,9 +27,9 @@ ModelReader::ModelReader(const QString &driver)
 {}
 
 
-Model* ModelReader::readDriverFile(Runner *r)
+Model* ModelReader::readDriverFile()
 {
-    if(m_driver_file_name.StringUtilities::isEmpty())
+    if(m_driver_file_name.isEmpty())
         emitException(ExceptionSeverity::ERROR, ExceptionType::FILE_NOT_FOUND, QString("Could not open driver file."));
 
     m_driver_file.setFileName(m_driver_file_name);
@@ -89,7 +89,7 @@ Model* ModelReader::readDriverFile(Runner *r)
             else if(list.at(1).startsWith("OBJECTIVE")) p_model->setObjective(readObjective());                 // objective
             else if(list.at(1).startsWith("PIPE")) p_model->addPipe(readPipe());                                // pipe
             else if(list.at(1).startsWith("CAPACITY")) p_model->addCapacity(readCapacity());                    // capacity
-            else if(list.at(1).startsWith("OPTIMIZER")) readOptimizer(r);                                       // optimizer
+            else if(list.at(1).startsWith("OPTIMIZER")) readOptimizer(p_model);                                 // optimizer
             else if(list.at(1).startsWith("MASTERSCHEDULE")) p_model->setMasterSchedule(readMasterSchedule());  // master schedule
             else if(list.at(1).startsWith("SEPARATOR")) p_model->addPipe(readSeparator());                      // separator
             else if(list.at(1).startsWith("BOOSTER")) p_model->addPipe(readPressureBooster());                  // booster
@@ -97,13 +97,16 @@ Model* ModelReader::readDriverFile(Runner *r)
         }
         else if(list.at(0).startsWith("DEBUG"))
         {
-            r->setDebugFileName(m_path + "/" + list.at(1));                                    // setting the debug file
+            p_model->getRuntimeSettings().setDebugFilename(m_path + "/" + list.at(1));
         }
         else if(list.at(0).startsWith("SIMULATOR"))     // reading the type of reservoir simulator to use
         {
-            if(list.at(1).startsWith("GPRS")) r->setReservoirSimulator(new GprsSimulator());
-            else if(list.at(1).startsWith("VLP")) r->setReservoirSimulator(new VlpSimulator());
-            else if(list.at(1).startsWith("MRST_BATCH")) r->setReservoirSimulator(new MrstBatchSimulator());
+            if(list.at(1).startsWith("GPRS"))
+                p_model->getRuntimeSettings().setSimulator(GPRS);
+            else if(list.at(1).startsWith("VLP"))
+                p_model->getRuntimeSettings().setSimulator(VLP);
+            else if(list.at(1).startsWith("MRST_BATCH"))
+                p_model->getRuntimeSettings().setSimulator(MRST);
             else
             {
                 QString message = QString("Type of SIMULATOR not understood.\nPossible types are: GPRS, MRST_BATCH, VLP\nLast line: %1").arg(list.join(" ").toLatin1().constData());
@@ -161,7 +164,7 @@ QVector<double> ModelReader::readMasterSchedule()
         if(l_schedule.at(i-1) >= l_schedule.at(i))
         {
             QString message = QString("MASTERSCHEDULE is not in ascending order.\n %1 >= %2").arg(l_schedule.at(i-1)).arg(l_schedule.at(i));
-            emitException(ExceptionSeverity::ERROR, ExceptionType::INCONSISTENT);
+            emitException(ExceptionSeverity::ERROR, ExceptionType::INCONSISTENT, message);
         }
     }
     return l_schedule;
@@ -262,7 +265,7 @@ Well* ModelReader::readWell()
     QString l_name = "";
     QString l_group = "";
     double l_bhp_limit = 0.0;
-    WellControl::contol_type l_bhp_inj = WellControl::QWAT;
+    WellControl::control_type l_bhp_inj = WellControl::QWAT;
     bool ok_bhp = false;
     Cost *well_cost = 0;
     shared_ptr<IntVariable> var_install;
@@ -1875,10 +1878,9 @@ Pipe* ModelReader::readPressureBooster()
 }
 
 
-void ModelReader::readOptimizer(Runner *r)
+void ModelReader::readOptimizer(Model *m)
 {
-    printProgress("Reading optimizer definition.");dl;
-    Optimizer *o = 0;
+    printProgress("Reading optimizer definition.");
 
     QStringList list;
     double l_perturb = 0.0001;
@@ -1896,13 +1898,12 @@ void ModelReader::readOptimizer(Runner *r)
     {
         if(list.at(0).startsWith("TYPE"))                           // getting the type
         {
-            if(list.at(1).startsWith("BONMIN")) o = new BonminOptimizer(r);
-            else if(list.at(1).startsWith("RUNONCE")) o = new RunonceOptimizer(r);
-            else if(list.at(1).startsWith("NOMAD")) o = new NomadOptimizer(r);
-            else if(list.at(1).startsWith("IPOPT")) o = new IpoptOptimizer(r);
-            else if(list.at(1).startsWith("LSH")) o = new LshOptimizer(r);
-            else if(list.at(1).startsWith("NOIP")) o = new NomadIpoptOptimizer(r);
-            else if(list.at(1).startsWith("EROPT")) o = new EroptOptimizer(r);
+            if(list.at(1).startsWith("RUNONCE"))
+                m->getRuntimeSettings().setOptimizer(RUNONCE);
+            else if(list.at(1).startsWith("LSH"))
+                m->getRuntimeSettings().setOptimizer(LSH);
+            else if(list.at(1).startsWith("EROPT"))
+                m->getRuntimeSettings().setOptimizer(EROPT);
         }
         else if(list.at(0).startsWith("ITERATIONS")) l_max_iter = list.at(1).toInt(&ok);    // getting the max number if iterations
         else if(list.at(0).startsWith("CONT_ITER")) l_max_iter_cont = list.at(1).toInt(&ok); // getting the max number if iterations for the contienous solver
@@ -1912,9 +1913,7 @@ void ModelReader::readOptimizer(Runner *r)
         {
             l_term = list.at(1).toDouble(&ok);
             if(list.size() == 3)
-            {
                 l_term_start = list.at(2).toInt(&ok);
-            }
         }
         else if(list.at(0).startsWith("STEPS"))                 // list of steps for EROPT only
         {
@@ -1936,7 +1935,7 @@ void ModelReader::readOptimizer(Runner *r)
         {
             if(list.at(1).startsWith("IDEAL"))              // find the ideal number of parallel runs
             {
-                l_parallel_runs = QThread::idealThreadCount();
+                l_parallel_runs = 2;
                 emitException(ExceptionSeverity::WARNING, ExceptionType::ASSUMPTION, "Using IDEAL number of parallel runs.");
             }
             else
@@ -1957,37 +1956,26 @@ void ModelReader::readOptimizer(Runner *r)
         }
         list = StringUtilities::processLine(m_driver_file.readLine());
     }
-    if(!ok || o == 0)
+    if(!ok)
     {
-        QString message = QString("Error detected in input file.\nThe optimizer was not defined properly.");
+        QString message = QString("Error detected in input file.\nThe optimizer settings were not defined properly.");
         emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
     }
 
     // everything ok, setting to optimizer
-    o->setMaxIterations(l_max_iter);
-    o->setMaxIterContineous(l_max_iter_cont);
-    o->setParallelRuns(l_parallel_runs);
-    o->setPerturbationSize(l_perturb);
-    o->setStartingpointUpdate(l_startingpoint_update);
-    o->setTermination(l_term);
-    o->setTerminationStart(l_term_start);
+    m->getRuntimeSettings().getOptimizerSettings().setMaxIterations(l_max_iter);
+    m->getRuntimeSettings().getOptimizerSettings().setMaxIterations(l_max_iter_cont);
+    m->getRuntimeSettings().setParallelRuns(l_parallel_runs);
+    m->getRuntimeSettings().getOptimizerSettings().setPerturbationSize(l_perturb);
+    m->getRuntimeSettings().getOptimizerSettings().setStartingpointUpdate(l_startingpoint_update);
+    m->getRuntimeSettings().getOptimizerSettings().setTermination(l_term);
+    m->getRuntimeSettings().getOptimizerSettings().setTerminationStart(l_term_start);
 
     // EROPT specific input
     if(l_eropt_steps.size() > 0)
     {
-        EroptOptimizer *p_eropt = dynamic_cast<EroptOptimizer*>(o);
-        if(p_eropt != 0)
-        {
-            p_eropt->setSteps(l_eropt_steps);
-        }
-        else
-        {
-            QString message = QString("Error detected in input file.\nKeyword: %1 \nIs only applicable for the EROPT optimizer.").arg(list.join(" ").toLatin1().constData());
-            emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
-        }
+        m->getRuntimeSettings().getOptimizerSettings().setSteps(l_eropt_steps);
     }
-    // setting optimizer to runner
-    r->setOptimizer(o);
 }
 
 
