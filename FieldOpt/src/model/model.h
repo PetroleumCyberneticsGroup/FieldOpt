@@ -23,6 +23,7 @@
 #include "constraints/userconstraint.h"
 #include "cost.h"
 #include "exceptionhandler/modelhandler.h"
+#include "settings/runtimesettings.h"
 
 using std::tr1::shared_ptr;
 
@@ -38,6 +39,7 @@ class Constraint;
 class Component;
 class UserConstraint;
 class Cost;
+class RuntimeSettings;
 
 
 /*!
@@ -62,15 +64,16 @@ signals:
     void error(ExceptionSeverity severity, ExceptionType type, const QString message);
 
 private:
-    Reservoir *p_reservoir; //!< Reservoir defined for the model. \todo This is marked as todo in the ResOpt code.
-    QVector<Well*> m_wells; //!< Wells in the model. \todo This is marked as todo in the ResOpt code.
-    QVector<Pipe*> m_pipes;  //!< Pipes in the model.
-    QVector<Capacity*> m_capacities;  //!< Capacities for the pipes in the model.
-    Objective *p_obj;  //!< The objective function for optimization.
-    QVector<double> m_master_schedule;  //!< The master schedule for this model.
+    Reservoir *p_reservoir;                       //!< Reservoir defined for the model. \todo This is marked as todo in the ResOpt code.
+    QVector<Well*> m_wells;                       //!< Wells in the model. \todo This is marked as todo in the ResOpt code.
+    QVector<Pipe*> m_pipes;                       //!< Pipes in the model.
+    QVector<Capacity*> m_capacities;              //!< Capacities for the pipes in the model.
+    Objective *p_obj;                             //!< The objective function for optimization.
+    QVector<double> m_master_schedule;            //!< The master schedule for this model.
     QVector<UserConstraint*> m_user_constraints;  //!< User defined constraints for this model.
-    bool m_up_to_date;      //!< True if the model has been evaluated
-    QString m_driver_path;  //!< The path to the driver file.
+    bool m_up_to_date;                            //!< True if the model has been evaluated
+    QString m_driver_path;                        //!< The path to the driver file.
+    RuntimeSettings runtimeSettings;              //!< Settings used by a runner.
 
     /*!
      * \brief Update the capacity constraints for all the Capacities in the model.
@@ -204,6 +207,9 @@ public:
     bool isUpToDate() const {return m_up_to_date;}                                   //!< Get whether or not the model is up to date.
 
     Model& operator=(const Model &rhs);  //!< Assignment operator. Sets two models equal to each other (they will have pointers to the same wells, streams, etc.)
+
+    RuntimeSettings getRuntimeSettings() const;
+    void setRuntimeSettings(const RuntimeSettings &value);
 
 protected:
     /*!

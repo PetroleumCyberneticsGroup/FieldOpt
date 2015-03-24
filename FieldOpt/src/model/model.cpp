@@ -1,5 +1,15 @@
 #include "model.h"
 
+
+RuntimeSettings Model::getRuntimeSettings() const
+{
+    return runtimeSettings;
+}
+
+void Model::setRuntimeSettings(const RuntimeSettings &value)
+{
+    runtimeSettings = value;
+}
 bool Model::updateCapacityConstraints()
 {
     bool ok = true;
@@ -100,7 +110,9 @@ Model::Model() :
     p_reservoir(0),
     p_obj(0),
     m_up_to_date(false)
-{}
+{
+    runtimeSettings = RuntimeSettings();
+}
 
 Model::Model(const Model &m)
 {
