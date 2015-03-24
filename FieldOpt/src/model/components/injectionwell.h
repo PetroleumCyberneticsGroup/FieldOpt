@@ -28,7 +28,7 @@
 /*!
  * \brief Class for representation of injection wells.
  */
-class InjectionWell : Well
+class InjectionWell : public Well
 {
 public:
     InjectionWell() {}                                  //!< Default constructor.
