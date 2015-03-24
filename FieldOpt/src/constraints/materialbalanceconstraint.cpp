@@ -60,9 +60,9 @@ bool MaterialBalanceConstraint::updateConstraints()
     if(p_irv == 0)
         return false;
 
-    p_con_oil->setValue(m_stream.oilRate(true) - p_irv->oilVariable()->value());
-    p_con_gas->setValue(m_stream.gasRate(true) - p_irv->gasVariable()->value());
-    p_con_water->setValue(m_stream.waterRate(true) - p_irv->waterVariable()->value());
+    p_con_oil->setValue(m_stream.oilRate() - p_irv->oilVariable()->value());
+    p_con_gas->setValue(m_stream.gasRate() - p_irv->gasVariable()->value());
+    p_con_water->setValue(m_stream.waterRate() - p_irv->waterVariable()->value());
 
     return true;
 
