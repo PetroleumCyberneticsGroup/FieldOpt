@@ -1,0 +1,556 @@
+!-------------------------------------------------------------------
+! Driver file for ResOpt
+!-------------------------------------------------------------------
+! ALL PRICES SCALED 1e-6
+ADJOINTS_COUPLED MODEL ! this _must_ be the first keyword, either COUPLED or DECOUPLED
+
+SIMULATOR MRST_BATCH ! GPRS VLP MRST_BATCH
+
+DEBUG debug.dat
+
+!---------------- Optimization Algorithm ---------------------------
+START OPTIMIZER
+ TYPE EROPT !BONMIN, RUNONCE, NOMAD
+ ITERATIONS 10000
+ CONT_ITER 50
+ PERTURBATION 0.0001   ! O.O5
+ PARALLELRUNS 1 !integer, or "IDEAL" for the ideal number of parallel runs on this machine
+ TERMINATION 0.7 5
+END OPTIMIZER
+
+
+!------------------- Objective definition -------------------------
+START OBJECTIVE
+ TYPE NPV  !NPV, CUMOIL, CUMGAS
+
+ ! these keywords are only needed for NPV:
+ DCF 0.10
+ OILPRICE   1e-4
+ GASPRICE     5e-6
+ WATERPRICE -1e-5
+END OBJECTIVE
+
+!------------------- Master Schedule -------------------------------
+START MASTERSCHEDULE
+ 547.5
+ 1095
+ 1642.5
+ 2555
+ 3650
+END MASTERSCHEDULE
+
+
+
+!----------------- Reservoir Definition ----------------------------
+START RESERVOIR
+ NAME RES1
+ FILE SIMPLE10x5x10.txt
+ MRST ~/Documents/MATLAB/mrst-2014b/
+ MATLAB /usr/local/MATLAB/R2014a/bin/matlab
+ TIME 365.0
+ PHASES 0 1 1             ! gas oil water
+ DENS 0.06054 49.1 64.79  ! gas oil water
+END RESERVOIR
+
+!-------------------- Well: i1 -----------------------------------
+START WELL
+ NAME i1
+ TYPE I
+ GROUP grp1
+ BHPLIMIT 1000000       ! Only used when well is on rate control
+ BHPINJ WATER           ! Only used for injectors, the injected phase when well is on BHP control (WATER, GAS)
+! INSTALLTIME 0 2 0
+! COST 1e7
+
+
+! START CONNECTIONS
+!  7  7  1  5  100
+! END CONNECTIONS
+
+ START VARCONNECTIONS
+! i   i_max  i_min       j   j_max j_min      k1 k2    pi
+  5     10      5      8     10     6         1  5     100
+ END VARCONNECTIONS
+
+ START SCHEDULE
+! t_end  value    max     min     type
+  547.5   150     300     100       WAT
+  1095    150     300     100       WAT
+  1642.5  150     300     100       WAT
+  2555    150     300     100       WAT
+  3650    150     300     100       WAT
+ END SCHEDULE
+END WELL
+
+
+
+
+
+!-------------------- Well: i2 -----------------------------------
+START WELL
+ NAME i2
+ TYPE I
+ GROUP grp1
+ BHPLIMIT 1000000       ! Only used when well is on rate control
+ BHPINJ WATER           ! Only used for injectors, the injected phase when well is on BHP control (WATER, GAS)
+! INSTALLTIME 0 2 0
+! COST 1e7
+
+
+ START CONNECTIONS
+  20  1  1  5  100
+ END CONNECTIONS
+
+ START SCHEDULE
+! t_end  value    max     min     type
+  547.5   130     130     130       WAT
+  1095    130     130     130       WAT
+  1642.5  130     130     130       WAT
+  2555    130     130     130       WAT
+  3650    130     130     130       WAT
+ END SCHEDULE
+END WELL
+
+
+
+
+!-------------------- Well: p1 ----------------------------------
+START WELL
+ NAME p1
+ TYPE P
+ GROUP grp1
+ BHPLIMIT 1  ! Only used when well is on rate control
+
+ START OUTLETPIPES
+! pipe#  fraction
+  1	1.0
+ END OUTLETPIPES
+
+
+ START CONNECTIONS
+  1  1  1  5  100	! Original 1 1 1 5 100
+ END CONNECTIONS
+
+ START SCHEDULE
+! t_end	value	max	min	type
+ 547.5	300	350	130	BHP
+ 1095	300	350	130	BHP
+ 1642.5 	300	350	130	BHP
+ 2555	300	350	130	BHP
+ 3650	300	350	130	BHP
+ END SCHEDULE
+
+END WELL
+
+
+
+
+
+
+
+
+!----------------------- Pipe 1 -----------------------------------
+START PIPE
+ NUMBER 1
+ FILE pipeW.dat
+
+!  OUTLETPRESSURE 20 BARA
+ START OUTLETPIPES
+! pipe#  fraction
+  2      1.0
+ END OUTLETPIPES
+
+END PIPE
+
+
+
+!----------------------- Booster 1  -----------------------------------
+START BOOSTER
+ NUMBER 2
+
+ INSTALLTIME 2 5 0	! 0 0 0, start max min
+COST 0.32 3.91E-12 EXP 4 1.8    ! COST 0.26 3.51E-12 EXP 4 1.8
+
+ OUTLETPIPE 3
+ PRESSUREBOOST  56 100 10
+ CAPACITY 106.2 300 50
+
+END BOOSTER
+
+
+!----------------------- Pipe 2 -----------------------------------
+START PIPE
+ NUMBER 3
+ FILE pipe1.dat
+
+!  OUTLETPRESSURE 20 BARA
+ START OUTLETPIPES
+! pipe#  fraction
+  16	1.0
+ END OUTLETPIPES
+
+END PIPE
+
+
+
+
+!-------------------- Well: p2 ----------------------------------
+START WELL
+ NAME p2
+ TYPE P
+ GROUP grp1
+ BHPLIMIT 1  ! Only used when well is on rate control
+
+ START OUTLETPIPES
+! pipe#  fraction
+  4      1.0
+ END OUTLETPIPES
+
+
+ START CONNECTIONS
+  1  10  1  5  100	! original 10 5 1 5 100
+ END CONNECTIONS
+
+ START SCHEDULE
+! t_end	value	max	min	type
+ 547.5	300	350	130	BHP
+ 1095	300	350	130	BHP
+ 1642.5 	300	350	130	BHP
+ 2555	300	350	130	BHP
+ 3650	300	350	130	BHP
+ END SCHEDULE
+
+END WELL
+
+
+
+
+
+
+!----------------------- Pipe 3 -----------------------------------
+START PIPE
+ NUMBER 4
+ FILE pipeW.dat
+
+!  OUTLETPRESSURE 20 BARA
+ START OUTLETPIPES
+! pipe#  fraction
+  5      1.0
+ END OUTLETPIPES
+
+END PIPE
+
+
+
+!----------------------- Booster 2  -----------------------------------
+START BOOSTER
+ NUMBER 5
+
+ INSTALLTIME 2 5 0 	! start max min
+COST 0.32 3.91E-12 EXP 4 1.8    ! COST 0.26 3.51E-12 EXP 4 1.8
+
+ OUTLETPIPE 6
+ PRESSUREBOOST  56 100 10
+ CAPACITY 106.2 300 50
+
+END BOOSTER
+
+
+
+!----------------------- Pipe 4 -----------------------------------
+START PIPE
+ NUMBER 6
+ FILE pipe2.dat
+
+!  OUTLETPRESSURE 20 BARA
+ START OUTLETPIPES
+! pipe#  fraction
+  16      1.0
+ END OUTLETPIPES
+
+END PIPE
+
+
+
+!-------------------- Well: p3 ----------------------------------
+START WELL
+ NAME p3
+ TYPE P
+ GROUP grp1
+ BHPLIMIT 1  ! Only used when well is on rate control
+
+ START OUTLETPIPES
+! pipe#  fraction
+  7      1.0
+ END OUTLETPIPES
+
+
+ START CONNECTIONS
+  20  10  1  5  100	! New well in the middel of the reservoir
+ END CONNECTIONS
+
+ START SCHEDULE
+! t_end	value	max	min	type
+ 547.5	300	350	130	BHP
+ 1095	300	350	130	BHP
+ 1642.5 	300	350	130	BHP
+ 2555	300	350	130	BHP
+ 3650	300	350	130	BHP
+ END SCHEDULE
+
+END WELL
+
+!----------------------- Pipe 5 -----------------------------------
+START PIPE
+ NUMBER 7
+ FILE pipeW.dat
+
+!  OUTLETPRESSURE 20 BARA
+ START OUTLETPIPES
+! pipe#  fraction
+  8      1.0
+ END OUTLETPIPES
+
+END PIPE
+
+
+
+!----------------------- Booster 3  -----------------------------------
+START BOOSTER
+ NUMBER 8
+
+ INSTALLTIME 2 5 0	! 0 0 0, start max min
+COST 0.32 3.91E-12 EXP 4 1.8    ! COST 0.26 3.51E-12 EXP 4 1.8
+
+ OUTLETPIPE 9
+ PRESSUREBOOST  73.4 100 10
+ CAPACITY 98 300 50
+
+END BOOSTER
+
+
+
+!----------------------- Pipe 6 -----------------------------------
+START PIPE
+ NUMBER 9
+ FILE pipe3.dat
+
+!  OUTLETPRESSURE 20 BARA
+ START OUTLETPIPES
+! pipe#  fraction
+  16      1.0
+ END OUTLETPIPES
+
+END PIPE
+
+
+
+
+!-------------------- Well: p4 ----------------------------------
+START WELL
+ NAME p4
+ TYPE P
+ GROUP grp1
+ BHPLIMIT 1  ! Only used when well is on rate control
+
+ START OUTLETPIPES
+! pipe#  fraction
+  10      1.0
+ END OUTLETPIPES
+
+ ! Dette er en variabel brønn - fixed kommenteres ut
+ ! START CONNECTIONS
+ ! 14  4  1  5  100	! New well in the middel of the reservoir
+ ! END CONNECTIONS
+
+ START VARCONNECTIONS
+! i   i_max  i_min       j   j_max j_min      k1 k2    pi
+  14     17      11      3     6     1         1  5     100
+ END VARCONNECTIONS
+
+
+ START SCHEDULE
+! t_end	value	max	min	type
+ 547.5	300	350	130	BHP
+ 1095	300	350	130	BHP
+ 1642.5 	300	350	130	BHP
+ 2555	300	350	130	BHP
+ 3650	300	350	130	BHP
+ END SCHEDULE
+
+END WELL
+
+!----------------------- Pipe 7 -----------------------------------
+START PIPE
+ NUMBER 10
+ FILE pipeW.dat
+
+!  OUTLETPRESSURE 20 BARA
+ START OUTLETPIPES
+! pipe#  fraction
+  11      1.0
+ END OUTLETPIPES
+
+END PIPE
+
+
+
+!----------------------- Booster 4  -----------------------------------
+START BOOSTER
+ NUMBER 11
+
+INSTALLTIME 2 5 0	! 0 0 0, start max min
+COST 0.32 3.91E-12 EXP 4 1.8    ! COST 0.26 3.51E-12 EXP 4 1.8
+
+ OUTLETPIPE 12
+ PRESSUREBOOST  53.7 100 10
+ CAPACITY 206.1 300 50
+
+END BOOSTER
+
+
+
+!----------------------- Pipe 8 -----------------------------------
+START PIPE
+ NUMBER 12
+ FILE pipe4.dat
+
+!  OUTLETPRESSURE 20 BARA
+ START OUTLETPIPES
+! pipe#  fraction
+  16      1.0
+ END OUTLETPIPES
+
+END PIPE
+
+
+
+
+
+
+!-------------------- Well: p5 ----------------------------------
+START WELL
+ NAME p5
+ TYPE P
+ GROUP grp1
+ BHPLIMIT 1  ! Only used when well is on rate control
+
+ START OUTLETPIPES
+! pipe#  fraction
+  13      1.0
+ END OUTLETPIPES
+
+
+ START CONNECTIONS
+  8  2  1  5  100	! New well in the middel of the reservoir
+ END CONNECTIONS
+
+ START SCHEDULE
+! t_end  value   max    min     type
+ 547.5	0	0	0	OIL
+ 1095	0	0	0	OIL
+ 1642.5	0	0	0	OIL
+ 2555	0	0	0	OIL
+ 3650	0	0	0	OIL
+ END SCHEDULE
+
+END WELL
+
+!----------------------- Pipe 9 -----------------------------------
+START PIPE
+ NUMBER 13
+ FILE pipeW.dat
+
+!  OUTLETPRESSURE 20 BARA
+ START OUTLETPIPES
+! pipe#  fraction
+  14      1.0
+ END OUTLETPIPES
+
+END PIPE
+
+
+
+!----------------------- Booster 5  -----------------------------------
+START BOOSTER
+ NUMBER 14
+
+ INSTALLTIME 5 5 5 	! start max min
+COST 0.2 2.7E-12 EXP 4 1.8
+
+ OUTLETPIPE 15
+ PRESSUREBOOST  12 12 12
+ CAPACITY 5E4 5E4 5E4
+
+END BOOSTER
+
+
+
+!----------------------- Pipe 10 -----------------------------------
+START PIPE
+ NUMBER 15
+ FILE pipe5.dat
+
+!  OUTLETPRESSURE 20 BARA
+ START OUTLETPIPES
+! pipe#  fraction
+  16      1.0
+ END OUTLETPIPES
+
+END PIPE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+!----------------------- Separator Subsea -----------------------------------
+! TEST TEST
+
+START SEPARATOR
+ NUMBER 16
+ TYPE WATER
+
+ INSTALLTIME 2 5 0	  	! 0 0 0, entry number in the master schedule
+ COST 0.5 2.97 7.2E-7 EXP 10 3		! 8 6E-2 1.28E-4 constant efficiency capacity . Costs senket med 20% 1E8 5e6 3e5 constant term, multiplier for remove fraction, multiplier for capacity
+
+ OUTLETPIPE 17
+
+ REMOVE 0.716 0.9 0.6		! 0.8 0.9 0.6 start max min
+ CAPACITY 122.3 180 30		! 118 150 10 start max min
+
+
+END SEPARATOR
+
+
+!----------------------- Riser -----------------------------------
+
+START PIPE
+
+ NUMBER 17
+ FILE pipeR.dat
+
+ OUTLETPRESSURE 20 BARA ! Default: PSIA, Alternatively: BARA
+
+END PIPE
+
+!----------------------- Capacity -----------------------------------
+
+START CAPACITY
+
+  NAME cap1
+  PIPES 17
+  WATER 150	! 300
+  OIL 220
+
+END CAPACITY
+
+EOF

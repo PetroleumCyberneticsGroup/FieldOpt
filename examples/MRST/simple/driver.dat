@@ -1,0 +1,102 @@
+!-------------------------------------------------------------------
+! Driver file for ResOpt
+!-------------------------------------------------------------------
+! ALL PRICES SCALED 1e-6
+ADJOINTS_COUPLED MODEL ! this _must_ be the first keyword, either COUPLED or DECOUPLED
+
+SIMULATOR MRST_BATCH ! GPRS VLP MRST_BATCH
+
+DEBUG debug.dat
+
+!---------------- Optimization Algorithm ---------------------------
+START OPTIMIZER
+ TYPE IPOPT !BONMIN, RUNONCE, NOMAD
+ ITERATIONS 10000
+ CONT_ITER 500
+ PERTURBATION 0.0001   ! O.O5
+ PARALLELRUNS 1 !integer, or "IDEAL" for the ideal number of parallel runs on this machine
+ TERMINATION 0.7 5
+END OPTIMIZER
+
+
+!------------------- Objective definition -------------------------
+START OBJECTIVE
+ TYPE CUMOIL  !NPV, CUMOIL, CUMGAS
+
+ ! these keywords are only needed for NPV:
+ DCF 0.10
+ OILPRICE   1e-4
+ GASPRICE     5e-6
+ WATERPRICE -1e-5
+END OBJECTIVE
+
+!------------------- Master Schedule -------------------------------
+START MASTERSCHEDULE
+ 10
+ 50
+ 100
+ 200
+ 365
+END MASTERSCHEDULE
+
+
+
+!----------------- Reservoir Definition ----------------------------
+START RESERVOIR
+ NAME RES1
+ FILE SIMPLE10x5x10.txt
+ MRST ~/Documents/MATLAB/mrst-2014b/
+ MATLAB /usr/local/MATLAB/R2014a/bin/matlab
+ TIME 365.0
+ PHASES 0 1 1             ! gas oil water
+ DENS 0.06054 49.1 64.79  ! gas oil water
+END RESERVOIR
+
+
+!-------------------- Well: p1 ----------------------------------
+START WELL
+ NAME p1
+ TYPE P
+ GROUP grp1
+ BHPLIMIT 1  ! Only used when well is on rate control
+
+ START OUTLETPIPES
+! pipe#  fraction
+  1	1.0
+ END OUTLETPIPES
+
+
+ START CONNECTIONS
+  1  1  1  5  100	! Original 1 1 1 5 100
+ END CONNECTIONS
+
+ START SCHEDULE
+! t_end	value	max	min	type
+ 10	300	350	50	BHP
+ 50	300	350	50	BHP
+ 100 	300	350	50	BHP
+ 200	300	350	50	BHP
+ 365	300	350	50	BHP
+ END SCHEDULE
+
+END WELL
+
+
+
+
+
+
+
+
+!----------------------- Pipe 1 -----------------------------------
+START PIPE
+ NUMBER 1
+ FILE pipe.dat
+
+ OUTLETPRESSURE 20 BARA
+
+END PIPE
+
+
+
+EOF

@@ -1,0 +1,145 @@
+----------------------------------------------------------------------
+------------------------ ResOpt Summary File -------------------------
+----------------------------------------------------------------------
+
+MODEL DESCRIPTION:
+Number of wells      = 7
+Number of pipes      = 17
+Number of separators = 1
+
+OPTIMIZATION PROBLEM:
+Number of contineous variables  = 35
+Number of binary variables      = 0
+Number of constraints           = 70
+
+CONTINEOUS VARIABLES:
+VAR_C1: Control variable for well: i1, until time = 547.5, bounds: (100 < 150 < 300)
+VAR_C2: Control variable for well: i1, until time = 1095, bounds: (100 < 150 < 300)
+VAR_C3: Control variable for well: i1, until time = 1642.5, bounds: (100 < 150 < 300)
+VAR_C4: Control variable for well: i1, until time = 2555, bounds: (100 < 150 < 300)
+VAR_C5: Control variable for well: i1, until time = 3650, bounds: (100 < 150 < 300)
+VAR_C6: Control variable for well: p1, until time = 547.5, bounds: (130 < 300 < 350)
+VAR_C7: Control variable for well: p1, until time = 1095, bounds: (130 < 300 < 350)
+VAR_C8: Control variable for well: p1, until time = 1642.5, bounds: (130 < 300 < 350)
+VAR_C9: Control variable for well: p1, until time = 2555, bounds: (130 < 300 < 350)
+VAR_C10: Control variable for well: p1, until time = 3650, bounds: (130 < 300 < 350)
+VAR_C11: Control variable for well: p2, until time = 547.5, bounds: (130 < 300 < 350)
+VAR_C12: Control variable for well: p2, until time = 1095, bounds: (130 < 300 < 350)
+VAR_C13: Control variable for well: p2, until time = 1642.5, bounds: (130 < 300 < 350)
+VAR_C14: Control variable for well: p2, until time = 2555, bounds: (130 < 300 < 350)
+VAR_C15: Control variable for well: p2, until time = 3650, bounds: (130 < 300 < 350)
+VAR_C16: Control variable for well: p3, until time = 547.5, bounds: (130 < 300 < 350)
+VAR_C17: Control variable for well: p3, until time = 1095, bounds: (130 < 300 < 350)
+VAR_C18: Control variable for well: p3, until time = 1642.5, bounds: (130 < 300 < 350)
+VAR_C19: Control variable for well: p3, until time = 2555, bounds: (130 < 300 < 350)
+VAR_C20: Control variable for well: p3, until time = 3650, bounds: (130 < 300 < 350)
+VAR_C21: Control variable for well: p4, until time = 547.5, bounds: (130 < 300 < 350)
+VAR_C22: Control variable for well: p4, until time = 1095, bounds: (130 < 300 < 350)
+VAR_C23: Control variable for well: p4, until time = 1642.5, bounds: (130 < 300 < 350)
+VAR_C24: Control variable for well: p4, until time = 2555, bounds: (130 < 300 < 350)
+VAR_C25: Control variable for well: p4, until time = 3650, bounds: (130 < 300 < 350)
+VAR_C26: Pressure variable for booster #2, bounds: (10 < 56 < 100)
+VAR_C27: Capacity variable for booster #2, bounds: (50 < 106.2 < 300)
+VAR_C28: Pressure variable for booster #5, bounds: (10 < 56 < 100)
+VAR_C29: Capacity variable for booster #5, bounds: (50 < 106.2 < 300)
+VAR_C30: Pressure variable for booster #8, bounds: (10 < 73.4 < 100)
+VAR_C31: Capacity variable for booster #8, bounds: (50 < 98 < 300)
+VAR_C32: Pressure variable for booster #11, bounds: (10 < 53.7 < 100)
+VAR_C33: Capacity variable for booster #11, bounds: (50 < 206.1 < 300)
+VAR_C34: Water removal fraction for separator #16, bounds: (0.6 < 0.716 < 0.9)
+VAR_C35: Water removal capacity for separator #16, bounds: (30 < 122.3 < 180)
+
+BINARY VARIABLES:
+
+INTEGER VARIABLES:
+VAR_I1: Installation time variable for booster #2, bounds: (0 < 2 < 5)
+VAR_I2: Installation time variable for booster #5, bounds: (0 < 2 < 5)
+VAR_I3: Installation time variable for booster #8, bounds: (0 < 2 < 5)
+VAR_I4: Installation time variable for booster #11, bounds: (0 < 2 < 5)
+VAR_I5: Installation time variable for separator #16, bounds: (0 < 2 < 5)
+VAR_I6: I-direction connection variable for well: i1, bounds: (5 < 5 < 10)
+VAR_I7: J-direction connection variable for well: i1, bounds: (6 < 8 < 10)
+VAR_I8: I-direction connection variable for well: p4, bounds: (11 < 14 < 17)
+VAR_I9: J-direction connection variable for well: p4, bounds: (1 < 3 < 6)
+
+CONSTRAINTS:
+CON1: Bottomhole pressure constraint for well: p1 for time = 547.5, bounds: (0 < c < 1)
+CON2: Bottomhole pressure constraint for well: p1 for time = 1095, bounds: (0 < c < 1)
+CON3: Bottomhole pressure constraint for well: p1 for time = 1642.5, bounds: (0 < c < 1)
+CON4: Bottomhole pressure constraint for well: p1 for time = 2555, bounds: (0 < c < 1)
+CON5: Bottomhole pressure constraint for well: p1 for time = 3650, bounds: (0 < c < 1)
+CON6: Bottomhole pressure constraint for well: p2 for time = 547.5, bounds: (0 < c < 1)
+CON7: Bottomhole pressure constraint for well: p2 for time = 1095, bounds: (0 < c < 1)
+CON8: Bottomhole pressure constraint for well: p2 for time = 1642.5, bounds: (0 < c < 1)
+CON9: Bottomhole pressure constraint for well: p2 for time = 2555, bounds: (0 < c < 1)
+CON10: Bottomhole pressure constraint for well: p2 for time = 3650, bounds: (0 < c < 1)
+CON11: Bottomhole pressure constraint for well: p3 for time = 547.5, bounds: (0 < c < 1)
+CON12: Bottomhole pressure constraint for well: p3 for time = 1095, bounds: (0 < c < 1)
+CON13: Bottomhole pressure constraint for well: p3 for time = 1642.5, bounds: (0 < c < 1)
+CON14: Bottomhole pressure constraint for well: p3 for time = 2555, bounds: (0 < c < 1)
+CON15: Bottomhole pressure constraint for well: p3 for time = 3650, bounds: (0 < c < 1)
+CON16: Bottomhole pressure constraint for well: p4 for time = 547.5, bounds: (0 < c < 1)
+CON17: Bottomhole pressure constraint for well: p4 for time = 1095, bounds: (0 < c < 1)
+CON18: Bottomhole pressure constraint for well: p4 for time = 1642.5, bounds: (0 < c < 1)
+CON19: Bottomhole pressure constraint for well: p4 for time = 2555, bounds: (0 < c < 1)
+CON20: Bottomhole pressure constraint for well: p4 for time = 3650, bounds: (0 < c < 1)
+CON21: Bottomhole pressure constraint for well: p5 for time = 547.5, bounds: (0 < c < 1)
+CON22: Bottomhole pressure constraint for well: p5 for time = 1095, bounds: (0 < c < 1)
+CON23: Bottomhole pressure constraint for well: p5 for time = 1642.5, bounds: (0 < c < 1)
+CON24: Bottomhole pressure constraint for well: p5 for time = 2555, bounds: (0 < c < 1)
+CON25: Bottomhole pressure constraint for well: p5 for time = 3650, bounds: (0 < c < 1)
+CON26: Pipe routing constraint for Pipe #1, bounds: (0 < c < 1)
+CON27: Capacity constraint for BOOSTER #2 for time = 547.5, bounds: (0 < c < 1)
+CON28: Capacity constraint for BOOSTER #2 for time = 1095, bounds: (0 < c < 1)
+CON29: Capacity constraint for BOOSTER #2 for time = 1642.5, bounds: (0 < c < 1)
+CON30: Capacity constraint for BOOSTER #2 for time = 2555, bounds: (0 < c < 1)
+CON31: Capacity constraint for BOOSTER #2 for time = 3650, bounds: (0 < c < 1)
+CON32: Pipe routing constraint for Pipe #3, bounds: (0 < c < 1)
+CON33: Pipe routing constraint for Pipe #4, bounds: (0 < c < 1)
+CON34: Capacity constraint for BOOSTER #5 for time = 547.5, bounds: (0 < c < 1)
+CON35: Capacity constraint for BOOSTER #5 for time = 1095, bounds: (0 < c < 1)
+CON36: Capacity constraint for BOOSTER #5 for time = 1642.5, bounds: (0 < c < 1)
+CON37: Capacity constraint for BOOSTER #5 for time = 2555, bounds: (0 < c < 1)
+CON38: Capacity constraint for BOOSTER #5 for time = 3650, bounds: (0 < c < 1)
+CON39: Pipe routing constraint for Pipe #6, bounds: (0 < c < 1)
+CON40: Pipe routing constraint for Pipe #7, bounds: (0 < c < 1)
+CON41: Capacity constraint for BOOSTER #8 for time = 547.5, bounds: (0 < c < 1)
+CON42: Capacity constraint for BOOSTER #8 for time = 1095, bounds: (0 < c < 1)
+CON43: Capacity constraint for BOOSTER #8 for time = 1642.5, bounds: (0 < c < 1)
+CON44: Capacity constraint for BOOSTER #8 for time = 2555, bounds: (0 < c < 1)
+CON45: Capacity constraint for BOOSTER #8 for time = 3650, bounds: (0 < c < 1)
+CON46: Pipe routing constraint for Pipe #9, bounds: (0 < c < 1)
+CON47: Pipe routing constraint for Pipe #10, bounds: (0 < c < 1)
+CON48: Capacity constraint for BOOSTER #11 for time = 547.5, bounds: (0 < c < 1)
+CON49: Capacity constraint for BOOSTER #11 for time = 1095, bounds: (0 < c < 1)
+CON50: Capacity constraint for BOOSTER #11 for time = 1642.5, bounds: (0 < c < 1)
+CON51: Capacity constraint for BOOSTER #11 for time = 2555, bounds: (0 < c < 1)
+CON52: Capacity constraint for BOOSTER #11 for time = 3650, bounds: (0 < c < 1)
+CON53: Pipe routing constraint for Pipe #12, bounds: (0 < c < 1)
+CON54: Pipe routing constraint for Pipe #13, bounds: (0 < c < 1)
+CON55: Capacity constraint for BOOSTER #14 for time = 547.5, bounds: (0 < c < 1)
+CON56: Capacity constraint for BOOSTER #14 for time = 1095, bounds: (0 < c < 1)
+CON57: Capacity constraint for BOOSTER #14 for time = 1642.5, bounds: (0 < c < 1)
+CON58: Capacity constraint for BOOSTER #14 for time = 2555, bounds: (0 < c < 1)
+CON59: Capacity constraint for BOOSTER #14 for time = 3650, bounds: (0 < c < 1)
+CON60: Pipe routing constraint for Pipe #15, bounds: (0 < c < 1)
+CON61: Oil production constraint for capacity: cap1 for time = 547.5, bounds: (-1 < c < 1)
+CON62: Oil production constraint for capacity: cap1 for time = 1095, bounds: (-1 < c < 1)
+CON63: Oil production constraint for capacity: cap1 for time = 1642.5, bounds: (-1 < c < 1)
+CON64: Oil production constraint for capacity: cap1 for time = 2555, bounds: (-1 < c < 1)
+CON65: Oil production constraint for capacity: cap1 for time = 3650, bounds: (-1 < c < 1)
+CON66: Water production constraint for capacity: cap1 for time = 547.5, bounds: (-1 < c < 1)
+CON67: Water production constraint for capacity: cap1 for time = 1095, bounds: (-1 < c < 1)
+CON68: Water production constraint for capacity: cap1 for time = 1642.5, bounds: (-1 < c < 1)
+CON69: Water production constraint for capacity: cap1 for time = 2555, bounds: (-1 < c < 1)
+CON70: Water production constraint for capacity: cap1 for time = 3650, bounds: (-1 < c < 1)
+
+MODEL EVALUATIONS:
+----------------------------------------------------------------------
+#	FEAS	OBJ	VAR_C1	VAR_C2	VAR_C3	VAR_C4	VAR_C5	VAR_C6	VAR_C7	VAR_C8	VAR_C9	VAR_C10	VAR_C11	VAR_C12	VAR_C13	VAR_C14	VAR_C15	VAR_C16	VAR_C17	VAR_C18	VAR_C19	VAR_C20	VAR_C21	VAR_C22	VAR_C23	VAR_C24	VAR_C25	VAR_C26	VAR_C27	VAR_C28	VAR_C29	VAR_C30	VAR_C31	VAR_C32	VAR_C33	VAR_C34	VAR_C35	VAR_I1	VAR_I2	VAR_I3	VAR_I4	VAR_I5	VAR_I6	VAR_I7	VAR_I8	VAR_I9	CON1	CON2	CON3	CON4	CON5	CON6	CON7	CON8	CON9	CON10	CON11	CON12	CON13	CON14	CON15	CON16	CON17	CON18	CON19	CON20	CON21	CON22	CON23	CON24	CON25	CON26	CON27	CON28	CON29	CON30	CON31	CON32	CON33	CON34	CON35	CON36	CON37	CON38	CON39	CON40	CON41	CON42	CON43	CON44	CON45	CON46	CON47	CON48	CON49	CON50	CON51	CON52	CON53	CON54	CON55	CON56	CON57	CON58	CON59	CON60	CON61	CON62	CON63	CON64	CON65	CON66	CON67	CON68	CON69	CON70	
+1	no	25.968877	150	150	150	150	150	300	300	300	300	300	300	300	300	300	300	300	300	300	300	300	300	300	300	300	300	56	106.2	56	106.2	73.4	98	53.7	206.1	0.716	122.3	2	2	2	2	2	5	8	14	3	0.1093303	0.065564329	0.25157399	0.21567488	0.1359738	0.10588801	0.024438849	0.17764661	0.13922359	0.08329183	0.1093226	0.064748668	0.29271448	0.24147839	0.17453577	0.10918246	0.047551548	0.1981053	0.15614946	0.09621518	0.44279321	0.50318026	0.47650397	0.41803291	0.34524495	1	0.5	0.5	0.59409108	0.65369354	0.65208428	1	1	0.5	0.5	0.057562631	0.023342536	0.028650929	1	1	0.5	0.5	0.47433614	0.4939604	0.49562704	1	1	0.5	0.5	0.53256451	0.54372416	0.55617246	1	1	0.5	0.5	0.5	0.5	0.5	1	0.576394	1.0149813*	0.75698661	0.53899917	0.37493877	0.00122724	0.30939719	0.23574051	0.31343998	0.50813864	
+2	no	25.932587	149.99963	149.98024	149.99366	149.98208	149.98423	299.99331	300.01106	299.99157	299.98318	299.98354	299.9955	300.02136	300.01187	300.03103	300.03406	299.99302	300.01114	299.99445	299.99093	299.99219	299.98813	300.01236	299.99259	299.98645	299.98983	56.000272	106.19924	56.003288	106.28723	73.3939	97.999475	53.695815	206.09808	0.76669153	122.29525	2	2	2	2	2	5	8	14	3	0.10930959	0.065603928	0.25835393	0.21991233	0.13594559	0.10587624	0.024517603	0.18449192	0.14361093	0.083436577	0.10930189	0.064788399	0.2994796	0.24572179	0.17452188	0.10914689	0.047594458	0.20487248	0.16038427	0.096201978	0.4427828	0.50318564	0.4815468	0.42143098	0.34527596	1	0.5	0.5	0.59403994	0.65358665	0.65190559	1	1	0.5	0.5	0.058459564	0.024521013	0.029900812	1	1	0.5	0.5	0.47430388	0.49393291	0.49557858	1	1	0.5	0.5	0.53253361	0.54368091	0.55613319	1	1	0.5	0.5	0.5	0.5	0.5	1	0.57642447	1.0148848*	0.75703499	0.53904669	0.37498668	0.0012270341	0.30932297	0.19364688	0.28816709	0.50798217	
+3	no	25.924865	149.9922	149.91048	149.98635	149.96163	149.96619	299.9742	300.0572	299.98184	299.96388	299.96463	299.95954	300.05061	300.02561	300.06659	300.0732	299.9751	300.05679	299.98803	299.9805	299.98321	299.95575	300.05848	299.98402	299.9709	299.97818	56.000624	106.19837	56.007151	106.38719	73.38685	97.998883	53.691029	206.09585	0.77134037	122.28995	2	2	2	2	2	5	8	14	3	0.10925323	0.065753584	0.25898208	0.21990754	0.13592349	0.10576906	0.02463204	0.18519959	0.14377164	0.083607447	0.1092485	0.064938716	0.30009729	0.24571443	0.17451092	0.10905191	0.047744751	0.20548447	0.16037045	0.096189544	0.44274188	0.50318296	0.48203676	0.42146625	0.34531687	1	0.5	0.5	0.59397392	0.65347397	0.65171553	1	1	0.5	0.5	0.059497164	0.025866301	0.0313225	1	1	0.5	0.5	0.47426314	0.4938968	0.49552431	1	1	0.5	0.5	0.53247917	0.54362919	0.55608173	1	1	0.5	0.5	0.5	0.5	0.5	1	0.57650522	1.0145155*	0.75711436	0.53911467	0.37505462	0.0012269625	0.30915828	0.18976818	0.28796229	0.50778612	
+4	yes	26.283453	150.80046	147.69588	150.58912	143.1289	148.16985	298.83025	302.08334	298.37542	294.17299	296.77627	300.33444	305.54423	300.17536	311.66896	306.31164	298.57816	301.98594	298.53014	296.835	298.19735	297.67626	302.6839	298.29292	295.26047	298.28208	56.53035	106.0308	57.265014	125.38175	71.57814	98.027799	53.002276	205.41487	0.75827616	121.44916	2	2	2	2	2	5	8	14	3	0.10585444	0.072961817	0.25558556	0.21243402	0.13006126	0.10690562	0.043856904	0.18906983	0.18773996	0.11168192	0.10509225	0.071849262	0.28942422	0.23976166	0.16848183	0.10223754	0.056832176	0.19776376	0.15341693	0.094343163	0.44163652	0.50586308	0.48209737	0.42724158	0.35127184	1	0.5	0.5	0.58312058	0.61713214	0.61032451	1	1	0.5	0.5	0.20386764	0.28741213	0.24799119	1	1	0.5	0.5	0.46636838	0.48538368	0.48373884	1	1	0.5	0.5	0.52442985	0.52968695	0.54952025	1	1	0.5	0.5	0.5	0.5	0.5	1	0.58344286	1.000022	0.77118394	0.55227108	0.3853332	0.001196704	0.29689735	0.20040835	0.25058327	0.48351	
+5	yes	25.661279	157.42213	150.27208	151.76046	164.64455	140.84276	302.82046	308.34976	284.32131	281.66686	278.5368	319.71012	328.39116	316.49672	311.69662	337.53524	299.64425	307.58058	287.56585	283.53581	285.24185	298.27082	313.63176	286.28356	282.67441	287.66483	79.844253	110.30598	71.828385	171.03817	71.3525	111.30076	77.176657	197.03504	0.83298231	119.98042	2	2	2	2	2	5	8	14	3	0.11769259	0.093866995	0.31559405	0.24845254	0.16907636	0.16115545	0.11370814	0.29196681	0.23374638	0.25760542	0.10833446	0.090517792	0.27502524	0.20164249	0.15389484	0.10407149	0.091122862	0.26563723	0.20272592	0.17207544	0.45348697	0.52726748	0.50033262	0.42539449	0.37242009	1	0.5	0.5	0.51029972	0.53996202	0.42372194	1	1	0.5	0.5	0.4820102	0.47008193	0.69726978	1	1	0.5	0.5	0.47516137	0.49977675	0.48274768	1	1	0.5	0.5	0.45850488	0.48306329	0.50889155	1	1	0.5	0.5	0.5	0.5	0.5	1	0.5800283	0.99837658	0.859557	0.61571578	0.426168	0.00098801752	0.27891684	0.13207626	0.28982093	0.37296071	
+6	yes	26.830971	162.6924	140.78669	154.17297	174.35378	148.27191	301.79071	313.23334	283.57787	278.50957	278.9656	312.75077	325.2916	311.87512	309.96516	323.4723	298.44574	311.32794	282.74705	275.40683	279.92646	295.8202	315.91659	284.3495	278.37274	286.02383	73.093999	113.60981	63.405832	168.90635	73.096895	116.97314	65.888391	186.4844	0.79247361	133.28241	2	2	2	2	2	5	8	14	3	0.11454632	0.10625609	0.28429079	0.2290457	0.15337013	0.14216709	0.10228157	0.24883761	0.21286063	0.20409309	0.10461608	0.099807533	0.26362374	0.19709244	0.15005753	0.096504108	0.095821175	0.21526172	0.16308925	0.13399022	0.45279291	0.52228488	0.49189697	0.43233734	0.36863659	1	0.5	0.5	0.53182731	0.54107439	0.48025495	1	1	0.5	0.5	0.46114285	0.44257686	0.60920156	1	1	0.5	0.5	0.49104652	0.49645079	0.49515153	1	1	0.5	0.5	0.43021347	0.44962419	0.49598341	1	1	0.5	0.5	0.5	0.5	0.5	1	0.60504742	0.9620931	0.86262223	0.63886988	0.42671704	0.0014949211	0.28334079	0.16632369	0.23143014	0.33960842	
