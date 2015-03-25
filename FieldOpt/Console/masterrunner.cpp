@@ -34,9 +34,9 @@ MasterRunner::~MasterRunner()
 void MasterRunner::initialize(QString driverPath)
 {
     this->driverPath = driverPath;
-    modelReader = new ModelReader(this->driverPath);
+    driverReader = new DriverReader(this->driverPath);
     printer->print("Reading driver file...", false);
-    model = modelReader->readDriverFile();
+    model = driverReader->readDriverFile();
     printer->print("Model object created.", false);
 }
 

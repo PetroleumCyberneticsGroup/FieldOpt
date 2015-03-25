@@ -72,8 +72,8 @@ private:
     QVector<double> m_master_schedule;            //!< The master schedule for this model.
     QVector<UserConstraint*> m_user_constraints;  //!< User defined constraints for this model.
     bool m_up_to_date;                            //!< True if the model has been evaluated
-    QString m_driver_path;                        //!< The path to the driver file.
-    RuntimeSettings runtimeSettings;              //!< Settings used by a runner.
+    QString m_driver_path;                        //!< The path to the driver file. \todo This really should not be here.
+    RuntimeSettings runtimeSettings;              //!< Settings used by a runner. \todo This really should not be here.
 
     /*!
      * \brief Update the capacity constraints for all the Capacities in the model.

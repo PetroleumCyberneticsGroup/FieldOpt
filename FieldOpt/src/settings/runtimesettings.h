@@ -12,9 +12,9 @@ class OptimizerSettings;
 /*!
  * \brief Holds settings used during run time by some runner program.
  *
- * An object of this class is included in a Model object.
+ * An object of this class is included in a Driver object.
  *
- * These settings are set by the ModelReader class.
+ * These settings are set by the DriverReader class.
  */
 class RuntimeSettings
 {

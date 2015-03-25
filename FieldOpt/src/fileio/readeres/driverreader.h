@@ -20,8 +20,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
-#ifndef MODELREADER_H
-#define MODELREADER_H
+#ifndef DRIVERREADER_H
+#define DRIVERREADER_H
 
 #include <QString>
 #include <QStringList>
@@ -115,7 +115,7 @@ using std::tr1::shared_ptr;
  *
  * \todo Simulator used to be created here. This needs to be done elsewhere.
  */
-class ModelReader : Reader
+class DriverReader : Reader
 {
 private:
     QString m_driver_file_name;
@@ -180,10 +180,10 @@ private:
     void readUserDefinedConstraints(Model *m);    //!< Reads the CONSTRAINTS section of the driver file
 
 public:
-    ModelReader(const QString &driver);                           //!< Default constructor. Sets the driver file path.
+    DriverReader(const QString &driver);                           //!< Default constructor. Sets the driver file path.
     Model* readDriverFile();                             //!< Read the driver file, and sets up all the data structures
     void setDriverFilePath(const QString &path) {m_path = path;}  //!< Set the driver file path.
     const QString& driverFilePath() {return m_path;}              //!< Get the driver file path.
 };
 
-#endif // MODELREADER_H
+#endif // DRIVERREADER_H

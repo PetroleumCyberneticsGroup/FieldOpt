@@ -10,7 +10,7 @@
 #include "transferobjects/simulationresults.h"
 #include "masterrunner.h"
 #include "simulationlauncher.h"
-#include "fileio/readeres/modelreader.h"
+#include "fileio/readeres/driverreader.h"
 #include "parallelprinter.h"
 
 namespace mpi = boost::mpi;

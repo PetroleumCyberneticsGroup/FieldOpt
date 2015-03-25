@@ -20,14 +20,14 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
-#include "modelreader.h"
+#include "driverreader.h"
 
-ModelReader::ModelReader(const QString &driver)
+DriverReader::DriverReader(const QString &driver)
     : m_driver_file_name(driver)
 {}
 
 
-Model* ModelReader::readDriverFile()
+Model* DriverReader::readDriverFile()
 {
     if(m_driver_file_name.isEmpty())
         emitException(ExceptionSeverity::ERROR, ExceptionType::FILE_NOT_FOUND, QString("Could not open driver file."));
@@ -135,7 +135,7 @@ Model* ModelReader::readDriverFile()
 }
 
 
-QVector<double> ModelReader::readMasterSchedule()
+QVector<double> DriverReader::readMasterSchedule()
 {
     printProgress(QString("Reading master schedule."));
     QStringList list;
@@ -171,7 +171,7 @@ QVector<double> ModelReader::readMasterSchedule()
 }
 
 
-Reservoir* ModelReader::readReservoir()
+Reservoir* DriverReader::readReservoir()
 {
     printProgress("Reading reservoir derfinition ...");
 
@@ -256,7 +256,7 @@ Reservoir* ModelReader::readReservoir()
 }
 
 
-Well* ModelReader::readWell()
+Well* DriverReader::readWell()
 {
     printProgress("Reading well definition ...");
 
@@ -453,7 +453,7 @@ Well* ModelReader::readWell()
 }
 
 
-bool ModelReader::readWellSchedule(Well *w)
+bool DriverReader::readWellSchedule(Well *w)
 {
     printProgress("       Reading well schedule...");
 
@@ -519,7 +519,7 @@ bool ModelReader::readWellSchedule(Well *w)
 }
 
 
-bool ModelReader::readGasLiftSchedule(ProductionWell *w)
+bool DriverReader::readGasLiftSchedule(ProductionWell *w)
 {
     printProgress("       Reading gas lift schedule.");
 
@@ -577,7 +577,7 @@ bool ModelReader::readGasLiftSchedule(ProductionWell *w)
 }
 
 
-bool ModelReader::readWellConnections(Well *w)
+bool DriverReader::readWellConnections(Well *w)
 {
     printProgress("       Reading connections table.");
 
@@ -657,7 +657,7 @@ bool ModelReader::readWellConnections(Well *w)
 }
 
 
-bool ModelReader::readVariableWellConnections(Well *w)
+bool DriverReader::readVariableWellConnections(Well *w)
 {
     printProgress("       Reading variable connections table.");
 
@@ -722,7 +722,7 @@ bool ModelReader::readVariableWellConnections(Well *w)
 }
 
 
-bool ModelReader::readWellPath(Well *w)
+bool DriverReader::readWellPath(Well *w)
 {
     printProgress("       Reading well path.");
 
@@ -769,7 +769,7 @@ bool ModelReader::readWellPath(Well *w)
 }
 
 
-bool ModelReader::readWellPathToe(WellPath *wp, Well *w)
+bool DriverReader::readWellPathToe(WellPath *wp, Well *w)
 {
     printProgress("       Reading toe.");
     QStringList list;
@@ -837,7 +837,7 @@ bool ModelReader::readWellPathToe(WellPath *wp, Well *w)
 }
 
 
-bool ModelReader::readWellPathHeel(WellPath *wp, Well *w)
+bool DriverReader::readWellPathHeel(WellPath *wp, Well *w)
 {
     printProgress("       Reading heel.");
     QStringList list;
@@ -893,7 +893,7 @@ bool ModelReader::readWellPathHeel(WellPath *wp, Well *w)
 }
 
 
-bool ModelReader::readWellPathOptions(WellPath *wp, Well *w)
+bool DriverReader::readWellPathOptions(WellPath *wp, Well *w)
 {
     printProgress("       Reading wellpath options.");
 
@@ -962,7 +962,7 @@ bool ModelReader::readWellPathOptions(WellPath *wp, Well *w)
 }
 
 
-bool ModelReader::readPipeConnections(ProductionWell *w)
+bool DriverReader::readPipeConnections(ProductionWell *w)
 {
     printProgress("       Reading outlet pipes table.");
 
@@ -1065,7 +1065,7 @@ bool ModelReader::readPipeConnections(ProductionWell *w)
 }
 
 
-bool ModelReader::readPipeConnections(MidPipe *p)
+bool DriverReader::readPipeConnections(MidPipe *p)
 {
     printProgress("       Reading outlet pipes table.");
 
@@ -1167,7 +1167,7 @@ bool ModelReader::readPipeConnections(MidPipe *p)
 }
 
 
-Objective* ModelReader::readObjective()
+Objective* DriverReader::readObjective()
 {
     printProgress("Reading objective definition.");
 
@@ -1233,7 +1233,7 @@ Objective* ModelReader::readObjective()
 }
 
 
-Pipe* ModelReader::readPipe()
+Pipe* DriverReader::readPipe()
 {
     printProgress("Reading pipe definition.");
     cout << "Reading pipe definition..." << endl;
@@ -1345,7 +1345,7 @@ Pipe* ModelReader::readPipe()
 }
 
 
-Capacity* ModelReader::readCapacity()
+Capacity* DriverReader::readCapacity()
 {
     printProgress("Reading capacity definition.");
 
@@ -1473,7 +1473,7 @@ Capacity* ModelReader::readCapacity()
 }
 
 
-Pipe* ModelReader::readSeparator()
+Pipe* DriverReader::readSeparator()
 {
     printProgress("Reading separator definition.");
 
@@ -1688,7 +1688,7 @@ Pipe* ModelReader::readSeparator()
 }
 
 
-Pipe* ModelReader::readPressureBooster()
+Pipe* DriverReader::readPressureBooster()
 {
     printProgress("Reading booster definition.");
     PressureBooster *p_boost = new PressureBooster();
@@ -1878,7 +1878,7 @@ Pipe* ModelReader::readPressureBooster()
 }
 
 
-void ModelReader::readOptimizer(Model *m)
+void DriverReader::readOptimizer(Model *m)
 {
     printProgress("Reading optimizer definition.");
 
@@ -1979,7 +1979,7 @@ void ModelReader::readOptimizer(Model *m)
 }
 
 
-void ModelReader::readUserDefinedConstraints(Model *m)
+void DriverReader::readUserDefinedConstraints(Model *m)
 {
     printProgress("Reading user defined constraints.");
 

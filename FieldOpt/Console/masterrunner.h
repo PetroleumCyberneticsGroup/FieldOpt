@@ -33,7 +33,7 @@
 #include "optimizers/case.h"
 #include "model/model.h"
 #include "model/coupledmodel.h"
-#include "fileio/readeres/modelreader.h"
+#include "fileio/readeres/driverreader.h"
 #include "parallelprinter.h"
 
 namespace mpi = boost::mpi;
@@ -62,7 +62,7 @@ private:
     QString driverPath;
     Model* model;
     mpi::communicator* world;
-    ModelReader* modelReader;
+    DriverReader* driverReader;
     ParallelPrinter* printer;
 
     void sendPerturbations();
