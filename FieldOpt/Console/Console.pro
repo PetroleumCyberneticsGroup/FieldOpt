@@ -31,10 +31,12 @@ SOURCES += main.cpp \
     transferobjects/modelperturbation.cpp \
     transferobjects/simulationresults.cpp \
     simulationlauncher.cpp \
-    masterrunner.cpp
+    masterrunner.cpp \
+    parallelprinter.cpp
 
 HEADERS += \
     transferobjects/modelperturbation.h \
     transferobjects/simulationresults.h \
     simulationlauncher.h \
-    masterrunner.h
+    masterrunner.h \
+    parallelprinter.h
