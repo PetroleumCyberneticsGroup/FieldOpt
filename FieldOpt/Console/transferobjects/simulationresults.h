@@ -23,7 +23,7 @@
 #ifndef SIMULATIONRESULTS_H
 #define SIMULATIONRESULTS_H
 
-#include <boost/lexical_cast.hpp>
+#include <QString>
 
 /*!
  * \brief The SimulationResults class contains the results of running a simuluation on a perturbed model.
@@ -52,7 +52,7 @@ public:
     float getModel_fopt() const;      //!< Get the simulated FOPT.
     void setModel_fopt(float value);  //!< Set the simulated FOPT.
 
-    std::string toString() const;  //!< Get a string description of the current state of this object. Primarily inteded for debugging purposes.
+    QString toString() const;  //!< Get a string description of the current state of this object. Primarily inteded for debugging purposes.
 };
 
 #endif // SIMULATIONRESULTS_H

@@ -24,13 +24,12 @@
 
 void SimulationLauncher::perturbModel()
 {
-    std::cout << "Perturbing the model before simulating." << std::endl;
-    std::cout << perturbation->toString() << std::endl;
+    printer->print("Perturbing the model before simulating: \n" + perturbation->toString(), true);
 }
 
 void SimulationLauncher::returnResults()
 {
-    std::cout << "Returning results." << std::endl;
+    printer->print("Returning results.", false);
     SimulationResults res = SimulationResults(perturbation->getModel_id(), 100.0+world->rank());
     int id = res.getModel_id();
     float fopt = res.getModel_fopt();
@@ -41,6 +40,7 @@ void SimulationLauncher::returnResults()
 SimulationLauncher::SimulationLauncher(mpi::communicator *comm)
 {
     world = comm;
+    printer = new ParallelPrinter(comm->rank());
 }
 
 SimulationLauncher::~SimulationLauncher()
@@ -55,7 +55,7 @@ void SimulationLauncher::initialize()
 
 void SimulationLauncher::receivePerturbations()
 {
-    std::cout << "Receiving perturbation... ";
+    printer->print("Reveiving perturbation...", false);
     int id;
     int var_id;
     float var_val;
@@ -64,7 +64,7 @@ void SimulationLauncher::receivePerturbations()
     MPI_Recv(&var_val, 1, MPI_FLOAT, 0, 103, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     ModelPerturbation p = ModelPerturbation(id, var_id, var_val);
 
-    std::cout << "Received perturbation: " << std::endl;
+    printer->print("Received perturbation.", false);
     perturbation = new ModelPerturbation();
     perturbation->setModel_id(p.getModel_id());
     perturbation->setPerturbation_variable(p.getPerturbation_variable());
@@ -74,7 +74,7 @@ void SimulationLauncher::receivePerturbations()
 void SimulationLauncher::startSimulation()
 {
     perturbModel();
-    std::cout << "Starting simulation...." << std::endl;
-    std::cout << "Simulation done." << std::endl;
+    printer->print("Starting simulation...", false);
+    printer->print("Simulation done.", false);
     returnResults();
 }

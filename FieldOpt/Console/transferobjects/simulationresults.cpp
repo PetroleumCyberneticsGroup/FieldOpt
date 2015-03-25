@@ -48,9 +48,10 @@ void SimulationResults::setModel_id(int value)
     model_id = value;
 }
 
-std::string SimulationResults::toString() const
+QString SimulationResults::toString() const
 {
-    std::string mid = "Model id: " + boost::lexical_cast<std::string>(model_id);
-    std::string fopt = "FOTP: " + boost::lexical_cast<std::string>(model_fopt);
+    QString mid = QString("Model id: %1").arg(model_id);
+
+    QString fopt = QString("FOPT: %1").arg(model_fopt);
     return mid + "\n" + fopt;
 }

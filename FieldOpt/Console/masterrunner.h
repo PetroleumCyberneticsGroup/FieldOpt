@@ -24,9 +24,8 @@
 #define MASTERRUNNER_H
 
 #include <boost/mpi.hpp>
-#include <string>
-#include <iostream>
 #include <QVector>
+#include <QString>
 
 #include "transferobjects/modelperturbation.h"
 #include "transferobjects/simulationresults.h"
@@ -34,6 +33,8 @@
 #include "optimizers/case.h"
 #include "model/model.h"
 #include "model/coupledmodel.h"
+#include "fileio/readeres/modelreader.h"
+#include "parallelprinter.h"
 
 namespace mpi = boost::mpi;
 
@@ -46,21 +47,24 @@ namespace mpi = boost::mpi;
  */
 class MasterRunner
 {
-    QVector<ModelPerturbation> perturbations;
-    QVector<SimulationResults> results;
-    Model* model;
-    mpi::communicator* world;
-
 public:
     MasterRunner(mpi::communicator *comm);
     ~MasterRunner();
 
-    void initialize();
+    void initialize(QString driverPath);
     void perturbModel();
     void distributePerturbations();
     void determineOptimal();
 
 private:
+    QVector<ModelPerturbation> perturbations;
+    QVector<SimulationResults> results;
+    QString driverPath;
+    Model* model;
+    mpi::communicator* world;
+    ModelReader* modelReader;
+    ParallelPrinter* printer;
+
     void sendPerturbations();
     void recvResults();
 };

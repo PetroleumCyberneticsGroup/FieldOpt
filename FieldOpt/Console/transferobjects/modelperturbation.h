@@ -23,8 +23,7 @@
 #ifndef MODELPERTURBATION_H
 #define MODELPERTURBATION_H
 
-#include <boost/lexical_cast.hpp>
-#include <string>
+#include <QString>
 #include <iostream>
 
 /*!
@@ -60,7 +59,7 @@ public:
     double getPerturbation_value() const;      //!< Get the value with which to perturb the model.
     void setPerturbation_value(double value);  //!< Set the value with which to perturb the model.
 
-    std::string toString() const;  //!< Get a string description of the current state of this object. Primarily inteded for debugging purposes.
+    QString toString() const;  //!< Get a string description of the current state of this object. Primarily inteded for debugging purposes.
 };
 
 #endif // MODELPERTURBATION_H

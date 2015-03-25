@@ -59,10 +59,10 @@ void ModelPerturbation::setModel_id(int value)
     model_id = value;
 }
 
-std::string ModelPerturbation::toString() const
+QString ModelPerturbation::toString() const
 {
-    std::string mid = "Model id: " + boost::lexical_cast<std::string>(model_id);
-    std::string pvid = "Perturbation variable id: " + boost::lexical_cast<std::string>(perturbation_variable_id);
-    std::string pval = "Perturbation value: " + boost::lexical_cast<std::string>(perturbation_value);
+    QString mid = QString("Model id: %1").arg(model_id);
+    QString pvid = QString("Perturbation variable id: %1").arg(perturbation_variable_id);
+    QString pval = QString("Perturbation value: %1").arg(perturbation_value);
     return mid + "\n" + pvid + "\n" + pval;
 }

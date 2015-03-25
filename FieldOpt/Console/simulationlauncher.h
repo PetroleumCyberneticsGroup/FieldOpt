@@ -23,16 +23,14 @@
 #ifndef SIMULATIONLAUNCHER_H
 #define SIMULATIONLAUNCHER_H
 
-#include <iostream>
 #include <boost/mpi.hpp>
-#include <string>
-#include <iostream>
 
 #include "transferobjects/modelperturbation.h"
 #include "transferobjects/simulationresults.h"
 #include "model/model.h"
 #include "model/coupledmodel.h"
 #include "simulators/simulator.h"
+#include "parallelprinter.h"
 
 namespace mpi = boost::mpi;
 
@@ -51,6 +49,7 @@ private:
     ModelPerturbation* perturbation;
     Model* model;
     mpi::communicator* world;
+    ParallelPrinter* printer;
 
     void perturbModel();
     void returnResults();

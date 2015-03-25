@@ -54,9 +54,11 @@ int main(int argc, char *argv[])
                   << "===================================================================" << std::endl;
     }
 
+    QString driverPath = QString::fromStdString(argv[1]);
+
     if (world.rank() == 0) {
         MasterRunner runner = MasterRunner(&world);
-        runner.initialize();
+        runner.initialize(driverPath);
         printer.print(QString("Initialized MasterRunner"), false);
         runner.perturbModel();
         printer.print(QString("Perturbed model."), false);

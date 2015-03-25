@@ -25,16 +25,19 @@
 MasterRunner::MasterRunner(mpi::communicator *comm)
 {
     world = comm;
+    printer = new ParallelPrinter(comm->rank());
 }
 
 MasterRunner::~MasterRunner()
-{
+{}
 
-}
-
-void MasterRunner::initialize()
+void MasterRunner::initialize(QString driverPath)
 {
-    model = new CoupledModel();
+    this->driverPath = driverPath;
+    modelReader = new ModelReader(this->driverPath);
+    printer->print("Reading driver file...", false);
+    model = modelReader->readDriverFile();
+    printer->print("Model object created.", false);
 }
 
 void MasterRunner::perturbModel()
@@ -56,7 +59,7 @@ void MasterRunner::distributePerturbations()
 
 void MasterRunner::determineOptimal()
 {
-    std::cout << "Determining best perturbation." << std::endl;
+    printer->print("Determining best perturbation.", false);
 }
 
 void MasterRunner::sendPerturbations()
@@ -81,8 +84,7 @@ void MasterRunner::recvResults()
         MPI_Recv(&fopt, 1, MPI_FLOAT, i+1, 202, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         SimulationResults res = SimulationResults(id ,fopt);
         results.push_back(res);
-        std::cout << "Got result: " << std::endl;
-        std::cout << res.toString() << std::endl;
+        printer->print(QString("Got result:\n" + res.toString()), true);
     }
 }
 
