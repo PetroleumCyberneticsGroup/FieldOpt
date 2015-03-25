@@ -10,8 +10,19 @@ void OptimizerSettings::setSteps(const QList<int> &value)
 {
     steps = value;
 }
+
+SelectedOptimizer OptimizerSettings::getOptimizer() const
+{
+    return optimizer;
+}
+
+void OptimizerSettings::setOptimizer(const SelectedOptimizer &value)
+{
+    optimizer = value;
+}
 OptimizerSettings::OptimizerSettings()
 {
+    optimizer = OPT_NOT_SET;
     maxIterations = 1;
     maxIterContinuous = 100;
     perturbationSize = 0.0001;

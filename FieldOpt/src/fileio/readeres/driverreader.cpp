@@ -102,11 +102,11 @@ Model* DriverReader::readDriverFile()
         else if(list.at(0).startsWith("SIMULATOR"))     // reading the type of reservoir simulator to use
         {
             if(list.at(1).startsWith("GPRS"))
-                p_model->getRuntimeSettings().setSimulator(GPRS);
+                p_model->getRuntimeSettings().getSimulatorSettings().setSimulator(GPRS);
             else if(list.at(1).startsWith("VLP"))
-                p_model->getRuntimeSettings().setSimulator(VLP);
+                p_model->getRuntimeSettings().getSimulatorSettings().setSimulator(VLP);
             else if(list.at(1).startsWith("MRST_BATCH"))
-                p_model->getRuntimeSettings().setSimulator(MRST);
+                p_model->getRuntimeSettings().getSimulatorSettings().setSimulator(MRST);
             else
             {
                 QString message = QString("Type of SIMULATOR not understood.\nPossible types are: GPRS, MRST_BATCH, VLP\nLast line: %1").arg(list.join(" ").toLatin1().constData());
@@ -1899,11 +1899,11 @@ void DriverReader::readOptimizer(Model *m)
         if(list.at(0).startsWith("TYPE"))                           // getting the type
         {
             if(list.at(1).startsWith("RUNONCE"))
-                m->getRuntimeSettings().setOptimizer(RUNONCE);
+                m->getRuntimeSettings().getOptimizerSettings().setOptimizer(RUNONCE);
             else if(list.at(1).startsWith("LSH"))
-                m->getRuntimeSettings().setOptimizer(LSH);
+                m->getRuntimeSettings().getOptimizerSettings().setOptimizer(LSH);
             else if(list.at(1).startsWith("EROPT"))
-                m->getRuntimeSettings().setOptimizer(EROPT);
+                m->getRuntimeSettings().getOptimizerSettings().setOptimizer(EROPT);
         }
         else if(list.at(0).startsWith("ITERATIONS")) l_max_iter = list.at(1).toInt(&ok);    // getting the max number if iterations
         else if(list.at(0).startsWith("CONT_ITER")) l_max_iter_cont = list.at(1).toInt(&ok); // getting the max number if iterations for the contienous solver

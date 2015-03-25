@@ -3,11 +3,10 @@
 
 #include <QString>
 #include "optimizersettings.h"
-
-enum SelectedSimulator {SIM_NOT_SET, MRST, GPRS, VLP};
-enum SelectedOptimizer {OPT_NOT_SET, RUNONCE, LSH, EROPT};
+#include "simulatorsettings.h"
 
 class OptimizerSettings;
+class SimulatorSettings;
 
 /*!
  * \brief Holds settings used during run time by some runner program.
@@ -21,10 +20,9 @@ class RuntimeSettings
 private:
     bool parallel;                //!< Whether or not to run in parallel.
     int parallelRuns;             //!< The number of parallel runs to be made.
-    SelectedSimulator simulator;  //!< The simulator specified in the driver file.
-    SelectedOptimizer optimizer;  //!< The Optimizer specified in the driver file.
     QString debugFilename;        //!< Path to the debug file to be written.
     OptimizerSettings optimizerSettings;  //!< General settings for the optimizer.
+    SimulatorSettings simulatorSettings;  //!< General settings for the simulator.
 
 public:
     RuntimeSettings();            //!< Initializes the fields to NOT_SET.
@@ -32,14 +30,11 @@ public:
     OptimizerSettings getOptimizerSettings() const;
     void setOptimizerSettings(const OptimizerSettings &value);
 
+    SimulatorSettings getSimulatorSettings() const;
+    void setSimulatorSettings(const SimulatorSettings &value);
+
     QString getDebugFilename() const;
     void setDebugFilename(const QString &value);
-
-    SelectedOptimizer getOptimizer() const;
-    void setOptimizer(const SelectedOptimizer &value);
-
-    SelectedSimulator getSimulator() const;
-    void setSimulator(const SelectedSimulator &value);
 
     int getParallelRuns() const;
     void setParallelRuns(int value);

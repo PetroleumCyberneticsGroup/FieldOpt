@@ -3,6 +3,8 @@
 
 #include <QList>
 
+enum SelectedOptimizer {OPT_NOT_SET, RUNONCE, LSH, EROPT};
+
 /*!
  * \brief Class containing general optimizer settings to be used during runtime.
  *
@@ -18,6 +20,7 @@ private:
     int terminationStart;
     bool startingpointUpdate;
     QList<int> steps;  //!< Steps to be used. Only used by the EROPT optimizer. \todo Implement EROPT optimizer.
+    SelectedOptimizer optimizer;  //!< The Optimizer specified in the driver file.
 
 
 public:
@@ -43,6 +46,9 @@ public:
 
     QList<int> getSteps() const;
     void setSteps(const QList<int> &value);
+
+    SelectedOptimizer getOptimizer() const;
+    void setOptimizer(const SelectedOptimizer &value);
 };
 
 #endif // OPTIMIZERSETTINGS_H

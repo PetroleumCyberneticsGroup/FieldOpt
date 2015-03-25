@@ -22,26 +22,6 @@ void RuntimeSettings::setDebugFilename(const QString &value)
     debugFilename = value;
 }
 
-SelectedOptimizer RuntimeSettings::getOptimizer() const
-{
-    return optimizer;
-}
-
-void RuntimeSettings::setOptimizer(const SelectedOptimizer &value)
-{
-    optimizer = value;
-}
-
-SelectedSimulator RuntimeSettings::getSimulator() const
-{
-    return simulator;
-}
-
-void RuntimeSettings::setSimulator(const SelectedSimulator &value)
-{
-    simulator = value;
-}
-
 int RuntimeSettings::getParallelRuns() const
 {
     return parallelRuns;
@@ -61,10 +41,20 @@ void RuntimeSettings::setParallel(bool value)
 {
     parallel = value;
 }
+
+SimulatorSettings RuntimeSettings::getSimulatorSettings() const
+{
+    return simulatorSettings;
+}
+
+void RuntimeSettings::setSimulatorSettings(const SimulatorSettings &value)
+{
+    simulatorSettings = value;
+}
 RuntimeSettings::RuntimeSettings()
 {
-    simulator = SIM_NOT_SET;
-    optimizer = OPT_NOT_SET;
+    simulatorSettings = SimulatorSettings();
+    optimizerSettings = OptimizerSettings();
     debugFilename = "NOT_SET";
     parallel = true;
     parallelRuns = 2;
