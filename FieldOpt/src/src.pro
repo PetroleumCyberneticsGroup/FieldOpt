@@ -68,7 +68,8 @@ HEADERS += \
     model/decoupledmodel.h \
     settings/runtimesettings.h \
     settings/optimizersettings.h \
-    settings/simulatorsettings.h
+    settings/simulatorsettings.h \
+    optimizers/runonceoptimizer.h
 
 SOURCES += \
     variables/intvariable.cpp \
@@ -129,4 +130,5 @@ SOURCES += \
     model/decoupledmodel.cpp \
     settings/runtimesettings.cpp \
     settings/optimizersettings.cpp \
-    settings/simulatorsettings.cpp
+    settings/simulatorsettings.cpp \
+    optimizers/runonceoptimizer.cpp
