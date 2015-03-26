@@ -10,7 +10,7 @@ DEBUG debug.dat
 
 !---------------- Optimization Algorithm ---------------------------
 START OPTIMIZER
- TYPE IPOPT !BONMIN, RUNONCE, NOMAD
+ TYPE RUNONCE !BONMIN, RUNONCE, NOMAD, IPOPT
  ITERATIONS 10000
  CONT_ITER 500
  PERTURBATION 0.0001   ! O.O5
@@ -45,7 +45,7 @@ END MASTERSCHEDULE
 START RESERVOIR
  NAME RES1
  FILE SIMPLE10x5x10.txt
- MRST ~/Documents/MATLAB/mrst-2014b/
+ MRST ~/Documents/MATLAB/mrst-2013a/
  MATLAB /usr/local/MATLAB/R2014a/bin/matlab
  TIME 365.0
  PHASES 0 1 1             ! gas oil water

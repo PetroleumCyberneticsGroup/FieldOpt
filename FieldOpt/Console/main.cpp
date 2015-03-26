@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
     }
     else {
         SimulationLauncher simlauncher = SimulationLauncher(&world);
-        simlauncher.initialize();
+        simlauncher.initialize(driverPath);
         printer.print(QString("Initialized SimulationLauncher"), false);
         simlauncher.receivePerturbations();
         simlauncher.startSimulation();

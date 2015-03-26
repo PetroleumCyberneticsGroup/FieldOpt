@@ -24,6 +24,7 @@
 #define SIMULATIONLAUNCHER_H
 
 #include <boost/mpi.hpp>
+#include <QString>
 
 #include "transferobjects/modelperturbation.h"
 #include "transferobjects/simulationresults.h"
@@ -31,6 +32,7 @@
 #include "model/coupledmodel.h"
 #include "simulators/simulator.h"
 #include "parallelprinter.h"
+#include "fileio/readeres/driverreader.h"
 
 namespace mpi = boost::mpi;
 
@@ -47,9 +49,11 @@ class SimulationLauncher
 {
 private:
     ModelPerturbation* perturbation;
+    DriverReader* driverReader;
     Model* model;
     mpi::communicator* world;
     ParallelPrinter* printer;
+    QString driverPath;
 
     void perturbModel();
     void returnResults();
@@ -58,7 +62,7 @@ public:
     SimulationLauncher(mpi::communicator *comm);
     ~SimulationLauncher();
 
-    void initialize();
+    void initialize(QString driverPath);
     void receivePerturbations();
     void startSimulation();
 };

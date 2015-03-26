@@ -48,9 +48,13 @@ SimulationLauncher::~SimulationLauncher()
 
 }
 
-void SimulationLauncher::initialize()
+void SimulationLauncher::initialize(QString driverPath)
 {
-    model = new CoupledModel();
+    this->driverPath = driverPath;
+    driverReader = new DriverReader(this->driverPath);
+    printer->print("Reading driver file...", false);
+    model = driverReader->readDriverFile();
+    printer->print("Model object created.", false);
 }
 
 void SimulationLauncher::receivePerturbations()
