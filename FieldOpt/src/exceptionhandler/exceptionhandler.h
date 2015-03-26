@@ -39,7 +39,10 @@ enum class ExceptionType {
     UNABLE_TO_PARSE,
     COMPUTATION_ERROR,
     ASSUMPTION,
-    MODEL_VALIDATION
+    MODEL_VALIDATION,
+    WRITE_ERROR,
+    READ_ERROR,
+    PROGRESS
 };
 
 class ExceptionHandler
@@ -78,6 +81,12 @@ private:
             return "Assumption.";
         case ExceptionType::MODEL_VALIDATION:
             return "Model validation error.";
+        case ExceptionType::WRITE_ERROR:
+            return "Error writing to file.";
+        case ExceptionType::READ_ERROR:
+            return "Error reading file.";
+        case ExceptionType::PROGRESS:
+            return "Everything is OK";
         default:
             return "Unknown type.";
         }

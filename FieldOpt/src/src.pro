@@ -69,7 +69,8 @@ HEADERS += \
     settings/runtimesettings.h \
     settings/optimizersettings.h \
     settings/simulatorsettings.h \
-    optimizers/runonceoptimizer.h
+    optimizers/runonceoptimizer.h \
+    exceptionhandler/simulatorhandler.h
 
 SOURCES += \
     variables/intvariable.cpp \
@@ -131,4 +132,5 @@ SOURCES += \
     settings/runtimesettings.cpp \
     settings/optimizersettings.cpp \
     settings/simulatorsettings.cpp \
-    optimizers/runonceoptimizer.cpp
+    optimizers/runonceoptimizer.cpp \
+    exceptionhandler/simulatorhandler.cpp

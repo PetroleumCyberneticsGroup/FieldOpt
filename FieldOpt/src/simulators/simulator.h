@@ -24,15 +24,31 @@
 #define SIMULATOR_H
 
 #include "model/model.h"
+#include "exceptionhandler/simulatorhandler.h"
 #include <QString>
+#include <QObject>
 
 /*!
  * \brief Abstract parent class for all simulators.
  *
  * \todo This is a stub.
  */
-class Simulator
+class Simulator : public QObject
 {
+    Q_OBJECT
+
+signals:
+    /*!
+     * \brief Error signal.
+     *
+     * Emitted when an error occurs.
+     *
+     * \param severity The severity of the event. May be WARNING or ERROR.
+     * \param type The type of exception.
+     * \param message The message to be printed in addition to the severity and the type.
+     */
+    void error(ExceptionSeverity severity, ExceptionType type, const QString message);
+
 private:
     QString m_folder;
 public:
@@ -50,6 +66,15 @@ public:
 
     const QString& folder() {return m_folder;}                  //!< Get the working directory.
     void setFolder(const QString &folder) {m_folder = folder;}  //!< Set the working directory.
+
+protected:
+    /*!
+     * \brief Convenience class used by the component subclasses to emit exceptions.
+     * \param severity The severity of the event.
+     * \param type The type of exception.
+     * \param message The message to be printed.
+     */
+    void emitException(ExceptionSeverity severity, ExceptionType type, QString message);
 };
 
 #endif // SIMULATOR_H

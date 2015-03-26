@@ -20,19 +20,36 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
-#include "simulator.h"
+#include "simulatorhandler.h"
 
-Simulator::Simulator(const Simulator &s)
+SimulatorHandler::SimulatorHandler(QObject *parent) : QObject(parent)
 {
-    m_folder = s.m_folder;
+
 }
 
-void Simulator::emitException(ExceptionSeverity severity, ExceptionType type, QString message)
+SimulatorHandler::~SimulatorHandler()
 {
-    SimulatorHandler* sh = new SimulatorHandler;
-    connect(this, SIGNAL(error(ExceptionSeverity, ExceptionType, QString)),
-            sh, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
-    emit error(severity, type, message);
-    disconnect(this, SIGNAL(error(ExceptionSeverity, ExceptionType, QString)),
-               sh, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
+
 }
+
+
+void SimulatorHandler::handleException(ExceptionSeverity severity, ExceptionType type, QString message)
+{
+    message.prepend("An exception has occured in a Simulator class.\n");
+    if (severity == ExceptionSeverity::WARNING)
+    {
+        printWarning(message, type);
+        return;
+    }
+    else if (severity == ExceptionSeverity::ERROR)
+    {
+        printError(message, type);
+        exit(1);
+        return;
+    }
+    else
+    {
+        return;
+    }
+}
+
