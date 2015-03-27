@@ -20,6 +20,35 @@ void OptimizerSettings::setOptimizer(const SelectedOptimizer &value)
 {
     optimizer = value;
 }
+
+QString OptimizerSettings::toString() const
+{
+    QString optstr = "Optimizer settings:\n";
+    optstr.append("Selected optimizer: ");
+    switch (optimizer) {
+    case OPT_NOT_SET:
+        optstr.append("Not set\n");
+        break;
+    case RUNONCE:
+        optstr.append("RUNONCE\n");
+        break;
+    case LSH:
+        optstr.append("LSH\n");
+        break;
+    case EROPT:
+        optstr.append("EROPT\n");
+        break;
+    default:
+        break;
+    }
+    optstr.append("Max iterations: " + QString::number(maxIterations) + "\n");
+    optstr.append("Max continous iterations: " + QString::number(maxIterContinuous) + "\n");
+    optstr.append("Perturbation size: " + QString::number(perturbationSize) + "\n");
+    optstr.append("Termination: " + QString::number(termination) + "\n");
+    optstr.append("Termination start: " + QString::number(terminationStart) + "\n");
+    optstr.append("Staring point update: " + QString::number(startingpointUpdate) + "\n");
+    return optstr;
+}
 OptimizerSettings::OptimizerSettings()
 {
     optimizer = OPT_NOT_SET;

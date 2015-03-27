@@ -1,6 +1,8 @@
 #ifndef SIMULATORSETTINGS_H
 #define SIMULATORSETTINGS_H
 
+#include <QString>
+
 enum SelectedSimulator {SIM_NOT_SET, MRST, GPRS, VLP};
 
 /*!
@@ -16,6 +18,8 @@ public:
 
     SelectedSimulator getSimulator() const;
     void setSimulator(const SelectedSimulator &value);
+
+    QString toString() const;
 };
 
 #endif // SIMULATORSETTINGS_H

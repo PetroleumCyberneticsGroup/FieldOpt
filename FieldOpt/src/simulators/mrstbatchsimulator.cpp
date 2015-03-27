@@ -189,7 +189,6 @@ bool MrstBatchSimulator::generateMRSTScript(Model *m, bool adjoints)
 
     // base file name
     QString base_name = m->reservoir()->file().split(".").at(0);
-
     *out_mrst << "function [] = runSim2\n\n";
     *out_mrst << "mrstModule add ad-fi\n";
     *out_mrst << "mrstModule add deckformat\n\n";
@@ -816,8 +815,11 @@ bool MrstBatchSimulator::launchSimulator()
 
     // starting MRST
     mrst.start(program, args);
+    emitException(ExceptionSeverity::WARNING, ExceptionType::PROGRESS, QString("MRST Started."));
     mrst.waitForStarted(-1);
+    emitException(ExceptionSeverity::WARNING, ExceptionType::PROGRESS, QString("Waiting for MRST to finish."));
     mrst.waitForFinished(-1);
+    emitException(ExceptionSeverity::WARNING, ExceptionType::PROGRESS, QString("MRST Finished."));
 
     // checking the exit code
     int exit_code = mrst.exitCode();

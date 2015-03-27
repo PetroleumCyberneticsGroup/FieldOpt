@@ -22,6 +22,9 @@
 
 #include "simulator.h"
 
+Simulator::Simulator()
+{}
+
 Simulator::Simulator(const Simulator &s)
 {
     m_folder = s.m_folder;

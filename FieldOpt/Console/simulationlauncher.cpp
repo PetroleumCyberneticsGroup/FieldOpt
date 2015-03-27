@@ -22,6 +22,25 @@
 
 #include "simulationlauncher.h"
 
+void SimulationLauncher::setupWorkingDirectory()
+{
+    // Create output directory
+    workingDirectory = driverPath.remove(driverPath.lastIndexOf("/"), driverPath.length());
+    QDir dir(workingDirectory);
+    printer->print(QString("Creating output directory in %1").arg(dir.absolutePath()), false);
+    if (!dir.exists("output"))
+        dir.mkdir("output");
+    if (!dir.exists("output"))
+        printer->eprint("Unable to create output directory.");
+    outputPath = dir.absolutePath() + "/output";
+
+    // Copy reservoir description file to output folder
+    QString newResFile = outputPath + "/" + model->reservoir()->file();
+    printer->print("Copying reservoir description file to" + newResFile, false);
+    QFile::remove(newResFile);
+    QFile::copy(workingDirectory + "/" + model->reservoir()->file(), newResFile);
+}
+
 void SimulationLauncher::perturbModel()
 {
     printer->print("Perturbing the model before simulating: \n" + perturbation->toString(), true);
@@ -54,6 +73,10 @@ void SimulationLauncher::initialize(QString driverPath)
     driverReader = new DriverReader(this->driverPath);
     printer->print("Reading driver file...", false);
     model = driverReader->readDriverFile();
+    model->readPipeFiles();
+    model->resolveCapacityConnections();
+    model->resolvePipeRouting();
+    model->initialize();
     printer->print("Model object created.", false);
 }
 
@@ -78,7 +101,16 @@ void SimulationLauncher::receivePerturbations()
 void SimulationLauncher::startSimulation()
 {
     perturbModel();
-    printer->print("Starting simulation...", false);
-    printer->print("Simulation done.", false);
+    if (this->model->getRuntimeSettings()->getSimulatorSettings()->getSimulator() == MRST) {
+        printer->print("Starting MRST simulation.", true);
+        setupWorkingDirectory();
+        MrstBatchSimulator sim = MrstBatchSimulator();
+        sim.setFolder(outputPath);
+        if(!sim.generateInputFiles(model))
+            printer->eprint("Failed to generate simulator input files.");
+        sim.launchSimulator();
+        sim.readOutput(model);
+        printer->print("Simulation done.", true);
+    }
     returnResults();
 }

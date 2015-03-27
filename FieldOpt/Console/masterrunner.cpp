@@ -37,7 +37,11 @@ void MasterRunner::initialize(QString driverPath)
     driverReader = new DriverReader(this->driverPath);
     printer->print("Reading driver file...", false);
     model = driverReader->readDriverFile();
-    printer->print("Model object created.", false);
+    if (!model->validate()) {
+        printer->eprint("Failed to validate model.");
+    }
+    printer->print("Model object successfully created and validated.", false);
+    printer->print(model->getRuntimeSettings()->toString(), true);
 }
 
 void MasterRunner::perturbModel()

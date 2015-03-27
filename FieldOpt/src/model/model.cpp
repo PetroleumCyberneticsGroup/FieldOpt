@@ -1,12 +1,14 @@
 #include "model.h"
 
 
-RuntimeSettings Model::getRuntimeSettings() const
+
+
+RuntimeSettings *Model::getRuntimeSettings() const
 {
     return runtimeSettings;
 }
 
-void Model::setRuntimeSettings(const RuntimeSettings &value)
+void Model::setRuntimeSettings(RuntimeSettings *value)
 {
     runtimeSettings = value;
 }
@@ -111,7 +113,7 @@ Model::Model() :
     p_obj(0),
     m_up_to_date(false)
 {
-    runtimeSettings = RuntimeSettings();
+    runtimeSettings = new RuntimeSettings();
 }
 
 Model::Model(const Model &m)

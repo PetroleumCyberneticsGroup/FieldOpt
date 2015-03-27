@@ -51,10 +51,10 @@ BeggsBrillCalculator *PipeReader::readBeggsBrill(QFile &file)
         else if(list.at(0).startsWith("WATERVISCOSITY")) l_vis_wat = list.at(1).toDouble(&ok);  // getting the water visc
         else
         {
-            if(StringUtilities::isEmpty(list))
+            if(!StringUtilities::isEmpty(list))
             {
-                QString message = QString("File: %s\nKeyword:%s\nNot understood in current context. Expecting a property.")
-                        .arg(file.fileName().toLatin1().constData()).arg(list.join(" ").toLatin1().constData());
+                QString message = QString("File: %1\nKeyword:%2\nNot understood in current context. Expecting a property.")
+                        .arg(file.fileName()).arg(list.join(" "));
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNKNOWN_KEYWORD, message);
             }
         }
@@ -63,8 +63,8 @@ BeggsBrillCalculator *PipeReader::readBeggsBrill(QFile &file)
     }
     if(!ok)
     {
-        QString message = QString("File: %s\nDefinition is incomplete.\nLast line: %s")
-                .arg(file.fileName().toLatin1().constData()).arg(list.join(" ").toLatin1().constData());
+        QString message = QString("File: %1\nDefinition is incomplete.\nLast line: %2")
+                .arg(file.fileName()).arg(list.join(" "));
         emitException(ExceptionSeverity::ERROR, ExceptionType::UNKNOWN_KEYWORD, message);
     }
     // setting the parameters
@@ -87,7 +87,7 @@ PressureDropCalculator *PipeReader::readFile(const QString &file_name)
     QFile input(file_name);
     if(!input.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        QString message = QString("Could not open pipe input file: %s").arg(file_name.toLatin1().constData());
+        QString message = QString("Could not open pipe input file: %1").arg(file_name);
         emitException(ExceptionSeverity::ERROR, ExceptionType::FILE_NOT_FOUND, message);
     }
 
@@ -100,10 +100,10 @@ PressureDropCalculator *PipeReader::readFile(const QString &file_name)
         {
             if(list.at(1).startsWith("BB73")) calc = readBeggsBrill(input);
         }
-        else if(StringUtilities::isEmpty(list))
+        else if(!StringUtilities::isEmpty(list))
         {
-            QString message = QString("File: %s\nKeyword:%s\nNot understood in current context. Expecting a calculator definition.")
-                    .arg(file_name.toLatin1().constData()).arg(list.join(" ").toLatin1().constData());
+            QString message = QString("File: %1\nKeyword:%2\nNot understood in current context. Expecting a calculator definition.")
+                    .arg(file_name).arg(list.join(" "));
             emitException(ExceptionSeverity::ERROR, ExceptionType::UNKNOWN_KEYWORD, message);
         }
         list = StringUtilities::processLine(input.readLine());

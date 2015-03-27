@@ -2,6 +2,7 @@
 #define OPTIMIZERSETTINGS_H
 
 #include <QList>
+#include <QString>
 
 enum SelectedOptimizer {OPT_NOT_SET, RUNONCE, LSH, EROPT};
 
@@ -49,6 +50,8 @@ public:
 
     SelectedOptimizer getOptimizer() const;
     void setOptimizer(const SelectedOptimizer &value);
+
+    QString toString() const;
 };
 
 #endif // OPTIMIZERSETTINGS_H

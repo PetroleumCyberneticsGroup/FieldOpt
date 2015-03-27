@@ -31,4 +31,5 @@ void ParallelPrinter::eprint(QString message)
     complete += "P" + rank_s + ":" + message + "\n";
     complete += "=================================P"+ rank_s + " ERROR END======================\n\n";
     cerr << complete.toLatin1().constData();
+    exit(1);
 }

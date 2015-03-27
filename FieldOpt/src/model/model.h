@@ -73,7 +73,7 @@ private:
     QVector<UserConstraint*> m_user_constraints;  //!< User defined constraints for this model.
     bool m_up_to_date;                            //!< True if the model has been evaluated
     QString m_driver_path;                        //!< The path to the driver file. \todo This really should not be here.
-    RuntimeSettings runtimeSettings;              //!< Settings used by a runner. \todo This really should not be here.
+    RuntimeSettings* runtimeSettings;             //!< Settings used by a runner. \todo This really should not be here.
 
     /*!
      * \brief Update the capacity constraints for all the Capacities in the model.
@@ -208,8 +208,8 @@ public:
 
     Model& operator=(const Model &rhs);  //!< Assignment operator. Sets two models equal to each other (they will have pointers to the same wells, streams, etc.)
 
-    RuntimeSettings getRuntimeSettings() const;
-    void setRuntimeSettings(const RuntimeSettings &value);
+    RuntimeSettings *getRuntimeSettings() const;
+    void setRuntimeSettings(RuntimeSettings *value);
 
 protected:
     /*!

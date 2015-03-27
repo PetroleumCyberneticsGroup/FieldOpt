@@ -53,7 +53,7 @@ private:
     QString m_folder;
 public:
     Simulator(Model* model) {}      //!< \todo Should maybe not exist
-    Simulator(){}                   //!< Default constructor. Does nothing.
+    Simulator();                   //!< Default constructor. Does nothing.
     Simulator(const Simulator &s);  //!< Copy constructor.
     virtual ~Simulator(){}          //!< Default constructor.
 

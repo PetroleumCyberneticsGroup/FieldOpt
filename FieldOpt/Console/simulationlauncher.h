@@ -25,12 +25,14 @@
 
 #include <boost/mpi.hpp>
 #include <QString>
+#include <QDir>
 
 #include "transferobjects/modelperturbation.h"
 #include "transferobjects/simulationresults.h"
 #include "model/model.h"
 #include "model/coupledmodel.h"
 #include "simulators/simulator.h"
+#include "simulators/mrstbatchsimulator.h"
 #include "parallelprinter.h"
 #include "fileio/readeres/driverreader.h"
 
@@ -54,6 +56,9 @@ private:
     mpi::communicator* world;
     ParallelPrinter* printer;
     QString driverPath;
+    QString workingDirectory;
+    QString outputPath;
+    void setupWorkingDirectory();
 
     void perturbModel();
     void returnResults();
