@@ -66,6 +66,7 @@ void AdjointsCoupledModel::initialize()
 
 void AdjointsCoupledModel::process()
 {
+    emitException(ExceptionSeverity::WARNING, ExceptionType::PROGRESS, "Processing Adjoints Coupled Model.");
     // Run perturbations
     QVector<Case*> cases;
     for(int i = 0; i < realVariables().size(); ++i)

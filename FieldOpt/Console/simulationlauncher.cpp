@@ -116,7 +116,9 @@ void SimulationLauncher::startSimulation()
         printer->print("Starting Launching simulator.", true);
         sim.launchSimulator();
         sim.readOutput(model);
+        model->process();
         printer->print("Simulation done.", true);
+        printer->print("OBJECTIVE:\n" + model->objective()->description() + "\n Value: " + QString::number(model->objective()->value()) + "\n", true);
     }
     returnResults();
 }
