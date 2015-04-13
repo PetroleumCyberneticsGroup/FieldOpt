@@ -27,7 +27,6 @@
 #include <QStringList>
 #include <QFile>
 #include <QTextStream>
-#include <QProcess>
 #include <QDir>
 
 #include "model/components/well.h"
@@ -45,6 +44,7 @@
 #include "model/stream.h"
 #include "optimizers/adjoint.h"
 #include "optimizers/adjointcollection.h"
+#include "utilities/posixutilities.h"
 
 /*!
  * \brief Interface for the MRST reservoir simulator.
@@ -61,7 +61,6 @@ private:
     QString m_script;                                          //!< Path to matlab script. \todo Why is this set to test2?
 
     bool generateControlInputFile(Model *m);                   //!< Generate a control input file. Called when using the auto-generated MRST script.
-    bool generateScriptControlFile(Model *m);                  //!< Generate the control input file. Called when using a _custom_ MRST script.
     bool generateEclIncludeFile(Model *m);                     //!< Generate the ECL include file. \todo Could be used for general ECL printing.
     bool generateMRSTScript(Model *m, bool adjoints = false);  //!< Generate the MRST Run2 function.
     void writeWellPaths(Model *m);                             //!< Write well paths to file if they are present.

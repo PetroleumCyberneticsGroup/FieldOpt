@@ -70,7 +70,8 @@ HEADERS += \
     settings/optimizersettings.h \
     settings/simulatorsettings.h \
     optimizers/runonceoptimizer.h \
-    exceptionhandler/simulatorhandler.h
+    exceptionhandler/simulatorhandler.h \
+    utilities/posixutilities.h
 
 SOURCES += \
     variables/intvariable.cpp \
@@ -133,4 +134,5 @@ SOURCES += \
     settings/optimizersettings.cpp \
     settings/simulatorsettings.cpp \
     optimizers/runonceoptimizer.cpp \
-    exceptionhandler/simulatorhandler.cpp
+    exceptionhandler/simulatorhandler.cpp \
+    utilities/posixutilities.cpp

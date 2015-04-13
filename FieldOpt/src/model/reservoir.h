@@ -22,7 +22,7 @@
  * END RESERVOIR
  * \endcode
  *
- * \todo Create and use fluid properties class here too.
+ * \todo Create and use fluid properties class here too
  */
 class Reservoir
 {
@@ -32,7 +32,6 @@ private:
     QString m_matlab_path;   //!< Path to the matlab executable.
     QString m_mrst_path;     //!< Path to the local MRST directory.
     QString m_mrst_script;   //!< Path to custom MRST script to run.
-    bool m_use_mrst_script;  //!< Whether or not to use custom MRST script.
     bool m_keep_mat_file;    //!< Keep .mat files generated when running simulations.
     double m_endtime;        //!< \todo This is marked as todo in the original resopt code.
     bool m_gas_phase;        //!< Whether or not the gas phase exists.
@@ -52,9 +51,7 @@ public:
         void setFile(const QString &f) {m_file = f;}                                         //!< Set the name of the file containing the reservoir description.
         void setMrstPath(const QString &p) {m_mrst_path = p;}                                //!< Set the MRST path.
         void setMatlabPath(const QString &p) {m_matlab_path = p;}                            //!< Set the Matlab path.
-        void setMrstScript(const QString &s) {m_mrst_script = s; m_use_mrst_script = true;}  //!< Set the path to the custom MRST script to be run.
         void setKeepMatFile(bool b) {m_keep_mat_file = b;}                                   //!< Set whether or not to keep .mat files from the simulations.
-        void setUseMrstScript(bool b) {m_use_mrst_script = b;}                               //!< Set whether or not to use a custom MRST script.
         void setEndTime(double t) {m_endtime = t;}                                           //!< Set the end time of the simulation.
         void setPhases(bool gas, bool oil, bool water);                                      //!< Set which phases are present.
         void setDensities(double gas, double oil, double water);                             //!< Set the densities of the present phases.
@@ -64,7 +61,6 @@ public:
         QString matlabPath() const {return m_matlab_path;}      //!< Get the Matlab path.
         QString mrstPath() const {return m_mrst_path;}          //!< Get the MRST path.
         QString mrstScript() const {return m_mrst_script;}      //!< Get the path to the custom MRST script.
-        bool useMrstScript() const {return m_use_mrst_script;}  //!< Get whether or not a custom MRST script is to be used.
         bool keepMatFile() const {return m_keep_mat_file;}      //!< Get whether or not .mat files from the simulations are to be kept.
         double endTime() const {return m_endtime;}              //!< Get the end time of the simulation.
         double gasDensity() {return m_den_gas;}                 //!< Get the gas density.

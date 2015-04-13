@@ -23,16 +23,20 @@
 #include "simulationlauncher.h"
 
 void SimulationLauncher::setupWorkingDirectory()
-{
+{    
     // Create output directory
     workingDirectory = driverPath.remove(driverPath.lastIndexOf("/"), driverPath.length());
     QDir dir(workingDirectory);
+
+    // Remove existing output directory
+    QString outputdirName = "output_p" + QString::number(world->rank());
+
     printer->print(QString("Creating output directory in %1").arg(dir.absolutePath()), false);
-    if (!dir.exists("output"))
-        dir.mkdir("output");
-    if (!dir.exists("output"))
+    if (!dir.exists(outputdirName))
+        dir.mkdir(outputdirName);
+    if (!dir.exists(outputdirName))
         printer->eprint("Unable to create output directory.");
-    outputPath = dir.absolutePath() + "/output";
+    outputPath = dir.absolutePath() + "/" + outputdirName;
 
     // Copy reservoir description file to output folder
     QString newResFile = outputPath + "/" + model->reservoir()->file();
@@ -106,8 +110,10 @@ void SimulationLauncher::startSimulation()
         setupWorkingDirectory();
         MrstBatchSimulator sim = MrstBatchSimulator();
         sim.setFolder(outputPath);
+        printer->print("Generating simulator input files.", true);
         if(!sim.generateInputFiles(model))
             printer->eprint("Failed to generate simulator input files.");
+        printer->print("Starting Launching simulator.", true);
         sim.launchSimulator();
         sim.readOutput(model);
         printer->print("Simulation done.", true);

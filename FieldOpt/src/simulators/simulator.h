@@ -75,6 +75,7 @@ protected:
      * \param message The message to be printed.
      */
     void emitException(ExceptionSeverity severity, ExceptionType type, QString message);
+    void emitProgress(QString message);
 };
 
 #endif // SIMULATOR_H

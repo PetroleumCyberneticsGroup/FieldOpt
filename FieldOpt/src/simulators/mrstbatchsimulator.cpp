@@ -41,7 +41,7 @@ bool MrstBatchSimulator::generateControlInputFile(Model *m)
     bool ok = true;
     QFile ctrl_file(folder() + "/test2.m");
     if(!ctrl_file.open(QIODevice::WriteOnly | QIODevice::Text))
-        emitException(ExceptionSeverity::ERROR, ExceptionType::WRITE_ERROR, QString("Could not connec to file: %1").arg(ctrl_file.fileName()));
+        emitException(ExceptionSeverity::ERROR, ExceptionType::WRITE_ERROR, QString("Could not connect to file: %1").arg(ctrl_file.fileName()));
 
     QTextStream *out_ctrl = new QTextStream(&ctrl_file);
 
@@ -120,59 +120,13 @@ bool MrstBatchSimulator::generateControlInputFile(Model *m)
     *out_ctrl << " runSim2;" << "\n";
     *out_ctrl << "catch err" << "\n";
     *out_ctrl << " warning('something went wrong with MRST');" << "\n";
+    *out_ctrl << " warning(getReport(err));" << "\n";
     *out_ctrl << " exit(3)" << "\n";
     *out_ctrl << "end" << "\n";
+    *out_ctrl << "warning('Simulation Completed')" << "\n";
+    *out_ctrl << "quit" << "\n";
 
     // closing file
-    ctrl_file.close();
-    delete out_ctrl;
-    return ok;
-}
-
-
-bool MrstBatchSimulator::generateScriptControlFile(Model *m)
-{
-    bool ok = true;
-    QFile ctrl_file(folder() + "/" + m->reservoir()->file().split(".").at(0) + "_CONTROLS.TXT");
-
-    if(!ctrl_file.open(QIODevice::WriteOnly | QIODevice::Text))
-        emitException(ExceptionSeverity::ERROR, ExceptionType::WRITE_ERROR, QString("Could not connect to control file: %1").arg(ctrl_file.fileName()));
-
-    QTextStream *out_ctrl = new QTextStream(&ctrl_file);
-    out_ctrl->setRealNumberNotation(QTextStream::ScientificNotation);
-
-    //sorting the wells in a list first: injectors first, then producers
-    QList<Well*> wells;
-
-    // injectors
-    for(int i = 0; i < m->numberOfWells(); ++i)
-    {
-        Well *w = m->well(i);
-        InjectionWell *inj = dynamic_cast<InjectionWell*>(w);
-        if(inj != 0) wells.push_back(w);
-    }
-
-    // producers
-    for(int i = 0; i < m->numberOfWells(); ++i)
-    {
-        Well *w = m->well(i);
-        ProductionWell *prod = dynamic_cast<ProductionWell*>(w);
-        if(prod != 0) wells.push_back(w);
-    }
-
-    // printing to file
-    for(int i = 0; i < m->numberOfMasterScheduleTimes(); ++i)
-    {
-        for(int j = 0; j < wells.size(); ++j)
-        {
-            WellControl *wc = wells.at(j)->control(i);
-            double value = wc->controlVar()->value();
-            if(wc->type() == WellControl::BHP) value = value * 100000;
-            else value = value * 1.15740741 / 100000;
-            *out_ctrl << value << " ";
-        }
-        *out_ctrl << "\n";
-    }
     ctrl_file.close();
     delete out_ctrl;
     return ok;
@@ -206,7 +160,7 @@ bool MrstBatchSimulator::generateMRSTScript(Model *m, bool adjoints)
     *out_mrst << "% check if initialized model already exists\n";
     *out_mrst << "[pth, nm, ext] = fileparts(caseNm);\n";
     *out_mrst << "modelNm = fullfile(pth,[nm,'.mat']);\n";
-    *out_mrst << "doInitialize = StringUtilities::isEmpty(dir(modelNm));\n";
+    *out_mrst << "doInitialize = isempty(dir(modelNm));\n";
     *out_mrst << "if doInitialize\n";
     *out_mrst << "    deck = readEclipseDeck(caseNm);\n";
     *out_mrst << "    % Convert to MRST units (SI)\n";
@@ -235,7 +189,7 @@ bool MrstBatchSimulator::generateMRSTScript(Model *m, bool adjoints)
 
     *out_mrst << "%if control input is given, edit schedule:\n";
     *out_mrst << "numContrSteps = numel(schedule.control);\n";
-    *out_mrst << "if ~StringUtilities::isEmpty(dir(cntrNm));\n";
+    *out_mrst << "if ~isempty(dir(cntrNm));\n";
     *out_mrst << "    fid = fopen(cntrNm);\n";
     *out_mrst << "    u   = fscanf(fid, '%g');\n";
     *out_mrst << "    numWells      = numel(u)/numContrSteps;\n";
@@ -306,7 +260,7 @@ bool MrstBatchSimulator::generateMRSTScriptAdjoints(QTextStream *out_mrst)
     *out_mrst << "   vb = opt.Verbose;\n";
     *out_mrst << "   states = opt.ForwardStates;\n\n";
 
-    *out_mrst << "   if ~StringUtilities::isEmpty(opt.scaling)\n";
+    *out_mrst << "   if ~isempty(opt.scaling)\n";
     *out_mrst << "      scalFacs = opt.scaling;\n";
     *out_mrst << "   else\n";
     *out_mrst << "      scalFacs.rate = 1; scalFacs.pressure = 1;\n";
@@ -324,13 +278,13 @@ bool MrstBatchSimulator::generateMRSTScriptAdjoints(QTextStream *out_mrst)
     *out_mrst << "      % delete existing output\n";
     *out_mrst << "      % delete([opt.outputName, '*.mat']);\n";
     *out_mrst << "      % output file-names\n";
-    *out_mrst << "      if StringUtilities::isEmpty(opt.outputNameFunc)\n";
+    *out_mrst << "      if isempty(opt.outputNameFunc)\n";
     *out_mrst << "         outNm  = @(tstep)fullfile(opt.directory, [opt.outputName, sprintf('%05.0f', tstep)]);\n";
     *out_mrst << "      else\n";
     *out_mrst << "         outNm  = @(tstep)fullfile(opt.directory, opt.outputNameFunc(tstep));\n";
     *out_mrst << "      end\n";
     *out_mrst << "   end\n";
-    *out_mrst << "   if StringUtilities::isEmpty(opt.simOutputNameFunc)\n";
+    *out_mrst << "   if isempty(opt.simOutputNameFunc)\n";
     *out_mrst << "      inNm  = @(tstep)fullfile(opt.directory, [opt.simOutputName, sprintf('%05.0f', tstep)]);\n";
     *out_mrst << "   else\n";
     *out_mrst << "      inNm  = @(tstep)fullfile(opt.directory, opt.simOutputNameFunc(tstep));\n";
@@ -361,7 +315,7 @@ bool MrstBatchSimulator::generateMRSTScriptAdjoints(QTextStream *out_mrst)
     *out_mrst << "           else\n";
     *out_mrst << "           W = processWellsLocal(G, rock, schedule.control(control), 'Verbose', opt.Verbose, ...\n";
     *out_mrst << "                             'DepthReorder', true);\n";
-    *out_mrst << "           if StringUtilities::isEmpty(numWells) %initialize\n";
+    *out_mrst << "           if isempty(numWells) %initialize\n";
     *out_mrst << "               numWells = numel(W); %assum numWells is equa for all cont steps\n";
     *out_mrst << "               %if isfield(state.wellSol(1), 'qGs')\n";
     *out_mrst << "               %    numWellProps = 4;\n";
@@ -397,7 +351,7 @@ bool MrstBatchSimulator::generateMRSTScriptAdjoints(QTextStream *out_mrst)
 
     *out_mrst << "       adjVec = eqs.jac{1}'\\rhs;\n\n";
 
-    *out_mrst << "       if StringUtilities::isEmpty(opt.ControlVariables)\n";
+    *out_mrst << "       if isempty(opt.ControlVariables)\n";
     *out_mrst << "           gradFull{tstep} = -adjVec(ii(end,1):ii(end,2),:);\n";
     *out_mrst << "       else\n";
     *out_mrst << "           gradFull{tstep} = -adjVec(mcolon(ii(opt.ControlVariables,1),ii(opt.ControlVariables,2)),:);\n";
@@ -433,7 +387,7 @@ bool MrstBatchSimulator::generateMRSTScriptAdjoints(QTextStream *out_mrst)
     *out_mrst << "%--------------------------------------------------------------------------\n\n";
 
     *out_mrst << "function state = loadState(states, inNm, tstep)\n";
-    *out_mrst << "if ~StringUtilities::isEmpty(states)\n";
+    *out_mrst << "if ~isempty(states)\n";
     *out_mrst << "    % State has been provided, no need to look for it.\n";
     *out_mrst << "    state = states{tstep+1};\n";
     *out_mrst << "    return\n";
@@ -726,44 +680,17 @@ bool MrstBatchSimulator::generateInputFiles(Model *m)
         {
             QFile::remove(folder() + "/" + base_name + ".mat");
         }
-        if(m->reservoir()->useMrstScript())
-        {
-            m_script = m->reservoir()->mrstScript().split(".").at(0);
-            m_script = m_script.split("/").last();
+        // removing old versions of the files
+        QFile::remove(folder() + "/test2.m");
+        QFile::remove(folder() + "/runSim2.m");
+        QFile::remove(folder() + "/initStateADI.m");
 
-            // removing old versions of the file
-            QFile::remove(folder() + "/" + m->reservoir()->mrstScript());
+        // copying the originals
+        QFile::copy(m->driverPath() + "/initStateADI.m", folder() + "/initStateADI.m");
 
-            // copy original
-            bool ok_cpy = false;
-            if(m->reservoir()->mrstScript().startsWith("/"))
-            {
-                QString script_new = m->reservoir()->mrstScript().split("/").last();
-                ok_cpy = QFile::copy(m->reservoir()->mrstScript(), folder() + "/" + script_new);
-            }
-            else
-            {
-                ok_cpy = QFile::copy(m->driverPath() + "/" + m->reservoir()->mrstScript(), folder() + "/" + m->reservoir()->mrstScript());
-            }
-            if(!ok_cpy)
-            {
-                emitException(ExceptionSeverity::ERROR, ExceptionType::READ_ERROR, "Did not find user specified MRST script.");
-            }
-        }
-        else
-        {
-            // removing old versions of the files
-            QFile::remove(folder() + "/test2.m");
-            QFile::remove(folder() + "/runSim2.m");
-            QFile::remove(folder() + "/initStateADI.m");
-
-            // copying the originals
-            QFile::copy(m->driverPath() + "/initStateADI.m", folder() + "/initStateADI.m");
-
-            // generating runsim2
-            AdjointsCoupledModel *am = dynamic_cast<AdjointsCoupledModel*>(m);
-            generateMRSTScript(m, am != 0);
-        }
+        // generating runsim2
+        AdjointsCoupledModel *am = dynamic_cast<AdjointsCoupledModel*>(m);
+        generateMRSTScript(m, am != 0);
         m_first_launch = false;
     }
     // generating schedule
@@ -780,50 +707,23 @@ bool MrstBatchSimulator::generateInputFiles(Model *m)
     // removing old output file
     QFile::remove(folder() + "/" + base_name + "_RES.TXT");
     QFile::remove(folder() + "/" + base_name + "_GRAD.TXT");
-
-    // generating the control input file
-    if(m->reservoir()->useMrstScript())
-    {
-        generateScriptControlFile(m);
-    }
-    else
-    {
-        generateControlInputFile(m);
-    }
+    emitProgress("Generating control file(test2.m)");
+    generateControlInputFile(m);
     return ok;
 }
 
 
 bool MrstBatchSimulator::launchSimulator()
 {
-    bool ok = true;
-
-    QProcess mrst;
-    emitException(ExceptionSeverity::WARNING, ExceptionType::PROGRESS, QString("Launching MRST in batch mode."));
-
-    QString program = m_matlab_path;
-
-    QStringList args;
-    args.push_back("-nojvm");   // beehive
-    args.push_back("-nosplash");
-    args.push_back("-nodesktop");
-    args.push_back("-r");
-
-    args.push_back(m_script + ";exit");
-    mrst.setProcessChannelMode(QProcess::MergedChannels);  // setting up the process
-    mrst.setWorkingDirectory(folder());      // setting the working directory
+    emitProgress(QString("Launching MRST in batch mode."));
+    emitProgress(QString("Running matlab script: %1").arg(m_script));
 
     // starting MRST
-    mrst.start(program, args);
-    emitException(ExceptionSeverity::WARNING, ExceptionType::PROGRESS, QString("MRST Started."));
-    mrst.waitForStarted(-1);
-    emitException(ExceptionSeverity::WARNING, ExceptionType::PROGRESS, QString("Waiting for MRST to finish."));
-    mrst.waitForFinished(-1);
-    emitException(ExceptionSeverity::WARNING, ExceptionType::PROGRESS, QString("MRST Finished."));
+    QString command = m_matlab_path + " -nosplash -nojvm -nodesktop -r " + m_script;
+    if (!PosixUtilities::executeCommand(command, folder()))
+        return false;
 
-    // checking the exit code
-    int exit_code = mrst.exitCode();
-    return exit_code == 0;
+    return true;
 }
 
 

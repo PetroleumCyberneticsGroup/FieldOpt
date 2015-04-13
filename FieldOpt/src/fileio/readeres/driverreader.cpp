@@ -192,7 +192,6 @@ Reservoir* DriverReader::readReservoir()
         else if(list.at(0).startsWith("FILE")) l_file = list.at(1);                     // getting the file name
         else if(list.at(0).startsWith("MRST")) res->setMrstPath(list.at(1));            // setting the MRST path
         else if(list.at(0).startsWith("MATLAB")) res->setMatlabPath(list.at(1));        // setting the Matlab path
-        else if(list.at(0).startsWith("SCRIPT")) res->setMrstScript(list.at(1));        // setting a custom MRST script
         else if(list.at(0).startsWith("KEEP_MAT_FILE")) res->setKeepMatFile(true);      // setting that the .mat file should not be deleted between runs
         else if(list.at(0).startsWith("TIME")) l_endtime = list.at(1).toDouble(&ok);    // getting the file name
         else if(list.at(0).startsWith("PHASES"))                                        // getting the phases present in the reservoir

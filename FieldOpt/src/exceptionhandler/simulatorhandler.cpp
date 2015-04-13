@@ -35,14 +35,19 @@ SimulatorHandler::~SimulatorHandler()
 
 void SimulatorHandler::handleException(ExceptionSeverity severity, ExceptionType type, QString message)
 {
-    message.prepend("An exception has occured in a Simulator class.\n");
     if (severity == ExceptionSeverity::WARNING)
     {
+        message.prepend("An exception has occured in a Simulator class.\n");
         printWarning(message, type);
+        return;
+    }
+    if (severity == ExceptionSeverity::PROGRESS) {
+        printProgress(message);
         return;
     }
     else if (severity == ExceptionSeverity::ERROR)
     {
+        message.prepend("An exception has occured in a Simulator class.\n");
         printError(message, type);
         exit(1);
         return;

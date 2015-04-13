@@ -39,3 +39,13 @@ void Simulator::emitException(ExceptionSeverity severity, ExceptionType type, QS
     disconnect(this, SIGNAL(error(ExceptionSeverity, ExceptionType, QString)),
                sh, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
 }
+
+void Simulator::emitProgress(QString message)
+{
+    SimulatorHandler* sh = new SimulatorHandler;
+    connect(this, SIGNAL(error(ExceptionSeverity, ExceptionType, QString)),
+            sh, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
+    emit error(ExceptionSeverity::PROGRESS, ExceptionType::PROGRESS, message);
+    disconnect(this, SIGNAL(error(ExceptionSeverity, ExceptionType, QString)),
+               sh, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
+}

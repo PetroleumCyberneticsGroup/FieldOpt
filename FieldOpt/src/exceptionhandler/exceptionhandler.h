@@ -27,7 +27,8 @@
 
 enum class ExceptionSeverity {
     WARNING,
-    ERROR
+    ERROR,
+    PROGRESS
 };
 
 enum class ExceptionType {
@@ -52,12 +53,15 @@ private:
     QString warning_footer;
     QString error_header;
     QString error_footer;
+    QString progress_header;
+    QString progress_footer;
 
 public:
     ExceptionHandler();
 
     void printWarning(QString message, ExceptionType type);
     void printError(QString message, ExceptionType type);
+    void printProgress(QString message);
 
 private:
     QString getTypeString(ExceptionType type)
