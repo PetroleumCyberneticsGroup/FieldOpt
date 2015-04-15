@@ -35,6 +35,8 @@
 #include "optimizers/derivative.h"
 #include "printers/caseprinter.h"
 
+class Model;
+
 /*!
  * \brief Container class for storing variable, constraint and objective values.
  *

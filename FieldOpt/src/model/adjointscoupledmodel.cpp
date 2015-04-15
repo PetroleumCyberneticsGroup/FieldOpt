@@ -170,3 +170,19 @@ Case* AdjointsCoupledModel::processBaseCase()
     updateObjectiveValue();
     return new Case(this, true);
 }
+
+
+bool AdjointsCoupledModel::applyCaseVariables(Case *c)
+{
+    if (this->numberOfBinaryVariables() != c->numberOfBinaryVariables()  // Check that the number of variables in the model conincides with the case.
+            || this->numberOfIntegerVariables() != c->numberOfIntegerVariables()
+            || this->numberOfRealVariables() != c->numberOfRealVariables())
+        return false;
+    for (int i = 0; i < this->numberOfBinaryVariables(); ++i)
+        this->binaryVariables().at(i)->setValue(c->binaryVariableValue(i));
+    for (int i = 0; i < this->numberOfIntegerVariables(); ++i)
+        this->binaryVariables().at(i)->setValue(c->integerVariableValue(i));
+    for (int i = 0; i < this->numberOfRealVariables(); ++i)
+        this->realVariables().at(i)->setValue(c->realVariableValue(i));
+    return true;
+}

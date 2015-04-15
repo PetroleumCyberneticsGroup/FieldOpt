@@ -40,6 +40,8 @@ public:
 
     double perturbationSize() {return m_perturbation;}
     Case* results() {return p_results;}
+
+    bool applyCaseVariables(Case* c);
 };
 
 #endif // ADJOINTSCOUPLEDMODEL_H
