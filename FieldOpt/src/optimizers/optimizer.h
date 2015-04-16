@@ -41,7 +41,6 @@ class OptimizerSettings;
  * 4: isFinished. If isFinished returns false, go to 2.
  * 5. getBestCase().
  *
- * \todo This class is a stub.
  */
 class Optimizer
 {
@@ -51,8 +50,7 @@ protected:
     int evals;        //!< Evaluations performed.
     int max_evals;    //!< Maximum number of evaluations allowed.
 public:
-    Optimizer();
-    ~Optimizer();
+//    Optimizer(){}
 
     /*!
      * \brief Get the case currently considered to be the best one. Should be called _after_ isFinished()
@@ -66,13 +64,13 @@ public:
      * \param baseCase The base case for the simulation.
      * \param settings Settings object containing the settings required for the specific simulator.
      */
-    virtual void initialize(Case* baseCase, OptimizerSettings* settings);
+    virtual void initialize(Case* baseCase, OptimizerSettings* settings) = 0;
 
     /*!
      * \brief Get a new set of cases to be evaluated.
      * \return The new set of cases.
      */
-    virtual QVector<Case*> getNewCases();
+    virtual QVector<Case*> getNewCases() = 0;
 
     /*!
      * \brief Compare a set of evaluated cases with the current base case.
@@ -82,7 +80,7 @@ public:
      * generated.
      * \param cases The set of cases to be compared.
      */
-    virtual void compareCases(QVector<Case*> cases);
+    virtual void compareCases(QVector<Case*> cases) = 0;
 
     /*!
      * \brief Checks if the optimizer has finished, i.e. if the maximum number of evaluation
@@ -91,7 +89,7 @@ public:
      * This function should always be called before asking for a new set of cases.
      * \return True if the optimization is finished; otherwise false.
      */
-    virtual bool isFinished();
+    virtual bool isFinished() = 0;
 };
 
 #endif // OPTIMIZER_H

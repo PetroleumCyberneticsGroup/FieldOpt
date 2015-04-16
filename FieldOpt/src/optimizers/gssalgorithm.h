@@ -20,11 +20,8 @@ protected:
     double step_length;     //!< Current step length
     double minimum_step_length;  //!< Step length convergence tolerance.
 
-    virtual QVector<Case*> perturb(Case* c);  //!< Generate perturbed cases from the input case.
-    virtual bool isBetter(Case* c);           //!< Check whether or not a case is better than the current best case.
-
-public:
-    GSSAlgorithm();
+    virtual QVector<Case*> perturb(Case* c) = 0;  //!< Generate perturbed cases from the input case.
+    virtual bool isBetter(Case* c) = 0;           //!< Check whether or not a case is better than the current best case.
 };
 
 #endif // GSSALGORITHM_H
