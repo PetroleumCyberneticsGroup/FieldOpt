@@ -49,6 +49,26 @@ QString OptimizerSettings::toString() const
     optstr.append("Staring point update: " + QString::number(startingpointUpdate) + "\n");
     return optstr;
 }
+
+double OptimizerSettings::getInitialStepLength() const
+{
+    return initialStepLength;
+}
+
+void OptimizerSettings::setInitialStepLength(double value)
+{
+    initialStepLength = value;
+}
+
+double OptimizerSettings::getMinimumStepLength() const
+{
+    return minimumStepLength;
+}
+
+void OptimizerSettings::setMinimumStepLength(double value)
+{
+    minimumStepLength = value;
+}
 OptimizerSettings::OptimizerSettings()
 {
     optimizer = OPT_NOT_SET;

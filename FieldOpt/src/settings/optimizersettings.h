@@ -4,7 +4,7 @@
 #include <QList>
 #include <QString>
 
-enum SelectedOptimizer {OPT_NOT_SET, RUNONCE, LSH, EROPT};
+enum SelectedOptimizer {OPT_NOT_SET, RUNONCE, LSH, EROPT, COMPASS};
 
 /*!
  * \brief Class containing general optimizer settings to be used during runtime.
@@ -16,6 +16,8 @@ class OptimizerSettings
 private:
     int maxIterations;
     int maxIterContinuous;
+    double initialStepLength;
+    double minimumStepLength;
     double perturbationSize;
     double termination;
     int terminationStart;
@@ -52,6 +54,10 @@ public:
     void setOptimizer(const SelectedOptimizer &value);
 
     QString toString() const;
+    double getInitialStepLength() const;
+    void setInitialStepLength(double value);
+    double getMinimumStepLength() const;
+    void setMinimumStepLength(double value);
 };
 
 #endif // OPTIMIZERSETTINGS_H
