@@ -29,9 +29,12 @@
 
 #include "transferobjects/modelperturbation.h"
 #include "transferobjects/simulationresults.h"
+#include "transferobjects/perturbation.h"
 #include "optimizers/optimizer.h"
+#include "optimizers/compasssearchoptimizer.h"
 #include "optimizers/case.h"
 #include "model/model.h"
+#include "model/adjointscoupledmodel.h"
 #include "model/coupledmodel.h"
 #include "fileio/readeres/driverreader.h"
 #include "parallelprinter.h"
@@ -57,13 +60,16 @@ public:
     void determineOptimal();
 
 private:
-    QVector<ModelPerturbation> perturbations;
+    QVector<ModelPerturbation> OLDperturbations;
+    QVector<Perturbation*> perturbations;
     QVector<SimulationResults> results;
     QString driverPath;
     Model* model;
     mpi::communicator* world;
     DriverReader* driverReader;
     ParallelPrinter* printer;
+    Optimizer* opt;
+    int caseId;
 
     void sendPerturbations();
     void recvResults();

@@ -23,7 +23,7 @@ private:
 public:
     Perturbation(Case* c, int id);
 
-    Case* getCase(Model* m);
+    Case* getCase(Model* m);  //!< Creates a Case object by combining information from the variables stored in this class and the information in a Model object.
 
     int getPerturbation_id() const { return perturbation_id; }
 
@@ -31,6 +31,7 @@ public:
     int getIntegerLength() const { return integerLength; }
     int getRealLength() const { return realLength; }
 
+    std::vector<int> getSendHeader() const;
     std::vector<double> getBinaryVariables() const { return binaryVariables; }
     std::vector<int> getIntegerVariables() const { return integerVariables; }
     std::vector<double> getRealVariables() const { return realVariables; }

@@ -26,6 +26,7 @@ MasterRunner::MasterRunner(mpi::communicator *comm)
 {
     world = comm;
     printer = new ParallelPrinter(comm->rank());
+    caseId = 0;
 }
 
 MasterRunner::~MasterRunner()
@@ -41,15 +42,47 @@ void MasterRunner::initialize(QString driverPath)
         printer->eprint("Failed to validate model.");
     }
     printer->print("Model object successfully created and validated.", false);
+
+    AdjointsCoupledModel* acm = dynamic_cast<AdjointsCoupledModel*>(model);
+    if (acm != 0) {
+        printer->print(QString("Model is an AdjointsCoupled model: %1").arg(acm->description()), true);
+        Case acmcase = Case(model);
+        acmcase.printToCout();
+        acmcase.setRealVariableValue(1, 123.0);
+        acmcase.printToCout();
+        if (acm->applyCaseVariables(&acmcase))
+            printer->print("Successfully applied case variables.", true);
+        else
+            printer->print("Could not apply case valuesvariable values to model.", true);
+    }
+
+    switch (model->getRuntimeSettings()->getOptimizerSettings()->getOptimizer()) {
+    case COMPASS:
+        printer->print("Compass search optimizer selected.", false);
+        opt = new CompassSearchOptimizer();
+        opt->initialize(new Case(model), model->getRuntimeSettings()->getOptimizerSettings());
+        break;
+    default:
+        printer->eprint("Optmimzer not recognized. Terminating.");
+        break;
+    }
+
     printer->print(model->getRuntimeSettings()->toString(), true);
 }
 
 void MasterRunner::perturbModel()
 {
+    QVector<Case*> perturbedCases = opt->getNewCases();
     perturbations.clear();
+    for (int i = 0; i < perturbedCases.length(); ++i) {
+        perturbations.append(new Perturbation(perturbedCases.at(i), caseId));
+        caseId = caseId + 1;
+    }
+
+    OLDperturbations.clear();
     for (int i = 0; i < world->size()-1; ++i) {
         ModelPerturbation p = ModelPerturbation(i, 2, i+100.0);
-        perturbations.push_back(p);
+        OLDperturbations.push_back(p);
     }
 }
 
@@ -67,12 +100,11 @@ void MasterRunner::determineOptimal()
 }
 
 void MasterRunner::sendPerturbations()
-{
-
-    for (int i = 0; i < perturbations.size(); ++i) {
-        int id = perturbations.at(i).getModel_id();
-        int var_id = perturbations.at(i).getPerturbation_variable();
-        float var_val = perturbations.at(i).getPerturbation_value();
+{    
+    for (int i = 0; i < OLDperturbations.size(); ++i) {
+        int id = OLDperturbations.at(i).getModel_id();
+        int var_id = OLDperturbations.at(i).getPerturbation_variable();
+        float var_val = OLDperturbations.at(i).getPerturbation_value();
         MPI_Send(&id, 1, MPI_INT, i+1, 101, MPI_COMM_WORLD);
         MPI_Send(&var_id, 1, MPI_INT, i+1, 102, MPI_COMM_WORLD);
         MPI_Send(&var_val, 1, MPI_FLOAT, i+1, 103, MPI_COMM_WORLD);
@@ -81,7 +113,7 @@ void MasterRunner::sendPerturbations()
 
 void MasterRunner::recvResults()
 {
-    for (int i = 0; i < perturbations.size(); ++i) {
+    for (int i = 0; i < OLDperturbations.size(); ++i) {
         int id;
         float fopt;
         MPI_Recv(&id, 1, MPI_INT, i+1, 201, MPI_COMM_WORLD, MPI_STATUS_IGNORE);

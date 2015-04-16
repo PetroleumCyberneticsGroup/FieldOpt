@@ -3,9 +3,7 @@ CONFIG+=ordered
 CONFIG += c++11
 SUBDIRS = \
     src \
-    Console \ #\
-    GSSOptimizer \
-    GSSOptimizerTests
+    Console  #\
     #tests
 
 Console.depends = src

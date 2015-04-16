@@ -32,3 +32,9 @@ Case *Perturbation::getCase(Model *m)
 
     return c;
 }
+
+std::vector<int> Perturbation::getSendHeader() const
+{
+    std::vector<int> sendHeader { perturbation_id, binaryLength, integerLength, realLength };
+    return sendHeader;
+}
