@@ -52,6 +52,9 @@ HEADERS += \
     constraints/capacity.h \
     exceptionhandler/modelhandler.h \
     model/components/pressurebooster.h \
+    settings/runtimesettings.h \
+    settings/optimizersettings.h \
+    settings/simulatorsettings.h \
     simulators/simulator.h \
     optimizers/optimizer.h \
     optimizers/case.h \
@@ -66,12 +69,10 @@ HEADERS += \
     model/inputratevariable.h \
     constraints/materialbalanceconstraint.h \
     model/decoupledmodel.h \
-    settings/runtimesettings.h \
-    settings/optimizersettings.h \
-    settings/simulatorsettings.h \
-    optimizers/runonceoptimizer.h \
     exceptionhandler/simulatorhandler.h \
-    utilities/posixutilities.h
+    utilities/posixutilities.h \
+    optimizers/gssalgorithm.h \
+    optimizers/compasssearchoptimizer.h
 
 SOURCES += \
     variables/intvariable.cpp \
@@ -116,8 +117,10 @@ SOURCES += \
     constraints/capacity.cpp \
     exceptionhandler/modelhandler.cpp \
     model/components/pressurebooster.cpp \
+    settings/runtimesettings.cpp \
+    settings/optimizersettings.cpp \
+    settings/simulatorsettings.cpp \
     simulators/simulator.cpp \
-    optimizers/optimizer.cpp \
     optimizers/case.cpp \
     model/coupledmodel.cpp \
     simulators/mrstbatchsimulator.cpp \
@@ -130,9 +133,6 @@ SOURCES += \
     model/inputratevariable.cpp \
     constraints/materialbalanceconstraint.cpp \
     model/decoupledmodel.cpp \
-    settings/runtimesettings.cpp \
-    settings/optimizersettings.cpp \
-    settings/simulatorsettings.cpp \
-    optimizers/runonceoptimizer.cpp \
     exceptionhandler/simulatorhandler.cpp \
-    utilities/posixutilities.cpp
+    utilities/posixutilities.cpp \
+    optimizers/compasssearchoptimizer.cpp
