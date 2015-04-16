@@ -15,7 +15,6 @@ bool PosixUtilities::executeCommand(QString cmd, QString workdir)
     std::string result = "";
     while(!feof(pipe)) {
         if(fgets(buffer, 128, pipe) != NULL)
-            std::cout << buffer;
             result += buffer;
     }
     pclose(pipe);
