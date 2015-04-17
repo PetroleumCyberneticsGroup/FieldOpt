@@ -10,7 +10,7 @@ private:
     QVector<Case*> perturb(Case *c);
     bool isBetter(Case *c);
 public:
-    CompassSearchOptimizer(){}
+    CompassSearchOptimizer(){ evals = 0; }
 
     void initialize(Case* baseCase, OptimizerSettings* settings);
     QVector<Case*> getNewCases();

@@ -17,6 +17,17 @@ Perturbation::Perturbation(Case* c, int id) :
         realVariables.push_back(c->realVariableValue(i));
 }
 
+Perturbation::Perturbation(std::vector<int> &header, std::vector<double> &binaries, std::vector<int> &integers, std::vector<double> &reals) :
+    perturbation_id(header.at(0)),
+    binaryLength(header.at(1)),
+    integerLength(header.at(2)),
+    realLength(header.at(3))
+{
+    binaryVariables = binaries;
+    integerVariables = integers;
+    realVariables = reals;
+}
+
 Case *Perturbation::getCase(Model *m)
 {
     c = new Case(m);

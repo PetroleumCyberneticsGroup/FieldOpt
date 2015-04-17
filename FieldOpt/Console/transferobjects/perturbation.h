@@ -26,6 +26,7 @@ private:
 
 public:
     Perturbation(Case* c, int id);  //!< Create a Pertrubation object from a Case and an id.
+    Perturbation(std::vector<int> &header,  std::vector<double> &binaries, std::vector<int> &integers, std::vector<double> &reals);
 
     Case* getCase(Model* m);  //!< Creates a Case object by combining information from the variables stored in this class and the information in a Model object.
 

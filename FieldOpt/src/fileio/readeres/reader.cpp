@@ -66,6 +66,6 @@ void Reader::emitKeywordNotUnderstoodError(QStringList list)
 
 void Reader::printProgress(QString message)
 {
-    cout << message.toLatin1().constData() << endl;
+    error(ExceptionSeverity::WARNING, ExceptionType::PROGRESS, message);
 }
 

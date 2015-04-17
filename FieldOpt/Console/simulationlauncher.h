@@ -26,15 +26,21 @@
 #include <boost/mpi.hpp>
 #include <QString>
 #include <QDir>
+#include <vector>
 
-#include "transferobjects/modelperturbation.h"
-#include "transferobjects/simulationresults.h"
+//#include "transferobjects/modelperturbation.h"
+//#include "transferobjects/simulationresults.h"
+#include "transferobjects/perturbation.h"
+#include "transferobjects/result.h"
 #include "model/model.h"
 #include "model/coupledmodel.h"
 #include "simulators/simulator.h"
 #include "simulators/mrstbatchsimulator.h"
 #include "parallelprinter.h"
 #include "fileio/readeres/driverreader.h"
+
+class Result;
+class Perturbation;
 
 namespace mpi = boost::mpi;
 
@@ -50,7 +56,8 @@ namespace mpi = boost::mpi;
 class SimulationLauncher
 {
 private:
-    ModelPerturbation* perturbation;
+//    ModelPerturbation* perturbationOLD;
+    Perturbation* perturbation;
     DriverReader* driverReader;
     Model* model;
     mpi::communicator* world;
@@ -60,16 +67,18 @@ private:
     QString outputPath;
     void setupWorkingDirectory();
 
-    void perturbModel();
     void returnResults();
+
+    void receivePerturbations();
+    void startSimulation();
 
 public:
     SimulationLauncher(mpi::communicator *comm);
-    ~SimulationLauncher();
+    ~SimulationLauncher() {}
 
     void initialize(QString driverPath);
-    void receivePerturbations();
-    void startSimulation();
+    void start();
+
 };
 
 #endif // SIMULATIONLAUNCHER_H

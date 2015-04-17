@@ -30,17 +30,19 @@ TEMPLATE = app
 SOURCES += main.cpp \
     transferobjects/modelperturbation.cpp \
     transferobjects/simulationresults.cpp \
+    transferobjects/perturbation.cpp \
+    transferobjects/result.cpp \
     simulationlauncher.cpp \
     masterrunner.cpp \
     parallelprinter.cpp \
-    transferobjects/perturbation.cpp \
-    transferobjects/result.cpp
+    broker.cpp
 
 HEADERS += \
     transferobjects/modelperturbation.h \
     transferobjects/simulationresults.h \
+    transferobjects/perturbation.h \
+    transferobjects/result.h \
     simulationlauncher.h \
     masterrunner.h \
     parallelprinter.h \
-    transferobjects/perturbation.h \
-    transferobjects/result.h
+    broker.h

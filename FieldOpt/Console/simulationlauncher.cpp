@@ -45,30 +45,19 @@ void SimulationLauncher::setupWorkingDirectory()
     QFile::copy(workingDirectory + "/" + model->reservoir()->file(), newResFile);
 }
 
-void SimulationLauncher::perturbModel()
-{
-    printer->print("Perturbing the model before simulating: \n" + perturbation->toString(), true);
-}
-
 void SimulationLauncher::returnResults()
 {
     printer->print("Returning results.", false);
-    SimulationResults res = SimulationResults(perturbation->getModel_id(), 100.0+world->rank());
-    int id = res.getModel_id();
-    float fopt = res.getModel_fopt();
-    MPI_Send(&id, 1, MPI_INT, 0, 201, MPI_COMM_WORLD);
-    MPI_Send(&fopt, 1, MPI_FLOAT, 0, 202, MPI_COMM_WORLD);
+    int id = perturbation->getPerturbation_id();
+    double result = model->objective()->value();
+    MPI_Send(&id, 1, MPI_INT, 0, 20, MPI_COMM_WORLD);
+    MPI_Send(&result, 1, MPI_DOUBLE, 0, 21, MPI_COMM_WORLD);
 }
 
 SimulationLauncher::SimulationLauncher(mpi::communicator *comm)
 {
     world = comm;
     printer = new ParallelPrinter(comm->rank());
-}
-
-SimulationLauncher::~SimulationLauncher()
-{
-
 }
 
 void SimulationLauncher::initialize(QString driverPath)
@@ -84,27 +73,52 @@ void SimulationLauncher::initialize(QString driverPath)
     printer->print("Model object created.", false);
 }
 
+void SimulationLauncher::start()
+{
+    while (true) {
+        receivePerturbations();
+        startSimulation();
+        returnResults();
+    }
+}
+
 void SimulationLauncher::receivePerturbations()
 {
-    printer->print("Reveiving perturbation...", false);
-    int id;
-    int var_id;
-    float var_val;
-    MPI_Recv(&id, 1, MPI_INT, 0, 101, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    MPI_Recv(&var_id, 1, MPI_INT, 0, 102, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    MPI_Recv(&var_val, 1, MPI_FLOAT, 0, 103, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    ModelPerturbation p = ModelPerturbation(id, var_id, var_val);
+    printer->print("Receiving perturbation...", false);
+    std::vector<int> header;
+    header.reserve(4);
+    MPI_Recv(&header, 4, MPI_INT, 0, 10, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    printer->print("Received header.", false);
+
+    std::vector<double> binaries;
+    binaries.reserve(header[1]);
+    MPI_Recv(&binaries, header[1], MPI_DOUBLE, 0, 11, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    printer->print("Received binaries.", false);
+
+    std::vector<int> integers;
+    integers.reserve(header[2]);
+    MPI_Recv(&integers, header[2], MPI_INT, 0, 12, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    printer->print("Received integers.", false);
+
+    std::vector<double> reals;
+    reals.reserve(header[3]);
+    MPI_Recv(&reals, header[3], MPI_DOUBLE, 0, 13, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    printer->print("Received reals.", false);
+
+    perturbation = new Perturbation(header, binaries, integers, reals);
+    Case* c = perturbation->getCase(model);
+
+    AdjointsCoupledModel* acm = dynamic_cast<AdjointsCoupledModel*>(model);
+    if (acm != 0) {
+        acm->applyCaseVariables(c);
+        model = acm;
+    }
 
     printer->print("Received perturbation.", false);
-    perturbation = new ModelPerturbation();
-    perturbation->setModel_id(p.getModel_id());
-    perturbation->setPerturbation_variable(p.getPerturbation_variable());
-    perturbation->setPerturbation_value(p.getPerturbation_value());
 }
 
 void SimulationLauncher::startSimulation()
 {
-    perturbModel();
     if (this->model->getRuntimeSettings()->getSimulatorSettings()->getSimulator() == MRST) {
         printer->print("Starting MRST simulation.", true);
         setupWorkingDirectory();
@@ -120,5 +134,4 @@ void SimulationLauncher::startSimulation()
         printer->print("Simulation done.", true);
         printer->print("OBJECTIVE:\n" + model->objective()->description() + "\n Value: " + QString::number(model->objective()->value()) + "\n", true);
     }
-    returnResults();
 }

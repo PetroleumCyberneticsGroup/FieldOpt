@@ -59,19 +59,19 @@ int main(int argc, char *argv[])
     if (world.rank() == 0) {
         MasterRunner runner = MasterRunner(&world);
         runner.initialize(driverPath);
-        printer.print(QString("Initialized MasterRunner"), false);
-        runner.perturbModel();
-        printer.print(QString("Perturbed model."), false);
-        runner.distributePerturbations();
-        printer.print(QString("Distributed perturbations"), false);
-        runner.determineOptimal();
+        runner.start();
+//        printer.print(QString("Initialized MasterRunner"), false);
+//        runner.perturbModel();
+//        printer.print(QString("Perturbed model."), false);
+//        runner.distributePerturbations();
+//        printer.print(QString("Distributed perturbations"), false);
+//        runner.determineOptimal();
     }
     else {
         SimulationLauncher simlauncher = SimulationLauncher(&world);
         simlauncher.initialize(driverPath);
         printer.print(QString("Initialized SimulationLauncher"), false);
-        simlauncher.receivePerturbations();
-        simlauncher.startSimulation();
+        simlauncher.start();
     }
     return 0;
 }

@@ -27,9 +27,9 @@
 #include <QVector>
 #include <QString>
 
-#include "transferobjects/modelperturbation.h"
-#include "transferobjects/simulationresults.h"
-#include "transferobjects/perturbation.h"
+//#include "transferobjects/modelperturbation.h"
+//#include "transferobjects/simulationresults.h"
+//#include "transferobjects/perturbation.h"
 #include "optimizers/optimizer.h"
 #include "optimizers/compasssearchoptimizer.h"
 #include "optimizers/case.h"
@@ -38,6 +38,7 @@
 #include "model/coupledmodel.h"
 #include "fileio/readeres/driverreader.h"
 #include "parallelprinter.h"
+#include "broker.h"
 
 namespace mpi = boost::mpi;
 
@@ -55,24 +56,29 @@ public:
     ~MasterRunner();
 
     void initialize(QString driverPath);
-    void perturbModel();
-    void distributePerturbations();
-    void determineOptimal();
+    void start();
+//    void perturbModel();
+//    void distributePerturbations();
+//    void determineOptimal();
+
 
 private:
-    QVector<ModelPerturbation> OLDperturbations;
-    QVector<Perturbation*> perturbations;
-    QVector<SimulationResults> results;
+//    QVector<ModelPerturbation> OLDperturbations;
+//    QVector<Perturbation*> perturbations;
+//    QVector<SimulationResults> results;
     QString driverPath;
     Model* model;
     mpi::communicator* world;
     DriverReader* driverReader;
     ParallelPrinter* printer;
     Optimizer* opt;
-    int caseId;
+    Broker* broker;
+//    int caseId;
+    int perturbationId;
+    QVector<int> getCaseIds(int length);
 
-    void sendPerturbations();
-    void recvResults();
+//    void sendPerturbations();
+//    void recvResults();
 };
 
 #endif // MASTERRUNNER_H

@@ -26,7 +26,7 @@ MasterRunner::MasterRunner(mpi::communicator *comm)
 {
     world = comm;
     printer = new ParallelPrinter(comm->rank());
-    caseId = 0;
+    perturbationId = 0;
 }
 
 MasterRunner::~MasterRunner()
@@ -43,18 +43,18 @@ void MasterRunner::initialize(QString driverPath)
     }
     printer->print("Model object successfully created and validated.", false);
 
-    AdjointsCoupledModel* acm = dynamic_cast<AdjointsCoupledModel*>(model);
-    if (acm != 0) {
-        printer->print(QString("Model is an AdjointsCoupled model: %1").arg(acm->description()), true);
-        Case acmcase = Case(model);
-        acmcase.printToCout();
-        acmcase.setRealVariableValue(1, 123.0);
-        acmcase.printToCout();
-        if (acm->applyCaseVariables(&acmcase))
-            printer->print("Successfully applied case variables.", true);
-        else
-            printer->print("Could not apply case valuesvariable values to model.", true);
-    }
+//    AdjointsCoupledModel* acm = dynamic_cast<AdjointsCoupledModel*>(model);
+//    if (acm != 0) {
+//        printer->print(QString("Model is an AdjointsCoupled model: %1").arg(acm->description()), true);
+//        Case acmcase = Case(model);
+//        acmcase.printToCout();
+//        acmcase.setRealVariableValue(1, 123.0);
+//        acmcase.printToCout();
+//        if (acm->applyCaseVariables(&acmcase))
+//            printer->print("Successfully applied case variables.", true);
+//        else
+//            printer->print("Could not apply case valuesvariable values to model.", true);
+//    }
 
     switch (model->getRuntimeSettings()->getOptimizerSettings()->getOptimizer()) {
     case COMPASS:
@@ -67,60 +67,87 @@ void MasterRunner::initialize(QString driverPath)
         break;
     }
 
-    printer->print(model->getRuntimeSettings()->toString(), true);
+//    printer->print(model->getRuntimeSettings()->toString(), true);
 }
 
-void MasterRunner::perturbModel()
+void MasterRunner::start()
 {
-    QVector<Case*> perturbedCases = opt->getNewCases();
-    perturbations.clear();
-    for (int i = 0; i < perturbedCases.length(); ++i) {
-        perturbations.append(new Perturbation(perturbedCases.at(i), caseId));
-        caseId = caseId + 1;
+    broker = new Broker(world, model);
+    while (!opt->isFinished()) {
+        printer->print("STARTING ITERATION...", true);
+        QVector<Case*> newCases = opt->getNewCases();
+        QVector<int> ids = getCaseIds(newCases.size());
+        broker->setPerturbations(newCases, ids);
+        broker->evaluatePerturbations();
+        opt->compareCases(broker->getResults());
+        broker->reset();
+        printer->print("ITERATION FINISHED.", true);
     }
-
-    OLDperturbations.clear();
-    for (int i = 0; i < world->size()-1; ++i) {
-        ModelPerturbation p = ModelPerturbation(i, 2, i+100.0);
-        OLDperturbations.push_back(p);
-    }
+    printer->print("Optimization completed.", true);
 }
 
-void MasterRunner::distributePerturbations()
+//void MasterRunner::perturbModel()
+//{
+//    QVector<Case*> perturbedCases = opt->getNewCases();
+//    perturbations.clear();
+//    for (int i = 0; i < perturbedCases.length(); ++i) {
+//        perturbations.append(new Perturbation(perturbedCases.at(i), caseId));
+//        caseId = caseId + 1;
+//    }
+
+//    OLDperturbations.clear();
+//    for (int i = 0; i < world->size()-1; ++i) {
+//        ModelPerturbation p = ModelPerturbation(i, 2, i+100.0);
+//        OLDperturbations.push_back(p);
+//    }
+//}
+
+//void MasterRunner::distributePerturbations()
+//{
+//    sendPerturbations();
+
+//    results.clear();
+//    recvResults();
+//}
+
+//void MasterRunner::determineOptimal()
+//{
+//    printer->print("Determining best perturbation.", false);
+//}
+
+QVector<int> MasterRunner::getCaseIds(int length)
 {
-    sendPerturbations();
-
-    results.clear();
-    recvResults();
-}
-
-void MasterRunner::determineOptimal()
-{
-    printer->print("Determining best perturbation.", false);
-}
-
-void MasterRunner::sendPerturbations()
-{    
-    for (int i = 0; i < OLDperturbations.size(); ++i) {
-        int id = OLDperturbations.at(i).getModel_id();
-        int var_id = OLDperturbations.at(i).getPerturbation_variable();
-        float var_val = OLDperturbations.at(i).getPerturbation_value();
-        MPI_Send(&id, 1, MPI_INT, i+1, 101, MPI_COMM_WORLD);
-        MPI_Send(&var_id, 1, MPI_INT, i+1, 102, MPI_COMM_WORLD);
-        MPI_Send(&var_val, 1, MPI_FLOAT, i+1, 103, MPI_COMM_WORLD);
+    QVector<int> ids;
+    for (int i = 0; i < length; ++i) {
+        ids.append(perturbationId);
+        perturbationId++;
     }
+    return ids;
 }
 
-void MasterRunner::recvResults()
-{
-    for (int i = 0; i < OLDperturbations.size(); ++i) {
-        int id;
-        float fopt;
-        MPI_Recv(&id, 1, MPI_INT, i+1, 201, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        MPI_Recv(&fopt, 1, MPI_FLOAT, i+1, 202, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        SimulationResults res = SimulationResults(id ,fopt);
-        results.push_back(res);
-        printer->print(QString("Got result:\n" + res.toString()), true);
-    }
-}
+
+//void MasterRunner::sendPerturbations()
+//{
+//    for (int i = 0; i < OLDperturbations.size(); ++i) {
+//        int id = OLDperturbations.at(i).getModel_id();
+//        int var_id = OLDperturbations.at(i).getPerturbation_variable();
+//        float var_val = OLDperturbations.at(i).getPerturbation_value();
+//        MPI_Send(&id, 1, MPI_INT, i+1, 101, MPI_COMM_WORLD);
+//        MPI_Send(&var_id, 1, MPI_INT, i+1, 102, MPI_COMM_WORLD);
+//        MPI_Send(&var_val, 1, MPI_FLOAT, i+1, 103, MPI_COMM_WORLD);
+//    }
+//}
+
+//void MasterRunner::recvResults()
+//{
+//    for (int i = 0; i < OLDperturbations.size(); ++i) {
+//        int id;
+//        float fopt;
+//        MPI_Recv(&id, 1, MPI_INT, i+1, 201, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+//        MPI_Recv(&fopt, 1, MPI_FLOAT, i+1, 202, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+//        SimulationResults res = SimulationResults(id ,fopt);
+//        results.push_back(res);
+//        printer->print(QString("Got result:\n" + res.toString()), true);
+//    }
+//}
 
