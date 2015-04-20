@@ -56,6 +56,7 @@ HEADERS += \
     settings/optimizersettings.h \
     settings/simulatorsettings.h \
     simulators/simulator.h \
+    exceptionhandler/optimizerhandler.h \
     optimizers/optimizer.h \
     optimizers/case.h \
     model/coupledmodel.h \
@@ -121,6 +122,8 @@ SOURCES += \
     settings/optimizersettings.cpp \
     settings/simulatorsettings.cpp \
     simulators/simulator.cpp \
+    exceptionhandler/optimizerhandler.cpp \
+    optimizers/optimizer.cpp \
     optimizers/case.cpp \
     model/coupledmodel.cpp \
     simulators/mrstbatchsimulator.cpp \

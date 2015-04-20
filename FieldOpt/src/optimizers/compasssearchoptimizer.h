@@ -18,6 +18,8 @@ public:
     bool isFinished();
 
     void reduceStepLength();
+
+    QString getStatusString();
 };
 
 #endif // COMPASSSEARCHOPTIMIZER_H
