@@ -24,8 +24,10 @@
 #define OPTIMIZER_H
 
 #include <QVector>
+#include <QObject>
 #include "case.h"
 #include "settings/optimizersettings.h"
+#include "exceptionhandler/optimizerhandler.h"
 
 class Case;
 class OptimizerSettings;
@@ -42,13 +44,29 @@ class OptimizerSettings;
  * 5. getBestCase().
  *
  */
-class Optimizer
+class Optimizer : public QObject
 {
+    Q_OBJECT
+
+signals:
+    /*!
+     * \brief Error signal.
+     *
+     * Emitted when an error occurs.
+     *
+     * \param severity The severity of the event. May be WARNING or ERROR.
+     * \param type The type of exception.
+     * \param message The message to be printed in addition to the severity and the type.
+     */
+    void error(ExceptionSeverity severity, ExceptionType type, const QString message);
+
 protected:
     Case* best_case;  //!< Best case found thus far.
     QVector<Case*> new_cases;  //!< New cases which have not yet been evaluated.
     int evals;        //!< Evaluations performed.
     int max_evals;    //!< Maximum number of evaluations allowed.
+    void emitException(ExceptionSeverity severity, ExceptionType type, QString message);
+    void emitProgress(QString message);
 public:
 //    Optimizer(){}
 

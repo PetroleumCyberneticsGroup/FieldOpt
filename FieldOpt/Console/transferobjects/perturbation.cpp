@@ -18,14 +18,26 @@ Perturbation::Perturbation(Case* c, int id) :
 }
 
 Perturbation::Perturbation(std::vector<int> &header, std::vector<double> &binaries, std::vector<int> &integers, std::vector<double> &reals) :
-    perturbation_id(header.at(0)),
-    binaryLength(header.at(1)),
-    integerLength(header.at(2)),
-    realLength(header.at(3))
+    perturbation_id(header[0]),
+    binaryLength(header[1]),
+    integerLength(header[2]),
+    realLength(header[3])
 {
-    binaryVariables = binaries;
-    integerVariables = integers;
-    realVariables = reals;
+    if (header[1] > 0){
+        for (int i = 0; i < header[1]; ++i) {
+            binaryVariables.push_back(binaries[i]);
+        }
+    }
+    if (header[2] > 0) {
+        for (int i = 0; i < header[2]; ++i) {
+            integerVariables.push_back(integers[i]);
+        }
+    }
+    if (header[3] > 0) {
+        for (int i = 0; i < header[3]; ++i) {
+            realVariables.push_back(reals[i]);
+        }
+    }
 }
 
 Case *Perturbation::getCase(Model *m)

@@ -75,11 +75,17 @@ void MasterRunner::start()
     broker = new Broker(world, model);
     while (!opt->isFinished()) {
         printer->print("STARTING ITERATION...", true);
+        printer->print("Getting new cases.", false);
         QVector<Case*> newCases = opt->getNewCases();
+        printer->print("Creating new case ids.", false);
         QVector<int> ids = getCaseIds(newCases.size());
+        printer->print("Setting perturbations to broker.", false);
         broker->setPerturbations(newCases, ids);
+        printer->print("Asking broker to evaluate perturbations.", false);
         broker->evaluatePerturbations();
+        printer->print("Comapring cases...", false);
         opt->compareCases(broker->getResults());
+        printer->print("Resetting broker.", false);
         broker->reset();
         printer->print("ITERATION FINISHED.", true);
     }

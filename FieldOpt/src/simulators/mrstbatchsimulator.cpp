@@ -801,7 +801,7 @@ bool MrstBatchSimulator::readAdjoints(AdjointsCoupledModel *m)
 
     if(!input.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        emitException(ExceptionSeverity::ERROR, ExceptionType::READ_ERROR, "Could not open MRST adjoints file.");
+        emitException(ExceptionSeverity::ERROR, ExceptionType::READ_ERROR, QString("Could not open MRST adjoints file: %1/%2_GRAD.TXT").arg(folder()).arg(base_name));
     }
 
     // ---- starting to read the adjoints -----

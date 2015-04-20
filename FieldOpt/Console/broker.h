@@ -11,6 +11,7 @@
 #include "transferobjects/result.h"
 #include "optimizers/case.h"
 #include "model/model.h"
+#include "parallelprinter.h"
 
 namespace mpi = boost::mpi;
 
@@ -24,12 +25,17 @@ private:
     QHash<int, Perturbation*> perturbations;   //!< Hashmap containing all perturbations. <int, Perturbation> = <perturbation_id, Perturbation object>
     QHash<int, Result*> results;               //!< Hashmap containing all results. <int, Result> = <perturbation_id, Result object>
     Model* model;
+    ParallelPrinter* printer;
 
     bool isFinished();                    //!< Returns true if at least one perturbation has not yet been evaluated or if at least one process is currently busy.
     int getNextPerturbationId();  //!< Finds the next perturbation to be evaluated. Returns -1 if all perturbations are evaluated or currently being evaluated.
     int getFreeProcessId();               //!< Finds the id of a non-busy process. Returns -1 if all processes are busy.
     void sendNextPerturbation();
     void recvResult();
+    int perturbationsRemaining();
+
+    QString processStatusString();
+    QString perturbationStatusString();
 
 public:
     explicit Broker(QObject *parent = 0);

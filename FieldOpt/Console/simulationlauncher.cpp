@@ -25,7 +25,8 @@
 void SimulationLauncher::setupWorkingDirectory()
 {    
     // Create output directory
-    workingDirectory = driverPath.remove(driverPath.lastIndexOf("/"), driverPath.length());
+    if (workingDirectory.length() == 0)
+        workingDirectory = driverPath.remove(driverPath.lastIndexOf("/"), driverPath.length());
     QDir dir(workingDirectory);
 
     // Remove existing output directory
@@ -47,9 +48,9 @@ void SimulationLauncher::setupWorkingDirectory()
 
 void SimulationLauncher::returnResults()
 {
-    printer->print("Returning results.", false);
     int id = perturbation->getPerturbation_id();
     double result = model->objective()->value();
+    printer->print(QString("Returning results. ID: %1, Result%2").arg(id).arg(result), false);
     MPI_Send(&id, 1, MPI_INT, 0, 20, MPI_COMM_WORLD);
     MPI_Send(&result, 1, MPI_DOUBLE, 0, 21, MPI_COMM_WORLD);
 }
@@ -87,25 +88,33 @@ void SimulationLauncher::receivePerturbations()
     printer->print("Receiving perturbation...", false);
     std::vector<int> header;
     header.reserve(4);
-    MPI_Recv(&header, 4, MPI_INT, 0, 10, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    MPI_Recv(&header[0], 4, MPI_INT, 0, 10, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     printer->print("Received header.", false);
+    printer->print(QString("%1, %2, %3, %4").arg(header[0]).arg(header[1]).arg(header[2]).arg(header[3]), true);
 
     std::vector<double> binaries;
-    binaries.reserve(header[1]);
-    MPI_Recv(&binaries, header[1], MPI_DOUBLE, 0, 11, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    printer->print("Received binaries.", false);
+    if (header[1] > 0) {
+        binaries.reserve(header[1]);
+        MPI_Recv(&binaries[0], header[1], MPI_DOUBLE, 0, 11, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        printer->print("Received binaries.", false);
+    }
 
     std::vector<int> integers;
-    integers.reserve(header[2]);
-    MPI_Recv(&integers, header[2], MPI_INT, 0, 12, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    printer->print("Received integers.", false);
+    if (header[2] > 0) {
+        integers.reserve(header[2]);
+        MPI_Recv(&integers[0], header[2], MPI_INT, 0, 12, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        printer->print("Received integers.", false);
+    }
 
     std::vector<double> reals;
-    reals.reserve(header[3]);
-    MPI_Recv(&reals, header[3], MPI_DOUBLE, 0, 13, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    printer->print("Received reals.", false);
+    if (header[3] > 0) {
+        reals.reserve(header[3]);
+        MPI_Recv(&reals[0], header[3], MPI_DOUBLE, 0, 13, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        printer->print("Received reals.", false);
+    }
 
     perturbation = new Perturbation(header, binaries, integers, reals);
+    printer->print("Created perturbation object.", false);
     Case* c = perturbation->getCase(model);
 
     AdjointsCoupledModel* acm = dynamic_cast<AdjointsCoupledModel*>(model);
