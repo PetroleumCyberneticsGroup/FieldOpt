@@ -32,7 +32,6 @@ void SimulationLauncher::setupWorkingDirectory()
     // Remove existing output directory
     QString outputdirName = "output_p" + QString::number(world->rank());
 
-    printer->print(QString("Creating output directory in %1").arg(dir.absolutePath()), false);
     if (!dir.exists(outputdirName))
         dir.mkdir(outputdirName);
     if (!dir.exists(outputdirName))
@@ -41,7 +40,6 @@ void SimulationLauncher::setupWorkingDirectory()
 
     // Copy reservoir description file to output folder
     QString newResFile = outputPath + "/" + model->reservoir()->file();
-    printer->print("Copying reservoir description file to" + newResFile, false);
     QFile::remove(newResFile);
     QFile::copy(workingDirectory + "/" + model->reservoir()->file(), newResFile);
 }
@@ -50,7 +48,6 @@ void SimulationLauncher::returnResults()
 {
     int id = perturbation->getPerturbation_id();
     double result = model->objective()->value();
-    printer->print(QString("Returning results. ID: %1, Result%2").arg(id).arg(result), false);
     MPI_Send(&id, 1, MPI_INT, 0, 20, MPI_COMM_WORLD);
     MPI_Send(&result, 1, MPI_DOUBLE, 0, 21, MPI_COMM_WORLD);
 }
@@ -65,13 +62,11 @@ void SimulationLauncher::initialize(QString driverPath)
 {
     this->driverPath = driverPath;
     driverReader = new DriverReader(this->driverPath);
-    printer->print("Reading driver file...", false);
     model = driverReader->readDriverFile();
     model->readPipeFiles();
     model->resolveCapacityConnections();
     model->resolvePipeRouting();
     model->initialize();
-    printer->print("Model object created.", false);
 }
 
 void SimulationLauncher::start()
@@ -85,36 +80,29 @@ void SimulationLauncher::start()
 
 void SimulationLauncher::receivePerturbations()
 {
-    printer->print("Receiving perturbation...", false);
     std::vector<int> header;
     header.reserve(4);
     MPI_Recv(&header[0], 4, MPI_INT, 0, 10, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    printer->print("Received header.", false);
-    printer->print(QString("%1, %2, %3, %4").arg(header[0]).arg(header[1]).arg(header[2]).arg(header[3]), true);
 
     std::vector<double> binaries;
     if (header[1] > 0) {
         binaries.reserve(header[1]);
         MPI_Recv(&binaries[0], header[1], MPI_DOUBLE, 0, 11, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        printer->print("Received binaries.", false);
     }
 
     std::vector<int> integers;
     if (header[2] > 0) {
         integers.reserve(header[2]);
         MPI_Recv(&integers[0], header[2], MPI_INT, 0, 12, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        printer->print("Received integers.", false);
     }
 
     std::vector<double> reals;
     if (header[3] > 0) {
         reals.reserve(header[3]);
         MPI_Recv(&reals[0], header[3], MPI_DOUBLE, 0, 13, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        printer->print("Received reals.", false);
     }
 
     perturbation = new Perturbation(header, binaries, integers, reals);
-    printer->print("Created perturbation object.", false);
     Case* c = perturbation->getCase(model);
 
     AdjointsCoupledModel* acm = dynamic_cast<AdjointsCoupledModel*>(model);
@@ -122,8 +110,6 @@ void SimulationLauncher::receivePerturbations()
         acm->applyCaseVariables(c);
         model = acm;
     }
-
-    printer->print("Received perturbation.", false);
 }
 
 void SimulationLauncher::startSimulation()
@@ -133,14 +119,11 @@ void SimulationLauncher::startSimulation()
         setupWorkingDirectory();
         MrstBatchSimulator sim = MrstBatchSimulator();
         sim.setFolder(outputPath);
-        printer->print("Generating simulator input files.", true);
         if(!sim.generateInputFiles(model))
             printer->eprint("Failed to generate simulator input files.");
-        printer->print("Starting Launching simulator.", true);
         sim.launchSimulator();
         sim.readOutput(model);
         model->process();
         printer->print("Simulation done.", true);
-        printer->print("OBJECTIVE:\n" + model->objective()->description() + "\n Value: " + QString::number(model->objective()->value()) + "\n", true);
     }
 }

@@ -1024,11 +1024,8 @@ bool DriverReader::readPipeConnections(ProductionWell *w)
                 }
                 else     // error when reading numbers in the connections line
                 {
-                    cout << endl << "### Error detected in input file! ###" << endl
-                         << "The OUTLETPIPES entry could not be read..." << endl
-                         << "Last line: " << list.join(" ").toLatin1().constData() << endl;
-
-                    exit(1);
+                    QString message = QString("Error detected in input file.\n The OUTLETPIPES entry could not be read.");
+                    emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
                 }
             }
             else
@@ -1070,8 +1067,6 @@ bool DriverReader::readPipeConnections(ProductionWell *w)
 bool DriverReader::readPipeConnections(MidPipe *p)
 {
     printProgress("       Reading outlet pipes table.");
-
-    cout << "        outlet pipes table..." << endl;
     QStringList list;
     list = StringUtilities::processLine(m_driver_file.readLine());
 
@@ -1191,10 +1186,8 @@ Objective* DriverReader::readObjective()
             else if(list.at(1).startsWith("CUMGAS")) o = new CumgasObjective();     // this is an CUMGAS type objective
             else                                                                    // not recognized
             {
-                cout << endl << "### Error detected in input file! ###" << endl
-                                << "Objective TYPE: " << list.at(1).toLatin1().constData() << endl
-                                << "Is not a recognized objective type." << endl << endl;
-                exit(1);
+                QString message = QString("Error detected in input file.\nObjective TYPE: %1\nIs not a recognized objective type.").arg(list.at(1));
+                emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
             }
         }
         else if(list.at(0).startsWith("DCF")) l_dcf = list.at(1).toDouble(&ok);            // getting the discount factor
@@ -1238,7 +1231,6 @@ Objective* DriverReader::readObjective()
 Pipe* DriverReader::readPipe()
 {
     printProgress("Reading pipe definition.");
-    cout << "Reading pipe definition..." << endl;
 
     Pipe *p = 0;
     int l_number = -1;
@@ -1277,12 +1269,10 @@ Pipe* DriverReader::readPipe()
                 {
                     if(list.at(2).startsWith("BAR"))
                     {
-                        cout << "Setting OUTLETPRESSURE uniuts to BAR..." << endl;
                         p_end->setOutletUnit(Stream::METRIC);
                     }
                     else if(list.at(2).startsWith("PSI"))
                     {
-                        cout << "Setting OUTLETPRESSURE uniuts to PSI..." << endl;
                         p_end->setOutletUnit(Stream::FIELD);
                     }
                 }
@@ -1335,7 +1325,6 @@ Pipe* DriverReader::readPipe()
         {
             mp->setMustRoute();
             emitException(ExceptionSeverity::WARNING, ExceptionType::ASSUMPTION, "Setting that the pipe must be routed to an upstream element.");
-            cout << "setting that the pipe must be routed to an upstream element..." << endl;
         }
         else
         {
@@ -1565,10 +1554,8 @@ Pipe* DriverReader::readSeparator()
             }
             else
             {
-                cout << endl << "### Error detected in input file! ###" << endl
-                     << "INSTALLTIME for SEPARATOR not in correct format..." << endl
-                     << "Last line: " << list.join(" ").toLatin1().constData() << endl << endl;
-                exit(1);
+                QString message = QString("INSTALLTIME for SEPARATOR not in correct format.\nLast line: %1").arg(list.join(" "));
+                emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
             }
             p_sep->setInstallTime(var_install);
         }
@@ -1632,10 +1619,6 @@ Pipe* DriverReader::readSeparator()
             {
                 QString message = QString("Error detected in input file.\nCAPACITY keyword for SEPARATOR not in correct format.\nLast line: %1").arg(list.join(" ").toLatin1().constData());
                 emitException(ExceptionSeverity::ERROR, ExceptionType::UNABLE_TO_PARSE, message);
-                cout << endl << "### Error detected in input file! ###" << endl
-                     << "CAPACITY keyword for SEPARATOR not in correct format..." << endl
-                     << "Last line: " << list.join(" ").toLatin1().constData() << endl << endl;
-                exit(1);
             }
             p_sep->setRemoveCapacity(var_capacity);
         } // CAPACITY kwrd
