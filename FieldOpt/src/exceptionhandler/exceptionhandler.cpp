@@ -46,19 +46,19 @@ void ExceptionHandler::printWarning(QString message, ExceptionType type)
 {
     QString l1 = "Exception type:\t" + getTypeString(type) + "\n";
     QString l2 = "Message:\t" + message + "\n";
-    QTextStream(stderr) << QString("%1 \n %2 \n %3 \n%4").arg(warning_header).arg(l1).arg(l2).arg(warning_footer);
+    if (verbose == true)
+        QTextStream(stdout) << QString("%1 \n %2 \n %3 \n%4").arg(warning_header).arg(l1).arg(l2).arg(warning_footer);
 }
 
 void ExceptionHandler::printError(QString message, ExceptionType type)
 {
     QString l1 = "Exception type: " + getTypeString(type) + "\n";
     QString l2 = "Message: " + message + "\n";
-    if (verbose)
-        QTextStream(stdout) << QString("%1 \n %2 \n %3 \n %4").arg(error_header).arg(l1).arg(l2).arg(error_footer);
+        QTextStream(stderr) << QString("%1 \n %2 \n %3 \n %4").arg(error_header).arg(l1).arg(l2).arg(error_footer);
 }
 
 void ExceptionHandler::printProgress(QString message)
 {
-    if (verbose)
+    if (verbose == true)
         QTextStream(stdout) << QString("%1%2\n").arg(progress_header).arg(message);
 }

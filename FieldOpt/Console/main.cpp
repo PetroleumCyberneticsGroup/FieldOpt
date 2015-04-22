@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     else if (argc < 2 && world.rank() > 0) {
         return (1);
     }
-    else if (argc >= 2 && world.rank() == 0 && QString::compare(argv[2], "-verbose") == 0 ) {
+    else if (argc >= 2 && QString::compare(argv[2], "-verbose") == 0 ) {
         std::cout << "Setting verbose mode." << std::endl;
         ExceptionHandler::verbose = true;
     }
