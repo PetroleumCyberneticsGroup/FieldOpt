@@ -65,12 +65,6 @@ int main(int argc, char *argv[])
         MasterRunner runner = MasterRunner(&world);
         runner.initialize(driverPath);
         runner.start();
-//        printer.print(QString("Initialized MasterRunner"), false);
-//        runner.perturbModel();
-//        printer.print(QString("Perturbed model."), false);
-//        runner.distributePerturbations();
-//        printer.print(QString("Distributed perturbations"), false);
-//        runner.determineOptimal();
     }
     else {
         SimulationLauncher simlauncher = SimulationLauncher(&world);

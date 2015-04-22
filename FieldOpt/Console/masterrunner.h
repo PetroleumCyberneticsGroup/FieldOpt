@@ -53,7 +53,7 @@ class MasterRunner
 {
 public:
     MasterRunner(mpi::communicator *comm);
-    ~MasterRunner();
+    ~MasterRunner(){}
 
     void initialize(QString driverPath);
     void start();
