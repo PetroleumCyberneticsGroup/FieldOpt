@@ -115,7 +115,7 @@ void SimulationLauncher::receivePerturbations()
 void SimulationLauncher::startSimulation()
 {
     if (this->model->getRuntimeSettings()->getSimulatorSettings()->getSimulator() == MRST) {
-        printer->print("Starting MRST simulation.", true);
+        printer->print("Starting MRST simulation.", false);
         setupWorkingDirectory();
         MrstBatchSimulator sim = MrstBatchSimulator();
         sim.setFolder(outputPath);
@@ -124,6 +124,6 @@ void SimulationLauncher::startSimulation()
         sim.launchSimulator();
         sim.readOutput(model);
         model->process();
-        printer->print("Simulation done.", true);
+        printer->print("Simulation done.", false);
     }
 }
