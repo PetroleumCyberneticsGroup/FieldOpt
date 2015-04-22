@@ -28,8 +28,6 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    transferobjects/modelperturbation.cpp \
-    transferobjects/simulationresults.cpp \
     transferobjects/perturbation.cpp \
     transferobjects/result.cpp \
     simulationlauncher.cpp \
@@ -38,8 +36,6 @@ SOURCES += main.cpp \
     broker.cpp
 
 HEADERS += \
-    transferobjects/modelperturbation.h \
-    transferobjects/simulationresults.h \
     transferobjects/perturbation.h \
     transferobjects/result.h \
     simulationlauncher.h \

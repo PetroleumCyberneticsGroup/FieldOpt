@@ -6,8 +6,6 @@
 #include <boost/serialization/string.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 
-#include "transferobjects/modelperturbation.h"
-#include "transferobjects/simulationresults.h"
 #include "masterrunner.h"
 #include "simulationlauncher.h"
 #include "fileio/readeres/driverreader.h"
