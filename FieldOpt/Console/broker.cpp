@@ -6,7 +6,7 @@ Broker::Broker(QObject *parent) :
 }
 
 
-Broker::Broker(mpi::communicator *comm, Model* m)
+Broker::Broker(mpi::communicator *comm, Model* m, ResultsLogger* l)
 {
     world = comm;
     for (int i = 1; i < world->size(); ++i)
@@ -14,6 +14,7 @@ Broker::Broker(mpi::communicator *comm, Model* m)
 
     model = m;
     printer = new ParallelPrinter(comm->rank());
+    logger = l;
 }
 
 
@@ -119,6 +120,7 @@ void Broker::sendNextPerturbation()
         MPI_Send(&reals[0], reals.size(), MPI_DOUBLE, destination, 13, MPI_COMM_WORLD);
     process_busy[destination] = true;
     perturbation_evaluated[header[0]] = true;
+    timestamps[header[0]].push_back(QDateTime::currentDateTime());
 }
 
 
@@ -132,6 +134,8 @@ void Broker::recvResult()
     process_busy[status.MPI_SOURCE] = false;
     Result* newResult = new Result(id, result);
     results[id] = newResult;
+    timestamps[id].push_back(QDateTime::currentDateTime());
+    logger->addEntry(perturbations[id], results[id], getTimeSpan(id));
 }
 
 
@@ -143,6 +147,13 @@ int Broker::perturbationsRemaining()
             remaining++;
     }
     return remaining;
+}
+
+int Broker::getTimeSpan(int id)
+{
+    QDateTime start = timestamps[id].at(0);
+    QDateTime end = timestamps[id].at(1);
+    return end.toMSecsSinceEpoch() - start.toMSecsSinceEpoch();
 }
 
 

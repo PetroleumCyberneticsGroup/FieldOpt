@@ -51,13 +51,14 @@ void MasterRunner::initialize(QString driverPath)
         printer->eprint("Optmimzer not recognized. Terminating.");
         break;
     }
-    printer->print(model->getRuntimeSettings()->toString(), true);
+    printer->print(model->getRuntimeSettings()->toString(), true);    
+    logger = new ResultsLogger(driverPath.remove(driverPath.lastIndexOf("/"), driverPath.length()), model);
 }
 
 
 void MasterRunner::start()
 {
-    broker = new Broker(world, model);
+    broker = new Broker(world, model, logger);
     while (!opt->isFinished()) {
         printer->print("Starting optimizer iteration.", false);
         QVector<Case*> newCases = opt->getNewCases();
@@ -69,6 +70,8 @@ void MasterRunner::start()
         printer->print("Optimizer iteration finished.", false);
     }
     printer->print("Optimization completed.", true);
+    logger->writeLog();
+    MPI_Finalize();
 }
 
 

@@ -39,6 +39,7 @@
 #include "fileio/readeres/driverreader.h"
 #include "parallelprinter.h"
 #include "broker.h"
+#include "resultslogger.h"
 
 namespace mpi = boost::mpi;
 
@@ -57,15 +58,8 @@ public:
 
     void initialize(QString driverPath);
     void start();
-//    void perturbModel();
-//    void distributePerturbations();
-//    void determineOptimal();
-
 
 private:
-//    QVector<ModelPerturbation> OLDperturbations;
-//    QVector<Perturbation*> perturbations;
-//    QVector<SimulationResults> results;
     QString driverPath;
     Model* model;
     mpi::communicator* world;
@@ -73,12 +67,10 @@ private:
     ParallelPrinter* printer;
     Optimizer* opt;
     Broker* broker;
-//    int caseId;
     int perturbationId;
     QVector<int> getCaseIds(int length);
+    ResultsLogger* logger;
 
-//    void sendPerturbations();
-//    void recvResults();
 };
 
 #endif // MASTERRUNNER_H

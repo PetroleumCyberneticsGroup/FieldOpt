@@ -33,7 +33,8 @@ SOURCES += main.cpp \
     simulationlauncher.cpp \
     masterrunner.cpp \
     parallelprinter.cpp \
-    broker.cpp
+    broker.cpp \
+    resultslogger.cpp
 
 HEADERS += \
     transferobjects/perturbation.h \
@@ -41,4 +42,5 @@ HEADERS += \
     simulationlauncher.h \
     masterrunner.h \
     parallelprinter.h \
-    broker.h
+    broker.h \
+    resultslogger.h
