@@ -23,6 +23,8 @@
 #include "exceptionhandler.h"
 #include <QTextStream>
 
+bool ExceptionHandler::verbose = false;
+
 ExceptionHandler::ExceptionHandler()
 {//
     warning_header = "\n************************************************************\n"
@@ -51,10 +53,12 @@ void ExceptionHandler::printError(QString message, ExceptionType type)
 {
     QString l1 = "Exception type: " + getTypeString(type) + "\n";
     QString l2 = "Message: " + message + "\n";
-    QTextStream(stderr) << QString("%1 \n %2 \n %3 \n %4").arg(error_header).arg(l1).arg(l2).arg(error_footer);
+    if (verbose)
+        QTextStream(stdout) << QString("%1 \n %2 \n %3 \n %4").arg(error_header).arg(l1).arg(l2).arg(error_footer);
 }
 
 void ExceptionHandler::printProgress(QString message)
 {
-    QTextStream(stdout) << QString("%1%2").arg(progress_header).arg(message);
+    if (verbose)
+        QTextStream(stdout) << QString("%1%2\n").arg(progress_header).arg(message);
 }

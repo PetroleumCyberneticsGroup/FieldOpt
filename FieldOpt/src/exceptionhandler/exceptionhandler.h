@@ -58,6 +58,7 @@ private:
 
 public:
     ExceptionHandler();
+    static bool verbose;
 
     void printWarning(QString message, ExceptionType type);
     void printError(QString message, ExceptionType type);

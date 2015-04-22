@@ -12,6 +12,7 @@
 #include "simulationlauncher.h"
 #include "fileio/readeres/driverreader.h"
 #include "parallelprinter.h"
+#include "exceptionhandler/exceptionhandler.h"
 
 namespace mpi = boost::mpi;
 
@@ -34,20 +35,24 @@ int main(int argc, char *argv[])
         return (1);
     }
 
-    // The program should take one and only one argument.
-    if (argc != 2 && world.rank() == 0) {
+    // The program should take at least one argument.
+    if (argc < 2 && world.rank() == 0) {
         std::cerr << "============================== ERROR ==============================" << std::endl
-                  << "This program should take one and only one argument." << std::endl
+                  << "This program should take at least one argument." << std::endl
                   << "This argument should be the path to the driver file to be used." << std::endl
                   << "Example of how to start the program:" << std::endl
                   << "mpirun -n 2 -x LD_LIBRARY_PATH Console /path/to/driver.dat" << std::endl
                   << "===================================================================" << std::endl;
         return (1);
     }
-    else if (argc != 2 && world.rank() > 0) {
+    else if (argc < 2 && world.rank() > 0) {
         return (1);
     }
-    else if (argc == 2 && world.rank() == 0) {
+    else if (argc >= 2 && world.rank() == 0 && QString::compare(argv[2], "-verbose") == 0 ) {
+        std::cout << "Setting verbose mode." << std::endl;
+        ExceptionHandler::verbose = true;
+    }
+    else if (argc >= 2 && world.rank() == 0) {
         std::cout << "===================================================================" << std::endl
                   << "Running program with the following driver file path: " << std::endl
                   << argv[1] << std::endl
