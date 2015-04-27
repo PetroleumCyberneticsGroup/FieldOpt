@@ -4,9 +4,9 @@ ResultsLogger::ResultsLogger(QString outputDirectoryPath, Model* m)
 {
     output_directory_path = outputDirectoryPath;
 
-    header.push_back("PERT_ID");
-    header.push_back("EVAL_TIME");
-    header.push_back("OBJECTIVE");
+    header.push_back("ID");
+    header.push_back("EV_T");
+    header.push_back("OBJ_VAL");
 
     for (int i = 0; i < m->numberOfBinaryVariables(); ++i)
         header.push_back(QString("BIN%1").arg(i));
