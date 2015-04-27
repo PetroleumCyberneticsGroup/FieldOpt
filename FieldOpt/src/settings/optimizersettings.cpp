@@ -47,6 +47,9 @@ QString OptimizerSettings::toString() const
     optstr.append("Termination: " + QString::number(termination) + "\n");
     optstr.append("Termination start: " + QString::number(terminationStart) + "\n");
     optstr.append("Staring point update: " + QString::number(startingpointUpdate) + "\n");
+    optstr.append("Initial step length: " + QString::number(initialStepLength) + "\n");
+    optstr.append("Minimum step length: " + QString::number(minimumStepLength) + "\n");
+    optstr.append("Bookkeeper tolerance: " + QString::number(bookkeeperTolerance) + "\n");
     return optstr;
 }
 
@@ -68,6 +71,16 @@ double OptimizerSettings::getMinimumStepLength() const
 void OptimizerSettings::setMinimumStepLength(double value)
 {
     minimumStepLength = value;
+}
+
+double OptimizerSettings::getBookkeeperTolerance() const
+{
+    return bookkeeperTolerance;
+}
+
+void OptimizerSettings::setBookkeeperTolerance(double value)
+{
+    bookkeeperTolerance = value;
 }
 OptimizerSettings::OptimizerSettings()
 {

@@ -75,7 +75,8 @@ HEADERS += \
     exceptionhandler/simulatorhandler.h \
     utilities/posixutilities.h \
     optimizers/gssalgorithm.h \
-    optimizers/compasssearchoptimizer.h
+    optimizers/compasssearchoptimizer.h \
+    optimizers/bookkeeper.h
 
 SOURCES += \
     constraints/integerboundaryconstraint.cpp \
@@ -143,3 +144,4 @@ SOURCES += \
     exceptionhandler/simulatorhandler.cpp \
     utilities/posixutilities.cpp \
     optimizers/compasssearchoptimizer.cpp \
+    optimizers/bookkeeper.cpp

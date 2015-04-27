@@ -10,13 +10,19 @@ QVector<Case *> CompassSearchOptimizer::perturb(Case *c)
     for (int i = 0; i < c->numberOfBinaryVariables(); ++i) {
         Case* newCasePositive = new Case(*c);
         newCasePositive->setBinaryVariableValue(i, newCasePositive->binaryVariableValue(i) + step_length);
-        if (newCasePositive->boundariesOk())
+        if (newCasePositive->boundariesOk() &&
+                (bookkeeper->isCalculated(newCasePositive) == false || bookkeeper->getTolerance() > step_length)) {
             newCases.append(newCasePositive);
+            bookkeeper->addEntry(newCasePositive);
+        }
 
         Case* newCaseNegative= new Case(*c);
         newCaseNegative->setBinaryVariableValue(i, newCaseNegative->binaryVariableValue(i) - step_length);
-        if (newCaseNegative->boundariesOk())
+        if (newCaseNegative->boundariesOk() &&
+                (bookkeeper->isCalculated(newCaseNegative) == false || bookkeeper->getTolerance() > step_length)) {
+            bookkeeper->addEntry(newCaseNegative);
             newCases.append(newCaseNegative);
+        }
     }
     emitProgress("Perturbed binary vars.");
 
@@ -24,13 +30,19 @@ QVector<Case *> CompassSearchOptimizer::perturb(Case *c)
     for (int i = 0; i < c->numberOfIntegerVariables(); ++i) {
         Case* newCasePositive = new Case(*c);
         newCasePositive->setIntegerVariableValue(i, newCasePositive->integerVariableValue(i) + step_length);
-        if (newCasePositive->boundariesOk())
+        if (newCasePositive->boundariesOk() &&
+                (bookkeeper->isCalculated(newCasePositive) == false || bookkeeper->getTolerance() > step_length)) {
             newCases.append(newCasePositive);
+            bookkeeper->addEntry(newCasePositive);
+        }
 
         Case* newCaseNegative= new Case(*c);
         newCaseNegative->setIntegerVariableValue(i, newCaseNegative->integerVariableValue(i) - step_length);
-        if (newCaseNegative->boundariesOk())
+        if (newCaseNegative->boundariesOk() &&
+                (bookkeeper->isCalculated(newCaseNegative) == false || bookkeeper->getTolerance() > step_length)) {
+            bookkeeper->addEntry(newCaseNegative);
             newCases.append(newCaseNegative);
+        }
     }
     emitProgress("Perturbed integer vars.");
 
@@ -38,13 +50,19 @@ QVector<Case *> CompassSearchOptimizer::perturb(Case *c)
     for (int i = 0; i < c->numberOfRealVariables(); ++i) {
         Case* newCasePositive = new Case(*c);
         newCasePositive->setRealVariableValue(i, newCasePositive->realVariableValue(i) + step_length);
-        if (newCasePositive->boundariesOk())
+        if (newCasePositive->boundariesOk() &&
+                (bookkeeper->isCalculated(newCasePositive) == false || bookkeeper->getTolerance() > step_length)) {
             newCases.append(newCasePositive);
+            bookkeeper->addEntry(newCasePositive);
+        }
 
         Case* newCaseNegative= new Case(*c);
         newCaseNegative->setRealVariableValue(i, newCaseNegative->realVariableValue(i) - step_length);
-        if (newCaseNegative->boundariesOk())
+        if (newCaseNegative->boundariesOk() &&
+                (bookkeeper->isCalculated(newCaseNegative) == false || bookkeeper->getTolerance() > step_length)) {
+            bookkeeper->addEntry(newCaseNegative);
             newCases.append(newCaseNegative);
+        }
     }
     emitProgress("Perturbed real vars.");
     return newCases;
@@ -65,6 +83,7 @@ void CompassSearchOptimizer::initialize(Case *baseCase, OptimizerSettings* setti
     best_case  = baseCase;
     minimum_step_length = settings->getMinimumStepLength();
     step_length = settings->getInitialStepLength();
+    bookkeeper = new Bookkeeper(settings->getBookkeeperTolerance());
 }
 
 QVector<Case *> CompassSearchOptimizer::getNewCases()

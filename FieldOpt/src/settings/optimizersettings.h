@@ -20,6 +20,7 @@ private:
     double minimumStepLength;
     double perturbationSize;
     double termination;
+    double bookkeeperTolerance;
     int terminationStart;
     bool startingpointUpdate;
     QList<int> steps;  //!< Steps to be used. Only used by the EROPT optimizer. \todo Implement EROPT optimizer.
@@ -58,6 +59,8 @@ public:
     void setInitialStepLength(double value);
     double getMinimumStepLength() const;
     void setMinimumStepLength(double value);
+    double getBookkeeperTolerance() const;
+    void setBookkeeperTolerance(double value);
 };
 
 #endif // OPTIMIZERSETTINGS_H
