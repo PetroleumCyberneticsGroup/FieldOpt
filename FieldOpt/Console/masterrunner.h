@@ -70,7 +70,7 @@ private:
     int perturbationId;
     QVector<int> getCaseIds(int length);
     ResultsLogger* logger;
-
+    void finalize();
 };
 
 #endif // MASTERRUNNER_H

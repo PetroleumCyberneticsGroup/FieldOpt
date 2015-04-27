@@ -21,6 +21,7 @@
  */
 
 #include "case.h"
+#include "iostream"
 
 Case::Case() :
     m_objective_value(0),
@@ -33,7 +34,7 @@ Case::~Case()
 {
     if(p_objective_derivative != 0)
         delete p_objective_derivative;
-
+    
     for(int i = 0; i < m_constraint_derivatives.size(); ++i)
         delete m_constraint_derivatives.at(i);
 }
@@ -55,16 +56,25 @@ Case::Case(Model *m, bool cpy_output)
     for(int i = 0; i < m->realVariables().size(); ++i)
     {
         addRealVariableValue(m->realVariables().at(i)->value());
+        double min = m->realVariables().at(i)->min();
+        double max = m->realVariables().at(i)->max();
+        addRealBoundConstraint(min, max);
     }
 
     for(int i = 0; i < m->binaryVariables().size(); ++i)
     {
         addBinaryVariableValue(m->binaryVariables().at(i)->value());
+        double min = m->binaryVariables().at(i)->min();
+        double max = m->binaryVariables().at(i)->max();
+        addBinaryBoundConstraint(min, max);
     }
 
     for(int i = 0; i < m->integerVariables().size(); ++i)
     {
         addIntegerVariableValue(m->integerVariables().at(i)->value());
+        int min = m->integerVariables().at(i)->min();
+        int max = m->integerVariables().at(i)->max();
+        addIntegerBoundConstraint(min, max);
     }
 
     if(cpy_output)
@@ -96,6 +106,16 @@ Case::Case(const Case &c, bool cpy_output)
     for(int i = 0; i < c.numberOfIntegerVariables(); ++i)
     {
         m_integer_var_values.push_back(c.m_integer_var_values.at(i));
+    }
+
+    for (int i = 0; i < c.binaryBoundConstraints().size(); ++i) {
+        m_binary_bound_constraints.push_back(c.binaryBoundConstraints().at(i));
+    }
+    for (int i = 0; i < c.integerBoundConstraints().size(); ++i) {
+        m_integer_bound_constraints.push_back(c.integerBoundConstraints().at(i));
+    }
+    for (int i = 0; i < c.realBoundConstraints().size(); ++i) {
+        m_real_bound_constraints.push_back(c.realBoundConstraints().at(i));
     }
 
     if(cpy_output)
@@ -154,4 +174,45 @@ Case& Case::operator =(const Case &rhs)
         m_infeasibility = rhs.m_infeasibility;
     }
     return *this;
+}
+
+void Case::addIntegerBoundConstraint(const int min, const int max)
+{
+    IntegerBoundaryConstraint* constraint = new IntegerBoundaryConstraint(min, max);
+    m_integer_bound_constraints.push_back(constraint);
+}
+
+void Case::addRealBoundConstraint(const double min, const double max)
+{
+    DoubleBoundaryConstraint* constraint = new DoubleBoundaryConstraint(min, max);
+    m_real_bound_constraints.push_back(constraint);
+}
+
+void Case::addBinaryBoundConstraint(const double min, const double max)
+{
+    DoubleBoundaryConstraint* constraint =  new DoubleBoundaryConstraint(min, max);
+    m_binary_bound_constraints.push_back(constraint);
+}
+
+bool Case::boundariesOk()
+{
+    if (m_binary_bound_constraints.size() > 0) {
+        for (int i = 0; i < m_binary_var_values.size(); ++i) {
+            if (m_binary_var_values.at(i) < m_binary_bound_constraints.at(i)->getMin() || m_binary_var_values.at(i) > m_binary_bound_constraints.at(i)->getMax())
+                return false;
+        }
+    }
+    if (m_integer_bound_constraints.size() > 0) {
+        for (int i = 0; i < m_integer_var_values.size(); ++i) {
+            if (m_integer_var_values.at(i) < m_integer_bound_constraints.at(i)->getMin() || m_integer_var_values.at(i) > m_integer_bound_constraints.at(i)->getMax())
+                return false;
+        }
+    }
+    if (m_real_bound_constraints.size() > 0) {
+        for (int i = 0; i < m_real_var_values.size(); ++i) {
+            if (m_real_var_values.at(i) < m_real_bound_constraints.at(i)->getMin() || m_real_var_values.at(i) > m_real_bound_constraints.at(i)->getMax())
+                return false;
+        }
+    }
+    return true;
 }

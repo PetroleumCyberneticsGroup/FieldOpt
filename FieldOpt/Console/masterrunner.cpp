@@ -70,8 +70,15 @@ void MasterRunner::start()
         printer->print("Optimizer iteration finished.", false);
     }
     printer->print("Optimization completed.", true);
-    logger->writeLog();
-    MPI_Finalize();
+    finalize();
+}
+
+void MasterRunner::finalize() {
+    int data = 1;
+    for (int i = 1; i < world->size(); ++i) {
+        MPI_Send(&data, 1, MPI_INT, i, 999, MPI_COMM_WORLD);
+    }
+    MPI_Finalize(); // Finalize root process
 }
 
 

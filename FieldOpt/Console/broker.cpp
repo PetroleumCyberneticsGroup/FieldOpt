@@ -130,7 +130,7 @@ void Broker::recvResult()
     int id;
     double result;
     MPI_Recv(&id, 1, MPI_INT, MPI_ANY_SOURCE, 20, MPI_COMM_WORLD, &status);
-    MPI_Recv(&result, 1, MPI_INT, status.MPI_SOURCE, 21, MPI_COMM_WORLD, &status);
+    MPI_Recv(&result, 1, MPI_DOUBLE, status.MPI_SOURCE, 21, MPI_COMM_WORLD, &status);
     process_busy[status.MPI_SOURCE] = false;
     Result* newResult = new Result(id, result);
     results[id] = newResult;

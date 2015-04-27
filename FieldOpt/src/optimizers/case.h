@@ -31,6 +31,8 @@
 #include "variables/binaryvariable.h"
 #include "variables/intvariable.h"
 #include "constraints/constraint.h"
+#include "constraints/integerboundaryconstraint.h"
+#include "constraints/doubleboundaryconstraint.h"
 #include "model/objectives/objective.h"
 #include "optimizers/derivative.h"
 #include "printers/caseprinter.h"
@@ -57,6 +59,9 @@ private:
     QVector<double> m_binary_var_values;
     QVector<int> m_integer_var_values;
     QVector<double> m_constraint_values;
+    QVector<IntegerBoundaryConstraint*> m_integer_bound_constraints;
+    QVector<DoubleBoundaryConstraint*> m_real_bound_constraints;
+    QVector<DoubleBoundaryConstraint*> m_binary_bound_constraints;
     double m_objective_value;
     QVector<Derivative*> m_constraint_derivatives;
     Derivative *p_objective_derivative;
@@ -103,6 +108,16 @@ public:
     double infeasibility() {return m_infeasibility;}
 
     Case& operator=(const Case &rhs);
+
+    QVector<IntegerBoundaryConstraint*> integerBoundConstraints() const { return m_integer_bound_constraints; }
+    void addIntegerBoundConstraint (const int min, const int max);
+    QVector<DoubleBoundaryConstraint*> realBoundConstraints() const { return m_real_bound_constraints; }
+    void addRealBoundConstraint(const double min, const double max);
+    QVector<DoubleBoundaryConstraint*> binaryBoundConstraints() const { return m_binary_bound_constraints; }
+    void addBinaryBoundConstraint(const double min, const double max);
+
+    bool boundariesOk();
+
 };
 
 #endif // CASE_H

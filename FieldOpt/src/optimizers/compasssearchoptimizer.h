@@ -3,12 +3,15 @@
 
 #include "gssalgorithm.h"
 #include "optimizer.h"
+#include "constraints/integerboundaryconstraint.h"
+#include "constraints/doubleboundaryconstraint.h"
 
 class CompassSearchOptimizer : public Optimizer, public GSSAlgorithm
 {
 private:
     QVector<Case*> perturb(Case *c);
     bool isBetter(Case *c);
+
 public:
     CompassSearchOptimizer(){ evals = 0; }
 

@@ -9,6 +9,8 @@ TEMPLATE = lib
 TARGET = fieldopt
 
 HEADERS += \
+    constraints/integerboundaryconstraint.h \
+    constraints/doubleboundaryconstraint.h \
     variables/variable.h \
     variables/intvariable.h \
     variables/realvariable.h \
@@ -76,6 +78,8 @@ HEADERS += \
     optimizers/compasssearchoptimizer.h
 
 SOURCES += \
+    constraints/integerboundaryconstraint.cpp \
+    constraints/doubleboundaryconstraint.cpp \
     variables/intvariable.cpp \
     variables/variable.cpp \
     variables/realvariable.cpp \
@@ -138,4 +142,4 @@ SOURCES += \
     model/decoupledmodel.cpp \
     exceptionhandler/simulatorhandler.cpp \
     utilities/posixutilities.cpp \
-    optimizers/compasssearchoptimizer.cpp
+    optimizers/compasssearchoptimizer.cpp \
