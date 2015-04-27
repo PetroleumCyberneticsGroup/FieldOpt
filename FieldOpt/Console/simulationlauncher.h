@@ -69,8 +69,10 @@ private:
 
     void returnResults();
 
-    void receivePerturbations();
+    bool receivePerturbations();  //!< Returns false if the termination signal is received; otherwise true.
     void startSimulation();
+
+    void finalize();
 
 public:
     SimulationLauncher(mpi::communicator *comm);

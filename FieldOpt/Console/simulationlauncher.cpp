@@ -71,18 +71,23 @@ void SimulationLauncher::initialize(QString driverPath)
 
 void SimulationLauncher::start()
 {
-    while (true) {
-        receivePerturbations();
+    while (receivePerturbations() == true) {
         startSimulation();
         returnResults();
     }
 }
 
-void SimulationLauncher::receivePerturbations()
+bool SimulationLauncher::receivePerturbations()
 {
     std::vector<int> header;
     header.reserve(4);
-    MPI_Recv(&header[0], 4, MPI_INT, 0, 10, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    MPI_Status status;
+    MPI_Recv(&header[0], 4, MPI_INT, 0, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+
+    if (status.MPI_TAG == 999) {
+        finalize();
+        return false;
+    }
 
     std::vector<double> binaries;
     if (header[1] > 0) {
@@ -110,12 +115,12 @@ void SimulationLauncher::receivePerturbations()
         acm->applyCaseVariables(c);
         model = acm;
     }
+    return true;
 }
 
 void SimulationLauncher::startSimulation()
 {
     if (this->model->getRuntimeSettings()->getSimulatorSettings()->getSimulator() == MRST) {
-        printer->print("Starting MRST simulation.", false);
         setupWorkingDirectory();
         MrstBatchSimulator sim = MrstBatchSimulator();
         sim.setFolder(outputPath);
@@ -124,6 +129,10 @@ void SimulationLauncher::startSimulation()
         sim.launchSimulator();
         sim.readOutput(model);
         model->process();
-        printer->print("Simulation done.", false);
     }
+}
+
+void SimulationLauncher::finalize()
+{
+    MPI_Finalize();
 }
