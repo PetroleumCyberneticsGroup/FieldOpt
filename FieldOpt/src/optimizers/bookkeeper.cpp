@@ -15,7 +15,7 @@ double Bookkeeper::calculateDistance(QVector<double> *entry1, QVector<double> *e
     double sqsum = 0;
     for (int i = 0; i < entry1->size(); ++i)
         sqsum += (entry1->at(i) - entry2->at(i)) * (entry1->at(i) - entry2->at(i));
-    return qSqrt(sqsum);
+    return sqrt(sqsum);
 }
 
 QVector<double> *Bookkeeper::createEntry(Case *c)

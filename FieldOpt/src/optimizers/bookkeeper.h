@@ -2,7 +2,7 @@
 #define BOOKKEEPER_H
 
 #include <QVector>
-#include <QtMath>
+#include <math.h>
 #include "case.h"
 
 class Bookkeeper
