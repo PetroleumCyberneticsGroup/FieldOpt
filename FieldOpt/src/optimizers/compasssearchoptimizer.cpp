@@ -100,7 +100,7 @@ void CompassSearchOptimizer::compareCases(QVector<Case *> cases)
 {
     emitProgress(QString("Comparing cases.\n%1").arg(getStatusString()));
     bool foundBetter = false;
-    for (int i = 0; i < cases.length(); ++i) {
+    for (int i = 0; i < cases.size(); ++i) {
         if (isBetter(cases.at(i))) {
             delete best_case;
             best_case = cases.at(i);
