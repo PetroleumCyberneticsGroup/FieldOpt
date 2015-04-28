@@ -3,5 +3,6 @@ module load openmpi/1.6.5
 module load python/2.7.6-intel
 module load boost
 module load qt
+module load matlab
 qmake FieldOpt.pro -r -spec linux-g++ CONFIG+=debug "QMAKE_CXXFLAGS+=-std=c++11"
 qmake && make
