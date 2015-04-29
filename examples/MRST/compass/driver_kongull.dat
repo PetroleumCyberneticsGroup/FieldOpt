@@ -36,9 +36,13 @@ END OBJECTIVE
 !------------------- Master Schedule -------------------------------
 START MASTERSCHEDULE
  10
+ 30
  50
+ 75
  100
+ 150
  200
+ 230
  365
 END MASTERSCHEDULE
 
