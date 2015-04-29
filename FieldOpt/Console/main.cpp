@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
     mpi::environment env(argc, argv);
     mpi::communicator world;
     ParallelPrinter printer = ParallelPrinter(world.rank());
+    QString mrstPath;  //!< Holds the MRST path if it is passed as a parameter
 
     if (world.size() < 2 && world.rank() == 0) {
         std::cerr << "============================== ERROR ==============================" << std::endl
@@ -50,6 +51,10 @@ int main(int argc, char *argv[])
         std::cout << "Setting verbose mode." << std::endl;
         ExceptionHandler::verbose = true;
     }
+    else if (argc >= 2) {  // If the second parameter is not "-verbose", assuming that it is the path to the MRST directory
+        std::cout << "Setting MRST directory to " << argv[2] << std::endl;
+        mrstPath = QString(argv[2]);
+    }
     else if (argc >= 2 && world.rank() == 0) {
         std::cout << "===================================================================" << std::endl
                   << "Running program with the following driver file path: " << std::endl
@@ -65,10 +70,18 @@ int main(int argc, char *argv[])
         runner.start();
     }
     else {
-        SimulationLauncher simlauncher = SimulationLauncher(&world);
-        simlauncher.initialize(driverPath);
-        printer.print(QString("Initialized SimulationLauncher"), false);
-        simlauncher.start();
+        if (mrstPath.startsWith("/")) {
+            SimulationLauncher simlauncher = SimulationLauncher(&world, mrstPath);
+            simlauncher.initialize(driverPath);
+            printer.print(QString("Initialized SimulationLauncher"), false);
+            simlauncher.start();
+        }
+        else {
+            SimulationLauncher simlauncher = SimulationLauncher(&world);
+            simlauncher.initialize(driverPath);
+            printer.print(QString("Initialized SimulationLauncher"), false);
+            simlauncher.start();
+        }
     }
     return 0;
 }

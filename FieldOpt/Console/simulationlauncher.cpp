@@ -56,6 +56,14 @@ SimulationLauncher::SimulationLauncher(mpi::communicator *comm)
 {
     world = comm;
     printer = new ParallelPrinter(comm->rank());
+    mrstPath = "";
+}
+
+SimulationLauncher::SimulationLauncher(mpi::communicator *comm, QString mrstPath)
+{
+    world = comm;
+    printer = new ParallelPrinter(comm->rank());
+    this->mrstPath = mrstPath;
 }
 
 void SimulationLauncher::initialize(QString driverPath)
@@ -67,6 +75,8 @@ void SimulationLauncher::initialize(QString driverPath)
     model->resolveCapacityConnections();
     model->resolvePipeRouting();
     model->initialize();
+    if (mrstPath.length() > 1)
+        model->reservoir()->setMrstPath(mrstPath);
 }
 
 void SimulationLauncher::start()

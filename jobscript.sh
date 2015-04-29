@@ -16,4 +16,4 @@ module load boost
 module load qt
 module load matlab
 
-mpirun -npernode 12 -x LD_LIBRARY_PATH Console ${PBS_O_WORKDIR}/examples/MRST/compass/driver_kongull.dat
+mpirun -npernode 12 -x LD_LIBRARY_PATH Console ${PBS_O_WORKDIR}/examples/MRST/compass/driver_kongull.dat ${PBS_O_WORKDIR}/MRST/mrst-2013a

@@ -65,6 +65,7 @@ private:
     QString driverPath;
     QString workingDirectory;
     QString outputPath;
+    QString mrstPath; //!< Holds the MRST path if it was passed as a parameter to the program.
     void setupWorkingDirectory();
 
     void returnResults();
@@ -76,6 +77,7 @@ private:
 
 public:
     SimulationLauncher(mpi::communicator *comm);
+    SimulationLauncher(mpi::communicator *comm, QString mrstPath);
     ~SimulationLauncher() {}
 
     void initialize(QString driverPath);
