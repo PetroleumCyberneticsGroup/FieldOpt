@@ -58,6 +58,7 @@ void MasterRunner::initialize(QString driverPath)
 
 void MasterRunner::start()
 {
+    startTime = QDateTime::currentDateTime();
     broker = new Broker(world, model, logger);
     while (!opt->isFinished()) {
         printer->print("Starting optimizer iteration.", false);
@@ -70,6 +71,8 @@ void MasterRunner::start()
         printer->print("Optimizer iteration finished.", false);
     }
     printer->print("Optimization completed.", true);
+    endTime = QDateTime::currentDateTime();
+    printer->print(QString("Run duration (miliseconds): %1").arg(endTime.toMSecsSinceEpoch() - startTime.toMSecsSinceEpoch()), false);
     finalize();
 }
 

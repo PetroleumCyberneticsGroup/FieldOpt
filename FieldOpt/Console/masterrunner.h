@@ -26,6 +26,7 @@
 #include <boost/mpi.hpp>
 #include <QVector>
 #include <QString>
+#include <QDateTime>
 
 //#include "transferobjects/modelperturbation.h"
 //#include "transferobjects/simulationresults.h"
@@ -71,6 +72,9 @@ private:
     QVector<int> getCaseIds(int length);
     ResultsLogger* logger;
     void finalize();
+
+    QDateTime startTime;
+    QDateTime endTime;
 };
 
 #endif // MASTERRUNNER_H

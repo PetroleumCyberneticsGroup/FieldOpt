@@ -11,4 +11,5 @@ tests.depends = src
 
 OTHER_FILES += \
     defaults.pri \
-    ../examples/MRST/compass/driver.dat
+    ../examples/MRST/compass/driver.dat \
+    ../examples/MRST/compass/driver_kongull.dat
