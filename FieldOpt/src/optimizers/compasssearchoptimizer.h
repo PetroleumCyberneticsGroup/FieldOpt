@@ -12,6 +12,7 @@ class CompassSearchOptimizer : public Optimizer, public GSSAlgorithm
 private:
     QVector<Case*> perturb(Case *c);
     bool isBetter(Case *c);
+    bool isValid(Case *c);
     Bookkeeper* bookkeeper;
 
 public:
