@@ -62,6 +62,7 @@ void MasterRunner::start()
     broker = new Broker(world, model, logger);
     while (!opt->isFinished()) {
         printer->print("Starting optimizer iteration.", false);
+        printOptimizerProgress();
         QVector<Case*> newCases = opt->getNewCases();
         QVector<int> ids = getCaseIds(newCases.size());
         broker->setPerturbations(newCases, ids);
@@ -82,6 +83,16 @@ void MasterRunner::finalize() {
         MPI_Send(&data, 1, MPI_INT, i, 999, MPI_COMM_WORLD);
     }
     MPI_Finalize(); // Finalize root process
+}
+
+void MasterRunner::printOptimizerProgress()
+{
+    QHash<QString, double>* optimizerStatus = opt->getStatus();
+    QString evals = "Evaluations: " + QString::number(optimizerStatus->value("evals")) + "/" + QString::number(model->getRuntimeSettings()->getOptimizerSettings()->getMaxEvaluations());
+    QString stepLength = "Step length. Current: " +  QString::number(optimizerStatus->value("step_length"))
+            + ", Min: " + QString::number(model->getRuntimeSettings()->getOptimizerSettings()->getMinimumStepLength())
+            + ", Max: " + QString::number(model->getRuntimeSettings()->getOptimizerSettings()->getInitialStepLength());
+    printer->print(evals + " -- " + stepLength, false);
 }
 
 

@@ -72,6 +72,7 @@ private:
     QVector<int> getCaseIds(int length);
     ResultsLogger* logger;
     void finalize();
+    void printOptimizerProgress();
 
     QDateTime startTime;
     QDateTime endTime;
