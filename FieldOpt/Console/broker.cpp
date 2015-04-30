@@ -34,13 +34,13 @@ void Broker::evaluatePerturbations()
     while (getNextPerturbationId() != -1 && getFreeProcessId() != -1)  // Send work to all processes initially.
         sendNextPerturbation();
 
+    printProgress();
     recvResult();  // Wait for first result. This is to allow for the ordering in the while-loop below.
 
     while (!isFinished()) {
-        printResourceUtilization();
-        printProgress();
         if (perturbationsRemaining() > 0)
             sendNextPerturbation();
+        printProgress();
         recvResult();
     }
     printer->print("Broker is done evealuating current batch of perturbations.", false);
@@ -191,17 +191,16 @@ void Broker::printProgress()
             evaluated++;
     }
     double progress = (double)evaluated / (double)total;
-    printer->print("Broker progress: " + QString::number(progress*100.0) + "%", false);
-}
+    QString progressString = "Broker progress: " + QString::number(progress*100.0) + "%";
 
-void Broker::printResourceUtilization()
-{
-    int total = process_busy.size();
+    total = process_busy.size();
     int busy = 0;
     foreach (int key, process_busy.keys()) {
         if (process_busy[key])
             busy++;
     }
     double utilization = (double)busy / (double)total;
-    printer->print("Resource utilization: " + QString::number(utilization) + "%", false);
+    QString utilizationString = "Resource utilization: " + QString::number(utilization*100) + "%";
+
+    printer->print(progressString + " -- " + utilizationString, false);
 }

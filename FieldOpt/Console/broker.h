@@ -43,7 +43,6 @@ private:
     QString perturbationStatusString();
 
     void printProgress();
-    void printResourceUtilization();
 
 public:
     explicit Broker(QObject *parent = 0);
