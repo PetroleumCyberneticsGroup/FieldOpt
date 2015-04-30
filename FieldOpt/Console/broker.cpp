@@ -37,8 +37,8 @@ void Broker::evaluatePerturbations()
     recvResult();  // Wait for first result. This is to allow for the ordering in the while-loop below.
 
     while (!isFinished()) {
-        printer->print(processStatusString(), true);
-        printer->print(perturbationStatusString(), true);
+        printResourceUtilization();
+        printProgress();
         if (perturbationsRemaining() > 0)
             sendNextPerturbation();
         recvResult();
@@ -180,4 +180,28 @@ QString Broker::perturbationStatusString()
             status.append(QString("Perturbation %1: not evaluated\n").arg(key));
     }
     return status;
+}
+
+void Broker::printProgress()
+{
+    int total = perturbation_evaluated.size();
+    int evaluated = 0;
+    foreach (int key, perturbation_evaluated.keys()) {
+        if (perturbation_evaluated[key])
+            evaluated++;
+    }
+    double progress = (double)evaluated / (double)total;
+    printer->print("Broker progress: " + QString::number(progress*100.0) + "%", false);
+}
+
+void Broker::printResourceUtilization()
+{
+    int total = process_busy.size();
+    int busy = 0;
+    foreach (int key, process_busy.keys()) {
+        if (process_busy[key])
+            busy++;
+    }
+    double utilization = (double)busy / (double)total;
+    printer->print("Resource utilization: " + QString::number(utilization) + "%", false);
 }

@@ -42,6 +42,9 @@ private:
     QString processStatusString();
     QString perturbationStatusString();
 
+    void printProgress();
+    void printResourceUtilization();
+
 public:
     explicit Broker(QObject *parent = 0);
     Broker(mpi::communicator *comm, Model* m, ResultsLogger* l);
