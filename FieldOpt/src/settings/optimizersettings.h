@@ -16,6 +16,7 @@ class OptimizerSettings
 private:
     int maxIterations;
     int maxIterContinuous;
+    int maxEvaluations;
     double initialStepLength;
     double minimumStepLength;
     double perturbationSize;
@@ -61,6 +62,8 @@ public:
     void setMinimumStepLength(double value);
     double getBookkeeperTolerance() const;
     void setBookkeeperTolerance(double value);
+    int getMaxEvaluations() const;
+    void setMaxEvaluations(int value);
 };
 
 #endif // OPTIMIZERSETTINGS_H

@@ -82,6 +82,16 @@ void OptimizerSettings::setBookkeeperTolerance(double value)
 {
     bookkeeperTolerance = value;
 }
+
+int OptimizerSettings::getMaxEvaluations() const
+{
+    return maxEvaluations;
+}
+
+void OptimizerSettings::setMaxEvaluations(int value)
+{
+    maxEvaluations = value;
+}
 OptimizerSettings::OptimizerSettings()
 {
     optimizer = OPT_NOT_SET;
