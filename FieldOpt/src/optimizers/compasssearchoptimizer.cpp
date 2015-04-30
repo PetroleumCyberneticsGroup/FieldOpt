@@ -116,6 +116,14 @@ bool CompassSearchOptimizer::isFinished()
         return false;
 }
 
+QHash<QString, double>* CompassSearchOptimizer::getStatus()
+{
+    QHash<QString, double>* status = new QHash<QString, double>();
+    status->insert("step_length", step_length);
+    status->insert("evals", evals);
+    return status;
+}
+
 void CompassSearchOptimizer::reduceStepLength()
 {
     step_length = 0.5 * step_length;

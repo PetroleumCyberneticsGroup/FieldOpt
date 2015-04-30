@@ -25,6 +25,7 @@
 
 #include <QVector>
 #include <QObject>
+#include <QHash>
 #include "case.h"
 #include "settings/optimizersettings.h"
 #include "exceptionhandler/optimizerhandler.h"
@@ -108,6 +109,12 @@ public:
      * \return True if the optimization is finished; otherwise false.
      */
     virtual bool isFinished() = 0;
+
+    /*!
+     * \brief Get the current status of the optimizer. This may be used to visualize the progress of the optimizer.
+     * \return
+     */
+    virtual QHash<QString, double>* getStatus() = 0;
 };
 
 #endif // OPTIMIZER_H
