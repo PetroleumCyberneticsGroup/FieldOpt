@@ -1874,6 +1874,7 @@ void DriverReader::readOptimizer(Model *m)
     double l_initial_step_length = 50.0;
     double l_minimum_step_length = 1.0;
     double l_bookkeeper_tolerance = 0.0;
+    int l_maximum_evaluations = 500;
     int l_parallel_runs = 1;
     double l_term = 0.0;
     int l_term_start = 5;
@@ -1899,6 +1900,7 @@ void DriverReader::readOptimizer(Model *m)
         else if(list.at(0).startsWith("CONT_ITER")) l_max_iter_cont = list.at(1).toInt(&ok); // getting the max number if iterations for the contienous solver
         else if(list.at(0).startsWith("INITIAL_STEP_LENGTH")) l_initial_step_length = list.at(1).toDouble(&ok);  // getting the initial step length for GSS type algorithms
         else if(list.at(0).startsWith("MINIMUM_STEP_LENGTH")) l_minimum_step_length = list.at(1).toDouble(&ok);  // getting the step length tolerance for GSS type algorithms
+        else if(list.at(0).startsWith("MAXIMUM_EVALUATIONS")) l_maximum_evaluations = list.at(1).toInt(&ok);  // getting the max number of function evaluations allowed
         else if(list.at(0).startsWith("BOOKKEEPER_TOLERANCE")) l_bookkeeper_tolerance = list.at(1).toDouble(&ok);  // getting bookkeeper tolerance
         else if(list.at(0).startsWith("PERTURB")) l_perturb = list.at(1).toDouble(&ok);     // getting the perturbation size
         else if(list.at(0).startsWith("STARTINGPOINT_UPDATE")) l_startingpoint_update = true;     // using the starting-point from the best sub-problem
@@ -1960,6 +1962,7 @@ void DriverReader::readOptimizer(Model *m)
     m->getRuntimeSettings()->getOptimizerSettings()->setMaxIterations(l_max_iter_cont);
     m->getRuntimeSettings()->getOptimizerSettings()->setInitialStepLength(l_initial_step_length);
     m->getRuntimeSettings()->getOptimizerSettings()->setMinimumStepLength(l_minimum_step_length);
+    m->getRuntimeSettings()->getOptimizerSettings()->setMaxEvaluations(l_maximum_evaluations);
     m->getRuntimeSettings()->getOptimizerSettings()->setBookkeeperTolerance(l_bookkeeper_tolerance);
     m->getRuntimeSettings()->setParallelRuns(l_parallel_runs);
     m->getRuntimeSettings()->getOptimizerSettings()->setPerturbationSize(l_perturb);
