@@ -82,6 +82,7 @@ void CompassSearchOptimizer::initialize(Case *baseCase, OptimizerSettings* setti
     best_case  = baseCase;
     minimum_step_length = settings->getMinimumStepLength();
     step_length = settings->getInitialStepLength();
+    max_evals = settings->getMaxEvaluations();
     bookkeeper = new Bookkeeper(settings->getBookkeeperTolerance());
 }
 
@@ -89,6 +90,13 @@ QVector<Case *> CompassSearchOptimizer::getNewCases()
 {
     new_cases.clear();
     new_cases = perturb(best_case);
+    if (new_cases.size() == 0) {  // If no valid new cases could be genrated, force step length reduction and try again.
+        while (new_cases.size() == 0) {
+            emitException(ExceptionSeverity::WARNING, ExceptionType::CONSTRAINT_VIOLATED, "Could not generate any valid cases. Forcing step length reduction.");
+            reduceStepLength();
+            new_cases = perturb(best_case);
+        }
+    }
     evals += new_cases.size();
     return new_cases;
 }
