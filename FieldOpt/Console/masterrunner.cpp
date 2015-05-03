@@ -72,6 +72,7 @@ void MasterRunner::start()
         printer->print("Optimizer iteration finished.", false);
     }
     printer->print("Optimization completed.", true);
+    printer->print(QString("Best solution objective value: %1").arg(opt->getBestCase()->objectiveValue()), false);
     endTime = QDateTime::currentDateTime();
     printer->print(QString("Run duration (miliseconds): %1").arg(endTime.toMSecsSinceEpoch() - startTime.toMSecsSinceEpoch()), false);
     finalize();
