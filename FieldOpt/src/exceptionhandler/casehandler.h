@@ -2,8 +2,9 @@
 #define CASEHANDLER_H
 
 #include <QObject>
+#include "exceptionhandler.h"
 
-class CaseHandler : public QObject
+class CaseHandler : public QObject, ExceptionHandler
 {
     Q_OBJECT
 public:
@@ -12,7 +13,7 @@ public:
 signals:
 
 public slots:
-
+    void handleException(ExceptionSeverity severity, ExceptionType type, QString message);
 };
 
 #endif // CASEHANDLER_H
