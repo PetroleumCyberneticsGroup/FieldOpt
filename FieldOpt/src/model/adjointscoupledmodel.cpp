@@ -178,11 +178,21 @@ bool AdjointsCoupledModel::applyCaseVariables(Case *c)
             || this->numberOfIntegerVariables() != c->numberOfIntegerVariables()
             || this->numberOfRealVariables() != c->numberOfRealVariables())
         return false;
-    for (int i = 0; i < this->numberOfBinaryVariables(); ++i)
-        this->binaryVariables().at(i)->setValue(c->binaryVariableValue(i));
-    for (int i = 0; i < this->numberOfIntegerVariables(); ++i)
-        this->binaryVariables().at(i)->setValue(c->integerVariableValue(i));
-    for (int i = 0; i < this->numberOfRealVariables(); ++i)
-        this->realVariables().at(i)->setValue(c->realVariableValue(i));
+    emitException(ExceptionSeverity::WARNING, ExceptionType::PROGRESS, QString("Applying case variables. BINS: %1, INTS: %2, REALS: %3.").arg(c->numberOfBinaryVariables()).arg(c->numberOfIntegerVariables()).arg(c->numberOfRealVariables()));
+    if (c->numberOfBinaryVariables() > 0) {
+        emitException(ExceptionSeverity::WARNING, ExceptionType::PROGRESS, QString("Applying binaries."));
+        for (int i = 0; i < this->numberOfBinaryVariables(); ++i)
+            this->binaryVariables().at(i)->setValue(c->binaryVariableValue(i));
+    }
+    if (c->numberOfIntegerVariables() > 0) {
+        emitException(ExceptionSeverity::WARNING, ExceptionType::PROGRESS, QString("Applying integers."));
+        for (int i = 0; i < this->numberOfIntegerVariables(); ++i)
+            this->integerVariables().at(i)->setValue(c->integerVariableValue(i));
+    }
+    if (c->numberOfRealVariables() > 0) {
+        emitException(ExceptionSeverity::WARNING, ExceptionType::PROGRESS, QString("Applying reals."));
+        for (int i = 0; i < this->numberOfRealVariables(); ++i)
+            this->realVariables().at(i)->setValue(c->realVariableValue(i));
+    }
     return true;
 }
