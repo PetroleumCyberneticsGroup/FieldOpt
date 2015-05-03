@@ -47,6 +47,15 @@ void Case::printToCout()
     disconnect(this, SIGNAL(printCase(const Case&)), cp, SLOT(printCase(const Case&)));
 }
 
+void Case::setObjectiveValue(double v) {
+    if (v > 0) {
+        emitException(ExceptionSeverity::WARNING, ExceptionType::ASSUMPTION, "Detected a positive objective value. Flipping it to negative.");
+        m_objective_value = -v;
+    }
+    else
+        m_objective_value = v;
+}
+
 
 Case::Case(Model *m, bool cpy_output)
     : m_objective_value(0),
@@ -215,4 +224,14 @@ bool Case::boundariesOk()
         }
     }
     return true;
+}
+
+void Case::emitException(ExceptionSeverity severity, ExceptionType type, QString message)
+{
+    CaseHandler* mh = new CaseHandler;
+    connect(this, SIGNAL(error(ExceptionSeverity, ExceptionType, QString)),
+            mh, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
+    emit error(severity, type, message);
+    disconnect(this, SIGNAL(error(ExceptionSeverity, ExceptionType, QString)),
+               mh, SLOT(handleException(ExceptionSeverity, ExceptionType, QString)));
 }

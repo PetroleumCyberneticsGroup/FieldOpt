@@ -36,6 +36,7 @@
 #include "model/objectives/objective.h"
 #include "optimizers/derivative.h"
 #include "printers/caseprinter.h"
+#include "exceptionhandler/casehandler.h"
 
 class Model;
 
@@ -69,6 +70,16 @@ private:
 
 signals:
     void printCase(const Case& c) const; //!< Received by the CasePrinter class. Print a representation of the Case to the console.
+    /*!
+     * \brief Error signal.
+     *
+     * Emitted when an error occurs.
+     *
+     * \param severity The severity of the event. May be WARNING or ERROR.
+     * \param type The type of exception.
+     * \param message The message to be printed in addition to the severity and the type.
+     */
+    void error(ExceptionSeverity severity, ExceptionType type, const QString message);
 
 
 public:
@@ -86,7 +97,7 @@ public:
     void addConstraintValue(double v) {m_constraint_values.push_back(v);}
     void addConstraintDerivative(Derivative *d) {m_constraint_derivatives.push_back(d);}
 
-    void setObjectiveValue(double v) {m_objective_value = v;}
+    void setObjectiveValue(double v);
     void setObjectiveDerivative(Derivative *d) {p_objective_derivative = d;}
     void setRealVariableValue(int i, double v) {m_real_var_values.replace(i,v);}
     void setBinaryVariableValue(int i, double v) {m_binary_var_values.replace(i,v);}
@@ -117,6 +128,15 @@ public:
     void addBinaryBoundConstraint(const double min, const double max);
 
     bool boundariesOk();
+
+protected:
+    /*!
+     * \brief Convenience class used by the component subclasses to emit exceptions.
+     * \param severity The severity of the event.
+     * \param type The type of exception.
+     * \param message The message to be printed.
+     */
+    void emitException(ExceptionSeverity severity, ExceptionType type, QString message);
 
 };
 
