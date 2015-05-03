@@ -97,6 +97,12 @@ public:
     void addConstraintValue(double v) {m_constraint_values.push_back(v);}
     void addConstraintDerivative(Derivative *d) {m_constraint_derivatives.push_back(d);}
 
+    /*!
+     * \brief Set the objective value.
+     *
+     * \todo Currently, positive input values are being flipped to negative. This happens for the well placement example, but not for the BHP example. This should _not_ be necessary.
+     * \param v The value to be assigned.
+     */
     void setObjectiveValue(double v);
     void setObjectiveDerivative(Derivative *d) {p_objective_derivative = d;}
     void setRealVariableValue(int i, double v) {m_real_var_values.replace(i,v);}
