@@ -4,7 +4,7 @@
 #PBS -l walltime=06:00:00
 #PBS -l pmem=1800MB
 #PBS -A acc-ipt
-#PBS -q default
+#PBS -q bigmem
 
 cd ${PBS_O_WORKDIR}/build/Console
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:../src
