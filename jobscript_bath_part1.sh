@@ -21,17 +21,17 @@ do
 	mpirun -npernode $P -x LD_LIBRARY_PATH Console ${PBS_O_WORKDIR}/examples/MRST/bhp_1/driver.dat ${PBS_O_WORKDIR}/MRST/mrst-2013a
 done
 
-for P in 1 2 4 6 8 12 18 24
-do
-	mpirun -npernode $P -x LD_LIBRARY_PATH Console ${PBS_O_WORKDIR}/examples/MRST/bhp_2/driver.dat ${PBS_O_WORKDIR}/MRST/mrst-2013a
-done
+# for P in 1 2 4 6 8 12 18 24
+# do
+# 	mpirun -npernode $P -x LD_LIBRARY_PATH Console ${PBS_O_WORKDIR}/examples/MRST/bhp_2/driver.dat ${PBS_O_WORKDIR}/MRST/mrst-2013a
+# done
 
-for P in 1 2 4 6 8 12 18 24
-do
-	mpirun -npernode $P -x LD_LIBRARY_PATH Console ${PBS_O_WORKDIR}/examples/MRST/bhp_4/driver.dat ${PBS_O_WORKDIR}/MRST/mrst-2013a
-done
+# for P in 1 2 4 6 8 12 18 24
+# do
+# 	mpirun -npernode $P -x LD_LIBRARY_PATH Console ${PBS_O_WORKDIR}/examples/MRST/bhp_4/driver.dat ${PBS_O_WORKDIR}/MRST/mrst-2013a
+# done
 
-for P in 1 2 4 6 8 12 18 24
-do
-	mpirun -npernode $P -x LD_LIBRARY_PATH Console ${PBS_O_WORKDIR}/examples/MRST/bhp_8/driver.dat ${PBS_O_WORKDIR}/MRST/mrst-2013a
-done
+# for P in 1 2 4 6 8 12 18 24
+# do
+# 	mpirun -npernode $P -x LD_LIBRARY_PATH Console ${PBS_O_WORKDIR}/examples/MRST/bhp_8/driver.dat ${PBS_O_WORKDIR}/MRST/mrst-2013a
+# done
