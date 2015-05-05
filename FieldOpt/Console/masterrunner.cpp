@@ -52,13 +52,13 @@ void MasterRunner::initialize(QString driverPath)
         break;
     }
     printer->print(model->getRuntimeSettings()->toString(), true);    
-    logger = new ResultsLogger(driverPath.remove(driverPath.lastIndexOf("/"), driverPath.length()), model);
+    logger = new ResultsLogger(driverPath.remove(driverPath.lastIndexOf("/"), driverPath.length()), world->size(), model);
+    summary_printer = new SummaryPrinter(logger->getOutput_directory_path(), world->size());
 }
 
 
 void MasterRunner::start()
 {
-    startTime = QDateTime::currentDateTime();
     broker = new Broker(world, model, logger);
     while (!opt->isFinished()) {
         printer->print("Starting optimizer iteration.", false);
@@ -72,13 +72,11 @@ void MasterRunner::start()
         printer->print("Optimizer iteration finished.", false);
     }
     printer->print("Optimization completed.", true);
-    printer->print(QString("Best solution objective value: %1").arg(opt->getBestCase()->objectiveValue()), false);
-    endTime = QDateTime::currentDateTime();
-    printer->print(QString("Run duration (miliseconds): %1").arg(endTime.toMSecsSinceEpoch() - startTime.toMSecsSinceEpoch()), false);
     finalize();
 }
 
 void MasterRunner::finalize() {
+    summary_printer->printSummary(opt->getBestCase());
     int data = 1;
     for (int i = 1; i < world->size(); ++i) {
         MPI_Send(&data, 1, MPI_INT, i, 999, MPI_COMM_WORLD);

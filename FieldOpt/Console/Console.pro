@@ -34,7 +34,8 @@ SOURCES += main.cpp \
     masterrunner.cpp \
     parallelprinter.cpp \
     broker.cpp \
-    resultslogger.cpp
+    resultslogger.cpp \
+    summaryprinter.cpp
 
 HEADERS += \
     transferobjects/perturbation.h \
@@ -43,4 +44,5 @@ HEADERS += \
     masterrunner.h \
     parallelprinter.h \
     broker.h \
-    resultslogger.h
+    resultslogger.h \
+    summaryprinter.h

@@ -25,14 +25,16 @@ private:
     QStringList header;           //!< The headers to be written to the results file.
     QList<QStringList> lines;     //!< A list of lines to be written to the results file.
     QString output_directory_path;  //!< Path to the directory in which to write the results file.
+    int mpi_size;  //!< The total number of MPI processes. Appended to the file name.
 
 public:
     /*!
      * \brief Logger default constructor.
      * \param outputDirectoryPath The directory in which to write the log file.
+     * \param mpiSize The number of mpi processes. Appended to the results file name.
      * \param m The Model used in the simulation. Used to create the header.
      */
-    ResultsLogger(QString outputDirectoryPath, Model* m);
+    ResultsLogger(QString outputDirectoryPath, int mpiSize, Model* m);
 
 
     /*!
@@ -48,6 +50,7 @@ public:
      * \brief Write the log into the output directory passed in the constructor. The file will be named results.txt.
      */
     void writeLog();
+    QString getOutput_directory_path() const;
 };
 
 #endif // RESULTSLOGGER_H

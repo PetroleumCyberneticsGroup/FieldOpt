@@ -41,6 +41,7 @@
 #include "parallelprinter.h"
 #include "broker.h"
 #include "resultslogger.h"
+#include "summaryprinter.h"
 
 namespace mpi = boost::mpi;
 
@@ -71,6 +72,7 @@ private:
     int perturbationId;
     QVector<int> getCaseIds(int length);
     ResultsLogger* logger;
+    SummaryPrinter* summary_printer;
     void finalize();
     void printOptimizerProgress();
 

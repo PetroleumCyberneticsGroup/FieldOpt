@@ -1,8 +1,16 @@
 #include "resultslogger.h"
 
-ResultsLogger::ResultsLogger(QString outputDirectoryPath, Model* m)
+
+QString ResultsLogger::getOutput_directory_path() const
+{
+    return output_directory_path;
+}
+
+
+ResultsLogger::ResultsLogger(QString outputDirectoryPath, int mpiSize, Model* m)
 {
     output_directory_path = outputDirectoryPath;
+    mpi_size = mpiSize;
 
     header.push_back("ID");
     header.push_back("EV_T");
@@ -46,7 +54,7 @@ void ResultsLogger::addEntry(Perturbation *p, Result *r, int evaluationTime)
 
     QFile file;
     QDir::setCurrent(output_directory_path);
-    file.setFileName("results.txt");
+    file.setFileName("results_" + QString::number(mpi_size) + "p.txt");
 
     if (!file.open(QIODevice::Append | QIODevice::Text))
         return;
@@ -61,7 +69,7 @@ void ResultsLogger::writeLog()
 {
     QFile file;
     QDir::setCurrent(output_directory_path);
-    file.setFileName("results.txt");
+    file.setFileName("results_" + QString::number(mpi_size) + "p.txt");
 
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
         return;
