@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -N FieldOpt_batch_part_1
-#PBS -l nodes=2:ppn=12:default
+#PBS -l nodes=2:ppn=12:bigmem
 #PBS -l walltime=06:00:00
 #PBS -l pmem=1800MB
 #PBS -A acc-ipt
