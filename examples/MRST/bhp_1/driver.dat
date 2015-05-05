@@ -34,7 +34,7 @@ START RESERVOIR
 	NAME RES1
 	FILE SIMPLE10x5x10.txt
 	MRST ~/Documents/MATLAB/mrst-2013a/
-	MATLAB /usr/local/MATLAB/R2015a/bin/matlab
+	MATLAB /share/apps/modulessoftware/matlab/R2013a_client/bin/matlab 
 	TIME 365.0
 	PHASES 0 1 1             ! gas oil water
 	DENS 0.06054 49.1 64.79  ! gas oil water
