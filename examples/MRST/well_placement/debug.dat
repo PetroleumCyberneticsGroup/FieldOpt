@@ -1,0 +1,8827 @@
+RUN # 1
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200	338.691
+p1	63.8002	0	1.66656	200
+#1	63.8002	0	1.66656	139.433
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200	338.873
+p1	66.3867	0	7.70004	200
+#1	66.3867	0	7.70004	141.757
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200
+type       = WATER
+
+time       = 200
+value      = 200
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200 (m^3/d)
+pressure   = 338.691 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200 (m^3/d)
+pressure   = 338.873 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200
+type       = BHP
+
+time       = 200
+value      = 200
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 63.8002 (m^3/d)
+water rate = 1.66656 (m^3/d)
+pressure   = 200 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 66.3867 (m^3/d)
+water rate = 7.70004 (m^3/d)
+pressure   = 200 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 63.8002 (m^3/d)
+water rate      = 1.66656 (m^3/d)
+inlet pressure  = 139.433 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 66.3867 (m^3/d)
+water rate      = 7.70004 (m^3/d)
+inlet pressure  = 141.757 (bara)
+
+RUN # 2
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.158	334.332
+p1	214.397	0	36.2936	111.435
+#1	214.397	0	36.2936	143.583
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.079	328.035
+p1	172.498	0	111.922	116.284
+#1	172.498	0	111.922	151.142
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.158
+type       = WATER
+
+time       = 200
+value      = 200.079
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.158 (m^3/d)
+pressure   = 334.332 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.079 (m^3/d)
+pressure   = 328.035 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 111.435
+type       = BHP
+
+time       = 200
+value      = 116.284
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 214.397 (m^3/d)
+water rate = 36.2936 (m^3/d)
+pressure   = 111.435 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 172.498 (m^3/d)
+water rate = 111.922 (m^3/d)
+pressure   = 116.284 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 214.397 (m^3/d)
+water rate      = 36.2936 (m^3/d)
+inlet pressure  = 143.583 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 172.498 (m^3/d)
+water rate      = 111.922 (m^3/d)
+inlet pressure  = 151.142 (bara)
+
+RUN # 3
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.53	338.926
+p1	66.2083	0	1.83558	198.682
+#1	66.2083	0	1.83558	139.482
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.253	337.459
+p1	116.21	0	20.8665	169.987
+#1	116.21	0	20.8665	143.332
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.53
+type       = WATER
+
+time       = 200
+value      = 200.253
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.53 (m^3/d)
+pressure   = 338.926 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.253 (m^3/d)
+pressure   = 337.459 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 198.682
+type       = BHP
+
+time       = 200
+value      = 169.987
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 66.2083 (m^3/d)
+water rate = 1.83558 (m^3/d)
+pressure   = 198.682 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 116.21 (m^3/d)
+water rate = 20.8665 (m^3/d)
+pressure   = 169.987 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 66.2083 (m^3/d)
+water rate      = 1.83558 (m^3/d)
+inlet pressure  = 139.482 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 116.21 (m^3/d)
+water rate      = 20.8665 (m^3/d)
+inlet pressure  = 143.332 (bara)
+
+RUN # 4
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.973	327.826
+p1	377.401	0	152.78	1.98682
+#1	377.401	0	152.78	149.721
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.021	318.121
+p1	147.129	0	171.45	112.508
+#1	147.129	0	171.45	155.658
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 199.973
+type       = WATER
+
+time       = 200
+value      = 200.021
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.973 (m^3/d)
+pressure   = 327.826 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.021 (m^3/d)
+pressure   = 318.121 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 1.98682
+type       = BHP
+
+time       = 200
+value      = 112.508
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 377.401 (m^3/d)
+water rate = 152.78 (m^3/d)
+pressure   = 1.98682 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 147.129 (m^3/d)
+water rate = 171.45 (m^3/d)
+pressure   = 112.508 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 377.401 (m^3/d)
+water rate      = 152.78 (m^3/d)
+inlet pressure  = 149.721 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 147.129 (m^3/d)
+water rate      = 171.45 (m^3/d)
+inlet pressure  = 155.658 (bara)
+
+RUN # 5
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.023	327.889
+p1	376.638	0	151.987	2.53405
+#1	376.638	0	151.987	149.798
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.043	317.608
+p1	157.329	0	186.995	104.347
+#1	157.329	0	186.995	155.993
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.023
+type       = WATER
+
+time       = 200
+value      = 200.043
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.023 (m^3/d)
+pressure   = 327.889 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.043 (m^3/d)
+pressure   = 317.608 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 2.53405
+type       = BHP
+
+time       = 200
+value      = 104.347
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 376.638 (m^3/d)
+water rate = 151.987 (m^3/d)
+pressure   = 2.53405 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 157.329 (m^3/d)
+water rate = 186.995 (m^3/d)
+pressure   = 104.347 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 376.638 (m^3/d)
+water rate      = 151.987 (m^3/d)
+inlet pressure  = 149.798 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 157.329 (m^3/d)
+water rate      = 186.995 (m^3/d)
+inlet pressure  = 155.993 (bara)
+
+RUN # 6
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.017	327.89
+p1	376.55	0	151.896	2.5967
+#1	376.55	0	151.896	149.807
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.04	317.693
+p1	155.951	0	184.745	105.483
+#1	155.951	0	184.745	155.941
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.017
+type       = WATER
+
+time       = 200
+value      = 200.04
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.017 (m^3/d)
+pressure   = 327.89 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.04 (m^3/d)
+pressure   = 317.693 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 2.5967
+type       = BHP
+
+time       = 200
+value      = 105.483
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 376.55 (m^3/d)
+water rate = 151.896 (m^3/d)
+pressure   = 2.5967 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 155.951 (m^3/d)
+water rate = 184.745 (m^3/d)
+pressure   = 105.483 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 376.55 (m^3/d)
+water rate      = 151.896 (m^3/d)
+inlet pressure  = 149.807 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 155.951 (m^3/d)
+water rate      = 184.745 (m^3/d)
+inlet pressure  = 155.941 (bara)
+
+RUN # 7
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.799	327.948
+p1	372.613	0	147.831	5.40859
+#1	372.613	0	147.831	149.829
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.944	320.715
+p1	105.56	0	109.94	146.132
+#1	105.56	0	109.94	154.207
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 199.799
+type       = WATER
+
+time       = 200
+value      = 199.944
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.799 (m^3/d)
+pressure   = 327.948 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.944 (m^3/d)
+pressure   = 320.715 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 5.40859
+type       = BHP
+
+time       = 200
+value      = 146.132
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 372.613 (m^3/d)
+water rate = 147.831 (m^3/d)
+pressure   = 5.40859 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 105.56 (m^3/d)
+water rate = 109.94 (m^3/d)
+pressure   = 146.132 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 372.613 (m^3/d)
+water rate      = 147.831 (m^3/d)
+inlet pressure  = 149.829 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 105.56 (m^3/d)
+water rate      = 109.94 (m^3/d)
+inlet pressure  = 154.207 (bara)
+
+RUN # 8
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.805	328.026
+p1	370.962	0	146.143	6.58598
+#1	370.962	0	146.143	149.752
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.947	320.825
+p1	105.844	0	109.643	146.112
+#1	105.844	0	109.643	154.167
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 199.805
+type       = WATER
+
+time       = 200
+value      = 199.947
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.805 (m^3/d)
+pressure   = 328.026 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.947 (m^3/d)
+pressure   = 320.825 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 6.58598
+type       = BHP
+
+time       = 200
+value      = 146.112
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 370.962 (m^3/d)
+water rate = 146.143 (m^3/d)
+pressure   = 6.58598 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 105.844 (m^3/d)
+water rate = 109.643 (m^3/d)
+pressure   = 146.112 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 370.962 (m^3/d)
+water rate      = 146.143 (m^3/d)
+inlet pressure  = 149.752 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 105.844 (m^3/d)
+water rate      = 109.643 (m^3/d)
+inlet pressure  = 154.167 (bara)
+
+RUN # 9
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.849	328.466
+p1	361.751	0	136.879	13.125
+#1	361.751	0	136.879	149.322
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.971	322.152
+p1	93.3943	0	90.7898	156.8
+#1	93.3943	0	90.7898	153.552
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 199.849
+type       = WATER
+
+time       = 200
+value      = 199.971
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.849 (m^3/d)
+pressure   = 328.466 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.971 (m^3/d)
+pressure   = 322.152 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 13.125
+type       = BHP
+
+time       = 200
+value      = 156.8
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 361.751 (m^3/d)
+water rate = 136.879 (m^3/d)
+pressure   = 13.125 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 93.3943 (m^3/d)
+water rate = 90.7898 (m^3/d)
+pressure   = 156.8 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 361.751 (m^3/d)
+water rate      = 136.879 (m^3/d)
+inlet pressure  = 149.322 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 93.3943 (m^3/d)
+water rate      = 90.7898 (m^3/d)
+inlet pressure  = 153.552 (bara)
+
+RUN # 10
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.918	328.765
+p1	355.901	0	131.137	17.2512
+#1	355.901	0	131.137	149.05
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.004	322.515
+p1	94.8903	0	90.5871	156.324
+#1	94.8903	0	90.5871	153.424
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 199.918
+type       = WATER
+
+time       = 200
+value      = 200.004
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.918 (m^3/d)
+pressure   = 328.765 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.004 (m^3/d)
+pressure   = 322.515 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 17.2512
+type       = BHP
+
+time       = 200
+value      = 156.324
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 355.901 (m^3/d)
+water rate = 131.137 (m^3/d)
+pressure   = 17.2512 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 94.8903 (m^3/d)
+water rate = 90.5871 (m^3/d)
+pressure   = 156.324 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 355.901 (m^3/d)
+water rate      = 131.137 (m^3/d)
+inlet pressure  = 149.05 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 94.8903 (m^3/d)
+water rate      = 90.5871 (m^3/d)
+inlet pressure  = 153.424 (bara)
+
+RUN # 11
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.182	329.861
+p1	333.72	0	111.273	32.7502
+#1	333.72	0	111.273	148.084
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.133	323.789
+p1	101.683	0	90.5759	153.69
+#1	101.683	0	90.5759	152.944
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.182
+type       = WATER
+
+time       = 200
+value      = 200.133
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.182 (m^3/d)
+pressure   = 329.861 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.133 (m^3/d)
+pressure   = 323.789 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 32.7502
+type       = BHP
+
+time       = 200
+value      = 153.69
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 333.72 (m^3/d)
+water rate = 111.273 (m^3/d)
+pressure   = 32.7502 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 101.683 (m^3/d)
+water rate = 90.5759 (m^3/d)
+pressure   = 153.69 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 333.72 (m^3/d)
+water rate      = 111.273 (m^3/d)
+inlet pressure  = 148.084 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 101.683 (m^3/d)
+water rate      = 90.5759 (m^3/d)
+inlet pressure  = 152.944 (bara)
+
+RUN # 12
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.279	330.266
+p1	325.174	0	104.426	38.6603
+#1	325.174	0	104.426	147.741
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.18	324.307
+p1	103.29	0	89.2885	153.446
+#1	103.29	0	89.2885	152.725
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.279
+type       = WATER
+
+time       = 200
+value      = 200.18
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.279 (m^3/d)
+pressure   = 330.266 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.18 (m^3/d)
+pressure   = 324.307 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 38.6603
+type       = BHP
+
+time       = 200
+value      = 153.446
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 325.174 (m^3/d)
+water rate = 104.426 (m^3/d)
+pressure   = 38.6603 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 103.29 (m^3/d)
+water rate = 89.2885 (m^3/d)
+pressure   = 153.446 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 325.174 (m^3/d)
+water rate      = 104.426 (m^3/d)
+inlet pressure  = 147.741 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 103.29 (m^3/d)
+water rate      = 89.2885 (m^3/d)
+inlet pressure  = 152.725 (bara)
+
+RUN # 13
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.749	332.209
+p1	282.541	0	73.8112	67.5072
+#1	282.541	0	73.8112	146.089
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.409	326.812
+p1	110.731	0	81.527	152.715
+#1	110.731	0	81.527	151.555
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.749
+type       = WATER
+
+time       = 200
+value      = 200.409
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.749 (m^3/d)
+pressure   = 332.209 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.409 (m^3/d)
+pressure   = 326.812 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 67.5072
+type       = BHP
+
+time       = 200
+value      = 152.715
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 282.541 (m^3/d)
+water rate = 73.8112 (m^3/d)
+pressure   = 67.5072 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 110.731 (m^3/d)
+water rate = 81.527 (m^3/d)
+pressure   = 152.715 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 282.541 (m^3/d)
+water rate      = 73.8112 (m^3/d)
+inlet pressure  = 146.089 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 110.731 (m^3/d)
+water rate      = 81.527 (m^3/d)
+inlet pressure  = 151.555 (bara)
+
+RUN # 14
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-201.348	334.615
+p1	225.778	0	41.2798	104.282
+#1	225.778	0	41.2798	143.961
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.701	329.892
+p1	120.932	0	70.1631	151.679
+#1	120.932	0	70.1631	149.871
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 201.348
+type       = WATER
+
+time       = 200
+value      = 200.701
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -201.348 (m^3/d)
+pressure   = 334.615 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.701 (m^3/d)
+pressure   = 329.892 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 104.282
+type       = BHP
+
+time       = 200
+value      = 151.679
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 225.778 (m^3/d)
+water rate = 41.2798 (m^3/d)
+pressure   = 104.282 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 120.932 (m^3/d)
+water rate = 70.1631 (m^3/d)
+pressure   = 151.679 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 225.778 (m^3/d)
+water rate      = 41.2798 (m^3/d)
+inlet pressure  = 143.961 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 120.932 (m^3/d)
+water rate      = 70.1631 (m^3/d)
+inlet pressure  = 149.871 (bara)
+
+RUN # 15
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-201.824	336.42
+p1	178.608	0	23.2908	133.569
+#1	178.608	0	23.2908	142.482
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.933	332.166
+p1	129.934	0	60.1096	150.51
+#1	129.934	0	60.1096	148.365
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 201.824
+type       = WATER
+
+time       = 200
+value      = 200.933
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -201.824 (m^3/d)
+pressure   = 336.42 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.933 (m^3/d)
+pressure   = 332.166 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 133.569
+type       = BHP
+
+time       = 200
+value      = 150.51
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 178.608 (m^3/d)
+water rate = 23.2908 (m^3/d)
+pressure   = 133.569 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 129.934 (m^3/d)
+water rate = 60.1096 (m^3/d)
+pressure   = 150.51 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 178.608 (m^3/d)
+water rate      = 23.2908 (m^3/d)
+inlet pressure  = 142.482 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 129.934 (m^3/d)
+water rate      = 60.1096 (m^3/d)
+inlet pressure  = 148.365 (bara)
+
+RUN # 16
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-201.965	336.949
+p1	164.432	0	18.8512	142.139
+#1	164.432	0	18.8512	142.037
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-201.001	332.806
+p1	133.069	0	57.3539	149.904
+#1	133.069	0	57.3539	147.921
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 201.965
+type       = WATER
+
+time       = 200
+value      = 201.001
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -201.965 (m^3/d)
+pressure   = 336.949 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -201.001 (m^3/d)
+pressure   = 332.806 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.139
+type       = BHP
+
+time       = 200
+value      = 149.904
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 164.432 (m^3/d)
+water rate = 18.8512 (m^3/d)
+pressure   = 142.139 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 133.069 (m^3/d)
+water rate = 57.3539 (m^3/d)
+pressure   = 149.904 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 164.432 (m^3/d)
+water rate      = 18.8512 (m^3/d)
+inlet pressure  = 142.037 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 133.069 (m^3/d)
+water rate      = 57.3539 (m^3/d)
+inlet pressure  = 147.921 (bara)
+
+RUN # 17
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-201.972	336.948
+p1	164.597	0	18.9005	142.04
+#1	164.597	0	18.9005	142.042
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-201.005	332.684
+p1	136.077	0	59.3901	147.855
+#1	136.077	0	59.3901	148.021
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 201.972
+type       = WATER
+
+time       = 200
+value      = 201.005
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -201.972 (m^3/d)
+pressure   = 336.948 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -201.005 (m^3/d)
+pressure   = 332.684 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.04
+type       = BHP
+
+time       = 200
+value      = 147.855
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 164.597 (m^3/d)
+water rate = 18.9005 (m^3/d)
+pressure   = 142.04 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 136.077 (m^3/d)
+water rate = 59.3901 (m^3/d)
+pressure   = 147.855 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 164.597 (m^3/d)
+water rate      = 18.9005 (m^3/d)
+inlet pressure  = 142.042 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 136.077 (m^3/d)
+water rate      = 59.3901 (m^3/d)
+inlet pressure  = 148.021 (bara)
+
+RUN # 18
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-202.074	337.005
+p1	164.6	0	18.9017	142.04
+#1	164.6	0	18.9017	142.042
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-201.059	332.709
+p1	136.085	0	59.3968	147.853
+#1	136.085	0	59.3968	148.021
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 202.074
+type       = WATER
+
+time       = 200
+value      = 201.059
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -202.074 (m^3/d)
+pressure   = 337.005 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -201.059 (m^3/d)
+pressure   = 332.709 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.04
+type       = BHP
+
+time       = 200
+value      = 147.853
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 164.6 (m^3/d)
+water rate = 18.9017 (m^3/d)
+pressure   = 142.04 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 136.085 (m^3/d)
+water rate = 59.3968 (m^3/d)
+pressure   = 147.853 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 164.6 (m^3/d)
+water rate      = 18.9017 (m^3/d)
+inlet pressure  = 142.042 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 136.085 (m^3/d)
+water rate      = 59.3968 (m^3/d)
+inlet pressure  = 148.021 (bara)
+
+RUN # 19
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.021	390.497
+p1	167.23	0	19.9592	142.042
+#1	167.23	0	19.9592	142.164
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-239.762	347.746
+p1	139.87	0	63.5645	147.88
+#1	139.87	0	63.5645	148.311
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 299.021
+type       = WATER
+
+time       = 200
+value      = 239.762
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.021 (m^3/d)
+pressure   = 390.497 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -239.762 (m^3/d)
+pressure   = 347.746 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.042
+type       = BHP
+
+time       = 200
+value      = 147.88
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 167.23 (m^3/d)
+water rate = 19.9592 (m^3/d)
+pressure   = 142.042 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 139.87 (m^3/d)
+water rate = 63.5645 (m^3/d)
+pressure   = 147.88 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 167.23 (m^3/d)
+water rate      = 19.9592 (m^3/d)
+inlet pressure  = 142.164 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 139.87 (m^3/d)
+water rate      = 63.5645 (m^3/d)
+inlet pressure  = 148.311 (bara)
+
+RUN # 20
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-294.415	388.006
+p1	167.093	0	19.9046	142.05
+#1	167.093	0	19.9046	142.158
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.398	374.767
+p1	141.125	0	64.6509	147.908
+#1	141.125	0	64.6509	148.372
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 294.415
+type       = WATER
+
+time       = 200
+value      = 299.398
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -294.415 (m^3/d)
+pressure   = 388.006 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.398 (m^3/d)
+pressure   = 374.767 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.05
+type       = BHP
+
+time       = 200
+value      = 147.908
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 167.093 (m^3/d)
+water rate = 19.9046 (m^3/d)
+pressure   = 142.05 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 141.125 (m^3/d)
+water rate = 64.6509 (m^3/d)
+pressure   = 147.908 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 167.093 (m^3/d)
+water rate      = 19.9046 (m^3/d)
+inlet pressure  = 142.158 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 141.125 (m^3/d)
+water rate      = 64.6509 (m^3/d)
+inlet pressure  = 148.372 (bara)
+
+RUN # 21
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.738	390.892
+p1	167.056	0	19.9075	142.159
+#1	167.056	0	19.9075	142.159
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.994	374.777
+p1	140.637	0	64.3277	148.379
+#1	140.637	0	64.3277	148.359
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 299.738
+type       = WATER
+
+time       = 200
+value      = 299.994
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.738 (m^3/d)
+pressure   = 390.892 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.994 (m^3/d)
+pressure   = 374.777 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.159
+type       = BHP
+
+time       = 200
+value      = 148.379
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 167.056 (m^3/d)
+water rate = 19.9075 (m^3/d)
+pressure   = 142.159 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 140.637 (m^3/d)
+water rate = 64.3277 (m^3/d)
+pressure   = 148.379 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 167.056 (m^3/d)
+water rate      = 19.9075 (m^3/d)
+inlet pressure  = 142.159 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 140.637 (m^3/d)
+water rate      = 64.3277 (m^3/d)
+inlet pressure  = 148.359 (bara)
+
+RUN # 22
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.995	391.031
+p1	167.062	0	19.9103	142.159
+#1	167.062	0	19.9103	142.159
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.996	374.763
+p1	140.676	0	64.3582	148.358
+#1	140.676	0	64.3582	148.36
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 299.995
+type       = WATER
+
+time       = 200
+value      = 299.996
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.995 (m^3/d)
+pressure   = 391.031 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.996 (m^3/d)
+pressure   = 374.763 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.159
+type       = BHP
+
+time       = 200
+value      = 148.358
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 167.062 (m^3/d)
+water rate = 19.9103 (m^3/d)
+pressure   = 142.159 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 140.676 (m^3/d)
+water rate = 64.3582 (m^3/d)
+pressure   = 148.358 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 167.062 (m^3/d)
+water rate      = 19.9103 (m^3/d)
+inlet pressure  = 142.159 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 140.676 (m^3/d)
+water rate      = 64.3582 (m^3/d)
+inlet pressure  = 148.36 (bara)
+
+RUN # 23
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.995	391.031
+p1	167.062	0	19.9103	142.159
+#1	167.062	0	19.9103	142.159
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.996	374.763
+p1	140.676	0	64.3582	148.358
+#1	140.676	0	64.3582	148.36
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 299.995
+type       = WATER
+
+time       = 200
+value      = 299.996
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.995 (m^3/d)
+pressure   = 391.031 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.996 (m^3/d)
+pressure   = 374.763 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.159
+type       = BHP
+
+time       = 200
+value      = 148.358
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 167.062 (m^3/d)
+water rate = 19.9103 (m^3/d)
+pressure   = 142.159 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 140.676 (m^3/d)
+water rate = 64.3582 (m^3/d)
+pressure   = 148.358 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 167.062 (m^3/d)
+water rate      = 19.9103 (m^3/d)
+inlet pressure  = 142.159 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 140.676 (m^3/d)
+water rate      = 64.3582 (m^3/d)
+inlet pressure  = 148.36 (bara)
+
+RUN # 24
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200	338.386
+p1	64.8637	0	1.66999	200
+#1	64.8637	0	1.66999	139.424
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200	338.47
+p1	67.4597	0	7.67921	200
+#1	67.4597	0	7.67921	141.708
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200
+type       = WATER
+
+time       = 200
+value      = 200
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200 (m^3/d)
+pressure   = 338.386 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200 (m^3/d)
+pressure   = 338.47 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200
+type       = BHP
+
+time       = 200
+value      = 200
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 64.8637 (m^3/d)
+water rate = 1.66999 (m^3/d)
+pressure   = 200 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 67.4597 (m^3/d)
+water rate = 7.67921 (m^3/d)
+pressure   = 200 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 64.8637 (m^3/d)
+water rate      = 1.66999 (m^3/d)
+inlet pressure  = 139.424 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 67.4597 (m^3/d)
+water rate      = 7.67921 (m^3/d)
+inlet pressure  = 141.708 (bara)
+
+RUN # 25
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.201	333.303
+p1	214.837	0	36.0991	111.514
+#1	214.837	0	36.0991	143.557
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.119	326.794
+p1	172.974	0	110.963	116.395
+#1	172.974	0	110.963	151.059
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.201
+type       = WATER
+
+time       = 200
+value      = 200.119
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.201 (m^3/d)
+pressure   = 333.303 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.119 (m^3/d)
+pressure   = 326.794 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 111.514
+type       = BHP
+
+time       = 200
+value      = 116.395
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 214.837 (m^3/d)
+water rate = 36.0991 (m^3/d)
+pressure   = 111.514 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 172.974 (m^3/d)
+water rate = 110.963 (m^3/d)
+pressure   = 116.395 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 214.837 (m^3/d)
+water rate      = 36.0991 (m^3/d)
+inlet pressure  = 143.557 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 172.974 (m^3/d)
+water rate      = 110.963 (m^3/d)
+inlet pressure  = 151.059 (bara)
+
+RUN # 26
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.612	338.668
+p1	66.8935	0	1.81291	198.89
+#1	66.8935	0	1.81291	139.466
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.361	336.891
+p1	116.765	0	20.5259	170.247
+#1	116.765	0	20.5259	143.253
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.612
+type       = WATER
+
+time       = 200
+value      = 200.361
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.612 (m^3/d)
+pressure   = 338.668 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.361 (m^3/d)
+pressure   = 336.891 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 198.89
+type       = BHP
+
+time       = 200
+value      = 170.247
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 66.8935 (m^3/d)
+water rate = 1.81291 (m^3/d)
+pressure   = 198.89 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 116.765 (m^3/d)
+water rate = 20.5259 (m^3/d)
+pressure   = 170.247 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 66.8935 (m^3/d)
+water rate      = 1.81291 (m^3/d)
+inlet pressure  = 139.466 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 116.765 (m^3/d)
+water rate      = 20.5259 (m^3/d)
+inlet pressure  = 143.253 (bara)
+
+RUN # 27
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.025	325.699
+p1	377.576	0	151.923	1.9889
+#1	377.576	0	151.923	149.726
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.045	316.624
+p1	147.595	0	170.467	112.494
+#1	147.595	0	170.467	155.589
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.025
+type       = WATER
+
+time       = 200
+value      = 200.045
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.025 (m^3/d)
+pressure   = 325.699 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.045 (m^3/d)
+pressure   = 316.624 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 1.9889
+type       = BHP
+
+time       = 200
+value      = 112.494
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 377.576 (m^3/d)
+water rate = 151.923 (m^3/d)
+pressure   = 1.9889 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 147.595 (m^3/d)
+water rate = 170.467 (m^3/d)
+pressure   = 112.494 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 377.576 (m^3/d)
+water rate      = 151.923 (m^3/d)
+inlet pressure  = 149.726 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 147.595 (m^3/d)
+water rate      = 170.467 (m^3/d)
+inlet pressure  = 155.589 (bara)
+
+RUN # 28
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.082	325.771
+p1	376.816	0	151.135	2.53498
+#1	376.816	0	151.135	149.803
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.076	316.016
+p1	157.856	0	185.954	104.269
+#1	157.856	0	185.954	155.923
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.082
+type       = WATER
+
+time       = 200
+value      = 200.076
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.082 (m^3/d)
+pressure   = 325.771 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.076 (m^3/d)
+pressure   = 316.016 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 2.53498
+type       = BHP
+
+time       = 200
+value      = 104.269
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 376.816 (m^3/d)
+water rate = 151.135 (m^3/d)
+pressure   = 2.53498 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 157.856 (m^3/d)
+water rate = 185.954 (m^3/d)
+pressure   = 104.269 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 376.816 (m^3/d)
+water rate      = 151.135 (m^3/d)
+inlet pressure  = 149.803 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 157.856 (m^3/d)
+water rate      = 185.954 (m^3/d)
+inlet pressure  = 155.923 (bara)
+
+RUN # 29
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.075	325.772
+p1	376.728	0	151.044	2.59833
+#1	376.728	0	151.044	149.812
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.072	316.116
+p1	156.464	0	183.698	105.418
+#1	156.464	0	183.698	155.871
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.075
+type       = WATER
+
+time       = 200
+value      = 200.072
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.075 (m^3/d)
+pressure   = 325.772 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.072 (m^3/d)
+pressure   = 316.116 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 2.59833
+type       = BHP
+
+time       = 200
+value      = 105.418
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 376.728 (m^3/d)
+water rate = 151.044 (m^3/d)
+pressure   = 2.59833 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 156.464 (m^3/d)
+water rate = 183.698 (m^3/d)
+pressure   = 105.418 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 376.728 (m^3/d)
+water rate      = 151.044 (m^3/d)
+inlet pressure  = 149.812 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 156.464 (m^3/d)
+water rate      = 183.698 (m^3/d)
+inlet pressure  = 155.871 (bara)
+
+RUN # 30
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.828	325.846
+p1	372.794	0	146.993	5.41188
+#1	372.794	0	146.993	149.784
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.935	319.59
+p1	106.081	0	109.46	146.14
+#1	106.081	0	109.46	154.138
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 199.828
+type       = WATER
+
+time       = 200
+value      = 199.935
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.828 (m^3/d)
+pressure   = 325.846 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.935 (m^3/d)
+pressure   = 319.59 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 5.41188
+type       = BHP
+
+time       = 200
+value      = 146.14
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 372.794 (m^3/d)
+water rate = 146.993 (m^3/d)
+pressure   = 5.41188 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 106.081 (m^3/d)
+water rate = 109.46 (m^3/d)
+pressure   = 146.14 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 372.794 (m^3/d)
+water rate      = 146.993 (m^3/d)
+inlet pressure  = 149.784 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 106.081 (m^3/d)
+water rate      = 109.46 (m^3/d)
+inlet pressure  = 154.138 (bara)
+
+RUN # 31
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.835	325.938
+p1	371.143	0	145.308	6.59153
+#1	371.143	0	145.308	149.707
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.939	319.698
+p1	106.454	0	109.272	146.053
+#1	106.454	0	109.272	154.101
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 199.835
+type       = WATER
+
+time       = 200
+value      = 199.939
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.835 (m^3/d)
+pressure   = 325.938 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.939 (m^3/d)
+pressure   = 319.698 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 6.59153
+type       = BHP
+
+time       = 200
+value      = 146.053
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 371.143 (m^3/d)
+water rate = 145.308 (m^3/d)
+pressure   = 6.59153 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 106.454 (m^3/d)
+water rate = 109.272 (m^3/d)
+pressure   = 146.053 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 371.143 (m^3/d)
+water rate      = 145.308 (m^3/d)
+inlet pressure  = 149.707 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 106.454 (m^3/d)
+water rate      = 109.272 (m^3/d)
+inlet pressure  = 154.101 (bara)
+
+RUN # 32
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.89	326.457
+p1	361.943	0	136.076	13.1355
+#1	361.943	0	136.076	149.277
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.976	321.158
+p1	93.9867	0	90.553	156.79
+#1	93.9867	0	90.553	153.488
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 199.89
+type       = WATER
+
+time       = 200
+value      = 199.976
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.89 (m^3/d)
+pressure   = 326.457 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.976 (m^3/d)
+pressure   = 321.158 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 13.1355
+type       = BHP
+
+time       = 200
+value      = 156.79
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 361.943 (m^3/d)
+water rate = 136.076 (m^3/d)
+pressure   = 13.1355 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 93.9867 (m^3/d)
+water rate = 90.553 (m^3/d)
+pressure   = 156.79 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 361.943 (m^3/d)
+water rate      = 136.076 (m^3/d)
+inlet pressure  = 149.277 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 93.9867 (m^3/d)
+water rate      = 90.553 (m^3/d)
+inlet pressure  = 153.488 (bara)
+
+RUN # 33
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.973	326.81
+p1	356.095	0	130.341	17.2722
+#1	356.095	0	130.341	149.005
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.025	321.528
+p1	95.5213	0	90.3677	156.292
+#1	95.5213	0	90.3677	153.359
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 199.973
+type       = WATER
+
+time       = 200
+value      = 200.025
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.973 (m^3/d)
+pressure   = 326.81 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.025 (m^3/d)
+pressure   = 321.528 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 17.2722
+type       = BHP
+
+time       = 200
+value      = 156.292
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 356.095 (m^3/d)
+water rate = 130.341 (m^3/d)
+pressure   = 17.2722 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 95.5213 (m^3/d)
+water rate = 90.3677 (m^3/d)
+pressure   = 156.292 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 356.095 (m^3/d)
+water rate      = 130.341 (m^3/d)
+inlet pressure  = 149.005 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 95.5213 (m^3/d)
+water rate      = 90.3677 (m^3/d)
+inlet pressure  = 153.359 (bara)
+
+RUN # 34
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.288	328.099
+p1	333.95	0	110.66	32.7866
+#1	333.95	0	110.66	148.046
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.213	322.819
+p1	102.377	0	90.3548	153.629
+#1	102.377	0	90.3548	152.878
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.288
+type       = WATER
+
+time       = 200
+value      = 200.213
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.288 (m^3/d)
+pressure   = 328.099 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.213 (m^3/d)
+pressure   = 322.819 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 32.7866
+type       = BHP
+
+time       = 200
+value      = 153.629
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 333.95 (m^3/d)
+water rate = 110.66 (m^3/d)
+pressure   = 32.7866 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 102.377 (m^3/d)
+water rate = 90.3548 (m^3/d)
+pressure   = 153.629 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 333.95 (m^3/d)
+water rate      = 110.66 (m^3/d)
+inlet pressure  = 148.046 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 102.377 (m^3/d)
+water rate      = 90.3548 (m^3/d)
+inlet pressure  = 152.878 (bara)
+
+RUN # 35
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.403	328.575
+p1	325.389	0	103.823	38.7183
+#1	325.389	0	103.823	147.702
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.282	323.354
+p1	103.998	0	89.0571	153.385
+#1	103.998	0	89.0571	152.658
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.403
+type       = WATER
+
+time       = 200
+value      = 200.282
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.403 (m^3/d)
+pressure   = 328.575 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.282 (m^3/d)
+pressure   = 323.354 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 38.7183
+type       = BHP
+
+time       = 200
+value      = 153.385
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 325.389 (m^3/d)
+water rate = 103.823 (m^3/d)
+pressure   = 38.7183 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 103.998 (m^3/d)
+water rate = 89.0571 (m^3/d)
+pressure   = 153.385 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 325.389 (m^3/d)
+water rate      = 103.823 (m^3/d)
+inlet pressure  = 147.702 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 103.998 (m^3/d)
+water rate      = 89.0571 (m^3/d)
+inlet pressure  = 152.658 (bara)
+
+RUN # 36
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.963	330.857
+p1	282.812	0	73.3682	67.5894
+#1	282.812	0	73.3682	146.054
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.617	325.943
+p1	111.504	0	81.2706	152.648
+#1	111.504	0	81.2706	151.485
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.963
+type       = WATER
+
+time       = 200
+value      = 200.617
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.963 (m^3/d)
+pressure   = 330.857 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.617 (m^3/d)
+pressure   = 325.943 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 67.5894
+type       = BHP
+
+time       = 200
+value      = 152.648
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 282.812 (m^3/d)
+water rate = 73.3682 (m^3/d)
+pressure   = 67.5894 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 111.504 (m^3/d)
+water rate = 81.2706 (m^3/d)
+pressure   = 152.648 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 282.812 (m^3/d)
+water rate      = 73.3682 (m^3/d)
+inlet pressure  = 146.054 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 111.504 (m^3/d)
+water rate      = 81.2706 (m^3/d)
+inlet pressure  = 151.485 (bara)
+
+RUN # 37
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-201.676	333.679
+p1	226.202	0	41.0378	104.36
+#1	226.202	0	41.0378	143.932
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-201.044	329.124
+p1	121.787	0	69.9123	151.6
+#1	121.787	0	69.9123	149.801
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 201.676
+type       = WATER
+
+time       = 200
+value      = 201.044
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -201.676 (m^3/d)
+pressure   = 333.679 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -201.044 (m^3/d)
+pressure   = 329.124 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 104.36
+type       = BHP
+
+time       = 200
+value      = 151.6
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 226.202 (m^3/d)
+water rate = 41.0378 (m^3/d)
+pressure   = 104.36 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 121.787 (m^3/d)
+water rate = 69.9123 (m^3/d)
+pressure   = 151.6 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 226.202 (m^3/d)
+water rate      = 41.0378 (m^3/d)
+inlet pressure  = 143.932 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 121.787 (m^3/d)
+water rate      = 69.9123 (m^3/d)
+inlet pressure  = 149.801 (bara)
+
+RUN # 38
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-202.243	335.791
+p1	179.261	0	23.1964	133.59
+#1	179.261	0	23.1964	142.462
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-201.382	331.475
+p1	130.822	0	59.9218	150.436
+#1	130.822	0	59.9218	148.305
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 202.243
+type       = WATER
+
+time       = 200
+value      = 201.382
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -202.243 (m^3/d)
+pressure   = 335.791 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -201.382 (m^3/d)
+pressure   = 331.475 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 133.59
+type       = BHP
+
+time       = 200
+value      = 150.436
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 179.261 (m^3/d)
+water rate = 23.1964 (m^3/d)
+pressure   = 133.59 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 130.822 (m^3/d)
+water rate = 59.9218 (m^3/d)
+pressure   = 150.436 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 179.261 (m^3/d)
+water rate      = 23.1964 (m^3/d)
+inlet pressure  = 142.462 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 130.822 (m^3/d)
+water rate      = 59.9218 (m^3/d)
+inlet pressure  = 148.305 (bara)
+
+RUN # 39
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-202.409	336.415
+p1	165.205	0	18.7963	142.12
+#1	165.205	0	18.7963	142.019
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-201.482	332.136
+p1	133.977	0	57.1923	149.818
+#1	133.977	0	57.1923	147.864
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 202.409
+type       = WATER
+
+time       = 200
+value      = 201.482
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -202.409 (m^3/d)
+pressure   = 336.415 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -201.482 (m^3/d)
+pressure   = 332.136 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.12
+type       = BHP
+
+time       = 200
+value      = 149.818
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 165.205 (m^3/d)
+water rate = 18.7963 (m^3/d)
+pressure   = 142.12 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 133.977 (m^3/d)
+water rate = 57.1923 (m^3/d)
+pressure   = 149.818 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 165.205 (m^3/d)
+water rate      = 18.7963 (m^3/d)
+inlet pressure  = 142.019 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 133.977 (m^3/d)
+water rate      = 57.1923 (m^3/d)
+inlet pressure  = 147.864 (bara)
+
+RUN # 40
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-202.418	336.414
+p1	165.353	0	18.8406	142.031
+#1	165.353	0	18.8406	142.024
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-201.487	331.999
+p1	136.882	0	59.1459	147.835
+#1	136.882	0	59.1459	147.961
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 202.418
+type       = WATER
+
+time       = 200
+value      = 201.487
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -202.418 (m^3/d)
+pressure   = 336.414 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -201.487 (m^3/d)
+pressure   = 331.999 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.031
+type       = BHP
+
+time       = 200
+value      = 147.835
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 165.353 (m^3/d)
+water rate = 18.8406 (m^3/d)
+pressure   = 142.031 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 136.882 (m^3/d)
+water rate = 59.1459 (m^3/d)
+pressure   = 147.835 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 165.353 (m^3/d)
+water rate      = 18.8406 (m^3/d)
+inlet pressure  = 142.024 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 136.882 (m^3/d)
+water rate      = 59.1459 (m^3/d)
+inlet pressure  = 147.961 (bara)
+
+RUN # 41
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-202.537	336.481
+p1	165.358	0	18.8425	142.03
+#1	165.358	0	18.8425	142.024
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-201.559	332.032
+p1	136.904	0	59.1627	147.824
+#1	136.904	0	59.1627	147.962
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 202.537
+type       = WATER
+
+time       = 200
+value      = 201.559
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -202.537 (m^3/d)
+pressure   = 336.481 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -201.559 (m^3/d)
+pressure   = 332.032 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.03
+type       = BHP
+
+time       = 200
+value      = 147.824
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 165.358 (m^3/d)
+water rate = 18.8425 (m^3/d)
+pressure   = 142.03 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 136.904 (m^3/d)
+water rate = 59.1627 (m^3/d)
+pressure   = 147.824 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 165.358 (m^3/d)
+water rate      = 18.8425 (m^3/d)
+inlet pressure  = 142.024 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 136.904 (m^3/d)
+water rate      = 59.1627 (m^3/d)
+inlet pressure  = 147.962 (bara)
+
+RUN # 42
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.025	389.636
+p1	168.47	0	19.9403	142.031
+#1	168.47	0	19.9403	142.145
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-261.25	356.492
+p1	141.505	0	63.7728	147.852
+#1	141.505	0	63.7728	148.266
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 299.025
+type       = WATER
+
+time       = 200
+value      = 261.25
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.025 (m^3/d)
+pressure   = 389.636 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -261.25 (m^3/d)
+pressure   = 356.492 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.031
+type       = BHP
+
+time       = 200
+value      = 147.852
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 168.47 (m^3/d)
+water rate = 19.9403 (m^3/d)
+pressure   = 142.031 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 141.505 (m^3/d)
+water rate = 63.7728 (m^3/d)
+pressure   = 147.852 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 168.47 (m^3/d)
+water rate      = 19.9403 (m^3/d)
+inlet pressure  = 142.145 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 141.505 (m^3/d)
+water rate      = 63.7728 (m^3/d)
+inlet pressure  = 148.266 (bara)
+
+RUN # 43
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.119	389.687
+p1	168.465	0	19.9388	142.036
+#1	168.465	0	19.9388	142.145
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.612	373.586
+p1	142.574	0	64.6431	147.873
+#1	142.574	0	64.6431	148.313
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 299.119
+type       = WATER
+
+time       = 200
+value      = 299.612
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.119 (m^3/d)
+pressure   = 389.687 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.612 (m^3/d)
+pressure   = 373.586 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.036
+type       = BHP
+
+time       = 200
+value      = 147.873
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 168.465 (m^3/d)
+water rate = 19.9388 (m^3/d)
+pressure   = 142.036 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 142.574 (m^3/d)
+water rate = 64.6431 (m^3/d)
+pressure   = 147.873 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 168.465 (m^3/d)
+water rate      = 19.9388 (m^3/d)
+inlet pressure  = 142.145 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 142.574 (m^3/d)
+water rate      = 64.6431 (m^3/d)
+inlet pressure  = 148.313 (bara)
+
+RUN # 44
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.911	390.122
+p1	168.308	0	19.892	142.146
+#1	168.308	0	19.892	142.14
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.996	373.749
+p1	141.997	0	64.1874	148.314
+#1	141.997	0	64.1874	148.289
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 299.911
+type       = WATER
+
+time       = 200
+value      = 299.996
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.911 (m^3/d)
+pressure   = 390.122 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.996 (m^3/d)
+pressure   = 373.749 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.146
+type       = BHP
+
+time       = 200
+value      = 148.314
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 168.308 (m^3/d)
+water rate = 19.892 (m^3/d)
+pressure   = 142.146 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 141.997 (m^3/d)
+water rate = 64.1874 (m^3/d)
+pressure   = 148.314 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 168.308 (m^3/d)
+water rate      = 19.892 (m^3/d)
+inlet pressure  = 142.14 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 141.997 (m^3/d)
+water rate      = 64.1874 (m^3/d)
+inlet pressure  = 148.289 (bara)
+
+RUN # 45
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.998	390.168
+p1	168.321	0	19.896	142.14
+#1	168.321	0	19.896	142.141
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.999	373.744
+p1	142.034	0	64.2182	148.289
+#1	142.034	0	64.2182	148.291
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 299.998
+type       = WATER
+
+time       = 200
+value      = 299.999
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.998 (m^3/d)
+pressure   = 390.168 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.999 (m^3/d)
+pressure   = 373.744 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.14
+type       = BHP
+
+time       = 200
+value      = 148.289
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 168.321 (m^3/d)
+water rate = 19.896 (m^3/d)
+pressure   = 142.14 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 142.034 (m^3/d)
+water rate = 64.2182 (m^3/d)
+pressure   = 148.289 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 168.321 (m^3/d)
+water rate      = 19.896 (m^3/d)
+inlet pressure  = 142.141 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 142.034 (m^3/d)
+water rate      = 64.2182 (m^3/d)
+inlet pressure  = 148.291 (bara)
+
+RUN # 46
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.998	390.168
+p1	168.321	0	19.896	142.14
+#1	168.321	0	19.896	142.141
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.999	373.744
+p1	142.034	0	64.2182	148.289
+#1	142.034	0	64.2182	148.291
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 299.998
+type       = WATER
+
+time       = 200
+value      = 299.999
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.998 (m^3/d)
+pressure   = 390.168 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.999 (m^3/d)
+pressure   = 373.744 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.14
+type       = BHP
+
+time       = 200
+value      = 148.289
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 168.321 (m^3/d)
+water rate = 19.896 (m^3/d)
+pressure   = 142.14 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 142.034 (m^3/d)
+water rate = 64.2182 (m^3/d)
+pressure   = 148.289 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 168.321 (m^3/d)
+water rate      = 19.896 (m^3/d)
+inlet pressure  = 142.141 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 142.034 (m^3/d)
+water rate      = 64.2182 (m^3/d)
+inlet pressure  = 148.291 (bara)
+
+RUN # 47
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200	338.116
+p1	64.931	0	1.77859	200
+#1	64.931	0	1.77859	139.471
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200	338.121
+p1	67.3202	0	8.12232	200
+#1	67.3202	0	8.12232	141.869
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200
+type       = WATER
+
+time       = 200
+value      = 200
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200 (m^3/d)
+pressure   = 338.116 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200 (m^3/d)
+pressure   = 338.121 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200
+type       = BHP
+
+time       = 200
+value      = 200
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 64.931 (m^3/d)
+water rate = 1.77859 (m^3/d)
+pressure   = 200 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 67.3202 (m^3/d)
+water rate = 8.12232 (m^3/d)
+pressure   = 200 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 64.931 (m^3/d)
+water rate      = 1.77859 (m^3/d)
+inlet pressure  = 139.471 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 67.3202 (m^3/d)
+water rate      = 8.12232 (m^3/d)
+inlet pressure  = 141.869 (bara)
+
+RUN # 48
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.23	332.381
+p1	212.321	0	36.8461	111.445
+#1	212.321	0	36.8461	143.667
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.147	325.683
+p1	169.479	0	112.658	116.511
+#1	169.479	0	112.658	151.3
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.23
+type       = WATER
+
+time       = 200
+value      = 200.147
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.23 (m^3/d)
+pressure   = 332.381 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.147 (m^3/d)
+pressure   = 325.683 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 111.445
+type       = BHP
+
+time       = 200
+value      = 116.511
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 212.321 (m^3/d)
+water rate = 36.8461 (m^3/d)
+pressure   = 111.445 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 169.479 (m^3/d)
+water rate = 112.658 (m^3/d)
+pressure   = 116.511 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 212.321 (m^3/d)
+water rate      = 36.8461 (m^3/d)
+inlet pressure  = 143.667 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 169.479 (m^3/d)
+water rate      = 112.658 (m^3/d)
+inlet pressure  = 151.3 (bara)
+
+RUN # 49
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.677	338.416
+p1	67.2285	0	1.94789	198.722
+#1	67.2285	0	1.94789	139.519
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.443	336.341
+p1	115.78	0	21.4336	170.12
+#1	115.78	0	21.4336	143.45
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.677
+type       = WATER
+
+time       = 200
+value      = 200.443
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.677 (m^3/d)
+pressure   = 338.416 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.443 (m^3/d)
+pressure   = 336.341 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 198.722
+type       = BHP
+
+time       = 200
+value      = 170.12
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 67.2285 (m^3/d)
+water rate = 1.94789 (m^3/d)
+pressure   = 198.722 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 115.78 (m^3/d)
+water rate = 21.4336 (m^3/d)
+pressure   = 170.12 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 67.2285 (m^3/d)
+water rate      = 1.94789 (m^3/d)
+inlet pressure  = 139.519 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 115.78 (m^3/d)
+water rate      = 21.4336 (m^3/d)
+inlet pressure  = 143.45 (bara)
+
+RUN # 50
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.052	323.763
+p1	372.003	0	153.96	1.98722
+#1	372.003	0	153.96	150.123
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.062	315.303
+p1	143.458	0	171.898	112.64
+#1	143.458	0	171.898	155.841
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.052
+type       = WATER
+
+time       = 200
+value      = 200.062
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.052 (m^3/d)
+pressure   = 323.763 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.062 (m^3/d)
+pressure   = 315.303 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 1.98722
+type       = BHP
+
+time       = 200
+value      = 112.64
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 372.003 (m^3/d)
+water rate = 153.96 (m^3/d)
+pressure   = 1.98722 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 143.458 (m^3/d)
+water rate = 171.898 (m^3/d)
+pressure   = 112.64 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 372.003 (m^3/d)
+water rate      = 153.96 (m^3/d)
+inlet pressure  = 150.123 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 143.458 (m^3/d)
+water rate      = 171.898 (m^3/d)
+inlet pressure  = 155.841 (bara)
+
+RUN # 51
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.114	323.843
+p1	371.263	0	153.177	2.5299
+#1	371.263	0	153.177	150.112
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.099	314.609
+p1	153.388	0	187.398	104.445
+#1	153.388	0	187.398	156.169
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.114
+type       = WATER
+
+time       = 200
+value      = 200.099
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.114 (m^3/d)
+pressure   = 323.843 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.099 (m^3/d)
+pressure   = 314.609 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 2.5299
+type       = BHP
+
+time       = 200
+value      = 104.445
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 371.263 (m^3/d)
+water rate = 153.177 (m^3/d)
+pressure   = 2.5299 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 153.388 (m^3/d)
+water rate = 187.398 (m^3/d)
+pressure   = 104.445 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 371.263 (m^3/d)
+water rate      = 153.177 (m^3/d)
+inlet pressure  = 150.112 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 153.388 (m^3/d)
+water rate      = 187.398 (m^3/d)
+inlet pressure  = 156.169 (bara)
+
+RUN # 52
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.106	323.844
+p1	371.176	0	153.086	2.59314
+#1	371.176	0	153.086	150.108
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.095	314.722
+p1	152.032	0	185.133	105.598
+#1	152.032	0	185.133	156.117
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.106
+type       = WATER
+
+time       = 200
+value      = 200.095
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.106 (m^3/d)
+pressure   = 323.844 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.095 (m^3/d)
+pressure   = 314.722 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 2.59314
+type       = BHP
+
+time       = 200
+value      = 105.598
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 371.176 (m^3/d)
+water rate = 153.086 (m^3/d)
+pressure   = 2.59314 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 152.032 (m^3/d)
+water rate = 185.133 (m^3/d)
+pressure   = 105.598 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 371.176 (m^3/d)
+water rate      = 153.086 (m^3/d)
+inlet pressure  = 150.108 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 152.032 (m^3/d)
+water rate      = 185.133 (m^3/d)
+inlet pressure  = 156.117 (bara)
+
+RUN # 53
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.825	323.927
+p1	367.332	0	149.054	5.39428
+#1	367.332	0	149.054	149.926
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.927	318.621
+p1	103.094	0	110.637	146.378
+#1	103.094	0	110.637	154.419
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 199.825
+type       = WATER
+
+time       = 200
+value      = 199.927
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.825 (m^3/d)
+pressure   = 323.927 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.927 (m^3/d)
+pressure   = 318.621 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 5.39428
+type       = BHP
+
+time       = 200
+value      = 146.378
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 367.332 (m^3/d)
+water rate = 149.054 (m^3/d)
+pressure   = 5.39428 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 103.094 (m^3/d)
+water rate = 110.637 (m^3/d)
+pressure   = 146.378 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 367.332 (m^3/d)
+water rate      = 149.054 (m^3/d)
+inlet pressure  = 149.926 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 103.094 (m^3/d)
+water rate      = 110.637 (m^3/d)
+inlet pressure  = 154.419 (bara)
+
+RUN # 54
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.831	324.029
+p1	365.723	0	147.382	6.56656
+#1	365.723	0	147.382	149.85
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.932	318.731
+p1	103.431	0	110.416	146.318
+#1	103.431	0	110.416	154.381
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 199.831
+type       = WATER
+
+time       = 200
+value      = 199.932
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.831 (m^3/d)
+pressure   = 324.029 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.932 (m^3/d)
+pressure   = 318.731 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 6.56656
+type       = BHP
+
+time       = 200
+value      = 146.318
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 365.723 (m^3/d)
+water rate = 147.382 (m^3/d)
+pressure   = 6.56656 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 103.431 (m^3/d)
+water rate = 110.416 (m^3/d)
+pressure   = 146.318 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 365.723 (m^3/d)
+water rate      = 147.382 (m^3/d)
+inlet pressure  = 149.85 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 103.431 (m^3/d)
+water rate      = 110.416 (m^3/d)
+inlet pressure  = 154.381 (bara)
+
+RUN # 55
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.877	324.605
+p1	356.726	0	138.19	13.0884
+#1	356.726	0	138.19	149.427
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.976	320.312
+p1	91.3136	0	91.3884	157.1
+#1	91.3136	0	91.3884	153.761
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 199.877
+type       = WATER
+
+time       = 200
+value      = 199.976
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.877 (m^3/d)
+pressure   = 324.605 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.976 (m^3/d)
+pressure   = 320.312 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 13.0884
+type       = BHP
+
+time       = 200
+value      = 157.1
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 356.726 (m^3/d)
+water rate = 138.19 (m^3/d)
+pressure   = 13.0884 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 91.3136 (m^3/d)
+water rate = 91.3884 (m^3/d)
+pressure   = 157.1 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 356.726 (m^3/d)
+water rate      = 138.19 (m^3/d)
+inlet pressure  = 149.427 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 91.3136 (m^3/d)
+water rate      = 91.3884 (m^3/d)
+inlet pressure  = 153.761 (bara)
+
+RUN # 56
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.958	324.994
+p1	351.026	0	132.504	17.1954
+#1	351.026	0	132.504	149.16
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.035	320.682
+p1	92.8361	0	91.252	156.598
+#1	92.8361	0	91.252	153.634
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 199.958
+type       = WATER
+
+time       = 200
+value      = 200.035
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.958 (m^3/d)
+pressure   = 324.994 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.035 (m^3/d)
+pressure   = 320.682 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 17.1954
+type       = BHP
+
+time       = 200
+value      = 156.598
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 351.026 (m^3/d)
+water rate = 132.504 (m^3/d)
+pressure   = 17.1954 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 92.8361 (m^3/d)
+water rate = 91.252 (m^3/d)
+pressure   = 156.598 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 351.026 (m^3/d)
+water rate      = 132.504 (m^3/d)
+inlet pressure  = 149.16 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 92.8361 (m^3/d)
+water rate      = 91.252 (m^3/d)
+inlet pressure  = 153.634 (bara)
+
+RUN # 57
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.268	326.439
+p1	329.338	0	112.243	32.6547
+#1	329.338	0	112.243	148.178
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.261	321.991
+p1	99.636	0	91.395	153.941
+#1	99.636	0	91.395	153.155
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.268
+type       = WATER
+
+time       = 200
+value      = 200.261
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.268 (m^3/d)
+pressure   = 326.439 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.261 (m^3/d)
+pressure   = 321.991 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 32.6547
+type       = BHP
+
+time       = 200
+value      = 153.941
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 329.338 (m^3/d)
+water rate = 112.243 (m^3/d)
+pressure   = 32.6547 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 99.636 (m^3/d)
+water rate = 91.395 (m^3/d)
+pressure   = 153.941 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 329.338 (m^3/d)
+water rate      = 112.243 (m^3/d)
+inlet pressure  = 148.178 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 99.636 (m^3/d)
+water rate      = 91.395 (m^3/d)
+inlet pressure  = 153.155 (bara)
+
+RUN # 58
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.382	326.969
+p1	320.984	0	105.373	38.5518
+#1	320.984	0	105.373	147.835
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.344	322.534
+p1	101.272	0	90.0895	153.685
+#1	101.272	0	90.0895	152.93
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.382
+type       = WATER
+
+time       = 200
+value      = 200.344
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.382 (m^3/d)
+pressure   = 326.969 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.344 (m^3/d)
+pressure   = 322.534 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 38.5518
+type       = BHP
+
+time       = 200
+value      = 153.685
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 320.984 (m^3/d)
+water rate = 105.373 (m^3/d)
+pressure   = 38.5518 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 101.272 (m^3/d)
+water rate = 90.0895 (m^3/d)
+pressure   = 153.685 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 320.984 (m^3/d)
+water rate      = 105.373 (m^3/d)
+inlet pressure  = 147.835 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 101.272 (m^3/d)
+water rate      = 90.0895 (m^3/d)
+inlet pressure  = 152.93 (bara)
+
+RUN # 59
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.932	329.504
+p1	279.29	0	74.7404	67.3597
+#1	279.29	0	74.7404	146.191
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.749	325.172
+p1	108.857	0	82.4435	152.92
+#1	108.857	0	82.4435	151.755
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.932
+type       = WATER
+
+time       = 200
+value      = 200.749
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.932 (m^3/d)
+pressure   = 329.504 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.749 (m^3/d)
+pressure   = 325.172 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 67.3597
+type       = BHP
+
+time       = 200
+value      = 152.92
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 279.29 (m^3/d)
+water rate = 74.7404 (m^3/d)
+pressure   = 67.3597 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 108.857 (m^3/d)
+water rate = 82.4435 (m^3/d)
+pressure   = 152.92 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 279.29 (m^3/d)
+water rate      = 74.7404 (m^3/d)
+inlet pressure  = 146.191 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 108.857 (m^3/d)
+water rate      = 82.4435 (m^3/d)
+inlet pressure  = 151.755 (bara)
+
+RUN # 60
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-201.635	332.644
+p1	223.692	0	42.1001	104.16
+#1	223.692	0	42.1001	144.067
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-201.266	328.425
+p1	119.269	0	71.1355	151.837
+#1	119.269	0	71.1355	150.058
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 201.635
+type       = WATER
+
+time       = 200
+value      = 201.266
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -201.635 (m^3/d)
+pressure   = 332.644 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -201.266 (m^3/d)
+pressure   = 328.425 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 104.16
+type       = BHP
+
+time       = 200
+value      = 151.837
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 223.692 (m^3/d)
+water rate = 42.1001 (m^3/d)
+pressure   = 104.16 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 119.269 (m^3/d)
+water rate = 71.1355 (m^3/d)
+pressure   = 151.837 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 223.692 (m^3/d)
+water rate      = 42.1001 (m^3/d)
+inlet pressure  = 144.067 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 119.269 (m^3/d)
+water rate      = 71.1355 (m^3/d)
+inlet pressure  = 150.058 (bara)
+
+RUN # 61
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-202.196	335.008
+p1	177.313	0	23.7804	133.579
+#1	177.313	0	23.7804	142.565
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-201.678	330.852
+p1	128.48	0	60.9499	150.629
+#1	128.48	0	60.9499	148.524
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 202.196
+type       = WATER
+
+time       = 200
+value      = 201.678
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -202.196 (m^3/d)
+pressure   = 335.008 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -201.678 (m^3/d)
+pressure   = 330.852 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 133.579
+type       = BHP
+
+time       = 200
+value      = 150.629
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 177.313 (m^3/d)
+water rate = 23.7804 (m^3/d)
+pressure   = 133.579 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 128.48 (m^3/d)
+water rate = 60.9499 (m^3/d)
+pressure   = 150.629 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 177.313 (m^3/d)
+water rate      = 23.7804 (m^3/d)
+inlet pressure  = 142.565 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 128.48 (m^3/d)
+water rate      = 60.9499 (m^3/d)
+inlet pressure  = 148.524 (bara)
+
+RUN # 62
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-202.362	335.706
+p1	163.332	0	19.2949	142.222
+#1	163.332	0	19.2949	142.117
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-201.8	331.533
+p1	131.678	0	58.193	150.01
+#1	131.678	0	58.193	148.075
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 202.362
+type       = WATER
+
+time       = 200
+value      = 201.8
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -202.362 (m^3/d)
+pressure   = 335.706 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -201.8 (m^3/d)
+pressure   = 331.533 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.222
+type       = BHP
+
+time       = 200
+value      = 150.01
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 163.332 (m^3/d)
+water rate = 19.2949 (m^3/d)
+pressure   = 142.222 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 131.678 (m^3/d)
+water rate = 58.193 (m^3/d)
+pressure   = 150.01 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 163.332 (m^3/d)
+water rate      = 19.2949 (m^3/d)
+inlet pressure  = 142.117 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 131.678 (m^3/d)
+water rate      = 58.193 (m^3/d)
+inlet pressure  = 148.075 (bara)
+
+RUN # 63
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-202.372	335.705
+p1	163.495	0	19.3451	142.122
+#1	163.495	0	19.3451	142.122
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-201.807	331.378
+p1	134.524	0	60.1696	148.019
+#1	134.524	0	60.1696	148.171
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 202.372
+type       = WATER
+
+time       = 200
+value      = 201.807
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -202.372 (m^3/d)
+pressure   = 335.705 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -201.807 (m^3/d)
+pressure   = 331.378 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.122
+type       = BHP
+
+time       = 200
+value      = 148.019
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 163.495 (m^3/d)
+water rate = 19.3451 (m^3/d)
+pressure   = 142.122 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 134.524 (m^3/d)
+water rate = 60.1696 (m^3/d)
+pressure   = 148.019 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 163.495 (m^3/d)
+water rate      = 19.3451 (m^3/d)
+inlet pressure  = 142.122 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 134.524 (m^3/d)
+water rate      = 60.1696 (m^3/d)
+inlet pressure  = 148.171 (bara)
+
+RUN # 64
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-202.525	335.79
+p1	163.501	0	19.3471	142.122
+#1	163.501	0	19.3471	142.123
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-201.907	331.424
+p1	134.539	0	60.1825	148.014
+#1	134.539	0	60.1825	148.172
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 202.525
+type       = WATER
+
+time       = 200
+value      = 201.907
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -202.525 (m^3/d)
+pressure   = 335.79 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -201.907 (m^3/d)
+pressure   = 331.424 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.122
+type       = BHP
+
+time       = 200
+value      = 148.014
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 163.501 (m^3/d)
+water rate = 19.3471 (m^3/d)
+pressure   = 142.122 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 134.539 (m^3/d)
+water rate = 60.1825 (m^3/d)
+pressure   = 148.014 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 163.501 (m^3/d)
+water rate      = 19.3471 (m^3/d)
+inlet pressure  = 142.123 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 134.539 (m^3/d)
+water rate      = 60.1825 (m^3/d)
+inlet pressure  = 148.172 (bara)
+
+RUN # 65
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.025	388.869
+p1	166.982	0	20.6105	142.122
+#1	166.982	0	20.6105	142.261
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-244.42	348.035
+p1	138.717	0	64.701	148.032
+#1	138.717	0	64.701	148.476
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 299.025
+type       = WATER
+
+time       = 200
+value      = 244.42
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.025 (m^3/d)
+pressure   = 388.869 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -244.42 (m^3/d)
+pressure   = 348.035 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.122
+type       = BHP
+
+time       = 200
+value      = 148.032
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 166.982 (m^3/d)
+water rate = 20.6105 (m^3/d)
+pressure   = 142.122 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 138.717 (m^3/d)
+water rate = 64.701 (m^3/d)
+pressure   = 148.032 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 166.982 (m^3/d)
+water rate      = 20.6105 (m^3/d)
+inlet pressure  = 142.261 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 138.717 (m^3/d)
+water rate      = 64.701 (m^3/d)
+inlet pressure  = 148.476 (bara)
+
+RUN # 66
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-297.743	388.179
+p1	166.92	0	20.5884	142.132
+#1	166.92	0	20.5884	142.259
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.444	372.698
+p1	140.392	0	66.0879	148.065
+#1	140.392	0	66.0879	148.549
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 297.743
+type       = WATER
+
+time       = 200
+value      = 299.444
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -297.743 (m^3/d)
+pressure   = 388.179 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.444 (m^3/d)
+pressure   = 372.698 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.132
+type       = BHP
+
+time       = 200
+value      = 148.065
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 166.92 (m^3/d)
+water rate = 20.5884 (m^3/d)
+pressure   = 142.132 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 140.392 (m^3/d)
+water rate = 66.0879 (m^3/d)
+pressure   = 148.065 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 166.92 (m^3/d)
+water rate      = 20.5884 (m^3/d)
+inlet pressure  = 142.259 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 140.392 (m^3/d)
+water rate      = 66.0879 (m^3/d)
+inlet pressure  = 148.549 (bara)
+
+RUN # 67
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.72	389.254
+p1	166.784	0	20.5489	142.26
+#1	166.784	0	20.5489	142.255
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.994	372.877
+p1	139.808	0	65.624	148.554
+#1	139.808	0	65.624	148.526
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 299.72
+type       = WATER
+
+time       = 200
+value      = 299.994
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.72 (m^3/d)
+pressure   = 389.254 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.994 (m^3/d)
+pressure   = 372.877 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.26
+type       = BHP
+
+time       = 200
+value      = 148.554
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 166.784 (m^3/d)
+water rate = 20.5489 (m^3/d)
+pressure   = 142.26 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 139.808 (m^3/d)
+water rate = 65.624 (m^3/d)
+pressure   = 148.554 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 166.784 (m^3/d)
+water rate      = 20.5489 (m^3/d)
+inlet pressure  = 142.255 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 139.808 (m^3/d)
+water rate      = 65.624 (m^3/d)
+inlet pressure  = 148.526 (bara)
+
+RUN # 68
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.995	389.402
+p1	166.802	0	20.5551	142.255
+#1	166.802	0	20.5551	142.256
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.997	372.861
+p1	139.856	0	65.6654	148.525
+#1	139.856	0	65.6654	148.528
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 299.995
+type       = WATER
+
+time       = 200
+value      = 299.997
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.995 (m^3/d)
+pressure   = 389.402 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.997 (m^3/d)
+pressure   = 372.861 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.255
+type       = BHP
+
+time       = 200
+value      = 148.525
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 166.802 (m^3/d)
+water rate = 20.5551 (m^3/d)
+pressure   = 142.255 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 139.856 (m^3/d)
+water rate = 65.6654 (m^3/d)
+pressure   = 148.525 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 166.802 (m^3/d)
+water rate      = 20.5551 (m^3/d)
+inlet pressure  = 142.256 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 139.856 (m^3/d)
+water rate      = 65.6654 (m^3/d)
+inlet pressure  = 148.528 (bara)
+
+RUN # 69
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.995	389.402
+p1	166.802	0	20.5551	142.255
+#1	166.802	0	20.5551	142.256
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.997	372.861
+p1	139.856	0	65.6654	148.525
+#1	139.856	0	65.6654	148.528
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 299.995
+type       = WATER
+
+time       = 200
+value      = 299.997
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.995 (m^3/d)
+pressure   = 389.402 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.997 (m^3/d)
+pressure   = 372.861 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 142.255
+type       = BHP
+
+time       = 200
+value      = 148.525
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 166.802 (m^3/d)
+water rate = 20.5551 (m^3/d)
+pressure   = 142.255 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 139.856 (m^3/d)
+water rate = 65.6654 (m^3/d)
+pressure   = 148.525 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 166.802 (m^3/d)
+water rate      = 20.5551 (m^3/d)
+inlet pressure  = 142.256 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 139.856 (m^3/d)
+water rate      = 65.6654 (m^3/d)
+inlet pressure  = 148.528 (bara)
+
+RUN # 70
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200	337.958
+p1	66.4176	0	1.34657	200
+#1	66.4176	0	1.34657	139.272
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200	337.945
+p1	69.2296	0	6.45077	200
+#1	69.2296	0	6.45077	141.21
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200
+type       = WATER
+
+time       = 200
+value      = 200
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200 (m^3/d)
+pressure   = 337.958 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200 (m^3/d)
+pressure   = 337.945 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200
+type       = BHP
+
+time       = 200
+value      = 200
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 66.4176 (m^3/d)
+water rate = 1.34657 (m^3/d)
+pressure   = 200 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 69.2296 (m^3/d)
+water rate = 6.45077 (m^3/d)
+pressure   = 200 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 66.4176 (m^3/d)
+water rate      = 1.34657 (m^3/d)
+inlet pressure  = 139.272 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 69.2296 (m^3/d)
+water rate      = 6.45077 (m^3/d)
+inlet pressure  = 141.21 (bara)
+
+RUN # 71
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.303	332.02
+p1	215.551	0	34.0993	111.842
+#1	215.551	0	34.0993	143.335
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.212	325.445
+p1	174.799	0	105.174	116.282
+#1	174.799	0	105.174	150.586
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.303
+type       = WATER
+
+time       = 200
+value      = 200.212
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.303 (m^3/d)
+pressure   = 332.02 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.212 (m^3/d)
+pressure   = 325.445 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 111.842
+type       = BHP
+
+time       = 200
+value      = 116.282
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 215.551 (m^3/d)
+water rate = 34.0993 (m^3/d)
+pressure   = 111.842 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 174.799 (m^3/d)
+water rate = 105.174 (m^3/d)
+pressure   = 116.282 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 215.551 (m^3/d)
+water rate      = 34.0993 (m^3/d)
+inlet pressure  = 143.335 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 174.799 (m^3/d)
+water rate      = 105.174 (m^3/d)
+inlet pressure  = 150.586 (bara)
+
+RUN # 72
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.743	338.359
+p1	66.8736	0	1.37095	199.767
+#1	66.8736	0	1.37095	139.28
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.584	336.273
+p1	118.181	0	17.421	170.634
+#1	118.181	0	17.421	142.628
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.743
+type       = WATER
+
+time       = 200
+value      = 200.584
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.743 (m^3/d)
+pressure   = 338.359 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.584 (m^3/d)
+pressure   = 336.273 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 199.767
+type       = BHP
+
+time       = 200
+value      = 170.634
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 66.8736 (m^3/d)
+water rate = 1.37095 (m^3/d)
+pressure   = 199.767 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 118.181 (m^3/d)
+water rate = 17.421 (m^3/d)
+pressure   = 170.634 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 66.8736 (m^3/d)
+water rate      = 1.37095 (m^3/d)
+inlet pressure  = 139.28 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 118.181 (m^3/d)
+water rate      = 17.421 (m^3/d)
+inlet pressure  = 142.628 (bara)
+
+RUN # 73
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.202	323.161
+p1	378.613	0	146.638	1.99767
+#1	378.613	0	146.638	149.732
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.135	315.033
+p1	150.388	0	166.92	111.256
+#1	150.388	0	166.92	155.29
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.202
+type       = WATER
+
+time       = 200
+value      = 200.135
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.202 (m^3/d)
+pressure   = 323.161 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.135 (m^3/d)
+pressure   = 315.033 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 1.99767
+type       = BHP
+
+time       = 200
+value      = 111.256
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 378.613 (m^3/d)
+water rate = 146.638 (m^3/d)
+pressure   = 1.99767 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 150.388 (m^3/d)
+water rate = 166.92 (m^3/d)
+pressure   = 111.256 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 378.613 (m^3/d)
+water rate      = 146.638 (m^3/d)
+inlet pressure  = 149.732 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 150.388 (m^3/d)
+water rate      = 166.92 (m^3/d)
+inlet pressure  = 155.29 (bara)
+
+RUN # 74
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.267	323.245
+p1	377.855	0	145.861	2.5429
+#1	377.855	0	145.861	149.696
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.184	314.382
+p1	159.956	0	180.932	103.589
+#1	159.956	0	180.932	155.601
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.267
+type       = WATER
+
+time       = 200
+value      = 200.184
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.267 (m^3/d)
+pressure   = 323.245 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.184 (m^3/d)
+pressure   = 314.382 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 2.5429
+type       = BHP
+
+time       = 200
+value      = 103.589
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 377.855 (m^3/d)
+water rate = 145.861 (m^3/d)
+pressure   = 2.5429 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 159.956 (m^3/d)
+water rate = 180.932 (m^3/d)
+pressure   = 103.589 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 377.855 (m^3/d)
+water rate      = 145.861 (m^3/d)
+inlet pressure  = 149.696 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 159.956 (m^3/d)
+water rate      = 180.932 (m^3/d)
+inlet pressure  = 155.601 (bara)
+
+RUN # 75
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.258	323.245
+p1	377.767	0	145.771	2.60599
+#1	377.767	0	145.771	149.692
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.178	314.495
+p1	158.569	0	178.757	104.735
+#1	158.569	0	178.757	155.549
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.258
+type       = WATER
+
+time       = 200
+value      = 200.178
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.258 (m^3/d)
+pressure   = 323.245 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.178 (m^3/d)
+pressure   = 314.495 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 2.60599
+type       = BHP
+
+time       = 200
+value      = 104.735
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 377.767 (m^3/d)
+water rate = 145.771 (m^3/d)
+pressure   = 2.60599 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 158.569 (m^3/d)
+water rate = 178.757 (m^3/d)
+pressure   = 104.735 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 377.767 (m^3/d)
+water rate      = 145.771 (m^3/d)
+inlet pressure  = 149.692 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 158.569 (m^3/d)
+water rate      = 178.757 (m^3/d)
+inlet pressure  = 155.549 (bara)
+
+RUN # 76
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.945	323.32
+p1	373.828	0	141.777	5.41934
+#1	373.828	0	141.777	149.506
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.944	318.447
+p1	108.01	0	106.445	145.625
+#1	108.01	0	106.445	153.794
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 199.945
+type       = WATER
+
+time       = 200
+value      = 199.944
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.945 (m^3/d)
+pressure   = 323.32 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.944 (m^3/d)
+pressure   = 318.447 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 5.41934
+type       = BHP
+
+time       = 200
+value      = 145.625
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 373.828 (m^3/d)
+water rate = 141.777 (m^3/d)
+pressure   = 5.41934 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 108.01 (m^3/d)
+water rate = 106.445 (m^3/d)
+pressure   = 145.625 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 373.828 (m^3/d)
+water rate      = 141.777 (m^3/d)
+inlet pressure  = 149.506 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 108.01 (m^3/d)
+water rate      = 106.445 (m^3/d)
+inlet pressure  = 153.794 (bara)
+
+RUN # 77
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.954	323.428
+p1	372.179	0	140.117	6.59778
+#1	372.179	0	140.117	149.428
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-199.951	318.564
+p1	108.263	0	106.117	145.636
+#1	108.263	0	106.117	153.753
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 199.954
+type       = WATER
+
+time       = 200
+value      = 199.951
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.954 (m^3/d)
+pressure   = 323.428 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -199.951 (m^3/d)
+pressure   = 318.564 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 6.59778
+type       = BHP
+
+time       = 200
+value      = 145.636
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 372.179 (m^3/d)
+water rate = 140.117 (m^3/d)
+pressure   = 6.59778 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 108.263 (m^3/d)
+water rate = 106.117 (m^3/d)
+pressure   = 145.636 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 372.179 (m^3/d)
+water rate      = 140.117 (m^3/d)
+inlet pressure  = 149.428 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 108.263 (m^3/d)
+water rate      = 106.117 (m^3/d)
+inlet pressure  = 153.753 (bara)
+
+RUN # 78
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.024	324.037
+p1	362.973	0	131.061	13.1468
+#1	362.973	0	131.061	148.999
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.011	320.172
+p1	95.7233	0	87.7728	156.444
+#1	95.7233	0	87.7728	153.119
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.024
+type       = WATER
+
+time       = 200
+value      = 200.011
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.024 (m^3/d)
+pressure   = 324.037 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.011 (m^3/d)
+pressure   = 320.172 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 13.1468
+type       = BHP
+
+time       = 200
+value      = 156.444
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 362.973 (m^3/d)
+water rate = 131.061 (m^3/d)
+pressure   = 13.1468 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 95.7233 (m^3/d)
+water rate = 87.7728 (m^3/d)
+pressure   = 156.444 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 362.973 (m^3/d)
+water rate      = 131.061 (m^3/d)
+inlet pressure  = 148.999 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 95.7233 (m^3/d)
+water rate      = 87.7728 (m^3/d)
+inlet pressure  = 153.119 (bara)
+
+RUN # 79
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.127	324.448
+p1	357.143	0	125.575	17.2735
+#1	357.143	0	125.575	148.735
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.092	320.559
+p1	97.1275	0	87.3809	156.052
+#1	97.1275	0	87.3809	152.983
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.127
+type       = WATER
+
+time       = 200
+value      = 200.092
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.127 (m^3/d)
+pressure   = 324.448 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.092 (m^3/d)
+pressure   = 320.559 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 17.2735
+type       = BHP
+
+time       = 200
+value      = 156.052
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 357.143 (m^3/d)
+water rate = 125.575 (m^3/d)
+pressure   = 17.2735 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 97.1275 (m^3/d)
+water rate = 87.3809 (m^3/d)
+pressure   = 156.052 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 357.143 (m^3/d)
+water rate      = 125.575 (m^3/d)
+inlet pressure  = 148.735 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 97.1275 (m^3/d)
+water rate      = 87.3809 (m^3/d)
+inlet pressure  = 152.983 (bara)
+
+RUN # 80
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.523	325.959
+p1	335.043	0	106.808	32.7843
+#1	335.043	0	106.808	147.807
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.406	321.867
+p1	104.056	0	87.1878	153.363
+#1	104.056	0	87.1878	152.491
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.523
+type       = WATER
+
+time       = 200
+value      = 200.406
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.523 (m^3/d)
+pressure   = 325.959 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.406 (m^3/d)
+pressure   = 321.867 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 32.7843
+type       = BHP
+
+time       = 200
+value      = 153.363
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 335.043 (m^3/d)
+water rate = 106.808 (m^3/d)
+pressure   = 32.7843 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 104.056 (m^3/d)
+water rate = 87.1878 (m^3/d)
+pressure   = 153.363 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 335.043 (m^3/d)
+water rate      = 106.808 (m^3/d)
+inlet pressure  = 147.807 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 104.056 (m^3/d)
+water rate      = 87.1878 (m^3/d)
+inlet pressure  = 152.491 (bara)
+
+RUN # 81
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.668	326.524
+p1	326.508	0	100.076	38.7008
+#1	326.508	0	100.076	147.461
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-200.521	322.419
+p1	105.788	0	85.9228	153.052
+#1	105.788	0	85.9228	152.265
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 200.668
+type       = WATER
+
+time       = 200
+value      = 200.521
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.668 (m^3/d)
+pressure   = 326.524 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -200.521 (m^3/d)
+pressure   = 322.419 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 38.7008
+type       = BHP
+
+time       = 200
+value      = 153.052
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 326.508 (m^3/d)
+water rate = 100.076 (m^3/d)
+pressure   = 38.7008 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 105.788 (m^3/d)
+water rate = 85.9228 (m^3/d)
+pressure   = 153.052 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 326.508 (m^3/d)
+water rate      = 100.076 (m^3/d)
+inlet pressure  = 147.461 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 105.788 (m^3/d)
+water rate      = 85.9228 (m^3/d)
+inlet pressure  = 152.265 (bara)
+
+RUN # 82
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-201.373	329.227
+p1	284.025	0	70.2782	67.5413
+#1	284.025	0	70.2782	145.813
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-201.081	325.116
+p1	113.487	0	77.9832	152.256
+#1	113.487	0	77.9832	151.057
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 201.373
+type       = WATER
+
+time       = 200
+value      = 201.081
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -201.373 (m^3/d)
+pressure   = 329.227 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -201.081 (m^3/d)
+pressure   = 325.116 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 67.5413
+type       = BHP
+
+time       = 200
+value      = 152.256
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 284.025 (m^3/d)
+water rate = 70.2782 (m^3/d)
+pressure   = 67.5413 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 113.487 (m^3/d)
+water rate = 77.9832 (m^3/d)
+pressure   = 152.256 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 284.025 (m^3/d)
+water rate      = 70.2782 (m^3/d)
+inlet pressure  = 145.813 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 113.487 (m^3/d)
+water rate      = 77.9832 (m^3/d)
+inlet pressure  = 151.057 (bara)
+
+RUN # 83
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-202.271	332.562
+p1	227.635	0	38.9966	104.238
+#1	227.635	0	38.9966	143.712
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-201.793	328.42
+p1	123.992	0	66.5767	151.142
+#1	123.992	0	66.5767	149.343
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 202.271
+type       = WATER
+
+time       = 200
+value      = 201.793
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -202.271 (m^3/d)
+pressure   = 332.562 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -201.793 (m^3/d)
+pressure   = 328.42 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 104.238
+type       = BHP
+
+time       = 200
+value      = 151.142
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 227.635 (m^3/d)
+water rate = 38.9966 (m^3/d)
+pressure   = 104.238 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 123.992 (m^3/d)
+water rate = 66.5767 (m^3/d)
+pressure   = 151.142 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 227.635 (m^3/d)
+water rate      = 38.9966 (m^3/d)
+inlet pressure  = 143.712 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 123.992 (m^3/d)
+water rate      = 66.5767 (m^3/d)
+inlet pressure  = 149.343 (bara)
+
+RUN # 84
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-202.983	335.068
+p1	180.94	0	21.7358	133.377
+#1	180.94	0	21.7358	142.246
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-202.358	330.871
+p1	133.229	0	56.7857	149.924
+#1	133.229	0	56.7857	147.85
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 202.983
+type       = WATER
+
+time       = 200
+value      = 202.358
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -202.983 (m^3/d)
+pressure   = 335.068 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -202.358 (m^3/d)
+pressure   = 330.871 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 133.377
+type       = BHP
+
+time       = 200
+value      = 149.924
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 180.94 (m^3/d)
+water rate = 21.7358 (m^3/d)
+pressure   = 133.377 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 133.229 (m^3/d)
+water rate = 56.7857 (m^3/d)
+pressure   = 149.924 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 180.94 (m^3/d)
+water rate      = 21.7358 (m^3/d)
+inlet pressure  = 142.246 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 133.229 (m^3/d)
+water rate      = 56.7857 (m^3/d)
+inlet pressure  = 147.85 (bara)
+
+RUN # 85
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-203.193	335.814
+p1	166.958	0	17.4296	141.886
+#1	166.958	0	17.4296	141.796
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-202.523	331.563
+p1	136.416	0	53.9535	149.308
+#1	136.416	0	53.9535	147.396
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 203.193
+type       = WATER
+
+time       = 200
+value      = 202.523
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -203.193 (m^3/d)
+pressure   = 335.814 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -202.523 (m^3/d)
+pressure   = 331.563 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 141.886
+type       = BHP
+
+time       = 200
+value      = 149.308
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 166.958 (m^3/d)
+water rate = 17.4296 (m^3/d)
+pressure   = 141.886 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 136.416 (m^3/d)
+water rate = 53.9535 (m^3/d)
+pressure   = 149.308 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 166.958 (m^3/d)
+water rate      = 17.4296 (m^3/d)
+inlet pressure  = 141.796 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 136.416 (m^3/d)
+water rate      = 53.9535 (m^3/d)
+inlet pressure  = 147.396 (bara)
+
+RUN # 86
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-203.206	335.815
+p1	167.097	0	17.4706	141.802
+#1	167.097	0	17.4706	141.8
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-202.533	331.41
+p1	139.277	0	55.8128	147.356
+#1	139.277	0	55.8128	147.495
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 203.206
+type       = WATER
+
+time       = 200
+value      = 202.533
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -203.206 (m^3/d)
+pressure   = 335.815 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -202.533 (m^3/d)
+pressure   = 331.41 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 141.802
+type       = BHP
+
+time       = 200
+value      = 147.356
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 167.097 (m^3/d)
+water rate = 17.4706 (m^3/d)
+pressure   = 141.802 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 139.277 (m^3/d)
+water rate = 55.8128 (m^3/d)
+pressure   = 147.356 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 167.097 (m^3/d)
+water rate      = 17.4706 (m^3/d)
+inlet pressure  = 141.8 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 139.277 (m^3/d)
+water rate      = 55.8128 (m^3/d)
+inlet pressure  = 147.495 (bara)
+
+RUN # 87
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-203.436	335.944
+p1	167.107	0	17.4717	141.802
+#1	167.107	0	17.4717	141.8
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-202.692	331.484
+p1	139.295	0	55.8237	147.353
+#1	139.295	0	55.8237	147.496
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 203.436
+type       = WATER
+
+time       = 200
+value      = 202.692
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -203.436 (m^3/d)
+pressure   = 335.944 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -202.692 (m^3/d)
+pressure   = 331.484 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 141.802
+type       = BHP
+
+time       = 200
+value      = 147.353
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 167.107 (m^3/d)
+water rate = 17.4717 (m^3/d)
+pressure   = 141.802 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 139.295 (m^3/d)
+water rate = 55.8237 (m^3/d)
+pressure   = 147.353 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 167.107 (m^3/d)
+water rate      = 17.4717 (m^3/d)
+inlet pressure  = 141.8 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 139.295 (m^3/d)
+water rate      = 55.8237 (m^3/d)
+inlet pressure  = 147.496 (bara)
+
+RUN # 88
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-298.849	388.387
+p1	171.033	0	17.9481	141.798
+#1	171.033	0	17.9481	141.827
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.027	372.133
+p1	145.666	0	59.7172	147.356
+#1	145.666	0	59.7172	147.679
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 298.849
+type       = WATER
+
+time       = 200
+value      = 299.027
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -298.849 (m^3/d)
+pressure   = 388.387 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.027 (m^3/d)
+pressure   = 372.133 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 141.798
+type       = BHP
+
+time       = 200
+value      = 147.356
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 171.033 (m^3/d)
+water rate = 17.9481 (m^3/d)
+pressure   = 141.798 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 145.666 (m^3/d)
+water rate = 59.7172 (m^3/d)
+pressure   = 147.356 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 171.033 (m^3/d)
+water rate      = 17.9481 (m^3/d)
+inlet pressure  = 141.827 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 145.666 (m^3/d)
+water rate      = 59.7172 (m^3/d)
+inlet pressure  = 147.679 (bara)
+
+RUN # 89
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.988	389.001
+p1	171.078	0	17.9534	141.799
+#1	171.078	0	17.9534	141.827
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.718	372.376
+p1	145.698	0	59.7388	147.374
+#1	145.698	0	59.7388	147.68
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 299.988
+type       = WATER
+
+time       = 200
+value      = 299.718
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.988 (m^3/d)
+pressure   = 389.001 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.718 (m^3/d)
+pressure   = 372.376 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 141.799
+type       = BHP
+
+time       = 200
+value      = 147.374
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 171.078 (m^3/d)
+water rate = 17.9534 (m^3/d)
+pressure   = 141.799 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 145.698 (m^3/d)
+water rate = 59.7388 (m^3/d)
+pressure   = 147.374 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 171.078 (m^3/d)
+water rate      = 17.9534 (m^3/d)
+inlet pressure  = 141.827 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 145.698 (m^3/d)
+water rate      = 59.7388 (m^3/d)
+inlet pressure  = 147.68 (bara)
+
+RUN # 90
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.998	389.008
+p1	171.03	0	17.939	141.828
+#1	171.03	0	17.939	141.826
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-299.997	372.523
+p1	145.263	0	59.431	147.686
+#1	145.263	0	59.431	147.663
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 299.998
+type       = WATER
+
+time       = 200
+value      = 299.997
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.998 (m^3/d)
+pressure   = 389.008 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -299.997 (m^3/d)
+pressure   = 372.523 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 141.828
+type       = BHP
+
+time       = 200
+value      = 147.686
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 171.03 (m^3/d)
+water rate = 17.939 (m^3/d)
+pressure   = 141.828 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 145.263 (m^3/d)
+water rate = 59.431 (m^3/d)
+pressure   = 147.686 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 171.03 (m^3/d)
+water rate      = 17.939 (m^3/d)
+inlet pressure  = 141.826 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 145.263 (m^3/d)
+water rate      = 59.431 (m^3/d)
+inlet pressure  = 147.663 (bara)
+
+RUN # 91
+CURRENT MODEL STATE:
+###############################
+
+------------------------------
+RATE MATRIX:
+------------------------------
+
+time = 100 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-300	389.009
+p1	171.034	0	17.94	141.826
+#1	171.034	0	17.94	141.826
+
+time = 200 days
+COMP	QO	QG	QW	P
+----	--	--	--	-
+i1	0	0	-300	372.523
+p1	145.296	0	59.4541	147.663
+#1	145.296	0	59.4541	147.664
+
+------------------------------
+WELL: i1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 300
+type       = WATER
+
+time       = 200
+value      = 300
+type       = WATER
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -300 (m^3/d)
+pressure   = 389.009 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 0 (m^3/d)
+water rate = -300 (m^3/d)
+pressure   = 372.523 (bara)
+
+------------------------------
+WELL: p1
+------------------------------
+
+------Controls-------
+time       = 100
+value      = 141.826
+type       = BHP
+
+time       = 200
+value      = 147.663
+type       = BHP
+
+------Routing-------
+destination pipe = 1
+value            = 1
+
+------Rate Data-------
+time       = 100 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 171.034 (m^3/d)
+water rate = 17.94 (m^3/d)
+pressure   = 141.826 (bara)
+
+time       = 200 (days)
+gas rate   = 0 (m^3/d)
+oil rate   = 145.296 (m^3/d)
+water rate = 59.4541 (m^3/d)
+pressure   = 147.663 (bara)
+
+------------------------------
+END PIPE: 1
+------------------------------
+
+Minimum outlet pressure = 70 (bara)
+
+------Rate Data-------
+time            = 100 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 171.034 (m^3/d)
+water rate      = 17.94 (m^3/d)
+inlet pressure  = 141.826 (bara)
+
+time            = 200 (days)
+gas rate        = 0 (m^3/d)
+oil rate        = 145.296 (m^3/d)
+water rate      = 59.4541 (m^3/d)
+inlet pressure  = 147.664 (bara)
+

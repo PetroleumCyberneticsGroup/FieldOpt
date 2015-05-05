@@ -1,0 +1,135 @@
+!-------------------------------------------------------------------
+! Driver file for ResOpt
+!-------------------------------------------------------------------
+! ALL PRICES SCALED 1e-6
+ADJOINTS_COUPLED MODEL ! this _must_ be the first keyword, either COUPLED, ADJOINTS_COUPLED or DECOUPLED 
+
+SIMULATOR MRST_BATCH ! GPRS VLP MRST_BATCH
+
+DEBUG debug.dat
+
+!---------------- Optimization Algorithm ---------------------------
+START OPTIMIZER
+ TYPE COMPASS  !BONMIN, RUNONCE, NOMAD, NOIP
+ INITIAL_STEP_LENGTH 8.0
+ MINIMUM_STEP_LENGTH 0.5
+ MAXIMUM_EVALUATIONS 500
+ BOOKKEEPER_TOLERANCE 1
+ ITERATIONS 1
+ PERTURBATION 0.00005   ! O.O5
+ PARALLELRUNS 1 !integer, or "IDEAL" for the ideal number of parallel runs on this machine
+ TERMINATION 1.0 4
+END OPTIMIZER
+
+
+!------------------- Objective definition -------------------------
+START OBJECTIVE
+ TYPE CUMOIL  !NPV, CUMOIL, CUMGAS
+ 
+ ! these keywords are only needed for NPV:
+ DCF 0.10
+ OILPRICE   1e-4
+ GASPRICE     5e-6
+ WATERPRICE -1e-5 
+END OBJECTIVE
+
+!------------------- Master Schedule -------------------------------
+START MASTERSCHEDULE
+ 100
+ 200
+END MASTERSCHEDULE
+
+
+
+!----------------- Reservoir Definition ----------------------------
+START RESERVOIR
+ NAME RES1
+ FILE SIMPLE10x5x10.DATA
+ MRST ~/Documents/MATLAB/mrst-2013a
+ MATLAB /usr/local/MATLAB/R2014a/bin/matlab
+ TIME 3650
+ PHASES 0 1 1             ! gas oil water
+ DENS 0.06054 49.1 64.79  ! gas oil water
+END RESERVOIR 
+
+
+!-------------------- Well: i1 -----------------------------------
+START WELL
+ NAME i1
+ TYPE I
+ GROUP grp1
+ BHPLIMIT 1000000       ! Only used when well is on rate control 
+ BHPINJ WATER           ! Only used for injectors, the injected phase when well is on BHP control (WATER, GAS)
+! INSTALLTIME 0 2 0
+! COST 1e7
+
+ 
+ START CONNECTIONS
+  2  5  1  5  100
+ END CONNECTIONS
+!START VARCONNECTIONS
+! i	i_max	i_min	j	j_max	j_min	k1	k2	pi
+!  5	10	1	3	5	1	1	5	100
+!END VARCONNECTIONS
+
+ START SCHEDULE
+! t_end  value    max     min     type
+  100    200     200     200       WAT 
+  200    200     200     200       WAT
+ END SCHEDULE
+END WELL
+
+
+!-------------------- Well: p1 ----------------------------------
+START WELL
+ NAME p1
+ TYPE P
+ GROUP grp1
+ BHPLIMIT 1  ! Only used when well is on rate control 
+
+ START OUTLETPIPES
+! pipe#  fraction
+  1	1.0
+ END OUTLETPIPES
+
+ 
+! START CONNECTIONS
+!  1  1  1  5  100
+! END CONNECTIONS
+
+ START VARCONNECTIONS
+! i	i_max	i_min	j	j_max 	j_min 	k1 	k2 	pi
+  10	20      1    	5   	10     	1    	1  	6  	100
+ END VARCONNECTIONS
+
+
+ START SCHEDULE
+! t_end	value	max	min	type
+  100	200	200	200	BHP
+  200	200	200	200	BHP
+ END SCHEDULE
+
+END WELL
+
+!----------------------- Pipe 1 -----------------------------------
+START PIPE
+ NUMBER 1
+ FILE pipeW.dat
+
+ OUTLETPRESSURE 70 BARA
+
+END PIPE
+
+
+
+!----------------------- Capacity -----------------------------------
+
+START CAPACITY
+
+  NAME cap1
+  PIPES 1
+  WATER 1200
+  
+END CAPACITY
+
+EOF
