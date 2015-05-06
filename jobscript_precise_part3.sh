@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -N FieldOpt_baselines
-#PBS -l nodes=1:ppn=12:default
+#PBS -l nodes=2:ppn=12:default
 #PBS -l walltime=01:00:00
 #PBS -l pmem=1800MB
 #PBS -A acc-ipt
@@ -16,7 +16,7 @@ module load boost
 module load qt
 module load matlab
 
-for P in 23 25 26
+for P in 11 13
 do
 	mpirun -npernode $P -x LD_LIBRARY_PATH Console ${PBS_O_WORKDIR}/examples/MRST/bhp_12/driver.dat ${PBS_O_WORKDIR}/MRST/mrst-2013a
 done
