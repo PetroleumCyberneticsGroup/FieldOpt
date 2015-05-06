@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N FieldOpt_batch_part_3
-#PBS -l nodes=2:ppn=12:bigmem
-#PBS -l walltime=12:00:00
+#PBS -l nodes=4:ppn=12:bigmem
+#PBS -l walltime=5:00:00
 #PBS -l pmem=1800MB
 #PBS -A acc-ipt
 #PBS -q bigmem
@@ -16,12 +16,7 @@ module load boost
 module load qt
 module load matlab
 
-for P in 12 18 24
+for P in 9 10 11 12
 do
 	mpirun -npernode $P -x LD_LIBRARY_PATH Console ${PBS_O_WORKDIR}/examples/MRST/bhp_24/driver.dat ${PBS_O_WORKDIR}/MRST/mrst-2013a
-done
-
-for P in 12 18 24
-do
-	mpirun -npernode $P -x LD_LIBRARY_PATH Console ${PBS_O_WORKDIR}/examples/MRST/bhp_36/driver.dat ${PBS_O_WORKDIR}/MRST/mrst-2013a
 done

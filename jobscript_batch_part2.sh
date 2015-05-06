@@ -20,8 +20,3 @@ for P in 6 12 18 24
 do
 	mpirun -npernode $P -x LD_LIBRARY_PATH Console ${PBS_O_WORKDIR}/examples/MRST/bhp_12/driver.dat ${PBS_O_WORKDIR}/MRST/mrst-2013a
 done
-
-for P in 6 12 18 24
-do
-	mpirun -npernode $P -x LD_LIBRARY_PATH Console ${PBS_O_WORKDIR}/examples/MRST/bhp_16/driver.dat ${PBS_O_WORKDIR}/MRST/mrst-2013a
-done
