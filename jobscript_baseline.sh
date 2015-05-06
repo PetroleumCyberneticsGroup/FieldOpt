@@ -16,8 +16,6 @@ module load boost
 module load qt
 module load matlab
 
-mpirun -npernode 2 -x LD_LIBRARY_PATH Console ${PBS_O_WORKDIR}/examples/MRST/bhp_1/driver.dat ${PBS_O_WORKDIR}/MRST/mrst-2013a
-mpirun -npernode 2 -x LD_LIBRARY_PATH Console ${PBS_O_WORKDIR}/examples/MRST/bhp_2/driver.dat ${PBS_O_WORKDIR}/MRST/mrst-2013a
 mpirun -npernode 2 -x LD_LIBRARY_PATH Console ${PBS_O_WORKDIR}/examples/MRST/bhp_4/driver.dat ${PBS_O_WORKDIR}/MRST/mrst-2013a
 mpirun -npernode 2 -x LD_LIBRARY_PATH Console ${PBS_O_WORKDIR}/examples/MRST/bhp_8/driver.dat ${PBS_O_WORKDIR}/MRST/mrst-2013a
 mpirun -npernode 2 -x LD_LIBRARY_PATH Console ${PBS_O_WORKDIR}/examples/MRST/bhp_12/driver.dat ${PBS_O_WORKDIR}/MRST/mrst-2013a
