@@ -15,6 +15,7 @@ Broker::Broker(mpi::communicator *comm, Model* m, ResultsLogger* l)
     model = m;
     printer = new ParallelPrinter(comm->rank());
     logger = l;
+    batch_logger = new BatchLogger(l->getOutput_directory_path(), world->size());
 }
 
 
@@ -30,6 +31,7 @@ void Broker::setPerturbations(const QVector<Case *> &value, QVector<int> &ids)
 
 void Broker::evaluatePerturbations()
 {
+    batch_logger->newBatchStart(perturbations.size());
     assert(perturbations.size() != 0);
     while (getNextPerturbationId() != -1 && getFreeProcessId() != -1)  // Send work to all processes initially.
         sendNextPerturbation();
@@ -43,6 +45,7 @@ void Broker::evaluatePerturbations()
         printProgress();
         recvResult();
     }
+    batch_logger->batchEnd();
     printer->print("Broker is done evealuating current batch of perturbations.", false);
 }
 

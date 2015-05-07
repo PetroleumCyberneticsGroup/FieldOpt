@@ -14,6 +14,7 @@
 #include "model/model.h"
 #include "parallelprinter.h"
 #include "resultslogger.h"
+#include "batchlogger.h"
 
 namespace mpi = boost::mpi;
 
@@ -30,6 +31,7 @@ private:
     Model* model;
     ParallelPrinter* printer;
     ResultsLogger* logger;
+    BatchLogger* batch_logger;
 
     bool isFinished();                    //!< Returns true if at least one perturbation has not yet been evaluated or if at least one process is currently busy.
     int getNextPerturbationId();  //!< Finds the next perturbation to be evaluated. Returns -1 if all perturbations are evaluated or currently being evaluated.
