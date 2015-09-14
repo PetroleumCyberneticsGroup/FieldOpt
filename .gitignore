@@ -45,4 +45,3 @@ libs/*
 build/*
 
 # Ignore changes in the examples directory
-examples/*
