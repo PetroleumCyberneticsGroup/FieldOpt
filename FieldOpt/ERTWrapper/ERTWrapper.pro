@@ -7,3 +7,9 @@ CONFIG += c++11
 TEMPLATE = lib
 
 TARGET = fieldopt
+
+HEADERS += \
+    eclgridreader.h
+
+SOURCES += \
+    eclgridreader.cpp
