@@ -3,7 +3,8 @@ CONFIG+=ordered
 CONFIG += c++11
 SUBDIRS = \
     src \
-    Console  #\
+    Console \  #\
+    ERTWrapper
     #tests
 
 Console.depends = src
