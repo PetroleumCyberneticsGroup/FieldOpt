@@ -4,7 +4,8 @@ CONFIG += c++11
 SUBDIRS = \
     src \
     Console \  #\
-    ERTWrapper
+    ERTWrapper \
+    GTest
     #tests
 
 Console.depends = src
