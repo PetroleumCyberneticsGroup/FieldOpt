@@ -25,10 +25,24 @@ namespace ERTWrapper {
             }
         }
 
+        ECLGridReader::dimensions ECLGridReader::Dimensions()
+        {
+            ECLGridReader::dimensions dims;
+            if (ecl_grid_ == 0) {
+                dims.x = 0; dims.y = 0; dims.z = 0;
+                return dims;
+            }
+            int x, y, z;
+            ecl_grid_get_dims(ecl_grid_, &x, &y, &z, NULL);
+            dims.x = x; dims.y = y; dims.z = z;
+            return dims;
+        }
+
         int ECLGridReader::ActiveCells()
         {
             if (ecl_grid_ == 0) return 0; // Return 0 if the grid has not been read
             else return ecl_grid_get_nactive(ecl_grid_);
         }
+
     }
 }

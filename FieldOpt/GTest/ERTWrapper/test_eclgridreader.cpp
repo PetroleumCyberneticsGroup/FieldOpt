@@ -16,7 +16,7 @@ protected:
     }
 
     virtual void SetUp() {
-        // Called immediately after the constructor (right before each test)
+        ecl_grid_reader->ReadEclGrid(file_name);
     }
 
     virtual void TearDown() {
@@ -30,8 +30,14 @@ protected:
 };
 
 TEST_F(ECLGridReaderTest, ReadGrid) {
-    ecl_grid_reader->ReadEclGrid(file_name);
     EXPECT_EQ(1620, ecl_grid_reader->ActiveCells());
+}
+
+TEST_F(ECLGridReaderTest, CheckDimensions) {
+    ECLGridReader::dimensions dims = ecl_grid_reader->Dimensions();
+    EXPECT_EQ(20, dims.x);
+    EXPECT_EQ(9, dims.y);
+    EXPECT_EQ(9, dims.z);
 }
 
 }

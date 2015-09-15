@@ -8,17 +8,25 @@ namespace ERTWrapper {
 
     namespace ECLGrid {
 
-        class ECLGridReader
-        {
-        private:
-            QString file_name_;
-            ecl_grid_type* ecl_grid_;
-        public:
-            ECLGridReader();
-            virtual ~ECLGridReader();
-            void ReadEclGrid(QString file_name);
-            int ActiveCells(); //!< TODO: This is a temporary method for testing. Should be removed.
+    /*!
+     * \brief The ECLGridReader class reads ECLIPSE grid files (.GRID and .EGRID).
+     */
+    class ECLGridReader
+    {
+    private:
+        QString file_name_;
+        ecl_grid_type* ecl_grid_;
+    public:
+        ECLGridReader();
+        virtual ~ECLGridReader();
+        void ReadEclGrid(QString file_name);
+
+        struct dimensions {
+            int x, y, z;
         };
+        dimensions Dimensions();
+        int ActiveCells(); //!< TODO: This is a temporary method for testing. Should be removed.
+    };
     }
 }
 
