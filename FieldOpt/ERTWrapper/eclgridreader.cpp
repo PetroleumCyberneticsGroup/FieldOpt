@@ -27,7 +27,7 @@ namespace ERTWrapper {
 
         int ECLGridReader::ActiveCells()
         {
-            if (ecl_grid_ == 0) return 0;
+            if (ecl_grid_ == 0) return 0; // Return 0 if the grid has not been read
             else return ecl_grid_get_nactive(ecl_grid_);
         }
     }

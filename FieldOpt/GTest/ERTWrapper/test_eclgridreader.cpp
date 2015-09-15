@@ -24,14 +24,14 @@ protected:
     }
 
     ECLGridReader* ecl_grid_reader;
-    QString file_name = "/home/einar/Documents/GitHub/FieldOpt/examples/ECLIPSE/HORZWELL/HORZWELL.EGRID";
+    QString file_name = "../../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID";
 
     // Objects declared here can be used by all tests in this test case.
 };
 
 TEST_F(ECLGridReaderTest, ReadGrid) {
     ecl_grid_reader->ReadEclGrid(file_name);
-    EXPECT_NE(0, ecl_grid_reader->ActiveCells());
+    EXPECT_EQ(1620, ecl_grid_reader->ActiveCells());
 }
 
 }
