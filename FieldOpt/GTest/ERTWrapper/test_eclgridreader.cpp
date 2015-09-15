@@ -1,18 +1,18 @@
 #include <gtest/gtest.h>
 #include "eclgridreader.h"
 
-using namespace ERTWrapper;
+using namespace ERTWrapper::ECLGrid;
 
 namespace {
 
 class ECLGridReaderTest : public ::testing::Test {
 protected:
     ECLGridReaderTest() {
-        // Set-up work for each test
+        ecl_grid_reader = new ECLGridReader();
     }
 
     virtual ~ECLGridReaderTest() {
-        // Clean-up work that does not throw exceptions.
+        delete ecl_grid_reader;
     }
 
     virtual void SetUp() {
@@ -23,11 +23,15 @@ protected:
         // Called immedeately after each test (right before the destructor)
     }
 
+    ECLGridReader* ecl_grid_reader;
+    QString file_name = "/home/einar/Documents/GitHub/FieldOpt/examples/ECLIPSE/HORZWELL/HORZWELL.EGRID";
+
     // Objects declared here can be used by all tests in this test case.
 };
 
-TEST_F(ECLGridReaderTest, TestSomething) {
-    EXPECT_EQ(0,0);
+TEST_F(ECLGridReaderTest, ReadGrid) {
+    ecl_grid_reader->ReadEclGrid(file_name);
+    EXPECT_NE(0, ecl_grid_reader->ActiveCells());
 }
 
 }
