@@ -50,17 +50,19 @@ ECLGridReader::ECLGridReader()
             }
         }
 
-        int ECLGridReader::ConvertIJKToGlobalIndex(QVector3D ijk)
+        int ECLGridReader::ConvertIJKToGlobalIndex(ECLGridReader::IJKIndex ijk)
         {
             if (ecl_grid_ == 0) return 0; // Return 0 if the grid has not been read
-            return ecl_grid_get_global_index3(ecl_grid_, ijk.x(), ijk.y(), ijk.z());
+            return ecl_grid_get_global_index3(ecl_grid_, ijk.i, ijk.j, ijk.k);
         }
 
-        QVector3D ECLGridReader::ConvertGlobalIndexToIJK(int global_index)
+        ECLGridReader::IJKIndex ECLGridReader::ConvertGlobalIndexToIJK(int global_index)
         {
             int i, j, k;
             ecl_grid_get_ijk1(ecl_grid_, global_index, &i, &j, &k);
-            return QVector3D(i, j, k);
+            ECLGridReader::IJKIndex ijk;
+            ijk.i = i; ijk.j = j; ijk.k = k;
+            return ijk;
         }
 
         ECLGridReader::Dims ECLGridReader::Dimensions()

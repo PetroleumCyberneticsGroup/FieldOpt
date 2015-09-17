@@ -15,6 +15,35 @@ namespace ERTWrapper {
      */
     class ECLGridReader
     {
+    public:
+        /*!
+         * \brief The Dims struct holds the x,y and z dimensions of a grid.
+         */
+        struct Dims {
+            int nx, ny, nz;
+        };
+
+        /*!
+         * \brief The Cell struct represents a cell in the grid.
+         *
+         * The corners list contains all the corner points specifying the grid.
+         * The four first coordinates specifies the corners in the lower layer
+         * counter-clockwise, beginning in the lower left. The four last coordinates
+         * specifies the same for the upper layer.
+         */
+        struct Cell {
+            int global_index;
+            double volume;
+            QList<QVector3D*>* corners;
+            QVector3D* center;
+        };
+
+        struct IJKIndex {
+            int i;
+            int j;
+            int k;
+        };
+
     private:
         QString file_name_;
         ecl_grid_type* ecl_grid_;
@@ -36,21 +65,14 @@ namespace ERTWrapper {
          * \param ijk Zero-offset coordinates for a cell.
          * \return global index
          */
-        int ConvertIJKToGlobalIndex(QVector3D ijk);
+        int ConvertIJKToGlobalIndex(IJKIndex ijk);
 
         /*!
          * \brief ConvertGlobalIndexToIJK Converts a global index for a cell to the corresponding zero-offset (i,j,k) coordinates.
          * \param global_index Global index for a cell.
          * \return (i,j,k) Zero-offset coordinates
          */
-        QVector3D ConvertGlobalIndexToIJK(int global_index);
-
-        /*!
-         * \brief The Dims struct holds the x,y and z dimensions of a grid.
-         */
-        struct Dims {
-            int nx, ny, nz;
-        };
+        IJKIndex ConvertGlobalIndexToIJK(int global_index);
 
         /*!
          * \brief Dimensions returns the total dimensions of the grid that has been read.
@@ -62,21 +84,6 @@ namespace ERTWrapper {
          * \brief ActiveCells Number of active cells in the grid that has been read.
          */
         int ActiveCells();
-
-        /*!
-         * \brief The Cell struct represents a cell in the grid.
-         *
-         * The corners list contains all the corner points specifying the grid.
-         * The four first coordinates specifies the corners in the lower layer
-         * counter-clockwise, beginning in the lower left. The four last coordinates
-         * specifies the same for the upper layer.
-         */
-        struct Cell {
-            int global_index;
-            double volume;
-            QList<QVector3D*>* corners;
-            QVector3D* center;
-        };
 
         /*!
          * \brief GetGridCell get a Cell struct describing the cell with the specified global index.
