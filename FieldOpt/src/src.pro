@@ -77,7 +77,11 @@ HEADERS += \
     optimizers/gssalgorithm.h \
     optimizers/compasssearchoptimizer.h \
     optimizers/bookkeeper.h \
-    exceptionhandler/casehandler.h
+    exceptionhandler/casehandler.h \
+    model/grid/grid.h \
+    model/grid/cell.h \
+    model/grid/ijkcoordinate.h \
+    model/grid/xyzcoordinate.h
 
 SOURCES += \
     constraints/integerboundaryconstraint.cpp \
@@ -146,4 +150,8 @@ SOURCES += \
     utilities/posixutilities.cpp \
     optimizers/compasssearchoptimizer.cpp \
     optimizers/bookkeeper.cpp \
-    exceptionhandler/casehandler.cpp
+    exceptionhandler/casehandler.cpp \
+    model/grid/grid.cpp \
+    model/grid/cell.cpp \
+    model/grid/ijkcoordinate.cpp \
+    model/grid/xyzcoordinate.cpp
