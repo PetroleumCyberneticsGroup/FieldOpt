@@ -6,6 +6,9 @@
 
 using std::string;
 
+namespace Model {
+namespace Grid {
+
 class GridCellNotFoundException : public std::runtime_error {
 public:
     GridCellNotFoundException(const string& message)
@@ -17,5 +20,8 @@ public:
     GridSourceTypeNotDefinedException(const string& message)
         : std::runtime_error(message) {}
 };
+
+}
+}
 
 #endif // GRID_EXCEPTIONS_H
