@@ -81,7 +81,8 @@ HEADERS += \
     model/grid/grid.h \
     model/grid/cell.h \
     model/grid/ijkcoordinate.h \
-    model/grid/xyzcoordinate.h
+    model/grid/xyzcoordinate.h \
+    model/grid/grid_exceptions.h
 
 SOURCES += \
     constraints/integerboundaryconstraint.cpp \

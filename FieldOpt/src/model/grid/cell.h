@@ -21,10 +21,6 @@ private:
     QList<XYZCoordinate*> corners_;
 
 public:
-    /*!
-     * \brief Cell Empty constructor to be used to be indicate that no valid cell exists.
-     */
-    Cell();
     Cell(int global_index, IJKCoordinate* ijk_index, double volume, XYZCoordinate* center, QList<XYZCoordinate*> corners);
 };
 

@@ -57,17 +57,17 @@ public:
     /*!
      * \brief GetCell Get a cell from its (i,j,k) index.
      */
-    Cell GetCell(IJKCoordinate ijk_coord);
+    Cell GetCell(IJKCoordinate* ijk);
 
     /*!
-     * \brief GetCell Get the cell enveloping the point (x,y,z). Throws an exception if no cell is found.
+     * \brief GetCellEnvelopingPoint Get the cell enveloping the point (x,y,z). Throws an exception if no cell is found.
      */
-    Cell GetCell(double x, double y, double z);
+    Cell GetCellEnvelopingPoint(double x, double y, double z);
 
     /*!
-     * \brief GetCell Get the cell enveloping the point (x,y,z). Throws an exception if no cell is found.
+     * \brief GetCellEnvelopingPoint Get the cell enveloping the point (x,y,z). Throws an exception if no cell is found.
      */
-    Cell GetCell(XYZCoordinate xyz_coord);
+    Cell GetCellEnvelopingPoint(XYZCoordinate* xyz);
 };
 
 }

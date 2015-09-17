@@ -56,6 +56,12 @@ int ECLGridReader::ConvertIJKToGlobalIndex(ECLGridReader::IJKIndex ijk)
     return ecl_grid_get_global_index3(ecl_grid_, ijk.i, ijk.j, ijk.k);
 }
 
+int ECLGridReader::ConvertIJKToGlobalIndex(int i, int j, int k)
+{
+    if (ecl_grid_ == 0) return 0; // Return 0 if the grid has not been read
+    return ecl_grid_get_global_index3(ecl_grid_, i, j, k);
+}
+
 ECLGridReader::IJKIndex ECLGridReader::ConvertGlobalIndexToIJK(int global_index)
 {
     int i, j, k;

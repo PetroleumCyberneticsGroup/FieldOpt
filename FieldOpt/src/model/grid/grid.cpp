@@ -1,6 +1,10 @@
 #include "grid.h"
 #include <QVector3D>
 #include <QList>
+#include <iostream>
+#include <string>
+
+#include "grid_exceptions.h"
 
 namespace Model {
 namespace Grid {
@@ -32,12 +36,7 @@ Grid::Dims Grid::Dimensions()
         dims.nz = eclDims.nz;
         return dims;
     }
-    else {
-        dims.nx = 0;
-        dims.ny = 0;
-        dims.nz = 0;
-        return dims;
-    }
+    else throw GridCellNotFoundException("Grid source must be defined before getting grid dimensions.");
 }
 
 Cell Grid::GetCell(int global_index)
@@ -46,8 +45,8 @@ Cell Grid::GetCell(int global_index)
         ERTWrapper::ECLGrid::ECLGridReader::Cell ertCell = ecl_grid_reader_->GetGridCell(global_index);
 
         // Get IJK index
-        QVector3D ijk_index_real = ecl_grid_reader_->ConvertGlobalIndexToIJK(global_index);
-        IJKCoordinate* ijk_index = new IJKCoordinate(ijk_index_real.x(), ijk_index_real.y(), ijk_index_real.z());
+        ERTWrapper::ECLGrid::ECLGridReader::IJKIndex ecl_ijk_index = ecl_grid_reader_->ConvertGlobalIndexToIJK(global_index);
+        IJKCoordinate* ijk_index = new IJKCoordinate(ecl_ijk_index.i, ecl_ijk_index.j, ecl_ijk_index.k);
 
         // Get center coordinates
         XYZCoordinate* center = new XYZCoordinate(ertCell.center->x(), ertCell.center->y(), ertCell.center->z());
@@ -62,10 +61,42 @@ Cell Grid::GetCell(int global_index)
         }
         return Cell(global_index, ijk_index, ertCell.volume, center, corners);
     }
-    else {
-        return Cell();
-    }
+    else throw GridCellNotFoundException("Grid source must be defined before getting a cell.");
 }
+
+Cell Grid::GetCell(int i, int j, int k)
+{
+    if (type_ == GridSourceType::ECLIPSE) {
+        int global_index = ecl_grid_reader_->ConvertIJKToGlobalIndex(i, j, k);
+        return GetCell(global_index);
+    }
+    else throw GridCellNotFoundException("Grid source must be defined before getting a cell.");
+}
+
+Cell Grid::GetCell(IJKCoordinate *ijk)
+{
+    if (type_ == GridSourceType::ECLIPSE) {
+        int global_index = ecl_grid_reader_->ConvertIJKToGlobalIndex(ijk->i(), ijk->j(), ijk->k());
+        return GetCell(global_index);
+    }
+    else throw GridCellNotFoundException("Grid source must be defined before getting a cell.");
+}
+
+Cell Grid::GetCellEnvelopingPoint(double x, double y, double z)
+{
+    int global_index = ecl_grid_reader_->GlobalIndexOfCellEnvelopingPoint(x, y ,z);
+    if (global_index == -1) {
+        throw GridCellNotFoundException("No grid cell found enveloping point.");
+    }
+    return GetCell(global_index);
+}
+
+Cell Grid::GetCellEnvelopingPoint(XYZCoordinate *xyz)
+{
+    return GetCellEnvelopingPoint(xyz->x(), xyz->y(), xyz->z());
+}
+
+
 
 
 

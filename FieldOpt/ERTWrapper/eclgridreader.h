@@ -66,6 +66,7 @@ public:
          * \return global index
          */
     int ConvertIJKToGlobalIndex(IJKIndex ijk);
+    int ConvertIJKToGlobalIndex(int i, int j, int k);
 
     /*!
          * \brief ConvertGlobalIndexToIJK Converts a global index for a cell to the corresponding zero-offset (i,j,k) coordinates.
