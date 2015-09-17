@@ -44,5 +44,16 @@ libs/*
 # Manually compiled program
 build/*
 
-# Ignore changes in the examples directory
-examples/*
+# Ignore ECLIPSE output files
+*.DBG
+*.ECLEND
+*.EGRID
+*.GRID
+*.INIT
+*.INSPEC
+*.MSG
+*.PRT
+*.RSSPEC
+*.SMSPEC
+*.UNRST
+*.UNSMRY

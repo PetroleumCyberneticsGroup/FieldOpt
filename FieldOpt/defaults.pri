@@ -1,2 +1,3 @@
 INCLUDEPATH += $$PWD/src
+INCLUDEPATH += $$PWD/ERTWrapper
 SRC_DIR = $$PWD
