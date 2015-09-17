@@ -6,6 +6,8 @@ The ECLIPSE libraries from ERT must be installed in order to compile this librar
 
 ## Implemented Functionality
 
+### ECLGridReader
+
 General operations:
 
 * Read grid from ECLIPSE .GRID or .EGRID files.
@@ -19,11 +21,5 @@ Cell operations:
 * Get cell center from global index.
 * Convert global index to i,j,k
 * Convert i,j,k to global index
-
-
-
-## Upcoming Functionality
-
-Cell operations:
-
-* Given a point (x,y,z), get the cell encompasing this point.
+* Given a point (x,y,z), get the cell enveloping this point.
+* Get cell volume

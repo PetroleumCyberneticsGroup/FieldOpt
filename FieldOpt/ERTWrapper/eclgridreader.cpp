@@ -3,8 +3,31 @@
 #include <iostream>
 
 namespace ERTWrapper {
-    namespace ECLGrid {
-        ECLGridReader::ECLGridReader()
+namespace ECLGrid {
+QVector3D* ECLGridReader::GetCellCenter(int global_index)
+{
+    double cx, cy, cz;
+    ecl_grid_get_xyz1(ecl_grid_, global_index, &cx, &cy, &cz);
+    return new QVector3D(cx, cy, cz);
+}
+
+QList<QVector3D *> *ECLGridReader::GetCellCorners(int global_index)
+{
+    QList<QVector3D*>* corners = new QList<QVector3D*>();
+    for (int i = 0; i < 8; ++i) {
+        double x, y, z;
+        ecl_grid_get_cell_corner_xyz1(ecl_grid_, global_index, i, &x, &y, &z);
+        corners->append(new QVector3D(x, y, z));
+    }
+    return corners;
+}
+
+double ECLGridReader::GetCellVolume(int global_index)
+{
+    return ecl_grid_get_cell_volume1(ecl_grid_, global_index);
+}
+
+ECLGridReader::ECLGridReader()
         {
             ecl_grid_ = 0;
         }
@@ -63,21 +86,15 @@ namespace ERTWrapper {
         {
             ECLGridReader::Cell cell;
             cell.global_index = global_index;
-
-            // Get corners
-            cell.corners = new QList<QVector3D*>();
-            for (int i = 0; i < 8; ++i) {
-                double x, y, z;
-                ecl_grid_get_cell_corner_xyz1(ecl_grid_, global_index, i, &x, &y, &z);
-                cell.corners->append(new QVector3D(x, y, z));
-            }
-
-            // Get center
-            double cx, cy, cz;
-            ecl_grid_get_xyz1(ecl_grid_, global_index, &cx, &cy, &cz);
-            cell.center = new QVector3D(cx, cy, cz);
-
+            cell.volume = GetCellVolume(global_index);
+            cell.corners = GetCellCorners(global_index);
+            cell.center = GetCellCenter(global_index);
             return cell;
+        }
+
+        int ECLGridReader::GlobalIndexOfCellEnvelopingPoint(double x, double y, double z, int initial_guess)
+        {
+            return ecl_grid_get_global_index_from_xyz(ecl_grid_, x, y, z, initial_guess);
         }
 
 

@@ -73,6 +73,16 @@ TEST_F(ECLGridReaderTest, GetCell) {
     EXPECT_EQ(cell.corners->at(0)->x(), 100);
     EXPECT_EQ(cell.corners->at(7)->z(), 7050);
     EXPECT_EQ(cell.center->x(), 150);
+    EXPECT_EQ(cell.volume, 1.5e+06);
+}
+
+TEST_F(ECLGridReaderTest, GlobalIndexOfCellEncompasingPoint) {
+    int global_index_1 = ecl_grid_reader_->GlobalIndexOfCellEnvelopingPoint(125, 50, 7010, 1); // Should be 1
+    int global_index_2 = ecl_grid_reader_->GlobalIndexOfCellEnvelopingPoint(700, 800, 7100, 0); // Should be inside grid
+    int global_index_3 = ecl_grid_reader_->GlobalIndexOfCellEnvelopingPoint(0, 0, 0, 0); // Should be outside grid
+    EXPECT_EQ(global_index_1, 1);
+    EXPECT_GT(global_index_2, -1);
+    EXPECT_EQ(global_index_3, -1);
 }
 
 }

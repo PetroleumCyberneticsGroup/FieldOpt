@@ -18,6 +18,9 @@ namespace ERTWrapper {
     private:
         QString file_name_;
         ecl_grid_type* ecl_grid_;
+        QVector3D* GetCellCenter(int global_index);
+        QList<QVector3D*>* GetCellCorners(int global_index);
+        double GetCellVolume(int global_index);
     public:
         ECLGridReader();
         virtual ~ECLGridReader(); //!< Frees the grid object if it has been set.
@@ -70,6 +73,7 @@ namespace ERTWrapper {
          */
         struct Cell {
             int global_index;
+            double volume;
             QList<QVector3D*>* corners;
             QVector3D* center;
         };
@@ -80,6 +84,21 @@ namespace ERTWrapper {
          * \return Cell struct.
          */
         Cell GetGridCell(int global_index);
+
+        /*!
+         * \brief GetGlobalIndexOfCellContainingPoint Gets the global index of any cell that envelops/contains the point (x,y,z).
+         *
+         * Searches the grid to check whether any cell envelops the point (x,y,z).
+         * If one is found, the global index is returned; if not, -1 is returned.
+         * An initial guess may be provided: the search will start from/around this global index. If no guess is
+         * provided the search will start at the global index 0.
+         * \param x coordinate in x-direction.
+         * \param y coordinate in y-direction.
+         * \param z coordinate in z-direction.
+         * \param initial_guess (optional) Global index to start search at/around
+         * \return Global index or -1.
+         */
+        int GlobalIndexOfCellEnvelopingPoint(double x, double y, double z, int initial_guess=0);
     };
     }
 }
