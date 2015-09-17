@@ -45,17 +45,22 @@ TEST_F(ECLGridReaderTest, ReadGrid) {
 }
 
 TEST_F(ECLGridReaderTest, ConvertIJKToGlobalIndex) {
-    int global_index1 = ecl_grid_reader_->ConvertIJKToGlobalIndex(QVector3D(0, 0, 0));
-    int global_index2 = ecl_grid_reader_->ConvertIJKToGlobalIndex(QVector3D(1, 0, 0));
+    ECLGridReader::IJKIndex index_1;
+    index_1.i = 0; index_1.j = 0; index_1.k = 0;
+    int global_index1 = ecl_grid_reader_->ConvertIJKToGlobalIndex(index_1);
     EXPECT_EQ(global_index1, 0);
+
+    ECLGridReader::IJKIndex index_2;
+    index_2.i = 1; index_2.j = 0; index_2.k = 0;
+    int global_index2 = ecl_grid_reader_->ConvertIJKToGlobalIndex(index_2);
     EXPECT_EQ(global_index2, 1);
 }
 
 TEST_F(ECLGridReaderTest, ConvertGlobalIndexToIJK) {
-    QVector3D ijk1 = ecl_grid_reader_->ConvertGlobalIndexToIJK(0);
-    QVector3D ijk2 = ecl_grid_reader_->ConvertGlobalIndexToIJK(1);
-    EXPECT_EQ(ijk1.x(), 0); EXPECT_EQ(ijk1.y(), 0); EXPECT_EQ(ijk1.z(), 0);
-    EXPECT_EQ(ijk2.x(), 1); EXPECT_EQ(ijk2.y(), 0); EXPECT_EQ(ijk2.z(), 0);
+    ECLGridReader::IJKIndex ijk1 = ecl_grid_reader_->ConvertGlobalIndexToIJK(0);
+    ECLGridReader::IJKIndex ijk2 = ecl_grid_reader_->ConvertGlobalIndexToIJK(1);
+    EXPECT_EQ(ijk1.i, 0); EXPECT_EQ(ijk1.j, 0); EXPECT_EQ(ijk1.k, 0);
+    EXPECT_EQ(ijk2.i, 1); EXPECT_EQ(ijk2.j, 0); EXPECT_EQ(ijk2.k, 0);
 }
 
 TEST_F(ECLGridReaderTest, CheckDimensions) {
