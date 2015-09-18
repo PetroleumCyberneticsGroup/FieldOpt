@@ -5,6 +5,7 @@
 
 #include "Library/model/grid/test_grid.cpp"
 #include "Library/model/grid/test_ijkcoordinate.cpp"
+#include "Library/model/grid/test_xyzcoordinate.cpp"
 #include "Library/model/grid/test_cell.cpp"
 
 using namespace std;
