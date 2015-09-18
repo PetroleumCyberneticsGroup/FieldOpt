@@ -9,7 +9,8 @@ TEMPLATE = lib
 TARGET = ertwrapper
 
 HEADERS += \
-    eclgridreader.h
+    eclgridreader.h \
+    ertwrapper_exceptions.h
 
 SOURCES += \
     eclgridreader.cpp

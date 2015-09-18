@@ -2,6 +2,8 @@
 #include <math.h>
 #include <iostream>
 
+#include "ertwrapper_exceptions.h"
+
 namespace ERTWrapper {
 namespace ECLGrid {
 QVector3D* ECLGridReader::GetCellCenter(int global_index)
@@ -52,12 +54,19 @@ void ECLGridReader::ReadEclGrid(QString file_name)
 
 int ECLGridReader::ConvertIJKToGlobalIndex(ECLGridReader::IJKIndex ijk)
 {
-    if (ecl_grid_ == 0) return 0; // Return 0 if the grid has not been read
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before converting indices.");
     return ecl_grid_get_global_index3(ecl_grid_, ijk.i, ijk.j, ijk.k);
+}
+
+int ECLGridReader::ConvertIJKToGlobalIndex(int i, int j, int k)
+{
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before converting indices.");
+    return ecl_grid_get_global_index3(ecl_grid_, i, j, k);
 }
 
 ECLGridReader::IJKIndex ECLGridReader::ConvertGlobalIndexToIJK(int global_index)
 {
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before converting indices.");
     int i, j, k;
     ecl_grid_get_ijk1(ecl_grid_, global_index, &i, &j, &k);
     ECLGridReader::IJKIndex ijk;
@@ -68,10 +77,7 @@ ECLGridReader::IJKIndex ECLGridReader::ConvertGlobalIndexToIJK(int global_index)
 ECLGridReader::Dims ECLGridReader::Dimensions()
 {
     ECLGridReader::Dims dims;
-    if (ecl_grid_ == 0) {
-        dims.nx = 0; dims.ny = 0; dims.nz = 0;
-        return dims;
-    }
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting dimensions.");
     int x, y, z;
     ecl_grid_get_dims(ecl_grid_, &x, &y, &z, NULL);
     dims.nx = x; dims.ny = y; dims.nz = z;
@@ -80,12 +86,13 @@ ECLGridReader::Dims ECLGridReader::Dimensions()
 
 int ECLGridReader::ActiveCells()
 {
-    if (ecl_grid_ == 0) return 0; // Return 0 if the grid has not been read
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before gettign active cells.");
     else return ecl_grid_get_nactive(ecl_grid_);
 }
 
 ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index)
 {
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting grid cells.");
     ECLGridReader::Cell cell;
     cell.global_index = global_index;
     cell.volume = GetCellVolume(global_index);
@@ -96,6 +103,7 @@ ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index)
 
 int ECLGridReader::GlobalIndexOfCellEnvelopingPoint(double x, double y, double z, int initial_guess)
 {
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before searching for cells.");
     return ecl_grid_get_global_index_from_xyz(ecl_grid_, x, y, z, initial_guess);
 }
 

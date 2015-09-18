@@ -27,10 +27,16 @@ public:
          * \brief The Cell struct represents a cell in the grid.
          *
          * The corners list contains all the corner points specifying the grid.
-         * The four first coordinates specifies the corners in the lower layer
-         * counter-clockwise, beginning in the lower left. The four last coordinates
-         * specifies the same for the upper layer.
-         */
+         * The first four elements represent the corners in the lower layer,
+         * the four last represent the corners in the top layer:
+         *
+         * Bottom:  Top:
+         * 2---3    6---7
+         * |   |    |   |
+         * 0---1    4---5
+         *
+         * Bottom and Top here refers to z-values.
+    */
     struct Cell {
         int global_index;
         double volume;
@@ -66,6 +72,7 @@ public:
          * \return global index
          */
     int ConvertIJKToGlobalIndex(IJKIndex ijk);
+    int ConvertIJKToGlobalIndex(int i, int j, int k);
 
     /*!
          * \brief ConvertGlobalIndexToIJK Converts a global index for a cell to the corresponding zero-offset (i,j,k) coordinates.

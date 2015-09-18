@@ -9,4 +9,8 @@ LIBS += -L../ERTWrapper -lertwrapper
 LIBS += -lpthread -lgtest -pthread
 SOURCES += \
     gtest_main.cpp \
-    ERTWrapper/test_eclgridreader.cpp
+    ERTWrapper/test_eclgridreader.cpp \
+    Library/model/grid/test_grid.cpp \
+    Library/model/grid/test_ijkcoordinate.cpp \
+    Library/model/grid/test_cell.cpp \
+    Library/model/grid/test_xyzcoordinate.cpp
