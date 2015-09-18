@@ -26,6 +26,20 @@ Grid::~Grid()
         delete ecl_grid_reader_;
 }
 
+bool Grid::IndexIsInsideGrid(int global_index) {
+    return global_index >= 0 && global_index < (Dimensions().nx*Dimensions().ny*Dimensions().nz);
+}
+
+bool Grid::IndexIsInsideGrid(int i, int j, int k) {
+    return i >= 0 && i < Dimensions().nx &&
+            j >= 0 && j < Dimensions().ny &&
+            k >= 0 && k < Dimensions().nz;
+}
+
+bool Grid::IndexIsInsideGrid(IJKCoordinate *ijk) {
+    return IndexIsInsideGrid(ijk->i(), ijk->j(), ijk->k());
+}
+
 Grid::Dims Grid::Dimensions()
 {
     Dims dims;
@@ -41,6 +55,7 @@ Grid::Dims Grid::Dimensions()
 
 Cell Grid::GetCell(int global_index)
 {
+    if (!IndexIsInsideGrid(global_index)) throw CellIndexOutsideGridException("Global index is outside grid.");
     if (type_ == GridSourceType::ECLIPSE) {
         ERTWrapper::ECLGrid::ECLGridReader::Cell ertCell = ecl_grid_reader_->GetGridCell(global_index);
 
@@ -66,6 +81,7 @@ Cell Grid::GetCell(int global_index)
 
 Cell Grid::GetCell(int i, int j, int k)
 {
+    if (!IndexIsInsideGrid(i, j, k)) throw CellIndexOutsideGridException("Index (i, j, k) is outside grid.");
     if (type_ == GridSourceType::ECLIPSE) {
         int global_index = ecl_grid_reader_->ConvertIJKToGlobalIndex(i, j, k);
         return GetCell(global_index);
@@ -75,6 +91,7 @@ Cell Grid::GetCell(int i, int j, int k)
 
 Cell Grid::GetCell(IJKCoordinate *ijk)
 {
+    if (!IndexIsInsideGrid(ijk)) throw CellIndexOutsideGridException("Index ijk is outside grid.");
     if (type_ == GridSourceType::ECLIPSE) {
         int global_index = ecl_grid_reader_->ConvertIJKToGlobalIndex(ijk->i(), ijk->j(), ijk->k());
         return GetCell(global_index);

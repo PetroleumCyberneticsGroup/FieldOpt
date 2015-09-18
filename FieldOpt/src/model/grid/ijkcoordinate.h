@@ -5,8 +5,8 @@ namespace Model {
 namespace Grid {
 
 /*!
- * \brief The IJKCoordinate class represents an integer-based (I,J,K) coordinate. Note that all IJK coordinates
- * must be positive.
+ * \brief The IJKCoordinate class represents an integer-based (I,J,K) coordinate or index.
+ * All IJK coordinates must be positive.
  */
 class IJKCoordinate
 {
@@ -21,6 +21,9 @@ public:
     int i() const { return i_; }
     int j() const { return j_; }
     int k() const { return k_;}
+
+    bool operator==(const IJKCoordinate &other);
+    bool operator!=(const IJKCoordinate &other);
 };
 
 }

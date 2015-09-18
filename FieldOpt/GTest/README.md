@@ -5,6 +5,14 @@ Test are as of sept. 2015 created using the Google Test framework.
 Directions for setting up the library on Ubuntu and creating simple tests
 may be found at http://www.eriksmistad.no/getting-started-with-google-test-on-ubuntu/
 
+## Test Assets
+
+### ECLIPSE HORZWELL Model
+This is a reservoir model with a 20x9x9 grid, spanning
+* x = [0:2000]
+* y = [0:990]
+* z = [7000:7275]
+
 ## GTest Boilerplate
 
 This boilerplate code is taken from https://code.google.com/p/googletest/wiki/Primer

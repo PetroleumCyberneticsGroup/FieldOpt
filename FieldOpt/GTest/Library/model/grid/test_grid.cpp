@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "model/grid/grid.h"
+#include "model/grid/grid_exceptions.h"
 #include "model/grid/cell.h"
 
 using namespace Model::Grid;
@@ -60,6 +61,14 @@ TEST_F(GridTest, GetCellByIJKObject) {
     IJKCoordinate *ijk = new IJKCoordinate(2, 0, 0);
     Cell cell = grid_->GetCell(ijk);
     EXPECT_EQ(cell.global_index(), 2);
+}
+
+TEST_F(GridTest, AttemptGetCellWithIndexOutsideGrid) {
+    EXPECT_THROW(grid_->GetCell(20,10,10), CellIndexOutsideGridException);
+}
+
+TEST_F(GridTest, AttemptFindCellOutsideGrid) {
+    EXPECT_THROW(grid_->GetCellEnvelopingPoint(100.0f, 1000.0, 7100.0), GridCellNotFoundException);
 }
 
 TEST_F(GridTest, GetCellEnvelopingPoint) {

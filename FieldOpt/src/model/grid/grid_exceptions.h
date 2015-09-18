@@ -15,6 +15,12 @@ public:
         : std::runtime_error(message) {}
 };
 
+class CellIndexOutsideGridException : public std::runtime_error {
+public:
+    CellIndexOutsideGridException(const string& message)
+        : std::runtime_error(message) {}
+};
+
 class GridSourceTypeNotDefinedException : public std::runtime_error {
 public:
     GridSourceTypeNotDefinedException(const string& message)

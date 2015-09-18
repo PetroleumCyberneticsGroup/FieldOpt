@@ -33,6 +33,9 @@ private:
     GridSourceType type_;
     QString file_path_;
     ERTWrapper::ECLGrid::ECLGridReader* ecl_grid_reader_ = 0;
+    bool IndexIsInsideGrid(int global_index); //!< Check that global_index is less than nx*ny*nz
+    bool IndexIsInsideGrid(int i, int j, int k); //!< Check that (i,j,k) are >= 0 and less than n*.
+    bool IndexIsInsideGrid(IJKCoordinate *ijk); //!< Check that (i,j,k) are >= 0 and less than n*.
 
 public:
     Grid(GridSourceType type, QString file_path);

@@ -14,5 +14,15 @@ IJKCoordinate::IJKCoordinate(int i, int j, int k)
     k_ = k;
 }
 
+bool IJKCoordinate::operator==(const IJKCoordinate &other)
+{
+    return i_ == other.i() && j_ == other.j() && k_ == other.k();
+}
+
+bool IJKCoordinate::operator!=(const IJKCoordinate &other)
+{
+    return i_ != other.i() || j_ != other.j() || k_ != other.k();
+}
+
 }
 }
