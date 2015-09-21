@@ -5,10 +5,23 @@ Test are as of sept. 2015 created using the Google Test framework.
 Directions for setting up the library on Ubuntu and creating simple tests
 may be found at http://www.eriksmistad.no/getting-started-with-google-test-on-ubuntu/
 
+## Writing And Running Tests
+
+Main guidelines:
+
+* Each new class should have a set of tests.
+* Tests for each class should be in a separate file named `test_classname.cpp` in a directory reflecting the class' placement in the project tree. For example, the tests for the `Grid` class located in `Library/model/grid/grid.*` should have its tests located in /GTest/Library/model/grid/test_grid.cpp`.
+* Tests should be written by using fixtures. See the boilerplate code in the end of this readme for an example, or look at the `test_grid.cpp` file.
+
+Each of the separate should be included in the main test file `gtest_main.cpp`.
+
+Tests are run by executing the `run_tests.sh` script.
+
 ## Test Assets
 
 ### ECLIPSE HORZWELL Model
-This is a reservoir model with a 20x9x9 grid, spanning
+
+The HORZWELL model found in `examples/ECLIPSE/HORZWELL` is a reservoir model with a 20x9x9 grid, spanning
 * x = [0:2000]
 * y = [0:990]
 * z = [7000:7275]
