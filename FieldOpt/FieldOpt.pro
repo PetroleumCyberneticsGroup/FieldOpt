@@ -1,15 +1,15 @@
 TEMPLATE = subdirs
-CONFIG+=ordered
 CONFIG += c++11
-SUBDIRS = \
-    src \
-    Console \  #\
-    ERTWrapper \
-    GTest
-    #tests
 
-Console.depends = src
-tests.depends = src
+SUBDIRS = \
+    ERTWrapper \
+    Library \
+    Console \
+    GTest
+
+Library.depends = ERTWrapper
+GTest.depends = ERTWrapper Library
+Console.depends = ERTWrapper Library
 
 OTHER_FILES += \
     defaults.pri \
