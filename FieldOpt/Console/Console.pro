@@ -21,7 +21,7 @@ QMAKE_CXXFLAGS += $$system(mpicxx --showme:compile) -DMPICH_IGNORE_CXX_SEEK
 QMAKE_CXXFLAGS_RELEASE += $$system(mpicxx --showme:compile) -DMPICH_IGNORE_CXX_SEEK
 
 LIBS += -lboost_mpi -lboost_serialization
-LIBS += -L../src -lfieldopt
+LIBS += -L../Library -lfieldopt -L../ERTWrapper -lertwrapper
 
 
 TEMPLATE = app

@@ -3,7 +3,6 @@ QT       += core
 CONFIG   += console
 CONFIG   -= app_bundle
 CONFIG += c++11
-LIBS += -L../src -lfieldopt
 LIBS += -lecl -lutil
 TEMPLATE = lib
 TARGET = ertwrapper
