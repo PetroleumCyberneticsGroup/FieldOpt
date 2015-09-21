@@ -4,9 +4,13 @@ This subproject defines a wrapper for ERT (https://github.com/Ensembles/ert) dev
 
 The ECLIPSE libraries from ERT must be installed in order to compile this library.
 
+
+
 ## Implemented Functionality
 
 ### ECLGridReader
+
+This wrapper should not be used directly by applications. A `Grid` class that uses it has been created in `Library/model/grid`.
 
 General operations:
 
