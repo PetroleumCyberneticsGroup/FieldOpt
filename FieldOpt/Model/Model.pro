@@ -1,7 +1,10 @@
 include(../defaults.pri)
 
+
 CONFIG   -= app_bundle
 CONFIG += c++11
+
+LIBS += -L../ERTWrapper -lertwrapper
 
 TEMPLATE = lib
 
@@ -13,7 +16,12 @@ HEADERS += \
     reservoir/reservoir.h \
     schedule/schedule.h \
     objective/objective.h \
-    variables/variable.h
+    variables/variable.h \
+    reservoir/grid/cell.h \
+    reservoir/grid/grid.h \
+    reservoir/grid/grid_exceptions.h \
+    reservoir/grid/ijkcoordinate.h \
+    reservoir/grid/xyzcoordinate.h
 
 SOURCES += \
     model.cpp \
@@ -21,4 +29,8 @@ SOURCES += \
     reservoir/reservoir.cpp \
     schedule/schedule.cpp \
     objective/objective.cpp \
-    variables/variable.cpp
+    variables/variable.cpp \
+    reservoir/grid/cell.cpp \
+    reservoir/grid/grid.cpp \
+    reservoir/grid/ijkcoordinate.cpp \
+    reservoir/grid/xyzcoordinate.cpp

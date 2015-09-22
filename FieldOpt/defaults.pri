@@ -1,3 +1,3 @@
-INCLUDEPATH += $$PWD/Library
 INCLUDEPATH += $$PWD/ERTWrapper
+INCLUDEPATH += $$PWD/Model
 SRC_DIR = $$PWD
