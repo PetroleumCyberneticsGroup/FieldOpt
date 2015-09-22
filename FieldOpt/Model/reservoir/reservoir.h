@@ -26,13 +26,20 @@
 #ifndef RESERVOIR_H
 #define RESERVOIR_H
 
+#include "grid/grid.h"
+
 namespace Model {
 namespace Reservoir {
 
 class Reservoir
 {
+private:
+    Grid::Grid* grid_;
+
 public:
     Reservoir();
+
+    Grid::Grid* grid() const { return grid_; }
 };
 
 }
