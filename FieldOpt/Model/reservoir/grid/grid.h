@@ -5,7 +5,7 @@
 #include "cell.h"
 #include "ijkcoordinate.h"
 #include "xyzcoordinate.h"
-#include "eclgridreader.h"
+#include "ERTWrapper/eclgridreader.h"
 
 namespace Model {
 namespace Reservoir {

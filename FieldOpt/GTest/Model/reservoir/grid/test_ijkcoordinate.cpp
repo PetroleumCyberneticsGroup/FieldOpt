@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
-#include "model/grid/ijkcoordinate.h"
+#include "Model/reservoir/grid/ijkcoordinate.h"
 
-using namespace Model::Grid;
+using namespace Model::Reservoir::Grid;
 
 namespace {
 

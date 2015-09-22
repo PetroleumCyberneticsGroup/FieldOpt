@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <QVector3D>
 #include <iostream>
-#include "eclgridreader.h"
+#include "ERTWrapper/eclgridreader.h"
 
 using namespace ERTWrapper::ECLGrid;
 

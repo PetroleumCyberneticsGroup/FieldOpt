@@ -4,13 +4,13 @@ TEMPLATE = app
 CONFIG += console
 CONFIG -= app_bundle
 CONFIG += c++11
-LIBS += -L../Library -lfieldopt
+LIBS += -L../Model -lmodel
 LIBS += -L../ERTWrapper -lertwrapper
 LIBS += -lpthread -lgtest -pthread
 SOURCES += \
     gtest_main.cpp \
     ERTWrapper/test_eclgridreader.cpp \
-    Library/model/grid/test_grid.cpp \
-    Library/model/grid/test_ijkcoordinate.cpp \
-    Library/model/grid/test_cell.cpp \
-    Library/model/grid/test_xyzcoordinate.cpp
+    Model/reservoir/grid/test_cell.cpp \
+    Model/reservoir/grid/test_grid.cpp \
+    Model/reservoir/grid/test_ijkcoordinate.cpp \
+    Model/reservoir/grid/test_xyzcoordinate.cpp

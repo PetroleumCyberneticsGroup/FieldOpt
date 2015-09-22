@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
 #include <QList>
-#include "model/grid/grid.h"
-#include "model/grid/grid_exceptions.h"
-#include "model/grid/cell.h"
+#include "Model/reservoir/grid/grid.h"
+#include "Model/reservoir/grid/grid_exceptions.h"
+#include "Model/reservoir/grid/cell.h"
 
-using namespace Model::Grid;
+using namespace Model::Reservoir::Grid;
 
 namespace {
 

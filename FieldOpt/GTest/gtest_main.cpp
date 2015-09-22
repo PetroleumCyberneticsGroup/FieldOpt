@@ -3,10 +3,10 @@
 
 #include "ERTWrapper/test_eclgridreader.cpp"
 
-#include "Library/model/grid/test_grid.cpp"
-#include "Library/model/grid/test_ijkcoordinate.cpp"
-#include "Library/model/grid/test_xyzcoordinate.cpp"
-#include "Library/model/grid/test_cell.cpp"
+#include "Model/reservoir/grid/test_grid.cpp"
+#include "Model/reservoir/grid/test_ijkcoordinate.cpp"
+#include "Model/reservoir/grid/test_xyzcoordinate.cpp"
+#include "Model/reservoir/grid/test_cell.cpp"
 
 using namespace std;
 
