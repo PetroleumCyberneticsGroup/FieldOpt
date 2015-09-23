@@ -37,13 +37,13 @@ IntegerVariable::IntegerVariable(int value)
 
 void IntegerVariable::setValue(int value)
 {
-    if (IsLocked()) throw VariableLockedException("Cannot change locked integer variable.");
+    if (IsLocked()) throw VariableLockedException("Cant change locked integer variable.");
     else value_ = value;
 }
 
 void IntegerVariable::Add(int i)
 {
-    if (IsLocked()) throw VariableLockedException("Cannot add to a locked integer variable");
+    if (IsLocked()) throw VariableLockedException("Cant add to a locked integer variable");
     else value_ += i;
 }
 

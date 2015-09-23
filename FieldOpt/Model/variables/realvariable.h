@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- * variable.h
+ * realvariable.h
  *
- * Created: 22.09.2015 2015 by einar
+ * Created: 23.09.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,36 +23,38 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef VARIABLE_H
-#define VARIABLE_H
+#ifndef REALVARIABLE_H
+#define REALVARIABLE_H
 
-#include "variable_exceptions.h"
+#include "variable.h"
 
 namespace Model {
 namespace Variables {
 
-/*!
- * \brief The Variable class is an abstract class implemented by
- * specific variables types, i.e. integer, real and binary.
- */
-class Variable
+class RealVariable : public Variable
 {
 public:
-    enum Type { Integer, Real, Binary };
+    RealVariable(double value);
 
-    bool IsLocked() const { return locked_; }
-    void Lock() { locked_ = true; }
-    void Unlock() { locked_ = false; }
+    double value() const { return value_; }
+    void setValue(double value);
 
-protected:
-    Variable(Type type) { type_ = type; locked_ = false; }
+    void Add(double d); //!< Add d to the value of this variable.
+
+    /*!
+     * \brief Equals checks whether the value of of this variable is equal to
+     * the value of another variable, optionally within some tolerance.
+     * \param other The variable to compare this to.
+     * \param epsilon Optional tolerance. Default: 0.0
+     * \return True if abs(this->value() - other->value()) <= epsilon; otherwise false.
+     */
+    bool Equals(RealVariable *other, double epsilon=0.0);
 
 private:
-    Type type_;
-    bool locked_;
+    double value_;
 };
 
 }
 }
 
-#endif // VARIABLE_H
+#endif // REALVARIABLE_H

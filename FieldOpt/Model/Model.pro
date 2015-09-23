@@ -23,7 +23,9 @@ HEADERS += \
     reservoir/grid/ijkcoordinate.h \
     reservoir/grid/xyzcoordinate.h \
     variables/integervariable.h \
-    variables/variable_exceptions.h
+    variables/variable_exceptions.h \
+    variables/realvariable.h \
+    variables/binaryvariable.h
 
 SOURCES += \
     model.cpp \
@@ -35,4 +37,6 @@ SOURCES += \
     reservoir/grid/grid.cpp \
     reservoir/grid/ijkcoordinate.cpp \
     reservoir/grid/xyzcoordinate.cpp \
-    variables/integervariable.cpp
+    variables/integervariable.cpp \
+    variables/realvariable.cpp \
+    variables/binaryvariable.cpp

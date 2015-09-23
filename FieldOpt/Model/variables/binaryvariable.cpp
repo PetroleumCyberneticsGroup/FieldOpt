@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- * variable.h
+ * binaryvariable.cpp
  *
- * Created: 22.09.2015 2015 by einar
+ * Created: 23.09.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,36 +23,17 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef VARIABLE_H
-#define VARIABLE_H
-
-#include "variable_exceptions.h"
+#include "binaryvariable.h"
 
 namespace Model {
 namespace Variables {
 
-/*!
- * \brief The Variable class is an abstract class implemented by
- * specific variables types, i.e. integer, real and binary.
- */
-class Variable
+void BinaryVariable::setValue(bool value)
 {
-public:
-    enum Type { Integer, Real, Binary };
+    if (IsLocked()) throw VariableLockedException("Cant change value of locked binary variable.");
+    else value_ = value;
+}
 
-    bool IsLocked() const { return locked_; }
-    void Lock() { locked_ = true; }
-    void Unlock() { locked_ = false; }
-
-protected:
-    Variable(Type type) { type_ = type; locked_ = false; }
-
-private:
-    Type type_;
-    bool locked_;
-};
 
 }
 }
-
-#endif // VARIABLE_H
