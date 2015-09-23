@@ -14,4 +14,5 @@ SOURCES += \
     Model/reservoir/grid/test_grid.cpp \
     Model/reservoir/grid/test_ijkcoordinate.cpp \
     Model/reservoir/grid/test_xyzcoordinate.cpp \
-    Model/variables/test_variables.cpp
+    Model/variables/test_variables.cpp \
+    Model/variables/test_variablecontainer.cpp

@@ -25,6 +25,31 @@
 
 #include "variablecontainer.h"
 
+namespace Model {
+namespace Variables {
+
 VariableContainer::VariableContainer()
 {
+    binary_variables_ = new QList<BinaryVariable *>();
+    integer_variables_ = new QList<IntegerVariable *>();
+    real_variables_ = new QList<RealVariable *>();
+}
+
+void VariableContainer::AddVariable(BinaryVariable *var)
+{
+    binary_variables_->append(var);
+}
+
+void VariableContainer::AddVariable(IntegerVariable *var)
+{
+    integer_variables_->append(var);
+}
+
+void VariableContainer::AddVariable(RealVariable *var)
+{
+    real_variables_->append(var);
+}
+
+
+}
 }

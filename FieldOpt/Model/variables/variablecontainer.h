@@ -26,10 +26,41 @@
 #ifndef VARIABLECONTAINER_H
 #define VARIABLECONTAINER_H
 
+#include <QList>
+
+#include "binaryvariable.h"
+#include "integervariable.h"
+#include "realvariable.h"
+
+namespace Model {
+namespace Variables {
+
+/*!
+ * \brief The VariableContainer class simplifies the handling of variables.
+ *
+ * This class has members that hold all integer, real and binary varialbes in the model
+ * and methods to maintain the lists.
+ */
 class VariableContainer
 {
 public:
     VariableContainer();
+
+    void AddVariable(BinaryVariable *var);
+    void AddVariable(IntegerVariable *var);
+    void AddVariable(RealVariable *var);
+
+    QList<BinaryVariable *> *binaryVariables() const { return binary_variables_; }
+    QList<IntegerVariable *> *integerVariables() const { return integer_variables_; }
+    QList<RealVariable *> *realVariables() const { return real_variables_; }
+
+private:
+    QList<BinaryVariable *> *binary_variables_;
+    QList<IntegerVariable *> *integer_variables_;
+    QList<RealVariable *> *real_variables_;
 };
+
+}
+}
 
 #endif // VARIABLECONTAINER_H

@@ -25,7 +25,8 @@ HEADERS += \
     variables/integervariable.h \
     variables/variable_exceptions.h \
     variables/realvariable.h \
-    variables/binaryvariable.h
+    variables/binaryvariable.h \
+    variables/variablecontainer.h
 
 SOURCES += \
     model.cpp \
@@ -39,4 +40,5 @@ SOURCES += \
     reservoir/grid/xyzcoordinate.cpp \
     variables/integervariable.cpp \
     variables/realvariable.cpp \
-    variables/binaryvariable.cpp
+    variables/binaryvariable.cpp \
+    variables/variablecontainer.cpp
