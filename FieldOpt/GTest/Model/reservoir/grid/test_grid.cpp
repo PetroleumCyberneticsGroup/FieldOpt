@@ -43,24 +43,24 @@ TEST_F(GridTest, CheckDimensions) {
 
 TEST_F(GridTest, GetCellByGlobalIndex) {
     // Cell 0 should have IJK coordinates (0,0,0) and volume 1.5e+06
-    Cell cell = grid_->GetCell(0);
-    EXPECT_EQ(cell.ijk_index()->i(), 0);
-    EXPECT_EQ(cell.ijk_index()->j(), 0);
-    EXPECT_EQ(cell.ijk_index()->k(), 0);
-    EXPECT_EQ(cell.volume(), 1.5e+06);
+    Cell *cell = grid_->GetCell(0);
+    EXPECT_EQ(cell->ijk_index()->i(), 0);
+    EXPECT_EQ(cell->ijk_index()->j(), 0);
+    EXPECT_EQ(cell->ijk_index()->k(), 0);
+    EXPECT_EQ(cell->volume(), 1.5e+06);
 }
 
 TEST_F(GridTest, GetCellByIJKIndex) {
     // Cell (1,0,0) should have global index 1
-    Cell cell = grid_->GetCell(1, 0, 0);
-    EXPECT_EQ(cell.global_index(), 1);
+    Cell *cell = grid_->GetCell(1, 0, 0);
+    EXPECT_EQ(cell->global_index(), 1);
 }
 
 TEST_F(GridTest, GetCellByIJKObject) {
     // Cell (2,0,0) should have global index 2
     IJKCoordinate *ijk = new IJKCoordinate(2, 0, 0);
-    Cell cell = grid_->GetCell(ijk);
-    EXPECT_EQ(cell.global_index(), 2);
+    Cell *cell = grid_->GetCell(ijk);
+    EXPECT_EQ(cell->global_index(), 2);
 }
 
 TEST_F(GridTest, AttemptGetCellWithIndexOutsideGrid) {
@@ -72,14 +72,14 @@ TEST_F(GridTest, AttemptFindCellOutsideGrid) {
 }
 
 TEST_F(GridTest, GetCellEnvelopingPoint) {
-    Cell cell = grid_->GetCellEnvelopingPoint(20, 300, 7050);
-    EXPECT_EQ(cell.global_index(), 20);
+    Cell *cell = grid_->GetCellEnvelopingPoint(20, 300, 7050);
+    EXPECT_EQ(cell->global_index(), 20);
 }
 
 TEST_F(GridTest, GetCellEnvelopingPointObject) {
     XYZCoordinate *xyz = new XYZCoordinate(20, 300, 7050);
-    Cell cell = grid_->GetCellEnvelopingPoint(xyz);
-    EXPECT_EQ(cell.global_index(), 20);
+    Cell *cell = grid_->GetCellEnvelopingPoint(xyz);
+    EXPECT_EQ(cell->global_index(), 20);
 }
 
 }

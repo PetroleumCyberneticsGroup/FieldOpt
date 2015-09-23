@@ -54,7 +54,7 @@ Grid::Dims Grid::Dimensions()
     else throw GridCellNotFoundException("Grid source must be defined before getting grid dimensions.");
 }
 
-Cell Grid::GetCell(int global_index)
+Cell* Grid::GetCell(int global_index)
 {
     if (!IndexIsInsideGrid(global_index)) throw CellIndexOutsideGridException("Global index is outside grid.");
     if (type_ == GridSourceType::ECLIPSE) {
@@ -75,12 +75,12 @@ Cell Grid::GetCell(int global_index)
                                ertCell.corners->at(i)->y(),
                                ertCell.corners->at(i)->z()));
         }
-        return Cell(global_index, ijk_index, ertCell.volume, center, corners);
+        return new Cell(global_index, ijk_index, ertCell.volume, center, corners);
     }
     else throw GridCellNotFoundException("Grid source must be defined before getting a cell.");
 }
 
-Cell Grid::GetCell(int i, int j, int k)
+Cell* Grid::GetCell(int i, int j, int k)
 {
     if (!IndexIsInsideGrid(i, j, k)) throw CellIndexOutsideGridException("Index (i, j, k) is outside grid.");
     if (type_ == GridSourceType::ECLIPSE) {
@@ -90,7 +90,7 @@ Cell Grid::GetCell(int i, int j, int k)
     else throw GridCellNotFoundException("Grid source must be defined before getting a cell.");
 }
 
-Cell Grid::GetCell(IJKCoordinate *ijk)
+Cell* Grid::GetCell(IJKCoordinate *ijk)
 {
     if (!IndexIsInsideGrid(ijk)) throw CellIndexOutsideGridException("Index ijk is outside grid.");
     if (type_ == GridSourceType::ECLIPSE) {
@@ -100,7 +100,7 @@ Cell Grid::GetCell(IJKCoordinate *ijk)
     else throw GridCellNotFoundException("Grid source must be defined before getting a cell.");
 }
 
-Cell Grid::GetCellEnvelopingPoint(double x, double y, double z)
+Cell* Grid::GetCellEnvelopingPoint(double x, double y, double z)
 {
     int global_index = ecl_grid_reader_->GlobalIndexOfCellEnvelopingPoint(x, y ,z);
     if (global_index == -1) {
@@ -109,7 +109,7 @@ Cell Grid::GetCellEnvelopingPoint(double x, double y, double z)
     return GetCell(global_index);
 }
 
-Cell Grid::GetCellEnvelopingPoint(XYZCoordinate *xyz)
+Cell* Grid::GetCellEnvelopingPoint(XYZCoordinate *xyz)
 {
     return GetCellEnvelopingPoint(xyz->x(), xyz->y(), xyz->z());
 }

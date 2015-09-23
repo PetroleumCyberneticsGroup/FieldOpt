@@ -42,27 +42,27 @@ public:
     /*!
      * \brief GetCell Get a cell from its global index.
      */
-    Cell GetCell(int global_index);
+    Cell* GetCell(int global_index);
 
     /*!
      * \brief GetCell Get a cell from its (i,j,k) index.
      */
-    Cell GetCell(int i, int j, int k);
+    Cell* GetCell(int i, int j, int k);
 
     /*!
      * \brief GetCell Get a cell from its (i,j,k) index.
      */
-    Cell GetCell(IJKCoordinate* ijk);
+    Cell* GetCell(IJKCoordinate* ijk);
 
     /*!
      * \brief GetCellEnvelopingPoint Get the cell enveloping the point (x,y,z). Throws an exception if no cell is found.
      */
-    Cell GetCellEnvelopingPoint(double x, double y, double z);
+    Cell* GetCellEnvelopingPoint(double x, double y, double z);
 
     /*!
      * \brief GetCellEnvelopingPoint Get the cell enveloping the point (x,y,z). Throws an exception if no cell is found.
      */
-    Cell GetCellEnvelopingPoint(XYZCoordinate* xyz);
+    Cell* GetCellEnvelopingPoint(XYZCoordinate* xyz);
 
 private:
     GridSourceType type_;
