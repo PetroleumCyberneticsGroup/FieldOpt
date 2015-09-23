@@ -7,7 +7,7 @@ namespace Grid {
 
 /*!
  * \brief The IJKCoordinate class represents an integer-based (I,J,K) coordinate or index.
- * All IJK coordinates must be positive.
+ * IJK coordinate objects are immutable.
  */
 class IJKCoordinate
 {
@@ -20,10 +20,15 @@ public:
 
     bool Equals(const IJKCoordinate *other) const;
 
+    /*!
+     * \brief Add Returns a new coordinate which is the sum of this coordinate and another coordinate.
+     */
+    IJKCoordinate *Add(const IJKCoordinate *other) const;
+
 private:
-    int i_;
-    int j_;
-    int k_;
+    const int i_;
+    const int j_;
+    const int k_;
 
 };
 

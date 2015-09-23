@@ -22,4 +22,13 @@ TEST_F(XYZCoordinateTest , Equality) {
     EXPECT_FALSE(xyz_1.Equals(&xyz_4, 0.1)); // Should not match with tolerance 0.1
 }
 
+
+TEST_F(XYZCoordinateTest, Addition) {
+    XYZCoordinate *xyz_1 = new XYZCoordinate(1,1,1);
+    XYZCoordinate *xyz_2 = new XYZCoordinate(3,4,5);
+    XYZCoordinate *xyz_3 = new XYZCoordinate(4,5,6);
+    XYZCoordinate *xyz_sum = xyz_1->Add(xyz_2);
+    EXPECT_TRUE(xyz_sum->Equals(xyz_3));
+}
+
 }
