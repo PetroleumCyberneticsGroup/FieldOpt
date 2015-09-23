@@ -24,7 +24,37 @@
  *****************************************************************************/
 
 #include "integervariable.h"
+#include "variable_exceptions.h"
 
-IntegerVariable::IntegerVariable()
+namespace Model {
+namespace Variables {
+
+IntegerVariable::IntegerVariable(int value)
+    : Variable(Integer)
 {
+    value_ = value;
+}
+
+void IntegerVariable::setValue(int value)
+{
+    if (IsLocked()) throw VariableLockedException("Cannot change locked integer variable.");
+    else value_ = value;
+}
+
+void IntegerVariable::Add(int i)
+{
+    if (IsLocked()) throw VariableLockedException("Cannot add to a locked integer variable");
+    else value_ += i;
+}
+
+bool IntegerVariable::Equals(IntegerVariable *other)
+{
+    if (this->value() == other->value()) return true;
+    else return false;
+}
+
+
+
+
+}
 }

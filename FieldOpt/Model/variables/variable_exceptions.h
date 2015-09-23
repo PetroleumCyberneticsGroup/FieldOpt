@@ -26,4 +26,21 @@
 #ifndef VARIABLE_EXCEPTIONS_H
 #define VARIABLE_EXCEPTIONS_H
 
+#include <stdexcept>
+#include <string>
+
+using std::string;
+
+namespace Model {
+namespace Variables {
+
+class VariableLockedException : public std::runtime_error {
+public:
+    VariableLockedException(const string& message)
+        : std::runtime_error(message) {}
+};
+
+}
+}
+
 #endif // VARIABLE_EXCEPTIONS_H

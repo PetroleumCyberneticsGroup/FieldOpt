@@ -29,10 +29,25 @@
 namespace Model {
 namespace Variables {
 
+/*!
+ * \brief The Variable class is an abstract class implemented by
+ * specific variables types, i.e. integer, real and binary.
+ */
 class Variable
 {
 public:
-    Variable();
+    enum Type { Integer, Real, Binary };
+
+    bool IsLocked() const { return locked_; }
+    void Lock() { locked_ = true; }
+    void Unlock() { locked_ = false; }
+
+protected:
+    Variable(Type type) { type_ = type; locked_ = false; }
+
+private:
+    Type type_;
+    bool locked_;
 };
 
 }

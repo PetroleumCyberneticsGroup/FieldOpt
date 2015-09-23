@@ -26,10 +26,30 @@
 #ifndef INTEGERVARIABLE_H
 #define INTEGERVARIABLE_H
 
+#include "variable.h"
+
+namespace Model {
+namespace Variables {
+
+/*!
+ * \brief The IntegerVariable class describes integer variables, commonly used when optimizing
+ * for example well placement in a discrete grid.
+ */
 class IntegerVariable : public Variable
 {
 public:
-    IntegerVariable();
+    IntegerVariable(int value);
+
+    int value() const { return value_; }
+    void setValue(int value);
+
+    void Add(int i); //!< Add i to the value of this variable.
+    bool Equals(IntegerVariable *other); // Check if the value of another variable equals the value of this variable.
+
+private:
+    int value_;
 };
 
+}
+}
 #endif // INTEGERVARIABLE_H

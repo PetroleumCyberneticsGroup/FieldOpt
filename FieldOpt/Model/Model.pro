@@ -21,7 +21,9 @@ HEADERS += \
     reservoir/grid/grid.h \
     reservoir/grid/grid_exceptions.h \
     reservoir/grid/ijkcoordinate.h \
-    reservoir/grid/xyzcoordinate.h
+    reservoir/grid/xyzcoordinate.h \
+    variables/integervariable.h \
+    variables/variable_exceptions.h
 
 SOURCES += \
     model.cpp \
@@ -29,8 +31,8 @@ SOURCES += \
     reservoir/reservoir.cpp \
     schedule/schedule.cpp \
     objective/objective.cpp \
-    variables/variable.cpp \
     reservoir/grid/cell.cpp \
     reservoir/grid/grid.cpp \
     reservoir/grid/ijkcoordinate.cpp \
-    reservoir/grid/xyzcoordinate.cpp
+    reservoir/grid/xyzcoordinate.cpp \
+    variables/integervariable.cpp
