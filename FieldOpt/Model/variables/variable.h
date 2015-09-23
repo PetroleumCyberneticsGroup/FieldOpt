@@ -27,6 +27,7 @@
 #define VARIABLE_H
 
 #include "variable_exceptions.h"
+#include <QString>
 
 namespace Model {
 namespace Variables {
@@ -41,6 +42,8 @@ public:
     enum Type { Integer, Real, Binary };
 
     Type type() const { return type_; }
+    QString name() const { return name_;}
+    void setName(QString name) { name_ = name; }
 
     bool IsLocked() const { return locked_; }
     void Lock() { locked_ = true; }
@@ -52,6 +55,7 @@ protected:
 private:
     Type type_;
     bool locked_;
+    QString name_;
 };
 
 }
