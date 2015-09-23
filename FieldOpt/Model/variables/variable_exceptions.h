@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- * variable.cpp
+ * variable_exceptions.h
  *
- * Created: 22.09.2015 2015 by einar
+ * Created: 23.09.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,14 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include "variable.h"
+#ifndef VARIABLE_EXCEPTIONS_H
+#define VARIABLE_EXCEPTIONS_H
 
-namespace Model {
-namespace Variables {
-
-Variable::Variable()
-{
-}
-
-}
-}
+#endif // VARIABLE_EXCEPTIONS_H
