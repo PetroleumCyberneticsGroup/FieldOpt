@@ -47,7 +47,7 @@ void IntegerVariable::Add(int i)
     else value_ += i;
 }
 
-bool IntegerVariable::Equals(IntegerVariable *other)
+bool IntegerVariable::Equals(const IntegerVariable *other) const
 {
     if (this->value() == other->value()) return true;
     else return false;

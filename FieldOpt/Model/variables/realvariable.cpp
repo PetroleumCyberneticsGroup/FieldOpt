@@ -47,7 +47,7 @@ void RealVariable::Add(double d)
     else value_ += d;
 }
 
-bool RealVariable::Equals(RealVariable *other, double epsilon)
+bool RealVariable::Equals(const RealVariable *other, double epsilon) const
 {
     return std::abs(this->value() - other->value()) <= epsilon;
 }

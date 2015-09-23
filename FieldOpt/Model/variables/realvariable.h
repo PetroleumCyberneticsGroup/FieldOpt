@@ -48,7 +48,7 @@ public:
      * \param epsilon Optional tolerance. Default: 0.0
      * \return True if abs(this->value() - other->value()) <= epsilon; otherwise false.
      */
-    bool Equals(RealVariable *other, double epsilon=0.0);
+    bool Equals(const RealVariable *other, double epsilon=0.0) const;
 
 private:
     double value_;

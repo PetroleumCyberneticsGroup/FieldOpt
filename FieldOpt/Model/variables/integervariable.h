@@ -44,7 +44,7 @@ public:
     void setValue(int value);
 
     void Add(int i); //!< Add i to the value of this variable.
-    bool Equals(IntegerVariable *other); // Check if the value of another variable equals the value of this variable.
+    bool Equals(const IntegerVariable *other) const; // Check if the value of another variable equals the value of this variable.
 
 private:
     int value_;

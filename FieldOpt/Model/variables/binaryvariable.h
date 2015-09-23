@@ -26,10 +26,25 @@
 #ifndef BINARYVARIABLE_H
 #define BINARYVARIABLE_H
 
+#include "variable.h"
+
+namespace Model {
+namespace Variables {
+
 class BinaryVariable : public Variable
 {
 public:
-    BinaryVariable();
+    BinaryVariable(bool value);
+
+    bool value() const { return value_; }
+    void setValue(bool value);
+
+private:
+    bool value_;
 };
+
+}
+}
+
 
 #endif // BINARYVARIABLE_H
