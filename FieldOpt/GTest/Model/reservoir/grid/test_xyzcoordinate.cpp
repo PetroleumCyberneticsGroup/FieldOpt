@@ -18,6 +18,7 @@ TEST_F(XYZCoordinateTest , Equality) {
     XYZCoordinate xyz_4 = XYZCoordinate(1.0,2.0,4.0);
     EXPECT_TRUE(xyz_1.Equals(&xyz_2));  // Should match with tolerance 0.0
     EXPECT_FALSE(xyz_1.Equals(&xyz_3)); // Should not match with tolerance 0.0
+    EXPECT_FALSE(xyz_1.Equals(&xyz_3, 0.04)); // Should not match with tolerance 0.4
     EXPECT_TRUE(xyz_1.Equals(&xyz_3, 0.1)); // Should match with tolerance 0.1
     EXPECT_FALSE(xyz_1.Equals(&xyz_4, 0.1)); // Should not match with tolerance 0.1
 }

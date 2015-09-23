@@ -28,6 +28,12 @@
 namespace Model {
 namespace Variables {
 
+BinaryVariable::BinaryVariable(bool value)
+    : Variable(Binary)
+{
+    value_ = value;
+}
+
 void BinaryVariable::setValue(bool value)
 {
     if (IsLocked()) throw VariableLockedException("Cant change value of locked binary variable.");

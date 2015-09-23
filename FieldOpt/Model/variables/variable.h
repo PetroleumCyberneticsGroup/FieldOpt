@@ -40,6 +40,8 @@ class Variable
 public:
     enum Type { Integer, Real, Binary };
 
+    Type type() const { return type_; }
+
     bool IsLocked() const { return locked_; }
     void Lock() { locked_ = true; }
     void Unlock() { locked_ = false; }
