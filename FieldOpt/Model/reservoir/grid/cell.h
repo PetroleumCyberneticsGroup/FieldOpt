@@ -59,16 +59,9 @@ public:
     QList<XYZCoordinate*> corners() const { return corners_; }
 
     /*!
-     * \brief operator == Check if the global indices of the two cells being compared are equal.
+     * \brief Equals Check if the global indices of the two cells being compared are equal.
      */
-    bool operator==(const Cell &other);
-
-    /*!
-     * \brief operator != Check if the global indices of the two cells being compared are not equal.
-     * \param other
-     * \return
-     */
-    bool operator!=(const Cell &other);
+    bool Equals(const Cell *other) const;
 };
 
 }

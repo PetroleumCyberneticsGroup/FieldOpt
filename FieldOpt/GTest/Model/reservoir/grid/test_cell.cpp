@@ -30,16 +30,8 @@ TEST_F(CellTest, Equality) {
     Cell cell_1 = grid_->GetCell(1); // Equal to cell_2_
     Cell cell_2 = grid_->GetCell(1, 0, 0); // Equal to cell_1_
     Cell cell_3 = grid_->GetCell(0);
-    EXPECT_TRUE(cell_1 == cell_2);
-    EXPECT_FALSE(cell_1 == cell_3);
-}
-
-TEST_F(CellTest, Inequality) {
-    Cell cell_1 = grid_->GetCell(0); // Equal to cell_2_
-    Cell cell_2 = grid_->GetCell(0, 0, 0); // Equal to cell_1_
-    Cell cell_3 = grid_->GetCell(20);
-    EXPECT_TRUE(cell_1 != cell_3);
-    EXPECT_FALSE(cell_1 != cell_2);
+    EXPECT_TRUE(cell_1.Equals(&cell_2));
+    EXPECT_FALSE(cell_1.Equals(&cell_3));
 }
 
 TEST_F(CellTest, GlobalIndex) {
@@ -49,7 +41,7 @@ TEST_F(CellTest, GlobalIndex) {
 
 TEST_F(CellTest, IJKIndex) {
     Cell cell = grid_->GetCell(10);
-    EXPECT_TRUE(*cell.ijk_index() == IJKCoordinate(10, 0, 0));
+    EXPECT_TRUE(cell.ijk_index()->Equals(new IJKCoordinate(10, 0, 0)));
 }
 
 TEST_F(CellTest, Volume) {

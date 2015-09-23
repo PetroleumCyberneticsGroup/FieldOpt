@@ -27,7 +27,7 @@ public:
      * \param epsilon Allowed error.
      * \return True if xyz is within epsilon of this along all dimensions.
      */
-    bool Equals(XYZCoordinate *other, double epsilon=0.0);
+    bool Equals(const XYZCoordinate *other, double epsilon=0.0) const;
 };
 
 }

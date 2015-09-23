@@ -30,15 +30,6 @@ public:
         int nx; int ny; int nz;
     };
 
-private:
-    GridSourceType type_;
-    QString file_path_;
-    ERTWrapper::ECLGrid::ECLGridReader* ecl_grid_reader_ = 0;
-    bool IndexIsInsideGrid(int global_index); //!< Check that global_index is less than nx*ny*nz
-    bool IndexIsInsideGrid(int i, int j, int k); //!< Check that (i,j,k) are >= 0 and less than n*.
-    bool IndexIsInsideGrid(IJKCoordinate *ijk); //!< Check that (i,j,k) are >= 0 and less than n*.
-
-public:
     Grid(GridSourceType type, QString file_path);
     virtual ~Grid();
 
@@ -72,6 +63,14 @@ public:
      * \brief GetCellEnvelopingPoint Get the cell enveloping the point (x,y,z). Throws an exception if no cell is found.
      */
     Cell GetCellEnvelopingPoint(XYZCoordinate* xyz);
+
+private:
+    GridSourceType type_;
+    QString file_path_;
+    ERTWrapper::ECLGrid::ECLGridReader* ecl_grid_reader_ = 0;
+    bool IndexIsInsideGrid(int global_index); //!< Check that global_index is less than nx*ny*nz
+    bool IndexIsInsideGrid(int i, int j, int k); //!< Check that (i,j,k) are >= 0 and less than n*.
+    bool IndexIsInsideGrid(IJKCoordinate *ijk); //!< Check that (i,j,k) are >= 0 and less than n*.
 };
 
 }

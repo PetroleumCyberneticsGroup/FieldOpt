@@ -23,8 +23,7 @@ public:
     int j() const { return j_; }
     int k() const { return k_;}
 
-    bool operator==(const IJKCoordinate &other);
-    bool operator!=(const IJKCoordinate &other);
+    bool Equals(const IJKCoordinate *other) const;
 };
 
 }

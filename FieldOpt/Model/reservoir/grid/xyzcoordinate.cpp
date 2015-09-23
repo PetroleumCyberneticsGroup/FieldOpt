@@ -14,7 +14,7 @@ XYZCoordinate::XYZCoordinate(double x, double y, double z)
     z_ = z;
 }
 
-bool XYZCoordinate::Equals(XYZCoordinate *other, double epsilon)
+bool XYZCoordinate::Equals(const XYZCoordinate *other, double epsilon) const
 {
     return abs(this->x() - other->x()) <= epsilon &&
             abs(this->y() - other->y()) <= epsilon &&

@@ -14,14 +14,9 @@ Cell::Cell(int global_index, IJKCoordinate* ijk_index, double volume, XYZCoordin
     corners_ = corners;
 }
 
-bool Cell::operator==(const Cell &other)
+bool Cell::Equals(const Cell *other) const
 {
-    return global_index_ == other.global_index();
-}
-
-bool Cell::operator!=(const Cell &other)
-{
-    return global_index_ != other.global_index();
+    return this->global_index() == other->global_index();
 }
 
 }
