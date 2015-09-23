@@ -33,13 +33,13 @@ namespace Reservoir {
 
 class Reservoir
 {
-private:
-    Grid::Grid* grid_;
-
 public:
     Reservoir();
 
     Grid::Grid* grid() const { return grid_; }
+
+private:
+    Grid::Grid* grid_;
 };
 
 }

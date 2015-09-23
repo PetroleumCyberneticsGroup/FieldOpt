@@ -39,13 +39,6 @@ namespace Model {
 
 class Model
 {
-private:
-    Reservoir::Reservoir reservoir_;
-    Schedule::Schedule schedule_;
-    Objective::Objective objective_;
-    QList<Variables::Variable*> variables_;
-    QList<Wells::Well*> wells_;
-
 public:
     Model();
 
@@ -54,6 +47,13 @@ public:
     Objective::Objective objective() const { return objective_; }
     QList<Variables::Variable*> variables() const { return variables_; }
     QList<Wells::Well*> wells() const { return wells_; }
+
+private:
+    Reservoir::Reservoir reservoir_;
+    Schedule::Schedule schedule_;
+    Objective::Objective objective_;
+    QList<Variables::Variable*> variables_;
+    QList<Wells::Well*> wells_;
 };
 
 }

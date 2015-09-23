@@ -10,10 +10,6 @@ namespace Grid {
  */
 class XYZCoordinate
 {
-private:
-    double x_;
-    double y_;
-    double z_;
 public:
     XYZCoordinate(double x, double y, double z);
 
@@ -28,6 +24,11 @@ public:
      * \return True if xyz is within epsilon of this along all dimensions.
      */
     bool Equals(const XYZCoordinate *other, double epsilon=0.0) const;
+
+private:
+    double x_;
+    double y_;
+    double z_;
 };
 
 }

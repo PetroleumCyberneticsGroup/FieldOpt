@@ -14,13 +14,6 @@ namespace Grid {
  */
 class Cell
 {
-private:
-    int global_index_;
-    IJKCoordinate* ijk_index_;
-    double volume_;
-    XYZCoordinate* center_;
-    QList<XYZCoordinate*> corners_;
-
 public:
     Cell(int global_index, IJKCoordinate* ijk_index, double volume, XYZCoordinate* center, QList<XYZCoordinate*> corners);
 
@@ -62,6 +55,13 @@ public:
      * \brief Equals Check if the global indices of the two cells being compared are equal.
      */
     bool Equals(const Cell *other) const;
+
+private:
+    int global_index_;
+    IJKCoordinate* ijk_index_;
+    double volume_;
+    XYZCoordinate* center_;
+    QList<XYZCoordinate*> corners_;
 };
 
 }

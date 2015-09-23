@@ -11,11 +11,6 @@ namespace Grid {
  */
 class IJKCoordinate
 {
-private:
-    int i_;
-    int j_;
-    int k_;
-
 public:
     IJKCoordinate(int i, int j, int k);
 
@@ -24,6 +19,12 @@ public:
     int k() const { return k_;}
 
     bool Equals(const IJKCoordinate *other) const;
+
+private:
+    int i_;
+    int j_;
+    int k_;
+
 };
 
 }
