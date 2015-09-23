@@ -5,7 +5,7 @@ namespace Reservoir {
 namespace Grid {
 
 
-Cell::Cell(int global_index, IJKCoordinate* ijk_index, double volume, XYZCoordinate* center, QList<XYZCoordinate *> corners)
+Cell::Cell(int global_index, IJKCoordinate* ijk_index, double volume, XYZCoordinate* center, QList<XYZCoordinate *> *corners)
 {
     global_index_ = global_index;
     ijk_index_ = ijk_index;

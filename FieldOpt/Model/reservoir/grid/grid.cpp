@@ -68,9 +68,9 @@ Cell* Grid::GetCell(int global_index)
         XYZCoordinate* center = new XYZCoordinate(ertCell.center->x(), ertCell.center->y(), ertCell.center->z());
 
         // Get the corners
-        QList<XYZCoordinate*> corners = QList<XYZCoordinate*>();
+        QList<XYZCoordinate*> *corners = new QList<XYZCoordinate*>();
         for (int i = 0; i < ertCell.corners->size(); ++i) {
-            corners.append(new XYZCoordinate(
+            corners->append(new XYZCoordinate(
                                ertCell.corners->at(i)->x(),
                                ertCell.corners->at(i)->y(),
                                ertCell.corners->at(i)->z()));

@@ -56,33 +56,33 @@ TEST_F(CellTest, Center) {
 }
 
 TEST_F(CellTest, Corners) {
-    QList<XYZCoordinate*> corners = grid_->GetCell(0)->corners();
+    QList<XYZCoordinate*> *corners = grid_->GetCell(0)->corners();
 
     // Top layer
     XYZCoordinate *top_sw = new XYZCoordinate(0.0, 0.0, 7000.0);
-    EXPECT_TRUE(corners.at(0)->Equals(top_sw));
+    EXPECT_TRUE(corners->at(0)->Equals(top_sw));
 
     XYZCoordinate *top_se = new XYZCoordinate(100.0, 0.0, 7000.0);
-    EXPECT_TRUE(corners.at(1)->Equals(top_se));
+    EXPECT_TRUE(corners->at(1)->Equals(top_se));
 
     XYZCoordinate *top_nw = new XYZCoordinate(0.0, 300.0, 7000.0);
-    EXPECT_TRUE(corners.at(2)->Equals(top_nw));
+    EXPECT_TRUE(corners->at(2)->Equals(top_nw));
 
     XYZCoordinate *top_ne = new XYZCoordinate(100.0, 300.0, 7000.0);
-    EXPECT_TRUE(corners.at(3)->Equals(top_ne));
+    EXPECT_TRUE(corners->at(3)->Equals(top_ne));
 
     // Bottom layer
     XYZCoordinate *bottom_sw = new XYZCoordinate(0.0, 0.0, 7050.0);
-    EXPECT_TRUE(corners.at(4)->Equals(bottom_sw));
+    EXPECT_TRUE(corners->at(4)->Equals(bottom_sw));
 
     XYZCoordinate *bottom_se = new XYZCoordinate(100.0, 0.0, 7050.0);
-    EXPECT_TRUE(corners.at(5)->Equals(bottom_se));
+    EXPECT_TRUE(corners->at(5)->Equals(bottom_se));
 
     XYZCoordinate *bottom_nw = new XYZCoordinate(0.0, 300.0, 7050.0);
-    EXPECT_TRUE(corners.at(6)->Equals(bottom_nw));
+    EXPECT_TRUE(corners->at(6)->Equals(bottom_nw));
 
     XYZCoordinate *bottom_ne = new XYZCoordinate(100.0, 300.0, 7050.0);
-    EXPECT_TRUE(corners.at(7)->Equals(bottom_ne));
+    EXPECT_TRUE(corners->at(7)->Equals(bottom_ne));
 }
 
 }
