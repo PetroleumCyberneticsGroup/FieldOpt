@@ -33,7 +33,9 @@ HEADERS += \
     wells/trajectory/trajectory.h \
     wells/trajectory/wellspline.h \
     wells/trajectory/wellblocks.h \
-    wells/wellgroup.h
+    wells/wellgroup.h \
+    wells/completions/completioncollection.h \
+    wells/completions/completion_exceptions.h
 
 SOURCES += \
     model.cpp \
@@ -55,4 +57,5 @@ SOURCES += \
     wells/trajectory/trajectory.cpp \
     wells/trajectory/wellspline.cpp \
     wells/trajectory/wellblocks.cpp \
-    wells/wellgroup.cpp
+    wells/wellgroup.cpp \
+    wells/completions/completioncollection.cpp
