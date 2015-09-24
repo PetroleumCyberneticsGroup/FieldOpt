@@ -40,6 +40,12 @@ public:
         : std::runtime_error(message) {}
 };
 
+class VariableIdDoesNotExistException : public std::runtime_error {
+public:
+    VariableIdDoesNotExistException(const string& message)
+        : std::runtime_error(message) {}
+};
+
 }
 }
 

@@ -56,19 +56,34 @@ protected:
 
 TEST_F(VariableContainerTest, Constructor) {
     // If the lists exist, the constructor has been run
-    EXPECT_GT(variable_container_->binaryVariables()->size(), 0);
-}
-
-TEST_F(VariableContainerTest, ListLengths) {
-    EXPECT_EQ(variable_container_->binaryVariables()->size(), 2);
-    EXPECT_EQ(variable_container_->integerVariables()->size(), 1);
-    EXPECT_EQ(variable_container_->realVariables()->size(), 3);
+    EXPECT_EQ(variable_container_->BinaryVariableSize(), 2);
+    EXPECT_EQ(variable_container_->IntegerVariableSize(), 1);
+    EXPECT_EQ(variable_container_->RealVariableSize(), 3);
 }
 
 TEST_F(VariableContainerTest, Retrieval) {
-    EXPECT_EQ(variable_container_->binaryVariables()->first()->value(), false);
-    EXPECT_EQ(variable_container_->integerVariables()->at(0)->value(), 5);
-    EXPECT_EQ(variable_container_->realVariables()->last()->value(), 1.0);
+    EXPECT_EQ(variable_container_->GetBinaryVariable(0)->value(), false);
+    EXPECT_EQ(variable_container_->GetIntegerVariable(0)->value(), 5);
+    EXPECT_EQ(variable_container_->GetRealVariable(2)->value(), 1.0);
+    EXPECT_THROW(variable_container_->GetRealVariable(4), VariableIdDoesNotExistException);
+    EXPECT_THROW(variable_container_->GetBinaryVariable(-1), VariableIdDoesNotExistException);
+    EXPECT_THROW(variable_container_->GetIntegerVariable(10), VariableIdDoesNotExistException);
 }
 
+TEST_F(VariableContainerTest, Deletion) {
+    EXPECT_NO_THROW(variable_container_->DeleteBinaryVariable(0));
+    EXPECT_THROW(variable_container_->GetBinaryVariable(0), VariableIdDoesNotExistException);
+    EXPECT_THROW(variable_container_->DeleteIntegerVariable(1), VariableIdDoesNotExistException);
+    EXPECT_NO_THROW(variable_container_->DeleteIntegerVariable(0));
+    EXPECT_EQ(variable_container_->IntegerVariableSize(), 0);
+    EXPECT_NO_THROW(variable_container_->DeleteRealVariable(1));
+    EXPECT_THROW(variable_container_->GetRealVariable(1), VariableIdDoesNotExistException);
+    EXPECT_DOUBLE_EQ(variable_container_->GetRealVariable(2)->value(), 1.0);
+}
+
+// Test modifiability on get
+
+// Test deletion and new ids
+
+// Test exceptions
 }

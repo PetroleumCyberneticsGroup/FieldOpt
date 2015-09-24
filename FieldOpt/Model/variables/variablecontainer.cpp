@@ -30,24 +30,64 @@ namespace Variables {
 
 VariableContainer::VariableContainer()
 {
-    binary_variables_ = new QList<BinaryVariable *>();
-    integer_variables_ = new QList<IntegerVariable *>();
-    real_variables_ = new QList<RealVariable *>();
+    next_binary_id_ = 0;
+    next_integer_id_ = 0;
+    next_real_id_ = 0;
+
+    binary_variables_ = new QHash<int, BinaryVariable *>();
+    integer_variables_ = new QHash<int, IntegerVariable *>();
+    real_variables_ = new QHash<int, RealVariable *>();
 }
 
 void VariableContainer::AddVariable(BinaryVariable *var)
 {
-    binary_variables_->append(var);
+    binary_variables_->insert(next_binary_id_++, var);
 }
 
 void VariableContainer::AddVariable(IntegerVariable *var)
 {
-    integer_variables_->append(var);
+    integer_variables_->insert(next_integer_id_++, var);
 }
 
 void VariableContainer::AddVariable(RealVariable *var)
 {
-    real_variables_->append(var);
+    real_variables_->insert(next_real_id_++, var);
+}
+
+BinaryVariable *VariableContainer::GetBinaryVariable(int id) const
+{
+    if (!binary_variables_->contains(id)) throw VariableIdDoesNotExistException("Binary variable not found.");
+    return binary_variables_->value(id);
+}
+
+IntegerVariable *VariableContainer::GetIntegerVariable(int id) const
+{
+    if (!integer_variables_->contains(id)) throw VariableIdDoesNotExistException("Integer variable not found.");
+    return integer_variables_->value(id);
+}
+
+RealVariable *VariableContainer::GetRealVariable(int id) const
+{
+    if (!real_variables_->contains(id)) throw VariableIdDoesNotExistException("Real variable not found.");
+    return real_variables_->value(id);
+}
+
+void VariableContainer::DeleteBinaryVariable(int id)
+{
+    if (!binary_variables_->contains(id)) throw VariableIdDoesNotExistException("Binary variable not found. Unable to delete.");
+    binary_variables_->remove(id);
+}
+
+void VariableContainer::DeleteIntegerVariable(int id)
+{
+    if (!integer_variables_->contains(id)) throw VariableIdDoesNotExistException("Integer variable not found. Unable to delete.");
+    integer_variables_->remove(id);
+}
+
+void VariableContainer::DeleteRealVariable(int id)
+{
+    if (!real_variables_->contains(id)) throw VariableIdDoesNotExistException("Real variable not found. Unable to delete");
+    real_variables_->remove(id);
 }
 
 

@@ -26,7 +26,7 @@
 #ifndef VARIABLECONTAINER_H
 #define VARIABLECONTAINER_H
 
-#include <QList>
+#include <QHash>
 
 #include "binaryvariable.h"
 #include "integervariable.h"
@@ -50,14 +50,26 @@ public:
     void AddVariable(IntegerVariable *var);
     void AddVariable(RealVariable *var);
 
-    QList<BinaryVariable *> *binaryVariables() const { return binary_variables_; }
-    QList<IntegerVariable *> *integerVariables() const { return integer_variables_; }
-    QList<RealVariable *> *realVariables() const { return real_variables_; }
+    int BinaryVariableSize() const { return binary_variables_->size(); } //!< Get the number of binary variables.
+    int IntegerVariableSize() const { return integer_variables_->size(); } //!< Get the number of binary variables.
+    int RealVariableSize() const { return real_variables_->size(); } //!< Get the number of binary variables.
+
+    BinaryVariable *GetBinaryVariable(int id) const; //!< Get the binary variable with index id.
+    IntegerVariable *GetIntegerVariable(int id) const; //!< Get the integer variable with index id.
+    RealVariable *GetRealVariable(int id) const; //!< Get the real variable with index id.
+
+    void DeleteBinaryVariable(int id);
+    void DeleteIntegerVariable(int id);
+    void DeleteRealVariable(int id);
 
 private:
-    QList<BinaryVariable *> *binary_variables_;
-    QList<IntegerVariable *> *integer_variables_;
-    QList<RealVariable *> *real_variables_;
+    int next_binary_id_;
+    int next_integer_id_;
+    int next_real_id_;
+
+    QHash<int, BinaryVariable *> *binary_variables_;
+    QHash<int, IntegerVariable *> *integer_variables_;
+    QHash<int, RealVariable *> *real_variables_;
 };
 
 }
