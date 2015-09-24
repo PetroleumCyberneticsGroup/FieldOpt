@@ -26,7 +26,14 @@ HEADERS += \
     variables/variable_exceptions.h \
     variables/realvariable.h \
     variables/binaryvariable.h \
-    variables/variablecontainer.h
+    variables/variablecontainer.h \
+    wells/completions/completion.h \
+    wells/completions/perforation.h \
+    wells/completions/inflowcontroldevice.h \
+    wells/trajectory/trajectory.h \
+    wells/trajectory/wellspline.h \
+    wells/trajectory/wellblocks.h \
+    wells/wellgroup.h
 
 SOURCES += \
     model.cpp \
@@ -41,4 +48,11 @@ SOURCES += \
     variables/integervariable.cpp \
     variables/realvariable.cpp \
     variables/binaryvariable.cpp \
-    variables/variablecontainer.cpp
+    variables/variablecontainer.cpp \
+    wells/completions/completion.cpp \
+    wells/completions/perforation.cpp \
+    wells/completions/inflowcontroldevice.cpp \
+    wells/trajectory/trajectory.cpp \
+    wells/trajectory/wellspline.cpp \
+    wells/trajectory/wellblocks.cpp \
+    wells/wellgroup.cpp
