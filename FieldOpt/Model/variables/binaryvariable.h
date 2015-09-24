@@ -31,6 +31,10 @@
 namespace Model {
 namespace Variables {
 
+/*!
+ * \brief The BinaryVariable class describes a binary variable. These are typically used
+ * as on/off or open/shut switches when optimizing.
+ */
 class BinaryVariable : public Variable
 {
 public:

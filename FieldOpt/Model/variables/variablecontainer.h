@@ -40,6 +40,9 @@ namespace Variables {
  *
  * This class has members that hold all integer, real and binary varialbes in the model
  * and methods to maintain the lists.
+ *
+ * This class also maintains unique IDs in the form of hashtable keys for every variable
+ * of each type.
  */
 class VariableContainer
 {
