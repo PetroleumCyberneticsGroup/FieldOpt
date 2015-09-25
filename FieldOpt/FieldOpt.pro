@@ -6,7 +6,8 @@ SUBDIRS = \
     Library \
     Console \
     GTest \
-    Model
+    Model \
+    Utilities
 
 Library.depends = ERTWrapper
 GTest.depends = ERTWrapper Library

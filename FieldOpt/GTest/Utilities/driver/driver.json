@@ -1,0 +1,48 @@
+{
+    "Global": {
+        "Name": "TestRun",
+        "OutputDirectory": "output",
+        "Verbose": false
+    },
+    "Optimizer": {
+        "Type": "Compass",
+        "MaxEvaluations": 10,
+        "Parameters": {
+            "InitialStepLength": 50.0,
+            "MinimumStepLength": 1.0
+        },
+        "Objective": {
+            "Type": "Expression",
+            "Expression": "CUMOIL - 0.5*CUMWAT"
+        }
+    },
+    "Simulator": {
+        "Type": "ECLIPSE",
+        "Commands": ["csh", "@eclipse"],
+        "DriverPath": "../../examples/ECLIPSE/HORZWELL/HORZWELL.DATA"
+    },
+    "Reservoir": {
+        "Type": "EGRID",
+        "Path": "../../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID"
+    },
+    "Wells": [
+        {
+            "Name": "PROD",
+            "Type": "WellBlocks",
+            "Heel": [0,0,0],
+            "WellBlocks": [
+                [0,4,2],
+                [1,4,2],
+                [2,4,2],
+                [3,4,2]
+            ]
+        }
+    ],
+    "Schedule": [
+        {
+            "Property": "BHP",
+            "Value": 2000
+        }
+
+    ]
+}

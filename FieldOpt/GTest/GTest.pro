@@ -16,3 +16,6 @@ SOURCES += \
     Model/reservoir/grid/test_xyzcoordinate.cpp \
     Model/variables/test_variables.cpp \
     Model/variables/test_variablecontainer.cpp
+
+OTHER_FILES += \
+    Utilities/driver/driver.json
