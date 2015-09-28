@@ -48,6 +48,16 @@ void CompletionCollection::AddInflowControlDevice(InflowControlDevice *icd)
     inflow_control_devices_->append(icd);
 }
 
+bool CompletionCollection::NewCompletionIsValid(Perforation *perf)
+{
+    return true;
+}
+
+bool CompletionCollection::NewCompletionIsValid(InflowControlDevice *icd)
+{
+    return true;
+}
+
 }
 }
 }

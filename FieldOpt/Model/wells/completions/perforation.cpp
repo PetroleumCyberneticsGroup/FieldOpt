@@ -29,6 +29,10 @@ namespace Model {
 namespace Wells {
 namespace Completions {
 
+Perforation::Perforation()
+{
+}
+
 }
 }
 }
