@@ -36,7 +36,17 @@
                 [2,4,2],
                 [3,4,2]
             ]
+        },
+        {
+            "Name": "INJ",
+            "Type": "WellSpline",
+            "Heel": [2,0,2],
+            "SplinePoints": [
+                [2,0,2],
+                [2,4,2]
+            ]
         }
+
     ],
     "Schedule": [
         {
