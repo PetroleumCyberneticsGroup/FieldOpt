@@ -6,8 +6,8 @@
     },
     "Optimizer": {
         "Type": "Compass",
-        "MaxEvaluations": 10,
         "Parameters": {
+            "MaxEvaluations": 10,
             "InitialStepLength": 50.0,
             "MinimumStepLength": 1.0
         },
