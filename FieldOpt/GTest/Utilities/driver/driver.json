@@ -14,7 +14,31 @@
         "Objective": {
             "Type": "Expression",
             "Expression": "CUMOIL - 0.5*CUMWAT"
-        }
+        },
+        "Constraints": [
+            {
+                "Type": "BHP",
+                "Well": "PROD",
+                "Max": 3000,
+                "Min": 1000
+            },
+            {
+                "Type": "SplinePoints",
+                "Well": "INJ",
+                "InputType": "MaxMin", // Could also be Function (z(x,y))
+                "SplinePointLimits": [ // Must have same length as number of WellSpline variables in INJ well
+                    {
+                        "Max": [4,1,4],
+                        "Min": [0,0,0]
+                    },
+                    {
+                        "Max": [4,4,4],
+                        "Min": [2,4,2]
+                    }
+                ]
+            }
+
+        ]
     },
     "Simulator": {
         "Type": "ECLIPSE",
@@ -28,6 +52,8 @@
     "Wells": [
         {
             "Name": "PROD",
+            "Control": "BHP",
+            "BHP": 2000,
             "Type": "WellBlocks",
             "Heel": [0,0,0],
             "WellBlocks": [
@@ -35,6 +61,14 @@
                 [1,4,2],
                 [2,4,2],
                 [3,4,2]
+            ],
+            "Variables": [
+                {
+                    "Type": "BHP",
+                    "InitialValue": 2000, // Same as setting to null (defaulting)
+                    "TimeSteps": [0, 50, 365]
+                }
+
             ]
         },
         {
@@ -44,15 +78,16 @@
             "SplinePoints": [
                 [2,0,2],
                 [2,4,2]
+            ],
+            "Variables": [
+                {
+                    "Type": "SplinePoints",
+                    "InitialValue": null, // Defaulting to the already given spline points
+                    "TimeSteps": [0]
+                }
+
             ]
         }
 
     ],
-    "Schedule": [
-        {
-            "Property": "BHP",
-            "Value": 2000
-        }
-
-    ]
 }
