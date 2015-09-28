@@ -45,49 +45,51 @@
         "Commands": ["csh", "@eclipse"],
         "DriverPath": "../../examples/ECLIPSE/HORZWELL/HORZWELL.DATA"
     },
-    "Reservoir": {
-        "Type": "EGRID",
-        "Path": "../../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID"
-    },
-    "Wells": [
-        {
-            "Name": "PROD",
-            "Control": "BHP",
-            "BHP": 2000,
-            "Type": "WellBlocks",
-            "Heel": [0,0,0],
-            "WellBlocks": [
-                [0,4,2],
-                [1,4,2],
-                [2,4,2],
-                [3,4,2]
-            ],
-            "Variables": [
-                {
-                    "Type": "BHP",
-                    "InitialValue": 2000, // Same as setting to null (defaulting)
-                    "TimeSteps": [0, 50, 365]
-                }
-
-            ]
+    "Model": {
+        "Reservoir": {
+            "Type": "ECLIPSE",
+            "Path": "../../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID"
         },
-        {
-            "Name": "INJ",
-            "Type": "WellSpline",
-            "Heel": [2,0,2],
-            "SplinePoints": [
-                [2,0,2],
-                [2,4,2]
-            ],
-            "Variables": [
-                {
-                    "Type": "SplinePoints",
-                    "InitialValue": null, // Defaulting to the already given spline points
-                    "TimeSteps": [0]
-                }
+        "Wells": [
+            {
+                "Name": "PROD",
+                "Control": "BHP",
+                "BHP": 2000,
+                "Type": "WellBlocks",
+                "Heel": [0,0,0],
+                "WellBlocks": [
+                    [0,4,2],
+                    [1,4,2],
+                    [2,4,2],
+                    [3,4,2]
+                ],
+                "Variables": [
+                    {
+                        "Type": "BHP",
+                        "InitialValue": 2000, // Same as setting to null (defaulting)
+                        "TimeSteps": [0, 50, 365]
+                    }
 
-            ]
-        }
+                ]
+            },
+            {
+                "Name": "INJ",
+                "Type": "WellSpline",
+                "Heel": [2,0,2],
+                "SplinePoints": [
+                    [2,0,2],
+                    [2,4,2]
+                ],
+                "Variables": [
+                    {
+                        "Type": "SplinePoints",
+                        "InitialValue": null, // Defaulting to the already given spline points
+                        "TimeSteps": [0]
+                    }
 
-    ],
+                ]
+            }
+
+        ],
+    }
 }
