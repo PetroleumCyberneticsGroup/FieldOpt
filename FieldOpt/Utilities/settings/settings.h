@@ -26,6 +26,8 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#include <QString>
+
 namespace Utilities {
 namespace Settings {
 
@@ -33,6 +35,11 @@ class Settings
 {
 public:
     Settings();
+
+private:
+    QString name_;
+    QString output_directory_;
+    bool verbose_;
 };
 
 }

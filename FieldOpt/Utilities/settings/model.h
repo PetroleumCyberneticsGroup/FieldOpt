@@ -26,15 +26,49 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include "settings.h"
+#include <QString>
+#include <QList>
 
 namespace Utilities {
 namespace Settings {
 
-class Model : public Settings
+class Model
 {
 public:
     Model();
+
+    enum ReservoirGridSourceType { ECLIPSE };
+    struct Reservoir {
+        ReservoirGridSourceType type;
+        QString path;
+    };
+
+    enum WellType { Injector, Producer };
+    enum WellControlType { BHP, Rate };
+    enum WellDefinitionType { WellBlocks, WellSpline };
+    struct Well {
+        struct IntegerCoordinate { int i; int j; int k; };
+        struct RealCoordinate { double x; double y; double z; };
+        struct Variable {
+            enum Type { BHP, SplinePoints };
+            QList<int> time_steps;
+            QList<int> variable_spline_point_indices;
+        };
+
+        QString name;
+        WellType type;
+        WellControlType control;
+        WellDefinitionType definition_type;
+        double bhp;
+        double rate;
+        IntegerCoordinate heel;
+        QList<IntegerCoordinate> well_blocks;
+        QList<RealCoordinate> spline_points;
+    };
+
+private:
+    Reservoir type_;
+    QList<Well> wells_;
 };
 
 }

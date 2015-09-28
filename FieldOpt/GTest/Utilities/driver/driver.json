@@ -19,21 +19,21 @@
             {
                 "Type": "BHP",
                 "Well": "PROD",
-                "Max": 3000,
-                "Min": 1000
+                "Max": 3000.0,
+                "Min": 1000.0
             },
             {
-                "Type": "SplinePoints",
+                "Type": "WellSplinePoints",
                 "Well": "INJ",
                 "InputType": "MaxMin", // Could also be Function (z(x,y))
-                "SplinePointLimits": [ // Must have same length as number of WellSpline variables in INJ well
+                "WellSplinePointLimits": [ // Must have same length as number of WellSpline variables in INJ well. Assumed to be (x,y,z) coordinates
                     {
-                        "Max": [4,1,4],
-                        "Min": [0,0,0]
+                        "Max": [40.0,10.0,40.0],
+                        "Min": [0.0,0.0,0.0]
                     },
                     {
-                        "Max": [4,4,4],
-                        "Min": [2,4,2]
+                        "Max": [40.0,40.0,40.0],
+                        "Min": [20.0,40.0,20.0]
                     }
                 ]
             }
@@ -53,9 +53,10 @@
         "Wells": [
             {
                 "Name": "PROD",
+                "Type": "Producer",
+                "DefinitionType": "WellBlocks",
                 "Control": "BHP",
                 "BHP": 2000,
-                "Type": "WellBlocks",
                 "Heel": [0,0,0],
                 "WellBlocks": [
                     [0,4,2],
@@ -66,7 +67,6 @@
                 "Variables": [
                     {
                         "Type": "BHP",
-                        "InitialValue": 2000, // Same as setting to null (defaulting)
                         "TimeSteps": [0, 50, 365]
                     }
 
@@ -74,16 +74,17 @@
             },
             {
                 "Name": "INJ",
-                "Type": "WellSpline",
+                "Type": "Injector",
+                "DefinitionType": "WellSpline",
                 "Heel": [2,0,2],
-                "SplinePoints": [
-                    [2,0,2],
-                    [2,4,2]
+                "SplinePoints": [ // Spline points are assumed to be (x,y,z) coordinates
+                    [20.0,0.0,20.0],
+                    [20.0,40.0,20.0]
                 ],
                 "Variables": [
                     {
                         "Type": "SplinePoints",
-                        "InitialValue": null, // Defaulting to the already given spline points
+                        "VariableSplinePointIndices": [0,1], // Indices of variable points in SplinePoints list.
                         "TimeSteps": [0]
                     }
 

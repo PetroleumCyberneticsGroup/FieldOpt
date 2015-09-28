@@ -26,15 +26,21 @@
 #ifndef SIMULATOR_H
 #define SIMULATOR_H
 
-#include "settings.h"
+#include <QStringList>
 
 namespace Utilities {
 namespace Settings {
 
-class Simulator : public Settings
+class Simulator
 {
 public:
     Simulator();
+
+    enum SimulatorType { ECLIPSE };
+private:
+    SimulatorType type_;
+    QStringList commands_;
+    QString driver_file_path;
 };
 
 }

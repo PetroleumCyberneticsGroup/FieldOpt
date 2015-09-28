@@ -26,15 +26,50 @@
 #ifndef OPTIMIZER_H
 #define OPTIMIZER_H
 
-#include "settings.h"
+#include <QList>
+#include <QString>
 
 namespace Utilities {
 namespace Settings {
 
-class Optimizer : public Settings
+class Optimizer
 {
 public:
     Optimizer();
+
+    enum SimulatorType { Compass };
+
+    struct Parameters {
+        int max_evaluations;
+        double initial_step_length;
+        double minimum_step_length;
+    };
+
+    struct Objective {
+        enum ObjectiveType { Expression };
+        ObjectiveType type;
+        QString expression;
+    };
+
+    enum ConstraintType { BHP, SplinePoints };
+    enum ConstraintWellSplinePointsType { MaxMin, Function};
+    struct Constraint {
+        struct RealCoordinate { double x; double y; double z; };
+        struct RealMaxMinLimit { RealCoordinate max; RealCoordinate min; };
+        ConstraintType type;
+        QString well;
+        double max;
+        double min;
+        ConstraintWellSplinePointsType spline_points_type;
+        QString well_spline_points_function;
+        QList<RealMaxMinLimit> spline_points_limits;
+    };
+
+private:
+    SimulatorType type_;
+    Parameters parameters_;
+    Objective objective_;
+    QList<Constraint> constraints_;
 };
 
 }
