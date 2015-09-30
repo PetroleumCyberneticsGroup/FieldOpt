@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- * simulator.h
+ * test_simulator.cpp
  *
- * Created: 28.09.2015 2015 by einar
+ * Created: 30.09.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,35 +23,35 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef SIMULATOR_H
-#define SIMULATOR_H
+#include <gtest/gtest.h>
+#include <QString>
 
-#include "settings.h"
+#include "Utilities/settings/settings.h"
+#include "Utilities/settings/simulator.h"
 
-#include <QStringList>
+using namespace Utilities::Settings;
 
-namespace Utilities {
-namespace Settings {
+namespace {
 
-class Simulator
-{
-    friend class Settings;
+class SimulatorSettingsTest : public ::testing::Test {
+protected:
+    SimulatorSettingsTest()
+        : settings_(driver_file_path_)
+    {
+    }
+    virtual ~SimulatorSettingsTest() {}
 
-public:
-    enum SimulatorType { ECLIPSE };
+    virtual void SetUp() {}
+    virtual void TearDown() {}
 
-    SimulatorType type() const { return type_; }
-    QStringList *commands() const { return commands_; }
-    QString driver_file_path() const { return driver_file_path_; }
-
-private:
-    Simulator(QJsonObject json_simulator);
-    SimulatorType type_;
-    QStringList *commands_;
-    QString driver_file_path_;
+    QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
+    Settings settings_;
 };
 
-}
+TEST_F(SimulatorSettingsTest, Fields) {
+    EXPECT_EQ(settings_.simulator()->type(), Simulator::SimulatorType::ECLIPSE);
+    EXPECT_EQ(settings_.simulator()->commands()->size(), 2);
+    EXPECT_STREQ("../../examples/ECLIPSE/HORZWELL/HORZWELL.DATA", settings_.simulator()->driver_file_path().toLatin1().constData());
 }
 
-#endif // SIMULATOR_H
+}

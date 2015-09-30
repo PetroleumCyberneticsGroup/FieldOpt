@@ -42,6 +42,7 @@ public:
     enum OptimizerType { Compass };
     enum ConstraintType { BHP, SplinePoints };
     enum ConstraintWellSplinePointsType { MaxMin, Function};
+    enum ObjectiveType { Expression };
 
     struct Parameters {
         int max_evaluations;
@@ -50,7 +51,6 @@ public:
     };
 
     struct Objective {
-        enum ObjectiveType { Expression };
         ObjectiveType type;
         QString expression;
     };
@@ -67,12 +67,19 @@ public:
         QList<RealMaxMinLimit> spline_points_limits;
     };
 
+    OptimizerType type() const { return type_; }
+    Parameters parameters() const { return parameters_; }
+    Objective objective() const { return objective_; }
+    QList<Constraint> *constraints() const { return constraints_; }
+
 private:
-    Optimizer();
+    Optimizer(QJsonObject json_optimizer);
     OptimizerType type_;
     Parameters parameters_;
     Objective objective_;
-    QList<Constraint> constraints_;
+    QList<Constraint> *constraints_;
+
+    Constraint parseSingleConstraint(QJsonObject json_constraint);
 };
 
 }

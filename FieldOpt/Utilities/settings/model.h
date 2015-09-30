@@ -41,8 +41,9 @@ class Model
 public:
     enum ReservoirGridSourceType { ECLIPSE };
     enum WellType { Injector, Producer };
-    enum WellControlType { BHP, Rate };
+    enum WellControlType { BHPControl, RateControl };
     enum WellDefinitionType { WellBlocks, WellSpline };
+    enum WellVariableType { BHP, SplinePoints };
 
     struct Reservoir {
         ReservoirGridSourceType type;
@@ -53,7 +54,7 @@ public:
         struct IntegerCoordinate { int i; int j; int k; };
         struct RealCoordinate { double x; double y; double z; };
         struct Variable {
-            enum Type { BHP, SplinePoints };
+            WellVariableType type;
             QList<int> time_steps;
             QList<int> variable_spline_point_indices;
         };
@@ -66,12 +67,20 @@ public:
         IntegerCoordinate heel;
         QList<IntegerCoordinate> well_blocks;
         QList<RealCoordinate> spline_points;
+        QList<Variable> variables;
     };
 
+    Reservoir reservoir() const { return reservoir_; }
+    QList<Well> wells() const { return wells_; }
+
 private:
-    Model();
-    Reservoir type_;
+    Model(QJsonObject json_model);
+    Reservoir reservoir_;
     QList<Well> wells_;
+
+    void readReservoir(QJsonObject json_reservoir);
+    Well readSingleWell(QJsonObject json_well);
+    Well::Variable readSingleVariable(QJsonObject json_variable);
 };
 
 }

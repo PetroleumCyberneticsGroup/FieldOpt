@@ -24,9 +24,36 @@
  *****************************************************************************/
 
 #include "simulator.h"
+#include "settings_exceptions.h"
+
+#include <QJsonArray>
 
 namespace Utilities {
 namespace Settings {
+
+Simulator::Simulator(QJsonObject json_simulator)
+{
+    // Driver path
+    if (!json_simulator.contains("DriverPath"))
+        throw UnableToParseSimulatorSectionException("A driver path must be defined.");
+    driver_file_path_ = json_simulator["DriverPath"].toString();
+
+    // Simulator type
+    QString type = json_simulator["Type"].toString();
+    if (QString::compare(type, "ECLIPSE") == 0)
+        type_ = SimulatorType::ECLIPSE;
+    else throw SimulatorTypeNotRecognizedException("The simulator type " + type.toStdString() + " was not recognized");
+
+    // Simulator commands
+    QJsonArray commands = json_simulator["Commands"].toArray();
+    if (json_simulator.contains("Commands") && commands.size() > 0) {
+        commands_ = new QStringList();
+        for (int i = 0; i < commands.size(); ++i) {
+            commands_->append(commands[i].toString());
+        }
+    }
+    else throw NoSimulatorCommandsGivenException("At least one simulator command must be given.");
+}
 
 }
 }

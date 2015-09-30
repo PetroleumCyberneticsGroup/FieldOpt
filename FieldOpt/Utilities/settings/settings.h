@@ -27,19 +27,54 @@
 #define SETTINGS_H
 
 #include <QString>
+#include <QJsonObject>
+
+#include "simulator.h"
+#include "optimizer.h"
+#include "model.h"
 
 namespace Utilities {
 namespace Settings {
 
+class Simulator;
+class Model;
+class Optimizer;
+
 class Settings
 {
 public:
-    Settings();
+    Settings(QString driver_path); //!< Used when reading a file
+
+    QString driver_path() const { return driver_path_; }
+
+    QString name() const { return name_; }
+    QString output_directory() const { return output_directory_; }
+    bool verbose() const { return verbose_; }
+
+    Model *model() const { return model_; }
+    Utilities::Settings::Optimizer *optimizer() const { return optimizer_; }
+    Simulator *simulator() const { return simulator_; }
 
 private:
+    Settings(); //!< Used by friends when writing a file
+
+    QString driver_path_;
+
     QString name_;
     QString output_directory_;
     bool verbose_;
+
+    Model *model_;
+    Utilities::Settings::Optimizer *optimizer_;
+    Simulator *simulator_;
+
+    QJsonObject *json_driver_;
+
+    void readDriverFile();
+    void readGlobalSection();
+    void readSimulatorSection();
+    void readOptimizerSection();
+    void readModelSection();
 };
 
 }

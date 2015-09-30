@@ -6,6 +6,7 @@ CONFIG -= app_bundle
 CONFIG += c++11
 LIBS += -L../Model -lmodel
 LIBS += -L../ERTWrapper -lertwrapper
+LIBS += -L../Utilities -lutilities
 LIBS += -lpthread -lgtest -pthread
 SOURCES += \
     gtest_main.cpp \
@@ -15,7 +16,11 @@ SOURCES += \
     Model/reservoir/grid/test_ijkcoordinate.cpp \
     Model/reservoir/grid/test_xyzcoordinate.cpp \
     Model/variables/test_variables.cpp \
-    Model/variables/test_variablecontainer.cpp
+    Model/variables/test_variablecontainer.cpp \
+    Utilities/settings/test_settings.cpp \
+    Utilities/settings/test_simulator.cpp \
+    Utilities/settings/test_model.cpp \
+    Utilities/settings/test_optimizer.cpp
 
 OTHER_FILES += \
     Utilities/driver/driver.json

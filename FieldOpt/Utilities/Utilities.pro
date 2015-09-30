@@ -6,13 +6,14 @@ TEMPLATE = lib
 TARGET = utilities
 
 HEADERS += \
-    settings/settings.h \
+    settings/settings_exceptions.h \
     settings/optimizer.h \
     settings/simulator.h \
-    settings/model.h
+    settings/model.h \
+    settings/settings.h
 
 SOURCES += \
-    settings/settings.cpp \
     settings/optimizer.cpp \
     settings/simulator.cpp \
-    settings/model.cpp
+    settings/model.cpp \
+    settings/settings.cpp

@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- * simulator.h
+ * test_settings.cpp
  *
- * Created: 28.09.2015 2015 by einar
+ * Created: 30.09.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,35 +23,35 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef SIMULATOR_H
-#define SIMULATOR_H
+#include <gtest/gtest.h>
+#include <QString>
+#include "Utilities/settings/settings.h"
 
-#include "settings.h"
+using namespace Utilities::Settings;
 
-#include <QStringList>
+namespace {
 
-namespace Utilities {
-namespace Settings {
+class SettingsTest : public ::testing::Test {
+protected:
+    SettingsTest() {}
+    virtual ~SettingsTest() {}
 
-class Simulator
-{
-    friend class Settings;
+    virtual void SetUp() {}
+    virtual void TearDown() {}
 
-public:
-    enum SimulatorType { ECLIPSE };
-
-    SimulatorType type() const { return type_; }
-    QStringList *commands() const { return commands_; }
-    QString driver_file_path() const { return driver_file_path_; }
-
-private:
-    Simulator(QJsonObject json_simulator);
-    SimulatorType type_;
-    QStringList *commands_;
-    QString driver_file_path_;
+    QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
 };
 
-}
+TEST_F(SettingsTest, ConstructorAndTestFileValidity) {
+    EXPECT_NO_THROW(Settings settings = Settings(driver_file_path_));
 }
 
-#endif // SIMULATOR_H
+TEST_F(SettingsTest, GlobalSettings) {
+    Settings settings = Settings(driver_file_path_);
+    EXPECT_STREQ("TestRun", settings.name().toLatin1().constData());
+    EXPECT_STREQ("~/FieldOpt/output", settings.output_directory().toLatin1().constData());
+    EXPECT_STREQ(driver_file_path_.toLatin1().constData(), settings.driver_path().toLatin1().constData());
+    EXPECT_EQ(false, settings.verbose());
+}
+
+}

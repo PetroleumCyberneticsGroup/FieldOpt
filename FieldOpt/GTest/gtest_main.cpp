@@ -9,6 +9,7 @@
 #include "Model/reservoir/grid/test_cell.cpp"
 #include "Model/variables/test_variables.cpp"
 #include "Model/variables/test_variablecontainer.cpp"
+#include "Utilities/settings/test_settings.cpp"
 
 using namespace std;
 
