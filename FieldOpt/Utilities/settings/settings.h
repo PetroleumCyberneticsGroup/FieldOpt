@@ -40,35 +40,38 @@ class Simulator;
 class Model;
 class Optimizer;
 
+/*!
+ * \brief The Settings class contains both general settings for a FieldOpt run
+ * and pointers to objects containing specific settings for the Model, Simulator
+ * and Optimizer. Settings takes as input the path to a "driver file" in the
+ * JSON format.
+ */
 class Settings
 {
 public:
-    Settings(QString driver_path); //!< Used when reading a file
+    Settings(QString driver_path);
 
     QString driver_path() const { return driver_path_; }
 
-    QString name() const { return name_; }
-    QString output_directory() const { return output_directory_; }
-    bool verbose() const { return verbose_; }
+    QString name() const { return name_; } //!< The name to be used for the run. Output file and folder names are derived from this.
+    QString output_directory() const { return output_directory_; } //!< Path to a directory in which output files are to be placed.
+    bool verbose() const { return verbose_; } //!< Verbose mode (with or without debug printing).
 
-    Model *model() const { return model_; }
-    Utilities::Settings::Optimizer *optimizer() const { return optimizer_; }
-    Simulator *simulator() const { return simulator_; }
+    Model *model() const { return model_; } //!< Object containing model specific settings.
+    Utilities::Settings::Optimizer *optimizer() const { return optimizer_; } //!< Object containing optimizer specific settings.
+    Simulator *simulator() const { return simulator_; } //!< Object containing simulator specific settings.
 
 private:
     Settings(); //!< Used by friends when writing a file
 
     QString driver_path_;
-
+    QJsonObject *json_driver_;
     QString name_;
     QString output_directory_;
     bool verbose_;
-
     Model *model_;
     Utilities::Settings::Optimizer *optimizer_;
     Simulator *simulator_;
-
-    QJsonObject *json_driver_;
 
     void readDriverFile();
     void readGlobalSection();

@@ -34,6 +34,10 @@
 namespace Utilities {
 namespace Settings {
 
+/*!
+ * \brief The Model class contains model-specific settings. Model settings objects may _only_ be
+ * created by the Settings class. They are created when reading a JSON-formatted "driver file".
+ */
 class Model
 {
     friend class Settings;
@@ -46,8 +50,8 @@ public:
     enum WellVariableType { BHP, SplinePoints };
 
     struct Reservoir {
-        ReservoirGridSourceType type;
-        QString path;
+        ReservoirGridSourceType type; //!< The source of the grid file (which reservoir simulator produced it).
+        QString path; //!< Path to the reservoir grid file, e.g. a .EGRID or .GRID file produced by ECLIPSE.
     };
 
     struct Well {
@@ -58,20 +62,20 @@ public:
             QList<int> time_steps;
             QList<int> variable_spline_point_indices;
         };
-        QString name;
-        WellType type;
-        WellControlType control;
-        WellDefinitionType definition_type;
-        double bhp;
-        double rate;
-        IntegerCoordinate heel;
-        QList<IntegerCoordinate> well_blocks;
-        QList<RealCoordinate> spline_points;
-        QList<Variable> variables;
+        QString name; //!< The name to be used for the well.
+        WellType type; //!< The well type, i.e. producer or injector.
+        WellControlType control; //!< Whether the well is controlled by rate or bhp.
+        IntegerCoordinate heel; //!< The heel of the well. Must _always_ be defined.
+        WellDefinitionType definition_type; //!< How the well path is defined.
+        double bhp; //!< BHP when using BHP control.
+        double rate; //!< Rate when using rate control.
+        QList<IntegerCoordinate> well_blocks; //!< Well blocks when the well path is defined by WellBlocks.
+        QList<RealCoordinate> spline_points; //!< Spline points when the well path is defined by SplinePoints.
+        QList<Variable> variables; //!< List of variables for the well (e.g. pressure, rate or spline point positions).
     };
 
-    Reservoir reservoir() const { return reservoir_; }
-    QList<Well> wells() const { return wells_; }
+    Reservoir reservoir() const { return reservoir_; } //!< Get the struct containing reservoir settings.
+    QList<Well> wells() const { return wells_; } //!< Get the struct containing settings for the well(s) in the model.
 
 private:
     Model(QJsonObject json_model);

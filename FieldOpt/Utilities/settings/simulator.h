@@ -33,6 +33,11 @@
 namespace Utilities {
 namespace Settings {
 
+/*!
+ * \brief The Simulator class contains simulator-specific settings. Simulator settings objects
+ * may _only_ be created by the Settings class. They are created when reading a JSON-formatted
+ * "driver file".
+ */
 class Simulator
 {
     friend class Settings;
@@ -40,9 +45,9 @@ class Simulator
 public:
     enum SimulatorType { ECLIPSE };
 
-    SimulatorType type() const { return type_; }
-    QStringList *commands() const { return commands_; }
-    QString driver_file_path() const { return driver_file_path_; }
+    SimulatorType type() const { return type_; } //!< Get the simulator type (e.g. ECLIPSE).
+    QStringList *commands() const { return commands_; } //!< Get the simulator commands (commands used to execute a simulation). Each list element is executed in sequence.
+    QString driver_file_path() const { return driver_file_path_; } //!< Get the path to the driver file.
 
 private:
     Simulator(QJsonObject json_simulator);

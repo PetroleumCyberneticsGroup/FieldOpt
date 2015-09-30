@@ -34,6 +34,11 @@
 namespace Utilities {
 namespace Settings {
 
+/*!
+ * \brief The Optimizer class contains optimizer-specific settings. Optimizer settings objects
+ * may _only_ be created by the Settings class. They are created when reading a
+ * JSON-formatted "driver file".
+ */
 class Optimizer
 {
     friend class Settings;
@@ -45,32 +50,32 @@ public:
     enum ObjectiveType { Expression };
 
     struct Parameters {
-        int max_evaluations;
-        double initial_step_length;
-        double minimum_step_length;
+        int max_evaluations; //!< Maximum number of evaluations allowed before terminating the optimization run.
+        double initial_step_length; //!< The initial step length in the algorithm when applicable.
+        double minimum_step_length; //!< The minimum step length in the algorithm when applicable.
     };
 
     struct Objective {
-        ObjectiveType type;
-        QString expression;
+        ObjectiveType type; //!< The objective definition type (e.g. Expression)
+        QString expression; //!< The expression for the Objective function (e.g. CUMOIL - 0.5 CUMWAT)
     };
 
     struct Constraint {
-        struct RealCoordinate { double x; double y; double z; };
-        struct RealMaxMinLimit { RealCoordinate max; RealCoordinate min; };
-        ConstraintType type;
-        QString well;
-        double max;
-        double min;
-        ConstraintWellSplinePointsType spline_points_type;
-        QString well_spline_points_function;
-        QList<RealMaxMinLimit> spline_points_limits;
+        struct RealCoordinate { double x; double y; double z; }; //!< Used to express (x,y,z) coordinates.
+        struct RealMaxMinLimit { RealCoordinate max; RealCoordinate min; }; //!< Used to define a box-shaped 3D area. Max and min each define a corner.
+        ConstraintType type; //!< The constraint type (e.g. BHP or SplinePoints positions).
+        QString well; //!< The name of the well this Constraint applies to.
+        double max; //!< Max limit when using constraints like BHP.
+        double min; //!< Min limit when using constraints like BHP.
+        ConstraintWellSplinePointsType spline_points_type; //!< How the SplinePoints constraint is given when SplinePoints constraint type is selected.
+        QString well_spline_points_function; //!< The function a spline point needs to adhere to to be valid when SplinePoints constraint type is selected.
+        QList<RealMaxMinLimit> spline_points_limits; //!< Box limits a spline point needs to be within to be valid when SplinePoints constraint type is selected.
     };
 
-    OptimizerType type() const { return type_; }
-    Parameters parameters() const { return parameters_; }
-    Objective objective() const { return objective_; }
-    QList<Constraint> *constraints() const { return constraints_; }
+    OptimizerType type() const { return type_; } //!< Get the Optimizer type (e.g. Compass).
+    Parameters parameters() const { return parameters_; } //!< Get the optimizer parameters.
+    Objective objective() const { return objective_; } //!< Get the optimizer objective function.
+    QList<Constraint> *constraints() const { return constraints_; } //!< Get the optimizer constraints.
 
 private:
     Optimizer(QJsonObject json_optimizer);
