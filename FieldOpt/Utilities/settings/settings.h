@@ -76,8 +76,8 @@ private:
     void readDriverFile();
     void readGlobalSection();
     void readSimulatorSection();
-    void readOptimizerSection();
     void readModelSection();
+    void readOptimizerSection();
 };
 
 }
