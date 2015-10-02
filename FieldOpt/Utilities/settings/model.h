@@ -58,9 +58,10 @@ public:
         struct IntegerCoordinate { int i; int j; int k; };
         struct RealCoordinate { double x; double y; double z; };
         struct Variable {
-            WellVariableType type;
-            QList<int> time_steps;
-            QList<int> variable_spline_point_indices;
+            QString name; //!< A unique name for the variable.
+            WellVariableType type; //!< The type of variable (what kind of property it applies to, _not_ int/float).
+            QList<int> time_steps; //!< The time steps at which the variable is allowed to change value.
+            QList<int> variable_spline_point_indices; //!< The indices of coordinates in the spline points list that are variable. The rest are taken as constant.
         };
         QString name; //!< The name to be used for the well.
         WellType type; //!< The well type, i.e. producer or injector.

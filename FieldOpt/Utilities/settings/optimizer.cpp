@@ -84,6 +84,10 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
 {
     Constraint optimizer_constraint;
 
+    if (!json_constraint.contains("Name") || json_constraint["Name"].toString().size() < 1)
+        throw UnableToParseOptimizerConstraintsSectionException("All constraints must specify a name corresponding to a unique variable name.");
+    optimizer_constraint.name = json_constraint["Name"].toString();
+
     // Constraint types BHP and Rate
     QString constraint_type = json_constraint["Type"].toString();
     if (QString::compare(constraint_type, "BHP") == 0) {

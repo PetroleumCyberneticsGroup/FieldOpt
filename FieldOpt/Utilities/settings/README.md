@@ -125,6 +125,7 @@ The final field in a well is an optional array of variables:
 		...,
 		"Variables": [
 			{
+				"Name": string,
 				"Type": string,
 				"TimeSteps": integer array,
 				"VariableSplinePointIndices": integer array
@@ -134,6 +135,7 @@ The final field in a well is an optional array of variables:
 ]
 ```
 
+* `Name` defines a unique name for the variable, for example `wellname-vartype-1`.
 * `Type` denotes what type of variable this is, e.g. `SplinePoints`, `Rate` or `BHP`.
 * `TimeSteps` denotes at what time steps the value of the variable is allowed to change. It is defined as an integer array of time steps.
 * `VariableSplinePointIndices` denotes which of the spline points are allowed to vary. The indices not found in this list are taken to be stationary.
@@ -205,6 +207,7 @@ The `Constraints` object defines any contraints for the model/well/problem/varia
 ```
 "Constraints": [
 	{
+		"Name": string,
 		"Type": string,
 		"Well": string,
 		...
@@ -213,6 +216,7 @@ The `Constraints` object defines any contraints for the model/well/problem/varia
 ]
 ```
 
+* `Name` The unique name of the variable this constraint applies to.
 * `Type` denotes the type of constraint. This corresponds to variable types. The implemented types are `BHP`, `Rate` and `WellSplinePoints`.
 * `Well` denotes the well this constraint applies to. Must correspond to the `Name` of a well in the model section.
 

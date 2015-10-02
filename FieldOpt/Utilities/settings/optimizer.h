@@ -61,6 +61,7 @@ public:
     };
 
     struct Constraint {
+        QString name; //!< The unique name of the variable this constraint applies to.
         struct RealCoordinate { double x; double y; double z; }; //!< Used to express (x,y,z) coordinates.
         struct RealMaxMinLimit { RealCoordinate max; RealCoordinate min; }; //!< Used to define a box-shaped 3D area. Max and min each define a corner.
         ConstraintType type; //!< The constraint type (e.g. BHP or SplinePoints positions).

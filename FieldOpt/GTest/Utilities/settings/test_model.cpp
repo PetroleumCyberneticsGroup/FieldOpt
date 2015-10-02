@@ -70,6 +70,7 @@ TEST_F(ModelSettingsTest, ProducerWell) {
     EXPECT_EQ(1, producer.variables.size());
     EXPECT_EQ(Model::WellVariableType::BHP, producer.variables.first().type);
     EXPECT_EQ(3, producer.variables.first().time_steps.size());
+    EXPECT_STREQ("PROD-BHP-1", producer.variables.first().name.toLatin1().constData());
 }
 
 TEST_F(ModelSettingsTest, InjectorWell) {
@@ -91,6 +92,7 @@ TEST_F(ModelSettingsTest, InjectorWell) {
     EXPECT_EQ(Model::WellVariableType::SplinePoints, injector.variables.first().type);
     EXPECT_EQ(1, injector.variables.first().variable_spline_point_indices.last());
     EXPECT_EQ(1, injector.variables.first().time_steps.size());
+    EXPECT_STREQ("INJ-SplinePoints-1", injector.variables.first().name.toLatin1().constData());
 }
 
 }

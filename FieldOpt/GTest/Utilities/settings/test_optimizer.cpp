@@ -71,6 +71,7 @@ TEST_F(OptimizerSettingsTest, ProducerConstraint) {
     EXPECT_STREQ("PROD", producerConstraint.well.toLatin1().constData());
     EXPECT_FLOAT_EQ(3000.0, producerConstraint.max);
     EXPECT_FLOAT_EQ(1000.0, producerConstraint.min);
+    EXPECT_STREQ("PROD-BHP-1", producerConstraint.name.toLatin1().constData());
 }
 
 TEST_F(OptimizerSettingsTest, InjectorConstraint) {
@@ -81,6 +82,7 @@ TEST_F(OptimizerSettingsTest, InjectorConstraint) {
     EXPECT_EQ(Optimizer::ConstraintWellSplinePointsType::MaxMin, injectorConstraint.spline_points_type);
     EXPECT_EQ(2, injectorConstraint.spline_points_limits.size());
     EXPECT_FLOAT_EQ(40.0, injectorConstraint.spline_points_limits.first().max.z);
+    EXPECT_STREQ("INJ-SplinePoints-1", injectorConstraint.name.toLatin1().constData());
 }
 
 }

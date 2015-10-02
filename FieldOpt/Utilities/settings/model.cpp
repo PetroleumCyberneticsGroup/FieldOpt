@@ -152,6 +152,11 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
 Model::Well::Variable Model::readSingleVariable(QJsonObject json_variable)
 {
     Well::Variable variable;
+
+    if (!json_variable.contains("Name") || json_variable["Name"].toString().size() < 1)
+        throw UnableToParseWellsModelSectionException("All variables must specify a unique name.");
+    variable.name = json_variable["Name"].toString();
+
     QString type = json_variable["Type"].toString();
     if (QString::compare(type, "BHP") == 0) {
         variable.type = WellVariableType::BHP;

@@ -17,12 +17,14 @@
         },
         "Constraints": [
             {
+                "Name": "PROD-BHP-1",
                 "Type": "BHP",
                 "Well": "PROD",
                 "Max": 3000.0,
                 "Min": 1000.0
             },
             {
+                "Name": "INJ-SplinePoints-1",
                 "Type": "WellSplinePoints",
                 "Well": "INJ",
                 "WellSplinePointsInputType": "MaxMin",
@@ -66,6 +68,7 @@
                 ],
                 "Variables": [
                     {
+                        "Name": "PROD-BHP-1",
                         "Type": "BHP",
                         "TimeSteps": [0, 50, 365]
                     }
@@ -85,6 +88,7 @@
                 ],
                 "Variables": [
                     {
+                        "Name": "INJ-SplinePoints-1",
                         "Type": "SplinePoints",
                         "VariableSplinePointIndices": [0,1],
                         "TimeSteps": [0]
