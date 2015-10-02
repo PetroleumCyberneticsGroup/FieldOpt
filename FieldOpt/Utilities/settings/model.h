@@ -48,6 +48,7 @@ public:
     enum WellControlType { BHPControl, RateControl };
     enum WellDefinitionType { WellBlocks, WellSpline };
     enum WellVariableType { BHP, Rate, SplinePoints };
+    enum WellCompletionType { Perforation };
 
     struct Reservoir {
         ReservoirGridSourceType type; //!< The source of the grid file (which reservoir simulator produced it).
@@ -57,6 +58,10 @@ public:
     struct Well {
         struct IntegerCoordinate { int i; int j; int k; };
         struct RealCoordinate { double x; double y; double z; };
+        struct Completion {
+            WellCompletionType type;
+            IntegerCoordinate well_block;
+        };
         struct Variable {
             QString name; //!< A unique name for the variable.
             WellVariableType type; //!< The type of variable (what kind of property it applies to, _not_ int/float).
@@ -70,6 +75,7 @@ public:
         WellDefinitionType definition_type; //!< How the well path is defined.
         double bhp; //!< BHP when using BHP control.
         double rate; //!< Rate when using rate control.
+        QList<Completion> completions; //!< Well completions, i.e. perforations and ICDs.
         QList<IntegerCoordinate> well_blocks; //!< Well blocks when the well path is defined by WellBlocks.
         QList<RealCoordinate> spline_points; //!< Spline points when the well path is defined by SplinePoints.
         QList<Variable> variables; //!< List of variables for the well (e.g. pressure, rate or spline point positions).

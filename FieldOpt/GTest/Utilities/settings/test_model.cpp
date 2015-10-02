@@ -71,6 +71,9 @@ TEST_F(ModelSettingsTest, ProducerWell) {
     EXPECT_EQ(Model::WellVariableType::BHP, producer.variables.first().type);
     EXPECT_EQ(3, producer.variables.first().time_steps.size());
     EXPECT_STREQ("PROD-BHP-1", producer.variables.first().name.toLatin1().constData());
+
+    EXPECT_EQ(Model::WellCompletionType::Perforation, producer.completions.first().type);
+    EXPECT_EQ(4, producer.completions.first().well_block.j);
 }
 
 TEST_F(ModelSettingsTest, InjectorWell) {

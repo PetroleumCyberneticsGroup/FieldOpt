@@ -117,6 +117,24 @@ In addition, depending on the values entered in the already mentioned fields, th
 * `WellBlocks` must be set when `DefinitionType` is set to `WellBlocks`. It must be set to an array of _integer_ coordinates, i.e. `[ [i1,j1,k1], [i2,j2,k2], ... ]`.
 * `SplinePoints` must be set when `DefinitionType` is set to `WellSpline`.  It must be set to an array of _float_ coordinates, i.e. `[ [x1,y1,z1], [x2,y2,k2], ... ]`.
 
+Additionally, all wells may/should define completions:
+```
+"Wells": [
+	{
+		...
+		"Completions": [
+			{
+				"Type": string,
+				"WellBlock": integer array
+			}, ...
+		]
+	}, ...
+]
+```
+
+* `Type` denotes the completion type. Initially only `Perforation` is supported.
+* `WellBlock` denotes the well block this perforation should be applied to.
+
 The final field in a well is an optional array of variables:
 
 ```

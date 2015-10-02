@@ -137,6 +137,26 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
     well.heel.j = json_heel[1].toInt();
     well.heel.k = json_heel[2].toInt();
 
+    // Completions
+    well.completions = QList<Well::Completion>();
+    if (json_well.contains("Completions")) {
+        if (!json_well["Completions"].isArray())
+            throw UnableToParseWellsModelSectionException("Completions must be provided as an array.");
+        for (int i = 0; i < json_well["Completions"].toArray().size(); ++i) {
+            QJsonObject json_completion = json_well["Completions"].toArray().at(i).toObject();
+            Well::Completion completion;
+            QString completion_type = json_completion["Type"].toString();
+            if (QString::compare(completion_type, "Perforation") == 0) {
+                completion.type = WellCompletionType::Perforation;
+                completion.well_block.i = json_completion["WellBlock"].toArray().at(0).toInt();
+                completion.well_block.j = json_completion["WellBlock"].toArray().at(1).toInt();
+                completion.well_block.k = json_completion["WellBlock"].toArray().at(2).toInt();
+            }
+            else throw UnableToParseWellsModelSectionException("Completion type not recognized.");
+            well.completions.append(completion);
+        }
+    }
+
     // Variables
     if (json_well.contains("Variables")) {
         QJsonArray json_variables = json_well["Variables"].toArray();
