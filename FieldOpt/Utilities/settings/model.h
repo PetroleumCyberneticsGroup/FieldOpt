@@ -87,7 +87,7 @@ private:
     Well readSingleWell(QJsonObject json_well);
     Well::Variable readSingleVariable(QJsonObject json_variable);
 
-    bool isVariableNameUnique(QString varialbe_name) const;
+    bool variableNameExists(QString varialbe_name) const;
 };
 
 }

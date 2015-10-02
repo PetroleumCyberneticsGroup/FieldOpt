@@ -78,6 +78,8 @@ private:
     void readSimulatorSection();
     void readModelSection();
     void readOptimizerSection();
+
+    bool constraintNamesCorrespondToVariables();
 };
 
 }

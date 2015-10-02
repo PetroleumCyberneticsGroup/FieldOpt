@@ -130,6 +130,12 @@ public:
         : std::runtime_error(message) {}
 };
 
+class DriverFileInconsistentException : public std::runtime_error {
+public:
+    DriverFileInconsistentException(const string &message)
+        : std::runtime_error(message) {}
+};
+
 }
 }
 #endif // SETTINGS_EXCEPTIONS_H

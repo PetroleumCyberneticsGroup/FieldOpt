@@ -153,7 +153,7 @@ Model::Well::Variable Model::readSingleVariable(QJsonObject json_variable)
 {
     Well::Variable variable;
 
-    if (!json_variable.contains("Name") || json_variable["Name"].toString().size() < 1 || !isVariableNameUnique(json_variable["Name"].toString()))
+    if (!json_variable.contains("Name") || json_variable["Name"].toString().size() < 1 || variableNameExists(json_variable["Name"].toString()))
         throw UnableToParseWellsModelSectionException("All variables must specify a unique name.");
     variable.name = json_variable["Name"].toString();
 
@@ -181,15 +181,15 @@ Model::Well::Variable Model::readSingleVariable(QJsonObject json_variable)
     return variable;
 }
 
-bool Model::isVariableNameUnique(QString varible_name) const
+bool Model::variableNameExists(QString varible_name) const
 {
     for (int i = 0; i < wells_.size(); ++i) {
         for (int j = 0; j < wells_.at(i).variables.size(); ++j) {
             if (QString::compare(wells_.at(i).variables.at(j).name, varible_name) == 0)
-                return false;
+                return true;
         }
     }
-    return true;
+    return false;
 }
 
 }
