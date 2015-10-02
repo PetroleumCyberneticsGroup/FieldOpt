@@ -75,7 +75,7 @@ The reservoir object contains information on the reservoir grid that should be u
 
 ### Model -> Wells
 
-In the wells section we describe one or more wells that are part of our model. Only wells that are included here will be part of the simulated model. 
+In the wells section we describe one or more wells that are part of our model. Only wells that are included here will be part of the simulated model.
 
 All wells must define the following fields:
 
@@ -134,7 +134,7 @@ The final field in a well is an optional array of variables:
 ]
 ```
 
-* `Type` denotes what type of variable this is, e.g. `SplinePoints` or `BHP`.
+* `Type` denotes what type of variable this is, e.g. `SplinePoints`, `Rate` or `BHP`.
 * `TimeSteps` denotes at what time steps the value of the variable is allowed to change. It is defined as an integer array of time steps.
 * `VariableSplinePointIndices` denotes which of the spline points are allowed to vary. The indices not found in this list are taken to be stationary.
 
@@ -213,7 +213,7 @@ The `Constraints` object defines any contraints for the model/well/problem/varia
 ]
 ```
 
-* `Type` denotes the type of constraint. This corresponds to variable types. The implemented types are `BHP` and `WellSplinePoints`.
+* `Type` denotes the type of constraint. This corresponds to variable types. The implemented types are `BHP`, `Rate` and `WellSplinePoints`.
 * `Well` denotes the well this constraint applies to. Must correspond to the `Name` of a well in the model section.
 
 The remaining fields depends on the type of variable being defined:

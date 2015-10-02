@@ -47,7 +47,7 @@ public:
     enum WellType { Injector, Producer };
     enum WellControlType { BHPControl, RateControl };
     enum WellDefinitionType { WellBlocks, WellSpline };
-    enum WellVariableType { BHP, SplinePoints };
+    enum WellVariableType { BHP, Rate, SplinePoints };
 
     struct Reservoir {
         ReservoirGridSourceType type; //!< The source of the grid file (which reservoir simulator produced it).

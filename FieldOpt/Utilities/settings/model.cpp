@@ -156,6 +156,9 @@ Model::Well::Variable Model::readSingleVariable(QJsonObject json_variable)
     if (QString::compare(type, "BHP") == 0) {
         variable.type = WellVariableType::BHP;
     }
+    if (QString::compare(type, "Rate") == 0) {
+        variable.type = WellVariableType::Rate;
+    }
     else if (QString::compare(type, "SplinePoints") == 0) {
         variable.type = WellVariableType::SplinePoints;
         variable.variable_spline_point_indices = QList<int>();

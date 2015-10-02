@@ -84,10 +84,17 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
 {
     Constraint optimizer_constraint;
 
-    // Constraint type
+    // Constraint types BHP and Rate
     QString constraint_type = json_constraint["Type"].toString();
     if (QString::compare(constraint_type, "BHP") == 0) {
         optimizer_constraint.type = ConstraintType::BHP;
+        if (json_constraint.contains("Max"))
+            optimizer_constraint.max = json_constraint["Max"].toDouble();
+        if (json_constraint.contains("Min"))
+            optimizer_constraint.min = json_constraint["Min"].toDouble();
+    }
+    else if (QString::compare(constraint_type, "Rate") == 0) {
+        optimizer_constraint.type = ConstraintType::Rate;
         if (json_constraint.contains("Max"))
             optimizer_constraint.max = json_constraint["Max"].toDouble();
         if (json_constraint.contains("Min"))
