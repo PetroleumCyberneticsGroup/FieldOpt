@@ -54,6 +54,7 @@ class WeightedSum : public Objective
 {
 public:
     WeightedSum(Utilities::Settings::Optimizer settings);
+    double value() const;
 
 private:
     QList<QPair<double, double>> components_; //!< List of gamma, k pairs.
