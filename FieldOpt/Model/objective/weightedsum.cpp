@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- * model.h
+ * weightedsum.cpp
  *
- * Created: 22.09.2015 2015 by einar
+ * Created: 07.10.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,39 +23,4 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef MODEL_H
-#define MODEL_H
-
-#include <QString>
-#include <QList>
-
-#include "reservoir/reservoir.h"
-#include "objective/objective.h"
-#include "variables/variablecontainer.h"
-#include "schedule/schedule.h"
-#include "wells/well.h"
-
-namespace Model {
-
-class Model
-{
-public:
-    Model();
-
-    Reservoir::Reservoir reservoir() const { return reservoir_; }
-    Schedule::Schedule schedule() const { return schedule_; }
-    Objective::Objective *objective() const { return objective_; }
-    Variables::VariableContainer *variables() const { return variables_; }
-    QList<Wells::Well *> wells() const { return wells_; }
-
-private:
-    Reservoir::Reservoir reservoir_;
-    Schedule::Schedule schedule_;
-    Objective::Objective *objective_;
-    Variables::VariableContainer *variables_;
-    QList<Wells::Well *> wells_;
-};
-
-}
-
-#endif // MODEL_H
+#include "weightedsum.h"

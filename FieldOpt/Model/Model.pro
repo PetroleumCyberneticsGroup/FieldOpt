@@ -5,6 +5,7 @@ CONFIG   -= app_bundle
 CONFIG += c++11
 
 LIBS += -L../ERTWrapper -lertwrapper
+LIBS += -L../Utilities -lutilities
 
 TEMPLATE = lib
 
@@ -35,7 +36,8 @@ HEADERS += \
     wells/trajectory/wellblocks.h \
     wells/wellgroup.h \
     wells/completions/completioncollection.h \
-    wells/completions/completion_exceptions.h
+    wells/completions/completion_exceptions.h \
+    objective/weightedsum.h
 
 SOURCES += \
     model.cpp \
@@ -58,4 +60,5 @@ SOURCES += \
     wells/trajectory/wellspline.cpp \
     wells/trajectory/wellblocks.cpp \
     wells/wellgroup.cpp \
-    wells/completions/completioncollection.cpp
+    wells/completions/completioncollection.cpp \
+    objective/weightedsum.cpp

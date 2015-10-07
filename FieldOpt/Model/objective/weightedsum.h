@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- * objective.h
+ * weightedsum.h
  *
- * Created: 22.09.2015 2015 by einar
+ * Created: 07.10.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,31 +23,43 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef OBJECTIVE_H
-#define OBJECTIVE_H
+#ifndef WEIGHTEDSUM_H
+#define WEIGHTEDSUM_H
 
-#include <QPair>
-#include <QList>
+#include "objective.h"
 #include "Utilities/settings/model.h"
 
 namespace Model {
 namespace Objective {
 
 /*!
- * \brief The Objective class defines an interface for objective functions.
- * It cannot be instantiated on its own.
+ * \brief The WightedSum class defines the objectuve function for the optimization
+ * on the following form for \f$ n \f$ components:
+ * \f[
+ *      f = \sum_{i=0}^{n} \gamma_i \times k_i
+ * \f]
+ * where \f$\gamma_i\f$ is some factor \f$ \left< -\infty, \infty \right> \f$, for example 1 or -1,
+ * and \f$ k \f$ is some keyword defining either a property in the simulator summary or some predefined
+ * compound expression. Both \f$ \gamma \f$ and \f$ k \f$ must be defined for all components of the
+ * objective function.
+ *
+ * Example:
+ * \f[
+ *      f = 1.0 \times CUMOIL - 0.9 \times CUMWAT
+ * \f]
+ * where \f$ CUMOIL \f$ \f$ CUMWAT \f$ are the keywords for the cumulative oil production and cumulative
+ * water production in the summary, respectively.
  */
-class Objective
+class WeightedSum : public Objective
 {
 public:
-    virtual double value() const = 0;
+    WeightedSum(Utilities::Settings::Optimizer settings);
 
 private:
-    Objective();
-
+    QList<QPair<double, double>> components_; //!< List of gamma, k pairs.
 };
 
 }
 }
 
-#endif // OBJECTIVE_H
+#endif // WEIGHTEDSUM_H
