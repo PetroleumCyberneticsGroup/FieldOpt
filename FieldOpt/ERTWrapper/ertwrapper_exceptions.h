@@ -14,6 +14,18 @@ public:
         : std::runtime_error(message) {}
 };
 
+class SummaryVariableDoesNotExistException : public std::runtime_error {
+public:
+    SummaryVariableDoesNotExistException(const string& message)
+        : std::runtime_error(message) {}
+};
+
+class SummaryTimeStepDoesNotExistException : public std::runtime_error {
+public:
+    SummaryTimeStepDoesNotExistException(const string& message)
+        : std::runtime_error(message) {}
+};
+
 }
 
 #endif // ECLGRIDREADER_EXCEPTIONS_H

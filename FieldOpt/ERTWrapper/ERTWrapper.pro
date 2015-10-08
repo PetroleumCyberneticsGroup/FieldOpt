@@ -9,7 +9,9 @@ TARGET = ertwrapper
 
 HEADERS += \
     eclgridreader.h \
-    ertwrapper_exceptions.h
+    ertwrapper_exceptions.h \
+    eclsummaryreader.h
 
 SOURCES += \
-    eclgridreader.cpp
+    eclgridreader.cpp \
+    eclsummaryreader.cpp
