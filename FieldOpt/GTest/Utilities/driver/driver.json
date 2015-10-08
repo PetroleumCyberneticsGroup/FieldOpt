@@ -44,7 +44,7 @@
     },
     "Simulator": {
         "Type": "ECLIPSE",
-        "Commands": ["csh", "@eclipse"],
+        "Commands": ["tcsh -c @eclipse"],
         "DriverPath": "../../examples/ECLIPSE/HORZWELL/HORZWELL.DATA"
     },
     "Model": {
