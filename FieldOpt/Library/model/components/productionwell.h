@@ -24,13 +24,13 @@
 #define PRODUCTIONWELL_H
 
 #include <tr1/memory>
-#include "model/components/well.h"
-#include "variables/intvariable.h"
-#include "variables/binaryvariable.h"
-#include "constraints/constraint.h"
-#include "model/pipeconnection.h"
-#include "model/components/pipe.h"
-#include "model/components/midpipe.h"
+#include "Library/model/components/well.h"
+#include "Library/variables/intvariable.h"
+#include "Library/variables/binaryvariable.h"
+#include "Library/constraints/constraint.h"
+#include "Library/model/pipeconnection.h"
+#include "Library/model/components/pipe.h"
+#include "Library/model/components/midpipe.h"
 
 using std::tr1::shared_ptr;
 

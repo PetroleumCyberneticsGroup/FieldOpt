@@ -29,22 +29,22 @@
 #include <QTextStream>
 #include <QDir>
 
-#include "model/components/well.h"
-#include "model/components/injectionwell.h"
-#include "model/components/productionwell.h"
-#include "model/wellcontrol.h"
-#include "model/model.h"
-#include "model/adjointscoupledmodel.h"
-#include "model/reservoir.h"
-#include "model/wellconnection.h"
-#include "model/wellcontrol.h"
-#include "model/wellpath.h"
-#include "variables/realvariable.h"
-#include "variables/intvariable.h"
-#include "model/stream.h"
-#include "optimizers/adjoint.h"
-#include "optimizers/adjointcollection.h"
-#include "utilities/posixutilities.h"
+#include "Library/model/components/well.h"
+#include "Library/model/components/injectionwell.h"
+#include "Library/model/components/productionwell.h"
+#include "Library/model/wellcontrol.h"
+#include "Library/model/model.h"
+#include "Library/model/adjointscoupledmodel.h"
+#include "Library/model/reservoir.h"
+#include "Library/model/wellconnection.h"
+#include "Library/model/wellcontrol.h"
+#include "Library/model/wellpath.h"
+#include "Library/variables/realvariable.h"
+#include "Library/variables/intvariable.h"
+#include "Library/model/stream.h"
+#include "Library/optimizers/adjoint.h"
+#include "Library/optimizers/adjointcollection.h"
+#include "Library/utilities/posixutilities.h"
 
 /*!
  * \brief Interface for the MRST reservoir simulator.

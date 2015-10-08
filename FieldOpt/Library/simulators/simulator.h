@@ -23,8 +23,8 @@
 #ifndef SIMULATOR_H
 #define SIMULATOR_H
 
-#include "model/model.h"
-#include "exceptionhandler/simulatorhandler.h"
+#include "Library/model/model.h"
+#include "Library/exceptionhandler/simulatorhandler.h"
 #include <QString>
 #include <QObject>
 

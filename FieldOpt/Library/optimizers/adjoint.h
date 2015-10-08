@@ -1,9 +1,9 @@
 #ifndef ADJOINT_H
 #define ADJOINT_H
 
-#include "model/stream.h"
-#include "variables/realvariable.h"
-#include "model/components/well.h"
+#include "Library/model/stream.h"
+#include "Library/variables/realvariable.h"
+#include "Library/model/components/well.h"
 
 /*!
  * \brief Holds the adjoints for one variable with respect to a single Stream.

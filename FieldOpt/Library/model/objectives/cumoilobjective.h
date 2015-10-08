@@ -2,7 +2,7 @@
 #define CUMOILOBJECTIVE_H
 
 #include "objective.h"
-#include "model/stream.h"
+#include "Library/model/stream.h"
 
 class CumoilObjective : public Objective
 {

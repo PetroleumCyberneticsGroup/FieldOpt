@@ -24,8 +24,8 @@
 #define WELLCONNECTIONVARIABLE_H
 
 #include <tr1/memory>
-#include "model/wellconnection.h"
-#include "variables/intvariable.h"
+#include "Library/model/wellconnection.h"
+#include "Library/variables/intvariable.h"
 
 using std::tr1::shared_ptr;
 class IntVariable;

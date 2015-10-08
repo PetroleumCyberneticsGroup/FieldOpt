@@ -26,17 +26,17 @@
 #include <QVector>
 #include <QObject>
 #include "case.h"
-#include "model/model.h"
-#include "variables/realvariable.h"
-#include "variables/binaryvariable.h"
-#include "variables/intvariable.h"
-#include "constraints/constraint.h"
-#include "constraints/integerboundaryconstraint.h"
-#include "constraints/doubleboundaryconstraint.h"
-#include "model/objectives/objective.h"
-#include "optimizers/derivative.h"
-#include "printers/caseprinter.h"
-#include "exceptionhandler/casehandler.h"
+#include "Library/model/model.h"
+#include "Library/variables/realvariable.h"
+#include "Library/variables/binaryvariable.h"
+#include "Library/variables/intvariable.h"
+#include "Library/constraints/constraint.h"
+#include "Library/constraints/integerboundaryconstraint.h"
+#include "Library/constraints/doubleboundaryconstraint.h"
+#include "Library/model/objectives/objective.h"
+#include "Library/optimizers/derivative.h"
+#include "Library/printers/caseprinter.h"
+#include "Library/exceptionhandler/casehandler.h"
 
 class Model;
 

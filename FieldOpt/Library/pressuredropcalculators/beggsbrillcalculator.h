@@ -23,7 +23,7 @@
 #ifndef BEGGSBRILLCALCULATOR_H
 #define BEGGSBRILLCALCULATOR_H
 
-#include <pressuredropcalculators/pressuredropcalculator.h>
+#include <Library/pressuredropcalculators/pressuredropcalculator.h>
 
 /*!
  * \brief Pressure drop calculations afrer Beggs and Brill, 1973. (SPE-4007-PA)

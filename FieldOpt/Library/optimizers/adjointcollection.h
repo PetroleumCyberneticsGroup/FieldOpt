@@ -2,9 +2,9 @@
 #define ADJOINTCOLLECTION_H
 
 #include "adjoint.h"
-#include "variables/realvariable.h"
-#include "model/components/well.h"
-#include "model/stream.h"
+#include "Library/variables/realvariable.h"
+#include "Library/model/components/well.h"
+#include "Library/model/stream.h"
 
 /*!
  * \brief A Collection of all the Adjoints for a given variable.

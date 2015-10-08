@@ -3,10 +3,10 @@
 
 #include <QVector>
 #include "coupledmodel.h"
-#include "optimizers/adjoint.h"
-#include "optimizers/adjointcollection.h"
+#include "Library/optimizers/adjoint.h"
+#include "Library/optimizers/adjointcollection.h"
 #include "stream.h"
-#include "optimizers/case.h"
+#include "Library/optimizers/case.h"
 
 /*!
  * \brief Model that uses adjoints from a reservoir simulator (e.g. MRST) to obtain derivatives.

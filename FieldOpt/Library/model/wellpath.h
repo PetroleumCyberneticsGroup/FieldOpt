@@ -6,8 +6,8 @@
 #include <QPair>
 #include <QString>
 
-#include "variables/intvariable.h"
-#include "model/components/well.h"
+#include "Library/variables/intvariable.h"
+#include "Library/model/components/well.h"
 
 using std::tr1::shared_ptr;
 

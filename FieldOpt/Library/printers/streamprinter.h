@@ -25,7 +25,7 @@
 
 #include "printer.h"
 #include <QObject>
-#include "model/stream.h"
+#include "Library/model/stream.h"
 
 class Stream;
 

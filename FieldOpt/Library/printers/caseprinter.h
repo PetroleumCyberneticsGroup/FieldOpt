@@ -25,7 +25,7 @@
 
 #include "printer.h"
 #include <QObject>
-#include "optimizers/case.h"
+#include "Library/optimizers/case.h"
 
 class Case;
 

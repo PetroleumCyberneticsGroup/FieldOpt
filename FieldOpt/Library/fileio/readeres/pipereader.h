@@ -25,9 +25,9 @@
 
 #include <QStringList>
 #include <QFile>
-#include "pressuredropcalculators/pressuredropcalculator.h"
-#include "pressuredropcalculators/beggsbrillcalculator.h"
-#include "utilities/stringutilities.h"
+#include "Library/pressuredropcalculators/pressuredropcalculator.h"
+#include "Library/pressuredropcalculators/beggsbrillcalculator.h"
+#include "Library/utilities/stringutilities.h"
 #include "reader.h"
 
 class PressureDropCalculator;

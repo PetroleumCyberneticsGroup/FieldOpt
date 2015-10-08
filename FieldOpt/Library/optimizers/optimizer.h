@@ -27,8 +27,8 @@
 #include <QObject>
 #include <QHash>
 #include "case.h"
-#include "settings/optimizersettings.h"
-#include "exceptionhandler/optimizerhandler.h"
+#include "Library/settings/optimizersettings.h"
+#include "Library/exceptionhandler/optimizerhandler.h"
 
 class Case;
 class OptimizerSettings;

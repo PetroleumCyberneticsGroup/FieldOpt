@@ -32,12 +32,12 @@
 //#include "transferobjects/simulationresults.h"
 #include "transferobjects/perturbation.h"
 #include "transferobjects/result.h"
-#include "model/model.h"
-#include "model/coupledmodel.h"
-#include "simulators/simulator.h"
-#include "simulators/mrstbatchsimulator.h"
+#include "Library/model/model.h"
+#include "Library/model/coupledmodel.h"
+#include "Library/simulators/simulator.h"
+#include "Library/simulators/mrstbatchsimulator.h"
 #include "parallelprinter.h"
-#include "fileio/readeres/driverreader.h"
+#include "Library/fileio/readeres/driverreader.h"
 
 class Result;
 class Perturbation;

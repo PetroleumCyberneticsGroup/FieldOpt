@@ -10,8 +10,8 @@
 
 #include "transferobjects/perturbation.h"
 #include "transferobjects/result.h"
-#include "optimizers/case.h"
-#include "model/model.h"
+#include "Library/optimizers/case.h"
+#include "Library/model/model.h"
 #include "parallelprinter.h"
 #include "resultslogger.h"
 #include "batchlogger.h"

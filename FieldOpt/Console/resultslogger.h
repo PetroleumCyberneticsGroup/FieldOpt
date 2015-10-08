@@ -9,8 +9,8 @@
 #include <QTextStream>
 #include <iostream>
 
-#include "optimizers/case.h"
-#include "model/model.h"
+#include "Library/optimizers/case.h"
+#include "Library/model/model.h"
 #include "transferobjects/perturbation.h"
 #include "transferobjects/result.h"
 

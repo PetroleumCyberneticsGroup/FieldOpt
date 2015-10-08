@@ -10,7 +10,7 @@ SUBDIRS = \
     Utilities
 
 Library.depends = ERTWrapper
-GTest.depends = ERTWrapper Library
+GTest.depends = ERTWrapper Utilities
 Console.depends = ERTWrapper Library
 
 OTHER_FILES += \

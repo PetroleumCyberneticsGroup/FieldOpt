@@ -3,8 +3,8 @@
 
 #include "gssalgorithm.h"
 #include "optimizer.h"
-#include "constraints/integerboundaryconstraint.h"
-#include "constraints/doubleboundaryconstraint.h"
+#include "Library/constraints/integerboundaryconstraint.h"
+#include "Library/constraints/doubleboundaryconstraint.h"
 #include "bookkeeper.h"
 
 /*!

@@ -24,10 +24,10 @@
 #define MATERIALBALANCECONSTRAINT_H
 
 #include <tr1/memory>
-#include "model/stream.h"
-#include "model/inputratevariable.h"
-#include "variables/realvariable.h"
-#include "model/components/pipe.h"
+#include "Library/model/stream.h"
+#include "Library/model/inputratevariable.h"
+#include "Library/variables/realvariable.h"
+#include "Library/model/components/pipe.h"
 #include "constraint.h"
 
 class InputRateVariable;

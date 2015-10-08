@@ -25,8 +25,8 @@
 
 #include <QVector>
 #include <QString>
-#include "model/stream.h"
-#include "exceptionhandler/componenthandler.h"
+#include "Library/model/stream.h"
+#include "Library/exceptionhandler/componenthandler.h"
 
 /*!
  * \brief Base class for components.

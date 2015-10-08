@@ -2,11 +2,11 @@
 #define PERTURBATION_H
 
 #include <vector>
-#include "model/model.h"
-#include "optimizers/case.h"
-#include "variables/binaryvariable.h"
-#include "variables/intvariable.h"
-#include "variables/realvariable.h"
+#include "Library/model/model.h"
+#include "Library/optimizers/case.h"
+#include "Library/variables/binaryvariable.h"
+#include "Library/variables/intvariable.h"
+#include "Library/variables/realvariable.h"
 
 /*!
  * \brief The Perturbation class is a convenience class used for handling the variables of

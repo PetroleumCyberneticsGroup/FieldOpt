@@ -27,7 +27,7 @@
 
 #include "components/pipe.h"
 #include "stream.h"
-#include "variables/realvariable.h"
+#include "Library/variables/realvariable.h"
 
 class Pipe;
 class Stream;
