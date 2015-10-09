@@ -26,14 +26,15 @@
 #include "eclsummaryreader.h"
 #include "ertwrapper_exceptions.h"
 #include "string"
+#include <iostream>
 
 namespace ERTWrapper {
 namespace ECLSummary {
 
 ECLSummaryReader::ECLSummaryReader(QString file_name)
-    : file_name_(file_name)
 {
-    ecl_sum_set_case(ecl_sum_, file_name_.toLatin1().constData());
+    file_name_ = file_name;
+    ecl_sum_ = ecl_sum_fread_alloc_case(file_name_.toLatin1().constData(), "");
 }
 
 ECLSummaryReader::~ECLSummaryReader()
@@ -45,23 +46,44 @@ double ECLSummaryReader::GetMiscVar(QString var_name, int time_index)
 {
     if (!hasMiscVar(var_name))
         throw SummaryVariableDoesNotExistException("Misc variable " + std::string(var_name.toLatin1().constData()) + " does not exist.");
-    if (!hasReportStep(time_index))
+    if (!HasReportStep(time_index))
         throw SummaryTimeStepDoesNotExistException("Time step does not exist");
     return ecl_sum_get_misc_var(ecl_sum_, time_index, var_name.toLatin1().constData());
 }
 
+double ECLSummaryReader::GetFieldVar(QString var_name, int time_index)
+{
+    if (!hasFieldVar(var_name))
+        throw SummaryVariableDoesNotExistException("Field variable " + std::string(var_name.toLatin1().constData()) + " does not exist.");
+    if (!HasReportStep(time_index))
+        throw SummaryTimeStepDoesNotExistException("Time step does not exist");
+    return ecl_sum_get_field_var(ecl_sum_, time_index, var_name.toLatin1().constData());
+}
+
+double ECLSummaryReader::GetWellVar(QString well_name, QString var_name, int time_index)
+{
+    if (!hasWellVar(well_name, var_name))
+        throw SummaryVariableDoesNotExistException("Well variable " + std::string(well_name.toLatin1().constData()) + ":"
+                                                   + std::string(var_name.toLatin1().constData()) + " does not exist.");
+    if (!HasReportStep(time_index))
+        throw SummaryTimeStepDoesNotExistException("Time step does not exist");
+    return ecl_sum_get_well_var(ecl_sum_, time_index, well_name.toLatin1().constData(), var_name.toLatin1().constData());
+}
+
 int ECLSummaryReader::GetLastReportStep()
 {
-    return ecl_sum_get_last_report_step(ecl_sum_);
+    int last_step = ecl_sum_get_last_report_step(ecl_sum_);
+    return ecl_sum_iget_report_end(ecl_sum_, last_step);
 }
 
 int ECLSummaryReader::GetFirstReportStep()
 {
-    return ecl_sum_get_first_report_step(ecl_sum_);
+    int first_step = ecl_sum_get_first_report_step(ecl_sum_);
+    return ecl_sum_iget_report_start(ecl_sum_, first_step);
 }
 
-bool ECLSummaryReader::hasReportStep(int report_step) {
-    return ecl_sum_has_report_step(ecl_sum_, report_step);
+bool ECLSummaryReader::HasReportStep(int report_step) {
+    return report_step <= GetLastReportStep() && report_step >= GetFirstReportStep();
 }
 
 bool ECLSummaryReader::hasWellVar(QString well_name, QString var_name) {

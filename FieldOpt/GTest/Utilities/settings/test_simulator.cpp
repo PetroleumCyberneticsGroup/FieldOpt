@@ -50,7 +50,7 @@ protected:
 
 TEST_F(SimulatorSettingsTest, Fields) {
     EXPECT_EQ(settings_.simulator()->type(), Simulator::SimulatorType::ECLIPSE);
-    EXPECT_EQ(settings_.simulator()->commands()->size(), 2);
+    EXPECT_EQ(settings_.simulator()->commands()->size(), 1);
     EXPECT_STREQ("../../examples/ECLIPSE/HORZWELL/HORZWELL.DATA", settings_.simulator()->driver_file_path().toLatin1().constData());
 }
 
