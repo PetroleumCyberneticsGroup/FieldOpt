@@ -21,7 +21,8 @@ SOURCES += \
     Utilities/settings/test_simulator.cpp \
     Utilities/settings/test_model.cpp \
     Utilities/settings/test_optimizer.cpp \
-    ERTWrapper/test_eclsummaryreader.cpp
+    ERTWrapper/test_eclsummaryreader.cpp \
+    Model/results/test_eclresults.cpp
 
 OTHER_FILES += \
     Utilities/driver/driver.json

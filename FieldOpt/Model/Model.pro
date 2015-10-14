@@ -37,7 +37,10 @@ HEADERS += \
     wells/wellgroup.h \
     wells/completions/completioncollection.h \
     wells/completions/completion_exceptions.h \
-    objective/weightedsum.h
+    objective/weightedsum.h \
+    results/results.h \
+    results/eclresults.h \
+    results/results_exceptions.h
 
 SOURCES += \
     model.cpp \
@@ -61,4 +64,5 @@ SOURCES += \
     wells/trajectory/wellblocks.cpp \
     wells/wellgroup.cpp \
     wells/completions/completioncollection.cpp \
-    objective/weightedsum.cpp
+    objective/weightedsum.cpp \
+    results/eclresults.cpp

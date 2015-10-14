@@ -47,7 +47,7 @@ public:
     ~ECLSummaryReader();
 
     /*!
-     * \brief GetMiscVar Get a Misc var.
+     * \brief GetMiscVar Get a Misc var. Calls ecl_sum_get_misc_var.
      * \param var_name Name of the variable to get, e.g. TIME or YEARS.
      * \param time_index The time index (0 and up).
      * \return The value of the variable at the specified time index.
@@ -55,7 +55,7 @@ public:
     double GetMiscVar(QString var_name, int time_index);
 
     /*!
-     * \brief GetFieldVar Get a Field variable.
+     * \brief GetFieldVar Get a Field variable. Calls ecl_sum_get_field_var.
      * \param var_name Name of the variable to get, e.g. FOPT or FWCT.
      * \param time_index The time index (0 and up).
      * \return The value of the variable at the specified time index.
@@ -63,7 +63,7 @@ public:
     double GetFieldVar(QString var_name, int time_index);
 
     /*!
-     * \brief GetWellVar Get a Well variable.
+     * \brief GetWellVar Get a Well variable. Calls ecl_sum_get_well_var.
      * \param well_name Name of the variable to get, e.g. WOPR or WBHP.
      * \param var_name Name of the well to which the variable belongs, e.g. "PROD" or "INJ" (must be upper-case).
      * \param time_index The time index (0 and up).

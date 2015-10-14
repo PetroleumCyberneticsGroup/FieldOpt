@@ -35,6 +35,7 @@ ECLSummaryReader::ECLSummaryReader(QString file_name)
 {
     file_name_ = file_name;
     ecl_sum_ = ecl_sum_fread_alloc_case(file_name_.toLatin1().constData(), "");
+    if (ecl_sum_ == NULL) throw SummaryFileNotFoundAtPathException(file_name.toLatin1().constData());
 }
 
 ECLSummaryReader::~ECLSummaryReader()

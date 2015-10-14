@@ -14,6 +14,12 @@ public:
         : std::runtime_error(message) {}
 };
 
+class SummaryFileNotFoundAtPathException : public std::runtime_error {
+public:
+    SummaryFileNotFoundAtPathException(const string &path)
+        : std::runtime_error("No valid simulation case found at path " + path) {}
+};
+
 class SummaryVariableDoesNotExistException : public std::runtime_error {
 public:
     SummaryVariableDoesNotExistException(const string& message)
