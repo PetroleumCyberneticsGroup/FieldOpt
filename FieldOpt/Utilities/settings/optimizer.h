@@ -57,7 +57,9 @@ public:
 
     struct Objective {
         ObjectiveType type; //!< The objective definition type (e.g. WeightedSum)
-        struct WeightedSumComponent { double coefficient; QString property; }; //!< A component of a weighted sum formulatied objective function
+        struct WeightedSumComponent {
+            double coefficient; QString property; int time_step;
+            bool is_well_prop; QString well; }; //!< A component of a weighted sum formulatied objective function
         QList<WeightedSumComponent> weighted_sum; //!< The expression for the Objective function formulated as a weighted sum
     };
 

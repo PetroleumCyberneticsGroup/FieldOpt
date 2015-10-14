@@ -24,3 +24,57 @@
  *****************************************************************************/
 
 #include "weightedsum.h"
+
+namespace Model {
+namespace Objective {
+
+WeightedSum::WeightedSum(Utilities::Settings::Optimizer *settings, Results::Results *results)
+{
+    settings_ = settings;
+    results_ = results;
+    components_ = new QList<WeightedSum::Component *>();
+    for (int i = 0; i < settings_->objective().weighted_sum.size(); ++i) {
+        WeightedSum::Component *comp = new WeightedSum::Component();
+        comp->property = results_->GetPropertyKeyFromString(settings->objective().weighted_sum.at(i).property);
+        comp->coefficient = settings->objective().weighted_sum.at(i).coefficient;
+        comp->time_step = settings->objective().weighted_sum.at(i).time_step;
+        if (settings->objective().weighted_sum.at(i).is_well_prop) {
+            comp->is_well_property = true;
+            comp->well = settings->objective().weighted_sum.at(i).well;
+        }
+        else comp->is_well_property = false;
+        components_->append(comp);
+    }
+}
+
+double WeightedSum::value() const
+{
+    double value = 0;
+    for (int i = 0; i < components_->size(); ++i) {
+        value += components_->at(i)->resolveValue(results_);
+    }
+    return value;
+}
+
+double WeightedSum::Component::resolveValue(Results::Results *results)
+{
+    if (is_well_property) {
+        if (time_step < 0) { // Final time step well property
+            return coefficient * results->GetValue(property, well);
+        }
+        else { // Non-final time step well property
+            return coefficient * results->GetValue(property, well, time_step);
+        }
+    }
+    else {
+        if (time_step < 0) { // Final time step field/misc property
+            return coefficient * results->GetValue(property);
+        }
+        else { // Non-final time step field/misc property
+            return coefficient * results->GetValue(property, time_step);
+        }
+    }
+}
+
+}
+}

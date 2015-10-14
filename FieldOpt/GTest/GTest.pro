@@ -22,7 +22,8 @@ SOURCES += \
     Utilities/settings/test_model.cpp \
     Utilities/settings/test_optimizer.cpp \
     ERTWrapper/test_eclsummaryreader.cpp \
-    Model/results/test_eclresults.cpp
+    Model/results/test_eclresults.cpp \
+    Model/objective/test_weightedsum.cpp
 
 OTHER_FILES += \
     Utilities/driver/driver.json

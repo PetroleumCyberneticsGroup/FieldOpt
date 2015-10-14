@@ -14,8 +14,14 @@
         "Objective": {
             "Type": "WeightedSum",
             "WeightedSumComponents": [
-                { "Coefficient": 1.0, "Property": "CumulativeOilProduction" },
-                { "Coefficient": -0.2, "Property": "CumulativeWaterProduction"}
+                {
+                    "Coefficient": 1.0, "Property": "CumulativeOilProduction", "TimeStep": -1,
+                    "IsWellProp": false
+                },
+                {
+                    "Coefficient": -0.2, "Property": "CumulativeWellWaterProduction", "TimeStep": 10,
+                    "IsWellProp": true, "Well": "PROD"
+                }
             ]
         },
         "Constraints": [

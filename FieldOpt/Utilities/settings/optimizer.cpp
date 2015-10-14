@@ -65,6 +65,12 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
                 Objective::WeightedSumComponent component;
                 component.coefficient = json_components.at(i).toObject()["Coefficient"].toDouble();
                 component.property = json_components.at(i).toObject()["Property"].toString();
+                if (json_components.at(i).toObject()["IsWellProp"].toBool()) {
+                    component.is_well_prop = true;
+                    component.well = json_components.at(i).toObject()["Well"].toString();
+                }
+                else component.is_well_prop = false;
+                component.time_step = json_components.at(i).toObject()["TimeStep"].toInt();
                 objective_.weighted_sum.append(component);
             }
         }

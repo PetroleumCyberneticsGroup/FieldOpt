@@ -66,9 +66,14 @@ TEST_F(OptimizerSettingsTest, Objective) {
 
     EXPECT_STREQ("CumulativeOilProduction", obj.weighted_sum.at(0).property.toLatin1().constData());
     EXPECT_FLOAT_EQ(1.0, obj.weighted_sum.at(0).coefficient);
+    EXPECT_EQ(-1, obj.weighted_sum.at(0).time_step);
+    EXPECT_FALSE(obj.weighted_sum.at(0).is_well_prop);
 
     EXPECT_STREQ("CumulativeWaterProduction", obj.weighted_sum.at(1).property.toLatin1().constData());
     EXPECT_FLOAT_EQ(-0.2, obj.weighted_sum.at(1).coefficient);
+    EXPECT_EQ(10, obj.weighted_sum.at(1).time_step);
+    EXPECT_TRUE(obj.weighted_sum.at(1).is_well_prop);
+    EXPECT_STREQ("PROD", obj.weighted_sum.at(1).well.toLatin1().constData());
 }
 
 TEST_F(OptimizerSettingsTest, ProducerConstraint) {

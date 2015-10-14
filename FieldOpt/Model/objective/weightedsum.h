@@ -28,12 +28,13 @@
 
 #include "objective.h"
 #include "Utilities/settings/model.h"
+#include "Model/results/results.h"
 
 namespace Model {
 namespace Objective {
 
 /*!
- * \brief The WightedSum class defines the objectuve function for the optimization
+ * \brief The WeightedSum class defines the objectuve function for the optimization
  * on the following form for \f$ n \f$ components:
  * \f[
  *      f = \sum_{i=0}^{n} \gamma_i \times k_i
@@ -53,11 +54,23 @@ namespace Objective {
 class WeightedSum : public Objective
 {
 public:
-    WeightedSum(Utilities::Settings::Optimizer settings);
+    WeightedSum(Utilities::Settings::Optimizer *settings, Results::Results *results);
     double value() const;
 
 private:
-    QList<QPair<double, double>> components_; //!< List of gamma, k pairs.
+    class Component {
+    public:
+        double coefficient;
+        Results::Results::Property property;
+        int time_step;
+        bool is_well_property;
+        QString well;
+        double resolveValue(Results::Results *results);
+    };
+
+    QList<Component *> *components_; //!< List of gamma, k pairs.
+    Utilities::Settings::Optimizer *settings_;
+    Results::Results *results_;  //!< Object providing access to simulator results.
 };
 
 }

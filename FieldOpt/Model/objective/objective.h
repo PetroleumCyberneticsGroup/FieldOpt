@@ -42,7 +42,7 @@ class Objective
 public:
     virtual double value() const = 0;
 
-private:
+protected:
     Objective();
 
 };

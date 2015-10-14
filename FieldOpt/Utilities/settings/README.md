@@ -216,8 +216,10 @@ The objective function may be defined in several ways, but initially only one me
 "Objective": {
     "Type": "WeightedSum",
     "WeightedSumComponents": [
-        { "Coefficient": float, "Property": string },
-        { "Coefficient": float, "Property": string },
+        {
+        	"Coefficient": float, "Property": string, "TimeStep": int,
+          	"IsWellProp": bool, "Well": string
+        },
         ...
     ]
 },
@@ -225,6 +227,9 @@ The objective function may be defined in several ways, but initially only one me
 
 * `Type` denotes how the objective function will be defined. Initially only `WeightedSum` is supported.
 * `WeightedSumComponents` defines the components in a "weighted sum formulation" of the objective value.
+* `TimeStep` indicates the time step at which to get the value. If this is set to a negative value the final time step will be used.
+* `IsWellProp` indicates wether or not it is a well property.
+* `Well` is the name of the well to get the property for if `IsWellProp` is set to true.
 
 ### Optimizer -> Constraints
 
