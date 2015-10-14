@@ -57,9 +57,16 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
     // Optimizer objective
     try {
         QString objective_type = json_objective["Type"].toString();
-        if (QString::compare(objective_type, "Expression") == 0) {
-            objective_.type = Optimizer::ObjectiveType::Expression;
-            objective_.expression = json_objective["Expression"].toString();
+        if (QString::compare(objective_type, "WeightedSum") == 0) {
+            objective_.type = ObjectiveType::WeightedSum;
+            objective_.weighted_sum = QList<Objective::WeightedSumComponent>();
+            QJsonArray json_components = json_objective["WeightedSumComponents"].toArray();
+            for (int i = 0; i < json_components.size(); ++i) {
+                Objective::WeightedSumComponent component;
+                component.coefficient = json_components.at(i).toObject()["Coefficient"].toDouble();
+                component.property = json_components.at(i).toObject()["Property"].toString();
+                objective_.weighted_sum.append(component);
+            }
         }
         else throw UnableToParseOptimizerObjectiveSectionException("Objective type " + objective_type.toStdString() + " not recognized");
     }

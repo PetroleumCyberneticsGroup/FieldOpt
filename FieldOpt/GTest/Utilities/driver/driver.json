@@ -12,8 +12,11 @@
             "MinimumStepLength": 1.0
         },
         "Objective": {
-            "Type": "Expression",
-            "Expression": "CUMOIL - 0.5*CUMWAT"
+            "Type": "WeightedSum",
+            "WeightedSumComponents": [
+                { "Coefficient": 1.0, "Property": "CumulativeOilProduction" },
+                { "Coefficient": -0.2, "Property": "CumulativeWaterProduction"}
+            ]
         },
         "Constraints": [
             {

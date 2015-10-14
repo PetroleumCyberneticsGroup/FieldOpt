@@ -213,10 +213,18 @@ The objective function may be defined in several ways, but initially only one me
 	"Type": string,
 	"Expression": string
 }
+"Objective": {
+    "Type": "WeightedSum",
+    "WeightedSumComponents": [
+        { "Coefficient": float, "Property": string },
+        { "Coefficient": float, "Property": string },
+        ...
+    ]
+},
 ```
 
-* `Type` denotes how the objective function will be defined. Initially only `Expression` is supported.
-* `Expression` must be defined is it is selected as the definition type. It is an equation, e.g. `"CUMOIL - 0.5*CUMWAT"`.
+* `Type` denotes how the objective function will be defined. Initially only `WeightedSum` is supported.
+* `WeightedSumComponents` defines the components in a "weighted sum formulation" of the objective value.
 
 ### Optimizer -> Constraints
 

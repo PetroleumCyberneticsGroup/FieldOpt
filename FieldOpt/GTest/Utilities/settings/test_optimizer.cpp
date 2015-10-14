@@ -61,8 +61,14 @@ TEST_F(OptimizerSettingsTest, Parameters) {
 
 TEST_F(OptimizerSettingsTest, Objective) {
     Optimizer::Objective obj = settings_.optimizer()->objective();
-    EXPECT_EQ(Optimizer::ObjectiveType::Expression, obj.type);
-    EXPECT_STREQ("CUMOIL - 0.5*CUMWAT", obj.expression.toLatin1().constData());
+    EXPECT_EQ(Optimizer::ObjectiveType::WeightedSum, obj.type);
+    EXPECT_EQ(2, obj.weighted_sum.size());
+
+    EXPECT_STREQ("CumulativeOilProduction", obj.weighted_sum.at(0).property.toLatin1().constData());
+    EXPECT_FLOAT_EQ(1.0, obj.weighted_sum.at(0).coefficient);
+
+    EXPECT_STREQ("CumulativeWaterProduction", obj.weighted_sum.at(1).property.toLatin1().constData());
+    EXPECT_FLOAT_EQ(-0.2, obj.weighted_sum.at(1).coefficient);
 }
 
 TEST_F(OptimizerSettingsTest, ProducerConstraint) {

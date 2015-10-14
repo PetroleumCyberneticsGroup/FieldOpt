@@ -47,7 +47,7 @@ public:
     enum OptimizerType { Compass };
     enum ConstraintType { BHP, Rate, SplinePoints };
     enum ConstraintWellSplinePointsType { MaxMin, Function};
-    enum ObjectiveType { Expression };
+    enum ObjectiveType { WeightedSum };
 
     struct Parameters {
         int max_evaluations; //!< Maximum number of evaluations allowed before terminating the optimization run.
@@ -56,8 +56,9 @@ public:
     };
 
     struct Objective {
-        ObjectiveType type; //!< The objective definition type (e.g. Expression)
-        QString expression; //!< The expression for the Objective function (e.g. CUMOIL - 0.5 CUMWAT)
+        ObjectiveType type; //!< The objective definition type (e.g. WeightedSum)
+        struct WeightedSumComponent { double coefficient; QString property; }; //!< A component of a weighted sum formulatied objective function
+        QList<WeightedSumComponent> weighted_sum; //!< The expression for the Objective function formulated as a weighted sum
     };
 
     struct Constraint {
