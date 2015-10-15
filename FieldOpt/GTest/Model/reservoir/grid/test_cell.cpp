@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <QList>
 #include "Model/reservoir/grid/grid.h"
+#include "Model/reservoir/grid/eclgrid.h"
 #include "Model/reservoir/grid/grid_exceptions.h"
 #include "Model/reservoir/grid/cell.h"
 
@@ -11,7 +12,7 @@ namespace {
 class CellTest : public ::testing::Test {
 protected:
     CellTest() {
-        grid_ = new Grid(Grid::GridSourceType::ECLIPSE, file_path_);
+        grid_ = new ECLGrid(file_path_);
     }
 
     virtual ~CellTest() {

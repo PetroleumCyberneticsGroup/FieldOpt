@@ -40,7 +40,8 @@ HEADERS += \
     objective/weightedsum.h \
     results/results.h \
     results/eclresults.h \
-    results/results_exceptions.h
+    results/results_exceptions.h \
+    reservoir/grid/eclgrid.h
 
 SOURCES += \
     model.cpp \
@@ -65,4 +66,5 @@ SOURCES += \
     wells/wellgroup.cpp \
     wells/completions/completioncollection.cpp \
     objective/weightedsum.cpp \
-    results/eclresults.cpp
+    results/eclresults.cpp \
+    reservoir/grid/eclgrid.cpp
