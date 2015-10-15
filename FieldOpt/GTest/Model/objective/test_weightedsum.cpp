@@ -70,7 +70,12 @@ TEST_F(WeightedSumTest, Constructor) {
 
 TEST_F(WeightedSumTest, Value) {
     Objective *obj = new WeightedSum(settings_.optimizer(), results_);
-    EXPECT_FLOAT_EQ(0.0, obj->value());
+    float wwpt = results_->GetValue(Results::Property::CumulativeWellWaterProduction, "PROD", 10);
+    float fopt = results_->GetValue(Results::Property::CumulativeOilProduction);
+    EXPECT_FLOAT_EQ(80.0, results_->GetValue(Results::Property::Time, 10));
+    EXPECT_FLOAT_EQ(wwpt, 420.28015);
+    EXPECT_FLOAT_EQ(fopt, 187866.44);
+    EXPECT_FLOAT_EQ(fopt - 0.2*wwpt, obj->value());
 }
 
 }
