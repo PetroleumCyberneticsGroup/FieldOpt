@@ -8,12 +8,14 @@ SUBDIRS = \
     GTest \
     Model \
     Utilities \
-    Optimization
+    Optimization \
+    Simulation
 
 Library.depends = ERTWrapper
 GTest.depends = ERTWrapper Utilities
 Model.depends = ERTWrapper Utilities
 Optimization.depends = Model
+Simulation.depends = Model
 Console.depends = ERTWrapper Library
 
 OTHER_FILES += \
