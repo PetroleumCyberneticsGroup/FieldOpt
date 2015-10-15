@@ -26,12 +26,24 @@
 #ifndef SIMULATOR
 #define SIMULATOR
 
+#include <QString>
+#include "Model/model.h"
+#include "Utilities/settings/settings.h"
+#include "Utilities/settings/simulator.h"
+
 namespace Simulation {
 namespace Simulator {
 
 class Simulator {
 public:
-private:
+    virtual ~Simulator();
+    virtual void Evaluate(Model::Model *model) = 0;
+    virtual void CleanUp() = 0;
+
+protected:
+    Simulator(Utilities::Settings::Settings settings);
+    QString initial_driver_file_path_;
+    QString output_directory_;
 };
 
 }

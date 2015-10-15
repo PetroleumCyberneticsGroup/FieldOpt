@@ -10,4 +10,4 @@ TEMPLATE = lib
 TARGET = simulation
 
 HEADERS += \
-    simulator.h
+    simulators/simulator.h
