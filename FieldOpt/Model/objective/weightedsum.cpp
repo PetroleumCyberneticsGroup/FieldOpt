@@ -30,10 +30,9 @@ namespace Objective {
 
 WeightedSum::WeightedSum(Utilities::Settings::Optimizer *settings, Results::Results *results)
 {
-    settings_ = settings;
     results_ = results;
     components_ = new QList<WeightedSum::Component *>();
-    for (int i = 0; i < settings_->objective().weighted_sum.size(); ++i) {
+    for (int i = 0; i < settings->objective().weighted_sum.size(); ++i) {
         WeightedSum::Component *comp = new WeightedSum::Component();
         comp->property = results_->GetPropertyKeyFromString(settings->objective().weighted_sum.at(i).property);
         comp->coefficient = settings->objective().weighted_sum.at(i).coefficient;

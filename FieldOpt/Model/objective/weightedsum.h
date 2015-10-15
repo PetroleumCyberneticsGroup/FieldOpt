@@ -54,10 +54,20 @@ namespace Objective {
 class WeightedSum : public Objective
 {
 public:
+    /*!
+     * \brief WeightedSum
+     * \param settings The Settings object from which to create the objective.
+     * \param results The Results object from which to get property values.
+     */
     WeightedSum(Utilities::Settings::Optimizer *settings, Results::Results *results);
+
     double value() const;
 
 private:
+    /*!
+     * \brief The Component class is used for internal representation of the components of the
+     * weighted sum.
+     */
     class Component {
     public:
         double coefficient;
@@ -69,7 +79,6 @@ private:
     };
 
     QList<Component *> *components_; //!< List of gamma, k pairs.
-    Utilities::Settings::Optimizer *settings_;
     Results::Results *results_;  //!< Object providing access to simulator results.
 };
 
