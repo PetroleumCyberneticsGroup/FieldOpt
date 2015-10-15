@@ -5,6 +5,7 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG += c++11
 LIBS += -L../Model -lmodel
+LIBS += -L../Optimization -loptimization
 LIBS += -L../ERTWrapper -lertwrapper
 LIBS += -L../Utilities -lutilities
 LIBS += -lpthread -lgtest -pthread

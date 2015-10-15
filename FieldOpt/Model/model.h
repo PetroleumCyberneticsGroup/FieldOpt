@@ -30,7 +30,6 @@
 #include <QList>
 
 #include "reservoir/reservoir.h"
-#include "objective/objective.h"
 #include "variables/variablecontainer.h"
 #include "schedule/schedule.h"
 #include "wells/well.h"
@@ -44,14 +43,12 @@ public:
 
     Reservoir::Reservoir reservoir() const { return reservoir_; }
     Schedule::Schedule schedule() const { return schedule_; }
-    Objective::Objective *objective() const { return objective_; }
     Variables::VariableContainer *variables() const { return variables_; }
     QList<Wells::Well *> wells() const { return wells_; }
 
 private:
     Reservoir::Reservoir reservoir_;
     Schedule::Schedule schedule_;
-    Objective::Objective *objective_;
     Variables::VariableContainer *variables_;
     QList<Wells::Well *> wells_;
 };

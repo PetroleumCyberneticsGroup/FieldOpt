@@ -16,7 +16,6 @@ HEADERS += \
     wells/well.h \
     reservoir/reservoir.h \
     schedule/schedule.h \
-    objective/objective.h \
     variables/variable.h \
     reservoir/grid/cell.h \
     reservoir/grid/grid.h \
@@ -37,7 +36,6 @@ HEADERS += \
     wells/wellgroup.h \
     wells/completions/completioncollection.h \
     wells/completions/completion_exceptions.h \
-    objective/weightedsum.h \
     results/results.h \
     results/eclresults.h \
     results/results_exceptions.h \
@@ -48,7 +46,6 @@ SOURCES += \
     wells/well.cpp \
     reservoir/reservoir.cpp \
     schedule/schedule.cpp \
-    objective/objective.cpp \
     reservoir/grid/cell.cpp \
     reservoir/grid/grid.cpp \
     reservoir/grid/ijkcoordinate.cpp \
@@ -65,6 +62,5 @@ SOURCES += \
     wells/trajectory/wellblocks.cpp \
     wells/wellgroup.cpp \
     wells/completions/completioncollection.cpp \
-    objective/weightedsum.cpp \
     results/eclresults.cpp \
     reservoir/grid/eclgrid.cpp

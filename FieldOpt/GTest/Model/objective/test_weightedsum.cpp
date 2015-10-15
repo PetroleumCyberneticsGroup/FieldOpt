@@ -27,7 +27,7 @@
 #include <QString>
 #include "Model/results/results.h"
 #include "Model/results/eclresults.h"
-#include "Model/objective/weightedsum.h"
+#include "Optimization/objective/weightedsum.h"
 #include "Utilities/settings/settings.h"
 #include "Utilities/settings/optimizer.h"
 
