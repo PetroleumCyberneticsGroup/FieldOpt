@@ -25,10 +25,10 @@
 
 #include "weightedsum.h"
 
-namespace Model {
+namespace Optimization {
 namespace Objective {
 
-WeightedSum::WeightedSum(Utilities::Settings::Optimizer *settings, Results::Results *results)
+WeightedSum::WeightedSum(Utilities::Settings::Optimizer *settings, Model::Results::Results *results)
 {
     results_ = results;
     components_ = new QList<WeightedSum::Component *>();
@@ -55,7 +55,7 @@ double WeightedSum::value() const
     return value;
 }
 
-double WeightedSum::Component::resolveValue(Results::Results *results)
+double WeightedSum::Component::resolveValue(Model::Results::Results *results)
 {
     if (is_well_property) {
         if (time_step < 0) { // Final time step well property

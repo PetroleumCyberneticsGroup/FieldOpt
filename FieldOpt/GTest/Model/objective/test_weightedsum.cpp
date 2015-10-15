@@ -32,7 +32,7 @@
 #include "Utilities/settings/optimizer.h"
 
 
-using namespace Model::Objective;
+using namespace Optimization::Objective;
 using namespace Model::Results;
 using namespace Utilities::Settings;
 

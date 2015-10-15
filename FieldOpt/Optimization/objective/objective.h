@@ -30,7 +30,7 @@
 #include <QList>
 #include "Utilities/settings/model.h"
 
-namespace Model {
+namespace Optimization {
 namespace Objective {
 
 /*!

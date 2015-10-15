@@ -25,7 +25,7 @@
 
 #include "objective.h"
 
-namespace Model {
+namespace Optimization {
 namespace Objective {
 
 Objective::Objective()
