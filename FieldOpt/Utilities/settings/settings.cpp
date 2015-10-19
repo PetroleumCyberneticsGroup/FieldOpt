@@ -90,7 +90,7 @@ void Settings::readSimulatorSection()
     // Simulator root
     try {
         QJsonObject json_simulator = json_driver_->value("Simulator").toObject();
-        simulator_ = new Simulator(json_simulator);
+        simulator_ = new Simulator(json_simulator, output_directory_);
     }
     catch (std::exception const &ex) {
         throw UnableToParseSimulatorSectionException("Unable to parse driver file simulator section: " + std::string(ex.what()));

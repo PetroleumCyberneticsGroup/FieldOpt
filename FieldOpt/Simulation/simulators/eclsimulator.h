@@ -2,7 +2,7 @@
  *
  *
  *
- * Created: 15.10.2015 2015 by einar
+ * Created: 16.10.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,48 +23,27 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef SIMULATOR
-#define SIMULATOR
+#ifndef ECLSIMULATOR_H
+#define ECLSIMULATOR_H
 
-#include <QString>
-#include "Model/model.h"
-#include "Utilities/settings/settings.h"
-#include "Utilities/settings/simulator.h"
+#include "simulator.h"
 
 namespace Simulation {
 namespace Simulator {
 
+
 /*!
- * \brief The Simulator class acts as an interface for all reservoir simulators.
+ * \brief The ECLSimulator class implements simulation of models using the ECLIPSE reservoir simulator.
  */
-class Simulator {
+class ECLSimulator : public Simulator
+{
 public:
-    virtual ~Simulator();
+    ECLSimulator(Utilities::Settings::Settings settings);
+    virtual void Evaluate(Model::Model *model);
+    virtual void CleanUp();
 
-    /*!
-     * \brief Evaluate Executes a simulation of the specified model.
-     */
-    virtual void Evaluate(Model::Model *model) = 0;
-
-    /*!
-     * \brief CleanUp Perform cleanup after simulation, i.e. delete output files.
-     */
-    virtual void CleanUp() = 0;
-
-    /*!
-     * \brief SetOutputDirectory Set the directory in which to execute the simulation.
-     */
-    virtual void SetOutputDirectory(QString output_directory);
-
-protected:
-    Simulator(Utilities::Settings::Settings settings);
-
-    QString initial_driver_file_path_;
-    QString output_directory_;
 };
 
 }
 }
-
-#endif // SIMULATOR
-
+#endif // ECLSIMULATOR_H

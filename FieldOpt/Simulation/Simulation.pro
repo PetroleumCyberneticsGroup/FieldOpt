@@ -10,4 +10,9 @@ TEMPLATE = lib
 TARGET = simulation
 
 HEADERS += \
-    simulators/simulator.h
+    simulators/simulator.h \
+    simulators/eclsimulator.h
+
+SOURCES += \
+    simulators/eclsimulator.cpp \
+    simulators/simulator.cpp

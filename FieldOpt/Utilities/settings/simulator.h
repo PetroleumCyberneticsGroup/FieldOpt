@@ -48,12 +48,14 @@ public:
     SimulatorType type() const { return type_; } //!< Get the simulator type (e.g. ECLIPSE).
     QStringList *commands() const { return commands_; } //!< Get the simulator commands (commands used to execute a simulation). Each list element is executed in sequence.
     QString driver_file_path() const { return driver_file_path_; } //!< Get the path to the driver file.
+    QString output_directory() const { return output_directory_; } //!< Get the output directory path.
 
 private:
-    Simulator(QJsonObject json_simulator);
+    Simulator(QJsonObject json_simulator, QString output_directory);
     SimulatorType type_;
     QStringList *commands_;
     QString driver_file_path_;
+    QString output_directory_;
 };
 
 }

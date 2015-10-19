@@ -31,12 +31,13 @@
 namespace Utilities {
 namespace Settings {
 
-Simulator::Simulator(QJsonObject json_simulator)
+Simulator::Simulator(QJsonObject json_simulator, QString output_directory)
 {
     // Driver path
     if (!json_simulator.contains("DriverPath"))
         throw UnableToParseSimulatorSectionException("A driver path must be defined.");
     driver_file_path_ = json_simulator["DriverPath"].toString();
+    output_directory_ = output_directory;
 
     // Simulator type
     QString type = json_simulator["Type"].toString();
