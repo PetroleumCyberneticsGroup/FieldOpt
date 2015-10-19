@@ -45,10 +45,12 @@ class Model
 public:
     enum ReservoirGridSourceType { ECLIPSE };
     enum WellType { Injector, Producer };
-    enum WellControlType { BHPControl, RateControl };
+    enum ControlType { BHPControl, RateControl };
+    enum InjectionType { WaterInjection, GasInjection };
     enum WellDefinitionType { WellBlocks, WellSpline };
     enum WellVariableType { BHP, Rate, SplinePoints };
     enum WellCompletionType { Perforation };
+    enum WellState { WellOpen, WellShut };
 
     struct Reservoir {
         ReservoirGridSourceType type; //!< The source of the grid file (which reservoir simulator produced it).
@@ -58,9 +60,18 @@ public:
     struct Well {
         struct IntegerCoordinate { int i; int j; int k; };
         struct RealCoordinate { double x; double y; double z; };
+        struct Control {
+            int time_step; //!< The time step this control is to be applied at.
+            WellState state; //!< Whether the well is open or shut.
+            ControlType control_mode; //!< Control mode.
+            double bhp; //!< Bhp target when well is on bhp control.
+            double rate; //!< Rate target when well is on rate control.
+            InjectionType injection_type; //!< Injector type (water/gas)
+        };
         struct Completion {
             WellCompletionType type;
             IntegerCoordinate well_block;
+            double transmissibility_factor;
         };
         struct Variable {
             QString name; //!< A unique name for the variable.
@@ -70,15 +81,13 @@ public:
         };
         QString name; //!< The name to be used for the well.
         WellType type; //!< The well type, i.e. producer or injector.
-        WellControlType control; //!< Whether the well is controlled by rate or bhp.
         IntegerCoordinate heel; //!< The heel of the well. Must _always_ be defined.
         WellDefinitionType definition_type; //!< How the well path is defined.
-        double bhp; //!< BHP when using BHP control.
-        double rate; //!< Rate when using rate control.
         QList<Completion> completions; //!< Well completions, i.e. perforations and ICDs.
         QList<IntegerCoordinate> well_blocks; //!< Well blocks when the well path is defined by WellBlocks.
         QList<RealCoordinate> spline_points; //!< Spline points when the well path is defined by SplinePoints.
         QList<Variable> variables; //!< List of variables for the well (e.g. pressure, rate or spline point positions).
+        QList<Control> controls; //!< List of well controls
     };
 
     Reservoir reservoir() const { return reservoir_; } //!< Get the struct containing reservoir settings.

@@ -94,7 +94,6 @@ All wells must define the following fields:
 
 * `Name` defines a _unique_ name for the well.
 * `Type` denotes whether the well is a `Producer` or an `Injector`.
-* `Control` denotes whether the well is controled by `Rate` or `BHP`.
 * `Heel` defines the heel of the well. This is defined as an array of _three_ integers `[i,j,k]`.
 * `DefinitionType` denotes whether the well path will defined by a  `WellSpline` or by a set of `WellBlocks`.
 
@@ -112,10 +111,35 @@ In addition, depending on the values entered in the already mentioned fields, th
 ]
 ```
 
-* `BHP` must be set when the `Control` field is set to `BHP` (Bottom Hole Pressure).
-* `Rate` must be set when the `Control` field is set to `Rate`.
 * `WellBlocks` must be set when `DefinitionType` is set to `WellBlocks`. It must be set to an array of _integer_ coordinates, i.e. `[ [i1,j1,k1], [i2,j2,k2], ... ]`.
 * `SplinePoints` must be set when `DefinitionType` is set to `WellSpline`.  It must be set to an array of _float_ coordinates, i.e. `[ [x1,y1,z1], [x2,y2,k2], ... ]`.
+
+We must also define some controls:
+```
+"Wells": [
+	{
+		...,
+		"Controls": [
+			{
+				"Controls": [
+                    "TimeStep": int,
+                    "Type": string,
+                    "State": string,
+                    "Mode": string,
+                    "Rate": float,
+                    "BHP": float
+			}, ...
+		], ...
+	}
+]
+```
+
+* `TimeStep` indicates the time step at which these settings should be applied.
+* `Type` indicates the type of injector when applicable (`Water` or `Gas`).
+* `State` whether the well should be `Open` or `Shut`.
+* `Mode` indicates the control mode (`BHP` or `Rate`).
+* `Rate` rate when `Rate` mode is set.
+* `BHP` BHP when `BHP` mode is set.
 
 Additionally, all wells may/should define completions:
 ```
@@ -125,7 +149,8 @@ Additionally, all wells may/should define completions:
 		"Completions": [
 			{
 				"Type": string,
-				"WellBlock": integer array
+				"WellBlock": integer array,
+				"TransmissibilityFactor": float
 			}, ...
 		]
 	}, ...
@@ -134,6 +159,7 @@ Additionally, all wells may/should define completions:
 
 * `Type` denotes the completion type. Initially only `Perforation` is supported.
 * `WellBlock` denotes the well block this perforation should be applied to.
+* `TransmissibilityFactor` is the transmissibility factor (well index) to be used in the well block containing the completion.
 
 The final field in a well is an optional array of variables:
 

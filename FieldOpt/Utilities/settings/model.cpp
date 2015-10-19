@@ -113,21 +113,42 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
     }
     else throw UnableToParseWellsModelSectionException("Well definition type " + definition_type.toStdString() + " not recognized for well " + well.name.toStdString());
 
-    // Well Control type
-    QString control_type = json_well["Control"].toString();
-    if (QString::compare(control_type, "BHP") == 0) {
-        well.control = WellControlType::BHPControl;
-        if (!json_well.contains("BHP"))
-            throw UnableToParseWellsModelSectionException("BHP must be set when BHPControl is selected.");
-        well.bhp = json_well["BHP"].toDouble();
+    // Controls
+    QJsonArray json_controls = json_well["Controls"].toArray();
+    well.controls = QList<Well::Control>();
+    for (int i = 0; i < json_controls.size(); ++i) {
+        Well::Control control;
+
+        control.time_step = json_controls.at(i).toObject()["TimeStep"].toInt();
+
+        // State (Open or shut)
+        if (QString::compare("Open", json_controls.at(i).toObject()["State"].toString()) == 0)
+            control.state = WellState::WellOpen;
+        else
+            control.state = WellState::WellShut;
+
+        // Control mode
+        if (QString::compare("BHP", json_controls.at(i).toObject()["Mode"].toString()) == 0) {
+            control.control_mode = ControlType::BHPControl;
+            control.bhp = json_controls.at(i).toObject()["BHP"].toDouble();
+        }
+        else if (QString::compare("Rate", json_controls.at(i).toObject()["Mode"].toString()) == 0) {
+            control.control_mode = ControlType::RateControl;
+            control.rate = json_controls.at(i).toObject()["Rate"].toDouble();
+        }
+        else throw UnableToParseWellsModelSectionException("Well control type " + json_controls.at(i).toObject()["Mode"].toString().toStdString() + " not recognized for well " + well.name.toStdString());
+
+        // Injection type
+        if (well.type == WellType::Injector) {
+            if (!json_controls.at(i).toObject().contains("Type"))
+                throw UnableToParseWellsModelSectionException("Type (water/gas) must be specified for injector wells.");
+            if (QString::compare("Water", json_controls.at(i).toObject()["Type"].toString()) == 0)
+                control.injection_type = InjectionType::WaterInjection;
+            else if (QString::compare("Gas", json_controls.at(i).toObject()["Type"].toString()) == 0)
+                control.injection_type = InjectionType::GasInjection;
+        }
+        well.controls.append(control);
     }
-    else if (QString::compare(control_type, "Rate") == 0) {
-        well.control = WellControlType::RateControl;
-        if (!json_well.contains("Rate"))
-            throw UnableToParseWellsModelSectionException("Rate must be set when RateControl is selected.");
-        well.rate = json_well["Rate"].toDouble();
-    }
-    else throw UnableToParseWellsModelSectionException("Well control type " + control_type.toStdString() + " not recognized for well " + well.name.toStdString());
 
     // Heel
     if (!json_well.contains("Heel"))
@@ -148,6 +169,7 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
             QString completion_type = json_completion["Type"].toString();
             if (QString::compare(completion_type, "Perforation") == 0) {
                 completion.type = WellCompletionType::Perforation;
+                completion.transmissibility_factor = json_completion["TransmissibilityFactor"].toDouble();
                 completion.well_block.i = json_completion["WellBlock"].toArray().at(0).toInt();
                 completion.well_block.j = json_completion["WellBlock"].toArray().at(1).toInt();
                 completion.well_block.k = json_completion["WellBlock"].toArray().at(2).toInt();

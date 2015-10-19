@@ -66,9 +66,9 @@
                 "Name": "PROD",
                 "Type": "Producer",
                 "DefinitionType": "WellBlocks",
-                "Control": "BHP",
-                "BHP": 2000.0,
                 "Heel": [0,0,0],
+                "WellboreRadius": 0.75,
+                "Direction": "X",
                 "WellBlocks": [
                     [0,4,2],
                     [1,4,2],
@@ -78,11 +78,21 @@
                 "Completions": [
                     {
                         "Type": "Perforation",
-                        "WellBlock": [1,4,2]
+                        "WellBlock": [1,4,2],
+                        "TransmissibilityFactor": 1.0
                     },
                     {
                         "Type": "Perforation",
-                        "WellBlock": [2,4,2]
+                        "WellBlock": [2,4,2],
+                        "TransmissibilityFactor": 1.0
+                    }
+                ],
+                "Controls": [
+                    {
+                        "TimeStep": 0,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 2000.0
                     }
                 ],
                 "Variables": [
@@ -97,13 +107,22 @@
             {
                 "Name": "INJ",
                 "Type": "Injector",
-                "Control": "Rate",
-                "Rate": 1200.0,
                 "DefinitionType": "WellSpline",
                 "Heel": [2,0,2],
+                "WellboreRadius": 0.75,
+                "Direction": "X",
                 "SplinePoints": [
                     [20.0,0.0,20.0],
                     [20.0,40.0,20.0]
+                ],
+                "Controls": [
+                    {
+                        "TimeStep": 0,
+                        "Type": "Water",
+                        "State": "Open",
+                        "Mode": "Rate",
+                        "Rate": 1200.0
+                    }
                 ],
                 "Variables": [
                     {
