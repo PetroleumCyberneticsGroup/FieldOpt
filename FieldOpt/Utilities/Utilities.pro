@@ -1,3 +1,5 @@
+include(../defaults.pri)
+
 CONFIG   -= app_bundle
 CONFIG += c++11
 

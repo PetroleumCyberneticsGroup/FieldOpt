@@ -23,10 +23,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef SIMULATOR_H
-#define SIMULATOR_H
+#ifndef SETTINGS_SIMULATOR_H
+#define SETTINGS_SIMULATOR_H
 
-#include "settings.h"
+#include "Utilities/settings/settings.h"
 
 #include <QStringList>
 
@@ -61,4 +61,4 @@ private:
 }
 }
 
-#endif // SIMULATOR_H
+#endif // SETTINGS_SIMULATOR_H

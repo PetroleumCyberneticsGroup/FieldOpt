@@ -23,7 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include "model.h"
+#include "Utilities/settings/model.h"
 #include "settings_exceptions.h"
 #include <QJsonArray>
 
@@ -87,11 +87,11 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
     QString definition_type = json_well["DefinitionType"].toString();
     if (QString::compare(definition_type, "WellBlocks") == 0) {
         well.definition_type = WellDefinitionType::WellBlocks;
-        well.well_blocks = QList<Well::IntegerCoordinate>();
+        well.well_blocks = QList<IntegerCoordinate>();
         QJsonArray json_well_blocks = json_well["WellBlocks"].toArray();
         for (int i = 0; i < json_well_blocks.size(); ++i) {
             QJsonArray json_block = json_well_blocks[i].toArray();
-            Well::IntegerCoordinate block;
+            IntegerCoordinate block;
             block.i = json_block[0].toInt();
             block.j = json_block[1].toInt();
             block.k = json_block[2].toInt();
@@ -100,11 +100,11 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
     }
     else if (QString::compare(definition_type, "WellSpline") == 0) {
         well.definition_type = WellDefinitionType::WellSpline;
-        well.spline_points = QList<Well::RealCoordinate>();
+        well.spline_points = QList<RealCoordinate>();
         QJsonArray json_points = json_well["SplinePoints"].toArray();
         for (int i = 0; i < json_points.size(); ++i) {
             QJsonArray json_point = json_points[i].toArray();
-            Well::RealCoordinate point;
+            RealCoordinate point;
             point.x = json_point[0].toDouble();
             point.y = json_point[1].toDouble();
             point.z = json_point[2].toDouble();
@@ -113,11 +113,23 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
     }
     else throw UnableToParseWellsModelSectionException("Well definition type " + definition_type.toStdString() + " not recognized for well " + well.name.toStdString());
 
+    // Wellbore radius
+    if (!json_well.contains("WellboreRadius"))
+        throw UnableToParseWellsModelSectionException("The wellbore radius must be defined for all wells.");
+    well.wellbore_radius = json_well["WellboreRadius"].toDouble();
+
+    // Direction of penetration
+    if (json_well.contains("Direction")) { // Direction must be specified for horizontal wells
+        if (QString::compare("X", json_well["Direction"].toString()) == 0) well.direction = Direction::X;
+        if (QString::compare("Y", json_well["Direction"].toString()) == 0) well.direction = Direction::Y;
+        if (QString::compare("Z", json_well["Direction"].toString()) == 0) well.direction = Direction::Z;
+    }
+
     // Controls
     QJsonArray json_controls = json_well["Controls"].toArray();
-    well.controls = QList<Well::Control>();
+    well.controls = QList<ControlEntry>();
     for (int i = 0; i < json_controls.size(); ++i) {
-        Well::Control control;
+        ControlEntry control;
 
         control.time_step = json_controls.at(i).toObject()["TimeStep"].toInt();
 
@@ -129,11 +141,11 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
 
         // Control mode
         if (QString::compare("BHP", json_controls.at(i).toObject()["Mode"].toString()) == 0) {
-            control.control_mode = ControlType::BHPControl;
+            control.control_mode = ControlMode::BHPControl;
             control.bhp = json_controls.at(i).toObject()["BHP"].toDouble();
         }
         else if (QString::compare("Rate", json_controls.at(i).toObject()["Mode"].toString()) == 0) {
-            control.control_mode = ControlType::RateControl;
+            control.control_mode = ControlMode::RateControl;
             control.rate = json_controls.at(i).toObject()["Rate"].toDouble();
         }
         else throw UnableToParseWellsModelSectionException("Well control type " + json_controls.at(i).toObject()["Mode"].toString().toStdString() + " not recognized for well " + well.name.toStdString());
@@ -150,22 +162,35 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
         well.controls.append(control);
     }
 
+    // Prefered Phase
+    if (QString::compare("Oil", json_well["PreferedPhase"].toString()) == 0)
+        well.prefered_phase = PreferedPhase::Oil;
+    else if (QString::compare("Water", json_well["PreferedPhase"].toString()) == 0)
+        well.prefered_phase = PreferedPhase::Water;
+    else if (QString::compare("Gas", json_well["PreferedPhase"].toString()) == 0)
+        well.prefered_phase = PreferedPhase::Gas;
+    else if (QString::compare("Liquid", json_well["PreferedPhase"].toString()) == 0)
+        well.prefered_phase = PreferedPhase::Liquid;
+
     // Heel
     if (!json_well.contains("Heel"))
         throw UnableToParseWellsModelSectionException("All wells must define a Heel.");
     QJsonArray json_heel = json_well["Heel"].toArray();
     well.heel.i = json_heel[0].toInt();
     well.heel.j = json_heel[1].toInt();
-    well.heel.k = json_heel[2].toInt();
+    if (json_heel.size() == 3) // The k-index does not have to be specified. It is defaulted to 1 if it is not.
+        well.heel.k = json_heel[2].toInt();
+    else
+        well.heel.k = 1;
 
     // Completions
-    well.completions = QList<Well::Completion>();
+    well.completions = QList<Completion>();
     if (json_well.contains("Completions")) {
         if (!json_well["Completions"].isArray())
             throw UnableToParseWellsModelSectionException("Completions must be provided as an array.");
         for (int i = 0; i < json_well["Completions"].toArray().size(); ++i) {
             QJsonObject json_completion = json_well["Completions"].toArray().at(i).toObject();
-            Well::Completion completion;
+            Completion completion;
             QString completion_type = json_completion["Type"].toString();
             if (QString::compare(completion_type, "Perforation") == 0) {
                 completion.type = WellCompletionType::Perforation;

@@ -58,10 +58,13 @@ TEST_F(ModelSettingsTest, ProducerWell) {
     EXPECT_STREQ("PROD", producer.name.toLatin1().constData());
     EXPECT_EQ(Model::WellType::Producer, producer.type);
     EXPECT_EQ(Model::WellDefinitionType::WellBlocks, producer.definition_type);
-    EXPECT_EQ(Model::ControlType::BHPControl, producer.controls.first().control_mode);
+    EXPECT_EQ(Model::ControlMode::BHPControl, producer.controls.first().control_mode);
     EXPECT_FLOAT_EQ(2000.0, producer.controls.first().bhp);
     EXPECT_EQ(0, producer.controls.first().time_step);
     EXPECT_EQ(Model::WellState::WellOpen, producer.controls.first().state);
+    EXPECT_EQ(Model::PreferedPhase::Oil, producer.prefered_phase);
+    EXPECT_FLOAT_EQ(0.75, producer.wellbore_radius);
+    EXPECT_EQ(Model::Direction::X, producer.direction);
 
     EXPECT_EQ(0, producer.heel.i);
     EXPECT_EQ(0, producer.heel.j);
@@ -82,11 +85,14 @@ TEST_F(ModelSettingsTest, InjectorWell) {
     Model::Well injector = settings_.model()->wells().last();
     EXPECT_STREQ("INJ", injector.name.toLatin1().constData());
     EXPECT_EQ(Model::WellType::Injector, injector.type);
-    EXPECT_EQ(Model::ControlType::RateControl, injector.controls.first().control_mode);
+    EXPECT_EQ(Model::ControlMode::RateControl, injector.controls.first().control_mode);
     EXPECT_FLOAT_EQ(1200.0, injector.controls.first().rate);
     EXPECT_EQ(0, injector.controls.first().time_step);
     EXPECT_EQ(Model::InjectionType::WaterInjection, injector.controls.first().injection_type);
     EXPECT_EQ(Model::WellState::WellOpen, injector.controls.first().state);
+    EXPECT_EQ(Model::PreferedPhase::Water, injector.prefered_phase);
+    EXPECT_FLOAT_EQ(0.75, injector.wellbore_radius);
+    EXPECT_EQ(Model::Direction::X, injector.direction);
 
     EXPECT_EQ(2, injector.heel.i);
     EXPECT_EQ(0, injector.heel.j);

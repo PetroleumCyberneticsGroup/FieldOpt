@@ -23,10 +23,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef OPTIMIZER_H
-#define OPTIMIZER_H
+#ifndef SETTINGS_OPTIMIZER_H
+#define SETTINGS_OPTIMIZER_H
 
-#include "settings.h"
+#include "Utilities/settings/settings.h"
 
 #include <QList>
 #include <QString>
@@ -94,4 +94,4 @@ private:
 }
 }
 
-#endif // OPTIMIZER_H
+#endif // SETTINGS_OPTIMIZER_H
