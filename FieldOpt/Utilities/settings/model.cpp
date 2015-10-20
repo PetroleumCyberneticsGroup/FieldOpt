@@ -32,12 +32,21 @@ namespace Settings {
 
 Model::Model(QJsonObject json_model)
 {
-    try { // Reservoir
+    // Reservoir
+    try {
         QJsonObject json_reservoir = json_model["Reservoir"].toObject();
         readReservoir(json_reservoir);
     }
     catch (std::exception const &ex) {
         throw UnableToParseReservoirModelSectionException("Unable to parse reservoir model section: " + std::string(ex.what()));
+    }
+
+    // Control times
+    if (!json_model.contains("ControlTimes") || !json_model["ControlTimes"].isArray())
+        throw UnableToParseModelSectionException("The ControlTimes array must be defined with at leas one time for the model.");
+    control_times_ = QList<int>();
+    for (int i = 0; i < json_model["ControlTimes"].toArray().size(); ++i) {
+        control_times_.append(json_model["ControlTimes"].toArray().at(i).toInt());
     }
 
     // Wells
@@ -131,7 +140,9 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
     for (int i = 0; i < json_controls.size(); ++i) {
         ControlEntry control;
 
-        control.time_step = json_controls.at(i).toObject()["TimeStep"].toInt();
+        if (!controlTimeIsDeclared(json_controls.at(i).toObject()["TimeStep"].toInt()))
+            throw UnableToParseWellsModelSectionException("All time steps must be declared in the ControlTimes array. Inconsistency detected in Controls declaration.");
+        else control.time_step = json_controls.at(i).toObject()["TimeStep"].toInt();
 
         // State (Open or shut)
         if (QString::compare("Open", json_controls.at(i).toObject()["State"].toString()) == 0)
@@ -243,6 +254,8 @@ Model::Well::Variable Model::readSingleVariable(QJsonObject json_variable)
     variable.time_steps = QList<int>();
     QJsonArray json_time_steps = json_variable["TimeSteps"].toArray();
     for (int i = 0; i < json_time_steps.size(); ++i) {
+        if (!controlTimeIsDeclared(json_time_steps[i].toInt()))
+            throw UnableToParseWellsModelSectionException("All time steps must be declared in the ControlTimes array. Inconsistency detected in variable declaration.");
         variable.time_steps.append(json_time_steps[i].toInt());
     }
     return variable;
@@ -257,6 +270,11 @@ bool Model::variableNameExists(QString varible_name) const
         }
     }
     return false;
+}
+
+bool Model::controlTimeIsDeclared(int time) const
+{
+    return control_times_.contains(time);
 }
 
 }

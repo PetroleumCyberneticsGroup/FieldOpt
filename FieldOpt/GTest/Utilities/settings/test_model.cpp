@@ -53,6 +53,11 @@ TEST_F(ModelSettingsTest, Reservoir) {
     EXPECT_STREQ("../../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID", settings_.model()->reservoir().path.toLatin1().constData());
 }
 
+TEST_F(ModelSettingsTest, ControlTimes) {
+    EXPECT_EQ(4, settings_.model()->control_times().size());
+    EXPECT_EQ(365, settings_.model()->control_times().last());
+}
+
 TEST_F(ModelSettingsTest, ProducerWell) {
     Model::Well producer = settings_.model()->wells().first();
     EXPECT_STREQ("PROD", producer.name.toLatin1().constData());

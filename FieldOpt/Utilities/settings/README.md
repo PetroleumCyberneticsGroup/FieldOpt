@@ -55,10 +55,15 @@ In the model section we define model related settings and define the wells for o
 
 ```
 "Model": {
+	"ControlTimes": [ ... ],
 	"Reservoir": { ... },
 	"Wells": [ {...}, {...}, ...]
 }, ...
 ```
+
+### Model -> ControlTimes
+
+The `ControlTimes` array in the `Model` declares all time steps at which any variable is allowed to vary, a well is introduced, etc. _All_ time steps that are to be used anywhere else in the model (e.g. in the Control or Varaibles sections of a well) must also be declared here.
 
 ### Model -> Reservoir
 The reservoir object contains information on the reservoir grid that should be used. It must declare the type of reservoir model that will be used (i.e. the source of the grid data file) and the path to the grid data file. By grid data file we mean generated files like ECLIPSE's `.GRID` and `.EGRID` files. The reservoir grids are primarily used when wells are defined by splines. The reservoir object must contain the following fields:

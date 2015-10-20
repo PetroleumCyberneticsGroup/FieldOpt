@@ -57,6 +57,7 @@
         "DriverPath": "../../examples/ECLIPSE/HORZWELL/HORZWELL.DATA"
     },
     "Model": {
+        "ControlTimes": [0, 50, 100, 365],
         "Reservoir": {
             "Type": "ECLIPSE",
             "Path": "../../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID"

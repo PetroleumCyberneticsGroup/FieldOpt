@@ -99,17 +99,20 @@ public:
 
     Reservoir reservoir() const { return reservoir_; } //!< Get the struct containing reservoir settings.
     QList<Well> wells() const { return wells_; } //!< Get the struct containing settings for the well(s) in the model.
+    QList<int> control_times() const { return control_times_; } //!< Get the control times for the schedule
 
 private:
     Model(QJsonObject json_model);
     Reservoir reservoir_;
     QList<Well> wells_;
+    QList<int> control_times_;
 
     void readReservoir(QJsonObject json_reservoir);
     Well readSingleWell(QJsonObject json_well);
     Well::Variable readSingleVariable(QJsonObject json_variable);
 
     bool variableNameExists(QString varialbe_name) const;
+    bool controlTimeIsDeclared(int time) const;
 };
 
 }
