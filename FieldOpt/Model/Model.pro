@@ -39,7 +39,8 @@ HEADERS += \
     results/results.h \
     results/eclresults.h \
     results/results_exceptions.h \
-    reservoir/grid/eclgrid.h
+    reservoir/grid/eclgrid.h \
+    wells/control.h
 
 SOURCES += \
     model.cpp \
@@ -63,4 +64,5 @@ SOURCES += \
     wells/wellgroup.cpp \
     wells/completions/completioncollection.cpp \
     results/eclresults.cpp \
-    reservoir/grid/eclgrid.cpp
+    reservoir/grid/eclgrid.cpp \
+    wells/control.cpp

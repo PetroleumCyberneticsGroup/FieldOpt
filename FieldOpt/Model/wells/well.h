@@ -26,13 +26,45 @@
 #ifndef WELL_H
 #define WELL_H
 
+#include "Utilities/settings/settings.h"
+#include "Utilities/settings/model.h"
+#include "Model/wells/completions/completion.h"
+#include "Model/wells/completions/completioncollection.h"
+#include "Model/variables/variablecontainer.h"
+#include "Model/variables/integervariable.h"
+#include "Model/wells/control.h"
+
+#include <QList>
+
 namespace Model {
 namespace Wells {
 
+/*!
+ * \brief The Well class represents any well in the model.
+ */
 class Well
 {
 public:
-    Well();
+    /*!
+     * \brief Well Default constructor.
+     * \param settings The settings object to create a well from.
+     * \param well_number The index of the sepcific well in the Model.Wells list to create a well from.
+     * \param variables The variables object to add all new variable variables to.
+     */
+    Well(Utilities::Settings::Model settings, int well_number, ::Model::Variables::VariableContainer *variables);
+
+    struct Heel { Variables::IntegerVariable *i; Variables::IntegerVariable *j; Variables::IntegerVariable *k; };
+
+    enum PreferedPhase { Oil, Gas, Water, Liquid };
+
+private:
+    QString name_;
+    ::Utilities::Settings::Model::WellType type_;
+    ::Utilities::Settings::Model::PreferedPhase prefered_phase_;
+    Heel heel_;
+    Completions::CompletionCollection *completions_;
+    QList<Control *> *controls_;
+    Variables::RealVariable *wellbore_radius_;
 };
 
 }

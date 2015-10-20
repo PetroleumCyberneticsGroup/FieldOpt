@@ -25,8 +25,19 @@
 
 #include "control.h"
 
-Control::Control()
-{
+namespace Model {
+namespace Wells {
 
+Control::Control(Utilities::Settings::Model::ControlEntry entry)
+{
+    time_step_ = entry.time_step;
+
+    if (entry.state == ::Utilities::Settings::Model::WellState::WellOpen)
+        open_ = new Variables::BinaryVariable(true);
+    else if (entry.state == ::Utilities::Settings::Model::WellState::WellOpen)
+        open_ = new Variables::BinaryVariable(false);
 }
 
+
+}
+}

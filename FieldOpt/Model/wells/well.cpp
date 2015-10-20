@@ -28,8 +28,19 @@
 namespace Model {
 namespace Wells {
 
-Well::Well()
+Well::Well(Utilities::Settings::Model settings, int well_number, Variables::VariableContainer *variables)
 {
+    Utilities::Settings::Model::Well well_settings = settings.wells().at(well_number);
+
+    name_ = well_settings.name;
+    type_ = well_settings.type;
+    prefered_phase_ = well_settings.prefered_phase;
+
+    heel_.i = new Variables::IntegerVariable(well_settings.heel.i);
+    heel_.j = new Variables::IntegerVariable(well_settings.heel.j);
+    heel_.i = new Variables::IntegerVariable(well_settings.heel.k);
+
+    wellbore_radius_ = new Variables::RealVariable(well_settings.wellbore_radius);
 }
 
 }

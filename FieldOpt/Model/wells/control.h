@@ -26,15 +26,30 @@
 #ifndef CONTROL_H
 #define CONTROL_H
 
+#include "Utilities/settings/settings.h"
+#include "Utilities/settings/model.h"
+#include "Model/variables/integervariable.h"
+#include "Model/variables/realvariable.h"
+#include "Model/variables/binaryvariable.h"
 
+namespace Model {
+namespace Wells {
+
+/*!
+ * \brief The Control class represents a well control.
+ */
 class Control
 {
 public:
-    Control();
+    Control(::Utilities::Settings::Model::ControlEntry entry);
 
-signals:
-
-public slots:
+private:
+    Variables::IntegerVariable *time_step_;
+    Variables::BinaryVariable *open_;
+    Variables::RealVariable *bhp_;
+    Variables::RealVariable *rate_;
+    ::Utilities::Settings::Model::ControlMode mode_;
 };
-
+}
+}
 #endif // CONTROL_H
