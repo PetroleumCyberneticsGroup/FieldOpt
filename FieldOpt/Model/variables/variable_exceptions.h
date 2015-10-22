@@ -46,6 +46,12 @@ public:
         : std::runtime_error(message) {}
 };
 
+class VariableHandlerCannotFindObjectException : public std::runtime_error {
+public:
+    VariableHandlerCannotFindObjectException(const string &message)
+        : std::runtime_error(message) {}
+};
+
 }
 }
 

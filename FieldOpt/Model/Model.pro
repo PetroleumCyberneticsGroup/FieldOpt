@@ -40,7 +40,8 @@ HEADERS += \
     results/eclresults.h \
     results/results_exceptions.h \
     reservoir/grid/eclgrid.h \
-    wells/control.h
+    wells/control.h \
+    variables/variablehandler.h
 
 SOURCES += \
     model.cpp \
@@ -65,4 +66,5 @@ SOURCES += \
     wells/completions/completioncollection.cpp \
     results/eclresults.cpp \
     reservoir/grid/eclgrid.cpp \
-    wells/control.cpp
+    wells/control.cpp \
+    variables/variablehandler.cpp

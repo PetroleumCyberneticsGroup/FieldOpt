@@ -12,7 +12,7 @@ SUBDIRS = \
     Simulation
 
 Library.depends = ERTWrapper
-GTest.depends = ERTWrapper Utilities
+GTest.depends = ERTWrapper Utilities Model
 Model.depends = ERTWrapper Utilities
 Optimization.depends = Model Utilities
 Simulation.depends = Model Utilities

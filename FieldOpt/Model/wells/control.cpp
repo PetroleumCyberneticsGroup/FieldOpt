@@ -30,7 +30,7 @@ namespace Wells {
 
 Control::Control(Utilities::Settings::Model::ControlEntry entry)
 {
-    time_step_ = entry.time_step;
+    time_step_ = new Variables::IntegerVariable(entry.time_step);
 
     if (entry.state == ::Utilities::Settings::Model::WellState::WellOpen)
         open_ = new Variables::BinaryVariable(true);

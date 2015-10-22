@@ -24,9 +24,80 @@
  *****************************************************************************/
 
 #include "variablehandler.h"
+#include "variable_exceptions.h"
+#include <iostream>
 
-VariableHandler::VariableHandler()
+namespace Model {
+namespace Variables {
+
+VariableHandler::VariableHandler(Utilities::Settings::Model settings)
 {
+    wells_ = QList<Well *>();
+    for (int well_idx = 0; well_idx < settings.wells().size(); ++well_idx) { // Wells
+        Utilities::Settings::Model::Well settings_well = settings.wells()[well_idx];
+        Well *new_well = new Well(settings_well.name);
+        for (int control_time = 0; control_time < settings.control_times().size(); ++control_time) {
+            new_well->controls_.append(new Control (settings.control_times()[control_time]));
+        }
+        for (int var_idx = 0; var_idx < settings_well.variables.size(); ++var_idx) { // Variables
+            Utilities::Settings::Model::Well::Variable settings_var = settings_well.variables[var_idx];
+            switch (settings_var.type) {
+                case Utilities::Settings::Model::WellVariableType::BHP :
+                for (int var_time_idx = 0; var_time_idx < settings_var.time_steps.size(); ++var_time_idx) { // Variable time steps
+                    int control_index = wellControlIndex(new_well, settings_var.time_steps[var_time_idx]);
+                    new_well->controls_[control_index]->bhp_ = true;
+                }
+                break;
+                case Utilities::Settings::Model::WellVariableType::Rate:
+                for (int var_time_idx = 0; var_time_idx < settings_var.time_steps.size(); ++var_time_idx) { // Variable time steps
+                    int control_index = wellControlIndex(new_well, settings_var.time_steps[var_time_idx]);
+                    new_well->controls_[control_index]->rate_ = true;
+                }
+                break;
+                case Utilities::Settings::Model::WellVariableType::OpenShut:
+                for (int var_time_idx = 0; var_time_idx < settings_var.time_steps.size(); ++var_time_idx) { // Variable time steps
+                    int control_index = wellControlIndex(new_well, settings_var.time_steps[var_time_idx]);
+                    new_well->controls_[control_index]->open_ = true;
+                }
+                break;
+            }
+        }
+        wells_.append(new_well);
+    }
+}
 
+VariableHandler::Control *VariableHandler::GetControl(QString well_name, int time)
+{
+    for (int i = 0; i < wells_.size(); ++i) {
+        if (QString::compare(well_name, wells_[i]->name()) == 0) {
+            for (int j = 0; j < wells_[i]->controls_.size(); ++j) {
+                if (wells_[i]->controls_[j]->time_ == time) {
+                    return wells_[i]->controls_[j];
+                }
+            }
+        }
+    }
+    throw VariableHandlerCannotFindObjectException("The variable handler was unable to find a control point for time " + std::to_string(time) + " in well " + well_name.toStdString());
+}
+
+VariableHandler::Well *VariableHandler::GetWell(QString well_name)
+{
+    for (int i = 0; i < wells_.size(); ++i) {
+        if (QString::compare(well_name, wells_[i]->name()) == 0)
+            return wells_[i];
+    }
+    throw VariableHandlerCannotFindObjectException("The variable handler was unable to find a well named " + well_name.toStdString());
+}
+
+
+int VariableHandler::wellControlIndex(VariableHandler::Well *well, int time)
+{
+    for (int i = 0; i < well->controls_.size(); ++i) {
+        if (well->controls_[i]->time() == time) return i;
+    }
+    return -1;
+}
+
+}
 }
 

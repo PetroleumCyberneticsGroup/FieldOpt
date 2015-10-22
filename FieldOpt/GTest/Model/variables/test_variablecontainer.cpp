@@ -81,9 +81,4 @@ TEST_F(VariableContainerTest, Deletion) {
     EXPECT_DOUBLE_EQ(variable_container_->GetRealVariable(2)->value(), 1.0);
 }
 
-// Test modifiability on get
-
-// Test deletion and new ids
-
-// Test exceptions
 }
