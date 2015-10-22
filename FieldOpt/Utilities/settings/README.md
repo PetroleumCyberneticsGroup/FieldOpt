@@ -185,7 +185,7 @@ The final field in a well is an optional array of variables:
 ```
 
 * `Name` defines a unique name for the variable, for example `wellname-vartype-1`.
-* `Type` denotes what type of variable this is, e.g. `SplinePoints`, `Rate` or `BHP`.
+* `Type` denotes what type of variable this is, e.g. `SplinePoints`, `OpenShut`, `Rate` or `BHP`.
 * `TimeSteps` denotes at what time steps the value of the variable is allowed to change. It is defined as an integer array of time steps.
 * `VariableSplinePointIndices` denotes which of the spline points are allowed to vary. The indices not found in this list are taken to be stationary.
 

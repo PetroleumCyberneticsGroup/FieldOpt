@@ -239,6 +239,9 @@ Model::Well::Variable Model::readSingleVariable(QJsonObject json_variable)
     if (QString::compare(type, "BHP") == 0) {
         variable.type = WellVariableType::BHP;
     }
+    if (QString::compare(type, "OpenShut") == 0) {
+        variable.type = WellVariableType::OpenShut;
+    }
     if (QString::compare(type, "Rate") == 0) {
         variable.type = WellVariableType::Rate;
     }
