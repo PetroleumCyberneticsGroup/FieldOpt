@@ -28,14 +28,84 @@
 namespace Model {
 namespace Wells {
 
-Control::Control(Utilities::Settings::Model::ControlEntry entry)
+Control::Control(::Utilities::Settings::Model::ControlEntry entry,
+                 ::Utilities::Settings::Model::Well well,
+                 ::Model::Variables::VariableContainer *variables,
+                 ::Model::Variables::VariableHandler *variable_handler)
 {
     time_step_ = new Variables::IntegerVariable(entry.time_step);
 
+    if (well.type == ::Utilities::Settings::Model::WellType::Injector)
+        injection_fluid_ = entry.injection_type;
+
+    // Open/Closed
     if (entry.state == ::Utilities::Settings::Model::WellState::WellOpen)
         open_ = new Variables::BinaryVariable(true);
-    else if (entry.state == ::Utilities::Settings::Model::WellState::WellOpen)
+    else if (entry.state == ::Utilities::Settings::Model::WellState::WellShut)
         open_ = new Variables::BinaryVariable(false);
+    if (variable_handler->GetControl(well.name, entry.time_step)->open())
+        variables->AddVariable(open_);
+
+    switch (entry.control_mode) {
+    case ::Utilities::Settings::Model::ControlMode::BHPControl:
+        mode_ = entry.control_mode;
+        bhp_ = new Variables::RealVariable(entry.bhp);
+        if (variable_handler->GetControl(well.name, entry.time_step)->bhp())
+            variables->AddVariable(bhp_);
+        break;
+    case ::Utilities::Settings::Model::ControlMode::RateControl:
+        mode_ = entry.control_mode;
+        rate_ = new Variables::RealVariable(entry.rate);
+        if (variable_handler->GetControl(well.name, entry.time_step)->rate())
+            variables->AddVariable(rate_);
+    }
+
+
+}
+
+int Control::time_step() const
+{
+    return time_step_->value();
+}
+
+bool Control::open() const
+{
+    return open_->value();
+}
+
+void Control::setOpen(bool open)
+{
+    open_->setValue(open);
+}
+
+double Control::bhp() const
+{
+    return bhp_->value();
+}
+
+void Control::setBhp(double bhp)
+{
+    bhp_->setValue(bhp);
+}
+
+double Control::rate() const
+{
+    return rate_->value();
+}
+
+void Control::setRate(double rate)
+{
+    rate_->setValue(rate);
+}
+
+::Utilities::Settings::Model::ControlMode Control::mode() const
+{
+    return mode_;
+}
+
+::Utilities::Settings::Model::InjectionType Control::injection_fluid() const
+{
+    return injection_fluid_;
 }
 
 

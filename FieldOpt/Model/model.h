@@ -33,6 +33,7 @@
 #include "variables/variablecontainer.h"
 #include "schedule/schedule.h"
 #include "wells/well.h"
+#include "variables/variablehandler.h"
 
 namespace Model {
 
@@ -50,6 +51,8 @@ private:
     Reservoir::Reservoir reservoir_;
     Schedule::Schedule schedule_;
     Variables::VariableContainer *variables_;
+    Variables::VariableHandler *variable_handler;
+
     QList<Wells::Well *> wells_;
 };
 

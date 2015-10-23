@@ -31,6 +31,8 @@
 #include "Model/variables/integervariable.h"
 #include "Model/variables/realvariable.h"
 #include "Model/variables/binaryvariable.h"
+#include "Model/variables/variablecontainer.h"
+#include "Model/variables/variablehandler.h"
 
 namespace Model {
 namespace Wells {
@@ -41,7 +43,31 @@ namespace Wells {
 class Control
 {
 public:
-    Control(::Utilities::Settings::Model::ControlEntry entry);
+    /*!
+     * \brief Control
+     * \param entry The settings entry to create a control from.
+     * \param well The well to which the settings/control belongs.
+     * \param variables The variable container to which any created variables that are declared _variable_ should be added.
+     * \param variable_handler Used to check if a control has been declared _variable_.
+     */
+    Control(::Utilities::Settings::Model::ControlEntry entry,
+            ::Utilities::Settings::Model::Well well,
+            ::Model::Variables::VariableContainer *variables,
+            ::Model::Variables::VariableHandler *variable_handler);
+
+    int time_step() const;
+
+    bool open() const;
+    void setOpen(bool open);
+
+    double bhp() const;
+    void setBhp(double bhp);
+
+    double rate() const;
+    void setRate(double rate);
+
+    ::Utilities::Settings::Model::ControlMode mode() const;
+    ::Utilities::Settings::Model::InjectionType injection_fluid() const;
 
 private:
     Variables::IntegerVariable *time_step_;
@@ -49,6 +75,7 @@ private:
     Variables::RealVariable *bhp_;
     Variables::RealVariable *rate_;
     ::Utilities::Settings::Model::ControlMode mode_;
+    ::Utilities::Settings::Model::InjectionType injection_fluid_;
 };
 }
 }

@@ -25,7 +25,8 @@ SOURCES += \
     ERTWrapper/test_eclsummaryreader.cpp \
     Model/results/test_eclresults.cpp \
     Model/objective/test_weightedsum.cpp \
-    Model/variables/test_variablehandler.cpp
+    Model/variables/test_variablehandler.cpp \
+    Model/wells/test_control.cpp
 
 OTHER_FILES += \
     Utilities/driver/driver.json
