@@ -51,7 +51,10 @@ public:
      * \param well_number The index of the sepcific well in the Model.Wells list to create a well from.
      * \param variables The variables object to add all new variable variables to.
      */
-    Well(Utilities::Settings::Model settings, int well_number, ::Model::Variables::VariableContainer *variables);
+    Well(Utilities::Settings::Model settings,
+         int well_number,
+         ::Model::Variables::VariableContainer *variables,
+         ::Model::Variables::VariableHandler *variable_handler);
 
     struct Heel { Variables::IntegerVariable *i; Variables::IntegerVariable *j; Variables::IntegerVariable *k; };
 
@@ -61,10 +64,10 @@ private:
     QString name_;
     ::Utilities::Settings::Model::WellType type_;
     ::Utilities::Settings::Model::PreferedPhase prefered_phase_;
-    Heel heel_;
-    Completions::CompletionCollection *completions_;
-    QList<Control *> *controls_;
     Variables::RealVariable *wellbore_radius_;
+    Heel heel_;
+    QList<Control *> *controls_;
+    Completions::CompletionCollection *completions_;
 };
 
 }

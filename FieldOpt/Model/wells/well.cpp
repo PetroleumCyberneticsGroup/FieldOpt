@@ -28,7 +28,10 @@
 namespace Model {
 namespace Wells {
 
-Well::Well(Utilities::Settings::Model settings, int well_number, Variables::VariableContainer *variables)
+Well::Well(Utilities::Settings::Model settings,
+           int well_number,
+           Variables::VariableContainer *variables,
+           ::Model::Variables::VariableHandler *variable_handler)
 {
     Utilities::Settings::Model::Well well_settings = settings.wells().at(well_number);
 
@@ -41,6 +44,10 @@ Well::Well(Utilities::Settings::Model settings, int well_number, Variables::Vari
     heel_.i = new Variables::IntegerVariable(well_settings.heel.k);
 
     wellbore_radius_ = new Variables::RealVariable(well_settings.wellbore_radius);
+
+    controls_ = new QList<Control *>();
+    for (int i = 0; i < well_settings.controls.size(); ++i)
+        controls_->append(new Control(well_settings.controls[i], well_settings, variables, variable_handler));
 }
 
 }
