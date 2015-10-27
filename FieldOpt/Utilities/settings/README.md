@@ -177,7 +177,8 @@ The final field in a well is an optional array of variables:
 				"Name": string,
 				"Type": string,
 				"TimeSteps": integer array,
-				"VariableSplinePointIndices": integer array
+				"VariableSplinePointIndices": integer array,
+				"Blocks": array of integer arrays or "WELL"
 			}
 		]
 	}, ...
@@ -185,9 +186,10 @@ The final field in a well is an optional array of variables:
 ```
 
 * `Name` defines a unique name for the variable, for example `wellname-vartype-1`.
-* `Type` denotes what type of variable this is, e.g. `SplinePoints`, `OpenShut`, `Rate` or `BHP`.
+* `Type` denotes what type of variable this is, e.g. `SplinePoints`, `OpenShut`, `Transmissibility`, `Rate` or `BHP`.
 * `TimeSteps` denotes at what time steps the value of the variable is allowed to change. It is defined as an integer array of time steps.
 * `VariableSplinePointIndices` denotes which of the spline points are allowed to vary. The indices not found in this list are taken to be stationary.
+* `Blocks` indicate the blocks the variable applies to. E.g. for the `Transmissibility` type, it indicates which well blocks should have variable transmissibilites. If this is set to `WELL`, it will be applied to all well blocks with completions. Note that the listed blocks must correspond to a completion (perforation).
 
 ## Simulator
 

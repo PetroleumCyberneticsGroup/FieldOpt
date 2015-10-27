@@ -29,9 +29,13 @@ namespace Model {
 namespace Wells {
 namespace Completions {
 
-Perforation::Perforation()
+Perforation::Perforation(Utilities::Settings::Model::Completion completion_settings, Variables::VariableContainer *variable_container, Variables::VariableHandler *variable_handler)
+    : Completion(completion_settings, variable_container, variable_handler)
 {
+    transmissibility_factor_ = new Variables::RealVariable(completion_settings.transmissibility_factor);
+
 }
+
 
 }
 }

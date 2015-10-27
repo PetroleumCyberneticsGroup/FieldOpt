@@ -102,8 +102,19 @@
                         "Name": "PROD-BHP-1",
                         "Type": "BHP",
                         "TimeSteps": [0, 50, 365]
+                    },
+                    {
+                        "Name": "PROD-TRANS-1",
+                        "Type": "Transmissibility",
+                        "TimeSteps": [0],
+                        "Blocks": [[2,4,2]]
+                    },
+                    {
+                        "Name": "PROD-TRANS-ALL",
+                        "Type": "Transmissibility",
+                        "TimeSteps": [0, 50],
+                        "Blocks": "WELL"
                     }
-
                 ]
             },
             {

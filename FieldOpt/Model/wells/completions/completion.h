@@ -26,6 +26,11 @@
 #ifndef COMPLETION_H
 #define COMPLETION_H
 
+#include "Model/variables/integervariable.h"
+#include "Model/variables/variablecontainer.h"
+#include "Model/variables/variablehandler.h"
+#include "Utilities/settings/model.h"
+
 namespace Model {
 namespace Wells {
 namespace Completions {
@@ -33,7 +38,23 @@ namespace Completions {
 class Completion
 {
 public:
-    Completion();
+    Completion(::Utilities::Settings::Model::Completion completion_settings,
+               Variables::VariableContainer *variable_container,
+               Variables::VariableHandler *variable_handler);
+
+    int id() const { return id_; }
+    int i() const { return i_->value(); }
+    int j() const { return j_->value(); }
+    int k() const { return k_->value(); }
+    void setI(int i) { i_->setValue(i); }
+    void setJ(int j) { j_->setValue(j); }
+    void setK(int k) { k_->setValue(k); }
+
+private:
+    int id_; //!< A unique identifier for this completion. The number is generated when reading the model settings.
+    Variables::IntegerVariable *i_;
+    Variables::IntegerVariable *j_;
+    Variables::IntegerVariable *k_;
 };
 
 }

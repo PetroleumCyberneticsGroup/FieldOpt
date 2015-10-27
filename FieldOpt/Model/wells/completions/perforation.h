@@ -27,6 +27,8 @@
 #define PERFORATION_H
 
 #include "completion.h"
+#include "Model/variables/realvariable.h"
+#include "Model/variables/variablehandler.h"
 
 namespace Model {
 namespace Wells {
@@ -35,7 +37,12 @@ namespace Completions {
 class Perforation : public Completion
 {
 public:
-    Perforation();
+    Perforation(::Utilities::Settings::Model::Completion completion_settings,
+                Variables::VariableContainer *variable_container,
+                Variables::VariableHandler *variable_handler);
+
+private:
+    Variables::RealVariable *transmissibility_factor_;
 };
 
 }

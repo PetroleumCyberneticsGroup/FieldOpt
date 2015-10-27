@@ -29,10 +29,18 @@ namespace Model {
 namespace Wells {
 namespace Completions {
 
-Completion::Completion()
+Completion::Completion(Utilities::Settings::Model::Completion completion_settings,
+                       Variables::VariableContainer *variable_container,
+                       Variables::VariableHandler *variable_handler)
 {
+    id_ = completion_settings.id;
+    i_ = new Variables::IntegerVariable(completion_settings.well_block.i);
+    j_ = new Variables::IntegerVariable(completion_settings.well_block.j);
+    k_ = new Variables::IntegerVariable(completion_settings.well_block.k);
 }
+
 
 }
 }
 }
+

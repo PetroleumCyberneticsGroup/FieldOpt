@@ -24,14 +24,11 @@
  *****************************************************************************/
 
 #include "inflowcontroldevice.h"
+#include "completion_exceptions.h"
 
 namespace Model {
 namespace Wells {
 namespace Completions {
-
-InflowControlDevice::InflowControlDevice()
-{
-}
 
 }
 }

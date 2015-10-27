@@ -64,6 +64,16 @@ public:
         bool bhp() const { return bhp_; }   //!< Returns true if the well's BHP can vary at this time step, otherwise false.
     };
 
+    class Perforation {
+        friend class Well;
+        Perforation(int id) { id_ = id; }
+        int id_;
+        int i_, j_, k_, transmissibility_factor_;
+
+    public:
+        bool transmissibility_factor() { return transmissibility_factor_; }
+    };
+
     /*!
      * \brief The Well class is an internal representation of a well within the variable handler.
      * The well class primarily acts as a root node and container for Controls etc.

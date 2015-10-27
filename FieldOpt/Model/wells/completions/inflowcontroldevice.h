@@ -35,7 +35,7 @@ namespace Completions {
 class InflowControlDevice : public Completion
 {
 public:
-    InflowControlDevice();
+    InflowControlDevice(int i, int j, int k);
 };
 
 }

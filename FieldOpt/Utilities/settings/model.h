@@ -30,6 +30,8 @@
 
 #include <QString>
 #include <QList>
+#include <QJsonArray>
+#include <assert.h>
 
 namespace Utilities {
 namespace Settings {
@@ -48,14 +50,28 @@ public:
     enum ControlMode : int { BHPControl=21, RateControl=22 };
     enum InjectionType : int { WaterInjection=31, GasInjection=32 };
     enum WellDefinitionType : int { WellBlocks=41, WellSpline=42 };
-    enum WellVariableType : int { BHP=51, Rate=52, SplinePoints=53, OpenShut=54 };
+    enum WellVariableType : int { BHP=51, Rate=52, SplinePoints=53, OpenShut=54, Transmissibility=55 };
     enum WellCompletionType : int { Perforation=61 };
     enum WellState : int { WellOpen=71, WellShut=72 };
     enum PreferedPhase : int { Oil=81, Water=82, Gas=83, Liquid=84 };
     enum Direction : int { X=91, Y=92, Z=93 };
 
-    struct IntegerCoordinate { int i; int j; int k; };
-    struct RealCoordinate { double x; double y; double z; };
+    struct IntegerCoordinate {
+        IntegerCoordinate() {}
+        IntegerCoordinate(QJsonArray array) {
+            assert(array.size() == 3);
+            i = array[0].toInt(); j = array[1].toInt(); k = array[2].toInt();
+        }
+        int i, j ,k;
+    };
+    struct RealCoordinate {
+        RealCoordinate() {}
+        RealCoordinate(QJsonArray array) {
+            assert(array.size() == 3);
+            x = array[0].toDouble(); y = array[1].toDouble(); z = array[2].toDouble();
+        }
+        double x, y, z;
+    };
 
     struct ControlEntry {
         int time_step; //!< The time step this control is to be applied at.
@@ -66,9 +82,10 @@ public:
         InjectionType injection_type; //!< Injector type (water/gas)
     };
     struct Completion {
-        WellCompletionType type;
-        IntegerCoordinate well_block;
-        double transmissibility_factor;
+        int id; //!< Unique numerical ID for the completion.
+        WellCompletionType type; //!< Which type of completion this is (Perforation/ICD)
+        IntegerCoordinate well_block; //!< The well block to which this completion belongs.
+        double transmissibility_factor; //!< The transmissibility factor for this completion (used for perforations)
     };
 
     struct Reservoir {
@@ -81,6 +98,7 @@ public:
             QString name; //!< A unique name for the variable.
             WellVariableType type; //!< The type of variable (what kind of property it applies to, _not_ int/float).
             QList<int> time_steps; //!< The time steps at which the variable is allowed to change value.
+            QList<IntegerCoordinate> blocks; //!< The blocks this variable should apply to
             QList<int> variable_spline_point_indices; //!< The indices of coordinates in the spline points list that are variable. The rest are taken as constant.
         };
         PreferedPhase prefered_phase; //!< The prefered phase for the well
@@ -107,9 +125,11 @@ private:
     QList<Well> wells_;
     QList<int> control_times_;
 
+    int next_completion_id;
+
     void readReservoir(QJsonObject json_reservoir);
     Well readSingleWell(QJsonObject json_well);
-    Well::Variable readSingleVariable(QJsonObject json_variable);
+    Well::Variable readSingleVariable(QJsonObject json_variable, Well well);
 
     bool variableNameExists(QString varialbe_name) const;
     bool controlTimeIsDeclared(int time) const;
