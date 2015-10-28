@@ -30,6 +30,7 @@
 #include "Utilities/settings/model.h"
 #include "Model/wells/completions/completion.h"
 #include "Model/wells/completions/completioncollection.h"
+#include "Model/wells/completions/perforation.h"
 #include "Model/variables/variablecontainer.h"
 #include "Model/variables/integervariable.h"
 #include "Model/wells/control.h"

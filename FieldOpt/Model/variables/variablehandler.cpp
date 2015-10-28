@@ -39,25 +39,34 @@ VariableHandler::VariableHandler(Utilities::Settings::Model settings)
         for (int control_time = 0; control_time < settings.control_times().size(); ++control_time) {
             new_well->controls_.append(new Control (settings.control_times()[control_time]));
         }
+        for (int completion_nr = 0; completion_nr < settings_well.completions.size(); ++completion_nr) {
+            if (settings_well.completions[completion_nr].type == ::Utilities::Settings::Model::WellCompletionType::Perforation)
+                new_well->perforations_.append(new Perforation(settings_well.completions[completion_nr]));
+        }
         for (int var_idx = 0; var_idx < settings_well.variables.size(); ++var_idx) { // Variables
             Utilities::Settings::Model::Well::Variable settings_var = settings_well.variables[var_idx];
             switch (settings_var.type) {
-                case Utilities::Settings::Model::WellVariableType::BHP :
+            case Utilities::Settings::Model::WellVariableType::BHP :
                 for (int var_time_idx = 0; var_time_idx < settings_var.time_steps.size(); ++var_time_idx) { // Variable time steps
                     int control_index = wellControlIndex(new_well, settings_var.time_steps[var_time_idx]);
                     new_well->controls_[control_index]->bhp_ = true;
                 }
                 break;
-                case Utilities::Settings::Model::WellVariableType::Rate:
+            case Utilities::Settings::Model::WellVariableType::Rate:
                 for (int var_time_idx = 0; var_time_idx < settings_var.time_steps.size(); ++var_time_idx) { // Variable time steps
                     int control_index = wellControlIndex(new_well, settings_var.time_steps[var_time_idx]);
                     new_well->controls_[control_index]->rate_ = true;
                 }
                 break;
-                case Utilities::Settings::Model::WellVariableType::OpenShut:
+            case Utilities::Settings::Model::WellVariableType::OpenShut:
                 for (int var_time_idx = 0; var_time_idx < settings_var.time_steps.size(); ++var_time_idx) { // Variable time steps
                     int control_index = wellControlIndex(new_well, settings_var.time_steps[var_time_idx]);
                     new_well->controls_[control_index]->open_ = true;
+                }
+                break;
+            case Utilities::Settings::Model::WellVariableType::Transmissibility:
+                for (int block_nr = 0; block_nr < settings_var.blocks.size(); ++block_nr) {
+                    new_well->getPerforation(&settings_var.blocks[block_nr])->transmissibility_factor_ = true;
                 }
                 break;
             }
@@ -80,6 +89,17 @@ VariableHandler::Control *VariableHandler::GetControl(QString well_name, int tim
     throw VariableHandlerCannotFindObjectException("The variable handler was unable to find a control point for time " + std::to_string(time) + " in well " + well_name.toStdString());
 }
 
+VariableHandler::Perforation *VariableHandler::GetPerforation(int completion_id)
+{
+    for (int i = 0; i < wells_.size(); ++i) {
+        for (int j = 0; j < wells_[i]->perforations_.size(); ++j) {
+            if (wells_[i]->perforations_[j]->id_ == completion_id)
+                return wells_[i]->perforations_[j];
+        }
+    }
+    throw VariableHandlerCannotFindObjectException("The variable handler was unable to find a perforation with id " + std::to_string(completion_id));
+}
+
 VariableHandler::Well *VariableHandler::GetWell(QString well_name)
 {
     for (int i = 0; i < wells_.size(); ++i) {
@@ -96,6 +116,24 @@ int VariableHandler::wellControlIndex(VariableHandler::Well *well, int time)
         if (well->controls_[i]->time() == time) return i;
     }
     return -1;
+}
+
+VariableHandler::Perforation *VariableHandler::Well::getPerforation(int id)
+{
+    for (int i = 0; i < perforations_.size(); ++i) {
+        if (id == perforations_[i]->id_)
+            return perforations_[i];
+    }
+    throw VariableHandlerCannotFindObjectException("The variable handler was unable to find a perforation with id " + std::to_string(id));
+}
+
+VariableHandler::Perforation *VariableHandler::Well::getPerforation(Utilities::Settings::Model::IntegerCoordinate *block)
+{
+    for (int i = 0; i < perforations_.size(); ++i) {
+        if (perforations_[i]->block_.Equals(block))
+            return perforations_[i];
+    }
+    throw VariableHandlerCannotFindObjectException("The variable handler was unable to find a perforation at the given block.");
 }
 
 }

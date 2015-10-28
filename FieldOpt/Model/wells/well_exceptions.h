@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- * completioncollection.h
  *
- * Created: 24.09.2015 2015 by einar
+ *
+ * Created: 27.10.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,40 +23,24 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef COMPLETIONCOLLECTION_H
-#define COMPLETIONCOLLECTION_H
+#ifndef WELL_EXCEPTIONS
+#define WELL_EXCEPTIONS
 
-#include <QList>
+#include <stdexcept>
+#include <string>
 
-#include "perforation.h"
-#include "inflowcontroldevice.h"
+using std::string;
 
 namespace Model {
 namespace Wells {
-namespace Completions {
 
-/*!
- * \brief The CompletionCollection class collects all completions for the model and checks whether
- * new completions are valid when they are added (e.g. that they don't overlap).
- */
-class CompletionCollection
-{
+class WellCompletionNotRecognizedException : public std::runtime_error {
 public:
-    CompletionCollection();
-
-    void AddPerforation(Perforation *perf); //!< Add a new perforation.
-    void AddInflowControlDevice(InflowControlDevice *icd); //!< Add a new ICD.
-
-private:
-    QList<Perforation *> *perforations_;
-    QList<InflowControlDevice *> *inflow_control_devices_;
-
-    bool NewCompletionIsValid(Perforation *perf);
-    bool NewCompletionIsValid(InflowControlDevice *icd);
+    WellCompletionNotRecognizedException(const string& message)
+        : std::runtime_error(message) {}
 };
 
 }
 }
-}
 
-#endif // COMPLETIONCOLLECTION_H
+#endif // WELL_EXCEPTIONS

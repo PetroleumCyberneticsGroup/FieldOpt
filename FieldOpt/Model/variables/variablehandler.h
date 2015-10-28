@@ -65,10 +65,16 @@ public:
     };
 
     class Perforation {
+        friend class VariableHandler;
         friend class Well;
-        Perforation(int id) { id_ = id; }
+        Perforation(::Utilities::Settings::Model::Completion completion) {
+            id_ = completion.id;
+            block_ = completion.well_block;
+            transmissibility_factor_ = false;
+        }
         int id_;
-        int i_, j_, k_, transmissibility_factor_;
+        ::Utilities::Settings::Model::IntegerCoordinate block_;
+        bool transmissibility_factor_;
 
     public:
         bool transmissibility_factor() { return transmissibility_factor_; }
@@ -84,9 +90,13 @@ public:
         Well(QString name) {
             name_ = name;
             controls_ = QList<Control *>();
+            perforations_ = QList<Perforation *>();
         }
         QString name_;
         QList<Control *> controls_;
+        QList<Perforation *> perforations_;
+        Perforation *getPerforation(int id);
+        Perforation *getPerforation(::Utilities::Settings::Model::IntegerCoordinate *block);
     public:
         QString name() const { return name_; } //!< Get the name of the well.
     };
@@ -97,6 +107,12 @@ public:
      * \param time The time step for the control.
      */
     Control *GetControl(QString well_name, int time);
+
+    /*!
+     * \brief GetPerforation Gets the perforation with a given id from a given well.
+     * \param completion_id The unique ID of the perforation assigned when reading the driver file.
+     */
+    Perforation *GetPerforation(int completion_id);
 
     /*!
      * \brief GetWell Get the well with the specified name.

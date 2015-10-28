@@ -240,8 +240,11 @@ Model::Well::Variable Model::readSingleVariable(QJsonObject json_variable, Well 
         variable.blocks = QList<IntegerCoordinate>();
         if (!json_variable.contains("Blocks"))
             throw UnableToParseWellsModelSectionException("Transmissibility type variables must specify the Blocks property.");
-        if (json_variable["Blocks"].isString() && QString::compare(json_variable["Blocks"].toString(), "WELL") == 0) { // Apply to all well blocks
-            variable.blocks = well.well_blocks;
+        if (json_variable["Blocks"].isString() && QString::compare(json_variable["Blocks"].toString(), "WELL") == 0) { // Apply to all perforated well blocks
+            for (int i = 0; i < well.completions.size(); ++i) {
+                if (well.completions[i].type == WellCompletionType::Perforation)
+                    variable.blocks.append(IntegerCoordinate(well.completions[i].well_block));
+            }
         }
         else if (json_variable["Blocks"].isArray() && json_variable["Blocks"].toArray().first().isArray()) { // Parsing block list
             for (int i = 0; i < json_variable["Blocks"].toArray().size(); ++i) {

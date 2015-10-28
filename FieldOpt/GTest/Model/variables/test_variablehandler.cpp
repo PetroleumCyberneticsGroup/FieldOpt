@@ -76,5 +76,12 @@ TEST_F(VariableHandlerTest, ProducerControls) {
 
 }
 
+TEST_F(VariableHandlerTest, PerforationVariables) {
+    EXPECT_TRUE(variable_handler_->GetPerforation(0)->transmissibility_factor());
+    EXPECT_TRUE(variable_handler_->GetPerforation(1)->transmissibility_factor());
+    EXPECT_THROW(variable_handler_->GetPerforation(3), VariableHandlerCannotFindObjectException);
+}
+
+
 }
 

@@ -41,7 +41,8 @@ HEADERS += \
     results/results_exceptions.h \
     reservoir/grid/eclgrid.h \
     wells/control.h \
-    variables/variablehandler.h
+    variables/variablehandler.h \
+    wells/well_exceptions.h
 
 SOURCES += \
     model.cpp \

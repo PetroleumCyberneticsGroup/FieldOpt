@@ -62,6 +62,10 @@ public:
             assert(array.size() == 3);
             i = array[0].toInt(); j = array[1].toInt(); k = array[2].toInt();
         }
+        bool Equals(const IntegerCoordinate *other) const {
+            if (this->i == other->i && this->j == other->j && this->k == other->k) return true;
+            else return false;
+        }
         int i, j ,k;
     };
     struct RealCoordinate {
@@ -95,6 +99,7 @@ public:
 
     struct Well {
         struct Variable {
+            int parent_completion_id; //!< The id of the parent completion. Automatically assigned.
             QString name; //!< A unique name for the variable.
             WellVariableType type; //!< The type of variable (what kind of property it applies to, _not_ int/float).
             QList<int> time_steps; //!< The time steps at which the variable is allowed to change value.

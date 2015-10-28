@@ -35,6 +35,12 @@ namespace Model {
 namespace Wells {
 namespace Completions {
 
+/*!
+ * \brief The Completion class is the superclass for all completions, e.g. perforations and ICDs.
+ *
+ * This class specifies members common to all completions, e.g. the location in the reservoir and
+ * a unique numerical ID for the completion.
+ */
 class Completion
 {
 public:
@@ -42,7 +48,7 @@ public:
                Variables::VariableContainer *variable_container,
                Variables::VariableHandler *variable_handler);
 
-    int id() const { return id_; }
+    int id() const { return id_; } //!< Get the unique ID for this completion.
     int i() const { return i_->value(); }
     int j() const { return j_->value(); }
     int k() const { return k_->value(); }

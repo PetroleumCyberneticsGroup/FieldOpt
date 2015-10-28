@@ -88,31 +88,19 @@ TEST_F(ModelSettingsTest, ProducerCompletions) {
 
 TEST_F(ModelSettingsTest, ProducerVariables) {
     Model::Well producer = settings_.model()->wells().first();
-    EXPECT_EQ(3, producer.variables.size());
+    EXPECT_EQ(2, producer.variables.size());
 
     // BHP variable
     EXPECT_EQ(Model::WellVariableType::BHP, producer.variables[0].type);
     EXPECT_EQ(3, producer.variables[0].time_steps.size());
     EXPECT_STREQ("PROD-BHP-1", producer.variables[0].name.toLatin1().constData());
 
-    // Transmissibility variable
-    EXPECT_EQ(Model::WellVariableType::Transmissibility, producer.variables[1].type);
-    EXPECT_EQ(1, producer.variables[1].time_steps.size());
-    EXPECT_EQ(0, producer.variables[1].time_steps[0]);
-    EXPECT_STREQ("PROD-TRANS-1", producer.variables[1].name.toLatin1().constData());
-    EXPECT_EQ(1, producer.variables[1].blocks.size());
-    EXPECT_EQ(2, producer.variables[1].blocks[0].i);
-    EXPECT_EQ(4, producer.variables[1].blocks[0].j);
-    EXPECT_EQ(2, producer.variables[1].blocks[0].k);
-
     // Transmissibility variable (All well blocks)
-    EXPECT_EQ(Model::WellVariableType::Transmissibility, producer.variables[2].type);
-    EXPECT_EQ(2, producer.variables[2].time_steps.size());
-    EXPECT_EQ(50, producer.variables[2].time_steps[1]);
-    EXPECT_STREQ("PROD-TRANS-ALL", producer.variables[2].name.toLatin1().constData());
-    EXPECT_EQ(4, producer.variables[2].blocks.size());
-    EXPECT_EQ(0, producer.variables[2].blocks[0].i);
-    EXPECT_EQ(3, producer.variables[2].blocks[3].i);
+    EXPECT_EQ(Model::WellVariableType::Transmissibility, producer.variables[1].type);
+    EXPECT_STREQ("PROD-TRANS-ALL", producer.variables[1].name.toLatin1().constData());
+    EXPECT_EQ(2, producer.variables[1].blocks.size());
+    EXPECT_EQ(1, producer.variables[1].blocks[0].i);
+    EXPECT_EQ(2, producer.variables[1].blocks[1].i);
 }
 
 TEST_F(ModelSettingsTest, InjectorWell) {
