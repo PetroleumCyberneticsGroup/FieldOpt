@@ -41,6 +41,12 @@ public:
         : std::runtime_error(message) {}
 };
 
+class CompletionNotFoundException : public std::runtime_error {
+public:
+    CompletionNotFoundException(const int completion_id)
+        : std::runtime_error("Completion with id " + std::to_string(completion_id) + " was not found.") {}
+};
+
 }
 }
 }

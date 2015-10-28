@@ -41,6 +41,15 @@ void CompletionCollection::AddPerforation(Perforation *perf)
     perforations_->append(perf);
 }
 
+Perforation *CompletionCollection::GetPerforation(int id)
+{
+    for (int i = 0; i < perforations_->size(); ++i) {
+        if (perforations_->at(i)->id() == id)
+            return perforations_->at(i);
+    }
+    throw CompletionNotFoundException(id);
+}
+
 bool CompletionCollection::NewCompletionIsValid(Perforation *perf)
 {
     return true;

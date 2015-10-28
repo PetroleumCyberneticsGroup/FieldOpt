@@ -44,10 +44,19 @@ public:
     CompletionCollection();
 
     void AddPerforation(Perforation *perf); //!< Add a new perforation.
+    Perforation *GetPerforation(int id); //!< Get a perforation by ID. Throws an excepton if it is not found.
 
 private:
     QList<Perforation *> *perforations_;
 
+    /*!
+     * \brief NewCompletionIsValid
+     *
+     * \todo Implement this.
+     *
+     * \param perf
+     * \return
+     */
     bool NewCompletionIsValid(Perforation *perf);
 };
 
