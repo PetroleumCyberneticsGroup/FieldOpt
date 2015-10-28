@@ -34,13 +34,14 @@
 #include "schedule/schedule.h"
 #include "wells/well.h"
 #include "variables/variablehandler.h"
+#include "Utilities/settings/model.h"
 
 namespace Model {
 
 class Model
 {
 public:
-    Model();
+    Model(::Utilities::Settings::Model settings);
 
     Reservoir::Reservoir reservoir() const { return reservoir_; }
     Schedule::Schedule schedule() const { return schedule_; }

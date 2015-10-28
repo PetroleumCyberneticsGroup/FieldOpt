@@ -33,7 +33,6 @@ namespace Completions {
 CompletionCollection::CompletionCollection()
 {
     perforations_ = new QList<Perforation *>();
-    inflow_control_devices_ = new QList<InflowControlDevice *>();
 }
 
 void CompletionCollection::AddPerforation(Perforation *perf)
@@ -42,18 +41,7 @@ void CompletionCollection::AddPerforation(Perforation *perf)
     perforations_->append(perf);
 }
 
-void CompletionCollection::AddInflowControlDevice(InflowControlDevice *icd)
-{
-    if (!NewCompletionIsValid(icd)) throw CompletionNotValidException("New ICD is invalid.");
-    inflow_control_devices_->append(icd);
-}
-
 bool CompletionCollection::NewCompletionIsValid(Perforation *perf)
-{
-    return true;
-}
-
-bool CompletionCollection::NewCompletionIsValid(InflowControlDevice *icd)
 {
     return true;
 }

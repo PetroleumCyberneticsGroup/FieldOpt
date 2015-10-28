@@ -27,8 +27,4 @@
 
 namespace Model {
 
-Model::Model()
-{
-}
-
 }

@@ -29,7 +29,6 @@
 #include <QList>
 
 #include "perforation.h"
-#include "inflowcontroldevice.h"
 
 namespace Model {
 namespace Wells {
@@ -45,14 +44,11 @@ public:
     CompletionCollection();
 
     void AddPerforation(Perforation *perf); //!< Add a new perforation.
-    void AddInflowControlDevice(InflowControlDevice *icd); //!< Add a new ICD.
 
 private:
     QList<Perforation *> *perforations_;
-    QList<InflowControlDevice *> *inflow_control_devices_;
 
     bool NewCompletionIsValid(Perforation *perf);
-    bool NewCompletionIsValid(InflowControlDevice *icd);
 };
 
 }

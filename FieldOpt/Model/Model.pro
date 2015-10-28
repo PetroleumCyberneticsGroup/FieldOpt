@@ -29,7 +29,6 @@ HEADERS += \
     variables/variablecontainer.h \
     wells/completions/completion.h \
     wells/completions/perforation.h \
-    wells/completions/inflowcontroldevice.h \
     wells/trajectory/trajectory.h \
     wells/trajectory/wellspline.h \
     wells/trajectory/wellblocks.h \
@@ -59,7 +58,6 @@ SOURCES += \
     variables/variablecontainer.cpp \
     wells/completions/completion.cpp \
     wells/completions/perforation.cpp \
-    wells/completions/inflowcontroldevice.cpp \
     wells/trajectory/trajectory.cpp \
     wells/trajectory/wellspline.cpp \
     wells/trajectory/wellblocks.cpp \

@@ -38,7 +38,3 @@ protected:
 };
 
 }
-
-TEST_F(PerforationTest, Constructor) {
-
-}
