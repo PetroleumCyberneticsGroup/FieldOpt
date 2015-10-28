@@ -55,19 +55,19 @@ public:
             ::Model::Variables::VariableContainer *variables,
             ::Model::Variables::VariableHandler *variable_handler);
 
-    int time_step() const;
+    int time_step() const { return time_step_->value(); }
 
-    bool open() const;
-    void setOpen(bool open);
+    bool open() const { return open_->value(); }
+    void setOpen(bool open) { open_->setValue(open); }
 
-    double bhp() const;
-    void setBhp(double bhp);
+    double bhp() const { return bhp_->value(); }
+    void setBhp(double bhp) { bhp_->setValue(bhp); }
 
-    double rate() const;
-    void setRate(double rate);
+    double rate() const { return rate_->value(); }
+    void setRate(double rate) { rate_->setValue(rate); }
 
-    ::Utilities::Settings::Model::ControlMode mode() const;
-    ::Utilities::Settings::Model::InjectionType injection_fluid() const;
+    ::Utilities::Settings::Model::ControlMode mode() const { return mode_; }
+    ::Utilities::Settings::Model::InjectionType injection_fluid() const { return injection_fluid_; }
 
 private:
     Variables::IntegerVariable *time_step_;

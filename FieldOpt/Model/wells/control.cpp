@@ -63,51 +63,5 @@ Control::Control(::Utilities::Settings::Model::ControlEntry entry,
 
 }
 
-int Control::time_step() const
-{
-    return time_step_->value();
-}
-
-bool Control::open() const
-{
-    return open_->value();
-}
-
-void Control::setOpen(bool open)
-{
-    open_->setValue(open);
-}
-
-double Control::bhp() const
-{
-    return bhp_->value();
-}
-
-void Control::setBhp(double bhp)
-{
-    bhp_->setValue(bhp);
-}
-
-double Control::rate() const
-{
-    return rate_->value();
-}
-
-void Control::setRate(double rate)
-{
-    rate_->setValue(rate);
-}
-
-::Utilities::Settings::Model::ControlMode Control::mode() const
-{
-    return mode_;
-}
-
-::Utilities::Settings::Model::InjectionType Control::injection_fluid() const
-{
-    return injection_fluid_;
-}
-
-
 }
 }
