@@ -37,7 +37,6 @@ CompletionCollection::CompletionCollection()
 
 void CompletionCollection::AddPerforation(Perforation *perf)
 {
-    if (!NewCompletionIsValid(perf)) throw CompletionNotValidException("New perforation is invalid.");
     perforations_->append(perf);
 }
 
@@ -48,11 +47,6 @@ Perforation *CompletionCollection::GetPerforation(int id)
             return perforations_->at(i);
     }
     throw CompletionNotFoundException(id);
-}
-
-bool CompletionCollection::NewCompletionIsValid(Perforation *perf)
-{
-    return true;
 }
 
 }

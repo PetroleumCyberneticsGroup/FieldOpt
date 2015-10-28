@@ -201,6 +201,8 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
                 completion.well_block = IntegerCoordinate(json_completion["WellBlock"].toArray());
             }
             else throw UnableToParseWellsModelSectionException("Completion type not recognized.");
+            if (!wellContainsBlock(well, completion.well_block)) // Throw an exception if the well does not contain the block the completion is defined in
+                throw CompletionDefinedOutsideWellException(well.name.toStdString());
             well.completions.append(completion);
         }
     }
@@ -271,6 +273,15 @@ Model::Well::Variable Model::readSingleVariable(QJsonObject json_variable, Well 
         variable.time_steps.append(json_time_steps[i].toInt());
     }
     return variable;
+}
+
+bool Model::wellContainsBlock(Model::Well well, Model::IntegerCoordinate block)
+{
+    for (int i = 0; i < well.well_blocks.size(); ++i) {
+        if (well.well_blocks[i].Equals(&block))
+            return true;
+    }
+    return false;
 }
 
 bool Model::variableNameExists(QString varible_name) const

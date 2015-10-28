@@ -136,6 +136,7 @@ private:
     Well readSingleWell(QJsonObject json_well);
     Well::Variable readSingleVariable(QJsonObject json_variable, Well well);
 
+    bool wellContainsBlock(Well well, IntegerCoordinate block);
     bool variableNameExists(QString varialbe_name) const;
     bool controlTimeIsDeclared(int time) const;
 };

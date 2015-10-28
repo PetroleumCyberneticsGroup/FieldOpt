@@ -49,15 +49,6 @@ public:
 private:
     QList<Perforation *> *perforations_;
 
-    /*!
-     * \brief NewCompletionIsValid
-     *
-     * \todo Implement this.
-     *
-     * \param perf
-     * \return
-     */
-    bool NewCompletionIsValid(Perforation *perf);
 };
 
 }

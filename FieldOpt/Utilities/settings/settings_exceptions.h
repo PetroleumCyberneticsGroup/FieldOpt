@@ -130,6 +130,12 @@ public:
         : std::runtime_error(message) {}
 };
 
+class CompletionDefinedOutsideWellException : public std::runtime_error {
+public:
+    CompletionDefinedOutsideWellException(const string well_name)
+        : std::runtime_error("Illegal definition of completion outside the set of well blocks for well " + well_name) {}
+};
+
 class DriverFileInconsistentException : public std::runtime_error {
 public:
     DriverFileInconsistentException(const string &message)
