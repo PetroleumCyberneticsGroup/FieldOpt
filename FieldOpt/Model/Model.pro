@@ -32,7 +32,6 @@ HEADERS += \
     wells/trajectory/trajectory.h \
     wells/trajectory/wellspline.h \
     wells/trajectory/wellblocks.h \
-    wells/wellgroup.h \
     wells/completions/completioncollection.h \
     wells/completions/completion_exceptions.h \
     results/results.h \
@@ -61,7 +60,6 @@ SOURCES += \
     wells/trajectory/trajectory.cpp \
     wells/trajectory/wellspline.cpp \
     wells/trajectory/wellblocks.cpp \
-    wells/wellgroup.cpp \
     wells/completions/completioncollection.cpp \
     results/eclresults.cpp \
     reservoir/grid/eclgrid.cpp \
