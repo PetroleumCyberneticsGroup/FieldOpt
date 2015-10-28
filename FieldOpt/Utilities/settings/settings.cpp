@@ -25,6 +25,7 @@
 
 #include "settings.h"
 #include "settings_exceptions.h"
+#include "Utilities/file_handling/filehandling.h"
 
 #include <QFile>
 #include <QByteArray>
@@ -36,6 +37,8 @@ namespace Settings {
 
 Settings::Settings(QString driver_path)
 {
+    if (!::Utilities::FileHandling::FileExists(driver_path))
+        throw FileNotFoundException(driver_path.toStdString());
     driver_path_ = driver_path;
     readDriverFile();
 }
@@ -77,8 +80,11 @@ void Settings::readGlobalSection()
     try {
         QJsonObject global = json_driver_->value("Global").toObject();
         name_ = global["Name"].toString();
-        output_directory_ = global["OutputDirectory"].toString();
         verbose_ = global["Verbose"].toBool();
+        output_directory_ = global["OutputDirectory"].toString();
+
+        if (!::Utilities::FileHandling::DirectoryExists(output_directory_)) // Throw an error if the output directory does not exist
+            throw FileNotFoundException(output_directory_.toStdString());
     }
     catch (std::exception const &ex) {
         throw UnableToParseGlobalSectionException("Unable to parse driver file global section: " + std::string(ex.what()));

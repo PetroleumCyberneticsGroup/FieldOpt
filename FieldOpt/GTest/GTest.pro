@@ -27,7 +27,8 @@ SOURCES += \
     Model/objective/test_weightedsum.cpp \
     Model/variables/test_variablehandler.cpp \
     Model/wells/test_control.cpp \
-    Model/wells/test_perforation.cpp
+    Model/wells/test_perforation.cpp \
+    Utilities/file_handling/test_filehandling.cpp
 
 OTHER_FILES += \
     Utilities/driver/driver.json

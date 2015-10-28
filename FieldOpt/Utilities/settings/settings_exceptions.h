@@ -34,6 +34,12 @@ using std::string;
 namespace Utilities {
 namespace Settings {
 
+class FileNotFoundException : public std::runtime_error {
+public:
+    FileNotFoundException(const string &path)
+        : std::runtime_error("No file or folder found at " + path) {}
+};
+
 class DriverFilePathNotSpecifiedException : public std::runtime_error {
 public:
     DriverFilePathNotSpecifiedException(const string &message)

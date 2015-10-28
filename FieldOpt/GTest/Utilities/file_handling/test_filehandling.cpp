@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- * test_settings.cpp
  *
- * Created: 30.09.2015 2015 by einar
+ *
+ * Created: 28.10.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -24,34 +24,32 @@
  *****************************************************************************/
 
 #include <gtest/gtest.h>
-#include <QString>
-#include "Utilities/settings/settings.h"
 
-using namespace Utilities::Settings;
+#include "Utilities/file_handling/filehandling.h"
 
 namespace {
 
-class SettingsTest : public ::testing::Test {
+class FileHandlingTest : public ::testing::Test {
 protected:
-    SettingsTest() {}
-    virtual ~SettingsTest() {}
+    FileHandlingTest() {}
+    virtual ~FileHandlingTest() {}
 
     virtual void SetUp() {}
     virtual void TearDown() {}
 
     QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
+    QString driver_directory_path_ = "../../FieldOpt/GTest/Utilities/driver";
 };
 
-TEST_F(SettingsTest, ConstructorAndTestFileValidity) {
-    EXPECT_NO_THROW(Settings settings = Settings(driver_file_path_));
+TEST_F(FileHandlingTest, Existance) {
+    EXPECT_TRUE(::Utilities::FileHandling::FileExists(driver_file_path_));
+    EXPECT_FALSE(::Utilities::FileHandling::FileExists(driver_file_path_ + "wrong"));
+    EXPECT_FALSE(::Utilities::FileHandling::FileExists(driver_directory_path_));
+
+    EXPECT_TRUE(::Utilities::FileHandling::DirectoryExists(driver_directory_path_));
+    EXPECT_FALSE(::Utilities::FileHandling::DirectoryExists(driver_directory_path_ + "wrong"));
+    EXPECT_FALSE(::Utilities::FileHandling::DirectoryExists(driver_file_path_));
 }
 
-TEST_F(SettingsTest, GlobalSettings) {
-    Settings settings = Settings(driver_file_path_);
-    EXPECT_STREQ("TestRun", settings.name().toLatin1().constData());
-    EXPECT_STREQ("../../../fieldopt_output", settings.output_directory().toLatin1().constData());
-    EXPECT_STREQ(driver_file_path_.toLatin1().constData(), settings.driver_path().toLatin1().constData());
-    EXPECT_EQ(false, settings.verbose());
-}
 
 }

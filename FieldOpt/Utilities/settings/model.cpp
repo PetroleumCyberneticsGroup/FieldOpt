@@ -25,6 +25,7 @@
 
 #include "Utilities/settings/model.h"
 #include "settings_exceptions.h"
+#include "Utilities/file_handling/filehandling.h"
 #include <QJsonArray>
 
 namespace Utilities {
@@ -75,6 +76,9 @@ void Model::readReservoir(QJsonObject json_reservoir)
     if (json_reservoir.contains("Path") && json_reservoir["Path"].toString().length() > 0)
         reservoir_.path = json_reservoir["Path"].toString();
     else throw UnableToParseReservoirModelSectionException("A reservoir path must be defined.");
+
+    if (!::Utilities::FileHandling::FileExists(reservoir_.path))
+        throw FileNotFoundException(reservoir_.path.toStdString());
 }
 
 Model::Well Model::readSingleWell(QJsonObject json_well)

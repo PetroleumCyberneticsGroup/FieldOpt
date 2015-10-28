@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- * test_settings.cpp
  *
- * Created: 30.09.2015 2015 by einar
+ *
+ * Created: 28.10.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,35 +23,20 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include <gtest/gtest.h>
-#include <QString>
-#include "Utilities/settings/settings.h"
+#include "filehandling.h"
 
-using namespace Utilities::Settings;
 
-namespace {
 
-class SettingsTest : public ::testing::Test {
-protected:
-    SettingsTest() {}
-    virtual ~SettingsTest() {}
-
-    virtual void SetUp() {}
-    virtual void TearDown() {}
-
-    QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
-};
-
-TEST_F(SettingsTest, ConstructorAndTestFileValidity) {
-    EXPECT_NO_THROW(Settings settings = Settings(driver_file_path_));
+bool Utilities::FileHandling::FileExists(QString file_path)
+{
+    QFileInfo file(file_path);
+    if (file.exists() && file.isFile()) return true;
+    else return false;
 }
 
-TEST_F(SettingsTest, GlobalSettings) {
-    Settings settings = Settings(driver_file_path_);
-    EXPECT_STREQ("TestRun", settings.name().toLatin1().constData());
-    EXPECT_STREQ("../../../fieldopt_output", settings.output_directory().toLatin1().constData());
-    EXPECT_STREQ(driver_file_path_.toLatin1().constData(), settings.driver_path().toLatin1().constData());
-    EXPECT_EQ(false, settings.verbose());
-}
-
+bool Utilities::FileHandling::DirectoryExists(QString directory_path)
+{
+    QFileInfo folder(directory_path);
+    if (folder.exists() && folder.isDir()) return true;
+    else return false;
 }

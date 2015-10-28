@@ -1,7 +1,7 @@
 {
     "Global": {
         "Name": "TestRun",
-        "OutputDirectory": "~/FieldOpt/output",
+        "OutputDirectory": "../../../fieldopt_output",
         "Verbose": false
     },
     "Optimizer": {

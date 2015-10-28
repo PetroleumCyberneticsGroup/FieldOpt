@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- * test_settings.cpp
  *
- * Created: 30.09.2015 2015 by einar
+ *
+ * Created: 28.10.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,35 +23,30 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include <gtest/gtest.h>
+#ifndef FILEHANDLING_H
+#define FILEHANDLING_H
+
 #include <QString>
-#include "Utilities/settings/settings.h"
+#include <QFileInfo>
 
-using namespace Utilities::Settings;
+namespace Utilities {
+namespace FileHandling {
 
-namespace {
+/*!
+ * \brief FileExists Checks whether or not a file exists at the specified path.
+ * \param file_path Path to a file that may or may not exist.
+ * \return True if a file exists at the specified path, otherwise false.
+ */
+bool FileExists(QString file_path);
 
-class SettingsTest : public ::testing::Test {
-protected:
-    SettingsTest() {}
-    virtual ~SettingsTest() {}
-
-    virtual void SetUp() {}
-    virtual void TearDown() {}
-
-    QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
-};
-
-TEST_F(SettingsTest, ConstructorAndTestFileValidity) {
-    EXPECT_NO_THROW(Settings settings = Settings(driver_file_path_));
-}
-
-TEST_F(SettingsTest, GlobalSettings) {
-    Settings settings = Settings(driver_file_path_);
-    EXPECT_STREQ("TestRun", settings.name().toLatin1().constData());
-    EXPECT_STREQ("../../../fieldopt_output", settings.output_directory().toLatin1().constData());
-    EXPECT_STREQ(driver_file_path_.toLatin1().constData(), settings.driver_path().toLatin1().constData());
-    EXPECT_EQ(false, settings.verbose());
-}
+/*!
+ * \brief DirectoryExists Checks whether or not a folder exists at the specified path.
+ * \param folder_path Path to a folder that may or may not exist.
+ * \return True if a folder exists at the specified path, otherwise false.
+ */
+bool DirectoryExists(QString folder_path);
 
 }
+}
+
+#endif // FILEHANDLING_H
