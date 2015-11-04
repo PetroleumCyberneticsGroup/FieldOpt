@@ -28,7 +28,9 @@ SOURCES += \
     Model/variables/test_variablehandler.cpp \
     Model/wells/test_control.cpp \
     Model/wells/test_perforation.cpp \
-    Utilities/file_handling/test_filehandling.cpp
+    Utilities/file_handling/test_filehandling.cpp \
+    Model/wells/test_wellblock.cpp \
+    Model/wells/test_trajectory.cpp
 
 OTHER_FILES += \
     Utilities/driver/driver.json

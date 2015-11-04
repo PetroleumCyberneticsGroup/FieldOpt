@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * trajectory.cpp
+ * wellspline.cpp
  *
  * Created: 24.09.2015 2015 by einar
  *
@@ -23,11 +23,11 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include "trajectory.h"
+#include "wellspline.h"
 
 namespace Model {
 namespace Wells {
-namespace Trajectory {
+namespace Wellbore {
 
 }
 }

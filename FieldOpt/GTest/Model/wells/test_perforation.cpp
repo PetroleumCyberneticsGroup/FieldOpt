@@ -24,9 +24,10 @@
  *****************************************************************************/
 
 #include <gtest/gtest.h>
-#include "Model/wells/completions/perforation.h"
+#include "Model/wells/wellbore/completions/perforation.h"
+#include "Model/model.h"
 
-using namespace Model::Wells;
+using namespace Model::Wells::Wellbore;
 
 namespace {
 
@@ -63,14 +64,6 @@ TEST_F(PerforationTest, Constructor) {
 TEST_F(PerforationTest, Values) {
     EXPECT_FLOAT_EQ(1.0, prod_perforations_[0]->transmissibility_factor());
     EXPECT_FLOAT_EQ(1.0, prod_perforations_[1]->transmissibility_factor());
-
-    EXPECT_EQ(1, prod_perforations_[0]->i());
-    EXPECT_EQ(4, prod_perforations_[0]->j());
-    EXPECT_EQ(2, prod_perforations_[0]->k());
-
-    EXPECT_EQ(2, prod_perforations_[1]->i());
-    EXPECT_EQ(4, prod_perforations_[1]->j());
-    EXPECT_EQ(2, prod_perforations_[1]->k());
 }
 
 TEST_F(PerforationTest, VariableHandlerCorrectness) {

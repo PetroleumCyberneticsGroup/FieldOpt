@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * wellblocks.cpp
+ * completion_exceptions.h
  *
  * Created: 24.09.2015 2015 by einar
  *
@@ -23,12 +23,34 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include "wellblocks.h"
+#ifndef COMPLETION_EXCEPTIONS_H
+#define COMPLETION_EXCEPTIONS_H
+
+#include <stdexcept>
+#include <string>
+
+using std::string;
 
 namespace Model {
 namespace Wells {
-namespace Trajectory {
+namespace Wellbore {
+namespace Completions {
+
+class CompletionNotValidException : public std::runtime_error {
+public:
+    CompletionNotValidException(const string& message)
+        : std::runtime_error(message) {}
+};
+
+class CompletionNotFoundException : public std::runtime_error {
+public:
+    CompletionNotFoundException(const int completion_id)
+        : std::runtime_error("Completion with id " + std::to_string(completion_id) + " was not found.") {}
+};
 
 }
 }
 }
+}
+
+#endif // COMPLETION_EXCEPTIONS_H

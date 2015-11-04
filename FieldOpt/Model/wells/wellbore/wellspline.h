@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * completioncollection.cpp
+ * wellspline.h
  *
  * Created: 24.09.2015 2015 by einar
  *
@@ -23,32 +23,23 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include "completioncollection.h"
-#include "completion_exceptions.h"
+#ifndef WELLSPLINE_H
+#define WELLSPLINE_H
+
+#include "trajectory.h"
 
 namespace Model {
 namespace Wells {
-namespace Completions {
+namespace Wellbore {
 
-CompletionCollection::CompletionCollection()
+class WellSpline
 {
-    perforations_ = new QList<Perforation *>();
-}
-
-void CompletionCollection::AddPerforation(Perforation *perf)
-{
-    perforations_->append(perf);
-}
-
-Perforation *CompletionCollection::GetPerforation(int id)
-{
-    for (int i = 0; i < perforations_->size(); ++i) {
-        if (perforations_->at(i)->id() == id)
-            return perforations_->at(i);
-    }
-    throw CompletionNotFoundException(id);
-}
+public:
+    WellSpline();
+};
 
 }
 }
 }
+
+#endif // WELLSPLINE_H

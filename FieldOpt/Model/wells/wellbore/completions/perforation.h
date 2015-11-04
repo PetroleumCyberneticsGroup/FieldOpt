@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * completioncollection.h
+ * perforation.h
  *
  * Created: 24.09.2015 2015 by einar
  *
@@ -23,36 +23,39 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef COMPLETIONCOLLECTION_H
-#define COMPLETIONCOLLECTION_H
+#ifndef PERFORATION_H
+#define PERFORATION_H
 
-#include <QList>
-
-#include "perforation.h"
+#include "completion.h"
+#include "Model/variables/realvariable.h"
+#include "Model/variables/variablehandler.h"
+#include "Model/variables/variablecontainer.h"
 
 namespace Model {
 namespace Wells {
+namespace Wellbore {
 namespace Completions {
 
 /*!
- * \brief The CompletionCollection class collects all completions for the model and checks whether
- * new completions are valid when they are added (e.g. that they don't overlap).
+ * \brief The Perforation class represents a well perforation. It contains the potentially variable transmissibility factor.
  */
-class CompletionCollection
+class Perforation : public Completion
 {
 public:
-    CompletionCollection();
+    Perforation(::Utilities::Settings::Model::Completion completion_settings,
+                Variables::VariableContainer *variable_container,
+                Variables::VariableHandler *variable_handler);
 
-    void AddPerforation(Perforation *perf); //!< Add a new perforation.
-    Perforation *GetPerforation(int id); //!< Get a perforation by ID. Throws an excepton if it is not found.
+    double transmissibility_factor() const { return transmissibility_factor_->value(); }
+    void setTransmissibility_factor(double value) { transmissibility_factor_->setValue(value); }
 
 private:
-    QList<Perforation *> *perforations_;
-
+    Variables::RealVariable *transmissibility_factor_;
 };
 
 }
 }
 }
+}
 
-#endif // COMPLETIONCOLLECTION_H
+#endif // PERFORATION_H

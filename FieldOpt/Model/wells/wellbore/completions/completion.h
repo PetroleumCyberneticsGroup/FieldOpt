@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * trajectory.h
+ * completion.h
  *
  * Created: 24.09.2015 2015 by einar
  *
@@ -23,21 +23,41 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef TRAJECTORY_H
-#define TRAJECTORY_H
+#ifndef COMPLETION_H
+#define COMPLETION_H
+
+#include "Utilities/settings/model.h"
 
 namespace Model {
 namespace Wells {
-namespace Trajectory {
+namespace Wellbore {
+namespace Completions {
 
-class Trajectory
+/*!
+ * \brief The Completion class is the superclass for all completions, e.g. perforations and ICDs.
+ *
+ * This class specifies members common to all completions, e.g. a unique numerical ID for the completion.
+ * Completion objects add themselves to their parent well block.
+ */
+class Completion
 {
 public:
-    Trajectory();
+
+    enum CompletionType : int { Perforation=1001 };
+    int id() const { return id_; } //!< Get the unique ID for this completion.
+    CompletionType type() const { return type_; } //!< Get the type of completion, e.g. Perforation.
+
+protected:
+    Completion(::Utilities::Settings::Model::Completion completion_settings);
+
+private:
+    int id_; //!< A unique identifier for this completion. The number is generated when reading the model settings.
+    CompletionType type_;
 };
 
 }
 }
 }
+}
 
-#endif // TRAJECTORY_H
+#endif // COMPLETION_H

@@ -27,20 +27,19 @@ HEADERS += \
     variables/realvariable.h \
     variables/binaryvariable.h \
     variables/variablecontainer.h \
-    wells/completions/completion.h \
-    wells/completions/perforation.h \
-    wells/trajectory/trajectory.h \
-    wells/trajectory/wellspline.h \
-    wells/trajectory/wellblocks.h \
-    wells/completions/completioncollection.h \
-    wells/completions/completion_exceptions.h \
+    wells/wellbore/completions/completion.h \
+    wells/wellbore/completions/perforation.h \
+    wells/wellbore/trajectory.h \
+    wells/wellbore/wellspline.h \
+    wells/wellbore/completions/completion_exceptions.h \
     results/results.h \
     results/eclresults.h \
     results/results_exceptions.h \
     reservoir/grid/eclgrid.h \
     wells/control.h \
     variables/variablehandler.h \
-    wells/well_exceptions.h
+    wells/well_exceptions.h \
+    wells/wellbore/wellblock.h
 
 SOURCES += \
     model.cpp \
@@ -55,13 +54,12 @@ SOURCES += \
     variables/realvariable.cpp \
     variables/binaryvariable.cpp \
     variables/variablecontainer.cpp \
-    wells/completions/completion.cpp \
-    wells/completions/perforation.cpp \
-    wells/trajectory/trajectory.cpp \
-    wells/trajectory/wellspline.cpp \
-    wells/trajectory/wellblocks.cpp \
-    wells/completions/completioncollection.cpp \
+    wells/wellbore/completions/completion.cpp \
+    wells/wellbore/completions/perforation.cpp \
+    wells/wellbore/trajectory.cpp \
+    wells/wellbore/wellspline.cpp \
     results/eclresults.cpp \
     reservoir/grid/eclgrid.cpp \
     wells/control.cpp \
-    variables/variablehandler.cpp
+    variables/variablehandler.cpp \
+    wells/wellbore/wellblock.cpp

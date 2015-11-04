@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- * completion.h
  *
- * Created: 24.09.2015 2015 by einar
+ *
+ * Created: 29.10.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,48 +23,50 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef COMPLETION_H
-#define COMPLETION_H
+#ifndef WELLBLOCK_H
+#define WELLBLOCK_H
 
 #include "Model/variables/integervariable.h"
-#include "Model/variables/variablecontainer.h"
-#include "Model/variables/variablehandler.h"
-#include "Utilities/settings/model.h"
+#include "Model/wells/wellbore/completions/completion.h"
+#include "Model/wells/wellbore/completions/perforation.h"
 
 namespace Model {
 namespace Wells {
-namespace Completions {
+namespace Wellbore {
 
 /*!
- * \brief The Completion class is the superclass for all completions, e.g. perforations and ICDs.
- *
- * This class specifies members common to all completions, e.g. the location in the reservoir and
- * a unique numerical ID for the completion.
+ * \brief The WellBlock class represents a single well block. It contains references to any completion
+ * defined within it.
  */
-class Completion
+class WellBlock
 {
 public:
-    Completion(::Utilities::Settings::Model::Completion completion_settings,
-               Variables::VariableContainer *variable_container,
-               Variables::VariableHandler *variable_handler);
+    WellBlock(int i, int j, int k);
 
-    int id() const { return id_; } //!< Get the unique ID for this completion.
+    void AddCompletion(::Model::Wells::Wellbore::Completions::Completion *completion); //!< Add a completion to this well block.
+    bool HasCompletion(); //!< Check if this well block has a completion.
+    Completions::Completion *GetCompletion(); //!< Get the completion defined for this block.
+
+    bool HasPerforation(); //!< Check if this well block has a perforation-type completion.
+    Completions::Perforation *GetPerforation(); //!< Get the perforation defined for this block.
+
     int i() const { return i_->value(); }
     int j() const { return j_->value(); }
     int k() const { return k_->value(); }
-    void setI(int i) { i_->setValue(i); }
-    void setJ(int j) { j_->setValue(j); }
-    void setK(int k) { k_->setValue(k); }
+
+    void setI(const int i) { i_->setValue(i); }
+    void setJ(const int j) { j_->setValue(j); }
+    void setK(const int k) { k_->setValue(k); }
+
 
 private:
-    int id_; //!< A unique identifier for this completion. The number is generated when reading the model settings.
-    Variables::IntegerVariable *i_;
-    Variables::IntegerVariable *j_;
-    Variables::IntegerVariable *k_;
+    Model::Variables::IntegerVariable *i_;
+    Model::Variables::IntegerVariable *j_;
+    Model::Variables::IntegerVariable *k_;
+    Completions::Completion *completion_;
 };
 
 }
 }
 }
-
-#endif // COMPLETION_H
+#endif // WELLBLOCK_H

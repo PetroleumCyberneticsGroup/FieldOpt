@@ -28,12 +28,12 @@
 
 #include "Utilities/settings/settings.h"
 #include "Utilities/settings/model.h"
-#include "Model/wells/completions/completion.h"
-#include "Model/wells/completions/completioncollection.h"
-#include "Model/wells/completions/perforation.h"
+#include "Model/wells/wellbore/completions/completion.h"
+#include "Model/wells/wellbore/completions/perforation.h"
 #include "Model/variables/variablecontainer.h"
 #include "Model/variables/integervariable.h"
 #include "Model/wells/control.h"
+#include "Model/wells/wellbore/trajectory.h"
 
 #include <QList>
 
@@ -54,7 +54,7 @@ public:
      */
     Well(Utilities::Settings::Model settings,
          int well_number,
-         ::Model::Variables::VariableContainer *variables,
+         ::Model::Variables::VariableContainer *variable_container,
          ::Model::Variables::VariableHandler *variable_handler);
 
     struct Heel { Variables::IntegerVariable *i; Variables::IntegerVariable *j; Variables::IntegerVariable *k; };
@@ -66,9 +66,10 @@ private:
     ::Utilities::Settings::Model::WellType type_;
     ::Utilities::Settings::Model::PreferedPhase prefered_phase_;
     Variables::RealVariable *wellbore_radius_;
+    Wellbore::Trajectory *trajectory_;
+
     Heel heel_;
     QList<Control *> *controls_;
-    Completions::CompletionCollection *completions_;
 };
 
 }

@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * wellblocks.h
+ * completion.cpp
  *
  * Created: 24.09.2015 2015 by einar
  *
@@ -23,23 +23,24 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef WELLBLOCKS_H
-#define WELLBLOCKS_H
-
-#include "trajectory.h"
+#include "completion.h"
 
 namespace Model {
 namespace Wells {
-namespace Trajectory {
+namespace Wellbore {
+namespace Completions {
 
-class WellBlocks : public Trajectory
+Completion::Completion(Utilities::Settings::Model::Completion completion_settings)
 {
-public:
-    WellBlocks();
-};
+    id_ = completion_settings.id;
+
+    if (completion_settings.type == ::Utilities::Settings::Model::WellCompletionType::Perforation)
+        type_ = CompletionType::Perforation;
+}
+
 
 }
 }
 }
+}
 
-#endif // WELLBLOCKS_H

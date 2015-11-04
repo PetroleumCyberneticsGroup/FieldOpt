@@ -31,7 +31,7 @@ namespace Wells {
 
 Well::Well(Utilities::Settings::Model settings,
            int well_number,
-           Variables::VariableContainer *variables,
+           Variables::VariableContainer *variable_container,
            ::Model::Variables::VariableHandler *variable_handler)
 {
     Utilities::Settings::Model::Well well_settings = settings.wells().at(well_number);
@@ -48,14 +48,17 @@ Well::Well(Utilities::Settings::Model settings,
 
     controls_ = new QList<Control *>();
     for (int i = 0; i < well_settings.controls.size(); ++i)
-        controls_->append(new Control(well_settings.controls[i], well_settings, variables, variable_handler));
+        controls_->append(new Control(well_settings.controls[i], well_settings, variable_container, variable_handler));
 
-    completions_ = new Completions::CompletionCollection();
+    trajectory_ = new Wellbore::Trajectory(well_settings, variable_container, variable_handler);
+
+    /*
     for (int i = 0; i < well_settings.completions.size(); ++i) {
         if (well_settings.completions[i].type == ::Utilities::Settings::Model::WellCompletionType::Perforation)
             completions_->AddPerforation(new Completions::Perforation(well_settings.completions[i], variables, variable_handler));
         else throw WellCompletionNotRecognizedException("Only perforation-type completions are currently supported.");
     }
+    */
 }
 
 }
