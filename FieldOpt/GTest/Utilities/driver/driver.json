@@ -107,6 +107,11 @@
                         "Name": "PROD-TRANS-ALL",
                         "Type": "Transmissibility",
                         "Blocks": "WELL"
+                    },
+                    {
+                        "Name": "PROD-WELLBLOCKS-ALL",
+                        "Type": "WellBlockPosition",
+                        "Blocks": "WELL"
                     }
                 ]
             },

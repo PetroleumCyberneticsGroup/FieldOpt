@@ -119,6 +119,8 @@ In addition, depending on the values entered in the already mentioned fields, th
 * `WellBlocks` must be set when `DefinitionType` is set to `WellBlocks`. It must be set to an array of _integer_ coordinates, i.e. `[ [i1,j1,k1], [i2,j2,k2], ... ]`.
 * `SplinePoints` must be set when `DefinitionType` is set to `WellSpline`.  It must be set to an array of _float_ coordinates, i.e. `[ [x1,y1,z1], [x2,y2,k2], ... ]`.
 
+#### Model -> Wells -> Controls
+
 We must also define some controls:
 ```
 "Wells": [
@@ -146,6 +148,8 @@ We must also define some controls:
 * `Rate` rate when `Rate` mode is set.
 * `BHP` BHP when `BHP` mode is set.
 
+#### Model -> Wells -> Completions
+
 Additionally, all wells may/should define completions:
 ```
 "Wells": [
@@ -165,6 +169,8 @@ Additionally, all wells may/should define completions:
 * `Type` denotes the completion type. Initially only `Perforation` is supported.
 * `WellBlock` denotes the well block this perforation should be applied to.
 * `TransmissibilityFactor` is the transmissibility factor (well index) to be used in the well block containing the completion.
+
+#### Model -> Wells -> Variables
 
 The final field in a well is an optional array of variables:
 
@@ -186,10 +192,10 @@ The final field in a well is an optional array of variables:
 ```
 
 * `Name` defines a unique name for the variable, for example `wellname-vartype-1`.
-* `Type` denotes what type of variable this is, e.g. `SplinePoints`, `OpenShut`, `Transmissibility`, `Rate` or `BHP`.
+* `Type` denotes what type of variable this is, e.g. `SplinePoints`, `OpenShut`, `Transmissibility`, `WellBlockPosition`, `Rate` or `BHP`.
 * `TimeSteps` denotes at what time steps the value of the variable is allowed to change. It is defined as an integer array of time steps.
 * `VariableSplinePointIndices` denotes which of the spline points are allowed to vary. The indices not found in this list are taken to be stationary.
-* `Blocks` indicate the blocks the variable applies to. E.g. for the `Transmissibility` type, it indicates which well blocks should have variable transmissibilites. If this is set to `WELL`, it will be applied to all well blocks with completions. Note that the listed blocks must correspond to a completion (perforation).
+* `Blocks` indicate the blocks the variable applies to. E.g. for the `Transmissibility` type, it indicates which well blocks should have variable transmissibilites; for the `WellBlockPosition` type it indicates the initial position of the well blocks that should be allowed to vatty. If this is set to `WELL`, it will be applied to all well blocks with completions. Note that the listed blocks must correspond to a completion (perforation).
 
 ## Simulator
 

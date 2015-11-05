@@ -50,7 +50,7 @@ public:
     enum ControlMode : int { BHPControl=21, RateControl=22 };
     enum InjectionType : int { WaterInjection=31, GasInjection=32 };
     enum WellDefinitionType : int { WellBlocks=41, WellSpline=42 };
-    enum WellVariableType : int { BHP=51, Rate=52, SplinePoints=53, OpenShut=54, Transmissibility=55 };
+    enum WellVariableType : int { BHP=51, Rate=52, SplinePoints=53, OpenShut=54, Transmissibility=55, WellBlockPosition=56 };
     enum WellCompletionType : int { Perforation=61 };
     enum WellState : int { WellOpen=71, WellShut=72 };
     enum PreferedPhase : int { Oil=81, Water=82, Gas=83, Liquid=84 };

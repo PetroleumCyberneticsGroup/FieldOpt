@@ -260,6 +260,24 @@ Model::Well::Variable Model::readSingleVariable(QJsonObject json_variable, Well 
         else
             throw UnableToParseWellsModelSectionException("Unable to parse transmissibility variable Blocks property.");
     }
+    else if (QString::compare(type, "WellBlockPosition") == 0) {
+        variable.type = WellVariableType::WellBlockPosition;
+        variable.blocks = QList<IntegerCoordinate>();
+        if (!json_variable.contains("Blocks"))
+            throw UnableToParseWellsModelSectionException("WellBlockPosition type variables must specify the Blocks property.");
+        if (json_variable["Blocks"].isString() && QString::compare(json_variable["Blocks"].toString(), "WELL") == 0) { // Apply add all well blocks
+            for (int i = 0; i < well.well_blocks.size(); ++i) {
+                variable.blocks.append(IntegerCoordinate(well.well_blocks[i]));
+            }
+        }
+        else if (json_variable["Blocks"].isArray() && json_variable["Blocks"].toArray().first().isArray()) { // Parsing block list
+            for (int i = 0; i < json_variable["Blocks"].toArray().size(); ++i) {
+                variable.blocks.append(IntegerCoordinate(json_variable["Blocks"].toArray()[i].toArray()));
+            }
+        }
+        else
+            throw UnableToParseWellsModelSectionException("Unable to parse WellBlockPosition variable Blocks property.");
+    }
     else if (QString::compare(type, "SplinePoints") == 0) {
         variable.type = WellVariableType::SplinePoints;
         variable.variable_spline_point_indices = QList<int>();
