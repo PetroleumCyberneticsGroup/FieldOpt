@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- * reservoir.cpp
  *
- * Created: 22.09.2015 2015 by einar
+ *
+ * Created: 05.11.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,20 +23,24 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include "reservoir.h"
-#include "reservoir_exceptions.h"
-#include "grid/eclgrid.h"
+#ifndef RESERVOIR_EXCEPTIONS
+#define RESERVOIR_EXCEPTIONS
+
+#include <stdexcept>
+#include <string>
+
+using std::string;
 
 namespace Model {
 namespace Reservoir {
 
-Reservoir::Reservoir(Utilities::Settings::Model::Reservoir reservoir_settings)
-{
-    if (reservoir_settings.type == ::Utilities::Settings::Model::ReservoirGridSourceType::ECLIPSE)
-        grid_ = new Grid::ECLGrid(reservoir_settings.path);
-    else
-        throw ReservoirTypeNotRecognizedException();
-}
+class ReservoirTypeNotRecognizedException : public std::runtime_error {
+public:
+    ReservoirTypeNotRecognizedException()
+        : std::runtime_error("The reservoir type was not recognized."){}
+};
 
 }
 }
+
+#endif // RESERVOIR_EXCEPTIONS

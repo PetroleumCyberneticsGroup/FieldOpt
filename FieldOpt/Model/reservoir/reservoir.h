@@ -27,6 +27,7 @@
 #define RESERVOIR_H
 
 #include "grid/grid.h"
+#include "Utilities/settings/model.h"
 
 namespace Model {
 namespace Reservoir {
@@ -34,7 +35,7 @@ namespace Reservoir {
 class Reservoir
 {
 public:
-    Reservoir();
+    Reservoir(::Utilities::Settings::Model::Reservoir reservoir_settings);
 
     Grid::Grid* grid() const { return grid_; }
 

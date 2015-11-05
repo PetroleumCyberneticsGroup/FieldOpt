@@ -30,7 +30,8 @@ SOURCES += \
     Model/wells/test_perforation.cpp \
     Utilities/file_handling/test_filehandling.cpp \
     Model/wells/test_wellblock.cpp \
-    Model/wells/test_trajectory.cpp
+    Model/wells/test_trajectory.cpp \
+    Model/reservoir/test_reservoir.cpp
 
 OTHER_FILES += \
     Utilities/driver/driver.json

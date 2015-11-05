@@ -39,7 +39,8 @@ HEADERS += \
     wells/control.h \
     variables/variablehandler.h \
     wells/well_exceptions.h \
-    wells/wellbore/wellblock.h
+    wells/wellbore/wellblock.h \
+    reservoir/reservoir_exceptions.h
 
 SOURCES += \
     model.cpp \
