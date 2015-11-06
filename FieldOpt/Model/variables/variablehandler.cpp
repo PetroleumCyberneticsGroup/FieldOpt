@@ -66,7 +66,7 @@ VariableHandler::VariableHandler(Utilities::Settings::Model settings)
                 break;
             case Utilities::Settings::Model::WellVariableType::Transmissibility:
                 for (int block_nr = 0; block_nr < settings_var.blocks.size(); ++block_nr) {
-                    new_well->getPerforation(&settings_var.blocks[block_nr])->transmissibility_factor_ = true;
+                    new_well->getPerforation(&settings_var.blocks[block_nr].position)->transmissibility_factor_ = true;
                 }
                 break;
             }
@@ -130,7 +130,7 @@ VariableHandler::Perforation *VariableHandler::Well::getPerforation(int id)
 VariableHandler::Perforation *VariableHandler::Well::getPerforation(Utilities::Settings::Model::IntegerCoordinate *block)
 {
     for (int i = 0; i < perforations_.size(); ++i) {
-        if (perforations_[i]->block_.Equals(block))
+        if (perforations_[i]->block_.position.Equals(block))
             return perforations_[i];
     }
     throw VariableHandlerCannotFindObjectException("The variable handler was unable to find a perforation at the given block.");

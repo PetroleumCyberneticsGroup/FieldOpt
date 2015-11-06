@@ -61,10 +61,10 @@ void Trajectory::initializeWellBlocks(Utilities::Settings::Model::Well well,
                                       Variables::VariableContainer *variable_container,
                                       Variables::VariableHandler *variable_handler)
 {
-    QList<Utilities::Settings::Model::IntegerCoordinate> blocks = well.well_blocks;
+    QList<Utilities::Settings::Model::WellBlock> blocks = well.well_blocks;
     for (int i = 0; i < blocks.size(); ++i) {
-        well_blocks_->append(new WellBlock(blocks[i].i, blocks[i].j, blocks[i].k));
-        Completions::Completion *completion = getCompletion(well.completions, blocks[i], variable_container, variable_handler);
+        well_blocks_->append(new WellBlock(blocks[i].position.i, blocks[i].position.j, blocks[i].position.k));
+        Completions::Completion *completion = getCompletion(well.completions, blocks[i].position, variable_container, variable_handler);
         if (completion != nullptr)
             well_blocks_->last()->AddCompletion(completion);
     }
@@ -76,7 +76,7 @@ Completions::Completion *Trajectory::getCompletion(QList<Utilities::Settings::Mo
                                                    Variables::VariableHandler *variable_handler)
 {
     for (int i = 0; i < completions.size(); ++i) { // Look for a completion belonging to the block.
-        if (completions[i].well_block.Equals(&block)) { // Found a block.
+        if (completions[i].well_block.position.Equals(&block)) { // Found a block.
             if (completions[i].type == Utilities::Settings::Model::WellCompletionType::Perforation) // Initializing a perforation
                 return new Completions::Perforation(completions[i], variable_container, variable_handler);
         }

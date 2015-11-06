@@ -73,7 +73,7 @@ public:
             transmissibility_factor_ = false;
         }
         int id_;
-        ::Utilities::Settings::Model::IntegerCoordinate block_;
+        ::Utilities::Settings::Model::WellBlock block_;
         bool transmissibility_factor_;
 
     public:

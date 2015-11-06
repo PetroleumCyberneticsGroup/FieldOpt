@@ -85,10 +85,20 @@ public:
         double rate; //!< Rate target when well is on rate control.
         InjectionType injection_type; //!< Injector type (water/gas)
     };
+
+    struct WellBlock {
+        WellBlock(){}
+        WellBlock(IntegerCoordinate pos, int ID) { position = pos; id = ID; }
+        int id; //!< Unique numerical ID for the well block
+        IntegerCoordinate position; //!< (Initial) Position of the well block
+    };
+
+
     struct Completion {
+        Completion(int ID) { id = ID; }
         int id; //!< Unique numerical ID for the completion.
         WellCompletionType type; //!< Which type of completion this is (Perforation/ICD)
-        IntegerCoordinate well_block; //!< The well block to which this completion belongs.
+        WellBlock well_block; //!< The well block to which this completion belongs.
         double transmissibility_factor; //!< The transmissibility factor for this completion (used for perforations)
     };
 
@@ -103,7 +113,7 @@ public:
             QString name; //!< A unique name for the variable.
             WellVariableType type; //!< The type of variable (what kind of property it applies to, _not_ int/float).
             QList<int> time_steps; //!< The time steps at which the variable is allowed to change value.
-            QList<IntegerCoordinate> blocks; //!< The blocks this variable should apply to
+            QList<WellBlock> blocks; //!< The blocks this variable should apply to
             QList<int> variable_spline_point_indices; //!< The indices of coordinates in the spline points list that are variable. The rest are taken as constant.
         };
         PreferedPhase prefered_phase; //!< The prefered phase for the well
@@ -114,7 +124,7 @@ public:
         IntegerCoordinate heel; //!< The heel of the well. Must _always_ be defined.
         WellDefinitionType definition_type; //!< How the well path is defined.
         QList<Completion> completions; //!< Well completions, i.e. perforations and ICDs.
-        QList<IntegerCoordinate> well_blocks; //!< Well blocks when the well path is defined by WellBlocks.
+        QList<WellBlock> well_blocks; //!< Well blocks when the well path is defined by WellBlocks.
         QList<RealCoordinate> spline_points; //!< Spline points when the well path is defined by SplinePoints.
         QList<Variable> variables; //!< List of variables for the well (e.g. pressure, rate or spline point positions).
         QList<ControlEntry> controls; //!< List of well controls
@@ -131,6 +141,7 @@ private:
     QList<int> control_times_;
 
     int next_completion_id;
+    int next_well_block_id;
 
     void readReservoir(QJsonObject json_reservoir);
     Well readSingleWell(QJsonObject json_well);
@@ -139,6 +150,7 @@ private:
     bool wellContainsBlock(Well well, IntegerCoordinate block);
     bool variableNameExists(QString varialbe_name) const;
     bool controlTimeIsDeclared(int time) const;
+    WellBlock getBlockAtPosition(Well well, QJsonArray array);
 };
 
 }

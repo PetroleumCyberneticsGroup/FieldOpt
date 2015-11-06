@@ -74,14 +74,14 @@ TEST_F(ModelSettingsTest, ProducerWell) {
     EXPECT_EQ(0, producer.heel.i);
     EXPECT_EQ(0, producer.heel.j);
     EXPECT_EQ(0, producer.heel.k);
-    EXPECT_EQ(3, producer.well_blocks[3].i);
+    EXPECT_EQ(3, producer.well_blocks[3].position.i);
     EXPECT_EQ(4, producer.well_blocks.size());
 }
 
 TEST_F(ModelSettingsTest, ProducerCompletions) {
     Model::Well producer = settings_.model()->wells().first();
     EXPECT_EQ(Model::WellCompletionType::Perforation, producer.completions.first().type);
-    EXPECT_EQ(4, producer.completions.first().well_block.j);
+    EXPECT_EQ(4, producer.completions.first().well_block.position.j);
     EXPECT_EQ(0, producer.completions[0].id);
     EXPECT_EQ(1, producer.completions[1].id);
 }
@@ -99,17 +99,17 @@ TEST_F(ModelSettingsTest, ProducerVariables) {
     EXPECT_EQ(Model::WellVariableType::Transmissibility, producer.variables[1].type);
     EXPECT_STREQ("PROD-TRANS-ALL", producer.variables[1].name.toLatin1().constData());
     EXPECT_EQ(2, producer.variables[1].blocks.size());
-    EXPECT_EQ(1, producer.variables[1].blocks[0].i);
-    EXPECT_EQ(2, producer.variables[1].blocks[1].i);
+    EXPECT_EQ(1, producer.variables[1].blocks[0].position.i);
+    EXPECT_EQ(2, producer.variables[1].blocks[1].position.i);
 
     // WellBlockPositionVariable
     EXPECT_EQ(Model::WellVariableType::WellBlockPosition, producer.variables[2].type);
     EXPECT_STREQ("PROD-WELLBLOCKS-ALL", producer.variables[2].name.toLatin1().constData());
     EXPECT_EQ(4, producer.variables[2].blocks.size());
-    EXPECT_EQ(0, producer.variables[2].blocks[0].i);
-    EXPECT_EQ(1, producer.variables[2].blocks[1].i);
-    EXPECT_EQ(4, producer.variables[2].blocks[2].j);
-    EXPECT_EQ(2, producer.variables[2].blocks[3].k);
+    EXPECT_EQ(0, producer.variables[2].blocks[0].position.i);
+    EXPECT_EQ(1, producer.variables[2].blocks[1].position.i);
+    EXPECT_EQ(4, producer.variables[2].blocks[2].position.j);
+    EXPECT_EQ(2, producer.variables[2].blocks[3].position.k);
 }
 
 TEST_F(ModelSettingsTest, InjectorWell) {
