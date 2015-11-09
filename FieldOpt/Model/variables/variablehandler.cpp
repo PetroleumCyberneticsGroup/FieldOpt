@@ -43,6 +43,9 @@ VariableHandler::VariableHandler(Utilities::Settings::Model settings)
             if (settings_well.completions[completion_nr].type == ::Utilities::Settings::Model::WellCompletionType::Perforation)
                 new_well->perforations_.append(new Perforation(settings_well.completions[completion_nr]));
         }
+        for (int block_nr = 0; block_nr < settings_well.well_blocks.size(); ++block_nr) {
+            new_well->well_blocks_.append(new WellBlock(settings_well.well_blocks[block_nr]));
+        }
         for (int var_idx = 0; var_idx < settings_well.variables.size(); ++var_idx) { // Variables
             Utilities::Settings::Model::Well::Variable settings_var = settings_well.variables[var_idx];
             switch (settings_var.type) {
@@ -69,6 +72,10 @@ VariableHandler::VariableHandler(Utilities::Settings::Model settings)
                     new_well->getPerforation(&settings_var.blocks[block_nr].position)->transmissibility_factor_ = true;
                 }
                 break;
+            case Utilities::Settings::Model::WellVariableType::WellBlockPosition:
+                for (int block_nr = 0; block_nr < settings_var.blocks.size(); ++block_nr) {
+                    new_well->getWellBlock(settings_var.blocks[block_nr].id)->position_ = true;
+                }
             }
         }
         wells_.append(new_well);
@@ -109,6 +116,18 @@ VariableHandler::Well *VariableHandler::GetWell(QString well_name)
     throw VariableHandlerCannotFindObjectException("The variable handler was unable to find a well named " + well_name.toStdString());
 }
 
+VariableHandler::WellBlock *VariableHandler::GetWellBlock(int well_block_id)
+{
+    for (int i = 0; i < wells_.size(); ++i) {
+        for (int j = 0; j < wells_[i]->well_blocks_.size(); ++j) {
+            if (wells_[i]->well_blocks_[j]->id_ == well_block_id) {
+                return wells_[i]->well_blocks_[j];
+            }
+        }
+    }
+    throw VariableHandlerCannotFindObjectException("The variable handler was unable to find a well block with id " + std::to_string(well_block_id));
+}
+
 
 int VariableHandler::wellControlIndex(VariableHandler::Well *well, int time)
 {
@@ -134,6 +153,15 @@ VariableHandler::Perforation *VariableHandler::Well::getPerforation(Utilities::S
             return perforations_[i];
     }
     throw VariableHandlerCannotFindObjectException("The variable handler was unable to find a perforation at the given block.");
+}
+
+VariableHandler::WellBlock *VariableHandler::Well::getWellBlock(int id)
+{
+    for (int i = 0; i < well_blocks_.size(); ++i) {
+        if (well_blocks_[i]->id_ == id)
+            return well_blocks_[i];
+    }
+    throw VariableHandlerCannotFindObjectException("The variable handler was unable to find a well block with the given id.");
 }
 
 }

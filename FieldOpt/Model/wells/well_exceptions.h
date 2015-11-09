@@ -65,6 +65,8 @@ public:
                              std::to_string(i) + ", " +
                              std::to_string(j) + ", " +
                              std::to_string(k) + ").") {}
+    WellBlockNotFoundException(const int id)
+        : std::runtime_error("No well block found with id " + std::to_string(id)) {}
 };
 
 }

@@ -82,6 +82,14 @@ TEST_F(VariableHandlerTest, PerforationVariables) {
     EXPECT_THROW(variable_handler_->GetPerforation(3), VariableHandlerCannotFindObjectException);
 }
 
+TEST_F(VariableHandlerTest, WellBlockVariables) {
+    EXPECT_TRUE(variable_handler_->GetWellBlock(0)->position());
+    EXPECT_TRUE(variable_handler_->GetWellBlock(1)->position());
+    EXPECT_TRUE(variable_handler_->GetWellBlock(2)->position());
+    EXPECT_TRUE(variable_handler_->GetWellBlock(3)->position());
+    EXPECT_THROW(variable_handler_->GetWellBlock(4)->position(), VariableHandlerCannotFindObjectException);
+}
+
 
 }
 

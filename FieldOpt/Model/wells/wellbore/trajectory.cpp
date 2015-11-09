@@ -52,6 +52,15 @@ WellBlock *Trajectory::GetWellBlock(int i, int j, int k)
     throw WellBlockNotFoundException(i, j, k);
 }
 
+WellBlock *Trajectory::GetWellBlock(int id)
+{
+    for (int idx = 0; idx < well_blocks_->size(); ++idx) {
+        if (well_blocks_->at(idx)->id() == id)
+            return well_blocks_->at(idx);
+    }
+    throw WellBlockNotFoundException(id);
+}
+
 QList<WellBlock *> *Trajectory::GetWellBlocks()
 {
     return well_blocks_;
@@ -63,7 +72,12 @@ void Trajectory::initializeWellBlocks(Utilities::Settings::Model::Well well,
 {
     QList<Utilities::Settings::Model::WellBlock> blocks = well.well_blocks;
     for (int i = 0; i < blocks.size(); ++i) {
-        well_blocks_->append(new WellBlock(blocks[i].position.i, blocks[i].position.j, blocks[i].position.k));
+        well_blocks_->append(new WellBlock(blocks[i].position.i, blocks[i].position.j, blocks[i].position.k, blocks[i].id));
+        if (variable_handler->GetWellBlock(blocks[i].id)->position() == true) {
+            variable_container->AddVariable(well_blocks_->last()->i_);
+            variable_container->AddVariable(well_blocks_->last()->j_);
+            variable_container->AddVariable(well_blocks_->last()->k_);
+        }
         Completions::Completion *completion = getCompletion(well.completions, blocks[i].position, variable_container, variable_handler);
         if (completion != nullptr)
             well_blocks_->last()->AddCompletion(completion);

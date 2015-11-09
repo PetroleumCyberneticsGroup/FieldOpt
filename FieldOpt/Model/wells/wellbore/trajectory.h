@@ -61,6 +61,7 @@ public:
                Variables::VariableContainer *variable_container,
                Variables::VariableHandler *variable_handler);
     WellBlock *GetWellBlock(int i, int j, int k); //!< Get the well block at index (i,j,k).
+    WellBlock *GetWellBlock(int id); //!< Get the well block with the specified id.
     QList<WellBlock *> *GetWellBlocks(); //!< Get a list containing all well blocks.
 
 private:

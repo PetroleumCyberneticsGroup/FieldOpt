@@ -40,8 +40,9 @@ namespace Wellbore {
  */
 class WellBlock
 {
+    friend class Trajectory;
 public:
-    WellBlock(int i, int j, int k);
+    WellBlock(int i, int j, int k, int id);
 
     void AddCompletion(::Model::Wells::Wellbore::Completions::Completion *completion); //!< Add a completion to this well block.
     bool HasCompletion(); //!< Check if this well block has a completion.
@@ -50,6 +51,7 @@ public:
     bool HasPerforation(); //!< Check if this well block has a perforation-type completion.
     Completions::Perforation *GetPerforation(); //!< Get the perforation defined for this block.
 
+    int id() const { return id_; }
     int i() const { return i_->value(); }
     int j() const { return j_->value(); }
     int k() const { return k_->value(); }
@@ -60,6 +62,7 @@ public:
 
 
 private:
+    const int id_; //!< A unique ID for this well block. This is needed to identify the well block if it is moved.
     Model::Variables::IntegerVariable *i_;
     Model::Variables::IntegerVariable *j_;
     Model::Variables::IntegerVariable *k_;

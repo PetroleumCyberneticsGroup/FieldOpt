@@ -64,6 +64,26 @@ public:
         bool bhp() const { return bhp_; }   //!< Returns true if the well's BHP can vary at this time step, otherwise false.
     };
 
+    /*!
+     * \brief The WellBlock class Keeps track of which properties of a well block are variable.
+     */
+    class WellBlock {
+        friend class VariableHandler;
+        friend class Well;
+        WellBlock(::Utilities::Settings::Model::WellBlock well_block) {
+            id_ = well_block.id;
+            position_ = false;
+        }
+        int id_;
+        bool position_;
+
+    public:
+        bool position() const { return position_; }
+    };
+
+    /*!
+     * \brief The Perforation class keeps track of which properties of a perforation are variable.
+     */
     class Perforation {
         friend class VariableHandler;
         friend class Well;
@@ -77,7 +97,7 @@ public:
         bool transmissibility_factor_;
 
     public:
-        bool transmissibility_factor() { return transmissibility_factor_; }
+        bool transmissibility_factor() const { return transmissibility_factor_; }
     };
 
     /*!
@@ -95,8 +115,10 @@ public:
         QString name_;
         QList<Control *> controls_;
         QList<Perforation *> perforations_;
+        QList<WellBlock *> well_blocks_;
         Perforation *getPerforation(int id);
         Perforation *getPerforation(::Utilities::Settings::Model::IntegerCoordinate *block);
+        WellBlock *getWellBlock(int id);
     public:
         QString name() const { return name_; } //!< Get the name of the well.
     };
@@ -119,6 +141,12 @@ public:
      * \param well_name The name of the well to get.
      */
     Well *GetWell(QString well_name);
+
+    /*!
+     * \brief GetWellBlock Gets the well block with the specified id.
+     * \param well_block_id The id of the block to get.
+     */
+    WellBlock *GetWellBlock(int well_block_id);
 
 private:
     QList<Well *> wells_;

@@ -30,7 +30,8 @@ namespace Model {
 namespace Wells {
 namespace Wellbore {
 
-WellBlock::WellBlock(int i, int j, int k)
+WellBlock::WellBlock(int i, int j, int k, int id)
+    : id_(id)
 {
     i_ = new Variables::IntegerVariable(i);
     j_ = new Variables::IntegerVariable(j);

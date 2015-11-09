@@ -34,7 +34,7 @@ namespace {
 class WellBlockTest : public ::testing::Test {
 protected:
     WellBlockTest() {
-        well_block_ = new WellBlock(1, 2, 3);
+        well_block_ = new WellBlock(1, 2, 3, 1);
     }
     virtual ~WellBlockTest() {}
 
@@ -47,6 +47,7 @@ TEST_F(WellBlockTest, Constructor) {
 
 
 TEST_F(WellBlockTest, Values) {
+    EXPECT_EQ(1, well_block_->id());
     EXPECT_EQ(1, well_block_->i());
     EXPECT_EQ(2, well_block_->j());
     EXPECT_EQ(3, well_block_->k());
