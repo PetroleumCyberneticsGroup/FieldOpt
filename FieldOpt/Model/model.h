@@ -31,7 +31,6 @@
 
 #include "reservoir/reservoir.h"
 #include "variables/variablecontainer.h"
-#include "schedule/schedule.h"
 #include "wells/well.h"
 #include "variables/variablehandler.h"
 #include "Utilities/settings/model.h"
@@ -44,13 +43,11 @@ public:
     Model(::Utilities::Settings::Model settings);
 
     Reservoir::Reservoir reservoir() const { return reservoir_; }
-    Schedule::Schedule schedule() const { return schedule_; }
     Variables::VariableContainer *variables() const { return variables_; }
     QList<Wells::Well *> wells() const { return wells_; }
 
 private:
     Reservoir::Reservoir reservoir_;
-    Schedule::Schedule schedule_;
     Variables::VariableContainer *variables_;
     Variables::VariableHandler *variable_handler;
 
