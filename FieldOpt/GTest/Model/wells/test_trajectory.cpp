@@ -23,7 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include <gtest/gtest.h>
+#include "GTest/Model/test_fixture_model_base.h"
 #include "Model/wells/wellbore/trajectory.h"
 #include "Model/wells/well_exceptions.h"
 
@@ -31,24 +31,17 @@ using namespace Model::Wells;
 
 namespace {
 
-class TrajectoryTest : public ::testing::Test {
+class TrajectoryTest : public ModelBaseTest {
 
 protected:
     TrajectoryTest() {
-        settings_ = new ::Utilities::Settings::Settings(driver_file_path_);
-        variable_handler_ = new ::Model::Variables::VariableHandler(*settings_->model());
-        variable_container_ = new ::Model::Variables::VariableContainer();
         prod_well_settings_ = settings_->model()->wells().first();
         prod_well_trajectory_ = new Wellbore::Trajectory(prod_well_settings_, variable_container_, variable_handler_);
     }
     virtual ~TrajectoryTest() {}
     virtual void SetUp() {}
 
-    QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
-    ::Utilities::Settings::Settings *settings_;
     ::Utilities::Settings::Model::Well prod_well_settings_;
-    ::Model::Variables::VariableHandler *variable_handler_;
-    ::Model::Variables::VariableContainer *variable_container_;
     ::Model::Wells::Wellbore::Trajectory *prod_well_trajectory_;
 };
 

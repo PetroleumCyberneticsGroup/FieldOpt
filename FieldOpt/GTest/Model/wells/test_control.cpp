@@ -23,20 +23,16 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include <gtest/gtest.h>
-
+#include "GTest/Model/test_fixture_model_base.h"
 #include "Model/wells/control.h"
 
 using namespace Model::Wells;
 
 namespace {
 
-class ControlTest : public ::testing::Test {
+class ControlTest : public ModelBaseTest {
 protected:
     ControlTest() {
-        settings_ = new ::Utilities::Settings::Settings(driver_file_path_);
-        variable_handler_ = new ::Model::Variables::VariableHandler(*settings_->model());
-        variable_container_ = new ::Model::Variables::VariableContainer();
         well_ = settings_->model()->wells().first();
         inj_well_ = settings_->model()->wells().last();
         entry_ = well_.controls.first();
@@ -54,14 +50,10 @@ protected:
     virtual ~ControlTest() {}
     virtual void SetUp() {}
 
-    QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
-    ::Utilities::Settings::Settings *settings_;
     ::Utilities::Settings::Model::Well well_;
     ::Utilities::Settings::Model::Well inj_well_;
     ::Utilities::Settings::Model::ControlEntry entry_;
     ::Utilities::Settings::Model::ControlEntry inj_entry_;
-    ::Model::Variables::VariableHandler *variable_handler_;
-    ::Model::Variables::VariableContainer *variable_container_;
     QList<Control *> all_controls_;
 };
 

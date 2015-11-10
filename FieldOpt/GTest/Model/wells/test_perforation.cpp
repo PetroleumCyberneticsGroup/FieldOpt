@@ -23,7 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include <gtest/gtest.h>
+#include "GTest/Model/test_fixture_model_base.h"
 #include "Model/wells/wellbore/completions/perforation.h"
 #include "Model/model.h"
 
@@ -31,12 +31,9 @@ using namespace Model::Wells::Wellbore;
 
 namespace {
 
-class PerforationTest : public ::testing::Test {
+class PerforationTest : public ModelBaseTest {
 protected:
     PerforationTest() {
-        settings_ = new ::Utilities::Settings::Settings(driver_file_path_);
-        variable_container_ = new ::Model::Variables::VariableContainer();
-        variable_handler_ = new ::Model::Variables::VariableHandler(*settings_->model());
         prod_well_ = settings_->model()->wells().first();
     }
     virtual ~PerforationTest() {}
@@ -49,10 +46,6 @@ protected:
         }
     }
 
-    QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
-    ::Utilities::Settings::Settings *settings_;
-    ::Model::Variables::VariableHandler *variable_handler_;
-    ::Model::Variables::VariableContainer *variable_container_;
     ::Utilities::Settings::Model::Well prod_well_;
     QList<Completions::Perforation *> prod_perforations_;
 };
