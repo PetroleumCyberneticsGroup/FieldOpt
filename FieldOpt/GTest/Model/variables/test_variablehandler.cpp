@@ -73,6 +73,8 @@ TEST_F(VariableHandlerTest, ProducerControls) {
 
     // These have been changed for some time steps
     EXPECT_TRUE(variable_handler_->GetControl("PROD", 0)->bhp());
+    EXPECT_TRUE(variable_handler_->GetControl("PROD", 50)->bhp());
+    EXPECT_TRUE(variable_handler_->GetControl("PROD", 365)->bhp());
 
 }
 

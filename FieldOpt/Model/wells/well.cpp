@@ -42,7 +42,7 @@ Well::Well(Utilities::Settings::Model settings,
 
     heel_.i = new Variables::IntegerVariable(well_settings.heel.i);
     heel_.j = new Variables::IntegerVariable(well_settings.heel.j);
-    heel_.i = new Variables::IntegerVariable(well_settings.heel.k);
+    heel_.k = new Variables::IntegerVariable(well_settings.heel.k);
 
     wellbore_radius_ = new Variables::RealVariable(well_settings.wellbore_radius);
 

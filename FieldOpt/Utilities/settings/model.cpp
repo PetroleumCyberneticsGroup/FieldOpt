@@ -292,6 +292,8 @@ Model::Well::Variable Model::readSingleVariable(QJsonObject json_variable, Well 
             throw UnableToParseWellsModelSectionException("All time steps must be declared in the ControlTimes array. Inconsistency detected in variable declaration.");
         variable.time_steps.append(json_time_steps[i].toInt());
     }
+    if (!well.hasControlsCorrespondingToVariable(variable))
+        throw UnableToParseWellsModelSectionException("A control of the correct type must be declared for all time steps in a control-type variable.");
     return variable;
 }
 
@@ -328,6 +330,27 @@ Model::WellBlock Model::getBlockAtPosition(Model::Well well, QJsonArray array)
             return well.well_blocks[i];
     }
     throw WellBlockNotFoundException("No well block found.");
+}
+
+bool Model::Well::hasControlsCorrespondingToVariable(Model::Well::Variable var)
+{
+    if (var.type != WellVariableType::BHP && var.type != WellVariableType::Rate)
+        return true; // This check is only for rate/bhp control variables
+
+    // Iterate over controls in well
+    for (int control_entry = 0; control_entry < controls.size(); ++control_entry) {
+        // If the variable and control entries match for either pressure or rate control ...
+        if ((var.type == WellVariableType::BHP && controls[control_entry].control_mode == ControlMode::BHPControl)
+                || (var.type == WellVariableType::Rate && controls[control_entry].control_mode == ControlMode::RateControl)) {
+            // Iterate over time steps in variable
+            for (int time_step = 0; time_step < var.time_steps.size(); ++time_step) {
+                // If a time step in the variable matches the time step for the control
+                if (controls[control_entry].time_step == var.time_steps[time_step])
+                    return true;
+            }
+        }
+    }
+    return false;
 }
 
 }

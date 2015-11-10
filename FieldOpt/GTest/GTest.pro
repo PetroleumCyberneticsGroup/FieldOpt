@@ -19,9 +19,6 @@ SOURCES += \
     Model/variables/test_variables.cpp \
     Model/variables/test_variablecontainer.cpp \
     Utilities/settings/test_settings.cpp \
-    Utilities/settings/test_simulator.cpp \
-    Utilities/settings/test_model.cpp \
-    Utilities/settings/test_optimizer.cpp \
     ERTWrapper/test_eclsummaryreader.cpp \
     Model/results/test_eclresults.cpp \
     Model/objective/test_weightedsum.cpp \
@@ -31,7 +28,15 @@ SOURCES += \
     Utilities/file_handling/test_filehandling.cpp \
     Model/wells/test_wellblock.cpp \
     Model/wells/test_trajectory.cpp \
-    Model/reservoir/test_reservoir.cpp
+    Model/reservoir/test_reservoir.cpp \
+    Model/test_model.cpp \
+    Utilities/settings/test_settings_model.cpp \
+    Utilities/settings/test_settings_optimizer.cpp \
+    Utilities/settings/test_settings_simulator.cpp \
+    Model/wells/test_well.cpp
 
 OTHER_FILES += \
     Utilities/driver/driver.json
+
+HEADERS += \
+    Model/test_fixture_model_base.h

@@ -25,6 +25,7 @@
 
 #include "trajectory.h"
 #include "Model/wells/well_exceptions.h"
+#include "iostream"
 
 namespace Model {
 namespace Wells {
@@ -39,7 +40,7 @@ Trajectory::Trajectory(Utilities::Settings::Model::Well well_settings,
         initializeWellBlocks(well_settings, variable_container, variable_handler);
     }
     else if (well_settings.definition_type == Utilities::Settings::Model::WellDefinitionType::WellSpline) {
-        throw std::runtime_error("Spline point type wellbore trajectory definition is not yet implemented");
+        std::cerr << "Spline definition of wells are not yet supported. Skipping the well." << std::endl;
     }
 }
 

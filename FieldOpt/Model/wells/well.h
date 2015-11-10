@@ -61,6 +61,16 @@ public:
 
     enum PreferedPhase { Oil, Gas, Water, Liquid };
 
+    QString name() const { return name_; }
+    ::Utilities::Settings::Model::WellType type() const { return type_; }
+    ::Utilities::Settings::Model::PreferedPhase prefered_phase() const { return prefered_phase_; }
+    double wellbore_radius() const { return wellbore_radius_->value(); }
+    Wellbore::Trajectory *trajectory() { return trajectory_; }
+    QList<Control *> *controls() { return controls_; }
+    int heel_i() const { return heel_.i->value(); }
+    int heel_j() const { return heel_.j->value(); }
+    int heel_k() const { return heel_.k->value(); }
+
 private:
     QString name_;
     ::Utilities::Settings::Model::WellType type_;

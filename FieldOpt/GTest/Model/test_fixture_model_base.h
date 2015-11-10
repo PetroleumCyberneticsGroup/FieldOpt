@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- * model.cpp
  *
- * Created: 22.09.2015 2015 by einar
+ *
+ * Created: 10.11.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,20 +23,26 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include "model.h"
+#ifndef TEST_FIXTURE_MODEL_BASE
+#define TEST_FIXTURE_MODEL_BASE
 
-namespace Model {
+#include <gtest/gtest.h>
+#include "Utilities/settings/settings.h"
+#include "Model/variables/variablecontainer.h"
+#include "Model/variables/variablehandler.h"
 
-Model::Model(Utilities::Settings::Model settings)
-{
-    reservoir_ = new Reservoir::Reservoir(settings.reservoir());
-    variable_container_ = new Variables::VariableContainer();
-    variable_handler_ = new Variables::VariableHandler(settings);
-
-    wells_ = new QList<Wells::Well *>();
-    for (int well_nr = 0; well_nr < settings.wells().size(); ++well_nr) {
-        wells_->append(new Wells::Well(settings, well_nr, variable_container_, variable_handler_));
+class ModelBaseTest : public ::testing::Test {
+protected:
+    ModelBaseTest() {
+        settings_ = new ::Utilities::Settings::Settings(driver_file_path_);
+        variable_container_ = new ::Model::Variables::VariableContainer();
+        variable_handler_ = new ::Model::Variables::VariableHandler(*settings_->model());
     }
-}
 
-}
+    QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
+    ::Utilities::Settings::Settings *settings_;
+    ::Model::Variables::VariableContainer *variable_container_;
+    ::Model::Variables::VariableHandler *variable_handler_;
+};
+
+#endif // TEST_FIXTURE_MODEL_BASE

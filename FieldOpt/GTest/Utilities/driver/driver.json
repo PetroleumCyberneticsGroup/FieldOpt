@@ -95,6 +95,18 @@
                         "State": "Open",
                         "Mode": "BHP",
                         "BHP": 2000.0
+                    },
+                    {
+                        "TimeStep": 50,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 2000.0
+                    },
+                    {
+                        "TimeStep": 365,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 2000.0
                     }
                 ],
                 "Variables": [

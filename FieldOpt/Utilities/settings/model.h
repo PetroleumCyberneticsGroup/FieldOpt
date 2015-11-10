@@ -128,6 +128,7 @@ public:
         QList<RealCoordinate> spline_points; //!< Spline points when the well path is defined by SplinePoints.
         QList<Variable> variables; //!< List of variables for the well (e.g. pressure, rate or spline point positions).
         QList<ControlEntry> controls; //!< List of well controls
+        bool hasControlsCorrespondingToVariable(Variable var);
     };
 
     Reservoir reservoir() const { return reservoir_; } //!< Get the struct containing reservoir settings.

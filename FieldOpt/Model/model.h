@@ -37,21 +37,36 @@
 
 namespace Model {
 
+/*!
+ * \brief The Model class represents the reservoir model as a whole, including wells and
+ * any related variables, and the reservoir grid.
+ */
 class Model
 {
 public:
     Model(::Utilities::Settings::Model settings);
 
-    Reservoir::Reservoir reservoir() const { return reservoir_; }
-    Variables::VariableContainer *variables() const { return variables_; }
-    QList<Wells::Well *> wells() const { return wells_; }
+    /*!
+     * \brief reservoir Get the reservoir (i.e. grid).
+     */
+    Reservoir::Reservoir *reservoir() const { return reservoir_; }
+
+    /*!
+     * \brief variables Get the set of variables of all types.
+     */
+    Variables::VariableContainer *variables() const { return variable_container_; }
+
+    /*!
+     * \brief wells Get a list of all the wells in the model.
+     */
+    QList<Wells::Well *> *wells() const { return wells_; }
 
 private:
-    Reservoir::Reservoir reservoir_;
-    Variables::VariableContainer *variables_;
-    Variables::VariableHandler *variable_handler;
+    Reservoir::Reservoir *reservoir_;
+    Variables::VariableContainer *variable_container_;
+    Variables::VariableHandler *variable_handler_;
 
-    QList<Wells::Well *> wells_;
+    QList<Wells::Well *> *wells_;
 };
 
 }

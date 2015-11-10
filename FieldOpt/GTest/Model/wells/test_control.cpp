@@ -89,18 +89,28 @@ TEST_F(ControlTest, InjectorControl) {
 TEST_F(ControlTest, VariableContainerConsistencyAfterCreation) {
     EXPECT_EQ(0, variable_container_->BinaryVariableSize());
     EXPECT_EQ(0, variable_container_->IntegerVariableSize());
-    EXPECT_EQ(1, variable_container_->RealVariableSize()); // BHP for PROD is the only control that's set to variable.
+    EXPECT_EQ(3, variable_container_->RealVariableSize()); // BHP for PROD is set variable at three time steps
     EXPECT_FLOAT_EQ(2000, variable_container_->GetRealVariable(0)->value());
+    EXPECT_FLOAT_EQ(2000, variable_container_->GetRealVariable(1)->value());
+    EXPECT_FLOAT_EQ(2000, variable_container_->GetRealVariable(2)->value());
 }
 
 TEST_F(ControlTest, VariableContainerConsistencyAfterModification) {
     // Changing value in variable container
     variable_container_->GetRealVariable(0)->setValue(500.0); // Should change the bhp in control
-    EXPECT_FLOAT_EQ(500, all_controls_.first()->bhp());
+    variable_container_->GetRealVariable(1)->setValue(600.0); // Should change the bhp in control
+    variable_container_->GetRealVariable(2)->setValue(700.0); // Should change the bhp in control
+    EXPECT_FLOAT_EQ(500, all_controls_[0]->bhp());
+    EXPECT_FLOAT_EQ(600, all_controls_[1]->bhp());
+    EXPECT_FLOAT_EQ(700, all_controls_[2]->bhp());
 
     // Changing value on control object
-    all_controls_.first()->setBhp(100); // should change the first real variable in the variable container
+    all_controls_[0]->setBhp(100); // should change the first real variable in the variable container
+    all_controls_[1]->setBhp(200); // should change the first real variable in the variable container
+    all_controls_[2]->setBhp(300); // should change the first real variable in the variable container
     EXPECT_FLOAT_EQ(100, variable_container_->GetRealVariable(0)->value());
+    EXPECT_FLOAT_EQ(200, variable_container_->GetRealVariable(1)->value());
+    EXPECT_FLOAT_EQ(300, variable_container_->GetRealVariable(2)->value());
 }
 
 }
