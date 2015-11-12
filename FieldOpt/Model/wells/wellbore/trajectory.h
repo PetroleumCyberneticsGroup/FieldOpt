@@ -71,6 +71,8 @@ private:
                               Variables::VariableContainer *variable_container,
                               Variables::VariableHandler *variable_handler);
 
+    void calculateDirectionOfPenetration(); // Calculate direction of penetration for all well blocks
+
     Completions::Completion *getCompletion(QList<Utilities::Settings::Model::Completion> completions,
                                            Utilities::Settings::Model::IntegerCoordinate block,
                                            Variables::VariableContainer *variable_container,
