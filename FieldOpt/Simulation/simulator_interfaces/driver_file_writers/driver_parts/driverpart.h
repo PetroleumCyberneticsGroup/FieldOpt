@@ -2,7 +2,7 @@
  *
  *
  *
- * Created: 16.10.2015 2015 by einar
+ * Created: 12.11.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,16 +23,31 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include "eclsimulator.h"
+#ifndef DRIVERPART_H
+#define DRIVERPART_H
+
+#include <QString>
 
 namespace Simulation {
-namespace Simulator {
+namespace SimulatorInterfaces {
+namespace DriverFileWriters {
+namespace DriverParts {
 
-Simulation::Simulator::ECLSimulator::ECLSimulator(Utilities::Settings::Settings settings)
-    : Simulator(settings)
+/*!
+ * \brief The DriverPart class Is the parent class for any part of a driver file.
+ */
+class DriverPart
 {
+public:
+    virtual QString GetPartString() = 0;
+
+protected:
+    DriverPart() {}
+};
 
 }
+}
+}
+}
 
-}
-}
+#endif // DRIVERPART_H

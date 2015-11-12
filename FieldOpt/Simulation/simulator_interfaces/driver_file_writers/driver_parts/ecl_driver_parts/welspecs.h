@@ -2,7 +2,7 @@
  *
  *
  *
- * Created: 15.10.2015 2015 by einar
+ * Created: 12.11.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,48 +23,38 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef SIMULATOR
-#define SIMULATOR
+#ifndef WELSPECS_H
+#define WELSPECS_H
 
-#include <QString>
-#include "Model/model.h"
-#include "Utilities/settings/settings.h"
-#include "Utilities/settings/simulator.h"
+#include "ecldriverpart.h"
+#include "Model/wells/well.h"
+#include <QList>
 
 namespace Simulation {
-namespace Simulator {
+namespace SimulatorInterfaces {
+namespace DriverFileWriters {
+namespace DriverParts {
+namespace ECLDriverParts {
 
 /*!
- * \brief The Simulator class acts as an interface for all reservoir simulators.
+ * \brief The Welspecs class Generates the string for the WELSPECS section in the ECLIPSE simulator.
+ *
+ * \todo Support WELSPECL.
  */
-class Simulator {
+class Welspecs : public ECLDriverPart
+{
 public:
-    virtual ~Simulator();
+    Welspecs(QList<Model::Wells::Well *> *wells);
+    QString GetPartString();
 
-    /*!
-     * \brief Evaluate Executes a simulation of the specified model.
-     */
-    virtual void Evaluate(Model::Model *model) = 0;
-
-    /*!
-     * \brief CleanUp Perform cleanup after simulation, i.e. delete output files.
-     */
-    virtual void CleanUp() = 0;
-
-    /*!
-     * \brief SetOutputDirectory Set the directory in which to execute the simulation.
-     */
-    virtual void SetOutputDirectory(QString output_directory);
-
-protected:
-    Simulator(Utilities::Settings::Settings settings);
-
-    QString initial_driver_file_path_;
-    QString output_directory_;
+private:
+    QStringList createWellEntry(::Model::Wells::Well *well);
 };
 
 }
 }
+}
+}
+}
 
-#endif // SIMULATOR
-
+#endif // WELSPECS_H

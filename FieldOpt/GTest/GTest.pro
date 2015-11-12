@@ -6,6 +6,7 @@ CONFIG -= app_bundle
 CONFIG += c++11
 LIBS += -L../Model -lmodel
 LIBS += -L../Optimization -loptimization
+LIBS += -L../Simulation -lsimulation
 LIBS += -L../ERTWrapper -lertwrapper
 LIBS += -L../Utilities -lutilities
 LIBS += -lpthread -lgtest -pthread
@@ -33,7 +34,8 @@ SOURCES += \
     Utilities/settings/test_settings_model.cpp \
     Utilities/settings/test_settings_optimizer.cpp \
     Utilities/settings/test_settings_simulator.cpp \
-    Model/wells/test_well.cpp
+    Model/wells/test_well.cpp \
+    Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_welspecs.cpp
 
 OTHER_FILES += \
     Utilities/driver/driver.json

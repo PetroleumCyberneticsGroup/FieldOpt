@@ -2,7 +2,7 @@
  *
  *
  *
- * Created: 16.10.2015 2015 by einar
+ * Created: 12.11.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,27 +23,17 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef ECLSIMULATOR_H
-#define ECLSIMULATOR_H
-
-#include "simulator.h"
+#include "ecldriverfilewriter.h"
 
 namespace Simulation {
-namespace Simulator {
+namespace SimulatorInterfaces {
+namespace DriverFileWriters {
 
-
-/*!
- * \brief The ECLSimulator class implements simulation of models using the ECLIPSE reservoir simulator.
- */
-class ECLSimulator : public Simulator
+EclDriverFileWriter::EclDriverFileWriter(Utilities::Settings::Settings settings, Model::Model model)
 {
-public:
-    ECLSimulator(Utilities::Settings::Settings settings);
-    virtual void Evaluate(Model::Model *model);
-    virtual void CleanUp();
 
-};
+}
 
 }
 }
-#endif // ECLSIMULATOR_H
+}
