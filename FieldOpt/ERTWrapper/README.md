@@ -27,3 +27,14 @@ Cell operations:
 * Convert i,j,k to global index
 * Given a point (x,y,z), get the cell enveloping this point.
 * Get cell volume
+
+### ECLSummaryReader
+
+This wrapper calls function from ecl_sum in ERT to read ECLIPSE summary files. Its constructor takes as parameter the path to the summary file, with or without the suffix. I.e. if the path to the data file is `/home/user/ecl/HORZWELL.DATA`, the an accepted path parameter is `/home/user/ecl/HORZWELL`.
+
+Supported operations:
+
+* Get Misc variables.
+* Get Field variables.
+* Get Well variables.
+* Get max and min report steps (time indices).

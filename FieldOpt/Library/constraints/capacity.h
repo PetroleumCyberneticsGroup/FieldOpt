@@ -28,9 +28,9 @@
 #include <QObject>
 #include <tr1/memory>
 
-#include "model/components/pipe.h"
+#include "Library/model/components/pipe.h"
 #include "constraint.h"
-#include "exceptionhandler/constrainthandler.h"
+#include "Library/exceptionhandler/constrainthandler.h"
 
 using std::tr1::shared_ptr;
 

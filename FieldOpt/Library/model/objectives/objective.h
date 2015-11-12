@@ -2,9 +2,9 @@
 #define OBJECTIVE_H
 
 #include <QObject>
-#include "exceptionhandler/objectivehandler.h"
-#include "model/stream.h"
-#include "model/cost.h"
+#include "Library/exceptionhandler/objectivehandler.h"
+#include "Library/model/stream.h"
+#include "Library/model/cost.h"
 
 /*!
  * \brief Abstract base class for objective functions.

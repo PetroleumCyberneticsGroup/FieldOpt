@@ -31,46 +31,46 @@
 #include <QFileInfo>
 #include <QDir>
 
-#include "model/model.h"
-#include "model/coupledmodel.h"
-#include "model/decoupledmodel.h"
-#include "model/adjointscoupledmodel.h"
+#include "Library/model/model.h"
+#include "Library/model/coupledmodel.h"
+#include "Library/model/decoupledmodel.h"
+#include "Library/model/adjointscoupledmodel.h"
 
-#include "model/stream.h"
-#include "model/wellcontrol.h"
-#include "model/wellconnection.h"
-#include "model/wellconnectionvariable.h"
-#include "model/wellpath.h"
-#include "model/pipeconnection.h"
-#include "model/reservoir.h"
+#include "Library/model/stream.h"
+#include "Library/model/wellcontrol.h"
+#include "Library/model/wellconnection.h"
+#include "Library/model/wellconnectionvariable.h"
+#include "Library/model/wellpath.h"
+#include "Library/model/pipeconnection.h"
+#include "Library/model/reservoir.h"
 
-#include "model/components/well.h"
-#include "model/components/productionwell.h"
-#include "model/components/injectionwell.h"
-#include "model/components/pipe.h"
-#include "model/components/midpipe.h"
-#include "model/components/endpipe.h"
-#include "model/components/separator.h"
-#include "model/components/pressurebooster.h"
+#include "Library/model/components/well.h"
+#include "Library/model/components/productionwell.h"
+#include "Library/model/components/injectionwell.h"
+#include "Library/model/components/pipe.h"
+#include "Library/model/components/midpipe.h"
+#include "Library/model/components/endpipe.h"
+#include "Library/model/components/separator.h"
+#include "Library/model/components/pressurebooster.h"
 
-#include "model/objectives/objective.h"
-#include "model/objectives/npvobjective.h"
-#include "model/objectives/cumoilobjective.h"
-#include "model/objectives/cumgasobjective.h"
+#include "Library/model/objectives/objective.h"
+#include "Library/model/objectives/npvobjective.h"
+#include "Library/model/objectives/cumoilobjective.h"
+#include "Library/model/objectives/cumgasobjective.h"
 
-#include "constraints/constraint.h"
-#include "constraints/userconstraint.h"
-#include "constraints/capacity.h"
+#include "Library/constraints/constraint.h"
+#include "Library/constraints/userconstraint.h"
+#include "Library/constraints/capacity.h"
 
-#include "variables/intvariable.h"
-#include "variables/realvariable.h"
-#include "variables/binaryvariable.h"
+#include "Library/variables/intvariable.h"
+#include "Library/variables/realvariable.h"
+#include "Library/variables/binaryvariable.h"
 
-#include "utilities/stringutilities.h"
+#include "Library/utilities/stringutilities.h"
 
-#include "model/cost.h"
+#include "Library/model/cost.h"
 
-#include "pressuredropcalculators/beggsbrillcalculator.h"
+#include "Library/pressuredropcalculators/beggsbrillcalculator.h"
 
 /// #include "gprssimulator.h" \todo Implement gprssimulator
 
@@ -84,7 +84,7 @@
 
 /// \todo Implement this: #include "simulators/gprssimulator.h"
 /// \todo Implement this: #include "simulators/vlpsimulator.h"
-#include "simulators/mrstbatchsimulator.h"
+#include "Library/simulators/mrstbatchsimulator.h"
 
 #include "reader.h"
 

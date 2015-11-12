@@ -23,11 +23,11 @@
 #ifndef PIPE_H
 #define PIPE_H
 
-#include "pressuredropcalculators/pressuredropcalculator.h"
-#include "model/stream.h"
-#include "model/components/component.h"
-#include "utilities/stringutilities.h"
-#include "fileio/readeres/pipereader.h"
+#include "Library/pressuredropcalculators/pressuredropcalculator.h"
+#include "Library/model/stream.h"
+#include "Library/model/components/component.h"
+#include "Library/utilities/stringutilities.h"
+#include "Library/fileio/readeres/pipereader.h"
 #include <QString>
 #include <QStringList>
 #include <QVector>

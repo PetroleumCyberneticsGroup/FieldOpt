@@ -5,10 +5,17 @@ SUBDIRS = \
     ERTWrapper \
     Library \
     Console \
-    GTest
+    GTest \
+    Model \
+    Utilities \
+    Optimization \
+    Simulation
 
 Library.depends = ERTWrapper
-GTest.depends = ERTWrapper Library
+GTest.depends = ERTWrapper Utilities Model
+Model.depends = ERTWrapper Utilities
+Optimization.depends = Model Utilities
+Simulation.depends = Model Utilities
 Console.depends = ERTWrapper Library
 
 OTHER_FILES += \

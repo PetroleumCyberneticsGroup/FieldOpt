@@ -24,8 +24,8 @@
 #define PIPECONNECTION_H
 
 #include <tr1/memory>
-#include "model/components/pipe.h"
-#include "variables/binaryvariable.h"
+#include "Library/model/components/pipe.h"
+#include "Library/variables/binaryvariable.h"
 
 using std::tr1::shared_ptr;
 

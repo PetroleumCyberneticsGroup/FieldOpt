@@ -29,12 +29,12 @@
 #include <tr1/memory>
 
 #include "constraint.h"
-#include "exceptionhandler/constrainthandler.h"
-#include "model/components/well.h"
-#include "model/components/productionwell.h"
-#include "model/components/pipe.h"
-#include "model/model.h"
-#include "model/components/separator.h"
+#include "Library/exceptionhandler/constrainthandler.h"
+#include "Library/model/components/well.h"
+#include "Library/model/components/productionwell.h"
+#include "Library/model/components/pipe.h"
+#include "Library/model/model.h"
+#include "Library/model/components/separator.h"
 
 using std::tr1::shared_ptr;
 

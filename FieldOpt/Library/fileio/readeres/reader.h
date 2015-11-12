@@ -24,7 +24,7 @@
 #define READER_H
 
 #include <QObject>
-#include "exceptionhandler/readerhandler.h"
+#include "Library/exceptionhandler/readerhandler.h"
 #include <iostream>
 #include <QStringList>
 #include <QString>

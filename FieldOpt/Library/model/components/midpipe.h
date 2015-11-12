@@ -25,9 +25,9 @@
 
 #include <tr1/memory>
 #include "pipe.h"
-#include "variables/intvariable.h"
-#include "model/pipeconnection.h"
-#include "constraints/constraint.h"
+#include "Library/variables/intvariable.h"
+#include "Library/model/pipeconnection.h"
+#include "Library/constraints/constraint.h"
 
 class IntVariable;
 class PipeConnection;

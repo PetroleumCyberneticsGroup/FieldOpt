@@ -25,7 +25,7 @@
 
 #include <tr1/memory>
 #include <QString>
-#include "variables/realvariable.h"
+#include "Library/variables/realvariable.h"
 
 using std::tr1::shared_ptr;
 class RealVariable;

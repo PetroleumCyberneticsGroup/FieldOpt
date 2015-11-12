@@ -295,6 +295,20 @@ FGOR
 
 FOPT
 
+WOPR
+   prod /
+WOPT
+   prod /
+WBHP
+   prod /
+WWPR
+   prod /
+WWPT
+   prod /
+WWCT
+   prod /
+
+
 SCHEDULE
 
 DRSDT

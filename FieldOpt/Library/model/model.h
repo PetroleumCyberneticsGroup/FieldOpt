@@ -15,15 +15,15 @@
 #include "components/midpipe.h"
 #include "reservoir.h"
 #include "objectives/objective.h"
-#include "constraints/capacity.h"
-#include "variables/intvariable.h"
-#include "variables/realvariable.h"
-#include "variables/binaryvariable.h"
-#include "constraints/constraint.h"
-#include "constraints/userconstraint.h"
+#include "Library/constraints/capacity.h"
+#include "Library/variables/intvariable.h"
+#include "Library/variables/realvariable.h"
+#include "Library/variables/binaryvariable.h"
+#include "Library/constraints/constraint.h"
+#include "Library/constraints/userconstraint.h"
 #include "cost.h"
-#include "exceptionhandler/modelhandler.h"
-#include "settings/runtimesettings.h"
+#include "Library/exceptionhandler/modelhandler.h"
+#include "Library/settings/runtimesettings.h"
 
 using std::tr1::shared_ptr;
 

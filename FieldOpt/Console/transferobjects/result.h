@@ -1,8 +1,8 @@
 #ifndef RESULT_H
 #define RESULT_H
 
-#include "optimizers/case.h"
-#include "model/model.h"
+#include "Library/optimizers/case.h"
+#include "Library/model/model.h"
 
 /*!
  * \brief The Result class is a convenience class used for handling the result of

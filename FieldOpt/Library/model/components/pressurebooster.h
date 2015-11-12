@@ -27,11 +27,11 @@
 #include <QVector>
 
 #include "pipe.h"
-#include "model/cost.h"
-#include "variables/intvariable.h"
-#include "variables/realvariable.h"
-#include "constraints/constraint.h"
-#include "model/pipeconnection.h"
+#include "Library/model/cost.h"
+#include "Library/variables/intvariable.h"
+#include "Library/variables/realvariable.h"
+#include "Library/constraints/constraint.h"
+#include "Library/model/pipeconnection.h"
 
 class PressureBooster : public Pipe
 {

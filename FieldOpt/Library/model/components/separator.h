@@ -2,11 +2,11 @@
 #define SEPARATOR_H
 
 #include <tr1/memory>
-#include "model/components/pipe.h"
-#include "model/cost.h"
-#include "model/pipeconnection.h"
-#include "variables/intvariable.h"
-#include "variables/realvariable.h"
+#include "Library/model/components/pipe.h"
+#include "Library/model/cost.h"
+#include "Library/model/pipeconnection.h"
+#include "Library/variables/intvariable.h"
+#include "Library/variables/realvariable.h"
 
 using std::tr1::shared_ptr;
 

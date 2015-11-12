@@ -23,7 +23,7 @@
 #ifndef INJECTIONWELL_H
 #define INJECTIONWELL_H
 
-#include "model/components/well.h"
+#include "Library/model/components/well.h"
 
 /*!
  * \brief Class for representation of injection wells.

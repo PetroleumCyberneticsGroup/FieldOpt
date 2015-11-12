@@ -8,7 +8,7 @@
 #include <QStringList>
 #include <QDateTime>
 #include <QString>
-#include <optimizers/case.h>
+#include <Library/optimizers/case.h>
 
 /*!
  * \brief The SummaryPrinter class is used for printing a summary file at the end of the optimization.

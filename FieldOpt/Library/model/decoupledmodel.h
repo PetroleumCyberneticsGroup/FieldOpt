@@ -27,15 +27,15 @@
 #include "stream.h"
 #include "pipeconnection.h"
 
-#include "variables/binaryvariable.h"
-#include "variables/realvariable.h"
-#include "variables/intvariable.h"
+#include "Library/variables/binaryvariable.h"
+#include "Library/variables/realvariable.h"
+#include "Library/variables/intvariable.h"
 #include "inputratevariable.h"
 
-#include "constraints/constraint.h"
-#include "constraints/userconstraint.h"
-#include "constraints/capacity.h"
-#include "constraints/materialbalanceconstraint.h"
+#include "Library/constraints/constraint.h"
+#include "Library/constraints/userconstraint.h"
+#include "Library/constraints/capacity.h"
+#include "Library/constraints/materialbalanceconstraint.h"
 
 #include "components/productionwell.h"
 #include "components/midpipe.h"

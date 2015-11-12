@@ -25,14 +25,14 @@
 
 #include <QVector>
 #include "tr1/memory"
-#include "model/components/component.h"
-#include "model/stream.h"
-#include "model/wellcontrol.h"
-#include "model/wellconnection.h"
-#include "model/wellconnectionvariable.h"
-#include "model/wellpath.h"
-#include "model/cost.h"
-#include "variables/intvariable.h"
+#include "Library/model/components/component.h"
+#include "Library/model/stream.h"
+#include "Library/model/wellcontrol.h"
+#include "Library/model/wellconnection.h"
+#include "Library/model/wellconnectionvariable.h"
+#include "Library/model/wellpath.h"
+#include "Library/model/cost.h"
+#include "Library/variables/intvariable.h"
 
 using std::tr1::shared_ptr;
 

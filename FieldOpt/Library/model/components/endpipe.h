@@ -23,8 +23,8 @@
 #ifndef ENDPIPE_H
 #define ENDPIPE_H
 
-#include "model/stream.h"
-#include "model/components/pipe.h"
+#include "Library/model/stream.h"
+#include "Library/model/components/pipe.h"
 
 /*!
  * \brief A top node in the Pipe network.

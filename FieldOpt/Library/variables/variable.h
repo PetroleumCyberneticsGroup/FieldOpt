@@ -25,9 +25,9 @@
 
 #include <QString>
 #include <QObject>
-#include "exceptionhandler/exceptionhandler.h"
-#include "exceptionhandler/variablehandler.h"
-#include "model/components/component.h"
+#include "Library/exceptionhandler/exceptionhandler.h"
+#include "Library/exceptionhandler/variablehandler.h"
+#include "Library/model/components/component.h"
 
 class Component;
 

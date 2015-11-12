@@ -25,7 +25,7 @@
 
 #include <QVector>
 #include <QObject>
-#include "printers/streamprinter.h"
+#include "Library/printers/streamprinter.h"
 
 /*!
  * \brief Container for rates at a given time step

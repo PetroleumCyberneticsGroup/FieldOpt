@@ -23,7 +23,7 @@
 #ifndef PRESSUREDROPCALCULATOR_H
 #define PRESSUREDROPCALCULATOR_H
 
-#include "model/stream.h"
+#include "Library/model/stream.h"
 
 /*!
  * \brief Abstract base class for pressure drop calculators.
