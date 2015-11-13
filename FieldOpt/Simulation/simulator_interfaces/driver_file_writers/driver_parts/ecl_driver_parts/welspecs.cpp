@@ -46,7 +46,7 @@ QString Welspecs::GetPartString()
 {
     QString entries = head_ + "\n";
     foreach (QStringList entry, entries_) {
-        entries.append("    " + entry.join(" ") + "\n");
+        entries.append("    " + entry.join(" ") + " /\n");
     }
     entries.append("\n" + foot_);
     return entries;
