@@ -36,8 +36,8 @@ Trajectory::Trajectory(Utilities::Settings::Model::Well well_settings,
                        Variables::VariableContainer *variable_container,
                        Variables::VariableHandler *variable_handler)
 {
+    well_blocks_ = new QList<WellBlock *>();
     if (well_settings.definition_type == Utilities::Settings::Model::WellDefinitionType::WellBlocks) {
-        well_blocks_ = new QList<WellBlock *>();
         initializeWellBlocks(well_settings, variable_container, variable_handler);
     }
     else if (well_settings.definition_type == Utilities::Settings::Model::WellDefinitionType::WellSpline) {
