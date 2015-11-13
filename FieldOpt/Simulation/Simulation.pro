@@ -16,7 +16,8 @@ HEADERS += \
     simulator_interfaces/driver_file_writers/ecldriverfilewriter.h \
     simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/welspecs.h \
     simulator_interfaces/driver_file_writers/driver_parts/driverpart.h \
-    simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/ecldriverpart.h
+    simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/ecldriverpart.h \
+    simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/compdat.h
 
 SOURCES += \
     simulator_interfaces/eclsimulator.cpp \
@@ -24,4 +25,5 @@ SOURCES += \
     simulator_interfaces/driver_file_writers/ecldriverfilewriter.cpp \
     simulator_interfaces/driver_file_writers/driver_parts/driverpart.cpp \
     simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/welspecs.cpp \
-    simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/ecldriverpart.cpp
+    simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/ecldriverpart.cpp \
+    simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/compdat.cpp

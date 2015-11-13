@@ -35,7 +35,8 @@ SOURCES += \
     Utilities/settings/test_settings_optimizer.cpp \
     Utilities/settings/test_settings_simulator.cpp \
     Model/wells/test_well.cpp \
-    Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_welspecs.cpp
+    Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_welspecs.cpp \
+    Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_compdat.cpp
 
 OTHER_FILES += \
     Utilities/driver/driver.json
