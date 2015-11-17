@@ -46,7 +46,7 @@ Props::Props(QStringList *driver_file_contents)
         }
     }
 
-    // Add grid content to the runspec_ string.
+    // Add props content to the props_ string.
     props_ = "";
     for (int line = start_index; line < driver_file_contents->size(); ++line) {
         if (driver_file_contents->at(line).startsWith("REGIONS") || driver_file_contents->at(line).startsWith("SOLUTION")) // If we're at the next section, break

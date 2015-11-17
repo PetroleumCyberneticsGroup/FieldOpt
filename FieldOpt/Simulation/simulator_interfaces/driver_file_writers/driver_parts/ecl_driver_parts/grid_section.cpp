@@ -46,7 +46,7 @@ Grid::Grid(QStringList *driver_file_contents)
         }
     }
 
-    // Add grid content to the runspec_ string.
+    // Add grid content to the grid_ string.
     grid_ = "";
     for (int line = start_index; line < driver_file_contents->size(); ++line) {
         if (driver_file_contents->at(line).startsWith("EDIT") || driver_file_contents->at(line).startsWith("PROPS")) // If we're at the next section, break
