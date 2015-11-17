@@ -19,7 +19,8 @@ HEADERS += \
     simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/ecldriverpart.h \
     simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/compdat.h \
     simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/wellcontrols.h \
-    simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/runspec.h
+    simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/runspec.h \
+    simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/grid_section.h
 
 SOURCES += \
     simulator_interfaces/eclsimulator.cpp \
@@ -30,4 +31,5 @@ SOURCES += \
     simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/ecldriverpart.cpp \
     simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/compdat.cpp \
     simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/wellcontrols.cpp \
-    simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/runspec.cpp
+    simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/runspec.cpp \
+    simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/grid_section.cpp

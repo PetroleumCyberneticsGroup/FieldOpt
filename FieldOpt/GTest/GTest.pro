@@ -38,7 +38,8 @@ SOURCES += \
     Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_welspecs.cpp \
     Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_compdat.cpp \
     Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_wellcontrols.cpp \
-    Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_runspec.cpp
+    Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_runspec.cpp \
+    Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_grid_section.cpp
 
 OTHER_FILES += \
     Utilities/driver/driver.json
