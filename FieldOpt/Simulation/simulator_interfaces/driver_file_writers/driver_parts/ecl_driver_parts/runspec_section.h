@@ -23,11 +23,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef RUNSPEC_H
-#define RUNSPEC_H
+#ifndef RUNSPEC_SECTION_H
+#define RUNSPEC_SECTION_H
 
 #include "ecldriverpart.h"
-#include "Simulation/simulator_interfaces/simulator_exceptions.h"
 #include <QStringList>
 
 namespace Simulation {
@@ -57,4 +56,4 @@ private:
 }
 
 
-#endif // RUNSPEC_H
+#endif // RUNSPEC_SECTION_H

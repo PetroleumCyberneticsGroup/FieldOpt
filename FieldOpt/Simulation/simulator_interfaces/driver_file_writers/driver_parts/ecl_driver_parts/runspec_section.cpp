@@ -23,7 +23,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include "runspec.h"
+#include "runspec_section.h"
+#include "Simulation/simulator_interfaces/simulator_exceptions.h"
 
 namespace Simulation {
 namespace SimulatorInterfaces {

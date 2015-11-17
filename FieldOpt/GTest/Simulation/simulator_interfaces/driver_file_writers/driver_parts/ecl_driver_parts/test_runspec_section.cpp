@@ -24,7 +24,7 @@
  *****************************************************************************/
 
 #include "GTest/Model/test_fixture_model_base.h"
-#include "Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/runspec.h"
+#include "Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/runspec_section.h"
 #include "Utilities/file_handling/filehandling.h"
 #include <iostream>
 
