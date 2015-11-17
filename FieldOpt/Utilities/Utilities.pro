@@ -13,7 +13,8 @@ HEADERS += \
     settings/simulator.h \
     settings/model.h \
     settings/settings.h \
-    file_handling/filehandling.h
+    file_handling/filehandling.h \
+    file_handling/filehandling_exceptions.h
 
 SOURCES += \
     settings/optimizer.cpp \

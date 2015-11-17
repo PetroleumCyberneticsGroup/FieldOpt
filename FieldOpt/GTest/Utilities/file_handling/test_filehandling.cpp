@@ -39,6 +39,8 @@ protected:
 
     QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
     QString driver_directory_path_ = "../../FieldOpt/GTest/Utilities/driver";
+
+
 };
 
 TEST_F(FileHandlingTest, Existance) {
@@ -49,6 +51,10 @@ TEST_F(FileHandlingTest, Existance) {
     EXPECT_TRUE(::Utilities::FileHandling::DirectoryExists(driver_directory_path_));
     EXPECT_FALSE(::Utilities::FileHandling::DirectoryExists(driver_directory_path_ + "wrong"));
     EXPECT_FALSE(::Utilities::FileHandling::DirectoryExists(driver_file_path_));
+}
+
+TEST_F(FileHandlingTest, FileReading) {
+    EXPECT_LE(162, ::Utilities::FileHandling::ReadFileToStringList(driver_file_path_)->size());
 }
 
 

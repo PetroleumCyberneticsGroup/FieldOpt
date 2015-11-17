@@ -2,7 +2,7 @@
  *
  *
  *
- * Created: 28.10.2015 2015 by einar
+ * Created: 17.11.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,39 +23,26 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include "filehandling.h"
-#include "filehandling_exceptions.h"
-#include <QTextStream>
+#ifndef FILEHANDLING_EXCEPTIONS
+#define FILEHANDLING_EXCEPTIONS
 
+#include <stdexcept>
+#include <string>
+#include <QString>
 
-bool Utilities::FileHandling::FileExists(QString file_path)
-{
-    QFileInfo file(file_path);
-    if (file.exists() && file.isFile()) return true;
-    else return false;
+using std::string;
+
+namespace Utilities {
+namespace FileHandling {
+
+class FileNotFoundException : public std::runtime_error {
+public:
+    FileNotFoundException(const QString path)
+        : std::runtime_error("The specified file does not exist: " + path.toStdString()) {}
+};
+
+}
 }
 
-bool Utilities::FileHandling::DirectoryExists(QString directory_path)
-{
-    QFileInfo folder(directory_path);
-    if (folder.exists() && folder.isDir()) return true;
-    else return false;
-}
+#endif // FILEHANDLING_EXCEPTIONS
 
-QStringList *Utilities::FileHandling::ReadFileToStringList(QString file_path)
-{
-    QStringList *string_list = new QStringList();
-    QFile file(file_path);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        throw FileNotFoundException(file_path);
-
-    QTextStream text_stream(&file);
-    while (true) {
-        QString line = text_stream.readLine();
-        if (line.isNull())
-            break;
-        else
-            string_list->append(line);
-    }
-    return string_list;
-}

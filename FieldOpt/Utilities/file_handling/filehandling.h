@@ -27,6 +27,8 @@
 #define FILEHANDLING_H
 
 #include <QString>
+#include <QStringList>
+#include <QFile>
 #include <QFileInfo>
 
 namespace Utilities {
@@ -45,6 +47,8 @@ bool FileExists(QString file_path);
  * \return True if a folder exists at the specified path, otherwise false.
  */
 bool DirectoryExists(QString folder_path);
+
+QStringList *ReadFileToStringList(QString file_path);
 
 }
 }
