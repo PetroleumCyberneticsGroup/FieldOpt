@@ -2,7 +2,7 @@
  *
  *
  *
- * Created: 12.11.2015 2015 by einar
+ * Created: 17.11.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,38 +23,28 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef SIMULATOR_EXCEPTIONS
-#define SIMULATOR_EXCEPTIONS
+#include "GTest/Model/test_fixture_model_base.h"
+#include "Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/runspec.h"
+#include "Utilities/file_handling/filehandling.h"
+#include <iostream>
 
-#include <stdexcept>
-#include <string>
-#include <QString>
+using namespace ::Simulation::SimulatorInterfaces::DriverFileWriters::DriverParts::ECLDriverParts;
 
-using std::string;
+namespace {
 
-namespace Simulation {
-namespace SimulatorInterfaces {
+class DriverPartRunspecTest : public ModelBaseTest {
+protected:
+    DriverPartRunspecTest(){
+        QStringList *driver_file_contents = Utilities::FileHandling::ReadFileToStringList(settings_->simulator()->driver_file_path());
+        runspec_ = new Runspec(driver_file_contents);
+    }
+    virtual ~DriverPartRunspecTest(){}
 
-class OutputDirectoryDoesNotExistException : public std::runtime_error {
-public:
-    OutputDirectoryDoesNotExistException(const QString path)
-        : std::runtime_error("The specified output directory does not exist: " + path.toStdString()) {}
+    Runspec *runspec_;
 };
 
-class DriverFileDoesNotExistException : public std::runtime_error {
-public:
-    DriverFileDoesNotExistException(const QString path)
-        : std::runtime_error("The specified driver file does not exist: " + path.toStdString()) {}
-};
-
-class DriverFileInvalidException : public std::runtime_error {
-public:
-    DriverFileInvalidException(const QString message)
-        : std::runtime_error(message.toStdString()) {}
-};
-
-
-}
+TEST_F(DriverPartRunspecTest, Constructor) {
+    std::cout << runspec_->GetPartString().toStdString() << std::endl;
 }
 
-#endif // SIMULATOR_EXCEPTIONS
+}

@@ -2,7 +2,7 @@
  *
  *
  *
- * Created: 12.11.2015 2015 by einar
+ * Created: 17.11.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,38 +23,46 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef SIMULATOR_EXCEPTIONS
-#define SIMULATOR_EXCEPTIONS
-
-#include <stdexcept>
-#include <string>
-#include <QString>
-
-using std::string;
+#include "runspec.h"
 
 namespace Simulation {
 namespace SimulatorInterfaces {
+namespace DriverFileWriters {
+namespace DriverParts {
+namespace ECLDriverParts {
 
-class OutputDirectoryDoesNotExistException : public std::runtime_error {
-public:
-    OutputDirectoryDoesNotExistException(const QString path)
-        : std::runtime_error("The specified output directory does not exist: " + path.toStdString()) {}
-};
+Runspec::Runspec(QStringList *driver_file_contents)
+{
+    // Find start
+    int start_index = 0;
+    while (true) {
+        if (driver_file_contents->at(start_index).startsWith("RUNSPEC"))
+            break; // Found the start of the RUNSPEC section
+        else {
+            start_index++;
+            if (start_index >= driver_file_contents->size())
+                throw DriverFileInvalidException("Did not find the RUNSPEC section in the driver file.");
+        }
+    }
 
-class DriverFileDoesNotExistException : public std::runtime_error {
-public:
-    DriverFileDoesNotExistException(const QString path)
-        : std::runtime_error("The specified driver file does not exist: " + path.toStdString()) {}
-};
+    // Add runspec content to the runspec_ string.
+    runspec_ = "";
+    for (int line = start_index; line < driver_file_contents->size(); ++line) {
+        if (driver_file_contents->at(line).startsWith("GRID")) // If we're at the next section, break
+            break;
+        else {
+            runspec_.append(driver_file_contents->at(line) + "\n");
+        }
+    }
+}
 
-class DriverFileInvalidException : public std::runtime_error {
-public:
-    DriverFileInvalidException(const QString message)
-        : std::runtime_error(message.toStdString()) {}
-};
-
+QString Runspec::GetPartString()
+{
+    return runspec_;
+}
 
 }
 }
-
-#endif // SIMULATOR_EXCEPTIONS
+}
+}
+}

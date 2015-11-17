@@ -2,7 +2,7 @@
  *
  *
  *
- * Created: 12.11.2015 2015 by einar
+ * Created: 17.11.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,38 +23,38 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef SIMULATOR_EXCEPTIONS
-#define SIMULATOR_EXCEPTIONS
+#ifndef RUNSPEC_H
+#define RUNSPEC_H
 
-#include <stdexcept>
-#include <string>
-#include <QString>
-
-using std::string;
+#include "ecldriverpart.h"
+#include "Simulation/simulator_interfaces/simulator_exceptions.h"
+#include <QStringList>
 
 namespace Simulation {
 namespace SimulatorInterfaces {
+namespace DriverFileWriters {
+namespace DriverParts {
+namespace ECLDriverParts {
 
-class OutputDirectoryDoesNotExistException : public std::runtime_error {
+/*!
+ * \brief The runspec class extracts the runspec section from the initial ECL100 driver
+ * file and holds it as a string.
+ */
+class Runspec : public ECLDriverPart
+{
 public:
-    OutputDirectoryDoesNotExistException(const QString path)
-        : std::runtime_error("The specified output directory does not exist: " + path.toStdString()) {}
-};
+    Runspec(QStringList *driver_file_contents);
+    QString GetPartString();
 
-class DriverFileDoesNotExistException : public std::runtime_error {
-public:
-    DriverFileDoesNotExistException(const QString path)
-        : std::runtime_error("The specified driver file does not exist: " + path.toStdString()) {}
+private:
+    QString runspec_;
 };
-
-class DriverFileInvalidException : public std::runtime_error {
-public:
-    DriverFileInvalidException(const QString message)
-        : std::runtime_error(message.toStdString()) {}
-};
-
 
 }
 }
+}
+}
+}
 
-#endif // SIMULATOR_EXCEPTIONS
+
+#endif // RUNSPEC_H
