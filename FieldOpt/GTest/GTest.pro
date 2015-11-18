@@ -41,7 +41,8 @@ SOURCES += \
     Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_grid_section.cpp \
     Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_runspec_section.cpp \
     Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_props_section.cpp \
-    Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_solution_section.cpp
+    Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_solution_section.cpp \
+    Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_summary_section.cpp
 
 OTHER_FILES += \
     Utilities/driver/driver.json

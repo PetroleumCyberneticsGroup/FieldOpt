@@ -22,7 +22,8 @@ HEADERS += \
     simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/grid_section.h \
     simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/runspec_section.h \
     simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/props_section.h \
-    simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/solution_section.h
+    simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/solution_section.h \
+    simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/summary_section.h
 
 SOURCES += \
     simulator_interfaces/eclsimulator.cpp \
@@ -36,4 +37,5 @@ SOURCES += \
     simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/grid_section.cpp \
     simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/runspec_section.cpp \
     simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/props_section.cpp \
-    simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/solution_section.cpp
+    simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/solution_section.cpp \
+    simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/summary_section.cpp
