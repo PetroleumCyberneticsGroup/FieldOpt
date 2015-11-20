@@ -55,9 +55,9 @@ public:
     void SetOutputDirectory(QString output_directory);
 
     /*!
-     * \brief Evaluate Writes the driver file and executes a simulation of the specified model.
+     * \brief Evaluate Writes the driver file and executes a simulation of the model.
      */
-    virtual void Evaluate(Model::Model *model) = 0;
+    virtual void Evaluate() = 0;
 
     /*!
      * \brief CleanUp Perform cleanup after simulation, i.e. delete output files.
@@ -68,7 +68,7 @@ protected:
     /*!
      * \brief Simulator This constructor should only be called by child classes.
      */
-    Simulator(Utilities::Settings::Settings settings);
+    Simulator(){}
 
     /*!
      * \brief writeDriverFile Writes the required driver files to the specified output directory.

@@ -37,17 +37,5 @@ void Simulator::SetOutputDirectory(QString output_directory)
     else throw OutputDirectoryDoesNotExistException(output_directory);
 }
 
-Simulator::Simulator(Utilities::Settings::Settings settings)
-{
-    if (Utilities::FileHandling::FileExists(settings.driver_path()))
-        initial_driver_file_path_ = settings.driver_path();
-    else throw DriverFileDoesNotExistException(settings.driver_path());
-
-    if (Utilities::FileHandling::DirectoryExists(settings.output_directory()))
-        output_directory_ = settings.output_directory();
-    else throw OutputDirectoryDoesNotExistException(settings.output_directory());
-}
-
-
 }
 }
