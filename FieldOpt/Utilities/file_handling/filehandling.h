@@ -48,7 +48,27 @@ bool FileExists(QString file_path);
  */
 bool DirectoryExists(QString folder_path);
 
+/*!
+ * \brief ParentDirectoryExists Checks whether a specified file's parent directory exists.
+ * \param file_path Path a file (the file itself does not have to exist).
+ * \return True if the parent directory exists, otherwise false.
+ */
+bool ParentDirectoryExists(QString file_path);
+
+/*!
+ * \brief ReadFileToStringList Reads the contents of a file and stores it as
+ * a string list where each element is a line in the file.
+ * \param file_path The file to create a list from.
+ * \return List where each element is a line in the file.
+ */
 QStringList *ReadFileToStringList(QString file_path);
+
+/*!
+ * \brief WriteStringToFile Write a string to a file.
+ * \param string The string to be written.
+ * \param file_path Path to the file to write the string into.
+ */
+void WriteStringToFile(QString string, QString file_path);
 
 }
 }

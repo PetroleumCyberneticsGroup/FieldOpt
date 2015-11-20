@@ -41,6 +41,13 @@ public:
         : std::runtime_error("The specified file does not exist: " + path.toStdString()) {}
 };
 
+class DirectoryNotFoundException : public std::runtime_error {
+public:
+    DirectoryNotFoundException(const QString message, const QString path)
+        : std::runtime_error(message.toStdString() + ": " + path.toStdString()) {}
+};
+
+
 }
 }
 
