@@ -49,6 +49,7 @@ class Optimizer;
 class Settings
 {
 public:
+    Settings(){}
     Settings(QString driver_path);
 
     QString driver_path() const { return driver_path_; }
@@ -62,8 +63,6 @@ public:
     Simulator *simulator() const { return simulator_; } //!< Object containing simulator specific settings.
 
 private:
-    Settings(); //!< Used by friends when writing a file
-
     QString driver_path_;
     QJsonObject *json_driver_;
     QString name_;
