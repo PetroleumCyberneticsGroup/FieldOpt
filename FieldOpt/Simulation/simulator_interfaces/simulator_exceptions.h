@@ -53,6 +53,12 @@ public:
         : std::runtime_error(message.toStdString()) {}
 };
 
+class UnableToWriteDriverFileException : public std::runtime_error {
+public:
+    UnableToWriteDriverFileException(const QString message)
+        : std::runtime_error(message.toStdString()) {}
+};
+
 
 }
 }

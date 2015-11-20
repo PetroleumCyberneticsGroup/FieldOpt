@@ -2,7 +2,7 @@
  *
  *
  *
- * Created: 16.10.2015 2015 by einar
+ * Created: 20.11.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,45 +23,27 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef ECLSIMULATOR_H
-#define ECLSIMULATOR_H
 
-#include "simulator.h"
-#include "Model/model.h"
-#include <QStringList>
+#include "GTest/Model/test_fixture_model_base.h"
+#include "Simulation/simulator_interfaces/eclsimulator.h"
 
-namespace Simulation {
-namespace SimulatorInterfaces {
+using namespace Simulation::SimulatorInterfaces;
+namespace {
 
-
-/*!
- * \brief The ECLSimulator class implements simulation of models using the ECLIPSE reservoir simulator.
- *
- * This class should not be used directly except for instantiation. All other actions should be
- * called through the Simulator class. The intended use is as follows:
- *
- * \code
- *  Simulator sim = new ECLSimulator();
- *  sim.SetOutputDirectory("some/path");
- *  sim.Evaluate();
- *  sim.CleanUp();
- * \endcode
- */
-class ECLSimulator : public Simulator
-{
-public:
-    ECLSimulator(Utilities::Settings::Settings *settings, Model::Model *model);
-    void Evaluate();
-    void CleanUp();
-
-private:
-    void writeDriverFile();
-    Utilities::Settings::Settings *settings_;
-    Model::Model *model_;
-    QStringList *driver_file_contents_;
-    QString output_file_name_;
+class ECLSimulatorTest : public ModelBaseTest {
+protected:
+    ECLSimulatorTest() {
+        simulator_ = new ECLSimulator(settings_, model_);
+    }
+    Simulator *simulator_;
 };
 
+TEST_F(ECLSimulatorTest, Constructor) {
+    EXPECT_TRUE(true);
 }
+
+TEST_F(ECLSimulatorTest, Evaluate) {
+    simulator_->Evaluate();
 }
-#endif // ECLSIMULATOR_H
+
+}
