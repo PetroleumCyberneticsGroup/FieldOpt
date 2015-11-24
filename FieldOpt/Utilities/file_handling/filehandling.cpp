@@ -27,11 +27,16 @@
 #include "filehandling_exceptions.h"
 #include <QTextStream>
 #include <QDir>
+#include <iostream>
 
 bool Utilities::FileHandling::FileExists(QString file_path)
 {
     QFileInfo file(file_path);
-    if (file.exists() && file.isFile()) return true;
+    QFileInfo file_relative(file.absoluteFilePath());
+    if (file.exists() && file.isFile())
+        return true;
+    else if (file_relative.exists() && file_relative.isFile())
+        return true;
     else return false;
 }
 
@@ -79,6 +84,26 @@ void Utilities::FileHandling::WriteStringToFile(QString string, QString file_pat
     QFile file(file_path);
     file.open(QIODevice::WriteOnly | QIODevice::Truncate);
     QTextStream out(&file);
-    out << string << endl;
+    out << string.toUtf8() << endl;
     file.close();
+}
+
+QString Utilities::FileHandling::GetBuildDirectoryPath()
+{
+    QDir path = QDir::currentPath(); // Get current directory
+    while (path.cdUp()) { // cd up untill we hit a directory that starts with 'build-'
+        QString current = path.dirName();
+        if (QString::compare(current.split("-").first(), "build") == 0)
+            break;
+        else if (QString::compare(path.dirName(), "home") == 0) // If we're in the home directory, we've come too far.
+            throw DirectoryNotFoundException("Unable to find the build directory.", "");
+    }
+    return path.absolutePath();
+}
+
+QString Utilities::FileHandling::GetProjectDirectoryPath()
+{
+    QDir path(GetBuildDirectoryPath());
+    path.cdUp();
+    return path.absolutePath();
 }

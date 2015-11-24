@@ -70,6 +70,21 @@ QStringList *ReadFileToStringList(QString file_path);
  */
 void WriteStringToFile(QString string, QString file_path);
 
+/*!
+ * \brief GetBuildDirectoryPath Gets the absolute path to the first directory in the tree
+ * that starts with build-.
+ *
+ * \todo Improve this.
+ */
+QString GetBuildDirectoryPath();
+
+/*!
+ * \brief GetProjectDirectoryPath Gets the absolute path to the project directory. Note that
+ * this assumes that the root project directory contains the build directory.
+ * \return
+ */
+QString GetProjectDirectoryPath();
+
 }
 }
 
