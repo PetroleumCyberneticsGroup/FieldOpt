@@ -50,18 +50,13 @@ TEST_F(TrajectoryTest, Constructor) {
 }
 
 TEST_F(TrajectoryTest, GetWellBlock) {
-    EXPECT_NO_THROW(prod_well_trajectory_->GetWellBlock(0, 4, 2));
+    EXPECT_NO_THROW(prod_well_trajectory_->GetWellBlock(1, 4, 2));
     EXPECT_THROW(prod_well_trajectory_->GetWellBlock(9, 9, 9), WellBlockNotFoundException);
-
-    EXPECT_EQ(0, prod_well_trajectory_->GetWellBlock(0,4,2)->i());
-    EXPECT_EQ(4, prod_well_trajectory_->GetWellBlock(0,4,2)->j());
-    EXPECT_EQ(2, prod_well_trajectory_->GetWellBlock(0,4,2)->k());
-    EXPECT_FALSE(prod_well_trajectory_->GetWellBlock(0,4,2)->HasCompletion());
 
     EXPECT_EQ(1, prod_well_trajectory_->GetWellBlock(1,4,2)->i());
     EXPECT_EQ(4, prod_well_trajectory_->GetWellBlock(1,4,2)->j());
     EXPECT_EQ(2, prod_well_trajectory_->GetWellBlock(1,4,2)->k());
-    EXPECT_TRUE(prod_well_trajectory_->GetWellBlock(1,4,2)->HasCompletion());
+    EXPECT_FALSE(prod_well_trajectory_->GetWellBlock(1,4,2)->HasCompletion());
 
     EXPECT_EQ(2, prod_well_trajectory_->GetWellBlock(2,4,2)->i());
     EXPECT_EQ(4, prod_well_trajectory_->GetWellBlock(2,4,2)->j());
@@ -71,7 +66,12 @@ TEST_F(TrajectoryTest, GetWellBlock) {
     EXPECT_EQ(3, prod_well_trajectory_->GetWellBlock(3,4,2)->i());
     EXPECT_EQ(4, prod_well_trajectory_->GetWellBlock(3,4,2)->j());
     EXPECT_EQ(2, prod_well_trajectory_->GetWellBlock(3,4,2)->k());
-    EXPECT_FALSE(prod_well_trajectory_->GetWellBlock(3,4,2)->HasCompletion());
+    EXPECT_TRUE(prod_well_trajectory_->GetWellBlock(3,4,2)->HasCompletion());
+
+    EXPECT_EQ(4, prod_well_trajectory_->GetWellBlock(4,4,2)->i());
+    EXPECT_EQ(4, prod_well_trajectory_->GetWellBlock(4,4,2)->j());
+    EXPECT_EQ(2, prod_well_trajectory_->GetWellBlock(4,4,2)->k());
+    EXPECT_FALSE(prod_well_trajectory_->GetWellBlock(4,4,2)->HasCompletion());
 }
 
 TEST_F(TrajectoryTest, AllWellBlocks) {
@@ -84,15 +84,15 @@ TEST_F(TrajectoryTest, AllWellBlocks) {
 
 TEST_F(TrajectoryTest, Completions) {
     EXPECT_EQ(::Model::Wells::Wellbore::Completions::Completion::CompletionType::Perforation,
-              prod_well_trajectory_->GetWellBlock(1,4,2)->GetCompletion()->type());
-    EXPECT_FALSE(prod_well_trajectory_->GetWellBlock(0,4,2)->HasPerforation());
-    EXPECT_TRUE(prod_well_trajectory_->GetWellBlock(1,4,2)->HasPerforation());
+              prod_well_trajectory_->GetWellBlock(2,4,2)->GetCompletion()->type());
+    EXPECT_FALSE(prod_well_trajectory_->GetWellBlock(1,4,2)->HasPerforation());
     EXPECT_TRUE(prod_well_trajectory_->GetWellBlock(2,4,2)->HasPerforation());
-    EXPECT_FALSE(prod_well_trajectory_->GetWellBlock(3,4,2)->HasPerforation());
-    EXPECT_FLOAT_EQ(1.0, prod_well_trajectory_->GetWellBlock(1,4,2)->GetPerforation()->transmissibility_factor());
+    EXPECT_TRUE(prod_well_trajectory_->GetWellBlock(3,4,2)->HasPerforation());
+    EXPECT_FALSE(prod_well_trajectory_->GetWellBlock(4,4,2)->HasPerforation());
     EXPECT_FLOAT_EQ(1.0, prod_well_trajectory_->GetWellBlock(2,4,2)->GetPerforation()->transmissibility_factor());
+    EXPECT_FLOAT_EQ(1.0, prod_well_trajectory_->GetWellBlock(3,4,2)->GetPerforation()->transmissibility_factor());
 
-    EXPECT_THROW(prod_well_trajectory_->GetWellBlock(0,4,2)->GetPerforation(), PerforationNotDefinedForWellBlockException);
+    EXPECT_THROW(prod_well_trajectory_->GetWellBlock(1,4,2)->GetPerforation(), PerforationNotDefinedForWellBlockException);
 }
 
 TEST_F(TrajectoryTest, VariableHandlerCorrectness) {
@@ -106,10 +106,10 @@ TEST_F(TrajectoryTest, VariableHandlerCorrectness) {
 TEST_F(TrajectoryTest, VariableContainerConsistencyAfterCreation) {
     // There should be three integer variables (i,j,k) for each of the four well block
     EXPECT_EQ(12, variable_container_->IntegerVariableSize());
-    EXPECT_EQ(0, variable_container_->GetIntegerVariable(0)->value()); // Block 1, i
+    EXPECT_EQ(1, variable_container_->GetIntegerVariable(0)->value()); // Block 1, i
     EXPECT_EQ(4, variable_container_->GetIntegerVariable(1)->value()); // Block 1, j
     EXPECT_EQ(2, variable_container_->GetIntegerVariable(2)->value()); // Block 1, k
-    EXPECT_EQ(3, variable_container_->GetIntegerVariable(9)->value()); // Block 4, i
+    EXPECT_EQ(4, variable_container_->GetIntegerVariable(9)->value()); // Block 4, i
     EXPECT_EQ(4, variable_container_->GetIntegerVariable(10)->value()); // Block 4, j
     EXPECT_EQ(2, variable_container_->GetIntegerVariable(11)->value()); // Block 4, k
 }

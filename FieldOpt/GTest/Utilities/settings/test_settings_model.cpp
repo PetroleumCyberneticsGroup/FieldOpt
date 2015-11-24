@@ -71,10 +71,10 @@ TEST_F(ModelSettingsTest, ProducerWell) {
     EXPECT_FLOAT_EQ(0.75, producer.wellbore_radius);
     EXPECT_EQ(Model::Direction::X, producer.direction);
 
-    EXPECT_EQ(0, producer.heel.i);
-    EXPECT_EQ(0, producer.heel.j);
-    EXPECT_EQ(0, producer.heel.k);
-    EXPECT_EQ(3, producer.well_blocks[3].position.i);
+    EXPECT_EQ(1, producer.heel.i);
+    EXPECT_EQ(1, producer.heel.j);
+    EXPECT_EQ(1, producer.heel.k);
+    EXPECT_EQ(4, producer.well_blocks[3].position.i);
     EXPECT_EQ(4, producer.well_blocks.size());
 }
 
@@ -99,15 +99,15 @@ TEST_F(ModelSettingsTest, ProducerVariables) {
     EXPECT_EQ(Model::WellVariableType::Transmissibility, producer.variables[1].type);
     EXPECT_STREQ("PROD-TRANS-ALL", producer.variables[1].name.toLatin1().constData());
     EXPECT_EQ(2, producer.variables[1].blocks.size());
-    EXPECT_EQ(1, producer.variables[1].blocks[0].position.i);
-    EXPECT_EQ(2, producer.variables[1].blocks[1].position.i);
+    EXPECT_EQ(2, producer.variables[1].blocks[0].position.i);
+    EXPECT_EQ(3, producer.variables[1].blocks[1].position.i);
 
     // WellBlockPositionVariable
     EXPECT_EQ(Model::WellVariableType::WellBlockPosition, producer.variables[2].type);
     EXPECT_STREQ("PROD-WELLBLOCKS-ALL", producer.variables[2].name.toLatin1().constData());
     EXPECT_EQ(4, producer.variables[2].blocks.size());
-    EXPECT_EQ(0, producer.variables[2].blocks[0].position.i);
-    EXPECT_EQ(1, producer.variables[2].blocks[1].position.i);
+    EXPECT_EQ(1, producer.variables[2].blocks[0].position.i);
+    EXPECT_EQ(2, producer.variables[2].blocks[1].position.i);
     EXPECT_EQ(4, producer.variables[2].blocks[2].position.j);
     EXPECT_EQ(2, producer.variables[2].blocks[3].position.k);
 }
@@ -126,7 +126,7 @@ TEST_F(ModelSettingsTest, InjectorWell) {
     EXPECT_EQ(Model::Direction::X, injector.direction);
 
     EXPECT_EQ(2, injector.heel.i);
-    EXPECT_EQ(0, injector.heel.j);
+    EXPECT_EQ(1, injector.heel.j);
     EXPECT_EQ(2, injector.heel.k);
 
     EXPECT_EQ(Model::WellDefinitionType::WellSpline, injector.definition_type);

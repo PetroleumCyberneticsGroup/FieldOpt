@@ -54,9 +54,9 @@ TEST_F(WellTest, Trajectory) {
 }
 
 TEST_F(WellTest, Heel) {
-    EXPECT_EQ(0, producer_well_->heel_i());
-    EXPECT_EQ(0, producer_well_->heel_j());
-    EXPECT_EQ(0, producer_well_->heel_k());
+    EXPECT_EQ(1, producer_well_->heel_i());
+    EXPECT_EQ(1, producer_well_->heel_j());
+    EXPECT_EQ(1, producer_well_->heel_k());
 }
 
 TEST_F(WellTest, Controls) {
