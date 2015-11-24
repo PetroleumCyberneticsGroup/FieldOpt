@@ -73,7 +73,7 @@ private:
     Model::Variables::IntegerVariable *j_;
     Model::Variables::IntegerVariable *k_;
     Completions::Completion *completion_;
-    DirectionOfPenetration direction_of_penetration_;
+    DirectionOfPenetration direction_of_penetration_; //!< The well's direction of penetration through this block.
 };
 
 }
