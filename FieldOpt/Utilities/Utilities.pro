@@ -14,11 +14,13 @@ HEADERS += \
     settings/model.h \
     settings/settings.h \
     file_handling/filehandling.h \
-    file_handling/filehandling_exceptions.h
+    file_handling/filehandling_exceptions.h \
+    unix/execution.h
 
 SOURCES += \
     settings/optimizer.cpp \
     settings/simulator.cpp \
     settings/model.cpp \
     settings/settings.cpp \
-    file_handling/filehandling.cpp
+    file_handling/filehandling.cpp \
+    unix/execution.cpp

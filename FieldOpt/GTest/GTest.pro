@@ -44,7 +44,8 @@ SOURCES += \
     Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_solution_section.cpp \
     Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_summary_section.cpp \
     Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_schedule_section.cpp \
-    Simulation/simulator_interfaces/test_eclsimulator.cpp
+    Simulation/simulator_interfaces/test_eclsimulator.cpp \
+    Utilities/unix/test_execution.cpp
 
 OTHER_FILES += \
     Utilities/driver/driver.json
