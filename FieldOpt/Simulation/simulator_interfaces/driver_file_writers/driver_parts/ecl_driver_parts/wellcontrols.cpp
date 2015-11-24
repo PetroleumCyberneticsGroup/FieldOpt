@@ -57,32 +57,37 @@ void WellControls::initializeTimeEntries(QList<Model::Wells::Well *> *wells)
 {
     time_entries_ = QMap<int, TimeEntry *>();
     for (int i = 0; i < wells->size(); ++i) {
-        for (int j = 0; j < wells->at(i)->controls()->size(); ++j) {
-            int current_time_step = wells->at(i)->controls()->at(j)->time_step();
-            WellSetting *well_setting = new WellSetting();
-            well_setting->well_name = wells->at(i)->name();
-            if (wells->at(i)->type() == ::Utilities::Settings::Model::WellType::Injector)
-                well_setting->is_injector = true;
-            else well_setting->is_injector = false;
-            well_setting->control = wells->at(i)->controls()->at(j);
-            if (time_entries_.keys().contains(current_time_step)) {
-                // Adding to existing time step
-                time_entries_.value(current_time_step)->well_settings.append(well_setting);
-            }
-            else {
-                // Adding new time step
-                TimeEntry *time_entry = new TimeEntry();
-                time_entry->time = current_time_step;
-                time_entry->well_settings = QList<WellSetting *>({well_setting});
-                time_entries_.insert(time_entry->time, time_entry);
-            }
+        if (wells->at(i)->trajectory()->GetWellBlocks()->size() > 0) {
+            for (int j = 0; j < wells->at(i)->controls()->size(); ++j) {
+                int current_time_step = wells->at(i)->controls()->at(j)->time_step();
+                WellSetting *well_setting = new WellSetting();
+                well_setting->well_name = wells->at(i)->name();
+                if (wells->at(i)->type() == ::Utilities::Settings::Model::WellType::Injector)
+                    well_setting->is_injector = true;
+                else well_setting->is_injector = false;
+                well_setting->control = wells->at(i)->controls()->at(j);
+                if (time_entries_.keys().contains(current_time_step)) {
+                    // Adding to existing time step
+                    time_entries_.value(current_time_step)->well_settings.append(well_setting);
+                }
+                else {
+                    // Adding new time step
+                    TimeEntry *time_entry = new TimeEntry();
+                    time_entry->time = current_time_step;
+                    time_entry->well_settings = QList<WellSetting *>({well_setting});
+                    time_entries_.insert(time_entry->time, time_entry);
+                }
 
+            }
         }
     }
 }
 
 QString WellControls::createTimeEntry(int time)
 {
+    if (time == 0) {
+        return QString(""); // A Time entry should not be created for the initial step
+    }
     return QString("TIME\n   %1/\n\n").arg(time);
 }
 

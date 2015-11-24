@@ -36,9 +36,10 @@ Welspecs::Welspecs(QList<Model::Wells::Well *> *wells)
 {
     initializeBaseEntryLine(17);
     head_ = "WELSPECS";
-    foot_ = "/";
+    foot_ = "/\n\n";
     for (int i = 0; i < wells->size(); ++i) {
-        entries_.append(createWellEntry(wells->at(i)));
+        if (wells->at(i)->trajectory()->GetWellBlocks()->size() > 0)
+            entries_.append(createWellEntry(wells->at(i)));
     }
 }
 

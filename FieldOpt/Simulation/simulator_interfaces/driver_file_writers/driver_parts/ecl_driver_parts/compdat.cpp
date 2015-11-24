@@ -37,7 +37,7 @@ Compdat::Compdat(QList<Model::Wells::Well *> *wells)
 {
     initializeBaseEntryLine(14);
     head_ = "COMPDAT";
-    foot_ = "/";
+    foot_ = "/\n\n";
     for (int i = 0; i < wells->size(); ++i) {
         if (wells->at(i)->trajectory()->GetWellBlocks()->size() > 0)
             entries_.append(createWellEntries(wells->at(i)));
