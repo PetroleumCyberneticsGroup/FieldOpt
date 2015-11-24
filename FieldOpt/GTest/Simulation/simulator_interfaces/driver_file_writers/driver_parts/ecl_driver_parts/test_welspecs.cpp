@@ -42,7 +42,7 @@ protected:
 };
 
 TEST_F(DriverPartWelspecsTest, Constructor) {
-    std::cout << welspecs_->GetPartString().toStdString() << std::endl;
+    //std::cout << welspecs_->GetPartString().toStdString() << std::endl;
 }
 
 }

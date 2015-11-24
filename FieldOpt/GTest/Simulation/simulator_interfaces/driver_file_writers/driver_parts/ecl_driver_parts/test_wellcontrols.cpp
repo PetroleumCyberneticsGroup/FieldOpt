@@ -42,7 +42,7 @@ protected:
 };
 
 TEST_F(DriverPartWellControlsTest, Constructor) {
-    std::cout << well_controls_->GetPartString().toStdString() << std::endl;
+    //std::cout << well_controls_->GetPartString().toStdString() << std::endl;
 }
 
 }

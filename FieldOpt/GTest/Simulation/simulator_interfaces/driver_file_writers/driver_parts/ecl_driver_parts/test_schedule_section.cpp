@@ -43,7 +43,7 @@ protected:
 };
 
 TEST_F(DriverPartScheduleTest, Constructor) {
-    std::cout << schedule_->GetPartString().toStdString() << std::endl;
+    //std::cout << schedule_->GetPartString().toStdString() << std::endl;
 }
 
 }

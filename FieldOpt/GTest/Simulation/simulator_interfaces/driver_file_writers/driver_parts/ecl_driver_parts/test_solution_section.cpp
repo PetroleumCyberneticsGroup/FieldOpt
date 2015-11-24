@@ -44,7 +44,7 @@ protected:
 };
 
 TEST_F(DriverPartSolutionTest, Constructor) {
-    std::cout << solution_->GetPartString().toStdString() << std::endl;
+    //std::cout << solution_->GetPartString().toStdString() << std::endl;
 }
 
 }

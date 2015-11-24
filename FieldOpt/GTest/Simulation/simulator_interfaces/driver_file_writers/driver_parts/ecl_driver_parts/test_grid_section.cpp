@@ -44,7 +44,7 @@ protected:
 };
 
 TEST_F(DriverPartGridTest, Constructor) {
-    std::cout << grid_->GetPartString().toStdString() << std::endl;
+    //std::cout << grid_->GetPartString().toStdString() << std::endl;
 }
 
 }

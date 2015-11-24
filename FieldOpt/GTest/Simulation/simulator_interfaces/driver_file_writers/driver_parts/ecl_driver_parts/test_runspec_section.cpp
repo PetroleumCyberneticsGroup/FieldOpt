@@ -44,7 +44,7 @@ protected:
 };
 
 TEST_F(DriverPartRunspecTest, Constructor) {
-    std::cout << runspec_->GetPartString().toStdString() << std::endl;
+    //std::cout << runspec_->GetPartString().toStdString() << std::endl;
 }
 
 }

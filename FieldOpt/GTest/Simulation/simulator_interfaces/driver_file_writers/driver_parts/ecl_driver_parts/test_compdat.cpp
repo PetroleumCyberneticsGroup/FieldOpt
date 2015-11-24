@@ -42,7 +42,7 @@ protected:
 };
 
 TEST_F(DriverPartCompdatTest, Constructor) {
-    std::cout << compdat_->GetPartString().toStdString() << std::endl;
+    //std::cout << compdat_->GetPartString().toStdString() << std::endl;
 }
 
 }

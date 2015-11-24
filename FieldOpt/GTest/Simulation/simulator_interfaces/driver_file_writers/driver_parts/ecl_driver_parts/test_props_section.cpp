@@ -44,7 +44,7 @@ protected:
 };
 
 TEST_F(DriverPartPropsTest, Constructor) {
-    std::cout << props_->GetPartString().toStdString() << std::endl;
+    //std::cout << props_->GetPartString().toStdString() << std::endl;
 }
 
 }
