@@ -31,7 +31,9 @@
 #include "driver_file_writers/driver_parts/ecl_driver_parts/summary_section.h"
 #include "driver_file_writers/driver_parts/ecl_driver_parts/schedule_section.h"
 #include "Utilities/file_handling/filehandling.h"
+#include "Utilities/unix/execution.h"
 #include "simulator_exceptions.h"
+#include "Simulation/execution_scripts/execution_scripts.h"
 
 namespace Simulation {
 namespace SimulatorInterfaces {
@@ -50,14 +52,16 @@ ECLSimulator::ECLSimulator(Utilities::Settings::Settings *settings, Model::Model
 
     settings_ = settings;
     model_ = model;
-    driver_file_contents_ = ::Utilities::FileHandling::ReadFileToStringList(settings_->simulator()->driver_file_path());
-    output_file_name_ = output_directory_ + "/" + settings->name() + ".DATA";
+    original_driver_file_contents_ = ::Utilities::FileHandling::ReadFileToStringList(settings_->simulator()->driver_file_path());
+    output_driver_file_name_ = output_directory_ + "/" + settings->name().toUpper() + ".DATA";
 }
 
 void ECLSimulator::Evaluate()
 {
     writeDriverFile();
-    throw std::runtime_error("Not yet implemented.");
+    QStringList args {output_directory_, output_driver_file_name_};
+    QString script = Simulation::ExecutionScripts::DefaultScripts[Simulation::ExecutionScripts::Script::csh_eclrun];
+    ::Utilities::Unix::ExecShellScript(script, args);
 }
 
 void ECLSimulator::CleanUp()
@@ -67,21 +71,21 @@ void ECLSimulator::CleanUp()
 
 void ECLSimulator::writeDriverFile()
 {
-    DriverFileParts::Runspec runspec = DriverFileParts::Runspec(driver_file_contents_);
-    DriverFileParts::Grid grid = DriverFileParts::Grid(driver_file_contents_);
-    DriverFileParts::Props props = DriverFileParts::Props(driver_file_contents_);
-    DriverFileParts::Solution solution = DriverFileParts::Solution(driver_file_contents_);
-    DriverFileParts::Summary summary = DriverFileParts::Summary(driver_file_contents_);
+    DriverFileParts::Runspec runspec = DriverFileParts::Runspec(original_driver_file_contents_);
+    DriverFileParts::Grid grid = DriverFileParts::Grid(original_driver_file_contents_);
+    DriverFileParts::Props props = DriverFileParts::Props(original_driver_file_contents_);
+    DriverFileParts::Solution solution = DriverFileParts::Solution(original_driver_file_contents_);
+    DriverFileParts::Summary summary = DriverFileParts::Summary(original_driver_file_contents_);
     DriverFileParts::Schedule schedule = DriverFileParts::Schedule(model_->wells());
 
     QString complete_string = runspec.GetPartString() + grid.GetPartString()
             + props.GetPartString() + solution.GetPartString()
             + summary.GetPartString() + schedule.GetPartString();
 
-    if (!Utilities::FileHandling::DirectoryExists(output_directory_) || !Utilities::FileHandling::ParentDirectoryExists(output_file_name_))
+    if (!Utilities::FileHandling::DirectoryExists(output_directory_) || !Utilities::FileHandling::ParentDirectoryExists(output_driver_file_name_))
         throw UnableToWriteDriverFileException("Cannot write driver file, specified output directory does not exist.");
 
-    Utilities::FileHandling::WriteStringToFile(complete_string, output_file_name_);
+    Utilities::FileHandling::WriteStringToFile(complete_string, output_driver_file_name_);
 }
 
 }

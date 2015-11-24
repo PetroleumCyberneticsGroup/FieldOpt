@@ -46,6 +46,8 @@ namespace SimulatorInterfaces {
  *  sim.Evaluate();
  *  sim.CleanUp();
  * \endcode
+ *
+ * \todo Support other execution scripts (i.e. get it from settings)
  */
 class ECLSimulator : public Simulator
 {
@@ -58,8 +60,8 @@ private:
     void writeDriverFile();
     Utilities::Settings::Settings *settings_;
     Model::Model *model_;
-    QStringList *driver_file_contents_;
-    QString output_file_name_;
+    QStringList *original_driver_file_contents_; //!< The content of the original (input) driver file.
+    QString output_driver_file_name_; //!< Path to the driver file to be written.
 };
 
 }
