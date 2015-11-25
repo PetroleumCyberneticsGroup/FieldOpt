@@ -24,21 +24,12 @@
  *****************************************************************************/
 
 #include "eclsimulator.h"
-#include "driver_file_writers/driver_parts/ecl_driver_parts/runspec_section.h"
-#include "driver_file_writers/driver_parts/ecl_driver_parts/grid_section.h"
-#include "driver_file_writers/driver_parts/ecl_driver_parts/props_section.h"
-#include "driver_file_writers/driver_parts/ecl_driver_parts/solution_section.h"
-#include "driver_file_writers/driver_parts/ecl_driver_parts/summary_section.h"
-#include "driver_file_writers/driver_parts/ecl_driver_parts/schedule_section.h"
-#include "Utilities/file_handling/filehandling.h"
 #include "Utilities/unix/execution.h"
 #include "simulator_exceptions.h"
 #include "Simulation/execution_scripts/execution_scripts.h"
 
 namespace Simulation {
 namespace SimulatorInterfaces {
-
-namespace DriverFileParts = DriverFileWriters::DriverParts::ECLDriverParts;
 
 ECLSimulator::ECLSimulator(Utilities::Settings::Settings *settings, Model::Model *model)
 {
@@ -52,14 +43,13 @@ ECLSimulator::ECLSimulator(Utilities::Settings::Settings *settings, Model::Model
 
     settings_ = settings;
     model_ = model;
-    original_driver_file_contents_ = ::Utilities::FileHandling::ReadFileToStringList(settings_->simulator()->driver_file_path());
-    output_driver_file_name_ = output_directory_ + "/" + settings->name().toUpper() + ".DATA";
+    driver_file_writer_ = new DriverFileWriters::EclDriverFileWriter(settings, model_);
 }
 
 void ECLSimulator::Evaluate()
 {
-    writeDriverFile();
-    QStringList args {output_directory_, output_driver_file_name_};
+    driver_file_writer_->WriteDriverFile();
+    QStringList args {output_directory_, driver_file_writer_->output_driver_file_name_};
     QString script = Simulation::ExecutionScripts::DefaultScripts[Simulation::ExecutionScripts::Script::csh_eclrun];
     ::Utilities::Unix::ExecShellScript(script, args);
 }
@@ -69,29 +59,10 @@ void ECLSimulator::CleanUp()
     QStringList file_endings_to_delete{"DBG", "ECLEND", "ECLRUN", "EGRID", "GRID",
                                        "h5", "INIT","INSPEC", "MSG", "PRT",
                                        "RSSPEC", "UNRST"};
-    QString base_file_path = output_driver_file_name_.split(".DATA").first();
+    QString base_file_path = driver_file_writer_->output_driver_file_name_.split(".DATA").first();
     foreach (QString ending, file_endings_to_delete) {
         Utilities::FileHandling::DeleteFile(base_file_path + "." + ending);
     }
-}
-
-void ECLSimulator::writeDriverFile()
-{
-    DriverFileParts::Runspec runspec = DriverFileParts::Runspec(original_driver_file_contents_);
-    DriverFileParts::Grid grid = DriverFileParts::Grid(original_driver_file_contents_);
-    DriverFileParts::Props props = DriverFileParts::Props(original_driver_file_contents_);
-    DriverFileParts::Solution solution = DriverFileParts::Solution(original_driver_file_contents_);
-    DriverFileParts::Summary summary = DriverFileParts::Summary(original_driver_file_contents_);
-    DriverFileParts::Schedule schedule = DriverFileParts::Schedule(model_->wells());
-
-    QString complete_string = runspec.GetPartString() + grid.GetPartString()
-            + props.GetPartString() + solution.GetPartString()
-            + summary.GetPartString() + schedule.GetPartString();
-
-    if (!Utilities::FileHandling::DirectoryExists(output_directory_) || !Utilities::FileHandling::ParentDirectoryExists(output_driver_file_name_))
-        throw UnableToWriteDriverFileException("Cannot write driver file, specified output directory does not exist.");
-
-    Utilities::FileHandling::WriteStringToFile(complete_string, output_driver_file_name_);
 }
 
 }

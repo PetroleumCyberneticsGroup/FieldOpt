@@ -27,6 +27,7 @@
 #define ECLSIMULATOR_H
 
 #include "simulator.h"
+#include "driver_file_writers/ecldriverfilewriter.h"
 #include "Model/model.h"
 #include <QStringList>
 
@@ -66,11 +67,9 @@ public:
     void CleanUp();
 
 private:
-    void writeDriverFile();
+    DriverFileWriters::EclDriverFileWriter *driver_file_writer_;
     Utilities::Settings::Settings *settings_;
     Model::Model *model_;
-    QStringList *original_driver_file_contents_; //!< The content of the original (input) driver file.
-    QString output_driver_file_name_; //!< Path to the driver file to be written.
 };
 
 }

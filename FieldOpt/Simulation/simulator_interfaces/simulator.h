@@ -70,11 +70,6 @@ protected:
      */
     Simulator(){}
 
-    /*!
-     * \brief writeDriverFile Writes the required driver files to the specified output directory.
-     */
-    virtual void writeDriverFile() = 0;
-
     QString initial_driver_file_path_; //!< Path to the driver file to be used as a base for the generated driver files.
     QString output_directory_; //!< The directory in which to write new driver files and execute simulations.
 };
