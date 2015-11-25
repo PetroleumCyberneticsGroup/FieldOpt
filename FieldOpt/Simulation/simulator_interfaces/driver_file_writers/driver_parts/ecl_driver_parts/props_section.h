@@ -39,7 +39,7 @@ namespace ECLDriverParts {
  * \brief The Props class extracts the props section from the initial ECL100 driver
  * file and holds it as a string.
  */
-class Props
+class Props : public ECLDriverPart
 {
 public:
     Props(QStringList *driver_file_contents);

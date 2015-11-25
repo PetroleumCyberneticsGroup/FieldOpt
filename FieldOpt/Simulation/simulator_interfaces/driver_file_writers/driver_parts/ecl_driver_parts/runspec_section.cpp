@@ -34,27 +34,7 @@ namespace ECLDriverParts {
 
 Runspec::Runspec(QStringList *driver_file_contents)
 {
-    // Find start
-    int start_index = 0;
-    while (true) {
-        if (driver_file_contents->at(start_index).startsWith("RUNSPEC"))
-            break; // Found the start of the RUNSPEC section
-        else {
-            start_index++;
-            if (start_index >= driver_file_contents->size())
-                throw DriverFileInvalidException("Did not find the RUNSPEC section in the driver file.");
-        }
-    }
-
-    // Add runspec content to the runspec_ string.
-    runspec_ = "";
-    for (int line = start_index; line < driver_file_contents->size(); ++line) {
-        if (driver_file_contents->at(line).startsWith("GRID")) // If we're at the next section, break
-            break;
-        else {
-            runspec_.append(driver_file_contents->at(line) + "\n");
-        }
-    }
+    runspec_ = getKeywordContent(driver_file_contents, "RUNSPEC", "GRID");
 }
 
 QString Runspec::GetPartString()

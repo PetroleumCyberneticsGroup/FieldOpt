@@ -34,27 +34,8 @@ namespace ECLDriverParts {
 
 Solution::Solution(QStringList *driver_file_contents)
 {
-    // Find start
-    int start_index = 0;
-    while (true) {
-        if (driver_file_contents->at(start_index).startsWith("SOLUTION"))
-            break; // Found the start of the SOLUTION section
-        else {
-            start_index++;
-            if (start_index >= driver_file_contents->size())
-                throw DriverFileInvalidException("Did not find the SOLUTION section in the driver file.");
-        }
-    }
+    solution_ = getKeywordContent(driver_file_contents, "SOLUTION", "SUMMARY");
 
-    // Add solution content to the solution_ string.
-    solution_ = "";
-    for (int line = start_index; line < driver_file_contents->size(); ++line) {
-        if (driver_file_contents->at(line).startsWith("SUMMARY")) // If we're at the next section, break
-            break;
-        else {
-            solution_.append(driver_file_contents->at(line) + "\n");
-        }
-    }
 }
 
 QString Solution::GetPartString()

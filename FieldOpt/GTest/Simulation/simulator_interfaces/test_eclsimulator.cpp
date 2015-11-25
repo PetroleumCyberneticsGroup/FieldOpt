@@ -43,7 +43,7 @@ TEST_F(ECLSimulatorTest, Constructor) {
 }
 
 TEST_F(ECLSimulatorTest, Evaluate) {
-    //simulator_->Evaluate();
+    simulator_->Evaluate();
 }
 
 TEST_F(ECLSimulatorTest, CleanUp) {

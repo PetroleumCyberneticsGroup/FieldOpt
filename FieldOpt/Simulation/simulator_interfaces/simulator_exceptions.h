@@ -59,6 +59,11 @@ public:
         : std::runtime_error(message.toStdString()) {}
 };
 
+class UnableToFindKeywordException : public std::runtime_error {
+public:
+    UnableToFindKeywordException(const QString keyword)
+        : std::runtime_error("Unable to find keyword in driver file: " + keyword.toStdString()) {}
+};
 
 }
 }

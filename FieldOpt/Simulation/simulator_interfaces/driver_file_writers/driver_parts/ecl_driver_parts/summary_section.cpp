@@ -34,27 +34,7 @@ namespace ECLDriverParts {
 
 Summary::Summary(QStringList *driver_file_contents)
 {
-    // Find start
-    int start_index = 0;
-    while (true) {
-        if (driver_file_contents->at(start_index).startsWith("SUMMARY"))
-            break; // Found the start of the SUMMARY section
-        else {
-            start_index++;
-            if (start_index >= driver_file_contents->size())
-                throw DriverFileInvalidException("Did not find the SUMMARY section in the driver file.");
-        }
-    }
-
-    // Add summary content to the summary_ string.
-    summary_ = "";
-    for (int line = start_index; line < driver_file_contents->size(); ++line) {
-        if (driver_file_contents->at(line).startsWith("SCHEDULE")) // If we're at the next section, break
-            break;
-        else {
-            summary_.append(driver_file_contents->at(line) + "\n");
-        }
-    }
+    summary_ = getKeywordContent(driver_file_contents, "SUMMARY", "SCHEDULE");
 }
 
 QString Summary::GetPartString()

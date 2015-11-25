@@ -34,27 +34,7 @@ namespace ECLDriverParts {
 
 Props::Props(QStringList *driver_file_contents)
 {
-    // Find start
-    int start_index = 0;
-    while (true) {
-        if (driver_file_contents->at(start_index).startsWith("PROPS"))
-            break; // Found the start of the PROPS section
-        else {
-            start_index++;
-            if (start_index >= driver_file_contents->size())
-                throw DriverFileInvalidException("Did not find the PROPS section in the driver file.");
-        }
-    }
-
-    // Add props content to the props_ string.
-    props_ = "";
-    for (int line = start_index; line < driver_file_contents->size(); ++line) {
-        if (driver_file_contents->at(line).startsWith("REGIONS") || driver_file_contents->at(line).startsWith("SOLUTION")) // If we're at the next section, break
-            break;
-        else {
-            props_.append(driver_file_contents->at(line) + "\n");
-        }
-    }
+    props_ = getKeywordContent(driver_file_contents, "PROPS", QStringList{"REGIONS", "SOLUTION"});
 }
 
 QString Props::GetPartString()

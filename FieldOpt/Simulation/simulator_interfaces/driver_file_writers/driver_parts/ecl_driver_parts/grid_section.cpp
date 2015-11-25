@@ -34,27 +34,7 @@ namespace ECLDriverParts {
 
 Grid::Grid(QStringList *driver_file_contents)
 {
-    // Find start
-    int start_index = 0;
-    while (true) {
-        if (driver_file_contents->at(start_index).startsWith("GRID"))
-            break; // Found the start of the GRID section
-        else {
-            start_index++;
-            if (start_index >= driver_file_contents->size())
-                throw DriverFileInvalidException("Did not find the GRID section in the driver file.");
-        }
-    }
-
-    // Add grid content to the grid_ string.
-    grid_ = "";
-    for (int line = start_index; line < driver_file_contents->size(); ++line) {
-        if (driver_file_contents->at(line).startsWith("EDIT") || driver_file_contents->at(line).startsWith("PROPS")) // If we're at the next section, break
-            break;
-        else {
-            grid_.append(driver_file_contents->at(line) + "\n");
-        }
-    }
+    grid_ = getKeywordContent(driver_file_contents, "GRID", QStringList{"EDIT", "PROPS"});
 }
 
 QString Grid::GetPartString()
