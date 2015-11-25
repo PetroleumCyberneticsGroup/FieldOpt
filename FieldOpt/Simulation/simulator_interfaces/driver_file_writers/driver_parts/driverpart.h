@@ -50,17 +50,17 @@ protected:
     DriverPart() {}
 
     /*!
-     * \brief getKeywordContent Get the content of the keyword in the driver file, i.e. everything from (and including)
+     * \brief getKeywordContent Get the content of the section in the driver file, i.e. everything from (and including)
      * the keyword and up to (but not including) the next keyword.
      * \param driver_file_content The driver file to search through.
      * \param keyword The keyword to get the contents of.
      * \param next_keyword The next keyword after the one you want.
      * \return The matching lines, joined with a newline between them.
      */
-    QString getKeywordContent(QStringList *driver_file_content, QString keyword, QString next_keyword);
+    QString getSectionContent(QStringList *driver_file_content, QString keyword, QString next_keyword);
 
     /*!
-     * \brief getKeywordContent Get the content of the keyword in the driver file, i.e. everything from (and including)
+     * \brief getKeywordContent Get the content of the section in the driver file, i.e. everything from (and including)
      * the keyword and up to (but not including) the next keyword. This method is used if there are more than one possible
      * next keywords, i.e. when the next keyword can be an optional one.
      * \param driver_file_content The driver file to search through.
@@ -68,7 +68,7 @@ protected:
      * \param possible_next_keywords A list of possible next keywords.
      * \return
      */
-    QString getKeywordContent(QStringList *driver_file_content, QString keyword, QStringList possible_next_keywords);
+    QString getSectionContent(QStringList *driver_file_content, QString keyword, QStringList possible_next_keywords);
 
 private:
     /*!

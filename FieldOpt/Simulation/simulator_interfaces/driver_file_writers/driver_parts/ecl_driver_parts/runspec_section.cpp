@@ -34,7 +34,7 @@ namespace ECLDriverParts {
 
 Runspec::Runspec(QStringList *driver_file_contents)
 {
-    runspec_ = getKeywordContent(driver_file_contents, "RUNSPEC", "GRID");
+    runspec_ = getSectionContent(driver_file_contents, "RUNSPEC", "GRID");
 }
 
 QString Runspec::GetPartString()

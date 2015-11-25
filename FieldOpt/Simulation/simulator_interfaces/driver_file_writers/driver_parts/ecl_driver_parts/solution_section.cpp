@@ -34,7 +34,7 @@ namespace ECLDriverParts {
 
 Solution::Solution(QStringList *driver_file_contents)
 {
-    solution_ = getKeywordContent(driver_file_contents, "SOLUTION", "SUMMARY");
+    solution_ = getSectionContent(driver_file_contents, "SOLUTION", "SUMMARY");
 
 }
 

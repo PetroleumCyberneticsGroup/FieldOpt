@@ -32,7 +32,7 @@ namespace SimulatorInterfaces {
 namespace DriverFileWriters {
 namespace DriverParts {
 
-QString DriverPart::getKeywordContent(QStringList *driver_file_content, QString keyword, QString next_keyword)
+QString DriverPart::getSectionContent(QStringList *driver_file_content, QString keyword, QString next_keyword)
 {
     int start_index = getLineIndex(driver_file_content, keyword);
     int end_index = getLineIndex(driver_file_content, next_keyword);
@@ -42,7 +42,7 @@ QString DriverPart::getKeywordContent(QStringList *driver_file_content, QString 
     return getLines(driver_file_content, start_index, end_index);
 }
 
-QString DriverPart::getKeywordContent(QStringList *driver_file_content, QString keyword, QStringList possible_next_keywords)
+QString DriverPart::getSectionContent(QStringList *driver_file_content, QString keyword, QStringList possible_next_keywords)
 {
     int start_index = getLineIndex(driver_file_content, keyword);
     if (start_index == -1) throw UnableToFindKeywordException(keyword);

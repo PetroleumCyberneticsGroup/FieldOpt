@@ -34,7 +34,7 @@ namespace ECLDriverParts {
 
 Props::Props(QStringList *driver_file_contents)
 {
-    props_ = getKeywordContent(driver_file_contents, "PROPS", QStringList{"REGIONS", "SOLUTION"});
+    props_ = getSectionContent(driver_file_contents, "PROPS", QStringList{"REGIONS", "SOLUTION"});
 }
 
 QString Props::GetPartString()

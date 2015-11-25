@@ -34,7 +34,7 @@ namespace ECLDriverParts {
 
 Summary::Summary(QStringList *driver_file_contents)
 {
-    summary_ = getKeywordContent(driver_file_contents, "SUMMARY", "SCHEDULE");
+    summary_ = getSectionContent(driver_file_contents, "SUMMARY", "SCHEDULE");
 }
 
 QString Summary::GetPartString()
