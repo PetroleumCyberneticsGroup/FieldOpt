@@ -107,3 +107,12 @@ QString Utilities::FileHandling::GetProjectDirectoryPath()
     path.cdUp();
     return path.absolutePath();
 }
+
+void Utilities::FileHandling::DeleteFile(QString path)
+{
+    if (FileExists(path)) {
+        QFile file(path);
+        file.remove();
+    }
+    else throw FileNotFoundException(path);
+}

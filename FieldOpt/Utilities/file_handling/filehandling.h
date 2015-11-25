@@ -71,6 +71,12 @@ QStringList *ReadFileToStringList(QString file_path);
 void WriteStringToFile(QString string, QString file_path);
 
 /*!
+ * \brief DeleteFile Deletes the file at the given path.
+ * \param path Path to file to be deleted.
+ */
+void DeleteFile(QString path);
+
+/*!
  * \brief GetBuildDirectoryPath Gets the absolute path to the first directory in the tree
  * that starts with build-.
  *
@@ -81,7 +87,8 @@ QString GetBuildDirectoryPath();
 /*!
  * \brief GetProjectDirectoryPath Gets the absolute path to the project directory. Note that
  * this assumes that the root project directory contains the build directory.
- * \return
+ *
+ * \todo Improve this.
  */
 QString GetProjectDirectoryPath();
 
