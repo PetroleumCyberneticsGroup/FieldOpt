@@ -53,7 +53,16 @@ class ECLSimulator : public Simulator
 {
 public:
     ECLSimulator(Utilities::Settings::Settings *settings, Model::Model *model);
+
+    /*!
+     * \brief Evaluate Executes the simulation of the current model. The evaluation is blocking.
+     */
     void Evaluate();
+
+    /*!
+     * \brief CleanUp Deletes files created during the simulation.
+     * All files except the .DATA, .UNSMRY, .SMSPEC  and .LOG are deleted.
+     */
     void CleanUp();
 
 private:

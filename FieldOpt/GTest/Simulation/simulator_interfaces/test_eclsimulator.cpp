@@ -46,4 +46,8 @@ TEST_F(ECLSimulatorTest, Evaluate) {
     //simulator_->Evaluate();
 }
 
+TEST_F(ECLSimulatorTest, CleanUp) {
+    simulator_->CleanUp();
+}
+
 }

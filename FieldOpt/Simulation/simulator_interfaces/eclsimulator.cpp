@@ -66,7 +66,13 @@ void ECLSimulator::Evaluate()
 
 void ECLSimulator::CleanUp()
 {
-    throw std::runtime_error("Not yet implemented.");
+    QStringList file_endings_to_delete{"DBG", "ECLEND", "ECLRUN", "EGRID", "GRID",
+                                       "h5", "INIT","INSPEC", "MSG", "PRT",
+                                       "RSSPEC", "UNRST"};
+    QString base_file_path = output_driver_file_name_.split(".DATA").first();
+    foreach (QString ending, file_endings_to_delete) {
+        Utilities::FileHandling::DeleteFile(base_file_path + "." + ending);
+    }
 }
 
 void ECLSimulator::writeDriverFile()
