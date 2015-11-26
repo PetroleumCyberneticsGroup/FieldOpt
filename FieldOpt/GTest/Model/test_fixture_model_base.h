@@ -28,23 +28,23 @@
 
 #include <gtest/gtest.h>
 #include "Utilities/settings/settings.h"
-#include "Model/variables/variablecontainer.h"
-#include "Model/variables/variablehandler.h"
+#include "Model/properties/variable_property_container.h"
+#include "Model/properties/variable_property_handler.h"
 #include "Model/model.h"
 
 class ModelBaseTest : public ::testing::Test {
 protected:
     ModelBaseTest() {
         settings_ = new ::Utilities::Settings::Settings(driver_file_path_);
-        variable_container_ = new ::Model::Variables::VariableContainer();
-        variable_handler_ = new ::Model::Variables::VariableHandler(*settings_->model());
+        variable_container_ = new ::Model::Properties::VariablePropertyContainer();
+        variable_handler_ = new ::Model::Properties::VariablePropertyHandler(*settings_->model());
         model_ = new ::Model::Model(*settings_->model());
     }
 
     QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
     ::Utilities::Settings::Settings *settings_;
-    ::Model::Variables::VariableContainer *variable_container_;
-    ::Model::Variables::VariableHandler *variable_handler_;
+    ::Model::Properties::VariablePropertyContainer *variable_container_;
+    ::Model::Properties::VariablePropertyHandler *variable_handler_;
     ::Model::Model *model_;
 };
 

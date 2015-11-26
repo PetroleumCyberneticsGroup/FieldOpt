@@ -7,8 +7,8 @@
 #include "Model/reservoir/grid/test_ijkcoordinate.cpp"
 #include "Model/reservoir/grid/test_xyzcoordinate.cpp"
 #include "Model/reservoir/grid/test_cell.cpp"
-#include "Model/variables/test_variables.cpp"
-#include "Model/variables/test_variablecontainer.cpp"
+#include "Model/variables/test_properties.cpp"
+#include "Model/variables/test_variable_property_container.cpp"
 #include "Utilities/settings/test_settings.cpp"
 
 using namespace std;

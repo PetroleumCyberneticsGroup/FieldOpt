@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- * integervariable.cpp
+ * variable.h
  *
- * Created: 23.09.2015 2015 by einar
+ * Created: 22.09.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,38 +23,43 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include "integervariable.h"
-#include "variable_exceptions.h"
+#ifndef PROPERTY_H
+#define PROPERTY_H
+
+#include "property_exceptions.h"
+#include <QString>
 
 namespace Model {
-namespace Variables {
+namespace Properties {
 
-IntegerVariable::IntegerVariable(int value)
-    : Variable(Integer)
+/*!
+ * \brief The Property class is an abstract class implemented by
+ * specific property types, i.e. integer, real and binary. It holds
+ * and to some extends describes the value of a property in the model.
+ */
+class Property
 {
-    value_ = value;
-}
+public:
+    enum Type { Discrete, Continous, Binary };
 
-void IntegerVariable::setValue(int value)
-{
-    if (IsLocked()) throw VariableLockedException("Cant change locked integer variable.");
-    else value_ = value;
-}
+    Type type() const { return type_; }
+    QString name() const { return name_;}
+    void setName(QString name) { name_ = name; }
 
-void IntegerVariable::Add(int i)
-{
-    if (IsLocked()) throw VariableLockedException("Cant add to a locked integer variable");
-    else value_ += i;
-}
+    bool IsLocked() const { return locked_; }
+    void Lock() { locked_ = true; }
+    void Unlock() { locked_ = false; }
 
-bool IntegerVariable::Equals(const IntegerVariable *other) const
-{
-    if (this->value() == other->value()) return true;
-    else return false;
-}
+protected:
+    Property(Type type) { type_ = type; locked_ = false; }
 
-
-
+private:
+    Type type_;
+    bool locked_;
+    QString name_;
+};
 
 }
 }
+
+#endif // PROPERTY_H

@@ -17,13 +17,10 @@ SOURCES += \
     Model/reservoir/grid/test_grid.cpp \
     Model/reservoir/grid/test_ijkcoordinate.cpp \
     Model/reservoir/grid/test_xyzcoordinate.cpp \
-    Model/variables/test_variables.cpp \
-    Model/variables/test_variablecontainer.cpp \
     Utilities/settings/test_settings.cpp \
     ERTWrapper/test_eclsummaryreader.cpp \
     Model/results/test_eclresults.cpp \
     Model/objective/test_weightedsum.cpp \
-    Model/variables/test_variablehandler.cpp \
     Model/wells/test_control.cpp \
     Model/wells/test_perforation.cpp \
     Utilities/file_handling/test_filehandling.cpp \
@@ -45,7 +42,10 @@ SOURCES += \
     Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_summary_section.cpp \
     Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_schedule_section.cpp \
     Simulation/simulator_interfaces/test_eclsimulator.cpp \
-    Utilities/unix/test_execution.cpp
+    Utilities/unix/test_execution.cpp \
+    Model/variables/test_properties.cpp \
+    Model/variables/test_variable_property_container.cpp \
+    Model/variables/test_variable_property_handler.cpp
 
 OTHER_FILES += \
     Utilities/driver/driver.json

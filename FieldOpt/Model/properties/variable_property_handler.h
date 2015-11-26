@@ -23,31 +23,31 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef VARIABLEHANDLER_H
-#define VARIABLEHANDLER_H
+#ifndef VARIABLE_PROPERTY_HANDLER_H
+#define VARIABLE_PROPERTY_HANDLER_H
 
 #include "Utilities/settings/settings.h"
 
 namespace Model {
-namespace Variables {
+namespace Properties {
 
 /*!
- * \brief The VariableHandler class maintains a tree of all parts of the model that could possibly be
- * declared variable (in the sense that the value can change during optimization). It is used during
- * initialization to determine which values in the model should be added to the VariableContainer,
- * i.e. the lists of variables that are passed to the optimizer at run time.
+ * \brief The VariablePropertyHandler class maintains a tree of all properties in the model that could
+ * possibly be declared variable (in the sense that the value can change during optimization).
+ * It is used during initialization to determine which values in the model should be added to the
+ * VariableContainer, i.e. the lists of variables that are passed to the optimizer at run time.
  */
-class VariableHandler
+class VariablePropertyHandler
 {
 public:
-    VariableHandler(Utilities::Settings::Model settings);
+    VariablePropertyHandler(Utilities::Settings::Model settings);
 
     /*!
      * \brief The Control class is an internal representation of a control within the variable handler.
      * The boolean fields indicate whether or not the property is variable at the given time.
      */
     class Control {
-        friend class VariableHandler;
+        friend class VariablePropertyHandler;
         friend class Well;
         Control(int time) {
             time_ = time;
@@ -68,7 +68,7 @@ public:
      * \brief The WellBlock class Keeps track of which properties of a well block are variable.
      */
     class WellBlock {
-        friend class VariableHandler;
+        friend class VariablePropertyHandler;
         friend class Well;
         WellBlock(::Utilities::Settings::Model::WellBlock well_block) {
             id_ = well_block.id;
@@ -85,7 +85,7 @@ public:
      * \brief The Perforation class keeps track of which properties of a perforation are variable.
      */
     class Perforation {
-        friend class VariableHandler;
+        friend class VariablePropertyHandler;
         friend class Well;
         Perforation(::Utilities::Settings::Model::Completion completion) {
             id_ = completion.id;
@@ -105,7 +105,7 @@ public:
      * The well class primarily acts as a root node and container for Controls etc.
      */
     class Well {
-        friend class VariableHandler;
+        friend class VariablePropertyHandler;
         friend class Control;
         Well(QString name) {
             name_ = name;
@@ -157,4 +157,4 @@ private:
 }
 }
 
-#endif // VARIABLEHANDLER_H
+#endif // VARIABLE_PROPERTY_HANDLER_H

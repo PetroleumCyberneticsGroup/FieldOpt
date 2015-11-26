@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * realvariable.cpp
+ * integervariable.cpp
  *
  * Created: 23.09.2015 2015 by einar
  *
@@ -23,34 +23,36 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include "realvariable.h"
-#include <cmath>
+#include "discrete_property.h"
+#include "property_exceptions.h"
 
 namespace Model {
-namespace Variables {
+namespace Properties {
 
-RealVariable::RealVariable(double value)
-    : Variable(Real)
+DiscreteProperty::DiscreteProperty(int value)
+    : Property(Discrete)
 {
     value_ = value;
 }
 
-void RealVariable::setValue(double value)
+void DiscreteProperty::setValue(int value)
 {
-    if (IsLocked()) throw VariableLockedException("Cant change locked real variable.");
+    if (IsLocked()) throw PropertyLockedException("Cant change locked integer variable.");
     else value_ = value;
 }
 
-void RealVariable::Add(double d)
+void DiscreteProperty::Add(int i)
 {
-    if (IsLocked()) throw VariableLockedException("Cant add to locked real variable");
-    else value_ += d;
+    if (IsLocked()) throw PropertyLockedException("Cant add to a locked integer variable");
+    else value_ += i;
 }
 
-bool RealVariable::Equals(const RealVariable *other, double epsilon) const
+bool DiscreteProperty::Equals(const DiscreteProperty *other) const
 {
-    return std::abs(this->value() - other->value()) <= epsilon;
+    if (this->value() == other->value()) return true;
+    else return false;
 }
+
 
 
 

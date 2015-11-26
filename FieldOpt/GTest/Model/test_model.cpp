@@ -47,34 +47,34 @@ TEST_F(ModelTest, ChildObjects) {
     EXPECT_NO_THROW(model_->variables());
     EXPECT_GE(model_->wells()->size(), 2);
     EXPECT_GE(model_->variables()->BinaryVariableSize(), 0);
-    EXPECT_GE(model_->variables()->IntegerVariableSize(), 12);
-    EXPECT_GE(model_->variables()->RealVariableSize(), 5);
+    EXPECT_GE(model_->variables()->DiscreteVariableSize(), 12);
+    EXPECT_GE(model_->variables()->ContinousVariableSize(), 5);
 }
 
 TEST_F(ModelTest, Variables) {
     // As of 2015.11.10, the variables are:
-    // 3 real variables (bhp at three time steps for the producer)
+    // 3 Continous variables (bhp at three time steps for the producer)
     EXPECT_TRUE(variable_handler_->GetControl("PROD", 0)->bhp());
     EXPECT_TRUE(variable_handler_->GetControl("PROD", 50)->bhp());
     EXPECT_TRUE(variable_handler_->GetControl("PROD", 365)->bhp());
     EXPECT_EQ(3, model_->wells()->at(0)->controls()->size());
-    EXPECT_FLOAT_EQ(2000.0, model_->variables()->GetRealVariable(0)->value());
-    EXPECT_FLOAT_EQ(2000.0, model_->variables()->GetRealVariable(1)->value());
-    EXPECT_FLOAT_EQ(2000.0, model_->variables()->GetRealVariable(2)->value());
+    EXPECT_FLOAT_EQ(2000.0, model_->variables()->GetContinousVariable(0)->value());
+    EXPECT_FLOAT_EQ(2000.0, model_->variables()->GetContinousVariable(1)->value());
+    EXPECT_FLOAT_EQ(2000.0, model_->variables()->GetContinousVariable(2)->value());
 
-    // 2 real variables for the transmissibility of the producer's two perforations
+    // 2 Continous variables for the transmissibility of the producer's two perforations
     EXPECT_TRUE(variable_handler_->GetPerforation(0)->transmissibility_factor());
     EXPECT_TRUE(variable_handler_->GetPerforation(1)->transmissibility_factor());
-    EXPECT_FLOAT_EQ(1.0, model_->variables()->GetRealVariable(3)->value());
-    EXPECT_FLOAT_EQ(1.0, model_->variables()->GetRealVariable(4)->value());
+    EXPECT_FLOAT_EQ(1.0, model_->variables()->GetContinousVariable(3)->value());
+    EXPECT_FLOAT_EQ(1.0, model_->variables()->GetContinousVariable(4)->value());
 
-    // 12 integer variables for the positions for the producer's four well blocks
+    // 12 Discrete variables for the positions for the producer's four well blocks
     EXPECT_TRUE(variable_handler_->GetWellBlock(0)->position());
     EXPECT_TRUE(variable_handler_->GetWellBlock(1)->position());
     EXPECT_TRUE(variable_handler_->GetWellBlock(2)->position());
     EXPECT_TRUE(variable_handler_->GetWellBlock(3)->position());
     for (int i = 0; i < 11; ++i) {
-        EXPECT_GE(model_->variables()->GetIntegerVariable(i)->value(), 0);
+        EXPECT_GE(model_->variables()->GetDiscreteVariable(i)->value(), 0);
     }
 }
 

@@ -27,9 +27,9 @@
 #define PERFORATION_H
 
 #include "completion.h"
-#include "Model/variables/realvariable.h"
-#include "Model/variables/variablehandler.h"
-#include "Model/variables/variablecontainer.h"
+#include "Model/properties/continous_property.h"
+#include "Model/properties/variable_property_handler.h"
+#include "Model/properties/variable_property_container.h"
 
 namespace Model {
 namespace Wells {
@@ -43,14 +43,14 @@ class Perforation : public Completion
 {
 public:
     Perforation(::Utilities::Settings::Model::Completion completion_settings,
-                Variables::VariableContainer *variable_container,
-                Variables::VariableHandler *variable_handler);
+                Properties::VariablePropertyContainer *variable_container,
+                Properties::VariablePropertyHandler *variable_handler);
 
     double transmissibility_factor() const { return transmissibility_factor_->value(); }
     void setTransmissibility_factor(double value) { transmissibility_factor_->setValue(value); }
 
 private:
-    Variables::RealVariable *transmissibility_factor_;
+    Properties::ContinousProperty *transmissibility_factor_;
 };
 
 }

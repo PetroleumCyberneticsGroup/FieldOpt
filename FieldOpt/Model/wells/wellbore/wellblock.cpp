@@ -33,9 +33,9 @@ namespace Wellbore {
 WellBlock::WellBlock(int i, int j, int k, int id)
     : id_(id)
 {
-    i_ = new Variables::IntegerVariable(i);
-    j_ = new Variables::IntegerVariable(j);
-    k_ = new Variables::IntegerVariable(k);
+    i_ = new Properties::DiscreteProperty(i);
+    j_ = new Properties::DiscreteProperty(j);
+    k_ = new Properties::DiscreteProperty(k);
     completion_ = 0;
 }
 

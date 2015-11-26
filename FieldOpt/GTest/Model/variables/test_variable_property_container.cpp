@@ -25,60 +25,60 @@
 
 #include <gtest/gtest.h>
 #include "Model/reservoir/grid/xyzcoordinate.h"
-#include "Model/variables/variable.h"
-#include "Model/variables/binaryvariable.h"
-#include "Model/variables/integervariable.h"
-#include "Model/variables/realvariable.h"
-#include "Model/variables/variablecontainer.h"
+#include "Model/properties/property.h"
+#include "Model/properties/binary_property.h"
+#include "Model/properties/discrete_property.h"
+#include "Model/properties/continous_property.h"
+#include "Model/properties/variable_property_container.h"
 
-using namespace Model::Variables;
+using namespace Model::Properties;
 
 namespace {
 
 class VariableContainerTest : public ::testing::Test {
 protected:
     VariableContainerTest () {
-        variable_container_ = new VariableContainer();
+        variable_container_ = new VariablePropertyContainer();
     }
     virtual ~VariableContainerTest () { }
 
     virtual void SetUp() {
-        variable_container_->AddVariable(new RealVariable(2.0));
-        variable_container_->AddVariable(new RealVariable(5.0));
-        variable_container_->AddVariable(new RealVariable(1.0));
-        variable_container_->AddVariable(new IntegerVariable(5));
-        variable_container_->AddVariable(new BinaryVariable(false));
-        variable_container_->AddVariable(new BinaryVariable(true));
+        variable_container_->AddVariable(new ContinousProperty(2.0));
+        variable_container_->AddVariable(new ContinousProperty(5.0));
+        variable_container_->AddVariable(new ContinousProperty(1.0));
+        variable_container_->AddVariable(new DiscreteProperty(5));
+        variable_container_->AddVariable(new BinaryProperty(false));
+        variable_container_->AddVariable(new BinaryProperty(true));
     }
 
-    VariableContainer *variable_container_;
+    VariablePropertyContainer *variable_container_;
 };
 
 TEST_F(VariableContainerTest, Constructor) {
     // If the lists exist, the constructor has been run
     EXPECT_EQ(variable_container_->BinaryVariableSize(), 2);
-    EXPECT_EQ(variable_container_->IntegerVariableSize(), 1);
-    EXPECT_EQ(variable_container_->RealVariableSize(), 3);
+    EXPECT_EQ(variable_container_->DiscreteVariableSize(), 1);
+    EXPECT_EQ(variable_container_->ContinousVariableSize(), 3);
 }
 
 TEST_F(VariableContainerTest, Retrieval) {
     EXPECT_EQ(variable_container_->GetBinaryVariable(0)->value(), false);
-    EXPECT_EQ(variable_container_->GetIntegerVariable(0)->value(), 5);
-    EXPECT_EQ(variable_container_->GetRealVariable(2)->value(), 1.0);
-    EXPECT_THROW(variable_container_->GetRealVariable(4), VariableIdDoesNotExistException);
+    EXPECT_EQ(variable_container_->GetDiscreteVariable(0)->value(), 5);
+    EXPECT_EQ(variable_container_->GetContinousVariable(2)->value(), 1.0);
+    EXPECT_THROW(variable_container_->GetContinousVariable(4), VariableIdDoesNotExistException);
     EXPECT_THROW(variable_container_->GetBinaryVariable(-1), VariableIdDoesNotExistException);
-    EXPECT_THROW(variable_container_->GetIntegerVariable(10), VariableIdDoesNotExistException);
+    EXPECT_THROW(variable_container_->GetDiscreteVariable(10), VariableIdDoesNotExistException);
 }
 
 TEST_F(VariableContainerTest, Deletion) {
     EXPECT_NO_THROW(variable_container_->DeleteBinaryVariable(0));
     EXPECT_THROW(variable_container_->GetBinaryVariable(0), VariableIdDoesNotExistException);
-    EXPECT_THROW(variable_container_->DeleteIntegerVariable(1), VariableIdDoesNotExistException);
-    EXPECT_NO_THROW(variable_container_->DeleteIntegerVariable(0));
-    EXPECT_EQ(variable_container_->IntegerVariableSize(), 0);
-    EXPECT_NO_THROW(variable_container_->DeleteRealVariable(1));
-    EXPECT_THROW(variable_container_->GetRealVariable(1), VariableIdDoesNotExistException);
-    EXPECT_DOUBLE_EQ(variable_container_->GetRealVariable(2)->value(), 1.0);
+    EXPECT_THROW(variable_container_->DeleteDiscreteVariable(1), VariableIdDoesNotExistException);
+    EXPECT_NO_THROW(variable_container_->DeleteDiscreteVariable(0));
+    EXPECT_EQ(variable_container_->DiscreteVariableSize(), 0);
+    EXPECT_NO_THROW(variable_container_->DeleteContinousVariable(1));
+    EXPECT_THROW(variable_container_->GetContinousVariable(1), VariableIdDoesNotExistException);
+    EXPECT_DOUBLE_EQ(variable_container_->GetContinousVariable(2)->value(), 1.0);
 }
 
 }

@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * binaryvariable.h
+ * integervariable.h
  *
  * Created: 23.09.2015 2015 by einar
  *
@@ -23,32 +23,34 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef BINARYVARIABLE_H
-#define BINARYVARIABLE_H
+#ifndef DISCRETE_PROPERTY_H
+#define DISCRETE_PROPERTY_H
 
-#include "variable.h"
+#include "property.h"
 
 namespace Model {
-namespace Variables {
+namespace Properties {
 
 /*!
- * \brief The BinaryVariable class describes a binary variable. These are typically used
- * as on/off or open/shut switches when optimizing.
+ * \brief The DiscreteProperty class describes descibes discrete properties in the model,
+ * such as locations in a discrete grid or the number of ICDs in the well. Discrete
+ * values are held as integer numbers.
  */
-class BinaryVariable : public Variable
+class DiscreteProperty : public Property
 {
 public:
-    BinaryVariable(bool value);
+    DiscreteProperty(int value);
 
-    bool value() const { return value_; }
-    void setValue(bool value);
+    int value() const { return value_; }
+    void setValue(int value);
+
+    void Add(int i); //!< Add i to the value of this property.
+    bool Equals(const DiscreteProperty *other) const; // Check if the value of another variable equals the value of this variable.
 
 private:
-    bool value_;
+    int value_;
 };
 
 }
 }
-
-
-#endif // BINARYVARIABLE_H
+#endif // DISCRETE_PROPERTY_H
