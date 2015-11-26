@@ -26,6 +26,7 @@
 #include "trajectory.h"
 #include "Model/wells/well_exceptions.h"
 #include "iostream"
+#include "cmath"
 
 namespace Model {
 namespace Wells {
@@ -35,12 +36,12 @@ Trajectory::Trajectory(Utilities::Settings::Model::Well well_settings,
                        Variables::VariableContainer *variable_container,
                        Variables::VariableHandler *variable_handler)
 {
+    well_blocks_ = new QList<WellBlock *>();
     if (well_settings.definition_type == Utilities::Settings::Model::WellDefinitionType::WellBlocks) {
-        well_blocks_ = new QList<WellBlock *>();
         initializeWellBlocks(well_settings, variable_container, variable_handler);
     }
     else if (well_settings.definition_type == Utilities::Settings::Model::WellDefinitionType::WellSpline) {
-        std::cerr << "Spline definition of wells are not yet supported. Skipping the well." << std::endl;
+        std::cout << "Spline definition of wells are not yet supported. Skipping the well." << std::endl;
     }
 }
 
@@ -83,6 +84,44 @@ void Trajectory::initializeWellBlocks(Utilities::Settings::Model::Well well,
         if (completion != nullptr)
             well_blocks_->last()->AddCompletion(completion);
     }
+    calculateDirectionOfPenetration();
+}
+
+void Trajectory::calculateDirectionOfPenetration()
+{
+    // All but the last block use forward direction
+    for (int i = 0; i < well_blocks_->size()-1; ++i) {
+        if (     std::abs(well_blocks_->at(i)->i() - well_blocks_->at(i+1)->i()) == 1 &&
+                 std::abs(well_blocks_->at(i)->j() - well_blocks_->at(i+1)->j()) == 0 &&
+                 std::abs(well_blocks_->at(i)->k() - well_blocks_->at(i+1)->k()) == 0)
+            well_blocks_->at(i)->setDirectionOfPenetration(WellBlock::DirectionOfPenetration::X);
+        else if (std::abs(well_blocks_->at(i)->i() - well_blocks_->at(i+1)->i()) == 0 &&
+                 std::abs(well_blocks_->at(i)->j() - well_blocks_->at(i+1)->j()) == 1 &&
+                 std::abs(well_blocks_->at(i)->k() - well_blocks_->at(i+1)->k()) == 0)
+            well_blocks_->at(i)->setDirectionOfPenetration(WellBlock::DirectionOfPenetration::Y);
+        else if (std::abs(well_blocks_->at(i)->i() - well_blocks_->at(i+1)->i()) == 0 &&
+                 std::abs(well_blocks_->at(i)->j() - well_blocks_->at(i+1)->j()) == 0 &&
+                 std::abs(well_blocks_->at(i)->k() - well_blocks_->at(i+1)->k()) == 1)
+            well_blocks_->at(i)->setDirectionOfPenetration(WellBlock::DirectionOfPenetration::Z);
+        else
+            well_blocks_->at(i)->setDirectionOfPenetration(WellBlock::DirectionOfPenetration::W);
+    }
+
+    // Last block uses backward direction
+    if (     std::abs(well_blocks_->last()->i() - well_blocks_->at(well_blocks_->size()-2)->i()) == 1 &&
+             std::abs(well_blocks_->last()->j() - well_blocks_->at(well_blocks_->size()-2)->j()) == 0 &&
+             std::abs(well_blocks_->last()->k() - well_blocks_->at(well_blocks_->size()-2)->k()) == 0)
+        well_blocks_->last()->setDirectionOfPenetration(WellBlock::DirectionOfPenetration::X);
+    else if (std::abs(well_blocks_->last()->i() - well_blocks_->at(well_blocks_->size()-2)->i()) == 0 &&
+             std::abs(well_blocks_->last()->j() - well_blocks_->at(well_blocks_->size()-2)->j()) == 1 &&
+             std::abs(well_blocks_->last()->k() - well_blocks_->at(well_blocks_->size()-2)->k()) == 0)
+        well_blocks_->last()->setDirectionOfPenetration(WellBlock::DirectionOfPenetration::Y);
+    else if (std::abs(well_blocks_->last()->i() - well_blocks_->at(well_blocks_->size()-2)->i()) == 0 &&
+             std::abs(well_blocks_->last()->j() - well_blocks_->at(well_blocks_->size()-2)->j()) == 0 &&
+             std::abs(well_blocks_->last()->k() - well_blocks_->at(well_blocks_->size()-2)->k()) == 1)
+        well_blocks_->last()->setDirectionOfPenetration(WellBlock::DirectionOfPenetration::Z);
+    else
+        well_blocks_->last()->setDirectionOfPenetration(WellBlock::DirectionOfPenetration::W);
 }
 
 Completions::Completion *Trajectory::getCompletion(QList<Utilities::Settings::Model::Completion> completions,

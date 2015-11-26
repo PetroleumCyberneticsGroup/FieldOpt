@@ -2,7 +2,7 @@
  *
  *
  *
- * Created: 16.10.2015 2015 by einar
+ * Created: 17.11.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,23 +23,36 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include "simulator.h"
+#ifndef SOLUTION_SECTION_H
+#define SOLUTION_SECTION_H
+
+#include "ecldriverpart.h"
+#include <QStringList>
 
 namespace Simulation {
-namespace Simulator {
+namespace SimulatorInterfaces {
+namespace DriverFileWriters {
+namespace DriverParts {
+namespace ECLDriverParts {
 
-void Simulator::SetOutputDirectory(QString output_directory)
+/*!
+ * \brief The Solution class extracts the solution section from the initial ECL100 driver
+ * file and holds it as a string.
+ */
+class Solution : public ECLDriverPart
 {
-    output_directory_ = output_directory;
-}
+public:
+    Solution(QStringList *driver_file_contents);
+    QString GetPartString();
 
-Simulation::Simulator::Simulator::Simulator(Utilities::Settings::Settings settings)
-{
-    initial_driver_file_path_ = settings.driver_path();
-    output_directory_ = settings.output_directory();
-}
-
-
+private:
+    QString solution_;
+};
 
 }
 }
+}
+}
+}
+
+#endif // SOLUTION_SECTION_H

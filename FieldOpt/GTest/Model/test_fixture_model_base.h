@@ -30,6 +30,7 @@
 #include "Utilities/settings/settings.h"
 #include "Model/variables/variablecontainer.h"
 #include "Model/variables/variablehandler.h"
+#include "Model/model.h"
 
 class ModelBaseTest : public ::testing::Test {
 protected:
@@ -37,12 +38,14 @@ protected:
         settings_ = new ::Utilities::Settings::Settings(driver_file_path_);
         variable_container_ = new ::Model::Variables::VariableContainer();
         variable_handler_ = new ::Model::Variables::VariableHandler(*settings_->model());
+        model_ = new ::Model::Model(*settings_->model());
     }
 
     QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
     ::Utilities::Settings::Settings *settings_;
     ::Model::Variables::VariableContainer *variable_container_;
     ::Model::Variables::VariableHandler *variable_handler_;
+    ::Model::Model *model_;
 };
 
 #endif // TEST_FIXTURE_MODEL_BASE

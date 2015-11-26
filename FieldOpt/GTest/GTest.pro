@@ -6,6 +6,7 @@ CONFIG -= app_bundle
 CONFIG += c++11
 LIBS += -L../Model -lmodel
 LIBS += -L../Optimization -loptimization
+LIBS += -L../Simulation -lsimulation
 LIBS += -L../ERTWrapper -lertwrapper
 LIBS += -L../Utilities -lutilities
 LIBS += -lpthread -lgtest -pthread
@@ -33,7 +34,18 @@ SOURCES += \
     Utilities/settings/test_settings_model.cpp \
     Utilities/settings/test_settings_optimizer.cpp \
     Utilities/settings/test_settings_simulator.cpp \
-    Model/wells/test_well.cpp
+    Model/wells/test_well.cpp \
+    Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_welspecs.cpp \
+    Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_compdat.cpp \
+    Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_wellcontrols.cpp \
+    Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_grid_section.cpp \
+    Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_runspec_section.cpp \
+    Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_props_section.cpp \
+    Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_solution_section.cpp \
+    Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_summary_section.cpp \
+    Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_schedule_section.cpp \
+    Simulation/simulator_interfaces/test_eclsimulator.cpp \
+    Utilities/unix/test_execution.cpp
 
 OTHER_FILES += \
     Utilities/driver/driver.json

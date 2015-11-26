@@ -49,7 +49,7 @@ TEST_F(SettingsTest, ConstructorAndTestFileValidity) {
 TEST_F(SettingsTest, GlobalSettings) {
     Settings settings = Settings(driver_file_path_);
     EXPECT_STREQ("TestRun", settings.name().toLatin1().constData());
-    EXPECT_STREQ("../../../fieldopt_output", settings.output_directory().toLatin1().constData());
+    EXPECT_STREQ("/home/einar/Documents/GitHub/PCG/fieldopt_output", settings.output_directory().toLatin1().constData());
     EXPECT_STREQ(driver_file_path_.toLatin1().constData(), settings.driver_path().toLatin1().constData());
     EXPECT_EQ(false, settings.verbose());
 }

@@ -44,6 +44,12 @@ class WellBlock
 public:
     WellBlock(int i, int j, int k, int id);
 
+    /*!
+     * \brief The DirectionOfPenetration enum indicates the wells direction of penetration through
+     * this block. The W value should be used to indicate that the direction could not be calculated.
+     */
+    enum DirectionOfPenetration : int {X=1, Y=2, Z=3, W=4};
+
     void AddCompletion(::Model::Wells::Wellbore::Completions::Completion *completion); //!< Add a completion to this well block.
     bool HasCompletion(); //!< Check if this well block has a completion.
     Completions::Completion *GetCompletion(); //!< Get the completion defined for this block.
@@ -55,18 +61,19 @@ public:
     int i() const { return i_->value(); }
     int j() const { return j_->value(); }
     int k() const { return k_->value(); }
+    DirectionOfPenetration directionOfPenetration() const { return direction_of_penetration_; }
 
     void setI(const int i) { i_->setValue(i); }
     void setJ(const int j) { j_->setValue(j); }
     void setK(const int k) { k_->setValue(k); }
-
-
+    void setDirectionOfPenetration(const DirectionOfPenetration dop) { direction_of_penetration_ = dop; }
 private:
     const int id_; //!< A unique ID for this well block. This is needed to identify the well block if it is moved.
     Model::Variables::IntegerVariable *i_;
     Model::Variables::IntegerVariable *j_;
     Model::Variables::IntegerVariable *k_;
     Completions::Completion *completion_;
+    DirectionOfPenetration direction_of_penetration_; //!< The well's direction of penetration through this block.
 };
 
 }

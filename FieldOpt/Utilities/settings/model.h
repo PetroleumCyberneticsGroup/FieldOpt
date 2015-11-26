@@ -39,6 +39,8 @@ namespace Settings {
 /*!
  * \brief The Model class contains model-specific settings. Model settings objects may _only_ be
  * created by the Settings class. They are created when reading a JSON-formatted "driver file".
+ *
+ * \todo Add more control types, e.g. multiple rate types (liquid rate, oil rate, gas rate, etc.) for producers.
  */
 class Model
 {

@@ -43,10 +43,6 @@ Settings::Settings(QString driver_path)
     readDriverFile();
 }
 
-Settings::Settings()
-{
-}
-
 void Settings::readDriverFile()
 {
     QFile *file = new QFile(driver_path_);

@@ -2,7 +2,7 @@
  *
  *
  *
- * Created: 16.10.2015 2015 by einar
+ * Created: 17.11.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,27 +23,37 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef ECLSIMULATOR_H
-#define ECLSIMULATOR_H
+#ifndef RUNSPEC_SECTION_H
+#define RUNSPEC_SECTION_H
 
-#include "simulator.h"
+#include "ecldriverpart.h"
+#include <QStringList>
 
 namespace Simulation {
-namespace Simulator {
-
+namespace SimulatorInterfaces {
+namespace DriverFileWriters {
+namespace DriverParts {
+namespace ECLDriverParts {
 
 /*!
- * \brief The ECLSimulator class implements simulation of models using the ECLIPSE reservoir simulator.
+ * \brief The runspec class extracts the runspec section from the initial ECL100 driver
+ * file and holds it as a string.
  */
-class ECLSimulator : public Simulator
+class Runspec : public ECLDriverPart
 {
 public:
-    ECLSimulator(Utilities::Settings::Settings settings);
-    virtual void Evaluate(Model::Model *model);
-    virtual void CleanUp();
+    Runspec(QStringList *driver_file_contents);
+    QString GetPartString();
 
+private:
+    QString runspec_;
 };
 
 }
 }
-#endif // ECLSIMULATOR_H
+}
+}
+}
+
+
+#endif // RUNSPEC_SECTION_H

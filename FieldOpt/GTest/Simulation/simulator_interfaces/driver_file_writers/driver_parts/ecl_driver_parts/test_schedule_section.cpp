@@ -2,7 +2,7 @@
  *
  *
  *
- * Created: 16.10.2015 2015 by einar
+ * Created: 18.11.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,16 +23,27 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include "eclsimulator.h"
+#include "GTest/Model/test_fixture_model_base.h"
+#include "Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/schedule_section.h"
+#include "Utilities/file_handling/filehandling.h"
+#include <iostream>
 
-namespace Simulation {
-namespace Simulator {
+using namespace ::Simulation::SimulatorInterfaces::DriverFileWriters::DriverParts::ECLDriverParts;
 
-Simulation::Simulator::ECLSimulator::ECLSimulator(Utilities::Settings::Settings settings)
-    : Simulator(settings)
-{
+namespace {
 
+class DriverPartScheduleTest : public ModelBaseTest {
+protected:
+    DriverPartScheduleTest(){
+        schedule_ = new Schedule(model_->wells());
+    }
+    virtual ~DriverPartScheduleTest(){}
+
+    Schedule *schedule_;
+};
+
+TEST_F(DriverPartScheduleTest, Constructor) {
+    //std::cout << schedule_->GetPartString().toStdString() << std::endl;
 }
 
-}
 }

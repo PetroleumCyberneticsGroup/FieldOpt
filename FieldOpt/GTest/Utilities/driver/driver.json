@@ -1,7 +1,7 @@
 {
     "Global": {
         "Name": "TestRun",
-        "OutputDirectory": "../../../fieldopt_output",
+        "OutputDirectory": "/home/einar/Documents/GitHub/PCG/fieldopt_output",
         "Verbose": false
     },
     "Optimizer": {
@@ -53,7 +53,7 @@
     },
     "Simulator": {
         "Type": "ECLIPSE",
-        "Commands": ["tcsh -c @eclipse"],
+        "Commands": ["tcsh -c \"eval source ~/.cshrc; eclrun eclipse\""],
         "DriverPath": "../../examples/ECLIPSE/HORZWELL/HORZWELL.DATA"
     },
     "Model": {
@@ -68,24 +68,24 @@
                 "Type": "Producer",
                 "DefinitionType": "WellBlocks",
                 "PreferedPhase": "Oil",
-                "Heel": [0,0,0],
+                "Heel": [1,1,1],
                 "WellboreRadius": 0.75,
                 "Direction": "X",
                 "WellBlocks": [
-                    [0,4,2],
                     [1,4,2],
                     [2,4,2],
-                    [3,4,2]
+                    [3,4,2],
+                    [4,4,2]
                 ],
                 "Completions": [
                     {
                         "Type": "Perforation",
-                        "WellBlock": [1,4,2],
+                        "WellBlock": [2,4,2],
                         "TransmissibilityFactor": 1.0
                     },
                     {
                         "Type": "Perforation",
-                        "WellBlock": [2,4,2],
+                        "WellBlock": [3,4,2],
                         "TransmissibilityFactor": 1.0
                     }
                 ],
@@ -132,7 +132,7 @@
                 "Type": "Injector",
                 "DefinitionType": "WellSpline",
                 "PreferedPhase": "Water",
-                "Heel": [2,0,2],
+                "Heel": [2,1,2],
                 "WellboreRadius": 0.75,
                 "Direction": "X",
                 "SplinePoints": [
