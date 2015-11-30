@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * variable_exceptions.h
+ * binaryvariable.h
  *
  * Created: 23.09.2015 2015 by einar
  *
@@ -23,36 +23,32 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef VARIABLE_EXCEPTIONS_H
-#define VARIABLE_EXCEPTIONS_H
+#ifndef BINARY_PROPERTY_H
+#define BINARY_PROPERTY_H
 
-#include <stdexcept>
-#include <string>
-
-using std::string;
+#include "property.h"
 
 namespace Model {
-namespace Variables {
+namespace Properties {
 
-class VariableLockedException : public std::runtime_error {
+/*!
+ * \brief The BinaryProperty class describes a binary property in the model.
+ * These are typically on/off or open/shut switches when optimizing.
+ */
+class BinaryProperty : public Property
+{
 public:
-    VariableLockedException(const string& message)
-        : std::runtime_error(message) {}
-};
+    BinaryProperty(bool value);
 
-class VariableIdDoesNotExistException : public std::runtime_error {
-public:
-    VariableIdDoesNotExistException(const string& message)
-        : std::runtime_error(message) {}
-};
+    bool value() const { return value_; }
+    void setValue(bool value);
 
-class VariableHandlerCannotFindObjectException : public std::runtime_error {
-public:
-    VariableHandlerCannotFindObjectException(const string &message)
-        : std::runtime_error(message) {}
+private:
+    bool value_;
 };
 
 }
 }
 
-#endif // VARIABLE_EXCEPTIONS_H
+
+#endif // BINARY_PROPERTY_H

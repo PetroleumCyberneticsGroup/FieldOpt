@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * test_variables.cpp
+ * test_properties.cpp
  *
  * Created: 23.09.2015 2015 by einar
  *
@@ -25,46 +25,46 @@
 
 #include <gtest/gtest.h>
 #include "Model/reservoir/grid/xyzcoordinate.h"
-#include "Model/variables/variable.h"
-#include "Model/variables/binaryvariable.h"
-#include "Model/variables/integervariable.h"
-#include "Model/variables/realvariable.h"
+#include "Model/properties/property.h"
+#include "Model/properties/binary_property.h"
+#include "Model/properties/discrete_property.h"
+#include "Model/properties/continous_property.h"
 
-using namespace Model::Variables;
+using namespace Model::Properties;
 
 namespace {
 
-class VariablesTest : public ::testing::Test {
+class PropertiesTest : public ::testing::Test {
 protected:
-    VariablesTest () { }
-    virtual ~VariablesTest () { }
+    PropertiesTest () { }
+    virtual ~PropertiesTest () { }
 };
 
-TEST_F(VariablesTest , BinaryVariableConstructor) {
-    BinaryVariable *binvar = new BinaryVariable(true);
+TEST_F(PropertiesTest , BinaryPropertyConstructor) {
+    BinaryProperty *binvar = new BinaryProperty(true);
     EXPECT_TRUE(binvar->value());
     EXPECT_FALSE(binvar->IsLocked());
-    EXPECT_TRUE(binvar->type() == Variable::Type::Binary);
+    EXPECT_TRUE(binvar->type() == Property::Type::Binary);
 }
 
-TEST_F(VariablesTest, IntegerVariableConstructor) {
-    IntegerVariable *intvar = new IntegerVariable(4);
+TEST_F(PropertiesTest, DiscretePropertyConstructor) {
+    DiscreteProperty *intvar = new DiscreteProperty(4);
     EXPECT_TRUE(intvar->value() == 4);
     EXPECT_FALSE(intvar->IsLocked());
-    EXPECT_TRUE(intvar->type() == Variable::Type::Integer);
+    EXPECT_TRUE(intvar->type() == Property::Type::Discrete);
 }
 
-TEST_F(VariablesTest, RealVariableConstructor) {
-    RealVariable *realvar = new RealVariable(2.0);
+TEST_F(PropertiesTest, ContinousPropertyConstructor) {
+    ContinousProperty *realvar = new ContinousProperty(2.0);
     EXPECT_TRUE(realvar->value() == 2.0);
     EXPECT_FALSE(realvar->IsLocked());
-    EXPECT_TRUE(realvar->type() == Variable::Type::Real);
+    EXPECT_TRUE(realvar->type() == Property::Type::Continous);
 }
 
-TEST_F(VariablesTest, Locking) {
-    BinaryVariable *binvar = new BinaryVariable(true);
-    IntegerVariable *intvar = new IntegerVariable(4);
-    RealVariable *realvar = new RealVariable(2.0);
+TEST_F(PropertiesTest, Locking) {
+    BinaryProperty *binvar = new BinaryProperty(true);
+    DiscreteProperty *intvar = new DiscreteProperty(4);
+    ContinousProperty *realvar = new ContinousProperty(2.0);
 
     // Lock and check
     binvar->Lock(); intvar->Lock(); realvar->Lock();
@@ -73,11 +73,11 @@ TEST_F(VariablesTest, Locking) {
     EXPECT_TRUE(realvar->IsLocked());
 
     // Attempt modifications;
-    EXPECT_THROW(binvar->setValue(false), VariableLockedException);
-    EXPECT_THROW(intvar->Add(1), VariableLockedException);
-    EXPECT_THROW(intvar->setValue(1), VariableLockedException);
-    EXPECT_THROW(realvar->Add(2.0), VariableLockedException);
-    EXPECT_THROW(realvar->setValue(0.0), VariableLockedException);
+    EXPECT_THROW(binvar->setValue(false), PropertyLockedException);
+    EXPECT_THROW(intvar->Add(1), PropertyLockedException);
+    EXPECT_THROW(intvar->setValue(1), PropertyLockedException);
+    EXPECT_THROW(realvar->Add(2.0), PropertyLockedException);
+    EXPECT_THROW(realvar->setValue(0.0), PropertyLockedException);
 
     // Verify values not changed
     EXPECT_TRUE(binvar->value());
@@ -85,31 +85,31 @@ TEST_F(VariablesTest, Locking) {
     EXPECT_TRUE(realvar->value() == 2.0);
 }
 
-TEST_F(VariablesTest, IntegerVariableAddition) {
-    IntegerVariable *intvar = new IntegerVariable(5);
+TEST_F(PropertiesTest, DiscretePropertyAddition) {
+    DiscreteProperty *intvar = new DiscreteProperty(5);
     intvar->Add(2);
     EXPECT_TRUE(intvar->value() == 7);
 }
 
-TEST_F(VariablesTest, RealVariableAddition) {
-    RealVariable *realvar = new RealVariable(7.0);
+TEST_F(PropertiesTest, ContinousPropertyAddition) {
+    ContinousProperty *realvar = new ContinousProperty(7.0);
     realvar->Add(-2.5);
     EXPECT_TRUE(realvar->value() == 4.5);
 }
 
-TEST_F(VariablesTest, IntegerVariableEquals) {
-    IntegerVariable *intvar_1 = new IntegerVariable(1);
-    IntegerVariable *intvar_2 = new IntegerVariable(1);
-    IntegerVariable *intvar_3 = new IntegerVariable(2);
+TEST_F(PropertiesTest, DiscretePropertyEquals) {
+    DiscreteProperty *intvar_1 = new DiscreteProperty(1);
+    DiscreteProperty *intvar_2 = new DiscreteProperty(1);
+    DiscreteProperty *intvar_3 = new DiscreteProperty(2);
     EXPECT_TRUE(intvar_1->Equals(intvar_2));
     EXPECT_FALSE(intvar_1->Equals(intvar_3));
 }
 
-TEST_F(VariablesTest, RealVariableEquals) {
-    RealVariable *realvar_1 = new RealVariable(2.0);
-    RealVariable *realvar_2 = new RealVariable(2.0);
-    RealVariable *realvar_3 = new RealVariable(3.0);
-    RealVariable *realvar_4 = new RealVariable(2.1);
+TEST_F(PropertiesTest, ContinousPropertyEquals) {
+    ContinousProperty *realvar_1 = new ContinousProperty(2.0);
+    ContinousProperty *realvar_2 = new ContinousProperty(2.0);
+    ContinousProperty *realvar_3 = new ContinousProperty(3.0);
+    ContinousProperty *realvar_4 = new ContinousProperty(2.1);
     EXPECT_TRUE(realvar_1->Equals(realvar_2));
     EXPECT_FALSE(realvar_1->Equals(realvar_3));
     EXPECT_FALSE(realvar_1->Equals(realvar_4, 0.09)); // Should be outside epsilon

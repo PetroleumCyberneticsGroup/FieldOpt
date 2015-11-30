@@ -31,11 +31,11 @@ namespace Wellbore {
 namespace Completions {
 
 Perforation::Perforation(Utilities::Settings::Model::Completion completion_settings,
-                         Variables::VariableContainer *variable_container,
-                         Variables::VariableHandler *variable_handler)
+                         Properties::VariablePropertyContainer *variable_container,
+                         Properties::VariablePropertyHandler *variable_handler)
     : Completion(completion_settings)
 {
-    transmissibility_factor_ = new Variables::RealVariable(completion_settings.transmissibility_factor);
+    transmissibility_factor_ = new Properties::ContinousProperty(completion_settings.transmissibility_factor);
     if (variable_handler->GetPerforation(completion_settings.id)->transmissibility_factor())
         variable_container->AddVariable(transmissibility_factor_);
 }

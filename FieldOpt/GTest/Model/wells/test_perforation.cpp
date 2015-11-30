@@ -65,20 +65,20 @@ TEST_F(PerforationTest, VariableHandlerCorrectness) {
 }
 
 TEST_F(PerforationTest, VariableContainerConsistencyAfterCreation) {
-    EXPECT_FLOAT_EQ(1.0, variable_container_->GetRealVariable(0)->value());
-    EXPECT_FLOAT_EQ(1.0, variable_container_->GetRealVariable(1)->value());
+    EXPECT_FLOAT_EQ(1.0, variable_container_->GetContinousVariable(0)->value());
+    EXPECT_FLOAT_EQ(1.0, variable_container_->GetContinousVariable(1)->value());
 }
 
 TEST_F(PerforationTest, VariableContainerConsistencyAfterModification) {
     // Change values directly and verify change in variable container
     prod_perforations_[0]->setTransmissibility_factor(2.0);
     prod_perforations_[1]->setTransmissibility_factor(3.0);
-    EXPECT_FLOAT_EQ(2.0, variable_container_->GetRealVariable(0)->value());
-    EXPECT_FLOAT_EQ(3.0, variable_container_->GetRealVariable(1)->value());
+    EXPECT_FLOAT_EQ(2.0, variable_container_->GetContinousVariable(0)->value());
+    EXPECT_FLOAT_EQ(3.0, variable_container_->GetContinousVariable(1)->value());
 
     // Change value in variable container and verify change directly
-    variable_container_->GetRealVariable(0)->setValue(4.0);
-    variable_container_->GetRealVariable(1)->setValue(5.0);
+    variable_container_->GetContinousVariable(0)->setValue(4.0);
+    variable_container_->GetContinousVariable(1)->setValue(5.0);
     EXPECT_FLOAT_EQ(4.0, prod_perforations_[0]->transmissibility_factor());
     EXPECT_FLOAT_EQ(5.0, prod_perforations_[1]->transmissibility_factor());
 

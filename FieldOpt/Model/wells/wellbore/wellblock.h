@@ -26,7 +26,7 @@
 #ifndef WELLBLOCK_H
 #define WELLBLOCK_H
 
-#include "Model/variables/integervariable.h"
+#include "Model/properties/discrete_property.h"
 #include "Model/wells/wellbore/completions/completion.h"
 #include "Model/wells/wellbore/completions/perforation.h"
 
@@ -69,9 +69,9 @@ public:
     void setDirectionOfPenetration(const DirectionOfPenetration dop) { direction_of_penetration_ = dop; }
 private:
     const int id_; //!< A unique ID for this well block. This is needed to identify the well block if it is moved.
-    Model::Variables::IntegerVariable *i_;
-    Model::Variables::IntegerVariable *j_;
-    Model::Variables::IntegerVariable *k_;
+    Model::Properties::DiscreteProperty *i_;
+    Model::Properties::DiscreteProperty *j_;
+    Model::Properties::DiscreteProperty *k_;
     Completions::Completion *completion_;
     DirectionOfPenetration direction_of_penetration_; //!< The well's direction of penetration through this block.
 };

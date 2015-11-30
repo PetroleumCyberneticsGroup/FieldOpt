@@ -24,10 +24,10 @@
  *****************************************************************************/
 
 #include <gtest/gtest.h>
-#include "Model/variables/variablehandler.h"
-#include "Model/variables/variable_exceptions.h"
+#include "Model/properties/variable_property_handler.h"
+#include "Model/properties/property_exceptions.h"
 
-using namespace Model::Variables;
+using namespace Model::Properties;
 
 namespace {
 
@@ -40,7 +40,7 @@ protected:
     ~VariableHandlerTest() {}
 
     virtual void SetUp() {
-        variable_handler_ = new VariableHandler(*settings_->model());
+        variable_handler_ = new VariablePropertyHandler(*settings_->model());
     }
     virtual void TearDown() {
         delete variable_handler_;
@@ -48,13 +48,13 @@ protected:
 
     Utilities::Settings::Settings *settings_;
     QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
-    VariableHandler *variable_handler_;
+    VariablePropertyHandler *variable_handler_;
 };
 
 TEST_F(VariableHandlerTest, Wells) {
     EXPECT_STREQ("PROD", variable_handler_->GetWell("PROD")->name().toLatin1().constData());
     EXPECT_STREQ("INJ", variable_handler_->GetWell("INJ")->name().toLatin1().constData());
-    EXPECT_THROW(variable_handler_->GetWell("NOWELL"), VariableHandlerCannotFindObjectException);
+    EXPECT_THROW(variable_handler_->GetWell("NOWELL"), VariablePropertyHandlerCannotFindObjectException);
 }
 
 TEST_F(VariableHandlerTest, ProducerControls) {
@@ -68,8 +68,8 @@ TEST_F(VariableHandlerTest, ProducerControls) {
         EXPECT_FALSE(variable_handler_->GetControl("INJ", control_time)->rate());
         EXPECT_FALSE(variable_handler_->GetControl("INJ", control_time)->bhp());
     }
-    EXPECT_THROW(variable_handler_->GetControl("PROD", 10)->open(), VariableHandlerCannotFindObjectException);
-    EXPECT_THROW(variable_handler_->GetControl("INJ", 15)->open(), VariableHandlerCannotFindObjectException);
+    EXPECT_THROW(variable_handler_->GetControl("PROD", 10)->open(), VariablePropertyHandlerCannotFindObjectException);
+    EXPECT_THROW(variable_handler_->GetControl("INJ", 15)->open(), VariablePropertyHandlerCannotFindObjectException);
 
     // These have been changed for some time steps
     EXPECT_TRUE(variable_handler_->GetControl("PROD", 0)->bhp());
@@ -81,7 +81,7 @@ TEST_F(VariableHandlerTest, ProducerControls) {
 TEST_F(VariableHandlerTest, PerforationVariables) {
     EXPECT_TRUE(variable_handler_->GetPerforation(0)->transmissibility_factor());
     EXPECT_TRUE(variable_handler_->GetPerforation(1)->transmissibility_factor());
-    EXPECT_THROW(variable_handler_->GetPerforation(3), VariableHandlerCannotFindObjectException);
+    EXPECT_THROW(variable_handler_->GetPerforation(3), VariablePropertyHandlerCannotFindObjectException);
 }
 
 TEST_F(VariableHandlerTest, WellBlockVariables) {
@@ -89,7 +89,7 @@ TEST_F(VariableHandlerTest, WellBlockVariables) {
     EXPECT_TRUE(variable_handler_->GetWellBlock(1)->position());
     EXPECT_TRUE(variable_handler_->GetWellBlock(2)->position());
     EXPECT_TRUE(variable_handler_->GetWellBlock(3)->position());
-    EXPECT_THROW(variable_handler_->GetWellBlock(4)->position(), VariableHandlerCannotFindObjectException);
+    EXPECT_THROW(variable_handler_->GetWellBlock(4)->position(), VariablePropertyHandlerCannotFindObjectException);
 }
 
 

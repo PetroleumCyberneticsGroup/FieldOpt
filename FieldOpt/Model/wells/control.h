@@ -28,11 +28,11 @@
 
 #include "Utilities/settings/settings.h"
 #include "Utilities/settings/model.h"
-#include "Model/variables/integervariable.h"
-#include "Model/variables/realvariable.h"
-#include "Model/variables/binaryvariable.h"
-#include "Model/variables/variablecontainer.h"
-#include "Model/variables/variablehandler.h"
+#include "Model/properties/discrete_property.h"
+#include "Model/properties/continous_property.h"
+#include "Model/properties/binary_property.h"
+#include "Model/properties/variable_property_container.h"
+#include "Model/properties/variable_property_handler.h"
 
 namespace Model {
 namespace Wells {
@@ -52,8 +52,8 @@ public:
      */
     Control(::Utilities::Settings::Model::ControlEntry entry,
             ::Utilities::Settings::Model::Well well,
-            ::Model::Variables::VariableContainer *variables,
-            ::Model::Variables::VariableHandler *variable_handler);
+            ::Model::Properties::VariablePropertyContainer *variables,
+            ::Model::Properties::VariablePropertyHandler *variable_handler);
 
     int time_step() const { return time_step_->value(); }
 
@@ -70,10 +70,10 @@ public:
     ::Utilities::Settings::Model::InjectionType injection_fluid() const { return injection_fluid_; }
 
 private:
-    Variables::IntegerVariable *time_step_;
-    Variables::BinaryVariable *open_;
-    Variables::RealVariable *bhp_;
-    Variables::RealVariable *rate_;
+    Properties::DiscreteProperty *time_step_;
+    Properties::BinaryProperty *open_;
+    Properties::ContinousProperty *bhp_;
+    Properties::ContinousProperty *rate_;
     ::Utilities::Settings::Model::ControlMode mode_;
     ::Utilities::Settings::Model::InjectionType injection_fluid_;
 };

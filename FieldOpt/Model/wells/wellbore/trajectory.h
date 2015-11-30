@@ -31,8 +31,8 @@
 #include "completions/completion.h"
 #include "completions/perforation.h"
 #include "Utilities/settings/model.h"
-#include "Model/variables/variablecontainer.h"
-#include "Model/variables/variablehandler.h"
+#include "Model/properties/variable_property_container.h"
+#include "Model/properties/variable_property_handler.h"
 
 #include <QList>
 
@@ -58,8 +58,8 @@ class Trajectory
 {
 public:
     Trajectory(::Utilities::Settings::Model::Well well_settings,
-               Variables::VariableContainer *variable_container,
-               Variables::VariableHandler *variable_handler);
+               Properties::VariablePropertyContainer *variable_container,
+               Properties::VariablePropertyHandler *variable_handler);
     WellBlock *GetWellBlock(int i, int j, int k); //!< Get the well block at index (i,j,k).
     WellBlock *GetWellBlock(int id); //!< Get the well block with the specified id.
     QList<WellBlock *> *GetWellBlocks(); //!< Get a list containing all well blocks.
@@ -68,15 +68,15 @@ private:
     QList<WellBlock *> *well_blocks_;
 
     void initializeWellBlocks(Utilities::Settings::Model::Well well,
-                              Variables::VariableContainer *variable_container,
-                              Variables::VariableHandler *variable_handler);
+                              Properties::VariablePropertyContainer *variable_container,
+                              Properties::VariablePropertyHandler *variable_handler);
 
     void calculateDirectionOfPenetration(); // Calculate direction of penetration for all well blocks
 
     Completions::Completion *getCompletion(QList<Utilities::Settings::Model::Completion> completions,
                                            Utilities::Settings::Model::IntegerCoordinate block,
-                                           Variables::VariableContainer *variable_container,
-                                           Variables::VariableHandler *variable_handler);
+                                           Properties::VariablePropertyContainer *variable_container,
+                                           Properties::VariablePropertyHandler *variable_handler);
 };
 
 }

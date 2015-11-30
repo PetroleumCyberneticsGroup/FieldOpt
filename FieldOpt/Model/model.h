@@ -30,9 +30,9 @@
 #include <QList>
 
 #include "reservoir/reservoir.h"
-#include "variables/variablecontainer.h"
+#include "properties/variable_property_container.h"
+#include "properties/variable_property_handler.h"
 #include "wells/well.h"
-#include "variables/variablehandler.h"
 #include "Utilities/settings/model.h"
 
 namespace Model {
@@ -52,9 +52,9 @@ public:
     Reservoir::Reservoir *reservoir() const { return reservoir_; }
 
     /*!
-     * \brief variables Get the set of variables of all types.
+     * \brief variables Get the set of variable properties of all types.
      */
-    Variables::VariableContainer *variables() const { return variable_container_; }
+    Properties::VariablePropertyContainer *variables() const { return variable_container_; }
 
     /*!
      * \brief wells Get a list of all the wells in the model.
@@ -63,9 +63,8 @@ public:
 
 private:
     Reservoir::Reservoir *reservoir_;
-    Variables::VariableContainer *variable_container_;
-    Variables::VariableHandler *variable_handler_;
-
+    Properties::VariablePropertyContainer *variable_container_;
+    Properties::VariablePropertyHandler *variable_handler_;
     QList<Wells::Well *> *wells_;
 };
 

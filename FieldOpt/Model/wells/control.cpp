@@ -30,32 +30,32 @@ namespace Wells {
 
 Control::Control(::Utilities::Settings::Model::ControlEntry entry,
                  ::Utilities::Settings::Model::Well well,
-                 ::Model::Variables::VariableContainer *variables,
-                 ::Model::Variables::VariableHandler *variable_handler)
+                 ::Model::Properties::VariablePropertyContainer *variables,
+                 ::Model::Properties::VariablePropertyHandler *variable_handler)
 {
-    time_step_ = new Variables::IntegerVariable(entry.time_step);
+    time_step_ = new Properties::DiscreteProperty(entry.time_step);
 
     if (well.type == ::Utilities::Settings::Model::WellType::Injector)
         injection_fluid_ = entry.injection_type;
 
     // Open/Closed
     if (entry.state == ::Utilities::Settings::Model::WellState::WellOpen)
-        open_ = new Variables::BinaryVariable(true);
+        open_ = new Properties::BinaryProperty(true);
     else if (entry.state == ::Utilities::Settings::Model::WellState::WellShut)
-        open_ = new Variables::BinaryVariable(false);
+        open_ = new Properties::BinaryProperty(false);
     if (variable_handler->GetControl(well.name, entry.time_step)->open())
         variables->AddVariable(open_);
 
     switch (entry.control_mode) {
     case ::Utilities::Settings::Model::ControlMode::BHPControl:
         mode_ = entry.control_mode;
-        bhp_ = new Variables::RealVariable(entry.bhp);
+        bhp_ = new Properties::ContinousProperty(entry.bhp);
         if (variable_handler->GetControl(well.name, entry.time_step)->bhp())
             variables->AddVariable(bhp_);
         break;
     case ::Utilities::Settings::Model::ControlMode::RateControl:
         mode_ = entry.control_mode;
-        rate_ = new Variables::RealVariable(entry.rate);
+        rate_ = new Properties::ContinousProperty(entry.rate);
         if (variable_handler->GetControl(well.name, entry.time_step)->rate())
             variables->AddVariable(rate_);
     }

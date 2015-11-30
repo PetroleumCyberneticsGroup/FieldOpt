@@ -23,32 +23,37 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef REALVARIABLE_H
-#define REALVARIABLE_H
+#ifndef CONTINOUS_PROPERTY_H
+#define CONTINOUS_PROPERTY_H
 
-#include "variable.h"
+#include "property.h"
 
 namespace Model {
-namespace Variables {
+namespace Properties {
 
-class RealVariable : public Variable
+/*!
+ * \brief The ContinousProperty class describes a continous property in the model. The
+ * value of the property is held as a floating-point number. Continous properties
+ * are typically used for production properties, such as rates and pressures.
+ */
+class ContinousProperty : public Property
 {
 public:
-    RealVariable(double value);
+    ContinousProperty(double value);
 
     double value() const { return value_; }
     void setValue(double value);
 
-    void Add(double d); //!< Add d to the value of this variable.
+    void Add(double d); //!< Add d to the value of this property.
 
     /*!
-     * \brief Equals checks whether the value of of this variable is equal to
-     * the value of another variable, optionally within some tolerance.
-     * \param other The variable to compare this to.
+     * \brief Equals checks whether the value of of this property is equal to
+     * the value of another property, optionally within some tolerance.
+     * \param other The property to compare this to.
      * \param epsilon Optional tolerance. Default: 0.0
      * \return True if abs(this->value() - other->value()) <= epsilon; otherwise false.
      */
-    bool Equals(const RealVariable *other, double epsilon=0.0) const;
+    bool Equals(const ContinousProperty *other, double epsilon=0.0) const;
 
 private:
     double value_;
@@ -57,4 +62,4 @@ private:
 }
 }
 
-#endif // REALVARIABLE_H
+#endif // CONTINOUS_PROPERTY_H

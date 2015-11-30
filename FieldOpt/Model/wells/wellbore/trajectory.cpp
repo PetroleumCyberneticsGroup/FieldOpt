@@ -33,8 +33,8 @@ namespace Wells {
 namespace Wellbore {
 
 Trajectory::Trajectory(Utilities::Settings::Model::Well well_settings,
-                       Variables::VariableContainer *variable_container,
-                       Variables::VariableHandler *variable_handler)
+                       Properties::VariablePropertyContainer *variable_container,
+                       Properties::VariablePropertyHandler *variable_handler)
 {
     well_blocks_ = new QList<WellBlock *>();
     if (well_settings.definition_type == Utilities::Settings::Model::WellDefinitionType::WellBlocks) {
@@ -69,8 +69,8 @@ QList<WellBlock *> *Trajectory::GetWellBlocks()
 }
 
 void Trajectory::initializeWellBlocks(Utilities::Settings::Model::Well well,
-                                      Variables::VariableContainer *variable_container,
-                                      Variables::VariableHandler *variable_handler)
+                                      Properties::VariablePropertyContainer *variable_container,
+                                      Properties::VariablePropertyHandler *variable_handler)
 {
     QList<Utilities::Settings::Model::WellBlock> blocks = well.well_blocks;
     for (int i = 0; i < blocks.size(); ++i) {
@@ -126,8 +126,8 @@ void Trajectory::calculateDirectionOfPenetration()
 
 Completions::Completion *Trajectory::getCompletion(QList<Utilities::Settings::Model::Completion> completions,
                                                    Utilities::Settings::Model::IntegerCoordinate block,
-                                                   Variables::VariableContainer *variable_container,
-                                                   Variables::VariableHandler *variable_handler)
+                                                   Properties::VariablePropertyContainer *variable_container,
+                                                   Properties::VariablePropertyHandler *variable_handler)
 {
     for (int i = 0; i < completions.size(); ++i) { // Look for a completion belonging to the block.
         if (completions[i].well_block.position.Equals(&block)) { // Found a block.

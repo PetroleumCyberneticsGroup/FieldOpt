@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- * variable.h
+ * binaryvariable.cpp
  *
- * Created: 22.09.2015 2015 by einar
+ * Created: 23.09.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,42 +23,23 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef VARIABLE_H
-#define VARIABLE_H
-
-#include "variable_exceptions.h"
-#include <QString>
+#include "binary_property.h"
 
 namespace Model {
-namespace Variables {
+namespace Properties {
 
-/*!
- * \brief The Variable class is an abstract class implemented by
- * specific variables types, i.e. integer, real and binary.
- */
-class Variable
+BinaryProperty::BinaryProperty(bool value)
+    : Property(Binary)
 {
-public:
-    enum Type { Integer, Real, Binary };
+    value_ = value;
+}
 
-    Type type() const { return type_; }
-    QString name() const { return name_;}
-    void setName(QString name) { name_ = name; }
+void BinaryProperty::setValue(bool value)
+{
+    if (IsLocked()) throw PropertyLockedException("Cant change value of locked binary variable.");
+    else value_ = value;
+}
 
-    bool IsLocked() const { return locked_; }
-    void Lock() { locked_ = true; }
-    void Unlock() { locked_ = false; }
-
-protected:
-    Variable(Type type) { type_ = type; locked_ = false; }
-
-private:
-    Type type_;
-    bool locked_;
-    QString name_;
-};
 
 }
 }
-
-#endif // VARIABLE_H

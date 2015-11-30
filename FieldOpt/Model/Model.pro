@@ -15,17 +15,11 @@ HEADERS += \
     model.h \
     wells/well.h \
     reservoir/reservoir.h \
-    variables/variable.h \
     reservoir/grid/cell.h \
     reservoir/grid/grid.h \
     reservoir/grid/grid_exceptions.h \
     reservoir/grid/ijkcoordinate.h \
     reservoir/grid/xyzcoordinate.h \
-    variables/integervariable.h \
-    variables/variable_exceptions.h \
-    variables/realvariable.h \
-    variables/binaryvariable.h \
-    variables/variablecontainer.h \
     wells/wellbore/completions/completion.h \
     wells/wellbore/completions/perforation.h \
     wells/wellbore/trajectory.h \
@@ -36,10 +30,16 @@ HEADERS += \
     results/results_exceptions.h \
     reservoir/grid/eclgrid.h \
     wells/control.h \
-    variables/variablehandler.h \
     wells/well_exceptions.h \
     wells/wellbore/wellblock.h \
-    reservoir/reservoir_exceptions.h
+    reservoir/reservoir_exceptions.h \
+    properties/property.h \
+    properties/binary_property.h \
+    properties/property_exceptions.h \
+    properties/variable_property_container.h \
+    properties/variable_property_handler.h \
+    properties/continous_property.h \
+    properties/discrete_property.h
 
 SOURCES += \
     model.cpp \
@@ -49,10 +49,6 @@ SOURCES += \
     reservoir/grid/grid.cpp \
     reservoir/grid/ijkcoordinate.cpp \
     reservoir/grid/xyzcoordinate.cpp \
-    variables/integervariable.cpp \
-    variables/realvariable.cpp \
-    variables/binaryvariable.cpp \
-    variables/variablecontainer.cpp \
     wells/wellbore/completions/completion.cpp \
     wells/wellbore/completions/perforation.cpp \
     wells/wellbore/trajectory.cpp \
@@ -60,5 +56,9 @@ SOURCES += \
     results/eclresults.cpp \
     reservoir/grid/eclgrid.cpp \
     wells/control.cpp \
-    variables/variablehandler.cpp \
-    wells/wellbore/wellblock.cpp
+    wells/wellbore/wellblock.cpp \
+    properties/binary_property.cpp \
+    properties/variable_property_container.cpp \
+    properties/variable_property_handler.cpp \
+    properties/continous_property.cpp \
+    properties/discrete_property.cpp

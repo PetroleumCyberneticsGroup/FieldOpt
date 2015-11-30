@@ -30,8 +30,8 @@ namespace Model {
 Model::Model(Utilities::Settings::Model settings)
 {
     reservoir_ = new Reservoir::Reservoir(settings.reservoir());
-    variable_container_ = new Variables::VariableContainer();
-    variable_handler_ = new Variables::VariableHandler(settings);
+    variable_container_ = new Properties::VariablePropertyContainer();
+    variable_handler_ = new Properties::VariablePropertyHandler(settings);
 
     wells_ = new QList<Wells::Well *>();
     for (int well_nr = 0; well_nr < settings.wells().size(); ++well_nr) {

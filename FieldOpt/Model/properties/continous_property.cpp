@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * binaryvariable.cpp
+ * realvariable.cpp
  *
  * Created: 23.09.2015 2015 by einar
  *
@@ -23,22 +23,35 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include "binaryvariable.h"
+#include "continous_property.h"
+#include <cmath>
 
 namespace Model {
-namespace Variables {
+namespace Properties {
 
-BinaryVariable::BinaryVariable(bool value)
-    : Variable(Binary)
+ContinousProperty::ContinousProperty(double value)
+    : Property(Continous)
 {
     value_ = value;
 }
 
-void BinaryVariable::setValue(bool value)
+void ContinousProperty::setValue(double value)
 {
-    if (IsLocked()) throw VariableLockedException("Cant change value of locked binary variable.");
+    if (IsLocked()) throw PropertyLockedException("Cant change locked real variable.");
     else value_ = value;
 }
+
+void ContinousProperty::Add(double d)
+{
+    if (IsLocked()) throw PropertyLockedException("Cant add to locked real variable");
+    else value_ += d;
+}
+
+bool ContinousProperty::Equals(const ContinousProperty *other, double epsilon) const
+{
+    return std::abs(this->value() - other->value()) <= epsilon;
+}
+
 
 
 }

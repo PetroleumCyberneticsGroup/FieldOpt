@@ -30,8 +30,8 @@
 #include "Utilities/settings/model.h"
 #include "Model/wells/wellbore/completions/completion.h"
 #include "Model/wells/wellbore/completions/perforation.h"
-#include "Model/variables/variablecontainer.h"
-#include "Model/variables/integervariable.h"
+#include "Model/properties/variable_property_container.h"
+#include "Model/properties/discrete_property.h"
 #include "Model/wells/control.h"
 #include "Model/wells/wellbore/trajectory.h"
 
@@ -54,10 +54,10 @@ public:
      */
     Well(Utilities::Settings::Model settings,
          int well_number,
-         ::Model::Variables::VariableContainer *variable_container,
-         ::Model::Variables::VariableHandler *variable_handler);
+         ::Model::Properties::VariablePropertyContainer *variable_container,
+         ::Model::Properties::VariablePropertyHandler *variable_handler);
 
-    struct Heel { Variables::IntegerVariable *i; Variables::IntegerVariable *j; Variables::IntegerVariable *k; };
+    struct Heel { Properties::DiscreteProperty *i; Properties::DiscreteProperty *j; Properties::DiscreteProperty *k; };
 
     enum PreferedPhase { Oil, Gas, Water, Liquid };
 
@@ -75,7 +75,7 @@ private:
     QString name_;
     ::Utilities::Settings::Model::WellType type_;
     ::Utilities::Settings::Model::PreferedPhase prefered_phase_;
-    Variables::RealVariable *wellbore_radius_;
+    Properties::ContinousProperty *wellbore_radius_;
     Wellbore::Trajectory *trajectory_;
 
     Heel heel_;

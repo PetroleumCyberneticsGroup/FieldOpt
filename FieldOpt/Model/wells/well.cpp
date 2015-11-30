@@ -31,8 +31,8 @@ namespace Wells {
 
 Well::Well(Utilities::Settings::Model settings,
            int well_number,
-           Variables::VariableContainer *variable_container,
-           ::Model::Variables::VariableHandler *variable_handler)
+           Properties::VariablePropertyContainer *variable_container,
+           ::Model::Properties::VariablePropertyHandler *variable_handler)
 {
     Utilities::Settings::Model::Well well_settings = settings.wells().at(well_number);
 
@@ -40,11 +40,11 @@ Well::Well(Utilities::Settings::Model settings,
     type_ = well_settings.type;
     prefered_phase_ = well_settings.prefered_phase;
 
-    heel_.i = new Variables::IntegerVariable(well_settings.heel.i);
-    heel_.j = new Variables::IntegerVariable(well_settings.heel.j);
-    heel_.k = new Variables::IntegerVariable(well_settings.heel.k);
+    heel_.i = new Properties::DiscreteProperty(well_settings.heel.i);
+    heel_.j = new Properties::DiscreteProperty(well_settings.heel.j);
+    heel_.k = new Properties::DiscreteProperty(well_settings.heel.k);
 
-    wellbore_radius_ = new Variables::RealVariable(well_settings.wellbore_radius);
+    wellbore_radius_ = new Properties::ContinousProperty(well_settings.wellbore_radius);
 
     controls_ = new QList<Control *>();
     for (int i = 0; i < well_settings.controls.size(); ++i)

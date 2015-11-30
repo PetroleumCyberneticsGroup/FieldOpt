@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * integervariable.h
+ * variable_exceptions.h
  *
  * Created: 23.09.2015 2015 by einar
  *
@@ -23,33 +23,36 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef INTEGERVARIABLE_H
-#define INTEGERVARIABLE_H
+#ifndef PROPERTY_EXCEPTIONS_H
+#define PROPERTY_EXCEPTIONS_H
 
-#include "variable.h"
+#include <stdexcept>
+#include <string>
+
+using std::string;
 
 namespace Model {
-namespace Variables {
+namespace Properties {
 
-/*!
- * \brief The IntegerVariable class describes integer variables, commonly used when optimizing
- * for example well placement in a discrete grid.
- */
-class IntegerVariable : public Variable
-{
+class PropertyLockedException : public std::runtime_error {
 public:
-    IntegerVariable(int value);
+    PropertyLockedException(const string& message)
+        : std::runtime_error(message) {}
+};
 
-    int value() const { return value_; }
-    void setValue(int value);
+class VariableIdDoesNotExistException : public std::runtime_error {
+public:
+    VariableIdDoesNotExistException(const string& message)
+        : std::runtime_error(message) {}
+};
 
-    void Add(int i); //!< Add i to the value of this variable.
-    bool Equals(const IntegerVariable *other) const; // Check if the value of another variable equals the value of this variable.
-
-private:
-    int value_;
+class VariablePropertyHandlerCannotFindObjectException : public std::runtime_error {
+public:
+    VariablePropertyHandlerCannotFindObjectException(const string &message)
+        : std::runtime_error(message) {}
 };
 
 }
 }
-#endif // INTEGERVARIABLE_H
+
+#endif // PROPERTY_EXCEPTIONS_H
