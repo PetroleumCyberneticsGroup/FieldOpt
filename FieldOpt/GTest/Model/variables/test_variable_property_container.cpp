@@ -64,7 +64,10 @@ TEST_F(VariableContainerTest, Constructor) {
 TEST_F(VariableContainerTest, Retrieval) {
     EXPECT_EQ(variable_container_->GetBinaryVariable(0)->value(), false);
     EXPECT_EQ(variable_container_->GetDiscreteVariable(0)->value(), 5);
-    EXPECT_EQ(variable_container_->GetContinousVariable(2)->value(), 1.0);
+    EXPECT_FLOAT_EQ(variable_container_->GetContinousVariable(2)->value(), 1.0);
+    EXPECT_EQ(variable_container_->GetBinaryVariableValues()[0], false);
+    EXPECT_EQ(variable_container_->GetDiscreteVariableValues()[0], 5);
+    EXPECT_FLOAT_EQ(variable_container_->GetContinousVariableValues()[2], 1.0);
     EXPECT_THROW(variable_container_->GetContinousVariable(4), VariableIdDoesNotExistException);
     EXPECT_THROW(variable_container_->GetBinaryVariable(-1), VariableIdDoesNotExistException);
     EXPECT_THROW(variable_container_->GetDiscreteVariable(10), VariableIdDoesNotExistException);

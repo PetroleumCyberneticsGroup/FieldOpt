@@ -72,6 +72,32 @@ ContinousProperty *VariablePropertyContainer::GetContinousVariable(int id) const
     return continous_variables_->value(id);
 }
 
+QHash<int, bool> VariablePropertyContainer::GetBinaryVariableValues() const
+{
+    QHash<int, bool> binary_values = QHash<int, bool>();
+    foreach (int key, binary_variables_->keys())
+        binary_values[key] = binary_variables_->value(key)->value();
+    return binary_values;
+}
+
+QHash<int, int> VariablePropertyContainer::GetDiscreteVariableValues() const
+{
+    QHash<int, int> discrete_values = QHash<int, int>();
+    foreach (int key, discrete_variables_->keys()) {
+        discrete_values[key] = discrete_variables_->value(key)->value();
+    }
+    return discrete_values;
+}
+
+QHash<int, double> VariablePropertyContainer::GetContinousVariableValues() const
+{
+    QHash<int, double> continous_values = QHash<int, double>();
+    foreach (int key, continous_variables_->keys()) {
+        continous_values[key] = continous_variables_->value(key)->value();
+    }
+    return continous_values;
+}
+
 void VariablePropertyContainer::DeleteBinaryVariable(int id)
 {
     if (!binary_variables_->contains(id)) throw VariableIdDoesNotExistException("Binary variable not found. Unable to delete.");

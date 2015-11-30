@@ -60,6 +60,9 @@ public:
     BinaryProperty *GetBinaryVariable(int id) const; //!< Get the binary variable with index id.
     DiscreteProperty *GetDiscreteVariable(int id) const; //!< Get the discrete variable with index id.
     ContinousProperty *GetContinousVariable(int id) const; //!< Get the continous variable with index id.
+    QHash<int, bool> GetBinaryVariableValues() const; //!< Get a hashmap containing all binary variable values. The key represents each variable's ID.
+    QHash<int, int> GetDiscreteVariableValues() const; //!< Get a hashmap containing all discrete variable values. The key represents each variable's ID.
+    QHash<int, double> GetContinousVariableValues() const; //!< Get a hashmap containing all discrete varaible values. The key represents each variable's ID.
 
     void DeleteBinaryVariable(int id);
     void DeleteDiscreteVariable(int id);
