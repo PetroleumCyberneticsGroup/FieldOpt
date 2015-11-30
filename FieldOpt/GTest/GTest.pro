@@ -45,10 +45,12 @@ SOURCES += \
     Utilities/unix/test_execution.cpp \
     Model/variables/test_properties.cpp \
     Model/variables/test_variable_property_container.cpp \
-    Model/variables/test_variable_property_handler.cpp
+    Model/variables/test_variable_property_handler.cpp \
+    Optimization/test_case.cpp
 
 OTHER_FILES += \
     Utilities/driver/driver.json
 
 HEADERS += \
-    Model/test_fixture_model_base.h
+    Model/test_fixture_model_base.h \
+    Optimization/test_fixture_case.h
