@@ -14,9 +14,11 @@ HEADERS += \
     objective/objective.h \
     objective/weightedsum.h \
     case.h \
-    optimization_exceptions.h
+    optimization_exceptions.h \
+    case_handler.h
 
 SOURCES += \
     objective/objective.cpp \
     objective/weightedsum.cpp \
-    case.cpp
+    case.cpp \
+    case_handler.cpp

@@ -44,6 +44,12 @@ public:
         : std::runtime_error(message.toStdString()) {}
 };
 
+class CaseHandlerException : public std::runtime_error {
+public:
+    CaseHandlerException(const QString &message)
+        : std::runtime_error(message.toStdString()) {}
+};
+
 }
 
 #endif // OPTIMIZATION_EXCEPTIONS

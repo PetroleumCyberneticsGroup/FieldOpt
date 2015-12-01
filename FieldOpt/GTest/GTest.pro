@@ -20,7 +20,7 @@ SOURCES += \
     Utilities/settings/test_settings.cpp \
     ERTWrapper/test_eclsummaryreader.cpp \
     Model/results/test_eclresults.cpp \
-    Model/objective/test_weightedsum.cpp \
+    Optimization/objective/test_weightedsum.cpp \
     Model/wells/test_control.cpp \
     Model/wells/test_perforation.cpp \
     Utilities/file_handling/test_filehandling.cpp \
@@ -46,7 +46,8 @@ SOURCES += \
     Model/variables/test_properties.cpp \
     Model/variables/test_variable_property_container.cpp \
     Model/variables/test_variable_property_handler.cpp \
-    Optimization/test_case.cpp
+    Optimization/test_case.cpp \
+    Optimization/test_case_handler.cpp
 
 OTHER_FILES += \
     Utilities/driver/driver.json
