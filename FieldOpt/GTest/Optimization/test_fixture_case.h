@@ -37,13 +37,13 @@ protected:
          * Only integer variables.
          * Objective function not evaluated.
          */
-        cases_.append(new Optimization::Case(QHash<int,bool>(), integer_variables_, QHash<int,double>()));
+        cases_.append(new Optimization::Case(QHash<QUuid,bool>(), integer_variables_, QHash<QUuid,double>()));
 
         /* Case 2:
          * Only real variables.
          * Objective function evaluated.
          */
-        cases_.append(new Optimization::Case(QHash<int,bool>(), QHash<int,int>(), real_variables_));
+        cases_.append(new Optimization::Case(QHash<QUuid,bool>(), QHash<QUuid,int>(), real_variables_));
         cases_.last()->set_objective_function_value(100.0);
 
         /* Case 3:
@@ -60,21 +60,21 @@ protected:
         cases_.last()->set_objective_function_value(-50.0);
     }
     QList<Optimization::Case *> cases_;
-    const QHash<int, bool> binary_variables_ {
-        {0, true},
-        {1, true},
-        {2, false},
-        {3, false}
+    const QHash<QUuid, bool> binary_variables_ {
+        {QUuid::createUuid(), true},
+        {QUuid::createUuid(), true},
+        {QUuid::createUuid(), false},
+        {QUuid::createUuid(), false}
     };
-    const QHash<int, int> integer_variables_ {
-        {0, 1},
-        {1, 2},
-        {2, 5}
+    const QHash<QUuid, int> integer_variables_ {
+        {QUuid::createUuid(), 1},
+        {QUuid::createUuid(), 2},
+        {QUuid::createUuid(), 5}
     };
-    const QHash<int, double> real_variables_ {
-        {0, 1.0},
-        {1, 4.0},
-        {2, 2.5}
+    const QHash<QUuid, double> real_variables_ {
+        {QUuid::createUuid(), 1.0},
+        {QUuid::createUuid(), 4.0},
+        {QUuid::createUuid(), 2.5}
     };
 };
 

@@ -76,24 +76,13 @@ TEST_F(CaseTest, NumberOfVariables) {
 }
 
 TEST_F(CaseTest, VariableValues) {
-    EXPECT_EQ(1, cases_[0]->integer_variables()[0]);
-    EXPECT_EQ(2, cases_[0]->integer_variables()[1]);
-    EXPECT_EQ(5, cases_[0]->integer_variables()[2]);
+    foreach (int value, integer_variables_.values()) {
+        EXPECT_TRUE(value == 1 || value == 2 || value == 5);
+    }
 
-    EXPECT_FLOAT_EQ(1.0, cases_[1]->real_variables()[0]);
-    EXPECT_FLOAT_EQ(4.0, cases_[1]->real_variables()[1]);
-    EXPECT_FLOAT_EQ(2.5, cases_[1]->real_variables()[2]);
-
-    EXPECT_EQ(1, cases_[2]->integer_variables()[0]);
-    EXPECT_EQ(2, cases_[2]->integer_variables()[1]);
-    EXPECT_EQ(5, cases_[2]->integer_variables()[2]);
-    EXPECT_FLOAT_EQ(1.0, cases_[2]->real_variables()[0]);
-    EXPECT_FLOAT_EQ(4.0, cases_[2]->real_variables()[1]);
-    EXPECT_FLOAT_EQ(2.5, cases_[2]->real_variables()[2]);
-    EXPECT_TRUE(cases_[2]->binary_variables()[0]);
-    EXPECT_TRUE(cases_[2]->binary_variables()[1]);
-    EXPECT_FALSE(cases_[2]->binary_variables()[2]);
-    EXPECT_FALSE(cases_[2]->binary_variables()[3]);
+    foreach (double value, real_variables_.values()) {
+        EXPECT_TRUE(value == 1.0 || value == 4.0 || value == 2.5);
+    }
 }
 
 }

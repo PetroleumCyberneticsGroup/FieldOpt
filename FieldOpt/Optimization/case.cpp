@@ -29,13 +29,13 @@
 namespace Optimization {
 
 Case::Case() {
-    binary_variables_ = QHash<int, bool>();
-    integer_variables_ = QHash<int, int>();
-    real_variables_ = QHash<int, double>();
+    binary_variables_ = QHash<QUuid, bool>();
+    integer_variables_ = QHash<QUuid, int>();
+    real_variables_ = QHash<QUuid, double>();
     objective_function_value_ = std::numeric_limits<double>::max();
 }
 
-Case::Case(const QHash<int, bool> &binary_variables, const QHash<int, int> &integer_variables, const QHash<int, double> &real_variables)
+Case::Case(const QHash<QUuid, bool> &binary_variables, const QHash<QUuid, int> &integer_variables, const QHash<QUuid, double> &real_variables)
 {
     binary_variables_ = binary_variables;
     integer_variables_ = integer_variables;
@@ -50,15 +50,15 @@ bool Case::Equals(const Case *other) const
             || this->integer_variables().size() != other->integer_variables().size()
             || this->real_variables().size() != other->real_variables().size())
         return false;
-    foreach (int key, this->binary_variables().keys()) {
+    foreach (QUuid key, this->binary_variables().keys()) {
         if (this->binary_variables()[key] != other->binary_variables()[key])
             return false;
     }
-    foreach (int key, this->integer_variables().keys()) {
+    foreach (QUuid key, this->integer_variables().keys()) {
         if (this->integer_variables()[key] != other->integer_variables()[key])
             return false;
     }
-    foreach (int key, this->real_variables().keys()) {
+    foreach (QUuid key, this->real_variables().keys()) {
         if (this->real_variables()[key] != other->real_variables()[key])
             return false;
     }

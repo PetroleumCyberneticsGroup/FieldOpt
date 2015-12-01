@@ -43,7 +43,7 @@ class Case
 public:
     friend class CaseHandler;
     Case();
-    Case(const QHash<int, bool> &binary_variables, const QHash<int, int> &integer_variables, const QHash<int, double> &real_variables);
+    Case(const QHash<QUuid, bool> &binary_variables, const QHash<QUuid, int> &integer_variables, const QHash<QUuid, double> &real_variables);
     Case(const Case &c) = delete;
 
     /*!
@@ -57,12 +57,12 @@ public:
 
     QUuid id() const { return id_; }
 
-    QHash<int, bool> binary_variables() const { return binary_variables_; }
-    QHash<int, int> integer_variables() const { return integer_variables_; }
-    QHash<int, double> real_variables() const { return real_variables_; }
-    void set_binary_variables(const QHash<int, bool> &binary_variables) { binary_variables_ = binary_variables; }
-    void set_integer_variables(const QHash<int, int> &integer_variables) { integer_variables_ = integer_variables; }
-    void set_real_variables(const QHash<int, double> &real_variables) { real_variables_ = real_variables; }
+    QHash<QUuid, bool> binary_variables() const { return binary_variables_; }
+    QHash<QUuid, int> integer_variables() const { return integer_variables_; }
+    QHash<QUuid, double> real_variables() const { return real_variables_; }
+    void set_binary_variables(const QHash<QUuid, bool> &binary_variables) { binary_variables_ = binary_variables; }
+    void set_integer_variables(const QHash<QUuid, int> &integer_variables) { integer_variables_ = integer_variables; }
+    void set_real_variables(const QHash<QUuid, double> &real_variables) { real_variables_ = real_variables; }
 
     double objective_function_value() const; //!< Get the objective function value. Throws an exception if the value has not been defined.
     void set_objective_function_value(double objective_function_value) { objective_function_value_ = objective_function_value; }
@@ -72,9 +72,9 @@ private:
     QUuid id_ = QUuid::createUuid(); //!< Unique ID for the case.
 
     double objective_function_value_;
-    QHash<int, bool> binary_variables_;
-    QHash<int, int> integer_variables_;
-    QHash<int, double> real_variables_;
+    QHash<QUuid, bool> binary_variables_;
+    QHash<QUuid, int> integer_variables_;
+    QHash<QUuid, double> real_variables_;
 
 };
 

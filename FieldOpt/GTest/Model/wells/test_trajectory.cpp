@@ -106,31 +106,8 @@ TEST_F(TrajectoryTest, VariableHandlerCorrectness) {
 TEST_F(TrajectoryTest, VariableContainerConsistencyAfterCreation) {
     // There should be three integer variables (i,j,k) for each of the four well block
     EXPECT_EQ(12, variable_container_->DiscreteVariableSize());
-    EXPECT_EQ(1, variable_container_->GetDiscreteVariable(0)->value()); // Block 1, i
-    EXPECT_EQ(4, variable_container_->GetDiscreteVariable(1)->value()); // Block 1, j
-    EXPECT_EQ(2, variable_container_->GetDiscreteVariable(2)->value()); // Block 1, k
-    EXPECT_EQ(4, variable_container_->GetDiscreteVariable(9)->value()); // Block 4, i
-    EXPECT_EQ(4, variable_container_->GetDiscreteVariable(10)->value()); // Block 4, j
-    EXPECT_EQ(2, variable_container_->GetDiscreteVariable(11)->value()); // Block 4, k
 }
 
-TEST_F(TrajectoryTest, VariableContainerConsistencyAfterModification) {
-    // Change values directly and verify change in variable container
-    prod_well_trajectory_->GetWellBlocks()->at(0)->setI(5);
-    prod_well_trajectory_->GetWellBlocks()->at(0)->setJ(6);
-    prod_well_trajectory_->GetWellBlocks()->at(0)->setK(7);
-    EXPECT_EQ(5, variable_container_->GetDiscreteVariable(0)->value()); // Block 1, i
-    EXPECT_EQ(6, variable_container_->GetDiscreteVariable(1)->value()); // Block 1, j
-    EXPECT_EQ(7, variable_container_->GetDiscreteVariable(2)->value()); // Block 1, k
-
-    // Change value in variable container and verify change directly
-    variable_container_->GetDiscreteVariable(0)->setValue(7);
-    variable_container_->GetDiscreteVariable(1)->setValue(8);
-    variable_container_->GetDiscreteVariable(2)->setValue(9);
-    EXPECT_EQ(7, prod_well_trajectory_->GetWellBlocks()->at(0)->i());
-    EXPECT_EQ(8, prod_well_trajectory_->GetWellBlocks()->at(0)->j());
-    EXPECT_EQ(9, prod_well_trajectory_->GetWellBlocks()->at(0)->k());
-}
 
 TEST_F(TrajectoryTest, WellBlockPerforationConsistency) {
     // The first well block should not have a completion

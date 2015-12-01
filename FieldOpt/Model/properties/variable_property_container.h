@@ -28,6 +28,7 @@
 
 #include <QHash>
 
+#include "property.h"
 #include "binary_property.h"
 #include "discrete_property.h"
 #include "continous_property.h"
@@ -57,25 +58,21 @@ public:
     int DiscreteVariableSize() const { return discrete_variables_->size(); } //!< Get the number of discrete variables.
     int ContinousVariableSize() const { return continous_variables_->size(); } //!< Get the number of continous variables.
 
-    BinaryProperty *GetBinaryVariable(int id) const; //!< Get the binary variable with index id.
-    DiscreteProperty *GetDiscreteVariable(int id) const; //!< Get the discrete variable with index id.
-    ContinousProperty *GetContinousVariable(int id) const; //!< Get the continous variable with index id.
-    QHash<int, bool> GetBinaryVariableValues() const; //!< Get a hashmap containing all binary variable values. The key represents each variable's ID.
-    QHash<int, int> GetDiscreteVariableValues() const; //!< Get a hashmap containing all discrete variable values. The key represents each variable's ID.
-    QHash<int, double> GetContinousVariableValues() const; //!< Get a hashmap containing all discrete varaible values. The key represents each variable's ID.
+    BinaryProperty *GetBinaryVariable(QUuid id) const; //!< Get the binary variable with index id.
+    DiscreteProperty *GetDiscreteVariable(QUuid id) const; //!< Get the discrete variable with index id.
+    ContinousProperty *GetContinousVariable(QUuid id) const; //!< Get the continous variable with index id.
+    QHash<QUuid, bool> GetBinaryVariableValues() const; //!< Get a hashmap containing all binary variable values. The key represents each variable's ID.
+    QHash<QUuid, int> GetDiscreteVariableValues() const; //!< Get a hashmap containing all discrete variable values. The key represents each variable's ID.
+    QHash<QUuid, double> GetContinousVariableValues() const; //!< Get a hashmap containing all discrete varaible values. The key represents each variable's ID.
 
-    void DeleteBinaryVariable(int id);
-    void DeleteDiscreteVariable(int id);
-    void DeleteContinousVariable(int id);
+    void DeleteBinaryVariable(QUuid id);
+    void DeleteDiscreteVariable(QUuid id);
+    void DeleteContinousVariable(QUuid id);
 
 private:
-    int next_binary_id_;
-    int next_discrete_id_;
-    int next_continous_id_;
-
-    QHash<int, BinaryProperty *> *binary_variables_;
-    QHash<int, DiscreteProperty *> *discrete_variables_;
-    QHash<int, ContinousProperty *> *continous_variables_;
+    QHash<QUuid, BinaryProperty *> *binary_variables_;
+    QHash<QUuid, DiscreteProperty *> *discrete_variables_;
+    QHash<QUuid, ContinousProperty *> *continous_variables_;
 };
 
 }

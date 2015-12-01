@@ -28,6 +28,7 @@
 
 #include "property_exceptions.h"
 #include <QString>
+#include <QUuid>
 
 namespace Model {
 namespace Properties {
@@ -50,10 +51,13 @@ public:
     void Lock() { locked_ = true; }
     void Unlock() { locked_ = false; }
 
+    QUuid id() const { return id_; }
+
 protected:
     Property(Type type) { type_ = type; locked_ = false; }
 
 private:
+    QUuid id_ = QUuid::createUuid();
     Type type_;
     bool locked_;
     QString name_;
