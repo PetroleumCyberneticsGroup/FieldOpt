@@ -44,6 +44,7 @@ public:
     friend class CaseHandler;
     Case();
     Case(const QHash<int, bool> &binary_variables, const QHash<int, int> &integer_variables, const QHash<int, double> &real_variables);
+    Case(const Case &c) = delete;
 
     /*!
      * \brief Equals Checks whether this case is equal to another case.
