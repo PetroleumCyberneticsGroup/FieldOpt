@@ -27,9 +27,12 @@
 #define CASE_H
 
 #include <QHash>
+#include <QUuid>
 #include "optimization_exceptions.h"
 
 namespace Optimization {
+
+class CaseHandler;
 
 /*!
  * \brief The Case class represents a specific case for the optimizer, i.e. a specific set of variable values
@@ -38,6 +41,7 @@ namespace Optimization {
 class Case
 {
 public:
+    friend class CaseHandler;
     Case();
     Case(const QHash<int, bool> &binary_variables, const QHash<int, int> &integer_variables, const QHash<int, double> &real_variables);
 
@@ -50,6 +54,8 @@ public:
      */
     bool Equals(const Case *other) const;
 
+    QUuid id() const { return id_; }
+
     QHash<int, bool> binary_variables() const { return binary_variables_; }
     QHash<int, int> integer_variables() const { return integer_variables_; }
     QHash<int, double> real_variables() const { return real_variables_; }
@@ -60,11 +66,15 @@ public:
     double objective_function_value() const; //!< Get the objective function value. Throws an exception if the value has not been defined.
     void set_objective_function_value(double objective_function_value) { objective_function_value_ = objective_function_value; }
 
+
 private:
+    QUuid id_ = QUuid::createUuid(); //!< Unique ID for the case.
+
     double objective_function_value_;
     QHash<int, bool> binary_variables_;
     QHash<int, int> integer_variables_;
     QHash<int, double> real_variables_;
+
 };
 
 }

@@ -37,29 +37,29 @@ protected:
          * Only integer variables.
          * Objective function not evaluated.
          */
-        cases_.append(Optimization::Case(QHash<int,bool>(), integer_variables_, QHash<int,double>()));
+        cases_.append(new Optimization::Case(QHash<int,bool>(), integer_variables_, QHash<int,double>()));
 
         /* Case 2:
          * Only real variables.
          * Objective function evaluated.
          */
-        cases_.append(Optimization::Case(QHash<int,bool>(), QHash<int,int>(), real_variables_));
-        cases_.last().set_objective_function_value(100.0);
+        cases_.append(new Optimization::Case(QHash<int,bool>(), QHash<int,int>(), real_variables_));
+        cases_.last()->set_objective_function_value(100.0);
 
         /* Case 3:
          * All variable types.
          * Objective function evaluated.
          */
-        cases_.append(Optimization::Case(binary_variables_, integer_variables_, real_variables_));
-        cases_.last().set_objective_function_value(-50.0);
+        cases_.append(new Optimization::Case(binary_variables_, integer_variables_, real_variables_));
+        cases_.last()->set_objective_function_value(-50.0);
 
         /* Case 4:
          * Identical to case 3.
          */
-        cases_.append(Optimization::Case(binary_variables_, integer_variables_, real_variables_));
-        cases_.last().set_objective_function_value(-50.0);
+        cases_.append(new Optimization::Case(binary_variables_, integer_variables_, real_variables_));
+        cases_.last()->set_objective_function_value(-50.0);
     }
-    QList<Optimization::Case> cases_;
+    QList<Optimization::Case *> cases_;
     const QHash<int, bool> binary_variables_ {
         {0, true},
         {1, true},
