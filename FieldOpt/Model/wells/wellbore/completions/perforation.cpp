@@ -36,8 +36,10 @@ Perforation::Perforation(Utilities::Settings::Model::Completion completion_setti
     : Completion(completion_settings)
 {
     transmissibility_factor_ = new Properties::ContinousProperty(completion_settings.transmissibility_factor);
-    if (variable_handler->GetPerforation(completion_settings.id)->transmissibility_factor())
+    if (variable_handler->GetPerforation(completion_settings.id)->transmissibility_factor()) {
+        transmissibility_factor_->setName(variable_handler->GetPerforation(completion_settings.id)->variable_name());
         variable_container->AddVariable(transmissibility_factor_);
+    }
 }
 
 

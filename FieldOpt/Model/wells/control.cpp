@@ -43,21 +43,27 @@ Control::Control(::Utilities::Settings::Model::ControlEntry entry,
         open_ = new Properties::BinaryProperty(true);
     else if (entry.state == ::Utilities::Settings::Model::WellState::WellShut)
         open_ = new Properties::BinaryProperty(false);
-    if (variable_handler->GetControl(well.name, entry.time_step)->open())
+    if (variable_handler->GetControl(well.name, entry.time_step)->open()) {
+        open_->setName(variable_handler->GetControl(well.name, entry.time_step)->variable_name());
         variables->AddVariable(open_);
+    }
 
     switch (entry.control_mode) {
     case ::Utilities::Settings::Model::ControlMode::BHPControl:
         mode_ = entry.control_mode;
         bhp_ = new Properties::ContinousProperty(entry.bhp);
-        if (variable_handler->GetControl(well.name, entry.time_step)->bhp())
+        if (variable_handler->GetControl(well.name, entry.time_step)->bhp()) {
+            bhp_->setName(variable_handler->GetControl(well.name, entry.time_step)->variable_name());
             variables->AddVariable(bhp_);
+        }
         break;
     case ::Utilities::Settings::Model::ControlMode::RateControl:
         mode_ = entry.control_mode;
         rate_ = new Properties::ContinousProperty(entry.rate);
-        if (variable_handler->GetControl(well.name, entry.time_step)->rate())
+        if (variable_handler->GetControl(well.name, entry.time_step)->rate()) {
+            rate_->setName(variable_handler->GetControl(well.name, entry.time_step)->variable_name());
             variables->AddVariable(rate_);
+        }
     }
 
 

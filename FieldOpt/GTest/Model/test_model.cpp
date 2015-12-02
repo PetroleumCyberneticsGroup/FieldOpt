@@ -57,17 +57,27 @@ TEST_F(ModelTest, Variables) {
     EXPECT_TRUE(variable_handler_->GetControl("PROD", 0)->bhp());
     EXPECT_TRUE(variable_handler_->GetControl("PROD", 50)->bhp());
     EXPECT_TRUE(variable_handler_->GetControl("PROD", 365)->bhp());
+    EXPECT_STREQ("PROD-BHP-1", variable_handler_->GetControl("PROD", 0)->variable_name().toLatin1().constData());
+    EXPECT_STREQ("PROD-BHP-1", variable_handler_->GetControl("PROD", 50)->variable_name().toLatin1().constData());
+    EXPECT_STREQ("PROD-BHP-1", variable_handler_->GetControl("PROD", 365)->variable_name().toLatin1().constData());
     EXPECT_EQ(3, model_->wells()->at(0)->controls()->size());
 
     // 2 Continous variables for the transmissibility of the producer's two perforations
     EXPECT_TRUE(variable_handler_->GetPerforation(0)->transmissibility_factor());
     EXPECT_TRUE(variable_handler_->GetPerforation(1)->transmissibility_factor());
+    EXPECT_STREQ("PROD-TRANS-ALL", variable_handler_->GetPerforation(0)->variable_name().toLatin1().constData());
+    EXPECT_STREQ("PROD-TRANS-ALL", variable_handler_->GetPerforation(1)->variable_name().toLatin1().constData());
+
 
     // 12 Discrete variables for the positions for the producer's four well blocks
     EXPECT_TRUE(variable_handler_->GetWellBlock(0)->position());
     EXPECT_TRUE(variable_handler_->GetWellBlock(1)->position());
     EXPECT_TRUE(variable_handler_->GetWellBlock(2)->position());
     EXPECT_TRUE(variable_handler_->GetWellBlock(3)->position());
+    EXPECT_STREQ("PROD-WELLBLOCKS-ALL", variable_handler_->GetWellBlock(0)->variable_name().toLatin1().constData());
+    EXPECT_STREQ("PROD-WELLBLOCKS-ALL", variable_handler_->GetWellBlock(1)->variable_name().toLatin1().constData());
+    EXPECT_STREQ("PROD-WELLBLOCKS-ALL", variable_handler_->GetWellBlock(2)->variable_name().toLatin1().constData());
+    EXPECT_STREQ("PROD-WELLBLOCKS-ALL", variable_handler_->GetWellBlock(3)->variable_name().toLatin1().constData());
     foreach (int value, model_->variables()->GetDiscreteVariableValues().values()) {
         EXPECT_GE(value, 0);
     }
