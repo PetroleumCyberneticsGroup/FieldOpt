@@ -53,6 +53,11 @@ bool DiscreteProperty::Equals(const DiscreteProperty *other) const
     else return false;
 }
 
+QString DiscreteProperty::ToString() const
+{
+    return QString("Type:\tDiscrete\nUUID:\t%1\nName:\t%2\nValue:\t%3\n").arg(id().toString()).arg(name()).arg(value());
+}
+
 
 
 

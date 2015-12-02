@@ -52,6 +52,11 @@ bool ContinousProperty::Equals(const ContinousProperty *other, double epsilon) c
     return std::abs(this->value() - other->value()) <= epsilon;
 }
 
+QString ContinousProperty::ToString() const
+{
+    return QString("Type:\tContinous\nUUID:\t%1\nName:\t%2\nValue:\t%3\n").arg(id().toString()).arg(name()).arg(value());
+}
+
 
 
 }

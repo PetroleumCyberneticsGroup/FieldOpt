@@ -47,6 +47,8 @@ public:
     void Add(int i); //!< Add i to the value of this property.
     bool Equals(const DiscreteProperty *other) const; // Check if the value of another variable equals the value of this variable.
 
+    QString ToString() const;
+
 private:
     int value_;
 };
