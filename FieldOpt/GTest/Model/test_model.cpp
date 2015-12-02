@@ -25,6 +25,7 @@
 
 #include "GTest/Model/test_fixture_model_base.h"
 #include "Model/model.h"
+#include <iostream>
 
 namespace {
 
@@ -60,6 +61,7 @@ TEST_F(ModelTest, Variables) {
     EXPECT_STREQ("PROD-BHP-1", variable_handler_->GetControl("PROD", 0)->variable_name().toLatin1().constData());
     EXPECT_STREQ("PROD-BHP-1", variable_handler_->GetControl("PROD", 50)->variable_name().toLatin1().constData());
     EXPECT_STREQ("PROD-BHP-1", variable_handler_->GetControl("PROD", 365)->variable_name().toLatin1().constData());
+    EXPECT_EQ(3, model_->variables()->GetContinousVariableIdsWithName("PROD-BHP-1").size());
     EXPECT_EQ(3, model_->wells()->at(0)->controls()->size());
 
     // 2 Continous variables for the transmissibility of the producer's two perforations
@@ -67,6 +69,7 @@ TEST_F(ModelTest, Variables) {
     EXPECT_TRUE(variable_handler_->GetPerforation(1)->transmissibility_factor());
     EXPECT_STREQ("PROD-TRANS-ALL", variable_handler_->GetPerforation(0)->variable_name().toLatin1().constData());
     EXPECT_STREQ("PROD-TRANS-ALL", variable_handler_->GetPerforation(1)->variable_name().toLatin1().constData());
+    EXPECT_EQ(2, model_->variables()->GetContinousVariableIdsWithName("PROD-TRANS-ALL").size());
 
 
     // 12 Discrete variables for the positions for the producer's four well blocks
@@ -78,6 +81,7 @@ TEST_F(ModelTest, Variables) {
     EXPECT_STREQ("PROD-WELLBLOCKS-ALL", variable_handler_->GetWellBlock(1)->variable_name().toLatin1().constData());
     EXPECT_STREQ("PROD-WELLBLOCKS-ALL", variable_handler_->GetWellBlock(2)->variable_name().toLatin1().constData());
     EXPECT_STREQ("PROD-WELLBLOCKS-ALL", variable_handler_->GetWellBlock(3)->variable_name().toLatin1().constData());
+    EXPECT_EQ(12, model_->variables()->GetDiscreteVariableIdsWithName("PROD-WELLBLOCKS-ALL").size()); // Three variables pr. block (i,j,k)
     foreach (int value, model_->variables()->GetDiscreteVariableValues().values()) {
         EXPECT_GE(value, 0);
     }

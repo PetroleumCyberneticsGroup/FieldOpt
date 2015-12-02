@@ -94,6 +94,36 @@ QHash<QUuid, double> VariablePropertyContainer::GetContinousVariableValues() con
     return continous_values;
 }
 
+QList<QUuid> VariablePropertyContainer::GetBinaryVariableIdsWithName(QString var_name) const
+{
+    QList<QUuid> ids_for_variables_with_name = QList<QUuid>();
+    foreach (Properties::BinaryProperty * prop, binary_variables_->values()) {
+        if (QString::compare(prop->name(), var_name) == 0)
+            ids_for_variables_with_name.append(prop->id());
+    }
+    return ids_for_variables_with_name;
+}
+
+QList<QUuid> VariablePropertyContainer::GetDiscreteVariableIdsWithName(QString var_name) const
+{
+    QList<QUuid> ids_for_variables_with_name = QList<QUuid>();
+    foreach (Properties::DiscreteProperty *prop, discrete_variables_->values()) {
+        if (QString::compare(prop->name(), var_name) == 0)
+            ids_for_variables_with_name.append(prop->id());
+    }
+    return ids_for_variables_with_name;
+}
+
+QList<QUuid> VariablePropertyContainer::GetContinousVariableIdsWithName(QString var_name) const
+{
+    QList<QUuid> ids_for_variables_with_name = QList<QUuid>();
+    foreach (Properties::ContinousProperty *prop, continous_variables_->values()) {
+        if (QString::compare(prop->name(), var_name) == 0)
+            ids_for_variables_with_name.append(prop->id());
+    }
+    return ids_for_variables_with_name;
+}
+
 void VariablePropertyContainer::DeleteBinaryVariable(QUuid id)
 {
     if (!binary_variables_->contains(id)) throw VariableIdDoesNotExistException("Binary variable not found. Unable to delete.");
