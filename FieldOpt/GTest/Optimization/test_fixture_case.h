@@ -26,11 +26,11 @@
 #ifndef TEST_FIXTURE_CASE
 #define TEST_FIXTURE_CASE
 
-#include <gtest/gtest.h>
 #include "Optimization/case.h"
+#include "GTest/Optimization/test_fixture_optimizer.h"
 #include <QList>
 
-class CaseTestFixture : public ::testing::Test {
+class CaseTestFixture : public OptimizerTestFixture {
 protected:
     CaseTestFixture() {
         /* Case 1:

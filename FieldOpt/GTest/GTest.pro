@@ -47,11 +47,13 @@ SOURCES += \
     Model/variables/test_variable_property_container.cpp \
     Model/variables/test_variable_property_handler.cpp \
     Optimization/test_case.cpp \
-    Optimization/test_case_handler.cpp
+    Optimization/test_case_handler.cpp \
+    Optimization/constraints/test_box_constraint.cpp
 
 OTHER_FILES += \
     Utilities/driver/driver.json
 
 HEADERS += \
     Model/test_fixture_model_base.h \
-    Optimization/test_fixture_case.h
+    Optimization/test_fixture_case.h \
+    Optimization/test_fixture_optimizer.h \

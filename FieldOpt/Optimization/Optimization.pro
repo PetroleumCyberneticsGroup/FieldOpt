@@ -16,11 +16,13 @@ HEADERS += \
     case.h \
     optimization_exceptions.h \
     case_handler.h \
-    constraints/constraint.h
+    constraints/constraint.h \
+    constraints/box_constraint.h
 
 SOURCES += \
     objective/objective.cpp \
     objective/weightedsum.cpp \
     case.cpp \
     case_handler.cpp \
-    constraints/constraint.cpp
+    constraints/constraint.cpp \
+    constraints/box_constraint.cpp
