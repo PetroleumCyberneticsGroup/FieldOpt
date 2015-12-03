@@ -72,4 +72,23 @@ double Case::objective_function_value() const {
         return objective_function_value_;
 }
 
+
+void Case::set_integer_variable_value(const QUuid id, const int val)
+{
+    if (!integer_variables_.contains(id)) throw VariableException("Unable to set value of variable " + id.toString());
+    integer_variables_[id] = val;
+}
+
+void Case::set_binary_variable_value(const QUuid id, const bool val)
+{
+    if (!binary_variables_.contains(id)) throw VariableException("Unable to set value of variable " + id.toString());
+    binary_variables_[id] = val;
+}
+
+void Case::set_real_variable_value(const QUuid id, const double val)
+{
+    if (!real_variables_.contains(id)) throw VariableException("Unable to set value of variable " + id.toString());
+    real_variables_[id] = val;
+}
+
 }
