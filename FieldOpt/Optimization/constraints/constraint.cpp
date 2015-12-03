@@ -27,4 +27,13 @@
 
 namespace Optimization { namespace Constraints {
 
+Constraint::Constraint(Utilities::Settings::Optimizer::Constraint settings, Model::Properties::VariablePropertyContainer *variables){
+    name_ = settings.name;
+    affected_binary_variables_ = variables->GetBinaryVariableIdsWithName(settings.name);
+    affected_integer_variables_ = variables->GetDiscreteVariableIdsWithName(settings.name);
+    affected_real_variables_ = variables->GetContinousVariableIdsWithName(settings.name);
+}
+
+
+
 }}

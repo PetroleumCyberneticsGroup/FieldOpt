@@ -27,11 +27,14 @@
 #define CONSTRAINT_H
 
 #include "Optimization/case.h"
+#include "Utilities/settings/optimizer.h"
+#include "Model/properties/variable_property_container.h"
 
 namespace Optimization { namespace Constraints {
 
 /*!
- * \brief The Constraint class is the abstract parent class to all other constraint classes.
+ * \brief The Constraint class is the abstract parent class to all other constraint classes. One Constraint
+ * object should be created for each defined constraint.
  *
  * \todo Find a way to determine which variables a constraint should be applied to.
  */
@@ -53,8 +56,14 @@ public:
      */
     virtual void SnapCaseToConstraints(Case *c) = 0;
 
+    QString name() const { return name_; }
+
 protected:
-    Constraint(){} //!< This class' constructor should not be used directly. The constructors of subclasses should be used.
+    Constraint(::Utilities::Settings::Optimizer::Constraint settings, ::Model::Properties::VariablePropertyContainer *variables); //!< This class' constructor should not be used directly. The constructors of subclasses should be used.
+    QList<QUuid> affected_binary_variables_;
+    QList<QUuid> affected_integer_variables_;
+    QList<QUuid> affected_real_variables_;
+    QString name_;
 };
 
 }}
