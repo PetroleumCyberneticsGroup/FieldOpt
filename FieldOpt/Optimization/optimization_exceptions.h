@@ -50,6 +50,12 @@ public:
         : std::runtime_error(message.toStdString()) {}
 };
 
+class OptimizerInitializationException : public std::runtime_error {
+public:
+    OptimizerInitializationException(const QString &message)
+        : std::runtime_error("Unable to initialize the optimizer: " + message.toStdString()) {}
+};
+
 }
 
 #endif // OPTIMIZATION_EXCEPTIONS
