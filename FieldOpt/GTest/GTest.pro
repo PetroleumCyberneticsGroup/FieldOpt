@@ -48,7 +48,8 @@ SOURCES += \
     Model/variables/test_variable_property_handler.cpp \
     Optimization/test_case.cpp \
     Optimization/test_case_handler.cpp \
-    Optimization/constraints/test_box_constraint.cpp
+    Optimization/constraints/test_box_constraint.cpp \
+    Optimization/constraints/test_constraint_handler.cpp
 
 OTHER_FILES += \
     Utilities/driver/driver.json

@@ -17,7 +17,8 @@ HEADERS += \
     optimization_exceptions.h \
     case_handler.h \
     constraints/constraint.h \
-    constraints/box_constraint.h
+    constraints/box_constraint.h \
+    constraints/constraint_handler.h
 
 SOURCES += \
     objective/objective.cpp \
@@ -25,4 +26,5 @@ SOURCES += \
     case.cpp \
     case_handler.cpp \
     constraints/constraint.cpp \
-    constraints/box_constraint.cpp
+    constraints/box_constraint.cpp \
+    constraints/constraint_handler.cpp
