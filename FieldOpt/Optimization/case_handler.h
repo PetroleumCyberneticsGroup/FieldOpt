@@ -39,6 +39,7 @@ class CaseHandler
 {
 public:
     CaseHandler();
+    CaseHandler(Case *base_case); //!< Call the default constructor and add the base case to list of evaluated cases.
 
     /*!
      * \brief AddNewCase Add a new non-evaluated case to the queue.

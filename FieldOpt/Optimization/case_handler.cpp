@@ -36,6 +36,13 @@ CaseHandler::CaseHandler()
     evaluated_recently_ = QList<QUuid>();
 }
 
+CaseHandler::CaseHandler(Case *base_case)
+    : CaseHandler()
+{
+    cases_[base_case->id()] = base_case;
+    evaluated_.append(base_case->id());
+}
+
 void CaseHandler::AddNewCase(Case *c)
 {
     evaluation_queue_.enqueue(c->id());
