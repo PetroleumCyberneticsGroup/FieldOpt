@@ -36,6 +36,7 @@ Optimizer::Optimizer(Utilities::Settings::Optimizer *settings, Case *base_case, 
         throw OptimizerInitializationException("The objective function value of the base case must be set before initializing an Optimizer.");
     }
 
+    max_evaluations_ = settings->parameters().max_evaluations;
     tentative_best_case_ = base_case;
     case_handler_ = new CaseHandler(tentative_best_case_);
     constraint_handler_ = new Constraints::ConstraintHandler(settings->constraints(), variables);
