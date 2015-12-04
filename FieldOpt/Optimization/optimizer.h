@@ -87,6 +87,22 @@ protected:
     Optimizer(::Utilities::Settings::Optimizer *settings, Case *base_case, ::Model::Properties::VariablePropertyContainer *variables);
 
     /*!
+     * \brief BetterCaseFoundLastEvaluation Searches the list of recently evaluated cases in the case handler for a case
+     * with a better objective function value than the current tentative best case.
+     *
+     * \todo Implement both minimization and maximization. Currently only maximization is implemented.
+     * \return True if a better case is found, otherwise false.
+     */
+    bool betterCaseFoundLastEvaluation();
+
+    /*!
+     * \brief ApplyNewTentativeBestCase Sets the tentative best case to the best case found in the case handler (if one is found).
+     *
+     * \todo Implement both minimization and maximization. Currently only maximization is implemented.
+     */
+    void applyNewTentativeBestCase();
+
+    /*!
      * \brief iterate Performs an iteration, generating new cases and adding them to the case_handler.
      */
     virtual void iterate() = 0;

@@ -42,6 +42,23 @@ Optimizer::Optimizer(Utilities::Settings::Optimizer *settings, Case *base_case, 
     constraint_handler_ = new Constraints::ConstraintHandler(settings->constraints(), variables);
 }
 
+bool Optimizer::betterCaseFoundLastEvaluation()
+{
+    foreach (Case* c, case_handler_->RecentlyEvaluatedCases()) {
+        if (c->objective_function_value() > tentative_best_case_->objective_function_value())
+            return true;
+    }
+    return false;
+}
+
+void Optimizer::applyNewTentativeBestCase()
+{
+    foreach (Case* c, case_handler_->RecentlyEvaluatedCases()) {
+        if (c->objective_function_value() > tentative_best_case_->objective_function_value())
+            tentative_best_case_ = c;
+    }
+}
+
 Case *Optimizer::GetCaseForEvaluation()
 {
     if (case_handler_->QueuedCases().size() == 0) {
