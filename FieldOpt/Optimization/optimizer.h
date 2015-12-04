@@ -44,12 +44,7 @@ namespace Optimization {
 class Optimizer
 {
 public:
-    /*!
-     * \brief Optimizer
-     * \param settings Settings for the optimizer.
-     * \param base_case The base case for optimizer. Must already have been evaluated (i.e. have an objective function value).
-     */
-    Optimizer(::Utilities::Settings::Optimizer *settings, Case *base_case, ::Model::Properties::VariablePropertyContainer *variables);
+    Optimizer() = delete;
 
     /*!
      * \brief GetCaseForEvaluation Get a new, unevaluated case for evaluation.
@@ -84,6 +79,13 @@ public:
     virtual bool IsFinished() = 0;
 
 protected:
+    /*!
+     * \brief Optimizer
+     * \param settings Settings for the optimizer.
+     * \param base_case The base case for optimizer. Must already have been evaluated (i.e. have an objective function value).
+     */
+    Optimizer(::Utilities::Settings::Optimizer *settings, Case *base_case, ::Model::Properties::VariablePropertyContainer *variables);
+
     /*!
      * \brief iterate Performs an iteration, generating new cases and adding them to the case_handler.
      */
