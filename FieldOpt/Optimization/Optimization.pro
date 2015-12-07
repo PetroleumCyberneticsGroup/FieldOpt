@@ -19,7 +19,8 @@ HEADERS += \
     constraints/constraint.h \
     constraints/box_constraint.h \
     constraints/constraint_handler.h \
-    optimizer.h
+    optimizer.h \
+    optimizers/compass_search.h
 
 SOURCES += \
     objective/objective.cpp \
@@ -29,4 +30,5 @@ SOURCES += \
     constraints/constraint.cpp \
     constraints/box_constraint.cpp \
     constraints/constraint_handler.cpp \
-    optimizer.cpp
+    optimizer.cpp \
+    optimizers/compass_search.cpp
