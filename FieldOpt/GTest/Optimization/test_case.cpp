@@ -85,5 +85,33 @@ TEST_F(CaseTest, VariableValues) {
     }
 }
 
+TEST_F(CaseTest, CopyConstructor) {
+    Optimization::Case *copy = new Optimization::Case(cases_[0]);
+    EXPECT_FALSE(copy->id() == cases_[0]->id());
+    EXPECT_TRUE(copy->Equals(cases_[0]));
+}
+
+TEST_F(CaseTest, PerturbMethod) {
+    // Perturb the first case's first integer variable in positive direction
+    QList<Optimization::Case *> perturbations_1 = cases_[0]->Perturb(cases_[0]->integer_variables().keys().first(),
+            Optimization::Case::SIGN::PLUS, 7);
+    EXPECT_EQ(1, perturbations_1.size());
+    EXPECT_FALSE(perturbations_1.first()->id() == cases_[0]->id());
+    EXPECT_FALSE(perturbations_1.first()->Equals(cases_[0]));
+    EXPECT_TRUE(cases_[0]->integer_variables().values().first() + 7 == perturbations_1.first()->integer_variables().values().first());
+
+    // Perturb the second case's first real variable in both directions
+    QList<Optimization::Case *> perturbations_2 = cases_[1]->Perturb(cases_[1]->real_variables().keys().first(),
+            Optimization::Case::SIGN::PLUSMINUS, 5);
+    EXPECT_EQ(2, perturbations_2.size());
+    EXPECT_FALSE(perturbations_2[0]->id() == cases_[1]->id());
+    EXPECT_FALSE(perturbations_2[1]->id() == cases_[1]->id());
+    EXPECT_FALSE(perturbations_2[0]->Equals(cases_[1]));
+    EXPECT_FALSE(perturbations_2[1]->Equals(cases_[1]));
+    EXPECT_FALSE(perturbations_2[0]->Equals(perturbations_2[1]));
+    EXPECT_TRUE(cases_[1]->real_variables().values().first() + 5 == perturbations_2[0]->real_variables().values().first());
+    EXPECT_TRUE(cases_[1]->real_variables().values().first() - 5 == perturbations_2[1]->real_variables().values().first());
+}
+
 }
 

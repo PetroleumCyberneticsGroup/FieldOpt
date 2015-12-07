@@ -45,6 +45,7 @@ public:
     Case();
     Case(const QHash<QUuid, bool> &binary_variables, const QHash<QUuid, int> &integer_variables, const QHash<QUuid, double> &real_variables);
     Case(const Case &c) = delete;
+    Case(const Case *c);
 
     /*!
      * \brief Equals Checks whether this case is equal to another case.
@@ -70,6 +71,22 @@ public:
     void set_integer_variable_value(const QUuid id, const int val); //!< Set the value of an integer variable in the case.
     void set_binary_variable_value(const QUuid id, const bool val); //!< Set the value of a boolean variable in the case.
     void set_real_variable_value(const QUuid id, const double val); //!< Set the value of a real variable in the case.
+
+    enum SIGN { PLUS, MINUS, PLUSMINUS};
+
+    /*!
+     * \brief Perturb Creates variations of this Case where the value of one variable has been changed.
+     *
+     * If PLUS or MINUS is selected as the sign, _one_ case is returned. If PLUSMINUS is selected, _two_
+     * cases are returned.
+     *
+     * Note that this method only handles integer and real variables.
+     * \param variabe_id The UUID of the variable to be perturbed.
+     * \param sign The sign/direction of the perturbation.
+     * \param magnitude The magnitude of the perturbaton.
+     * \return One or two cases where one variable has been perturbed.
+     */
+    QList<Case *> Perturb(QUuid variabe_id, SIGN sign, double magnitude);
 
 
 private:
