@@ -41,6 +41,7 @@ protected:
         base_case_ = new ::Optimization::Case(model_->variables()->GetBinaryVariableValues(),
                                               model_->variables()->GetDiscreteVariableValues(),
                                               model_->variables()->GetContinousVariableValues());
+        base_case_->set_objective_function_value(1000.0);
     }
 
     QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
