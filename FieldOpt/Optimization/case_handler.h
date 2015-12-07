@@ -43,9 +43,13 @@ public:
 
     /*!
      * \brief AddNewCase Add a new non-evaluated case to the queue.
-     * \param c
      */
     void AddNewCase(Case *c);
+
+    /*!
+     * \brief AddNewCases Add any number of non-evaluated cases to the queue.
+     */
+    void AddNewCases(QList<Case *> cases);
 
     /*!
      * \brief GetNextCaseForEvaluation Get the next case to be evaluated.

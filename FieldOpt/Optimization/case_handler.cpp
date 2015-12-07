@@ -49,6 +49,13 @@ void CaseHandler::AddNewCase(Case *c)
     cases_[c->id()] = c;
 }
 
+void CaseHandler::AddNewCases(QList<Case *> cases)
+{
+    foreach (Case *c, cases) {
+        AddNewCase(c);
+    }
+}
+
 Case *CaseHandler::GetNextCaseForEvaluation()
 {
     if (evaluation_queue_.size() == 0) throw CaseHandlerException("The evaluation queue contains no cases.");
