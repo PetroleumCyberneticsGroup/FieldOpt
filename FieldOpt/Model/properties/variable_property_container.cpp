@@ -58,14 +58,32 @@ BinaryProperty *VariablePropertyContainer::GetBinaryVariable(QUuid id) const
 
 DiscreteProperty *VariablePropertyContainer::GetDiscreteVariable(QUuid id) const
 {
-    if (!discrete_variables_->contains(id)) throw VariableIdDoesNotExistException("Integer variable not found.");
+    if (!discrete_variables_->contains(id)) throw VariableIdDoesNotExistException("Discrete variable not found.");
     return discrete_variables_->value(id);
 }
 
 ContinousProperty *VariablePropertyContainer::GetContinousVariable(QUuid id) const
 {
-    if (!continous_variables_->contains(id)) throw VariableIdDoesNotExistException("Real variable not found.");
+    if (!continous_variables_->contains(id)) throw VariableIdDoesNotExistException("Continous variable not found.");
     return continous_variables_->value(id);
+}
+
+void VariablePropertyContainer::SetBinaryVariableValue(QUuid id, bool val)
+{
+    if (!binary_variables_->contains(id)) throw VariableIdDoesNotExistException("Binary variable not found.");
+    else binary_variables_->value(id)->setValue(val);
+}
+
+void VariablePropertyContainer::SetDiscreteVariableValue(QUuid id, int val)
+{
+    if (!discrete_variables_->contains(id)) throw VariableIdDoesNotExistException("Integer variable not found.");
+    else discrete_variables_->value(id)->setValue(val);
+}
+
+void VariablePropertyContainer::SetContinousVariableValue(QUuid id, double val)
+{
+    if (!continous_variables_->contains(id)) throw VariableIdDoesNotExistException("Continous variable not found.");
+    else continous_variables_->value(id)->setValue(val);
 }
 
 QHash<QUuid, bool> VariablePropertyContainer::GetBinaryVariableValues() const

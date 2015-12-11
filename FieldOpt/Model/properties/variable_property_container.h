@@ -61,6 +61,9 @@ public:
     BinaryProperty *GetBinaryVariable(QUuid id) const; //!< Get the binary variable with index id.
     DiscreteProperty *GetDiscreteVariable(QUuid id) const; //!< Get the discrete variable with index id.
     ContinousProperty *GetContinousVariable(QUuid id) const; //!< Get the continous variable with index id.
+    void SetBinaryVariableValue(QUuid id, bool val); //!< Set the value of a binary variable.
+    void SetDiscreteVariableValue(QUuid id, int val); //!< Set the value of a binary variable.
+    void SetContinousVariableValue(QUuid id, double val); //!< Set the value of a binary variable.
     QHash<QUuid, BinaryProperty *> *GetBinaryVariables() const { return binary_variables_; } //!< Get all binary variables
     QHash<QUuid, DiscreteProperty *> *GetDiscreteVariables() const { return discrete_variables_; } //!< Get all discrete variables
     QHash<QUuid, ContinousProperty *> *GetContinousVariables() const { return continous_variables_; } //!< Get all continous variables

@@ -25,6 +25,8 @@
 
 #include "GTest/Model/test_fixture_model_base.h"
 #include "Model/model.h"
+#include "Optimization/case.h"
+#include "Model/wells/wellbore/trajectory.h"
 #include <iostream>
 
 namespace {
@@ -84,6 +86,34 @@ TEST_F(ModelTest, Variables) {
     EXPECT_EQ(12, model_->variables()->GetDiscreteVariableIdsWithName("PROD-WELLBLOCKS-ALL").size()); // Three variables pr. block (i,j,k)
     foreach (int value, model_->variables()->GetDiscreteVariableValues().values()) {
         EXPECT_GE(value, 0);
+    }
+}
+
+TEST_F(ModelTest, ApplyCase) {
+    Optimization::Case *c = new ::Optimization::Case(model_->variables()->GetBinaryVariableValues(),
+                                                     model_->variables()->GetDiscreteVariableValues(),
+                                                     model_->variables()->GetContinousVariableValues());
+
+    // Set all continous variables to 1.0 (should affect BHP and Transmissibility in the model)
+    foreach (QUuid key, c->real_variables().keys()) {
+        c->set_real_variable_value(key, 1.0);
+    }
+
+    // Set all integer coordinates to 2 (should affect positions for all well blocks)
+    foreach (QUuid key, c->integer_variables().keys()) {
+        c->set_integer_variable_value(key, 2);
+    }
+
+    model_->ApplyCase(c);
+
+    foreach (Model::Wells::Control *control, *model_->wells()->first()->controls()) {
+        EXPECT_FLOAT_EQ(1.0, control->bhp());
+    }
+
+    foreach (Model::Wells::Wellbore::WellBlock *wb, *model_->wells()->first()->trajectory()->GetWellBlocks()) {
+        EXPECT_EQ(2, wb->i());
+        EXPECT_EQ(2, wb->j());
+        EXPECT_EQ(2, wb->k());
     }
 }
 
