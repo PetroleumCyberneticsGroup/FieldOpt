@@ -34,6 +34,7 @@
 #include "properties/variable_property_handler.h"
 #include "wells/well.h"
 #include "Utilities/settings/model.h"
+#include "Optimization/case.h"
 
 namespace Model {
 
@@ -60,6 +61,12 @@ public:
      * \brief wells Get a list of all the wells in the model.
      */
     QList<Wells::Well *> *wells() const { return wells_; }
+
+    /*!
+     * \brief ApplyCase Applies the variable values from a case to the variables in the model.
+     * \param c Case to apply the variable values of.
+     */
+    void ApplyCase(Optimization::Case *c);
 
 private:
     Reservoir::Reservoir *reservoir_;

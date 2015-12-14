@@ -30,61 +30,131 @@ namespace Properties {
 
 VariablePropertyContainer::VariablePropertyContainer()
 {
-    next_binary_id_ = 0;
-    next_discrete_id_ = 0;
-    next_continous_id_ = 0;
-
-    binary_variables_ = new QHash<int, BinaryProperty *>();
-    discrete_variables_ = new QHash<int, DiscreteProperty *>();
-    continous_variables_ = new QHash<int, ContinousProperty *>();
+    binary_variables_ = new QHash<QUuid, BinaryProperty *>();
+    discrete_variables_ = new QHash<QUuid, DiscreteProperty *>();
+    continous_variables_ = new QHash<QUuid, ContinousProperty *>();
 }
 
 void VariablePropertyContainer::AddVariable(BinaryProperty *var)
 {
-    binary_variables_->insert(next_binary_id_++, var);
+    binary_variables_->insert(var->id(), var);
 }
 
 void VariablePropertyContainer::AddVariable(DiscreteProperty *var)
 {
-    discrete_variables_->insert(next_discrete_id_++, var);
+    discrete_variables_->insert(var->id(), var);
 }
 
 void VariablePropertyContainer::AddVariable(ContinousProperty *var)
 {
-    continous_variables_->insert(next_continous_id_++, var);
+    continous_variables_->insert(var->id(), var);
 }
 
-BinaryProperty *VariablePropertyContainer::GetBinaryVariable(int id) const
+BinaryProperty *VariablePropertyContainer::GetBinaryVariable(QUuid id) const
 {
     if (!binary_variables_->contains(id)) throw VariableIdDoesNotExistException("Binary variable not found.");
     return binary_variables_->value(id);
 }
 
-DiscreteProperty *VariablePropertyContainer::GetDiscreteVariable(int id) const
+DiscreteProperty *VariablePropertyContainer::GetDiscreteVariable(QUuid id) const
 {
-    if (!discrete_variables_->contains(id)) throw VariableIdDoesNotExistException("Integer variable not found.");
+    if (!discrete_variables_->contains(id)) throw VariableIdDoesNotExistException("Discrete variable not found.");
     return discrete_variables_->value(id);
 }
 
-ContinousProperty *VariablePropertyContainer::GetContinousVariable(int id) const
+ContinousProperty *VariablePropertyContainer::GetContinousVariable(QUuid id) const
 {
-    if (!continous_variables_->contains(id)) throw VariableIdDoesNotExistException("Real variable not found.");
+    if (!continous_variables_->contains(id)) throw VariableIdDoesNotExistException("Continous variable not found.");
     return continous_variables_->value(id);
 }
 
-void VariablePropertyContainer::DeleteBinaryVariable(int id)
+void VariablePropertyContainer::SetBinaryVariableValue(QUuid id, bool val)
+{
+    if (!binary_variables_->contains(id)) throw VariableIdDoesNotExistException("Binary variable not found.");
+    else binary_variables_->value(id)->setValue(val);
+}
+
+void VariablePropertyContainer::SetDiscreteVariableValue(QUuid id, int val)
+{
+    if (!discrete_variables_->contains(id)) throw VariableIdDoesNotExistException("Integer variable not found.");
+    else discrete_variables_->value(id)->setValue(val);
+}
+
+void VariablePropertyContainer::SetContinousVariableValue(QUuid id, double val)
+{
+    if (!continous_variables_->contains(id)) throw VariableIdDoesNotExistException("Continous variable not found.");
+    else continous_variables_->value(id)->setValue(val);
+}
+
+QHash<QUuid, bool> VariablePropertyContainer::GetBinaryVariableValues() const
+{
+    QHash<QUuid, bool> binary_values = QHash<QUuid, bool>();
+    foreach (QUuid key, binary_variables_->keys())
+        binary_values[key] = binary_variables_->value(key)->value();
+    return binary_values;
+}
+
+QHash<QUuid, int> VariablePropertyContainer::GetDiscreteVariableValues() const
+{
+    QHash<QUuid, int> discrete_values = QHash<QUuid, int>();
+    foreach (QUuid key, discrete_variables_->keys()) {
+        discrete_values[key] = discrete_variables_->value(key)->value();
+    }
+    return discrete_values;
+}
+
+QHash<QUuid, double> VariablePropertyContainer::GetContinousVariableValues() const
+{
+    QHash<QUuid, double> continous_values = QHash<QUuid, double>();
+    foreach (QUuid key, continous_variables_->keys()) {
+        continous_values[key] = continous_variables_->value(key)->value();
+    }
+    return continous_values;
+}
+
+QList<QUuid> VariablePropertyContainer::GetBinaryVariableIdsWithName(QString var_name) const
+{
+    QList<QUuid> ids_for_variables_with_name = QList<QUuid>();
+    foreach (Properties::BinaryProperty * prop, binary_variables_->values()) {
+        if (QString::compare(prop->name(), var_name) == 0)
+            ids_for_variables_with_name.append(prop->id());
+    }
+    return ids_for_variables_with_name;
+}
+
+QList<QUuid> VariablePropertyContainer::GetDiscreteVariableIdsWithName(QString var_name) const
+{
+    QList<QUuid> ids_for_variables_with_name = QList<QUuid>();
+    foreach (Properties::DiscreteProperty *prop, discrete_variables_->values()) {
+        if (QString::compare(prop->name(), var_name) == 0)
+            ids_for_variables_with_name.append(prop->id());
+    }
+    return ids_for_variables_with_name;
+}
+
+QList<QUuid> VariablePropertyContainer::GetContinousVariableIdsWithName(QString var_name) const
+{
+    QList<QUuid> ids_for_variables_with_name = QList<QUuid>();
+    foreach (Properties::ContinousProperty *prop, continous_variables_->values()) {
+        if (QString::compare(prop->name(), var_name) == 0)
+            ids_for_variables_with_name.append(prop->id());
+    }
+    return ids_for_variables_with_name;
+}
+
+void VariablePropertyContainer::DeleteBinaryVariable(QUuid id)
 {
     if (!binary_variables_->contains(id)) throw VariableIdDoesNotExistException("Binary variable not found. Unable to delete.");
     binary_variables_->remove(id);
 }
 
-void VariablePropertyContainer::DeleteDiscreteVariable(int id)
+void VariablePropertyContainer::DeleteDiscreteVariable(QUuid id)
 {
     if (!discrete_variables_->contains(id)) throw VariableIdDoesNotExistException("Integer variable not found. Unable to delete.");
     discrete_variables_->remove(id);
 }
 
-void VariablePropertyContainer::DeleteContinousVariable(int id)
+void VariablePropertyContainer::DeleteContinousVariable(QUuid id)
 {
     if (!continous_variables_->contains(id)) throw VariableIdDoesNotExistException("Real variable not found. Unable to delete");
     continous_variables_->remove(id);

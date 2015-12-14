@@ -53,28 +53,33 @@ VariablePropertyHandler::VariablePropertyHandler(Utilities::Settings::Model sett
                 for (int var_time_idx = 0; var_time_idx < settings_var.time_steps.size(); ++var_time_idx) { // Variable time steps
                     int control_index = wellControlIndex(new_well, settings_var.time_steps[var_time_idx]);
                     new_well->controls_[control_index]->bhp_ = true;
+                    new_well->controls_[control_index]->variable_name_ = settings_var.name;
                 }
                 break;
             case Utilities::Settings::Model::WellVariableType::Rate:
                 for (int var_time_idx = 0; var_time_idx < settings_var.time_steps.size(); ++var_time_idx) { // Variable time steps
                     int control_index = wellControlIndex(new_well, settings_var.time_steps[var_time_idx]);
                     new_well->controls_[control_index]->rate_ = true;
+                    new_well->controls_[control_index]->variable_name_ = settings_var.name;
                 }
                 break;
             case Utilities::Settings::Model::WellVariableType::OpenShut:
                 for (int var_time_idx = 0; var_time_idx < settings_var.time_steps.size(); ++var_time_idx) { // Variable time steps
                     int control_index = wellControlIndex(new_well, settings_var.time_steps[var_time_idx]);
                     new_well->controls_[control_index]->open_ = true;
+                    new_well->controls_[control_index]->variable_name_ = settings_var.name;
                 }
                 break;
             case Utilities::Settings::Model::WellVariableType::Transmissibility:
                 for (int block_nr = 0; block_nr < settings_var.blocks.size(); ++block_nr) {
                     new_well->getPerforation(&settings_var.blocks[block_nr].position)->transmissibility_factor_ = true;
+                    new_well->getPerforation(&settings_var.blocks[block_nr].position)->variable_name_ = settings_var.name;
                 }
                 break;
             case Utilities::Settings::Model::WellVariableType::WellBlockPosition:
                 for (int block_nr = 0; block_nr < settings_var.blocks.size(); ++block_nr) {
                     new_well->getWellBlock(settings_var.blocks[block_nr].id)->position_ = true;
+                    new_well->getWellBlock(settings_var.blocks[block_nr].id)->variable_name_ = settings_var.name;
                 }
             }
         }

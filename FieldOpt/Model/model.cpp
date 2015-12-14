@@ -39,4 +39,17 @@ Model::Model(Utilities::Settings::Model settings)
     }
 }
 
+void Model::ApplyCase(Optimization::Case *c)
+{
+    foreach (QUuid key, c->binary_variables().keys()) {
+        variable_container_->SetBinaryVariableValue(key, c->binary_variables()[key]);
+    }
+    foreach (QUuid key, c->integer_variables().keys()) {
+        variable_container_->SetDiscreteVariableValue(key, c->integer_variables()[key]);
+    }
+    foreach (QUuid key, c->real_variables().keys()) {
+        variable_container_->SetContinousVariableValue(key, c->real_variables()[key]);
+    }
+}
+
 }

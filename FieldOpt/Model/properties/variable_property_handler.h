@@ -51,13 +51,16 @@ public:
         friend class Well;
         Control(int time) {
             time_ = time;
+            variable_name_ = "";
         }
         int time_;
         bool open_ = false;
         bool rate_ = false;
         bool bhp_ = false;
+        QString variable_name_;
 
     public:
+        QString variable_name() const { return variable_name_; } //!< Get the name of the variable
         int time() const { return time_; }  //!< Get the time step for this control.
         bool open() const { return open_; } //!< Returns true if the well's open/closed state can vary at this time step, otherwise false.
         bool rate() const { return rate_; } //!< Returns true if the well's rate can vary at this time step, otherwise false.
@@ -72,12 +75,15 @@ public:
         friend class Well;
         WellBlock(::Utilities::Settings::Model::WellBlock well_block) {
             id_ = well_block.id;
+            variable_name_ = "";
             position_ = false;
         }
+        QString variable_name_;
         int id_;
         bool position_;
 
     public:
+        QString variable_name() const { return variable_name_; } //!< Get the name of the variable
         bool position() const { return position_; }
     };
 
@@ -91,12 +97,15 @@ public:
             id_ = completion.id;
             block_ = completion.well_block;
             transmissibility_factor_ = false;
+            variable_name_ = "";
         }
         int id_;
         ::Utilities::Settings::Model::WellBlock block_;
         bool transmissibility_factor_;
+        QString variable_name_;
 
     public:
+        QString variable_name() const { return variable_name_; } //!< Get the name of the variable
         bool transmissibility_factor() const { return transmissibility_factor_; }
     };
 

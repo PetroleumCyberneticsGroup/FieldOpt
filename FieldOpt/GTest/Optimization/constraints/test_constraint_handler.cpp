@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- * integervariable.cpp
  *
- * Created: 23.09.2015 2015 by einar
+ *
+ * Created: 04.12.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,43 +23,30 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include "discrete_property.h"
-#include "property_exceptions.h"
+#include "GTest/Optimization/test_fixture_case.h"
+#include "Optimization/constraints/constraint_handler.h"
+#include <QString>
 
-namespace Model {
-namespace Properties {
+namespace {
 
-DiscreteProperty::DiscreteProperty(int value)
-    : Property(Discrete)
-{
-    value_ = value;
+class ConstraintHandlerTest : public CaseTestFixture {
+protected:
+    ConstraintHandlerTest() {
+        constraint_handler_ = new ::Optimization::Constraints::ConstraintHandler(optimizer_settings_->constraints(), model_->variables());
+    }
+    virtual ~ConstraintHandlerTest() {}
+    virtual void SetUp() {}
+
+    Optimization::Constraints::ConstraintHandler *constraint_handler_;
+};
+
+TEST_F(ConstraintHandlerTest, Constructor) {
+    EXPECT_EQ(1, constraint_handler_->constraints().size());
+    EXPECT_STREQ(constraint_handler_->constraints().first()->name().toLatin1().constData(), "PROD-BHP-1");
 }
 
-void DiscreteProperty::setValue(int value)
-{
-    if (IsLocked()) throw PropertyLockedException("Cant change locked integer variable.");
-    else value_ = value;
+TEST_F(ConstraintHandlerTest, BaseCaseSatasfaction) {
+    EXPECT_TRUE(constraint_handler_->constraints().first()->CaseSatisfiesConstraint(base_case_));
 }
 
-void DiscreteProperty::Add(int i)
-{
-    if (IsLocked()) throw PropertyLockedException("Cant add to a locked integer variable");
-    else value_ += i;
-}
-
-bool DiscreteProperty::Equals(const DiscreteProperty *other) const
-{
-    if (this->value() == other->value()) return true;
-    else return false;
-}
-
-QString DiscreteProperty::ToString() const
-{
-    return QString("Type:\tDiscrete\nUUID:\t%1\nName:\t%2\nValue:\t%3\n").arg(id().toString()).arg(name()).arg(value());
-}
-
-
-
-
-}
 }

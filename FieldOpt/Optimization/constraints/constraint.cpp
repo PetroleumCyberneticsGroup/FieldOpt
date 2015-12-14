@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- * integervariable.cpp
  *
- * Created: 23.09.2015 2015 by einar
+ *
+ * Created: 01.12.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,43 +23,17 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include "discrete_property.h"
-#include "property_exceptions.h"
+#include "constraint.h"
 
-namespace Model {
-namespace Properties {
+namespace Optimization { namespace Constraints {
 
-DiscreteProperty::DiscreteProperty(int value)
-    : Property(Discrete)
-{
-    value_ = value;
-}
-
-void DiscreteProperty::setValue(int value)
-{
-    if (IsLocked()) throw PropertyLockedException("Cant change locked integer variable.");
-    else value_ = value;
-}
-
-void DiscreteProperty::Add(int i)
-{
-    if (IsLocked()) throw PropertyLockedException("Cant add to a locked integer variable");
-    else value_ += i;
-}
-
-bool DiscreteProperty::Equals(const DiscreteProperty *other) const
-{
-    if (this->value() == other->value()) return true;
-    else return false;
-}
-
-QString DiscreteProperty::ToString() const
-{
-    return QString("Type:\tDiscrete\nUUID:\t%1\nName:\t%2\nValue:\t%3\n").arg(id().toString()).arg(name()).arg(value());
+Constraint::Constraint(Utilities::Settings::Optimizer::Constraint settings, Model::Properties::VariablePropertyContainer *variables){
+    name_ = settings.name;
+    affected_binary_variables_ = variables->GetBinaryVariableIdsWithName(settings.name);
+    affected_integer_variables_ = variables->GetDiscreteVariableIdsWithName(settings.name);
+    affected_real_variables_ = variables->GetContinousVariableIdsWithName(settings.name);
 }
 
 
 
-
-}
-}
+}}

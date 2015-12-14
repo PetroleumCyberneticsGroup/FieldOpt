@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- * integervariable.cpp
  *
- * Created: 23.09.2015 2015 by einar
+ *
+ * Created: 30.11.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,43 +23,40 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include "discrete_property.h"
-#include "property_exceptions.h"
+#ifndef OPTIMIZATION_EXCEPTIONS
+#define OPTIMIZATION_EXCEPTIONS
 
-namespace Model {
-namespace Properties {
+#include <stdexcept>
+#include <string>
+#include <QString>
 
-DiscreteProperty::DiscreteProperty(int value)
-    : Property(Discrete)
-{
-    value_ = value;
-}
+namespace Optimization {
 
-void DiscreteProperty::setValue(int value)
-{
-    if (IsLocked()) throw PropertyLockedException("Cant change locked integer variable.");
-    else value_ = value;
-}
+class ObjectiveFunctionException : public std::runtime_error {
+public:
+    ObjectiveFunctionException(const QString &message)
+        : std::runtime_error(message.toStdString()) {}
+};
 
-void DiscreteProperty::Add(int i)
-{
-    if (IsLocked()) throw PropertyLockedException("Cant add to a locked integer variable");
-    else value_ += i;
-}
+class VariableException : public std::runtime_error {
+public:
+    VariableException(const QString &message)
+        : std::runtime_error(message.toStdString()) {}
+};
 
-bool DiscreteProperty::Equals(const DiscreteProperty *other) const
-{
-    if (this->value() == other->value()) return true;
-    else return false;
-}
+class CaseHandlerException : public std::runtime_error {
+public:
+    CaseHandlerException(const QString &message)
+        : std::runtime_error(message.toStdString()) {}
+};
 
-QString DiscreteProperty::ToString() const
-{
-    return QString("Type:\tDiscrete\nUUID:\t%1\nName:\t%2\nValue:\t%3\n").arg(id().toString()).arg(name()).arg(value());
-}
-
-
-
+class OptimizerInitializationException : public std::runtime_error {
+public:
+    OptimizerInitializationException(const QString &message)
+        : std::runtime_error("Unable to initialize the optimizer: " + message.toStdString()) {}
+};
 
 }
-}
+
+#endif // OPTIMIZATION_EXCEPTIONS
+

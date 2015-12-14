@@ -55,6 +55,8 @@ public:
      */
     bool Equals(const ContinousProperty *other, double epsilon=0.0) const;
 
+    QString ToString() const;
+
 private:
     double value_;
 };

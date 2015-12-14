@@ -25,6 +25,9 @@
 
 #include "GTest/Model/test_fixture_model_base.h"
 #include "Model/model.h"
+#include "Optimization/case.h"
+#include "Model/wells/wellbore/trajectory.h"
+#include <iostream>
 
 namespace {
 
@@ -57,24 +60,60 @@ TEST_F(ModelTest, Variables) {
     EXPECT_TRUE(variable_handler_->GetControl("PROD", 0)->bhp());
     EXPECT_TRUE(variable_handler_->GetControl("PROD", 50)->bhp());
     EXPECT_TRUE(variable_handler_->GetControl("PROD", 365)->bhp());
+    EXPECT_STREQ("PROD-BHP-1", variable_handler_->GetControl("PROD", 0)->variable_name().toLatin1().constData());
+    EXPECT_STREQ("PROD-BHP-1", variable_handler_->GetControl("PROD", 50)->variable_name().toLatin1().constData());
+    EXPECT_STREQ("PROD-BHP-1", variable_handler_->GetControl("PROD", 365)->variable_name().toLatin1().constData());
+    EXPECT_EQ(3, model_->variables()->GetContinousVariableIdsWithName("PROD-BHP-1").size());
     EXPECT_EQ(3, model_->wells()->at(0)->controls()->size());
-    EXPECT_FLOAT_EQ(2000.0, model_->variables()->GetContinousVariable(0)->value());
-    EXPECT_FLOAT_EQ(2000.0, model_->variables()->GetContinousVariable(1)->value());
-    EXPECT_FLOAT_EQ(2000.0, model_->variables()->GetContinousVariable(2)->value());
 
     // 2 Continous variables for the transmissibility of the producer's two perforations
     EXPECT_TRUE(variable_handler_->GetPerforation(0)->transmissibility_factor());
     EXPECT_TRUE(variable_handler_->GetPerforation(1)->transmissibility_factor());
-    EXPECT_FLOAT_EQ(1.0, model_->variables()->GetContinousVariable(3)->value());
-    EXPECT_FLOAT_EQ(1.0, model_->variables()->GetContinousVariable(4)->value());
+    EXPECT_STREQ("PROD-TRANS-ALL", variable_handler_->GetPerforation(0)->variable_name().toLatin1().constData());
+    EXPECT_STREQ("PROD-TRANS-ALL", variable_handler_->GetPerforation(1)->variable_name().toLatin1().constData());
+    EXPECT_EQ(2, model_->variables()->GetContinousVariableIdsWithName("PROD-TRANS-ALL").size());
+
 
     // 12 Discrete variables for the positions for the producer's four well blocks
     EXPECT_TRUE(variable_handler_->GetWellBlock(0)->position());
     EXPECT_TRUE(variable_handler_->GetWellBlock(1)->position());
     EXPECT_TRUE(variable_handler_->GetWellBlock(2)->position());
     EXPECT_TRUE(variable_handler_->GetWellBlock(3)->position());
-    for (int i = 0; i < 11; ++i) {
-        EXPECT_GE(model_->variables()->GetDiscreteVariable(i)->value(), 0);
+    EXPECT_STREQ("PROD-WELLBLOCKS-ALL", variable_handler_->GetWellBlock(0)->variable_name().toLatin1().constData());
+    EXPECT_STREQ("PROD-WELLBLOCKS-ALL", variable_handler_->GetWellBlock(1)->variable_name().toLatin1().constData());
+    EXPECT_STREQ("PROD-WELLBLOCKS-ALL", variable_handler_->GetWellBlock(2)->variable_name().toLatin1().constData());
+    EXPECT_STREQ("PROD-WELLBLOCKS-ALL", variable_handler_->GetWellBlock(3)->variable_name().toLatin1().constData());
+    EXPECT_EQ(12, model_->variables()->GetDiscreteVariableIdsWithName("PROD-WELLBLOCKS-ALL").size()); // Three variables pr. block (i,j,k)
+    foreach (int value, model_->variables()->GetDiscreteVariableValues().values()) {
+        EXPECT_GE(value, 0);
+    }
+}
+
+TEST_F(ModelTest, ApplyCase) {
+    Optimization::Case *c = new ::Optimization::Case(model_->variables()->GetBinaryVariableValues(),
+                                                     model_->variables()->GetDiscreteVariableValues(),
+                                                     model_->variables()->GetContinousVariableValues());
+
+    // Set all continous variables to 1.0 (should affect BHP and Transmissibility in the model)
+    foreach (QUuid key, c->real_variables().keys()) {
+        c->set_real_variable_value(key, 1.0);
+    }
+
+    // Set all integer coordinates to 2 (should affect positions for all well blocks)
+    foreach (QUuid key, c->integer_variables().keys()) {
+        c->set_integer_variable_value(key, 2);
+    }
+
+    model_->ApplyCase(c);
+
+    foreach (Model::Wells::Control *control, *model_->wells()->first()->controls()) {
+        EXPECT_FLOAT_EQ(1.0, control->bhp());
+    }
+
+    foreach (Model::Wells::Wellbore::WellBlock *wb, *model_->wells()->first()->trajectory()->GetWellBlocks()) {
+        EXPECT_EQ(2, wb->i());
+        EXPECT_EQ(2, wb->j());
+        EXPECT_EQ(2, wb->k());
     }
 }
 

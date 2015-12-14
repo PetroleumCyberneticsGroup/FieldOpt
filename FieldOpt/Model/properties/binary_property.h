@@ -42,6 +42,7 @@ public:
 
     bool value() const { return value_; }
     void setValue(bool value);
+    QString ToString() const;
 
 private:
     bool value_;

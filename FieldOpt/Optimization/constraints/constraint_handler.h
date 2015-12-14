@@ -1,8 +1,8 @@
 /******************************************************************************
  *
- * integervariable.cpp
  *
- * Created: 23.09.2015 2015 by einar
+ *
+ * Created: 04.12.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,43 +23,33 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include "discrete_property.h"
-#include "property_exceptions.h"
+#ifndef CONSTRAINTHANDLER_H
+#define CONSTRAINTHANDLER_H
+#include "constraint.h"
+#include "box_constraint.h"
+#include "Optimization/case.h"
+#include "Model/properties/variable_property_container.h"
+#include "Utilities/settings/optimizer.h"
+#include <QList>
 
-namespace Model {
-namespace Properties {
+namespace Optimization { namespace Constraints {
 
-DiscreteProperty::DiscreteProperty(int value)
-    : Property(Discrete)
+/*!
+ * \brief The ConstraintHandler class facilitiates the initialization and usage of multiple constraints.
+ */
+class ConstraintHandler
 {
-    value_ = value;
-}
+public:
+    ConstraintHandler(QList<Utilities::Settings::Optimizer::Constraint> *constraints, Model::Properties::VariablePropertyContainer *variables);
+    bool CaseSatisfiesConstraints(Case *c); //!< Check if a Case satisfies _all_ constraints.
+    void SnapCaseToConstraints(Case *c); //!< Snap all variables to _all_ constraints.
 
-void DiscreteProperty::setValue(int value)
-{
-    if (IsLocked()) throw PropertyLockedException("Cant change locked integer variable.");
-    else value_ = value;
-}
+    QList<Constraint *> constraints() const { return constraints_; }
 
-void DiscreteProperty::Add(int i)
-{
-    if (IsLocked()) throw PropertyLockedException("Cant add to a locked integer variable");
-    else value_ += i;
-}
+private:
+    QList<Constraint *> constraints_;
+};
 
-bool DiscreteProperty::Equals(const DiscreteProperty *other) const
-{
-    if (this->value() == other->value()) return true;
-    else return false;
-}
+}}
 
-QString DiscreteProperty::ToString() const
-{
-    return QString("Type:\tDiscrete\nUUID:\t%1\nName:\t%2\nValue:\t%3\n").arg(id().toString()).arg(name()).arg(value());
-}
-
-
-
-
-}
-}
+#endif // CONSTRAINTHANDLER_H
