@@ -9,7 +9,8 @@ SUBDIRS = \
     Model \
     Utilities \
     Optimization \
-    Simulation
+    Simulation \
+    Runner
 
 Library.depends = ERTWrapper
 GTest.depends = ERTWrapper Utilities Model Optimization Simulation
