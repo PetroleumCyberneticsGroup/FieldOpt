@@ -55,7 +55,7 @@ public:
     bool verbose() const { return verbose_; }
     bool overwrite_existing() const { return overwrite_existing_; }
     int max_parallel_sims() const { return max_parallel_sims_; }
-    RunnerType runner_type() const { return max_parallel_sims_; }
+    RunnerType runner_type() const { return runner_type_; }
 
 private:
     QString driver_file_; //!< Path to the driver file to be used by FieldOpt.
