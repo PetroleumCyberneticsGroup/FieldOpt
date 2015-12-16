@@ -19,9 +19,11 @@ LIBS += -lboost_program_options
 
 SOURCES += main.cpp \
     runtime_settings.cpp \
-    runners/main_runner.cpp
+    runners/main_runner.cpp \
+    runners/abstract_runner.cpp
 
 HEADERS += \
     runtime_settings.h \
-    runners/main_runner.h
+    runners/main_runner.h \
+    runners/abstract_runner.h
 
