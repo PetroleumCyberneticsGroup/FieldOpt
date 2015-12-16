@@ -116,3 +116,12 @@ void Utilities::FileHandling::DeleteFile(QString path)
     }
     else throw FileNotFoundException(path);
 }
+
+bool Utilities::FileHandling::DirectoryIsEmpty(QString folder_path)
+{
+    if (!DirectoryExists(folder_path)) return false;
+    QDir directory = QDir(folder_path);
+    if (directory.entryInfoList(QDir::NoDotAndDotDot|QDir::AllEntries).count() == 0)
+        return true;
+    else return false;
+}

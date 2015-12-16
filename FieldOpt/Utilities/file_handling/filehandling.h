@@ -49,6 +49,13 @@ bool FileExists(QString file_path);
 bool DirectoryExists(QString folder_path);
 
 /*!
+ * \brief DirectoryIsEmpty Check whether or not a directory is empty.
+ * \param folder_path Path a folder to check.
+ * \return True if the directory is empty, otherwise false.
+ */
+bool DirectoryIsEmpty(QString folder_path);
+
+/*!
  * \brief ParentDirectoryExists Checks whether a specified file's parent directory exists.
  * \param file_path Path a file (the file itself does not have to exist).
  * \return True if the parent directory exists, otherwise false.
