@@ -30,7 +30,7 @@ namespace Runner {
 RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
 {
     if (vm.count("input-file")) {
-        input_file_ = QString::fromStdString(vm["input-file"].as<std::string>());
+        driver_file_ = QString::fromStdString(vm["input-file"].as<std::string>());
         if (!Utilities::FileHandling::FileExists(input_file_))
             throw std::runtime_error("The specified driver file does not exist.");
     } else throw std::runtime_error("An input file must be specified.");

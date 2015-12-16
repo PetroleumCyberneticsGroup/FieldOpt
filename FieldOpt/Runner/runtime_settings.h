@@ -49,8 +49,16 @@ public:
      */
     enum RunnerType { SERIAL };
 
+    QString driver_file() const { return driver_file_; }
+    QString output_dir() const { return output_dir_; }
+    bool show_progress() const { return show_progress_; }
+    bool verbose() const { return verbose_; }
+    bool overwrite_existing() const { return overwrite_existing_; }
+    int max_parallel_sims() const { return max_parallel_sims_; }
+    RunnerType runner_type() const { return max_parallel_sims_; }
+
 private:
-    QString input_file_; //!< Path to the driver file to be used by FieldOpt.
+    QString driver_file_; //!< Path to the driver file to be used by FieldOpt.
     QString output_dir_; //!< Directory in which to write all output.
     bool show_progress_; //!< Whether or not the progress of the optimization run should be printed to the terminal.
     bool verbose_; //!< Verbose mode (i.e. whether or not to print detailed/debug/diagnostic info to the console while running).
