@@ -36,22 +36,29 @@ namespace po = boost::program_options;
 
 namespace Runner {
 
+/*!
+ * \brief The RuntimeSettings class Parses, validates and stores any settings passed to FieldOpt through the command line.
+ */
 class RuntimeSettings
 {
 public:
     RuntimeSettings(po::variables_map vm);
+
+    /*!
+     * \brief The RunnerType enum lists the names of available runners.
+     */
     enum RunnerType { SERIAL };
 
 private:
-    QString input_file_;
-    QString output_dir_;
-    bool show_progress_;
-    bool verbose_;
-    bool overwrite_existing_;
-    int max_parallel_sims_;
-    RunnerType runner_type_;
+    QString input_file_; //!< Path to the driver file to be used by FieldOpt.
+    QString output_dir_; //!< Directory in which to write all output.
+    bool show_progress_; //!< Whether or not the progress of the optimization run should be printed to the terminal.
+    bool verbose_; //!< Verbose mode (i.e. whether or not to print detailed/debug/diagnostic info to the console while running).
+    bool overwrite_existing_; //!< Whether or not files in the specified output directory should be overwritten (only relevant if the directory is not empty).
+    int max_parallel_sims_; //!< Maximum number of parallel simulations to start. This is important to define if you for example have a limited number of simulator licenses.
+    RunnerType runner_type_; //!< The type of runner to be used (e.g. serial or parallel).
 
-    QString runnerTypeString();
+    QString runnerTypeString(); //!< Get a string representation of the runner type (used when printing settings to the terminal).
 };
 
 }

@@ -31,6 +31,9 @@
 
 namespace Runner {
 
+/*!
+ * \brief The MainRunner class takes care of initializing and starting the actual runner indicated in the runtime settings.
+ */
 class MainRunner
 {
 public:
