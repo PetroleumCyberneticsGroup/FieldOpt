@@ -31,7 +31,7 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
 {
     if (vm.count("input-file")) {
         driver_file_ = QString::fromStdString(vm["input-file"].as<std::string>());
-        if (!Utilities::FileHandling::FileExists(input_file_))
+        if (!Utilities::FileHandling::FileExists(driver_file_))
             throw std::runtime_error("The specified driver file does not exist.");
     } else throw std::runtime_error("An input file must be specified.");
 
@@ -59,8 +59,8 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
 
     if (verbose_) {
         std::cout << "FieldOpt runtime settings: " << std::endl;
-        std::cout << "Input file:     " << vm["input-file"].as<std::string>() << std::endl;
-        std::cout << "Output dir:     " <<vm["output-dir"].as<std::string>() << std::endl;
+        std::cout << "Input file:     " << driver_file_.toStdString() << std::endl;
+        std::cout << "Output dir:     " << output_dir().toStdString() << std::endl;
         std::cout << "Runner type:    " << runnerTypeString().toStdString() << std::endl;
         std::cout << "Show progress:  " << show_progress_ << std::endl;
         std::cout << "Verbose output: " << verbose_ << std::endl;
@@ -69,9 +69,12 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
     }
 }
 
+
+
 QString RuntimeSettings::runnerTypeString() {
     if (runner_type_ == RunnerType::SERIAL)
         return "serial";
+    else return "NOT SET";
 }
 
 }
