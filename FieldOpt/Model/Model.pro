@@ -4,8 +4,8 @@ include(../defaults.pri)
 CONFIG   -= app_bundle
 CONFIG += c++11
 
-LIBS += -L../ERTWrapper -lertwrapper
-LIBS += -L../Utilities -lutilities
+LIBS += -L$$OUT_PWD/../ERTWrapper -lertwrapper
+LIBS += -L$$OUT_PWD/../Utilities -lutilities
 
 TEMPLATE = lib
 

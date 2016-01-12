@@ -1,7 +1,6 @@
 include(../defaults.pri)
 
-QT += core
-QT -= gui
+CONFIG   -= app_bundle
 
 TARGET = FieldOpt
 CONFIG += console
@@ -10,10 +9,11 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 CONFIG += c++11
-LIBS += -L../Model -lmodel
-LIBS += -L../Optimization -loptimization
-LIBS += -L../Simulation -lsimulation
-LIBS += -L../Utilities -lutilities
+LIBS += -L$$OUT_PWD/../Model -lmodel
+LIBS += -L$$OUT_PWD/../Optimization -loptimization
+LIBS += -L$$OUT_PWD/../Simulation -lsimulation
+LIBS += -L$$OUT_PWD/../Utilities -lutilities
+LIBS += -L$$OUT_PWD/../ERTWrapper -lertwrapper
 LIBS += -lpthread -lgtest -pthread
 LIBS += -lboost_program_options
 
