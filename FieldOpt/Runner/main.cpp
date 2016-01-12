@@ -72,10 +72,10 @@ int main(int argc, char *argv[])
         }
 
         // Parse runtime settings
-        Runner::RuntimeSettings *runtime_settings = new Runner::RuntimeSettings(vm);
+        auto *runtime_settings = new Runner::RuntimeSettings(vm);
 
         // Initialize runner
-        Runner::MainRunner runner = Runner::MainRunner(runtime_settings);
+        auto runner = Runner::MainRunner(runtime_settings);
     }
     catch (std::exception &e) {
         std::cout << "error: " << e.what() << std::endl;

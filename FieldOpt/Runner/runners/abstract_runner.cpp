@@ -28,19 +28,15 @@
 #include "Simulation/simulator_interfaces/eclsimulator.h"
 
 namespace Runner {
-AbstractRunner::AbstractRunner()
-{
-
-}
 
 AbstractRunner::AbstractRunner(RuntimeSettings *runtime_settings)
 {
     runtime_settings_ = runtime_settings;
     settings_ = new Utilities::Settings::Settings(runtime_settings->driver_file());
-    model_ = new Model::Model(settings_->model());
-    base_case_ = new Optimization::Case(model_->variables()->GetBinaryVariables(),
-                                        model_->variables()->GetDiscreteVariables(),
-                                        model_->variables()->GetContinousVariables());
+    model_ = new Model::Model(*settings_->model());
+    base_case_ = new Optimization::Case(model_->variables()->GetBinaryVariableValues(),
+                                        model_->variables()->GetDiscreteVariableValues(),
+                                        model_->variables()->GetContinousVariableValues());
 
     // Initialize optimizer
     switch (settings_->optimizer()->type()) {
@@ -53,9 +49,9 @@ AbstractRunner::AbstractRunner(RuntimeSettings *runtime_settings)
     }
 
     // Initialize simulator
-    switch (settings_->simulator()) {
+    switch (settings_->simulator()->type()) {
     case ::Utilities::Settings::Simulator::SimulatorType::ECLIPSE:
-        simulator_ = new Simulation::SimulatorInterfaces::ECLSimulator(settings_->simulator(), model_);
+        simulator_ = new Simulation::SimulatorInterfaces::ECLSimulator(settings_, model_);
         break;
     default:
         throw std::runtime_error("Unable to initialize runner: simulator set in driver file not recognized.");
