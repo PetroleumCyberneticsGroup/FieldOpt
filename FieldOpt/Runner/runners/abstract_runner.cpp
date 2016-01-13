@@ -25,6 +25,7 @@
 
 #include "abstract_runner.h"
 #include "Optimization/optimizers/compass_search.h"
+#include "Optimization/objective/weightedsum.h"
 #include "Simulation/simulator_interfaces/eclsimulator.h"
 
 namespace Runner {
@@ -34,13 +35,43 @@ AbstractRunner::AbstractRunner(RuntimeSettings *runtime_settings)
     runtime_settings_ = runtime_settings;
     settings_ = new Utilities::Settings::Settings(runtime_settings->driver_file());
     model_ = new Model::Model(*settings_->model());
+
+    // Initialize simulator
+    switch (settings_->simulator()->type()) {
+    case ::Utilities::Settings::Simulator::SimulatorType::ECLIPSE:
+        if (runtime_settings_->verbose()) std::cout << "Using ECL100 reservoir simulator." << std::endl;
+        simulator_ = new Simulation::SimulatorInterfaces::ECLSimulator(settings_, model_);
+        break;
+    default:
+        throw std::runtime_error("Unable to initialize runner: simulator set in driver file not recognized.");
+    }
+
+    // Evaluate the base case if not already done.
+    if (!simulator_->results()->isAvailable()) {
+        if (runtime_settings_->verbose()) std::cout << "Simulating base case." << std::endl;
+        simulator_->Evaluate();
+    }
+
+    // Initialize objective function
+    switch (settings_->optimizer()->type()) {
+    case Utilities::Settings::Optimizer::ObjectiveType::WeightedSum:
+        if (runtime_settings->verbose()) std::cout << "Using WeightedSum-type objective function." << std::endl;
+        objective_function_ = new Optimization::Objective::WeightedSum(settings_->optimizer(), simulator_->results());
+        break;
+    default:
+        throw std::runtime_error("Unable to initialize runner: objective function type not recognized.");
+    }
+
     base_case_ = new Optimization::Case(model_->variables()->GetBinaryVariableValues(),
                                         model_->variables()->GetDiscreteVariableValues(),
                                         model_->variables()->GetContinousVariableValues());
+    base_case_->set_objective_function_value(objective_function_->value());
+    if (runtime_settings_->verbose()) std::cout << "Base case objective function value set to: " << base_case_->objective_function_value() << std::endl;
 
     // Initialize optimizer
     switch (settings_->optimizer()->type()) {
     case Utilities::Settings::Optimizer::OptimizerType::Compass:
+        if (runtime_settings_->verbose()) std::cout << "Using CompassSearch optimization algorithm." << std::endl;
         optimizer_ = new Optimization::Optimizers::CompassSearch(settings_->optimizer(), base_case_, model_->variables());
         break;
     default:
@@ -48,15 +79,7 @@ AbstractRunner::AbstractRunner(RuntimeSettings *runtime_settings)
         break;
     }
 
-    // Initialize simulator
-    switch (settings_->simulator()->type()) {
-    case ::Utilities::Settings::Simulator::SimulatorType::ECLIPSE:
-        simulator_ = new Simulation::SimulatorInterfaces::ECLSimulator(settings_, model_);
-        break;
-    default:
-        throw std::runtime_error("Unable to initialize runner: simulator set in driver file not recognized.");
-        break;
-    }
+
 }
 
 }

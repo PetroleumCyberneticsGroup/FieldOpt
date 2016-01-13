@@ -30,13 +30,16 @@
 #include "Model/model.h"
 #include "Optimization/optimizer.h"
 #include "Optimization/case.h"
+#include "Optimization/objective/objective.h"
 #include "Simulation/simulator_interfaces/simulator.h"
 #include "Utilities/settings/settings.h"
 
 namespace Runner {
 
+class MainRunner;
+
 /*!
- * \brief The AbstractRunner class is the abstract parent class for all runners.
+ * \brief The AbstractRunner class is the abstract parent class for all runners. It should only be constructed by the MainRunner class.
  *
  * This class initializes the primary objects needed and provides some utility functions for logging.
  *
@@ -47,20 +50,22 @@ namespace Runner {
  */
 class AbstractRunner
 {
-public:
-    AbstractRunner(RuntimeSettings *runtime_settings);
+    friend class MainRunner;
+private:
 
     /*!
      * \brief Execute starts the actual optimization run and should not return until the optimization is done.
      */
     virtual void Execute() = 0;
 
-private:
+protected:
+    AbstractRunner(RuntimeSettings *runtime_settings);
     Model::Model *model_;
     Utilities::Settings::Settings *settings_;
     RuntimeSettings *runtime_settings_;
     Optimization::Case *base_case_;
     Optimization::Optimizer *optimizer_;
+    Optimization::Objective::Objective *objective_function_;
     Simulation::SimulatorInterfaces::Simulator *simulator_;
 };
 
