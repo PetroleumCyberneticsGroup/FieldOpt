@@ -6,4 +6,4 @@
 cd $1
 
 # Execute eclipse with the file path as parameter
-eval eclrun eclipse $2
+eval eclrun eclipse $2 >& /dev/null
