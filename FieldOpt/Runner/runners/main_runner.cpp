@@ -24,12 +24,28 @@
  *****************************************************************************/
 
 #include "main_runner.h"
+#include "serial_runner.h"
 
 namespace Runner {
 
 MainRunner::MainRunner(RuntimeSettings *rts)
 {
     runtime_settings_ = rts;
+
+    switch (runtime_settings_->runner_type()) {
+    case RuntimeSettings::RunnerType::SERIAL:
+        runner_ = new SerialRunner(runtime_settings_);
+        break;
+    default:
+        throw std::runtime_error("Runner type not recognized.");
+        break;
+    }
+}
+
+void MainRunner::Execute()
+{
+    if (runtime_settings_->verbose()) std::cout << "Starting optimization run." << std::endl;
+    runner_->Execute();
 }
 
 }

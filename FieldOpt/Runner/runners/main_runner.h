@@ -28,6 +28,7 @@
 
 #include <stdexcept>
 #include "runtime_settings.h"
+#include "abstract_runner.h"
 
 namespace Runner {
 
@@ -39,8 +40,14 @@ class MainRunner
 public:
     MainRunner(RuntimeSettings *rts);
 
+    /*!
+     * \brief Execute Start the optimization run by calling the Execute function in the simulator.
+     */
+    void Execute();
+
 private:
     RuntimeSettings *runtime_settings_;
+    AbstractRunner *runner_;
 };
 
 }
