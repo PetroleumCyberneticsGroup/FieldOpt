@@ -27,6 +27,7 @@
 #include "Utilities/unix/execution.h"
 #include "simulator_exceptions.h"
 #include "Simulation/execution_scripts/execution_scripts.h"
+#include "Model/results/eclresults.h"
 
 namespace Simulation {
 namespace SimulatorInterfaces {
@@ -44,6 +45,11 @@ ECLSimulator::ECLSimulator(Utilities::Settings::Settings *settings, Model::Model
     settings_ = settings;
     model_ = model;
     driver_file_writer_ = new DriverFileWriters::EclDriverFileWriter(settings, model_);
+
+    results_ = new Model::Results::ECLResults();
+    try {
+        results()->ReadResults(driver_file_writer_->output_driver_file_name_);
+    } catch (...) {}
 }
 
 void ECLSimulator::Evaluate()
@@ -52,6 +58,7 @@ void ECLSimulator::Evaluate()
     QStringList args {output_directory_, driver_file_writer_->output_driver_file_name_};
     QString script = Simulation::ExecutionScripts::DefaultScripts[Simulation::ExecutionScripts::Script::csh_eclrun];
     ::Utilities::Unix::ExecShellScript(script, args);
+    results_->ReadResults(driver_file_writer_->output_driver_file_name_);
 }
 
 void ECLSimulator::CleanUp()

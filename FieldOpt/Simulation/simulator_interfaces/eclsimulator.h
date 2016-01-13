@@ -68,8 +68,6 @@ public:
 
 private:
     DriverFileWriters::EclDriverFileWriter *driver_file_writer_;
-    Utilities::Settings::Settings *settings_;
-    Model::Model *model_;
 };
 
 }
