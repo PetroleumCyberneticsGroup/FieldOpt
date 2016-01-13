@@ -76,6 +76,7 @@ int main(int argc, char *argv[])
 
         // Initialize runner
         auto runner = Runner::MainRunner(runtime_settings);
+        runner.Execute();
     }
     catch (std::exception &e) {
         std::cout << "error: " << e.what() << std::endl;
