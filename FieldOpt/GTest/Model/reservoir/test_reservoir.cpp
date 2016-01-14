@@ -34,7 +34,7 @@ namespace {
 class ReservoirTest : public ::testing::Test {
 protected:
     ReservoirTest() {
-        settings_ = new ::Utilities::Settings::Settings(driver_file_path_);
+        settings_ = new ::Utilities::Settings::Settings(driver_file_path_, output_directory_);
         reservoir_ = new Reservoir(settings_->model()->reservoir());
     }
 
@@ -47,6 +47,7 @@ protected:
     ::Utilities::Settings::Settings *settings_;
     Reservoir *reservoir_;
     QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
+    QString output_directory_ = "/home/einar/Documents/GitHub/PCG/fieldopt_output";
 };
 
 TEST_F(ReservoirTest, Constructor) {

@@ -1,8 +1,6 @@
 {
     "Global": {
-        "Name": "TestRun",
-        "OutputDirectory": "/home/einar/Documents/GitHub/PCG/fieldopt_output",
-        "Verbose": false
+        "Name": "TestRun"
     },
     "Optimizer": {
         "Type": "Compass",

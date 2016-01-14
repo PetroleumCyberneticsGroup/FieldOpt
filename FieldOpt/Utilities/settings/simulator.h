@@ -51,7 +51,7 @@ public:
     QString output_directory() const { return output_directory_; } //!< Get the output directory path.
 
 private:
-    Simulator(QJsonObject json_simulator, QString output_directory);
+    Simulator(QJsonObject json_simulator);
     SimulatorType type_;
     QStringList *commands_;
     QString driver_file_path_;

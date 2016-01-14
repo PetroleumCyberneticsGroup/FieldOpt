@@ -41,7 +41,7 @@ namespace {
 class WeightedSumTest : public ::testing::Test {
 protected:
     WeightedSumTest()
-        : settings_(driver_file_path_)
+        : settings_(driver_file_path_, output_directory_)
     {
         results_ = new ECLResults();
     }
@@ -61,6 +61,7 @@ protected:
     Results *results_;
     QString file_path_ = "../../examples/ECLIPSE/HORZWELL/HORZWELL";
     QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
+    QString output_directory_ = "/home/einar/Documents/GitHub/PCG/fieldopt_output";
     Settings settings_;
 };
 

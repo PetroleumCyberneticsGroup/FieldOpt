@@ -50,13 +50,14 @@ class Settings
 {
 public:
     Settings(){}
-    Settings(QString driver_path);
+    Settings(QString driver_path, QString output_directory);
 
     QString driver_path() const { return driver_path_; }
 
     QString name() const { return name_; } //!< The name to be used for the run. Output file and folder names are derived from this.
     QString output_directory() const { return output_directory_; } //!< Path to a directory in which output files are to be placed.
     bool verbose() const { return verbose_; } //!< Verbose mode (with or without debug printing).
+    void set_verbosity(const bool verbosity) { verbose_ = verbosity; }
 
     Model *model() const { return model_; } //!< Object containing model specific settings.
     Utilities::Settings::Optimizer *optimizer() const { return optimizer_; } //!< Object containing optimizer specific settings.
@@ -67,7 +68,7 @@ private:
     QJsonObject *json_driver_;
     QString name_;
     QString output_directory_;
-    bool verbose_;
+    bool verbose_ = false;
     Model *model_;
     Utilities::Settings::Optimizer *optimizer_;
     Simulator *simulator_;

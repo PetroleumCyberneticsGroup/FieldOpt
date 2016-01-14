@@ -33,7 +33,8 @@ namespace Runner {
 AbstractRunner::AbstractRunner(RuntimeSettings *runtime_settings)
 {
     runtime_settings_ = runtime_settings;
-    settings_ = new Utilities::Settings::Settings(runtime_settings->driver_file());
+    settings_ = new Utilities::Settings::Settings(runtime_settings->driver_file(), runtime_settings->output_dir());
+    settings_->set_verbosity(runtime_settings_->verbose());
     model_ = new Model::Model(*settings_->model());
 
     // Initialize simulator

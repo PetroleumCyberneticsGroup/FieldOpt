@@ -36,7 +36,7 @@ namespace {
 class OptimizerSettingsTest : public ::testing::Test {
 protected:
     OptimizerSettingsTest()
-        : settings_(driver_file_path_)
+        : settings_(driver_file_path_, output_directory_)
     {
     }
     virtual ~OptimizerSettingsTest() {}
@@ -45,6 +45,7 @@ protected:
     virtual void TearDown() {}
 
     QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
+    QString output_directory_ = "/home/einar/Documents/GitHub/PCG/fieldopt_output";
     Settings settings_;
 };
 
