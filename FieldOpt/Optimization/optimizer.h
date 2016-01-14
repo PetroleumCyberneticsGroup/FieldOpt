@@ -69,6 +69,11 @@ public:
      */
     Case *GetTentativeBestCase() const;
 
+    // Status related methods
+    int nr_evaluated_cases() const { return case_handler_->EvaluatedCases().size(); }
+    int nr_queued_cases() const { return case_handler_->QueuedCases().size(); }
+    int nr_recently_evaluated_cases() const { return case_handler_->RecentlyEvaluatedCases().size(); }
+
     /*!
      * \brief IsFinished Check whether the optimization is finished, i.e. if the the optimizer has
      * reached some  termination condition.
