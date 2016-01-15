@@ -21,11 +21,13 @@ SOURCES += main.cpp \
     runtime_settings.cpp \
     runners/main_runner.cpp \
     runners/abstract_runner.cpp \
-    runners/serial_runner.cpp
+    runners/serial_runner.cpp \
+    logger.cpp
 
 HEADERS += \
     runtime_settings.h \
     runners/main_runner.h \
     runners/abstract_runner.h \
-    runners/serial_runner.h
+    runners/serial_runner.h \
+    logger.h
 

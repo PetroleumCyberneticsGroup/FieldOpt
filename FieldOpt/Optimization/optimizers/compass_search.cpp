@@ -77,4 +77,26 @@ void CompassSearch::iterate()
     case_handler_->ClearRecentlyEvaluatedCases();
 }
 
+QString CompassSearch::GetStatusStringHeader() const
+{
+    return QString("%1,%2,%3,%4,%5,%6\n")
+            .arg("EvaluatedCases")
+            .arg("QueuedCases")
+            .arg("RecentlyEvaluatedCases")
+            .arg("TentativeBestCaseID")
+            .arg("TentativeBestCaseOFValue")
+            .arg("StepLength");
+}
+
+QString CompassSearch::GetStatusString() const
+{
+    return QString("%1,%2,%3,%4,%5\n")
+            .arg(nr_evaluated_cases())
+            .arg(nr_queued_cases())
+            .arg(nr_recently_evaluated_cases())
+            .arg(tentative_best_case_->id().toString())
+            .arg(tentative_best_case_->objective_function_value())
+            .arg(step_length_);
+}
+
 }}

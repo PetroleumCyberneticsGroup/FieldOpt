@@ -76,5 +76,25 @@ Case *Optimizer::GetTentativeBestCase() const {
     return tentative_best_case_;
 }
 
+QString Optimizer::GetStatusStringHeader() const
+{
+    return QString("%1,%2,%3,%4,%5\n")
+            .arg("EvaluatedCases")
+            .arg("QueuedCases")
+            .arg("RecentlyEvaluatedCases")
+            .arg("TentativeBestCaseID")
+            .arg("TentativeBestCaseOFValue");
+}
+
+QString Optimizer::GetStatusString() const
+{
+    return QString("%1,%2,%3,%4,%5\n")
+            .arg(nr_evaluated_cases())
+            .arg(nr_queued_cases())
+            .arg(nr_recently_evaluated_cases())
+            .arg(tentative_best_case_->id().toString())
+            .arg(tentative_best_case_->objective_function_value());
+}
+
 }
 

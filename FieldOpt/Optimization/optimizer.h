@@ -83,6 +83,9 @@ public:
      */
     virtual bool IsFinished() = 0;
 
+    virtual QString GetStatusStringHeader() const; //!< Get the CSV header for the status string.
+    virtual QString GetStatusString() const; //!< Get a CSV string describing the current state of the optimizer.
+
 protected:
     /*!
      * \brief Optimizer

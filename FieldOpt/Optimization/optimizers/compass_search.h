@@ -63,6 +63,9 @@ public:
      */
     bool IsFinished();
 
+    QString GetStatusStringHeader() const;
+    QString GetStatusString() const;
+
 private:
     void iterate(); //!< Step or contract, perturb, and clear list of recently evaluated cases.
 };

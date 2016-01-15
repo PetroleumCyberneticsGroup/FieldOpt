@@ -71,11 +71,22 @@ bool ParentDirectoryExists(QString file_path);
 QStringList *ReadFileToStringList(QString file_path);
 
 /*!
- * \brief WriteStringToFile Write a string to a file.
+ * \brief WriteStringToFile Write a string to a file. Removes existing file contents.
+ *
+ * If the string does not end with a newline, it will be added.
  * \param string The string to be written.
  * \param file_path Path to the file to write the string into.
  */
 void WriteStringToFile(QString string, QString file_path);
+
+/*!
+ * \brief WriteLineToFile Append a string to a file.
+ *
+ * If the string does not end with a newline, it will be added.
+ * \param string The string/line to be written.
+ * \param file_path The file to write the string/line to.
+ */
+void WriteLineToFile(QString string, QString file_path);
 
 /*!
  * \brief DeleteFile Deletes the file at the given path.
