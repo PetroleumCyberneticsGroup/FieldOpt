@@ -23,13 +23,16 @@ public:
     /*!
      * \brief LogCase Add a case to the case log.
      * \param c The case to be logged.
+     * \param message An optional message that will be printed to the console.
      */
-    void LogCase(const Optimization::Case *c);
+    void LogCase(const Optimization::Case *c, QString message="");
 
     /*!
      * \brief LogOptimizerStatus Log the current status of the optimizer.
+     * \param opt Pointer to the optimizer object to log.
+     * \param message An optional message that will be printed to the console.
      */
-    void LogOptimizerStatus(const Optimization::Optimizer *opt);
+    void LogOptimizerStatus(const Optimization::Optimizer *opt, QString message="");
 
     /*!
      * \brief LogSimulation Log the start/stop of the simulation of a case.
@@ -38,8 +41,9 @@ public:
      * case will be registered. If it is the second time, the end time will be registered
      * and the log line will be written.
      * \param c The case that is being simulated.
+     * \param message An optional message that will be printed to the console.
      */
-    void LogSimulation(const Optimization::Case *c);
+    void LogSimulation(const Optimization::Case *c, QString message="");
 
 
 

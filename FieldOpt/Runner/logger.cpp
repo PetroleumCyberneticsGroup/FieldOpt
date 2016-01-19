@@ -13,7 +13,7 @@ Logger::Logger(QString output_dir, bool verbose)
     cas_log_path_ = output_dir + "/log_cases.csv";
 }
 
-void Logger::LogCase(const Optimization::Case *c)
+void Logger::LogCase(const Optimization::Case *c, QString message)
 {
     if (!Utilities::FileHandling::FileExists(cas_log_path_))
         initializeCaseLog(c);
@@ -44,13 +44,14 @@ void Logger::LogCase(const Optimization::Case *c)
 
     if (verbose_) {
         std::cout << "Case:_____________________________________" << std::endl;
+        if (message.size() > 0) std::cout << "MESSAGE: " << message.toStdString() << std::endl;
         for (int i = 0; i < cas_header_.size(); ++i) {
             std::cout << "\t" << cas_header_[i].toStdString() << ": " << line[i].toStdString() << std::endl;
         }
     }
 }
 
-void Logger::LogOptimizerStatus(const Optimization::Optimizer *opt)
+void Logger::LogOptimizerStatus(const Optimization::Optimizer *opt, QString message)
 {
     if (!Utilities::FileHandling::FileExists(opt_log_path_))
         initializeOptimizerLog(opt);
@@ -63,21 +64,24 @@ void Logger::LogOptimizerStatus(const Optimization::Optimizer *opt)
 
     if (verbose_) {
         std::cout << "Optimizer status:_________________________" << std::endl;
+        if (message.size() > 0) std::cout << "MESSAGE: " << message.toStdString() << std::endl;
         for (int i = 0; i < opt_header_.size(); ++i) {
             std::cout << "\t" << opt_header_[i].toStdString() << ": " << line[i].toStdString() << std::endl;
         }
     }
 }
 
-void Logger::LogSimulation(const Optimization::Case *c)
+void Logger::LogSimulation(const Optimization::Case *c, QString message)
 {
     if (!Utilities::FileHandling::FileExists(sim_log_path_))
         initializeSimulationLog();
 
     if (!sim_start_times_.contains(c->id())) {
         sim_start_times_[c->id()] = QDateTime::currentDateTimeUtc();
-        if (verbose_)
+        if (verbose_) {
             std::cout << "Registered simulation start for Case " << c->id().toString().toStdString() << std::endl;
+            if (message.size() > 0) std::cout << "MESSAGE: " << message.toStdString() << std::endl;
+        }
     }
     else {
         QDateTime start = sim_start_times_[c->id()];
@@ -93,6 +97,7 @@ void Logger::LogSimulation(const Optimization::Case *c)
 
         if (verbose_) {
             std::cout << "Simulation ended:_________________________" << std::endl;
+            if (message.size() > 0) std::cout << "MESSAGE: " << message.toStdString() << std::endl;
             for (int i = 0; i < sim_header_.size(); ++i) {
                 std::cout << "\t" << sim_header_[i].toStdString() << ": " << line[i].toStdString() << std::endl;
             }
