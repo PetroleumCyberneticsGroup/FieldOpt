@@ -33,3 +33,6 @@ HEADERS += \
     logger.h \
     bookkeeper.h
 
+DISTFILES += \
+    README.md
+
