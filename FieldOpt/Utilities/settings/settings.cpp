@@ -78,6 +78,8 @@ void Settings::readGlobalSection()
     try {
         QJsonObject global = json_driver_->value("Global").toObject();
         name_ = global["Name"].toString();
+        bookkeeper_tolerance_ = global["BookkeeperTolerance"].toDouble();
+        if (bookkeeper_tolerance_ < 0.0) throw UnableToParseGlobalSectionException("The bookkeeper tolerance must be a positive number.");
     }
     catch (std::exception const &ex) {
         throw UnableToParseGlobalSectionException("Unable to parse driver file global section: " + std::string(ex.what()));

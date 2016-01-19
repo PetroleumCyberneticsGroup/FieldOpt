@@ -1,6 +1,7 @@
 {
     "Global": {
-        "Name": "TestRun"
+        "Name": "TestRun",
+        "BookkeeperTolerance": 0.0
     },
     "Optimizer": {
         "Type": "Compass",

@@ -40,14 +40,12 @@ In the global section we define some global settings for FieldOpt. The required 
 ```
 "Global": {
 	"Name": string,
-	"OutputDirectory": string,
-	"Verbose": bool
+	"BookkeeperTolerance": float
 }, ...
 ```
 
 * `Name` is used to derive the output file names.
-* `OutputDirectory` is a path to directory in which to write the output files.
-* `Verbose` denotes whether or not detailed debugging output should be shown.
+* `BookkeeperTolerance` is used to set the tolerance for the case bookkeeper. Defaults to 0.
 
 ## Model
 

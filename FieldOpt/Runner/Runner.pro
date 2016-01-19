@@ -6,7 +6,7 @@ TARGET = FieldOpt
 CONFIG += console
 CONFIG -= app_bundle
 
-TEMPLATE = app
+TEMPLATE = lib
 
 CONFIG += c++11
 LIBS += -L$$OUT_PWD/../Model -lmodel
@@ -22,12 +22,14 @@ SOURCES += main.cpp \
     runners/main_runner.cpp \
     runners/abstract_runner.cpp \
     runners/serial_runner.cpp \
-    logger.cpp
+    logger.cpp \
+    bookkeeper.cpp
 
 HEADERS += \
     runtime_settings.h \
     runners/main_runner.h \
     runners/abstract_runner.h \
     runners/serial_runner.h \
-    logger.h
+    logger.h \
+    bookkeeper.h
 

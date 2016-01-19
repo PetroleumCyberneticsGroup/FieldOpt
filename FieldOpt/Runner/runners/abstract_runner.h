@@ -33,6 +33,7 @@
 #include "Optimization/objective/objective.h"
 #include "Simulation/simulator_interfaces/simulator.h"
 #include "Utilities/settings/settings.h"
+#include "bookkeeper.h"
 
 namespace Runner {
 
@@ -60,6 +61,8 @@ private:
 
 protected:
     AbstractRunner(RuntimeSettings *runtime_settings);
+
+    Bookkeeper *bookkeeper_;
     Model::Model *model_;
     Utilities::Settings::Settings *settings_;
     RuntimeSettings *runtime_settings_;

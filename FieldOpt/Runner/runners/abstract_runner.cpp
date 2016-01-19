@@ -80,7 +80,7 @@ AbstractRunner::AbstractRunner(RuntimeSettings *runtime_settings)
         break;
     }
 
-
+    bookkeeper_ = new Bookkeeper(settings_, optimizer_->case_handler());
 }
 
 }

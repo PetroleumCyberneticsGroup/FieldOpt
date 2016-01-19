@@ -69,6 +69,11 @@ public:
      */
     Case *GetTentativeBestCase() const;
 
+    /*!
+     * \brief case_handler Get the case handler. Used by the bookkeeper in the runner lib.
+     */
+    CaseHandler *case_handler() const { return case_handler_; }
+
     // Status related methods
     int nr_evaluated_cases() const { return case_handler_->EvaluatedCases().size(); }
     int nr_queued_cases() const { return case_handler_->QueuedCases().size(); }

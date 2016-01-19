@@ -58,6 +58,7 @@ public:
     QString output_directory() const { return output_directory_; } //!< Path to a directory in which output files are to be placed.
     bool verbose() const { return verbose_; } //!< Verbose mode (with or without debug printing).
     void set_verbosity(const bool verbosity) { verbose_ = verbosity; }
+    double bookkeeper_tolerance() const { return bookkeeper_tolerance_; } //!< Get the value for the bookkeeper tolerance. Used by the Bookkeeper in the Runner library.
 
     Model *model() const { return model_; } //!< Object containing model specific settings.
     Utilities::Settings::Optimizer *optimizer() const { return optimizer_; } //!< Object containing optimizer specific settings.
@@ -67,6 +68,7 @@ private:
     QString driver_path_;
     QJsonObject *json_driver_;
     QString name_;
+    double bookkeeper_tolerance_;
     QString output_directory_;
     bool verbose_ = false;
     Model *model_;
