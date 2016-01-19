@@ -25,6 +25,7 @@
 
 #include "case.h"
 #include <limits>
+#include <cmath>
 
 namespace Optimization {
 
@@ -51,7 +52,7 @@ Case::Case(const Case *c)
     objective_function_value_ = c->objective_function_value_;
 }
 
-bool Case::Equals(const Case *other) const
+bool Case::Equals(const Case *other, double tolerance) const
 {
     // Check if number of variables are equal
     if (this->binary_variables().size() != other->binary_variables().size()
@@ -59,15 +60,15 @@ bool Case::Equals(const Case *other) const
             || this->real_variables().size() != other->real_variables().size())
         return false;
     foreach (QUuid key, this->binary_variables().keys()) {
-        if (this->binary_variables()[key] != other->binary_variables()[key])
+        if (std::abs(this->binary_variables()[key] - other->binary_variables()[key]) > tolerance)
             return false;
     }
     foreach (QUuid key, this->integer_variables().keys()) {
-        if (this->integer_variables()[key] != other->integer_variables()[key])
+        if (std::abs(this->integer_variables()[key] - other->integer_variables()[key]) > tolerance)
             return false;
     }
     foreach (QUuid key, this->real_variables().keys()) {
-        if (this->real_variables()[key] != other->real_variables()[key])
+        if (std::abs(this->real_variables()[key] - other->real_variables()[key]) > tolerance)
             return false;
     }
     return true; // All variable values are equal if we reach this point.
