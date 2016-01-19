@@ -7,6 +7,10 @@ namespace Runner {
 
 class MainRunner;
 
+/*!
+ * \brief The SerialRunner class is a very simple implementation of a serial runner.
+ * It interacts with the optimizer and starts simulations in series (i.e. it is _very_ slow).
+ */
 class SerialRunner : public AbstractRunner
 {
     friend class MainRunner;

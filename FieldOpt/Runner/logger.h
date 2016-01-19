@@ -10,6 +10,11 @@
 #include "Optimization/optimizer.h"
 
 namespace Runner {
+
+/*!
+ * \brief The Logger class is responsible for writing CSV logs to the disk, as well as printing
+ * information to the console at runtime.
+ */
 class Logger
 {
 public:
@@ -49,14 +54,14 @@ public:
 
 private:
     bool verbose_; //!< Whether or not new log entries should also be printed to the console.
-    QString output_dir_;
-    QString opt_log_path_;
-    QString sim_log_path_;
-    QString cas_log_path_;
+    QString output_dir_; //!< Directory in which the files will be written.
+    QString opt_log_path_; //!< Path to the optimization log file.
+    QString sim_log_path_; //!< Path to the simulation log file.
+    QString cas_log_path_; //!< Path to the case log file.
 
-    QStringList opt_header_;
-    QStringList sim_header_;
-    QStringList cas_header_;
+    QStringList opt_header_; //!< CSV header for the optimization log
+    QStringList sim_header_; //!< CSV header for the simulation log
+    QStringList cas_header_; //!< CSV header for for the case log
 
     QHash<QUuid, QDateTime> sim_start_times_; //!< A list of start times for currently running simulations.
 
