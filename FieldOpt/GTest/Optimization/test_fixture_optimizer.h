@@ -36,7 +36,8 @@ namespace {
 class OptimizerTestFixture : public ::testing::Test {
 protected:
     OptimizerTestFixture(){
-        optimizer_settings_ = ::Utilities::Settings::Settings(driver_file_path_, output_directory_).optimizer();
+        settings_ = new ::Utilities::Settings::Settings(driver_file_path_, output_directory_);
+        optimizer_settings_ = settings_->optimizer();
         model_ = new ::Model::Model(*::Utilities::Settings::Settings(driver_file_path_, output_directory_).model());
         base_case_ = new ::Optimization::Case(model_->variables()->GetBinaryVariableValues(),
                                               model_->variables()->GetDiscreteVariableValues(),
@@ -47,6 +48,7 @@ protected:
     QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
     QString output_directory_ = "/home/einar/Documents/GitHub/PCG/fieldopt_output";
     ::Utilities::Settings::Optimizer *optimizer_settings_;
+    ::Utilities::Settings::Settings *settings_;
     ::Model::Model *model_;
 
     ::Optimization::Case *base_case_;
