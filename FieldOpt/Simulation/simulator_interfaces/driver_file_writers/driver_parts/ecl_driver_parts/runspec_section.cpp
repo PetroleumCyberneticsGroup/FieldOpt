@@ -32,9 +32,23 @@ namespace DriverFileWriters {
 namespace DriverParts {
 namespace ECLDriverParts {
 
-Runspec::Runspec(QStringList *driver_file_contents)
+Runspec::Runspec(QStringList *driver_file_contents, QList<Model::Wells::Well *> *wells)
 {
     runspec_ = getSectionContent(driver_file_contents, "RUNSPEC", "GRID");
+
+    // Remove original contents of WELLDIMS
+    int start = runspec_.indexOf("WELLDIMS", 0, Qt::CaseInsensitive);
+    int stop = runspec_.indexOf("/", start) + 1;
+    runspec_.remove(start, stop-start);
+
+    // Create proper WELLDIMS keyword
+    int maxwells = wells->size();
+    int maxconns = wells->first()->trajectory()->GetWellBlocks()->size() * (maxwells +1);
+    int maxgroups = wells->size();
+    QString welldims = QString("WELLDIMS\n   %1   %2   %3   %4 /\n").arg(maxwells).arg(maxconns).arg(maxgroups).arg(maxwells);
+
+    // Insert proper welldims keyword
+    runspec_.insert(start, welldims);
 }
 
 QString Runspec::GetPartString()

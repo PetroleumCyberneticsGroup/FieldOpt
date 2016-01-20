@@ -27,6 +27,7 @@
 #define RUNSPEC_SECTION_H
 
 #include "ecldriverpart.h"
+#include "Model/wells/well.h"
 #include <QStringList>
 
 namespace Simulation {
@@ -37,12 +38,12 @@ namespace ECLDriverParts {
 
 /*!
  * \brief The runspec class extracts the runspec section from the initial ECL100 driver
- * file and holds it as a string.
+ * file and holds it as a string. It also creates the proper WELLDIMS keyword for the case.
  */
 class Runspec : public ECLDriverPart
 {
 public:
-    Runspec(QStringList *driver_file_contents);
+    Runspec(QStringList *driver_file_contents, QList<Model::Wells::Well *> *wells);
     QString GetPartString();
 
 private:
