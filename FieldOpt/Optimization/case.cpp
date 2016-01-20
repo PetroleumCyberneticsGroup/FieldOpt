@@ -107,22 +107,26 @@ QList<Case *> Case::Perturb(QUuid variabe_id, Case::SIGN sign, double magnitude)
         if (sign == PLUS || sign == PLUSMINUS) {
             Case *new_case_p = new Case(this);
             new_case_p->integer_variables_[variabe_id] += magnitude;
+            new_case_p->objective_function_value_ = std::numeric_limits<double>::max();
             new_cases.append(new_case_p);
         }
         if (sign == MINUS || sign == PLUSMINUS) {
             Case *new_case_m = new Case(this);
             new_case_m->integer_variables_[variabe_id] -= magnitude;
+            new_case_m->objective_function_value_ = std::numeric_limits<double>::max();
             new_cases.append(new_case_m);
         }
     } else if (real_variables_.contains(variabe_id)) {
         if (sign == PLUS || sign == PLUSMINUS) {
             Case *new_case_p = new Case(this);
             new_case_p->real_variables_[variabe_id] += magnitude;
+            new_case_p->objective_function_value_ = std::numeric_limits<double>::max();
             new_cases.append(new_case_p);
         }
         if (sign == MINUS || sign == PLUSMINUS) {
             Case *new_case_m = new Case(this);
             new_case_m->real_variables_[variabe_id] -= magnitude;
+            new_case_m->objective_function_value_ = std::numeric_limits<double>::max();
             new_cases.append(new_case_m);
         }
     }
