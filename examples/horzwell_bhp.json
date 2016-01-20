@@ -35,14 +35,12 @@
     },
     "Simulator": {
         "Type": "ECLIPSE",
-        "Commands": ["tcsh -c \"eval source ~/.cshrc; eclrun eclipse\""],
-        "DriverPath": "../../examples/ECLIPSE/HORZWELL/HORZWELL.DATA"
+        "Commands": ["tcsh -c \"eval source ~/.cshrc; eclrun eclipse\""]
     },
     "Model": {
         "ControlTimes": [0, 50, 100, 365],
         "Reservoir": {
-            "Type": "ECLIPSE",
-            "Path": "../../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID"
+            "Type": "ECLIPSE"
         },
         "Wells": [
             {

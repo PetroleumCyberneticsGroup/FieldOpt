@@ -34,9 +34,9 @@ namespace Settings {
 Simulator::Simulator(QJsonObject json_simulator)
 {
     // Driver path
-    if (!json_simulator.contains("DriverPath"))
-        throw UnableToParseSimulatorSectionException("A driver path must be defined.");
-    driver_file_path_ = json_simulator["DriverPath"].toString();
+    if (json_simulator.contains("DriverPath"))
+        driver_file_path_ = json_simulator["DriverPath"].toString();
+    else driver_file_path_ = "";
 
     // Simulator type
     QString type = json_simulator["Type"].toString();

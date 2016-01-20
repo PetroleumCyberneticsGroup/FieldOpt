@@ -66,6 +66,8 @@ The `ControlTimes` array in the `Model` declares all time steps at which any var
 ### Model -> Reservoir
 The reservoir object contains information on the reservoir grid that should be used. It must declare the type of reservoir model that will be used (i.e. the source of the grid data file) and the path to the grid data file. By grid data file we mean generated files like ECLIPSE's `.GRID` and `.EGRID` files. The reservoir grids are primarily used when wells are defined by splines. The reservoir object must contain the following fields:
 
+Note that the grid file path may be omitted from the driver file. If it is, the path must be passed as a command line parameter. If a path is specified both places, the one passed in the command line will be used.
+
 ```
 "Reservoir": {
 	"Type": string,
@@ -74,7 +76,7 @@ The reservoir object contains information on the reservoir grid that should be u
 ```
 
 * `Type` defines the source of the grid file. For now the only supported source is `ECLIPSE`.
-* `Path` is the full path to the reservoir grid file.
+* `Path` is the full path to the reservoir grid file. This may be omitted.
 
 ### Model -> Wells
 
@@ -207,9 +209,11 @@ In the simulator section we define settings and parameters needed to launch the 
 }
 ```
 
+Note that the simulator driver path may be omitted from the driver file. If it is, the path must be passed as a command line parameter. If a path is specified both places, the one passed in the command line will be used.
+
 * `Type` denotes the simulator to be used. Currently, the only supported simulator is `ECLIPSE`.
 * `Commands` is an array of (BASH) commands that should be executed in order to start the simulator.
-* `DriverPath` is the path to a complete driver file for the model (e.g. the one run to generate the grid files). Fluid functions, rock properties etc. is taken from this file.
+* `DriverPath` is the path to a complete driver file for the model (e.g. the one run to generate the grid files). Fluid functions, rock properties etc. is taken from this file. This may be omitted.
 
 ## Optimizer
 

@@ -44,9 +44,13 @@ int main(int argc, char *argv[])
                 ("force,f", po::value<int>()->implicit_value(0),
                  "overwrite existing output files")
                 ("max-parallel-simulations,m", po::value<int>(&max_par_sims)->default_value(0),
-                 "start max <arg> parallel simulations.")
+                 "start max <arg> parallel simulations")
                 ("runner-type,r", po::value<std::string>(),
                  "type of runner (serial)")
+                ("grid-path,g", po::value<std::string>(),
+                 "path to model grid file (e.g. *.GRID)")
+                ("sim-drv-path,s", po::value<std::string>(),
+                 "path to simulator driver file (e.g. *.DATA)")
                 ("input-file", po::value<std::string>(),
                  "path to FieldOpt driver file")
                 ("output-dir", po::value<std::string>(),

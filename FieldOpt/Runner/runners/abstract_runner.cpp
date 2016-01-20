@@ -32,9 +32,18 @@ namespace Runner {
 
 AbstractRunner::AbstractRunner(RuntimeSettings *runtime_settings)
 {
+    //Initialize settings
     runtime_settings_ = runtime_settings;
     settings_ = new Utilities::Settings::Settings(runtime_settings->driver_file(), runtime_settings->output_dir());
     settings_->set_verbosity(runtime_settings_->verbose());
+
+    // Override simulator driver and grid file paths if the have been passed as command line arguments
+    if (runtime_settings->simulator_driver_path().length() > 0)
+        settings_->simulator()->set_driver_file_path(runtime_settings->simulator_driver_path());
+    if (runtime_settings->grid_file_path().length() > 0)
+        settings_->model()->set_reservoir_grid_path(runtime_settings->grid_file_path());
+
+    // Initialize model
     model_ = new Model::Model(*settings_->model());
 
     // Initialize simulator

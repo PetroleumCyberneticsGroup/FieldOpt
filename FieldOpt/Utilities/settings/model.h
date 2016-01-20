@@ -134,6 +134,7 @@ public:
     };
 
     Reservoir reservoir() const { return reservoir_; } //!< Get the struct containing reservoir settings.
+    void set_reservoir_grid_path(const QString path) { reservoir_.path = path; } //!< Set the reservoir grid path. Used when the path is passed by command line argument.
     QList<Well> wells() const { return wells_; } //!< Get the struct containing settings for the well(s) in the model.
     QList<int> control_times() const { return control_times_; } //!< Get the control times for the schedule
 

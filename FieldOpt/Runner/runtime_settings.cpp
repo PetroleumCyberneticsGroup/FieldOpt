@@ -57,10 +57,27 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
             runner_type_ = RunnerType::SERIAL;
     } else runner_type_ = RunnerType::SERIAL;
 
+    if (vm.count("sim-drv-path")) {
+        QString sim_drv_path = QString::fromStdString(vm["sim-drv-path"].as<std::string>());
+        if (!Utilities::FileHandling::FileExists(sim_drv_path))
+            throw std::runtime_error("Simulation driver file specified as argument does not exist.");
+        else simulator_driver_path_ = sim_drv_path;
+    } else simulator_driver_path_ = "";
+
+    if (vm.count("grid-path")) {
+        QString grid_path = QString::fromStdString(vm["grid-path"].as<std::string>());
+        if (!Utilities::FileHandling::FileExists(grid_path))
+            throw std::runtime_error("Grid file path specified as argument does not exist.");
+        else grid_file_path_ = grid_path;
+    } else grid_file_path_ = "";
+
+
     if (verbose_) {
         std::cout << "FieldOpt runtime settings: " << std::endl;
         std::cout << "Input file:     " << driver_file_.toStdString() << std::endl;
         std::cout << "Output dir:     " << output_dir().toStdString() << std::endl;
+        std::cout << "Sim driver file:" << (simulator_driver_path_.length() > 0 ? simulator_driver_path_.toStdString() : "from FieldOpt driver file") << std::endl;
+        std::cout << "Grid file path: " << (grid_file_path_.length() > 0 ? grid_file_path_.toStdString() : "from FieldOpt driver file") << std::endl;
         std::cout << "Runner type:    " << runnerTypeString().toStdString() << std::endl;
         std::cout << "Show progress:  " << show_progress_ << std::endl;
         std::cout << "Verbose output: " << verbose_ << std::endl;

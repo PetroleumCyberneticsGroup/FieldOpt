@@ -34,6 +34,9 @@ namespace SimulatorInterfaces {
 
 ECLSimulator::ECLSimulator(Utilities::Settings::Settings *settings, Model::Model *model)
 {
+    if (settings->driver_path().length() == 0)
+        throw DriverFileInvalidException("A path to a valid simulator driver file must be specified in the FieldOpt driver file or as a command line parameter.");
+
     if (Utilities::FileHandling::FileExists(settings->driver_path()))
         initial_driver_file_path_ = settings->driver_path();
     else throw DriverFileDoesNotExistException(settings->driver_path());
