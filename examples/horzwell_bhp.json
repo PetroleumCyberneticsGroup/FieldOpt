@@ -93,7 +93,7 @@
                     {
                         "Name": "PROD-BHP-1",
                         "Type": "BHP",
-                        "TimeSteps": [0, 50, 365]
+                        "TimeSteps": [0]
                     }
                 ]
             },

@@ -40,6 +40,7 @@ Optimizer::Optimizer(Utilities::Settings::Optimizer *settings, Case *base_case, 
     tentative_best_case_ = base_case;
     case_handler_ = new CaseHandler(tentative_best_case_);
     constraint_handler_ = new Constraints::ConstraintHandler(settings->constraints(), variables);
+    iteration_ = 0;
 }
 
 bool Optimizer::betterCaseFoundLastEvaluation()
@@ -63,6 +64,7 @@ Case *Optimizer::GetCaseForEvaluation()
 {
     if (case_handler_->QueuedCases().size() == 0) {
         iterate();
+        iteration_++;
     }
     return case_handler_->GetNextCaseForEvaluation();
 }
@@ -78,7 +80,8 @@ Case *Optimizer::GetTentativeBestCase() const {
 
 QString Optimizer::GetStatusStringHeader() const
 {
-    return QString("%1,%2,%3,%4,%5\n")
+    return QString("%1,%2,%3,%4,%5,%6\n")
+            .arg("Iteration")
             .arg("EvaluatedCases")
             .arg("QueuedCases")
             .arg("RecentlyEvaluatedCases")
@@ -88,7 +91,8 @@ QString Optimizer::GetStatusStringHeader() const
 
 QString Optimizer::GetStatusString() const
 {
-    return QString("%1,%2,%3,%4,%5\n")
+    return QString("%1,%2,%3,%4,%5,%6\n")
+            .arg(iteration_)
             .arg(nr_evaluated_cases())
             .arg(nr_queued_cases())
             .arg(nr_recently_evaluated_cases())

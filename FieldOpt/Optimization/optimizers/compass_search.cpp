@@ -66,7 +66,10 @@ bool CompassSearch::IsFinished()
 
 void CompassSearch::iterate()
 {
-    if (betterCaseFoundLastEvaluation()) {
+    if (iteration_ == 0) {
+        perturb();
+    }
+    else if (betterCaseFoundLastEvaluation()) {
         step();
         perturb();
     }
@@ -79,7 +82,8 @@ void CompassSearch::iterate()
 
 QString CompassSearch::GetStatusStringHeader() const
 {
-    return QString("%1,%2,%3,%4,%5,%6")
+    return QString("%1,%2,%3,%4,%5,%6,%7")
+            .arg("Iteration")
             .arg("EvaluatedCases")
             .arg("QueuedCases")
             .arg("RecentlyEvaluatedCases")
@@ -90,7 +94,8 @@ QString CompassSearch::GetStatusStringHeader() const
 
 QString CompassSearch::GetStatusString() const
 {
-    return QString("%1,%2,%3,%4,%5,%6")
+    return QString("%1,%2,%3,%4,%5,%6,%7")
+            .arg(iteration_)
             .arg(nr_evaluated_cases())
             .arg(nr_queued_cases())
             .arg(nr_recently_evaluated_cases())
