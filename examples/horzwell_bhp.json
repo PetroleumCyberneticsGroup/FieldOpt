@@ -1,0 +1,150 @@
+{
+    "Global": {
+        "Name": "horzwell_bhp",
+        "BookkeeperTolerance": 1.0
+    },
+    "Optimizer": {
+        "Type": "Compass",
+        "Parameters": {
+            "MaxEvaluations": 50,
+            "InitialStepLength": 100.0,
+            "MinimumStepLength": 1.0
+        },
+        "Objective": {
+            "Type": "WeightedSum",
+            "WeightedSumComponents": [
+                {
+                    "Coefficient": 1.0, "Property": "CumulativeOilProduction", "TimeStep": -1,
+                    "IsWellProp": false
+                },
+                {
+                    "Coefficient": -0.2, "Property": "CumulativeWellWaterProduction", "TimeStep": -1,
+                    "IsWellProp": true, "Well": "PROD"
+                }
+            ]
+        },
+        "Constraints": [
+            {
+                "Name": "PROD-BHP-1",
+                "Type": "BHP",
+                "Well": "PROD",
+                "Max": 3000.0,
+                "Min": 1000.0
+            }
+        ]
+    },
+    "Simulator": {
+        "Type": "ECLIPSE",
+        "Commands": ["tcsh -c \"eval source ~/.cshrc; eclrun eclipse\""],
+        "DriverPath": "../../examples/ECLIPSE/HORZWELL/HORZWELL.DATA"
+    },
+    "Model": {
+        "ControlTimes": [0, 50, 100, 365],
+        "Reservoir": {
+            "Type": "ECLIPSE",
+            "Path": "../../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID"
+        },
+        "Wells": [
+            {
+                "Name": "PROD",
+                "Type": "Producer",
+                "DefinitionType": "WellBlocks",
+                "PreferedPhase": "Oil",
+                "Heel": [1,1,1],
+                "WellboreRadius": 0.75,
+                "Direction": "X",
+                "WellBlocks": [
+                    [1,4,2],
+                    [2,4,2],
+                    [3,4,2],
+                    [4,4,2]
+                ],
+                "Completions": [
+                    {
+                        "Type": "Perforation",
+                        "WellBlock": [2,4,2],
+                        "TransmissibilityFactor": 1.0
+                    },
+                    {
+                        "Type": "Perforation",
+                        "WellBlock": [3,4,2],
+                        "TransmissibilityFactor": 1.0
+                    }
+                ],
+                "Controls": [
+                    {
+                        "TimeStep": 0,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 2000.0
+                    },
+                    {
+                        "TimeStep": 50,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 2000.0
+                    },
+                    {
+                        "TimeStep": 365,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 2000.0
+                    }
+                ],
+                "Variables": [
+                    {
+                        "Name": "PROD-BHP-1",
+                        "Type": "BHP",
+                        "TimeSteps": [0, 50, 365]
+                    }
+                ]
+            },
+            {
+                "Name": "INJ",
+                "Type": "Injector",
+                "DefinitionType": "WellBlocks",
+                "PreferedPhase": "Water",
+                "Heel": [2,1,2],
+                "WellboreRadius": 0.75,
+                "Direction": "X",
+                "WellBlocks": [
+                    [1,4,5],
+                    [2,4,5],
+                    [3,4,5],
+                    [4,4,5]
+                ],
+                "Completions": [
+                    {
+                        "Type": "Perforation",
+                        "WellBlock": [1,4,5],
+                        "TransmissibilityFactor": 1.0
+                    },
+                    {
+                        "Type": "Perforation",
+                        "WellBlock": [2,4,5],
+                        "TransmissibilityFactor": 1.0
+                    },
+                    {
+                        "Type": "Perforation",
+                        "WellBlock": [3,4,5],
+                        "TransmissibilityFactor": 1.0
+                    },
+                    {
+                        "Type": "Perforation",
+                        "WellBlock": [4,4,5],
+                        "TransmissibilityFactor": 1.0
+                    }
+                ],
+                "Controls": [
+                    {
+                        "TimeStep": 0,
+                        "Type": "Water",
+                        "State": "Open",
+                        "Mode": "Rate",
+                        "Rate": 1200.0
+                    }
+                ]
+            }
+        ]
+    }
+}
