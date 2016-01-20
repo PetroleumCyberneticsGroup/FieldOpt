@@ -8,6 +8,7 @@
 #include <QUuid>
 #include "Optimization/case.h"
 #include "Optimization/optimizer.h"
+#include "runtime_settings.h"
 
 namespace Runner {
 
@@ -20,10 +21,8 @@ class Logger
 public:
     /*!
      * \brief Logger
-     * \param output_dir The directory the logs should be written to.
-     * \param verbose Whether or not new log entries should also be printed to the console.
      */
-    Logger(QString output_dir, bool verbose);
+    Logger(RuntimeSettings *rts);
 
     /*!
      * \brief LogCase Add a case to the case log.

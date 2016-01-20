@@ -79,7 +79,7 @@ void CompassSearch::iterate()
 
 QString CompassSearch::GetStatusStringHeader() const
 {
-    return QString("%1,%2,%3,%4,%5,%6\n")
+    return QString("%1,%2,%3,%4,%5,%6")
             .arg("EvaluatedCases")
             .arg("QueuedCases")
             .arg("RecentlyEvaluatedCases")
@@ -90,7 +90,7 @@ QString CompassSearch::GetStatusStringHeader() const
 
 QString CompassSearch::GetStatusString() const
 {
-    return QString("%1,%2,%3,%4,%5\n")
+    return QString("%1,%2,%3,%4,%5,%6")
             .arg(nr_evaluated_cases())
             .arg(nr_queued_cases())
             .arg(nr_recently_evaluated_cases())

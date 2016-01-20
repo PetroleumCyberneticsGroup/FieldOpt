@@ -4,13 +4,23 @@
 
 namespace Runner {
 
-Logger::Logger(QString output_dir, bool verbose)
+Logger::Logger(RuntimeSettings *rts)
 {
-    verbose_ = verbose;
-    output_dir_ = output_dir;
-    opt_log_path_ = output_dir + "/log_optimization.csv";
-    sim_log_path_ = output_dir + "/log_simulation.csv";
-    cas_log_path_ = output_dir + "/log_cases.csv";
+    verbose_ = rts->verbose();
+    output_dir_ = rts->output_dir();
+    opt_log_path_ = output_dir_ + "/log_optimization.csv";
+    sim_log_path_ = output_dir_ + "/log_simulation.csv";
+    cas_log_path_ = output_dir_ + "/log_cases.csv";
+
+    // Delete existing logs if --force flag is on
+    if (rts->overwrite_existing()) {
+        foreach (auto path, (QStringList() << cas_log_path_ << opt_log_path_ << sim_log_path_)) {
+            if (Utilities::FileHandling::FileExists(path)) {
+                std::cout << "Force flag on. Deleting " << path.toStdString() << std::endl;
+                Utilities::FileHandling::DeleteFile(path);
+            }
+        }
+    }
 }
 
 void Logger::LogCase(const Optimization::Case *c, QString message)
@@ -57,8 +67,8 @@ void Logger::LogOptimizerStatus(const Optimization::Optimizer *opt, QString mess
         initializeOptimizerLog(opt);
 
     QStringList line = (QStringList() << getTimeStampString() << opt->GetStatusString().split(","));
-    if (line.size() != opt_header_.length())
-        throw std::runtime_error("Optimizer header/line length mismatch in logger.");
+    if (line.size() != opt_header_.size())
+        throw std::runtime_error("Optimizer header/line length mismatch in logger. ");
 
     Utilities::FileHandling::WriteLineToFile(line.join(","), opt_log_path_);
 
@@ -120,8 +130,8 @@ void Logger::initializeCaseLog(const Optimization::Case *c)
 
 void Logger::initializeOptimizerLog(const Optimization::Optimizer *opt)
 {
-    opt_header_ = opt->GetStatusStringHeader().split(",");
-    Utilities::FileHandling::WriteStringToFile("TimeStamp,"+opt->GetStatusStringHeader(), opt_log_path_);
+    opt_header_ = (QStringList() << "TimeStamp" << opt->GetStatusStringHeader().split(","));
+    Utilities::FileHandling::WriteStringToFile(opt_header_.join(","), opt_log_path_);
 }
 
 void Logger::initializeSimulationLog()
