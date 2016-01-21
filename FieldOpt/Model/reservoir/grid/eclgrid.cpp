@@ -90,7 +90,9 @@ Cell* ECLGrid::GetCell(int global_index)
                                ertCell.corners->at(i)->y(),
                                ertCell.corners->at(i)->z()));
         }
-        return new Cell(global_index, ijk_index, ertCell.volume, center, corners);
+        return new Cell(global_index, ijk_index,
+                        ertCell.volume, ertCell.porosity, ertCell.permx, ertCell.permy, ertCell.permz,
+                        center, corners);
     }
     else throw GridCellNotFoundException("Grid source must be defined before getting a cell.");
 }
