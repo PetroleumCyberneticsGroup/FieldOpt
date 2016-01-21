@@ -86,5 +86,13 @@ TEST_F(CellTest, Corners) {
     EXPECT_TRUE(corners->at(7)->Equals(bottom_ne));
 }
 
+TEST_F(CellTest, Properties) {
+    auto cell = grid_->GetCell(1);
+    EXPECT_FLOAT_EQ(0.25, cell->porosity());
+    EXPECT_FLOAT_EQ(100, cell->permx());
+    EXPECT_FLOAT_EQ(100, cell->permy());
+    EXPECT_FLOAT_EQ(5, cell->permz());
+}
+
 }
 

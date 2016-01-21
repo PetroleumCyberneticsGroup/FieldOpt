@@ -32,23 +32,42 @@ double ECLGridReader::GetCellVolume(int global_index)
 ECLGridReader::ECLGridReader()
 {
     ecl_grid_ = 0;
+    ecl_file_init_ = 0;
 }
 
 ECLGridReader::~ECLGridReader()
 {
     if (ecl_grid_ != 0)
         ecl_grid_free(ecl_grid_);
+    if (ecl_file_init_ != 0)
+        ecl_file_close(ecl_file_init_);
 }
 
 void ECLGridReader::ReadEclGrid(QString file_name)
 {
     file_name_ = file_name;
+    if (file_name.endsWith(".EGRID")) init_file_name_ = file_name.replace(".EGRID", ".INIT");
+    if (file_name.endsWith(".GRID")) init_file_name_ = file_name.replace(".GRID", ".INIT");
+
     if (ecl_grid_ == 0) {
-        ecl_grid_ = ecl_grid_alloc(file_name.toStdString().c_str());
-    }
-    else {
+        ecl_grid_ = ecl_grid_alloc(file_name_.toStdString().c_str());
+    } else {
         ecl_grid_free(ecl_grid_);
-        ecl_grid_ = ecl_grid_alloc(file_name.toStdString().c_str());
+        ecl_grid_ = ecl_grid_alloc(file_name_.toStdString().c_str());
+    }
+    if (ecl_file_init_ == 0) {
+        ecl_file_init_ = ecl_file_open(init_file_name_.toStdString().c_str(), 0);
+        poro_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PORO", 0);
+        permx_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMX", 0);
+        permy_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMY", 0);
+        permz_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMZ", 0);
+    } else {
+        ecl_file_close(ecl_file_init_);
+        ecl_file_init_ = ecl_file_open(init_file_name_.toStdString().c_str(), 0);
+        poro_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PORO", 0);
+        permx_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMX", 0);
+        permy_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMY", 0);
+        permz_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMZ", 0);
     }
 }
 
@@ -98,6 +117,13 @@ ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index)
     cell.volume = GetCellVolume(global_index);
     cell.corners = GetCellCorners(global_index);
     cell.center = GetCellCenter(global_index);
+
+    // Get properties from the INIT file
+    cell.porosity = ecl_kw_iget_as_double(poro_kw_, global_index);
+    cell.permx = ecl_kw_iget_as_double(permx_kw_, global_index);
+    cell.permy = ecl_kw_iget_as_double(permy_kw_, global_index);
+    cell.permz = ecl_kw_iget_as_double(permz_kw_, global_index);
+
     return cell;
 }
 

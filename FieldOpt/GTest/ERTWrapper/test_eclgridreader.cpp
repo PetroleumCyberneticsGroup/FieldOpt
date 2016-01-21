@@ -81,6 +81,19 @@ TEST_F(ECLGridReaderTest, GetCell) {
     EXPECT_EQ(cell.volume, 1.5e+06);
 }
 
+TEST_F(ECLGridReaderTest, CellProperties) {
+    ECLGridReader::Cell cell_1 = ecl_grid_reader_->GetGridCell(1);
+    ECLGridReader::Cell cell_1000 = ecl_grid_reader_->GetGridCell(1000);
+    EXPECT_FLOAT_EQ(0.25, cell_1.porosity);
+    EXPECT_FLOAT_EQ(100, cell_1.permx);
+    EXPECT_FLOAT_EQ(100, cell_1.permy);
+    EXPECT_FLOAT_EQ(5, cell_1.permz);
+    EXPECT_FLOAT_EQ(0.25, cell_1000.porosity);
+    EXPECT_FLOAT_EQ(100, cell_1000.permx);
+    EXPECT_FLOAT_EQ(100, cell_1000.permy);
+    EXPECT_FLOAT_EQ(5, cell_1000.permz);
+}
+
 TEST_F(ECLGridReaderTest, GlobalIndexOfCellEncompasingPoint) {
     int global_index_1 = ecl_grid_reader_->GlobalIndexOfCellEnvelopingPoint(125, 50, 7010, 1); // Should be 1
     int global_index_2 = ecl_grid_reader_->GlobalIndexOfCellEnvelopingPoint(700, 800, 7100, 0); // Should be inside grid
