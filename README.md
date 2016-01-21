@@ -1,5 +1,5 @@
 # FieldOpt
-Petroleum Field Development Optimization Framework. Based on ResOpt.
+Petroleum Field Development Optimization Framework.
 
 ## Library Path
 To run the compiled program, the LD_LIBRARY_PATH variable must be extended
