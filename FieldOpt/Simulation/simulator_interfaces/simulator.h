@@ -28,6 +28,7 @@
 
 #include <QString>
 #include "Model/model.h"
+#include "Simulation/results/results.h"
 #include "Utilities/settings/settings.h"
 #include "Utilities/settings/simulator.h"
 
@@ -55,6 +56,11 @@ public:
     void SetOutputDirectory(QString output_directory);
 
     /*!
+     * \brief results Get the simulation results.
+     */
+    ::Simulation::Results::Results *results();
+
+    /*!
      * \brief Evaluate Writes the driver file and executes a simulation of the model.
      */
     virtual void Evaluate() = 0;
@@ -72,6 +78,10 @@ protected:
 
     QString initial_driver_file_path_; //!< Path to the driver file to be used as a base for the generated driver files.
     QString output_directory_; //!< The directory in which to write new driver files and execute simulations.
+
+    ::Simulation::Results::Results *results_;
+    Utilities::Settings::Settings *settings_;
+    Model::Model *model_;
 };
 
 }

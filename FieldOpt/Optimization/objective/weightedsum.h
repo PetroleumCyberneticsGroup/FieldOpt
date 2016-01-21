@@ -28,7 +28,7 @@
 
 #include "objective.h"
 #include "Utilities/settings/model.h"
-#include "Model/results/results.h"
+#include "Simulation/results/results.h"
 
 namespace Optimization {
 namespace Objective {
@@ -59,7 +59,7 @@ public:
      * \param settings The Settings object from which to create the objective.
      * \param results The Results object from which to get property values.
      */
-    WeightedSum(Utilities::Settings::Optimizer *settings, Model::Results::Results *results);
+    WeightedSum(Utilities::Settings::Optimizer *settings, Simulation::Results::Results *results);
 
     double value() const;
 
@@ -71,15 +71,15 @@ private:
     class Component {
     public:
         double coefficient;
-        Model::Results::Results::Property property;
+        Simulation::Results::Results::Property property;
         int time_step;
         bool is_well_property;
         QString well;
-        double resolveValue(Model::Results::Results *results);
+        double resolveValue(Simulation::Results::Results *results);
     };
 
     QList<Component *> *components_; //!< List of gamma, k pairs.
-    Model::Results::Results *results_;  //!< Object providing access to simulator results.
+    Simulation::Results::Results *results_;  //!< Object providing access to simulator results.
 };
 
 }

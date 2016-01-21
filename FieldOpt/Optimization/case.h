@@ -48,13 +48,12 @@ public:
     Case(const Case *c);
 
     /*!
-     * \brief Equals Checks whether this case is equal to another case.
-     *
-     * To cases are considered equal if they contain the same variable values.
+     * \brief Equals Checks whether this case is equal to another case within some tolerance.
      * \param other Case to compare with.
-     * \return True if the cases contain the same varaible values; otherwise false;
+     * \param tolerance The allowed deviation between two cases.
+     * \return True if the cases are equal within the tolerance, otherwise false.
      */
-    bool Equals(const Case *other) const;
+    bool Equals(const Case *other, double tolerance=0.0) const;
 
     QUuid id() const { return id_; }
 

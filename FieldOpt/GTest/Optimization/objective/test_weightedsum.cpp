@@ -25,15 +25,15 @@
 
 #include <gtest/gtest.h>
 #include <QString>
-#include "Model/results/results.h"
-#include "Model/results/eclresults.h"
+#include "Simulation/results/results.h"
+#include "Simulation/results/eclresults.h"
 #include "Optimization/objective/weightedsum.h"
 #include "Utilities/settings/settings.h"
 #include "Utilities/settings/optimizer.h"
 
 
 using namespace Optimization::Objective;
-using namespace Model::Results;
+using namespace Simulation::Results;
 using namespace Utilities::Settings;
 
 namespace {
@@ -41,7 +41,7 @@ namespace {
 class WeightedSumTest : public ::testing::Test {
 protected:
     WeightedSumTest()
-        : settings_(driver_file_path_)
+        : settings_(driver_file_path_, output_directory_)
     {
         results_ = new ECLResults();
     }
@@ -61,15 +61,16 @@ protected:
     Results *results_;
     QString file_path_ = "../../examples/ECLIPSE/HORZWELL/HORZWELL";
     QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
+    QString output_directory_ = "/home/einar/Documents/GitHub/PCG/fieldopt_output";
     Settings settings_;
 };
 
 TEST_F(WeightedSumTest, Constructor) {
-    WeightedSum *obj = new WeightedSum(settings_.optimizer(), results_);
+    auto *obj = new WeightedSum(settings_.optimizer(), results_);
 }
 
 TEST_F(WeightedSumTest, Value) {
-    Objective *obj = new WeightedSum(settings_.optimizer(), results_);
+    auto *obj = new WeightedSum(settings_.optimizer(), results_);
     float wwpt = results_->GetValue(Results::Property::CumulativeWellWaterProduction, "PROD", 10);
     float fopt = results_->GetValue(Results::Property::CumulativeOilProduction);
     EXPECT_FLOAT_EQ(80.0, results_->GetValue(Results::Property::Time, 10));

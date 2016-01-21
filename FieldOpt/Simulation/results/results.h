@@ -29,8 +29,7 @@
 #include <QString>
 #include "results_exceptions.h"
 
-namespace Model {
-namespace Results {
+namespace Simulation { namespace Results {
 
 /*!
  * \brief The Results class handles access to the results of an evaluated model. It acts
@@ -143,7 +142,6 @@ private:
     bool available_;
 };
 
-}
-}
+}}
 
 #endif // RESULTS_H

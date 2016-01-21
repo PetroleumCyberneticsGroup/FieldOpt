@@ -34,7 +34,7 @@ namespace {
 class VariableHandlerTest : public ::testing::Test {
 protected:
     VariableHandlerTest() {
-        settings_ = new Utilities::Settings::Settings(driver_file_path_);
+        settings_ = new Utilities::Settings::Settings(driver_file_path_, output_directory_);
     }
 
     ~VariableHandlerTest() {}
@@ -48,6 +48,7 @@ protected:
 
     Utilities::Settings::Settings *settings_;
     QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
+    QString output_directory_ = "/home/einar/Documents/GitHub/PCG/fieldopt_output";
     VariablePropertyHandler *variable_handler_;
 };
 

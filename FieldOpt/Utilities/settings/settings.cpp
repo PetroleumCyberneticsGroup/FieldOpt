@@ -35,12 +35,14 @@
 namespace Utilities {
 namespace Settings {
 
-Settings::Settings(QString driver_path)
+Settings::Settings(QString driver_path, QString output_directory)
 {
     if (!::Utilities::FileHandling::FileExists(driver_path))
         throw FileNotFoundException(driver_path.toStdString());
     driver_path_ = driver_path;
     readDriverFile();
+    output_directory_ = output_directory;
+    simulator_->output_directory_ = output_directory;
 }
 
 void Settings::readDriverFile()
@@ -76,11 +78,8 @@ void Settings::readGlobalSection()
     try {
         QJsonObject global = json_driver_->value("Global").toObject();
         name_ = global["Name"].toString();
-        verbose_ = global["Verbose"].toBool();
-        output_directory_ = global["OutputDirectory"].toString();
-
-        if (!::Utilities::FileHandling::DirectoryExists(output_directory_)) // Throw an error if the output directory does not exist
-            throw FileNotFoundException(output_directory_.toStdString());
+        bookkeeper_tolerance_ = global["BookkeeperTolerance"].toDouble();
+        if (bookkeeper_tolerance_ < 0.0) throw UnableToParseGlobalSectionException("The bookkeeper tolerance must be a positive number.");
     }
     catch (std::exception const &ex) {
         throw UnableToParseGlobalSectionException("Unable to parse driver file global section: " + std::string(ex.what()));
@@ -92,7 +91,7 @@ void Settings::readSimulatorSection()
     // Simulator root
     try {
         QJsonObject json_simulator = json_driver_->value("Simulator").toObject();
-        simulator_ = new Simulator(json_simulator, output_directory_);
+        simulator_ = new Simulator(json_simulator);
     }
     catch (std::exception const &ex) {
         throw UnableToParseSimulatorSectionException("Unable to parse driver file simulator section: " + std::string(ex.what()));

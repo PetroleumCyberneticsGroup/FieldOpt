@@ -35,13 +35,14 @@
 class ModelBaseTest : public ::testing::Test {
 protected:
     ModelBaseTest() {
-        settings_ = new ::Utilities::Settings::Settings(driver_file_path_);
+        settings_ = new ::Utilities::Settings::Settings(driver_file_path_, output_directory_);
         variable_container_ = new ::Model::Properties::VariablePropertyContainer();
         variable_handler_ = new ::Model::Properties::VariablePropertyHandler(*settings_->model());
         model_ = new ::Model::Model(*settings_->model());
     }
 
     QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
+    QString output_directory_ = "/home/einar/Documents/GitHub/PCG/fieldopt_output";
     ::Utilities::Settings::Settings *settings_;
     ::Model::Properties::VariablePropertyContainer *variable_container_;
     ::Model::Properties::VariablePropertyHandler *variable_handler_;

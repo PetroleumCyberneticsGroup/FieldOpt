@@ -51,10 +51,11 @@ TEST_F(FileHandlingTest, Existance) {
     EXPECT_TRUE(::Utilities::FileHandling::DirectoryExists(driver_directory_path_));
     EXPECT_FALSE(::Utilities::FileHandling::DirectoryExists(driver_directory_path_ + "wrong"));
     EXPECT_FALSE(::Utilities::FileHandling::DirectoryExists(driver_file_path_));
+    EXPECT_FALSE(::Utilities::FileHandling::DirectoryIsEmpty(driver_directory_path_));
 }
 
 TEST_F(FileHandlingTest, FileReading) {
-    EXPECT_LE(162, ::Utilities::FileHandling::ReadFileToStringList(driver_file_path_)->size());
+    EXPECT_LE(160, ::Utilities::FileHandling::ReadFileToStringList(driver_file_path_)->size());
 }
 
 

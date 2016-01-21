@@ -47,7 +47,7 @@ EclDriverFileWriter::EclDriverFileWriter(Utilities::Settings::Settings *settings
 
 void EclDriverFileWriter::WriteDriverFile()
 {
-    DriverParts::ECLDriverParts::Runspec runspec = DriverParts::ECLDriverParts::Runspec(original_driver_file_contents_);
+    DriverParts::ECLDriverParts::Runspec runspec = DriverParts::ECLDriverParts::Runspec(original_driver_file_contents_, model_->wells());
     DriverParts::ECLDriverParts::Grid grid = DriverParts::ECLDriverParts::Grid(original_driver_file_contents_);
     DriverParts::ECLDriverParts::Props props = DriverParts::ECLDriverParts::Props(original_driver_file_contents_);
     DriverParts::ECLDriverParts::Solution solution = DriverParts::ECLDriverParts::Solution(original_driver_file_contents_);

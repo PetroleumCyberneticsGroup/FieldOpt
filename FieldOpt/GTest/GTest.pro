@@ -4,11 +4,13 @@ TEMPLATE = app
 CONFIG += console
 CONFIG -= app_bundle
 CONFIG += c++11
-LIBS += -L../Model -lmodel
-LIBS += -L../Optimization -loptimization
-LIBS += -L../Simulation -lsimulation
-LIBS += -L../ERTWrapper -lertwrapper
-LIBS += -L../Utilities -lutilities
+LIBS += -L$$OUT_PWD/../Model -lmodel
+LIBS += -L$$OUT_PWD/../Optimization -loptimization
+LIBS += -L$$OUT_PWD/../Simulation -lsimulation
+LIBS += -L$$OUT_PWD/../ERTWrapper -lertwrapper
+LIBS += -L$$OUT_PWD/../Utilities -lutilities
+LIBS += -L$$OUT_PWD/../Runner -lFieldOpt
+
 LIBS += -lpthread -lgtest -pthread
 SOURCES += \
     gtest_main.cpp \
@@ -50,7 +52,8 @@ SOURCES += \
     Optimization/test_case_handler.cpp \
     Optimization/constraints/test_box_constraint.cpp \
     Optimization/constraints/test_constraint_handler.cpp \
-    Optimization/optimizers/test_compass_search.cpp
+    Optimization/optimizers/test_compass_search.cpp \
+    Runner/test_bookkeeper.cpp
 
 OTHER_FILES += \
     Utilities/driver/driver.json

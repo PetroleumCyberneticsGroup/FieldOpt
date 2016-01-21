@@ -27,12 +27,16 @@
 #include "Utilities/unix/execution.h"
 #include "simulator_exceptions.h"
 #include "Simulation/execution_scripts/execution_scripts.h"
+#include "Simulation/results/eclresults.h"
 
 namespace Simulation {
 namespace SimulatorInterfaces {
 
 ECLSimulator::ECLSimulator(Utilities::Settings::Settings *settings, Model::Model *model)
 {
+    if (settings->driver_path().length() == 0)
+        throw DriverFileInvalidException("A path to a valid simulator driver file must be specified in the FieldOpt driver file or as a command line parameter.");
+
     if (Utilities::FileHandling::FileExists(settings->driver_path()))
         initial_driver_file_path_ = settings->driver_path();
     else throw DriverFileDoesNotExistException(settings->driver_path());
@@ -44,6 +48,11 @@ ECLSimulator::ECLSimulator(Utilities::Settings::Settings *settings, Model::Model
     settings_ = settings;
     model_ = model;
     driver_file_writer_ = new DriverFileWriters::EclDriverFileWriter(settings, model_);
+
+    results_ = new Results::ECLResults();
+    try {
+        results()->ReadResults(driver_file_writer_->output_driver_file_name_);
+    } catch (...) {}
 }
 
 void ECLSimulator::Evaluate()
@@ -52,6 +61,7 @@ void ECLSimulator::Evaluate()
     QStringList args {output_directory_, driver_file_writer_->output_driver_file_name_};
     QString script = Simulation::ExecutionScripts::DefaultScripts[Simulation::ExecutionScripts::Script::csh_eclrun];
     ::Utilities::Unix::ExecShellScript(script, args);
+    results_->ReadResults(driver_file_writer_->output_driver_file_name_);
 }
 
 void ECLSimulator::CleanUp()

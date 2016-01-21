@@ -30,7 +30,7 @@
 #include "ERTWrapper/eclsummaryreader.h"
 #include <QHash>
 
-namespace Model {
+namespace Simulation {
 namespace Results {
 
 /*!

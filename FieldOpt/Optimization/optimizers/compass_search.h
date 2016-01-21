@@ -42,6 +42,7 @@ class CompassSearch : public Optimizer
 {
 public:
     CompassSearch(::Utilities::Settings::Optimizer *settings, Case *base_case, ::Model::Properties::VariablePropertyContainer *variables);
+    double step_length() const { return step_length_; }
 
 private:
     double step_length_; //!< The size of the perturbation for each variable.
@@ -61,6 +62,9 @@ public:
      * \return True if the algorithm has finished, otherwise false.
      */
     bool IsFinished();
+
+    QString GetStatusStringHeader() const;
+    QString GetStatusString() const;
 
 private:
     void iterate(); //!< Step or contract, perturb, and clear list of recently evaluated cases.

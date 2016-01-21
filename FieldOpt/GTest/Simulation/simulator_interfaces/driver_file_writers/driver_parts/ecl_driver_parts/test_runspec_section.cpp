@@ -36,7 +36,7 @@ class DriverPartRunspecTest : public ModelBaseTest {
 protected:
     DriverPartRunspecTest(){
         QStringList *driver_file_contents = Utilities::FileHandling::ReadFileToStringList(settings_->simulator()->driver_file_path());
-        runspec_ = new Runspec(driver_file_contents);
+        runspec_ = new Runspec(driver_file_contents, model_->wells());
     }
     virtual ~DriverPartRunspecTest(){}
 
@@ -44,7 +44,7 @@ protected:
 };
 
 TEST_F(DriverPartRunspecTest, Constructor) {
-    //std::cout << runspec_->GetPartString().toStdString() << std::endl;
+    std::cout << runspec_->GetPartString().toStdString() << std::endl;
 }
 
 }

@@ -81,8 +81,26 @@ void Utilities::FileHandling::WriteStringToFile(QString string, QString file_pat
     if (!ParentDirectoryExists(file_path))
         throw DirectoryNotFoundException("Specified file's parent directory does not exist", file_path);
 
+    if (!string.endsWith("\n"))
+        string.append("\n");
+
     QFile file(file_path);
     file.open(QIODevice::WriteOnly | QIODevice::Truncate);
+    QTextStream out(&file);
+    out << string.toUtf8() << endl;
+    file.close();
+}
+
+void Utilities::FileHandling::WriteLineToFile(QString string, QString file_path)
+{
+    if (!ParentDirectoryExists(file_path))
+        throw DirectoryNotFoundException("Specified file's parent directory does not exist", file_path);
+
+    if (!string.endsWith("\n"))
+        string.append("\n");
+
+    QFile file(file_path);
+    file.open(QIODevice::Append);
     QTextStream out(&file);
     out << string.toUtf8() << endl;
     file.close();
@@ -115,4 +133,13 @@ void Utilities::FileHandling::DeleteFile(QString path)
         file.remove();
     }
     else throw FileNotFoundException(path);
+}
+
+bool Utilities::FileHandling::DirectoryIsEmpty(QString folder_path)
+{
+    if (!DirectoryExists(folder_path)) return false;
+    QDir directory = QDir(folder_path);
+    if (directory.entryInfoList(QDir::NoDotAndDotDot|QDir::AllEntries).count() == 0)
+        return true;
+    else return false;
 }

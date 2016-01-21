@@ -9,14 +9,16 @@ SUBDIRS = \
     Model \
     Utilities \
     Optimization \
-    Simulation
+    Simulation \
+    Runner
 
 Library.depends = ERTWrapper
-GTest.depends = ERTWrapper Utilities Model Optimization Simulation
+GTest.depends = ERTWrapper Utilities Model Optimization Simulation Runner
 Model.depends = ERTWrapper Utilities
-Optimization.depends = Model Utilities
+Optimization.depends = Model Utilities Simulation
 Simulation.depends = Model Utilities
 Console.depends = ERTWrapper Library
+Runner.depends = Optimization Model Utilities Simulation
 
 OTHER_FILES += \
     defaults.pri \

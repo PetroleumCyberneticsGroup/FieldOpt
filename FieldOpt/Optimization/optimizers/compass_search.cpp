@@ -66,7 +66,10 @@ bool CompassSearch::IsFinished()
 
 void CompassSearch::iterate()
 {
-    if (betterCaseFoundLastEvaluation()) {
+    if (iteration_ == 0) {
+        perturb();
+    }
+    else if (betterCaseFoundLastEvaluation()) {
         step();
         perturb();
     }
@@ -75,6 +78,30 @@ void CompassSearch::iterate()
         perturb();
     }
     case_handler_->ClearRecentlyEvaluatedCases();
+}
+
+QString CompassSearch::GetStatusStringHeader() const
+{
+    return QString("%1,%2,%3,%4,%5,%6,%7")
+            .arg("Iteration")
+            .arg("EvaluatedCases")
+            .arg("QueuedCases")
+            .arg("RecentlyEvaluatedCases")
+            .arg("TentativeBestCaseID")
+            .arg("TentativeBestCaseOFValue")
+            .arg("StepLength");
+}
+
+QString CompassSearch::GetStatusString() const
+{
+    return QString("%1,%2,%3,%4,%5,%6,%7")
+            .arg(iteration_)
+            .arg(nr_evaluated_cases())
+            .arg(nr_queued_cases())
+            .arg(nr_recently_evaluated_cases())
+            .arg(tentative_best_case_->id().toString())
+            .arg(tentative_best_case_->objective_function_value())
+            .arg(step_length_);
 }
 
 }}

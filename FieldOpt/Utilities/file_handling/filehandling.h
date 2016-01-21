@@ -49,6 +49,13 @@ bool FileExists(QString file_path);
 bool DirectoryExists(QString folder_path);
 
 /*!
+ * \brief DirectoryIsEmpty Check whether or not a directory is empty.
+ * \param folder_path Path a folder to check.
+ * \return True if the directory is empty, otherwise false.
+ */
+bool DirectoryIsEmpty(QString folder_path);
+
+/*!
  * \brief ParentDirectoryExists Checks whether a specified file's parent directory exists.
  * \param file_path Path a file (the file itself does not have to exist).
  * \return True if the parent directory exists, otherwise false.
@@ -64,11 +71,22 @@ bool ParentDirectoryExists(QString file_path);
 QStringList *ReadFileToStringList(QString file_path);
 
 /*!
- * \brief WriteStringToFile Write a string to a file.
+ * \brief WriteStringToFile Write a string to a file. Removes existing file contents.
+ *
+ * If the string does not end with a newline, it will be added.
  * \param string The string to be written.
  * \param file_path Path to the file to write the string into.
  */
 void WriteStringToFile(QString string, QString file_path);
+
+/*!
+ * \brief WriteLineToFile Append a string to a file.
+ *
+ * If the string does not end with a newline, it will be added.
+ * \param string The string/line to be written.
+ * \param file_path The file to write the string/line to.
+ */
+void WriteLineToFile(QString string, QString file_path);
 
 /*!
  * \brief DeleteFile Deletes the file at the given path.

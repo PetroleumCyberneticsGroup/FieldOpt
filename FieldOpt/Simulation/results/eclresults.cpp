@@ -27,14 +27,15 @@
 #include "results_exceptions.h"
 #include "ERTWrapper/ertwrapper_exceptions.h"
 
+namespace Simulation { namespace Results {
 
-Model::Results::ECLResults::ECLResults()
+ECLResults::ECLResults()
     : Results()
 {
     summary_reader_ = 0;
 }
 
-void Model::Results::ECLResults::ReadResults(QString file_path)
+void ECLResults::ReadResults(QString file_path)
 {
     file_path_ = file_path;
     if (summary_reader_ != 0) delete summary_reader_;
@@ -48,14 +49,14 @@ void Model::Results::ECLResults::ReadResults(QString file_path)
     setAvailable();
 }
 
-void Model::Results::ECLResults::DumpResults()
+void ECLResults::DumpResults()
 {
     if (summary_reader_ != 0) delete summary_reader_;
     summary_reader_ = 0;
     setUnavailable();
 }
 
-double Model::Results::ECLResults::GetValue(Model::Results::Results::Property prop)
+double ECLResults::GetValue(Results::Property prop)
 {
     if (!isAvailable()) throw ResultsNotAvailableException();
     if (!keys_.contains(prop)) throw ResultPropertyKeyDoesNotExistException("ECLIPSE");
@@ -68,7 +69,7 @@ double Model::Results::ECLResults::GetValue(Model::Results::Results::Property pr
         return summary_reader_->GetFieldVar(keys_.value(prop), last_report_step);
 }
 
-double Model::Results::ECLResults::GetValue(Model::Results::Results::Property prop, int time_index)
+double ECLResults::GetValue(Results::Property prop, int time_index)
 {
     if (!isAvailable()) throw ResultsNotAvailableException();
     if (!keys_.contains(prop)) throw ResultPropertyKeyDoesNotExistException("ECLIPSE");
@@ -80,7 +81,7 @@ double Model::Results::ECLResults::GetValue(Model::Results::Results::Property pr
         return summary_reader_->GetFieldVar(keys_.value(prop), time_index);
 }
 
-double Model::Results::ECLResults::GetValue(Model::Results::Results::Property prop, QString well)
+double ECLResults::GetValue(Results::Property prop, QString well)
 {
     if (!isAvailable()) throw ResultsNotAvailableException();
     if (!keys_.contains(prop)) throw ResultPropertyKeyDoesNotExistException("ECLIPSE");
@@ -89,10 +90,12 @@ double Model::Results::ECLResults::GetValue(Model::Results::Results::Property pr
     return summary_reader_->GetWellVar(well, keys_.value(prop), last_report_step);
 }
 
-double Model::Results::ECLResults::GetValue(Model::Results::Results::Property prop, QString well, int time_index)
+double ECLResults::GetValue(Results::Property prop, QString well, int time_index)
 {
     if (!isAvailable()) throw ResultsNotAvailableException();
     if (!keys_.contains(prop)) throw ResultPropertyKeyDoesNotExistException("ECLIPSE");
     if (!summary_reader_->HasReportStep(time_index)) throw ResultTimeIndexInvalidException(time_index);
     return summary_reader_->GetWellVar(well, keys_.value(prop), time_index);
 }
+
+}}
