@@ -10,12 +10,15 @@ namespace Reservoir {
 namespace Grid {
 
 /*!
- * \brief The Cell class describes a cell in a grid.
+ * \brief The Cell class describes a cell in a grid, including it's geometry and static properties
+ * like porosity and permeability.
  */
 class Cell
 {
 public:
-    Cell(int global_index, IJKCoordinate* ijk_index, double volume, XYZCoordinate* center, QList<XYZCoordinate*> *corners);
+    Cell(int global_index, IJKCoordinate* ijk_index,
+         double volume, double poro, double permx, double permy, double permz,
+         XYZCoordinate* center, QList<XYZCoordinate*> *corners);
 
     /*!
      * \brief global_index Gets the cells global index in its parent grid.
@@ -31,6 +34,27 @@ public:
      * \brief volume Gets the cells volume.
      */
     double volume() const { return volume_; }
+
+    /*!
+     * \brief porosity Gets the cell's porosity.
+     */
+    double porosity() const { return porosity_; }
+
+    /*!
+     * \brief porosity Gets the cell's x-permeability.
+     */
+    double permx() const { return permx_; }
+
+    /*!
+     * \brief porosity Gets the cell's y-permeability.
+     */
+    double permy() const { return permy_; }
+
+    /*!
+     * \brief porosity Gets the cell's z-permeability.
+     */
+    double permz() const { return permz_; }
+
 
     /*!
      * \brief center Gets the (x, y, z) position of the cells center.
@@ -62,6 +86,10 @@ private:
     double volume_;
     XYZCoordinate* center_;
     QList<XYZCoordinate *> *corners_;
+    double porosity_;
+    double permx_;
+    double permy_;
+    double permz_;
 };
 
 }
