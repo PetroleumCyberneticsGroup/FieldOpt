@@ -37,8 +37,6 @@ int main(int argc, char *argv[])
         po::options_description desc("FieldOpt options");
         desc.add_options()
                 ("help,h", "print help message")
-                ("progress,p", po::value<int>()->implicit_value(0),
-                 "show progress during optimization")
                 ("verbose,v", po::value<int>()->implicit_value(0),
                  "show verbose console output while optimizing")
                 ("force,f", po::value<int>()->implicit_value(0),

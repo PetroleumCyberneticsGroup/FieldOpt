@@ -41,7 +41,6 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
             throw std::runtime_error("The specified output directory does not exist.");
     } else throw std::runtime_error("An output directory must be specified.");
 
-    show_progress_ = vm.count("progress") ? true : false;
     verbose_ = vm.count("verbose") ? true : false;
 
     overwrite_existing_ = vm.count("force") ? true : false;
@@ -79,7 +78,6 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
         std::cout << "Sim driver file:" << (simulator_driver_path_.length() > 0 ? simulator_driver_path_.toStdString() : "from FieldOpt driver file") << std::endl;
         std::cout << "Grid file path: " << (grid_file_path_.length() > 0 ? grid_file_path_.toStdString() : "from FieldOpt driver file") << std::endl;
         std::cout << "Runner type:    " << runnerTypeString().toStdString() << std::endl;
-        std::cout << "Show progress:  " << show_progress_ << std::endl;
         std::cout << "Verbose output: " << verbose_ << std::endl;
         std::cout << "Overwr. existing out files: " << overwrite_existing_ << std::endl;
         std::cout << "Max parallel simulations:   " << (max_parallel_sims_ > 0 ? std::to_string(max_parallel_sims_) : "default") << std::endl;
