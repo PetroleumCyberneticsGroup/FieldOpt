@@ -25,9 +25,6 @@ HEADERS += \
     wells/wellbore/trajectory.h \
     wells/wellbore/wellspline.h \
     wells/wellbore/completions/completion_exceptions.h \
-    results/results.h \
-    results/eclresults.h \
-    results/results_exceptions.h \
     reservoir/grid/eclgrid.h \
     wells/control.h \
     wells/well_exceptions.h \
@@ -53,7 +50,6 @@ SOURCES += \
     wells/wellbore/completions/perforation.cpp \
     wells/wellbore/trajectory.cpp \
     wells/wellbore/wellspline.cpp \
-    results/eclresults.cpp \
     reservoir/grid/eclgrid.cpp \
     wells/control.cpp \
     wells/wellbore/wellblock.cpp \

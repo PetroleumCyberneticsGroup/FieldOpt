@@ -31,8 +31,7 @@
 
 using std::string;
 
-namespace Model {
-namespace Results {
+namespace Simulation { namespace Results {
 
 class ResultFileNotFoundException : public std::runtime_error {
 public:
@@ -58,7 +57,6 @@ public:
         : std::runtime_error("Time index " + std::to_string(index) + " is not valid for the current results.") {}
 };
 
-}
-}
+}}
 
 #endif // RESULTS_EXCEPTIONS

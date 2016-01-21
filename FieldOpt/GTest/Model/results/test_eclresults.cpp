@@ -26,10 +26,10 @@
 #include <gtest/gtest.h>
 #include <QString>
 #include <iostream>
-#include "Model/results/eclresults.h"
-#include "Model/results/results_exceptions.h"
+#include "Simulation/results/eclresults.h"
+#include "Simulation/results/results_exceptions.h"
 
-using namespace Model::Results;
+using namespace Simulation::Results;
 
 namespace {
 

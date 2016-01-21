@@ -27,7 +27,7 @@
 #include "Utilities/unix/execution.h"
 #include "simulator_exceptions.h"
 #include "Simulation/execution_scripts/execution_scripts.h"
-#include "Model/results/eclresults.h"
+#include "Simulation/results/eclresults.h"
 
 namespace Simulation {
 namespace SimulatorInterfaces {
@@ -49,7 +49,7 @@ ECLSimulator::ECLSimulator(Utilities::Settings::Settings *settings, Model::Model
     model_ = model;
     driver_file_writer_ = new DriverFileWriters::EclDriverFileWriter(settings, model_);
 
-    results_ = new Model::Results::ECLResults();
+    results_ = new Results::ECLResults();
     try {
         results()->ReadResults(driver_file_writer_->output_driver_file_name_);
     } catch (...) {}

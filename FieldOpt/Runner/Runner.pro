@@ -10,8 +10,8 @@ TEMPLATE = app
 
 CONFIG += c++11
 LIBS += -L$$OUT_PWD/../Model -lmodel
-LIBS += -L$$OUT_PWD/../Optimization -loptimization
 LIBS += -L$$OUT_PWD/../Simulation -lsimulation
+LIBS += -L$$OUT_PWD/../Optimization -loptimization
 LIBS += -L$$OUT_PWD/../Utilities -lutilities
 LIBS += -L$$OUT_PWD/../ERTWrapper -lertwrapper
 LIBS += -lpthread -lgtest -pthread

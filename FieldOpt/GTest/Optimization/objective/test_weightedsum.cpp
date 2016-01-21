@@ -25,15 +25,15 @@
 
 #include <gtest/gtest.h>
 #include <QString>
-#include "Model/results/results.h"
-#include "Model/results/eclresults.h"
+#include "Simulation/results/results.h"
+#include "Simulation/results/eclresults.h"
 #include "Optimization/objective/weightedsum.h"
 #include "Utilities/settings/settings.h"
 #include "Utilities/settings/optimizer.h"
 
 
 using namespace Optimization::Objective;
-using namespace Model::Results;
+using namespace Simulation::Results;
 using namespace Utilities::Settings;
 
 namespace {
@@ -66,11 +66,11 @@ protected:
 };
 
 TEST_F(WeightedSumTest, Constructor) {
-    WeightedSum *obj = new WeightedSum(settings_.optimizer(), results_);
+    auto *obj = new WeightedSum(settings_.optimizer(), results_);
 }
 
 TEST_F(WeightedSumTest, Value) {
-    Objective *obj = new WeightedSum(settings_.optimizer(), results_);
+    auto *obj = new WeightedSum(settings_.optimizer(), results_);
     float wwpt = results_->GetValue(Results::Property::CumulativeWellWaterProduction, "PROD", 10);
     float fopt = results_->GetValue(Results::Property::CumulativeOilProduction);
     EXPECT_FLOAT_EQ(80.0, results_->GetValue(Results::Property::Time, 10));

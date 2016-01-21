@@ -37,7 +37,7 @@ void Simulator::SetOutputDirectory(QString output_directory)
     else throw OutputDirectoryDoesNotExistException(output_directory);
 }
 
-Model::Results::Results *Simulator::results()
+::Simulation::Results::Results *Simulator::results()
 {
     return results_;
 }
