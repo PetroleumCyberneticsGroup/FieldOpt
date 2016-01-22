@@ -205,6 +205,7 @@ In the simulator section we define settings and parameters needed to launch the 
 "Simulator": {
 	"Type": string,
 	"Commands": string array,
+	"ExecutionScript": string,
 	"DriverPath": string
 }
 ```
@@ -213,6 +214,7 @@ Note that the simulator driver path may be omitted from the driver file. If it i
 
 * `Type` denotes the simulator to be used. Currently, the only supported simulator is `ECLIPSE`.
 * `Commands` is an array of (BASH) commands that should be executed in order to start the simulator.
+* `ExecutionScript` is the name of a script found in the `FieldOpt/execution_scripts` folder that should be used to execute simulations. The name should be given without the suffix (e.g. `"ExecutionScript": "csh_eclrun"`). If defined, this will override any commands given.
 * `DriverPath` is the path to a complete driver file for the model (e.g. the one run to generate the grid files). Fluid functions, rock properties etc. is taken from this file. This may be omitted.
 
 ## Optimizer

@@ -49,18 +49,19 @@ ECLSimulator::ECLSimulator(Utilities::Settings::Settings *settings, Model::Model
     model_ = model;
     driver_file_writer_ = new DriverFileWriters::EclDriverFileWriter(settings, model_);
 
+    script_path_ = ExecutionScripts::GetScriptPath(settings->simulator()->script_name());
+    script_args_ = (QStringList() << output_directory_ << driver_file_writer_->output_driver_file_name_);
+
     results_ = new Results::ECLResults();
     try {
         results()->ReadResults(driver_file_writer_->output_driver_file_name_);
-    } catch (...) {}
+    } catch (...) {} // At this stage we don't really care if the results can be read, we just want to set the path.
 }
 
 void ECLSimulator::Evaluate()
 {
     driver_file_writer_->WriteDriverFile();
-    QStringList args {output_directory_, driver_file_writer_->output_driver_file_name_};
-    QString script = Simulation::ExecutionScripts::DefaultScripts[Simulation::ExecutionScripts::Script::csh_eclrun];
-    ::Utilities::Unix::ExecShellScript(script, args);
+    ::Utilities::Unix::ExecShellScript(script_path_, script_args_);
     results_->ReadResults(driver_file_writer_->output_driver_file_name_);
 }
 

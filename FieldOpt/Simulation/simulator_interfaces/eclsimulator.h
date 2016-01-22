@@ -49,6 +49,7 @@ namespace SimulatorInterfaces {
  * \endcode
  *
  * \todo Support other execution scripts (i.e. get it from settings)
+ * \todo Support custom execution commands.
  */
 class ECLSimulator : public Simulator
 {
@@ -68,6 +69,8 @@ public:
 
 private:
     DriverFileWriters::EclDriverFileWriter *driver_file_writer_;
+    QString script_path_;
+    QStringList script_args_;
 };
 
 }

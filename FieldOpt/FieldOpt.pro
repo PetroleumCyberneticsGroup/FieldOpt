@@ -20,3 +20,10 @@ OTHER_FILES += \
     defaults.pri \
     ../examples/MRST/compass/driver.dat \
     ../examples/MRST/compass/driver_kongull.dat
+
+# Copy simulator execution scripts to build dir
+copy_sim_exec_scripts.commands = $(COPY_DIR) $$PWD/execution_scripts $$OUT_PWD
+first.depends = $(first) copy_sim_exec_scripts
+export(first.depends)
+export(copy_sim_exec_scripts.commands)
+QMAKE_EXTRA_TARGETS += first copy_sim_exec_scripts

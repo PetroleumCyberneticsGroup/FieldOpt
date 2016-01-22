@@ -52,6 +52,7 @@
     },
     "Simulator": {
         "Type": "ECLIPSE",
+        "ExecutionScript": "csh_eclrun",
         "Commands": ["tcsh -c \"eval source ~/.cshrc; eclrun eclipse\""],
         "DriverPath": "../../examples/ECLIPSE/HORZWELL/HORZWELL.DATA"
     },

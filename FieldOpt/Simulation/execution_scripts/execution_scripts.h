@@ -43,7 +43,17 @@ namespace Simulation { namespace ExecutionScripts {
         {Script::csh_eclrun, QString("%1/execution_scripts/csh_eclrun.sh").arg(::Utilities::FileHandling::GetBuildDirectoryPath())}
     };
 
+    Script GetScript(QString name) {
+        if (QString::compare(name, "csh_eclrun") == 0)
+            return Script::csh_eclrun;
+        else throw std::runtime_error("Script " + name.toStdString() + " not recognized.");
+    }
 
+    QString GetScriptPath(QString name) {
+        Script scr = GetScript(name);
+        QString path = DefaultScripts[scr];
+        return path;
+    }
 }}
 
 #endif // EXECUTION_SCRIPTS

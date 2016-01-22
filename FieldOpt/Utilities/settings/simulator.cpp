@@ -46,13 +46,18 @@ Simulator::Simulator(QJsonObject json_simulator)
 
     // Simulator commands
     QJsonArray commands = json_simulator["Commands"].toArray();
+    script_name_ = "";
+    if (json_simulator.contains("ExecutionScript") && json_simulator["ExecutionScript"].toString().size() > 0) {
+        script_name_ = json_simulator["ExecutionScript"].toString();
+    }
     if (json_simulator.contains("Commands") && commands.size() > 0) {
         commands_ = new QStringList();
         for (int i = 0; i < commands.size(); ++i) {
             commands_->append(commands[i].toString());
         }
-    }
-    else throw NoSimulatorCommandsGivenException("At least one simulator command must be given.");
+    }    
+    if (script_name_.length() == 0 && commands.size() == 0)
+        throw NoSimulatorCommandsGivenException("At least one simulator command or a simulator script must be given.");
 }
 
 }
