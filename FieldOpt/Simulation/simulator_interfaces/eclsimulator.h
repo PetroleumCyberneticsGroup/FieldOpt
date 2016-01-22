@@ -48,7 +48,6 @@ namespace SimulatorInterfaces {
  *  sim.CleanUp();
  * \endcode
  *
- * \todo Support other execution scripts (i.e. get it from settings)
  * \todo Support custom execution commands.
  */
 class ECLSimulator : public Simulator

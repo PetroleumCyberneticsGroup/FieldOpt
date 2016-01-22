@@ -46,8 +46,6 @@ class MainRunner;
  *
  * It also defines the purely virtual Execute() method which should be implemented by all concrete
  * runners.
- *
- * \todo Methods for logging common to all runnes (maybe make them virtual so they can be overridden)
  */
 class AbstractRunner
 {

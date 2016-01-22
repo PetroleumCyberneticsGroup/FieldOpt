@@ -35,8 +35,6 @@ namespace Optimization { namespace Constraints {
 /*!
  * \brief The Constraint class is the abstract parent class to all other constraint classes. One Constraint
  * object should be created for each defined constraint.
- *
- * \todo Find a way to determine which variables a constraint should be applied to.
  */
 class Constraint
 {
