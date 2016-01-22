@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <QVector3D>
 #include <iostream>
-#include "eclgridreader.h"
+#include "ERTWrapper/eclgridreader.h"
 
 using namespace ERTWrapper::ECLGrid;
 
@@ -79,6 +79,19 @@ TEST_F(ECLGridReaderTest, GetCell) {
     EXPECT_EQ(cell.corners->at(7)->z(), 7050);
     EXPECT_EQ(cell.center->x(), 150);
     EXPECT_EQ(cell.volume, 1.5e+06);
+}
+
+TEST_F(ECLGridReaderTest, CellProperties) {
+    ECLGridReader::Cell cell_1 = ecl_grid_reader_->GetGridCell(1);
+    ECLGridReader::Cell cell_1000 = ecl_grid_reader_->GetGridCell(1000);
+    EXPECT_FLOAT_EQ(0.25, cell_1.porosity);
+    EXPECT_FLOAT_EQ(100, cell_1.permx);
+    EXPECT_FLOAT_EQ(100, cell_1.permy);
+    EXPECT_FLOAT_EQ(5, cell_1.permz);
+    EXPECT_FLOAT_EQ(0.25, cell_1000.porosity);
+    EXPECT_FLOAT_EQ(100, cell_1000.permx);
+    EXPECT_FLOAT_EQ(100, cell_1000.permy);
+    EXPECT_FLOAT_EQ(5, cell_1000.permz);
 }
 
 TEST_F(ECLGridReaderTest, GlobalIndexOfCellEncompasingPoint) {

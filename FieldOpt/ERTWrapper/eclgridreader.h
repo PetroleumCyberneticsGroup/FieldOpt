@@ -5,6 +5,7 @@
 #include <ert/ecl/ecl_grid.h>
 #include <QVector3D>
 #include <QList>
+#include <ert/ecl/ecl_file.h>
 
 namespace ERTWrapper {
 
@@ -40,6 +41,10 @@ public:
     struct Cell {
         int global_index;
         double volume;
+        double porosity;
+        double permx;
+        double permy;
+        double permz;
         QList<QVector3D*>* corners;
         QVector3D* center;
     };
@@ -52,10 +57,17 @@ public:
 
 private:
     QString file_name_;
+    QString init_file_name_;
     ecl_grid_type* ecl_grid_;
+    ecl_file_type* ecl_file_init_;
     QVector3D* GetCellCenter(int global_index);
     QList<QVector3D*>* GetCellCorners(int global_index);
     double GetCellVolume(int global_index);
+
+    ecl_kw_type *poro_kw_;
+    ecl_kw_type *permx_kw_;
+    ecl_kw_type *permy_kw_;
+    ecl_kw_type *permz_kw_;
 public:
     ECLGridReader();
     virtual ~ECLGridReader(); //!< Frees the grid object if it has been set.
