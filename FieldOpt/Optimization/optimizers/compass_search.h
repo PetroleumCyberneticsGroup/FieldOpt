@@ -36,7 +36,11 @@ namespace Optimization { namespace Optimizers {
  *
  * This algorithm only supports integer and real variables.
  *
- * \todo Insert complete reference here.
+ * Reference:
+ *
+ * Kolda, Tamara G., Robert Michael Lewis, and Virginia Torczon.
+ *  "Optimization by direct search: New perspectives on some classical and modern methods."
+ *  SIAM review 45.3 (2003): 385-482.
  */
 class CompassSearch : public Optimizer
 {

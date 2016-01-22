@@ -38,8 +38,6 @@ namespace Optimization {
 /*!
  * \brief The Optimizer class is the abstract parent class for all optimizers. It is primarily
  * designed to support direct search optimization algorithms.
- *
- * \todo GetProgress method
  */
 class Optimizer
 {
@@ -102,16 +100,12 @@ protected:
     /*!
      * \brief BetterCaseFoundLastEvaluation Searches the list of recently evaluated cases in the case handler for a case
      * with a better objective function value than the current tentative best case.
-     *
-     * \todo Implement both minimization and maximization. Currently only maximization is implemented.
      * \return True if a better case is found, otherwise false.
      */
     bool betterCaseFoundLastEvaluation();
 
     /*!
      * \brief ApplyNewTentativeBestCase Sets the tentative best case to the best case found in the case handler (if one is found).
-     *
-     * \todo Implement both minimization and maximization. Currently only maximization is implemented.
      */
     void applyNewTentativeBestCase();
 
