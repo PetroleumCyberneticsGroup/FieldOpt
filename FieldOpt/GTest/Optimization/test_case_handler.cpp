@@ -65,7 +65,7 @@ TEST_F(CaseHandlerTest, CaseIDs) {
 }
 
 TEST_F(CaseHandlerTest, GetNewCase) {
-    Optimization::Case *next_case = case_handler_->GetNextCaseForEvaluation();
+    case_handler_->GetNextCaseForEvaluation();
     EXPECT_EQ(3, case_handler_->QueuedCases().size());
     EXPECT_EQ(1, case_handler_->CasesBeingEvaluated().size());
     EXPECT_EQ(0, case_handler_->EvaluatedCases().size());

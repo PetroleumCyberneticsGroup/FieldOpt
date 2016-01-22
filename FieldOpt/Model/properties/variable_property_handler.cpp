@@ -81,6 +81,12 @@ VariablePropertyHandler::VariablePropertyHandler(Utilities::Settings::Model sett
                     new_well->getWellBlock(settings_var.blocks[block_nr].id)->position_ = true;
                     new_well->getWellBlock(settings_var.blocks[block_nr].id)->variable_name_ = settings_var.name;
                 }
+                break;
+            case Utilities::Settings::Model::WellVariableType::SplinePoints:
+                std::cout << "SplinePoints-type variables are not yet handled. Skipping." << std::endl;
+                break;
+            default:
+                throw VariableTypeNotRecognizedException();
             }
         }
         wells_.append(new_well);

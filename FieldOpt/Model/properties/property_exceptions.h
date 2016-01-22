@@ -52,6 +52,12 @@ public:
         : std::runtime_error(message) {}
 };
 
+class VariableTypeNotRecognizedException : public std::runtime_error {
+public:
+    VariableTypeNotRecognizedException()
+        : std::runtime_error("The variable type was not recognized.") {}
+};
+
 }
 }
 

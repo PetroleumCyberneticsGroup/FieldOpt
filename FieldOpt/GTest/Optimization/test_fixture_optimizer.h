@@ -32,7 +32,6 @@
 #include "Model/model.h"
 #include "Optimization/case.h"
 
-namespace {
 class OptimizerTestFixture : public ::testing::Test {
 protected:
     OptimizerTestFixture(){
@@ -54,6 +53,5 @@ protected:
     ::Optimization::Case *base_case_;
 };
 
-}
 #endif // TEST_FIXTURE_OPTIMIZER
 

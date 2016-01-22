@@ -57,10 +57,6 @@ protected:
     QList<Control *> all_controls_;
 };
 
-TEST_F(ControlTest, Constructor) {
-    Control *control = new Control(entry_, well_, variable_container_, variable_handler_);
-}
-
 TEST_F(ControlTest, ProducerControl) {
     EXPECT_STREQ("PROD", well_.name.toLatin1().constData());
     EXPECT_EQ(0, entry_.time_step);

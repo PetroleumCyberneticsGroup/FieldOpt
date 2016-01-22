@@ -65,10 +65,6 @@ protected:
     Settings settings_;
 };
 
-TEST_F(WeightedSumTest, Constructor) {
-    auto *obj = new WeightedSum(settings_.optimizer(), results_);
-}
-
 TEST_F(WeightedSumTest, Value) {
     auto *obj = new WeightedSum(settings_.optimizer(), results_);
     float wwpt = results_->GetValue(Results::Property::CumulativeWellWaterProduction, "PROD", 10);
