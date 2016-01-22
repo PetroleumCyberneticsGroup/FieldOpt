@@ -5,6 +5,7 @@
     },
     "Optimizer": {
         "Type": "Compass",
+        "Mode": "Maximize",
         "Parameters": {
             "MaxEvaluations": 50,
             "InitialStepLength": 100.0,

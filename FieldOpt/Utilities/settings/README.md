@@ -224,6 +224,7 @@ The optimizer section contains optimizer specific settings and parameters. The r
 ```
 "Optimizer": {
 	"Type": string,
+	"Mode": "Maximize",
 	"Parameters": { ... },
 	"Objective": { ... },
 	"Constraints": [ {...}, {...}, ... ]
@@ -231,6 +232,7 @@ The optimizer section contains optimizer specific settings and parameters. The r
 ```
 
 * `Type` denotes which optmizer is to be used. Currently the only implemented algorithm is `Compass`.
+* `Mode` specifies whether the objective function should be `Maximize`d or `Minimize`d.
 * `Parameters` holds the optimization algorithm-specific parameters. The structure is shown below.
 * `Objective` specifies the objective function to be used by the optimization algorithm. The structure is shown below.
 * `Constraints` is an array of objects defining the constraints to be applied to the algorithm/variables. The structure of each constraint object is shown below.

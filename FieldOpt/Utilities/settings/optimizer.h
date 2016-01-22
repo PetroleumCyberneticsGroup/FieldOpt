@@ -45,6 +45,7 @@ class Optimizer
 
 public:
     enum OptimizerType { Compass };
+    enum OptimizerMode { Maximize, Minimize };
     enum ConstraintType { BHP, Rate, SplinePoints };
     enum ConstraintWellSplinePointsType { MaxMin, Function};
     enum ObjectiveType { WeightedSum };
@@ -77,6 +78,7 @@ public:
     };
 
     OptimizerType type() const { return type_; } //!< Get the Optimizer type (e.g. Compass).
+    OptimizerMode mode() const { return mode_; } //!< Get the optimizer mode (maximize/minimize).
     Parameters parameters() const { return parameters_; } //!< Get the optimizer parameters.
     Objective objective() const { return objective_; } //!< Get the optimizer objective function.
     QList<Constraint> *constraints() const { return constraints_; } //!< Get the optimizer constraints.
@@ -87,7 +89,7 @@ private:
     Parameters parameters_;
     Objective objective_;
     QList<Constraint> *constraints_;
-
+    OptimizerMode mode_;
     Constraint parseSingleConstraint(QJsonObject json_constraint);
 };
 

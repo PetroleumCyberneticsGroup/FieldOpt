@@ -44,6 +44,16 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
         type_ = OptimizerType::Compass;
     else throw OptimizerTypeNotRecognizedException("The optimizer type " + type.toStdString() + " was not recognized.");
 
+    // Optimizer mode
+    if (json_optimizer.contains("Mode")) {
+        QString mode = json_optimizer["Mode"].toString();
+        if (QString::compare(mode, "Minimize", Qt::CaseInsensitive) == 0)
+            mode_ = OptimizerMode::Minimize;
+        else if (QString::compare(mode, "Maximize", Qt::CaseInsensitive) == 0)
+            mode_ = OptimizerMode::Maximize;
+        else throw UnableToParseOptimizerSectionException("Did not recognize optimizer Mode setting.");
+    } else throw UnableToParseOptimizerSectionException("Optimizer Mode keyword must be specified.");
+
     // Optimizer parameters
     try {
         parameters_.max_evaluations = json_parameters["MaxEvaluations"].toInt();

@@ -53,6 +53,10 @@ TEST_F(OptimizerSettingsTest, Type) {
     EXPECT_EQ(Optimizer::OptimizerType::Compass, settings_.optimizer()->type());
 }
 
+TEST_F(OptimizerSettingsTest, Mode) {
+    EXPECT_EQ(Optimizer::OptimizerMode::Maximize, settings_.optimizer()->mode());
+}
+
 TEST_F(OptimizerSettingsTest, Parameters) {
     Optimizer::Parameters params = settings_.optimizer()->parameters();
     EXPECT_EQ(10, params.max_evaluations);

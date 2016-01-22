@@ -125,6 +125,7 @@ protected:
     Constraints::ConstraintHandler *constraint_handler_; //!< All constraints defined for the optimization.
     int max_evaluations_; //!< Maximum number of objective function evaluations allowed before terminating.
     int iteration_; //!< The current iteration.
+    ::Utilities::Settings::Optimizer::OptimizerMode mode_; //!< The optimization mode, i.e. whether the objective function should be maximized or minimized.
 };
 
 }
