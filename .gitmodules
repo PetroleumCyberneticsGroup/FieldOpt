@@ -1,0 +1,3 @@
+[submodule "FieldOpt/WellIndexCalculator"]
+	path = FieldOpt/WellIndexCalculator
+	url = git@github.com:PetroleumCyberneticsGroup/WellIndexCalculator.git
