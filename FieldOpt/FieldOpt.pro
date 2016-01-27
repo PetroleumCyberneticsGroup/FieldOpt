@@ -1,9 +1,9 @@
 TEMPLATE = subdirs
 CONFIG += c++11
 
+# GTest has been omitted from the release
 SUBDIRS = \
     ERTWrapper \
-    GTest \
     Model \
     Utilities \
     Optimization \
