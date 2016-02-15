@@ -10,7 +10,7 @@ SUBDIRS = \
     Simulation \
     Runner \
     WellIndexCalculator \
-    WellIndexCalculator/WellIndexCalculatorTests
+    GTest
 
 GTest.depends = ERTWrapper Utilities Model Optimization Simulation Runner
 Model.depends = ERTWrapper Utilities

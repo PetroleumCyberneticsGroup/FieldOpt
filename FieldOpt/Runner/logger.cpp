@@ -12,10 +12,11 @@ Logger::Logger(RuntimeSettings *rts)
     sim_log_path_ = output_dir_ + "/log_simulation.csv";
     cas_log_path_ = output_dir_ + "/log_cases.csv";
     settings_log_path_ = output_dir_ + "/log_settings.csv";
+    property_uuid_name_map_path_ = output_dir_ + "/log_property_uuid_name_map.csv";
 
     // Delete existing logs if --force flag is on
     if (rts->overwrite_existing()) {
-        foreach (auto path, (QStringList() << cas_log_path_ << opt_log_path_ << sim_log_path_ << settings_log_path_)) {
+        foreach (auto path, (QStringList() << cas_log_path_ << opt_log_path_ << sim_log_path_ << settings_log_path_ << property_uuid_name_map_path_)) {
             if (Utilities::FileHandling::FileExists(path)) {
                 std::cout << "Force flag on. Deleting " << path.toStdString() << std::endl;
                 Utilities::FileHandling::DeleteFile(path);
@@ -27,6 +28,32 @@ Logger::Logger(RuntimeSettings *rts)
 void Logger::LogSettings(const Utilities::Settings::Settings *settings)
 {
     Utilities::FileHandling::WriteStringToFile(settings->GetLogCsvString(), settings_log_path_);
+}
+
+void Logger::WritePropertyUuidNameMap(Model::Model *model)
+{
+    Model::Properties::VariablePropertyContainer *properties = model->variables();
+
+    // Write header
+    Utilities::FileHandling::WriteLineToFile("UUID,name", property_uuid_name_map_path_);
+
+    // Binary properties
+    foreach (QUuid id, properties->GetBinaryVariables()->keys()) {
+        QString line = QString("%1,%2").arg(id.toString()).arg(properties->GetBinaryVariables()->value(id)->name());
+        Utilities::FileHandling::WriteLineToFile(line, property_uuid_name_map_path_);
+    }
+
+    // Continous properties
+    foreach (QUuid id, properties->GetContinousVariables()->keys()) {
+        QString line = QString("%1,%2").arg(id.toString()).arg(properties->GetContinousVariables()->value(id)->name());
+        Utilities::FileHandling::WriteLineToFile(line, property_uuid_name_map_path_);
+    }
+
+    // Discrete properties
+    foreach (QUuid id, properties->GetDiscreteVariables()->keys()) {
+        QString line = QString("%1,%2").arg(id.toString()).arg(properties->GetDiscreteVariables()->value(id)->name());
+        Utilities::FileHandling::WriteLineToFile(line, property_uuid_name_map_path_);
+    }
 }
 
 void Logger::LogCase(const Optimization::Case *c, QString message)
