@@ -11,16 +11,22 @@ Logger::Logger(RuntimeSettings *rts)
     opt_log_path_ = output_dir_ + "/log_optimization.csv";
     sim_log_path_ = output_dir_ + "/log_simulation.csv";
     cas_log_path_ = output_dir_ + "/log_cases.csv";
+    settings_log_path_ = output_dir_ + "/log_settings.csv";
 
     // Delete existing logs if --force flag is on
     if (rts->overwrite_existing()) {
-        foreach (auto path, (QStringList() << cas_log_path_ << opt_log_path_ << sim_log_path_)) {
+        foreach (auto path, (QStringList() << cas_log_path_ << opt_log_path_ << sim_log_path_ << settings_log_path_)) {
             if (Utilities::FileHandling::FileExists(path)) {
                 std::cout << "Force flag on. Deleting " << path.toStdString() << std::endl;
                 Utilities::FileHandling::DeleteFile(path);
             }
         }
     }
+}
+
+void Logger::LogSettings(const Utilities::Settings::Settings *settings)
+{
+    Utilities::FileHandling::WriteStringToFile(settings->GetLogCsvString(), settings_log_path_);
 }
 
 void Logger::LogCase(const Optimization::Case *c, QString message)

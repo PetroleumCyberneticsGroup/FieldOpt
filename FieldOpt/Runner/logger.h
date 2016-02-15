@@ -9,6 +9,7 @@
 #include "Optimization/case.h"
 #include "Optimization/optimizer.h"
 #include "runtime_settings.h"
+#include "Utilities/settings/settings.h"
 
 namespace Runner {
 
@@ -23,6 +24,11 @@ public:
      * \brief Logger
      */
     Logger(RuntimeSettings *rts);
+
+    /*!
+     * \brief LogSettings Write a log containing some of the settings specified in the driver file.
+     */
+    void LogSettings(const Utilities::Settings::Settings *settings);
 
     /*!
      * \brief LogCase Add a case to the case log.
@@ -57,6 +63,7 @@ private:
     QString opt_log_path_; //!< Path to the optimization log file.
     QString sim_log_path_; //!< Path to the simulation log file.
     QString cas_log_path_; //!< Path to the case log file.
+    QString settings_log_path_; //!< Path to the settings log file.
 
     QStringList opt_header_; //!< CSV header for the optimization log
     QStringList sim_header_; //!< CSV header for the simulation log

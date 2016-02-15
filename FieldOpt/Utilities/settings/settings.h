@@ -64,6 +64,8 @@ public:
     Utilities::Settings::Optimizer *optimizer() const { return optimizer_; } //!< Object containing optimizer specific settings.
     Simulator *simulator() const { return simulator_; } //!< Object containing simulator specific settings.
 
+    QString GetLogCsvString() const; //!< Get a string containing the CSV header and contents for the log.
+
 private:
     QString driver_path_;
     QJsonObject *json_driver_;

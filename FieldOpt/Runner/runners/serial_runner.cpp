@@ -11,6 +11,7 @@ SerialRunner::SerialRunner(Runner::RuntimeSettings *runtime_settings)
 void SerialRunner::Execute()
 {
     auto logger = Logger(runtime_settings_);
+    logger.LogSettings(settings_);
     while (optimizer_->IsFinished() == false) {
         auto new_case = optimizer_->GetCaseForEvaluation();
         logger.LogCase(new_case);
