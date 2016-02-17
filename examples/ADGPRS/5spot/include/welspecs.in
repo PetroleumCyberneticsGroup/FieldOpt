@@ -1,0 +1,7 @@
+WELSPECS
+  INJ1      G1        39  23  */
+  PROD1     G2         6   6  */
+  PROD2     G2        55   6  */
+  PROD3     G2         6  55  */
+  PROD4     G2        55  55  */
+/

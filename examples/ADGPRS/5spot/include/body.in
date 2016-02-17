@@ -1,0 +1,61 @@
+VERBOSE
+    BRIEF SILENT
+/
+
+MODEL
+    BLACK_OIL NATURAL
+/
+
+DIMENS
+    60 60 1
+/
+
+WELL_RATES_AT
+    STC
+/
+
+INCLUDE
+    ./include/depth.in
+/
+
+DX
+    3600*32 /
+
+DY
+    3600*32 /
+
+DZ
+    3600*24 /
+
+INCLUDE
+    ./include/permx.in /
+
+INCLUDE
+    ./include/permy.in /
+
+INCLUDE
+    ./include/permz.in /
+
+INCLUDE
+    ./include/props.in
+/
+
+INCLUDE
+    ./include/props_mod.in
+/
+
+INCLUDE
+    ./include/poro.in
+/
+
+INCLUDE
+    ./include/init.in
+/
+
+SGAS
+    0
+/
+
+INCLUDE
+    ./include/tuning.in
+/

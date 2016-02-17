@@ -1,0 +1,21 @@
+OUTPUT
+    HDF5 TIME    5SPOT/
+   #ASCII REPORT "prefix" /
+/
+
+INCLUDE
+    ./include/body.in
+
+INCLUDE
+    ./include/wells.in
+/
+
+INCLUDE
+    ./include/tstep_4yrs.in
+/
+
+INCLUDE
+    ./include/tstep_4yrs.in
+/
+
+END
