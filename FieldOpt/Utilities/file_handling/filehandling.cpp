@@ -143,3 +143,37 @@ bool Utilities::FileHandling::DirectoryIsEmpty(QString folder_path)
         return true;
     else return false;
 }
+
+void Utilities::FileHandling::CopyFile(QString origin, QString destination)
+{
+    if (!FileExists(origin))
+        throw FileNotFoundException(origin);
+    QFile original(origin);
+    if (!original.copy(destination))
+        FileHandlingException("Failed to copy file " + origin + " to " + destination);
+}
+
+void Utilities::FileHandling::CopyDirectory(QString origin, QString destination)
+{
+    if (!DirectoryExists(origin))
+        throw DirectoryNotFoundException("Can't find parent directory for copying: ", origin);
+    if (!DirectoryExists(destination))
+        throw DirectoryNotFoundException("Cant findt destination (parent) directory for copying: ", destination);
+    QDir original(origin);
+    QFileInfoList entries = original.entryInfoList();
+
+    foreach (auto entry, entries) {
+        if (entry.isFile())
+            CopyFile(entry.absolutePath(), destination+entry.fileName());
+        else if (entry.isDir())
+            CreateDirectory(entry.absolutePath());
+    }
+
+}
+
+void Utilities::FileHandling::CreateDirectory(QString path)
+{
+    if (DirectoryExists(path))
+        return; // Do nothing if the directory already exists.
+    QDir().mkdir(path);
+}
