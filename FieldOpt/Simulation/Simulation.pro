@@ -52,4 +52,5 @@ SOURCES += \
 
 DISTFILES += \
     execution_scripts/README.md \
-    execution_scripts/csh_eclrun.sh
+    execution_scripts/csh_eclrun.sh \
+    execution_scripts/bash_adgprs.sh
