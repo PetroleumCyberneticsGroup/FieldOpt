@@ -4,6 +4,7 @@ CONFIG   -= app_bundle
 CONFIG += c++11
 
 LIBS += -L$$OUT_PWD/../Model -lmodel
+LIBS += -L$$OUT_PWD/../AdgprsResultsReader -ladgprsresultsreader
 
 TEMPLATE = lib
 
@@ -28,7 +29,8 @@ HEADERS += \
     execution_scripts/execution_scripts.h \
     results/results.h \
     results/eclresults.h \
-    results/results_exceptions.h
+    results/results_exceptions.h \
+    results/adgprsresults.h
 
 SOURCES += \
     simulator_interfaces/simulator.cpp \
@@ -45,7 +47,8 @@ SOURCES += \
     simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/solution_section.cpp \
     simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/summary_section.cpp \
     simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/schedule_section.cpp \
-    results/eclresults.cpp
+    results/eclresults.cpp \
+    results/adgprsresults.cpp
 
 DISTFILES += \
     execution_scripts/README.md \

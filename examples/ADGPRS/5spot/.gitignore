@@ -1,0 +1,6 @@
+/5SPOT.SIM.H5
+/5SPOT.log.txt
+/5SPOT.res_partition.bin
+/5SPOT.solver_partition.bin
+*.json
+*.csv
