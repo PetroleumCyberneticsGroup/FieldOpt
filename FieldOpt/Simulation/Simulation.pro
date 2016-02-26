@@ -30,7 +30,8 @@ HEADERS += \
     results/results.h \
     results/eclresults.h \
     results/results_exceptions.h \
-    results/adgprsresults.h
+    results/adgprsresults.h \
+    simulator_interfaces/adgprssimulator.h
 
 SOURCES += \
     simulator_interfaces/simulator.cpp \
@@ -48,9 +49,11 @@ SOURCES += \
     simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/summary_section.cpp \
     simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/schedule_section.cpp \
     results/eclresults.cpp \
-    results/adgprsresults.cpp
+    results/adgprsresults.cpp \
+    simulator_interfaces/adgprssimulator.cpp
 
 DISTFILES += \
     execution_scripts/README.md \
+    README.md \
     execution_scripts/csh_eclrun.sh \
     execution_scripts/bash_adgprs.sh

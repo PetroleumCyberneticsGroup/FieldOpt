@@ -57,7 +57,8 @@ SOURCES += \
     Runner/test_bookkeeper.cpp \
     Simulation/results/test_adgprsresults.cpp \
     AdgprsResultsReader/test_json_summary_reader.cpp \
-    AdgprsResultsReader/test_adgprs_results_reader.cpp
+    AdgprsResultsReader/test_adgprs_results_reader.cpp \
+    Simulation/simulator_interfaces/test_adgprssimulator.cpp
 
 OTHER_FILES += \
     Utilities/driver/driver.json
