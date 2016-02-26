@@ -23,5 +23,9 @@ TEST_F(AdgprsSimulatorTest, Evaluate) {
     EXPECT_TRUE(true);
 }
 
+//TEST_F(AdgprsSimulatorTest, CleanUp) {
+//    EXPECT_TRUE(false);
+//}
+
 }
 

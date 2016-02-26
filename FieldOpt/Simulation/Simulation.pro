@@ -31,7 +31,9 @@ HEADERS += \
     results/eclresults.h \
     results/results_exceptions.h \
     results/adgprsresults.h \
-    simulator_interfaces/adgprssimulator.h
+    simulator_interfaces/adgprssimulator.h \
+    simulator_interfaces/driver_file_writers/adgprsdriverfilewriter.h \
+    simulator_interfaces/driver_file_writers/driver_parts/adgprs_driver_parts/wellstre.h
 
 SOURCES += \
     simulator_interfaces/simulator.cpp \
@@ -50,7 +52,9 @@ SOURCES += \
     simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/schedule_section.cpp \
     results/eclresults.cpp \
     results/adgprsresults.cpp \
-    simulator_interfaces/adgprssimulator.cpp
+    simulator_interfaces/adgprssimulator.cpp \
+    simulator_interfaces/driver_file_writers/adgprsdriverfilewriter.cpp \
+    simulator_interfaces/driver_file_writers/driver_parts/adgprs_driver_parts/wellstre.cpp
 
 DISTFILES += \
     execution_scripts/README.md \

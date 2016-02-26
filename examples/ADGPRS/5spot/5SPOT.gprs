@@ -11,11 +11,7 @@ INCLUDE
 /
 
 INCLUDE
-    ./include/tstep_4yrs.in
-/
-
-INCLUDE
-    ./include/tstep_4yrs.in
+    ./include/tsteps.in
 /
 
 END

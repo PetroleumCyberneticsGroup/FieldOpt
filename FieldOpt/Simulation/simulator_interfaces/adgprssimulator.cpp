@@ -15,6 +15,7 @@ AdgprsSimulator::AdgprsSimulator(Utilities::Settings::Settings *settings, Model:
     if (!Utilities::FileHandling::DirectoryExists(settings->output_directory()))
         OutputDirectoryDoesNotExistException(settings->output_directory());
     output_directory_ = settings->output_directory();
+    output_h5_summary_file_path_ = output_directory_ + "/" + initial_driver_file_name_.split(".").first() + ".SIM.H5";
 
     QStringList tmp = initial_driver_file_path_.split("/");
     initial_driver_file_name_ = tmp.last();
@@ -30,7 +31,7 @@ void AdgprsSimulator::Evaluate()
 
 void AdgprsSimulator::CleanUp()
 {
-    // Files to delete: *.SIM.H5 etc
+    Utilities::FileHandling::DeleteFile(output_h5_summary_file_path_);
 }
 
 void AdgprsSimulator::copyDriverFiles()
