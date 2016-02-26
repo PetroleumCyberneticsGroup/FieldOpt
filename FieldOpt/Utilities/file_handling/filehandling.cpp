@@ -160,13 +160,13 @@ void Utilities::FileHandling::CopyDirectory(QString origin, QString destination)
     if (!DirectoryExists(destination))
         throw DirectoryNotFoundException("Cant findt destination (parent) directory for copying: ", destination);
     QDir original(origin);
-    QFileInfoList entries = original.entryInfoList();
+    QFileInfoList entries = original.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot, QDir::DirsLast);
 
     foreach (auto entry, entries) {
-        if (entry.isFile())
-            CopyFile(entry.absolutePath(), destination+entry.fileName());
+        if (entry.isFile() && !entry.isDir())
+            CopyFile(entry.absoluteFilePath(), destination+"/"+entry.fileName()); //std::cout << "FILE: " << QString().toStdString() << std::endl;
         else if (entry.isDir())
-            CreateDirectory(entry.absolutePath());
+            CreateDirectory(destination+"/"+entry.fileName()); // std::cout << "FOLDER: " << QString().toStdString() << std::endl;
     }
 
 }
