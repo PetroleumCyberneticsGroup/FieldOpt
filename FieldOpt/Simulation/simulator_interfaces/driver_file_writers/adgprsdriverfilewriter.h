@@ -4,7 +4,10 @@
 #include "Utilities/settings/settings.h"
 #include "Utilities/settings/simulator.h"
 #include "Model/model.h"
-#include "Simulation/simulator_interfaces/adgprssimulator.h"
+
+namespace Simulation { namespace SimulatorInterfaces {
+    class AdgprsSimulator;
+}}
 
 namespace Simulation { namespace SimulatorInterfaces { namespace DriverFileWriters {
 

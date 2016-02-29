@@ -37,7 +37,8 @@ namespace DriverParts {
 namespace ECLDriverParts {
 /*!
  * \brief The ECLDriverPart class Is the parent class for any part of an ECL100 driver file,
- * e.g. the WELSPECS section.
+ * e.g. the WELSPECS section. Because the driver files are so similar, this class is also used
+ * by ADGPRS driver parts.
  */
 class ECLDriverPart : public Simulation::SimulatorInterfaces::DriverFileWriters::DriverParts::DriverPart
 {

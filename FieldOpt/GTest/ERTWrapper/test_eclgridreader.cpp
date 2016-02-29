@@ -72,6 +72,7 @@ TEST_F(ECLGridReaderTest, CheckDimensions) {
 
 TEST_F(ECLGridReaderTest, GetCell) {
     ECLGridReader::Cell cell = ecl_grid_reader_->GetGridCell(1);
+    ECLGridReader::Cell cell2 = ecl_grid_reader_->GetGridCell(0);
     //PrintCell(&cell);
     EXPECT_EQ(1, cell.global_index);
     EXPECT_EQ(8, cell.corners->size());
@@ -79,6 +80,7 @@ TEST_F(ECLGridReaderTest, GetCell) {
     EXPECT_EQ(cell.corners->at(7)->z(), 7050);
     EXPECT_EQ(cell.center->x(), 150);
     EXPECT_EQ(cell.volume, 1.5e+06);
+    EXPECT_EQ(0, cell2.global_index);
 }
 
 TEST_F(ECLGridReaderTest, CellProperties) {

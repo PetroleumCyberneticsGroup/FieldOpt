@@ -31,6 +31,7 @@
 #include "Simulation/results/results.h"
 #include "Utilities/settings/settings.h"
 #include "Utilities/settings/simulator.h"
+#include "Simulation/execution_scripts/execution_scripts.h"
 
 namespace Simulation {
 namespace SimulatorInterfaces {

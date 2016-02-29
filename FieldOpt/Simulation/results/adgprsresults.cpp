@@ -1,4 +1,5 @@
 #include "adgprsresults.h"
+#include <iostream>
 
 namespace Simulation { namespace Results {
 
