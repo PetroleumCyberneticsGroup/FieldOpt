@@ -26,16 +26,13 @@ OTHER_FILES += \
     ../examples/MRST/compass/driver_kongull.dat \
     AdgprsSummaryConverter/*
 
-# Copy simulator execution scripts to build dir
-copy_sim_exec_scripts.commands = $(COPY_DIR) $$PWD/execution_scripts $$OUT_PWD
-first.depends = $(first) copy_sim_exec_scripts
-export(first.depends)
-export(copy_sim_exec_scripts.commands)
-QMAKE_EXTRA_TARGETS += first copy_sim_exec_scripts
-
 # Copy ADPGRS summary converter python script to build dir
-copy_python_adgprs_summary_converter.commands = $(MKDIR) -p $$OUT_PWD/AdgprsSummaryConverter ; $(COPY_FILE) $$PWD/AdgprsSummaryConverter/*.py $$OUT_PWD/AdgprsSummaryConverter/
-first.depends = $(first) copy_python_adgprs_summary_converter
+copy_scripts.commands = \
+    $(MKDIR) -p $$OUT_PWD/AdgprsSummaryConverter ; \
+    $(MKDIR) -p $$OUT_PWD/execution_scripts ; \
+    $(COPY_FILE) $$PWD/execution_scripts/*.sh $$OUT_PWD/execution_scripts ; \
+    $(COPY_FILE) $$PWD/AdgprsSummaryConverter/*.py $$OUT_PWD/AdgprsSummaryConverter/
+first.depends = $(first) copy_scripts
 export(first.depends)
-export(copy_python_adgprs_summary_converter.commands)
-QMAKE_EXTRA_TARGETS  += first copy_python_adgprs_summary_converter
+export(copy_scripts.commands)
+QMAKE_EXTRA_TARGETS  += first copy_scripts
