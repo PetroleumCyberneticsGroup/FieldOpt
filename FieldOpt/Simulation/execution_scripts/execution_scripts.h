@@ -40,12 +40,12 @@ namespace Simulation { namespace ExecutionScripts {
         bash_adgprs
     };
 
-    QMap<Script, QString> DefaultScripts {
+    static QMap<Script, QString> DefaultScripts {
         {Script::csh_eclrun, QString("%1/execution_scripts/csh_eclrun.sh").arg(::Utilities::FileHandling::GetBuildDirectoryPath())},
         {Script::bash_adgprs, QString("%1/execution_scripts/bash_adgprs.sh").arg(::Utilities::FileHandling::GetBuildDirectoryPath())}
     };
 
-    Script GetScript(QString name) {
+    static Script GetScript(QString name) {
         if (QString::compare(name, "csh_eclrun") == 0)
             return Script::csh_eclrun;
         else if (QString::compare(name, "bash_adgprs") == 0)
@@ -53,7 +53,7 @@ namespace Simulation { namespace ExecutionScripts {
         else throw std::runtime_error("Script " + name.toStdString() + " not recognized.");
     }
 
-    QString GetScriptPath(QString name) {
+    static QString GetScriptPath(QString name) {
         Script scr = GetScript(name);
         QString path = DefaultScripts[scr];
         return path;
