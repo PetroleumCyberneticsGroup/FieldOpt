@@ -93,6 +93,7 @@ QString WellControls::createTimeEntry(int time)
 
 QString WellControls::createProducerEntry(WellControls::WellSetting *setting)
 {
+    initializeBaseEntryLine(9);
     QStringList producer_entry_line = QStringList(base_entry_line_);
     producer_entry_line[0] = setting->well_name;
 
@@ -116,6 +117,7 @@ QString WellControls::createProducerEntry(WellControls::WellSetting *setting)
 
 QString WellControls::createInjectorEntry(WellControls::WellSetting *setting)
 {
+    initializeBaseEntryLine(7);
     QStringList injector_entry_line = QStringList(base_entry_line_);
     injector_entry_line[0] = setting->well_name;
 
@@ -130,7 +132,7 @@ QString WellControls::createInjectorEntry(WellControls::WellSetting *setting)
         throw std::runtime_error("Injector type not recognized.");
     }
 
-    if (setting->control->open()) injector_entry_line[3] = "OPEN";
+    if (setting->control->open()) injector_entry_line[2] = "OPEN";
     else injector_entry_line[2] = "SHUT";
 
     switch (setting->control->mode()) {
