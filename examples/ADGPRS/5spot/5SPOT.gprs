@@ -1,6 +1,5 @@
 OUTPUT
-    HDF5 TIME    5SPOT/
-   #ASCII REPORT "prefix" /
+    HDF5 TIME    5SPOT /
 /
 
 INCLUDE
