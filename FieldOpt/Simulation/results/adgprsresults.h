@@ -18,6 +18,8 @@ public:
      * numbers in it's summary.
      *
      * \todo Well properties do not support injectors. Field props do.
+     *
+     * \todo The results reported for wells are not reliable. The nr -> name mapping is wrong.
      */
     AdgprsResults(Model::Model *model);
 
@@ -43,9 +45,6 @@ private:
         {CumulativeOilProduction, "FOPT"},
         {CumulativeGasProduction, "FGPT"},
         {CumulativeWaterProduction, "FWPT"},
-        {CumulativeWellOilProduction, "WOT"},
-        {CumulativeWellGasProduction, "WGT"},
-        {CumulativeWellWaterProduction, "WWT"},
         {Time, "TIME"}
     };
 };

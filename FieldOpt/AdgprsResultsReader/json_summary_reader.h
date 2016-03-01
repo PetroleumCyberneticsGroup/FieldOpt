@@ -11,6 +11,9 @@ namespace AdgprsResultsReader {
 /*!
  * \brief The JsonSummaryReader class reads the JSON summary files created
  * by the AdgprsSummaryConverter pythnon script. This class should not be instantiated directly.
+ *
+ * \note All field values are absolute values. I.e. borth production and injection numbers will
+ * be positive.
  */
 class JsonSummaryReader
 {
