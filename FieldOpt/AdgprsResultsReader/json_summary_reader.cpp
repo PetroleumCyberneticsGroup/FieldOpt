@@ -6,6 +6,7 @@
 #include <QFile>
 #include <QList>
 #include <stdexcept>
+#include <cmath>
 
 namespace AdgprsResultsReader {
 
@@ -92,7 +93,7 @@ void JsonSummaryReader::readFieldProps(QJsonObject field_props)
     foreach (QString key, keys) {
         field_properties_[key] = new QVector<double>();
         foreach (QJsonValue v, field_props[key].toArray()) {
-            field_properties_[key]->append(v.toDouble());
+            field_properties_[key]->append(std::abs(v.toDouble()));
         }
     }
 }
@@ -101,7 +102,11 @@ void JsonSummaryReader::readWellProps(QJsonArray well_props)
 {
     foreach (QJsonValue w, well_props) {
         WellData *data = new WellData();
-        data->is_injector = w.toObject()["IsInjector"].toInt() == 1 ? true : false;
+        if (w.toObject()["IsInjector"].toInt() == 1)
+            data->is_injector = true;
+        else
+            data->is_injector = false;
+
         data->num_perforations = w.toObject()["NumPerforations"].toInt();
 
         data->properties_ = QHash<QString, QVector<double> *>();
