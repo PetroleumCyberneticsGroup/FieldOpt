@@ -42,6 +42,8 @@ Simulator::Simulator(QJsonObject json_simulator)
     QString type = json_simulator["Type"].toString();
     if (QString::compare(type, "ECLIPSE") == 0)
         type_ = SimulatorType::ECLIPSE;
+    else if (QString::compare(type, "ADGPRS") == 0)
+        type_ = SimulatorType::ADGPRS;
     else throw SimulatorTypeNotRecognizedException("The simulator type " + type.toStdString() + " was not recognized");
 
     // Simulator commands
