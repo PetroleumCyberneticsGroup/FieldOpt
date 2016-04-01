@@ -5,9 +5,14 @@
 #include <QString>
 #include <iostream>
 #include "Utilities/file_handling/filehandling.h"
-#include "GTest/Model/test_fixture_model_base.h"
+#include <gtest/gtest.h>
+#include "Utilities/settings/settings.h"
+#include "Model/properties/variable_property_container.h"
+#include "Model/properties/variable_property_handler.h"
+#include "Model/model.h"
 
-class AdgprsTestFixture : public ModelBaseTest {
+
+class AdgprsTestFixture : public ::testing::Test{
 protected:
     AdgprsTestFixture(){
         settings_ = new Utilities::Settings::Settings(fo_driver_path_, output_directory_);
@@ -22,6 +27,9 @@ protected:
     QString json_summary_path_ = Utilities::FileHandling::GetBuildDirectoryPath() + "/../examples/ADGPRS/5spot/5SPOT.json";
     QString hdf5_summary_path_ = Utilities::FileHandling::GetBuildDirectoryPath() + "/../examples/ADGPRS/5spot/5SPOT.SIM.H5";
     QString base_summary_path_ = Utilities::FileHandling::GetBuildDirectoryPath() + "/../examples/ADGPRS/5spot/5SPOT";
+
+    ::Utilities::Settings::Settings *settings_;
+    ::Model::Model *model_;
 };
 
 #endif // TEST_FIXTURE_ADGPRS_H

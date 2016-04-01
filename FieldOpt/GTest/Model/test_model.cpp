@@ -99,9 +99,9 @@ TEST_F(ModelTest, ApplyCase) {
         c->set_real_variable_value(key, 1.0);
     }
 
-    // Set all integer coordinates to 2 (should affect positions for all well blocks)
+    // Set all integer coordinates to 1 (should affect positions for all well blocks)
     foreach (QUuid key, c->integer_variables().keys()) {
-        c->set_integer_variable_value(key, 2);
+        c->set_integer_variable_value(key, 1);
     }
 
     model_->ApplyCase(c);
@@ -111,9 +111,9 @@ TEST_F(ModelTest, ApplyCase) {
     }
 
     foreach (Model::Wells::Wellbore::WellBlock *wb, *model_->wells()->first()->trajectory()->GetWellBlocks()) {
-        EXPECT_EQ(2, wb->i());
-        EXPECT_EQ(2, wb->j());
-        EXPECT_EQ(2, wb->k());
+        EXPECT_EQ(1, wb->i());
+        EXPECT_EQ(1, wb->j());
+        EXPECT_EQ(1, wb->k());
     }
 }
 
