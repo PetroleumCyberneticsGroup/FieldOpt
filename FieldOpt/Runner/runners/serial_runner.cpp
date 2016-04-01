@@ -1,6 +1,7 @@
 #include "serial_runner.h"
 #include "Optimization/objective/weightedsum.h"
 #include "Runner/logger.h"
+#include "Model/wells/well_exceptions.h"
 
 namespace Runner {
 
@@ -21,11 +22,17 @@ void SerialRunner::Execute()
             logger.LogCase(new_case, "Case objective value set by bookkeeper.");
         }
         else {
-            model_->ApplyCase(new_case);
-            logger.LogSimulation(new_case); // Log sim start
-            simulator_->Evaluate();
-            logger.LogSimulation(new_case); // Log sim end
-            new_case->set_objective_function_value(objective_function_->value());
+            try {
+                model_->ApplyCase(new_case);
+                logger.LogSimulation(new_case); // Log sim start
+                simulator_->Evaluate();
+                logger.LogSimulation(new_case); // Log sim end
+                new_case->set_objective_function_value(objective_function_->value());
+            } catch (std::runtime_error e) {
+                std::cout << e.what() << std::endl;
+                std::cout << "Invalid well block coordinate encountered. Setting obj. val. to sentinel value." << std::endl;
+                setObjectiveFunctionSentinelValue(new_case);
+            }
             logger.LogCase(new_case);
         }
         optimizer_->SubmitEvaluatedCase(new_case);
