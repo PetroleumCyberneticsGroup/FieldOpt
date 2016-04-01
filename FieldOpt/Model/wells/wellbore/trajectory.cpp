@@ -93,6 +93,10 @@ void Trajectory::initializeWellBlocks(Utilities::Settings::Model::Well well,
 
 void Trajectory::calculateDirectionOfPenetration()
 {
+    if (well_blocks_->size() == 1) { // Assuming that the well is vertical if it only has one block
+        well_blocks_->first()->setDirectionOfPenetration(WellBlock::DirectionOfPenetration::Z);
+        return;
+    }
     // All but the last block use forward direction
     for (int i = 0; i < well_blocks_->size()-1; ++i) {
         if (     std::abs(well_blocks_->at(i)->i() - well_blocks_->at(i+1)->i()) == 1 &&
