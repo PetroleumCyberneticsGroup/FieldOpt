@@ -1,0 +1,16 @@
+OUTPUT
+    HDF5 TIME    5SPOT /
+/
+
+INCLUDE
+    ./include/body.in
+
+INCLUDE
+    ./include/wells.in
+/
+
+INCLUDE
+    ./include/tsteps.in
+/
+
+END

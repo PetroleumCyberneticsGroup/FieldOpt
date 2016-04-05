@@ -1,0 +1,6 @@
+[submodule "FieldOpt/WellIndexCalculator"]
+	path = FieldOpt/WellIndexCalculator
+	url = git@github.com:PetroleumCyberneticsGroup/WellIndexCalculator.git
+[submodule "FieldOpt/AdgprsSummaryConverter"]
+	path = FieldOpt/AdgprsSummaryConverter
+	url = git@github.com:PetroleumCyberneticsGroup/AdgprsSummaryConverter.git

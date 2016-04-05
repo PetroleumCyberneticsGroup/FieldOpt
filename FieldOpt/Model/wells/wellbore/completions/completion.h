@@ -49,9 +49,9 @@ public:
 
 protected:
     Completion(::Utilities::Settings::Model::Completion completion_settings);
+    int id_; //!< A unique identifier for this completion. The number is generated when reading the model settings.
 
 private:
-    int id_; //!< A unique identifier for this completion. The number is generated when reading the model settings.
     CompletionType type_;
 };
 

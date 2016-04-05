@@ -1,0 +1,11 @@
+INCLUDE
+  ./include/welspecs.in
+/
+
+INCLUDE
+  ./include/compdat.in
+/
+
+INCLUDE
+  ./include/controls.in
+/

@@ -9,6 +9,7 @@ LIBS += -L$$OUT_PWD/../Optimization -loptimization
 LIBS += -L$$OUT_PWD/../Simulation -lsimulation
 LIBS += -L$$OUT_PWD/../ERTWrapper -lertwrapper
 LIBS += -L$$OUT_PWD/../Utilities -lutilities
+LIBS += -L$$OUT_PWD/../AdgprsResultsReader -ladgprsresultsreader
 LIBS += -L$$OUT_PWD/../Runner -lFieldOpt
 
 LIBS += -lpthread -lgtest -pthread
@@ -53,7 +54,12 @@ SOURCES += \
     Optimization/constraints/test_box_constraint.cpp \
     Optimization/constraints/test_constraint_handler.cpp \
     Optimization/optimizers/test_compass_search.cpp \
-    Runner/test_bookkeeper.cpp
+    Runner/test_bookkeeper.cpp \
+    Simulation/results/test_adgprsresults.cpp \
+    AdgprsResultsReader/test_json_summary_reader.cpp \
+    AdgprsResultsReader/test_adgprs_results_reader.cpp \
+    Simulation/simulator_interfaces/test_adgprssimulator.cpp \
+    Simulation/simulator_interfaces/driver_file_writers/adgprs_driver_file_writer.cpp
 
 OTHER_FILES += \
     Utilities/driver/driver.json
@@ -62,3 +68,4 @@ HEADERS += \
     Model/test_fixture_model_base.h \
     Optimization/test_fixture_case.h \
     Optimization/test_fixture_optimizer.h \
+    Simulation/results/test_fixture_adgprs.h

@@ -51,14 +51,22 @@ Well::Well(Utilities::Settings::Model settings,
         controls_->append(new Control(well_settings.controls[i], well_settings, variable_container, variable_handler));
 
     trajectory_ = new Wellbore::Trajectory(well_settings, variable_container, variable_handler);
+}
 
-    /*
-    for (int i = 0; i < well_settings.completions.size(); ++i) {
-        if (well_settings.completions[i].type == ::Utilities::Settings::Model::WellCompletionType::Perforation)
-            completions_->AddPerforation(new Completions::Perforation(well_settings.completions[i], variables, variable_handler));
-        else throw WellCompletionNotRecognizedException("Only perforation-type completions are currently supported.");
-    }
-    */
+bool Well::IsProducer()
+{
+    if (type_ == ::Utilities::Settings::Model::WellType::Producer)
+        return true;
+    else
+        return false;
+}
+
+bool Well::IsInjector()
+{
+    if (type_ == ::Utilities::Settings::Model::WellType::Injector)
+        return true;
+    else
+        return false;
 }
 
 }

@@ -28,6 +28,7 @@
 
 #include <gtest/gtest.h>
 #include "Utilities/settings/settings.h"
+#include "Utilities/file_handling/filehandling.h"
 #include "Model/properties/variable_property_container.h"
 #include "Model/properties/variable_property_handler.h"
 #include "Model/model.h"
@@ -36,6 +37,7 @@ class ModelBaseTest : public ::testing::Test {
 protected:
     ModelBaseTest() {
         settings_ = new ::Utilities::Settings::Settings(driver_file_path_, output_directory_);
+        settings_->model()->set_reservoir_grid_path(reservoir_grid_path_);
         variable_container_ = new ::Model::Properties::VariablePropertyContainer();
         variable_handler_ = new ::Model::Properties::VariablePropertyHandler(*settings_->model());
         model_ = new ::Model::Model(*settings_->model());
@@ -43,6 +45,7 @@ protected:
 
     QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
     QString output_directory_ = "/home/einar/Documents/GitHub/PCG/fieldopt_output";
+    QString reservoir_grid_path_ = Utilities::FileHandling::GetBuildDirectoryPath() + "/../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID";
     ::Utilities::Settings::Settings *settings_;
     ::Model::Properties::VariablePropertyContainer *variable_container_;
     ::Model::Properties::VariablePropertyHandler *variable_handler_;

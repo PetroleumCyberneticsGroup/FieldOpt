@@ -35,6 +35,7 @@
 #include "wells/well.h"
 #include "Utilities/settings/model.h"
 #include "Optimization/case.h"
+#include "Model/wells/wellbore/wellblock.h"
 
 namespace Model {
 
@@ -73,6 +74,11 @@ private:
     Properties::VariablePropertyContainer *variable_container_;
     Properties::VariablePropertyHandler *variable_handler_;
     QList<Wells::Well *> *wells_;
+
+    void verify(); //!< Verify the model. Throws an exception if it is not.
+    void verifyWells();
+    void verifyWellTrajectory(Wells::Well *w);
+    void verifyWellBlock(Wells::Wellbore::WellBlock *wb);
 };
 
 }

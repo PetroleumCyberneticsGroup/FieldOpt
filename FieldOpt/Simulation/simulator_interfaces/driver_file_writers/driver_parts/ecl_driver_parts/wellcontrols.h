@@ -52,9 +52,9 @@ class WellControls : public ECLDriverPart
 public:
     WellControls(QList<Model::Wells::Well *> *wells);
 
-    QString GetPartString();
+    virtual QString GetPartString();
 
-private:
+protected:
     /*!
      * \brief The WellSetting struct is a convenience class representing all settings
      * for a well at a particular time.
@@ -88,7 +88,7 @@ private:
      * \param time The time step to be inserted.
      * \return
      */
-    QString createTimeEntry(int time);
+    virtual QString createTimeEntry(int time);
     QString createProducerEntry(WellSetting *setting);
 
     /*!

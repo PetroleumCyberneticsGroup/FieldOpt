@@ -35,7 +35,7 @@ namespace ECLDriverParts {
 
 Compdat::Compdat(QList<Model::Wells::Well *> *wells)
 {
-    initializeBaseEntryLine(14);
+    initializeBaseEntryLine(13);
     head_ = "COMPDAT";
     foot_ = "/\n\n";
     for (int i = 0; i < wells->size(); ++i) {

@@ -1,0 +1,14 @@
+WELLSTRE
+  INJ1      0  0  1/
+/
+
+WCONINJE
+  INJ1      WATER  OPEN  BHP  *  *       230.000/
+/
+
+WCONPROD
+  PROD1     OPEN  BHP  5*        90.000/
+  PROD2     OPEN  BHP  5*        90.000/
+  PROD3     OPEN  BHP  5*        90.000/
+  PROD4     OPEN  BHP  5*        90.000/
+/
