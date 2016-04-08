@@ -95,6 +95,31 @@ void WriteLineToFile(QString string, QString file_path);
 void DeleteFile(QString path);
 
 /*!
+ * \brief CreateDirectory Create a new drectory with the specified path.
+ * \param path Path to new directory.
+ */
+void CreateDirectory(QString path);
+
+/*!
+ * \brief CopyFile Copy a file.
+ * \param origin The path to the original file.
+ * \param destination Path to the copy of the file.
+ */
+void CopyFile(QString origin, QString destination);
+
+/*!
+ * \brief CopyDirectory Copy a directory and it's contents to a new destination.
+ *
+ * Note that this is not a recursive function: It will copy files in the root of the
+ * directory, and _create_ any subdirectories found, but it will not copy the contents
+ * of subdirectories.
+ * \param origin Path to the original directory to be copied.
+ * \param destination Path to the _parent directory_ for the copy.
+ */
+void CopyDirectory(QString origin, QString destination);
+
+
+/*!
  * \brief GetBuildDirectoryPath Gets the absolute path to the first directory in the tree
  * that starts with build-.
  *

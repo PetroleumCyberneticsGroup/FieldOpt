@@ -66,13 +66,6 @@ TEST_F(ModelTest, Variables) {
     EXPECT_EQ(3, model_->variables()->GetContinousVariableIdsWithName("PROD-BHP-1").size());
     EXPECT_EQ(3, model_->wells()->at(0)->controls()->size());
 
-    // 2 Continous variables for the transmissibility of the producer's two perforations
-    EXPECT_TRUE(variable_handler_->GetPerforation(0)->transmissibility_factor());
-    EXPECT_TRUE(variable_handler_->GetPerforation(1)->transmissibility_factor());
-    EXPECT_STREQ("PROD-TRANS-ALL", variable_handler_->GetPerforation(0)->variable_name().toLatin1().constData());
-    EXPECT_STREQ("PROD-TRANS-ALL", variable_handler_->GetPerforation(1)->variable_name().toLatin1().constData());
-    EXPECT_EQ(2, model_->variables()->GetContinousVariableIdsWithName("PROD-TRANS-ALL").size());
-
 
     // 12 Discrete variables for the positions for the producer's four well blocks
     EXPECT_TRUE(variable_handler_->GetWellBlock(0)->position());
@@ -83,7 +76,7 @@ TEST_F(ModelTest, Variables) {
     EXPECT_STREQ("PROD-WELLBLOCKS-ALL", variable_handler_->GetWellBlock(1)->variable_name().toLatin1().constData());
     EXPECT_STREQ("PROD-WELLBLOCKS-ALL", variable_handler_->GetWellBlock(2)->variable_name().toLatin1().constData());
     EXPECT_STREQ("PROD-WELLBLOCKS-ALL", variable_handler_->GetWellBlock(3)->variable_name().toLatin1().constData());
-    EXPECT_EQ(12, model_->variables()->GetDiscreteVariableIdsWithName("PROD-WELLBLOCKS-ALL").size()); // Three variables pr. block (i,j,k)
+    EXPECT_EQ(1, model_->variables()->GetDiscreteVariableIdsWithName("PROD-WELLBLOCKS-ALL_0_i").size()); // Three variables pr. block (i,j,k)
     foreach (int value, model_->variables()->GetDiscreteVariableValues().values()) {
         EXPECT_GE(value, 0);
     }
@@ -99,9 +92,9 @@ TEST_F(ModelTest, ApplyCase) {
         c->set_real_variable_value(key, 1.0);
     }
 
-    // Set all integer coordinates to 2 (should affect positions for all well blocks)
+    // Set all integer coordinates to 1 (should affect positions for all well blocks)
     foreach (QUuid key, c->integer_variables().keys()) {
-        c->set_integer_variable_value(key, 2);
+        c->set_integer_variable_value(key, 1);
     }
 
     model_->ApplyCase(c);
@@ -111,9 +104,9 @@ TEST_F(ModelTest, ApplyCase) {
     }
 
     foreach (Model::Wells::Wellbore::WellBlock *wb, *model_->wells()->first()->trajectory()->GetWellBlocks()) {
-        EXPECT_EQ(2, wb->i());
-        EXPECT_EQ(2, wb->j());
-        EXPECT_EQ(2, wb->k());
+        EXPECT_EQ(1, wb->i());
+        EXPECT_EQ(1, wb->j());
+        EXPECT_EQ(1, wb->k());
     }
 }
 

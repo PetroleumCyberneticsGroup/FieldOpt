@@ -27,6 +27,9 @@
 #include "Optimization/optimizers/compass_search.h"
 #include "Optimization/objective/weightedsum.h"
 #include "Simulation/simulator_interfaces/eclsimulator.h"
+#include "Simulation/simulator_interfaces/adgprssimulator.h"
+
+#include <limits>
 
 namespace Runner {
 
@@ -51,6 +54,10 @@ AbstractRunner::AbstractRunner(RuntimeSettings *runtime_settings)
     case ::Utilities::Settings::Simulator::SimulatorType::ECLIPSE:
         if (runtime_settings_->verbose()) std::cout << "Using ECL100 reservoir simulator." << std::endl;
         simulator_ = new Simulation::SimulatorInterfaces::ECLSimulator(settings_, model_);
+        break;
+    case ::Utilities::Settings::Simulator::SimulatorType::ADGPRS:
+        if (runtime_settings_->verbose()) std::cout << "Using ADGPRS reservoir simulator." << std::endl;
+        simulator_ = new Simulation::SimulatorInterfaces::AdgprsSimulator(settings_, model_);
         break;
     default:
         throw std::runtime_error("Unable to initialize runner: simulator set in driver file not recognized.");
@@ -90,6 +97,14 @@ AbstractRunner::AbstractRunner(RuntimeSettings *runtime_settings)
     }
 
     bookkeeper_ = new Bookkeeper(settings_, optimizer_->case_handler());
+}
+
+void AbstractRunner::setObjectiveFunctionSentinelValue(Optimization::Case *c)
+{
+    if (settings_->optimizer()->mode() == Utilities::Settings::Optimizer::OptimizerMode::Minimize)
+        c->set_objective_function_value(std::numeric_limits<double>::max());
+    if (settings_->optimizer()->mode() == Utilities::Settings::Optimizer::OptimizerMode::Maximize)
+        c->set_objective_function_value(std::numeric_limits<double>::min());
 }
 
 }

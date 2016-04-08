@@ -43,7 +43,7 @@ class Simulator
     friend class Settings;
 
 public:
-    enum SimulatorType { ECLIPSE };
+    enum SimulatorType { ECLIPSE, ADGPRS };
 
     SimulatorType type() const { return type_; } //!< Get the simulator type (e.g. ECLIPSE).
     QStringList *commands() const { return commands_; } //!< Get the simulator commands (commands used to execute a simulation). Each list element is executed in sequence.

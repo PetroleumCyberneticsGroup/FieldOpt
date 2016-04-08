@@ -23,3 +23,14 @@ cd $1
 eval eclrun eclipse $2 >& /dev/null
 
 ```
+
+## `bash_adgprs.sh`
+* Executes /usr/bin/adgprs
+* First parameter is the path to the workdir, second parameter is the path to the driver file.
+
+Note that if ADGPRS can't be started by executing `/usr/bin/adgprs driverfilenam`, you must
+create a link to it, e.g.
+```
+sudo ln -s /opt/ADGPRS/bin/ADGPRSLinuxK3 /usr/bin/adgprs
+```
+

@@ -68,6 +68,17 @@ protected:
     Optimization::Optimizer *optimizer_;
     Optimization::Objective::Objective *objective_function_;
     Simulation::SimulatorInterfaces::Simulator *simulator_;
+
+    /*!
+     * \brief setObjectiveFunctionSentinelValue Sets the objective function value to a sentinel value.
+     *
+     * Should be called when the case is invalid.
+     *
+     * If the ongoing run is maximization, the objective function value will be set to DBL_MIN; if
+     * it is minimization, the value will be set to DBL_MAX.
+     * \param c
+     */
+    void setObjectiveFunctionSentinelValue(Optimization::Case *c);
 };
 
 }

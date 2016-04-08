@@ -1,0 +1,105 @@
+
+TUNING
+15 30 15 5 /
+#0.1 6 * 5 / #24.07.2012, w/Oleg, did not help much from previous
+#0.1 10 * 2.5 / #24.07.2012, w/Oleg, no improvement from previous
+#0.1 10 * 5 / #25.07.2012, w/Oleg, better than previous
+#0.01 10 * 1.5 / #24.07.2012, w/Oleg
+# 0.01 30 2 1.5 /
+#0.01  2  *  2  /  #Oleg, NRN
+#0.01  20 * 1.5 /  #Oleg, vanEssen
+# 5e-2 30 0 2/
+# 0.01 2 2 25 10000 10000 0 /
+/
+
+# --------------------
+# min timestep sz (days),                        def=0.01
+# max timestep sz (days),                        def=30
+# first timestep in input region (days),         def=0
+# (max) timestep increment multiplier,           def=2
+# target max pressure (bar) change in a timestep,def=10000
+# target max saturation change in a timestep,    def=10000
+# target max concentration change in a timestep, def=10000
+# Relaxation factor (0∼1) for timestep selection
+# based on maximum variable changes              def=0
+# --------------------
+
+
+LINEAR
+#PARDISO 1e-02 300
+GMRES_CPR0 1e-06 300
+#GMRES_CPR0 1e-6 300 #Oleg, NRN
+/
+
+# --------------------
+# 1. Linear solver.
+# PARDISO
+# SUPERLU
+# GMRES BILU0 — BILU(0) preconditioner
+# GMRES CPR0 — CPR preconditioner with AMG + BILU(0)
+# GMRES CPRS0 — CPR preconditioner with SAMG + BILU(0)
+# GMRES BILU1 — BILU(1) preconditioner
+# GMRES CPR1 — CPR preconditioner with AMG + BILU(1)
+# GMRES CPRS1 — CPR preconditioner with SAMG + BILU(1)
+# DEFAULT: GMRES CPR0
+# 2. Linear solver tolerance.
+# DEFAULT: 1e-04
+# 3. Maximum number of iterations.
+# DEFAULT: 10
+# --------------------
+
+#IMPLICIT
+#IMPES 1 2 2 0 /
+
+
+NONLINEAR
+APPL 1e-06 30 /
+#APPL 1e-6 30 / #Oleg, NRN
+/
+
+# --------------------
+# 1. Name of nonlinear solver:
+# APPL — Applyard chopping
+# STD — Standard Newton without chopping
+# DEFAULT: APPL
+# 2. Tolerance for mass conservation and secondary
+# (e.g., thermodynamic equilibrium) equations.
+# DEFAULT: 1e-4
+# 3. Maximum number of nonlinear iterations per timestep.
+# DEFAULT: 12
+# 4. Maximum number of stationary iterations per timestep.
+# DEFAULT: 3
+# 5. Tolerance for pressure changes between two iterations.
+# DEFAULT: 0 (Not activated)
+# 6. Tolerance for saturation changes between two iterations.
+# DEFAULT: 5e-3
+# 7. Tolerance for molar fraction changes between two iterations.
+# DEFAULT: 1e-3
+# --------------------
+
+
+FACILITY
+#1e-06 30 1e-1 /
+1e-6  30 1e+10 /
+#1e-6  30 1e+10 / #NRN, Oleg
+#1e-9  30 1e+10 / # Oleg, van Essen
+/
+
+
+# --------------------
+# This keyword defines parameters for facility solver.
+# 1. Tolerance for facility equations in facility solver
+#  and global Newton iteration.
+# DEFAULT: same as [Tolerance for reservoir transport equations]
+# 2. Maximum number of facility solver iterations.
+# DEFAULT: 0 (Not activated)
+# 3. Tolerance of reservoir transport equations for
+# activating facility solver.
+# DEFAULT: 1e-1
+# 4. Tolerance for facility pressure changes.
+# DEFAULT: same as [Tolerance for reservoir pressure changes]
+# 5. Tolerance for facility saturation changes.
+# DEFAULT: same as [Tolerance for reservoir saturation changes]
+# 6. Tolerance for facility molar fraction changes.
+# DEFAULT: same as [Tolerance for reservoir molar fraction changes]
+# --------------------

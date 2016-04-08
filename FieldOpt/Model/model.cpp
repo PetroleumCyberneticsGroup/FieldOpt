@@ -50,6 +50,35 @@ void Model::ApplyCase(Optimization::Case *c)
     foreach (QUuid key, c->real_variables().keys()) {
         variable_container_->SetContinousVariableValue(key, c->real_variables()[key]);
     }
+    verify();
+}
+
+void Model::verify()
+{
+    verifyWells();
+}
+
+void Model::verifyWells()
+{
+    foreach (Wells::Well *well, *wells_) {
+        verifyWellTrajectory(well);
+    }
+}
+
+void Model::verifyWellTrajectory(Wells::Well *w)
+{
+    foreach (Wells::Wellbore::WellBlock *wb, *w->trajectory()->GetWellBlocks()) {
+        verifyWellBlock(wb);
+    }
+}
+
+void Model::verifyWellBlock(Wells::Wellbore::WellBlock *wb)
+{
+    if (wb->i() < 1 || wb->i() > reservoir()->grid()->Dimensions().nx ||
+            wb->j() < 1 || wb->j() > reservoir()->grid()->Dimensions().ny ||
+            wb->k() < 1 || wb->k() > reservoir()->grid()->Dimensions().nz)
+        throw std::runtime_error("Invalid well block detected.");
 }
 
 }
+

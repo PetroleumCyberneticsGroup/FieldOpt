@@ -45,6 +45,22 @@ Settings::Settings(QString driver_path, QString output_directory)
     simulator_->output_directory_ = output_directory;
 }
 
+QString Settings::GetLogCsvString() const
+{
+    QStringList header  = QStringList();
+    QStringList content = QStringList();
+    header  << "name"
+            << "maxevals"
+            << "initstep"
+            << "minstep";
+    content << name_
+            << QString::number(optimizer_->parameters().max_evaluations)
+            << QString::number(optimizer_->parameters().initial_step_length)
+            << QString::number(optimizer_->parameters().minimum_step_length);
+
+    return QString("%1\n%2").arg(header.join(",")).arg(content.join(","));
+}
+
 void Settings::readDriverFile()
 {
     QFile *file = new QFile(driver_path_);

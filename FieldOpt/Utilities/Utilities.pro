@@ -24,3 +24,7 @@ SOURCES += \
     settings/settings.cpp \
     file_handling/filehandling.cpp \
     unix/execution.cpp
+
+DISTFILES += \
+    README.md \
+    settings/README.md

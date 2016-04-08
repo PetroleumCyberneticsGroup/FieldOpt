@@ -25,6 +25,7 @@
 
 #include "welspecs.h"
 #include <stdexcept>
+#include <iostream>
 
 namespace Simulation {
 namespace SimulatorInterfaces {
@@ -34,7 +35,7 @@ namespace ECLDriverParts {
 
 Welspecs::Welspecs(QList<Model::Wells::Well *> *wells)
 {
-    initializeBaseEntryLine(17);
+    initializeBaseEntryLine(10);
     head_ = "WELSPECS";
     foot_ = "/\n\n";
     for (int i = 0; i < wells->size(); ++i) {

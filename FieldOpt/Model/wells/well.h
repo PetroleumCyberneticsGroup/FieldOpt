@@ -63,6 +63,8 @@ public:
 
     QString name() const { return name_; }
     ::Utilities::Settings::Model::WellType type() const { return type_; }
+    bool IsProducer();
+    bool IsInjector();
     ::Utilities::Settings::Model::PreferedPhase prefered_phase() const { return prefered_phase_; }
     double wellbore_radius() const { return wellbore_radius_->value(); }
     Wellbore::Trajectory *trajectory() { return trajectory_; }

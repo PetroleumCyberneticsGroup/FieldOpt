@@ -9,6 +9,8 @@
 #include "Optimization/case.h"
 #include "Optimization/optimizer.h"
 #include "runtime_settings.h"
+#include "Utilities/settings/settings.h"
+#include "Model/model.h"
 
 namespace Runner {
 
@@ -23,6 +25,16 @@ public:
      * \brief Logger
      */
     Logger(RuntimeSettings *rts);
+
+    /*!
+     * \brief LogSettings Write a log containing some of the settings specified in the driver file.
+     */
+    void LogSettings(const Utilities::Settings::Settings *settings);
+
+    /*!
+     * \brief WriteVariableMap Write a CSV file with mappings from property UUID to property name.
+     */
+    void WritePropertyUuidNameMap(Model::Model *model);
 
     /*!
      * \brief LogCase Add a case to the case log.
@@ -57,6 +69,8 @@ private:
     QString opt_log_path_; //!< Path to the optimization log file.
     QString sim_log_path_; //!< Path to the simulation log file.
     QString cas_log_path_; //!< Path to the case log file.
+    QString settings_log_path_; //!< Path to the settings log file.
+    QString property_uuid_name_map_path_; //!< Path to the property uuid-name map.
 
     QStringList opt_header_; //!< CSV header for the optimization log
     QStringList sim_header_; //!< CSV header for the simulation log

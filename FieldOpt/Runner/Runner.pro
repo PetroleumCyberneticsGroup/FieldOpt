@@ -14,6 +14,7 @@ LIBS += -L$$OUT_PWD/../Simulation -lsimulation
 LIBS += -L$$OUT_PWD/../Optimization -loptimization
 LIBS += -L$$OUT_PWD/../Utilities -lutilities
 LIBS += -L$$OUT_PWD/../ERTWrapper -lertwrapper
+LIBS += -L$$OUT_PWD/../AdgprsResultsReader -ladgprsresultsreader
 LIBS += -lpthread -lgtest -pthread
 LIBS += -lboost_program_options
 

@@ -47,6 +47,12 @@ public:
         : std::runtime_error(message.toStdString() + ": " + path.toStdString()) {}
 };
 
+class FileHandlingException : public std::runtime_error {
+public:
+    FileHandlingException(const QString message)
+        : std::runtime_error(message.toStdString()) {}
+};
+
 
 }
 }

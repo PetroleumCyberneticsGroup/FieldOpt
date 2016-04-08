@@ -68,7 +68,7 @@ public:
 
     /*!
      * \brief ReadResults Read the summary data from file.
-     * \param file_path The path to the summary file.
+     * \param file_path The path to the summary file without suffixes.
      */
     virtual void ReadResults(QString file_path) = 0;
 
