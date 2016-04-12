@@ -76,7 +76,7 @@ TEST_F(ModelTest, Variables) {
     EXPECT_STREQ("PROD-WELLBLOCKS-ALL", variable_handler_->GetWellBlock(1)->variable_name().toLatin1().constData());
     EXPECT_STREQ("PROD-WELLBLOCKS-ALL", variable_handler_->GetWellBlock(2)->variable_name().toLatin1().constData());
     EXPECT_STREQ("PROD-WELLBLOCKS-ALL", variable_handler_->GetWellBlock(3)->variable_name().toLatin1().constData());
-    EXPECT_EQ(1, model_->variables()->GetDiscreteVariableIdsWithName("PROD-WELLBLOCKS-ALL_0_i").size()); // Three variables pr. block (i,j,k)
+    EXPECT_EQ(12, model_->variables()->GetDiscreteVariableIdsWithName("PROD-WELLBLOCKS-ALL#0#i").size()); // Three variables pr. block (i,j,k)
     foreach (int value, model_->variables()->GetDiscreteVariableValues().values()) {
         EXPECT_GE(value, 0);
     }

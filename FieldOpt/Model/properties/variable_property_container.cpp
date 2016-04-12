@@ -24,6 +24,7 @@
  *****************************************************************************/
 
 #include "variable_property_container.h"
+#include <QStringList>
 
 namespace Model {
 namespace Properties {
@@ -114,9 +115,10 @@ QHash<QUuid, double> VariablePropertyContainer::GetContinousVariableValues() con
 
 QList<QUuid> VariablePropertyContainer::GetBinaryVariableIdsWithName(QString var_name) const
 {
+    QString varn_wo_suffixes = var_name.split("#").first();
     QList<QUuid> ids_for_variables_with_name = QList<QUuid>();
     foreach (Properties::BinaryProperty * prop, binary_variables_->values()) {
-        if (QString::compare(prop->name(), var_name) == 0)
+        if (QString::compare(prop->name().split("#").first(), varn_wo_suffixes) == 0)
             ids_for_variables_with_name.append(prop->id());
     }
     return ids_for_variables_with_name;
@@ -124,9 +126,10 @@ QList<QUuid> VariablePropertyContainer::GetBinaryVariableIdsWithName(QString var
 
 QList<QUuid> VariablePropertyContainer::GetDiscreteVariableIdsWithName(QString var_name) const
 {
+    QString varn_wo_suffixes = var_name.split("#").first();
     QList<QUuid> ids_for_variables_with_name = QList<QUuid>();
     foreach (Properties::DiscreteProperty *prop, discrete_variables_->values()) {
-        if (QString::compare(prop->name(), var_name) == 0)
+        if (QString::compare(prop->name().split("#").first(), varn_wo_suffixes) == 0)
             ids_for_variables_with_name.append(prop->id());
     }
     return ids_for_variables_with_name;
@@ -134,9 +137,10 @@ QList<QUuid> VariablePropertyContainer::GetDiscreteVariableIdsWithName(QString v
 
 QList<QUuid> VariablePropertyContainer::GetContinousVariableIdsWithName(QString var_name) const
 {
+    QString varn_wo_suffixes = var_name.split("#").first();
     QList<QUuid> ids_for_variables_with_name = QList<QUuid>();
     foreach (Properties::ContinousProperty *prop, continous_variables_->values()) {
-        if (QString::compare(prop->name(), var_name) == 0)
+        if (QString::compare(prop->name().split("#").first(), varn_wo_suffixes) == 0)
             ids_for_variables_with_name.append(prop->id());
     }
     return ids_for_variables_with_name;
@@ -158,6 +162,37 @@ void VariablePropertyContainer::DeleteContinousVariable(QUuid id)
 {
     if (!continous_variables_->contains(id)) throw VariableIdDoesNotExistException("Real variable not found. Unable to delete");
     continous_variables_->remove(id);
+}
+
+void VariablePropertyContainer::CheckVariableNameUniqueness()
+{
+    QList<QString> names = QList<QString>();
+    foreach (auto var, discrete_variables_->values()) {
+        if (var->name().size() > 0) {
+            if (names.contains(var->name()))
+                throw std::runtime_error("Encountered non-unique variable name: " + var->name().toStdString());
+            else
+                names.append(var->name());
+        }
+    }
+
+    foreach (auto var, continous_variables_->values()) {
+        if (var->name().size() > 0) {
+            if (names.contains(var->name()))
+                throw std::runtime_error("Encountered non-unique variable name: " + var->name().toStdString());
+            else
+                names.append(var->name());
+        }
+    }
+
+    foreach (auto var, binary_variables_->values()) {
+        if (var->name().size() > 0) {
+            if (names.contains(var->name()))
+                throw std::runtime_error("Encountered non-unique variable name: " + var->name().toStdString());
+            else
+                names.append(var->name());
+        }
+    }
 }
 
 

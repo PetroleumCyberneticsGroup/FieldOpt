@@ -53,7 +53,8 @@ Control::Control(::Utilities::Settings::Model::ControlEntry entry,
         mode_ = entry.control_mode;
         bhp_ = new Properties::ContinousProperty(entry.bhp);
         if (variable_handler->GetControl(well.name, entry.time_step)->bhp()) {
-            bhp_->setName(variable_handler->GetControl(well.name, entry.time_step)->variable_name());
+            QString var_name_suffix = "#" + well.name + "#" + entry.time_step;
+            bhp_->setName(variable_handler->GetControl(well.name, entry.time_step)->variable_name() + var_name_suffix);
             variables->AddVariable(bhp_);
         }
         break;

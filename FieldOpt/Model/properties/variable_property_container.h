@@ -78,6 +78,8 @@ public:
     void DeleteDiscreteVariable(QUuid id);
     void DeleteContinousVariable(QUuid id);
 
+    void CheckVariableNameUniqueness(); //!< Check that all variable names are unique. If they are not, throw an error.
+
 private:
     QHash<QUuid, BinaryProperty *> *binary_variables_;
     QHash<QUuid, DiscreteProperty *> *discrete_variables_;

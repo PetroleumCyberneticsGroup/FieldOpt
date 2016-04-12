@@ -85,7 +85,7 @@ void Trajectory::initializeWellBlocks(Utilities::Settings::Model::Well well,
     for (int i = 0; i < blocks.size(); ++i) {
         well_blocks_->append(new WellBlock(blocks[i].position.i, blocks[i].position.j, blocks[i].position.k, blocks[i].id));
         if (variable_handler->GetWellBlock(blocks[i].id)->position() == true) {
-            QString base_var_name = variable_handler->GetWellBlock(blocks[i].id)->variable_name() + "_" + QString::number(i) + "_";
+            QString base_var_name = variable_handler->GetWellBlock(blocks[i].id)->variable_name() + "#" + QString::number(i) + "#";
             well_blocks_->last()->i_->setName(base_var_name + "i");
             well_blocks_->last()->j_->setName(base_var_name + "j");
             well_blocks_->last()->k_->setName(base_var_name + "k");

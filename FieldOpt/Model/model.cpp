@@ -37,6 +37,8 @@ Model::Model(Utilities::Settings::Model settings)
     for (int well_nr = 0; well_nr < settings.wells().size(); ++well_nr) {
         wells_->append(new Wells::Well(settings, well_nr, variable_container_, variable_handler_, reservoir_));
     }
+
+    variable_container_->CheckVariableNameUniqueness();
 }
 
 void Model::ApplyCase(Optimization::Case *c)
