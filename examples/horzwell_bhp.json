@@ -9,7 +9,7 @@
         "Parameters": {
             "MaxEvaluations": 50,
             "InitialStepLength": 100.0,
-            "MinimumStepLength": 1.0
+            "MinimumStepLength": 10.0
         },
         "Objective": {
             "Type": "WeightedSum",
@@ -94,7 +94,7 @@
                     {
                         "Name": "PROD-BHP-1",
                         "Type": "BHP",
-                        "TimeSteps": [0]
+                        "TimeSteps": [0,100]
                     }
                 ]
             },
