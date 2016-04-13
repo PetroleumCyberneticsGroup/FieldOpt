@@ -42,6 +42,10 @@ private:
     Simulation::SimulatorInterfaces::DriverFileWriters::AdgprsDriverFileWriter *driver_file_writer_;
     void copyDriverFiles(); //!< Copy the original driver files.
     void verifyOriginalDriverFileDirectory(); //!< Ensure that all necessary files are present in the original dir.
+
+    // Simulator interface
+protected:
+    void UpdateFilePaths();
 };
 
 }}

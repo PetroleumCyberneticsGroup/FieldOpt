@@ -32,8 +32,10 @@ namespace SimulatorInterfaces {
 
 void Simulator::SetOutputDirectory(QString output_directory)
 {
-    if (Utilities::FileHandling::DirectoryExists(output_directory))
+    if (Utilities::FileHandling::DirectoryExists(output_directory)) {
         output_directory_ = output_directory;
+        UpdateFilePaths();
+    }
     else throw OutputDirectoryDoesNotExistException(output_directory);
 }
 

@@ -76,5 +76,10 @@ void ECLSimulator::CleanUp()
     }
 }
 
+void ECLSimulator::UpdateFilePaths()
+{
+    return;
+}
+
 }
 }

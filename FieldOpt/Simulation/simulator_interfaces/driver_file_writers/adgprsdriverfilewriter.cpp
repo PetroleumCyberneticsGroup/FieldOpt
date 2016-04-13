@@ -14,7 +14,7 @@ AdgprsDriverFileWriter::AdgprsDriverFileWriter(Utilities::Settings::Settings *se
     settings_ = settings;
 }
 
-void AdgprsDriverFileWriter::WriteDriverFile()
+void AdgprsDriverFileWriter::WriteDriverFile(QString output_dir)
 {
     auto welspecs = DriverParts::ECLDriverParts::Welspecs(model_->wells());
     auto compdat = DriverParts::ECLDriverParts::Compdat(model_->wells());
@@ -24,9 +24,9 @@ void AdgprsDriverFileWriter::WriteDriverFile()
     QString complete_string = welspecs.GetPartString() + compdat.GetPartString() +
             wellstre.GetPartString() + wellcontrols.GetPartString();
 
-    if (!Utilities::FileHandling::FileExists(settings_->output_directory()+"/include/wells.in"))
+    if (!Utilities::FileHandling::FileExists(output_dir+"/include/wells.in"))
         throw std::runtime_error("Unable to find include/wells.in file to write to.");
-    Utilities::FileHandling::WriteStringToFile(complete_string,settings_->output_directory()+"/include/wells.in");
+    Utilities::FileHandling::WriteStringToFile(complete_string, output_dir+"/include/wells.in");
 }
 
 }}}
