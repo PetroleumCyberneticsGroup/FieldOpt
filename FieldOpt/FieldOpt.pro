@@ -29,7 +29,7 @@ OTHER_FILES += \
 copy_scripts.commands = \
     $(MKDIR) -p $$OUT_PWD/AdgprsSummaryConverter ; \
     $(MKDIR) -p $$OUT_PWD/execution_scripts ; \
-    $(COPY_FILE) $$PWD/execution_scripts/*.sh $$OUT_PWD/execution_scripts ; \
+    $(COPY_FILE) $$PWD/Simulation/execution_scripts/*.sh $$OUT_PWD/execution_scripts ; \
     $(COPY_FILE) $$PWD/AdgprsSummaryConverter/*.py $$OUT_PWD/AdgprsSummaryConverter/
 first.depends = $(first) copy_scripts
 export(first.depends)
