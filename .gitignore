@@ -55,6 +55,10 @@ test-*
 *.INIT
 *.INSPEC
 *.MSG
+*.RSM
+*.LOG
+*.ECLRUN
+*.h5
 *.PRT
 *.RSSPEC
 *.SMSPEC
