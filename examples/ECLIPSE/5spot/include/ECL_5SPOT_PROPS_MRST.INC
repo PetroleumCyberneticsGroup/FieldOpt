@@ -3,11 +3,6 @@
 
 -- ____________________________________________________
 
-
-INCLUDE
-'$ECLINC/ECL_5SPOT_PROPS_PVDO_MULT_MRST.INC' /
-
-
 -- ____________________________________________________
 PVTW
 -- PREF   BREF   COMP         VISC  VISCOSIBILITY

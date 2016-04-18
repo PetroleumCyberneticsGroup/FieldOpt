@@ -117,6 +117,12 @@ INCLUDE
 -- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 PROPS
 
+-- ____________________________________________________
+-- PVT
+
+INCLUDE
+'$ECLINC/ECL_5SPOT_PROPS_PVDO_MULT_MRST.INC' /
+
 INCLUDE
 '$ECLINC/ECL_5SPOT_PROPS_MRST.INC' /
 
