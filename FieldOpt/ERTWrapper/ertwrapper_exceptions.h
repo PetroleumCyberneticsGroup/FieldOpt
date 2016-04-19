@@ -14,6 +14,12 @@ public:
         : std::runtime_error(message) {}
 };
 
+class InvalidIndexException : public std::runtime_error {
+public:
+    InvalidIndexException(const string& message)
+        : std::runtime_error(message) {}
+};
+
 class SummaryFileNotFoundAtPathException : public std::runtime_error {
 public:
     SummaryFileNotFoundAtPathException(const string &path)

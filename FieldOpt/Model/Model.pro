@@ -6,6 +6,9 @@ CONFIG += c++11
 
 LIBS += -L$$OUT_PWD/../ERTWrapper -lertwrapper
 LIBS += -L$$OUT_PWD/../Utilities -lutilities
+LIBS += -L$$OUT_PWD/../WellIndexCalculator -lWellIndexCalculator
+
+LIBS += -lrpoly_plus_plus
 
 TEMPLATE = lib
 

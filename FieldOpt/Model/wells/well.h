@@ -34,6 +34,7 @@
 #include "Model/properties/discrete_property.h"
 #include "Model/wells/control.h"
 #include "Model/wells/wellbore/trajectory.h"
+#include "Model/reservoir/reservoir.h"
 
 #include <QList>
 
@@ -55,7 +56,8 @@ public:
     Well(Utilities::Settings::Model settings,
          int well_number,
          ::Model::Properties::VariablePropertyContainer *variable_container,
-         ::Model::Properties::VariablePropertyHandler *variable_handler);
+         ::Model::Properties::VariablePropertyHandler *variable_handler,
+         ::Model::Reservoir::Reservoir *reservoir);
 
     struct Heel { Properties::DiscreteProperty *i; Properties::DiscreteProperty *j; Properties::DiscreteProperty *k; };
 

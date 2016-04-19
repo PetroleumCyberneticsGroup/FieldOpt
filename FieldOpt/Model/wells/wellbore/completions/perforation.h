@@ -46,6 +46,8 @@ public:
                 Properties::VariablePropertyContainer *variable_container,
                 Properties::VariablePropertyHandler *variable_handler);
 
+    Perforation();
+
     double transmissibility_factor() const { return transmissibility_factor_->value(); }
     void setTransmissibility_factor(double value) { transmissibility_factor_->setValue(value); }
 

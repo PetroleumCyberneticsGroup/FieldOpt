@@ -25,9 +25,8 @@
 
 #include "trajectory.h"
 #include "Model/wells/well_exceptions.h"
-#include "iostream"
-#include "cmath"
-#include "Model/properties/property.h"
+#include <iostream>
+#include <cmath>
 
 namespace Model {
 namespace Wells {
@@ -35,14 +34,17 @@ namespace Wellbore {
 
 Trajectory::Trajectory(Utilities::Settings::Model::Well well_settings,
                        Properties::VariablePropertyContainer *variable_container,
-                       Properties::VariablePropertyHandler *variable_handler)
+                       Properties::VariablePropertyHandler *variable_handler,
+                       ::Model::Reservoir::Reservoir *reservoir)
 {
     well_blocks_ = new QList<WellBlock *>();
     if (well_settings.definition_type == Utilities::Settings::Model::WellDefinitionType::WellBlocks) {
         initializeWellBlocks(well_settings, variable_container, variable_handler);
+        well_spline_ = 0;
     }
     else if (well_settings.definition_type == Utilities::Settings::Model::WellDefinitionType::WellSpline) {
-        std::cout << "Spline definition of wells are not yet supported. Skipping the well." << std::endl;
+        well_spline_ = new WellSpline(well_settings, variable_container, variable_handler, reservoir);
+        well_blocks_ = well_spline_->GetWellBlocks();
     }
 }
 
@@ -67,6 +69,12 @@ WellBlock *Trajectory::GetWellBlock(int id)
 QList<WellBlock *> *Trajectory::GetWellBlocks()
 {
     return well_blocks_;
+}
+
+void Trajectory::UpdateWellBlocks()
+{
+    if (well_spline_ != 0)
+        well_blocks_ = well_spline_->GetWellBlocks();
 }
 
 void Trajectory::initializeWellBlocks(Utilities::Settings::Model::Well well,

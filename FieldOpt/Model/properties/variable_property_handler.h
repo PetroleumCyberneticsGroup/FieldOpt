@@ -109,6 +109,21 @@ public:
         bool transmissibility_factor() const { return transmissibility_factor_; }
     };
 
+
+    class SplinePoint {
+        friend class VariablePropertyHandler;
+        friend class Well;
+        SplinePoint(int index) {
+            index_ = index;
+        }
+        int index_;
+        bool variable_;
+        QString variable_name_;
+    public:
+        bool variable() { return variable_; }
+        QString variable_name() { return variable_name_; }
+    };
+
     /*!
      * \brief The Well class is an internal representation of a well within the variable handler.
      * The well class primarily acts as a root node and container for Controls etc.
@@ -120,11 +135,13 @@ public:
             name_ = name;
             controls_ = QList<Control *>();
             perforations_ = QList<Perforation *>();
+            spline_points_ = QList<SplinePoint *>();
         }
         QString name_;
         QList<Control *> controls_;
         QList<Perforation *> perforations_;
         QList<WellBlock *> well_blocks_;
+        QList<SplinePoint *> spline_points_;
         Perforation *getPerforation(int id);
         Perforation *getPerforation(::Utilities::Settings::Model::IntegerCoordinate *block);
         WellBlock *getWellBlock(int id);
@@ -144,6 +161,13 @@ public:
      * \param completion_id The unique ID of the perforation assigned when reading the driver file.
      */
     Perforation *GetPerforation(int completion_id);
+
+    /*!
+     * \brief GetSplinePoint Get the spline point with the specified index from the specified well.
+     * \param well_name The name of the well the spline point belongs to.
+     * \param point_index The index (in the list in the well settings) of the point to get.
+     */
+    SplinePoint *GetSplinePoint(QString well_name, int point_index);
 
     /*!
      * \brief GetWell Get the well with the specified name.

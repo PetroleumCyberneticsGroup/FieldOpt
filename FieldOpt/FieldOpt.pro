@@ -14,11 +14,10 @@ SUBDIRS = \
     AdgprsResultsReader
 
 GTest.depends = ERTWrapper Utilities Model Optimization Simulation Runner AdgprsResultsReader
-Model.depends = ERTWrapper Utilities
+Model.depends = ERTWrapper Utilities WellIndexCalculator
 Optimization.depends = Model Utilities Simulation
 Simulation.depends = Model Utilities AdgprsResultsReader
 Runner.depends = Optimization Model Utilities Simulation
-WellIndexCalculator.depends = Model
 
 OTHER_FILES += \
     defaults.pri \

@@ -111,6 +111,8 @@ int ECLGridReader::ActiveCells()
 
 ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index)
 {
+    if (!GlobalIndexIsInsideGrid(global_index))
+        throw InvalidIndexException("The global index " + std::to_string(global_index) + " is outside the grid.");
     if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting grid cells.");
     ECLGridReader::Cell cell;
     cell.global_index = global_index;
@@ -131,6 +133,15 @@ int ECLGridReader::GlobalIndexOfCellEnvelopingPoint(double x, double y, double z
 {
     if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before searching for cells.");
     return ecl_grid_get_global_index_from_xyz(ecl_grid_, x, y, z, initial_guess);
+}
+
+bool ECLGridReader::GlobalIndexIsInsideGrid(int global_index)
+{
+    Dims dims = Dimensions();
+    if (global_index < dims.nx * dims.ny * dims.nz)
+        return true;
+    else
+        return false;
 }
 
 

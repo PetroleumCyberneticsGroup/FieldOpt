@@ -42,6 +42,12 @@ Perforation::Perforation(Utilities::Settings::Model::Completion completion_setti
     }
 }
 
+Perforation::Perforation()
+    : Completion(CompletionType::Perforation)
+{
+    transmissibility_factor_ = new Properties::ContinousProperty(0.0);
+}
+
 
 
 
