@@ -31,7 +31,7 @@ namespace {
 class WellTest : public ModelBaseTest {
 protected:
     WellTest() {
-        producer_well_ = new ::Model::Wells::Well(*settings_->model(), 0, variable_container_, variable_handler_);
+        producer_well_ = new ::Model::Wells::Well(*settings_->model(), 0, variable_container_, variable_handler_, model_->reservoir());
     }
 
     ::Model::Wells::Well *producer_well_;

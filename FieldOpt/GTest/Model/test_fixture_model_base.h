@@ -45,7 +45,8 @@ protected:
 
     QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
     QString output_directory_ = "/home/einar/Documents/GitHub/PCG/fieldopt_output";
-    QString reservoir_grid_path_ = Utilities::FileHandling::GetBuildDirectoryPath() + "/../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID";
+//    QString reservoir_grid_path_ = Utilities::FileHandling::GetBuildDirectoryPath() + "/../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID";
+    QString reservoir_grid_path_ = Utilities::FileHandling::GetBuildDirectoryPath() + "/../examples/ADGPRS/5spot/ECL_5SPOT.EGRID";
     ::Utilities::Settings::Settings *settings_;
     ::Model::Properties::VariablePropertyContainer *variable_container_;
     ::Model::Properties::VariablePropertyHandler *variable_handler_;

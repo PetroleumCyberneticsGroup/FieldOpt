@@ -58,6 +58,7 @@ protected:
 };
 
 TEST_F(ControlTest, ProducerControl) {
+
     EXPECT_STREQ("PROD", well_.name.toLatin1().constData());
     EXPECT_EQ(0, entry_.time_step);
     EXPECT_TRUE(all_controls_.first()->open());

@@ -56,9 +56,9 @@ TEST_F(ReservoirTest, Constructor) {
 
 TEST_F(ReservoirTest, CheckDimensions) {
     Grid::Grid::Dims dims = reservoir_->grid()->Dimensions();
-    EXPECT_EQ(dims.nx, 20);
-    EXPECT_EQ(dims.ny, 9);
-    EXPECT_EQ(dims.nz, 9);
+    EXPECT_EQ(dims.nx, 60);
+    EXPECT_EQ(dims.ny, 60);
+    EXPECT_EQ(dims.nz, 1);
 }
 
 }

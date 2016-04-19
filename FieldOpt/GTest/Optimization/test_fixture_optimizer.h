@@ -31,11 +31,14 @@
 #include "Utilities/settings/optimizer.h"
 #include "Model/model.h"
 #include "Optimization/case.h"
+#include "Utilities/file_handling/filehandling.h"
+#include <iostream>
 
 class OptimizerTestFixture : public ::testing::Test {
 protected:
     OptimizerTestFixture(){
         settings_ = new ::Utilities::Settings::Settings(driver_file_path_, output_directory_);
+        settings_->model()->set_reservoir_grid_path(reservoir_grid_path_);
         optimizer_settings_ = settings_->optimizer();
         model_ = new ::Model::Model(*::Utilities::Settings::Settings(driver_file_path_, output_directory_).model());
         base_case_ = new ::Optimization::Case(model_->variables()->GetBinaryVariableValues(),
@@ -46,6 +49,7 @@ protected:
 
     QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
     QString output_directory_ = "/home/einar/Documents/GitHub/PCG/fieldopt_output";
+    QString reservoir_grid_path_ = Utilities::FileHandling::GetBuildDirectoryPath() + "/../examples/ADGPRS/5spot/ECL_5SPOT.EGRID";
     ::Utilities::Settings::Optimizer *optimizer_settings_;
     ::Utilities::Settings::Settings *settings_;
     ::Model::Model *model_;
