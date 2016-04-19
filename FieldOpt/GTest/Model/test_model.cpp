@@ -89,8 +89,8 @@ TEST_F(ModelTest, ApplyCase) {
 
     // Set all continous variables to 1.0 (should affect BHP and Transmissibility in the model)
     foreach (QUuid key, c->real_variables().keys()) {
-        std::cout << variable_container_->GetContinousVariableIdsWithName("INJ-SplinePoints-1").size() << std::endl;
-        if (variable_container_->GetContinousVariableIdsWithName("INJ-SplinePoints-1").contains(key))
+        std::cout << model_->variables()->GetContinousVariableIdsWithName("INJ-SplinePoints-1").size() << std::endl;
+        if (model_->variables()->GetContinousVariableIdsWithName("INJ-SplinePoints-1").contains(key))
             continue;
         c->set_real_variable_value(key, 1.0);
     }
