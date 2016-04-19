@@ -48,7 +48,6 @@ WellSpline::WellSpline(Utilities::Settings::Model::Well well_settings, Propertie
 
     if (variable_handler->GetSplinePoint(well_settings.name, 0)) { // Check if heel is variable
         QString base_name = variable_handler->GetSplinePoint(well_settings.name, 0)->variable_name() + "#heel";
-        std::cout << "Added variable with name " << base_name.toStdString() << std::endl;
         heel_x_->setName(base_name + "#x");
         heel_y_->setName(base_name + "#y");
         heel_z_->setName(base_name + "#z");
@@ -88,7 +87,6 @@ WellBlock *WellSpline::getWellBlock(WellIndexCalculator::WellIndexCalculator::Bl
 {
     WellBlock *wb = new WellBlock(block_data.i+1, block_data.j+1, block_data.k+1, block_id_++);
     auto comp = new Completions::Perforation();
-    std::cout << block_data.well_index << std::endl;
     comp->setTransmissibility_factor(block_data.well_index);
     wb->AddCompletion(comp);
     return wb;
