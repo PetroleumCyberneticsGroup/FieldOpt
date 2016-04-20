@@ -65,3 +65,4 @@ test-*
 *.UNRST
 *.UNSMRY
 *.xml
+*.eclrun_dbg
