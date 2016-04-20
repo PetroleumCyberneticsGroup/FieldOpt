@@ -40,11 +40,13 @@ Trajectory::Trajectory(Utilities::Settings::Model::Well well_settings,
     well_blocks_ = new QList<WellBlock *>();
     if (well_settings.definition_type == Utilities::Settings::Model::WellDefinitionType::WellBlocks) {
         initializeWellBlocks(well_settings, variable_container, variable_handler);
+        calculateDirectionOfPenetration();
         well_spline_ = 0;
     }
     else if (well_settings.definition_type == Utilities::Settings::Model::WellDefinitionType::WellSpline) {
         well_spline_ = new WellSpline(well_settings, variable_container, variable_handler, reservoir);
         well_blocks_ = well_spline_->GetWellBlocks();
+        calculateDirectionOfPenetration();
     }
 }
 
@@ -75,6 +77,7 @@ void Trajectory::UpdateWellBlocks()
 {
     if (well_spline_ != 0)
         well_blocks_ = well_spline_->GetWellBlocks();
+    calculateDirectionOfPenetration();
 }
 
 void Trajectory::initializeWellBlocks(Utilities::Settings::Model::Well well,
@@ -97,7 +100,6 @@ void Trajectory::initializeWellBlocks(Utilities::Settings::Model::Well well,
         if (completion != nullptr)
             well_blocks_->last()->AddCompletion(completion);
     }
-    calculateDirectionOfPenetration();
 }
 
 void Trajectory::calculateDirectionOfPenetration()
