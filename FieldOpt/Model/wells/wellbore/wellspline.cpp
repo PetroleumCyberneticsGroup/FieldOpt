@@ -62,7 +62,7 @@ WellSpline::WellSpline(Utilities::Settings::Model::Well well_settings, Propertie
         toe_z_->setName(base_name + "#z");
         variable_container->AddVariable(toe_x_);
         variable_container->AddVariable(toe_y_);
-        variable_container->AddVariable(heel_z_);
+        variable_container->AddVariable(toe_z_);
     }
 }
 
