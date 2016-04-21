@@ -1,15 +1,15 @@
 {
     "Global": {
         "Name": "5spot",
-        "BookkeeperTolerance": 1.0
+        "BookkeeperTolerance": 10.0
     },
     "Optimizer": {
         "Type": "Compass",
         "Mode": "Maximize",
         "Parameters": {
-            "MaxEvaluations": 50,
-            "InitialStepLength": 100.0,
-            "MinimumStepLength": 1.0
+            "MaxEvaluations": 500,
+            "InitialStepLength": 256.0,
+            "MinimumStepLength": 4.0
         },
         "Objective": {
             "Type": "WeightedSum",
@@ -23,7 +23,17 @@
                     "IsWellProp": false
                 }
             ]
-        }
+        },
+        "Constraints": [
+            {
+                "Name": "INJ-SplinePoints-1",
+                "Well": "INJ",
+                "Type": "WellSplineLength",
+                "Max": 1000,
+                "Min": 50
+            }
+
+        ]
     },
     "Simulator": {
         "Type": "ADGPRS",
