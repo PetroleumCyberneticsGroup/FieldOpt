@@ -47,7 +47,7 @@ WellSpline::WellSpline(Utilities::Settings::Model::Well well_settings, Propertie
     toe_z_ = new Model::Properties::ContinousProperty(well_settings.spline_points.last().z);
 
     if (variable_handler->GetSplinePoint(well_settings.name, 0)) { // Check if heel is variable
-        QString base_name = variable_handler->GetSplinePoint(well_settings.name, 0)->variable_name() + "#spline" + "#heel";
+        QString base_name = variable_handler->GetSplinePoint(well_settings.name, 0)->variable_name() + "#" + well_settings.name + "#heel";
         heel_x_->setName(base_name + "#x");
         heel_y_->setName(base_name + "#y");
         heel_z_->setName(base_name + "#z");
@@ -56,7 +56,7 @@ WellSpline::WellSpline(Utilities::Settings::Model::Well well_settings, Propertie
         variable_container->AddVariable(heel_z_);
     }
     if (variable_handler->GetSplinePoint(well_settings.name, 1)) { // Check if toe is variable
-        QString base_name = variable_handler->GetSplinePoint(well_settings.name, 1)->variable_name() + "#spline" + "#toe";
+        QString base_name = variable_handler->GetSplinePoint(well_settings.name, 1)->variable_name() + "#" + well_settings.name + "#toe";
         toe_x_->setName(base_name + "#x");
         toe_y_->setName(base_name + "#y");
         toe_z_->setName(base_name + "#z");
