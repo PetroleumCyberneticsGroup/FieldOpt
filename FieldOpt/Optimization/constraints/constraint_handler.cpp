@@ -36,6 +36,10 @@ ConstraintHandler::ConstraintHandler(QList<Utilities::Settings::Optimizer::Const
             break;
         case Utilities::Settings::Optimizer::ConstraintType::WellSplineLength:
             constraints_.append(new WellSplineLength(constraint, variables));
+            break;
+        case Utilities::Settings::Optimizer::ConstraintType::WellSplineInterwellDistance:
+            constraints_.append(new InterwellDistance(constraint, variables));
+            break;
         default:
             break;
         }

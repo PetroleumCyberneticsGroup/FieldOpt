@@ -7,9 +7,9 @@
         "Type": "Compass",
         "Mode": "Maximize",
         "Parameters": {
-            "MaxEvaluations": 500,
+            "MaxEvaluations": 750,
             "InitialStepLength": 256.0,
-            "MinimumStepLength": 4.0
+            "MinimumStepLength": 24.0
         },
         "Objective": {
             "Type": "WeightedSum",

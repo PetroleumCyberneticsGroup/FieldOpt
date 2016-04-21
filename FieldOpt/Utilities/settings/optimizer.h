@@ -30,6 +30,7 @@
 
 #include <QList>
 #include <QString>
+#include <QStringList>
 
 namespace Utilities {
 namespace Settings {
@@ -46,7 +47,7 @@ class Optimizer
 public:
     enum OptimizerType { Compass };
     enum OptimizerMode { Maximize, Minimize };
-    enum ConstraintType { BHP, Rate, SplinePoints, WellSplineLength };
+    enum ConstraintType { BHP, Rate, SplinePoints, WellSplineLength, WellSplineInterwellDistance };
     enum ConstraintWellSplinePointsType { MaxMin, Function};
     enum ObjectiveType { WeightedSum };
 
@@ -70,6 +71,7 @@ public:
         struct RealMaxMinLimit { RealCoordinate max; RealCoordinate min; }; //!< Used to define a box-shaped 3D area. Max and min each define a corner.
         ConstraintType type; //!< The constraint type (e.g. BHP or SplinePoints positions).
         QString well; //!< The name of the well this Constraint applies to.
+        QStringList wells; //!< List of well names if the constraint applies to more than one.
         double max; //!< Max limit when using constraints like BHP.
         double min; //!< Min limit when using constraints like BHP.
         ConstraintWellSplinePointsType spline_points_type; //!< How the SplinePoints constraint is given when SplinePoints constraint type is selected.

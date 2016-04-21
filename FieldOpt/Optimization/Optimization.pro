@@ -25,7 +25,9 @@ HEADERS += \
     constraints/constraint_handler.h \
     optimizer.h \
     optimizers/compass_search.h \
-    constraints/well_spline_length.h
+    constraints/well_spline_length.h \
+    constraints/interwell_distance.h \
+    constraints/well_spline_constraint.h
 
 SOURCES += \
     objective/objective.cpp \
@@ -37,4 +39,6 @@ SOURCES += \
     constraints/constraint_handler.cpp \
     optimizer.cpp \
     optimizers/compass_search.cpp \
-    constraints/well_spline_length.cpp
+    constraints/well_spline_length.cpp \
+    constraints/interwell_distance.cpp \
+    constraints/well_spline_constraint.cpp

@@ -2,10 +2,15 @@
 #define WELLSPLINELENGTH_H
 
 #include "constraint.h"
+#include "well_spline_constraint.h"
 
 namespace Optimization { namespace Constraints {
 
-class WellSplineLength : public Constraint
+/*!
+ * \brief The WellSplineLength class defines a constraint on the maximum and minimum length
+ * of a well defined by a WellSpline. It uses the WellIndexCalculator library.
+ */
+class WellSplineLength : public Constraint, WellSplineConstraint
 {
 public:
     WellSplineLength(::Utilities::Settings::Optimizer::Constraint settings, ::Model::Properties::VariablePropertyContainer *variables);
@@ -18,23 +23,7 @@ public:
 private:
     double min_length_;
     double max_length_;
-
-    struct Coord {
-        QUuid x;
-        QUuid y;
-        QUuid z;
-    };
-
-    struct Well {
-        Coord heel;
-        Coord toe;
-        QString name;
-    };
-
     Well affected_well_;
-
-    void initializeWell(QList<QPair<QUuid, QString>> vars);
-    Coord initializeCoord(QList<QPair<QUuid, QString>> point_vars);
 
 };
 

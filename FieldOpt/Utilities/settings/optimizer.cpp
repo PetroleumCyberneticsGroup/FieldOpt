@@ -168,6 +168,19 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
         optimizer_constraint.min = json_constraint["Min"].toDouble();
         optimizer_constraint.well = json_constraint["Well"].toString();
     }
+    else if (QString::compare(constraint_type, "WellSplineInterwellDistance") == 0) {
+        optimizer_constraint.type = ConstraintType::WellSplineInterwellDistance;
+        optimizer_constraint.min = json_constraint["Min"].toDouble();
+        if (!json_constraint.contains("Wells") || json_constraint["Wells"].toArray().size() < 2) {
+            throw UnableToParseOptimizerConstraintsSectionException("WellSplineInterwellDistance constraint needs a Wells array with at least two well names specified.");
+        }
+        else {
+            optimizer_constraint.wells = QStringList();
+            for (int i = 0; i < json_constraint["Wells"].toArray().size(); ++i) {
+                optimizer_constraint.wells.append(json_constraint["Wells"].toArray()[i].toString());
+            }
+        }
+    }
     else throw UnableToParseOptimizerConstraintsSectionException("Constraint type " + constraint_type.toStdString() + " not recognized.");
 
     optimizer_constraint.well = json_constraint["Well"].toString();
