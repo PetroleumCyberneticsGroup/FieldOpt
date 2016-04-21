@@ -146,6 +146,20 @@ QList<QUuid> VariablePropertyContainer::GetContinousVariableIdsWithName(QString 
     return ids_for_variables_with_name;
 }
 
+QList<QPair<QUuid, QString> > VariablePropertyContainer::GetContinousVariableNamesAndIdsMatchingSubstring(QString substring)
+{
+    QList<QPair<QUuid, QString> > mathcing_vars = QList<QPair<QUuid, QString> >();
+    foreach (Properties::ContinousProperty *prop, continous_variables_->values()) {
+        if (prop->name().contains(substring)) {
+            QPair<QUuid, QString> entry = QPair<QUuid, QString>();
+            entry.first = prop->id();
+            entry.second = prop->name();
+            mathcing_vars.append(entry);
+        }
+    }
+    return mathcing_vars;
+}
+
 void VariablePropertyContainer::DeleteBinaryVariable(QUuid id)
 {
     if (!binary_variables_->contains(id)) throw VariableIdDoesNotExistException("Binary variable not found. Unable to delete.");

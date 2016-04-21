@@ -27,6 +27,8 @@
 #define VARIABLE_PROPERTY_CONTAINER_H
 
 #include <QHash>
+#include <QPair>
+#include <QString>
 
 #include "property.h"
 #include "binary_property.h"
@@ -73,6 +75,13 @@ public:
     QList<QUuid> GetBinaryVariableIdsWithName(QString var_name) const;
     QList<QUuid> GetDiscreteVariableIdsWithName(QString var_name) const;
     QList<QUuid> GetContinousVariableIdsWithName(QString var_name) const;
+
+    /*!
+     * \brief GetContinousVariableNamesAndIdsMatchingNamePart Get the names and IDs of continous variables with
+     * names containing the proided substring.
+     * \param substring
+     */
+    QList<QPair<QUuid, QString> > GetContinousVariableNamesAndIdsMatchingSubstring(QString substring);
 
     void DeleteBinaryVariable(QUuid id);
     void DeleteDiscreteVariable(QUuid id);
