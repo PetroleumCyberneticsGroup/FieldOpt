@@ -38,6 +38,11 @@ Completion::Completion(Utilities::Settings::Model::Completion completion_setting
         type_ = CompletionType::Perforation;
 }
 
+Completion::Completion(Completion::CompletionType type )
+{
+    type_ = type;
+}
+
 
 }
 }

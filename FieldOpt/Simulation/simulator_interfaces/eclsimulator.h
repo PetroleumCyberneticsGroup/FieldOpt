@@ -70,6 +70,10 @@ private:
     DriverFileWriters::EclDriverFileWriter *driver_file_writer_;
     QString script_path_;
     QStringList script_args_;
+
+    // Simulator interface
+protected:
+    void UpdateFilePaths();
 };
 
 }

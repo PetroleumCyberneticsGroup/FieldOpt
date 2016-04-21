@@ -1,0 +1,97 @@
+{
+    "Global": {
+        "Name": "5spot",
+        "BookkeeperTolerance": 1.0
+    },
+    "Optimizer": {
+        "Type": "Compass",
+        "Mode": "Maximize",
+        "Parameters": {
+            "MaxEvaluations": 50,
+            "InitialStepLength": 100.0,
+            "MinimumStepLength": 1.0
+        },
+        "Objective": {
+            "Type": "WeightedSum",
+            "WeightedSumComponents": [
+                {
+                    "Coefficient": 1.0, "Property": "CumulativeOilProduction", "TimeStep": -1,
+                    "IsWellProp": false
+                },
+                {
+                    "Coefficient": -0.2, "Property": "CumulativeWaterProduction", "TimeStep": -1,
+                    "IsWellProp": false
+                }
+            ]
+        }
+    },
+    "Simulator": {
+        "Type": "ADGPRS",
+        "ExecutionScript": "bash_adgprs"
+    },
+    "Model": {
+        "ControlTimes": [0, 50, 100, 365],
+        "Reservoir": {
+            "Type": "ECLIPSE"
+        },
+        "Wells": [
+            {
+                "Name": "PRODUCER",
+                "Type": "Producer",
+                "DefinitionType": "WellBlocks",
+                "PreferedPhase": "Oil",
+                "Heel": [1,4,1],
+                "WellboreRadius": 0.75,
+                "Direction": "Z",
+                "WellBlocks": [
+                    [1,4,1]
+                ],
+                "Completions": [
+                    {
+                        "Type": "Perforation",
+                        "WellBlock": [1,4,1],
+                        "TransmissibilityFactor": 1.0
+                    }
+                ],
+                "Controls": [
+                    {
+                        "TimeStep": 0,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 2000.0
+                    }
+                ]
+            },
+            {
+                "Name": "INJECTOR",
+                "Type": "Injector",
+                "DefinitionType": "WellSpline",
+                "PreferedPhase": "Water",
+                "Heel": [10,10,1],
+                "WellboreRadius": 0.75,
+                "Direction": "Y",
+                "SplinePoints": [
+                    [12.0,12.0,1712.0],
+                    [36.0,12.0,1712.0]
+                ],
+                "Controls": [
+                    {
+                        "TimeStep": 0,
+                        "Type": "Water",
+                        "State": "Open",
+                        "Mode": "Rate",
+                        "Rate": 1200.0
+                    }
+                ],
+                "Variables": [
+                    {
+                        "Name": "INJ-SplinePoints-1",
+                        "Type": "SplinePoints",
+                        "VariableSplinePointIndices": [0,1],
+                        "TimeSteps": [0]
+                    }
+                ]
+            }
+        ]
+    }
+}

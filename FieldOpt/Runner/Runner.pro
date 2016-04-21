@@ -6,7 +6,7 @@ TARGET = FieldOpt
 CONFIG += console
 CONFIG -= app_bundle
 
-TEMPLATE = app
+TEMPLATE = lib
 
 CONFIG += c++11
 LIBS += -L$$OUT_PWD/../Model -lmodel
@@ -15,8 +15,10 @@ LIBS += -L$$OUT_PWD/../Optimization -loptimization
 LIBS += -L$$OUT_PWD/../Utilities -lutilities
 LIBS += -L$$OUT_PWD/../ERTWrapper -lertwrapper
 LIBS += -L$$OUT_PWD/../AdgprsResultsReader -ladgprsresultsreader
+LIBS += -L$$OUT_PWD/../WellIndexCalculator -lWellIndexCalculator
 LIBS += -lpthread -lgtest -pthread
 LIBS += -lboost_program_options
+LIBS += -lrpoly_plus_plus
 
 SOURCES += main.cpp \
     runtime_settings.cpp \

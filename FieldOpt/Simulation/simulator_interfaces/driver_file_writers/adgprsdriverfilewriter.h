@@ -21,7 +21,7 @@ class AdgprsDriverFileWriter
 private:
     friend class ::Simulation::SimulatorInterfaces::AdgprsSimulator;
     AdgprsDriverFileWriter(::Utilities::Settings::Settings *settings, Model::Model *model);
-    void WriteDriverFile();
+    void WriteDriverFile(QString output_dir);
 
     Model::Model *model_;
     Utilities::Settings::Settings *settings_;

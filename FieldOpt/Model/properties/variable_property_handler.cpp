@@ -46,6 +46,11 @@ VariablePropertyHandler::VariablePropertyHandler(Utilities::Settings::Model sett
         for (int block_nr = 0; block_nr < settings_well.well_blocks.size(); ++block_nr) {
             new_well->well_blocks_.append(new WellBlock(settings_well.well_blocks[block_nr]));
         }
+        if (settings_well.spline_points.size() > 0) {
+            for (int sp_nr = 0; sp_nr < settings_well.spline_points.length(); ++sp_nr) {
+                new_well->spline_points_.append(new SplinePoint(sp_nr));
+            }
+        }
         for (int var_idx = 0; var_idx < settings_well.variables.size(); ++var_idx) { // Variables
             Utilities::Settings::Model::Well::Variable settings_var = settings_well.variables[var_idx];
             switch (settings_var.type) {
@@ -83,7 +88,10 @@ VariablePropertyHandler::VariablePropertyHandler(Utilities::Settings::Model sett
                 }
                 break;
             case Utilities::Settings::Model::WellVariableType::SplinePoints:
-                std::cout << "SplinePoints-type variables are not yet handled. Skipping." << std::endl;
+                for (int sp_nr = 0; sp_nr < settings_var.variable_spline_point_indices.length(); ++sp_nr) {
+                    new_well->spline_points_[sp_nr]->variable_ = true;
+                    new_well->spline_points_[sp_nr]->variable_name_ = settings_var.name;
+                }
                 break;
             default:
                 throw VariableTypeNotRecognizedException();
@@ -116,6 +124,12 @@ VariablePropertyHandler::Perforation *VariablePropertyHandler::GetPerforation(in
         }
     }
     throw VariablePropertyHandlerCannotFindObjectException("The variable handler was unable to find a perforation with id " + std::to_string(completion_id));
+}
+
+VariablePropertyHandler::SplinePoint *VariablePropertyHandler::GetSplinePoint(QString well_name, int point_index)
+{
+    Well *w = GetWell(well_name);
+    return w->spline_points_[point_index];
 }
 
 VariablePropertyHandler::Well *VariablePropertyHandler::GetWell(QString well_name)

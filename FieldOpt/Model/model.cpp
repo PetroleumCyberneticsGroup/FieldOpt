@@ -35,8 +35,10 @@ Model::Model(Utilities::Settings::Model settings)
 
     wells_ = new QList<Wells::Well *>();
     for (int well_nr = 0; well_nr < settings.wells().size(); ++well_nr) {
-        wells_->append(new Wells::Well(settings, well_nr, variable_container_, variable_handler_));
+        wells_->append(new Wells::Well(settings, well_nr, variable_container_, variable_handler_, reservoir_));
     }
+
+    variable_container_->CheckVariableNameUniqueness();
 }
 
 void Model::ApplyCase(Optimization::Case *c)
@@ -49,6 +51,9 @@ void Model::ApplyCase(Optimization::Case *c)
     }
     foreach (QUuid key, c->real_variables().keys()) {
         variable_container_->SetContinousVariableValue(key, c->real_variables()[key]);
+    }
+    foreach (Wells::Well *w, *wells_) {
+        w->trajectory()->UpdateWellBlocks();
     }
     verify();
 }
@@ -77,7 +82,11 @@ void Model::verifyWellBlock(Wells::Wellbore::WellBlock *wb)
     if (wb->i() < 1 || wb->i() > reservoir()->grid()->Dimensions().nx ||
             wb->j() < 1 || wb->j() > reservoir()->grid()->Dimensions().ny ||
             wb->k() < 1 || wb->k() > reservoir()->grid()->Dimensions().nz)
-        throw std::runtime_error("Invalid well block detected.");
+        throw std::runtime_error("Invalid well block detected: ("
+                                 + std::to_string(wb->i()) + ", "
+                                 + std::to_string(wb->j()) + ", "
+                                 + std::to_string(wb->k()) + ")"
+                                 );
 }
 
 }

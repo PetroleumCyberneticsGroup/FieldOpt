@@ -25,9 +25,8 @@
 
 #include "trajectory.h"
 #include "Model/wells/well_exceptions.h"
-#include "iostream"
-#include "cmath"
-#include "Model/properties/property.h"
+#include <iostream>
+#include <cmath>
 
 namespace Model {
 namespace Wells {
@@ -35,14 +34,19 @@ namespace Wellbore {
 
 Trajectory::Trajectory(Utilities::Settings::Model::Well well_settings,
                        Properties::VariablePropertyContainer *variable_container,
-                       Properties::VariablePropertyHandler *variable_handler)
+                       Properties::VariablePropertyHandler *variable_handler,
+                       ::Model::Reservoir::Reservoir *reservoir)
 {
     well_blocks_ = new QList<WellBlock *>();
     if (well_settings.definition_type == Utilities::Settings::Model::WellDefinitionType::WellBlocks) {
         initializeWellBlocks(well_settings, variable_container, variable_handler);
+        calculateDirectionOfPenetration();
+        well_spline_ = 0;
     }
     else if (well_settings.definition_type == Utilities::Settings::Model::WellDefinitionType::WellSpline) {
-        std::cout << "Spline definition of wells are not yet supported. Skipping the well." << std::endl;
+        well_spline_ = new WellSpline(well_settings, variable_container, variable_handler, reservoir);
+        well_blocks_ = well_spline_->GetWellBlocks();
+        calculateDirectionOfPenetration();
     }
 }
 
@@ -69,6 +73,13 @@ QList<WellBlock *> *Trajectory::GetWellBlocks()
     return well_blocks_;
 }
 
+void Trajectory::UpdateWellBlocks()
+{
+    if (well_spline_ != 0)
+        well_blocks_ = well_spline_->GetWellBlocks();
+    calculateDirectionOfPenetration();
+}
+
 void Trajectory::initializeWellBlocks(Utilities::Settings::Model::Well well,
                                       Properties::VariablePropertyContainer *variable_container,
                                       Properties::VariablePropertyHandler *variable_handler)
@@ -77,7 +88,7 @@ void Trajectory::initializeWellBlocks(Utilities::Settings::Model::Well well,
     for (int i = 0; i < blocks.size(); ++i) {
         well_blocks_->append(new WellBlock(blocks[i].position.i, blocks[i].position.j, blocks[i].position.k, blocks[i].id));
         if (variable_handler->GetWellBlock(blocks[i].id)->position() == true) {
-            QString base_var_name = variable_handler->GetWellBlock(blocks[i].id)->variable_name() + "_" + QString::number(i) + "_";
+            QString base_var_name = variable_handler->GetWellBlock(blocks[i].id)->variable_name() + "#" + QString::number(i) + "#";
             well_blocks_->last()->i_->setName(base_var_name + "i");
             well_blocks_->last()->j_->setName(base_var_name + "j");
             well_blocks_->last()->k_->setName(base_var_name + "k");
@@ -89,7 +100,6 @@ void Trajectory::initializeWellBlocks(Utilities::Settings::Model::Well well,
         if (completion != nullptr)
             well_blocks_->last()->AddCompletion(completion);
     }
-    calculateDirectionOfPenetration();
 }
 
 void Trajectory::calculateDirectionOfPenetration()

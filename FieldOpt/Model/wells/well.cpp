@@ -32,7 +32,8 @@ namespace Wells {
 Well::Well(Utilities::Settings::Model settings,
            int well_number,
            Properties::VariablePropertyContainer *variable_container,
-           ::Model::Properties::VariablePropertyHandler *variable_handler)
+           ::Model::Properties::VariablePropertyHandler *variable_handler,
+           Reservoir::Reservoir *reservoir)
 {
     Utilities::Settings::Model::Well well_settings = settings.wells().at(well_number);
 
@@ -50,7 +51,7 @@ Well::Well(Utilities::Settings::Model settings,
     for (int i = 0; i < well_settings.controls.size(); ++i)
         controls_->append(new Control(well_settings.controls[i], well_settings, variable_container, variable_handler));
 
-    trajectory_ = new Wellbore::Trajectory(well_settings, variable_container, variable_handler);
+    trajectory_ = new Wellbore::Trajectory(well_settings, variable_container, variable_handler, reservoir);
 }
 
 bool Well::IsProducer()

@@ -51,7 +51,7 @@ protected:
 
 TEST_F(ModelSettingsTest, Reservoir) {
     EXPECT_EQ(settings_.model()->reservoir().type, Model::ReservoirGridSourceType::ECLIPSE);
-    EXPECT_STREQ("../../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID", settings_.model()->reservoir().path.toLatin1().constData());
+    EXPECT_STREQ("../../examples/ADGPRS/5spot/ECL_5SPOT.EGRID", settings_.model()->reservoir().path.toLatin1().constData());
 }
 
 TEST_F(ModelSettingsTest, ControlTimes) {
@@ -110,7 +110,7 @@ TEST_F(ModelSettingsTest, ProducerVariables) {
     EXPECT_EQ(1, producer.variables[2].blocks[0].position.i);
     EXPECT_EQ(2, producer.variables[2].blocks[1].position.i);
     EXPECT_EQ(4, producer.variables[2].blocks[2].position.j);
-    EXPECT_EQ(2, producer.variables[2].blocks[3].position.k);
+    EXPECT_EQ(1, producer.variables[2].blocks[3].position.k);
 }
 
 TEST_F(ModelSettingsTest, InjectorWell) {
@@ -126,13 +126,13 @@ TEST_F(ModelSettingsTest, InjectorWell) {
     EXPECT_FLOAT_EQ(0.75, injector.wellbore_radius);
     EXPECT_EQ(Model::Direction::X, injector.direction);
 
-    EXPECT_EQ(2, injector.heel.i);
+    EXPECT_EQ(1, injector.heel.i);
     EXPECT_EQ(1, injector.heel.j);
-    EXPECT_EQ(2, injector.heel.k);
+    EXPECT_EQ(1, injector.heel.k);
 
     EXPECT_EQ(Model::WellDefinitionType::WellSpline, injector.definition_type);
     EXPECT_EQ(2, injector.spline_points.size());
-    EXPECT_FLOAT_EQ(40.0, injector.spline_points[1].y);
+    EXPECT_FLOAT_EQ(12.0, injector.spline_points[1].y);
 }
 
 TEST_F(ModelSettingsTest, InjectorVariables) {

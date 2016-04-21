@@ -10,9 +10,10 @@ LIBS += -L$$OUT_PWD/../Simulation -lsimulation
 LIBS += -L$$OUT_PWD/../ERTWrapper -lertwrapper
 LIBS += -L$$OUT_PWD/../Utilities -lutilities
 LIBS += -L$$OUT_PWD/../AdgprsResultsReader -ladgprsresultsreader
+LIBS += -L$$OUT_PWD/../WellIndexCalculator -lWellIndexCalculator
 LIBS += -L$$OUT_PWD/../Runner -lFieldOpt
 
-LIBS += -lpthread -lgtest -pthread
+LIBS += -lpthread -lgtest -pthread -lrpoly_plus_plus
 SOURCES += \
     gtest_main.cpp \
     ERTWrapper/test_eclgridreader.cpp \

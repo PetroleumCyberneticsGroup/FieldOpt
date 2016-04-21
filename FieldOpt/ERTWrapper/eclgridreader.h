@@ -13,6 +13,9 @@ namespace ECLGrid {
 
 /*!
      * \brief The ECLGridReader class reads ECLIPSE grid files (.GRID and .EGRID).
+     *
+     * \note ERT uses 0-index IJK indeces. These are not directly valid in ECL or
+     * ADGPRS simulator -- they need to be incremented by 1.
      */
 class ECLGridReader
 {
@@ -125,6 +128,8 @@ public:
          * \return Global index or -1.
          */
     int GlobalIndexOfCellEnvelopingPoint(double x, double y, double z, int initial_guess=0);
+
+    bool GlobalIndexIsInsideGrid(int global_index);
 };
 }
 }

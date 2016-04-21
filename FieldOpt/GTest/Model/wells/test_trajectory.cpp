@@ -36,7 +36,7 @@ class TrajectoryTest : public ModelBaseTest {
 protected:
     TrajectoryTest() {
         prod_well_settings_ = settings_->model()->wells().first();
-        prod_well_trajectory_ = new Wellbore::Trajectory(prod_well_settings_, variable_container_, variable_handler_);
+        prod_well_trajectory_ = new Wellbore::Trajectory(prod_well_settings_, variable_container_, variable_handler_, model_->reservoir());
     }
     virtual ~TrajectoryTest() {}
     virtual void SetUp() {}
@@ -50,28 +50,28 @@ TEST_F(TrajectoryTest, Constructor) {
 }
 
 TEST_F(TrajectoryTest, GetWellBlock) {
-    EXPECT_NO_THROW(prod_well_trajectory_->GetWellBlock(1, 4, 2));
+    EXPECT_NO_THROW(prod_well_trajectory_->GetWellBlock(1, 4, 1));
     EXPECT_THROW(prod_well_trajectory_->GetWellBlock(9, 9, 9), WellBlockNotFoundException);
 
-    EXPECT_EQ(1, prod_well_trajectory_->GetWellBlock(1,4,2)->i());
-    EXPECT_EQ(4, prod_well_trajectory_->GetWellBlock(1,4,2)->j());
-    EXPECT_EQ(2, prod_well_trajectory_->GetWellBlock(1,4,2)->k());
-    EXPECT_FALSE(prod_well_trajectory_->GetWellBlock(1,4,2)->HasCompletion());
+    EXPECT_EQ(1, prod_well_trajectory_->GetWellBlock(1,4,1)->i());
+    EXPECT_EQ(4, prod_well_trajectory_->GetWellBlock(1,4,1)->j());
+    EXPECT_EQ(1, prod_well_trajectory_->GetWellBlock(1,4,1)->k());
+    EXPECT_FALSE(prod_well_trajectory_->GetWellBlock(1,4,1)->HasCompletion());
 
-    EXPECT_EQ(2, prod_well_trajectory_->GetWellBlock(2,4,2)->i());
-    EXPECT_EQ(4, prod_well_trajectory_->GetWellBlock(2,4,2)->j());
-    EXPECT_EQ(2, prod_well_trajectory_->GetWellBlock(2,4,2)->k());
-    EXPECT_TRUE(prod_well_trajectory_->GetWellBlock(2,4,2)->HasCompletion());
+    EXPECT_EQ(2, prod_well_trajectory_->GetWellBlock(2,4,1)->i());
+    EXPECT_EQ(4, prod_well_trajectory_->GetWellBlock(2,4,1)->j());
+    EXPECT_EQ(1, prod_well_trajectory_->GetWellBlock(2,4,1)->k());
+    EXPECT_TRUE(prod_well_trajectory_->GetWellBlock(2,4,1)->HasCompletion());
 
-    EXPECT_EQ(3, prod_well_trajectory_->GetWellBlock(3,4,2)->i());
-    EXPECT_EQ(4, prod_well_trajectory_->GetWellBlock(3,4,2)->j());
-    EXPECT_EQ(2, prod_well_trajectory_->GetWellBlock(3,4,2)->k());
-    EXPECT_TRUE(prod_well_trajectory_->GetWellBlock(3,4,2)->HasCompletion());
+    EXPECT_EQ(3, prod_well_trajectory_->GetWellBlock(3,4,1)->i());
+    EXPECT_EQ(4, prod_well_trajectory_->GetWellBlock(3,4,1)->j());
+    EXPECT_EQ(1, prod_well_trajectory_->GetWellBlock(3,4,1)->k());
+    EXPECT_TRUE(prod_well_trajectory_->GetWellBlock(3,4,1)->HasCompletion());
 
-    EXPECT_EQ(4, prod_well_trajectory_->GetWellBlock(4,4,2)->i());
-    EXPECT_EQ(4, prod_well_trajectory_->GetWellBlock(4,4,2)->j());
-    EXPECT_EQ(2, prod_well_trajectory_->GetWellBlock(4,4,2)->k());
-    EXPECT_FALSE(prod_well_trajectory_->GetWellBlock(4,4,2)->HasCompletion());
+    EXPECT_EQ(4, prod_well_trajectory_->GetWellBlock(4,4,1)->i());
+    EXPECT_EQ(4, prod_well_trajectory_->GetWellBlock(4,4,1)->j());
+    EXPECT_EQ(1, prod_well_trajectory_->GetWellBlock(4,4,1)->k());
+    EXPECT_FALSE(prod_well_trajectory_->GetWellBlock(4,4,1)->HasCompletion());
 }
 
 TEST_F(TrajectoryTest, AllWellBlocks) {
@@ -84,15 +84,15 @@ TEST_F(TrajectoryTest, AllWellBlocks) {
 
 TEST_F(TrajectoryTest, Completions) {
     EXPECT_EQ(::Model::Wells::Wellbore::Completions::Completion::CompletionType::Perforation,
-              prod_well_trajectory_->GetWellBlock(2,4,2)->GetCompletion()->type());
-    EXPECT_FALSE(prod_well_trajectory_->GetWellBlock(1,4,2)->HasPerforation());
-    EXPECT_TRUE(prod_well_trajectory_->GetWellBlock(2,4,2)->HasPerforation());
-    EXPECT_TRUE(prod_well_trajectory_->GetWellBlock(3,4,2)->HasPerforation());
-    EXPECT_FALSE(prod_well_trajectory_->GetWellBlock(4,4,2)->HasPerforation());
-    EXPECT_FLOAT_EQ(1.0, prod_well_trajectory_->GetWellBlock(2,4,2)->GetPerforation()->transmissibility_factor());
-    EXPECT_FLOAT_EQ(1.0, prod_well_trajectory_->GetWellBlock(3,4,2)->GetPerforation()->transmissibility_factor());
+              prod_well_trajectory_->GetWellBlock(2,4,1)->GetCompletion()->type());
+    EXPECT_FALSE(prod_well_trajectory_->GetWellBlock(1,4,1)->HasPerforation());
+    EXPECT_TRUE(prod_well_trajectory_->GetWellBlock(2,4,1)->HasPerforation());
+    EXPECT_TRUE(prod_well_trajectory_->GetWellBlock(3,4,1)->HasPerforation());
+    EXPECT_FALSE(prod_well_trajectory_->GetWellBlock(4,4,1)->HasPerforation());
+    EXPECT_FLOAT_EQ(1.0, prod_well_trajectory_->GetWellBlock(2,4,1)->GetPerforation()->transmissibility_factor());
+    EXPECT_FLOAT_EQ(1.0, prod_well_trajectory_->GetWellBlock(3,4,1)->GetPerforation()->transmissibility_factor());
 
-    EXPECT_THROW(prod_well_trajectory_->GetWellBlock(1,4,2)->GetPerforation(), PerforationNotDefinedForWellBlockException);
+    EXPECT_THROW(prod_well_trajectory_->GetWellBlock(1,4,1)->GetPerforation(), PerforationNotDefinedForWellBlockException);
 }
 
 TEST_F(TrajectoryTest, VariableHandlerCorrectness) {

@@ -83,6 +83,7 @@ protected:
     ::Simulation::Results::Results *results_;
     Utilities::Settings::Settings *settings_;
     Model::Model *model_;
+    virtual void UpdateFilePaths() = 0;
 };
 
 }

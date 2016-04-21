@@ -37,7 +37,7 @@ AdgprsSimulator::AdgprsSimulator(Utilities::Settings::Settings *settings, Model:
 void AdgprsSimulator::Evaluate()
 {
     copyDriverFiles();
-    driver_file_writer_->WriteDriverFile();
+    driver_file_writer_->WriteDriverFile(output_directory_);
     ::Utilities::Unix::ExecShellScript(script_path_, script_args_);
     results_->ReadResults(output_h5_summary_file_path_);
 }
@@ -65,6 +65,12 @@ void AdgprsSimulator::verifyOriginalDriverFileDirectory()
         if (!Utilities::FileHandling::FileExists(file))
             throw DriverFileDoesNotExistException(file);
     }
+}
+
+void AdgprsSimulator::UpdateFilePaths()
+{
+    output_h5_summary_file_path_ = output_directory_ + "/" + initial_driver_file_name_.split(".").first() + ".SIM.H5";
+    script_args_ = (QStringList() << output_directory_ << output_directory_+"/"+initial_driver_file_name_);
 }
 
 }}
