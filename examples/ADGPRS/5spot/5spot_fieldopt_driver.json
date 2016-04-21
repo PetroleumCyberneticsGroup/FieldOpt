@@ -26,8 +26,14 @@
         },
         "Constraints": [
             {
-                "Name": "INJ-SplinePoints-1",
-                "Well": "INJ",
+                "Name": "SplinePoints",
+                "Wells": ["INJECTOR", "PRODUCER"],
+                "Type": "WellSplineInterwellDistance",
+                "Min": 100
+            },
+            {
+                "Name": "SplinePoints",
+                "Well": "INJECTOR",
                 "Type": "WellSplineLength",
                 "Max": 1000,
                 "Min": 50
@@ -48,20 +54,14 @@
             {
                 "Name": "PRODUCER",
                 "Type": "Producer",
-                "DefinitionType": "WellBlocks",
+                "DefinitionType": "WellSpline",
                 "PreferedPhase": "Oil",
                 "Heel": [1,4,1],
                 "WellboreRadius": 0.75,
-                "Direction": "Z",
-                "WellBlocks": [
-                    [1,4,1]
-                ],
-                "Completions": [
-                    {
-                        "Type": "Perforation",
-                        "WellBlock": [1,4,1],
-                        "TransmissibilityFactor": 1.0
-                    }
+                "Direction": "X",
+                "SplinePoints": [
+                    [100.0,600.0,1712.0],
+                    [300.0,600.0,1712.0]
                 ],
                 "Controls": [
                     {
@@ -69,6 +69,14 @@
                         "State": "Open",
                         "Mode": "BHP",
                         "BHP": 2000.0
+                    }
+                ],
+                "Variables": [
+                    {
+                        "Name": "SplinePoints",
+                        "Type": "SplinePoints",
+                        "VariableSplinePointIndices": [0,1],
+                        "TimeSteps": [0]
                     }
                 ]
             },
@@ -79,10 +87,10 @@
                 "PreferedPhase": "Water",
                 "Heel": [10,10,1],
                 "WellboreRadius": 0.75,
-                "Direction": "Y",
+                "Direction": "X",
                 "SplinePoints": [
-                    [12.0,12.0,1712.0],
-                    [36.0,12.0,1712.0]
+                    [100.0,100.0,1712.0],
+                    [300.0,100.0,1712.0]
                 ],
                 "Controls": [
                     {
@@ -95,7 +103,7 @@
                 ],
                 "Variables": [
                     {
-                        "Name": "INJ-SplinePoints-1",
+                        "Name": "SplinePoints",
                         "Type": "SplinePoints",
                         "VariableSplinePointIndices": [0,1],
                         "TimeSteps": [0]

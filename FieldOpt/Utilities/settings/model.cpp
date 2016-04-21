@@ -224,7 +224,7 @@ Model::Well::Variable Model::readSingleVariable(QJsonObject json_variable, Well 
 {
     Well::Variable variable;
 
-    if (!json_variable.contains("Name") || json_variable["Name"].toString().size() < 1 || variableNameExists(json_variable["Name"].toString()))
+    if (!json_variable.contains("Name") || json_variable["Name"].toString().size() < 1)
         throw UnableToParseWellsModelSectionException("All variables must specify a unique name.");
     variable.name = json_variable["Name"].toString();
 
