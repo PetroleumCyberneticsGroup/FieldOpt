@@ -6,7 +6,7 @@ TARGET = FieldOpt
 CONFIG += console
 CONFIG -= app_bundle
 
-TEMPLATE = lib
+TEMPLATE = app
 
 CONFIG += c++11
 LIBS += -L$$OUT_PWD/../Model -lmodel
