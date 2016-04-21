@@ -4,13 +4,13 @@ The `Settings` class takes as input the path to a JSON formatted driver file. It
 
 The `Settings::Model`, `Settings::Simulator` and `Settings::Optimizer` classes cannot be initialized outside the `Settings::Settings` class.
 
-Here we define the the various settings and parameters held by the settings classes, and their corresponding fields in the JSON driver file.
+Here we define the various settings and parameters held by the settings classes, and their corresponding fields in the JSON driver file.
 
 ## JSON
 
 JSON (or JavaScript Object Notation) is a lightweight data-interchange format. This format was chosen for FieldOpt's driver files because it is both easy for humans to read and write it, and for computers to parse and write it.
 
-An introdction to the JavaScript syntax is found [here](http://www.w3schools.com/json/json_syntax.asp).
+An introduction to the JavaScript syntax is found [here](http://www.w3schools.com/json/json_syntax.asp).
 
 ## The Driver File
 
@@ -61,10 +61,10 @@ In the model section we define model related settings and define the wells for o
 
 ### Model -> ControlTimes
 
-The `ControlTimes` array in the `Model` declares all time steps at which any variable is allowed to vary, a well is introduced, etc. _All_ time steps that are to be used anywhere else in the model (e.g. in the Control or Varaibles sections of a well) must also be declared here.
+The `ControlTimes` array in the `Model` declares all time steps at which any variable is allowed to vary, a well is introduced, etc. _All_ time steps that are to be used anywhere else in the model (e.g. in the Control or Variables sections of a well) must also be declared here.
 
 ### Model -> Reservoir
-The reservoir object contains information on the reservoir grid that should be used. It must declare the type of reservoir model that will be used (i.e. the source of the grid data file) and the path to the grid data file. By grid data file we mean generated files like ECLIPSE's `.GRID` and `.EGRID` files. The reservoir grids are primarily used when wells are defined by splines. The reservoir object must contain the following fields:
+The reservoir object contains information about the reservoir grid that should be used. It must declare the type of reservoir model that will be used (i.e. the source of the grid data file) and the path to the grid data file. By grid data file we mean generated files like ECLIPSE's `.GRID` and `.EGRID` files. The reservoir grids are primarily used when wells are defined by splines. The reservoir object must contain the following fields:
 
 Note that the grid file path may be omitted from the driver file. If it is, the path must be passed as a command line parameter. If a path is specified both places, the one passed in the command line will be used.
 
@@ -100,7 +100,7 @@ All wells must define the following fields:
 * `Name` defines a _unique_ name for the well.
 * `Type` denotes whether the well is a `Producer` or an `Injector`.
 * `Heel` defines the heel of the well. This is defined as an array of _three_ integers `[i,j,k]`.
-* `DefinitionType` denotes whether the well path will defined by a  `WellSpline` or by a set of `WellBlocks`.
+* `DefinitionType` denotes whether the well path is defined by a  `WellSpline` or by a set of `WellBlocks`.
 
 In addition, depending on the values entered in the already mentioned fields, the following fields may/must be defined:
 ```
@@ -166,7 +166,7 @@ Additionally, all wells may/should define completions:
 ]
 ```
 
-* `Type` denotes the completion type. Initially only `Perforation` is supported.
+* `Type` denotes the completion type. Currently only `Perforation` is supported.
 * `WellBlock` denotes the well block this perforation should be applied to.
 * `TransmissibilityFactor` is the transmissibility factor (well index) to be used in the well block containing the completion.
 
@@ -195,7 +195,7 @@ The final field in a well is an optional array of variables:
 * `Type` denotes what type of variable this is, e.g. `SplinePoints`, `OpenShut`, `Transmissibility`, `WellBlockPosition`, `Rate` or `BHP`.
 * `TimeSteps` denotes at what time steps the value of the variable is allowed to change. It is defined as an integer array of time steps. If the variable is for e.g. a control, then a control must already be declared for all time steps listed in this array.
 * `VariableSplinePointIndices` denotes which of the spline points are allowed to vary. The indices not found in this list are taken to be stationary.
-* `Blocks` indicate the blocks the variable applies to. E.g. for the `Transmissibility` type, it indicates which well blocks should have variable transmissibilites; for the `WellBlockPosition` type it indicates the initial position of the well blocks that should be allowed to vatty. If this is set to `WELL`, it will be applied to all well blocks with completions. Note that the listed blocks must correspond to a completion (perforation).
+* `Blocks` indicate the blocks the variable applies to. E.g. for the `Transmissibility` type, it indicates which well blocks should have variable transmissibilites; for the `WellBlockPosition` type it indicates the initial position of the well blocks that should be allowed to vary. If this is set to `WELL`, it will be applied to all well blocks with completions. Note that the listed blocks must correspond to a completion (perforation).
 
 ## Simulator
 
@@ -231,8 +231,8 @@ The optimizer section contains optimizer specific settings and parameters. The r
 }
 ```
 
-* `Type` denotes which optmizer is to be used. Currently the only implemented algorithm is `Compass`.
-* `Mode` specifies whether the objective function should be `Maximize`d or `Minimize`d.
+* `Type` denotes which optimizer is to be used. Currently the only implemented algorithm is `Compass`.
+* `Mode` specifies whether the objective function should be `Maximize` or `Minimize`.
 * `Parameters` holds the optimization algorithm-specific parameters. The structure is shown below.
 * `Objective` specifies the objective function to be used by the optimization algorithm. The structure is shown below.
 * `Constraints` is an array of objects defining the constraints to be applied to the algorithm/variables. The structure of each constraint object is shown below.
@@ -273,12 +273,12 @@ The objective function may be defined in several ways, but initially only one me
 * `Type` denotes how the objective function will be defined. Initially only `WeightedSum` is supported.
 * `WeightedSumComponents` defines the components in a "weighted sum formulation" of the objective value.
 * `TimeStep` indicates the time step at which to get the value. If this is set to a negative value the final time step will be used.
-* `IsWellProp` indicates wether or not it is a well property.
+* `IsWellProp` indicates whether or not it is a well property.
 * `Well` is the name of the well to get the property for if `IsWellProp` is set to true.
 
 ### Optimizer -> Constraints
 
-The `Constraints` object defines any contraints for the model/well/problem/variables. How the constraint is defiend depends on the type of constraint, but the fields required for all constraints are
+The `Constraints` object defines any constraints for the model/well/problem/variables. How the constraint is defined depends on the type of constraint, but the fields required for all constraints are
 
 ```
 "Constraints": [

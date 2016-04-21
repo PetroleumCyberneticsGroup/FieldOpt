@@ -44,6 +44,9 @@ libs/*
 # Manually compiled program
 build/*
 
+# Test folders
+test-*
+
 # Ignore ECLIPSE output files
 *.DBG
 *.ECLEND
@@ -52,8 +55,14 @@ build/*
 *.INIT
 *.INSPEC
 *.MSG
+*.RSM
+*.LOG
+*.ECLRUN
+*.h5
 *.PRT
 *.RSSPEC
 *.SMSPEC
 *.UNRST
 *.UNSMRY
+*.xml
+*.eclrun_dbg

@@ -26,8 +26,8 @@
         },
         "Constraints": [
             {
-                "Name": "PROD-BHP-1",
-                "Type": "BHP",
+                "Name": "PROD-PERF-1",
+                "Type": "Perforation",
                 "Well": "PROD",
                 "Max": 3000.0,
                 "Min": 1000.0
@@ -92,9 +92,9 @@
                 ],
                 "Variables": [
                     {
-                        "Name": "PROD-BHP-1",
-                        "Type": "BHP",
-                        "TimeSteps": [0,100]
+                        "Name": "PROD-PERF-1",
+                        "Type": "Perforation",
+                        "WellBlock": [3,4,2]
                     }
                 ]
             },

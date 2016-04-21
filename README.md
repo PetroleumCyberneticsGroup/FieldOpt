@@ -11,4 +11,4 @@ LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:/home/einar/Documents/GitHub/Fie
 export LD_LIBRARY_PATH
 ```
 
-To make this persistant, we can add this code to the `~/.bashrc` file. This will add both the main library, the ERTWrapper and the ECL library from ERT to the library path.
+To make this persistent, we can add this code to the `~/.bashrc` file. This will add both the main library, the ERTWrapper and the ECL library from ERT to the library path.
