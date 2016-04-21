@@ -27,6 +27,7 @@
 #define CONSTRAINTHANDLER_H
 #include "constraint.h"
 #include "box_constraint.h"
+#include "well_spline_length.h"
 #include "Optimization/case.h"
 #include "Model/properties/variable_property_container.h"
 #include "Utilities/settings/optimizer.h"

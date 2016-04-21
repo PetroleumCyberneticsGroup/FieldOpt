@@ -46,7 +46,7 @@ class Optimizer
 public:
     enum OptimizerType { Compass };
     enum OptimizerMode { Maximize, Minimize };
-    enum ConstraintType { BHP, Rate, SplinePoints };
+    enum ConstraintType { BHP, Rate, SplinePoints, WellSplineLength };
     enum ConstraintWellSplinePointsType { MaxMin, Function};
     enum ObjectiveType { WeightedSum };
 

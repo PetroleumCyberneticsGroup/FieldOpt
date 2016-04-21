@@ -34,6 +34,8 @@ ConstraintHandler::ConstraintHandler(QList<Utilities::Settings::Optimizer::Const
         case Utilities::Settings::Optimizer::ConstraintType::BHP:
             constraints_.append(new BoxConstraint(constraint, variables));
             break;
+        case Utilities::Settings::Optimizer::ConstraintType::WellSplineLength:
+            constraints_.append(new WellSplineLength(constraint, variables));
         default:
             break;
         }
