@@ -82,6 +82,8 @@ QStringList Compdat::createBlockEntry(QString well_name, double wellbore_radius,
 
     block_entry[8] = QString::number(wellbore_radius);
 
+    /// \note By default, this is set to X. This is primarily relevant if the well passes diagonally through a block.
+    block_entry[12] = "X";
     switch (well_block->directionOfPenetration()) {
     case Model::Wells::Wellbore::WellBlock::DirectionOfPenetration::X:
         block_entry[12] = "X";
@@ -91,6 +93,9 @@ QStringList Compdat::createBlockEntry(QString well_name, double wellbore_radius,
         break;
     case Model::Wells::Wellbore::WellBlock::DirectionOfPenetration::Z:
         block_entry[12] = "Z";
+        break;
+    case Model::Wells::Wellbore::WellBlock::DirectionOfPenetration::W:
+        std::runtime_error("The model library was unable to determine the direction of penetration.");
     default:
         std::runtime_error("The model library was unable to determine the direction of penetration.");
     }
