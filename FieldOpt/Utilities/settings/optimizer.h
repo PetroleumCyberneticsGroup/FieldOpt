@@ -47,7 +47,9 @@ class Optimizer
 public:
     enum OptimizerType { Compass };
     enum OptimizerMode { Maximize, Minimize };
-    enum ConstraintType { BHP, Rate, SplinePoints, WellSplineLength, WellSplineInterwellDistance };
+    enum ConstraintType { BHP, Rate, SplinePoints,
+                          WellSplineLength, WellSplineInterwellDistance,
+                          CombinedWellSplineLengthInterwellDistance };
     enum ConstraintWellSplinePointsType { MaxMin, Function};
     enum ObjectiveType { WeightedSum };
 
@@ -74,6 +76,10 @@ public:
         QStringList wells; //!< List of well names if the constraint applies to more than one.
         double max; //!< Max limit when using constraints like BHP.
         double min; //!< Min limit when using constraints like BHP.
+        double max_length;
+        double min_length;
+        double min_distance;
+        double max_iterations;
         ConstraintWellSplinePointsType spline_points_type; //!< How the SplinePoints constraint is given when SplinePoints constraint type is selected.
         QString well_spline_points_function; //!< The function a spline point needs to adhere to to be valid when SplinePoints constraint type is selected.
         QList<RealMaxMinLimit> spline_points_limits; //!< Box limits a spline point needs to be within to be valid when SplinePoints constraint type is selected.

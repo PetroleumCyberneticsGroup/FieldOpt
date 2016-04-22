@@ -171,14 +171,26 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
     else if (QString::compare(constraint_type, "WellSplineInterwellDistance") == 0) {
         optimizer_constraint.type = ConstraintType::WellSplineInterwellDistance;
         optimizer_constraint.min = json_constraint["Min"].toDouble();
-        if (!json_constraint.contains("Wells") || json_constraint["Wells"].toArray().size() < 2) {
+        if (!json_constraint.contains("Wells") || json_constraint["Wells"].toArray().size() < 2)
             throw UnableToParseOptimizerConstraintsSectionException("WellSplineInterwellDistance constraint needs a Wells array with at least two well names specified.");
-        }
         else {
             optimizer_constraint.wells = QStringList();
-            for (int i = 0; i < json_constraint["Wells"].toArray().size(); ++i) {
+            for (int i = 0; i < json_constraint["Wells"].toArray().size(); ++i)
                 optimizer_constraint.wells.append(json_constraint["Wells"].toArray()[i].toString());
-            }
+        }
+    }
+    else if (QString::compare(constraint_type, "CombinedWellSplineLengthInterwellDistance") == 0) {
+        optimizer_constraint.type = ConstraintType::CombinedWellSplineLengthInterwellDistance;
+        optimizer_constraint.min_length = json_constraint["MinLength"].toDouble();
+        optimizer_constraint.max_length = json_constraint["MaxLength"].toDouble();
+        optimizer_constraint.min_distance = json_constraint["MinDistance"].toDouble();
+        optimizer_constraint.max_iterations = json_constraint["MaxIterations"].toInt();
+        if (!json_constraint.contains("Wells") || json_constraint["Wells"].toArray().size() < 2)
+            throw UnableToParseOptimizerConstraintsSectionException("WellSplineInterwellDistance constraint needs a Wells array with at least two well names specified.");
+        else {
+            optimizer_constraint.wells = QStringList();
+            for (int i = 0; i < json_constraint["Wells"].toArray().size(); ++i)
+                optimizer_constraint.wells.append(json_constraint["Wells"].toArray()[i].toString());
         }
     }
     else throw UnableToParseOptimizerConstraintsSectionException("Constraint type " + constraint_type.toStdString() + " not recognized.");

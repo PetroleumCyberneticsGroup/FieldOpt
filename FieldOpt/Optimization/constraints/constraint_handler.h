@@ -29,6 +29,7 @@
 #include "box_constraint.h"
 #include "well_spline_length.h"
 #include "interwell_distance.h"
+#include "combined_spline_length_interwell_distance.h"
 #include "Optimization/case.h"
 #include "Model/properties/variable_property_container.h"
 #include "Utilities/settings/optimizer.h"
