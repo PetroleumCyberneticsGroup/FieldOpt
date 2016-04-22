@@ -120,7 +120,7 @@ void Logger::LogSimulation(const Optimization::Case *c, QString message)
         initializeSimulationLog();
 
     if (!sim_start_times_.contains(c->id())) {
-        sim_start_times_[c->id()] = QDateTime::currentDateTimeUtc();
+        sim_start_times_[c->id()] = QDateTime::currentDateTime();
         if (verbose_) {
             std::cout << "Registered simulation start for Case " << c->id().toString().toStdString() << std::endl;
             if (message.size() > 0) std::cout << "MESSAGE: " << message.toStdString() << std::endl;
