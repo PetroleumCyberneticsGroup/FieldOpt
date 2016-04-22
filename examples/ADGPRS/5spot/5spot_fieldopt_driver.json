@@ -28,17 +28,12 @@
             {
                 "Name": "SplinePoints",
                 "Wells": ["INJECTOR", "PRODUCER"],
-                "Type": "WellSplineInterwellDistance",
-                "Min": 100
-            },
-            {
-                "Name": "SplinePoints",
-                "Well": "INJECTOR",
-                "Type": "WellSplineLength",
-                "Max": 1000,
-                "Min": 50
+                "Type": "CombinedWellSplineLengthInterwellDistance",
+                "MinLength": 50,
+                "MaxLength": 1000,
+                "MinDistance": 100,
+                "MaxIterations": 50
             }
-
         ]
     },
     "Simulator": {
