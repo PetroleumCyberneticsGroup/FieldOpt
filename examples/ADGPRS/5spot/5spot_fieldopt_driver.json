@@ -46,7 +46,7 @@
         "ExecutionScript": "bash_adgprs"
     },
     "Model": {
-        "ControlTimes": [0, 50, 100, 365],
+        "ControlTimes": [0, 50, 100],
         "Reservoir": {
             "Type": "ECLIPSE"
         },
