@@ -138,6 +138,9 @@ class CaseContainer:
             if row[2] == 'true':
                 self.evaluated_case_rows.append(row)
                 self.evaluated_cases.append(Case(row, property_uuid_name_map_log))
+            elif row == case_log.rows[-1]:
+                self.evaluated_cases.append(Case(row, property_uuid_name_map_log))
+                print('WARNING: Appended an unevaluated latest case.')
 
     def get_case(self, uuid):
         """
