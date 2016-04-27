@@ -162,6 +162,12 @@ class Optimizer:
         :param optimizer_log: The OptimizerLog from the LogReader.
         :param case_container: The CaseContainer object.
         """
+        self.current_iteration = optimizer_log.rows[-1][1]
+        self.number_of_evaluated_cases = optimizer_log.rows[-1][2]
+        self.number_of_queued_cases_in_iteration = optimizer_log.rows[-1][3]
+        self.number_of_evaluated_cases_in_iteration = optimizer_log.rows[-1][4]
+        self.current_step_length = optimizer_log.rows[-1][7]
+
         self.best_case_uuid_pr_iteration = []
         cur_iter = 1
         for i in range(len(optimizer_log.rows)):
@@ -175,3 +181,18 @@ class Optimizer:
         for i in range(len(self.best_case_uuid_pr_iteration)):
             id = self.best_case_uuid_pr_iteration[i]
             self.best_case_pr_iteration.append(case_container.get_case(id))
+
+class Simulator:
+    """
+    The Simulator class holds information about simulator execution time for each simulated case.
+    """
+    def __init__(self, simulation_log):
+        """
+        Initialize a Simulator object.
+        :param simulation_log: The SimulationLog from the LogReader package.
+        """
+        self.durations = []
+        self.case_uuids = []
+        for row in simulation_log.rows:
+            self.case_uuids.append(row[-1])
+            self.durations.append(int(row[-2]))
