@@ -1,9 +1,10 @@
 VERBOSE
-    BRIEF SILENT
+-- BRIEF SILENT
+    ALL BRIEF
 /
 
 MODEL
-    BLACK_OIL NATURAL
+    DEAD_OIL NATURAL
 /
 
 DIMENS
@@ -18,10 +19,10 @@ INCLUDE
     ./include/depth.in /
 
 DX
-    3600*32 /
+    3600*24 /
 
 DY
-    3600*32 /
+    3600*24 /
 
 DZ
     3600*24 /
@@ -39,17 +40,17 @@ INCLUDE
     ./include/poro.in /
 
 INCLUDE
-    ./include/init.in /
-
-SGAS
-    0
-/
+    ./include/init_do.in /
 
 INCLUDE
-    ./include/props.in /
--- real    0m13.084s
--- user    0m21.740s
--- sys     0m1.244s
+     ./include/props_do.in /
+-- real    0m12.088s
+-- user    0m20.388s
+-- sys     0m1.204s
+--    ./include/props_do_spe10.in /
+-- real    0m12.890s
+-- user    0m21.524s
+-- sys     0m1.292s
 
 INCLUDE
     ./include/tuning.in /
