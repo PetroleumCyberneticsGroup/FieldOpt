@@ -29,15 +29,9 @@
                 "Name": "SplinePoints",
                 "Wells": ["INJECTOR", "PRODUCER"],
                 "Type": "CombinedWellSplineLengthInterwellDistance",
-<<<<<<< HEAD
-                "MinLength": 50,
-                "MaxLength": 1000,
-                "MinDistance": 100,
-=======
                 "MinLength": 400,
                 "MaxLength": 1200,
                 "MinDistance": 300,
->>>>>>> c080b09... Fixed 5spot model including added dead-oil settings.
                 "MaxIterations": 50
             }
         ]

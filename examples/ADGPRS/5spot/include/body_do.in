@@ -44,13 +44,7 @@ INCLUDE
 
 INCLUDE
      ./include/props_do.in /
--- real    0m12.088s
--- user    0m20.388s
--- sys     0m1.204s
 --    ./include/props_do_spe10.in /
--- real    0m12.890s
--- user    0m21.524s
--- sys     0m1.292s
 
 INCLUDE
     ./include/tuning.in /
