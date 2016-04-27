@@ -29,9 +29,9 @@
                 "Name": "SplinePoints",
                 "Wells": ["INJECTOR", "PRODUCER"],
                 "Type": "CombinedWellSplineLengthInterwellDistance",
-                "MinLength": 50,
-                "MaxLength": 1000,
-                "MinDistance": 100,
+                "MinLength": 400,
+                "MaxLength": 1200,
+                "MinDistance": 300,
                 "MaxIterations": 50
             }
         ]
@@ -52,11 +52,11 @@
                 "DefinitionType": "WellSpline",
                 "PreferedPhase": "Oil",
                 "Heel": [1,4,1],
-                "WellboreRadius": 0.75,
+                "WellboreRadius": 0.1905,
                 "Direction": "X",
                 "SplinePoints": [
-                    [100.0,600.0,1712.0],
-                    [300.0,600.0,1712.0]
+                    [300.0,900.0,1712.0],
+                    [900.0,900.0,1712.0]
                 ],
                 "Controls": [
                     {
@@ -81,11 +81,11 @@
                 "DefinitionType": "WellSpline",
                 "PreferedPhase": "Water",
                 "Heel": [10,10,1],
-                "WellboreRadius": 0.75,
+                "WellboreRadius": 0.1905,
                 "Direction": "X",
                 "SplinePoints": [
-                    [100.0,100.0,1712.0],
-                    [300.0,100.0,1712.0]
+                    [300.0,500.0,1712.0],
+                    [772.0,500.0,1712.0]
                 ],
                 "Controls": [
                     {
