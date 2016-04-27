@@ -1,6 +1,11 @@
 import LogReader as lr
 from datetime import datetime
 
+"""
+This Package contains data structures and methods used to facilitate
+easier access to the data stored in the FieldOpt logs.
+"""
+
 def extract_well_names(variables):
     """
     Extract the names of all wells defined in the provided list of variables.
@@ -51,27 +56,53 @@ class Variable:
     logged by FieldOpt. It includes the UUID of the variable; the name of
     the variable; and the value of the variable.
     """
-    def __init__(self, id, value, property_uuid_name_map):
-        self.id = id
+    def __init__(self, uuid, value, property_uuid_name_map_log):
+        """
+        Initialize a variable.
+        :param uuid: The variable's UUID.
+        :param value: The value of the variable.
+        :param property_uuid_name_map_log: The PropertyUuidNameMapLog object from the LogReader, used
+        to find variable names.
+        """
+        self.uuid = uuid
         self.value = float(value)
-        self.name = property_uuid_name_map.name(id)
+        self.name = property_uuid_name_map_log.name(uuid)
 
 
 class Well:
+    """
+    The Well class holds the name of a well, as well as the (x, y, z) coordinates for its heel and toe.
+    """
     def __init__(self, variables, well_name):
+        """
+        Initialize a well.
+        :param variables: All variables from a case.
+        :param well_name: The name of the well.
+        """
         self.name = well_name
         (self.heel, self.toe) = extract_well_endpoints(variables, well_name)
 
 
 class Case:
-    def __init__(self, caselog_row, property_uuid_name_map):
+    """
+    The Case class holds all information about a case, including timestamp; case UUID; objective
+    function value; a list of all variables; and a list of all the wells defined by the case
+    variables and their names.
+    """
+    def __init__(self, caselog_row, property_uuid_name_map_log):
+        """
+        Initialize a case.
+        :param caselog_row: A single row from the CaseLog, defining a Case.
+        :param property_uuid_name_map_log: The PropertyUuidNameMapLog object from the LogReader,
+        used to get variable names.
+        """
         self.timestamp = datetime.strptime(caselog_row[0], "%Y-%m-%dT%H:%M:%SZ")
         self.uuid = caselog_row[1]
         self.objective_function_value = float(caselog_row[3])
         self.variables = []
         i = 4
         while i < len(caselog_row):
-            self.variables.append(Variable(caselog_row[i], caselog_row[i+1], property_uuid_name_map))
+            self.variables.append(Variable(caselog_row[i], caselog_row[i+1], property_uuid_name_map_log))
             i = i+2
         self.well_names = extract_well_names(self.variables)
         self.wells = []
@@ -79,37 +110,65 @@ class Case:
             self.wells.append(Well(self.variables, name))
 
     def get_well(self, name):
+        """
+        Get a Well object, containing structured information about a well.
+        :param name: The name of the well to get.
+        :return: A Well object representing the requested well.
+        """
         for well in self.wells:
             if well.name == name:
                 return well
 
 
 class CaseContainer:
-    def __init__(self, case_log, property_uuid_name_map):
+    """
+    A container class for all Cases.
+    """
+    def __init__(self, case_log, property_uuid_name_map_log):
+        """
+        Initialize the Case Container. This only need to be called once per run. This will
+        also initialize all Cases, Variables and Wells for the run.
+        :param case_log: The CaseLog object from the LogReader.
+        :param property_uuid_name_map_log: The PropertyUuidNameMapLog object from the LogReader, used
+        to get the names of variables from their UUIDs.
+        """
         self.evaluated_case_rows = []
         self.evaluated_cases = []
         for row in case_log.rows:
             if row[2] == 'true':
                 self.evaluated_case_rows.append(row)
-                self.evaluated_cases.append(Case(row, property_uuid_name_map))
+                self.evaluated_cases.append(Case(row, property_uuid_name_map_log))
 
-    def get_case(self, id):
+    def get_case(self, uuid):
+        """
+        Get the Case object with the specified UUID.
+        :param uuid: The UUID of the case.
+        :return: A Case object.
+        """
         for case in self.evaluated_cases:
-            if case.uuid == id:
+            if case.uuid == uuid:
                 return case
 
 class Optimizer:
+    """
+    The Optimizer object holds the best cases for each iteration in the optimization process.
+    """
     def __init__(self, optimizer_log, case_container):
-        self.best_case_id_pr_iteration = []
+        """
+        Initialize the Optimizer object. This must be initialized _after_ the CaseContainer object.
+        :param optimizer_log: The OptimizerLog from the LogReader.
+        :param case_container: The CaseContainer object.
+        """
+        self.best_case_uuid_pr_iteration = []
         cur_iter = 1
         for i in range(len(optimizer_log.rows)):
             if int(optimizer_log.rows[i][1]) != cur_iter: # Reached next iteration
-                self.best_case_id_pr_iteration.append(optimizer_log.rows[i-1][5])
+                self.best_case_uuid_pr_iteration.append(optimizer_log.rows[i - 1][5])
                 cur_iter = cur_iter + 1
             if i == len(optimizer_log.rows ) - 1:
-                self.best_case_id_pr_iteration.append(optimizer_log.rows[i][5])
+                self.best_case_uuid_pr_iteration.append(optimizer_log.rows[i][5])
 
         self.best_case_pr_iteration = []
-        for i in range(len(self.best_case_id_pr_iteration)):
-            id = self.best_case_id_pr_iteration[i]
+        for i in range(len(self.best_case_uuid_pr_iteration)):
+            id = self.best_case_uuid_pr_iteration[i]
             self.best_case_pr_iteration.append(case_container.get_case(id))
