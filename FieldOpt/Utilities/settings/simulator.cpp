@@ -60,6 +60,15 @@ Simulator::Simulator(QJsonObject json_simulator)
     }    
     if (script_name_.length() == 0 && commands.size() == 0)
         throw NoSimulatorCommandsGivenException("At least one simulator command or a simulator script must be given.");
+
+    if (json_simulator.contains("FluidModel")) {
+        QString fluid_model = json_simulator["FluidModel"].toString();
+        if (QString::compare(fluid_model, "DeadOil") == 0)
+            fluid_model_ = SimulatorFluidModel::DeadOil;
+        else if (QString::compare(fluid_model, "BlackOil") == 0)
+            fluid_model_ = SimulatorFluidModel::BlackOil;
+    }
+    else fluid_model_ = SimulatorFluidModel::BlackOil;
 }
 
 }
