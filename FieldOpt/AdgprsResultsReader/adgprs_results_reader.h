@@ -15,6 +15,8 @@ public:
      */
     AdgprsResultsReader(QString summary_path);
 
+    ~AdgprsResultsReader();
+
     /*!
      * \brief results Get the object allowing access to the results.
      * \return

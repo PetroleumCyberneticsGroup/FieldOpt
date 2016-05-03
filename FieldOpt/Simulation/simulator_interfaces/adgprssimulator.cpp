@@ -36,6 +36,7 @@ AdgprsSimulator::AdgprsSimulator(Utilities::Settings::Settings *settings, Model:
 
 void AdgprsSimulator::Evaluate()
 {
+    if (results_->isAvailable()) results()->DumpResults();
     copyDriverFiles();
     driver_file_writer_->WriteDriverFile(output_directory_);
     ::Utilities::Unix::ExecShellScript(script_path_, script_args_);

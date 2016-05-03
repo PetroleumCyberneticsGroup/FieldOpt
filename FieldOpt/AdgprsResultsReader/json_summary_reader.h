@@ -23,6 +23,7 @@ public:
      * \param file_path Path to a valid .json file.
      */
     JsonSummaryReader(QString file_path);
+    ~JsonSummaryReader();
 
     /*!
      * \brief GetNumberOfWells Returns the number of wells found in the summary.

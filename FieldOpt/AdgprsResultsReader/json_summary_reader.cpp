@@ -30,6 +30,21 @@ JsonSummaryReader::JsonSummaryReader(QString file_path)
 
 }
 
+JsonSummaryReader::~JsonSummaryReader()
+{
+    time_->clear();
+    delete time_;
+    foreach (auto v, field_properties_.values()) {
+        delete v;
+    }
+    field_properties_.clear();
+    foreach (auto w, wells_) {
+        delete w;
+    }
+    wells_.clear();
+
+}
+
 QList<QString> JsonSummaryReader::GetAvalableFieldPropertyNames() const
 {
     return field_properties_.keys();

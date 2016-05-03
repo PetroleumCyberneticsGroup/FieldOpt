@@ -13,6 +13,11 @@ AdgprsResultsReader::AdgprsResultsReader(QString summary_path)
     json_reader_ = new JsonSummaryReader(json_path_);
 }
 
+AdgprsResultsReader::~AdgprsResultsReader()
+{
+    delete json_reader_;
+}
+
 void AdgprsResultsReader::convertHdfSummaryToJson()
 {
     QString conversion_script_path = Utilities::FileHandling::GetBuildDirectoryPath() + "/AdgprsSummaryConverter/AdgprsSummaryConverter.py";
