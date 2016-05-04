@@ -12,7 +12,9 @@ namespace Grid {
 class IJKCoordinate
 {
 public:
+    IJKCoordinate(){}
     IJKCoordinate(int i, int j, int k);
+
 
     int i() const { return i_; }
     int j() const { return j_; }
@@ -26,10 +28,9 @@ public:
     IJKCoordinate *Add(const IJKCoordinate *other) const;
 
 private:
-    const int i_;
-    const int j_;
-    const int k_;
-
+    int i_;
+    int j_;
+    int k_;
 };
 
 }

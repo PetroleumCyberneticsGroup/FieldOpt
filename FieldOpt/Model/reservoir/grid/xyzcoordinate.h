@@ -12,6 +12,7 @@ namespace Grid {
 class XYZCoordinate
 {
 public:
+    XYZCoordinate(){}
     XYZCoordinate(double x, double y, double z);
 
     double x() const { return x_; }
@@ -25,6 +26,7 @@ public:
      * \return True if xyz is within epsilon of this along all dimensions.
      */
     bool Equals(const XYZCoordinate *other, double epsilon=0.0) const;
+    bool Equals(const XYZCoordinate &other, double epsilon=0.0) const;
 
     /*!
      * \brief Add Returns a new coordinate which is the sum of this coordinate and another coordinate.
@@ -32,9 +34,9 @@ public:
     XYZCoordinate *Add(const XYZCoordinate *other) const;
 
 private:
-    const double x_;
-    const double y_;
-    const double z_;
+    double x_;
+    double y_;
+    double z_;
 };
 
 }
