@@ -16,9 +16,9 @@ namespace Grid {
 class Cell
 {
 public:
-    Cell(int global_index, IJKCoordinate* ijk_index,
+    Cell(int global_index, IJKCoordinate ijk_index,
          double volume, double poro, double permx, double permy, double permz,
-         XYZCoordinate* center, QList<XYZCoordinate*> *corners);
+         XYZCoordinate center, QList<XYZCoordinate> corners);
 
     /*!
      * \brief global_index Gets the cells global index in its parent grid.
@@ -28,7 +28,7 @@ public:
     /*!
      * \brief ijk_index Gets the cells (i, j, k) index in its parent grid.
      */
-    IJKCoordinate *ijk_index() const { return ijk_index_; }
+    IJKCoordinate ijk_index() const { return ijk_index_; }
 
     /*!
      * \brief volume Gets the cells volume.
@@ -59,7 +59,7 @@ public:
     /*!
      * \brief center Gets the (x, y, z) position of the cells center.
      */
-    XYZCoordinate *center() const { return center_; }
+    XYZCoordinate center() const { return center_; }
 
     /*!
      * \brief corners Gets the (x, y, z) coordinates of the cells 8 corners.
@@ -73,19 +73,20 @@ public:
      * 0---1    4---5
      *
      */
-    QList<XYZCoordinate*> *corners() const { return corners_; }
+    QList<XYZCoordinate> corners() const { return corners_; }
 
     /*!
      * \brief Equals Check if the global indices of the two cells being compared are equal.
      */
     bool Equals(const Cell *other) const;
+    bool Equals(const Cell &other) const;
 
 private:
     int global_index_;
-    IJKCoordinate *ijk_index_;
+    IJKCoordinate ijk_index_;
     double volume_;
-    XYZCoordinate* center_;
-    QList<XYZCoordinate *> *corners_;
+    XYZCoordinate center_;
+    QList<XYZCoordinate> corners_;
     double porosity_;
     double permx_;
     double permy_;

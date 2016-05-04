@@ -69,7 +69,7 @@ Grid::Dims ECLGrid::Dimensions()
     else throw GridCellNotFoundException("Grid source must be defined before getting grid dimensions.");
 }
 
-Cell* ECLGrid::GetCell(int global_index)
+Cell ECLGrid::GetCell(int global_index)
 {
     if (!IndexIsInsideGrid(global_index)) throw CellIndexOutsideGridException("Global index is outside grid.");
     if (type_ == GridSourceType::ECLIPSE) {
@@ -77,27 +77,27 @@ Cell* ECLGrid::GetCell(int global_index)
 
         // Get IJK index
         ERTWrapper::ECLGrid::ECLGridReader::IJKIndex ecl_ijk_index = ecl_grid_reader_->ConvertGlobalIndexToIJK(global_index);
-        IJKCoordinate* ijk_index = new IJKCoordinate(ecl_ijk_index.i, ecl_ijk_index.j, ecl_ijk_index.k);
+        IJKCoordinate ijk_index = IJKCoordinate(ecl_ijk_index.i, ecl_ijk_index.j, ecl_ijk_index.k);
 
         // Get center coordinates
-        XYZCoordinate* center = new XYZCoordinate(ertCell.center->x(), ertCell.center->y(), ertCell.center->z());
+        auto center = XYZCoordinate(ertCell.center.x(), ertCell.center.y(), ertCell.center.z());
 
         // Get the corners
-        QList<XYZCoordinate*> *corners = new QList<XYZCoordinate*>();
-        for (int i = 0; i < ertCell.corners->size(); ++i) {
-            corners->append(new XYZCoordinate(
-                               ertCell.corners->at(i)->x(),
-                               ertCell.corners->at(i)->y(),
-                               ertCell.corners->at(i)->z()));
+        QList<XYZCoordinate> corners = QList<XYZCoordinate>();
+        for (int i = 0; i < ertCell.corners.size(); ++i) {
+            corners.append(XYZCoordinate(
+                            ertCell.corners.at(i).x(),
+                            ertCell.corners.at(i).y(),
+                            ertCell.corners.at(i).z()));
         }
-        return new Cell(global_index, ijk_index,
+        return Cell(global_index, ijk_index,
                         ertCell.volume, ertCell.porosity, ertCell.permx, ertCell.permy, ertCell.permz,
                         center, corners);
     }
     else throw GridCellNotFoundException("Grid source must be defined before getting a cell.");
 }
 
-Cell* ECLGrid::GetCell(int i, int j, int k)
+Cell ECLGrid::GetCell(int i, int j, int k)
 {
     if (!IndexIsInsideGrid(i, j, k)) throw CellIndexOutsideGridException("Index (i, j, k) is outside grid.");
     if (type_ == GridSourceType::ECLIPSE) {
@@ -107,7 +107,7 @@ Cell* ECLGrid::GetCell(int i, int j, int k)
     else throw GridCellNotFoundException("Grid source must be defined before getting a cell.");
 }
 
-Cell* ECLGrid::GetCell(IJKCoordinate *ijk)
+Cell ECLGrid::GetCell(IJKCoordinate *ijk)
 {
     if (!IndexIsInsideGrid(ijk)) throw CellIndexOutsideGridException("Index ijk is outside grid.");
     if (type_ == GridSourceType::ECLIPSE) {
@@ -117,7 +117,7 @@ Cell* ECLGrid::GetCell(IJKCoordinate *ijk)
     else throw GridCellNotFoundException("Grid source must be defined before getting a cell.");
 }
 
-Cell* ECLGrid::GetCellEnvelopingPoint(double x, double y, double z)
+Cell ECLGrid::GetCellEnvelopingPoint(double x, double y, double z)
 {
     int global_index = ecl_grid_reader_->GlobalIndexOfCellEnvelopingPoint(x, y ,z);
     if (global_index == -1) {
@@ -126,7 +126,7 @@ Cell* ECLGrid::GetCellEnvelopingPoint(double x, double y, double z)
     return GetCell(global_index);
 }
 
-Cell* ECLGrid::GetCellEnvelopingPoint(XYZCoordinate *xyz)
+Cell ECLGrid::GetCellEnvelopingPoint(XYZCoordinate *xyz)
 {
     return GetCellEnvelopingPoint(xyz->x(), xyz->y(), xyz->z());
 }

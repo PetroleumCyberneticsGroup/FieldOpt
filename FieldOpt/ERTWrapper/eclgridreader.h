@@ -48,8 +48,8 @@ public:
         double permx;
         double permy;
         double permz;
-        QList<QVector3D*>* corners;
-        QVector3D* center;
+        QList<QVector3D> corners;
+        QVector3D center;
     };
 
     struct IJKIndex {
@@ -63,8 +63,8 @@ private:
     QString init_file_name_;
     ecl_grid_type* ecl_grid_;
     ecl_file_type* ecl_file_init_;
-    QVector3D* GetCellCenter(int global_index);
-    QList<QVector3D*>* GetCellCorners(int global_index);
+    QVector3D GetCellCenter(int global_index);
+    QList<QVector3D> GetCellCorners(int global_index);
     double GetCellVolume(int global_index);
 
     ecl_kw_type *poro_kw_;
@@ -73,6 +73,7 @@ private:
     ecl_kw_type *permz_kw_;
 public:
     ECLGridReader();
+    ECLGridReader(const ECLGridReader& other) = delete;
     virtual ~ECLGridReader(); //!< Frees the grid object if it has been set.
 
     /*!
