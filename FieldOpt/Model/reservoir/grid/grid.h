@@ -22,6 +22,7 @@ public:
      * \brief The GridSourceType enum Enumerates the supported grid types.
      */
     enum GridSourceType {ECLIPSE};
+    Grid(const Grid& other) = delete;
 
     /*!
      * \brief The Dims struct Contains the grid dimensions.
@@ -41,27 +42,27 @@ public:
     /*!
      * \brief GetCell Get a cell from its global index.
      */
-    virtual Cell* GetCell(int global_index) = 0;
+    virtual Cell GetCell(int global_index) = 0;
 
     /*!
      * \brief GetCell Get a cell from its (i,j,k) index.
      */
-    virtual Cell* GetCell(int i, int j, int k) = 0;
+    virtual Cell GetCell(int i, int j, int k) = 0;
 
     /*!
      * \brief GetCell Get a cell from its (i,j,k) index.
      */
-    virtual Cell* GetCell(IJKCoordinate* ijk) = 0;
+    virtual Cell GetCell(IJKCoordinate* ijk) = 0;
 
     /*!
      * \brief GetCellEnvelopingPoint Get the cell enveloping the point (x,y,z). Throws an exception if no cell is found.
      */
-    virtual Cell* GetCellEnvelopingPoint(double x, double y, double z) = 0;
+    virtual Cell GetCellEnvelopingPoint(double x, double y, double z) = 0;
 
     /*!
      * \brief GetCellEnvelopingPoint Get the cell enveloping the point (x,y,z). Throws an exception if no cell is found.
      */
-    virtual Cell* GetCellEnvelopingPoint(XYZCoordinate* xyz) = 0;
+    virtual Cell GetCellEnvelopingPoint(XYZCoordinate* xyz) = 0;
 
 protected:
     GridSourceType type_;
