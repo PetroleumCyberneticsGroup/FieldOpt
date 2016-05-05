@@ -38,6 +38,7 @@
     },
     "Simulator": {
         "Type": "ADGPRS",
+        "FluidModel": "DeadOil",
         "ExecutionScript": "bash_adgprs"
     },
     "Model": {
