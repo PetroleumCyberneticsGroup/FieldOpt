@@ -1,9 +1,9 @@
 OUTPUT
-    HDF5 TIME    5SPOT /
+    HDF5 TIME 5SPOT /
 /
 
 INCLUDE
-    ./include/body.in
+    ./include/body_do.in
 
 INCLUDE
     ./include/wells.in

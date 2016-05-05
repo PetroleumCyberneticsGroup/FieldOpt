@@ -10,6 +10,7 @@ SUBDIRS = \
     Simulation \
     Runner \
     WellIndexCalculator \
+    WellIndexCalculator/WellIndexCalculatorTests \
     GTest \
     AdgprsResultsReader
 
