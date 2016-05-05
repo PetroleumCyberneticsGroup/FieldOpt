@@ -25,6 +25,7 @@
 
 #include "eclgrid.h"
 #include "grid_exceptions.h"
+#include "Utilities/file_handling/filehandling.h"
 
 namespace Model {
 namespace Reservoir {
@@ -33,6 +34,8 @@ namespace Grid {
 ECLGrid::ECLGrid(QString file_path)
     : Grid(GridSourceType::ECLIPSE, file_path)
 {
+    if (!Utilities::FileHandling::FileExists(file_path))
+        throw std::runtime_error("Grid file " + file_path.toStdString() + " not found");
     ecl_grid_reader_ = new ERTWrapper::ECLGrid::ECLGridReader();
     ecl_grid_reader_->ReadEclGrid(file_path_);
 }
