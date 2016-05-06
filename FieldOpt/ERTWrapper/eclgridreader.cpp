@@ -6,20 +6,20 @@
 
 namespace ERTWrapper {
 namespace ECLGrid {
-QVector3D* ECLGridReader::GetCellCenter(int global_index)
+QVector3D ECLGridReader::GetCellCenter(int global_index)
 {
     double cx, cy, cz;
     ecl_grid_get_xyz1(ecl_grid_, global_index, &cx, &cy, &cz);
-    return new QVector3D(cx, cy, cz);
+    return QVector3D(cx, cy, cz);
 }
 
-QList<QVector3D *> *ECLGridReader::GetCellCorners(int global_index)
+QList<QVector3D> ECLGridReader::GetCellCorners(int global_index)
 {
-    QList<QVector3D*>* corners = new QList<QVector3D*>();
+    QList<QVector3D> corners = QList<QVector3D>();
     for (int i = 0; i < 8; ++i) {
         double x, y, z;
         ecl_grid_get_cell_corner_xyz1(ecl_grid_, global_index, i, &x, &y, &z);
-        corners->append(new QVector3D(x, y, z));
+        corners.append(QVector3D(x, y, z));
     }
     return corners;
 }
@@ -33,6 +33,10 @@ ECLGridReader::ECLGridReader()
 {
     ecl_grid_ = 0;
     ecl_file_init_ = 0;
+    poro_kw_ = 0;
+    permx_kw_ = 0;
+    permy_kw_ = 0;
+    permz_kw_ = 0;
 }
 
 ECLGridReader::~ECLGridReader()

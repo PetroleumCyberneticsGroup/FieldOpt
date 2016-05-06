@@ -68,11 +68,11 @@ WellSpline::WellSpline(Utilities::Settings::Model::Well well_settings, Propertie
 
 QList<WellBlock *> *WellSpline::GetWellBlocks()
 {
-    Model::Reservoir::Grid::XYZCoordinate *heel = new Model::Reservoir::Grid::XYZCoordinate(heel_x_->value(), heel_y_->value(), heel_z_->value());
-    Model::Reservoir::Grid::XYZCoordinate *toe = new Model::Reservoir::Grid::XYZCoordinate(toe_x_->value(), toe_y_->value(), toe_z_->value());
+    Model::Reservoir::Grid::XYZCoordinate heel = Model::Reservoir::Grid::XYZCoordinate(heel_x_->value(), heel_y_->value(), heel_z_->value());
+    Model::Reservoir::Grid::XYZCoordinate toe = Model::Reservoir::Grid::XYZCoordinate(toe_x_->value(), toe_y_->value(), toe_z_->value());
 
     ::WellIndexCalculator::WellIndexCalculator wic = ::WellIndexCalculator::WellIndexCalculator(grid_, well_settings_.wellbore_radius);
-    QList<Model::Reservoir::Grid::XYZCoordinate *> points = QList<Model::Reservoir::Grid::XYZCoordinate *>();
+    QList<Model::Reservoir::Grid::XYZCoordinate> points = QList<Model::Reservoir::Grid::XYZCoordinate>();
     points.append(heel);
     points.append(toe);
     QList<WellIndexCalculator::WellIndexCalculator::BlockData> block_data = wic.GetBlocks(points);

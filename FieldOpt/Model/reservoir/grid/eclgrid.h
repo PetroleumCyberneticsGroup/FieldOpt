@@ -45,11 +45,11 @@ public:
     virtual ~ECLGrid();
 
     Dims Dimensions();
-    Cell* GetCell(int global_index);
-    Cell* GetCell(int i, int j, int k);
-    Cell* GetCell(IJKCoordinate* ijk);
-    Cell* GetCellEnvelopingPoint(double x, double y, double z);
-    Cell* GetCellEnvelopingPoint(XYZCoordinate* xyz);
+    Cell GetCell(int global_index);
+    Cell GetCell(int i, int j, int k);
+    Cell GetCell(IJKCoordinate* ijk);
+    Cell GetCellEnvelopingPoint(double x, double y, double z);
+    Cell GetCellEnvelopingPoint(XYZCoordinate* xyz);
 
 
 private:

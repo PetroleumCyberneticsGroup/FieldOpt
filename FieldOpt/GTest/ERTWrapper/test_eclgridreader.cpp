@@ -30,12 +30,12 @@ protected:
 
     // Objects declared here can be used by all tests in this test case.
 
-    void PrintCell(ECLGridReader::Cell* cell) {
-        std::cout << "Cell " << cell->global_index << std::endl;
-        std::cout << "\tCenter: (" << cell->center->x() << ", " << cell->center->y() << ", " << cell->center->z() << ")" << std::endl;
+    void PrintCell(ECLGridReader::Cell cell) {
+        std::cout << "Cell " << cell.global_index << std::endl;
+        std::cout << "\tCenter: (" << cell.center.x() << ", " << cell.center.y() << ", " << cell.center.z() << ")" << std::endl;
         std::cout << "\tCorners: " << std::endl;
         for (int i = 0; i < 8; ++i) {
-            std::cout << "\t\t(" << cell->corners->at(i)->x() << ", " << cell->corners->at(i)->y() << ", " << cell->corners->at(i)->z() << ")" << std::endl;
+            std::cout << "\t\t(" << cell.corners.at(i).x() << ", " << cell.corners.at(i).y() << ", " << cell.corners.at(i).z() << ")" << std::endl;
         }
     }
 };
@@ -75,10 +75,10 @@ TEST_F(ECLGridReaderTest, GetCell) {
     ECLGridReader::Cell cell2 = ecl_grid_reader_->GetGridCell(0);
     //PrintCell(&cell);
     EXPECT_EQ(1, cell.global_index);
-    EXPECT_EQ(8, cell.corners->size());
-    EXPECT_EQ(cell.corners->at(0)->x(), 100);
-    EXPECT_EQ(cell.corners->at(7)->z(), 7050);
-    EXPECT_EQ(cell.center->x(), 150);
+    EXPECT_EQ(8, cell.corners.size());
+    EXPECT_EQ(cell.corners.at(0).x(), 100);
+    EXPECT_EQ(cell.corners.at(7).z(), 7050);
+    EXPECT_EQ(cell.center.x(), 150);
     EXPECT_EQ(cell.volume, 1.5e+06);
     EXPECT_EQ(0, cell2.global_index);
 }
