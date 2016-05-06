@@ -35,7 +35,14 @@ ECLGrid::ECLGrid(QString file_path)
     : Grid(GridSourceType::ECLIPSE, file_path)
 {
     if (!Utilities::FileHandling::FileExists(file_path))
-        throw std::runtime_error("Grid file " + file_path.toStdString() + " not found");
+        throw std::runtime_error("Grid file " + file_path.toStdString() + " not found.");
+
+    QString init_file_path = file_path;
+    if (file_path.endsWith(".EGRID")) init_file_path = init_file_path.replace(".EGRID", ".INIT");
+    if (file_path.endsWith(".GRID")) init_file_path = init_file_path.replace(".GRID", ".INIT");
+    if (!Utilities::FileHandling::FileExists(init_file_path))
+        throw std::runtime_error("Reservoir init file " + init_file_path.toStdString() + " not found.");
+
     ecl_grid_reader_ = new ERTWrapper::ECLGrid::ECLGridReader();
     ecl_grid_reader_->ReadEclGrid(file_path_);
 }
