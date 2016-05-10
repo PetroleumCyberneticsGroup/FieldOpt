@@ -26,6 +26,7 @@
 #include "eclresults.h"
 #include "results_exceptions.h"
 #include "ERTWrapper/ertwrapper_exceptions.h"
+#include <QVector>
 
 namespace Simulation { namespace Results {
 
@@ -96,6 +97,26 @@ double ECLResults::GetValue(Results::Property prop, QString well, int time_index
     if (!keys_.contains(prop)) throw ResultPropertyKeyDoesNotExistException("ECLIPSE");
     if (!summary_reader_->HasReportStep(time_index)) throw ResultTimeIndexInvalidException(time_index);
     return summary_reader_->GetWellVar(well, keys_.value(prop), time_index);
+}
+
+QVector<double> ECLResults::GetValueVector(Results::Property prop)
+{
+    if (!isAvailable()) throw ResultsNotAvailableException();
+    if (!keys_.contains(prop)) throw ResultPropertyKeyDoesNotExistException("ECLIPSE");
+    QVector<double> values = QVector<double>();
+    if (misc_keys_.contains(prop)) {
+        for (int t = summary_reader_->GetFirstReportStep(); t <= summary_reader_->GetLastReportStep(); ++t) {
+            if (summary_reader_->HasReportStep(t))
+                values.append(summary_reader_->GetMiscVar(keys_[prop], t));
+        }
+    }
+    else {
+        for (int t = summary_reader_->GetFirstReportStep(); t <= summary_reader_->GetLastReportStep(); ++t) {
+            if (summary_reader_->HasReportStep(t))
+                values.append(summary_reader_->GetFieldVar(keys_[prop], t));
+        }
+    }
+    return values;
 }
 
 }}

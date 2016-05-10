@@ -86,6 +86,12 @@ public:
     virtual double GetValue(Property prop) = 0;
 
     /*!
+     * \brief GetValueVector Get the vector containing all values for the specified property.
+     * \param prop The property to be retrieved.
+     */
+    virtual QVector<double> GetValueVector(Property prop) = 0;
+
+    /*!
      * \brief GetFinalValue Gets the value of the given property for the given well at the
      * final time index.
      * \param prop The property to be retireved.

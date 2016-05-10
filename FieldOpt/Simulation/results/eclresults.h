@@ -50,6 +50,7 @@ public:
     double GetValue(Property prop, int time_index);
     double GetValue(Property prop, QString well);
     double GetValue(Property prop, QString well, int time_index);
+    QVector<double> GetValueVector(Property prop); //!< This currently only works for Field and Misc variables
 
 private:
     QString file_path_;

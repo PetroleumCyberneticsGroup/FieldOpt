@@ -71,5 +71,12 @@ double AdgprsResults::GetValue(Results::Property prop, QString well, int time_in
     return GetValue(well_numbers_[well], prop, time_index);
 }
 
+QVector<double> AdgprsResults::GetValueVector(Results::Property prop)
+{
+    if (!isAvailable()) throw ResultsNotAvailableException();
+    if (!keys_.contains(prop)) throw ResultPropertyKeyDoesNotExistException("ADGPRS");
+    return *summary_reader_->results()->GetFieldProperty(keys_[prop]);
+}
+
 
 }}

@@ -21,7 +21,26 @@ TEST_F(AdgprsResultsTest, ReadFile) {
 
 TEST_F(AdgprsResultsTest, Time) {
     EXPECT_FLOAT_EQ(0.0, results_->GetValue(Simulation::Results::Results::Property::Time, 0));
-    EXPECT_FLOAT_EQ(2920.0, results_->GetValue(Simulation::Results::Results::Property::Time));
+    EXPECT_FLOAT_EQ(100.0, results_->GetValue(Simulation::Results::Results::Property::Time));
+    EXPECT_EQ(8, results_->GetValueVector(Simulation::Results::Results::Property::Time).length());
+}
+
+TEST_F(AdgprsResultsTest, FOPT) {
+    EXPECT_EQ(8, results_->GetValueVector(Simulation::Results::Results::Property::CumulativeOilProduction).length());
+    EXPECT_FLOAT_EQ(0.0, results_->GetValueVector(Simulation::Results::Results::Property::CumulativeOilProduction).first());
+    EXPECT_FLOAT_EQ(359464.72, results_->GetValueVector(Simulation::Results::Results::Property::CumulativeOilProduction).last());
+}
+
+TEST_F(AdgprsResultsTest, FWPT) {
+    EXPECT_EQ(8, results_->GetValueVector(Simulation::Results::Results::Property::CumulativeWaterProduction).length());
+    EXPECT_FLOAT_EQ(0.0, results_->GetValueVector(Simulation::Results::Results::Property::CumulativeWaterProduction).first());
+    EXPECT_FLOAT_EQ(347556.34, results_->GetValueVector(Simulation::Results::Results::Property::CumulativeWaterProduction).last());
+}
+
+TEST_F(AdgprsResultsTest, FGPT) {
+    EXPECT_EQ(8, results_->GetValueVector(Simulation::Results::Results::Property::CumulativeGasProduction).length());
+    EXPECT_FLOAT_EQ(0.0, results_->GetValueVector(Simulation::Results::Results::Property::CumulativeGasProduction).first());
+    EXPECT_FLOAT_EQ(0.0, results_->GetValueVector(Simulation::Results::Results::Property::CumulativeGasProduction).last());
 }
 
 }

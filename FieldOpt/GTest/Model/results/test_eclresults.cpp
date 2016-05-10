@@ -25,6 +25,7 @@
 
 #include <gtest/gtest.h>
 #include <QString>
+#include <qvector.h>
 #include <iostream>
 #include "Simulation/results/eclresults.h"
 #include "Simulation/results/results_exceptions.h"
@@ -82,6 +83,11 @@ TEST_F(ECLResultsTest, FieldVariables) {
     EXPECT_FLOAT_EQ(187866.44, results_->GetValue(ECLResults::Property::CumulativeOilProduction));
     EXPECT_FLOAT_EQ(98328.047, results_->GetValue(ECLResults::Property::CumulativeOilProduction, 10));
     EXPECT_THROW(results_->GetValue(ECLResults::Property::CumulativeOilProduction, 30), ResultTimeIndexInvalidException);
+
+    QVector<double> fopt_vec = results_->GetValueVector(ECLResults::Property::CumulativeOilProduction);
+    EXPECT_EQ(23, fopt_vec.length());
+    EXPECT_FLOAT_EQ(0, fopt_vec.first());
+    EXPECT_FLOAT_EQ(187866.44, fopt_vec.last());
 }
 
 TEST_F(ECLResultsTest, MiscVariables) {
@@ -89,6 +95,11 @@ TEST_F(ECLResultsTest, MiscVariables) {
     EXPECT_FLOAT_EQ(200, results_->GetValue(ECLResults::Property::Time));
     EXPECT_FLOAT_EQ(80, results_->GetValue(ECLResults::Property::Time, 10));
     EXPECT_THROW(results_->GetValue(ECLResults::Property::Time, 30), ResultTimeIndexInvalidException);
+
+    QVector<double> time_vec = results_->GetValueVector(ECLResults::Property::Time);
+    EXPECT_EQ(23, time_vec.length());
+    EXPECT_EQ(0, time_vec.first());
+    EXPECT_EQ(200, time_vec.last());
 }
 
 TEST_F(ECLResultsTest, WellVariables) {
