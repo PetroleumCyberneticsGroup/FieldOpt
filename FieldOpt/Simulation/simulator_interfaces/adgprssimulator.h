@@ -46,6 +46,10 @@ private:
     // Simulator interface
 protected:
     void UpdateFilePaths();
+
+    // Simulator interface
+public:
+    QString GetCompdatString();
 };
 
 }}

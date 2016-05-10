@@ -74,4 +74,9 @@ void AdgprsSimulator::UpdateFilePaths()
     script_args_ = (QStringList() << output_directory_ << output_directory_+"/"+initial_driver_file_name_);
 }
 
+QString AdgprsSimulator::GetCompdatString()
+{
+    return driver_file_writer_->GetCompdatString();
+}
+
 }}

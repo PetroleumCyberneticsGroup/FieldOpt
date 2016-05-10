@@ -65,6 +65,11 @@ void EclDriverFileWriter::WriteDriverFile()
     Utilities::FileHandling::WriteStringToFile(complete_string, output_driver_file_name_);
 }
 
+QString EclDriverFileWriter::GetCompdatString()
+{
+    return DriverParts::ECLDriverParts::Compdat(model_->wells()).GetPartString();
+}
+
 }
 }
 }

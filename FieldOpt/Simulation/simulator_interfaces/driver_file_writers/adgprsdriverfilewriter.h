@@ -25,6 +25,7 @@ private:
 
     Model::Model *model_;
     Utilities::Settings::Settings *settings_;
+    QString GetCompdatString();
 };
 
 }}}

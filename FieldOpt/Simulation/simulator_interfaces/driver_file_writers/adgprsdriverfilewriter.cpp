@@ -36,4 +36,9 @@ void AdgprsDriverFileWriter::WriteDriverFile(QString output_dir)
 
 }
 
+QString AdgprsDriverFileWriter::GetCompdatString()
+{
+    return DriverParts::ECLDriverParts::Compdat(model_->wells()).GetPartString();
+}
+
 }}}

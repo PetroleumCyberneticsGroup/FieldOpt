@@ -81,5 +81,10 @@ void ECLSimulator::UpdateFilePaths()
     return;
 }
 
+QString ECLSimulator::GetCompdatString()
+{
+    return driver_file_writer_->GetCompdatString();
+}
+
 }
 }
