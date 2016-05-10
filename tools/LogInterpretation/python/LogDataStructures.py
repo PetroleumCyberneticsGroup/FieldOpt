@@ -82,6 +82,21 @@ class Well:
         self.name = well_name
         (self.heel, self.toe) = extract_well_endpoints(variables, well_name)
 
+class ProductionData:
+    """
+    The ProductionData class holds production data from a reservoir simulation. This includes time vectors
+    and cumulative production data.
+    """
+    def __init__(self, production_data_log):
+        self.time = {}
+        self.fopt = {}
+        self.fwpt = {}
+        self.fgpt = {}
+        for key in production_data_log.entries:
+            self.time[key] = [float(x) for x in production_data_log.entries[key]['TIME'].split(', ')[0:-1]]
+            self.fopt[key] = [float(x) for x in production_data_log.entries[key]['FOPT'].split(', ')[0:-1]]
+            self.fwpt[key] = [float(x) for x in production_data_log.entries[key]['FWPT'].split(', ')[0:-1]]
+            self.fgpt[key] = [float(x) for x in production_data_log.entries[key]['FGPT'].split(', ')[0:-1]]
 
 class Case:
     """

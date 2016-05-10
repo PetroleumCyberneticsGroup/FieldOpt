@@ -1,10 +1,12 @@
 import csv
+import numpy as np
 
 """
-In this package we define functions and classes used to read the csv-formatted logs
-written by FieldOpt. The logs are read into separate objects, which structure
-the logs into headers and rows.
+In this package we define functions and classes used to read the csv-formatted
+logs written by FieldOpt. The logs are read into separate objects, which
+structure the logs into headers and rows.
 """
+
 
 def read_log(file_path):
     """
@@ -23,6 +25,7 @@ def read_log(file_path):
         headers = rows.pop(0)
     return (headers, rows)
 
+
 def extract_column(rows, col_nr):
     """
     Extract a column from a CSV file.
@@ -35,6 +38,7 @@ def extract_column(rows, col_nr):
         col.append(row[col_nr])
     return col
 
+
 def get_header_index(headers, header):
     """
     Get the integer index of the column with the specified header.
@@ -45,6 +49,7 @@ def get_header_index(headers, header):
     for i in range(len(headers)):
         if headers[i] == header:
             return i
+
 
 class CaseLog:
     """
@@ -61,9 +66,11 @@ class CaseLog:
         index = get_header_index(self.headers, col_name)
         return extract_column(self.rows, index)
 
+
 class PropertyUuidNameMapLog:
     """
-    Reads the log_property_uuid_name_map.csv file, and separates it into headers and rows.
+    Reads the log_property_uuid_name_map.csv file, and separates it into
+    headers and rows.
     """
     headers = []
     rows = []
@@ -86,6 +93,7 @@ class PropertyUuidNameMapLog:
             if row[0] == uuid:
                 return row[1]
 
+
 class SimulationLog:
     """
     Reads the log_simulation.csv file and splits it into headers and rows.
@@ -100,6 +108,7 @@ class SimulationLog:
     def column(self, col_name):
         index = get_header_index(self.headers, col_name)
         return extract_column(self.rows, index)
+
 
 class OptimizationLog:
     """
@@ -116,6 +125,25 @@ class OptimizationLog:
         index = get_header_index(self.headers, col_name)
         return extract_column(self.rows, index)
 
+
+class ProductionDataLog:
+    """
+    Read the production data log.
+    Returns an array of dictionaries, where the key in the dictionary
+    is the case UUID and the value is a 2D array containing, in the following
+    order, TIME, FOPT, FWPT, FGPT.
+    """
+    def __init__(self, prod_data_log_path):
+        self.entries = {}
+        loglines = [line.rstrip('\n') for line in open(prod_data_log_path)]
+        for i in np.arange(0, len(loglines), 5):
+            self.entries[loglines[i]] = {}
+            self.entries[loglines[i]]['TIME'] = loglines[i + 1].split(': ')[1]
+            self.entries[loglines[i]]['FOPT'] = loglines[i + 2].split(': ')[1]
+            self.entries[loglines[i]]['FWPT'] = loglines[i + 3].split(': ')[1]
+            self.entries[loglines[i]]['FGPT'] = loglines[i + 4].split(': ')[1]
+
+
 class LogReader:
     """
     Read all the log files and create the appropriate objects for them.
@@ -126,3 +154,4 @@ class LogReader:
         self.case_log = CaseLog(output_dir_path + "/log_cases.csv")
         self.simulation_log = SimulationLog(output_dir_path + "/log_simulation.csv")
         self.optimization_log = OptimizationLog(output_dir_path + "/log_optimization.csv")
+        self.production_data_log = ProductionDataLog(output_dir_path + "/log_production_data.txt")
