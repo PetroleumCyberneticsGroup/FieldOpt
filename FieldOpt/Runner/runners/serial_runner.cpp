@@ -15,6 +15,8 @@ void SerialRunner::Execute()
     logger.LogSettings(settings_);
     logger.WritePropertyUuidNameMap(model_);
     logger.LogCase(base_case_);
+    logger.LogCompdat(base_case_, simulator_->GetCompdatString());
+    logger.LogProductionData(base_case_, simulator_->results());
     while (optimizer_->IsFinished() == false) {
         auto new_case = optimizer_->GetCaseForEvaluation();
         logger.LogCase(new_case);
@@ -26,8 +28,10 @@ void SerialRunner::Execute()
             try {
                 model_->ApplyCase(new_case);
                 logger.LogSimulation(new_case); // Log sim start
+                logger.LogCompdat(new_case, simulator_->GetCompdatString()); // Log compdat
                 simulator_->Evaluate();
                 logger.LogSimulation(new_case); // Log sim end
+                logger.LogProductionData(new_case, simulator_->results());
                 new_case->set_objective_function_value(objective_function_->value());
             } catch (std::runtime_error e) {
                 std::cout << e.what() << std::endl;

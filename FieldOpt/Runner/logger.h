@@ -11,6 +11,7 @@
 #include "runtime_settings.h"
 #include "Utilities/settings/settings.h"
 #include "Model/model.h"
+#include "Simulation/results/results.h"
 
 namespace Runner {
 
@@ -61,6 +62,17 @@ public:
      */
     void LogSimulation(const Optimization::Case *c, QString message="");
 
+    /*!
+     * \brief LogCompdat Log the compdat section for the simulation of a case.
+     */
+    void LogCompdat(const Optimization::Case *c, const QString compdat);
+
+    /*!
+     * \brief LogProductionData Log the production data (e.g. production rates and cumulatives)
+     * from a simulation.
+     */
+    void LogProductionData(const Optimization::Case *c, Simulation::Results::Results *results);
+
 
 
 private:
@@ -69,6 +81,8 @@ private:
     QString opt_log_path_; //!< Path to the optimization log file.
     QString sim_log_path_; //!< Path to the simulation log file.
     QString cas_log_path_; //!< Path to the case log file.
+    QString compdat_log_path_; //!< Path to the COMPDAT log file.
+    QString prod_data_log_path_; //!< Path to the production data log file.
     QString settings_log_path_; //!< Path to the settings log file.
     QString property_uuid_name_map_path_; //!< Path to the property uuid-name map.
 

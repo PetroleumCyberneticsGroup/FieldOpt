@@ -1,6 +1,7 @@
 #include "logger.h"
 #include "Utilities/file_handling/filehandling.h"
 #include <iostream>
+#include <QVector>
 
 namespace Runner {
 
@@ -11,12 +12,16 @@ Logger::Logger(RuntimeSettings *rts)
     opt_log_path_ = output_dir_ + "/log_optimization.csv";
     sim_log_path_ = output_dir_ + "/log_simulation.csv";
     cas_log_path_ = output_dir_ + "/log_cases.csv";
+    compdat_log_path_ = output_dir_ + "/log_compdat.txt";
+    prod_data_log_path_ = output_dir_ + "/log_production_data.txt";
     settings_log_path_ = output_dir_ + "/log_settings.csv";
     property_uuid_name_map_path_ = output_dir_ + "/log_property_uuid_name_map.csv";
 
     // Delete existing logs if --force flag is on
     if (rts->overwrite_existing()) {
-        foreach (auto path, (QStringList() << cas_log_path_ << opt_log_path_ << sim_log_path_ << settings_log_path_ << property_uuid_name_map_path_)) {
+        foreach (auto path, (QStringList() << cas_log_path_ << opt_log_path_ << sim_log_path_
+                             << compdat_log_path_ << prod_data_log_path_
+                             << settings_log_path_ << property_uuid_name_map_path_)) {
             if (Utilities::FileHandling::FileExists(path)) {
                 std::cout << "Force flag on. Deleting " << path.toStdString() << std::endl;
                 Utilities::FileHandling::DeleteFile(path);
@@ -146,6 +151,37 @@ void Logger::LogSimulation(const Optimization::Case *c, QString message)
             }
         }
     }
+}
+
+void Logger::LogCompdat(const Optimization::Case *c, const QString compdat)
+{
+    Utilities::FileHandling::WriteLineToFile(c->id().toString(), compdat_log_path_);
+    Utilities::FileHandling::WriteLineToFile(compdat, compdat_log_path_);
+}
+
+void Logger::LogProductionData(const Optimization::Case *c, Simulation::Results::Results *results)
+{
+    Utilities::FileHandling::WriteLineToFile(c->id().toString(), prod_data_log_path_);
+    QString time_string = "TIME: ";
+    foreach (double value, results->GetValueVector(Simulation::Results::Results::Property::Time)) {
+        time_string.append(QString("%1, ").arg(value));
+    }
+    QString fopt_string = "FOPT: ";
+    foreach (double value, results->GetValueVector(Simulation::Results::Results::Property::CumulativeOilProduction)) {
+        fopt_string.append(QString("%1, ").arg(value));
+    }
+    QString fwpt_string = "FWPT: ";
+    foreach (double value, results->GetValueVector(Simulation::Results::Results::Property::CumulativeWaterProduction)) {
+        fwpt_string.append(QString("%1, ").arg(value));
+    }
+    QString fgpt_string = "FGPT: ";
+    foreach (double value, results->GetValueVector(Simulation::Results::Results::Property::CumulativeGasProduction)) {
+        fgpt_string.append(QString("%1, ").arg(value));
+    }
+    Utilities::FileHandling::WriteLineToFile(time_string, prod_data_log_path_);
+    Utilities::FileHandling::WriteLineToFile(fopt_string, prod_data_log_path_);
+    Utilities::FileHandling::WriteLineToFile(fwpt_string, prod_data_log_path_);
+    Utilities::FileHandling::WriteLineToFile(fgpt_string, prod_data_log_path_);
 }
 
 void Logger::initializeCaseLog(const Optimization::Case *c)
