@@ -24,6 +24,8 @@
  *****************************************************************************/
 
 #include "runtime_settings.h"
+#include <vector>
+#include <QPair>
 
 namespace Runner {
 
@@ -70,6 +72,21 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
         else grid_file_path_ = grid_path;
     } else grid_file_path_ = "";
 
+    if (vm.count("well-prod-points")) {
+        if (vm["well-prod-points"].as<std::vector<double>>().size() != 6)
+            throw std::runtime_error("Exactly six coordinates must be provided for the production well position.");
+        std::vector<double> coords = vm["well-prod-points"].as<std::vector<double>>();
+        prod_coords_.first = QVector<double>() << coords[0] << coords[1] << coords[2];
+        prod_coords_.second = QVector<double>() << coords[3] << coords[4] << coords[5];
+    }
+    if (vm.count("well-inj-points")) {
+        if (vm["well-inj-points"].as<std::vector<double>>().size() != 6)
+            throw std::runtime_error("Exactly six coordinates must be provided for the injection well position.");
+        std::vector<double> coords = vm["well-inj-points"].as<std::vector<double>>();
+        inje_coords_.first = QVector<double>() << coords[0] << coords[1] << coords[2];
+        inje_coords_.second = QVector<double>() << coords[3] << coords[4] << coords[5];
+    }
+
 
     if (verbose_) {
         std::cout << "FieldOpt runtime settings: " << std::endl;
@@ -81,6 +98,10 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
         std::cout << "Verbose output: " << verbose_ << std::endl;
         std::cout << "Overwr. existing out files: " << overwrite_existing_ << std::endl;
         std::cout << "Max parallel simulations:   " << (max_parallel_sims_ > 0 ? std::to_string(max_parallel_sims_) : "default") << std::endl;
+        std::cout << "Producer coordinates:       " << "(" << prod_coords_.first[0]  << ", " << prod_coords_.first[1]  << ", " << prod_coords_.first[2]  << "), "
+                                                    << "(" << prod_coords_.second[0] << ", " << prod_coords_.second[1] << ", " << prod_coords_.second[2] << ")" << std::endl;
+        std::cout << "Injector coordinates:       " << "(" << inje_coords_.first[0]  << ", " << prod_coords_.first[1]  << ", " << inje_coords_.first[2]  << "), "
+                                                    << "(" << inje_coords_.second[0] << ", " << prod_coords_.second[1] << ", " << inje_coords_.second[2] << ")" << std::endl;
     }
 }
 

@@ -29,6 +29,8 @@
 #include <boost/program_options.hpp>
 #include <iostream>
 #include <QString>
+#include <QVector>
+#include <QPair>
 #include <stdexcept>
 #include "Utilities/file_handling/filehandling.h"
 
@@ -69,6 +71,8 @@ private:
     bool overwrite_existing_; //!< Whether or not files in the specified output directory should be overwritten (only relevant if the directory is not empty).
     int max_parallel_sims_; //!< Maximum number of parallel simulations to start. This is important to define if you for example have a limited number of simulator licenses.
     RunnerType runner_type_; //!< The type of runner to be used (e.g. serial or parallel).
+    QPair<QVector<double>, QVector<double>> prod_coords_; //!< The spline coordinates for the production well
+    QPair<QVector<double>, QVector<double>> inje_coords_; //!< The spline coordinates for the injection well
 
     QString runnerTypeString(); //!< Get a string representation of the runner type (used when printing settings to the terminal).
 };
