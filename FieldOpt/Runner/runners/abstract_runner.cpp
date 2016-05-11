@@ -130,7 +130,13 @@ void AbstractRunner::InitializeBaseCase()
     base_case_ = new Optimization::Case(model_->variables()->GetBinaryVariableValues(),
                                         model_->variables()->GetDiscreteVariableValues(),
                                         model_->variables()->GetContinousVariableValues());
-    base_case_->set_objective_function_value(objective_function_->value());
+    if (!simulator_->results()->isAvailable()) {
+        if (runtime_settings_->verbose())
+            std::cout << "Simulation results are unavailable. Setting base case objective function value to sentinel value." << std::endl;
+        base_case_->set_objective_function_value(sentinelValue());
+    }
+    else
+        base_case_->set_objective_function_value(objective_function_->value());
     if (runtime_settings_->verbose()) std::cout << "Base case objective function value set to: " << base_case_->objective_function_value() << std::endl;
 }
 
