@@ -24,6 +24,7 @@ public:
     // AbstractRunner interface
 private:
     void Execute();
+    void applyWellPositionFromArguments();
 };
 
 }
