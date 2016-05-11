@@ -7,6 +7,15 @@ OneOffRunner::OneOffRunner(RuntimeSettings *runtime_settings)
     : AbstractRunner(runtime_settings)
 {
     std::cout << "Initializing one-off runner." << std::endl;
+    InitializeSettings();
+    InitializeModel();
+    InitializeSimulator();
+    //EvaluateBaseModel();
+    InitializeObjectiveFunction();
+    InitializeBaseCase();
+    //InitializeOptimizer();
+    //InitializeBookkeeper();
+    InitializeLogger();
 }
 
 void OneOffRunner::Execute()
