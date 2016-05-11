@@ -25,6 +25,7 @@
 
 #include "main_runner.h"
 #include "serial_runner.h"
+#include "oneoff_runner.h"
 
 namespace Runner {
 
@@ -35,6 +36,9 @@ MainRunner::MainRunner(RuntimeSettings *rts)
     switch (runtime_settings_->runner_type()) {
     case RuntimeSettings::RunnerType::SERIAL:
         runner_ = new SerialRunner(runtime_settings_);
+        break;
+    case RuntimeSettings::RunnerType::ONEOFF:
+        runner_ = new OneOffRunner(runtime_settings_);
         break;
     default:
         throw std::runtime_error("Runner type not recognized.");

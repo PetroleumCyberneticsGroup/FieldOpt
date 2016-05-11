@@ -54,8 +54,11 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
     } else max_parallel_sims_ = 0;
 
     if (vm.count("runner-type")) {
-        if (QString::compare(QString::fromStdString(vm["runner-type"].as<std::string>()), "serial") == 0)
+        QString runner_str = QString::fromStdString(vm["runner-type"].as<std::string>());
+        if (QString::compare(runner_str, "serial") == 0)
             runner_type_ = RunnerType::SERIAL;
+        else if (QString::compare(runner_str, "oneoff") == 0)
+            runner_type_ = RunnerType::ONEOFF;
     } else runner_type_ = RunnerType::SERIAL;
 
     if (vm.count("sim-drv-path")) {

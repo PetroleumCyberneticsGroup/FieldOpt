@@ -51,7 +51,7 @@ public:
     /*!
      * \brief The RunnerType enum lists the names of available runners.
      */
-    enum RunnerType { SERIAL };
+    enum RunnerType { SERIAL, ONEOFF};
 
     QString driver_file() const { return driver_file_; }
     QString output_dir() const { return output_dir_; }
