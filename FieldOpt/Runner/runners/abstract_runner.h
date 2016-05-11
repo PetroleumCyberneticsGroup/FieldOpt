@@ -34,6 +34,7 @@
 #include "Simulation/simulator_interfaces/simulator.h"
 #include "Utilities/settings/settings.h"
 #include "bookkeeper.h"
+#include "Runner/logger.h"
 
 namespace Runner {
 
@@ -56,6 +57,7 @@ private:
      * \brief Execute starts the actual optimization run and should not return until the optimization is done.
      */
     virtual void Execute() = 0;
+    const double sentinel_value_ = 0.0001; //!< Value to be used as a sentinel value for the objective function of cases that cannot be evaluated.
 
 protected:
     AbstractRunner(RuntimeSettings *runtime_settings);
@@ -68,17 +70,27 @@ protected:
     Optimization::Optimizer *optimizer_;
     Optimization::Objective::Objective *objective_function_;
     Simulation::SimulatorInterfaces::Simulator *simulator_;
+    Logger *logger_;
 
     /*!
-     * \brief setObjectiveFunctionSentinelValue Sets the objective function value to a sentinel value.
+     * \brief sentinelValue Get the sentinel value to be used as objective function values for cases
+     * that cannot be evaluated.
      *
-     * Should be called when the case is invalid.
-     *
-     * If the ongoing run is maximization, the objective function value will be set to DBL_MIN; if
-     * it is minimization, the value will be set to DBL_MAX.
-     * \param c
+     * When maximizing, this will be 0.0001; when minimizing, this will be -0.0001.
+     * \return
      */
-    void setObjectiveFunctionSentinelValue(Optimization::Case *c);
+    double sentinelValue() const;
+
+    void InitializeSettings(QString output_subdirectory="");
+    void InitializeModel();
+    void InitializeSimulator();
+    void EvaluateBaseModel();
+    void InitializeObjectiveFunction();
+    void InitializeBaseCase();
+    void InitializeOptimizer();
+    void InitializeBookkeeper();
+
+    void InitializeLogger();
 };
 
 }
