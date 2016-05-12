@@ -1,18 +1,23 @@
 cmake_minimum_required(VERSION 3.2)
 project(FieldOpt LANGUAGES CXX)
 
-find_package (Qt5 REQUIRED COMPONENTS Core)
+# Qt libraries
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+find_package (Qt5Core REQUIRED)
+
+
+# Boost libraries
 find_package(Boost REQUIRED program_options)
 add_library(boost INTERFACE IMPORTED)
 set_property(TARGET boost PROPERTY
         INTERFACE_INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIR})
-
 add_library(boost-program_options SHARED IMPORTED)
 set_property(TARGET boost-program_options PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIRS})
 set_property(TARGET boost-program_options PROPERTY IMPORTED_LOCATION ${Boost_PROPGRAM_OPTIONS_LIBRARY})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}
-    ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
+# Set this directory as the root dir
+include_directories(${CMAKE_SOURCE_DIR})
 
 #enable_testing()
 
