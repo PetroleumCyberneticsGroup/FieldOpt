@@ -1,23 +1,24 @@
-project( ertwrapper )
-cmake_minimum_required( VERSION 2.6 )
-set ( CMAKE_BUILD_TYPE Release )
-add_definitions ( -Wall )
-find_package ( Qt4 REQUIRED )
-include ( ${QT_USE_FILE} )
-include_directories (
-	${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
-	${QT_QTCORE_INCLUDE_DIR} ${QT_QTGUI_INCLUDE_DIR} ${QT_QTCORE_INCLUDE_DIR}
-	)
-set ( ertwrapper_HDRS
-	eclgridreader.h
-	ertwrapper_exceptions.h
-	eclsummaryreader.h
-	)
+project(ertwrapper)
+cmake_minimum_required(VERSION 3.2)
 
-set ( ertwrapper_SRCS
-	eclgridreader.cpp
-	eclsummaryreader.cpp
-	)
+# ERT libraries
+find_library(ert_ecl ecl REQUIRED)
+find_library(ert_util util REQUIRED)
 
-add_library ( ertwrapper SHARED ${ertwrapper_SRCS} ${UIS} ${RSCS} ${TRS} ${MOCS} )
-target_link_libraries ( ertwrapper  ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} )
+add_library(ertwrapper
+		eclgridreader.cpp
+		eclsummaryreader.cpp)
+add_library(fieldopt::ertwrapper ALIAS ${PROJECT_NAME})
+
+target_link_libraries(ertwrapper
+		PUBLIC Qt5::Core
+        PUBLIC Qt5::Gui
+		PRIVATE ert_ecl
+		PRIVATE ert_util)
+
+target_include_directories(ertwrapper PUBLIC
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/settings>)
+
+target_compile_features(ertwrapper
+		PUBLIC cxx_auto_type
+		PUBLIC cxx_range_for)

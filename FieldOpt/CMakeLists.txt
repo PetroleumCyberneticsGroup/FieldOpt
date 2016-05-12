@@ -4,7 +4,8 @@ project(FieldOpt LANGUAGES CXX)
 # Qt libraries
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-find_package (Qt5Core REQUIRED)
+find_package(Qt5Core REQUIRED)
+find_package(Qt5Gui REQUIRED)
 
 
 # Boost libraries
@@ -16,13 +17,16 @@ add_library(boost-program_options SHARED IMPORTED)
 set_property(TARGET boost-program_options PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIRS})
 set_property(TARGET boost-program_options PROPERTY IMPORTED_LOCATION ${Boost_PROPGRAM_OPTIONS_LIBRARY})
 
+# Armadillo library
+find_package(Armadillo)
+
 # Set this directory as the root dir
 include_directories(${CMAKE_SOURCE_DIR})
 
 #enable_testing()
 
 
-#add_subdirectory(ERTWrapper)
+add_subdirectory(ERTWrapper)
 #add_subdirectory(Model)
 add_subdirectory(Utilities)
 #add_subdirectory(Optimization)
