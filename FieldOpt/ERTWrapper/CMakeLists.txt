@@ -17,7 +17,7 @@ target_link_libraries(ertwrapper
 		PRIVATE ert_util)
 
 target_include_directories(ertwrapper PUBLIC
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/settings>)
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 
 target_compile_features(ertwrapper
 		PUBLIC cxx_auto_type
