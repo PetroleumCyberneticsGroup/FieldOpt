@@ -61,6 +61,8 @@ public:
     bool overwrite_existing() const { return overwrite_existing_; }
     int max_parallel_sims() const { return max_parallel_sims_; }
     RunnerType runner_type() const { return runner_type_; }
+    QPair<QVector<double>, QVector<double>> prod_coords() const { return prod_coords_; }
+    QPair<QVector<double>, QVector<double>> inje_coords() const { return inje_coords_; }
 
 private:
     QString driver_file_; //!< Path to the driver file to be used by FieldOpt.
