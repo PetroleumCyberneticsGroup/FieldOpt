@@ -1,33 +1,404 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="CPP_MODULE" version="4">
   <component name="NewModuleRootManager">
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/AdgprsResultsReader/adgprsresultsreader_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/AdgprsResultsReader/adgprsresultsreader_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/ERTWrapper/ertwrapper_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/ERTWrapper/ertwrapper_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Model/model_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Model/model_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Optimization/optimization_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Optimization/optimization_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Runner/FieldOpt_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Runner/FieldOpt_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Runner/runner_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Runner/runner_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Simulation/simulation_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Simulation/simulation_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Utilities/utilities_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Utilities/utilities_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/WellIndexCalculator/wellindexcalculator_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/WellIndexCalculator/wellindexcalculator_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/AdgprsResultsReader/adgprsresultsreader_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/AdgprsResultsReader/adgprsresultsreader_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/ERTWrapper/ertwrapper_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/ERTWrapper/ertwrapper_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Model/model_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Model/model_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Optimization/optimization_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Optimization/optimization_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Runner/FieldOpt_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Runner/FieldOpt_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Runner/runner_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Runner/runner_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Simulation/simulation_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Simulation/simulation_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Utilities/utilities_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Utilities/utilities_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/WellIndexCalculator/wellindexcalculator_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/WellIndexCalculator/wellindexcalculator_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/AdgprsResultsReader/adgprsresultsreader_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/AdgprsResultsReader/adgprsresultsreader_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/ERTWrapper/ertwrapper_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/ERTWrapper/ertwrapper_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Model/model_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Model/model_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Optimization/optimization_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Optimization/optimization_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Runner/FieldOpt_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Runner/FieldOpt_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Runner/runner_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Runner/runner_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Simulation/simulation_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Simulation/simulation_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Utilities/utilities_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Utilities/utilities_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/WellIndexCalculator/wellindexcalculator_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/WellIndexCalculator/wellindexcalculator_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/AdgprsResultsReader/adgprsresultsreader_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/AdgprsResultsReader/adgprsresultsreader_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/ERTWrapper/ertwrapper_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/ERTWrapper/ertwrapper_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Model/model_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Model/model_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Optimization/optimization_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Optimization/optimization_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Runner/FieldOpt_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Runner/FieldOpt_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Runner/runner_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Runner/runner_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Simulation/simulation_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Simulation/simulation_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Utilities/utilities_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Utilities/utilities_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/WellIndexCalculator/wellindexcalculator_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/WellIndexCalculator/wellindexcalculator_automoc.cpp" isTestSource="false" />
+    </content>
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/Utilities/src/unix/execution.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Utilities/src/settings/simulator.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Utilities/src/settings/model.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Utilities/src/settings/settings.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Utilities/src/settings/optimizer.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Utilities/src/file_handling/filehandling.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Utilities/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/case_handler.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/objective/objective.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/objective/weightedsum.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/objective/weightedsum.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/objective/objective.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/case_handler.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/case.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/optimizer.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/case.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/constraints/constraint.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/constraints/box_constraint.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/constraints/constraint.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/constraints/well_spline_length.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/constraints/well_spline_constraint.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/constraints/well_spline_length.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/constraints/combined_spline_length_interwell_distance.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/constraints/combined_spline_length_interwell_distance.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/constraints/interwell_distance.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/constraints/well_spline_constraint.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/constraints/constraint_handler.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/constraints/box_constraint.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/constraints/constraint_handler.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/constraints/interwell_distance.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/optimization_exceptions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/optimizers/compass_search.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/optimizers/compass_search.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Optimization/optimizer.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/AdgprsResultsReader/adgprs_results_reader.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/AdgprsResultsReader/adgprs_results_reader.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/AdgprsResultsReader/json_summary_reader.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/AdgprsResultsReader/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/AdgprsResultsReader/json_summary_reader.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/results/adgprsresults.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/results/results.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/results/adgprsresults.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/results/eclresults.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/results/eclresults.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/results/results_exceptions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/eclsimulator.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/ecldriverfilewriter.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/adgprs_driver_parts/wellstre.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/adgprs_driver_parts/adgprs_wellcontrols.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/adgprs_driver_parts/wellstre.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/adgprs_driver_parts/adgprs_wellcontrols.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/driverpart.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/driverpart.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/wellcontrols.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/compdat.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/props_section.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/welspecs.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/ecldriverpart.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/runspec_section.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/solution_section.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/grid_section.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/summary_section.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/schedule_section.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/compdat.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/schedule_section.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/ecldriverpart.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/solution_section.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/runspec_section.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/grid_section.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/summary_section.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/props_section.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/welspecs.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/wellcontrols.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/ecldriverfilewriter.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/adgprsdriverfilewriter.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/driver_file_writers/adgprsdriverfilewriter.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/adgprssimulator.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/adgprssimulator.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/simulator_exceptions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/simulator.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/simulator.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Simulation/simulator_interfaces/eclsimulator.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WellIndexCalculator/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WellIndexCalculator/wellindexcalculator.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WellIndexCalculator/geometry_functions/geometryfunctions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WellIndexCalculator/geometry_functions/geometryfunctions.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WellIndexCalculator/geometry_functions/geometryfunctions_exceptions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WellIndexCalculator/wellindexcalculator.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WellIndexCalculator/well_constraint_projections/well_constraint_projections.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WellIndexCalculator/well_constraint_projections/well_constraint_projections.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WellIndexCalculator/geometry_classes/squareplane.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WellIndexCalculator/geometry_classes/squareplane.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WellIndexCalculator/geometry_classes/line.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/WellIndexCalculator/geometry_classes/line.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Runner/bookkeeper.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Runner/bookkeeper.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Runner/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Runner/main.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Runner/runtime_settings.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Runner/runtime_settings.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Runner/runners/main_runner.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Runner/runners/main_runner.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Runner/runners/abstract_runner.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Runner/runners/serial_runner.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Runner/runners/abstract_runner.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Runner/runners/serial_runner.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Runner/logger.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Runner/logger.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ERTWrapper/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ERTWrapper/ertwrapper_exceptions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ERTWrapper/eclgridreader.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ERTWrapper/eclsummaryreader.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ERTWrapper/eclgridreader.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ERTWrapper/eclsummaryreader.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/properties/discrete_property.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/properties/variable_property_container.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/properties/binary_property.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/properties/discrete_property.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/properties/continous_property.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/properties/property_exceptions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/properties/variable_property_handler.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/properties/continous_property.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/properties/variable_property_container.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/properties/property.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/properties/binary_property.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/properties/variable_property_handler.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/wells/well_exceptions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/wells/control.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/wells/well.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/wells/well.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/wells/wellbore/wellblock.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/wells/wellbore/wellblock.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/wells/wellbore/wellspline.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/wells/wellbore/completions/perforation.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/wells/wellbore/completions/completion.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/wells/wellbore/completions/completion.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/wells/wellbore/completions/perforation.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/wells/wellbore/completions/completion_exceptions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/wells/wellbore/trajectory.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/wells/wellbore/wellspline.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/wells/wellbore/trajectory.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/wells/control.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/model.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/reservoir/reservoir.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/reservoir/reservoir.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/reservoir/grid/grid_exceptions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/reservoir/grid/eclgrid.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/reservoir/grid/ijkcoordinate.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/reservoir/grid/grid.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/reservoir/grid/xyzcoordinate.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/reservoir/grid/eclgrid.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/reservoir/grid/grid.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/reservoir/grid/cell.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/reservoir/grid/ijkcoordinate.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/reservoir/grid/xyzcoordinate.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/reservoir/grid/cell.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Model/model.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Utilities/unix/execution.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Utilities/unix/execution.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Utilities/settings/settings.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Utilities/settings/model.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Utilities/settings/optimizer.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Utilities/settings/settings_exceptions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Utilities/settings/settings.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Utilities/settings/model.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Utilities/settings/simulator.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Utilities/settings/simulator.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Utilities/settings/optimizer.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Utilities/file_handling/filehandling.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Utilities/file_handling/filehandling_exceptions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Utilities/file_handling/filehandling.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Utilities/CMakeLists.txt" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
       <library name="Header Search Paths">
         <CLASSES>
-          <root url="file:///usr/include" />
           <root url="file:///usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64" />
           <root url="file:///usr/lib/gcc/x86_64-linux-gnu/5/include-fixed" />
           <root url="file:///usr/lib/gcc/x86_64-linux-gnu/5/include" />
+          <root url="file:///usr/include" />
           <root url="file:///usr/local/include" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Optimization" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/AdgprsResultsReader" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Runner" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/WellIndexCalculator" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Simulation" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/ERTWrapper" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Model" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Utilities" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Optimization" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/AdgprsResultsReader" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Simulation" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/WellIndexCalculator" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Runner" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/ERTWrapper" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Model" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Utilities" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Optimization" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/AdgprsResultsReader" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Runner" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/WellIndexCalculator" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Simulation" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/ERTWrapper" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Model" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Utilities" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Optimization" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/AdgprsResultsReader" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Simulation" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/WellIndexCalculator" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Runner" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/ERTWrapper" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Model" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Utilities" />
         </CLASSES>
         <SOURCES>
-          <root url="file:///usr/include" />
           <root url="file:///usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64" />
           <root url="file:///usr/lib/gcc/x86_64-linux-gnu/5/include-fixed" />
           <root url="file:///usr/lib/gcc/x86_64-linux-gnu/5/include" />
+          <root url="file:///usr/include" />
           <root url="file:///usr/local/include" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Optimization" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/AdgprsResultsReader" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Runner" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/WellIndexCalculator" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Simulation" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/ERTWrapper" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Model" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Utilities" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Optimization" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/AdgprsResultsReader" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Simulation" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/WellIndexCalculator" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Runner" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/ERTWrapper" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Model" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Utilities" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Optimization" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/AdgprsResultsReader" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Runner" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/WellIndexCalculator" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Simulation" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/ERTWrapper" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Model" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Utilities" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Optimization" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/AdgprsResultsReader" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Simulation" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/WellIndexCalculator" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Runner" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/ERTWrapper" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Model" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Utilities" />
         </SOURCES>
+        <excluded>
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Optimization/optimization_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/AdgprsResultsReader/adgprsresultsreader_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Runner/runner_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Runner/FieldOpt_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/WellIndexCalculator/wellindexcalculator_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Simulation/simulation_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/ERTWrapper/ertwrapper_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Model/model_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/RelWithDebInfo0/Utilities/utilities_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Optimization/optimization_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/AdgprsResultsReader/adgprsresultsreader_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Simulation/simulation_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/WellIndexCalculator/wellindexcalculator_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Runner/runner_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Runner/FieldOpt_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/ERTWrapper/ertwrapper_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Model/model_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug0/Utilities/utilities_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Optimization/optimization_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/AdgprsResultsReader/adgprsresultsreader_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Runner/runner_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Runner/FieldOpt_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/WellIndexCalculator/wellindexcalculator_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Simulation/simulation_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/ERTWrapper/ertwrapper_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Model/model_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/Release0/Utilities/utilities_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Optimization/optimization_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/AdgprsResultsReader/adgprsresultsreader_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Simulation/simulation_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/WellIndexCalculator/wellindexcalculator_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Runner/runner_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Runner/FieldOpt_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/ERTWrapper/ertwrapper_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Model/model_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.1/system/cmake/generated/FieldOpt-c9373114/c9373114/MinSizeRel0/Utilities/utilities_automoc.cpp" />
+        </excluded>
       </library>
     </orderEntry>
   </component>
