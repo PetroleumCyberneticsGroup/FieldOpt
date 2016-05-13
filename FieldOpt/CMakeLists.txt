@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2)
-project(FieldOpt LANGUAGES CXX)
+project(FieldOpt VERSION 0.3 LANGUAGES CXX)
 
 # Qt libraries
 set(CMAKE_AUTOMOC ON)
@@ -23,8 +23,7 @@ find_package(Threads)
 # Set this directory as the root dir
 include_directories(${CMAKE_SOURCE_DIR})
 
-#enable_testing()
-
+enable_testing()
 
 add_subdirectory(ERTWrapper)
 add_subdirectory(Model)
