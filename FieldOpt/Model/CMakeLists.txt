@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2)
-project(model)
+project(model LANGUAGES CXX)
 
 add_library(model
 		model.cpp
@@ -32,8 +32,7 @@ target_link_libraries (model
 		PUBLIC fieldopt::ertwrapper
 		PUBLIC fieldopt::utilities
 		PUBLIC fieldopt::wellindexcalculator
-		PUBLIC Qt5::Core
-		PUBLIC RPolyPlusPlus)
+		PUBLIC Qt5::Core)
 
 target_include_directories(model PUBLIC
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/properties>

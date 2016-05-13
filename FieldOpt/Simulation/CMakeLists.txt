@@ -1,5 +1,5 @@
-project(simulation)
-cmake_minimum_required( VERSION 2.6 )
+cmake_minimum_required( VERSION 3.2 )
+project(simulation LANGUAGES CXX)
 
 add_library(simulation
         simulator_interfaces/simulator_exceptions.h
