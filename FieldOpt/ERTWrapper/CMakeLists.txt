@@ -6,6 +6,7 @@ find_library(ert_ecl ecl REQUIRED)
 find_library(ert_util util REQUIRED)
 
 add_library(ertwrapper
+        ertwrapper_exceptions.h
 		eclgridreader.cpp
 		eclsummaryreader.cpp)
 add_library(fieldopt::ertwrapper ALIAS ${PROJECT_NAME})

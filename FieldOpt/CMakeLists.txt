@@ -17,8 +17,8 @@ add_library(boost-program_options SHARED IMPORTED)
 set_property(TARGET boost-program_options PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIRS})
 set_property(TARGET boost-program_options PROPERTY IMPORTED_LOCATION ${Boost_PROPGRAM_OPTIONS_LIBRARY})
 
-# Armadillo library
 find_package(Armadillo)
+find_library(RpolyPlusPlus rpoly_plus_plus REQUIRED)
 
 # Set this directory as the root dir
 include_directories(${CMAKE_SOURCE_DIR})
@@ -27,7 +27,7 @@ include_directories(${CMAKE_SOURCE_DIR})
 
 
 add_subdirectory(ERTWrapper)
-#add_subdirectory(Model)
+add_subdirectory(Model)
 add_subdirectory(Utilities)
 #add_subdirectory(Optimization)
 #add_subdirectory(Simulation)
