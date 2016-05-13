@@ -1,5 +1,5 @@
-project(adgprsresultsreader)
 cmake_minimum_required(VERSION 3.2)
+project(adgprsresultsreader)
 
 add_library(adgprsresultsreader
 		json_summary_reader.cpp
@@ -10,7 +10,7 @@ target_link_libraries(adgprsresultsreader
 		PUBLIC Qt5::Core)
 
 target_include_directories(adgprsresultsreader PUBLIC
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/)
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 
 target_compile_features(adgprsresultsreader
 		PUBLIC cxx_auto_type
