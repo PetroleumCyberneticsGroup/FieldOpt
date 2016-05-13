@@ -7,7 +7,6 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Gui REQUIRED)
 
-
 # Boost libraries
 find_package(Boost)
 if (Boost_FOUND)
@@ -32,6 +31,9 @@ add_subdirectory(Optimization)
 add_subdirectory(Simulation)
 add_subdirectory(Runner)
 add_subdirectory(WellIndexCalculator)
-#add_subdirectory(WellIndexCalculator/WellIndexCalculatorTests)
 #add_subdirectory(GTest)
 add_subdirectory(AdgprsResultsReader)
+
+# Copy ADGPRS summary convertion python scripts
+file(COPY ${CMAKE_SOURCE_DIR}/AdgprsSummaryConverter DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+file(COPY ${CMAKE_SOURCE_DIR}/execution_scripts DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
