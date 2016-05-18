@@ -31,3 +31,24 @@ target_include_directories(optimization PUBLIC
 target_compile_features(ertwrapper
         PUBLIC cxx_auto_type
         PUBLIC cxx_range_for)
+
+# Unit tests
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIRS})
+add_executable(test_optimization
+        tests/test_fixture_optimizer.h
+        tests/test_fixture_case.h
+        tests/test_case.cpp
+        tests/test_case_handler.cpp
+        tests/constraints/test_box_constraint.cpp
+        tests/constraints/test_constraint_handler.cpp
+        tests/objective/test_weightedsum.cpp
+        tests/optimizers/test_compass_search.cpp
+        )
+
+target_link_libraries(test_optimization
+        fieldopt::optimization
+        ${GTEST_BOTH_LIBRARIES}
+        ${CMAKE_THREAD_LIBS_INIT})
+
+add_test(test_optimization test_optimization)

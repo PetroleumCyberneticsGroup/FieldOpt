@@ -23,3 +23,17 @@ target_include_directories(ertwrapper PUBLIC
 target_compile_features(ertwrapper
 		PUBLIC cxx_auto_type
 		PUBLIC cxx_range_for)
+
+# Unit tests
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIRS})
+add_executable(test_ertwrapper
+        tests/test_eclgridreader.cpp
+        tests/test_eclsummaryreader.cpp
+        )
+target_link_libraries(test_ertwrapper
+        fieldopt::ertwrapper
+        ${GTEST_BOTH_LIBRARIES}
+        ${CMAKE_THREAD_LIBS_INIT})
+
+add_test(test_ertwrapper test_ertwrapper)

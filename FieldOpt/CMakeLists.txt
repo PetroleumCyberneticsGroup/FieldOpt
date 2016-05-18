@@ -37,3 +37,6 @@ add_subdirectory(AdgprsResultsReader)
 # Copy ADGPRS summary convertion python scripts
 file(COPY ${CMAKE_SOURCE_DIR}/AdgprsSummaryConverter DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 file(COPY ${CMAKE_SOURCE_DIR}/execution_scripts DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+
+# Copy the examples into the build dir
+file(COPY ${CMAKE_SOURCE_DIR}/../examples DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})

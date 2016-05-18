@@ -45,3 +45,32 @@ target_include_directories(model PUBLIC
 target_compile_features(model
 		PUBLIC cxx_auto_type
 		PUBLIC cxx_range_for)
+
+# Unit tests
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIRS})
+add_executable(test_model
+		tests/test_fixture_model_base.h
+		tests/test_model.cpp
+		tests/reservoir/test_reservoir.cpp
+		tests/reservoir/grid/test_cell.cpp
+		tests/reservoir/grid/test_grid.cpp
+		tests/reservoir/grid/test_ijkcoordinate.cpp
+		tests/reservoir/grid/test_xyzcoordinate.cpp
+		tests/results/test_eclresults.cpp
+		tests/variables/test_properties.cpp
+		tests/variables/test_variable_property_handler.cpp
+		tests/variables/test_variable_property_container.cpp
+		tests/wells/test_control.cpp
+		tests/wells/test_perforation.cpp
+		tests/wells/test_trajectory.cpp
+		tests/wells/test_well.cpp
+		tests/wells/test_wellblock.cpp
+		)
+target_link_libraries(test_model
+		fieldopt::model
+		fieldopt::optimization
+		${GTEST_BOTH_LIBRARIES}
+		${CMAKE_THREAD_LIBS_INIT})
+
+add_test(test_model test_model)

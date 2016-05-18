@@ -23,3 +23,20 @@ target_include_directories(utilities PUBLIC
 target_compile_features(utilities
 		PUBLIC cxx_auto_type
 		PUBLIC cxx_range_for)
+
+# Unit tests
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIRS})
+add_executable(test_utilities
+        tests/file_handling/test_filehandling.cpp
+        tests/settings/test_settings.cpp
+        tests/settings/test_settings_model.cpp
+        tests/settings/test_settings_optimizer.cpp
+        tests/settings/test_settings_simulator.cpp
+        )
+target_link_libraries(test_utilities
+        fieldopt::utilities
+        ${GTEST_BOTH_LIBRARIES}
+        ${CMAKE_THREAD_LIBS_INIT})
+
+add_test(test_utilities test_utilities)
