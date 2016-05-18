@@ -71,4 +71,4 @@ target_link_libraries(test_runner
         ${GTEST_BOTH_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT})
 
-add_test(test_runner test_runner)
+add_test(NAME test_runner COMMAND $<TARGET_FILE:test_runner>)

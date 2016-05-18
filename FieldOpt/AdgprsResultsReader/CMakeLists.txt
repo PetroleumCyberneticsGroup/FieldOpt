@@ -31,4 +31,4 @@ target_link_libraries(test_adgprsresultsreader
 		${GTEST_BOTH_LIBRARIES}
 		${CMAKE_THREAD_LIBS_INIT})
 
-add_test(test_adgprsresultsreader test_adgprsresultsreader)
+add_test(NAME test_adgprsresultsreader COMMAND $<TARGET_FILE:test_adgprsresultsreader>)

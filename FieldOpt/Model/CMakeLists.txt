@@ -73,4 +73,4 @@ target_link_libraries(test_model
 		${GTEST_BOTH_LIBRARIES}
 		${CMAKE_THREAD_LIBS_INIT})
 
-add_test(test_model test_model)
+add_test(NAME test_model COMMAND $<TARGET_FILE:test_model>)

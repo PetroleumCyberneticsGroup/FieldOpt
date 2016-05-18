@@ -36,4 +36,4 @@ target_link_libraries(test_ertwrapper
         ${GTEST_BOTH_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT})
 
-add_test(test_ertwrapper test_ertwrapper)
+add_test(NAME test_ertwrapper COMMAND $<TARGET_FILE:test_ertwrapper>)

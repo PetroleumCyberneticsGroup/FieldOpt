@@ -54,4 +54,4 @@ target_link_libraries(test_optimization
 target_include_directories(test_optimization PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tests>)
 
-add_test(test_optimization test_optimization)
+add_test(NAME test_optimization COMMAND $<TARGET_FILE:test_optimization>)

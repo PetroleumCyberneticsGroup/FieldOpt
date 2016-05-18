@@ -59,4 +59,4 @@ target_link_libraries(test_simulation
         ${GTEST_BOTH_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT})
 
-add_test(test_simulation test_simulation)
+add_test(NAME test_simulation COMMAND $<TARGET_FILE:test_simulation>)

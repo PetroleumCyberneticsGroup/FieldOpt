@@ -40,4 +40,4 @@ target_link_libraries(test_utilities
         ${GTEST_BOTH_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT})
 
-add_test(test_utilities test_utilities)
+add_test(NAME test_utilities COMMAND $<TARGET_FILE:test_utilities>)
