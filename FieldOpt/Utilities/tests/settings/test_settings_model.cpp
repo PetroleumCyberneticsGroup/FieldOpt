@@ -44,8 +44,8 @@ protected:
     virtual void SetUp() {}
     virtual void TearDown() {}
 
-    QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
-    QString output_directory_ = "/home/einar/Documents/GitHub/PCG/fieldopt_output";
+    QString driver_file_path_ = "examples/driver.json";
+    QString output_directory_ = "fieldopt_output";
     Settings settings_;
 };
 

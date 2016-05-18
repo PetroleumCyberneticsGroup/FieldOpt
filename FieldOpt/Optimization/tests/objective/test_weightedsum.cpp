@@ -59,9 +59,9 @@ protected:
     }
 
     Results *results_;
-    QString file_path_ = "../../examples/ECLIPSE/HORZWELL/HORZWELL";
-    QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
-    QString output_directory_ = "/home/einar/Documents/GitHub/PCG/fieldopt_output";
+    QString file_path_ = "examples/ECLIPSE/HORZWELL/HORZWELL";
+    QString driver_file_path_ = "examples/driver.json";
+    QString output_directory_ = "fieldopt_output";
     Settings settings_;
 };
 

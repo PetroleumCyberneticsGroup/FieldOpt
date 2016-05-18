@@ -33,7 +33,7 @@ namespace {
 class UnixPipeTest : public ::testing::Test {
 protected:
     UnixPipeTest() {
-        directory_ = "/home/einar/Documents/GitHub/PCG/fieldopt_output";
+        directory_ = "fieldopt_output";
         command_ = "";
         //commands_ = QStringList();
         //commands_.append("ls");

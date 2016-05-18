@@ -47,9 +47,9 @@ protected:
         base_case_->set_objective_function_value(1000.0);
     }
 
-    QString driver_file_path_ = "../../FieldOpt/GTest/Utilities/driver/driver.json";
-    QString output_directory_ = "/home/einar/Documents/GitHub/PCG/fieldopt_output";
-    QString reservoir_grid_path_ = Utilities::FileHandling::GetBuildDirectoryPath() + "/../examples/ADGPRS/5spot/ECL_5SPOT.EGRID";
+    QString driver_file_path_ = "examples/driver.json";
+    QString output_directory_ = "fieldopt_output";
+    QString reservoir_grid_path_ = "examples/ADGPRS/5spot/ECL_5SPOT.EGRID";
     ::Utilities::Settings::Optimizer *optimizer_settings_;
     ::Utilities::Settings::Settings *settings_;
     ::Model::Model *model_;

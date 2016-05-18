@@ -22,6 +22,7 @@ find_package(Threads)
 # Set this directory as the root dir
 include_directories(${CMAKE_SOURCE_DIR})
 
+include(CTest)
 enable_testing()
 
 add_subdirectory(ERTWrapper)
@@ -40,3 +41,9 @@ file(COPY ${CMAKE_SOURCE_DIR}/execution_scripts DESTINATION ${CMAKE_RUNTIME_OUTP
 
 # Copy the examples into the build dir
 file(COPY ${CMAKE_SOURCE_DIR}/../examples DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+
+# Copy the test driver file into the build dir
+file(COPY ${CMAKE_SOURCE_DIR}/Utilities/tests/driver/driver.json DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples)
+
+# Create an empty directory for test output
+file(MAKE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/fieldopt_output)

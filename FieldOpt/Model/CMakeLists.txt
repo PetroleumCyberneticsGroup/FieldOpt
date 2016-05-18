@@ -48,7 +48,7 @@ target_compile_features(model
 
 # Unit tests
 find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS})
+include_directories(${GTEST_INCLUDE_DIRS} tests)
 add_executable(test_model
 		tests/test_fixture_model_base.h
 		tests/test_model.cpp

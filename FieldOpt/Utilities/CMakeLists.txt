@@ -33,6 +33,7 @@ add_executable(test_utilities
         tests/settings/test_settings_model.cpp
         tests/settings/test_settings_optimizer.cpp
         tests/settings/test_settings_simulator.cpp
+        tests/unix/test_execution.cpp
         )
 target_link_libraries(test_utilities
         fieldopt::utilities

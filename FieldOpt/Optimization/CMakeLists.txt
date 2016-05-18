@@ -34,7 +34,7 @@ target_compile_features(ertwrapper
 
 # Unit tests
 find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS})
+include_directories(${GTEST_INCLUDE_DIRS} tests)
 add_executable(test_optimization
         tests/test_fixture_optimizer.h
         tests/test_fixture_case.h
@@ -50,5 +50,8 @@ target_link_libraries(test_optimization
         fieldopt::optimization
         ${GTEST_BOTH_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT})
+
+target_include_directories(test_optimization PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tests>)
 
 add_test(test_optimization test_optimization)
