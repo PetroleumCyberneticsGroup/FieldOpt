@@ -29,6 +29,7 @@ namespace po = boost::program_options;
 
 #include "runners/main_runner.h"
 #include "runtime_settings.h"
+#include <vector>
 
 int main(int argc, char *argv[])
 {
@@ -44,11 +45,15 @@ int main(int argc, char *argv[])
                 ("max-parallel-simulations,m", po::value<int>(&max_par_sims)->default_value(0),
                  "start max <arg> parallel simulations")
                 ("runner-type,r", po::value<std::string>(),
-                 "type of runner (serial)")
+                 "type of runner (serial/oneoff)")
                 ("grid-path,g", po::value<std::string>(),
                  "path to model grid file (e.g. *.GRID)")
                 ("sim-drv-path,s", po::value<std::string>(),
                  "path to simulator driver file (e.g. *.DATA)")
+                ("well-prod-points,p", po::value<std::vector<double>>()->multitoken(),
+                 "Production well position coordinates")
+                ("well-inj-points,i", po::value<std::vector<double>>()->multitoken(),
+                 "Injection well position coordinates")
                 ("input-file", po::value<std::string>(),
                  "path to FieldOpt driver file")
                 ("output-dir", po::value<std::string>(),

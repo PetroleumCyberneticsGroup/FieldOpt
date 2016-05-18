@@ -26,7 +26,8 @@ SOURCES += main.cpp \
     runners/abstract_runner.cpp \
     runners/serial_runner.cpp \
     logger.cpp \
-    bookkeeper.cpp
+    bookkeeper.cpp \
+    runners/oneoff_runner.cpp
 
 HEADERS += \
     runtime_settings.h \
@@ -34,7 +35,8 @@ HEADERS += \
     runners/abstract_runner.h \
     runners/serial_runner.h \
     logger.h \
-    bookkeeper.h
+    bookkeeper.h \
+    runners/oneoff_runner.h
 
 DISTFILES += \
     README.md

@@ -28,6 +28,7 @@
 #include "Optimization/objective/weightedsum.h"
 #include "Simulation/simulator_interfaces/eclsimulator.h"
 #include "Simulation/simulator_interfaces/adgprssimulator.h"
+#include <stdexcept>
 
 #include <limits>
 
@@ -35,21 +36,54 @@ namespace Runner {
 
 AbstractRunner::AbstractRunner(RuntimeSettings *runtime_settings)
 {
-    //Initialize settings
     runtime_settings_ = runtime_settings;
-    settings_ = new Utilities::Settings::Settings(runtime_settings->driver_file(), runtime_settings->output_dir());
+
+    settings_ = 0;
+    model_ = 0;
+    simulator_ = 0;
+    objective_function_ = 0;
+    base_case_ = 0;
+    optimizer_ = 0;
+    bookkeeper_ = 0;
+}
+
+double AbstractRunner::sentinelValue() const
+{
+    if (settings_->optimizer()->mode() == Utilities::Settings::Optimizer::OptimizerMode::Minimize)
+        return -1*sentinel_value_;
+    if (settings_->optimizer()->mode() == Utilities::Settings::Optimizer::OptimizerMode::Maximize)
+        return sentinel_value_;
+}
+
+void AbstractRunner::InitializeSettings(QString output_subdirectory)
+{
+    QString output_directory = runtime_settings_->output_dir();
+    if (output_subdirectory.length() > 0)
+        output_directory.append(QString("/%1/").arg(output_subdirectory));
+
+    settings_ = new Utilities::Settings::Settings(runtime_settings_->driver_file(), output_directory);
     settings_->set_verbosity(runtime_settings_->verbose());
 
     // Override simulator driver and grid file paths if the have been passed as command line arguments
-    if (runtime_settings->simulator_driver_path().length() > 0)
-        settings_->simulator()->set_driver_file_path(runtime_settings->simulator_driver_path());
-    if (runtime_settings->grid_file_path().length() > 0)
-        settings_->model()->set_reservoir_grid_path(runtime_settings->grid_file_path());
+    if (runtime_settings_->simulator_driver_path().length() > 0)
+        settings_->simulator()->set_driver_file_path(runtime_settings_->simulator_driver_path());
+    if (runtime_settings_->grid_file_path().length() > 0)
+        settings_->model()->set_reservoir_grid_path(runtime_settings_->grid_file_path());
+}
 
-    // Initialize model
+void AbstractRunner::InitializeModel()
+{
+    if (settings_ == 0)
+        throw std::runtime_error("The Settings must be initialized before the Model.");
+
     model_ = new Model::Model(*settings_->model());
+}
 
-    // Initialize simulator
+void AbstractRunner::InitializeSimulator()
+{
+    if (model_ == 0)
+        throw std::runtime_error("The Model must be initialized before the simulator.");
+
     switch (settings_->simulator()->type()) {
     case ::Utilities::Settings::Simulator::SimulatorType::ECLIPSE:
         if (runtime_settings_->verbose()) std::cout << "Using ECL100 reservoir simulator." << std::endl;
@@ -62,30 +96,55 @@ AbstractRunner::AbstractRunner(RuntimeSettings *runtime_settings)
     default:
         throw std::runtime_error("Unable to initialize runner: simulator set in driver file not recognized.");
     }
+}
 
-    // Evaluate the base case if not already done.
+void AbstractRunner::EvaluateBaseModel()
+{
+    if (simulator_ == 0)
+        throw std::runtime_error("The simulator must be initialized before evaluating the base model.");
     if (!simulator_->results()->isAvailable()) {
         if (runtime_settings_->verbose()) std::cout << "Simulating base case." << std::endl;
         simulator_->Evaluate();
     }
+}
 
-    // Initialize objective function
+void AbstractRunner::InitializeObjectiveFunction()
+{
+    if (simulator_ == 0 || settings_ == 0)
+        throw std::runtime_error("The Simulator and the Settings must be initialized before the Objective Function.");
+
     switch (settings_->optimizer()->type()) {
     case Utilities::Settings::Optimizer::ObjectiveType::WeightedSum:
-        if (runtime_settings->verbose()) std::cout << "Using WeightedSum-type objective function." << std::endl;
+        if (runtime_settings_->verbose()) std::cout << "Using WeightedSum-type objective function." << std::endl;
         objective_function_ = new Optimization::Objective::WeightedSum(settings_->optimizer(), simulator_->results());
         break;
     default:
         throw std::runtime_error("Unable to initialize runner: objective function type not recognized.");
     }
+}
 
+void AbstractRunner::InitializeBaseCase()
+{
+    if (objective_function_ == 0 || model_ == 0)
+        throw std::runtime_error("The Objective Function and the Model must be initialized before the Base Case.");
     base_case_ = new Optimization::Case(model_->variables()->GetBinaryVariableValues(),
                                         model_->variables()->GetDiscreteVariableValues(),
                                         model_->variables()->GetContinousVariableValues());
-    base_case_->set_objective_function_value(objective_function_->value());
+    if (!simulator_->results()->isAvailable()) {
+        if (runtime_settings_->verbose())
+            std::cout << "Simulation results are unavailable. Setting base case objective function value to sentinel value." << std::endl;
+        base_case_->set_objective_function_value(sentinelValue());
+    }
+    else
+        base_case_->set_objective_function_value(objective_function_->value());
     if (runtime_settings_->verbose()) std::cout << "Base case objective function value set to: " << base_case_->objective_function_value() << std::endl;
+}
 
-    // Initialize optimizer
+void AbstractRunner::InitializeOptimizer()
+{
+    if (base_case_ == 0 || model_ == 0)
+        throw std::runtime_error("The Base Case and the Model must be initialized before the Optimizer");
+
     switch (settings_->optimizer()->type()) {
     case Utilities::Settings::Optimizer::OptimizerType::Compass:
         if (runtime_settings_->verbose()) std::cout << "Using CompassSearch optimization algorithm." << std::endl;
@@ -95,16 +154,19 @@ AbstractRunner::AbstractRunner(RuntimeSettings *runtime_settings)
         throw std::runtime_error("Unable to initialize runner: optimization algorithm set in driver file not recognized.");
         break;
     }
+}
+
+void AbstractRunner::InitializeBookkeeper()
+{
+    if (settings_ == 0 || optimizer_ == 0)
+        throw std::runtime_error("The Settings and the Optimizer must be initialized before the Bookkeeper.");
 
     bookkeeper_ = new Bookkeeper(settings_, optimizer_->case_handler());
 }
 
-void AbstractRunner::setObjectiveFunctionSentinelValue(Optimization::Case *c)
+void AbstractRunner::InitializeLogger()
 {
-    if (settings_->optimizer()->mode() == Utilities::Settings::Optimizer::OptimizerMode::Minimize)
-        c->set_objective_function_value(std::numeric_limits<double>::max());
-    if (settings_->optimizer()->mode() == Utilities::Settings::Optimizer::OptimizerMode::Maximize)
-        c->set_objective_function_value(std::numeric_limits<double>::min());
+    logger_ = new Logger(runtime_settings_);
 }
 
 }
