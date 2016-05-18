@@ -7,6 +7,7 @@ add_executable(FieldOpt
 		runners/main_runner.cpp
 		runners/abstract_runner.cpp
 		runners/serial_runner.cpp
+        runners/oneoff_runner.cpp
 		logger.cpp
 		bookkeeper.cpp)
 
@@ -15,6 +16,7 @@ add_library(runner
 		runners/main_runner.cpp
 		runners/abstract_runner.cpp
 		runners/serial_runner.cpp
+        runners/oneoff_runner.cpp
 		logger.cpp
 		bookkeeper.cpp)
 add_library(fieldopt::runner ALIAS runner)
