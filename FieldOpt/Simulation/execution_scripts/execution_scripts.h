@@ -41,8 +41,8 @@ namespace Simulation { namespace ExecutionScripts {
     };
 
     static QMap<Script, QString> DefaultScripts {
-        {Script::csh_eclrun, QString("%1/execution_scripts/csh_eclrun.sh").arg(::Utilities::FileHandling::GetBuildDirectoryPath())},
-        {Script::bash_adgprs, QString("%1/execution_scripts/bash_adgprs.sh").arg(::Utilities::FileHandling::GetBuildDirectoryPath())}
+        {Script::csh_eclrun, QString("execution_scripts/csh_eclrun.sh")},
+        {Script::bash_adgprs, QString("execution_scripts/bash_adgprs.sh")}
     };
 
     static Script GetScript(QString name) {
