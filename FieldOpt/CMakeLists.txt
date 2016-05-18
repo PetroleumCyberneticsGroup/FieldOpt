@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.2)
 project(FieldOpt VERSION 0.3 LANGUAGES CXX)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Qt libraries
 set(CMAKE_AUTOMOC ON)
@@ -35,15 +38,21 @@ add_subdirectory(WellIndexCalculator)
 #add_subdirectory(GTest)
 add_subdirectory(AdgprsResultsReader)
 
-# Copy ADGPRS summary convertion python scripts
-file(COPY ${CMAKE_SOURCE_DIR}/AdgprsSummaryConverter DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-file(COPY ${CMAKE_SOURCE_DIR}/execution_scripts DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+## Copy ADGPRS summary convertion python scripts
+file(GLOB CONVERSION_SCRIPTS
+        "AdgprsSummaryConverter/*.py")
+file(COPY ${CONVERSION_SCRIPTS} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/AdgprsSummaryConverter)
 
-# Copy the examples into the build dir
-file(COPY ${CMAKE_SOURCE_DIR}/../examples DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+# Copy execution scripts
+file(GLOB EXECUTION_SCRIPTS
+        "execution_scripts/*.sh")
+file(COPY ${EXECUTION_SCRIPTS} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/execution_scripts)
 
-# Copy the test driver file into the build dir
-file(COPY ${CMAKE_SOURCE_DIR}/Utilities/tests/driver/driver.json DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples)
-
-# Create an empty directory for test output
-file(MAKE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/fieldopt_output)
+## Copy the examples into the build dir
+file(COPY ${CMAKE_SOURCE_DIR}/../examples DESTINATION ${CMAKE_BINARY_DIR}/)
+#
+## Copy the test driver file into the build dir
+file(COPY ${CMAKE_SOURCE_DIR}/Utilities/tests/driver/driver.json DESTINATION ${CMAKE_BINARY_DIR}/examples)
+#
+## Create an empty directory for test output
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fieldopt_output)
