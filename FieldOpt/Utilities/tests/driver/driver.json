@@ -55,13 +55,13 @@
         "Type": "ECLIPSE",
         "ExecutionScript": "csh_eclrun",
         "Commands": ["tcsh -c \"eval source ~/.cshrc; eclrun eclipse\""],
-        "DriverPath": "../../examples/ECLIPSE/HORZWELL/HORZWELL.DATA"
+        "DriverPath": "../examples/ECLIPSE/HORZWELL/HORZWELL.DATA"
     },
     "Model": {
         "ControlTimes": [0, 50, 100, 365],
         "Reservoir": {
             "Type": "ECLIPSE",
-            "Path": "../../examples/ADGPRS/5spot/ECL_5SPOT.EGRID"
+            "Path": "../examples/ADGPRS/5spot/ECL_5SPOT.EGRID"
         },
         "Wells": [
             {

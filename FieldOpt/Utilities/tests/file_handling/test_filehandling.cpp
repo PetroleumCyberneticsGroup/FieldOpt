@@ -37,8 +37,8 @@ protected:
     virtual void SetUp() {}
     virtual void TearDown() {}
 
-    QString driver_file_path_ = "examples/driver.json";
-    QString driver_directory_path_ = "examples";
+    QString driver_file_path_ = "../examples/driver.json";
+    QString driver_directory_path_ = "../examples";
 
 
 };

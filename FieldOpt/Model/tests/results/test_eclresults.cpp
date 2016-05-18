@@ -53,7 +53,7 @@ protected:
     }
 
     Results *results_;
-    QString file_path_ = "../../examples/ECLIPSE/HORZWELL/HORZWELL";
+    QString file_path_ = "../examples/ECLIPSE/HORZWELL/HORZWELL";
 };
 
 TEST_F(ECLResultsTest, ReadSummary) {

@@ -44,14 +44,14 @@ protected:
     virtual void SetUp() {}
     virtual void TearDown() {}
 
-    QString driver_file_path_ = "examples/driver.json";
-    QString output_directory_ = "fieldopt_output";
+    QString driver_file_path_ = "../examples/driver.json";
+    QString output_directory_ = "../fieldopt_output";
     Settings settings_;
 };
 
 TEST_F(ModelSettingsTest, Reservoir) {
     EXPECT_EQ(settings_.model()->reservoir().type, Model::ReservoirGridSourceType::ECLIPSE);
-    EXPECT_STREQ("../../examples/ADGPRS/5spot/ECL_5SPOT.EGRID", settings_.model()->reservoir().path.toLatin1().constData());
+    EXPECT_STREQ("../examples/ADGPRS/5spot/ECL_5SPOT.EGRID", settings_.model()->reservoir().path.toLatin1().constData());
 }
 
 TEST_F(ModelSettingsTest, ControlTimes) {

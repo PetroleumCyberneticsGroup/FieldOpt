@@ -27,7 +27,7 @@ protected:
     }
 
     Grid* grid_;
-    QString file_path_ = "../../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID";
+    QString file_path_ = "../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID";
 };
 
 TEST_F(GridTest, GridRead) {

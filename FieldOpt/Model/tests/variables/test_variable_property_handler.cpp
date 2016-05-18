@@ -47,8 +47,8 @@ protected:
     }
 
     Utilities::Settings::Settings *settings_;
-    QString driver_file_path_ = "examples/driver.json";
-    QString output_directory_ = "fieldopt_output";
+    QString driver_file_path_ = "../examples/driver.json";
+    QString output_directory_ = "../fieldopt_output";
     VariablePropertyHandler *variable_handler_;
 };
 

@@ -24,7 +24,7 @@ protected:
     virtual void TearDown() { }
 
     Grid *grid_;
-    QString file_path_ = "../../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID";
+    QString file_path_ = "../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID";
 };
 
 TEST_F(CellTest, Equality) {

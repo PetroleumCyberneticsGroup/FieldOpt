@@ -44,8 +44,8 @@ protected:
     virtual void SetUp() {}
     virtual void TearDown() {}
 
-    QString driver_file_path_ = "examples/driver.json";
-    QString output_directory_ = "fieldopt_output";
+    QString driver_file_path_ = "../examples/driver.json";
+    QString output_directory_ = "../fieldopt_output";
     Settings settings_;
 };
 

@@ -20,13 +20,13 @@ protected:
         settings_->model()->set_reservoir_grid_path(reservoir_grid_path_);
         model_ = new Model::Model(*settings_->model());
     }
-    QString sim_driver_path_ = Utilities::FileHandling::GetBuildDirectoryPath() + "/../examples/ADGPRS/5spot/5SPOT.gprs";
-    QString fo_driver_path_ = Utilities::FileHandling::GetBuildDirectoryPath() + "/../examples/ADGPRS/5spot/5spot_fieldopt_driver.json";
-    QString output_directory_ = "/home/einar/Documents/GitHub/PCG/fieldopt_output/adgprs";
-    QString reservoir_grid_path_ = Utilities::FileHandling::GetBuildDirectoryPath() + "/../examples/ADGPRS/5spot/ECL_5SPOT.EGRID";
-    QString json_summary_path_ = Utilities::FileHandling::GetBuildDirectoryPath() + "/../examples/ADGPRS/5spot/5SPOT.json";
-    QString hdf5_summary_path_ = Utilities::FileHandling::GetBuildDirectoryPath() + "/../examples/ADGPRS/5spot/5SPOT.SIM.H5";
-    QString base_summary_path_ = Utilities::FileHandling::GetBuildDirectoryPath() + "/../examples/ADGPRS/5spot/5SPOT";
+    QString sim_driver_path_ = "../examples/ADGPRS/5spot/5SPOT.gprs";
+    QString fo_driver_path_ = "../examples/ADGPRS/5spot/5spot_fieldopt_driver.json";
+    QString output_directory_ = "../fieldopt_output/adgprs";
+    QString reservoir_grid_path_ = "../examples/ADGPRS/5spot/ECL_5SPOT.EGRID";
+    QString json_summary_path_ = "../examples/ADGPRS/5spot/5SPOT.json";
+    QString hdf5_summary_path_ = "../examples/ADGPRS/5spot/5SPOT.SIM.H5";
+    QString base_summary_path_ = "../examples/ADGPRS/5spot/5SPOT";
 
     ::Utilities::Settings::Settings *settings_;
     ::Model::Model *model_;

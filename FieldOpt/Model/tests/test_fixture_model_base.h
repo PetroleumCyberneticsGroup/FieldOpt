@@ -43,10 +43,10 @@ protected:
         model_ = new ::Model::Model(*settings_->model());
     }
 
-    QString driver_file_path_ = "examples/driver.json";
-    QString output_directory_ = "fieldopt_output";
+    QString driver_file_path_ = "../examples/driver.json";
+    QString output_directory_ = "../fieldopt_output";
 //    QString reservoir_grid_path_ = Utilities::FileHandling::GetBuildDirectoryPath() + "examples/ECLIPSE/HORZWELL/HORZWELL.EGRID";
-    QString reservoir_grid_path_ = "examples/ADGPRS/5spot/ECL_5SPOT.EGRID";
+    QString reservoir_grid_path_ = "../examples/ADGPRS/5spot/ECL_5SPOT.EGRID";
     ::Utilities::Settings::Settings *settings_;
     ::Model::Properties::VariablePropertyContainer *variable_container_;
     ::Model::Properties::VariablePropertyHandler *variable_handler_;

@@ -26,7 +26,7 @@ protected:
     }
 
     ECLGridReader* ecl_grid_reader_;
-    QString file_name_ = "../../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID";
+    QString file_name_ = "../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID";
 
     // Objects declared here can be used by all tests in this test case.
 

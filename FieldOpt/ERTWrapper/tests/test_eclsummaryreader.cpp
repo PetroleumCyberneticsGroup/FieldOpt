@@ -48,7 +48,7 @@ protected:
     }
 
     ECLSummaryReader *ecl_summary_reader_;
-    QString file_name_ = "../../examples/ECLIPSE/HORZWELL/HORZWELL";
+    QString file_name_ = "../examples/ECLIPSE/HORZWELL/HORZWELL";
 };
 
 TEST_F(ECLSummaryReaderTest, ReportSteps) {
