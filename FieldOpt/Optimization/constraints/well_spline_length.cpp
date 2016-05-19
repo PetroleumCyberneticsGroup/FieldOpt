@@ -34,10 +34,7 @@ bool WellSplineLength::CaseSatisfiesConstraint(Case *c)
                 max_length_, min_length_,
                 0.001);
 
-    if (heel_vals.isApprox(projection.first(), 0.01) && toe_vals.isApprox(projection.last(), 0.01))
-        return true;
-    else
-        return false;
+    return heel_vals.isApprox(projection.first(), 0.01) && toe_vals.isApprox(projection.last(), 0.01);
 }
 
 void WellSplineLength::SnapCaseToConstraints(Case *c)

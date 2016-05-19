@@ -59,9 +59,7 @@ void CompassSearch::perturb()
 
 bool CompassSearch::IsFinished()
 {
-    if (case_handler_->EvaluatedCases().size() >= max_evaluations_ || step_length_ < minimum_step_length_)
-        return true;
-    else return false;
+    return case_handler_->EvaluatedCases().size() >= max_evaluations_ || step_length_ < minimum_step_length_;
 }
 
 void CompassSearch::iterate()

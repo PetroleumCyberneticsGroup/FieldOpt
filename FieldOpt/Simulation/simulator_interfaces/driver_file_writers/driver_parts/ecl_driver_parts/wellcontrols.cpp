@@ -61,9 +61,7 @@ void WellControls::initializeTimeEntries(QList<Model::Wells::Well *> *wells)
                 int current_time_step = wells->at(i)->controls()->at(j)->time_step();
                 WellSetting *well_setting = new WellSetting();
                 well_setting->well_name = wells->at(i)->name();
-                if (wells->at(i)->type() == ::Utilities::Settings::Model::WellType::Injector)
-                    well_setting->is_injector = true;
-                else well_setting->is_injector = false;
+                well_setting->is_injector = wells->at(i)->type() == ::Utilities::Settings::Model::WellType::Injector;
                 well_setting->control = wells->at(i)->controls()->at(j);
                 if (time_entries_.keys().contains(current_time_step)) {
                     // Adding to existing time step

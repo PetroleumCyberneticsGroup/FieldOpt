@@ -109,7 +109,7 @@ void AbstractRunner::InitializeObjectiveFunction()
     if (simulator_ == 0 || settings_ == 0)
         throw std::runtime_error("The Simulator and the Settings must be initialized before the Objective Function.");
 
-    switch (settings_->optimizer()->type()) {
+    switch (settings_->optimizer()->objective().type) {
     case Utilities::Settings::Optimizer::ObjectiveType::WeightedSum:
         if (runtime_settings_->verbose()) std::cout << "Using WeightedSum-type objective function." << std::endl;
         objective_function_ = new Optimization::Objective::WeightedSum(settings_->optimizer(), simulator_->results());

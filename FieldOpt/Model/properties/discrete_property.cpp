@@ -48,8 +48,7 @@ void DiscreteProperty::Add(int i)
 
 bool DiscreteProperty::Equals(const DiscreteProperty *other) const
 {
-    if (this->value() == other->value()) return true;
-    else return false;
+    return this->value() == other->value();
 }
 
 QString DiscreteProperty::ToString() const

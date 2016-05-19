@@ -34,26 +34,20 @@ bool Utilities::FileHandling::FileExists(QString file_path)
     QFileInfo file_relative(file.absoluteFilePath());
     if (file.exists() && file.isFile())
         return true;
-    else if (file_relative.exists() && file_relative.isFile())
-        return true;
-    else return false;
+    else return file_relative.exists() && file_relative.isFile();
 }
 
 bool Utilities::FileHandling::DirectoryExists(QString directory_path)
 {
     QFileInfo folder(directory_path);
-    if (folder.exists() && folder.isDir()) return true;
-    else return false;
+    return folder.exists() && folder.isDir();
 }
 
 bool Utilities::FileHandling::ParentDirectoryExists(QString file_path)
 {
     QFileInfo file(file_path);
     QDir parent_directory = file.dir();
-    if (parent_directory.exists())
-        return true;
-    else
-        return false;
+    return parent_directory.exists();
 }
 
 QStringList *Utilities::FileHandling::ReadFileToStringList(QString file_path)
@@ -131,9 +125,7 @@ bool Utilities::FileHandling::DirectoryIsEmpty(QString folder_path)
 {
     if (!DirectoryExists(folder_path)) return false;
     QDir directory = QDir(folder_path);
-    if (directory.entryInfoList(QDir::NoDotAndDotDot|QDir::AllEntries).count() == 0)
-        return true;
-    else return false;
+    return directory.entryInfoList(QDir::NoDotAndDotDot | QDir::AllEntries).count() == 0;
 }
 
 void Utilities::FileHandling::CopyFile(QString origin, QString destination)

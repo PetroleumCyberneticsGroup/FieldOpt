@@ -2,7 +2,7 @@
 #include "Model/reservoir/grid/grid.h"
 #include "Model/reservoir/grid/eclgrid.h"
 #include "Model/reservoir/grid/grid_exceptions.h"
-#include "Model/reservoir//grid/cell.h"
+#include "Model/reservoir/grid/cell.h"
 
 using namespace Model::Reservoir::Grid;
 
