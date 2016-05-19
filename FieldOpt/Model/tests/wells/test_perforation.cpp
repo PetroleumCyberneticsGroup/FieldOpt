@@ -24,8 +24,6 @@
  *****************************************************************************/
 
 #include "../test_fixture_model_base.h"
-#include "Model/wells/wellbore/completions/perforation.h"
-#include "Model/model.h"
 
 using namespace Model::Wells::Wellbore;
 

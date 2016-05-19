@@ -25,7 +25,6 @@
 
 #include "../test_fixture_case.h"
 #include "Optimization/constraints/constraint_handler.h"
-#include <QString>
 
 namespace {
 

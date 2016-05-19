@@ -46,10 +46,7 @@ void WellBlock::AddCompletion(Model::Wells::Wellbore::Completions::Completion *c
 
 bool WellBlock::HasCompletion()
 {
-    if (completion_ == 0)
-        return false;
-    else
-        return true;
+    return completion_ != 0;
 }
 
 Model::Wells::Wellbore::Completions::Completion *WellBlock::GetCompletion()

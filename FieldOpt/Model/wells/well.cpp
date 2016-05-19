@@ -24,7 +24,6 @@
  *****************************************************************************/
 
 #include "well.h"
-#include "well_exceptions.h"
 
 namespace Model {
 namespace Wells {
@@ -56,18 +55,12 @@ Well::Well(Utilities::Settings::Model settings,
 
 bool Well::IsProducer()
 {
-    if (type_ == ::Utilities::Settings::Model::WellType::Producer)
-        return true;
-    else
-        return false;
+    return type_ == ::Utilities::Settings::Model::WellType::Producer;
 }
 
 bool Well::IsInjector()
 {
-    if (type_ == ::Utilities::Settings::Model::WellType::Injector)
-        return true;
-    else
-        return false;
+    return type_ == ::Utilities::Settings::Model::WellType::Injector;
 }
 
 }

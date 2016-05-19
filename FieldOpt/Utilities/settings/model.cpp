@@ -26,7 +26,6 @@
 #include "Utilities/settings/model.h"
 #include "settings_exceptions.h"
 #include "Utilities/file_handling/filehandling.h"
-#include <QJsonArray>
 
 namespace Utilities {
 namespace Settings {

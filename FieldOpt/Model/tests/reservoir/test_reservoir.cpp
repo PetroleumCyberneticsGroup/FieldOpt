@@ -25,7 +25,6 @@
 
 #include <gtest/gtest.h>
 #include "Model/reservoir/reservoir.h"
-#include "Utilities/settings/model.h"
 
 using namespace Model::Reservoir;
 

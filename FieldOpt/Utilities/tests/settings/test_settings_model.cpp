@@ -27,7 +27,6 @@
 #include <QString>
 
 #include "Utilities/settings/settings.h"
-#include "Utilities/settings/model.h"
 
 using namespace Utilities::Settings;
 

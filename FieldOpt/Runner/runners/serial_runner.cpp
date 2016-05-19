@@ -1,7 +1,4 @@
 #include "serial_runner.h"
-#include "Optimization/objective/weightedsum.h"
-#include "Runner/logger.h"
-#include "Model/wells/well_exceptions.h"
 
 namespace Runner {
 
@@ -26,7 +23,7 @@ void SerialRunner::Execute()
     logger_->LogCase(base_case_);
     logger_->LogCompdat(base_case_, simulator_->GetCompdatString());
     logger_->LogProductionData(base_case_, simulator_->results());
-    while (optimizer_->IsFinished() == false) {
+    while (!optimizer_->IsFinished()) {
         auto new_case = optimizer_->GetCaseForEvaluation();
         logger_->LogCase(new_case);
 

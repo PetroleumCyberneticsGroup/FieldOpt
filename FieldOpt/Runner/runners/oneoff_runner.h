@@ -15,8 +15,7 @@ class MainRunner;
  * Note that, currently, this only supports models with two wells: one producer
  * named PRODUCER and one injector named INJECTOR.
  */
-class OneOffRunner : AbstractRunner
-{
+class OneOffRunner : public AbstractRunner {
     friend class MainRunner;
 public:
     OneOffRunner(RuntimeSettings *runtime_settings);

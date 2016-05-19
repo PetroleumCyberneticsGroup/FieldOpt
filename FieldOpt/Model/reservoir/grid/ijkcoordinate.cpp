@@ -1,5 +1,4 @@
 #include "ijkcoordinate.h"
-#include <assert.h>
 
 namespace Model {
 namespace Reservoir {

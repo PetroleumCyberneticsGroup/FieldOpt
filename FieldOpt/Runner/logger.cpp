@@ -1,7 +1,4 @@
 #include "logger.h"
-#include "Utilities/file_handling/filehandling.h"
-#include <iostream>
-#include <QVector>
 
 namespace Runner {
 

@@ -24,8 +24,6 @@
  *****************************************************************************/
 
 #include "case.h"
-#include <limits>
-#include <cmath>
 
 namespace Optimization {
 

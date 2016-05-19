@@ -24,7 +24,6 @@
  *****************************************************************************/
 
 #include "discrete_property.h"
-#include "property_exceptions.h"
 
 namespace Model {
 namespace Properties {
@@ -49,8 +48,7 @@ void DiscreteProperty::Add(int i)
 
 bool DiscreteProperty::Equals(const DiscreteProperty *other) const
 {
-    if (this->value() == other->value()) return true;
-    else return false;
+    return this->value() == other->value();
 }
 
 QString DiscreteProperty::ToString() const

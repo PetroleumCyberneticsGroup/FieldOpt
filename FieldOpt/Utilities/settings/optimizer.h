@@ -79,7 +79,7 @@ public:
         double max_length;
         double min_length;
         double min_distance;
-        double max_iterations;
+        int max_iterations;
         ConstraintWellSplinePointsType spline_points_type; //!< How the SplinePoints constraint is given when SplinePoints constraint type is selected.
         QString well_spline_points_function; //!< The function a spline point needs to adhere to to be valid when SplinePoints constraint type is selected.
         QList<RealMaxMinLimit> spline_points_limits; //!< Box limits a spline point needs to be within to be valid when SplinePoints constraint type is selected.

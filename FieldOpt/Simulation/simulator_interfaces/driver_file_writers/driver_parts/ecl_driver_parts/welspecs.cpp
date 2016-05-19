@@ -24,7 +24,6 @@
  *****************************************************************************/
 
 #include "welspecs.h"
-#include <stdexcept>
 #include <iostream>
 
 namespace Simulation {

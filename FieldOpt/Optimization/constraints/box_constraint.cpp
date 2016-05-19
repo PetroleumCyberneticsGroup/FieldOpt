@@ -24,7 +24,6 @@
  *****************************************************************************/
 
 #include "box_constraint.h"
-#include "stdexcept"
 
 namespace Optimization { namespace Constraints {
 

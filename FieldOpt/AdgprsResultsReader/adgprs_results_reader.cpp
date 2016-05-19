@@ -1,5 +1,4 @@
 #include "adgprs_results_reader.h"
-#include <QStringList>
 #include "Utilities/unix/execution.h"
 #include "Utilities/file_handling/filehandling.h"
 

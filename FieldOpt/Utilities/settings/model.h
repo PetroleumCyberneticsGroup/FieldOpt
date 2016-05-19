@@ -65,8 +65,7 @@ public:
             i = array[0].toInt(); j = array[1].toInt(); k = array[2].toInt();
         }
         bool Equals(const IntegerCoordinate *other) const {
-            if (this->i == other->i && this->j == other->j && this->k == other->k) return true;
-            else return false;
+            return this->i == other->i && this->j == other->j && this->k == other->k;
         }
         int i, j ,k;
     };

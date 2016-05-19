@@ -25,7 +25,6 @@
 
 #include "test_fixture_case.h"
 #include "Optimization/case_handler.h"
-#include <iostream>
 
 namespace {
 

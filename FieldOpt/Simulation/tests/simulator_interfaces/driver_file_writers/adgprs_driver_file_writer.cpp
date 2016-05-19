@@ -1,7 +1,5 @@
 #include "Simulation/tests/test_fixture_adgprs.h"
 #include "Simulation/simulator_interfaces/adgprssimulator.h"
-#include "Simulation/simulator_interfaces/simulator.h"
-#include "Simulation/simulator_interfaces/driver_file_writers/adgprsdriverfilewriter.h"
 
 namespace {
 

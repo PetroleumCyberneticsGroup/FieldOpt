@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 #include <QVector3D>
-#include <iostream>
 #include "ERTWrapper/eclgridreader.h"
 
 using namespace ERTWrapper::ECLGrid;

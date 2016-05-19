@@ -25,7 +25,6 @@
 
 #include "eclsummaryreader.h"
 #include "ertwrapper_exceptions.h"
-#include "string"
 #include <iostream>
 
 namespace ERTWrapper {

@@ -28,8 +28,6 @@ namespace po = boost::program_options;
 #include <iostream>
 
 #include "runners/main_runner.h"
-#include "runtime_settings.h"
-#include <vector>
 
 int main(int argc, char *argv[])
 {

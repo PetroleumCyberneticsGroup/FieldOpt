@@ -24,10 +24,6 @@
  *****************************************************************************/
 
 #include "test_fixture_model_base.h"
-#include "Model/model.h"
-#include "Optimization/case.h"
-#include "Model/wells/wellbore/trajectory.h"
-#include <iostream>
 
 namespace {
 

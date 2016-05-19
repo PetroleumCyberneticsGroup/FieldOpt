@@ -1,12 +1,8 @@
 #include "json_summary_reader.h"
-#include <stdexcept>
 #include <iostream>
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QFile>
-#include <QList>
-#include <stdexcept>
-#include <cmath>
 
 namespace AdgprsResultsReader {
 
@@ -117,10 +113,7 @@ void JsonSummaryReader::readWellProps(QJsonArray well_props)
 {
     foreach (QJsonValue w, well_props) {
         WellData *data = new WellData();
-        if (w.toObject()["IsInjector"].toInt() == 1)
-            data->is_injector = true;
-        else
-            data->is_injector = false;
+            data->is_injector = w.toObject()["IsInjector"].toInt() == 1;
 
         data->num_perforations = w.toObject()["NumPerforations"].toInt();
 

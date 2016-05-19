@@ -1,5 +1,4 @@
 #include "eclgridreader.h"
-#include <math.h>
 #include <iostream>
 
 #include "ertwrapper_exceptions.h"
@@ -142,10 +141,7 @@ int ECLGridReader::GlobalIndexOfCellEnvelopingPoint(double x, double y, double z
 bool ECLGridReader::GlobalIndexIsInsideGrid(int global_index)
 {
     Dims dims = Dimensions();
-    if (global_index < dims.nx * dims.ny * dims.nz)
-        return true;
-    else
-        return false;
+    return global_index < dims.nx * dims.ny * dims.nz;
 }
 
 

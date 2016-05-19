@@ -26,7 +26,6 @@
 #include "trajectory.h"
 #include "Model/wells/well_exceptions.h"
 #include <iostream>
-#include <cmath>
 
 namespace Model {
 namespace Wells {
@@ -87,7 +86,7 @@ void Trajectory::initializeWellBlocks(Utilities::Settings::Model::Well well,
     QList<Utilities::Settings::Model::WellBlock> blocks = well.well_blocks;
     for (int i = 0; i < blocks.size(); ++i) {
         well_blocks_->append(new WellBlock(blocks[i].position.i, blocks[i].position.j, blocks[i].position.k, blocks[i].id));
-        if (variable_handler->GetWellBlock(blocks[i].id)->position() == true) {
+        if (variable_handler->GetWellBlock(blocks[i].id)->position()) {
             QString base_var_name = variable_handler->GetWellBlock(blocks[i].id)->variable_name() + "#" + QString::number(i) + "#";
             well_blocks_->last()->i_->setName(base_var_name + "i");
             well_blocks_->last()->j_->setName(base_var_name + "j");

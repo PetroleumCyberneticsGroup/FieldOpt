@@ -28,9 +28,6 @@
 #include "Optimization/objective/weightedsum.h"
 #include "Simulation/simulator_interfaces/eclsimulator.h"
 #include "Simulation/simulator_interfaces/adgprssimulator.h"
-#include <stdexcept>
-
-#include <limits>
 
 namespace Runner {
 
@@ -51,8 +48,7 @@ double AbstractRunner::sentinelValue() const
 {
     if (settings_->optimizer()->mode() == Utilities::Settings::Optimizer::OptimizerMode::Minimize)
         return -1*sentinel_value_;
-    if (settings_->optimizer()->mode() == Utilities::Settings::Optimizer::OptimizerMode::Maximize)
-        return sentinel_value_;
+    return sentinel_value_;
 }
 
 void AbstractRunner::InitializeSettings(QString output_subdirectory)
@@ -113,7 +109,7 @@ void AbstractRunner::InitializeObjectiveFunction()
     if (simulator_ == 0 || settings_ == 0)
         throw std::runtime_error("The Simulator and the Settings must be initialized before the Objective Function.");
 
-    switch (settings_->optimizer()->type()) {
+    switch (settings_->optimizer()->objective().type) {
     case Utilities::Settings::Optimizer::ObjectiveType::WeightedSum:
         if (runtime_settings_->verbose()) std::cout << "Using WeightedSum-type objective function." << std::endl;
         objective_function_ = new Optimization::Objective::WeightedSum(settings_->optimizer(), simulator_->results());
@@ -152,7 +148,6 @@ void AbstractRunner::InitializeOptimizer()
         break;
     default:
         throw std::runtime_error("Unable to initialize runner: optimization algorithm set in driver file not recognized.");
-        break;
     }
 }
 

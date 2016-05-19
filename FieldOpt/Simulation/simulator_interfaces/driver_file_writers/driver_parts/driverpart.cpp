@@ -25,7 +25,6 @@
 
 #include "driverpart.h"
 #include "Simulation/simulator_interfaces/simulator_exceptions.h"
-#include <QRegExp>
 
 namespace Simulation {
 namespace SimulatorInterfaces {

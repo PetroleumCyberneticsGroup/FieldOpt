@@ -26,8 +26,6 @@
 #include "simulator.h"
 #include "settings_exceptions.h"
 
-#include <QJsonArray>
-
 namespace Utilities {
 namespace Settings {
 
@@ -57,7 +55,7 @@ Simulator::Simulator(QJsonObject json_simulator)
         for (int i = 0; i < commands.size(); ++i) {
             commands_->append(commands[i].toString());
         }
-    }    
+    }
     if (script_name_.length() == 0 && commands.size() == 0)
         throw NoSimulatorCommandsGivenException("At least one simulator command or a simulator script must be given.");
 

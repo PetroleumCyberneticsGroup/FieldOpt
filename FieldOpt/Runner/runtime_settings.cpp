@@ -24,8 +24,6 @@
  *****************************************************************************/
 
 #include "runtime_settings.h"
-#include <vector>
-#include <QPair>
 
 namespace Runner {
 
@@ -43,9 +41,9 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
             throw std::runtime_error("The specified output directory does not exist.");
     } else throw std::runtime_error("An output directory must be specified.");
 
-    verbose_ = vm.count("verbose") ? true : false;
+    verbose_ = vm.count("verbose") != 0;
 
-    overwrite_existing_ = vm.count("force") ? true : false;
+    overwrite_existing_ = vm.count("force") != 0;
     if (!overwrite_existing_ && !Utilities::FileHandling::DirectoryIsEmpty(output_dir_))
         throw std::runtime_error("Output directory is not empty. Use the --force flag to overwrite existing content.");
 
