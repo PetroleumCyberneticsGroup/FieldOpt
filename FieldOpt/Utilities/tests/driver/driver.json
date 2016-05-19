@@ -1,0 +1,163 @@
+{
+    "Global": {
+        "Name": "TestRun",
+        "BookkeeperTolerance": 0.0
+    },
+    "Optimizer": {
+        "Type": "Compass",
+        "Mode": "Maximize",
+        "Parameters": {
+            "MaxEvaluations": 10,
+            "InitialStepLength": 50.0,
+            "MinimumStepLength": 1.0
+        },
+        "Objective": {
+            "Type": "WeightedSum",
+            "WeightedSumComponents": [
+                {
+                    "Coefficient": 1.0, "Property": "CumulativeOilProduction", "TimeStep": -1,
+                    "IsWellProp": false
+                },
+                {
+                    "Coefficient": -0.2, "Property": "CumulativeWellWaterProduction", "TimeStep": 10,
+                    "IsWellProp": true, "Well": "PROD"
+                }
+            ]
+        },
+        "Constraints": [
+            {
+                "Name": "PROD-BHP-1",
+                "Type": "BHP",
+                "Well": "PROD",
+                "Max": 3000.0,
+                "Min": 1000.0
+            },
+            {
+                "Name": "INJ-SplinePoints-1",
+                "Type": "WellSplinePoints",
+                "Well": "INJ",
+                "WellSplinePointsInputType": "MaxMin",
+                "WellSplinePointLimits": [
+                    {
+                        "Max": [40.0,10.0,40.0],
+                        "Min": [0.0,0.0,0.0]
+                    },
+                    {
+                        "Max": [40.0,40.0,40.0],
+                        "Min": [20.0,40.0,20.0]
+                    }
+                ]
+            }
+
+        ]
+    },
+    "Simulator": {
+        "Type": "ECLIPSE",
+        "ExecutionScript": "csh_eclrun",
+        "Commands": ["tcsh -c \"eval source ~/.cshrc; eclrun eclipse\""],
+        "DriverPath": "../examples/ECLIPSE/HORZWELL/HORZWELL.DATA"
+    },
+    "Model": {
+        "ControlTimes": [0, 50, 100, 365],
+        "Reservoir": {
+            "Type": "ECLIPSE",
+            "Path": "../examples/ADGPRS/5spot/ECL_5SPOT.EGRID"
+        },
+        "Wells": [
+            {
+                "Name": "PROD",
+                "Type": "Producer",
+                "DefinitionType": "WellBlocks",
+                "PreferedPhase": "Oil",
+                "Heel": [1,1,1],
+                "WellboreRadius": 0.75,
+                "Direction": "X",
+                "WellBlocks": [
+                    [1,4,1],
+                    [2,4,1],
+                    [3,4,1],
+                    [4,4,1]
+                ],
+                "Completions": [
+                    {
+                        "Type": "Perforation",
+                        "WellBlock": [2,4,1],
+                        "TransmissibilityFactor": 1.0
+                    },
+                    {
+                        "Type": "Perforation",
+                        "WellBlock": [3,4,1],
+                        "TransmissibilityFactor": 1.0
+                    }
+                ],
+                "Controls": [
+                    {
+                        "TimeStep": 0,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 2000.0
+                    },
+                    {
+                        "TimeStep": 50,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 2000.0
+                    },
+                    {
+                        "TimeStep": 365,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 2000.0
+                    }
+                ],
+                "Variables": [
+                    {
+                        "Name": "PROD-BHP-1",
+                        "Type": "BHP",
+                        "TimeSteps": [0, 50, 365]
+                    },
+                    {
+                        "Name": "PROD-TRANS-ALL",
+                        "Type": "Transmissibility",
+                        "Blocks": "WELL"
+                    },
+                    {
+                        "Name": "PROD-WELLBLOCKS-ALL",
+                        "Type": "WellBlockPosition",
+                        "Blocks": "WELL"
+                    }
+                ]
+            },
+            {
+                "Name": "INJ",
+                "Type": "Injector",
+                "DefinitionType": "WellSpline",
+                "PreferedPhase": "Water",
+                "Heel": [1,1,1],
+                "WellboreRadius": 0.75,
+                "Direction": "X",
+                "SplinePoints": [
+                    [12.0,12.0,1712.0],
+                    [36.0,12.0,1712.0]
+                ],
+                "Controls": [
+                    {
+                        "TimeStep": 0,
+                        "Type": "Water",
+                        "State": "Open",
+                        "Mode": "Rate",
+                        "Rate": 1200.0
+                    }
+                ],
+                "Variables": [
+                    {
+                        "Name": "INJ-SplinePoints-1",
+                        "Type": "SplinePoints",
+                        "VariableSplinePointIndices": [0,1],
+                        "TimeSteps": [0]
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -1,2 +1,0 @@
-INCLUDEPATH += $$PWD
-SRC_DIR = $$PWD

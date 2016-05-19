@@ -109,13 +109,6 @@ void Utilities::FileHandling::WriteLineToFile(QString string, QString file_path)
 QString Utilities::FileHandling::GetBuildDirectoryPath()
 {
     QDir path = QDir::currentPath(); // Get current directory
-    while (path.cdUp()) { // cd up untill we hit a directory that starts with 'build-'
-        QString current = path.dirName();
-        if (QString::compare(current.split("-").first(), "build") == 0)
-            break;
-        else if (QString::compare(path.dirName(), "home") == 0) // If we're in the home directory, we've come too far.
-            throw DirectoryNotFoundException("Unable to find the build directory.", "");
-    }
     return path.absolutePath();
 }
 

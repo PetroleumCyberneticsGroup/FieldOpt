@@ -2,7 +2,7 @@
  *
  *
  *
- * Created: 24.11.2015 2015 by einar
+ * Created: 18.11.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
@@ -23,42 +23,28 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef EXECUTION_SCRIPTS
-#define EXECUTION_SCRIPTS
-
-#include <QString>
-#include <QMap>
+#include "Model/tests/test_fixture_model_base.h"
+#include "Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/summary_section.h"
 #include "Utilities/file_handling/filehandling.h"
+#include <iostream>
 
-namespace Simulation { namespace ExecutionScripts {
+using namespace ::Simulation::SimulatorInterfaces::DriverFileWriters::DriverParts::ECLDriverParts;
 
-    /*!
-     * \brief The DefaultScripts enum lists the availabel scripts.
-     */
-    enum Script {
-        csh_eclrun,
-        bash_adgprs
-    };
+namespace {
 
-    static QMap<Script, QString> DefaultScripts {
-        {Script::csh_eclrun, QString("execution_scripts/csh_eclrun.sh")},
-        {Script::bash_adgprs, QString("execution_scripts/bash_adgprs.sh")}
-    };
-
-    static Script GetScript(QString name) {
-        if (QString::compare(name, "csh_eclrun") == 0)
-            return Script::csh_eclrun;
-        else if (QString::compare(name, "bash_adgprs") == 0)
-            return Script::bash_adgprs;
-        else throw std::runtime_error("Script " + name.toStdString() + " not recognized.");
+class DriverPartSummaryTest : public ModelBaseTest {
+protected:
+    DriverPartSummaryTest(){
+        QStringList *driver_file_contents = Utilities::FileHandling::ReadFileToStringList(settings_->simulator()->driver_file_path());
+        summary_ = new Summary(driver_file_contents);
     }
+    virtual ~DriverPartSummaryTest(){}
 
-    static QString GetScriptPath(QString name) {
-        Script scr = GetScript(name);
-        QString path = DefaultScripts[scr];
-        return path;
-    }
-}}
+    Summary *summary_;
+};
 
-#endif // EXECUTION_SCRIPTS
+TEST_F(DriverPartSummaryTest, Constructor) {
+    //std::cout << summary_->GetPartString().toStdString() << std::endl;
+}
 
+}
