@@ -42,7 +42,6 @@ MainRunner::MainRunner(RuntimeSettings *rts)
         break;
     default:
         throw std::runtime_error("Runner type not recognized.");
-        break;
     }
 }
 

@@ -51,8 +51,7 @@ double AbstractRunner::sentinelValue() const
 {
     if (settings_->optimizer()->mode() == Utilities::Settings::Optimizer::OptimizerMode::Minimize)
         return -1*sentinel_value_;
-    if (settings_->optimizer()->mode() == Utilities::Settings::Optimizer::OptimizerMode::Maximize)
-        return sentinel_value_;
+    return sentinel_value_;
 }
 
 void AbstractRunner::InitializeSettings(QString output_subdirectory)
@@ -152,7 +151,6 @@ void AbstractRunner::InitializeOptimizer()
         break;
     default:
         throw std::runtime_error("Unable to initialize runner: optimization algorithm set in driver file not recognized.");
-        break;
     }
 }
 
