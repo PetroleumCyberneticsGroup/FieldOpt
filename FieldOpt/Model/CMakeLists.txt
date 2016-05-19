@@ -11,7 +11,6 @@ add_library(model
 		reservoir/grid/ijkcoordinate.cpp
 		reservoir/grid/xyzcoordinate.cpp
 		wells/well_exceptions.h
-		wells/wellbore/completions/completion_exceptions.h
 		wells/wellbore/completions/completion.cpp
 		wells/wellbore/completions/perforation.cpp
 		wells/wellbore/trajectory.cpp

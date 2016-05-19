@@ -28,7 +28,7 @@ WellSplineConstraint::Coord WellSplineConstraint::initializeCoord(QList<QPair<QU
     if (point_vars.length() != 3)
         throw std::runtime_error(std::to_string(point_vars.length()) + " coordinate variables were found for the heel/toe. Need 3.");
 
-    Coord coord;
+    Coord coord = WellSplineConstraint::Coord();
 
     for (int i = 0; i < point_vars.length(); ++i) {
         if (QString::compare(point_vars[i].second.split("#").last(), "x") == 0)
