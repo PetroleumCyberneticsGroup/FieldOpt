@@ -1,12 +1,8 @@
 #include "json_summary_reader.h"
-#include <stdexcept>
 #include <iostream>
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QFile>
-#include <QList>
-#include <stdexcept>
-#include <cmath>
 
 namespace AdgprsResultsReader {
 

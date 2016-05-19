@@ -1,7 +1,4 @@
 #include "serial_runner.h"
-#include "Optimization/objective/weightedsum.h"
-#include "Runner/logger.h"
-#include "Model/wells/well_exceptions.h"
 
 namespace Runner {
 

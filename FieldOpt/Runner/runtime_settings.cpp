@@ -24,8 +24,6 @@
  *****************************************************************************/
 
 #include "runtime_settings.h"
-#include <vector>
-#include <QPair>
 
 namespace Runner {
 

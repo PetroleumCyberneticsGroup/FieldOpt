@@ -27,11 +27,6 @@
 #include "Utilities/file_handling/filehandling.h"
 #include "Utilities/file_handling/filehandling_exceptions.h"
 #include <iostream>
-#include <QString>
-#include <QStringList>
-#include <stdlib.h>
-#include <stdio.h>
-#include <QFileInfo>
 
 namespace Utilities { namespace Unix {
 

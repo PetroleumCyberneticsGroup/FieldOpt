@@ -24,7 +24,6 @@
  *****************************************************************************/
 
 #include "../test_fixture_model_base.h"
-#include "Model/wells/wellbore/trajectory.h"
 #include "Model/wells/well_exceptions.h"
 
 using namespace Model::Wells;

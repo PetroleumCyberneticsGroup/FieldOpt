@@ -28,8 +28,6 @@
 #include "Simulation/results/results.h"
 #include "Simulation/results/eclresults.h"
 #include "Optimization/objective/weightedsum.h"
-#include "Utilities/settings/settings.h"
-#include "Utilities/settings/optimizer.h"
 
 
 using namespace Optimization::Objective;

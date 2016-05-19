@@ -24,7 +24,6 @@
  *****************************************************************************/
 
 #include "well.h"
-#include "well_exceptions.h"
 
 namespace Model {
 namespace Wells {

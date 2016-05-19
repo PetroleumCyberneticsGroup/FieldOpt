@@ -27,10 +27,7 @@
 #include "settings_exceptions.h"
 #include "Utilities/file_handling/filehandling.h"
 
-#include <QFile>
-#include <QByteArray>
 #include <QJsonDocument>
-#include <QJsonArray>
 
 namespace Utilities {
 namespace Settings {

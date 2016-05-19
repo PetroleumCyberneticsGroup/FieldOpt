@@ -1,10 +1,7 @@
 #include "adgprssimulator.h"
-#include "Utilities/file_handling/filehandling.h"
 #include "Utilities/unix/execution.h"
-#include <QStringList>
 #include "simulator_exceptions.h"
 #include "Simulation/results/adgprsresults.h"
-#include <iostream>
 
 namespace Simulation { namespace SimulatorInterfaces {
 

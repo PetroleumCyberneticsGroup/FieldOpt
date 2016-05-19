@@ -24,7 +24,6 @@
  *****************************************************************************/
 
 #include "eclresults.h"
-#include "results_exceptions.h"
 #include "ERTWrapper/ertwrapper_exceptions.h"
 #include <QVector>
 

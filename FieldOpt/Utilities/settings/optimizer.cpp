@@ -26,8 +26,6 @@
 #include "optimizer.h"
 #include "settings_exceptions.h"
 
-#include <QJsonArray>
-
 namespace Utilities {
 namespace Settings {
 

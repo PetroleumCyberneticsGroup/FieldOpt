@@ -27,7 +27,6 @@
 #include "filehandling_exceptions.h"
 #include <QTextStream>
 #include <QDir>
-#include <iostream>
 
 bool Utilities::FileHandling::FileExists(QString file_path)
 {

@@ -24,7 +24,6 @@
  *****************************************************************************/
 
 #include "continous_property.h"
-#include <cmath>
 
 namespace Model {
 namespace Properties {

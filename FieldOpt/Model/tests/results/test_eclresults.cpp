@@ -26,9 +26,7 @@
 #include <gtest/gtest.h>
 #include <QString>
 #include <qvector.h>
-#include <iostream>
 #include "Simulation/results/eclresults.h"
-#include "Simulation/results/results_exceptions.h"
 
 using namespace Simulation::Results;
 

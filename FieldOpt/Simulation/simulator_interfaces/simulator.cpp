@@ -24,7 +24,6 @@
  *****************************************************************************/
 
 #include "simulator.h"
-#include "Utilities/file_handling/filehandling.h"
 #include "simulator_exceptions.h"
 
 namespace Simulation {

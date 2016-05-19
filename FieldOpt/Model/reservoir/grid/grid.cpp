@@ -1,10 +1,4 @@
 #include "grid.h"
-#include <QVector3D>
-#include <QList>
-#include <iostream>
-#include <string>
-
-#include "grid_exceptions.h"
 
 namespace Model {
 namespace Reservoir {

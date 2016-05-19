@@ -1,5 +1,4 @@
 #include "eclgridreader.h"
-#include <math.h>
 #include <iostream>
 
 #include "ertwrapper_exceptions.h"

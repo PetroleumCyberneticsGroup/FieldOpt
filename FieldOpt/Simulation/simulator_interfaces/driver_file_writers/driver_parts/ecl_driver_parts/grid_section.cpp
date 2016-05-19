@@ -24,7 +24,6 @@
  *****************************************************************************/
 
 #include "grid_section.h"
-#include "Simulation/simulator_interfaces/simulator_exceptions.h"
 
 namespace Simulation {
 namespace SimulatorInterfaces {

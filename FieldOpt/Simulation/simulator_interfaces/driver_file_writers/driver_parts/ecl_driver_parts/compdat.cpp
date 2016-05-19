@@ -24,7 +24,6 @@
  *****************************************************************************/
 
 #include "compdat.h"
-#include <stdexcept>
 #include <iostream>
 
 namespace Simulation {

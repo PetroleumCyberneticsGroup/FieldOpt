@@ -26,7 +26,6 @@
 #include "trajectory.h"
 #include "Model/wells/well_exceptions.h"
 #include <iostream>
-#include <cmath>
 
 namespace Model {
 namespace Wells {

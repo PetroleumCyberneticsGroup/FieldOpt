@@ -1,6 +1,5 @@
 #include "well_spline_length.h"
 #include "WellIndexCalculator/well_constraint_projections/well_constraint_projections.h"
-#include <Eigen/Core>
 
 namespace Optimization { namespace Constraints {
 

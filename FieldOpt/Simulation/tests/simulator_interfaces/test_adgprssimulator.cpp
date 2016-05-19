@@ -1,6 +1,5 @@
 #include "Simulation/tests/test_fixture_adgprs.h"
 #include "Simulation/simulator_interfaces/adgprssimulator.h"
-#include "Simulation/simulator_interfaces/simulator.h"
 
 namespace {
 

@@ -24,7 +24,6 @@
  *****************************************************************************/
 
 #include "discrete_property.h"
-#include "property_exceptions.h"
 
 namespace Model {
 namespace Properties {

@@ -24,7 +24,6 @@
  *****************************************************************************/
 
 #include "wellcontrols.h"
-#include <stdexcept>
 
 namespace Simulation {
 namespace SimulatorInterfaces {

@@ -24,7 +24,6 @@
  *****************************************************************************/
 
 #include "eclsimulator.h"
-#include "Utilities/file_handling/filehandling.h"
 #include "Utilities/unix/execution.h"
 #include "simulator_exceptions.h"
 #include "Simulation/results/eclresults.h"

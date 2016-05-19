@@ -26,7 +26,6 @@
 #include <gtest/gtest.h>
 
 #include "Utilities/unix/execution.h"
-#include <QStringList>
 
 namespace {
 

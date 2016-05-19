@@ -28,9 +28,6 @@
 #include "Optimization/objective/weightedsum.h"
 #include "Simulation/simulator_interfaces/eclsimulator.h"
 #include "Simulation/simulator_interfaces/adgprssimulator.h"
-#include <stdexcept>
-
-#include <limits>
 
 namespace Runner {
 
