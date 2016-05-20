@@ -24,6 +24,7 @@
  *****************************************************************************/
 
 #include "constraint_handler.h"
+#include <iostream>
 
 namespace Optimization { namespace Constraints {
 
@@ -43,10 +44,21 @@ ConstraintHandler::ConstraintHandler(QList<Utilities::Settings::Optimizer::Const
         case Utilities::Settings::Optimizer::ConstraintType::CombinedWellSplineLengthInterwellDistance:
             constraints_.append(new CombinedSplineLengthInterwellDistance(constraint, variables));
             break;
+#ifdef WITH_EXPERIMENTAL_CONSTRIANTS
+        case Utilities::Settings::Optimizer::ConstraintType::ReservoirBoundary:
+            std::cout << "Initializing Reservoir boundary constraint." << std::endl;
+            constraints_.append(new ReservoirBoundary(constraint, variables));
+            break;
+#endif
         default:
             break;
         }
     }
+#ifdef WITH_EXPERIMENTAL_CONSTRIANTS
+    std::cout << "Using experimental constaints" << std::endl;
+#else
+    std::cout << "Not using experimental constaints" << std::endl;
+#endif
 }
 
 bool ConstraintHandler::CaseSatisfiesConstraints(Case *c)

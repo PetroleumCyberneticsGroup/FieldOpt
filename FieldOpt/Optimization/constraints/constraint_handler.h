@@ -35,6 +35,10 @@
 #include "Utilities/settings/optimizer.h"
 #include <QList>
 
+#ifdef WITH_EXPERIMENTAL_CONSTRIANTS
+#include "experimental_constraints/reservoir_boundary.h"
+#endif
+
 namespace Optimization { namespace Constraints {
 
 /*!

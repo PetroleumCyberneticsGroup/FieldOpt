@@ -49,7 +49,9 @@ public:
     enum OptimizerMode { Maximize, Minimize };
     enum ConstraintType { BHP, Rate, SplinePoints,
                           WellSplineLength, WellSplineInterwellDistance,
-                          CombinedWellSplineLengthInterwellDistance };
+                          CombinedWellSplineLengthInterwellDistance,
+                          ReservoirBoundary
+    };
     enum ConstraintWellSplinePointsType { MaxMin, Function};
     enum ObjectiveType { WeightedSum };
 
