@@ -24,6 +24,7 @@
  *****************************************************************************/
 
 #include "variable_property_container.h"
+#include <QStringList>
 
 namespace Model {
 namespace Properties {
