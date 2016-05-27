@@ -2,10 +2,13 @@
 #define FIELDOPT_TEST_RESOURCE_CASES_H
 
 #include "Optimization/case.h"
+#include "Model/properties/continous_property.h"
+#include "Model/tests/test_resource_variable_property_container.h"
 #include <QHash>
 #include <QUuid>
+#include <QList>
 
-class TestResourceCases {
+class TestResourceCases : public TestResourceVariablePropertyContainer {
 public:
     TestResourceCases(){
         test_case_1_ = new Optimization::Case(QHash<QUuid,bool>(), integer_variables_, QHash<QUuid,double>());
@@ -15,6 +18,9 @@ public:
         test_case_3_->set_objective_function_value(-50.0);
         test_case_4_ = new Optimization::Case(binary_variables_, integer_variables_, real_variables_);
         test_case_4_->set_objective_function_value(-50.0);
+        test_case_5_ = new Optimization::Case(variable_property_container_->GetBinaryVariableValues(),
+                                              variable_property_container_->GetDiscreteVariableValues(),
+                                              variable_property_container_->GetContinousVariableValues());
     }
 
     /* Case 1:
@@ -40,6 +46,12 @@ public:
      */
     Optimization::Case *test_case_4_;
 
+    /* Case 5:
+     * Spline well case
+     */
+    Optimization::Case *test_case_5_;
+
+private:
     const QHash<QUuid, bool> binary_variables_ {
             {QUuid::createUuid(), true},
             {QUuid::createUuid(), true},
