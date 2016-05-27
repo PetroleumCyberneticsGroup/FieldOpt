@@ -23,95 +23,100 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#include "test_fixture_case.h"
+#include <gtest/gtest.h>
+#include "test_resource_cases.h"
+#include <QList>
 
 namespace {
 
 
-class CaseTest : public CaseTestFixture {
-protected:
-    CaseTest(){}
-    virtual ~CaseTest(){}
-};
+    class CaseTest : public ::testing::Test, public TestResourceCases {
 
-TEST_F(CaseTest, Constructor) {
-    EXPECT_NO_THROW();
-}
+    public:
 
-TEST_F(CaseTest, UUIDs) {
-    EXPECT_FALSE(cases_[0]->id().isNull());
-    EXPECT_FALSE(cases_[1]->id().isNull());
-    EXPECT_FALSE(cases_[2]->id().isNull());
-    EXPECT_FALSE(cases_[3]->id().isNull());
-}
+        CaseTest() : Test() { }
 
-TEST_F(CaseTest, ObjectiveValues) {
-    EXPECT_THROW(cases_[0]->objective_function_value(), Optimization::ObjectiveFunctionException);
-    EXPECT_FLOAT_EQ(100.0, cases_[1]->objective_function_value());
-    EXPECT_FLOAT_EQ(-50.0, cases_[2]->objective_function_value());
-    EXPECT_FLOAT_EQ(-50.0, cases_[3]->objective_function_value());
-}
+        virtual ~CaseTest() { }
 
-TEST_F(CaseTest, Equals) {
-    EXPECT_FALSE(cases_[0]->Equals(cases_[1]));
-    EXPECT_TRUE(cases_[2]->Equals(cases_[3]));
-}
+    protected:
+        virtual void TearDown() {
 
-TEST_F(CaseTest, NumberOfVariables) {
-    EXPECT_EQ(0, cases_[0]->binary_variables().size());
-    EXPECT_EQ(3, cases_[0]->integer_variables().size());
-    EXPECT_EQ(0, cases_[0]->real_variables().size());
+        }
 
-    EXPECT_EQ(0, cases_[1]->binary_variables().size());
-    EXPECT_EQ(0, cases_[1]->integer_variables().size());
-    EXPECT_EQ(3, cases_[1]->real_variables().size());
+        virtual void SetUp() {
 
-    EXPECT_EQ(4, cases_[2]->binary_variables().size());
-    EXPECT_EQ(3, cases_[2]->integer_variables().size());
-    EXPECT_EQ(3, cases_[2]->real_variables().size());
+        }
 
-    EXPECT_EQ(4, cases_[3]->binary_variables().size());
-    EXPECT_EQ(3, cases_[3]->integer_variables().size());
-    EXPECT_EQ(3, cases_[3]->real_variables().size());
-}
 
-TEST_F(CaseTest, VariableValues) {
-    foreach (int value, integer_variables_.values()) {
-        EXPECT_TRUE(value == 1 || value == 2 || value == 5);
+    };
+
+    TEST_F(CaseTest, Constructor) {
+        EXPECT_NO_THROW();
     }
 
-    foreach (double value, real_variables_.values()) {
-        EXPECT_TRUE(value == 1.0 || value == 4.0 || value == 2.5);
+    TEST_F(CaseTest, UUIDs) {
+        EXPECT_FALSE(test_case_1_->id().isNull());
+        EXPECT_FALSE(test_case_2_->id().isNull());
+        EXPECT_FALSE(test_case_3_->id().isNull());
+        EXPECT_FALSE(test_case_4_->id().isNull());
     }
+
+    TEST_F(CaseTest, ObjectiveValues) {
+        EXPECT_THROW(test_case_1_->objective_function_value(), Optimization::ObjectiveFunctionException);
+        EXPECT_FLOAT_EQ(100.0, test_case_2_->objective_function_value());
+        EXPECT_FLOAT_EQ(-50.0, test_case_3_->objective_function_value());
+        EXPECT_FLOAT_EQ(-50.0, test_case_4_->objective_function_value());
+    }
+
+    TEST_F(CaseTest, Equals) {
+        EXPECT_FALSE(test_case_1_->Equals(test_case_2_));
+        EXPECT_TRUE(test_case_3_->Equals(test_case_4_));
+    }
+
+    TEST_F(CaseTest, NumberOfVariables) {
+        EXPECT_EQ(0, test_case_1_->binary_variables().size());
+        EXPECT_EQ(3, test_case_1_->integer_variables().size());
+        EXPECT_EQ(0, test_case_1_->real_variables().size());
+
+        EXPECT_EQ(0, test_case_2_->binary_variables().size());
+        EXPECT_EQ(0, test_case_2_->integer_variables().size());
+        EXPECT_EQ(3, test_case_2_->real_variables().size());
+
+        EXPECT_EQ(4, test_case_3_->binary_variables().size());
+        EXPECT_EQ(3, test_case_3_->integer_variables().size());
+        EXPECT_EQ(3, test_case_3_->real_variables().size());
+
+        EXPECT_EQ(4, test_case_4_->binary_variables().size());
+        EXPECT_EQ(3, test_case_4_->integer_variables().size());
+        EXPECT_EQ(3, test_case_4_->real_variables().size());
+    }
+
+    TEST_F(CaseTest, CopyConstructor) {
+        Optimization::Case *copy = new Optimization::Case(test_case_1_);
+        EXPECT_FALSE(copy->id() == test_case_1_->id());
+        EXPECT_TRUE(copy->Equals(test_case_1_));
+    }
+
+    TEST_F(CaseTest, PerturbMethod) {
+        // Perturb the first case's first integer variable in positive direction
+        QList<Optimization::Case *> perturbations_1 = test_case_1_->Perturb(test_case_1_->integer_variables().keys().first(),
+                                                                            Optimization::Case::SIGN::PLUS, 7);
+        EXPECT_EQ(1, perturbations_1.size());
+        EXPECT_FALSE(perturbations_1.first()->id() == test_case_1_->id());
+        EXPECT_FALSE(perturbations_1.first()->Equals(test_case_1_));
+        EXPECT_TRUE(test_case_1_->integer_variables().values().first() + 7 == perturbations_1.first()->integer_variables().values().first());
+
+        // Perturb the second case's first real variable in both directions
+        QList<Optimization::Case *> perturbations_2 = test_case_2_->Perturb(test_case_2_->real_variables().keys().first(),
+                                                                            Optimization::Case::SIGN::PLUSMINUS, 5);
+        EXPECT_EQ(2, perturbations_2.size());
+        EXPECT_FALSE(perturbations_2[0]->id() == test_case_2_->id());
+        EXPECT_FALSE(perturbations_2[1]->id() == test_case_2_->id());
+        EXPECT_FALSE(perturbations_2[0]->Equals(test_case_2_));
+        EXPECT_FALSE(perturbations_2[1]->Equals(test_case_2_));
+        EXPECT_FALSE(perturbations_2[0]->Equals(perturbations_2[1]));
+        EXPECT_TRUE(test_case_2_->real_variables().values().first() + 5 == perturbations_2[0]->real_variables().values().first());
+        EXPECT_TRUE(test_case_2_->real_variables().values().first() - 5 == perturbations_2[1]->real_variables().values().first());
+    }
+
 }
-
-TEST_F(CaseTest, CopyConstructor) {
-    Optimization::Case *copy = new Optimization::Case(cases_[0]);
-    EXPECT_FALSE(copy->id() == cases_[0]->id());
-    EXPECT_TRUE(copy->Equals(cases_[0]));
-}
-
-TEST_F(CaseTest, PerturbMethod) {
-    // Perturb the first case's first integer variable in positive direction
-    QList<Optimization::Case *> perturbations_1 = cases_[0]->Perturb(cases_[0]->integer_variables().keys().first(),
-            Optimization::Case::SIGN::PLUS, 7);
-    EXPECT_EQ(1, perturbations_1.size());
-    EXPECT_FALSE(perturbations_1.first()->id() == cases_[0]->id());
-    EXPECT_FALSE(perturbations_1.first()->Equals(cases_[0]));
-    EXPECT_TRUE(cases_[0]->integer_variables().values().first() + 7 == perturbations_1.first()->integer_variables().values().first());
-
-    // Perturb the second case's first real variable in both directions
-    QList<Optimization::Case *> perturbations_2 = cases_[1]->Perturb(cases_[1]->real_variables().keys().first(),
-            Optimization::Case::SIGN::PLUSMINUS, 5);
-    EXPECT_EQ(2, perturbations_2.size());
-    EXPECT_FALSE(perturbations_2[0]->id() == cases_[1]->id());
-    EXPECT_FALSE(perturbations_2[1]->id() == cases_[1]->id());
-    EXPECT_FALSE(perturbations_2[0]->Equals(cases_[1]));
-    EXPECT_FALSE(perturbations_2[1]->Equals(cases_[1]));
-    EXPECT_FALSE(perturbations_2[0]->Equals(perturbations_2[1]));
-    EXPECT_TRUE(cases_[1]->real_variables().values().first() + 5 == perturbations_2[0]->real_variables().values().first());
-    EXPECT_TRUE(cases_[1]->real_variables().values().first() - 5 == perturbations_2[1]->real_variables().values().first());
-}
-
-}
-
