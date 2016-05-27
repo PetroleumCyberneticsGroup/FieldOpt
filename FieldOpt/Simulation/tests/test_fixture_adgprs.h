@@ -10,20 +10,20 @@
 #include "Model/properties/variable_property_container.h"
 #include "Model/properties/variable_property_handler.h"
 #include "Model/model.h"
+#include "Model/tests/test_resource_grids.h"
 
 
-class AdgprsTestFixture : public ::testing::Test{
+class AdgprsTestFixture : public ::testing::Test, TestResourceGrids {
 protected:
     AdgprsTestFixture(){
         settings_ = new Utilities::Settings::Settings(fo_driver_path_, output_directory_);
         settings_->simulator()->set_driver_file_path(sim_driver_path_);
-        settings_->model()->set_reservoir_grid_path(reservoir_grid_path_);
+        settings_->model()->set_reservoir_grid_path(file_path_5spot_);
         model_ = new Model::Model(*settings_->model());
     }
     QString sim_driver_path_ = "../examples/ADGPRS/5spot/5SPOT.gprs";
     QString fo_driver_path_ = "../examples/ADGPRS/5spot/5spot_fieldopt_driver.json";
     QString output_directory_ = "../fieldopt_output/adgprs";
-    QString reservoir_grid_path_ = "../examples/ADGPRS/5spot/ECL_5SPOT.EGRID";
     QString json_summary_path_ = "../examples/ADGPRS/5spot/5SPOT.json";
     QString hdf5_summary_path_ = "../examples/ADGPRS/5spot/5SPOT.SIM.H5";
     QString base_summary_path_ = "../examples/ADGPRS/5spot/5SPOT";

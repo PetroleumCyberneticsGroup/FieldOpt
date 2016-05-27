@@ -3,15 +3,16 @@
 #include "Model/reservoir/grid/eclgrid.h"
 #include "Model/reservoir/grid/grid_exceptions.h"
 #include "Model/reservoir/grid/cell.h"
+#include "Model/tests/test_resource_grids.h"
 
 using namespace Model::Reservoir::Grid;
 
 namespace {
 
-class GridTest : public ::testing::Test {
+class GridTest : public ::testing::Test, TestResourceGrids {
 protected:
-    GridTest() {
-        grid_ = new ECLGrid(file_path_);
+    GridTest() : Test(), TestResourceGrids() {
+        grid_ = grid_horzwel_;
     }
 
     virtual ~GridTest() {
@@ -27,7 +28,6 @@ protected:
     }
 
     Grid* grid_;
-    QString file_path_ = "../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID";
 };
 
 TEST_F(GridTest, GridRead) {

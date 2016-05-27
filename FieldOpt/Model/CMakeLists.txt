@@ -65,7 +65,7 @@ add_executable(test_model
 		tests/wells/test_trajectory.cpp
 		tests/wells/test_well.cpp
 		tests/wells/test_wellblock.cpp
-		)
+		tests/test_resource_grids.h)
 target_link_libraries(test_model
 		fieldopt::model
 		fieldopt::optimization

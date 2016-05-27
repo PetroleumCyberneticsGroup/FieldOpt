@@ -32,12 +32,13 @@
 #include "Model/properties/variable_property_container.h"
 #include "Model/properties/variable_property_handler.h"
 #include "Model/model.h"
+#include "Model/tests/test_resource_grids.h"
 
-class ModelBaseTest : public ::testing::Test {
+class ModelBaseTest : public ::testing::Test, TestResourceGrids {
 protected:
     ModelBaseTest() {
         settings_ = new ::Utilities::Settings::Settings(driver_file_path_, output_directory_);
-        settings_->model()->set_reservoir_grid_path(reservoir_grid_path_);
+        settings_->model()->set_reservoir_grid_path(file_path_5spot_);
         variable_container_ = new ::Model::Properties::VariablePropertyContainer();
         variable_handler_ = new ::Model::Properties::VariablePropertyHandler(*settings_->model());
         model_ = new ::Model::Model(*settings_->model());
@@ -45,8 +46,7 @@ protected:
 
     QString driver_file_path_ = "../examples/driver.json";
     QString output_directory_ = "../fieldopt_output";
-//    QString reservoir_grid_path_ = Utilities::FileHandling::GetBuildDirectoryPath() + "examples/ECLIPSE/HORZWELL/HORZWELL.EGRID";
-    QString reservoir_grid_path_ = "../examples/ADGPRS/5spot/ECL_5SPOT.EGRID";
+
     ::Utilities::Settings::Settings *settings_;
     ::Model::Properties::VariablePropertyContainer *variable_container_;
     ::Model::Properties::VariablePropertyHandler *variable_handler_;

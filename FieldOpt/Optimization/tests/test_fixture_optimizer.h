@@ -32,13 +32,14 @@
 #include "Model/model.h"
 #include "Optimization/case.h"
 #include "Utilities/file_handling/filehandling.h"
+#include "Model/tests/test_resource_grids.h"
 #include <iostream>
 
-class OptimizerTestFixture : public ::testing::Test {
+class OptimizerTestFixture : public ::testing::Test, TestResourceGrids {
 protected:
     OptimizerTestFixture(){
         settings_ = new ::Utilities::Settings::Settings(driver_file_path_, output_directory_);
-        settings_->model()->set_reservoir_grid_path(reservoir_grid_path_);
+        settings_->model()->set_reservoir_grid_path(file_path_5spot_);
         optimizer_settings_ = settings_->optimizer();
         model_ = new ::Model::Model(*::Utilities::Settings::Settings(driver_file_path_, output_directory_).model());
         base_case_ = new ::Optimization::Case(model_->variables()->GetBinaryVariableValues(),
@@ -49,7 +50,6 @@ protected:
 
     QString driver_file_path_ = "../examples/driver.json";
     QString output_directory_ = "../fieldopt_output";
-    QString reservoir_grid_path_ = "../examples/ADGPRS/5spot/ECL_5SPOT.EGRID";
     ::Utilities::Settings::Optimizer *optimizer_settings_;
     ::Utilities::Settings::Settings *settings_;
     ::Model::Model *model_;
