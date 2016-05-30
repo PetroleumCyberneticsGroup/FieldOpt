@@ -47,7 +47,7 @@ ConstraintHandler::ConstraintHandler(QList<Utilities::Settings::Optimizer::Const
 #ifdef WITH_EXPERIMENTAL_CONSTRIANTS
         case Utilities::Settings::Optimizer::ConstraintType::ReservoirBoundary:
             std::cout << "Initializing Reservoir boundary constraint." << std::endl;
-            constraints_.append(new ReservoirBoundary(constraint, variables));
+            constraints_.append(new ReservoirBoundary(constraint, variables, nullptr)); // TODO: Take grid as input
             break;
 #endif
         default:

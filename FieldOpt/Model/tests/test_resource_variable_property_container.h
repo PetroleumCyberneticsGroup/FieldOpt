@@ -13,10 +13,10 @@ public:
     TestResourceVariablePropertyContainer() {
         prod_heel_x_ = new Model::Properties::ContinousProperty(5.0);
         prod_heel_y_ = new Model::Properties::ContinousProperty(5.0);
-        prod_heel_z_ = new Model::Properties::ContinousProperty(5.0);
-        prod_toe_x_ = new Model::Properties::ContinousProperty(10.0);
-        prod_toe_y_ = new Model::Properties::ContinousProperty(10.0);
-        prod_toe_z_ = new Model::Properties::ContinousProperty(10.0);
+        prod_heel_z_ = new Model::Properties::ContinousProperty(200.0);
+        prod_toe_x_ = new Model::Properties::ContinousProperty(12);
+        prod_toe_y_ = new Model::Properties::ContinousProperty(120.1);
+        prod_toe_z_ = new Model::Properties::ContinousProperty(300.0);
         prod_heel_x_->setName("SplinePoints#PRODUCER#heel#x");
         prod_heel_y_->setName("SplinePoints#PRODUCER#heel#y");
         prod_heel_z_->setName("SplinePoints#PRODUCER#heel#z");

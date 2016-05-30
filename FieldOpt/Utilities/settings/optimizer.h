@@ -48,7 +48,7 @@ public:
     enum OptimizerType { Compass };
     enum OptimizerMode { Maximize, Minimize };
     enum ConstraintType { BHP, Rate, SplinePoints,
-                          WellSplineLength, WellSplineInterwellDistance,
+                          WellSplineLength, WellSplineInterwellDistance, WellSplineDomain,
                           CombinedWellSplineLengthInterwellDistance,
                           ReservoirBoundary
     };
