@@ -11,15 +11,15 @@ protected:
         simulator_settings_ = full_settings_->simulator();
         model_settings_ = full_settings_->model();
 
-        constraint_settings_reservoir_boundary_.name = "BOUNDARY_CONSTRAINT";
+        constraint_settings_reservoir_boundary_.name = "SplinePoints";
         constraint_settings_reservoir_boundary_.type = Utilities::Settings::Optimizer::ConstraintType::ReservoirBoundary;
         constraint_settings_reservoir_boundary_.imin = 1;
-        constraint_settings_reservoir_boundary_.imax = 5;
-        constraint_settings_reservoir_boundary_.jmin = 1;
-        constraint_settings_reservoir_boundary_.jmax = 5;
-        constraint_settings_reservoir_boundary_.kmin = 1;
-        constraint_settings_reservoir_boundary_.kmax = 5;
-        constraint_settings_reservoir_boundary_.wells << "PRODUCER" << "INJECTOR";
+        constraint_settings_reservoir_boundary_.imax = 1;
+        constraint_settings_reservoir_boundary_.jmin = 0;
+        constraint_settings_reservoir_boundary_.jmax = 0;
+        constraint_settings_reservoir_boundary_.kmin = 0;
+        constraint_settings_reservoir_boundary_.kmax = 0;
+        constraint_settings_reservoir_boundary_.well = "PRODUCER";
     }
     Utilities::Settings::Settings *full_settings_;
     Utilities::Settings::Optimizer *optimizer_settings_;
