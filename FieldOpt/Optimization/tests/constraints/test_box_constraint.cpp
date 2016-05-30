@@ -25,6 +25,7 @@
 
 #include "../test_fixture_case.h"
 #include "Optimization/constraints/box_constraint.h"
+#include "Utilities/tests/test_resource_settings.h"
 
 namespace {
 

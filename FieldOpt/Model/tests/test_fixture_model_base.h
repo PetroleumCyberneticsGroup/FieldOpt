@@ -33,19 +33,17 @@
 #include "Model/properties/variable_property_handler.h"
 #include "Model/model.h"
 #include "Model/tests/test_resource_grids.h"
+#include "Utilities/tests/test_resource_settings.h"
 
-class ModelBaseTest : public ::testing::Test, TestResourceGrids {
+class ModelBaseTest : public ::testing::Test, TestResourceGrids, TestResourceSettings {
 protected:
     ModelBaseTest() {
-        settings_ = new ::Utilities::Settings::Settings(driver_file_path_, output_directory_);
+        settings_ = full_settings_;
         settings_->model()->set_reservoir_grid_path(file_path_5spot_);
         variable_container_ = new ::Model::Properties::VariablePropertyContainer();
         variable_handler_ = new ::Model::Properties::VariablePropertyHandler(*settings_->model());
         model_ = new ::Model::Model(*settings_->model());
     }
-
-    QString driver_file_path_ = "../examples/driver.json";
-    QString output_directory_ = "../fieldopt_output";
 
     ::Utilities::Settings::Settings *settings_;
     ::Model::Properties::VariablePropertyContainer *variable_container_;
