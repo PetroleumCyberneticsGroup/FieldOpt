@@ -99,10 +99,22 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
         std::cout << "Verbose output: " << verbose_ << std::endl;
         std::cout << "Overwr. existing out files: " << overwrite_existing_ << std::endl;
         std::cout << "Max parallel simulations:   " << (max_parallel_sims_ > 0 ? std::to_string(max_parallel_sims_) : "default") << std::endl;
-        std::cout << "Producer coordinates:       " << "(" << prod_coords_.first[0]  << ", " << prod_coords_.first[1]  << ", " << prod_coords_.first[2]  << "), "
-                                                    << "(" << prod_coords_.second[0] << ", " << prod_coords_.second[1] << ", " << prod_coords_.second[2] << ")" << std::endl;
-        std::cout << "Injector coordinates:       " << "(" << inje_coords_.first[0]  << ", " << prod_coords_.first[1]  << ", " << inje_coords_.first[2]  << "), "
-                                                    << "(" << inje_coords_.second[0] << ", " << prod_coords_.second[1] << ", " << inje_coords_.second[2] << ")" << std::endl;
+        if (vm.count("well-prod-points")) {
+            std::cout << "Producer coordinates:       " << "(" << prod_coords_.first[0] << ", "
+                                                               << prod_coords_.first[1] << ", "
+                                                               << prod_coords_.first[2] << "), "
+                                                        << "(" << prod_coords_.second[0] << ", "
+                                                               << prod_coords_.second[1] << ", "
+                                                               << prod_coords_.second[2] << ")" << std::endl;
+        }
+        if (vm.count("well-prod-points")) {
+            std::cout << "Injector coordinates:       " << "(" << inje_coords_.first[0] << ", "
+                                                               << prod_coords_.first[1] << ", "
+                                                               << inje_coords_.first[2] << "), "
+                                                        << "(" << inje_coords_.second[0] << ", "
+                                                               << prod_coords_.second[1] << ", "
+                                                               << inje_coords_.second[2] << ")" << std::endl;
+        }
     }
 }
 
