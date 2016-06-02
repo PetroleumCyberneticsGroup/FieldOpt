@@ -49,7 +49,6 @@ target_compile_features(model
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS} tests)
 add_executable(test_model
-		tests/test_fixture_model_base.h
 		tests/test_model.cpp
 		tests/reservoir/test_reservoir.cpp
 		tests/reservoir/grid/test_cell.cpp
