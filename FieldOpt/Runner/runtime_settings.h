@@ -76,7 +76,8 @@ private:
     QPair<QVector<double>, QVector<double>> prod_coords_; //!< The spline coordinates for the production well
     QPair<QVector<double>, QVector<double>> inje_coords_; //!< The spline coordinates for the injection well
 
-    QString runnerTypeString(); //!< Get a string representation of the runner type (used when printing settings to the terminal).
+    QString runnerTypeString() const; //!< Get a string representation of the runner type (used when printing settings to the terminal).
+    QString wellSplineCoordinateString(const QPair<QVector<double>, QVector<double>> spline) const;
 };
 
 }

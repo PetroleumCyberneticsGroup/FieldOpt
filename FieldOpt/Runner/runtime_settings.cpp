@@ -99,28 +99,21 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
         std::cout << "Verbose output: " << verbose_ << std::endl;
         std::cout << "Overwr. existing out files: " << overwrite_existing_ << std::endl;
         std::cout << "Max parallel simulations:   " << (max_parallel_sims_ > 0 ? std::to_string(max_parallel_sims_) : "default") << std::endl;
-        if (vm.count("well-prod-points")) {
-            std::cout << "Producer coordinates:       " << "(" << prod_coords_.first[0] << ", "
-                                                               << prod_coords_.first[1] << ", "
-                                                               << prod_coords_.first[2] << "), "
-                                                        << "(" << prod_coords_.second[0] << ", "
-                                                               << prod_coords_.second[1] << ", "
-                                                               << prod_coords_.second[2] << ")" << std::endl;
-        }
-        if (vm.count("well-prod-points")) {
-            std::cout << "Injector coordinates:       " << "(" << inje_coords_.first[0] << ", "
-                                                               << prod_coords_.first[1] << ", "
-                                                               << inje_coords_.first[2] << "), "
-                                                        << "(" << inje_coords_.second[0] << ", "
-                                                               << prod_coords_.second[1] << ", "
-                                                               << inje_coords_.second[2] << ")" << std::endl;
-        }
+        if (vm.count("well-prod-points"))
+            std::cout << "Producer coordinates:   " << wellSplineCoordinateString(prod_coords_).toStdString() << std::endl;
+        if (vm.count("well-prod-points"))
+            std::cout << "Injector coordinates:   " << wellSplineCoordinateString(inje_coords_).toStdString() << std::endl;
     }
 }
 
+    QString RuntimeSettings::wellSplineCoordinateString(const QPair<QVector<double>, QVector<double>> spline) const {
+        return QString("(%1, %2, %3) - (%4, %5, %6)")
+                .arg(spline.first[0]).arg(spline.first[1]).arg(spline.first[2])
+                .arg(spline.second[0]).arg(spline.second[1]).arg(spline.second[2]);
+    }
 
 
-QString RuntimeSettings::runnerTypeString() {
+    QString RuntimeSettings::runnerTypeString() const {
     if (runner_type_ == RunnerType::SERIAL)
         return "serial";
     else return "NOT SET";
