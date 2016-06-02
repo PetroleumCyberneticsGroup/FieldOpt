@@ -15,7 +15,7 @@ namespace TestResources {
         static QString grid_horzwel_ = "../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID";
         static QString grid_5spot_ = "../examples/ADGPRS/5spot/ECL_5SPOT.EGRID";
 
-        static QString ecl_drv_horzwell = "../examples/ECLIPSE/HORZWELL/HORZWELL";
+        static QString ecl_base_horzwell = "../examples/ECLIPSE/HORZWELL/HORZWELL";
 
         static QString driver_5spot_ = "../examples/ADGPRS/5spot/5spot_fieldopt_driver.json";
         static QString gprs_drv_5spot_ = "../examples/ADGPRS/5spot/5SPOT.gprs";

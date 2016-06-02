@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <QVector3D>
 #include "ERTWrapper/eclgridreader.h"
+#include "Utilities/tests/test_resource_example_file_paths.h"
 
 using namespace ERTWrapper::ECLGrid;
 
@@ -20,12 +21,10 @@ protected:
         ecl_grid_reader_->ReadEclGrid(file_name_);
     }
 
-    virtual void TearDown() {
-        // Called immedeately after each test (right before the destructor)
-    }
+    virtual void TearDown() { }
 
     ECLGridReader* ecl_grid_reader_;
-    QString file_name_ = "../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID";
+    QString file_name_ = TestResources::ExampleFilePaths::grid_horzwel_;
 
     // Objects declared here can be used by all tests in this test case.
 
