@@ -1,14 +1,15 @@
-#include "Simulation/tests/test_fixture_adgprs.h"
+#include <gtest/gtest.h>
+#include "Model/tests/test_resource_model.h"
 #include "Simulation/results/adgprsresults.h"
 
 namespace {
 
-class AdgprsResultsTest : public AdgprsTestFixture {
+class AdgprsResultsTest : public ::testing::Test, public TestResources::TestResourceModel {
 protected:
     AdgprsResultsTest()
     {
         results_ = new Simulation::Results::AdgprsResults(model_);
-        results_->ReadResults(base_summary_path_);
+        results_->ReadResults(TestResources::ExampleFilePaths::gprs_base_5spot_);
     }
     virtual ~AdgprsResultsTest() {}
     virtual void SetUp() {}

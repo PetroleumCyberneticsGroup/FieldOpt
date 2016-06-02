@@ -1,12 +1,14 @@
-#include "Simulation/tests/test_fixture_adgprs.h"
+#include <gtest/gtest.h>
+#include "Model/tests/test_resource_model.h"
 #include "Simulation/simulator_interfaces/adgprssimulator.h"
 
 namespace {
 
-class AdgprsSimulatorTest : public AdgprsTestFixture {
+class AdgprsSimulatorTest : public ::testing::Test, public TestResources::TestResourceModel {
 protected:
     AdgprsSimulatorTest() {
-        simulator_ = new Simulation::SimulatorInterfaces::AdgprsSimulator(settings_, model_);
+        settings_simulator_->set_driver_file_path(TestResources::ExampleFilePaths::gprs_drv_5spot_);
+        simulator_ = new Simulation::SimulatorInterfaces::AdgprsSimulator(settings_full_, model_);
     }
     virtual ~AdgprsSimulatorTest() {}
     virtual void SetUp() {}

@@ -39,7 +39,6 @@ target_compile_features(ertwrapper
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 add_executable(test_simulation
-        tests/test_fixture_adgprs.h
         tests/results/test_adgprsresults.cpp
         tests/simulator_interfaces/test_adgprssimulator.cpp
         tests/simulator_interfaces/test_eclsimulator.cpp
