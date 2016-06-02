@@ -26,45 +26,39 @@
 #include <gtest/gtest.h>
 #include <QString>
 
-#include "Utilities/settings/settings.h"
+#include "Utilities/tests/test_resource_settings.h"
 
 using namespace Utilities::Settings;
 
 namespace {
 
-class OptimizerSettingsTest : public ::testing::Test {
+class OptimizerSettingsTest : public ::testing::Test, public TestResources::TestResourceSettings {
 protected:
     OptimizerSettingsTest()
-        : settings_(driver_file_path_, output_directory_)
-    {
-    }
+    { }
     virtual ~OptimizerSettingsTest() {}
 
     virtual void SetUp() {}
     virtual void TearDown() {}
-
-    QString driver_file_path_ = "../examples/driver.json";
-    QString output_directory_ = "../fieldopt_output";
-    Settings settings_;
 };
 
 TEST_F(OptimizerSettingsTest, Type) {
-    EXPECT_EQ(Optimizer::OptimizerType::Compass, settings_.optimizer()->type());
+    EXPECT_EQ(Optimizer::OptimizerType::Compass, settings_optimizer_->type());
 }
 
 TEST_F(OptimizerSettingsTest, Mode) {
-    EXPECT_EQ(Optimizer::OptimizerMode::Maximize, settings_.optimizer()->mode());
+    EXPECT_EQ(Optimizer::OptimizerMode::Maximize, settings_optimizer_->mode());
 }
 
 TEST_F(OptimizerSettingsTest, Parameters) {
-    Optimizer::Parameters params = settings_.optimizer()->parameters();
+    Optimizer::Parameters params = settings_optimizer_->parameters();
     EXPECT_EQ(10, params.max_evaluations);
     EXPECT_FLOAT_EQ(50.0, params.initial_step_length);
     EXPECT_FLOAT_EQ(1.0, params.minimum_step_length);
 }
 
 TEST_F(OptimizerSettingsTest, Objective) {
-    Optimizer::Objective obj = settings_.optimizer()->objective();
+    Optimizer::Objective obj = settings_optimizer_->objective();
     EXPECT_EQ(Optimizer::ObjectiveType::WeightedSum, obj.type);
     EXPECT_EQ(2, obj.weighted_sum.size());
 
@@ -81,7 +75,7 @@ TEST_F(OptimizerSettingsTest, Objective) {
 }
 
 TEST_F(OptimizerSettingsTest, ProducerConstraint) {
-    Optimizer::Constraint producerConstraint = settings_.optimizer()->constraints()->first();
+    Optimizer::Constraint producerConstraint = settings_optimizer_->constraints()->first();
     EXPECT_EQ(Optimizer::ConstraintType::BHP, producerConstraint.type);
     EXPECT_STREQ("PROD", producerConstraint.well.toLatin1().constData());
     EXPECT_FLOAT_EQ(3000.0, producerConstraint.max);
@@ -90,7 +84,7 @@ TEST_F(OptimizerSettingsTest, ProducerConstraint) {
 }
 
 TEST_F(OptimizerSettingsTest, InjectorConstraint) {
-    Optimizer::Constraint injectorConstraint = settings_.optimizer()->constraints()->last();
+    Optimizer::Constraint injectorConstraint = settings_optimizer_->constraints()->last();
     EXPECT_EQ(Optimizer::ConstraintType::SplinePoints, injectorConstraint.type);
     EXPECT_STREQ("INJ", injectorConstraint.well.toLatin1().constData());
 

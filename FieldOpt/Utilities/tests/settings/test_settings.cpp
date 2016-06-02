@@ -26,6 +26,7 @@
 #include <gtest/gtest.h>
 #include <QString>
 #include "Utilities/settings/settings.h"
+#include "Utilities/tests/test_resource_example_file_paths.h"
 
 using namespace Utilities::Settings;
 
@@ -38,19 +39,16 @@ protected:
 
     virtual void SetUp() {}
     virtual void TearDown() {}
-
-    QString driver_file_path_ = "../examples/driver.json";
-    QString output_directory_ = "../fieldopt_output";
 };
 
 TEST_F(SettingsTest, ConstructorAndTestFileValidity) {
-    EXPECT_NO_THROW(Settings settings = Settings(driver_file_path_, output_directory_));
+    EXPECT_NO_THROW(Settings settings = Settings(TestResources::ExampleFilePaths::driver_example_, TestResources::ExampleFilePaths::directory_output_));
 }
 
 TEST_F(SettingsTest, GlobalSettings) {
-    Settings settings = Settings(driver_file_path_, output_directory_);
+    Settings settings = Settings(TestResources::ExampleFilePaths::driver_example_, TestResources::ExampleFilePaths::directory_output_);
     EXPECT_STREQ("TestRun", settings.name().toLatin1().constData());
-    EXPECT_STREQ(driver_file_path_.toLatin1().constData(), settings.driver_path().toLatin1().constData());
+    EXPECT_STREQ(TestResources::ExampleFilePaths::driver_example_.toLatin1().constData(), settings.driver_path().toLatin1().constData());
     EXPECT_EQ(false, settings.verbose());
 }
 

@@ -1,46 +1,19 @@
-/******************************************************************************
- *
- *
- *
- * Created: 04.11.2015 2015 by einar
- *
- * This file is part of the FieldOpt project.
- *
- * Copyright (C) 2015-2015 Einar J.M. Baumann <einar.baumann@ntnu.no>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
- *****************************************************************************/
-
-#include "../test_fixture_model_base.h"
+#include <gtest/gtest.h>
+#include "Model/tests/test_resource_model.h"
 #include "Model/wells/well_exceptions.h"
 
 using namespace Model::Wells;
 
 namespace {
 
-class TrajectoryTest : public ModelBaseTest {
+class TrajectoryTest : public ::testing::Test, public TestResources::TestResourceModel {
 
 protected:
     TrajectoryTest() {
-        prod_well_settings_ = settings_->model()->wells().first();
-        prod_well_trajectory_ = new Wellbore::Trajectory(prod_well_settings_, variable_container_, variable_handler_, model_->reservoir());
+        prod_well_trajectory_ = model_->wells()->first()->trajectory();
     }
     virtual ~TrajectoryTest() {}
     virtual void SetUp() {}
-
-    ::Utilities::Settings::Model::Well prod_well_settings_;
     ::Model::Wells::Wellbore::Trajectory *prod_well_trajectory_;
 };
 
@@ -95,16 +68,16 @@ TEST_F(TrajectoryTest, Completions) {
 }
 
 TEST_F(TrajectoryTest, VariableHandlerCorrectness) {
-    EXPECT_TRUE(variable_handler_->GetWellBlock(0)->position());
-    EXPECT_TRUE(variable_handler_->GetWellBlock(1)->position());
-    EXPECT_TRUE(variable_handler_->GetWellBlock(2)->position());
-    EXPECT_TRUE(variable_handler_->GetWellBlock(3)->position());
+    EXPECT_TRUE(model_->variable_handler()->GetWellBlock(0)->position());
+    EXPECT_TRUE(model_->variable_handler()->GetWellBlock(1)->position());
+    EXPECT_TRUE(model_->variable_handler()->GetWellBlock(2)->position());
+    EXPECT_TRUE(model_->variable_handler()->GetWellBlock(3)->position());
 }
 
 
 TEST_F(TrajectoryTest, VariableContainerConsistencyAfterCreation) {
     // There should be three integer variables (i,j,k) for each of the four well block
-    EXPECT_EQ(12, variable_container_->DiscreteVariableSize());
+    EXPECT_EQ(12, model_->variables()->DiscreteVariableSize());
 }
 
 

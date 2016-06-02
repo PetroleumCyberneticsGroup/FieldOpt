@@ -13,12 +13,12 @@
 #include "Model/tests/test_resource_grids.h"
 
 
-class AdgprsTestFixture : public ::testing::Test, TestResourceGrids {
+class AdgprsTestFixture : public ::testing::Test, TestResources::TestResourceGrids {
 protected:
     AdgprsTestFixture(){
         settings_ = new Utilities::Settings::Settings(fo_driver_path_, output_directory_);
         settings_->simulator()->set_driver_file_path(sim_driver_path_);
-        settings_->model()->set_reservoir_grid_path(file_path_5spot_);
+        settings_->model()->set_reservoir_grid_path(TestResources::ExampleFilePaths::grid_5spot_);
         model_ = new Model::Model(*settings_->model());
     }
     QString sim_driver_path_ = "../examples/ADGPRS/5spot/5SPOT.gprs";

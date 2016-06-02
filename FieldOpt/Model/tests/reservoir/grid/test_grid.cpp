@@ -9,7 +9,7 @@ using namespace Model::Reservoir::Grid;
 
 namespace {
 
-class GridTest : public ::testing::Test, TestResourceGrids {
+class GridTest : public ::testing::Test, TestResources::TestResourceGrids {
 protected:
     GridTest() : Test(), TestResourceGrids() {
         grid_ = grid_horzwel_;
@@ -19,13 +19,8 @@ protected:
         delete grid_;
     }
 
-    virtual void SetUp() {
-
-    }
-
-    virtual void TearDown() {
-
-    }
+    virtual void SetUp() { }
+    virtual void TearDown() { }
 
     Grid* grid_;
 };

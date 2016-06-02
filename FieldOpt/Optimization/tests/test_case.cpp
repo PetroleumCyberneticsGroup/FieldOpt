@@ -28,24 +28,14 @@
 #include <QList>
 
 namespace {
-
-
-    class CaseTest : public ::testing::Test, public TestResourceCases {
-
+    class CaseTest : public ::testing::Test, public TestResources::TestResourceCases {
     public:
-
         CaseTest() : Test() { }
-
         virtual ~CaseTest() { }
 
     protected:
-        virtual void TearDown() {
-
-        }
-
-        virtual void SetUp() {
-
-        }
+        virtual void TearDown() { }
+        virtual void SetUp() { }
 
 
     };

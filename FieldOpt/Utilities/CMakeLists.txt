@@ -28,6 +28,7 @@ target_compile_features(utilities
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 add_executable(test_utilities
+		tests/test_resource_example_file_paths.h
 		tests/test_resource_settings.h
         tests/file_handling/test_filehandling.cpp
         tests/settings/test_settings.cpp

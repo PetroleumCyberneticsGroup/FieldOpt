@@ -34,12 +34,13 @@
 #include "Model/model.h"
 #include "Model/tests/test_resource_grids.h"
 #include "Utilities/tests/test_resource_settings.h"
+#include "Model/tests/test_resource_model.h"
 
-class ModelBaseTest : public ::testing::Test, TestResourceGrids, TestResourceSettings {
+class ModelBaseTest : public ::testing::Test, TestResources::TestResourceGrids, TestResources::TestResourceSettings {
 protected:
     ModelBaseTest() {
-        settings_ = full_settings_;
-        settings_->model()->set_reservoir_grid_path(file_path_5spot_);
+        settings_ = settings_full_;
+        settings_->model()->set_reservoir_grid_path(TestResources::ExampleFilePaths::grid_5spot_);
         variable_container_ = new ::Model::Properties::VariablePropertyContainer();
         variable_handler_ = new ::Model::Properties::VariablePropertyHandler(*settings_->model());
         model_ = new ::Model::Model(*settings_->model());

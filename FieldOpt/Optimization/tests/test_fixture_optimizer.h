@@ -35,11 +35,11 @@
 #include "Model/tests/test_resource_grids.h"
 #include <iostream>
 
-class OptimizerTestFixture : public ::testing::Test, TestResourceGrids {
+class OptimizerTestFixture : public ::testing::Test, TestResources::TestResourceGrids {
 protected:
     OptimizerTestFixture(){
         settings_ = new ::Utilities::Settings::Settings(driver_file_path_, output_directory_);
-        settings_->model()->set_reservoir_grid_path(file_path_5spot_);
+        settings_->model()->set_reservoir_grid_path(TestResources::ExampleFilePaths::grid_5spot_);
         optimizer_settings_ = settings_->optimizer();
         model_ = new ::Model::Model(*::Utilities::Settings::Settings(driver_file_path_, output_directory_).model());
         base_case_ = new ::Optimization::Case(model_->variables()->GetBinaryVariableValues(),
