@@ -1,12 +1,13 @@
-#include "Simulation/tests/test_fixture_adgprs.h"
+#include <gtest/gtest.h>
+#include "Utilities/tests/test_resource_example_file_paths.h"
 #include "AdgprsResultsReader/json_summary_reader.h"
 
 namespace {
 
-class JsonSummaryReaderTest : public AdgprsTestFixture {
+class JsonSummaryReaderTest : public testing::Test {
 protected:
     JsonSummaryReaderTest() {
-        reader_ = new AdgprsResultsReader::JsonSummaryReader(json_summary_path_);
+        reader_ = new AdgprsResultsReader::JsonSummaryReader(TestResources::ExampleFilePaths::gprs_smry_json_5spot_);
     }
     virtual ~JsonSummaryReaderTest() {}
     virtual void SetUp() {}

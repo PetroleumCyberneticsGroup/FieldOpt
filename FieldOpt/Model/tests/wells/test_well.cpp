@@ -1,36 +1,12 @@
-/******************************************************************************
- *
- *
- *
- * Created: 10.11.2015 2015 by einar
- *
- * This file is part of the FieldOpt project.
- *
- * Copyright (C) 2015-2015 Einar J.M. Baumann <einar.baumann@ntnu.no>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
- *****************************************************************************/
-
-#include "../test_fixture_model_base.h"
+#include <gtest/gtest.h>
+#include "Model/tests/test_resource_model.h"
 
 namespace {
 
-class WellTest : public ModelBaseTest {
+class WellTest : public ::testing::Test, public TestResources::TestResourceModel{
 protected:
     WellTest() {
-        producer_well_ = new ::Model::Wells::Well(*settings_->model(), 0, variable_container_, variable_handler_, model_->reservoir());
+        producer_well_ = model_->wells()->first();
     }
 
     ::Model::Wells::Well *producer_well_;

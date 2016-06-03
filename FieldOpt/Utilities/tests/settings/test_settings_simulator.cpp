@@ -26,32 +26,26 @@
 #include <gtest/gtest.h>
 #include <QString>
 
-#include "Utilities/settings/settings.h"
+#include "Utilities/tests/test_resource_settings.h"
 
 using namespace Utilities::Settings;
 
 namespace {
 
-class SimulatorSettingsTest : public ::testing::Test {
+class SimulatorSettingsTest : public ::testing::Test, public TestResources::TestResourceSettings {
 protected:
     SimulatorSettingsTest()
-        : settings_(driver_file_path_, output_directory_)
-    {
-    }
+    { }
     virtual ~SimulatorSettingsTest() {}
 
     virtual void SetUp() {}
     virtual void TearDown() {}
-
-    QString driver_file_path_ = "../examples/driver.json";
-    QString output_directory_ = "../fieldopt_output";
-    Settings settings_;
 };
 
 TEST_F(SimulatorSettingsTest, Fields) {
-    EXPECT_EQ(settings_.simulator()->type(), Simulator::SimulatorType::ECLIPSE);
-    EXPECT_EQ(settings_.simulator()->commands()->size(), 1);
-    EXPECT_STREQ("../examples/ECLIPSE/HORZWELL/HORZWELL.DATA", settings_.simulator()->driver_file_path().toLatin1().constData());
+    EXPECT_EQ(settings_simulator_->type(), Simulator::SimulatorType::ECLIPSE);
+    EXPECT_EQ(settings_simulator_->commands()->size(), 1);
+    EXPECT_STREQ("../examples/ECLIPSE/HORZWELL/HORZWELL.DATA", settings_simulator_->driver_file_path().toLatin1().constData());
 }
 
 }

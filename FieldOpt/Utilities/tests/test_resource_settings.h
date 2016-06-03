@@ -2,34 +2,37 @@
 #define FIELDOPT_TEST_RESOURCE_SETTINGS_H
 
 #include "Utilities/settings/settings.h"
+#include "Utilities/tests/test_resource_example_file_paths.h"
 
-class TestResourceSettings {
-protected:
-    TestResourceSettings() {
-        full_settings_ = new Utilities::Settings::Settings(driver_file_path_, output_directory_);
-        optimizer_settings_ = full_settings_->optimizer();
-        simulator_settings_ = full_settings_->simulator();
-        model_settings_ = full_settings_->model();
+namespace TestResources {
 
-        constraint_settings_reservoir_boundary_.name = "SplinePoints";
-        constraint_settings_reservoir_boundary_.type = Utilities::Settings::Optimizer::ConstraintType::ReservoirBoundary;
-        constraint_settings_reservoir_boundary_.imin = 1;
-        constraint_settings_reservoir_boundary_.imax = 1;
-        constraint_settings_reservoir_boundary_.jmin = 0;
-        constraint_settings_reservoir_boundary_.jmax = 0;
-        constraint_settings_reservoir_boundary_.kmin = 0;
-        constraint_settings_reservoir_boundary_.kmax = 0;
-        constraint_settings_reservoir_boundary_.well = "PRODUCER";
-    }
-    Utilities::Settings::Settings *full_settings_;
-    Utilities::Settings::Optimizer *optimizer_settings_;
-    Utilities::Settings::Simulator *simulator_settings_;
-    Utilities::Settings::Model *model_settings_;
+    class TestResourceSettings {
+    protected:
+        TestResourceSettings() {
+                settings_full_ = new Utilities::Settings::Settings(ExampleFilePaths::driver_example_, ExampleFilePaths::directory_output_);
+                settings_optimizer_ = settings_full_->optimizer();
+                settings_simulator_ = settings_full_->simulator();
+                settings_model_ = settings_full_->model();
 
-    QString driver_file_path_ = "../examples/driver.json";
-    QString output_directory_ = "../fieldopt_output";
+                constraint_settings_reservoir_boundary_.name = "SplinePoints";
+                constraint_settings_reservoir_boundary_.type = Utilities::Settings::Optimizer::ConstraintType::ReservoirBoundary;
+                constraint_settings_reservoir_boundary_.imin = 1;
+                constraint_settings_reservoir_boundary_.imax = 1;
+                constraint_settings_reservoir_boundary_.jmin = 0;
+                constraint_settings_reservoir_boundary_.jmax = 0;
+                constraint_settings_reservoir_boundary_.kmin = 0;
+                constraint_settings_reservoir_boundary_.kmax = 0;
+                constraint_settings_reservoir_boundary_.well = "PRODUCER";
+        }
 
-    Utilities::Settings::Optimizer::Constraint constraint_settings_reservoir_boundary_;
-};
+        Utilities::Settings::Settings *settings_full_;
+        Utilities::Settings::Optimizer *settings_optimizer_;
+        Utilities::Settings::Simulator *settings_simulator_;
+        Utilities::Settings::Model *settings_model_;
+
+        Utilities::Settings::Optimizer::Constraint constraint_settings_reservoir_boundary_;
+    };
+
+}
 
 #endif //FIELDOPT_TEST_RESOURCE_SETTINGS_H

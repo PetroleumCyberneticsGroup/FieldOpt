@@ -1,40 +1,16 @@
-/******************************************************************************
- *
- *
- *
- * Created: 01.12.2015 2015 by einar
- *
- * This file is part of the FieldOpt project.
- *
- * Copyright (C) 2015-2015 Einar J.M. Baumann <einar.baumann@ntnu.no>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
- *****************************************************************************/
-
-#include "test_fixture_case.h"
+#include <gtest/gtest.h>
 #include "Optimization/case_handler.h"
+#include "Optimization/tests/test_resource_cases.h"
 
 namespace {
 
-class CaseHandlerTest : public CaseTestFixture {
+class CaseHandlerTest : public ::testing::Test, public TestResources::TestResourceCases {
 protected:
     CaseHandlerTest(){}
     virtual ~CaseHandlerTest(){}
     virtual void SetUp() {
         case_handler_ = new Optimization::CaseHandler();
-        foreach (Optimization::Case *c, cases_) {
+        foreach (Optimization::Case *c, trivial_cases_) {
             case_handler_->AddNewCase(c);
         }
     }
@@ -57,10 +33,10 @@ TEST_F(CaseHandlerTest, InitialQueue) {
 }
 
 TEST_F(CaseHandlerTest, CaseIDs) {
-    EXPECT_STREQ(cases_[0]->id().toString().toLatin1().constData(), case_handler_->QueuedCases()[0]->id().toString().toLatin1().constData());
-    EXPECT_STREQ(cases_[1]->id().toString().toLatin1().constData(), case_handler_->QueuedCases()[1]->id().toString().toLatin1().constData());
-    EXPECT_STREQ(cases_[2]->id().toString().toLatin1().constData(), case_handler_->QueuedCases()[2]->id().toString().toLatin1().constData());
-    EXPECT_STREQ(cases_[3]->id().toString().toLatin1().constData(), case_handler_->QueuedCases()[3]->id().toString().toLatin1().constData());
+    EXPECT_STREQ(trivial_cases_[0]->id().toString().toLatin1().constData(), case_handler_->QueuedCases()[0]->id().toString().toLatin1().constData());
+    EXPECT_STREQ(trivial_cases_[1]->id().toString().toLatin1().constData(), case_handler_->QueuedCases()[1]->id().toString().toLatin1().constData());
+    EXPECT_STREQ(trivial_cases_[2]->id().toString().toLatin1().constData(), case_handler_->QueuedCases()[2]->id().toString().toLatin1().constData());
+    EXPECT_STREQ(trivial_cases_[3]->id().toString().toLatin1().constData(), case_handler_->QueuedCases()[3]->id().toString().toLatin1().constData());
 }
 
 TEST_F(CaseHandlerTest, GetNewCase) {

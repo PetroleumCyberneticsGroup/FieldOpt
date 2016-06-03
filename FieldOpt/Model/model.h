@@ -59,6 +59,11 @@ public:
     Properties::VariablePropertyContainer *variables() const { return variable_container_; }
 
     /*!
+     * \brief Get the variable property handler used to initialize the model's variables.
+     */
+    Properties::VariablePropertyHandler *variable_handler() const { return variable_handler_; }
+
+    /*!
      * \brief wells Get a list of all the wells in the model.
      */
     QList<Wells::Well *> *wells() const { return wells_; }

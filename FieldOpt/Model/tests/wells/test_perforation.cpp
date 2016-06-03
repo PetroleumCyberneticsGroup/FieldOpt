@@ -1,46 +1,24 @@
-/******************************************************************************
- *
- *
- *
- * Created: 28.10.2015 2015 by einar
- *
- * This file is part of the FieldOpt project.
- *
- * Copyright (C) 2015-2015 Einar J.M. Baumann <einar.baumann@ntnu.no>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
- *****************************************************************************/
-
-#include "../test_fixture_model_base.h"
+#include <gtest/gtest.h>
+#include "Model/wells/wellbore/completions/completion.h"
+#include "Model/wells/wellbore/completions/perforation.h"
+#include "Model/tests/test_resource_model.h"
 
 using namespace Model::Wells::Wellbore;
 
 namespace {
 
-class PerforationTest : public ModelBaseTest {
+class PerforationTest : public testing::Test, public TestResources::TestResourceModel {
 protected:
     PerforationTest() {
-        prod_well_ = settings_->model()->wells().first();
+        prod_well_ = settings_full_->model()->wells().first();
     }
     virtual ~PerforationTest() {}
     virtual void SetUp() {
         prod_perforations_ = QList<Completions::Perforation *>();
         for (int i = 0; i < prod_well_.completions.size(); ++i) {
             prod_perforations_.append(new Completions::Perforation(prod_well_.completions[i],
-                                                                   variable_container_,
-                                                                   variable_handler_));
+                                                                   model_->variables(),
+                                                                   model_->variable_handler()));
         }
     }
 
@@ -58,8 +36,8 @@ TEST_F(PerforationTest, Values) {
 }
 
 TEST_F(PerforationTest, VariableHandlerCorrectness) {
-    EXPECT_TRUE(variable_handler_->GetPerforation(0)->transmissibility_factor());
-    EXPECT_TRUE(variable_handler_->GetPerforation(1)->transmissibility_factor());
+    EXPECT_TRUE(model_->variable_handler()->GetPerforation(0)->transmissibility_factor());
+    EXPECT_TRUE(model_->variable_handler()->GetPerforation(1)->transmissibility_factor());
 }
 
 

@@ -53,9 +53,6 @@ target_compile_features(ertwrapper
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS} tests)
 add_executable(test_optimization
-        tests/test_fixture_optimizer.h
-        tests/test_fixture_case.h
-
         tests/test_case.cpp
         tests/test_case_handler.cpp
         tests/constraints/test_box_constraint.cpp
@@ -63,8 +60,9 @@ add_executable(test_optimization
         tests/objective/test_weightedsum.cpp
         tests/optimizers/test_compass_search.cpp
         tests/test_resource_cases.h
+		tests/test_resource_optimizer.h
 		${EXPERIMENTAL_CONSTRAINTS_TESTS}
-        )
+		)
 
 target_link_libraries(test_optimization
         fieldopt::optimization

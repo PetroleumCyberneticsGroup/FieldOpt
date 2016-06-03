@@ -26,6 +26,7 @@
 #include <gtest/gtest.h>
 
 #include "Utilities/file_handling/filehandling.h"
+#include "Utilities/tests/test_resource_example_file_paths.h"
 
 namespace {
 
@@ -36,26 +37,20 @@ protected:
 
     virtual void SetUp() {}
     virtual void TearDown() {}
-
-    QString driver_file_path_ = "../examples/driver.json";
-    QString driver_directory_path_ = "../examples";
-
-
 };
 
 TEST_F(FileHandlingTest, Existance) {
-    EXPECT_TRUE(::Utilities::FileHandling::FileExists(driver_file_path_));
-    EXPECT_FALSE(::Utilities::FileHandling::FileExists(driver_file_path_ + "wrong"));
-    EXPECT_FALSE(::Utilities::FileHandling::FileExists(driver_directory_path_));
+    EXPECT_TRUE(::Utilities::FileHandling::FileExists(TestResources::ExampleFilePaths::driver_example_));
+    EXPECT_FALSE(::Utilities::FileHandling::FileExists(TestResources::ExampleFilePaths::driver_example_ + "wrong"));
+    EXPECT_FALSE(::Utilities::FileHandling::FileExists(TestResources::ExampleFilePaths::directory_output_));
 
-    EXPECT_TRUE(::Utilities::FileHandling::DirectoryExists(driver_directory_path_));
-    EXPECT_FALSE(::Utilities::FileHandling::DirectoryExists(driver_directory_path_ + "wrong"));
-    EXPECT_FALSE(::Utilities::FileHandling::DirectoryExists(driver_file_path_));
-    EXPECT_FALSE(::Utilities::FileHandling::DirectoryIsEmpty(driver_directory_path_));
+    EXPECT_TRUE(::Utilities::FileHandling::DirectoryExists(TestResources::ExampleFilePaths::directory_output_));
+    EXPECT_FALSE(::Utilities::FileHandling::DirectoryExists(TestResources::ExampleFilePaths::directory_output_ + "wrong"));
+    EXPECT_FALSE(::Utilities::FileHandling::DirectoryExists(TestResources::ExampleFilePaths::driver_example_));
 }
 
 TEST_F(FileHandlingTest, FileReading) {
-    EXPECT_LE(160, ::Utilities::FileHandling::ReadFileToStringList(driver_file_path_)->size());
+    EXPECT_LE(160, ::Utilities::FileHandling::ReadFileToStringList(TestResources::ExampleFilePaths::driver_example_)->size());
 }
 
 

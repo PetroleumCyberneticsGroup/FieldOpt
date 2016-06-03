@@ -26,40 +26,34 @@
 #include <gtest/gtest.h>
 #include <QString>
 
-#include "Utilities/settings/settings.h"
+#include "Utilities/tests/test_resource_settings.h"
 
 using namespace Utilities::Settings;
 
 namespace {
 
-class ModelSettingsTest : public ::testing::Test {
+class ModelSettingsTest : public ::testing::Test, public TestResources::TestResourceSettings {
 protected:
     ModelSettingsTest()
-        : settings_(driver_file_path_, output_directory_)
-    {
-    }
+    { }
     virtual ~ModelSettingsTest() {}
 
     virtual void SetUp() {}
     virtual void TearDown() {}
-
-    QString driver_file_path_ = "../examples/driver.json";
-    QString output_directory_ = "../fieldopt_output";
-    Settings settings_;
 };
 
 TEST_F(ModelSettingsTest, Reservoir) {
-    EXPECT_EQ(settings_.model()->reservoir().type, Model::ReservoirGridSourceType::ECLIPSE);
-    EXPECT_STREQ("../examples/ADGPRS/5spot/ECL_5SPOT.EGRID", settings_.model()->reservoir().path.toLatin1().constData());
+    EXPECT_EQ(settings_model_->reservoir().type, Model::ReservoirGridSourceType::ECLIPSE);
+    EXPECT_STREQ("../examples/ADGPRS/5spot/ECL_5SPOT.EGRID", settings_model_->reservoir().path.toLatin1().constData());
 }
 
 TEST_F(ModelSettingsTest, ControlTimes) {
-    EXPECT_EQ(4, settings_.model()->control_times().size());
-    EXPECT_EQ(365, settings_.model()->control_times().last());
+    EXPECT_EQ(4, settings_model_->control_times().size());
+    EXPECT_EQ(365, settings_model_->control_times().last());
 }
 
 TEST_F(ModelSettingsTest, ProducerWell) {
-    Model::Well producer = settings_.model()->wells().first();
+    Model::Well producer = settings_model_->wells().first();
     EXPECT_STREQ("PROD", producer.name.toLatin1().constData());
     EXPECT_EQ(Model::WellType::Producer, producer.type);
     EXPECT_EQ(Model::WellDefinitionType::WellBlocks, producer.definition_type);
@@ -79,7 +73,7 @@ TEST_F(ModelSettingsTest, ProducerWell) {
 }
 
 TEST_F(ModelSettingsTest, ProducerCompletions) {
-    Model::Well producer = settings_.model()->wells().first();
+    Model::Well producer = settings_model_->wells().first();
     EXPECT_EQ(Model::WellCompletionType::Perforation, producer.completions.first().type);
     EXPECT_EQ(4, producer.completions.first().well_block.position.j);
     EXPECT_EQ(0, producer.completions[0].id);
@@ -87,7 +81,7 @@ TEST_F(ModelSettingsTest, ProducerCompletions) {
 }
 
 TEST_F(ModelSettingsTest, ProducerVariables) {
-    Model::Well producer = settings_.model()->wells().first();
+    Model::Well producer = settings_model_->wells().first();
     EXPECT_EQ(3, producer.variables.size());
 
     // BHP variable
@@ -113,7 +107,7 @@ TEST_F(ModelSettingsTest, ProducerVariables) {
 }
 
 TEST_F(ModelSettingsTest, InjectorWell) {
-    Model::Well injector = settings_.model()->wells().last();
+    Model::Well injector = settings_model_->wells().last();
     EXPECT_STREQ("INJ", injector.name.toLatin1().constData());
     EXPECT_EQ(Model::WellType::Injector, injector.type);
     EXPECT_EQ(Model::ControlMode::RateControl, injector.controls.first().control_mode);
@@ -135,7 +129,7 @@ TEST_F(ModelSettingsTest, InjectorWell) {
 }
 
 TEST_F(ModelSettingsTest, InjectorVariables) {
-    Model::Well injector = settings_.model()->wells().last();
+    Model::Well injector = settings_model_->wells().last();
     EXPECT_EQ(1, injector.variables.size());
     EXPECT_EQ(Model::WellVariableType::SplinePoints, injector.variables.first().type);
     EXPECT_EQ(1, injector.variables.first().variable_spline_point_indices.last());

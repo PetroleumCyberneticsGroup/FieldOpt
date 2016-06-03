@@ -39,7 +39,6 @@ target_compile_features(ertwrapper
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 add_executable(test_simulation
-        tests/test_fixture_adgprs.h
         tests/results/test_adgprsresults.cpp
         tests/simulator_interfaces/test_adgprssimulator.cpp
         tests/simulator_interfaces/test_eclsimulator.cpp
@@ -53,7 +52,7 @@ add_executable(test_simulation
         tests/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_summary_section.cpp
         tests/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_wellcontrols.cpp
         tests/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_welspecs.cpp
-        )
+        tests/test_resource_results.h)
 target_link_libraries(test_simulation
         fieldopt::simulation
         ${GTEST_BOTH_LIBRARIES}

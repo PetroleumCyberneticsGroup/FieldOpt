@@ -49,7 +49,6 @@ target_compile_features(model
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS} tests)
 add_executable(test_model
-		tests/test_fixture_model_base.h
 		tests/test_model.cpp
 		tests/reservoir/test_reservoir.cpp
 		tests/reservoir/grid/test_cell.cpp
@@ -66,7 +65,8 @@ add_executable(test_model
 		tests/wells/test_well.cpp
 		tests/wells/test_wellblock.cpp
 		tests/test_resource_grids.h
-		tests/test_resource_variable_property_container.h)
+		tests/test_resource_variable_property_container.h
+		tests/test_resource_model.h)
 target_link_libraries(test_model
 		fieldopt::model
 		fieldopt::optimization

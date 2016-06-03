@@ -1,48 +1,26 @@
-/******************************************************************************
- *
- *
- *
- * Created: 22.10.2015 2015 by einar
- *
- * This file is part of the FieldOpt project.
- *
- * Copyright (C) 2015-2015 Einar J.M. Baumann <einar.baumann@ntnu.no>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
- *****************************************************************************/
-
-#include "../test_fixture_model_base.h"
+#include <gtest/gtest.h>
+#include <tests/test_resource_model.h>
+#include "Model/wells/control.h"
+#include "Model/tests/test_resource_model.h"
 
 using namespace Model::Wells;
 
 namespace {
 
-class ControlTest : public ModelBaseTest {
+class ControlTest : public testing::Test, public TestResources::TestResourceModel {
 protected:
     ControlTest() {
-        well_ = settings_->model()->wells().first();
-        inj_well_ = settings_->model()->wells().last();
+        well_ = settings_model_->wells().first();
+        inj_well_ = settings_model_->wells().last();
         entry_ = well_.controls.first();
         inj_entry_ = inj_well_.controls.first();
 
-        for (int i = 0; i < settings_->model()->wells().size(); ++i) {
-            for (int j = 0; j < settings_->model()->wells()[i].controls.size(); ++j) {
-                all_controls_.append(new Control(settings_->model()->wells()[i].controls[j],
-                                                 settings_->model()->wells()[i],
-                                                 variable_container_,
-                                                 variable_handler_));
+        for (int i = 0; i < settings_model_->wells().size(); ++i) {
+            for (int j = 0; j < settings_model_->wells()[i].controls.size(); ++j) {
+                all_controls_.append(new Control(settings_model_->wells()[i].controls[j],
+                                                 settings_model_->wells()[i],
+                                                 model_->variables(),
+                                                 model_->variable_handler()));
             }
         }
     }
@@ -75,9 +53,9 @@ TEST_F(ControlTest, InjectorControl) {
 }
 
 TEST_F(ControlTest, VariableContainerConsistencyAfterCreation) {
-    EXPECT_EQ(0, variable_container_->BinaryVariableSize());
-    EXPECT_EQ(0, variable_container_->DiscreteVariableSize());
-    EXPECT_EQ(3, variable_container_->ContinousVariableSize()); // BHP for PROD is set variable at three time steps
+    EXPECT_EQ(0, model_->variables()->BinaryVariableSize());
+    EXPECT_EQ(12, model_->variables()->DiscreteVariableSize());
+    EXPECT_EQ(14, model_->variables()->ContinousVariableSize());
 }
 
 }

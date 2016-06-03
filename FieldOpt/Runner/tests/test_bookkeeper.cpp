@@ -1,14 +1,15 @@
-#include "Optimization/tests/test_fixture_case.h"
+#include <gtest/gtest.h>
+#include "Optimization/tests/test_resource_optimizer.h"
 #include "../Runner/bookkeeper.h"
 #include "Optimization/optimizers/compass_search.h"
 
 namespace {
 
-class BookkeeperTest : public CaseTestFixture {
+class BookkeeperTest : public ::testing::Test, public TestResources::TestResourceOptimizer {
 protected:
     BookkeeperTest() {
-        compass_search_ = new ::Optimization::Optimizers::CompassSearch(optimizer_settings_, base_case_, model_->variables());
-        bookkeeper_ = new Runner::Bookkeeper(settings_, compass_search_->case_handler());
+        compass_search_ = new ::Optimization::Optimizers::CompassSearch(settings_optimizer_, base_case_, model_->variables());
+        bookkeeper_ = new Runner::Bookkeeper(settings_full_, compass_search_->case_handler());
         c1 = compass_search_->GetCaseForEvaluation();
         c2 = compass_search_->GetCaseForEvaluation();
         c3 = compass_search_->GetCaseForEvaluation();

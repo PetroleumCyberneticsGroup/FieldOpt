@@ -24,7 +24,7 @@ AdgprsSimulator::AdgprsSimulator(Utilities::Settings::Settings *settings, Model:
 
     model_ = model;
     settings_ = settings;
-    results_ = new Simulation::Results::AdgprsResults(model_);
+    results_ = new Simulation::Results::AdgprsResults();
     driver_file_writer_ = new DriverFileWriters::AdgprsDriverFileWriter(settings_, model_);
 
     script_path_ = ExecutionScripts::GetScriptPath(settings->simulator()->script_name());
