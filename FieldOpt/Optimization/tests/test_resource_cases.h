@@ -22,7 +22,11 @@ namespace TestResources {
             test_case_5_ = new Optimization::Case(variable_property_container_->GetBinaryVariableValues(),
                                                   variable_property_container_->GetDiscreteVariableValues(),
                                                   variable_property_container_->GetContinousVariableValues());
+
+            trivial_cases_ << test_case_1_ << test_case_2_ << test_case_3_ << test_case_4_;
         }
+
+        QList<Optimization::Case *> trivial_cases_;
 
         /* Case 1:
          * Only integer variables.

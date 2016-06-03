@@ -63,7 +63,6 @@ target_compile_features(runner
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 add_executable(test_runner
-        ../Optimization/tests/test_fixture_case.h
         tests/test_bookkeeper.cpp
         )
 target_link_libraries(test_runner

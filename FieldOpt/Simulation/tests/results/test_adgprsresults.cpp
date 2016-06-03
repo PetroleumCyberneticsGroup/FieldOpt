@@ -1,14 +1,14 @@
 #include <gtest/gtest.h>
-#include "Model/tests/test_resource_model.h"
+#include "Utilities/tests/test_resource_example_file_paths.h"
 #include "Simulation/results/adgprsresults.h"
 
 namespace {
 
-class AdgprsResultsTest : public ::testing::Test, public TestResources::TestResourceModel {
+class AdgprsResultsTest : public ::testing::Test {
 protected:
     AdgprsResultsTest()
     {
-        results_ = new Simulation::Results::AdgprsResults(model_);
+        results_ = new Simulation::Results::AdgprsResults();
         results_->ReadResults(TestResources::ExampleFilePaths::gprs_base_5spot_);
     }
     virtual ~AdgprsResultsTest() {}
