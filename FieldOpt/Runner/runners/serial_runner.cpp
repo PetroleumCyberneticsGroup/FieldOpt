@@ -29,6 +29,7 @@ void SerialRunner::Execute()
 
         if (bookkeeper_->IsEvaluated(new_case, true)) {
             logger_->LogCase(new_case, "Case objective value set by bookkeeper.");
+            logger_->increment_bookkeeped_cases();
         }
         else {
             try {
@@ -38,16 +39,19 @@ void SerialRunner::Execute()
                 simulator_->Evaluate();
                 logger_->LogSimulation(new_case); // Log sim end
                 logger_->LogProductionData(new_case, simulator_->results());
+                logger_->increment_simulated_cases();
                 new_case->set_objective_function_value(objective_function_->value());
             } catch (std::runtime_error e) {
                 std::cout << e.what() << std::endl;
                 std::cout << "Invalid well block coordinate encountered. Setting obj. val. to sentinel value." << std::endl;
+                logger_->increment_invalid_cases();
                 new_case->set_objective_function_value(sentinelValue());
             }
             logger_->LogCase(new_case);
         }
         optimizer_->SubmitEvaluatedCase(new_case);
         logger_->LogOptimizerStatus(optimizer_);
+        logger_->LogRunnerStats();
     }
 }
 

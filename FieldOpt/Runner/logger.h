@@ -73,6 +73,11 @@ public:
      */
     void LogProductionData(const Optimization::Case *c, Simulation::Results::Results *results);
 
+    void LogRunnerStats();
+    void increment_simulated_cases(); //!< Increase the number of simulated cases by 1.
+    void increment_bookkeeped_cases(); //!< Increase the number of bookkeeped cases by 1.
+    void increment_invalid_cases(); //!< Increase the number of invalid cases by 1.
+
 
 
 private:
@@ -81,6 +86,7 @@ private:
     QString opt_log_path_; //!< Path to the optimization log file.
     QString sim_log_path_; //!< Path to the simulation log file.
     QString cas_log_path_; //!< Path to the case log file.
+    QString run_log_path_; //!< Path to the runner log file.
     QString compdat_log_path_; //!< Path to the COMPDAT log file.
     QString prod_data_log_path_; //!< Path to the production data log file.
     QString settings_log_path_; //!< Path to the settings log file.
@@ -89,12 +95,20 @@ private:
     QStringList opt_header_; //!< CSV header for the optimization log
     QStringList sim_header_; //!< CSV header for the simulation log
     QStringList cas_header_; //!< CSV header for for the case log
+    QStringList run_header_; //!< CSV header for the runner log
+
+    int simulated_cases_;
+    int bookkeeped_cases_;
+    int invalid_cases_;
+    int total_cases_;
 
     QHash<QUuid, QDateTime> sim_start_times_; //!< A list of start times for currently running simulations.
+    QDateTime start_time_;
 
     void initializeCaseLog(const Optimization::Case *c);
     void initializeOptimizerLog(const Optimization::Optimizer *opt);
     void initializeSimulationLog();
+    void initializeRunnerLog();
     QString getTimeStampString();
     QString getTimeStampString(QDateTime t);
 };
