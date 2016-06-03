@@ -4,24 +4,18 @@
 #include "results.h"
 #include <QHash>
 #include "AdgprsResultsReader/adgprs_results_reader.h"
-#include "Model/model.h"
 
 namespace Simulation { namespace Results {
 
+/*!
+ * \brief AdgprsResults provides access to the results of an ADGPRS simulation.
+ *
+ * TODO: Support well properties. This is problematic because in the summary the wells only have a number that I can't reliably map to a name.
+ */
 class AdgprsResults : public Results
 {
 public:
-    /*!
-     * \brief AdgprsResults Uses the Model to create a mapping from well name to well number.
-     *
-     * Creating this mapping is necessary because the ADGPRS does not (unlike ECL) use well
-     * numbers in it's summary.
-     *
-     * \todo Well properties do not support injectors. Field props do.
-     *
-     * \todo The results reported for wells are not reliable. The nr -> name mapping is wrong.
-     */
-    AdgprsResults(Model::Model *model);
+    AdgprsResults();
 
     double GetValue(int well_nr, Property prop);
     double GetValue(int well_nr, Property prop, int time_index);
@@ -39,7 +33,6 @@ public:
 private:
     QString file_path_;
     AdgprsResultsReader::AdgprsResultsReader *summary_reader_;
-    QHash<QString, int> well_numbers_; //!< A mapping from well name to well number. This is needed because the ADGPRS summary does not include well names.
 
     // Mappings to summary keys.
     QHash<Property, QString> keys_ {
