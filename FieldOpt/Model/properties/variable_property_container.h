@@ -83,6 +83,13 @@ public:
      */
     QList<QPair<QUuid, QString> > GetContinousVariableNamesAndIdsMatchingSubstring(QString substring);
 
+    /*!
+     * \brief GetDiscreteVariableNamesAndIdsMatchingNamePart Get the names and IDs of continous variables with
+     * names containing the provided substring.
+     * \param substring
+     */
+    QList<QPair<QUuid, QString> > GetDiscreteVariableNamesAndIdsMatchingSubstring(QString substring);
+
     void DeleteBinaryVariable(QUuid id);
     void DeleteDiscreteVariable(QUuid id);
     void DeleteContinousVariable(QUuid id);
