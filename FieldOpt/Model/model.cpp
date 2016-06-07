@@ -53,7 +53,7 @@ void Model::ApplyCase(Optimization::Case *c)
         variable_container_->SetContinousVariableValue(key, c->real_variables()[key]);
     }
     foreach (Wells::Well *w, *wells_) {
-        w->trajectory()->UpdateWellBlocks();
+        w->Update();
     }
     verify();
 }

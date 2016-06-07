@@ -59,7 +59,7 @@ public:
          ::Model::Properties::VariablePropertyHandler *variable_handler,
          ::Model::Reservoir::Reservoir *reservoir);
 
-    struct Heel { Properties::DiscreteProperty *i; Properties::DiscreteProperty *j; Properties::DiscreteProperty *k; };
+    struct Heel { int i; int j; int k; };
 
     enum PreferedPhase { Oil, Gas, Water, Liquid };
 
@@ -71,9 +71,10 @@ public:
     double wellbore_radius() const { return wellbore_radius_->value(); }
     Wellbore::Trajectory *trajectory() { return trajectory_; }
     QList<Control *> *controls() { return controls_; }
-    int heel_i() const { return heel_.i->value(); }
-    int heel_j() const { return heel_.j->value(); }
-    int heel_k() const { return heel_.k->value(); }
+    int heel_i() const { return heel_.i; }
+    int heel_j() const { return heel_.j; }
+    int heel_k() const { return heel_.k; }
+    void Update();
 
 private:
     QString name_;

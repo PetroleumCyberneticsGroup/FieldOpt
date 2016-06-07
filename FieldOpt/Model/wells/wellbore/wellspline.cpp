@@ -36,30 +36,25 @@ WellSpline::WellSpline(Utilities::Settings::Model::Well well_settings, Propertie
     grid_ = reservoir->grid();
     well_settings_ = well_settings;
 
-    if (well_settings.spline_points.length() > 2)
-        throw std::runtime_error("Wells defined by a spline with more than two points are not yet supported!");
+    heel_x_ = new Model::Properties::ContinousProperty(well_settings.spline_heel.x);
+    heel_y_ = new Model::Properties::ContinousProperty(well_settings.spline_heel.y);
+    heel_z_ = new Model::Properties::ContinousProperty(well_settings.spline_heel.z);
+    toe_x_ = new Model::Properties::ContinousProperty(well_settings.spline_toe.x);
+    toe_y_ = new Model::Properties::ContinousProperty(well_settings.spline_toe.y);
+    toe_z_ = new Model::Properties::ContinousProperty(well_settings.spline_toe.z);
 
-    heel_x_ = new Model::Properties::ContinousProperty(well_settings.spline_points.first().x);
-    heel_y_ = new Model::Properties::ContinousProperty(well_settings.spline_points.first().y);
-    heel_z_ = new Model::Properties::ContinousProperty(well_settings.spline_points.first().z);
-    toe_x_ = new Model::Properties::ContinousProperty(well_settings.spline_points.last().x);
-    toe_y_ = new Model::Properties::ContinousProperty(well_settings.spline_points.last().y);
-    toe_z_ = new Model::Properties::ContinousProperty(well_settings.spline_points.last().z);
-
-    if (variable_handler->GetSplinePoint(well_settings.name, 0)) { // Check if heel is variable
-        QString base_name = variable_handler->GetSplinePoint(well_settings.name, 0)->variable_name() + "#" + well_settings.name + "#heel";
-        heel_x_->setName(base_name + "#x");
-        heel_y_->setName(base_name + "#y");
-        heel_z_->setName(base_name + "#z");
+    if (well_settings.spline_heel.is_variable) {
+        heel_x_->setName(well_settings.spline_heel.name + "#x");
+        heel_y_->setName(well_settings.spline_heel.name + "#y");
+        heel_z_->setName(well_settings.spline_heel.name + "#z");
         variable_container->AddVariable(heel_x_);
         variable_container->AddVariable(heel_y_);
         variable_container->AddVariable(heel_z_);
     }
-    if (variable_handler->GetSplinePoint(well_settings.name, 1)) { // Check if toe is variable
-        QString base_name = variable_handler->GetSplinePoint(well_settings.name, 1)->variable_name() + "#" + well_settings.name + "#toe";
-        toe_x_->setName(base_name + "#x");
-        toe_y_->setName(base_name + "#y");
-        toe_z_->setName(base_name + "#z");
+    if (well_settings.spline_toe.is_variable) {
+        toe_x_->setName(well_settings.spline_toe.name + "#x");
+        toe_y_->setName(well_settings.spline_toe.name + "#y");
+        toe_z_->setName(well_settings.spline_toe.name + "#z");
         variable_container->AddVariable(toe_x_);
         variable_container->AddVariable(toe_y_);
         variable_container->AddVariable(toe_z_);

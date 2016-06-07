@@ -52,11 +52,8 @@ class WellSpline;
  * a set of well blocks is calculated from. Either way it is always percieved as a set of blocks
  * from the outside.
  *
- * \todo Implement support for SplinePoint definition. Decide how to add completions to it. SplinePoints should provide a WellBlock list.
- *
  * \todo Initialize ICDs.
  *
- * \todo Handle variable trajectories.
  */
 class Trajectory
 {
