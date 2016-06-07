@@ -23,6 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
+#include <iostream>
 #include "Utilities/settings/model.h"
 #include "settings_exceptions.h"
 #include "Utilities/file_handling/filehandling.h"
@@ -50,8 +51,6 @@ Model::Model(QJsonObject json_model)
     }
 
     // Wells
-    next_completion_id = 0;
-    next_well_block_id = 0;
     try {
         QJsonArray json_wells = json_model["Wells"].toArray();
         wells_ = QList<Well>();
@@ -100,19 +99,53 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
     QString definition_type = json_well["DefinitionType"].toString();
     if (QString::compare(definition_type, "WellBlocks") == 0) {
         well.definition_type = WellDefinitionType::WellBlocks;
-        well.well_blocks = QList<WellBlock>();
+        well.well_blocks = QList<Well::WellBlock>();
         QJsonArray json_well_blocks = json_well["WellBlocks"].toArray();
         for (int i = 0; i < json_well_blocks.size(); ++i) {
-            well.well_blocks.append(WellBlock(IntegerCoordinate(json_well_blocks[i].toArray()), next_well_block_id++));
+            QJsonObject json_well_block_i = json_well_blocks[i].toObject();
+            Well::WellBlock block;
+            block.i = json_well_block_i["i"].toDouble();
+            block.j = json_well_block_i["j"].toDouble();
+            block.k = json_well_block_i["k"].toDouble();
+            block.is_variable = json_well_block_i["IsVariable"].toBool();
+            if (json_well_block_i.contains("Completion")) {
+                QJsonObject json_well_block_i_completion = json_well_block_i["Completion"].toObject();
+                block.completion.type = WellCompletionType::Perforation;
+                if (json_well_block_i_completion.contains("TransmissibilityFactor"))
+                    block.completion.transmissibility_factor = json_well_block_i_completion["TransmissibilityFactor"].toDouble();
+                if (json_well_block_i_completion.contains("IsVariable"))
+                    block.completion.is_variable = json_well_block_i_completion["IsVariable"].toBool();
+                else
+                    block.completion.is_variable = false;
+                block.completion.name = "Perforation#" + well.name + "#" + i;
+                block.has_completion = true;
+            }
+            else
+                block.has_completion = false;
+            block.name = "WellBlock#" + well.name + "#" + i;
+            well.well_blocks.append(block);
         }
     }
     else if (QString::compare(definition_type, "WellSpline") == 0) {
         well.definition_type = WellDefinitionType::WellSpline;
-        well.spline_points = QList<RealCoordinate>();
-        QJsonArray json_points = json_well["SplinePoints"].toArray();
-        for (int i = 0; i < json_points.size(); ++i) {
-            well.spline_points.append(RealCoordinate(json_points[i].toArray()));
-        }
+        QJsonObject json_points = json_well["SplinePoints"].toObject();
+        if (!json_points.contains("Heel") || !json_points.contains("Toe"))
+            throw UnableToParseWellsModelSectionException("Both Heel and Toe must be defined for spline-type wells.");
+
+        QJsonObject json_heel = json_points["Heel"].toObject();
+        QJsonObject json_toe = json_points["Toe"].toObject();
+        well.spline_heel.x = json_heel["x"].toDouble();
+        well.spline_heel.y = json_heel["y"].toDouble();
+        well.spline_heel.z = json_heel["z"].toDouble();
+        well.spline_toe.x = json_toe["x"].toDouble();
+        well.spline_toe.y = json_toe["y"].toDouble();
+        well.spline_toe.z = json_toe["z"].toDouble();
+        if (json_heel.contains("IsVariable") && json_heel["IsVariable"].toBool() == true)
+            well.spline_heel.is_variable = true;
+        if (json_toe.contains("IsVariable") && json_toe["IsVariable"].toBool() == true)
+            well.spline_toe.is_variable = true;
+        well.spline_heel.name = "SplinePoint#" + well.name + "#heel";
+        well.spline_toe.name = "SplinePoint#" + well.name + "#toe";
     }
     else throw UnableToParseWellsModelSectionException("Well definition type " + definition_type.toStdString() + " not recognized for well " + well.name.toStdString());
 
@@ -123,6 +156,8 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
 
     // Direction of penetration
     if (json_well.contains("Direction")) { // Direction must be specified for horizontal wells
+        if (well.definition_type == WellDefinitionType::WellSpline)
+            throw std::runtime_error("Direction should not be specified for spline-defined wells");
         if (QString::compare("X", json_well["Direction"].toString()) == 0) well.direction = Direction::X;
         if (QString::compare("Y", json_well["Direction"].toString()) == 0) well.direction = Direction::Y;
         if (QString::compare("Z", json_well["Direction"].toString()) == 0) well.direction = Direction::Z;
@@ -177,36 +212,6 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
     else if (QString::compare("Liquid", json_well["PreferedPhase"].toString()) == 0)
         well.prefered_phase = PreferedPhase::Liquid;
 
-    // Heel
-    if (!json_well.contains("Heel"))
-        throw UnableToParseWellsModelSectionException("All wells must define a Heel.");
-    QJsonArray json_heel = json_well["Heel"].toArray();
-    well.heel.i = json_heel[0].toInt();
-    well.heel.j = json_heel[1].toInt();
-    if (json_heel.size() == 3) // The k-index does not have to be specified. It is defaulted to 1 if it is not.
-        well.heel.k = json_heel[2].toInt();
-    else
-        well.heel.k = 1;
-
-    // Completions
-    well.completions = QList<Completion>();
-    if (json_well.contains("Completions")) {
-        if (!json_well["Completions"].isArray())
-            throw UnableToParseWellsModelSectionException("Completions must be provided as an array.");
-        for (int i = 0; i < json_well["Completions"].toArray().size(); ++i) {
-            QJsonObject json_completion = json_well["Completions"].toArray().at(i).toObject();
-            Completion completion = Completion(next_completion_id++);
-            QString completion_type = json_completion["Type"].toString();
-            if (QString::compare(completion_type, "Perforation") == 0) {
-                completion.type = WellCompletionType::Perforation;
-                completion.transmissibility_factor = json_completion["TransmissibilityFactor"].toDouble();
-                completion.well_block = getBlockAtPosition(well, json_completion["WellBlock"].toArray());
-            }
-            else throw UnableToParseWellsModelSectionException("Completion type not recognized.");
-            well.completions.append(completion);
-        }
-    }
-
     // Variables
     if (json_well.contains("Variables")) {
         QJsonArray json_variables = json_well["Variables"].toArray();
@@ -231,56 +236,8 @@ Model::Well::Variable Model::readSingleVariable(QJsonObject json_variable, Well 
     if (QString::compare(type, "BHP") == 0) {
         variable.type = WellVariableType::BHP;
     }
-    else if (QString::compare(type, "OpenShut") == 0) {
-        variable.type = WellVariableType::OpenShut;
-    }
     else if (QString::compare(type, "Rate") == 0) {
         variable.type = WellVariableType::Rate;
-    }
-    else if (QString::compare(type, "Transmissibility") == 0) {
-        variable.type = WellVariableType::Transmissibility;
-        variable.blocks = QList<WellBlock>();
-        if (!json_variable.contains("Blocks"))
-            throw UnableToParseWellsModelSectionException("Transmissibility type variables must specify the Blocks property.");
-        if (json_variable["Blocks"].isString() && QString::compare(json_variable["Blocks"].toString(), "WELL") == 0) { // Apply to all perforated well blocks
-            for (int i = 0; i < well.completions.size(); ++i) {
-                if (well.completions[i].type == WellCompletionType::Perforation)
-                    variable.blocks.append(well.completions[i].well_block);
-            }
-        }
-        else if (json_variable["Blocks"].isArray() && json_variable["Blocks"].toArray().first().isArray()) { // Parsing block list
-            for (int i = 0; i < json_variable["Blocks"].toArray().size(); ++i) {
-                variable.blocks.append(getBlockAtPosition(well, json_variable["Blocks"].toArray()[i].toArray()));
-            }
-        }
-        else
-            throw UnableToParseWellsModelSectionException("Unable to parse transmissibility variable Blocks property.");
-    }
-    else if (QString::compare(type, "WellBlockPosition") == 0) {
-        variable.type = WellVariableType::WellBlockPosition;
-        variable.blocks = QList<WellBlock>();
-        if (!json_variable.contains("Blocks"))
-            throw UnableToParseWellsModelSectionException("WellBlockPosition type variables must specify the Blocks property.");
-        if (json_variable["Blocks"].isString() && QString::compare(json_variable["Blocks"].toString(), "WELL") == 0) { // Apply add all well blocks
-            for (int i = 0; i < well.well_blocks.size(); ++i) {
-                variable.blocks.append(well.well_blocks[i]);
-            }
-        }
-        else if (json_variable["Blocks"].isArray() && json_variable["Blocks"].toArray().first().isArray()) { // Parsing block list
-            for (int i = 0; i < json_variable["Blocks"].toArray().size(); ++i) {
-                variable.blocks.append(getBlockAtPosition(well, json_variable["Blocks"].toArray()[i].toArray()));
-            }
-        }
-        else
-            throw UnableToParseWellsModelSectionException("Unable to parse WellBlockPosition variable Blocks property.");
-    }
-    else if (QString::compare(type, "SplinePoints") == 0) {
-        variable.type = WellVariableType::SplinePoints;
-        variable.variable_spline_point_indices = QList<int>();
-        QJsonArray json_variable_spline_point_indices = json_variable["VariableSplinePointIndices"].toArray();
-        for (int i = 0; i < json_variable_spline_point_indices.size(); ++i) {
-            variable.variable_spline_point_indices.append(json_variable_spline_point_indices[i].toInt());
-        }
     }
 
     variable.time_steps = QList<int>();
@@ -290,19 +247,9 @@ Model::Well::Variable Model::readSingleVariable(QJsonObject json_variable, Well 
             throw UnableToParseWellsModelSectionException("All time steps must be declared in the ControlTimes array. Inconsistency detected in variable declaration.");
         variable.time_steps.append(json_time_steps[i].toInt());
     }
-    if (!well.hasControlsCorrespondingToVariable(variable))
-        throw UnableToParseWellsModelSectionException("A control of the correct type must be declared for all time steps in a control-type variable.");
     return variable;
 }
 
-bool Model::wellContainsBlock(Model::Well well, Model::IntegerCoordinate block)
-{
-    for (int i = 0; i < well.well_blocks.size(); ++i) {
-        if (well.well_blocks[i].position.Equals(&block))
-            return true;
-    }
-    return false;
-}
 
 bool Model::variableNameExists(QString varible_name) const
 {
@@ -318,16 +265,6 @@ bool Model::variableNameExists(QString varible_name) const
 bool Model::controlTimeIsDeclared(int time) const
 {
     return control_times_.contains(time);
-}
-
-Model::WellBlock Model::getBlockAtPosition(Model::Well well, QJsonArray array)
-{
-    for (int i = 0; i < well.well_blocks.size(); ++i) {
-        IntegerCoordinate pos = IntegerCoordinate(array);
-        if (well.well_blocks[i].position.Equals(&pos))
-            return well.well_blocks[i];
-    }
-    throw WellBlockNotFoundException("No well block found.");
 }
 
 bool Model::Well::hasControlsCorrespondingToVariable(Model::Well::Variable var)

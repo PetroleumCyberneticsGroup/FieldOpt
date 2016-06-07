@@ -67,47 +67,7 @@ public:
         bool bhp() const { return bhp_; }   //!< Returns true if the well's BHP can vary at this time step, otherwise false.
     };
 
-    /*!
-     * \brief The WellBlock class Keeps track of which properties of a well block are variable.
-     */
-    class WellBlock {
-        friend class VariablePropertyHandler;
-        friend class Well;
-        WellBlock(::Utilities::Settings::Model::WellBlock well_block) {
-            id_ = well_block.id;
-            variable_name_ = "";
-            position_ = false;
-        }
-        QString variable_name_;
-        int id_;
-        bool position_;
 
-    public:
-        QString variable_name() const { return variable_name_; } //!< Get the name of the variable
-        bool position() const { return position_; }
-    };
-
-    /*!
-     * \brief The Perforation class keeps track of which properties of a perforation are variable.
-     */
-    class Perforation {
-        friend class VariablePropertyHandler;
-        friend class Well;
-        Perforation(::Utilities::Settings::Model::Completion completion) {
-            id_ = completion.id;
-            block_ = completion.well_block;
-            transmissibility_factor_ = false;
-            variable_name_ = "";
-        }
-        int id_;
-        ::Utilities::Settings::Model::WellBlock block_;
-        bool transmissibility_factor_;
-        QString variable_name_;
-
-    public:
-        QString variable_name() const { return variable_name_; } //!< Get the name of the variable
-        bool transmissibility_factor() const { return transmissibility_factor_; }
-    };
 
     /*!
      * \brief The Well class is an internal representation of a well within the variable handler.
@@ -119,15 +79,10 @@ public:
         Well(QString name) {
             name_ = name;
             controls_ = QList<Control *>();
-            perforations_ = QList<Perforation *>();
         }
         QString name_;
         QList<Control *> controls_;
-        QList<Perforation *> perforations_;
-        QList<WellBlock *> well_blocks_;
-        Perforation *getPerforation(int id);
-        Perforation *getPerforation(::Utilities::Settings::Model::IntegerCoordinate *block);
-        WellBlock *getWellBlock(int id);
+
     public:
         QString name() const { return name_; } //!< Get the name of the well.
     };
@@ -140,22 +95,10 @@ public:
     Control *GetControl(QString well_name, int time);
 
     /*!
-     * \brief GetPerforation Gets the perforation with a given id from a given well.
-     * \param completion_id The unique ID of the perforation assigned when reading the driver file.
-     */
-    Perforation *GetPerforation(int completion_id);
-
-    /*!
      * \brief GetWell Get the well with the specified name.
      * \param well_name The name of the well to get.
      */
     Well *GetWell(QString well_name);
-
-    /*!
-     * \brief GetWellBlock Gets the well block with the specified id.
-     * \param well_block_id The id of the block to get.
-     */
-    WellBlock *GetWellBlock(int well_block_id);
 
 private:
     QList<Well *> wells_;

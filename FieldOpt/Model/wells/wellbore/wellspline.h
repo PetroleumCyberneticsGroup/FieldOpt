@@ -73,7 +73,6 @@ private:
     * \return
     */
    WellBlock *getWellBlock(WellIndexCalculator::WellIndexCalculator::BlockData block_data);
-   int block_id_; //!< An ID that will be passed to the well block.
 };
 
 }

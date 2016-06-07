@@ -55,7 +55,7 @@ TEST_F(ControlTest, InjectorControl) {
 TEST_F(ControlTest, VariableContainerConsistencyAfterCreation) {
     EXPECT_EQ(0, model_->variables()->BinaryVariableSize());
     EXPECT_EQ(12, model_->variables()->DiscreteVariableSize());
-    EXPECT_EQ(14, model_->variables()->ContinousVariableSize());
+    EXPECT_EQ(15, model_->variables()->ContinousVariableSize());
 }
 
 }

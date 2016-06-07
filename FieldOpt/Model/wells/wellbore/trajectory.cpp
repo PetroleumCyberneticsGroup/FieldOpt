@@ -58,15 +58,6 @@ WellBlock *Trajectory::GetWellBlock(int i, int j, int k)
     throw WellBlockNotFoundException(i, j, k);
 }
 
-WellBlock *Trajectory::GetWellBlock(int id)
-{
-    for (int idx = 0; idx < well_blocks_->size(); ++idx) {
-        if (well_blocks_->at(idx)->id() == id)
-            return well_blocks_->at(idx);
-    }
-    throw WellBlockNotFoundException(id);
-}
-
 QList<WellBlock *> *Trajectory::GetWellBlocks()
 {
     return well_blocks_;
@@ -83,21 +74,19 @@ void Trajectory::initializeWellBlocks(Utilities::Settings::Model::Well well,
                                       Properties::VariablePropertyContainer *variable_container,
                                       Properties::VariablePropertyHandler *variable_handler)
 {
-    QList<Utilities::Settings::Model::WellBlock> blocks = well.well_blocks;
+    QList<Utilities::Settings::Model::Well::WellBlock> blocks = well.well_blocks;
     for (int i = 0; i < blocks.size(); ++i) {
-        well_blocks_->append(new WellBlock(blocks[i].position.i, blocks[i].position.j, blocks[i].position.k, blocks[i].id));
-        if (variable_handler->GetWellBlock(blocks[i].id)->position()) {
-            QString base_var_name = variable_handler->GetWellBlock(blocks[i].id)->variable_name() + "#" + QString::number(i) + "#";
-            well_blocks_->last()->i_->setName(base_var_name + "i");
-            well_blocks_->last()->j_->setName(base_var_name + "j");
-            well_blocks_->last()->k_->setName(base_var_name + "k");
+        well_blocks_->append(new WellBlock(blocks[i].i, blocks[i].j, blocks[i].k));
+        if (blocks[i].is_variable) {
+            well_blocks_->last()->i_->setName(blocks[i].name + "#i");
+            well_blocks_->last()->j_->setName(blocks[i].name + "#j");
+            well_blocks_->last()->k_->setName(blocks[i].name + "#k");
             variable_container->AddVariable(well_blocks_->last()->i_);
             variable_container->AddVariable(well_blocks_->last()->j_);
             variable_container->AddVariable(well_blocks_->last()->k_);
         }
-        Completions::Completion *completion = getCompletion(well.completions, blocks[i].position, variable_container, variable_handler);
-        if (completion != nullptr)
-            well_blocks_->last()->AddCompletion(completion);
+        if (blocks[i].has_completion)
+            well_blocks_->last()->AddCompletion(new Completions::Perforation(blocks[i].completion, variable_container, variable_handler));
     }
 }
 
@@ -140,20 +129,6 @@ void Trajectory::calculateDirectionOfPenetration()
         well_blocks_->last()->setDirectionOfPenetration(WellBlock::DirectionOfPenetration::Z);
     else
         well_blocks_->last()->setDirectionOfPenetration(WellBlock::DirectionOfPenetration::W);
-}
-
-Completions::Completion *Trajectory::getCompletion(QList<Utilities::Settings::Model::Completion> completions,
-                                                   Utilities::Settings::Model::IntegerCoordinate block,
-                                                   Properties::VariablePropertyContainer *variable_container,
-                                                   Properties::VariablePropertyHandler *variable_handler)
-{
-    for (int i = 0; i < completions.size(); ++i) { // Look for a completion belonging to the block.
-        if (completions[i].well_block.position.Equals(&block)) { // Found a block.
-            if (completions[i].type == Utilities::Settings::Model::WellCompletionType::Perforation) // Initializing a perforation
-                return new Completions::Perforation(completions[i], variable_container, variable_handler);
-        }
-    }
-    return nullptr; // Found no matching completion
 }
 
 }

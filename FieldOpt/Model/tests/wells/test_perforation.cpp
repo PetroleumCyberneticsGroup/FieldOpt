@@ -15,10 +15,12 @@ protected:
     virtual ~PerforationTest() {}
     virtual void SetUp() {
         prod_perforations_ = QList<Completions::Perforation *>();
-        for (int i = 0; i < prod_well_.completions.size(); ++i) {
-            prod_perforations_.append(new Completions::Perforation(prod_well_.completions[i],
-                                                                   model_->variables(),
-                                                                   model_->variable_handler()));
+        for (int i = 0; i < prod_well_.well_blocks.size(); ++i) {
+            if (prod_well_.well_blocks[i].has_completion == true) {
+                prod_perforations_.append(new Completions::Perforation(prod_well_.well_blocks[i].completion,
+                                                                       model_->variables(),
+                                                                       model_->variable_handler()));
+            }
         }
     }
 
@@ -27,18 +29,12 @@ protected:
 };
 
 TEST_F(PerforationTest, Constructor) {
-    EXPECT_EQ(2, prod_perforations_.size());
+    EXPECT_EQ(3, prod_perforations_.size());
 }
 
 TEST_F(PerforationTest, Values) {
     EXPECT_FLOAT_EQ(1.0, prod_perforations_[0]->transmissibility_factor());
     EXPECT_FLOAT_EQ(1.0, prod_perforations_[1]->transmissibility_factor());
 }
-
-TEST_F(PerforationTest, VariableHandlerCorrectness) {
-    EXPECT_TRUE(model_->variable_handler()->GetPerforation(0)->transmissibility_factor());
-    EXPECT_TRUE(model_->variable_handler()->GetPerforation(1)->transmissibility_factor());
-}
-
 
 }

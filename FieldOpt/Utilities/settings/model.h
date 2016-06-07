@@ -52,7 +52,7 @@ public:
     enum ControlMode : int { BHPControl=21, RateControl=22 };
     enum InjectionType : int { WaterInjection=31, GasInjection=32 };
     enum WellDefinitionType : int { WellBlocks=41, WellSpline=42 };
-    enum WellVariableType : int { BHP=51, Rate=52, SplinePoints=53, OpenShut=54, Transmissibility=55, WellBlockPosition=56 };
+    enum WellVariableType : int { BHP=51, Rate=52 };
     enum WellCompletionType : int { Perforation=61 };
     enum WellState : int { WellOpen=71, WellShut=72 };
     enum PreferedPhase : int { Oil=81, Water=82, Gas=83, Liquid=84 };
@@ -69,14 +69,6 @@ public:
         }
         int i, j ,k;
     };
-    struct RealCoordinate {
-        RealCoordinate() {}
-        RealCoordinate(QJsonArray array) {
-            assert(array.size() == 3);
-            x = array[0].toDouble(); y = array[1].toDouble(); z = array[2].toDouble();
-        }
-        double x, y, z;
-    };
 
     struct ControlEntry {
         int time_step; //!< The time step this control is to be applied at.
@@ -87,28 +79,28 @@ public:
         InjectionType injection_type; //!< Injector type (water/gas)
     };
 
-    struct WellBlock {
-        WellBlock(){}
-        WellBlock(IntegerCoordinate pos, int ID) { position = pos; id = ID; }
-        int id; //!< Unique numerical ID for the well block
-        IntegerCoordinate position; //!< (Initial) Position of the well block
-    };
-
-
-    struct Completion {
-        Completion(int ID) { id = ID; }
-        int id; //!< Unique numerical ID for the completion.
-        WellCompletionType type; //!< Which type of completion this is (Perforation/ICD)
-        WellBlock well_block; //!< The well block to which this completion belongs.
-        double transmissibility_factor; //!< The transmissibility factor for this completion (used for perforations)
-    };
-
     struct Reservoir {
         ReservoirGridSourceType type; //!< The source of the grid file (which reservoir simulator produced it).
         QString path; //!< Path to the reservoir grid file, e.g. a .EGRID or .GRID file produced by ECLIPSE.
     };
 
     struct Well {
+        Well(){}
+        struct Completion {
+            Completion(){}
+            WellCompletionType type; //!< Which type of completion this is (Perforation/ICD)
+            double transmissibility_factor; //!< The transmissibility factor for this completion (used for perforations)
+            bool is_variable;
+            QString name;
+        };
+        struct WellBlock {
+            WellBlock(){}
+            bool is_variable;
+            bool has_completion;
+            Completion completion;
+            QString name;
+            int i, j, k;
+        };
         struct Variable {
             int parent_completion_id; //!< The id of the parent completion. Automatically assigned.
             QString name; //!< A unique name for the variable.
@@ -117,16 +109,21 @@ public:
             QList<WellBlock> blocks; //!< The blocks this variable should apply to
             QList<int> variable_spline_point_indices; //!< The indices of coordinates in the spline points list that are variable. The rest are taken as constant.
         };
+        struct SplinePoint {
+            SplinePoint(){}
+            QString name;
+            double x, y, z;
+            bool is_variable;
+        };
         PreferedPhase prefered_phase; //!< The prefered phase for the well
         QString name; //!< The name to be used for the well.
         WellType type; //!< The well type, i.e. producer or injector.
         double wellbore_radius; //!< The wellbore radius
         Direction direction; //!< Direction of penetration
-        IntegerCoordinate heel; //!< The heel of the well. Must _always_ be defined.
         WellDefinitionType definition_type; //!< How the well path is defined.
-        QList<Completion> completions; //!< Well completions, i.e. perforations and ICDs.
         QList<WellBlock> well_blocks; //!< Well blocks when the well path is defined by WellBlocks.
-        QList<RealCoordinate> spline_points; //!< Spline points when the well path is defined by SplinePoints.
+        SplinePoint spline_heel; //!< Heel (start) point to be used when calculating the well path from a spline.
+        SplinePoint spline_toe; //!< Toe (end) point to be used when calculating the well path from a spline.
         QList<Variable> variables; //!< List of variables for the well (e.g. pressure, rate or spline point positions).
         QList<ControlEntry> controls; //!< List of well controls
         bool hasControlsCorrespondingToVariable(Variable var);
@@ -143,17 +140,12 @@ private:
     QList<Well> wells_;
     QList<int> control_times_;
 
-    int next_completion_id;
-    int next_well_block_id;
-
     void readReservoir(QJsonObject json_reservoir);
     Well readSingleWell(QJsonObject json_well);
     Well::Variable readSingleVariable(QJsonObject json_variable, Well well);
 
-    bool wellContainsBlock(Well well, IntegerCoordinate block);
     bool variableNameExists(QString varialbe_name) const;
     bool controlTimeIsDeclared(int time) const;
-    WellBlock getBlockAtPosition(Well well, QJsonArray array);
 };
 
 }

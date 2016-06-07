@@ -42,7 +42,7 @@ namespace Completions {
 class Perforation : public Completion
 {
 public:
-    Perforation(::Utilities::Settings::Model::Completion completion_settings,
+    Perforation(::Utilities::Settings::Model::Well::Completion completion_settings,
                 Properties::VariablePropertyContainer *variable_container,
                 Properties::VariablePropertyHandler *variable_handler);
 

@@ -30,8 +30,7 @@ namespace Model {
 namespace Wells {
 namespace Wellbore {
 
-WellBlock::WellBlock(int i, int j, int k, int id)
-    : id_(id)
+WellBlock::WellBlock(int i, int j, int k)
 {
     i_ = new Properties::DiscreteProperty(i);
     j_ = new Properties::DiscreteProperty(j);

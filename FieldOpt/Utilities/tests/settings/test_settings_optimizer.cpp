@@ -32,66 +32,55 @@ using namespace Utilities::Settings;
 
 namespace {
 
-class OptimizerSettingsTest : public ::testing::Test, public TestResources::TestResourceSettings {
-protected:
-    OptimizerSettingsTest()
-    { }
-    virtual ~OptimizerSettingsTest() {}
+    class OptimizerSettingsTest : public ::testing::Test, public TestResources::TestResourceSettings {
+    protected:
+        OptimizerSettingsTest()
+        { }
+        virtual ~OptimizerSettingsTest() {}
 
-    virtual void SetUp() {}
-    virtual void TearDown() {}
-};
+        virtual void SetUp() {}
+        virtual void TearDown() {}
+    };
 
-TEST_F(OptimizerSettingsTest, Type) {
-    EXPECT_EQ(Optimizer::OptimizerType::Compass, settings_optimizer_->type());
-}
+    TEST_F(OptimizerSettingsTest, Type) {
+        EXPECT_EQ(Optimizer::OptimizerType::Compass, settings_optimizer_->type());
+    }
 
-TEST_F(OptimizerSettingsTest, Mode) {
-    EXPECT_EQ(Optimizer::OptimizerMode::Maximize, settings_optimizer_->mode());
-}
+    TEST_F(OptimizerSettingsTest, Mode) {
+        EXPECT_EQ(Optimizer::OptimizerMode::Maximize, settings_optimizer_->mode());
+    }
 
-TEST_F(OptimizerSettingsTest, Parameters) {
-    Optimizer::Parameters params = settings_optimizer_->parameters();
-    EXPECT_EQ(10, params.max_evaluations);
-    EXPECT_FLOAT_EQ(50.0, params.initial_step_length);
-    EXPECT_FLOAT_EQ(1.0, params.minimum_step_length);
-}
+    TEST_F(OptimizerSettingsTest, Parameters) {
+        Optimizer::Parameters params = settings_optimizer_->parameters();
+        EXPECT_EQ(10, params.max_evaluations);
+        EXPECT_FLOAT_EQ(50.0, params.initial_step_length);
+        EXPECT_FLOAT_EQ(1.0, params.minimum_step_length);
+    }
 
-TEST_F(OptimizerSettingsTest, Objective) {
-    Optimizer::Objective obj = settings_optimizer_->objective();
-    EXPECT_EQ(Optimizer::ObjectiveType::WeightedSum, obj.type);
-    EXPECT_EQ(2, obj.weighted_sum.size());
+    TEST_F(OptimizerSettingsTest, Objective) {
+        Optimizer::Objective obj = settings_optimizer_->objective();
+        EXPECT_EQ(Optimizer::ObjectiveType::WeightedSum, obj.type);
+        EXPECT_EQ(2, obj.weighted_sum.size());
 
-    EXPECT_STREQ("CumulativeOilProduction", obj.weighted_sum.at(0).property.toLatin1().constData());
-    EXPECT_FLOAT_EQ(1.0, obj.weighted_sum.at(0).coefficient);
-    EXPECT_EQ(-1, obj.weighted_sum.at(0).time_step);
-    EXPECT_FALSE(obj.weighted_sum.at(0).is_well_prop);
+        EXPECT_STREQ("CumulativeOilProduction", obj.weighted_sum.at(0).property.toLatin1().constData());
+        EXPECT_FLOAT_EQ(1.0, obj.weighted_sum.at(0).coefficient);
+        EXPECT_EQ(-1, obj.weighted_sum.at(0).time_step);
+        EXPECT_FALSE(obj.weighted_sum.at(0).is_well_prop);
 
-    EXPECT_STREQ("CumulativeWellWaterProduction", obj.weighted_sum.at(1).property.toLatin1().constData());
-    EXPECT_FLOAT_EQ(-0.2, obj.weighted_sum.at(1).coefficient);
-    EXPECT_EQ(10, obj.weighted_sum.at(1).time_step);
-    EXPECT_TRUE(obj.weighted_sum.at(1).is_well_prop);
-    EXPECT_STREQ("PROD", obj.weighted_sum.at(1).well.toLatin1().constData());
-}
+        EXPECT_STREQ("CumulativeWellWaterProduction", obj.weighted_sum.at(1).property.toLatin1().constData());
+        EXPECT_FLOAT_EQ(-0.2, obj.weighted_sum.at(1).coefficient);
+        EXPECT_EQ(10, obj.weighted_sum.at(1).time_step);
+        EXPECT_TRUE(obj.weighted_sum.at(1).is_well_prop);
+        EXPECT_STREQ("PROD", obj.weighted_sum.at(1).well.toLatin1().constData());
+    }
 
-TEST_F(OptimizerSettingsTest, ProducerConstraint) {
-    Optimizer::Constraint producerConstraint = settings_optimizer_->constraints()->first();
-    EXPECT_EQ(Optimizer::ConstraintType::BHP, producerConstraint.type);
-    EXPECT_STREQ("PROD", producerConstraint.well.toLatin1().constData());
-    EXPECT_FLOAT_EQ(3000.0, producerConstraint.max);
-    EXPECT_FLOAT_EQ(1000.0, producerConstraint.min);
-    EXPECT_STREQ("PROD-BHP-1", producerConstraint.name.toLatin1().constData());
-}
-
-TEST_F(OptimizerSettingsTest, InjectorConstraint) {
-    Optimizer::Constraint injectorConstraint = settings_optimizer_->constraints()->last();
-    EXPECT_EQ(Optimizer::ConstraintType::SplinePoints, injectorConstraint.type);
-    EXPECT_STREQ("INJ", injectorConstraint.well.toLatin1().constData());
-
-    EXPECT_EQ(Optimizer::ConstraintWellSplinePointsType::MaxMin, injectorConstraint.spline_points_type);
-    EXPECT_EQ(2, injectorConstraint.spline_points_limits.size());
-    EXPECT_FLOAT_EQ(40.0, injectorConstraint.spline_points_limits.first().max.z);
-    EXPECT_STREQ("INJ-SplinePoints-1", injectorConstraint.name.toLatin1().constData());
-}
+    TEST_F(OptimizerSettingsTest, ProducerConstraint) {
+        Optimizer::Constraint producerConstraint = settings_optimizer_->constraints()->first();
+        EXPECT_EQ(Optimizer::ConstraintType::BHP, producerConstraint.type);
+        EXPECT_STREQ("PROD", producerConstraint.well.toLatin1().constData());
+        EXPECT_FLOAT_EQ(3000.0, producerConstraint.max);
+        EXPECT_FLOAT_EQ(1000.0, producerConstraint.min);
+        EXPECT_STREQ("PROD-BHP-1", producerConstraint.name.toLatin1().constData());
+    }
 
 }

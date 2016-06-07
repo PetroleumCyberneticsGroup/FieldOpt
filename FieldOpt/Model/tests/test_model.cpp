@@ -35,17 +35,8 @@ namespace {
         EXPECT_EQ(3, model_->variables()->GetContinousVariableIdsWithName("PROD-BHP-1").size());
         EXPECT_EQ(3, model_->wells()->at(0)->controls()->size());
 
-
-        // 12 Discrete variables for the positions for the producer's four well blocks
-        EXPECT_TRUE(model_->variable_handler()->GetWellBlock(0)->position());
-        EXPECT_TRUE(model_->variable_handler()->GetWellBlock(1)->position());
-        EXPECT_TRUE(model_->variable_handler()->GetWellBlock(2)->position());
-        EXPECT_TRUE(model_->variable_handler()->GetWellBlock(3)->position());
-        EXPECT_STREQ("PROD-WELLBLOCKS-ALL", model_->variable_handler()->GetWellBlock(0)->variable_name().toLatin1().constData());
-        EXPECT_STREQ("PROD-WELLBLOCKS-ALL", model_->variable_handler()->GetWellBlock(1)->variable_name().toLatin1().constData());
-        EXPECT_STREQ("PROD-WELLBLOCKS-ALL", model_->variable_handler()->GetWellBlock(2)->variable_name().toLatin1().constData());
-        EXPECT_STREQ("PROD-WELLBLOCKS-ALL", model_->variable_handler()->GetWellBlock(3)->variable_name().toLatin1().constData());
-        EXPECT_EQ(12, model_->variables()->GetDiscreteVariableIdsWithName("PROD-WELLBLOCKS-ALL#0#i").size()); // Three variables pr. block (i,j,k)
+        EXPECT_EQ(12, model_->variables()->GetDiscreteVariableNamesAndIdsMatchingSubstring("WellBlock#PROD").size());
+//        EXPECT_EQ(12, model_->variables()->GetDiscreteVariableIdsWithName("PROD-WELLBLOCKS-ALL#0#i").size()); // Three variables pr. block (i,j,k)
                 foreach (int value, model_->variables()->GetDiscreteVariableValues().values()) {
                 EXPECT_GE(value, 0);
             }

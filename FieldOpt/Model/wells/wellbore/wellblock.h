@@ -42,7 +42,7 @@ class WellBlock
 {
     friend class Trajectory;
 public:
-    WellBlock(int i, int j, int k, int id);
+    WellBlock(int i, int j, int k);
 
     /*!
      * \brief The DirectionOfPenetration enum indicates the wells direction of penetration through
@@ -57,7 +57,6 @@ public:
     bool HasPerforation(); //!< Check if this well block has a perforation-type completion.
     Completions::Perforation *GetPerforation(); //!< Get the perforation defined for this block.
 
-    int id() const { return id_; }
     int i() const { return i_->value(); }
     int j() const { return j_->value(); }
     int k() const { return k_->value(); }
@@ -68,7 +67,6 @@ public:
     void setK(const int k) { k_->setValue(k); }
     void setDirectionOfPenetration(const DirectionOfPenetration dop) { direction_of_penetration_ = dop; }
 private:
-    const int id_; //!< A unique ID for this well block. This is needed to identify the well block if it is moved.
     Model::Properties::DiscreteProperty *i_;
     Model::Properties::DiscreteProperty *j_;
     Model::Properties::DiscreteProperty *k_;

@@ -30,14 +30,14 @@ namespace Wells {
 namespace Wellbore {
 namespace Completions {
 
-Perforation::Perforation(Utilities::Settings::Model::Completion completion_settings,
+Perforation::Perforation(Utilities::Settings::Model::Well::Completion completion_settings,
                          Properties::VariablePropertyContainer *variable_container,
                          Properties::VariablePropertyHandler *variable_handler)
     : Completion(completion_settings)
 {
     transmissibility_factor_ = new Properties::ContinousProperty(completion_settings.transmissibility_factor);
-    if (variable_handler->GetPerforation(completion_settings.id)->transmissibility_factor()) {
-        transmissibility_factor_->setName(variable_handler->GetPerforation(completion_settings.id)->variable_name() + "#" + id_);
+    if (completion_settings.is_variable) {
+        transmissibility_factor_->setName(completion_settings.name + "#transmissibility");
         variable_container->AddVariable(transmissibility_factor_);
     }
 }

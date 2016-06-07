@@ -32,7 +32,6 @@ namespace Wellbore {
 
 WellSpline::WellSpline(Utilities::Settings::Model::Well well_settings, Properties::VariablePropertyContainer *variable_container, Properties::VariablePropertyHandler *variable_handler, Reservoir::Reservoir *reservoir)
 {
-    block_id_ = 0;
     grid_ = reservoir->grid();
     well_settings_ = well_settings;
 
@@ -80,7 +79,7 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
 
 WellBlock *WellSpline::getWellBlock(WellIndexCalculator::WellIndexCalculator::BlockData block_data)
 {
-    WellBlock *wb = new WellBlock(block_data.i+1, block_data.j+1, block_data.k+1, block_id_++);
+    WellBlock *wb = new WellBlock(block_data.i+1, block_data.j+1, block_data.k+1);
     auto comp = new Completions::Perforation();
     comp->setTransmissibility_factor(block_data.well_index);
     wb->AddCompletion(comp);

@@ -63,7 +63,6 @@ public:
                Properties::VariablePropertyHandler *variable_handler,
                ::Model::Reservoir::Reservoir *reservoir);
     WellBlock *GetWellBlock(int i, int j, int k); //!< Get the well block at index (i,j,k).
-    WellBlock *GetWellBlock(int id); //!< Get the well block with the specified id.
     QList<WellBlock *> *GetWellBlocks(); //!< Get a list containing all well blocks.
     void UpdateWellBlocks(); //!< Update the well blocks, in particular the ones defined by a spline.
 
@@ -77,10 +76,6 @@ private:
 
     void calculateDirectionOfPenetration(); // Calculate direction of penetration for all well blocks
 
-    Completions::Completion *getCompletion(QList<Utilities::Settings::Model::Completion> completions,
-                                           Utilities::Settings::Model::IntegerCoordinate block,
-                                           Properties::VariablePropertyContainer *variable_container,
-                                           Properties::VariablePropertyHandler *variable_handler);
 };
 
 }

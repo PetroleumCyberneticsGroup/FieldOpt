@@ -44,13 +44,11 @@ class Completion
 public:
 
     enum CompletionType : int { Perforation=1001 };
-    int id() const { return id_; } //!< Get the unique ID for this completion.
     CompletionType type() const { return type_; } //!< Get the type of completion, e.g. Perforation.
 
 protected:
-    Completion(::Utilities::Settings::Model::Completion completion_settings);
+    Completion(::Utilities::Settings::Model::Well::Completion completion_settings);
     Completion(CompletionType type);
-    int id_; //!< A unique identifier for this completion. The number is generated when reading the model settings.
 
 private:
     CompletionType type_;
