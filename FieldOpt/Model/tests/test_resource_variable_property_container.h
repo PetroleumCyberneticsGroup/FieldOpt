@@ -18,12 +18,12 @@ namespace TestResources {
             prod_toe_x_ = new Model::Properties::ContinousProperty(12);
             prod_toe_y_ = new Model::Properties::ContinousProperty(120.1);
             prod_toe_z_ = new Model::Properties::ContinousProperty(300.0);
-            prod_heel_x_->setName("SplinePoints#PRODUCER#heel#x");
-            prod_heel_y_->setName("SplinePoints#PRODUCER#heel#y");
-            prod_heel_z_->setName("SplinePoints#PRODUCER#heel#z");
-            prod_toe_x_->setName("SplinePoints#PRODUCER#toe#x");
-            prod_toe_y_->setName("SplinePoints#PRODUCER#toe#y");
-            prod_toe_z_->setName("SplinePoints#PRODUCER#toe#z");
+            prod_heel_x_->setName("SplinePoint#PRODUCER#heel#x");
+            prod_heel_y_->setName("SplinePoint#PRODUCER#heel#y");
+            prod_heel_z_->setName("SplinePoint#PRODUCER#heel#z");
+            prod_toe_x_->setName("SplinePoint#PRODUCER#toe#x");
+            prod_toe_y_->setName("SplinePoint#PRODUCER#toe#y");
+            prod_toe_z_->setName("SplinePoint#PRODUCER#toe#z");
 
             variable_property_container_ = new Model::Properties::VariablePropertyContainer();
             variable_property_container_->AddVariable(prod_heel_x_);
