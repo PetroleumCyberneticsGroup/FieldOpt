@@ -50,16 +50,19 @@ public:
     bool IsLocked() const { return locked_; }
     void Lock() { locked_ = true; }
     void Unlock() { locked_ = false; }
+    void SetVariable() { is_variable_ = true; }
+    bool isVariable() { return is_variable_; }
 
     QUuid id() const { return id_; }
 
 protected:
-    Property(Type type) { type_ = type; locked_ = false; }
+    Property(Type type) { type_ = type; locked_ = false; is_variable_ = false; }
 
 private:
     QUuid id_ = QUuid::createUuid();
     Type type_;
     bool locked_;
+    bool is_variable_;
     QString name_;
 };
 
