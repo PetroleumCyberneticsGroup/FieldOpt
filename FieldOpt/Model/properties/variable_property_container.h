@@ -77,12 +77,14 @@ public:
     QList<QUuid> GetDiscreteVariableIdsWithName(QString var_name) const;
     QList<QUuid> GetContinousVariableIdsWithName(QString var_name) const;
 
-    QList<ContinousProperty *> GetWellControlVariables(); //!< Get all control (rate/bhp) variables.
-    QList<ContinousProperty *> GetWellBHPVariables(); //!< Get all BHP variables.
-    QList<ContinousProperty *> GetWellRateVariables(); //!< Get all BHP variables.
-    QList<ContinousProperty *> GetWellControlVariables(const QString well_name); //!< Get all control variables for a specific well
-    QList<ContinousProperty *> GetWellBHPVariables(const QString well_name); //!< Get all BHP variables for a specific well.
-    QList<ContinousProperty *> GetWellRateVariables(const QString well_name); //!< Get all BHP variables for a specific well.
+    QList<ContinousProperty *> GetWellControlVariables() const; //!< Get all control (rate/bhp) variables.
+    QList<ContinousProperty *> GetWellBHPVariables() const; //!< Get all BHP variables.
+    QList<ContinousProperty *> GetWellRateVariables() const ; //!< Get all BHP variables.
+    QList<ContinousProperty *> GetWellControlVariables(const QString well_name) const; //!< Get all control variables for a specific well
+    QList<ContinousProperty *> GetWellBHPVariables(const QString well_name) const; //!< Get all BHP variables for a specific well.
+    QList<ContinousProperty *> GetWellRateVariables(const QString well_name) const; //!< Get all BHP variables for a specific well.
+
+    QList<ContinousProperty *> GetWellSplineVariables(const QString well_name) const; //!< Get all variables for the spline defining a well.
 
 
     /*!
