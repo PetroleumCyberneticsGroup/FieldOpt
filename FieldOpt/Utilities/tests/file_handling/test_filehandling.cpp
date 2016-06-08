@@ -50,7 +50,7 @@ TEST_F(FileHandlingTest, Existance) {
 }
 
 TEST_F(FileHandlingTest, FileReading) {
-    EXPECT_LE(160, ::Utilities::FileHandling::ReadFileToStringList(TestResources::ExampleFilePaths::driver_example_)->size());
+    EXPECT_LE(155, ::Utilities::FileHandling::ReadFileToStringList(TestResources::ExampleFilePaths::driver_example_)->size());
 }
 
 

@@ -50,7 +50,7 @@ public:
      * \param variables The variable container to which any created variables that are declared _variable_ should be added.
      * \param variable_handler Used to check if a control has been declared _variable_.
      */
-    Control(::Utilities::Settings::Model::ControlEntry entry,
+    Control(::Utilities::Settings::Model::Well::ControlEntry entry,
             ::Utilities::Settings::Model::Well well,
             ::Model::Properties::VariablePropertyContainer *variables,
             ::Model::Properties::VariablePropertyHandler *variable_handler);

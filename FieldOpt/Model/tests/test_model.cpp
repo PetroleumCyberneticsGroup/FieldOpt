@@ -26,20 +26,18 @@ namespace {
     TEST_F(ModelTest, Variables) {
         // As of 2015.11.10, the variables are:
         // 3 Continous variables (bhp at three time steps for the producer)
-        EXPECT_TRUE(model_->variable_handler()->GetControl("PROD", 0)->bhp());
-        EXPECT_TRUE(model_->variable_handler()->GetControl("PROD", 50)->bhp());
-        EXPECT_TRUE(model_->variable_handler()->GetControl("PROD", 365)->bhp());
-        EXPECT_STREQ("PROD-BHP-1", model_->variable_handler()->GetControl("PROD", 0)->variable_name().toLatin1().constData());
-        EXPECT_STREQ("PROD-BHP-1", model_->variable_handler()->GetControl("PROD", 50)->variable_name().toLatin1().constData());
-        EXPECT_STREQ("PROD-BHP-1", model_->variable_handler()->GetControl("PROD", 365)->variable_name().toLatin1().constData());
-        EXPECT_EQ(3, model_->variables()->GetContinousVariableIdsWithName("PROD-BHP-1").size());
+        QList<Model::Properties::ContinousProperty *> prod_cont_variables = model_->variables()->GetWellControlVariables("PROD");
+        EXPECT_EQ(prod_cont_variables.size(), 3);
+        EXPECT_STREQ("BHP#PROD#0", prod_cont_variables[0]->name().toLatin1().constData());
+        EXPECT_STREQ("BHP#PROD#50", prod_cont_variables[1]->name().toLatin1().constData());
+        EXPECT_STREQ("BHP#PROD#365", prod_cont_variables[2]->name().toLatin1().constData());
         EXPECT_EQ(3, model_->wells()->at(0)->controls()->size());
 
         EXPECT_EQ(12, model_->variables()->GetDiscreteVariableNamesAndIdsMatchingSubstring("WellBlock#PROD").size());
 //        EXPECT_EQ(12, model_->variables()->GetDiscreteVariableIdsWithName("PROD-WELLBLOCKS-ALL#0#i").size()); // Three variables pr. block (i,j,k)
-                foreach (int value, model_->variables()->GetDiscreteVariableValues().values()) {
-                EXPECT_GE(value, 0);
-            }
+        foreach (int value, model_->variables()->GetDiscreteVariableValues().values()) {
+            EXPECT_GE(value, 0);
+        }
     }
 
     TEST_F(ModelTest, ApplyCase) {

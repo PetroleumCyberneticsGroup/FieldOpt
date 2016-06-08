@@ -117,12 +117,12 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
                     block.completion.is_variable = json_well_block_i_completion["IsVariable"].toBool();
                 else
                     block.completion.is_variable = false;
-                block.completion.name = "Perforation#" + well.name + "#" + i;
+                block.completion.name = "Perforation#" + well.name + "#" + QString::number(i);
                 block.has_completion = true;
             }
             else
                 block.has_completion = false;
-            block.name = "WellBlock#" + well.name + "#" + i;
+            block.name = "WellBlock#" + well.name + "#" + QString::number(i);
             well.well_blocks.append(block);
         }
     }
@@ -165,28 +165,31 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
 
     // Controls
     QJsonArray json_controls = json_well["Controls"].toArray();
-    well.controls = QList<ControlEntry>();
+    well.controls = QList<Well::ControlEntry>();
     for (int i = 0; i < json_controls.size(); ++i) {
-        ControlEntry control;
+        Well::ControlEntry control;
 
         if (!controlTimeIsDeclared(json_controls.at(i).toObject()["TimeStep"].toInt()))
             throw UnableToParseWellsModelSectionException("All time steps must be declared in the ControlTimes array. Inconsistency detected in Controls declaration.");
         else control.time_step = json_controls.at(i).toObject()["TimeStep"].toInt();
 
         // State (Open or shut)
-        if (QString::compare("Open", json_controls.at(i).toObject()["State"].toString()) == 0)
-            control.state = WellState::WellOpen;
-        else
+        if (QString::compare("Shut", json_controls.at(i).toObject()["State"].toString()) == 0)
             control.state = WellState::WellShut;
+        else
+            control.state = WellState::WellOpen;
+
 
         // Control mode
         if (QString::compare("BHP", json_controls.at(i).toObject()["Mode"].toString()) == 0) {
             control.control_mode = ControlMode::BHPControl;
             control.bhp = json_controls.at(i).toObject()["BHP"].toDouble();
+            control.name = "BHP#" + well.name + "#" + QString::number(control.time_step);
         }
         else if (QString::compare("Rate", json_controls.at(i).toObject()["Mode"].toString()) == 0) {
             control.control_mode = ControlMode::RateControl;
             control.rate = json_controls.at(i).toObject()["Rate"].toDouble();
+            control.name = "Rate#" + well.name + "#" + QString::number(control.time_step);
         }
         else throw UnableToParseWellsModelSectionException("Well control type " + json_controls.at(i).toObject()["Mode"].toString().toStdString() + " not recognized for well " + well.name.toStdString());
 
@@ -199,6 +202,10 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
             else if (QString::compare("Gas", json_controls.at(i).toObject()["Type"].toString()) == 0)
                 control.injection_type = InjectionType::GasInjection;
         }
+        if (json_controls[i].toObject()["IsVariable"].toBool())
+            control.is_variable = true;
+        else
+            control.is_variable = false;
         well.controls.append(control);
     }
 
@@ -212,54 +219,7 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
     else if (QString::compare("Liquid", json_well["PreferedPhase"].toString()) == 0)
         well.prefered_phase = PreferedPhase::Liquid;
 
-    // Variables
-    if (json_well.contains("Variables")) {
-        QJsonArray json_variables = json_well["Variables"].toArray();
-        well.variables = QList<Well::Variable>();
-        for (int i = 0; i < json_variables.size(); ++i) {
-            QJsonObject json_variable = json_variables[i].toObject();
-            well.variables.append(readSingleVariable(json_variable, well));
-        }
-    }
     return well;
-}
-
-Model::Well::Variable Model::readSingleVariable(QJsonObject json_variable, Well well)
-{
-    Well::Variable variable;
-
-    if (!json_variable.contains("Name") || json_variable["Name"].toString().size() < 1)
-        throw UnableToParseWellsModelSectionException("All variables must specify a unique name.");
-    variable.name = json_variable["Name"].toString();
-
-    QString type = json_variable["Type"].toString();
-    if (QString::compare(type, "BHP") == 0) {
-        variable.type = WellVariableType::BHP;
-    }
-    else if (QString::compare(type, "Rate") == 0) {
-        variable.type = WellVariableType::Rate;
-    }
-
-    variable.time_steps = QList<int>();
-    QJsonArray json_time_steps = json_variable["TimeSteps"].toArray();
-    for (int i = 0; i < json_time_steps.size(); ++i) {
-        if (!controlTimeIsDeclared(json_time_steps[i].toInt()))
-            throw UnableToParseWellsModelSectionException("All time steps must be declared in the ControlTimes array. Inconsistency detected in variable declaration.");
-        variable.time_steps.append(json_time_steps[i].toInt());
-    }
-    return variable;
-}
-
-
-bool Model::variableNameExists(QString varible_name) const
-{
-    for (int i = 0; i < wells_.size(); ++i) {
-        for (int j = 0; j < wells_.at(i).variables.size(); ++j) {
-            if (QString::compare(wells_.at(i).variables.at(j).name, varible_name) == 0)
-                return true;
-        }
-    }
-    return false;
 }
 
 bool Model::controlTimeIsDeclared(int time) const
@@ -267,26 +227,7 @@ bool Model::controlTimeIsDeclared(int time) const
     return control_times_.contains(time);
 }
 
-bool Model::Well::hasControlsCorrespondingToVariable(Model::Well::Variable var)
-{
-    if (var.type != WellVariableType::BHP && var.type != WellVariableType::Rate)
-        return true; // This check is only for rate/bhp control variables
 
-    // Iterate over controls in well
-    for (int control_entry = 0; control_entry < controls.size(); ++control_entry) {
-        // If the variable and control entries match for either pressure or rate control ...
-        if ((var.type == WellVariableType::BHP && controls[control_entry].control_mode == ControlMode::BHPControl)
-                || (var.type == WellVariableType::Rate && controls[control_entry].control_mode == ControlMode::RateControl)) {
-            // Iterate over time steps in variable
-            for (int time_step = 0; time_step < var.time_steps.size(); ++time_step) {
-                // If a time step in the variable matches the time step for the control
-                if (controls[control_entry].time_step == var.time_steps[time_step])
-                    return true;
-            }
-        }
-    }
-    return false;
-}
 
 }
 }

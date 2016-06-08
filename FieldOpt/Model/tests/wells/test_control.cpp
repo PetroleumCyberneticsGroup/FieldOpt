@@ -29,8 +29,8 @@ protected:
 
     ::Utilities::Settings::Model::Well well_;
     ::Utilities::Settings::Model::Well inj_well_;
-    ::Utilities::Settings::Model::ControlEntry entry_;
-    ::Utilities::Settings::Model::ControlEntry inj_entry_;
+    ::Utilities::Settings::Model::Well::ControlEntry entry_;
+    ::Utilities::Settings::Model::Well::ControlEntry inj_entry_;
     QList<Control *> all_controls_;
 };
 

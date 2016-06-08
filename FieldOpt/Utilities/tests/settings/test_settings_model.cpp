@@ -77,10 +77,7 @@ namespace {
     TEST_F(ModelSettingsTest, ProducerVariables) {
         Model::Well producer = settings_model_->wells().first();
 
-        // BHP variable
-        EXPECT_EQ(Model::WellVariableType::BHP, producer.variables[0].type);
-        EXPECT_EQ(3, producer.variables[0].time_steps.size());
-        EXPECT_STREQ("PROD-BHP-1", producer.variables[0].name.toLatin1().constData());
+        EXPECT_TRUE(false);
     }
 
     TEST_F(ModelSettingsTest, InjectorWell) {
