@@ -18,8 +18,7 @@ protected:
         for (int i = 0; i < prod_well_.well_blocks.size(); ++i) {
             if (prod_well_.well_blocks[i].has_completion == true) {
                 prod_perforations_.append(new Completions::Perforation(prod_well_.well_blocks[i].completion,
-                                                                       model_->variables(),
-                                                                       model_->variable_handler()));
+                                                                       model_->variables()));
             }
         }
     }

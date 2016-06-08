@@ -19,8 +19,7 @@ protected:
             for (int j = 0; j < settings_model_->wells()[i].controls.size(); ++j) {
                 all_controls_.append(new Control(settings_model_->wells()[i].controls[j],
                                                  settings_model_->wells()[i],
-                                                 model_->variables(),
-                                                 model_->variable_handler()));
+                                                 model_->variables()));
             }
         }
     }

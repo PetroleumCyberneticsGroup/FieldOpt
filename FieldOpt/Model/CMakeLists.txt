@@ -22,7 +22,6 @@ add_library(model
 		properties/property_exceptions.h
 		properties/binary_property.cpp
 		properties/variable_property_container.cpp
-		properties/variable_property_handler.cpp
 		properties/continous_property.cpp
 		properties/discrete_property.cpp)
 add_library(fieldopt::model ALIAS ${PROJECT_NAME})
@@ -57,7 +56,6 @@ add_executable(test_model
 		tests/reservoir/grid/test_xyzcoordinate.cpp
 		tests/results/test_eclresults.cpp
 		tests/variables/test_properties.cpp
-		tests/variables/test_variable_property_handler.cpp
 		tests/variables/test_variable_property_container.cpp
 		tests/wells/test_control.cpp
 		tests/wells/test_perforation.cpp
