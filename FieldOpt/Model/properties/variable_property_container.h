@@ -29,6 +29,7 @@
 #include <QHash>
 #include <QPair>
 #include <QString>
+#include <QtGui/QVector3D>
 
 #include "property.h"
 #include "binary_property.h"
@@ -52,9 +53,9 @@ class VariablePropertyContainer
 public:
     VariablePropertyContainer();
 
-    void AddVariable(BinaryProperty *var);
-    void AddVariable(DiscreteProperty *var);
-    void AddVariable(ContinousProperty *var);
+    void AddVariable(BinaryProperty *var); //!< Add a property to the container and mark it as variable
+    void AddVariable(DiscreteProperty *var); //!< Add a property to the container and mark it as variable
+    void AddVariable(ContinousProperty *var); //!< Add a property to the container and mark it as variable
 
     int BinaryVariableSize() const { return binary_variables_->size(); } //!< Get the number of binary variables.
     int DiscreteVariableSize() const { return discrete_variables_->size(); } //!< Get the number of discrete variables.
@@ -75,6 +76,14 @@ public:
     QList<QUuid> GetBinaryVariableIdsWithName(QString var_name) const;
     QList<QUuid> GetDiscreteVariableIdsWithName(QString var_name) const;
     QList<QUuid> GetContinousVariableIdsWithName(QString var_name) const;
+
+    QList<ContinousProperty *> GetWellControlVariables(); //!< Get all control (rate/bhp) variables.
+    QList<ContinousProperty *> GetWellBHPVariables(); //!< Get all BHP variables.
+    QList<ContinousProperty *> GetWellRateVariables(); //!< Get all BHP variables.
+    QList<ContinousProperty *> GetWellControlVariables(const QString well_name); //!< Get all control variables for a specific well
+    QList<ContinousProperty *> GetWellBHPVariables(const QString well_name); //!< Get all BHP variables for a specific well.
+    QList<ContinousProperty *> GetWellRateVariables(const QString well_name); //!< Get all BHP variables for a specific well.
+
 
     /*!
      * \brief GetContinousVariableNamesAndIdsMatchingNamePart Get the names and IDs of continous variables with
