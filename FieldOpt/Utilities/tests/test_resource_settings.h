@@ -14,7 +14,6 @@ namespace TestResources {
                 settings_simulator_ = settings_full_->simulator();
                 settings_model_ = settings_full_->model();
 
-                constraint_settings_reservoir_boundary_.name = "SplinePoints";
                 constraint_settings_reservoir_boundary_.type = Utilities::Settings::Optimizer::ConstraintType::ReservoirBoundary;
                 constraint_settings_reservoir_boundary_.imin = 1;
                 constraint_settings_reservoir_boundary_.imax = 1;

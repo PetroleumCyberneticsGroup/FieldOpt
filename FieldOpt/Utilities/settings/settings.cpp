@@ -82,9 +82,6 @@ void Settings::readDriverFile()
     readModelSection();
     readOptimizerSection();
 
-    if (!constraintNamesCorrespondToVariables())
-        throw DriverFileInconsistentException("Constraint names must correspond to variable names.");
-
     file->close();
 }
 
@@ -133,15 +130,6 @@ void Settings::readModelSection()
     catch (std::exception const &ex) {
         throw UnableToParseModelSectionException("Unable to parse model section: " + std::string(ex.what()));
     }
-}
-
-bool Settings::constraintNamesCorrespondToVariables()
-{
-    for (int i = 0; i < optimizer_->constraints()->size(); ++i) {
-        if (!model_->variableNameExists(optimizer_->constraints()->at(i).name))
-            return false;
-    }
-    return true;
 }
 
 }

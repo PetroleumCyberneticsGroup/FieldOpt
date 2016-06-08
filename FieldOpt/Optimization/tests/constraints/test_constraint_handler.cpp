@@ -17,7 +17,6 @@ protected:
 
 TEST_F(ConstraintHandlerTest, Constructor) {
     EXPECT_EQ(1, constraint_handler_->constraints().size());
-    EXPECT_STREQ(constraint_handler_->constraints().first()->name().toLatin1().constData(), "PROD-BHP-1");
 }
 
 TEST_F(ConstraintHandlerTest, BaseCaseSatasfaction) {

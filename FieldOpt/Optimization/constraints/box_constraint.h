@@ -50,7 +50,7 @@ public:
 private:
     QHash<QUuid, QPair<double, double> > integer_constraints_; //!< Constraints for integer variables. The pair contains the min- and max- values for each variable. The first element is min, the second is max.
     QHash<QUuid, QPair<double, double> > real_constraints_; //!< Constraints for real variables. The pair contains the min- and max- values for each variable. The first element is min, the second is max.
-
+    QList<QUuid> affected_real_variables_;
     void initializeBhpConstraints(double min, double max);
 };
 

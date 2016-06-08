@@ -1,45 +1,39 @@
 #include "well_spline_constraint.h"
 
-namespace Optimization { namespace Constraints {
+namespace Optimization {
+    namespace Constraints {
 
-WellSplineConstraint::Well WellSplineConstraint::initializeWell(QList<QPair<QUuid, QString> > vars, QString well_name)
-{
-    Well well;
+        WellSplineConstraint::Well WellSplineConstraint::initializeWell(QList<Model::Properties::ContinousProperty *> vars) {
+            if (vars.length() != 6)
+                throw std::runtime_error("Incorrect number of variables (" + std::to_string(vars.length())
+                                         + ")passed to the initialize well method.");
 
-    QList<QPair<QUuid, QString>> heel_vars = QList<QPair<QUuid, QString>>();
-    QList<QPair<QUuid, QString>> toe_vars = QList<QPair<QUuid, QString>>();
-    for (int i = 0; i < vars.length(); ++i) {
-        if (QString::compare(vars[i].second.split("#")[1], well_name) == 0) {
-            if (QString::compare(vars[i].second.split("#")[2], "heel") == 0)
-                heel_vars.append(vars[i]);
-            else if (QString::compare(vars[i].second.split("#")[2], "toe") == 0)
-                toe_vars.append(vars[i]);
+            Well well;
+            foreach (auto var, vars) {
+                QStringList nmcomps = var->name().split("#"); // Should be {SplinePoint, WELLNAME, heel/toe, x/y/z}
+                if (QString::compare("heel", nmcomps[2]) == 0) {
+                    if (QString::compare("x", nmcomps[3]) == 0)
+                        well.heel.x = var->id();
+                    else if (QString::compare("y", nmcomps[3]) == 0)
+                        well.heel.y = var->id();
+                    else if (QString::compare("z", nmcomps[3]) == 0)
+                        well.heel.z = var->id();
+                    else throw std::runtime_error("Unable to parse variable " + var->name().toStdString());
+                }
+                else if (QString::compare("toe", nmcomps[2]) == 0) {
+                    if (QString::compare("x", nmcomps[3]) == 0)
+                        well.toe.x = var->id();
+                    else if (QString::compare("y", nmcomps[3]) == 0)
+                        well.toe.y = var->id();
+                    else if (QString::compare("z", nmcomps[3]) == 0)
+                        well.toe.z = var->id();
+                    else throw std::runtime_error("Unable to parse variable " + var->name().toStdString());
+                }
+                else throw std::runtime_error("Unable to parse variable " + var->name().toStdString());
+            }
+            return well;
         }
+
+
     }
-    if (heel_vars.length() + toe_vars.length() != 6)
-        throw std::runtime_error("More/less than 6 variables were found for a well. Something is wrong in the with a WellSpline constraint.");
-    well.heel = initializeCoord(heel_vars);
-    well.toe = initializeCoord(toe_vars);
-    return well;
 }
-
-WellSplineConstraint::Coord WellSplineConstraint::initializeCoord(QList<QPair<QUuid, QString> > point_vars)
-{
-    if (point_vars.length() != 3)
-        throw std::runtime_error(std::to_string(point_vars.length()) + " coordinate variables were found for the heel/toe. Need 3.");
-
-    Coord coord = WellSplineConstraint::Coord();
-
-    for (int i = 0; i < point_vars.length(); ++i) {
-        if (QString::compare(point_vars[i].second.split("#").last(), "x") == 0)
-            coord.x = point_vars[i].first;
-        else if (QString::compare(point_vars[i].second.split("#").last(), "y") == 0)
-            coord.y = point_vars[i].first;
-        else if (QString::compare(point_vars[i].second.split("#").last(), "z") == 0)
-            coord.z = point_vars[i].first;
-        else throw std::runtime_error("One of variables passed to initializeCoord does not match the #heel/toe#x/y/z pattern.");
-    }
-    return coord;
-}
-
-}}

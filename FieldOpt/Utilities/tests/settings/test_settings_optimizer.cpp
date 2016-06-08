@@ -80,7 +80,6 @@ namespace {
         EXPECT_STREQ("PROD", producerConstraint.well.toLatin1().constData());
         EXPECT_FLOAT_EQ(3000.0, producerConstraint.max);
         EXPECT_FLOAT_EQ(1000.0, producerConstraint.min);
-        EXPECT_STREQ("PROD-BHP-1", producerConstraint.name.toLatin1().constData());
     }
 
 }

@@ -31,81 +31,10 @@
 namespace Model {
 namespace Properties {
 
-/*!
- * \brief The VariablePropertyHandler class maintains a tree of all properties in the model that could
- * possibly be declared variable (in the sense that the value can change during optimization).
- * It is used during initialization to determine which values in the model should be added to the
- * VariableContainer, i.e. the lists of variables that are passed to the optimizer at run time.
- */
-class VariablePropertyHandler
-{
-public:
-    VariablePropertyHandler(Utilities::Settings::Model settings);
-
-    /*!
-     * \brief The Control class is an internal representation of a control within the variable handler.
-     * The boolean fields indicate whether or not the property is variable at the given time.
-     */
-    class Control {
-        friend class VariablePropertyHandler;
-        friend class Well;
-        Control(int time) {
-            time_ = time;
-            variable_name_ = "";
-        }
-        int time_;
-        bool open_ = false;
-        bool rate_ = false;
-        bool bhp_ = false;
-        QString variable_name_;
-
+    class VariablePropertyHandler {
     public:
-        QString variable_name() const { return variable_name_; } //!< Get the name of the variable
-        int time() const { return time_; }  //!< Get the time step for this control.
-        bool open() const { return open_; } //!< Returns true if the well's open/closed state can vary at this time step, otherwise false.
-        bool rate() const { return rate_; } //!< Returns true if the well's rate can vary at this time step, otherwise false.
-        bool bhp() const { return bhp_; }   //!< Returns true if the well's BHP can vary at this time step, otherwise false.
+        VariablePropertyHandler(Utilities::Settings::Model model_settings);
     };
-
-
-
-    /*!
-     * \brief The Well class is an internal representation of a well within the variable handler.
-     * The well class primarily acts as a root node and container for Controls etc.
-     */
-    class Well {
-        friend class VariablePropertyHandler;
-        friend class Control;
-        Well(QString name) {
-            name_ = name;
-            controls_ = QList<Control *>();
-        }
-        QString name_;
-        QList<Control *> controls_;
-
-    public:
-        QString name() const { return name_; } //!< Get the name of the well.
-    };
-
-    /*!
-     * \brief GetControl Get a given control for a well with a given name.
-     * \param well_name The name of the well the control belongs to.
-     * \param time The time step for the control.
-     */
-    Control *GetControl(QString well_name, int time);
-
-    /*!
-     * \brief GetWell Get the well with the specified name.
-     * \param well_name The name of the well to get.
-     */
-    Well *GetWell(QString well_name);
-
-private:
-    QList<Well *> wells_;
-
-    int wellControlIndex(Well *well, int time);
-};
-
 }
 }
 

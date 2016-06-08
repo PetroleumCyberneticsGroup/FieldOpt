@@ -105,10 +105,6 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
 {
     Constraint optimizer_constraint;
 
-    if (!json_constraint.contains("Name") || json_constraint["Name"].toString().size() < 1)
-        throw UnableToParseOptimizerConstraintsSectionException("All constraints must specify a name corresponding to a unique variable name.");
-    optimizer_constraint.name = json_constraint["Name"].toString();
-
     // Constraint types BHP and Rate
     QString constraint_type = json_constraint["Type"].toString();
     if (QString::compare(constraint_type, "BHP") == 0) {
@@ -134,7 +130,7 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
         QString optimizer_constraints_spline_points_type = json_constraint["WellSplinePointsInputType"].toString();
         if (QString::compare(optimizer_constraints_spline_points_type, "Function") == 0) {
             optimizer_constraint.spline_points_type = ConstraintWellSplinePointsType::Function;
-            optimizer_constraint.well_spline_points_function = json_constraint["Function"].toString();
+            json_constraint["Function"].toString();
         }
         else if (QString::compare(optimizer_constraints_spline_points_type, "MaxMin") == 0) {
             optimizer_constraint.spline_points_type = ConstraintWellSplinePointsType::MaxMin;

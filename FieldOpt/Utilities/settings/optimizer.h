@@ -70,7 +70,6 @@ public:
     };
 
     struct Constraint {
-        QString name; //!< The unique name of the variable this constraint applies to.
         struct RealCoordinate { double x; double y; double z; }; //!< Used to express (x,y,z) coordinates.
         struct RealMaxMinLimit { RealCoordinate max; RealCoordinate min; }; //!< Used to define a box-shaped 3D area. Max and min each define a corner.
         ConstraintType type; //!< The constraint type (e.g. BHP or SplinePoints positions).
@@ -84,7 +83,6 @@ public:
         double min_distance;
         int max_iterations;
         ConstraintWellSplinePointsType spline_points_type; //!< How the SplinePoints constraint is given when SplinePoints constraint type is selected.
-        QString well_spline_points_function; //!< The function a spline point needs to adhere to to be valid when SplinePoints constraint type is selected.
         QList<RealMaxMinLimit> spline_points_limits; //!< Box limits a spline point needs to be within to be valid when SplinePoints constraint type is selected.
     };
 

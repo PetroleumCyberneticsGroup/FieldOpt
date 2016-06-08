@@ -23,15 +23,18 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
+#include <iostream>
 #include "box_constraint.h"
 
 namespace Optimization { namespace Constraints {
 
 BoxConstraint::BoxConstraint(Utilities::Settings::Optimizer::Constraint settings, Model::Properties::VariablePropertyContainer *variables)
-    : Constraint(settings, variables)
 {
     switch (settings.type) {
     case ::Utilities::Settings::Optimizer::ConstraintType::BHP:
+        foreach (auto bhp_var, variables->GetWellBHPVariables(settings.well)) {
+            affected_real_variables_.append(bhp_var->id());
+        }
         initializeBhpConstraints(settings.min, settings.max);
         break;
     default:

@@ -121,7 +121,6 @@ private:
     void readReservoir(QJsonObject json_reservoir);
     Well readSingleWell(QJsonObject json_well);
 
-    bool variableNameExists(QString varialbe_name) const;
     bool controlTimeIsDeclared(int time) const;
 };
 
