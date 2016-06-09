@@ -26,11 +26,35 @@
         },
         "Constraints": [
             {
-                "Name": "PROD-BHP-1",
                 "Type": "BHP",
                 "Well": "PROD",
                 "Max": 3000.0,
                 "Min": 1000.0
+            },
+            {
+                "Well": "INJ",
+                "Type": "WellSplineLength",
+                "MinLength": 400,
+                "MaxLength": 1200
+            },
+            {
+                "Type": "Rate",
+                "Well": "INJ",
+                "Max": 1400,
+                "Min": 1200
+            },
+            {
+                "Wells": ["INJ", "TESTW"],
+                "Type": "WellSplineInterwellDistance",
+                "Min": 100
+            },
+            {
+                "Wells": ["INJ", "TESTW"],
+                "Type": "CombinedWellSplineLengthInterwellDistance",
+                "MinLength": 400,
+                "MaxLength": 1200,
+                "MinDistance": 100,
+                "MaxIterations": 50
             }
         ]
     },
@@ -70,7 +94,7 @@
                         "i": 2,
                         "j": 4,
                         "k": 1,
-                        "IsVariable": true
+                        "IsVariable": false
                     },
                     {
                         "i": 3,
@@ -100,31 +124,22 @@
                         "TimeStep": 0,
                         "State": "Open",
                         "Mode": "BHP",
-                        "BHP": 2000.0
+                        "BHP": 2000.0,
+                        "IsVariable": true
                     },
                     {
                         "TimeStep": 50,
                         "State": "Open",
                         "Mode": "BHP",
-                        "BHP": 2000.0
+                        "BHP": 2000.0,
+                        "IsVariable": true
                     },
                     {
                         "TimeStep": 365,
                         "State": "Open",
                         "Mode": "BHP",
-                        "BHP": 2000.0
-                    }
-                ],
-                "Variables": [
-                    {
-                        "Name": "PROD-BHP-1",
-                        "Type": "BHP",
-                        "TimeSteps": [0, 50, 365]
-                    },
-                    {
-                        "Name": "PROD-TRANS-ALL",
-                        "Type": "Transmissibility",
-                        "Blocks": "WELL"
+                        "BHP": 2000.0,
+                        "IsVariable": true
                     }
                 ]
             },
@@ -154,7 +169,38 @@
                         "Type": "Water",
                         "State": "Open",
                         "Mode": "Rate",
-                        "Rate": 1200.0
+                        "Rate": 1200.0,
+                        "IsVariable": false
+                    }
+                ]
+            },
+            {
+                "Name": "TESTW",
+                "Type": "Producer",
+                "DefinitionType": "WellSpline",
+                "PreferedPhase": "Oil",
+                "WellboreRadius": 0.75,
+                "SplinePoints": {
+                    "Heel": {
+                        "x": 100.0,
+                        "y": 100.0,
+                        "z": 1712.0,
+                        "IsVariable": true
+                    },
+                    "Toe": {
+                        "x": 500.0,
+                        "y": 500.0,
+                        "z": 1712.0,
+                        "IsVariable": true
+                    }
+                },
+                "Controls": [
+                    {
+                        "TimeStep": 0,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 2000.0,
+                        "IsVariable": true
                     }
                 ]
             }
