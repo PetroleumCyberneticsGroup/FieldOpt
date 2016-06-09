@@ -11,11 +11,11 @@ class ControlTest : public testing::Test, public TestResources::TestResourceMode
 protected:
     ControlTest() {
         well_ = settings_model_->wells().first();
-        inj_well_ = settings_model_->wells().last();
+        inj_well_ = settings_model_->wells()[1];
         entry_ = well_.controls.first();
         inj_entry_ = inj_well_.controls.first();
 
-        for (int i = 0; i < settings_model_->wells().size(); ++i) {
+        for (int i = 0; i < 2; ++i) {
             for (int j = 0; j < settings_model_->wells()[i].controls.size(); ++j) {
                 all_controls_.append(new Control(settings_model_->wells()[i].controls[j],
                                                  settings_model_->wells()[i],
@@ -49,12 +49,6 @@ TEST_F(ControlTest, InjectorControl) {
     EXPECT_TRUE(all_controls_.last()->open());
     EXPECT_EQ(::Utilities::Settings::Model::ControlMode::RateControl, all_controls_.last()->mode());
     EXPECT_FLOAT_EQ(1200, all_controls_.last()->rate());
-}
-
-TEST_F(ControlTest, VariableContainerConsistencyAfterCreation) {
-    EXPECT_EQ(0, model_->variables()->BinaryVariableSize());
-    EXPECT_EQ(12, model_->variables()->DiscreteVariableSize());
-    EXPECT_EQ(15, model_->variables()->ContinousVariableSize());
 }
 
 }

@@ -30,7 +30,7 @@ TEST_F(CompassSearchTest, GetNewCases) {
 
 TEST_F(CompassSearchTest, Pseudoiterations) {
     Optimization::Case *tentative_best_0 = compass_search_->GetTentativeBestCase();
-    for (int i = 0; i < 50; ++i) {
+    for (int i = 0; i < 100; ++i) {
         Optimization::Case *new_case = compass_search_->GetCaseForEvaluation();
         new_case->set_objective_function_value((i%3)*700);
         compass_search_->SubmitEvaluatedCase(new_case);
@@ -38,7 +38,7 @@ TEST_F(CompassSearchTest, Pseudoiterations) {
     Optimization::Case *tentative_best_1 = compass_search_->GetTentativeBestCase();
     EXPECT_TRUE(tentative_best_1->objective_function_value() > tentative_best_0->objective_function_value());
 
-    for (int i = 51; i < 100; ++i) {
+    for (int i = 100; i < 150; ++i) {
         Optimization::Case *new_case = compass_search_->GetCaseForEvaluation();
         new_case->set_objective_function_value((i%3)*800);
         compass_search_->SubmitEvaluatedCase(new_case);

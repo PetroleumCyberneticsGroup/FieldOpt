@@ -28,9 +28,9 @@
 
 namespace Optimization { namespace Constraints {
 
-ConstraintHandler::ConstraintHandler(QList<Utilities::Settings::Optimizer::Constraint> *constraints, Model::Properties::VariablePropertyContainer *variables)
+ConstraintHandler::ConstraintHandler(QList<Utilities::Settings::Optimizer::Constraint> constraints, Model::Properties::VariablePropertyContainer *variables)
 {
-    foreach (Utilities::Settings::Optimizer::Constraint constraint, *constraints) {
+    foreach (Utilities::Settings::Optimizer::Constraint constraint, constraints) {
         switch (constraint.type) {
         case Utilities::Settings::Optimizer::ConstraintType::BHP:
             constraints_.append(new BoxConstraint(constraint, variables));

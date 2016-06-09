@@ -1,28 +1,3 @@
-/******************************************************************************
- *
- * optimizer.cpp
- *
- * Created: 28.09.2015 2015 by einar
- *
- * This file is part of the FieldOpt project.
- *
- * Copyright (C) 2015-2015 Einar J.M. Baumann <einar.baumann@ntnu.no>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
- *****************************************************************************/
-
 #include "optimizer.h"
 #include "settings_exceptions.h"
 
@@ -90,10 +65,10 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
 
     // Optimizer constraints
     try {
-        constraints_ = new QList<Constraint>();
+        constraints_ = QList<Constraint>();
         for (int i = 0; i < json_constraints.size(); ++i) { // Iterate over all constraints
             QJsonObject json_constraint = json_constraints[i].toObject();
-            constraints_->append(parseSingleConstraint(json_constraint));
+            constraints_.append(parseSingleConstraint(json_constraint));
         }
     }
     catch (std::exception const &ex) {
@@ -158,13 +133,42 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
     }
     else if (QString::compare(constraint_type, "WellSplineLength") == 0) {
         optimizer_constraint.type = ConstraintType::WellSplineLength;
-        optimizer_constraint.max = json_constraint["Max"].toDouble();
-        optimizer_constraint.min = json_constraint["Min"].toDouble();
-        optimizer_constraint.well = json_constraint["Well"].toString();
+        if (json_constraint.contains("Min")) {
+            optimizer_constraint.min = json_constraint["Min"].toDouble();
+            optimizer_constraint.min_length = json_constraint["Min"].toDouble();
+        }
+        else if (json_constraint.contains("MinLength")) {
+            optimizer_constraint.min = json_constraint["MinLength"].toDouble();
+            optimizer_constraint.min_length = json_constraint["MinLength"].toDouble();
+        }
+        else throw std::runtime_error("The MinLength field must be specified for well spline length constraints.");
+
+        if (json_constraint.contains("Max")) {
+            optimizer_constraint.max = json_constraint["Max"].toDouble();
+            optimizer_constraint.max_length = json_constraint["Max"].toDouble();
+        }
+        else if (json_constraint.contains("MaxLength")) {
+            optimizer_constraint.max = json_constraint["MaxLength"].toDouble();
+            optimizer_constraint.max_length = json_constraint["MaxLength"].toDouble();
+        }
+        else throw std::runtime_error("The MaxLength field must be specified for well length constraints.");
+
+        if (json_constraint.contains("Well"))
+            optimizer_constraint.well = json_constraint["Well"].toString();
+        else if (json_constraint.contains("Wells") && json_constraint["Wells"].isArray() && json_constraint["Wells"].toArray().size() == 1)
+            optimizer_constraint.well = json_constraint["Wells"].toArray()[0].toString();
+        else throw std::runtime_error("The Well field must be specified for well spline length constraints.");
     }
     else if (QString::compare(constraint_type, "WellSplineInterwellDistance") == 0) {
         optimizer_constraint.type = ConstraintType::WellSplineInterwellDistance;
-        optimizer_constraint.min = json_constraint["Min"].toDouble();
+        if (json_constraint.contains("Min")) {
+            optimizer_constraint.min = json_constraint["Min"].toDouble();
+            optimizer_constraint.min_distance = json_constraint["Min"].toDouble();
+        }
+        else if (json_constraint.contains("MinDistance")) {
+            optimizer_constraint.min = json_constraint["MinDistance"].toDouble();
+            optimizer_constraint.min_distance = json_constraint["MinDistance"].toDouble();
+        }
         if (!json_constraint.contains("Wells") || json_constraint["Wells"].toArray().size() < 2)
             throw UnableToParseOptimizerConstraintsSectionException("WellSplineInterwellDistance constraint needs a Wells array with at least two well names specified.");
         else {

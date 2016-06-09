@@ -74,12 +74,56 @@ namespace {
         EXPECT_STREQ("PROD", obj.weighted_sum.at(1).well.toLatin1().constData());
     }
 
-    TEST_F(OptimizerSettingsTest, ProducerConstraint) {
-        Optimizer::Constraint producerConstraint = settings_optimizer_->constraints()->first();
-        EXPECT_EQ(Optimizer::ConstraintType::BHP, producerConstraint.type);
-        EXPECT_STREQ("PROD", producerConstraint.well.toLatin1().constData());
-        EXPECT_FLOAT_EQ(3000.0, producerConstraint.max);
-        EXPECT_FLOAT_EQ(1000.0, producerConstraint.min);
+
+    TEST_F(OptimizerSettingsTest, Constraints) {
+        EXPECT_EQ(5, settings_optimizer_->constraints().length());
+        EXPECT_EQ(Optimizer::ConstraintType::BHP, settings_optimizer_->constraints()[0].type);
+        EXPECT_EQ(Optimizer::ConstraintType::WellSplineLength, settings_optimizer_->constraints()[1].type);
+        EXPECT_EQ(Optimizer::ConstraintType::Rate, settings_optimizer_->constraints()[2].type);
+        EXPECT_EQ(Optimizer::ConstraintType::WellSplineInterwellDistance, settings_optimizer_->constraints()[3].type);
+        EXPECT_EQ(Optimizer::ConstraintType::CombinedWellSplineLengthInterwellDistance, settings_optimizer_->constraints()[4].type);
     }
 
+    TEST_F(OptimizerSettingsTest, BHPConstraint) {
+        auto constr = settings_optimizer_->constraints()[0];
+        EXPECT_STREQ("PROD", constr.well.toLatin1().constData());
+        EXPECT_FLOAT_EQ(3000.0, constr.max);
+        EXPECT_FLOAT_EQ(1000.0, constr.min);
+    }
+
+    TEST_F(OptimizerSettingsTest, WellSplineLengthConstraint) {
+        auto constr = settings_optimizer_->constraints()[1];
+        EXPECT_STREQ("INJ", constr.well.toLatin1().constData());
+        EXPECT_FLOAT_EQ(400, constr.min_length);
+        EXPECT_FLOAT_EQ(1200, constr.max_length);
+        EXPECT_FLOAT_EQ(400, constr.min);
+        EXPECT_FLOAT_EQ(1200, constr.max);
+    }
+
+
+    TEST_F(OptimizerSettingsTest, RateConstraint) {
+        auto constr = settings_optimizer_->constraints()[2];
+        EXPECT_STREQ("INJ", constr.well.toLatin1().constData());
+        EXPECT_FLOAT_EQ(1200, constr.min);
+        EXPECT_FLOAT_EQ(1400, constr.max);
+    }
+
+
+    TEST_F(OptimizerSettingsTest, InterwellDistanceConstraint) {
+        auto constr = settings_optimizer_->constraints()[3];
+        EXPECT_EQ(2, constr.wells.length());
+        EXPECT_STREQ("TESTW", constr.wells[1].toLatin1().constData());
+        EXPECT_FLOAT_EQ(100, constr.min);
+        EXPECT_FLOAT_EQ(100, constr.min_distance);
+    }
+
+    TEST_F(OptimizerSettingsTest, CombinedSplineLengthInterwellDistanceConstraint) {
+        auto constr = settings_optimizer_->constraints()[4];
+        EXPECT_EQ(2, constr.wells.length());
+        EXPECT_STREQ("TESTW", constr.wells[1].toLatin1().constData());
+        EXPECT_FLOAT_EQ(100, constr.min_distance);
+        EXPECT_FLOAT_EQ(400, constr.min_length);
+        EXPECT_FLOAT_EQ(1200, constr.max_length);
+        EXPECT_EQ(50, constr.max_iterations);
+    }
 }

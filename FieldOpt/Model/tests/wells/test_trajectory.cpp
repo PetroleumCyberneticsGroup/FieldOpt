@@ -69,7 +69,7 @@ namespace {
 
     TEST_F(TrajectoryTest, VariableContainerConsistencyAfterCreation) {
         // There should be three integer variables (i,j,k) for each of the four well block
-        EXPECT_EQ(12, model_->variables()->DiscreteVariableSize());
+        EXPECT_EQ(9, model_->variables()->DiscreteVariableSize());
     }
 
 

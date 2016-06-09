@@ -47,7 +47,7 @@ namespace Optimization { namespace Constraints {
 class ConstraintHandler
 {
 public:
-    ConstraintHandler(QList<Utilities::Settings::Optimizer::Constraint> *constraints, Model::Properties::VariablePropertyContainer *variables);
+    ConstraintHandler(QList<Utilities::Settings::Optimizer::Constraint> constraints, Model::Properties::VariablePropertyContainer *variables);
     bool CaseSatisfiesConstraints(Case *c); //!< Check if a Case satisfies _all_ constraints.
     void SnapCaseToConstraints(Case *c); //!< Snap all variables to _all_ constraints.
 

@@ -19,7 +19,7 @@ namespace {
         EXPECT_NO_THROW(model_->variables());
         EXPECT_GE(model_->wells()->size(), 2);
         EXPECT_GE(model_->variables()->BinaryVariableSize(), 0);
-        EXPECT_GE(model_->variables()->DiscreteVariableSize(), 12);
+        EXPECT_GE(model_->variables()->DiscreteVariableSize(), 9);
         EXPECT_GE(model_->variables()->ContinousVariableSize(), 5);
     }
 
@@ -33,7 +33,7 @@ namespace {
         EXPECT_STREQ("BHP#PROD#365", prod_cont_variables[2]->name().toLatin1().constData());
         EXPECT_EQ(3, model_->wells()->at(0)->controls()->size());
 
-        EXPECT_EQ(12, model_->variables()->GetDiscreteVariableNamesAndIdsMatchingSubstring("WellBlock#PROD").size());
+        EXPECT_EQ(9, model_->variables()->GetDiscreteVariableNamesAndIdsMatchingSubstring("WellBlock#PROD").size());
 //        EXPECT_EQ(12, model_->variables()->GetDiscreteVariableIdsWithName("PROD-WELLBLOCKS-ALL#0#i").size()); // Three variables pr. block (i,j,k)
         foreach (int value, model_->variables()->GetDiscreteVariableValues().values()) {
             EXPECT_GE(value, 0);
@@ -65,10 +65,18 @@ namespace {
             EXPECT_FLOAT_EQ(1.0, control->bhp());
         }
 
-        foreach (Model::Wells::Wellbore::WellBlock *wb, *model_->wells()->first()->trajectory()->GetWellBlocks()) {
-            EXPECT_EQ(1, wb->i());
-            EXPECT_EQ(1, wb->j());
-            EXPECT_EQ(1, wb->k());
+        for (int i = 0; i < model_->wells()->first()->trajectory()->GetWellBlocks()->size(); ++i) {
+            auto wb = model_->wells()->first()->trajectory()->GetWellBlocks()->at(i);
+            if (i == 1) { //!< WB 1 is not variable, and should thus not have been changed
+                EXPECT_EQ(2, wb->i());
+                EXPECT_EQ(4, wb->j());
+                EXPECT_EQ(1, wb->k());
+            }
+            else {
+                EXPECT_EQ(1, wb->i());
+                EXPECT_EQ(1, wb->j());
+                EXPECT_EQ(1, wb->k());
+            }
         }
     }
 

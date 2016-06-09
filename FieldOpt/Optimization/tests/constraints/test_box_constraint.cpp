@@ -8,7 +8,7 @@ namespace {
     class BoxConstraintTest : public ::testing::Test, public TestResources::TestResourceOptimizer {
     protected:
         BoxConstraintTest() {
-            box_constraint_ = new ::Optimization::Constraints::BoxConstraint(settings_optimizer_->constraints()->first(), model_->variables());
+            box_constraint_ = new ::Optimization::Constraints::BoxConstraint(settings_optimizer_->constraints()[0], model_->variables());
         }
         virtual ~BoxConstraintTest() {}
         virtual void SetUp() {}
