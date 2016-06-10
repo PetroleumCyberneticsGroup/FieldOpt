@@ -56,6 +56,8 @@ namespace {
                 EXPECT_TRUE(producer.well_blocks[i].has_completion);
                 EXPECT_FLOAT_EQ(1.0, producer.well_blocks[i].completion.transmissibility_factor);
                 EXPECT_EQ(Model::WellCompletionType::Perforation, producer.well_blocks[i].completion.type);
+                QString expected_name = QString("Transmissibility#PROD#%1").arg(i);
+                EXPECT_STREQ(expected_name.toLatin1().constData(), producer.well_blocks[i].completion.name.toLatin1().constData());
             }
         }
     }

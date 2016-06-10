@@ -121,7 +121,7 @@ namespace Utilities {
                             block.completion.is_variable = json_well_block_i_completion["IsVariable"].toBool();
                         else
                             block.completion.is_variable = false;
-                        block.completion.name = "Perforation#" + well.name + "#" + QString::number(i);
+                        block.completion.name = "Transmissibility#" + well.name + "#" + QString::number(i);
                         block.has_completion = true;
                     }
                     else

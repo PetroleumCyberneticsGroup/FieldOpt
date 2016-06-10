@@ -83,9 +83,11 @@ public:
     QList<ContinousProperty *> GetWellControlVariables(const QString well_name) const; //!< Get all control variables for a specific well
     QList<ContinousProperty *> GetWellBHPVariables(const QString well_name) const; //!< Get all BHP variables for a specific well.
     QList<ContinousProperty *> GetWellRateVariables(const QString well_name) const; //!< Get all BHP variables for a specific well.
-
     QList<ContinousProperty *> GetWellSplineVariables(const QString well_name) const; //!< Get all variables for the spline defining a well.
-
+    QList<DiscreteProperty *> GetWellBlockVariables() const; //!< Get well block position variables.
+    QList<DiscreteProperty *> GetWellBlockVariables(const QString well_name) const; //!< Get well block position variables for a well.
+    QList<ContinousProperty *> GetTransmissibilityVariables() const; //!< Get all transmissibility variables.
+    QList<ContinousProperty *> GetTransmissibilityVariables(const QString well_name) const; //!< Get all transmissibility variables for a well.
 
     /*!
      * \brief GetContinousVariableNamesAndIdsMatchingNamePart Get the names and IDs of continous variables with
@@ -100,10 +102,6 @@ public:
      * \param substring
      */
     QList<QPair<QUuid, QString> > GetDiscreteVariableNamesAndIdsMatchingSubstring(QString substring);
-
-    void DeleteBinaryVariable(QUuid id);
-    void DeleteDiscreteVariable(QUuid id);
-    void DeleteContinousVariable(QUuid id);
 
     void CheckVariableNameUniqueness(); //!< Check that all variable names are unique. If they are not, throw an error.
 

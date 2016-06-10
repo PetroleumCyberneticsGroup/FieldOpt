@@ -21,12 +21,6 @@ namespace Model {
                 {
                     transmissibility_factor_ = new Properties::ContinousProperty(0.0);
                 }
-
-
-
-
-
-
             }
         }
     }

@@ -164,24 +164,6 @@ namespace Model {
             return mathcing_vars;
         }
 
-        void VariablePropertyContainer::DeleteBinaryVariable(QUuid id)
-        {
-            if (!binary_variables_->contains(id)) throw VariableIdDoesNotExistException("Binary variable not found. Unable to delete.");
-            binary_variables_->remove(id);
-        }
-
-        void VariablePropertyContainer::DeleteDiscreteVariable(QUuid id)
-        {
-            if (!discrete_variables_->contains(id)) throw VariableIdDoesNotExistException("Integer variable not found. Unable to delete.");
-            discrete_variables_->remove(id);
-        }
-
-        void VariablePropertyContainer::DeleteContinousVariable(QUuid id)
-        {
-            if (!continous_variables_->contains(id)) throw VariableIdDoesNotExistException("Real variable not found. Unable to delete");
-            continous_variables_->remove(id);
-        }
-
         void VariablePropertyContainer::CheckVariableNameUniqueness()
         {
             QList<QString> names = QList<QString>();
@@ -230,8 +212,8 @@ namespace Model {
         QList<ContinousProperty *> VariablePropertyContainer::GetWellSplineVariables(const QString well_name) const {
             QList<ContinousProperty *> spline_vars;
             foreach (auto var, continous_variables_->values()) {
-                if (QString::compare("SplinePoint", var->name().split("#")[0]) == 0 &&
-                        QString::compare(well_name, var->name().split("#")[1]) == 0) {
+                if (var->propertyInfo().prop_type == Property::PropertyType::SplinePoint &&
+                        QString::compare(well_name, var->propertyInfo().parent_well_name) == 0) {
                     spline_vars.append(var);
                 }
             }
@@ -242,14 +224,14 @@ namespace Model {
         QList<ContinousProperty *> VariablePropertyContainer::GetWellControlVariables() const {
             QList<ContinousProperty *> well_controls;
             foreach (auto var, continous_variables_->values()) {
-                if (QString::compare("BHP", var->name().split("#")[0]) == 0 ||
-                    QString::compare("Rate", var->name().split("#")[0]) == 0) {
+                if (var->propertyInfo().prop_type == Property::PropertyType::BHP||
+                        var->propertyInfo().prop_type == Property::PropertyType::Rate) {
                     well_controls.append(var);
                 }
             }
             std::sort(well_controls.begin(), well_controls.end(), [](ContinousProperty *p1, ContinousProperty *p2) {
-                int time_1 = p1->name().split("#").last().toInt();
-                int time_2 = p2->name().split("#").last().toInt();
+                int time_1 = p1->propertyInfo().index;
+                int time_2 = p2->propertyInfo().index;
                 return time_1 < time_2;
             });
             return well_controls;
@@ -258,7 +240,7 @@ namespace Model {
         QList<ContinousProperty *> VariablePropertyContainer::GetWellControlVariables(const QString well_name) const {
             QList<ContinousProperty *> well_controls;
             foreach (auto var, GetWellControlVariables()) {
-                if (QString::compare(well_name, var->name().split("#")[1]) == 0) {
+                if (QString::compare(well_name, var->propertyInfo().parent_well_name) == 0) {
                     well_controls.append(var);
                 }
             }
@@ -268,7 +250,7 @@ namespace Model {
         QList<ContinousProperty *> VariablePropertyContainer::GetWellBHPVariables() const {
             QList<ContinousProperty *> bhp_variables;
             foreach (auto var, GetWellControlVariables()) {
-                if (QString::compare("BHP", var->name().split("#")[0]) == 0)
+                if (var->propertyInfo().prop_type == Property::PropertyType::BHP)
                     bhp_variables.append(var);
             }
             return bhp_variables;
@@ -277,7 +259,7 @@ namespace Model {
         QList<ContinousProperty *> VariablePropertyContainer::GetWellRateVariables() const {
             QList<ContinousProperty *> rate_variables;
             foreach (auto var, GetWellControlVariables()) {
-                if (QString::compare("Rate", var->name().split("#")[0]) == 0)
+                    if (var->propertyInfo().prop_type == Property::PropertyType::Rate)
                     rate_variables.append(var);
             }
             return rate_variables;
@@ -286,7 +268,7 @@ namespace Model {
         QList<ContinousProperty *> VariablePropertyContainer::GetWellBHPVariables(QString well_name) const {
             QList<ContinousProperty *> well_bhp_variables;
             foreach (auto var, GetWellBHPVariables()) {
-                if (QString::compare(well_name, var->name().split("#")[1]) == 0) {
+                if (QString::compare(well_name, var->propertyInfo().parent_well_name) == 0) {
                     well_bhp_variables.append(var);
                 }
             }
@@ -295,12 +277,48 @@ namespace Model {
 
         QList<ContinousProperty *> VariablePropertyContainer::GetWellRateVariables(QString well_name) const {
             QList<ContinousProperty *> well_rate_variables;
-                    foreach (auto var, GetWellRateVariables()) {
-                    if (QString::compare(well_name, var->name().split("#")[1]) == 0) {
-                        well_rate_variables.append(var);
-                    }
+            foreach (auto var, GetWellRateVariables()) {
+                if (QString::compare(well_name, var->propertyInfo().parent_well_name) == 0) {
+                    well_rate_variables.append(var);
                 }
+            }
             return well_rate_variables;
+        }
+
+        QList<DiscreteProperty *> VariablePropertyContainer::GetWellBlockVariables() const {
+            QList<DiscreteProperty *> wb_vars;
+            foreach (auto var, discrete_variables_->values()) {
+                if (var->propertyInfo().prop_type == Property::PropertyType::WellBlock)
+                    wb_vars.append(var);
+            }
+            return wb_vars;
+        }
+
+        QList<DiscreteProperty *> VariablePropertyContainer::GetWellBlockVariables(const QString well_name) const {
+            QList<DiscreteProperty *> wb_vars;
+            foreach (auto var, GetWellBlockVariables()) {
+                if (QString::compare(well_name, var->propertyInfo().parent_well_name) == 0)
+                    wb_vars.append(var);
+            }
+            return wb_vars;
+        }
+
+        QList<ContinousProperty *> VariablePropertyContainer::GetTransmissibilityVariables() const {
+            QList<ContinousProperty *> trans_vars;
+            foreach (auto var, continous_variables_->values()) {
+                if (var->propertyInfo().prop_type == Property::PropertyType::Transmissibility)
+                    trans_vars.append(var);
+            }
+            return trans_vars;
+        }
+
+        QList<ContinousProperty *> VariablePropertyContainer::GetTransmissibilityVariables(const QString well_name) const {
+            QList<ContinousProperty *> trans_vars;
+            foreach (auto var, GetTransmissibilityVariables()) {
+                if (QString::compare(well_name, var->propertyInfo().parent_well_name) == 0)
+                    trans_vars.append(var);
+            }
+            return trans_vars;
         }
 
 

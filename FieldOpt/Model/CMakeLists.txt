@@ -23,7 +23,7 @@ add_library(model
 		properties/binary_property.cpp
 		properties/variable_property_container.cpp
 		properties/continous_property.cpp
-		properties/discrete_property.cpp)
+		properties/discrete_property.cpp properties/property.cpp)
 add_library(fieldopt::model ALIAS ${PROJECT_NAME})
 
 target_link_libraries (model

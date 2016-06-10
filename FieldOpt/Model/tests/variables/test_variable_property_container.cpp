@@ -5,70 +5,50 @@
 #include "Model/properties/discrete_property.h"
 #include "Model/properties/continous_property.h"
 #include "Model/properties/variable_property_container.h"
+#include "Model/tests/test_resource_model.h"
 
 using namespace Model::Properties;
 
 namespace {
 
-class VariableContainerTest : public ::testing::Test {
-protected:
-    VariableContainerTest () {
-        variable_container_ = new VariablePropertyContainer();
+    class VariableContainerTest : public ::testing::Test, TestResources::TestResourceModel {
+    protected:
+        VariableContainerTest () {
+            vc_ = model_->variables();
+        }
+        virtual ~VariableContainerTest () { }
+
+        virtual void SetUp() { }
+
+        VariablePropertyContainer *vc_;
+    };
+
+    TEST_F(VariableContainerTest, Constructor) {
+        // Check that all variables have been added
+        // PROD well: 9 int pos vars, 3 float trans vars, 3 float bhp vars
+        // INJ well: 6 float pos vars
+        // TESTW well: 6 float pos vars, 1 float bhp var
+        // Total: 12 int vars, 20 float vars, no binary vars
+        EXPECT_EQ(9, vc_->GetDiscreteVariables()->size());
+        EXPECT_EQ(19, vc_->GetContinousVariables()->size());
+        EXPECT_EQ(0, vc_->GetBinaryVariables()->size());
     }
-    virtual ~VariableContainerTest () { }
 
-    virtual void SetUp() {
-        variable_container_->AddVariable(continous_properties_[0]);
-        variable_container_->AddVariable(continous_properties_[1]);
-        variable_container_->AddVariable(continous_properties_[2]);
-        variable_container_->AddVariable(discrete_properties_[0]);
-        variable_container_->AddVariable(binary_properties_[0]);
-        variable_container_->AddVariable(binary_properties_[1]);
+    TEST_F(VariableContainerTest, PRODWellVariables) {
+        EXPECT_EQ(9, vc_->GetWellBlockVariables("PROD").length());
+        EXPECT_EQ(3, vc_->GetTransmissibilityVariables("PROD").length());
+        EXPECT_EQ(3, vc_->GetWellBHPVariables("PROD").length());
+        EXPECT_EQ(0, vc_->GetWellRateVariables("PROD").length());
+        EXPECT_EQ(0, vc_->GetWellSplineVariables("PROD").length());
     }
 
-    VariablePropertyContainer *variable_container_;
-    QList<ContinousProperty *> continous_properties_ {
-        new ContinousProperty(2.0),
-        new ContinousProperty(5.0),
-        new ContinousProperty(1.0)
-    };
-    QList<DiscreteProperty *> discrete_properties_ {
-        new DiscreteProperty(5)
-    };
-    QList<BinaryProperty *> binary_properties_ {
-        new BinaryProperty(false),
-        new BinaryProperty(true)
-    };
-};
 
-TEST_F(VariableContainerTest, Constructor) {
-    // If the lists exist, the constructor has been run
-    EXPECT_EQ(variable_container_->BinaryVariableSize(), 2);
-    EXPECT_EQ(variable_container_->DiscreteVariableSize(), 1);
-    EXPECT_EQ(variable_container_->ContinousVariableSize(), 3);
-}
-
-TEST_F(VariableContainerTest, Retrieval) {
-    EXPECT_EQ(variable_container_->GetBinaryVariable(binary_properties_[0]->id())->value(), false);
-    EXPECT_EQ(variable_container_->GetDiscreteVariable(discrete_properties_[0]->id())->value(), 5);
-    EXPECT_FLOAT_EQ(variable_container_->GetContinousVariable(continous_properties_[2]->id())->value(), 1.0);
-    EXPECT_EQ(variable_container_->GetBinaryVariableValues()[binary_properties_[0]->id()], false);
-    EXPECT_EQ(variable_container_->GetDiscreteVariableValues()[discrete_properties_[0]->id()], 5);
-    EXPECT_FLOAT_EQ(variable_container_->GetContinousVariableValues()[continous_properties_[2]->id()], 1.0);
-    EXPECT_THROW(variable_container_->GetContinousVariable(QUuid::createUuid()), VariableIdDoesNotExistException);
-    EXPECT_THROW(variable_container_->GetBinaryVariable(QUuid::createUuid()), VariableIdDoesNotExistException);
-    EXPECT_THROW(variable_container_->GetDiscreteVariable(QUuid::createUuid()), VariableIdDoesNotExistException);
-}
-
-TEST_F(VariableContainerTest, Deletion) {
-    EXPECT_NO_THROW(variable_container_->DeleteBinaryVariable(binary_properties_[0]->id()));
-    EXPECT_THROW(variable_container_->GetBinaryVariable(0), VariableIdDoesNotExistException);
-    EXPECT_THROW(variable_container_->DeleteDiscreteVariable(QUuid::createUuid()), VariableIdDoesNotExistException);
-    EXPECT_NO_THROW(variable_container_->DeleteDiscreteVariable(discrete_properties_[0]->id()));
-    EXPECT_EQ(variable_container_->DiscreteVariableSize(), 0);
-    EXPECT_NO_THROW(variable_container_->DeleteContinousVariable(continous_properties_[1]->id()));
-    EXPECT_THROW(variable_container_->GetContinousVariable(continous_properties_[1]->id()), VariableIdDoesNotExistException);
-    EXPECT_DOUBLE_EQ(variable_container_->GetContinousVariable(continous_properties_[2]->id())->value(), 1.0);
-}
+    TEST_F(VariableContainerTest, INJWellVariables) {
+        EXPECT_EQ(6, vc_->GetWellSplineVariables("INJ").length());
+        EXPECT_EQ(0, vc_->GetWellRateVariables("INJ").length());
+        EXPECT_EQ(0, vc_->GetWellBlockVariables("INJ").length());
+        EXPECT_EQ(0, vc_->GetTransmissibilityVariables("INJ").length());
+        EXPECT_EQ(0, vc_->GetWellBHPVariables("INJ").length());
+    }
 
 }
