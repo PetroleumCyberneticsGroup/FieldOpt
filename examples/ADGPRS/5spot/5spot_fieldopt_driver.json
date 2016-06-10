@@ -26,7 +26,6 @@
         },
         "Constraints": [
             {
-                "Name": "SplinePoints",
                 "Wells": ["INJECTOR", "PRODUCER"],
                 "Type": "CombinedWellSplineLengthInterwellDistance",
                 "MinLength": 400,
@@ -52,27 +51,27 @@
                 "Type": "Producer",
                 "DefinitionType": "WellSpline",
                 "PreferedPhase": "Oil",
-                "Heel": [1,4,1],
                 "WellboreRadius": 0.1905,
-                "Direction": "X",
-                "SplinePoints": [
-                    [300.0,900.0,1712.0],
-                    [900.0,900.0,1712.0]
-                ],
+                "SplinePoints": {
+                    "Heel": {
+                        "x": 300.0,
+                        "y": 900.0,
+                        "z": 1712.0,
+                        "IsVariable": true
+                    },
+                    "Toe": {
+                        "x": 900.0,
+                        "y": 900.0,
+                        "z": 1712.0,
+                        "IsVariable": true
+                    }
+                },
                 "Controls": [
                     {
                         "TimeStep": 0,
                         "State": "Open",
                         "Mode": "BHP",
                         "BHP": 2000.0
-                    }
-                ],
-                "Variables": [
-                    {
-                        "Name": "SplinePoints",
-                        "Type": "SplinePoints",
-                        "VariableSplinePointIndices": [0,1],
-                        "TimeSteps": [0]
                     }
                 ]
             },
@@ -81,13 +80,21 @@
                 "Type": "Injector",
                 "DefinitionType": "WellSpline",
                 "PreferedPhase": "Water",
-                "Heel": [10,10,1],
                 "WellboreRadius": 0.1905,
-                "Direction": "X",
-                "SplinePoints": [
-                    [300.0,500.0,1712.0],
-                    [772.0,500.0,1712.0]
-                ],
+                "SplinePoints": {
+                    "Heel": {
+                        "x": 300.0,
+                        "y": 500.0,
+                        "z": 1712.0,
+                        "IsVariable": true
+                    },
+                    "Toe": {
+                        "x": 772.0,
+                        "y": 500.0,
+                        "z": 1712.0,
+                        "IsVariable": true
+                    }
+                },
                 "Controls": [
                     {
                         "TimeStep": 0,
@@ -95,14 +102,6 @@
                         "State": "Open",
                         "Mode": "Rate",
                         "Rate": 1200.0
-                    }
-                ],
-                "Variables": [
-                    {
-                        "Name": "SplinePoints",
-                        "Type": "SplinePoints",
-                        "VariableSplinePointIndices": [0,1],
-                        "TimeSteps": [0]
                     }
                 ]
             }
