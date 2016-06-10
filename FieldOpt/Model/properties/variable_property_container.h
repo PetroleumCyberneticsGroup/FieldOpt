@@ -73,9 +73,6 @@ public:
     QHash<QUuid, bool> GetBinaryVariableValues() const; //!< Get a hashmap containing all binary variable values. The key represents each variable's ID.
     QHash<QUuid, int> GetDiscreteVariableValues() const; //!< Get a hashmap containing all discrete variable values. The key represents each variable's ID.
     QHash<QUuid, double> GetContinousVariableValues() const; //!< Get a hashmap containing all discrete varaible values. The key represents each variable's ID.
-    QList<QUuid> GetBinaryVariableIdsWithName(QString var_name) const;
-    QList<QUuid> GetDiscreteVariableIdsWithName(QString var_name) const;
-    QList<QUuid> GetContinousVariableIdsWithName(QString var_name) const;
 
     QList<ContinousProperty *> GetWellControlVariables() const; //!< Get all control (rate/bhp) variables.
     QList<ContinousProperty *> GetWellBHPVariables() const; //!< Get all BHP variables.
@@ -88,20 +85,6 @@ public:
     QList<DiscreteProperty *> GetWellBlockVariables(const QString well_name) const; //!< Get well block position variables for a well.
     QList<ContinousProperty *> GetTransmissibilityVariables() const; //!< Get all transmissibility variables.
     QList<ContinousProperty *> GetTransmissibilityVariables(const QString well_name) const; //!< Get all transmissibility variables for a well.
-
-    /*!
-     * \brief GetContinousVariableNamesAndIdsMatchingNamePart Get the names and IDs of continous variables with
-     * names containing the proided substring.
-     * \param substring
-     */
-    QList<QPair<QUuid, QString> > GetContinousVariableNamesAndIdsMatchingSubstring(QString substring);
-
-    /*!
-     * \brief GetDiscreteVariableNamesAndIdsMatchingNamePart Get the names and IDs of continous variables with
-     * names containing the provided substring.
-     * \param substring
-     */
-    QList<QPair<QUuid, QString> > GetDiscreteVariableNamesAndIdsMatchingSubstring(QString substring);
 
     void CheckVariableNameUniqueness(); //!< Check that all variable names are unique. If they are not, throw an error.
 

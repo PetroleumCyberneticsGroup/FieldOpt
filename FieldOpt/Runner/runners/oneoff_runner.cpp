@@ -25,52 +25,52 @@ void OneOffRunner::Execute()
 
 void OneOffRunner::applyWellPositionFromArguments()
 {
-    QList<QPair<QUuid, QString>> prod_vars = model_->variables()->GetContinousVariableNamesAndIdsMatchingSubstring("PRODUCER");
-    QList<QPair<QUuid, QString>> inje_vars = model_->variables()->GetContinousVariableNamesAndIdsMatchingSubstring("INJECTOR");
+    QList<Model::Properties::ContinousProperty *> prod_vars = model_->variables()->GetWellSplineVariables("PRODUCER");
+    QList<Model::Properties::ContinousProperty *> inje_vars = model_->variables()->GetWellSplineVariables("INJECTOR");
     if (prod_vars.length() != 6 || inje_vars.length() != 6)
         throw std::runtime_error("Found an incorrect number of variables for the wells.");
 
     QUuid phx, phy, phz, ihx, ihy, ihz, ptx, pty, ptz, itx, ity, itz;
     for (int i = 0; i < prod_vars.length(); ++i)
     {
-        if (QString::compare(prod_vars[i].second.split("#").end()[-2], "heel") == 0)
+        if (prod_vars[i]->propertyInfo().spline_end == Model::Properties::Property::SplineEnd::Heel)
         {
-            if (QString::compare(prod_vars[i].second.split("#").end()[-1], "x") == 0)
-                phx = prod_vars[i].first;
-            else if (QString::compare(prod_vars[i].second.split("#").end()[-1], "y") == 0)
-                phy = prod_vars[i].first;
-            else if (QString::compare(prod_vars[i].second.split("#").end()[-1], "z") == 0)
-                phz = prod_vars[i].first;
+            if (prod_vars[i]->propertyInfo().coord == Model::Properties::Property::Coordinate::x)
+                phx = prod_vars[i]->id();
+            else if (prod_vars[i]->propertyInfo().coord == Model::Properties::Property::Coordinate::y)
+                phy = prod_vars[i]->id();
+            else if (prod_vars[i]->propertyInfo().coord == Model::Properties::Property::Coordinate::z)
+                phz = prod_vars[i]->id();
         }
-        else if (QString::compare(prod_vars[i].second.split("#").end()[-2], "toe") == 0)
+        else if (prod_vars[i]->propertyInfo().spline_end == Model::Properties::Property::SplineEnd::Toe)
         {
-            if (QString::compare(prod_vars[i].second.split("#").end()[-1], "x") == 0)
-                ptx = prod_vars[i].first;
-            else if (QString::compare(prod_vars[i].second.split("#").end()[-1], "y") == 0)
-                pty = prod_vars[i].first;
-            else if (QString::compare(prod_vars[i].second.split("#").end()[-1], "z") == 0)
-                ptz = prod_vars[i].first;
+            if (prod_vars[i]->propertyInfo().coord == Model::Properties::Property::Coordinate::x)
+                ptx = prod_vars[i]->id();
+            else if (prod_vars[i]->propertyInfo().coord == Model::Properties::Property::Coordinate::y)
+                pty = prod_vars[i]->id();
+            else if (prod_vars[i]->propertyInfo().coord == Model::Properties::Property::Coordinate::z)
+                ptz = prod_vars[i]->id();
         }
     }
     for (int i = 0; i < inje_vars.length(); ++i)
     {
-        if (QString::compare(inje_vars[i].second.split("#").end()[-2], "heel") == 0)
+        if (inje_vars[i]->propertyInfo().spline_end == Model::Properties::Property::SplineEnd::Heel)
         {
-            if (QString::compare(inje_vars[i].second.split("#").end()[-1], "x") == 0)
-                ihx = inje_vars[i].first;
-            else if (QString::compare(inje_vars[i].second.split("#").end()[-1], "y") == 0)
-                ihy = inje_vars[i].first;
-            else if (QString::compare(inje_vars[i].second.split("#").end()[-1], "z") == 0)
-                ihz = inje_vars[i].first;
+            if (inje_vars[i]->propertyInfo().coord == Model::Properties::Property::Coordinate::x)
+                ihx = inje_vars[i]->id();
+            if (inje_vars[i]->propertyInfo().coord == Model::Properties::Property::Coordinate::y)
+                ihy = inje_vars[i]->id();
+            if (inje_vars[i]->propertyInfo().coord == Model::Properties::Property::Coordinate::z)
+                ihz = inje_vars[i]->id();
         }
-        else if (QString::compare(inje_vars[i].second.split("#").end()[-2], "toe") == 0)
+        if (inje_vars[i]->propertyInfo().spline_end == Model::Properties::Property::SplineEnd::Toe)
         {
-            if (QString::compare(inje_vars[i].second.split("#").end()[-1], "x") == 0)
-                itx = inje_vars[i].first;
-            else if (QString::compare(inje_vars[i].second.split("#").end()[-1], "y") == 0)
-                ity = inje_vars[i].first;
-            else if (QString::compare(inje_vars[i].second.split("#").end()[-1], "z") == 0)
-                itz = inje_vars[i].first;
+            if (inje_vars[i]->propertyInfo().coord == Model::Properties::Property::Coordinate::x)
+                itx = inje_vars[i]->id();
+            if (inje_vars[i]->propertyInfo().coord == Model::Properties::Property::Coordinate::y)
+                ity = inje_vars[i]->id();
+            if (inje_vars[i]->propertyInfo().coord == Model::Properties::Property::Coordinate::z)
+                itz = inje_vars[i]->id();
         }
     }
 

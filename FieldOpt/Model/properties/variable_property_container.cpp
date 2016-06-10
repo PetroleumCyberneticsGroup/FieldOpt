@@ -117,53 +117,6 @@ namespace Model {
             return continous_values;
         }
 
-        QList<QUuid> VariablePropertyContainer::GetBinaryVariableIdsWithName(QString var_name) const
-        {
-            QString varn_wo_suffixes = var_name.split("#").first();
-            QList<QUuid> ids_for_variables_with_name = QList<QUuid>();
-                    foreach (Properties::BinaryProperty * prop, binary_variables_->values()) {
-                    if (QString::compare(prop->name().split("#").first(), varn_wo_suffixes) == 0)
-                        ids_for_variables_with_name.append(prop->id());
-                }
-            return ids_for_variables_with_name;
-        }
-
-        QList<QUuid> VariablePropertyContainer::GetDiscreteVariableIdsWithName(QString var_name) const
-        {
-            QString varn_wo_suffixes = var_name.split("#").first();
-            QList<QUuid> ids_for_variables_with_name = QList<QUuid>();
-                    foreach (Properties::DiscreteProperty *prop, discrete_variables_->values()) {
-                    if (QString::compare(prop->name().split("#").first(), varn_wo_suffixes) == 0)
-                        ids_for_variables_with_name.append(prop->id());
-                }
-            return ids_for_variables_with_name;
-        }
-
-        QList<QUuid> VariablePropertyContainer::GetContinousVariableIdsWithName(QString var_name) const
-        {
-            QString varn_wo_suffixes = var_name.split("#").first();
-            QList<QUuid> ids_for_variables_with_name = QList<QUuid>();
-                    foreach (Properties::ContinousProperty *prop, continous_variables_->values()) {
-                    if (QString::compare(prop->name().split("#").first(), varn_wo_suffixes) == 0)
-                        ids_for_variables_with_name.append(prop->id());
-                }
-            return ids_for_variables_with_name;
-        }
-
-        QList<QPair<QUuid, QString> > VariablePropertyContainer::GetContinousVariableNamesAndIdsMatchingSubstring(QString substring)
-        {
-            QList<QPair<QUuid, QString> > mathcing_vars = QList<QPair<QUuid, QString> >();
-                    foreach (Properties::ContinousProperty *prop, continous_variables_->values()) {
-                    if (prop->name().contains(substring)) {
-                        QPair<QUuid, QString> entry = QPair<QUuid, QString>();
-                        entry.first = prop->id();
-                        entry.second = prop->name();
-                        mathcing_vars.append(entry);
-                    }
-                }
-            return mathcing_vars;
-        }
-
         void VariablePropertyContainer::CheckVariableNameUniqueness()
         {
             QList<QString> names = QList<QString>();
@@ -193,20 +146,6 @@ namespace Model {
                             names.append(var->name());
                     }
                 }
-        }
-
-        QList<QPair<QUuid, QString> > VariablePropertyContainer::GetDiscreteVariableNamesAndIdsMatchingSubstring(
-                QString substring) {
-            QList<QPair<QUuid, QString> > mathcing_vars = QList<QPair<QUuid, QString> >();
-                    foreach (Properties::DiscreteProperty *prop, discrete_variables_->values()) {
-                    if (prop->name().contains(substring)) {
-                        QPair<QUuid, QString> entry = QPair<QUuid, QString>();
-                        entry.first = prop->id();
-                        entry.second = prop->name();
-                        mathcing_vars.append(entry);
-                    }
-                }
-            return mathcing_vars;
         }
 
         QList<ContinousProperty *> VariablePropertyContainer::GetWellSplineVariables(const QString well_name) const {

@@ -33,8 +33,7 @@ namespace {
         EXPECT_STREQ("BHP#PROD#365", prod_cont_variables[2]->name().toLatin1().constData());
         EXPECT_EQ(3, model_->wells()->at(0)->controls()->size());
 
-        EXPECT_EQ(9, model_->variables()->GetDiscreteVariableNamesAndIdsMatchingSubstring("WellBlock#PROD").size());
-//        EXPECT_EQ(12, model_->variables()->GetDiscreteVariableIdsWithName("PROD-WELLBLOCKS-ALL#0#i").size()); // Three variables pr. block (i,j,k)
+        EXPECT_EQ(9, model_->variables()->GetWellBlockVariables("PROD").size());
         foreach (int value, model_->variables()->GetDiscreteVariableValues().values()) {
             EXPECT_GE(value, 0);
         }
@@ -46,17 +45,18 @@ namespace {
                                                          model_->variables()->GetContinousVariableValues());
 
         // Set all continous variables for the PROD well to 1. Should affect BHP and transmissibilty.
-        auto producer_vars = model_->variables()->GetContinousVariableNamesAndIdsMatchingSubstring("PROD");
+        auto producer_vars = model_->variables()->GetWellBHPVariables("PROD");
+        producer_vars.append(model_->variables()->GetTransmissibilityVariables("PROD"));
         foreach (auto var, producer_vars) {
-                std::cout << "Setting value for " << var.second.toStdString() << std::endl;
-            c->set_real_variable_value(var.first, 1.0);
+                std::cout << "Setting value for " << var->id().toString().toStdString() << std::endl;
+            c->set_real_variable_value(var->id(), 1.0);
         }
 
         // Set all integer coordinates to 1 (should affect positions for all well blocks)
-        auto producer_disc_vars = model_->variables()->GetDiscreteVariableNamesAndIdsMatchingSubstring("PROD");
-        foreach (auto var, producer_disc_vars) {
-                std::cout << "Setting value for " << var.second.toStdString() << std::endl;
-                c->set_integer_variable_value(var.first, 1);
+        auto producer_wb_vars = model_->variables()->GetWellBlockVariables("PROD");
+        foreach (auto var, producer_wb_vars) {
+                std::cout << "Setting value for " << var->id().toString().toStdString() << std::endl;
+                c->set_integer_variable_value(var->id(), 1);
         }
 
         model_->ApplyCase(c);
