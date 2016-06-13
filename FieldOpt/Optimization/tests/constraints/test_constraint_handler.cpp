@@ -16,7 +16,7 @@ protected:
 };
 
 TEST_F(ConstraintHandlerTest, Constructor) {
-    EXPECT_EQ(4, constraint_handler_->constraints().size());
+    EXPECT_EQ(5, constraint_handler_->constraints().size());
 }
 
 TEST_F(ConstraintHandlerTest, BaseCaseSatasfaction) {
