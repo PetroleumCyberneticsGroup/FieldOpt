@@ -4,7 +4,7 @@
 #include <QString>
 #include <QList>
 
-#include "reservoir/reservoir.h"
+#include "Reservoir/reservoir.h"
 #include "properties/variable_property_container.h"
 #include "wells/well.h"
 #include "Utilities/settings/model.h"

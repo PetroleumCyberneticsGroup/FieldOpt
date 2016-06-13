@@ -47,7 +47,7 @@ target_include_directories(optimization PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/objective>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/optimizers>)
 
-target_compile_features(ertwrapper
+target_compile_features(optimization
         PUBLIC cxx_auto_type
         PUBLIC cxx_range_for)
 

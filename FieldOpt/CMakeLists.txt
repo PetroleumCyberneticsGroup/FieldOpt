@@ -30,6 +30,7 @@ include(CTest)
 enable_testing()
 
 add_subdirectory(ERTWrapper)
+add_subdirectory(Reservoir)
 add_subdirectory(Model)
 add_subdirectory(Utilities)
 add_subdirectory(Optimization)

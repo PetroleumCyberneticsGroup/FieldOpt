@@ -8,7 +8,7 @@ namespace Model {
 
             Trajectory::Trajectory(Utilities::Settings::Model::Well well_settings,
                                    Properties::VariablePropertyContainer *variable_container,
-                                   ::Model::Reservoir::Reservoir *reservoir)
+                                   ::Reservoir::Reservoir *reservoir)
             {
                 well_blocks_ = new QList<WellBlock *>();
                 if (well_settings.definition_type == Utilities::Settings::Model::WellDefinitionType::WellBlocks) {

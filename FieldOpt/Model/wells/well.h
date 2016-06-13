@@ -9,7 +9,7 @@
 #include "Model/properties/discrete_property.h"
 #include "Model/wells/control.h"
 #include "Model/wells/wellbore/trajectory.h"
-#include "Model/reservoir/reservoir.h"
+#include "Reservoir/reservoir.h"
 
 #include <QList>
 
@@ -31,7 +31,7 @@ namespace Model {
             Well(Utilities::Settings::Model settings,
                  int well_number,
                  ::Model::Properties::VariablePropertyContainer *variable_container,
-                 ::Model::Reservoir::Reservoir *reservoir);
+                 ::Reservoir::Reservoir *reservoir);
 
             struct Heel { int i; int j; int k; };
 
