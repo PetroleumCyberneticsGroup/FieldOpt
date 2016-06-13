@@ -149,6 +149,7 @@ void AbstractRunner::InitializeOptimizer()
     default:
         throw std::runtime_error("Unable to initialize runner: optimization algorithm set in driver file not recognized.");
     }
+    optimizer_->EnableConstraintLogging(runtime_settings_->output_dir());
 }
 
 void AbstractRunner::InitializeBookkeeper()

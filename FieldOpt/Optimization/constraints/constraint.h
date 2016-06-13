@@ -15,6 +15,8 @@ namespace Optimization {
         class Constraint
         {
         public:
+            Constraint();
+
             /*!
              * \brief CaseSatisfiesConstraint checks whether a case satisfies the constraints for all
              * applicable variables.
@@ -29,6 +31,13 @@ namespace Optimization {
              * \param c The case that should have it's variable values snapped.
              */
             virtual void SnapCaseToConstraints(Case *c) = 0;
+
+        public:
+            void EnableLogging(QString output_directory_path);
+        protected:
+            bool logging_enabled_;
+        private:
+            QString constraint_log_path_; //!< Path to the constraint log path to be written.
         };
 
     }
