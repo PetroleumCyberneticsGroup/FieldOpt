@@ -9,9 +9,9 @@ namespace Optimization {
         {
             distance_ = settings.min;
 
-                    foreach (QString name, settings.wells) {
-                    affected_wells_.append(initializeWell(variables->GetWellSplineVariables(name)));
-                }
+            for (QString name : settings.wells) {
+                affected_wells_.append(initializeWell(variables->GetWellSplineVariables(name)));
+            }
             if (affected_wells_.length() != 2) {
                 throw std::runtime_error("Currently, the Interwell Distance constraint must be applied to exactly two wells. Found " + std::to_string(affected_wells_.length()));
             }
@@ -20,22 +20,22 @@ namespace Optimization {
         bool InterwellDistance::CaseSatisfiesConstraint(Case *c)
         {
             QList<Eigen::Vector3d> points;
-                    foreach (Well well, affected_wells_) {
-                    double heel_x_val = c->real_variables()[well.heel.x];
-                    double heel_y_val = c->real_variables()[well.heel.y];
-                    double heel_z_val = c->real_variables()[well.heel.z];
+            for (Well well : affected_wells_) {
+                double heel_x_val = c->real_variables()[well.heel.x];
+                double heel_y_val = c->real_variables()[well.heel.y];
+                double heel_z_val = c->real_variables()[well.heel.z];
 
-                    double toe_x_val = c->real_variables()[well.toe.x];
-                    double toe_y_val = c->real_variables()[well.toe.y];
-                    double toe_z_val = c->real_variables()[well.toe.z];
+                double toe_x_val = c->real_variables()[well.toe.x];
+                double toe_y_val = c->real_variables()[well.toe.y];
+                double toe_z_val = c->real_variables()[well.toe.z];
 
-                    Eigen::Vector3d heel_vals;
-                    Eigen::Vector3d toe_vals;
-                    heel_vals << heel_x_val, heel_y_val, heel_z_val;
-                    toe_vals << toe_x_val, toe_y_val, toe_z_val;
-                    points.append(heel_vals);
-                    points.append(toe_vals);
-                }
+                Eigen::Vector3d heel_vals;
+                Eigen::Vector3d toe_vals;
+                heel_vals << heel_x_val, heel_y_val, heel_z_val;
+                toe_vals << toe_x_val, toe_y_val, toe_z_val;
+                points.append(heel_vals);
+                points.append(toe_vals);
+            }
             // Get the projection
             QList<Eigen::Vector3d> projection = WellIndexCalculator::WellConstraintProjections::interwell_constraint_projection_eigen(points, distance_);
 
@@ -50,22 +50,22 @@ namespace Optimization {
         void InterwellDistance::SnapCaseToConstraints(Case *c)
         {
             QList<Eigen::Vector3d> points;
-                    foreach (Well well, affected_wells_) {
-                    double heel_x_val = c->real_variables()[well.heel.x];
-                    double heel_y_val = c->real_variables()[well.heel.y];
-                    double heel_z_val = c->real_variables()[well.heel.z];
+            for (Well well : affected_wells_) {
+                double heel_x_val = c->real_variables()[well.heel.x];
+                double heel_y_val = c->real_variables()[well.heel.y];
+                double heel_z_val = c->real_variables()[well.heel.z];
 
-                    double toe_x_val = c->real_variables()[well.toe.x];
-                    double toe_y_val = c->real_variables()[well.toe.y];
-                    double toe_z_val = c->real_variables()[well.toe.z];
+                double toe_x_val = c->real_variables()[well.toe.x];
+                double toe_y_val = c->real_variables()[well.toe.y];
+                double toe_z_val = c->real_variables()[well.toe.z];
 
-                    Eigen::Vector3d heel_vals;
-                    Eigen::Vector3d toe_vals;
-                    heel_vals << heel_x_val, heel_y_val, heel_z_val;
-                    toe_vals << toe_x_val, toe_y_val, toe_z_val;
-                    points.append(heel_vals);
-                    points.append(toe_vals);
-                }
+                Eigen::Vector3d heel_vals;
+                Eigen::Vector3d toe_vals;
+                heel_vals << heel_x_val, heel_y_val, heel_z_val;
+                toe_vals << toe_x_val, toe_y_val, toe_z_val;
+                points.append(heel_vals);
+                points.append(toe_vals);
+            }
             // Get the projection
             QList<Eigen::Vector3d> projection = WellIndexCalculator::WellConstraintProjections::interwell_constraint_projection_eigen(points, distance_);
 

@@ -7,31 +7,31 @@ namespace Optimization {
 
         ConstraintHandler::ConstraintHandler(QList<Utilities::Settings::Optimizer::Constraint> constraints, Model::Properties::VariablePropertyContainer *variables)
         {
-            foreach (Utilities::Settings::Optimizer::Constraint constraint, constraints) {
+            for (Utilities::Settings::Optimizer::Constraint constraint : constraints) {
                 switch (constraint.type) {
-                case Utilities::Settings::Optimizer::ConstraintType::BHP:
-                    constraints_.append(new BhpConstraint(constraint, variables));
-                    break;
-                case Utilities::Settings::Optimizer::ConstraintType::Rate:
-                    constraints_.append(new RateConstraint(constraint, variables));
-                    break;
-                case Utilities::Settings::Optimizer::ConstraintType::WellSplineLength:
-                    constraints_.append(new WellSplineLength(constraint, variables));
-                    break;
-                case Utilities::Settings::Optimizer::ConstraintType::WellSplineInterwellDistance:
-                    constraints_.append(new InterwellDistance(constraint, variables));
-                    break;
-                case Utilities::Settings::Optimizer::ConstraintType::CombinedWellSplineLengthInterwellDistance:
-                    constraints_.append(new CombinedSplineLengthInterwellDistance(constraint, variables));
-                    break;
+                    case Utilities::Settings::Optimizer::ConstraintType::BHP:
+                        constraints_.append(new BhpConstraint(constraint, variables));
+                        break;
+                    case Utilities::Settings::Optimizer::ConstraintType::Rate:
+                        constraints_.append(new RateConstraint(constraint, variables));
+                        break;
+                    case Utilities::Settings::Optimizer::ConstraintType::WellSplineLength:
+                        constraints_.append(new WellSplineLength(constraint, variables));
+                        break;
+                    case Utilities::Settings::Optimizer::ConstraintType::WellSplineInterwellDistance:
+                        constraints_.append(new InterwellDistance(constraint, variables));
+                        break;
+                    case Utilities::Settings::Optimizer::ConstraintType::CombinedWellSplineLengthInterwellDistance:
+                        constraints_.append(new CombinedSplineLengthInterwellDistance(constraint, variables));
+                        break;
 #ifdef WITH_EXPERIMENTAL_CONSTRIANTS
-                case Utilities::Settings::Optimizer::ConstraintType::ReservoirBoundary:
-                    std::cout << "Initializing Reservoir boundary constraint." << std::endl;
-                    constraints_.append(new ReservoirBoundary(constraint, variables, nullptr)); // TODO: Take grid as input
-                    break;
+                    case Utilities::Settings::Optimizer::ConstraintType::ReservoirBoundary:
+                        std::cout << "Initializing Reservoir boundary constraint." << std::endl;
+                        constraints_.append(new ReservoirBoundary(constraint, variables, nullptr)); // TODO: Take grid as input
+                        break;
 #endif
-                default:
-                    break;
+                    default:
+                        break;
                 }
             }
 #ifdef WITH_EXPERIMENTAL_CONSTRIANTS
@@ -43,21 +43,20 @@ namespace Optimization {
 
         bool ConstraintHandler::CaseSatisfiesConstraints(Case *c)
         {
-            foreach (Constraint *constraint, constraints_) {
-                if (!constraint->CaseSatisfiesConstraint(c))
+            for (Constraint *constraint : constraints_) {
+                if (!constraint->CaseSatisfiesConstraint(c)) {
                     return false;
+                }
             }
             return true;
         }
 
         void ConstraintHandler::SnapCaseToConstraints(Case *c)
         {
-            foreach (Constraint *constraint, constraints_) {
+            for (Constraint *constraint : constraints_) {
                 constraint->SnapCaseToConstraints(c);
             }
         }
-
-
 
     }
 }

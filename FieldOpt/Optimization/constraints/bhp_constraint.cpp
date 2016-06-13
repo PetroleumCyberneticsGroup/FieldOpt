@@ -9,14 +9,14 @@ namespace Optimization {
             min_ = settings.min;
             max_ = settings.max;
             affected_well_names_ = settings.wells;
-            foreach (auto wname, affected_well_names_) {
+            for (auto wname : affected_well_names_) {
                 affected_real_variables_.append(variables->GetWellBHPVariables(wname));
             }
         }
 
         bool BhpConstraint::CaseSatisfiesConstraint(Case *c)
         {
-            foreach (auto var, affected_real_variables_) {
+            for (auto var : affected_real_variables_) {
                 double case_value = c->real_variables()[var->id()];
                 if (case_value > max_ || case_value < min_)
                     return false;
@@ -26,7 +26,7 @@ namespace Optimization {
 
         void BhpConstraint::SnapCaseToConstraints(Case *c)
         {
-            foreach (auto var, affected_real_variables_) {
+            for (auto var : affected_real_variables_) {
                 if (c->real_variables()[var->id()] > max_)
                     c->set_real_variable_value(var->id(), max_);
                 else if (c->real_variables()[var->id()] < min_)
