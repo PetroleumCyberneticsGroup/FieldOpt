@@ -26,18 +26,7 @@ namespace WellIndexCalculator {
     class GeometryFunctions {
     public:
 
-        static double distance_coordinates(Reservoir::Grid::XYZCoordinate start_point, Reservoir::Grid::XYZCoordinate end_point);
-
         static QVector3D line_plane_intersection(QVector3D p0, QVector3D p1, QVector3D normal_vector, QVector3D point_in_plane);
-
-        /*!
-         * \brief normal_vector returns the cross product of the two vectors (p2 - p0) and (p2 - p0)
-         * \param p0
-         * \param p1
-         * \param p2
-         * \return normal_vector spanned by points
-        */
-        static QVector3D normal_vector_XYZ(Reservoir::Grid::XYZCoordinate p0, Reservoir::Grid::XYZCoordinate p1, Reservoir::Grid::XYZCoordinate p2);
 
         static QVector3D normal_vector(QVector3D p0, QVector3D p1, QVector3D p2);
 
@@ -189,6 +178,9 @@ namespace WellIndexCalculator {
          * \param name (and path) of file to be created and written to.
          */
         static void print_well_index_file(Reservoir::Grid::Grid *grid , QList<QVector3D> start_point, QList<QVector3D> end_points, double wellbore_radius, double min_wi, QString filename);
+
+        static Eigen::Vector3d qvec_to_evec(QVector3D vec); // \todo This is temporary and should be removed
+        static QVector3D evec_to_qvec(Eigen::Vector3d vec); // \todo This is temporary and should be removed
     };
 
 }

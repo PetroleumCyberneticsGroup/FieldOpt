@@ -3,17 +3,6 @@
 
 namespace WellIndexCalculator {
 
-    double GeometryFunctions::distance_coordinates(Reservoir::Grid::XYZCoordinate start_point, Reservoir::Grid::XYZCoordinate end_point)
-    {
-        // Calculates the euclidian distance (in 3 dimensions) between two points (XYZCoordinates).
-        double distance;
-        distance = sqrt(   (end_point.x()-start_point.x())*(end_point.x()-start_point.x())
-                           + (end_point.y()-start_point.y())*(end_point.y()-start_point.y())
-                           + (end_point.z()-start_point.z())*(end_point.z()-start_point.z())  );
-
-        return distance;
-    }
-
     QVector3D GeometryFunctions::line_plane_intersection(QVector3D p0, QVector3D p1, QVector3D normal_vector, QVector3D point_in_plane){
 
         QVector3D line_vector = QVector3D(p1.x() - p0.x(), p1.y() - p0.y(), p1.z() - p0.z());
@@ -38,14 +27,6 @@ namespace WellIndexCalculator {
         QVector3D intersection_point = QVector3D(p0.x() + s*(line_vector.x()), p0.y() + s*(line_vector.y()), p0.z() + s*(line_vector.z()));
 
         return intersection_point;
-    }
-
-    QVector3D GeometryFunctions::normal_vector_XYZ(Reservoir::Grid::XYZCoordinate p0, Reservoir::Grid::XYZCoordinate p1, Reservoir::Grid::XYZCoordinate p2)
-    {
-        // Take the cross product of the two vectors as spanned by the three input points
-        QVector3D normal_vector = QVector3D::crossProduct(p2.toQvec() - p0.toQvec(), p1.toQvec() - p0.toQvec());
-        // We leave the vector not normalized
-        return normal_vector;
     }
 
     QVector3D GeometryFunctions::normal_vector(QVector3D p0, QVector3D p1, QVector3D p2)
@@ -735,6 +716,13 @@ namespace WellIndexCalculator {
         myfile.close();
     }
 
+    Eigen::Vector3d GeometryFunctions::qvec_to_evec(QVector3D vec) {
+        return Eigen::Vector3d(vec.x(), vec.y(), vec.z());
+    }
+
+    QVector3D GeometryFunctions::evec_to_qvec(Eigen::Vector3d vec) {
+        return QVector3D(vec.x(), vec.y(), vec.z());
+    }
 
 
 }
