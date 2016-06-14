@@ -40,7 +40,8 @@ namespace WellIndexCalculator {
          * \param normal_vector
          * \return normal_vector spanned by points
         */
-        static bool point_on_same_side(QVector3D point, QVector3D plane_point, QVector3D normal_vector, double slack);
+        static bool point_on_same_side(Eigen::Vector3d point, Eigen::Vector3d plane_point,
+                                       Eigen::Vector3d normal_vector, double slack);
 
         /*!
          * \brief Given a reservoir with blocks and a line(start_point to end_point), return global index of all blocks interesected

@@ -36,14 +36,15 @@ namespace WellIndexCalculator {
         return normal_vector.normalized();
     }
 
-    bool GeometryFunctions::point_on_same_side(QVector3D point, QVector3D plane_point, QVector3D normal_vector, double slack)
+    bool GeometryFunctions::point_on_same_side(Eigen::Vector3d point, Eigen::Vector3d plane_point,
+                                               Eigen::Vector3d normal_vector, double slack)
     {
         /* The dot product helps us determine if the angle between the two
          * vectors is below (positive answer), at (zero answer) or above
          * (negative answer) 90 degrees. Essentially telling us which side
          * of a plane the point is
          */
-        double dot_product = QVector3D::dotProduct(point-plane_point,normal_vector);
+        double dot_product = (point-plane_point).dot(normal_vector);
         return dot_product >= 0.0 - slack;
     }
 
@@ -206,7 +207,10 @@ namespace WellIndexCalculator {
                  */
                 bool feasible_point = true;
                 for( int ii=0; ii<6; ii++) {
-                    if(!GeometryFunctions::point_on_same_side(intersect_point, face_corner_coords.at(ii).at(0), normal_vectors[ii],10e-6)) {
+                    if(!GeometryFunctions::point_on_same_side(qvec_to_evec(intersect_point),
+                                                              qvec_to_evec(face_corner_coords.at(ii).at(0)),
+                                                              qvec_to_evec(normal_vectors[ii]),
+                                                              10e-6)) {
                         feasible_point = false;
                     }
                 }
