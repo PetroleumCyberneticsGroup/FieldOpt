@@ -82,7 +82,7 @@ namespace WellIndexCalculator {
          * \param vector onto which projection is done
          * \return orthogonal projection of vector
         */
-        static QVector3D project_v1_on_v2(QVector3D v1, QVector3D v2);
+        static Eigen::Vector3d project_v1_on_v2(Eigen::Vector3d v1, Eigen::Vector3d v2);
 
         /*!
          * \brief Compute the well index for a (one) single cell/block by using the Projection Well Method (Shu 2005).

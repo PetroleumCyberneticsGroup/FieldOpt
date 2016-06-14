@@ -238,11 +238,9 @@ namespace WellIndexCalculator {
         return point - normal_vector * (point-plane_point).dot(normal_vector);
     }
 
-    QVector3D GeometryFunctions::project_v1_on_v2(QVector3D v1, QVector3D v2)
+    Eigen::Vector3d GeometryFunctions::project_v1_on_v2(Eigen::Vector3d v1, Eigen::Vector3d v2)
     {
-        QVector3D proj_v = v2 * (QVector3D::dotProduct(v2, v1)/(QVector3D::dotProduct(v2, v2)) );
-        QVector3D ptr_proj_v = QVector3D(proj_v);
-        return ptr_proj_v;
+        return v2 * v2.dot(v1) / v2.dot(v2);
     }
 
     double GeometryFunctions::well_index_cell_qvector(Reservoir::Grid::Cell cell,
@@ -283,9 +281,9 @@ namespace WellIndexCalculator {
              * not the spatial position. Also adds the lengths of previous segments in case there
              * is more than one segment within the well.
              */
-            Lx = Lx + GeometryFunctions::project_v1_on_v2(evec_to_qvec(current_vec), evec_to_qvec(xvec)).length();
-            Ly = Ly + GeometryFunctions::project_v1_on_v2(evec_to_qvec(current_vec), evec_to_qvec(yvec)).length();
-            Lz = Lz + GeometryFunctions::project_v1_on_v2(evec_to_qvec(current_vec), evec_to_qvec(zvec)).length();
+            Lx = Lx + GeometryFunctions::project_v1_on_v2(current_vec, xvec).norm();
+            Ly = Ly + GeometryFunctions::project_v1_on_v2(current_vec, yvec).norm();
+            Lz = Lz + GeometryFunctions::project_v1_on_v2(current_vec, zvec).norm();
         }
 
         // Compute Well Index from formula provided by Shu
