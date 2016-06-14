@@ -48,6 +48,14 @@ namespace Reservoir {
             return other.toQvec() - this->toQvec();
         }
 
+        Eigen::Vector3d XYZCoordinate::vectorTo_eigen(const XYZCoordinate other) const {
+            return Eigen::Vector3d(other.x(), other.y(), other.z()) - Eigen::Vector3d(this->x(), this->y(), this->z());
+        }
+
+        Eigen::Vector3d XYZCoordinate::toEigenVec() const {
+            return Eigen::Vector3d(x_, y_, z_);
+        }
+
 
     }
 }

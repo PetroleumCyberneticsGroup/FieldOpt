@@ -2,6 +2,7 @@
 #define XYZCOORDINATE_H
 
 #include <QVector3D>
+#include <Eigen/Dense>
 
 namespace Reservoir {
     namespace Grid {
@@ -40,12 +41,16 @@ namespace Reservoir {
              */
             QVector3D toQvec() const;
 
+            Eigen::Vector3d toEigenVec() const;
+
             /*!
              * \brief Find vector going from this point to the other point.
              * \param other The point to create a vector to.
              * \return The vector between this point and the other point.
             */
             QVector3D vectorTo(const XYZCoordinate other) const;
+
+            Eigen::Vector3d vectorTo_eigen(const XYZCoordinate other) const;
 
 
         private:
