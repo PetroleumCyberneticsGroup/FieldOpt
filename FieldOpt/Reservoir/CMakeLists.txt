@@ -12,6 +12,7 @@ add_library(reservoir
 
 add_library(fieldopt::reservoir ALIAS ${PROJECT_NAME})
 
+include_directories(${EIGEN3_INCLUDE_DIR})
 target_link_libraries (reservoir
         PUBLIC fieldopt::ertwrapper
         PUBLIC fieldopt::utilities
@@ -23,7 +24,7 @@ target_compile_features(reservoir
 
 # Unit tests
 find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS} tests)
+include_directories(${GTEST_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR} tests)
 add_executable(test_reservoir
         tests/test_resource_grids.h
         tests/test_reservoir.cpp

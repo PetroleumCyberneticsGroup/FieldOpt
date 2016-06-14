@@ -22,6 +22,7 @@ find_package(Boost COMPONENTS REQUIRED program_options)
 
 find_package(Armadillo)
 find_package(Threads)
+find_package(Eigen3)
 
 # Set this directory as the root dir
 include_directories(${CMAKE_SOURCE_DIR})
