@@ -399,7 +399,7 @@ namespace WellIndexCalculator {
     Eigen::Vector3d GeometryFunctions::point_to_cell_shortest(Reservoir::Grid::Cell cell, Eigen::Vector3d point)
     {
         // Create a list of Eigen::Vector3d for corners.
-        QList<Eigen::Vector3d> corners = GeometryFunctions::cell_to_corner_list(cell);
+        QList<Eigen::Vector3d> corners = cell.corners_eigen();
 
         // Check if point is already inside cell
         QVector3D qv_point = QVector3D(point(0),point(1),point(2));
@@ -663,18 +663,6 @@ namespace WellIndexCalculator {
         return closest_Q;
     }
 
-    QList<Eigen::Vector3d> GeometryFunctions::cell_to_corner_list(Reservoir::Grid::Cell cell)
-    {
-        QList<Reservoir::Grid::XYZCoordinate> corners_qvec = cell.corners();
-        QList<Eigen::Vector3d> corners;
-
-        for(int ii=0; ii<8; ii++){
-            Eigen::Vector3d temp = Eigen::Vector3d(corners_qvec.at(ii).x(), corners_qvec.at(ii).y(), corners_qvec.at(ii).z());
-            corners.append(temp);
-        }
-        return corners;
-
-    }
 
     void GeometryFunctions::print_well_index_file(Reservoir::Grid::Grid *grid, QList<QVector3D> start_points, QList<QVector3D> end_points, double wellbore_radius, double min_wi, QString filename)
     {

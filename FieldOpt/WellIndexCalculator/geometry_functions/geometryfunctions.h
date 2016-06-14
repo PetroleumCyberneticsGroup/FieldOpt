@@ -177,8 +177,6 @@ namespace WellIndexCalculator {
          */
         static Eigen::Vector3d point_to_line_shortest(QList<Eigen::Vector3d> line_segment, Eigen::Vector3d P0);
 
-        static QList<Eigen::Vector3d> cell_to_corner_list(Reservoir::Grid::Cell cell);
-
         /*!
          * \brief Given a grid and one or more wells (start_points to end_points), find blocks intersected
          * by the well and return the well indices of the penetrated blocks (whose well index value are
