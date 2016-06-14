@@ -59,8 +59,8 @@ namespace WellIndexCalculator {
         /* Find first and last cell blocks intersected and their indeces.
          * Add first cell and first point to lists.
          */
-        Reservoir::Grid::Cell last_cell = GeometryFunctions::get_cell_enveloping_point(grid,evec_to_qvec(end_point));
-        Reservoir::Grid::Cell first_cell = GeometryFunctions::get_cell_enveloping_point(grid,evec_to_qvec(start_point));
+        Reservoir::Grid::Cell last_cell = GeometryFunctions::get_cell_enveloping_point(grid, end_point);
+        Reservoir::Grid::Cell first_cell = GeometryFunctions::get_cell_enveloping_point(grid, start_point);
 
         int last_cell_index  = last_cell.global_index();
         int first_cell_index = first_cell.global_index();
@@ -89,12 +89,12 @@ namespace WellIndexCalculator {
         double epsilon = 0.01 / (end_point - exit_point).norm();
         Eigen::Vector3d move_exit_epsilon = exit_point*(1-epsilon) + end_point*epsilon;
 
-        Reservoir::Grid::Cell current_cell = GeometryFunctions::get_cell_enveloping_point(grid,evec_to_qvec(move_exit_epsilon));
+        Reservoir::Grid::Cell current_cell = GeometryFunctions::get_cell_enveloping_point(grid, move_exit_epsilon);
         double epsilon_temp = epsilon;
         while(current_cell.global_index() == first_cell_index){
             epsilon_temp = 10*epsilon_temp;
             move_exit_epsilon= exit_point*(1-epsilon_temp) + end_point*epsilon_temp;
-            current_cell = GeometryFunctions::get_cell_enveloping_point(grid,evec_to_qvec(move_exit_epsilon));
+            current_cell = GeometryFunctions::get_cell_enveloping_point(grid, move_exit_epsilon);
         }
 
         while(current_cell.global_index() != last_cell_index){
@@ -114,8 +114,7 @@ namespace WellIndexCalculator {
             else{
                 epsilon = 0.01 / (end_point - exit_point).norm();
                 move_exit_epsilon = exit_point*(1-epsilon) + end_point*epsilon;
-                current_cell = GeometryFunctions::get_cell_enveloping_point(grid,
-                                                                            evec_to_qvec(move_exit_epsilon));
+                current_cell = GeometryFunctions::get_cell_enveloping_point(grid, move_exit_epsilon);
             }
 
         }
@@ -336,13 +335,13 @@ namespace WellIndexCalculator {
         return point_inside;
     }
 
-    Reservoir::Grid::Cell GeometryFunctions::get_cell_enveloping_point(Reservoir::Grid::Grid *grid, QVector3D point)
+    Reservoir::Grid::Cell GeometryFunctions::get_cell_enveloping_point(Reservoir::Grid::Grid *grid, Eigen::Vector3d point)
     {
         // Get total number of cells
         int total_cells = grid->Dimensions().nx*grid->Dimensions().ny*grid->Dimensions().nz;
 
         for(int ii=0; ii<total_cells; ii++){
-            if( GeometryFunctions::is_point_inside_cell(grid->GetCell(ii), qvec_to_evec(point)) ){
+            if( GeometryFunctions::is_point_inside_cell(grid->GetCell(ii), point) ){
                 return grid->GetCell(ii);
             }
         }

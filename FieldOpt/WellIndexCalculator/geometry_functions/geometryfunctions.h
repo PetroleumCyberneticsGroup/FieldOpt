@@ -132,7 +132,7 @@ namespace WellIndexCalculator {
          * \param point
          * \return returns cell enveloping/containing point. return 0 if no cell contains point
          */
-        static Reservoir::Grid::Cell get_cell_enveloping_point(Reservoir::Grid::Grid *grid, QVector3D point);
+        static Reservoir::Grid::Cell get_cell_enveloping_point(Reservoir::Grid::Grid *grid, Eigen::Vector3d point);
 
         /*!
          * \brief Given a reservoir and a line segment (start, end) return the calculated well indeces for all cells intersected by the line segment.
