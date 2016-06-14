@@ -276,10 +276,18 @@ QList<QVector3D> WellConstraintProjections::move_points_4p(QList<QVector3D> coor
     QVector3D top_plane_point = avg_point + (d/2)*(s);
     QVector3D bot_plane_point = avg_point - (d/2)*(s);
 
-    QVector3D x0moved = QVector3D(WellIndexCalculator::GeometryFunctions::project_point_to_plane(coords.at(0),s, top_plane_point));
-    QVector3D x1moved = QVector3D(WellIndexCalculator::GeometryFunctions::project_point_to_plane(coords.at(1),s, top_plane_point));
-    QVector3D x2moved = QVector3D(WellIndexCalculator::GeometryFunctions::project_point_to_plane(coords.at(2),s, bot_plane_point));
-    QVector3D x3moved = QVector3D(WellIndexCalculator::GeometryFunctions::project_point_to_plane(coords.at(3),s, bot_plane_point));
+    QVector3D x0moved = GeometryFunctions::evec_to_qvec(WellIndexCalculator::GeometryFunctions::project_point_to_plane(GeometryFunctions::qvec_to_evec(coords.at(0)),
+                                                                                                 GeometryFunctions::qvec_to_evec(s),
+                                                                                                 GeometryFunctions::qvec_to_evec(top_plane_point)));
+    QVector3D x1moved = GeometryFunctions::evec_to_qvec(WellIndexCalculator::GeometryFunctions::project_point_to_plane(GeometryFunctions::qvec_to_evec(coords.at(1)),
+                                                                                                                       GeometryFunctions::qvec_to_evec(s),
+                                                                                                                       GeometryFunctions::qvec_to_evec(top_plane_point)));
+    QVector3D x2moved = GeometryFunctions::evec_to_qvec(WellIndexCalculator::GeometryFunctions::project_point_to_plane(GeometryFunctions::qvec_to_evec(coords.at(2)),
+                                                                                                                       GeometryFunctions::qvec_to_evec(s),
+                                                                                                                       GeometryFunctions::qvec_to_evec(bot_plane_point)));
+    QVector3D x3moved = GeometryFunctions::evec_to_qvec(WellIndexCalculator::GeometryFunctions::project_point_to_plane(GeometryFunctions::qvec_to_evec(coords.at(3)),
+                                                                                                                       GeometryFunctions::qvec_to_evec(s),
+                                                                                                                       GeometryFunctions::qvec_to_evec(bot_plane_point)));
 
     QList<QVector3D> moved_coords;
     moved_coords.append(x0moved);
@@ -297,9 +305,15 @@ QList<QVector3D> WellConstraintProjections::move_points_3p(QList<QVector3D> coor
     QVector3D top_plane_point = avg_point + (2.0*d/3)*(s);
     QVector3D bot_plane_point = avg_point - (1.0*d/3)*(s);
 
-    QVector3D x0moved = QVector3D(WellIndexCalculator::GeometryFunctions::project_point_to_plane(coords.at(0),s, top_plane_point));
-    QVector3D x1moved = QVector3D(WellIndexCalculator::GeometryFunctions::project_point_to_plane(coords.at(1),s, bot_plane_point));
-    QVector3D x2moved = QVector3D(WellIndexCalculator::GeometryFunctions::project_point_to_plane(coords.at(2),s, bot_plane_point));
+    QVector3D x0moved = GeometryFunctions::evec_to_qvec(WellIndexCalculator::GeometryFunctions::project_point_to_plane(GeometryFunctions::qvec_to_evec(coords.at(0)),
+                                                                                                                       GeometryFunctions::qvec_to_evec(s),
+                                                                                                                       GeometryFunctions::qvec_to_evec(top_plane_point)));
+    QVector3D x1moved = GeometryFunctions::evec_to_qvec(WellIndexCalculator::GeometryFunctions::project_point_to_plane(GeometryFunctions::qvec_to_evec(coords.at(1)),
+                                                                                                                       GeometryFunctions::qvec_to_evec(s),
+                                                                                                                       GeometryFunctions::qvec_to_evec(bot_plane_point)));
+    QVector3D x2moved = GeometryFunctions::evec_to_qvec(WellIndexCalculator::GeometryFunctions::project_point_to_plane(GeometryFunctions::qvec_to_evec(coords.at(2)),
+                                                                                                                       GeometryFunctions::qvec_to_evec(s),
+                                                                                                                       GeometryFunctions::qvec_to_evec(bot_plane_point)));
 
     QList<QVector3D> moved_coords;
     moved_coords.append(x0moved);
@@ -320,10 +334,18 @@ QList<Reservoir::Grid::XYZCoordinate> WellConstraintProjections::move_points_4p_
     QVector3D top_plane_point = avg_point + (d/2)*(s);
     QVector3D bot_plane_point = avg_point - (d/2)*(s);
 
-    QVector3D x0moved = QVector3D(WellIndexCalculator::GeometryFunctions::project_point_to_plane(x0,s, top_plane_point));
-    QVector3D x1moved = QVector3D(WellIndexCalculator::GeometryFunctions::project_point_to_plane(x1,s, top_plane_point));
-    QVector3D x2moved = QVector3D(WellIndexCalculator::GeometryFunctions::project_point_to_plane(x2,s, bot_plane_point));
-    QVector3D x3moved = QVector3D(WellIndexCalculator::GeometryFunctions::project_point_to_plane(x3,s, bot_plane_point));
+    QVector3D x0moved = GeometryFunctions::evec_to_qvec(WellIndexCalculator::GeometryFunctions::project_point_to_plane(GeometryFunctions::qvec_to_evec(x0),
+                                                                                                                       GeometryFunctions::qvec_to_evec(s),
+                                                                                                                       GeometryFunctions::qvec_to_evec(top_plane_point)));
+    QVector3D x1moved = GeometryFunctions::evec_to_qvec(WellIndexCalculator::GeometryFunctions::project_point_to_plane(GeometryFunctions::qvec_to_evec(x1),
+                                                                                                                       GeometryFunctions::qvec_to_evec(s),
+                                                                                                                       GeometryFunctions::qvec_to_evec(top_plane_point)));
+    QVector3D x2moved = GeometryFunctions::evec_to_qvec(WellIndexCalculator::GeometryFunctions::project_point_to_plane(GeometryFunctions::qvec_to_evec(x2),
+                                                                                                                       GeometryFunctions::qvec_to_evec(s),
+                                                                                                                       GeometryFunctions::qvec_to_evec(bot_plane_point)));
+    QVector3D x3moved = GeometryFunctions::evec_to_qvec(WellIndexCalculator::GeometryFunctions::project_point_to_plane(GeometryFunctions::qvec_to_evec(x3),
+                                                                                                                       GeometryFunctions::qvec_to_evec(s),
+                                                                                                                       GeometryFunctions::qvec_to_evec(bot_plane_point)));
 
     QList<Reservoir::Grid::XYZCoordinate> moved_coords;
     moved_coords.append(Reservoir::Grid::XYZCoordinate(x0moved));

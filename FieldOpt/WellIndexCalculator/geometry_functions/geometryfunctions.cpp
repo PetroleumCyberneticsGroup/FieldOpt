@@ -232,11 +232,10 @@ namespace WellIndexCalculator {
         return entry_point;
     }
 
-    QVector3D GeometryFunctions::project_point_to_plane(QVector3D point, QVector3D normal_vector, QVector3D plane_point)
+    Eigen::Vector3d GeometryFunctions::project_point_to_plane(Eigen::Vector3d point, Eigen::Vector3d normal_vector,
+                                                              Eigen::Vector3d plane_point)
     {
-        QVector3D proj_point = point - normal_vector * (QVector3D::dotProduct(point-plane_point, normal_vector));
-        QVector3D ptr_proj_point = QVector3D(proj_point);
-        return ptr_proj_point;
+        return point - normal_vector * (point-plane_point).dot(normal_vector);
     }
 
     QVector3D GeometryFunctions::project_v1_on_v2(QVector3D v1, QVector3D v2)

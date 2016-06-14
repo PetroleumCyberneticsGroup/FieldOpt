@@ -73,7 +73,8 @@ namespace WellIndexCalculator {
          * \param SquarePlane object containing points which lie in the same plane
          * \return orthogonal projection of line
         */
-        static QVector3D project_point_to_plane(QVector3D point, QVector3D normal_vector, QVector3D plane_point);
+        static Eigen::Vector3d project_point_to_plane(Eigen::Vector3d point, Eigen::Vector3d normal_vector,
+                                                      Eigen::Vector3d plane_point);
 
         /*!
          * \brief project_v1_onv2 is the orthognal projection of a vector v1 onto the vector v2.
