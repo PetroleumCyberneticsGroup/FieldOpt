@@ -1,6 +1,8 @@
 #ifndef XYZCOORDINATE_H
 #define XYZCOORDINATE_H
 
+#include <QVector3D>
+
 namespace Reservoir {
     namespace Grid {
 
@@ -13,6 +15,7 @@ namespace Reservoir {
         public:
             XYZCoordinate(){}
             XYZCoordinate(double x, double y, double z);
+            XYZCoordinate(QVector3D point);
 
             double x() const { return x_; }
             double y() const { return y_; }
@@ -31,6 +34,11 @@ namespace Reservoir {
              * \brief Add Returns a new coordinate which is the sum of this coordinate and another coordinate.
              */
             XYZCoordinate *Add(const XYZCoordinate *other) const;
+
+            /*!
+             * \brief Get a QVector3D object representing the (x, y, z) coordinates of this point.
+             */
+            QVector3D toQvec() const;
 
         private:
             double x_;

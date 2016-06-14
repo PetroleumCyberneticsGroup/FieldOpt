@@ -11,6 +11,12 @@ namespace Reservoir {
         {
         }
 
+        XYZCoordinate::XYZCoordinate(QVector3D point) {
+            x_ = point.x();
+            y_ = point.y();
+            z_ = point.z();
+        }
+
         bool XYZCoordinate::Equals(const XYZCoordinate *other, double epsilon) const
         {
             return abs(this->x() - other->x()) <= epsilon &&
@@ -32,6 +38,12 @@ namespace Reservoir {
                     this->y() + other->y(),
                     this->z() + other->z());
         }
+
+
+        QVector3D XYZCoordinate::toQvec() const {
+            return QVector3D(x_, y_, z_);
+        }
+
 
     }
 }
