@@ -48,17 +48,19 @@ namespace WellIndexCalculator {
         return dot_product >= 0.0 - slack;
     }
 
-    QPair<QList<int>, QList<QVector3D > > GeometryFunctions::cells_intersected(QVector3D start_point, QVector3D end_point, Reservoir::Grid::Grid *grid)
+    QPair<QList<int>, QList<Eigen::Vector3d>> GeometryFunctions::cells_intersected(Eigen::Vector3d start_point,
+                                                                               Eigen::Vector3d end_point,
+                                                                               Reservoir::Grid::Grid *grid)
     {
         // Lists which will contain intersected block indeces and intersection points.
         QList<int> cell_global_index;
-        QList<QVector3D> entry_points;
+        QList<Eigen::Vector3d> entry_points;
 
         /* Find first and last cell blocks intersected and their indeces.
          * Add first cell and first point to lists.
          */
-        Reservoir::Grid::Cell last_cell = GeometryFunctions::get_cell_enveloping_point(grid,end_point);
-        Reservoir::Grid::Cell first_cell = GeometryFunctions::get_cell_enveloping_point(grid,start_point);
+        Reservoir::Grid::Cell last_cell = GeometryFunctions::get_cell_enveloping_point(grid,evec_to_qvec(end_point));
+        Reservoir::Grid::Cell first_cell = GeometryFunctions::get_cell_enveloping_point(grid,evec_to_qvec(start_point));
 
         int last_cell_index  = last_cell.global_index();
         int first_cell_index = first_cell.global_index();
@@ -70,29 +72,35 @@ namespace WellIndexCalculator {
          */
         if( last_cell_index == first_cell_index){
             entry_points.append(end_point);
-            QPair<QList<int>,QList<QVector3D>> early_pair;
+            QPair<QList<int>,QList<Eigen::Vector3d>> early_pair;
             early_pair.first = cell_global_index;
             early_pair.second = entry_points;
             return early_pair;
         }
 
 
-        QVector3D exit_point = find_exit_point(first_cell,start_point,end_point,start_point);
+        Eigen::Vector3d exit_point = qvec_to_evec(find_exit_point(first_cell,
+                                                                  evec_to_qvec(start_point),
+                                                                  evec_to_qvec(end_point),
+                                                                  evec_to_qvec(start_point)));
         // Make sure we follow line in the correct direction. (i.e. dot product positive)
-        if( QVector3D::dotProduct(end_point - start_point, exit_point - start_point) <= 0 ){
+        if ((end_point - start_point).dot(exit_point-start_point) <= 0.0) {
             std::cout << "wrong direction, try other" << std::endl;
             std::cout << "exit_point = " << exit_point.x() << " " << exit_point.y() << " " << exit_point.z() << std::endl;
-            exit_point = find_exit_point(first_cell, start_point, end_point, exit_point);
+            exit_point = qvec_to_evec(find_exit_point(first_cell,
+                                         evec_to_qvec(start_point),
+                                         evec_to_qvec(end_point),
+                                         evec_to_qvec(exit_point)));
         }
-        double epsilon = 0.01/(exit_point.distanceToPoint(end_point));
-        QVector3D move_exit_epsilon = QVector3D(exit_point*(1-epsilon) + end_point * epsilon);
+        double epsilon = 0.01 / (end_point - exit_point).norm();
+        Eigen::Vector3d move_exit_epsilon = exit_point*(1-epsilon) + end_point*epsilon;
 
-        Reservoir::Grid::Cell current_cell = GeometryFunctions::get_cell_enveloping_point(grid,move_exit_epsilon);
+        Reservoir::Grid::Cell current_cell = GeometryFunctions::get_cell_enveloping_point(grid,evec_to_qvec(move_exit_epsilon));
         double epsilon_temp = epsilon;
         while(current_cell.global_index() == first_cell_index){
             epsilon_temp = 10*epsilon_temp;
-            move_exit_epsilon= QVector3D(exit_point * (1 - epsilon_temp) + end_point * epsilon_temp);
-            current_cell = GeometryFunctions::get_cell_enveloping_point(grid,move_exit_epsilon);
+            move_exit_epsilon= exit_point*(1-epsilon_temp) + end_point*epsilon_temp;
+            current_cell = GeometryFunctions::get_cell_enveloping_point(grid,evec_to_qvec(move_exit_epsilon));
         }
 
         while(current_cell.global_index() != last_cell_index){
@@ -102,7 +110,10 @@ namespace WellIndexCalculator {
             entry_points.append(exit_point);
 
             // Find other exit point.
-            exit_point = GeometryFunctions::find_exit_point(current_cell,exit_point,end_point,exit_point);
+            exit_point = qvec_to_evec(GeometryFunctions::find_exit_point(current_cell,
+                                                            evec_to_qvec(exit_point),
+                                                            evec_to_qvec(end_point),
+                                                            evec_to_qvec(exit_point)));
 
             // DO SOME CHECK IF EXIT POINT IS THE SAME AS END_POINT: UNLIKELY IN PRACTICE
             if(exit_point == end_point){
@@ -110,9 +121,10 @@ namespace WellIndexCalculator {
             }
                 // Move slightly along line to enter the new cell and find cell by using GetCellEnvelopingPoint function.
             else{
-                epsilon = 0.01 / (exit_point.distanceToPoint(end_point));
-                move_exit_epsilon = QVector3D(exit_point * (1-epsilon) + end_point * epsilon);
-                current_cell = GeometryFunctions::get_cell_enveloping_point(grid, move_exit_epsilon);
+                epsilon = 0.01 / (end_point - exit_point).norm();
+                move_exit_epsilon = exit_point*(1-epsilon) + end_point*epsilon;
+                current_cell = GeometryFunctions::get_cell_enveloping_point(grid,
+                                                                            evec_to_qvec(move_exit_epsilon));
             }
 
         }
@@ -124,7 +136,7 @@ namespace WellIndexCalculator {
          * endpoints of the line segment inside each cell in a
          * QPair type to return them both
          */
-        QPair<QList<int>,QList<QVector3D>> pair;
+        QPair<QList<int>,QList<Eigen::Vector3d>> pair;
         pair.first = cell_global_index;
         pair.second = entry_points;
         return pair;
@@ -242,7 +254,9 @@ namespace WellIndexCalculator {
         return ptr_proj_v;
     }
 
-    double GeometryFunctions::well_index_cell_qvector(Reservoir::Grid::Cell cell, QList<QVector3D> start_points, QList<QVector3D> end_points, double wellbore_radius)
+    double GeometryFunctions::well_index_cell_qvector(Reservoir::Grid::Cell cell,
+                                                      QList<Eigen::Vector3d> start_points,
+                                                      QList<Eigen::Vector3d> end_points, double wellbore_radius)
     {
         /* corner points of Cell(s) are always listen in the same order and orientation. (see
          * Reservoir::Grid::Cell for illustration as it is included in the code.
@@ -250,16 +264,15 @@ namespace WellIndexCalculator {
          * Determine the 3(orthogonal, or very close to orth.) vectors to project line onto.
          * Corners 4&5, 4&6 and 4&0 span the cell from the front bottom left corner.
          */
-
-        QList<Reservoir::Grid::XYZCoordinate > corners = cell.corners();
-        QVector3D xvec = corners[4].vectorTo(corners[5]);
-        QVector3D yvec = corners[4].vectorTo(corners[6]);
-        QVector3D zvec = corners[4].vectorTo(corners[0]);
+        QList<Eigen::Vector3d> corners = cell.corners_eigen();
+        Eigen::Vector3d xvec = corners[5] - corners[4];
+        Eigen::Vector3d yvec = corners[6] - corners[4];
+        Eigen::Vector3d zvec = corners[0] - corners[4];
 
         // Finds the dimensional sizes (i.e. length in each direction) of the cell block
-        double dx = xvec.length();
-        double dy = yvec.length();
-        double dz = zvec.length();
+        double dx = xvec.norm();
+        double dy = yvec.norm();
+        double dz = zvec.norm();
         // Get directional permeabilities
         double kx = cell.permx();
         double ky = cell.permy();
@@ -272,16 +285,16 @@ namespace WellIndexCalculator {
         // Need to add projections of all segments, each line is one segment.
         for (int ii = 0; ii < start_points.length(); ++ii) { // Current segment ii
             // Compute vector from segment
-            QVector3D current_vec = QVector3D(end_points.at(ii) - start_points.at(ii));
+            Eigen::Vector3d current_vec = end_points.at(ii) - start_points.at(ii);
 
             /* Proejcts segment vector to directional spanning vectors and determines the length.
              * of the projections. Note that we only only care about the length of the projection,
              * not the spatial position. Also adds the lengths of previous segments in case there
              * is more than one segment within the well.
              */
-            Lx = Lx + GeometryFunctions::project_v1_on_v2(current_vec,xvec).length();
-            Ly = Ly + GeometryFunctions::project_v1_on_v2(current_vec,yvec).length();
-            Lz = Lz + GeometryFunctions::project_v1_on_v2(current_vec,zvec).length();
+            Lx = Lx + GeometryFunctions::project_v1_on_v2(evec_to_qvec(current_vec), evec_to_qvec(xvec)).length();
+            Ly = Ly + GeometryFunctions::project_v1_on_v2(evec_to_qvec(current_vec), evec_to_qvec(yvec)).length();
+            Lz = Lz + GeometryFunctions::project_v1_on_v2(evec_to_qvec(current_vec), evec_to_qvec(zvec)).length();
         }
 
         // Compute Well Index from formula provided by Shu
@@ -352,19 +365,22 @@ namespace WellIndexCalculator {
         );
     }
 
-    QPair<QList<int>, QList<double> > GeometryFunctions::well_index_of_grid(Reservoir::Grid::Grid *grid, QList<QVector3D> start_points, QList<QVector3D> end_points, double wellbore_radius)
+    QPair<QList<int>, QList<double> > GeometryFunctions::well_index_of_grid(Reservoir::Grid::Grid *grid,
+                                                                            QList<Eigen::Vector3d> start_points,
+                                                                            QList<Eigen::Vector3d> end_points,
+                                                                            double wellbore_radius)
     {
         // Find intersected blocks and the points of intersection
-        QPair<QList<int>, QList<QVector3D>> temp_pair = GeometryFunctions::cells_intersected(start_points.at(0),end_points.at(0),grid);
+        QPair<QList<int>, QList<Eigen::Vector3d>> temp_pair = GeometryFunctions::cells_intersected(start_points.at(0), end_points.at(0), grid);
         QPair<QList<int>, QList<double>> pair;
 
         QList<double> well_indeces;
         for(int ii=0; ii<temp_pair.first.length(); ii++){
-            QList<QVector3D> entry_points;
-            QList<QVector3D> exit_points;
+            QList<Eigen::Vector3d> entry_points;
+            QList<Eigen::Vector3d> exit_points;
             entry_points.append(temp_pair.second.at(ii));
             exit_points.append(temp_pair.second.at(ii+1));
-            well_indeces.append(GeometryFunctions::well_index_cell_qvector(grid->GetCell(temp_pair.first.at(ii)),entry_points, exit_points, wellbore_radius));
+            well_indeces.append(GeometryFunctions::well_index_cell_qvector(grid->GetCell(temp_pair.first.at(ii)), entry_points, exit_points, wellbore_radius));
         }
         pair.first = temp_pair.first;
         pair.second = well_indeces;
@@ -651,76 +667,76 @@ namespace WellIndexCalculator {
     }
 
 
-    void GeometryFunctions::print_well_index_file(Reservoir::Grid::Grid *grid, QList<QVector3D> start_points, QList<QVector3D> end_points, double wellbore_radius, double min_wi, QString filename)
-    {
-        // Find intersected blocks and the points of intersection
-        QPair<QList<int>, QList<QVector3D>> temp_pair = GeometryFunctions::cells_intersected(start_points.at(0),end_points.at(0),grid);
-        QPair<QList<int>, QList<double>> pair;
-
-        QList<double> well_indeces;
-        for(int ii=0; ii<temp_pair.first.length(); ii++){
-            QList<QVector3D> entry_points;
-            QList<QVector3D> exit_points;
-            entry_points.append(temp_pair.second.at(ii));
-            exit_points.append(temp_pair.second.at(ii+1));
-            well_indeces.append(GeometryFunctions::well_index_cell_qvector(grid->GetCell(temp_pair.first.at(ii)),entry_points, exit_points, wellbore_radius));
-        }
-        pair.first = temp_pair.first;
-        pair.second = well_indeces;
-
-        std::ofstream myfile;
-        myfile.open (filename.toUtf8().constData());
-        myfile <<"-- ==================================================================================================\n";
-        myfile <<"-- \n";
-        myfile <<"-- Exported from ECL_5SPOT\n";
-        myfile <<"-- \n";
-        myfile <<"-- Exported by user hilmarm from WellIndexCalculator \n";
-        myfile <<"-- \n";
-        myfile <<"-- ==================================================================================================\n";
-        myfile <<"\n";
-        myfile <<"WELSPECS\n";
-        myfile <<" 'TW01' 'PRODUC'    1    1  1712.00 'OIL'    0.0 'STD' 'SHUT' 'YES' 0 'SEG' /\n";
-        myfile <<"/\n";
-        myfile <<" \n";
-        myfile <<"\n";
-        myfile <<"GRUPTREE\n";
-        myfile <<" 'PRODUC' 'FIELD' /\n";
-        myfile <<" 'INJECT' 'FIELD' /\n";
-        myfile <<"/\n";
-        myfile <<"\n";
-        myfile <<"COMPDAT\n";
-        myfile <<"-- --------------------------------------------------------------------------------------------------\n";
-        for( int ii = 0; ii<pair.first.length(); ii++){
-
-            if(pair.second.at(ii)>min_wi){
-                myfile << " 'TW01'" ;
-                myfile << std::setw(5) << grid->GetCell(pair.first.at(ii)).ijk_index().i()+1;
-                myfile << std::setw(5) << grid->GetCell(pair.first.at(ii)).ijk_index().j()+1;
-                myfile << std::setw(5) << grid->GetCell(pair.first.at(ii)).ijk_index().k()+1;
-                myfile << std::setw(5) << grid->GetCell(pair.first.at(ii)).ijk_index().k()+1;
-
-                myfile << "  'OPEN' 0 " ;
-                float temp = pair.second.at(ii);
-                myfile << std::setprecision(5) << std::fixed;
-                myfile <<std::setw(13) << temp;
-
-                myfile.unsetf(std::ios_base::fixed);
-                myfile << std::setw(8)  << wellbore_radius*2 ;
-
-                float temp2 = grid->GetCell(pair.first.at(ii)).permx()*temp_pair.second.at(ii).distanceToPoint(temp_pair.second.at(ii+1));
-                myfile << std::setprecision(5) << std::fixed;
-                myfile << std::setw(13) << temp2;
-                myfile << "    0.00 0.0 'X'    4.75 /\n";
-                myfile.unsetf(std::ios_base::fixed);
-            }
-        }
-        myfile << "-- --------------------------------------------------------------------------------------------------\n";
-        myfile << "/";
-        myfile << "\n";
-        myfile << "\n";
-
-        myfile.close();
-    }
+//    void GeometryFunctions::print_well_index_file(Reservoir::Grid::Grid *grid, QList<QVector3D> start_points, QList<QVector3D> end_points, double wellbore_radius, double min_wi, QString filename)
+//    {
+//        // Find intersected blocks and the points of intersection
+//        QPair<QList<int>, QList<QVector3D>> temp_pair = GeometryFunctions::cells_intersected(start_points.at(0),end_points.at(0),grid);
+//        QPair<QList<int>, QList<double>> pair;
+//
+//        QList<double> well_indeces;
+//        for(int ii=0; ii<temp_pair.first.length(); ii++){
+//            QList<QVector3D> entry_points;
+//            QList<QVector3D> exit_points;
+//            entry_points.append(temp_pair.second.at(ii));
+//            exit_points.append(temp_pair.second.at(ii+1));
+//            well_indeces.append(GeometryFunctions::well_index_cell_qvector(grid->GetCell(temp_pair.first.at(ii)),entry_points, exit_points, wellbore_radius));
+//        }
+//        pair.first = temp_pair.first;
+//        pair.second = well_indeces;
+//
+//        std::ofstream myfile;
+//        myfile.open (filename.toUtf8().constData());
+//        myfile <<"-- ==================================================================================================\n";
+//        myfile <<"-- \n";
+//        myfile <<"-- Exported from ECL_5SPOT\n";
+//        myfile <<"-- \n";
+//        myfile <<"-- Exported by user hilmarm from WellIndexCalculator \n";
+//        myfile <<"-- \n";
+//        myfile <<"-- ==================================================================================================\n";
+//        myfile <<"\n";
+//        myfile <<"WELSPECS\n";
+//        myfile <<" 'TW01' 'PRODUC'    1    1  1712.00 'OIL'    0.0 'STD' 'SHUT' 'YES' 0 'SEG' /\n";
+//        myfile <<"/\n";
+//        myfile <<" \n";
+//        myfile <<"\n";
+//        myfile <<"GRUPTREE\n";
+//        myfile <<" 'PRODUC' 'FIELD' /\n";
+//        myfile <<" 'INJECT' 'FIELD' /\n";
+//        myfile <<"/\n";
+//        myfile <<"\n";
+//        myfile <<"COMPDAT\n";
+//        myfile <<"-- --------------------------------------------------------------------------------------------------\n";
+//        for( int ii = 0; ii<pair.first.length(); ii++){
+//
+//            if(pair.second.at(ii)>min_wi){
+//                myfile << " 'TW01'" ;
+//                myfile << std::setw(5) << grid->GetCell(pair.first.at(ii)).ijk_index().i()+1;
+//                myfile << std::setw(5) << grid->GetCell(pair.first.at(ii)).ijk_index().j()+1;
+//                myfile << std::setw(5) << grid->GetCell(pair.first.at(ii)).ijk_index().k()+1;
+//                myfile << std::setw(5) << grid->GetCell(pair.first.at(ii)).ijk_index().k()+1;
+//
+//                myfile << "  'OPEN' 0 " ;
+//                float temp = pair.second.at(ii);
+//                myfile << std::setprecision(5) << std::fixed;
+//                myfile <<std::setw(13) << temp;
+//
+//                myfile.unsetf(std::ios_base::fixed);
+//                myfile << std::setw(8)  << wellbore_radius*2 ;
+//
+//                float temp2 = grid->GetCell(pair.first.at(ii)).permx()*temp_pair.second.at(ii).distanceToPoint(temp_pair.second.at(ii+1));
+//                myfile << std::setprecision(5) << std::fixed;
+//                myfile << std::setw(13) << temp2;
+//                myfile << "    0.00 0.0 'X'    4.75 /\n";
+//                myfile.unsetf(std::ios_base::fixed);
+//            }
+//        }
+//        myfile << "-- --------------------------------------------------------------------------------------------------\n";
+//        myfile << "/";
+//        myfile << "\n";
+//        myfile << "\n";
+//
+//        myfile.close();
+//    }
 
     Eigen::Vector3d GeometryFunctions::qvec_to_evec(QVector3D vec) {
         return Eigen::Vector3d(vec.x(), vec.y(), vec.z());

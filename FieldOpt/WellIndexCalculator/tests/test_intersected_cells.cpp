@@ -60,9 +60,9 @@ TEST_F(IntersectedCellsTest, intersected_cell_test_cases) {
     // Load grid and chose first cell (cell 1,1,1)
     auto cell_0 = grid_->GetCell(0);
     //auto ptr_cell_1 = &cell_1;
-    QVector3D start_point = QVector3D(0,0,1702);
-    QVector3D end_point = QVector3D(44,84,1720);
-    QPair<QList<int>,QList<QVector3D>> pair;
+        Eigen::Vector3d start_point = Eigen::Vector3d(0,0,1702);
+        Eigen::Vector3d end_point = Eigen::Vector3d(44,84,1720);
+    QPair<QList<int>,QList<Eigen::Vector3d>> pair;
 
     pair  = WellIndexCalculator::GeometryFunctions::cells_intersected(start_point,end_point,grid_);
 

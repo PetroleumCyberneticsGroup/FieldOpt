@@ -13,8 +13,8 @@ QList<WellIndexCalculator::BlockData> WellIndexCalculator::GetBlocks(QList<Reser
 {
     if (points.length() != 2)
         throw std::runtime_error("Currently, only well splines consisting of two points (heel and toe) are supported.");
-    QList<QVector3D> startvec = {points.first().toQvec()};
-    QList<QVector3D> endvec = {points.last().toQvec()};
+    QList<Eigen::Vector3d> startvec = {points.first().toEigenVec()};
+    QList<Eigen::Vector3d> endvec = {points.last().toEigenVec()};
     QPair<QList<int>, QList<double>> data = GeometryFunctions::well_index_of_grid(grid_, startvec, endvec, wellbore_radius_);
 
     QList<BlockData> block_data = QList<BlockData>();

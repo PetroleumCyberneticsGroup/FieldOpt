@@ -9,6 +9,7 @@
 #include <QVector3D>
 #include <QPair>
 #include <Eigen/Dense>
+#include <Eigen/Core>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -52,7 +53,9 @@ namespace WellIndexCalculator {
          * \param QList for storing global indeces of intersected blocks
          * \param QList for storing line segments that are inside intersected blocks
          */
-        static QPair<QList<int>, QList<QVector3D> > cells_intersected(QVector3D start_point, QVector3D end_point, Reservoir::Grid::Grid *grid);
+        static QPair<QList<int>, QList<Eigen::Vector3d> > cells_intersected(Eigen::Vector3d start_point,
+                                                                      Eigen::Vector3d end_point,
+                                                                      Reservoir::Grid::Grid *grid);
 
         /*!
          * \brief Generates a double array with the numbers of 3 corners from each of the 6 faces of a cell that
@@ -87,7 +90,9 @@ namespace WellIndexCalculator {
          * \param wellbore radius
          * \return Well index for block/cell
         */
-        static double well_index_cell_qvector(Reservoir::Grid::Cell block, QList<QVector3D> start_points, QList<QVector3D> end_points, double wellbore_radius);
+        static double well_index_cell_qvector(Reservoir::Grid::Cell block,
+                                              QList<Eigen::Vector3d> start_points,
+                                              QList<Eigen::Vector3d> end_points, double wellbore_radius);
 
         /*!
          * \brief Auxilary function for well_index_cell function
@@ -134,7 +139,9 @@ namespace WellIndexCalculator {
          * \param end point line segment/well
          * \return list of cells intersected and their calculated well indeces
          */
-        static QPair<QList<int>, QList<double>> well_index_of_grid(Reservoir::Grid::Grid *grid , QList<QVector3D> start_points, QList<QVector3D> end_points, double wellbore_radius);
+        static QPair<QList<int>, QList<double>> well_index_of_grid(Reservoir::Grid::Grid *grid,
+                                                                   QList<Eigen::Vector3d> start_points,
+                                                                   QList<Eigen::Vector3d> end_points, double wellbore_radius);
 
         /*!
          * \brief Given two lists of QVector3D* points, calculates the L2-norm of the vectors between the points.
@@ -179,7 +186,7 @@ namespace WellIndexCalculator {
          * \param well index treshold value. if below this level it will not be printed.
          * \param name (and path) of file to be created and written to.
          */
-        static void print_well_index_file(Reservoir::Grid::Grid *grid , QList<QVector3D> start_point, QList<QVector3D> end_points, double wellbore_radius, double min_wi, QString filename);
+//        static void print_well_index_file(Reservoir::Grid::Grid *grid , QList<QVector3D> start_point, QList<QVector3D> end_points, double wellbore_radius, double min_wi, QString filename);
 
         static Eigen::Vector3d qvec_to_evec(QVector3D vec); // \todo This is temporary and should be removed
         static QVector3D evec_to_qvec(Eigen::Vector3d vec); // \todo This is temporary and should be removed

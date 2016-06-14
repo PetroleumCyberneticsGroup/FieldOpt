@@ -52,14 +52,17 @@ TEST_F(SingleCellWellIndexTest, WellIndexValueWithQVector_test) {
     double well_end_x = 0.25*corners[4].x() + 0.25*corners[5].x() +0.25*corners[6].x() + 0.25*corners[7].x();
     double well_end_y = 0.25*corners[4].y() + 0.25*corners[5].y() +0.25*corners[6].y() + 0.25*corners[7].y();
     double well_end_z = 0.25*corners[4].z() + 0.25*corners[5].z() +0.25*corners[6].z() + 0.25*corners[7].z();
-    QVector3D start_point = QVector3D(well_start_x,well_start_y,well_start_z);
-    QVector3D end_point = QVector3D(well_end_x,well_end_y, well_end_z);
-    QList<QVector3D> start_points;
-    QList<QVector3D> end_points;
+    Eigen::Vector3d start_point = Eigen::Vector3d(well_start_x,well_start_y,well_start_z);
+    Eigen::Vector3d end_point = Eigen::Vector3d(well_end_x,well_end_y, well_end_z);
+    QList<Eigen::Vector3d> start_points;
+    QList<Eigen::Vector3d> end_points;
     start_points.append(start_point);
     end_points.append(end_point);
 
-    double wi = WellIndexCalculator::GeometryFunctions::well_index_cell_qvector(ptr_cell_1,start_points,end_points,wellbore_radius);
+    double wi = WellIndexCalculator::GeometryFunctions::well_index_cell_qvector(ptr_cell_1,
+                                                                                start_points,
+                                                                                end_points,
+                                                                                wellbore_radius);
     /* 0.555602 is the expected well transmisibility factor aka. well index.
      * For now this value is read directly from eclipse output file:
      * Expect value within delta percent
@@ -84,11 +87,11 @@ TEST_F(SingleCellWellIndexTest, vertical_well_index_test) {
     double well_end_x = 0.25*corners.at(4).x() + 0.25*corners.at(5).x() +0.25*corners.at(6).x() + 0.25*corners.at(7).x();
     double well_end_y = 0.25*corners.at(4).y() + 0.25*corners.at(5).y() +0.25*corners.at(6).y() + 0.25*corners.at(7).y();
     double well_end_z = 0.25*corners.at(4).z() + 0.25*corners.at(5).z() +0.25*corners.at(6).z() + 0.25*corners.at(7).z();
-    QVector3D start_point = QVector3D(well_start_x, well_start_y, well_start_z);
-    QVector3D end_point= QVector3D(well_end_x,well_end_y, well_end_z);
-    QList<QVector3D> start_points;
+    Eigen::Vector3d start_point = Eigen::Vector3d(well_start_x, well_start_y, well_start_z);
+    Eigen::Vector3d end_point= Eigen::Vector3d(well_end_x,well_end_y, well_end_z);
+    QList<Eigen::Vector3d> start_points;
     start_points.append(start_point);
-    QList<QVector3D> end_points;
+    QList<Eigen::Vector3d> end_points;
     end_points.append(end_point);
 
 
@@ -107,10 +110,10 @@ TEST_F(SingleCellWellIndexTest, vertical_well_index_test) {
 TEST_F(SingleCellWellIndexTest, Well_index_grid_test) {
     double wellbore_radius = 0.191/2;
 
-    QVector3D start_point = QVector3D(0.05,0.00,1712);
-    QVector3D end_point= QVector3D(1440.0,1400.0,1712);
-    QList<QVector3D> start_points;
-    QList<QVector3D> end_points;
+    Eigen::Vector3d start_point = Eigen::Vector3d(0.05,0.00,1712);
+    Eigen::Vector3d end_point= Eigen::Vector3d(1440.0,1400.0,1712);
+    QList<Eigen::Vector3d> start_points;
+    QList<Eigen::Vector3d> end_points;
     start_points.append(start_point);
     end_points.append(end_point);
 
