@@ -89,15 +89,6 @@ namespace WellIndexCalculator {
         static QVector3D project_v1_on_v2(QVector3D v1, QVector3D v2);
 
         /*!
-         * \brief Find vector going from p1 to p2 and return it as QVector3D*
-         * \param first point
-         * \param second point
-         * \return vector between input points
-        */
-
-        static QVector3D XYZpoints_to_qvector(Reservoir::Grid::XYZCoordinate p1, Reservoir::Grid::XYZCoordinate p2);
-
-        /*!
          * \brief Compute the well index for a (one) single cell/block by using the Projection Well Method (Shu 2005).
          * \param cell/block
          * \param start point line segment/well

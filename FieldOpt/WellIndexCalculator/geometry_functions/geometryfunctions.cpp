@@ -255,12 +255,6 @@ namespace WellIndexCalculator {
         return ptr_proj_v;
     }
 
-    QVector3D GeometryFunctions::XYZpoints_to_qvector(Reservoir::Grid::XYZCoordinate p1, Reservoir::Grid::XYZCoordinate p2)
-    {
-        QVector3D vector = QVector3D((p2.x() ) -( p1.x()), (p2.y() ) - (p1.y()), (p2.z()) - (p1.z()));
-        return vector;
-    }
-
     double GeometryFunctions::well_index_cell_qvector(Reservoir::Grid::Cell cell, QList<QVector3D> start_points, QList<QVector3D> end_points, double wellbore_radius)
     {
         /* corner points of Cell(s) are always listen in the same order and orientation. (see
@@ -271,9 +265,9 @@ namespace WellIndexCalculator {
          */
 
         QList<Reservoir::Grid::XYZCoordinate > corners = cell.corners();
-        QVector3D xvec = WellIndexCalculator::GeometryFunctions::XYZpoints_to_qvector(corners[4],corners[5]);
-        QVector3D yvec = WellIndexCalculator::GeometryFunctions::XYZpoints_to_qvector(corners[4],corners[6]);
-        QVector3D zvec = WellIndexCalculator::GeometryFunctions::XYZpoints_to_qvector(corners[4],corners[0]);
+        QVector3D xvec = corners[4].vectorTo(corners[5]);
+        QVector3D yvec = corners[4].vectorTo(corners[6]);
+        QVector3D zvec = corners[4].vectorTo(corners[0]);
 
         // Finds the dimensional sizes (i.e. length in each direction) of the cell block
         double dx = xvec.length();
