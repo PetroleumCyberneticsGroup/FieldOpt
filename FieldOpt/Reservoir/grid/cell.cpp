@@ -29,5 +29,14 @@ namespace Reservoir {
             return this->global_index() == other.global_index();
         }
 
+        QList<Eigen::Vector3d> Cell::corners_eigen() const {
+            QList<Eigen::Vector3d> corners;
+            for (auto corner : corners_) {
+                corners.append(Eigen::Vector3d(corner.x(), corner.y(), corner.z()));
+            }
+            return corners;
+        }
+
+
     }
 }

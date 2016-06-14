@@ -2,6 +2,7 @@
 #define CELL_H
 
 #include <QList>
+#include <Eigen/Dense>
 #include "ijkcoordinate.h"
 #include "xyzcoordinate.h"
 
@@ -75,10 +76,19 @@ namespace Reservoir {
             QList<XYZCoordinate> corners() const { return corners_; }
 
             /*!
+             * \brief Get the corners represented as a QList with eight Eigen::Vector3d objects instead
+             * of XYZCoordinate objects.
+             */
+            QList<Eigen::Vector3d> corners_eigen() const;
+
+            /*!
              * \brief Equals Check if the global indices of the two cells being compared are equal.
              */
             bool Equals(const Cell *other) const;
             bool Equals(const Cell &other) const;
+
+
+
 
         private:
             int global_index_;
