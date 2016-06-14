@@ -1,5 +1,4 @@
 #include "constraint_handler.h"
-#include "rate_constraint.h"
 #include <iostream>
 
 namespace Optimization {
@@ -24,11 +23,11 @@ namespace Optimization {
                     case Utilities::Settings::Optimizer::ConstraintType::CombinedWellSplineLengthInterwellDistance:
                         constraints_.append(new CombinedSplineLengthInterwellDistance(constraint, variables));
                         break;
-#ifdef WITH_EXPERIMENTAL_CONSTRIANTS
                     case Utilities::Settings::Optimizer::ConstraintType::ReservoirBoundary:
-                        std::cout << "Initializing Reservoir boundary constraint." << std::endl;
                         constraints_.append(new ReservoirBoundary(constraint, variables, nullptr)); // TODO: Take grid as input
                         break;
+#ifdef WITH_EXPERIMENTAL_CONSTRIANTS
+                        // Cases for constraints in the experimental_constraints directory go here
 #endif
                     default:
                         break;

@@ -5,13 +5,15 @@
 #include "well_spline_length.h"
 #include "interwell_distance.h"
 #include "combined_spline_length_interwell_distance.h"
+#include "reservoir_boundary.h"
+#include "rate_constraint.h"
 #include "Optimization/case.h"
 #include "Model/properties/variable_property_container.h"
 #include "Utilities/settings/optimizer.h"
-#include <QList>
 
+#include <QList>
 #ifdef WITH_EXPERIMENTAL_CONSTRIANTS
-#include "experimental_constraints/reservoir_boundary.h"
+// Includes for constraints in the experimental_constraints dir go here.
 #endif
 
 namespace Optimization {

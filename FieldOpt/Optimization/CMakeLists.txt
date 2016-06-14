@@ -8,9 +8,9 @@ if(EXISTS ${EXPERIMENTAL_CONSTRAINTS_DIR} AND IS_DIRECTORY ${EXPERIMENTAL_CONSTR
 	message("Including experimental constraints")
 	add_definitions(-DWITH_EXPERIMENTAL_CONSTRIANTS)
 	set(EXPERIMENTAL_CONSTRAINTS_SRC
-			${EXPERIMENTAL_CONSTRAINTS_DIR}/reservoir_boundary.cpp)
+			${EXPERIMENTAL_CONSTRAINTS_DIR}/)
 	set(EXPERIMENTAL_CONSTRAINTS_TESTS
-			${EXPERIMENTAL_CONSTRAINTS_DIR}/tests/test_reservoir_boundary.cpp)
+			${EXPERIMENTAL_CONSTRAINTS_DIR}/tests/)
 else()
 	message("Experimental constraints not found")
 	add_definitions(-DWITHOUT_EXPERIMENTAL_CONSTRAINTS)
@@ -25,6 +25,7 @@ add_library(optimization
 		constraints/constraint.cpp
 		constraints/bhp_constraint.cpp
 		constraints/constraint_handler.cpp
+		constraints/reservoir_boundary.cpp
 		optimizer.cpp
 		optimizers/compass_search.cpp
 		constraints/well_spline_length.cpp
@@ -59,6 +60,7 @@ add_executable(test_optimization
         tests/test_case_handler.cpp
 		tests/constraints/test_bhp_constraint.cpp
         tests/constraints/test_constraint_handler.cpp
+		tests/constraints/test_reservoir_boundary.cpp
         tests/objective/test_weightedsum.cpp
         tests/optimizers/test_compass_search.cpp
         tests/test_resource_cases.h
