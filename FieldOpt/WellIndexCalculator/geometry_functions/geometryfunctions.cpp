@@ -30,12 +30,10 @@ namespace WellIndexCalculator {
         return intersection_point;
     }
 
-    QVector3D GeometryFunctions::normal_vector(QVector3D p0, QVector3D p1, QVector3D p2)
+    Eigen::Vector3d GeometryFunctions::normal_vector(Eigen::Vector3d p0, Eigen::Vector3d p1, Eigen::Vector3d p2)
     {
-        QVector3D normal_vector = QVector3D::crossProduct(p2 - p0,p1 - p0);
-        QVector3D normal_vector_ptr = QVector3D(normal_vector.x(),normal_vector.y(),normal_vector.z());
-        normal_vector_ptr.normalize();
-        return normal_vector_ptr;
+        Eigen::Vector3d normal_vector = (p2-p0).cross(p1-p0);
+        return normal_vector.normalized();
     }
 
     bool GeometryFunctions::point_on_same_side(QVector3D point, QVector3D plane_point, QVector3D normal_vector, double slack)
@@ -176,9 +174,9 @@ namespace WellIndexCalculator {
         QList<QList<QVector3D>> face_corner_coords = GeometryFunctions::cell_planes_coords(cell.corners());
         QList<QVector3D> normal_vectors;
         for( int ii=0; ii<6; ii++) {
-            QVector3D cur_normal_vector = GeometryFunctions::normal_vector(face_corner_coords.at(ii).at(0),
-                                                                           face_corner_coords.at(ii).at(1),
-                                                                           face_corner_coords.at(ii).at(2));
+            QVector3D cur_normal_vector = evec_to_qvec(GeometryFunctions::normal_vector(qvec_to_evec(face_corner_coords.at(ii).at(0)),
+                                                                           qvec_to_evec(face_corner_coords.at(ii).at(1)),
+                                                                           qvec_to_evec(face_corner_coords.at(ii).at(2))));
             normal_vectors.append(cur_normal_vector);
         }
 
@@ -310,9 +308,9 @@ namespace WellIndexCalculator {
         QList<QList<QVector3D>> face_corner_coords = GeometryFunctions::cell_planes_coords(cell.corners());
         QList<QVector3D> normal_vectors;
         for( int ii=0; ii<6; ii++){
-            normal_vectors.append(GeometryFunctions::normal_vector(face_corner_coords.at(ii).at(0),
-                                                                   face_corner_coords.at(ii).at(1),
-                                                                   face_corner_coords.at(ii).at(2)));
+            normal_vectors.append(evec_to_qvec(GeometryFunctions::normal_vector(qvec_to_evec(face_corner_coords.at(ii).at(0)),
+                                                                   qvec_to_evec(face_corner_coords.at(ii).at(1)),
+                                                                   qvec_to_evec(face_corner_coords.at(ii).at(2)))));
         }
 
         /* For loop through all faces to check that point

@@ -29,7 +29,7 @@ namespace WellIndexCalculator {
         static Eigen::Vector3d line_plane_intersection(Eigen::Vector3d p0, Eigen::Vector3d p1,
                                                        Eigen::Vector3d normal_vector, Eigen::Vector3d point_in_plane);
 
-        static QVector3D normal_vector(QVector3D p0, QVector3D p1, QVector3D p2);
+        static Eigen::Vector3d normal_vector(Eigen::Vector3d p0, Eigen::Vector3d p1, Eigen::Vector3d p2);
 
         /*!
          * \brief point_on_same_side returns true if point is on the same side of a plane
