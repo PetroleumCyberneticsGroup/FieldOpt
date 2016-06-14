@@ -308,15 +308,15 @@ namespace WellIndexCalculator {
         return r;
     }
 
-    bool GeometryFunctions::is_point_inside_cell(Reservoir::Grid::Cell cell, QVector3D point)
+    bool GeometryFunctions::is_point_inside_cell(Reservoir::Grid::Cell cell, Eigen::Vector3d point)
     {
         // First find normal vectors of all faces of block/cell.
         QList<QList<Eigen::Vector3d>> face_corner_coords = GeometryFunctions::cell_planes_coords(cell.corners());
-        QList<QVector3D> normal_vectors;
+        QList<Eigen::Vector3d> normal_vectors;
         for( int ii=0; ii<6; ii++){
-            normal_vectors.append(evec_to_qvec(GeometryFunctions::normal_vector(face_corner_coords.at(ii).at(0),
+            normal_vectors.append(GeometryFunctions::normal_vector(face_corner_coords.at(ii).at(0),
                                                                    face_corner_coords.at(ii).at(1),
-                                                                   face_corner_coords.at(ii).at(2))));
+                                                                   face_corner_coords.at(ii).at(2)));
         }
 
         /* For loop through all faces to check that point
@@ -328,7 +328,7 @@ namespace WellIndexCalculator {
          */
         bool point_inside = true;
         for(int face_number = 0; face_number<6; face_number++){
-            if( QVector3D::dotProduct(point - evec_to_qvec(face_corner_coords.at(face_number).at(0)), normal_vectors.at(face_number)) < 0){
+            if ((point - face_corner_coords[face_number][0]).dot(normal_vectors[face_number]) < 0) {
                 point_inside = false;
             }
         }
@@ -342,7 +342,7 @@ namespace WellIndexCalculator {
         int total_cells = grid->Dimensions().nx*grid->Dimensions().ny*grid->Dimensions().nz;
 
         for(int ii=0; ii<total_cells; ii++){
-            if( GeometryFunctions::is_point_inside_cell(grid->GetCell(ii),point) ){
+            if( GeometryFunctions::is_point_inside_cell(grid->GetCell(ii), qvec_to_evec(point)) ){
                 return grid->GetCell(ii);
             }
         }
@@ -395,7 +395,7 @@ namespace WellIndexCalculator {
 
         // Check if point is already inside cell
         QVector3D qv_point = QVector3D(point(0),point(1),point(2));
-        if(is_point_inside_cell(cell, qv_point)){
+        if(is_point_inside_cell(cell, qvec_to_evec(qv_point))){
             std::cout << "point is inside cell" << std::endl;
             return point;
         }
@@ -452,7 +452,7 @@ namespace WellIndexCalculator {
          * point is inside cell
          */
         QVector3D qv_point = QVector3D(proj_point(0),proj_point(1),proj_point(2));
-        if(is_point_inside_cell(cell, qv_point)){
+        if(is_point_inside_cell(cell, qvec_to_evec(qv_point))){
             return proj_point;
         }
 

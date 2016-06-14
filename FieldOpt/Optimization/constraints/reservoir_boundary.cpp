@@ -34,13 +34,13 @@ namespace Optimization {
             for (int ii=0; ii<index_list_.length(); ii++){
                 if( WellIndexCalculator::GeometryFunctions::is_point_inside_cell(
                         grid_->GetCell(index_list_[ii]),
-                        QVector3D(heel_x_val, heel_y_val, heel_z_val)
+                        Eigen::Vector3d(heel_x_val, heel_y_val, heel_z_val)
                 )){
                     heel_feasible = true;
                 }
                 if( WellIndexCalculator::GeometryFunctions::is_point_inside_cell(
                         grid_->GetCell(index_list_[ii]),
-                        QVector3D(toe_x_val, toe_y_val, toe_z_val)
+                        Eigen::Vector3d(toe_x_val, toe_y_val, toe_z_val)
                 )){
                     toe_feasible = true;
                 }

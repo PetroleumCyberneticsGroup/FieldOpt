@@ -124,7 +124,7 @@ namespace WellIndexCalculator {
          * \param point
          * \return true if point is inside cell, false if it is not
          */
-        static bool is_point_inside_cell(Reservoir::Grid::Cell cell, QVector3D point);
+        static bool is_point_inside_cell(Reservoir::Grid::Cell cell, Eigen::Vector3d point);
 
         /*!
          * \brief Given a Reservoir::Grid::Grid grid and a point, return a cell that envelopes the point

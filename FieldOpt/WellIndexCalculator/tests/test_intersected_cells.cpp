@@ -83,9 +83,9 @@ namespace {
         auto cell_1 = grid_->GetCell(1);
         auto cell_60 = grid_->GetCell(60);
 
-        QVector3D point_0 = QVector3D(0,0,1700);
-        QVector3D point_1 = QVector3D(12,12,1712);
-        QVector3D point_2 = QVector3D(24,12,1712);
+        Eigen::Vector3d point_0 = Eigen::Vector3d(0,0,1700);
+        Eigen::Vector3d point_1 = Eigen::Vector3d(12,12,1712);
+        Eigen::Vector3d point_2 = Eigen::Vector3d(24,12,1712);
 
         EXPECT_TRUE(WellIndexCalculator::GeometryFunctions::is_point_inside_cell(cell_0,point_0));
         EXPECT_FALSE(WellIndexCalculator::GeometryFunctions::is_point_inside_cell(cell_1,point_0));
