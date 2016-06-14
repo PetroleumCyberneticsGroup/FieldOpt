@@ -40,6 +40,14 @@ namespace Reservoir {
              */
             QVector3D toQvec() const;
 
+            /*!
+             * \brief Find vector going from this point to the other point.
+             * \param other The point to create a vector to.
+             * \return The vector between this point and the other point.
+            */
+            QVector3D vectorTo(const XYZCoordinate other) const;
+
+
         private:
             double x_;
             double y_;

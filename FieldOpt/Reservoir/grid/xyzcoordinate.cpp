@@ -44,6 +44,10 @@ namespace Reservoir {
             return QVector3D(x_, y_, z_);
         }
 
+        QVector3D XYZCoordinate::vectorTo(const XYZCoordinate other) const {
+            return other.toQvec() - this->toQvec();
+        }
+
 
     }
 }
