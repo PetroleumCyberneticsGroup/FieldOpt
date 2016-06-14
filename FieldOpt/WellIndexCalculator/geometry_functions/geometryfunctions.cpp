@@ -3,9 +3,11 @@
 
 namespace WellIndexCalculator {
 
-    QVector3D GeometryFunctions::line_plane_intersection(QVector3D p0, QVector3D p1, QVector3D normal_vector, QVector3D point_in_plane){
+    Eigen::Vector3d GeometryFunctions::line_plane_intersection(Eigen::Vector3d p0, Eigen::Vector3d p1,
+                                                               Eigen::Vector3d normal_vector,
+                                                               Eigen::Vector3d point_in_plane){
 
-        QVector3D line_vector = QVector3D(p1.x() - p0.x(), p1.y() - p0.y(), p1.z() - p0.z());
+        Eigen::Vector3d line_vector = Eigen::Vector3d(p1.x() - p0.x(), p1.y() - p0.y(), p1.z() - p0.z());
 
         /* Some numerical issues when the line_vector (vector between p0 and p1)
          * is much longer (or shorter) than the normal vector. Normalize both
@@ -15,16 +17,15 @@ namespace WellIndexCalculator {
         line_vector.normalize();
         normal_vector.normalize();
 
-        QVector3D w = QVector3D(p0.x() - point_in_plane.x(), p0.y() - point_in_plane.y(),p0.z() - point_in_plane.z());
+        Eigen::Vector3d w = Eigen::Vector3d(p0.x() - point_in_plane.x(), p0.y() - point_in_plane.y(), p0.z() - point_in_plane.z());
 
         /* s is a variable for the parametrized line defined by the 2 points in line.
          *Inputting a s such that s>=0 or s<=1 will give a point on the line between the 2 points in line.
          */
-        double s;
-        s =( QVector3D::dotProduct(normal_vector,-w) ) / ( QVector3D::dotProduct(normal_vector,line_vector) );
+        double s = normal_vector.dot(-w) / normal_vector.dot(line_vector);
 
         // Use the found s in parametrizaton to return intersection point.
-        QVector3D intersection_point = QVector3D(p0.x() + s*(line_vector.x()), p0.y() + s*(line_vector.y()), p0.z() + s*(line_vector.z()));
+        Eigen::Vector3d intersection_point = Eigen::Vector3d(p0.x() + s*(line_vector.x()), p0.y() + s*(line_vector.y()), p0.z() + s*(line_vector.z()));
 
         return intersection_point;
     }
@@ -197,7 +198,10 @@ namespace WellIndexCalculator {
 
             if(QVector3D::dotProduct(cur_normal_vector, line) != 0) {
                 // Finds the intersection point of line and the current face
-                QVector3D intersect_point = GeometryFunctions::line_plane_intersection(entry_point,end_point,cur_normal_vector,cur_face_point);
+                QVector3D intersect_point = evec_to_qvec(line_plane_intersection(qvec_to_evec(entry_point),
+                                                                                 qvec_to_evec(end_point),
+                                                                                 qvec_to_evec(cur_normal_vector),
+                                                                                 qvec_to_evec(cur_face_point)));
 
                 /* Loop through all faces and check that intersection point is on the correct side of all of them.
                  * i.e. the same direction as the normal vector of each face

@@ -26,7 +26,8 @@ namespace WellIndexCalculator {
     class GeometryFunctions {
     public:
 
-        static QVector3D line_plane_intersection(QVector3D p0, QVector3D p1, QVector3D normal_vector, QVector3D point_in_plane);
+        static Eigen::Vector3d line_plane_intersection(Eigen::Vector3d p0, Eigen::Vector3d p1,
+                                                       Eigen::Vector3d normal_vector, Eigen::Vector3d point_in_plane);
 
         static QVector3D normal_vector(QVector3D p0, QVector3D p1, QVector3D p2);
 
