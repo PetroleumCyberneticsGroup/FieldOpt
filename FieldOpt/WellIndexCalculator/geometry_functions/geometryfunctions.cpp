@@ -143,7 +143,7 @@ namespace WellIndexCalculator {
 
     }
 
-    QList<QList<QVector3D>> GeometryFunctions::cell_planes_coords(QList<Reservoir::Grid::XYZCoordinate> corners)
+    QList<QList<Eigen::Vector3d>> GeometryFunctions::cell_planes_coords(QList<Reservoir::Grid::XYZCoordinate> corners)
     {
         QList<QList<int>> points;
         QList<int> p0, p1, p2, p3, p4, p5;
@@ -160,12 +160,12 @@ namespace WellIndexCalculator {
          * Corners have been chosen in such a way that normal_vector() function
          * returns a vector that points in towards the centre of the block.
          */
-        QList<QList<QVector3D>> face_corner_coords;
+        QList<QList<Eigen::Vector3d>> face_corner_coords;
         for(int ii=0; ii<6; ii++){
-            QList<QVector3D> currentSideCorners;
-            currentSideCorners.append(corners.at(points.at(ii).at(0)).toQvec());
-            currentSideCorners.append(corners.at(points.at(ii).at(1)).toQvec());
-            currentSideCorners.append(corners.at(points.at(ii).at(2)).toQvec());
+            QList<Eigen::Vector3d> currentSideCorners;
+            currentSideCorners.append(corners.at(points.at(ii).at(0)).toEigenVec());
+            currentSideCorners.append(corners.at(points.at(ii).at(1)).toEigenVec());
+            currentSideCorners.append(corners.at(points.at(ii).at(2)).toEigenVec());
             face_corner_coords.append(currentSideCorners);
         }
 
@@ -184,12 +184,12 @@ namespace WellIndexCalculator {
         QVector3D line = QVector3D(end_point - entry_point);
 
         // First find normal vectors of all faces of block/cell.
-        QList<QList<QVector3D>> face_corner_coords = GeometryFunctions::cell_planes_coords(cell.corners());
+        QList<QList<Eigen::Vector3d>> face_corner_coords = GeometryFunctions::cell_planes_coords(cell.corners());
         QList<QVector3D> normal_vectors;
         for( int ii=0; ii<6; ii++) {
-            QVector3D cur_normal_vector = evec_to_qvec(GeometryFunctions::normal_vector(qvec_to_evec(face_corner_coords.at(ii).at(0)),
-                                                                           qvec_to_evec(face_corner_coords.at(ii).at(1)),
-                                                                           qvec_to_evec(face_corner_coords.at(ii).at(2))));
+            QVector3D cur_normal_vector = evec_to_qvec(GeometryFunctions::normal_vector(face_corner_coords.at(ii).at(0),
+                                                                           face_corner_coords.at(ii).at(1),
+                                                                           face_corner_coords.at(ii).at(2)));
             normal_vectors.append(cur_normal_vector);
         }
 
@@ -200,7 +200,7 @@ namespace WellIndexCalculator {
         for(int face_number = 0; face_number<6; face_number++) {
             // Normal vector
             QVector3D cur_normal_vector = normal_vectors[face_number];
-            QVector3D cur_face_point = face_corner_coords.at(face_number).at(0);
+            Eigen::Vector3d cur_face_point = face_corner_coords.at(face_number).at(0);
             /* If the dot product of the line vector and the face normal vector is
              * zero then the line is paralell to the face and won't intersect it
              * unless it lies in the same plane, which in any case won't be the
@@ -212,7 +212,7 @@ namespace WellIndexCalculator {
                 QVector3D intersect_point = evec_to_qvec(line_plane_intersection(qvec_to_evec(entry_point),
                                                                                  qvec_to_evec(end_point),
                                                                                  qvec_to_evec(cur_normal_vector),
-                                                                                 qvec_to_evec(cur_face_point)));
+                                                                                 cur_face_point));
 
                 /* Loop through all faces and check that intersection point is on the correct side of all of them.
                  * i.e. the same direction as the normal vector of each face
@@ -220,7 +220,7 @@ namespace WellIndexCalculator {
                 bool feasible_point = true;
                 for( int ii=0; ii<6; ii++) {
                     if(!GeometryFunctions::point_on_same_side(qvec_to_evec(intersect_point),
-                                                              qvec_to_evec(face_corner_coords.at(ii).at(0)),
+                                                              face_corner_coords.at(ii).at(0),
                                                               qvec_to_evec(normal_vectors[ii]),
                                                               10e-6)) {
                         feasible_point = false;
@@ -322,12 +322,12 @@ namespace WellIndexCalculator {
     bool GeometryFunctions::is_point_inside_cell(Reservoir::Grid::Cell cell, QVector3D point)
     {
         // First find normal vectors of all faces of block/cell.
-        QList<QList<QVector3D>> face_corner_coords = GeometryFunctions::cell_planes_coords(cell.corners());
+        QList<QList<Eigen::Vector3d>> face_corner_coords = GeometryFunctions::cell_planes_coords(cell.corners());
         QList<QVector3D> normal_vectors;
         for( int ii=0; ii<6; ii++){
-            normal_vectors.append(evec_to_qvec(GeometryFunctions::normal_vector(qvec_to_evec(face_corner_coords.at(ii).at(0)),
-                                                                   qvec_to_evec(face_corner_coords.at(ii).at(1)),
-                                                                   qvec_to_evec(face_corner_coords.at(ii).at(2)))));
+            normal_vectors.append(evec_to_qvec(GeometryFunctions::normal_vector(face_corner_coords.at(ii).at(0),
+                                                                   face_corner_coords.at(ii).at(1),
+                                                                   face_corner_coords.at(ii).at(2))));
         }
 
         /* For loop through all faces to check that point
@@ -339,7 +339,7 @@ namespace WellIndexCalculator {
          */
         bool point_inside = true;
         for(int face_number = 0; face_number<6; face_number++){
-            if( QVector3D::dotProduct(point - face_corner_coords.at(face_number).at(0), normal_vectors.at(face_number)) < 0){
+            if( QVector3D::dotProduct(point - evec_to_qvec(face_corner_coords.at(face_number).at(0)), normal_vectors.at(face_number)) < 0){
                 point_inside = false;
             }
         }
