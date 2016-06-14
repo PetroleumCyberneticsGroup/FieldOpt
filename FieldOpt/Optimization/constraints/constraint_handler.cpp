@@ -1,82 +1,62 @@
-/******************************************************************************
- *
- *
- *
- * Created: 04.12.2015 2015 by einar
- *
- * This file is part of the FieldOpt project.
- *
- * Copyright (C) 2015-2015 Einar J.M. Baumann <einar.baumann@ntnu.no>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
- *****************************************************************************/
-
 #include "constraint_handler.h"
+#include "rate_constraint.h"
 #include <iostream>
 
-namespace Optimization { namespace Constraints {
+namespace Optimization {
+    namespace Constraints {
 
-ConstraintHandler::ConstraintHandler(QList<Utilities::Settings::Optimizer::Constraint> constraints, Model::Properties::VariablePropertyContainer *variables)
-{
-    foreach (Utilities::Settings::Optimizer::Constraint constraint, constraints) {
-        switch (constraint.type) {
-        case Utilities::Settings::Optimizer::ConstraintType::BHP:
-            constraints_.append(new BoxConstraint(constraint, variables));
-            break;
-        case Utilities::Settings::Optimizer::ConstraintType::WellSplineLength:
-            constraints_.append(new WellSplineLength(constraint, variables));
-            break;
-        case Utilities::Settings::Optimizer::ConstraintType::WellSplineInterwellDistance:
-            constraints_.append(new InterwellDistance(constraint, variables));
-            break;
-        case Utilities::Settings::Optimizer::ConstraintType::CombinedWellSplineLengthInterwellDistance:
-            constraints_.append(new CombinedSplineLengthInterwellDistance(constraint, variables));
-            break;
+        ConstraintHandler::ConstraintHandler(QList<Utilities::Settings::Optimizer::Constraint> constraints, Model::Properties::VariablePropertyContainer *variables)
+        {
+            for (Utilities::Settings::Optimizer::Constraint constraint : constraints) {
+                switch (constraint.type) {
+                    case Utilities::Settings::Optimizer::ConstraintType::BHP:
+                        constraints_.append(new BhpConstraint(constraint, variables));
+                        break;
+                    case Utilities::Settings::Optimizer::ConstraintType::Rate:
+                        constraints_.append(new RateConstraint(constraint, variables));
+                        break;
+                    case Utilities::Settings::Optimizer::ConstraintType::WellSplineLength:
+                        constraints_.append(new WellSplineLength(constraint, variables));
+                        break;
+                    case Utilities::Settings::Optimizer::ConstraintType::WellSplineInterwellDistance:
+                        constraints_.append(new InterwellDistance(constraint, variables));
+                        break;
+                    case Utilities::Settings::Optimizer::ConstraintType::CombinedWellSplineLengthInterwellDistance:
+                        constraints_.append(new CombinedSplineLengthInterwellDistance(constraint, variables));
+                        break;
 #ifdef WITH_EXPERIMENTAL_CONSTRIANTS
-        case Utilities::Settings::Optimizer::ConstraintType::ReservoirBoundary:
-            std::cout << "Initializing Reservoir boundary constraint." << std::endl;
-            constraints_.append(new ReservoirBoundary(constraint, variables, nullptr)); // TODO: Take grid as input
-            break;
+                    case Utilities::Settings::Optimizer::ConstraintType::ReservoirBoundary:
+                        std::cout << "Initializing Reservoir boundary constraint." << std::endl;
+                        constraints_.append(new ReservoirBoundary(constraint, variables, nullptr)); // TODO: Take grid as input
+                        break;
 #endif
-        default:
-            break;
-        }
-    }
+                    default:
+                        break;
+                }
+            }
 #ifdef WITH_EXPERIMENTAL_CONSTRIANTS
-    std::cout << "Using experimental constaints" << std::endl;
+            std::cout << "Using experimental constaints" << std::endl;
 #else
-    std::cout << "Not using experimental constaints" << std::endl;
+            std::cout << "Not using experimental constaints" << std::endl;
 #endif
-}
+        }
 
-bool ConstraintHandler::CaseSatisfiesConstraints(Case *c)
-{
-    foreach (Constraint *constraint, constraints_) {
-        if (!constraint->CaseSatisfiesConstraint(c))
-            return false;
+        bool ConstraintHandler::CaseSatisfiesConstraints(Case *c)
+        {
+            for (Constraint *constraint : constraints_) {
+                if (!constraint->CaseSatisfiesConstraint(c)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        void ConstraintHandler::SnapCaseToConstraints(Case *c)
+        {
+            for (Constraint *constraint : constraints_) {
+                constraint->SnapCaseToConstraints(c);
+            }
+        }
+
     }
-    return true;
 }
-
-void ConstraintHandler::SnapCaseToConstraints(Case *c)
-{
-    foreach (Constraint *constraint, constraints_) {
-        constraint->SnapCaseToConstraints(c);
-    }
-}
-
-
-
-}}

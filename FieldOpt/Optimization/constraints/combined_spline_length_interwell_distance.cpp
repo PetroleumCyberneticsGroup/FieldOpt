@@ -16,24 +16,24 @@ namespace Optimization {
             std::cout << "Initialized distance constraint." << std::endl;
 
             length_constraints_ = QList<WellSplineLength *>();
-                    foreach (QString wname, settings.wells) {
-                    Utilities::Settings::Optimizer::Constraint len_constr_settings;
-                    len_constr_settings.well = wname;
-                    len_constr_settings.min = settings.min_length;
-                    len_constr_settings.max = settings.max_length;
-                    length_constraints_.append(new WellSplineLength(len_constr_settings, variables));
-                    std::cout << "Initialized length constraint." << std::endl;
-                }
+            for (QString wname : settings.wells) {
+                Utilities::Settings::Optimizer::Constraint len_constr_settings;
+                len_constr_settings.well = wname;
+                len_constr_settings.min = settings.min_length;
+                len_constr_settings.max = settings.max_length;
+                length_constraints_.append(new WellSplineLength(len_constr_settings, variables));
+                std::cout << "Initialized length constraint." << std::endl;
+            }
         }
 
         bool CombinedSplineLengthInterwellDistance::CaseSatisfiesConstraint(Case *c)
         {
             if (!distance_constraint_->CaseSatisfiesConstraint(c))
                 return false;
-                    foreach (WellSplineLength *wsl, length_constraints_) {
-                    if (!wsl->CaseSatisfiesConstraint(c))
-                        return false;
-                }
+            for (WellSplineLength *wsl : length_constraints_) {
+                if (!wsl->CaseSatisfiesConstraint(c))
+                    return false;
+            }
             return true;
         }
 
@@ -45,9 +45,9 @@ namespace Optimization {
                 }
                 else {
                     distance_constraint_->SnapCaseToConstraints(c);
-                            foreach (WellSplineLength *wsl, length_constraints_) {
-                            wsl->SnapCaseToConstraints(c);
-                        }
+                    for (WellSplineLength *wsl : length_constraints_) {
+                        wsl->SnapCaseToConstraints(c);
+                    }
                 }
             }
         }

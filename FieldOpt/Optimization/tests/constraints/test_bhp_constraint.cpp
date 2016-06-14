@@ -1,30 +1,30 @@
 #include "gtest/gtest.h"
-#include "Optimization/constraints/box_constraint.h"
+#include "Optimization/constraints/bhp_constraint.h"
 #include "Utilities/tests/test_resource_settings.h"
 #include "Optimization/tests/test_resource_optimizer.h"
 
 namespace {
 
-    class BoxConstraintTest : public ::testing::Test, public TestResources::TestResourceOptimizer {
+    class BhpConstraintTest : public ::testing::Test, public TestResources::TestResourceOptimizer {
     protected:
-        BoxConstraintTest() {
-            box_constraint_ = new ::Optimization::Constraints::BoxConstraint(settings_optimizer_->constraints()[0], model_->variables());
+        BhpConstraintTest() {
+            box_constraint_ = new ::Optimization::Constraints::BhpConstraint(settings_optimizer_->constraints()[0], model_->variables());
         }
-        virtual ~BoxConstraintTest() {}
+        virtual ~BhpConstraintTest() {}
         virtual void SetUp() {}
 
-        Optimization::Constraints::BoxConstraint *box_constraint_;
+        Optimization::Constraints::BhpConstraint *box_constraint_;
     };
 
-    TEST_F(BoxConstraintTest, Constructor) {
+    TEST_F(BhpConstraintTest, Constructor) {
         EXPECT_TRUE(true);
     }
 
-    TEST_F(BoxConstraintTest, BaseCaseSatasfaction) {
+    TEST_F(BhpConstraintTest, BaseCaseSatasfaction) {
         EXPECT_TRUE(box_constraint_->CaseSatisfiesConstraint(base_case_));
     }
 
-    TEST_F(BoxConstraintTest, SatisfactionAfterModification) {
+    TEST_F(BhpConstraintTest, SatisfactionAfterModification) {
         // get the bhp variable ids
         QList<QUuid> bhp_ids;
         foreach (auto var, model_->variables()->GetWellBHPVariables("PROD")) {
@@ -50,7 +50,7 @@ namespace {
         EXPECT_TRUE(box_constraint_->CaseSatisfiesConstraint(base_case_));
     }
 
-    TEST_F(BoxConstraintTest, SnappingValues) {
+    TEST_F(BhpConstraintTest, SnappingValues) {
         // get the bhp variable ids
         QList<QUuid> bhp_ids;
             foreach (auto var, model_->variables()->GetWellBHPVariables("PROD")) {

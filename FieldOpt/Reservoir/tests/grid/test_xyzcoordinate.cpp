@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
-#include "Model/reservoir/grid/xyzcoordinate.h"
+#include "Reservoir/grid/xyzcoordinate.h"
 
-using namespace Model::Reservoir::Grid;
+using namespace Reservoir::Grid;
 
 namespace {
 

@@ -87,6 +87,7 @@ public:
      */
     QList<Case *> Perturb(QUuid variabe_id, SIGN sign, double magnitude);
 
+    QString StringRepresentation();
 
 private:
     QUuid id_ = QUuid::createUuid(); //!< Unique ID for the case.

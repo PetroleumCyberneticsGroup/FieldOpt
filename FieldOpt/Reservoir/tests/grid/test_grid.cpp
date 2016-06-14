@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
-#include "Model/reservoir/grid/grid.h"
-#include "Model/reservoir/grid/eclgrid.h"
-#include "Model/reservoir/grid/grid_exceptions.h"
-#include "Model/reservoir/grid/cell.h"
-#include "Model/tests/test_resource_grids.h"
+#include "Reservoir/grid/grid.h"
+#include "Reservoir/grid/eclgrid.h"
+#include "Reservoir/grid/grid_exceptions.h"
+#include "Reservoir/grid/cell.h"
+#include "tests/test_resource_grids.h"
 
-using namespace Model::Reservoir::Grid;
+using namespace Reservoir::Grid;
 
 namespace {
 

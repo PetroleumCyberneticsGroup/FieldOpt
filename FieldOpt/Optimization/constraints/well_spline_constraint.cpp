@@ -9,7 +9,7 @@ namespace Optimization {
                                          + ")passed to the initialize well method.");
 
             Well well;
-            foreach (auto var, vars) {
+            for (auto var : vars) {
                 QStringList nmcomps = var->name().split("#"); // Should be {SplinePoint, WELLNAME, heel/toe, x/y/z}
                 if (QString::compare("heel", nmcomps[2]) == 0) {
                     if (QString::compare("x", nmcomps[3]) == 0)
