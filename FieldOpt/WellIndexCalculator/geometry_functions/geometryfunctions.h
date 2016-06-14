@@ -64,7 +64,8 @@ namespace WellIndexCalculator {
          */
         static QList<QList<Eigen::Vector3d>> cell_planes_coords(QList<Reservoir::Grid::XYZCoordinate > corners);
 
-        static QVector3D find_exit_point(Reservoir::Grid::Cell cell, QVector3D start_point, QVector3D end_point, QVector3D exception_point);
+        static Eigen::Vector3d find_exit_point(Reservoir::Grid::Cell cell, Eigen::Vector3d start_point,
+                                               Eigen::Vector3d end_point, Eigen::Vector3d exception_point);
 
         /*!
          * \brief project_line_to_plane is the orthognal projection of two points (and the line segment connecting them) down on a plane

@@ -79,18 +79,12 @@ namespace WellIndexCalculator {
         }
 
 
-        Eigen::Vector3d exit_point = qvec_to_evec(find_exit_point(first_cell,
-                                                                  evec_to_qvec(start_point),
-                                                                  evec_to_qvec(end_point),
-                                                                  evec_to_qvec(start_point)));
+        Eigen::Vector3d exit_point = find_exit_point(first_cell, start_point, end_point, start_point);
         // Make sure we follow line in the correct direction. (i.e. dot product positive)
         if ((end_point - start_point).dot(exit_point-start_point) <= 0.0) {
             std::cout << "wrong direction, try other" << std::endl;
             std::cout << "exit_point = " << exit_point.x() << " " << exit_point.y() << " " << exit_point.z() << std::endl;
-            exit_point = qvec_to_evec(find_exit_point(first_cell,
-                                         evec_to_qvec(start_point),
-                                         evec_to_qvec(end_point),
-                                         evec_to_qvec(exit_point)));
+            exit_point = find_exit_point(first_cell, start_point, end_point, exit_point);
         }
         double epsilon = 0.01 / (end_point - exit_point).norm();
         Eigen::Vector3d move_exit_epsilon = exit_point*(1-epsilon) + end_point*epsilon;
@@ -110,10 +104,7 @@ namespace WellIndexCalculator {
             entry_points.append(exit_point);
 
             // Find other exit point.
-            exit_point = qvec_to_evec(GeometryFunctions::find_exit_point(current_cell,
-                                                            evec_to_qvec(exit_point),
-                                                            evec_to_qvec(end_point),
-                                                            evec_to_qvec(exit_point)));
+            exit_point = GeometryFunctions::find_exit_point(current_cell, exit_point, end_point, exit_point);
 
             // DO SOME CHECK IF EXIT POINT IS THE SAME AS END_POINT: UNLIKELY IN PRACTICE
             if(exit_point == end_point){
@@ -172,7 +163,8 @@ namespace WellIndexCalculator {
         return face_corner_coords;
     }
 
-    QVector3D GeometryFunctions::find_exit_point(Reservoir::Grid::Cell cell, QVector3D entry_point, QVector3D end_point, QVector3D exception_point)
+    Eigen::Vector3d GeometryFunctions::find_exit_point(Reservoir::Grid::Cell cell, Eigen::Vector3d entry_point,
+                                                       Eigen::Vector3d end_point, Eigen::Vector3d exception_point)
     {
         /* takes an entry point as input and an end_point
          * which just defines the line of the well. Find
@@ -181,15 +173,15 @@ namespace WellIndexCalculator {
          * point. This will be the exit point.
          */
 
-        QVector3D line = QVector3D(end_point - entry_point);
+        Eigen::Vector3d line = end_point - entry_point;
 
         // First find normal vectors of all faces of block/cell.
         QList<QList<Eigen::Vector3d>> face_corner_coords = GeometryFunctions::cell_planes_coords(cell.corners());
-        QList<QVector3D> normal_vectors;
+        QList<Eigen::Vector3d> normal_vectors;
         for( int ii=0; ii<6; ii++) {
-            QVector3D cur_normal_vector = evec_to_qvec(GeometryFunctions::normal_vector(face_corner_coords.at(ii).at(0),
+            Eigen::Vector3d cur_normal_vector = GeometryFunctions::normal_vector(face_corner_coords.at(ii).at(0),
                                                                            face_corner_coords.at(ii).at(1),
-                                                                           face_corner_coords.at(ii).at(2)));
+                                                                           face_corner_coords.at(ii).at(2));
             normal_vectors.append(cur_normal_vector);
         }
 
@@ -199,7 +191,7 @@ namespace WellIndexCalculator {
          */
         for(int face_number = 0; face_number<6; face_number++) {
             // Normal vector
-            QVector3D cur_normal_vector = normal_vectors[face_number];
+            Eigen::Vector3d cur_normal_vector = normal_vectors[face_number];
             Eigen::Vector3d cur_face_point = face_corner_coords.at(face_number).at(0);
             /* If the dot product of the line vector and the face normal vector is
              * zero then the line is paralell to the face and won't intersect it
@@ -207,29 +199,29 @@ namespace WellIndexCalculator {
              * exit point.
              */
 
-            if(QVector3D::dotProduct(cur_normal_vector, line) != 0) {
+            if (cur_normal_vector.dot(line) != 0) {
                 // Finds the intersection point of line and the current face
-                QVector3D intersect_point = evec_to_qvec(line_plane_intersection(qvec_to_evec(entry_point),
-                                                                                 qvec_to_evec(end_point),
-                                                                                 qvec_to_evec(cur_normal_vector),
-                                                                                 cur_face_point));
+                Eigen::Vector3d intersect_point = line_plane_intersection(entry_point,
+                                                                                 end_point,
+                                                                                 cur_normal_vector,
+                                                                                 cur_face_point);
 
                 /* Loop through all faces and check that intersection point is on the correct side of all of them.
                  * i.e. the same direction as the normal vector of each face
                  */
                 bool feasible_point = true;
                 for( int ii=0; ii<6; ii++) {
-                    if(!GeometryFunctions::point_on_same_side(qvec_to_evec(intersect_point),
+                    if(!GeometryFunctions::point_on_same_side(intersect_point,
                                                               face_corner_coords.at(ii).at(0),
-                                                              qvec_to_evec(normal_vectors[ii]),
+                                                              normal_vectors[ii],
                                                               10e-6)) {
                         feasible_point = false;
                     }
                 }
 
                 // If point is feasible(i.e. on/inside cell), not identical to given entry point, and going in correct direction
-                if (feasible_point && intersect_point.distanceToPoint(exception_point) > 10-10
-                    && QVector3D::dotProduct(end_point - entry_point, end_point - intersect_point) >= 0){
+                if (feasible_point && (exception_point - intersect_point).norm() > 10e-10
+                    && (end_point - entry_point).dot(end_point - intersect_point) >= 0){
                     return intersect_point;
                 }
 
