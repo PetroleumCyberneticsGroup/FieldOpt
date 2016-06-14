@@ -310,10 +310,10 @@ QList<QVector3D> WellConstraintProjections::move_points_3p(QList<QVector3D> coor
 
 QList<Reservoir::Grid::XYZCoordinate> WellConstraintProjections::move_points_4p_XYZ(QList<Reservoir::Grid::XYZCoordinate> coords, double d, QVector3D s)
 {
-    QVector3D x0 = QVector3D(WellIndexCalculator::GeometryFunctions::XYZ_to_qvec(coords.at(0)));
-    QVector3D x1 = QVector3D(WellIndexCalculator::GeometryFunctions::XYZ_to_qvec(coords.at(1)));
-    QVector3D x2 = QVector3D(WellIndexCalculator::GeometryFunctions::XYZ_to_qvec(coords.at(2)));
-    QVector3D x3 = QVector3D(WellIndexCalculator::GeometryFunctions::XYZ_to_qvec(coords.at(3)));
+    QVector3D x0 = QVector3D(coords.at(0).toQvec());
+    QVector3D x1 = QVector3D(coords.at(1).toQvec());
+    QVector3D x2 = QVector3D(coords.at(2).toQvec());
+    QVector3D x3 = QVector3D(coords.at(3).toQvec());
     QVector3D normal_vector = s;
     normal_vector.normalize();
     QVector3D avg_point = 0.25*(x0 + x1 + x2 + x3);
@@ -326,10 +326,10 @@ QList<Reservoir::Grid::XYZCoordinate> WellConstraintProjections::move_points_4p_
     QVector3D x3moved = QVector3D(WellIndexCalculator::GeometryFunctions::project_point_to_plane(x3,s, bot_plane_point));
 
     QList<Reservoir::Grid::XYZCoordinate> moved_coords;
-    moved_coords.append(WellIndexCalculator::GeometryFunctions::qvec_to_XYZ(x0moved));
-    moved_coords.append(WellIndexCalculator::GeometryFunctions::qvec_to_XYZ(x1moved));
-    moved_coords.append(WellIndexCalculator::GeometryFunctions::qvec_to_XYZ(x2moved));
-    moved_coords.append(WellIndexCalculator::GeometryFunctions::qvec_to_XYZ(x3moved));
+    moved_coords.append(Reservoir::Grid::XYZCoordinate(x0moved));
+    moved_coords.append(Reservoir::Grid::XYZCoordinate(x1moved));
+    moved_coords.append(Reservoir::Grid::XYZCoordinate(x2moved));
+    moved_coords.append(Reservoir::Grid::XYZCoordinate(x3moved));
     return moved_coords;
 }
 

@@ -38,11 +38,11 @@ protected:
 };
 
 TEST_F(GeometryFunctionsTest, XYZtoVector) {
-    EXPECT_TRUE( corner_.Equals(WellIndexCalculator::GeometryFunctions::qvec_to_XYZ(vector_point_)) );
+    EXPECT_TRUE( corner_.Equals(Reservoir::Grid::XYZCoordinate(vector_point_)));
 }
 
 TEST_F(GeometryFunctionsTest, XYZtoVectortoXYZ) {
-    EXPECT_TRUE( corner_.Equals(WellIndexCalculator::GeometryFunctions::qvec_to_XYZ( WellIndexCalculator::GeometryFunctions::XYZ_to_qvec(corner_)  )) );
+    EXPECT_TRUE(corner_.Equals(Reservoir::Grid::XYZCoordinate(corner_.toQvec())));
 }
 
 }
