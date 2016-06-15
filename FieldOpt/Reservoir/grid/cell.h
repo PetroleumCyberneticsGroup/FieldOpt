@@ -93,6 +93,7 @@ namespace Reservoir {
                 Eigen::Vector3d normal_vector;
             };
 
+            QList<Plane> planes() const { return planes_; }
 
 
         private:
@@ -105,7 +106,7 @@ namespace Reservoir {
             double permx_;
             double permy_;
             double permz_;
-            Plane planes_[6];
+            QList<Plane> planes_;
 
             /*!
              * \brief Populates the planes_ field.

@@ -55,7 +55,7 @@ namespace Reservoir {
                 plane.corners[1] = corners_[points[ii][1]];
                 plane.corners[2] = corners_[points[ii][2]];
                 plane.normal_vector = (plane.corners[2] - plane.corners[0]).cross(plane.corners[1] - plane.corners[0]);
-                planes_[ii] = plane;
+                planes_.append(plane);
             }
         }
 
