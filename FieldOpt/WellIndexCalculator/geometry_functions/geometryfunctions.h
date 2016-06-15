@@ -5,7 +5,6 @@
 #include "Reservoir/grid/eclgrid.h"
 #include "Reservoir/grid/grid_exceptions.h"
 #include <QList>
-#include <QVector3D>
 #include <QPair>
 #include <Eigen/Dense>
 #include <Eigen/Core>

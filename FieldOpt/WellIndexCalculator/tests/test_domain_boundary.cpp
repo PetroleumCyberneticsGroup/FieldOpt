@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 #include <QList>
-#include <QVector3D>
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
 #include "Reservoir/grid/grid_exceptions.h"

@@ -7,8 +7,7 @@ add_library(adgprsresultsreader
 add_library(fieldopt::adgprsresultsreader ALIAS ${PROJECT_NAME})
 
 target_link_libraries(adgprsresultsreader
-		PUBLIC Qt5::Core
-        PUBLIC Qt5::Gui)
+		PUBLIC Qt5::Core)
 
 target_include_directories(adgprsresultsreader PUBLIC
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)

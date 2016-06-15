@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 #include <QList>
-#include <QVector3D>
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/grid_exceptions.h"
 #include "Reservoir/grid/eclgrid.h"
@@ -35,10 +34,10 @@ namespace {
             coords_3d.append(x1);
             coords_3d.append(x2);
 
-            x_1 = QVector3D(3,2,0);
-            x_2 = QVector3D(-2,2,0);
-            x_3 = QVector3D(2,-2,0);
-            x_4 = QVector3D(-3,-2,0);
+            x_1 = Eigen::Vector3d(3,2,0);
+            x_2 = Eigen::Vector3d(-2,2,0);
+            x_3 = Eigen::Vector3d(2,-2,0);
+            x_4 = Eigen::Vector3d(-3,-2,0);
             coords_qvec.append(x_1);
             coords_qvec.append(x_2);
             coords_qvec.append(x_3);
@@ -58,16 +57,16 @@ namespace {
         Eigen::Vector3d x4;
         Eigen::Vector3d x5;
 
-        QVector3D x_1;
-        QVector3D x_2;
-        QVector3D x_3;
-        QVector3D x_4;
+        Eigen::Vector3d x_1;
+        Eigen::Vector3d x_2;
+        Eigen::Vector3d x_3;
+        Eigen::Vector3d x_4;
 
         QList<Eigen::Vector3d> coords;
         QList<Eigen::Vector3d> coords_3d;
 
-        QList<QVector3D> coords_qvec;
-        QList<QVector3D> coords_3d_qvec;
+        QList<Eigen::Vector3d> coords_qvec;
+        QList<Eigen::Vector3d> coords_3d_qvec;
 
         double d;
 

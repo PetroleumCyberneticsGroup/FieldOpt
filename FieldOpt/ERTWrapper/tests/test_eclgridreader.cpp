@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include <QVector3D>
 #include "ERTWrapper/eclgridreader.h"
 #include "Utilities/tests/test_resource_example_file_paths.h"
 

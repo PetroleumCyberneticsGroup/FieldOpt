@@ -29,7 +29,6 @@
 #include <QHash>
 #include <QPair>
 #include <QString>
-#include <QtGui/QVector3D>
 
 #include "property.h"
 #include "binary_property.h"
