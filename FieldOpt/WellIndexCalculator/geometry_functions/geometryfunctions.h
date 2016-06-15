@@ -39,7 +39,8 @@ namespace WellIndexCalculator {
                                 Eigen::Vector3d normal_vector, double slack);
 
         /*!
-         * \brief Given a reservoir with blocks and a line(start_point to end_point), return global index of all blocks interesected
+         * \brief Given a reservoir with blocks and a line(start_point to end_point), return global index of all
+         * blocks interesected
          * by the line and the points of intersection
          * \param start point line
          * \param end point line

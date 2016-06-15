@@ -1,5 +1,4 @@
 #include "geometryfunctions.h"
-#include "geometryfunctions_exceptions.h"
 
 namespace WellIndexCalculator {
 
@@ -9,30 +8,12 @@ namespace WellIndexCalculator {
                                                                    Eigen::Vector3d normal_vector,
                                                                    Eigen::Vector3d point_in_plane) {
 
-            Eigen::Vector3d line_vector = Eigen::Vector3d(p1.x() - p0.x(), p1.y() - p0.y(), p1.z() - p0.z());
-
-            /* Some numerical issues when the line_vector (vector between p0 and p1)
-             * is much longer (or shorter) than the normal vector. Normalize both
-             * to fix the issue. Resultins parameter s further down should now
-             * be more numerically stable.
-             */
+            Eigen::Vector3d line_vector = p1 - p0;
             line_vector.normalize();
             normal_vector.normalize();
-
-            Eigen::Vector3d w = Eigen::Vector3d(p0.x() - point_in_plane.x(), p0.y() - point_in_plane.y(),
-                                                p0.z() - point_in_plane.z());
-
-            /* s is a variable for the parametrized line defined by the 2 points in line.
-             *Inputting a s such that s>=0 or s<=1 will give a point on the line between the 2 points in line.
-             */
+            auto w = p0 - point_in_plane;
             double s = normal_vector.dot(-w) / normal_vector.dot(line_vector);
-
-            // Use the found s in parametrizaton to return intersection point.
-            Eigen::Vector3d intersection_point = Eigen::Vector3d(p0.x() + s * (line_vector.x()),
-                                                                 p0.y() + s * (line_vector.y()),
-                                                                 p0.z() + s * (line_vector.z()));
-
-            return intersection_point;
+            return p0 + s*line_vector;
         }
 
         bool point_on_same_side(Eigen::Vector3d point, Eigen::Vector3d plane_point,
