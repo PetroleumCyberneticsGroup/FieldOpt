@@ -64,12 +64,12 @@ namespace Reservoir {
                 IJKCoordinate ijk_index = IJKCoordinate(ecl_ijk_index.i, ecl_ijk_index.j, ecl_ijk_index.k);
 
                 // Get center coordinates
-                auto center = Eigen::Vector3d(ertCell.center.x(), ertCell.center.y(), ertCell.center.z());
+                auto center = Eigen::Vector3d(ertCell.center);
 
                 // Get the corners
                 QList<Eigen::Vector3d> corners;
                 for (auto corner : ertCell.corners) {
-                    corners.append(Eigen::Vector3d(corner.x(), corner.y(), corner.z()));
+                    corners.append(corner);
                 }
                 return Cell(global_index, ijk_index,
                             ertCell.volume, ertCell.porosity, ertCell.permx, ertCell.permy, ertCell.permz,
