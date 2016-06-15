@@ -28,7 +28,7 @@ namespace Optimization {
             heel_vals << heel_x_val, heel_y_val, heel_z_val;
             toe_vals << toe_x_val, toe_y_val, toe_z_val;
 
-            QList<Eigen::Vector3d> projection = WellIndexCalculator::WellConstraintProjections::well_length_projection_eigen(
+            QList<Eigen::Vector3d> projection = WellIndexCalculator::WellConstraintProjections::well_length_projection(
                     heel_vals, toe_vals,
                     max_length_, min_length_,
                     0.001);
@@ -51,7 +51,7 @@ namespace Optimization {
             heel_vals << heel_x_val, heel_y_val, heel_z_val;
             toe_vals << toe_x_val, toe_y_val, toe_z_val;
 
-            QList<Eigen::Vector3d> projection = WellIndexCalculator::WellConstraintProjections::well_length_projection_eigen(
+            QList<Eigen::Vector3d> projection = WellIndexCalculator::WellConstraintProjections::well_length_projection(
                     heel_vals, toe_vals,
                     max_length_, min_length_,
                     0.001);

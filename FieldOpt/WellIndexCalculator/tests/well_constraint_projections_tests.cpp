@@ -141,7 +141,7 @@ TEST_F(WellConstraintProjectionsTests, eigen_eigensolver_test){
     coords.append(xx2);
     coords.append(xx3);
     coords.append(xx4);
-    MatrixXd A = WellIndexCalculator::WellConstraintProjections::build_A_4p_eigen(coords);
+    MatrixXd A = WellIndexCalculator::WellConstraintProjections::build_A_4p(coords);
 
     cout << "Here is a random symmetric 5x5 matrix, A:" << endl << A << endl << endl;
     SelfAdjointEigenSolver<MatrixXd> es(A);
@@ -178,14 +178,14 @@ TEST_F(WellConstraintProjectionsTests, eigen_kkt_solver){
     newcoords.append(xx3);
     newcoords.append(xx4);
 
-    std::cout << "shortest distance" << WellIndexCalculator::WellConstraintProjections::shortest_distance_eigen(newcoords) << std::endl;
+    std::cout << "shortest distance" << WellIndexCalculator::WellConstraintProjections::shortest_distance(newcoords) << std::endl;
 
-    Eigen::Matrix3d A = WellIndexCalculator::WellConstraintProjections::build_A_4p_eigen(newcoords);
-    Eigen::Vector3d b = WellIndexCalculator::WellConstraintProjections::build_b_4p_eigen(newcoords,d);
+    Eigen::Matrix3d A = WellIndexCalculator::WellConstraintProjections::build_A_4p(newcoords);
+    Eigen::Vector3d b = WellIndexCalculator::WellConstraintProjections::build_b_4p(newcoords, d);
     A = WellConstraintProjections::rm_entries_eps_matrix(A,10e-10);
     std::cout <<"A = " << std::endl << A << std::endl;
     std::cout <<"b = " << std::endl << b << std::endl;
-    QList<Eigen::Vector3d> moved_points = WellConstraintProjections::interwell_constraint_projection_eigen(newcoords,d);
+    QList<Eigen::Vector3d> moved_points = WellConstraintProjections::interwell_constraint_projection(newcoords, d);
 
     std::cout <<"ksi 1 = " << std::endl << xx1 << std::endl;
     std::cout <<"ksi 2 = " << std::endl << xx2 << std::endl;
@@ -197,7 +197,8 @@ TEST_F(WellConstraintProjectionsTests, eigen_kkt_solver){
         std::cout << "x_" << i << std::endl << moved_points.at(i) << std::endl;
     }
     if (moved_points.length() >0){
-        std::cout << "with movement cost = " << WellIndexCalculator::WellConstraintProjections::movement_cost_eig(newcoords,moved_points) << std::endl;
+        std::cout << "with movement cost = " <<
+                WellIndexCalculator::WellConstraintProjections::movement_cost(newcoords, moved_points) << std::endl;
     }
 
 }
@@ -289,7 +290,7 @@ TEST_F(WellConstraintProjectionsTests, threepoint_interwell_error_test){
     wells.append(y1);
     wells.append(y2);
 
-    moved_wells = WellIndexCalculator::WellConstraintProjections::interwell_constraint_projection_eigen(wells, d);
+    moved_wells = WellIndexCalculator::WellConstraintProjections::interwell_constraint_projection(wells, d);
     std::cout << "initial positions" << std::endl;
     for (int i=0; i<4; i++){
         std::cout << wells.at(i) << std::endl;
