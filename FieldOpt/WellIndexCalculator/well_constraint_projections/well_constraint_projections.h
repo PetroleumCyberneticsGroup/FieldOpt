@@ -134,13 +134,6 @@ public:
      * ARE NOT NEEDED AND SCHEDULED TO BE DELETED
      */
 
-    // Computes the candidate vectors that solve interwell distance problem
-    static QList<QVector3D> compute_interwell_vector_4d(QList<Reservoir::Grid::XYZCoordinate> coords, double d);
-
-    static QList<QVector3D> interwell_projection_4p(QList<QVector3D> coords, double d);
-
-    // Computes the candidate vectors that solve interwell distance problem
-    static QList<QVector3D> compute_interwell_vector_3d(QList<Reservoir::Grid::XYZCoordinate> coords, double d);
     static QList<QVector3D> interwell_projection_3p(QList<QVector3D> coords, double d);
     static QList<QVector3D> interwell_projection_3p_eigen(QList<QVector3D> coords, double d);
 
@@ -150,18 +143,9 @@ public:
     static QList<QVector3D> move_points_4p(QList<QVector3D> coords, double d, QVector3D s);
     static QList<QVector3D> move_points_3p(QList<QVector3D> coords, double d, QVector3D s);
 
-    static QList<Reservoir::Grid::XYZCoordinate> move_points_4p_XYZ(QList<Reservoir::Grid::XYZCoordinate> coords, double d, QVector3D s);
-
     static QList<QVector3D> kkt_eq_solutions(arma::mat A, arma::vec b);
 
     static double shortest_distance_3p(QList<QVector3D> coords);
-
-    /*!
-     * \brief Master function for the interwell constraint projection. Projects two wells so that they are at least a distance d appart.
-     * \param Two line segments defined by their endpoints. Two first entries belong to first line segment, two last entries belong to second line segment.
-     * \return Cheapest(L2-norm) projection of line segments s.t. they are at least a distance d appart.
-    */
-    static QList<QVector3D> interwell_constraint_projection(QList<QVector3D> coords, double d);
 
     /*!
      * \brief Master function for the interwell constraint projection. Projects two wells so that they are at least a distance d appart.
@@ -189,12 +173,6 @@ public:
     */
     static double prod_Qtb(arma::mat Qt, arma::vec b, int k);
 
-    /*!
-     * \brief Computes eigenvectors of a symmetric matrix and collects them in a matrix which is transposed before returning it
-     * \param matrix
-     * \return transposed matrix of eigenvectors
-    */
-    static arma::mat Q_trans(arma::mat A);
     // Build matrices for 2point and 3point case!
 
     static arma::mat build_A(QList<QVector3D> coords);
@@ -204,12 +182,6 @@ public:
     static arma::vec build_b_4p_qvec(QList<QVector3D> coords, double d);
     static arma::mat build_A_3p_qvec(QList<QVector3D> coords);
     static arma::vec build_b_3p_qvec(QList<QVector3D> coords, double d);
-
-    static arma::mat build_A_4d(QList<Reservoir::Grid::XYZCoordinate> coords);
-    static arma::vec build_b_4d(QList<Reservoir::Grid::XYZCoordinate> coords, double d);
-    static arma::mat build_A_3d(QList<Reservoir::Grid::XYZCoordinate> coords);
-    static arma::vec build_b_3d(QList<Reservoir::Grid::XYZCoordinate> coords, double d);
-    static arma::vec lambdas(QList<Reservoir::Grid::XYZCoordinate> coords, double d);
 
     static Eigen::VectorXd coeff_vector(arma::vec D, arma::mat Qt, arma::vec b);
 
