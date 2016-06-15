@@ -47,8 +47,8 @@ namespace {
 
     TEST_F(CellTest, Center) {
         Cell cell = grid_->GetCell(0);
-        XYZCoordinate center = XYZCoordinate(50.0, 150.0, 7025.0);
-        EXPECT_TRUE(cell.center().Equals(&center));
+        Eigen::Vector3d center = Eigen::Vector3d(50.0, 150.0, 7025.0);
+        EXPECT_TRUE(cell.center() == center);
     }
 
     TEST_F(CellTest, Corners) {

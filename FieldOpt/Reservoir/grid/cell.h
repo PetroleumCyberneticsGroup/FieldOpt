@@ -59,7 +59,7 @@ namespace Reservoir {
             /*!
              * \brief center Gets the (x, y, z) position of the cells center.
              */
-            XYZCoordinate center() const { return center_; }
+            Eigen::Vector3d center() const { return center_; }
 
             /*!
              * \brief corners Gets the (x, y, z) coordinates of the cells 8 corners.
@@ -88,7 +88,7 @@ namespace Reservoir {
             int global_index_;
             IJKCoordinate ijk_index_;
             double volume_;
-            XYZCoordinate center_;
+            Eigen::Vector3d center_;
             QList<Eigen::Vector3d> corners_;
             double porosity_;
             double permx_;

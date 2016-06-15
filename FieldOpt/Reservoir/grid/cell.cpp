@@ -15,7 +15,7 @@ namespace Reservoir {
             permx_ = permx;
             permy_ = permy;
             permz_ = permz;
-            center_ = center;
+            center_ = Eigen::Vector3d(center.x(), center.y(), center.z());
             for (XYZCoordinate corner : corners)
                 corners_.append(Eigen::Vector3d(corner.x(), corner.y(), corner.z()));
         }
