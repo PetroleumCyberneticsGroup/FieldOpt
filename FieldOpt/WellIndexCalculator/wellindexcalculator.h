@@ -3,7 +3,6 @@
 
 #include <QList>
 #include "Reservoir/grid/grid.h"
-#include "Reservoir/grid/xyzcoordinate.h"
 
 namespace WellIndexCalculator {
 
@@ -19,7 +18,7 @@ namespace WellIndexCalculator {
             double well_index;
         };
 
-        QList<BlockData> GetBlocks(QList<Reservoir::Grid::XYZCoordinate> points);
+        QList<BlockData> GetBlocks(QList<Eigen::Vector3d> points);
 
     private:
         Reservoir::Grid::Grid *grid_;

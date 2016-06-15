@@ -39,13 +39,11 @@ WellSpline::WellSpline(Utilities::Settings::Model::Well well_settings,
 
 QList<WellBlock *> *WellSpline::GetWellBlocks()
 {
-    Reservoir::Grid::XYZCoordinate heel = Reservoir::Grid::XYZCoordinate(heel_x_->value(), heel_y_->value(), heel_z_->value());
-    Reservoir::Grid::XYZCoordinate toe = Reservoir::Grid::XYZCoordinate(toe_x_->value(), toe_y_->value(), toe_z_->value());
+    auto heel = Eigen::Vector3d(heel_x_->value(), heel_y_->value(), heel_z_->value());
+    auto toe = Eigen::Vector3d(toe_x_->value(), toe_y_->value(), toe_z_->value());
+    QList<Eigen::Vector3d> points = {heel, toe};
 
-    ::WellIndexCalculator::WellIndexCalculator wic = ::WellIndexCalculator::WellIndexCalculator(grid_, well_settings_.wellbore_radius);
-    QList<Reservoir::Grid::XYZCoordinate> points = QList<Reservoir::Grid::XYZCoordinate>();
-    points.append(heel);
-    points.append(toe);
+    auto wic = ::WellIndexCalculator::WellIndexCalculator(grid_, well_settings_.wellbore_radius);
     QList<WellIndexCalculator::WellIndexCalculator::BlockData> block_data = wic.GetBlocks(points);
     QList<WellBlock *> *blocks = new QList<WellBlock *>();
     for (int i = 0; i < block_data.length(); ++i) {
