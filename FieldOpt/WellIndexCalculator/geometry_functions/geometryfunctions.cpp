@@ -56,8 +56,8 @@ namespace WellIndexCalculator {
             /* Find first and last cell blocks intersected and their indeces.
              * Add first cell and first point to lists.
              */
-            Reservoir::Grid::Cell last_cell = get_cell_enveloping_point(grid, end_point);
-            Reservoir::Grid::Cell first_cell = get_cell_enveloping_point(grid, start_point);
+            Reservoir::Grid::Cell last_cell = grid->GetCellEnvelopingPoint(end_point);
+            Reservoir::Grid::Cell first_cell = grid->GetCellEnvelopingPoint(start_point);
 
             int last_cell_index = last_cell.global_index();
             int first_cell_index = first_cell.global_index();
@@ -87,12 +87,12 @@ namespace WellIndexCalculator {
             double epsilon = 0.01 / (end_point - exit_point).norm();
             Eigen::Vector3d move_exit_epsilon = exit_point * (1 - epsilon) + end_point * epsilon;
 
-            Reservoir::Grid::Cell current_cell = get_cell_enveloping_point(grid, move_exit_epsilon);
+            Reservoir::Grid::Cell current_cell = grid->GetCellEnvelopingPoint(move_exit_epsilon);
             double epsilon_temp = epsilon;
             while (current_cell.global_index() == first_cell_index) {
                 epsilon_temp = 10 * epsilon_temp;
                 move_exit_epsilon = exit_point * (1 - epsilon_temp) + end_point * epsilon_temp;
-                current_cell = get_cell_enveloping_point(grid, move_exit_epsilon);
+                current_cell = grid->GetCellEnvelopingPoint(move_exit_epsilon);
             }
 
             while (current_cell.global_index() != last_cell_index) {
@@ -112,7 +112,7 @@ namespace WellIndexCalculator {
                 else {
                     epsilon = 0.01 / (end_point - exit_point).norm();
                     move_exit_epsilon = exit_point * (1 - epsilon) + end_point * epsilon;
-                    current_cell = get_cell_enveloping_point(grid, move_exit_epsilon);
+                    current_cell = grid->GetCellEnvelopingPoint(move_exit_epsilon);
                 }
 
             }
@@ -254,24 +254,6 @@ namespace WellIndexCalculator {
             double r = 0.28 * sqrt((dx * dx) * sqrt(ky / kx) + (dy * dy) * sqrt(kx / ky)) /
                        (sqrt(sqrt(kx / ky)) + sqrt(sqrt(ky / kx)));
             return r;
-        }
-
-        Reservoir::Grid::Cell get_cell_enveloping_point(Reservoir::Grid::Grid *grid,
-                                                                           Eigen::Vector3d point) {
-            // Get total number of cells
-            int total_cells = grid->Dimensions().nx * grid->Dimensions().ny * grid->Dimensions().nz;
-
-            for (int ii = 0; ii < total_cells; ii++) {
-                if (grid->GetCell(ii).EnvelopsPoint(point)) {
-                    return grid->GetCell(ii);
-                }
-            }
-            // Throw an exception if no cell was found
-            throw std::runtime_error("WellIndexCalculator::get_cell_enveloping_point: Cell is outside grid ("
-                                     + std::to_string(point.x()) + ", "
-                                     + std::to_string(point.y()) + ", "
-                                     + std::to_string(point.z()) + ")"
-            );
         }
 
         QPair<QList<int>, QList<double> > well_index_of_grid(Reservoir::Grid::Grid *grid,

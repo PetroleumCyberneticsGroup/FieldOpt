@@ -97,14 +97,6 @@ namespace WellIndexCalculator {
         double dir_wellblock_radius(double dx, double dy, double kx, double ky);
 
         /*!
-         * \brief Given a Reservoir::Grid::Grid grid and a point, return a cell that envelopes the point
-         * \param A grid containing cells
-         * \param point
-         * \return returns cell enveloping/containing point. return 0 if no cell contains point
-         */
-        Reservoir::Grid::Cell get_cell_enveloping_point(Reservoir::Grid::Grid *grid, Eigen::Vector3d point);
-
-        /*!
          * \brief Given a reservoir and a line segment (start, end) return the calculated well indeces for all cells intersected by the line segment.
          * \param A grid containing cells
          * \param start point line segment/well

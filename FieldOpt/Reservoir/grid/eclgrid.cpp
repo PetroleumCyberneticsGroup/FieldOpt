@@ -108,7 +108,7 @@ namespace Reservoir {
                 }
             }
             // Throw an exception if no cell was found
-            throw GridCellNotFoundException("WellIndexCalculator::get_cell_enveloping_point: Cell is outside grid ("
+            throw GridCellNotFoundException("Grid::GetCellEnvelopingPoint: Cell is outside grid ("
                                      + std::to_string(x) + ", "
                                      + std::to_string(y) + ", "
                                      + std::to_string(z) + ")"
