@@ -68,12 +68,12 @@ TEST_F(GridTest, AttemptFindCellOutsideGrid) {
 }
 
 TEST_F(GridTest, GetCellEnvelopingPoint) {
-    Cell cell = grid_->GetCellEnvelopingPoint(20, 300, 7050);
+    Cell cell = grid_->GetCellEnvelopingPoint(21, 301, 7025);
     EXPECT_EQ(cell.global_index(), 20);
 }
 
 TEST_F(GridTest, GetCellEnvelopingPointObject) {
-    Eigen::Vector3d xyz = Eigen::Vector3d(20, 300, 7050);
+    Eigen::Vector3d xyz = Eigen::Vector3d(21, 301, 7025);
     Cell cell = grid_->GetCellEnvelopingPoint(xyz);
     EXPECT_EQ(cell.global_index(), 20);
 }

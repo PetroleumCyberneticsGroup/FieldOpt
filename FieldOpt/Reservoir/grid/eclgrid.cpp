@@ -100,11 +100,19 @@ namespace Reservoir {
 
         Cell ECLGrid::GetCellEnvelopingPoint(double x, double y, double z)
         {
-            int global_index = ecl_grid_reader_->GlobalIndexOfCellEnvelopingPoint(x, y ,z);
-            if (global_index == -1) {
-                throw GridCellNotFoundException("No grid cell found enveloping point.");
+            int total_cells = Dimensions().nx * Dimensions().ny * Dimensions().nz;
+
+            for (int ii = 0; ii < total_cells; ii++) {
+                if (GetCell(ii).EnvelopsPoint(Eigen::Vector3d(x, y, z))) {
+                    return GetCell(ii);
+                }
             }
-            return GetCell(global_index);
+            // Throw an exception if no cell was found
+            throw GridCellNotFoundException("WellIndexCalculator::get_cell_enveloping_point: Cell is outside grid ("
+                                     + std::to_string(x) + ", "
+                                     + std::to_string(y) + ", "
+                                     + std::to_string(z) + ")"
+            );
         }
 
         Cell ECLGrid::GetCellEnvelopingPoint(Eigen::Vector3d xyz)
