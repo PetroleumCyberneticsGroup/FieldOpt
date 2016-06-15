@@ -393,8 +393,8 @@ namespace WellIndexCalculator {
         QList<Eigen::Vector3d> corners = cell.corners_eigen();
 
         // Check if point is already inside cell
-        QVector3D qv_point = QVector3D(point(0),point(1),point(2));
-        if(is_point_inside_cell(cell, qvec_to_evec(qv_point))){
+        Eigen::Vector3d qv_point = Eigen::Vector3d(point(0),point(1),point(2));
+        if(is_point_inside_cell(cell, qv_point)){
             std::cout << "point is inside cell" << std::endl;
             return point;
         }
@@ -450,8 +450,8 @@ namespace WellIndexCalculator {
          * Equivalently we can just check if the
          * point is inside cell
          */
-        QVector3D qv_point = QVector3D(proj_point(0),proj_point(1),proj_point(2));
-        if(is_point_inside_cell(cell, qvec_to_evec(qv_point))){
+        Eigen::Vector3d qv_point = Eigen::Vector3d(proj_point(0),proj_point(1),proj_point(2));
+        if(is_point_inside_cell(cell, qv_point)){
             return proj_point;
         }
 

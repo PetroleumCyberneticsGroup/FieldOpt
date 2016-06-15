@@ -146,7 +146,7 @@ namespace WellIndexCalculator {
                                                                    QList<Eigen::Vector3d> end_points, double wellbore_radius);
 
         /*!
-         * \brief Given two lists of QVector3D* points, calculates the L2-norm of the vectors between the points.
+         * \brief Given two lists of Eigen::Vector3d* points, calculates the L2-norm of the vectors between the points.
          * \param initial points
          * \param moved points
          * \return L2 norm of vectors of how points moved.
