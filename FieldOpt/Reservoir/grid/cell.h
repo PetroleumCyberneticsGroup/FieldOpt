@@ -80,6 +80,18 @@ namespace Reservoir {
             bool Equals(const Cell *other) const;
             bool Equals(const Cell &other) const;
 
+            /*!
+             * \brief Check whether a point is inside or on the boundary of this cell.
+             */
+            bool EnvelopsPoint(Eigen::Vector3d point);
+
+            /*!
+             * \todo Hilmar should probably be the one to document this thing.
+             */
+            struct Plane {
+                Eigen::Vector3d corners[3];
+                Eigen::Vector3d normal_vector;
+            };
 
 
 
@@ -93,6 +105,19 @@ namespace Reservoir {
             double permx_;
             double permy_;
             double permz_;
+            Plane planes_[6];
+
+            /*!
+             * \brief Populates the planes_ field.
+             *
+             * Generates a double array with the numbers of 3 corners from each of the 6 faces of this cell that
+             * will be used to create a normal vector for each face.
+
+             * \todo Clarify this comment.
+
+             * \return double list of corner numbers for each face
+             */
+            void initializePlanes();
         };
 
     }
