@@ -487,9 +487,13 @@ QList<QVector3D> WellConstraintProjections::interwell_constraint_projection(QLis
         moved_coords.replace(two_point_index[ii][0],temp_coords.at(0));
         moved_coords.replace(two_point_index[ii][1],temp_coords.at(1));
         std::cout << "shortest distance - d = " << shortest_distance(moved_coords)-d << std::endl;
-        if(WellConstraintProjections::shortest_distance(moved_coords) >=d && WellIndexCalculator::GeometryFunctions::movement_cost(coords,moved_coords) < cost){
+        if(WellConstraintProjections::shortest_distance(moved_coords) >=d && WellIndexCalculator::GeometryFunctions::movement_cost(
+                GeometryFunctions::qveclist_to_eveclist(coords),
+                GeometryFunctions::qveclist_to_eveclist(moved_coords)) < cost){
             // If several moves of two points work, save the one with lovest movement cost
-            cost = WellIndexCalculator::GeometryFunctions::movement_cost(coords,moved_coords);
+            cost = WellIndexCalculator::GeometryFunctions::movement_cost(
+                    GeometryFunctions::qveclist_to_eveclist(coords),
+                    GeometryFunctions::qveclist_to_eveclist(moved_coords));
             solution_coords = moved_coords;
         }
     }
@@ -527,10 +531,14 @@ QList<QVector3D> WellConstraintProjections::interwell_constraint_projection(QLis
         std::cout << "shortest distance 3p = " << shortest_distance_3p(temp_coords) << std::endl;
         std::cout << "shortest distance 4p = " << shortest_distance(moved_coords) << std::endl;
 
-        if(WellConstraintProjections::shortest_distance(moved_coords) >=d-0.01 && WellIndexCalculator::GeometryFunctions::movement_cost(coords,moved_coords) < cost){
+        if(WellConstraintProjections::shortest_distance(moved_coords) >=d-0.01 && WellIndexCalculator::GeometryFunctions::movement_cost(
+                    GeometryFunctions::qveclist_to_eveclist(coords),
+                    GeometryFunctions::qveclist_to_eveclist(moved_coords)) < cost){
             // If several moves of two points work, save the one with lovest movement cost
             std::cout<<"does this ever happen" << std::endl;
-            cost = WellIndexCalculator::GeometryFunctions::movement_cost(coords,moved_coords);
+            cost = WellIndexCalculator::GeometryFunctions::movement_cost(
+                    GeometryFunctions::qveclist_to_eveclist(coords),
+                    GeometryFunctions::qveclist_to_eveclist(moved_coords));
             solution_coords = moved_coords;
         }
     }
@@ -579,9 +587,13 @@ QList<QVector3D> WellConstraintProjections::interwell_constraint_projection_2nd(
         moved_coords.replace(two_point_index[ii][0],temp_coords.at(0));
         moved_coords.replace(two_point_index[ii][1],temp_coords.at(1));
         std::cout << "shortest distance - d = " << shortest_distance(moved_coords)-d << std::endl;
-        if(WellConstraintProjections::shortest_distance(moved_coords) >=d && WellIndexCalculator::GeometryFunctions::movement_cost(coords,moved_coords) < cost){
+        if(WellConstraintProjections::shortest_distance(moved_coords) >=d && WellIndexCalculator::GeometryFunctions::movement_cost(
+                    GeometryFunctions::qveclist_to_eveclist(coords),
+                    GeometryFunctions::qveclist_to_eveclist(moved_coords)) < cost){
             // If several moves of two points work, save the one with lovest movement cost
-            cost = WellIndexCalculator::GeometryFunctions::movement_cost(coords,moved_coords);
+            cost = WellIndexCalculator::GeometryFunctions::movement_cost(
+                    GeometryFunctions::qveclist_to_eveclist(coords),
+                    GeometryFunctions::qveclist_to_eveclist(moved_coords));
             solution_coords = moved_coords;
         }
     }
@@ -626,9 +638,13 @@ QList<QVector3D> WellConstraintProjections::interwell_constraint_projection_2nd(
             std::cout << "shortest distance 3p = " << shortest_distance_3p(temp_coords) << std::endl;
             std::cout << "shortest distance 4p = " << shortest_distance(moved_coords) << std::endl;
 
-            if(WellConstraintProjections::shortest_distance(moved_coords) >=d-0.001 && WellIndexCalculator::GeometryFunctions::movement_cost(coords,moved_coords) < cost){
+            if(WellConstraintProjections::shortest_distance(moved_coords) >=d-0.001 && WellIndexCalculator::GeometryFunctions::movement_cost(
+                        GeometryFunctions::qveclist_to_eveclist(coords),
+                        GeometryFunctions::qveclist_to_eveclist(moved_coords)) < cost){
                 // If several moves of two points work, save the one with lovest movement cost
-                cost = WellIndexCalculator::GeometryFunctions::movement_cost(coords,moved_coords);
+                cost = WellIndexCalculator::GeometryFunctions::movement_cost(
+                        GeometryFunctions::qveclist_to_eveclist(coords),
+                        GeometryFunctions::qveclist_to_eveclist(moved_coords));
                 solution_coords = moved_coords;
             }
         }
@@ -654,9 +670,13 @@ QList<QVector3D> WellConstraintProjections::interwell_constraint_projection_2nd(
     for(int sol_num = 0; sol_num < solution_candidates.length(); sol_num++){
 
         moved_coords = WellConstraintProjections::move_points_4p(coords,d,solution_candidates.at(sol_num));
-        if(WellConstraintProjections::shortest_distance(moved_coords) >=d-0.001 && WellIndexCalculator::GeometryFunctions::movement_cost(coords,moved_coords) < cost){
+        if(WellConstraintProjections::shortest_distance(moved_coords) >=d-0.001 && WellIndexCalculator::GeometryFunctions::movement_cost(
+                    GeometryFunctions::qveclist_to_eveclist(coords),
+                    GeometryFunctions::qveclist_to_eveclist(moved_coords)) < cost){
             // If several candidates for s work, save the one with lovest movement cost
-            cost = WellIndexCalculator::GeometryFunctions::movement_cost(coords,moved_coords);
+            cost = WellIndexCalculator::GeometryFunctions::movement_cost(
+                    GeometryFunctions::qveclist_to_eveclist(coords),
+                    GeometryFunctions::qveclist_to_eveclist(moved_coords));
             solution_coords = moved_coords;
         }
     }
@@ -1772,9 +1792,14 @@ QList<QVector3D> WellConstraintProjections::interwell_projection_4p(QList<QVecto
             // Check if current vector has length 1 and is better than previous choices
             if(     sqrt(s(0)*s(0) + s(1)*s(1) +s(2)*s(2)) < 1 + tolerance &&
                     sqrt(s(0)*s(0) + s(1)*s(1) +s(2)*s(2)) > 1 - tolerance &&
-                    WellIndexCalculator::GeometryFunctions::movement_cost(coords,move_points_4p(coords,d,current_vector))<cost){
+                    WellIndexCalculator::GeometryFunctions::movement_cost(
+                            GeometryFunctions::qveclist_to_eveclist(coords),
+                            GeometryFunctions::qveclist_to_eveclist(move_points_4p(coords,d,current_vector)))
+                    <cost){
                 solution_moved_points = WellConstraintProjections::move_points_4p(coords,d,current_vector);
-                cost = WellIndexCalculator::GeometryFunctions::movement_cost(coords,move_points_4p(coords,d,current_vector));
+                cost = WellIndexCalculator::GeometryFunctions::movement_cost(
+                        GeometryFunctions::qveclist_to_eveclist(coords),
+                        GeometryFunctions::qveclist_to_eveclist(move_points_4p(coords,d,current_vector)));
             }
         }
     }
@@ -1793,9 +1818,14 @@ QList<QVector3D> WellConstraintProjections::interwell_projection_4p(QList<QVecto
 
         for (int i=0; i<s_list.length(); i++){
             current_vector= QVector3D(s_list.at(i)(0), s_list.at(i)(1), s_list.at(i)(2));
-            if( WellIndexCalculator::GeometryFunctions::movement_cost(coords,move_points_4p(coords,d,current_vector))<cost){
+            if( WellIndexCalculator::GeometryFunctions::movement_cost(
+                        GeometryFunctions::qveclist_to_eveclist(coords),
+                        GeometryFunctions::qveclist_to_eveclist(move_points_4p(coords,d,current_vector)))
+                <cost){
                 solution_moved_points = WellConstraintProjections::move_points_4p(coords,d,current_vector);
-                cost = WellIndexCalculator::GeometryFunctions::movement_cost(coords,move_points_4p(coords,d,current_vector));
+                cost = WellIndexCalculator::GeometryFunctions::movement_cost(
+                        GeometryFunctions::qveclist_to_eveclist(coords),
+                        GeometryFunctions::qveclist_to_eveclist(move_points_4p(coords,d,current_vector)));
             }
         }
     }
@@ -1930,9 +1960,13 @@ QList<QVector3D> WellConstraintProjections::interwell_projection_3p(QList<QVecto
             // Check if current vector has length 1 and is better than previous choices
             if(     sqrt(s(0)*s(0) + s(1)*s(1) +s(2)*s(2)) < 1 + tolerance &&
                     sqrt(s(0)*s(0) + s(1)*s(1) +s(2)*s(2)) > 1 - tolerance &&
-                    WellIndexCalculator::GeometryFunctions::movement_cost(coords,move_points_3p(coords,d,current_vector))<cost){
+                    WellIndexCalculator::GeometryFunctions::movement_cost(
+                            GeometryFunctions::qveclist_to_eveclist(coords),
+                            GeometryFunctions::qveclist_to_eveclist(move_points_3p(coords,d,current_vector)))<cost){
                 solution_moved_points = WellConstraintProjections::move_points_3p(coords,d,current_vector);
-                cost = WellIndexCalculator::GeometryFunctions::movement_cost(coords,move_points_3p(coords,d,current_vector));
+                cost = WellIndexCalculator::GeometryFunctions::movement_cost(
+                        GeometryFunctions::qveclist_to_eveclist(coords),
+                        GeometryFunctions::qveclist_to_eveclist(move_points_3p(coords,d,current_vector)));
             }
         }
     }
@@ -1964,9 +1998,14 @@ QList<QVector3D> WellConstraintProjections::interwell_projection_3p_eigen(QList<
         double movement_cost = INFINITY;
         for (int i=0; i<s_list.length(); i++){
             QVector3D current_vector = QVector3D(s_list.at(i)(0),s_list.at(i)(1),s_list.at(i)(2));
-            if( WellIndexCalculator::GeometryFunctions::movement_cost(coords,move_points_3p(coords,d,current_vector))<movement_cost){
+            if( WellIndexCalculator::GeometryFunctions::movement_cost(
+                        GeometryFunctions::qveclist_to_eveclist(coords),
+                        GeometryFunctions::qveclist_to_eveclist(move_points_3p(coords,d,current_vector)))
+                <movement_cost){
                 solution_moved_points = WellConstraintProjections::move_points_3p(coords,d,current_vector);
-                movement_cost = WellIndexCalculator::GeometryFunctions::movement_cost(coords,move_points_3p(coords,d,current_vector));
+                movement_cost = WellIndexCalculator::GeometryFunctions::movement_cost(
+                        GeometryFunctions::qveclist_to_eveclist(coords),
+                        GeometryFunctions::qveclist_to_eveclist(move_points_3p(coords,d,current_vector)));
             }
         }
     }

@@ -375,13 +375,13 @@ namespace WellIndexCalculator {
         return pair;
     }
 
-    double GeometryFunctions::movement_cost(QList<QVector3D> old_coords, QList<QVector3D> new_coords)
+    double GeometryFunctions::movement_cost(QList<Eigen::Vector3d> old_coords, QList<Eigen::Vector3d> new_coords)
     {
         double n_of_points = old_coords.length();
         if(new_coords.length()!=n_of_points){throw geometryfunctions::MovementCost_VectorsNotSameLength("Lists of points are not the same length");}
         double cost_squares = 0;
         for (int ii=0; ii<n_of_points; ii++){
-            cost_squares += pow(old_coords.at(ii).distanceToPoint(new_coords.at(ii)),2);
+            cost_squares += (new_coords[ii] - old_coords[ii]).squaredNorm();
         }
 
         return sqrt(cost_squares);
@@ -732,6 +732,20 @@ namespace WellIndexCalculator {
 
     QVector3D GeometryFunctions::evec_to_qvec(Eigen::Vector3d vec) {
         return QVector3D(vec.x(), vec.y(), vec.z());
+    }
+
+    QList<Eigen::Vector3d> GeometryFunctions::qveclist_to_eveclist(QList<QVector3D> qveclist) {
+        QList<Eigen::Vector3d> list;
+        for (auto vec : qveclist)
+            list.append(Eigen::Vector3d(vec.x(), vec.y(), vec.z()));
+        return list;
+    }
+
+    QList<QVector3D> GeometryFunctions::eveclist_to_qveclist(QList<Eigen::Vector3d> eveclist) {
+        QList<QVector3D> list;
+        for (auto vec : eveclist)
+            list.append(QVector3D(vec.x(), vec.y(), vec.z()));
+        return list;
     }
 
 

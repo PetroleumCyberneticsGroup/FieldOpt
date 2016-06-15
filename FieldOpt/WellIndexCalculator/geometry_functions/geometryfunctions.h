@@ -151,7 +151,7 @@ namespace WellIndexCalculator {
          * \param moved points
          * \return L2 norm of vectors of how points moved.
          */
-        static double movement_cost(QList<QVector3D> old_coords, QList<QVector3D> new_coords);
+        static double movement_cost(QList<Eigen::Vector3d> old_coords, QList<Eigen::Vector3d> new_coords);
 
         /*!
          * \brief Given a cell block and a point in space, computes the point in the cell block which is closest to the given point
@@ -191,6 +191,8 @@ namespace WellIndexCalculator {
 //        static void print_well_index_file(Reservoir::Grid::Grid *grid , QList<QVector3D> start_point, QList<QVector3D> end_points, double wellbore_radius, double min_wi, QString filename);
 
         static Eigen::Vector3d qvec_to_evec(QVector3D vec); // \todo This is temporary and should be removed
+        static QList<Eigen::Vector3d> qveclist_to_eveclist(QList<QVector3D> qveclist); // \todo This is temporary and should be removed
+        static QList<QVector3D> eveclist_to_qveclist(QList<Eigen::Vector3d> eveclist); // \todo This is temporary and should be removed
         static QVector3D evec_to_qvec(Eigen::Vector3d vec); // \todo This is temporary and should be removed
     };
 
