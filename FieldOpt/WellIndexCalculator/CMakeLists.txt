@@ -30,7 +30,6 @@ target_compile_features(wellindexcalculator
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR})
 add_executable(test_wellindexcalculator
-        tests/test_geometryfunctions.cpp
         tests/test_intersected_cells.cpp
         tests/test_single_cell_wellindex.cpp
         tests/well_constraint_projections_tests.cpp
