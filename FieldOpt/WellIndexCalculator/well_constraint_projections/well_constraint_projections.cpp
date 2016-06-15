@@ -11,7 +11,7 @@ namespace WellIndexCalculator {
 
             // Check if point is already inside cell
             Eigen::Vector3d qv_point = Eigen::Vector3d(point(0), point(1), point(2));
-            if (GeometryFunctions::is_point_inside_cell(cell, qv_point)) {
+            if (cell.EnvelopsPoint(qv_point)) {
                 std::cout << "point is inside cell" << std::endl;
                 return point;
             }
@@ -70,7 +70,7 @@ namespace WellIndexCalculator {
              * point is inside cell
              */
             Eigen::Vector3d qv_point = Eigen::Vector3d(proj_point(0), proj_point(1), proj_point(2));
-            if (GeometryFunctions::is_point_inside_cell(cell, qv_point)) {
+            if (cell.EnvelopsPoint(qv_point)) {
                 return proj_point;
             }
 

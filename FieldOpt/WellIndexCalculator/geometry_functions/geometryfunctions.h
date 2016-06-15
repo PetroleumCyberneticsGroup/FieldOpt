@@ -26,8 +26,6 @@ namespace WellIndexCalculator {
         Eigen::Vector3d line_plane_intersection(Eigen::Vector3d p0, Eigen::Vector3d p1,
                                                 Eigen::Vector3d normal_vector, Eigen::Vector3d point_in_plane);
 
-        Eigen::Vector3d normal_vector(Eigen::Vector3d p0, Eigen::Vector3d p1, Eigen::Vector3d p2);
-
         /*!
          * \brief point_on_same_side returns true if point is on the same side of a plane
          * (containing plane_point and with normal_vector as the normal vector) as the normal vector,
@@ -52,13 +50,6 @@ namespace WellIndexCalculator {
         QPair<QList<int>, QList<Eigen::Vector3d> > cells_intersected(Eigen::Vector3d start_point,
                                                                      Eigen::Vector3d end_point,
                                                                      Reservoir::Grid::Grid *grid);
-
-        /*!
-         * \brief Generates a double array with the numbers of 3 corners from each of the 6 faces of a cell that
-         * will be used to create a normal vector for each face.
-         * \return double list of corner numbers for each face
-         */
-        QList<QList<Eigen::Vector3d>> cell_planes_coords(QList<Eigen::Vector3d> corners);
 
         Eigen::Vector3d find_exit_point(Reservoir::Grid::Cell cell, Eigen::Vector3d start_point,
                                         Eigen::Vector3d end_point, Eigen::Vector3d exception_point);
@@ -104,14 +95,6 @@ namespace WellIndexCalculator {
          * \return directional wellblock radius
          */
         double dir_wellblock_radius(double dx, double dy, double kx, double ky);
-
-        /*!
-         * \brief Given a Reservoir::Grid::Cell cell and a point, return true if the given point is inside the (or on boundary of) cell
-         * \param Cell containing coordinates of corners
-         * \param point
-         * \return true if point is inside cell, false if it is not
-         */
-        bool is_point_inside_cell(Reservoir::Grid::Cell cell, Eigen::Vector3d point);
 
         /*!
          * \brief Given a Reservoir::Grid::Grid grid and a point, return a cell that envelopes the point

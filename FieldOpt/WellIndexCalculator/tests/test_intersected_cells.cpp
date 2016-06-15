@@ -86,12 +86,12 @@ namespace {
         Eigen::Vector3d point_1 = Eigen::Vector3d(12,12,1712);
         Eigen::Vector3d point_2 = Eigen::Vector3d(24,12,1712);
 
-        EXPECT_TRUE(WellIndexCalculator::GeometryFunctions::is_point_inside_cell(cell_0,point_0));
-        EXPECT_FALSE(WellIndexCalculator::GeometryFunctions::is_point_inside_cell(cell_1,point_0));
-        EXPECT_TRUE(WellIndexCalculator::GeometryFunctions::is_point_inside_cell(cell_0,point_1));
-        EXPECT_FALSE(WellIndexCalculator::GeometryFunctions::is_point_inside_cell(cell_1,point_1));
-        EXPECT_FALSE(WellIndexCalculator::GeometryFunctions::is_point_inside_cell(cell_60,point_0));
-        EXPECT_TRUE(WellIndexCalculator::GeometryFunctions::is_point_inside_cell(cell_1,point_2));
+        EXPECT_TRUE(cell_0.EnvelopsPoint(point_0));
+        EXPECT_FALSE(cell_1.EnvelopsPoint(point_0));
+        EXPECT_TRUE(cell_0.EnvelopsPoint(point_1));
+        EXPECT_FALSE(cell_1.EnvelopsPoint(point_1));
+        EXPECT_FALSE(cell_60.EnvelopsPoint(point_0));
+        EXPECT_TRUE(cell_1.EnvelopsPoint(point_2));
     }
 
 }

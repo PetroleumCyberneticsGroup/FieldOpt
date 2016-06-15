@@ -35,11 +35,6 @@ namespace WellIndexCalculator {
             return intersection_point;
         }
 
-        Eigen::Vector3d normal_vector(Eigen::Vector3d p0, Eigen::Vector3d p1, Eigen::Vector3d p2) {
-            Eigen::Vector3d normal_vector = (p2 - p0).cross(p1 - p0);
-            return normal_vector.normalized();
-        }
-
         bool point_on_same_side(Eigen::Vector3d point, Eigen::Vector3d plane_point,
                                                    Eigen::Vector3d normal_vector, double slack) {
             /* The dot product helps us determine if the angle between the two
@@ -136,35 +131,6 @@ namespace WellIndexCalculator {
 
         }
 
-        QList<QList<Eigen::Vector3d>> cell_planes_coords(
-                QList<Eigen::Vector3d> corners) {
-            QList<QList<int>> points;
-            QList<int> p0, p1, p2, p3, p4, p5;
-
-            p0 << 0 << 2 << 1; //First face
-            p1 << 4 << 5 << 6; //Second face
-            p2 << 0 << 4 << 2; //third face
-            p3 << 1 << 3 << 5; //fourth face
-            p4 << 0 << 1 << 4; //fifth face
-            p5 << 2 << 6 << 3; //Sixth face
-            points << p0 << p1 << p2 << p3 << p4 << p5;
-
-            /* Fill 2D QList array with 3 corner coordinates for each of the 6 faces
-             * Corners have been chosen in such a way that normal_vector() function
-             * returns a vector that points in towards the centre of the block.
-             */
-            QList<QList<Eigen::Vector3d>> face_corner_coords;
-            for (int ii = 0; ii < 6; ii++) {
-                QList<Eigen::Vector3d> currentSideCorners;
-                currentSideCorners.append(corners[points[ii][0]]);
-                currentSideCorners.append(corners[points[ii][1]]);
-                currentSideCorners.append(corners[points[ii][2]]);
-                face_corner_coords.append(currentSideCorners);
-            }
-
-            return face_corner_coords;
-        }
-
         Eigen::Vector3d find_exit_point(Reservoir::Grid::Cell cell, Eigen::Vector3d entry_point,
                                                            Eigen::Vector3d end_point, Eigen::Vector3d exception_point) {
             /* takes an entry point as input and an end_point
@@ -176,24 +142,14 @@ namespace WellIndexCalculator {
 
             Eigen::Vector3d line = end_point - entry_point;
 
-            // First find normal vectors of all faces of block/cell.
-            QList<QList<Eigen::Vector3d>> face_corner_coords = cell_planes_coords(cell.corners());
-            QList<Eigen::Vector3d> normal_vectors;
-            for (int ii = 0; ii < 6; ii++) {
-                Eigen::Vector3d cur_normal_vector = normal_vector(face_corner_coords.at(ii).at(0),
-                                                                                     face_corner_coords.at(ii).at(1),
-                                                                                     face_corner_coords.at(ii).at(2));
-                normal_vectors.append(cur_normal_vector);
-            }
-
             /* For loop through all faces untill we find a face that
              * intersects with line on face of the block and not just
              * the extension of the face to a plane
              */
             for (int face_number = 0; face_number < 6; face_number++) {
                 // Normal vector
-                Eigen::Vector3d cur_normal_vector = normal_vectors[face_number];
-                Eigen::Vector3d cur_face_point = face_corner_coords.at(face_number).at(0);
+                Eigen::Vector3d cur_normal_vector = cell.planes()[face_number].normal_vector;
+                Eigen::Vector3d cur_face_point = cell.planes()[face_number].corners[0];
                 /* If the dot product of the line vector and the face normal vector is
                  * zero then the line is paralell to the face and won't intersect it
                  * unless it lies in the same plane, which in any case won't be the
@@ -212,10 +168,8 @@ namespace WellIndexCalculator {
                      */
                     bool feasible_point = true;
                     for (int ii = 0; ii < 6; ii++) {
-                        if (!point_on_same_side(intersect_point,
-                                                                   face_corner_coords.at(ii).at(0),
-                                                                   normal_vectors[ii],
-                                                                   10e-6)) {
+                        if (!point_on_same_side(intersect_point, cell.planes()[ii].corners[0],
+                                                cell.planes()[ii].normal_vector, 10e-6)) {
                             feasible_point = false;
                         }
                     }
@@ -302,40 +256,13 @@ namespace WellIndexCalculator {
             return r;
         }
 
-        bool is_point_inside_cell(Reservoir::Grid::Cell cell, Eigen::Vector3d point) {
-            // First find normal vectors of all faces of block/cell.
-            QList<QList<Eigen::Vector3d>> face_corner_coords = cell_planes_coords(cell.corners());
-            QList<Eigen::Vector3d> normal_vectors;
-            for (int ii = 0; ii < 6; ii++) {
-                normal_vectors.append(normal_vector(face_corner_coords.at(ii).at(0),
-                                                                       face_corner_coords.at(ii).at(1),
-                                                                       face_corner_coords.at(ii).at(2)));
-            }
-
-            /* For loop through all faces to check that point
-             * is on right side of every face (i.e. in the same
-             * direction as the computed normal vector) by
-             * taking the dot product of the normal vector with
-             * the vector going from one corner of the face to
-             * point
-             */
-            bool point_inside = true;
-            for (int face_number = 0; face_number < 6; face_number++) {
-                if ((point - face_corner_coords[face_number][0]).dot(normal_vectors[face_number]) < 0) {
-                    point_inside = false;
-                }
-            }
-
-            return point_inside;
-        }
-
         Reservoir::Grid::Cell get_cell_enveloping_point(Reservoir::Grid::Grid *grid,
                                                                            Eigen::Vector3d point) {
             // Get total number of cells
             int total_cells = grid->Dimensions().nx * grid->Dimensions().ny * grid->Dimensions().nz;
 
             for (int ii = 0; ii < total_cells; ii++) {
-                if (is_point_inside_cell(grid->GetCell(ii), point)) {
+                if (grid->GetCell(ii).EnvelopsPoint(point)) {
                     return grid->GetCell(ii);
                 }
             }
@@ -370,6 +297,6 @@ namespace WellIndexCalculator {
             pair.second = well_indeces;
             return pair;
         }
-        
+
     }
 }
