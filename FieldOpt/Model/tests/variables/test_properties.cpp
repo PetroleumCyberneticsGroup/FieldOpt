@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 #include <QtCore/QStringList>
-#include "Reservoir/grid/xyzcoordinate.h"
 #include "Model/properties/property.h"
 #include "Model/properties/binary_property.h"
 #include "Model/properties/discrete_property.h"

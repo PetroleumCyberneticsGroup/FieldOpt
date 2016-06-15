@@ -7,7 +7,6 @@ add_library(reservoir
         grid/cell.cpp
         grid/grid.cpp
         grid/ijkcoordinate.cpp
-        grid/xyzcoordinate.cpp
         grid/eclgrid.cpp)
 
 add_library(fieldopt::reservoir ALIAS ${PROJECT_NAME})
@@ -30,8 +29,7 @@ add_executable(test_reservoir
         tests/test_reservoir.cpp
         tests/grid/test_cell.cpp
         tests/grid/test_grid.cpp
-        tests/grid/test_ijkcoordinate.cpp
-        tests/grid/test_xyzcoordinate.cpp)
+        tests/grid/test_ijkcoordinate.cpp)
 target_link_libraries(test_reservoir
         fieldopt::reservoir
         fieldopt::ertwrapper

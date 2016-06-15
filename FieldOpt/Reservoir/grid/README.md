@@ -46,31 +46,9 @@ Top:    Bottom:
 
 ## The `IJKCoordinate` Class
 
-The `IJKCoordinate` class holds three-dimensional _integer_ coordinates. This class should be used to represent the _(i, j, k)_ indices used by the `Grid` and `Cell` classes. 
+The `IJKCoordinate` class holds three-dimensional _integer_ coordinates. This class should be used to represent the _(i, j, k)_ indices used by the `Grid` and `Cell` classes.
 
 The class defines the `==` and `!=` operators to check if two `IJKCoordinate` objects reprent the same coordinate/index.
-
-## The `XYZCoordinate` Class
-
-The `XYZCoordinate` class holds three-dimensional _float_ coordinates. This class should be used to represent the _(x, y, z)_ points used by the `Grid` and `Cell` classes.
-
-The class defines the `Equals(Cell *cell, double epsilon=0.0)` method to check whether two cells represents (approximately) the same point in space. The optional `epsilon` argument lets you specify how far apart the two points may be and still be considered equal; it defaults to 0.0.
-
-### Usage
-
-This is a demonstration of how the `XYZCoordinate::Equals(Cell *cell)` method may be used. We have used macros from the google test library to indicate the expected outcome of the method call.
-
-```
-    XYZCoordinate xyz_1 = XYZCoordinate(1.0,2.0,3.00);
-    XYZCoordinate xyz_2 = XYZCoordinate(1.0,2.0,3.00);
-    XYZCoordinate xyz_3 = XYZCoordinate(1.0,2.0,3.05);
-    XYZCoordinate xyz_4 = XYZCoordinate(1.0,2.0,4.00);
-    
-    EXPECT_TRUE(xyz_1.Equals(&xyz_2));       // Should match with default tolerance 0.0
-    EXPECT_TRUE(xyz_1.Equals(&xyz_3, 0.1));  // Should match with tolerance 0.1
-    EXPECT_FALSE(xyz_1.Equals(&xyz_3));      // Should not match with default tolerance 0.0
-    EXPECT_FALSE(xyz_1.Equals(&xyz_4, 0.1)); // Should not match with tolerance 0.1
-```
 
 ## Example Usage
 

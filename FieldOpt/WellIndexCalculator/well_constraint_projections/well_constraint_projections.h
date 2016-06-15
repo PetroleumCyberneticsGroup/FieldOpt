@@ -4,7 +4,6 @@
 
 #include <RpolyPlusPlus/polynomial.h>
 #include <RpolyPlusPlus/find_polynomial_roots_jenkins_traub.h>
-#include "Reservoir/grid/xyzcoordinate.h"
 #include "WellIndexCalculator/geometry_functions/geometryfunctions.h"
 #include "WellIndexCalculator/geometry_functions/geometryfunctions_exceptions.h"
 #include "Reservoir/grid/cell.h"

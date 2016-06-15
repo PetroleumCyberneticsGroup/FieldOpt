@@ -1,6 +1,5 @@
 #ifndef GEOMETRYFUNCTIONS_H
 #define GEOMETRYFUNCTIONS_H
-#include "Reservoir/grid/xyzcoordinate.h"
 #include "Reservoir/grid/cell.h"
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
