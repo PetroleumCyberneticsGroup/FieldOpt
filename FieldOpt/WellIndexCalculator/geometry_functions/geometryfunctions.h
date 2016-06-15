@@ -60,7 +60,7 @@ namespace WellIndexCalculator {
          * will be used to create a normal vector for each face.
          * \return double list of corner numbers for each face
          */
-        QList<QList<Eigen::Vector3d>> cell_planes_coords(QList<Reservoir::Grid::XYZCoordinate > corners);
+        QList<QList<Eigen::Vector3d>> cell_planes_coords(QList<Eigen::Vector3d> corners);
 
         Eigen::Vector3d find_exit_point(Reservoir::Grid::Cell cell, Eigen::Vector3d start_point,
                                         Eigen::Vector3d end_point, Eigen::Vector3d exception_point);

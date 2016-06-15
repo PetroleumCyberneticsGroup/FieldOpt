@@ -77,16 +77,16 @@ TEST_F(SingleCellWellIndexTest, vertical_well_index_test) {
     double wellbore_radius = 0.1905/2;
 
     auto cell_1 = grid_->GetCell(0);
-    QList<XYZCoordinate> corners = cell_1.corners();
+    QList<Eigen::Vector3d> corners = cell_1.corners();
 
     //Determine well placement. Let it go vertically through the centre of the block.
-    double well_start_x = 0.25*corners.at(0).x() + 0.25*corners.at(1).x() +0.25*corners.at(2).x() + 0.25*corners.at(3).x();
-    double well_start_y = 0.25*corners.at(0).y() + 0.25*corners.at(1).y() +0.25*corners.at(2).y() + 0.25*corners.at(3).y();
-    double well_start_z = 0.25*corners.at(0).z() + 0.25*corners.at(1).z() +0.25*corners.at(2).z() + 0.25*corners.at(3).z();
+    double well_start_x = 0.25*corners[0].x() + 0.25*corners[1].x() +0.25*corners[2].x() + 0.25*corners[3].x();
+    double well_start_y = 0.25*corners[0].y() + 0.25*corners[1].y() +0.25*corners[2].y() + 0.25*corners[3].y();
+    double well_start_z = 0.25*corners[0].z() + 0.25*corners[1].z() +0.25*corners[2].z() + 0.25*corners[3].z();
 
-    double well_end_x = 0.25*corners.at(4).x() + 0.25*corners.at(5).x() +0.25*corners.at(6).x() + 0.25*corners.at(7).x();
-    double well_end_y = 0.25*corners.at(4).y() + 0.25*corners.at(5).y() +0.25*corners.at(6).y() + 0.25*corners.at(7).y();
-    double well_end_z = 0.25*corners.at(4).z() + 0.25*corners.at(5).z() +0.25*corners.at(6).z() + 0.25*corners.at(7).z();
+    double well_end_x = 0.25*corners[4].x() + 0.25*corners[5].x() +0.25*corners[6].x() + 0.25*corners[7].x();
+    double well_end_y = 0.25*corners[4].y() + 0.25*corners[5].y() +0.25*corners[6].y() + 0.25*corners[7].y();
+    double well_end_z = 0.25*corners[4].z() + 0.25*corners[5].z() +0.25*corners[6].z() + 0.25*corners[7].z();
     Eigen::Vector3d start_point = Eigen::Vector3d(well_start_x, well_start_y, well_start_z);
     Eigen::Vector3d end_point= Eigen::Vector3d(well_end_x,well_end_y, well_end_z);
     QList<Eigen::Vector3d> start_points;

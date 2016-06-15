@@ -137,7 +137,7 @@ namespace WellIndexCalculator {
         }
 
         QList<QList<Eigen::Vector3d>> cell_planes_coords(
-                QList<Reservoir::Grid::XYZCoordinate> corners) {
+                QList<Eigen::Vector3d> corners) {
             QList<QList<int>> points;
             QList<int> p0, p1, p2, p3, p4, p5;
 
@@ -156,9 +156,9 @@ namespace WellIndexCalculator {
             QList<QList<Eigen::Vector3d>> face_corner_coords;
             for (int ii = 0; ii < 6; ii++) {
                 QList<Eigen::Vector3d> currentSideCorners;
-                currentSideCorners.append(corners.at(points.at(ii).at(0)).toEigenVec());
-                currentSideCorners.append(corners.at(points.at(ii).at(1)).toEigenVec());
-                currentSideCorners.append(corners.at(points.at(ii).at(2)).toEigenVec());
+                currentSideCorners.append(corners[points[ii][0]]);
+                currentSideCorners.append(corners[points[ii][1]]);
+                currentSideCorners.append(corners[points[ii][2]]);
                 face_corner_coords.append(currentSideCorners);
             }
 
@@ -246,7 +246,7 @@ namespace WellIndexCalculator {
              * Determine the 3(orthogonal, or very close to orth.) vectors to project line onto.
              * Corners 4&5, 4&6 and 4&0 span the cell from the front bottom left corner.
              */
-            QList<Eigen::Vector3d> corners = cell.corners_eigen();
+            QList<Eigen::Vector3d> corners = cell.corners();
             Eigen::Vector3d xvec = corners[5] - corners[4];
             Eigen::Vector3d yvec = corners[6] - corners[4];
             Eigen::Vector3d zvec = corners[0] - corners[4];

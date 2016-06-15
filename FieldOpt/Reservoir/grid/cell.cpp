@@ -16,7 +16,8 @@ namespace Reservoir {
             permy_ = permy;
             permz_ = permz;
             center_ = center;
-            corners_ = corners;
+            for (XYZCoordinate corner : corners)
+                corners_.append(Eigen::Vector3d(corner.x(), corner.y(), corner.z()));
         }
 
         bool Cell::Equals(const Cell *other) const
@@ -28,15 +29,6 @@ namespace Reservoir {
         {
             return this->global_index() == other.global_index();
         }
-
-        QList<Eigen::Vector3d> Cell::corners_eigen() const {
-            QList<Eigen::Vector3d> corners;
-            for (auto corner : corners_) {
-                corners.append(Eigen::Vector3d(corner.x(), corner.y(), corner.z()));
-            }
-            return corners;
-        }
-
 
     }
 }

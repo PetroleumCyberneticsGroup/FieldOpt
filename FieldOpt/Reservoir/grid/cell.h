@@ -73,13 +73,7 @@ namespace Reservoir {
              * 0---1    4---5
              *
              */
-            QList<XYZCoordinate> corners() const { return corners_; }
-
-            /*!
-             * \brief Get the corners represented as a QList with eight Eigen::Vector3d objects instead
-             * of XYZCoordinate objects.
-             */
-            QList<Eigen::Vector3d> corners_eigen() const;
+            QList<Eigen::Vector3d> corners() const { return corners_; }
 
             /*!
              * \brief Equals Check if the global indices of the two cells being compared are equal.
@@ -95,7 +89,7 @@ namespace Reservoir {
             IJKCoordinate ijk_index_;
             double volume_;
             XYZCoordinate center_;
-            QList<XYZCoordinate> corners_;
+            QList<Eigen::Vector3d> corners_;
             double porosity_;
             double permx_;
             double permy_;

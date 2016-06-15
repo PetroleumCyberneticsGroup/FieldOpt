@@ -52,33 +52,33 @@ namespace {
     }
 
     TEST_F(CellTest, Corners) {
-        QList<XYZCoordinate> corners = grid_->GetCell(0).corners();
+        QList<Eigen::Vector3d> corners = grid_->GetCell(0).corners();
 
         // Top layer
-        XYZCoordinate top_sw = XYZCoordinate(0.0, 0.0, 7000.0);
-        EXPECT_TRUE(corners.at(0).Equals(top_sw));
+        Eigen::Vector3d top_sw = Eigen::Vector3d(0.0, 0.0, 7000.0);
+        EXPECT_TRUE(corners[0] == top_sw);
 
-        XYZCoordinate top_se = XYZCoordinate(100.0, 0.0, 7000.0);
-        EXPECT_TRUE(corners.at(1).Equals(top_se));
+        Eigen::Vector3d top_se = Eigen::Vector3d(100.0, 0.0, 7000.0);
+        EXPECT_TRUE(corners[1] == top_se);
 
-        XYZCoordinate top_nw = XYZCoordinate(0.0, 300.0, 7000.0);
-        EXPECT_TRUE(corners.at(2).Equals(top_nw));
+        Eigen::Vector3d top_nw = Eigen::Vector3d(0.0, 300.0, 7000.0);
+        EXPECT_TRUE(corners[2] == top_nw);
 
-        XYZCoordinate top_ne = XYZCoordinate(100.0, 300.0, 7000.0);
-        EXPECT_TRUE(corners.at(3).Equals(top_ne));
+        Eigen::Vector3d top_ne = Eigen::Vector3d(100.0, 300.0, 7000.0);
+        EXPECT_TRUE(corners[3] == top_ne);
 
         // Bottom layer
-        XYZCoordinate bottom_sw = XYZCoordinate(0.0, 0.0, 7050.0);
-        EXPECT_TRUE(corners.at(4).Equals(bottom_sw));
+        Eigen::Vector3d bottom_sw = Eigen::Vector3d(0.0, 0.0, 7050.0);
+        EXPECT_TRUE(corners[4] == bottom_sw);
 
-        XYZCoordinate bottom_se = XYZCoordinate(100.0, 0.0, 7050.0);
-        EXPECT_TRUE(corners.at(5).Equals(bottom_se));
+        Eigen::Vector3d bottom_se = Eigen::Vector3d(100.0, 0.0, 7050.0);
+        EXPECT_TRUE(corners[5] == bottom_se);
 
-        XYZCoordinate bottom_nw = XYZCoordinate(0.0, 300.0, 7050.0);
-        EXPECT_TRUE(corners.at(6).Equals(bottom_nw));
+        Eigen::Vector3d bottom_nw = Eigen::Vector3d(0.0, 300.0, 7050.0);
+        EXPECT_TRUE(corners[6] == bottom_nw);
 
-        XYZCoordinate bottom_ne = XYZCoordinate(100.0, 300.0, 7050.0);
-        EXPECT_TRUE(corners.at(7).Equals(bottom_ne));
+        Eigen::Vector3d bottom_ne = Eigen::Vector3d(100.0, 300.0, 7050.0);
+        EXPECT_TRUE(corners[7] == bottom_ne);
     }
 
     TEST_F(CellTest, Properties) {

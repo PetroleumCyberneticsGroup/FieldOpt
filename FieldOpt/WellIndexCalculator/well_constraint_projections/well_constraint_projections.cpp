@@ -7,7 +7,7 @@ namespace WellIndexCalculator {
         Eigen::Vector3d point_to_cell_shortest(Reservoir::Grid::Cell cell,
                                                                           Eigen::Vector3d point) {
             // Create a list of Eigen::Vector3d for corners.
-            QList<Eigen::Vector3d> corners = cell.corners_eigen();
+            QList<Eigen::Vector3d> corners = cell.corners();
 
             // Check if point is already inside cell
             Eigen::Vector3d qv_point = Eigen::Vector3d(point(0), point(1), point(2));
