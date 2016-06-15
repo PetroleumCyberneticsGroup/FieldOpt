@@ -25,13 +25,6 @@ namespace WellIndexCalculator {
  */
     namespace WellConstraintProjections
     {
-        //All of the functions below should probably be private. Public so I can test them.
-
-        // simple summation and product functions
-        double sum_i(double a,double b,double c);
-        double sum_ij(double a,double b,double c);
-        double prod_i(double a,double b,double c);
-
         // Functions to build A and b for different cases.
         Eigen::Matrix3d build_A_4p(QList<Eigen::Vector3d> coords);
         Eigen::Vector3d build_b_4p(QList<Eigen::Vector3d> coords, double d);

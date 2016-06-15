@@ -273,18 +273,6 @@ namespace WellIndexCalculator {
             return closest_Q;
         }
 
-        double sum_i(double a, double b, double c) {
-            return (a + b + c);
-        }
-
-        double sum_ij(double a, double b, double c) {
-            return (a * b + b * c + c * a);
-        }
-
-        double prod_i(double a, double b, double c) {
-            return (a * b * c);
-        }
-
         Eigen::Vector3d non_inv_quad_coeffs(Eigen::Vector3d x, Eigen::Vector3d n) {
             Eigen::Vector3d coeffs;
 

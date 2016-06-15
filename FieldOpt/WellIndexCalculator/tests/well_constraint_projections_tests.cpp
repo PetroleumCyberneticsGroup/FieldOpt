@@ -75,16 +75,6 @@ protected:
 };
 
 
-TEST_F(WellConstraintProjectionsTests, sumTests) {
-    EXPECT_TRUE( WellConstraintProjections::sum_i(2,3,-10)==-5 );
-    EXPECT_FALSE( WellConstraintProjections::sum_i(2,3,-10)== 5 );
-    EXPECT_TRUE( WellConstraintProjections::sum_ij(2,5,1)==17 );
-    EXPECT_FALSE( WellConstraintProjections::sum_ij(2,5,5)==-5 );
-    EXPECT_TRUE( WellConstraintProjections::prod_i(2,5,3)==30 );
-    EXPECT_FALSE( WellConstraintProjections::prod_i(2,5,3)==10 );
-
-}
-
 TEST_F(WellConstraintProjectionsTests, root_alg_test){
     Eigen::VectorXd coeffs(7);
     coeffs(0)=1;
