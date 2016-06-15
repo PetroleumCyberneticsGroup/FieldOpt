@@ -73,7 +73,7 @@ TEST_F(GridTest, GetCellEnvelopingPoint) {
 }
 
 TEST_F(GridTest, GetCellEnvelopingPointObject) {
-    XYZCoordinate *xyz = new XYZCoordinate(20, 300, 7050);
+    Eigen::Vector3d xyz = Eigen::Vector3d(20, 300, 7050);
     Cell cell = grid_->GetCellEnvelopingPoint(xyz);
     EXPECT_EQ(cell.global_index(), 20);
 }

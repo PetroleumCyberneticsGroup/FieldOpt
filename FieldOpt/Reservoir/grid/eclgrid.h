@@ -23,7 +23,7 @@ public:
     Cell GetCell(int i, int j, int k);
     Cell GetCell(IJKCoordinate* ijk);
     Cell GetCellEnvelopingPoint(double x, double y, double z);
-    Cell GetCellEnvelopingPoint(XYZCoordinate* xyz);
+    Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz);
 
 
 private:

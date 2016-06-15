@@ -11,6 +11,7 @@ add_library(ertwrapper
 		eclsummaryreader.cpp)
 add_library(fieldopt::ertwrapper ALIAS ${PROJECT_NAME})
 
+include_directories(${EIGEN3_INCLUDE_DIR})
 target_link_libraries(ertwrapper
 		PUBLIC Qt5::Core
         PUBLIC Qt5::Gui

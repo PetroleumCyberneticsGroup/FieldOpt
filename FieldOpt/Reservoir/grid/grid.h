@@ -4,7 +4,6 @@
 #include <QString>
 #include "cell.h"
 #include "ijkcoordinate.h"
-#include "xyzcoordinate.h"
 #include "ERTWrapper/eclgridreader.h"
 
 namespace Reservoir {
@@ -61,7 +60,7 @@ namespace Reservoir {
             /*!
              * \brief GetCellEnvelopingPoint Get the cell enveloping the point (x,y,z). Throws an exception if no cell is found.
              */
-            virtual Cell GetCellEnvelopingPoint(XYZCoordinate* xyz) = 0;
+            virtual Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz) = 0;
 
         protected:
             GridSourceType type_;

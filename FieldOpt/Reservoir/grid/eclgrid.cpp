@@ -107,9 +107,9 @@ namespace Reservoir {
             return GetCell(global_index);
         }
 
-        Cell ECLGrid::GetCellEnvelopingPoint(XYZCoordinate *xyz)
+        Cell ECLGrid::GetCellEnvelopingPoint(Eigen::Vector3d xyz)
         {
-            return GetCellEnvelopingPoint(xyz->x(), xyz->y(), xyz->z());
+            return GetCellEnvelopingPoint(xyz.x(), xyz.y(), xyz.z());
         }
 
     }
