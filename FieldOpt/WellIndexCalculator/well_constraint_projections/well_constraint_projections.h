@@ -8,7 +8,6 @@
 #include "WellIndexCalculator/geometry_functions/geometryfunctions.h"
 #include "WellIndexCalculator/geometry_functions/geometryfunctions_exceptions.h"
 #include <QList>
-#include <armadillo>
 #include <Eigen/Dense>
 #include <QVector3D>
 #include <QList>

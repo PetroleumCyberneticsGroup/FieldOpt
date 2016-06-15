@@ -104,41 +104,41 @@ TEST_F(WellConstraintProjectionsTests, root_alg_test){
     EXPECT_TRUE(1);
 }
 
-TEST_F(WellConstraintProjectionsTests, eigvalues_test){
-    using namespace arma;
-    mat eigvec;
-    vec eigval;
-
-    // Create matrix with known eig_vec and eig_val
-    // see: http://mathforum.org/library/drmath/view/51988.html
-    mat A(3,3);
-    A(0,0) = 3;
-    A(0,1) = 4;
-    A(0,2) = -1;
-    A(1,0) = 4;
-    A(1,1) = 3;
-    A(1,2) = 1;
-    A(2,0) = -1;
-    A(2,1) = 1;
-    A(2,2) = 1;
-
-    eig_sym(eigval,eigvec,A);
-    std::cout <<"Here is matrix A = (" << std::endl << A(0,0)<<"," << A(0,1) <<"," << A(0,2)<<")" << std::endl
-                                                     <<A(1,0)<<"," << A(1,1) <<"," << A(1,2)<<")" << std::endl
-                                                     <<A(2,0)<<"," << A(2,1) <<"," << A(2,2)<<")" << std::endl;
-
-    std::cout <<"eigenval 1 = " << eigval(0) << std::endl;
-    std::cout <<"eigenvector 1 = (" << eigvec(0,0)<<"," << eigvec(1,0) <<"," << eigvec(2,0)<<")" << std::endl;
-    std::cout <<"eigenval 2 = " << eigval.at(1) << std::endl;
-    std::cout <<"eigenvector 2 = (" << eigvec(0,1)<<"," << eigvec(1,1) <<"," << eigvec(2,1)<<")" << std::endl;
-    std::cout <<"eigenval 3 = " << eigval.at(2) << std::endl;
-    std::cout <<"eigenvector 3 = (" << eigvec(0,2)<<"," << eigvec(1,2) <<"," << eigvec(2,2)<<")" << std::endl;
-
-
-    EXPECT_TRUE(abs(eigval.at(0) + sqrt(3)) < 10e-10);
-    EXPECT_TRUE(eigval.at(1) - sqrt(3) < 10e-10);
-    EXPECT_TRUE(eigval.at(2) == 7);
-}
+//TEST_F(WellConstraintProjectionsTests, eigvalues_test){
+//    using namespace arma;
+//    mat eigvec;
+//    vec eigval;
+//
+//    // Create matrix with known eig_vec and eig_val
+//    // see: http://mathforum.org/library/drmath/view/51988.html
+//    mat A(3,3);
+//    A(0,0) = 3;
+//    A(0,1) = 4;
+//    A(0,2) = -1;
+//    A(1,0) = 4;
+//    A(1,1) = 3;
+//    A(1,2) = 1;
+//    A(2,0) = -1;
+//    A(2,1) = 1;
+//    A(2,2) = 1;
+//
+//    eig_sym(eigval,eigvec,A);
+//    std::cout <<"Here is matrix A = (" << std::endl << A(0,0)<<"," << A(0,1) <<"," << A(0,2)<<")" << std::endl
+//                                                     <<A(1,0)<<"," << A(1,1) <<"," << A(1,2)<<")" << std::endl
+//                                                     <<A(2,0)<<"," << A(2,1) <<"," << A(2,2)<<")" << std::endl;
+//
+//    std::cout <<"eigenval 1 = " << eigval(0) << std::endl;
+//    std::cout <<"eigenvector 1 = (" << eigvec(0,0)<<"," << eigvec(1,0) <<"," << eigvec(2,0)<<")" << std::endl;
+//    std::cout <<"eigenval 2 = " << eigval.at(1) << std::endl;
+//    std::cout <<"eigenvector 2 = (" << eigvec(0,1)<<"," << eigvec(1,1) <<"," << eigvec(2,1)<<")" << std::endl;
+//    std::cout <<"eigenval 3 = " << eigval.at(2) << std::endl;
+//    std::cout <<"eigenvector 3 = (" << eigvec(0,2)<<"," << eigvec(1,2) <<"," << eigvec(2,2)<<")" << std::endl;
+//
+//
+//    EXPECT_TRUE(abs(eigval.at(0) + sqrt(3)) < 10e-10);
+//    EXPECT_TRUE(eigval.at(1) - sqrt(3) < 10e-10);
+//    EXPECT_TRUE(eigval.at(2) == 7);
+//}
 
 //TEST_F(WellConstraintProjectionsTests, 3p_interwell_projection_test){
 //    // INITIALIZE

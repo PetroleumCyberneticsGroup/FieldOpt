@@ -10,11 +10,10 @@ add_library(wellindexcalculator
         wellindexcalculator.cpp)
 add_library(fieldopt::wellindexcalculator ALIAS ${PROJECT_NAME})
 
-include_directories(${ARMADILLO_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR})
+include_directories(${EIGEN3_INCLUDE_DIR})
 target_link_libraries(wellindexcalculator
         PUBLIC Qt5::Core
         PUBLIC Qt5::Gui
-        PUBLIC ${ARMADILLO_LIBRARIES}
         PUBLIC ${RpolyPlusPlus}
         PUBLIC fieldopt::ertwrapper
         PUBLIC fieldopt::reservoir

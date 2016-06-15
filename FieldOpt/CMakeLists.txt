@@ -20,7 +20,6 @@ set(Boost_USE_STATIC_LIBS OFF) # enable dynamic linking
 set(Boost_USE_MULTITHREAD ON) # enable multithreading
 find_package(Boost COMPONENTS REQUIRED program_options)
 
-find_package(Armadillo)
 find_package(Threads)
 find_package(Eigen3)
 
