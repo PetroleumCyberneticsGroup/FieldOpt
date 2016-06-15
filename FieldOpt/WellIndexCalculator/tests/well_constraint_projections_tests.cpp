@@ -140,82 +140,82 @@ TEST_F(WellConstraintProjectionsTests, eigvalues_test){
     EXPECT_TRUE(eigval.at(2) == 7);
 }
 
-TEST_F(WellConstraintProjectionsTests, 3p_interwell_projection_test){
-    // INITIALIZE
+//TEST_F(WellConstraintProjectionsTests, 3p_interwell_projection_test){
+//    // INITIALIZE
+//
+//    QList<QVector3D> moved_cords = WellIndexCalculator::WellConstraintProjections::interwell_projection_3p(coords_3d_qvec, d);
+//    std::cout << "3 point inter-well projection test. shortest distance before moving = " << WellConstraintProjections::shortest_distance_3p(coords_3d_qvec) << std::endl;
+//    std::cout << "x0 moved from (" << coords_3d_qvec.at(0).x() <<"," << coords_3d_qvec.at(0).y() << "," << coords_3d_qvec.at(0).z() << ") to ("
+//              << moved_cords.at(0).x() <<"," << moved_cords.at(0).y() << "," << moved_cords.at(0).z()<< ")" << std::endl;
+//    std::cout << "x1 moved from (" << coords_3d_qvec.at(1).x() <<"," << coords_3d_qvec.at(1).y() << "," << coords_3d_qvec.at(1).z() << ") to ("
+//              << moved_cords.at(1).x() <<"," << moved_cords.at(1).y() << "," << moved_cords.at(1).z()<< ")" << std::endl;
+//    std::cout << "x2 moved from (" << coords_3d_qvec.at(2).x() <<"," << coords_3d_qvec.at(2).y() << "," << coords_3d_qvec.at(2).z() << ") to ("
+//              << moved_cords.at(2).x() <<"," << moved_cords.at(2).y() << "," << moved_cords.at(2).z()<< ")" << std::endl;
+//    std::cout << "shortest distance between line segments after moving = " << WellConstraintProjections::shortest_distance_3p(moved_cords) << std::endl;
+//
+//    EXPECT_TRUE(1);
+//}
 
-    QList<QVector3D> moved_cords = WellIndexCalculator::WellConstraintProjections::interwell_projection_3p(coords_3d_qvec, d);
-    std::cout << "3 point inter-well projection test. shortest distance before moving = " << WellConstraintProjections::shortest_distance_3p(coords_3d_qvec) << std::endl;
-    std::cout << "x0 moved from (" << coords_3d_qvec.at(0).x() <<"," << coords_3d_qvec.at(0).y() << "," << coords_3d_qvec.at(0).z() << ") to ("
-              << moved_cords.at(0).x() <<"," << moved_cords.at(0).y() << "," << moved_cords.at(0).z()<< ")" << std::endl;
-    std::cout << "x1 moved from (" << coords_3d_qvec.at(1).x() <<"," << coords_3d_qvec.at(1).y() << "," << coords_3d_qvec.at(1).z() << ") to ("
-              << moved_cords.at(1).x() <<"," << moved_cords.at(1).y() << "," << moved_cords.at(1).z()<< ")" << std::endl;
-    std::cout << "x2 moved from (" << coords_3d_qvec.at(2).x() <<"," << coords_3d_qvec.at(2).y() << "," << coords_3d_qvec.at(2).z() << ") to ("
-              << moved_cords.at(2).x() <<"," << moved_cords.at(2).y() << "," << moved_cords.at(2).z()<< ")" << std::endl;
-    std::cout << "shortest distance between line segments after moving = " << WellConstraintProjections::shortest_distance_3p(moved_cords) << std::endl;
+//TEST_F(WellConstraintProjectionsTests, 3p_inter_updated_test){
+//    // INITIALIZE
+//
+//    QList<QVector3D> moved_cords = WellIndexCalculator::WellConstraintProjections::interwell_projection_3p_eigen(coords_3d_qvec,d);
+//    if(moved_cords.length()>0){
+//        std::cout << "3 point inter-well projection test. shortest distance before moving = " << WellConstraintProjections::shortest_distance_3p(coords_3d_qvec) << std::endl;
+//        std::cout << "x0 moved from (" << coords_3d_qvec.at(0).x() <<"," << coords_3d_qvec.at(0).y() << "," << coords_3d_qvec.at(0).z() << ") to ("
+//                  << moved_cords.at(0).x() <<"," << moved_cords.at(0).y() << "," << moved_cords.at(0).z()<< ")" << std::endl;
+//        std::cout << "x1 moved from (" << coords_3d_qvec.at(1).x() <<"," << coords_3d_qvec.at(1).y() << "," << coords_3d_qvec.at(1).z() << ") to ("
+//                  << moved_cords.at(1).x() <<"," << moved_cords.at(1).y() << "," << moved_cords.at(1).z()<< ")" << std::endl;
+//        std::cout << "x2 moved from (" << coords_3d_qvec.at(2).x() <<"," << coords_3d_qvec.at(2).y() << "," << coords_3d_qvec.at(2).z() << ") to ("
+//                  << moved_cords.at(2).x() <<"," << moved_cords.at(2).y() << "," << moved_cords.at(2).z()<< ")" << std::endl;
+//        std::cout << "shortest distance between line segments after moving = " << WellConstraintProjections::shortest_distance_3p(moved_cords) << std::endl;
+//
+//    }
+//    else std::cout << "no solution was found at all" << std::endl;
+//    EXPECT_TRUE(1);
+//}
 
-    EXPECT_TRUE(1);
-}
+//TEST_F(WellConstraintProjectionsTests, interwell_projection_test){
+//    // INITIALIZE
+//
+//    QList<QVector3D> moved_cords = WellIndexCalculator::WellConstraintProjections::interwell_constraint_projection_2nd(coords_qvec, d);
+//    std::cout << "inter-well 4p projection test. shortest distance before moving = " << WellConstraintProjections::shortest_distance(coords_qvec) << std::endl;
+//    if(moved_cords.length()>0){
+//        std::cout << "x0 moved from (" << coords_qvec.at(0).x() <<"," << coords_qvec.at(0).y() << "," << coords_qvec.at(0).z() << ") to ("
+//                  << moved_cords.at(0).x() <<"," << moved_cords.at(0).y() << "," << moved_cords.at(0).z()<< ")" << std::endl;
+//        std::cout << "x1 moved from (" << coords_qvec.at(1).x() <<"," << coords_qvec.at(1).y() << "," << coords_qvec.at(1).z() << ") to ("
+//                << moved_cords.at(1).x() <<"," << moved_cords.at(1).y() << "," << moved_cords.at(1).z()<< ")" << std::endl;
+//        std::cout << "x2 moved from (" << coords_qvec.at(2).x() <<"," << coords_qvec.at(2).y() << "," << coords_qvec.at(2).z() << ") to ("
+//                 << moved_cords.at(2).x() <<"," << moved_cords.at(2).y() << "," << moved_cords.at(2).z()<< ")" << std::endl;
+//        std::cout << "x3 moved from (" << coords_qvec.at(3).x() <<"," << coords_qvec.at(3).y() << "," << coords_qvec.at(3).z() << ") to ("
+//                  << moved_cords.at(3).x() <<"," << moved_cords.at(3).y() << "," << moved_cords.at(3).z()<< ")" << std::endl;
+//        std::cout << "shortest distance between line segments after moving = " << WellConstraintProjections::shortest_distance(moved_cords) << std::endl;
+//    }
+//    else std::cout << "no solution was found at all" << std::endl;
+//    EXPECT_TRUE(1);
+//}
 
-TEST_F(WellConstraintProjectionsTests, 3p_inter_updated_test){
-    // INITIALIZE
-
-    QList<QVector3D> moved_cords = WellIndexCalculator::WellConstraintProjections::interwell_projection_3p_eigen(coords_3d_qvec,d);
-    if(moved_cords.length()>0){
-        std::cout << "3 point inter-well projection test. shortest distance before moving = " << WellConstraintProjections::shortest_distance_3p(coords_3d_qvec) << std::endl;
-        std::cout << "x0 moved from (" << coords_3d_qvec.at(0).x() <<"," << coords_3d_qvec.at(0).y() << "," << coords_3d_qvec.at(0).z() << ") to ("
-                  << moved_cords.at(0).x() <<"," << moved_cords.at(0).y() << "," << moved_cords.at(0).z()<< ")" << std::endl;
-        std::cout << "x1 moved from (" << coords_3d_qvec.at(1).x() <<"," << coords_3d_qvec.at(1).y() << "," << coords_3d_qvec.at(1).z() << ") to ("
-                  << moved_cords.at(1).x() <<"," << moved_cords.at(1).y() << "," << moved_cords.at(1).z()<< ")" << std::endl;
-        std::cout << "x2 moved from (" << coords_3d_qvec.at(2).x() <<"," << coords_3d_qvec.at(2).y() << "," << coords_3d_qvec.at(2).z() << ") to ("
-                  << moved_cords.at(2).x() <<"," << moved_cords.at(2).y() << "," << moved_cords.at(2).z()<< ")" << std::endl;
-        std::cout << "shortest distance between line segments after moving = " << WellConstraintProjections::shortest_distance_3p(moved_cords) << std::endl;
-
-    }
-    else std::cout << "no solution was found at all" << std::endl;
-    EXPECT_TRUE(1);
-}
-
-TEST_F(WellConstraintProjectionsTests, interwell_projection_test){
-    // INITIALIZE
-
-    QList<QVector3D> moved_cords = WellIndexCalculator::WellConstraintProjections::interwell_constraint_projection_2nd(coords_qvec, d);
-    std::cout << "inter-well 4p projection test. shortest distance before moving = " << WellConstraintProjections::shortest_distance(coords_qvec) << std::endl;
-    if(moved_cords.length()>0){
-        std::cout << "x0 moved from (" << coords_qvec.at(0).x() <<"," << coords_qvec.at(0).y() << "," << coords_qvec.at(0).z() << ") to ("
-                  << moved_cords.at(0).x() <<"," << moved_cords.at(0).y() << "," << moved_cords.at(0).z()<< ")" << std::endl;
-        std::cout << "x1 moved from (" << coords_qvec.at(1).x() <<"," << coords_qvec.at(1).y() << "," << coords_qvec.at(1).z() << ") to ("
-                << moved_cords.at(1).x() <<"," << moved_cords.at(1).y() << "," << moved_cords.at(1).z()<< ")" << std::endl;
-        std::cout << "x2 moved from (" << coords_qvec.at(2).x() <<"," << coords_qvec.at(2).y() << "," << coords_qvec.at(2).z() << ") to ("
-                 << moved_cords.at(2).x() <<"," << moved_cords.at(2).y() << "," << moved_cords.at(2).z()<< ")" << std::endl;
-        std::cout << "x3 moved from (" << coords_qvec.at(3).x() <<"," << coords_qvec.at(3).y() << "," << coords_qvec.at(3).z() << ") to ("
-                  << moved_cords.at(3).x() <<"," << moved_cords.at(3).y() << "," << moved_cords.at(3).z()<< ")" << std::endl;
-        std::cout << "shortest distance between line segments after moving = " << WellConstraintProjections::shortest_distance(moved_cords) << std::endl;
-    }
-    else std::cout << "no solution was found at all" << std::endl;
-    EXPECT_TRUE(1);
-}
-
-TEST_F(WellConstraintProjectionsTests, well_distance_test){
-    // SLIGHT ERRORS; FIX
-    double max = 8;
-    double max_1 = 3;
-    double min = 5;
-    double min_1 = 5;
-    QVector3D heel = QVector3D(0,0,0);
-    QVector3D toe = QVector3D(10,0,0);
-    QVector3D heel_1 = QVector3D(0,0,0);
-    QVector3D toe_1 = QVector3D(3,0,0);
-    QList<QVector3D> moved_points;
-    QList<QVector3D> moved_points_1;
-    QList<QVector3D> moved_points_2;
-    moved_points = WellConstraintProjections::well_distance_projection(heel,toe,max,min,0);
-    moved_points_1 = WellConstraintProjections::well_distance_projection(heel_1,toe_1,max_1,min_1,0);
-    moved_points_2 = WellConstraintProjections::well_distance_projection(heel,toe,12,2,0);
-    EXPECT_TRUE(moved_points.at(0).x()==1);
-    EXPECT_TRUE(moved_points_1.at(0).x()==-1);
-    EXPECT_TRUE(moved_points_1.at(1).x()==4);
-    EXPECT_TRUE(moved_points_2.at(0) == heel);
-}
+//TEST_F(WellConstraintProjectionsTests, well_distance_test){
+//    // SLIGHT ERRORS; FIX
+//    double max = 8;
+//    double max_1 = 3;
+//    double min = 5;
+//    double min_1 = 5;
+//    QVector3D heel = QVector3D(0,0,0);
+//    QVector3D toe = QVector3D(10,0,0);
+//    QVector3D heel_1 = QVector3D(0,0,0);
+//    QVector3D toe_1 = QVector3D(3,0,0);
+//    QList<QVector3D> moved_points;
+//    QList<QVector3D> moved_points_1;
+//    QList<QVector3D> moved_points_2;
+//    moved_points = WellConstraintProjections::well_distance_projection(heel,toe,max,min,0);
+//    moved_points_1 = WellConstraintProjections::well_distance_projection(heel_1,toe_1,max_1,min_1,0);
+//    moved_points_2 = WellConstraintProjections::well_distance_projection(heel,toe,12,2,0);
+//    EXPECT_TRUE(moved_points.at(0).x()==1);
+//    EXPECT_TRUE(moved_points_1.at(0).x()==-1);
+//    EXPECT_TRUE(moved_points_1.at(1).x()==4);
+//    EXPECT_TRUE(moved_points_2.at(0) == heel);
+//}
 
 TEST_F(WellConstraintProjectionsTests, LU_factorisation){
 
@@ -235,52 +235,52 @@ TEST_F(WellConstraintProjectionsTests, LU_factorisation){
     }
 
 }
+//
+//TEST_F(WellConstraintProjectionsTests, kkt_eq_solutions_test){
+//
+//    arma::mat A = WellIndexCalculator::WellConstraintProjections::build_A_4p_qvec(coords_qvec);
+//    arma::vec b = WellIndexCalculator::WellConstraintProjections::build_b_4p_qvec(coords_qvec,d);
+//    QList<QVector3D> solution_vectors = WellConstraintProjections::kkt_eq_solutions(A,b);
+//
+//    std::cout << "x3 = (" << coords_3d_qvec.at(0).x() << "," << coords_3d_qvec.at(0).y() << "," << coords_3d_qvec.at(0).z() << ")" << std::endl;
+//    std::cout << "x1 = (" << coords_3d_qvec.at(1).x() << "," << coords_3d_qvec.at(1).y() << "," << coords_3d_qvec.at(1).z() << ")" << std::endl;
+//    std::cout << "x2 = (" << coords_3d_qvec.at(2).x() << "," << coords_3d_qvec.at(2).y() << "," << coords_3d_qvec.at(2).z() << ")" << std::endl;
+//    std::cout << "distance between x1 x3 = " << (coords_3d_qvec.at(0)-coords_3d_qvec.at(1)).length() << std::endl;
+//    std::cout << "distance between x2 x3 = " << (coords_3d_qvec.at(0)-coords_3d_qvec.at(2)).length() << std::endl;
+//
+//    std::cout << "shortest distance = " << WellIndexCalculator::WellConstraintProjections::shortest_distance(coords_qvec) << std::endl;
+//    for(int i=0; i<solution_vectors.length(); i++){
+//        std::cout << "solution vector with length "<< sqrt(solution_vectors.at(i).x()*solution_vectors.at(i).x()
+//                                                          +solution_vectors.at(i).y()*solution_vectors.at(i).y()
+//                                                          +solution_vectors.at(i).z()*solution_vectors.at(i).z());
+//
+//        std::cout << " = (" << solution_vectors.at(i).x() << ", ";
+//        std::cout << solution_vectors.at(i).y() << ", ";
+//        std::cout << solution_vectors.at(i).z() << ") " << std::endl;
+//    }
+//
+//}
 
-TEST_F(WellConstraintProjectionsTests, kkt_eq_solutions_test){
-
-    arma::mat A = WellIndexCalculator::WellConstraintProjections::build_A_4p_qvec(coords_qvec);
-    arma::vec b = WellIndexCalculator::WellConstraintProjections::build_b_4p_qvec(coords_qvec,d);
-    QList<QVector3D> solution_vectors = WellConstraintProjections::kkt_eq_solutions(A,b);
-
-    std::cout << "x3 = (" << coords_3d_qvec.at(0).x() << "," << coords_3d_qvec.at(0).y() << "," << coords_3d_qvec.at(0).z() << ")" << std::endl;
-    std::cout << "x1 = (" << coords_3d_qvec.at(1).x() << "," << coords_3d_qvec.at(1).y() << "," << coords_3d_qvec.at(1).z() << ")" << std::endl;
-    std::cout << "x2 = (" << coords_3d_qvec.at(2).x() << "," << coords_3d_qvec.at(2).y() << "," << coords_3d_qvec.at(2).z() << ")" << std::endl;
-    std::cout << "distance between x1 x3 = " << (coords_3d_qvec.at(0)-coords_3d_qvec.at(1)).length() << std::endl;
-    std::cout << "distance between x2 x3 = " << (coords_3d_qvec.at(0)-coords_3d_qvec.at(2)).length() << std::endl;
-
-    std::cout << "shortest distance = " << WellIndexCalculator::WellConstraintProjections::shortest_distance(coords_qvec) << std::endl;
-    for(int i=0; i<solution_vectors.length(); i++){
-        std::cout << "solution vector with length "<< sqrt(solution_vectors.at(i).x()*solution_vectors.at(i).x()
-                                                          +solution_vectors.at(i).y()*solution_vectors.at(i).y()
-                                                          +solution_vectors.at(i).z()*solution_vectors.at(i).z());
-
-        std::cout << " = (" << solution_vectors.at(i).x() << ", ";
-        std::cout << solution_vectors.at(i).y() << ", ";
-        std::cout << solution_vectors.at(i).z() << ") " << std::endl;
-    }
-
-}
-
-TEST_F(WellConstraintProjectionsTests, diagonalize_orthogonality_test){
-
-    arma::mat A = WellIndexCalculator::WellConstraintProjections::build_A_3p_qvec(coords_3d_qvec);
-    arma::mat eigvec;
-    arma::vec eigval;
-    Eigen::Matrix3d A_temp;
-
-    arma::eig_sym(eigval,eigvec,A);
-
-    std::cout << "eigvec1 = (" << eigvec(0,0) << "," << eigvec(1,0) << "," << eigvec(2,0) << ") with length = "<<
-              sqrt(eigvec(0,0)*eigvec(0,0) + eigvec(1,0)*eigvec(1,0) +eigvec(2,0)*eigvec(2,0))<< " and eigenvalue "<< eigval(0) << std::endl;
-    std::cout << "eigvec2 = (" << eigvec(0,1) << "," << eigvec(1,1) << "," << eigvec(2,1) << ") with eigenvalue "<< eigval(1)<< ")" << std::endl;
-    std::cout << "eigvec3 = (" << eigvec(0,2) << "," << eigvec(1,2) << "," << eigvec(2,2) << ") with eigenvalue "<< eigval(2)<< ")" << std::endl;
-
-    std::cout << "dot product 1,2 = " << eigvec(0,0)*eigvec(0,1) + eigvec(1,0)*eigvec(1,1) +eigvec(2,0)*eigvec(2,1) << std::endl;
-    std::cout << "dot product 1,3 = " << eigvec(0,0)*eigvec(0,2) + eigvec(1,0)*eigvec(1,2) +eigvec(2,0)*eigvec(2,2) << std::endl;
-    std::cout << "dot product 3,1 = " << eigvec(0,2)*eigvec(0,1) + eigvec(1,2)*eigvec(1,1) +eigvec(2,2)*eigvec(2,1) << std::endl;
-
-
-}
+//TEST_F(WellConstraintProjectionsTests, diagonalize_orthogonality_test){
+//
+//    arma::mat A = WellIndexCalculator::WellConstraintProjections::build_A_3p_qvec(coords_3d_qvec);
+//    arma::mat eigvec;
+//    arma::vec eigval;
+//    Eigen::Matrix3d A_temp;
+//
+//    arma::eig_sym(eigval,eigvec,A);
+//
+//    std::cout << "eigvec1 = (" << eigvec(0,0) << "," << eigvec(1,0) << "," << eigvec(2,0) << ") with length = "<<
+//              sqrt(eigvec(0,0)*eigvec(0,0) + eigvec(1,0)*eigvec(1,0) +eigvec(2,0)*eigvec(2,0))<< " and eigenvalue "<< eigval(0) << std::endl;
+//    std::cout << "eigvec2 = (" << eigvec(0,1) << "," << eigvec(1,1) << "," << eigvec(2,1) << ") with eigenvalue "<< eigval(1)<< ")" << std::endl;
+//    std::cout << "eigvec3 = (" << eigvec(0,2) << "," << eigvec(1,2) << "," << eigvec(2,2) << ") with eigenvalue "<< eigval(2)<< ")" << std::endl;
+//
+//    std::cout << "dot product 1,2 = " << eigvec(0,0)*eigvec(0,1) + eigvec(1,0)*eigvec(1,1) +eigvec(2,0)*eigvec(2,1) << std::endl;
+//    std::cout << "dot product 1,3 = " << eigvec(0,0)*eigvec(0,2) + eigvec(1,0)*eigvec(1,2) +eigvec(2,0)*eigvec(2,2) << std::endl;
+//    std::cout << "dot product 3,1 = " << eigvec(0,2)*eigvec(0,1) + eigvec(1,2)*eigvec(1,1) +eigvec(2,2)*eigvec(2,1) << std::endl;
+//
+//
+//}
 
 TEST_F(WellConstraintProjectionsTests, eigen_eigensolver_test){
 

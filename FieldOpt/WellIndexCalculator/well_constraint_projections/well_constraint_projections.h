@@ -130,68 +130,12 @@ public:
 
     static Eigen::Vector3d well_domain_constraint_indices(Eigen::Vector3d point, Reservoir::Grid::Grid *grid, QList<int> index_list);
 
-    /* FUNCTIONS BELOW THIS LINE AND UNTIL PRIVATE STARTS
-     * ARE NOT NEEDED AND SCHEDULED TO BE DELETED
-     */
-
-    static QList<QVector3D> interwell_projection_3p(QList<QVector3D> coords, double d);
-    static QList<QVector3D> interwell_projection_3p_eigen(QList<QVector3D> coords, double d);
-
-
-    static QList<QVector3D> well_distance_projection(QVector3D heel, QVector3D toe, double max, double min, double epsilon);
-
-    static QList<QVector3D> move_points_4p(QList<QVector3D> coords, double d, QVector3D s);
-    static QList<QVector3D> move_points_3p(QList<QVector3D> coords, double d, QVector3D s);
-
-    static QList<QVector3D> kkt_eq_solutions(arma::mat A, arma::vec b);
-
-    static double shortest_distance_3p(QList<QVector3D> coords);
-
-    /*!
-     * \brief Master function for the interwell constraint projection. Projects two wells so that they are at least a distance d appart.
-     * \param Two line segments defined by their endpoints. Two first entries belong to first line segment, two last entries belong to second line segment.
-     * \return Cheapest(L2-norm) projection of line segments s.t. they are at least a distance d appart.
-    */
-    static QList<QVector3D> interwell_constraint_projection_2nd(QList<QVector3D> coords, double d);
-
-    /*!
-     * \brief Calculates the shortest distance between two line segments. Line segment endpoints given by 4 coordinates
-     * \param coordinates containing endpoints of both line segments
-     * \return shortest distance between line segments
-    */
-    static double shortest_distance(QList<QVector3D> coords);
-
-
-    // Below here used to be private
-
-    /*!
-     * \brief returns the k'th element of the matrix-vector product Qt*b
-     * \param matrix
-     * \param vector
-     * \param k'th element
-     * \return k'th element of matrix-vector product
-    */
-    static double prod_Qtb(arma::mat Qt, arma::vec b, int k);
-
-    // Build matrices for 2point and 3point case!
-
-    static arma::mat build_A(QList<QVector3D> coords);
-    static arma::vec build_b(QList<QVector3D> coords, double d);
-
-    static arma::mat build_A_4p_qvec(QList<QVector3D> coords);
-    static arma::vec build_b_4p_qvec(QList<QVector3D> coords, double d);
-    static arma::mat build_A_3p_qvec(QList<QVector3D> coords);
-    static arma::vec build_b_3p_qvec(QList<QVector3D> coords, double d);
-
-    static Eigen::VectorXd coeff_vector(arma::vec D, arma::mat Qt, arma::vec b);
-
     /*!
      * \brief Sets all elements of a 3-by-3 matrix whose absolute value is below a certain threshold to zero.
      * \param Matrix
      * \param Threshold
      * \return Matrix with cleared sub-threshold values
     */
-
     static Eigen::Vector3d rm_entries_eps(Eigen::Vector3d m, double eps);
 
 };
