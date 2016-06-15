@@ -68,15 +68,6 @@ namespace WellIndexCalculator {
                                                Eigen::Vector3d end_point, Eigen::Vector3d exception_point);
 
         /*!
-         * \brief project_line_to_plane is the orthognal projection of two points (and the line segment connecting them) down on a plane
-         * \param a line
-         * \param SquarePlane object containing points which lie in the same plane
-         * \return orthogonal projection of line
-        */
-        static Eigen::Vector3d project_point_to_plane(Eigen::Vector3d point, Eigen::Vector3d normal_vector,
-                                                      Eigen::Vector3d plane_point);
-
-        /*!
          * \brief project_v1_onv2 is the orthognal projection of a vector v1 onto the vector v2.
          * \param vector to be projected
          * \param vector onto which projection is done
@@ -146,14 +137,6 @@ namespace WellIndexCalculator {
                                                                    QList<Eigen::Vector3d> end_points, double wellbore_radius);
 
         /*!
-         * \brief Given two lists of Eigen::Vector3d* points, calculates the L2-norm of the vectors between the points.
-         * \param initial points
-         * \param moved points
-         * \return L2 norm of vectors of how points moved.
-         */
-        static double movement_cost(QList<Eigen::Vector3d> old_coords, QList<Eigen::Vector3d> new_coords);
-
-        /*!
          * \brief Given a cell block and a point in space, computes the point in the cell block which is closest to the given point
          * \param initial points
          * \param moved points
@@ -189,11 +172,6 @@ namespace WellIndexCalculator {
          * \param name (and path) of file to be created and written to.
          */
 //        static void print_well_index_file(Reservoir::Grid::Grid *grid , QList<QVector3D> start_point, QList<QVector3D> end_points, double wellbore_radius, double min_wi, QString filename);
-
-        static Eigen::Vector3d qvec_to_evec(QVector3D vec); // \todo This is temporary and should be removed
-        static QList<Eigen::Vector3d> qveclist_to_eveclist(QList<QVector3D> qveclist); // \todo This is temporary and should be removed
-        static QList<QVector3D> eveclist_to_qveclist(QList<Eigen::Vector3d> eveclist); // \todo This is temporary and should be removed
-        static QVector3D evec_to_qvec(Eigen::Vector3d vec); // \todo This is temporary and should be removed
     };
 
 }

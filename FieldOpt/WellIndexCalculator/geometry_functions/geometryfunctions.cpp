@@ -231,12 +231,6 @@ namespace WellIndexCalculator {
         return entry_point;
     }
 
-    Eigen::Vector3d GeometryFunctions::project_point_to_plane(Eigen::Vector3d point, Eigen::Vector3d normal_vector,
-                                                              Eigen::Vector3d plane_point)
-    {
-        return point - normal_vector * (point-plane_point).dot(normal_vector);
-    }
-
     Eigen::Vector3d GeometryFunctions::project_v1_on_v2(Eigen::Vector3d v1, Eigen::Vector3d v2)
     {
         return v2 * v2.dot(v1) / v2.dot(v2);
@@ -373,18 +367,6 @@ namespace WellIndexCalculator {
         pair.first = temp_pair.first;
         pair.second = well_indeces;
         return pair;
-    }
-
-    double GeometryFunctions::movement_cost(QList<Eigen::Vector3d> old_coords, QList<Eigen::Vector3d> new_coords)
-    {
-        double n_of_points = old_coords.length();
-        if(new_coords.length()!=n_of_points){throw geometryfunctions::MovementCost_VectorsNotSameLength("Lists of points are not the same length");}
-        double cost_squares = 0;
-        for (int ii=0; ii<n_of_points; ii++){
-            cost_squares += (new_coords[ii] - old_coords[ii]).squaredNorm();
-        }
-
-        return sqrt(cost_squares);
     }
 
     Eigen::Vector3d GeometryFunctions::point_to_cell_shortest(Reservoir::Grid::Cell cell, Eigen::Vector3d point)
@@ -725,28 +707,6 @@ namespace WellIndexCalculator {
 //
 //        myfile.close();
 //    }
-
-    Eigen::Vector3d GeometryFunctions::qvec_to_evec(QVector3D vec) {
-        return Eigen::Vector3d(vec.x(), vec.y(), vec.z());
-    }
-
-    QVector3D GeometryFunctions::evec_to_qvec(Eigen::Vector3d vec) {
-        return QVector3D(vec.x(), vec.y(), vec.z());
-    }
-
-    QList<Eigen::Vector3d> GeometryFunctions::qveclist_to_eveclist(QList<QVector3D> qveclist) {
-        QList<Eigen::Vector3d> list;
-        for (auto vec : qveclist)
-            list.append(Eigen::Vector3d(vec.x(), vec.y(), vec.z()));
-        return list;
-    }
-
-    QList<QVector3D> GeometryFunctions::eveclist_to_qveclist(QList<Eigen::Vector3d> eveclist) {
-        QList<QVector3D> list;
-        for (auto vec : eveclist)
-            list.append(QVector3D(vec.x(), vec.y(), vec.z()));
-        return list;
-    }
 
 
 }
