@@ -7,6 +7,10 @@
 #include "Reservoir/grid/xyzcoordinate.h"
 #include "WellIndexCalculator/geometry_functions/geometryfunctions.h"
 #include "WellIndexCalculator/geometry_functions/geometryfunctions_exceptions.h"
+#include "Reservoir/grid/cell.h"
+#include "Reservoir/grid/grid.h"
+#include "Reservoir/grid/eclgrid.h"
+#include "Reservoir/grid/grid_exceptions.h"
 #include <QList>
 #include <Eigen/Dense>
 #include <QList>
@@ -149,6 +153,29 @@ namespace WellIndexCalculator {
         */
         static Eigen::Vector3d rm_entries_eps(Eigen::Vector3d m, double eps);
 
+        /*!
+             * \brief Given a cell block and a point in space, computes the point in the cell block which is closest to the given point
+             * \param initial points
+             * \param moved points
+             * \return L2 norm of vectors of how points moved.
+             */
+        static Eigen::Vector3d point_to_cell_shortest(Reservoir::Grid::Cell cell, Eigen::Vector3d point);
+
+        /*!
+         * \brief Given a face (4 corner points) and a point in 3D space, computes the point on the face which is closest to given point
+         * \param initial points
+         * \param moved points
+         * \return point on face closest to given point
+         */
+        static Eigen::Vector3d point_to_face_shortest(QList<Eigen::Vector3d> face, Eigen::Vector3d point, Reservoir::Grid::Cell cell);
+
+        /*!
+         * \brief computes which point on a line segment that is closest to a given point
+         * \param line segment
+         * \param given point
+         * \return point on line segment closest to given point
+         */
+        static Eigen::Vector3d point_to_line_shortest(QList<Eigen::Vector3d> line_segment, Eigen::Vector3d P0);
     };
 
 }

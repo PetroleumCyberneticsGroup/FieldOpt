@@ -1,6 +1,274 @@
+#include "geometryfunctions.h"
 #include "well_constraint_projections.h"
 
 namespace WellIndexCalculator{
+
+    Eigen::Vector3d WellConstraintProjections::point_to_cell_shortest(Reservoir::Grid::Cell cell, Eigen::Vector3d point)
+    {
+        // Create a list of Eigen::Vector3d for corners.
+        QList<Eigen::Vector3d> corners = cell.corners_eigen();
+
+        // Check if point is already inside cell
+        Eigen::Vector3d qv_point = Eigen::Vector3d(point(0), point(1), point(2));
+        if(GeometryFunctions::is_point_inside_cell(cell, qv_point)){
+            std::cout << "point is inside cell" << std::endl;
+            return point;
+        }
+
+        // Shortest distance so far
+        double minimum = INFINITY;
+        Eigen::Vector3d closest_point = point;
+
+        // face_indices[ii] contain the indices to
+        // find the corners that belong to face ii
+
+        //TODO: Compare face indices with those in GeometryFunctions::cell_planes_coords
+        int face_indices[6][4] = { { 0, 1 ,2, 3},
+                                   { 4, 5, 6, 7},
+                                   { 2, 0, 6, 4},
+                                   { 1, 3, 5, 7},
+                                   { 0, 1, 4, 5},
+                                   { 2, 3, 6, 7} };
+
+        // Loop through all faces.
+        for(int ii = 0; ii<6; ii++){
+            QList<Eigen::Vector3d> temp_face({corners.at(face_indices[ii][0]), corners.at(face_indices[ii][1]), corners.at(face_indices[ii][2]), corners.at(face_indices[ii][3]) });
+            Eigen::Vector3d temp_point = point_to_face_shortest(temp_face, point, cell);
+            Eigen::Vector3d projected_length = point - temp_point;
+            if(projected_length.norm()<minimum){
+                closest_point = temp_point;
+                minimum = projected_length.norm();
+            }
+        }
+        return closest_point;
+    }
+
+    Eigen::Vector3d WellConstraintProjections::point_to_face_shortest(QList<Eigen::Vector3d> face, Eigen::Vector3d point, Reservoir::Grid::Cell cell)
+    {
+        /* Assumes that corner points of face are given in the following order
+         * (front/back doesn't really matter here)
+         *
+         *          2 *---* 3
+         *            |   |
+         *          0 *---* 1
+         */
+
+        // Calculate normal vector and normalize
+        Eigen::Vector3d vec1 = face.at(0) - face.at(1);
+        Eigen::Vector3d vec2 = face.at(0) - face.at(2);
+        Eigen::Vector3d n_vec = vec1.cross(vec2);
+        n_vec.normalize();
+
+        // Project point onto plane spanned by face
+        Eigen::Vector3d proj_point = point - n_vec.dot(point - face.at(0)) * n_vec;
+
+        /* Check if point is inside the face.
+         * Equivalently we can just check if the
+         * point is inside cell
+         */
+        Eigen::Vector3d qv_point = Eigen::Vector3d(proj_point(0), proj_point(1), proj_point(2));
+        if(GeometryFunctions::is_point_inside_cell(cell, qv_point)){
+            return proj_point;
+        }
+
+        /* If the above is false, projected point is outside face.
+         * Closest point lies on one of the four lines.
+         * create array for locating line segments, and
+         * loop through all lines to find best point.
+         */
+        int line_indices[4][2] = { { 0, 1 },
+                                   { 1, 3 },
+                                   { 3, 2 },
+                                   { 2, 0 } };
+        double minimum = INFINITY;
+        Eigen::Vector3d closest_point;
+        for(int ii=0; ii<4; ii++){
+            QList<Eigen::Vector3d> temp_line({face.at(line_indices[ii][0]), face.at(line_indices[ii][1])});
+            Eigen::Vector3d temp_point = point_to_line_shortest(temp_line, point);
+            Eigen::Vector3d projected_length = point - temp_point;
+
+            if(projected_length.norm()<minimum){
+                closest_point = temp_point;
+                minimum = projected_length.norm();
+            }
+        }
+        return closest_point;
+    }
+
+    Eigen::Vector3d WellConstraintProjections::point_to_line_shortest(QList<Eigen::Vector3d> line_segment, Eigen::Vector3d P0)
+    {
+        /* Function runs through all possible combinations of
+         * where the two closest points could be located. Return
+         * when a solution is found. This function is a slightly
+         * editet version of the one from:
+         * http://www.geometrictools.com/GTEngine/Include/Mathematics/GteDistSegmentSegmentExact.h
+         */
+
+        // David Eberly, Geometric Tools, Redmond WA 98052
+        // Copyright (c) 1998-2016
+        // Distributed under the Boost Software License, Version 1.0.
+        // http://www.boost.org/LICENSE_1_0.txt
+        // http://www.geometrictools.com/License/Boost/LICENSE_1_0.txt
+        // File Version: 2.1.0 (2016/01/25)d
+
+        Eigen::Vector3d P1 = P0;
+        Eigen::Vector3d Q0 = line_segment.at(0);
+        Eigen::Vector3d Q1 = line_segment.at(1);
+
+        Eigen::Vector3d P1mP0 = P1 - P0;
+        Eigen::Vector3d Q1mQ0 = Q1 - Q0;
+        Eigen::Vector3d P0mQ0 = P0 - Q0;
+
+        double a = P1mP0.transpose()*P1mP0;
+        double b = P1mP0.transpose()*Q1mQ0;
+        double c = Q1mQ0.transpose()*Q1mQ0;
+        double d = P1mP0.transpose()*P0mQ0;
+        double e = Q1mQ0.transpose()*P0mQ0;
+        double const zero = 0;
+        double const one  = 1;
+        double det = a * c - b * b;
+        double s, t, nd, bmd, bte, ctd, bpe, ate, btd;
+
+        if (det > zero) {
+            bte = b * e;
+            ctd = c * d;
+            if (bte <= ctd) {  // s <= 0
+                s = zero;
+                if (e <= zero) { // t <= 0, region 6
+                    t = zero;
+                    nd = -d;
+                    if (nd >= a)
+                        s = one;
+                    else if (nd > zero)
+                        s = nd / a;
+                    // else: s is already zero
+                }
+                else if (e < c) { // 0 < t < 1, region 5
+                    t = e / c;
+                }
+                else { // t >= 1, region 4
+                    t = one;
+                    bmd = b - d;
+                    if (bmd >= a)
+                        s = one;
+                    else if (bmd > zero)
+                        s = bmd / a;
+                    // else:  s is already zero
+                }
+            }
+            else { // s > 0
+                s = bte - ctd;
+                if (s >= det) { // s >= 1
+                    s = one; // s = 1
+                    bpe = b + e;
+                    if (bpe <= zero) { // t <= 0, region 8
+                        t = zero;
+                        nd = -d;
+                        if (nd <= zero)
+                            s = zero;
+                        else if (nd < a)
+                            s = nd / a;
+                        // else: s is already one
+                    }
+                    else if (bpe < c) { // 0 < t < 1, region 1
+                        t = bpe / c;
+                    }
+                    else { // t >= 1, region 2
+                        t = one;
+                        bmd = b - d;
+                        if (bmd <= zero)
+                            s = zero;
+                        else if (bmd < a)
+                            s = bmd / a;
+                        // else:  s is already one
+                    }
+                }
+                else { // 0 < s < 1
+                    ate = a * e;
+                    btd = b * d;
+                    if (ate <= btd) { // t <= 0, region 7
+                        t = zero;
+                        nd = -d;
+                        if (nd <= zero)
+                            s = zero;
+                        else if (nd >= a)
+                            s = one;
+                        else
+                            s = nd / a;
+                    }
+                    else { // t > 0
+                        t = ate - btd;
+                        if (t >= det) { // t >= 1, region 3
+                            t = one;
+                            bmd = b - d;
+                            if (bmd <= zero)
+                                s = zero;
+                            else if (bmd >= a)
+                                s = one;
+                            else
+                                s = bmd / a;
+                        }
+                        else { // 0 < t < 1, region 0
+                            s /= det;
+                            t /= det;
+                        }
+                    }
+                }
+            }
+        }
+        else {
+            // The segments are parallel.  The quadratic factors to R(s,t) =
+            // a*(s-(b/a)*t)^2 + 2*d*(s - (b/a)*t) + f, where a*c = b^2,
+            // e = b*d/a, f = |P0-Q0|^2, and b is not zero.  R is constant along
+            // lines of the form s-(b/a)*t = k, and the minimum of R occurs on the
+            // line a*s - b*t + d = 0.  This line must intersect both the s-axis
+            // and the t-axis because 'a' and 'b' are not zero.  Because of
+            // parallelism, the line is also represented by -b*s + c*t - e = 0.
+            //
+            // The code determines an edge of the domain [0,1]^2 that intersects
+            // the minimum line, or if none of the edges intersect, it determines
+            // the closest corner to the minimum line.  The conditionals are
+            // designed to test first for intersection with the t-axis (s = 0)
+            // using -b*s + c*t - e = 0 and then with the s-axis (t = 0) using
+            // a*s - b*t + d = 0.
+
+            // When s = 0, solve c*t - e = 0 (t = e/c).
+            if (e <= zero) { // t <= 0
+                // Now solve a*s - b*t + d = 0 for t = 0 (s = -d/a).
+                t = zero;
+                nd = -d;
+                if (nd <= zero) // s <= 0, region 6
+                    s = zero;
+                else if (nd >= a) // s >= 1, region 8
+                    s = one;
+                else // 0 < s < 1, region 7
+                    s = nd / a;
+            }
+            else if (e >= c) { // t >= 1
+                // Now solve a*s - b*t + d = 0 for t = 1 (s = (b-d)/a).
+                t = one;
+                bmd = b - d;
+                if (bmd <= zero) // s <= 0, region 4
+                    s = zero;
+                else if (bmd >= a) // s >= 1, region 2
+                    s = one;
+                else // 0 < s < 1, region 3
+                    s = bmd / a;
+            }
+            else { // 0 < t < 1
+                // The point (0,e/c) is on the line and domain, so we have one
+                // point at which R is a minimum.
+                s = zero;
+                t = e / c;
+            }
+        }
+
+        Eigen::Vector3d closest_P;
+        Eigen::Vector3d closest_Q;
+        closest_P = P0 + s*P1mP0;
+        closest_Q = Q0 + t*Q1mQ0;
+        return closest_Q;
+    }
 
     double WellConstraintProjections::sum_i(double a,double b,double c)
     {
@@ -357,7 +625,7 @@ namespace WellIndexCalculator{
 
         for (int ii=0; ii<cells.length(); ii++){
             Reservoir::Grid::Cell current_cell = cells.at(ii);
-            Eigen::Vector3d temp_point = WellIndexCalculator::GeometryFunctions::point_to_cell_shortest(current_cell,point);
+            Eigen::Vector3d temp_point = point_to_cell_shortest(current_cell,point);
             Eigen::Vector3d projected_length = point-temp_point;
 
             if(projected_length.norm()<minimum){
@@ -376,7 +644,7 @@ namespace WellIndexCalculator{
 
         for (int ii=0; ii<cells.size(); ii++){
             Reservoir::Grid::Cell current_cell = cells[ii];
-            Eigen::Vector3d temp_point = WellIndexCalculator::GeometryFunctions::point_to_cell_shortest(current_cell,point);
+            Eigen::Vector3d temp_point = point_to_cell_shortest(current_cell,point);
             Eigen::Vector3d projected_length = point-temp_point;
 
             if(projected_length.norm()<minimum){

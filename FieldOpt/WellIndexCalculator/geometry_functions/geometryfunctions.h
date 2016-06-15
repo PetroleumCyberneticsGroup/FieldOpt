@@ -54,8 +54,8 @@ namespace WellIndexCalculator {
          * \param QList for storing line segments that are inside intersected blocks
          */
         static QPair<QList<int>, QList<Eigen::Vector3d> > cells_intersected(Eigen::Vector3d start_point,
-                                                                      Eigen::Vector3d end_point,
-                                                                      Reservoir::Grid::Grid *grid);
+                                                                            Eigen::Vector3d end_point,
+                                                                            Reservoir::Grid::Grid *grid);
 
         /*!
          * \brief Generates a double array with the numbers of 3 corners from each of the 6 faces of a cell that
@@ -135,30 +135,6 @@ namespace WellIndexCalculator {
         static QPair<QList<int>, QList<double>> well_index_of_grid(Reservoir::Grid::Grid *grid,
                                                                    QList<Eigen::Vector3d> start_points,
                                                                    QList<Eigen::Vector3d> end_points, double wellbore_radius);
-
-        /*!
-         * \brief Given a cell block and a point in space, computes the point in the cell block which is closest to the given point
-         * \param initial points
-         * \param moved points
-         * \return L2 norm of vectors of how points moved.
-         */
-        static Eigen::Vector3d point_to_cell_shortest(Reservoir::Grid::Cell cell, Eigen::Vector3d point);
-
-        /*!
-         * \brief Given a face (4 corner points) and a point in 3D space, computes the point on the face which is closest to given point
-         * \param initial points
-         * \param moved points
-         * \return point on face closest to given point
-         */
-        static Eigen::Vector3d point_to_face_shortest(QList<Eigen::Vector3d> face, Eigen::Vector3d point, Reservoir::Grid::Cell cell);
-
-        /*!
-         * \brief computes which point on a line segment that is closest to a given point
-         * \param line segment
-         * \param given point
-         * \return point on line segment closest to given point
-         */
-        static Eigen::Vector3d point_to_line_shortest(QList<Eigen::Vector3d> line_segment, Eigen::Vector3d P0);
 
         /*!
          * \brief Given a grid and one or more wells (start_points to end_points), find blocks intersected
