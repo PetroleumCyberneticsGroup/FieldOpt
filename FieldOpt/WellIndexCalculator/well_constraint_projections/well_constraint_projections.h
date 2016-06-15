@@ -9,7 +9,6 @@
 #include "WellIndexCalculator/geometry_functions/geometryfunctions_exceptions.h"
 #include <QList>
 #include <Eigen/Dense>
-#include <QVector3D>
 #include <QList>
 
 namespace WellIndexCalculator {

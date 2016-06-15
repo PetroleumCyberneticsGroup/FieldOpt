@@ -921,7 +921,7 @@ QList<Eigen::Vector3d> WellConstraintProjections::move_points_3p_eigen(QList<Eig
 
 Eigen::Vector3d WellConstraintProjections::project_point_to_plane_eigen(Eigen::Vector3d point, Eigen::Vector3d normal_vector, Eigen::Vector3d plane_point)
 {
-    Eigen::Vector3d proj_point = point - normal_vector*( (point-plane_point).transpose()*normal_vector );//QVector3D::dotProduct(*point-*plane_point,*normal_vector));
+    Eigen::Vector3d proj_point = point - normal_vector*( (point-plane_point).transpose()*normal_vector );
     return proj_point;
 
 }
@@ -978,13 +978,8 @@ QList<Eigen::Vector3d> WellConstraintProjections::kkt_eq_solutions_eigen(Eigen::
             //invmatr(1,1) = 1.00/(A_es.eigenvalues()[1]-cur_root);
             //invmatr(2,2) = 1.00/(A_es.eigenvalues()[2]-cur_root);
             Eigen::Vector3d s = A_es.eigenvectors()*invmatr.inverse()*A_es.eigenvectors().inverse()*b;
-            //QVector3D* current_s = new QVector3D(s(0),s(1),s(2));
 
-            // No need to check that current vector has length 1 +- tolerance
-            // if () current_s->length() < 1 + tolerance && current_s->length() > 1 - tolerance){
             candidate_solutions.append(s);
-            //std::cout << candidate_solutions.length() <<" solution found. mu not eigenvalue of A. s= " << std::endl << s << std::endl;
-
         }
     }
 
