@@ -131,19 +131,6 @@ namespace WellIndexCalculator {
         QPair<QList<int>, QList<double>> well_index_of_grid(Reservoir::Grid::Grid *grid,
                                                             QList<Eigen::Vector3d> start_points,
                                                             QList<Eigen::Vector3d> end_points, double wellbore_radius);
-
-        /*!
-         * \brief Given a grid and one or more wells (start_points to end_points), find blocks intersected
-         * by the well and return the well indices of the penetrated blocks (whose well index value are
-         * above min_wi) by writing it to a file.
-         * \param grid
-         * \param list of start points
-         * \param list of end points
-         * \param wellbore radius
-         * \param well index treshold value. if below this level it will not be printed.
-         * \param name (and path) of file to be created and written to.
-         */
-//        void print_well_index_file(Reservoir::Grid::Grid *grid , QList<QVector3D> start_point, QList<QVector3D> end_points, double wellbore_radius, double min_wi, QString filename);
     };
 
 }
