@@ -270,30 +270,7 @@ QList<QList<Eigen::Vector3d>> WellConstraintProjections::interwell_constraint_mu
     return coords;
 }
 
-void WellConstraintProjections::write_eigen_to_tikz(QList<QList<Eigen::Vector3d> > all_wells, std::string name)
-{
-
-    std::ofstream myfile;
-    myfile.open (name);
-
-    double n = all_wells.length();
-    myfile << "\\begin{axis}[grid=major," << std::endl;
-    myfile << "xmin=-10, xmax=10," << std::endl;
-    myfile << "ymin=-10, ymax=10," << std::endl;
-    myfile << "zmin=-10, zmax=10]" << std::endl;
-    for (int i=0; i<n; i++){
-
-        myfile << "\\addplot3 coordinates { (" << all_wells.at(i).at(0)(0) <<"," << all_wells.at(i).at(0)(1) <<"," << all_wells.at(i).at(0)(2) <<
-                ") (" << all_wells.at(i).at(1)(0) <<"," << all_wells.at(i).at(1)(1) <<"," << all_wells.at(i).at(1)(2) << ") };" << std::endl;
-        myfile << "\\addlegendentry{$\\text{Well}_" << i+1 << "$};" << std::endl;
-
-    }
-    myfile << "\\end{axis}" << std::endl;
-
-    myfile.close();
-}
-
-QList<QList<Eigen::Vector3d> > WellConstraintProjections::well_length_constraint_multiple_wells(QList<QList<Eigen::Vector3d> > wells, double max, double min, double epsilon)
+    QList<QList<Eigen::Vector3d> > WellConstraintProjections::well_length_constraint_multiple_wells(QList<QList<Eigen::Vector3d> > wells, double max, double min, double epsilon)
 {
     QList<QList<Eigen::Vector3d>> projected_wells;
     int n = wells.length();

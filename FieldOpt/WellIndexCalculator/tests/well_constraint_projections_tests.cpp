@@ -257,11 +257,6 @@ TEST_F(WellConstraintProjectionsTests, interwell_multiple_wells_test){
     QList<QList<Eigen::Vector3d>> all_wells_length_moved = WellIndexCalculator::WellConstraintProjections::well_length_constraint_multiple_wells(all_wells,10, 5,10e-8);
     QList<QList<Eigen::Vector3d>> all_wells_both_proj = WellIndexCalculator::WellConstraintProjections::both_constraints_multiple_wells(all_wells, 4, 10e-4, 10, 5, 10e-8);
 
-    WellIndexCalculator::WellConstraintProjections::write_eigen_to_tikz(all_wells, "wells.txt");
-    WellIndexCalculator::WellConstraintProjections::write_eigen_to_tikz(all_wells_moved, "wells_moved.txt");
-    WellIndexCalculator::WellConstraintProjections::write_eigen_to_tikz(all_wells_length_moved, "wells_moved_length.txt");
-    WellIndexCalculator::WellConstraintProjections::write_eigen_to_tikz(all_wells_both_proj, "wells_moved_both.txt");
-
     Eigen::Vector3d temp_comp_vec;
     temp_comp_vec << -2, -2, 1;
 

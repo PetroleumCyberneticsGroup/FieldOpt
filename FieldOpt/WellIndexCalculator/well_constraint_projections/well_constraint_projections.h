@@ -61,7 +61,6 @@ public:
     static double movement_cost_eig(QList<Eigen::Vector3d> old_coords, QList<Eigen::Vector3d> new_coords);
     static bool feasible_well_length(QList<QList<Eigen::Vector3d> > coords, double max, double min, double tol);
     static bool feasible_interwell_distance(QList<QList<Eigen::Vector3d> > coords, double d, double tol);
-    static void write_eigen_to_tikz(QList<QList<Eigen::Vector3d> > coords, std::string name);
 
 
     // THESE FUNCTIONS SHOULD ALL BE PUBLIC. ACTUAL CONSTRAINT PROJECTIONS FOR SINGLE AND MULTIPLE WELLS
