@@ -4,7 +4,6 @@
 #include <QList>
 #include <Eigen/Dense>
 #include "ijkcoordinate.h"
-#include "xyzcoordinate.h"
 
 namespace Reservoir {
     namespace Grid {
@@ -18,7 +17,7 @@ namespace Reservoir {
         public:
             Cell(int global_index, IJKCoordinate ijk_index,
                  double volume, double poro, double permx, double permy, double permz,
-                 XYZCoordinate center, QList<XYZCoordinate> corners);
+                 Eigen::Vector3d center, QList<Eigen::Vector3d> corners);
 
             /*!
              * \brief global_index Gets the cells global index in its parent grid.
