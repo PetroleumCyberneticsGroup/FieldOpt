@@ -30,6 +30,12 @@ namespace WellIndexCalculator {
          * \brief point_on_same_side returns true if point is on the same side of a plane
          * (containing plane_point and with normal_vector as the normal vector) as the normal vector,
          * true if it is in the plane, and false if it's on the other side.
+         *
+         * In the function, a dot product helps us determine if the angle between the two
+         * vectors is below (positive answer), at (zero answer) or above
+         * (negative answer) 90 degrees. Essentially telling us which side
+         * of a plane the point is
+         *
          * \param point
          * \param plane_point
          * \param normal_vector
