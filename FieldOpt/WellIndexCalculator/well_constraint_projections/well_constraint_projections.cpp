@@ -291,23 +291,11 @@ namespace WellIndexCalculator {
         QList<QList<Vector3d> > well_length_constraint_multiple_wells(QList<QList<Vector3d> > wells,
                                                                       double max, double min, double epsilon) {
             QList<QList<Vector3d>> projected_wells;
-            int n = wells.length();
-
-            // for all wells
-            for (int i = 0; i < n; i++) {
-
-                // Create QList with current pair of wells
+            for (int i = 0; i < wells.length(); i++) {
                 Vector3d current_heel = wells.at(i).at(0);
                 Vector3d current_toe = wells.at(i).at(1);
-
-                /* Project current well to feasible length
-                 * and add to list of projected wells
-                 */
-                projected_wells.append(
-                        well_length_projection(current_heel, current_toe, max, min,
-                                               epsilon));
+                projected_wells.append(well_length_projection(current_heel, current_toe, max, min, epsilon));
             }
-
             return projected_wells;
         }
 

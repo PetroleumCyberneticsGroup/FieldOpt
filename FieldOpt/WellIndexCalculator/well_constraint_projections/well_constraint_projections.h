@@ -95,14 +95,15 @@ namespace WellIndexCalculator {
                                                                     double d, double tol);
 
         /*!
-         * \brief MWell length constraint projection for multiple wells. Projects the heel and toe of every well so that
+         * \brief Well length constraint projection for multiple wells. Projects the heel and toe of every well so that
          * the length of the well is at least min and at most max.
          *
-         * \param ith element in QList corresponds to well i. Coordinates of the heel and toe of well stored in a QList
-         * which contains two Vector3d
-         * \param maximum allowed length of well
-         * \param minimum allowed length of well
-         * \param Tolerance addition epsilon. Moves the heel and toe and extra length epsilon.
+         * \param wells List of well heels and toes to be projected. ith element in outer QList corresponds to well i.
+         * Coordinates of the heel and toe of well stored in the inner QList, each of which contains contains
+         * two Vector3d objects.
+         * \param max maximum allowed length of well
+         * \param min minimum allowed length of well
+         * \param epsilon Tolerance addition epsilon. Moves the heel and toe and extra length epsilon.
          * \return Optimal list of moved wells such that length constraint is satisfied (+ epsilon)
         */
         QList<QList<Vector3d>> well_length_constraint_multiple_wells(QList<QList<Vector3d>> wells,
