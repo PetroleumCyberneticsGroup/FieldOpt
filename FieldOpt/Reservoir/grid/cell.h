@@ -88,12 +88,12 @@ namespace Reservoir {
             /*!
              * \todo Hilmar should probably be the one to document this thing.
              */
-            struct Plane {
+            struct Face {
                 QList<Eigen::Vector3d> corners;
                 Eigen::Vector3d normal_vector;
             };
 
-            QList<Plane> planes() const { return planes_; }
+            QList<Face> faces() const { return faces_; }
 
 
         private:
@@ -106,10 +106,10 @@ namespace Reservoir {
             double permx_;
             double permy_;
             double permz_;
-            QList<Plane> planes_;
+            QList<Face> faces_;
 
             /*!
-             * \brief Populates the planes_ field.
+             * \brief Populates the faces_ field.
              *
              * Generates a double array with the numbers of 3 corners from each of the 6 faces of this cell that
              * will be used to create a normal vector for each face.
@@ -118,7 +118,7 @@ namespace Reservoir {
 
              * \return double list of corner numbers for each face
              */
-            void initializePlanes();
+            void initializeFaces();
         };
 
     }

@@ -82,13 +82,13 @@ namespace WellIndexCalculator {
             Vector3d line = end_point - entry_point;
 
             // Loop through the cell faces untill we find one that the line intersects
-            for (Reservoir::Grid::Cell::Plane plane : cell.planes()) {
-                if (plane.normal_vector.dot(line) != 0) { // Check that the line and face are not parallel.
-                    auto intersect_point = line_plane_intersection(entry_point, end_point, plane.normal_vector, plane.corners[0]);
+            for (Reservoir::Grid::Cell::Face face : cell.faces()) {
+                if (face.normal_vector.dot(line) != 0) { // Check that the line and face are not parallel.
+                    auto intersect_point = line_plane_intersection(entry_point, end_point, face.normal_vector, face.corners[0]);
 
                     // Check that the intersect point is on the correct side of all faces (i.e. inside the cell)
                     bool feasible_point = true;
-                    for (auto p : cell.planes()) {
+                    for (auto p : cell.faces()) {
                         if (!point_on_same_side(intersect_point, p.corners[0], p.normal_vector, 10e-6)) {
                             feasible_point = false;
                             break;

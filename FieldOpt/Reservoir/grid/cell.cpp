@@ -17,7 +17,7 @@ namespace Reservoir {
             permz_ = permz;
             center_ = center;
             corners_ = corners;
-            initializePlanes();
+            initializeFaces();
         }
 
         bool Cell::Equals(const Cell *other) const
@@ -32,14 +32,14 @@ namespace Reservoir {
 
         bool Cell::EnvelopsPoint(Eigen::Vector3d point) {
             bool point_inside = true;
-            for (Plane plane : planes_) {
-                if ((point - plane.corners[0]).dot(plane.normal_vector) < 0)
+            for (Face face : faces_) {
+                if ((point - face.corners[0]).dot(face.normal_vector) < 0)
                     point_inside = false;
             }
             return point_inside;
         }
 
-        void Cell::initializePlanes() {
+        void Cell::initializeFaces() {
             int face_indices_points[6][4] = {
                     {0, 2, 1, 3},
                     {4, 5, 6, 7},
@@ -50,13 +50,13 @@ namespace Reservoir {
             };
 
             for (int ii = 0; ii < 6; ii++) {
-                Plane plane;
-                plane.corners.append(corners_[face_indices_points[ii][0]]);
-                plane.corners.append(corners_[face_indices_points[ii][1]]);
-                plane.corners.append(corners_[face_indices_points[ii][2]]);
-                plane.corners.append(corners_[face_indices_points[ii][3]]);
-                plane.normal_vector = (plane.corners[2] - plane.corners[0]).cross(plane.corners[1] - plane.corners[0]);
-                planes_.append(plane);
+                Face face;
+                face.corners.append(corners_[face_indices_points[ii][0]]);
+                face.corners.append(corners_[face_indices_points[ii][1]]);
+                face.corners.append(corners_[face_indices_points[ii][2]]);
+                face.corners.append(corners_[face_indices_points[ii][3]]);
+                face.normal_vector = (face.corners[2] - face.corners[0]).cross(face.corners[1] - face.corners[0]);
+                faces_.append(face);
             }
         }
 

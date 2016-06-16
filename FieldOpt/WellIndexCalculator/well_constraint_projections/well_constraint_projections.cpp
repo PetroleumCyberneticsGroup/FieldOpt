@@ -16,7 +16,7 @@ namespace WellIndexCalculator {
             double minimum = INFINITY;
             Vector3d closest_point = point;
 
-            for (auto face : cell.planes()) {
+            for (auto face : cell.faces()) {
                 Vector3d temp_point = point_to_face_shortest(face.corners, point, cell);
                 Vector3d projected_length = point - temp_point;
                 if (projected_length.norm() < minimum) {
