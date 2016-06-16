@@ -1,14 +1,12 @@
 #include "geometryfunctions.h"
 
 namespace WellIndexCalculator {
-
     namespace GeometryFunctions {
+        using namespace Eigen;
 
-        Eigen::Vector3d line_plane_intersection(Eigen::Vector3d p0, Eigen::Vector3d p1,
-                                                Eigen::Vector3d normal_vector,
-                                                Eigen::Vector3d point_in_plane) {
+        Vector3d line_plane_intersection(Vector3d p0, Vector3d p1, Vector3d normal_vector, Vector3d point_in_plane) {
 
-            Eigen::Vector3d line_vector = p1 - p0;
+            Vector3d line_vector = p1 - p0;
             line_vector.normalize();
             normal_vector.normalize();
             auto w = p0 - point_in_plane;
@@ -16,17 +14,15 @@ namespace WellIndexCalculator {
             return p0 + s*line_vector;
         }
 
-        bool point_on_same_side(Eigen::Vector3d point, Eigen::Vector3d plane_point,
-                                Eigen::Vector3d normal_vector, double slack) {
+        bool point_on_same_side(Vector3d point, Vector3d plane_point, Vector3d normal_vector, double slack) {
             double dot_product = (point - plane_point).dot(normal_vector);
             return dot_product >= 0.0 - slack;
         }
 
-        QPair<QList<int>, QList<Eigen::Vector3d>> cells_intersected(Eigen::Vector3d start_point,
-                                                                    Eigen::Vector3d end_point,
-                                                                    Reservoir::Grid::Grid *grid) {
+        QPair<QList<int>, QList<Vector3d>> cells_intersected(Vector3d start_point, Vector3d end_point,
+                                                             Reservoir::Grid::Grid *grid) {
             QList<int> global_cell_indeces;
-            QList<Eigen::Vector3d> entry_points;
+            QList<Vector3d> entry_points;
 
             // Add first and last cell blocks to the lists
             Reservoir::Grid::Cell last_cell = grid->GetCellEnvelopingPoint(end_point);
@@ -39,18 +35,18 @@ namespace WellIndexCalculator {
             // If the first and last blocks are the same, return the block and start+end points
             if (last_cell_index == first_cell_index) {
                 entry_points.append(end_point);
-                return QPair<QList<int>, QList<Eigen::Vector3d>>(global_cell_indeces, entry_points);
+                return QPair<QList<int>, QList<Vector3d>>(global_cell_indeces, entry_points);
             }
 
 
-            Eigen::Vector3d exit_point = find_exit_point(first_cell, start_point, end_point, start_point);
+            Vector3d exit_point = find_exit_point(first_cell, start_point, end_point, start_point);
             // Make sure we follow line in the correct direction. (i.e. dot product positive)
             if ((end_point - start_point).dot(exit_point - start_point) <= 0.0) {
                 exit_point = find_exit_point(first_cell, start_point, end_point, exit_point);
             }
 
             double epsilon = 0.01 / (end_point - exit_point).norm();
-            Eigen::Vector3d move_exit_epsilon = exit_point * (1 - epsilon) + end_point * epsilon;
+            Vector3d move_exit_epsilon = exit_point * (1 - epsilon) + end_point * epsilon;
             Reservoir::Grid::Cell current_cell = grid->GetCellEnvelopingPoint(move_exit_epsilon);
             double epsilon_temp = epsilon;
 
@@ -78,13 +74,12 @@ namespace WellIndexCalculator {
             global_cell_indeces.append(last_cell_index);
             entry_points.append(exit_point);
             entry_points.append(end_point);
-            return QPair<QList<int>, QList<Eigen::Vector3d>>(global_cell_indeces, entry_points);
+            return QPair<QList<int>, QList<Vector3d>>(global_cell_indeces, entry_points);
         }
 
-        Eigen::Vector3d find_exit_point(Reservoir::Grid::Cell cell, Eigen::Vector3d entry_point,
-                                        Eigen::Vector3d end_point, Eigen::Vector3d exception_point) {
-
-            Eigen::Vector3d line = end_point - entry_point;
+        Vector3d find_exit_point(Reservoir::Grid::Cell cell,
+                                 Vector3d entry_point, Vector3d end_point, Vector3d exception_point) {
+            Vector3d line = end_point - entry_point;
 
             // Loop through the cell faces untill we find one that the line intersects
             for (Reservoir::Grid::Cell::Plane plane : cell.planes()) {
@@ -107,28 +102,26 @@ namespace WellIndexCalculator {
                     }
                 }
             }
-
             // If all fails, the line intersects the cell in a single point (corner or edge) -> return entry_point
             return entry_point;
         }
 
-        Eigen::Vector3d project_v1_on_v2(Eigen::Vector3d v1, Eigen::Vector3d v2) {
+        Vector3d project_v1_on_v2(Vector3d v1, Vector3d v2) {
             return v2 * v2.dot(v1) / v2.dot(v2);
         }
 
-        double well_index_cell_qvector(Reservoir::Grid::Cell cell,
-                                       QList<Eigen::Vector3d> start_points,
-                                       QList<Eigen::Vector3d> end_points, double wellbore_radius) {
+        double well_index_cell_qvector(Reservoir::Grid::Cell cell, QList<Vector3d> start_points,
+                                       QList<Vector3d> end_points, double wellbore_radius) {
             /* corner points of Cell(s) are always listen in the same order and orientation. (see
              * Reservoir::Grid::Cell for illustration as it is included in the code.
              * Assumption: The block is fairly regular, i.e. corners are right angles.
              * Determine the 3(orthogonal, or very close to orth.) vectors to project line onto.
              * Corners 4&5, 4&6 and 4&0 span the cell from the front bottom left corner.
              */
-            QList<Eigen::Vector3d> corners = cell.corners();
-            Eigen::Vector3d xvec = corners[5] - corners[4];
-            Eigen::Vector3d yvec = corners[6] - corners[4];
-            Eigen::Vector3d zvec = corners[0] - corners[4];
+            QList<Vector3d> corners = cell.corners();
+            Vector3d xvec = corners[5] - corners[4];
+            Vector3d yvec = corners[6] - corners[4];
+            Vector3d zvec = corners[0] - corners[4];
 
             // Finds the dimensional sizes (i.e. length in each direction) of the cell block
             double dx = xvec.norm();
@@ -146,7 +139,7 @@ namespace WellIndexCalculator {
             // Need to add projections of all segments, each line is one segment.
             for (int ii = 0; ii < start_points.length(); ++ii) { // Current segment ii
                 // Compute vector from segment
-                Eigen::Vector3d current_vec = end_points.at(ii) - start_points.at(ii);
+                Vector3d current_vec = end_points.at(ii) - start_points.at(ii);
 
                 /* Proejcts segment vector to directional spanning vectors and determines the length.
                  * of the projections. Note that we only only care about the length of the projection,
@@ -165,8 +158,7 @@ namespace WellIndexCalculator {
             return sqrt(well_index_x * well_index_x + well_index_y * well_index_y + well_index_z * well_index_z);
         }
 
-        double dir_well_index(double Lx, double dy, double dz, double ky, double kz,
-                              double wellbore_radius) {
+        double dir_well_index(double Lx, double dy, double dz, double ky, double kz, double wellbore_radius) {
             // wellbore radius should probably be taken as input. CAREFUL
             //double wellbore_radius = 0.1905;
             double silly_eclipse_factor = 0.008527;
@@ -181,19 +173,17 @@ namespace WellIndexCalculator {
             return r;
         }
 
-        QPair<QList<int>, QList<double> > well_index_of_grid(Reservoir::Grid::Grid *grid,
-                                                             QList<Eigen::Vector3d> start_points,
-                                                             QList<Eigen::Vector3d> end_points,
-                                                             double wellbore_radius) {
+        QPair<QList<int>, QList<double> > well_index_of_grid(Reservoir::Grid::Grid *grid, QList<Vector3d> start_points,
+                                                             QList<Vector3d> end_points, double wellbore_radius) {
             // Find intersected blocks and the points of intersection
-            QPair<QList<int>, QList<Eigen::Vector3d>> temp_pair = cells_intersected(
+            QPair<QList<int>, QList<Vector3d>> temp_pair = cells_intersected(
                     start_points.at(0), end_points.at(0), grid);
             QPair<QList<int>, QList<double>> pair;
 
             QList<double> well_indeces;
             for (int ii = 0; ii < temp_pair.first.length(); ii++) {
-                QList<Eigen::Vector3d> entry_points;
-                QList<Eigen::Vector3d> exit_points;
+                QList<Vector3d> entry_points;
+                QList<Vector3d> exit_points;
                 entry_points.append(temp_pair.second.at(ii));
                 exit_points.append(temp_pair.second.at(ii + 1));
                 well_indeces.append(
