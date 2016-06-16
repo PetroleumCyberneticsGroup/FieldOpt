@@ -126,7 +126,7 @@ namespace WellIndexCalculator {
          * \param epsilon Tolerance addition epsilon. Moves the heel and toe and extra length epsilon.
          * \return Some projection of all wells such that both constraints are satisfied.
         */
-        QList<QList<Vector3d> > both_constraints_multiple_wells(QList<QList<Vector3d>> wells, double d,
+        QList<QList<Vector3d>> both_constraints_multiple_wells(QList<QList<Vector3d>> wells, double d,
                                                                 double tol, double max, double min, double epsilon);
 
         /*!

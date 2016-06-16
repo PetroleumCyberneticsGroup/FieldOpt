@@ -313,10 +313,10 @@ namespace WellIndexCalculator {
 
         bool feasible_interwell_distance(QList<QList<Vector3d>> wells, double d, double tol) {
             // Number of wells
-            int n = wells.length();
             bool is_feasible = true;
-            if (shortest_distance_n_wells(wells, n) < d - tol) { is_feasible = false; }
-
+            if (shortest_distance_n_wells(wells, wells.length()) < d - tol) {
+                is_feasible = false;
+            }
             return is_feasible;
         }
 
@@ -327,25 +327,15 @@ namespace WellIndexCalculator {
             // While at least one of the constraints is violated, continue projecting
             while (!feasible_interwell_distance(wells, d, 3 * tol) ||
                    !feasible_well_length(wells, max, min, tol)) {
-
-                if (!feasible_interwell_distance(wells, d, tol)) {
-                    std::cout << "interwell distance not feasible" << std::endl;
-                }
-                if (!feasible_well_length(wells, max, min, tol)) {
-                    std::cout << "well length not feasible" << std::endl;
-                }
-
                 wells = well_length_constraint_multiple_wells(wells, max, min, epsilon);
                 wells = interwell_constraint_multiple_wells(wells, d, tol);
 
                 iter += 1;
                 if (iter > 100) {
-                    std::cout << "above max number of iterations" << std::endl;
+                    std::cout << "In both_both_constraints_multiple_wells: above max number of iterations" << std::endl;
                     return wells;
                 }
             }
-
-            std::cout << iter << " iterations" << std::endl;
             return wells;
         }
 
