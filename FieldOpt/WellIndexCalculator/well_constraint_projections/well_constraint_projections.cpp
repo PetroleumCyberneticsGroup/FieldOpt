@@ -343,9 +343,8 @@ namespace WellIndexCalculator {
             double minimum = INFINITY;
             Vector3d best_point;
 
-            for (int ii = 0; ii < cells.length(); ii++) {
-                Reservoir::Grid::Cell current_cell = cells.at(ii);
-                Vector3d temp_point = point_to_cell_shortest(current_cell, point);
+            for (auto cell : cells) {
+                Vector3d temp_point = point_to_cell_shortest(cell, point);
                 Vector3d projected_length = point - temp_point;
 
                 if (projected_length.norm() < minimum) {
@@ -353,7 +352,6 @@ namespace WellIndexCalculator {
                     minimum = projected_length.norm();
                 }
             }
-
             return best_point;
         }
 

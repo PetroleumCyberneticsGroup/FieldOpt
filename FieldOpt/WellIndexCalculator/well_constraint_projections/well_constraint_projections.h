@@ -132,8 +132,8 @@ namespace WellIndexCalculator {
         /*!
          * \brief Given some arbitrary point and a list of cells in which the point is allowed to be, finds the projection to
          * this space of allowed domain.
-         * \param some arbitrary point
-         * \param List of allowed blocks to which point should be projected
+         * \param point some arbitrary point
+         * \param cells List of allowed blocks to which point should be projected
          * \return projected point. If point is already legal returns the same point.
         */
         Vector3d well_domain_constraint(Vector3d point, QList<Reservoir::Grid::Cell> cells);
