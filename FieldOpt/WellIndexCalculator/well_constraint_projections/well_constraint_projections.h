@@ -155,11 +155,12 @@ namespace WellIndexCalculator {
 
         /*!
          * \brief Given a face (4 corner points) and a point in 3D space, computes the point on the face which is closest to given point
-         * \param initial points
-         * \param moved points
+         * \param face The face to project to.
+         * \param point The point to project.
+         * \param cell The cell the face belongs to.
          * \return point on face closest to given point
          */
-        Vector3d point_to_face_shortest(QList<Vector3d> face, Vector3d point, Reservoir::Grid::Cell cell);
+        Vector3d point_to_face_shortest(Reservoir::Grid::Cell::Face face, Vector3d point, Reservoir::Grid::Cell cell);
 
         /*!
          * \brief computes which point on a line segment that is closest to a given point

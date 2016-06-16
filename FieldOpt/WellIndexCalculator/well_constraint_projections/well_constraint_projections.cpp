@@ -17,7 +17,7 @@ namespace WellIndexCalculator {
             Vector3d closest_point = point;
 
             for (auto face : cell.faces()) {
-                Vector3d temp_point = point_to_face_shortest(face.corners, point, cell);
+                Vector3d temp_point = point_to_face_shortest(face, point, cell);
                 Vector3d projected_length = point - temp_point;
                 if (projected_length.norm() < minimum) {
                     closest_point = temp_point;
@@ -27,38 +27,21 @@ namespace WellIndexCalculator {
             return closest_point;
         }
 
-        Vector3d point_to_face_shortest(QList<Vector3d> face, Vector3d point, Reservoir::Grid::Cell cell) {
-            /* Assumes that corner points of face are given in the following order
-             * (front/back doesn't really matter here)
-             *
-             *          2 *---* 3
-             *            |   |
-             *          0 *---* 1
-             */
-
+        Vector3d point_to_face_shortest(Reservoir::Grid::Cell::Face face, Vector3d point, Reservoir::Grid::Cell cell) {
             // Calculate normal vector and normalize
-            Vector3d vec1 = face.at(0) - face.at(1);
-            Vector3d vec2 = face.at(0) - face.at(2);
-            Vector3d n_vec = vec1.cross(vec2);
-            n_vec.normalize();
+            auto n_vec = face.normal_vector.normalized();
 
             // Project point onto plane spanned by face
-            Vector3d proj_point = point - n_vec.dot(point - face.at(0)) * n_vec;
+            Vector3d proj_point = point - n_vec.dot(point - face.corners[0]) * n_vec;
 
-            /* Check if point is inside the face.
-             * Equivalently we can just check if the
-             * point is inside cell
-             */
-            Vector3d qv_point = Vector3d(proj_point(0), proj_point(1), proj_point(2));
-            if (cell.EnvelopsPoint(qv_point)) {
+            // Check if the point is inside the face (checking if it is inside the cell is equivalent here)
+            if (cell.EnvelopsPoint(proj_point)) {
                 return proj_point;
             }
 
-            /* If the above is false, projected point is outside face.
-             * Closest point lies on one of the four lines.
-             * create array for locating line segments, and
-             * loop through all lines to find best point.
-             */
+            // If the above is false, projected point is outside face, The closest point lies on one of the four lines.
+            // We create an array containing the index for line segments in the face, and loop through the lines to
+            // find best point.
             int line_indices[4][2] = {{0, 1},
                                       {1, 3},
                                       {3, 2},
@@ -66,7 +49,7 @@ namespace WellIndexCalculator {
             double minimum = INFINITY;
             Vector3d closest_point;
             for (int ii = 0; ii < 4; ii++) {
-                QList<Vector3d> temp_line({face.at(line_indices[ii][0]), face.at(line_indices[ii][1])});
+                QList<Vector3d> temp_line({face.corners[line_indices[ii][0]], face.corners[line_indices[ii][1]]});
                 Vector3d temp_point = point_to_line_shortest(temp_line, point);
                 Vector3d projected_length = point - temp_point;
 
