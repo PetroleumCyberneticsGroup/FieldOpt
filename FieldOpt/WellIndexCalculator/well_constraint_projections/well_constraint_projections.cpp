@@ -6,22 +6,15 @@ namespace WellIndexCalculator {
         using namespace Eigen;
 
         Vector3d point_to_cell_shortest(Reservoir::Grid::Cell cell, Vector3d point) {
-            // Create a list of Vector3d for corners.
             QList<Vector3d> corners = cell.corners();
 
-            // Check if point is already inside cell
-            Vector3d qv_point = Vector3d(point(0), point(1), point(2));
-            if (cell.EnvelopsPoint(qv_point)) {
-                std::cout << "point is inside cell" << std::endl;
+            if (cell.EnvelopsPoint(point)) {
                 return point;
             }
 
             // Shortest distance so far
             double minimum = INFINITY;
             Vector3d closest_point = point;
-
-            // face_indices[ii] contain the indices to
-            // find the corners that belong to face ii
 
             //TODO: Compare face indices with those in GeometryFunctions::cell_planes_coords
             int face_indices[6][4] = {{0, 1, 2, 3},
@@ -398,7 +391,6 @@ namespace WellIndexCalculator {
                     }
 
                     /*std::cout << "shortest distance unmoved 3p = " << shortest_distance_3p_eigen(input_cords_3p) << std::endl;
-                    std::cout << "shortest distance 3p = " << shortest_distance_3p(temp_coords) << std::endl;
                     std::cout << "shortest distance 4p = " << shortest_distance(moved_coords) << std::endl;
                     std::cout << "movement cost = " << movement_cost(coords,moved_coords) << std::endl;*/
 
@@ -890,15 +882,6 @@ namespace WellIndexCalculator {
             Vector3d closest_distance_vec = closest_Q - closest_P;
             double distance = sqrt(closest_distance_vec.transpose() * closest_distance_vec);
             return distance;
-        }
-
-        double shortest_distance_3p(QList<Vector3d> coords) {
-            QList<Vector3d> temp_coords;
-            temp_coords.append(coords.at(0));
-            temp_coords.append(coords.at(0));
-            temp_coords.append(coords.at(1));
-            temp_coords.append(coords.at(2));
-            return shortest_distance(temp_coords);
         }
 
         QList<Vector3d> well_length_projection(Vector3d heel, Vector3d toe, double max, double min, double epsilon) {

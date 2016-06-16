@@ -49,7 +49,7 @@ namespace WellIndexCalculator {
         // Help functions. Moving ponts, shortest distance, costs, feasibillity etc.
         double shortest_distance_n_wells(QList<QList<Vector3d> > coords, int n);
         double shortest_distance(QList<Vector3d> coords);
-        double shortest_distance_3p(QList<Vector3d> coords);
+
         Vector3d project_point_to_plane(Vector3d point, Vector3d normal_vector,
                                         Vector3d plane_point);
         QList<Vector3d> move_points_4p(QList<Vector3d> coords, double d, Vector3d s);
@@ -143,15 +143,14 @@ namespace WellIndexCalculator {
          * \param Matrix
          * \param Threshold
          * \return Matrix with cleared sub-threshold values
-        */
+         */
         Vector3d rm_entries_eps(Vector3d m, double eps);
 
         /*!
-             * \brief Given a cell block and a point in space, computes the point in the cell block which is closest to the given point
-             * \param initial points
-             * \param moved points
-             * \return L2 norm of vectors of how points moved.
-             */
+         * \brief Given a cell block and a point in space, computes the point in the cell block which is closest to the given point
+         * \param point point to check
+         * \return L2 norm of vectors of how points moved.
+         */
         Vector3d point_to_cell_shortest(Reservoir::Grid::Cell cell, Vector3d point);
 
         /*!
