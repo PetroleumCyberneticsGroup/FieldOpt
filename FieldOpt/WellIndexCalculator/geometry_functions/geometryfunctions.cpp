@@ -83,57 +83,32 @@ namespace WellIndexCalculator {
 
         Eigen::Vector3d find_exit_point(Reservoir::Grid::Cell cell, Eigen::Vector3d entry_point,
                                         Eigen::Vector3d end_point, Eigen::Vector3d exception_point) {
-            /* takes an entry point as input and an end_point
-             * which just defines the line of the well. Find
-             * the two points which intersect the block faces
-             * and choose the one of them which is not the entry
-             * point. This will be the exit point.
-             */
 
             Eigen::Vector3d line = end_point - entry_point;
 
-            /* For loop through all faces untill we find a face that
-             * intersects with line on face of the block and not just
-             * the extension of the face to a plane
-             */
-            for (int face_number = 0; face_number < 6; face_number++) {
-                // Normal vector
-                Eigen::Vector3d cur_normal_vector = cell.planes()[face_number].normal_vector;
-                Eigen::Vector3d cur_face_point = cell.planes()[face_number].corners[0];
-                /* If the dot product of the line vector and the face normal vector is
-                 * zero then the line is paralell to the face and won't intersect it
-                 * unless it lies in the same plane, which in any case won't be the
-                 * exit point.
-                 */
+            // Loop through the cell faces untill we find one that the line intersects
+            for (Reservoir::Grid::Cell::Plane plane : cell.planes()) {
+                if (plane.normal_vector.dot(line) != 0) { // Check that the line and face are not parallel.
+                    auto intersect_point = line_plane_intersection(entry_point, end_point, plane.normal_vector, plane.corners[0]);
 
-                if (cur_normal_vector.dot(line) != 0) {
-                    // Finds the intersection point of line and the current face
-                    Eigen::Vector3d intersect_point = line_plane_intersection(entry_point,
-                                                                              end_point,
-                                                                              cur_normal_vector,
-                                                                              cur_face_point);
-
-                    /* Loop through all faces and check that intersection point is on the correct side of all of them.
-                     * i.e. the same direction as the normal vector of each face
-                     */
+                    // Check that the intersect point is on the correct side of all faces (i.e. inside the cell)
                     bool feasible_point = true;
-                    for (int ii = 0; ii < 6; ii++) {
-                        if (!point_on_same_side(intersect_point, cell.planes()[ii].corners[0],
-                                                cell.planes()[ii].normal_vector, 10e-6)) {
+                    for (auto p: cell.planes()) {
+                        if (!point_on_same_side(intersect_point, p.corners[0], p.normal_vector, 10e-6)) {
                             feasible_point = false;
+                            break;
                         }
                     }
 
-                    // If point is feasible(i.e. on/inside cell), not identical to given entry point, and going in correct direction
+                    // Return the point if it is deemed feasible, not identical to the entry point, and going in the correct direction.
                     if (feasible_point && (exception_point - intersect_point).norm() > 10e-10
                         && (end_point - entry_point).dot(end_point - intersect_point) >= 0) {
                         return intersect_point;
                     }
-
                 }
-
             }
-            // If all fails, the line intersects the cell in a single point(corner or edge) -> return entry_point
+
+            // If all fails, the line intersects the cell in a single point (corner or edge) -> return entry_point
             return entry_point;
         }
 

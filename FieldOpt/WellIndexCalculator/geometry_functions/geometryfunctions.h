@@ -36,10 +36,10 @@ namespace WellIndexCalculator {
          * (negative answer) 90 degrees. Essentially telling us which side
          * of a plane the point is
          *
-         * \param point
-         * \param plane_point
-         * \param normal_vector
-         * \return normal_vector spanned by points
+         * \param point The point to be checked.
+         * \param plane_point A point in the plane.
+         * \param normal_vector The normal vector of the plane.
+         * \return True if the point is on the same side as the normal vector or in the plane; otherwise false.
         */
         bool point_on_same_side(Eigen::Vector3d point, Eigen::Vector3d plane_point,
                                 Eigen::Vector3d normal_vector, double slack);
@@ -48,17 +48,29 @@ namespace WellIndexCalculator {
          * \brief Given a reservoir with blocks and a line(start_point to end_point), return global index of all
          * blocks interesected
          * by the line and the points of intersection
-         * \param start point line
-         * \param end point line
-         * \param reservoir (containing blocks/cells)
-         * \param QList for storing global indeces of intersected blocks
-         * \param QList for storing line segments that are inside intersected blocks
+         * \param start_point The start point of the well path.
+         * \param end_point The end point of the well path.
+         * \param grid The grid object containing blocks/cells.
          * \return A pair containing global indeces of intersected cells and the endpoints of the line segment inside each cell.
          */
         QPair<QList<int>, QList<Eigen::Vector3d> > cells_intersected(Eigen::Vector3d start_point,
                                                                      Eigen::Vector3d end_point,
                                                                      Reservoir::Grid::Grid *grid);
 
+        /*!
+         * \brief Find the point where the line bethween the start_point and end_point exits a cell.
+         *
+         * Takes as input an entry_point end_point which defines the well path. Finds the two points on the path
+         * which intersects the block faces and chooses the one that is not the entry point, i.e. the exit point.
+         *
+         * \todo Find a better name for the exception_point and describe it better.
+         *
+         * \param cell The cell to find the well paths exit point in.
+         * \param start_point The start point of the well path.
+         * \param end_point The end point of the well path.
+         * \param exception_point A specific point we don't want the function to end up in.
+         * \return The point where the well path exits the cell.
+         */
         Eigen::Vector3d find_exit_point(Reservoir::Grid::Cell cell, Eigen::Vector3d start_point,
                                         Eigen::Vector3d end_point, Eigen::Vector3d exception_point);
 
@@ -73,9 +85,9 @@ namespace WellIndexCalculator {
         /*!
          * \brief Compute the well index for a (one) single cell/block by using the Projection Well Method (Shu 2005).
          * \param cell/block
-         * \param start point line segment/well
-         * \param end point line segment/well
-         * \param wellbore radius
+         * \param start_points line segment/well
+         * \param end_points line segment/well
+         * \param wellbore_radius
          * \return Well index for block/cell
         */
         double well_index_cell_qvector(Reservoir::Grid::Cell block,
