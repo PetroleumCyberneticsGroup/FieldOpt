@@ -62,173 +62,8 @@ namespace WellIndexCalculator {
         }
 
         Vector3d point_to_line_shortest(QList<Vector3d> line_segment, Vector3d P0) {
-            /* Function runs through all possible combinations of where the two closest points could be located.
-             * This function is a slightly edited version of the one from:
-             * http://www.geometrictools.com/GTEngine/Include/Mathematics/GteDistSegmentSegmentExact.h
-             *
-             * David Eberly, Geometric Tools, Redmond WA 98052
-             * Copyright (c) 1998-2016
-             * Distributed under the Boost Software License, Version 1.0.
-             * http://www.boost.org/LICENSE_1_0.txt
-             * http://www.geometrictools.com/License/Boost/LICENSE_1_0.txt
-             * File Version: 2.1.0 (2016/01/25)d
-             */
-
-            Vector3d P1 = P0;
-            Vector3d Q0 = line_segment[0];
-            Vector3d Q1 = line_segment[1];
-
-            Vector3d P1mP0 = P1 - P0;
-            Vector3d Q1mQ0 = Q1 - Q0;
-            Vector3d P0mQ0 = P0 - Q0;
-
-            double a = P1mP0.transpose() * P1mP0;
-            double b = P1mP0.transpose() * Q1mQ0;
-            double c = Q1mQ0.transpose() * Q1mQ0;
-            double d = P1mP0.transpose() * P0mQ0;
-            double e = Q1mQ0.transpose() * P0mQ0;
-            double const zero = 0;
-            double const one = 1;
-            double det = a * c - b * b;
-            double s, t, nd, bmd, bte, ctd, bpe, ate, btd;
-
-            if (det > zero) {
-                bte = b * e;
-                ctd = c * d;
-                if (bte <= ctd) {  // s <= 0
-                    s = zero;
-                    if (e <= zero) { // t <= 0, region 6
-                        t = zero;
-                        nd = -d;
-                        if (nd >= a)
-                            s = one;
-                        else if (nd > zero)
-                            s = nd / a;
-                        // else: s is already zero
-                    }
-                    else if (e < c) { // 0 < t < 1, region 5
-                        t = e / c;
-                    }
-                    else { // t >= 1, region 4
-                        t = one;
-                        bmd = b - d;
-                        if (bmd >= a)
-                            s = one;
-                        else if (bmd > zero)
-                            s = bmd / a;
-                        // else:  s is already zero
-                    }
-                }
-                else { // s > 0
-                    s = bte - ctd;
-                    if (s >= det) { // s >= 1
-                        s = one; // s = 1
-                        bpe = b + e;
-                        if (bpe <= zero) { // t <= 0, region 8
-                            t = zero;
-                            nd = -d;
-                            if (nd <= zero)
-                                s = zero;
-                            else if (nd < a)
-                                s = nd / a;
-                            // else: s is already one
-                        }
-                        else if (bpe < c) { // 0 < t < 1, region 1
-                            t = bpe / c;
-                        }
-                        else { // t >= 1, region 2
-                            t = one;
-                            bmd = b - d;
-                            if (bmd <= zero)
-                                s = zero;
-                            else if (bmd < a)
-                                s = bmd / a;
-                            // else:  s is already one
-                        }
-                    }
-                    else { // 0 < s < 1
-                        ate = a * e;
-                        btd = b * d;
-                        if (ate <= btd) { // t <= 0, region 7
-                            t = zero;
-                            nd = -d;
-                            if (nd <= zero)
-                                s = zero;
-                            else if (nd >= a)
-                                s = one;
-                            else
-                                s = nd / a;
-                        }
-                        else { // t > 0
-                            t = ate - btd;
-                            if (t >= det) { // t >= 1, region 3
-                                t = one;
-                                bmd = b - d;
-                                if (bmd <= zero)
-                                    s = zero;
-                                else if (bmd >= a)
-                                    s = one;
-                                else
-                                    s = bmd / a;
-                            }
-                            else { // 0 < t < 1, region 0
-                                s /= det;
-                                t /= det;
-                            }
-                        }
-                    }
-                }
-            }
-            else {
-                // The segments are parallel.  The quadratic factors to R(s,t) =
-                // a*(s-(b/a)*t)^2 + 2*d*(s - (b/a)*t) + f, where a*c = b^2,
-                // e = b*d/a, f = |P0-Q0|^2, and b is not zero.  R is constant along
-                // lines of the form s-(b/a)*t = k, and the minimum of R occurs on the
-                // line a*s - b*t + d = 0.  This line must intersect both the s-axis
-                // and the t-axis because 'a' and 'b' are not zero.  Because of
-                // parallelism, the line is also represented by -b*s + c*t - e = 0.
-                //
-                // The code determines an edge of the domain [0,1]^2 that intersects
-                // the minimum line, or if none of the edges intersect, it determines
-                // the closest corner to the minimum line.  The conditionals are
-                // designed to test first for intersection with the t-axis (s = 0)
-                // using -b*s + c*t - e = 0 and then with the s-axis (t = 0) using
-                // a*s - b*t + d = 0.
-
-                // When s = 0, solve c*t - e = 0 (t = e/c).
-                if (e <= zero) { // t <= 0
-                    // Now solve a*s - b*t + d = 0 for t = 0 (s = -d/a).
-                    t = zero;
-                    nd = -d;
-                    if (nd <= zero) // s <= 0, region 6
-                        s = zero;
-                    else if (nd >= a) // s >= 1, region 8
-                        s = one;
-                    else // 0 < s < 1, region 7
-                        s = nd / a;
-                }
-                else if (e >= c) { // t >= 1
-                    // Now solve a*s - b*t + d = 0 for t = 1 (s = (b-d)/a).
-                    t = one;
-                    bmd = b - d;
-                    if (bmd <= zero) // s <= 0, region 4
-                        s = zero;
-                    else if (bmd >= a) // s >= 1, region 2
-                        s = one;
-                    else // 0 < s < 1, region 3
-                        s = bmd / a;
-                }
-                else { // 0 < t < 1
-                    // The point (0,e/c) is on the line and domain, so we have one
-                    // point at which R is a minimum.
-                    s = zero;
-                    t = e / c;
-                }
-            }
-
-            Vector3d closest_P = P0 + s * P1mP0;
-            Vector3d closest_Q = Q0 + t * Q1mQ0;
-            return closest_Q;
+            auto closest_p_q = closest_points_on_lines(P0, P0, line_segment[0], line_segment[1]);
+            return closest_p_q.second;
         }
 
         Vector3d non_inv_quad_coeffs(Vector3d x, Vector3d n) {
@@ -613,241 +448,8 @@ namespace WellIndexCalculator {
         }
 
         double shortest_distance(QList<Vector3d> coords) {
-            /* Function runs through all possible combinations of
-             * where the two closest points could be located. Return
-             * when a solution is found. This function is a slightly
-             * editet version of the one from:
-             * http://www.geometrictools.com/GTEngine/Include/Mathematics/GteDistSegmentSegmentExact.h
-             */
-
-            // David Eberly, Geometric Tools, Redmond WA 98052
-            // Copyright (c) 1998-2016
-            // Distributed under the Boost Software License, Version 1.0.
-            // http://www.boost.org/LICENSE_1_0.txt
-            // http://www.geometrictools.com/License/Boost/LICENSE_1_0.txt
-            // File Version: 2.1.0 (2016/01/25)d
-
-            Vector3d P0 = coords.at(0);
-            Vector3d P1 = coords.at(1);
-            Vector3d Q0 = coords.at(2);
-            Vector3d Q1 = coords.at(3);
-
-            Vector3d P1mP0 = P1 - P0;
-            Vector3d Q1mQ0 = Q1 - Q0;
-            Vector3d P0mQ0 = P0 - Q0;
-
-            double a = P1mP0.transpose() * P1mP0;
-            double b = P1mP0.transpose() * Q1mQ0;
-            double c = Q1mQ0.transpose() * Q1mQ0;
-            double d = P1mP0.transpose() * P0mQ0;
-            double e = Q1mQ0.transpose() * P0mQ0;
-            double const zero = 0;
-            double const one = 1;
-            double det = a * c - b * b;
-            double s, t, nd, bmd, bte, ctd, bpe, ate, btd;
-
-            if (det > zero) {
-                bte = b * e;
-                ctd = c * d;
-                if (bte <= ctd)  // s <= 0
-                {
-                    s = zero;
-                    if (e <= zero)  // t <= 0
-                    {
-                        // region 6
-                        t = zero;
-                        nd = -d;
-                        if (nd >= a) {
-                            s = one;
-                        }
-                        else if (nd > zero) {
-                            s = nd / a;
-                        }
-                        // else: s is already zero
-                    }
-                    else if (e < c)  // 0 < t < 1
-                    {
-                        // region 5
-                        t = e / c;
-                    }
-                    else  // t >= 1
-                    {
-                        // region 4
-                        t = one;
-                        bmd = b - d;
-                        if (bmd >= a) {
-                            s = one;
-                        }
-                        else if (bmd > zero) {
-                            s = bmd / a;
-                        }
-                        // else:  s is already zero
-                    }
-                }
-                else  // s > 0
-                {
-                    s = bte - ctd;
-                    if (s >= det)  // s >= 1
-                    {
-                        // s = 1
-                        s = one;
-                        bpe = b + e;
-                        if (bpe <= zero)  // t <= 0
-                        {
-                            // region 8
-                            t = zero;
-                            nd = -d;
-                            if (nd <= zero) {
-                                s = zero;
-                            }
-                            else if (nd < a) {
-                                s = nd / a;
-                            }
-                            // else: s is already one
-                        }
-                        else if (bpe < c)  // 0 < t < 1
-                        {
-                            // region 1
-                            t = bpe / c;
-                        }
-                        else  // t >= 1
-                        {
-                            // region 2
-                            t = one;
-                            bmd = b - d;
-                            if (bmd <= zero) {
-                                s = zero;
-                            }
-                            else if (bmd < a) {
-                                s = bmd / a;
-                            }
-                            // else:  s is already one
-                        }
-                    }
-                    else  // 0 < s < 1
-                    {
-                        ate = a * e;
-                        btd = b * d;
-                        if (ate <= btd)  // t <= 0
-                        {
-                            // region 7
-                            t = zero;
-                            nd = -d;
-                            if (nd <= zero) {
-                                s = zero;
-                            }
-                            else if (nd >= a) {
-                                s = one;
-                            }
-                            else {
-                                s = nd / a;
-                            }
-                        }
-                        else  // t > 0
-                        {
-                            t = ate - btd;
-                            if (t >= det)  // t >= 1
-                            {
-                                // region 3
-                                t = one;
-                                bmd = b - d;
-                                if (bmd <= zero) {
-                                    s = zero;
-                                }
-                                else if (bmd >= a) {
-                                    s = one;
-                                }
-                                else {
-                                    s = bmd / a;
-                                }
-                            }
-                            else  // 0 < t < 1
-                            {
-                                // region 0
-                                s /= det;
-                                t /= det;
-                            }
-                        }
-                    }
-                }
-            }
-            else {
-                // The segments are parallel.  The quadratic factors to R(s,t) =
-                // a*(s-(b/a)*t)^2 + 2*d*(s - (b/a)*t) + f, where a*c = b^2,
-                // e = b*d/a, f = |P0-Q0|^2, and b is not zero.  R is constant along
-                // lines of the form s-(b/a)*t = k, and the minimum of R occurs on the
-                // line a*s - b*t + d = 0.  This line must intersect both the s-axis
-                // and the t-axis because 'a' and 'b' are not zero.  Because of
-                // parallelism, the line is also represented by -b*s + c*t - e = 0.
-                //
-                // The code determines an edge of the domain [0,1]^2 that intersects
-                // the minimum line, or if none of the edges intersect, it determines
-                // the closest corner to the minimum line.  The conditionals are
-                // designed to test first for intersection with the t-axis (s = 0)
-                // using -b*s + c*t - e = 0 and then with the s-axis (t = 0) using
-                // a*s - b*t + d = 0.
-
-                // When s = 0, solve c*t - e = 0 (t = e/c).
-                if (e <= zero)  // t <= 0
-                {
-                    // Now solve a*s - b*t + d = 0 for t = 0 (s = -d/a).
-                    t = zero;
-                    nd = -d;
-                    if (nd <= zero)  // s <= 0
-                    {
-                        // region 6
-                        s = zero;
-                    }
-                    else if (nd >= a)  // s >= 1
-                    {
-                        // region 8
-                        s = one;
-                    }
-                    else  // 0 < s < 1
-                    {
-                        // region 7
-                        s = nd / a;
-                    }
-                }
-                else if (e >= c)  // t >= 1
-                {
-                    // Now solve a*s - b*t + d = 0 for t = 1 (s = (b-d)/a).
-                    t = one;
-                    bmd = b - d;
-                    if (bmd <= zero)  // s <= 0
-                    {
-                        // region 4
-                        s = zero;
-                    }
-                    else if (bmd >= a)  // s >= 1
-                    {
-                        // region 2
-                        s = one;
-                    }
-                    else  // 0 < s < 1
-                    {
-                        // region 3
-                        s = bmd / a;
-                    }
-                }
-                else  // 0 < t < 1
-                {
-                    // The point (0,e/c) is on the line and domain, so we have one
-                    // point at which R is a minimum.
-                    s = zero;
-                    t = e / c;
-                }
-            }
-
-            /*result.parameter[0] = s;
-            result.parameter[1] = t;*/
-            Vector3d closest_P;
-            Vector3d closest_Q;
-            closest_P = P0 + s * P1mP0;
-            closest_Q = Q0 + t * Q1mQ0;
-            /*result.closest[0] = P0 + s * P1mP0;
-            result.closest[1] = Q0 + t * Q1mQ0;*/
-            Vector3d closest_distance_vec = closest_Q - closest_P;
+            auto closest_p_q = closest_points_on_lines(coords[0], coords[1], coords[2], coords[3]);
+            Vector3d closest_distance_vec = closest_p_q.second - closest_p_q.first;
             double distance = sqrt(closest_distance_vec.transpose() * closest_distance_vec);
             return distance;
         }
@@ -1188,6 +790,171 @@ namespace WellIndexCalculator {
             }
 
             return candidate_solutions;
+        }
+
+        QPair<Vector3d, Vector3d> closest_points_on_lines(Vector3d P0, Vector3d P1, Vector3d Q0, Vector3d Q1) {
+            /* Function runs through all possible combinations of where the two closest points could be located.
+             * This function is a slightly edited version of the one from:
+             * http://www.geometrictools.com/GTEngine/Include/Mathematics/GteDistSegmentSegmentExact.h
+             *
+             * David Eberly, Geometric Tools, Redmond WA 98052
+             * Copyright (c) 1998-2016
+             * Distributed under the Boost Software License, Version 1.0.
+             * http://www.boost.org/LICENSE_1_0.txt
+             * http://www.geometrictools.com/License/Boost/LICENSE_1_0.txt
+             * File Version: 2.1.0 (2016/01/25)d
+             */
+            Vector3d P1mP0 = P1 - P0;
+            Vector3d Q1mQ0 = Q1 - Q0;
+            Vector3d P0mQ0 = P0 - Q0;
+
+            double a = P1mP0.transpose() * P1mP0;
+            double b = P1mP0.transpose() * Q1mQ0;
+            double c = Q1mQ0.transpose() * Q1mQ0;
+            double d = P1mP0.transpose() * P0mQ0;
+            double e = Q1mQ0.transpose() * P0mQ0;
+            double const zero = 0;
+            double const one = 1;
+            double det = a * c - b * b;
+            double s, t, nd, bmd, bte, ctd, bpe, ate, btd;
+
+            if (det > zero) {
+                bte = b * e;
+                ctd = c * d;
+                if (bte <= ctd) {  // s <= 0
+                    s = zero;
+                    if (e <= zero) { // t <= 0, region 6
+                        t = zero;
+                        nd = -d;
+                        if (nd >= a)
+                            s = one;
+                        else if (nd > zero)
+                            s = nd / a;
+                        // else: s is already zero
+                    }
+                    else if (e < c) { // 0 < t < 1, region 5
+                        t = e / c;
+                    }
+                    else { // t >= 1, region 4
+                        t = one;
+                        bmd = b - d;
+                        if (bmd >= a)
+                            s = one;
+                        else if (bmd > zero)
+                            s = bmd / a;
+                        // else:  s is already zero
+                    }
+                }
+                else { // s > 0
+                    s = bte - ctd;
+                    if (s >= det) { // s >= 1
+                        s = one; // s = 1
+                        bpe = b + e;
+                        if (bpe <= zero) { // t <= 0, region 8
+                            t = zero;
+                            nd = -d;
+                            if (nd <= zero)
+                                s = zero;
+                            else if (nd < a)
+                                s = nd / a;
+                            // else: s is already one
+                        }
+                        else if (bpe < c) { // 0 < t < 1, region 1
+                            t = bpe / c;
+                        }
+                        else { // t >= 1, region 2
+                            t = one;
+                            bmd = b - d;
+                            if (bmd <= zero)
+                                s = zero;
+                            else if (bmd < a)
+                                s = bmd / a;
+                            // else:  s is already one
+                        }
+                    }
+                    else { // 0 < s < 1
+                        ate = a * e;
+                        btd = b * d;
+                        if (ate <= btd) { // t <= 0, region 7
+                            t = zero;
+                            nd = -d;
+                            if (nd <= zero)
+                                s = zero;
+                            else if (nd >= a)
+                                s = one;
+                            else
+                                s = nd / a;
+                        }
+                        else { // t > 0
+                            t = ate - btd;
+                            if (t >= det) { // t >= 1, region 3
+                                t = one;
+                                bmd = b - d;
+                                if (bmd <= zero)
+                                    s = zero;
+                                else if (bmd >= a)
+                                    s = one;
+                                else
+                                    s = bmd / a;
+                            }
+                            else { // 0 < t < 1, region 0
+                                s /= det;
+                                t /= det;
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                // The segments are parallel.  The quadratic factors to R(s,t) =
+                // a*(s-(b/a)*t)^2 + 2*d*(s - (b/a)*t) + f, where a*c = b^2,
+                // e = b*d/a, f = |P0-Q0|^2, and b is not zero.  R is constant along
+                // lines of the form s-(b/a)*t = k, and the minimum of R occurs on the
+                // line a*s - b*t + d = 0.  This line must intersect both the s-axis
+                // and the t-axis because 'a' and 'b' are not zero.  Because of
+                // parallelism, the line is also represented by -b*s + c*t - e = 0.
+                //
+                // The code determines an edge of the domain [0,1]^2 that intersects
+                // the minimum line, or if none of the edges intersect, it determines
+                // the closest corner to the minimum line.  The conditionals are
+                // designed to test first for intersection with the t-axis (s = 0)
+                // using -b*s + c*t - e = 0 and then with the s-axis (t = 0) using
+                // a*s - b*t + d = 0.
+
+                // When s = 0, solve c*t - e = 0 (t = e/c).
+                if (e <= zero) { // t <= 0
+                    // Now solve a*s - b*t + d = 0 for t = 0 (s = -d/a).
+                    t = zero;
+                    nd = -d;
+                    if (nd <= zero) // s <= 0, region 6
+                        s = zero;
+                    else if (nd >= a) // s >= 1, region 8
+                        s = one;
+                    else // 0 < s < 1, region 7
+                        s = nd / a;
+                }
+                else if (e >= c) { // t >= 1
+                    // Now solve a*s - b*t + d = 0 for t = 1 (s = (b-d)/a).
+                    t = one;
+                    bmd = b - d;
+                    if (bmd <= zero) // s <= 0, region 4
+                        s = zero;
+                    else if (bmd >= a) // s >= 1, region 2
+                        s = one;
+                    else // 0 < s < 1, region 3
+                        s = bmd / a;
+                }
+                else { // 0 < t < 1
+                    // The point (0,e/c) is on the line and domain, so we have one
+                    // point at which R is a minimum.
+                    s = zero;
+                    t = e / c;
+                }
+            }
+
+            Vector3d closest_P = P0 + s * P1mP0;
+            Vector3d closest_Q = Q0 + t * Q1mQ0;
+            return QPair<Eigen::Vector3d, Eigen::Vector3d>(closest_P, closest_Q);
         }
 
 

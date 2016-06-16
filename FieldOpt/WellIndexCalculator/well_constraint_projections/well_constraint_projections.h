@@ -169,6 +169,31 @@ namespace WellIndexCalculator {
          * \return point on line segment closest to given point
          */
         Vector3d point_to_line_shortest(QList<Vector3d> line_segment, Vector3d P0);
+
+        /*!
+         * \brief Compute the closest points on the line segments P and Q.
+         *
+         * If a pair of endpoints are equal they are considered a point. The point on the line closest to
+         * that point will then be computed.
+         *
+         * Function runs through all possible combinations of where the two closest points could be located.
+         * This function is a slightly edited version of the one from:
+         * http://www.geometrictools.com/GTEngine/Include/Mathematics/GteDistSegmentSegmentExact.h
+         *
+         * David Eberly, Geometric Tools, Redmond WA 98052
+         * Copyright (c) 1998-2016
+         * Distributed under the Boost Software License, Version 1.0.
+         * http://www.boost.org/LICENSE_1_0.txt
+         * http://www.geometrictools.com/License/Boost/LICENSE_1_0.txt
+         * File Version: 2.1.0 (2016/01/25)d
+         *
+         * \param P0 End point on line P.
+         * \param P1 End point on line P.
+         * \param Q1 End point on line Q.
+         * \param Q2 End point on line Q.
+         * \return A pair containing the closest point on P and the closest point on Q (closest_P, closest_Q).
+         */
+        QPair<Vector3d, Vector3d> closest_points_on_lines(Vector3d P0, Vector3d P1, Vector3d Q0, Vector3d Q1);
     }
 
 }
