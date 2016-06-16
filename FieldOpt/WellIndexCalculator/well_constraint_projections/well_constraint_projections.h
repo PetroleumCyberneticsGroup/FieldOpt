@@ -164,8 +164,8 @@ namespace WellIndexCalculator {
 
         /*!
          * \brief computes which point on a line segment that is closest to a given point
-         * \param line segment
-         * \param given point
+         * \param line_segment The line segment to project to.
+         * \param P0 The point to project
          * \return point on line segment closest to given point
          */
         Vector3d point_to_line_shortest(QList<Vector3d> line_segment, Vector3d P0);

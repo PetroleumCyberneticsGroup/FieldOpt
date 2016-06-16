@@ -62,23 +62,21 @@ namespace WellIndexCalculator {
         }
 
         Vector3d point_to_line_shortest(QList<Vector3d> line_segment, Vector3d P0) {
-            /* Function runs through all possible combinations of
-             * where the two closest points could be located. Return
-             * when a solution is found. This function is a slightly
-             * editet version of the one from:
+            /* Function runs through all possible combinations of where the two closest points could be located.
+             * This function is a slightly edited version of the one from:
              * http://www.geometrictools.com/GTEngine/Include/Mathematics/GteDistSegmentSegmentExact.h
+             *
+             * David Eberly, Geometric Tools, Redmond WA 98052
+             * Copyright (c) 1998-2016
+             * Distributed under the Boost Software License, Version 1.0.
+             * http://www.boost.org/LICENSE_1_0.txt
+             * http://www.geometrictools.com/License/Boost/LICENSE_1_0.txt
+             * File Version: 2.1.0 (2016/01/25)d
              */
 
-            // David Eberly, Geometric Tools, Redmond WA 98052
-            // Copyright (c) 1998-2016
-            // Distributed under the Boost Software License, Version 1.0.
-            // http://www.boost.org/LICENSE_1_0.txt
-            // http://www.geometrictools.com/License/Boost/LICENSE_1_0.txt
-            // File Version: 2.1.0 (2016/01/25)d
-
             Vector3d P1 = P0;
-            Vector3d Q0 = line_segment.at(0);
-            Vector3d Q1 = line_segment.at(1);
+            Vector3d Q0 = line_segment[0];
+            Vector3d Q1 = line_segment[1];
 
             Vector3d P1mP0 = P1 - P0;
             Vector3d Q1mQ0 = Q1 - Q0;
@@ -228,10 +226,8 @@ namespace WellIndexCalculator {
                 }
             }
 
-            Vector3d closest_P;
-            Vector3d closest_Q;
-            closest_P = P0 + s * P1mP0;
-            closest_Q = Q0 + t * Q1mQ0;
+            Vector3d closest_P = P0 + s * P1mP0;
+            Vector3d closest_Q = Q0 + t * Q1mQ0;
             return closest_Q;
         }
 
