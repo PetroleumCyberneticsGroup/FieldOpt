@@ -89,7 +89,7 @@ namespace Reservoir {
              * \todo Hilmar should probably be the one to document this thing.
              */
             struct Plane {
-                Eigen::Vector3d corners[3];
+                QList<Eigen::Vector3d> corners;
                 Eigen::Vector3d normal_vector;
             };
 

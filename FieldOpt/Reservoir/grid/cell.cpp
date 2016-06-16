@@ -40,20 +40,21 @@ namespace Reservoir {
         }
 
         void Cell::initializePlanes() {
-            int points[6][3] = {
-                    {0, 2, 1},
-                    {4, 5, 6},
-                    {0, 4, 2},
-                    {1, 3, 5},
-                    {0, 1, 4},
-                    {2, 6, 3}
+            int face_indices_points[6][4] = {
+                    {0, 2, 1, 3},
+                    {4, 5, 6, 7},
+                    {0, 4, 2, 6},
+                    {1, 3, 5, 7},
+                    {0, 1, 4, 5},
+                    {2, 6, 3, 7}
             };
 
             for (int ii = 0; ii < 6; ii++) {
                 Plane plane;
-                plane.corners[0] = corners_[points[ii][0]];
-                plane.corners[1] = corners_[points[ii][1]];
-                plane.corners[2] = corners_[points[ii][2]];
+                plane.corners.append(corners_[face_indices_points[ii][0]]);
+                plane.corners.append(corners_[face_indices_points[ii][1]]);
+                plane.corners.append(corners_[face_indices_points[ii][2]]);
+                plane.corners.append(corners_[face_indices_points[ii][3]]);
                 plane.normal_vector = (plane.corners[2] - plane.corners[0]).cross(plane.corners[1] - plane.corners[0]);
                 planes_.append(plane);
             }
