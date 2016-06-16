@@ -4,7 +4,6 @@ project(wellindexcalculator LANGUAGES CXX)
 find_library(RpolyPlusPlus rpoly_plus_plus REQUIRED)
 
 add_library(wellindexcalculator
-        geometry_functions/geometryfunctions_exceptions.h
         geometry_functions/geometryfunctions.cpp
         well_constraint_projections/well_constraint_projections.cpp
         wellindexcalculator.cpp)

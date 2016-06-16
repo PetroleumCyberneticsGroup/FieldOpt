@@ -178,6 +178,6 @@ namespace WellIndexCalculator {
             }
             return QPair<QList<int>, QList<double>>(temp_pair.first, well_indeces);
         }
-        
+
     }
 }

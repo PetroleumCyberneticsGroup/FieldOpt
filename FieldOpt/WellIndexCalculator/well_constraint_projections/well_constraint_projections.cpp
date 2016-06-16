@@ -1095,7 +1095,7 @@ namespace WellIndexCalculator {
                                                         QList<Eigen::Vector3d> new_coords) {
             double n_of_points = old_coords.length();
             if (new_coords.length() != n_of_points) {
-                throw geometryfunctions::MovementCost_VectorsNotSameLength("Lists of points are not the same length");
+                throw std::runtime_error("Error in movement_cost: Lists of points are not the same length");
             }
             double cost_squares;
             for (int ii = 0; ii < n_of_points; ii++) {
