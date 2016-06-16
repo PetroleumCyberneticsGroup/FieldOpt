@@ -94,32 +94,33 @@ namespace WellIndexCalculator {
 
         /*!
          * \brief Auxilary function for well_index_cell function
-         * \param lenght of projection in first direction
-         * \param size block second direction
-         * \param size block third direction
-         * \param permeability second direction
-         * \param permeability second direction
-         * \param wellbore radius
+         * \param Lx lenght of projection in first direction
+         * \param dy size block second direction
+         * \param dz size block third direction
+         * \param ky permeability second direction
+         * \param kz permeability second direction
+         * \param wellbore_radius wellbore radius
          * \return directional well index
         */
         double dir_well_index(double Lx, double dy, double dz, double ky, double kz, double wellbore_radius);
 
         /*!
          * \brief Auxilary function(2) for well_index_cell function
-         * \param size block second direction
-         * \param size block third direction
-         * \param permeability second direction
-         * \param permeability second direction
+         * \param dx size block second direction
+         * \param dy size block third direction
+         * \param kx permeability second direction
+         * \param ky permeability second direction
          * \return directional wellblock radius
          */
         double dir_wellblock_radius(double dx, double dy, double kx, double ky);
 
         /*!
-         * \brief Given a reservoir and a line segment (start, end) return the calculated well indeces for all cells intersected by the line segment.
-         * \param A grid containing cells
-         * \param start point line segment/well
-         * \param end point line segment/well
-         * \return list of cells intersected and their calculated well indeces
+         * \brief Given a reservoir and a line segment (start, end) return the calculated well
+         * indeces for all cells intersected by the line segment.
+         * \param grid A grid containing cells
+         * \param start_points start points for line segments/wells
+         * \param end_points end point line segment/well
+         * \return lists of cells intersected and their calculated well indeces
          */
         QPair<QList<int>, QList<double>> well_index_of_grid(Reservoir::Grid::Grid *grid,
                                                             QList<Eigen::Vector3d> start_points,

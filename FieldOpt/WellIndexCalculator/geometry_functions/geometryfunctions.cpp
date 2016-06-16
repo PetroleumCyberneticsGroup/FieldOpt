@@ -166,24 +166,18 @@ namespace WellIndexCalculator {
         QPair<QList<int>, QList<double> > well_index_of_grid(Reservoir::Grid::Grid *grid, QList<Vector3d> start_points,
                                                              QList<Vector3d> end_points, double wellbore_radius) {
             // Find intersected blocks and the points of intersection
-            QPair<QList<int>, QList<Vector3d>> temp_pair = cells_intersected(
-                    start_points.at(0), end_points.at(0), grid);
-            QPair<QList<int>, QList<double>> pair;
+            QPair<QList<int>, QList<Vector3d>> temp_pair = cells_intersected(start_points[0], end_points[0], grid);
 
             QList<double> well_indeces;
             for (int ii = 0; ii < temp_pair.first.length(); ii++) {
-                QList<Vector3d> entry_points;
-                QList<Vector3d> exit_points;
-                entry_points.append(temp_pair.second.at(ii));
-                exit_points.append(temp_pair.second.at(ii + 1));
+                QList<Vector3d> entry_points = {temp_pair.second[ii]};
+                QList<Vector3d> exit_points = {temp_pair.second[ii + 1]};
                 well_indeces.append(
-                        well_index_cell(grid->GetCell(temp_pair.first.at(ii)), entry_points,
-                                        exit_points, wellbore_radius));
+                        well_index_cell(grid->GetCell(temp_pair.first[ii]),
+                                        entry_points, exit_points, wellbore_radius));
             }
-            pair.first = temp_pair.first;
-            pair.second = well_indeces;
-            return pair;
+            return QPair<QList<int>, QList<double>>(temp_pair.first, well_indeces);
         }
-
+        
     }
 }
