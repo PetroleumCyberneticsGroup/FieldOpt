@@ -3,14 +3,14 @@
 
 namespace WellIndexCalculator {
     namespace WellConstraintProjections {
+        using namespace Eigen;
 
-        Eigen::Vector3d point_to_cell_shortest(Reservoir::Grid::Cell cell,
-                                                                          Eigen::Vector3d point) {
-            // Create a list of Eigen::Vector3d for corners.
-            QList<Eigen::Vector3d> corners = cell.corners();
+        Vector3d point_to_cell_shortest(Reservoir::Grid::Cell cell, Vector3d point) {
+            // Create a list of Vector3d for corners.
+            QList<Vector3d> corners = cell.corners();
 
             // Check if point is already inside cell
-            Eigen::Vector3d qv_point = Eigen::Vector3d(point(0), point(1), point(2));
+            Vector3d qv_point = Vector3d(point(0), point(1), point(2));
             if (cell.EnvelopsPoint(qv_point)) {
                 std::cout << "point is inside cell" << std::endl;
                 return point;
@@ -18,7 +18,7 @@ namespace WellIndexCalculator {
 
             // Shortest distance so far
             double minimum = INFINITY;
-            Eigen::Vector3d closest_point = point;
+            Vector3d closest_point = point;
 
             // face_indices[ii] contain the indices to
             // find the corners that belong to face ii
@@ -33,10 +33,10 @@ namespace WellIndexCalculator {
 
             // Loop through all faces.
             for (int ii = 0; ii < 6; ii++) {
-                QList<Eigen::Vector3d> temp_face({corners.at(face_indices[ii][0]), corners.at(face_indices[ii][1]),
-                                                  corners.at(face_indices[ii][2]), corners.at(face_indices[ii][3])});
-                Eigen::Vector3d temp_point = point_to_face_shortest(temp_face, point, cell);
-                Eigen::Vector3d projected_length = point - temp_point;
+                QList<Vector3d> temp_face({corners.at(face_indices[ii][0]), corners.at(face_indices[ii][1]),
+                                           corners.at(face_indices[ii][2]), corners.at(face_indices[ii][3])});
+                Vector3d temp_point = point_to_face_shortest(temp_face, point, cell);
+                Vector3d projected_length = point - temp_point;
                 if (projected_length.norm() < minimum) {
                     closest_point = temp_point;
                     minimum = projected_length.norm();
@@ -45,9 +45,7 @@ namespace WellIndexCalculator {
             return closest_point;
         }
 
-        Eigen::Vector3d point_to_face_shortest(QList<Eigen::Vector3d> face,
-                                                                          Eigen::Vector3d point,
-                                                                          Reservoir::Grid::Cell cell) {
+        Vector3d point_to_face_shortest(QList<Vector3d> face, Vector3d point, Reservoir::Grid::Cell cell) {
             /* Assumes that corner points of face are given in the following order
              * (front/back doesn't really matter here)
              *
@@ -57,19 +55,19 @@ namespace WellIndexCalculator {
              */
 
             // Calculate normal vector and normalize
-            Eigen::Vector3d vec1 = face.at(0) - face.at(1);
-            Eigen::Vector3d vec2 = face.at(0) - face.at(2);
-            Eigen::Vector3d n_vec = vec1.cross(vec2);
+            Vector3d vec1 = face.at(0) - face.at(1);
+            Vector3d vec2 = face.at(0) - face.at(2);
+            Vector3d n_vec = vec1.cross(vec2);
             n_vec.normalize();
 
             // Project point onto plane spanned by face
-            Eigen::Vector3d proj_point = point - n_vec.dot(point - face.at(0)) * n_vec;
+            Vector3d proj_point = point - n_vec.dot(point - face.at(0)) * n_vec;
 
             /* Check if point is inside the face.
              * Equivalently we can just check if the
              * point is inside cell
              */
-            Eigen::Vector3d qv_point = Eigen::Vector3d(proj_point(0), proj_point(1), proj_point(2));
+            Vector3d qv_point = Vector3d(proj_point(0), proj_point(1), proj_point(2));
             if (cell.EnvelopsPoint(qv_point)) {
                 return proj_point;
             }
@@ -84,11 +82,11 @@ namespace WellIndexCalculator {
                                       {3, 2},
                                       {2, 0}};
             double minimum = INFINITY;
-            Eigen::Vector3d closest_point;
+            Vector3d closest_point;
             for (int ii = 0; ii < 4; ii++) {
-                QList<Eigen::Vector3d> temp_line({face.at(line_indices[ii][0]), face.at(line_indices[ii][1])});
-                Eigen::Vector3d temp_point = point_to_line_shortest(temp_line, point);
-                Eigen::Vector3d projected_length = point - temp_point;
+                QList<Vector3d> temp_line({face.at(line_indices[ii][0]), face.at(line_indices[ii][1])});
+                Vector3d temp_point = point_to_line_shortest(temp_line, point);
+                Vector3d projected_length = point - temp_point;
 
                 if (projected_length.norm() < minimum) {
                     closest_point = temp_point;
@@ -98,8 +96,7 @@ namespace WellIndexCalculator {
             return closest_point;
         }
 
-        Eigen::Vector3d point_to_line_shortest(QList<Eigen::Vector3d> line_segment,
-                                                                          Eigen::Vector3d P0) {
+        Vector3d point_to_line_shortest(QList<Vector3d> line_segment, Vector3d P0) {
             /* Function runs through all possible combinations of
              * where the two closest points could be located. Return
              * when a solution is found. This function is a slightly
@@ -114,13 +111,13 @@ namespace WellIndexCalculator {
             // http://www.geometrictools.com/License/Boost/LICENSE_1_0.txt
             // File Version: 2.1.0 (2016/01/25)d
 
-            Eigen::Vector3d P1 = P0;
-            Eigen::Vector3d Q0 = line_segment.at(0);
-            Eigen::Vector3d Q1 = line_segment.at(1);
+            Vector3d P1 = P0;
+            Vector3d Q0 = line_segment.at(0);
+            Vector3d Q1 = line_segment.at(1);
 
-            Eigen::Vector3d P1mP0 = P1 - P0;
-            Eigen::Vector3d Q1mQ0 = Q1 - Q0;
-            Eigen::Vector3d P0mQ0 = P0 - Q0;
+            Vector3d P1mP0 = P1 - P0;
+            Vector3d Q1mQ0 = Q1 - Q0;
+            Vector3d P0mQ0 = P0 - Q0;
 
             double a = P1mP0.transpose() * P1mP0;
             double b = P1mP0.transpose() * Q1mQ0;
@@ -266,15 +263,15 @@ namespace WellIndexCalculator {
                 }
             }
 
-            Eigen::Vector3d closest_P;
-            Eigen::Vector3d closest_Q;
+            Vector3d closest_P;
+            Vector3d closest_Q;
             closest_P = P0 + s * P1mP0;
             closest_Q = Q0 + t * Q1mQ0;
             return closest_Q;
         }
 
-        Eigen::Vector3d non_inv_quad_coeffs(Eigen::Vector3d x, Eigen::Vector3d n) {
-            Eigen::Vector3d coeffs;
+        Vector3d non_inv_quad_coeffs(Vector3d x, Vector3d n) {
+            Vector3d coeffs;
 
             coeffs(0) = n(0) * n(0) + n(1) * n(1) + n(2) * n(2);
             coeffs(1) = 2 * (x(0) * n(0) + x(1) * n(1) + x(2) * n(2));
@@ -283,7 +280,7 @@ namespace WellIndexCalculator {
             return coeffs;
         }
 
-        Eigen::Vector3d rm_entries_eps(Eigen::Vector3d m, double eps) {
+        Vector3d rm_entries_eps(Vector3d m, double eps) {
             for (int ii = 0; ii < 3; ii++) {
                 if (fabs(m[ii]) < eps) {
                     m(ii) = 0;
@@ -292,7 +289,7 @@ namespace WellIndexCalculator {
             return m;
         }
 
-        Eigen::Matrix3d rm_entries_eps_matrix(Eigen::Matrix3d m, double eps) {
+        Matrix3d rm_entries_eps_matrix(Matrix3d m, double eps) {
             for (int ii = 0; ii < 3; ii++) {
                 for (int jj = 0; jj < 3; jj++) {
                     if (fabs(m(ii, jj)) < eps) {
@@ -303,7 +300,7 @@ namespace WellIndexCalculator {
             return m;
         }
 
-        Eigen::VectorXd rm_entries_eps_coeffs(Eigen::VectorXd m, double eps) {
+        VectorXd rm_entries_eps_coeffs(VectorXd m, double eps) {
             for (int ii = 0; ii < 7; ii++) {
                 if (fabs(m[ii]) < eps) {
                     m(ii) = 0;
@@ -313,8 +310,7 @@ namespace WellIndexCalculator {
         }
 
 
-        QList<Eigen::Vector3d> interwell_constraint_projection(QList<Eigen::Vector3d> coords,
-                                                                                          double d) {
+        QList<Vector3d> interwell_constraint_projection(QList<Vector3d> coords, double d) {
             /* If the two line segments already satisfy
              * the interwell distance constraint,
              * simply return the same coordinates
@@ -324,9 +320,9 @@ namespace WellIndexCalculator {
                 return coords;
             }
 
-            QList<Eigen::Vector3d> solution_coords;
-            QList<Eigen::Vector3d> moved_coords;
-            QList<Eigen::Vector3d> temp_coords;
+            QList<Vector3d> solution_coords;
+            QList<Vector3d> moved_coords;
+            QList<Vector3d> temp_coords;
             /* Iterate through moving points. First try moving 2 points, then 3 points
              * then 4 points. If problem can be solved moving k points, moving k+1 points
              * will be a worse solution. Return the best k point solution.
@@ -344,9 +340,9 @@ namespace WellIndexCalculator {
             for (int ii = 0; ii < 4; ii++) {
                 moved_coords = coords;
                 temp_coords = well_length_projection(coords.at(two_point_index[ii][0]),
-                                                                                coords.at(two_point_index[ii][1]),
-                                                                                INFINITY, d,
-                                                                                10e-5);
+                                                     coords.at(two_point_index[ii][1]),
+                                                     INFINITY, d,
+                                                     10e-5);
                 moved_coords.replace(two_point_index[ii][0], temp_coords.at(0));
                 moved_coords.replace(two_point_index[ii][1], temp_coords.at(1));
                 if (shortest_distance(moved_coords) >= d &&
@@ -374,12 +370,12 @@ namespace WellIndexCalculator {
                 moved_coords = coords;
 
                 // Choose which 3 points to move. (order is important, second and third entry should belong to same line segment)
-                QList<Eigen::Vector3d> input_cords_3p;
+                QList<Vector3d> input_cords_3p;
                 for (int jj = 0; jj < 3; jj++) {
                     input_cords_3p.append(coords.at(three_point_index[ii][jj]));
                 }
-                Eigen::Matrix3d temp_A = build_A_3p(input_cords_3p);
-                Eigen::Vector3d temp_b = build_b_3p(input_cords_3p, d);
+                Matrix3d temp_A = build_A_3p(input_cords_3p);
+                Vector3d temp_b = build_b_3p(input_cords_3p, d);
 
                 /* The kkt_eg_solutions solver handles some numerical issues
                  * like A having some values close to machine epsilon and
@@ -387,14 +383,14 @@ namespace WellIndexCalculator {
                  * must be among the ones given in solution candidates. we check
                  * all of them.
                  */
-                QList<Eigen::Vector3d> solution_candidates = kkt_eq_solutions(temp_A,
-                                                                                                         temp_b);
+                QList<Vector3d> solution_candidates = kkt_eq_solutions(temp_A,
+                                                                       temp_b);
                 //std::cout << "there are " << solution_candidates.length() << " solution candidates" << std::endl;
 
                 for (int sol_num = 0; sol_num < solution_candidates.length(); sol_num++) {
                     // Solution of three point problem
                     temp_coords = move_points_3p(input_cords_3p, d,
-                                                                            solution_candidates.at(sol_num));
+                                                 solution_candidates.at(sol_num));
                     if (temp_coords.length() < 1) { temp_coords = input_cords_3p; }
 
                     for (int jj = 0; jj < 3; jj++) {
@@ -434,9 +430,9 @@ namespace WellIndexCalculator {
              * must be among the ones given in solution candidates. we check
              * all of them.
              */
-            Eigen::Matrix3d temp_A = build_A_4p(coords);
-            Eigen::Vector3d temp_b = build_b_4p(coords, d);
-            QList<Eigen::Vector3d> solution_candidates = kkt_eq_solutions(temp_A, temp_b);
+            Matrix3d temp_A = build_A_4p(coords);
+            Vector3d temp_b = build_b_4p(coords, d);
+            QList<Vector3d> solution_candidates = kkt_eq_solutions(temp_A, temp_b);
 
             // Go through candidates s and pick the best one
             for (int sol_num = 0; sol_num < solution_candidates.length(); sol_num++) {
@@ -456,7 +452,7 @@ namespace WellIndexCalculator {
             return solution_coords;
         }
 
-        double shortest_distance_n_wells(QList<QList<Eigen::Vector3d>> coords, int n) {
+        double shortest_distance_n_wells(QList<QList<Vector3d>> coords, int n) {
             double distance = INFINITY;
 
             // for all pairs of wells (i,j) i != j
@@ -464,7 +460,7 @@ namespace WellIndexCalculator {
                 for (int j = i + 1; j < n; j++) {
 
                     // Create QList with current pair of wells
-                    QList<Eigen::Vector3d> current_pair;
+                    QList<Vector3d> current_pair;
                     current_pair.append(coords.at(i).at(0));
                     current_pair.append(coords.at(i).at(1));
                     current_pair.append(coords.at(j).at(0));
@@ -479,8 +475,7 @@ namespace WellIndexCalculator {
             return distance;
         }
 
-        QList<QList<Eigen::Vector3d>> interwell_constraint_multiple_wells(
-                QList<QList<Eigen::Vector3d>> coords, double d, double tol) {
+        QList<QList<Vector3d>> interwell_constraint_multiple_wells(QList<QList<Vector3d>> coords, double d, double tol) {
             double shortest_distance = 0;
             double n = coords.length();
 
@@ -498,7 +493,7 @@ namespace WellIndexCalculator {
                     for (int j = i + 1; j < n; j++) {
 
                         // Create QList with current pair of wells
-                        QList<Eigen::Vector3d> current_pair;
+                        QList<Vector3d> current_pair;
                         current_pair.append(coords.at(i).at(0));
                         current_pair.append(coords.at(i).at(1));
                         current_pair.append(coords.at(j).at(0));
@@ -528,31 +523,30 @@ namespace WellIndexCalculator {
             return coords;
         }
 
-        QList<QList<Eigen::Vector3d> > well_length_constraint_multiple_wells(
-                QList<QList<Eigen::Vector3d> > wells, double max, double min, double epsilon) {
-            QList<QList<Eigen::Vector3d>> projected_wells;
+        QList<QList<Vector3d> > well_length_constraint_multiple_wells(QList<QList<Vector3d> > wells,
+                                                                      double max, double min, double epsilon) {
+            QList<QList<Vector3d>> projected_wells;
             int n = wells.length();
 
             // for all wells
             for (int i = 0; i < n; i++) {
 
                 // Create QList with current pair of wells
-                Eigen::Vector3d current_heel = wells.at(i).at(0);
-                Eigen::Vector3d current_toe = wells.at(i).at(1);
+                Vector3d current_heel = wells.at(i).at(0);
+                Vector3d current_toe = wells.at(i).at(1);
 
                 /* Project current well to feasible length
                  * and add to list of projected wells
                  */
                 projected_wells.append(
                         well_length_projection(current_heel, current_toe, max, min,
-                                                                          epsilon));
+                                               epsilon));
             }
 
             return projected_wells;
         }
 
-        bool feasible_well_length(QList<QList<Eigen::Vector3d> > coords, double max,
-                                                             double min, double tol) {
+        bool feasible_well_length(QList<QList<Vector3d> > coords, double max, double min, double tol) {
             // Number of wells
             int n = coords.length();
             bool is_feasible = true;
@@ -572,8 +566,7 @@ namespace WellIndexCalculator {
             return is_feasible;
         }
 
-        bool feasible_interwell_distance(QList<QList<Eigen::Vector3d> > coords, double d,
-                                                                    double tol) {
+        bool feasible_interwell_distance(QList<QList<Vector3d> > coords, double d, double tol) {
             // Number of wells
             int n = coords.length();
             bool is_feasible = true;
@@ -582,8 +575,8 @@ namespace WellIndexCalculator {
             return is_feasible;
         }
 
-        QList<QList<Eigen::Vector3d> > both_constraints_multiple_wells(
-                QList<QList<Eigen::Vector3d> > coords, double d, double tol, double max, double min, double epsilon) {
+        QList<QList<Vector3d> > both_constraints_multiple_wells(QList<QList<Vector3d> > coords, double d,
+                                                                double tol, double max, double min, double epsilon) {
             int iter = 0;
 
             // While at least one of the constraints is violated, continue projecting
@@ -611,15 +604,14 @@ namespace WellIndexCalculator {
             return coords;
         }
 
-        Eigen::Vector3d well_domain_constraint(Eigen::Vector3d point,
-                                                                          QList<Reservoir::Grid::Cell> cells) {
+        Vector3d well_domain_constraint(Vector3d point, QList<Reservoir::Grid::Cell> cells) {
             double minimum = INFINITY;
-            Eigen::Vector3d best_point;
+            Vector3d best_point;
 
             for (int ii = 0; ii < cells.length(); ii++) {
                 Reservoir::Grid::Cell current_cell = cells.at(ii);
-                Eigen::Vector3d temp_point = point_to_cell_shortest(current_cell, point);
-                Eigen::Vector3d projected_length = point - temp_point;
+                Vector3d temp_point = point_to_cell_shortest(current_cell, point);
+                Vector3d projected_length = point - temp_point;
 
                 if (projected_length.norm() < minimum) {
                     best_point = temp_point;
@@ -630,15 +622,14 @@ namespace WellIndexCalculator {
             return best_point;
         }
 
-        Eigen::Vector3d well_domain_constraint_vector(Eigen::Vector3d point,
-                                                                                 std::vector<Reservoir::Grid::Cell> cells) {
+        Vector3d well_domain_constraint_vector(Vector3d point, std::vector<Reservoir::Grid::Cell> cells) {
             double minimum = INFINITY;
-            Eigen::Vector3d best_point;
+            Vector3d best_point;
 
             for (int ii = 0; ii < cells.size(); ii++) {
                 Reservoir::Grid::Cell current_cell = cells[ii];
-                Eigen::Vector3d temp_point = point_to_cell_shortest(current_cell, point);
-                Eigen::Vector3d projected_length = point - temp_point;
+                Vector3d temp_point = point_to_cell_shortest(current_cell, point);
+                Vector3d projected_length = point - temp_point;
 
                 if (projected_length.norm() < minimum) {
                     best_point = temp_point;
@@ -649,9 +640,9 @@ namespace WellIndexCalculator {
             return best_point;
         }
 
-        Eigen::Vector3d well_domain_constraint_indices(Eigen::Vector3d point,
-                                                                                  Reservoir::Grid::Grid *grid,
-                                                                                  QList<int> index_list) {
+        Vector3d well_domain_constraint_indices(Vector3d point,
+                                                Reservoir::Grid::Grid *grid,
+                                                QList<int> index_list) {
             std::vector<Reservoir::Grid::Cell> cells;
 
             for (int ii = 0; ii < index_list.size(); ii++) {
@@ -661,7 +652,7 @@ namespace WellIndexCalculator {
             return well_domain_constraint_vector(point, cells);
         }
 
-        double shortest_distance(QList<Eigen::Vector3d> coords) {
+        double shortest_distance(QList<Vector3d> coords) {
             /* Function runs through all possible combinations of
              * where the two closest points could be located. Return
              * when a solution is found. This function is a slightly
@@ -676,14 +667,14 @@ namespace WellIndexCalculator {
             // http://www.geometrictools.com/License/Boost/LICENSE_1_0.txt
             // File Version: 2.1.0 (2016/01/25)d
 
-            Eigen::Vector3d P0 = coords.at(0);
-            Eigen::Vector3d P1 = coords.at(1);
-            Eigen::Vector3d Q0 = coords.at(2);
-            Eigen::Vector3d Q1 = coords.at(3);
+            Vector3d P0 = coords.at(0);
+            Vector3d P1 = coords.at(1);
+            Vector3d Q0 = coords.at(2);
+            Vector3d Q1 = coords.at(3);
 
-            Eigen::Vector3d P1mP0 = P1 - P0;
-            Eigen::Vector3d Q1mQ0 = Q1 - Q0;
-            Eigen::Vector3d P0mQ0 = P0 - Q0;
+            Vector3d P1mP0 = P1 - P0;
+            Vector3d Q1mQ0 = Q1 - Q0;
+            Vector3d P0mQ0 = P0 - Q0;
 
             double a = P1mP0.transpose() * P1mP0;
             double b = P1mP0.transpose() * Q1mQ0;
@@ -890,19 +881,19 @@ namespace WellIndexCalculator {
 
             /*result.parameter[0] = s;
             result.parameter[1] = t;*/
-            Eigen::Vector3d closest_P;
-            Eigen::Vector3d closest_Q;
+            Vector3d closest_P;
+            Vector3d closest_Q;
             closest_P = P0 + s * P1mP0;
             closest_Q = Q0 + t * Q1mQ0;
             /*result.closest[0] = P0 + s * P1mP0;
             result.closest[1] = Q0 + t * Q1mQ0;*/
-            Eigen::Vector3d closest_distance_vec = closest_Q - closest_P;
+            Vector3d closest_distance_vec = closest_Q - closest_P;
             double distance = sqrt(closest_distance_vec.transpose() * closest_distance_vec);
             return distance;
         }
 
-        double shortest_distance_3p(QList<Eigen::Vector3d> coords) {
-            QList<Eigen::Vector3d> temp_coords;
+        double shortest_distance_3p(QList<Vector3d> coords) {
+            QList<Vector3d> temp_coords;
             temp_coords.append(coords.at(0));
             temp_coords.append(coords.at(0));
             temp_coords.append(coords.at(1));
@@ -910,23 +901,20 @@ namespace WellIndexCalculator {
             return shortest_distance(temp_coords);
         }
 
-        QList<Eigen::Vector3d> well_length_projection(Eigen::Vector3d heel,
-                                                                                 Eigen::Vector3d toe,
-                                                                                 double max, double min,
-                                                                                 double epsilon) {
-            QList<Eigen::Vector3d> projected_points;
-            Eigen::Vector3d moved_heel;
-            Eigen::Vector3d moved_toe;
+        QList<Vector3d> well_length_projection(Vector3d heel, Vector3d toe, double max, double min, double epsilon) {
+            QList<Vector3d> projected_points;
+            Vector3d moved_heel;
+            Vector3d moved_toe;
 
             // Need the vector going from heel to toe to project points
-            Eigen::Vector3d heel_to_toe_vec = toe - heel;
+            Vector3d heel_to_toe_vec = toe - heel;
             // Distance between heel and toe.
             double d = heel_to_toe_vec.norm();
 
             // heel and toe same point.
             // All directions equally good.
             if (d == 0) {
-                Eigen::Vector3d unit_vector;
+                Vector3d unit_vector;
                 unit_vector << 1, 0, 0;
                 moved_heel = heel + (min / 2) * unit_vector;
                 moved_toe = heel - (min / 2) * unit_vector;
@@ -965,40 +953,40 @@ namespace WellIndexCalculator {
             return projected_points;
         }
 
-        QList<Eigen::Vector3d> non_inv_solution(Eigen::Matrix3d A, Eigen::Vector3d b) {
-            QList<Eigen::Vector3d> solution_vectors;
+        QList<Vector3d> non_inv_solution(Matrix3d A, Vector3d b) {
+            QList<Vector3d> solution_vectors;
             // Compute full pivotal LU decomposition of A
-            Eigen::FullPivLU<Eigen::Matrix3d> lu(A);
-            Eigen::Vector3d x = A.fullPivLu().solve(b);
+            FullPivLU<Matrix3d> lu(A);
+            Vector3d x = A.fullPivLu().solve(b);
 
-            Eigen::MatrixXd nu = lu.kernel();
-            Eigen::Vector3d null_space;
+            MatrixXd nu = lu.kernel();
+            Vector3d null_space;
             if (nu.cols() > 1) {
                 null_space << nu(0, 0), nu(1, 0), nu(2, 0);
                 std::cout << "Null space/kernel of (A-mu I) has more than 1 vector. " << std::endl;
             }
             else null_space = nu;
 
-            Eigen::VectorXd real_roots;
-            Eigen::VectorXd complex_roots;
+            VectorXd real_roots;
+            VectorXd complex_roots;
             rpoly_plus_plus::FindPolynomialRootsJenkinsTraub(
                     non_inv_quad_coeffs(x, null_space), &real_roots, &complex_roots);
 
 
             if (complex_roots(0) == 0) {
-                Eigen::Vector3d s0 = x + real_roots(0) * null_space;
+                Vector3d s0 = x + real_roots(0) * null_space;
                 solution_vectors.append(s0);
             }
             if (complex_roots(1) == 0) {
-                Eigen::Vector3d s1 = x + real_roots(1) * null_space;
+                Vector3d s1 = x + real_roots(1) * null_space;
                 solution_vectors.append(s1);
             }
 
             return solution_vectors;
         }
 
-        bool solution_existence(Eigen::Matrix3d A, Eigen::Vector3d b) {
-            Eigen::Vector3d x = A.fullPivLu().solve(b);
+        bool solution_existence(Matrix3d A, Vector3d b) {
+            Vector3d x = A.fullPivLu().solve(b);
             return ((A * x).isApprox(b));
 
         }
@@ -1006,12 +994,12 @@ namespace WellIndexCalculator {
 
         /* PUTTING ALL REWORKED EIGEN FUNCTIONS BELOW HERE*/
 
-        Eigen::Matrix3d build_A_4p(QList<Eigen::Vector3d> coords) {
-            Eigen::Vector3d vec1 = coords.at(0);
-            Eigen::Vector3d vec2 = coords.at(1);
-            Eigen::Vector3d vec3 = coords.at(2);
-            Eigen::Vector3d vec4 = coords.at(3);
-            Eigen::Vector3d avg_vec = 0.25 * (vec1 + vec2 + vec3 + vec4);
+        Matrix3d build_A_4p(QList<Vector3d> coords) {
+            Vector3d vec1 = coords.at(0);
+            Vector3d vec2 = coords.at(1);
+            Vector3d vec3 = coords.at(2);
+            Vector3d vec4 = coords.at(3);
+            Vector3d avg_vec = 0.25 * (vec1 + vec2 + vec3 + vec4);
             vec1 = vec1 - avg_vec;
             vec2 = vec2 - avg_vec;
             vec3 = vec3 - avg_vec;
@@ -1021,12 +1009,12 @@ namespace WellIndexCalculator {
                    vec4 * vec4.transpose();
         }
 
-        Eigen::Vector3d build_b_4p(QList<Eigen::Vector3d> coords, double d) {
-            Eigen::Vector3d vec1 = coords.at(0);
-            Eigen::Vector3d vec2 = coords.at(1);
-            Eigen::Vector3d vec3 = coords.at(2);
-            Eigen::Vector3d vec4 = coords.at(3);
-            Eigen::Vector3d avg_vec = 0.25 * (vec1 + vec2 + vec3 + vec4);
+        Vector3d build_b_4p(QList<Vector3d> coords, double d) {
+            Vector3d vec1 = coords.at(0);
+            Vector3d vec2 = coords.at(1);
+            Vector3d vec3 = coords.at(2);
+            Vector3d vec4 = coords.at(3);
+            Vector3d avg_vec = 0.25 * (vec1 + vec2 + vec3 + vec4);
             vec1 = vec1 - avg_vec;
             vec2 = vec2 - avg_vec;
             vec3 = vec3 - avg_vec;
@@ -1035,11 +1023,11 @@ namespace WellIndexCalculator {
             return 0.5 * d * (vec1 + vec2 - vec3 - vec4);
         }
 
-        Eigen::Matrix3d build_A_3p(QList<Eigen::Vector3d> coords) {
-            Eigen::Vector3d vec1 = coords.at(0);
-            Eigen::Vector3d vec2 = coords.at(1);
-            Eigen::Vector3d vec3 = coords.at(2);
-            Eigen::Vector3d avg_vec = (1.0 / 3) * (vec1 + vec2 + vec3);
+        Matrix3d build_A_3p(QList<Vector3d> coords) {
+            Vector3d vec1 = coords.at(0);
+            Vector3d vec2 = coords.at(1);
+            Vector3d vec3 = coords.at(2);
+            Vector3d avg_vec = (1.0 / 3) * (vec1 + vec2 + vec3);
 
             vec1 = vec1 - avg_vec;
             vec2 = vec2 - avg_vec;
@@ -1047,11 +1035,11 @@ namespace WellIndexCalculator {
             return vec1 * vec1.transpose() + vec2 * vec2.transpose() + vec3 * vec3.transpose();
         }
 
-        Eigen::Vector3d build_b_3p(QList<Eigen::Vector3d> coords, double d) {
-            Eigen::Vector3d vec1 = coords.at(0);
-            Eigen::Vector3d vec2 = coords.at(1);
-            Eigen::Vector3d vec3 = coords.at(2);
-            Eigen::Vector3d avg_vec = (1.0 / 3) * (vec1 + vec2 + vec3);
+        Vector3d build_b_3p(QList<Vector3d> coords, double d) {
+            Vector3d vec1 = coords.at(0);
+            Vector3d vec2 = coords.at(1);
+            Vector3d vec3 = coords.at(2);
+            Vector3d avg_vec = (1.0 / 3) * (vec1 + vec2 + vec3);
             vec1 = vec1 - avg_vec;
             vec2 = vec2 - avg_vec;
             vec3 = vec3 - avg_vec;
@@ -1059,8 +1047,7 @@ namespace WellIndexCalculator {
             return (2.0 / 3) * d * (vec1) - (1.0 / 3) * d * (vec2 + vec3);
         }
 
-        Eigen::VectorXd coeff_vector(Eigen::Vector3d D, Eigen::Matrix3d Qinv,
-                                                                Eigen::Vector3d b) {
+        VectorXd coeff_vector(Vector3d D, Matrix3d Qinv, Vector3d b) {
             double D1 = D(0);
             double D2 = D(1);
             double D3 = D(2);
@@ -1071,7 +1058,7 @@ namespace WellIndexCalculator {
             double Qtb_2 = Qinv.row(1) * b * (Qinv.row(1) * b);
             double Qtb_3 = Qinv.row(2) * b * (Qinv.row(2) * b);
 
-            Eigen::VectorXd lambda(7);
+            VectorXd lambda(7);
             lambda(0) = 1;
             lambda(1) = -2 * sum_i;
             lambda(2) = 2 * sum_ij + sum_i * sum_i - (Qtb_1 + Qtb_2 + Qtb_3);
@@ -1091,8 +1078,7 @@ namespace WellIndexCalculator {
             return lambda;
         }
 
-        double movement_cost(QList<Eigen::Vector3d> old_coords,
-                                                        QList<Eigen::Vector3d> new_coords) {
+        double movement_cost(QList<Vector3d> old_coords, QList<Vector3d> new_coords) {
             double n_of_points = old_coords.length();
             if (new_coords.length() != n_of_points) {
                 throw std::runtime_error("Error in movement_cost: Lists of points are not the same length");
@@ -1105,24 +1091,23 @@ namespace WellIndexCalculator {
             return cost_squares;
         }
 
-        QList<Eigen::Vector3d> move_points_4p(QList<Eigen::Vector3d> coords, double d,
-                                                                         Eigen::Vector3d s) {
+        QList<Vector3d> move_points_4p(QList<Vector3d> coords, double d, Vector3d s) {
             // Normalize s in case it is not of unit length
             s.normalize();
-            Eigen::Vector3d avg_point = 0.25 * (coords.at(0) + coords.at(1) + coords.at(2) + coords.at(3));
-            Eigen::Vector3d top_plane_point = avg_point + (d / 2) * (s);
-            Eigen::Vector3d bot_plane_point = avg_point - (d / 2) * (s);
+            Vector3d avg_point = 0.25 * (coords.at(0) + coords.at(1) + coords.at(2) + coords.at(3));
+            Vector3d top_plane_point = avg_point + (d / 2) * (s);
+            Vector3d bot_plane_point = avg_point - (d / 2) * (s);
 
-            Eigen::Vector3d x0moved = project_point_to_plane(coords.at(0), s,
-                                                                                        top_plane_point);
-            Eigen::Vector3d x1moved = project_point_to_plane(coords.at(1), s,
-                                                                                        top_plane_point);
-            Eigen::Vector3d x2moved = project_point_to_plane(coords.at(2), s,
-                                                                                        bot_plane_point);
-            Eigen::Vector3d x3moved = project_point_to_plane(coords.at(3), s,
-                                                                                        bot_plane_point);
+            Vector3d x0moved = project_point_to_plane(coords.at(0), s,
+                                                      top_plane_point);
+            Vector3d x1moved = project_point_to_plane(coords.at(1), s,
+                                                      top_plane_point);
+            Vector3d x2moved = project_point_to_plane(coords.at(2), s,
+                                                      bot_plane_point);
+            Vector3d x3moved = project_point_to_plane(coords.at(3), s,
+                                                      bot_plane_point);
 
-            QList<Eigen::Vector3d> moved_coords;
+            QList<Vector3d> moved_coords;
             moved_coords.append(x0moved);
             moved_coords.append(x1moved);
             moved_coords.append(x2moved);
@@ -1130,56 +1115,53 @@ namespace WellIndexCalculator {
             return moved_coords;
         }
 
-        QList<Eigen::Vector3d> move_points_3p(QList<Eigen::Vector3d> coords, double d,
-                                                                         Eigen::Vector3d s) {
+        QList<Vector3d> move_points_3p(QList<Vector3d> coords, double d, Vector3d s) {
             // Normalize s in case it is not of unit length
             s.normalize();
-            Eigen::Vector3d avg_point = (1.0 / 3) * (coords.at(0) + coords.at(1) + coords.at(2));
-            Eigen::Vector3d top_plane_point = avg_point + (2.0 * d / 3) * (s);
-            Eigen::Vector3d bot_plane_point = avg_point - (1.0 * d / 3) * (s);
+            Vector3d avg_point = (1.0 / 3) * (coords.at(0) + coords.at(1) + coords.at(2));
+            Vector3d top_plane_point = avg_point + (2.0 * d / 3) * (s);
+            Vector3d bot_plane_point = avg_point - (1.0 * d / 3) * (s);
 
-            Eigen::Vector3d x0moved = project_point_to_plane(coords.at(0), s,
-                                                                                        top_plane_point);
-            Eigen::Vector3d x1moved = project_point_to_plane(coords.at(1), s,
-                                                                                        bot_plane_point);
-            Eigen::Vector3d x2moved = project_point_to_plane(coords.at(2), s,
-                                                                                        bot_plane_point);
+            Vector3d x0moved = project_point_to_plane(coords.at(0), s,
+                                                      top_plane_point);
+            Vector3d x1moved = project_point_to_plane(coords.at(1), s,
+                                                      bot_plane_point);
+            Vector3d x2moved = project_point_to_plane(coords.at(2), s,
+                                                      bot_plane_point);
 
 
-            QList<Eigen::Vector3d> moved_coords;
+            QList<Vector3d> moved_coords;
             moved_coords.append(x0moved);
             moved_coords.append(x1moved);
             moved_coords.append(x2moved);
             return moved_coords;
         }
 
-        Eigen::Vector3d project_point_to_plane(Eigen::Vector3d point,
-                                                                          Eigen::Vector3d normal_vector,
-                                                                          Eigen::Vector3d plane_point) {
-            Eigen::Vector3d proj_point = point - normal_vector * ((point - plane_point).transpose() * normal_vector);
+        Vector3d project_point_to_plane(Vector3d point, Vector3d normal_vector, Vector3d plane_point) {
+            Vector3d proj_point = point - normal_vector * ((point - plane_point).transpose() * normal_vector);
             return proj_point;
 
         }
 
-        QList<Eigen::Vector3d> kkt_eq_solutions(Eigen::Matrix3d A, Eigen::Vector3d b) {
+        QList<Vector3d> kkt_eq_solutions(Matrix3d A, Vector3d b) {
 
-            QList<Eigen::Vector3d> candidate_solutions;
+            QList<Vector3d> candidate_solutions;
 
             /* First assume that A-\mu I has an inverse.
              * We can find the inverse of it and solve
              * a sixth degree equation for \mu.
              */
             A = rm_entries_eps_matrix(A, 10e-12);
-            Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> A_es(A);
+            SelfAdjointEigenSolver<Matrix3d> A_es(A);
 
             // Need to remove eigenvalues which are approx 0
-            Eigen::Vector3d eigenvalues = rm_entries_eps(A_es.eigenvalues(), 10e-12);
+            Vector3d eigenvalues = rm_entries_eps(A_es.eigenvalues(), 10e-12);
             /*std::cout << "eigvalues" << std::endl << A_es.eigenvalues() << std::endl;
             std::cout << "eigvalues small removed" << std::endl << eigenvalues << std::endl;
             std::cout << "qinvb" << std::endl << A_es.eigenvectors().inverse()*b << std::endl;*/
             // Compute coefficients of 6th degree polynomial
-            Eigen::VectorXd coeffs = coeff_vector(eigenvalues, A_es.eigenvectors().inverse(),
-                                                                             b);
+            VectorXd coeffs = coeff_vector(eigenvalues, A_es.eigenvectors().inverse(),
+                                           b);
 
             /* There is an issue where coefficients should be zero but are not
              * but because of numerical issues these need to be handled manually.
@@ -1189,13 +1171,13 @@ namespace WellIndexCalculator {
 
 
             // Compute roots of polynomial
-            Eigen::VectorXd realroots(6);
-            Eigen::VectorXd comproots(6);
+            VectorXd realroots(6);
+            VectorXd comproots(6);
             rpoly_plus_plus::FindPolynomialRootsJenkinsTraub(coeffs, &realroots, &comproots);
 
             //std::cout << "polynomial coeffs = " << std::endl << coeffs << std::endl;
 
-            //Eigen::Matrix3d invmatr = Eigen::Matrix3d::Zero();
+            //Matrix3d invmatr = Matrix3d::Zero();
 
             for (int ii = 0; ii < 6; ii++) {
 
@@ -1205,14 +1187,14 @@ namespace WellIndexCalculator {
 
                     // We have found a valid root. Get vector s.
                     double cur_root = realroots[ii];
-                    Eigen::Vector3d cur_root_vec;
+                    Vector3d cur_root_vec;
                     cur_root_vec << cur_root, cur_root, cur_root;
-                    Eigen::Matrix3d invmatr = (eigenvalues - cur_root_vec).asDiagonal();
+                    Matrix3d invmatr = (eigenvalues - cur_root_vec).asDiagonal();
 
                     //invmatr(0,0) = 1.00/(A_es.eigenvalues()[0]-cur_root);
                     //invmatr(1,1) = 1.00/(A_es.eigenvalues()[1]-cur_root);
                     //invmatr(2,2) = 1.00/(A_es.eigenvalues()[2]-cur_root);
-                    Eigen::Vector3d s = A_es.eigenvectors() * invmatr.inverse() * A_es.eigenvectors().inverse() * b;
+                    Vector3d s = A_es.eigenvectors() * invmatr.inverse() * A_es.eigenvectors().inverse() * b;
 
                     candidate_solutions.append(s);
                 }
@@ -1229,17 +1211,17 @@ namespace WellIndexCalculator {
             // Loop through all 3 eigenvalues of A
             for (int i = 0; i < 3; i++) {
 
-                QList<Eigen::Vector3d> eigenvalue_solutions;
+                QList<Vector3d> eigenvalue_solutions;
 
                 // Create linear system (A-\my I)s = b
-                Eigen::Matrix3d A_eig = A - eigenvalues[i] * Eigen::Matrix3d::Identity();
+                Matrix3d A_eig = A - eigenvalues[i] * Matrix3d::Identity();
 
                 /*
                 A_eig << A(0,0)-eigval(i), A(0,1)          , A(0,2),
                          A(1,0)          , A(1,1)-eigval(i), A(1,2),
                          A(2,0)          , A(2,1)           ,A(2,2)-eigval(i);
                 */
-                Eigen::Vector3d b_eig = b;
+                Vector3d b_eig = b;
                 // Check for existence of solution
                 //std::cout << "eigenvalue number "<< i << " = " << eigenvalues[i] << std::endl;
                 if (solution_existence(A_eig, b_eig)) {

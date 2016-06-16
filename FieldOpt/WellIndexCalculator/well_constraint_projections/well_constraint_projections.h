@@ -23,38 +23,40 @@ namespace WellIndexCalculator {
  */
     namespace WellConstraintProjections
     {
+        using namespace Eigen;
+
         // Functions to build A and b for different cases.
-        Eigen::Matrix3d build_A_4p(QList<Eigen::Vector3d> coords);
-        Eigen::Vector3d build_b_4p(QList<Eigen::Vector3d> coords, double d);
-        Eigen::Matrix3d build_A_3p(QList<Eigen::Vector3d> coords);
-        Eigen::Vector3d build_b_3p(QList<Eigen::Vector3d> coords, double d);
+        Matrix3d build_A_4p(QList<Vector3d> coords);
+        Vector3d build_b_4p(QList<Vector3d> coords, double d);
+        Matrix3d build_A_3p(QList<Vector3d> coords);
+        Vector3d build_b_3p(QList<Vector3d> coords, double d);
 
 
 
         // This function finds all potential KKT points (s) for an equation (A-muI)s = b, length(s) = 1.
-        QList<Eigen::Vector3d> kkt_eq_solutions(Eigen::Matrix3d A, Eigen::Vector3d b);
-        Eigen::VectorXd coeff_vector(Eigen::Vector3d D, Eigen::Matrix3d Qt, Eigen::Vector3d b);
+        QList<Vector3d> kkt_eq_solutions(Matrix3d A, Vector3d b);
+        VectorXd coeff_vector(Vector3d D, Matrix3d Qt, Vector3d b);
 
         // Solves the above (A-muI)s = b, length(s) = 1, but where the inverse does not exist.
-        Eigen::Vector3d non_inv_quad_coeffs(Eigen::Vector3d x, Eigen::Vector3d n);
-        QList<Eigen::Vector3d> non_inv_solution(Eigen::Matrix3d A, Eigen::Vector3d b);
-        bool solution_existence(Eigen::Matrix3d A, Eigen::Vector3d b);
+        Vector3d non_inv_quad_coeffs(Vector3d x, Vector3d n);
+        QList<Vector3d> non_inv_solution(Matrix3d A, Vector3d b);
+        bool solution_existence(Matrix3d A, Vector3d b);
 
         // Remove all values from a matrix or vector which are below threshold value eps. Helps stabillity in some cases.
-        Eigen::Matrix3d rm_entries_eps_matrix(Eigen::Matrix3d m, double eps);
-        Eigen::VectorXd rm_entries_eps_coeffs(Eigen::VectorXd m, double eps);
+        Matrix3d rm_entries_eps_matrix(Matrix3d m, double eps);
+        VectorXd rm_entries_eps_coeffs(VectorXd m, double eps);
 
         // Help functions. Moving ponts, shortest distance, costs, feasibillity etc.
-        double shortest_distance_n_wells(QList<QList<Eigen::Vector3d> > coords, int n);
-        double shortest_distance(QList<Eigen::Vector3d> coords);
-        double shortest_distance_3p(QList<Eigen::Vector3d> coords);
-        Eigen::Vector3d project_point_to_plane(Eigen::Vector3d point, Eigen::Vector3d normal_vector,
-                                                      Eigen::Vector3d plane_point);
-        QList<Eigen::Vector3d> move_points_4p(QList<Eigen::Vector3d> coords, double d, Eigen::Vector3d s);
-        QList<Eigen::Vector3d> move_points_3p(QList<Eigen::Vector3d> coords, double d, Eigen::Vector3d s);
-        double movement_cost(QList<Eigen::Vector3d> old_coords, QList<Eigen::Vector3d> new_coords);
-        bool feasible_well_length(QList<QList<Eigen::Vector3d> > coords, double max, double min, double tol);
-        bool feasible_interwell_distance(QList<QList<Eigen::Vector3d> > coords, double d, double tol);
+        double shortest_distance_n_wells(QList<QList<Vector3d> > coords, int n);
+        double shortest_distance(QList<Vector3d> coords);
+        double shortest_distance_3p(QList<Vector3d> coords);
+        Vector3d project_point_to_plane(Vector3d point, Vector3d normal_vector,
+                                        Vector3d plane_point);
+        QList<Vector3d> move_points_4p(QList<Vector3d> coords, double d, Vector3d s);
+        QList<Vector3d> move_points_3p(QList<Vector3d> coords, double d, Vector3d s);
+        double movement_cost(QList<Vector3d> old_coords, QList<Vector3d> new_coords);
+        bool feasible_well_length(QList<QList<Vector3d> > coords, double max, double min, double tol);
+        bool feasible_interwell_distance(QList<QList<Vector3d> > coords, double d, double tol);
 
 
         // THESE FUNCTIONS SHOULD ALL BE PUBLIC. ACTUAL CONSTRAINT PROJECTIONS FOR SINGLE AND MULTIPLE WELLS
@@ -70,8 +72,7 @@ namespace WellIndexCalculator {
          * \param Tolerance addition epsilon. Moves the heel and toe and extra length epsilon.
          * \return List of moved heel and toe. First Vector is the heel and the second Vector is the toe.
         */
-        QList<Eigen::Vector3d> well_length_projection(Eigen::Vector3d heel, Eigen::Vector3d toe, double max,
-                                                             double min, double epsilon);
+        QList<Vector3d> well_length_projection(Vector3d heel, Vector3d toe, double max, double min, double epsilon);
 
         /*!
          * \brief Master function for the interwell constraint projection. Projects two wells so that they are at
@@ -82,7 +83,7 @@ namespace WellIndexCalculator {
          * \param minimum distance d allowed between the two wells.
          * \return Cheapest(L2-norm) projection of line segments s.t. they are at least a distance d appart.
         */
-        QList<Eigen::Vector3d> interwell_constraint_projection(QList<Eigen::Vector3d> coords, double d);
+        QList<Vector3d> interwell_constraint_projection(QList<Vector3d> coords, double d);
 
         /*!
          * \brief Projects any number of wells so that they are at least a distance d appart.
@@ -90,7 +91,8 @@ namespace WellIndexCalculator {
          * \param minimum distance d allowed between any pair of two wells.
          * \return A projection (not necessarily best one) of wells s.t. they are at least a distance d appart.
         */
-        QList<QList<Eigen::Vector3d> > interwell_constraint_multiple_wells(QList<QList<Eigen::Vector3d> > coords, double d, double tol);
+        QList<QList<Vector3d> > interwell_constraint_multiple_wells(QList<QList<Vector3d>> coords,
+                                                                    double d, double tol);
 
         /*!
          * \brief MWell length constraint projection for multiple wells. Projects the heel and toe of every well so that
@@ -103,7 +105,8 @@ namespace WellIndexCalculator {
          * \param Tolerance addition epsilon. Moves the heel and toe and extra length epsilon.
          * \return Optimal list of moved wells such that length constraint is satisfied (+ epsilon)
         */
-        QList<QList<Eigen::Vector3d>> well_length_constraint_multiple_wells(QList<QList<Eigen::Vector3d>> wells, double max, double min, double epsilon);
+        QList<QList<Vector3d>> well_length_constraint_multiple_wells(QList<QList<Vector3d>> wells,
+                                                                     double max, double min, double epsilon);
 
         /*!
          * \brief Master function for the interwell AND length constraint projection. Projects any number of wells so
@@ -119,7 +122,8 @@ namespace WellIndexCalculator {
          * \param Tolerance addition epsilon. Moves the heel and toe and extra length epsilon.
          * \return Some projection of all wells such that both constraints are satisfied.
         */
-        QList<QList<Eigen::Vector3d> > both_constraints_multiple_wells(QList<QList<Eigen::Vector3d> > coords, double d, double tol, double max, double min, double epsilon);
+        QList<QList<Vector3d> > both_constraints_multiple_wells(QList<QList<Vector3d>> coords, double d,
+                                                                double tol, double max, double min, double epsilon);
 
         /*!
          * \brief Given some arbitrary point and a list of cells in which the point is allowed to be, finds the projection to
@@ -128,11 +132,11 @@ namespace WellIndexCalculator {
          * \param List of allowed blocks to which point should be projected
          * \return projected point. If point is already legal returns the same point.
         */
-        Eigen::Vector3d well_domain_constraint(Eigen::Vector3d point, QList<Reservoir::Grid::Cell> cells);
+        Vector3d well_domain_constraint(Vector3d point, QList<Reservoir::Grid::Cell> cells);
 
-        Eigen::Vector3d well_domain_constraint_vector(Eigen::Vector3d point, std::vector<Reservoir::Grid::Cell> cells);
+        Vector3d well_domain_constraint_vector(Vector3d point, std::vector<Reservoir::Grid::Cell> cells);
 
-        Eigen::Vector3d well_domain_constraint_indices(Eigen::Vector3d point, Reservoir::Grid::Grid *grid, QList<int> index_list);
+        Vector3d well_domain_constraint_indices(Vector3d point, Reservoir::Grid::Grid *grid, QList<int> index_list);
 
         /*!
          * \brief Sets all elements of a 3-by-3 matrix whose absolute value is below a certain threshold to zero.
@@ -140,7 +144,7 @@ namespace WellIndexCalculator {
          * \param Threshold
          * \return Matrix with cleared sub-threshold values
         */
-        Eigen::Vector3d rm_entries_eps(Eigen::Vector3d m, double eps);
+        Vector3d rm_entries_eps(Vector3d m, double eps);
 
         /*!
              * \brief Given a cell block and a point in space, computes the point in the cell block which is closest to the given point
@@ -148,7 +152,7 @@ namespace WellIndexCalculator {
              * \param moved points
              * \return L2 norm of vectors of how points moved.
              */
-        Eigen::Vector3d point_to_cell_shortest(Reservoir::Grid::Cell cell, Eigen::Vector3d point);
+        Vector3d point_to_cell_shortest(Reservoir::Grid::Cell cell, Vector3d point);
 
         /*!
          * \brief Given a face (4 corner points) and a point in 3D space, computes the point on the face which is closest to given point
@@ -156,7 +160,7 @@ namespace WellIndexCalculator {
          * \param moved points
          * \return point on face closest to given point
          */
-        Eigen::Vector3d point_to_face_shortest(QList<Eigen::Vector3d> face, Eigen::Vector3d point, Reservoir::Grid::Cell cell);
+        Vector3d point_to_face_shortest(QList<Vector3d> face, Vector3d point, Reservoir::Grid::Cell cell);
 
         /*!
          * \brief computes which point on a line segment that is closest to a given point
@@ -164,7 +168,7 @@ namespace WellIndexCalculator {
          * \param given point
          * \return point on line segment closest to given point
          */
-        Eigen::Vector3d point_to_line_shortest(QList<Eigen::Vector3d> line_segment, Eigen::Vector3d P0);
+        Vector3d point_to_line_shortest(QList<Vector3d> line_segment, Vector3d P0);
     }
 
 }
