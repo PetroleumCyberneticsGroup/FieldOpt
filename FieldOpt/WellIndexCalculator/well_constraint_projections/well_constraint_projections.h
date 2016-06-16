@@ -138,8 +138,6 @@ namespace WellIndexCalculator {
         */
         Vector3d well_domain_constraint(Vector3d point, QList<Reservoir::Grid::Cell> cells);
 
-        Vector3d well_domain_constraint_vector(Vector3d point, std::vector<Reservoir::Grid::Cell> cells);
-
         Vector3d well_domain_constraint_indices(Vector3d point, Reservoir::Grid::Grid *grid, QList<int> index_list);
 
         /*!

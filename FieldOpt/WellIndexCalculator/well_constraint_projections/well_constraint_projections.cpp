@@ -355,34 +355,12 @@ namespace WellIndexCalculator {
             return best_point;
         }
 
-        Vector3d well_domain_constraint_vector(Vector3d point, std::vector<Reservoir::Grid::Cell> cells) {
-            double minimum = INFINITY;
-            Vector3d best_point;
-
-            for (int ii = 0; ii < cells.size(); ii++) {
-                Reservoir::Grid::Cell current_cell = cells[ii];
-                Vector3d temp_point = point_to_cell_shortest(current_cell, point);
-                Vector3d projected_length = point - temp_point;
-
-                if (projected_length.norm() < minimum) {
-                    best_point = temp_point;
-                    minimum = projected_length.norm();
-                }
+        Vector3d well_domain_constraint_indices(Vector3d point, Reservoir::Grid::Grid *grid, QList<int> index_list) {
+            QList<Reservoir::Grid::Cell> cells;
+            for (int index : index_list) {
+                cells.append(grid->GetCell(index));
             }
-
-            return best_point;
-        }
-
-        Vector3d well_domain_constraint_indices(Vector3d point,
-                                                Reservoir::Grid::Grid *grid,
-                                                QList<int> index_list) {
-            std::vector<Reservoir::Grid::Cell> cells;
-
-            for (int ii = 0; ii < index_list.size(); ii++) {
-                cells.push_back(grid->GetCell(index_list[ii]));
-            }
-
-            return well_domain_constraint_vector(point, cells);
+            return well_domain_constraint(point, cells);
         }
 
         double shortest_distance(QList<Vector3d> coords) {
