@@ -222,7 +222,7 @@ namespace WellIndexCalculator {
                 }
             }
 
-            if (solution_coords.length() == 0) 
+            if (solution_coords.length() == 0)
                 std::cout << "Found no solution to interwell projection problem" << std::endl;
             return solution_coords;
         }
@@ -233,20 +233,18 @@ namespace WellIndexCalculator {
             // for all pairs of wells (i,j) i != j
             for (int i = 0; i < n; i++) {
                 for (int j = i + 1; j < n; j++) {
-
                     // Create QList with current pair of wells
                     QList<Vector3d> current_pair;
-                    current_pair.append(coords.at(i).at(0));
-                    current_pair.append(coords.at(i).at(1));
-                    current_pair.append(coords.at(j).at(0));
-                    current_pair.append(coords.at(j).at(1));
+                    current_pair.append(coords[i][0]);
+                    current_pair.append(coords[i][1]);
+                    current_pair.append(coords[j][0]);
+                    current_pair.append(coords[j][1]);
 
                     if (shortest_distance(current_pair) < distance) {
                         distance = shortest_distance(current_pair);
                     }
                 }
             }
-
             return distance;
         }
 
@@ -254,11 +252,8 @@ namespace WellIndexCalculator {
             double shortest_distance = 0;
             double n = coords.length();
 
-            /* loop through all wells as
-             * long as some pair of wells
-             * violate inter-well distance
-             * constraint. Tolerance tol
-             * added for quicker convergence.
+            /* loop through all wells as long as some pair of wells violate inter-well distance
+             * constraint. Tolerance tol added for quicker convergence.
              */
             int max_iter = 10000;
             int iter = 0;
@@ -266,34 +261,29 @@ namespace WellIndexCalculator {
                 // for all pairs of wells (i,j) i != j
                 for (int i = 0; i < n; i++) {
                     for (int j = i + 1; j < n; j++) {
-
                         // Create QList with current pair of wells
                         QList<Vector3d> current_pair;
-                        current_pair.append(coords.at(i).at(0));
-                        current_pair.append(coords.at(i).at(1));
-                        current_pair.append(coords.at(j).at(0));
-                        current_pair.append(coords.at(j).at(1));
+                        current_pair.append(coords[i][0]);
+                        current_pair.append(coords[i][1]);
+                        current_pair.append(coords[j][0]);
+                        current_pair.append(coords[j][1]);
 
                         // Project pair of wells
                         current_pair = interwell_constraint_projection(current_pair, d);
 
                         // Replace initial well pair with projected pair.
-                        coords[i].replace(0, current_pair.at(0));
-                        coords[i].replace(1, current_pair.at(1));
-                        coords[j].replace(0, current_pair.at(2));
-                        coords[j].replace(1, current_pair.at(3));
-
+                        coords[i].replace(0, current_pair[0]);
+                        coords[i].replace(1, current_pair[1]);
+                        coords[j].replace(0, current_pair[2]);
+                        coords[j].replace(1, current_pair[3]);
                     }
                 }
-
                 shortest_distance = shortest_distance_n_wells(coords, n);
-                std::cout << "current shortest distance = " << shortest_distance << std::endl;
                 iter += 1;
-                //sleep(0.001);
             }
-            if (iter < max_iter) { std::cout << "converged in " << iter << " steps!" << std::endl; }
-            else std::cout << "No convergence. Max iterations " << iter << " reached" << std::endl;
-
+            if (iter == max_iter)
+                std::cout << "No convergence in interwell distance constraints after max iterations "
+                << iter << " reached" << std::endl;
 
             return coords;
         }
