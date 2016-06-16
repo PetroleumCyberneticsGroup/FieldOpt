@@ -88,7 +88,7 @@ namespace WellIndexCalculator {
 
                     // Check that the intersect point is on the correct side of all faces (i.e. inside the cell)
                     bool feasible_point = true;
-                    for (auto p: cell.planes()) {
+                    for (auto p : cell.planes()) {
                         if (!point_on_same_side(intersect_point, p.corners[0], p.normal_vector, 10e-6)) {
                             feasible_point = false;
                             break;
@@ -106,27 +106,20 @@ namespace WellIndexCalculator {
             return entry_point;
         }
 
-        Vector3d project_v1_on_v2(Vector3d v1, Vector3d v2) {
-            return v2 * v2.dot(v1) / v2.dot(v2);
-        }
+        double well_index_cell(Reservoir::Grid::Cell cell, QList<Vector3d> start_points,
+                               QList<Vector3d> end_points, double wellbore_radius) {
 
-        double well_index_cell_qvector(Reservoir::Grid::Cell cell, QList<Vector3d> start_points,
-                                       QList<Vector3d> end_points, double wellbore_radius) {
-            /* corner points of Cell(s) are always listen in the same order and orientation. (see
-             * Reservoir::Grid::Cell for illustration as it is included in the code.
-             * Assumption: The block is fairly regular, i.e. corners are right angles.
-             * Determine the 3(orthogonal, or very close to orth.) vectors to project line onto.
-             * Corners 4&5, 4&6 and 4&0 span the cell from the front bottom left corner.
-             */
-            QList<Vector3d> corners = cell.corners();
-            Vector3d xvec = corners[5] - corners[4];
-            Vector3d yvec = corners[6] - corners[4];
-            Vector3d zvec = corners[0] - corners[4];
+            // Determine the 3 (orthogonal, or very close to orth.) vectors to project line onto.
+            // Corners 4&5, 4&6 and 4&0 span the cell from the front bottom left corner.
+            Vector3d xvec = cell.corners()[5] - cell.corners()[4];
+            Vector3d yvec = cell.corners()[6] - cell.corners()[4];
+            Vector3d zvec = cell.corners()[0] - cell.corners()[4];
 
             // Finds the dimensional sizes (i.e. length in each direction) of the cell block
             double dx = xvec.norm();
             double dy = yvec.norm();
             double dz = zvec.norm();
+
             // Get directional permeabilities
             double kx = cell.permx();
             double ky = cell.permy();
@@ -136,7 +129,6 @@ namespace WellIndexCalculator {
             double Ly = 0;
             double Lz = 0;
 
-            // Need to add projections of all segments, each line is one segment.
             for (int ii = 0; ii < start_points.length(); ++ii) { // Current segment ii
                 // Compute vector from segment
                 Vector3d current_vec = end_points.at(ii) - start_points.at(ii);
@@ -146,9 +138,9 @@ namespace WellIndexCalculator {
                  * not the spatial position. Also adds the lengths of previous segments in case there
                  * is more than one segment within the well.
                  */
-                Lx = Lx + project_v1_on_v2(current_vec, xvec).norm();
-                Ly = Ly + project_v1_on_v2(current_vec, yvec).norm();
-                Lz = Lz + project_v1_on_v2(current_vec, zvec).norm();
+                Lx = Lx + (xvec * xvec.dot(current_vec) / xvec.dot(xvec)).norm();
+                Ly = Ly + (yvec * yvec.dot(current_vec) / yvec.dot(yvec)).norm();
+                Lz = Lz + (zvec * zvec.dot(current_vec) / zvec.dot(zvec)).norm();
             }
 
             // Compute Well Index from formula provided by Shu
@@ -159,8 +151,6 @@ namespace WellIndexCalculator {
         }
 
         double dir_well_index(double Lx, double dy, double dz, double ky, double kz, double wellbore_radius) {
-            // wellbore radius should probably be taken as input. CAREFUL
-            //double wellbore_radius = 0.1905;
             double silly_eclipse_factor = 0.008527;
             double well_index_i = silly_eclipse_factor * (2 * M_PI * sqrt(ky * kz) * Lx) /
                                   (log(dir_wellblock_radius(dy, dz, ky, kz) / wellbore_radius));
@@ -187,8 +177,8 @@ namespace WellIndexCalculator {
                 entry_points.append(temp_pair.second.at(ii));
                 exit_points.append(temp_pair.second.at(ii + 1));
                 well_indeces.append(
-                        well_index_cell_qvector(grid->GetCell(temp_pair.first.at(ii)), entry_points,
-                                                exit_points, wellbore_radius));
+                        well_index_cell(grid->GetCell(temp_pair.first.at(ii)), entry_points,
+                                        exit_points, wellbore_radius));
             }
             pair.first = temp_pair.first;
             pair.second = well_indeces;

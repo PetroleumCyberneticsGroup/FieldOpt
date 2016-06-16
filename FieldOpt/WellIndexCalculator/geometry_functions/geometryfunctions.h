@@ -75,24 +75,22 @@ namespace WellIndexCalculator {
                                         Eigen::Vector3d end_point, Eigen::Vector3d exception_point);
 
         /*!
-         * \brief project_v1_onv2 is the orthognal projection of a vector v1 onto the vector v2.
-         * \param vector to be projected
-         * \param vector onto which projection is done
-         * \return orthogonal projection of vector
-        */
-        Eigen::Vector3d project_v1_on_v2(Eigen::Vector3d v1, Eigen::Vector3d v2);
-
-        /*!
-         * \brief Compute the well index for a (one) single cell/block by using the Projection Well Method (Shu 2005).
-         * \param cell/block
+         * \brief Compute the well index (aka. transmissibility factor) for a (one) single cell/block by
+         * using the Projection Well Method (Shu 2005).
+         *
+         * Assumption: The block is fairly regular, i.e. corners are straight angles.
+         *
+         * \note Corner points of Cell(s) are always listed in the same order and orientation. (see
+         * Reservoir::Grid::Cell for illustration).
+         *
+         * \param cell Well block to compute the WI in.
          * \param start_points line segment/well
          * \param end_points line segment/well
-         * \param wellbore_radius
+         * \param wellbore_radius The wellbore radius.
          * \return Well index for block/cell
         */
-        double well_index_cell_qvector(Reservoir::Grid::Cell block,
-                                       QList<Eigen::Vector3d> start_points,
-                                       QList<Eigen::Vector3d> end_points, double wellbore_radius);
+        double well_index_cell(Reservoir::Grid::Cell cell, QList<Eigen::Vector3d> start_points,
+                               QList<Eigen::Vector3d> end_points, double wellbore_radius);
 
         /*!
          * \brief Auxilary function for well_index_cell function

@@ -58,10 +58,10 @@ TEST_F(SingleCellWellIndexTest, WellIndexValueWithQVector_test) {
     start_points.append(start_point);
     end_points.append(end_point);
 
-    double wi = WellIndexCalculator::GeometryFunctions::well_index_cell_qvector(ptr_cell_1,
-                                                                                start_points,
-                                                                                end_points,
-                                                                                wellbore_radius);
+    double wi = WellIndexCalculator::GeometryFunctions::well_index_cell(ptr_cell_1,
+                                                                        start_points,
+                                                                        end_points,
+                                                                        wellbore_radius);
     /* 0.555602 is the expected well transmisibility factor aka. well index.
      * For now this value is read directly from eclipse output file:
      * Expect value within delta percent
@@ -94,7 +94,8 @@ TEST_F(SingleCellWellIndexTest, vertical_well_index_test) {
     end_points.append(end_point);
 
 
-    double wi = WellIndexCalculator::GeometryFunctions::well_index_cell_qvector(cell_1,start_points,end_points,wellbore_radius);
+    double wi = WellIndexCalculator::GeometryFunctions::well_index_cell(cell_1, start_points, end_points,
+                                                                        wellbore_radius);
     // WellIndexCalculator::GeometryFunctions::vertical_well_index_cell(cell_1,kx,ky,wellbore_radius);
     /* 0.555602 is the expected well transmisibility factor aka. well index.
      * For now this value is read directly from eclipse output file:
