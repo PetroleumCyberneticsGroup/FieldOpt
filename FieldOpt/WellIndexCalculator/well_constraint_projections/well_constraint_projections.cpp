@@ -16,19 +16,8 @@ namespace WellIndexCalculator {
             double minimum = INFINITY;
             Vector3d closest_point = point;
 
-            //TODO: Compare face indices with those in GeometryFunctions::cell_planes_coords
-            int face_indices[6][4] = {{0, 1, 2, 3},
-                                      {4, 5, 6, 7},
-                                      {2, 0, 6, 4},
-                                      {1, 3, 5, 7},
-                                      {0, 1, 4, 5},
-                                      {2, 3, 6, 7}};
-
-            // Loop through all faces.
-            for (int ii = 0; ii < 6; ii++) {
-                QList<Vector3d> temp_face({corners.at(face_indices[ii][0]), corners.at(face_indices[ii][1]),
-                                           corners.at(face_indices[ii][2]), corners.at(face_indices[ii][3])});
-                Vector3d temp_point = point_to_face_shortest(temp_face, point, cell);
+            for (auto face : cell.planes()) {
+                Vector3d temp_point = point_to_face_shortest(face.corners, point, cell);
                 Vector3d projected_length = point - temp_point;
                 if (projected_length.norm() < minimum) {
                     closest_point = temp_point;
