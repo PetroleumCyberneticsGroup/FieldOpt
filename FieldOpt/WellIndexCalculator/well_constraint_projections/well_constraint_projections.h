@@ -80,7 +80,7 @@ namespace WellIndexCalculator {
          *
          * \param Two line segments defined by their endpoints. Two first entries belong to first line segment,
          * two last entries belong to second line segment.
-         * \param minimum distance d allowed between the two wells.
+         * \param d minimum distance d allowed between the two wells.
          * \return Cheapest(L2-norm) projection of line segments s.t. they are at least a distance d appart.
         */
         QList<Vector3d> interwell_constraint_projection(QList<Vector3d> coords, double d);

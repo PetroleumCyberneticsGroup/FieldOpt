@@ -6,8 +6,6 @@ namespace WellIndexCalculator {
         using namespace Eigen;
 
         Vector3d point_to_cell_shortest(Reservoir::Grid::Cell cell, Vector3d point) {
-            QList<Vector3d> corners = cell.corners();
-
             if (cell.EnvelopsPoint(point)) {
                 return point;
             }
@@ -68,11 +66,9 @@ namespace WellIndexCalculator {
 
         Vector3d non_inv_quad_coeffs(Vector3d x, Vector3d n) {
             Vector3d coeffs;
-
             coeffs(0) = n(0) * n(0) + n(1) * n(1) + n(2) * n(2);
             coeffs(1) = 2 * (x(0) * n(0) + x(1) * n(1) + x(2) * n(2));
             coeffs(2) = x(0) * x(0) + x(1) * x(1) + x(2) * x(2) - 1;
-
             return coeffs;
         }
 
@@ -107,27 +103,20 @@ namespace WellIndexCalculator {
 
 
         QList<Vector3d> interwell_constraint_projection(QList<Vector3d> coords, double d) {
-            /* If the two line segments already satisfy
-             * the interwell distance constraint,
-             * simply return the same coordinates
-             */
+            // If the two line segments already satisfy the interwell distance constraint, return the coordinates.
             if (shortest_distance(coords) >= d) {
-                std::cout << "Initial points satisfy constraints" << std::endl;
                 return coords;
             }
+            QList<Vector3d> solution_coords, moved_coords, temp_coords;
 
-            QList<Vector3d> solution_coords;
-            QList<Vector3d> moved_coords;
-            QList<Vector3d> temp_coords;
             /* Iterate through moving points. First try moving 2 points, then 3 points
              * then 4 points. If problem can be solved moving k points, moving k+1 points
              * will be a worse solution. Return the best k point solution.
              */
-
             double cost = INFINITY;
 
-            // Move 2 points
-            std::cout << "Initial points not feasible. Try moving 2 points" << std::endl;
+            // ################## 2 POINT PART ############################
+            // ################ END 2 POINT PART ##########################
             int two_point_index[4][2] = {{0, 2},
                                          {0, 3},
                                          {1, 2},
@@ -135,28 +124,26 @@ namespace WellIndexCalculator {
 
             for (int ii = 0; ii < 4; ii++) {
                 moved_coords = coords;
-                temp_coords = well_length_projection(coords.at(two_point_index[ii][0]),
-                                                     coords.at(two_point_index[ii][1]),
-                                                     INFINITY, d,
-                                                     10e-5);
-                moved_coords.replace(two_point_index[ii][0], temp_coords.at(0));
-                moved_coords.replace(two_point_index[ii][1], temp_coords.at(1));
+                temp_coords = well_length_projection(coords[two_point_index[ii][0]],
+                                                     coords[two_point_index[ii][1]],
+                                                     INFINITY, d, 10e-5);
+                moved_coords.replace(two_point_index[ii][0], temp_coords[0]);
+                moved_coords.replace(two_point_index[ii][1], temp_coords[1]);
                 if (shortest_distance(moved_coords) >= d &&
                     movement_cost(coords, moved_coords) < cost) {
-                    // If several moves of two points work, save the one with lovest movement cost
+                    // If several moves of two points work, save the one with lowest movement cost
                     cost = movement_cost(coords, moved_coords);
                     solution_coords = moved_coords;
                 }
             }
             // If there were any succesful configurations, return the best one.
             if (cost < INFINITY) {
-                std::cout << "Found 2-point solution" << std::endl;
                 return solution_coords;
             }
+            // ################ END 2 POINT PART ##########################
 
             // ################## 3 POINT PART ############################
             // If no 2 point movements were succesful, try moving 3 points.
-            std::cout << "No 2 point solution. Try moving 3 points" << std::endl;
             int three_point_index[4][3] = {{2, 0, 1},
                                            {3, 0, 1},
                                            {0, 2, 3},
@@ -179,9 +166,7 @@ namespace WellIndexCalculator {
                  * must be among the ones given in solution candidates. we check
                  * all of them.
                  */
-                QList<Vector3d> solution_candidates = kkt_eq_solutions(temp_A,
-                                                                       temp_b);
-                //std::cout << "there are " << solution_candidates.length() << " solution candidates" << std::endl;
+                QList<Vector3d> solution_candidates = kkt_eq_solutions(temp_A, temp_b);
 
                 for (int sol_num = 0; sol_num < solution_candidates.length(); sol_num++) {
                     // Solution of three point problem
@@ -193,13 +178,9 @@ namespace WellIndexCalculator {
                         moved_coords.replace(three_point_index[ii][jj], temp_coords.at(jj));
                     }
 
-                    /*std::cout << "shortest distance unmoved 3p = " << shortest_distance_3p_eigen(input_cords_3p) << std::endl;
-                    std::cout << "shortest distance 4p = " << shortest_distance(moved_coords) << std::endl;
-                    std::cout << "movement cost = " << movement_cost(coords,moved_coords) << std::endl;*/
-
                     if (shortest_distance(moved_coords) >= d - 0.001 &&
                         movement_cost(coords, moved_coords) < cost) {
-                        // If several moves of two points work, save the one with lovest movement cost
+                        // If several moves of three points work, save the one with lovest movement cost
                         cost = movement_cost(coords, moved_coords);
                         solution_coords = moved_coords;
                     }
@@ -241,9 +222,8 @@ namespace WellIndexCalculator {
                 }
             }
 
-            if (solution_coords.length() > 0) { std::cout << "Found 4-point solution" << std::endl; }
-            else std::cout << "Found no solution to problem" << std::endl;
-
+            if (solution_coords.length() == 0) 
+                std::cout << "Found no solution to interwell projection problem" << std::endl;
             return solution_coords;
         }
 
