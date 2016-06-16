@@ -53,6 +53,7 @@ namespace WellIndexCalculator {
          * \param reservoir (containing blocks/cells)
          * \param QList for storing global indeces of intersected blocks
          * \param QList for storing line segments that are inside intersected blocks
+         * \return A pair containing global indeces of intersected cells and the endpoints of the line segment inside each cell.
          */
         QPair<QList<int>, QList<Eigen::Vector3d> > cells_intersected(Eigen::Vector3d start_point,
                                                                      Eigen::Vector3d end_point,

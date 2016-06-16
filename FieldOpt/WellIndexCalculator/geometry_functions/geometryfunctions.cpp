@@ -25,86 +25,60 @@ namespace WellIndexCalculator {
         QPair<QList<int>, QList<Eigen::Vector3d>> cells_intersected(Eigen::Vector3d start_point,
                                                                     Eigen::Vector3d end_point,
                                                                     Reservoir::Grid::Grid *grid) {
-            // Lists which will contain intersected block indeces and intersection points.
-            QList<int> cell_global_index;
+            QList<int> global_cell_indeces;
             QList<Eigen::Vector3d> entry_points;
 
-            /* Find first and last cell blocks intersected and their indeces.
-             * Add first cell and first point to lists.
-             */
+            // Add first and last cell blocks to the lists
             Reservoir::Grid::Cell last_cell = grid->GetCellEnvelopingPoint(end_point);
             Reservoir::Grid::Cell first_cell = grid->GetCellEnvelopingPoint(start_point);
-
             int last_cell_index = last_cell.global_index();
             int first_cell_index = first_cell.global_index();
-            cell_global_index.append(first_cell_index);
+            global_cell_indeces.append(first_cell_index);
             entry_points.append(start_point);
 
-            /* If first and last block are the same then this block is
-             * the only one intercepted. Return current cell and start point + end point.
-             */
+            // If the first and last blocks are the same, return the block and start+end points
             if (last_cell_index == first_cell_index) {
                 entry_points.append(end_point);
-                QPair<QList<int>, QList<Eigen::Vector3d>> early_pair;
-                early_pair.first = cell_global_index;
-                early_pair.second = entry_points;
-                return early_pair;
+                return QPair<QList<int>, QList<Eigen::Vector3d>>(global_cell_indeces, entry_points);
             }
 
 
             Eigen::Vector3d exit_point = find_exit_point(first_cell, start_point, end_point, start_point);
             // Make sure we follow line in the correct direction. (i.e. dot product positive)
             if ((end_point - start_point).dot(exit_point - start_point) <= 0.0) {
-                std::cout << "wrong direction, try other" << std::endl;
-                std::cout << "exit_point = " << exit_point.x() << " " << exit_point.y() << " " << exit_point.z() <<
-                std::endl;
                 exit_point = find_exit_point(first_cell, start_point, end_point, exit_point);
             }
+
             double epsilon = 0.01 / (end_point - exit_point).norm();
             Eigen::Vector3d move_exit_epsilon = exit_point * (1 - epsilon) + end_point * epsilon;
-
             Reservoir::Grid::Cell current_cell = grid->GetCellEnvelopingPoint(move_exit_epsilon);
             double epsilon_temp = epsilon;
+
+            // Move untill we're out of the first cell
             while (current_cell.global_index() == first_cell_index) {
                 epsilon_temp = 10 * epsilon_temp;
                 move_exit_epsilon = exit_point * (1 - epsilon_temp) + end_point * epsilon_temp;
                 current_cell = grid->GetCellEnvelopingPoint(move_exit_epsilon);
             }
 
+            // Add previous exit point to list, find next exit point and all other up to the end_point
             while (current_cell.global_index() != last_cell_index) {
-
-                // Add current cell and previous exit point to lists
-                cell_global_index.append(current_cell.global_index());
+                global_cell_indeces.append(current_cell.global_index());
                 entry_points.append(exit_point);
-
-                // Find other exit point.
                 exit_point = find_exit_point(current_cell, exit_point, end_point, exit_point);
 
-                // DO SOME CHECK IF EXIT POINT IS THE SAME AS END_POINT: UNLIKELY IN PRACTICE
-                if (exit_point == end_point) {
+                if (exit_point == end_point) { // Terminate loop if the exit point is the last point
                     current_cell = last_cell;
                 }
-                    // Move slightly along line to enter the new cell and find cell by using GetCellEnvelopingPoint function.
-                else {
-                    epsilon = 0.01 / (end_point - exit_point).norm();
+                else { // Move slightly along line to enter the new cell and get it
                     move_exit_epsilon = exit_point * (1 - epsilon) + end_point * epsilon;
                     current_cell = grid->GetCellEnvelopingPoint(move_exit_epsilon);
                 }
-
             }
-            cell_global_index.append(last_cell_index);
+            global_cell_indeces.append(last_cell_index);
             entry_points.append(exit_point);
             entry_points.append(end_point);
-
-            /* Collect global indeces of intersected cells and the
-             * endpoints of the line segment inside each cell in a
-             * QPair type to return them both
-             */
-            QPair<QList<int>, QList<Eigen::Vector3d>> pair;
-            pair.first = cell_global_index;
-            pair.second = entry_points;
-            return pair;
-
+            return QPair<QList<int>, QList<Eigen::Vector3d>>(global_cell_indeces, entry_points);
         }
 
         Eigen::Vector3d find_exit_point(Reservoir::Grid::Cell cell, Eigen::Vector3d entry_point,
