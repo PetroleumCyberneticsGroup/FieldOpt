@@ -227,7 +227,7 @@ namespace WellIndexCalculator {
             return solution_coords;
         }
 
-        double shortest_distance_n_wells(QList<QList<Vector3d>> coords, int n) {
+        double shortest_distance_n_wells(QList<QList<Vector3d>> wells, int n) {
             double distance = INFINITY;
 
             // for all pairs of wells (i,j) i != j
@@ -235,10 +235,10 @@ namespace WellIndexCalculator {
                 for (int j = i + 1; j < n; j++) {
                     // Create QList with current pair of wells
                     QList<Vector3d> current_pair;
-                    current_pair.append(coords[i][0]);
-                    current_pair.append(coords[i][1]);
-                    current_pair.append(coords[j][0]);
-                    current_pair.append(coords[j][1]);
+                    current_pair.append(wells[i][0]);
+                    current_pair.append(wells[i][1]);
+                    current_pair.append(wells[j][0]);
+                    current_pair.append(wells[j][1]);
 
                     if (shortest_distance(current_pair) < distance) {
                         distance = shortest_distance(current_pair);
@@ -248,113 +248,105 @@ namespace WellIndexCalculator {
             return distance;
         }
 
-        QList<QList<Vector3d>> interwell_constraint_multiple_wells(QList<QList<Vector3d>> coords, double d, double tol) {
+        QList<QList<Vector3d>> interwell_constraint_multiple_wells(QList<QList<Vector3d>> wells, double d, double tol) {
             double shortest_distance = 0;
-            double n = coords.length();
 
-            /* loop through all wells as long as some pair of wells violate inter-well distance
-             * constraint. Tolerance tol added for quicker convergence.
-             */
+            // Loop through all wells as long as some pair of wells violate inter-well distance
+            // constraint. Tolerance tol added for quicker convergence.
             int max_iter = 10000;
             int iter = 0;
             while (shortest_distance < d - tol && iter < max_iter) {
                 // for all pairs of wells (i,j) i != j
-                for (int i = 0; i < n; i++) {
-                    for (int j = i + 1; j < n; j++) {
+                for (int i = 0; i < wells.length(); i++) {
+                    for (int j = i + 1; j < wells.length(); j++) {
                         // Create QList with current pair of wells
                         QList<Vector3d> current_pair;
-                        current_pair.append(coords[i][0]);
-                        current_pair.append(coords[i][1]);
-                        current_pair.append(coords[j][0]);
-                        current_pair.append(coords[j][1]);
+                        current_pair.append(wells[i][0]);
+                        current_pair.append(wells[i][1]);
+                        current_pair.append(wells[j][0]);
+                        current_pair.append(wells[j][1]);
 
                         // Project pair of wells
                         current_pair = interwell_constraint_projection(current_pair, d);
 
                         // Replace initial well pair with projected pair.
-                        coords[i].replace(0, current_pair[0]);
-                        coords[i].replace(1, current_pair[1]);
-                        coords[j].replace(0, current_pair[2]);
-                        coords[j].replace(1, current_pair[3]);
+                        wells[i].replace(0, current_pair[0]);
+                        wells[i].replace(1, current_pair[1]);
+                        wells[j].replace(0, current_pair[2]);
+                        wells[j].replace(1, current_pair[3]);
                     }
                 }
-                shortest_distance = shortest_distance_n_wells(coords, n);
+                shortest_distance = shortest_distance_n_wells(wells, wells.length());
                 iter += 1;
             }
             if (iter == max_iter)
                 std::cout << "No convergence in interwell distance constraints after max iterations "
                 << iter << " reached" << std::endl;
 
-            return coords;
+            return wells;
         }
 
         QList<QList<Vector3d> > well_length_constraint_multiple_wells(QList<QList<Vector3d> > wells,
                                                                       double max, double min, double epsilon) {
             QList<QList<Vector3d>> projected_wells;
             for (int i = 0; i < wells.length(); i++) {
-                Vector3d current_heel = wells.at(i).at(0);
-                Vector3d current_toe = wells.at(i).at(1);
+                Vector3d current_heel = wells[i][0];
+                Vector3d current_toe = wells[i][1];
                 projected_wells.append(well_length_projection(current_heel, current_toe, max, min, epsilon));
             }
             return projected_wells;
         }
 
-        bool feasible_well_length(QList<QList<Vector3d> > coords, double max, double min, double tol) {
-            // Number of wells
-            int n = coords.length();
+        bool feasible_well_length(QList<QList<Vector3d>> wells, double max, double min, double tol) {
             bool is_feasible = true;
-
-            // loop through all wells
-            for (int i = 0; i < n; i++) {
-
-                //Find length of current well (vector between endpoints)
-                double current_length;
-                current_length = (coords.at(i).at(0) - coords.at(i).at(1)).norm();
+            for (int i = 0; i < wells.length(); i++) {
+                double current_well_length;
+                current_well_length = (wells[i][0] - wells[i][1]).norm();
 
                 // If smaller than min or larger than max (with tolerance tol). not feasible
-                if (current_length < min - tol || current_length > max + tol) { is_feasible = false; }
-
+                if (current_well_length < min - tol || current_well_length > max + tol) {
+                    is_feasible = false;
+                }
             }
-
             return is_feasible;
         }
 
-        bool feasible_interwell_distance(QList<QList<Vector3d> > coords, double d, double tol) {
+        bool feasible_interwell_distance(QList<QList<Vector3d>> wells, double d, double tol) {
             // Number of wells
-            int n = coords.length();
+            int n = wells.length();
             bool is_feasible = true;
-            if (shortest_distance_n_wells(coords, n) < d - tol) { is_feasible = false; }
+            if (shortest_distance_n_wells(wells, n) < d - tol) { is_feasible = false; }
 
             return is_feasible;
         }
 
-        QList<QList<Vector3d> > both_constraints_multiple_wells(QList<QList<Vector3d> > coords, double d,
+        QList<QList<Vector3d> > both_constraints_multiple_wells(QList<QList<Vector3d> > wells, double d,
                                                                 double tol, double max, double min, double epsilon) {
             int iter = 0;
 
             // While at least one of the constraints is violated, continue projecting
-            while (!feasible_interwell_distance(coords, d, 3 * tol) ||
-                   !feasible_well_length(coords, max, min, tol)) {
+            while (!feasible_interwell_distance(wells, d, 3 * tol) ||
+                   !feasible_well_length(wells, max, min, tol)) {
 
-                if (!feasible_interwell_distance(coords, d, tol)) {
+                if (!feasible_interwell_distance(wells, d, tol)) {
                     std::cout << "interwell distance not feasible" << std::endl;
                 }
-                if (!feasible_well_length(coords, max, min, tol)) {
+                if (!feasible_well_length(wells, max, min, tol)) {
                     std::cout << "well length not feasible" << std::endl;
                 }
 
-                coords = well_length_constraint_multiple_wells(coords, max, min, epsilon);
-                coords = interwell_constraint_multiple_wells(coords, d, tol);
+                wells = well_length_constraint_multiple_wells(wells, max, min, epsilon);
+                wells = interwell_constraint_multiple_wells(wells, d, tol);
 
                 iter += 1;
                 if (iter > 100) {
                     std::cout << "above max number of iterations" << std::endl;
-                    return coords;
+                    return wells;
                 }
             }
 
             std::cout << iter << " iterations" << std::endl;
-            return coords;
+            return wells;
         }
 
         Vector3d well_domain_constraint(Vector3d point, QList<Reservoir::Grid::Cell> cells) {

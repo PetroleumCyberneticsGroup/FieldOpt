@@ -47,7 +47,7 @@ namespace WellIndexCalculator {
         VectorXd rm_entries_eps_coeffs(VectorXd m, double eps);
 
         // Help functions. Moving ponts, shortest distance, costs, feasibillity etc.
-        double shortest_distance_n_wells(QList<QList<Vector3d> > coords, int n);
+        double shortest_distance_n_wells(QList<QList<Vector3d> > wells, int n);
         double shortest_distance(QList<Vector3d> coords);
 
         Vector3d project_point_to_plane(Vector3d point, Vector3d normal_vector,
@@ -55,8 +55,8 @@ namespace WellIndexCalculator {
         QList<Vector3d> move_points_4p(QList<Vector3d> coords, double d, Vector3d s);
         QList<Vector3d> move_points_3p(QList<Vector3d> coords, double d, Vector3d s);
         double movement_cost(QList<Vector3d> old_coords, QList<Vector3d> new_coords);
-        bool feasible_well_length(QList<QList<Vector3d> > coords, double max, double min, double tol);
-        bool feasible_interwell_distance(QList<QList<Vector3d> > coords, double d, double tol);
+        bool feasible_well_length(QList<QList<Vector3d>> wells, double max, double min, double tol);
+        bool feasible_interwell_distance(QList<QList<Vector3d>> wells, double d, double tol);
 
 
         // THESE FUNCTIONS SHOULD ALL BE PUBLIC. ACTUAL CONSTRAINT PROJECTIONS FOR SINGLE AND MULTIPLE WELLS
@@ -87,11 +87,13 @@ namespace WellIndexCalculator {
 
         /*!
          * \brief Projects any number of wells so that they are at least a distance d appart.
-         * \param QList of wells. Each well is a QList of two Vector3D, the heel and toe of the well.
+         * \param wells List of well heels and toes to be projected. ith element in outer QList corresponds to well i.
+         * Coordinates of the heel and toe of well stored in the inner QList, each of which contains contains
+         * two Vector3d objects.
          * \param minimum distance d allowed between any pair of two wells.
          * \return A projection (not necessarily best one) of wells s.t. they are at least a distance d appart.
         */
-        QList<QList<Vector3d> > interwell_constraint_multiple_wells(QList<QList<Vector3d>> coords,
+        QList<QList<Vector3d>> interwell_constraint_multiple_wells(QList<QList<Vector3d>> wells,
                                                                     double d, double tol);
 
         /*!
@@ -113,17 +115,18 @@ namespace WellIndexCalculator {
          * \brief Master function for the interwell AND length constraint projection. Projects any number of wells so
          * that both constraints are satisfied.
          *
-         * \param List of wells. ith element in QList corresponds to well i. Coordinates of the heel and toe of well
-         * stored in a QList which contains two Vector3d
-         * \param minimum distance d allowed between the two wells.
-         * \param tolerance tol which is used as a stopping criterion for the alorithm. Algorithm stops if both constrains
+         * \param wells List of well heels and toes to be projected. ith element in outer QList corresponds to well i.
+         * Coordinates of the heel and toe of well stored in the inner QList, each of which contains contains
+         * two Vector3d objects.
+         * \param d minimum distance d allowed between the two wells.
+         * \param tol tolerance tol which is used as a stopping criterion for the alorithm. Algorithm stops if both constrains
          * are satisfied up to tolerance level.
-         * \param maximum allowed length of well
-         * \param minimum allowed length of well
-         * \param Tolerance addition epsilon. Moves the heel and toe and extra length epsilon.
+         * \param max maximum allowed length of well
+         * \param min minimum allowed length of well
+         * \param epsilon Tolerance addition epsilon. Moves the heel and toe and extra length epsilon.
          * \return Some projection of all wells such that both constraints are satisfied.
         */
-        QList<QList<Vector3d> > both_constraints_multiple_wells(QList<QList<Vector3d>> coords, double d,
+        QList<QList<Vector3d> > both_constraints_multiple_wells(QList<QList<Vector3d>> wells, double d,
                                                                 double tol, double max, double min, double epsilon);
 
         /*!
