@@ -65,11 +65,11 @@ namespace WellIndexCalculator {
          * \brief Well length constraint projection. Projects the heel and toe of a well so that the length of the
          * well is at least min and at most max.
          *
-         * \param Coordinates of the heel of the well
-         * \param Coordinates of the toe of the well
-         * \param maximum allowed length of well
-         * \param minimum allowed length of well
-         * \param Tolerance addition epsilon. Moves the heel and toe and extra length epsilon.
+         * \param heel Coordinates of the heel of the well
+         * \param toe Coordinates of the toe of the well
+         * \param max maximum allowed length of well
+         * \param min minimum allowed length of well
+         * \param epsilon Tolerance addition epsilon. Moves the heel and toe and extra length epsilon.
          * \return List of moved heel and toe. First Vector is the heel and the second Vector is the toe.
         */
         QList<Vector3d> well_length_projection(Vector3d heel, Vector3d toe, double max, double min, double epsilon);
