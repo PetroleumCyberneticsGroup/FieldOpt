@@ -4,7 +4,6 @@
 
 #include <RpolyPlusPlus/polynomial.h>
 #include <RpolyPlusPlus/find_polynomial_roots_jenkins_traub.h>
-#include "WellIndexCalculator/geometry_functions/geometryfunctions.h"
 #include "Reservoir/grid/cell.h"
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
@@ -12,6 +11,8 @@
 #include <QList>
 #include <Eigen/Dense>
 #include <QList>
+#include <QPair>
+#include <iostream>
 
 namespace WellIndexCalculator {
 /*!

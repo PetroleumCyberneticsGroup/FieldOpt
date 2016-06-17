@@ -1,4 +1,3 @@
-#include "geometryfunctions.h"
 #include "well_constraint_projections.h"
 
 namespace WellIndexCalculator {
