@@ -31,4 +31,16 @@ QList<WellIndexCalculator::BlockData> WellIndexCalculator::GetBlocks(QList<Eigen
     return block_data;
 }
 
+    WellIndexCalculator::WellIndexCalculator(Reservoir::Grid::Grid *grid) {
+        grid_ = grid;
+    }
+
+    QList<BlockData> WellIndexCalculator::ComputeWellBlocks(Vector3d heel, Vector3d toe, double wellbore_radius) {
+        current_well_.heel = heel;
+        current_well_.toe = toe;
+        current_well_.wellbore_radius = wellbore_radius;
+        return QList<BlockData>();
+    }
+
+
 }
