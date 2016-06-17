@@ -5,7 +5,6 @@ namespace WellIndexCalculator {
         using namespace Eigen;
 
         Vector3d line_plane_intersection(Vector3d p0, Vector3d p1, Vector3d normal_vector, Vector3d point_in_plane) {
-
             Vector3d line_vector = p1 - p0;
             line_vector.normalize();
             normal_vector.normalize();

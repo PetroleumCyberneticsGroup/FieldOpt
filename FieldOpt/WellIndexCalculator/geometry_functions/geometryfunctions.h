@@ -23,6 +23,14 @@ namespace WellIndexCalculator {
  */
 
     namespace GeometryFunctions {
+        /*!
+         * Find the point of inntersection between a line an a plane.
+         * \param p0 Point defining one end of the line.
+         * \param p1 Point defining other end of the line.
+         * \param normal_vector The normal vector of the plane.
+         * \param point_in_plane A point in the plane.
+         * \return The point of intersection.
+         */
         Eigen::Vector3d line_plane_intersection(Eigen::Vector3d p0, Eigen::Vector3d p1,
                                                 Eigen::Vector3d normal_vector, Eigen::Vector3d point_in_plane);
 
@@ -53,9 +61,9 @@ namespace WellIndexCalculator {
          * \param grid The grid object containing blocks/cells.
          * \return A pair containing global indeces of intersected cells and the endpoints of the line segment inside each cell.
          */
-        QPair<QList<int>, QList<Eigen::Vector3d> > cells_intersected(Eigen::Vector3d start_point,
-                                                                     Eigen::Vector3d end_point,
-                                                                     Reservoir::Grid::Grid *grid);
+        QPair<QList<int>, QList<Eigen::Vector3d>> cells_intersected(Eigen::Vector3d start_point,
+                                                                    Eigen::Vector3d end_point,
+                                                                    Reservoir::Grid::Grid *grid);
 
         /*!
          * \brief Find the point where the line bethween the start_point and end_point exits a cell.
