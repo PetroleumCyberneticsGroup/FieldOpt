@@ -411,6 +411,7 @@ namespace WellIndexCalculator {
         }
 
         QList<Vector3d> non_inv_solution(Matrix3d A, Vector3d b) {
+            // \todo Continue here on the morrow
             QList<Vector3d> solution_vectors;
             // Compute full pivotal LU decomposition of A
             FullPivLU<Matrix3d> lu(A);
@@ -420,14 +421,12 @@ namespace WellIndexCalculator {
             Vector3d null_space;
             if (nu.cols() > 1) {
                 null_space << nu(0, 0), nu(1, 0), nu(2, 0);
-                std::cout << "Null space/kernel of (A-mu I) has more than 1 vector. " << std::endl;
             }
             else null_space = nu;
 
-            VectorXd real_roots;
-            VectorXd complex_roots;
-            rpoly_plus_plus::FindPolynomialRootsJenkinsTraub(
-                    non_inv_quad_coeffs(x, null_space), &real_roots, &complex_roots);
+            VectorXd real_roots, complex_roots;
+            rpoly_plus_plus::FindPolynomialRootsJenkinsTraub(non_inv_quad_coeffs(x, null_space),
+                                                             &real_roots, &complex_roots);
 
 
             if (complex_roots(0) == 0) {
@@ -445,11 +444,7 @@ namespace WellIndexCalculator {
         bool solution_existence(Matrix3d A, Vector3d b) {
             Vector3d x = A.fullPivLu().solve(b);
             return ((A * x).isApprox(b));
-
         }
-
-
-        /* PUTTING ALL REWORKED EIGEN FUNCTIONS BELOW HERE*/
 
         Matrix3d build_A_4p(QList<Vector3d> coords) {
             Vector3d vec1 = coords.at(0);
@@ -544,7 +539,6 @@ namespace WellIndexCalculator {
             for (int ii = 0; ii < n_of_points; ii++) {
                 cost_squares += (old_coords.at(ii) - new_coords.at(ii)).squaredNorm();
             }
-
             return cost_squares;
         }
 
@@ -555,21 +549,12 @@ namespace WellIndexCalculator {
             Vector3d top_plane_point = avg_point + (d / 2) * (s);
             Vector3d bot_plane_point = avg_point - (d / 2) * (s);
 
-            Vector3d x0moved = project_point_to_plane(coords.at(0), s,
-                                                      top_plane_point);
-            Vector3d x1moved = project_point_to_plane(coords.at(1), s,
-                                                      top_plane_point);
-            Vector3d x2moved = project_point_to_plane(coords.at(2), s,
-                                                      bot_plane_point);
-            Vector3d x3moved = project_point_to_plane(coords.at(3), s,
-                                                      bot_plane_point);
+            Vector3d x0moved = project_point_to_plane(coords.at(0), s, top_plane_point);
+            Vector3d x1moved = project_point_to_plane(coords.at(1), s, top_plane_point);
+            Vector3d x2moved = project_point_to_plane(coords.at(2), s, bot_plane_point);
+            Vector3d x3moved = project_point_to_plane(coords.at(3), s, bot_plane_point);
 
-            QList<Vector3d> moved_coords;
-            moved_coords.append(x0moved);
-            moved_coords.append(x1moved);
-            moved_coords.append(x2moved);
-            moved_coords.append(x3moved);
-            return moved_coords;
+            return QList<Vector3d>({x0moved, x1moved, x2moved, x3moved});
         }
 
         QList<Vector3d> move_points_3p(QList<Vector3d> coords, double d, Vector3d s) {
@@ -579,29 +564,19 @@ namespace WellIndexCalculator {
             Vector3d top_plane_point = avg_point + (2.0 * d / 3) * (s);
             Vector3d bot_plane_point = avg_point - (1.0 * d / 3) * (s);
 
-            Vector3d x0moved = project_point_to_plane(coords.at(0), s,
-                                                      top_plane_point);
-            Vector3d x1moved = project_point_to_plane(coords.at(1), s,
-                                                      bot_plane_point);
-            Vector3d x2moved = project_point_to_plane(coords.at(2), s,
-                                                      bot_plane_point);
+            Vector3d x0moved = project_point_to_plane(coords.at(0), s, top_plane_point);
+            Vector3d x1moved = project_point_to_plane(coords.at(1), s, bot_plane_point);
+            Vector3d x2moved = project_point_to_plane(coords.at(2), s, bot_plane_point);
 
-
-            QList<Vector3d> moved_coords;
-            moved_coords.append(x0moved);
-            moved_coords.append(x1moved);
-            moved_coords.append(x2moved);
-            return moved_coords;
+            return QList<Vector3d>({x0moved, x1moved, x2moved});
         }
 
         Vector3d project_point_to_plane(Vector3d point, Vector3d normal_vector, Vector3d plane_point) {
             Vector3d proj_point = point - normal_vector * ((point - plane_point).transpose() * normal_vector);
             return proj_point;
-
         }
 
         QList<Vector3d> kkt_eq_solutions(Matrix3d A, Vector3d b) {
-
             QList<Vector3d> candidate_solutions;
 
             /* First assume that A-\mu I has an inverse.
