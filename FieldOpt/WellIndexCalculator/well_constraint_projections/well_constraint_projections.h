@@ -32,9 +32,13 @@ namespace WellIndexCalculator {
         Vector3d build_b_3p(QList<Vector3d> coords, double d);
 
 
-
-        // This function finds all potential KKT points (s) for an equation (A-muI)s = b, length(s) = 1.
+        /*!
+         * \brief Find all potential KKT points (s) for the equation \f$A - \mu I = b, \; length(s) = 1\f$.
+         * \param A The matrix A in the equation.
+         * \param b The vector b in the equation.
+         */
         QList<Vector3d> kkt_eq_solutions(Matrix3d A, Vector3d b);
+
         VectorXd coeff_vector(Vector3d D, Matrix3d Qt, Vector3d b);
 
         // Solves the above (A-muI)s = b, length(s) = 1, but where the inverse does not exist.

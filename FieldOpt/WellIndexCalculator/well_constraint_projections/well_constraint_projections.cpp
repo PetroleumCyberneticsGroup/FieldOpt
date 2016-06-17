@@ -579,40 +579,26 @@ namespace WellIndexCalculator {
         QList<Vector3d> kkt_eq_solutions(Matrix3d A, Vector3d b) {
             QList<Vector3d> candidate_solutions;
 
-            /* First assume that A-\mu I has an inverse.
-             * We can find the inverse of it and solve
-             * a sixth degree equation for \mu.
-             */
+            // Assume that A-\mu I has an inverse - find it and solve a sixth degree eq. for \mu
             A = rm_entries_eps_matrix(A, 10e-12);
             SelfAdjointEigenSolver<Matrix3d> A_es(A);
 
-            // Need to remove eigenvalues which are approx 0
+            // Remove eigenvalues that are aproximately 0
             Vector3d eigenvalues = rm_entries_eps(A_es.eigenvalues(), 10e-12);
-            /*std::cout << "eigvalues" << std::endl << A_es.eigenvalues() << std::endl;
-            std::cout << "eigvalues small removed" << std::endl << eigenvalues << std::endl;
-            std::cout << "qinvb" << std::endl << A_es.eigenvectors().inverse()*b << std::endl;*/
+
             // Compute coefficients of 6th degree polynomial
-            VectorXd coeffs = coeff_vector(eigenvalues, A_es.eigenvectors().inverse(),
-                                           b);
+            VectorXd coeffs = coeff_vector(eigenvalues, A_es.eigenvectors().inverse(), b);
 
-            /* There is an issue where coefficients should be zero but are not
-             * but because of numerical issues these need to be handled manually.
-             * Simply set all whose fabs(x)<10-e12 to zero.
-             */
+            /* There is an issue where coefficients should be zero but are not. Because of numerical issues
+             * these need to be handled manually. Set all whise fabs(x) < 10e-12 to zero. */
             coeffs = rm_entries_eps_coeffs(coeffs, 10e-12);
-
 
             // Compute roots of polynomial
             VectorXd realroots(6);
             VectorXd comproots(6);
             rpoly_plus_plus::FindPolynomialRootsJenkinsTraub(coeffs, &realroots, &comproots);
 
-            //std::cout << "polynomial coeffs = " << std::endl << coeffs << std::endl;
-
-            //Matrix3d invmatr = Matrix3d::Zero();
-
             for (int ii = 0; ii < 6; ii++) {
-
                 // Root may not be complex or an eigenvalue of A
                 if (comproots[ii] == 0 && eigenvalues[0] != realroots[ii] &&
                     eigenvalues[1] != realroots[ii] && eigenvalues[2] != realroots[ii]) {
@@ -622,52 +608,28 @@ namespace WellIndexCalculator {
                     Vector3d cur_root_vec;
                     cur_root_vec << cur_root, cur_root, cur_root;
                     Matrix3d invmatr = (eigenvalues - cur_root_vec).asDiagonal();
-
-                    //invmatr(0,0) = 1.00/(A_es.eigenvalues()[0]-cur_root);
-                    //invmatr(1,1) = 1.00/(A_es.eigenvalues()[1]-cur_root);
-                    //invmatr(2,2) = 1.00/(A_es.eigenvalues()[2]-cur_root);
                     Vector3d s = A_es.eigenvectors() * invmatr.inverse() * A_es.eigenvectors().inverse() * b;
-
                     candidate_solutions.append(s);
                 }
             }
 
-            /* Now for the second part assume that A-\mu I is not
-             * invertible, i.e. \mu is an eigenvalue of A. Then
-             * we either have an infinite amount of solutions of
-             * (A-\mu I)s = b. Require s have length 1 to find
-             * at most two solutions as long as all points are
-             * not on the same line.
-             */
-
-            // Loop through all 3 eigenvalues of A
-            for (int i = 0; i < 3; i++) {
-
+            /* Now for the second part assume that A-\mu I is not invertible, i.e. \mu is an eigenvalue of A. Then
+             * we either have an infinite amount of solutions of (A-\mu I)s = b. Require s have length 1 to find
+             * at most two solutions as long as all points are not on the same line. */
+            for (int i = 0; i < 3; i++) { // Loop through all 3 eigenvalues of A
                 QList<Vector3d> eigenvalue_solutions;
 
                 // Create linear system (A-\my I)s = b
                 Matrix3d A_eig = A - eigenvalues[i] * Matrix3d::Identity();
-
-                /*
-                A_eig << A(0,0)-eigval(i), A(0,1)          , A(0,2),
-                         A(1,0)          , A(1,1)-eigval(i), A(1,2),
-                         A(2,0)          , A(2,1)           ,A(2,2)-eigval(i);
-                */
                 Vector3d b_eig = b;
-                // Check for existence of solution
-                //std::cout << "eigenvalue number "<< i << " = " << eigenvalues[i] << std::endl;
-                if (solution_existence(A_eig, b_eig)) {
-                    //std::cout << "Indeed solvable" << std::endl;
+
+                if (solution_existence(A_eig, b_eig)) { // Check for existence of solution
                     eigenvalue_solutions = non_inv_solution(A_eig, b_eig);
                 }
-
-                // If any solutions, add them to solution_vectors
-                for (int jj = 0; jj < eigenvalue_solutions.length(); jj++) {
-                    candidate_solutions.append(eigenvalue_solutions.at(jj));
-                    //std::cout << candidate_solutions.length() <<" solution found. mu eigenvalue of A. solution is" << std::endl << eigenvalue_solutions.at(jj) << std::endl;
+                for (auto solution : eigenvalue_solutions) { // If any solutions, add them to solution_vectors
+                    candidate_solutions.append(solution);
                 }
             }
-
             return candidate_solutions;
         }
 
