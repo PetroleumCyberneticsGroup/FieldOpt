@@ -112,12 +112,9 @@ TEST_F(SingleCellWellIndexTest, Well_index_grid_test) {
 
     Eigen::Vector3d start_point = Eigen::Vector3d(0.05,0.00,1712);
     Eigen::Vector3d end_point= Eigen::Vector3d(1440.0,1400.0,1712);
-    QList<Eigen::Vector3d> start_points;
-    QList<Eigen::Vector3d> end_points;
-    start_points.append(start_point);
-    end_points.append(end_point);
+    QList<Eigen::Vector3d> well_spline_points = {start_point, end_point};
 
-    QPair<QList<int>, QList<double>> pair = WellIndexCalculator::GeometryFunctions::well_index_of_grid(grid_,start_points,end_points,wellbore_radius);
+    QPair<QList<int>, QList<double>> pair = WellIndexCalculator::GeometryFunctions::well_index_of_grid(grid_,well_spline_points,wellbore_radius);
 /*
     std::ofstream myfile;
     myfile.open ("test_44.txt");
@@ -129,7 +126,7 @@ TEST_F(SingleCellWellIndexTest, Well_index_grid_test) {
         myfile << "cell number " << pair.first.at(ii) << " with permeability kx = " << grid_->GetCell(pair.first.at(ii)).permx() <<", ky = "<< grid_->GetCell(pair.first.at(ii)).permy()<< ", kz = "<< grid_->GetCell(pair.first.at(ii)).permz()<<" has well index = " << pair.second.at(ii) <<"\n";
     }
         myfile.close();
-    WellIndexCalculator::GeometryFunctions::print_well_index_file(grid_,start_points, end_points, wellbore_radius, 0.00001, "NewlyTried1422");
+    WellIndexCalculator::GeometryFunctions::print_well_index_file(grid_,well_spline_points, end_points, wellbore_radius, 0.00001, "NewlyTried1422");
 */
     EXPECT_TRUE(true);
 }

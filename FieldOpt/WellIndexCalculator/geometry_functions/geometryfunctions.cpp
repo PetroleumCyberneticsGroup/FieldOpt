@@ -162,10 +162,23 @@ namespace WellIndexCalculator {
             return r;
         }
 
-        QPair<QList<int>, QList<double> > well_index_of_grid(Reservoir::Grid::Grid *grid, QList<Vector3d> start_points,
-                                                             QList<Vector3d> end_points, double wellbore_radius) {
+        QPair<QList<int>, QList<double>> well_index_of_grid(Reservoir::Grid::Grid *grid,
+                                                            QList<Eigen::Vector3d> well_spline_points,
+                                                            double wellbore_radius) {
+            assert(well_spline_points.length() == 2);
             // Find intersected blocks and the points of intersection
-            QPair<QList<int>, QList<Vector3d>> temp_pair = cells_intersected(start_points[0], end_points[0], grid);
+            // \todo Call this in a loop. When there is more than two ponts defining the spline, ensure that the blocks are not duplicated when going from one segment to the next.
+            QPair<QList<int>, QList<Vector3d>> temp_pair;
+            for (int ii = 0; ii < well_spline_points.length() - 1; ii++) {
+                QPair<QList<int>, QList<Vector3d>> tmp_pair_segment = cells_intersected(well_spline_points[ii], well_spline_points[ii+1], grid);
+                if (temp_pair.first.length() > 0 &&
+                    temp_pair.first.last() == tmp_pair_segment.first.first()) { // The last cell from the previous segment is a duplicate of the first cell in this segment
+                    tmp_pair_segment.first.removeAt(0);
+                    tmp_pair_segment.second.removeAt(0);
+                }
+                temp_pair.first.append(tmp_pair_segment.first);
+                temp_pair.second.append(tmp_pair_segment.second);
+            }
 
             QList<double> well_indeces;
             for (int ii = 0; ii < temp_pair.first.length(); ii++) {

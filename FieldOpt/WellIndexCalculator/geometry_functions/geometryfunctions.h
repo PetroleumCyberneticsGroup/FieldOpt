@@ -54,12 +54,13 @@ namespace WellIndexCalculator {
 
         /*!
          * \brief Given a reservoir with blocks and a line(start_point to end_point), return global index of all
-         * blocks interesected
+         * blocks interesected by the line, as well as the point where the line enters the block.
          * by the line and the points of intersection
          * \param start_point The start point of the well path.
          * \param end_point The end point of the well path.
          * \param grid The grid object containing blocks/cells.
-         * \return A pair containing global indeces of intersected cells and the endpoints of the line segment inside each cell.
+         * \return A pair containing global indeces of intersected cells and the points where it enters each cell
+         * (and thereby leaves the previous cell) of the line segment inside each cell.
          */
         QPair<QList<int>, QList<Eigen::Vector3d>> cells_intersected(Eigen::Vector3d start_point,
                                                                     Eigen::Vector3d end_point,
@@ -123,16 +124,17 @@ namespace WellIndexCalculator {
         double dir_wellblock_radius(double dx, double dy, double kx, double ky);
 
         /*!
-         * \brief Given a reservoir and a line segment (start, end) return the calculated well
-         * indeces for all cells intersected by the line segment.
+         * \brief Given a reservoir and a spline (heel, intermediate1, ..., toe) return the calculated well
+         * indeces for all cells intersected by the spline segment.
          * \param grid A grid containing cells
-         * \param start_points start points for line segments/wells
-         * \param end_points end point line segment/well
+         * \param well_spline_points The points defining a spline for a well path. The first point is the position
+         * of the heel of the well; the last point is the position of the toe.
+         * \param wellbore_radius The the wellbore radius for the well.
          * \return lists of cells intersected and their calculated well indeces
          */
         QPair<QList<int>, QList<double>> well_index_of_grid(Reservoir::Grid::Grid *grid,
-                                                            QList<Eigen::Vector3d> start_points,
-                                                            QList<Eigen::Vector3d> end_points, double wellbore_radius);
+                                                            QList<Eigen::Vector3d> well_spline_points,
+                                                            double wellbore_radius);
     };
 
 }
