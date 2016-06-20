@@ -24,6 +24,7 @@ namespace Reservoir {
          */
         class WellIndexCalculator {
         public:
+            WellIndexCalculator(){}
             WellIndexCalculator(Grid::Grid *grid, double wellbore_radius); // \todo Remove this.
             WellIndexCalculator(Grid::Grid *grid);
 
@@ -103,9 +104,7 @@ namespace Reservoir {
          * \return A pair containing global indeces of intersected cells and the points where it enters each cell
          * (and thereby leaves the previous cell) of the line segment inside each cell.
          */
-            static QList<IntersectedCell> cells_intersected(Vector3d start_point,
-                                                            Vector3d end_point,
-                                                            Grid::Grid *grid);
+            QList<IntersectedCell> cells_intersected();
 
             /*!
              * \brief Find the point where the line bethween the start_point and end_point exits a cell.
@@ -121,8 +120,8 @@ namespace Reservoir {
              * \param exception_point A specific point we don't want the function to end up in.
              * \return The point where the well path exits the cell.
              */
-            static Vector3d find_exit_point(Grid::Cell cell, Vector3d start_point,
-                                            Vector3d end_point, Vector3d exception_point);
+            Vector3d find_exit_point(Grid::Cell cell, Vector3d start_point,
+                                     Vector3d end_point, Vector3d exception_point);
 
             /*!
              * \brief Compute the well index (aka. transmissibility factor) for a (one) single cell/block by

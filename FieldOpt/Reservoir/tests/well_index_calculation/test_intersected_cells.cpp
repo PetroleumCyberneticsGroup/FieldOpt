@@ -16,6 +16,7 @@ namespace {
     protected:
         IntersectedCellsTest() {
             grid_ = new ECLGrid(file_path_);
+            wic_ = WellIndexCalculator(grid_);
         }
 
         virtual ~IntersectedCellsTest() {
@@ -29,6 +30,7 @@ namespace {
 
         Grid *grid_;
         QString file_path_ = "../examples/ADGPRS/5spot/ECL_5SPOT.EGRID";
+        WellIndexCalculator wic_;
     };
 
     TEST_F(IntersectedCellsTest, find_point_test) {
@@ -41,11 +43,13 @@ namespace {
         Eigen::Vector3d end_point = Eigen::Vector3d(25,25,1712);
         Eigen::Vector3d exit_point = Eigen::Vector3d(24,24,1712);
         std::cout << "find exit point test"<<std::endl;
-        Eigen::Vector3d calc_exit_point = WellIndexCalculator::find_exit_point(cell_1,start_point,end_point,start_point);
+
+        wic_.ComputeWellBlocks(start_point, end_point, 0.190);
+        Eigen::Vector3d calc_exit_point = wic_.find_exit_point(cell_1,start_point,end_point,start_point);
 
         if ((calc_exit_point - start_point).dot(end_point - start_point) <= 0) {
             std::cout << "exit point wrong direction, try other direction"<<std::endl;
-            calc_exit_point = WellIndexCalculator::find_exit_point(cell_1,start_point,end_point,calc_exit_point);
+            calc_exit_point = wic_.find_exit_point(cell_1,start_point,end_point,calc_exit_point);
             std::cout << "new algorith exit point = " << calc_exit_point.x() << "," << calc_exit_point.y() << "," << calc_exit_point.z() << std::endl;
         }
         std::cout << "algorith exit point = " << calc_exit_point.x() << "," << calc_exit_point.y() << "," << calc_exit_point.z() << std::endl;
@@ -65,7 +69,9 @@ namespace {
         Eigen::Vector3d end_point = Eigen::Vector3d(44,84,1720);
         QList<IntersectedCell> cells;
 
-        cells  = WellIndexCalculator::cells_intersected(start_point,end_point,grid_);
+        wic_.ComputeWellBlocks(start_point, end_point, 0.190);
+
+        cells  = wic_.cells_intersected();
 
         std::cout << "number of cells intersected = " << cells.length() << std::endl;
         for( int ii = 0; ii<cells.length(); ii++){
