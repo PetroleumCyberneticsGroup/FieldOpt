@@ -35,7 +35,7 @@ add_subdirectory(Utilities)
 add_subdirectory(Optimization)
 add_subdirectory(Simulation)
 add_subdirectory(Runner)
-add_subdirectory(WellIndexCalculator)
+add_subdirectory(ConstraintMath)
 add_subdirectory(AdgprsResultsReader)
 
 ## Copy ADGPRS summary convertion python scripts

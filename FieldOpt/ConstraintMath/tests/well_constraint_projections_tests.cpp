@@ -3,7 +3,7 @@
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/grid_exceptions.h"
 #include "Reservoir/grid/eclgrid.h"
-#include "WellIndexCalculator/well_constraint_projections/well_constraint_projections.h"
+#include "ConstraintMath/well_constraint_projections/well_constraint_projections.h"
 
 using namespace WellIndexCalculation;
 using namespace Reservoir::Grid;

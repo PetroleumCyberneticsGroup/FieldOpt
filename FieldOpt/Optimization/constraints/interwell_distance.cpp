@@ -1,5 +1,5 @@
 #include "interwell_distance.h"
-#include "WellIndexCalculator/well_constraint_projections/well_constraint_projections.h"
+#include "ConstraintMath/well_constraint_projections/well_constraint_projections.h"
 
 namespace Optimization {
     namespace Constraints {
