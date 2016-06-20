@@ -12,8 +12,10 @@ namespace Reservoir {
             if (points.length() != 2)
                 throw std::runtime_error(
                         "Currently, only well splines consisting of two points (heel and toe) are supported.");
+            heel_ = points.first();
+            toe_ = points.last();
             auto spline_points = QList<Vector3d>({points.first(), points.last()});
-            QList<IntersectedCell> data = well_index_of_grid(grid_, spline_points, wellbore_radius_);
+            QList<IntersectedCell> data = compute_well_indices();
             QList<BlockData> block_data = QList<BlockData>();
             for (auto icell : data) {
                 BlockData block;
@@ -32,9 +34,9 @@ namespace Reservoir {
 
         QList<WellIndexCalculator::BlockData> WellIndexCalculator::ComputeWellBlocks(Vector3d heel, Vector3d toe,
                                                                                      double wellbore_radius) {
-            current_well_.heel = heel;
-            current_well_.toe = toe;
-            current_well_.wellbore_radius = wellbore_radius;
+            heel_ = heel;
+            toe_ = toe;
+            wellbore_radius_ = wellbore_radius;
             return QList<BlockData>();
         }
 
@@ -181,17 +183,15 @@ namespace Reservoir {
             return r;
         }
 
-        QList<IntersectedCell> WellIndexCalculator::well_index_of_grid(Grid::Grid *grid,
-                                                                       QList<Eigen::Vector3d> well_spline_points,
-                                                                       double wellbore_radius) {
-            assert(well_spline_points.length() == 2);
+        QList<IntersectedCell> WellIndexCalculator::compute_well_indices() {
+            assert(spline_points().length() == 2);
             // Find intersected blocks and the points of intersection
             // \todo Call this in a loop. When there is more than two ponts defining the spline, ensure that the blocks are not duplicated when going from one segment to the next.
             QList<IntersectedCell> intersected_cells = cells_intersected(
-                    well_spline_points.first(), well_spline_points.last(), grid);
+                    heel_, toe_, grid_);
 
             for (auto cell : intersected_cells) {
-                cell.set_well_index(well_index_cell(cell, wellbore_radius));
+                cell.set_well_index(well_index_cell(cell, wellbore_radius_));
             }
             return intersected_cells;
         }

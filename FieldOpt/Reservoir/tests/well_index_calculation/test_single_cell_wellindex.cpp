@@ -108,7 +108,12 @@ namespace {
         Eigen::Vector3d end_point= Eigen::Vector3d(1440.0,1400.0,1712);
         QList<Eigen::Vector3d> well_spline_points = {start_point, end_point};
 
-        auto pair = WellIndexCalculator::well_index_of_grid(grid_,well_spline_points,wellbore_radius);
+        // \todo The following lines need to be changed
+        auto wic = WellIndexCalculator(grid_);
+        auto blocks = wic.ComputeWellBlocks(start_point, end_point, wellbore_radius);
+
+        auto pair = wic.compute_well_indices();
+        EXPECT_EQ(118, pair.length());
 /*
     std::ofstream myfile;
     myfile.open ("test_44.txt");

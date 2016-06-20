@@ -55,15 +55,12 @@ namespace Reservoir {
              * \brief The Well struct holds the information needed to compute the well blocks and their
              * respective well indices for a well spline consisting of a heel and a toe.
              */
-            struct Well {
-                double wellbore_radius;
-                Vector3d heel;
-                Vector3d toe;
-            };
 
             Grid::Grid *grid_; //!< The grid used in the calculations.
             double wellbore_radius_; // \todo Remove this.
-            Well current_well_; //!< Struct holding information about the well currently being treated.
+            Vector3d heel_;
+            Vector3d toe_;
+            QList<Vector3d> spline_points() {return QList<Vector3d>({heel_, toe_});}
 
         public:
 
@@ -175,9 +172,7 @@ namespace Reservoir {
              * \param wellbore_radius The the wellbore radius for the well.
              * \return lists of cells intersected and their calculated well indeces
              */
-            static QList<IntersectedCell> well_index_of_grid(Grid::Grid *grid,
-                                                             QList<Vector3d> well_spline_points,
-                                                             double wellbore_radius);
+            QList<IntersectedCell> compute_well_indices();
         };
 
     }
