@@ -40,7 +40,7 @@ add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 target_link_libraries(optimization
         PUBLIC fieldopt::model
         PUBLIC fieldopt::simulation
-        PUBLIC fieldopt::wellindexcalculator
+        PUBLIC fieldopt::constraintmath
         Qt5::Core)
 
 target_include_directories(optimization PUBLIC

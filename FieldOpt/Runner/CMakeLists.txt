@@ -28,7 +28,7 @@ target_link_libraries(FieldOpt
 		PUBLIC fieldopt::utilities
 		PUBLIC fieldopt::ertwrapper
 		PUBLIC fieldopt::adgprsresultsreader
-		PUBLIC fieldopt::wellindexcalculator
+		PUBLIC fieldopt::constraintmath
 		PUBLIC ${CMAKE_THREAD_LIBS_INIT}
 		PUBLIC ${Boost_LIBRARIES})
 
@@ -39,7 +39,7 @@ target_link_libraries(runner
 		PUBLIC fieldopt::utilities
 		PUBLIC fieldopt::ertwrapper
 		PUBLIC fieldopt::adgprsresultsreader
-		PUBLIC fieldopt::wellindexcalculator
+		PUBLIC fieldopt::constraintmath
 		PUBLIC ${CMAKE_THREAD_LIBS_INIT}
 		PUBLIC ${Boost_LIBRARIES})
 
