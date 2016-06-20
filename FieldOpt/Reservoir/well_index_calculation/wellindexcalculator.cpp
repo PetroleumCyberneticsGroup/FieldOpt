@@ -40,13 +40,6 @@ namespace Reservoir {
             return QList<BlockData>();
         }
 
-        Vector3d WellIndexCalculator::line_plane_intersection(const Vector3d &p0, const Vector3d &p1, const Grid::Cell::Face &plane) {
-            Vector3d line_vector = (p1 - p0).normalized();
-            auto w = p0 - plane.corners[0];
-            double s = plane.normal_vector.dot(-w) / plane.normal_vector.dot(line_vector);
-            return p0 + s*line_vector;
-        }
-
         QList<IntersectedCell> WellIndexCalculator::cells_intersected() {
             using namespace WellIndexCalculation;
 
@@ -114,7 +107,7 @@ namespace Reservoir {
             // Loop through the cell faces untill we find one that the line intersects
             for (Grid::Cell::Face face : cell.faces()) {
                 if (face.normal_vector.dot(line) != 0) { // Check that the line and face are not parallel.
-                    auto intersect_point = line_plane_intersection(entry_point, end_point, face);
+                    auto intersect_point = face.intersection_with_line(entry_point, end_point);
 
                     // Check that the intersect point is on the correct side of all faces (i.e. inside the cell)
                     bool feasible_point = true;

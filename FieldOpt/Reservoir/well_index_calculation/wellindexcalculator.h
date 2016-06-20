@@ -64,16 +64,6 @@ namespace Reservoir {
             QList<Vector3d> spline_points() {return QList<Vector3d>({heel_, toe_});}
 
         public:
-
-            /*!
-             * Find the point of inntersection between a line an a plane.
-             * \param p0 Point defining one end of the line.
-             * \param p1 Point defining other end of the line.
-             * \param plane A plane.
-             * \return The point of intersection.
-             */
-            static Vector3d line_plane_intersection(const Vector3d &p0, const Vector3d &p1, const Grid::Cell::Face &plane);
-
             /*!
              * \brief Given a reservoir with blocks and a line(start_point to end_point), return global index of all
              * blocks interesected by the line, as well as the point where the line enters the block.

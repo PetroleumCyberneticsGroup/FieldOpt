@@ -109,6 +109,19 @@ namespace Reservoir {
                 bool point_on_same_side(const Eigen::Vector3d &point, const double slack) {
                     return (point - corners[0]).dot(normal_vector) >= 0.0 - slack;
                 }
+
+                /*!
+                 * Find the point of inntersection between a line and this plane.
+                 * \param p0 Point defining one end of the line.
+                 * \param p1 Point defining other end of the line.
+                 * \return The point of intersection.
+                 */
+                Eigen::Vector3d intersection_with_line(const Eigen::Vector3d &p0, const Eigen::Vector3d &p1) {
+                    Eigen::Vector3d line_vector = (p1 - p0).normalized();
+                    auto w = p0 - corners[0];
+                    double s = normal_vector.dot(-w) / normal_vector.dot(line_vector);
+                    return p0 + s*line_vector;
+                }
             };
 
             QList<Face> faces() const { return faces_; }
