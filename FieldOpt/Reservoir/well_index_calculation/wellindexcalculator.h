@@ -25,21 +25,7 @@ namespace Reservoir {
         class WellIndexCalculator {
         public:
             WellIndexCalculator(){}
-            WellIndexCalculator(Grid::Grid *grid, double wellbore_radius); // \todo Remove this.
             WellIndexCalculator(Grid::Grid *grid);
-
-            /*!
-             * \brief The BlockData Holds well block data computed by this class, including their (i,j,k) coordinate and
-             * the well index for the block.
-             */
-            struct BlockData {
-                int i;
-                int j;
-                int k;
-                double well_index;
-            };
-
-            QList<BlockData> GetBlocks(QList<Eigen::Vector3d> points); // \todo Remove this.
 
             /*!
              * \brief Compute the well block data for a single well.
@@ -58,10 +44,9 @@ namespace Reservoir {
              */
 
             Grid::Grid *grid_; //!< The grid used in the calculations.
-            double wellbore_radius_; // \todo Remove this.
+            double wellbore_radius_;
             Vector3d heel_;
             Vector3d toe_;
-            QList<Vector3d> spline_points() {return QList<Vector3d>({heel_, toe_});}
 
         public:
             /*!

@@ -46,7 +46,7 @@ namespace Model {
                  * \param block_data
                  * \return
                  */
-                WellBlock *getWellBlock(Reservoir::WellIndexCalculation::WellIndexCalculator::BlockData block_data);
+                WellBlock *getWellBlock(Reservoir::WellIndexCalculation::IntersectedCell block_data);
             };
 
         }
