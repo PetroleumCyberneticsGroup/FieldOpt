@@ -15,6 +15,7 @@ namespace Reservoir {
         class Cell
         {
         public:
+            Cell(){};
             Cell(int global_index, IJKCoordinate ijk_index,
                  double volume, double poro, double permx, double permy, double permz,
                  Eigen::Vector3d center, QList<Eigen::Vector3d> corners);

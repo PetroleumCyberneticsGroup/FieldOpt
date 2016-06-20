@@ -7,7 +7,8 @@ add_library(reservoir
         grid/cell.cpp
         grid/grid.cpp
         grid/ijkcoordinate.cpp
-        grid/eclgrid.cpp)
+        grid/eclgrid.cpp
+        well_index_calculation/intersected_cell.cpp)
 
 add_library(fieldopt::reservoir ALIAS ${PROJECT_NAME})
 
