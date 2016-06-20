@@ -59,7 +59,7 @@ namespace {
         icell.set_exit_point(end_point);
         auto wic = WellIndexCalculator(grid_);
         wic.ComputeWellBlocks(start_point, end_point, wellbore_radius);
-        double wi = wic.well_index_cell(icell);
+        double wi = wic.compute_well_index(icell);
         /* 0.555602 is the expected well transmisibility factor aka. well index.
          * For now this value is read directly from eclipse output file:
          * Expect value within delta percent
@@ -93,7 +93,7 @@ namespace {
         auto wic = WellIndexCalculator(grid_);
         wic.ComputeWellBlocks(start_point, end_point, wellbore_radius);
 
-        double wi = wic.well_index_cell(icell);
+        double wi = wic.compute_well_index(icell);
         // WellIndexCalculation::GeometryFunctions::vertical_well_index_cell(cell_1,kx,ky,wellbore_radius);
         /* 0.555602 is the expected well transmisibility factor aka. well index.
          * For now this value is read directly from eclipse output file:
@@ -115,9 +115,7 @@ namespace {
         // \todo The following lines need to be changed
         auto wic = WellIndexCalculator(grid_);
         auto blocks = wic.ComputeWellBlocks(start_point, end_point, wellbore_radius);
-
-        auto pair = wic.compute_well_indices();
-        EXPECT_EQ(118, pair.length());
+        EXPECT_EQ(118, blocks.length());
 /*
     std::ofstream myfile;
     myfile.open ("test_44.txt");

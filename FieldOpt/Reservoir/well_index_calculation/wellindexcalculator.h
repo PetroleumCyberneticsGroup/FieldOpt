@@ -49,7 +49,7 @@ namespace Reservoir {
              * \return A list of BlockData objects containing the (i,j,k) index and well index/transmissibility factor
              * for every block intersected by the spline.
              */
-            QList<BlockData> ComputeWellBlocks(Vector3d heel, Vector3d toe, double wellbore_radius);
+            QList<IntersectedCell> ComputeWellBlocks(Vector3d heel, Vector3d toe, double wellbore_radius);
 
         private:
             /*!
@@ -105,10 +105,10 @@ namespace Reservoir {
              * \param icell Well block to compute the WI in.
              * \return Well index for block/cell
             */
-            double well_index_cell(IntersectedCell &icell);
+            double compute_well_index(IntersectedCell &icell);
 
             /*!
-             * \brief Auxilary function for well_index_cell function
+             * \brief Auxilary function for compute_well_index function
              * \param Lx lenght of projection in first direction
              * \param dy size block second direction
              * \param dz size block third direction
@@ -119,7 +119,7 @@ namespace Reservoir {
             double dir_well_index(double Lx, double dy, double dz, double ky, double kz);
 
             /*!
-             * \brief Auxilary function(2) for well_index_cell function
+             * \brief Auxilary function(2) for compute_well_index function
              * \param dx size block second direction
              * \param dy size block third direction
              * \param kx permeability second direction
@@ -127,13 +127,6 @@ namespace Reservoir {
              * \return directional wellblock radius
              */
             double dir_wellblock_radius(double dx, double dy, double kx, double ky);
-
-            /*!
-             * \brief Given a reservoir and a spline (heel, intermediate1, ..., toe) return the calculated well
-             * indeces for all cells intersected by the spline segment.
-             * \return lists of cells intersected and their calculated well indeces
-             */
-            QList<IntersectedCell> compute_well_indices();
         };
 
     }

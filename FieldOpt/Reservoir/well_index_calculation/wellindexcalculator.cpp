@@ -16,7 +16,7 @@ namespace Reservoir {
             heel_ = points.first();
             toe_ = points.last();
             auto spline_points = QList<Vector3d>({points.first(), points.last()});
-            QList<IntersectedCell> data = compute_well_indices();
+            QList<IntersectedCell> data = ComputeWellBlocks(heel_, toe_, wellbore_radius_);
             QList<BlockData> block_data = QList<BlockData>();
             for (auto icell : data) {
                 BlockData block;
@@ -33,12 +33,15 @@ namespace Reservoir {
             grid_ = grid;
         }
 
-        QList<WellIndexCalculator::BlockData> WellIndexCalculator::ComputeWellBlocks(Vector3d heel, Vector3d toe,
-                                                                                     double wellbore_radius) {
+        QList<IntersectedCell> WellIndexCalculator::ComputeWellBlocks(Vector3d heel, Vector3d toe, double wellbore_radius) {
             heel_ = heel;
             toe_ = toe;
             wellbore_radius_ = wellbore_radius;
-            return QList<BlockData>();
+
+            QList<IntersectedCell> intersected_cells = cells_intersected();
+            for (auto cell : intersected_cells)
+                cell.set_well_index(compute_well_index(cell));
+            return intersected_cells;
         }
 
         QList<IntersectedCell> WellIndexCalculator::cells_intersected() {
@@ -113,7 +116,7 @@ namespace Reservoir {
             return entry_point;
         }
 
-        double WellIndexCalculator::well_index_cell(IntersectedCell &icell) {
+        double WellIndexCalculator::compute_well_index(IntersectedCell &icell) {
             double Lx = 0;
             double Ly = 0;
             double Lz = 0;
@@ -150,18 +153,6 @@ namespace Reservoir {
             double r = 0.28 * sqrt((dx * dx) * sqrt(ky / kx) + (dy * dy) * sqrt(kx / ky)) /
                        (sqrt(sqrt(kx / ky)) + sqrt(sqrt(ky / kx)));
             return r;
-        }
-
-        QList<IntersectedCell> WellIndexCalculator::compute_well_indices() {
-            assert(spline_points().length() == 2);
-            // Find intersected blocks and the points of intersection
-            // \todo Call this in a loop. When there is more than two ponts defining the spline, ensure that the blocks are not duplicated when going from one segment to the next.
-            QList<IntersectedCell> intersected_cells = cells_intersected();
-
-            for (auto cell : intersected_cells) {
-                cell.set_well_index(well_index_cell(cell));
-            }
-            return intersected_cells;
         }
     }
 }
