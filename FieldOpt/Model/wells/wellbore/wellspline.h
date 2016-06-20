@@ -4,7 +4,7 @@
 #include "trajectory.h"
 #include "Reservoir/reservoir.h"
 #include "Model/wells/wellbore/wellblock.h"
-#include "WellIndexCalculator/wellindexcalculator.h"
+#include "Reservoir/well_index_calculation/wellindexcalculator.h"
 #include <QList>
 
 namespace Model {
@@ -13,7 +13,7 @@ namespace Model {
 
 /*!
  * \brief The WellSpline class Generates the well blocks making up the trajectory from a set of spline points.
- * It uses the WellIndexCalculator library to do this.
+ * It uses the WellIndexCalculation library to do this.
  */
             class WellSpline
             {
@@ -46,7 +46,7 @@ namespace Model {
                  * \param block_data
                  * \return
                  */
-                WellBlock *getWellBlock(WellIndexCalculator::WellIndexCalculator::BlockData block_data);
+                WellBlock *getWellBlock(Reservoir::WellIndexCalculation::WellIndexCalculator::BlockData block_data);
             };
 
         }

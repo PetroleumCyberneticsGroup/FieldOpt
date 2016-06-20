@@ -6,7 +6,7 @@ find_library(RpolyPlusPlus rpoly_plus_plus REQUIRED)
 add_library(wellindexcalculator
         geometry_functions/geometryfunctions.cpp
         well_constraint_projections/well_constraint_projections.cpp
-        wellindexcalculator.cpp)
+        )
 add_library(fieldopt::wellindexcalculator ALIAS ${PROJECT_NAME})
 
 include_directories(${EIGEN3_INCLUDE_DIR})
@@ -29,8 +29,6 @@ target_compile_features(wellindexcalculator
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR})
 add_executable(test_wellindexcalculator
-        tests/test_intersected_cells.cpp
-        tests/test_single_cell_wellindex.cpp
         tests/well_constraint_projections_tests.cpp
         tests/test_domain_boundary.cpp
         )

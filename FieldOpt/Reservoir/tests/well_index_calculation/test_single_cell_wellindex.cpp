@@ -5,8 +5,10 @@
 #include "Reservoir/grid/grid_exceptions.h"
 #include "WellIndexCalculator/geometry_functions/geometryfunctions.h"
 #include "Utilities/file_handling/filehandling.h"
+#include "Reservoir/well_index_calculation/wellindexcalculator.h"
 
 using namespace Reservoir::Grid;
+using namespace Reservoir::WellIndexCalculation;
 
 namespace {
 
@@ -53,10 +55,10 @@ namespace {
         double well_end_z = 0.25*corners[4].z() + 0.25*corners[5].z() +0.25*corners[6].z() + 0.25*corners[7].z();
         Eigen::Vector3d start_point = Eigen::Vector3d(well_start_x,well_start_y,well_start_z);
         Eigen::Vector3d end_point = Eigen::Vector3d(well_end_x,well_end_y, well_end_z);
-        auto icell = Reservoir::WellIndexCalculation::IntersectedCell(cell_1);
+        auto icell = IntersectedCell(cell_1);
         icell.set_entry_point(start_point);
         icell.set_exit_point(end_point);
-        double wi = WellIndexCalculator::GeometryFunctions::well_index_cell(icell, wellbore_radius);
+        double wi = WellIndexCalculator::well_index_cell(icell, wellbore_radius);
         /* 0.555602 is the expected well transmisibility factor aka. well index.
          * For now this value is read directly from eclipse output file:
          * Expect value within delta percent
@@ -87,8 +89,8 @@ namespace {
         icell.set_entry_point(start_point);
         icell.set_exit_point(end_point);
 
-        double wi = WellIndexCalculator::GeometryFunctions::well_index_cell(icell, wellbore_radius);
-        // WellIndexCalculator::GeometryFunctions::vertical_well_index_cell(cell_1,kx,ky,wellbore_radius);
+        double wi = WellIndexCalculator::well_index_cell(icell, wellbore_radius);
+        // WellIndexCalculation::GeometryFunctions::vertical_well_index_cell(cell_1,kx,ky,wellbore_radius);
         /* 0.555602 is the expected well transmisibility factor aka. well index.
          * For now this value is read directly from eclipse output file:
          * Expect value within delta percent
@@ -106,7 +108,7 @@ namespace {
         Eigen::Vector3d end_point= Eigen::Vector3d(1440.0,1400.0,1712);
         QList<Eigen::Vector3d> well_spline_points = {start_point, end_point};
 
-        auto pair = WellIndexCalculator::GeometryFunctions::well_index_of_grid(grid_,well_spline_points,wellbore_radius);
+        auto pair = WellIndexCalculator::well_index_of_grid(grid_,well_spline_points,wellbore_radius);
 /*
     std::ofstream myfile;
     myfile.open ("test_44.txt");
@@ -118,7 +120,7 @@ namespace {
         myfile << "cell number " << pair.first.at(ii) << " with permeability kx = " << grid_->GetCell(pair.first.at(ii)).permx() <<", ky = "<< grid_->GetCell(pair.first.at(ii)).permy()<< ", kz = "<< grid_->GetCell(pair.first.at(ii)).permz()<<" has well index = " << pair.second.at(ii) <<"\n";
     }
         myfile.close();
-    WellIndexCalculator::GeometryFunctions::print_well_index_file(grid_,well_spline_points, end_points, wellbore_radius, 0.00001, "NewlyTried1422");
+    WellIndexCalculation::GeometryFunctions::print_well_index_file(grid_,well_spline_points, end_points, wellbore_radius, 0.00001, "NewlyTried1422");
 */
         EXPECT_TRUE(true);
     }

@@ -53,12 +53,12 @@ namespace Optimization {
             double toe_y_val = c->real_variables()[affected_well_.toe.y];
             double toe_z_val = c->real_variables()[affected_well_.toe.z];
 
-            Eigen::Vector3d projected_heel = WellIndexCalculator::WellConstraintProjections::well_domain_constraint_indices(
+            Eigen::Vector3d projected_heel = WellIndexCalculation::WellConstraintProjections::well_domain_constraint_indices(
                     Eigen::Vector3d(heel_x_val, heel_y_val, heel_z_val),
                     grid_,
                     index_list_
             );
-            Eigen::Vector3d projected_toe = WellIndexCalculator::WellConstraintProjections::well_domain_constraint_indices(
+            Eigen::Vector3d projected_toe = WellIndexCalculation::WellConstraintProjections::well_domain_constraint_indices(
                     Eigen::Vector3d(toe_x_val, toe_y_val, toe_z_val),
                     grid_,
                     index_list_

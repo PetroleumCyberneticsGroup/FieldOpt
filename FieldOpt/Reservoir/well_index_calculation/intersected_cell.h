@@ -9,7 +9,7 @@ namespace WellIndexCalculation {
     /*!
      * \brief The IntersectedCell struct holds information about an intersected cell.
      */
-    class IntersectedCell : public Reservoir::Grid::Cell {
+    class IntersectedCell : public Grid::Cell {
     public:
         IntersectedCell() {}
         IntersectedCell(const Grid::Cell &cell) : Grid::Cell(cell) {};

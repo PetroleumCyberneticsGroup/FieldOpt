@@ -14,7 +14,7 @@
 #include <QPair>
 #include <iostream>
 
-namespace WellIndexCalculator {
+namespace WellIndexCalculation {
 /*!
  * \brief WellConstraintProjections is a collection for solving projection of well constraints
  *

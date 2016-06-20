@@ -4,6 +4,7 @@
 namespace Model {
 namespace Wells {
 namespace Wellbore {
+    using namespace Reservoir::WellIndexCalculation;
 
 WellSpline::WellSpline(Utilities::Settings::Model::Well well_settings,
                        Properties::VariablePropertyContainer *variable_container,
@@ -43,8 +44,8 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
     auto toe = Eigen::Vector3d(toe_x_->value(), toe_y_->value(), toe_z_->value());
     QList<Eigen::Vector3d> points = {heel, toe};
 
-    auto wic = ::WellIndexCalculator::WellIndexCalculator(grid_, well_settings_.wellbore_radius);
-    QList<WellIndexCalculator::WellIndexCalculator::BlockData> block_data = wic.GetBlocks(points);
+    auto wic = WellIndexCalculator(grid_, well_settings_.wellbore_radius);
+    QList<WellIndexCalculator::BlockData> block_data = wic.GetBlocks(points);
     QList<WellBlock *> *blocks = new QList<WellBlock *>();
     for (int i = 0; i < block_data.length(); ++i) {
         blocks->append(getWellBlock(block_data[i]));
@@ -52,7 +53,7 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
     return blocks;
 }
 
-WellBlock *WellSpline::getWellBlock(WellIndexCalculator::WellIndexCalculator::BlockData block_data)
+WellBlock *WellSpline::getWellBlock(WellIndexCalculator::BlockData block_data)
 {
     WellBlock *wb = new WellBlock(block_data.i+1, block_data.j+1, block_data.k+1);
     auto comp = new Completions::Perforation();

@@ -1,4 +1,4 @@
-# WellIndexCalculator
+# WellIndexCalculation
 A small library for well index calculation for FieldOpt.
 The library now only consists of a list of functions that can be called.
 
@@ -7,7 +7,7 @@ The following libraries are needed:
 
 - RPolyPlusPlus(https://github.com/sweeneychris/RpolyPlusPlus):
 
-Important note. Later versions of RPoly makes WellIndexCalculator unstable. 
+Important note. Later versions of RPoly makes WellIndexCalculation unstable.
 Clone the RPoly repo and then checkout an older commit with the following command:
 
 git checkout c79e0ea87922b5d7624e76f9792f5fd915837c19

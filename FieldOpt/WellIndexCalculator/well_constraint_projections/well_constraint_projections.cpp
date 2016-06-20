@@ -1,6 +1,6 @@
 #include "well_constraint_projections.h"
 
-namespace WellIndexCalculator {
+namespace WellIndexCalculation {
     namespace WellConstraintProjections {
         using namespace Eigen;
 

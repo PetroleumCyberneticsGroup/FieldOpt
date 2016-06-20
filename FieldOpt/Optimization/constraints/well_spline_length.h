@@ -9,7 +9,7 @@ namespace Optimization {
 
         /*!
          * \brief The WellSplineLength class defines a constraint on the maximum and minimum length
-         * of a well defined by a WellSpline. It uses the WellIndexCalculator library.
+         * of a well defined by a WellSpline. It uses the WellIndexCalculation library.
          */
         class WellSplineLength : public Constraint, WellSplineConstraint
         {

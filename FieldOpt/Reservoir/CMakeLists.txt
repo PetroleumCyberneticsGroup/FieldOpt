@@ -8,7 +8,8 @@ add_library(reservoir
         grid/grid.cpp
         grid/ijkcoordinate.cpp
         grid/eclgrid.cpp
-        well_index_calculation/intersected_cell.cpp)
+        well_index_calculation/intersected_cell.cpp
+        well_index_calculation/wellindexcalculator.cpp)
 
 add_library(fieldopt::reservoir ALIAS ${PROJECT_NAME})
 
@@ -30,7 +31,9 @@ add_executable(test_reservoir
         tests/test_reservoir.cpp
         tests/grid/test_cell.cpp
         tests/grid/test_grid.cpp
-        tests/grid/test_ijkcoordinate.cpp)
+        tests/grid/test_ijkcoordinate.cpp
+        tests/well_index_calculation/test_intersected_cells.cpp
+        tests/well_index_calculation/test_single_cell_wellindex.cpp)
 target_link_libraries(test_reservoir
         fieldopt::reservoir
         fieldopt::ertwrapper

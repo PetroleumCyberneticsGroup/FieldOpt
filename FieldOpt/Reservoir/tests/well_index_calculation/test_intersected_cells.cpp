@@ -3,10 +3,12 @@
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
 #include "Reservoir/grid/grid_exceptions.h"
+#include "Reservoir/well_index_calculation/wellindexcalculator.h"
 #include "WellIndexCalculator/geometry_functions/geometryfunctions.h"
 #include "Utilities/file_handling/filehandling.h"
 
 using namespace Reservoir::Grid;
+using namespace Reservoir::WellIndexCalculation;
 
 namespace {
 
@@ -39,11 +41,11 @@ namespace {
         Eigen::Vector3d end_point = Eigen::Vector3d(25,25,1712);
         Eigen::Vector3d exit_point = Eigen::Vector3d(24,24,1712);
         std::cout << "find exit point test"<<std::endl;
-        Eigen::Vector3d calc_exit_point = WellIndexCalculator::GeometryFunctions::find_exit_point(cell_1,start_point,end_point,start_point);
+        Eigen::Vector3d calc_exit_point = WellIndexCalculator::find_exit_point(cell_1,start_point,end_point,start_point);
 
         if ((calc_exit_point - start_point).dot(end_point - start_point) <= 0) {
             std::cout << "exit point wrong direction, try other direction"<<std::endl;
-            calc_exit_point = WellIndexCalculator::GeometryFunctions::find_exit_point(cell_1,start_point,end_point,calc_exit_point);
+            calc_exit_point = WellIndexCalculator::find_exit_point(cell_1,start_point,end_point,calc_exit_point);
             std::cout << "new algorith exit point = " << calc_exit_point.x() << "," << calc_exit_point.y() << "," << calc_exit_point.z() << std::endl;
         }
         std::cout << "algorith exit point = " << calc_exit_point.x() << "," << calc_exit_point.y() << "," << calc_exit_point.z() << std::endl;
@@ -61,9 +63,9 @@ namespace {
         //auto ptr_cell_1 = &cell_1;
         Eigen::Vector3d start_point = Eigen::Vector3d(0,0,1702);
         Eigen::Vector3d end_point = Eigen::Vector3d(44,84,1720);
-        QList<Reservoir::WellIndexCalculation::IntersectedCell> cells;
+        QList<IntersectedCell> cells;
 
-        cells  = WellIndexCalculator::GeometryFunctions::cells_intersected(start_point,end_point,grid_);
+        cells  = WellIndexCalculator::cells_intersected(start_point,end_point,grid_);
 
         std::cout << "number of cells intersected = " << cells.length() << std::endl;
         for( int ii = 0; ii<cells.length(); ii++){
