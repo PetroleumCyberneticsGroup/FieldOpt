@@ -4,7 +4,6 @@
 #include "Reservoir/grid/eclgrid.h"
 #include "Reservoir/grid/grid_exceptions.h"
 #include "Reservoir/well_index_calculation/wellindexcalculator.h"
-#include "WellIndexCalculator/geometry_functions/geometryfunctions.h"
 #include "Utilities/file_handling/filehandling.h"
 
 using namespace Reservoir::Grid;

@@ -3,7 +3,6 @@
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
 #include "Reservoir/grid/grid_exceptions.h"
-#include "WellIndexCalculator/geometry_functions/geometryfunctions.h"
 #include "WellIndexCalculator/well_constraint_projections/well_constraint_projections.h"
 #include "Utilities/file_handling/filehandling.h"
 

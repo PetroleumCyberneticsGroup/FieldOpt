@@ -4,7 +4,6 @@ project(wellindexcalculator LANGUAGES CXX)
 find_library(RpolyPlusPlus rpoly_plus_plus REQUIRED)
 
 add_library(wellindexcalculator
-        geometry_functions/geometryfunctions.cpp
         well_constraint_projections/well_constraint_projections.cpp
         )
 add_library(fieldopt::wellindexcalculator ALIAS ${PROJECT_NAME})
@@ -18,7 +17,6 @@ target_link_libraries(wellindexcalculator
         PUBLIC fieldopt::utilities)
 
 target_include_directories(wellindexcalculator PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/geometry_functions>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/well_constraint_projections>)
 
 target_compile_features(wellindexcalculator
