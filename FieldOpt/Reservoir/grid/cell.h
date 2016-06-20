@@ -92,6 +92,23 @@ namespace Reservoir {
             struct Face {
                 QList<Eigen::Vector3d> corners;
                 Eigen::Vector3d normal_vector;
+
+                /*!
+                 * \brief point_on_same_side returns true if point is on the same side of this plane,
+                 * true if it is in the plane, and false if it's on the other side.
+                 *
+                 * In the function, a dot product helps us determine if the angle between the two
+                 * vectors is below (positive answer), at (zero answer) or above
+                 * (negative answer) 90 degrees. Essentially telling us which side
+                 * of a plane the point is.
+                 *
+                 * \param point The point to be checked.
+                 * \param slack A slack factor.
+                 * \return True if the point is on the same side as the normal vector or in the plane; otherwise false.
+                 */
+                bool point_on_same_side(const Eigen::Vector3d &point, const double slack) {
+                    return (point - corners[0]).dot(normal_vector) >= 0.0 - slack;
+                }
             };
 
             QList<Face> faces() const { return faces_; }

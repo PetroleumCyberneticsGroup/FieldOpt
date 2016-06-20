@@ -69,30 +69,10 @@ namespace Reservoir {
              * Find the point of inntersection between a line an a plane.
              * \param p0 Point defining one end of the line.
              * \param p1 Point defining other end of the line.
-             * \param normal_vector The normal vector of the plane.
-             * \param point_in_plane A point in the plane.
+             * \param plane A plane.
              * \return The point of intersection.
              */
-            static Vector3d line_plane_intersection(Vector3d &p0, Vector3d &p1,
-                                                    Vector3d &normal_vector, Vector3d &point_in_plane);
-
-            /*!
-             * \brief point_on_same_side returns true if point is on the same side of a plane
-             * (containing plane_point and with normal_vector as the normal vector) as the normal vector,
-             * true if it is in the plane, and false if it's on the other side.
-             *
-             * In the function, a dot product helps us determine if the angle between the two
-             * vectors is below (positive answer), at (zero answer) or above
-             * (negative answer) 90 degrees. Essentially telling us which side
-             * of a plane the point is
-             *
-             * \param point The point to be checked.
-             * \param plane_point A point in the plane.
-             * \param normal_vector The normal vector of the plane.
-             * \return True if the point is on the same side as the normal vector or in the plane; otherwise false.
-             */
-            static bool point_on_same_side(Vector3d &point, Vector3d &plane_point,
-                                           Vector3d &normal_vector, double slack);
+            static Vector3d line_plane_intersection(const Vector3d &p0, const Vector3d &p1, const Grid::Cell::Face &plane);
 
             /*!
              * \brief Given a reservoir with blocks and a line(start_point to end_point), return global index of all

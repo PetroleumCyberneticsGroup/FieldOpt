@@ -40,19 +40,11 @@ namespace Reservoir {
             return QList<BlockData>();
         }
 
-        Vector3d WellIndexCalculator::line_plane_intersection(Vector3d &p0, Vector3d &p1, Vector3d &normal_vector, Vector3d &point_in_plane) {
-            Vector3d line_vector = p1 - p0;
-            line_vector.normalize();
-            normal_vector.normalize();
-            auto w = p0 - point_in_plane;
-            double s = normal_vector.dot(-w) / normal_vector.dot(line_vector);
+        Vector3d WellIndexCalculator::line_plane_intersection(const Vector3d &p0, const Vector3d &p1, const Grid::Cell::Face &plane) {
+            Vector3d line_vector = (p1 - p0).normalized();
+            auto w = p0 - plane.corners[0];
+            double s = plane.normal_vector.dot(-w) / plane.normal_vector.dot(line_vector);
             return p0 + s*line_vector;
-        }
-
-        bool WellIndexCalculator::point_on_same_side(Vector3d &point, Vector3d &plane_point,
-                                                     Vector3d &normal_vector, double slack) {
-            double dot_product = (point - plane_point).dot(normal_vector);
-            return dot_product >= 0.0 - slack;
         }
 
         QList<IntersectedCell> WellIndexCalculator::cells_intersected() {
@@ -122,12 +114,12 @@ namespace Reservoir {
             // Loop through the cell faces untill we find one that the line intersects
             for (Grid::Cell::Face face : cell.faces()) {
                 if (face.normal_vector.dot(line) != 0) { // Check that the line and face are not parallel.
-                    auto intersect_point = line_plane_intersection(entry_point, end_point, face.normal_vector, face.corners[0]);
+                    auto intersect_point = line_plane_intersection(entry_point, end_point, face);
 
                     // Check that the intersect point is on the correct side of all faces (i.e. inside the cell)
                     bool feasible_point = true;
                     for (auto p : cell.faces()) {
-                        if (!point_on_same_side(intersect_point, p.corners[0], p.normal_vector, 10e-6)) {
+                        if (!p.point_on_same_side(intersect_point, 10e-6)) {
                             feasible_point = false;
                             break;
                         }
