@@ -55,7 +55,7 @@ namespace Reservoir {
                 face.corners.append(corners_[face_indices_points[ii][1]]);
                 face.corners.append(corners_[face_indices_points[ii][2]]);
                 face.corners.append(corners_[face_indices_points[ii][3]]);
-                face.normal_vector = (face.corners[2] - face.corners[0]).cross(face.corners[1] - face.corners[0]);
+                face.normal_vector = (face.corners[2] - face.corners[0]).cross(face.corners[1] - face.corners[0]).normalized();
                 faces_.append(face);
             }
         }
