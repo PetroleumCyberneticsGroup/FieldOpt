@@ -39,8 +39,13 @@ namespace Model {
 
             void Trajectory::UpdateWellBlocks()
             {
-                if (well_spline_ != 0)
+                if (well_spline_ != 0) {
+                    // Delete old objects
+                    for (int i = 0; i < well_blocks_->length(); ++i) {
+                        delete well_blocks_->at(i);
+                    }
                     well_blocks_ = well_spline_->GetWellBlocks();
+                }
                 calculateDirectionOfPenetration();
             }
 
