@@ -53,8 +53,9 @@ namespace {
         double well_end_z = 0.25*corners[4].z() + 0.25*corners[5].z() +0.25*corners[6].z() + 0.25*corners[7].z();
         Eigen::Vector3d start_point = Eigen::Vector3d(well_start_x,well_start_y,well_start_z);
         Eigen::Vector3d end_point = Eigen::Vector3d(well_end_x,well_end_y, well_end_z);
-        auto icell = WellIndexCalculator::GeometryFunctions::IntersectedCell(cell_1, start_point);
-        icell.exit_point = end_point;
+        auto icell = Reservoir::WellIndexCalculation::IntersectedCell(cell_1);
+        icell.set_entry_point(start_point);
+        icell.set_exit_point(end_point);
         double wi = WellIndexCalculator::GeometryFunctions::well_index_cell(icell, wellbore_radius);
         /* 0.555602 is the expected well transmisibility factor aka. well index.
          * For now this value is read directly from eclipse output file:
@@ -82,8 +83,9 @@ namespace {
         double well_end_z = 0.25*corners[4].z() + 0.25*corners[5].z() +0.25*corners[6].z() + 0.25*corners[7].z();
         Eigen::Vector3d start_point = Eigen::Vector3d(well_start_x, well_start_y, well_start_z);
         Eigen::Vector3d end_point= Eigen::Vector3d(well_end_x,well_end_y, well_end_z);
-        WellIndexCalculator::GeometryFunctions::IntersectedCell icell(cell_1, start_point);
-        icell.exit_point = end_point;
+        Reservoir::WellIndexCalculation::IntersectedCell icell(cell_1);
+        icell.set_entry_point(start_point);
+        icell.set_exit_point(end_point);
 
         double wi = WellIndexCalculator::GeometryFunctions::well_index_cell(icell, wellbore_radius);
         // WellIndexCalculator::GeometryFunctions::vertical_well_index_cell(cell_1,kx,ky,wellbore_radius);

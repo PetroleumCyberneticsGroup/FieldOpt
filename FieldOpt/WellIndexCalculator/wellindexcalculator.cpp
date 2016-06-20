@@ -13,18 +13,15 @@ namespace WellIndexCalculator {
     {
         if (points.length() != 2)
             throw std::runtime_error("Currently, only well splines consisting of two points (heel and toe) are supported.");
-        QList<Eigen::Vector3d> spline_points = {points.first(), points.last()};
-        QPair<QList<int>, QList<double>> data = GeometryFunctions::well_index_of_grid(grid_, spline_points, wellbore_radius_);
-
+        auto spline_points = QList<Vector3d>({points.first(), points.last()});
+        QList<Reservoir::WellIndexCalculation::IntersectedCell> data = GeometryFunctions::well_index_of_grid(grid_, spline_points, wellbore_radius_);
         QList<BlockData> block_data = QList<BlockData>();
-        for (int i = 0; i < data.first.size(); ++i) {
+        for (auto icell : data) {
             BlockData block;
-            int global_index = data.first[i];
-            Reservoir::Grid::IJKCoordinate ijk = grid_->GetCell(global_index).ijk_index();
-            block.i = ijk.i();
-            block.j = ijk.j();
-            block.k = ijk.k();
-            block.well_index = data.second[i];
+            block.i = icell.ijk_index().i();
+            block.j = icell.ijk_index().j();
+            block.k = icell.ijk_index().k();
+            block.well_index = icell.well_index();
             block_data.append(block);
         }
         return block_data;

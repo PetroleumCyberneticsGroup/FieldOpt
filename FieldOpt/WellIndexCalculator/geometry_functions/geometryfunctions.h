@@ -57,28 +57,28 @@ namespace WellIndexCalculator {
         /*!
          * \brief The IntersectedCell struct holds information about an intersected cell.
          */
-        struct IntersectedCell {
-            IntersectedCell() {}
-            IntersectedCell(Reservoir::Grid::Cell c, Vector3d entryp) {
-                cell = c;
-                entry_point = entryp;
-            }
-            Reservoir::Grid::Cell cell; //!< The intersected cell/
-            Vector3d entry_point; //!< The point where the well spline enters the cell, or the spline start point if it starts inside the cell.
-            Vector3d exit_point; //!< The point where the well exits the cell, or the spline end point if it ends inside the cell.
-            double well_index;
-
-            QList<Vector3d> points() {return QList<Vector3d>({entry_point, exit_point});}
-            Vector3d xvec() {return cell.corners()[5] - cell.corners()[4];}
-            Vector3d yvec() {return cell.corners()[6] - cell.corners()[4];}
-            Vector3d zvec() {return cell.corners()[0] - cell.corners()[4];}
-            double dx() {return xvec().norm();}
-            double dy() {return yvec().norm();}
-            double dz() {return zvec().norm();}
-            double kx() {return cell.permx();}
-            double ky() {return cell.permy();}
-            double kz() {return cell.permz();}
-        };
+//        struct IntersectedCell {
+//            IntersectedCell() {}
+//            IntersectedCell(Reservoir::Grid::Cell c, Vector3d entryp) {
+//                cell = c;
+//                entry_point = entryp;
+//            }
+//            Reservoir::Grid::Cell cell; //!< The intersected cell/
+//            Vector3d entry_point; //!< The point where the well spline enters the cell, or the spline start point if it starts inside the cell.
+//            Vector3d exit_point; //!< The point where the well exits the cell, or the spline end point if it ends inside the cell.
+//            double well_index;
+//
+//            QList<Vector3d> points() {return QList<Vector3d>({entry_point, exit_point});}
+//            Vector3d xvec() {return cell.corners()[5] - cell.corners()[4];}
+//            Vector3d yvec() {return cell.corners()[6] - cell.corners()[4];}
+//            Vector3d zvec() {return cell.corners()[0] - cell.corners()[4];}
+//            double dx() {return xvec().norm();}
+//            double dy() {return yvec().norm();}
+//            double dz() {return zvec().norm();}
+//            double kx() {return cell.permx();}
+//            double ky() {return cell.permy();}
+//            double kz() {return cell.permz();}
+//        };
 
         /*!
          * \brief Given a reservoir with blocks and a line(start_point to end_point), return global index of all
@@ -90,9 +90,9 @@ namespace WellIndexCalculator {
          * \return A pair containing global indeces of intersected cells and the points where it enters each cell
          * (and thereby leaves the previous cell) of the line segment inside each cell.
          */
-        QList<IntersectedCell> cells_intersected(Vector3d start_point,
-                                                             Vector3d end_point,
-                                                             Reservoir::Grid::Grid *grid);
+        QList<Reservoir::WellIndexCalculation::IntersectedCell> cells_intersected(Vector3d start_point,
+                                                                                  Vector3d end_point,
+                                                                                  Reservoir::Grid::Grid *grid);
 
         /*!
          * \brief Find the point where the line bethween the start_point and end_point exits a cell.
@@ -126,7 +126,7 @@ namespace WellIndexCalculator {
          * \param wellbore_radius The wellbore radius.
          * \return Well index for block/cell
         */
-        double well_index_cell(IntersectedCell icell, double wellbore_radius);
+        double well_index_cell(Reservoir::WellIndexCalculation::IntersectedCell icell, double wellbore_radius);
 
         /*!
          * \brief Auxilary function for well_index_cell function
@@ -159,9 +159,9 @@ namespace WellIndexCalculator {
          * \param wellbore_radius The the wellbore radius for the well.
          * \return lists of cells intersected and their calculated well indeces
          */
-        QList<IntersectedCell> well_index_of_grid(Reservoir::Grid::Grid *grid,
-                                                            QList<Vector3d> well_spline_points,
-                                                            double wellbore_radius);
+        QList<Reservoir::WellIndexCalculation::IntersectedCell> well_index_of_grid(Reservoir::Grid::Grid *grid,
+                                                                                   QList<Vector3d> well_spline_points,
+                                                                                   double wellbore_radius);
     };
 
 }

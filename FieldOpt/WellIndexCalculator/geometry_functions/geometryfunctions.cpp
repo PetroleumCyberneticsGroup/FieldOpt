@@ -18,19 +18,21 @@ namespace WellIndexCalculator {
             return dot_product >= 0.0 - slack;
         }
 
-        QList<IntersectedCell> cells_intersected(Vector3d start_point, Vector3d end_point,
-                                                             Reservoir::Grid::Grid *grid) {
+        QList<Reservoir::WellIndexCalculation::IntersectedCell> cells_intersected(Vector3d start_point, Vector3d end_point,
+                                                                                  Reservoir::Grid::Grid *grid) {
+            using namespace Reservoir::WellIndexCalculation;
 
             QList<IntersectedCell> cells;
             // Add first and last cell blocks to the lists
             Reservoir::Grid::Cell last_cell = grid->GetCellEnvelopingPoint(end_point);
             Reservoir::Grid::Cell first_cell = grid->GetCellEnvelopingPoint(start_point);
-            cells.append(IntersectedCell(first_cell, start_point));
+            cells.append(IntersectedCell(first_cell));
+            cells[0].set_entry_point(start_point);
 
 
             // If the first and last blocks are the same, return the block and start+end points
             if (last_cell.global_index() == first_cell.global_index()) {
-                cells[0].exit_point = end_point;
+                cells[0].set_exit_point(end_point);
                 return cells;
             }
 
@@ -51,14 +53,15 @@ namespace WellIndexCalculator {
                 move_exit_epsilon = exit_point * (1 - epsilon_temp) + end_point * epsilon_temp;
                 current_cell = grid->GetCellEnvelopingPoint(move_exit_epsilon);
             }
-            cells[0].exit_point = exit_point;
+            cells[0].set_exit_point(exit_point);
 
             // Add previous exit point to list, find next exit point and all other up to the end_point
             while (current_cell.global_index() != last_cell.global_index()) {
-                IntersectedCell next_cell = IntersectedCell(current_cell, exit_point); // Add the previously located cell
+                IntersectedCell next_cell = IntersectedCell(current_cell); // Add the previously located cell
+                next_cell.set_entry_point(exit_point);
 
                 exit_point = find_exit_point(current_cell, exit_point, end_point, exit_point);
-                next_cell.exit_point = exit_point;
+                next_cell.set_exit_point(exit_point);
                 cells.append(next_cell);
 
                 if (exit_point == end_point) { // Terminate loop if the exit point is the last point
@@ -69,11 +72,10 @@ namespace WellIndexCalculator {
                     current_cell = grid->GetCellEnvelopingPoint(move_exit_epsilon);
                 }
             }
-            cells.append(IntersectedCell(last_cell, exit_point));
-            cells.last().exit_point = end_point;
-            std::cout << "Last cell in list: " << cells.last().cell.global_index() << std::endl;
-            std::cout << "Last cell: " << last_cell.global_index() << std::endl;
-            assert(cells.last().cell.global_index() == last_cell.global_index());
+            cells.append(IntersectedCell(last_cell));
+            cells.last().set_entry_point(exit_point);
+            cells.last().set_exit_point(end_point);
+            assert(cells.last().global_index() == last_cell.global_index());
             return cells;
         }
 
@@ -106,7 +108,7 @@ namespace WellIndexCalculator {
             return entry_point;
         }
 
-        double well_index_cell(IntersectedCell icell, double wellbore_radius) {
+        double well_index_cell(Reservoir::WellIndexCalculation::IntersectedCell icell, double wellbore_radius) {
             double Lx = 0;
             double Ly = 0;
             double Lz = 0;
@@ -126,9 +128,9 @@ namespace WellIndexCalculator {
             }
 
             // Compute Well Index from formula provided by Shu
-            double well_index_x = (dir_well_index(Lx, icell.dy(), icell.dz(), icell.ky(), icell.kz(), wellbore_radius));
-            double well_index_y = (dir_well_index(Ly, icell.dx(), icell.dz(), icell.kx(), icell.kz(), wellbore_radius));
-            double well_index_z = (dir_well_index(Lz, icell.dx(), icell.dy(), icell.kx(), icell.ky(), wellbore_radius));
+            double well_index_x = (dir_well_index(Lx, icell.dy(), icell.dz(), icell.permy(), icell.permz(), wellbore_radius));
+            double well_index_y = (dir_well_index(Ly, icell.dx(), icell.dz(), icell.permx(), icell.permz(), wellbore_radius));
+            double well_index_z = (dir_well_index(Lz, icell.dx(), icell.dy(), icell.permx(), icell.permy(), wellbore_radius));
             return sqrt(well_index_x * well_index_x + well_index_y * well_index_y + well_index_z * well_index_z);
         }
 
@@ -145,16 +147,17 @@ namespace WellIndexCalculator {
             return r;
         }
 
-        QList<IntersectedCell> well_index_of_grid(Reservoir::Grid::Grid *grid,
-                                                            QList<Eigen::Vector3d> well_spline_points,
-                                                            double wellbore_radius) {
+        QList<Reservoir::WellIndexCalculation::IntersectedCell> well_index_of_grid(Reservoir::Grid::Grid *grid,
+                                                                                   QList<Eigen::Vector3d> well_spline_points,
+                                                                                   double wellbore_radius) {
             assert(well_spline_points.length() == 2);
             // Find intersected blocks and the points of intersection
             // \todo Call this in a loop. When there is more than two ponts defining the spline, ensure that the blocks are not duplicated when going from one segment to the next.
-            QList<IntersectedCell> intersected_cells = cells_intersected(well_spline_points.first(), well_spline_points.last(), grid);
+            QList<Reservoir::WellIndexCalculation::IntersectedCell> intersected_cells = cells_intersected(
+                    well_spline_points.first(), well_spline_points.last(), grid);
 
             for (auto cell : intersected_cells) {
-                cell.well_index = well_index_cell(cell, wellbore_radius);
+                cell.set_well_index(well_index_cell(cell, wellbore_radius));
             }
             return intersected_cells;
         }
