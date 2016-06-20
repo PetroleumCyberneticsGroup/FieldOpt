@@ -1,3 +1,4 @@
+#include <iostream>
 #include "wellindexcalculator.h"
 
 namespace Reservoir {
@@ -41,61 +42,46 @@ namespace Reservoir {
         }
 
         QList<IntersectedCell> WellIndexCalculator::cells_intersected() {
-            using namespace WellIndexCalculation;
-
-            QList<IntersectedCell> cells;
-            // Add first and last cell blocks to the lists
             Grid::Cell last_cell = grid_->GetCellEnvelopingPoint(toe_);
-            Grid::Cell first_cell = grid_->GetCellEnvelopingPoint(heel_);
-            cells.append(IntersectedCell(first_cell));
-            cells[0].set_entry_point(heel_);
-
+            QList<IntersectedCell> intersected_cells;
+            intersected_cells.append(IntersectedCell(grid_->GetCellEnvelopingPoint(heel_)));
+            intersected_cells.first().set_entry_point(heel_);
 
             // If the first and last blocks are the same, return the block and start+end points
-            if (last_cell.global_index() == first_cell.global_index()) {
-                cells[0].set_exit_point(toe_);
-                return cells;
+            if (last_cell.global_index() == intersected_cells.first().global_index()) {
+                intersected_cells.first().set_exit_point(toe_);
+                return intersected_cells;
             }
 
-            Vector3d exit_point = find_exit_point(first_cell, heel_, toe_, heel_);
             // Make sure we follow line in the correct direction. (i.e. dot product positive)
+            Vector3d exit_point = find_exit_point(intersected_cells.first(), heel_, toe_, heel_);
             if ((toe_ - heel_).dot(exit_point - heel_) <= 0.0) {
-                exit_point = find_exit_point(first_cell, heel_, toe_, exit_point);
+                exit_point = find_exit_point(intersected_cells.first(), heel_, toe_, exit_point);
             }
+            intersected_cells.first().set_exit_point(exit_point);
 
             double epsilon = 0.01 / (toe_ - exit_point).norm();
-            Vector3d move_exit_epsilon = exit_point * (1 - epsilon) + toe_ * epsilon;
-            Grid::Cell current_cell = grid_->GetCellEnvelopingPoint(move_exit_epsilon);
-
-            // Move untill we're out of the first cell
-            while (current_cell.global_index() == first_cell.global_index()) {
-                move_exit_epsilon = exit_point * (1 - epsilon) + toe_ * epsilon;
-                current_cell = grid_->GetCellEnvelopingPoint(move_exit_epsilon);
-            }
-            cells[0].set_exit_point(exit_point);
 
             // Add previous exit point to list, find next exit point and all other up to the end_point
-            while (current_cell.global_index() != last_cell.global_index()) {
-                IntersectedCell next_cell = IntersectedCell(current_cell); // Add the previously located cell
-                next_cell.set_entry_point(exit_point);
+            while (true) {
+                // Move into the next cell, add it to the list and set the entry point
+                Vector3d move_exit_epsilon = exit_point * (1 - epsilon) + toe_ * epsilon;
+                intersected_cells.append(IntersectedCell(grid_->GetCellEnvelopingPoint(move_exit_epsilon)));
+                intersected_cells.last().set_entry_point(exit_point); // The entry point of each cell is the exit point of the previous cell
 
-                exit_point = find_exit_point(current_cell, exit_point, toe_, exit_point);
-                next_cell.set_exit_point(exit_point);
-                cells.append(next_cell);
+                // Terminate if we're in the last cell
+                if (intersected_cells.last().global_index() == last_cell.global_index()) {
+                    intersected_cells.last().set_exit_point(toe_);
+                    break;
+                }
 
-                if (exit_point == toe_) { // Terminate loop if the exit point is the last point
-                    current_cell = last_cell;
-                }
-                else { // Move slightly along line to enter the new cell and get it
-                    move_exit_epsilon = exit_point * (1 - epsilon) + toe_ * epsilon;
-                    current_cell = grid_->GetCellEnvelopingPoint(move_exit_epsilon);
-                }
+                // Find the exit point of the cell and set it in the list
+                exit_point = find_exit_point(intersected_cells.last(), exit_point, toe_, exit_point);
+                intersected_cells.last().set_exit_point(exit_point);
+                assert(intersected_cells.length() < 500);
             }
-            cells.append(IntersectedCell(last_cell));
-            cells.last().set_entry_point(exit_point);
-            cells.last().set_exit_point(toe_);
-            assert(cells.last().global_index() == last_cell.global_index());
-            return cells;
+            assert(intersected_cells.last().global_index() == last_cell.global_index());
+            return intersected_cells;
         }
 
         Vector3d WellIndexCalculator::find_exit_point(Grid::Cell &cell, Vector3d &entry_point,

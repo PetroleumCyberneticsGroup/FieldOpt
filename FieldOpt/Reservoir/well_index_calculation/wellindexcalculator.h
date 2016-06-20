@@ -126,7 +126,7 @@ namespace Reservoir {
              * \param ky permeability second direction
              * \return directional wellblock radius
              */
-            static double dir_wellblock_radius(double dx, double dy, double kx, double ky);
+            double dir_wellblock_radius(double dx, double dy, double kx, double ky);
 
             /*!
              * \brief Given a reservoir and a spline (heel, intermediate1, ..., toe) return the calculated well
