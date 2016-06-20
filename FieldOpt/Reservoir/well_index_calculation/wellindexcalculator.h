@@ -73,8 +73,8 @@ namespace Reservoir {
              * \param point_in_plane A point in the plane.
              * \return The point of intersection.
              */
-            static Vector3d line_plane_intersection(Vector3d p0, Vector3d p1,
-                                                    Vector3d normal_vector, Vector3d point_in_plane);
+            static Vector3d line_plane_intersection(Vector3d &p0, Vector3d &p1,
+                                                    Vector3d &normal_vector, Vector3d &point_in_plane);
 
             /*!
              * \brief point_on_same_side returns true if point is on the same side of a plane
@@ -91,19 +91,19 @@ namespace Reservoir {
              * \param normal_vector The normal vector of the plane.
              * \return True if the point is on the same side as the normal vector or in the plane; otherwise false.
              */
-            static bool point_on_same_side(Vector3d point, Vector3d plane_point,
-                                           Vector3d normal_vector, double slack);
+            static bool point_on_same_side(Vector3d &point, Vector3d &plane_point,
+                                           Vector3d &normal_vector, double slack);
 
             /*!
-         * \brief Given a reservoir with blocks and a line(start_point to end_point), return global index of all
-         * blocks interesected by the line, as well as the point where the line enters the block.
-         * by the line and the points of intersection
-         * \param start_point The start point of the well path.
-         * \param end_point The end point of the well path.
-         * \param grid The grid object containing blocks/cells.
-         * \return A pair containing global indeces of intersected cells and the points where it enters each cell
-         * (and thereby leaves the previous cell) of the line segment inside each cell.
-         */
+             * \brief Given a reservoir with blocks and a line(start_point to end_point), return global index of all
+             * blocks interesected by the line, as well as the point where the line enters the block.
+             * by the line and the points of intersection
+             * \param start_point The start point of the well path.
+             * \param end_point The end point of the well path.
+             * \param grid The grid object containing blocks/cells.
+             * \return A pair containing global indeces of intersected cells and the points where it enters each cell
+             * (and thereby leaves the previous cell) of the line segment inside each cell.
+             */
             QList<IntersectedCell> cells_intersected();
 
             /*!
@@ -120,8 +120,8 @@ namespace Reservoir {
              * \param exception_point A specific point we don't want the function to end up in.
              * \return The point where the well path exits the cell.
              */
-            Vector3d find_exit_point(Grid::Cell cell, Vector3d start_point,
-                                     Vector3d end_point, Vector3d exception_point);
+            Vector3d find_exit_point(Grid::Cell &cell, Vector3d &start_point,
+                                     Vector3d &end_point, Vector3d &exception_point);
 
             /*!
              * \brief Compute the well index (aka. transmissibility factor) for a (one) single cell/block by
@@ -135,7 +135,7 @@ namespace Reservoir {
              * \param icell Well block to compute the WI in.
              * \return Well index for block/cell
             */
-            double well_index_cell(IntersectedCell icell);
+            double well_index_cell(IntersectedCell &icell);
 
             /*!
              * \brief Auxilary function for well_index_cell function

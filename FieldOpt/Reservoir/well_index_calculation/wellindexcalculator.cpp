@@ -40,7 +40,7 @@ namespace Reservoir {
             return QList<BlockData>();
         }
 
-        Vector3d WellIndexCalculator::line_plane_intersection(Vector3d p0, Vector3d p1, Vector3d normal_vector, Vector3d point_in_plane) {
+        Vector3d WellIndexCalculator::line_plane_intersection(Vector3d &p0, Vector3d &p1, Vector3d &normal_vector, Vector3d &point_in_plane) {
             Vector3d line_vector = p1 - p0;
             line_vector.normalize();
             normal_vector.normalize();
@@ -49,7 +49,8 @@ namespace Reservoir {
             return p0 + s*line_vector;
         }
 
-        bool WellIndexCalculator::point_on_same_side(Vector3d point, Vector3d plane_point, Vector3d normal_vector, double slack) {
+        bool WellIndexCalculator::point_on_same_side(Vector3d &point, Vector3d &plane_point,
+                                                     Vector3d &normal_vector, double slack) {
             double dot_product = (point - plane_point).dot(normal_vector);
             return dot_product >= 0.0 - slack;
         }
@@ -114,8 +115,8 @@ namespace Reservoir {
             return cells;
         }
 
-        Vector3d WellIndexCalculator::find_exit_point(Grid::Cell cell, Vector3d entry_point,
-                                                      Vector3d end_point, Vector3d exception_point) {
+        Vector3d WellIndexCalculator::find_exit_point(Grid::Cell &cell, Vector3d &entry_point,
+                                                      Vector3d &end_point, Vector3d &exception_point) {
             Vector3d line = end_point - entry_point;
 
             // Loop through the cell faces untill we find one that the line intersects
@@ -143,7 +144,7 @@ namespace Reservoir {
             return entry_point;
         }
 
-        double WellIndexCalculator::well_index_cell(IntersectedCell icell) {
+        double WellIndexCalculator::well_index_cell(IntersectedCell &icell) {
             double Lx = 0;
             double Ly = 0;
             double Lz = 0;
