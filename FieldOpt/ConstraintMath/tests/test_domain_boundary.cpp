@@ -37,8 +37,8 @@ TEST_F(DomainBoundaryTest, cell_boundary_constraint_test){
     Eigen::Vector3d point_0_real = Eigen::Vector3d(24,10,1724);
     Eigen::Vector3d point_1_real = Eigen::Vector3d(24,24,1724);
 
-    Eigen::Vector3d point_0_proj = WellIndexCalculation::WellConstraintProjections::point_to_cell_shortest(cell, point_0);
-    Eigen::Vector3d point_1_proj = WellIndexCalculation::WellConstraintProjections::point_to_cell_shortest(cell, point_1);
+    Eigen::Vector3d point_0_proj = WellConstraintProjections::point_to_cell_shortest(cell, point_0);
+    Eigen::Vector3d point_1_proj = WellConstraintProjections::point_to_cell_shortest(cell, point_1);
 
     EXPECT_TRUE(point_0_proj==point_0_real);
     EXPECT_TRUE(point_1_proj==point_1_real);
@@ -54,7 +54,7 @@ TEST_F(DomainBoundaryTest, two_cells_boundary_constraint_test){
     Eigen::Vector3d point_0 = Eigen::Vector3d(500,500,1724);
     Eigen::Vector3d point_0_real = Eigen::Vector3d(24,24,1724);
 
-    Eigen::Vector3d point_0_proj = WellIndexCalculation::WellConstraintProjections::well_domain_constraint(point_0, cells);
+    Eigen::Vector3d point_0_proj = WellConstraintProjections::well_domain_constraint(point_0, cells);
     //Eigen::Vector3d point_1_proj = WellIndexCalculation::GeometryFunctions::point_to_cell_shortest(cell,point_1);
 
 
@@ -72,7 +72,7 @@ TEST_F(DomainBoundaryTest, two_cells_boundary_constraint_test){
         Eigen::Vector3d point_0 = Eigen::Vector3d(-1,-1,1702);
         Eigen::Vector3d point_0_real = Eigen::Vector3d(0,0,1702);
 
-        Eigen::Vector3d point_0_proj = WellIndexCalculation::WellConstraintProjections::point_to_cell_shortest(cell, point_0);
+        Eigen::Vector3d point_0_proj = WellConstraintProjections::point_to_cell_shortest(cell, point_0);
 
         std::cout << point_0_real << std::endl;
         std::cout << point_0_proj << std::endl;

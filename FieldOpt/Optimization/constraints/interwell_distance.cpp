@@ -37,7 +37,7 @@ namespace Optimization {
                 points.append(toe_vals);
             }
             // Get the projection
-            QList<Eigen::Vector3d> projection = WellIndexCalculation::WellConstraintProjections::interwell_constraint_projection(
+            QList<Eigen::Vector3d> projection = WellConstraintProjections::interwell_constraint_projection(
                     points, distance_);
 
             // Check if the projection is (approximately) equal to the input case
@@ -68,7 +68,7 @@ namespace Optimization {
                 points.append(toe_vals);
             }
             // Get the projection
-            QList<Eigen::Vector3d> projection = WellIndexCalculation::WellConstraintProjections::interwell_constraint_projection(
+            QList<Eigen::Vector3d> projection = WellConstraintProjections::interwell_constraint_projection(
                     points, distance_);
 
             for (int i = 0; i < affected_wells_.length(); ++i) {

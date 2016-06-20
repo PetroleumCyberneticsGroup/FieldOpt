@@ -5,7 +5,6 @@
 #include "Reservoir/grid/eclgrid.h"
 #include "ConstraintMath/well_constraint_projections/well_constraint_projections.h"
 
-using namespace WellIndexCalculation;
 using namespace Reservoir::Grid;
 
 namespace {
@@ -99,7 +98,7 @@ namespace {
                 0, 6, 6;
         Eigen::Vector3d b;
         b << 1, 4, 2;
-        QList<Eigen::Vector3d> solution_vectors = WellIndexCalculation::WellConstraintProjections::non_inv_solution(A,b);
+        QList<Eigen::Vector3d> solution_vectors = WellConstraintProjections::non_inv_solution(A,b);
 
         for(int i=0; i<solution_vectors.length(); i++){
             std::cout << "solution vector with length "<< sqrt(solution_vectors.at(i)(0)*solution_vectors.at(i)(0)
@@ -128,7 +127,7 @@ namespace {
         coords.append(xx2);
         coords.append(xx3);
         coords.append(xx4);
-        MatrixXd A = WellIndexCalculation::WellConstraintProjections::build_A_4p(coords);
+        MatrixXd A = WellConstraintProjections::build_A_4p(coords);
 
         cout << "Here is a random symmetric 5x5 matrix, A:" << endl << A << endl << endl;
         SelfAdjointEigenSolver<MatrixXd> es(A);
@@ -165,10 +164,10 @@ namespace {
         newcoords.append(xx3);
         newcoords.append(xx4);
 
-        std::cout << "shortest distance" << WellIndexCalculation::WellConstraintProjections::shortest_distance(newcoords) << std::endl;
+        std::cout << "shortest distance" << WellConstraintProjections::shortest_distance(newcoords) << std::endl;
 
-        Eigen::Matrix3d A = WellIndexCalculation::WellConstraintProjections::build_A_4p(newcoords);
-        Eigen::Vector3d b = WellIndexCalculation::WellConstraintProjections::build_b_4p(newcoords, d);
+        Eigen::Matrix3d A = WellConstraintProjections::build_A_4p(newcoords);
+        Eigen::Vector3d b = WellConstraintProjections::build_b_4p(newcoords, d);
         A = WellConstraintProjections::rm_entries_eps_matrix(A,10e-10);
         std::cout <<"A = " << std::endl << A << std::endl;
         std::cout <<"b = " << std::endl << b << std::endl;
@@ -185,7 +184,7 @@ namespace {
         }
         if (moved_points.length() >0){
             std::cout << "with movement cost = " <<
-            WellIndexCalculation::WellConstraintProjections::movement_cost(newcoords, moved_points) << std::endl;
+            WellConstraintProjections::movement_cost(newcoords, moved_points) << std::endl;
         }
 
     }
@@ -241,9 +240,9 @@ namespace {
         all_wells.append(well_4);
         all_wells.append(well_5);
 
-        QList<QList<Eigen::Vector3d>> all_wells_moved = WellIndexCalculation::WellConstraintProjections::interwell_constraint_multiple_wells(all_wells, 4, 10e-4);
-        QList<QList<Eigen::Vector3d>> all_wells_length_moved = WellIndexCalculation::WellConstraintProjections::well_length_constraint_multiple_wells(all_wells,10, 5,10e-8);
-        QList<QList<Eigen::Vector3d>> all_wells_both_proj = WellIndexCalculation::WellConstraintProjections::both_constraints_multiple_wells(all_wells, 4, 10e-4, 10, 5, 10e-8);
+        QList<QList<Eigen::Vector3d>> all_wells_moved = WellConstraintProjections::interwell_constraint_multiple_wells(all_wells, 4, 10e-4);
+        QList<QList<Eigen::Vector3d>> all_wells_length_moved = WellConstraintProjections::well_length_constraint_multiple_wells(all_wells,10, 5,10e-8);
+        QList<QList<Eigen::Vector3d>> all_wells_both_proj = WellConstraintProjections::both_constraints_multiple_wells(all_wells, 4, 10e-4, 10, 5, 10e-8);
 
         Eigen::Vector3d temp_comp_vec;
         temp_comp_vec << -2, -2, 1;
@@ -277,7 +276,7 @@ namespace {
         wells.append(y1);
         wells.append(y2);
 
-        moved_wells = WellIndexCalculation::WellConstraintProjections::interwell_constraint_projection(wells, d);
+        moved_wells = WellConstraintProjections::interwell_constraint_projection(wells, d);
         std::cout << "initial positions" << std::endl;
         for (int i=0; i<4; i++){
             std::cout << wells.at(i) << std::endl;
