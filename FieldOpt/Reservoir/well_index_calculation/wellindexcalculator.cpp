@@ -66,12 +66,10 @@ namespace Reservoir {
             double epsilon = 0.01 / (toe_ - exit_point).norm();
             Vector3d move_exit_epsilon = exit_point * (1 - epsilon) + toe_ * epsilon;
             Grid::Cell current_cell = grid_->GetCellEnvelopingPoint(move_exit_epsilon);
-            double epsilon_temp = epsilon;
 
             // Move untill we're out of the first cell
             while (current_cell.global_index() == first_cell.global_index()) {
-                epsilon_temp = 10 * epsilon_temp;
-                move_exit_epsilon = exit_point * (1 - epsilon_temp) + toe_ * epsilon_temp;
+                move_exit_epsilon = exit_point * (1 - epsilon) + toe_ * epsilon;
                 current_cell = grid_->GetCellEnvelopingPoint(move_exit_epsilon);
             }
             cells[0].set_exit_point(exit_point);
