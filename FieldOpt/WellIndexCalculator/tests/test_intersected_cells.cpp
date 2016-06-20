@@ -61,18 +61,15 @@ namespace {
         //auto ptr_cell_1 = &cell_1;
         Eigen::Vector3d start_point = Eigen::Vector3d(0,0,1702);
         Eigen::Vector3d end_point = Eigen::Vector3d(44,84,1720);
-        QPair<QList<int>,QList<Eigen::Vector3d>> pair;
+        QList<WellIndexCalculator::GeometryFunctions::IntersectedCell> cells;
 
-        pair  = WellIndexCalculator::GeometryFunctions::cells_intersected(start_point,end_point,grid_);
+        cells  = WellIndexCalculator::GeometryFunctions::cells_intersected(start_point,end_point,grid_);
 
-        std::cout << "number of cells intersected = " << pair.first.length() << std::endl;
-        std::cout << "number of intersection points = " << pair.second.length() << std::endl;
-        for( int ii = 0; ii<pair.first.length(); ii++){
-            std::cout << "cell intersection number " << ii+1 << " with index number " << pair.first.at(ii) << std::endl;
-            std::cout << "line enters in point " << pair.second.at(ii).x() << "," << pair.second.at(ii).y() << "," << pair.second.at(ii).z() << std::endl;
+        std::cout << "number of cells intersected = " << cells.length() << std::endl;
+        for( int ii = 0; ii<cells.length(); ii++){
+            std::cout << "cell intersection number " << ii+1 << " with index number " << cells[ii].cell.global_index() << std::endl;
+            std::cout << "line enters in point " << cells[ii].entry_point.x() << "," << cells[ii].entry_point.y() << "," << cells[ii].entry_point.z() << std::endl;
         }
-
-        EXPECT_TRUE( pair.first.length() + 1 == pair.second.length());
     }
 
     TEST_F(IntersectedCellsTest, point_inside_cell_test) {

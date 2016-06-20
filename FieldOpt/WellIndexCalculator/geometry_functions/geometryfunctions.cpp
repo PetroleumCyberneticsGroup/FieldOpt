@@ -18,25 +18,21 @@ namespace WellIndexCalculator {
             return dot_product >= 0.0 - slack;
         }
 
-        QPair<QList<int>, QList<Vector3d>> cells_intersected(Vector3d start_point, Vector3d end_point,
+        QList<IntersectedCell> cells_intersected(Vector3d start_point, Vector3d end_point,
                                                              Reservoir::Grid::Grid *grid) {
-            QList<int> global_cell_indeces;
-            QList<Vector3d> entry_points;
 
+            QList<IntersectedCell> cells;
             // Add first and last cell blocks to the lists
             Reservoir::Grid::Cell last_cell = grid->GetCellEnvelopingPoint(end_point);
             Reservoir::Grid::Cell first_cell = grid->GetCellEnvelopingPoint(start_point);
-            int last_cell_index = last_cell.global_index();
-            int first_cell_index = first_cell.global_index();
-            global_cell_indeces.append(first_cell_index);
-            entry_points.append(start_point);
+            cells.append(IntersectedCell(first_cell, start_point));
+
 
             // If the first and last blocks are the same, return the block and start+end points
-            if (last_cell_index == first_cell_index) {
-                entry_points.append(end_point);
-                return QPair<QList<int>, QList<Vector3d>>(global_cell_indeces, entry_points);
+            if (last_cell.global_index() == first_cell.global_index()) {
+                cells[0].exit_point = end_point;
+                return cells;
             }
-
 
             Vector3d exit_point = find_exit_point(first_cell, start_point, end_point, start_point);
             // Make sure we follow line in the correct direction. (i.e. dot product positive)
@@ -50,17 +46,20 @@ namespace WellIndexCalculator {
             double epsilon_temp = epsilon;
 
             // Move untill we're out of the first cell
-            while (current_cell.global_index() == first_cell_index) {
+            while (current_cell.global_index() == first_cell.global_index()) {
                 epsilon_temp = 10 * epsilon_temp;
                 move_exit_epsilon = exit_point * (1 - epsilon_temp) + end_point * epsilon_temp;
                 current_cell = grid->GetCellEnvelopingPoint(move_exit_epsilon);
             }
+            cells[0].exit_point = exit_point;
 
             // Add previous exit point to list, find next exit point and all other up to the end_point
-            while (current_cell.global_index() != last_cell_index) {
-                global_cell_indeces.append(current_cell.global_index());
-                entry_points.append(exit_point);
+            while (current_cell.global_index() != last_cell.global_index()) {
+                IntersectedCell next_cell = IntersectedCell(current_cell, exit_point); // Add the previously located cell
+
                 exit_point = find_exit_point(current_cell, exit_point, end_point, exit_point);
+                next_cell.exit_point = exit_point;
+                cells.append(next_cell);
 
                 if (exit_point == end_point) { // Terminate loop if the exit point is the last point
                     current_cell = last_cell;
@@ -70,10 +69,12 @@ namespace WellIndexCalculator {
                     current_cell = grid->GetCellEnvelopingPoint(move_exit_epsilon);
                 }
             }
-            global_cell_indeces.append(last_cell_index);
-            entry_points.append(exit_point);
-            entry_points.append(end_point);
-            return QPair<QList<int>, QList<Vector3d>>(global_cell_indeces, entry_points);
+            cells.append(IntersectedCell(last_cell, exit_point));
+            cells.last().exit_point = end_point;
+            std::cout << "Last cell in list: " << cells.last().cell.global_index() << std::endl;
+            std::cout << "Last cell: " << last_cell.global_index() << std::endl;
+            assert(cells.last().cell.global_index() == last_cell.global_index());
+            return cells;
         }
 
         Vector3d find_exit_point(Reservoir::Grid::Cell cell,
@@ -105,47 +106,29 @@ namespace WellIndexCalculator {
             return entry_point;
         }
 
-        double well_index_cell(Reservoir::Grid::Cell cell, QList<Vector3d> start_points,
-                               QList<Vector3d> end_points, double wellbore_radius) {
-
-            // Determine the 3 (orthogonal, or very close to orth.) vectors to project line onto.
-            // Corners 4&5, 4&6 and 4&0 span the cell from the front bottom left corner.
-            Vector3d xvec = cell.corners()[5] - cell.corners()[4];
-            Vector3d yvec = cell.corners()[6] - cell.corners()[4];
-            Vector3d zvec = cell.corners()[0] - cell.corners()[4];
-
-            // Finds the dimensional sizes (i.e. length in each direction) of the cell block
-            double dx = xvec.norm();
-            double dy = yvec.norm();
-            double dz = zvec.norm();
-
-            // Get directional permeabilities
-            double kx = cell.permx();
-            double ky = cell.permy();
-            double kz = cell.permz();
-
+        double well_index_cell(IntersectedCell icell, double wellbore_radius) {
             double Lx = 0;
             double Ly = 0;
             double Lz = 0;
 
-            for (int ii = 0; ii < start_points.length(); ++ii) { // Current segment ii
+            for (int ii = 0; ii < icell.points().length() - 1; ++ii) { // Current segment ii
                 // Compute vector from segment
-                Vector3d current_vec = end_points.at(ii) - start_points.at(ii);
+                Vector3d current_vec = icell.points().at(ii+1) - icell.points().at(ii);
 
                 /* Proejcts segment vector to directional spanning vectors and determines the length.
                  * of the projections. Note that we only only care about the length of the projection,
                  * not the spatial position. Also adds the lengths of previous segments in case there
                  * is more than one segment within the well.
                  */
-                Lx = Lx + (xvec * xvec.dot(current_vec) / xvec.dot(xvec)).norm();
-                Ly = Ly + (yvec * yvec.dot(current_vec) / yvec.dot(yvec)).norm();
-                Lz = Lz + (zvec * zvec.dot(current_vec) / zvec.dot(zvec)).norm();
+                Lx = Lx + (icell.xvec() * icell.xvec().dot(current_vec) / icell.xvec().dot(icell.xvec())).norm();
+                Ly = Ly + (icell.yvec() * icell.yvec().dot(current_vec) / icell.yvec().dot(icell.yvec())).norm();
+                Lz = Lz + (icell.zvec() * icell.zvec().dot(current_vec) / icell.zvec().dot(icell.zvec())).norm();
             }
 
             // Compute Well Index from formula provided by Shu
-            double well_index_x = (dir_well_index(Lx, dy, dz, ky, kz, wellbore_radius));
-            double well_index_y = (dir_well_index(Ly, dx, dz, kx, kz, wellbore_radius));
-            double well_index_z = (dir_well_index(Lz, dx, dy, kx, ky, wellbore_radius));
+            double well_index_x = (dir_well_index(Lx, icell.dy(), icell.dz(), icell.ky(), icell.kz(), wellbore_radius));
+            double well_index_y = (dir_well_index(Ly, icell.dx(), icell.dz(), icell.kx(), icell.kz(), wellbore_radius));
+            double well_index_z = (dir_well_index(Lz, icell.dx(), icell.dy(), icell.kx(), icell.ky(), wellbore_radius));
             return sqrt(well_index_x * well_index_x + well_index_y * well_index_y + well_index_z * well_index_z);
         }
 
@@ -162,33 +145,18 @@ namespace WellIndexCalculator {
             return r;
         }
 
-        QPair<QList<int>, QList<double>> well_index_of_grid(Reservoir::Grid::Grid *grid,
+        QList<IntersectedCell> well_index_of_grid(Reservoir::Grid::Grid *grid,
                                                             QList<Eigen::Vector3d> well_spline_points,
                                                             double wellbore_radius) {
             assert(well_spline_points.length() == 2);
             // Find intersected blocks and the points of intersection
             // \todo Call this in a loop. When there is more than two ponts defining the spline, ensure that the blocks are not duplicated when going from one segment to the next.
-            QPair<QList<int>, QList<Vector3d>> temp_pair;
-            for (int ii = 0; ii < well_spline_points.length() - 1; ii++) {
-                QPair<QList<int>, QList<Vector3d>> tmp_pair_segment = cells_intersected(well_spline_points[ii], well_spline_points[ii+1], grid);
-                if (temp_pair.first.length() > 0 &&
-                    temp_pair.first.last() == tmp_pair_segment.first.first()) { // The last cell from the previous segment is a duplicate of the first cell in this segment
-                    tmp_pair_segment.first.removeAt(0);
-                    tmp_pair_segment.second.removeAt(0);
-                }
-                temp_pair.first.append(tmp_pair_segment.first);
-                temp_pair.second.append(tmp_pair_segment.second);
-            }
+            QList<IntersectedCell> intersected_cells = cells_intersected(well_spline_points.first(), well_spline_points.last(), grid);
 
-            QList<double> well_indeces;
-            for (int ii = 0; ii < temp_pair.first.length(); ii++) {
-                QList<Vector3d> entry_points = {temp_pair.second[ii]};
-                QList<Vector3d> exit_points = {temp_pair.second[ii + 1]};
-                well_indeces.append(
-                        well_index_cell(grid->GetCell(temp_pair.first[ii]),
-                                        entry_points, exit_points, wellbore_radius));
+            for (auto cell : intersected_cells) {
+                cell.well_index = well_index_cell(cell, wellbore_radius);
             }
-            return QPair<QList<int>, QList<double>>(temp_pair.first, well_indeces);
+            return intersected_cells;
         }
 
     }
