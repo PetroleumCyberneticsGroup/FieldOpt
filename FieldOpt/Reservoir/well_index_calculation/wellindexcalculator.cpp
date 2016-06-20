@@ -144,7 +144,7 @@ namespace Reservoir {
             return entry_point;
         }
 
-        double WellIndexCalculator::well_index_cell(IntersectedCell icell, double wellbore_radius) {
+        double WellIndexCalculator::well_index_cell(IntersectedCell icell) {
             double Lx = 0;
             double Ly = 0;
             double Lz = 0;
@@ -164,16 +164,16 @@ namespace Reservoir {
             }
 
             // Compute Well Index from formula provided by Shu
-            double well_index_x = (dir_well_index(Lx, icell.dy(), icell.dz(), icell.permy(), icell.permz(), wellbore_radius));
-            double well_index_y = (dir_well_index(Ly, icell.dx(), icell.dz(), icell.permx(), icell.permz(), wellbore_radius));
-            double well_index_z = (dir_well_index(Lz, icell.dx(), icell.dy(), icell.permx(), icell.permy(), wellbore_radius));
+            double well_index_x = (dir_well_index(Lx, icell.dy(), icell.dz(), icell.permy(), icell.permz()));
+            double well_index_y = (dir_well_index(Ly, icell.dx(), icell.dz(), icell.permx(), icell.permz()));
+            double well_index_z = (dir_well_index(Lz, icell.dx(), icell.dy(), icell.permx(), icell.permy()));
             return sqrt(well_index_x * well_index_x + well_index_y * well_index_y + well_index_z * well_index_z);
         }
 
-        double WellIndexCalculator::dir_well_index(double Lx, double dy, double dz, double ky, double kz, double wellbore_radius) {
+        double WellIndexCalculator::dir_well_index(double Lx, double dy, double dz, double ky, double kz) {
             double silly_eclipse_factor = 0.008527;
             double well_index_i = silly_eclipse_factor * (2 * M_PI * sqrt(ky * kz) * Lx) /
-                                  (log(dir_wellblock_radius(dy, dz, ky, kz) / wellbore_radius));
+                                  (log(dir_wellblock_radius(dy, dz, ky, kz) / wellbore_radius_));
             return well_index_i;
         }
 
@@ -191,7 +191,7 @@ namespace Reservoir {
                     heel_, toe_, grid_);
 
             for (auto cell : intersected_cells) {
-                cell.set_well_index(well_index_cell(cell, wellbore_radius_));
+                cell.set_well_index(well_index_cell(cell));
             }
             return intersected_cells;
         }

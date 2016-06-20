@@ -58,7 +58,9 @@ namespace {
         auto icell = IntersectedCell(cell_1);
         icell.set_entry_point(start_point);
         icell.set_exit_point(end_point);
-        double wi = WellIndexCalculator::well_index_cell(icell, wellbore_radius);
+        auto wic = WellIndexCalculator(grid_);
+        wic.ComputeWellBlocks(start_point, end_point, wellbore_radius);
+        double wi = wic.well_index_cell(icell);
         /* 0.555602 is the expected well transmisibility factor aka. well index.
          * For now this value is read directly from eclipse output file:
          * Expect value within delta percent
@@ -89,7 +91,10 @@ namespace {
         icell.set_entry_point(start_point);
         icell.set_exit_point(end_point);
 
-        double wi = WellIndexCalculator::well_index_cell(icell, wellbore_radius);
+        auto wic = WellIndexCalculator(grid_);
+        wic.ComputeWellBlocks(start_point, end_point, wellbore_radius);
+
+        double wi = wic.well_index_cell(icell);
         // WellIndexCalculation::GeometryFunctions::vertical_well_index_cell(cell_1,kx,ky,wellbore_radius);
         /* 0.555602 is the expected well transmisibility factor aka. well index.
          * For now this value is read directly from eclipse output file:

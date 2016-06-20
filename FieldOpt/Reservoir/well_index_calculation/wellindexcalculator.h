@@ -133,13 +133,10 @@ namespace Reservoir {
              * \note Corner points of Cell(s) are always listed in the same order and orientation. (see
              * Grid::Cell for illustration).
              *
-             * \param cell Well block to compute the WI in.
-             * \param start_points line segment/well
-             * \param end_points line segment/well
-             * \param wellbore_radius The wellbore radius.
+             * \param icell Well block to compute the WI in.
              * \return Well index for block/cell
             */
-            static double well_index_cell(IntersectedCell icell, double wellbore_radius);
+            double well_index_cell(IntersectedCell icell);
 
             /*!
              * \brief Auxilary function for well_index_cell function
@@ -148,10 +145,9 @@ namespace Reservoir {
              * \param dz size block third direction
              * \param ky permeability second direction
              * \param kz permeability second direction
-             * \param wellbore_radius wellbore radius
              * \return directional well index
             */
-            static double dir_well_index(double Lx, double dy, double dz, double ky, double kz, double wellbore_radius);
+            double dir_well_index(double Lx, double dy, double dz, double ky, double kz);
 
             /*!
              * \brief Auxilary function(2) for well_index_cell function
@@ -166,10 +162,6 @@ namespace Reservoir {
             /*!
              * \brief Given a reservoir and a spline (heel, intermediate1, ..., toe) return the calculated well
              * indeces for all cells intersected by the spline segment.
-             * \param grid A grid containing cells
-             * \param well_spline_points The points defining a spline for a well path. The first point is the position
-             * of the heel of the well; the last point is the position of the toe.
-             * \param wellbore_radius The the wellbore radius for the well.
              * \return lists of cells intersected and their calculated well indeces
              */
             QList<IntersectedCell> compute_well_indices();
