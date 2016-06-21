@@ -187,7 +187,6 @@ namespace WellConstraintProjections {
         }
         // If there were any succesful configurations, return the best one.
         if (cost < INFINITY) {
-            std::cout << "Found 3-point solution" << std::endl;
             return solution_coords;
         }
         // ################## END 3 POINT PART ########################
