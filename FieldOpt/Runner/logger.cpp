@@ -17,14 +17,14 @@ namespace Runner {
 
         // Delete existing logs if --force flag is on
         if (rts->overwrite_existing()) {
-                    foreach (auto path, (QStringList() << cas_log_path_ << opt_log_path_ << sim_log_path_
-                                         << compdat_log_path_ << prod_data_log_path_ << run_log_path_
-                                         << settings_log_path_ << property_uuid_name_map_path_)) {
-                    if (Utilities::FileHandling::FileExists(path)) {
-                        std::cout << "Force flag on. Deleting " << path.toStdString() << std::endl;
-                        Utilities::FileHandling::DeleteFile(path);
-                    }
+            for (auto path : (QStringList() << cas_log_path_ << opt_log_path_ << sim_log_path_
+                                            << compdat_log_path_ << prod_data_log_path_ << run_log_path_
+                                            << settings_log_path_ << property_uuid_name_map_path_)) {
+                if (Utilities::FileHandling::FileExists(path)) {
+                    std::cout << "Force flag on. Deleting " << path.toStdString() << std::endl;
+                    Utilities::FileHandling::DeleteFile(path);
                 }
+            }
         }
 
         initializeRunnerLog();
@@ -43,22 +43,22 @@ namespace Runner {
         Utilities::FileHandling::WriteLineToFile("UUID,name", property_uuid_name_map_path_);
 
         // Binary properties
-                foreach (QUuid id, properties->GetBinaryVariables()->keys()) {
-                QString line = QString("%1,%2").arg(id.toString()).arg(properties->GetBinaryVariables()->value(id)->name());
-                Utilities::FileHandling::WriteLineToFile(line, property_uuid_name_map_path_);
-            }
+        for (QUuid id : properties->GetBinaryVariables()->keys()) {
+            QString line = QString("%1,%2").arg(id.toString()).arg(properties->GetBinaryVariables()->value(id)->name());
+            Utilities::FileHandling::WriteLineToFile(line, property_uuid_name_map_path_);
+        }
 
         // Continous properties
-                foreach (QUuid id, properties->GetContinousVariables()->keys()) {
-                QString line = QString("%1,%2").arg(id.toString()).arg(properties->GetContinousVariables()->value(id)->name());
-                Utilities::FileHandling::WriteLineToFile(line, property_uuid_name_map_path_);
-            }
+        for (QUuid id : properties->GetContinousVariables()->keys()) {
+            QString line = QString("%1,%2").arg(id.toString()).arg(properties->GetContinousVariables()->value(id)->name());
+            Utilities::FileHandling::WriteLineToFile(line, property_uuid_name_map_path_);
+        }
 
         // Discrete properties
-                foreach (QUuid id, properties->GetDiscreteVariables()->keys()) {
-                QString line = QString("%1,%2").arg(id.toString()).arg(properties->GetDiscreteVariables()->value(id)->name());
-                Utilities::FileHandling::WriteLineToFile(line, property_uuid_name_map_path_);
-            }
+        for (QUuid id : properties->GetDiscreteVariables()->keys()) {
+            QString line = QString("%1,%2").arg(id.toString()).arg(properties->GetDiscreteVariables()->value(id)->name());
+            Utilities::FileHandling::WriteLineToFile(line, property_uuid_name_map_path_);
+        }
     }
 
     void Logger::LogCase(const Optimization::Case *c, QString message)
@@ -78,12 +78,12 @@ namespace Runner {
         }
 
         // variables
-                foreach (QUuid bin_id, c->binary_variables().keys())
-                line << bin_id.toString() << QString::number(c->binary_variables()[bin_id]);
-                foreach (QUuid int_id, c->integer_variables().keys())
-                line << int_id.toString() << QString::number(c->integer_variables()[int_id]);
-                foreach (QUuid rea_id, c->real_variables().keys())
-                line << rea_id.toString() << QString::number(c->real_variables()[rea_id]);
+        for (QUuid bin_id : c->binary_variables().keys())
+            line << bin_id.toString() << QString::number(c->binary_variables()[bin_id]);
+        for (QUuid int_id : c->integer_variables().keys())
+            line << int_id.toString() << QString::number(c->integer_variables()[int_id]);
+        for (QUuid rea_id : c->real_variables().keys())
+            line << rea_id.toString() << QString::number(c->real_variables()[rea_id]);
 
         if (line.size() != cas_header_.size())
             throw std::runtime_error("Case header/line length mismatch in logger.");
@@ -163,21 +163,21 @@ namespace Runner {
     {
         Utilities::FileHandling::WriteLineToFile(c->id().toString(), prod_data_log_path_);
         QString time_string = "TIME: ";
-                foreach (double value, results->GetValueVector(Simulation::Results::Results::Property::Time)) {
-                time_string.append(QString("%1, ").arg(value));
-            }
+        for (double value : results->GetValueVector(Simulation::Results::Results::Property::Time)) {
+            time_string.append(QString("%1, ").arg(value));
+        }
         QString fopt_string = "FOPT: ";
-                foreach (double value, results->GetValueVector(Simulation::Results::Results::Property::CumulativeOilProduction)) {
-                fopt_string.append(QString("%1, ").arg(value));
-            }
+        for (double value : results->GetValueVector(Simulation::Results::Results::Property::CumulativeOilProduction)) {
+            fopt_string.append(QString("%1, ").arg(value));
+        }
         QString fwpt_string = "FWPT: ";
-                foreach (double value, results->GetValueVector(Simulation::Results::Results::Property::CumulativeWaterProduction)) {
-                fwpt_string.append(QString("%1, ").arg(value));
-            }
+        for (double value : results->GetValueVector(Simulation::Results::Results::Property::CumulativeWaterProduction)) {
+            fwpt_string.append(QString("%1, ").arg(value));
+        }
         QString fgpt_string = "FGPT: ";
-                foreach (double value, results->GetValueVector(Simulation::Results::Results::Property::CumulativeGasProduction)) {
-                fgpt_string.append(QString("%1, ").arg(value));
-            }
+        for (double value : results->GetValueVector(Simulation::Results::Results::Property::CumulativeGasProduction)) {
+            fgpt_string.append(QString("%1, ").arg(value));
+        }
         Utilities::FileHandling::WriteLineToFile(time_string, prod_data_log_path_);
         Utilities::FileHandling::WriteLineToFile(fopt_string, prod_data_log_path_);
         Utilities::FileHandling::WriteLineToFile(fwpt_string, prod_data_log_path_);
@@ -221,7 +221,7 @@ namespace Runner {
 
     void Logger::initializeRunnerLog() {
         run_header_ = (QStringList()
-                       << "ElapsedSecs" << "TotalCases"  << "SimulatedCases" << "BookkeepedCases" << "InvalidCases");
+                << "ElapsedSecs" << "TotalCases"  << "SimulatedCases" << "BookkeepedCases" << "InvalidCases");
         start_time_ = QDateTime::currentDateTime();
         simulated_cases_ = 0;
         bookkeeped_cases_ = 0;

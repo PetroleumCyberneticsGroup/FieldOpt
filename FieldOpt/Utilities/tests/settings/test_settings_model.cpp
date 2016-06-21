@@ -65,7 +65,7 @@ namespace {
     TEST_F(ModelSettingsTest, ProducerControls) {
         Model::Well producer = settings_model_->wells().first();
         EXPECT_EQ(3, producer.controls.length());
-        foreach (auto control, producer.controls) {
+        for (auto control : producer.controls) {
             QString expected_name = QString("BHP#PROD#%1").arg(control.time_step);
             EXPECT_STREQ(expected_name.toLatin1().constData(), control.name.toLatin1().constData());
             EXPECT_EQ(Model::ControlMode::BHPControl, control.control_mode);

@@ -47,11 +47,11 @@ void CompassSearch::contract()
 void CompassSearch::perturb()
 {
     QList<Case *> perturbations = QList<Case *>();
-    foreach (QUuid id, tentative_best_case_->integer_variables().keys())
+    for (QUuid id : tentative_best_case_->integer_variables().keys())
         perturbations.append(tentative_best_case_->Perturb(id, Case::SIGN::PLUSMINUS, step_length_));
-    foreach (QUuid id, tentative_best_case_->real_variables().keys())
+    for (QUuid id : tentative_best_case_->real_variables().keys())
         perturbations.append(tentative_best_case_->Perturb(id, Case::SIGN::PLUSMINUS, step_length_));
-    foreach (Case *c, perturbations) {
+    for (Case *c : perturbations) {
         constraint_handler_->SnapCaseToConstraints(c);
     }
     case_handler_->AddNewCases(perturbations);

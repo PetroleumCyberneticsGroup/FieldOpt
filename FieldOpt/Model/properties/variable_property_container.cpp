@@ -94,65 +94,65 @@ namespace Model {
         QHash<QUuid, bool> VariablePropertyContainer::GetBinaryVariableValues() const
         {
             QHash<QUuid, bool> binary_values = QHash<QUuid, bool>();
-                    foreach (QUuid key, binary_variables_->keys())
-                    binary_values[key] = binary_variables_->value(key)->value();
+            for (QUuid key : binary_variables_->keys())
+                binary_values[key] = binary_variables_->value(key)->value();
             return binary_values;
         }
 
         QHash<QUuid, int> VariablePropertyContainer::GetDiscreteVariableValues() const
         {
             QHash<QUuid, int> discrete_values = QHash<QUuid, int>();
-                    foreach (QUuid key, discrete_variables_->keys()) {
-                    discrete_values[key] = discrete_variables_->value(key)->value();
-                }
+            for (QUuid key : discrete_variables_->keys()) {
+                discrete_values[key] = discrete_variables_->value(key)->value();
+            }
             return discrete_values;
         }
 
         QHash<QUuid, double> VariablePropertyContainer::GetContinousVariableValues() const
         {
             QHash<QUuid, double> continous_values = QHash<QUuid, double>();
-                    foreach (QUuid key, continous_variables_->keys()) {
-                    continous_values[key] = continous_variables_->value(key)->value();
-                }
+            for (QUuid key : continous_variables_->keys()) {
+                continous_values[key] = continous_variables_->value(key)->value();
+            }
             return continous_values;
         }
 
         void VariablePropertyContainer::CheckVariableNameUniqueness()
         {
             QList<QString> names = QList<QString>();
-                    foreach (auto var, discrete_variables_->values()) {
-                    if (var->name().size() > 0) {
-                        if (names.contains(var->name()))
-                            throw std::runtime_error("Encountered non-unique variable name: " + var->name().toStdString());
-                        else
-                            names.append(var->name());
-                    }
+            for (auto var : discrete_variables_->values()) {
+                if (var->name().size() > 0) {
+                    if (names.contains(var->name()))
+                        throw std::runtime_error("Encountered non-unique variable name: " + var->name().toStdString());
+                    else
+                        names.append(var->name());
                 }
+            }
 
-                    foreach (auto var, continous_variables_->values()) {
-                    if (var->name().size() > 0) {
-                        if (names.contains(var->name()))
-                            throw std::runtime_error("Encountered non-unique variable name: " + var->name().toStdString());
-                        else
-                            names.append(var->name());
-                    }
+            for (auto var : continous_variables_->values()) {
+                if (var->name().size() > 0) {
+                    if (names.contains(var->name()))
+                        throw std::runtime_error("Encountered non-unique variable name: " + var->name().toStdString());
+                    else
+                        names.append(var->name());
                 }
+            }
 
-                    foreach (auto var, binary_variables_->values()) {
-                    if (var->name().size() > 0) {
-                        if (names.contains(var->name()))
-                            throw std::runtime_error("Encountered non-unique variable name: " + var->name().toStdString());
-                        else
-                            names.append(var->name());
-                    }
+            for (auto var : binary_variables_->values()) {
+                if (var->name().size() > 0) {
+                    if (names.contains(var->name()))
+                        throw std::runtime_error("Encountered non-unique variable name: " + var->name().toStdString());
+                    else
+                        names.append(var->name());
                 }
+            }
         }
 
         QList<ContinousProperty *> VariablePropertyContainer::GetWellSplineVariables(const QString well_name) const {
             QList<ContinousProperty *> spline_vars;
-            foreach (auto var, continous_variables_->values()) {
+            for (auto var : continous_variables_->values()) {
                 if (var->propertyInfo().prop_type == Property::PropertyType::SplinePoint &&
-                        QString::compare(well_name, var->propertyInfo().parent_well_name) == 0) {
+                    QString::compare(well_name, var->propertyInfo().parent_well_name) == 0) {
                     spline_vars.append(var);
                 }
             }
@@ -162,9 +162,9 @@ namespace Model {
 
         QList<ContinousProperty *> VariablePropertyContainer::GetWellControlVariables() const {
             QList<ContinousProperty *> well_controls;
-            foreach (auto var, continous_variables_->values()) {
+            for (auto var : continous_variables_->values()) {
                 if (var->propertyInfo().prop_type == Property::PropertyType::BHP||
-                        var->propertyInfo().prop_type == Property::PropertyType::Rate) {
+                    var->propertyInfo().prop_type == Property::PropertyType::Rate) {
                     well_controls.append(var);
                 }
             }
@@ -178,7 +178,7 @@ namespace Model {
 
         QList<ContinousProperty *> VariablePropertyContainer::GetWellControlVariables(const QString well_name) const {
             QList<ContinousProperty *> well_controls;
-            foreach (auto var, GetWellControlVariables()) {
+            for (auto var : GetWellControlVariables()) {
                 if (QString::compare(well_name, var->propertyInfo().parent_well_name) == 0) {
                     well_controls.append(var);
                 }
@@ -188,7 +188,7 @@ namespace Model {
 
         QList<ContinousProperty *> VariablePropertyContainer::GetWellBHPVariables() const {
             QList<ContinousProperty *> bhp_variables;
-            foreach (auto var, GetWellControlVariables()) {
+            for (auto var : GetWellControlVariables()) {
                 if (var->propertyInfo().prop_type == Property::PropertyType::BHP)
                     bhp_variables.append(var);
             }
@@ -197,8 +197,8 @@ namespace Model {
 
         QList<ContinousProperty *> VariablePropertyContainer::GetWellRateVariables() const {
             QList<ContinousProperty *> rate_variables;
-            foreach (auto var, GetWellControlVariables()) {
-                    if (var->propertyInfo().prop_type == Property::PropertyType::Rate)
+            for (auto var : GetWellControlVariables()) {
+                if (var->propertyInfo().prop_type == Property::PropertyType::Rate)
                     rate_variables.append(var);
             }
             return rate_variables;
@@ -206,7 +206,7 @@ namespace Model {
 
         QList<ContinousProperty *> VariablePropertyContainer::GetWellBHPVariables(QString well_name) const {
             QList<ContinousProperty *> well_bhp_variables;
-            foreach (auto var, GetWellBHPVariables()) {
+            for (auto var : GetWellBHPVariables()) {
                 if (QString::compare(well_name, var->propertyInfo().parent_well_name) == 0) {
                     well_bhp_variables.append(var);
                 }
@@ -216,7 +216,7 @@ namespace Model {
 
         QList<ContinousProperty *> VariablePropertyContainer::GetWellRateVariables(QString well_name) const {
             QList<ContinousProperty *> well_rate_variables;
-            foreach (auto var, GetWellRateVariables()) {
+            for (auto var : GetWellRateVariables()) {
                 if (QString::compare(well_name, var->propertyInfo().parent_well_name) == 0) {
                     well_rate_variables.append(var);
                 }
@@ -226,7 +226,7 @@ namespace Model {
 
         QList<DiscreteProperty *> VariablePropertyContainer::GetWellBlockVariables() const {
             QList<DiscreteProperty *> wb_vars;
-            foreach (auto var, discrete_variables_->values()) {
+            for (auto var : discrete_variables_->values()) {
                 if (var->propertyInfo().prop_type == Property::PropertyType::WellBlock)
                     wb_vars.append(var);
             }
@@ -235,7 +235,7 @@ namespace Model {
 
         QList<DiscreteProperty *> VariablePropertyContainer::GetWellBlockVariables(const QString well_name) const {
             QList<DiscreteProperty *> wb_vars;
-            foreach (auto var, GetWellBlockVariables()) {
+            for (auto var : GetWellBlockVariables()) {
                 if (QString::compare(well_name, var->propertyInfo().parent_well_name) == 0)
                     wb_vars.append(var);
             }
@@ -244,7 +244,7 @@ namespace Model {
 
         QList<ContinousProperty *> VariablePropertyContainer::GetTransmissibilityVariables() const {
             QList<ContinousProperty *> trans_vars;
-            foreach (auto var, continous_variables_->values()) {
+            for (auto var : continous_variables_->values()) {
                 if (var->propertyInfo().prop_type == Property::PropertyType::Transmissibility)
                     trans_vars.append(var);
             }
@@ -253,7 +253,7 @@ namespace Model {
 
         QList<ContinousProperty *> VariablePropertyContainer::GetTransmissibilityVariables(const QString well_name) const {
             QList<ContinousProperty *> trans_vars;
-            foreach (auto var, GetTransmissibilityVariables()) {
+            for (auto var : GetTransmissibilityVariables()) {
                 if (QString::compare(well_name, var->propertyInfo().parent_well_name) == 0)
                     trans_vars.append(var);
             }

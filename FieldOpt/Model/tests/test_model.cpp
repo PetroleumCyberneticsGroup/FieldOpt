@@ -34,7 +34,7 @@ namespace {
         EXPECT_EQ(3, model_->wells()->at(0)->controls()->size());
 
         EXPECT_EQ(9, model_->variables()->GetWellBlockVariables("PROD").size());
-        foreach (int value, model_->variables()->GetDiscreteVariableValues().values()) {
+        for (int value : model_->variables()->GetDiscreteVariableValues().values()) {
             EXPECT_GE(value, 0);
         }
     }
@@ -47,21 +47,21 @@ namespace {
         // Set all continous variables for the PROD well to 1. Should affect BHP and transmissibilty.
         auto producer_vars = model_->variables()->GetWellBHPVariables("PROD");
         producer_vars.append(model_->variables()->GetTransmissibilityVariables("PROD"));
-        foreach (auto var, producer_vars) {
-                std::cout << "Setting value for " << var->id().toString().toStdString() << std::endl;
+        for (auto var : producer_vars) {
+            std::cout << "Setting value for " << var->id().toString().toStdString() << std::endl;
             c->set_real_variable_value(var->id(), 1.0);
         }
 
         // Set all integer coordinates to 1 (should affect positions for all well blocks)
         auto producer_wb_vars = model_->variables()->GetWellBlockVariables("PROD");
-        foreach (auto var, producer_wb_vars) {
-                std::cout << "Setting value for " << var->id().toString().toStdString() << std::endl;
-                c->set_integer_variable_value(var->id(), 1);
+        for (auto var : producer_wb_vars) {
+            std::cout << "Setting value for " << var->id().toString().toStdString() << std::endl;
+            c->set_integer_variable_value(var->id(), 1);
         }
 
         model_->ApplyCase(c);
 
-        foreach (Model::Wells::Control *control, *model_->wells()->first()->controls()) {
+        for (Model::Wells::Control *control : *model_->wells()->first()->controls()) {
             EXPECT_FLOAT_EQ(1.0, control->bhp());
         }
 

@@ -17,18 +17,18 @@ namespace Model {
 
     void Model::ApplyCase(Optimization::Case *c)
     {
-                foreach (QUuid key, c->binary_variables().keys()) {
-                variable_container_->SetBinaryVariableValue(key, c->binary_variables()[key]);
-            }
-                foreach (QUuid key, c->integer_variables().keys()) {
-                variable_container_->SetDiscreteVariableValue(key, c->integer_variables()[key]);
-            }
-                foreach (QUuid key, c->real_variables().keys()) {
-                variable_container_->SetContinousVariableValue(key, c->real_variables()[key]);
-            }
-                foreach (Wells::Well *w, *wells_) {
-                w->Update();
-            }
+        for (QUuid key : c->binary_variables().keys()) {
+            variable_container_->SetBinaryVariableValue(key, c->binary_variables()[key]);
+        }
+        for (QUuid key : c->integer_variables().keys()) {
+            variable_container_->SetDiscreteVariableValue(key, c->integer_variables()[key]);
+        }
+        for (QUuid key : c->real_variables().keys()) {
+            variable_container_->SetContinousVariableValue(key, c->real_variables()[key]);
+        }
+        for (Wells::Well *w : *wells_) {
+            w->Update();
+        }
         verify();
     }
 
@@ -39,16 +39,16 @@ namespace Model {
 
     void Model::verifyWells()
     {
-                foreach (Wells::Well *well, *wells_) {
-                verifyWellTrajectory(well);
-            }
+        for (Wells::Well *well : *wells_) {
+            verifyWellTrajectory(well);
+        }
     }
 
     void Model::verifyWellTrajectory(Wells::Well *w)
     {
-                foreach (Wells::Wellbore::WellBlock *wb, *w->trajectory()->GetWellBlocks()) {
-                verifyWellBlock(wb);
-            }
+        for (Wells::Wellbore::WellBlock *wb : *w->trajectory()->GetWellBlocks()) {
+            verifyWellBlock(wb);
+        }
     }
 
     void Model::verifyWellBlock(Wells::Wellbore::WellBlock *wb)

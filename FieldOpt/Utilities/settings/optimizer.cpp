@@ -88,7 +88,7 @@ namespace Utilities {
                 if (json_constraint["Wells"].toArray().size() == 1) {
                     optimizer_constraint.well = json_constraint["Wells"].toArray()[0].toString();
                 }
-                foreach (auto wname, json_constraint["Wells"].toArray()) {
+                for (auto wname : json_constraint["Wells"].toArray()) {
                     optimizer_constraint.wells.append(wname.toString());
                 }
             }
