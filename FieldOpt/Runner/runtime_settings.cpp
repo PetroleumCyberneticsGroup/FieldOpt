@@ -51,6 +51,10 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
         max_parallel_sims_ = vm["max-parallel-simulations"].as<int>();
     } else max_parallel_sims_ = 0;
 
+    if (vm.count("simulation-timeout")) {
+        simulation_timeout_ = vm["simulation-timeout"].as()<int>();
+    } else simulation_timeout_ = 0;
+
     if (vm.count("runner-type")) {
         QString runner_str = QString::fromStdString(vm["runner-type"].as<std::string>());
         if (QString::compare(runner_str, "serial") == 0)

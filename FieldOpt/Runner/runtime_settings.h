@@ -60,6 +60,7 @@ public:
     bool verbose() const { return verbose_; }
     bool overwrite_existing() const { return overwrite_existing_; }
     int max_parallel_sims() const { return max_parallel_sims_; }
+    int simulation_timeout() const { return simulation_timeout_; }
     RunnerType runner_type() const { return runner_type_; }
     QPair<QVector<double>, QVector<double>> prod_coords() const { return prod_coords_; }
     QPair<QVector<double>, QVector<double>> inje_coords() const { return inje_coords_; }
@@ -72,6 +73,7 @@ private:
     bool verbose_; //!< Verbose mode (i.e. whether or not to print detailed/debug/diagnostic info to the console while running).
     bool overwrite_existing_; //!< Whether or not files in the specified output directory should be overwritten (only relevant if the directory is not empty).
     int max_parallel_sims_; //!< Maximum number of parallel simulations to start. This is important to define if you for example have a limited number of simulator licenses.
+    int simulation_timeout_; //!< Simulations will be terminated after running for simulation_timeout_ times the lowest recorded simulation time up to that point.
     RunnerType runner_type_; //!< The type of runner to be used (e.g. serial or parallel).
     QPair<QVector<double>, QVector<double>> prod_coords_; //!< The spline coordinates for the production well
     QPair<QVector<double>, QVector<double>> inje_coords_; //!< The spline coordinates for the injection well

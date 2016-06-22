@@ -48,6 +48,8 @@ int main(int argc, char *argv[])
                  "path to model grid file (e.g. *.GRID)")
                 ("sim-drv-path,s", po::value<std::string>(),
                  "path to simulator driver file (e.g. *.DATA)")
+                ("simulation-timeout,t", po::value<int>()->implicit_value(0),
+                 "Simulations will be terminated after running for t*(lowest_recorded_time)")
                 ("well-prod-points,p", po::value<std::vector<double>>()->multitoken(),
                  "Production well position coordinates")
                 ("well-inj-points,i", po::value<std::vector<double>>()->multitoken(),
