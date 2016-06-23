@@ -8,4 +8,4 @@
 cd $1
 
 # Execute eclipse with the file path as parameter
-eval /usr/bin/adgprs $2
+exec /usr/bin/adgprs $2
