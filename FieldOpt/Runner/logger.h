@@ -58,9 +58,10 @@ public:
      * case will be registered. If it is the second time, the end time will be registered
      * and the log line will be written.
      * \param c The case that is being simulated.
+     * \param terminated True should be passed if the simulation was, for some reason, terminated.
      * \param message An optional message that will be printed to the console.
      */
-    void LogSimulation(const Optimization::Case *c, QString message="");
+    void LogSimulation(const Optimization::Case *c, bool terminated=false, QString message="");
 
     /*!
      * \brief LogCompdat Log the compdat section for the simulation of a case.
@@ -77,6 +78,7 @@ public:
     void increment_simulated_cases(); //!< Increase the number of simulated cases by 1.
     void increment_bookkeeped_cases(); //!< Increase the number of bookkeeped cases by 1.
     void increment_invalid_cases(); //!< Increase the number of invalid cases by 1.
+    int shortest_simulation_time() { return shortest_simulation_time_; } //!< Get the shortest recorded simulation time.
 
 
 
@@ -101,9 +103,11 @@ private:
     int bookkeeped_cases_;
     int invalid_cases_;
     int total_cases_;
+    int timed_out_simulations_;
 
     QHash<QUuid, QDateTime> sim_start_times_; //!< A list of start times for currently running simulations.
     QDateTime start_time_;
+    int shortest_simulation_time_; //!< The shortest recorded simulation time.
 
     void initializeCaseLog(const Optimization::Case *c);
     void initializeOptimizerLog(const Optimization::Optimizer *opt);

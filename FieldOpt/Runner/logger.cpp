@@ -4,6 +4,7 @@ namespace Runner {
 
     Logger::Logger(RuntimeSettings *rts)
     {
+        shortest_simulation_time_ = 0;
         verbose_ = rts->verbose();
         output_dir_ = rts->output_dir();
         opt_log_path_ = output_dir_ + "/log_optimization.csv";
@@ -14,12 +15,13 @@ namespace Runner {
         prod_data_log_path_ = output_dir_ + "/log_production_data.txt";
         settings_log_path_ = output_dir_ + "/log_settings.csv";
         property_uuid_name_map_path_ = output_dir_ + "/log_property_uuid_name_map.csv";
+        QStringList log_paths = (QStringList() << cas_log_path_ << opt_log_path_ << sim_log_path_
+                                               << compdat_log_path_ << prod_data_log_path_ << run_log_path_
+                                               << settings_log_path_ << property_uuid_name_map_path_);
 
         // Delete existing logs if --force flag is on
         if (rts->overwrite_existing()) {
-            for (auto path : (QStringList() << cas_log_path_ << opt_log_path_ << sim_log_path_
-                                            << compdat_log_path_ << prod_data_log_path_ << run_log_path_
-                                            << settings_log_path_ << property_uuid_name_map_path_)) {
+            for (auto path : log_paths) {
                 if (Utilities::FileHandling::FileExists(path)) {
                     std::cout << "Force flag on. Deleting " << path.toStdString() << std::endl;
                     Utilities::FileHandling::DeleteFile(path);
@@ -119,7 +121,7 @@ namespace Runner {
         }
     }
 
-    void Logger::LogSimulation(const Optimization::Case *c, QString message)
+    void Logger::LogSimulation(const Optimization::Case *c, bool terminated, QString message)
     {
         if (!Utilities::FileHandling::FileExists(sim_log_path_))
             initializeSimulationLog();
@@ -150,6 +152,16 @@ namespace Runner {
                     std::cout << "\t" << sim_header_[i].toStdString() << ": " << line[i].toStdString() << std::endl;
                 }
             }
+
+            if (!terminated) {
+                if (shortest_simulation_time_ == 0 || shortest_simulation_time_ > duration) {
+                    shortest_simulation_time_ = duration;
+                    if (verbose_)
+                        std::cout << "New shortest simulation time recorded: " << shortest_simulation_time_ << "seconds"
+                                  << std::endl;
+                }
+            }
+            else timed_out_simulations_++;
         }
     }
 
@@ -221,12 +233,13 @@ namespace Runner {
 
     void Logger::initializeRunnerLog() {
         run_header_ = (QStringList()
-                << "ElapsedSecs" << "TotalCases"  << "SimulatedCases" << "BookkeepedCases" << "InvalidCases");
+                << "ElapsedSecs" << "TotalCases"  << "SimulatedCases" << "BookkeepedCases" << "InvalidCases" << "TimedOutSimulations");
         start_time_ = QDateTime::currentDateTime();
         simulated_cases_ = 0;
         bookkeeped_cases_ = 0;
         invalid_cases_ = 0;
         total_cases_ = 0;
+        timed_out_simulations_ = 0;
         Utilities::FileHandling::WriteLineToFile(run_header_.join(","), run_log_path_);
     }
 
