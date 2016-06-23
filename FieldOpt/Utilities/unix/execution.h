@@ -62,6 +62,10 @@ namespace Utilities {
          */
         bool ExecShellScriptTimeout(QString script_path, QStringList args, int timeout);
 
+        namespace helpers {
+            pid_t fork_child(QString script_path, QStringList arglist);
+            bool is_pid_running(int pid);
+        }
     }
 }
 #endif // EXECUTION_H

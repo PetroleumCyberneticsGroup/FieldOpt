@@ -83,56 +83,104 @@ namespace Utilities {
             if (!Utilities::FileHandling::FileExists(script_path))
                 throw ::Utilities::FileHandling::FileNotFoundException(script_path);
             assert(args.length() == 2);
-            char *script = script_path.toLatin1().data();
-            char *arg1 = args[0].toLatin1().data();
-            char *arg2 = args[1].toLatin1().data();
 
-            pid_t pid, wpid;
-            pid  = fork();
-            if (pid < 0) {
-                std::cout << "Error forking." << std::endl;
+            pid_t pid;
+            sigset_t mask;
+            sigset_t orig_mask;
+            struct timespec to;
+            sigemptyset (&mask);
+            sigaddset (&mask, SIGCHLD);
+
+            if (sigprocmask(SIG_BLOCK, &mask, &orig_mask) < 0) {
+                perror ("sigprocmask");
                 return false;
             }
-            if (pid == 0) {
-                execlp(script, script, arg1, arg2, NULL); // Execute script as child
+
+            pid  = helpers::fork_child(script_path, args);
+            to.tv_sec = timeout;
+            to.tv_nsec = 0;
+
+            std::cout << "Monitoring child process with pid " << pid << ". Timeout set to " << to.tv_sec << std::endl;
+            do {
+                if (!helpers::is_pid_running(pid)) // If the child no longer exists, return true
+                    return true;
+                int ret = sigtimedwait(&mask, NULL, &to);
+                std::cout << "SIGTIMEDWAIT returned " << ret << " with errno " << errno << std::endl;
+                if (ret < 0) {
+                    if (errno == EINTR) {
+                        std::cout << "Interrupted by a signal other than sigchild." << std::endl;
+                        return false;
+                    }
+                    else if (errno == EAGAIN) {
+                        std::cout << "Timeout, killing child " << pid << std::endl;
+                        if (helpers::is_pid_running(pid)) { // Ensure that child still exists
+                            kill(pid, SIGKILL);
+                            return false;
+                        }
+                        else return true;
+                    }
+                    else if (errno = EINVAL) {
+                        std::cout << "Got error EINVAL" << std::endl;
+                        return false;
+                    }
+                    else {
+                        std::cout << "Error: sigtimedwait" << std::endl;
+                        perror ("sigtimedwait");
+                        return false;
+                    }
+                }
+                else { // sigtimedwait returned something >= 0
+                    std::cout << "sigtimedwait returned something greater than -1" << std::endl;
+                    if (helpers::is_pid_running(pid)) {
+                        std::cout << "For some reason the process is still running - continuing " << std::endl;
+                        continue;
+                    }
+                    else {
+                        std::cout << "breaking" << std::endl;
+                        return true;
+                    }
+                }
+            } while (1);
+
+            if (waitpid(pid, NULL, 0) < 0) {
+                perror ("waitpid");
+                return false;
+            }
+            return true;
+        }
+
+        pid_t helpers::fork_child(QString script_path, QStringList arglist) {
+            QStringList cmdl = script_path.split("/");
+            QString cmd = cmdl.last();
+            QString arg1 = arglist[0];
+            QString arg2 = arglist[1];
+            auto barg1 = arg1.toLatin1();
+            auto barg2 = arg2.toLatin1();
+            int p = fork();
+            if (p == -1) {
+                perror("fork");
+                exit(1);
+            }
+            if (p == 0) {
+                char *carg1 = barg1.data();
+                char *carg2 = barg2.data();
+                char *ccmnd = cmd.toLatin1().data();
+                char *cscrp = script_path.toLatin1().data();
+                char *cargs[] = {ccmnd, carg1, carg2, (char *)0};
+                execvp(cscrp, cargs);
+                delete cargs, carg1, carg2, ccmnd, cscrp;
                 exit(0);
             }
-            else { // Monitor execution of child
-                int waittime = 0;
-                int status;
-                do {
-                    wpid = waitpid(pid, &status, WNOHANG);
-                    if (wpid == 0) {
-                        if (waittime < timeout) {
-                            sleep(1);
-                            waittime++;
-                        }
-                        else {
-                            kill(pid, SIGKILL);
-                            sleep(1);
-                        }
-                    }
-                } while (wpid == 0 && waittime <= timeout);
-                if (WIFEXITED(status)) {
-                    std::cout << "Script with pid " << pid
-                              << " returned with status " << status
-                              << " after " << waittime
-                              << " which is before the allowed " << timeout << " seconds."
-                              << std::endl;
-                    return true;
-                }
-                else if (WIFSIGNALED(status)) {
-                    std::cout << "Script with pid " << pid
-                              << " was terminated with status " << WTERMSIG(status)
-                              << " after " << waittime << " seconds"
-                              << " which is more than the allowed " << timeout << " seconds."
+            return p;
+        }
 
-                              << std::endl;
-                    return false;
-                }
+        bool ::Utilities::Unix::helpers::is_pid_running(int pid) {
+            while(waitpid(-1, 0, WNOHANG) > 0) {
+                // Wait for defunct....
             }
-
-            return false;
+            if (0 == kill(pid, 0))
+                return 1; // Process exists
+            return 0;
         }
 
     }
