@@ -33,14 +33,31 @@ void SerialRunner::Execute()
         }
         else {
             try {
+                bool simulation_success = true;
                 model_->ApplyCase(new_case);
                 logger_->LogSimulation(new_case); // Log sim start
                 logger_->LogCompdat(new_case, simulator_->GetCompdatString()); // Log compdat
-                simulator_->Evaluate();
-                logger_->LogSimulation(new_case); // Log sim end
+                if (logger_->shortest_simulation_time() == 0 || runtime_settings_->simulation_timeout() == 0) {
+                    simulator_->Evaluate();
+                    logger_->LogSimulation(new_case); // Log sim end
+                }
+                else {
+                    simulation_success = simulator_->Evaluate(logger_->shortest_simulation_time() * runtime_settings_->simulation_timeout());
+                    if (!simulation_success && runtime_settings_->verbose()) {
+                        new_case->set_objective_function_value(sentinelValue());
+                        logger_->LogSimulation(new_case, true); // Log sim end
+                        std::cout << "Simulation timed out. Case objective function value set to sentinel value.";
+                    }
+                    else {
+                        logger_->LogSimulation(new_case); // Log sim end
+                    }
+                }
                 logger_->LogProductionData(new_case, simulator_->results());
                 logger_->increment_simulated_cases();
-                new_case->set_objective_function_value(objective_function_->value());
+                if (simulation_success)
+                    new_case->set_objective_function_value(objective_function_->value());
+                else
+                    new_case->set_objective_function_value(sentinelValue());
             } catch (std::runtime_error e) {
                 std::cout << e.what() << std::endl;
                 std::cout << "Invalid well block coordinate encountered. Setting obj. val. to sentinel value." << std::endl;

@@ -52,7 +52,7 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
     } else max_parallel_sims_ = 0;
 
     if (vm.count("simulation-timeout")) {
-        simulation_timeout_ = vm["simulation-timeout"].as()<int>();
+        simulation_timeout_ = vm["simulation-timeout"].as<int>();
     } else simulation_timeout_ = 0;
 
     if (vm.count("runner-type")) {
