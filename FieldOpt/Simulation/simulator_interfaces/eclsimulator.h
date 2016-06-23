@@ -53,6 +53,8 @@ protected:
     // Simulator interface
 public:
     QString GetCompdatString();
+
+    virtual bool Evaluate(int timeout) override;
 };
 
 }

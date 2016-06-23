@@ -1,3 +1,4 @@
+#include <iostream>
 #include "eclsimulator.h"
 #include "Utilities/unix/execution.h"
 #include "simulator_exceptions.h"
@@ -58,6 +59,18 @@ namespace Simulation {
         QString ECLSimulator::GetCompdatString()
         {
             return driver_file_writer_->GetCompdatString();
+        }
+
+        bool ECLSimulator::Evaluate(int timeout) {
+            int t = timeout;
+            if (timeout < 10) t = 10; // Always let simulations run for at least 10 seconds
+
+            driver_file_writer_->WriteDriverFile();
+            std::cout << "Starting monitored simulation with timeout " << timeout << std::endl;
+            bool success = ::Utilities::Unix::ExecShellScriptTimeout(script_path_, script_args_, t);
+            std::cout << "Monitored simulation done." << std::endl;
+            if (success) results_->ReadResults(driver_file_writer_->output_driver_file_name_);
+            return success;
         }
 
     }

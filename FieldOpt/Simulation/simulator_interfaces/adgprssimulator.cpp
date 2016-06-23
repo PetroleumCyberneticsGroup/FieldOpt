@@ -1,3 +1,4 @@
+#include <iostream>
 #include "adgprssimulator.h"
 #include "Utilities/unix/execution.h"
 #include "simulator_exceptions.h"
@@ -37,7 +38,7 @@ namespace Simulation {
             if (results_->isAvailable()) results()->DumpResults();
             copyDriverFiles();
             driver_file_writer_->WriteDriverFile(output_directory_);
-            ::Utilities::Unix::ExecShellScript(script_path_, script_args_);
+            ::Utilities::Unix::ExecShellScriptTimeout(script_path_, script_args_, 1000000);
             results_->ReadResults(output_h5_summary_file_path_);
         }
 
@@ -75,6 +76,19 @@ namespace Simulation {
         QString AdgprsSimulator::GetCompdatString()
         {
             return driver_file_writer_->GetCompdatString();
+        }
+
+        bool AdgprsSimulator::Evaluate(int timeout) {
+            int t = timeout;
+            if (timeout < 10) t = 10; // Always let simulations run for at least 10 seconds
+            if (results_->isAvailable()) results()->DumpResults();
+            copyDriverFiles();
+            driver_file_writer_->WriteDriverFile(output_directory_);
+            std::cout << "Starting monitored simulation with timeout " << timeout << std::endl;
+            bool success = ::Utilities::Unix::ExecShellScriptTimeout(script_path_, script_args_, t);
+            std::cout << "Monitored simulation done." << std::endl;
+            if (success) results_->ReadResults(output_h5_summary_file_path_);
+            return success;
         }
 
     }

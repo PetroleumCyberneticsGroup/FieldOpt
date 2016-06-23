@@ -33,6 +33,7 @@ namespace Simulation {
         public:
             void Evaluate();
             void CleanUp();
+            virtual bool Evaluate(int timeout) override;
 
         private:
             QString initial_driver_file_parent_dir_path_;

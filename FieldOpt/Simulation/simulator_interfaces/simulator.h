@@ -67,6 +67,13 @@ public:
     virtual void Evaluate() = 0;
 
     /*!
+     * \brief Evaluate Writes the driver file and executes a simulation of the model. The simulation
+     * is terminated after the amount of seconds provided in the timeout argument.
+     * @param timeout Number of seconds before the simulation should be terminated.
+     */
+    virtual bool Evaluate(int timeout) = 0;
+
+    /*!
      * \brief CleanUp Perform cleanup after simulation, i.e. delete output files.
      */
     virtual void CleanUp() = 0;
