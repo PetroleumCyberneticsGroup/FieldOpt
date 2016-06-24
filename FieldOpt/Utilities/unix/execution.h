@@ -63,8 +63,25 @@ namespace Utilities {
         bool ExecShellScriptTimeout(QString script_path, QStringList args, int timeout);
 
         namespace helpers {
+            /*!
+             * Create a child-process and execute the given script with the given arguments in it.
+             * @param script_path Path to the script to be executed (must take 2 args).
+             * @param arglist List of arguments to be passed to the script (must be length 2).
+             * @return The PID of the child process.
+             */
             pid_t fork_child(QString script_path, QStringList arglist);
+
+            /*!
+             * Check if a process with the given PID is running (after waiting for defunct processes to terminate properly).
+             * @param pid The PID of the process to check.
+             * @return True if the process is running; otherwise false.
+             */
             bool is_pid_running(int pid);
+
+            /*!
+             * After checking if the process is running using the is_pid_running function, terminate it.
+             * @param pid The PID of the process to terminate.
+             */
             void terminate_process(int pid);
         }
     }

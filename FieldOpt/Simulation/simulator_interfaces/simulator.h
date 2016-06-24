@@ -70,6 +70,7 @@ public:
      * \brief Evaluate Writes the driver file and executes a simulation of the model. The simulation
      * is terminated after the amount of seconds provided in the timeout argument.
      * @param timeout Number of seconds before the simulation should be terminated.
+     * @return True if the simuation completes before the set timeout, otherwise false.
      */
     virtual bool Evaluate(int timeout) = 0;
 
