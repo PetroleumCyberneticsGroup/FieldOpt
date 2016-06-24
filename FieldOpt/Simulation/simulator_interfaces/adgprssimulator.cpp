@@ -38,7 +38,7 @@ namespace Simulation {
             if (results_->isAvailable()) results()->DumpResults();
             copyDriverFiles();
             driver_file_writer_->WriteDriverFile(output_directory_);
-            ::Utilities::Unix::ExecShellScriptTimeout(script_path_, script_args_, 1000000);
+            ::Utilities::Unix::ExecShellScript(script_path_, script_args_);
             results_->ReadResults(output_h5_summary_file_path_);
         }
 
@@ -86,8 +86,9 @@ namespace Simulation {
             driver_file_writer_->WriteDriverFile(output_directory_);
             std::cout << "Starting monitored simulation with timeout " << timeout << std::endl;
             bool success = ::Utilities::Unix::ExecShellScriptTimeout(script_path_, script_args_, t);
-            std::cout << "Monitored simulation done." << std::endl;
-            if (success) results_->ReadResults(output_h5_summary_file_path_);
+            if (success) {
+                results_->ReadResults(output_h5_summary_file_path_);
+            }
             return success;
         }
 
