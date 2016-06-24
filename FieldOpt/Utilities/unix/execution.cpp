@@ -109,6 +109,7 @@ namespace Utilities {
                 if (ret < 0) {
                     if (errno == EINTR) {
                         std::cout << "Interrupted by a signal other than sigchild." << std::endl;
+                        helpers::terminate_process(pid);
                         return false;
                     }
                     else if (errno == EAGAIN) {
@@ -117,36 +118,33 @@ namespace Utilities {
                             kill(pid, SIGKILL);
                             return false;
                         }
-                        else return true;
+                        else {
+                            std::cout << "The process terminated successfully before the set timeout." << std::endl;
+                            return true;
+                        }
                     }
                     else if (errno = EINVAL) {
-                        std::cout << "Got error EINVAL" << std::endl;
+                        std::cout << "Got error EINVAL from process, terminating it." << std::endl;
+                        helpers::terminate_process(pid);
                         return false;
                     }
                     else {
-                        std::cout << "Error: sigtimedwait" << std::endl;
-                        perror ("sigtimedwait");
+                        std::cout << "Got error sigtimedwait from process, terminating it." << std::endl;
+                        helpers::terminate_process(pid);
                         return false;
                     }
                 }
                 else { // sigtimedwait returned something >= 0
-                    std::cout << "sigtimedwait returned something greater than -1" << std::endl;
                     if (helpers::is_pid_running(pid)) {
-                        std::cout << "For some reason the process is still running - continuing " << std::endl;
+                        std::cout << "The process returned a non-error value, but it is still running - continue waiting ... " << std::endl;
                         continue;
                     }
                     else {
-                        std::cout << "breaking" << std::endl;
+                        std::cout << "The process terminated successfully before the set timeout." << std::endl;
                         return true;
                     }
                 }
             } while (1);
-
-            if (waitpid(pid, NULL, 0) < 0) {
-                perror ("waitpid");
-                return false;
-            }
-            return true;
         }
 
         pid_t helpers::fork_child(QString script_path, QStringList arglist) {
@@ -181,6 +179,12 @@ namespace Utilities {
             if (0 == kill(pid, 0))
                 return 1; // Process exists
             return 0;
+        }
+
+        void ::Utilities::Unix::helpers::terminate_process(int pid) {
+            if (is_pid_running(pid)) {
+                kill(pid, SIGKILL);
+            }
         }
 
     }

@@ -65,6 +65,7 @@ namespace Utilities {
         namespace helpers {
             pid_t fork_child(QString script_path, QStringList arglist);
             bool is_pid_running(int pid);
+            void terminate_process(int pid);
         }
     }
 }
