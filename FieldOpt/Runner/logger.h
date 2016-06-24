@@ -58,10 +58,10 @@ public:
      * case will be registered. If it is the second time, the end time will be registered
      * and the log line will be written.
      * \param c The case that is being simulated.
-     * \param terminated True should be passed if the simulation was, for some reason, terminated.
+     * \param success True should be passed if the simulation was, for some reason, terminated.
      * \param message An optional message that will be printed to the console.
      */
-    void LogSimulation(const Optimization::Case *c, bool terminated=false, QString message="");
+    void LogSimulation(const Optimization::Case *c, bool success=true, QString message="");
 
     /*!
      * \brief LogCompdat Log the compdat section for the simulation of a case.

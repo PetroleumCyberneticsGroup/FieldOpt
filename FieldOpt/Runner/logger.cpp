@@ -121,7 +121,7 @@ namespace Runner {
         }
     }
 
-    void Logger::LogSimulation(const Optimization::Case *c, bool terminated, QString message)
+    void Logger::LogSimulation(const Optimization::Case *c, bool success, QString message)
     {
         if (!Utilities::FileHandling::FileExists(sim_log_path_))
             initializeSimulationLog();
@@ -153,15 +153,20 @@ namespace Runner {
                 }
             }
 
-            if (!terminated) {
+            if (success) {
+                if (verbose_)
+                    std::cout << "Simulation completed successfully after " << duration << " seconds." << std::endl;
                 if (shortest_simulation_time_ == 0 || shortest_simulation_time_ > duration) {
                     shortest_simulation_time_ = duration;
                     if (verbose_)
-                        std::cout << "New shortest simulation time recorded: " << shortest_simulation_time_ << "seconds"
-                                  << std::endl;
+                        std::cout << "New shortest simulation time recorded: " << shortest_simulation_time_ << "seconds" << std::endl;
                 }
             }
-            else timed_out_simulations_++;
+            else {
+                if (verbose_)
+                    std::cout << "Simulation was terminated after " << duration << " seconds." << std::endl;
+                timed_out_simulations_++;
+            }
         }
     }
 
@@ -244,14 +249,14 @@ namespace Runner {
     }
 
     void Logger::LogRunnerStats() {
-        QString line = QString("%1,%2,%3,%4,%5")
+        QString line = QString("%1,%2,%3,%4,%5,%6")
                 .arg((QDateTime::currentMSecsSinceEpoch() - start_time_.currentMSecsSinceEpoch()) / 1000.0)
-                .arg(total_cases_).arg(simulated_cases_).arg(bookkeeped_cases_).arg(invalid_cases_);
+                .arg(total_cases_).arg(simulated_cases_).arg(bookkeeped_cases_).arg(invalid_cases_).arg(timed_out_simulations_);
         Utilities::FileHandling::WriteLineToFile(line, run_log_path_);
         if (verbose_) {
-            QString stats = QString("Runner stats:  Time elapsed: %1\n\tCases:\n\ttotal: %2 -- simulated: %3 -- bookkeeped: %4 -- invalid: %5")
+            QString stats = QString("Runner stats:  Time elapsed: %1\n\tCases:\n\ttotal: %2 -- simulated: %3 -- bookkeeped: %4 -- invalid: %5 -- timedout: %6")
                     .arg((QDateTime::currentMSecsSinceEpoch() - start_time_.currentMSecsSinceEpoch()) / 1000.0)
-                    .arg(total_cases_).arg(simulated_cases_).arg(bookkeeped_cases_).arg(invalid_cases_);
+                    .arg(total_cases_).arg(simulated_cases_).arg(bookkeeped_cases_).arg(invalid_cases_).arg(timed_out_simulations_);
             std::cout << stats.toStdString() << std::endl;
         }
     }
