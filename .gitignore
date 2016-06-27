@@ -47,6 +47,11 @@ build/*
 # Test folders
 test-*
 
+# Ignore ADGPRS output files
+*.SIM.H5
+*.res_partition.bin
+*.log.txt
+
 # Ignore ECLIPSE output files
 *.DBG
 *.ECLEND
