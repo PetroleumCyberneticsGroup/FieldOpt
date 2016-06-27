@@ -33,7 +33,7 @@
 namespace Simulation { namespace ExecutionScripts {
 
     /*!
-     * \brief The DefaultScripts enum lists the availabel scripts.
+     * \brief The DefaultScripts enum lists the available scripts.
      */
     enum Script {
         csh_eclrun,
@@ -61,4 +61,3 @@ namespace Simulation { namespace ExecutionScripts {
 }}
 
 #endif // EXECUTION_SCRIPTS
-
