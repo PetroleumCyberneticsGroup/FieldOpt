@@ -42,14 +42,14 @@ QString Wellstre::createWellEntry(Model::Wells::Well *well)
         base_entry_line_[2] = "0";
         base_entry_line_[3] = "0";
 
-        switch (well->prefered_phase()) {
-        case Utilities::Settings::Model::PreferedPhase::Water:
+        switch (well->preferred_phase()) {
+        case Utilities::Settings::Model::PreferredPhase::Water:
             base_entry_line_[3] = "1";
             break;
-        case Utilities::Settings::Model::PreferedPhase::Gas:
+        case Utilities::Settings::Model::PreferredPhase::Gas:
             base_entry_line_[1] = "1";
             break;
-        case Utilities::Settings::Model::PreferedPhase::Oil:
+        case Utilities::Settings::Model::PreferredPhase::Oil:
             base_entry_line_[2] = "1";
             break;
         default:
@@ -63,11 +63,11 @@ QString Wellstre::createWellEntry(Model::Wells::Well *well)
         base_entry_line_[1] = "0";
         base_entry_line_[2] = "0";
 
-        switch (well->prefered_phase()) {
-        case Utilities::Settings::Model::PreferedPhase::Water:
+        switch (well->preferred_phase()) {
+        case Utilities::Settings::Model::PreferredPhase::Water:
             base_entry_line_[1] = "1";
             break;
-        case Utilities::Settings::Model::PreferedPhase::Oil:
+        case Utilities::Settings::Model::PreferredPhase::Oil:
             base_entry_line_[2] = "1";
             break;
         default:

@@ -213,15 +213,15 @@ namespace Utilities {
                 well.controls.append(control);
             }
 
-            // Prefered Phase
-            if (QString::compare("Oil", json_well["PreferedPhase"].toString()) == 0)
-                well.prefered_phase = PreferedPhase::Oil;
-            else if (QString::compare("Water", json_well["PreferedPhase"].toString()) == 0)
-                well.prefered_phase = PreferedPhase::Water;
-            else if (QString::compare("Gas", json_well["PreferedPhase"].toString()) == 0)
-                well.prefered_phase = PreferedPhase::Gas;
-            else if (QString::compare("Liquid", json_well["PreferedPhase"].toString()) == 0)
-                well.prefered_phase = PreferedPhase::Liquid;
+            // Preferred Phase
+            if (QString::compare("Oil", json_well["PreferredPhase"].toString()) == 0)
+                well.preferred_phase = PreferredPhase::Oil;
+            else if (QString::compare("Water", json_well["PreferredPhase"].toString()) == 0)
+                well.preferred_phase = PreferredPhase::Water;
+            else if (QString::compare("Gas", json_well["PreferredPhase"].toString()) == 0)
+                well.preferred_phase = PreferredPhase::Gas;
+            else if (QString::compare("Liquid", json_well["PreferredPhase"].toString()) == 0)
+                well.preferred_phase = PreferredPhase::Liquid;
 
             return well;
         }

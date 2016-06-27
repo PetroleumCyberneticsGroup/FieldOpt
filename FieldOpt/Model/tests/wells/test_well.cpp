@@ -20,7 +20,7 @@ TEST_F(WellTest, BasicFields) {
     EXPECT_STREQ("PROD", producer_well_->name().toLatin1().constData());
     EXPECT_FLOAT_EQ(0.75, producer_well_->wellbore_radius());
     EXPECT_EQ(::Utilities::Settings::Model::WellType::Producer, producer_well_->type());
-    EXPECT_EQ(::Utilities::Settings::Model::PreferedPhase::Oil, producer_well_->prefered_phase());
+    EXPECT_EQ(::Utilities::Settings::Model::PreferredPhase::Oil, producer_well_->preferred_phase());
 }
 
 TEST_F(WellTest, Trajectory) {

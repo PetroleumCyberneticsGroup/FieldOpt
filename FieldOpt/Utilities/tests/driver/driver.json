@@ -75,7 +75,7 @@
                 "Name": "PROD",
                 "Type": "Producer",
                 "DefinitionType": "WellBlocks",
-                "PreferedPhase": "Oil",
+                "PreferredPhase": "Oil",
                 "WellboreRadius": 0.75,
                 "Direction": "X",
                 "WellBlocks":  [
@@ -147,7 +147,7 @@
                 "Name": "INJ",
                 "Type": "Injector",
                 "DefinitionType": "WellSpline",
-                "PreferedPhase": "Water",
+                "PreferredPhase": "Water",
                 "WellboreRadius": 0.75,
                 "SplinePoints": {
                     "Heel": {
@@ -178,7 +178,7 @@
                 "Name": "TESTW",
                 "Type": "Producer",
                 "DefinitionType": "WellSpline",
-                "PreferedPhase": "Oil",
+                "PreferredPhase": "Oil",
                 "WellboreRadius": 0.75,
                 "SplinePoints": {
                     "Heel": {

@@ -33,7 +33,7 @@ namespace {
         EXPECT_STREQ("PROD", producer.name.toLatin1().constData());
         EXPECT_EQ(Model::WellType::Producer, producer.type);
         EXPECT_EQ(Model::WellDefinitionType::WellBlocks, producer.definition_type);
-        EXPECT_EQ(Model::PreferedPhase::Oil, producer.prefered_phase);
+        EXPECT_EQ(Model::PreferredPhase::Oil, producer.preferred_phase);
         EXPECT_FLOAT_EQ(0.75, producer.wellbore_radius);
         EXPECT_EQ(Model::Direction::X, producer.direction);
     }
@@ -81,7 +81,7 @@ namespace {
         Model::Well injector = settings_model_->wells()[1];
         EXPECT_STREQ("INJ", injector.name.toLatin1().constData());
         EXPECT_EQ(Model::WellType::Injector, injector.type);
-        EXPECT_EQ(Model::PreferedPhase::Water, injector.prefered_phase);
+        EXPECT_EQ(Model::PreferredPhase::Water, injector.preferred_phase);
         EXPECT_FLOAT_EQ(0.75, injector.wellbore_radius);
         EXPECT_EQ(Model::WellDefinitionType::WellSpline, injector.definition_type);
     }

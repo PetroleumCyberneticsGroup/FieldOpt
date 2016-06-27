@@ -54,7 +54,7 @@ public:
     enum WellDefinitionType : int { WellBlocks=41, WellSpline=42 };
     enum WellCompletionType : int { Perforation=61 };
     enum WellState : int { WellOpen=71, WellShut=72 };
-    enum PreferedPhase : int { Oil=81, Water=82, Gas=83, Liquid=84 };
+    enum PreferredPhase : int { Oil=81, Water=82, Gas=83, Liquid=84 };
     enum Direction : int { X=91, Y=92, Z=93 };
 
     struct Reservoir {
@@ -95,7 +95,7 @@ public:
             bool is_variable;
             QString name;
         };
-        PreferedPhase prefered_phase; //!< The prefered phase for the well
+        PreferredPhase preferred_phase; //!< The preferred phase for the well
         QString name; //!< The name to be used for the well.
         WellType type; //!< The well type, i.e. producer or injector.
         double wellbore_radius; //!< The wellbore radius

@@ -35,13 +35,13 @@ namespace Model {
 
             struct Heel { int i; int j; int k; };
 
-            enum PreferedPhase { Oil, Gas, Water, Liquid };
+            enum PreferredPhase { Oil, Gas, Water, Liquid };
 
             QString name() const { return name_; }
             ::Utilities::Settings::Model::WellType type() const { return type_; }
             bool IsProducer();
             bool IsInjector();
-            ::Utilities::Settings::Model::PreferedPhase prefered_phase() const { return prefered_phase_; }
+            ::Utilities::Settings::Model::PreferredPhase preferred_phase() const { return preferred_phase_; }
             double wellbore_radius() const { return wellbore_radius_->value(); }
             Wellbore::Trajectory *trajectory() { return trajectory_; }
             QList<Control *> *controls() { return controls_; }
@@ -53,7 +53,7 @@ namespace Model {
         private:
             QString name_;
             ::Utilities::Settings::Model::WellType type_;
-            ::Utilities::Settings::Model::PreferedPhase prefered_phase_;
+            ::Utilities::Settings::Model::PreferredPhase preferred_phase_;
             Properties::ContinousProperty *wellbore_radius_;
             Wellbore::Trajectory *trajectory_;
 

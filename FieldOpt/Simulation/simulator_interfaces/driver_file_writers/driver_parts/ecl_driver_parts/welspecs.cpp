@@ -35,21 +35,21 @@ namespace Simulation {
                         entry[2] = QString::number(well->heel_i());
                         entry[3] = QString::number(well->heel_j());
 
-                        switch (well->prefered_phase()) {
-                            case Utilities::Settings::Model::PreferedPhase::Oil:
+                        switch (well->preferred_phase()) {
+                            case Utilities::Settings::Model::PreferredPhase::Oil:
                                 entry[5] = "OIL";
                                 break;
-                            case Utilities::Settings::Model::PreferedPhase::Water:
+                            case Utilities::Settings::Model::PreferredPhase::Water:
                                 entry[5] = "WATER";
                                 break;
-                            case Utilities::Settings::Model::PreferedPhase::Gas:
+                            case Utilities::Settings::Model::PreferredPhase::Gas:
                                 entry[5] = "GAS";
                                 break;
-                            case Utilities::Settings::Model::PreferedPhase::Liquid:
+                            case Utilities::Settings::Model::PreferredPhase::Liquid:
                                 entry[5] = "LIQ";
                                 break;
                             default:
-                                throw std::runtime_error("The prefered phase was not recognized for well " + well->name().toStdString());
+                                throw std::runtime_error("The preferred phase was not recognized for well " + well->name().toStdString());
                         }
                         return entry;
                     }

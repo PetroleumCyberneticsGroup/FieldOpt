@@ -50,7 +50,7 @@
                 "Name": "PRODUCER",
                 "Type": "Producer",
                 "DefinitionType": "WellSpline",
-                "PreferedPhase": "Oil",
+                "PreferredPhase": "Oil",
                 "WellboreRadius": 0.1905,
                 "SplinePoints": {
                     "Heel": {
@@ -79,7 +79,7 @@
                 "Name": "INJECTOR",
                 "Type": "Injector",
                 "DefinitionType": "WellSpline",
-                "PreferedPhase": "Water",
+                "PreferredPhase": "Water",
                 "WellboreRadius": 0.1905,
                 "SplinePoints": {
                     "Heel": {
