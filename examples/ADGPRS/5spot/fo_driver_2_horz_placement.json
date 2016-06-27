@@ -7,9 +7,9 @@
         "Type": "Compass",
         "Mode": "Maximize",
         "Parameters": {
-            "MaxEvaluations": 750,
-            "InitialStepLength": 256.0,
-            "MinimumStepLength": 24.0
+            "MaxEvaluations": 2000,
+            "InitialStepLength": 128.0,
+            "MinimumStepLength": 32.0
         },
         "Objective": {
             "Type": "WeightedSum",
@@ -28,16 +28,16 @@
             {
                 "Wells": ["INJECTOR", "PRODUCER"],
                 "Type": "CombinedWellSplineLengthInterwellDistance",
-                "MinLength": 400,
-                "MaxLength": 1200,
+                "MinLength": 300,
+                "MaxLength": 800,
                 "MinDistance": 300,
-                "MaxIterations": 50
+                "MaxIterations": 100
             }
         ]
     },
     "Simulator": {
         "Type": "ADGPRS",
-        "FluidModel": "DeadOil",
+        "FluidModel": "DeadOil",        
         "ExecutionScript": "bash_adgprs"
     },
     "Model": {
@@ -48,9 +48,10 @@
         "Wells": [
             {
                 "Name": "PRODUCER",
+                "Group": "G1",
                 "Type": "Producer",
                 "DefinitionType": "WellSpline",
-                "PreferedPhase": "Oil",
+                "PreferredPhase": "Oil",
                 "WellboreRadius": 0.1905,
                 "SplinePoints": {
                     "Heel": {
@@ -73,13 +74,14 @@
                         "Mode": "BHP",
                         "BHP": 2000.0
                     }
-                ],
+                ]
             },
             {
                 "Name": "INJECTOR",
+                "Group": "G1",
                 "Type": "Injector",
                 "DefinitionType": "WellSpline",
-                "PreferedPhase": "Water",
+                "PreferredPhase": "Water",
                 "WellboreRadius": 0.1905,
                 "SplinePoints": {
                     "Heel": {
