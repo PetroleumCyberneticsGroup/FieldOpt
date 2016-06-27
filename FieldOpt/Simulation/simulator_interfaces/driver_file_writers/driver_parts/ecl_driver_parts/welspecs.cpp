@@ -32,6 +32,7 @@ namespace Simulation {
                     {
                         QStringList entry = QStringList(base_entry_line_);
                         entry[0] = well->name();
+                        entry[1] = well->group();
                         entry[2] = QString::number(well->heel_i());
                         entry[3] = QString::number(well->heel_j());
 

@@ -90,6 +90,10 @@ namespace Utilities {
 
             // Well Type
             QString type = json_well["Type"].toString();
+
+            // Well group
+            well.group = json_well["Group"].toString();
+
             if (QString::compare(type, "Producer") == 0)
                 well.type = WellType::Producer;
             else if (QString::compare(type, "Injector") == 0)

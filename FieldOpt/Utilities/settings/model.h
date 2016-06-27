@@ -98,6 +98,7 @@ public:
         PreferredPhase preferred_phase; //!< The preferred phase for the well
         QString name; //!< The name to be used for the well.
         WellType type; //!< The well type, i.e. producer or injector.
+        QString group; //!< The group of the well.
         double wellbore_radius; //!< The wellbore radius
         Direction direction; //!< Direction of penetration
         WellDefinitionType definition_type; //!< How the well path is defined.

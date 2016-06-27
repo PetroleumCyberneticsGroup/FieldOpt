@@ -39,6 +39,7 @@ namespace Model {
 
             QString name() const { return name_; }
             ::Utilities::Settings::Model::WellType type() const { return type_; }
+            QString group() const { return group_; }
             bool IsProducer();
             bool IsInjector();
             ::Utilities::Settings::Model::PreferredPhase preferred_phase() const { return preferred_phase_; }
@@ -53,6 +54,7 @@ namespace Model {
         private:
             QString name_;
             ::Utilities::Settings::Model::WellType type_;
+            QString group_;
             ::Utilities::Settings::Model::PreferredPhase preferred_phase_;
             Properties::ContinousProperty *wellbore_radius_;
             Wellbore::Trajectory *trajectory_;

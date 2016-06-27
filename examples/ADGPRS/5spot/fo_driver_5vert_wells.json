@@ -37,7 +37,7 @@
     },
     "Simulator": {
         "Type": "ADGPRS",
-        "FluidModel": "DeadOil",
+        "FluidModel": "DeadOil",        
         "ExecutionScript": "bash_adgprs"
     },
     "Model": {
@@ -48,6 +48,7 @@
         "Wells": [
             {
                 "Name": "PRODUCER",
+                "Group": "G1",
                 "Type": "Producer",
                 "DefinitionType": "WellSpline",
                 "PreferredPhase": "Oil",
@@ -77,6 +78,7 @@
             },
             {
                 "Name": "INJECTOR",
+                "Group": "G1",
                 "Type": "Injector",
                 "DefinitionType": "WellSpline",
                 "PreferredPhase": "Water",
