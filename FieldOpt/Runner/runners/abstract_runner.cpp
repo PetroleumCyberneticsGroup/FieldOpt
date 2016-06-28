@@ -65,6 +65,8 @@ void AbstractRunner::InitializeSettings(QString output_subdirectory)
         settings_->simulator()->set_driver_file_path(runtime_settings_->simulator_driver_path());
     if (runtime_settings_->grid_file_path().length() > 0)
         settings_->model()->set_reservoir_grid_path(runtime_settings_->grid_file_path());
+    if (runtime_settings_->simulator_exec_script_path().length() > 0)
+        settings_->simulator()->set_execution_script_path(runtime_settings_->simulator_exec_script_path());
 }
 
 void AbstractRunner::InitializeModel()

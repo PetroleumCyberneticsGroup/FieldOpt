@@ -57,7 +57,7 @@ public:
     QString output_dir() const { return output_dir_; }
     QString simulator_driver_path() const { return simulator_driver_path_; }
     QString grid_file_path() const { return grid_file_path_; }
-    QString exec_file_path() const { return exec_file_path_; }
+    QString simulator_exec_script_path() const { return simulator_exec_script_path_; }
     bool verbose() const { return verbose_; }
     bool overwrite_existing() const { return overwrite_existing_; }
     int max_parallel_sims() const { return max_parallel_sims_; }
@@ -71,7 +71,7 @@ private:
     QString output_dir_; //!< Directory in which to write all output.
     QString simulator_driver_path_; //!< Path to simulator driver file.
     QString grid_file_path_; //!< Path to reservoir grid file.
-    QString exec_file_path_; //!< Path to executable performing reservoir simulation.
+    QString simulator_exec_script_path_; //!< Path to script that launches the simulator.
     bool verbose_; //!< Verbose mode (i.e. whether or not to print detailed/debug/diagnostic info to the console while running).
     bool overwrite_existing_; //!< Whether or not files in the specified output directory should be overwritten (only relevant if the directory is not empty).
     int max_parallel_sims_; //!< Maximum number of parallel simulations to start. This is important to define if you for example have a limited number of simulator licenses.

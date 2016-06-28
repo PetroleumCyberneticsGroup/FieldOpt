@@ -29,7 +29,10 @@ namespace Simulation {
             results_ = new Simulation::Results::AdgprsResults();
             driver_file_writer_ = new DriverFileWriters::AdgprsDriverFileWriter(settings_, model_);
 
-            script_path_ = ExecutionScripts::GetScriptPath(settings->simulator()->script_name());
+            if (settings->simulator()->custom_simulator_execution_script_path().length() > 0)
+                script_path_ = settings->simulator()->custom_simulator_execution_script_path();
+            else
+                script_path_ = ExecutionScripts::GetScriptPath(settings->simulator()->script_name());
             script_args_ = (QStringList() << output_directory_ << output_directory_+"/"+initial_driver_file_name_);
         }
 
