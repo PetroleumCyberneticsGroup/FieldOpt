@@ -49,8 +49,8 @@ int main(int argc, char *argv[])
                  "path to model grid file (e.g. *.GRID)")
                 ("sim-exec-path,e", po::value<std::string>(),
                  "path to script that executes the reservoir simulation")
-                ("fieldopt-build-path,b", po::value<std::string>(),
-                 "path to FieldOpt build folder")
+                ("fieldopt-build-dir,b", po::value<std::string>(),
+                 "path to FieldOpt build directory")
                 ("sim-drv-path,s", po::value<std::string>(),
                  "path to simulator driver file (e.g. *.DATA)")
                 ("simulation-timeout,t", po::value<int>(&simulation_timeout)->default_value(0),

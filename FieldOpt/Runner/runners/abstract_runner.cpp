@@ -60,16 +60,19 @@ void AbstractRunner::InitializeSettings(QString output_subdirectory)
     settings_ = new Utilities::Settings::Settings(runtime_settings_->driver_file(), output_directory);
     settings_->set_verbosity(runtime_settings_->verbose());
 
-    // Override simulator driver, grid file and simulator executable paths if they have been passed as command line arguments
+    // Override simulator driver file if it has been passed as command line arguments
     if (runtime_settings_->simulator_driver_path().length() > 0)
         settings_->simulator()->set_driver_file_path(runtime_settings_->simulator_driver_path());
+    // Override grid file if it has been passed as command line arguments
     if (runtime_settings_->grid_file_path().length() > 0)
         settings_->model()->set_reservoir_grid_path(runtime_settings_->grid_file_path());
+    // Override simulator executable path if it has been passed as command line arguments
     if (runtime_settings_->simulator_exec_script_path().length() > 0)
         settings_->simulator()->set_execution_script_path(runtime_settings_->simulator_exec_script_path());
 
-    if (runtime_settings_->simulator_fieldopt_build_path().length() > 0)
-        settings_->simulator()->set_fieldopt_build_path(runtime_settings_->simulator_fieldopt_build_path());
+    // Override FieldOpt build directory path if it has been passed as command line arguments
+    if (runtime_settings_->fieldopt_build_dir().length() > 0)
+        settings_->simulator()->set_fieldopt_build_path(runtime_settings_->fieldopt_build_dir());
 }
 
 void AbstractRunner::InitializeModel()
