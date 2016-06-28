@@ -117,7 +117,7 @@ void Utilities::FileHandling::CopyDirectory(QString origin, QString destination)
     if (!DirectoryExists(origin))
         throw DirectoryNotFoundException("Can't find parent directory for copying: ", origin);
     if (!DirectoryExists(destination))
-        throw DirectoryNotFoundException("Cant findt destination (parent) directory for copying: ", destination);
+        throw DirectoryNotFoundException("Can't find destination (parent) directory for copying: ", destination);
     QDir original(origin);
     QFileInfoList entries = original.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot, QDir::DirsLast);
 
