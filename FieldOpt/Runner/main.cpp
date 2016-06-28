@@ -47,6 +47,8 @@ int main(int argc, char *argv[])
                  "type of runner (serial/oneoff)")
                 ("grid-path,g", po::value<std::string>(),
                  "path to model grid file (e.g. *.GRID)")
+                ("exec-path,e", po::value<std::string>(),
+                 "path to executable running reservoir simulation")
                 ("sim-drv-path,s", po::value<std::string>(),
                  "path to simulator driver file (e.g. *.DATA)")
                 ("simulation-timeout,t", po::value<int>(&simulation_timeout)->default_value(0),

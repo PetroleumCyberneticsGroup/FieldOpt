@@ -77,6 +77,13 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
         else grid_file_path_ = grid_path;
     } else grid_file_path_ = "";
 
+    if (vm.count("exec-path")) {
+        QString exec_path = QString::fromStdString(vm["exec-path"].as<std::string>());
+        if (!Utilities::FileHandling::FileExists(exec_path))
+            throw std::runtime_error("Custom executable file path specified as argument does not exist.");
+        else exec_file_path_ = exec_path;
+    } else exec_file_path_ = "";
+
     if (vm.count("well-prod-points")) {
         if (vm["well-prod-points"].as<std::vector<double>>().size() != 6)
             throw std::runtime_error("Exactly six coordinates must be provided for the production well position.");
@@ -99,6 +106,7 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
         std::cout << "Output dir:     " << output_dir().toStdString() << std::endl;
         std::cout << "Sim driver file:" << (simulator_driver_path_.length() > 0 ? simulator_driver_path_.toStdString() : "from FieldOpt driver file") << std::endl;
         std::cout << "Grid file path: " << (grid_file_path_.length() > 0 ? grid_file_path_.toStdString() : "from FieldOpt driver file") << std::endl;
+        std::cout << "Exec file path: " << (exec_file_path_.length() > 0 ? exec_file_path_.toStdString() : "from FieldOpt driver file") << std::endl;
         std::cout << "Runner type:    " << runnerTypeString().toStdString() << std::endl;
         std::cout << "Verbose output: " << verbose_ << std::endl;
         std::cout << "Overwr. existing out files: " << overwrite_existing_ << std::endl;
