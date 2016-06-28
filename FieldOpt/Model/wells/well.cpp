@@ -12,7 +12,10 @@ namespace Model {
 
             name_ = well_settings.name;
             type_ = well_settings.type;
-            group_ = well_settings.group;
+            if (well_settings.group.length() >= 1)
+                group_ = well_settings.group;
+            else group_ = "";
+
             preferred_phase_ = well_settings.preferred_phase;
 
             wellbore_radius_ = new Properties::ContinousProperty(well_settings.wellbore_radius);

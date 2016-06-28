@@ -92,7 +92,9 @@ namespace Utilities {
             QString type = json_well["Type"].toString();
 
             // Well group
-            well.group = json_well["Group"].toString();
+            if (json_well.contains("Group"))
+                well.group = json_well["Group"].toString();
+            else well.group = "";
 
             if (QString::compare(type, "Producer") == 0)
                 well.type = WellType::Producer;
