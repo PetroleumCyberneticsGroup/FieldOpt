@@ -120,6 +120,8 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
     QString RuntimeSettings::runnerTypeString() const {
     if (runner_type_ == RunnerType::SERIAL)
         return "serial";
+    else if (runner_type_ == RunnerType::ONEOFF)
+        return "oneoff";
     else return "NOT SET";
 }
 
