@@ -70,19 +70,26 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
         else simulator_driver_path_ = sim_drv_path;
     } else simulator_driver_path_ = "";
 
+    if (vm.count("sim-exec-path")) {
+        QString sim_exec_path = QString::fromStdString(vm["sim-exec-path"].as<std::string>());
+        if (!Utilities::FileHandling::FileExists(sim_exec_path))
+            throw std::runtime_error("Custom executable file path specified as argument does not exist.");
+        else simulator_exec_script_path_ = sim_exec_path;
+    } else simulator_exec_script_path_ = "";
+
+    if (vm.count("fieldopt-build-path")) {
+        QString fieldopt_build_path = QString::fromStdString(vm["fieldopt-build-path"].as<std::string>());
+        if (!Utilities::FileHandling::FileExists(fieldopt_build_path))
+            throw std::runtime_error("Custom executable file path specified as argument does not exist.");
+        else simulator_fieldopt_build_path_ = fieldopt_build_path;
+    } else simulator_fieldopt_build_path_ = "";
+
     if (vm.count("grid-path")) {
         QString grid_path = QString::fromStdString(vm["grid-path"].as<std::string>());
         if (!Utilities::FileHandling::FileExists(grid_path))
             throw std::runtime_error("Grid file path specified as argument does not exist.");
         else grid_file_path_ = grid_path;
     } else grid_file_path_ = "";
-
-    if (vm.count("sim-exec-path")) {
-        QString exec_path = QString::fromStdString(vm["sim-exec-path"].as<std::string>());
-        if (!Utilities::FileHandling::FileExists(exec_path))
-            throw std::runtime_error("Custom executable file path specified as argument does not exist.");
-        else simulator_exec_script_path_ = exec_path;
-    } else simulator_exec_script_path_ = "";
 
     if (vm.count("well-prod-points")) {
         if (vm["well-prod-points"].as<std::vector<double>>().size() != 6)
@@ -107,6 +114,7 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
         std::cout << "Sim driver file:" << (simulator_driver_path_.length() > 0 ? simulator_driver_path_.toStdString() : "from FieldOpt driver file") << std::endl;
         std::cout << "Grid file path: " << (grid_file_path_.length() > 0 ? grid_file_path_.toStdString() : "from FieldOpt driver file") << std::endl;
         std::cout << "Exec file path: " << (simulator_exec_script_path_.length() > 0 ? simulator_exec_script_path_.toStdString() : "from FieldOpt driver file") << std::endl;
+        std::cout << "Build path: " << (simulator_fieldopt_build_path_.length() > 0 ? simulator_fieldopt_build_path_.toStdString() : "from FieldOpt driver file") << std::endl;
         std::cout << "Runner type:    " << runnerTypeString().toStdString() << std::endl;
         std::cout << "Verbose output: " << verbose_ << std::endl;
         std::cout << "Overwr. existing out files: " << overwrite_existing_ << std::endl;

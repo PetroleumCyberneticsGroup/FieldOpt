@@ -52,6 +52,7 @@ public:
     QString driver_file_path() const { return driver_file_path_; } //!< Get the path to the driver file.
     void set_driver_file_path(const QString path) { driver_file_path_ = path; } //!< Set the driver file path. Used when the path is passed by command line argument.
     void set_execution_script_path (const QString path) { custom_exec_script_path_ = path; } //!< Set a custom path for the simulator execution script.
+    void set_fieldopt_build_path (const QString path) { fieldopt_build_path_ = path; } //!< Specify FieldOpt build directory.
     QString custom_simulator_execution_script_path() const { return custom_exec_script_path_; }
     QString output_directory() const { return output_directory_; } //!< Get the output directory path.
     SimulatorFluidModel fluid_model() const { return fluid_model_; } //!< Get the fluid model
@@ -65,6 +66,7 @@ private:
     QString driver_file_path_;
     QString output_directory_;
     QString custom_exec_script_path_;
+    QString fieldopt_build_path_;
 };
 
 }
