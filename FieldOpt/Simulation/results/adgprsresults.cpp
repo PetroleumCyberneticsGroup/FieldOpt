@@ -25,6 +25,16 @@ void AdgprsResults::ReadResults(QString file_path)
     setAvailable();
 }
 
+void AdgprsResults::ReadResults(QString file_path, QString build_dir)
+{
+    if (file_path.split(".SIM.H5").length() == 1)
+        file_path = file_path + ".SIM.H5"; // Append the suffix if it's not already there
+    file_path_ = file_path;
+    build_dir_ = build_dir;
+    summary_reader_ = new AdgprsResultsReader::AdgprsResultsReader(file_path, build_dir);
+    setAvailable();
+}
+
 void AdgprsResults::DumpResults()
 {
     delete summary_reader_;

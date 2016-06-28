@@ -73,6 +73,13 @@ public:
     virtual void ReadResults(QString file_path) = 0;
 
     /*!
+     * \brief ReadResults Read the summary data from file.
+     * \param file_path The path to the summary file without suffixes.
+     * \param build_dir
+     */
+    virtual void ReadResults(QString file_path, QString build_dir) = 0;
+
+    /*!
      * \brief DumpResults Dump the results that have been read. Should be called when the results are no longer valid.
      *
      * Should call setUnavailable().

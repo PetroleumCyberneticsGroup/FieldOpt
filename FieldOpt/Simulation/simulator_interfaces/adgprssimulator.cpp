@@ -42,7 +42,13 @@ namespace Simulation {
             copyDriverFiles();
             driver_file_writer_->WriteDriverFile(output_directory_);
             ::Utilities::Unix::ExecShellScript(script_path_, script_args_);
-            results_->ReadResults(output_h5_summary_file_path_);
+
+            build_dir_ = settings_->simulator()->fieldopt_build_path();
+            if (settings_->simulator()->fieldopt_build_path().length() > 0)
+                results_->ReadResults(output_h5_summary_file_path_, build_dir_);
+            else
+                results_->ReadResults(output_h5_summary_file_path_);
+
         }
 
         void AdgprsSimulator::CleanUp()

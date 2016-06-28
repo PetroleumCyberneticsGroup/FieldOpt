@@ -49,6 +49,11 @@ void ECLResults::ReadResults(QString file_path)
     setAvailable();
 }
 
+void ECLResults::ReadResults(QString file_path, QString build_dir)
+{
+
+}
+
 void ECLResults::DumpResults()
 {
     if (summary_reader_ != 0) delete summary_reader_;

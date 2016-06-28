@@ -23,6 +23,7 @@ public:
     // Results interface
 public:
     void ReadResults(QString file_path);
+    void ReadResults(QString file_path, QString build_dir);
     void DumpResults();
     double GetValue(Property prop);
     double GetValue(Property prop, QString well);
@@ -32,6 +33,7 @@ public:
 
 private:
     QString file_path_;
+    QString build_dir_;
     AdgprsResultsReader::AdgprsResultsReader *summary_reader_;
 
     // Mappings to summary keys.

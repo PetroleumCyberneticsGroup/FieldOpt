@@ -14,6 +14,7 @@ public:
      * \param summary_path Path to a ADGPRS summary file in the HDF5 format, including the .SIM.H5 suffix.
      */
     AdgprsResultsReader(QString summary_path);
+    AdgprsResultsReader(QString summary_path,QString build_path);
 
     ~AdgprsResultsReader();
 
@@ -26,9 +27,10 @@ public:
 private:
     QString hdf5_path_;
     QString json_path_;
+    QString build_path_;
     JsonSummaryReader *json_reader_;
 
-    void convertHdfSummaryToJson();
+    void convertHdfSummaryToJson(QString build_path);
 
 };
 

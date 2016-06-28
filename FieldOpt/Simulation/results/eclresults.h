@@ -43,6 +43,7 @@ public:
     ECLResults();
 
     void ReadResults(QString file_path);
+    void ReadResults(QString file_path, QString build_dir);
     void DumpResults();
 
 

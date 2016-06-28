@@ -40,6 +40,7 @@ namespace Simulation {
             QString initial_driver_file_name_;
             QString output_h5_summary_file_path_;
             QString script_path_;
+            QString build_dir_;
             QStringList script_args_;
             Simulation::SimulatorInterfaces::DriverFileWriters::AdgprsDriverFileWriter *driver_file_writer_;
             void copyDriverFiles(); //!< Copy the original driver files.
