@@ -65,6 +65,13 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
 
     if (vm.count("sim-drv-path")) {
         QString sim_drv_path = QString::fromStdString(vm["sim-drv-path"].as<std::string>());
+
+        system("pwd");
+        std::string temp1 = "ls " + sim_drv_path.toStdString();
+        system(temp1.c_str());
+        std::string temp2 = "ls " + fieldopt_build_dir_.toStdString();
+        system(temp2.c_str());
+
         if (!Utilities::FileHandling::FileExists(sim_drv_path))
             throw std::runtime_error("Simulation driver file specified as argument does not exist.");
         else simulator_driver_path_ = sim_drv_path;
@@ -72,6 +79,11 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
 
     if (vm.count("sim-exec-path")) {
         QString sim_exec_path = QString::fromStdString(vm["sim-exec-path"].as<std::string>());
+
+        system("pwd");
+        std::string temp3 = "ls " + sim_exec_path.toStdString();
+        system(temp3.c_str());
+
         if (!Utilities::FileHandling::FileExists(sim_exec_path))
             throw std::runtime_error("Custom executable file path specified as argument does not exist.");
         else simulator_exec_script_path_ = sim_exec_path;
