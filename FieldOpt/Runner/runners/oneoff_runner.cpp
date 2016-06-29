@@ -19,8 +19,14 @@ OneOffRunner::OneOffRunner(RuntimeSettings *runtime_settings)
 
 void OneOffRunner::Execute()
 {
+    logger_->LogSettings(settings_);
+    logger_->WritePropertyUuidNameMap(model_);
+    logger_->LogCase(base_case_);
+    logger_->LogCompdat(base_case_, simulator_->GetCompdatString());
     applyWellPositionFromArguments();
     EvaluateBaseModel();
+    logger_->LogProductionData(base_case_, simulator_->results());
+    std::cout << objective_function_->value() << std::endl;
 }
 
 void OneOffRunner::applyWellPositionFromArguments()
