@@ -29,14 +29,14 @@ namespace Simulation {
             results_ = new Simulation::Results::AdgprsResults();
             driver_file_writer_ = new DriverFileWriters::AdgprsDriverFileWriter(settings_, model_);
 
+            if (settings->build_path().length() > 0)
+                build_dir_ = settings->build_path() + "/";
+
             if (settings->simulator()->custom_simulator_execution_script_path().length() > 0)
                 script_path_ = settings->simulator()->custom_simulator_execution_script_path();
             else
-                script_path_ = ExecutionScripts::GetScriptPath(settings->simulator()->script_name());
+                script_path_ = build_dir_ + ExecutionScripts::GetScriptPath(settings->simulator()->script_name());
             script_args_ = (QStringList() << output_directory_ << output_directory_+"/"+initial_driver_file_name_);
-
-            if (settings->build_path().length() > 0)
-                build_dir_ = settings->build_path();
         }
 
         void AdgprsSimulator::Evaluate()
