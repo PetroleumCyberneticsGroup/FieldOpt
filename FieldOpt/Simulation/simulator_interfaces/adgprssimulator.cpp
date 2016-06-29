@@ -8,35 +8,17 @@ namespace Simulation {
     namespace SimulatorInterfaces {
 
         AdgprsSimulator::AdgprsSimulator(Utilities::Settings::Settings *settings, Model::Model *model)
+        : Simulator(settings)
         {
-            if (!Utilities::FileHandling::FileExists(settings->simulator()->driver_file_path()))
-                DriverFileDoesNotExistException(settings->simulator()->driver_file_path());
-            initial_driver_file_path_ = settings->simulator()->driver_file_path();
-
-            if (!Utilities::FileHandling::DirectoryExists(settings->output_directory()))
-                OutputDirectoryDoesNotExistException(settings->output_directory());
-            output_directory_ = settings->output_directory();
-
             QStringList tmp = initial_driver_file_path_.split("/");
-            initial_driver_file_name_ = tmp.last();
             tmp.removeLast();
             initial_driver_file_parent_dir_path_ = tmp.join("/");
             verifyOriginalDriverFileDirectory();
             output_h5_summary_file_path_ = output_directory_ + "/" + initial_driver_file_name_.split(".").first() + ".SIM.H5";
 
             model_ = model;
-            settings_ = settings;
             results_ = new Simulation::Results::AdgprsResults();
             driver_file_writer_ = new DriverFileWriters::AdgprsDriverFileWriter(settings_, model_);
-
-            if (settings->build_path().length() > 0)
-                build_dir_ = settings->build_path() + "/";
-
-            if (settings->simulator()->custom_simulator_execution_script_path().length() > 0)
-                script_path_ = settings->simulator()->custom_simulator_execution_script_path();
-            else
-                script_path_ = build_dir_ + ExecutionScripts::GetScriptPath(settings->simulator()->script_name());
-            script_args_ = (QStringList() << output_directory_ << output_directory_+"/"+initial_driver_file_name_);
         }
 
         void AdgprsSimulator::Evaluate()

@@ -1,28 +1,3 @@
-/******************************************************************************
- *
- *
- *
- * Created: 15.10.2015 2015 by einar
- *
- * This file is part of the FieldOpt project.
- *
- * Copyright (C) 2015-2015 Einar J.M. Baumann <einar.baumann@ntnu.no>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
- *****************************************************************************/
-
 #ifndef SIMULATOR
 #define SIMULATOR
 
@@ -34,7 +9,7 @@
 #include "Simulation/execution_scripts/execution_scripts.h"
 
 namespace Simulation {
-namespace SimulatorInterfaces {
+    namespace SimulatorInterfaces {
 
 /*!
  * \brief The Simulator class acts as an interface for all reservoir simulators.
@@ -49,58 +24,64 @@ namespace SimulatorInterfaces {
  *  sim.CleanUp();
  * \endcode
  */
-class Simulator {
-public:
-    /*!
-     * \brief SetOutputDirectory Set the directory in which to execute the simulation.
-     */
-    void SetOutputDirectory(QString output_directory);
+        class Simulator {
+        public:
+            /*!
+             * \brief SetOutputDirectory Set the directory in which to execute the simulation.
+             */
+            void SetOutputDirectory(QString output_directory);
 
-    /*!
-     * \brief results Get the simulation results.
-     */
-    ::Simulation::Results::Results *results();
+            /*!
+             * \brief results Get the simulation results.
+             */
+            ::Simulation::Results::Results *results();
 
-    /*!
-     * \brief Evaluate Writes the driver file and executes a simulation of the model.
-     */
-    virtual void Evaluate() = 0;
+            /*!
+             * \brief Evaluate Writes the driver file and executes a simulation of the model.
+             */
+            virtual void Evaluate() = 0;
 
-    /*!
-     * \brief Evaluate Writes the driver file and executes a simulation of the model. The simulation
-     * is terminated after the amount of seconds provided in the timeout argument.
-     * @param timeout Number of seconds before the simulation should be terminated.
-     * @return True if the simuation completes before the set timeout, otherwise false.
-     */
-    virtual bool Evaluate(int timeout) = 0;
+            /*!
+             * \brief Evaluate Writes the driver file and executes a simulation of the model. The simulation
+             * is terminated after the amount of seconds provided in the timeout argument.
+             * @param timeout Number of seconds before the simulation should be terminated.
+             * @return True if the simuation completes before the set timeout, otherwise false.
+             */
+            virtual bool Evaluate(int timeout) = 0;
 
-    /*!
-     * \brief CleanUp Perform cleanup after simulation, i.e. delete output files.
-     */
-    virtual void CleanUp() = 0;
+            /*!
+             * \brief CleanUp Perform cleanup after simulation, i.e. delete output files.
+             */
+            virtual void CleanUp() = 0;
 
-    /*!
-     * \brief GetCompdatString Get the compdat section used in the simulation's driver file.
-     * \return String containing the compdat section.
-     */
-    virtual QString GetCompdatString() = 0;
+            /*!
+             * \brief GetCompdatString Get the compdat section used in the simulation's driver file.
+             * \return String containing the compdat section.
+             */
+            virtual QString GetCompdatString() = 0;
 
-protected:
-    /*!
-     * \brief Simulator This constructor should only be called by child classes.
-     */
-    Simulator(){}
+        protected:
+            /*!
+             * Set various path variables. Should only be called by child classes.
+             * @param settings
+             * @return
+             */
+            Simulator(Utilities::Settings::Settings *settings);
 
-    QString initial_driver_file_path_; //!< Path to the driver file to be used as a base for the generated driver files.
-    QString output_directory_; //!< The directory in which to write new driver files and execute simulations.
+            QString initial_driver_file_path_; //!< Path to the driver file to be used as a base for the generated driver files.
+            QString output_directory_; //!< The directory in which to write new driver files and execute simulations.
+            QString initial_driver_file_name_;
 
-    ::Simulation::Results::Results *results_;
-    Utilities::Settings::Settings *settings_;
-    Model::Model *model_;
-    virtual void UpdateFilePaths() = 0;
-};
+            ::Simulation::Results::Results *results_;
+            Utilities::Settings::Settings *settings_;
+            Model::Model *model_;
+            QString build_dir_;
+            QString script_path_;
+            QStringList script_args_;
+            virtual void UpdateFilePaths() = 0;
+        };
 
-}
+    }
 }
 
 #endif // SIMULATOR

@@ -8,19 +8,8 @@ namespace Simulation {
     namespace SimulatorInterfaces {
 
         ECLSimulator::ECLSimulator(Utilities::Settings::Settings *settings, Model::Model *model)
+        : Simulator(settings)
         {
-            if (settings->driver_path().length() == 0)
-                throw DriverFileInvalidException("A path to a valid simulator driver file must be specified in the FieldOpt driver file or as a command line parameter.");
-
-            if (Utilities::FileHandling::FileExists(settings->driver_path()))
-                initial_driver_file_path_ = settings->driver_path();
-            else throw DriverFileDoesNotExistException(settings->driver_path());
-
-            if (Utilities::FileHandling::DirectoryExists(settings->output_directory()))
-                output_directory_ = settings->output_directory();
-            else throw OutputDirectoryDoesNotExistException(settings->output_directory());
-
-            settings_ = settings;
             model_ = model;
             driver_file_writer_ = new DriverFileWriters::EclDriverFileWriter(settings, model_);
 

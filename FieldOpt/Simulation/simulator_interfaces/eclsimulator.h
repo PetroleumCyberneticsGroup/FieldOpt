@@ -7,7 +7,7 @@
 #include <QStringList>
 
 namespace Simulation {
-namespace SimulatorInterfaces {
+    namespace SimulatorInterfaces {
 
 
 /*!
@@ -25,38 +25,38 @@ namespace SimulatorInterfaces {
  *
  * \todo Support custom execution commands.
  */
-class ECLSimulator : public Simulator
-{
-public:
-    ECLSimulator(Utilities::Settings::Settings *settings, Model::Model *model);
+        class ECLSimulator : public Simulator
+        {
+        public:
+            ECLSimulator(Utilities::Settings::Settings *settings, Model::Model *model);
 
-    /*!
-     * \brief Evaluate Executes the simulation of the current model. The evaluation is blocking.
-     */
-    void Evaluate();
+            /*!
+             * \brief Evaluate Executes the simulation of the current model. The evaluation is blocking.
+             */
+            void Evaluate();
 
-    /*!
-     * \brief CleanUp Deletes files created during the simulation.
-     * All files except the .DATA, .UNSMRY, .SMSPEC  and .LOG are deleted.
-     */
-    void CleanUp();
+            /*!
+             * \brief CleanUp Deletes files created during the simulation.
+             * All files except the .DATA, .UNSMRY, .SMSPEC  and .LOG are deleted.
+             */
+            void CleanUp();
 
-private:
-    DriverFileWriters::EclDriverFileWriter *driver_file_writer_;
-    QString script_path_;
-    QStringList script_args_;
+        private:
+            DriverFileWriters::EclDriverFileWriter *driver_file_writer_;
+            QString script_path_;
+            QStringList script_args_;
 
-    // Simulator interface
-protected:
-    void UpdateFilePaths();
+            // Simulator interface
+        protected:
+            void UpdateFilePaths();
 
-    // Simulator interface
-public:
-    QString GetCompdatString();
+            // Simulator interface
+        public:
+            QString GetCompdatString();
 
-    virtual bool Evaluate(int timeout) override;
-};
+            virtual bool Evaluate(int timeout) override;
+        };
 
-}
+    }
 }
 #endif // ECLSIMULATOR_H
