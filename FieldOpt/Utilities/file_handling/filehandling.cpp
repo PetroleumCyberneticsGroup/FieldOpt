@@ -74,16 +74,9 @@ void Utilities::FileHandling::WriteLineToFile(QString string, QString file_path)
     file.close();
 }
 
-QString Utilities::FileHandling::GetBuildDirectoryPath()
+QString Utilities::FileHandling::GetCurrentDirectoryPath()
 {
     QDir path = QDir::currentPath(); // Get current directory
-    return path.absolutePath();
-}
-
-QString Utilities::FileHandling::GetProjectDirectoryPath()
-{
-    QDir path(GetBuildDirectoryPath());
-    path.cdUp();
     return path.absolutePath();
 }
 

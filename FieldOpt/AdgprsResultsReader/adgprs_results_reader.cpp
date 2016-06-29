@@ -9,7 +9,7 @@ AdgprsResultsReader::AdgprsResultsReader(QString summary_path)
 {
     hdf5_path_ = summary_path;
     json_path_ = summary_path.split(".SIM.H5").first() + ".json";
-    build_path_ = Utilities::FileHandling::GetBuildDirectoryPath();
+    build_path_ = Utilities::FileHandling::GetCurrentDirectoryPath();
     convertHdfSummaryToJson(build_path_);
     json_reader_ = new JsonSummaryReader(json_path_);
 }

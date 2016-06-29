@@ -95,20 +95,11 @@ namespace Utilities {
 
 
 /*!
- * \brief GetBuildDirectoryPath Gets the absolute path to the first directory in the tree
- * that starts with build-.
+ * \brief GetCurrentDirectoryPath Gets the absolute path to the current directory.
  *
  * \todo Improve this.
  */
-        QString GetBuildDirectoryPath();
-
-/*!
- * \brief GetProjectDirectoryPath Gets the absolute path to the project directory. Note that
- * this assumes that the root project directory contains the build directory.
- *
- * \todo Improve this.
- */
-        QString GetProjectDirectoryPath();
+        QString GetCurrentDirectoryPath();
 
     }
 }
