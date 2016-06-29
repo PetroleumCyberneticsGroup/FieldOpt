@@ -72,7 +72,7 @@ void AbstractRunner::InitializeSettings(QString output_subdirectory)
 
     // Override FieldOpt build directory path if it has been passed as command line arguments
     if (runtime_settings_->fieldopt_build_dir().length() > 0)
-        settings_->simulator()->set_fieldopt_build_path(runtime_settings_->fieldopt_build_dir());
+        settings_->set_build_path(runtime_settings_->fieldopt_build_dir());
 }
 
 void AbstractRunner::InitializeModel()

@@ -34,6 +34,9 @@ namespace Simulation {
             else
                 script_path_ = ExecutionScripts::GetScriptPath(settings->simulator()->script_name());
             script_args_ = (QStringList() << output_directory_ << output_directory_+"/"+initial_driver_file_name_);
+
+            if (settings->build_path().length() > 0)
+                build_dir_ = settings->build_path();
         }
 
         void AdgprsSimulator::Evaluate()
@@ -43,8 +46,7 @@ namespace Simulation {
             driver_file_writer_->WriteDriverFile(output_directory_);
             ::Utilities::Unix::ExecShellScript(script_path_, script_args_);
 
-            build_dir_ = settings_->simulator()->fieldopt_build_path();
-            if (settings_->simulator()->fieldopt_build_path().length() > 0)
+            if (build_dir_.length() > 0)
                 results_->ReadResults(output_h5_summary_file_path_, build_dir_);
             else
                 results_->ReadResults(output_h5_summary_file_path_);

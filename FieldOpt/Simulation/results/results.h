@@ -75,7 +75,7 @@ public:
     /*!
      * \brief ReadResults Read the summary data from file.
      * \param file_path The path to the summary file without suffixes.
-     * \param build_dir
+     * \param build_dir Path to the FieldOpt build directory.
      */
     virtual void ReadResults(QString file_path, QString build_dir) = 0;
 

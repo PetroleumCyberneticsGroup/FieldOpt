@@ -66,6 +66,9 @@ public:
 
     QString GetLogCsvString() const; //!< Get a string containing the CSV header and contents for the log.
 
+    const QString &build_path() const { return build_path_; } //!< Get the to the FieldOpt build directory.
+    void set_build_path(const QString &build_path); //!< Set the path to the FieldOpt build directory.
+
 private:
     QString driver_path_;
     QJsonObject *json_driver_;
@@ -76,6 +79,7 @@ private:
     Model *model_;
     Utilities::Settings::Optimizer *optimizer_;
     Simulator *simulator_;
+    QString build_path_;
 
     void readDriverFile();
     void readGlobalSection();
