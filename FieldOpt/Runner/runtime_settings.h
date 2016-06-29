@@ -68,6 +68,7 @@ public:
     QPair<QVector<double>, QVector<double>> inje_coords() const { return inje_coords_; }
 
 private:
+    std::string str_out; //!< Temporary variable for verbosity function
     QString driver_file_; //!< Path to the driver file to be used by FieldOpt.
     QString output_dir_; //!< Directory in which to write all output.
     QString simulator_driver_path_; //!< Path to simulator driver file.
