@@ -34,7 +34,7 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
     if (verbose_)
         str_out = "FieldOpt runtime settings";
         std::cout << str_out << "\n" << std::string(str_out.length(),'=') << std::endl;
-        std::cout << "Verbosity level:\t" << verbose_ << std::endl;
+        std::cout << "Verbosity level:  " << verbose_ << std::endl;
 
     if (vm.count("runner-type")) {
         QString runner_str = QString::fromStdString(vm["runner-type"].as<std::string>());
@@ -44,13 +44,13 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
             runner_type_ = RunnerType::ONEOFF;
     } else runner_type_ = RunnerType::SERIAL;
     if (verbose_)
-        std::cout << "Runner type:\t" << runnerTypeString().toStdString() << std::endl;
+        std::cout << "Runner type:      " << runnerTypeString().toStdString() << std::endl;
 
     if (vm.count("max-parallel-simulations")) {
         max_parallel_sims_ = vm["max-parallel-simulations"].as<int>();
     } else max_parallel_sims_ = 0;
     if (verbose_)
-        std::cout << "Max parallel sims:\t" << (max_parallel_sims_ > 0 ? std::to_string(max_parallel_sims_) : "default") << std::endl;
+        std::cout << "Max parallel sims:  " << (max_parallel_sims_ > 0 ? std::to_string(max_parallel_sims_) : "default") << std::endl;
 
     if (vm.count("simulation-timeout")) {
         simulation_timeout_ = vm["simulation-timeout"].as<int>();
@@ -60,13 +60,13 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
     if (!overwrite_existing_ && !Utilities::FileHandling::DirectoryIsEmpty(output_dir_))
         throw std::runtime_error("Output directory is not empty. Use the --force flag to overwrite existing content.");
     if (verbose_)
-        std::cout << "Overwr. existing out files: " << overwrite_existing_ << std::endl;
+        std::cout << "Overwr. old out files: " << overwrite_existing_ << std::endl;
 
     if (vm.count("input-file")) {
         driver_file_ = QString::fromStdString(vm["input-file"].as<std::string>());
         if (verbose_)
-            std::cout << "Current dir:\t" << Utilities::FileHandling::GetCurrentDirectoryPath().toStdString() << std::endl;
-            std::cout << "Input file:\t" << driver_file_.toStdString() << std::endl;
+            std::cout << "Current dir:-------" << Utilities::FileHandling::GetCurrentDirectoryPath().toStdString() << std::endl;
+            std::cout << "Input file:--------" << driver_file_.toStdString() << std::endl;
         if (!Utilities::FileHandling::FileExists(driver_file_))
             throw std::runtime_error("The specified driver file does not exist.");
     } else throw std::runtime_error("An input file must be specified.");
@@ -74,7 +74,7 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
     if (vm.count("output-dir")) {
         output_dir_ = QString::fromStdString(vm["output-dir"].as<std::string>());
         if (verbose_)
-            std::cout << "Output dir:\t" << output_dir().toStdString() << std::endl;
+            std::cout << "Output dir:--------" << output_dir().toStdString() << std::endl;
         if (!Utilities::FileHandling::DirectoryExists(output_dir_))
             throw std::runtime_error("The specified output directory does not exist.");
     } else throw std::runtime_error("An output directory must be specified.");
@@ -82,7 +82,7 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
     if (vm.count("sim-drv-path")) {
         QString sim_drv_path = QString::fromStdString(vm["sim-drv-path"].as<std::string>());
         if (verbose_)
-            std::cout << "Sim driver file:\t" << (sim_drv_path.length() > 0 ? sim_drv_path.toStdString() : "from FieldOpt driver file") << std::endl;
+            std::cout << "Sim driver file:---" << (sim_drv_path.length() > 0 ? sim_drv_path.toStdString() : "from FieldOpt driver file") << std::endl;
         if (!Utilities::FileHandling::FileExists(sim_drv_path))
             throw std::runtime_error("Specified simulation driver file does not exist.");
         else simulator_driver_path_ = sim_drv_path;
@@ -91,7 +91,7 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
     if (vm.count("sim-exec-path")) {
         QString sim_exec_path = QString::fromStdString(vm["sim-exec-path"].as<std::string>());
         if (verbose_)
-            std::cout << "Exec file path:\t" << (sim_exec_path.length() > 0 ? sim_exec_path.toStdString() : "from FieldOpt driver file") << std::endl;
+            std::cout << "Exec file path:----" << (sim_exec_path.length() > 0 ? sim_exec_path.toStdString() : "from FieldOpt driver file") << std::endl;
         if (!Utilities::FileHandling::FileExists(sim_exec_path))
             throw std::runtime_error("Custom executable file path specified as argument does not exist.");
         else simulator_exec_script_path_ = sim_exec_path;
@@ -100,7 +100,7 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
     if (vm.count("fieldopt-build-dir")) {
         QString fieldopt_build_dir = QString::fromStdString(vm["fieldopt-build-dir"].as<std::string>());
         if (verbose_)
-            std::cout << "Build dir:\t" << fieldopt_build_dir.toStdString() << std::endl;
+            std::cout << "Build dir:---------" << fieldopt_build_dir.toStdString() << std::endl;
         if (!Utilities::FileHandling::DirectoryExists(fieldopt_build_dir))
             throw std::runtime_error("FieldOpt build directory specified as argument does not exist.");
         else fieldopt_build_dir_ = fieldopt_build_dir;
@@ -109,7 +109,7 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
     if (vm.count("grid-path")) {
         QString grid_path = QString::fromStdString(vm["grid-path"].as<std::string>());
         if (verbose_)
-            std::cout << "Grid file path: " << (grid_path.length() > 0 ? grid_path.toStdString() : "from FieldOpt driver file") << std::endl;
+            std::cout << "Grid file path:----" << (grid_path.length() > 0 ? grid_path.toStdString() : "from FieldOpt driver file") << std::endl;
         if (!Utilities::FileHandling::FileExists(grid_path))
             throw std::runtime_error("Grid file path specified as argument does not exist.");
         else grid_file_path_ = grid_path;
