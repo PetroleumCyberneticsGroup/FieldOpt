@@ -69,7 +69,6 @@ void AbstractRunner::InitializeSettings(QString output_subdirectory)
     // Override simulator executable path if it has been passed as command line arguments
     if (runtime_settings_->simulator_exec_script_path().length() > 0)
         settings_->simulator()->set_execution_script_path(runtime_settings_->simulator_exec_script_path());
-
     // Override FieldOpt build directory path if it has been passed as command line arguments
     if (runtime_settings_->fieldopt_build_dir().length() > 0)
         settings_->set_build_path(runtime_settings_->fieldopt_build_dir());
