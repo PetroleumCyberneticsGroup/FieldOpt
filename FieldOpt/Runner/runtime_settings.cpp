@@ -108,17 +108,21 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
 
 
     if (verbose_) {
-        std::cout << "FieldOpt runtime settings: " << std::endl;
-        std::cout << "Input file:     " << driver_file_.toStdString() << std::endl;
-        std::cout << "Output dir:     " << output_dir().toStdString() << std::endl;
-        std::cout << "Sim driver file:" << (simulator_driver_path_.length() > 0 ? simulator_driver_path_.toStdString() : "from FieldOpt driver file") << std::endl;
-        std::cout << "Grid file path: " << (grid_file_path_.length() > 0 ? grid_file_path_.toStdString() : "from FieldOpt driver file") << std::endl;
-        std::cout << "Exec file path: " << (simulator_exec_script_path_.length() > 0 ? simulator_exec_script_path_.toStdString() : "from FieldOpt driver file") << std::endl;
-        std::cout << "Build dir: " << fieldopt_build_dir_.toStdString() << std::endl;
-        std::cout << "Runner type:    " << runnerTypeString().toStdString() << std::endl;
-        std::cout << "Verbose output: " << verbose_ << std::endl;
-        std::cout << "Overwr. existing out files: " << overwrite_existing_ << std::endl;
-        std::cout << "Max parallel simulations:   " << (max_parallel_sims_ > 0 ? std::to_string(max_parallel_sims_) : "default") << std::endl;
+        str_out = "FieldOpt runtime settings";
+        std::cout << "\n" << str_out << "\n" << std::string(str_out.length(),'=') << std::endl;
+        std::cout << "Verbosity level:  " << verbose_ << std::endl;
+        std::cout << "Runner type:      " << runnerTypeString().toStdString() << std::endl;
+        std::cout << "Overwr. old out files: " << overwrite_existing_ << std::endl;
+        std::cout << "Max parallel sims:   " << (max_parallel_sims_ > 0 ? std::to_string(max_parallel_sims_) : "default") << std::endl;
+        str_out = "Current/specified paths:";
+        std::cout << "\n" << str_out << "\n" << std::string(str_out.length(),'-') << std::endl;
+        std::cout << "Current dir:-------" << Utilities::FileHandling::GetCurrentDirectoryPath().toStdString() << std::endl;
+        std::cout << "Input file:--------" << driver_file_.toStdString() << std::endl;
+        std::cout << "Output dir:--------" << output_dir().toStdString() << std::endl;
+        std::cout << "Sim driver file:---" << (simulator_driver_path_.length() > 0 ? simulator_driver_path_.toStdString() : "from FieldOpt driver file") << std::endl;
+        std::cout << "Grid file path:----" << (grid_file_path_.length() > 0 ? grid_file_path_.toStdString() : "from FieldOpt driver file") << std::endl;
+        std::cout << "Exec file path:----" << (simulator_exec_script_path_.length() > 0 ? simulator_exec_script_path_.toStdString() : "from FieldOpt driver file") << std::endl;
+        std::cout << "Build dir:---------" << fieldopt_build_dir_.toStdString() << std::endl;
         if (vm.count("well-prod-points"))
             std::cout << "Producer coordinates:   " << wellSplineCoordinateString(prod_coords_).toStdString() << std::endl;
         if (vm.count("well-prod-points"))
