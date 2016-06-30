@@ -45,7 +45,7 @@ file(COPY ${CONVERSION_SCRIPTS} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Ad
 
 # Copy execution scripts
 file(GLOB EXECUTION_SCRIPTS
-        "execution_scripts/*.sh")
+        "Simulation/execution_scripts/*.sh")
 file(COPY ${EXECUTION_SCRIPTS} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/execution_scripts)
 
 ## Copy the examples into the build dir

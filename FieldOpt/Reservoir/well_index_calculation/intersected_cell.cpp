@@ -35,24 +35,24 @@ namespace Reservoir {
             return entry_point_;
         }
 
-        void IntersectedCell::set_entry_point(const Vector3d &entry_point_) {
-            IntersectedCell::entry_point_ = entry_point_;
+        void IntersectedCell::set_entry_point(const Vector3d &entry_point) {
+            entry_point_ = entry_point;
         }
 
         const Vector3d &IntersectedCell::exit_point() const {
             return exit_point_;
         }
 
-        void IntersectedCell::set_exit_point(const Vector3d &exit_point_) {
-            IntersectedCell::exit_point_ = exit_point_;
+        void IntersectedCell::set_exit_point(const Vector3d &exit_point) {
+            exit_point_ = exit_point;
         }
 
         double IntersectedCell::well_index() const {
             return well_index_;
         }
 
-        void IntersectedCell::set_well_index(double well_index_) {
-            IntersectedCell::well_index_ = well_index_;
+        void IntersectedCell::set_well_index(double well_index) {
+            well_index_ = well_index;
         }
     }
 }

@@ -13,8 +13,9 @@ namespace Reservoir {
             wellbore_radius_ = wellbore_radius;
 
             QList<IntersectedCell> intersected_cells = cells_intersected();
-            for (auto cell : intersected_cells)
-                cell.set_well_index(compute_well_index(cell));
+            for (int i = 0; i < intersected_cells.length(); ++i) {
+                intersected_cells[i].set_well_index(compute_well_index(intersected_cells[i]));
+            }
             return intersected_cells;
         }
 
@@ -113,7 +114,8 @@ namespace Reservoir {
             double well_index_x = (dir_well_index(Lx, icell.dy(), icell.dz(), icell.permy(), icell.permz()));
             double well_index_y = (dir_well_index(Ly, icell.dx(), icell.dz(), icell.permx(), icell.permz()));
             double well_index_z = (dir_well_index(Lz, icell.dx(), icell.dy(), icell.permx(), icell.permy()));
-            return sqrt(well_index_x * well_index_x + well_index_y * well_index_y + well_index_z * well_index_z);
+            double wi = sqrt(well_index_x * well_index_x + well_index_y * well_index_y + well_index_z * well_index_z);
+            return wi;
         }
 
         double WellIndexCalculator::dir_well_index(double Lx, double dy, double dz, double ky, double kz) {
