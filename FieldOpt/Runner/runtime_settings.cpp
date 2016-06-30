@@ -32,20 +32,20 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
     if (vm.count("input-file")) {
         driver_file_ = QString::fromStdString(vm["input-file"].as<std::string>());
         if (!Utilities::FileHandling::FileExists(driver_file_))
-            throw std::runtime_error("The specified driver file does not exist.");
+            throw std::runtime_error("The specified driver file does not exist: " + driver_file_.toStdString());
     } else throw std::runtime_error("An input file must be specified.");
 
     if (vm.count("output-dir")) {
         output_dir_ = QString::fromStdString(vm["output-dir"].as<std::string>());
         if (!Utilities::FileHandling::DirectoryExists(output_dir_))
-            throw std::runtime_error("The specified output directory does not exist.");
+            throw std::runtime_error("The specified output directory does not exist: " + output_dir_.toStdString());
     } else throw std::runtime_error("An output directory must be specified.");
 
     verbose_ = vm.count("verbose") != 0;
 
     overwrite_existing_ = vm.count("force") != 0;
     if (!overwrite_existing_ && !Utilities::FileHandling::DirectoryIsEmpty(output_dir_))
-        throw std::runtime_error("Output directory is not empty. Use the --force flag to overwrite existing content.");
+        throw std::runtime_error("Output directory is not empty. Use the --force flag to overwrite existing content in: " + output_dir_.toStdString());
 
     if (vm.count("max-parallel-simulations")) {
         max_parallel_sims_ = vm["max-parallel-simulations"].as<int>();
@@ -66,28 +66,28 @@ RuntimeSettings::RuntimeSettings(boost::program_options::variables_map vm)
     if (vm.count("sim-drv-path")) {
         QString sim_drv_path = QString::fromStdString(vm["sim-drv-path"].as<std::string>());
         if (!Utilities::FileHandling::FileExists(sim_drv_path))
-            throw std::runtime_error("Simulation driver file specified as argument does not exist.");
+            throw std::runtime_error("Simulation driver file specified as argument does not exist: " + sim_drv_path.toStdString());
         else simulator_driver_path_ = sim_drv_path;
     } else simulator_driver_path_ = "";
 
     if (vm.count("sim-exec-path")) {
         QString sim_exec_path = QString::fromStdString(vm["sim-exec-path"].as<std::string>());
         if (!Utilities::FileHandling::FileExists(sim_exec_path))
-            throw std::runtime_error("Custom executable file path specified as argument does not exist.");
+            throw std::runtime_error("Custom executable file path specified as argument does not exist: " + sim_exec_path.toStdString());
         else simulator_exec_script_path_ = sim_exec_path;
     } else simulator_exec_script_path_ = "";
 
     if (vm.count("fieldopt-build-dir")) {
         QString fieldopt_build_dir = QString::fromStdString(vm["fieldopt-build-dir"].as<std::string>());
         if (!Utilities::FileHandling::DirectoryExists(fieldopt_build_dir))
-            throw std::runtime_error("FieldOpt build directory specified as argument does not exist.");
+            throw std::runtime_error("FieldOpt build directory specified as argument does not exist: " + fieldopt_build_dir.toStdString());
         else fieldopt_build_dir_ = fieldopt_build_dir;
     } else fieldopt_build_dir_ = "";
 
     if (vm.count("grid-path")) {
         QString grid_path = QString::fromStdString(vm["grid-path"].as<std::string>());
         if (!Utilities::FileHandling::FileExists(grid_path))
-            throw std::runtime_error("Grid file path specified as argument does not exist.");
+            throw std::runtime_error("Grid file path specified as argument does not exist: " + fieldopt_build_dir_.toStdString());
         else grid_file_path_ = grid_path;
     } else grid_file_path_ = "";
 
