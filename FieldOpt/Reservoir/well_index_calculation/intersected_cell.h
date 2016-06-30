@@ -24,11 +24,11 @@ namespace WellIndexCalculation {
         double dz() const;
 
         const Vector3d & entry_point() const;
-        void set_entry_point(const Vector3d &entry_point_);
+        void set_entry_point(const Vector3d &entry_point);
         const Vector3d & exit_point() const;
-        void set_exit_point(const Vector3d &exit_point_);
+        void set_exit_point(const Vector3d &exit_point);
         double well_index() const;
-        void set_well_index(double well_index_);
+        void set_well_index(double well_index);
 
     private:
         Vector3d entry_point_;
