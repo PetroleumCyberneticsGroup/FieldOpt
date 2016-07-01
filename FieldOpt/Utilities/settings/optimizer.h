@@ -25,6 +25,7 @@ namespace Utilities {
             enum ConstraintType { BHP, Rate, SplinePoints,
                 WellSplineLength, WellSplineInterwellDistance, WellSplineDomain,
                 CombinedWellSplineLengthInterwellDistance,
+                CombinedWellSplineLengthInterwellDistanceReservoirBoundary,
                 ReservoirBoundary
             };
             enum ConstraintWellSplinePointsType { MaxMin, Function};
