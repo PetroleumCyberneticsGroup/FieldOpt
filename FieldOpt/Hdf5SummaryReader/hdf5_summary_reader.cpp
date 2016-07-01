@@ -103,13 +103,13 @@ Hdf5SummaryReader::well_state Hdf5SummaryReader::parseWellState(std::vector<wsty
         state.well_controls[t] = ws[i].vIntData[2];
         state.bottom_hole_pressures[t] = ws[i].vPressures[0];
         if (state.nphases == 2) {
-            state.water_rates_sc[t] = ws[t].vPhaseRatesAtSC[0];
-            state.oil_rates_sc[t] = ws[t].vPhaseRatesAtSC[1];
+            state.water_rates_sc[t] = ws[i].vPhaseRatesAtSC[0];
+            state.oil_rates_sc[t] = ws[i].vPhaseRatesAtSC[1];
         }
         else if (state.nphases == 3) {
-            state.gas_rates_sc[t] = ws[t].vPhaseRatesAtSC[0];
-            state.oil_rates_sc[t] = ws[t].vPhaseRatesAtSC[1];
-            state.water_rates_sc[t] = ws[t].vPhaseRatesAtSC[2];
+            state.gas_rates_sc[t] = ws[i].vPhaseRatesAtSC[0];
+            state.oil_rates_sc[t] = ws[i].vPhaseRatesAtSC[1];
+            state.water_rates_sc[t] = ws[i].vPhaseRatesAtSC[2];
         } else throw std::runtime_error("Can only handle models with 2 or 3 phases.");
         for (int p = 0; p < nperfs; ++p) { // Perforation data at each time step
             state.perforation_states[p] = perforation_state(ntimes_);
@@ -145,6 +145,22 @@ int Hdf5SummaryReader::number_of_perforations(const int well_number) const {
 
 int Hdf5SummaryReader::number_of_phases(const int well_number) const {
     return well_states_[well_number].nphases;
+}
+
+const std::vector<double> &Hdf5SummaryReader::bottom_hole_pressures(const int well_number) const {
+    return well_states_[well_number].bottom_hole_pressures;
+}
+
+const std::vector<double> &Hdf5SummaryReader::oil_rates_sc(const int well_number) const {
+    return well_states_[well_number].oil_rates_sc;
+}
+
+const std::vector<double> &Hdf5SummaryReader::water_rates_sc(const int well_number) const {
+    return well_states_[well_number].water_rates_sc;
+}
+
+const std::vector<double> &Hdf5SummaryReader::gas_rates_sc(const int well_number) const {
+    return well_states_[well_number].gas_rates_sc;
 }
 
 Hdf5SummaryReader::well_state::well_state(int nt, int np) {

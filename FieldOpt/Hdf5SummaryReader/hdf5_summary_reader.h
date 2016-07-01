@@ -4,10 +4,13 @@
 #include <vector>
 #include <H5Cpp.h>
 
+/*!
+ * \todo This must also be tested for a 3 phase black oil model, it has only been tested for 2 phase dead oil.
+ */
 class Hdf5SummaryReader {
 public:
     Hdf5SummaryReader(const std::string file_path);
-    const std::vector<double> &times() const { return times_; }
+    const std::vector<double> &times_steps() const { return times_; }
 
 
     int number_of_wells() const { return nwells_; }
@@ -18,7 +21,12 @@ public:
 
     int number_of_perforations(const int well_number) const;
     int number_of_phases(const int well_number) const;
-//    const std::vector<double> &
+
+    const std::vector<double> &bottom_hole_pressures(const int well_number) const;
+
+    const std::vector<double> &oil_rates_sc(const int well_number) const;
+    const std::vector<double> &water_rates_sc(const int well_number) const;
+    const std::vector<double> &gas_rates_sc(const int well_number) const;
 
 private:
     const H5std_string GROUP_NAME_RESTART;
