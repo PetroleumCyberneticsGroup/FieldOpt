@@ -37,6 +37,7 @@ add_subdirectory(Simulation)
 add_subdirectory(Runner)
 add_subdirectory(ConstraintMath)
 add_subdirectory(AdgprsResultsReader)
+add_subdirectory(Hdf5SummaryReader)
 
 ## Copy ADGPRS summary convertion python scripts
 file(GLOB CONVERSION_SCRIPTS
