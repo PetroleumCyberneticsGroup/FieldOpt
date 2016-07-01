@@ -26,7 +26,9 @@ void OneOffRunner::Execute()
     applyWellPositionFromArguments();
     EvaluateBaseModel();
     logger_->LogProductionData(base_case_, simulator_->results());
-    std::cout << objective_function_->value() << std::endl;
+    // Write objective function value to file
+    Utilities::FileHandling::WriteLineToFile(QString("%1").arg(objective_function_->value()),settings_->output_directory() + "/f.out");
+//    std::cout << objective_function_->value() << std::endl;
 }
 
 void OneOffRunner::applyWellPositionFromArguments()
