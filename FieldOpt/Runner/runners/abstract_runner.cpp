@@ -151,7 +151,8 @@ void AbstractRunner::InitializeOptimizer()
     switch (settings_->optimizer()->type()) {
     case Utilities::Settings::Optimizer::OptimizerType::Compass:
         if (runtime_settings_->verbose()) std::cout << "Using CompassSearch optimization algorithm." << std::endl;
-        optimizer_ = new Optimization::Optimizers::CompassSearch(settings_->optimizer(), base_case_, model_->variables());
+        optimizer_ = new Optimization::Optimizers::CompassSearch(settings_->optimizer(), base_case_, model_->variables(),
+                                                                 model_->reservoir()->grid());
         break;
     default:
         throw std::runtime_error("Unable to initialize runner: optimization algorithm set in driver file not recognized.");

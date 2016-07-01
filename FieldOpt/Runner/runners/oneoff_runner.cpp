@@ -95,7 +95,8 @@ void OneOffRunner::applyWellPositionFromArguments()
     base_case_->set_real_variable_value(ity, runtime_settings_->inje_coords().second[1]);
     base_case_->set_real_variable_value(itz, runtime_settings_->inje_coords().second[2]);
 
-    auto constraint_handler_ = new Optimization::Constraints::ConstraintHandler(settings_->optimizer()->constraints(), model_->variables());
+    auto constraint_handler_ = new Optimization::Constraints::ConstraintHandler(settings_->optimizer()->constraints(),
+                                                                                model_->variables(), model_->reservoir()->grid());
     constraint_handler_->SnapCaseToConstraints(base_case_);
     model_->ApplyCase(base_case_);
 }

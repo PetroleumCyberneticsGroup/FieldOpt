@@ -2,7 +2,9 @@
 
 namespace Optimization {
 
-    Optimizer::Optimizer(Utilities::Settings::Optimizer *settings, Case *base_case, Model::Properties::VariablePropertyContainer *variables)
+    Optimizer::Optimizer(Utilities::Settings::Optimizer *settings, Case *base_case,
+                         Model::Properties::VariablePropertyContainer *variables,
+                         Reservoir::Grid::Grid *grid)
     {
         // Verify that the base case has been evaluated.
         try {
@@ -14,7 +16,7 @@ namespace Optimization {
         max_evaluations_ = settings->parameters().max_evaluations;
         tentative_best_case_ = base_case;
         case_handler_ = new CaseHandler(tentative_best_case_);
-        constraint_handler_ = new Constraints::ConstraintHandler(settings->constraints(), variables);
+        constraint_handler_ = new Constraints::ConstraintHandler(settings->constraints(), variables, grid);
         iteration_ = 0;
         mode_ = settings->mode();
     }

@@ -4,7 +4,9 @@
 namespace Optimization {
     namespace Constraints {
 
-        ConstraintHandler::ConstraintHandler(QList<Utilities::Settings::Optimizer::Constraint> constraints, Model::Properties::VariablePropertyContainer *variables)
+        ConstraintHandler::ConstraintHandler(QList<Utilities::Settings::Optimizer::Constraint> constraints,
+                                             Model::Properties::VariablePropertyContainer *variables,
+                                             Reservoir::Grid::Grid *grid)
         {
             for (Utilities::Settings::Optimizer::Constraint constraint : constraints) {
                 switch (constraint.type) {
@@ -26,12 +28,10 @@ namespace Optimization {
                     case Utilities::Settings::Optimizer::ConstraintType::
                         CombinedWellSplineLengthInterwellDistanceReservoirBoundary:
                         constraints_.append(new CombinedSplineLengthInterwellDistanceReservoirBoundary
-                                                    (constraint, variables, nullptr));
-                        // TODO: Take grid as input
+                                                    (constraint, variables, grid));
                         break;
                     case Utilities::Settings::Optimizer::ConstraintType::ReservoirBoundary:
-                        constraints_.append(new ReservoirBoundary(constraint, variables, nullptr));
-                        // TODO: Take grid as input
+                        constraints_.append(new ReservoirBoundary(constraint, variables, grid));
                         break;
 #ifdef WITH_EXPERIMENTAL_CONSTRAINTS
                         // Cases for constraints in the experimental_constraints directory go here

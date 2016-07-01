@@ -41,6 +41,7 @@ target_link_libraries(optimization
         PUBLIC fieldopt::model
         PUBLIC fieldopt::simulation
         PUBLIC fieldopt::constraintmath
+		PUBLIC fieldopt::reservoir
         Qt5::Core)
 
 target_include_directories(optimization PUBLIC

@@ -11,6 +11,7 @@
 #include "Optimization/case.h"
 #include "Model/properties/variable_property_container.h"
 #include "Utilities/settings/optimizer.h"
+#include "Reservoir/grid/grid.h"
 
 #include <QList>
 #ifdef WITH_EXPERIMENTAL_CONSTRIANTS
@@ -26,7 +27,9 @@ namespace Optimization {
         class ConstraintHandler
         {
         public:
-            ConstraintHandler(QList<Utilities::Settings::Optimizer::Constraint> constraints, Model::Properties::VariablePropertyContainer *variables);
+            ConstraintHandler(QList<Utilities::Settings::Optimizer::Constraint> constraints,
+                              Model::Properties::VariablePropertyContainer *variables,
+                              Reservoir::Grid::Grid *grid);
             bool CaseSatisfiesConstraints(Case *c); //!< Check if a Case satisfies _all_ constraints.
             void SnapCaseToConstraints(Case *c); //!< Snap all variables to _all_ constraints.
 
