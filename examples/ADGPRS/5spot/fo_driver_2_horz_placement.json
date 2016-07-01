@@ -27,7 +27,7 @@
         "Constraints": [
             {
                 "Wells": ["INJECTOR", "PRODUCER"],
-                "Type": "CombinedWellSplineLengthInterwellDistance",
+                "Type": "CombinedWellSplineLengthInterwellDistanceReservoirBoundary",
                 "MinLength": 300,
                 "MaxLength": 800,
                 "MinDistance": 300,
