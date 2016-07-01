@@ -163,6 +163,28 @@ const std::vector<double> &Hdf5SummaryReader::gas_rates_sc(const int well_number
     return well_states_[well_number].gas_rates_sc;
 }
 
+std::vector<double> Hdf5SummaryReader::calculate_cumulative(const std::vector<double> &rates) const {
+    std::vector<double> cumulative;
+    cumulative.resize(ntimes_);
+    cumulative[0] = 0;
+    for (int k = 1; k <ntimes_; ++k) {
+        cumulative[k] = cumulative[k-1] + (times_[k] - times_[k-1]) * (rates[k-1] + rates[k]);
+    }
+    return cumulative;
+}
+
+std::vector<double> Hdf5SummaryReader::cumulative_oil_production_sc(const int well_number) const {
+    return calculate_cumulative(oil_rates_sc(well_number));
+}
+
+std::vector<double> Hdf5SummaryReader::cumulative_water_production_sc(const int well_number) const {
+    return calculate_cumulative(water_rates_sc(well_number));
+}
+
+std::vector<double> Hdf5SummaryReader::cumulative_gas_production_sc(const int well_number) const {
+    return calculate_cumulative(gas_rates_sc(well_number));
+}
+
 Hdf5SummaryReader::well_data::well_data(int nt, int np) {
     nperfs = np;
     perforation_states.resize(np);

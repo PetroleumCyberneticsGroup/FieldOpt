@@ -97,4 +97,12 @@ namespace {
             }
         }
     }
+
+    TEST_F(Hdf5SummaryReaderTest, CumulativeOilProductionSC) {
+        auto reader = Hdf5SummaryReader(file_path);
+        for (int t = 0; t < reader.number_of_tsteps(); ++t) {
+            std::cout << reader.cumulative_oil_production_sc(2)[t] << ", ";
+        }
+        std::cout << std::endl;
+    }
 }

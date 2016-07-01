@@ -86,6 +86,10 @@ public:
      */
     const std::vector<double> &gas_rates_sc(const int well_number) const;
 
+    std::vector<double> cumulative_oil_production_sc(const int well_number) const;
+    std::vector<double> cumulative_water_production_sc(const int well_number) const;
+    std::vector<double> cumulative_gas_production_sc(const int well_number) const;
+
 private:
     const H5std_string GROUP_NAME_RESTART; //!< The name of the restart group in the HDF5 file.
     const H5std_string DATASET_NAME_TIMES; //!< The name of the dataset containing the time step vector in the HDF5 file.
@@ -156,6 +160,31 @@ private:
     int nwells_; //!< Number of wells in summary.
     int ntimes_; //!< Number of time steps in the summary.
     std::vector<double> times_; //!< Vector containing all time steps.
+
+    /*!
+     * Calculate the cumulative using the composite trapezoidal rule.
+     *
+     * The standard form is
+     * \f[
+     *  T(f, h) = \frac{h}{2} \sum_{k=1}^{M}\left[ f(x_{k-1}) + f(x_k) \right]
+     * \f]
+     *
+     * In our case, \f$ h \f$ (the time difference) is not constant but can vary from step to step in the time step
+     * vector \f$ t \f$, so \f$ h = f(k) = t_k - t_{k-1} \f$. Additionally, \f$ f(x_k) = r_k \f$ where \f$ r \f$ is
+     * the rate vector. We also need to compute the cumulative at various time steps, so \f$ M \f$ is a variable.
+     * So then we have
+     * \f[
+     *  T(M) = \sum_{k=1}^M \left[ \frac{t_k - t_{k-1}}{2} \left( r_{k-1} + r_k \right) \right]
+     * \f]
+     * and the cumulative vector becomes
+     * \f[
+     *  c = [0, T(1), T(2), ..., T(N)]
+     * \f]
+     * where \f$ N \f$ is the number of time steps.
+     * @param rates
+     * @return
+     */
+    std::vector<double> calculate_cumulative(const std::vector<double> &rates) const;
 
     std::vector<well_data> well_states_; //!< Vector containing all information from the well states dataset.
 };
