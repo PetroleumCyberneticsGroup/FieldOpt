@@ -148,7 +148,7 @@ private:
         bool is_injector() const { return well_types[0] == 1; }
     };
 
-    std::vector<double> readTimeVector(std::string file_path); //!< Read the time vector from the HDF5 summary file.
+    void readTimeVector(std::string file_path); //!< Read the time vector from the HDF5 summary file.
     void readWellStates(std::string file_path); //!< Read all well state information from the HDF5 summary file.
     void parseWsVector(std::vector<wstype_t> &wsvec); //!< Populate well_states_ by creating well_data and perforation_data objects from the wstype_t vector.
     well_data parseWellState(std::vector<wstype_t> &ws, int wnr); //!< Parse the states for a single well and create a well_data object.

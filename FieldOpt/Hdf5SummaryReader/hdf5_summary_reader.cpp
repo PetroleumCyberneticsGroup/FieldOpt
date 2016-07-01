@@ -7,11 +7,11 @@ Hdf5SummaryReader::Hdf5SummaryReader(const std::string file_path)
 : GROUP_NAME_RESTART(("RESTART")), DATASET_NAME_TIMES("TIMES"),
   GROUP_NAME_FLOW_TRANSPORT("FLOW_TRANSPORT"), DATASET_NAME_WELL_STATES("WELL_STATES")
 {
-    times_ = readTimeVector(file_path);
+    readTimeVector(file_path);
     readWellStates(file_path);
 }
 
-std::vector<double> Hdf5SummaryReader::readTimeVector(std::string file_path) {
+void Hdf5SummaryReader::readTimeVector(std::string file_path) {
     // Read the file
     H5File file(file_path, H5F_ACC_RDONLY);
     Group group = Group(file.openGroup(GROUP_NAME_RESTART));
@@ -29,7 +29,7 @@ std::vector<double> Hdf5SummaryReader::readTimeVector(std::string file_path) {
     std::vector<double> vector;
     vector.resize(dims[0]);
     dataset.read(vector.data(), PredType::NATIVE_DOUBLE);
-    return vector;
+    times_ = vector;
 }
 
 void Hdf5SummaryReader::readWellStates(std::string file_path) {
