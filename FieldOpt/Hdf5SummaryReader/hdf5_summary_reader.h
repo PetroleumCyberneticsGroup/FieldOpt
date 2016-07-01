@@ -5,35 +5,97 @@
 #include <H5Cpp.h>
 
 /*!
+ * The Hdf5SummaryReader class reads the summaries written in the HDF5 format by the AD-GPRS reservoir simulator.
+ *
+ * Currently the class supports getting rates and cumulatives for each well and for the field, as well as
+ * bottom hole pressures and well type for each well.
+ *
+ * Note that we do not have access to the well names in the summary, thus we use well numbers. This number
+ * corresponds to the row on which information about the well is found. This number apparently does not correspond to
+ * the order in which the wells were specified in the driver file, thus we have no way of distinguishing wells other
+ * that by producer/injector. Note also that we do not know whether the order in which the wells appear can change
+ * between subsequent runs of the simulator.
+ *
  * \todo This must also be tested for a 3 phase black oil model, it has only been tested for 2 phase dead oil.
  */
 class Hdf5SummaryReader {
 public:
+    /*!
+     * Read the HDF5 summary file written by AD-GPRS at the specified path.
+     *
+     * \note The provided path is not checked by this method, and should therefore be checked before
+     * invoking this.
+     * @param file_path Path to a .H5 summary file.
+     * @return A Hdf5SummaryReader object containing information from the summary.
+     */
     Hdf5SummaryReader(const std::string file_path);
+
+    /*!
+     * Get the vector containing all time steps in the summary.
+     */
     const std::vector<double> &times_steps() const { return times_; }
 
-
+    /*!
+     * Get the number of wells found in the summary.
+     */
     int number_of_wells() const { return nwells_; }
+
+    /*!
+     * Get the number of time steps found in the summary.
+     */
     int number_of_tsteps() const { return ntimes_; }
 
+    /*!
+     * Get the type reported for a well. +1 indicates an injector, -1 indicates a producer.
+     */
     int well_type(const int well_number) const;
+
+    /*!
+     * Check if a well is reported as an injector.
+     * @return True if it is an injector; otherwise false.
+     */
     bool is_injector(const int well_number) const;
 
+    /*!
+     * Get the number of perforations reported for a well.
+     */
     int number_of_perforations(const int well_number) const;
+
+    /*!
+     * Get the number of phases (water/oil/gas) found for a well.
+     */
     int number_of_phases(const int well_number) const;
 
+    /*!
+     * Get the vector of bottom hole pressures at each time step for a well.
+     */
     const std::vector<double> &bottom_hole_pressures(const int well_number) const;
 
+    /*!
+     * Get the vector of oil rates (at standard conditions) at each time step for a well.
+     */
     const std::vector<double> &oil_rates_sc(const int well_number) const;
+
+    /*!
+     * Get the vector of water rates (at standard conditions) at each time step for a well.
+     */
     const std::vector<double> &water_rates_sc(const int well_number) const;
+
+    /*!
+     * Get the vector of water rates (at standard conditions) at each time step for a well.
+     */
     const std::vector<double> &gas_rates_sc(const int well_number) const;
 
 private:
-    const H5std_string GROUP_NAME_RESTART;
-    const H5std_string DATASET_NAME_TIMES;
-    const H5std_string GROUP_NAME_FLOW_TRANSPORT;
-    const H5std_string DATASET_NAME_WELL_STATES;
+    const H5std_string GROUP_NAME_RESTART; //!< The name of the restart group in the HDF5 file.
+    const H5std_string DATASET_NAME_TIMES; //!< The name of the dataset containing the time step vector in the HDF5 file.
+    const H5std_string GROUP_NAME_FLOW_TRANSPORT; //!< The name of the flow transport group in the HDF5 file.
+    const H5std_string DATASET_NAME_WELL_STATES; //!< The name of the dataset containing the well states in the HDF5 file.
 
+    /*!
+     * The wstype_t datatype represents the datatype in which well states are stored in the HDF5 file. Each element
+     * in the dataset contains information about a well and its perforations at a specific time step.
+     */
     typedef struct wstype_t {
         std::vector<double> vPressures;
         hvl_t vPressures_handle;
