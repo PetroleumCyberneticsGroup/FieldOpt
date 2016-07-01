@@ -5,6 +5,7 @@
 #include "well_spline_length.h"
 #include "interwell_distance.h"
 #include "combined_spline_length_interwell_distance.h"
+#include "combined_spline_length_interwell_distance_reservoir_boundary.h"
 #include "reservoir_boundary.h"
 #include "rate_constraint.h"
 #include "Optimization/case.h"
