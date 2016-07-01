@@ -113,9 +113,13 @@ private:
         hvl_t vDoubleData_handle;
     } wstype_t;
 
-    struct perforation_state {
-        perforation_state(){}
-        perforation_state(int nt);
+    /*!
+     * The perforation_data struct holds vectors containing rate, pressure, temperature and density values at
+     * all time steps for a specific perforation in a well.
+     */
+    struct perforation_data {
+        perforation_data(){}
+        perforation_data(int nt);
         std::vector<double> pressures;
         std::vector<double> temperatures;
         std::vector<double> average_densities;
@@ -123,12 +127,17 @@ private:
         std::vector<double> water_rates;
         std::vector<double> gas_rates;
     };
-    struct well_state {
-        well_state(){}
-        well_state(int nt, int np);
+
+    /*!
+     * The well_data struct holds information about a specific well, as well as a vector of perforation_data for
+     * all of its perforations, and vectors containing rate and pressure values at all time steps.
+     */
+    struct well_data {
+        well_data(){}
+        well_data(int nt, int np);
         int nperfs; //!< Number of perforations in the well
         int nphases; //!< Number of fluid phases
-        std::vector<perforation_state> perforation_states;
+        std::vector<perforation_data> perforation_states;
         std::vector<int> well_types;
         std::vector<int> phase_status;
         std::vector<int> well_controls;
@@ -142,13 +151,13 @@ private:
     std::vector<double> readTimeVector(std::string file_path);
     void readWellStates(std::string file_path);
     void parseWsVector(std::vector<wstype_t> &wsvec);
-    well_state parseWellState(std::vector<wstype_t> &ws, int wnr);
+    well_data parseWellState(std::vector<wstype_t> &ws, int wnr);
 
     int nwells_; //!< Number of wells in summary.
     int ntimes_; //!< Number of time steps in the summary.
     std::vector<double> times_;
 
-    std::vector<well_state> well_states_;
+    std::vector<well_data> well_states_;
 };
 
 

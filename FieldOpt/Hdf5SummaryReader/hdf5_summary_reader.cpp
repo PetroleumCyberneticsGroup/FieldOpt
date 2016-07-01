@@ -90,11 +90,11 @@ void Hdf5SummaryReader::parseWsVector(std::vector<wstype_t> &wsvec) {
     }
 }
 
-Hdf5SummaryReader::well_state Hdf5SummaryReader::parseWellState(std::vector<wstype_t> &ws, int wnr) {
+Hdf5SummaryReader::well_data Hdf5SummaryReader::parseWellState(std::vector<wstype_t> &ws, int wnr) {
     int first = wnr*ntimes_;
     int last = first + ntimes_;
     int nperfs = ws[first].vAverageDensity.size();
-    auto state = Hdf5SummaryReader::well_state(ntimes_, nperfs);
+    auto state = Hdf5SummaryReader::well_data(ntimes_, nperfs);
     state.nphases = ws[0].vPhaseRates.size() / nperfs;
     int t = 0;
     for (int i = first; i < last; ++i) { // Well data at each time step
@@ -112,7 +112,7 @@ Hdf5SummaryReader::well_state Hdf5SummaryReader::parseWellState(std::vector<wsty
             state.water_rates_sc[t] = ws[i].vPhaseRatesAtSC[2];
         } else throw std::runtime_error("Can only handle models with 2 or 3 phases.");
         for (int p = 0; p < nperfs; ++p) { // Perforation data at each time step
-            state.perforation_states[p] = perforation_state(ntimes_);
+            state.perforation_states[p] = perforation_data(ntimes_);
             state.perforation_states[p].pressures[t] = ws[i].vPressures[p+1];
             state.perforation_states[p].temperatures[t] = ws[i].vTemperatures[p];
             state.perforation_states[p].average_densities[t] = ws[i].vAverageDensity[p];
@@ -163,7 +163,7 @@ const std::vector<double> &Hdf5SummaryReader::gas_rates_sc(const int well_number
     return well_states_[well_number].gas_rates_sc;
 }
 
-Hdf5SummaryReader::well_state::well_state(int nt, int np) {
+Hdf5SummaryReader::well_data::well_data(int nt, int np) {
     nperfs = np;
     perforation_states.resize(np);
     well_types.resize(nt);
@@ -175,7 +175,7 @@ Hdf5SummaryReader::well_state::well_state(int nt, int np) {
     gas_rates_sc.resize(nt);
 }
 
-Hdf5SummaryReader::perforation_state::perforation_state(int nt) {
+Hdf5SummaryReader::perforation_data::perforation_data(int nt) {
     pressures.resize(nt);
     temperatures.resize(nt);
     average_densities.resize(nt);

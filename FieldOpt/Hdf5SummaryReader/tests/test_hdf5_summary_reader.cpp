@@ -98,27 +98,3 @@ namespace {
         }
     }
 }
-//struct well_state {
-//    well_state(){}
-//    well_state(int nt, int np);
-//    int nperfs; //!< Number of perforations in the well
-//    int nphases; //!< Number of fluid phases
-//    std::vector<perforation_state> perforation_states;
-//    std::vector<int> well_types;
-//    std::vector<int> phase_status;
-//    std::vector<int> well_controls;
-//    std::vector<double> bottom_hole_pressures;
-//    std::vector<double> oil_rates_sc;
-//    std::vector<double> water_rates_sc;
-//    std::vector<double> gas_rates_sc;
-//};
-//struct perforation_state {
-//    perforation_state(){}
-//    perforation_state(int nt);
-//    std::vector<double> pressures;
-//    std::vector<double> temperatures;
-//    std::vector<double> average_densities;
-//    std::vector<double> oil_rates;
-//    std::vector<double> water_rates;
-//    std::vector<double> gas_rates;
-//};
