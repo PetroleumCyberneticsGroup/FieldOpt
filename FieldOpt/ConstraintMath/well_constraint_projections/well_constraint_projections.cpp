@@ -532,7 +532,7 @@ namespace WellConstraintProjections {
         if (new_coords.length() != n_of_points) {
             throw std::runtime_error("Error in movement_cost: Lists of points are not the same length");
         }
-        double cost_squares;
+        double cost_squares = 0;
         for (int ii = 0; ii < n_of_points; ii++) {
             cost_squares += (old_coords.at(ii) - new_coords.at(ii)).squaredNorm();
         }

@@ -16,7 +16,7 @@ protected:
     virtual void SetUp() {
         prod_perforations_ = QList<Completions::Perforation *>();
         for (int i = 0; i < prod_well_.well_blocks.size(); ++i) {
-            if (prod_well_.well_blocks[i].has_completion == true) {
+            if (prod_well_.well_blocks[i].has_completion) {
                 prod_perforations_.append(new Completions::Perforation(prod_well_.well_blocks[i].completion,
                                                                        model_->variables()));
             }

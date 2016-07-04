@@ -150,9 +150,9 @@ namespace Utilities {
                 well.spline_toe.x = json_toe["x"].toDouble();
                 well.spline_toe.y = json_toe["y"].toDouble();
                 well.spline_toe.z = json_toe["z"].toDouble();
-                if (json_heel.contains("IsVariable") && json_heel["IsVariable"].toBool() == true)
+                if (json_heel.contains("IsVariable") && json_heel["IsVariable"].toBool())
                     well.spline_heel.is_variable = true;
-                if (json_toe.contains("IsVariable") && json_toe["IsVariable"].toBool() == true)
+                if (json_toe.contains("IsVariable") && json_toe["IsVariable"].toBool())
                     well.spline_toe.is_variable = true;
                 well.spline_heel.name = "SplinePoint#" + well.name + "#heel";
                 well.spline_toe.name = "SplinePoint#" + well.name + "#toe";
