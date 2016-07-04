@@ -151,9 +151,36 @@ namespace {
     TEST_F(Hdf5SummaryReaderTest, WaterInjectionRatesSC) {
         auto reader = Hdf5SummaryReader(file_path);
         double expected_values[8] = {39601.7, 14233.9, 8755.69, 6803.42, 6701.8, 6431.61, 6282.44, 6267.97};
-        EXPECT_THROW(reader.water_injection_rates(1), std::runtime_error);
+        EXPECT_THROW(reader.water_injection_rates_sc(1), std::runtime_error);
         for (int t = 0; t < reader.number_of_tsteps(); ++t) {
-            EXPECT_NEAR(expected_values[t], reader.water_injection_rates(0)[t], 1.0);
+            EXPECT_NEAR(expected_values[t], reader.water_injection_rates_sc(0)[t], 1.0);
+        }
+    }
+
+    TEST_F(Hdf5SummaryReaderTest, CumulativeWaterInjectionSC) {
+        auto reader = Hdf5SummaryReader(file_path);
+        double expected_values[8] = {0.00000000e+00, 8.07534000e+04, 2.53175325e+05, 4.86561975e+05,
+                                     5.00067195e+05, 5.98567770e+05, 7.89278520e+05, 8.20654545e+05};
+        for (int t = 0; t < reader.number_of_tsteps(); ++t) {
+            EXPECT_NEAR(expected_values[t], reader.cumulative_water_injection_sc(0)[t], 1.0);
+        }
+    }
+
+    TEST_F(Hdf5SummaryReaderTest, FieldWaterInjectionRatesSC) {
+        auto reader = Hdf5SummaryReader(file_path);
+        double expected_values[8] = {39601.7, 14233.9, 8755.69, 6803.42, 6701.8, 6431.61, 6282.44, 6267.97};
+        EXPECT_THROW(reader.water_injection_rates_sc(1), std::runtime_error);
+        for (int t = 0; t < reader.number_of_tsteps(); ++t) {
+            EXPECT_NEAR(expected_values[t], reader.field_water_injection_rates_sc()[t], 1.0);
+        }
+    }
+
+    TEST_F(Hdf5SummaryReaderTest, FieldCumulativeWaterInjectionSC) {
+        auto reader = Hdf5SummaryReader(file_path);
+        double expected_values[8] = {0.00000000e+00, 8.07534000e+04, 2.53175325e+05, 4.86561975e+05,
+                                     5.00067195e+05, 5.98567770e+05, 7.89278520e+05, 8.20654545e+05};
+        for (int t = 0; t < reader.number_of_tsteps(); ++t) {
+            EXPECT_NEAR(expected_values[t], reader.field_cumulative_water_injection_sc()[t], 1.0);
         }
     }
 }

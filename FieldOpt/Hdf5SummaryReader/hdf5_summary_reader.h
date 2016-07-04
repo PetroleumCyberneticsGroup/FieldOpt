@@ -142,12 +142,42 @@ public:
     /*!
      * Get the water injection rates (at standard conditions) at each time step for a well.
      */
-    std::vector<double> water_injection_rates(const int well_number) const;
+    std::vector<double> water_injection_rates_sc(const int well_number) const;
 
     /*!
      * Get the gas injection rates (at standard conditions) at each time step for a well.
      */
-    std::vector<double> gas_injection_rates(const int well_number) const;
+    std::vector<double> gas_injection_rates_sc(const int well_number) const;
+
+    /*!
+     * Get the cumulative water injection (at standard conditions) at each time step for a well.
+     */
+    std::vector<double> cumulative_water_injection_sc(const int well_number) const;
+
+    /*!
+     * Get the cumulative gas injection (at standard conditions) at each time step for a well.
+     */
+    std::vector<double> cumulative_gas_injection_sc(const int well_number) const;
+
+    /*!
+     * Get the field-wide water injection rates (at standard conditions) at each time step.
+     */
+    std::vector<double> field_water_injection_rates_sc() const;
+
+    /*!
+     * Get the field-wide gas injection rates (at standard conditions) at each time step.
+     */
+    std::vector<double> field_gas_injection_rates_sc() const;
+
+    /*!
+     * Get the field-wide water injection cumulatives (at standard conditions) at each time step.
+     */
+    std::vector<double> field_cumulative_water_injection_sc() const;
+
+    /*!
+     * Get the field-wide gas injection cumulatives (at standard conditions) at each time step.
+     */
+    std::vector<double> field_cumulative_gas_injection_sc() const;
 
 
 private:
