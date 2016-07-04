@@ -39,7 +39,9 @@ namespace {
     }
 
     TEST_F(AdgprsResultsTest, FGPT) {
-        EXPECT_THROW(results_->GetValueVector(Simulation::Results::Results::Property::CumulativeGasProduction), std::runtime_error);
+        EXPECT_EQ(8, results_->GetValueVector(Simulation::Results::Results::Property::CumulativeGasProduction).size());
+        EXPECT_FLOAT_EQ(0.0, results_->GetValueVector(Simulation::Results::Results::Property::CumulativeGasProduction).front());
+        EXPECT_FLOAT_EQ(0.0, results_->GetValueVector(Simulation::Results::Results::Property::CumulativeGasProduction).back());
     }
 
 }
