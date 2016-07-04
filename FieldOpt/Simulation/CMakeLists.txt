@@ -29,7 +29,7 @@ add_library(fieldopt::simulation ALIAS ${PROJECT_NAME})
 
 target_link_libraries(simulation
         PUBLIC fieldopt::model
-        PUBLIC fieldopt::adgprsresultsreader)
+        PUBLIC fieldopt::hdf5summaryreader)
 
 target_compile_features(ertwrapper
         PUBLIC cxx_auto_type

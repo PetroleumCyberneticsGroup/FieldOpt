@@ -103,7 +103,7 @@ double ECLResults::GetValue(Results::Property prop, QString well, int time_index
     return summary_reader_->GetWellVar(well, keys_.value(prop), time_index);
 }
 
-QVector<double> ECLResults::GetValueVector(Results::Property prop)
+std::vector<double> ECLResults::GetValueVector(Results::Property prop)
 {
     if (!isAvailable()) throw ResultsNotAvailableException();
     if (!keys_.contains(prop)) throw ResultPropertyKeyDoesNotExistException("ECLIPSE");
@@ -120,7 +120,7 @@ QVector<double> ECLResults::GetValueVector(Results::Property prop)
                 values.append(summary_reader_->GetFieldVar(keys_[prop], t));
         }
     }
-    return values;
+    return values.toStdVector();
 }
 
 }}

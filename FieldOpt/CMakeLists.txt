@@ -10,6 +10,10 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(Qt5Core REQUIRED)
 include_directories(${Qt5Core_INCLUDE_DIRS} ${Qt5Gui_INCLUDE_DIRS})
 
+find_package(HDF5 REQUIRED COMPONENTS CXX)
+add_definitions(${HDF5_DEFINITIONS})
+include_directories(${HDF5_INCLUDE_DIRS})
+
 # Boost libraries
 find_package(Boost)
 if (Boost_FOUND)
@@ -36,7 +40,6 @@ add_subdirectory(Optimization)
 add_subdirectory(Simulation)
 add_subdirectory(Runner)
 add_subdirectory(ConstraintMath)
-add_subdirectory(AdgprsResultsReader)
 add_subdirectory(Hdf5SummaryReader)
 
 ## Copy ADGPRS summary convertion python scripts

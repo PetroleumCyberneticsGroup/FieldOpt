@@ -3,7 +3,7 @@
 
 #include "results.h"
 #include <QHash>
-#include "AdgprsResultsReader/adgprs_results_reader.h"
+#include "Hdf5SummaryReader/hdf5_summary_reader.h"
 
 namespace Simulation { namespace Results {
 
@@ -23,26 +23,16 @@ public:
     // Results interface
 public:
     void ReadResults(QString file_path);
-    void ReadResults(QString file_path, QString build_dir);
     void DumpResults();
     double GetValue(Property prop);
     double GetValue(Property prop, QString well);
     double GetValue(Property prop, int time_index);
     double GetValue(Property prop, QString well, int time_index);
-    QVector<double> GetValueVector(Property prop);
+    std::vector<double> GetValueVector(Property prop);
 
 private:
     QString file_path_;
-    QString build_dir_;
-    AdgprsResultsReader::AdgprsResultsReader *summary_reader_;
-
-    // Mappings to summary keys.
-    QHash<Property, QString> keys_ {
-        {CumulativeOilProduction, "FOPT"},
-        {CumulativeGasProduction, "FGPT"},
-        {CumulativeWaterProduction, "FWPT"},
-        {Time, "TIME"}
-    };
+    Hdf5SummaryReader *summary_reader_;
 };
 
 }}

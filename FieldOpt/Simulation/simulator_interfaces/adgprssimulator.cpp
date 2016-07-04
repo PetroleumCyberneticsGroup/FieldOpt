@@ -27,12 +27,7 @@ namespace Simulation {
             copyDriverFiles();
             driver_file_writer_->WriteDriverFile(output_directory_);
             ::Utilities::Unix::ExecShellScript(script_path_, script_args_);
-
-            if (build_dir_.length() > 0)
-                results_->ReadResults(output_h5_summary_file_path_, build_dir_);
-            else
-                results_->ReadResults(output_h5_summary_file_path_);
-
+            results_->ReadResults(output_h5_summary_file_path_);
         }
 
         void AdgprsSimulator::CleanUp()
@@ -80,10 +75,7 @@ namespace Simulation {
             std::cout << "Starting monitored simulation with timeout " << timeout << std::endl;
             bool success = ::Utilities::Unix::ExecShellScriptTimeout(script_path_, script_args_, t);
             if (success) {
-                if (build_dir_.length() > 0)
-                    results_->ReadResults(output_h5_summary_file_path_, build_dir_);
-                else
-                    results_->ReadResults(output_h5_summary_file_path_);
+                results_->ReadResults(output_h5_summary_file_path_);
             }
             return success;
         }

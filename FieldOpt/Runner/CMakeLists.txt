@@ -27,7 +27,7 @@ target_link_libraries(FieldOpt
 		PUBLIC fieldopt::optimization
 		PUBLIC fieldopt::utilities
 		PUBLIC fieldopt::ertwrapper
-		PUBLIC fieldopt::adgprsresultsreader
+		PUBLIC fieldopt::hdf5summaryreader
 		PUBLIC fieldopt::constraintmath
 		PUBLIC ${CMAKE_THREAD_LIBS_INIT}
 		PUBLIC ${Boost_LIBRARIES})
@@ -38,7 +38,7 @@ target_link_libraries(runner
 		PUBLIC fieldopt::optimization
 		PUBLIC fieldopt::utilities
 		PUBLIC fieldopt::ertwrapper
-		PUBLIC fieldopt::adgprsresultsreader
+		PUBLIC fieldopt::hdf5summaryreader
 		PUBLIC fieldopt::constraintmath
 		PUBLIC ${CMAKE_THREAD_LIBS_INIT}
 		PUBLIC ${Boost_LIBRARIES})
