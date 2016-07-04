@@ -168,7 +168,7 @@ std::vector<double> Hdf5SummaryReader::calculate_cumulative(const std::vector<do
     cumulative.resize(ntimes_);
     cumulative[0] = 0;
     for (int k = 1; k <ntimes_; ++k) {
-        cumulative[k] = cumulative[k-1] + (times_[k] - times_[k-1]) * (rates[k-1] + rates[k]);
+        cumulative[k] = cumulative[k-1] + ((times_[k] - times_[k-1]) * (rates[k-1] + rates[k]) / 2.0);
     }
     return cumulative;
 }
@@ -183,6 +183,39 @@ std::vector<double> Hdf5SummaryReader::cumulative_water_production_sc(const int 
 
 std::vector<double> Hdf5SummaryReader::cumulative_gas_production_sc(const int well_number) const {
     return calculate_cumulative(gas_rates_sc(well_number));
+}
+
+std::vector<double> Hdf5SummaryReader::field_oil_rates_sc() const {
+    std::vector<double> sum(ntimes_, 0.0);
+    for (int w = 0; w < nwells_; ++w) {
+        auto well_rates = oil_rates_sc(w);
+        for (int t = 0; t < ntimes_; ++t) {
+            sum[t] = sum[t] + well_rates[t];
+        }
+    }
+    return sum;
+}
+
+std::vector<double> Hdf5SummaryReader::field_water_rates_sc() const {
+    std::vector<double> sum(ntimes_, 0.0);
+    for (int w = 0; w < nwells_; ++w) {
+        auto well_rates = water_rates_sc(w);
+        for (int t = 0; t < ntimes_; ++t) {
+            sum[t] = sum[t] + well_rates[t];
+        }
+    }
+    return sum;
+}
+
+std::vector<double> Hdf5SummaryReader::field_gas_rates_sc() const {
+    std::vector<double> sum(ntimes_, 0.0);
+    for (int w = 0; w < nwells_; ++w) {
+        auto well_rates = gas_rates_sc(w);
+        for (int t = 0; t < ntimes_; ++t) {
+            sum[t] = sum[t] + well_rates[t];
+        }
+    }
+    return sum;
 }
 
 Hdf5SummaryReader::well_data::well_data(int nt, int np) {

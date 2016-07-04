@@ -98,11 +98,28 @@ namespace {
         }
     }
 
-    TEST_F(Hdf5SummaryReaderTest, CumulativeOilProductionSC) {
+    TEST_F(Hdf5SummaryReaderTest, CumulativWaterProductionSC) {
         auto reader = Hdf5SummaryReader(file_path);
-        for (int t = 0; t < reader.number_of_tsteps(); ++t) {
-            std::cout << reader.cumulative_oil_production_sc(2)[t] << ", ";
+        double expected_final_cumulatives[5] = {-820650, 71961, 93900, -120.8536, 151200};
+        for (int w = 0; w < reader.number_of_wells(); ++w) {
+            EXPECT_NEAR(expected_final_cumulatives[w], reader.cumulative_water_production_sc(w)[reader.number_of_tsteps()-1], 5.1);
         }
-        std::cout << std::endl;
+    }
+
+    TEST_F(Hdf5SummaryReaderTest, FieldOilRatesSC) {
+        auto reader = Hdf5SummaryReader(file_path);
+        double expected_rates[8] = {4019.531, 1656.43226, 1966.0995, 1822.35104, 1812.75895, 1738.22821, 1580.15754, 1554.09552};
+        for (int t = 0; t < reader.number_of_tsteps(); ++t) {
+            EXPECT_NEAR(expected_rates[t], reader.field_oil_rates_sc()[t], 1.0);
+        }
+    }
+
+
+    TEST_F(Hdf5SummaryReaderTest, FieldWaterRatesSC) {
+        auto reader = Hdf5SummaryReader(file_path);
+        double expected_rates[8] = {-23003.8015, -10216.99, -6341.257, -4068.191, -3927.033, -3432.306, -2953.04924, -2879.65886};
+        for (int t = 0; t < reader.number_of_tsteps(); ++t) {
+            EXPECT_NEAR(expected_rates[t], reader.field_water_rates_sc()[t], 1.0);
+        }
     }
 }
