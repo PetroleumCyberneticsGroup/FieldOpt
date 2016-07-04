@@ -408,7 +408,6 @@ namespace WellConstraintProjections {
     }
 
     QList<Vector3d> non_inv_solution(Matrix3d A, Vector3d b) {
-        // \todo Continue here on the morrow
         QList<Vector3d> solution_vectors;
         // Compute full pivotal LU decomposition of A
         FullPivLU<Matrix3d> lu(A);
@@ -421,9 +420,14 @@ namespace WellConstraintProjections {
         }
         else null_space = nu;
 
+        // \todo Hilmar, check this (the 4 next lines). Its to avoid problems if the polynomial is a constant.
+        auto coeffs = non_inv_quad_coeffs(x, null_space);
+        if (coeffs[0] == 0.0 && coeffs[1] == 0.0) {
+            return solution_vectors;
+        }
+
         VectorXd real_roots, complex_roots;
-        rpoly_plus_plus::FindPolynomialRootsJenkinsTraub(non_inv_quad_coeffs(x, null_space),
-                                                         &real_roots, &complex_roots);
+        rpoly_plus_plus::FindPolynomialRootsJenkinsTraub(coeffs, &real_roots, &complex_roots);
 
 
         if (complex_roots(0) == 0) {
@@ -532,7 +536,7 @@ namespace WellConstraintProjections {
         if (new_coords.length() != n_of_points) {
             throw std::runtime_error("Error in movement_cost: Lists of points are not the same length");
         }
-        double cost_squares;
+        double cost_squares = 0;
         for (int ii = 0; ii < n_of_points; ii++) {
             cost_squares += (old_coords.at(ii) - new_coords.at(ii)).squaredNorm();
         }

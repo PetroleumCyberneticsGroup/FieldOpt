@@ -1,6 +1,3 @@
-[submodule "FieldOpt/AdgprsSummaryConverter"]
-	path = FieldOpt/AdgprsSummaryConverter
-	url = git@github.com:PetroleumCyberneticsGroup/AdgprsSummaryConverter.git
 [submodule "FieldOpt/Optimization/experimental_constraints"]
 	path = FieldOpt/Optimization/experimental_constraints
 	url = git@github.com:PetroleumCyberneticsGroup/experimental_constraints.git

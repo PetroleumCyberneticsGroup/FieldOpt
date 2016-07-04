@@ -123,7 +123,7 @@ namespace Utilities {
                             return true;
                         }
                     }
-                    else if (errno = EINVAL) {
+                    else if (errno == EINVAL) {
                         std::cout << "Got error EINVAL from process, terminating it." << std::endl;
                         helpers::terminate_process(pid);
                         return false;
