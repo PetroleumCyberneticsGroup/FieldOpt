@@ -62,6 +62,11 @@ public:
     int number_of_perforations(const int well_number) const;
 
     /*!
+     * Get the number of phases in the model.
+     */
+    int number_of_phases() const;
+
+    /*!
      * Get the number of phases (water/oil/gas) found for a well.
      */
     int number_of_phases(const int well_number) const;
@@ -174,6 +179,7 @@ private:
 
     int nwells_; //!< Number of wells in summary.
     int ntimes_; //!< Number of time steps in the summary.
+    int nphases_; //!< Number of phases in the model
     std::vector<double> times_; //!< Vector containing all time steps.
 
     /*!

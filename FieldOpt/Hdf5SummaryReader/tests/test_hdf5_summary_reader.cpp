@@ -18,6 +18,7 @@ namespace {
         auto reader = Hdf5SummaryReader(file_path);
         EXPECT_EQ(5, reader.number_of_wells());
         EXPECT_EQ(8, reader.number_of_tsteps());
+        EXPECT_EQ(2, reader.number_of_phases());
     }
 
 

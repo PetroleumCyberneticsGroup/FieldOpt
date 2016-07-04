@@ -86,8 +86,8 @@ void Hdf5SummaryReader::parseWsVector(std::vector<wstype_t> &wsvec) {
     well_states_.resize(nwells_);
     for (int well = 0; well < nwells_; ++well) {
         well_states_[well] = parseWellState(wsvec, well);
-
     }
+    nphases_ = well_states_[0].nphases;
 }
 
 Hdf5SummaryReader::well_data Hdf5SummaryReader::parseWellState(std::vector<wstype_t> &ws, int wnr) {
@@ -160,6 +160,7 @@ const std::vector<double> &Hdf5SummaryReader::water_rates_sc(const int well_numb
 }
 
 const std::vector<double> &Hdf5SummaryReader::gas_rates_sc(const int well_number) const {
+    if (nphases_ == 2) throw std::runtime_error("Cannot get gas rates for dead oil (two-phase) models.");
     return well_states_[well_number].gas_rates_sc;
 }
 
@@ -182,6 +183,7 @@ std::vector<double> Hdf5SummaryReader::cumulative_water_production_sc(const int 
 }
 
 std::vector<double> Hdf5SummaryReader::cumulative_gas_production_sc(const int well_number) const {
+    if (nphases_ == 2) throw std::runtime_error("Cannot get gas cumulatives for dead oil (two-phase) models.");
     return calculate_cumulative(gas_rates_sc(well_number));
 }
 
@@ -208,6 +210,7 @@ std::vector<double> Hdf5SummaryReader::field_water_rates_sc() const {
 }
 
 std::vector<double> Hdf5SummaryReader::field_gas_rates_sc() const {
+    if (nphases_ == 2) throw std::runtime_error("Cannot get field gas rates for dead oil (two-phase) models.");
     std::vector<double> sum(ntimes_, 0.0);
     for (int w = 0; w < nwells_; ++w) {
         auto well_rates = gas_rates_sc(w);
@@ -216,6 +219,10 @@ std::vector<double> Hdf5SummaryReader::field_gas_rates_sc() const {
         }
     }
     return sum;
+}
+
+int Hdf5SummaryReader::number_of_phases() const {
+    return nphases_;
 }
 
 Hdf5SummaryReader::well_data::well_data(int nt, int np) {
