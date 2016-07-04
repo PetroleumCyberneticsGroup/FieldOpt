@@ -26,7 +26,15 @@ namespace Optimization {
                 length_constraints_.append(new WellSplineLength(len_constr_settings, variables));
                 std::cout << "Initialized length constraint." << std::endl;
 
-                boundary_constraints_.append(new ReservoirBoundary(len_constr_settings, variables, nullptr));
+                Utilities::Settings::Optimizer::Constraint boundary_constraint_settings;
+                boundary_constraint_settings.box_imin = settings.box_imin;
+                boundary_constraint_settings.box_imax = settings.box_imax;
+                boundary_constraint_settings.box_jmin = settings.box_jmin;
+                boundary_constraint_settings.box_jmax = settings.box_jmax;
+                boundary_constraint_settings.box_kmin = settings.box_kmin;
+                boundary_constraint_settings.box_kmax = settings.box_kmax;
+                boundary_constraint_settings.well = wname;
+                boundary_constraints_.append(new ReservoirBoundary(boundary_constraint_settings, variables, grid));
                 std::cout << "Initialized boundary constraint." << std::endl;
             }
         }
