@@ -106,9 +106,35 @@ public:
      */
     std::vector<double> cumulative_gas_production_sc(const int well_number) const;
 
+    /*!
+     * Get field-wide oil production rates (at standard conditions) at each time step.
+     */
     std::vector<double> field_oil_rates_sc() const;
+
+    /*!
+     * Get field-wide water production rates (at standard conditions) at each time step.
+     */
     std::vector<double> field_water_rates_sc() const;
+
+    /*!
+     * Get field-wide gas production rates (at standard conditions) at each time step.
+     */
     std::vector<double> field_gas_rates_sc() const;
+
+    /*!
+     * Get field-wide cumulative oil production (at standard conditions) at each time step.
+     */
+    std::vector<double> field_cumulative_oil_production_sc() const;
+
+    /*!
+     * Get field-wide cumulative water production (at standard conditions) at each time step.
+     */
+    std::vector<double> field_cumulative_water_production_sc() const;
+
+    /*!
+     * Get field-wide cumulative gas production (at standard conditions) at each time step.
+     */
+    std::vector<double> field_cumulative_gas_production_sc() const;
 
 private:
     const H5std_string GROUP_NAME_RESTART; //!< The name of the restart group in the HDF5 file.

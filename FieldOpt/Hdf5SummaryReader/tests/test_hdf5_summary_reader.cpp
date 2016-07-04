@@ -107,6 +107,14 @@ namespace {
         }
     }
 
+    TEST_F(Hdf5SummaryReaderTest, CumulativeOilProductionSC) {
+        auto reader = Hdf5SummaryReader(file_path);
+        double expected_final_cumulatives[5] = {0.0 , 357.42928, 117920.765, 62110.4295, 0.0 };
+        for (int w = 0; w < reader.number_of_wells(); ++w) {
+            EXPECT_NEAR(expected_final_cumulatives[w], reader.cumulative_oil_production_sc(w)[reader.number_of_tsteps()-1], 1.0);
+        }
+    }
+
     TEST_F(Hdf5SummaryReaderTest, FieldOilRatesSC) {
         auto reader = Hdf5SummaryReader(file_path);
         double expected_rates[8] = {4019.531, 1656.43226, 1966.0995, 1822.35104, 1812.75895, 1738.22821, 1580.15754, 1554.09552};
@@ -118,9 +126,25 @@ namespace {
 
     TEST_F(Hdf5SummaryReaderTest, FieldWaterRatesSC) {
         auto reader = Hdf5SummaryReader(file_path);
-        double expected_rates[8] = {-23003.8015, -10216.99, -6341.257, -4068.191, -3927.033, -3432.306, -2953.04924, -2879.65886};
+        double expected_rates[8] = {16597.8985, 4016.91, 2414.433, 2735.229, 2774.767, 2999.304, 3329.39076, 3388.31114};
         for (int t = 0; t < reader.number_of_tsteps(); ++t) {
             EXPECT_NEAR(expected_rates[t], reader.field_water_rates_sc()[t], 1.0);
+        }
+    }
+
+    TEST_F(Hdf5SummaryReaderTest, FieldOilCumulativesSC) {
+        auto reader = Hdf5SummaryReader(file_path);
+        double expected_values[8] = {0.0, 8513.94489, 35682.93309, 92509.69119, 96144.80118, 122777.20488, 172552.99113, 180388.62378};
+        for (int t = 0; t < reader.number_of_tsteps(); ++t) {
+            EXPECT_NEAR(expected_values[t], reader.field_cumulative_oil_production_sc()[t], 1.0);
+        }
+    }
+
+    TEST_F(Hdf5SummaryReaderTest, FieldWaterCumulativesSC) {
+        auto reader = Hdf5SummaryReader(file_path);
+        double expected_values[8] = {0.0, 30922.21275, 79157.28525, 156402.21525, 161912.21125, 205217.74375, 300148.16515, 316942.4199};
+        for (int t = 0; t < reader.number_of_tsteps(); ++t) {
+            EXPECT_NEAR(expected_values[t], reader.field_cumulative_water_production_sc()[t], 1.0);
         }
     }
 }
