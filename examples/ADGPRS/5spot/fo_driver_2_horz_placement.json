@@ -31,7 +31,13 @@
                 "MinLength": 300,
                 "MaxLength": 800,
                 "MinDistance": 300,
-                "MaxIterations": 100
+                "MaxIterations": 100,
+                "BoxImin": 1,
+                "BoxImax": 60,
+                "BoxJmin": 1,
+                "BoxJmax": 60,
+                "BoxKmin": 1,
+                "BoxKmax": 1                
             }
         ]
     },
