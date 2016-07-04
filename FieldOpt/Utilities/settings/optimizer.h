@@ -53,7 +53,7 @@ namespace Utilities {
                 QStringList wells; //!< List of well names if the constraint applies to more than one.
                 double max; //!< Max limit when using constraints like BHP.
                 double min; //!< Min limit when using constraints like BHP.
-                double imin, imax, jmin, jmax, kmin, kmax; //!< Min max limits for geometrix box constraints.
+                double box_imin, box_imax, box_jmin, box_jmax, box_kmin, box_kmax; //!< Min max limits for geometrix box constraints.
                 double max_length;
                 double min_length;
                 double min_distance;

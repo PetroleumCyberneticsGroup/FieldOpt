@@ -15,12 +15,12 @@ namespace TestResources {
                 settings_model_ = settings_full_->model();
 
                 constraint_settings_reservoir_boundary_.type = Utilities::Settings::Optimizer::ConstraintType::ReservoirBoundary;
-                constraint_settings_reservoir_boundary_.imin = 1;
-                constraint_settings_reservoir_boundary_.imax = 1;
-                constraint_settings_reservoir_boundary_.jmin = 0;
-                constraint_settings_reservoir_boundary_.jmax = 0;
-                constraint_settings_reservoir_boundary_.kmin = 0;
-                constraint_settings_reservoir_boundary_.kmax = 0;
+                constraint_settings_reservoir_boundary_.box_imin = 1;
+                constraint_settings_reservoir_boundary_.box_imax = 1;
+                constraint_settings_reservoir_boundary_.box_jmin = 0;
+                constraint_settings_reservoir_boundary_.box_jmax = 0;
+                constraint_settings_reservoir_boundary_.box_kmin = 0;
+                constraint_settings_reservoir_boundary_.box_kmax = 0;
                 constraint_settings_reservoir_boundary_.well = "PRODUCER";
         }
 

@@ -76,7 +76,7 @@ namespace {
 
 
     TEST_F(OptimizerSettingsTest, Constraints) {
-        EXPECT_EQ(5, settings_optimizer_->constraints().length());
+        EXPECT_EQ(6, settings_optimizer_->constraints().length());
         EXPECT_EQ(Optimizer::ConstraintType::BHP, settings_optimizer_->constraints()[0].type);
         EXPECT_EQ(Optimizer::ConstraintType::WellSplineLength, settings_optimizer_->constraints()[1].type);
         EXPECT_EQ(Optimizer::ConstraintType::Rate, settings_optimizer_->constraints()[2].type);
@@ -118,6 +118,16 @@ namespace {
     }
 
     TEST_F(OptimizerSettingsTest, CombinedSplineLengthInterwellDistanceConstraint) {
+        auto constr = settings_optimizer_->constraints()[4];
+        EXPECT_EQ(2, constr.wells.length());
+        EXPECT_STREQ("TESTW", constr.wells[1].toLatin1().constData());
+        EXPECT_FLOAT_EQ(100, constr.min_distance);
+        EXPECT_FLOAT_EQ(400, constr.min_length);
+        EXPECT_FLOAT_EQ(1200, constr.max_length);
+        EXPECT_EQ(50, constr.max_iterations);
+    }
+
+    TEST_F(OptimizerSettingsTest, CombinedSplineLengthInterwellDistanceConstraintReservoirBoundary) {
         auto constr = settings_optimizer_->constraints()[4];
         EXPECT_EQ(2, constr.wells.length());
         EXPECT_STREQ("TESTW", constr.wells[1].toLatin1().constData());

@@ -9,12 +9,12 @@ namespace Optimization {
                 Model::Properties::VariablePropertyContainer *variables,
                 Reservoir::Grid::Grid *grid)
         {
-            imin_ = settings.imin;
-            imax_ = settings.imax;
-            jmin_ = settings.jmin;
-            jmax_ = settings.jmax;
-            kmin_ = settings.kmin;
-            kmax_ = settings.kmax;
+            imin_ = settings.box_imin;
+            imax_ = settings.box_imax;
+            jmin_ = settings.box_jmin;
+            jmax_ = settings.box_jmax;
+            kmin_ = settings.box_kmin;
+            kmax_ = settings.box_kmax;
             grid_ = grid;
             index_list_ = getListOfCellIndices();
             affected_well_ = initializeWell(variables->GetWellSplineVariables(settings.well));
