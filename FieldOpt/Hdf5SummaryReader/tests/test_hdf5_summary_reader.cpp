@@ -147,4 +147,13 @@ namespace {
             EXPECT_NEAR(expected_values[t], reader.field_cumulative_water_production_sc()[t], 1.0);
         }
     }
+
+    TEST_F(Hdf5SummaryReaderTest, WaterInjectionRatesSC) {
+        auto reader = Hdf5SummaryReader(file_path);
+        double expected_values[8] = {39601.7, 14233.9, 8755.69, 6803.42, 6701.8, 6431.61, 6282.44, 6267.97};
+        EXPECT_THROW(reader.water_injection_rates(1), std::runtime_error);
+        for (int t = 0; t < reader.number_of_tsteps(); ++t) {
+            EXPECT_NEAR(expected_values[t], reader.water_injection_rates(0)[t], 1.0);
+        }
+    }
 }

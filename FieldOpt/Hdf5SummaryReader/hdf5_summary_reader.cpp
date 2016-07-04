@@ -188,7 +188,7 @@ std::vector<double> Hdf5SummaryReader::cumulative_gas_production_sc(const int we
 std::vector<double> Hdf5SummaryReader::field_oil_rates_sc() const {
     std::vector<double> sum(ntimes_, 0.0);
     for (int w = 0; w < nwells_; ++w) {
-        if (well_states_[w].is_injector()) continue; // Skip injectors
+        if (is_injector(w)) continue; // Skip injectors
         auto well_rates = oil_rates_sc(w);
         for (int t = 0; t < ntimes_; ++t) {
             sum[t] = sum[t] + well_rates[t];
@@ -200,7 +200,7 @@ std::vector<double> Hdf5SummaryReader::field_oil_rates_sc() const {
 std::vector<double> Hdf5SummaryReader::field_water_rates_sc() const {
     std::vector<double> sum(ntimes_, 0.0);
     for (int w = 0; w < nwells_; ++w) {
-        if (well_states_[w].is_injector()) continue; // Skip injectors
+        if (is_injector(w)) continue; // Skip injectors
         auto well_rates = water_rates_sc(w);
         for (int t = 0; t < ntimes_; ++t) {
             sum[t] = sum[t] + well_rates[t];
@@ -213,7 +213,7 @@ std::vector<double> Hdf5SummaryReader::field_gas_rates_sc() const {
     if (nphases_ == 2) throw std::runtime_error("Cannot get field gas rates for dead oil (two-phase) models.");
     std::vector<double> sum(ntimes_, 0.0);
     for (int w = 0; w < nwells_; ++w) {
-        if (well_states_[w].is_injector()) continue; // Skip injectors
+        if (is_injector(w)) continue; // Skip injectors
         auto well_rates = gas_rates_sc(w);
         for (int t = 0; t < ntimes_; ++t) {
             sum[t] = sum[t] + well_rates[t];
@@ -229,7 +229,7 @@ int Hdf5SummaryReader::number_of_phases() const {
 std::vector<double> Hdf5SummaryReader::field_cumulative_oil_production_sc() const {
     std::vector<double> sum(ntimes_, 0.0);
     for (int w = 0; w < nwells_; ++w) {
-        if (well_states_[w].is_injector()) continue; // Skip injectors
+        if (is_injector(w)) continue; // Skip injectors
         auto well_cumulatives = cumulative_oil_production_sc(w);
         for (int t = 0; t < ntimes_; ++t) {
             sum[t] = sum[t] + well_cumulatives[t];
@@ -241,7 +241,7 @@ std::vector<double> Hdf5SummaryReader::field_cumulative_oil_production_sc() cons
 std::vector<double> Hdf5SummaryReader::field_cumulative_water_production_sc() const {
     std::vector<double> sum(ntimes_, 0.0);
     for (int w = 0; w < nwells_; ++w) {
-        if (well_states_[w].is_injector()) continue; // Skip injectors
+        if (is_injector(w)) continue; // Skip injectors
         auto well_cumulatives = cumulative_water_production_sc(w);
         for (int t = 0; t < ntimes_; ++t) {
             sum[t] = sum[t] + well_cumulatives[t];
@@ -253,13 +253,33 @@ std::vector<double> Hdf5SummaryReader::field_cumulative_water_production_sc() co
 std::vector<double> Hdf5SummaryReader::field_cumulative_gas_production_sc() const {
     std::vector<double> sum(ntimes_, 0.0);
     for (int w = 0; w < nwells_; ++w) {
-        if (well_states_[w].is_injector()) continue; // Skip injectors
+        if (is_injector(w)) continue; // Skip injectors
         auto well_cumulatives = cumulative_gas_production_sc(w);
         for (int t = 0; t < ntimes_; ++t) {
             sum[t] = sum[t] + well_cumulatives[t];
         }
     }
     return sum;
+}
+
+std::vector<double> Hdf5SummaryReader::water_injection_rates(const int well_number) const {
+    if (!is_injector(well_number)) throw std::runtime_error("Attempted to get injecton rates for a production well.");
+    std::vector<double> inj_rates(ntimes_, 0.0);
+    auto rates = water_rates_sc(well_number);
+    for (int t = 0; t < ntimes_; ++t) {
+        inj_rates[t] = rates[t] * (-1.0);
+    }
+    return inj_rates;
+}
+
+std::vector<double> Hdf5SummaryReader::gas_injection_rates(const int well_number) const {
+    if (!is_injector(well_number)) throw std::runtime_error("Attempted to get injecton rates for a production well.");
+    std::vector<double> inj_rates(ntimes_, 0.0);
+    auto rates = gas_rates_sc(well_number);
+    for (int t = 0; t < ntimes_; ++t) {
+        inj_rates[t] = rates[t] * (-1.0);
+    }
+    return inj_rates;
 }
 
 Hdf5SummaryReader::well_data::well_data(int nt, int np) {

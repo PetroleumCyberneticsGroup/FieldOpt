@@ -16,6 +16,9 @@
  * that by producer/injector. Note also that we do not know whether the order in which the wells appear can change
  * between subsequent runs of the simulator.
  *
+ * Note also that when you get the rates for an injector using the get_*_rates methods, the numbers will be negative,
+ * whereas if you get them using the get_*_injection_rates methods, they will be positive.
+ *
  * \todo This must also be tested for a 3 phase black oil model, it has only been tested for 2 phase dead oil.
  */
 class Hdf5SummaryReader {
@@ -135,6 +138,17 @@ public:
      * Get field-wide cumulative gas production (at standard conditions) at each time step.
      */
     std::vector<double> field_cumulative_gas_production_sc() const;
+
+    /*!
+     * Get the water injection rates (at standard conditions) at each time step for a well.
+     */
+    std::vector<double> water_injection_rates(const int well_number) const;
+
+    /*!
+     * Get the gas injection rates (at standard conditions) at each time step for a well.
+     */
+    std::vector<double> gas_injection_rates(const int well_number) const;
+
 
 private:
     const H5std_string GROUP_NAME_RESTART; //!< The name of the restart group in the HDF5 file.
