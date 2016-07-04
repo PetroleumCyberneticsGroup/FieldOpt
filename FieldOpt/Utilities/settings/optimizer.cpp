@@ -205,8 +205,7 @@ namespace Utilities {
                 optimizer_constraint.box_kmax = json_constraint["BoxKmax"].toInt();
                 if (optimizer_constraint.wells.length() != 2)
                     throw UnableToParseOptimizerConstraintsSectionException(
-                            "WellSplineInterwellDistanceReservoirBoundary"
-                            " constraint needs a Wells array with exactly two well names specified.");
+                            "WellSplineInterwellDistanceReservoirBoundary constraint needs a Wells array with exactly two well names specified.");
             }
             else throw UnableToParseOptimizerConstraintsSectionException("Constraint type " + constraint_type.toStdString() + " not recognized.");
             return optimizer_constraint;
