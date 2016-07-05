@@ -22,7 +22,8 @@ namespace Optimization {
                     case Utilities::Settings::Optimizer::ConstraintType::WellSplineInterwellDistance:
                         constraints_.append(new InterwellDistance(constraint, variables));
                         break;
-                    case Utilities::Settings::Optimizer::ConstraintType::CombinedWellSplineLengthInterwellDistance:
+                    case Utilities::Settings::Optimizer::ConstraintType::
+                        CombinedWellSplineLengthInterwellDistance:
                         constraints_.append(new CombinedSplineLengthInterwellDistance(constraint, variables));
                         break;
                     case Utilities::Settings::Optimizer::ConstraintType::

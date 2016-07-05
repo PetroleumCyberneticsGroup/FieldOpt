@@ -15,7 +15,17 @@ namespace Optimization {
             jmax_ = settings.box_jmax;
             kmin_ = settings.box_kmin;
             kmax_ = settings.box_kmax;
-            grid_ = grid;
+            // TODO Figure out a more effective way to enforce the box constraints
+            // Steps:
+            // -find the edge cells of the box,
+            // -get the corner points for each of the cells,
+            // -find the corner points of the entire box (assuming then
+            // the box is a parallelogram, which may not be true for the
+            // top and bottom planes)
+            // -print the box data to log for external visualization
+            // -figure out if the current point is inside or outside
+            // the box, e.g., create a BoxEnvelopsPoint function
+            // -if outside, project point onto nearest point on plane
             index_list_ = getListOfCellIndices();
             index_list_edge_ = getListOfBoxEdgeCellIndices();
             affected_well_ = initializeWell(variables->GetWellSplineVariables(settings.well));
