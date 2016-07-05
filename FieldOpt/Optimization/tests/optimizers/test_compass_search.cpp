@@ -1,13 +1,14 @@
 #include <gtest/gtest.h>
 #include "Optimization/optimizers/compass_search.h"
 #include "Optimization/tests/test_resource_optimizer.h"
+#include "Reservoir/tests/test_resource_grids.h"
 
 namespace {
 
-class CompassSearchTest : public ::testing::Test, TestResources::TestResourceOptimizer {
+class CompassSearchTest : public ::testing::Test, TestResources::TestResourceOptimizer, TestResources::TestResourceGrids {
 protected:
     CompassSearchTest() {
-        compass_search_ = new ::Optimization::Optimizers::CompassSearch(settings_optimizer_, base_case_, model_->variables());
+        compass_search_ = new ::Optimization::Optimizers::CompassSearch(settings_optimizer_, base_case_, model_->variables(), grid_5spot_);
     }
     virtual ~CompassSearchTest() {}
     virtual void SetUp() {}

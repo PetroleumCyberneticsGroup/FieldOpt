@@ -111,7 +111,7 @@ class Case:
         :param property_uuid_name_map_log: The PropertyUuidNameMapLog object from the LogReader,
         used to get variable names.
         """
-        self.timestamp = datetime.strptime(caselog_row[0], "%Y-%m-%dT%H:%M:%SZ")
+        self.timestamp = datetime.strptime(caselog_row[0], "%Y-%m-%dT%H:%M:%S")
         self.uuid = caselog_row[1]
         self.objective_function_value = float(caselog_row[3])
         self.variables = []

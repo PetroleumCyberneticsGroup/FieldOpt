@@ -4,7 +4,9 @@
 namespace Optimization {
     namespace Constraints {
 
-        ConstraintHandler::ConstraintHandler(QList<Utilities::Settings::Optimizer::Constraint> constraints, Model::Properties::VariablePropertyContainer *variables)
+        ConstraintHandler::ConstraintHandler(QList<Utilities::Settings::Optimizer::Constraint> constraints,
+                                             Model::Properties::VariablePropertyContainer *variables,
+                                             Reservoir::Grid::Grid *grid)
         {
             for (Utilities::Settings::Optimizer::Constraint constraint : constraints) {
                 switch (constraint.type) {
@@ -23,20 +25,25 @@ namespace Optimization {
                     case Utilities::Settings::Optimizer::ConstraintType::CombinedWellSplineLengthInterwellDistance:
                         constraints_.append(new CombinedSplineLengthInterwellDistance(constraint, variables));
                         break;
-                    case Utilities::Settings::Optimizer::ConstraintType::ReservoirBoundary:
-                        constraints_.append(new ReservoirBoundary(constraint, variables, nullptr)); // TODO: Take grid as input
+                    case Utilities::Settings::Optimizer::ConstraintType::
+                        CombinedWellSplineLengthInterwellDistanceReservoirBoundary:
+                        constraints_.append(new CombinedSplineLengthInterwellDistanceReservoirBoundary
+                                                    (constraint, variables, grid));
                         break;
-#ifdef WITH_EXPERIMENTAL_CONSTRIANTS
+                    case Utilities::Settings::Optimizer::ConstraintType::ReservoirBoundary:
+                        constraints_.append(new ReservoirBoundary(constraint, variables, grid));
+                        break;
+#ifdef WITH_EXPERIMENTAL_CONSTRAINTS
                         // Cases for constraints in the experimental_constraints directory go here
 #endif
                     default:
                         break;
                 }
             }
-#ifdef WITH_EXPERIMENTAL_CONSTRIANTS
-            std::cout << "Using experimental constaints" << std::endl;
+#ifdef WITH_EXPERIMENTAL_CONSTRAINTS
+            std::cout << "Using experimental constraints" << std::endl;
 #else
-            std::cout << "Not using experimental constaints" << std::endl;
+            std::cout << "Not using experimental constraints" << std::endl;
 #endif
         }
 

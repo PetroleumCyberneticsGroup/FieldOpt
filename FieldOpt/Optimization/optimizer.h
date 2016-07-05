@@ -71,7 +71,9 @@ namespace Optimization {
          * \param settings Settings for the optimizer.
          * \param base_case The base case for optimizer. Must already have been evaluated (i.e. have an objective function value).
          */
-        Optimizer(::Utilities::Settings::Optimizer *settings, Case *base_case, ::Model::Properties::VariablePropertyContainer *variables);
+        Optimizer(::Utilities::Settings::Optimizer *settings, Case *base_case,
+                  ::Model::Properties::VariablePropertyContainer *variables,
+                  Reservoir::Grid::Grid *grid);
 
         /*!
          * \brief BetterCaseFoundLastEvaluation Searches the list of recently evaluated cases in the case handler for a case

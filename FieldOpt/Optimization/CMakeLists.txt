@@ -34,6 +34,8 @@ add_library(optimization
 		constraints/combined_spline_length_interwell_distance.cpp
 		constraints/rate_constraint.cpp
 		constraints/rate_constraint.h
+		constraints/combined_spline_length_interwell_distance_reservoir_boundary.cpp
+		constraints/combined_spline_length_interwell_distance_reservoir_boundary.h
 		${EXPERIMENTAL_CONSTRAINTS_SRC} )
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
@@ -41,6 +43,7 @@ target_link_libraries(optimization
         PUBLIC fieldopt::model
         PUBLIC fieldopt::simulation
         PUBLIC fieldopt::constraintmath
+		PUBLIC fieldopt::reservoir
         Qt5::Core)
 
 target_include_directories(optimization PUBLIC

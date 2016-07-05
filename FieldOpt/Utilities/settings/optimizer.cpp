@@ -178,7 +178,8 @@ namespace Utilities {
                     optimizer_constraint.min_distance = json_constraint["MinDistance"].toDouble();
                 }
                 if (optimizer_constraint.wells.length() != 2)
-                    throw UnableToParseOptimizerConstraintsSectionException("WellSplineInterwellDistance constraint needs a Wells array with exactly two well names specified.");
+                    throw UnableToParseOptimizerConstraintsSectionException("WellSplineInterwellDistance constraint"
+                                                       " needs a Wells array with exactly two well names specified.");
             }
             else if (QString::compare(constraint_type, "CombinedWellSplineLengthInterwellDistance") == 0) {
                 optimizer_constraint.type = ConstraintType::CombinedWellSplineLengthInterwellDistance;
@@ -187,7 +188,24 @@ namespace Utilities {
                 optimizer_constraint.min_distance = json_constraint["MinDistance"].toDouble();
                 optimizer_constraint.max_iterations = json_constraint["MaxIterations"].toInt();
                 if (optimizer_constraint.wells.length() != 2)
-                    throw UnableToParseOptimizerConstraintsSectionException("WellSplineInterwellDistance constraint needs a Wells array with exactly two well names specified.");
+                    throw UnableToParseOptimizerConstraintsSectionException("WellSplineInterwellDistance constraint"
+                                                       " needs a Wells array with exactly two well names specified.");
+            }
+            else if (QString::compare(constraint_type, "CombinedWellSplineLengthInterwellDistanceReservoirBoundary") == 0) {
+                optimizer_constraint.type = ConstraintType::CombinedWellSplineLengthInterwellDistanceReservoirBoundary;
+                optimizer_constraint.min_length = json_constraint["MinLength"].toDouble();
+                optimizer_constraint.max_length = json_constraint["MaxLength"].toDouble();
+                optimizer_constraint.min_distance = json_constraint["MinDistance"].toDouble();
+                optimizer_constraint.max_iterations = json_constraint["MaxIterations"].toInt();
+                optimizer_constraint.box_imin = json_constraint["BoxImin"].toInt();
+                optimizer_constraint.box_imax = json_constraint["BoxImax"].toInt();
+                optimizer_constraint.box_jmin = json_constraint["BoxJmin"].toInt();
+                optimizer_constraint.box_jmax = json_constraint["BoxJmax"].toInt();
+                optimizer_constraint.box_kmin = json_constraint["BoxKmin"].toInt();
+                optimizer_constraint.box_kmax = json_constraint["BoxKmax"].toInt();
+                if (optimizer_constraint.wells.length() != 2)
+                    throw UnableToParseOptimizerConstraintsSectionException(
+                            "WellSplineInterwellDistanceReservoirBoundary constraint needs a Wells array with exactly two well names specified.");
             }
             else throw UnableToParseOptimizerConstraintsSectionException("Constraint type " + constraint_type.toStdString() + " not recognized.");
             return optimizer_constraint;

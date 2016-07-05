@@ -27,11 +27,17 @@
         "Constraints": [
             {
                 "Wells": ["INJECTOR", "PRODUCER"],
-                "Type": "CombinedWellSplineLengthInterwellDistance",
+                "Type": "CombinedWellSplineLengthInterwellDistanceReservoirBoundary",
                 "MinLength": 300,
                 "MaxLength": 800,
                 "MinDistance": 300,
-                "MaxIterations": 100
+                "MaxIterations": 100,
+                "BoxImin": 0,
+                "BoxImax": 59,
+                "BoxJmin": 0,
+                "BoxJmax": 59,
+                "BoxKmin": 0,
+                "BoxKmax": 0                
             }
         ]
     },
@@ -72,7 +78,7 @@
                         "TimeStep": 0,
                         "State": "Open",
                         "Mode": "BHP",
-                        "BHP": 2000.0
+                        "BHP": 100.0
                     }
                 ]
             },
@@ -103,7 +109,7 @@
                         "Type": "Water",
                         "State": "Open",
                         "Mode": "Rate",
-                        "Rate": 1200.0
+                        "Rate": 5000.0
                     }
                 ]
             }

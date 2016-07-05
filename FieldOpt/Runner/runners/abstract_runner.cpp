@@ -69,7 +69,6 @@ void AbstractRunner::InitializeSettings(QString output_subdirectory)
     // Override simulator executable path if it has been passed as command line arguments
     if (runtime_settings_->simulator_exec_script_path().length() > 0)
         settings_->simulator()->set_execution_script_path(runtime_settings_->simulator_exec_script_path());
-
     // Override FieldOpt build directory path if it has been passed as command line arguments
     if (runtime_settings_->fieldopt_build_dir().length() > 0)
         settings_->set_build_path(runtime_settings_->fieldopt_build_dir());
@@ -152,7 +151,8 @@ void AbstractRunner::InitializeOptimizer()
     switch (settings_->optimizer()->type()) {
     case Utilities::Settings::Optimizer::OptimizerType::Compass:
         if (runtime_settings_->verbose()) std::cout << "Using CompassSearch optimization algorithm." << std::endl;
-        optimizer_ = new Optimization::Optimizers::CompassSearch(settings_->optimizer(), base_case_, model_->variables());
+        optimizer_ = new Optimization::Optimizers::CompassSearch(settings_->optimizer(), base_case_, model_->variables(),
+                                                                 model_->reservoir()->grid());
         break;
     default:
         throw std::runtime_error("Unable to initialize runner: optimization algorithm set in driver file not recognized.");

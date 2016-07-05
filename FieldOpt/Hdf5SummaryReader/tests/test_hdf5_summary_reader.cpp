@@ -10,7 +10,7 @@ namespace {
     protected:
         virtual void SetUp() {}
         virtual void TearDown() {}
-        std::string file_path = "/home/einar/Documents/GitHub/PCG/FieldOpt/examples/ADGPRS/5spot/5SPOT.SIM.H5"; // \todo Use the path from TestResources
+        std::string file_path = "../examples/ADGPRS/5spot/5SPOT.SIM.H5";
     };
 
 

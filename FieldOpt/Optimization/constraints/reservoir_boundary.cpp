@@ -4,15 +4,17 @@
 namespace Optimization {
     namespace Constraints {
 
-        ReservoirBoundary::ReservoirBoundary(const Utilities::Settings::Optimizer::Constraint &settings,
-                                             Model::Properties::VariablePropertyContainer *variables, Reservoir::Grid::Grid *grid)
+        ReservoirBoundary::ReservoirBoundary(
+                const Utilities::Settings::Optimizer::Constraint &settings,
+                Model::Properties::VariablePropertyContainer *variables,
+                Reservoir::Grid::Grid *grid)
         {
-            imin_ = settings.imin;
-            imax_ = settings.imax;
-            jmin_ = settings.jmin;
-            jmax_ = settings.jmax;
-            kmin_ = settings.kmin;
-            kmax_ = settings.kmax;
+            imin_ = settings.box_imin;
+            imax_ = settings.box_imax;
+            jmin_ = settings.box_jmin;
+            jmax_ = settings.box_jmax;
+            kmin_ = settings.box_kmin;
+            kmax_ = settings.box_kmax;
             grid_ = grid;
             index_list_ = getListOfCellIndices();
             affected_well_ = initializeWell(variables->GetWellSplineVariables(settings.well));
@@ -32,10 +34,12 @@ namespace Optimization {
             bool toe_feasible = false;
 
             for (int ii=0; ii<index_list_.length(); ii++){
-                if (grid_->GetCell(index_list_[ii]).EnvelopsPoint(Eigen::Vector3d(heel_x_val, heel_y_val, heel_z_val))) {
+                if (grid_->GetCell(index_list_[ii]).EnvelopsPoint(
+                        Eigen::Vector3d(heel_x_val, heel_y_val, heel_z_val))) {
                     heel_feasible = true;
                 }
-                if (grid_->GetCell(index_list_[ii]).EnvelopsPoint(Eigen::Vector3d(toe_x_val, toe_y_val, toe_z_val))) {
+                if (grid_->GetCell(index_list_[ii]).EnvelopsPoint(
+                        Eigen::Vector3d(toe_x_val, toe_y_val, toe_z_val))) {
                     toe_feasible = true;
                 }
             }
@@ -53,12 +57,14 @@ namespace Optimization {
             double toe_y_val = c->real_variables()[affected_well_.toe.y];
             double toe_z_val = c->real_variables()[affected_well_.toe.z];
 
-            Eigen::Vector3d projected_heel = WellConstraintProjections::well_domain_constraint_indices(
+            Eigen::Vector3d projected_heel =
+                    WellConstraintProjections::well_domain_constraint_indices(
                     Eigen::Vector3d(heel_x_val, heel_y_val, heel_z_val),
                     grid_,
                     index_list_
             );
-            Eigen::Vector3d projected_toe = WellConstraintProjections::well_domain_constraint_indices(
+            Eigen::Vector3d projected_toe =
+                    WellConstraintProjections::well_domain_constraint_indices(
                     Eigen::Vector3d(toe_x_val, toe_y_val, toe_z_val),
                     grid_,
                     index_list_

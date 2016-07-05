@@ -40,6 +40,8 @@ namespace Optimization {
             QList<Eigen::Vector3d> projection = WellConstraintProjections::interwell_constraint_projection(
                     points, distance_);
 
+            if (projection.length() == 0) return false; // No solution was found
+
             // Check if the projection is (approximately) equal to the input case
             for (int i = 0; i < projection.length(); ++i) {
                 if (!points[i].isApprox(projection[i], 0.01))
@@ -70,6 +72,8 @@ namespace Optimization {
             // Get the projection
             QList<Eigen::Vector3d> projection = WellConstraintProjections::interwell_constraint_projection(
                     points, distance_);
+
+            if (projection.length() == 0) return; // No solution was found
 
             for (int i = 0; i < affected_wells_.length(); ++i) {
                 c->set_real_variable_value(affected_wells_[i].heel.x, projection[i*2](0));

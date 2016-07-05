@@ -10,7 +10,7 @@ namespace Optimization { namespace Constraints {
 /*!
  * \brief The CombinedSplineLengthInterwellDistance class combines the WellSplineLength and
  * InterwellDistance constraints. It instantiates one well length constraint per well and
- * _one_ distance constraint. All the constraints are applied cyclically in a loop untill
+ * _one_ distance constraint. All the constraints are applied cyclically in a loop until
  * either all constraints are satisfied or the maximum number of iterations is reached.
  */
 class CombinedSplineLengthInterwellDistance : public Constraint
