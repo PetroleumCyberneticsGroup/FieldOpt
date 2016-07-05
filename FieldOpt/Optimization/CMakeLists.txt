@@ -8,7 +8,7 @@ if(EXISTS ${EXPERIMENTAL_CONSTRAINTS_DIR} AND IS_DIRECTORY ${EXPERIMENTAL_CONSTR
 	message("Including experimental constraints")
 	add_definitions(-DWITH_EXPERIMENTAL_CONSTRIANTS)
 	set(EXPERIMENTAL_CONSTRAINTS_SRC
-			${EXPERIMENTAL_CONSTRAINTS_DIR}/ constraints/combined_spline_length_interwell_distance_reservoir_boundary.cpp constraints/combined_spline_length_interwell_distance_reservoir_boundary.h)
+			${EXPERIMENTAL_CONSTRAINTS_DIR}/)
 	set(EXPERIMENTAL_CONSTRAINTS_TESTS
 			${EXPERIMENTAL_CONSTRAINTS_DIR}/tests/)
 else()
@@ -34,6 +34,8 @@ add_library(optimization
 		constraints/combined_spline_length_interwell_distance.cpp
 		constraints/rate_constraint.cpp
 		constraints/rate_constraint.h
+		constraints/combined_spline_length_interwell_distance_reservoir_boundary.cpp
+		constraints/combined_spline_length_interwell_distance_reservoir_boundary.h
 		${EXPERIMENTAL_CONSTRAINTS_SRC} )
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
