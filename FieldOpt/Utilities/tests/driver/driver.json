@@ -55,20 +55,6 @@
                 "MaxLength": 1200,
                 "MinDistance": 100,
                 "MaxIterations": 50
-            },
-            {
-                "Wells": ["INJ", "TESTW"],
-                "Type": "CombinedWellSplineLengthInterwellDistanceReservoirBoundary",
-                "MinLength": 400,
-                "MaxLength": 1200,
-                "MinDistance": 100,
-                "MaxIterations": 50,
-                "BoxImin": 1,
-                "BoxImax": 60,
-                "BoxJmin": 1,
-                "BoxJmax": 60,
-                "BoxKmin": 1,
-                "BoxKmax": 1
             }
         ]
     },

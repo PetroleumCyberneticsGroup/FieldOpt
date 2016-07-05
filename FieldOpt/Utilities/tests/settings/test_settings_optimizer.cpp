@@ -76,7 +76,7 @@ namespace {
 
 
     TEST_F(OptimizerSettingsTest, Constraints) {
-        EXPECT_EQ(6, settings_optimizer_->constraints().length());
+        EXPECT_EQ(5, settings_optimizer_->constraints().length());
         EXPECT_EQ(Optimizer::ConstraintType::BHP, settings_optimizer_->constraints()[0].type);
         EXPECT_EQ(Optimizer::ConstraintType::WellSplineLength, settings_optimizer_->constraints()[1].type);
         EXPECT_EQ(Optimizer::ConstraintType::Rate, settings_optimizer_->constraints()[2].type);
