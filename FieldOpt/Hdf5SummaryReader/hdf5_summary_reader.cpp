@@ -105,6 +105,7 @@ Hdf5SummaryReader::well_data Hdf5SummaryReader::parseWellState(std::vector<wstyp
         if (state.nphases == 2) {
             state.water_rates_sc[t] = ws[i].vPhaseRatesAtSC[0];
             state.oil_rates_sc[t] = ws[i].vPhaseRatesAtSC[1];
+            state.gas_rates_sc = std::vector<double>(ntimes_, 0.0);
         }
         else if (state.nphases == 3) {
             state.gas_rates_sc[t] = ws[i].vPhaseRatesAtSC[0];
@@ -160,10 +161,7 @@ const std::vector<double> &Hdf5SummaryReader::water_rates_sc(const int well_numb
 }
 
 const std::vector<double> &Hdf5SummaryReader::gas_rates_sc(const int well_number) const {
-    if (nphases_ == 2)
-        return std::vector<double>(ntimes_, 0.0);
-    else
-        return well_states_[well_number].gas_rates_sc;
+    return well_states_[well_number].gas_rates_sc;
 }
 
 std::vector<double> Hdf5SummaryReader::calculate_cumulative(const std::vector<double> &rates) const {
@@ -183,10 +181,7 @@ std::vector<double> Hdf5SummaryReader::cumulative_water_production_sc(const int 
 }
 
 std::vector<double> Hdf5SummaryReader::cumulative_gas_production_sc(const int well_number) const {
-    if (nphases_ == 2)
-        return std::vector<double>(ntimes_, 0.0);
-    else
-        return calculate_cumulative(gas_rates_sc(well_number));
+    return calculate_cumulative(gas_rates_sc(well_number));
 }
 
 std::vector<double> Hdf5SummaryReader::field_oil_rates_sc() const {
