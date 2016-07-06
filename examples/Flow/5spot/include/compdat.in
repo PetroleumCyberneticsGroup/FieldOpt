@@ -1,0 +1,21 @@
+COMPDAT
+-- 1)  2)  3) 4) 5)  6)    7)  8)  9)      10-13) 14)
+INJ1   1   1  1  1   OPEN  1   1*  0.1905  4*     1*  /
+PROD1  6   6  1  1   OPEN  1   1*  0.1905  4*     1*  /
+/
+
+-- 1) Well name
+-- 2) I-location of connecting grid blocks
+-- 3) J-location of connecting grid blocks
+-- 4) K-location of upper connecting grid blocks
+-- 5) K-location of lower connecting grid blocks
+-- 6) Open/shut flag connection
+-- 7) Sat table number for connection rel-perms
+-- 8) Transmissibility factor for the connection
+-- 9) Wellbore diameter at the connection
+--    (needed for well PI calculation);
+--    def.: 1 ft = 0.3048 m  UNITS: m (METRIC)
+--    ignored of not required. Required if 8)
+--    is zero(0.0). ft. def.: Undefined.
+--    MLO: 0.1905m
+-- 14) Eq. wellbore radius, UNITS: m (METRIC)
