@@ -14,6 +14,7 @@ namespace Simulation {
             virtual void Evaluate() override;
             virtual bool Evaluate(int timeout) override;
             virtual void CleanUp() override;
+            virtual void UpdateFilePaths() override;
             QString GetCompdatString();
 
         private:
