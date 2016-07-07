@@ -37,12 +37,14 @@ namespace Simulation { namespace ExecutionScripts {
      */
     enum Script {
         csh_eclrun,
-        bash_adgprs
+        bash_adgprs,
+        bash_flow
     };
 
     static QMap<Script, QString> DefaultScripts {
         {Script::csh_eclrun, QString("execution_scripts/csh_eclrun.sh")},
-        {Script::bash_adgprs, QString("execution_scripts/bash_adgprs.sh")}
+        {Script::bash_adgprs, QString("execution_scripts/bash_adgprs.sh")},
+        {Script::bash_adgprs, QString("execution_scripts/bash_flow.sh")}
     };
 
     static Script GetScript(QString name) {
@@ -50,6 +52,8 @@ namespace Simulation { namespace ExecutionScripts {
             return Script::csh_eclrun;
         else if (QString::compare(name, "bash_adgprs") == 0)
             return Script::bash_adgprs;
+        else if (QString::compare(name, "bash_flow") == 0)
+            return Script::bash_flow;
         else throw std::runtime_error("Script " + name.toStdString() + " not recognized.");
     }
 
