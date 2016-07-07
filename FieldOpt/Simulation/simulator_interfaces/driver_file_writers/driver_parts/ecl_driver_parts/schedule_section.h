@@ -42,7 +42,7 @@ namespace ECLDriverParts {
 class Schedule : public ECLDriverPart
 {
 public:
-    Schedule(QList<Model::Wells::Well *> *wells);
+    Schedule(QList<Model::Wells::Well *> *wells, QList<int> control_times);
     QString GetPartString();
 
 private:

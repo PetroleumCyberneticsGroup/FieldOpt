@@ -18,7 +18,7 @@ namespace Simulation {
             void FlowDriverFileWriter::WriteDriverFile(QString output_dir) {
                 auto welspecs = DriverParts::ECLDriverParts::Welspecs(model_->wells());
                 auto compdat = DriverParts::ECLDriverParts::Compdat(model_->wells());
-                auto wellcontrols = DriverParts::ECLDriverParts::WellControls(model_->wells());
+                auto wellcontrols = DriverParts::ECLDriverParts::WellControls(model_->wells(), settings_->model()->control_times());
 
                 if (!Utilities::FileHandling::FileExists(output_dir+"/include/wells.in")
                     || !Utilities::FileHandling::FileExists(output_dir+"/include/welspecs.in"))

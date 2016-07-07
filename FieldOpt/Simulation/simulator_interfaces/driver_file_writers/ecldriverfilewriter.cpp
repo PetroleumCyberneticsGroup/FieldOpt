@@ -52,7 +52,8 @@ void EclDriverFileWriter::WriteDriverFile()
     DriverParts::ECLDriverParts::Props props = DriverParts::ECLDriverParts::Props(original_driver_file_contents_);
     DriverParts::ECLDriverParts::Solution solution = DriverParts::ECLDriverParts::Solution(original_driver_file_contents_);
     DriverParts::ECLDriverParts::Summary summary = DriverParts::ECLDriverParts::Summary(original_driver_file_contents_);
-    DriverParts::ECLDriverParts::Schedule schedule = DriverParts::ECLDriverParts::Schedule(model_->wells());
+    DriverParts::ECLDriverParts::Schedule schedule = DriverParts::ECLDriverParts::Schedule(model_->wells(),
+                                                                                           settings_->model()->control_times());
 
     QString complete_string = runspec.GetPartString() + grid.GetPartString()
             + props.GetPartString() + solution.GetPartString()

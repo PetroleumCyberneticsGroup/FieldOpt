@@ -14,6 +14,7 @@ namespace TestResources {
 
         static QString grid_horzwel_ = "../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID";
         static QString grid_5spot_ = "../examples/ADGPRS/5spot/ECL_5SPOT.EGRID";
+//        static QString grid_5spot_flow_ = "../examples/Flow/5spot/5SPOT.EGRID";
 
         static QString ecl_base_horzwell = "../examples/ECLIPSE/HORZWELL/HORZWELL";
 
@@ -22,6 +23,11 @@ namespace TestResources {
         static QString gprs_smry_json_5spot_ = "../examples/ADGPRS/5spot/5SPOT.json";
         static QString gprs_smry_hdf5_5spot_ = "../examples/ADGPRS/5spot/5SPOT.SIM.H5";
         static QString gprs_base_5spot_ = "../examples/ADGPRS/5spot/5SPOT";
+
+//        static QString driver_5spot_flow_ = "../examples/Flow/5spot/fo_driver_2_horz_placement.json";
+//        static QString flow_drv_5spot_ = "../examples/Flow/5spot/5SPOT.DATA";
+//        static QString flow_base_5spot_ = "../exampels/Flow/5spot";
+
     }
 }
 

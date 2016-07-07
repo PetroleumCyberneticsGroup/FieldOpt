@@ -9,7 +9,7 @@ namespace {
 class DriverPartWellControlsTest : public ::testing::Test, public TestResources::TestResourceModel {
 protected:
     DriverPartWellControlsTest(){
-        well_controls_ = new WellControls(model_->wells());
+        well_controls_ = new WellControls(model_->wells(), settings_model_->control_times());
     }
     virtual ~DriverPartWellControlsTest(){}
 
