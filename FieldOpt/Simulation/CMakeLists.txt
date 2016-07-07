@@ -24,7 +24,9 @@ add_library(simulation
         results/adgprsresults.cpp
         simulator_interfaces/driver_file_writers/adgprsdriverfilewriter.cpp
         simulator_interfaces/driver_file_writers/driver_parts/adgprs_driver_parts/wellstre.cpp
-        simulator_interfaces/driver_file_writers/driver_parts/adgprs_driver_parts/adgprs_wellcontrols.cpp)
+        simulator_interfaces/driver_file_writers/driver_parts/adgprs_driver_parts/adgprs_wellcontrols.cpp
+        simulator_interfaces/driver_file_writers/flowdriverfilewriter.cpp
+        simulator_interfaces/flowsimulator.cpp)
 add_library(fieldopt::simulation ALIAS ${PROJECT_NAME})
 
 target_link_libraries(simulation

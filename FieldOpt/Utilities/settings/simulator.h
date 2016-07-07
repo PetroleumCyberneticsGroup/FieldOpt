@@ -18,7 +18,7 @@ namespace Utilities {
             friend class Settings;
 
         public:
-            enum SimulatorType { ECLIPSE, ADGPRS };
+            enum SimulatorType { ECLIPSE, ADGPRS, Flow };
             enum SimulatorFluidModel { BlackOil, DeadOil };
 
             SimulatorType type() const { return type_; } //!< Get the simulator type (e.g. ECLIPSE).
