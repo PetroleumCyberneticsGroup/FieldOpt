@@ -44,7 +44,7 @@ namespace Simulation { namespace ExecutionScripts {
     static QMap<Script, QString> DefaultScripts {
         {Script::csh_eclrun, QString("execution_scripts/csh_eclrun.sh")},
         {Script::bash_adgprs, QString("execution_scripts/bash_adgprs.sh")},
-        {Script::bash_adgprs, QString("execution_scripts/bash_flow.sh")}
+        {Script::bash_flow, QString("execution_scripts/bash_flow.sh")}
     };
 
     static Script GetScript(QString name) {
