@@ -24,7 +24,8 @@ set(Boost_USE_MULTITHREAD ON) # enable multithreading
 find_package(Boost COMPONENTS REQUIRED program_options)
 
 find_package(Threads)
-find_package(Eigen3)
+# find_package(Eigen3)
+set( EIGEN3_INCLUDE_DIR "$ENV{EIGEN3_INCLUDE_DIR}" )
 
 # Set this directory as the root dir
 include_directories(${CMAKE_SOURCE_DIR})
