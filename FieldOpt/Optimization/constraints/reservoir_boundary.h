@@ -33,6 +33,11 @@ namespace Optimization {
             Well affected_well_;
             QList<int> getListOfCellIndices();
 
+            QList<int> getListOfBoxEdgeCellIndices();
+            QList<int> index_list_edge_;
+            QList<int> box_edge_cells_;
+
+
         };
     }
 }

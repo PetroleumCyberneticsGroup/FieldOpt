@@ -17,7 +17,80 @@ namespace Optimization {
             kmax_ = settings.box_kmax;
             grid_ = grid;
             index_list_ = getListOfCellIndices();
+            index_list_edge_ = getListOfBoxEdgeCellIndices();
             affected_well_ = initializeWell(variables->GetWellSplineVariables(settings.well));
+        }
+
+        /* \brief Function getListOfBoxEdgeCellIndices uses the limits
+         * defining the box constraint to find the cells that constitute
+         * the edges of the box
+         */
+        QList<int> ReservoirBoundary::getListOfBoxEdgeCellIndices() {
+            QList<int> box_edge_cells_;
+
+            QList<int> upper_face_left_edge_;
+            QList<int> upper_face_bottom_edge_;
+            QList<int> upper_face_right_edge_;
+            QList<int> upper_face_top_edge_;
+
+            // UPPER CELL FACE: LEFT EDGE
+            for (int j = jmin_; j <= jmax_; j++) {
+                upper_face_left_edge_.append(grid_->GetCell(imin_, j, kmax_).global_index());
+            }
+
+            // UPPER CELL FACE: BOTTOM EDGE
+            for (int i = imin_; i <= imax_; i++) {
+                upper_face_bottom_edge_.append(grid_->GetCell(i, jmin_, kmax_).global_index());
+            }
+
+            // UPPER CELL FACE: RIGHT EDGE
+            for (int j = jmin_; j <= jmax_; j++) {
+                upper_face_right_edge_.append(grid_->GetCell(imax_, j, kmax_).global_index());
+            }
+
+            // UPPER CELL FACE: TOP EDGE
+            for (int i = imin_; i <= imax_; i++) {
+                upper_face_top_edge_.append(grid_->GetCell(i, jmax_, kmax_).global_index());
+            }
+
+            // APPEND UPPER EDGE CELLS TO box_edge_cells_ LIST
+            box_edge_cells_.append(upper_face_left_edge_);
+            box_edge_cells_.append(upper_face_bottom_edge_);
+            box_edge_cells_.append(upper_face_right_edge_);
+            box_edge_cells_.append(upper_face_top_edge_);
+
+            QList<int> lower_face_left_edge_;
+            QList<int> lower_face_bottom_edge_;
+            QList<int> lower_face_right_edge_;
+            QList<int> lower_face_top_edge_;
+
+            // LOWER CELL FACE: LEFT EDGE
+           for (int j = jmin_; j <= jmax_; j++) {
+               lower_face_left_edge_.append(grid_->GetCell(imin_, j, kmin_).global_index());
+           }
+
+            // LOWER CELL FACE: BOTTOM EDGE
+           for (int i = imin_; i <= imax_; i++) {
+               lower_face_bottom_edge_.append(grid_->GetCell(i, jmin_, kmin_).global_index());
+           }
+
+            // LOWER CELL FACE: RIGHT EDGE
+           for (int j = jmin_; j <= jmax_; j++) {
+               lower_face_right_edge_.append(grid_->GetCell(imax_, j, kmin_).global_index());
+           }
+
+            // LOWER CELL FACE: TOP EDGE
+           for (int i = imin_; i <= imax_; i++) {
+               lower_face_top_edge_.append(grid_->GetCell(i, jmax_, kmin_).global_index());
+           }
+
+            // APPEND LOWER EDGE CELLS TO box_edge_cells_ LIST
+            box_edge_cells_.append(lower_face_left_edge_);
+            box_edge_cells_.append(lower_face_bottom_edge_);
+            box_edge_cells_.append(lower_face_right_edge_);
+            box_edge_cells_.append(lower_face_top_edge_);
+
+            return box_edge_cells_;
         }
 
         bool ReservoirBoundary::CaseSatisfiesConstraint(Case *c) {
