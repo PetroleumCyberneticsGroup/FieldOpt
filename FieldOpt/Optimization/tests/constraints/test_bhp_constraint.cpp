@@ -8,7 +8,8 @@ namespace {
     class BhpConstraintTest : public ::testing::Test, public TestResources::TestResourceOptimizer {
     protected:
         BhpConstraintTest() {
-            box_constraint_ = new ::Optimization::Constraints::BhpConstraint(settings_optimizer_->constraints()[0], model_->variables());
+            box_constraint_ = new ::Optimization::Constraints::BhpConstraint(
+                settings_optimizer_->constraints()[0], model_->variables());
         }
         virtual ~BhpConstraintTest() {}
         virtual void SetUp() {}
@@ -20,7 +21,7 @@ namespace {
         EXPECT_TRUE(true);
     }
 
-    TEST_F(BhpConstraintTest, BaseCaseSatasfaction) {
+    TEST_F(BhpConstraintTest, BaseCaseSatisfaction) {
         EXPECT_TRUE(box_constraint_->CaseSatisfiesConstraint(base_case_));
     }
 
