@@ -91,12 +91,24 @@ namespace ERTWrapper {
         }
 
         void ECLSummaryReader::populateKeyLists() {
-            const stringlist_type *keys = ecl_sum_alloc_matching_general_var_list(ecl_sum_, NULL);
-            std::cout << "Number of keys: " << stringlist_back(keys) << std::endl;
-//            for (int i = 0; i < stringlist_get_size(keys); ++i) {
-//                const char* key = stringlist_safe_iget(keys, i);
-//                std::cout << key << std::endl;
-//            }
+            stringlist_type * keys = ecl_sum_alloc_matching_general_var_list(ecl_sum_, NULL);
+            stringlist_type * wells = ecl_sum_alloc_well_list(ecl_sum_, NULL);
+            stringlist_type * field_keys = ecl_sum_alloc_matching_general_var_list(ecl_sum_, "F*");
+            stringlist_type * well_keys = ecl_sum_alloc_well_var_list(ecl_sum_);
+
+            for (int i = 0; i < stringlist_get_size(keys); ++i)
+                keys_.push_back(QString::fromLatin1(stringlist_safe_iget(keys, i)));
+            for (int j = 0; j < stringlist_get_size(wells); ++j)
+                wells_.push_back(QString::fromLatin1(stringlist_safe_iget(wells, j)));
+            for (int k = 0; k < stringlist_get_size(field_keys); ++k)
+                field_keys_.push_back(QString::fromLatin1(stringlist_safe_iget(field_keys, k)));
+            for (int l = 0; l < stringlist_get_size(well_keys); ++l)
+                well_keys_.push_back(QString::fromLatin1(stringlist_safe_iget(well_keys, l)));
+
+            stringlist_free(keys);
+            stringlist_free(wells);
+            stringlist_free(field_keys);
+            stringlist_free(well_keys);
         }
 
     }

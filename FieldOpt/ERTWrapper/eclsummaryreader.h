@@ -52,6 +52,9 @@ namespace ERTWrapper {
             bool HasReportStep(int report_step); //!< Check whether the report step is valid, i.e. < last and > first.
 
             const QList<QString> &keys() const { return keys_; } //!< Get the list of all the keys contained in the summary.
+            const QList<QString> &wells() const { return wells_; } //!< Get the list of all wells found in the summary.
+            const QList<QString> &field_keys() const { return field_keys_; } //!< Get the list of all field-level keys contained in the summary.
+            const QList<QString> &well_keys() const { return well_keys_; } //!< Get the list of all well-level keys contained in the summary.
 
         private:
             QString file_name_;
