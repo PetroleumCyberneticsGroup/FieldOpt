@@ -99,6 +99,13 @@ namespace {
         EXPECT_FLOAT_EQ(1116.8876, fwpt.back());
     }
 
+    TEST_F(ECLSummaryReaderTest, WellRateVectors) {
+        auto wopr = ecl_summary_reader_->wopr("PROD");
+        EXPECT_EQ(21, wopr.size());
+        EXPECT_FLOAT_EQ(0.0, wopr.front());
+        EXPECT_FLOAT_EQ(628.9869, wopr.back());
+    }
+
     TEST_F(ECLSummaryReaderTest, KeysAndWells) {
         EXPECT_EQ(1, ecl_summary_reader_->wells().size());
         EXPECT_STREQ("PROD", ecl_summary_reader_->wells().first().toLatin1());

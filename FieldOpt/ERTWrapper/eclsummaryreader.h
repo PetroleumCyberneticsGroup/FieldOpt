@@ -71,6 +71,12 @@ namespace ERTWrapper {
             const std::vector<double> wwit(const QString well_name) const;
             const std::vector<double> wgit(const QString well_name) const;
 
+            const std::vector<double> wopr(const QString well_name) const;
+            const std::vector<double> wwpr(const QString well_name) const;
+            const std::vector<double> wgpr(const QString well_name) const;
+            const std::vector<double> wwir(const QString well_name) const;
+            const std::vector<double> wgir(const QString well_name) const;
+
         private:
             QString file_name_;
 
@@ -93,13 +99,19 @@ namespace ERTWrapper {
             QHash<QString, std::vector<double>> wgpt_;
             QHash<QString, std::vector<double>> wwit_;
             QHash<QString, std::vector<double>> wgit_;
+            QHash<QString, std::vector<double>> wopr_;
+            QHash<QString, std::vector<double>> wwpr_;
+            QHash<QString, std::vector<double>> wgpr_;
+            QHash<QString, std::vector<double>> wwir_;
+            QHash<QString, std::vector<double>> wgir_;
 
             void initializeVectors();
             void initializeTimeVector();
-            void initializeFieldCumulatives();
+            void initializeWellRates();
             void initializeWellCumulatives();
+            void initializeFieldCumulatives();
 
-            void warnPropertyNotFound(QString wname, QString propname) const;
+            void warnPropertyZero(QString wname, QString propname) const;
             void warnPropertyNotFound(QString propname) const;
             void warnPropertyZero(QString propname) const;
 
