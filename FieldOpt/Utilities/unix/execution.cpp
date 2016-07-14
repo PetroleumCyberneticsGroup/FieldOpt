@@ -105,15 +105,15 @@ namespace Utilities {
                 if (!helpers::is_pid_running(pid)) // If the child no longer exists, return true
                     return true;
                 int ret = sigtimedwait(&mask, NULL, &to);
-                std::cout << "SIGTIMEDWAIT returned " << ret << " with errno " << errno << std::endl;
+                std::cerr << "SIGTIMEDWAIT returned " << ret << " with errno " << errno << std::endl;
                 if (ret < 0) {
                     if (errno == EINTR) {
-                        std::cout << "Interrupted by a signal other than sigchild." << std::endl;
+                        std::cerr << "Interrupted by a signal other than sigchild." << std::endl;
                         helpers::terminate_process(pid);
                         return false;
                     }
                     else if (errno == EAGAIN) {
-                        std::cout << "Timeout, killing child " << pid << std::endl;
+                        std::cerr << "Timeout, killing child " << pid << std::endl;
                         if (helpers::is_pid_running(pid)) { // Ensure that child still exists
                             kill(pid, SIGKILL);
                             return false;
@@ -124,12 +124,12 @@ namespace Utilities {
                         }
                     }
                     else if (errno == EINVAL) {
-                        std::cout << "Got error EINVAL from process, terminating it." << std::endl;
+                        std::cerr << "Got error EINVAL from process, terminating it." << std::endl;
                         helpers::terminate_process(pid);
                         return false;
                     }
                     else {
-                        std::cout << "Got error sigtimedwait from process, terminating it." << std::endl;
+                        std::cerr << "Got error sigtimedwait from process, terminating it." << std::endl;
                         helpers::terminate_process(pid);
                         return false;
                     }
