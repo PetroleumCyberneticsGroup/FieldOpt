@@ -40,7 +40,6 @@ find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS} tests)
 add_executable(test_model
 		tests/test_model.cpp
-		tests/results/test_eclresults.cpp
 		tests/variables/test_properties.cpp
 		tests/variables/test_variable_property_container.cpp
 		tests/wells/test_control.cpp

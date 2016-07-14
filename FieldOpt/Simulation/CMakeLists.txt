@@ -42,6 +42,7 @@ find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 add_executable(test_simulation
         tests/results/test_adgprsresults.cpp
+        tests/results/test_eclresults.cpp
         tests/simulator_interfaces/test_adgprssimulator.cpp
         tests/simulator_interfaces/test_eclsimulator.cpp
         tests/simulator_interfaces/driver_file_writers/adgprs_driver_file_writer.cpp
