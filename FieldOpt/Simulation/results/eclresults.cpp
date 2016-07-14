@@ -2,7 +2,8 @@
 #include "ERTWrapper/ertwrapper_exceptions.h"
 #include <QVector>
 
-namespace Simulation { namespace Results {
+namespace Simulation {
+    namespace Results {
 
         ECLResults::ECLResults()
                 : Results()
@@ -39,63 +40,55 @@ namespace Simulation { namespace Results {
         double ECLResults::GetValue(Results::Property prop)
         {
             if (!isAvailable()) throw ResultsNotAvailableException();
-            if (!keys_.contains(prop)) throw ResultPropertyKeyDoesNotExistException("ECLIPSE");
-
-            int last_report_step = summary_reader_->GetLastReportStep();
-
-            if (misc_keys_.contains(prop))
-                return summary_reader_->GetMiscVar(keys_.value(prop), last_report_step);
-            else
-                return summary_reader_->GetFieldVar(keys_.value(prop), last_report_step);
+            return GetValueVector(prop).back();
         }
 
         double ECLResults::GetValue(Results::Property prop, int time_index)
         {
             if (!isAvailable()) throw ResultsNotAvailableException();
-            if (!keys_.contains(prop)) throw ResultPropertyKeyDoesNotExistException("ECLIPSE");
-            if (!summary_reader_->HasReportStep(time_index)) throw ResultTimeIndexInvalidException(time_index);
-
-            if (misc_keys_.contains(prop))
-                return summary_reader_->GetMiscVar(keys_.value(prop), time_index);
-            else
-                return summary_reader_->GetFieldVar(keys_.value(prop), time_index);
+            if (time_index < 0 || time_index >= summary_reader_->time().size())
+                throw std::runtime_error("The time index " + std::to_string(time_index) + " is outside the range of the summary.");
+            return GetValueVector(prop)[time_index];
         }
 
         double ECLResults::GetValue(Results::Property prop, QString well)
         {
             if (!isAvailable()) throw ResultsNotAvailableException();
-            if (!keys_.contains(prop)) throw ResultPropertyKeyDoesNotExistException("ECLIPSE");
-
-            int last_report_step = summary_reader_->GetLastReportStep();
-            return summary_reader_->GetWellVar(well, keys_.value(prop), last_report_step);
+            return GetValueVector(prop, well).back();
         }
 
         double ECLResults::GetValue(Results::Property prop, QString well, int time_index)
         {
             if (!isAvailable()) throw ResultsNotAvailableException();
-            if (!keys_.contains(prop)) throw ResultPropertyKeyDoesNotExistException("ECLIPSE");
-            if (!summary_reader_->HasReportStep(time_index)) throw ResultTimeIndexInvalidException(time_index);
-            return summary_reader_->GetWellVar(well, keys_.value(prop), time_index);
+            if (time_index < 0 || time_index >= summary_reader_->time().size())
+                throw std::runtime_error("The time index " + std::to_string(time_index) + " is outside the range of the summary.");
+            return GetValueVector(prop, well)[time_index];
         }
 
         std::vector<double> ECLResults::GetValueVector(Results::Property prop)
         {
             if (!isAvailable()) throw ResultsNotAvailableException();
-            if (!keys_.contains(prop)) throw ResultPropertyKeyDoesNotExistException("ECLIPSE");
-            QVector<double> values = QVector<double>();
-            if (misc_keys_.contains(prop)) {
-                for (int t = summary_reader_->GetFirstReportStep(); t <= summary_reader_->GetLastReportStep(); ++t) {
-                    if (summary_reader_->HasReportStep(t))
-                        values.append(summary_reader_->GetMiscVar(keys_[prop], t));
-                }
+            switch (prop) {
+                case CumulativeOilProduction:   return summary_reader_->fopt();
+                case CumulativeGasProduction:   return summary_reader_->fgpt();
+                case CumulativeWaterProduction: return summary_reader_->fwpt();
+                case CumulativeWaterInjection:  return summary_reader_->fwit();
+                case CumulativeGasInjection:    return summary_reader_->fgit();
+                case Time:                      return summary_reader_->time();
+                default: throw std::runtime_error("In ECLResults: The requested property is not a field or misc property.");
             }
-            else {
-                for (int t = summary_reader_->GetFirstReportStep(); t <= summary_reader_->GetLastReportStep(); ++t) {
-                    if (summary_reader_->HasReportStep(t))
-                        values.append(summary_reader_->GetFieldVar(keys_[prop], t));
-                }
+        }
+
+        std::vector<double> ECLResults::GetValueVector(Results::Property prop, QString well_name) {
+            if (!isAvailable()) throw ResultsNotAvailableException();
+            switch (prop) {
+                case CumulativeWellOilProduction:   return summary_reader_->wopt(well_name);
+                case CumulativeWellGasProduction:   return summary_reader_->wgpt(well_name);
+                case CumulativeWellWaterProduction: return summary_reader_->wwpt(well_name);
+                case CumulativeWellWaterInjection:  return summary_reader_->wwit(well_name);
+                case CumulativeWellGasInjection:    return summary_reader_->wgit(well_name);
+                default: throw std::runtime_error("In ECLResults: The requested property is not a well property.");
             }
-            return values.toStdVector();
         }
 
     }}
