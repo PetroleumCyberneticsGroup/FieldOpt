@@ -2,6 +2,7 @@
 #define ECLSUMMARYREADER_H
 
 #include <ert/ecl/ecl_sum.h>
+#include <ert/ecl/ecl_smspec.h>
 #include <QString>
 #include <QtCore/QHash>
 
@@ -56,45 +57,51 @@ namespace ERTWrapper {
             const QList<QString> &field_keys() const { return field_keys_; } //!< Get the list of all field-level keys contained in the summary.
             const QList<QString> &well_keys() const { return well_keys_; } //!< Get the list of all well-level keys contained in the summary.
 
+            const std::vector<double> &time() const { return time_; } //!< Get the time vector (days).
+
+            const std::vector<double> &fopt() const;
+            const std::vector<double> &fwpt() const;
+            const std::vector<double> &fgpt() const;
+            const std::vector<double> &fwit() const;
+            const std::vector<double> &fgit() const;
+
+            const std::vector<double> wopt(const QString well_name) const;
+            const std::vector<double> wwpt(const QString well_name) const;
+            const std::vector<double> wgpt(const QString well_name) const;
+            const std::vector<double> wwit(const QString well_name) const;
+            const std::vector<double> wgit(const QString well_name) const;
+
         private:
             QString file_name_;
 
             ecl_sum_type *ecl_sum_;
+
             QList<QString> keys_; //!< A list of all keys found in the summary.
             QList<QString> wells_; //!< A list of all the wells found in the summary.
             QList<QString> field_keys_; //!< A list of all the field keys found in the summary.
             QList<QString> well_keys_; //!< A list of all the well keys found in the summary.
             void populateKeyLists(); //! Populalate the key lists using the ecl_sum_select_matching_general_var_list function.
 
-            /*!
-             * Maps from a field property name to the equivalent well property name.
-             *
-             * This is used when
-             * a field property is requested but cannot be found in the summary. This mainly affects
-             * summaries written by the Flow reservoir simulator, which apparently does not support writing
-             * field-level properties.
-             */
-            QHash<QString, QString> f2w_prop = {
-                    {"FOPT", "WOPT"},
-                    {"FWPT", "WWPT"},
-                    {"FGPT", "WGPT"},
-                    {"FWCT", "WWCT"},
-                    {"FOPR", "WOPR"},
-                    {"FWPR", "WWPR"},
-                    {"FGPR", "WGPR"},
-                    {"FGIT", "WGIT"},
-                    {"FGIR", "WGIR"},
-                    {"FWIT", "WWIT"},
-                    {"FWIR", "WWIR"}
-            };
+            std::vector<double> time_;
+            std::vector<double> fopt_;
+            std::vector<double> fwpt_;
+            std::vector<double> fgpt_;
+            std::vector<double> fwit_;
+            std::vector<double> fgit_;
+            QHash<QString, std::vector<double>> wopt_;
+            QHash<QString, std::vector<double>> wwpt_;
+            QHash<QString, std::vector<double>> wgpt_;
+            QHash<QString, std::vector<double>> wwit_;
+            QHash<QString, std::vector<double>> wgit_;
 
-            /*!
-             * Compute the field-level property value by summing all the well property values.
-             * @param field_var_name The field property name.
-             * @param time_index The time index (0 and up).
-             * @return The sum of all corresponding well property values.
-             */
-            double computeFieldValueFromWellValues(QString field_var_name, int time_index);
+            void initializeVectors();
+            void initializeTimeVector();
+            void initializeFieldCumulatives();
+            void initializeWellCumulatives();
+
+            void warnPropertyNotFound(QString wname, QString propname) const;
+            void warnPropertyNotFound(QString propname) const;
+            void warnPropertyZero(QString propname) const;
 
             bool hasWellVar(QString well_name, QString var_name);
             bool hasGroupVar(QString group_name, QString var_name);
