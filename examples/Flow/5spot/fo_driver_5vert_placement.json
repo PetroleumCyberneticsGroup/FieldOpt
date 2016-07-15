@@ -8,8 +8,8 @@
         "Mode": "Maximize",
         "Parameters": {
             "MaxEvaluations": 2000,
-            "InitialStepLength": 128.0,
-            "MinimumStepLength": 32.0
+            "InitialStepLength": 20.0,
+            "MinimumStepLength": 1.0
         },
         "Objective": {
             "Type": "WeightedSum",
@@ -25,20 +25,6 @@
             ]
         },
         "Constraints": [
-            {
-                "Wells": ["INJECTOR", "PRODUCER"],
-                "Type": "CombinedWellSplineLengthInterwellDistanceReservoirBoundary",
-                "MinLength": 300,
-                "MaxLength": 800,
-                "MinDistance": 300,
-                "MaxIterations": 100,
-                "BoxImin": 0,
-                "BoxImax": 59,
-                "BoxJmin": 0,
-                "BoxJmax": 59,
-                "BoxKmin": 0,
-                "BoxKmax": 0
-            }
         ]
     },
     "Simulator": {
@@ -61,11 +47,11 @@
                 "WellboreRadius": 0.1905,
                 "WellBlocks": [
                     {
-                        "i": 1, "j": 1, "k": 1,
+                        "i": 10, "j": 30, "k": 1,
                         "IsVariable": true,
                         "Completion": {
                             "Type": "Perforation",
-                            "TransmissibilityFactor": 0.0,
+                            "TransmissibilityFactor": 0.0
                         }
                     }
                 ],
@@ -87,11 +73,11 @@
                 "WellboreRadius": 0.1905,
                 "WellBlocks": [
                     {
-                        "i": 60, "j": 60, "k": 1,
+                        "i": 20, "j": 5, "k": 1,
                         "IsVariable": true,
                         "Completion": {
                             "Type": "Perforation",
-                            "TransmissibilityFactor": 0.0,
+                            "TransmissibilityFactor": 0.0
                         }
                     }
                 ],
@@ -113,11 +99,11 @@
                 "WellboreRadius": 0.1905,
                 "WellBlocks": [
                     {
-                        "i": 1, "j": 60, "k": 1,
+                        "i": 40, "j": 30, "k": 1,
                         "IsVariable": true,
                         "Completion": {
                             "Type": "Perforation",
-                            "TransmissibilityFactor": 0.0,
+                            "TransmissibilityFactor": 0.0
                         }
                     }
                 ],
@@ -139,11 +125,11 @@
                 "WellboreRadius": 0.1905,
                 "WellBlocks": [
                     {
-                        "i": 60, "j": 1, "k": 1,
+                        "i": 10, "j": 20, "k": 1,
                         "IsVariable": true,
                         "Completion": {
                             "Type": "Perforation",
-                            "TransmissibilityFactor": 0.0,
+                            "TransmissibilityFactor": 0.0
                         }
                     }
                 ],
@@ -165,11 +151,11 @@
                 "WellboreRadius": 0.1905,
                 "WellBlocks": [
                     {
-                        "i": 30, "j": 30, "k": 1,
+                        "i": 5, "j": 20, "k": 1,
                         "IsVariable": true,
                         "Completion": {
                             "Type": "Perforation",
-                            "TransmissibilityFactor": 0.0,
+                            "TransmissibilityFactor": 0.0
                         }
                     }
                 ],
