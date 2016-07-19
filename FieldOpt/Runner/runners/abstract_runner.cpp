@@ -178,4 +178,35 @@ namespace Runner {
         logger_ = new Logger(runtime_settings_);
     }
 
+    void AbstractRunner::PrintCompletionMessage() const {
+        std::cout << "Optimization complete: ";
+        switch (optimizer_->IsFinished()) {
+            case Optimization::Optimizer::TerminationCondition::MAX_EVALS_REACHED:
+                std::cout << "maximum number of evaluations reached (not converged)." << std::endl;
+                break;
+            case Optimization::Optimizer::TerminationCondition::MINIMUM_STEP_LENGTH_REACHED:
+                std::cout << "minimum step length reached (converged)." << std::endl;
+                break;
+            default: std::cout << "Unknown termination reason." << std::endl;
+        }
+
+        std::cout << logger_->GetTimeInfoString().toStdString() << std::endl;
+        std::cout << logger_->GetSimInfoString().toStdString() << std::endl;
+
+        std::cout << "Best case at termination:" << optimizer_->GetTentativeBestCase()->id().toString().toStdString() << std::endl;
+        std::cout << "Variable values: " << std::endl;
+        for (auto var : optimizer_->GetTentativeBestCase()->integer_variables().keys()) {
+            auto prop = model_->variables()->GetDiscreteVariable(var);
+            std::cout << "\t" << prop->name().toStdString() << "\t" << prop->value() << std::endl;
+        }
+        for (auto var : optimizer_->GetTentativeBestCase()->real_variables().keys()) {
+            auto prop = model_->variables()->GetDiscreteVariable(var);
+            std::cout << "\t" << prop->name().toStdString() << "\t" << prop->value() << std::endl;
+        }
+        for (auto var : optimizer_->GetTentativeBestCase()->binary_variables().keys()) {
+            auto prop = model_->variables()->GetDiscreteVariable(var);
+            std::cout << "\t" << prop->name().toStdString() << "\t" << prop->value() << std::endl;
+        }
+    }
+
 }

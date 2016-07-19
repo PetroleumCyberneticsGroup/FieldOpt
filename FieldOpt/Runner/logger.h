@@ -80,6 +80,9 @@ public:
     void increment_invalid_cases(); //!< Increase the number of invalid cases by 1.
     int shortest_simulation_time() { return shortest_simulation_time_; } //!< Get the shortest recorded simulation time.
 
+    QString GetTimeInfoString() const; //!< Get a string with information about time spent running the optimization. Intended for printing at end of run.
+    QString GetSimInfoString() const; //!< Get a string with simulation stats. Intended for printing at end of optimization run.
+
 
 
 private:

@@ -72,6 +72,8 @@ protected:
     Simulation::SimulatorInterfaces::Simulator *simulator_;
     Logger *logger_;
 
+    void PrintCompletionMessage() const;
+
     /*!
      * \brief sentinelValue Get the sentinel value to be used as objective function values for cases
      * that cannot be evaluated.

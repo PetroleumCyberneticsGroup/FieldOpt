@@ -65,15 +65,7 @@ void SerialRunner::Execute()
         logger_->LogOptimizerStatus(optimizer_);
         logger_->LogRunnerStats();
     }
-    std::cout << "Optimization complete: ";
-    switch (optimizer_->IsFinished()) {
-        case Optimization::Optimizer::TerminationCondition::MAX_EVALS_REACHED:
-        std::cout << "maximum number of evaluations reached (not converged)." << std::endl;
-            break;
-        case Optimization::Optimizer::TerminationCondition::MINIMUM_STEP_LENGTH_REACHED:
-        std::cout << "minimum step length reached (converged)." << std::endl;
-        default: std::cout << "Unknown termination reason." << std::endl;
-    }
+    PrintCompletionMessage();
 }
 
 }
