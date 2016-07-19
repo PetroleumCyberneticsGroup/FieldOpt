@@ -10,12 +10,13 @@ namespace Utilities {
 
         Settings::Settings(QString driver_path, QString output_directory)
         {
-            std::cout << "Reading driver: " + driver_path.toStdString() << std::endl;
-            if (!::Utilities::FileHandling::FileExists(driver_path))
+            output_directory_ = output_directory;
+            if (!::Utilities::FileHandling::FileExists(driver_path)) {
                 throw FileNotFoundException(driver_path.toStdString());
+            }
             driver_path_ = driver_path;
             readDriverFile();
-            output_directory_ = output_directory;
+            if (verbosity_level_>2) std::cout << "Reading driver: " + driver_path.toStdString() << std::endl;
             simulator_->output_directory_ = output_directory;
         }
 
@@ -67,6 +68,9 @@ namespace Utilities {
                 name_ = global["Name"].toString();
                 bookkeeper_tolerance_ = global["BookkeeperTolerance"].toDouble();
                 if (bookkeeper_tolerance_ < 0.0) throw UnableToParseGlobalSectionException("The bookkeeper tolerance must be a positive number.");
+                if (global.contains("Verbosity_level")) {
+                    verbosity_level_ = global["Verbosity_level"].toInt();
+                }
             }
             catch (std::exception const &ex) {
                 throw UnableToParseGlobalSectionException("Unable to parse driver file global section: " + std::string(ex.what()));
