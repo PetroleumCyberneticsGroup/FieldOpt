@@ -1,0 +1,96 @@
+{
+    "Global": {
+        "Name": "5spot",
+        "BookkeeperTolerance": 10.0
+    },
+    "Optimizer": {
+        "Type": "Compass",
+        "Mode": "Maximize",
+        "Parameters": {
+            "MaxEvaluations": 2000,
+            "InitialStepLength": 20.0,
+            "MinimumStepLength": 1.0
+        },
+        "Objective": {
+            "Type": "WeightedSum",
+            "WeightedSumComponents": [
+                {
+                    "Coefficient": 1.0, "Property": "CumulativeOilProduction", "TimeStep": -1,
+                    "IsWellProp": false
+                },
+                {
+                    "Coefficient": -0.2, "Property": "CumulativeWaterProduction", "TimeStep": -1,
+                    "IsWellProp": false
+                }
+            ]
+        },
+        "Constraints": [
+        ]
+    },
+    "Simulator": {
+        "Type": "Flow",
+        "FluidModel": "DeadOil",
+        "ExecutionScript": "bash_flow"
+    },
+    "Model": {
+        "ControlTimes": [0, 50, 100, 200, 500],
+        "Reservoir": {
+            "Type": "ECLIPSE"
+        },
+        "Wells": [
+            {
+                "Name": "PROD1",
+                "Group": "GP",
+                "Type": "Producer",
+                "DefinitionType": "WellBlocks",
+                "PreferredPhase": "Oil",
+                "WellboreRadius": 0.1905,
+                "WellBlocks": [
+                    {
+                        "i": 10, "j": 30, "k": 1,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": 0.0
+                        }
+                    }
+                ],
+                "Controls": [
+                    {
+                        "TimeStep": 0,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 90.0,
+                        "IsVariable": true
+                    }
+                ]
+            },
+            {
+                "Name": "INJ1",
+                "Group": "GI",
+                "Type": "Injector",
+                "DefinitionType": "WellBlocks",
+                "PreferredPhase": "Water",
+                "WellboreRadius": 0.1905,
+                "WellBlocks": [
+                    {
+                        "i": 5, "j": 20, "k": 1,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": 0.0
+                        }
+                    }
+                ],
+                "Controls": [
+                    {
+                        "TimeStep": 0,
+                        "Type": "Water",
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 190.0,
+                        "IsVariable": true
+                    }
+                ]
+            }
+        ]
+    }
+}

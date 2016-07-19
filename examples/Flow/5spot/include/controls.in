@@ -1,9 +1,6 @@
 WCONPROD
 -- 1)  2)    3)   4)  5)  6)  7)  8)  9)
 PROD1  OPEN  BHP  1*  1*  1*  1*  1*  90  /
-PROD2  OPEN  BHP  1*  1*  1*  1*  1*  90  /
-PROD3  OPEN  BHP  1*  1*  1*  1*  1*  90  /
-PROD4  OPEN  BHP  1*  1*  1*  1*  1*  90  /
 /
 -- 1) Well name
 -- 2) Open/shut flag
@@ -20,7 +17,7 @@ PROD4  OPEN  BHP  1*  1*  1*  1*  1*  90  /
 
 WCONINJE
 -- 1)     2)     3)    4)    5)        6)  7)
-   INJ1   WATER  OPEN  BHP   1*        1*  230  /
+   INJ1   WATER  OPEN  BHP   1*        1*  190  /
 /
 -- 1) Well name
 -- 2) Injector type: WATER or GAS
@@ -49,4 +46,4 @@ WCONINJE
 -- 9) Injection well VFP table number.
 
 TSTEP
-100*1 /
+150*2 /

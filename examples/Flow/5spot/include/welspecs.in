@@ -2,9 +2,6 @@ WELSPECS
 -- 1)     2)   3)   4)   5)     6)
   INJ1   GI    5   20   1715   WAT /
   PROD1  GP   10   30   1715   OIL /
-  PROD2  GP   20    5   1715   OIL /
-  PROD3  GP   40   30   1715   OIL /
-  PROD4  GP   10   20   1715   OIL /
 /
 -- 1) Well name
 -- 2) Name of group to which well belongs
