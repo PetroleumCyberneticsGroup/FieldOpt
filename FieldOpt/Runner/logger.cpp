@@ -279,7 +279,7 @@ namespace Runner {
     QString Logger::GetTimeInfoString() const {
         QString start = start_time_.toLocalTime().toString("ddd MMMM d - hh:mm::ss");
         QString end = QDateTime::currentDateTime().toLocalTime().toString("ddd MMMM d - hh:mm::ss");
-        int duration_secs = (QDateTime::currentDateTime().toMSecsSinceEpoch() - start_time_.toMSecsSinceEpoch());
+        int duration_secs = (QDateTime::currentDateTime().toMSecsSinceEpoch() - start_time_.toMSecsSinceEpoch())/1000;
         int hrs  = duration_secs/3600;
         int mins = (duration_secs % 3600) / 60;
         int secs = duration_secs % 60;
