@@ -53,13 +53,20 @@ namespace Optimization {
         int nr_recently_evaluated_cases() const { return case_handler_->RecentlyEvaluatedCases().size(); }
 
         /*!
+         * The TerminationCondition enum enumerates the reasons why an optimization run is deemed
+         * finished. It is returned by the IsFinished method
+         */
+        enum TerminationCondition : int {NOT_FINISHED=0, MAX_EVALS_REACHED=1, MINIMUM_STEP_LENGTH_REACHED=2};
+
+        /*!
          * \brief IsFinished Check whether the optimization is finished, i.e. if the the optimizer has
          * reached some  termination condition.
          *
          * This method should be called before attempting to get a new case for evaluation.
-         * \return True if the optimizer has finished, otherwise false.
+         * \return NOT_FINISHED (0, =false) if the optimization has not finished, otherwise the non-zero reason
+         * for termination.
          */
-        virtual bool IsFinished() = 0;
+        virtual TerminationCondition IsFinished() = 0;
 
         virtual QString GetStatusStringHeader() const; //!< Get the CSV header for the status string.
         virtual QString GetStatusString() const; //!< Get a CSV string describing the current state of the optimizer.

@@ -23,7 +23,7 @@ void SerialRunner::Execute()
     logger_->LogCase(base_case_);
     logger_->LogCompdat(base_case_, simulator_->GetCompdatString());
     logger_->LogProductionData(base_case_, simulator_->results());
-    while (!optimizer_->IsFinished()) {
+    while (optimizer_->IsFinished() == Optimization::Optimizer::TerminationCondition::NOT_FINISHED) {
         auto new_case = optimizer_->GetCaseForEvaluation();
         logger_->LogCase(new_case);
 
@@ -64,6 +64,15 @@ void SerialRunner::Execute()
         optimizer_->SubmitEvaluatedCase(new_case);
         logger_->LogOptimizerStatus(optimizer_);
         logger_->LogRunnerStats();
+    }
+    std::cout << "Optimization complete: ";
+    switch (optimizer_->IsFinished()) {
+        case Optimization::Optimizer::TerminationCondition::MAX_EVALS_REACHED:
+        std::cout << "maximum number of evaluations reached (not converged)." << std::endl;
+            break;
+        case Optimization::Optimizer::TerminationCondition::MINIMUM_STEP_LENGTH_REACHED:
+        std::cout << "minimum step length reached (converged)." << std::endl;
+        default: std::cout << "Unknown termination reason." << std::endl;
     }
 }
 
