@@ -8,8 +8,8 @@
         "Mode": "Maximize",
         "Parameters": {
             "MaxEvaluations": 2000,
-            "InitialStepLength": 20.0,
-            "MinimumStepLength": 1.0
+            "InitialStepLength": 64.0,
+            "MinimumStepLength": 4.0
         },
         "Objective": {
             "Type": "WeightedSum",
