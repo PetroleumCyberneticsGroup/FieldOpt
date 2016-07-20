@@ -2,6 +2,8 @@
 #define FIELDOPT_SYNCHRONOUS_MPI_RUNNER_H
 
 #include "mpi_runner.h"
+#include "overseer.h"
+#include "worker.h"
 
 namespace Runner {
 
@@ -14,6 +16,10 @@ namespace Runner {
     public:
         SynchronousMPIRunner(RuntimeSettings *rts);
         virtual void Execute();
+
+    private:
+        std::unique_ptr<MPI::Overseer> overseer_;
+        std::unique_ptr<MPI::Worker> worker_;
     };
 
 }

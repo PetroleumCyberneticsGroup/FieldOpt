@@ -57,6 +57,7 @@ namespace Runner {
         QString output_directory = runtime_settings_->output_dir();
         if (output_subdirectory.length() > 0)
             output_directory.append(QString("/%1/").arg(output_subdirectory));
+        Utilities::FileHandling::CreateDirectory(output_directory);
 
         settings_ = new Utilities::Settings::Settings(runtime_settings_->driver_file(), output_directory);
         settings_->set_verbosity(runtime_settings_->verbose());

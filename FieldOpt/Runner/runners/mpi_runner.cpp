@@ -7,7 +7,7 @@
 namespace Runner {
 
     MPIRunner::MPIRunner(RuntimeSettings *rts) : AbstractRunner(rts) {
-
+        rank_ = world_.rank();
     }
 
 }
