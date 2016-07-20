@@ -25,6 +25,9 @@
 
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
+#include <boost/mpi/environment.hpp>
+#include <boost/mpi/communicator.hpp>
+namespace mpi = boost::mpi;
 #include <iostream>
 
 #include "runners/main_runner.h"
@@ -86,9 +89,13 @@ int main(int argc, char *argv[])
         // Parse runtime settings
         auto *runtime_settings = new Runner::RuntimeSettings(vm);
 
+        // Initialize mpi
+        mpi::environment env;
+        mpi::communicator world;
+
         // Initialize runner
         auto runner = Runner::MainRunner(runtime_settings);
-        runner.Execute();
+        //runner.Execute();
     }
     catch (std::exception &e) {
         std::cout << "error: " << e.what() << std::endl;
