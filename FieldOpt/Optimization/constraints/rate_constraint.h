@@ -7,7 +7,8 @@ namespace Optimization {
     namespace Constraints {
         class RateConstraint : public Constraint {
         public:
-            RateConstraint(Utilities::Settings::Optimizer::Constraint settings, Model::Properties::VariablePropertyContainer *variables);
+            RateConstraint(Utilities::Settings::Optimizer::Constraint settings,
+                           Model::Properties::VariablePropertyContainer *variables);
 
         // Constraint interface
         public:
