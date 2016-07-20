@@ -11,6 +11,10 @@ add_executable(FieldOpt
 		runners/abstract_runner.cpp
 		runners/serial_runner.cpp
         runners/oneoff_runner.cpp
+        runners/mpi_runner.cpp
+        runners/synchronous_mpi_runner.cpp
+        runners/overseer.cpp
+        runners/worker.cpp
 		logger.cpp
 		bookkeeper.cpp)
 
@@ -20,8 +24,13 @@ add_library(runner
 		runners/abstract_runner.cpp
 		runners/serial_runner.cpp
         runners/oneoff_runner.cpp
-		logger.cpp
-		bookkeeper.cpp)
+        runners/mpi_runner.cpp
+        runners/synchronous_mpi_runner.cpp
+        runners/overseer.cpp
+        runners/worker.cpp
+        logger.cpp
+        bookkeeper.cpp
+        )
 add_library(fieldopt::runner ALIAS runner)
 
 target_link_libraries(FieldOpt

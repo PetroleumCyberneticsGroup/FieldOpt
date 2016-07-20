@@ -89,10 +89,6 @@ int main(int argc, char *argv[])
         // Parse runtime settings
         auto *runtime_settings = new Runner::RuntimeSettings(vm);
 
-        // Initialize mpi
-        mpi::environment env;
-        mpi::communicator world;
-
         // Initialize runner
         auto runner = Runner::MainRunner(runtime_settings);
         //runner.Execute();
