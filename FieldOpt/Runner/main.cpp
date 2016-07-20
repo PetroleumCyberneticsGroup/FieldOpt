@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
                 ("max-parallel-simulations,m", po::value<int>(&max_par_sims)->default_value(0),
                  "start max <arg> parallel simulations")
                 ("runner-type,r", po::value<std::string>(),
-                 "type of runner (serial/oneoff)")
+                 "type of runner (serial/oneoff/mpisync)")
                 ("grid-path,g", po::value<std::string>(),
                  "path to model grid file (e.g. *.GRID)")
                 ("sim-exec-path,e", po::value<std::string>(),
