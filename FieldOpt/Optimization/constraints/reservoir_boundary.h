@@ -19,12 +19,16 @@ namespace Optimization {
         {
         public:
             ReservoirBoundary(const Utilities::Settings::Optimizer::Constraint &settings,
-                              Model::Properties::VariablePropertyContainer *variables, Reservoir::Grid::Grid *grid);
+                              Model::Properties::VariablePropertyContainer *variables,
+                              Reservoir::Grid::Grid *grid);
 
             // Constraint interface
         public:
             bool CaseSatisfiesConstraint(Case *c);
             void SnapCaseToConstraints(Case *c);
+
+            // Def. function that outputs box_edge_cells_ for testing
+            QList<int> returnListOfBoxEdgeCellIndices() const { return index_list_edge_; }
 
         private:
             int imin_, imax_, jmin_, jmax_, kmin_, kmax_;
@@ -35,9 +39,6 @@ namespace Optimization {
 
             QList<int> getListOfBoxEdgeCellIndices();
             QList<int> index_list_edge_;
-            QList<int> box_edge_cells_;
-
-
         };
     }
 }
