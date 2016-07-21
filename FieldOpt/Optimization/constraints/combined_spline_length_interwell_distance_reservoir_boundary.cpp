@@ -15,7 +15,14 @@ namespace Optimization {
             dist_constr_settings.wells = settings.wells;
             dist_constr_settings.min = settings.min_distance;
             distance_constraint_ = new InterwellDistance(dist_constr_settings, variables);
-            std::cout << "Initialized distance constraint." << std::endl;
+            Utilities::Settings::Settings global_settings_;
+            if (global_settings_.verbosity()>2) {
+                std::cout << "... ... initialized distance constraint for wells: ";
+                for (QString wname : settings.wells) {
+                    std::cout << wname.toStdString() << ", ";
+                }
+                std::cout << std::endl;
+            }
 
             length_constraints_ = QList<WellSplineLength *>();
             for (QString wname : settings.wells) {
@@ -24,7 +31,6 @@ namespace Optimization {
                 len_constr_settings.min = settings.min_length;
                 len_constr_settings.max = settings.max_length;
                 length_constraints_.append(new WellSplineLength(len_constr_settings, variables));
-                std::cout << "Initialized length constraint." << std::endl;
 
                 Utilities::Settings::Optimizer::Constraint boundary_constraint_settings;
                 boundary_constraint_settings.box_imin = settings.box_imin;
@@ -35,7 +41,6 @@ namespace Optimization {
                 boundary_constraint_settings.box_kmax = settings.box_kmax;
                 boundary_constraint_settings.well = wname;
                 boundary_constraints_.append(new ReservoirBoundary(boundary_constraint_settings, variables, grid));
-                std::cout << "Initialized boundary constraint." << std::endl;
             }
         }
 
