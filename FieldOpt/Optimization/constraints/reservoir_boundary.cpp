@@ -15,20 +15,54 @@ namespace Optimization {
             jmax_ = settings.box_jmax;
             kmin_ = settings.box_kmin;
             kmax_ = settings.box_kmax;
-            // TODO Figure out a more effective way to enforce the box constraints
-            // Steps:
-            // -find the edge cells of the box,
-            // -get the corner points for each of the cells,
-            // -find the corner points of the entire box (assuming then
-            // the box is a parallelogram, which may not be true for the
-            // top and bottom planes)
-            // -print the box data to log for external visualization
-            // -figure out if the current point is inside or outside
-            // the box, e.g., create a BoxEnvelopsPoint function
-            // -if outside, project point onto nearest point on plane
+            grid_ = grid;
+
             index_list_ = getListOfCellIndices();
-            index_list_edge_ = getListOfBoxEdgeCellIndices();
             affected_well_ = initializeWell(variables->GetWellSplineVariables(settings.well));
+
+            int verbosity_level_ = 0;
+            if (verbosity_level_>2){
+                std::cout << "... ... initialized boundary constraint for well: "
+                << settings.well.toStdString() << std::endl;
+            }
+
+            // QList with indices of box edge cells
+            index_list_edge_ = getListOfBoxEdgeCellIndices();
+
+            // Debug: verbose level = 4
+            if (verbosity_level_>3){
+                std::cout << "... ... [debug] index_list_edge_ length (reservoir_boundary.cpp): "
+                << index_list_edge_.length() << std::endl;
+            }
+
+//            for( int i=0; i < index_list_edge_.length(); ++i )
+//            {
+//               std::cout << index_list_edge_[i] << std::endl;
+//            }
+
+            // TODO Figure out a more effective way to enforce the box constraints
+            // (TASK A), then figure out way boundary constraints for non-box
+            // (parallelogram) shapes (TASK B); finally, define this constraint
+            // (out of ReservoirBoundary) as a standalone constriant (call it
+            // Box) (TASK C)
+            //
+            // Steps for (A):
+            // 1. find the edge cells of the box [x] + unit test [],
+            //
+            // 2. get the corner points for each of the cells [] + unit test [],
+            //
+            // 3. find the corner points of the entire box (assuming the box is a
+            // parallelogram, which may not be true for the top and bottom planes
+            // -> figure out how to deal with this later) [] + unit test [],
+            //
+            // 4. print the box data to log for external visualization
+            //
+            // 5. figure out if the current point is inside or outside
+            // the box, e.g., create a BoxEnvelopsPoint function
+            //
+            // 6. if outside, project point onto nearest point on plane
+            //
+            // Steps for (B):
         }
 
         /* \brief Function getListOfBoxEdgeCellIndices uses the limits
@@ -36,6 +70,7 @@ namespace Optimization {
          * the edges of the box
          */
         QList<int> ReservoirBoundary::getListOfBoxEdgeCellIndices() {
+
             QList<int> box_edge_cells_;
 
             QList<int> upper_face_left_edge_;
@@ -75,24 +110,24 @@ namespace Optimization {
             QList<int> lower_face_top_edge_;
 
             // LOWER CELL FACE: LEFT EDGE
-           for (int j = jmin_; j <= jmax_; j++) {
+            for (int j = jmin_; j <= jmax_; j++) {
                lower_face_left_edge_.append(grid_->GetCell(imin_, j, kmin_).global_index());
-           }
+            }
 
             // LOWER CELL FACE: BOTTOM EDGE
-           for (int i = imin_; i <= imax_; i++) {
+            for (int i = imin_; i <= imax_; i++) {
                lower_face_bottom_edge_.append(grid_->GetCell(i, jmin_, kmin_).global_index());
-           }
+            }
 
             // LOWER CELL FACE: RIGHT EDGE
-           for (int j = jmin_; j <= jmax_; j++) {
+            for (int j = jmin_; j <= jmax_; j++) {
                lower_face_right_edge_.append(grid_->GetCell(imax_, j, kmin_).global_index());
-           }
+            }
 
             // LOWER CELL FACE: TOP EDGE
-           for (int i = imin_; i <= imax_; i++) {
+            for (int i = imin_; i <= imax_; i++) {
                lower_face_top_edge_.append(grid_->GetCell(i, jmax_, kmin_).global_index());
-           }
+            }
 
             // APPEND LOWER EDGE CELLS TO box_edge_cells_ LIST
             box_edge_cells_.append(lower_face_left_edge_);
@@ -163,7 +198,7 @@ namespace Optimization {
         }
 
         QList<int> ReservoirBoundary::getListOfCellIndices() {
-            QList<int> index_list;
+             QList<int> index_list;
 
             for (int i = imin_; i <= imax_; i++){
                 for (int j = jmin_; j <= jmax_; j++){
