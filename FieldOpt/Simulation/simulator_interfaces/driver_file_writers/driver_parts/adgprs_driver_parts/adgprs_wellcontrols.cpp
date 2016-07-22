@@ -6,8 +6,8 @@ namespace DriverFileWriters {
 namespace DriverParts {
 namespace AdgprsDriverParts {
 
-WellControls::WellControls(QList<Model::Wells::Well *> *wells)
-    : Simulation::SimulatorInterfaces::DriverFileWriters::DriverParts::ECLDriverParts::WellControls(wells)
+WellControls::WellControls(QList<Model::Wells::Well *> *wells, QList<int> control_times)
+    : Simulation::SimulatorInterfaces::DriverFileWriters::DriverParts::ECLDriverParts::WellControls(wells, control_times)
 {}
 
 QString WellControls::GetPartString()
@@ -15,7 +15,7 @@ QString WellControls::GetPartString()
     return Simulation::SimulatorInterfaces::DriverFileWriters::DriverParts::ECLDriverParts::WellControls::GetPartString();
 }
 
-QString WellControls::createTimeEntry(int time)
+QString WellControls::createTimeEntry(int time, int prev_time)
 {
     if (time == 0) return "";
 

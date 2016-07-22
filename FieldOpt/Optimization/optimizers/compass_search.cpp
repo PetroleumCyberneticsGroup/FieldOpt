@@ -35,9 +35,13 @@ namespace Optimization {
             case_handler_->AddNewCases(perturbations);
         }
 
-        bool CompassSearch::IsFinished()
+        Optimizer::TerminationCondition CompassSearch::IsFinished()
         {
-            return case_handler_->EvaluatedCases().size() >= max_evaluations_ || step_length_ < minimum_step_length_;
+            if (case_handler_->EvaluatedCases().size() >= max_evaluations_)
+                return MAX_EVALS_REACHED;
+            else if (step_length_ < minimum_step_length_)
+                return MINIMUM_STEP_LENGTH_REACHED;
+            else return NOT_FINISHED; // The value of not finished is 0, which evaluates to false.
         }
 
         void CompassSearch::iterate()

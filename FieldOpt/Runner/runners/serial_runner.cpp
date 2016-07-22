@@ -23,7 +23,7 @@ void SerialRunner::Execute()
     logger_->LogCase(base_case_);
     logger_->LogCompdat(base_case_, simulator_->GetCompdatString());
     logger_->LogProductionData(base_case_, simulator_->results());
-    while (!optimizer_->IsFinished()) {
+    while (optimizer_->IsFinished() == Optimization::Optimizer::TerminationCondition::NOT_FINISHED) {
         auto new_case = optimizer_->GetCaseForEvaluation();
         logger_->LogCase(new_case);
 
@@ -65,6 +65,7 @@ void SerialRunner::Execute()
         logger_->LogOptimizerStatus(optimizer_);
         logger_->LogRunnerStats();
     }
+    PrintCompletionMessage();
 }
 
 }

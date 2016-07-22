@@ -17,6 +17,8 @@ namespace Utilities {
                 type_ = SimulatorType::ECLIPSE;
             else if (QString::compare(type, "ADGPRS") == 0)
                 type_ = SimulatorType::ADGPRS;
+            else if (QString::compare(type, "Flow", Qt::CaseInsensitive) == 0)
+                type_ = SimulatorType::Flow;
             else throw SimulatorTypeNotRecognizedException("The simulator type " + type.toStdString() + " was not recognized");
 
             // Simulator commands

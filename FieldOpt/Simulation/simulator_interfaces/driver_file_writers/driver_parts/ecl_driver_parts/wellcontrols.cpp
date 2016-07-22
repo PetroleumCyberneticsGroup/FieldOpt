@@ -1,3 +1,4 @@
+#include <iostream>
 #include "wellcontrols.h"
 
 namespace Simulation {
@@ -6,28 +7,32 @@ namespace Simulation {
             namespace DriverParts {
                 namespace ECLDriverParts {
 
-                    WellControls::WellControls(QList<Model::Wells::Well *> *wells)
+                    WellControls::WellControls(QList<Model::Wells::Well *> *wells, QList<int> control_times)
                     {
                         initializeBaseEntryLine(12);
-                        initializeTimeEntries(wells);
+                        initializeTimeEntries(wells, control_times);
                     }
 
                     QString WellControls::GetPartString()
                     {
                         QString part = "";
+                        int prev_time = 0;
                         for (int time : time_entries_.keys()) {
-                            part.append(createTimeEntry(time));
-                            for (WellSetting *setting : time_entries_.value(time)->well_settings) {
-                                if (setting->is_injector)
-                                    part.append(createInjectorEntry(setting));
-                                else
-                                    part.append(createProducerEntry(setting));
+                            part.append(createTimeEntry(time, prev_time));
+                            prev_time = time;
+                            if (time_entries_[time]->has_well_setting) {
+                                for (WellSetting *setting : time_entries_.value(time)->well_settings) {
+                                    if (setting->is_injector)
+                                        part.append(createInjectorEntry(setting));
+                                    else
+                                        part.append(createProducerEntry(setting));
+                                }
                             }
                         }
                         return part;
                     }
 
-                    void WellControls::initializeTimeEntries(QList<Model::Wells::Well *> *wells)
+                    void WellControls::initializeTimeEntries(QList<Model::Wells::Well *> *wells, QList<int> control_times)
                     {
                         time_entries_ = QMap<int, TimeEntry *>();
                         for (int i = 0; i < wells->size(); ++i) {
@@ -47,20 +52,29 @@ namespace Simulation {
                                         TimeEntry *time_entry = new TimeEntry();
                                         time_entry->time = current_time_step;
                                         time_entry->well_settings = QList<WellSetting *>({well_setting});
+                                        time_entry->has_well_setting = true;
                                         time_entries_.insert(time_entry->time, time_entry);
                                     }
 
                                 }
                             }
                         }
+                        for (int t = 0; t < control_times.size(); ++t) {
+                            if (!time_entries_.contains(control_times[t])) { // Adding a control time without a well setting
+                                auto control_time_entry = new TimeEntry();
+                                control_time_entry->time = control_times[t];
+                                time_entries_.insert(control_time_entry->time, control_time_entry);
+                            }
+                        }
                     }
 
-                    QString WellControls::createTimeEntry(int time)
+                    QString WellControls::createTimeEntry(int time, int prev_time)
                     {
                         if (time == 0) {
                             return QString(""); // A Time entry should not be created for the initial step
                         }
-                        return QString("TIME\n   %1/\n\n").arg(time);
+                        int delta_time = time - prev_time; // The amount of time to advance
+                        return QString("TSTEP\n   %1*2/\n\n").arg(delta_time/2);
                     }
 
                     QString WellControls::createProducerEntry(WellControls::WellSetting *setting)

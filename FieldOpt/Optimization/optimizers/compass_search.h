@@ -43,7 +43,7 @@ namespace Optimization {
              * minimum step length.
              * \return True if the algorithm has finished, otherwise false.
              */
-            bool IsFinished();
+            TerminationCondition IsFinished();
 
             QString GetStatusStringHeader() const;
             QString GetStatusString() const;

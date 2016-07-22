@@ -13,6 +13,7 @@ namespace Simulation {
             if (!Utilities::FileHandling::FileExists(settings->simulator()->driver_file_path()))
                 DriverFileDoesNotExistException(settings->simulator()->driver_file_path());
             initial_driver_file_path_ = settings->simulator()->driver_file_path();
+            control_times_ = settings->model()->control_times();
 
             QStringList tmp = initial_driver_file_path_.split("/");
             initial_driver_file_name_ = tmp.last();

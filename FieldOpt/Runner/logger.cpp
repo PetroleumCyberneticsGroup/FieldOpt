@@ -276,5 +276,31 @@ namespace Runner {
         total_cases_++;
     }
 
+    QString Logger::GetTimeInfoString() const {
+        QString start = start_time_.toLocalTime().toString("ddd MMMM d - hh:mm::ss");
+        QString end = QDateTime::currentDateTime().toLocalTime().toString("ddd MMMM d - hh:mm::ss");
+        int duration_secs = (QDateTime::currentDateTime().toMSecsSinceEpoch() - start_time_.toMSecsSinceEpoch())/1000;
+        int hrs  = duration_secs/3600;
+        int mins = (duration_secs % 3600) / 60;
+        int secs = duration_secs % 60;
+        QString duration = QString("%1 hours, %2 minutes, %3 seconds.").arg(hrs).arg(mins).arg(secs);
+        return QString("Start:    %1\n"
+                       "End:      %2\n"
+                       "Duration: %3\n").arg(start).arg(end).arg(duration);
+    }
+
+    QString Logger::GetSimInfoString() const {
+        QString total       = "Total number of cases:   " + QString::number(total_cases_);
+        QString simulated   = "Simulated cases:         " + QString::number(simulated_cases_);
+        QString bookkeeped  = "Bookkeeped cases:        " + QString::number(bookkeeped_cases_);
+        QString timedout    = "Timed out simulations:   " + QString::number(timed_out_simulations_);
+        QString invalid     = "Invalid cases generated: " + QString::number(invalid_cases_);
+        QString pct_invalid = "Percentage of cases invalid:         " + QString::number(float(invalid_cases_) / float(total_cases_) * 100) + "%";
+        QString pct_bkpd    = "Percentage of cases bookkeeped:      " + QString::number(float(bookkeeped_cases_) / float(total_cases_-invalid_cases_) * 100) + "%";
+        QString pct_to      = "Percentage of simulations timed out: " + QString::number(float(timed_out_simulations_) / float(total_cases_-invalid_cases_-bookkeeped_cases_) * 100) + "%";
+        return total + "\n" + simulated + "\n" + bookkeeped + "\n" + timedout + "\n" + invalid + "\n"
+               + pct_invalid + "\n" + pct_bkpd + "\n" + pct_to + "\n";
+    }
+
 
 }

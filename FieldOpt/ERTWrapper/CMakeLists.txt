@@ -3,7 +3,7 @@ project(ertwrapper)
 
 # ERT libraries
 find_library(ert_ecl NAMES ecl REQUIRED)
-find_library(ert_util NAMES util REQUIRED)
+find_library(ert_util NAMES ert_util REQUIRED)
 
 add_library(ertwrapper
         ertwrapper_exceptions.h

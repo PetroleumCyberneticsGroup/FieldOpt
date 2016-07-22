@@ -1,0 +1,49 @@
+WCONPROD
+-- 1)  2)    3)   4)  5)  6)  7)  8)  9)
+PROD1  OPEN  BHP  1*  1*  1*  1*  1*  90  /
+/
+-- 1) Well name
+-- 2) Open/shut flag
+-- 3) Control mode: ORAT cntr by oil rate, WRAT cntr by water rate,
+--    LRAT cntr by liquid rate, RESV cntr by res. fluid volume rate target,
+--    BHP cntr by BHP target, THP cntr by THP target.
+-- 4) Oil rate target or upper limit.
+-- 5) Water rate target or upper limit.
+-- 6) Gas rate target or upper limit.
+-- 7) Liquid rate target or upper limit.
+-- 8) Reservoir fluid volume rate target or upper limit.
+-- 9) BHP target or lower limit.
+-- Note= since Bo~1, the surf-oil prod = res.oil prod
+
+WCONINJE
+-- 1)     2)     3)    4)    5)        6)  7)
+   INJ1   WATER  OPEN  BHP   1*        1*  190  /
+/
+-- 1) Well name
+-- 2) Injector type: WATER or GAS
+-- 3) Open/shut flag
+-- 4) Control mode: RATE cntr by surface flow rate
+--    (Item 5), RESV cntr by reservoir volume target
+--    rate (Item 6), BHP Controlled by BHP target
+--    (Item 7), THP Controlled by THP target (Item 8)
+-- 5) Surface flow rate target or upper limit. For
+--    a multi-phase injector, this is the surface
+--    flow rate of the preferred phase of the well.
+--    Units: [SM3/DAY]. Def. No target or limit.
+-- 6) Reservoir fluid volume rate target or upper
+--    limit. Units: [RM3/DAY]. Def. No target or
+--    limit.
+-- 7) BHP target or upper limit. It is recommended
+--    that this quantity should be set to a value
+--    not exceeding the highest pressure in the
+--    PVT tables, to ensure the tables are not
+--    extrapolated in the well. It is best not
+--    to default this quantity, as its value is
+--    used in calculating the well potential.
+--    Def. 6803 atma, or 1.0E5 psia, or 6891 barsa.
+-- 8) THP target or upper limit. Def. No target or
+--    limit.
+-- 9) Injection well VFP table number.
+
+TSTEP
+150*2 /

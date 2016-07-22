@@ -26,9 +26,13 @@ namespace Simulation {
                 CumulativeOilProduction,
                 CumulativeGasProduction,
                 CumulativeWaterProduction,
+                CumulativeWaterInjection,
+                CumulativeGasInjection,
                 CumulativeWellOilProduction,
                 CumulativeWellGasProduction,
                 CumulativeWellWaterProduction,
+                CumulativeWellWaterInjection,
+                CumulativeWellGasInjection,
                 Time
             };
 

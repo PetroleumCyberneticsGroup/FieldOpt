@@ -24,7 +24,9 @@ add_library(simulation
         results/adgprsresults.cpp
         simulator_interfaces/driver_file_writers/adgprsdriverfilewriter.cpp
         simulator_interfaces/driver_file_writers/driver_parts/adgprs_driver_parts/wellstre.cpp
-        simulator_interfaces/driver_file_writers/driver_parts/adgprs_driver_parts/adgprs_wellcontrols.cpp)
+        simulator_interfaces/driver_file_writers/driver_parts/adgprs_driver_parts/adgprs_wellcontrols.cpp
+        simulator_interfaces/driver_file_writers/flowdriverfilewriter.cpp
+        simulator_interfaces/flowsimulator.cpp)
 add_library(fieldopt::simulation ALIAS ${PROJECT_NAME})
 
 target_link_libraries(simulation
@@ -40,6 +42,7 @@ find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 add_executable(test_simulation
         tests/results/test_adgprsresults.cpp
+        tests/results/test_eclresults.cpp
         tests/simulator_interfaces/test_adgprssimulator.cpp
         tests/simulator_interfaces/test_eclsimulator.cpp
         tests/simulator_interfaces/driver_file_writers/adgprs_driver_file_writer.cpp
@@ -52,7 +55,8 @@ add_executable(test_simulation
         tests/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_summary_section.cpp
         tests/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_wellcontrols.cpp
         tests/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_welspecs.cpp
-        tests/test_resource_results.h)
+        tests/test_resource_results.h
+        tests/simulator_interfaces/driver_file_writers/flow_driver_file_writer.cpp)
 target_link_libraries(test_simulation
         fieldopt::simulation
         ${GTEST_BOTH_LIBRARIES}

@@ -78,6 +78,7 @@ namespace Simulation {
             QString build_dir_;
             QString script_path_;
             QStringList script_args_;
+            QList<int> control_times_;
             virtual void UpdateFilePaths() = 0;
         };
 

@@ -25,7 +25,7 @@ namespace Simulation {
                     class WellControls : public ECLDriverPart
                     {
                     public:
-                        WellControls(QList<Model::Wells::Well *> *wells);
+                        WellControls(QList<Model::Wells::Well *> *wells, QList<int> control_times);
 
                         virtual QString GetPartString();
 
@@ -46,11 +46,12 @@ namespace Simulation {
                          */
                         struct TimeEntry {
                             int time;
+                            bool has_well_setting = false;
                             QList<WellSetting *> well_settings;
                         };
 
                         QMap<int, TimeEntry *> time_entries_;
-                        void initializeTimeEntries(QList<Model::Wells::Well *> *wells);
+                        void initializeTimeEntries(QList<Model::Wells::Well *> *wells, QList<int> control_times);
 
                         /*!
                          * \brief createTimeEntry Creates a string on the form
@@ -63,7 +64,7 @@ namespace Simulation {
                          * \param time The time step to be inserted.
                          * \return
                          */
-                        virtual QString createTimeEntry(int time);
+                        virtual QString createTimeEntry(int time, int prev_time);
                         QString createProducerEntry(WellSetting *setting);
 
                         /*!
