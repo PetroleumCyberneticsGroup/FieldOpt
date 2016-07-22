@@ -11,6 +11,9 @@ namespace Optimization {
             max_length_ = settings.max;
 
             affected_well_ = initializeWell(variables->GetWellSplineVariables(settings.well));
+
+            int verbosity_level_ = 0;
+            if (verbosity_level_>2) std::cout << "... ... initialized length constraint for well: " << settings.well.toStdString() << std::endl;
         }
 
         bool WellSplineLength::CaseSatisfiesConstraint(Case *c)
