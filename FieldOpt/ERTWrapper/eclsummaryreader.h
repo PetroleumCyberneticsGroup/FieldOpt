@@ -5,6 +5,7 @@
 #include <ert/ecl/ecl_smspec.h>
 #include <QString>
 #include <QtCore/QHash>
+#include <vector>
 
 namespace ERTWrapper {
     namespace ECLSummary {
@@ -86,7 +87,7 @@ namespace ERTWrapper {
             QList<QString> wells_; //!< A list of all the wells found in the summary.
             QList<QString> field_keys_; //!< A list of all the field keys found in the summary.
             QList<QString> well_keys_; //!< A list of all the well keys found in the summary.
-            void populateKeyLists(); //!< Populalate the key lists using the ecl_sum_select_matching_general_var_list function.
+            void populateKeyLists(); //!< Populate the key lists using the ecl_sum_select_matching_general_var_list function.
 
             std::vector<double> time_;
             std::vector<double> fopt_;
