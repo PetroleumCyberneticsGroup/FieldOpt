@@ -35,16 +35,17 @@ namespace Optimization {
                 << index_list_edge_.length() << std::endl;
             }
 
-//            for( int i=0; i < index_list_edge_.length(); ++i )
-//            {
-//               std::cout << index_list_edge_[i] << std::endl;
-//            }
+            // Debug (move to tests):
+            // for( int i=0; i < index_list_edge_.length(); ++i )
+            // {
+            //   std::cout << index_list_edge_[i] << std::endl;
+            // }
 
-            // TODO Figure out a more effective way to enforce the box constraints
-            // (TASK A), then figure out way boundary constraints for non-box
-            // (parallelogram) shapes (TASK B); finally, define this constraint
-            // (out of ReservoirBoundary) as a standalone constriant (call it
-            // Box) (TASK C)
+            // TODO NOTE Figure out a more effective way to enforce the box
+            // constraints (TASK A), then figure out way boundary constraints
+            // for non-box (parallelogram) shapes (TASK B); finally, define this
+            // constraint (out of ReservoirBoundary) as a standalone constriant
+            // (call it Box) (TASK C)
             //
             // Steps for (A):
             // 1. find the edge cells of the box [x] + unit test [],
@@ -63,7 +64,9 @@ namespace Optimization {
             // 6. if outside, project point onto nearest point on plane
             //
             // Steps for (B):
+            // ...
         }
+
 
         /* \brief Function getListOfBoxEdgeCellIndices uses the limits
          * defining the box constraint to find the cells that constitute
