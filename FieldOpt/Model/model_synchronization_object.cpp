@@ -1,4 +1,5 @@
 #include <boost/lexical_cast.hpp>
+#include <iostream>
 #include "model_synchronization_object.h"
 
 namespace Model {

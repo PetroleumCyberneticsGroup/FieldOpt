@@ -40,9 +40,9 @@ namespace Runner {
         return c;
     }
 
-    void MPIRunner::BroadcastModel(Model::Model *model) {
+    void MPIRunner::BroadcastModel() {
         if (rank() != 0) throw std::runtime_error("BroadcastModel should only be called on the root process.");
-        auto mso = Model::ModelSynchronizationObject(model);
+        auto mso = Model::ModelSynchronizationObject(model_);
         std::ostringstream oss;
         boost::archive::text_oarchive oa(oss);
         oa << mso;
@@ -52,7 +52,7 @@ namespace Runner {
         }
     }
 
-    void MPIRunner::RecvModelSynchronizationObject(Model::Model *model) {
+    void MPIRunner::RecvModelSynchronizationObject() {
         if (rank() == 0) std::runtime_error("BroadcastModel should not be called on the root process.");
         Model::ModelSynchronizationObject mso;
         std::string s;
@@ -60,7 +60,7 @@ namespace Runner {
         std::istringstream iss(s);
         boost::archive::text_iarchive ia(iss);
         ia >> mso;
-        mso.UpdateVariablePropertyIds(model);
+        mso.UpdateVariablePropertyIds(model_);
     }
 
 }

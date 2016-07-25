@@ -36,18 +36,12 @@ namespace Runner {
          */
         enum MsgTag : int { CASE_UNEVAL=1, CASE_EVAL=2, MODEL_SYNC=3 };
 
-    protected:
-        MPIRunner(RuntimeSettings *rts);
-        mpi::environment env_;
-        mpi::communicator world_;
-        int rank_;
-
         /*!
-         * @brief Send a case to the specified destination.
-         * @param c Case to be sent.
-         * @param dest The rank of the process the case should be sent to.
-         * @param tag Tag to be used when sending.
-         */
+ * @brief Send a case to the specified destination.
+ * @param c Case to be sent.
+ * @param dest The rank of the process the case should be sent to.
+ * @param tag Tag to be used when sending.
+ */
         void SendCase(Optimization::Case *c, int dest, MsgTag tag);
 
 
@@ -66,16 +60,20 @@ namespace Runner {
          *
          * This should be called by the process with rank 0, in order to make the variable UUIDs match across
          * all processes.
-         * @param model The model to be broadcast.
          */
-        void BroadcastModel(Model::Model *model);
+        void BroadcastModel();
 
         /*!
          * @brief Receive the ModelSynchronizationObject broadcast by the root process. This is applied to the
          * model object.
-         * @param model The model to apply the synchronization object on.
          */
-        void RecvModelSynchronizationObject(Model::Model *model);
+        void RecvModelSynchronizationObject();
+
+    protected:
+        MPIRunner(RuntimeSettings *rts);
+        mpi::environment env_;
+        mpi::communicator world_;
+        int rank_;
     };
 
 }
