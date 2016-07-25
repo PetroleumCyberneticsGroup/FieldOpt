@@ -145,7 +145,7 @@ namespace Optimization {
         str = str + "\nReal variable values: ";
         for (bool val : real_variables().values())
             str = str + QString::number(val);
-        str = "\n--------------------------------------------------\n";
+        str = str + "\n--------------------------------------------------\n";
         return str;
     }
 }
