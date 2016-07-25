@@ -36,6 +36,10 @@
 #include "continous_property.h"
 
 namespace Model {
+    class ModelSynchronizationObject;
+}
+
+namespace Model {
 namespace Properties {
 
 /*!
@@ -49,6 +53,7 @@ namespace Properties {
  */
 class VariablePropertyContainer
 {
+    friend class ::Model::ModelSynchronizationObject;
 public:
     VariablePropertyContainer();
 
@@ -63,14 +68,22 @@ public:
     BinaryProperty *GetBinaryVariable(QUuid id) const; //!< Get the binary variable with index id.
     DiscreteProperty *GetDiscreteVariable(QUuid id) const; //!< Get the discrete variable with index id.
     ContinousProperty *GetContinousVariable(QUuid id) const; //!< Get the continous variable with index id.
+
+    BinaryProperty *GetBinaryVariable(QString name) const; //!< Get the binary variable with the specified name.
+    DiscreteProperty *GetDiscreteVariable(QString name) const; //!< Get the discrete variable with the specified name.
+    ContinousProperty *GetContinousProperty(QString name) const; //!< Get the continous variable with the specified name.
+
     void SetBinaryVariableValue(QUuid id, bool val); //!< Set the value of a binary variable.
     void SetDiscreteVariableValue(QUuid id, int val); //!< Set the value of a binary variable.
+
     void SetContinousVariableValue(QUuid id, double val); //!< Set the value of a binary variable.
     QHash<QUuid, BinaryProperty *> *GetBinaryVariables() const { return binary_variables_; } //!< Get all binary variables
     QHash<QUuid, DiscreteProperty *> *GetDiscreteVariables() const { return discrete_variables_; } //!< Get all discrete variables
+
     QHash<QUuid, ContinousProperty *> *GetContinousVariables() const { return continous_variables_; } //!< Get all continous variables
     QHash<QUuid, bool> GetBinaryVariableValues() const; //!< Get a hashmap containing all binary variable values. The key represents each variable's ID.
     QHash<QUuid, int> GetDiscreteVariableValues() const; //!< Get a hashmap containing all discrete variable values. The key represents each variable's ID.
+
     QHash<QUuid, double> GetContinousVariableValues() const; //!< Get a hashmap containing all discrete varaible values. The key represents each variable's ID.
 
     QList<ContinousProperty *> GetWellControlVariables() const; //!< Get all control (rate/bhp) variables.

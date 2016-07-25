@@ -12,6 +12,7 @@
 #include "Model/wells/wellbore/wellblock.h"
 
 namespace Model {
+    class ModelSynchronizationObject;
 
     /*!
      * \brief The Model class represents the reservoir model as a whole, including wells and
@@ -19,6 +20,7 @@ namespace Model {
      */
     class Model
     {
+        friend class ModelSynchronizationObject;
     public:
         Model(::Utilities::Settings::Model settings);
 

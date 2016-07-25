@@ -90,6 +90,10 @@ namespace Model {
             else throw std::runtime_error("Unable to extract coordinate from property name " + prop_name.toStdString());
         }
 
+        void Property::UpdateId(QUuid new_id) {
+            id_ = new_id;
+        }
+
 
     }
 }
