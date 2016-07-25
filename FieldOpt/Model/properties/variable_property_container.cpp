@@ -276,7 +276,7 @@ namespace Model {
             throw std::runtime_error("Unable to find discrete variable with name " + name.toStdString());
         }
 
-        ContinousProperty *VariablePropertyContainer::GetContinousProperty(QString name) const {
+        ContinousProperty *VariablePropertyContainer::GetContinousVariable(QString name) const {
             for (auto var : continous_variables_->values()) {
                 if (QString::compare(var->name(), name) == 0)
                     return var;

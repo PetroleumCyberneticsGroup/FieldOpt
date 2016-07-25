@@ -71,7 +71,7 @@ public:
 
     BinaryProperty *GetBinaryVariable(QString name) const; //!< Get the binary variable with the specified name.
     DiscreteProperty *GetDiscreteVariable(QString name) const; //!< Get the discrete variable with the specified name.
-    ContinousProperty *GetContinousProperty(QString name) const; //!< Get the continous variable with the specified name.
+    ContinousProperty *GetContinousVariable(QString name) const; //!< Get the continous variable with the specified name.
 
     void SetBinaryVariableValue(QUuid id, bool val); //!< Set the value of a binary variable.
     void SetDiscreteVariableValue(QUuid id, int val); //!< Set the value of a binary variable.
