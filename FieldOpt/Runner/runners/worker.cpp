@@ -9,5 +9,17 @@ namespace Runner {
             std::cout << "Initialized Worker on " << runner_->world().rank() << std::endl;
         }
 
+        void Worker::RecvUnevaluatedCase() {
+            current_case_ = runner_->RecvCase(runner_->scheduler_rank_, MPIRunner::MsgTag::CASE_UNEVAL);
+        }
+
+        void Worker::SendEvaluatedCase() {
+            runner_->SendCase(current_case_, runner_->scheduler_rank_, MPIRunner::MsgTag::CASE_EVAL);
+        }
+
+        Optimization::Case *Worker::GetCurrentCase() {
+            return current_case_;
+        }
+
     }
 }
