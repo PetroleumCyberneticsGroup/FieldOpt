@@ -17,7 +17,7 @@ namespace Runner {
                 runner_ = new OneOffRunner(runtime_settings_);
                 break;
             case RuntimeSettings::RunnerType::MPISYNC:
-                runner_ = new SynchronousMPIRunner(runtime_settings_);
+                runner_ = new MPI::SynchronousMPIRunner(runtime_settings_);
                 break;
             default:
                 throw std::runtime_error("Runner type not recognized.");

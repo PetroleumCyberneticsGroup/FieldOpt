@@ -36,6 +36,7 @@ namespace Runner {
              * @brief The WorkerStatus struct holds information about the current status of all workers in the network.
              */
             struct WorkerStatus {
+                WorkerStatus() { rank = -1; }
                 WorkerStatus(int r) { rank = r;}
                 int rank; //!< The rank of the process the worker is running on.
                 bool working = false; //!< Indicates if the worker is currently performing simulations.
