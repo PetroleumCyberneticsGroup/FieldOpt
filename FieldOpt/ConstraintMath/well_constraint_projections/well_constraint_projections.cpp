@@ -35,9 +35,16 @@ namespace WellConstraintProjections {
             return proj_point;
         }
 
-        // If the above is false, projected point is outside face, The closest point lies on one of the four lines.
-        // We create an array containing the index for line segments in the face, and loop through the lines to
-        // find best point.
+        // If the above is false, then the projected point is outside of the plane defined by face. 
+        // If so, then the closest point lies on one of the four lines defining the bound of the cell. 
+        // We create an array containing the index for the line segments defining the face, then loop 
+        // through the lines to find closest point.
+        //
+        // cell face index ordering:
+        // 0 -- 1
+        // |    |
+        // 2 -- 3
+        // (Hilmar: check if this is correct)
         int line_indices[4][2] = {{0, 1},
                                   {1, 3},
                                   {3, 2},
@@ -62,6 +69,7 @@ namespace WellConstraintProjections {
         return closest_p_q.second;
     }
 
+    // TODO: what does this function do? 
     Vector3d non_inv_quad_coeffs(Vector3d x, Vector3d n) {
         Vector3d coeffs;
         coeffs(0) = n(0) * n(0) + n(1) * n(1) + n(2) * n(2);
@@ -70,6 +78,7 @@ namespace WellConstraintProjections {
         return coeffs;
     }
 
+    // TODO: what does this function do?
     Vector3d rm_entries_eps(Vector3d m, double eps) {
         for (int ii = 0; ii < 3; ii++) {
             if (fabs(m[ii]) < eps) {
@@ -79,6 +88,7 @@ namespace WellConstraintProjections {
         return m;
     }
 
+    // TODO: what does this function do?
     Matrix3d rm_entries_eps_matrix(Matrix3d m, double eps) {
         for (int ii = 0; ii < 3; ii++) {
             for (int jj = 0; jj < 3; jj++) {
@@ -90,6 +100,7 @@ namespace WellConstraintProjections {
         return m;
     }
 
+    // TODO: what does this function do?
     VectorXd rm_entries_eps_coeffs(VectorXd m, double eps) {
         for (int ii = 0; ii < 7; ii++) {
             if (fabs(m[ii]) < eps) {
@@ -207,7 +218,7 @@ namespace WellConstraintProjections {
         Vector3d temp_b = build_b_4p(coords, d);
         QList<Vector3d> solution_candidates = kkt_eq_solutions(temp_A, temp_b);
 
-        // Go through candidates s and pick the best one
+        // Go through candidates and pick the best one
         for (int sol_num = 0; sol_num < solution_candidates.length(); sol_num++) {
 
             moved_coords = move_points_4p(coords, d, solution_candidates.at(sol_num));
