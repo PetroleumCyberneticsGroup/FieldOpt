@@ -8,7 +8,6 @@
 #include <QPair>
 #include <stdexcept>
 #include "Utilities/file_handling/filehandling.h"
-
 namespace po = boost::program_options;
 
 namespace Runner {
@@ -21,7 +20,7 @@ namespace Runner {
 class RuntimeSettings
 {
 public:
-    RuntimeSettings(po::variables_map vm);
+    RuntimeSettings(int argc, const char *argv[]);
 
     /*!
      * \brief The RunnerType enum lists the names of available runners.
@@ -60,6 +59,8 @@ private:
 
     QString runnerTypeString() const; //!< Get a string representation of the runner type (used when printing settings to the terminal).
     QString wellSplineCoordinateString(const QPair<QVector<double>, QVector<double>> spline) const;
+
+    po::variables_map createVariablesMap(int argc, const char *argv[]);
 };
 
 }

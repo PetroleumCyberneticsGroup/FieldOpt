@@ -88,7 +88,7 @@ find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 add_executable(test_runner
         tests/test_bookkeeper.cpp
-        )
+        tests/test_runtime_settings.cpp)
 target_link_libraries(test_runner
         fieldopt::runner
         ${GTEST_BOTH_LIBRARIES}
