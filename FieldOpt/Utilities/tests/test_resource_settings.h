@@ -11,28 +11,21 @@ namespace TestResources {
     protected:
         TestResourceSettings() {
 
-            settings_full_ = new Utilities::Settings::Settings(ExampleFilePaths::driver_example_, ExampleFilePaths::directory_output_);
+            settings_full_ = new Utilities::Settings::Settings(
+                    ExampleFilePaths::driver_example_,
+                    ExampleFilePaths::directory_output_);
             settings_optimizer_ = settings_full_->optimizer();
             settings_simulator_ = settings_full_->simulator();
             settings_model_ = settings_full_->model();
+
+            // ESTABLISH OVERALL SETTINGS FOR TESTING
+            if (settings_full_->verbosity()>2) std::cout << "... establishing overall settings for testing (test_resource_settings.h)" << std::endl;
 
 //            settings_flow_5spot_ = new Utilities::Settings::Settings(ExampleFilePaths::driver_5spot_flow_,
 //                                                                     "/home/einar/.CLion2016.2/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug/fieldopt_output/");
 //            settings_flow_5spot_->simulator()->set_driver_file_path(TestResources::ExampleFilePaths::flow_drv_5spot_);
 //            settings_flow_5spot_->model()->set_reservoir_grid_path(ExampleFilePaths::grid_5spot_flow_);
 
-            // ESTABLISH OVERALL SETTINGS FOR TESTING
-            if (settings_full_->verbosity()>2) std::cout << "... establishing overall settings for testing (test_resource_settings.h)" << std::endl;
-
-            // ESTABLISH RESERVOIR BOUNDARY SETTINGS FOR TESTING
-            constraint_settings_reservoir_boundary_.type = Utilities::Settings::Optimizer::ConstraintType::ReservoirBoundary;
-            constraint_settings_reservoir_boundary_.box_imin = 0;
-            constraint_settings_reservoir_boundary_.box_imax = 59;
-            constraint_settings_reservoir_boundary_.box_jmin = 0;
-            constraint_settings_reservoir_boundary_.box_jmax = 59;
-            constraint_settings_reservoir_boundary_.box_kmin = 0;
-            constraint_settings_reservoir_boundary_.box_kmax = 0;
-            constraint_settings_reservoir_boundary_.well = "TESTW";
         }
 
         Utilities::Settings::Settings *settings_full_;
@@ -41,7 +34,6 @@ namespace TestResources {
         Utilities::Settings::Model *settings_model_;
 //        Utilities::Settings::Settings *settings_flow_5spot_;
 
-        Utilities::Settings::Optimizer::Constraint constraint_settings_reservoir_boundary_;
     };
 
 }
