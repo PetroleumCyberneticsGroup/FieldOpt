@@ -30,10 +30,12 @@ namespace TestResources {
         Matrix<double,Dynamic,1> WCF;
         QString name;
 
-        Matrix<int, Dynamic, 4>* IJK_ptr = &IJK;
-        Matrix<double,Dynamic,1>* WCF_ptr = &WCF;
+        // obsolete:
+        // Matrix<int, Dynamic, 4>* IJK_ptr = &IJK;
+        // Matrix<double,Dynamic,1>* WCF_ptr = &WCF;
 
     private:
+        bool debug_ = false;
     };
 
     void WIData::ReadData(QString file_name) {
@@ -80,6 +82,11 @@ namespace TestResources {
 
         IJK = IJK_stor;
         WCF = Map<Matrix<double, Dynamic, 1>>(wcf.data(), wcf.size());
+
+        // Debug: read input is OK
+        if (debug_){
+
+        }
     }
 }
 

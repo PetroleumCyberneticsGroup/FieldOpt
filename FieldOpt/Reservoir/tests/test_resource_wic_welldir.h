@@ -32,6 +32,7 @@ namespace TestResources {
         // Variables: folder path
         QString well_data_dir_ = "../wic-benchmark-wells";
         // QString* well_data_dir_ptr = &well_data_dir_; // obsolete
+        bool debug_ = false;
     };
 
 
@@ -52,21 +53,23 @@ namespace TestResources {
         well_list_.append(AddFilesToList(dir_list_, QString("*RMS.DATA")));
         well_list_.append(AddFilesToList(dir_list_, QString("*PCG.DATA")));
 
-        // Check lists are OK
-        std::cout << "well_data_path_: " << well_data_dir_.toStdString() << std::endl;
-        std::cout << "size of well_list_: " << well_list_.size() << std::endl;
+        // Debug: check lists are OK
+        if (debug_){
+            std::cout << "well_data_path_: " << well_data_dir_.toStdString() << std::endl;
+            std::cout << "size of well_list_: " << well_list_.size() << std::endl;
 
-        QStringList temp = well_list_[0];
-        QString temp_str = "well dir list";
-        printWellDirList(temp, temp_str);
+            QStringList temp = well_list_[0];
+            QString temp_str = "well dir list";
+            printWellDirList(temp, temp_str);
 
-        temp = well_list_[1];
-        temp_str = "rms_list";
-        printWellDirList(temp, temp_str);
+            temp = well_list_[1];
+            temp_str = "rms_list";
+            printWellDirList(temp, temp_str);
 
-        temp = well_list_[2];
-        temp_str = "pcg_list";
-        printWellDirList(temp, temp_str);
+            temp = well_list_[2];
+            temp_str = "pcg_list";
+            printWellDirList(temp, temp_str);
+        }
 
         return well_list_;
     }
