@@ -7,6 +7,7 @@
 #include "Reservoir/grid/eclgrid.h"
 #include "Reservoir/grid/grid_exceptions.h"
 #include "Utilities/file_handling/filehandling.h"
+#include "Reservoir/tests/test_resource_wic_diff_functions.h"
 #include "Reservoir/well_index_calculation/wellindexcalculator.h"
 #include "Reservoir/tests/test_resource_wic_welldir.h"
 #include "Reservoir/tests/test_resource_wic_widata.h"

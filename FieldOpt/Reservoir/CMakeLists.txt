@@ -36,7 +36,7 @@ add_executable(test_reservoir
         tests/grid/test_ijkcoordinate.cpp
         tests/well_index_calculation/test_intersected_cells.cpp
         tests/well_index_calculation/test_single_cell_wellindex.cpp
-        tests/well_index_calculation/test_well_index_deviated_well.cpp)
+        tests/well_index_calculation/test_well_index_deviated_well.cpp tests/test_resource_wic_diff_functions.cpp tests/test_resource_wic_diff_functions.h)
 target_link_libraries(test_reservoir
         fieldopt::reservoir
         fieldopt::ertwrapper
