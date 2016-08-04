@@ -16,76 +16,78 @@
 using namespace Eigen;
 
 namespace TestResources {
+    namespace WIBenchmark {
 
-    class WIData {
-    public:
-        // Constructor
-        WIData(){};
+        class WIData {
+        public:
+            // Constructor
+            WIData(){};
 
-        // Functions
-        void ReadData(QString file_name);
+            // Functions
+            void ReadData(QString file_name);
 
-        // Variables:
-        Matrix<int, Dynamic, 4> IJK;
-        Matrix<double,Dynamic,1> WCF;
-        QString name;
+            // Variables:
+            Matrix<int, Dynamic, 4> IJK;
+            Matrix<double,Dynamic,1> WCF;
+            QString name;
 
-        // obsolete:
-        // Matrix<int, Dynamic, 4>* IJK_ptr = &IJK;
-        // Matrix<double,Dynamic,1>* WCF_ptr = &WCF;
+            // obsolete:
+            // Matrix<int, Dynamic, 4>* IJK_ptr = &IJK;
+            // Matrix<double,Dynamic,1>* WCF_ptr = &WCF;
 
-    private:
-        bool debug_ = false;
-    };
+        private:
+            bool debug_ = false;
+        };
 
-    void WIData::ReadData(QString file_name) {
+        void WIData::ReadData(QString file_name) {
 
-        QFile file(file_name);
-        file.open(QIODevice::ReadOnly|QIODevice::Text);
+            QFile file(file_name);
+            file.open(QIODevice::ReadOnly|QIODevice::Text);
 
-        QTextStream in(&file);
-        QStringList in_fields;
+            QTextStream in(&file);
+            QStringList in_fields;
 
-        Matrix<int, 1, 4> temp_IJK;
-        Matrix<int, Dynamic, 4> IJK_stor;
-        std::vector<double> wcf;
+            Matrix<int, 1, 4> temp_IJK;
+            Matrix<int, Dynamic, 4> IJK_stor;
+            std::vector<double> wcf;
 
-        while(!in.atEnd()) {
+            while(!in.atEnd()) {
 
-            QString line = in.readLine();
+                QString line = in.readLine();
 
-            if (line.contains("OPEN")) {
+                if (line.contains("OPEN")) {
 
-                // TODO: is there a more robust way to read line such that
-                // indices are not wrong if a change in spacing, for example?
-                // how to remove the space that the line begins with?
-                in_fields = line.split(QRegExp("\\s+"));
+                    // TODO: is there a more robust way to read line such that
+                    // indices are not wrong if a change in spacing, for example?
+                    // how to remove the space that the line begins with?
+                    in_fields = line.split(QRegExp("\\s+"));
 
-                // Read & store well name from current line
-                name = in_fields[1];
+                    // Read & store well name from current line
+                    name = in_fields[1];
 
-                // Read IJK values from current line
-                temp_IJK << in_fields[2].toInt(), in_fields[3].toInt(),
-                        in_fields[4].toInt(), in_fields[5].toInt();
+                    // Read IJK values from current line
+                    temp_IJK << in_fields[2].toInt(), in_fields[3].toInt(),
+                            in_fields[4].toInt(), in_fields[5].toInt();
 
-                // Store IJK values
-                Matrix<int, Dynamic, 4> IJK_curr(IJK_stor.rows() + temp_IJK.rows(), 4);
-                IJK_curr << IJK_stor, temp_IJK;
-                IJK_stor = IJK_curr;
+                    // Store IJK values
+                    Matrix<int, Dynamic, 4> IJK_curr(IJK_stor.rows() + temp_IJK.rows(), 4);
+                    IJK_curr << IJK_stor, temp_IJK;
+                    IJK_stor = IJK_curr;
 
-                // Store well connection factor values
-                wcf.push_back(in_fields[8].toFloat());
-            };
-        }
+                    // Store well connection factor values
+                    wcf.push_back(in_fields[8].toFloat());
+                };
+            }
 
-        file.close();
+            file.close();
 
-        IJK = IJK_stor;
-        WCF = Map<Matrix<double, Dynamic, 1>>(wcf.data(), wcf.size());
+            IJK = IJK_stor;
+            WCF = Map<Matrix<double, Dynamic, 1>>(wcf.data(), wcf.size());
 
-        // Debug: read input is OK
-        if (debug_){
+            // Debug: read input is OK
+            if (debug_){
 
+            }
         }
     }
 }

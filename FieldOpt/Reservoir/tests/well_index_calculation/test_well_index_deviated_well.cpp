@@ -7,20 +7,22 @@
 #include "Reservoir/grid/eclgrid.h"
 #include "Reservoir/grid/grid_exceptions.h"
 #include "Utilities/file_handling/filehandling.h"
-#include "Reservoir/tests/test_resource_wic_diff_functions.h"
 #include "Reservoir/well_index_calculation/wellindexcalculator.h"
+
 #include "Reservoir/tests/test_resource_wic_welldir.h"
-#include "Reservoir/tests/test_resource_wic_widata.h"
+//#include "Reservoir/tests/test_resource_wic_widata.h"
+//#include "Reservoir/tests/test_resource_wic_diff_functions.h"
 
 #include <QList>
 #include <QVector>
 #include <QTextStream>
 #include <fstream>
 #include <Eigen/Dense>
+#include <tests/test_resource_wic_diff_functions.h>
 
 using namespace Reservoir::Grid;
 using namespace Reservoir::WellIndexCalculation;
-using namespace TestResources;
+using namespace TestResources::WIBenchmark;
 
 namespace {
 
@@ -71,14 +73,14 @@ namespace {
                           << std::endl << WIDataPCG.WCF << std::endl;
             }
 
-        auto va = WIDataRMS.IJK;
-        auto vb = WIDataPCG.IJK;
 
-        if (va.rows() != vb.rows()){
 
-        }else{
-
+        if(TestResources::WIBenchmark::DiffVectorLength(WIDataRMS,WIDataPCG)){
+            TestResources::WIBenchmark::CompareIJK(WIDataRMS,WIDataPCG);
         }
+
+        TestResources::WIBenchmark::CompareIJK(WIDataRMS,WIDataPCG);
+
 //        }
 
 
