@@ -8,7 +8,8 @@
 #include "Reservoir/grid/grid_exceptions.h"
 #include "Utilities/file_handling/filehandling.h"
 #include "Reservoir/well_index_calculation/wellindexcalculator.h"
-#include "Reservoir/tests/test_resource_wic.h"
+#include "Reservoir/tests/test_resource_wic_welldir.h"
+#include "Reservoir/tests/test_resource_wic_widata.h"
 
 #include <QList>
 #include <QVector>
