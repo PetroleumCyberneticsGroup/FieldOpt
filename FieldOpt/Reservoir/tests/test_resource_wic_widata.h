@@ -80,13 +80,6 @@ namespace TestResources {
 
         IJK = IJK_stor;
         WCF = Map<Matrix<double, Dynamic, 1>>(wcf.data(), wcf.size());
-
-//		return WIData;
-
-        //        debug
-        //        for( int ii=0; ii < in_fields.length(); ++ii ) {
-        //            std::cout << ii << ":" << in_fields[ii].toStdString() << std::endl;
-        //        }
     }
 }
 

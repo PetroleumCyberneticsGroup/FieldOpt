@@ -40,6 +40,11 @@ namespace {
 
     TEST_F(DeviatedWellIndexTest, test) {
 
+        //        debug
+        //        for( int ii=0; ii < in_fields.length(); ++ii ) {
+        //            std::cout << ii << ":" << in_fields[ii].toStdString() << std::endl;
+        //        }
+
     }
 
     TEST_F(DeviatedWellIndexTest, compareCOMPDAT) {
