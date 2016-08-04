@@ -59,5 +59,8 @@ file(COPY ${CMAKE_SOURCE_DIR}/../examples DESTINATION ${CMAKE_BINARY_DIR}/)
 ## Copy the test driver file into the build dir
 file(COPY ${CMAKE_SOURCE_DIR}/Utilities/tests/driver/driver.json DESTINATION ${CMAKE_BINARY_DIR}/examples)
 #
+## Copy wic benchmark wells into the build dir
+file(COPY ${CMAKE_SOURCE_DIR}/Reservoir/tests/well_index_calculation/wic-benchmark-wells DESTINATION ${CMAKE_BINARY_DIR}/)
+#
 ## Create an empty directory for test output
-file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fieldopt_output)
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fieldopt-output)
