@@ -13,12 +13,13 @@ namespace Reservoir {
         using namespace Eigen;
 
         /*!
-         * \brief The WellIndexCalculation class deduces the well blocks and their respecitve well indices/transmissibility
-         * factors for one or more well splines defined by a heel and a toe.
+         * \brief The WellIndexCalculation class deduces the well blocks and their respecitve well
+         * indices/transmissibility factors for one or more well splines defined by a heel and a toe.
          *
-         * Note that some of the internal datastructures in this class seem more complex than they need to be. This is
-         * because the internal methods support well splines consisting of more than one point. This is, however, not yet
-         * supported by the Model library and so have been "hidden".
+         * Note that some of the internal data structures in this class seem more complex than they 
+         * need to be. This is because the internal methods support well splines consisting of more 
+         * than one point. This is, however, not yet supported by the Model library and so have been 
+         * "hidden".
          *
          * Credit for computations in this class goes to @hilmarm.
          */
@@ -32,15 +33,15 @@ namespace Reservoir {
              * \param heel The heel end point of the spline defining the well.
              * \param toe The toe end point of the spline defining the well.
              * \param wellbore_radius The radius of the well.
-             * \return A list of BlockData objects containing the (i,j,k) index and well index/transmissibility factor
-             * for every block intersected by the spline.
+             * \return A list of BlockData objects containing the (i,j,k) index and well 
+             * index/transmissibility factor for every block intersected by the spline.
              */
             QList<IntersectedCell> ComputeWellBlocks(Vector3d heel, Vector3d toe, double wellbore_radius);
 
         private:
             /*!
-             * \brief The Well struct holds the information needed to compute the well blocks and their
-             * respective well indices for a well spline consisting of a heel and a toe.
+             * \brief The Well struct holds the information needed to compute the well blocks and 
+             * their respective well indices for a well spline consisting of a heel and a toe.
              */
 
             Grid::Grid *grid_; //!< The grid used in the calculations.
