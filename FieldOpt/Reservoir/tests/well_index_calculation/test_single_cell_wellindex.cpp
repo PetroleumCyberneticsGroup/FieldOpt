@@ -26,7 +26,6 @@ namespace {
 
         virtual void TearDown() { }
 
-
         Grid *grid_;
         QString file_path_ = "../examples/ADGPRS/5spot/ECL_5SPOT.EGRID";
     };
@@ -37,7 +36,7 @@ namespace {
         //double kx = 1.689380;
         //double ky = 1.689380;
         //double kz = 1;
-        //Figure out conversions and shit?
+        //Figure out conversions and stuff?
         double wellbore_radius = 0.1905/2;
 
         auto cell_1 = grid_->GetCell(0);
@@ -52,13 +51,17 @@ namespace {
         double well_end_x = 0.25*corners[4].x() + 0.25*corners[5].x() +0.25*corners[6].x() + 0.25*corners[7].x();
         double well_end_y = 0.25*corners[4].y() + 0.25*corners[5].y() +0.25*corners[6].y() + 0.25*corners[7].y();
         double well_end_z = 0.25*corners[4].z() + 0.25*corners[5].z() +0.25*corners[6].z() + 0.25*corners[7].z();
+
         Eigen::Vector3d start_point = Eigen::Vector3d(well_start_x,well_start_y,well_start_z);
         Eigen::Vector3d end_point = Eigen::Vector3d(well_end_x,well_end_y, well_end_z);
+        
         auto icell = IntersectedCell(cell_1);
         icell.set_entry_point(start_point);
         icell.set_exit_point(end_point);
+
         auto wic = WellIndexCalculator(grid_);
         wic.ComputeWellBlocks(start_point, end_point, wellbore_radius);
+
         double wi = wic.compute_well_index(icell);
         /* 0.555602 is the expected well transmisibility factor aka. well index.
          * For now this value is read directly from eclipse output file:
@@ -84,8 +87,10 @@ namespace {
         double well_end_x = 0.25*corners[4].x() + 0.25*corners[5].x() +0.25*corners[6].x() + 0.25*corners[7].x();
         double well_end_y = 0.25*corners[4].y() + 0.25*corners[5].y() +0.25*corners[6].y() + 0.25*corners[7].y();
         double well_end_z = 0.25*corners[4].z() + 0.25*corners[5].z() +0.25*corners[6].z() + 0.25*corners[7].z();
+        
         Eigen::Vector3d start_point = Eigen::Vector3d(well_start_x, well_start_y, well_start_z);
         Eigen::Vector3d end_point= Eigen::Vector3d(well_end_x,well_end_y, well_end_z);
+        
         Reservoir::WellIndexCalculation::IntersectedCell icell(cell_1);
         icell.set_entry_point(start_point);
         icell.set_exit_point(end_point);
@@ -105,6 +110,7 @@ namespace {
         EXPECT_TRUE( wi > 0.555602/(delta_percent));
     }
 
+
     TEST_F(SingleCellWellIndexTest, Well_index_grid_test) {
         double wellbore_radius = 0.191/2;
 
@@ -116,6 +122,7 @@ namespace {
         auto wic = WellIndexCalculator(grid_);
         auto blocks = wic.ComputeWellBlocks(start_point, end_point, wellbore_radius);
         EXPECT_EQ(118, blocks.length());
+
 /*
     std::ofstream myfile;
     myfile.open ("test_44.txt");
@@ -129,6 +136,7 @@ namespace {
         myfile.close();
     WellIndexCalculation::GeometryFunctions::print_well_index_file(grid_,well_spline_points, end_points, wellbore_radius, 0.00001, "NewlyTried1422");
 */
+
         EXPECT_TRUE(true);
     }
 

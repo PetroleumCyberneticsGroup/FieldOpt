@@ -33,7 +33,10 @@ namespace {
     };
 
     TEST_F(IntersectedCellsTest, find_point_test) {
-        std::cout << "find exit point test"<<std::endl;
+
+        std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
+        std::cout << "find exit point test" << std::endl;
+        
         // Load grid and chose first cell (cell 1,1,1)
         auto cell_1 = grid_->GetCell(0);
         //auto ptr_cell_1 = &cell_1;
