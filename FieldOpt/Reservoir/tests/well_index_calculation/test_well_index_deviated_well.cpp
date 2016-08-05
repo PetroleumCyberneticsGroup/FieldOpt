@@ -10,15 +10,13 @@
 #include "Reservoir/well_index_calculation/wellindexcalculator.h"
 
 #include "Reservoir/tests/test_resource_wic_welldir.h"
-//#include "Reservoir/tests/test_resource_wic_widata.h"
-//#include "Reservoir/tests/test_resource_wic_diff_functions.h"
+#include "Reservoir/tests/test_resource_wic_diff_functions.h"
 
 #include <QList>
 #include <QVector>
 #include <QTextStream>
 #include <fstream>
 #include <Eigen/Dense>
-#include <tests/test_resource_wic_diff_functions.h>
 
 using namespace Reservoir::Grid;
 using namespace Reservoir::WellIndexCalculation;
@@ -75,11 +73,11 @@ namespace {
 
 
 
-        if(TestResources::WIBenchmark::DiffVectorLength(WIDataRMS,WIDataPCG)){
-            TestResources::WIBenchmark::CompareIJK(WIDataRMS,WIDataPCG);
+        if(DiffVectorLength(WIDataRMS,WIDataPCG)){
+            CompareIJK(WIDataRMS,WIDataPCG);
         }
 
-        TestResources::WIBenchmark::CompareIJK(WIDataRMS,WIDataPCG);
+        CompareIJK(WIDataRMS,WIDataPCG);
 
 //        }
 
