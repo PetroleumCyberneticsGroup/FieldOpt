@@ -49,37 +49,54 @@ namespace {
 
         // FIND LIST OF WELL FOLDERS CONTAINING PCG & RMS COMPDATS
         auto file_list_ = well_dir_->GetWellDir();
-        auto rms_files = file_list_[1];
-        auto pcg_files = file_list_[2];
+        auto dir_list_  = file_list_[0]; // list of well dirs (absolute path)
+        auto dir_names_ = file_list_[1]; // list of well dirs (names only)
+        auto rms_files  = file_list_[2];
+        auto pcg_files  = file_list_[3];
+
+        if (debug_) {
+            for (int ii = 0; ii < dir_names_.length(); ++ii) {
+                std::cout << ii << ":" << dir_names_[ii].toStdString() << std::endl; // list of well dirs (names only)
+                std::cout << ii << ":" << dir_list_[ii].toStdString() << std::endl; // list of well dirs (absolute path)
+            }
+        }
+
 
         WIData WIDataRMS, WIDataPCG;
 
         // LOOP THROUGH LIST OF WELL FOLDERS: FOR WELL FOLDER ii,
         // READ PCG & RMS COMPDAT DATA
         if (!debug_) num_files=rms_files.length();
-//        for( int ii=0; ii < num_files; ++ii ){
+        for( int ii=0; ii < num_files; ++ii ){
 
-            WIDataRMS.ReadData(rms_files[0]);
-            WIDataPCG.ReadData(pcg_files[0]);
+            WIDataRMS.ReadData(rms_files[ii]);
+            WIDataPCG.ReadData(pcg_files[ii]);
 
             if (debug_){
                 std::cout << "WIDataPCG DATA " << std::endl;
                 std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
                 std::cout << "WIDataPCG.IJK (size: " << WIDataPCG.IJK.size() << "): "
-                          << std::endl << WIDataPCG.IJK << std::endl;
+                          << std::endl << WIDataPCG.IJK.block(0,0,10,4) 
+                          << std::endl << "..." << std::endl; 
                 std::cout << "WIDataPCG.WIC: (size: " << WIDataPCG.WCF.size() << "): "
-                          << std::endl << WIDataPCG.WCF << std::endl;
+                          << std::endl << WIDataPCG.WCF.block(0,0,10,1) 
+                          << std::endl << "..." << std::endl;
             }
 
+            if(DiffVectorLength(WIDataRMS,WIDataPCG)){
 
+                std::cout << "Checking IJK and WCF data for well: "
+                          << WIDataRMS.dir_name.toStdString() << std::endl;
+                std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
+                
+                CompareIJK(WIDataRMS,WIDataPCG);
+                CompareWCF(WIDataRMS,WIDataPCG);
 
-        if(DiffVectorLength(WIDataRMS,WIDataPCG)){
-            CompareIJK(WIDataRMS,WIDataPCG);
+            }else{
+
+            }
+
         }
-
-        CompareIJK(WIDataRMS,WIDataPCG);
-
-//        }
 
 
 
