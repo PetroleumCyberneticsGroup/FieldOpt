@@ -55,10 +55,12 @@ namespace {
         auto pcg_files  = file_list_[3];
 
         if (debug_) {
+            std::cout << "\033[1;31m<DEBUG:START->\033[0m" << std::endl;
             for (int ii = 0; ii < dir_names_.length(); ++ii) {
                 std::cout << ii << ":" << dir_names_[ii].toStdString() << std::endl; // list of well dirs (names only)
                 std::cout << ii << ":" << dir_list_[ii].toStdString() << std::endl; // list of well dirs (absolute path)
             }
+            std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;            
         }
 
 
@@ -73,14 +75,16 @@ namespace {
             WIDataPCG.ReadData(pcg_files[ii]);
 
             if (debug_){
+                std::cout << "\033[1;31m<DEBUG:START->\033[0m" << std::endl;
                 std::cout << "WIDataPCG DATA " << std::endl;
                 std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
                 std::cout << "WIDataPCG.IJK (size: " << WIDataPCG.IJK.size() << "): "
-                          << std::endl << WIDataPCG.IJK.block(0,0,10,4) 
-                          << std::endl << "..." << std::endl; 
-                std::cout << "WIDataPCG.WIC: (size: " << WIDataPCG.WCF.size() << "): "
-                          << std::endl << WIDataPCG.WCF.block(0,0,10,1) 
+                          << std::endl << WIDataPCG.IJK.block(0,0,10,4)
                           << std::endl << "..." << std::endl;
+                std::cout << "WIDataPCG.WIC: (size: " << WIDataPCG.WCF.size() << "): "
+                          << std::endl << WIDataPCG.WCF.block(0,0,10,1)
+                          << std::endl << "..." << std::endl;
+                std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;
             }
 
             if(DiffVectorLength(WIDataRMS,WIDataPCG)){

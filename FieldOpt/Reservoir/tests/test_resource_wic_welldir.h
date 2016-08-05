@@ -59,6 +59,7 @@ namespace TestResources {
 
             // Debug: check lists are OK
             if (debug_){
+                std::cout << "\033[1;31m<DEBUG:START->\033[0m" << std::endl;
                 std::cout << "well_data_path_: " << well_data_dir_.toStdString() << std::endl;
                 std::cout << "size of well_list_: " << well_list_.size() << std::endl;
 
@@ -73,6 +74,7 @@ namespace TestResources {
                 temp = well_list_[2];
                 temp_str = "pcg_list";
                 printWellDirList(temp, temp_str);
+                std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;                
             }
 
             return well_list_;

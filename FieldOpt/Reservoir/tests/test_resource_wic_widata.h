@@ -91,7 +91,8 @@ namespace TestResources {
 
             // Debug: read input is OK
             if (debug_){
-
+                std::cout << "\033[1;31m<DEBUG:START->\033[0m" << std::endl;
+                std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;
             }
         }
     }

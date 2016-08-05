@@ -6,6 +6,7 @@
 
 #include "Reservoir/tests/test_resource_wic_widata.h"
 #include <Eigen/Dense>
+#include <typeinfo>
 
 using namespace Eigen;
 
@@ -35,22 +36,67 @@ namespace TestResources {
 			return vector_diff;
 		}
 
+        template <typename T> T incr( T& a, T b = 1 ) { return a += b; }
+
+        template <typename TTT> TTT CheckTagTest(WIData& va, WIData& vb, WIData& vdiff, QString& tag){
+            return vdiff;
+        }
+
+        void CheckTag(WIData va, WIData vb, WIData vdiff, QString tag){
+
+            // Default def before being properly defined within if-loop
+            Matrix<double, Dynamic, Dynamic> vdiffLocal;
+
+            if(tag=="IJK"){
+                auto vdiffLocal = vdiff.IJK;
+                std::cout << "Testing: IJK >> "; // Confirmation
+            }else if(tag=="WCF"){
+                auto vdiffLocal = vdiff.WCF;
+                std::cout << "Testing: WCF >> ";
+            }else {
+                std::cout << "Specify tag!" << std::endl;
+            }
+
+            auto *vdiffLocal_ptr = &vdiffLocal;
+        }
+        
 /*!
  * \brief
  * \param
  * \return
  */
-        void CheckRowwiseDiff(WIData va, WIData vb, WIData vdiff, string DiffFlag){
+        void CheckRowwiseDiff(WIData va, WIData vb, WIData vdiff, QString tag){
 
-            if(DiffFlag.compare("IJK")){
+            // Default def before being properly defined within if-loop
+            Matrix<double, Dynamic, Dynamic> vdiffLocal;
+//            *vdiffLocal_ptr = &vdiffLocal;
+
+            if(tag=="IJK"){
 				auto vdiffLocal = vdiff.IJK;
-			}else if(DiffFlag.compare("WCF")){
+                std::cout << "Testing: IJK >> "; // Confirmation
+			}else if(tag=="WCF"){
 				auto vdiffLocal = vdiff.WCF;
+                std::cout << "Testing: WCF >> ";
 			}else {
-                std::cout << "Specify flag!" << std::endl;
+                std::cout << "Specify tag!" << std::endl;
             }
-            std::cout << "Testing: " << DiffFlag << " >> ";
-            
+
+            Matrix<int,1,1> one;
+            Matrix<int,1,1> two;
+            one << 1;
+            two << 2;
+//            int one = 1;
+//            int two = 2;
+//            double one = 1;
+//            double two = 2;
+            auto test = incr(one,two);
+            std::cout << "Testing!" << test << "which is of type: " << typeid(test).name() << std::endl;
+
+            auto testTTT = CheckTagTest(va, vb, vdiff, tag);
+            std::cout << "Testing!" << testTTT << "which is of type: " << typeid(testTTT).name() << std::endl;
+
+//            std::cout << "Testing!" << &vdiffLocal_ptr << std::endl;
+
             std::cout << "the values differ at the following rows:" << std::endl;
             for( int ii=0; ii < vdiffLocal.rows(); ++ii ) {
                 auto IJKrow = vdiffLocal.row(ii);
@@ -67,20 +113,30 @@ namespace TestResources {
  * \param
  * \return
  */
+        void CheckColumnwiseDiff(WIData va, WIData vb, WIData vdiff, QString tag){
+
+        }
+
+/*!
+ * \brief
+ * \param
+ * \return
+ */
         WIData CompareIJK(WIData va, WIData vb){
 
 		    WIData vdiff;
 		    vdiff.IJK = va.IJK - vb.IJK;
 
 			// Check if IJK values computed by RMS and PCG WIC are equal
-			// If not, output differing rows  
+			// If not, output differing rows
             if (vdiff.IJK.isZero(GetEps())){
                 std::cout << "IJK values match exactly for this well." << std::endl;
             }else{
                 std::cout << "IJK values are NOT the same for this well." << std::endl;
 
                 // Output general difference (i.e., for I, J and K columns)
-                CheckRowwiseDiff(va,vb,vdiff,"IJK");
+                QString tag = "IJK";
+                CheckRowwiseDiff(va,vb,vdiff,tag);
 
                 // Output difference for individual columns (later)
                 // Produce quantitative differences, e.g., using percentages:
@@ -90,10 +146,11 @@ namespace TestResources {
 
             bool debug_ = true;
             if (debug_){
-			    std::cout << "\033[1;31m<---DEBUG--->\033[0m" << std::endl
+                std::cout << "\033[1;31m<DEBUG:START->\033[0m" << std::endl
                           << "(WIDataPCG.IJK - WIDataPCG.IJK)= " << std::endl
 	                      << vdiff.IJK.block(0,0,10,4)
 	                      << std::endl << "..." << std::endl;
+                std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;                          
             }
 
 		    return vdiff;
@@ -112,7 +169,8 @@ namespace TestResources {
             bool test = va.WCF.isApprox(vb.WCF, 1e-2);
 
             // Output general difference (i.e., for I, J and K columns)
-            CheckRowwiseDiff(va,vb,vdiff,"WCF");
+            QString tag = "WCF";
+            CheckRowwiseDiff(va,vb,vdiff,tag);
 
             return vdiff;
         }
