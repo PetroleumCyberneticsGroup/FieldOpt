@@ -27,7 +27,7 @@ namespace TestResources {
 
             // Functions
             QList<QStringList> GetWellDir();
-            QStringList MakeDirList(QString data_dir);
+            QList<QStringList> MakeDirList(QString data_dir);
             QStringList AddFilesToList(QStringList temp_dir, QString ext);
             void printWellDirList(QStringList temp, QString temp_str);
 
@@ -46,15 +46,16 @@ namespace TestResources {
                 throw std::runtime_error("Well dir " + well_data_dir_.toStdString() + " not found.");
 
             // Make list of well dirs
-            QStringList dir_list_ = MakeDirList(well_data_dir_);
+            QList<QStringList> dir_list_ = MakeDirList(well_data_dir_);
 
             // Make overall well_list_ list + add dir name list to it
             QList<QStringList> well_list_;
-            well_list_.append(dir_list_);
+            well_list_.append(dir_list_[0]); // dir_names only
+            well_list_.append(dir_list_[1]); // dirs full path
 
             // Make list of rms/pcg well files + add lists to well_list_:
-            well_list_.append(AddFilesToList(dir_list_, QString("*RMS.DATA")));
-            well_list_.append(AddFilesToList(dir_list_, QString("*PCG.DATA")));
+            well_list_.append(AddFilesToList(dir_list_[1], QString("*RMS.DATA")));
+            well_list_.append(AddFilesToList(dir_list_[1], QString("*PCG.DATA")));
 
             // Debug: check lists are OK
             if (debug_){
@@ -77,16 +78,22 @@ namespace TestResources {
             return well_list_;
         }
 
-        QStringList WellDir::MakeDirList(QString data_dir){
+        QList<QStringList> WellDir::MakeDirList(QString data_dir){
             // Make list of well dirs:
             QDir dir(data_dir);
             dir.setSorting(QDir::Name);
             dir.setNameFilters(QStringList()<<"tw*");
-            QStringList dir_list_;
-                    foreach (QString dir_name_, dir.entryList()){
-                    QString dir_str_ = dir.absolutePath() + "/" + dir_name_;
-                    dir_list_.append(dir_str_);
-                }
+            QList<QStringList> dir_list_;
+            QStringList dir_list_abs_;
+
+            foreach (QString dir_name_, dir.entryList()){
+                QString dir_str_ = dir.absolutePath() + "/" + dir_name_;
+                dir_list_abs_.append(dir_str_);
+            }
+
+            dir_list_.append(dir.entryList());
+            dir_list_.append(dir_list_abs_);
+
             return dir_list_;
         }
 
