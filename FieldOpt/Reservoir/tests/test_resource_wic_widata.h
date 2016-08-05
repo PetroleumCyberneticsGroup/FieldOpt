@@ -29,20 +29,25 @@ namespace TestResources {
             // Variables:
             Matrix<int, Dynamic, 4> IJK;
             Matrix<double,Dynamic,1> WCF;
-            QString name;
+            QStringList name;
+            QString dir_name;
 
             // obsolete:
             // Matrix<int, Dynamic, 4>* IJK_ptr = &IJK;
             // Matrix<double,Dynamic,1>* WCF_ptr = &WCF;
 
-        private:
             bool debug_ = false;
+
+        private:
         };
 
         void WIData::ReadData(QString file_name) {
 
             QFile file(file_name);
             file.open(QIODevice::ReadOnly|QIODevice::Text);
+
+            QFileInfo file_info(file_name);
+            dir_name = file_info.dir().dirName();
 
             QTextStream in(&file);
             QStringList in_fields;
@@ -63,7 +68,7 @@ namespace TestResources {
                     in_fields = line.split(QRegExp("\\s+"));
 
                     // Read & store well name from current line
-                    name = in_fields[1];
+                    name.append(in_fields[1]);
 
                     // Read IJK values from current line
                     temp_IJK << in_fields[2].toInt(), in_fields[3].toInt(),
