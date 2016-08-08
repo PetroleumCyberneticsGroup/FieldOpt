@@ -96,9 +96,15 @@ namespace {
                 CompareIJK(WIDataRMS,WIDataPCG);
                 CompareWCF(WIDataRMS,WIDataPCG);
 
-            }else{
 
-            }
+
+        DiffVectorLength(WIDataRMS,WIDataPCG);
+
+//        if(TestResources::WIBenchmark::DiffVectorLength(WIDataRMS,WIDataPCG)){
+//            TestResources::WIBenchmark::CompareIJK(WIDataRMS,WIDataPCG);
+//        }
+//
+//        TestResources::WIBenchmark::CompareIJK(WIDataRMS,WIDataPCG);
 
         }
 
