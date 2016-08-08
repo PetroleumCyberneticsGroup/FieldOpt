@@ -87,15 +87,15 @@ namespace {
                 std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;
             }
 
-            if(DiffVectorLength(WIDataRMS,WIDataPCG)){
+            if(DiffVectorLength(WIDataRMS,WIDataPCG)) {
 
                 std::cout << "Checking IJK and WCF data for well: "
                           << WIDataRMS.dir_name.toStdString() << std::endl;
                 std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
-                
-                CompareIJK(WIDataRMS,WIDataPCG);
-                CompareWCF(WIDataRMS,WIDataPCG);
 
+                CompareIJK(WIDataRMS, WIDataPCG);
+                CompareWCF(WIDataRMS, WIDataPCG);
+            }
 
 
         DiffVectorLength(WIDataRMS,WIDataPCG);
