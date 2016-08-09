@@ -136,17 +136,10 @@ namespace {
                 // QList<Diff> diffs;
 
                 QList<Diff> diffs = dmp->diff_main(str1,str2);
-
-                // QList<QVariant> a = dmp->diff_linesToChars("abc", "xyz");
-                // QVariant lineText1 = a[0];
-                // QVariant lineText2 = a[1];
-                // QVariant lineArray = a[2];                
-
-                // QList<Diff> diffs = dmp->diff_main(lineText1, lineText2, false);
-
-                // dmp->diff_charsToLines_(diffs, lineArray);
-                // std::cout << diffs[0];
+                std::cout << "length of diff: " << diffs.size() << std::endl;
                 std::cout << "Diffs: " << diffs[0].toString().toStdString();
+
+//                QString dmp->diff_text1(&diffs);
             }
 
 
