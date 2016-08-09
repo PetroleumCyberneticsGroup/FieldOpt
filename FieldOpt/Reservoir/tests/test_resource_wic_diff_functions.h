@@ -7,6 +7,7 @@
 #include "Reservoir/tests/test_resource_wic_widata.h"
 #include <Eigen/Dense>
 #include <typeinfo>
+
 #include <iomanip>
 
 using namespace Eigen;
@@ -64,11 +65,31 @@ namespace TestResources {
  * \param
  * \return
  */
-        double GetColumnOffset(Matrix<double,Dynamic,1> col_vector){
+            double GetColumnOffset(Matrix<double,Dynamic,1> va,
+                                   Matrix<double,Dynamic,1> vb,
+                                   Matrix<double,Dynamic,1> vdiff){
 
 			// accuracy_magniture: norm of difference vector
-			double column_offset = col_vector.norm();
+            double column_offset = vdiff.norm();
+
+            // return
 			return column_offset;
+        }
+
+/*!
+ * \brief
+ * \param
+ * \return
+ */
+            double GetColumnCosine(Matrix<double,Dynamic,1> va,
+                                   Matrix<double,Dynamic,1> vb,
+                                   Matrix<double,Dynamic,1> vdiff){
+
+            // cosine similarity
+            double cosine_measure = va.dot(vb) / (va.norm() * vb.norm());
+
+            // return
+            return cosine_measure;
         }
 
 /*!
@@ -78,24 +99,29 @@ namespace TestResources {
  */
         QList<Matrix<double,1,4>> CheckColumnwiseDiff(WIData va, WIData vb, WIData vdiff){
 
-			// Output msg
-        	auto vdiff_ = vdiff.IJK.cast<double>();
+			//
+        	auto va_ = va.IJK.cast<double>();
+            auto vb_ = vb.IJK.cast<double>();
+            auto vdiff_ = vdiff.IJK.cast<double>();
 
 			Matrix<double,1,4> IJK_accuracy_elements;
 			Matrix<double,1,4> IJK_column_offset;
+            Matrix<double,1,4> IJK_column_cosine;
 
             for( int ii=0; ii < vdiff_.cols(); ++ii ) {
                 IJK_accuracy_elements(ii) = GetColumnAccuracyElements(vdiff_.col(ii));
-				IJK_column_offset(ii) = GetColumnOffset(vdiff_.col(ii));
+				IJK_column_offset(ii) = GetColumnOffset(va_.col(ii), vb_.col(ii), vdiff_.col(ii));
+                IJK_column_cosine(ii) = GetColumnCosine(va_.col(ii), vb_.col(ii), vdiff_.col(ii));
             }
 
 			QList<Matrix<double,1,4>> IJK_accuracy_list;
 			IJK_accuracy_list.append(IJK_accuracy_elements);
 			IJK_accuracy_list.append(IJK_column_offset);
+            IJK_accuracy_list.append(IJK_column_cosine);
 
-            // Accuracy
-            std::cout << "Element column accuracy: fraction of elements in difference "
-                         "columns that are zero up to given tolerance" << std::endl;
+            // Zero element fraction
+            std::cout << "\033[1;33mElement accuracy: fraction of zero (<tol) elements in diff. "
+                         "column (1=best)\033[0m" << std::endl;
 			std::cout << "Element accuracy I column:  "
 			<< std::fixed << std::setprecision(4) << IJK_accuracy_list[0][0] << std::endl;
 			std::cout << "Element accuracy J column:  "
@@ -104,8 +130,8 @@ namespace TestResources {
 			<< std::fixed << std::setprecision(4) << IJK_accuracy_list[0][2] << std::endl;
 			std::cout << "Element accuracy K2 column: "
 			<< std::fixed << std::setprecision(4) << IJK_accuracy_list[0][3] << std::endl;
-			// Offset
-			std::cout << "Column IJK offset: norm of difference vector" << std::endl;
+            // Column offset
+            std::cout << "\033[1;33mColumn IJK offset: norm of diff. vector [Euclidean dist.]  (0=best)\033[0m" << std::endl;
 			std::cout << "Column offset I column:  "
 			<< std::fixed << std::setprecision(4) << IJK_accuracy_list[1][0] << std::endl;
 			std::cout << "Column offset J column:  "
@@ -114,6 +140,16 @@ namespace TestResources {
 			<< std::fixed << std::setprecision(4) << IJK_accuracy_list[1][2] << std::endl;
 			std::cout << "Column offset K2 column: "
 			<< std::fixed << std::setprecision(4) << IJK_accuracy_list[1][3] << std::endl;
+            // Cosine measure
+            std::cout << "\033[1;33mColumn IJK cosine measure: angle b/e vectors (1=parallel=best)\033[0m" << std::endl;
+            std::cout << "Column cosine I column:  "
+            << std::fixed << std::setprecision(8) << IJK_accuracy_list[2][0] << std::endl;
+            std::cout << "Column cosine J column:  "
+            << std::fixed << std::setprecision(8) << IJK_accuracy_list[2][1] << std::endl;
+            std::cout << "Column cosine K1 column: "
+            << std::fixed << std::setprecision(8) << IJK_accuracy_list[2][2] << std::endl;
+            std::cout << "Column cosine K2 column: "
+            << std::fixed << std::setprecision(8) << IJK_accuracy_list[2][3] << std::endl;
 
 			return IJK_accuracy_list;
         }
@@ -130,16 +166,18 @@ namespace TestResources {
                 throw std::runtime_error("Difference vector (vdiff_) has no elements");
 
 			// Output msg
-            std::cout << "Testing: " << tag << " (rowwise) >> "
-                      << "values differ at the following rows:" << std::endl;
+            std::cout << "\033[1;33mTesting: " << tag << " (rowwise) >> "
+                      << "values differ at the following rows:\033[0m" << std::endl;
             for( int ii=0; ii < vdiff_.rows(); ++ii ) {
                 auto row = vdiff_.row(ii);
 
                 if (!row.isZero(GetEps())){
-                    std::cout << "row " << ii << ":"
-                              << " RMS=" << va_.row(ii)
-                              << " PCG=" << vb_.row(ii)
-                              << " DF=" << std::fixed << std::setw(7) << vdiff_(ii,0) << std::endl;
+                    std::cout << "row "  << std::setw(3) << ii << ":"  << std::setprecision(4)
+                              << " RMS=" << std::setw(2) << va_.row(ii)
+                              << " PCG=" << std::setw(2) << vb_.row(ii)
+                              << " DF="  << std::setw(2) << vdiff_.row(ii) << std::endl;
+
+                              // << " DF=" << std::fixed << std::setw(7) << vdiff_(ii,0) << std::endl;
                     // TO DO: COLORED DIFFERENCES
                     // QString str_out;
                     // QString str_out = QString::number(row(ii));
@@ -193,22 +231,21 @@ namespace TestResources {
 			// Check if IJK values computed by RMS and PCG WIC are equal
 			// If not, output differing rows
             if (vdiff.IJK.isZero(GetEps())){
-                std::cout << "IJK values match exactly for this well." << std::endl;
+                std::cout << "\033[1;32mIJK values match exactly for this well.\033[0m" << std::endl;
             }else{
-                std::cout << "IJK values are NOT the same for this well." << std::endl;
-
+                std::cout << "\033[1;35mIJK values are NOT the same for this well.\033[0m" << std::endl;
                 // Output row differences (i.e., I, J and K columns combined)
                 CheckRowwiseDiffIJK(va,vb,vdiff);
-
                 // Output difference for individual columns
                 IJK_accuracy_list = CheckColumnwiseDiff(va,vb,vdiff);
             }
 
-            bool debug_ = true;
+            bool debug_ = false;
             if (debug_){
+                int nrows = (vdiff.IJK.rows() > 10) ? 10 : vdiff.IJK.rows();
                 std::cout << "\033[1;31m<DEBUG:START->\033[0m" << std::endl
                           << "(WIDataPCG.IJK - WIDataPCG.IJK)= " << std::endl
-	                      << vdiff.IJK.block(0,0,10,4)
+	                      << vdiff.IJK.block(0,0,nrows,4)
 	                      << std::endl << "..." << std::endl;
                 std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;
             }
@@ -225,36 +262,42 @@ namespace TestResources {
 
             WIData vdiff;
             vdiff.WCF = va.WCF - vb.WCF;
-            double IJK_accuracy_elements;
-            double IJK_column_offset;
-
-            bool test = va.WCF.isApprox(vb.WCF, 1e-2);
-
-            // Output general difference (i.e., for I, J and K columns)
-            CheckRowwiseDiffWCF(va,vb,vdiff);
-
-            // Output difference for column
-            IJK_accuracy_elements = GetColumnAccuracyElements(vdiff.WCF);
-            IJK_column_offset = GetColumnOffset(vdiff.WCF);
-
             QList<double> WCF_accuracy_list;
-            WCF_accuracy_list.append(IJK_accuracy_elements);
-            WCF_accuracy_list.append(IJK_column_offset);
 
-            std::cout << "Element accuracy: fraction of elements in difference "
-                         "column that are zero up to given tolerance" << std::endl;
-            std::cout << "Element accuracy:  "
-            << std::fixed << std::setprecision(4) << WCF_accuracy_list[0] << std::endl;
-            // Magnitude accuracies
-            std::cout << "Column IJK offset: norm of difference vector" << std::endl;
-            std::cout << "Column offset:  "
-            << std::fixed << std::setprecision(4) << WCF_accuracy_list[1] << std::endl;
+            if(va.WCF.isApprox(vb.WCF, 1e-3)){
+                std::cout << "\033[1;32mWCF values match exactly for this well.\033[0m" << std::endl;
+            }else{
+                std::cout << "\033[1;35mWCF values are NOT the same for this well.\033[0m" << std::endl;                    
+                
+                // Output general difference (i.e., for I, J and K columns)
+                CheckRowwiseDiffWCF(va,vb,vdiff);
 
-            bool debug_ = true;
+                // Output difference for column
+                WCF_accuracy_list.append(GetColumnAccuracyElements(vdiff.WCF));
+                WCF_accuracy_list.append(GetColumnOffset(va.WCF, vb.WCF, vdiff.WCF));
+                WCF_accuracy_list.append(GetColumnCosine(va.WCF, vb.WCF, vdiff.WCF));
+
+                // Zero element fraction
+                std::cout << "\033[1;33mElement accuracy: fraction of zero (<tol) elements in diff. "
+                             "column (1=best)\033[0m" << std::endl;
+                std::cout << "Element accuracy:  "
+                << std::fixed << std::setprecision(4) << WCF_accuracy_list[0] << std::endl;
+                // Column offset
+                std::cout << "\033[1;33mColumn WCF offset: norm of difference vector (0=best)\033[0m" << std::endl;
+                std::cout << "Column offset:  "
+                << std::fixed << std::setprecision(4) << WCF_accuracy_list[1] << std::endl;
+                // Cosine measure
+                std::cout << "\033[1;33mColumn WCF cosine measure: angle b/e vectors (1=parallel=best)\033[0m" << std::endl;
+                std::cout << "Column cosine measure:  "
+                << std::fixed << std::setprecision(8) << WCF_accuracy_list[2] << std::endl;
+            }
+
+            bool debug_ = false;
             if (debug_){
+                int nrows = (vdiff.WCF.rows() > 10) ? 10 : vdiff.WCF.rows();
                 std::cout << "\033[1;31m<DEBUG:START->\033[0m" << std::endl
                           << "(WIDataPCG.WCF - WIDataPCG.WCF)= " << std::endl
-	                      << vdiff.WCF.block(0,0,10,1)
+	                      << vdiff.WCF.block(0,0,nrows,1)
 	                      << std::endl << "..." << std::endl;
                 std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;
             }
