@@ -125,6 +125,8 @@ namespace {
 
             }else {
 
+// https://github.com/cubicdaiya/dtl#compare-large-sequences
+
                 // If vector lengths are unequal => make equal, then compare directly
                 std::cout << "\033[1;36m" << WIDataRMS.dir_name.toStdString() <<
                 ": >>> Vector lengths are unequal. Making them equal.\033[0m" << std::endl;
