@@ -38,6 +38,11 @@ namespace Runner {
             int NumberOfFreeWorkers();
 
             /*!
+             * @brief Get the number of workers that are currently executing simulations.
+             */
+            int NumberOfBusyWorkers();
+
+            /*!
              * @brief The WorkerStatus struct holds information about the current status of all workers in the network.
              */
             struct WorkerStatus {

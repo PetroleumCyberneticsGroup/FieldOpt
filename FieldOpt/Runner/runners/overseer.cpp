@@ -61,5 +61,9 @@ namespace Runner {
                 runner_->SendCase(new Optimization::Case(), i, MPIRunner::MsgTag::TERMINATE);
             }
         }
+
+        int Overseer::NumberOfBusyWorkers() {
+            return workers_.count() - NumberOfFreeWorkers();
+        }
     }
 }
