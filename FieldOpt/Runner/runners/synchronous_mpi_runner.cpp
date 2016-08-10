@@ -35,12 +35,16 @@ namespace Runner {
                     // Get an evaluated case
                     // Submit the case to the optimizer
                     // Get new case
+                    // Send termination signal to workers if done
                 }
             }
             else {
-                // Recv a case
-                // Evaluate the case
-                // Return the case
+                worker_->RecvUnevaluatedCase();
+                while (worker_->GetCurrentCase() != nullptr) {
+                    // Evaluate the case
+                    // Return the case
+                    // Recv new case
+                }
             }
         }
 

@@ -36,9 +36,10 @@ namespace Runner {
              * CASE_UNEVAL: To be used when sending unevaluated cases.
              * CASE_EVAL: To be used when sending evaluated cases.
              * MODEL_SYNC: To be used when sending model synchronization objects.
+             * TERMINATE: This tag should be sent by the overseer to terminate a worker.
              */
             enum MsgTag : int {
-                CASE_UNEVAL = 1, CASE_EVAL = 2, MODEL_SYNC = 3
+                CASE_UNEVAL = 1, CASE_EVAL = 2, MODEL_SYNC = 3, TERMINATE = 4
             };
 
             /*!
@@ -54,6 +55,7 @@ namespace Runner {
              * @brief Receive a message with the specified tag containing a Case from the specified soruce.
              * If the CASE_EVAL tag is passed, i.e. if we want to receive an evaluated case, a case will be received
              * from any source, and the source argument will be set to the rank of the process the case was received from.
+             * If the message contains the TERMINATE tag, a nullptr will be returned.
              * @param source
              * @param tag
              * @return

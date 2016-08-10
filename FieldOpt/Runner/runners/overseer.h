@@ -28,6 +28,11 @@ namespace Runner {
             Optimization::Case *RecvEvaluatedCase();
 
             /*!
+             * @brief Terminate all workers by sending a message with the TERMINATE tag.
+             */
+            void TerminateWorkers();
+
+            /*!
              * @brief Get the number of workers that are currently not performing any work.
              */
             int NumberOfFreeWorkers();

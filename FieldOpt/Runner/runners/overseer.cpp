@@ -55,5 +55,11 @@ namespace Runner {
             }
             return workers_[longest_running_worker];
         }
+
+        void Overseer::TerminateWorkers() {
+            for (int i = 1; i < runner_->world_.size(); ++i) {
+                runner_->SendCase(new Optimization::Case(), i, MPIRunner::MsgTag::TERMINATE);
+            }
+        }
     }
 }

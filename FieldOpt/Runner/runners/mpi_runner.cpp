@@ -27,7 +27,9 @@ namespace Runner {
         Optimization::Case *MPIRunner::RecvCase(int &source, MPIRunner::MsgTag tag) {
             Optimization::CaseTransferObject cto;
             std::string s;
-            if (tag == CASE_EVAL) {
+            if (tag == TERMINATE)
+                return nullptr;
+            else if (tag == CASE_EVAL) {
                 mpi::status status = world_.recv(mpi::any_source, tag, s);
                 source = status.source();
             }
