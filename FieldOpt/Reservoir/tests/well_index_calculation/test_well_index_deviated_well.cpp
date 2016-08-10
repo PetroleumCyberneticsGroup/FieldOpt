@@ -14,37 +14,19 @@
 
 #include <QList>
 #include <QVector>
+#include <QProcess>
 #include <QTextStream>
 #include <fstream>
 #include <Eigen/Dense>
-
-#include "../../../external_libraries/diff-match-patch/diff_match_patch_20121119/cpp/diff_match_patch.cpp"
 
 #include <vector>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 
-
-//#include "../../../external_libraries/dtl/dtl/Diff3.hpp"
-//#include "../../../external_libraries/dtl/dtl/Diff.hpp"
-#include "../../../external_libraries/dtl/dtl/dtl.hpp"
-//#include "../../../external_libraries/dtl/dtl/functors.hpp"
-//#include "../../../external_libraries/dtl/dtl/Lcs.hpp"
-//#include "../../../external_libraries/dtl/dtl/Sequence.hpp"
-//#include "../../../external_libraries/dtl/dtl/Ses.hpp"
-//#include "../../../external_libraries/dtl/dtl/variables.hpp"
-
-
 using namespace Reservoir::Grid;
 using namespace Reservoir::WellIndexCalculation;
 using namespace TestResources::WIBenchmark;
-
-using dtl::Diff;
-using dtl::elemInfo;
-using dtl::uniHunk;
-
-// using namespace std;
 
 namespace {
 
@@ -72,10 +54,10 @@ namespace {
 
         // FIND LIST OF WELL FOLDERS CONTAINING PCG & RMS COMPDATS
         auto file_list_ = well_dir_->GetWellDir();
-        auto dir_names_ = file_list_[0]; // list of well dirs (names only)
-        auto dir_list_  = file_list_[1]; // list of well dirs (absolute path)
-        auto rms_files  = file_list_[2];
-        auto pcg_files  = file_list_[3];
+        auto dir_names_ = file_list_[0]; // list of well dirs (names only) => dir name only: tw04_04
+        auto dir_list_  = file_list_[1]; // list of well dirs (absolute path) => fullpath: ../tw04_04/
+        auto rms_files  = file_list_[2]; // fullpath: ../tw04_04/EVENTS_tw04_04_RMS.DATA
+        auto pcg_files  = file_list_[3]; // fullpath: ../tw04_04/EVENTS_tw04_04_PCG.DATA
 
         if (debug_) {
             std::cout << "\033[1;31m<DEBUG:START->\033[0m" << std::endl;
@@ -86,7 +68,7 @@ namespace {
             std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;
         }
 
-
+        // WELL INDEX DATA OBJECTS
         WIData WIDataRMS, WIDataPCG;
 
         // LOOP THROUGH LIST OF WELL FOLDERS: FOR WELL FOLDER ii,
@@ -95,9 +77,26 @@ namespace {
 
         for( int ii=0; ii < num_files; ++ii ){
 
+            // READ COMPDAT FILES
             WIDataRMS.ReadData(rms_files[ii]);
             WIDataPCG.ReadData(pcg_files[ii]);
 
+            QStringList diff_files = {
+                dir_list_[ii] + "/DIFF_" + dir_names_[ii] +  "_RMS.IJK",
+                dir_list_[ii] + "/DIFF_" + dir_names_[ii] +  "_PCG.IJK",
+                dir_list_[ii] + "/DIFF_" + dir_names_[ii] +  "_RMS.WCF",
+                dir_list_[ii] + "/DIFF_" + dir_names_[ii] +  "_PCG.WCF"
+            };
+
+            // PRINT IJK, WCF DATA TO INDIVIDUAL FILES FOR DIFF TREATMENT
+            WIDataRMS.PrintIJKData(diff_files[0]);
+            WIDataPCG.PrintIJKData(diff_files[1]);
+
+            WIDataRMS.PrintWCFData(diff_files[2]);
+            WIDataPCG.PrintWCFData(diff_files[3]);
+
+
+            // MESSAGE OUTPUT
             std::cout << "\n\n\033[1;36m" << std::setfill('=') << std::setw(80) << "=" << "\033[0m" << std::endl;
             std::cout << "\033[1;36mChecking IJK and WCF data for well: "
                       << WIDataRMS.dir_name.toStdString() << "\033[0m" << std::endl;
@@ -137,7 +136,7 @@ namespace {
 
             if(DiffVectorLength(WIDataRMS,WIDataPCG)) {
 
-                // If vector lengths are equal => compare directly
+                // IF VECTOR LENGTHS ARE EQUAL => COMPARE DIRECTLY
                 std::cout << "\033[1;36m" << WIDataRMS.dir_name.toStdString() <<
                 ": >>> Vector lengths are equal. Making comparison.\033[0m" <<
                 std::setfill(' ') << std::endl;
@@ -145,61 +144,40 @@ namespace {
                 CompareIJK(WIDataRMS, WIDataPCG);
                 CompareWCF(WIDataRMS, WIDataPCG);
 
-            }else {
+            }else{
 
-// https://github.com/cubicdaiya/dtl#compare-large-sequences
-
-                // If vector lengths are unequal => make equal, then compare directly
+                // IF VECTOR LENGTHS ARE UNEQUAL => MAKE EQUAL, THEN COMPARE DIRECTLY
                 std::cout << "\033[1;36m" << WIDataRMS.dir_name.toStdString() <<
                 ": >>> Vector lengths are unequal. Making them equal.\033[0m" << std::endl;
 
-                diff_match_patch* dmp; //
-                dmp = new diff_match_patch();
-                QString str1 = "abc nnn vvv";
-                QString str2 = "abd mmm vvv";
-                // QList<Diff> diffs;
+                // diff options
+                // -q report only when files differ
+                // -c output NUM (default 3) lines of copied context
+                // -Z  ignore white space at line end
+                // -b ignore changes in the amount of white space
+                // -w --ignore-all-space
+                // diff output
+                // %<     lines from FILE1
+                // %>     lines from FILE2
+                // %=     lines common to FILE1 and FILE2
 
-                auto diffs = dmp->diff_main(str1,str2);
-                std::cout << "length of diff: " << diffs.size() << std::endl;
-                std::cout << "str1: " << str1.toStdString() << std::endl;
-                std::cout << "str2: " << str2.toStdString() << std::endl;
+                // DIFF TREATMENT: IJK COMPARISON
+                QProcess* diff_process = new QProcess;
+                diff_process->start("diff", QStringList() << diff_files[0] << diff_files[1]);
+                diff_process->waitForFinished();
+                QString IJK_diff = diff_process->readAllStandardOutput();
 
-                for( int ii=0; ii < diffs.size(); ++ii ){
-                    std::cout << "Diffs: " << diffs[ii].toString().toStdString() << std::endl;
-                }
+                // DIFF TREATMENT: IJK COMPARISON
+                diff_process->start("diff", QStringList() << diff_files[2] << diff_files[3] << "-q ");
+                diff_process->waitForFinished();
+                QString WCF_diff = diff_process->readAllStandardOutput();
 
+                std::cout << "\n\nIJK_diff: " << WCF_diff.toStdString() << std::endl;
+                std::cout << "\n\nWCF_diff: " << WCF_diff.toStdString() << std::endl;
 
-
-                typedef string                 elem;
-                typedef std::vector< elem >         sequence;
-                typedef std::pair< elem, elemInfo > sesElem;
-
-                sequence ALines, BLines;
-                ALines = {"afg" "fdfdf" "adscr" "adsd" "fdsg"};
-                BLines = {"afg" "adscr" "fdfdf" "adsd"};
-
-                Diff< elem > diffX(ALines, BLines);
-                diffX.onHuge();
-                // //diff.onUnserious();
-                diffX.compose();
-
-//                diffX.strOperation().toStdString();
-
-//                std::cout << diffX.toString().toStdString();
-
-                diffX.composeUnifiedHunks();
-                diffX.printUnifiedFormat();
-                diffX.printSES();
-
-//                for( int ii=0; ii < ; ++ii ){
-//                    std::cout << "Diffs: " << diff << std::endl;
-//                }
-
-//                QString dmp->diff_text1(&diffs);
             }
 
 
-        DiffVectorLength(WIDataRMS,WIDataPCG);
 
 //        if(TestResources::WIBenchmark::DiffVectorLength(WIDataRMS,WIDataPCG)){
 //            TestResources::WIBenchmark::CompareIJK(WIDataRMS,WIDataPCG);
