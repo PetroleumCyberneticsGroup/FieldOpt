@@ -12,6 +12,13 @@ namespace Runner {
          * @brief The SynchronousMPIRunner class performs the optimization synchronously in parallel. Depending
          * on the process rank, it will instantiate either an Overseer (rank = 0) to handle optimizer iteraction
          * and logging, or a Worker (rank > 0) to execute simulations.
+         *
+         * Still todo:
+         *   - Probably some more logging and console debug messages
+         *   - Utilizing bookkeeping
+         *   - Timeout on simulations
+         *   - Handle cases that cant validly be applied to model
+         *   - Logging of simulation, production data and compdat and runner stats
          */
         class SynchronousMPIRunner : public MPIRunner {
         public:

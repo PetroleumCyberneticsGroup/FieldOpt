@@ -31,20 +31,28 @@ namespace Runner {
 
         void SynchronousMPIRunner::Execute() {
             if (rank() == 0) {
+                logger_->LogSettings(settings_);
+                logger_->WritePropertyUuidNameMap(model_);
+                logger_->LogCase(base_case_);
                 if (runtime_settings_->verbosity_level() >= 2) printMessage("Performing initial distribution...");
                 initialDistribution();
                 if (runtime_settings_->verbosity_level() >= 2) printMessage("Initial distribution done.");
                 while (optimizer_->IsFinished() == false) {
                     if (runtime_settings_->verbosity_level() >= 2) printMessage("Assigning new case to worker...");
-                    overseer_->AssignCase(optimizer_->GetCaseForEvaluation());
+                    auto new_case = optimizer_->GetCaseForEvaluation();
+                    logger_->LogCase(new_case);
+                    overseer_->AssignCase(new_case);
                     if (runtime_settings_->verbosity_level() >= 2) printMessage("New case assigned to worker.");
                     if (runtime_settings_->verbosity_level() >= 2) printMessage("Waiting to receive evaluated case...");
                     auto evaluated_case = overseer_->RecvEvaluatedCase(); // TODO: This is a duplicate case that wont get deleted, i.e. a MEMORY LEAK.
+                    logger_->LogCase(evaluated_case);
                     if (runtime_settings_->verbosity_level() >= 2) printMessage("Evaluated case received.");
                     optimizer_->SubmitEvaluatedCase(evaluated_case);
                     if (runtime_settings_->verbosity_level() >= 2) printMessage("Submitted evaluated case to optimizer.");
+                    logger_->LogOptimizerStatus(optimizer_);
                 }
                 if (runtime_settings_->verbosity_level() >= 2) printMessage("Terminating workers.");
+                PrintCompletionMessage();
                 overseer_->TerminateWorkers();
             }
             else {
