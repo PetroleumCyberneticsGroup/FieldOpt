@@ -105,6 +105,7 @@ namespace Runner {
             default:
                 throw std::runtime_error("Unable to initialize runner: simulator set in driver file not recognized.");
         }
+        simulator_->SetVerbosityLevel(runtime_settings_->verbosity_level());
     }
 
     void AbstractRunner::EvaluateBaseModel()
@@ -159,6 +160,7 @@ namespace Runner {
                 if (runtime_settings_->verbosity_level()) std::cout << "Using CompassSearch optimization algorithm." << std::endl;
                 optimizer_ = new Optimization::Optimizers::CompassSearch(settings_->optimizer(), base_case_, model_->variables(),
                                                                          model_->reservoir()->grid());
+                optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
                 break;
             default:
                 throw std::runtime_error("Unable to initialize runner: optimization algorithm set in driver file not recognized.");

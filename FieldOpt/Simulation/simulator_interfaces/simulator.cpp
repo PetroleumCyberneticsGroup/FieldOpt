@@ -46,5 +46,9 @@ namespace Simulation {
             return results_;
         }
 
+        void Simulator::SetVerbosityLevel(int level) {
+            verbosity_level_ = level;
+        }
+
     }
 }

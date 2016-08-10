@@ -60,6 +60,8 @@ namespace Simulation {
              */
             virtual QString GetCompdatString() = 0;
 
+            void SetVerbosityLevel(int level);
+
         protected:
             /*!
              * Set various path variables. Should only be called by child classes.
@@ -80,6 +82,7 @@ namespace Simulation {
             QStringList script_args_;
             QList<int> control_times_;
             virtual void UpdateFilePaths() = 0;
+            int verbosity_level_; //!< Verbosity level for runtime console logging.
         };
 
     }

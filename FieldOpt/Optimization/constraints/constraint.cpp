@@ -12,6 +12,10 @@ namespace Optimization {
             constraint_log_path_ = output_directory_path + "/log_constraints.txt";
         }
 
+        void Constraint::SetVerbosityLevel(int level) {
+            verbosity_level_ = level;
+        }
+
 
     }
 }

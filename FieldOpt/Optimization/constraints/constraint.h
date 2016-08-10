@@ -32,10 +32,13 @@ namespace Optimization {
              */
             virtual void SnapCaseToConstraints(Case *c) = 0;
 
-        public:
             void EnableLogging(QString output_directory_path);
+            void SetVerbosityLevel(int level);
+
         protected:
             bool logging_enabled_;
+            int verbosity_level_;
+
         private:
             QString constraint_log_path_; //!< Path to the constraint log path to be written.
         };

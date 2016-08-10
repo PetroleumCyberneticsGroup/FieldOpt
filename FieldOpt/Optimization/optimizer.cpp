@@ -96,6 +96,12 @@ namespace Optimization {
             con->EnableLogging(output_directory_path);
     }
 
+    void Optimizer::SetVerbosityLevel(int level) {
+        verbosity_level_ = level;
+        for (auto con : constraint_handler_->constraints())
+            con->SetVerbosityLevel(level);
+    }
+
 
 }
 
