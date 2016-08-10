@@ -60,7 +60,7 @@ namespace Runner {
         Utilities::FileHandling::CreateDirectory(output_directory);
 
         settings_ = new Utilities::Settings::Settings(runtime_settings_->driver_file(), output_directory);
-        settings_->set_verbosity(runtime_settings_->verbose());
+        settings_->set_verbosity(runtime_settings_->verbosity_level());
 
         // Override simulator driver file if it has been passed as command line arguments
         if (runtime_settings_->simulator_driver_path().length() > 0)
@@ -91,15 +91,15 @@ namespace Runner {
 
         switch (settings_->simulator()->type()) {
             case ::Utilities::Settings::Simulator::SimulatorType::ECLIPSE:
-                if (runtime_settings_->verbose()) std::cout << "Using ECL100 reservoir simulator." << std::endl;
+                if (runtime_settings_->verbosity_level()) std::cout << "Using ECL100 reservoir simulator." << std::endl;
                 simulator_ = new Simulation::SimulatorInterfaces::ECLSimulator(settings_, model_);
                 break;
             case ::Utilities::Settings::Simulator::SimulatorType::ADGPRS:
-                if (runtime_settings_->verbose()) std::cout << "Using ADGPRS reservoir simulator." << std::endl;
+                if (runtime_settings_->verbosity_level()) std::cout << "Using ADGPRS reservoir simulator." << std::endl;
                 simulator_ = new Simulation::SimulatorInterfaces::AdgprsSimulator(settings_, model_);
                 break;
             case ::Utilities::Settings::Simulator::SimulatorType::Flow:
-                if (runtime_settings_->verbose()) std::cout << "Using Flow reservoir simulator." << std::endl;
+                if (runtime_settings_->verbosity_level()) std::cout << "Using Flow reservoir simulator." << std::endl;
                 simulator_ = new Simulation::SimulatorInterfaces::FlowSimulator(settings_, model_);
                 break;
             default:
@@ -112,7 +112,7 @@ namespace Runner {
         if (simulator_ == 0)
             throw std::runtime_error("The simulator must be initialized before evaluating the base model.");
         if (!simulator_->results()->isAvailable()) {
-            if (runtime_settings_->verbose()) std::cout << "Simulating base case." << std::endl;
+            if (runtime_settings_->verbosity_level()) std::cout << "Simulating base case." << std::endl;
             simulator_->Evaluate();
         }
     }
@@ -124,7 +124,7 @@ namespace Runner {
 
         switch (settings_->optimizer()->objective().type) {
             case Utilities::Settings::Optimizer::ObjectiveType::WeightedSum:
-                if (runtime_settings_->verbose()) std::cout << "Using WeightedSum-type objective function." << std::endl;
+                if (runtime_settings_->verbosity_level()) std::cout << "Using WeightedSum-type objective function." << std::endl;
                 objective_function_ = new Optimization::Objective::WeightedSum(settings_->optimizer(), simulator_->results());
                 break;
             default:
@@ -140,13 +140,13 @@ namespace Runner {
                                             model_->variables()->GetDiscreteVariableValues(),
                                             model_->variables()->GetContinousVariableValues());
         if (!simulator_->results()->isAvailable()) {
-            if (runtime_settings_->verbose())
+            if (runtime_settings_->verbosity_level())
                 std::cout << "Simulation results are unavailable. Setting base case objective function value to sentinel value." << std::endl;
             base_case_->set_objective_function_value(sentinelValue());
         }
         else
             base_case_->set_objective_function_value(objective_function_->value());
-        if (runtime_settings_->verbose()) std::cout << "Base case objective function value set to: " << base_case_->objective_function_value() << std::endl;
+        if (runtime_settings_->verbosity_level()) std::cout << "Base case objective function value set to: " << base_case_->objective_function_value() << std::endl;
     }
 
     void AbstractRunner::InitializeOptimizer()
@@ -156,7 +156,7 @@ namespace Runner {
 
         switch (settings_->optimizer()->type()) {
             case Utilities::Settings::Optimizer::OptimizerType::Compass:
-                if (runtime_settings_->verbose()) std::cout << "Using CompassSearch optimization algorithm." << std::endl;
+                if (runtime_settings_->verbosity_level()) std::cout << "Using CompassSearch optimization algorithm." << std::endl;
                 optimizer_ = new Optimization::Optimizers::CompassSearch(settings_->optimizer(), base_case_, model_->variables(),
                                                                          model_->reservoir()->grid());
                 break;

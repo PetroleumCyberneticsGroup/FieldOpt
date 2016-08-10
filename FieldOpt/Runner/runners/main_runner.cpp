@@ -26,7 +26,7 @@ namespace Runner {
 
     void MainRunner::Execute()
     {
-        if (runtime_settings_->verbose()) std::cout << "Starting optimization run." << std::endl;
+        if (runtime_settings_->verbosity_level()) std::cout << "Starting optimization run." << std::endl;
         runner_->Execute();
     }
 

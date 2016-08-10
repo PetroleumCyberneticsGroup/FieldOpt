@@ -5,7 +5,7 @@ namespace Runner {
     Logger::Logger(RuntimeSettings *rts)
     {
         shortest_simulation_time_ = 0;
-        verbose_ = rts->verbose();
+        verbose_ = rts->verbosity_level();
         output_dir_ = rts->output_dir();
         opt_log_path_ = output_dir_ + "/log_optimization.csv";
         sim_log_path_ = output_dir_ + "/log_simulation.csv";

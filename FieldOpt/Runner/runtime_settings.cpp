@@ -18,7 +18,8 @@ namespace Runner {
                 throw std::runtime_error("The specified output directory does not exist: " + output_dir_.toStdString());
         } else throw std::runtime_error("An output directory must be specified.");
 
-        verbose_ = vm.count("verbose") != 0;
+        if (vm.count("verbose")) verbosity_level_ = vm["verbose"].as<int>();
+        else verbosity_level_ = 0;
 
         overwrite_existing_ = vm.count("force") != 0;
         if (!overwrite_existing_ && !Utilities::FileHandling::DirectoryIsEmpty(output_dir_))
@@ -86,10 +87,10 @@ namespace Runner {
         }
 
 
-        if (verbose_) {
+        if (verbosity_level_) {
             str_out = "FieldOpt runtime settings";
             std::cout << "\n" << str_out << "\n" << std::string(str_out.length(),'=') << std::endl;
-            std::cout << "Verbosity level:  " << verbose_ << std::endl;
+            std::cout << "Verbosity level:  " << verbosity_level_ << std::endl;
             std::cout << "Runner type:      " << runnerTypeString().toStdString() << std::endl;
             std::cout << "Overwr. old out files: " << overwrite_existing_ << std::endl;
             std::cout << "Max parallel sims:   " << (max_parallel_sims_ > 0 ? std::to_string(max_parallel_sims_) : "default") << std::endl;
@@ -129,11 +130,12 @@ namespace Runner {
     po::variables_map RuntimeSettings::createVariablesMap(int argc, const char **argv) {
         int max_par_sims;
         int simulation_timeout;
+        int verbosity_level;
         po::options_description desc("FieldOpt options");
         desc.add_options()
                 ("help,h", "print help message")
-                ("verbose,v", po::value<int>()->implicit_value(0),
-                 "show verbose console output while optimizing")
+                ("verbose,v", po::value<int>(&verbosity_level)->default_value(0),
+                 "verbosity level for runtime console logging")
                 ("force,f", po::value<int>()->implicit_value(0),
                  "overwrite existing output files")
                 ("max-parallel-simulations,m", po::value<int>(&max_par_sims)->default_value(0),
