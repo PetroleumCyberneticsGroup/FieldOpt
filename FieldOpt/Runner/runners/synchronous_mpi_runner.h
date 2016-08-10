@@ -23,7 +23,12 @@ namespace Runner {
             MPI::Overseer *overseer_;
             MPI::Worker *worker_;
 
+            /*!
+             * @brief Distribute cases to be evaluated to all but one worker.
+             */
             void initialDistribution();
+
+            void printMessage(std::string message);
         };
 
     }

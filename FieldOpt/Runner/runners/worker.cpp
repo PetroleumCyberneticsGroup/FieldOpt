@@ -10,6 +10,7 @@ namespace Runner {
         }
 
         void Worker::RecvUnevaluatedCase() {
+            delete current_case_;
             current_case_ = runner_->RecvCase(runner_->scheduler_rank_, MPIRunner::MsgTag::CASE_UNEVAL);
         }
 
