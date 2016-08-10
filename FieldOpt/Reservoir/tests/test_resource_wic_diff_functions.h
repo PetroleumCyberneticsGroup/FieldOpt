@@ -172,10 +172,12 @@ namespace TestResources {
                 auto row = vdiff_.row(ii);
 
                 if (!row.isZero(GetEps())){
-                    std::cout << "row "  << std::setw(3) << ii << ":"  << std::setprecision(4)
-                              << " RMS=" << std::setw(2) << va_.row(ii)
-                              << " PCG=" << std::setw(2) << vb_.row(ii)
-                              << " DF="  << std::setw(2) << vdiff_.row(ii) << std::endl;
+
+                    IOFormat CleanFmt(4, 0, " ", "\n", "", "");
+                    std::cout << "row "  << std::setw(3) << ii << ":"  // << std::setprecision(4)
+                              << std::setw(4) << " RMS=" << std::setw(8) << va_.row(ii).format(CleanFmt)
+                              << std::setw(4) << " PCG=" << std::setw(8) << vb_.row(ii).format(CleanFmt)
+                              << std::setw(4) << " DF="  << std::setw(8) << vdiff_.row(ii).format(CleanFmt) << std::endl;
 
                               // << " DF=" << std::fixed << std::setw(7) << vdiff_(ii,0) << std::endl;
                     // TO DO: COLORED DIFFERENCES

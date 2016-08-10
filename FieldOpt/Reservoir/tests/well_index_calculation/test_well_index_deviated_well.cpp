@@ -18,11 +18,33 @@
 #include <fstream>
 #include <Eigen/Dense>
 
-#include "../../../external_libraries/diff_match_patch/diff_match_patch_20121119/cpp/diff_match_patch.cpp"
+#include "../../../external_libraries/diff-match-patch/diff_match_patch_20121119/cpp/diff_match_patch.cpp"
+
+#include <vector>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+
+
+//#include "../../../external_libraries/dtl/dtl/Diff3.hpp"
+//#include "../../../external_libraries/dtl/dtl/Diff.hpp"
+#include "../../../external_libraries/dtl/dtl/dtl.hpp"
+//#include "../../../external_libraries/dtl/dtl/functors.hpp"
+//#include "../../../external_libraries/dtl/dtl/Lcs.hpp"
+//#include "../../../external_libraries/dtl/dtl/Sequence.hpp"
+//#include "../../../external_libraries/dtl/dtl/Ses.hpp"
+//#include "../../../external_libraries/dtl/dtl/variables.hpp"
+
 
 using namespace Reservoir::Grid;
 using namespace Reservoir::WellIndexCalculation;
 using namespace TestResources::WIBenchmark;
+
+using dtl::Diff;
+using dtl::elemInfo;
+using dtl::uniHunk;
+
+// using namespace std;
 
 namespace {
 
@@ -108,7 +130,7 @@ namespace {
                 std::cout << "WIDataPCG.WCF: (size: " << WIDataPCG.WCF.size() << "): "
                           << std::endl << WIDataPCG.WCF.block(0,0,nPCG,1)
                           << std::endl << "..." << std::endl;
-                
+
                 std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;
                 // std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
             }
@@ -117,7 +139,7 @@ namespace {
 
                 // If vector lengths are equal => compare directly
                 std::cout << "\033[1;36m" << WIDataRMS.dir_name.toStdString() <<
-                ": >>> Vector lengths are equal. Making comparison.\033[0m" << 
+                ": >>> Vector lengths are equal. Making comparison.\033[0m" <<
                 std::setfill(' ') << std::endl;
 
                 CompareIJK(WIDataRMS, WIDataPCG);
@@ -131,15 +153,47 @@ namespace {
                 std::cout << "\033[1;36m" << WIDataRMS.dir_name.toStdString() <<
                 ": >>> Vector lengths are unequal. Making them equal.\033[0m" << std::endl;
 
-                // diff_match_patch* dmp; //
-                auto dmp = new diff_match_patch();
-                QString str1 = "abc"; 
-                QString str2 = "abd";
+                diff_match_patch* dmp; //
+                dmp = new diff_match_patch();
+                QString str1 = "abc nnn vvv";
+                QString str2 = "abd mmm vvv";
                 // QList<Diff> diffs;
 
-                QList<Diff> diffs = dmp->diff_main(str1,str2);
+                auto diffs = dmp->diff_main(str1,str2);
                 std::cout << "length of diff: " << diffs.size() << std::endl;
-                std::cout << "Diffs: " << diffs[0].toString().toStdString();
+                std::cout << "str1: " << str1.toStdString() << std::endl;
+                std::cout << "str2: " << str2.toStdString() << std::endl;
+
+                for( int ii=0; ii < diffs.size(); ++ii ){
+                    std::cout << "Diffs: " << diffs[ii].toString().toStdString() << std::endl;
+                }
+
+
+
+                typedef string                 elem;
+                typedef std::vector< elem >         sequence;
+                typedef std::pair< elem, elemInfo > sesElem;
+
+                sequence ALines, BLines;
+                ALines = {"afg" "fdfdf" "adscr" "adsd" "fdsg"};
+                BLines = {"afg" "adscr" "fdfdf" "adsd"};
+
+                Diff< elem > diffX(ALines, BLines);
+                diffX.onHuge();
+                // //diff.onUnserious();
+                diffX.compose();
+
+//                diffX.strOperation().toStdString();
+
+//                std::cout << diffX.toString().toStdString();
+
+                diffX.composeUnifiedHunks();
+                diffX.printUnifiedFormat();
+                diffX.printSES();
+
+//                for( int ii=0; ii < ; ++ii ){
+//                    std::cout << "Diffs: " << diff << std::endl;
+//                }
 
 //                QString dmp->diff_text1(&diffs);
             }
