@@ -10,8 +10,11 @@
 #include <QDirIterator>
 #include <QtCore/QString>
 #include <QList>
-#include <QTextStream>
 #include <Eigen/Dense>
+
+#include <QFile>
+#include <QTextStream>
+#include <fstream>
 
 using namespace Eigen;
 
@@ -25,6 +28,8 @@ namespace TestResources {
 
             // Functions
             void ReadData(QString file_name);
+            void PrintIJKData(QString file_name);
+            void PrintWCFData(QString file_name);
 
             // Variables:
             Matrix<int, Dynamic, 4> IJK;
@@ -40,6 +45,46 @@ namespace TestResources {
 
         private:
         };
+
+        void WIData::PrintIJKData(QString file_name) {
+
+            std::ofstream file;
+            file.open(file_name.toStdString());
+
+            if (!file.is_open()){
+                std::cerr << "Cannot open file '"
+                          << file_name.toStdString()
+                          << "' for writing." << std::endl;
+            }
+
+            file << std::fixed;
+            file << IJK;
+            file.close();
+
+            // // TODO: Why can't we make it work using QTextStream?
+            // IOFormat CleanFmt(4, 0, " ", "", "", "");
+            // QFile fileb(file_name);
+            // fileb.open(QIODevice::WriteOnly);
+            // QTextStream out(&fileb);
+            // out << IJK.data();
+            // fileb.close();
+        }
+
+        void WIData::PrintWCFData(QString file_name) {
+
+            std::ofstream file;
+            file.open(file_name.toStdString());
+
+            if (!file.is_open()){
+                std::cerr << "Cannot open file '"
+                          << file_name.toStdString()
+                          << "' for writing." << std::endl;
+            }
+
+            file << std::fixed;
+            file << WCF;
+            file.close();
+        }
 
         void WIData::ReadData(QString file_name) {
 
