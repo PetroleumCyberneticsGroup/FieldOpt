@@ -31,22 +31,38 @@ namespace Runner {
 
         void SynchronousMPIRunner::Execute() {
             if (rank() == 0) {
+                if (runtime_settings_->verbosity_level() >= 2) printMessage("Performing initial distribution...");
                 initialDistribution();
+                if (runtime_settings_->verbosity_level() >= 2) printMessage("Initial distribution done.");
                 while (optimizer_->IsFinished() == false) {
+                    if (runtime_settings_->verbosity_level() >= 2) printMessage("Assigning new case to worker...");
                     overseer_->AssignCase(optimizer_->GetCaseForEvaluation());
+                    if (runtime_settings_->verbosity_level() >= 2) printMessage("New case assigned to worker.");
+                    if (runtime_settings_->verbosity_level() >= 2) printMessage("Waiting to receive evaluated case...");
                     auto evaluated_case = overseer_->RecvEvaluatedCase(); // TODO: This is a duplicate case that wont get deleted, i.e. a MEMORY LEAK.
+                    if (runtime_settings_->verbosity_level() >= 2) printMessage("Evaluated case received.");
                     optimizer_->SubmitEvaluatedCase(evaluated_case);
+                    if (runtime_settings_->verbosity_level() >= 2) printMessage("Submitted evaluated case to optimizer.");
                 }
+                if (runtime_settings_->verbosity_level() >= 2) printMessage("Terminating workers.");
                 overseer_->TerminateWorkers();
             }
             else {
+                if (runtime_settings_->verbosity_level() >= 2) printMessage("Waiting to receive initial unevaluated case...");
                 worker_->RecvUnevaluatedCase();
+                if (runtime_settings_->verbosity_level() >= 2) printMessage("Reveived initial unevaluated case.");
                 while (worker_->GetCurrentCase() != nullptr) {
+                    if (runtime_settings_->verbosity_level() >= 2) printMessage("Applying case to model.");
                     model_->ApplyCase(worker_->GetCurrentCase());
+                    if (runtime_settings_->verbosity_level() >= 2) printMessage("Starting model evaluation.");
                     simulator_->Evaluate();
+                    if (runtime_settings_->verbosity_level() >= 2) printMessage("Setting objective function value.");
                     worker_->GetCurrentCase()->set_objective_function_value(objective_function_->value());
+                    if (runtime_settings_->verbosity_level() >= 2) printMessage("Sending back evaluated case.");
                     worker_->SendEvaluatedCase();
+                    if (runtime_settings_->verbosity_level() >= 2) printMessage("Waiting to reveive an unevaluated case...");
                     worker_->RecvUnevaluatedCase();
+                    if (runtime_settings_->verbosity_level() >= 2) printMessage("Received an unevaluated case.");
                 }
             }
         }
