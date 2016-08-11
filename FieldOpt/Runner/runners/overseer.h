@@ -75,13 +75,13 @@ namespace Runner {
                  * @brief Get the status for the longest running worker.
                  * @return A copy of the status object for the longest running worker.
                  */
-            WorkerStatus GetLongestRunningWorker();
+            WorkerStatus * GetLongestRunningWorker();
 
         private:
             MPIRunner *runner_;
-            QHash<int, WorkerStatus> workers_; //!< A map of the workers. The key is the rank of the process.
+            QHash<int, WorkerStatus*> workers_; //!< A map of the workers. The key is the rank of the process.
 
-            WorkerStatus & getFreeWorker(); //!< Get a worker not marked as working.
+            WorkerStatus * getFreeWorker(); //!< Get a worker not marked as working.
         };
     }
 }
