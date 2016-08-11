@@ -65,5 +65,10 @@ namespace Runner {
             ia >> mso;
             mso.UpdateVariablePropertyIds(model_);
         }
+
+        void MPIRunner::printMessage(std::string message, int min_verb) {
+            if (runtime_settings_->verbosity_level() >= min_verb)
+                std::cout << "RANK " << world_.rank() << ": " << message << std::endl;
+        }
     }
 }

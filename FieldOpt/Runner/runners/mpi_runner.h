@@ -83,6 +83,13 @@ namespace Runner {
             mpi::communicator world_;
             int rank_;
             int scheduler_rank_ = 0;
+
+            /*!
+             * @brief Print a message to the console.
+             * @param message The message to be printed.
+             * @param min_verb The minimum verbosity level requred for the message to be printed.
+             */
+            void printMessage(std::string message, int min_verb=1);
         };
     }
 }
