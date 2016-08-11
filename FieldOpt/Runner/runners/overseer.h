@@ -82,6 +82,11 @@ namespace Runner {
             QHash<int, WorkerStatus*> workers_; //!< A map of the workers. The key is the rank of the process.
 
             WorkerStatus * getFreeWorker(); //!< Get a worker not marked as working.
+
+            /*!
+             * @brief Get a string summarizing the status for all workers.
+             */
+            std::string workerStatusSummary();
         };
     }
 }

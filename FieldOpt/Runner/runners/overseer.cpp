@@ -18,13 +18,14 @@ namespace Runner {
             runner_->SendCase(c, worker->rank, MPIRunner::MsgTag::CASE_UNEVAL);
             worker->start();
             runner_->printMessage("Assigned case to worker " + std::to_string(worker->rank), 2);
+            runner_->printMessage("Current status for workers:\n" + workerStatusSummary(), 2);
         }
 
         Optimization::Case *Overseer::RecvEvaluatedCase() {
             int worker_rank;
             auto evaluated_case = runner_->RecvCase(worker_rank, MPIRunner::MsgTag::CASE_EVAL);
             workers_[worker_rank]->stop();
-            runner_->printMessage("Received case from worker " + std::to_string(worker_rank));
+            runner_->printMessage("Received case from worker " + std::to_string(worker_rank), 2);
             return evaluated_case;
         }
 
@@ -65,6 +66,20 @@ namespace Runner {
 
         int Overseer::NumberOfBusyWorkers() {
             return workers_.count() - NumberOfFreeWorkers();
+        }
+
+        std::string Overseer::workerStatusSummary() {
+            QString status = "";
+            for (auto stat : workers_.values()) {
+                if (stat->working)
+                    status.append(QString("\tWorker %1: working. Duration of current task: %2 sec\n")
+                                          .arg(stat->rank)
+                                          .arg(stat->working_seconds())
+                    );
+                else
+                    status.append(QString("\tWorker %1: idle").arg(stat->rank));
+            }
+            return status.toStdString();
         }
     }
 }
