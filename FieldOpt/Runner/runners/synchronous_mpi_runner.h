@@ -15,10 +15,7 @@ namespace Runner {
          *
          * Still todo:
          *   - Probably some more logging and console debug messages
-         *   - Utilizing bookkeeping
-         *   - Timeout on simulations
-         *   - Handle cases that cant validly be applied to model
-         *   - Logging of simulation, production data and compdat and runner stats
+         *   - Logging of runner stats
          */
         class SynchronousMPIRunner : public MPIRunner {
         public:
@@ -35,7 +32,7 @@ namespace Runner {
              */
             void initialDistribution();
 
-            void printMessage(std::string message);
+
         };
 
     }
