@@ -176,9 +176,9 @@ namespace Runner {
         bookkeeper_ = new Bookkeeper(settings_, optimizer_->case_handler());
     }
 
-    void AbstractRunner::InitializeLogger()
+    void AbstractRunner::InitializeLogger(QString output_subdir)
     {
-        logger_ = new Logger(runtime_settings_);
+        logger_ = new Logger(runtime_settings_, output_subdir);
     }
 
     void AbstractRunner::PrintCompletionMessage() const {

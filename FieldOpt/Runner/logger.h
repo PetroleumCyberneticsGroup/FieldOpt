@@ -24,8 +24,10 @@ class Logger
 public:
     /*!
      * \brief Logger
+     * \param rts Runtime settings
+     * \param output_subdir Optional subdirectory in the output directory to write the logs in.
      */
-    Logger(RuntimeSettings *rts);
+    Logger(RuntimeSettings *rts, QString output_subdir="");
 
     /*!
      * \brief LogSettings Write a log containing some of the settings specified in the driver file.

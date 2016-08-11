@@ -2,11 +2,12 @@
 
 namespace Runner {
 
-    Logger::Logger(RuntimeSettings *rts)
+    Logger::Logger(RuntimeSettings *rts, QString output_subdir)
     {
         shortest_simulation_time_ = 0;
         verbose_ = rts->verbosity_level();
         output_dir_ = rts->output_dir();
+        if (output_subdir.length() > 0) output_dir_.append("/" + output_subdir + "/");
         opt_log_path_ = output_dir_ + "/log_optimization.csv";
         sim_log_path_ = output_dir_ + "/log_simulation.csv";
         cas_log_path_ = output_dir_ + "/log_cases.csv";
