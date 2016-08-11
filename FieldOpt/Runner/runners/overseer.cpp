@@ -26,6 +26,7 @@ namespace Runner {
             auto evaluated_case = runner_->RecvCase(worker_rank, MPIRunner::MsgTag::CASE_EVAL);
             workers_[worker_rank]->stop();
             runner_->printMessage("Received case from worker " + std::to_string(worker_rank), 2);
+            runner_->printMessage("Current status for workers:\n" + workerStatusSummary(), 2);
             return evaluated_case;
         }
 
