@@ -56,7 +56,7 @@ namespace Runner {
                 switch (overseer_->last_case_tag) {
                     case MPIRunner::MsgTag::CASE_EVAL_SUCCESS: logger_->increment_simulated_cases(); break;
                     case MPIRunner::MsgTag::CASE_EVAL_INVALID: logger_->increment_invalid_cases(); break;
-                    case MPIRunner::MsgTag::CASE_EVAL_TIMEOUT: logger_->increment_simulated_cases(); break;
+                    case MPIRunner::MsgTag::CASE_EVAL_TIMEOUT: logger_->increment_timed_out_cases(); break;
                 }
             };
             if (rank() == 0) {
