@@ -1,4 +1,5 @@
 #include "logger.h"
+#include "Utilities/time.hpp"
 
 namespace Runner {
 
@@ -155,6 +156,7 @@ namespace Runner {
             }
 
             if (success) {
+                simulator_execution_times_.append(duration);
                 if (verbose_)
                     std::cout << "Simulation completed successfully after " << duration << " seconds." << std::endl;
                 if (shortest_simulation_time_ == 0 || shortest_simulation_time_ > duration) {

@@ -86,7 +86,7 @@ public:
     QString GetTimeInfoString() const; //!< Get a string with information about time spent running the optimization. Intended for printing at end of run.
     QString GetSimInfoString() const; //!< Get a string with simulation stats. Intended for printing at end of optimization run.
 
-
+    QList<int> simulator_execution_times() const { return simulator_execution_times_; }
 
 private:
     bool verbose_; //!< Whether or not new log entries should also be printed to the console.
@@ -112,7 +112,8 @@ private:
     int timed_out_simulations_;
 
     QHash<QUuid, QDateTime> sim_start_times_; //!< A list of start times for currently running simulations.
-    QDateTime start_time_;
+    QList<int> simulator_execution_times_;
+    QDateTime start_time_; //!< The start time for FieldOpt
     int shortest_simulation_time_; //!< The shortest recorded simulation time.
 
     void initializeCaseLog(const Optimization::Case *c);
