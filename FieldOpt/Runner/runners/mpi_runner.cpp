@@ -99,8 +99,9 @@ namespace Runner {
         }
 
         void MPIRunner::printMessage(std::string message, int min_verb) {
+            std::string time_stamp = QDateTime::currentDateTime().toString("hh:mm").toStdString();
             if (runtime_settings_->verbosity_level() >= min_verb)
-                std::cout << "RANK " << world_.rank() << ": " << message << std::endl;
+                std::cout << "RANK" << world_.rank() << " " << time_stamp << ": " << message << std::endl;
         }
     }
 }
