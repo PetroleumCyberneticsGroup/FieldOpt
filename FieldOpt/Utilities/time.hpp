@@ -7,7 +7,7 @@
  * @param t1 Fist time. Should be before t2.
  * @param t2 Seconds time. Should be after t1.
  */
-inline int time_span_seconds(QDateTime t1, QDateTime t2) {
+inline int time_span_seconds(const QDateTime t1, const QDateTime t2) {
     return t2.toMSecsSinceEpoch()/1000 - t1.toMSecsSinceEpoch()/1000;
 }
 
@@ -15,7 +15,7 @@ inline int time_span_seconds(QDateTime t1, QDateTime t2) {
  * @brief Get the number of seconds that have passed from t1 until now.
  * @param t The time to get the number of seconds from.
  */
-inline int time_since_seconds(QDateTime t) {
+inline int time_since_seconds(const QDateTime t) {
     return time_span_seconds(t, QDateTime::currentDateTime());
 }
 
