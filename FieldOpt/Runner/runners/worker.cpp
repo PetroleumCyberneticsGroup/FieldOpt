@@ -10,11 +10,19 @@ namespace Runner {
         }
 
         void Worker::RecvUnevaluatedCase() {
-            current_case_ = runner_->RecvCase(runner_->scheduler_rank_, MPIRunner::MsgTag::CASE_UNEVAL);
+            auto msg = MPIRunner::Message();
+            msg.source = runner_->scheduler_rank_;
+            msg.tag = MPIRunner::MsgTag::CASE_UNEVAL;
+            runner_->RecvMessage(msg);
+            current_case_ = msg.c;
         }
 
         void Worker::SendEvaluatedCase() {
-            runner_->SendCase(current_case_, runner_->scheduler_rank_, MPIRunner::MsgTag::CASE_EVAL);
+            auto msg = MPIRunner::Message();
+            msg.destination = runner_->scheduler_rank_;
+            msg.c = current_case_;
+            msg.tag = MPIRunner::MsgTag::CASE_EVAL_SUCCESS;
+            runner_->SendMessage(msg);
         }
 
         Optimization::Case *Worker::GetCurrentCase() {

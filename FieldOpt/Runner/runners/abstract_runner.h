@@ -47,6 +47,8 @@ class MainRunner;
  *
  * It also defines the purely virtual Execute() method which should be implemented by all concrete
  * runners.
+ *
+ * todo: Create a method to get the timeout it seconds that uses the recorded simulation times and the timeout argument.
  */
 class AbstractRunner
 {

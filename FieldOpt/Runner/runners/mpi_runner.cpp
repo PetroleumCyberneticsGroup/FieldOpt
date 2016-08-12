@@ -15,32 +15,64 @@ namespace Runner {
             rank_ = world_.rank();
         }
 
-        void MPIRunner::SendCase(Optimization::Case *c, int dest, MPIRunner::MsgTag tag) {
-            auto cto = Optimization::CaseTransferObject(c);
-            std::ostringstream oss;
-            boost::archive::text_oarchive oa(oss);
-            oa << cto;
-            std::string s = oss.str();
-            world_.send(dest, tag, s);
-        }
-
-        Optimization::Case *MPIRunner::RecvCase(int &source, MPIRunner::MsgTag tag) {
-            Optimization::CaseTransferObject cto;
+        void MPIRunner::SendMessage(Message &message) {
             std::string s;
-            if (tag == TERMINATE)
-                return nullptr;
-            else if (tag == CASE_EVAL) {
-                mpi::status status = world_.recv(mpi::any_source, tag, s);
-                source = status.source();
+            if (message.c != nullptr) {
+                auto cto = Optimization::CaseTransferObject(message.c);
+                std::ostringstream oss;
+                boost::archive::text_oarchive oa(oss);
+                oa << cto;
+                s = oss.str();
             }
             else {
-                mpi::status status = world_.recv(source, tag, s);
+                s = "";
             }
-            std::istringstream iss(s);
-            boost::archive::text_iarchive ia(iss);
-            ia >> cto;
-            auto c = cto.CreateCase();
-            return c;
+            world_.send(message.destination, message.tag, s);
+        }
+
+        void MPIRunner::RecvMessage(Message &message) {
+            Optimization::CaseTransferObject cto;
+            std::string s;
+            printMessage("Waiting to receive a message with tag " + std::to_string(message.tag)
+                         + " from source " + std::to_string(message.source), 2);
+            mpi::status status = world_.recv(message.source, message.tag, s);
+            message.set_status(status);
+
+            auto handle_received_case = [&]() mutable {
+                std::istringstream iss(s);
+                boost::archive::text_iarchive ia(iss);
+                ia >> cto;
+                message.c = cto.CreateCase();
+            };
+
+            if (message.tag == TERMINATE) {
+                printMessage("Received termination signal.");
+                return;
+            }
+            else if (message.tag == MODEL_SYNC) {
+                printMessage("Received message with MODEL_SYNC tag. RecvMessage method cannot handle this. Throwing exception.");
+                throw std::runtime_error("RecvMessage is unable to handle model synchronization objects. "
+                                                 "This should be handled by the RecvModelSynchronizationObject method.");
+            }
+            else if (message.tag == CASE_UNEVAL) {
+                printMessage("Received an unevaluated case.", 2);
+                handle_received_case();
+            }
+            else if (message.tag == CASE_EVAL_SUCCESS) {
+                printMessage("Received a successfully evaluated case.", 2);
+                handle_received_case();
+            }
+            else if (message.tag == CASE_EVAL_INVALID) {
+                printMessage("Received an invalid case.", 2);
+                handle_received_case();
+            }
+            else if (message.tag == CASE_EVAL_TIMEOUT) {
+                printMessage("Received a case that was terminated due to timeout.", 2);
+            }
+            else {
+                printMessage("Received message with an unrecognized tag. Throwing exception.");
+                throw std::runtime_error("RecvMessage received a message with an unrecognized tag.");
+            }
         }
 
         void MPIRunner::BroadcastModel() {
@@ -56,7 +88,7 @@ namespace Runner {
         }
 
         void MPIRunner::RecvModelSynchronizationObject() {
-            if (rank() == 0) std::runtime_error("BroadcastModel should not be called on the root process.");
+            if (rank() == 0) std::runtime_error("RecvModelSynchronizationObject should not be called on the root process.");
             Model::ModelSynchronizationObject mso;
             std::string s;
             world_.recv(0, MODEL_SYNC, s);

@@ -15,19 +15,24 @@ namespace Runner {
         void Overseer::AssignCase(Optimization::Case *c) {
             if (NumberOfFreeWorkers() == 0) throw std::runtime_error("Cannot assign Case. No free workers found.");
             auto worker = getFreeWorker();
-            runner_->SendCase(c, worker->rank, MPIRunner::MsgTag::CASE_UNEVAL);
+            auto msg = MPIRunner::Message();
+            msg.tag = MPIRunner::MsgTag ::CASE_UNEVAL;
+            msg.destination = worker->rank;
+            msg.c = c;
+            runner_->SendMessage(msg);
             worker->start();
             runner_->printMessage("Assigned case to worker " + std::to_string(worker->rank), 2);
             runner_->printMessage("Current status for workers:\n" + workerStatusSummary(), 2);
         }
 
         Optimization::Case *Overseer::RecvEvaluatedCase() {
-            int worker_rank;
-            auto evaluated_case = runner_->RecvCase(worker_rank, MPIRunner::MsgTag::CASE_EVAL);
-            workers_[worker_rank]->stop();
-            runner_->printMessage("Received case from worker " + std::to_string(worker_rank), 2);
+            auto message = MPIRunner::Message();
+            runner_->RecvMessage(message);
+            workers_[message.source]->stop();
+            runner_->printMessage("Received case with tag " + std::to_string(message.tag)
+                                  + " from worker " + std::to_string(message.source), 2);
             runner_->printMessage("Current status for workers:\n" + workerStatusSummary(), 2);
-            return evaluated_case;
+            return message.c;
         }
 
         Overseer::WorkerStatus * Overseer::getFreeWorker() {
@@ -61,7 +66,9 @@ namespace Runner {
 
         void Overseer::TerminateWorkers() {
             for (int i = 1; i < runner_->world_.size(); ++i) {
-                runner_->SendCase(new Optimization::Case(), i, MPIRunner::MsgTag::TERMINATE);
+                auto msg = MPIRunner::Message();
+                msg.destination = i; msg.tag = MPIRunner::MsgTag::TERMINATE;
+                runner_->SendMessage(msg);
             }
         }
 

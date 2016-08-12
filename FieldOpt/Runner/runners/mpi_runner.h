@@ -34,33 +34,55 @@ namespace Runner {
              * @brief Tags used when sending and receiving.
              *
              * CASE_UNEVAL: To be used when sending unevaluated cases.
-             * CASE_EVAL: To be used when sending evaluated cases.
+             * CASE_EVAL_SUCCESS: To be used when sending successfully evaluated cases.
+             * CASE_EVAL_INVALID: To be used when sending cases that were some some reason deemed invalid.
+             * CASE_EVAL_TIMEOUT: To be used when sending cases whose simulation was terminated by a timeout condition.
              * MODEL_SYNC: To be used when sending model synchronization objects.
+             * ANY_TAG: This will match any tag.
              * TERMINATE: This tag should be sent by the overseer to terminate a worker.
              */
             enum MsgTag : int {
-                CASE_UNEVAL = 1, CASE_EVAL = 2, MODEL_SYNC = 3, TERMINATE = 4
+                CASE_UNEVAL = 1, CASE_EVAL_SUCCESS = 2, CASE_EVAL_INVALID = 3, CASE_EVAL_TIMEOUT = 4,
+                MODEL_SYNC = 10, TERMINATE = 100,
+                ANY_TAG = MPI_ANY_TAG
             };
 
             /*!
-             * @brief Send a case to the specified destination.
-             * @param c Case to be sent.
-             * @param dest The rank of the process the case should be sent to.
-             * @param tag Tag to be used when sending.
+             * @brief The Message struct should be used when sending and receiving any message.
              */
-            void SendCase(Optimization::Case *c, int dest, MsgTag tag);
+            struct Message {
+                Message() {
+                    c = nullptr; this->tag = MPI_ANY_TAG; this->source = MPI_ANY_SOURCE; this->destination = MPI_ANY_SOURCE;
+                }
+                void set_status(mpi::status status) {
+                    this->status = status; this->source = status.source(); this->tag = status.tag();
+                }
+                Optimization::Case *c; //!< The case associated with the message (if any).
+                int tag; //!< The tag for the message.
+                int source; //!< The rank of the process sending the message.
+                int destination; //!< The rank of the process receiving the message.
+                mpi::status status; //!< The status object for the message.
+            };
+
+            /*!
+             * @brief Send a message potentially containing a case.
+             * @param message The message to be sent.
+             */
+            void SendMessage(Message &message);
 
 
             /*!
-             * @brief Receive a message with the specified tag containing a Case from the specified soruce.
-             * If the CASE_EVAL tag is passed, i.e. if we want to receive an evaluated case, a case will be received
-             * from any source, and the source argument will be set to the rank of the process the case was received from.
-             * If the message contains the TERMINATE tag, a nullptr will be returned.
-             * @param source
-             * @param tag
+             * @brief Receive a message potentially containing a Case.
+             *
+             * If the source or tag is specified in the message parameter, only messages with this tag and/or source
+             * will be received. If not, a message will be received from any source and/or with any tag, and the
+             * values will be entered in the Message object.
+             *
+             * If a case is received, the c field in the parameter message object will be set to it.
+             * @param message
              * @return
              */
-            Optimization::Case *RecvCase(int &source, MsgTag tag);
+            void RecvMessage(Message &message);
 
             /*!
              * @brief Create a ModelSynchronizationObject and send it to all other processes.
