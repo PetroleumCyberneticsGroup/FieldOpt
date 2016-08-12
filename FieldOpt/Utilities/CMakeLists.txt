@@ -36,7 +36,7 @@ add_executable(test_utilities
         tests/settings/test_settings_optimizer.cpp
         tests/settings/test_settings_simulator.cpp
         tests/unix/test_execution.cpp
-		tests/test_time.cpp)
+		tests/test_time.cpp tests/test_math.cpp)
 target_link_libraries(test_utilities
         fieldopt::utilities
         ${GTEST_BOTH_LIBRARIES}
