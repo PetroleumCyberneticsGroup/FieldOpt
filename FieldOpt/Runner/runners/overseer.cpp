@@ -32,6 +32,7 @@ namespace Runner {
             runner_->printMessage("Received case with tag " + std::to_string(message.tag)
                                   + " from worker " + std::to_string(message.source), 2);
             runner_->printMessage("Current status for workers:\n" + workerStatusSummary(), 2);
+            last_case_tag = message.get_tag();
             return message.c;
         }
 

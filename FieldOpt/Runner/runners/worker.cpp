@@ -17,7 +17,7 @@ namespace Runner {
             current_case_ = msg.c;
         }
 
-        void Worker::SendEvaluatedCase() {
+        void Worker::SendEvaluatedCase(MPIRunner::MsgTag tag) {
             auto msg = MPIRunner::Message();
             msg.destination = runner_->scheduler_rank_;
             msg.c = current_case_;

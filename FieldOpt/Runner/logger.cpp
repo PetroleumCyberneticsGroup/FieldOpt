@@ -272,6 +272,11 @@ namespace Runner {
         total_cases_++;
     }
 
+    void Logger::increment_timed_out_cases() {
+        timed_out_simulations_++;
+        total_cases_++;
+    }
+
     void Logger::increment_invalid_cases() {
         invalid_cases_++;
         total_cases_++;

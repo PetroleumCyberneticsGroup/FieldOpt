@@ -77,6 +77,8 @@ namespace Runner {
                  */
             WorkerStatus * GetLongestRunningWorker();
 
+            MPIRunner::MsgTag last_case_tag; //!< The message tag for the last received case.
+
         private:
             MPIRunner *runner_;
             QHash<int, WorkerStatus*> workers_; //!< A map of the workers. The key is the rank of the process.

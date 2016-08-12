@@ -80,6 +80,7 @@ public:
     void increment_simulated_cases(); //!< Increase the number of simulated cases by 1.
     void increment_bookkeeped_cases(); //!< Increase the number of bookkeeped cases by 1.
     void increment_invalid_cases(); //!< Increase the number of invalid cases by 1.
+    void increment_timed_out_cases(); //!< Increase the number of invalid cases by 1. This should be used for parallel runners, as the automatic method wont currently work with them.
     int shortest_simulation_time() { return shortest_simulation_time_; } //!< Get the shortest recorded simulation time.
 
     QString GetTimeInfoString() const; //!< Get a string with information about time spent running the optimization. Intended for printing at end of run.

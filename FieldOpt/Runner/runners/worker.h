@@ -20,8 +20,9 @@ namespace Runner {
 
             /*!
              * @brief Send the current_case_ back to the Scheduler.
+             * @param tag The tag the message should be sent with, indicating whether the evaluation was successful.
              */
-            void SendEvaluatedCase();
+            void SendEvaluatedCase(MPIRunner::MsgTag tag);
 
             Optimization::Case *GetCurrentCase();
 

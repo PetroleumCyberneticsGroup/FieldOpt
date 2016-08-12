@@ -57,6 +57,16 @@ namespace Runner {
                 void set_status(mpi::status status) {
                     this->status = status; this->source = status.source(); this->tag = status.tag();
                 }
+                MsgTag get_tag() {
+                    switch (tag) {
+                        case 1: return CASE_UNEVAL;
+                        case 2: return CASE_EVAL_SUCCESS;
+                        case 3: return CASE_EVAL_INVALID;
+                        case 4: return CASE_EVAL_TIMEOUT;
+                        case 10: return MODEL_SYNC;
+                        case 100: return TERMINATE;
+                    }
+                }
                 Optimization::Case *c; //!< The case associated with the message (if any).
                 int tag; //!< The tag for the message.
                 int source; //!< The rank of the process sending the message.

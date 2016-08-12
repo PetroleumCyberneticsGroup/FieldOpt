@@ -53,6 +53,11 @@ namespace Runner {
                 optimizer_->SubmitEvaluatedCase(evaluated_case);
                 printMessage("Submitted evaluated case to optimizer.", 2);
                 logger_->LogOptimizerStatus(optimizer_);
+                switch (overseer_->last_case_tag) {
+                    case MPIRunner::MsgTag::CASE_EVAL_SUCCESS: logger_->increment_simulated_cases(); break;
+                    case MPIRunner::MsgTag::CASE_EVAL_INVALID: logger_->increment_invalid_cases(); break;
+                    case MPIRunner::MsgTag::CASE_EVAL_TIMEOUT: logger_->increment_simulated_cases(); break;
+                }
             };
             if (rank() == 0) {
                 logger_->LogSettings(settings_);
@@ -84,6 +89,7 @@ namespace Runner {
                             wait_for_evaluated_case();
                         }
                     }
+                    logger_->LogRunnerStats();
                 }
                 printMessage("Terminating workers.", 2);
                 PrintCompletionMessage();
@@ -94,6 +100,7 @@ namespace Runner {
                 worker_->RecvUnevaluatedCase();
                 printMessage("Reveived initial unevaluated case.", 2);
                 while (worker_->GetCurrentCase() != nullptr) {
+                    MPIRunner::MsgTag tag = MPIRunner::MsgTag::CASE_EVAL_SUCCESS; // Tag to be sent along with the case.
                     try {
                         bool simulation_success = true;
                         printMessage("Applying case to model.", 2);
@@ -109,12 +116,14 @@ namespace Runner {
                             simulation_success = simulator_->Evaluate(logger_->shortest_simulation_time() * runtime_settings_->simulation_timeout());
                         }
                         if (simulation_success) {
+                            tag = MPIRunner::MsgTag::CASE_EVAL_SUCCESS;
                             logger_->LogSimulation(worker_->GetCurrentCase());
                             printMessage("Setting objective function value.", 2);
                             worker_->GetCurrentCase()->set_objective_function_value(objective_function_->value());
                             logger_->LogProductionData(worker_->GetCurrentCase(), simulator_->results());
                         }
                         else {
+                            tag = MPIRunner::MsgTag::CASE_EVAL_TIMEOUT;
                             logger_->LogSimulation(worker_->GetCurrentCase(), false);
                             printMessage("Timed out. Setting objective function value to SENTINEL VALUE.", 2);
                             worker_->GetCurrentCase()->set_objective_function_value(sentinelValue());
@@ -122,13 +131,14 @@ namespace Runner {
                         logger_->increment_simulated_cases();
                     } catch (std::runtime_error e) {
                         std::cout << e.what() << std::endl;
+                        tag = MPIRunner::MsgTag::CASE_EVAL_INVALID;
                         printMessage("Invalid well block coordinate encountered. Setting obj. val. to sentinel value.");
                         logger_->increment_invalid_cases();
                         printMessage("Invalid case. Setting objective function value to SENTINEL VALUE.", 2);
                         worker_->GetCurrentCase()->set_objective_function_value(sentinelValue());
                     }
                     printMessage("Sending back evaluated case.", 2);
-                    worker_->SendEvaluatedCase();
+                    worker_->SendEvaluatedCase(tag);
                     printMessage("Waiting to reveive an unevaluated case...", 2);
                     worker_->RecvUnevaluatedCase();
                     printMessage("Received an unevaluated case.", 2);
