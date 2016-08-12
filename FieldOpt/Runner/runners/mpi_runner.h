@@ -47,6 +47,16 @@ namespace Runner {
                 ANY_TAG = MPI_ANY_TAG
             };
 
+            std::map<int, std::string> tag_to_string = {
+                    {-1, "any tag"},
+                    {1, "unevaluated case"},
+                    {2, "successfully evaluated case"},
+                    {3, "invalid case"},
+                    {4, "timed out case"},
+                    {10, "model synchronization object"},
+                    {100, "termination signal"}
+            };
+
             /*!
              * @brief The Message struct should be used when sending and receiving any message.
              */

@@ -28,12 +28,15 @@ namespace Runner {
                 s = "";
             }
             world_.send(message.destination, message.tag, s);
+            printMessage("Sent a message to " + std::to_string(message.destination)
+                         + " with tag " + std::to_string(message.tag) + " (" + tag_to_string[message.tag] + ")");
         }
 
         void MPIRunner::RecvMessage(Message &message) {
             Optimization::CaseTransferObject cto;
             std::string s;
             printMessage("Waiting to receive a message with tag " + std::to_string(message.tag)
+                         + " (" + tag_to_string[message.tag] + ") "
                          + " from source " + std::to_string(message.source), 2);
             mpi::status status = world_.recv(message.source, message.tag, s);
             message.set_status(status);
