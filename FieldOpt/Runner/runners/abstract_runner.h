@@ -85,6 +85,16 @@ protected:
      */
     double sentinelValue() const;
 
+    /*!
+     * @brief Get the timeout value to be used when starting simulations. It is calculated from the recorded
+     * (successful) simulation times and the timeout value provided as an argument when running the program.
+     *
+     * If there either have not been any recorded simulation times or the timeout argument was not provided, 10,000 will
+     * be returned.
+     * @return
+     */
+    int timeoutValue() const;
+
     void InitializeSettings(QString output_subdirectory="");
     void InitializeModel();
     void InitializeSimulator();

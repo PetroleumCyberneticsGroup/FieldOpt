@@ -113,7 +113,7 @@ namespace Runner {
                         }
                         else {
                             printMessage("Starting model evaluation with timeout.", 2);
-                            simulation_success = simulator_->Evaluate(logger_->shortest_simulation_time() * runtime_settings_->simulation_timeout());
+                            simulation_success = simulator_->Evaluate(timeoutValue());
                         }
                         if (simulation_success) {
                             tag = MPIRunner::MsgTag::CASE_EVAL_SUCCESS;

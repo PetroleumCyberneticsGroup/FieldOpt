@@ -29,6 +29,7 @@
 #include "Optimization/objective/weightedsum.h"
 #include "Simulation/simulator_interfaces/eclsimulator.h"
 #include "Simulation/simulator_interfaces/adgprssimulator.h"
+#include "Utilities/math.hpp"
 
 namespace Runner {
 
@@ -209,6 +210,14 @@ namespace Runner {
         for (auto var : optimizer_->GetTentativeBestCase()->binary_variables().keys()) {
             auto prop = model_->variables()->GetBinaryVariable(var);
             std::cout << "\t" << prop->name().toStdString() << "\t" << prop->value() << std::endl;
+        }
+    }
+
+    int AbstractRunner::timeoutValue() const {
+        if (logger_->shortest_simulation_time() == 0 || runtime_settings_->simulation_timeout() == 0)
+            return 10000;
+        else {
+            return calc_average(logger_->simulator_execution_times()) * runtime_settings_->simulation_timeout();
         }
     }
 
