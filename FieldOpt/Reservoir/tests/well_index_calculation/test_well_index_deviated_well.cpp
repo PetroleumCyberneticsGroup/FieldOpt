@@ -76,7 +76,8 @@ namespace {
 
         // LOOP THROUGH LIST OF WELL FOLDERS: FOR WELL FOLDER ii,
         // READ PCG & RMS COMPDAT DATA
-        int num_files = (debug_) ? 1 : rms_files.length();
+        // int num_files = (debug_) ? 1 : rms_files.length(); //override
+        int num_files = (debug_) ? rms_files.length() : rms_files.length();
 
         for (int ii = 0; ii < num_files; ++ii) {
 
@@ -214,6 +215,7 @@ namespace {
                     if (debug_) std::cout << "kk: " << kk << std::endl;
                     if (!sup_indices.contains(ii)) {
                         WIShort.IJK.row(kk) << WILong.IJK.row(ii);
+                        WIShort.WCF.row(kk) << WILong.WCF.row(ii);
                     }
                     kk += 1;
                 }
@@ -221,8 +223,10 @@ namespace {
                 // MAKE ORIGINALLY (TOO-)LONG COLUMN EQUAL TO COLUMN WITHOUT SUPERFLUOUS ROWS
                 if (WIDataRMS.IJK.rows() > WIDataPCG.IJK.rows()) {
                     WIDataRMS.IJK = WIShort.IJK;
+                    WIDataRMS.WCF = WIShort.WCF;
                 } else {
                     WIDataPCG.IJK = WIShort.IJK;
+                    WIDataPCG.WCF = WIShort.WCF;
                 }
 
                 if (debug_){
