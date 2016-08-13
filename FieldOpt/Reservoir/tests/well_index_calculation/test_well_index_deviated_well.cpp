@@ -139,109 +139,19 @@ namespace {
             }
 
             if (DiffVectorLength(WIDataRMS, WIDataPCG)) {
-
                 // IF VECTOR LENGTHS ARE EQUAL => COMPARE DIRECTLY
                 std::cout << "\033[1;36m" << WIDataRMS.dir_name.toStdString() <<
                           ": >>> Vector lengths are equal. Making comparison.\033[0m" <<
                           std::setfill(' ') << std::endl;
-
-                CompareIJK(WIDataRMS, WIDataPCG);
-                CompareWCF(WIDataRMS, WIDataPCG);
-
             } else {
-
                 // IF VECTOR LENGTHS ARE UNEQUAL => MAKE EQUAL, THEN COMPARE DIRECTLY
                 std::cout << "\033[1;36m" << WIDataRMS.dir_name.toStdString() <<
                           ": >>> Vector lengths are unequal. Making them equal.\033[0m" << std::endl;
-
-                // RemoveSuperfluousRows(WIDataRMS,WIDataPCG,diff_files)
-
-                // DIFF TREATMENT: IJK COMPARISON: FIND EXTRA ROWS USING diff COMMAND
-                QProcess diff_process, grep_process;
-                diff_process.setStandardOutputProcess(&grep_process);
-                grep_process.setProcessChannelMode(QProcess::MergedChannels);
-
-                if (debug_) {
-                    std::cout << "Original number of rows in RMS and PCG data:" << std::endl;
-                    std::cout << "WIDataPCG.IJK.rows:" << WIDataPCG.IJK.rows() << std::endl;
-                    std::cout << "WIDataRMS.IJK.rows:" << WIDataRMS.IJK.rows() << std::endl;
-                }
-
-                // CALL diff COMMAND USING QProcess; PIPE IT TO grep COMMAND
-                // SWITCH COLUMNS SUCH THAT LONGEST COLUMN IS ALWAYS THE COLUMN TO THE RIGHT
-                if (WIDataRMS.IJK.rows() > WIDataPCG.IJK.rows()) { // longer vector = right column
-                    diff_process.start("diff -y " + diff_files[1] + " " + diff_files[0]); // PCG[1] < RMS[0]
-                } else {
-                    diff_process.start("diff -y " + diff_files[0] + " " + diff_files[1]); // RMS[0] < PCG[1]
-                }
-                grep_process.start("grep \">\" -n");
-                diff_process.waitForFinished();
-                grep_process.waitForFinished();
-
-                // READ OUTPUT FROM QProcess COMMAND + CLOSE PROCESSES
-                QByteArray grep_output = grep_process.readAllStandardOutput();
-                diff_process.close();
-                grep_process.close();
-
-                // OBTAIN INDICES OF SUPERFLUOUS ROWS IN LONGEST COLUMN:
-                // SPLIT QString SUCH THAT EACH LINE IS ONE ELEMENT IN A QStringList
-                QString DataAsString = QString::fromLatin1(grep_output.data());
-                QStringList textString = DataAsString.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
-                QVector<int> sup_indices;
-
-                // OBTAIN INDICES OF SUPERFLUOUS ROWS IN LONGEST COLUMN:
-                // READ EACH LINE OF diff OUTPUT AND STORE INDICES -- IMPORTANT: INDICES OBTAINED
-                // FROM DIFF START FROM 1; WE THEREFORE SUBSTRACT 1 FROM THESE TO MAKE THESE WORK
-                // WITH 0-START INDEXING
-                if (debug_) std::cout << std::endl << "superfluous indices in rightmost column:" << std::endl;
-                for (int ii = 0; ii < textString.size(); ++ii) {
-                    sup_indices.append(textString[ii].split(":").first().toInt() - 1); // CONVERT TO 0-START INDEXING
-                    if (debug_) std::cout << ii << ":" << sup_indices[ii] << std::endl;
-                }
-                if (debug_) std::cout << "sup_indices.size:" << sup_indices.size() << std::endl;
-
-                // REMOVE SUPERFLUOUS ROWS
-                WIData WILong = GetLongestVector(WIDataRMS, WIDataPCG);
-                WIData WIShort = GetShortestVector(WIDataRMS, WIDataPCG);
-
-                WIShort.IJK.setZero();
-                std::cout << "WILong.IJK.rows:" << WILong.IJK.rows() << std::endl;
-                std::cout << "WIShort.IJK.rows:" << WIShort.IJK.rows() << std::endl;
-
-                // LOOP OVER ALL ROWS IN THE LONGEST COLUMN AND INSERT EACH OF THESE INTO A NEW IJK
-                // COLUMN UNLESS THE GIVEN ROW IS A SUPERFLUOUS ONE, IN WHICH CASE WE SKIP IT
-                int kk = 0;
-                for (int ii = 0; ii < WILong.IJK.rows(); ++ii) {
-                    if (debug_) std::cout << "kk: " << kk << std::endl;
-                    if (!sup_indices.contains(ii)) {
-                        WIShort.IJK.row(kk) << WILong.IJK.row(ii);
-                        WIShort.WCF.row(kk) << WILong.WCF.row(ii);
-                    }
-                    kk += 1;
-                }
-
-                // MAKE ORIGINALLY (TOO-)LONG COLUMN EQUAL TO COLUMN WITHOUT SUPERFLUOUS ROWS
-                if (WIDataRMS.IJK.rows() > WIDataPCG.IJK.rows()) {
-                    WIDataRMS.IJK = WIShort.IJK;
-                    WIDataRMS.WCF = WIShort.WCF;
-                } else {
-                    WIDataPCG.IJK = WIShort.IJK;
-                    WIDataPCG.WCF = WIShort.WCF;
-                }
-
-                if (debug_){
-                    std::cout << "WIDataRMS.IJK.rows:" << WIDataRMS.IJK.rows() << std::endl;
-                    std::cout << "WIDataPCG.IJK.rows:" << WIDataPCG.IJK.rows() << std::endl;
-                }
-
-                // VECTOR LENGTHS HAVE BEE MADE EQUAL => COMPARE DIRECTLY
-                std::cout << "\033[1;36m" << WIDataRMS.dir_name.toStdString() <<
-                          ": >>> Vector lengths have been made equal. Making comparison.\033[0m" <<
-                          std::setfill(' ') << std::endl;
-
-                CompareIJK(WIDataRMS, WIDataPCG);
-                CompareWCF(WIDataRMS, WIDataPCG);
+                RemoveSuperfluousRows(WIDataRMS, WIDataPCG, diff_files);
             }
+
+            CompareIJK(WIDataRMS, WIDataPCG);
+            CompareWCF(WIDataRMS, WIDataPCG);            
         }
     }
 }
