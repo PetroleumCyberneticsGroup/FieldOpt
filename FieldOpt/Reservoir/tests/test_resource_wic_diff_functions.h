@@ -44,6 +44,34 @@ namespace TestResources {
  * \param
  * \return
  */
+        WIData GetLongestVector(WIData va, WIData vb){
+
+            if (va.IJK.rows() > vb.IJK.rows()){
+                return va;
+            }else{
+                return vb;
+            }
+        }
+
+/*!
+ * \brief
+ * \param
+ * \return
+ */
+        WIData GetShortestVector(WIData va, WIData vb){
+
+            if (va.IJK.rows() < vb.IJK.rows()){
+                return va;
+            }else{
+                return vb;
+            }
+        }
+
+/*!
+ * \brief
+ * \param
+ * \return
+ */
         double GetColumnAccuracyElements(Matrix<double,Dynamic,1> col_vector){
 
 			// accuracy_elements: fraction of elements in column which are zero up to given tolerance
@@ -269,8 +297,8 @@ namespace TestResources {
             if(va.WCF.isApprox(vb.WCF, 1e-3)){
                 std::cout << "\033[1;32mWCF values match exactly for this well.\033[0m" << std::endl;
             }else{
-                std::cout << "\033[1;35mWCF values are NOT the same for this well.\033[0m" << std::endl;                    
-                
+                std::cout << "\033[1;35mWCF values are NOT the same for this well.\033[0m" << std::endl;
+
                 // Output general difference (i.e., for I, J and K columns)
                 CheckRowwiseDiffWCF(va,vb,vdiff);
 
@@ -306,6 +334,7 @@ namespace TestResources {
 
             return vdiff;
         }
+
 
 
 
