@@ -195,6 +195,8 @@ namespace TestResources {
             if (!vdiff_.rows()>0)
                 throw std::runtime_error("Difference vector (vdiff_) has no elements");
 
+            auto vrel_ = va_.cwiseQuotient(vb_);
+
 			// Output msg
             std::cout << "\033[1;33mTesting: " << tag << " (rowwise) >> "
                       << "values differ at the following rows:\033[0m" << std::endl;
@@ -207,7 +209,8 @@ namespace TestResources {
                     std::cout << "row "  << std::setw(3) << ii << ":"  // << std::setprecision(4)
                               << std::setw(4) << " RMS=" << std::setw(1) << va_.row(ii).format(CleanFmt)
                               << std::setw(4) << " PCG=" << std::setw(1) << vb_.row(ii).format(CleanFmt)
-                              << std::setw(4) << " DF="  << std::setw(1) << vdiff_.row(ii).format(CleanFmt) << std::endl;
+                              << std::setw(4) << " DF="  << std::setw(1) << vdiff_.row(ii).format(CleanFmt)
+                              << std::setw(4) << " RMS/PCG=" << std::setw(1) << vrel_.row(ii).format(CleanFmt) << std::endl;
 
                               // << " DF=" << std::fixed << std::setw(7) << vdiff_(ii,0) << std::endl;
                     // TO DO: COLORED DIFFERENCES
@@ -396,19 +399,28 @@ namespace TestResources {
             WIData WIShort = GetShortestVector(WIDataRMS, WIDataPCG);
 
             WIShort.IJK.setZero();
-            std::cout << "WILong.IJK.rows:" << WILong.IJK.rows() << std::endl;
-            std::cout << "WIShort.IJK.rows:" << WIShort.IJK.rows() << std::endl;
+            if (debug_){
+                std::cout << "WILong.IJK.rows:" << WILong.IJK.rows() << std::endl;
+                std::cout << "WIShort.IJK.rows:" << WIShort.IJK.rows() << std::endl;
+            }
+
+
 
             // LOOP OVER ALL ROWS IN THE LONGEST COLUMN AND INSERT EACH OF THESE INTO A NEW IJK
             // COLUMN UNLESS THE GIVEN ROW IS A SUPERFLUOUS ONE, IN WHICH CASE WE SKIP IT
             int kk = 0;
             for (int ii = 0; ii < WILong.IJK.rows(); ++ii) {
-                if (debug_) std::cout << "kk: " << kk << std::endl;
-                if (!sup_indices.contains(ii)) {
+                if (debug_) std::cout << "ii: " <<  ii
+                                      << "[kk: " << kk << "]"
+                                      << "contains: " << sup_indices.contains(ii)
+                                      << std::endl;
+                if (! sup_indices.contains(ii)) {
                     WIShort.IJK.row(kk) << WILong.IJK.row(ii);
                     WIShort.WCF.row(kk) << WILong.WCF.row(ii);
+                    kk += 1;
+                }else{
+                    if (debug_) std::cout << "Row skipped!" << std::endl;;
                 }
-                kk += 1;
             }
 
             // MAKE ORIGINALLY (TOO-)LONG COLUMN EQUAL TO COLUMN WITHOUT SUPERFLUOUS ROWS
@@ -427,7 +439,9 @@ namespace TestResources {
 
             // VECTOR LENGTHS HAVE BEE MADE EQUAL => COMPARE DIRECTLY
             std::cout << "\033[1;36m" << WIDataRMS.dir_name.toStdString() <<
-                      ": >>> Vector lengths have been made equal. Making comparison.\033[0m" <<
+                      ": >>> Vector lengths have been made equal. "
+                      << sup_indices.size() << " rows where removed b/c IJK values did not match."
+                      << std::endl << " Making comparison.\033[0m" <<
                       std::setfill(' ') << std::endl;
 
         }
