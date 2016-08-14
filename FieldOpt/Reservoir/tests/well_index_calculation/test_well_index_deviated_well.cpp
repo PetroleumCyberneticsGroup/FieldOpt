@@ -147,11 +147,12 @@ namespace {
                 // IF VECTOR LENGTHS ARE UNEQUAL => MAKE EQUAL, THEN COMPARE DIRECTLY
                 std::cout << "\033[1;36m" << WIDataRMS.dir_name.toStdString() <<
                           ": >>> Vector lengths are unequal. Making them equal.\033[0m" << std::endl;
+                //TODO Do something with negative WCFs from RMS!!!!
                 RemoveSuperfluousRows(WIDataRMS, WIDataPCG, diff_files);
             }
 
             CompareIJK(WIDataRMS, WIDataPCG);
-            CompareWCF(WIDataRMS, WIDataPCG);            
+            CompareWCF(WIDataRMS, WIDataPCG);
         }
     }
 }
