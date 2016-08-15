@@ -23,6 +23,16 @@ target_compile_features(reservoir
         PUBLIC cxx_auto_type
         PUBLIC cxx_range_for)
 
+# Standalone WIC executable
+add_executable(WellIndexCalculator
+        well_index_calculation/main.cpp)
+
+include_directories(${EIGEN3_INCLUDE_DIR})
+
+target_link_libraries(WellIndexCalculator
+        fieldopt::reservoir
+        ${Boost_LIBRARIES})
+
 # Unit tests
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR} tests)
