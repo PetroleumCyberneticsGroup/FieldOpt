@@ -85,21 +85,6 @@ namespace {
             WIDataRMS.ReadData(rms_files[ii]);
             WIDataPCG.ReadData(pcg_files[ii]);
 
-            // PRINT IJK, WCF DATA TO INDIVIDUAL FILES TO TREAT WITH diff COMMAND LATER:
-            // MAKE DIFF FILE NAMES
-            QStringList diff_files = {
-                    dir_list_[ii] + "/DIFF_" + dir_names_[ii] + "_RMS.IJK",
-                    dir_list_[ii] + "/DIFF_" + dir_names_[ii] + "_PCG.IJK",
-                    dir_list_[ii] + "/DIFF_" + dir_names_[ii] + "_RMS.WCF",
-                    dir_list_[ii] + "/DIFF_" + dir_names_[ii] + "_PCG.WCF"
-            };
-
-            // PRINT DIFF FILES
-            WIDataRMS.PrintIJKData(diff_files[0]);
-            WIDataPCG.PrintIJKData(diff_files[1]);
-            WIDataRMS.PrintWCFData(diff_files[2]);
-            WIDataPCG.PrintWCFData(diff_files[3]);
-
             // MESSAGE OUTPUT
             std::cout << "\n\n\033[1;36m" << std::setfill('=') << std::setw(80) << "=" << "\033[0m" << std::endl;
             std::cout << "\033[1;36mChecking IJK and WCF data for well: "
@@ -138,6 +123,25 @@ namespace {
                 // std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
             }
 
+//                RemoveRowsNegativeWCF(WIDataRMS);
+            RemoveRowsLowWCF(WIDataRMS);
+            RemoveRowsLowWCF(WIDataPCG);
+
+            // PRINT IJK, WCF DATA TO INDIVIDUAL FILES TO TREAT WITH diff COMMAND LATER:
+            // MAKE DIFF FILE NAMES
+            QStringList diff_files = {
+                    dir_list_[ii] + "/DIFF_" + dir_names_[ii] + "_RMS.IJK",
+                    dir_list_[ii] + "/DIFF_" + dir_names_[ii] + "_PCG.IJK",
+                    dir_list_[ii] + "/DIFF_" + dir_names_[ii] + "_RMS.WCF",
+                    dir_list_[ii] + "/DIFF_" + dir_names_[ii] + "_PCG.WCF"
+            };
+
+            // PRINT DIFF FILES
+            WIDataRMS.PrintIJKData(diff_files[0]);
+            WIDataPCG.PrintIJKData(diff_files[1]);
+            WIDataRMS.PrintWCFData(diff_files[2]);
+            WIDataPCG.PrintWCFData(diff_files[3]);
+
             if (DiffVectorLength(WIDataRMS, WIDataPCG)) {
                 // IF VECTOR LENGTHS ARE EQUAL => COMPARE DIRECTLY
                 std::cout << "\033[1;36m" << WIDataRMS.dir_name.toStdString() <<
@@ -147,7 +151,7 @@ namespace {
                 // IF VECTOR LENGTHS ARE UNEQUAL => MAKE EQUAL, THEN COMPARE DIRECTLY
                 std::cout << "\033[1;36m" << WIDataRMS.dir_name.toStdString() <<
                           ": >>> Vector lengths are unequal. Making them equal.\033[0m" << std::endl;
-                //TODO Do something with negative WCFs from RMS!!!!
+
                 RemoveSuperfluousRows(WIDataRMS, WIDataPCG, diff_files);
             }
 
