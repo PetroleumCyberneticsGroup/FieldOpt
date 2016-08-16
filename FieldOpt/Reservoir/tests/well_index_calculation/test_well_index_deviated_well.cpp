@@ -55,29 +55,24 @@ namespace {
 
     TEST_F(DeviatedWellIndexTest, compareCOMPDAT) {
 
-        // FIND LIST OF WELL FOLDERS CONTAINING PCG & RMS COMPDATS
+        // GET LIST OF WELL FOLDERS CONTAINING PCG & RMS COMPDATS
         auto file_list_ = well_dir_->GetWellDir();
         auto dir_names_ = file_list_[0]; // list of well dirs (names only) => dir name only: tw04_04
         auto dir_list_ = file_list_[1]; // list of well dirs (absolute path) => fullpath: ../tw04_04/
         auto rms_files = file_list_[2]; // fullpath: ../tw04_04/EVENTS_tw04_04_RMS.DATA
         auto pcg_files = file_list_[3]; // fullpath: ../tw04_04/EVENTS_tw04_04_PCG.DATA
 
-        if (debug_) {
-            std::cout << "\033[1;31m<DEBUG:START->\033[0m" << std::endl;
-            for (int ii = 0; ii < dir_names_.length(); ++ii) {
-                std::cout << ii << ":" << dir_names_[ii].toStdString() << std::endl; // list of well dirs (names only)
-                std::cout << ii << ":" << dir_list_[ii].toStdString() << std::endl; // list of well dirs (absolute path)
-            }
-            std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;
-        }
-
         // WELL INDEX DATA OBJECTS
         WIData WIDataRMS, WIDataPCG;
+        WIDataRMS.data_tag = "RMS";
+        WIDataPCG.data_tag = "PCG";
+
+        // DEBUG
+        debug_msg(false, "well_dir_list", dir_names_, dir_list_, 0, WIDataRMS, WIDataPCG, 0);
 
         // LOOP THROUGH LIST OF WELL FOLDERS: FOR WELL FOLDER ii,
         // READ PCG & RMS COMPDAT DATA
-        // int num_files = (debug_) ? 1 : rms_files.length(); //override
-        int num_files = (debug_) ? rms_files.length() : rms_files.length();
+        int num_files = (debug_) ? 5 : rms_files.length(); //override
 
         for (int ii = 0; ii < num_files; ++ii) {
 
@@ -85,45 +80,19 @@ namespace {
             WIDataRMS.ReadData(rms_files[ii]);
             WIDataPCG.ReadData(pcg_files[ii]);
 
+            // MAKE NEW WIData OBJECT USING CURRENT WIC LIBRARIES
+            
+
             // MESSAGE OUTPUT
             std::cout << "\n\n\033[1;36m" << std::setfill('=') << std::setw(80) << "=" << "\033[0m" << std::endl;
             std::cout << "\033[1;36mChecking IJK and WCF data for well: "
                       << WIDataRMS.dir_name.toStdString() << "\033[0m" << std::endl;
             std::cout << "\033[1;36m" << std::setfill('=') << std::setw(80) << "=" << "\033[0m" << std::endl;
 
-            if (debug_) {
-                int nRMS = (WIDataRMS.IJK.rows() > 5) ? 5 : WIDataRMS.IJK.rows();
-                int nPCG = (WIDataPCG.IJK.rows() > 5) ? 5 : WIDataPCG.IJK.rows();
-                // std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
-                std::cout << "\033[1;31m<DEBUG:START->\033[0m" << std::endl;
+            // DEBUG
+            debug_msg(false, "RMS_PCG_IJK_data", dir_names_, dir_list_, ii, WIDataRMS, WIDataPCG, 0);
 
-                // RMS-PCG: IJK
-                std::cout << "RMS-PCG IJK DATA (well = " << dir_names_[ii].toStdString() << ")" << std::endl;
-                // RMS: IJK
-                std::cout << "WIDataRMS.IJK (size: " << WIDataRMS.IJK.size() << "): "
-                          << std::endl << WIDataRMS.IJK.block(0, 0, nRMS, 4)
-                          << std::endl << "..." << std::endl;
-                // PCG: IJK
-                std::cout << "WIDataPCG.IJK (size: " << WIDataPCG.IJK.size() << "): "
-                          << std::endl << WIDataPCG.IJK.block(0, 0, nPCG, 4)
-                          << std::endl << "..." << std::endl;
-
-                // RMS-PCG: WCF
-                std::cout << "RMS-PCG WCF DATA (well = " << dir_names_[ii].toStdString() << ")" << std::endl;
-                // RMS: WCF
-                std::cout << "WIDataRMS.WCF: (size: " << WIDataRMS.WCF.size() << "): "
-                          << std::endl << WIDataRMS.WCF.block(0, 0, nRMS, 1)
-                          << std::endl << "..." << std::endl;
-                // PCG: WCF
-                std::cout << "WIDataPCG.WCF: (size: " << WIDataPCG.WCF.size() << "): "
-                          << std::endl << WIDataPCG.WCF.block(0, 0, nPCG, 1)
-                          << std::endl << "..." << std::endl;
-
-                std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;
-                // std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
-            }
-
-//                RemoveRowsNegativeWCF(WIDataRMS);
+            // REMOVE ROW IF LOW WCF
             RemoveRowsLowWCF(WIDataRMS);
             RemoveRowsLowWCF(WIDataPCG);
 
@@ -142,6 +111,7 @@ namespace {
             WIDataRMS.PrintWCFData(diff_files[2]);
             WIDataPCG.PrintWCFData(diff_files[3]);
 
+            // REMOVE EXTRA ROWS IF DATA HAS UNEQUAL LENGTH
             if (DiffVectorLength(WIDataRMS, WIDataPCG)) {
                 // IF VECTOR LENGTHS ARE EQUAL => COMPARE DIRECTLY
                 std::cout << "\033[1;36m" << WIDataRMS.dir_name.toStdString() <<
@@ -151,10 +121,10 @@ namespace {
                 // IF VECTOR LENGTHS ARE UNEQUAL => MAKE EQUAL, THEN COMPARE DIRECTLY
                 std::cout << "\033[1;36m" << WIDataRMS.dir_name.toStdString() <<
                           ": >>> Vector lengths are unequal. Making them equal.\033[0m" << std::endl;
-
                 RemoveSuperfluousRows(WIDataRMS, WIDataPCG, diff_files);
             }
 
+            // COMPARE IJK AND PCG VALUES (EQUAL LENGTH DATA)
             CompareIJK(WIDataRMS, WIDataPCG);
             CompareWCF(WIDataRMS, WIDataPCG);
         }

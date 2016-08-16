@@ -22,8 +22,18 @@ namespace TestResources {
  * \param
  * \return
  */
-        double GetEps(){
-            double eps = 1e-16;
+        double GetEpsIJK(){
+            double eps = 1e-12; // tolerance for comparison, NOT for removing rows
+            return eps;
+        }
+
+/*!
+ * \brief
+ * \param
+ * \return
+ */
+        double GetEpsWCF(){
+            double eps = 0.05; // tolerance for comparison, NOT for removing rows
             return eps;
         }
 
@@ -77,13 +87,35 @@ namespace TestResources {
         void RemoveRowsLowWCF(WIData &data){
 
             int nRows;
-            double tol = 0.01;
-            int nColsWCF = data.WCF.cols();
-            int nColsIJK = data.IJK.cols();
+            double tol = .01; // tolerance for removing row
+            int nColsWCF  = data.WCF.cols();
+            int nColsIJK  = data.IJK.cols();
+            std::string msg;
+            int max_counter = 0;
 
             for( int ii=0; ii < data.WCF.rows(); ++ii ) {
 
-                if (data.WCF.row(ii).value() < tol){
+                auto wcf_num = data.WCF.row(ii).value();
+                QString wcf_str;
+                wcf_str.sprintf("%5.3f", wcf_num);
+
+                if (wcf_num < tol){
+
+                    if (wcf_num > 0){
+                        msg = "is lower than set tolerance";
+                    }else{
+                        msg = "is negative!";
+                        max_counter += 1;
+                    }
+                    if (max_counter <= 10){
+                        std::cout << "\033[1;33mRemoving row " << ii
+                                  << " from --" << data.data_tag.toStdString()
+                                  << "-- data b/c WCF " << msg << " ("
+                                  << std::setprecision(3) << wcf_str.toStdString() << " < "
+                                  << std::setprecision(3) << tol
+                                  << ")\033[0m" << std::endl;
+                    }
+
                     nRows = data.WCF.rows()-1;
                     // WCF
                     data.WCF.block(ii,0,nRows-ii,nColsWCF) = data.WCF.block(ii+1,0,nRows-ii,nColsWCF);
@@ -91,11 +123,11 @@ namespace TestResources {
                     // IJK
                     data.IJK.block(ii,0,nRows-ii,nColsIJK) = data.IJK.block(ii+1,0,nRows-ii,nColsIJK);
                     data.IJK.conservativeResize(nRows,nColsIJK);
-
-                    std::cout << "\033[1;33mRemoving row " << ii
-                              << " b/c WCF is lower than set tolerance (" << tol
-                              << ")\033[0m" << std::endl;
                 }
+            }
+            if (max_counter > 10){
+                std::cout << "\033[1;33m+" << max_counter
+                          << " other rows removed b/c WCF " << msg << "\033[0m" << std::endl;
             }
         }
 
@@ -113,7 +145,7 @@ namespace TestResources {
             for( int ii=0; ii < nrows; ++ii ) {
             	Matrix<double,1,1> row_element;
             	row_element << col_vector[ii];
-				if(row_element.isZero(GetEps())){ nrows_nz += 1; }
+				if(row_element.isZero(GetEpsWCF())){ nrows_nz += 1; }
 			}
 
 			double accuracy_elements = nrows_nz / nrows;
@@ -219,7 +251,7 @@ namespace TestResources {
  * \param
  * \return
  */
-        template<typename T, typename V> void CheckRowwiseDiff(T& va_, T& vb_, V& vdiff_, string tag){
+        template<typename T, typename V> void CheckRowwiseDiff(T& va_, T& vb_, V& vdiff_, string tag, double tol){
 
             // Check vector has length > 0
             if (!vdiff_.rows()>0)
@@ -241,6 +273,12 @@ namespace TestResources {
                 std::vector<double> va_d, vb_d, vdiff_d, vrel_d;
                 QStringList labels;
                 labels << "RMS: " << "PCG: " << "DFF: " << "RMS/PCG: ";
+                string frmt;
+                if (tag.compare("IJK")==0){
+                    frmt = "%3.0f ";
+                }else if(tag.compare("WCF")==0){
+                    frmt = "%7.3f    ";
+                }
 
                 for( int jj = 0; jj < vdiff_row.size(); ++jj ) {
                     va_d.push_back(va_(ii,jj));
@@ -250,7 +288,7 @@ namespace TestResources {
                 }
 
                 // If difference is larger than zero by a given tolerance
-                if (!vdiff_row.isZero(GetEps())){
+                if (!vdiff_row.isZero(tol)){
 
                     QString num_str, txt_str;
                     num_str.sprintf("row %3.0i:  ", ii);
@@ -258,22 +296,22 @@ namespace TestResources {
 
                     txt_str.append(labels[0]); // RMS DATA
                     for( int jj = 0; jj < va_d.size(); ++jj ) {
-                        txt_str.append(num_str.sprintf("%7.3f    ", va_d[jj]));
+                        txt_str.append(num_str.sprintf(frmt.c_str(), va_d[jj]));
                     }
 
                     txt_str.append(labels[1]); // PCG DATA
                     for( int jj = 0; jj < vb_d.size(); ++jj ) {
-                        txt_str.append(num_str.sprintf("%7.3f    ", vb_d[jj]));
+                        txt_str.append(num_str.sprintf(frmt.c_str(), vb_d[jj]));
                     }
 
                     txt_str.append(labels[2]); // DFF DATA
                     for( int jj = 0; jj < vdiff_d.size(); ++jj ) {
-                        txt_str.append(num_str.sprintf("%7.3f    ", vdiff_d[jj]));
+                        txt_str.append(num_str.sprintf(frmt.c_str(), vdiff_d[jj]));
                     }
 
                     txt_str.append(labels[3]); // DFF DATA
                     for( int jj = 0; jj < vrel_d.size(); ++jj ) {
-                        txt_str.append(num_str.sprintf("%5.3f    ", vrel_d[jj]));
+                        txt_str.append(num_str.sprintf(frmt.c_str(), vrel_d[jj]));
                     }
 
                     std::cout << txt_str.toStdString() << std::endl;
@@ -290,7 +328,7 @@ namespace TestResources {
         	auto vdiff_ = vdiff.IJK;
         	auto va_ = va.IJK;
         	auto vb_ = vb.IJK;
-			CheckRowwiseDiff(va_, vb_, vdiff_, "IJK");
+			CheckRowwiseDiff(va_, vb_, vdiff_, "IJK",GetEpsIJK());
         }
 
 /*!
@@ -302,7 +340,7 @@ namespace TestResources {
         	auto vdiff_ = vdiff.WCF;
         	auto va_ = va.WCF;
         	auto vb_ = vb.WCF;
-			CheckRowwiseDiff(va_, vb_, vdiff_, "WCF");
+			CheckRowwiseDiff(va_, vb_, vdiff_, "WCF",GetEpsWCF());
         }
 
 /*!
@@ -318,10 +356,17 @@ namespace TestResources {
 
 			// Check if IJK values computed by RMS and PCG WIC are equal
 			// If not, output differing rows
-            if (vdiff.IJK.isZero(GetEps())){
-                std::cout << "\033[1;32mIJK values match exactly for this well.\033[0m" << std::endl;
+            QString msg;
+            QString tol;
+            tol.sprintf("%5.3e",GetEpsIJK());
+
+            if (vdiff.IJK.isZero(GetEpsIJK())){
+                msg = "IJK values match exactly for this well (IJK tol = " + tol + ")";
+                std::cout << "\033[1;32m" << msg.toStdString() << "\033[0m" << std::endl;
             }else{
-                std::cout << "\033[1;35mIJK values are NOT the same for this well.\033[0m" << std::endl;
+                msg = "IJK values are NOT the same for this well (IJK tol = " + tol + ")";
+                std::cout << "\033[1;35m" << msg.toStdString() << "\033[0m" << std::endl;
+
                 // Output row differences (i.e., I, J and K columns combined)
                 CheckRowwiseDiffIJK(va,vb,vdiff);
                 // Output difference for individual columns
@@ -352,10 +397,16 @@ namespace TestResources {
             vdiff.WCF = va.WCF - vb.WCF;
             QList<double> WCF_accuracy_list;
 
-            if(va.WCF.isApprox(vb.WCF, 1e-3)){
-                std::cout << "\033[1;32mWCF values match exactly for this well.\033[0m" << std::endl;
+            QString msg;
+            QString tol;
+            tol.sprintf("%5.3f",GetEpsWCF());
+
+            if(va.WCF.isApprox(vb.WCF, GetEpsWCF())){
+                msg = "WCF values match exactly for this well (WCF tol = " + tol + ")";
+                std::cout << "\033[1;32m" << msg.toStdString() << "\033[0m" << std::endl;
             }else{
-                std::cout << "\033[1;35mWCF values are NOT the same for this well.\033[0m" << std::endl;
+                msg = "WCF values are NOT the same for this well (WCF tol = " + tol + ")";
+                std::cout << "\033[1;35m" << msg.toStdString() << "\033[0m" << std::endl;
 
                 // Output general difference (i.e., for I, J and K columns)
                 CheckRowwiseDiffWCF(va,vb,vdiff);
@@ -398,7 +449,6 @@ namespace TestResources {
  * \param
  * \return
  */
- // QList<WIData> RemoveSuperfluousRows(&WIDataRMS_PCG,&diff_files){
         void RemoveSuperfluousRows(WIData &WIDataRMS, WIData &WIDataPCG, QStringList &diff_files){
 
             bool debug_ = false;
@@ -490,7 +540,7 @@ namespace TestResources {
                 std::cout << "WIDataPCG.IJK.rows:" << WIDataPCG.IJK.rows() << std::endl;
             }
 
-            // VECTOR LENGTHS HAVE BEE MADE EQUAL => COMPARE DIRECTLY
+            // VECTOR LENGTHS HAVE BEEN MADE EQUAL => COMPARE DIRECTLY
             std::cout << "\033[1;36m" << WIDataRMS.dir_name.toStdString() <<
                       ": >>> Vector lengths have been made equal. "
                       << sup_indices.size() << " rows where removed b/c IJK values did not match."
@@ -498,6 +548,72 @@ namespace TestResources {
                       std::setfill(' ') << std::endl;
 
         }
+
+
+        // ///////////////////////////////////////////////////////////////////////////////
+        // DEBUG MESSAGES
+        template<typename ZA, typename ZB, typename ZC, typename ZD, typename ZE, typename ZF>
+        void debug_msg(bool debug_, string msg,
+                       ZA varA, // dir_names_
+                       ZB varB, // dir_list_
+                       ZC varC, // ii
+                       ZD varD, // WIDataRMS
+                       ZE varE, // WIDataPCG
+                       ZF varF  // empty
+        ){
+
+            if (msg.compare("well_dir_list")==0){
+                if (debug_) {
+                    std::cout << "\033[1;31m<DEBUG:START->\033[0m" << std::endl;
+                    for (int ii = 0; ii < varA.length(); ++ii) {
+                        std::cout << ii << ":" << varA[ii].toStdString() << std::endl; // list of well dirs (names only)
+                        std::cout << ii << ":" << varB[ii].toStdString() << std::endl; // list of well dirs (absolute path)
+                    }
+                    std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;
+                }
+            }else if(msg.compare("RMS_PCG_IJK_data")==0){
+                if (debug_) {
+                    int nRMS = (varD.IJK.rows() > 5) ? 5 : varD.IJK.rows();
+                    int nPCG = (varE.IJK.rows() > 5) ? 5 : varE.IJK.rows();
+
+                    std::cout << "\033[1;31m<DEBUG:START->\033[0m" << std::endl << std::setfill(' ');
+
+                    // RMS-PCG: IJK
+                    std::cout << "RMS-PCG IJK DATA (well = " << varA[varC].toStdString() << ")" << std::endl;
+                    // RMS: IJK
+                    std::cout << "WIDataRMS.IJK (size: " << varD.IJK.size() << "): "
+                              << std::endl << varD.IJK.block(0, 0, nRMS, 4)
+                              << std::endl << "..." << std::endl;
+                    // PCG: IJK
+                    std::cout << "WIDataPCG.IJK (size: " << varE.IJK.size() << "): "
+                              << std::endl << varE.IJK.block(0, 0, nPCG, 4)
+                              << std::endl << "..." << std::endl;
+
+                    // RMS-PCG: WCF
+                    std::cout << "RMS-PCG WCF DATA (well = " << varA[varC].toStdString() << ")" << std::endl;
+                    // RMS: WCF
+                    std::cout << "WIDataRMS.WCF: (size: " << varD.WCF.size() << "): "
+                              << std::endl << varD.WCF.block(0, 0, nRMS, 1)
+                              << std::endl << "..." << std::endl;
+                    // PCG: WCF
+                    std::cout << "WIDataPCG.WCF: (size: " << varE.WCF.size() << "): "
+                              << std::endl << varE.WCF.block(0, 0, nPCG, 1)
+                              << std::endl << "..." << std::endl;
+
+                    std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;
+                    // std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
+                }
+            }else if(msg.compare("C")==0){
+
+            }else if(msg.compare("D")==0){
+
+            }else if(msg.compare("E")==0){
+
+            }
+
+        }
+
+
 
     }
 }

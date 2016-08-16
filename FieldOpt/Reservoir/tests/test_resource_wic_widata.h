@@ -36,6 +36,7 @@ namespace TestResources {
             Matrix<double,Dynamic,1> WCF;
             QStringList name;
             QString dir_name;
+            QString data_tag;
 
             // obsolete:
             // Matrix<int, Dynamic, 4>* IJK_ptr = &IJK;
