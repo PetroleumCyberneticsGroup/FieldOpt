@@ -74,6 +74,36 @@ namespace TestResources {
  * \param
  * \return
  */
+        void RemoveRowsLowWCF(WIData &data){
+
+            int nRows;
+            double tol = 0.01;
+            int nColsWCF = data.WCF.cols();
+            int nColsIJK = data.IJK.cols();
+
+            for( int ii=0; ii < data.WCF.rows(); ++ii ) {
+
+                if (data.WCF.row(ii).value() < tol){
+                    nRows = data.WCF.rows()-1;
+                    // WCF
+                    data.WCF.block(ii,0,nRows-ii,nColsWCF) = data.WCF.block(ii+1,0,nRows-ii,nColsWCF);
+                    data.WCF.conservativeResize(nRows,nColsWCF);
+                    // IJK
+                    data.IJK.block(ii,0,nRows-ii,nColsIJK) = data.IJK.block(ii+1,0,nRows-ii,nColsIJK);
+                    data.IJK.conservativeResize(nRows,nColsIJK);
+
+                    std::cout << "\033[1;33mRemoving row " << ii
+                              << " b/c WCF is lower than set tolerance (" << tol
+                              << ")\033[0m" << std::endl;
+                }
+            }
+        }
+
+/*!
+ * \brief
+ * \param
+ * \return
+ */
         double GetColumnAccuracyElements(Matrix<double,Dynamic,1> col_vector){
 
 			// accuracy_elements: fraction of elements in column which are zero up to given tolerance
@@ -99,7 +129,7 @@ namespace TestResources {
                                    Matrix<double,Dynamic,1> vb,
                                    Matrix<double,Dynamic,1> vdiff){
 
-			// accuracy_magniture: norm of difference vector
+			// accuracy_magnitude: norm of difference vector
             double column_offset = vdiff.norm();
 
             // return
@@ -197,33 +227,56 @@ namespace TestResources {
 
             auto vrel_ = va_.cwiseQuotient(vb_);
 
-			// Output msg
+            // Output msg
             std::cout << "\033[1;33mTesting: " << tag << " (rowwise) >> "
                       << "values differ at the following rows:\033[0m" << std::endl;
+
+            // Loop over each row
             for( int ii=0; ii < vdiff_.rows(); ++ii ) {
-                auto row = vdiff_.row(ii);
 
-                if (!row.isZero(GetEps())){
+                // Setup row
+                auto vdiff_row = vdiff_.row(ii);
 
-                    IOFormat CleanFmt(4, 0, " ", "\n", "", "");
-                    std::cout << "row "  << std::setw(3) << ii << ":"  // << std::setprecision(4)
-                              << std::setw(4) << " RMS=" << std::setw(1) << va_.row(ii).format(CleanFmt)
-                              << std::setw(4) << " PCG=" << std::setw(1) << vb_.row(ii).format(CleanFmt)
-                              << std::setw(4) << " DF="  << std::setw(1) << vdiff_.row(ii).format(CleanFmt)
-                              << std::setw(4) << " RMS/PCG=" << std::setw(1) << vrel_.row(ii).format(CleanFmt) << std::endl;
+                // print out to double vectors for QString treatment later on
+                std::vector<double> va_d, vb_d, vdiff_d, vrel_d;
+                QStringList labels;
+                labels << "RMS: " << "PCG: " << "DFF: " << "RMS/PCG: ";
 
-                              // << " DF=" << std::fixed << std::setw(7) << vdiff_(ii,0) << std::endl;
-                    // TO DO: COLORED DIFFERENCES
-                    // QString str_out;
-                    // QString str_out = QString::number(row(ii));
-                    // for (int ii; ii < row.size(); ++ii){
-                    //     if (fabs(row(ii))<1e-3){
-                    //         str_out.append("0");
-                    //     }else{
-                    //         str_out.append("\033[1;31m" + QString::number(row(ii)) + "\033[0m");
-                    //     }
-                    // }
-                    // std::cout << str_out.toStdString() << std::endl;
+                for( int jj = 0; jj < vdiff_row.size(); ++jj ) {
+                    va_d.push_back(va_(ii,jj));
+                    vb_d.push_back(vb_(ii,jj));
+                    vdiff_d.push_back(vdiff_(ii,jj));
+                    vrel_d.push_back(vrel_(ii,jj));
+                }
+
+                // If difference is larger than zero by a given tolerance
+                if (!vdiff_row.isZero(GetEps())){
+
+                    QString num_str, txt_str;
+                    num_str.sprintf("row %3.0i:  ", ii);
+                    txt_str.append(num_str);
+
+                    txt_str.append(labels[0]); // RMS DATA
+                    for( int jj = 0; jj < va_d.size(); ++jj ) {
+                        txt_str.append(num_str.sprintf("%7.3f    ", va_d[jj]));
+                    }
+
+                    txt_str.append(labels[1]); // PCG DATA
+                    for( int jj = 0; jj < vb_d.size(); ++jj ) {
+                        txt_str.append(num_str.sprintf("%7.3f    ", vb_d[jj]));
+                    }
+
+                    txt_str.append(labels[2]); // DFF DATA
+                    for( int jj = 0; jj < vdiff_d.size(); ++jj ) {
+                        txt_str.append(num_str.sprintf("%7.3f    ", vdiff_d[jj]));
+                    }
+
+                    txt_str.append(labels[3]); // DFF DATA
+                    for( int jj = 0; jj < vrel_d.size(); ++jj ) {
+                        txt_str.append(num_str.sprintf("%5.3f    ", vrel_d[jj]));
+                    }
+
+                    std::cout << txt_str.toStdString() << std::endl;
                 }
             }
 	    }
