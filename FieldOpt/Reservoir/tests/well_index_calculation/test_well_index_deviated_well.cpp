@@ -8,6 +8,7 @@
 #include "Reservoir/grid/grid_exceptions.h"
 #include "Utilities/file_handling/filehandling.h"
 #include "Reservoir/well_index_calculation/wellindexcalculator.h"
+#include "Reservoir/well_index_calculation/main.hpp"
 
 #include "Reservoir/tests/test_resource_wic_welldir.h"
 #include "Reservoir/tests/test_resource_wic_diff_functions.h"
@@ -24,6 +25,7 @@
 #include <fstream>
 #include <sstream>
 #include <QTextCodec>
+
 
 using namespace Reservoir::Grid;
 using namespace Reservoir::WellIndexCalculation;
@@ -55,7 +57,7 @@ namespace {
 
     TEST_F(DeviatedWellIndexTest, compareCOMPDAT) {
 
-        // GET LIST OF WELL FOLDERS CONTAINING PCG & RMS COMPDATS
+        // GET LIST OF WELL FOLDERS CONTAINING PCG & RMS COMPDATS (OBTAINED USING WI_BENCHMARK CODE)
         auto file_list_ = well_dir_->GetWellDir();
         auto dir_names_ = file_list_[0]; // list of well dirs (names only) => dir name only: tw04_04
         auto dir_list_ = file_list_[1]; // list of well dirs (absolute path) => fullpath: ../tw04_04/
@@ -67,6 +69,9 @@ namespace {
         WIDataRMS.data_tag = "RMS";
         WIDataPCG.data_tag = "PCG";
 
+        // MAKE *PCG_NEW.DATA FILES USING PRECOMPILED WellIndexCalculator
+        WIDataPCG.CalculateWCF()
+
         // DEBUG
         debug_msg(false, "well_dir_list", dir_names_, dir_list_, 0, WIDataRMS, WIDataPCG, 0);
 
@@ -76,18 +81,15 @@ namespace {
 
         for (int ii = 0; ii < num_files; ++ii) {
 
-            // READ COMPDAT + XYZ FILES
-            WIDataRMS.ReadData(rms_files[ii],dir_names_[ii],dir_list_[ii]);
-            WIDataPCG.ReadData(pcg_files[ii],dir_names_[ii],dir_list_[ii]);
-
-            // MAKE NEW WIData OBJECT USING CURRENT WIC LIBRARIES
-            
-
             // MESSAGE OUTPUT
             std::cout << "\n\n\033[1;36m" << std::setfill('=') << std::setw(80) << "=" << "\033[0m" << std::endl;
             std::cout << "\033[1;36mChecking IJK and WCF data for well: "
                       << WIDataRMS.dir_name.toStdString() << "\033[0m" << std::endl;
             std::cout << "\033[1;36m" << std::setfill('=') << std::setw(80) << "=" << "\033[0m" << std::endl;
+
+            // READ COMPDAT + XYZ FILES
+            WIDataRMS.ReadData(rms_files[ii],dir_names_[ii],dir_list_[ii]);
+            WIDataPCG.ReadData(pcg_files[ii],dir_names_[ii],dir_list_[ii]);
 
             // DEBUG
             debug_msg(false, "RMS_PCG_IJK_data", dir_names_, dir_list_, ii, WIDataRMS, WIDataPCG, 0);
@@ -95,6 +97,9 @@ namespace {
             // REMOVE ROW IF LOW WCF
             RemoveRowsLowWCF(WIDataRMS);
             RemoveRowsLowWCF(WIDataPCG);
+
+            // REMOVE EXTRA ROWS IF DATA HAS UNEQUAL LENGTH
+            RemoveSuperfluousRowsWrapper(WIDataRMS, WIDataPCG, dir_list_, dir_names_);
 
             // PRINT IJK, WCF DATA TO INDIVIDUAL FILES TO TREAT WITH diff COMMAND LATER:
             // MAKE DIFF FILE NAMES
@@ -111,7 +116,6 @@ namespace {
             WIDataRMS.PrintWCFData(diff_files[2]);
             WIDataPCG.PrintWCFData(diff_files[3]);
 
-            // REMOVE EXTRA ROWS IF DATA HAS UNEQUAL LENGTH
             if (DiffVectorLength(WIDataRMS, WIDataPCG)) {
                 // IF VECTOR LENGTHS ARE EQUAL => COMPARE DIRECTLY
                 std::cout << "\033[1;36m" << WIDataRMS.dir_name.toStdString() <<

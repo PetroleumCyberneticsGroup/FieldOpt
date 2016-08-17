@@ -34,7 +34,6 @@ namespace TestResources {
         private:
             // Variables: folder path
             QString well_data_dir_ = "../wic-benchmark-wells";
-            // QString* well_data_dir_ptr = &well_data_dir_; // obsolete
             bool debug_ = false;
         };
 

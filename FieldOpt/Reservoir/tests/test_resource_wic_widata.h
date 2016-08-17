@@ -30,11 +30,15 @@ namespace TestResources {
             void ReadData(QString file_name, QString dir_name, QString dir_list);
             void PrintIJKData(QString file_name);
             void PrintWCFData(QString file_name);
+            void CalculateWCF();
 
             // Variables:
             Matrix<int, Dynamic, 4> IJK;
             Matrix<double,Dynamic,1> WCF;
-            Matrix<double,1,6> XYZ;
+            Matrix<double,1,6> XYZd;
+            QStringList XYZc;
+            QString radius = QString::number(0.1905/2);
+
             QStringList name;
             QString dir_name;
             QString data_tag;
@@ -43,6 +47,12 @@ namespace TestResources {
 
         private:
         };
+
+        void WIData::CalculateWCF(){
+
+            data_tag
+            
+        }
 
         void WIData::PrintIJKData(QString file_name) {
 
@@ -139,8 +149,8 @@ namespace TestResources {
 
             QTextStream xyz_in(&xyz_file);
             QStringList xyz_in_fields;
-            std::vector<double> xyz;
-
+            std::vector<double> xyz_d;
+            QStringList xyz_c;
 
             while(!xyz_in.atEnd()) {
 
@@ -150,18 +160,30 @@ namespace TestResources {
                 if (!line.contains("TW01")) {
                     // Store xyz values
                     for(int ii = 0; ii < xyz_in_fields.size(); ++ii){
-                        xyz.push_back(xyz_in_fields[ii].toDouble());
+                        xyz_d.push_back(xyz_in_fields[ii].toDouble());
+                        XYZc << xyz_in_fields[ii];
                     }
                 }
             }
 
             xyz_file.close();
-            XYZ = Map<Matrix<double,1,6>>(xyz.data(), xyz.size());
+
+            XYZd = Map<Matrix<double,1,6>>(xyz_d.data(), xyz_d.size());
 
             // Debug: check read process for XYZ data is OK
             if (debug_){
                 std::cout << "\033[1;31m<DEBUG:START->\033[0m" << std::endl;
-                std::cout << "XYZ: " << XYZ << std::endl;
+                std::cout << "--" << data_tag.toStdString() << " data--" << std::endl;
+                std::cout << std::setfill(' ');
+                // DOUBLE DATA
+                IOFormat CleanFmt(FullPrecision, 0, " ", "\n", "[", "]");
+                std::cout << "XYZd: " << XYZd.format(CleanFmt) << std::endl;
+                // CHAR DATA
+                std::cout << "XYZc: ";
+                for(int ii = 0; ii < XYZc.size(); ++ii){
+                    std::cout << XYZc[ii].toStdString() << " ";
+                }
+                std::cout << std::endl;
                 std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;
             }
 

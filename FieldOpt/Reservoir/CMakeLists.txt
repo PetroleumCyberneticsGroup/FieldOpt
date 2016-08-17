@@ -52,7 +52,8 @@ target_link_libraries(test_reservoir
         fieldopt::reservoir
         fieldopt::ertwrapper
         ${GTEST_BOTH_LIBRARIES}
-        ${CMAKE_THREAD_LIBS_INIT})
+        ${CMAKE_THREAD_LIBS_INIT}
+        ${Boost_LIBRARIES})
 
 add_test(NAME test_reservoir COMMAND $<TARGET_FILE:test_reservoir>)
 
