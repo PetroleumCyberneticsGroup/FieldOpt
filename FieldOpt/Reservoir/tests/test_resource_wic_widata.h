@@ -15,6 +15,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <fstream>
+#include <QProcess>
 
 using namespace Eigen;
 
@@ -35,23 +36,95 @@ namespace TestResources {
             // Variables:
             Matrix<int, Dynamic, 4> IJK;
             Matrix<double,Dynamic,1> WCF;
+
+            Matrix<int, Dynamic, 4> IJKN;
+            Matrix<double,Dynamic,1> WCFN;
+
             Matrix<double,1,6> XYZd;
             QStringList XYZc;
-            QString radius = QString::number(0.1905/2);
 
             QStringList name;
             QString dir_name;
             QString data_tag;
 
-            bool debug_ = true;
+            QString grid_file;            
+            QString well_name = "TW01";            
+            QString radius = QString::number(0.1905/2);
+
+            bool debug_ = false;
 
         private:
         };
 
         void WIData::CalculateWCF(){
 
-            data_tag
-            
+            bool debug_ = false;
+
+            QString heel = "0.05 0 1700";
+            QString toe  = "700 600 1700";
+            QString command = "./WellIndexCalculator -g " 
+                + grid_file 
+                + " -h " + XYZc[0] + " " + XYZc[1] + " " + XYZc[2]
+                + " -t " + XYZc[3] + " " + XYZc[4] + " " + XYZc[5]
+                + " -r " + radius 
+                + " -c " 
+                + " -w " + well_name;
+
+            // LAUNCH WELL INDEX CALCULATOR
+            QProcess wic_process;
+            wic_process.start(command);
+            wic_process.waitForFinished();
+
+            // READ OUTPUT FROM QProcess COMMAND + CLOSE PROCESSES
+            QByteArray wic_all_output  = wic_process.readAll();
+            QByteArray wic_error_output = wic_process.readAllStandardError();
+            QByteArray wic_standard_output = wic_process.readAllStandardOutput();
+            wic_process.close();
+
+            // CONVERT OUTPUT TO QSTRING
+            QString all_output = QString::fromLatin1(wic_all_output.data());
+            QString standard_output = QString::fromLatin1(wic_standard_output.data());
+            QString error_output = QString::fromLatin1(wic_error_output.data());
+
+            QStringList lines = all_output.split(QRegExp("[\r\n]"));
+            QStringList fields;
+            Matrix<int, 1, 4> temp_IJK;
+            Matrix<int, Dynamic, 4> IJK_stor;
+            std::vector<double> wcf;
+
+            // for (int ii = 0; ii < textString.size(); ++ii) {
+            foreach(QString line, lines){
+
+                if (line.contains("OPEN")) {
+
+                    // Read IJK values from current line
+                    fields = line.split(QRegExp("\\s+"));
+                    temp_IJK << fields[2].toInt(), fields[3].toInt(),
+                                fields[4].toInt(), fields[5].toInt();
+
+                    // Store IJK values
+                    Matrix<int, Dynamic, 4> IJK_curr(IJK_stor.rows() + temp_IJK.rows(), 4);
+                    IJK_curr << IJK_stor, temp_IJK;
+                    IJK_stor = IJK_curr;
+
+                    // Store well connection factor values
+                    wcf.push_back(fields[8].toDouble());
+                }
+            }
+
+            IJKN = IJK_stor;
+            WCFN = Map<Matrix<double, Dynamic, 1>>(wcf.data(), wcf.size());
+
+            if (debug_){
+                std::cout << "\033[1;31m<DEBUG:START->\033[0m" << std::endl;
+                std::cout << "all output:" << all_output.toStdString() << std::endl;
+                std::cout << "standard output:" << standard_output.toStdString() << std::endl;
+                std::cout << "error output:" << error_output.toStdString() << std::endl;
+
+                std::cout << "IJKN:" << IJKN << std::endl;
+                std::cout << "WCFN:" << WCFN << std::endl;
+                std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;
+            }
         }
 
         void WIData::PrintIJKData(QString file_name) {
@@ -150,7 +223,7 @@ namespace TestResources {
             QTextStream xyz_in(&xyz_file);
             QStringList xyz_in_fields;
             std::vector<double> xyz_d;
-            QStringList xyz_c;
+            XYZc.clear();
 
             while(!xyz_in.atEnd()) {
 

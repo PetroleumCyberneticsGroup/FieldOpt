@@ -508,7 +508,6 @@ namespace TestResources {
             }
 
 
-
             // LOOP OVER ALL ROWS IN THE LONGEST COLUMN AND INSERT EACH OF THESE INTO A NEW IJK
             // COLUMN UNLESS THE GIVEN ROW IS A SUPERFLUOUS ONE, IN WHICH CASE WE SKIP IT
             int kk = 0;
@@ -549,6 +548,48 @@ namespace TestResources {
 
         }
 
+/*!
+ * \brief
+ * \param
+ * \return
+ */
+        void RemoveSuperfluousRowsWrapper(WIData &WIDataRMS,
+                                          WIData &WIDataPCG,
+                                          QStringList &dir_list_,
+                                          QStringList &dir_names_,
+                                          int ii){
+
+            // PRINT IJK, WCF DATA TO INDIVIDUAL FILES TO TREAT WITH diff COMMAND LATER:
+            // MAKE DIFF FILE NAMES
+            QStringList diff_files = {
+                    dir_list_[ii] + "/DIFF_" + dir_names_[ii] + "_RMS.IJK",
+                    dir_list_[ii] + "/DIFF_" + dir_names_[ii] + "_PCG.IJK",
+                    dir_list_[ii] + "/DIFF_" + dir_names_[ii] + "_RMS.WCF",
+                    dir_list_[ii] + "/DIFF_" + dir_names_[ii] + "_PCG.WCF"
+            };
+
+            // PRINT DIFF FILES
+            WIDataRMS.PrintIJKData(diff_files[0]);
+            WIDataPCG.PrintIJKData(diff_files[1]);
+            WIDataRMS.PrintWCFData(diff_files[2]);
+            WIDataPCG.PrintWCFData(diff_files[3]);
+
+            if (DiffVectorLength(WIDataRMS, WIDataPCG)) {
+
+                // IF VECTOR LENGTHS ARE EQUAL => COMPARE DIRECTLY
+                std::cout << "\033[1;36m" << WIDataRMS.dir_name.toStdString() <<
+                          ": >>> Vector lengths are equal. Making comparison.\033[0m" <<
+                          std::setfill(' ') << std::endl;
+
+            } else {
+
+                // IF VECTOR LENGTHS ARE UNEQUAL => MAKE EQUAL, THEN COMPARE DIRECTLY
+                std::cout << "\033[1;36m" << WIDataRMS.dir_name.toStdString() <<
+                          ": >>> Vector lengths are unequal. Making them equal.\033[0m" << std::endl;
+                RemoveSuperfluousRows(WIDataRMS, WIDataPCG, diff_files);
+
+            }
+        }
 
         // ///////////////////////////////////////////////////////////////////////////////
         // DEBUG MESSAGES
@@ -612,8 +653,6 @@ namespace TestResources {
             }
 
         }
-
-
 
     }
 }

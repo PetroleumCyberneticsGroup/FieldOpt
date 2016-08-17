@@ -68,9 +68,7 @@ namespace {
         WIData WIDataRMS, WIDataPCG;
         WIDataRMS.data_tag = "RMS";
         WIDataPCG.data_tag = "PCG";
-
-        // MAKE *PCG_NEW.DATA FILES USING PRECOMPILED WellIndexCalculator
-        WIDataPCG.CalculateWCF()
+        WIDataPCG.grid_file = file_path_;
 
         // DEBUG
         debug_msg(false, "well_dir_list", dir_names_, dir_list_, 0, WIDataRMS, WIDataPCG, 0);
@@ -84,12 +82,23 @@ namespace {
             // MESSAGE OUTPUT
             std::cout << "\n\n\033[1;36m" << std::setfill('=') << std::setw(80) << "=" << "\033[0m" << std::endl;
             std::cout << "\033[1;36mChecking IJK and WCF data for well: "
-                      << WIDataRMS.dir_name.toStdString() << "\033[0m" << std::endl;
+                      << dir_names_[ii].toStdString() << "\033[0m" << std::endl;
             std::cout << "\033[1;36m" << std::setfill('=') << std::setw(80) << "=" << "\033[0m" << std::endl;
 
             // READ COMPDAT + XYZ FILES
             WIDataRMS.ReadData(rms_files[ii],dir_names_[ii],dir_list_[ii]);
             WIDataPCG.ReadData(pcg_files[ii],dir_names_[ii],dir_list_[ii]);
+
+            // MAKE PCG_NEW.DATA FILES USING PRECOMPILED WellIndexCalculator
+            WIDataPCG.CalculateWCF();
+
+            // DEBUG: PRINT OLD IJK/WCF VALUES B/F SHIFTING TO NEW
+            WIDataPCG.PrintIJKData(dir_list_[ii] + "/DBG_" + dir_names_[ii] + "_PCG.IJK");
+            WIDataPCG.PrintWCFData(dir_list_[ii] + "/DBG_" + dir_names_[ii] + "_PCG.WCF");
+
+            // SHIFT OVER TO DATA COMPUTED USING WellIndexCalculator
+            WIDataPCG.IJK = WIDataPCG.IJKN;
+            WIDataPCG.WCF = WIDataPCG.WCFN;
 
             // DEBUG
             debug_msg(false, "RMS_PCG_IJK_data", dir_names_, dir_list_, ii, WIDataRMS, WIDataPCG, 0);
@@ -99,34 +108,7 @@ namespace {
             RemoveRowsLowWCF(WIDataPCG);
 
             // REMOVE EXTRA ROWS IF DATA HAS UNEQUAL LENGTH
-            RemoveSuperfluousRowsWrapper(WIDataRMS, WIDataPCG, dir_list_, dir_names_);
-
-            // PRINT IJK, WCF DATA TO INDIVIDUAL FILES TO TREAT WITH diff COMMAND LATER:
-            // MAKE DIFF FILE NAMES
-            QStringList diff_files = {
-                    dir_list_[ii] + "/DIFF_" + dir_names_[ii] + "_RMS.IJK",
-                    dir_list_[ii] + "/DIFF_" + dir_names_[ii] + "_PCG.IJK",
-                    dir_list_[ii] + "/DIFF_" + dir_names_[ii] + "_RMS.WCF",
-                    dir_list_[ii] + "/DIFF_" + dir_names_[ii] + "_PCG.WCF"
-            };
-
-            // PRINT DIFF FILES
-            WIDataRMS.PrintIJKData(diff_files[0]);
-            WIDataPCG.PrintIJKData(diff_files[1]);
-            WIDataRMS.PrintWCFData(diff_files[2]);
-            WIDataPCG.PrintWCFData(diff_files[3]);
-
-            if (DiffVectorLength(WIDataRMS, WIDataPCG)) {
-                // IF VECTOR LENGTHS ARE EQUAL => COMPARE DIRECTLY
-                std::cout << "\033[1;36m" << WIDataRMS.dir_name.toStdString() <<
-                          ": >>> Vector lengths are equal. Making comparison.\033[0m" <<
-                          std::setfill(' ') << std::endl;
-            } else {
-                // IF VECTOR LENGTHS ARE UNEQUAL => MAKE EQUAL, THEN COMPARE DIRECTLY
-                std::cout << "\033[1;36m" << WIDataRMS.dir_name.toStdString() <<
-                          ": >>> Vector lengths are unequal. Making them equal.\033[0m" << std::endl;
-                RemoveSuperfluousRows(WIDataRMS, WIDataPCG, diff_files);
-            }
+            RemoveSuperfluousRowsWrapper(WIDataRMS, WIDataPCG, dir_list_, dir_names_, ii);
 
             // COMPARE IJK AND PCG VALUES (EQUAL LENGTH DATA)
             CompareIJK(WIDataRMS, WIDataPCG);
