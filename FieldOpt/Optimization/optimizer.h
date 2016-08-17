@@ -71,6 +71,7 @@ namespace Optimization {
         virtual QString GetStatusStringHeader() const; //!< Get the CSV header for the status string.
         virtual QString GetStatusString() const; //!< Get a CSV string describing the current state of the optimizer.
         void EnableConstraintLogging(QString output_directory_path); //!< Enable writing a text log for the constraint operations.
+        void SetVerbosityLevel(int level);
 
     protected:
         /*!
@@ -104,6 +105,7 @@ namespace Optimization {
         Constraints::ConstraintHandler *constraint_handler_; //!< All constraints defined for the optimization.
         int max_evaluations_; //!< Maximum number of objective function evaluations allowed before terminating.
         int iteration_; //!< The current iteration.
+        int verbosity_level_; //!< The verbosity level for runtime console logging.
         ::Utilities::Settings::Optimizer::OptimizerMode mode_; //!< The optimization mode, i.e. whether the objective function should be maximized or minimized.
     };
 

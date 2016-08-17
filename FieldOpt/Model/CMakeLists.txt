@@ -16,14 +16,17 @@ add_library(model
 		properties/binary_property.cpp
 		properties/variable_property_container.cpp
 		properties/continous_property.cpp
-		properties/discrete_property.cpp properties/property.cpp)
+		properties/discrete_property.cpp
+        properties/property.cpp
+        model_synchronization_object.cpp )
 add_library(fieldopt::model ALIAS ${PROJECT_NAME})
 
 target_link_libraries (model
         PUBLIC fieldopt::reservoir
 		PUBLIC fieldopt::utilities
 		PUBLIC fieldopt::constraintmath
-		PUBLIC Qt5::Core)
+		PUBLIC Qt5::Core
+		PUBLIC ${Boost_LIBRARIES})
 
 target_include_directories(model PUBLIC
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/properties>

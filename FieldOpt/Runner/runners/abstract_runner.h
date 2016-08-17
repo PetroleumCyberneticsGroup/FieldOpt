@@ -47,6 +47,8 @@ class MainRunner;
  *
  * It also defines the purely virtual Execute() method which should be implemented by all concrete
  * runners.
+ *
+ * todo: Create a method to get the timeout it seconds that uses the recorded simulation times and the timeout argument.
  */
 class AbstractRunner
 {
@@ -83,6 +85,16 @@ protected:
      */
     double sentinelValue() const;
 
+    /*!
+     * @brief Get the timeout value to be used when starting simulations. It is calculated from the recorded
+     * (successful) simulation times and the timeout value provided as an argument when running the program.
+     *
+     * If there either have not been any recorded simulation times or the timeout argument was not provided, 10,000 will
+     * be returned.
+     * @return
+     */
+    int timeoutValue() const;
+
     void InitializeSettings(QString output_subdirectory="");
     void InitializeModel();
     void InitializeSimulator();
@@ -92,7 +104,11 @@ protected:
     void InitializeOptimizer();
     void InitializeBookkeeper();
 
-    void InitializeLogger();
+    /*!
+     * @brief Initialize the logger.
+     * @param output_subdir Optional subdir in the output dir to write the logs in.
+     */
+    void InitializeLogger(QString output_subdir="");
 };
 
 }

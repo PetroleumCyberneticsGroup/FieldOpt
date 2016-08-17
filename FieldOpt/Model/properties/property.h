@@ -64,6 +64,13 @@ public:
     QUuid id() const { return id_; } //!< Unique ID for the property.
 
     /*!
+     * @brief Update the UUID for this object. This is used when synchronizing models between process instances when
+     * using MPI.
+     * @param new_id The new ID for this object.
+     */
+    void UpdateId(QUuid new_id);
+
+    /*!
      * \brief The type of property represented. This type decides which field in the
      * Info datastructure is set.
      */

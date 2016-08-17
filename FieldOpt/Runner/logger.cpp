@@ -1,12 +1,14 @@
 #include "logger.h"
+#include "Utilities/time.hpp"
 
 namespace Runner {
 
-    Logger::Logger(RuntimeSettings *rts)
+    Logger::Logger(RuntimeSettings *rts, QString output_subdir)
     {
         shortest_simulation_time_ = 0;
-        verbose_ = rts->verbose();
+        verbose_ = rts->verbosity_level();
         output_dir_ = rts->output_dir();
+        if (output_subdir.length() > 0) output_dir_.append("/" + output_subdir + "/");
         opt_log_path_ = output_dir_ + "/log_optimization.csv";
         sim_log_path_ = output_dir_ + "/log_simulation.csv";
         cas_log_path_ = output_dir_ + "/log_cases.csv";
@@ -154,6 +156,7 @@ namespace Runner {
             }
 
             if (success) {
+                simulator_execution_times_.append(duration);
                 if (verbose_)
                     std::cout << "Simulation completed successfully after " << duration << " seconds." << std::endl;
                 if (shortest_simulation_time_ == 0 || shortest_simulation_time_ > duration) {
@@ -268,6 +271,11 @@ namespace Runner {
 
     void Logger::increment_bookkeeped_cases() {
         bookkeeped_cases_++;
+        total_cases_++;
+    }
+
+    void Logger::increment_timed_out_cases() {
+        timed_out_simulations_++;
         total_cases_++;
     }
 

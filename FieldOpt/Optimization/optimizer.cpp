@@ -61,6 +61,7 @@ namespace Optimization {
 
     void Optimizer::SubmitEvaluatedCase(Case *c)
     {
+        case_handler_->UpdateCaseObjectiveFunctionValue(c->id(), c->objective_function_value());
         case_handler_->SetCaseEvaluated(c->id());
     }
 
@@ -93,6 +94,12 @@ namespace Optimization {
     void Optimizer::EnableConstraintLogging(QString output_directory_path) {
         for (Constraints::Constraint *con : constraint_handler_->constraints())
             con->EnableLogging(output_directory_path);
+    }
+
+    void Optimizer::SetVerbosityLevel(int level) {
+        verbosity_level_ = level;
+        for (auto con : constraint_handler_->constraints())
+            con->SetVerbosityLevel(level);
     }
 
 
