@@ -76,9 +76,9 @@ namespace {
 
         for (int ii = 0; ii < num_files; ++ii) {
 
-            // READ COMPDAT FILES
-            WIDataRMS.ReadData(rms_files[ii]);
-            WIDataPCG.ReadData(pcg_files[ii]);
+            // READ COMPDAT + XYZ FILES
+            WIDataRMS.ReadData(rms_files[ii],dir_names_[ii],dir_list_[ii]);
+            WIDataPCG.ReadData(pcg_files[ii],dir_names_[ii],dir_list_[ii]);
 
             // MAKE NEW WIData OBJECT USING CURRENT WIC LIBRARIES
             

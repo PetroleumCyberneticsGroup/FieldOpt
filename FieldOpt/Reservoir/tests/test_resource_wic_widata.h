@@ -27,22 +27,19 @@ namespace TestResources {
             WIData(){};
 
             // Functions
-            void ReadData(QString file_name);
+            void ReadData(QString file_name, QString dir_name, QString dir_list);
             void PrintIJKData(QString file_name);
             void PrintWCFData(QString file_name);
 
             // Variables:
             Matrix<int, Dynamic, 4> IJK;
             Matrix<double,Dynamic,1> WCF;
+            Matrix<double,1,6> XYZ;
             QStringList name;
             QString dir_name;
             QString data_tag;
 
-            // obsolete:
-            // Matrix<int, Dynamic, 4>* IJK_ptr = &IJK;
-            // Matrix<double,Dynamic,1>* WCF_ptr = &WCF;
-
-            bool debug_ = false;
+            bool debug_ = true;
 
         private:
         };
@@ -61,14 +58,6 @@ namespace TestResources {
             file << std::fixed;
             file << IJK;
             file.close();
-
-            // // TODO: Why can't we make it work using QTextStream?
-            // IOFormat CleanFmt(4, 0, " ", "", "", "");
-            // QFile fileb(file_name);
-            // fileb.open(QIODevice::WriteOnly);
-            // QTextStream out(&fileb);
-            // out << IJK.data();
-            // fileb.close();
         }
 
         void WIData::PrintWCFData(QString file_name) {
@@ -87,8 +76,11 @@ namespace TestResources {
             file.close();
         }
 
-        void WIData::ReadData(QString file_name) {
+        void WIData::ReadData(QString file_name,
+                              QString dir_name,
+                              QString dir_list){
 
+            // READ IJK AND WCF DATA
             QFile file(file_name);
             file.open(QIODevice::ReadOnly|QIODevice::Text);
 
@@ -125,8 +117,8 @@ namespace TestResources {
                     IJK_curr << IJK_stor, temp_IJK;
                     IJK_stor = IJK_curr;
 
-                    // Store well connection factor values
-                    wcf.push_back(in_fields[8].toFloat());
+                    // Store well conne = 0ction factor values
+                    wcf.push_back(in_fields[8].toDouble());
                 };
             }
 
@@ -135,11 +127,44 @@ namespace TestResources {
             IJK = IJK_stor;
             WCF = Map<Matrix<double, Dynamic, 1>>(wcf.data(), wcf.size());
 
-            // Debug: read input is OK
+            // Debug: check read process for IJK and WCF data is OK
             if (debug_){
                 std::cout << "\033[1;31m<DEBUG:START->\033[0m" << std::endl;
                 std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;
             }
+
+            // READ XYZ DATA
+            QFile xyz_file(dir_list + "/" + dir_name + ".xyz");
+            xyz_file.open(QIODevice::ReadOnly|QIODevice::Text);
+
+            QTextStream xyz_in(&xyz_file);
+            QStringList xyz_in_fields;
+            std::vector<double> xyz;
+
+
+            while(!xyz_in.atEnd()) {
+
+                QString line = xyz_in.readLine();
+                xyz_in_fields = line.split(QRegExp("[\r\n\t]"));
+
+                if (!line.contains("TW01")) {
+                    // Store xyz values
+                    for(int ii = 0; ii < xyz_in_fields.size(); ++ii){
+                        xyz.push_back(xyz_in_fields[ii].toDouble());
+                    }
+                }
+            }
+
+            xyz_file.close();
+            XYZ = Map<Matrix<double,1,6>>(xyz.data(), xyz.size());
+
+            // Debug: check read process for XYZ data is OK
+            if (debug_){
+                std::cout << "\033[1;31m<DEBUG:START->\033[0m" << std::endl;
+                std::cout << "XYZ: " << XYZ << std::endl;
+                std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;
+            }
+
         }
     }
 }
