@@ -31,10 +31,6 @@ parser.add_argument('dimi', metavar='DIMI', type=int,
     help="Number of blocks in i-direction")
 parser.add_argument('dimj', metavar='DIMJ', type=int,
     help="Number of blocks in j-direction")
-parser.add_argument('--heel', nargs='+', type=float,
-    help='XYZ coordinates for the well heel')
-parser.add_argument('--toe', nargs='+', type=float,
-    help='XYZ coordinates for the well toe')
 args = parser.parse_args()
 
 # Read the well data from the CSV file
@@ -66,11 +62,6 @@ imgplot = plt.imshow(grid, cmap=cm.Blues, interpolation='nearest')
 plt.xticks(x_vals, grid_xlabels)
 plt.yticks(y_vals, grid_xlabels)
 plt.colorbar()
-
-# Add the well line
-xs = [args.heel[0] - 1, args.toe[0] - 1]
-ys = [args.heel[1] - 1, args.toe[1] - 1]
-plt.plot(xs, ys, 'r-', linewidth=2.0)
 
 # Set grid
 minorLocator = MultipleLocator(1)
