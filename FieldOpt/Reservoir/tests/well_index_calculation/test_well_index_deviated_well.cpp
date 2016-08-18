@@ -76,14 +76,22 @@ namespace {
         // LOOP THROUGH LIST OF WELL FOLDERS: FOR WELL FOLDER ii,
         // READ PCG & RMS COMPDAT DATA
         int num_files = (debug_) ? 5 : rms_files.length(); //override
+        QString str_out;
+        QString lstr_out = "================================================================================";
 
         for (int ii = 0; ii < num_files; ++ii) {
 
             // MESSAGE OUTPUT
-            std::cout << "\n\n\033[1;36m" << std::setfill('=') << std::setw(80) << "=" << "\033[0m" << std::endl;
-            std::cout << "\033[1;36mChecking IJK and WCF data for well: "
-                      << dir_names_[ii].toStdString() << "\033[0m" << std::endl;
-            std::cout << "\033[1;36m" << std::setfill('=') << std::setw(80) << "=" << "\033[0m" << std::endl;
+
+            str_out = "\n\n\033[1;36m" + lstr_out + "\033[0m"; std::cout << str_out.toStdString();
+            str_out = "\n\033[1;36m Checking IJK and WCF data for well: " + dir_names_[ii] + "\033[0m"; 
+            std::cout << str_out.toStdString();
+            str_out = "\n\033[1;36m" + lstr_out + "\033[0m"; std::cout << str_out.toStdString();
+
+            // std::cout << "\n\n\033[1;36m" << std::setfill('=') << std::setw(80) << "=" << "\033[0m" << std::endl;
+            // std::cout << "\033[1;36mChecking IJK and WCF data for well: "
+            //           << dir_names_[ii].toStdString() << "\033[0m" << std::endl;
+            // std::cout << "\033[1;36m" << std::setfill('=') << std::setw(80) << "=" << "\033[0m" << std::endl;
 
             // READ COMPDAT + XYZ FILES
             WIDataRMS.ReadData(rms_files[ii],dir_names_[ii],dir_list_[ii]);

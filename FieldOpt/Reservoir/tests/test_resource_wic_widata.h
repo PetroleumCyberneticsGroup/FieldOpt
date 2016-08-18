@@ -169,6 +169,7 @@ namespace TestResources {
 
             QFileInfo file_info(file_name);
             dir_name = file_info.dir().dirName();
+            // std::cout << "dir_name:" << dir_name.toStdString();
 
             QTextStream in(&file);
             QStringList in_fields;

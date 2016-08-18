@@ -90,10 +90,14 @@ namespace TestResources {
             double tol = .01; // tolerance for removing row
             int nColsWCF  = data.WCF.cols();
             int nColsIJK  = data.IJK.cols();
-            std::string msg;
+
+            bool rem_flag = false;
+            QString str_out;
+            QString msg;
             int max_counter = 0;
 
             for( int ii=0; ii < data.WCF.rows(); ++ii ) {
+
 
                 auto wcf_num = data.WCF.row(ii).value();
                 QString wcf_str;
@@ -108,12 +112,14 @@ namespace TestResources {
                         max_counter += 1;
                     }
                     if (max_counter <= 10){
-                        std::cout << "\033[1;33mRemoving row " << ii
-                                  << " from --" << data.data_tag.toStdString()
-                                  << "-- data b/c WCF " << msg << " ("
-                                  << std::setprecision(3) << wcf_str.toStdString() << " < "
-                                  << std::setprecision(3) << tol
-                                  << ")\033[0m" << std::endl;
+
+                        str_out = "\033[1;33m\nRemoving row " + QString::number(ii)
+                                  + " from --" + data.data_tag
+                                  + "-- data b/c WCF " + msg + " ("
+                                  + wcf_str + " < "
+                                  + QString::number(tol)
+                                  + ")\033[0m";
+                        std::cout << str_out.toStdString();
                     }
 
                     nRows = data.WCF.rows()-1;
@@ -123,12 +129,18 @@ namespace TestResources {
                     // IJK
                     data.IJK.block(ii,0,nRows-ii,nColsIJK) = data.IJK.block(ii+1,0,nRows-ii,nColsIJK);
                     data.IJK.conservativeResize(nRows,nColsIJK);
+
+                    rem_flag = true;
                 }
             }
             if (max_counter > 10){
-                std::cout << "\033[1;33m+" << max_counter
-                          << " other rows removed b/c WCF " << msg << "\033[0m" << std::endl;
+                str_out = "\n\033[1;33m+" + QString::number(max_counter)
+                          + " other rows removed b/c WCF " + msg + "\033[0m";
+                std::cout << str_out.toStdString();
             }
+            str_out = "\033[1;33m\n>>> Finished removing rows with low WCF for " + data.data_tag + " data.\033[0m";
+            std::cout << str_out.toStdString();
+            if (!rem_flag) {str_out = "\033[1;33m [None removed.]\033[0m"; std::cout << str_out.toStdString();}
         }
 
 /*!
@@ -361,10 +373,10 @@ namespace TestResources {
             tol.sprintf("%5.3e",GetEpsIJK());
 
             if (vdiff.IJK.isZero(GetEpsIJK())){
-                msg = "IJK values match exactly for this well (IJK tol = " + tol + ")";
+                msg = "IJK values match exactly for this well.";
                 std::cout << "\033[1;32m" << msg.toStdString() << "\033[0m" << std::endl;
             }else{
-                msg = "IJK values are NOT the same for this well (IJK tol = " + tol + ")";
+                msg = "IJK values are NOT the same for this well.";
                 std::cout << "\033[1;35m" << msg.toStdString() << "\033[0m" << std::endl;
 
                 // Output row differences (i.e., I, J and K columns combined)
@@ -402,10 +414,10 @@ namespace TestResources {
             tol.sprintf("%5.3f",GetEpsWCF());
 
             if(va.WCF.isApprox(vb.WCF, GetEpsWCF())){
-                msg = "WCF values match exactly for this well (WCF tol = " + tol + ")";
+                msg = "WCF values match exactly for this well (WCF tol = " + tol + ").";
                 std::cout << "\033[1;32m" << msg.toStdString() << "\033[0m" << std::endl;
             }else{
-                msg = "WCF values are NOT the same for this well (WCF tol = " + tol + ")";
+                msg = "WCF values are NOT the same for this well (WCF tol = " + tol + ").";
                 std::cout << "\033[1;35m" << msg.toStdString() << "\033[0m" << std::endl;
 
                 // Output general difference (i.e., for I, J and K columns)
@@ -513,39 +525,60 @@ namespace TestResources {
             int kk = 0;
             for (int ii = 0; ii < WILong.IJK.rows(); ++ii) {
                 if (debug_) std::cout << "ii: " <<  ii
-                                      << "[kk: " << kk << "]"
-                                      << "contains: " << sup_indices.contains(ii)
+                                      << "[kk: " << kk << "] "
+                                      << "is current row superfluous? (1=yes, 0=no): " << sup_indices.contains(ii)
                                       << std::endl;
                 if (! sup_indices.contains(ii)) {
                     WIShort.IJK.row(kk) << WILong.IJK.row(ii);
                     WIShort.WCF.row(kk) << WILong.WCF.row(ii);
                     kk += 1;
                 }else{
-                    if (debug_) std::cout << "Row skipped!" << std::endl;;
+                    if (debug_) std::cout << "Row not added to short vector!" << std::endl;;
                 }
             }
 
             // MAKE ORIGINALLY (TOO-)LONG COLUMN EQUAL TO COLUMN WITHOUT SUPERFLUOUS ROWS
+            QString rem_str;
             if (WIDataRMS.IJK.rows() > WIDataPCG.IJK.rows()) {
                 WIDataRMS.IJK = WIShort.IJK;
                 WIDataRMS.WCF = WIShort.WCF;
+                rem_str = "RMS";
             } else {
                 WIDataPCG.IJK = WIShort.IJK;
                 WIDataPCG.WCF = WIShort.WCF;
+                rem_str = "PCG";
             }
 
             if (debug_){
                 std::cout << "WIDataRMS.IJK.rows:" << WIDataRMS.IJK.rows() << std::endl;
                 std::cout << "WIDataPCG.IJK.rows:" << WIDataPCG.IJK.rows() << std::endl;
+                std::cout << "sup_indices.size():" << sup_indices.size() << std::endl;
             }
 
             // VECTOR LENGTHS HAVE BEEN MADE EQUAL => COMPARE DIRECTLY
-            std::cout << "\033[1;36m" << WIDataRMS.dir_name.toStdString() <<
-                      ": >>> Vector lengths have been made equal. "
-                      << sup_indices.size() << " rows where removed b/c IJK values did not match."
-                      << std::endl << " Making comparison.\033[0m" <<
-                      std::setfill(' ') << std::endl;
+            QString str_out;
+            QString ind_str = (sup_indices.length()>1) ? QString::number(sup_indices.size()) + " rows were" : "1 row was";
+            str_out = "\033[1;36m"
+                      + WIDataRMS.dir_name + ">>> Vector lengths have been made equal: "
+                      + ind_str + " removed\nfrom "
+                      + rem_str + " data using diff command b/c IJK values did not match. "
+                      + "\033[0m";
+            std::cout << str_out.toStdString() << std::setfill(' ') << std::endl;
+            
+            QStringList str_ind;
+            foreach(int ii, sup_indices){ str_ind.append(QString::number(ii + 1)); } // 1-INDEXING
 
+            str_out = "\033[1;36mRows that were removed: [" + str_ind.join(" ") + "]\n\033[0m";
+            std::cout << str_out.toStdString() << std::setfill(' ');
+
+            if (sup_indices.length()>10){
+                str_out = "\033[1;31mWARNING: more than 10 rows were removed, " 
+                            "check wells are supposed to be equal.\n\033[0m";
+                std::cout << str_out.toStdString() << std::setfill(' ');
+            }
+
+            str_out = "\033[1;36mContinuing comparison.\n\033[0m";
+            std::cout << str_out.toStdString() << std::setfill(' ');
         }
 
 /*!
@@ -574,18 +607,24 @@ namespace TestResources {
             WIDataRMS.PrintWCFData(diff_files[2]);
             WIDataPCG.PrintWCFData(diff_files[3]);
 
+            QString str_out;
             if (DiffVectorLength(WIDataRMS, WIDataPCG)) {
 
                 // IF VECTOR LENGTHS ARE EQUAL => COMPARE DIRECTLY
-                std::cout << "\033[1;36m" << WIDataRMS.dir_name.toStdString() <<
-                          ": >>> Vector lengths are equal. Making comparison.\033[0m" <<
-                          std::setfill(' ') << std::endl;
+                str_out = "\033[1;36m\n"
+                          + WIDataRMS.dir_name + ">>> Vector lengths are equal. "
+                          + "Making comparison."
+                          + "\033[0m";
+                std::cout << str_out.toStdString() << std::setfill(' ') << std::endl;
 
             } else {
 
                 // IF VECTOR LENGTHS ARE UNEQUAL => MAKE EQUAL, THEN COMPARE DIRECTLY
-                std::cout << "\033[1;36m" << WIDataRMS.dir_name.toStdString() <<
-                          ": >>> Vector lengths are unequal. Making them equal.\033[0m" << std::endl;
+                str_out = "\033[1;36m\n"
+                          + WIDataRMS.dir_name + ">>> Vector lengths are unequal. "
+                          + "Making them equal."
+                          + "\033[0m";
+                std::cout << str_out.toStdString() << std::setfill(' ') << std::endl;
                 RemoveSuperfluousRows(WIDataRMS, WIDataPCG, diff_files);
 
             }
