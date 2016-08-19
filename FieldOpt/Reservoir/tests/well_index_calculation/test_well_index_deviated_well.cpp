@@ -73,26 +73,25 @@ namespace {
         // DEBUG
         debug_msg(false, "well_dir_list", dir_names_, dir_list_, 0, WIDataRMS, WIDataPCG, 0);
 
-        // LOOP THROUGH LIST OF WELL FOLDERS: FOR WELL FOLDER ii,
-        // READ PCG & RMS COMPDAT DATA
+        // LOOP THROUGH LIST OF WELL FOLDERS: FOR WELL FOLDER ii: READ PCG & RMS COMPDAT DATA
         int num_files = (debug_) ? 5 : rms_files.length(); //override
         QString str_out;
-        QString lstr_out = "================================================================================";
+        QString lstr_out = "\n================================================================================";
 
         for (int ii = 0; ii < num_files; ++ii) {
 
+            // WRITE TO TEX FILE
+            WIDataPCG.tex_file = dir_list_[ii] + "/" + dir_names_[ii] + ".tex";
+            WIDataRMS.tex_file = WIDataPCG.tex_file;
+            str_out = "\\verb+";
+            Utilities::FileHandling::WriteStringToFile(str_out, WIDataPCG.tex_file);
+
             // MESSAGE OUTPUT
-
-            str_out = "\n\n\033[1;36m" + lstr_out + "\033[0m"; std::cout << str_out.toStdString();
-            str_out = "\n\033[1;36m Checking IJK and WCF data for well: " + dir_names_[ii] + "\033[0m"; 
-            std::cout << str_out.toStdString();
-            str_out = "\n\033[1;36m" + lstr_out + "\033[0m"; std::cout << str_out.toStdString();
-
-            // std::cout << "\n\n\033[1;36m" << std::setfill('=') << std::setw(80) << "=" << "\033[0m" << std::endl;
-            // std::cout << "\033[1;36mChecking IJK and WCF data for well: "
-            //           << dir_names_[ii].toStdString() << "\033[0m" << std::endl;
-            // std::cout << "\033[1;36m" << std::setfill('=') << std::setw(80) << "=" << "\033[0m" << std::endl;
-
+            str_out = "\n" + lstr_out + "\nChecking IJK and WCF data for well: "
+                      + dir_names_[ii] + lstr_out;
+            std::cout << "\033[1;36m" << str_out.toStdString() << "\033[0m";
+            Utilities::FileHandling::WriteLineToFile(str_out, WIDataPCG.tex_file);
+            
             // READ COMPDAT + XYZ FILES
             WIDataRMS.ReadData(rms_files[ii],dir_names_[ii],dir_list_[ii]);
             WIDataPCG.ReadData(pcg_files[ii],dir_names_[ii],dir_list_[ii]);

@@ -113,13 +113,13 @@ namespace TestResources {
                     }
                     if (max_counter <= 10){
 
-                        str_out = "\033[1;33m\nRemoving row " + QString::number(ii)
+                        str_out = "\nRemoving row " + QString::number(ii)
                                   + " from --" + data.data_tag
                                   + "-- data b/c WCF " + msg + " ("
                                   + wcf_str + " < "
-                                  + QString::number(tol)
-                                  + ")\033[0m";
-                        std::cout << str_out.toStdString();
+                                  + QString::number(tol) + ")";
+                        std::cout << "\033[1;33m" << str_out.toStdString() << "\033[0m";
+                        Utilities::FileHandling::WriteLineToFile(str_out, data.tex_file);
                     }
 
                     nRows = data.WCF.rows()-1;
@@ -137,10 +137,16 @@ namespace TestResources {
                 str_out = "\n\033[1;33m+" + QString::number(max_counter)
                           + " other rows removed b/c WCF " + msg + "\033[0m";
                 std::cout << str_out.toStdString();
+                Utilities::FileHandling::WriteLineToFile(str_out, data.tex_file);
             }
-            str_out = "\033[1;33m\n>>> Finished removing rows with low WCF for " + data.data_tag + " data.\033[0m";
+            str_out = "\033[1;33m\n>>> Finished removing rows with low WCF for " 
+                      + data.data_tag + " data.\033[0m";
             std::cout << str_out.toStdString();
-            if (!rem_flag) {str_out = "\033[1;33m [None removed.]\033[0m"; std::cout << str_out.toStdString();}
+            Utilities::FileHandling::WriteLineToFile(str_out, data.tex_file);
+
+            if (!rem_flag) {str_out = "\033[1;33m [None removed.]\033[0m"; 
+            std::cout << str_out.toStdString();}
+            Utilities::FileHandling::WriteLineToFile(str_out, data.tex_file);
         }
 
 /*!
@@ -150,7 +156,8 @@ namespace TestResources {
  */
         double GetColumnAccuracyElements(Matrix<double,Dynamic,1> col_vector){
 
-			// accuracy_elements: fraction of elements in column which are zero up to given tolerance
+			// accuracy_elements: fraction of elements in column which 
+            //are zero up to given tolerance
 			double nrows = col_vector.rows();
 			double nrows_nz = 0;
 
@@ -224,20 +231,35 @@ namespace TestResources {
             IJK_accuracy_list.append(IJK_column_cosine);
 
             // Zero element fraction
-            std::cout << "\033[1;33mElement accuracy: fraction of zero (<tol) elements in diff. "
-                         "column (1=best)\033[0m" << std::endl;
-			std::cout << "Element accuracy I column:  "
-			<< std::fixed << std::setprecision(4) << IJK_accuracy_list[0][0] << std::endl;
-			std::cout << "Element accuracy J column:  "
-			<< std::fixed << std::setprecision(4) << IJK_accuracy_list[0][1] << std::endl;
-			std::cout << "Element accuracy K1 column: "
-			<< std::fixed << std::setprecision(4) << IJK_accuracy_list[0][2] << std::endl;
-			std::cout << "Element accuracy K2 column: "
-			<< std::fixed << std::setprecision(4) << IJK_accuracy_list[0][3] << std::endl;
+            QString str_out = "Element accuracy: fraction of zero (<tol) elements in diff. column (1=best)";
+            std::cout << "\033[1;33m" << str_out.toStdString() << "\033[0m" << std::endl;
+            Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
+
+            str_out = "Element accuracy I column:  " + QString::number(IJK_accuracy_list[0][0]);
+            std::cout << str_out.toStdString() << std::endl;
+            Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
+
+            str_out = "Element accuracy J column:  " + QString::number(IJK_accuracy_list[0][1]);
+            std::cout << str_out.toStdString() << std::endl;
+            Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
+
+            str_out = "Element accuracy K1 column:  " + QString::number(IJK_accuracy_list[0][2]);
+            std::cout << str_out.toStdString() << std::endl;
+            Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
+
+            str_out = "Element accuracy K2 column:  " + QString::number(IJK_accuracy_list[0][3]);
+            std::cout << str_out.toStdString() << std::endl;
+            Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
+
             // Column offset
-            std::cout << "\033[1;33mColumn IJK offset: norm of diff. vector [Euclidean dist.]  (0=best)\033[0m" << std::endl;
-			std::cout << "Column offset I column:  "
-			<< std::fixed << std::setprecision(4) << IJK_accuracy_list[1][0] << std::endl;
+            str_out = "Column IJK offset: norm of diff. vector [Euclidean dist.]  (0=best)";
+            std::cout << "\033[1;33m" << str_out.toStdString() << "\033[0m" << std::endl;
+            Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
+
+            str_out = "Column offset I column:  " + QString::number(IJK_accuracy_list[1][0]);
+            std::cout << str_out.toStdString();
+            Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
+
 			std::cout << "Column offset J column:  "
 			<< std::fixed << std::setprecision(4) << IJK_accuracy_list[1][1] << std::endl;
 			std::cout << "Column offset K1 column: "
@@ -564,7 +586,7 @@ namespace TestResources {
                       + rem_str + " data using diff command b/c IJK values did not match. "
                       + "\033[0m";
             std::cout << str_out.toStdString() << std::setfill(' ') << std::endl;
-            
+
             QStringList str_ind;
             foreach(int ii, sup_indices){ str_ind.append(QString::number(ii + 1)); } // 1-INDEXING
 
@@ -572,7 +594,7 @@ namespace TestResources {
             std::cout << str_out.toStdString() << std::setfill(' ');
 
             if (sup_indices.length()>10){
-                str_out = "\033[1;31mWARNING: more than 10 rows were removed, " 
+                str_out = "\033[1;31mWARNING: more than 10 rows were removed, "
                             "check wells are supposed to be equal.\n\033[0m";
                 std::cout << str_out.toStdString() << std::setfill(' ');
             }

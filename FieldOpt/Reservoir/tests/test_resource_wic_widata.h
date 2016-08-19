@@ -47,7 +47,8 @@ namespace TestResources {
             QString dir_name;
             QString data_tag;
 
-            QString grid_file;            
+            QString grid_file;
+            QString tex_file;            
             QString well_name = "TW01";            
             QString radius = QString::number(0.1905/2);
 
