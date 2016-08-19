@@ -55,7 +55,7 @@ void Utilities::FileHandling::WriteStringToFile(QString string, QString file_pat
     QFile file(file_path);
     file.open(QIODevice::WriteOnly | QIODevice::Truncate);
     QTextStream out(&file);
-    out << string.toUtf8() << endl;
+    out << string.toUtf8();
     file.close();
 }
 
