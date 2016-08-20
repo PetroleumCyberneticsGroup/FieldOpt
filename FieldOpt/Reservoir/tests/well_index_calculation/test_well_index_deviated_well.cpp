@@ -98,6 +98,7 @@ namespace {
 
             // MAKE PCG_NEW.DATA FILES USING PRECOMPILED WellIndexCalculator
             WIDataPCG.CalculateWCF();
+            WIDataPCG.PrintCOMPDATPlot(dir_list_[ii] + "/" + dir_names_[ii]);
 
             // DEBUG: PRINT OLD IJK/WCF VALUES B/F SHIFTING TO NEW
             WIDataPCG.PrintIJKData(dir_list_[ii] + "/DBG_" + dir_names_[ii] + "_PCG.IJK");

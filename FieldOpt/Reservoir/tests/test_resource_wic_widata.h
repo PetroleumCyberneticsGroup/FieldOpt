@@ -32,7 +32,7 @@ namespace TestResources {
             void PrintIJKData(QString file_name);
             void PrintWCFData(QString file_name);
             void CalculateWCF();
-            void PrintCOMPDATPlot();
+            void PrintCOMPDATPlot(QString file_root);
 
             // Variables:
             Matrix<int, Dynamic, 4> IJK;
@@ -58,20 +58,36 @@ namespace TestResources {
         private:
         };
 
-        void WIData::PrintCOMPDATPlot(){
+        void WIData::PrintCOMPDATPlot(QString file_root){
 
-            QString command = "python3 ../../tools/python_scripts/compdat_plot/create_compdat_plot.py -g "
-                              + grid_file
-                              + " -h " + XYZc[0] + " " + XYZc[1] + " " + XYZc[2]
-                              + " -t " + XYZc[3] + " " + XYZc[4] + " " + XYZc[5]
-                              + " -r " + radius
-                              + " -c "
-                              + " -w " + well_name;
+            QString csv_file = file_root + ".csv";
+            QString pdf_file = file_root + ".pdf";
+            QString command = "python3 ../../tools/python_scripts/compdat_plot/create_compdat_plot.py "
+                              + csv_file + pdf_file + " 60 60";
+
+            // LAUNCH PLOT MAKER
+            QProcess plot_process;
+//            plot_process.start(command);
+//            plot_process.waitForFinished();
         }
+
         void WIData::CalculateWCF(){
 
             bool debug_ = false;
 
+            // CSV FORMAT
+            QString command_csv = "./WellIndexCalculator -g "
+                                  + grid_file
+                                  + " -h " + XYZc[0] + " " + XYZc[1] + " " + XYZc[2]
+                                  + " -t " + XYZc[3] + " " + XYZc[4] + " " + XYZc[5]
+                                  + " -r " + radius + " > test.csv";
+
+            // LAUNCH WELL INDEX CALCULATOR (CSV FORMAT)
+            QProcess wic_process_csv;
+            wic_process_csv.start(command_csv);
+            wic_process_csv.waitForFinished();
+
+            // COMPDAT FORMAT
             QString command = "./WellIndexCalculator -g "
                 + grid_file
                 + " -h " + XYZc[0] + " " + XYZc[1] + " " + XYZc[2]
@@ -102,7 +118,6 @@ namespace TestResources {
             Matrix<int, Dynamic, 4> IJK_stor;
             std::vector<double> wcf;
 
-            // for (int ii = 0; ii < textString.size(); ++ii) {
             foreach(QString line, lines){
 
                 if (line.contains("OPEN")) {

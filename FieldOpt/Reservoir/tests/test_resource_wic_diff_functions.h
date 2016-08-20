@@ -312,17 +312,21 @@ namespace TestResources {
                 QStringList labels;
                 labels << "RMS: " << "PCG: " << "DFF: " << "RMS/PCG: ";
                 string frmt;
-                if (tag.compare("IJK")==0){
-                    frmt = "%2.0f ";
-                }else if(tag.compare("WCF")==0){
-                    frmt = "%7.3f    ";
-                }
+                int ncols;
 
                 for( int jj = 0; jj < vdiff_row.size(); ++jj ) {
                     va_d.push_back(va_(ii,jj));
                     vb_d.push_back(vb_(ii,jj));
                     vdiff_d.push_back(vdiff_(ii,jj));
                     vrel_d.push_back(vrel_(ii,jj));
+                }
+
+                if (tag.compare("IJK")==0){
+                    frmt = "%2.0f ";
+                    ncols = va_d.size() - 1; // SKIP LAST COLUMN
+                }else if(tag.compare("WCF")==0){
+                    frmt = "%7.3f    ";
+                    ncols = va_d.size();
                 }
 
                 // If difference is larger than zero by a given tolerance
@@ -333,22 +337,22 @@ namespace TestResources {
                     txt_str.append(num_str);
 
                     txt_str.append(labels[0]); // RMS DATA
-                    for( int jj = 0; jj < va_d.size()-1; ++jj ) {
+                    for( int jj = 0; jj < ncols; ++jj ) {
                         txt_str.append(num_str.sprintf(frmt.c_str(), va_d[jj]));
                     }
 
                     txt_str.append(labels[1]); // PCG DATA
-                    for( int jj = 0; jj < vb_d.size()-1; ++jj ) {
+                    for( int jj = 0; jj < ncols; ++jj ) {
                         txt_str.append(num_str.sprintf(frmt.c_str(), vb_d[jj]));
                     }
 
                     txt_str.append(labels[2]); // DFF DATA
-                    for( int jj = 0; jj < vdiff_d.size()-1; ++jj ) {
+                    for( int jj = 0; jj < ncols; ++jj ) {
                         txt_str.append(num_str.sprintf(frmt.c_str(), vdiff_d[jj]));
                     }
 
                     txt_str.append(labels[3]); // DFF DATA
-                    for( int jj = 0; jj < vrel_d.size()-1; ++jj ) {
+                    for( int jj = 0; jj < ncols; ++jj ) {
                         txt_str.append(num_str.sprintf(frmt.c_str(), vrel_d[jj]));
                     }
 
