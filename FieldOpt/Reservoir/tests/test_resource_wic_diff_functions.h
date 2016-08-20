@@ -91,13 +91,15 @@ namespace TestResources {
             int nColsWCF  = data.WCF.cols();
             int nColsIJK  = data.IJK.cols();
 
-            bool rem_flag = false;
-            QString str_out;
-            QString msg;
+            int rem_count = 0;
+            QString str_out, temp_str, msg, nl, lstr_out;
             int max_counter = 0;
 
-            for( int ii=0; ii < data.WCF.rows(); ++ii ) {
+            lstr_out = "\n--------------------------------------------------------------------------------";
+            str_out = lstr_out + "\n>>> If any, start removing rows with low WCF for "
+                      + data.data_tag + " data.";
 
+            for( int ii=0; ii < data.WCF.rows(); ++ii ) {
 
                 auto wcf_num = data.WCF.row(ii).value();
                 QString wcf_str;
@@ -113,13 +115,13 @@ namespace TestResources {
                     }
                     if (max_counter <= 10){
 
-                        str_out = "\nRemoving row " + QString::number(ii)
-                                  + " from --" + data.data_tag
-                                  + "-- data b/c WCF " + msg + " ("
-                                  + wcf_str + " < "
-                                  + QString::number(tol) + ")";
-                        std::cout << "\033[1;33m" << str_out.toStdString() << "\033[0m";
-                        Utilities::FileHandling::WriteLineToFile(str_out, data.tex_file);
+                        temp_str = "Removing row " + QString::number(ii)
+                                   + " from " + data.data_tag
+                                   + " data b/c WCF " + msg + " ("
+                                   + wcf_str + " < "
+                                   + QString::number(tol) + ")";
+                        // nl = (rem_count > 0) ? "\n" : "";
+                        str_out.append("\n" + temp_str);
                     }
 
                     nRows = data.WCF.rows()-1;
@@ -130,22 +132,21 @@ namespace TestResources {
                     data.IJK.block(ii,0,nRows-ii,nColsIJK) = data.IJK.block(ii+1,0,nRows-ii,nColsIJK);
                     data.IJK.conservativeResize(nRows,nColsIJK);
 
-                    rem_flag = true;
+                    rem_count += 1;
                 }
             }
-            if (max_counter > 10){
-                str_out = "\n\033[1;33m+" + QString::number(max_counter)
-                          + " other rows removed b/c WCF " + msg + "\033[0m";
-                std::cout << str_out.toStdString();
-                Utilities::FileHandling::WriteLineToFile(str_out, data.tex_file);
-            }
-            str_out = "\033[1;33m\n>>> Finished removing rows with low WCF for " 
-                      + data.data_tag + " data.\033[0m";
-            std::cout << str_out.toStdString();
-            Utilities::FileHandling::WriteLineToFile(str_out, data.tex_file);
+            nl = (rem_count > 0) ? "\n" : "";
+            str_out.append(nl);
 
-            if (!rem_flag) {str_out = "\033[1;33m [None removed.]\033[0m"; 
-            std::cout << str_out.toStdString();}
+            if (max_counter > 10){
+                str_out = str_out + "+" + QString::number(max_counter)
+                          + " other rows removed b/c WCF " + msg + "\n";
+            }
+            // str_out = str_out + ">>> Finished removing rows with low WCF for "
+            //           + data.data_tag + " data.";
+            if (rem_count < 1) {str_out = str_out + " [None removed.]";}
+
+            std::cout << std::endl << "\033[1;33m" << str_out.toStdString() << "\033[0m";
             Utilities::FileHandling::WriteLineToFile(str_out, data.tex_file);
         }
 
@@ -156,7 +157,7 @@ namespace TestResources {
  */
         double GetColumnAccuracyElements(Matrix<double,Dynamic,1> col_vector){
 
-			// accuracy_elements: fraction of elements in column which 
+			// accuracy_elements: fraction of elements in column which
             //are zero up to given tolerance
 			double nrows = col_vector.rows();
 			double nrows_nz = 0;
@@ -230,24 +231,21 @@ namespace TestResources {
 			IJK_accuracy_list.append(IJK_column_offset);
             IJK_accuracy_list.append(IJK_column_cosine);
 
+            QString temp_str, str_out, nl;
+            QString lstr_out = "\n--------------------------------------------------------------------------------";
+
             // Zero element fraction
-            QString str_out = "Element accuracy: fraction of zero (<tol) elements in diff. column (1=best)";
+            str_out = "\nElement accuracy: fraction of zero (<tol) elements in diff. column (1=best)";
             std::cout << "\033[1;33m" << str_out.toStdString() << "\033[0m" << std::endl;
             Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
 
-            str_out = "Element accuracy I column:  " + QString::number(IJK_accuracy_list[0][0]);
-            std::cout << str_out.toStdString() << std::endl;
-            Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
-
-            str_out = "Element accuracy J column:  " + QString::number(IJK_accuracy_list[0][1]);
-            std::cout << str_out.toStdString() << std::endl;
-            Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
-
-            str_out = "Element accuracy K1 column:  " + QString::number(IJK_accuracy_list[0][2]);
-            std::cout << str_out.toStdString() << std::endl;
-            Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
-
-            str_out = "Element accuracy K2 column:  " + QString::number(IJK_accuracy_list[0][3]);
+            str_out  = "Element accuracy I column: " + QString::number(IJK_accuracy_list[0][0]);
+            temp_str = "Element accuracy J column: " + QString::number(IJK_accuracy_list[0][1]);
+            str_out.append("\n" + temp_str);
+            temp_str = "Element accuracy K column: " + QString::number(IJK_accuracy_list[0][2]);
+            str_out.append("\n" + temp_str);
+//            temp_str = "Element accuracy K2 column: " + QString::number(IJK_accuracy_list[0][3]);
+//            str_out.append("\n" + temp_str);
             std::cout << str_out.toStdString() << std::endl;
             Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
 
@@ -256,26 +254,30 @@ namespace TestResources {
             std::cout << "\033[1;33m" << str_out.toStdString() << "\033[0m" << std::endl;
             Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
 
-            str_out = "Column offset I column:  " + QString::number(IJK_accuracy_list[1][0]);
-            std::cout << str_out.toStdString();
+            str_out  = "Column offset I column:  " + QString::number(IJK_accuracy_list[1][0]);
+            temp_str = "Column offset J column:  " + QString::number(IJK_accuracy_list[1][1]);
+            str_out.append("\n" + temp_str);
+            temp_str = "Column offset K column:  " + QString::number(IJK_accuracy_list[1][2]);
+            str_out.append("\n" + temp_str);
+//            temp_str = "Column offset K2 column:  " + QString::number(IJK_accuracy_list[1][3]);
+//            str_out.append("\n" + temp_str);
+            std::cout << str_out.toStdString() << std::endl;
             Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
 
-			std::cout << "Column offset J column:  "
-			<< std::fixed << std::setprecision(4) << IJK_accuracy_list[1][1] << std::endl;
-			std::cout << "Column offset K1 column: "
-			<< std::fixed << std::setprecision(4) << IJK_accuracy_list[1][2] << std::endl;
-			std::cout << "Column offset K2 column: "
-			<< std::fixed << std::setprecision(4) << IJK_accuracy_list[1][3] << std::endl;
             // Cosine measure
-            std::cout << "\033[1;33mColumn IJK cosine measure: angle b/e vectors (1=parallel=best)\033[0m" << std::endl;
-            std::cout << "Column cosine I column:  "
-            << std::fixed << std::setprecision(8) << IJK_accuracy_list[2][0] << std::endl;
-            std::cout << "Column cosine J column:  "
-            << std::fixed << std::setprecision(8) << IJK_accuracy_list[2][1] << std::endl;
-            std::cout << "Column cosine K1 column: "
-            << std::fixed << std::setprecision(8) << IJK_accuracy_list[2][2] << std::endl;
-            std::cout << "Column cosine K2 column: "
-            << std::fixed << std::setprecision(8) << IJK_accuracy_list[2][3] << std::endl;
+            str_out = "Column IJK cosine measure: angle b/e vectors (1=parallel=best)";
+            std::cout << "\033[1;33m" << str_out.toStdString() << "\033[0m" << std::endl;
+            Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
+
+            str_out  = "Column cosine I column: " + QString::number(IJK_accuracy_list[2][0]);
+            temp_str = "Column cosine J column: " + QString::number(IJK_accuracy_list[2][1]);
+            str_out.append("\n" + temp_str);
+            temp_str = "Column cosine K column: " + QString::number(IJK_accuracy_list[2][2]);
+            str_out.append("\n" + temp_str);
+//            temp_str = "Column cosine K2 column: " + QString::number(IJK_accuracy_list[2][3]);
+//            str_out.append("\n" + temp_str);
+            std::cout << str_out.toStdString() << std::endl;
+            Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
 
 			return IJK_accuracy_list;
         }
@@ -285,7 +287,7 @@ namespace TestResources {
  * \param
  * \return
  */
-        template<typename T, typename V> void CheckRowwiseDiff(T& va_, T& vb_, V& vdiff_, string tag, double tol){
+        template<typename T, typename V> void CheckRowwiseDiff(T& va_, T& vb_, V& vdiff_, QString tag, double tol, WIData data){
 
             // Check vector has length > 0
             if (!vdiff_.rows()>0)
@@ -294,8 +296,10 @@ namespace TestResources {
             auto vrel_ = va_.cwiseQuotient(vb_);
 
             // Output msg
-            std::cout << "\033[1;33mTesting: " << tag << " (rowwise) >> "
-                      << "values differ at the following rows:\033[0m" << std::endl;
+            QString str_out;
+            str_out = "Testing: " + tag + " (rowwise) >> values differ at the following rows:";
+            std::cout << "\033[1;33m" << str_out.toStdString() << "\033[0m" << std::endl;
+            Utilities::FileHandling::WriteLineToFile(str_out, data.tex_file);
 
             // Loop over each row
             for( int ii=0; ii < vdiff_.rows(); ++ii ) {
@@ -309,7 +313,7 @@ namespace TestResources {
                 labels << "RMS: " << "PCG: " << "DFF: " << "RMS/PCG: ";
                 string frmt;
                 if (tag.compare("IJK")==0){
-                    frmt = "%3.0f ";
+                    frmt = "%2.0f ";
                 }else if(tag.compare("WCF")==0){
                     frmt = "%7.3f    ";
                 }
@@ -325,30 +329,31 @@ namespace TestResources {
                 if (!vdiff_row.isZero(tol)){
 
                     QString num_str, txt_str;
-                    num_str.sprintf("row %3.0i:  ", ii);
+                    num_str.sprintf("row %3.0f:  ", (double) ii);
                     txt_str.append(num_str);
 
                     txt_str.append(labels[0]); // RMS DATA
-                    for( int jj = 0; jj < va_d.size(); ++jj ) {
+                    for( int jj = 0; jj < va_d.size()-1; ++jj ) {
                         txt_str.append(num_str.sprintf(frmt.c_str(), va_d[jj]));
                     }
 
                     txt_str.append(labels[1]); // PCG DATA
-                    for( int jj = 0; jj < vb_d.size(); ++jj ) {
+                    for( int jj = 0; jj < vb_d.size()-1; ++jj ) {
                         txt_str.append(num_str.sprintf(frmt.c_str(), vb_d[jj]));
                     }
 
                     txt_str.append(labels[2]); // DFF DATA
-                    for( int jj = 0; jj < vdiff_d.size(); ++jj ) {
+                    for( int jj = 0; jj < vdiff_d.size()-1; ++jj ) {
                         txt_str.append(num_str.sprintf(frmt.c_str(), vdiff_d[jj]));
                     }
 
                     txt_str.append(labels[3]); // DFF DATA
-                    for( int jj = 0; jj < vrel_d.size(); ++jj ) {
+                    for( int jj = 0; jj < vrel_d.size()-1; ++jj ) {
                         txt_str.append(num_str.sprintf(frmt.c_str(), vrel_d[jj]));
                     }
 
                     std::cout << txt_str.toStdString() << std::endl;
+                    Utilities::FileHandling::WriteLineToFile(txt_str, data.tex_file);
                 }
             }
 	    }
@@ -362,7 +367,8 @@ namespace TestResources {
         	auto vdiff_ = vdiff.IJK;
         	auto va_ = va.IJK;
         	auto vb_ = vb.IJK;
-			CheckRowwiseDiff(va_, vb_, vdiff_, "IJK",GetEpsIJK());
+            QString tag = "IJK";
+			CheckRowwiseDiff(va_, vb_, vdiff_, tag, GetEpsIJK(), va);
         }
 
 /*!
@@ -374,7 +380,8 @@ namespace TestResources {
         	auto vdiff_ = vdiff.WCF;
         	auto va_ = va.WCF;
         	auto vb_ = vb.WCF;
-			CheckRowwiseDiff(va_, vb_, vdiff_, "WCF",GetEpsWCF());
+            QString tag = "WCF";
+			CheckRowwiseDiff(va_, vb_, vdiff_, tag, GetEpsWCF(), va);
         }
 
 /*!
@@ -390,16 +397,20 @@ namespace TestResources {
 
 			// Check if IJK values computed by RMS and PCG WIC are equal
 			// If not, output differing rows
-            QString msg;
+            QString str_out;
+            QString lstr_out = "\n--------------------------------------------------------------------------------";
             QString tol;
             tol.sprintf("%5.3e",GetEpsIJK());
 
             if (vdiff.IJK.isZero(GetEpsIJK())){
-                msg = "IJK values match exactly for this well.";
-                std::cout << "\033[1;32m" << msg.toStdString() << "\033[0m" << std::endl;
+                str_out = lstr_out + "\nIJK values match exactly for this well.";
+                std::cout << "\033[1;32m" << str_out.toStdString() << "\033[0m" << std::endl;
+                Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
+
             }else{
-                msg = "IJK values are NOT the same for this well.";
-                std::cout << "\033[1;35m" << msg.toStdString() << "\033[0m" << std::endl;
+                str_out = lstr_out + "\nIJK values are NOT the same for this well.";
+                std::cout << "\033[1;35m" << str_out.toStdString() << "\033[0m" << std::endl;
+                Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
 
                 // Output row differences (i.e., I, J and K columns combined)
                 CheckRowwiseDiffIJK(va,vb,vdiff);
@@ -431,16 +442,19 @@ namespace TestResources {
             vdiff.WCF = va.WCF - vb.WCF;
             QList<double> WCF_accuracy_list;
 
-            QString msg;
+            QString str_out;
+            QString lstr_out = "\n--------------------------------------------------------------------------------";
             QString tol;
             tol.sprintf("%5.3f",GetEpsWCF());
 
             if(va.WCF.isApprox(vb.WCF, GetEpsWCF())){
-                msg = "WCF values match exactly for this well (WCF tol = " + tol + ").";
-                std::cout << "\033[1;32m" << msg.toStdString() << "\033[0m" << std::endl;
+                str_out = lstr_out + "\nWCF values match exactly for this well (WCF tol = " + tol + ").";
+                std::cout << "\033[1;32m" << str_out.toStdString() << "\033[0m" << std::endl;
+                Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
             }else{
-                msg = "WCF values are NOT the same for this well (WCF tol = " + tol + ").";
-                std::cout << "\033[1;35m" << msg.toStdString() << "\033[0m" << std::endl;
+                str_out = lstr_out + "\nWCF values are NOT the same for this well (WCF tol = " + tol + ").";
+                std::cout << "\033[1;35m" << str_out.toStdString() << "\033[0m" << std::endl;
+                Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
 
                 // Output general difference (i.e., for I, J and K columns)
                 CheckRowwiseDiffWCF(va,vb,vdiff);
@@ -451,18 +465,31 @@ namespace TestResources {
                 WCF_accuracy_list.append(GetColumnCosine(va.WCF, vb.WCF, vdiff.WCF));
 
                 // Zero element fraction
-                std::cout << "\033[1;33mElement accuracy: fraction of zero (<tol) elements in diff. "
-                             "column (1=best)\033[0m" << std::endl;
-                std::cout << "Element accuracy:  "
-                << std::fixed << std::setprecision(4) << WCF_accuracy_list[0] << std::endl;
+                str_out = "\nElement accuracy: fraction of zero (<tol) elements in diff. column (1=best)";
+                std::cout << "\033[1;33m" << str_out.toStdString() << "\033[0m" << std::endl;
+                Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
+
+                str_out  = "Element accuracy:  " + QString::number(WCF_accuracy_list[0]);
+                std::cout << str_out.toStdString() << std::endl;
+                Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
+
                 // Column offset
-                std::cout << "\033[1;33mColumn WCF offset: norm of difference vector (0=best)\033[0m" << std::endl;
-                std::cout << "Column offset:  "
-                << std::fixed << std::setprecision(4) << WCF_accuracy_list[1] << std::endl;
+                str_out = "Column WCF offset: norm of difference vector (0=best)";
+                std::cout << "\033[1;33m" << str_out.toStdString() << "\033[0m" << std::endl;
+                Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
+
+                str_out  = "Column offset:  " + QString::number(WCF_accuracy_list[1]);
+                std::cout << str_out.toStdString() << std::endl;
+                Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
+
                 // Cosine measure
-                std::cout << "\033[1;33mColumn WCF cosine measure: angle b/e vectors (1=parallel=best)\033[0m" << std::endl;
-                std::cout << "Column cosine measure:  "
-                << std::fixed << std::setprecision(8) << WCF_accuracy_list[2] << std::endl;
+                str_out = "Column WCF cosine measure: angle b/e vectors (1=parallel=best)";
+                std::cout << "\033[1;33m" << str_out.toStdString() << "\033[0m" << std::endl;
+                Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
+
+                str_out  = "Column cosine measure:  " + QString::number(WCF_accuracy_list[2]);
+                std::cout << str_out.toStdString() << std::endl;
+                Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
             }
 
             bool debug_ = false;
@@ -579,28 +606,23 @@ namespace TestResources {
 
             // VECTOR LENGTHS HAVE BEEN MADE EQUAL => COMPARE DIRECTLY
             QString str_out;
-            QString ind_str = (sup_indices.length()>1) ? QString::number(sup_indices.size()) + " rows were" : "1 row was";
-            str_out = "\033[1;36m"
-                      + WIDataRMS.dir_name + ">>> Vector lengths have been made equal: "
-                      + ind_str + " removed\nfrom "
-                      + rem_str + " data using diff command b/c IJK values did not match. "
-                      + "\033[0m";
-            std::cout << str_out.toStdString() << std::setfill(' ') << std::endl;
+            QString ind_str = (sup_indices.length() > 1) ? QString::number(sup_indices.size()) + " rows were" : "1 row was";
+            str_out.append(WIDataRMS.dir_name + ">>> Vector lengths have been made equal: "
+                                              + ind_str + " removed from "
+                                              + rem_str + " data b/c\nIJK values did not match. ");
 
             QStringList str_ind;
-            foreach(int ii, sup_indices){ str_ind.append(QString::number(ii + 1)); } // 1-INDEXING
+            foreach(int ii, sup_indices){ str_ind.append(QString::number(ii)); }
+            str_out.append("Rows that were removed: [" + str_ind.join(" ") + "].");
 
-            str_out = "\033[1;36mRows that were removed: [" + str_ind.join(" ") + "]\n\033[0m";
-            std::cout << str_out.toStdString() << std::setfill(' ');
 
             if (sup_indices.length()>10){
-                str_out = "\033[1;31mWARNING: more than 10 rows were removed, "
-                            "check wells are supposed to be equal.\n\033[0m";
-                std::cout << str_out.toStdString() << std::setfill(' ');
+                str_out.append("\nWARNING: more than 10 rows were removed, check wells are supposed to be equal.");
             }
 
-            str_out = "\033[1;36mContinuing comparison.\n\033[0m";
-            std::cout << str_out.toStdString() << std::setfill(' ');
+            str_out.append("\nContinuing comparison.");
+            std::cout << "\033[1;36m" << str_out.toStdString() << "\033[0m" << std::endl;
+            Utilities::FileHandling::WriteLineToFile(str_out, WIDataPCG.tex_file);
         }
 
 /*!
@@ -630,25 +652,24 @@ namespace TestResources {
             WIDataPCG.PrintWCFData(diff_files[3]);
 
             QString str_out;
+            QString lstr_out = "\n--------------------------------------------------------------------------------";
             if (DiffVectorLength(WIDataRMS, WIDataPCG)) {
 
                 // IF VECTOR LENGTHS ARE EQUAL => COMPARE DIRECTLY
-                str_out = "\033[1;36m\n"
-                          + WIDataRMS.dir_name + ">>> Vector lengths are equal. "
-                          + "Making comparison."
-                          + "\033[0m";
-                std::cout << str_out.toStdString() << std::setfill(' ') << std::endl;
+                str_out = lstr_out + "\n" + WIDataRMS.dir_name 
+                + ">>> COMPDAT vectors have the same length. Making comparison.";
+                std::cout << std::endl << "\033[1;36m" << str_out.toStdString() << "\033[0m" << std::endl;
+                Utilities::FileHandling::WriteLineToFile(str_out, WIDataPCG.tex_file);
 
             } else {
 
                 // IF VECTOR LENGTHS ARE UNEQUAL => MAKE EQUAL, THEN COMPARE DIRECTLY
-                str_out = "\033[1;36m\n"
-                          + WIDataRMS.dir_name + ">>> Vector lengths are unequal. "
-                          + "Making them equal."
-                          + "\033[0m";
-                std::cout << str_out.toStdString() << std::setfill(' ') << std::endl;
-                RemoveSuperfluousRows(WIDataRMS, WIDataPCG, diff_files);
+                str_out = lstr_out + "\n" + WIDataRMS.dir_name 
+                + ">>> COMPDAT vectors have different length. Making them equal.";
+                std::cout << std::endl << "\033[1;36m" << str_out.toStdString() << "\033[0m" << std::endl;
+                Utilities::FileHandling::WriteLineToFile(str_out, WIDataPCG.tex_file);
 
+                RemoveSuperfluousRows(WIDataRMS, WIDataPCG, diff_files);
             }
         }
 

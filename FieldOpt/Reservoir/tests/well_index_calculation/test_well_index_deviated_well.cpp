@@ -83,15 +83,15 @@ namespace {
             // WRITE TO TEX FILE
             WIDataPCG.tex_file = dir_list_[ii] + "/" + dir_names_[ii] + ".tex";
             WIDataRMS.tex_file = WIDataPCG.tex_file;
-            str_out = "\\verb+";
+            str_out = "\\begin{alltt}" + lstr_out + "\nChecking IJK and WCF data for well: "
+                      + dir_names_[ii] + " (row numbering uses 0-indexing)" + lstr_out;
             Utilities::FileHandling::WriteStringToFile(str_out, WIDataPCG.tex_file);
 
             // MESSAGE OUTPUT
-            str_out = "\n" + lstr_out + "\nChecking IJK and WCF data for well: "
+            str_out = lstr_out + "\nChecking IJK and WCF data for well: "
                       + dir_names_[ii] + lstr_out;
             std::cout << "\033[1;36m" << str_out.toStdString() << "\033[0m";
-            Utilities::FileHandling::WriteLineToFile(str_out, WIDataPCG.tex_file);
-            
+
             // READ COMPDAT + XYZ FILES
             WIDataRMS.ReadData(rms_files[ii],dir_names_[ii],dir_list_[ii]);
             WIDataPCG.ReadData(pcg_files[ii],dir_names_[ii],dir_list_[ii]);
@@ -120,6 +120,8 @@ namespace {
             // COMPARE IJK AND PCG VALUES (EQUAL LENGTH DATA)
             CompareIJK(WIDataRMS, WIDataPCG);
             CompareWCF(WIDataRMS, WIDataPCG);
+
+            Utilities::FileHandling::WriteLineToFile("\\end{alltt}", WIDataPCG.tex_file);
         }
     }
 }

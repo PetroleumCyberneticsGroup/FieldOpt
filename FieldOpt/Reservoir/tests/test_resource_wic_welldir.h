@@ -73,7 +73,7 @@ namespace TestResources {
                 temp = well_list_[2];
                 temp_str = "pcg_list";
                 printWellDirList(temp, temp_str);
-                std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;                
+                std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;
             }
 
             return well_list_;
@@ -108,9 +108,25 @@ namespace TestResources {
                                                             QDir::Files |
                                                             QDir::CaseSensitive |
                                                             QDir::NoDotAndDotDot);
-                // Check if only one file
+
+                // Debug: check lists are OK
+                if (debug_){
+                    std::cout << "\033[1;31m<DEBUG:START->\033[0m" << std::endl;
+                    std::cout << "Checking dir: " << dir_name_.toStdString() << std::endl;
+                    std::cout << "file_name_ length: " << file_name_.length() << std::endl;
+                    foreach(QString fn, file_name_){
+                            std::cout << "fn: " << fn.toStdString() << std::endl;
+                        }
+                    std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;
+                }
+
+                // Check if more than one file
                 if (file_name_.length()>1)
                     throw std::runtime_error("Too many " + ext.toStdString() + " files in well folder!");
+
+                // Check if no files
+                if (file_name_.length()<1)
+                    throw std::runtime_error("No " + ext.toStdString() + " file in well folder!");
 
                 QString file_str_ = dir_name_ + "/" + file_name_[0];
                 temp_list_.append(file_str_);
@@ -125,6 +141,6 @@ namespace TestResources {
                 std::cout << temp_str.toStdString() << ": " << temp[ii].toStdString() << std::endl;
             }
         }
-    }   
+    }
 }
 #endif //FIELDOPT_TEST_RESOURCE_WIC_H
