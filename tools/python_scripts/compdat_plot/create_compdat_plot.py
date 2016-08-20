@@ -5,7 +5,7 @@ of the well indices over a grid.
 
 It takes as input a CSV file containing information about the
 well (ijk-coordinates and WI for each block), the (ij) grid size,
-(optionally) the xyz coordainates for the well heel and toe, as
+(optionally) the xyz coordinates for the well heel and toe, as
 well as the path to the output file to be written.
 
 It stores plots of the well path in a pdf file at a given location.
