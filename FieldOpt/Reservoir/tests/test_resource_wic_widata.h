@@ -28,10 +28,11 @@ namespace TestResources {
             WIData(){};
 
             // Functions
-            void ReadData(QString file_name, QString dir_name, QString dir_list);
+            void ReadData(QString file_name, QString dir_list);
             void PrintIJKData(QString file_name);
             void PrintWCFData(QString file_name);
             void CalculateWCF();
+            void PrintCOMPDATPlot();
 
             // Variables:
             Matrix<int, Dynamic, 4> IJK;
@@ -48,8 +49,8 @@ namespace TestResources {
             QString data_tag;
 
             QString grid_file;
-            QString tex_file;            
-            QString well_name = "TW01";            
+            QString tex_file;
+            QString well_name = "TW01";
             QString radius = QString::number(0.1905/2);
 
             bool debug_ = false;
@@ -57,18 +58,26 @@ namespace TestResources {
         private:
         };
 
+        void WIData::PrintCOMPDATPlot(){
+
+            QString command = "python3 ../../tools/python_scripts/compdat_plot/create_compdat_plot.py -g "
+                              + grid_file
+                              + " -h " + XYZc[0] + " " + XYZc[1] + " " + XYZc[2]
+                              + " -t " + XYZc[3] + " " + XYZc[4] + " " + XYZc[5]
+                              + " -r " + radius
+                              + " -c "
+                              + " -w " + well_name;
+        }
         void WIData::CalculateWCF(){
 
             bool debug_ = false;
 
-            QString heel = "0.05 0 1700";
-            QString toe  = "700 600 1700";
-            QString command = "./WellIndexCalculator -g " 
-                + grid_file 
+            QString command = "./WellIndexCalculator -g "
+                + grid_file
                 + " -h " + XYZc[0] + " " + XYZc[1] + " " + XYZc[2]
                 + " -t " + XYZc[3] + " " + XYZc[4] + " " + XYZc[5]
-                + " -r " + radius 
-                + " -c " 
+                + " -r " + radius
+                + " -c "
                 + " -w " + well_name;
 
             // LAUNCH WELL INDEX CALCULATOR
@@ -161,7 +170,6 @@ namespace TestResources {
         }
 
         void WIData::ReadData(QString file_name,
-                              QString dir_name,
                               QString dir_list){
 
             // READ IJK AND WCF DATA
@@ -178,6 +186,7 @@ namespace TestResources {
             Matrix<int, 1, 4> temp_IJK;
             Matrix<int, Dynamic, 4> IJK_stor;
             std::vector<double> wcf;
+            QString well_name;
 
             while(!in.atEnd()) {
 
@@ -191,11 +200,11 @@ namespace TestResources {
                     in_fields = line.split(QRegExp("\\s+"));
 
                     // Read & store well name from current line
-                    name.append(in_fields[1]);
+                    well_name.append(in_fields[1]);
 
                     // Read IJK values from current line
                     temp_IJK << in_fields[2].toInt(), in_fields[3].toInt(),
-                            in_fields[4].toInt(), in_fields[5].toInt();
+                                in_fields[4].toInt(), in_fields[5].toInt();
 
                     // Store IJK values
                     Matrix<int, Dynamic, 4> IJK_curr(IJK_stor.rows() + temp_IJK.rows(), 4);

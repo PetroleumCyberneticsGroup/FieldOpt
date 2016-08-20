@@ -93,8 +93,8 @@ namespace {
             std::cout << "\033[1;36m" << str_out.toStdString() << "\033[0m";
 
             // READ COMPDAT + XYZ FILES
-            WIDataRMS.ReadData(rms_files[ii],dir_names_[ii],dir_list_[ii]);
-            WIDataPCG.ReadData(pcg_files[ii],dir_names_[ii],dir_list_[ii]);
+            WIDataRMS.ReadData(rms_files[ii],dir_list_[ii]);
+            WIDataPCG.ReadData(pcg_files[ii],dir_list_[ii]);
 
             // MAKE PCG_NEW.DATA FILES USING PRECOMPILED WellIndexCalculator
             WIDataPCG.CalculateWCF();

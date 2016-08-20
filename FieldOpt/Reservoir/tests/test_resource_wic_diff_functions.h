@@ -609,7 +609,7 @@ namespace TestResources {
             QString ind_str = (sup_indices.length() > 1) ? QString::number(sup_indices.size()) + " rows were" : "1 row was";
             str_out.append(WIDataRMS.dir_name + ">>> Vector lengths have been made equal: "
                                               + ind_str + " removed from "
-                                              + rem_str + " data b/c\nIJK values did not match. ");
+                                              + rem_str + "\ndata b/c IJK values did not match. ");
 
             QStringList str_ind;
             foreach(int ii, sup_indices){ str_ind.append(QString::number(ii)); }
