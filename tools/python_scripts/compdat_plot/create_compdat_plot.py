@@ -41,8 +41,8 @@ lines = lines[1:]  # Remove header line
 
 # Create empty grid
 grid = np.zeros([args.dimi, args.dimj])
-x_vals = [i for i in range(0, args.dimi, 5)]
-y_vals = [j for j in range(0, args.dimj, 5)]
+x_vals = [i for i in range(0, args.dimi, 10)]
+y_vals = [j for j in range(0, args.dimj, 10)]
 grid_xlabels = [x + 1 for x in x_vals]
 grid_ylabels = [y + 1 for y in y_vals]
 
@@ -58,10 +58,10 @@ for line in lines:
 
 # Plot the well blocks
 fig, ax = plt.subplots()
-imgplot = plt.imshow(grid, cmap=cm.Blues, interpolation='nearest')
+imgplot = plt.imshow(grid, vmin=0, vmax=0.00001, cmap=cm.Blues, interpolation='nearest')
 plt.xticks(x_vals, grid_xlabels)
 plt.yticks(y_vals, grid_xlabels)
-plt.colorbar()
+# plt.colorbar()
 
 # Set grid
 minorLocator = MultipleLocator(1)
