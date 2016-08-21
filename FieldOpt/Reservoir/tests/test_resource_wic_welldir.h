@@ -1,6 +1,7 @@
 //
 // Created by bellout on 7/30/16.
 //
+
 #ifndef FIELDOPT_TEST_RESOURCE_WIC_H
 #define FIELDOPT_TEST_RESOURCE_WIC_H
 
@@ -125,10 +126,13 @@ namespace TestResources {
                     throw std::runtime_error("Too many " + ext.toStdString() + " files in well folder!");
 
                 // Check if no files
-                if (file_name_.length()<1)
-                    throw std::runtime_error("No " + ext.toStdString() + " file in well folder!");
-
-                QString file_str_ = dir_name_ + "/" + file_name_[0];
+                QString file_str_;
+                if (file_name_.length()<1){
+                    // throw std::runtime_error("No " + ext.toStdString() + " file in well folder!");
+                    file_str_ = "none";
+                }else{
+                    file_str_ = dir_name_ + "/" + file_name_[0];
+                }
                 temp_list_.append(file_str_);
             }
             return temp_list_;

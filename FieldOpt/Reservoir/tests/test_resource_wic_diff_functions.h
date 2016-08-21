@@ -33,7 +33,7 @@ namespace TestResources {
  * \return
  */
         double GetEpsWCF(){
-            double eps = 0.05; // tolerance for comparison, NOT for removing rows
+            double eps = 0.01; // tolerance for comparison, NOT for removing rows
             return eps;
         }
 
@@ -84,70 +84,84 @@ namespace TestResources {
  * \param
  * \return
  */
-        void RemoveRowsLowWCF(WIData &data){
+        void RemoveRowsLowWCF(WIData &data) {
 
-            int nRows;
-            double tol = .01; // tolerance for removing row
-            int nColsWCF  = data.WCF.cols();
-            int nColsIJK  = data.IJK.cols();
-
+            bool debug = false;
+            int jj = 0;
             int rem_count = 0;
-            QString str_out, temp_str, msg, nl, lstr_out;
-            int max_counter = 0;
+            int neg_cnt = 0;
+            int tol_cnt = 0;
 
+            // MSG OUT
+            QString str_out, wcf_str, temp_str, msg, nl, lstr_out;
             lstr_out = "\n--------------------------------------------------------------------------------";
-            str_out = lstr_out + "\n>>> If any, start removing rows with low WCF for "
-                      + data.data_tag + " data.";
+            str_out = lstr_out + "\n>>> If any, start removing rows with low WCF for " + data.data_tag + " data.";
 
-            for( int ii=0; ii < data.WCF.rows(); ++ii ) {
+            // DEBUG
+            if(debug){
+                std::cout << std::endl << "size of " << data.data_tag.toStdString()
+                          << " data entering: " << "nRowsWCF=" << data.WCF.rows()
+                          << ", nRowsIJK=" << data.IJK.rows();
+            }
+
+            // FIND ROW INDICES OF ORIG MATRIX THAT ARE ABOVE TOL, OUTPUT MSG IF NOT
+            std::vector<int> tol_ind;
+            double tol = .01; // tolerance for removing row
+
+            for (int ii = 0; ii < data.WCF.rows(); ++ii) {
 
                 auto wcf_num = data.WCF.row(ii).value();
-                QString wcf_str;
-                wcf_str.sprintf("%5.3f", wcf_num);
+                wcf_str.sprintf("%5.4f", wcf_num);
 
-                if (wcf_num < tol){
-
-                    if (wcf_num > 0){
-                        msg = "is lower than set tolerance";
-                    }else{
-                        msg = "is negative!";
-                        max_counter += 1;
-                    }
-                    if (max_counter <= 10){
-
-                        temp_str = "Removing row " + QString::number(ii)
-                                   + " from " + data.data_tag
-                                   + " data b/c WCF " + msg + " ("
-                                   + wcf_str + " < "
-                                   + QString::number(tol) + ")";
-                        // nl = (rem_count > 0) ? "\n" : "";
+                if (wcf_num > tol) {
+                    tol_ind.push_back(ii);
+                }else{
+                    // MSG OUT
+                    msg = (wcf_num >= 0) ? "is lower than set tolerance" : "is negative!";
+                    if (wcf_num >= 0) { tol_cnt += 1; } else { neg_cnt += 1; }
+                    if (rem_count <= 10) {
+                        temp_str = "Removing row " + QString::number(ii) + " from "
+                                   + data.data_tag + " data b/c WCF " + msg + " ("
+                                   + wcf_str + " < " + QString::number(tol) + ")";
                         str_out.append("\n" + temp_str);
                     }
-
-                    nRows = data.WCF.rows()-1;
-                    // WCF
-                    data.WCF.block(ii,0,nRows-ii,nColsWCF) = data.WCF.block(ii+1,0,nRows-ii,nColsWCF);
-                    data.WCF.conservativeResize(nRows,nColsWCF);
-                    // IJK
-                    data.IJK.block(ii,0,nRows-ii,nColsIJK) = data.IJK.block(ii+1,0,nRows-ii,nColsIJK);
-                    data.IJK.conservativeResize(nRows,nColsIJK);
-
                     rem_count += 1;
                 }
             }
-            nl = (rem_count > 0) ? "\n" : "";
-            str_out.append(nl);
 
-            if (max_counter > 10){
-                str_out = str_out + "+" + QString::number(max_counter)
+            // MAKE TEMP MATRICES TO STORE ORIG ROW ABOVE TOL
+            WIData data_temp;
+            data_temp.IJK = Matrix<int, Dynamic, 4>::Zero(tol_ind.size(),4);
+            data_temp.WCF = Matrix<double,Dynamic,1>::Zero(tol_ind.size());
+
+            // COPY SELECTED ROWS
+            for (int ii = 0; ii < tol_ind.size(); ++ii) {
+                // std::cout << std::endl << "row:" << ii << ", tol_ind[ii] " << tol_ind[ii];
+                data_temp.IJK.row(ii) = data.IJK.row(tol_ind[ii]);
+                data_temp.WCF.row(ii) = data.WCF.row(tol_ind[ii]);
+            }
+
+            // TRANSFER VALUES
+            data.IJK = data_temp.IJK;
+            data.WCF = data_temp.WCF;
+
+            // DEBUG
+            if(debug){
+                std::cout << std::endl << "size of " << data.data_tag.toStdString()
+                          << " data leaving: " << "nRowsWCF=" << data.WCF.rows()
+                          << ", nRowsIJK=" << data.IJK.rows();
+            }
+
+            // MSG OUT
+            if (tol_cnt + neg_cnt > 10) {
+                str_out = str_out + "\n+" + QString::number(tol_cnt + neg_cnt - 10)
                           + " other rows removed b/c WCF " + msg + "\n";
             }
-            // str_out = str_out + ">>> Finished removing rows with low WCF for "
-            //           + data.data_tag + " data.";
-            if (rem_count < 1) {str_out = str_out + " [None removed.]";}
+            if (rem_count < 1) { str_out = str_out + " [None removed.]"; }
 
             std::cout << std::endl << "\033[1;33m" << str_out.toStdString() << "\033[0m";
             Utilities::FileHandling::WriteLineToFile(str_out, data.tex_file);
+
         }
 
 /*!
@@ -157,8 +171,8 @@ namespace TestResources {
  */
         double GetColumnAccuracyElements(Matrix<double,Dynamic,1> col_vector){
 
-			// accuracy_elements: fraction of elements in column which
-            //are zero up to given tolerance
+			// Accuracy_elements: fraction of elements in column which
+            // are zero up to given tolerance
 			double nrows = col_vector.rows();
 			double nrows_nz = 0;
 
@@ -183,8 +197,6 @@ namespace TestResources {
 
 			// accuracy_magnitude: norm of difference vector
             double column_offset = vdiff.norm();
-
-            // return
 			return column_offset;
         }
 
@@ -199,8 +211,6 @@ namespace TestResources {
 
             // cosine similarity
             double cosine_measure = va.dot(vb) / (va.norm() * vb.norm());
-
-            // return
             return cosine_measure;
         }
 
@@ -211,7 +221,6 @@ namespace TestResources {
  */
         QList<Matrix<double,1,4>> CheckColumnwiseDiff(WIData va, WIData vb, WIData vdiff){
 
-			//
         	auto va_ = va.IJK.cast<double>();
             auto vb_ = vb.IJK.cast<double>();
             auto vdiff_ = vdiff.IJK.cast<double>();
@@ -244,8 +253,8 @@ namespace TestResources {
             str_out.append("\n" + temp_str);
             temp_str = "Element accuracy K column: " + QString::number(IJK_accuracy_list[0][2]);
             str_out.append("\n" + temp_str);
-//            temp_str = "Element accuracy K2 column: " + QString::number(IJK_accuracy_list[0][3]);
-//            str_out.append("\n" + temp_str);
+            // temp_str = "Element accuracy K2 column: " + QString::number(IJK_accuracy_list[0][3]);
+            // str_out.append("\n" + temp_str);
             std::cout << str_out.toStdString() << std::endl;
             Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
 
@@ -259,13 +268,13 @@ namespace TestResources {
             str_out.append("\n" + temp_str);
             temp_str = "Column offset K column:  " + QString::number(IJK_accuracy_list[1][2]);
             str_out.append("\n" + temp_str);
-//            temp_str = "Column offset K2 column:  " + QString::number(IJK_accuracy_list[1][3]);
-//            str_out.append("\n" + temp_str);
+            // temp_str = "Column offset K2 column:  " + QString::number(IJK_accuracy_list[1][3]);
+            // str_out.append("\n" + temp_str);
             std::cout << str_out.toStdString() << std::endl;
             Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
 
             // Cosine measure
-            str_out = "Column IJK cosine measure: angle b/e vectors (1=parallel=best)";
+            str_out = "Column IJK cosine similarity: angle b/e vectors (1=parallel=best)";
             std::cout << "\033[1;33m" << str_out.toStdString() << "\033[0m" << std::endl;
             Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
 
@@ -274,8 +283,8 @@ namespace TestResources {
             str_out.append("\n" + temp_str);
             temp_str = "Column cosine K column: " + QString::number(IJK_accuracy_list[2][2]);
             str_out.append("\n" + temp_str);
-//            temp_str = "Column cosine K2 column: " + QString::number(IJK_accuracy_list[2][3]);
-//            str_out.append("\n" + temp_str);
+            // temp_str = "Column cosine K2 column: " + QString::number(IJK_accuracy_list[2][3]);
+            // str_out.append("\n" + temp_str);
             std::cout << str_out.toStdString() << std::endl;
             Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
 
@@ -287,7 +296,8 @@ namespace TestResources {
  * \param
  * \return
  */
-        template<typename T, typename V> void CheckRowwiseDiff(T& va_, T& vb_, V& vdiff_, QString tag, double tol, WIData data){
+        template<typename T, typename V> void CheckRowwiseDiff(
+             T& va_, T& vb_, V& vdiff_, QString tag, double tol, WIData data){
 
             // Check vector has length > 0
             if (!vdiff_.rows()>0)
@@ -449,7 +459,7 @@ namespace TestResources {
             QString str_out;
             QString lstr_out = "\n--------------------------------------------------------------------------------";
             QString tol;
-            tol.sprintf("%5.3f",GetEpsWCF());
+            tol.sprintf("%5.3f", GetEpsWCF());
 
             if(va.WCF.isApprox(vb.WCF, GetEpsWCF())){
                 str_out = lstr_out + "\nWCF values match exactly for this well (WCF tol = " + tol + ").";
@@ -487,7 +497,7 @@ namespace TestResources {
                 Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
 
                 // Cosine measure
-                str_out = "Column WCF cosine measure: angle b/e vectors (1=parallel=best)";
+                str_out = "Column WCF cosine similarity: angle b/e vectors (1=parallel=best)";
                 std::cout << "\033[1;33m" << str_out.toStdString() << "\033[0m" << std::endl;
                 Utilities::FileHandling::WriteLineToFile(str_out, va.tex_file);
 
@@ -611,17 +621,17 @@ namespace TestResources {
             // VECTOR LENGTHS HAVE BEEN MADE EQUAL => COMPARE DIRECTLY
             QString str_out;
             QString ind_str = (sup_indices.length() > 1) ? QString::number(sup_indices.size()) + " rows were" : "1 row was";
-            str_out.append(WIDataRMS.dir_name + ">>> Vector lengths have been made equal: "
-                                              + ind_str + " removed from "
-                                              + rem_str + "\ndata b/c IJK values did not match. ");
+            str_out.append(">>> Vector lengths have been made equal: "
+                           + ind_str + " removed from "
+                           + rem_str + " data\nb/c IJK values did not match. ");
 
             QStringList str_ind;
             foreach(int ii, sup_indices){ str_ind.append(QString::number(ii)); }
             str_out.append("Rows that were removed: [" + str_ind.join(" ") + "].");
 
 
-            if (sup_indices.length()>10){
-                str_out.append("\nWARNING: more than 10 rows were removed, check wells are supposed to be equal.");
+            if (sup_indices.length()>5){
+                str_out.append("\nWARNING: more than 5 rows removed, check wells are supposed to be equal. ");
             }
 
             str_out.append("\nContinuing comparison.");
@@ -660,7 +670,7 @@ namespace TestResources {
             if (DiffVectorLength(WIDataRMS, WIDataPCG)) {
 
                 // IF VECTOR LENGTHS ARE EQUAL => COMPARE DIRECTLY
-                str_out = lstr_out + "\n" + WIDataRMS.dir_name 
+                str_out = lstr_out + "\n"
                 + ">>> COMPDAT vectors have the same length. Making comparison.";
                 std::cout << std::endl << "\033[1;36m" << str_out.toStdString() << "\033[0m" << std::endl;
                 Utilities::FileHandling::WriteLineToFile(str_out, WIDataPCG.tex_file);
@@ -668,7 +678,7 @@ namespace TestResources {
             } else {
 
                 // IF VECTOR LENGTHS ARE UNEQUAL => MAKE EQUAL, THEN COMPARE DIRECTLY
-                str_out = lstr_out + "\n" + WIDataRMS.dir_name 
+                str_out = lstr_out + "\n"
                 + ">>> COMPDAT vectors have different length. Making them equal.";
                 std::cout << std::endl << "\033[1;36m" << str_out.toStdString() << "\033[0m" << std::endl;
                 Utilities::FileHandling::WriteLineToFile(str_out, WIDataPCG.tex_file);
@@ -728,7 +738,6 @@ namespace TestResources {
                               << std::endl << "..." << std::endl;
 
                     std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;
-                    // std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
                 }
             }else if(msg.compare("C")==0){
 

@@ -13,20 +13,6 @@
 #include "Reservoir/tests/test_resource_wic_welldir.h"
 #include "Reservoir/tests/test_resource_wic_diff_functions.h"
 
-#include <QList>
-#include <QVector>
-#include <QProcess>
-#include <QTextStream>
-#include <fstream>
-#include <Eigen/Dense>
-
-#include <vector>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <QTextCodec>
-
-
 using namespace Reservoir::Grid;
 using namespace Reservoir::WellIndexCalculation;
 using namespace TestResources::WIBenchmark;
@@ -80,33 +66,33 @@ namespace {
 
         for (int ii = 0; ii < num_files; ++ii) {
 
+            // USE COMPDAT DATA PRODUCED BY BENCHMARK PROGRAM
+            WIDataRMS.ReadCOMPDAT(rms_files[ii], dir_list_[ii]);
+
+            // UNCOMMENT IF READING PCG COMPDAT TABLE FROM BENCHMARK PROGRAM
+            // WIDataPCG.ReadCOMPDAT(pcg_files[ii],dir_list_[ii]);
+            // DEBUG: PRINT OLD IJK/WCF VALUES B/F SHIFTING TO NEW
+            // WIDataPCG.PrintIJKData(dir_list_[ii] + "/DBG_" + dir_names_[ii] + "_PCG.IJK");
+            // WIDataPCG.PrintWCFData(dir_list_[ii] + "/DBG_" + dir_names_[ii] + "_PCG.WCF");
+
+            // MAKE NEW COMPDAT DATA USING PRECOMPILED WellIndexCalculator
+            WIDataRMS.ReadXYZ(dir_list_[ii] + "/" + dir_names_[ii]);
+            WIDataPCG.ReadXYZ(dir_list_[ii] + "/" + dir_names_[ii]);
+            WIDataPCG.CalculateWCF(dir_list_[ii] + "/" + dir_names_[ii]);
+            WIDataPCG.PrintCOMPDATPlot(dir_list_[ii] + "/" + dir_names_[ii]);
+            // USE DATA COMPUTED USING WellIndexCalculator INSTEAD OF OLD DATA
+            WIDataPCG.IJK = WIDataPCG.IJKN;
+            WIDataPCG.WCF = WIDataPCG.WCFN;
+
             // WRITE TO TEX FILE
             WIDataPCG.tex_file = dir_list_[ii] + "/" + dir_names_[ii] + ".tex";
             WIDataRMS.tex_file = WIDataPCG.tex_file;
-            str_out = "\\begin{alltt}" + lstr_out + "\nChecking IJK and WCF data for well: "
-                      + dir_names_[ii] + " (row numbering uses 0-indexing)" + lstr_out;
-            Utilities::FileHandling::WriteStringToFile(str_out, WIDataPCG.tex_file);
-
-            // MESSAGE OUTPUT
             str_out = lstr_out + "\nChecking IJK and WCF data for well: "
-                      + dir_names_[ii] + lstr_out;
+                      + dir_names_[ii] + " (row numbering uses 0-indexing)\nheel.xyz = "
+                      + WIDataPCG.XYZh + ", toe.xyz = " + WIDataPCG.XYZt
+                      + lstr_out;
+            Utilities::FileHandling::WriteStringToFile("\\begin{alltt}" + str_out, WIDataPCG.tex_file);
             std::cout << "\033[1;36m" << str_out.toStdString() << "\033[0m";
-
-            // READ COMPDAT + XYZ FILES
-            WIDataRMS.ReadData(rms_files[ii],dir_list_[ii]);
-            WIDataPCG.ReadData(pcg_files[ii],dir_list_[ii]);
-
-            // MAKE PCG_NEW.DATA FILES USING PRECOMPILED WellIndexCalculator
-            WIDataPCG.CalculateWCF();
-            WIDataPCG.PrintCOMPDATPlot(dir_list_[ii] + "/" + dir_names_[ii]);
-
-            // DEBUG: PRINT OLD IJK/WCF VALUES B/F SHIFTING TO NEW
-            WIDataPCG.PrintIJKData(dir_list_[ii] + "/DBG_" + dir_names_[ii] + "_PCG.IJK");
-            WIDataPCG.PrintWCFData(dir_list_[ii] + "/DBG_" + dir_names_[ii] + "_PCG.WCF");
-
-            // SHIFT OVER TO DATA COMPUTED USING WellIndexCalculator
-            WIDataPCG.IJK = WIDataPCG.IJKN;
-            WIDataPCG.WCF = WIDataPCG.WCFN;
 
             // DEBUG
             debug_msg(false, "RMS_PCG_IJK_data", dir_names_, dir_list_, ii, WIDataRMS, WIDataPCG, 0);
@@ -122,6 +108,7 @@ namespace {
             CompareIJK(WIDataRMS, WIDataPCG);
             CompareWCF(WIDataRMS, WIDataPCG);
 
+            // WRITE TO TEX FILE
             Utilities::FileHandling::WriteLineToFile("\\end{alltt}", WIDataPCG.tex_file);
         }
     }

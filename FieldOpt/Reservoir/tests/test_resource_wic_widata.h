@@ -1,6 +1,7 @@
 //
 // Created by bellout on 8/4/16.
 //
+
 #ifndef FIELDOPT_TEST_RESOURCE_WIC_WIDATA_H
 #define FIELDOPT_TEST_RESOURCE_WIC_WIDATA_H
 
@@ -28,10 +29,11 @@ namespace TestResources {
             WIData(){};
 
             // Functions
-            void ReadData(QString file_name, QString dir_list);
+            void ReadCOMPDAT(QString file_name, QString dir_list);
+            void ReadXYZ(QString file_name);
             void PrintIJKData(QString file_name);
             void PrintWCFData(QString file_name);
-            void CalculateWCF();
+            void CalculateWCF(QString file_root);
             void PrintCOMPDATPlot(QString file_root);
 
             // Variables:
@@ -43,6 +45,7 @@ namespace TestResources {
 
             Matrix<double,1,6> XYZd;
             QStringList XYZc;
+            QString XYZh, XYZt;
 
             QStringList name;
             QString dir_name;
@@ -62,30 +65,38 @@ namespace TestResources {
 
             QString csv_file = file_root + ".csv";
             QString pdf_file = file_root + ".pdf";
-            QString command = "python3 ../../tools/python_scripts/compdat_plot/create_compdat_plot.py "
-                              + csv_file + pdf_file + " 60 60";
+            // CHANGE AFTER COPYING TOOLS DIR TO BUILD FOLDER AT COMPILE TIME
+            QString command = "/home/bellout/git/PCG/FieldOpt/tools/python_scripts/compdat_plot/create_compdat_plot.py "
+                              + csv_file + " " + pdf_file + " 60 60";
 
             // LAUNCH PLOT MAKER
             QProcess plot_process;
-//            plot_process.start(command);
-//            plot_process.waitForFinished();
+            plot_process.start(command);
+            plot_process.waitForFinished();
         }
 
-        void WIData::CalculateWCF(){
+        void WIData::CalculateWCF(QString file_root){
 
             bool debug_ = false;
 
             // CSV FORMAT
+            XYZh = XYZc[0] + " " + XYZc[1] + " " + XYZc[2];
+            XYZt = XYZc[3] + " " + XYZc[4] + " " + XYZc[5];
             QString command_csv = "./WellIndexCalculator -g "
                                   + grid_file
-                                  + " -h " + XYZc[0] + " " + XYZc[1] + " " + XYZc[2]
-                                  + " -t " + XYZc[3] + " " + XYZc[4] + " " + XYZc[5]
-                                  + " -r " + radius + " > test.csv";
+                                  + " -h " + XYZh
+                                  + " -t " + XYZt
+                                  + " -r " + radius;
 
             // LAUNCH WELL INDEX CALCULATOR (CSV FORMAT)
             QProcess wic_process_csv;
             wic_process_csv.start(command_csv);
             wic_process_csv.waitForFinished();
+
+            // READ OUTPUT FROM QProcess COMMAND + CLOSE PROCESSES
+            QString wic_process_csv_all_output = QString::fromLatin1(wic_process_csv.readAll().data());
+            wic_process_csv.close();
+            Utilities::FileHandling::WriteStringToFile(wic_process_csv_all_output, file_root + ".csv");
 
             // COMPDAT FORMAT
             QString command = "./WellIndexCalculator -g "
@@ -111,6 +122,7 @@ namespace TestResources {
             QString all_output = QString::fromLatin1(wic_all_output.data());
             QString standard_output = QString::fromLatin1(wic_standard_output.data());
             QString error_output = QString::fromLatin1(wic_error_output.data());
+            Utilities::FileHandling::WriteStringToFile(all_output, file_root + ".compdat");
 
             QStringList lines = all_output.split(QRegExp("[\r\n]"));
             QStringList fields;
@@ -184,8 +196,8 @@ namespace TestResources {
             file.close();
         }
 
-        void WIData::ReadData(QString file_name,
-                              QString dir_list){
+        void WIData::ReadCOMPDAT(QString file_name,
+                                 QString dir_list){
 
             // READ IJK AND WCF DATA
             QFile file(file_name);
@@ -219,7 +231,7 @@ namespace TestResources {
 
                     // Read IJK values from current line
                     temp_IJK << in_fields[2].toInt(), in_fields[3].toInt(),
-                                in_fields[4].toInt(), in_fields[5].toInt();
+                            in_fields[4].toInt(), in_fields[5].toInt();
 
                     // Store IJK values
                     Matrix<int, Dynamic, 4> IJK_curr(IJK_stor.rows() + temp_IJK.rows(), 4);
@@ -235,15 +247,12 @@ namespace TestResources {
 
             IJK = IJK_stor;
             WCF = Map<Matrix<double, Dynamic, 1>>(wcf.data(), wcf.size());
+        }
 
-            // Debug: check read process for IJK and WCF data is OK
-            if (debug_){
-                std::cout << "\033[1;31m<DEBUG:START->\033[0m" << std::endl;
-                std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;
-            }
+        void WIData::ReadXYZ(QString file_name){
 
             // READ XYZ DATA
-            QFile xyz_file(dir_list + "/" + dir_name + ".xyz");
+            QFile xyz_file(file_name + ".xyz");
             xyz_file.open(QIODevice::ReadOnly|QIODevice::Text);
 
             QTextStream xyz_in(&xyz_file);
@@ -285,7 +294,6 @@ namespace TestResources {
                 std::cout << std::endl;
                 std::cout << "\033[1;31m<DEBUG:END--->\033[0m" << std::endl;
             }
-
         }
     }
 }
