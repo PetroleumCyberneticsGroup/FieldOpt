@@ -27,8 +27,8 @@ namespace {
         Runner::RuntimeSettings *rts;
     };
 
-    TEST_F(RuntimeSettingsTest, Verbosity) {
-        EXPECT_EQ(rts->verbosity_level(), 2);
-    }
+//    TEST_F(RuntimeSettingsTest, Verbosity) {
+//        EXPECT_EQ(rts->verbosity_level(), 2);
+//    }
 
 }
