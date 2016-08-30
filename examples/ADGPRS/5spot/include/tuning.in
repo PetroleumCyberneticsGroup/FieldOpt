@@ -1,6 +1,6 @@
 
 TUNING
-15 30 15 5 /
+1 30 15 5 /
 #0.1 6 * 5 / #24.07.2012, w/Oleg, did not help much from previous
 #0.1 10 * 2.5 / #24.07.2012, w/Oleg, no improvement from previous
 #0.1 10 * 5 / #25.07.2012, w/Oleg, better than previous
@@ -27,9 +27,9 @@ TUNING
 
 LINEAR
 #PARDISO 1e-02 300
-GMRES_CPR0 1e-06 300
+GMRES_CPR0 1e-08 300
 #GMRES_CPR0 1e-6 300 #Oleg, NRN
-/
+//
 
 # --------------------
 # 1. Linear solver.
@@ -53,7 +53,7 @@ GMRES_CPR0 1e-06 300
 
 
 NONLINEAR
-APPL 1e-06 30 /
+APPL 1e-4 30 /
 #APPL 1e-6 30 / #Oleg, NRN
 /
 
@@ -78,12 +78,12 @@ APPL 1e-06 30 /
 # --------------------
 
 
-FACILITY
+--FACILITY
 #1e-06 30 1e-1 /
-1e-6  30 1e+10 /
+--1e-6  30 1e+10 /
 #1e-6  30 1e+10 / #NRN, Oleg
 #1e-9  30 1e+10 / # Oleg, van Essen
-/
+--/
 
 
 # --------------------
