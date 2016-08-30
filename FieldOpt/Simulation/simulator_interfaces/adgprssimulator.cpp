@@ -14,7 +14,7 @@ namespace Simulation {
             tmp.removeLast();
             initial_driver_file_parent_dir_path_ = tmp.join("/");
             verifyOriginalDriverFileDirectory();
-            output_h5_summary_file_path_ = output_directory_ + "/" + initial_driver_file_name_.split(".").first() + ".SIM.H5";
+            output_h5_summary_file_path_ = output_directory_ + "/" + initial_driver_file_name_.split(".").first() + ".vars.h5";
 
             model_ = model;
             results_ = new Simulation::Results::AdgprsResults();
@@ -57,7 +57,7 @@ namespace Simulation {
 
         void AdgprsSimulator::UpdateFilePaths()
         {
-            output_h5_summary_file_path_ = output_directory_ + "/" + initial_driver_file_name_.split(".").first() + ".SIM.H5";
+            output_h5_summary_file_path_ = output_directory_ + "/" + initial_driver_file_name_.split(".").first() + ".vars.h5";
             script_args_ = (QStringList() << output_directory_ << output_directory_+"/"+initial_driver_file_name_);
         }
 

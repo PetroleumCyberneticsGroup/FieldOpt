@@ -21,7 +21,7 @@ namespace TestResources {
         static QString driver_5spot_ = "../examples/ADGPRS/5spot/fo_driver_5vert_wells.json";
         static QString gprs_drv_5spot_ = "../examples/ADGPRS/5spot/5SPOT.gprs";
         static QString gprs_smry_json_5spot_ = "../examples/ADGPRS/5spot/5SPOT.json";
-        static QString gprs_smry_hdf5_5spot_ = "../examples/ADGPRS/5spot/5SPOT.SIM.H5";
+        static QString gprs_smry_hdf5_5spot_ = "../examples/ADGPRS/5spot/5SPOT.vars.h5";
         static QString gprs_base_5spot_ = "../examples/ADGPRS/5spot/5SPOT";
 
 //        static QString driver_5spot_flow_ = "../examples/Flow/5spot/fo_driver_2_horz_placement.json";

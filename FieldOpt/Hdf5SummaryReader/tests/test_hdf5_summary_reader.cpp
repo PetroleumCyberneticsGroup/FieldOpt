@@ -10,7 +10,7 @@ namespace {
     protected:
         virtual void SetUp() {}
         virtual void TearDown() {}
-        std::string file_path = "../examples/ADGPRS/5spot/5SPOT.SIM.H5";
+        std::string file_path = "../examples/ADGPRS/5spot/5SPOT.vars.h5";
     };
 
 
