@@ -91,30 +91,42 @@ namespace Reservoir {
             return entry_point;
         }
 
-        double WellIndexCalculator::compute_well_index(IntersectedCell &icell) {
-            double Lx = 0;
-            double Ly = 0;
-            double Lz = 0;
+        ADDouble WellIndexCalculator::compute_well_index(IntersectedCell &icell) {
+            ADDouble Lx = 0;
+            ADDouble Ly = 0;
+            ADDouble Lz = 0;
 
             for (int ii = 0; ii < icell.points().length() - 1; ++ii) { // Current segment ii
                 // Compute vector from segment
-                Vector3d current_vec = icell.points().at(ii+1) - icell.points().at(ii);
+                ADDoubleVector current_vec;
+                current_vec[0] = icell.points()[ii+1][0] - icell.points()[ii][0];
+                current_vec[1] = icell.points()[ii+1][1] - icell.points()[ii][1];
+                current_vec[2] = icell.points()[ii+1][2] - icell.points()[ii][2];
 
                 /* Proejcts segment vector to directional spanning vectors and determines the length.
                  * of the projections. Note that we only only care about the length of the projection,
                  * not the spatial position. Also adds the lengths of previous segments in case there
                  * is more than one segment within the well.
                  */
-                Lx = Lx + (icell.xvec() * icell.xvec().dot(current_vec) / icell.xvec().dot(icell.xvec())).norm();
-                Ly = Ly + (icell.yvec() * icell.yvec().dot(current_vec) / icell.yvec().dot(icell.yvec())).norm();
-                Lz = Lz + (icell.zvec() * icell.zvec().dot(current_vec) / icell.zvec().dot(icell.zvec())).norm();
+                Lx = Lx + (icell.xvec() * (icell.xvec()[0]*current_vec[0]
+                           + icell.xvec()[1] * current_vec[1]
+                           + icell.xvec()[2] * current_vec[2]) // dot
+                        / icell.xvec().dot(icell.xvec())).norm();
+                Ly = Ly + (icell.yvec() * (icell.yvec()[0]*current_vec[0]
+                           + icell.yvec()[1] * current_vec[1]
+                           + icell.yvec()[2] * current_vec[2]) // dot
+                          / icell.yvec().dot(icell.yvec())).norm();
+                Lz = Lz + (icell.zvec() * (icell.zvec()[0]*current_vec[0]
+                           + icell.zvec()[1] * current_vec[1]
+                           + icell.zvec()[2] * current_vec[2]) // dot
+                          / icell.zvec().dot(icell.zvec())).norm();
             }
 
             // Compute Well Index from formula provided by Shu
-            double well_index_x = (dir_well_index(Lx, icell.dy(), icell.dz(), icell.permy(), icell.permz()));
-            double well_index_y = (dir_well_index(Ly, icell.dx(), icell.dz(), icell.permx(), icell.permz()));
-            double well_index_z = (dir_well_index(Lz, icell.dx(), icell.dy(), icell.permx(), icell.permy()));
-            double wi = sqrt(well_index_x * well_index_x + well_index_y * well_index_y + well_index_z * well_index_z);
+            ADDouble well_index_x = Lx * (dir_well_index(1, icell.dy(), icell.dz(), icell.permy(), icell.permz()));
+            ADDouble well_index_y = Ly * (dir_well_index(1, icell.dx(), icell.dz(), icell.permx(), icell.permz()));
+            ADDouble well_index_z = Lz * (dir_well_index(1, icell.dx(), icell.dy(), icell.permx(), icell.permy()));
+            ADDouble wi = sqrt(well_index_x * well_index_x + well_index_y * well_index_y + well_index_z * well_index_z);
             return wi;
         }
 

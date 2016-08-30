@@ -51,7 +51,7 @@ namespace Reservoir {
             return well_index_;
         }
 
-        void IntersectedCell::set_well_index(double well_index) {
+        void IntersectedCell::set_well_index(ADDouble well_index) {
             well_index_ = well_index;
         }
     }

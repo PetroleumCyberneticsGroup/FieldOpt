@@ -6,6 +6,8 @@
 namespace Reservoir {
 namespace WellIndexCalculation {
     using namespace Eigen;
+    typedef double ADDouble;
+    typedef Vector3d ADDoubleVector;
     /*!
      * \brief The IntersectedCell struct holds information about an intersected cell.
      */
@@ -28,12 +30,12 @@ namespace WellIndexCalculation {
         const Vector3d & exit_point() const;
         void set_exit_point(const Vector3d &exit_point);
         double well_index() const;
-        void set_well_index(double well_index);
+        void set_well_index(ADDouble well_index);
 
     private:
-        Vector3d entry_point_;
-        Vector3d exit_point_;
-        double well_index_;
+        ADDoubleVector entry_point_;
+        ADDoubleVector exit_point_;
+        ADDouble well_index_;
     };
 }
 }

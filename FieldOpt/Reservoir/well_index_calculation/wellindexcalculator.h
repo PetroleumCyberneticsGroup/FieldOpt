@@ -10,7 +10,11 @@
 
 namespace Reservoir {
     namespace WellIndexCalculation {
+
         using namespace Eigen;
+        typedef double ADDouble;
+
+        typedef Vector3d ADDoubleVector;
 
         /*!
          * \brief The WellIndexCalculation class deduces the well blocks and their respecitve well indices/transmissibility
@@ -90,7 +94,7 @@ namespace Reservoir {
              * \param icell Well block to compute the WI in.
              * \return Well index for block/cell
             */
-            double compute_well_index(IntersectedCell &icell);
+            ADDouble compute_well_index(IntersectedCell &icell);
 
             /*!
              * \brief Auxilary function for compute_well_index function
