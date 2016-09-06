@@ -3,7 +3,7 @@
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
 #include "Reservoir/grid/grid_exceptions.h"
-#include "Utilities/file_handling/filehandling.h"
+#include "Utilities/file_handling/filehandling.hpp"
 #include "Reservoir/well_index_calculation/wellindexcalculator.h"
 
 using namespace Reservoir::Grid;

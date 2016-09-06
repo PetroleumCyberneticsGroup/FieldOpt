@@ -24,8 +24,7 @@
  *****************************************************************************/
 
 #include "execution.h"
-#include "Utilities/file_handling/filehandling.h"
-#include "Utilities/file_handling/filehandling_exceptions.h"
+#include "Utilities/file_handling/filehandling.hpp"
 #include <iostream>
 #include <unistd.h>
 #include <sys/wait.h>
@@ -52,7 +51,7 @@ namespace Utilities {
         QString Exec(QString directory, QStringList commands, bool verbose)
         {
             if (!Utilities::FileHandling::DirectoryExists(directory))
-                throw Utilities::FileHandling::DirectoryNotFoundException("Directory for command execution not found", directory);
+                throw std::runtime_error("Directory for command execution not found: " + directory.toStdString());
 
             QString cmd = "cd " + directory + "; " + commands.join("; ");
             FILE* pipe = popen(cmd.toStdString().c_str(), "r");
@@ -74,14 +73,14 @@ namespace Utilities {
         void ExecShellScript(QString script_path, QStringList args)
         {
             if (!Utilities::FileHandling::FileExists(script_path))
-                throw ::Utilities::FileHandling::FileNotFoundException(script_path);
+                throw std::runtime_error("File not found: " + script_path.toStdString());
             QString command = script_path + " " + args.join(" ");
             system(command.toLatin1().constData());
         }
 
         bool ExecShellScriptTimeout(QString script_path, QStringList args, int timeout) {
             if (!Utilities::FileHandling::FileExists(script_path))
-                throw ::Utilities::FileHandling::FileNotFoundException(script_path);
+                throw std::runtime_error("File not found: " + script_path.toStdString());
             assert(args.length() == 2);
 
             pid_t pid;
