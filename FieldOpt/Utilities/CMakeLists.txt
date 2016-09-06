@@ -7,8 +7,6 @@ add_library(utilities
 		settings/simulator.cpp
 		settings/model.cpp
 		settings/settings.cpp
-        file_handling/filehandling_exceptions.h
-		file_handling/filehandling.cpp
 		unix/execution.cpp)
 add_library(fieldopt::utilities ALIAS ${PROJECT_NAME})
 
@@ -28,8 +26,6 @@ target_compile_features(utilities
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 add_executable(test_utilities
-        tests/test_resource_example_file_paths.hpp
-		tests/test_resource_settings.hpp
         tests/file_handling/test_filehandling.cpp
         tests/settings/test_settings.cpp
         tests/settings/test_settings_model.cpp
