@@ -12,7 +12,7 @@
 #include <boost/program_options.hpp>
 #include <iostream>
 #include <stdlib.h>
-#include "Utilities/file_handling/filehandling.hpp"
+#include "Utilities/filehandling.hpp"
 
 namespace po = boost::program_options;
 using namespace Reservoir::WellIndexCalculation;

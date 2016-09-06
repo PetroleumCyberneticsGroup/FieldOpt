@@ -1,6 +1,6 @@
 #include "eclgrid.h"
 #include "grid_exceptions.h"
-#include "Utilities/file_handling/filehandling.hpp"
+#include "Utilities/filehandling.hpp"
 
 namespace Reservoir {
     namespace Grid {
