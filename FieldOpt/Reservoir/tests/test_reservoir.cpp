@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include "Reservoir/reservoir.h"
-#include "Utilities/tests/test_resource_settings.h"
+#include "Utilities/tests/test_resource_settings.hpp"
 
 using namespace Reservoir;
 

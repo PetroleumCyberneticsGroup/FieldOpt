@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include "ERTWrapper/eclgridreader.h"
-#include "Utilities/tests/test_resource_example_file_paths.h"
+#include "Utilities/tests/test_resource_example_file_paths.hpp"
 
 using namespace ERTWrapper::ECLGrid;
 
