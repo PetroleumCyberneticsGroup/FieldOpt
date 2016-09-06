@@ -1,5 +1,5 @@
 #include <results/eclresults.h>
-#include <Utilities/unix/execution.h>
+#include <Utilities/execution.hpp>
 #include <iostream>
 #include "flowsimulator.h"
 #include "simulator_exceptions.h"

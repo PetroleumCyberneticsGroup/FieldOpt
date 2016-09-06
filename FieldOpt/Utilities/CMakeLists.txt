@@ -7,7 +7,7 @@ add_library(utilities
 		settings/simulator.cpp
 		settings/model.cpp
 		settings/settings.cpp
-		unix/execution.cpp)
+        )
 add_library(fieldopt::utilities ALIAS ${PROJECT_NAME})
 
 target_link_libraries(utilities

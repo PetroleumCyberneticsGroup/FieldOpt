@@ -2,7 +2,7 @@
 #include <tests/test_resource_example_file_paths.hpp>
 #include <Simulation/execution_scripts/execution_scripts.h>
 
-#include "Utilities/unix/execution.h"
+#include "execution.hpp"
 
 namespace {
 
@@ -29,7 +29,7 @@ namespace {
     };
 
     TEST_F(UnixPipeTest, SingleCommand) {
-        ::Utilities::Unix::Exec(directory_, command_, true);
+        ::Utilities::Unix::Exec(directory_, QStringList(command_), true);
     }
 
     TEST_F(UnixPipeTest, MultipleCommands) {
