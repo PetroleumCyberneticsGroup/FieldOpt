@@ -1,8 +1,8 @@
 #ifndef CONTROL_H
 #define CONTROL_H
 
-#include "Utilities/settings/settings.h"
-#include "Utilities/settings/model.h"
+#include "Settings/settings.h"
+#include "Settings/model.h"
 #include "Model/properties/discrete_property.h"
 #include "Model/properties/continous_property.h"
 #include "Model/properties/binary_property.h"

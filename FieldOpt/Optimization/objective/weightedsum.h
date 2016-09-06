@@ -27,7 +27,7 @@
 #define WEIGHTEDSUM_H
 
 #include "objective.h"
-#include "Utilities/settings/model.h"
+#include "Settings/model.h"
 #include "Simulation/results/results.h"
 
 namespace Optimization {

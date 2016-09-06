@@ -24,9 +24,9 @@
  *****************************************************************************/
 
 #include <iostream>
-#include "Utilities/settings/model.h"
+#include "model.h"
 #include "settings_exceptions.h"
-#include "filehandling.hpp"
+#include "Utilities/filehandling.hpp"
 
 namespace Utilities {
     namespace Settings {

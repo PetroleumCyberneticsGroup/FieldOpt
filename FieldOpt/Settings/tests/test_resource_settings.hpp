@@ -1,8 +1,8 @@
 #ifndef FIELDOPT_TEST_RESOURCE_SETTINGS_H
 #define FIELDOPT_TEST_RESOURCE_SETTINGS_H
 
-#include "Utilities/settings/settings.h"
-#include "Utilities/tests/test_resource_example_file_paths.hpp"
+#include "Settings/settings.h"
+#include "Settings/tests/test_resource_example_file_paths.hpp"
 
 namespace TestResources {
 

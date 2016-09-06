@@ -16,7 +16,6 @@ add_library(fieldopt::reservoir ALIAS ${PROJECT_NAME})
 include_directories(${EIGEN3_INCLUDE_DIR})
 target_link_libraries (reservoir
         PUBLIC fieldopt::ertwrapper
-        PUBLIC fieldopt::utilities
         PUBLIC Qt5::Core)
 
 target_compile_features(reservoir
@@ -47,6 +46,7 @@ add_executable(test_reservoir
 target_link_libraries(test_reservoir
         fieldopt::reservoir
         fieldopt::ertwrapper
+        fieldopt::settings
         ${GTEST_BOTH_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT})
 

@@ -26,7 +26,7 @@
 #include <gtest/gtest.h>
 
 #include "filehandling.hpp"
-#include "Utilities/tests/test_resource_example_file_paths.hpp"
+#include "Settings/tests/test_resource_example_file_paths.hpp"
 
 namespace {
 

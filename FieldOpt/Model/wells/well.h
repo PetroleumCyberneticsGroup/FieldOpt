@@ -1,8 +1,8 @@
 #ifndef WELL_H
 #define WELL_H
 
-#include "Utilities/settings/settings.h"
-#include "Utilities/settings/model.h"
+#include "Settings/settings.h"
+#include "Settings/model.h"
 #include "Model/wells/wellbore/completions/completion.h"
 #include "Model/wells/wellbore/completions/perforation.h"
 #include "Model/properties/variable_property_container.h"

@@ -2,7 +2,7 @@
 #define CONSTRAINT_H
 
 #include "Optimization/case.h"
-#include "Utilities/settings/optimizer.h"
+#include "Settings/optimizer.h"
 #include "Model/properties/variable_property_container.h"
 
 namespace Optimization {

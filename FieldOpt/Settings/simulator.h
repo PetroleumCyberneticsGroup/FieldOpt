@@ -1,7 +1,7 @@
 #ifndef SETTINGS_SIMULATOR_H
 #define SETTINGS_SIMULATOR_H
 
-#include "Utilities/settings/settings.h"
+#include "settings.h"
 
 #include <QStringList>
 

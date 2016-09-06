@@ -7,7 +7,7 @@
 #include "Reservoir/reservoir.h"
 #include "properties/variable_property_container.h"
 #include "wells/well.h"
-#include "Utilities/settings/model.h"
+#include "Settings/model.h"
 #include "Optimization/case.h"
 #include "Model/wells/wellbore/wellblock.h"
 

@@ -3,7 +3,7 @@
 
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
-#include "Utilities/tests/test_resource_example_file_paths.hpp"
+#include "Settings/tests/test_resource_example_file_paths.hpp"
 
 namespace TestResources {
     class TestResourceGrids {

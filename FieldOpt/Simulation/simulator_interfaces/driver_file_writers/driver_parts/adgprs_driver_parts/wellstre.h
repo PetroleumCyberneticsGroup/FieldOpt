@@ -3,7 +3,7 @@
 
 #include "Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/ecldriverpart.h"
 #include "Model/wells/well.h"
-#include "Utilities/settings/simulator.h"
+#include "Settings/simulator.h"
 #include <QStringList>
 
 

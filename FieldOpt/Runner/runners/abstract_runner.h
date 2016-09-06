@@ -32,7 +32,7 @@
 #include "Optimization/case.h"
 #include "Optimization/objective/objective.h"
 #include "Simulation/simulator_interfaces/simulator.h"
-#include "Utilities/settings/settings.h"
+#include "Settings/settings.h"
 #include "bookkeeper.h"
 #include "Runner/logger.h"
 

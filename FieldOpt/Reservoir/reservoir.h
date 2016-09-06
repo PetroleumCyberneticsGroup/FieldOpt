@@ -2,7 +2,7 @@
 #define RESERVOIR_H
 
 #include "grid/grid.h"
-#include "Utilities/settings/model.h"
+#include "Settings/model.h"
 
 namespace Reservoir {
 

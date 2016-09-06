@@ -3,7 +3,7 @@
 #include "simulator.h"
 
 #include "Model/model.h"
-#include "Utilities/settings/settings.h"
+#include "Settings/settings.h"
 #include "driver_file_writers/adgprsdriverfilewriter.h"
 
 namespace Simulation {
