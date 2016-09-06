@@ -44,7 +44,6 @@ add_executable(test_reservoir
 target_link_libraries(test_reservoir
         fieldopt::reservoir
         fieldopt::ertwrapper
-        fieldopt::settings
         ${GTEST_BOTH_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT})
 
