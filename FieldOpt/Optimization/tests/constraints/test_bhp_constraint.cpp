@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 #include "Optimization/constraints/bhp_constraint.h"
-#include "Utilities/tests/test_resource_settings.h"
+#include "Utilities/tests/test_resource_settings.hpp"
 #include "Optimization/tests/test_resource_optimizer.h"
 
 namespace {

@@ -2,7 +2,7 @@
 #include <QString>
 #include <qvector.h>
 #include "Simulation/results/eclresults.h"
-#include "Utilities/tests/test_resource_example_file_paths.h"
+#include "Utilities/tests/test_resource_example_file_paths.hpp"
 
 using namespace Simulation::Results;
 

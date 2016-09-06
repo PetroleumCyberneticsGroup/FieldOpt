@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <tests/test_resource_example_file_paths.h>
+#include <tests/test_resource_example_file_paths.hpp>
 #include <Simulation/execution_scripts/execution_scripts.h>
 
 #include "Utilities/unix/execution.h"
