@@ -1,7 +1,7 @@
 #ifndef OPTIMIZER_H
 #define OPTIMIZER_H
 
-#include "Utilities/settings/optimizer.h"
+#include "Settings/optimizer.h"
 #include "case.h"
 #include "case_handler.h"
 #include "constraints/constraint_handler.h"

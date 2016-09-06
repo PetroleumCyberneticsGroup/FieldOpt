@@ -26,7 +26,7 @@
 #ifndef COMPLETION_H
 #define COMPLETION_H
 
-#include "Utilities/settings/model.h"
+#include "Settings/model.h"
 
 namespace Model {
 namespace Wells {

@@ -25,8 +25,8 @@
 
 #include <gtest/gtest.h>
 #include <QString>
-#include "Utilities/settings/settings.h"
-#include "Utilities/tests/test_resource_example_file_paths.hpp"
+#include "Settings/settings.h"
+#include "test_resource_example_file_paths.hpp"
 
 using namespace Utilities::Settings;
 

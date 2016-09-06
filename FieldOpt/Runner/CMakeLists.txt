@@ -37,7 +37,7 @@ target_link_libraries(FieldOpt
 		PUBLIC fieldopt::model
 		PUBLIC fieldopt::simulation
 		PUBLIC fieldopt::optimization
-		PUBLIC fieldopt::utilities
+		PUBLIC fieldopt::settings
 		PUBLIC fieldopt::ertwrapper
 		PUBLIC fieldopt::hdf5summaryreader
 		PUBLIC fieldopt::constraintmath
@@ -49,7 +49,7 @@ target_link_libraries(runner
 		PUBLIC fieldopt::model
 		PUBLIC fieldopt::simulation
 		PUBLIC fieldopt::optimization
-		PUBLIC fieldopt::utilities
+		PUBLIC fieldopt::settings
 		PUBLIC fieldopt::ertwrapper
 		PUBLIC fieldopt::hdf5summaryreader
 		PUBLIC fieldopt::constraintmath

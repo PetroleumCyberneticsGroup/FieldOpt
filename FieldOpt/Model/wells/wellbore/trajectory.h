@@ -6,7 +6,7 @@
 #include "completions/completion.h"
 #include "completions/perforation.h"
 #include "Reservoir/reservoir.h"
-#include "Utilities/settings/model.h"
+#include "Settings/model.h"
 #include "Model/properties/variable_property_container.h"
 #include "Model/properties/property.h"
 

@@ -1,8 +1,8 @@
 #ifndef ADGPRSDRIVERFILEWRITER_H
 #define ADGPRSDRIVERFILEWRITER_H
 
-#include "Utilities/settings/settings.h"
-#include "Utilities/settings/simulator.h"
+#include "Settings/settings.h"
+#include "Settings/simulator.h"
 #include "Model/model.h"
 
 namespace Simulation { namespace SimulatorInterfaces {

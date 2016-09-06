@@ -10,7 +10,7 @@
 #include "rate_constraint.h"
 #include "Optimization/case.h"
 #include "Model/properties/variable_property_container.h"
-#include "Utilities/settings/optimizer.h"
+#include "Settings/optimizer.h"
 #include "Reservoir/grid/grid.h"
 
 #include <QList>

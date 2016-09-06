@@ -13,8 +13,7 @@ target_link_libraries(constraintmath
         PUBLIC Qt5::Core
         PUBLIC ${RpolyPlusPlus}
         PUBLIC fieldopt::ertwrapper
-        PUBLIC fieldopt::reservoir
-        PUBLIC fieldopt::utilities)
+        PUBLIC fieldopt::reservoir)
 
 target_include_directories(constraintmath PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/well_constraint_projections>)

@@ -9,7 +9,7 @@
 #include "Optimization/case.h"
 #include "Optimization/optimizer.h"
 #include "runtime_settings.h"
-#include "Utilities/settings/settings.h"
+#include "Settings/settings.h"
 #include "Model/model.h"
 #include "Simulation/results/results.h"
 

@@ -29,9 +29,9 @@
 #include <QString>
 #include <QJsonObject>
 
-#include "Utilities/settings/simulator.h"
-#include "Utilities/settings/optimizer.h"
-#include "Utilities/settings/model.h"
+#include "simulator.h"
+#include "optimizer.h"
+#include "model.h"
 
 namespace Utilities {
 namespace Settings {

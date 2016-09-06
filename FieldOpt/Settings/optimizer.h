@@ -1,7 +1,7 @@
 #ifndef SETTINGS_OPTIMIZER_H
 #define SETTINGS_OPTIMIZER_H
 
-#include "Utilities/settings/settings.h"
+#include "settings.h"
 
 #include <QList>
 #include <QString>

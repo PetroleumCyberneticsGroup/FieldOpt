@@ -23,7 +23,7 @@ add_library(fieldopt::model ALIAS ${PROJECT_NAME})
 
 target_link_libraries (model
         PUBLIC fieldopt::reservoir
-		PUBLIC fieldopt::utilities
+		PUBLIC fieldopt::settings
 		PUBLIC fieldopt::constraintmath
 		PUBLIC Qt5::Core
 		PUBLIC ${Boost_LIBRARIES})

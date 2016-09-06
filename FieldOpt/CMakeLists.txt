@@ -32,10 +32,11 @@ include_directories(${CMAKE_SOURCE_DIR})
 include(CTest)
 enable_testing()
 
+add_subdirectory(Utilities)
+add_subdirectory(Settings)
 add_subdirectory(ERTWrapper)
 add_subdirectory(Reservoir)
 add_subdirectory(Model)
-add_subdirectory(Utilities)
 add_subdirectory(Optimization)
 add_subdirectory(Simulation)
 add_subdirectory(Runner)
@@ -56,7 +57,7 @@ file(COPY ${EXECUTION_SCRIPTS} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/exe
 file(COPY ${CMAKE_SOURCE_DIR}/../examples DESTINATION ${CMAKE_BINARY_DIR}/)
 #
 ## Copy the test driver file into the build dir
-file(COPY ${CMAKE_SOURCE_DIR}/Utilities/tests/driver/driver.json DESTINATION ${CMAKE_BINARY_DIR}/examples)
+file(COPY ${CMAKE_SOURCE_DIR}/Settings/tests/driver/driver.json DESTINATION ${CMAKE_BINARY_DIR}/examples)
 #
 ## Create an empty directory for test output
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fieldopt_output)

@@ -26,7 +26,7 @@
 #ifndef SETTINGS_MODEL_H
 #define SETTINGS_MODEL_H
 
-#include "Utilities/settings/settings.h"
+#include "settings.h"
 
 #include <QString>
 #include <QList>
