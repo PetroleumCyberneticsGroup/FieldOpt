@@ -31,7 +31,7 @@
 #include "driver_parts/ecl_driver_parts/summary_section.h"
 #include "driver_parts/ecl_driver_parts/schedule_section.h"
 #include "Simulation/simulator_interfaces/simulator_exceptions.h"
-#include "Utilities/file_handling/filehandling.hpp"
+#include "Utilities/filehandling.hpp"
 
 namespace Simulation {
 namespace SimulatorInterfaces {

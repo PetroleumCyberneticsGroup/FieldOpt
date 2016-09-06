@@ -4,7 +4,7 @@
 #include "Reservoir/grid/eclgrid.h"
 #include "Reservoir/grid/grid_exceptions.h"
 #include "ConstraintMath/well_constraint_projections/well_constraint_projections.h"
-#include "Utilities/file_handling/filehandling.hpp"
+#include "Utilities/filehandling.hpp"
 
 using namespace Reservoir::Grid;
 
