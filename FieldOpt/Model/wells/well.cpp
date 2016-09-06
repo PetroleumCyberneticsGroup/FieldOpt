@@ -6,7 +6,7 @@ namespace Model {
         Well::Well(Utilities::Settings::Model settings,
                    int well_number,
                    Properties::VariablePropertyContainer *variable_container,
-                   Reservoir::Reservoir *reservoir)
+                   Reservoir::Grid::Grid *grid)
         {
             Utilities::Settings::Model::Well well_settings = settings.wells().at(well_number);
 
@@ -24,7 +24,7 @@ namespace Model {
             for (int i = 0; i < well_settings.controls.size(); ++i)
                 controls_->append(new Control(well_settings.controls[i], well_settings, variable_container));
 
-            trajectory_ = new Wellbore::Trajectory(well_settings, variable_container, reservoir);
+            trajectory_ = new Wellbore::Trajectory(well_settings, variable_container, grid);
 
             heel_.i = trajectory_->GetWellBlocks()->first()->i();
             heel_.j = trajectory_->GetWellBlocks()->first()->j();

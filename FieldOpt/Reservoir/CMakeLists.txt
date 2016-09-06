@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.2)
 project(reservoir LANGUAGES CXX)
 
 add_library(reservoir
-        reservoir.cpp
         grid/grid_exceptions.h
         grid/cell.cpp
         grid/grid.cpp
@@ -37,7 +36,6 @@ find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR} tests)
 add_executable(test_reservoir
         tests/test_resource_grids.h
-        tests/test_reservoir.cpp
         tests/grid/test_cell.cpp
         tests/grid/test_grid.cpp
         tests/grid/test_ijkcoordinate.cpp

@@ -8,9 +8,9 @@ namespace Wellbore {
 
 WellSpline::WellSpline(Utilities::Settings::Model::Well well_settings,
                        Properties::VariablePropertyContainer *variable_container,
-                       Reservoir::Reservoir *reservoir)
+                       Reservoir::Grid::Grid *grid)
 {
-    grid_ = reservoir->grid();
+    grid_ = grid;
     well_settings_ = well_settings;
 
     heel_x_ = new Model::Properties::ContinousProperty(well_settings.spline_heel.x);

@@ -160,7 +160,7 @@ namespace Runner {
             case Utilities::Settings::Optimizer::OptimizerType::Compass:
                 if (runtime_settings_->verbosity_level()) std::cout << "Using CompassSearch optimization algorithm." << std::endl;
                 optimizer_ = new Optimization::Optimizers::CompassSearch(settings_->optimizer(), base_case_, model_->variables(),
-                                                                         model_->reservoir()->grid());
+                                                                         model_->grid());
                 optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
                 break;
             default:

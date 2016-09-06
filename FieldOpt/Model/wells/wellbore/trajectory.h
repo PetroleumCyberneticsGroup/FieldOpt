@@ -5,7 +5,7 @@
 #include "wellspline.h"
 #include "completions/completion.h"
 #include "completions/perforation.h"
-#include "Reservoir/reservoir.h"
+#include "Reservoir/grid/eclgrid.h"
 #include "Settings/model.h"
 #include "Model/properties/variable_property_container.h"
 #include "Model/properties/property.h"
@@ -33,7 +33,7 @@ namespace Model {
             public:
                 Trajectory(::Utilities::Settings::Model::Well well_settings,
                            Properties::VariablePropertyContainer *variable_container,
-                           Reservoir::Reservoir *reservoir);
+                           Reservoir::Grid::Grid *grid);
                 WellBlock *GetWellBlock(int i, int j, int k); //!< Get the well block at index (i,j,k).
                 QList<WellBlock *> *GetWellBlocks(); //!< Get a list containing all well blocks.
                 void UpdateWellBlocks(); //!< Update the well blocks, in particular the ones defined by a spline.

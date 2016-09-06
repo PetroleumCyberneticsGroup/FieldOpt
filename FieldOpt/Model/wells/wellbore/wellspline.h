@@ -2,7 +2,7 @@
 #define WELLSPLINE_H
 
 #include "trajectory.h"
-#include "Reservoir/reservoir.h"
+#include "Reservoir/grid/eclgrid.h"
 #include "Model/wells/wellbore/wellblock.h"
 #include "Reservoir/well_index_calculation/wellindexcalculator.h"
 #include <QList>
@@ -20,7 +20,7 @@ namespace Model {
             public:
                 WellSpline(::Utilities::Settings::Model::Well well_settings,
                            Properties::VariablePropertyContainer *variable_container,
-                           Reservoir::Reservoir *reservoir);
+                           Reservoir::Grid::Grid *grid);
 
                 /*!
                  * \brief GetWellBlocks Get the set of well blocks with proper WI's defined by the spline.
