@@ -4,12 +4,12 @@ namespace Model {
 
     Model::Model(Utilities::Settings::Model settings)
     {
-        reservoir_ = new Reservoir::Reservoir(settings.reservoir());
+        grid_ = new Reservoir::Grid::ECLGrid(settings.reservoir().path);
         variable_container_ = new Properties::VariablePropertyContainer();
 
         wells_ = new QList<Wells::Well *>();
         for (int well_nr = 0; well_nr < settings.wells().size(); ++well_nr) {
-            wells_->append(new Wells::Well(settings, well_nr, variable_container_, reservoir_));
+            wells_->append(new Wells::Well(settings, well_nr, variable_container_, grid_));
         }
 
         variable_container_->CheckVariableNameUniqueness();
@@ -53,9 +53,9 @@ namespace Model {
 
     void Model::verifyWellBlock(Wells::Wellbore::WellBlock *wb)
     {
-        if (wb->i() < 1 || wb->i() > reservoir()->grid()->Dimensions().nx ||
-            wb->j() < 1 || wb->j() > reservoir()->grid()->Dimensions().ny ||
-            wb->k() < 1 || wb->k() > reservoir()->grid()->Dimensions().nz)
+        if (wb->i() < 1 || wb->i() > grid()->Dimensions().nx ||
+            wb->j() < 1 || wb->j() > grid()->Dimensions().ny ||
+            wb->k() < 1 || wb->k() > grid()->Dimensions().nz)
             throw std::runtime_error("Invalid well block detected: ("
                                      + std::to_string(wb->i()) + ", "
                                      + std::to_string(wb->j()) + ", "

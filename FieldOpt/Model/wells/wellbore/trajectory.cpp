@@ -8,7 +8,7 @@ namespace Model {
 
             Trajectory::Trajectory(Utilities::Settings::Model::Well well_settings,
                                    Properties::VariablePropertyContainer *variable_container,
-                                   ::Reservoir::Reservoir *reservoir)
+                                   ::Reservoir::Grid::Grid *grid)
             {
                 well_blocks_ = new QList<WellBlock *>();
                 if (well_settings.definition_type == Utilities::Settings::Model::WellDefinitionType::WellBlocks) {
@@ -17,7 +17,7 @@ namespace Model {
                     well_spline_ = 0;
                 }
                 else if (well_settings.definition_type == Utilities::Settings::Model::WellDefinitionType::WellSpline) {
-                    well_spline_ = new WellSpline(well_settings, variable_container, reservoir);
+                    well_spline_ = new WellSpline(well_settings, variable_container, grid);
                     well_blocks_ = well_spline_->GetWellBlocks();
                     calculateDirectionOfPenetration();
                 }

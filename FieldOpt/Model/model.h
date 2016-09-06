@@ -3,8 +3,7 @@
 
 #include <QString>
 #include <QList>
-
-#include "Reservoir/reservoir.h"
+#include "Reservoir/grid/eclgrid.h"
 #include "properties/variable_property_container.h"
 #include "wells/well.h"
 #include "Settings/model.h"
@@ -27,7 +26,7 @@ namespace Model {
         /*!
          * \brief reservoir Get the reservoir (i.e. grid).
          */
-        Reservoir::Reservoir *reservoir() const { return reservoir_; }
+        Reservoir::Grid::Grid *grid() const { return grid_; }
 
         /*!
          * \brief variables Get the set of variable properties of all types.
@@ -46,7 +45,7 @@ namespace Model {
         void ApplyCase(Optimization::Case *c);
 
     private:
-        Reservoir::Reservoir *reservoir_;
+        Reservoir::Grid::Grid *grid_;
         Properties::VariablePropertyContainer *variable_container_;
         QList<Wells::Well *> *wells_;
 
