@@ -10,7 +10,7 @@ int main(int argc, const char *argv[]) {
     auto vm = createVariablesMap(argc, argv);
     auto heel = Eigen::Vector3d(vm["heel"].as<std::vector<double>>().data());
     auto toe = Eigen::Vector3d(vm["toe"].as<std::vector<double>>().data());
-    QString gridpth = QString::fromStdString(vm["grid"].as<std::string>());
+    std::string gridpth = vm["grid"].as<std::string>();
     double wellbore_radius = vm["radius"].as<double>();
 
     // Initialize the Grid and WellIndexCalculator objects

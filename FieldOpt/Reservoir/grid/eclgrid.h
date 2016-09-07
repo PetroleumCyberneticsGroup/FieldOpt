@@ -15,7 +15,7 @@ namespace Grid {
 class ECLGrid : public Grid
 {
 public:
-    ECLGrid(QString file_path);
+    ECLGrid(std::string file_path);
     virtual ~ECLGrid();
 
     Dims Dimensions();

@@ -4,7 +4,7 @@ namespace Model {
 
     Model::Model(Settings::Model settings)
     {
-        grid_ = new Reservoir::Grid::ECLGrid(settings.reservoir().path);
+        grid_ = new Reservoir::Grid::ECLGrid(settings.reservoir().path.toStdString());
         variable_container_ = new Properties::VariablePropertyContainer();
 
         wells_ = new QList<Wells::Well *>();
