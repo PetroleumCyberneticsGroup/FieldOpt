@@ -14,6 +14,7 @@ add_library(fieldopt::reservoir ALIAS ${PROJECT_NAME})
 include_directories(${EIGEN3_INCLUDE_DIR})
 target_link_libraries (reservoir
         PUBLIC fieldopt::ertwrapper
+        ${Boost_LIBRARIES}
         PUBLIC Qt5::Core)
 
 target_compile_features(reservoir
