@@ -23,7 +23,7 @@ protected:
     virtual void TearDown() { }
 
     ECLGridReader* ecl_grid_reader_;
-    QString file_name_ = TestResources::ExampleFilePaths::grid_horzwel_;
+    std::string file_name_ = TestResources::ExampleFilePaths::grid_horzwel_.toStdString();
 
     // Objects declared here can be used by all tests in this test case.
 

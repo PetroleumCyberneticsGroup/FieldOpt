@@ -26,7 +26,7 @@ protected:
 
 
     Grid *grid_;
-    QString file_path_ = "../examples/ADGPRS/5spot/ECL_5SPOT.EGRID";
+    std::string file_path_ = "../examples/ADGPRS/5spot/ECL_5SPOT.EGRID";
 };
 
 TEST_F(DomainBoundaryTest, cell_boundary_constraint_test){

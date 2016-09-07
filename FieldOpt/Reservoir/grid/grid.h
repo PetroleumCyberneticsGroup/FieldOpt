@@ -1,7 +1,6 @@
 #ifndef GRID_H
 #define GRID_H
 
-#include <QString>
 #include "cell.h"
 #include "ijkcoordinate.h"
 #include "ERTWrapper/eclgridreader.h"
@@ -64,8 +63,8 @@ namespace Reservoir {
 
         protected:
             GridSourceType type_;
-            QString file_path_;
-            Grid(GridSourceType type, QString file_path);
+            std::string file_path_;
+            Grid(GridSourceType type, std::string file_path);
         };
 
     }

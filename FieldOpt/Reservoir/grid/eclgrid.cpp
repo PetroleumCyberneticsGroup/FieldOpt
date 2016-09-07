@@ -1,20 +1,24 @@
 #include "eclgrid.h"
 #include <boost/filesystem.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string/replace.hpp>
 
 namespace Reservoir {
     namespace Grid {
 
-        ECLGrid::ECLGrid(QString file_path)
+        ECLGrid::ECLGrid(std::string file_path)
                 : Grid(GridSourceType::ECLIPSE, file_path)
         {
-            if (!boost::filesystem::exists(file_path.toStdString()))
-                throw std::runtime_error("Grid file " + file_path.toStdString() + " not found.");
+            if (!boost::filesystem::exists(file_path))
+                throw std::runtime_error("Grid file " + file_path + " not found.");
 
-            QString init_file_path = file_path;
-            if (file_path.endsWith(".EGRID")) init_file_path = init_file_path.replace(".EGRID", ".INIT");
-            if (file_path.endsWith(".GRID")) init_file_path = init_file_path.replace(".GRID", ".INIT");
-            if (!boost::filesystem::exists(init_file_path.toStdString()))
-                throw std::runtime_error("ECLGrid::ECLGrid: Reservoir init file " + init_file_path.toStdString() + " not found.");
+            std::string init_file_path = file_path;
+            if (boost::algorithm::ends_with(file_path, ".EGRID"))
+                boost::replace_all(init_file_path, ".EGRID", ".INIT");
+            else if (boost::algorithm::ends_with(file_path, ".GRID"))
+                boost::replace_all(init_file_path, ".GRID", ".INIT");
+            if (!boost::filesystem::exists(init_file_path))
+                throw std::runtime_error("ECLGrid::ECLGrid: Reservoir init file " + init_file_path + " not found.");
 
             ecl_grid_reader_ = new ERTWrapper::ECLGrid::ECLGridReader();
             ecl_grid_reader_->ReadEclGrid(file_path_);

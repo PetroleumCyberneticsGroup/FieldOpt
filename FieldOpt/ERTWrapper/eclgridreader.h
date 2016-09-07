@@ -1,7 +1,6 @@
 #ifndef ECLGRIDREADER_H
 #define ECLGRIDREADER_H
 
-#include <qt5/QtCore/QString>
 #include <ert/ecl/ecl_grid.h>
 #include <QList>
 #include <ert/ecl/ecl_file.h>
@@ -59,8 +58,8 @@ namespace ERTWrapper {
             };
 
         private:
-            QString file_name_;
-            QString init_file_name_;
+            std::string file_name_;
+            std::string init_file_name_;
             ecl_grid_type* ecl_grid_;
             ecl_file_type* ecl_file_init_;
             Eigen::Vector3d GetCellCenter(int global_index);
@@ -80,7 +79,7 @@ namespace ERTWrapper {
                  * \brief ReadEclGrid reads an ECLIPSE .GRID or .EGRID file.
                  * \param file_name The path to the grid to be read, including suffix.
                  */
-            void ReadEclGrid(QString file_name);
+            void ReadEclGrid(std::string file_name);
 
             /*!
                  * \brief ConvertIJKToGlobalIndex Converts a set of zero-offset (i,j,k) coordinates to the global index to that cell.

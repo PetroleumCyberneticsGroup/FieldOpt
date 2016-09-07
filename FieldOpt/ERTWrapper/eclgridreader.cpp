@@ -1,5 +1,7 @@
 #include "eclgridreader.h"
 #include <iostream>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string/replace.hpp>
 
 #include "ertwrapper_exceptions.h"
 
@@ -46,27 +48,31 @@ namespace ERTWrapper {
                 ecl_file_close(ecl_file_init_);
         }
 
-        void ECLGridReader::ReadEclGrid(QString file_name)
+        void ECLGridReader::ReadEclGrid(std::string file_name)
         {
             file_name_ = file_name;
-            if (file_name.endsWith(".EGRID")) init_file_name_ = file_name.replace(".EGRID", ".INIT");
-            if (file_name.endsWith(".GRID")) init_file_name_ = file_name.replace(".GRID", ".INIT");
+            init_file_name_ = file_name;
+            if (boost::algorithm::ends_with(file_name, ".EGRID")) 
+                boost::replace_all(init_file_name_, ".EGRID", ".INIT");
+
+            else if (boost::algorithm::ends_with(file_name, ".GRID"))
+                boost::replace_all(init_file_name_, ".GRID", ".INIT");
 
             if (ecl_grid_ == 0) {
-                ecl_grid_ = ecl_grid_alloc(file_name_.toStdString().c_str());
+                ecl_grid_ = ecl_grid_alloc(file_name_.c_str());
             } else {
                 ecl_grid_free(ecl_grid_);
-                ecl_grid_ = ecl_grid_alloc(file_name_.toStdString().c_str());
+                ecl_grid_ = ecl_grid_alloc(file_name_.c_str());
             }
             if (ecl_file_init_ == 0) {
-                ecl_file_init_ = ecl_file_open(init_file_name_.toStdString().c_str(), 0);
+                ecl_file_init_ = ecl_file_open(init_file_name_.c_str(), 0);
                 poro_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PORO", 0);
                 permx_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMX", 0);
                 permy_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMY", 0);
                 permz_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMZ", 0);
             } else {
                 ecl_file_close(ecl_file_init_);
-                ecl_file_init_ = ecl_file_open(init_file_name_.toStdString().c_str(), 0);
+                ecl_file_init_ = ecl_file_open(init_file_name_.c_str(), 0);
                 poro_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PORO", 0);
                 permx_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMX", 0);
                 permy_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMY", 0);
