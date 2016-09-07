@@ -48,7 +48,7 @@ Top:    Bottom:
 
 The `IJKCoordinate` class holds three-dimensional _integer_ coordinates. This class should be used to represent the _(i, j, k)_ indices used by the `Grid` and `Cell` classes.
 
-The class defines the `==` and `!=` operators to check if two `IJKCoordinate` objects reprent the same coordinate/index.
+The class defines the `==` and `!=` operators to check if two `IJKCoordinate` objects represent the same coordinate/index.
 
 ## Example Usage
 

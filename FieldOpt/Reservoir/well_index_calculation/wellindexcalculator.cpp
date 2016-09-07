@@ -66,7 +66,7 @@ namespace Reservoir {
                                                       Vector3d &end_point, Vector3d &exception_point) {
             Vector3d line = end_point - entry_point;
 
-            // Loop through the cell faces untill we find one that the line intersects
+            // Loop through the cell faces until we find one that the line intersects
             for (Grid::Cell::Face face : cell.faces()) {
                 if (face.normal_vector.dot(line) != 0) { // Check that the line and face are not parallel.
                     auto intersect_point = face.intersection_with_line(entry_point, end_point);
@@ -100,7 +100,7 @@ namespace Reservoir {
                 // Compute vector from segment
                 Vector3d current_vec = icell.points().at(ii+1) - icell.points().at(ii);
 
-                /* Proejcts segment vector to directional spanning vectors and determines the length.
+                /* Projects segment vector to directional spanning vectors and determines the length.
                  * of the projections. Note that we only only care about the length of the projection,
                  * not the spatial position. Also adds the lengths of previous segments in case there
                  * is more than one segment within the well.
