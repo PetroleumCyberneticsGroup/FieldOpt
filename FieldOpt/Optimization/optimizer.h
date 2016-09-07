@@ -79,7 +79,7 @@ namespace Optimization {
          * \param settings Settings for the optimizer.
          * \param base_case The base case for optimizer. Must already have been evaluated (i.e. have an objective function value).
          */
-        Optimizer(::Utilities::Settings::Optimizer *settings, Case *base_case,
+        Optimizer(::Settings::Optimizer *settings, Case *base_case,
                   ::Model::Properties::VariablePropertyContainer *variables,
                   Reservoir::Grid::Grid *grid);
 
@@ -106,7 +106,7 @@ namespace Optimization {
         int max_evaluations_; //!< Maximum number of objective function evaluations allowed before terminating.
         int iteration_; //!< The current iteration.
         int verbosity_level_; //!< The verbosity level for runtime console logging.
-        ::Utilities::Settings::Optimizer::OptimizerMode mode_; //!< The optimization mode, i.e. whether the objective function should be maximized or minimized.
+        ::Settings::Optimizer::OptimizerMode mode_; //!< The optimization mode, i.e. whether the objective function should be maximized or minimized.
     };
 
 }

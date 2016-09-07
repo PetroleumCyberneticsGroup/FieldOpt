@@ -27,7 +27,7 @@ namespace Optimization {
         class ConstraintHandler
         {
         public:
-            ConstraintHandler(QList<Utilities::Settings::Optimizer::Constraint> constraints,
+            ConstraintHandler(QList<Settings::Optimizer::Constraint> constraints,
                               Model::Properties::VariablePropertyContainer *variables,
                               Reservoir::Grid::Grid *grid);
             bool CaseSatisfiesConstraints(Case *c); //!< Check if a Case satisfies _all_ constraints.

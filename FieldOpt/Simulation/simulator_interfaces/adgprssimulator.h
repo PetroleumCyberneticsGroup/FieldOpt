@@ -27,7 +27,7 @@ namespace Simulation {
         class AdgprsSimulator : public Simulator
         {
         public:
-            AdgprsSimulator(Utilities::Settings::Settings *settings, Model::Model *model);
+            AdgprsSimulator(Settings::Settings *settings, Model::Model *model);
 
             // Simulator interface
         public:

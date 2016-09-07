@@ -34,7 +34,7 @@ namespace Runner {
         initializeRunnerLog();
     }
 
-    void Logger::LogSettings(const Utilities::Settings::Settings *settings)
+    void Logger::LogSettings(const Settings::Settings *settings)
     {
         Utilities::FileHandling::WriteStringToFile(settings->GetLogCsvString(), settings_log_path_);
     }

@@ -7,7 +7,7 @@
 namespace Simulation {
     namespace SimulatorInterfaces {
 
-        AdgprsSimulator::AdgprsSimulator(Utilities::Settings::Settings *settings, Model::Model *model)
+        AdgprsSimulator::AdgprsSimulator(Settings::Settings *settings, Model::Model *model)
         : Simulator(settings)
         {
             QStringList tmp = initial_driver_file_path_.split("/");

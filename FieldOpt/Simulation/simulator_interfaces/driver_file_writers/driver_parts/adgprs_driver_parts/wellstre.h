@@ -16,7 +16,7 @@ namespace AdgprsDriverParts {
 class Wellstre : public ECLDriverParts::ECLDriverPart
 {
 public:
-    Wellstre(QList<Model::Wells::Well *> *wells, Utilities::Settings::Simulator::SimulatorFluidModel fluid_model);
+    Wellstre(QList<Model::Wells::Well *> *wells, Settings::Simulator::SimulatorFluidModel fluid_model);
 
     // DriverPart interface
 public:
@@ -26,7 +26,7 @@ private:
     QString createKeyword();
     QString createWellEntry(Model::Wells::Well *well);
     QList<Model::Wells::Well *> *wells_;
-    Utilities::Settings::Simulator::SimulatorFluidModel fluid_model_;
+    Settings::Simulator::SimulatorFluidModel fluid_model_;
 };
 
 }}}}}

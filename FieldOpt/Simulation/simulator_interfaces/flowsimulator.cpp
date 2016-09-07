@@ -7,7 +7,7 @@
 namespace Simulation {
     namespace SimulatorInterfaces {
 
-        FlowSimulator::FlowSimulator(Utilities::Settings::Settings *settings, Model::Model *model)
+        FlowSimulator::FlowSimulator(Settings::Settings *settings, Model::Model *model)
                 : Simulator(settings)
         {
             model_ = model;

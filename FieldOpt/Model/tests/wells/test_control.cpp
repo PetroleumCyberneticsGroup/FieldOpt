@@ -26,10 +26,10 @@ protected:
     virtual ~ControlTest() {}
     virtual void SetUp() {}
 
-    ::Utilities::Settings::Model::Well well_;
-    ::Utilities::Settings::Model::Well inj_well_;
-    ::Utilities::Settings::Model::Well::ControlEntry entry_;
-    ::Utilities::Settings::Model::Well::ControlEntry inj_entry_;
+    ::Settings::Model::Well well_;
+    ::Settings::Model::Well inj_well_;
+    ::Settings::Model::Well::ControlEntry entry_;
+    ::Settings::Model::Well::ControlEntry inj_entry_;
     QList<Control *> all_controls_;
 };
 
@@ -38,7 +38,7 @@ TEST_F(ControlTest, ProducerControl) {
     EXPECT_STREQ("PROD", well_.name.toLatin1().constData());
     EXPECT_EQ(0, entry_.time_step);
     EXPECT_TRUE(all_controls_.first()->open());
-    EXPECT_EQ(::Utilities::Settings::Model::ControlMode::BHPControl, all_controls_.first()->mode());
+    EXPECT_EQ(::Settings::Model::ControlMode::BHPControl, all_controls_.first()->mode());
     EXPECT_FLOAT_EQ(2000, all_controls_.first()->bhp());
 }
 
@@ -47,7 +47,7 @@ TEST_F(ControlTest, InjectorControl) {
     EXPECT_EQ(0, inj_entry_.time_step);
     EXPECT_EQ(0, all_controls_.last()->time_step());
     EXPECT_TRUE(all_controls_.last()->open());
-    EXPECT_EQ(::Utilities::Settings::Model::ControlMode::RateControl, all_controls_.last()->mode());
+    EXPECT_EQ(::Settings::Model::ControlMode::RateControl, all_controls_.last()->mode());
     EXPECT_FLOAT_EQ(1200, all_controls_.last()->rate());
 }
 

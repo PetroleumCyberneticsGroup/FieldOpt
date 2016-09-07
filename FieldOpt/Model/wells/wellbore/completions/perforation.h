@@ -16,7 +16,7 @@ namespace Model {
                 class Perforation : public Completion
                 {
                 public:
-                    Perforation(::Utilities::Settings::Model::Well::Completion completion_settings,
+                    Perforation(::Settings::Model::Well::Completion completion_settings,
                                 Properties::VariablePropertyContainer *variable_container);
 
                     Perforation();

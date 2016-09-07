@@ -3,7 +3,7 @@
 namespace Optimization {
     namespace Optimizers {
 
-        CompassSearch::CompassSearch(Utilities::Settings::Optimizer *settings, Case *base_case,
+        CompassSearch::CompassSearch(Settings::Optimizer *settings, Case *base_case,
                                      Model::Properties::VariablePropertyContainer *variables,
                                      Reservoir::Grid::Grid *grid)
                 : Optimizer(settings, base_case, variables, grid)

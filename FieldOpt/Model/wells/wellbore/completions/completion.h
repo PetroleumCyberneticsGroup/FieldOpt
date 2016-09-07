@@ -47,7 +47,7 @@ public:
     CompletionType type() const { return type_; } //!< Get the type of completion, e.g. Perforation.
 
 protected:
-    Completion(::Utilities::Settings::Model::Well::Completion completion_settings);
+    Completion(::Settings::Model::Well::Completion completion_settings);
     Completion(CompletionType type);
 
 private:

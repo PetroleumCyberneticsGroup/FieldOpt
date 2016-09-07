@@ -2,7 +2,7 @@
 
 namespace Model {
 
-    Model::Model(Utilities::Settings::Model settings)
+    Model::Model(Settings::Model settings)
     {
         grid_ = new Reservoir::Grid::ECLGrid(settings.reservoir().path);
         variable_container_ = new Properties::VariablePropertyContainer();

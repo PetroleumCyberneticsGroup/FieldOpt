@@ -7,7 +7,7 @@
 namespace Simulation {
     namespace SimulatorInterfaces {
 
-        ECLSimulator::ECLSimulator(Utilities::Settings::Settings *settings, Model::Model *model)
+        ECLSimulator::ECLSimulator(Settings::Settings *settings, Model::Model *model)
         : Simulator(settings)
         {
             model_ = model;

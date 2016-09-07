@@ -21,7 +21,7 @@ namespace Model {
     {
         friend class ModelSynchronizationObject;
     public:
-        Model(::Utilities::Settings::Model settings);
+        Model(::Settings::Model settings);
 
         /*!
          * \brief reservoir Get the reservoir (i.e. grid).

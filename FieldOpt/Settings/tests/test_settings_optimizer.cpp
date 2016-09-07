@@ -28,7 +28,7 @@
 
 #include "Settings/tests/test_resource_settings.hpp"
 
-using namespace Utilities::Settings;
+using namespace Settings;
 
 namespace {
 

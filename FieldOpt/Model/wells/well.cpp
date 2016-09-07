@@ -3,12 +3,12 @@
 namespace Model {
     namespace Wells {
 
-        Well::Well(Utilities::Settings::Model settings,
+        Well::Well(Settings::Model settings,
                    int well_number,
                    Properties::VariablePropertyContainer *variable_container,
                    Reservoir::Grid::Grid *grid)
         {
-            Utilities::Settings::Model::Well well_settings = settings.wells().at(well_number);
+            Settings::Model::Well well_settings = settings.wells().at(well_number);
 
             name_ = well_settings.name;
             type_ = well_settings.type;
@@ -33,12 +33,12 @@ namespace Model {
 
         bool Well::IsProducer()
         {
-            return type_ == ::Utilities::Settings::Model::WellType::Producer;
+            return type_ == ::Settings::Model::WellType::Producer;
         }
 
         bool Well::IsInjector()
         {
-            return type_ == ::Utilities::Settings::Model::WellType::Injector;
+            return type_ == ::Settings::Model::WellType::Injector;
         }
 
         void Well::Update() {

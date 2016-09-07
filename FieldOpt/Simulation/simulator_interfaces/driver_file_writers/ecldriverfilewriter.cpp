@@ -37,7 +37,7 @@ namespace Simulation {
 namespace SimulatorInterfaces {
 namespace DriverFileWriters {
 
-EclDriverFileWriter::EclDriverFileWriter(Utilities::Settings::Settings *settings, Model::Model *model)
+EclDriverFileWriter::EclDriverFileWriter(Settings::Settings *settings, Model::Model *model)
 {
     model_ = model;
     settings_ = settings;
