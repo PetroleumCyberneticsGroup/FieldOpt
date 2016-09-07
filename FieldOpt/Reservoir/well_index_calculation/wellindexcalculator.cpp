@@ -96,7 +96,7 @@ namespace Reservoir {
             double Ly = 0;
             double Lz = 0;
 
-            for (int ii = 0; ii < icell.points().length() - 1; ++ii) { // Current segment ii
+            for (int ii = 0; ii < icell.points().size() - 1; ++ii) { // Current segment ii
                 // Compute vector from segment
                 Vector3d current_vec = icell.points().at(ii+1) - icell.points().at(ii);
 

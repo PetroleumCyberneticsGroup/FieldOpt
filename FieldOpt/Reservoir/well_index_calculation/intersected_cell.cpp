@@ -3,8 +3,8 @@
 namespace Reservoir {
     namespace WellIndexCalculation {
 
-        QList<Vector3d> IntersectedCell::points() const {
-            return QList<Vector3d>({entry_point_, exit_point_});
+        std::vector<Vector3d> IntersectedCell::points() const {
+            return std::vector<Vector3d>({entry_point_, exit_point_});
         }
 
         Vector3d IntersectedCell::xvec() const {
