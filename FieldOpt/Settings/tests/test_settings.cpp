@@ -28,8 +28,6 @@
 #include "Settings/settings.h"
 #include "test_resource_example_file_paths.hpp"
 
-using namespace Utilities::Settings;
-
 namespace {
 
 class SettingsTest : public ::testing::Test {
@@ -42,11 +40,11 @@ protected:
 };
 
 TEST_F(SettingsTest, ConstructorAndTestFileValidity) {
-    EXPECT_NO_THROW(Settings settings = Settings(TestResources::ExampleFilePaths::driver_example_, TestResources::ExampleFilePaths::directory_output_));
+    EXPECT_NO_THROW(auto settings = ::Settings::Settings(TestResources::ExampleFilePaths::driver_example_, TestResources::ExampleFilePaths::directory_output_));
 }
 
 TEST_F(SettingsTest, GlobalSettings) {
-    Settings settings = Settings(TestResources::ExampleFilePaths::driver_example_, TestResources::ExampleFilePaths::directory_output_);
+    auto settings = ::Settings::Settings(TestResources::ExampleFilePaths::driver_example_, TestResources::ExampleFilePaths::directory_output_);
     EXPECT_STREQ("TestRun", settings.name().toLatin1().constData());
     EXPECT_STREQ(TestResources::ExampleFilePaths::driver_example_.toLatin1().constData(), settings.driver_path().toLatin1().constData());
     EXPECT_EQ(false, settings.verbose());

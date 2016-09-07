@@ -4,7 +4,7 @@
 namespace Simulation {
     namespace SimulatorInterfaces {
 
-        Simulator::Simulator(Utilities::Settings::Settings *settings) {
+        Simulator::Simulator(Settings::Settings *settings) {
             settings_ = settings;
 
             if (settings->driver_path().length() == 0)

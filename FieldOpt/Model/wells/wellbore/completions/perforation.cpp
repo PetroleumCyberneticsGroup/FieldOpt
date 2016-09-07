@@ -5,7 +5,7 @@ namespace Model {
         namespace Wellbore {
             namespace Completions {
 
-                Perforation::Perforation(Utilities::Settings::Model::Well::Completion completion_settings,
+                Perforation::Perforation(Settings::Model::Well::Completion completion_settings,
                                          Properties::VariablePropertyContainer *variable_container)
                         : Completion(completion_settings)
                 {

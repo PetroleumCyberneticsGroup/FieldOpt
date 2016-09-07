@@ -18,7 +18,7 @@ namespace Optimization {
         class ReservoirBoundary : public Constraint, WellSplineConstraint
         {
         public:
-            ReservoirBoundary(const Utilities::Settings::Optimizer::Constraint &settings,
+            ReservoirBoundary(const Settings::Optimizer::Constraint &settings,
                               Model::Properties::VariablePropertyContainer *variables, Reservoir::Grid::Grid *grid);
 
             // Constraint interface

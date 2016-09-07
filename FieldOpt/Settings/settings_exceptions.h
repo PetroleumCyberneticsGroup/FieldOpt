@@ -31,7 +31,6 @@
 
 using std::string;
 
-namespace Utilities {
 namespace Settings {
 
 class FileNotFoundException : public std::runtime_error {
@@ -155,5 +154,5 @@ public:
 };
 
 }
-}
+
 #endif // SETTINGS_EXCEPTIONS_H

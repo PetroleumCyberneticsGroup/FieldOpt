@@ -7,7 +7,7 @@
 namespace Simulation {
     namespace SimulatorInterfaces {
         namespace DriverFileWriters {
-            FlowDriverFileWriter::FlowDriverFileWriter(::Utilities::Settings::Settings *settings,
+            FlowDriverFileWriter::FlowDriverFileWriter(::Settings::Settings *settings,
                                                        Model::Model *model)
             {
                 model_ = model;

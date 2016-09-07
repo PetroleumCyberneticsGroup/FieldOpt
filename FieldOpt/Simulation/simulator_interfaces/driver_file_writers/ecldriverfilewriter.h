@@ -47,11 +47,11 @@ class EclDriverFileWriter
 {
 private:
     friend class ::Simulation::SimulatorInterfaces::ECLSimulator;
-    EclDriverFileWriter(::Utilities::Settings::Settings *settings, Model::Model *model);
+    EclDriverFileWriter(::Settings::Settings *settings, Model::Model *model);
     void WriteDriverFile();
 
     Model::Model *model_;
-    ::Utilities::Settings::Settings *settings_;
+    ::Settings::Settings *settings_;
     QStringList *original_driver_file_contents_; //!< The content of the original (input) driver file.
     QString output_driver_file_name_; //!< Path to the driver file to be written.
     QString GetCompdatString();

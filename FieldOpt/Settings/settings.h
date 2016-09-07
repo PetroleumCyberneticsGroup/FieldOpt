@@ -33,12 +33,11 @@
 #include "optimizer.h"
 #include "model.h"
 
-namespace Utilities {
 namespace Settings {
 
-class Simulator;
-class Model;
-class Optimizer;
+    class Simulator;
+    class Model;
+    class Optimizer;
 
 /*!
  * \brief The Settings class contains both general settings for a FieldOpt run
@@ -46,49 +45,48 @@ class Optimizer;
  * and Optimizer. Settings takes as input the path to a "driver file" in the
  * JSON format.
  */
-class Settings
-{
-public:
-    Settings(){}
-    Settings(QString driver_path, QString output_directory);
+    class Settings
+    {
+    public:
+        Settings(){}
+        Settings(QString driver_path, QString output_directory);
 
-    QString driver_path() const { return driver_path_; }
+        QString driver_path() const { return driver_path_; }
 
-    QString name() const { return name_; } //!< The name to be used for the run. Output file and folder names are derived from this.
-    QString output_directory() const { return output_directory_; } //!< Path to a directory in which output files are to be placed.
-    bool verbose() const { return verbose_; } //!< Verbose mode (with or without debug printing).
-    void set_verbosity(const bool verbosity) { verbose_ = verbosity; }
-    double bookkeeper_tolerance() const { return bookkeeper_tolerance_; } //!< Get the value for the bookkeeper tolerance. Used by the Bookkeeper in the Runner library.
+        QString name() const { return name_; } //!< The name to be used for the run. Output file and folder names are derived from this.
+        QString output_directory() const { return output_directory_; } //!< Path to a directory in which output files are to be placed.
+        bool verbose() const { return verbose_; } //!< Verbose mode (with or without debug printing).
+        void set_verbosity(const bool verbosity) { verbose_ = verbosity; }
+        double bookkeeper_tolerance() const { return bookkeeper_tolerance_; } //!< Get the value for the bookkeeper tolerance. Used by the Bookkeeper in the Runner library.
 
-    Model *model() const { return model_; } //!< Object containing model specific settings.
-    Utilities::Settings::Optimizer *optimizer() const { return optimizer_; } //!< Object containing optimizer specific settings.
-    Simulator *simulator() const { return simulator_; } //!< Object containing simulator specific settings.
+        Model *model() const { return model_; } //!< Object containing model specific settings.
+        Optimizer *optimizer() const { return optimizer_; } //!< Object containing optimizer specific settings.
+        Simulator *simulator() const { return simulator_; } //!< Object containing simulator specific settings.
 
-    QString GetLogCsvString() const; //!< Get a string containing the CSV header and contents for the log.
+        QString GetLogCsvString() const; //!< Get a string containing the CSV header and contents for the log.
 
-    const QString &build_path() const { return build_path_; } //!< Get the to the FieldOpt build directory.
-    void set_build_path(const QString &build_path); //!< Set the path to the FieldOpt build directory.
+        const QString &build_path() const { return build_path_; } //!< Get the to the FieldOpt build directory.
+        void set_build_path(const QString &build_path); //!< Set the path to the FieldOpt build directory.
 
-private:
-    QString driver_path_;
-    QJsonObject *json_driver_;
-    QString name_;
-    double bookkeeper_tolerance_;
-    QString output_directory_;
-    bool verbose_ = false;
-    Model *model_;
-    Utilities::Settings::Optimizer *optimizer_;
-    Simulator *simulator_;
-    QString build_path_;
+    private:
+        QString driver_path_;
+        QJsonObject *json_driver_;
+        QString name_;
+        double bookkeeper_tolerance_;
+        QString output_directory_;
+        bool verbose_ = false;
+        Model *model_;
+        Optimizer *optimizer_;
+        Simulator *simulator_;
+        QString build_path_;
 
-    void readDriverFile();
-    void readGlobalSection();
-    void readSimulatorSection();
-    void readModelSection();
-    void readOptimizerSection();
-};
+        void readDriverFile();
+        void readGlobalSection();
+        void readSimulatorSection();
+        void readModelSection();
+        void readOptimizerSection();
+    };
 
-}
 }
 
 #endif // SETTINGS_H

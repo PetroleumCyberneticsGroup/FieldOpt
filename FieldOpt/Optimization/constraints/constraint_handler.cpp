@@ -4,33 +4,33 @@
 namespace Optimization {
     namespace Constraints {
 
-        ConstraintHandler::ConstraintHandler(QList<Utilities::Settings::Optimizer::Constraint> constraints,
+        ConstraintHandler::ConstraintHandler(QList<Settings::Optimizer::Constraint> constraints,
                                              Model::Properties::VariablePropertyContainer *variables,
                                              Reservoir::Grid::Grid *grid)
         {
-            for (Utilities::Settings::Optimizer::Constraint constraint : constraints) {
+            for (Settings::Optimizer::Constraint constraint : constraints) {
                 switch (constraint.type) {
-                    case Utilities::Settings::Optimizer::ConstraintType::BHP:
+                    case Settings::Optimizer::ConstraintType::BHP:
                         constraints_.append(new BhpConstraint(constraint, variables));
                         break;
-                    case Utilities::Settings::Optimizer::ConstraintType::Rate:
+                    case Settings::Optimizer::ConstraintType::Rate:
                         constraints_.append(new RateConstraint(constraint, variables));
                         break;
-                    case Utilities::Settings::Optimizer::ConstraintType::WellSplineLength:
+                    case Settings::Optimizer::ConstraintType::WellSplineLength:
                         constraints_.append(new WellSplineLength(constraint, variables));
                         break;
-                    case Utilities::Settings::Optimizer::ConstraintType::WellSplineInterwellDistance:
+                    case Settings::Optimizer::ConstraintType::WellSplineInterwellDistance:
                         constraints_.append(new InterwellDistance(constraint, variables));
                         break;
-                    case Utilities::Settings::Optimizer::ConstraintType::CombinedWellSplineLengthInterwellDistance:
+                    case Settings::Optimizer::ConstraintType::CombinedWellSplineLengthInterwellDistance:
                         constraints_.append(new CombinedSplineLengthInterwellDistance(constraint, variables));
                         break;
-                    case Utilities::Settings::Optimizer::ConstraintType::
+                    case Settings::Optimizer::ConstraintType::
                         CombinedWellSplineLengthInterwellDistanceReservoirBoundary:
                         constraints_.append(new CombinedSplineLengthInterwellDistanceReservoirBoundary
                                                     (constraint, variables, grid));
                         break;
-                    case Utilities::Settings::Optimizer::ConstraintType::ReservoirBoundary:
+                    case Settings::Optimizer::ConstraintType::ReservoirBoundary:
                         constraints_.append(new ReservoirBoundary(constraint, variables, grid));
                         break;
 #ifdef WITH_EXPERIMENTAL_CONSTRAINTS

@@ -7,7 +7,7 @@
 
 using namespace Optimization::Objective;
 using namespace Simulation::Results;
-using namespace Utilities::Settings;
+using namespace Settings;
 
 namespace {
 

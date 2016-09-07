@@ -68,14 +68,14 @@ namespace Simulation {
              * @param settings
              * @return
              */
-            Simulator(Utilities::Settings::Settings *settings);
+            Simulator(Settings::Settings *settings);
 
             QString initial_driver_file_path_; //!< Path to the driver file to be used as a base for the generated driver files.
             QString output_directory_; //!< The directory in which to write new driver files and execute simulations.
             QString initial_driver_file_name_;
 
             ::Simulation::Results::Results *results_;
-            Utilities::Settings::Settings *settings_;
+            Settings::Settings *settings_;
             Model::Model *model_;
             QString build_dir_;
             QString script_path_;

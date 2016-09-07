@@ -6,7 +6,7 @@ namespace Wells {
 namespace Wellbore {
     using namespace Reservoir::WellIndexCalculation;
 
-WellSpline::WellSpline(Utilities::Settings::Model::Well well_settings,
+WellSpline::WellSpline(Settings::Model::Well well_settings,
                        Properties::VariablePropertyContainer *variable_container,
                        Reservoir::Grid::Grid *grid)
 {

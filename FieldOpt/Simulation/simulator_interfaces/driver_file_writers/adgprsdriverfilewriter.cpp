@@ -8,7 +8,7 @@
 
 namespace Simulation { namespace SimulatorInterfaces { namespace DriverFileWriters {
 
-AdgprsDriverFileWriter::AdgprsDriverFileWriter(Utilities::Settings::Settings *settings, Model::Model *model)
+AdgprsDriverFileWriter::AdgprsDriverFileWriter(Settings::Settings *settings, Model::Model *model)
 {
     model_ = model;
     settings_ = settings;

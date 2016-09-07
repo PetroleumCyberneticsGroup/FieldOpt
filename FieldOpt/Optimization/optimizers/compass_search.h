@@ -21,7 +21,7 @@ namespace Optimization {
         class CompassSearch : public Optimizer
         {
         public:
-            CompassSearch(::Utilities::Settings::Optimizer *settings, Case *base_case,
+            CompassSearch(::Settings::Optimizer *settings, Case *base_case,
                           ::Model::Properties::VariablePropertyContainer *variables,
                           Reservoir::Grid::Grid *grid);
             double step_length() const { return step_length_; }

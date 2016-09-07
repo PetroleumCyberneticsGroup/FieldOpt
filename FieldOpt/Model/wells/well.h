@@ -28,7 +28,7 @@ namespace Model {
              * \param well_number The index of the sepcific well in the Model.Wells list to create a well from.
              * \param variables The variables object to add all new variable variables to.
              */
-            Well(Utilities::Settings::Model settings,
+            Well(Settings::Model settings,
                  int well_number,
                  ::Model::Properties::VariablePropertyContainer *variable_container,
                  ::Reservoir::Grid::Grid *grid);
@@ -38,11 +38,11 @@ namespace Model {
             enum PreferredPhase { Oil, Gas, Water, Liquid };
 
             QString name() const { return name_; }
-            ::Utilities::Settings::Model::WellType type() const { return type_; }
+            ::Settings::Model::WellType type() const { return type_; }
             QString group() const { return group_; }
             bool IsProducer();
             bool IsInjector();
-            ::Utilities::Settings::Model::PreferredPhase preferred_phase() const { return preferred_phase_; }
+            ::Settings::Model::PreferredPhase preferred_phase() const { return preferred_phase_; }
             double wellbore_radius() const { return wellbore_radius_->value(); }
             Wellbore::Trajectory *trajectory() { return trajectory_; }
             QList<Control *> *controls() { return controls_; }
@@ -53,9 +53,9 @@ namespace Model {
 
         private:
             QString name_;
-            ::Utilities::Settings::Model::WellType type_;
+            ::Settings::Model::WellType type_;
             QString group_;
-            ::Utilities::Settings::Model::PreferredPhase preferred_phase_;
+            ::Settings::Model::PreferredPhase preferred_phase_;
             Properties::ContinousProperty *wellbore_radius_;
             Wellbore::Trajectory *trajectory_;
 

@@ -23,7 +23,7 @@ namespace Runner {
 class Bookkeeper
 {
 public:
-    Bookkeeper(Utilities::Settings::Settings *settings, Optimization::CaseHandler *case_handler);
+    Bookkeeper(Settings::Settings *settings, Optimization::CaseHandler *case_handler);
 
     /*!
      * \brief IsEvaluated Check if a case has already been evaluated. If the set_obj parameter

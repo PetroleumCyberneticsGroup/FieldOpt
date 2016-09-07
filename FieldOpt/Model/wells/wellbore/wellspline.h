@@ -18,7 +18,7 @@ namespace Model {
             class WellSpline
             {
             public:
-                WellSpline(::Utilities::Settings::Model::Well well_settings,
+                WellSpline(::Settings::Model::Well well_settings,
                            Properties::VariablePropertyContainer *variable_container,
                            Reservoir::Grid::Grid *grid);
 
@@ -30,7 +30,7 @@ namespace Model {
 
             private:
                 Reservoir::Grid::Grid *grid_;
-                Utilities::Settings::Model::Well well_settings_;
+                Settings::Model::Well well_settings_;
 
                 Model::Properties::ContinousProperty *heel_x_;
                 Model::Properties::ContinousProperty *heel_y_;
