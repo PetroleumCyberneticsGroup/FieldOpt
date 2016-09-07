@@ -2,7 +2,6 @@
 #include <QList>
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
-#include "Reservoir/grid/grid_exceptions.h"
 #include "ConstraintMath/well_constraint_projections/well_constraint_projections.h"
 #include "Utilities/filehandling.hpp"
 

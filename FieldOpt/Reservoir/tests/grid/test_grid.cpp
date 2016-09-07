@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
-#include "Reservoir/grid/grid_exceptions.h"
 #include "Reservoir/grid/cell.h"
 #include "tests/test_resource_grids.h"
 
@@ -60,11 +59,11 @@ namespace {
     }
 
     TEST_F(GridTest, AttemptGetCellWithIndexOutsideGrid) {
-        EXPECT_THROW(grid_->GetCell(20,10,10), CellIndexOutsideGridException);
+        EXPECT_THROW(grid_->GetCell(20,10,10), std::runtime_error);
     }
 
     TEST_F(GridTest, AttemptFindCellOutsideGrid) {
-        EXPECT_THROW(grid_->GetCellEnvelopingPoint(100.0f, 1000.0, 7100.0), GridCellNotFoundException);
+        EXPECT_THROW(grid_->GetCellEnvelopingPoint(100.0f, 1000.0, 7100.0), std::runtime_error);
     }
 
     TEST_F(GridTest, GetCellEnvelopingPoint) {
