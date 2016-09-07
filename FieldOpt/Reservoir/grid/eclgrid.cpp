@@ -66,9 +66,9 @@ namespace Reservoir {
                 auto center = Eigen::Vector3d(ertCell.center);
 
                 // Get the corners
-                QList<Eigen::Vector3d> corners;
+                std::vector<Eigen::Vector3d> corners;
                 for (auto corner : ertCell.corners) {
-                    corners.append(corner);
+                    corners.push_back(corner);
                 }
                 return Cell(global_index, ijk_index,
                             ertCell.volume, ertCell.porosity, ertCell.permx, ertCell.permy, ertCell.permz,

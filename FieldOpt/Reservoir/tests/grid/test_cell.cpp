@@ -51,7 +51,7 @@ namespace {
     }
 
     TEST_F(CellTest, Corners) {
-        QList<Eigen::Vector3d> corners = grid_->GetCell(0).corners();
+        auto corners = grid_->GetCell(0).corners();
 
         // Top layer
         Eigen::Vector3d top_sw = Eigen::Vector3d(0.0, 0.0, 7000.0);

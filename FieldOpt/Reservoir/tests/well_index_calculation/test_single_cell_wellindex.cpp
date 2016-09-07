@@ -73,7 +73,7 @@ namespace {
         double wellbore_radius = 0.1905/2;
 
         auto cell_1 = grid_->GetCell(0);
-        QList<Eigen::Vector3d> corners = cell_1.corners();
+        auto corners = cell_1.corners();
 
         //Determine well placement. Let it go vertically through the centre of the block.
         double well_start_x = 0.25*corners[0].x() + 0.25*corners[1].x() +0.25*corners[2].x() + 0.25*corners[3].x();

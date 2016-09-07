@@ -14,7 +14,7 @@ namespace WellIndexCalculation {
         IntersectedCell() {}
         IntersectedCell(const Grid::Cell &cell) : Grid::Cell(cell) {};
 
-        QList<Vector3d> points() const;
+        std::vector<Vector3d> points() const;
 
         Vector3d xvec() const;
         Vector3d yvec() const;
