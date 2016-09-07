@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.2)
 project(reservoir LANGUAGES CXX)
 
 add_library(reservoir
-        grid/grid_exceptions.h
         grid/cell.cpp
         grid/grid.cpp
         grid/ijkcoordinate.cpp

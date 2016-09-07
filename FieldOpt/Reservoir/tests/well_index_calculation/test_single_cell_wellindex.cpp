@@ -2,7 +2,6 @@
 #include <QList>
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
-#include "Reservoir/grid/grid_exceptions.h"
 #include "Utilities/filehandling.hpp"
 #include "Reservoir/well_index_calculation/wellindexcalculator.h"
 

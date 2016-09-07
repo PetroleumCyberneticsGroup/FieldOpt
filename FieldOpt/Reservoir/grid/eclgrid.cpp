@@ -1,5 +1,4 @@
 #include "eclgrid.h"
-#include "grid_exceptions.h"
 #include "Utilities/filehandling.hpp"
 
 namespace Reservoir {
@@ -15,7 +14,7 @@ namespace Reservoir {
             if (file_path.endsWith(".EGRID")) init_file_path = init_file_path.replace(".EGRID", ".INIT");
             if (file_path.endsWith(".GRID")) init_file_path = init_file_path.replace(".GRID", ".INIT");
             if (!Utilities::FileHandling::FileExists(init_file_path))
-                throw std::runtime_error("Reservoir init file " + init_file_path.toStdString() + " not found.");
+                throw std::runtime_error("ECLGrid::ECLGrid: Reservoir init file " + init_file_path.toStdString() + " not found.");
 
             ecl_grid_reader_ = new ERTWrapper::ECLGrid::ECLGridReader();
             ecl_grid_reader_->ReadEclGrid(file_path_);
@@ -50,12 +49,12 @@ namespace Reservoir {
                 dims.nz = eclDims.nz;
                 return dims;
             }
-            else throw GridCellNotFoundException("Grid source must be defined before getting grid dimensions.");
+            else throw std::runtime_error("ECLGrid::Dimensions: Grid source must be defined before getting grid dimensions.");
         }
 
         Cell ECLGrid::GetCell(int global_index)
         {
-            if (!IndexIsInsideGrid(global_index)) throw CellIndexOutsideGridException("Global index is outside grid.");
+            if (!IndexIsInsideGrid(global_index)) throw std::runtime_error("Error getting grid cell. Global index is outside grid.");
             if (type_ == GridSourceType::ECLIPSE) {
                 ERTWrapper::ECLGrid::ECLGridReader::Cell ertCell = ecl_grid_reader_->GetGridCell(global_index);
 
@@ -75,27 +74,27 @@ namespace Reservoir {
                             ertCell.volume, ertCell.porosity, ertCell.permx, ertCell.permy, ertCell.permz,
                             center, corners);
             }
-            else throw GridCellNotFoundException("Grid source must be defined before getting a cell.");
+            else throw std::runtime_error("ECLGrid::GetCell: Grid source must be defined before getting a cell.");
         }
 
         Cell ECLGrid::GetCell(int i, int j, int k)
         {
-            if (!IndexIsInsideGrid(i, j, k)) throw CellIndexOutsideGridException("Index (i, j, k) is outside grid.");
+            if (!IndexIsInsideGrid(i, j, k)) throw std::runtime_error("Error getting grid cell. Index (i, j, k) is outside grid.");
             if (type_ == GridSourceType::ECLIPSE) {
                 int global_index = ecl_grid_reader_->ConvertIJKToGlobalIndex(i, j, k);
                 return GetCell(global_index);
             }
-            else throw GridCellNotFoundException("Grid source must be defined before getting a cell.");
+            else throw std::runtime_error("ECLGrid::GetCell: Grid source must be defined before getting a cell.");
         }
 
         Cell ECLGrid::GetCell(IJKCoordinate *ijk)
         {
-            if (!IndexIsInsideGrid(ijk)) throw CellIndexOutsideGridException("Index ijk is outside grid.");
+            if (!IndexIsInsideGrid(ijk)) throw std::runtime_error("ECLGrid::GetCell: Index ijk is outside grid.");
             if (type_ == GridSourceType::ECLIPSE) {
                 int global_index = ecl_grid_reader_->ConvertIJKToGlobalIndex(ijk->i(), ijk->j(), ijk->k());
                 return GetCell(global_index);
             }
-            else throw GridCellNotFoundException("Grid source must be defined before getting a cell.");
+            else throw std::runtime_error("ECLGrid::GetCell: Grid source must be defined before getting a cell.");
         }
 
         Cell ECLGrid::GetCellEnvelopingPoint(double x, double y, double z)
@@ -108,7 +107,7 @@ namespace Reservoir {
                 }
             }
             // Throw an exception if no cell was found
-            throw GridCellNotFoundException("Grid::GetCellEnvelopingPoint: Cell is outside grid ("
+            throw std::runtime_error("Grid::GetCellEnvelopingPoint: Cell is outside grid ("
                                      + std::to_string(x) + ", "
                                      + std::to_string(y) + ", "
                                      + std::to_string(z) + ")"
