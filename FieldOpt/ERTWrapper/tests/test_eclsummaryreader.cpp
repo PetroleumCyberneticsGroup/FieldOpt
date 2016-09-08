@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include "ERTWrapper/eclsummaryreader.h"
 #include "ERTWrapper/ertwrapper_exceptions.h"
-#include "Settings/tests/test_resource_example_file_paths.hpp"
 
 using namespace ERTWrapper::ECLSummary;
 
@@ -22,7 +21,7 @@ namespace {
         virtual void TearDown() { }
 
         ECLSummaryReader *ecl_summary_reader_;
-        QString file_name_ = TestResources::ExampleFilePaths::ecl_base_horzwell;
+        std::string file_name_ = "../examples/ECLIPSE/HORZWELL/HORZWELL";
     };
 
     TEST_F(ECLSummaryReaderTest, ReportSteps) {
@@ -108,7 +107,7 @@ namespace {
 
     TEST_F(ECLSummaryReaderTest, KeysAndWells) {
         EXPECT_EQ(1, ecl_summary_reader_->wells().size());
-        EXPECT_STREQ("PROD", ecl_summary_reader_->wells().first().toLatin1());
+        EXPECT_EQ(1, ecl_summary_reader_->wells().count("PROD"));
         EXPECT_EQ(11, ecl_summary_reader_->keys().size());
         EXPECT_EQ(4, ecl_summary_reader_->field_keys().size());
         EXPECT_EQ(6, ecl_summary_reader_->well_keys().size());

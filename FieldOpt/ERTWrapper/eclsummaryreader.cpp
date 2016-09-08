@@ -2,15 +2,17 @@
 #include "ertwrapper_exceptions.h"
 #include <iostream>
 #include <assert.h>
+#include <algorithm>
+#include <boost/algorithm/string/join.hpp>
 
 namespace ERTWrapper {
     namespace ECLSummary {
 
-        ECLSummaryReader::ECLSummaryReader(QString file_name)
+        ECLSummaryReader::ECLSummaryReader(string file_name)
         {
             file_name_ = file_name;
-            ecl_sum_ = ecl_sum_fread_alloc_case(file_name_.toLatin1().constData(), "");
-            if (ecl_sum_ == NULL) throw SummaryFileNotFoundAtPathException(file_name.toLatin1().constData());
+            ecl_sum_ = ecl_sum_fread_alloc_case(file_name_.c_str(), "");
+            if (ecl_sum_ == NULL) throw SummaryFileNotFoundAtPathException(file_name);
             populateKeyLists();
             initializeVectors();
         }
@@ -20,33 +22,33 @@ namespace ERTWrapper {
             ecl_sum_free(ecl_sum_);
         }
 
-        double ECLSummaryReader::GetMiscVar(QString var_name, int time_index)
+        double ECLSummaryReader::GetMiscVar(string var_name, int time_index)
         {
             if (!hasMiscVar(var_name))
-                throw SummaryVariableDoesNotExistException("Misc variable " + std::string(var_name.toLatin1().constData()) + " does not exist.");
+                throw SummaryVariableDoesNotExistException("Misc variable " + std::string(var_name) + " does not exist.");
             if (!HasReportStep(time_index))
                 throw SummaryTimeStepDoesNotExistException("Time step does not exist");
-            return ecl_sum_get_misc_var(ecl_sum_, time_index, var_name.toLatin1().constData());
+            return ecl_sum_get_misc_var(ecl_sum_, time_index, var_name.c_str());
         }
 
-        double ECLSummaryReader::GetFieldVar(QString var_name, int time_index)
+        double ECLSummaryReader::GetFieldVar(string var_name, int time_index)
         {
             if (!HasReportStep(time_index))
                 throw SummaryTimeStepDoesNotExistException("Time step does not exist");
             if (!hasFieldVar(var_name)) {
-                throw SummaryVariableDoesNotExistException("Field variable" + var_name.toStdString() + " does not exist.");
+                throw SummaryVariableDoesNotExistException("Field variable" + var_name + " does not exist.");
             }
-            return ecl_sum_get_field_var(ecl_sum_, time_index, var_name.toLatin1().constData());
+            return ecl_sum_get_field_var(ecl_sum_, time_index, var_name.c_str());
         }
 
-        double ECLSummaryReader::GetWellVar(QString well_name, QString var_name, int time_index)
+        double ECLSummaryReader::GetWellVar(string well_name, string var_name, int time_index)
         {
             if (!hasWellVar(well_name, var_name))
-                throw SummaryVariableDoesNotExistException("Well variable " + std::string(well_name.toLatin1().constData()) + ":"
-                                                           + std::string(var_name.toLatin1().constData()) + " does not exist.");
+                throw SummaryVariableDoesNotExistException("Well variable " + std::string(well_name) + ":"
+                                                           + std::string(var_name) + " does not exist.");
             if (!HasReportStep(time_index))
                 throw SummaryTimeStepDoesNotExistException("Time step does not exist");
-            return ecl_sum_get_well_var(ecl_sum_, time_index, well_name.toLatin1().constData(), var_name.toLatin1().constData());
+            return ecl_sum_get_well_var(ecl_sum_, time_index, well_name.c_str(), var_name.c_str());
         }
 
         int ECLSummaryReader::GetLastReportStep()
@@ -65,32 +67,24 @@ namespace ERTWrapper {
             return report_step <= GetLastReportStep() && report_step >= GetFirstReportStep();
         }
 
-        bool ECLSummaryReader::hasWellVar(QString well_name, QString var_name) {
-            return ecl_sum_has_well_var(ecl_sum_,
-                                        well_name.toLatin1().constData(),
-                                        var_name.toLatin1().constData());
+        bool ECLSummaryReader::hasWellVar(string well_name, string var_name) {
+            return ecl_sum_has_well_var(ecl_sum_, well_name.c_str(), var_name.c_str());
         }
 
-        bool ECLSummaryReader::hasGroupVar(QString group_name, QString var_name) {
-            return ecl_sum_has_group_var(ecl_sum_,
-                                         group_name.toLatin1().constData(),
-                                         var_name.toLatin1().constData());
+        bool ECLSummaryReader::hasGroupVar(string group_name, string var_name) {
+            return ecl_sum_has_group_var(ecl_sum_, group_name.c_str(), var_name.c_str());
         }
 
-        bool ECLSummaryReader::hasFieldVar(QString var_name) {
-            return ecl_sum_has_field_var(ecl_sum_,
-                                         var_name.toLatin1().constData());
+        bool ECLSummaryReader::hasFieldVar(string var_name) {
+            return ecl_sum_has_field_var(ecl_sum_, var_name.c_str());
         }
 
-        bool ECLSummaryReader::hasBlockVar(int block_nr, QString var_name) {
-            return ecl_sum_has_block_var(ecl_sum_,
-                                         var_name.toLatin1().constData(),
-                                         block_nr);
+        bool ECLSummaryReader::hasBlockVar(int block_nr, string var_name) {
+            return ecl_sum_has_block_var(ecl_sum_, var_name.c_str(), block_nr);
         }
 
-        bool ECLSummaryReader::hasMiscVar(QString var_name) {
-            return ecl_sum_has_misc_var(ecl_sum_,
-                                        var_name.toLatin1().constData());
+        bool ECLSummaryReader::hasMiscVar(string var_name) {
+            return ecl_sum_has_misc_var(ecl_sum_, var_name.c_str());
         }
 
         void ECLSummaryReader::populateKeyLists() {
@@ -100,18 +94,23 @@ namespace ERTWrapper {
             stringlist_type * well_keys = ecl_sum_alloc_well_var_list(ecl_sum_);
 
             for (int i = 0; i < stringlist_get_size(keys); ++i)
-                keys_.push_back(QString::fromLatin1(stringlist_safe_iget(keys, i)));
+                keys_.insert(stringlist_safe_iget(keys, i));
             for (int j = 0; j < stringlist_get_size(wells); ++j)
-                wells_.push_back(QString::fromLatin1(stringlist_safe_iget(wells, j)));
+                wells_.insert(stringlist_safe_iget(wells, j));
             for (int k = 0; k < stringlist_get_size(field_keys); ++k)
-                field_keys_.push_back(QString::fromLatin1(stringlist_safe_iget(field_keys, k)));
+                field_keys_.insert(stringlist_safe_iget(field_keys, k));
             for (int l = 0; l < stringlist_get_size(well_keys); ++l)
-                well_keys_.push_back(QString::fromLatin1(stringlist_safe_iget(well_keys, l)));
+                well_keys_.insert(stringlist_safe_iget(well_keys, l));
 
             stringlist_free(keys);
             stringlist_free(wells);
             stringlist_free(field_keys);
             stringlist_free(well_keys);
+
+            cout << "Found wells: " << boost::algorithm::join(wells_, ", ") << endl;
+            cout << "Found keys: " << boost::algorithm::join(keys_, ", ") << endl;
+            cout << "Found field keys: " << boost::algorithm::join(field_keys_, ", ") << endl;
+            cout << "Found well keys: " << boost::algorithm::join(well_keys_, ", ") << endl;
         }
 
         void ECLSummaryReader::initializeVectors() {
@@ -135,9 +134,9 @@ namespace ERTWrapper {
         void ECLSummaryReader::initializeWellRates() {
             const ecl_smspec_type * smspec = ecl_sum_get_smspec(ecl_sum_);
             for (auto wname : wells_) {
-                wopr_.insert(wname, std::vector<double>(time_.size(), 0.0));
+                wopr_[wname] = std::vector<double>(time_.size(), 0.0);
                 if (hasWellVar(wname, "WOPR")) {
-                    int index = ecl_smspec_get_well_var_params_index(smspec, wname.toLatin1(), "WOPR");
+                    int index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WOPR");
                     auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
                     assert(double_vector_size(data) == time_.size());
                     for (int i = 0; i < time_.size(); ++i) {
@@ -147,9 +146,9 @@ namespace ERTWrapper {
                     double_vector_free(data);
                 }
 
-                wwpr_.insert(wname, std::vector<double>(time_.size(), 0.0));
+                wwpr_[wname] = std::vector<double>(time_.size(), 0.0);
                 if (hasWellVar(wname, "WWPR")) {
-                    int index = ecl_smspec_get_well_var_params_index(smspec, wname.toLatin1(), "WWPR");
+                    int index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WWPR");
                     auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
                     assert(double_vector_size(data) == time_.size());
                     for (int i = 0; i < time_.size(); ++i) {
@@ -159,9 +158,9 @@ namespace ERTWrapper {
                     double_vector_free(data);
                 }
 
-                wgpr_.insert(wname, std::vector<double>(time_.size(), 0.0));
+                wgpr_[wname] = std::vector<double>(time_.size(), 0.0);
                 if (hasWellVar(wname, "WGPR")) {
-                    int index = ecl_smspec_get_well_var_params_index(smspec, wname.toLatin1(), "WGPR");
+                    int index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WGPR");
                     auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
                     assert(double_vector_size(data) == time_.size());
                     for (int i = 0; i < time_.size(); ++i) {
@@ -171,9 +170,9 @@ namespace ERTWrapper {
                     double_vector_free(data);
                 }
 
-                wwir_.insert(wname, std::vector<double>(time_.size(), 0.0));
+                wwir_[wname] = std::vector<double>(time_.size(), 0.0);
                 if (hasWellVar(wname, "WWIR")) {
-                    int index = ecl_smspec_get_well_var_params_index(smspec, wname.toLatin1(), "WWIR");
+                    int index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WWIR");
                     auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
                     assert(double_vector_size(data) == time_.size());
                     for (int i = 0; i < time_.size(); ++i) {
@@ -183,9 +182,9 @@ namespace ERTWrapper {
                     double_vector_free(data);
                 }
 
-                wgir_.insert(wname, std::vector<double>(time_.size(), 0.0));
+                wgir_[wname] = std::vector<double>(time_.size(), 0.0);
                 if (hasWellVar(wname, "WGIR")) {
-                    int index = ecl_smspec_get_well_var_params_index(smspec, wname.toLatin1(), "WGIR");
+                    int index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WGIR");
                     auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
                     assert(double_vector_size(data) == time_.size());
                     for (int i = 0; i < time_.size(); ++i) {
@@ -200,9 +199,9 @@ namespace ERTWrapper {
         void ECLSummaryReader::initializeWellCumulatives() {
             const ecl_smspec_type * smspec = ecl_sum_get_smspec(ecl_sum_);
             for (auto wname : wells_) {
-                wopt_.insert(wname, std::vector<double>(time_.size(), 0.0));
+                wopt_[wname] = std::vector<double>(time_.size(), 0.0);
                 if (hasWellVar(wname, "WOPT")) {
-                    int wopt_index = ecl_smspec_get_well_var_params_index(smspec, wname.toLatin1(), "WOPT");
+                    int wopt_index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WOPT");
                     double_vector_type * wopt = ecl_sum_alloc_data_vector(ecl_sum_, wopt_index, true);
                     assert(double_vector_size(wopt) == time_.size());
                     for (int i = 0; i < time_.size(); ++i) {
@@ -212,9 +211,9 @@ namespace ERTWrapper {
                     double_vector_free(wopt);
                 }
 
-                wwpt_.insert(wname, std::vector<double>(time_.size(), 0.0));
+                wwpt_[wname] = std::vector<double>(time_.size(), 0.0);
                 if (hasWellVar(wname, "WWPT")) {
-                    int wwpt_index = ecl_smspec_get_well_var_params_index(smspec, wname.toLatin1(), "WWPT");
+                    int wwpt_index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WWPT");
                     double_vector_type * wwpt = ecl_sum_alloc_data_vector(ecl_sum_, wwpt_index, true);
                     assert(double_vector_size(wwpt) == time_.size());
                     for (int i = 0; i < time_.size(); ++i) {
@@ -224,9 +223,9 @@ namespace ERTWrapper {
                     double_vector_free(wwpt);
                 }
 
-                wgpt_.insert(wname, std::vector<double>(time_.size(), 0.0));
+                wgpt_[wname] = std::vector<double>(time_.size(), 0.0);
                 if (hasWellVar(wname, "WGPT")) {
-                    int wgpt_index = ecl_smspec_get_well_var_params_index(smspec, wname.toLatin1(), "WGPT");
+                    int wgpt_index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WGPT");
                     double_vector_type * wgpt = ecl_sum_alloc_data_vector(ecl_sum_, wgpt_index, true);
                     assert(double_vector_size(wgpt) == time_.size());
                     for (int i = 0; i < time_.size(); ++i) {
@@ -236,9 +235,9 @@ namespace ERTWrapper {
                     double_vector_free(wgpt);
                 }
 
-                wwit_.insert(wname, std::vector<double>(time_.size(), 0.0));
+                wwit_[wname] = std::vector<double>(time_.size(), 0.0);
                 if (hasWellVar(wname, "WWIT")) {
-                    int wwit_index = ecl_smspec_get_well_var_params_index(smspec, wname.toLatin1(), "WWIT");
+                    int wwit_index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WWIT");
                     double_vector_type * wwit = ecl_sum_alloc_data_vector(ecl_sum_, wwit_index, true);
                     assert(double_vector_size(wwit) == time_.size());
                     for (int i = 0; i < time_.size(); ++i) {
@@ -248,9 +247,9 @@ namespace ERTWrapper {
                     double_vector_free(wwit);
                 }
 
-                wgit_.insert(wname, std::vector<double>(time_.size(), 0.0));
+                wgit_[wname] = std::vector<double>(time_.size(), 0.0);
                 if (hasWellVar(wname, "WGIT")) {
-                    int wgit_index = ecl_smspec_get_well_var_params_index(smspec, wname.toLatin1(), "WGIT");
+                    int wgit_index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WGIT");
                     double_vector_type * wgit = ecl_sum_alloc_data_vector(ecl_sum_, wgit_index, true);
                     assert(double_vector_size(wgit) == time_.size());
                     for (int i = 0; i < time_.size(); ++i) {
@@ -366,63 +365,62 @@ namespace ERTWrapper {
             }
         }
 
-        const std::vector<double> ECLSummaryReader::wopt(const QString well_name) const {
-            if (!wells_.contains(well_name))
-                throw SummaryVariableDoesNotExistException("The well " + well_name.toStdString() + " was not found in the summary.");
-            if (wopt_[well_name].back() == 0.0)
+        const std::vector<double> ECLSummaryReader::wopt(const string well_name) const {
+            if (wells_.find(well_name) == wells_.end())
+                throw SummaryVariableDoesNotExistException("The well " + well_name + " was not found in the summary.");
+            if (wopt_.at(well_name).back() == 0.0)
                 warnPropertyZero(well_name, "WOPT");
-            return wopt_[well_name];
+            return wopt_.at(well_name);
         }
 
-        const std::vector<double> ECLSummaryReader::wwpt(const QString well_name) const {
-            if (!wells_.contains(well_name))
-                throw SummaryVariableDoesNotExistException("The well " + well_name.toStdString() + " was not found in the summary.");
-            if (wwpt_[well_name].back() == 0.0)
+        const std::vector<double> ECLSummaryReader::wwpt(const string well_name) const {
+            if (wells_.find(well_name) == wells_.end())
+                throw SummaryVariableDoesNotExistException("The well " + well_name + " was not found in the summary.");
+            if (wwpt_.at(well_name).back() == 0.0)
                 warnPropertyZero(well_name, "WWPT");
-            return wwpt_[well_name];
+            return wwpt_.at(well_name);
         }
 
-        const std::vector<double> ECLSummaryReader::wgpt(const QString well_name) const {
-            if (!wells_.contains(well_name))
-                throw SummaryVariableDoesNotExistException("The well " + well_name.toStdString() + " was not found in the summary.");
-            if (wgpt_[well_name].back() == 0.0)
+        const std::vector<double> ECLSummaryReader::wgpt(const string well_name) const {
+            if (wells_.find(well_name) == wells_.end())
+                throw SummaryVariableDoesNotExistException("The well " + well_name + " was not found in the summary.");
+            if (wgpt_.at(well_name).back() == 0.0)
                 warnPropertyZero(well_name, "WGPT");
-            return wgpt_[well_name];
+            return wgpt_.at(well_name);
         }
 
-        const std::vector<double> ECLSummaryReader::wwit(const QString well_name) const {
-            if (!wells_.contains(well_name))
-                throw SummaryVariableDoesNotExistException("The well " + well_name.toStdString() + " was not found in the summary.");
-            if (wwit_[well_name].back() == 0.0)
+        const std::vector<double> ECLSummaryReader::wwit(const string well_name) const {
+            if (wells_.find(well_name) == wells_.end())
+                throw SummaryVariableDoesNotExistException("The well " + well_name + " was not found in the summary.");
+            if (wwit_.at(well_name).back() == 0.0)
                 warnPropertyZero(well_name, "WWIT");
-            return wwit_[well_name];
+            return wwit_.at(well_name);
         }
 
-        const std::vector<double> ECLSummaryReader::wgit(const QString well_name) const {
-            if (!wells_.contains(well_name))
-                throw SummaryVariableDoesNotExistException("The well " + well_name.toStdString() + " was not found in the summary.");
-            if (wgit_[well_name].back() == 0.0)
+        const std::vector<double> ECLSummaryReader::wgit(const string well_name) const {
+            if (wells_.find(well_name) == wells_.end())
+                throw SummaryVariableDoesNotExistException("The well " + well_name + " was not found in the summary.");
+            if (wgit_.at(well_name).back() == 0.0)
                 warnPropertyZero(well_name, "WGIT");
-            return wgit_[well_name];
+            return wgit_.at(well_name);
         }
 
-        void ECLSummaryReader::warnPropertyZero(QString wname, QString propname) const {
+        void ECLSummaryReader::warnPropertyZero(string wname, string propname) const {
             std::cerr << "WARNING: Returning cumulative vector with final falue 0.0 for "
-                                 "property " + propname.toStdString() +
-                                 " for well " + wname.toStdString() +
+                                 "property " + propname + " for well " + wname +
                                  ". The vector may be uninitialized because "
                                  "the property is not found for the well, or because the phase "
                                  "does not exist in the system." << std::endl;
         }
 
-        void ECLSummaryReader::warnPropertyNotFound(QString propname) const {
-            std::cerr << "WARNING: The field property " + propname.toStdString() + " was not found in "
+        void ECLSummaryReader::warnPropertyNotFound(string propname) const {
+            std::cerr << "WARNING: The field property " + propname + " was not found in "
                                  "the summary. Attempting to calculate it from corresponding well property." << std::endl;
         }
 
-        void ECLSummaryReader::warnPropertyZero(QString propname) const {
+        void ECLSummaryReader::warnPropertyZero(string propname) const {
             std::cerr << "WARNING: Returning cumulative vector with final falue 0.0 for "
-                         "property " + propname.toStdString() +
+                         "property " + propname +
                          ". The vector may be uninitialized because "
                          "the property is not found for the well, or because the phase "
                          "does not exist in the system." << std::endl;
@@ -458,34 +456,34 @@ namespace ERTWrapper {
             return fgit_;
         }
 
-        const std::vector<double> ECLSummaryReader::wopr(const QString well_name) const {
-            if (!wells_.contains(well_name))
-                throw SummaryVariableDoesNotExistException("The well " + well_name.toStdString() + " was not found in the summary.");
-            return wopr_[well_name];
+        const std::vector<double> ECLSummaryReader::wopr(const string well_name) const {
+            if (wells_.find(well_name) == wells_.end())
+                throw SummaryVariableDoesNotExistException("The well " + well_name + " was not found in the summary.");
+            return wopr_.at(well_name);
         }
 
-        const std::vector<double> ECLSummaryReader::wwpr(const QString well_name) const {
-            if (!wells_.contains(well_name))
-                throw SummaryVariableDoesNotExistException("The well " + well_name.toStdString() + " was not found in the summary.");
-            return wwpr_[well_name];
+        const std::vector<double> ECLSummaryReader::wwpr(const string well_name) const {
+            if (wells_.find(well_name) == wells_.end())
+                throw SummaryVariableDoesNotExistException("The well " + well_name + " was not found in the summary.");
+            return wwpr_.at(well_name);
         }
 
-        const std::vector<double> ECLSummaryReader::wgpr(const QString well_name) const {
-            if (!wells_.contains(well_name))
-                throw SummaryVariableDoesNotExistException("The well " + well_name.toStdString() + " was not found in the summary.");
-            return wgpr_[well_name];
+        const std::vector<double> ECLSummaryReader::wgpr(const string well_name) const {
+            if (wells_.find(well_name) == wells_.end())
+                throw SummaryVariableDoesNotExistException("The well " + well_name + " was not found in the summary.");
+            return wgpr_.at(well_name);
         }
 
-        const std::vector<double> ECLSummaryReader::wwir(const QString well_name) const {
-            if (!wells_.contains(well_name))
-                throw SummaryVariableDoesNotExistException("The well " + well_name.toStdString() + " was not found in the summary.");
-            return wwir_[well_name];
+        const std::vector<double> ECLSummaryReader::wwir(const string well_name) const {
+            if (wells_.find(well_name) == wells_.end())
+                throw SummaryVariableDoesNotExistException("The well " + well_name + " was not found in the summary.");
+            return wwir_.at(well_name);
         }
 
-        const std::vector<double> ECLSummaryReader::wgir(const QString well_name) const {
-            if (!wells_.contains(well_name))
-                throw SummaryVariableDoesNotExistException("The well " + well_name.toStdString() + " was not found in the summary.");
-            return wgir_[well_name];
+        const std::vector<double> ECLSummaryReader::wgir(const string well_name) const {
+            if (wells_.find(well_name) == wells_.end())
+                throw SummaryVariableDoesNotExistException("The well " + well_name + " was not found in the summary.");
+            return wgir_.at(well_name);
         }
 
 
