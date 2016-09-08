@@ -5,9 +5,7 @@
 #ifndef FIELDOPT_TRUST_REGION_SEARCH_H
 #define FIELDOPT_TRUST_REGION_SEARCH_H
 
-#include "optimizers/trust_region/classes/trust_region_model.h"
-#include "classes/polynomial.h"
-
+#include "Utilities/math.hpp"
 
 #include "Optimization/optimizer.h"
 

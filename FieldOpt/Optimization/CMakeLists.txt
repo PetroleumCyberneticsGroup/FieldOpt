@@ -28,9 +28,7 @@ add_library(optimization
 		constraints/reservoir_boundary.cpp
 		optimizer.cpp
 		optimizers/compass_search.cpp
-		optimizers/trust_region/trust_region_search.cpp
-		optimizers/trust_region/classes/trust_region_model.cpp
-		optimizers/trust_region/classes/polynomial.cpp
+		optimizers/trust_region_search.cpp
 		constraints/well_spline_length.cpp
 		constraints/interwell_distance.cpp
 		constraints/well_spline_constraint.cpp
@@ -38,7 +36,7 @@ add_library(optimization
 		constraints/rate_constraint.cpp
 		constraints/combined_spline_length_interwell_distance_reservoir_boundary.cpp
 		case_transfer_object.cpp
-		${EXPERIMENTAL_CONSTRAINTS_SRC} optimizers/trust_region/trust_region_search.cpp optimizers/trust_region/trust_region_search.h)
+		${EXPERIMENTAL_CONSTRAINTS_SRC} optimizers/trust_region_search.cpp optimizers/trust_region_search.h)
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
 target_link_libraries(optimization
