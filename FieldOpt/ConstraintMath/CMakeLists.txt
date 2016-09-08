@@ -22,16 +22,18 @@ target_compile_features(constraintmath
         PUBLIC cxx_auto_type
         PUBLIC cxx_range_for)
 
-# Unit tests
-find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR})
-add_executable(test_constraintmath
-        tests/well_constraint_projections_tests.cpp
-        tests/test_domain_boundary.cpp
-        )
-target_link_libraries(test_constraintmath
-        fieldopt::constraintmath
-        ${GTEST_BOTH_LIBRARIES}
-        ${CMAKE_THREAD_LIBS_INIT})
+if (BUILD_TESTING)
+    # Unit tests
+    find_package(GTest REQUIRED)
+    include_directories(${GTEST_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR})
+    add_executable(test_constraintmath
+            tests/well_constraint_projections_tests.cpp
+            tests/test_domain_boundary.cpp
+            )
+    target_link_libraries(test_constraintmath
+            fieldopt::constraintmath
+            ${GTEST_BOTH_LIBRARIES}
+            ${CMAKE_THREAD_LIBS_INIT})
 
-add_test(NAME test_constraintmath COMMAND $<TARGET_FILE:test_constraintmath>)
+    add_test(NAME test_constraintmath COMMAND $<TARGET_FILE:test_constraintmath>)
+endif()
