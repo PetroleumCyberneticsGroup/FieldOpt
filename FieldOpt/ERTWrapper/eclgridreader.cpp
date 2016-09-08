@@ -14,13 +14,13 @@ namespace ERTWrapper {
             return Eigen::Vector3d(cx, cy, cz);
         }
 
-        QList<Eigen::Vector3d> ECLGridReader::GetCellCorners(int global_index)
+        std::vector<Eigen::Vector3d> ECLGridReader::GetCellCorners(int global_index)
         {
-            QList<Eigen::Vector3d> corners;
+            std::vector<Eigen::Vector3d> corners;
             for (int i = 0; i < 8; ++i) {
                 double x, y, z;
                 ecl_grid_get_cell_corner_xyz1(ecl_grid_, global_index, i, &x, &y, &z);
-                corners.append(Eigen::Vector3d(x, y, z));
+                corners.push_back(Eigen::Vector3d(x, y, z));
             }
             return corners;
         }

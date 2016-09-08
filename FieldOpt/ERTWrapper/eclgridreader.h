@@ -2,7 +2,6 @@
 #define ECLGRIDREADER_H
 
 #include <ert/ecl/ecl_grid.h>
-#include <QList>
 #include <ert/ecl/ecl_file.h>
 #include <Eigen/Dense>
 
@@ -47,7 +46,7 @@ namespace ERTWrapper {
                 double permx;
                 double permy;
                 double permz;
-                QList<Eigen::Vector3d> corners;
+                std::vector<Eigen::Vector3d> corners;
                 Eigen::Vector3d center;
             };
 
@@ -63,7 +62,7 @@ namespace ERTWrapper {
             ecl_grid_type* ecl_grid_;
             ecl_file_type* ecl_file_init_;
             Eigen::Vector3d GetCellCenter(int global_index);
-            QList<Eigen::Vector3d> GetCellCorners(int global_index);
+            std::vector<Eigen::Vector3d> GetCellCorners(int global_index);
             double GetCellVolume(int global_index);
 
             ecl_kw_type *poro_kw_;
