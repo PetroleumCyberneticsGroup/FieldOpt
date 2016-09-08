@@ -1,6 +1,21 @@
-# Well Index (WI) Calculation
-This directory contains the code needed to compute the well indices for
-well splines. It uses a Grid to compute the values.
+# WellIndexCalculatior
+The WellIndexCalculator library and executable is part of the 
+[FieldOpt project](https://github.com/PetroleumCyberneticsGroup/FieldOpt).
+
+## License
+The the code in this directory is provided under the GNU Lesser General
+Public License Version  3 [(LGPLv3)](https://www.gnu.org/licenses/lgpl-3.0.en.html).
+A verbatim copy of the license (copied September 8. 2016) can be found
+[here](LICENSE.md)
+
+The license permits you to share and modify all versions of the code in
+this directory (WellIndexCalculator). You may modify or extend it, given
+that the resulting program is free and licensed under the GPL or LGPL
+license. Any modifications must carry a notice stating that it is 
+modified, as well as a relevant date.
+
+_You may use the WellIndexCalculator library as part of a program (e.g.
+by linking it), regardless of whether or not the program is free._ 
 
 ## Dependencies
 The WellIndexCalculator library and executable depend on the Reservoir
