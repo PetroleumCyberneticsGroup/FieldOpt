@@ -52,7 +52,7 @@ namespace ERTWrapper {
         {
             file_name_ = file_name;
             init_file_name_ = file_name;
-            if (boost::algorithm::ends_with(file_name, ".EGRID")) 
+            if (boost::algorithm::ends_with(file_name, ".EGRID"))
                 boost::replace_all(init_file_name_, ".EGRID", ".INIT");
 
             else if (boost::algorithm::ends_with(file_name, ".GRID"))
