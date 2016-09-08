@@ -46,7 +46,7 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
     auto wic = WellIndexCalculator(grid_);
     auto block_data = wic.ComputeWellBlocks(heel, toe, well_settings_.wellbore_radius);
     QList<WellBlock *> *blocks = new QList<WellBlock *>();
-    for (int i = 0; i < block_data.length(); ++i) {
+    for (int i = 0; i < block_data.size(); ++i) {
         blocks->append(getWellBlock(block_data[i]));
     }
     return blocks;

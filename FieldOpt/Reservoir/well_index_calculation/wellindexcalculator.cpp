@@ -7,36 +7,36 @@ namespace Reservoir {
             grid_ = grid;
         }
 
-        QList<IntersectedCell> WellIndexCalculator::ComputeWellBlocks(Vector3d heel, Vector3d toe, double wellbore_radius) {
+        std::vector<IntersectedCell> WellIndexCalculator::ComputeWellBlocks(Vector3d heel, Vector3d toe, double wellbore_radius) {
             heel_ = heel;
             toe_ = toe;
             wellbore_radius_ = wellbore_radius;
 
-            QList<IntersectedCell> intersected_cells = cells_intersected();
-            for (int i = 0; i < intersected_cells.length(); ++i) {
+            std::vector<IntersectedCell> intersected_cells = cells_intersected();
+            for (int i = 0; i < intersected_cells.size(); ++i) {
                 intersected_cells[i].set_well_index(compute_well_index(intersected_cells[i]));
             }
             return intersected_cells;
         }
 
-        QList<IntersectedCell> WellIndexCalculator::cells_intersected() {
+        std::vector<IntersectedCell> WellIndexCalculator::cells_intersected() {
             Grid::Cell last_cell = grid_->GetCellEnvelopingPoint(toe_);
-            QList<IntersectedCell> intersected_cells;
-            intersected_cells.append(IntersectedCell(grid_->GetCellEnvelopingPoint(heel_)));
-            intersected_cells.first().set_entry_point(heel_);
+            std::vector<IntersectedCell> intersected_cells;
+            intersected_cells.push_back(IntersectedCell(grid_->GetCellEnvelopingPoint(heel_)));
+            intersected_cells[0].set_entry_point(heel_);
 
             // If the first and last blocks are the same, return the block and start+end points
-            if (last_cell.global_index() == intersected_cells.first().global_index()) {
-                intersected_cells.first().set_exit_point(toe_);
+            if (last_cell.global_index() == intersected_cells[0].global_index()) {
+                intersected_cells[0].set_exit_point(toe_);
                 return intersected_cells;
             }
 
             // Make sure we follow line in the correct direction. (i.e. dot product positive)
-            Vector3d exit_point = find_exit_point(intersected_cells.first(), heel_, toe_, heel_);
+            Vector3d exit_point = find_exit_point(intersected_cells[0], heel_, toe_, heel_);
             if ((toe_ - heel_).dot(exit_point - heel_) <= 0.0) {
-                exit_point = find_exit_point(intersected_cells.first(), heel_, toe_, exit_point);
+                exit_point = find_exit_point(intersected_cells[0], heel_, toe_, exit_point);
             }
-            intersected_cells.first().set_exit_point(exit_point);
+            intersected_cells[0].set_exit_point(exit_point);
 
             double epsilon = 0.01 / (toe_ - exit_point).norm();
 
@@ -44,21 +44,21 @@ namespace Reservoir {
             while (true) {
                 // Move into the next cell, add it to the list and set the entry point
                 Vector3d move_exit_epsilon = exit_point * (1 - epsilon) + toe_ * epsilon;
-                intersected_cells.append(IntersectedCell(grid_->GetCellEnvelopingPoint(move_exit_epsilon)));
-                intersected_cells.last().set_entry_point(exit_point); // The entry point of each cell is the exit point of the previous cell
+                intersected_cells.push_back(IntersectedCell(grid_->GetCellEnvelopingPoint(move_exit_epsilon)));
+                intersected_cells.back().set_entry_point(exit_point); // The entry point of each cell is the exit point of the previous cell
 
                 // Terminate if we're in the last cell
-                if (intersected_cells.last().global_index() == last_cell.global_index()) {
-                    intersected_cells.last().set_exit_point(toe_);
+                if (intersected_cells.back().global_index() == last_cell.global_index()) {
+                    intersected_cells.back().set_exit_point(toe_);
                     break;
                 }
 
                 // Find the exit point of the cell and set it in the list
-                exit_point = find_exit_point(intersected_cells.last(), exit_point, toe_, exit_point);
-                intersected_cells.last().set_exit_point(exit_point);
-                assert(intersected_cells.length() < 500);
+                exit_point = find_exit_point(intersected_cells.back(), exit_point, toe_, exit_point);
+                intersected_cells.back().set_exit_point(exit_point);
+                assert(intersected_cells.size() < 500);
             }
-            assert(intersected_cells.last().global_index() == last_cell.global_index());
+            assert(intersected_cells.back().global_index() == last_cell.global_index());
             return intersected_cells;
         }
 

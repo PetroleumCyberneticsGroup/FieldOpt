@@ -4,13 +4,14 @@
 #include "wellindexcalculator.h"
 #include <grid/eclgrid.h>
 
+using namespace std;
 
 int main(int argc, const char *argv[]) {
     // Initialize some variables from the runtime arguments
     auto vm = createVariablesMap(argc, argv);
-    auto heel = Eigen::Vector3d(vm["heel"].as<std::vector<double>>().data());
-    auto toe = Eigen::Vector3d(vm["toe"].as<std::vector<double>>().data());
-    std::string gridpth = vm["grid"].as<std::string>();
+    auto heel = Eigen::Vector3d(vm["heel"].as<vector<double>>().data());
+    auto toe = Eigen::Vector3d(vm["toe"].as<vector<double>>().data());
+    string gridpth = vm["grid"].as<string>();
     double wellbore_radius = vm["radius"].as<double>();
 
     // Initialize the Grid and WellIndexCalculator objects
@@ -21,7 +22,7 @@ int main(int argc, const char *argv[]) {
     auto well_blocks = wic.ComputeWellBlocks(heel, toe, wellbore_radius);
 
     if (vm.count("compdat")) { // Print as a COMPDAT table if the --compdat/-c flag was given
-        QString well_name = QString::fromStdString(vm["well-name"].as<std::string>());
+        string well_name = vm["well-name"].as<string>();
         printCompdat(well_blocks, well_name, wellbore_radius);
     }
     else { // Otherwise, print as a CSV table

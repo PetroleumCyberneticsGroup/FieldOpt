@@ -10,42 +10,45 @@
 
 #include "intersected_cell.h"
 #include <boost/program_options.hpp>
+#include <boost/format.hpp>
+#include <boost/algorithm/string/join.hpp>
 #include <iostream>
 #include <stdlib.h>
-#include "Utilities/filehandling.hpp"
+#include <boost/filesystem/operations.hpp>
 
 namespace po = boost::program_options;
 using namespace Reservoir::WellIndexCalculation;
+using namespace std;
 
-void printCsv(QList<IntersectedCell> &well_blocks) {
-    std::cout << "i,\tj,\tk,\twi" << std::endl;
+void printCsv(vector<IntersectedCell> &well_blocks) {
+    cout << "i,\tj,\tk,\twi" << endl;
     for (auto block : well_blocks) {
-        auto line = QString("%1,\t%2,\t%3,\t%4")
-                .arg(block.ijk_index().i() + 1)         // %1
-                .arg(block.ijk_index().j() + 1)         // %2
-                .arg(block.ijk_index().k() + 1)         // %3
-                .arg(block.well_index()).toStdString(); // %4
-        std::cout << line << std::endl;
+        auto line = boost::str(boost::format("%d,\t%d,\t%d,\t%s")
+                %(block.ijk_index().i() + 1)         // %1
+                %(block.ijk_index().j() + 1)         // %2
+                %(block.ijk_index().k() + 1)         // %3
+                %block.well_index());                // %4
+        cout << line << endl;
     }
 }
 
-void printCompdat(QList<IntersectedCell> &well_blocs, QString well_name, double wellbore_radius) {
-    QString head = "COMPDAT\n";
-    QString foot = "\n/";
-    QStringList body;
+void printCompdat(vector<IntersectedCell> &well_blocs, string well_name, double wellbore_radius) {
+    string head = "COMPDAT\n";
+    string foot = "\n/";
+    vector<string> body;
     for (auto block : well_blocs) {
-        //                       NAME I   J  K1  K2  OP/SH ST WI  RAD
-        auto entry = QString("   %1  %2  %3  %4  %4  OPEN  1  %5  %6")
-                .arg(well_name)             // %1
-                .arg(block.ijk_index().i() + 1) // %2
-                .arg(block.ijk_index().j() + 1) // %3
-                .arg(block.ijk_index().k() + 1) // %4
-                .arg(block.well_index())        // %5
-                .arg(wellbore_radius);          // %6
-        body.append(entry);
+        //                                        NAME I   J  K1  K2  OP/SH ST WI  RAD
+        auto entry = boost::str(boost::format("   %s  %d  %d  %d  %d  OPEN  1  %s  %s")
+                % well_name             // %1
+                %(block.ijk_index().i() + 1) // %2
+                %(block.ijk_index().j() + 1) // %3
+                %(block.ijk_index().k() + 1) // %4
+                %block.well_index()          // %5
+                %wellbore_radius);           // %6
+        body.push_back(entry);
     }
-    std::string full = (head + body.join("\n") + foot).toStdString();
-    std::cout << full << std::endl;
+    string full = head + boost::algorithm::join(body, "\n") + foot;
+    cout << full << endl;
 }
 
 po::variables_map createVariablesMap(int argc, const char **argv) {
@@ -56,17 +59,17 @@ po::variables_map createVariablesMap(int argc, const char **argv) {
     po::options_description desc("FieldOpt options");
     desc.add_options()
             ("help", "print help message")
-            ("grid,g", po::value<std::string>(),
+            ("grid,g", po::value<string>(),
              "path to model grid file (e.g. *.GRID)")
-            ("heel,h", po::value<std::vector<double>>()->multitoken(),
+            ("heel,h", po::value<vector<double>>()->multitoken(),
              "Heel coordinates (x y z)")
-            ("toe,t", po::value<std::vector<double>>()->multitoken(),
+            ("toe,t", po::value<vector<double>>()->multitoken(),
              "Toe coordinates (x y z)")
             ("radius,r", po::value<double>(),
              "wellbore radius")
             ("compdat,c", po::value<int>()->implicit_value(0),
              "print in compdat format instead of CSV")
-            ("well-name,w", po::value<std::string>(),
+            ("well-name,w", po::value<string>(),
              "well name to be used when writing compdat")
             ;
     // Positional arguments
@@ -81,9 +84,9 @@ po::variables_map createVariablesMap(int argc, const char **argv) {
 
     // If called with --help or -h flag:
     if (vm.count("help")) { // Print help if --help present or input file/output dir not present
-        std::cout << "Usage: ./WellIndexCalculator gridpath --heel x1 y1 z1 --toe x2 y2 z2 --radius r [options]" << std::endl;
-        std::cout << desc << std::endl;
-        std::exit(EXIT_SUCCESS);
+        cout << "Usage: ./WellIndexCalculator gridpath --heel x1 y1 z1 --toe x2 y2 z2 --radius r [options]" << endl;
+        cout << desc << endl;
+        exit(EXIT_SUCCESS);
     }
 
     assert(vm.count("grid"));
@@ -92,9 +95,9 @@ po::variables_map createVariablesMap(int argc, const char **argv) {
     assert(vm.count("radius"));
     if (vm.count("compdat"))
         assert(vm.count("well-name"));
-    assert(vm["heel"].as<std::vector<double>>().size() == 3);
-    assert(vm["toe"].as<std::vector<double>>().size() == 3);
-    assert(Utilities::FileHandling::FileExists(QString::fromStdString(vm["grid"].as<std::string>())));
+    assert(vm["heel"].as<vector<double>>().size() == 3);
+    assert(vm["toe"].as<vector<double>>().size() == 3);
+    assert(boost::filesystem::exists(vm["grid"].as<string>()));
     assert(vm["radius"].as<double>() > 0);
 
     return vm;

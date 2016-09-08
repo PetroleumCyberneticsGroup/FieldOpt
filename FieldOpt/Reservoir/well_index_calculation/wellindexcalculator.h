@@ -1,9 +1,9 @@
 #ifndef WELLINDEXCALCULATOR_H
 #define WELLINDEXCALCULATOR_H
 
-#include <QList>
 #include <QPair>
 #include <Eigen/Dense>
+#include <vector>
 #include <Eigen/Core>
 #include "Reservoir/grid/grid.h"
 #include "intersected_cell.h"
@@ -35,7 +35,7 @@ namespace Reservoir {
              * \return A list of BlockData objects containing the (i,j,k) index and well index/transmissibility factor
              * for every block intersected by the spline.
              */
-            QList<IntersectedCell> ComputeWellBlocks(Vector3d heel, Vector3d toe, double wellbore_radius);
+            std::vector<IntersectedCell> ComputeWellBlocks(Vector3d heel, Vector3d toe, double wellbore_radius);
 
         private:
             /*!
@@ -59,7 +59,7 @@ namespace Reservoir {
              * \return A pair containing global indeces of intersected cells and the points where it enters each cell
              * (and thereby leaves the previous cell) of the line segment inside each cell.
              */
-            QList<IntersectedCell> cells_intersected();
+            std::vector<IntersectedCell> cells_intersected();
 
             /*!
              * \brief Find the point where the line bethween the start_point and end_point exits a cell.

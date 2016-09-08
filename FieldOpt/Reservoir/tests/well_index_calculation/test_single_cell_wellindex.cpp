@@ -114,7 +114,7 @@ namespace {
         // \todo The following lines need to be changed
         auto wic = WellIndexCalculator(grid_);
         auto blocks = wic.ComputeWellBlocks(start_point, end_point, wellbore_radius);
-        EXPECT_EQ(118, blocks.length());
+        EXPECT_EQ(118, blocks.size());
 /*
     std::ofstream myfile;
     myfile.open ("test_44.txt");
