@@ -2,7 +2,7 @@
 
 #include "main.hpp"
 #include "wellindexcalculator.h"
-#include <grid/eclgrid.h>
+#include <Reservoir/grid/eclgrid.h>
 
 using namespace std;
 

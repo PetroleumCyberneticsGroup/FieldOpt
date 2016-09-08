@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
-#include "Reservoir/well_index_calculation/wellindexcalculator.h"
+#include "WellIndexCalculator/wellindexcalculator.h"
 
 using namespace Reservoir::Grid;
 using namespace Reservoir::WellIndexCalculation;
