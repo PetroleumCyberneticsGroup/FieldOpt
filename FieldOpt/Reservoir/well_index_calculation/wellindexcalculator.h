@@ -1,7 +1,6 @@
 #ifndef WELLINDEXCALCULATOR_H
 #define WELLINDEXCALCULATOR_H
 
-#include <QPair>
 #include <Eigen/Dense>
 #include <vector>
 #include <Eigen/Core>
