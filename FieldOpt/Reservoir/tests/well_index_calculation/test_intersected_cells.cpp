@@ -1,9 +1,7 @@
 #include <gtest/gtest.h>
-#include <QList>
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
 #include "Reservoir/well_index_calculation/wellindexcalculator.h"
-#include "Utilities/filehandling.hpp"
 
 using namespace Reservoir::Grid;
 using namespace Reservoir::WellIndexCalculation;

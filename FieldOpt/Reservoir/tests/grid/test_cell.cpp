@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include <QList>
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
 #include "tests/test_resource_grids.h"

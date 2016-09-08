@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
-#include "Reservoir/grid/cell.h"
 #include "tests/test_resource_grids.h"
 
 using namespace Reservoir::Grid;
