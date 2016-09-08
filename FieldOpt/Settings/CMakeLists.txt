@@ -20,18 +20,20 @@ target_compile_features(settings
         PUBLIC cxx_auto_type
         PUBLIC cxx_range_for)
 
-# Unit tests
-find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS})
-add_executable(test_settings
-        tests/test_settings.cpp
-        tests/test_settings_model.cpp
-        tests/test_settings_optimizer.cpp
-        tests/test_settings_simulator.cpp
-        )
-target_link_libraries(test_settings
-        fieldopt::settings
-        ${GTEST_BOTH_LIBRARIES}
-        ${CMAKE_THREAD_LIBS_INIT})
+if (BUILD_TESTING)
+    # Unit tests
+    find_package(GTest REQUIRED)
+    include_directories(${GTEST_INCLUDE_DIRS})
+    add_executable(test_settings
+            tests/test_settings.cpp
+            tests/test_settings_model.cpp
+            tests/test_settings_optimizer.cpp
+            tests/test_settings_simulator.cpp
+            )
+    target_link_libraries(test_settings
+            fieldopt::settings
+            ${GTEST_BOTH_LIBRARIES}
+            ${CMAKE_THREAD_LIBS_INIT})
 
-add_test(NAME test_settings COMMAND $<TARGET_FILE:test_settings>)
+    add_test(NAME test_settings COMMAND $<TARGET_FILE:test_settings>)
+endif()

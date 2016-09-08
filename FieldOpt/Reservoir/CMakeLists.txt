@@ -18,19 +18,19 @@ target_compile_features(reservoir
         PUBLIC cxx_auto_type
         PUBLIC cxx_range_for)
 
-# Unit tests
-find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR} tests)
-add_executable(test_reservoir
-        tests/test_resource_grids.h
-        tests/grid/test_cell.cpp
-        tests/grid/test_grid.cpp
-        tests/grid/test_ijkcoordinate.cpp)
-target_link_libraries(test_reservoir
-        fieldopt::reservoir
-        ${GTEST_BOTH_LIBRARIES}
-        ${CMAKE_THREAD_LIBS_INIT})
+if (BUILD_TESTING)
+    # Unit tests
+    find_package(GTest REQUIRED)
+    include_directories(${GTEST_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR} tests)
+    add_executable(test_reservoir
+            tests/test_resource_grids.h
+            tests/grid/test_cell.cpp
+            tests/grid/test_grid.cpp
+            tests/grid/test_ijkcoordinate.cpp)
+    target_link_libraries(test_reservoir
+            fieldopt::reservoir
+            ${GTEST_BOTH_LIBRARIES}
+            ${CMAKE_THREAD_LIBS_INIT})
 
-add_test(NAME test_reservoir COMMAND $<TARGET_FILE:test_reservoir>)
-
-
+    add_test(NAME test_reservoir COMMAND $<TARGET_FILE:test_reservoir>)
+endif()
