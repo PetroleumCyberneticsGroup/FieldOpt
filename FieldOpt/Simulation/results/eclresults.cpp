@@ -16,7 +16,7 @@ namespace Simulation {
             file_path_ = file_path;
             if (summary_reader_ != 0) delete summary_reader_;
             try {
-                summary_reader_ = new ERTWrapper::ECLSummary::ECLSummaryReader(file_path);
+                summary_reader_ = new ERTWrapper::ECLSummary::ECLSummaryReader(file_path.toStdString());
             }
             catch (ERTWrapper::SummaryFileNotFoundAtPathException) {
                 throw ResultFileNotFoundException(file_path.toLatin1().constData());
@@ -82,11 +82,11 @@ namespace Simulation {
         std::vector<double> ECLResults::GetValueVector(Results::Property prop, QString well_name) {
             if (!isAvailable()) throw ResultsNotAvailableException();
             switch (prop) {
-                case CumulativeWellOilProduction:   return summary_reader_->wopt(well_name);
-                case CumulativeWellGasProduction:   return summary_reader_->wgpt(well_name);
-                case CumulativeWellWaterProduction: return summary_reader_->wwpt(well_name);
-                case CumulativeWellWaterInjection:  return summary_reader_->wwit(well_name);
-                case CumulativeWellGasInjection:    return summary_reader_->wgit(well_name);
+                case CumulativeWellOilProduction:   return summary_reader_->wopt(well_name.toStdString());
+                case CumulativeWellGasProduction:   return summary_reader_->wgpt(well_name.toStdString());
+                case CumulativeWellWaterProduction: return summary_reader_->wwpt(well_name.toStdString());
+                case CumulativeWellWaterInjection:  return summary_reader_->wwit(well_name.toStdString());
+                case CumulativeWellGasInjection:    return summary_reader_->wgit(well_name.toStdString());
                 default: throw std::runtime_error("In ECLResults: The requested property is not a well property.");
             }
         }
