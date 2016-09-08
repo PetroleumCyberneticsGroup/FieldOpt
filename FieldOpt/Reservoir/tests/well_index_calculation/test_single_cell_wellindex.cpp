@@ -107,7 +107,7 @@ namespace {
 
         Eigen::Vector3d start_point = Eigen::Vector3d(0.05,0.00,1712);
         Eigen::Vector3d end_point= Eigen::Vector3d(1440.0,1400.0,1712);
-        QList<Eigen::Vector3d> well_spline_points = {start_point, end_point};
+        std::vector<Eigen::Vector3d> well_spline_points = {start_point, end_point};
 
         // \todo The following lines need to be changed
         auto wic = WellIndexCalculator(grid_);
