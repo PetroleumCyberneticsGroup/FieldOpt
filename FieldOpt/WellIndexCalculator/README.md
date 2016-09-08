@@ -2,6 +2,29 @@
 This directory contains the code needed to compute the well indices for
 well splines. It uses a Grid to compute the values.
 
+## Dependencies
+The WellIndexCalculator library and executable depend on the Reservoir
+and ERTWrapper libraries. The third party dependencies are Eigen, 
+`ert_ecl`, `ert_util` and Boost.
+
+## Compiling
+You can compile only the WellIndexCalculator libarary and executable. To
+do this, run CMake with FieldOpt's primary list while setting the
+`BUILD_CMAKE_ONLY` flag to on, either using ccmake or the following 
+command:
+```bash
+cmake -DBUILD_WIC_ONLY:BOOL=ON path/to/FieldOpt/FieldOpt/
+```
+
+If you don't want to build the unit tests, set the `BUILD_TESTING` flag
+to on; if you don't want to copy the examples (needed for some
+of the unit tests) into the build directory, set the `COPY_EXAMPLES` 
+flag to off. So, to _only_ build the WellIndexCalculator executable and
+the required libraries, execute
+```bash
+cmake -DBUILD_WIC_ONLY:BOOL=ON -DBUILD_TESTING:BOOL=OFF -DCOPY_EXAMPLES:BOOL=OFF path/to/FieldOpt/FieldOpt/
+```
+
 ## Stand-alone Executable
 A stand-alone executable has been created to compute the well blocks and 
 well indices for a well path defined between a heel and a toe in (x,y,z)
