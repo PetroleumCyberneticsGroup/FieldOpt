@@ -1,6 +1,16 @@
 # FieldOpt
 Petroleum Field Development Optimization Framework.
 
+## License
+The FieldOpt project as a whole, except for the
+[WellIndexCalculator](Fieldopt/WellIndexCalculator), is
+provided under the GNU General Public License Version 3.
+A verbatim copy of the license (copied September 9. 2016) can be
+found [here](LICENSE.md).
+
+The [WellIndexCalculator](Fieldopt/WellIndexCalculator) is
+provided under the GNU _Lesser_ Public License Version 3.
+
 ## Quick Setup Guide
 This quick setup guide has been tested with Ubuntu 16.04.
 

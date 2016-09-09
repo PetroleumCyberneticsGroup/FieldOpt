@@ -3,7 +3,9 @@ The WellIndexCalculator library and executable is part of the
 [FieldOpt project](https://github.com/PetroleumCyberneticsGroup/FieldOpt).
 
 ## License
-The the code in this directory is provided under the GNU Lesser General
+The FieldOpt project, as a whole, is provided under the GNU General
+Public License Version 3. However, the the code in this directory 
+(WellIndexCalculator) is provided under the GNU _Lesser_ General
 Public License Version  3 [(LGPLv3)](https://www.gnu.org/licenses/lgpl-3.0.en.html).
 A verbatim copy of the license (copied September 8. 2016) can be found
 [here](LICENSE.md)
