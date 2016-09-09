@@ -14,7 +14,7 @@ namespace {
         QList<int> l2 = {2, 2};
         QList<int> l3 = {0};
         QList<int> l4 = {1, 2, 1, 2, 1, 2};
-        EXPECT_FLOAT_EQ(1, calc_average(l1));
+        EXPECT_FLOAT_EQ(1, calc_average(l1)); 
         EXPECT_FLOAT_EQ(2, calc_average(l2));
         EXPECT_FLOAT_EQ(0, calc_average(l3));
         EXPECT_FLOAT_EQ(1.5, calc_average(l4));
