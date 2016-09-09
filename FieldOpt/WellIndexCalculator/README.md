@@ -16,8 +16,8 @@ that the resulting program is free and licensed under the GPL or LGPL
 license. Any modifications must carry a notice stating that it is 
 modified, as well as a relevant date.
 
-_You may use the WellIndexCalculator library as part of a program (e.g.
-by linking it), regardless of whether or not the program is free._ 
+_You may use the WellIndexCalculator as part of a program, regardless of 
+whether or not the program is free._ 
 
 ## Dependencies
 The WellIndexCalculator library and executable depend on the Reservoir
