@@ -4,7 +4,7 @@ The WellIndexCalculator library and executable is part of the
 
 ## License
 The FieldOpt project, as a whole, is provided under the GNU General
-Public License Version 3. However, the the code in this directory 
+Public License Version 3. However, the code in this directory 
 (WellIndexCalculator) is provided under the GNU _Lesser_ General
 Public License Version  3 [(LGPLv3)](https://www.gnu.org/licenses/lgpl-3.0.en.html).
 A verbatim copy of the license (copied September 8. 2016) can be found
