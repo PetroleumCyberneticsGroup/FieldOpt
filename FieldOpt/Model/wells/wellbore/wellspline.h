@@ -4,7 +4,7 @@
 #include "trajectory.h"
 #include "Reservoir/grid/eclgrid.h"
 #include "Model/wells/wellbore/wellblock.h"
-#include "WellIndexCalculator/wellindexcalculator.h"
+#include "FieldOpt-WellIndexCalculator/wellindexcalculator.h"
 #include <QList>
 
 namespace Model {
