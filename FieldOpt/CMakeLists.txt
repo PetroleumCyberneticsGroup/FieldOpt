@@ -46,7 +46,7 @@ endif()
 
 add_subdirectory(ERTWrapper)
 add_subdirectory(Reservoir)
-add_subdirectory(WellIndexCalculator)
+add_subdirectory(FieldOpt-WellIndexCalculator)
 
 if (NOT BUILD_WIC_ONLY)
     add_subdirectory(Utilities)
