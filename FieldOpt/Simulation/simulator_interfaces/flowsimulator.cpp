@@ -1,5 +1,5 @@
 #include <results/eclresults.h>
-#include <Utilities/unix/execution.h>
+#include <Utilities/execution.hpp>
 #include <iostream>
 #include "flowsimulator.h"
 #include "simulator_exceptions.h"
@@ -7,7 +7,7 @@
 namespace Simulation {
     namespace SimulatorInterfaces {
 
-        FlowSimulator::FlowSimulator(Utilities::Settings::Settings *settings, Model::Model *model)
+        FlowSimulator::FlowSimulator(Settings::Settings *settings, Model::Model *model)
                 : Simulator(settings)
         {
             model_ = model;

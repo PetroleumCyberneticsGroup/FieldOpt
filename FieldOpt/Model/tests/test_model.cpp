@@ -14,7 +14,7 @@ namespace {
     }
 
     TEST_F(ModelTest, ChildObjects) {
-        EXPECT_NO_THROW(model_->reservoir());
+        EXPECT_NO_THROW(model_->grid());
         EXPECT_NO_THROW(model_->wells());
         EXPECT_NO_THROW(model_->variables());
         EXPECT_GE(model_->wells()->size(), 2);

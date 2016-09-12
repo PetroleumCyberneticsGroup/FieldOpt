@@ -26,7 +26,7 @@
 #ifndef COMPLETION_H
 #define COMPLETION_H
 
-#include "Utilities/settings/model.h"
+#include "Settings/model.h"
 
 namespace Model {
 namespace Wells {
@@ -47,7 +47,7 @@ public:
     CompletionType type() const { return type_; } //!< Get the type of completion, e.g. Perforation.
 
 protected:
-    Completion(::Utilities::Settings::Model::Well::Completion completion_settings);
+    Completion(::Settings::Model::Well::Completion completion_settings);
     Completion(CompletionType type);
 
 private:

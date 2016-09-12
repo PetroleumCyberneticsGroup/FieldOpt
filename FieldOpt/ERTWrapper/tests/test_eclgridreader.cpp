@@ -1,40 +1,58 @@
+/******************************************************************************
+   Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+
+   This file is part of the FieldOpt project.
+
+   FieldOpt is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   FieldOpt is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
+
 #include <gtest/gtest.h>
 #include "ERTWrapper/eclgridreader.h"
-#include "Utilities/tests/test_resource_example_file_paths.h"
 
 using namespace ERTWrapper::ECLGrid;
 
 namespace {
 
 class ECLGridReaderTest : public ::testing::Test {
-protected:
-    ECLGridReaderTest() {
-        ecl_grid_reader_ = new ECLGridReader();
-    }
+ protected:
+  ECLGridReaderTest() {
+      ecl_grid_reader_ = new ECLGridReader();
+  }
 
-    virtual ~ECLGridReaderTest() {
-        delete ecl_grid_reader_;
-    }
+  virtual ~ECLGridReaderTest() {
+      delete ecl_grid_reader_;
+  }
 
-    virtual void SetUp() {
-        ecl_grid_reader_->ReadEclGrid(file_name_);
-    }
+  virtual void SetUp() {
+      ecl_grid_reader_->ReadEclGrid(file_name_);
+  }
 
-    virtual void TearDown() { }
+  virtual void TearDown() { }
 
-    ECLGridReader* ecl_grid_reader_;
-    QString file_name_ = TestResources::ExampleFilePaths::grid_horzwel_;
+  ECLGridReader* ecl_grid_reader_;
+  std::string file_name_ = "../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID";
 
-    // Objects declared here can be used by all tests in this test case.
+  // Objects declared here can be used by all tests in this test case.
 
-    void PrintCell(ECLGridReader::Cell cell) {
-        std::cout << "Cell " << cell.global_index << std::endl;
-        std::cout << "\tCenter: (" << cell.center.x() << ", " << cell.center.y() << ", " << cell.center.z() << ")" << std::endl;
-        std::cout << "\tCorners: " << std::endl;
-        for (int i = 0; i < 8; ++i) {
-            std::cout << "\t\t(" << cell.corners.at(i).x() << ", " << cell.corners.at(i).y() << ", " << cell.corners.at(i).z() << ")" << std::endl;
-        }
-    }
+  void PrintCell(ECLGridReader::Cell cell) {
+      std::cout << "Cell " << cell.global_index << std::endl;
+      std::cout << "\tCenter: (" << cell.center.x() << ", " << cell.center.y() << ", " << cell.center.z() << ")" << std::endl;
+      std::cout << "\tCorners: " << std::endl;
+      for (int i = 0; i < 8; ++i) {
+          std::cout << "\t\t(" << cell.corners.at(i).x() << ", " << cell.corners.at(i).y() << ", " << cell.corners.at(i).z() << ")" << std::endl;
+      }
+  }
 };
 
 TEST_F(ECLGridReaderTest, ReadGrid) {

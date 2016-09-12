@@ -9,7 +9,7 @@
 #include "Optimization/case.h"
 #include "Optimization/optimizer.h"
 #include "runtime_settings.h"
-#include "Utilities/settings/settings.h"
+#include "Settings/settings.h"
 #include "Model/model.h"
 #include "Simulation/results/results.h"
 
@@ -32,7 +32,7 @@ public:
     /*!
      * \brief LogSettings Write a log containing some of the settings specified in the driver file.
      */
-    void LogSettings(const Utilities::Settings::Settings *settings);
+    void LogSettings(const Settings::Settings *settings);
 
     /*!
      * \brief WriteVariableMap Write a CSV file with mappings from property UUID to property name.

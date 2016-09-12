@@ -6,18 +6,18 @@ namespace Model {
     namespace Wells {
         namespace Wellbore {
 
-            Trajectory::Trajectory(Utilities::Settings::Model::Well well_settings,
+            Trajectory::Trajectory(Settings::Model::Well well_settings,
                                    Properties::VariablePropertyContainer *variable_container,
-                                   ::Reservoir::Reservoir *reservoir)
+                                   ::Reservoir::Grid::Grid *grid)
             {
                 well_blocks_ = new QList<WellBlock *>();
-                if (well_settings.definition_type == Utilities::Settings::Model::WellDefinitionType::WellBlocks) {
+                if (well_settings.definition_type == Settings::Model::WellDefinitionType::WellBlocks) {
                     initializeWellBlocks(well_settings, variable_container);
                     calculateDirectionOfPenetration();
                     well_spline_ = 0;
                 }
-                else if (well_settings.definition_type == Utilities::Settings::Model::WellDefinitionType::WellSpline) {
-                    well_spline_ = new WellSpline(well_settings, variable_container, reservoir);
+                else if (well_settings.definition_type == Settings::Model::WellDefinitionType::WellSpline) {
+                    well_spline_ = new WellSpline(well_settings, variable_container, grid);
                     well_blocks_ = well_spline_->GetWellBlocks();
                     calculateDirectionOfPenetration();
                 }
@@ -46,10 +46,10 @@ namespace Model {
                 calculateDirectionOfPenetration();
             }
 
-            void Trajectory::initializeWellBlocks(Utilities::Settings::Model::Well well,
+            void Trajectory::initializeWellBlocks(Settings::Model::Well well,
                                                   Properties::VariablePropertyContainer *variable_container)
             {
-                QList<Utilities::Settings::Model::Well::WellBlock> blocks = well.well_blocks;
+                QList<Settings::Model::Well::WellBlock> blocks = well.well_blocks;
                 for (int i = 0; i < blocks.size(); ++i) {
                     well_blocks_->append(new WellBlock(blocks[i].i, blocks[i].j, blocks[i].k));
                     if (blocks[i].is_variable) {

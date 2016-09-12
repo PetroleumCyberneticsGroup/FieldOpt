@@ -1,7 +1,25 @@
+/******************************************************************************
+   Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+
+   This file is part of the FieldOpt project.
+
+   FieldOpt is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   FieldOpt is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
+
 #ifndef GRID_H
 #define GRID_H
 
-#include <QString>
 #include "cell.h"
 #include "ijkcoordinate.h"
 #include "ERTWrapper/eclgridreader.h"
@@ -64,8 +82,8 @@ namespace Reservoir {
 
         protected:
             GridSourceType type_;
-            QString file_path_;
-            Grid(GridSourceType type, QString file_path);
+            std::string file_path_;
+            Grid(GridSourceType type, std::string file_path);
         };
 
     }

@@ -1,5 +1,26 @@
+/******************************************************************************
+   Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+
+   This file is part of the FieldOpt project.
+
+   FieldOpt is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   FieldOpt is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
+
 #include "eclgridreader.h"
 #include <iostream>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string/replace.hpp>
 
 #include "ertwrapper_exceptions.h"
 
@@ -12,13 +33,13 @@ namespace ERTWrapper {
             return Eigen::Vector3d(cx, cy, cz);
         }
 
-        QList<Eigen::Vector3d> ECLGridReader::GetCellCorners(int global_index)
+        std::vector<Eigen::Vector3d> ECLGridReader::GetCellCorners(int global_index)
         {
-            QList<Eigen::Vector3d> corners;
+            std::vector<Eigen::Vector3d> corners;
             for (int i = 0; i < 8; ++i) {
                 double x, y, z;
                 ecl_grid_get_cell_corner_xyz1(ecl_grid_, global_index, i, &x, &y, &z);
-                corners.append(Eigen::Vector3d(x, y, z));
+                corners.push_back(Eigen::Vector3d(x, y, z));
             }
             return corners;
         }
@@ -46,27 +67,31 @@ namespace ERTWrapper {
                 ecl_file_close(ecl_file_init_);
         }
 
-        void ECLGridReader::ReadEclGrid(QString file_name)
+        void ECLGridReader::ReadEclGrid(std::string file_name)
         {
             file_name_ = file_name;
-            if (file_name.endsWith(".EGRID")) init_file_name_ = file_name.replace(".EGRID", ".INIT");
-            if (file_name.endsWith(".GRID")) init_file_name_ = file_name.replace(".GRID", ".INIT");
+            init_file_name_ = file_name;
+            if (boost::algorithm::ends_with(file_name, ".EGRID"))
+                boost::replace_all(init_file_name_, ".EGRID", ".INIT");
+
+            else if (boost::algorithm::ends_with(file_name, ".GRID"))
+                boost::replace_all(init_file_name_, ".GRID", ".INIT");
 
             if (ecl_grid_ == 0) {
-                ecl_grid_ = ecl_grid_alloc(file_name_.toStdString().c_str());
+                ecl_grid_ = ecl_grid_alloc(file_name_.c_str());
             } else {
                 ecl_grid_free(ecl_grid_);
-                ecl_grid_ = ecl_grid_alloc(file_name_.toStdString().c_str());
+                ecl_grid_ = ecl_grid_alloc(file_name_.c_str());
             }
             if (ecl_file_init_ == 0) {
-                ecl_file_init_ = ecl_file_open(init_file_name_.toStdString().c_str(), 0);
+                ecl_file_init_ = ecl_file_open(init_file_name_.c_str(), 0);
                 poro_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PORO", 0);
                 permx_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMX", 0);
                 permy_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMY", 0);
                 permz_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMZ", 0);
             } else {
                 ecl_file_close(ecl_file_init_);
-                ecl_file_init_ = ecl_file_open(init_file_name_.toStdString().c_str(), 0);
+                ecl_file_init_ = ecl_file_open(init_file_name_.c_str(), 0);
                 poro_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PORO", 0);
                 permx_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMX", 0);
                 permy_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMY", 0);

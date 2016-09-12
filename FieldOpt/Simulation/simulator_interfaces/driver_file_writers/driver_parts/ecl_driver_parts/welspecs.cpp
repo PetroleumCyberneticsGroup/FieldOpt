@@ -38,16 +38,16 @@ namespace Simulation {
                         entry[3] = QString::number(well->heel_j());
 
                         switch (well->preferred_phase()) {
-                            case Utilities::Settings::Model::PreferredPhase::Oil:
+                            case Settings::Model::PreferredPhase::Oil:
                                 entry[5] = "OIL";
                                 break;
-                            case Utilities::Settings::Model::PreferredPhase::Water:
+                            case Settings::Model::PreferredPhase::Water:
                                 entry[5] = "WATER";
                                 break;
-                            case Utilities::Settings::Model::PreferredPhase::Gas:
+                            case Settings::Model::PreferredPhase::Gas:
                                 entry[5] = "GAS";
                                 break;
-                            case Utilities::Settings::Model::PreferredPhase::Liquid:
+                            case Settings::Model::PreferredPhase::Liquid:
                                 entry[5] = "LIQ";
                                 break;
                             default:

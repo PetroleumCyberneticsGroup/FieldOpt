@@ -7,7 +7,6 @@
 #include "Reservoir/grid/cell.h"
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
-#include "Reservoir/grid/grid_exceptions.h"
 #include <QList>
 #include <Eigen/Dense>
 #include <QList>

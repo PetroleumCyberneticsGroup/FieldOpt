@@ -14,7 +14,7 @@ namespace Optimization {
         class WellSplineLength : public Constraint, WellSplineConstraint
         {
         public:
-            WellSplineLength(::Utilities::Settings::Optimizer::Constraint settings, ::Model::Properties::VariablePropertyContainer *variables);
+            WellSplineLength(::Settings::Optimizer::Constraint settings, ::Model::Properties::VariablePropertyContainer *variables);
 
             // Constraint interface
         public:

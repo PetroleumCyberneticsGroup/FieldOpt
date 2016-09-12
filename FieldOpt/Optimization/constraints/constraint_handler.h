@@ -10,7 +10,7 @@
 #include "rate_constraint.h"
 #include "Optimization/case.h"
 #include "Model/properties/variable_property_container.h"
-#include "Utilities/settings/optimizer.h"
+#include "Settings/optimizer.h"
 #include "Reservoir/grid/grid.h"
 
 #include <QList>
@@ -27,7 +27,7 @@ namespace Optimization {
         class ConstraintHandler
         {
         public:
-            ConstraintHandler(QList<Utilities::Settings::Optimizer::Constraint> constraints,
+            ConstraintHandler(QList<Settings::Optimizer::Constraint> constraints,
                               Model::Properties::VariablePropertyContainer *variables,
                               Reservoir::Grid::Grid *grid);
             bool CaseSatisfiesConstraints(Case *c); //!< Check if a Case satisfies _all_ constraints.

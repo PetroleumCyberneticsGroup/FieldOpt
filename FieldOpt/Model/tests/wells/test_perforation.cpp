@@ -23,7 +23,7 @@ protected:
         }
     }
 
-    ::Utilities::Settings::Model::Well prod_well_;
+    ::Settings::Model::Well prod_well_;
     QList<Completions::Perforation *> prod_perforations_;
 };
 

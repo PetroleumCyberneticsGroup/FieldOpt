@@ -10,7 +10,7 @@ namespace {
         BookkeeperTest() {
             compass_search_ = new ::Optimization::Optimizers::CompassSearch(settings_optimizer_,
                                                                             base_case_, model_->variables(),
-                                                                            model_->reservoir()->grid());
+                                                                            model_->grid());
             bookkeeper_ = new Runner::Bookkeeper(settings_full_, compass_search_->case_handler());
             c1 = compass_search_->GetCaseForEvaluation();
             c2 = compass_search_->GetCaseForEvaluation();

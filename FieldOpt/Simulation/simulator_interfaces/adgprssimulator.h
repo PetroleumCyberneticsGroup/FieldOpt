@@ -3,7 +3,7 @@
 #include "simulator.h"
 
 #include "Model/model.h"
-#include "Utilities/settings/settings.h"
+#include "Settings/settings.h"
 #include "driver_file_writers/adgprsdriverfilewriter.h"
 
 namespace Simulation {
@@ -27,7 +27,7 @@ namespace Simulation {
         class AdgprsSimulator : public Simulator
         {
         public:
-            AdgprsSimulator(Utilities::Settings::Settings *settings, Model::Model *model);
+            AdgprsSimulator(Settings::Settings *settings, Model::Model *model);
 
             // Simulator interface
         public:

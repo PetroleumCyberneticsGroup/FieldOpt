@@ -5,8 +5,8 @@
 #include "wellspline.h"
 #include "completions/completion.h"
 #include "completions/perforation.h"
-#include "Reservoir/reservoir.h"
-#include "Utilities/settings/model.h"
+#include "Reservoir/grid/eclgrid.h"
+#include "Settings/model.h"
 #include "Model/properties/variable_property_container.h"
 #include "Model/properties/property.h"
 
@@ -31,9 +31,9 @@ namespace Model {
             class Trajectory
             {
             public:
-                Trajectory(::Utilities::Settings::Model::Well well_settings,
+                Trajectory(::Settings::Model::Well well_settings,
                            Properties::VariablePropertyContainer *variable_container,
-                           Reservoir::Reservoir *reservoir);
+                           Reservoir::Grid::Grid *grid);
                 WellBlock *GetWellBlock(int i, int j, int k); //!< Get the well block at index (i,j,k).
                 QList<WellBlock *> *GetWellBlocks(); //!< Get a list containing all well blocks.
                 void UpdateWellBlocks(); //!< Update the well blocks, in particular the ones defined by a spline.
@@ -42,7 +42,7 @@ namespace Model {
                 QList<WellBlock *> *well_blocks_;
                 WellSpline *well_spline_; //!< Used to defined trajectories with a spline. When used, this generates the well blocks.
 
-                void initializeWellBlocks(Utilities::Settings::Model::Well well,
+                void initializeWellBlocks(Settings::Model::Well well,
                                           Properties::VariablePropertyContainer *variable_container);
 
                 void calculateDirectionOfPenetration(); // Calculate direction of penetration for all well blocks

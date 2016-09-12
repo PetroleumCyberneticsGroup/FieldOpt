@@ -1,9 +1,26 @@
+/******************************************************************************
+   Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+
+   This file is part of the FieldOpt project.
+
+   FieldOpt is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   FieldOpt is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
+
 #include <gtest/gtest.h>
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
-#include "Reservoir/grid/grid_exceptions.h"
-#include "Reservoir/grid/cell.h"
-#include "tests/test_resource_grids.h"
+#include "Reservoir/tests/test_resource_grids.h"
 
 using namespace Reservoir::Grid;
 
@@ -60,11 +77,11 @@ namespace {
     }
 
     TEST_F(GridTest, AttemptGetCellWithIndexOutsideGrid) {
-        EXPECT_THROW(grid_->GetCell(20,10,10), CellIndexOutsideGridException);
+        EXPECT_THROW(grid_->GetCell(20,10,10), std::runtime_error);
     }
 
     TEST_F(GridTest, AttemptFindCellOutsideGrid) {
-        EXPECT_THROW(grid_->GetCellEnvelopingPoint(100.0f, 1000.0, 7100.0), GridCellNotFoundException);
+        EXPECT_THROW(grid_->GetCellEnvelopingPoint(100.0f, 1000.0, 7100.0), std::runtime_error);
     }
 
     TEST_F(GridTest, GetCellEnvelopingPoint) {

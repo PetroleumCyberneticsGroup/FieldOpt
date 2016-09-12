@@ -1,7 +1,7 @@
 #ifndef WELLSPLINECONSTRAINT_H
 #define WELLSPLINECONSTRAINT_H
 
-#include "Utilities/settings/optimizer.h"
+#include "Settings/optimizer.h"
 #include "Model/properties/variable_property_container.h"
 
 namespace Optimization {

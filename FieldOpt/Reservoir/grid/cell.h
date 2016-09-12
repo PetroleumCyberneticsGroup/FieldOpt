@@ -1,7 +1,25 @@
+/******************************************************************************
+   Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+
+   This file is part of the FieldOpt project.
+
+   FieldOpt is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   FieldOpt is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
+
 #ifndef CELL_H
 #define CELL_H
 
-#include <QList>
 #include <Eigen/Dense>
 #include "ijkcoordinate.h"
 
@@ -18,7 +36,7 @@ namespace Reservoir {
             Cell(){};
             Cell(int global_index, IJKCoordinate ijk_index,
                  double volume, double poro, double permx, double permy, double permz,
-                 Eigen::Vector3d center, QList<Eigen::Vector3d> corners);
+                 Eigen::Vector3d center, std::vector<Eigen::Vector3d> corners);
 
             /*!
              * \brief global_index Gets the cells global index in its parent grid.
@@ -73,7 +91,7 @@ namespace Reservoir {
              * 0---1    4---5
              *
              */
-            QList<Eigen::Vector3d> corners() const { return corners_; }
+            std::vector<Eigen::Vector3d> corners() const { return corners_; }
 
             /*!
              * \brief Equals Check if the global indices of the two cells being compared are equal.
@@ -90,7 +108,7 @@ namespace Reservoir {
              * \todo Hilmar should probably be the one to document this thing.
              */
             struct Face {
-                QList<Eigen::Vector3d> corners;
+                std::vector<Eigen::Vector3d> corners;
                 Eigen::Vector3d normal_vector;
 
                 /*!
@@ -124,7 +142,7 @@ namespace Reservoir {
                 }
             };
 
-            QList<Face> faces() const { return faces_; }
+            std::vector<Face> faces() const { return faces_; }
 
 
         private:
@@ -132,12 +150,12 @@ namespace Reservoir {
             IJKCoordinate ijk_index_;
             double volume_;
             Eigen::Vector3d center_;
-            QList<Eigen::Vector3d> corners_;
+            std::vector<Eigen::Vector3d> corners_;
             double porosity_;
             double permx_;
             double permy_;
             double permz_;
-            QList<Face> faces_;
+            std::vector<Face> faces_;
 
             /*!
              * \brief Populates the faces_ field.

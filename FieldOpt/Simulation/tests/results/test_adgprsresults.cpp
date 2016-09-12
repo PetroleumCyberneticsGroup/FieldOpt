@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "Utilities/tests/test_resource_example_file_paths.h"
+#include "Settings/tests/test_resource_example_file_paths.hpp"
 #include "Simulation/results/adgprsresults.h"
 
 namespace {
