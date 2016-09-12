@@ -75,7 +75,7 @@ sudo make install
 5. Clone and build FieldOpt
 ```bash
 # Clone FieldOpt into some directory
-git clone https://github.com/PetroleumCyberneticsGroup/FieldOpt.git
+git clone --recursive https://github.com/PetroleumCyberneticsGroup/FieldOpt.git
 mkdir fieldopt-build
 cd fieldopt-build
 cmake ../FieldOpt/FieldOpt
