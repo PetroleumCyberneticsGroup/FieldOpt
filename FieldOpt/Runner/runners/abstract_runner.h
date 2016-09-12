@@ -32,7 +32,7 @@
 #include "Optimization/case.h"
 #include "Optimization/objective/objective.h"
 #include "Simulation/simulator_interfaces/simulator.h"
-#include "Utilities/settings/settings.h"
+#include "Settings/settings.h"
 #include "bookkeeper.h"
 #include "Runner/logger.h"
 
@@ -66,7 +66,7 @@ protected:
 
     Bookkeeper *bookkeeper_;
     Model::Model *model_;
-    Utilities::Settings::Settings *settings_;
+    Settings::Settings *settings_;
     RuntimeSettings *runtime_settings_;
     Optimization::Case *base_case_;
     Optimization::Optimizer *optimizer_;

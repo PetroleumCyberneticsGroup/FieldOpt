@@ -30,9 +30,9 @@ namespace Wells {
 namespace Wellbore {
 namespace Completions {
 
-Completion::Completion(Utilities::Settings::Model::Well::Completion completion_settings)
+Completion::Completion(Settings::Model::Well::Completion completion_settings)
 {
-    if (completion_settings.type == ::Utilities::Settings::Model::WellCompletionType::Perforation)
+    if (completion_settings.type == ::Settings::Model::WellCompletionType::Perforation)
         type_ = CompletionType::Perforation;
 }
 

@@ -1,15 +1,15 @@
 #ifndef WELL_H
 #define WELL_H
 
-#include "Utilities/settings/settings.h"
-#include "Utilities/settings/model.h"
+#include "Settings/settings.h"
+#include "Settings/model.h"
 #include "Model/wells/wellbore/completions/completion.h"
 #include "Model/wells/wellbore/completions/perforation.h"
 #include "Model/properties/variable_property_container.h"
 #include "Model/properties/discrete_property.h"
 #include "Model/wells/control.h"
 #include "Model/wells/wellbore/trajectory.h"
-#include "Reservoir/reservoir.h"
+#include "Reservoir/grid/eclgrid.h"
 
 #include <QList>
 
@@ -28,21 +28,21 @@ namespace Model {
              * \param well_number The index of the sepcific well in the Model.Wells list to create a well from.
              * \param variables The variables object to add all new variable variables to.
              */
-            Well(Utilities::Settings::Model settings,
+            Well(Settings::Model settings,
                  int well_number,
                  ::Model::Properties::VariablePropertyContainer *variable_container,
-                 ::Reservoir::Reservoir *reservoir);
+                 ::Reservoir::Grid::Grid *grid);
 
             struct Heel { int i; int j; int k; };
 
             enum PreferredPhase { Oil, Gas, Water, Liquid };
 
             QString name() const { return name_; }
-            ::Utilities::Settings::Model::WellType type() const { return type_; }
+            ::Settings::Model::WellType type() const { return type_; }
             QString group() const { return group_; }
             bool IsProducer();
             bool IsInjector();
-            ::Utilities::Settings::Model::PreferredPhase preferred_phase() const { return preferred_phase_; }
+            ::Settings::Model::PreferredPhase preferred_phase() const { return preferred_phase_; }
             double wellbore_radius() const { return wellbore_radius_->value(); }
             Wellbore::Trajectory *trajectory() { return trajectory_; }
             QList<Control *> *controls() { return controls_; }
@@ -53,9 +53,9 @@ namespace Model {
 
         private:
             QString name_;
-            ::Utilities::Settings::Model::WellType type_;
+            ::Settings::Model::WellType type_;
             QString group_;
-            ::Utilities::Settings::Model::PreferredPhase preferred_phase_;
+            ::Settings::Model::PreferredPhase preferred_phase_;
             Properties::ContinousProperty *wellbore_radius_;
             Wellbore::Trajectory *trajectory_;
 

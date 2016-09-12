@@ -6,7 +6,7 @@
 #define FIELDOPT_TEST_RESOURCE_MODEL_H
 
 #include "Model/model.h"
-#include "Utilities/tests/test_resource_settings.h"
+#include "Settings/tests/test_resource_settings.hpp"
 
 namespace TestResources {
     class TestResourceModel : public TestResourceSettings {

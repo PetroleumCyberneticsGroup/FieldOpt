@@ -28,7 +28,7 @@ namespace Simulation {
         class ECLSimulator : public Simulator
         {
         public:
-            ECLSimulator(Utilities::Settings::Settings *settings, Model::Model *model);
+            ECLSimulator(Settings::Settings *settings, Model::Model *model);
 
             /*!
              * \brief Evaluate Executes the simulation of the current model. The evaluation is blocking.

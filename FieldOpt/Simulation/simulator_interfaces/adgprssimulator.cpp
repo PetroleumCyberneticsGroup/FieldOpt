@@ -1,13 +1,13 @@
 #include <iostream>
 #include "adgprssimulator.h"
-#include "Utilities/unix/execution.h"
+#include "Utilities/execution.hpp"
 #include "simulator_exceptions.h"
 #include "Simulation/results/adgprsresults.h"
 
 namespace Simulation {
     namespace SimulatorInterfaces {
 
-        AdgprsSimulator::AdgprsSimulator(Utilities::Settings::Settings *settings, Model::Model *model)
+        AdgprsSimulator::AdgprsSimulator(Settings::Settings *settings, Model::Model *model)
         : Simulator(settings)
         {
             QStringList tmp = initial_driver_file_path_.split("/");

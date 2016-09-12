@@ -41,7 +41,7 @@ namespace Simulation {
                                     int current_time_step = wells->at(i)->controls()->at(j)->time_step();
                                     WellSetting *well_setting = new WellSetting();
                                     well_setting->well_name = wells->at(i)->name();
-                                    well_setting->is_injector = wells->at(i)->type() == ::Utilities::Settings::Model::WellType::Injector;
+                                    well_setting->is_injector = wells->at(i)->type() == ::Settings::Model::WellType::Injector;
                                     well_setting->control = wells->at(i)->controls()->at(j);
                                     if (time_entries_.keys().contains(current_time_step)) {
                                         // Adding to existing time step
@@ -87,11 +87,11 @@ namespace Simulation {
                         else producer_entry_line[1] = "SHUT";
 
                         switch (setting->control->mode()) {
-                            case ::Utilities::Settings::Model::ControlMode::BHPControl:
+                            case ::Settings::Model::ControlMode::BHPControl:
                                 producer_entry_line[2] = "BHP";
                                 producer_entry_line[8] = QString::number(setting->control->bhp());
                                 break;
-                            case ::Utilities::Settings::Model::ControlMode::RateControl:
+                            case ::Settings::Model::ControlMode::RateControl:
                                 producer_entry_line[2] = "LRAT";
                                 producer_entry_line[6] = QString::number(setting->control->rate());
                                 break;
@@ -108,10 +108,10 @@ namespace Simulation {
                         injector_entry_line[0] = setting->well_name;
 
                         switch (setting->control->injection_fluid()) {
-                            case ::Utilities::Settings::Model::InjectionType::WaterInjection:
+                            case ::Settings::Model::InjectionType::WaterInjection:
                                 injector_entry_line[1] = "WATER";
                                 break;
-                            case ::Utilities::Settings::Model::InjectionType::GasInjection:
+                            case ::Settings::Model::InjectionType::GasInjection:
                                 injector_entry_line[1] = "GAS";
                                 break;
                             default:
@@ -122,11 +122,11 @@ namespace Simulation {
                         else injector_entry_line[2] = "SHUT";
 
                         switch (setting->control->mode()) {
-                            case ::Utilities::Settings::Model::ControlMode::BHPControl:
+                            case ::Settings::Model::ControlMode::BHPControl:
                                 injector_entry_line[3] = "BHP";
                                 injector_entry_line[6] = QString::number(setting->control->bhp());
                                 break;
-                            case ::Utilities::Settings::Model::ControlMode::RateControl:
+                            case ::Settings::Model::ControlMode::RateControl:
                                 injector_entry_line[3] = "RATE";
                                 injector_entry_line[4] = QString::number(setting->control->rate());
                                 break;

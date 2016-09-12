@@ -31,13 +31,13 @@
 #include "driver_parts/ecl_driver_parts/summary_section.h"
 #include "driver_parts/ecl_driver_parts/schedule_section.h"
 #include "Simulation/simulator_interfaces/simulator_exceptions.h"
-#include "Utilities/file_handling/filehandling.h"
+#include "Utilities/filehandling.hpp"
 
 namespace Simulation {
 namespace SimulatorInterfaces {
 namespace DriverFileWriters {
 
-EclDriverFileWriter::EclDriverFileWriter(Utilities::Settings::Settings *settings, Model::Model *model)
+EclDriverFileWriter::EclDriverFileWriter(Settings::Settings *settings, Model::Model *model)
 {
     model_ = model;
     settings_ = settings;

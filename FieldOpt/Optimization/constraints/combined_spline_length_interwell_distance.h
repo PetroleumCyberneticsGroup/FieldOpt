@@ -16,7 +16,7 @@ namespace Optimization { namespace Constraints {
 class CombinedSplineLengthInterwellDistance : public Constraint
 {
 public:
-    CombinedSplineLengthInterwellDistance(Utilities::Settings::Optimizer::Constraint settings,
+    CombinedSplineLengthInterwellDistance(Settings::Optimizer::Constraint settings,
                                           Model::Properties::VariablePropertyContainer *variables);
 
 

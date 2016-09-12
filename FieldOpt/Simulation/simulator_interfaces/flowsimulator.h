@@ -9,7 +9,7 @@ namespace Simulation {
     namespace SimulatorInterfaces {
         class FlowSimulator : public Simulator {
         public:
-            FlowSimulator(Utilities::Settings::Settings *settings, Model::Model *model);
+            FlowSimulator(Settings::Settings *settings, Model::Model *model);
 
             virtual void Evaluate() override;
             virtual bool Evaluate(int timeout) override;

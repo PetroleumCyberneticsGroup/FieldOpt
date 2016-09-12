@@ -4,11 +4,11 @@
 #include "Simulation/simulator_interfaces/driver_file_writers/driver_parts/adgprs_driver_parts/wellstre.h"
 #include "Simulation/simulator_interfaces/driver_file_writers/driver_parts/adgprs_driver_parts/adgprs_wellcontrols.h"
 #include <iostream>
-#include "Utilities/file_handling/filehandling.h"
+#include "Utilities/filehandling.hpp"
 
 namespace Simulation { namespace SimulatorInterfaces { namespace DriverFileWriters {
 
-AdgprsDriverFileWriter::AdgprsDriverFileWriter(Utilities::Settings::Settings *settings, Model::Model *model)
+AdgprsDriverFileWriter::AdgprsDriverFileWriter(Settings::Settings *settings, Model::Model *model)
 {
     model_ = model;
     settings_ = settings;

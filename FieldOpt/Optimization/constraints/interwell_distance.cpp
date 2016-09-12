@@ -4,7 +4,7 @@
 namespace Optimization {
     namespace Constraints {
 
-        InterwellDistance::InterwellDistance(Utilities::Settings::Optimizer::Constraint settings,
+        InterwellDistance::InterwellDistance(Settings::Optimizer::Constraint settings,
                                              Model::Properties::VariablePropertyContainer *variables)
         {
             distance_ = settings.min;

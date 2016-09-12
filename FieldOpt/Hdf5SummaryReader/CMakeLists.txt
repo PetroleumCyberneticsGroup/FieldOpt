@@ -17,16 +17,18 @@ target_compile_features(hdf5summaryreader
         PUBLIC cxx_auto_type
         PUBLIC cxx_range_for)
 
-# Unit tests
-find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS} ${HDF5_INCLUDE_DIRS})
-add_executable(test_hdf5summaryreader
-        tests/test_hdf5_summary_reader.cpp)
+if (BUILD_TESTING)
+    # Unit tests
+    find_package(GTest REQUIRED)
+    include_directories(${GTEST_INCLUDE_DIRS} ${HDF5_INCLUDE_DIRS})
+    add_executable(test_hdf5summaryreader
+            tests/test_hdf5_summary_reader.cpp)
 
-target_link_libraries(test_hdf5summaryreader
-        fieldopt::hdf5summaryreader
-        ${HDF5_LIBRARIES}
-        ${GTEST_BOTH_LIBRARIES}
-        ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(test_hdf5summaryreader
+            fieldopt::hdf5summaryreader
+            ${HDF5_LIBRARIES}
+            ${GTEST_BOTH_LIBRARIES}
+            ${CMAKE_THREAD_LIBS_INIT})
 
-add_test(NAME test_hdf5summaryreader COMMAND $<TARGET_FILE:test_hdf5summaryreader>)
+    add_test(NAME test_hdf5summaryreader COMMAND $<TARGET_FILE:test_hdf5summaryreader>)
+endif()

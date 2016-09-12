@@ -3,12 +3,12 @@
 namespace Model {
     namespace Wells {
 
-        Well::Well(Utilities::Settings::Model settings,
+        Well::Well(Settings::Model settings,
                    int well_number,
                    Properties::VariablePropertyContainer *variable_container,
-                   Reservoir::Reservoir *reservoir)
+                   Reservoir::Grid::Grid *grid)
         {
-            Utilities::Settings::Model::Well well_settings = settings.wells().at(well_number);
+            Settings::Model::Well well_settings = settings.wells().at(well_number);
 
             name_ = well_settings.name;
             type_ = well_settings.type;
@@ -24,7 +24,7 @@ namespace Model {
             for (int i = 0; i < well_settings.controls.size(); ++i)
                 controls_->append(new Control(well_settings.controls[i], well_settings, variable_container));
 
-            trajectory_ = new Wellbore::Trajectory(well_settings, variable_container, reservoir);
+            trajectory_ = new Wellbore::Trajectory(well_settings, variable_container, grid);
 
             heel_.i = trajectory_->GetWellBlocks()->first()->i();
             heel_.j = trajectory_->GetWellBlocks()->first()->j();
@@ -33,12 +33,12 @@ namespace Model {
 
         bool Well::IsProducer()
         {
-            return type_ == ::Utilities::Settings::Model::WellType::Producer;
+            return type_ == ::Settings::Model::WellType::Producer;
         }
 
         bool Well::IsInjector()
         {
-            return type_ == ::Utilities::Settings::Model::WellType::Injector;
+            return type_ == ::Settings::Model::WellType::Injector;
         }
 
         void Well::Update() {

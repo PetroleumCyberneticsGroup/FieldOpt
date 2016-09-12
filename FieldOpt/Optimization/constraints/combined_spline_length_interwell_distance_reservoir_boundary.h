@@ -21,7 +21,7 @@ class CombinedSplineLengthInterwellDistanceReservoirBoundary : public Constraint
 {
 public:
     CombinedSplineLengthInterwellDistanceReservoirBoundary(
-                    Utilities::Settings::Optimizer::Constraint settings,
+                    Settings::Optimizer::Constraint settings,
                     Model::Properties::VariablePropertyContainer *variables,
                     Reservoir::Grid::Grid *grid);
 
