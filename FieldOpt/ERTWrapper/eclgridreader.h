@@ -1,9 +1,26 @@
+/******************************************************************************
+   Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+
+   This file is part of the FieldOpt project.
+
+   FieldOpt is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   FieldOpt is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
+
 #ifndef ECLGRIDREADER_H
 #define ECLGRIDREADER_H
 
-#include <qt5/QtCore/QString>
 #include <ert/ecl/ecl_grid.h>
-#include <QList>
 #include <ert/ecl/ecl_file.h>
 #include <Eigen/Dense>
 
@@ -48,7 +65,7 @@ namespace ERTWrapper {
                 double permx;
                 double permy;
                 double permz;
-                QList<Eigen::Vector3d> corners;
+                std::vector<Eigen::Vector3d> corners;
                 Eigen::Vector3d center;
             };
 
@@ -59,12 +76,12 @@ namespace ERTWrapper {
             };
 
         private:
-            QString file_name_;
-            QString init_file_name_;
+            std::string file_name_;
+            std::string init_file_name_;
             ecl_grid_type* ecl_grid_;
             ecl_file_type* ecl_file_init_;
             Eigen::Vector3d GetCellCenter(int global_index);
-            QList<Eigen::Vector3d> GetCellCorners(int global_index);
+            std::vector<Eigen::Vector3d> GetCellCorners(int global_index);
             double GetCellVolume(int global_index);
 
             ecl_kw_type *poro_kw_;
@@ -80,7 +97,7 @@ namespace ERTWrapper {
                  * \brief ReadEclGrid reads an ECLIPSE .GRID or .EGRID file.
                  * \param file_name The path to the grid to be read, including suffix.
                  */
-            void ReadEclGrid(QString file_name);
+            void ReadEclGrid(std::string file_name);
 
             /*!
                  * \brief ConvertIJKToGlobalIndex Converts a set of zero-offset (i,j,k) coordinates to the global index to that cell.

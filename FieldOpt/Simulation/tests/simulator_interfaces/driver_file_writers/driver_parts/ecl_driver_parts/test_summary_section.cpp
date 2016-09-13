@@ -1,7 +1,7 @@
 #include <Model/tests/test_resource_model.h>
 #include <gtest/gtest.h>
 #include "Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/summary_section.h"
-#include "Utilities/file_handling/filehandling.h"
+#include "Utilities/filehandling.hpp"
 
 using namespace ::Simulation::SimulatorInterfaces::DriverFileWriters::DriverParts::ECLDriverParts;
 

@@ -1,7 +1,7 @@
 #ifndef FIELDOPT_TEST_RESOURCE_RESULTS_H
 #define FIELDOPT_TEST_RESOURCE_RESULTS_H
 
-#include "Utilities/tests/test_resource_example_file_paths.h"
+#include "Settings/tests/test_resource_example_file_paths.hpp"
 #include "Simulation/results/eclresults.h"
 #include "Simulation/results/adgprsresults.h"
 

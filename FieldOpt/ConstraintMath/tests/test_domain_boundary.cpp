@@ -2,9 +2,8 @@
 #include <QList>
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
-#include "Reservoir/grid/grid_exceptions.h"
 #include "ConstraintMath/well_constraint_projections/well_constraint_projections.h"
-#include "Utilities/file_handling/filehandling.h"
+#include "Utilities/filehandling.hpp"
 
 using namespace Reservoir::Grid;
 
@@ -27,7 +26,7 @@ protected:
 
 
     Grid *grid_;
-    QString file_path_ = "../examples/ADGPRS/5spot/ECL_5SPOT.EGRID";
+    std::string file_path_ = "../examples/ADGPRS/5spot/ECL_5SPOT.EGRID";
 };
 
 TEST_F(DomainBoundaryTest, cell_boundary_constraint_test){

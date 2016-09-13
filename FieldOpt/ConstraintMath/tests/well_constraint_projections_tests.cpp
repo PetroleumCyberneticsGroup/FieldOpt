@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include <QList>
 #include "Reservoir/grid/grid.h"
-#include "Reservoir/grid/grid_exceptions.h"
 #include "Reservoir/grid/eclgrid.h"
 #include "ConstraintMath/well_constraint_projections/well_constraint_projections.h"
 

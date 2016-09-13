@@ -2,12 +2,12 @@
 #include <QString>
 #include "Optimization/objective/weightedsum.h"
 #include "Simulation/tests/test_resource_results.h"
-#include "Utilities/tests/test_resource_settings.h"
+#include "Settings/tests/test_resource_settings.hpp"
 
 
 using namespace Optimization::Objective;
 using namespace Simulation::Results;
-using namespace Utilities::Settings;
+using namespace Settings;
 
 namespace {
 
