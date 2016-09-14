@@ -118,4 +118,48 @@ namespace {
 
         EXPECT_TRUE(poly_2.return_coeffs()==poly_0.return_coeffs());
     }
+
+    TEST_F(MathTest, complete_model) {
+        Eigen::VectorXd point_0(2), point_1(2), point_2(2), point_3(2), point_4(2), point_5(2);
+        point_0 << 0, 0;
+        point_1 << 1, -1;
+        point_2 << 1, 1;
+        point_3 << 1, 1.01;
+        point_4 << 1, 1;
+        point_5 << 0, 0.2;
+
+        QList<Eigen::VectorXd> points;
+        points.append(point_0);
+        points.append(point_1);
+        points.append(point_2);
+        points.append(point_3);
+        points.append(point_4);
+        points.append(point_5);
+        QList<double> fvalues;
+        fvalues.append(0);
+        fvalues.append(1);
+        fvalues.append(4);
+        fvalues.append(-3);
+        fvalues.append(2);
+        fvalues.append(9);
+
+        // Create model with the points point_i.
+        PolyModel test_model = PolyModel(points, fvalues, 2, 2);
+
+        // Complete a well-poised set of points and calculate polynomial model.
+        test_model.complete_points();
+        test_model.calculate_model_coeffs();
+
+        Polynomial model_approx = Polynomial(2,test_model.get_model_coeffs());
+
+        // Test to see if model approx is correct, i.e. M(x_i) = y(x_i)
+        // Use NEAR because of numerical errors
+        for (int j = 0; j < 6; ++j) {
+            EXPECT_NEAR(model_approx.evaluate(test_model.get_points().at(j)),test_model.silly_function(test_model.get_points().at(j)), 10e-6);
+        }
+
+        Eigen::VectorXd testorino(2);
+        testorino << 0,2;
+        std::cout << "m(0,2) = " << model_approx.evaluate(testorino) << std::endl;
+    }
 }

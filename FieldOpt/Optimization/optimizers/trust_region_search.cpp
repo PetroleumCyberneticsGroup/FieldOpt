@@ -3,7 +3,7 @@
 namespace Optimization {
     namespace Optimizers {
 
-        TrustRegionSearch::TrustRegionSearch(Utilities::Settings::Optimizer *settings, Case *base_case,
+        TrustRegionSearch::TrustRegionSearch(::Settings::Optimizer *settings, Case *base_case,
                                      Model::Properties::VariablePropertyContainer *variables,
                                      Reservoir::Grid::Grid *grid)
                 : Optimizer(settings, base_case, variables, grid)

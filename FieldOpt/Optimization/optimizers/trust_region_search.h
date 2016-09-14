@@ -27,7 +27,7 @@ namespace Optimization {
         class TrustRegionSearch : public Optimizer
         {
         public:
-            TrustRegionSearch(::Utilities::Settings::Optimizer *settings, Case *base_case,
+            TrustRegionSearch(::Settings::Optimizer *settings, Case *base_case,
                           ::Model::Properties::VariablePropertyContainer *variables,
                           Reservoir::Grid::Grid *grid);
             double step_length() const { return step_length_; }
