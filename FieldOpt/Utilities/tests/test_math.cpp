@@ -146,9 +146,11 @@ namespace {
         // Create model with the points point_i.
         PolyModel test_model = PolyModel(points, fvalues, 2, 2);
 
+        EXPECT_FALSE(test_model.isModelComplete());
         // Complete a well-poised set of points and calculate polynomial model.
         test_model.complete_points();
         test_model.calculate_model_coeffs();
+        EXPECT_TRUE(test_model.isModelComplete());
 
         Polynomial model_approx = Polynomial(2,test_model.get_model_coeffs());
 
@@ -158,8 +160,5 @@ namespace {
             EXPECT_NEAR(model_approx.evaluate(test_model.get_points().at(j)),test_model.silly_function(test_model.get_points().at(j)), 10e-6);
         }
 
-        Eigen::VectorXd testorino(2);
-        testorino << 0,2;
-        std::cout << "m(0,2) = " << model_approx.evaluate(testorino) << std::endl;
     }
 }

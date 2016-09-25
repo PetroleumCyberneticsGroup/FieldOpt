@@ -22,6 +22,11 @@ namespace Optimization {
             step_length_ = step_length_/2.0;
         }
 
+        void TrustRegionSearch::expand()
+        {
+            step_length_ = step_length_*2.0;
+        }
+
         void TrustRegionSearch::perturb()
         {
             QList<Case *> perturbations = QList<Case *>();
@@ -46,9 +51,13 @@ namespace Optimization {
 
         void TrustRegionSearch::iterate()
         {
+            // At the first iteration we initialze the PolyModel object
             if (iteration_ == 0) {
+                PolyModel polymodel = PolyModel();
                 perturb();
             }
+
+            // If we found a better point we move the center of the trust region
             else if (betterCaseFoundLastEvaluation()) {
                 step();
                 perturb();

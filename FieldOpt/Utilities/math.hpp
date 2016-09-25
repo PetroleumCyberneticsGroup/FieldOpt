@@ -178,12 +178,10 @@ private:
     QList<double> fvalues_;
     Eigen::VectorXd center_;
     double radius_;
-    int dimension_;
-    // Monomial basis of model, usually quadratic
-    QList<Polynomial> basis_;
-    // The coefficients of the model using basis
-    Eigen::VectorXd model_coeffs_;
-    // Private methods/sub-methods
+    int dimension_; // Monomial basis of model, usually quadratic
+    QList<Polynomial> basis_; // The coefficients of the model using basis
+    Eigen::VectorXd model_coeffs_; // Private methods/sub-methods
+    bool is_model_complete_; // Bool that is set true whenever a model has been build for current center point and radius
 
    /*!
     * @brief As described by A. Conn, finds a 'good point' for the
@@ -272,6 +270,7 @@ public:
         center_ = points.at(0);
         radius_ = radius;
         dimension_ = dimension;
+        is_model_complete_ = false;
         QList<Polynomial> basis;
         for (int i = 0; i < (dimension+1)*(dimension+2)/2; ++i) {
             Eigen::VectorXd temp_vec = Eigen::VectorXd::Zero((dimension+1)*(dimension+2)/2);
@@ -302,6 +301,10 @@ public:
     Eigen::VectorXd get_model_coeffs() {
         return model_coeffs_;
     };
+
+    bool isModelComplete() {
+        return is_model_complete_;
+    }
 
     /*!
      * @brief Complete set of interpolation points
@@ -410,6 +413,7 @@ public:
 
         Eigen::VectorXd alpha = M.inverse()*y;
         model_coeffs_ = alpha;
+        is_model_complete_ = true;
 
     };
 

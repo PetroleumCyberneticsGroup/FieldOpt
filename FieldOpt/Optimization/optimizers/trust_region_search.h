@@ -37,7 +37,8 @@ namespace Optimization {
             double minimum_step_length_; //!< Smallest allowed step length for the optimizer. _This is a termination condition_.
 
             void step(); //!< Move to a new tentative best case found in the list of recently evaluated cases.
-            void contract(); //!< Contract the pattern, i.e. reduce the step length.
+            void contract(); //!< Contract/reduce the radius of the region.
+            void expand(); //!< increase the radius of the region.
             void perturb(); //!< Apply the pattern to generate new cases.
 
             // Optimizer interface
