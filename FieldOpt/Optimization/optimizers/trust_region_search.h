@@ -35,7 +35,7 @@ namespace Optimization {
         private:
             double radius_; //!< The size of the perturbation for each variable.
             double minimum_radius_; //!< Smallest allowed step length for the optimizer. _This is a termination condition_.
-            //PolyModel polymodel_;
+            PolyModel polymodel_;
 
             void step(); //!< Move to a new tentative best case found in the list of recently evaluated cases.
             void contract(); //!< Contract/reduce the radius of the region.

@@ -51,9 +51,23 @@ namespace Optimization {
 
         void TrustRegionSearch::iterate()
         {
-            // At the first iteration we initialze the PolyModel object
+            /* At the first iteration we initialze the PolyModel
+             * object with the initial point
+             */
             if (iteration_ == 0) {
-                perturb();
+                QList<Eigen::VectorXd> points;
+                Eigen::VectorXd initial_point;
+                initial_point << 1,3,2; //TODO: Need to get this from runner input.
+                QList<double> fvalues;
+                if(tentative_best_case_->objective_function_value()) {
+                    fvalues.append(tentative_best_case_->objective_function_value()); //TODO: Either append correct value or leave empty and calculate later.
+                }
+                points.append(initial_point);
+                polymodel_ = PolyModel(points,fvalues, 3, 2);
+                polymodel_.complete_points();
+
+                // The set of points has been completed.
+                //TODO: Call runner to get objective function values of the set of points.
             }
             // If we found a better point we move the center of the trust region
             else if (betterCaseFoundLastEvaluation()) {

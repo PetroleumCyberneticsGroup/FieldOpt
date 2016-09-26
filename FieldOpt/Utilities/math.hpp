@@ -257,8 +257,7 @@ private:
     }
 
     return best_point;
-};
-
+    };
 
 public:
     /*!
@@ -281,6 +280,11 @@ public:
         basis_ = basis;
 
     };
+
+    /*!
+     * @brief Empty PolyModel constructor so other classes can contain a PolyModel as private variable
+     */
+    PolyModel();
 
     QList<Eigen::VectorXd> get_points() {
         return points_;
