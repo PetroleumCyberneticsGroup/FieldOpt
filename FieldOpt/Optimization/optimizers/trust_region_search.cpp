@@ -8,8 +8,8 @@ namespace Optimization {
                                      Reservoir::Grid::Grid *grid)
                 : Optimizer(settings, base_case, variables, grid)
         {
-            step_length_ = settings->parameters().initial_step_length;
-            minimum_step_length_ = settings->parameters().minimum_step_length;
+            radius_ = settings->parameters().initial_step_length;
+            minimum_radius_ = settings->parameters().minimum_step_length;
         }
 
         void TrustRegionSearch::step()
@@ -19,21 +19,21 @@ namespace Optimization {
 
         void TrustRegionSearch::contract()
         {
-            step_length_ = step_length_/2.0;
+            radius_ = radius_/2.0;
         }
 
         void TrustRegionSearch::expand()
         {
-            step_length_ = step_length_*2.0;
+            radius_ = radius_*2.0;
         }
 
         void TrustRegionSearch::perturb()
         {
             QList<Case *> perturbations = QList<Case *>();
             for (QUuid id : tentative_best_case_->integer_variables().keys())
-                perturbations.append(tentative_best_case_->Perturb(id, Case::SIGN::PLUSMINUS, step_length_));
+                perturbations.append(tentative_best_case_->Perturb(id, Case::SIGN::PLUSMINUS, radius_));
             for (QUuid id : tentative_best_case_->real_variables().keys())
-                perturbations.append(tentative_best_case_->Perturb(id, Case::SIGN::PLUSMINUS, step_length_));
+                perturbations.append(tentative_best_case_->Perturb(id, Case::SIGN::PLUSMINUS, radius_));
             for (Case *c : perturbations) {
                 constraint_handler_->SnapCaseToConstraints(c);
             }
@@ -44,7 +44,7 @@ namespace Optimization {
         {
             if (case_handler_->EvaluatedCases().size() >= max_evaluations_)
                 return MAX_EVALS_REACHED;
-            else if (step_length_ < minimum_step_length_)
+            else if (radius_ < minimum_radius_)
                 return MINIMUM_STEP_LENGTH_REACHED;
             else return NOT_FINISHED; // The value of not finished is 0, which evaluates to false.
         }
@@ -53,10 +53,8 @@ namespace Optimization {
         {
             // At the first iteration we initialze the PolyModel object
             if (iteration_ == 0) {
-                PolyModel polymodel = PolyModel();
                 perturb();
             }
-
             // If we found a better point we move the center of the trust region
             else if (betterCaseFoundLastEvaluation()) {
                 step();
@@ -90,7 +88,7 @@ namespace Optimization {
                     .arg(nr_recently_evaluated_cases())
                     .arg(tentative_best_case_->id().toString())
                     .arg(tentative_best_case_->objective_function_value())
-                    .arg(step_length_);
+                    .arg(radius_);
         }
 
     }}
