@@ -57,6 +57,11 @@ public:
         no_elemts_ = (dimension+1)*(dimension+2)/2;
     };
 
+    /*!
+     * @brief Empty default Polynomial constructor so other classes can contain a Polynomial as private variable
+     */
+    Polynomial();
+
     Eigen::VectorXd return_coeffs() {
         return coeffs_;
     };
@@ -175,6 +180,7 @@ class PolyModel {
 private:
     // Member variables
     QList<Eigen::VectorXd> points_;
+    QList<int> points_evaluated_;
     QList<double> fvalues_;
     Eigen::VectorXd center_;
     double radius_;
@@ -217,9 +223,9 @@ private:
         x2 = -x1;
     }
     else{
-        // Mixed term quadratic is larges
+        // Mixed term quadratic is largest
         // There is probably a smarter way to do this... oh whatever I'm lazy
-        int l,m = 0;
+        int l,m = -1;
         int coeff_dummy = 2*dimension+1;
 
         for(int i=0; i<dimension-1; i++){
@@ -249,6 +255,8 @@ private:
     points.append(x2);
     points.append(x3);
     points.append(x4);
+
+    // Determine which of the 5 points is the best one
     for(int i=0; i<5; i++){
         if(fabs(poly.evaluate(points.at(i)))>=best_value){
             best_point = points.at(i);
@@ -266,6 +274,8 @@ public:
     PolyModel(QList<Eigen::VectorXd> points, QList<double> fvalues, double radius, int dimension) {
         points_ = points;
         fvalues_ = fvalues;
+        // Add 1s to signal that points have been evaluated
+        for(int i=0; i<fvalues.length(); i++){points_evaluated_.append(1);}
         center_ = points.at(0);
         radius_ = radius;
         dimension_ = dimension;
@@ -278,16 +288,19 @@ public:
             basis.append(temp_poly);
         }
         basis_ = basis;
-
     };
 
     /*!
-     * @brief Empty PolyModel constructor so other classes can contain a PolyModel as private variable
+     * @brief Empty default PolyModel constructor so other classes can contain a PolyModel as private variable
      */
     PolyModel();
 
     QList<Eigen::VectorXd> get_points() {
         return points_;
+    };
+
+    QList<int> get_points_evaluated() {
+        return points_evaluated_;
     };
 
     QList<double> get_fvalues() {
@@ -353,23 +366,32 @@ public:
                 }
             }
 
-            /* If evaluation in pivot element is greater than threshold, switch elements
-             * and its associated function evaluations
+            /* If evaluation in pivot element is greater than threshold and
+             * within a distance radius_ of center point, switch elements
+             * and its associated function evaluations.
+             * Note that we have scaled the points so we only need to
+             * check that the norm of the current points is <=1
              */
-            if(max_abs>tol_pivot){
+            if(max_abs>tol_pivot && points_abs.at(i).norm()<=1) {
                 //YES sufficient pivot element aka. good point
                 points_abs.swap(i,max_abs_ind);
                 fvalues_.swap(i,max_abs_ind);
+                points_evaluated_.swap(i,max_abs_ind);
             }
             else{
                 //NO sufficient pivot element aka. good point
                 //Find new point using alg proposed by Conn
                 Polynomial temp_poly_here = temp_basis.at(i);
+                // Append new point and swap it to current position
                 points_abs.append(find_new_point(temp_poly_here));
                 points_abs.swap(i,points_abs.length()-1);
-                // TODO: Here we need to evaluate the function of the new (but UNSCALED) point and append it!
-                fvalues_.append(silly_function(points_abs.at(i)));
+                // Append 0 to signal that point is not yet evaluated
+                points_evaluated_.append(0);
+                points_evaluated_.swap(i,points_abs.length()-1);
+                // TODO: We just append a dummy value, will update later
+                fvalues_.append(-1000);
                 fvalues_.swap(i,points_abs.length()-1);
+
             }
 
             Polynomial temp_i = temp_basis.at(i);
