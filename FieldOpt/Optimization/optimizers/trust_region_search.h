@@ -53,6 +53,23 @@ namespace Optimization {
              */
             TerminationCondition IsFinished();
 
+            /*!
+             * \brief create QList<variables> from a Case
+             *
+             * Creates a vector which the PolyModel constructor can take as input
+             * \return List of Vectors (i.e. positions from given variables) from a Case
+             */
+            Eigen::VectorXd PointFromCase(Case* c);
+
+            /*!
+             * \brief create a Case from a list of variables and a Case prototype
+             *
+             * Creates a Case type object from a Case prototype (i.e. a case with the same
+             * number of variables but where the variable values have been altered.
+             * \return A Case generated from a Eigen::VectorXd point
+             */
+            Case* CaseFromPoint(Eigen::VectorXd point, Case *prototype);
+
             QString GetStatusStringHeader() const;
             QString GetStatusString() const;
 
