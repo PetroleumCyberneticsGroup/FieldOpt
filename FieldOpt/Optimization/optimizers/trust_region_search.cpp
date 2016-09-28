@@ -56,14 +56,10 @@ namespace Optimization {
              */
             if (iteration_ == 0) {
                 QList<Eigen::VectorXd> points;
-                Eigen::VectorXd initial_point;
-                initial_point << 1,3,2; //TODO: Need to get this from runner input.
+                points.append(PointFromCase(tentative_best_case_));
                 QList<double> fvalues;
-                if(tentative_best_case_->objective_function_value()) {
-                    fvalues.append(tentative_best_case_->objective_function_value()); //TODO: Either append correct value or leave empty and calculate later.
-                }
-                points.append(initial_point);
-                polymodel_ = PolyModel(points,fvalues, 3, 2);
+                fvalues.append(tentative_best_case_->objective_function_value());
+                polymodel_ = PolyModel(points,fvalues,3.5, points.length());
                 polymodel_.complete_points();
 
                 // The set of points has been completed.
@@ -80,6 +76,26 @@ namespace Optimization {
             }
             case_handler_->ClearRecentlyEvaluatedCases();
         }
+
+        Eigen::VectorXd TrustRegionSearch::PointFromCase(Case *c) {
+            Eigen::VectorXd point(c->real_variables().count());
+            int i=0;
+            for (QUuid id : c->real_variables().keys()){
+                point[i] = c->real_variables().value(id);
+            }
+            return point;
+        }
+
+        Case* TrustRegionSearch::CaseFromPoint(Eigen::VectorXd point, Case *prototype){
+            Case *new_case = new Case(prototype);
+            int i=0;
+            for (QUuid id : new_case->real_variables().keys()){
+                new_case->set_real_variable_value(id, point[i]);
+            }
+            return new_case;
+        }
+
+        void TrustRegionSearch::UpdateModel
 
         QString TrustRegionSearch::GetStatusStringHeader() const
         {

@@ -157,6 +157,7 @@ namespace {
         // Test to see if model approx is correct, i.e. M(x_i) = y(x_i)
         // Use NEAR because of numerical errors
         for (int j = 0; j < 6; ++j) {
+            std::cout << "model = " << model_approx.evaluate(test_model.get_points().at(j)) << " same as " << test_model.silly_function(test_model.get_points().at(j)) << std::endl;
             EXPECT_NEAR(model_approx.evaluate(test_model.get_points().at(j)),test_model.silly_function(test_model.get_points().at(j)), 10e-6);
         }
 

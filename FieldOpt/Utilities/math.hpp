@@ -181,6 +181,7 @@ private:
     // Member variables
     QList<Eigen::VectorXd> points_;
     QList<int> points_evaluated_;
+    bool needs_evals_;
     QList<double> fvalues_;
     Eigen::VectorXd center_;
     double radius_;
@@ -276,6 +277,7 @@ public:
         fvalues_ = fvalues;
         // Add 1s to signal that points have been evaluated
         for(int i=0; i<fvalues.length(); i++){points_evaluated_.append(1);}
+        needs_evals_ = false; // All points have been evaluated
         center_ = points.at(0);
         radius_ = radius;
         dimension_ = dimension;
@@ -302,6 +304,10 @@ public:
     QList<int> get_points_evaluated() {
         return points_evaluated_;
     };
+
+    bool get_needs_evals() {
+        return needs_evals_;
+    }
 
     QList<double> get_fvalues() {
         return fvalues_;
@@ -360,19 +366,22 @@ public:
             double max_abs = 0.0;
             int max_abs_ind = -1;
             for (int j = i; j < n_points; ++j) {
-                if(fabs(cur_pol.evaluate(points_abs.at(j)))>max_abs){
+                /* If new max value, and within a distance radius_ of center point,
+                 * accept this point as the currently best point.
+                 * Note that we have scaled the points so we only need to
+                 * check that the norm of the current points is <=1
+                 */
+                if(fabs(cur_pol.evaluate(points_abs.at(j)))>max_abs && points_abs.at(i).norm()<=1){
                     max_abs = fabs(cur_pol.evaluate(points_abs.at(j)));
                     max_abs_ind = j;
                 }
             }
 
-            /* If evaluation in pivot element is greater than threshold and
-             * within a distance radius_ of center point, switch elements
+            /* If evaluation in pivot element is greater than threshold,
+             * switch elements
              * and its associated function evaluations.
-             * Note that we have scaled the points so we only need to
-             * check that the norm of the current points is <=1
              */
-            if(max_abs>tol_pivot && points_abs.at(i).norm()<=1) {
+            if(max_abs>tol_pivot) {
                 //YES sufficient pivot element aka. good point
                 points_abs.swap(i,max_abs_ind);
                 fvalues_.swap(i,max_abs_ind);
@@ -388,9 +397,11 @@ public:
                 // Append 0 to signal that point is not yet evaluated
                 points_evaluated_.append(0);
                 points_evaluated_.swap(i,points_abs.length()-1);
-                // TODO: We just append a dummy value, will update later
-                fvalues_.append(-1000);
+                // Append dummy value and change needs_evals_ to true;
+                fvalues_.append(silly_function(points_abs.at(i)));
                 fvalues_.swap(i,points_abs.length()-1);
+                needs_evals_ = true;
+
 
             }
 
@@ -423,6 +434,8 @@ public:
      * well poised set of points
      */
     void calculate_model_coeffs() {
+        if(needs_evals_){std::cout << "there are unfinished evaluations, model will be wrong" << std::endl;}
+
         Eigen::MatrixXd M = Eigen::MatrixXd::Zero(basis_.length() ,basis_.length());
         Eigen::VectorXd y = Eigen::VectorXd::Zero(basis_.length());
 
@@ -442,6 +455,34 @@ public:
         is_model_complete_ = true;
 
     };
+
+    /*!
+    * @brief Returns a list of indeces of all non-evaluated cases
+    * @return List of indeces of non-evaluated cases
+    */
+    QList<int> missing_evaluations() {
+        QList<int> missing;
+        for(int i=0; i<points_evaluated_.length(); i++){
+            if(points_evaluated_.at(i)==0){missing.append(i);}
+        }
+        return missing;
+    }
+
+    void add_point(Eigen::VectorXd point){
+        points_.append(point);
+        points_evaluated_.append(0);
+        needs_evals_ = true;
+    }
+
+    void set_fvalue(double fvalue, int i){
+        fvalues_[i]=fvalue;
+        points_evaluated_[i]=1;
+    }
+
+    void set_evaluations_complete(){
+        needs_evals_ = false;
+    }
+
 
     // Silly function for testing:
     double silly_function(Eigen::VectorXd x) {
