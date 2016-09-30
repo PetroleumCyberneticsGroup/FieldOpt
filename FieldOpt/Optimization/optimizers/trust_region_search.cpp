@@ -59,11 +59,11 @@ namespace Optimization {
                 points.append(PointFromCase(tentative_best_case_));
                 QList<double> fvalues;
                 fvalues.append(tentative_best_case_->objective_function_value());
-                polymodel_ = PolyModel(points,fvalues,3.5, points.length());
+                polymodel_ = PolyModel(points, fvalues, radius_, points.length());
                 polymodel_.complete_points();
-
                 // The set of points has been completed.
                 //TODO: Call runner to get objective function values of the set of points.
+                
             }
             // If we found a better point we move the center of the trust region
             else if (betterCaseFoundLastEvaluation()) {
@@ -86,7 +86,7 @@ namespace Optimization {
             return point;
         }
 
-        Case* TrustRegionSearch::CaseFromPoint(Eigen::VectorXd point, Case *prototype){
+        Case* TrustRegionSearch::CaseFromPoint(Eigen::VectorXd point, Case *prototype) {
             Case *new_case = new Case(prototype);
             int i=0;
             for (QUuid id : new_case->real_variables().keys()){
@@ -95,7 +95,15 @@ namespace Optimization {
             return new_case;
         }
 
-        void TrustRegionSearch::UpdateModel
+        void TrustRegionSearch::UpdateFunctionValues() {
+            QList<Case *> cases;
+            // Create all cases that are missing objective values
+            foreach(int i, polymodel_.missing_evaluations()){
+                    cases.append(CaseFromPoint(polymodel_.get_points().at(i), tentative_best_case_));
+                }
+
+            if(cases.length()>0){case_handler_->AddNewCases(cases);}
+        }
 
         QString TrustRegionSearch::GetStatusStringHeader() const
         {

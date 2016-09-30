@@ -70,6 +70,14 @@ namespace Optimization {
              */
             Case* CaseFromPoint(Eigen::VectorXd point, Case *prototype);
 
+            /*!
+             * \brief Update missing function values in the model
+             *
+             * Sends all unevaluated cases to runner
+             * \return A Case generated from a Eigen::VectorXd point
+             */
+            void UpdateFunctionValues();
+
             QString GetStatusStringHeader() const;
             QString GetStatusString() const;
 
