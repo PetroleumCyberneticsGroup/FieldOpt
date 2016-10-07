@@ -43,6 +43,7 @@ libs/*
 
 # Manually compiled program
 build/*
+FieldOpt/build
 
 # Test folders
 test-*
