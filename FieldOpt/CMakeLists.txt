@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.2)
 project(FieldOpt VERSION 0.3 LANGUAGES CXX)
+
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -15,13 +16,13 @@ endif()
 if (NOT BUILD_WIC_ONLY)
     # Qt libraries
     set(CMAKE_AUTOMOC ON)
-    set(CMAKE_INCLUDE_CURRENT_DIR ON)
-    find_package(Qt5Core REQUIRED)
-    include_directories(${Qt5Core_INCLUDE_DIRS} ${Qt5Gui_INCLUDE_DIRS})
-    find_package(HDF5 REQUIRED COMPONENTS CXX)
-    add_definitions(${HDF5_DEFINITIONS})
-    include_directories(${HDF5_INCLUDE_DIRS})
-    find_package(Threads REQUIRED)
+   set(CMAKE_INCLUDE_CURRENT_DIR ON)
+   find_package(Qt5Core REQUIRED)
+   include_directories(${Qt5Core_INCLUDE_DIRS} ${Qt5Gui_INCLUDE_DIRS})
+   find_package(HDF5 REQUIRED COMPONENTS CXX)
+   add_definitions(${HDF5_DEFINITIONS})
+   include_directories(${HDF5_INCLUDE_DIRS})
+   find_package(Threads REQUIRED)
 endif()
 
 
@@ -32,9 +33,17 @@ if (Boost_FOUND)
 endif ()
 set(Boost_USE_STATIC_LIBS OFF) # enable dynamic linking
 set(Boost_USE_MULTITHREAD ON) # enable multithreading
-find_package(Boost COMPONENTS REQUIRED program_options serialization mpi system filesystem)
+if (BUILD_WIC_ONLY)
+    find_package(Boost COMPONENTS REQUIRED program_options system filesystem)
+else()
+    find_package(Boost COMPONENTS REQUIRED program_options serialization mpi system filesystem)
+endif()
 
+#find_package(Eigen3 REQUIRED)
+#include_directories("${EIGEN3_INCLUDE_DIR}")
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 find_package(Eigen3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR})
 
 # Set this directory as the root dir
 include_directories(${CMAKE_SOURCE_DIR})
