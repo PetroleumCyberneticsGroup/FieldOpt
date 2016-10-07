@@ -28,6 +28,8 @@ add_library(optimization
 		constraints/reservoir_boundary.cpp
 		optimizer.cpp
 		optimizers/compass_search.cpp
+		optimizers/trust_region_classes/polynomial.cpp
+        optimizers/trust_region_classes/poly_model.cpp
 		optimizers/trust_region_search.cpp
 		constraints/well_spline_length.cpp
 		constraints/interwell_distance.cpp
@@ -39,6 +41,7 @@ add_library(optimization
 		${EXPERIMENTAL_CONSTRAINTS_SRC} optimizers/trust_region_search.cpp optimizers/trust_region_search.h)
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
+include_directories(${EIGEN3_INCLUDE_DIR})
 target_link_libraries(optimization
         PUBLIC fieldopt::model
         PUBLIC fieldopt::simulation

@@ -63,7 +63,7 @@ namespace Optimization {
                 polymodel_.complete_points();
                 // The set of points has been completed.
                 //TODO: Call runner to get objective function values of the set of points.
-                
+
             }
             // If we found a better point we move the center of the trust region
             else if (betterCaseFoundLastEvaluation()) {
