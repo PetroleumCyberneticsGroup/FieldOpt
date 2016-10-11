@@ -23,6 +23,7 @@
 #include <ert/ecl/ecl_grid.h>
 #include <ert/ecl/ecl_file.h>
 #include <Eigen/Dense>
+#include <vector>
 
 namespace ERTWrapper {
 
@@ -88,6 +89,7 @@ namespace ERTWrapper {
             ecl_kw_type *permx_kw_;
             ecl_kw_type *permy_kw_;
             ecl_kw_type *permz_kw_;
+	
         public:
             ECLGridReader();
             ECLGridReader(const ECLGridReader& other) = delete;

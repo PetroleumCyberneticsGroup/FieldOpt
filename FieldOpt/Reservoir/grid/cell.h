@@ -22,6 +22,7 @@
 
 #include <Eigen/Dense>
 #include "ijkcoordinate.h"
+#include <vector>
 
 namespace Reservoir {
     namespace Grid {
