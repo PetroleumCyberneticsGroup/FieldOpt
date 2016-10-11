@@ -123,12 +123,13 @@ namespace Reservoir {
         Cell ECLGrid::GetCellEnvelopingPoint(double x, double y, double z)
         {
             int total_cells = Dimensions().nx * Dimensions().ny * Dimensions().nz;
-
+	    	
             for (int ii = 0; ii < total_cells; ii++) {
                 if (GetCell(ii).EnvelopsPoint(Eigen::Vector3d(x, y, z))) {
                     return GetCell(ii);
                 }
             }
+	    
             // Throw an exception if no cell was found
             throw std::runtime_error("Grid::GetCellEnvelopingPoint: Cell is outside grid ("
                                      + std::to_string(x) + ", "
@@ -141,6 +142,5 @@ namespace Reservoir {
         {
             return GetCellEnvelopingPoint(xyz.x(), xyz.y(), xyz.z());
         }
-
     }
 }

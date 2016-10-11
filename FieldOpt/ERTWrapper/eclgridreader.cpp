@@ -76,13 +76,14 @@ namespace ERTWrapper {
 
             else if (boost::algorithm::ends_with(file_name, ".GRID"))
                 boost::replace_all(init_file_name_, ".GRID", ".INIT");
-
+	
             if (ecl_grid_ == 0) {
                 ecl_grid_ = ecl_grid_alloc(file_name_.c_str());
             } else {
                 ecl_grid_free(ecl_grid_);
                 ecl_grid_ = ecl_grid_alloc(file_name_.c_str());
             }
+	    
             if (ecl_file_init_ == 0) {
                 ecl_file_init_ = ecl_file_open(init_file_name_.c_str(), 0);
                 poro_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PORO", 0);
@@ -168,8 +169,5 @@ namespace ERTWrapper {
             Dims dims = Dimensions();
             return global_index < dims.nx * dims.ny * dims.nz;
         }
-
-
-
     }
 }
