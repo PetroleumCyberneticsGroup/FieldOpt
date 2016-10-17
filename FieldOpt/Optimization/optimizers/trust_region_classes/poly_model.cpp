@@ -4,22 +4,43 @@
 
 #include "poly_model.h"
 
-PolyModel::PolyModel(Optimization::Case* initial_case, double radius, int dimension) {
-    points_cases_.append(initial_case);
-    points_.append(); // TODO convert case to variables
-    needs_evals_ = false; // All points have been evaluated
-    center_ = points.at(0);
+PolyModel::PolyModel(Optimization::Case* initial_case, double radius) {
+    cases_.append(initial_case);
+    points_.append(PointFromCase(initial_case)); // TODO convert case to variables
+    center_ = points_.at(0);
     radius_ = radius;
-    dimension_ = dimension;
-    is_model_complete_ = false;
+    dimension_ = center_.size();
     QList<Polynomial> basis;
-    for (int i = 0; i < (dimension+1)*(dimension+2)/2; ++i) {
-        Eigen::VectorXd temp_vec = Eigen::VectorXd::Zero((dimension+1)*(dimension+2)/2);
+    for (int i = 0; i < (dimension_+1)*(dimension_+2)/2; ++i) {
+        Eigen::VectorXd temp_vec = Eigen::VectorXd::Zero((dimension_+1)*(dimension_+2)/2);
         temp_vec(i) = 1;
-        Polynomial temp_poly = Polynomial(dimension, temp_vec);
+        Polynomial temp_poly = Polynomial(dimension_, temp_vec);
         basis.append(temp_poly);
     }
     basis_ = basis;
+
+    needs_set_of_points_ = true;
+    needs_evals_ = false; // All points have been evaluated
+    is_model_complete_ = false;
+}
+
+Optimization::Case* PolyModel::CaseFromPoint(Eigen::VectorXd point, Optimization::Case *prototype) {
+    // In order for case to exist outside poly_model, we use the new operator
+    Optimization::Case *new_case = new Optimization::Case(prototype);
+    int i=0;
+    for (QUuid id : new_case->real_variables().keys()){
+        new_case->set_real_variable_value(id, point[i]);
+    }
+    return new_case;
+}
+
+Eigen::VectorXd PolyModel::PointFromCase(Optimization::Case *c) {
+    Eigen::VectorXd point(c->real_variables().count());
+    int i=0;
+    for (QUuid id : c->real_variables().keys()){
+        point[i] = c->real_variables().value(id);
+    }
+    return point;
 }
 
 Eigen::VectorXd PolyModel::find_new_point(Polynomial poly) {

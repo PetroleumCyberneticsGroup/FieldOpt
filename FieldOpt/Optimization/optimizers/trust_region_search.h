@@ -5,8 +5,7 @@
 #ifndef FIELDOPT_TRUST_REGION_SEARCH_H
 #define FIELDOPT_TRUST_REGION_SEARCH_H
 
-#include "Utilities/math.hpp"
-
+#include "trust_region_classes/poly_model.h"
 #include "Optimization/optimizer.h"
 
 namespace Optimization {
@@ -36,6 +35,9 @@ namespace Optimization {
             double radius_; //!< The size of the perturbation for each variable.
             double minimum_radius_; //!< Smallest allowed step length for the optimizer. _This is a termination condition_.
             PolyModel polymodel_;
+            Eigen::VectorXd current_model_;
+
+            void UpdateModel();
 
             void step(); //!< Move to a new tentative best case found in the list of recently evaluated cases.
             void contract(); //!< Contract/reduce the radius of the region.
@@ -52,31 +54,6 @@ namespace Optimization {
              * \return True if the algorithm has finished, otherwise false.
              */
             TerminationCondition IsFinished();
-
-            /*!
-             * \brief create QList<variables> from a Case
-             *
-             * Creates a vector which the PolyModel constructor can take as input
-             * \return List of Vectors (i.e. positions from given variables) from a Case
-             */
-            Eigen::VectorXd PointFromCase(Case* c);
-
-            /*!
-             * \brief create a Case from a list of variables and a Case prototype
-             *
-             * Creates a Case type object from a Case prototype (i.e. a case with the same
-             * number of variables but where the variable values have been altered.
-             * \return A Case generated from a Eigen::VectorXd point
-             */
-            Case* CaseFromPoint(Eigen::VectorXd point, Case *prototype);
-
-            /*!
-             * \brief Update missing function values in the model
-             *
-             * Sends all unevaluated cases to runner
-             * \return A Case generated from a Eigen::VectorXd point
-             */
-            void UpdateFunctionValues();
 
             QString GetStatusStringHeader() const;
             QString GetStatusString() const;

@@ -25,15 +25,36 @@ class PolyModel {
 private:
     // Member variables
     QList<Eigen::VectorXd> points_;
-    QList<Optimization::Case*> points_cases_;
-    bool needs_evals_;
-    QList<double> fvalues_;
+    QList<Optimization::Case*> cases_; // All cases, might or might not be evaluated
+    QList<Optimization::Case*> cases_not_eval_; // Cases that need to be sent to case_handler
+
+    // Bools to help trust_region_search class determine next step
+    bool needs_evals_; //
+    bool needs_set_of_points_;
+    bool is_model_complete_; // Bool that is set true whenever a model has been build for current center point and radius
+
     Eigen::VectorXd center_;
     double radius_;
     int dimension_;
     QList<Polynomial> basis_; // Monomial basis of model, usually quadratic
     Eigen::VectorXd model_coeffs_; // The coefficients of the model using basis
-    bool is_model_complete_; // Bool that is set true whenever a model has been build for current center point and radius
+
+    /*!
+             * \brief create a Case from a list of variables and a Case prototype
+             *
+             * Creates a Case type object from a Case prototype (i.e. a case with the same
+             * number of variables but where the variable values have been altered.
+             * \return A Case generated from a Eigen::VectorXd point
+             */
+    Optimization::Case* CaseFromPoint(Eigen::VectorXd point, Optimization::Case *prototype);
+
+    /*!
+             * \brief create QList<variables> from a Case
+             *
+             * Creates a vector which the PolyModel constructor can take as input
+             * \return List of Vectors (i.e. positions from given variables) from a Case
+             */
+    Eigen::VectorXd PointFromCase(Optimization::Case* c);
 
     /*!
      * @brief As described by A. Conn, finds a 'good point' for the
@@ -47,7 +68,7 @@ public:
     /*!
      * @brief PolyModel constructor.
      */
-    PolyModel(QList<Eigen::VectorXd> points, QList<double> fvalues, double radius, int dimension);
+    PolyModel(Optimization::Case* base_case, double radius);
 
     /*!
      * @brief Empty default PolyModel constructor so other classes can contain a PolyModel as private variable
@@ -58,17 +79,18 @@ public:
         return points_;
     };
 
-    QList<int> get_points_evaluated() {
-        return points_evaluated_;
+    QList<Optimization::Case*> get_cases_not_eval() {
+        return cases_not_eval_;
     };
+
+    void ClearCasesNotEval() {
+        cases_not_eval_ = QList<Optimization::Case*>();
+        needs_evals_ = false;
+    }
 
     bool get_needs_evals() {
         return needs_evals_;
     }
-
-    QList<double> get_fvalues() {
-        return fvalues_;
-    };
 
     double get_radius() {
         return radius_;
@@ -81,6 +103,14 @@ public:
     Eigen::VectorXd get_model_coeffs() {
         return model_coeffs_;
     };
+
+    bool ModelNeedsEvals() {
+        return needs_evals_;
+    }
+
+    bool ModelNeedsSetOfPoints() {
+        return needs_set_of_points_;
+    }
 
     bool isModelComplete() {
         return is_model_complete_;
@@ -109,10 +139,13 @@ public:
          * the points list)
          */
 
+        /*
         QList<Eigen::VectorXd> points_abs;
         for (int i = 0; i < points_.length(); ++i) {
             points_abs.append((1/radius_)*(get_points().at(i) - centre_point));
         }
+        */
+        QList<Eigen::VectorXd> points_abs = points_;
 
         int n_Polynomials = basis_.length();
         int n_points = points_.length();
@@ -141,8 +174,7 @@ public:
             if(max_abs>tol_pivot) {
                 //YES sufficient pivot element aka. good point
                 points_abs.swap(i,max_abs_ind);
-                fvalues_.swap(i,max_abs_ind);
-                points_evaluated_.swap(i,max_abs_ind);
+                cases_.swap(i,max_abs_ind);
             }
             else{
                 //NO sufficient pivot element aka. good point
@@ -152,11 +184,11 @@ public:
                 points_abs.append(find_new_point(temp_poly_here));
                 points_abs.swap(i,points_abs.length()-1);
                 // Append 0 to signal that point is not yet evaluated
-                points_evaluated_.append(0);
-                points_evaluated_.swap(i,points_abs.length()-1);
+                cases_.append(CaseFromPoint(points_abs.at(i), cases_.at(i)));
+                cases_.swap(i,points_abs.length()-1);
                 // Append dummy value and change needs_evals_ to true;
-                fvalues_.append(silly_function(points_abs.at(i)));
-                fvalues_.swap(i,points_abs.length()-1);
+                cases_not_eval_.append(CaseFromPoint(points_abs.at(i), cases_.at(i)));
+                cases_not_eval_.swap(i,points_abs.length()-1);
                 needs_evals_ = true;
 
 
@@ -177,12 +209,14 @@ public:
         }
 
         // Scale points back
+        /*
         QList<Eigen::VectorXd> points_scaled;
         for (int i = 0; i < n_Polynomials; ++i) {
             points_scaled.append(centre_point + radius_*points_abs.at(i));
         }
+        */
 
-        points_ = points_scaled;
+        points_ = points_abs;
     };
 
     /*!
@@ -204,7 +238,7 @@ public:
                 M(i,j) = current_basis.evaluate(points_.at(i));
             }
             //y(i) = fvalues_.at(i);
-            y(i) = silly_function(points_.at(i));
+            y(i) = cases_.at(i)->objective_function_value();
         }
 
         Eigen::VectorXd alpha = M.inverse()*y;
@@ -213,27 +247,9 @@ public:
 
     };
 
-    /*!
-    * @brief Returns a list of indeces of all non-evaluated cases
-    * @return List of indeces of non-evaluated cases
-    */
-    QList<int> missing_evaluations() {
-        QList<int> missing;
-        for(int i=0; i<points_evaluated_.length(); i++){
-            if(points_evaluated_.at(i)==0){missing.append(i);}
-        }
-        return missing;
-    }
-
     void add_point(Eigen::VectorXd point){
         points_.append(point);
-        points_evaluated_.append(0);
         needs_evals_ = true;
-    }
-
-    void set_fvalue(double fvalue, int i){
-        fvalues_[i]=fvalue;
-        points_evaluated_[i]=1;
     }
 
     void set_evaluations_complete(){

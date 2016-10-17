@@ -49,60 +49,45 @@ namespace Optimization {
             else return NOT_FINISHED; // The value of not finished is 0, which evaluates to false.
         }
 
-        void TrustRegionSearch::iterate()
+        void TrustRegionSearch::UpdateModel()
         {
             /* At the first iteration we initialze the PolyModel
              * object with the initial point
              */
+            // TODO: REmember to set bools in polymodel_ to true when things have been done.
             if (iteration_ == 0) {
-                QList<Eigen::VectorXd> points;
-                points.append(PointFromCase(tentative_best_case_));
-                QList<double> fvalues;
-                fvalues.append(tentative_best_case_->objective_function_value());
-                polymodel_ = PolyModel(points, fvalues, radius_, points.length());
+                polymodel_ = PolyModel(tentative_best_case_, radius_);
                 polymodel_.complete_points();
                 // The set of points has been completed.
                 //TODO: Call runner to get objective function values of the set of points.
+                case_handler_->AddNewCases(polymodel_.get_cases_not_eval());
+                current_model_ = polymodel_.get_model_coeffs();
 
             }
-            // If we found a better point we move the center of the trust region
-            else if (betterCaseFoundLastEvaluation()) {
-                step();
-                perturb();
+            // If set of points not ready
+            else if (polymodel_.ModelNeedsSetOfPoints()) {
+                polymodel_.complete_points();
+                case_handler_->AddNewCases(polymodel_.get_cases_not_eval());
+                polymodel_.ClearCasesNotEval();
+                current_model_ = polymodel_.get_model_coeffs();
             }
-            else {
-                contract();
-                perturb();
+            else if (polymodel_.get_needs_evals()) {
+                case_handler_->AddNewCases(polymodel_.get_cases_not_eval());
+                polymodel_.ClearCasesNotEval();
+                current_model_ = polymodel_.get_model_coeffs();
+
             }
+
             case_handler_->ClearRecentlyEvaluatedCases();
+
+            /* TODO Here we can use current_model to do an optimization step, which
+             * should include finding a new (improved) point/case. Next use this
+             * point as the new center_point in model and maybe reduce radius, then
+             * redo the updateModel thing
         }
 
-        Eigen::VectorXd TrustRegionSearch::PointFromCase(Case *c) {
-            Eigen::VectorXd point(c->real_variables().count());
-            int i=0;
-            for (QUuid id : c->real_variables().keys()){
-                point[i] = c->real_variables().value(id);
-            }
-            return point;
-        }
+        void iterate() {
 
-        Case* TrustRegionSearch::CaseFromPoint(Eigen::VectorXd point, Case *prototype) {
-            Case *new_case = new Case(prototype);
-            int i=0;
-            for (QUuid id : new_case->real_variables().keys()){
-                new_case->set_real_variable_value(id, point[i]);
-            }
-            return new_case;
-        }
-
-        void TrustRegionSearch::UpdateFunctionValues() {
-            QList<Case *> cases;
-            // Create all cases that are missing objective values
-            foreach(int i, polymodel_.missing_evaluations()){
-                    cases.append(CaseFromPoint(polymodel_.get_points().at(i), tentative_best_case_));
-                }
-
-            if(cases.length()>0){case_handler_->AddNewCases(cases);}
         }
 
         QString TrustRegionSearch::GetStatusStringHeader() const
