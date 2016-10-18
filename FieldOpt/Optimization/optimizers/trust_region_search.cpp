@@ -51,10 +51,15 @@ namespace Optimization {
 
         void TrustRegionSearch::UpdateModel()
         {
-            /* At the first iteration we initialze the PolyModel
-             * object with the initial point
+            /* Everytime we update model we must first have a PolyModel object,
+             * then we must complete the set of points in the model, then the
+             * objective values of all cases must be calculated, and lastly we
+             * can return the PolyModel coefficients. This functions checks these
+             * steps, starting with the first one. We start at the first incomplete
+             * step and perform all the steps that come after it.
              */
-            // TODO: REmember to set bools in polymodel_ to true when things have been done.
+
+            // At the first iteration we initialze the PolyModel with base_case
             if (iteration_ == 0) {
                 polymodel_ = PolyModel(tentative_best_case_, radius_);
                 polymodel_.complete_points();
@@ -62,20 +67,24 @@ namespace Optimization {
                 //TODO: Call runner to get objective function values of the set of points.
                 case_handler_->AddNewCases(polymodel_.get_cases_not_eval());
                 current_model_ = polymodel_.get_model_coeffs();
-
             }
-            // If set of points not ready
+
+            // If set of points is not ready
             else if (polymodel_.ModelNeedsSetOfPoints()) {
                 polymodel_.complete_points();
                 case_handler_->AddNewCases(polymodel_.get_cases_not_eval());
                 polymodel_.ClearCasesNotEval();
                 current_model_ = polymodel_.get_model_coeffs();
             }
+            // If there are unevaluated cases send them to case_handler
             else if (polymodel_.get_needs_evals()) {
                 case_handler_->AddNewCases(polymodel_.get_cases_not_eval());
                 polymodel_.ClearCasesNotEval();
                 current_model_ = polymodel_.get_model_coeffs();
-
+            }
+            // Model is already done, just get coefficients.
+            else {
+                current_model_ = polymodel_.get_model_coeffs();
             }
 
             case_handler_->ClearRecentlyEvaluatedCases();
@@ -84,11 +93,10 @@ namespace Optimization {
              * should include finding a new (improved) point/case. Next use this
              * point as the new center_point in model and maybe reduce radius, then
              * redo the updateModel thing
+             */
         }
 
-        void iterate() {
-
-        }
+        void TrustRegionSearch::iterate() {}
 
         QString TrustRegionSearch::GetStatusStringHeader() const
         {

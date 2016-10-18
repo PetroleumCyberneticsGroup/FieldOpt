@@ -37,8 +37,6 @@ namespace Optimization {
             PolyModel polymodel_;
             Eigen::VectorXd current_model_;
 
-            void UpdateModel();
-
             void step(); //!< Move to a new tentative best case found in the list of recently evaluated cases.
             void contract(); //!< Contract/reduce the radius of the region.
             void expand(); //!< increase the radius of the region.
@@ -60,6 +58,7 @@ namespace Optimization {
 
         private:
             void iterate(); //!< Step or contract, perturb, and clear list of recently evaluated cases.
+            void UpdateModel(); //!< Creates a polynomial model, no matter what state the PolyModel is currently in
         };
 
     }}

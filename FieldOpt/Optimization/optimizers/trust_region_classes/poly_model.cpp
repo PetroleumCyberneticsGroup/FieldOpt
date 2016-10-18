@@ -6,7 +6,7 @@
 
 PolyModel::PolyModel(Optimization::Case* initial_case, double radius) {
     cases_.append(initial_case);
-    points_.append(PointFromCase(initial_case)); // TODO convert case to variables
+    points_.append(initial_case->GetRealVarVector());
     center_ = points_.at(0);
     radius_ = radius;
     dimension_ = center_.size();
@@ -27,20 +27,8 @@ PolyModel::PolyModel(Optimization::Case* initial_case, double radius) {
 Optimization::Case* PolyModel::CaseFromPoint(Eigen::VectorXd point, Optimization::Case *prototype) {
     // In order for case to exist outside poly_model, we use the new operator
     Optimization::Case *new_case = new Optimization::Case(prototype);
-    int i=0;
-    for (QUuid id : new_case->real_variables().keys()){
-        new_case->set_real_variable_value(id, point[i]);
-    }
+    new_case->SetRealVarValues(point);
     return new_case;
-}
-
-Eigen::VectorXd PolyModel::PointFromCase(Optimization::Case *c) {
-    Eigen::VectorXd point(c->real_variables().count());
-    int i=0;
-    for (QUuid id : c->real_variables().keys()){
-        point[i] = c->real_variables().value(id);
-    }
-    return point;
 }
 
 Eigen::VectorXd PolyModel::find_new_point(Polynomial poly) {
@@ -113,4 +101,102 @@ Eigen::VectorXd PolyModel::find_new_point(Polynomial poly) {
     }
 
     return best_point;
+}
+
+void PolyModel::complete_points() {
+    // Complete set of interpolation points so
+    // that the set is well-poised
+
+    /* Pivot element tolerance. Note that we can always find
+     * an element inside the ball of radius one in order to
+     * get as close as we want to 0.25. It might however be clever
+     * to lower this tolerance in order to preserve as many stored
+     * function evaluations as possible.
+     */
+    double tol_pivot = 0.24;
+    Eigen::VectorXd centre_point = points_.at(0);
+
+    /* scaling points to a ball of radius 1
+     * and center at center_ (first point of
+     * the points list)
+     */
+
+    /*
+    QList<Eigen::VectorXd> points_abs;
+    for (int i = 0; i < points_.length(); ++i) {
+        points_abs.append((1/radius_)*(get_points().at(i) - centre_point));
+    }
+    */
+    QList<Eigen::VectorXd> points_abs = points_;
+
+    int n_Polynomials = basis_.length();
+    int n_points = points_.length();
+    QList<Polynomial> temp_basis = get_basis();
+
+    for(int i=0; i<n_Polynomials; i++){
+        Polynomial cur_pol = temp_basis.at(i);
+        double max_abs = 0.0;
+        int max_abs_ind = -1;
+        for (int j = i; j < n_points; ++j) {
+            /* If new max value, and within a distance radius_ of center point,
+             * accept this point as the currently best point.
+             * Note that we have scaled the points so we only need to
+             * check that the norm of the current points is <=1
+             */
+            if(fabs(cur_pol.evaluate(points_abs.at(j)))>max_abs && points_abs.at(i).norm()<=1){
+                max_abs = fabs(cur_pol.evaluate(points_abs.at(j)));
+                max_abs_ind = j;
+            }
+        }
+
+        /* If evaluation in pivot element is greater than threshold,
+         * switch elements
+         * and its associated function evaluations.
+         */
+        if(max_abs>tol_pivot) {
+            //YES sufficient pivot element aka. good point
+            points_abs.swap(i,max_abs_ind);
+            cases_.swap(i,max_abs_ind);
+        }
+        else{
+            //NO sufficient pivot element aka. good point
+            //Find new point using alg proposed by Conn
+            Polynomial temp_poly_here = temp_basis.at(i);
+            // Append new point and swap it to current position
+            points_abs.append(find_new_point(temp_poly_here));
+            points_abs.swap(i,points_abs.length()-1);
+            // Append 0 to signal that point is not yet evaluated
+            cases_.append(CaseFromPoint(points_abs.at(i), cases_.at(i)));
+            cases_.swap(i,points_abs.length()-1);
+            // Append dummy value and change needs_evals_ to true;
+            cases_not_eval_.append(CaseFromPoint(points_abs.at(i), cases_.at(i)));
+            cases_not_eval_.swap(i,points_abs.length()-1);
+            needs_evals_ = true;
+
+
+        }
+
+        Polynomial temp_i = temp_basis.at(i);
+        auto temp_point = points_abs.at(i);
+
+
+        for (int j = i+1; j <n_points ; j++) {
+            Polynomial uj= temp_basis.at(j);
+            Polynomial ui = temp_basis.at(i);
+            double temp_ratio = uj.evaluate(temp_point)/ui.evaluate(temp_point);
+            ui.multiply(-1.0*temp_ratio);
+            uj.add(ui);
+            temp_basis[j] = uj;
+        }
+    }
+
+    // Scale points back
+    /*
+    QList<Eigen::VectorXd> points_scaled;
+    for (int i = 0; i < n_Polynomials; ++i) {
+        points_scaled.append(centre_point + radius_*points_abs.at(i));
+    }
+    */
+
+    points_ = points_abs;
 }

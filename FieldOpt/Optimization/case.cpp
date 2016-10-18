@@ -17,6 +17,8 @@ namespace Optimization {
         integer_variables_ = integer_variables;
         real_variables_ = real_variables;
         objective_function_value_ = std::numeric_limits<double>::max();
+
+        real_id_index_map_ = real_variables_.keys();
     }
 
     Case::Case(const Case *c)
@@ -26,6 +28,8 @@ namespace Optimization {
         integer_variables_ = QHash<QUuid, int> (c->integer_variables());
         real_variables_ = QHash<QUuid, double> (c->real_variables());
         objective_function_value_ = c->objective_function_value_;
+
+        real_id_index_map_ = c->real_id_index_map_;
     }
 
     bool Case::Equals(const Case *other, double tolerance) const
@@ -124,5 +128,19 @@ namespace Optimization {
             str = str + QString::number(val);
         str = "\n--------------------------------------------------\n";
         return str;
+    }
+
+    Eigen::VectorXd Case::GetRealVarVector() {
+        Eigen::VectorXd vec(real_id_index_map_.length());
+        for (int i = 0; i < real_id_index_map_.length(); ++i) {
+            vec[i] = real_variables_.value(real_id_index_map_[i]);
+        }
+        return vec;
+    }
+
+    void Case::SetRealVarValues(Eigen::VectorXd vec) {
+        for (int i = 0; i < vec.size(); ++i) {
+            set_real_variable_value(real_id_index_map_[i], vec[i]);
+        }
     }
 }

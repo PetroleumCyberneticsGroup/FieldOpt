@@ -37,8 +37,7 @@ add_library(optimization
 		constraints/combined_spline_length_interwell_distance.cpp
 		constraints/rate_constraint.cpp
 		constraints/combined_spline_length_interwell_distance_reservoir_boundary.cpp
-		case_transfer_object.cpp
-		${EXPERIMENTAL_CONSTRAINTS_SRC} optimizers/trust_region_search.cpp optimizers/trust_region_search.h)
+		case_transfer_object.cpp)
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
 include_directories(${EIGEN3_INCLUDE_DIR})
@@ -71,6 +70,7 @@ if (BUILD_TESTING)
 			tests/constraints/test_reservoir_boundary.cpp
 			tests/objective/test_weightedsum.cpp
 			tests/optimizers/test_compass_search.cpp
+            tests/optimizers/test_trust_region.cpp
 			tests/test_resource_cases.h
 			tests/test_resource_optimizer.h
 			${EXPERIMENTAL_CONSTRAINTS_TESTS}
