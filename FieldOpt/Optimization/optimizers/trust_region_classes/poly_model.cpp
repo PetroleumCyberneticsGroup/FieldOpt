@@ -20,7 +20,14 @@ PolyModel::PolyModel(Optimization::Case* initial_case, double radius) {
     basis_ = basis;
 
     needs_set_of_points_ = true;
-    needs_evals_ = false; // All points have been evaluated
+
+    // Check if objective value of base case has been computed
+    if(initial_case->objective_function_value() == std::numeric_limits<double>::max()) {
+        needs_evals_ = true;
+        cases_not_eval_.append(initial_case);
+    }
+    else{needs_evals_ = false;}
+
     is_model_complete_ = false;
 }
 
@@ -28,6 +35,7 @@ Optimization::Case* PolyModel::CaseFromPoint(Eigen::VectorXd point, Optimization
     // In order for case to exist outside poly_model, we use the new operator
     Optimization::Case *new_case = new Optimization::Case(prototype);
     new_case->SetRealVarValues(point);
+
     return new_case;
 }
 
@@ -120,20 +128,16 @@ void PolyModel::complete_points() {
      * and center at center_ (first point of
      * the points list)
      */
-
-    /*
     QList<Eigen::VectorXd> points_abs;
     for (int i = 0; i < points_.length(); ++i) {
         points_abs.append((1/radius_)*(get_points().at(i) - centre_point));
     }
-    */
-    QList<Eigen::VectorXd> points_abs = points_;
 
     int n_Polynomials = basis_.length();
     int n_points = points_.length();
     QList<Polynomial> temp_basis = get_basis();
 
-    for(int i=0; i<n_Polynomials; i++){
+    for (int i = 0; i < n_Polynomials; i++) {
         Polynomial cur_pol = temp_basis.at(i);
         double max_abs = 0.0;
         int max_abs_ind = -1;
@@ -143,7 +147,7 @@ void PolyModel::complete_points() {
              * Note that we have scaled the points so we only need to
              * check that the norm of the current points is <=1
              */
-            if(fabs(cur_pol.evaluate(points_abs.at(j)))>max_abs && points_abs.at(i).norm()<=1){
+            if (fabs(cur_pol.evaluate(points_abs.at(j))) > max_abs && points_abs.at(i).norm() <= 1) {
                 max_abs = fabs(cur_pol.evaluate(points_abs.at(j)));
                 max_abs_ind = j;
             }
@@ -153,50 +157,73 @@ void PolyModel::complete_points() {
          * switch elements
          * and its associated function evaluations.
          */
-        if(max_abs>tol_pivot) {
+        if (max_abs > tol_pivot) {
             //YES sufficient pivot element aka. good point
-            points_abs.swap(i,max_abs_ind);
-            cases_.swap(i,max_abs_ind);
+            points_abs.swap(i, max_abs_ind);
+            cases_.swap(i, max_abs_ind);
         }
-        else{
+        else {
+            std::cout << "find new point, i = " << i << std::endl;
             //NO sufficient pivot element aka. good point
             //Find new point using alg proposed by Conn
             Polynomial temp_poly_here = temp_basis.at(i);
+
             // Append new point and swap it to current position
             points_abs.append(find_new_point(temp_poly_here));
-            points_abs.swap(i,points_abs.length()-1);
-            // Append 0 to signal that point is not yet evaluated
-            cases_.append(CaseFromPoint(points_abs.at(i), cases_.at(i)));
-            cases_.swap(i,points_abs.length()-1);
-            // Append dummy value and change needs_evals_ to true;
-            cases_not_eval_.append(CaseFromPoint(points_abs.at(i), cases_.at(i)));
-            cases_not_eval_.swap(i,points_abs.length()-1);
+            points_abs.swap(i, points_abs.length() - 1);
+
+            // Make and append new case (remember to scale point back first)
+            cases_.append(CaseFromPoint(centre_point + radius_*points_abs.at(i), cases_.at(0)));
+            cases_.swap(i, points_abs.length() - 1);
+
+            // Append case to list of unevaluated cases
+            cases_not_eval_.append(cases_.at(i));
             needs_evals_ = true;
-
-
         }
 
         Polynomial temp_i = temp_basis.at(i);
         auto temp_point = points_abs.at(i);
 
 
-        for (int j = i+1; j <n_points ; j++) {
-            Polynomial uj= temp_basis.at(j);
+        for (int j = i + 1; j < n_points; j++) {
+            Polynomial uj = temp_basis.at(j);
             Polynomial ui = temp_basis.at(i);
-            double temp_ratio = uj.evaluate(temp_point)/ui.evaluate(temp_point);
-            ui.multiply(-1.0*temp_ratio);
+            double temp_ratio = uj.evaluate(temp_point) / ui.evaluate(temp_point);
+            ui.multiply(-1.0 * temp_ratio);
             uj.add(ui);
             temp_basis[j] = uj;
         }
     }
 
     // Scale points back
-    /*
     QList<Eigen::VectorXd> points_scaled;
     for (int i = 0; i < n_Polynomials; ++i) {
         points_scaled.append(centre_point + radius_*points_abs.at(i));
     }
-    */
 
+    needs_set_of_points_ = false;
     points_ = points_abs;
 }
+
+void PolyModel::calculate_model_coeffs() {
+    if(!needs_evals_ && !needs_set_of_points_){
+        Eigen::MatrixXd M = Eigen::MatrixXd::Zero(basis_.length() ,basis_.length());
+        Eigen::VectorXd y = Eigen::VectorXd::Zero(basis_.length());
+
+
+        // Build Matrix M from basis and functions evaluations
+        for (int i = 0; i < basis_.length(); ++i) {
+            for (int j = 0; j < basis_.length(); ++j) {
+                Polynomial current_basis = basis_.at(j);
+                M(i,j) = current_basis.evaluate(points_.at(i));
+            }
+            //y(i) = fvalues_.at(i);
+            y(i) = cases_.at(i)->objective_function_value();
+        }
+
+        Eigen::VectorXd alpha = M.inverse()*y;
+        model_coeffs_ = alpha;
+    }
+    else{std::cout << "Model_coefficient alg: Either needs evaluations or set of points not finished yet" << std::endl;}
+}
+

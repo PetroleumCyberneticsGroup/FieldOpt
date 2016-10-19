@@ -40,15 +40,6 @@ private:
     Eigen::VectorXd model_coeffs_; //!< The coefficients of the model using basis
 
     /*!
-     * \brief create a Case from a list of variables and a Case prototype
-     *
-     * Creates a Case type object from a Case prototype (i.e. a case with the same
-     * number of variables but where the variable values have been altered.
-     * \return A Case generated from a Eigen::VectorXd point
-     */
-    Optimization::Case* CaseFromPoint(Eigen::VectorXd point, Optimization::Case *prototype);
-
-    /*!
      * @brief As described by A. Conn, finds a 'good point' for the
      * scaled trust region. This is a copy of C. Giuliani's Matlab code
      * @param Double k
@@ -66,6 +57,15 @@ public:
      * @brief Empty default PolyModel constructor so other classes can contain a PolyModel as private variable
      */
     PolyModel() {};
+
+    /*!
+     * \brief create a Case from a list of variables and a Case prototype
+     *
+     * Creates a Case type object from a Case prototype (i.e. a case with the same
+     * number of variables but where the variable values have been altered.
+     * \return A Case generated from a Eigen::VectorXd point
+     */
+    static Optimization::Case* CaseFromPoint(Eigen::VectorXd point, Optimization::Case *prototype);
 
     QList<Eigen::VectorXd> get_points() {
         return points_;
@@ -93,6 +93,7 @@ public:
     };
 
     Eigen::VectorXd get_model_coeffs() {
+        calculate_model_coeffs();
         return model_coeffs_;
     };
 
@@ -104,8 +105,10 @@ public:
         return needs_set_of_points_;
     }
 
-    bool isModelComplete() {
-        return is_model_complete_;
+    bool isModelReady() {
+        if(needs_set_of_points_){return false;}
+        else if(needs_evals_){return false;}
+        else{return true;}
     }
 
     /*!
@@ -120,32 +123,11 @@ public:
      * of the trust region using a complete and
      * well poised set of points
      */
-    void calculate_model_coeffs() {
-        if(!needs_evals_ && !needs_set_of_points_){
-            Eigen::MatrixXd M = Eigen::MatrixXd::Zero(basis_.length() ,basis_.length());
-            Eigen::VectorXd y = Eigen::VectorXd::Zero(basis_.length());
-
-
-            // Build Matrix M from basis and functions evaluations
-            for (int i = 0; i < basis_.length(); ++i) {
-                for (int j = 0; j < basis_.length(); ++j) {
-                    Polynomial current_basis = basis_.at(j);
-                    M(i,j) = current_basis.evaluate(points_.at(i));
-                }
-                //y(i) = fvalues_.at(i);
-                y(i) = cases_.at(i)->objective_function_value();
-            }
-
-            Eigen::VectorXd alpha = M.inverse()*y;
-            model_coeffs_ = alpha;
-            is_model_complete_ = true;
-        }
-        else{std::cout << "Model_coefficient alg: Either needs evaluations or set of points not finished yet" << std::endl;}
-
-    };
+    void calculate_model_coeffs();
 
     void add_point(Eigen::VectorXd point){
         points_.append(point);
+        cases_not_eval_.append(CaseFromPoint(point, cases_.at(0)));
         needs_evals_ = true;
     }
 
@@ -153,14 +135,11 @@ public:
         needs_evals_ = false;
     }
 
-
     // Silly function for testing:
     double silly_function(Eigen::VectorXd x) {
         return 3+ 4*x(0) + 3*x(1) + x(0)*x(0) + 5*x(1)*x(1) -1*x(0)*x(1);
     };
 
 };
-
-
 
 #endif //FIELDOPT_POLY_MODEL_H

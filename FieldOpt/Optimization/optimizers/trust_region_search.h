@@ -55,10 +55,10 @@ namespace Optimization {
 
             QString GetStatusStringHeader() const;
             QString GetStatusString() const;
+            void UpdateModel(); //!< Creates a polynomial model, no matter what state the PolyModel is currently in
 
         private:
             void iterate(); //!< Step or contract, perturb, and clear list of recently evaluated cases.
-            void UpdateModel(); //!< Creates a polynomial model, no matter what state the PolyModel is currently in
         };
 
     }}

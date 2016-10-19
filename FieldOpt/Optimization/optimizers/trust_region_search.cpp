@@ -49,8 +49,8 @@ namespace Optimization {
             else return NOT_FINISHED; // The value of not finished is 0, which evaluates to false.
         }
 
-        void TrustRegionSearch::UpdateModel()
-        {
+        void TrustRegionSearch::iterate() {
+            std::cout << "this is iteration number " << iteration_ << std::endl;
             /* Everytime we update model we must first have a PolyModel object,
              * then we must complete the set of points in the model, then the
              * objective values of all cases must be calculated, and lastly we
@@ -61,42 +61,51 @@ namespace Optimization {
 
             // At the first iteration we initialze the PolyModel with base_case
             if (iteration_ == 0) {
-                polymodel_ = PolyModel(tentative_best_case_, radius_);
+                polymodel_ = PolyModel(GetTentativeBestCase(), radius_);
                 polymodel_.complete_points();
                 // The set of points has been completed.
                 //TODO: Call runner to get objective function values of the set of points.
                 case_handler_->AddNewCases(polymodel_.get_cases_not_eval());
-                current_model_ = polymodel_.get_model_coeffs();
-            }
-
-            // If set of points is not ready
-            else if (polymodel_.ModelNeedsSetOfPoints()) {
-                polymodel_.complete_points();
-                case_handler_->AddNewCases(polymodel_.get_cases_not_eval());
                 polymodel_.ClearCasesNotEval();
-                current_model_ = polymodel_.get_model_coeffs();
-            }
-            // If there are unevaluated cases send them to case_handler
-            else if (polymodel_.get_needs_evals()) {
-                case_handler_->AddNewCases(polymodel_.get_cases_not_eval());
-                polymodel_.ClearCasesNotEval();
-                current_model_ = polymodel_.get_model_coeffs();
-            }
-            // Model is already done, just get coefficients.
-            else {
-                current_model_ = polymodel_.get_model_coeffs();
+                polymodel_.set_evaluations_complete();
+                std::cout << "successfully made model next step is compute case obj. values" << std::endl;
             }
 
-            case_handler_->ClearRecentlyEvaluatedCases();
-
-            /* TODO Here we can use current_model to do an optimization step, which
-             * should include finding a new (improved) point/case. Next use this
-             * point as the new center_point in model and maybe reduce radius, then
-             * redo the updateModel thing
+            /* Either the PolyModel is ready to give us a derivative, or
+             * we need to update points or get cases evaluated
              */
-        }
+            else if(!polymodel_.isModelReady()) {
+                std::cout << "Model is not ready" << std::endl;
+                // If set of points is not ready
+                if (polymodel_.ModelNeedsSetOfPoints()) {
+                    polymodel_.complete_points();
+                    case_handler_->AddNewCases(polymodel_.get_cases_not_eval());
+                    polymodel_.ClearCasesNotEval();
+                    polymodel_.set_evaluations_complete();
+                }
+                // If there are unevaluated cases send them to case_handler
+                else if (polymodel_.get_needs_evals()) {
+                    std::cout << "need to get case obj values, send to case handler" << std::endl;
+                    case_handler_->AddNewCases(polymodel_.get_cases_not_eval());
+                    polymodel_.ClearCasesNotEval();
+                    polymodel_.set_evaluations_complete();
+                }
+            }
 
-        void TrustRegionSearch::iterate() {}
+            else {
+                std::cout << "Model should be ready, we make some opt step " << std::endl;
+                /* TODO Here we can use current_model to do an optimization step, which
+                * should include finding a new (improved) point/case. Next use this
+                 * point as the new center_point in model and maybe reduce radius, then
+                * redo the updateModel thing
+                */
+                polymodel_.calculate_model_coeffs();
+                // Just a dummy thing to stop optimization
+                step();
+                std:: cout << "end of opt step part" << std::endl;
+            }
+            case_handler_->ClearRecentlyEvaluatedCases();
+        }
 
         QString TrustRegionSearch::GetStatusStringHeader() const
         {
