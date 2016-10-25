@@ -217,7 +217,6 @@ void PolyModel::calculate_model_coeffs() {
                 Polynomial current_basis = basis_.at(j);
                 M(i,j) = current_basis.evaluate(points_.at(i));
             }
-            //y(i) = fvalues_.at(i);
             y(i) = cases_.at(i)->objective_function_value();
         }
 
@@ -225,5 +224,16 @@ void PolyModel::calculate_model_coeffs() {
         model_coeffs_ = alpha;
     }
     else{std::cout << "Model_coefficient alg: Either needs evaluations or set of points not finished yet" << std::endl;}
+}
+
+void PolyModel::addCenterPoint(Optimization::Case *c) {
+    cases_.append(c);
+    // Add to list of unevaluated cases if not yet evaluated
+    if (c->objective_function_value() == std::numeric_limits<double>::max())
+        cases_not_eval_.append(c);
+    points_.append(c->GetRealVarVector());
+    // Put points in correct position, i.e. first in array
+    points_.swap(0,points_.size()-1);
+    center_ = points_.at(0);
 }
 

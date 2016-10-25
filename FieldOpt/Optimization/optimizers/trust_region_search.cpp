@@ -14,7 +14,10 @@ namespace Optimization {
 
         void TrustRegionSearch::step()
         {
+            // applyNew.. sets best case so far to new best.
+            // let's just go with the flow for now
             applyNewTentativeBestCase();
+            polymodel_.addCenterPoint(GetTentativeBestCase());
         }
 
         void TrustRegionSearch::contract()

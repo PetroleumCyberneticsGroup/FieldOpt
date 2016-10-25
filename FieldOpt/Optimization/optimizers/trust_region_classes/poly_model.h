@@ -135,10 +135,7 @@ public:
         needs_evals_ = false;
     }
 
-    // Silly function for testing:
-    double silly_function(Eigen::VectorXd x) {
-        return 3+ 4*x(0) + 3*x(1) + x(0)*x(0) + 5*x(1)*x(1) -1*x(0)*x(1);
-    };
+    void addCenterPoint(Optimization::Case *c);
 
 };
 
