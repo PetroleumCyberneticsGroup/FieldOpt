@@ -38,6 +38,7 @@ add_library(optimization
 		constraints/rate_constraint.cpp
 		constraints/combined_spline_length_interwell_distance_reservoir_boundary.cpp
 		case_transfer_object.cpp)
+		${EXPERIMENTAL_CONSTRAINTS_SRC} )
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
 include_directories(${EIGEN3_INCLUDE_DIR})
