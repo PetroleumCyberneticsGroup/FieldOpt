@@ -20,6 +20,7 @@
 #ifndef ECLGRID_H
 #define ECLGRID_H
 
+#include <vector>
 #include "grid.h"
 
 namespace Reservoir {
@@ -41,8 +42,11 @@ public:
     Cell GetCell(int global_index);
     Cell GetCell(int i, int j, int k);
     Cell GetCell(IJKCoordinate* ijk);
+    std::vector<int> GetBoundingBoxCellIndices(double xi, double yi, double zi, double xf, double yf, double zf);
     Cell GetCellEnvelopingPoint(double x, double y, double z);
+    Cell GetCellEnvelopingPoint(double x, double y, double z, std::vector<int> search_set);
     Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz);
+    Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz, std::vector<int> search_set);
 
 
 private:

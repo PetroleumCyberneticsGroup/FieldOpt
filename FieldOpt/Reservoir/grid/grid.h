@@ -71,14 +71,34 @@ namespace Reservoir {
             virtual Cell GetCell(IJKCoordinate* ijk) = 0;
 
             /*!
-             * \brief GetCellEnvelopingPoint Get the cell enveloping the point (x,y,z). Throws an exception if no cell is found.
+             * \brief GetBoundingBoxCellIndices Searches for the bounding box of the space
+             * defined by the two point and returns the list of all the cells in that bounding box.
+             */
+            virtual std::vector<int> GetBoundingBoxCellIndices(double xi, double yi, double zi, double xf, double yf, double zf) = 0;
+
+            /*!
+             * \brief GetCellEnvelopingPoint Get the cell enveloping the point (x,y,z) searching the entire grid.
+             * Throws an exception if no cell is found.
              */
             virtual Cell GetCellEnvelopingPoint(double x, double y, double z) = 0;
 
             /*!
-             * \brief GetCellEnvelopingPoint Get the cell enveloping the point (x,y,z). Throws an exception if no cell is found.
+             * \brief GetCellEnvelopingPoint Get the cell enveloping the point (x,y,z) searching a subsection of the grid.
+             * Throws an exception if no cell is found.
+             */
+            virtual Cell GetCellEnvelopingPoint(double x, double y, double z, std::vector<int> search_set) = 0;
+
+            /*!
+             * \brief GetCellEnvelopingPoint Get the cell enveloping the point (xyz.x(), xyz.y(), xyz.z()) searching the entire grid.
+             * Throws an exception if no cell is found.
              */
             virtual Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz) = 0;
+
+            /*!
+             * \brief GetCellEnvelopingPoint Get the cell enveloping the point (xyz.x(), xyz.y(), xyz.z()) searching a subsection of the grid.
+             * Throws an exception if no cell is found.
+             */
+            virtual Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz, std::vector<int> search_set) = 0;
 
         protected:
             GridSourceType type_;

@@ -21,6 +21,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/replace.hpp>
+#include <iostream>
 
 namespace Reservoir {
     namespace Grid {
@@ -120,6 +121,39 @@ namespace Reservoir {
             else throw std::runtime_error("ECLGrid::GetCell: Grid source must be defined before getting a cell.");
         }
 
+        std::vector<int> ECLGrid::GetBoundingBoxCellIndices(double xi, double yi, double zi, double xf, double yf, double zf)
+		{
+        	double x_i, y_i, z_i, x_f, y_f, z_f;
+        	if (xi > xf)
+        	{ x_i = xf; x_f = xi;}
+        	else
+        	{ x_i = xi; x_f = xf;}
+
+        	if (yi > yf)
+        	{ y_i = yf; y_f = yi;}
+        	else
+        	{ y_i = yi; y_f = yf;}
+
+        	if (zi > zf)
+        	{ z_i = zf; z_f = zi;}
+        	else
+        	{ z_i = zi; z_f = zf;}
+
+            int total_cells = Dimensions().nx * Dimensions().ny * Dimensions().nz;
+
+            std::vector<int> indices_list;
+            for (int ii = 0; ii < total_cells; ii++) {
+            	if ((GetCell(ii).center().x() >= x_i) && (GetCell(ii).center().x() <= x_f) &&
+            		(GetCell(ii).center().y() >= y_i) && (GetCell(ii).center().y() <= y_f) &&
+            		(GetCell(ii).center().z() >= z_i) && (GetCell(ii).center().z() <= z_f))
+            	{
+            		indices_list.push_back(ii);
+            	}
+            }
+
+            return indices_list;
+		}
+
         Cell ECLGrid::GetCellEnvelopingPoint(double x, double y, double z)
         {
             int total_cells = Dimensions().nx * Dimensions().ny * Dimensions().nz;
@@ -131,16 +165,44 @@ namespace Reservoir {
             }
 	    
             // Throw an exception if no cell was found
-            throw std::runtime_error("Grid::GetCellEnvelopingPoint: Cell is outside grid ("
+            throw std::runtime_error("Grid::GetCellEnvelopingPoint: The point is outside the grid ("
                                      + std::to_string(x) + ", "
                                      + std::to_string(y) + ", "
                                      + std::to_string(z) + ")"
             );
         }
 
+        Cell ECLGrid::GetCellEnvelopingPoint(double x, double y, double z, std::vector<int> search_set)
+        {
+        	// If the searching area is empty then search the entire grid
+        	if (search_set.size() == 0)
+        	{
+        		return GetCellEnvelopingPoint(x, y, z);
+        	}
+
+            for (int iCell = 0; iCell < search_set.size(); iCell++) {
+                if (GetCell(search_set[iCell]).EnvelopsPoint(Eigen::Vector3d(x, y, z))) {
+                    return GetCell(search_set[iCell]);
+                }
+            }
+	    
+            // Throw an exception if no cell was found
+            throw std::runtime_error("Grid::GetCellEnvelopingPoint: The point is outside the searching area or" 
+						   "even outside the grid ("
+                                     + std::to_string(x) + ", "
+                                     + std::to_string(y) + ", "
+                                     + std::to_string(z) + ")"
+            );
+        }
+	
         Cell ECLGrid::GetCellEnvelopingPoint(Eigen::Vector3d xyz)
         {
             return GetCellEnvelopingPoint(xyz.x(), xyz.y(), xyz.z());
         }
-    }
+
+        Cell ECLGrid::GetCellEnvelopingPoint(Eigen::Vector3d xyz, std::vector<int> search_set)
+        {
+            return GetCellEnvelopingPoint(xyz.x(), xyz.y(), xyz.z(), search_set);
+        }	
+}
 }
