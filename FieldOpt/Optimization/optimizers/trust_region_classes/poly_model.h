@@ -42,10 +42,11 @@ private:
     /*!
      * @brief As described by A. Conn, finds a 'good point' for the
      * scaled trust region. This is a copy of C. Giuliani's Matlab code
+     * and will always find a point such that abs(basis_function(x)) > 0.24
      * @param Double k
      * @return A good point
      */
-    Eigen::VectorXd find_new_point(Polynomial poly);
+    Eigen::VectorXd find_new_point(Polynomial basis_function);
 
 public:
     /*!

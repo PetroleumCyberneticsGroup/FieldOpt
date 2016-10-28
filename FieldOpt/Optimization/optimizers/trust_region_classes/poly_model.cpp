@@ -35,21 +35,22 @@ Optimization::Case* PolyModel::CaseFromPoint(Eigen::VectorXd point, Optimization
     // In order for case to exist outside poly_model, we use the new operator
     Optimization::Case *new_case = new Optimization::Case(prototype);
     new_case->SetRealVarValues(point);
+    //TODO: Objective value must be changed to not evalated, i.e. MAXLIMITSDOUBLE
 
     return new_case;
 }
 
-Eigen::VectorXd PolyModel::find_new_point(Polynomial poly) {
+Eigen::VectorXd PolyModel::find_new_point(Polynomial basis_function) {
 
-    int dimension = poly.return_dimension();
-    Eigen::VectorXd coeffs = poly.return_coeffs();
+    int dimension = basis_function.return_dimension();
+    Eigen::VectorXd coeffs = basis_function.return_coeffs();
     Eigen::VectorXd x0, x1, x2, x3, x4;
     x0 = x1 = x2 = x3 = x4 = Eigen::VectorXd::Zero(dimension);
 
     // Find largest monomial coefficient (excluding constant term which has already been assigned to first point)
     double max = 0.0;
     int max_coeff = -1;
-    for (int i = 1; i < poly.return_no_elements(); ++i) {
+    for (int i = 1; i < basis_function.return_no_elements(); ++i) {
         if(fabs(coeffs(i)) > max) {
             max = fabs(coeffs(i));
             max_coeff = i;
@@ -73,7 +74,7 @@ Eigen::VectorXd PolyModel::find_new_point(Polynomial poly) {
         int coeff_dummy = 2*dimension+1;
 
         for(int i=0; i<dimension-1; i++){
-            for (int j=1; j<dimension; j++) {
+            for (int j=i+1; j<dimension; j++) {
                 if (max_coeff == coeff_dummy) {
                     l = i;
                     m = j;
@@ -102,9 +103,9 @@ Eigen::VectorXd PolyModel::find_new_point(Polynomial poly) {
 
     // Determine which of the 5 points is the best one
     for(int i=0; i<5; i++){
-        if(fabs(poly.evaluate(points.at(i)))>=best_value){
+        if(fabs(basis_function.evaluate(points.at(i)))>=best_value){
             best_point = points.at(i);
-            best_value = fabs(poly.evaluate(points.at(i)));
+            best_value = fabs(basis_function.evaluate(points.at(i)));
         }
     }
 
