@@ -70,7 +70,10 @@ namespace Optimization {
         QString StringRepresentation();
 
         /*!
-         * Get the real variables of this case as a Vector
+         * Get the real variables of this case as a Vector.
+         *
+         * @note This function will not work with Case objects created from CaseTransferObject.
+         * This implies that, when running in parallel, it will only work on the main process.
          *
          * This creates an ordering of the variables so that for future
          * use the i'th index in the vector will always correspond to the
@@ -80,13 +83,43 @@ namespace Optimization {
         Eigen::VectorXd GetRealVarVector();
 
         /*!
-         * Sets the real variable values of this case from a given vector
+         * Sets the real variable values of this case from a given vector.
+         *
+         * @note This function will not work with Case objects created from CaseTransferObject.
+         * This implies that, when running in parallel, it will only work on the main process.
          *
          * The order of the variables as they appear in vector this case is preserved
          * given that they were taken from this same case from the function GetRealVector()
          * @param vec
          */
         void SetRealVarValues(Eigen::VectorXd vec);
+
+        /*!
+         * Get the integer variables of this case as a Vector.
+         *
+         * @note This function will not work with Case objects created from CaseTransferObject.
+         * This implies that, when running in parallel, it will only work on the main process.
+         *
+         * This creates an ordering of the variables so that for future
+         * use the i'th index in the vector will always correspond to the
+         * same variable.
+         * @return Values of the integer variables in a vector
+         */
+        Eigen::VectorXi GetIntegerVarVector();
+
+        /*!
+         * Sets the integer variable values of this case from a given vector.
+         *
+         * @note This function will not work with Case objects created from CaseTransferObject.
+         * This implies that, when running in parallel, it will only work on the main process.
+         *
+         * The order of the variables as they appear in vector this case is preserved
+         * given that they were taken from this same case from the function GetIntegerVarVector()
+         * @param vec
+         */
+        void SetIntegerVarValues(Eigen::VectorXi vec);
+
+
 
     private:
         QUuid id_; //!< Unique ID for the case.
@@ -97,6 +130,7 @@ namespace Optimization {
         QHash<QUuid, double> real_variables_;
 
         QList<QUuid> real_id_index_map_;
+        QList<QUuid> integer_id_index_map_;
 
     };
 

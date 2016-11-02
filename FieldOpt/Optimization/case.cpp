@@ -19,6 +19,7 @@ namespace Optimization {
         objective_function_value_ = std::numeric_limits<double>::max();
 
         real_id_index_map_ = real_variables_.keys();
+        integer_id_index_map_ = integer_variables_.keys();
     }
 
     Case::Case(const Case *c)
@@ -30,6 +31,7 @@ namespace Optimization {
         objective_function_value_ = c->objective_function_value_;
 
         real_id_index_map_ = c->real_id_index_map_;
+        integer_id_index_map_ = c->integer_variables_.keys();
     }
 
     bool Case::Equals(const Case *other, double tolerance) const
@@ -141,6 +143,20 @@ namespace Optimization {
     void Case::SetRealVarValues(Eigen::VectorXd vec) {
         for (int i = 0; i < vec.size(); ++i) {
             set_real_variable_value(real_id_index_map_[i], vec[i]);
+        }
+    }
+
+    Eigen::VectorXi Case::GetIntegerVarVector() {
+        Eigen::VectorXi vec(integer_id_index_map_.length());
+        for (int i = 0; i < integer_id_index_map_.length(); ++i) {
+            vec[i] = integer_variables_.value(integer_id_index_map_[i]);
+        }
+        return vec;
+    }
+
+    void Case::SetIntegerVarValues(Eigen::VectorXi vec) {
+        for (int i = 0; i < vec.size(); ++i) {
+            set_integer_variable_value(integer_id_index_map_[i], vec[i]);
         }
     }
 }
