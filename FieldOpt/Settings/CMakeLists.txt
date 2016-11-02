@@ -32,6 +32,7 @@ if (BUILD_TESTING)
             )
     target_link_libraries(test_settings
             fieldopt::settings
+            ${Boost_LIBRARIES}
             ${GTEST_BOTH_LIBRARIES}
             ${CMAKE_THREAD_LIBS_INIT})
 

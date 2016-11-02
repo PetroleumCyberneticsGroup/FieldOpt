@@ -31,6 +31,7 @@ add_library(fieldopt::simulation ALIAS ${PROJECT_NAME})
 
 target_link_libraries(simulation
         PUBLIC fieldopt::model
+        PUBLIC ${Boost_LIBRARIES}
         PUBLIC fieldopt::hdf5summaryreader)
 
 target_compile_features(ertwrapper

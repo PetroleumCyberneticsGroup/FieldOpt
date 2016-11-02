@@ -48,7 +48,9 @@ namespace Simulation {
 
                         if (well_block->HasPerforation()) {
                             block_entry[5] = "OPEN";
-                            block_entry[7] = QString::number(well_block->GetPerforation()->transmissibility_factor());
+                            if (well_block->GetPerforation()->transmissibility_factor() >= 0.0)
+                                block_entry[7] = QString::number(well_block->GetPerforation()->transmissibility_factor());
+                            // WI is defaulted if a negative value is provided.
                         }
                         else {
                             block_entry[5] = "SHUT";

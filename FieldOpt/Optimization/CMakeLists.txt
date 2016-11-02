@@ -37,7 +37,9 @@ add_library(optimization
 		constraints/combined_spline_length_interwell_distance.cpp
 		constraints/rate_constraint.cpp
 		constraints/combined_spline_length_interwell_distance_reservoir_boundary.cpp
-		case_transfer_object.cpp)
+		case_transfer_object.cpp
+		optimizers/ExhaustiveSearch2DVert.cpp
+		optimizers/ExhaustiveSearch2DVert.h
 		${EXPERIMENTAL_CONSTRAINTS_SRC} )
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 

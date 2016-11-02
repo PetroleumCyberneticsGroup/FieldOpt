@@ -29,6 +29,7 @@ if (BUILD_TESTING)
             tests/grid/test_ijkcoordinate.cpp)
     target_link_libraries(test_reservoir
             fieldopt::reservoir
+            ${Boost_LIBRARIES}
             ${GTEST_BOTH_LIBRARIES}
             ${CMAKE_THREAD_LIBS_INIT})
 

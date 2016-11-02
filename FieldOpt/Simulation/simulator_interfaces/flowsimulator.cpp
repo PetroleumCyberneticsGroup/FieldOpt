@@ -66,7 +66,7 @@ namespace Simulation {
         }
 
         void FlowSimulator::copyDriverFiles() {
-            Utilities::FileHandling::CopyFile(initial_driver_file_path_, output_directory_+"/"+initial_driver_file_name_);
+            Utilities::FileHandling::CopyFile(initial_driver_file_path_, output_directory_+"/"+initial_driver_file_name_, true);
             Utilities::FileHandling::CreateDirectory(output_directory_+"/include");
             Utilities::FileHandling::CopyDirectory(initial_driver_file_parent_dir_path_+"/include", output_directory_+"/include");
         }

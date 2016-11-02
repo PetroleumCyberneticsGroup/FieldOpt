@@ -19,7 +19,7 @@ namespace Settings {
         friend class Settings;
 
     public:
-        enum OptimizerType { Compass };
+        enum OptimizerType { Compass, ExhaustiveSearch2DVert };
         enum OptimizerMode { Maximize, Minimize };
         enum ConstraintType { BHP, Rate, SplinePoints,
             WellSplineLength, WellSplineInterwellDistance, WellSplineDomain,

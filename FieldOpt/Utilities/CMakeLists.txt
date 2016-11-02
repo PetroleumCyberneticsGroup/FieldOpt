@@ -16,6 +16,7 @@ if (BUILD_TESTING)
 			tests/test_math.cpp)
 	target_link_libraries(test_utilities
 			Qt5::Core
+			${Boost_LIBRARIES}
 			${GTEST_BOTH_LIBRARIES}
 			${CMAKE_THREAD_LIBS_INIT})
 

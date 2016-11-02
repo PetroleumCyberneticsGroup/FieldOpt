@@ -26,6 +26,7 @@
 #include <Simulation/simulator_interfaces/flowsimulator.h>
 #include "abstract_runner.h"
 #include "Optimization/optimizers/compass_search.h"
+#include "Optimization/optimizers/ExhaustiveSearch2DVert.h"
 #include "Optimization/objective/weightedsum.h"
 #include "Simulation/simulator_interfaces/eclsimulator.h"
 #include "Simulation/simulator_interfaces/adgprssimulator.h"
@@ -161,6 +162,12 @@ namespace Runner {
                 if (runtime_settings_->verbosity_level()) std::cout << "Using CompassSearch optimization algorithm." << std::endl;
                 optimizer_ = new Optimization::Optimizers::CompassSearch(settings_->optimizer(), base_case_, model_->variables(),
                                                                          model_->grid());
+                optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
+                break;
+            case Settings::Optimizer::OptimizerType::ExhaustiveSearch2DVert:
+                if (runtime_settings_->verbosity_level()) std::cout << "Using ExhaustiveSearch2DVert." << std::endl;
+                optimizer_ = new Optimization::Optimizers::ExhaustiveSearch2DVert(settings_->optimizer(), base_case_,
+                                                                                  model_->variables(), model_->grid());
                 optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
                 break;
             default:

@@ -14,26 +14,30 @@ namespace Settings {
         // Optimizer type
         if (QString::compare(type, "Compass") == 0)
             type_ = OptimizerType::Compass;
+        else if (QString::compare(type, "ExhaustiveSearch2DVert") == 0)
+            type_ = OptimizerType::ExhaustiveSearch2DVert;
         else throw OptimizerTypeNotRecognizedException("The optimizer type " + type.toStdString() + " was not recognized.");
 
         // Optimizer mode
-        if (json_optimizer.contains("Mode")) {
-            QString mode = json_optimizer["Mode"].toString();
-            if (QString::compare(mode, "Minimize", Qt::CaseInsensitive) == 0)
-                mode_ = OptimizerMode::Minimize;
-            else if (QString::compare(mode, "Maximize", Qt::CaseInsensitive) == 0)
-                mode_ = OptimizerMode::Maximize;
-            else throw UnableToParseOptimizerSectionException("Did not recognize optimizer Mode setting.");
-        } else throw UnableToParseOptimizerSectionException("Optimizer Mode keyword must be specified.");
+        if (type_ != ExhaustiveSearch2DVert) {
+            if (json_optimizer.contains("Mode")) {
+                QString mode = json_optimizer["Mode"].toString();
+                if (QString::compare(mode, "Minimize", Qt::CaseInsensitive) == 0)
+                    mode_ = OptimizerMode::Minimize;
+                else if (QString::compare(mode, "Maximize", Qt::CaseInsensitive) == 0)
+                    mode_ = OptimizerMode::Maximize;
+                else throw UnableToParseOptimizerSectionException("Did not recognize optimizer Mode setting.");
+            } else throw UnableToParseOptimizerSectionException("Optimizer Mode keyword must be specified.");
 
-        // Optimizer parameters
-        try {
-            parameters_.max_evaluations = json_parameters["MaxEvaluations"].toInt();
-            parameters_.initial_step_length = json_parameters["InitialStepLength"].toDouble();
-            parameters_.minimum_step_length = json_parameters["MinimumStepLength"].toDouble();
-        }
-        catch (std::exception const &ex) {
-            throw UnableToParseOptimizerParametersSectionException("Unable to parse optimizer parameters: " + std::string(ex.what()));
+            // Optimizer parameters
+            try {
+                parameters_.max_evaluations = json_parameters["MaxEvaluations"].toInt();
+                parameters_.initial_step_length = json_parameters["InitialStepLength"].toDouble();
+                parameters_.minimum_step_length = json_parameters["MinimumStepLength"].toDouble();
+            }
+            catch (std::exception const &ex) {
+                throw UnableToParseOptimizerParametersSectionException("Unable to parse optimizer parameters: " + std::string(ex.what()));
+            }
         }
 
         // Optimizer objective
