@@ -3,6 +3,7 @@
 
 #include <QHash>
 #include <QUuid>
+#include <Eigen/Core>
 #include "optimization_exceptions.h"
 
 namespace Optimization {
@@ -68,6 +69,25 @@ namespace Optimization {
 
         QString StringRepresentation();
 
+        /*!
+         * Get the real variables of this case as a Vector
+         *
+         * This creates an ordering of the variables so that for future
+         * use the i'th index in the vector will always correspond to the
+         * same variable.
+         * @return Values of the real variables in a vector
+         */
+        Eigen::VectorXd GetRealVarVector();
+
+        /*!
+         * Sets the real variable values of this case from a given vector
+         *
+         * The order of the variables as they appear in vector this case is preserved
+         * given that they were taken from this same case from the function GetRealVector()
+         * @param vec
+         */
+        void SetRealVarValues(Eigen::VectorXd vec);
+
     private:
         QUuid id_; //!< Unique ID for the case.
 
@@ -75,6 +95,8 @@ namespace Optimization {
         QHash<QUuid, bool> binary_variables_;
         QHash<QUuid, int> integer_variables_;
         QHash<QUuid, double> real_variables_;
+
+        QList<QUuid> real_id_index_map_;
 
     };
 
