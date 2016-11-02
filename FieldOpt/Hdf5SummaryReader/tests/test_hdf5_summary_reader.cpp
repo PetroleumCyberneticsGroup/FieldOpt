@@ -27,7 +27,7 @@ namespace {
         std::vector<double> times = reader.times_steps();
         EXPECT_EQ(8, times.size());
 
-        std::vector<double> expected_times{0.0, 3.0, 18.0, 48.0, 50.0, 65.0, 95.0, 100.0};
+        std::vector<double> expected_times{0.0, 1.0, 6.0, 31.0, 50, 65.0, 95.0, 100.0};
         for (int i = 0; i < times.size(); ++i) {
             EXPECT_DOUBLE_EQ(expected_times[i], times[i]);
         }
@@ -69,9 +69,9 @@ namespace {
         auto reader = Hdf5SummaryReader(file_path);
         double expected_oil_rates[5][8] = {
                 { -0, -0, -0, -0, -0, -0, -0, -0 },
-                { 0, 1.62626, 2.6165, 3.99704, 4.04895, 4.29621, 4.44254, 4.45752 },
-                { 4478.23, 1527.28, 1472.31, 1106.74, 1084.17, 963.563, 789.691, 763.152 },
-                { -458.699, 127.526, 491.173, 711.614, 724.54, 770.369, 786.024, 786.486 },
+                { 5.33392e-07, 1.28479e+00, 1.93622e+00, 3.34471e+00, 4.12568e+00, 4.32977e+00, 4.44898e+00, 4.46081e+00 },
+                { 4.47823e+03, 1.44194e+03, 1.63272e+03, 1.29462e+03, 1.07743e+03, 9.59778e+02, 7.88312e+02, 7.61999e+02 },
+                { -4.58699e+02,  1.82363e+01,  2.49221e+02,  6.14325e+02,  7.30089e+02,  7.73242e+02,  7.87443e+02,  7.87746e+02 },
                 { 0, 0, 0, 0, 0, 0, 0, 0 }
         };
         for (int w = 0; w < reader.number_of_wells(); ++w) {
@@ -85,11 +85,11 @@ namespace {
     TEST_F(Hdf5SummaryReaderTest, WaterRatesAtSC) {
         auto reader = Hdf5SummaryReader(file_path);
         double expected_water_rates[5][8] = {
-                { -39601.7, -14233.9, -8755.69, -6803.42, -6701.8, -6431.61, -6282.44, -6267.97 },
-                { 4042.22, 1734.34, 890.349, 519.612, 500.087, 434.554, 396.248, 391.699 },
-                { 0, 0, 239.944, 991.767, 1051.24, 1328.3, 1682.86, 1744.34 },
-                { -94.7215, 0, 0, 0, 0, 0, 1.02276, 1.33214 },
-                { 12650.4, 2282.57, 1284.14, 1223.85, 1223.44, 1236.45, 1249.26, 1250.94 }
+                { -3.96017e+04, -1.69272e+04, -1.17907e+04, -7.56994e+03, -6.67773e+03, -6.42420e+03, -6.28320e+03, -6.26953e+03 },
+                { 4.04222e+03, 2.10610e+03, 1.38645e+03, 6.72054e+02, 4.92830e+02, 4.31293e+02, 3.95274e+02, 3.90997e+02 },
+                { 3.39375e-07, 1.09275e-07, 1.92567e-01, 5.78575e+02, 1.07060e+03, 1.34168e+03, 1.68984e+03, 1.75021e+03 },
+                { -9.47215e+01, 1.38201e-09, 1.88868e-08, 4.65556e-08, 5.53286e-08, 5.85988e-08, 9.65374e-01, 1.26232e+00 },
+                { 1.26504e+04, 3.21890e+03, 1.62203e+03, 1.22582e+03, 1.22453e+03, 1.23722e+03, 1.24947e+03, 1.25108e+03 }
         };
         for (int w = 0; w < reader.number_of_wells(); ++w) {
             EXPECT_EQ(reader.number_of_tsteps(), reader.water_rates_sc(w).size());
@@ -101,7 +101,7 @@ namespace {
 
     TEST_F(Hdf5SummaryReaderTest, CumulativWaterProductionSC) {
         auto reader = Hdf5SummaryReader(file_path);
-        double expected_final_cumulatives[5] = {-820650, 71961, 93900, -120.8536, 151200};
+        double expected_final_cumulatives[5] = {-797676, 69898, 95067, -27, 140928};
         for (int w = 0; w < reader.number_of_wells(); ++w) {
             EXPECT_NEAR(expected_final_cumulatives[w], reader.cumulative_water_production_sc(w)[reader.number_of_tsteps()-1], 5.1);
         }
@@ -109,76 +109,49 @@ namespace {
 
     TEST_F(Hdf5SummaryReaderTest, CumulativeOilProductionSC) {
         auto reader = Hdf5SummaryReader(file_path);
-        double expected_final_cumulatives[5] = {0.0 , 357.42928, 117920.765, 62110.4295, 0.0 };
+        double expected_final_cumulatives[5] = {0.0 , 363, 115149, 62637.4295, 0.0 };
         for (int w = 0; w < reader.number_of_wells(); ++w) {
-            EXPECT_NEAR(expected_final_cumulatives[w], reader.cumulative_oil_production_sc(w)[reader.number_of_tsteps()-1], 1.0);
+            EXPECT_NEAR(expected_final_cumulatives[w], reader.cumulative_oil_production_sc(w)[reader.number_of_tsteps()-1], 2.0);
         }
     }
 
     TEST_F(Hdf5SummaryReaderTest, FieldOilRatesSC) {
         auto reader = Hdf5SummaryReader(file_path);
-        double expected_rates[8] = {4019.531, 1656.43226, 1966.0995, 1822.35104, 1812.75895, 1738.22821, 1580.15754, 1554.09552};
+        double expected_rates[8] = {4019, 1461, 1883, 1912, 1811, 1737, 1580, 1554};
         for (int t = 0; t < reader.number_of_tsteps(); ++t) {
             EXPECT_NEAR(expected_rates[t], reader.field_oil_rates_sc()[t], 1.0);
         }
     }
 
-
-    TEST_F(Hdf5SummaryReaderTest, FieldWaterRatesSC) {
-        auto reader = Hdf5SummaryReader(file_path);
-        double expected_rates[8] = {16597.8985, 4016.91, 2414.433, 2735.229, 2774.767, 2999.304, 3329.39076, 3388.31114};
-        for (int t = 0; t < reader.number_of_tsteps(); ++t) {
-            EXPECT_NEAR(expected_rates[t], reader.field_water_rates_sc()[t], 1.0);
-        }
-    }
-
     TEST_F(Hdf5SummaryReaderTest, FieldOilCumulativesSC) {
         auto reader = Hdf5SummaryReader(file_path);
-        double expected_values[8] = {0.0, 8513.94489, 35682.93309, 92509.69119, 96144.80118, 122777.20488, 172552.99113, 180388.62378};
+        double expected_values[8] = {0.0, 2740, 11103, 58555, 93933, 120550, 170314, 178150};
         for (int t = 0; t < reader.number_of_tsteps(); ++t) {
             EXPECT_NEAR(expected_values[t], reader.field_cumulative_oil_production_sc()[t], 1.0);
         }
     }
 
-    TEST_F(Hdf5SummaryReaderTest, FieldWaterCumulativesSC) {
-        auto reader = Hdf5SummaryReader(file_path);
-        double expected_values[8] = {0.0, 30922.21275, 79157.28525, 156402.21525, 161912.21125, 205217.74375, 300148.16515, 316942.4199};
-        for (int t = 0; t < reader.number_of_tsteps(); ++t) {
-            EXPECT_NEAR(expected_values[t], reader.field_cumulative_water_production_sc()[t], 1.0);
-        }
-    }
-
     TEST_F(Hdf5SummaryReaderTest, WaterInjectionRatesSC) {
         auto reader = Hdf5SummaryReader(file_path);
-        double expected_values[8] = {39601.7, 14233.9, 8755.69, 6803.42, 6701.8, 6431.61, 6282.44, 6267.97};
+        double expected_values[8] = {3.96017e+04, 1.69272e+04, 1.17907e+04, 7.56994e+03, 6.67773e+03, 6.42420e+03, 6.28320e+03, 6.26953e+03};
         EXPECT_THROW(reader.water_injection_rates_sc(1), std::runtime_error);
         for (int t = 0; t < reader.number_of_tsteps(); ++t) {
             EXPECT_NEAR(expected_values[t], reader.water_injection_rates_sc(0)[t], 1.0);
         }
     }
 
-    TEST_F(Hdf5SummaryReaderTest, CumulativeWaterInjectionSC) {
-        auto reader = Hdf5SummaryReader(file_path);
-        double expected_values[8] = {0.00000000e+00, 8.07534000e+04, 2.53175325e+05, 4.86561975e+05,
-                                     5.00067195e+05, 5.98567770e+05, 7.89278520e+05, 8.20654545e+05};
-        for (int t = 0; t < reader.number_of_tsteps(); ++t) {
-            EXPECT_NEAR(expected_values[t], reader.cumulative_water_injection_sc(0)[t], 1.0);
-        }
-    }
-
     TEST_F(Hdf5SummaryReaderTest, FieldWaterInjectionRatesSC) {
         auto reader = Hdf5SummaryReader(file_path);
-        double expected_values[8] = {39601.7, 14233.9, 8755.69, 6803.42, 6701.8, 6431.61, 6282.44, 6267.97};
+        double expected_values[8] = {-3.96017e+04, -1.69272e+04, -1.17907e+04, -7.56994e+03, -6.67773e+03, -6.42420e+03, -6.28320e+03, -6.26953e+03};
         EXPECT_THROW(reader.water_injection_rates_sc(1), std::runtime_error);
         for (int t = 0; t < reader.number_of_tsteps(); ++t) {
-            EXPECT_NEAR(expected_values[t], reader.field_water_injection_rates_sc()[t], 1.0);
+            EXPECT_NEAR(-1 * expected_values[t], reader.field_water_injection_rates_sc()[t], 1.0);
         }
     }
 
     TEST_F(Hdf5SummaryReaderTest, FieldCumulativeWaterInjectionSC) {
         auto reader = Hdf5SummaryReader(file_path);
-        double expected_values[8] = {0.00000000e+00, 8.07534000e+04, 2.53175325e+05, 4.86561975e+05,
-                                     5.00067195e+05, 5.98567770e+05, 7.89278520e+05, 8.20654545e+05};
+        double expected_values[8] = {0, 28264, 100059, 342066, 477419, 575683, 766294, 797676};
         for (int t = 0; t < reader.number_of_tsteps(); ++t) {
             EXPECT_NEAR(expected_values[t], reader.field_cumulative_water_injection_sc()[t], 1.0);
         }
