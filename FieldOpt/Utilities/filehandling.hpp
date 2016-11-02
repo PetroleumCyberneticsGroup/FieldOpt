@@ -8,6 +8,8 @@
 #include <QTextStream>
 #include <QDir>
 #include <stdexcept>
+#include <boost/filesystem.hpp>
+#include <boost/filesystem/operations.hpp>
 
 namespace Utilities {
     namespace FileHandling {
@@ -159,14 +161,19 @@ namespace Utilities {
          * \brief CopyFile Copy a file.
          * \param origin The path to the original file.
          * \param destination Path to the copy of the file.
+         * \param overwrite Overwrite existing file.
          */
-        inline void CopyFile(QString origin, QString destination)
+        inline void CopyFile(QString origin, QString destination, bool overwrite)
         {
             if (!FileExists(origin))
                 throw std::runtime_error("Error copying. Original file not found: " + origin.toStdString());
-            QFile original(origin);
-            if (!original.copy(destination))
-                throw std::runtime_error("Error copying file: " + origin.toStdString() + " to " + destination.toStdString());
+
+            if (overwrite)
+                boost::filesystem::copy_file(origin.toStdString(),
+                                             destination.toStdString(),
+                                             boost::filesystem::copy_option::overwrite_if_exists);
+            else
+                boost::filesystem::copy_file(origin.toStdString(), destination.toStdString());
         }
 
         /*!
@@ -189,7 +196,7 @@ namespace Utilities {
 
             for (auto entry : entries) {
                 if (entry.isFile() && !entry.isDir())
-                    CopyFile(entry.absoluteFilePath(), destination+"/"+entry.fileName()); //std::cout << "FILE: " << QString().toStdString() << std::endl;
+                    CopyFile(entry.absoluteFilePath(), destination+"/"+entry.fileName(), true); //std::cout << "FILE: " << QString().toStdString() << std::endl;
                 else if (entry.isDir())
                     CreateDirectory(destination+"/"+entry.fileName()); // std::cout << "FOLDER: " << QString().toStdString() << std::endl;
             }
