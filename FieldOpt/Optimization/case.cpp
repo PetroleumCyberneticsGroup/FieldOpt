@@ -159,4 +159,10 @@ namespace Optimization {
             set_integer_variable_value(integer_id_index_map_[i], vec[i]);
         }
     }
+
+    void Case::set_origin_data(Case *parent, int direction_index, double step_length) {
+        parent_ = parent;
+        direction_index_ = direction_index;
+        step_length_ = step_length;
+    }
 }

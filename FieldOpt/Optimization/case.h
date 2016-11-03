@@ -119,7 +119,15 @@ namespace Optimization {
          */
         void SetIntegerVarValues(Eigen::VectorXi vec);
 
-
+        /*!
+         * @brief Set the origin info of this Case/trial point, i.e. which point it was generated
+         * from, in which direction it was perturbed, and with what magnitude. This method is
+         * needed by some optimization algorithms.
+         * @param parent The Case/trial point this was generated from.
+         * @param direction_index The direction index of the perturbation.
+         * @param step_length The magnitude of the perturbation.
+         */
+        void set_origin_data(Case* parent, int direction_index, double step_length);
 
     private:
         QUuid id_; //!< Unique ID for the case.
@@ -131,6 +139,10 @@ namespace Optimization {
 
         QList<QUuid> real_id_index_map_;
         QList<QUuid> integer_id_index_map_;
+
+        Case* parent_; //!< The parent of this trial point. Needed by the APPS algorithm.
+        int direction_index_; //!< The direction index used to generate this trial point.
+        double step_length_; //!< The step length used to generate this trial point.
 
     };
 
