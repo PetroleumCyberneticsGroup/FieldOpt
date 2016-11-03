@@ -84,4 +84,29 @@ namespace {
         EXPECT_TRUE(test_case_2_->real_variables().values().first() - 5 == perturbations_2[1]->real_variables().values().first());
     }
 
+    TEST_F(CaseTest, VectorHelpers) {
+        // Get the initial integer vector
+        Eigen::VectorXi tc1_ivec_init = test_case_1_->GetIntegerVarVector();
+
+        // Create a delta vector
+        Eigen::VectorXi delta_vec = Eigen::VectorXi(tc1_ivec_init.size());
+        delta_vec[0] = 10;
+        delta_vec[1] = 0;
+        delta_vec[2] = 1;
+
+        // Add the delta vector to the initial vector
+        auto tc1_ivec_plus_delta = tc1_ivec_init + delta_vec;
+
+        // Update the var values in the case to the new vector
+        test_case_1_->SetIntegerVarValues(tc1_ivec_plus_delta);
+
+        // Get the updated vector
+        Eigen::VectorXi tc1_updated = test_case_1_->GetIntegerVarVector();
+
+        // Check that the updated vector has the correct values
+        EXPECT_EQ(tc1_updated[0], tc1_ivec_init[0] + delta_vec[0]);
+        EXPECT_EQ(tc1_updated[1], tc1_ivec_init[1] + delta_vec[1]);
+        EXPECT_EQ(tc1_updated[2], tc1_ivec_init[2] + delta_vec[2]);
+    }
+
 }
