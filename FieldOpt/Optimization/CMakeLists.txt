@@ -37,7 +37,7 @@ add_library(optimization
 		case_transfer_object.cpp
 		optimizers/ExhaustiveSearch2DVert.cpp
 		optimizers/ExhaustiveSearch2DVert.h
-		${EXPERIMENTAL_CONSTRAINTS_SRC} )
+		${EXPERIMENTAL_CONSTRAINTS_SRC} optimizers/GSS.cpp optimizers/GSS.h)
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
 target_link_libraries(optimization
