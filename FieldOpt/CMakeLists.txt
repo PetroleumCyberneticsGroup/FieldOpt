@@ -60,4 +60,4 @@ file(COPY ${CMAKE_SOURCE_DIR}/../examples DESTINATION ${CMAKE_BINARY_DIR}/)
 file(COPY ${CMAKE_SOURCE_DIR}/Utilities/tests/driver/driver.json DESTINATION ${CMAKE_BINARY_DIR}/examples)
 #
 ## Create an empty directory for test output
-file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fieldopt_output)
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fieldopt-output)
