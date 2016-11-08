@@ -2,7 +2,7 @@
 
 namespace Optimization {
     namespace Constraints {
-        RateConstraint::RateConstraint(Utilities::Settings::Optimizer::Constraint settings, Model::Properties::VariablePropertyContainer *variables) {
+        RateConstraint::RateConstraint(Settings::Optimizer::Constraint settings, Model::Properties::VariablePropertyContainer *variables) {
             affected_well_names_ = settings.wells;
             min_ = settings.min;
             max_ = settings.max;

@@ -28,7 +28,7 @@
 namespace Optimization {
 namespace Objective {
 
-WeightedSum::WeightedSum(Utilities::Settings::Optimizer *settings, Simulation::Results::Results *results)
+WeightedSum::WeightedSum(Settings::Optimizer *settings, Simulation::Results::Results *results)
 {
     results_ = results;
     components_ = new QList<WeightedSum::Component *>();

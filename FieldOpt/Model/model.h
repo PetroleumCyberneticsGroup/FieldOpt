@@ -3,15 +3,15 @@
 
 #include <QString>
 #include <QList>
-
-#include "Reservoir/reservoir.h"
+#include "Reservoir/grid/eclgrid.h"
 #include "properties/variable_property_container.h"
 #include "wells/well.h"
-#include "Utilities/settings/model.h"
+#include "Settings/model.h"
 #include "Optimization/case.h"
 #include "Model/wells/wellbore/wellblock.h"
 
 namespace Model {
+    class ModelSynchronizationObject;
 
     /*!
      * \brief The Model class represents the reservoir model as a whole, including wells and
@@ -19,13 +19,14 @@ namespace Model {
      */
     class Model
     {
+        friend class ModelSynchronizationObject;
     public:
-        Model(::Utilities::Settings::Model settings);
+        Model(::Settings::Model settings);
 
         /*!
          * \brief reservoir Get the reservoir (i.e. grid).
          */
-        Reservoir::Reservoir *reservoir() const { return reservoir_; }
+        Reservoir::Grid::Grid *grid() const { return grid_; }
 
         /*!
          * \brief variables Get the set of variable properties of all types.
@@ -44,7 +45,7 @@ namespace Model {
         void ApplyCase(Optimization::Case *c);
 
     private:
-        Reservoir::Reservoir *reservoir_;
+        Reservoir::Grid::Grid *grid_;
         Properties::VariablePropertyContainer *variable_container_;
         QList<Wells::Well *> *wells_;
 

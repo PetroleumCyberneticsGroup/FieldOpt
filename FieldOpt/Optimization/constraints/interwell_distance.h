@@ -11,7 +11,7 @@ namespace Optimization {
         class InterwellDistance : public Constraint, WellSplineConstraint
         {
         public:
-            InterwellDistance(Utilities::Settings::Optimizer::Constraint settings,
+            InterwellDistance(Settings::Optimizer::Constraint settings,
                               Model::Properties::VariablePropertyContainer *variables);
 
 

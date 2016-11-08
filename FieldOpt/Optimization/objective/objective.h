@@ -28,7 +28,7 @@
 
 #include <QPair>
 #include <QList>
-#include "Utilities/settings/model.h"
+#include "Settings/model.h"
 
 namespace Optimization {
 namespace Objective {

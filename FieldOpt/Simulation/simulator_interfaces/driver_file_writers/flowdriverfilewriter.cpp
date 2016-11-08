@@ -1,13 +1,13 @@
 #include <simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/welspecs.h>
 #include <simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/compdat.h>
 #include <simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/wellcontrols.h>
-#include <Utilities/file_handling/filehandling.h>
+#include <Utilities/filehandling.hpp>
 #include "flowdriverfilewriter.h"
 
 namespace Simulation {
     namespace SimulatorInterfaces {
         namespace DriverFileWriters {
-            FlowDriverFileWriter::FlowDriverFileWriter(::Utilities::Settings::Settings *settings,
+            FlowDriverFileWriter::FlowDriverFileWriter(::Settings::Settings *settings,
                                                        Model::Model *model)
             {
                 model_ = model;

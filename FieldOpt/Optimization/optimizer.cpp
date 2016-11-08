@@ -2,7 +2,7 @@
 
 namespace Optimization {
 
-    Optimizer::Optimizer(Utilities::Settings::Optimizer *settings, Case *base_case,
+    Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
                          Model::Properties::VariablePropertyContainer *variables,
                          Reservoir::Grid::Grid *grid)
     {
@@ -24,11 +24,11 @@ namespace Optimization {
     bool Optimizer::betterCaseFoundLastEvaluation()
     {
         for (Case* c : case_handler_->RecentlyEvaluatedCases()) {
-            if (mode_ == Utilities::Settings::Optimizer::OptimizerMode::Maximize) {
+            if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
                 if (c->objective_function_value() > tentative_best_case_->objective_function_value())
                     return true;
             }
-            else if (mode_ == Utilities::Settings::Optimizer::OptimizerMode::Minimize) {
+            else if (mode_ == Settings::Optimizer::OptimizerMode::Minimize) {
                 if (c->objective_function_value() < tentative_best_case_->objective_function_value())
                     return true;
             }
@@ -39,11 +39,11 @@ namespace Optimization {
     void Optimizer::applyNewTentativeBestCase()
     {
         for (Case* c : case_handler_->RecentlyEvaluatedCases()) {
-            if (mode_ == Utilities::Settings::Optimizer::OptimizerMode::Maximize) {
+            if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
                 if (c->objective_function_value() > tentative_best_case_->objective_function_value())
                     tentative_best_case_ = c;
             }
-            else if (mode_ == Utilities::Settings::Optimizer::OptimizerMode::Minimize) {
+            else if (mode_ == Settings::Optimizer::OptimizerMode::Minimize) {
                 if (c->objective_function_value() < tentative_best_case_->objective_function_value())
                     tentative_best_case_ = c;
             }
@@ -61,6 +61,7 @@ namespace Optimization {
 
     void Optimizer::SubmitEvaluatedCase(Case *c)
     {
+        case_handler_->UpdateCaseObjectiveFunctionValue(c->id(), c->objective_function_value());
         case_handler_->SetCaseEvaluated(c->id());
     }
 
@@ -93,6 +94,12 @@ namespace Optimization {
     void Optimizer::EnableConstraintLogging(QString output_directory_path) {
         for (Constraints::Constraint *con : constraint_handler_->constraints())
             con->EnableLogging(output_directory_path);
+    }
+
+    void Optimizer::SetVerbosityLevel(int level) {
+        verbosity_level_ = level;
+        for (auto con : constraint_handler_->constraints())
+            con->SetVerbosityLevel(level);
     }
 
 

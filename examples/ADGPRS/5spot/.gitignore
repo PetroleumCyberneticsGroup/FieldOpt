@@ -4,3 +4,5 @@
 /5SPOT.solver_partition.bin
 *.json
 *.csv
+*.FIPS.txt
+*.rates.txt

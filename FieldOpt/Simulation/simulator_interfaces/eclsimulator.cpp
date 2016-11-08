@@ -1,13 +1,13 @@
 #include <iostream>
 #include "eclsimulator.h"
-#include "Utilities/unix/execution.h"
+#include "Utilities/execution.hpp"
 #include "simulator_exceptions.h"
 #include "Simulation/results/eclresults.h"
 
 namespace Simulation {
     namespace SimulatorInterfaces {
 
-        ECLSimulator::ECLSimulator(Utilities::Settings::Settings *settings, Model::Model *model)
+        ECLSimulator::ECLSimulator(Settings::Settings *settings, Model::Model *model)
         : Simulator(settings)
         {
             model_ = model;

@@ -33,9 +33,10 @@ add_library(optimization
 		constraints/well_spline_constraint.cpp
 		constraints/combined_spline_length_interwell_distance.cpp
 		constraints/rate_constraint.cpp
-		constraints/rate_constraint.h
 		constraints/combined_spline_length_interwell_distance_reservoir_boundary.cpp
-		constraints/combined_spline_length_interwell_distance_reservoir_boundary.h
+		case_transfer_object.cpp
+		optimizers/ExhaustiveSearch2DVert.cpp
+		optimizers/ExhaustiveSearch2DVert.h
 		${EXPERIMENTAL_CONSTRAINTS_SRC} )
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
@@ -44,7 +45,8 @@ target_link_libraries(optimization
         PUBLIC fieldopt::simulation
         PUBLIC fieldopt::constraintmath
 		PUBLIC fieldopt::reservoir
-        Qt5::Core)
+        Qt5::Core
+		PUBLIC ${Boost_LIBRARIES})
 
 target_include_directories(optimization PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/constraints>
@@ -55,31 +57,34 @@ target_compile_features(optimization
         PUBLIC cxx_auto_type
         PUBLIC cxx_range_for)
 
-# Unit tests
-find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS} tests)
-add_executable(test_optimization
-        tests/test_case.cpp
-        tests/test_case_handler.cpp
-		tests/constraints/test_bhp_constraint.cpp
-        tests/constraints/test_constraint_handler.cpp
-		tests/constraints/test_reservoir_boundary.cpp
-        tests/objective/test_weightedsum.cpp
-        tests/optimizers/test_compass_search.cpp
-        tests/test_resource_cases.h
-		tests/test_resource_optimizer.h
-		${EXPERIMENTAL_CONSTRAINTS_TESTS}
-		tests/constraints/test_rate_constraint.cpp)
+if (BUILD_TESTING)
+	# Unit tests
+	find_package(GTest REQUIRED)
+	include_directories(${GTEST_INCLUDE_DIRS} tests)
+	add_executable(test_optimization
+			tests/test_case.cpp
+			tests/test_case_handler.cpp
+			tests/constraints/test_bhp_constraint.cpp
+			tests/constraints/test_constraint_handler.cpp
+			tests/constraints/test_reservoir_boundary.cpp
+			tests/objective/test_weightedsum.cpp
+			tests/optimizers/test_compass_search.cpp
+			tests/test_resource_cases.h
+			tests/test_resource_optimizer.h
+			${EXPERIMENTAL_CONSTRAINTS_TESTS}
+			tests/constraints/test_rate_constraint.cpp
+			tests/test_case_transfer_object.cpp)
 
-target_link_libraries(test_optimization
-        fieldopt::optimization
-        ${GTEST_BOTH_LIBRARIES}
-        ${CMAKE_THREAD_LIBS_INIT})
+	target_link_libraries(test_optimization
+			fieldopt::optimization
+			${GTEST_BOTH_LIBRARIES}
+			${CMAKE_THREAD_LIBS_INIT})
 
-target_include_directories(test_optimization PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tests>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/constraints>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/objective>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/optimizers>)
+	target_include_directories(test_optimization PUBLIC
+			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tests>
+			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/constraints>
+			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/objective>
+			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/optimizers>)
 
-add_test(NAME test_optimization COMMAND $<TARGET_FILE:test_optimization>)
+	add_test(NAME test_optimization COMMAND $<TARGET_FILE:test_optimization>)
+endif()

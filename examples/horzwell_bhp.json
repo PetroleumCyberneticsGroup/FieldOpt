@@ -26,7 +26,6 @@
         },
         "Constraints": [
             {
-                "Name": "PROD-BHP-1",
                 "Type": "BHP",
                 "Well": "PROD",
                 "Max": 3000.0,
@@ -48,26 +47,48 @@
                 "Name": "PROD",
                 "Type": "Producer",
                 "DefinitionType": "WellBlocks",
-                "PreferedPhase": "Oil",
-                "Heel": [1,1,1],
+                "PreferredPhase": "Oil",
                 "WellboreRadius": 0.75,
                 "Direction": "X",
-                "WellBlocks": [
-                    [1,4,2],
-                    [2,4,2],
-                    [3,4,2],
-                    [4,4,2]
-                ],
-                "Completions": [
+                "WellBlocks":  [
                     {
-                        "Type": "Perforation",
-                        "WellBlock": [2,4,2],
-                        "TransmissibilityFactor": 1.0
+                        "i": 1,
+                        "j": 4,
+                        "k": 1,
+                        "IsVariable": false,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": -1.0,
+                            "IsVariable": false
+                        }
                     },
                     {
-                        "Type": "Perforation",
-                        "WellBlock": [3,4,2],
-                        "TransmissibilityFactor": 1.0
+                        "i": 2,
+                        "j": 4,
+                        "k": 1,
+                        "IsVariable": false
+                    },
+                    {
+                        "i": 3,
+                        "j": 4,
+                        "k": 1,
+                        "IsVariable": false,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": -1.0,
+                            "IsVariable": false
+                        }
+                    },
+                    {
+                        "i": 4,
+                        "j": 4,
+                        "k": 1,
+                        "IsVariable": false,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": -1.0,
+                            "IsVariable": false
+                        }
                     }
                 ],
                 "Controls": [
@@ -75,26 +96,22 @@
                         "TimeStep": 0,
                         "State": "Open",
                         "Mode": "BHP",
-                        "BHP": 2000.0
+                        "BHP": 2000.0,
+                        "IsVariable": true
                     },
                     {
                         "TimeStep": 50,
                         "State": "Open",
                         "Mode": "BHP",
-                        "BHP": 2000.0
+                        "BHP": 2000.0,
+                        "IsVariable": true
                     },
                     {
                         "TimeStep": 365,
                         "State": "Open",
                         "Mode": "BHP",
-                        "BHP": 2000.0
-                    }
-                ],
-                "Variables": [
-                    {
-                        "Name": "PROD-BHP-1",
-                        "Type": "BHP",
-                        "TimeSteps": [0,100]
+                        "BHP": 2000.0,
+                        "IsVariable": true
                     }
                 ]
             },
@@ -102,36 +119,48 @@
                 "Name": "INJ",
                 "Type": "Injector",
                 "DefinitionType": "WellBlocks",
-                "PreferedPhase": "Water",
-                "Heel": [2,1,2],
+                "PreferredPhase": "Water",
                 "WellboreRadius": 0.75,
                 "Direction": "X",
-                "WellBlocks": [
-                    [1,4,5],
-                    [2,4,5],
-                    [3,4,5],
-                    [4,4,5]
-                ],
-                "Completions": [
+                "WellBlocks":  [
                     {
-                        "Type": "Perforation",
-                        "WellBlock": [1,4,5],
-                        "TransmissibilityFactor": 1.0
+                        "i": 1,
+                        "j": 4,
+                        "k": 5,
+                        "IsVariable": false,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": -1.0,
+                            "IsVariable": false
+                        }
                     },
                     {
-                        "Type": "Perforation",
-                        "WellBlock": [2,4,5],
-                        "TransmissibilityFactor": 1.0
+                        "i": 2,
+                        "j": 4,
+                        "k": 5,
+                        "IsVariable": false
                     },
                     {
-                        "Type": "Perforation",
-                        "WellBlock": [3,4,5],
-                        "TransmissibilityFactor": 1.0
+                        "i": 3,
+                        "j": 4,
+                        "k": 5,
+                        "IsVariable": false,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": -1.0,
+                            "IsVariable": false
+                        }
                     },
                     {
-                        "Type": "Perforation",
-                        "WellBlock": [4,4,5],
-                        "TransmissibilityFactor": 1.0
+                        "i": 4,
+                        "j": 4,
+                        "k": 5,
+                        "IsVariable": false,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": -1.0,
+                            "IsVariable": false
+                        }
                     }
                 ],
                 "Controls": [

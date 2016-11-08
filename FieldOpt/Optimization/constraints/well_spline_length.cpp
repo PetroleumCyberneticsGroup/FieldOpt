@@ -4,7 +4,7 @@
 namespace Optimization {
     namespace Constraints {
 
-        WellSplineLength::WellSplineLength(Utilities::Settings::Optimizer::Constraint settings,
+        WellSplineLength::WellSplineLength(Settings::Optimizer::Constraint settings,
                                            Model::Properties::VariablePropertyContainer *variables)
         {
             min_length_ = settings.min;

@@ -1,7 +1,7 @@
 #ifndef BOOKKEEPER_H
 #define BOOKKEEPER_H
 
-#include "Utilities/settings/settings.h"
+#include "Settings/settings.h"
 #include "Optimization/case_handler.h"
 
 namespace Runner {
@@ -23,7 +23,7 @@ namespace Runner {
 class Bookkeeper
 {
 public:
-    Bookkeeper(Utilities::Settings::Settings *settings, Optimization::CaseHandler *case_handler);
+    Bookkeeper(Settings::Settings *settings, Optimization::CaseHandler *case_handler);
 
     /*!
      * \brief IsEvaluated Check if a case has already been evaluated. If the set_obj parameter

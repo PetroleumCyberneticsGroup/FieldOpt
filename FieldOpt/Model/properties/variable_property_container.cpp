@@ -260,6 +260,30 @@ namespace Model {
             return trans_vars;
         }
 
+        BinaryProperty *VariablePropertyContainer::GetBinaryVariable(QString name) const {
+            for (auto var : binary_variables_->values()) {
+                if (QString::compare(var->name(), name) == 0)
+                    return var;
+            }
+            throw std::runtime_error("Unable to find binary variable with name " + name.toStdString());
+        }
+
+        DiscreteProperty *VariablePropertyContainer::GetDiscreteVariable(QString name) const {
+            for (auto var : discrete_variables_->values()) {
+                if (QString::compare(var->name(), name) == 0)
+                    return var;
+            }
+            throw std::runtime_error("Unable to find discrete variable with name " + name.toStdString());
+        }
+
+        ContinousProperty *VariablePropertyContainer::GetContinousVariable(QString name) const {
+            for (auto var : continous_variables_->values()) {
+                if (QString::compare(var->name(), name) == 0)
+                    return var;
+            }
+            throw std::runtime_error("Unable to find continous variable with name " + name.toStdString());
+        }
+
 
     }
 }

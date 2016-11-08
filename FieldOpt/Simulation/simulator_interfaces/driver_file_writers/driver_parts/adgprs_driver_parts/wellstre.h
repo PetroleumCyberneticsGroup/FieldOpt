@@ -3,7 +3,7 @@
 
 #include "Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/ecldriverpart.h"
 #include "Model/wells/well.h"
-#include "Utilities/settings/simulator.h"
+#include "Settings/simulator.h"
 #include <QStringList>
 
 
@@ -16,7 +16,7 @@ namespace AdgprsDriverParts {
 class Wellstre : public ECLDriverParts::ECLDriverPart
 {
 public:
-    Wellstre(QList<Model::Wells::Well *> *wells, Utilities::Settings::Simulator::SimulatorFluidModel fluid_model);
+    Wellstre(QList<Model::Wells::Well *> *wells, Settings::Simulator::SimulatorFluidModel fluid_model);
 
     // DriverPart interface
 public:
@@ -26,7 +26,7 @@ private:
     QString createKeyword();
     QString createWellEntry(Model::Wells::Well *well);
     QList<Model::Wells::Well *> *wells_;
-    Utilities::Settings::Simulator::SimulatorFluidModel fluid_model_;
+    Settings::Simulator::SimulatorFluidModel fluid_model_;
 };
 
 }}}}}

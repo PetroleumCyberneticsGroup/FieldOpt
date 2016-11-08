@@ -1,5 +1,5 @@
 #include <results/eclresults.h>
-#include <Utilities/unix/execution.h>
+#include <Utilities/execution.hpp>
 #include <iostream>
 #include "flowsimulator.h"
 #include "simulator_exceptions.h"
@@ -7,7 +7,7 @@
 namespace Simulation {
     namespace SimulatorInterfaces {
 
-        FlowSimulator::FlowSimulator(Utilities::Settings::Settings *settings, Model::Model *model)
+        FlowSimulator::FlowSimulator(Settings::Settings *settings, Model::Model *model)
                 : Simulator(settings)
         {
             model_ = model;
@@ -66,7 +66,7 @@ namespace Simulation {
         }
 
         void FlowSimulator::copyDriverFiles() {
-            Utilities::FileHandling::CopyFile(initial_driver_file_path_, output_directory_+"/"+initial_driver_file_name_);
+            Utilities::FileHandling::CopyFile(initial_driver_file_path_, output_directory_+"/"+initial_driver_file_name_, true);
             Utilities::FileHandling::CreateDirectory(output_directory_+"/include");
             Utilities::FileHandling::CopyDirectory(initial_driver_file_parent_dir_path_+"/include", output_directory_+"/include");
         }

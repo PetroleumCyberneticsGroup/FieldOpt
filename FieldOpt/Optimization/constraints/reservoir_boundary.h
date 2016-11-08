@@ -18,20 +18,13 @@ namespace Optimization {
         class ReservoirBoundary : public Constraint, WellSplineConstraint
         {
         public:
-            ReservoirBoundary(const Utilities::Settings::Optimizer::Constraint &settings,
-                              Model::Properties::VariablePropertyContainer *variables,
-                              Reservoir::Grid::Grid *grid);
+            ReservoirBoundary(const Settings::Optimizer::Constraint &settings,
+                              Model::Properties::VariablePropertyContainer *variables, Reservoir::Grid::Grid *grid);
 
             // Constraint interface
         public:
             bool CaseSatisfiesConstraint(Case *c);
             void SnapCaseToConstraints(Case *c);
-
-            // Def. function that outputs box_edge_cells_ for testing
-            QList<int> returnListOfBoxEdgeCellIndices() const { return index_list_edge_; }
-
-            void findCornerCells();
-//            QList<int> index_corner_cells_;
 
         private:
             int imin_, imax_, jmin_, jmax_, kmin_, kmax_;
@@ -40,10 +33,6 @@ namespace Optimization {
             Well affected_well_;
             QList<int> getListOfCellIndices();
 
-            QList<int> getIndicesOfEdgeCells();
-            QList<int> index_list_edge_;
-
-            void printCornerXYZ(std::string str_out, Eigen::Vector3d vector_xyz);
         };
     }
 }

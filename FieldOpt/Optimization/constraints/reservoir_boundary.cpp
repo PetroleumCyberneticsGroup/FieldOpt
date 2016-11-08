@@ -6,7 +6,7 @@ namespace Optimization {
     namespace Constraints {
 
         ReservoirBoundary::ReservoirBoundary(
-                const Utilities::Settings::Optimizer::Constraint &settings,
+                const Settings::Optimizer::Constraint &settings,
                 Model::Properties::VariablePropertyContainer *variables,
                 Reservoir::Grid::Grid *grid)
         {

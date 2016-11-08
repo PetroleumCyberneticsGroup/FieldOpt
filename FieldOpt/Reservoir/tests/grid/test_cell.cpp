@@ -1,9 +1,26 @@
+/******************************************************************************
+   Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+
+   This file is part of the FieldOpt project.
+
+   FieldOpt is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   FieldOpt is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
+
 #include <gtest/gtest.h>
-#include <QList>
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
-#include "Reservoir/grid/grid_exceptions.h"
-#include "tests/test_resource_grids.h"
+#include "Reservoir/tests/test_resource_grids.h"
 
 using namespace Reservoir::Grid;
 
@@ -52,7 +69,7 @@ namespace {
     }
 
     TEST_F(CellTest, Corners) {
-        QList<Eigen::Vector3d> corners = grid_->GetCell(0).corners();
+        auto corners = grid_->GetCell(0).corners();
 
         // Top layer
         Eigen::Vector3d top_sw = Eigen::Vector3d(0.0, 0.0, 7000.0);

@@ -1,3 +1,22 @@
+/******************************************************************************
+   Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+
+   This file is part of the FieldOpt project.
+
+   FieldOpt is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   FieldOpt is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
+
 #include "cell.h"
 
 namespace Reservoir {
@@ -6,7 +25,7 @@ namespace Reservoir {
 
         Cell::Cell(int global_index, IJKCoordinate ijk_index,
                    double volume, double poro, double permx, double permy, double permz,
-                   Eigen::Vector3d center, QList<Eigen::Vector3d> corners)
+                   Eigen::Vector3d center, std::vector<Eigen::Vector3d> corners)
         {
             global_index_ = global_index;
             ijk_index_ = ijk_index;
@@ -51,12 +70,12 @@ namespace Reservoir {
 
             for (int ii = 0; ii < 6; ii++) {
                 Face face;
-                face.corners.append(corners_[face_indices_points[ii][0]]);
-                face.corners.append(corners_[face_indices_points[ii][1]]);
-                face.corners.append(corners_[face_indices_points[ii][2]]);
-                face.corners.append(corners_[face_indices_points[ii][3]]);
+                face.corners.push_back(corners_[face_indices_points[ii][0]]);
+                face.corners.push_back(corners_[face_indices_points[ii][1]]);
+                face.corners.push_back(corners_[face_indices_points[ii][2]]);
+                face.corners.push_back(corners_[face_indices_points[ii][3]]);
                 face.normal_vector = (face.corners[2] - face.corners[0]).cross(face.corners[1] - face.corners[0]).normalized();
-                faces_.append(face);
+                faces_.push_back(face);
             }
         }
 

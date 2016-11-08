@@ -1,7 +1,7 @@
 #ifndef OPTIMIZER_H
 #define OPTIMIZER_H
 
-#include "Utilities/settings/optimizer.h"
+#include "Settings/optimizer.h"
 #include "case.h"
 #include "case_handler.h"
 #include "constraints/constraint_handler.h"
@@ -71,6 +71,7 @@ namespace Optimization {
         virtual QString GetStatusStringHeader() const; //!< Get the CSV header for the status string.
         virtual QString GetStatusString() const; //!< Get a CSV string describing the current state of the optimizer.
         void EnableConstraintLogging(QString output_directory_path); //!< Enable writing a text log for the constraint operations.
+        void SetVerbosityLevel(int level);
 
     protected:
         /*!
@@ -78,7 +79,7 @@ namespace Optimization {
          * \param settings Settings for the optimizer.
          * \param base_case The base case for optimizer. Must already have been evaluated (i.e. have an objective function value).
          */
-        Optimizer(::Utilities::Settings::Optimizer *settings, Case *base_case,
+        Optimizer(::Settings::Optimizer *settings, Case *base_case,
                   ::Model::Properties::VariablePropertyContainer *variables,
                   Reservoir::Grid::Grid *grid);
 
@@ -104,7 +105,8 @@ namespace Optimization {
         Constraints::ConstraintHandler *constraint_handler_; //!< All constraints defined for the optimization.
         int max_evaluations_; //!< Maximum number of objective function evaluations allowed before terminating.
         int iteration_; //!< The current iteration.
-        ::Utilities::Settings::Optimizer::OptimizerMode mode_; //!< The optimization mode, i.e. whether the objective function should be maximized or minimized.
+        int verbosity_level_; //!< The verbosity level for runtime console logging.
+        ::Settings::Optimizer::OptimizerMode mode_; //!< The optimization mode, i.e. whether the objective function should be maximized or minimized.
     };
 
 }

@@ -18,8 +18,8 @@ double AdgprsResults::GetValue(int well_nr, Results::Property prop, int time_ind
 
 void AdgprsResults::ReadResults(QString file_path)
 {
-    if (file_path.split(".SIM.H5").length() == 1)
-        file_path = file_path + ".SIM.H5"; // Append the suffix if it's not already there
+    if (file_path.split(".vars.h5").length() == 1)
+        file_path = file_path + ".vars.h5"; // Append the suffix if it's not already there
     file_path_ = file_path;
     summary_reader_ = new Hdf5SummaryReader(file_path_.toStdString());
     setAvailable();

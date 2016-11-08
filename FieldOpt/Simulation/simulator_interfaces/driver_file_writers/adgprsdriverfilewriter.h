@@ -1,8 +1,8 @@
 #ifndef ADGPRSDRIVERFILEWRITER_H
 #define ADGPRSDRIVERFILEWRITER_H
 
-#include "Utilities/settings/settings.h"
-#include "Utilities/settings/simulator.h"
+#include "Settings/settings.h"
+#include "Settings/simulator.h"
 #include "Model/model.h"
 
 namespace Simulation { namespace SimulatorInterfaces {
@@ -20,11 +20,11 @@ class AdgprsDriverFileWriter
 {
 private:
     friend class ::Simulation::SimulatorInterfaces::AdgprsSimulator;
-    AdgprsDriverFileWriter(::Utilities::Settings::Settings *settings, Model::Model *model);
+    AdgprsDriverFileWriter(::Settings::Settings *settings, Model::Model *model);
     void WriteDriverFile(QString output_dir);
 
     Model::Model *model_;
-    Utilities::Settings::Settings *settings_;
+    Settings::Settings *settings_;
     QString GetCompdatString();
 };
 

@@ -4,7 +4,7 @@
 namespace Optimization {
     namespace Constraints {
 
-        BhpConstraint::BhpConstraint(Utilities::Settings::Optimizer::Constraint settings, Model::Properties::VariablePropertyContainer *variables)
+        BhpConstraint::BhpConstraint(Settings::Optimizer::Constraint settings, Model::Properties::VariablePropertyContainer *variables)
         {
             min_ = settings.min;
             max_ = settings.max;

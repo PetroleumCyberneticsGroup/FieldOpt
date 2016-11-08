@@ -1,14 +1,34 @@
+/******************************************************************************
+   Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+
+   This file is part of the FieldOpt project.
+
+   FieldOpt is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   FieldOpt is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
+
 #ifndef ECLSUMMARYREADER_H
 #define ECLSUMMARYREADER_H
 
 #include <ert/ecl/ecl_sum.h>
 #include <ert/ecl/ecl_smspec.h>
-#include <QString>
-#include <QtCore/QHash>
+#include <map>
 #include <vector>
+#include <set>
 
 namespace ERTWrapper {
     namespace ECLSummary {
+        using namespace std;
 
 /*!
  * \brief The ECLSummaryReader class is a wrapper for ecl_sum in ERT. It lets you retrieve information
@@ -21,7 +41,7 @@ namespace ERTWrapper {
              * \brief ECLSummaryReader Reads the summary file specified in the parameter.
              * \param file_name Path to the eclipse summary, with or without file suffix.
              */
-            ECLSummaryReader(QString file_name);
+            ECLSummaryReader(string file_name);
             ~ECLSummaryReader();
 
             /*!
@@ -30,7 +50,7 @@ namespace ERTWrapper {
              * \param time_index The time index (0 and up).
              * \return The value of the variable at the specified time index.
              */
-            double GetMiscVar(QString var_name, int time_index);
+            double GetMiscVar(string var_name, int time_index);
 
             /*!
              * \brief GetFieldVar Get a Field variable. Calls ecl_sum_get_field_var.
@@ -38,7 +58,7 @@ namespace ERTWrapper {
              * \param time_index The time index (0 and up).
              * \return The value of the variable at the specified time index.
              */
-            double GetFieldVar(QString var_name, int time_index);
+            double GetFieldVar(string var_name, int time_index);
 
             /*!
              * \brief GetWellVar Get a Well variable. Calls ecl_sum_get_well_var.
@@ -47,64 +67,64 @@ namespace ERTWrapper {
              * \param time_index The time index (0 and up).
              * \return The value of the variable at the specified time index.
              */
-            double GetWellVar(QString well_name, QString var_name, int time_index);
+            double GetWellVar(string well_name, string var_name, int time_index);
 
             int GetLastReportStep(); //!< Get the last report step, i.e. the highest possible time index.
             int GetFirstReportStep(); //!< Get the first report step, i.e. the lowest possible time index (usually 0).
             bool HasReportStep(int report_step); //!< Check whether the report step is valid, i.e. < last and > first.
 
-            const QList<QString> &keys() const { return keys_; } //!< Get the list of all the keys contained in the summary.
-            const QList<QString> &wells() const { return wells_; } //!< Get the list of all wells found in the summary.
-            const QList<QString> &field_keys() const { return field_keys_; } //!< Get the list of all field-level keys contained in the summary.
-            const QList<QString> &well_keys() const { return well_keys_; } //!< Get the list of all well-level keys contained in the summary.
+            const set<string> &keys() const { return keys_; } //!< Get the list of all the keys contained in the summary.
+            const set<string> &wells() const { return wells_; } //!< Get the list of all wells found in the summary.
+            const set<string> &field_keys() const { return field_keys_; } //!< Get the list of all field-level keys contained in the summary.
+            const set<string> &well_keys() const { return well_keys_; } //!< Get the list of all well-level keys contained in the summary.
 
-            const std::vector<double> &time() const { return time_; } //!< Get the time vector (days).
+            const vector<double> &time() const { return time_; } //!< Get the time vector (days).
 
-            const std::vector<double> &fopt() const;
-            const std::vector<double> &fwpt() const;
-            const std::vector<double> &fgpt() const;
-            const std::vector<double> &fwit() const;
-            const std::vector<double> &fgit() const;
+            const vector<double> &fopt() const;
+            const vector<double> &fwpt() const;
+            const vector<double> &fgpt() const;
+            const vector<double> &fwit() const;
+            const vector<double> &fgit() const;
 
-            const std::vector<double> wopt(const QString well_name) const;
-            const std::vector<double> wwpt(const QString well_name) const;
-            const std::vector<double> wgpt(const QString well_name) const;
-            const std::vector<double> wwit(const QString well_name) const;
-            const std::vector<double> wgit(const QString well_name) const;
+            const vector<double> wopt(const string well_name) const;
+            const vector<double> wwpt(const string well_name) const;
+            const vector<double> wgpt(const string well_name) const;
+            const vector<double> wwit(const string well_name) const;
+            const vector<double> wgit(const string well_name) const;
 
-            const std::vector<double> wopr(const QString well_name) const;
-            const std::vector<double> wwpr(const QString well_name) const;
-            const std::vector<double> wgpr(const QString well_name) const;
-            const std::vector<double> wwir(const QString well_name) const;
-            const std::vector<double> wgir(const QString well_name) const;
+            const vector<double> wopr(const string well_name) const;
+            const vector<double> wwpr(const string well_name) const;
+            const vector<double> wgpr(const string well_name) const;
+            const vector<double> wwir(const string well_name) const;
+            const vector<double> wgir(const string well_name) const;
 
         private:
-            QString file_name_;
+            string file_name_;
 
             ecl_sum_type *ecl_sum_;
 
-            QList<QString> keys_; //!< A list of all keys found in the summary.
-            QList<QString> wells_; //!< A list of all the wells found in the summary.
-            QList<QString> field_keys_; //!< A list of all the field keys found in the summary.
-            QList<QString> well_keys_; //!< A list of all the well keys found in the summary.
-            void populateKeyLists(); //!< Populate the key lists using the ecl_sum_select_matching_general_var_list function.
+            set<string> keys_; //!< A list of all keys found in the summary.
+            set<string> wells_; //!< A list of all the wells found in the summary.
+            set<string> field_keys_; //!< A list of all the field keys found in the summary.
+            set<string> well_keys_; //!< A list of all the well keys found in the summary.
+            void populateKeyLists(); //!< Populalate the key lists using the ecl_sum_select_matching_general_var_list function.
 
-            std::vector<double> time_;
-            std::vector<double> fopt_;
-            std::vector<double> fwpt_;
-            std::vector<double> fgpt_;
-            std::vector<double> fwit_;
-            std::vector<double> fgit_;
-            QHash<QString, std::vector<double>> wopt_;
-            QHash<QString, std::vector<double>> wwpt_;
-            QHash<QString, std::vector<double>> wgpt_;
-            QHash<QString, std::vector<double>> wwit_;
-            QHash<QString, std::vector<double>> wgit_;
-            QHash<QString, std::vector<double>> wopr_;
-            QHash<QString, std::vector<double>> wwpr_;
-            QHash<QString, std::vector<double>> wgpr_;
-            QHash<QString, std::vector<double>> wwir_;
-            QHash<QString, std::vector<double>> wgir_;
+            vector<double> time_;
+            vector<double> fopt_;
+            vector<double> fwpt_;
+            vector<double> fgpt_;
+            vector<double> fwit_;
+            vector<double> fgit_;
+            map<string, vector<double>> wopt_;
+            map<string, vector<double>> wwpt_;
+            map<string, vector<double>> wgpt_;
+            map<string, vector<double>> wwit_;
+            map<string, vector<double>> wgit_;
+            map<string, vector<double>> wopr_;
+            map<string, vector<double>> wwpr_;
+            map<string, vector<double>> wgpr_;
+            map<string, vector<double>> wwir_;
+            map<string, vector<double>> wgir_;
 
             void initializeVectors();
             void initializeTimeVector();
@@ -112,15 +132,15 @@ namespace ERTWrapper {
             void initializeWellCumulatives();
             void initializeFieldCumulatives();
 
-            void warnPropertyZero(QString wname, QString propname) const;
-            void warnPropertyNotFound(QString propname) const;
-            void warnPropertyZero(QString propname) const;
+            void warnPropertyZero(string wname, string propname) const;
+            void warnPropertyNotFound(string propname) const;
+            void warnPropertyZero(string propname) const;
 
-            bool hasWellVar(QString well_name, QString var_name);
-            bool hasGroupVar(QString group_name, QString var_name);
-            bool hasFieldVar(QString var_name);
-            bool hasBlockVar(int block_nr, QString var_name);
-            bool hasMiscVar(QString var_name);
+            bool hasWellVar(string well_name, string var_name);
+            bool hasGroupVar(string group_name, string var_name);
+            bool hasFieldVar(string var_name);
+            bool hasBlockVar(int block_nr, string var_name);
+            bool hasMiscVar(string var_name);
         };
 
     }

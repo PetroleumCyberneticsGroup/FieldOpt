@@ -5,11 +5,11 @@ namespace Optimization {
     namespace Constraints {
 
         CombinedSplineLengthInterwellDistance::CombinedSplineLengthInterwellDistance(
-                Utilities::Settings::Optimizer::Constraint settings,
+                Settings::Optimizer::Constraint settings,
                 Model::Properties::VariablePropertyContainer *variables)
         {
             max_iterations_ = settings.max_iterations;
-            Utilities::Settings::Optimizer::Constraint dist_constr_settings;
+            Settings::Optimizer::Constraint dist_constr_settings;
             dist_constr_settings.wells = settings.wells;
             dist_constr_settings.min = settings.min_distance;
             distance_constraint_ = new InterwellDistance(dist_constr_settings, variables);
@@ -25,7 +25,7 @@ namespace Optimization {
 
             length_constraints_ = QList<WellSplineLength *>();
             for (QString wname : settings.wells) {
-                Utilities::Settings::Optimizer::Constraint len_constr_settings;
+                Settings::Optimizer::Constraint len_constr_settings;
                 len_constr_settings.well = wname;
                 len_constr_settings.min = settings.min_length;
                 len_constr_settings.max = settings.max_length;

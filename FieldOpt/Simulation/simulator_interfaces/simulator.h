@@ -4,8 +4,8 @@
 #include <QString>
 #include "Model/model.h"
 #include "Simulation/results/results.h"
-#include "Utilities/settings/settings.h"
-#include "Utilities/settings/simulator.h"
+#include "Settings/settings.h"
+#include "Settings/simulator.h"
 #include "Simulation/execution_scripts/execution_scripts.h"
 
 namespace Simulation {
@@ -60,26 +60,29 @@ namespace Simulation {
              */
             virtual QString GetCompdatString() = 0;
 
+            void SetVerbosityLevel(int level);
+
         protected:
             /*!
              * Set various path variables. Should only be called by child classes.
              * @param settings
              * @return
              */
-            Simulator(Utilities::Settings::Settings *settings);
+            Simulator(Settings::Settings *settings);
 
             QString initial_driver_file_path_; //!< Path to the driver file to be used as a base for the generated driver files.
             QString output_directory_; //!< The directory in which to write new driver files and execute simulations.
             QString initial_driver_file_name_;
 
             ::Simulation::Results::Results *results_;
-            Utilities::Settings::Settings *settings_;
+            Settings::Settings *settings_;
             Model::Model *model_;
             QString build_dir_;
             QString script_path_;
             QStringList script_args_;
             QList<int> control_times_;
             virtual void UpdateFilePaths() = 0;
+            int verbosity_level_; //!< Verbosity level for runtime console logging.
         };
 
     }

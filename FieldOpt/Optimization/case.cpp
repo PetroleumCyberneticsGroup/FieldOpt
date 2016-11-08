@@ -1,34 +1,10 @@
-/******************************************************************************
- *
- *
- *
- * Created: 30.11.2015 2015 by einar
- *
- * This file is part of the FieldOpt project.
- *
- * Copyright (C) 2015-2015 Einar J.M. Baumann <einar.baumann@ntnu.no>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
- *****************************************************************************/
-
 #include "case.h"
 #include <cmath>
 
 namespace Optimization {
 
     Case::Case() {
+        id_ = QUuid::createUuid();
         binary_variables_ = QHash<QUuid, bool>();
         integer_variables_ = QHash<QUuid, int>();
         real_variables_ = QHash<QUuid, double>();
@@ -37,18 +13,26 @@ namespace Optimization {
 
     Case::Case(const QHash<QUuid, bool> &binary_variables, const QHash<QUuid, int> &integer_variables, const QHash<QUuid, double> &real_variables)
     {
+        id_ = QUuid::createUuid();
         binary_variables_ = binary_variables;
         integer_variables_ = integer_variables;
         real_variables_ = real_variables;
         objective_function_value_ = std::numeric_limits<double>::max();
+
+        real_id_index_map_ = real_variables_.keys();
+        integer_id_index_map_ = integer_variables_.keys();
     }
 
     Case::Case(const Case *c)
     {
+        id_ = QUuid::createUuid();
         binary_variables_ = QHash<QUuid, bool>(c->binary_variables());
         integer_variables_ = QHash<QUuid, int> (c->integer_variables());
         real_variables_ = QHash<QUuid, double> (c->real_variables());
         objective_function_value_ = c->objective_function_value_;
+
+        real_id_index_map_ = c->real_id_index_map_;
+        integer_id_index_map_ = c->integer_variables_.keys();
     }
 
     bool Case::Equals(const Case *other, double tolerance) const
@@ -147,5 +131,33 @@ namespace Optimization {
             str = str + " " + QString::number(val);
         str = str + "\n--------------------------------------------------\n";
         return str;
+    }
+
+    Eigen::VectorXd Case::GetRealVarVector() {
+        Eigen::VectorXd vec(real_id_index_map_.length());
+        for (int i = 0; i < real_id_index_map_.length(); ++i) {
+            vec[i] = real_variables_.value(real_id_index_map_[i]);
+        }
+        return vec;
+    }
+
+    void Case::SetRealVarValues(Eigen::VectorXd vec) {
+        for (int i = 0; i < vec.size(); ++i) {
+            set_real_variable_value(real_id_index_map_[i], vec[i]);
+        }
+    }
+
+    Eigen::VectorXi Case::GetIntegerVarVector() {
+        Eigen::VectorXi vec(integer_id_index_map_.length());
+        for (int i = 0; i < integer_id_index_map_.length(); ++i) {
+            vec[i] = integer_variables_.value(integer_id_index_map_[i]);
+        }
+        return vec;
+    }
+
+    void Case::SetIntegerVarValues(Eigen::VectorXi vec) {
+        for (int i = 0; i < vec.size(); ++i) {
+            set_integer_variable_value(integer_id_index_map_[i], vec[i]);
+        }
     }
 }

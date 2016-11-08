@@ -14,7 +14,7 @@ namespace Optimization {
         class BhpConstraint : public Constraint
         {
         public:
-            BhpConstraint(::Utilities::Settings::Optimizer::Constraint settings, ::Model::Properties::VariablePropertyContainer *variables); //!< This class' constructor should not be used directly. The constructors of subclasses should be used.
+            BhpConstraint(::Settings::Optimizer::Constraint settings, ::Model::Properties::VariablePropertyContainer *variables); //!< This class' constructor should not be used directly. The constructors of subclasses should be used.
 
         // Constraint interface
         public:

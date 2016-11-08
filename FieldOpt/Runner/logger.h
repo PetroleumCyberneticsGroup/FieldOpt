@@ -9,7 +9,7 @@
 #include "Optimization/case.h"
 #include "Optimization/optimizer.h"
 #include "runtime_settings.h"
-#include "Utilities/settings/settings.h"
+#include "Settings/settings.h"
 #include "Model/model.h"
 #include "Simulation/results/results.h"
 
@@ -24,13 +24,15 @@ class Logger
 public:
     /*!
      * \brief Logger
+     * \param rts Runtime settings
+     * \param output_subdir Optional subdirectory in the output directory to write the logs in.
      */
-    Logger(RuntimeSettings *rts);
+    Logger(RuntimeSettings *rts, QString output_subdir="");
 
     /*!
      * \brief LogSettings Write a log containing some of the settings specified in the driver file.
      */
-    void LogSettings(const Utilities::Settings::Settings *settings);
+    void LogSettings(const Settings::Settings *settings);
 
     /*!
      * \brief WriteVariableMap Write a CSV file with mappings from property UUID to property name.
@@ -78,12 +80,13 @@ public:
     void increment_simulated_cases(); //!< Increase the number of simulated cases by 1.
     void increment_bookkeeped_cases(); //!< Increase the number of bookkeeped cases by 1.
     void increment_invalid_cases(); //!< Increase the number of invalid cases by 1.
+    void increment_timed_out_cases(); //!< Increase the number of invalid cases by 1. This should be used for parallel runners, as the automatic method wont currently work with them.
     int shortest_simulation_time() { return shortest_simulation_time_; } //!< Get the shortest recorded simulation time.
 
     QString GetTimeInfoString() const; //!< Get a string with information about time spent running the optimization. Intended for printing at end of run.
     QString GetSimInfoString() const; //!< Get a string with simulation stats. Intended for printing at end of optimization run.
 
-
+    QList<int> simulator_execution_times() const { return simulator_execution_times_; }
 
 private:
     bool verbose_; //!< Whether or not new log entries should also be printed to the console.
@@ -109,7 +112,8 @@ private:
     int timed_out_simulations_;
 
     QHash<QUuid, QDateTime> sim_start_times_; //!< A list of start times for currently running simulations.
-    QDateTime start_time_;
+    QList<int> simulator_execution_times_;
+    QDateTime start_time_; //!< The start time for FieldOpt
     int shortest_simulation_time_; //!< The shortest recorded simulation time.
 
     void initializeCaseLog(const Optimization::Case *c);
