@@ -13,7 +13,8 @@ namespace TestResources {
     protected:
         TestResourceOptimizer() {
             // ESTABLISH BASE CASE FOR TESTING
-            if (settings_full_->verbosity()>2) std::cout << "... establishing base case for testing (test_resource_optimizer.h)" << std::endl;
+            // Figure out new verbosity setting: settings_full_->verbosity()>2
+            if (true) std::cout << "... establishing base case for testing (test_resource_optimizer.h)" << std::endl;
             base_case_ = new Optimization::Case(model_->variables()->GetBinaryVariableValues(),
                                                 model_->variables()->GetDiscreteVariableValues(),
                                                 model_->variables()->GetContinousVariableValues());

@@ -9,7 +9,8 @@ namespace {
     protected:
         BhpConstraintTest() {
             // USE FIRST DEFINED CONSTRAINT FOR BHP TESTING
-            if (settings_full_->verbosity()>2){
+            // Figure out new verbosity setting: settings_full_->verbosity()>2
+            if (true){
                 std::cout << "... using first constraint defined in driver.json (BHP); well: " << settings_optimizer_->constraints()[0].well.toStdString() << std::endl;
             }
 
