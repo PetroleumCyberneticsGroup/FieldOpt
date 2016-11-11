@@ -22,7 +22,7 @@ namespace Optimization {
     namespace Constraints {
 
         /*!
-         * \brief The ConstraintHandler class facilitiates the initialization and usage of multiple constraints.
+         * \brief The ConstraintHandler class facilitates the initialization and usage of multiple constraints.
          */
         class ConstraintHandler
         {

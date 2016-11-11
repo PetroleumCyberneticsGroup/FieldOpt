@@ -28,8 +28,8 @@
             {
                 "Type": "BHP",
                 "Well": "PROD",
-                "Max": 3000.0,
-                "Min": 1000.0
+                "Max": 300.0,
+                "Min": 90.0
             },
             {
                 "Well": "INJ",
@@ -55,7 +55,21 @@
                 "MaxLength": 1200,
                 "MinDistance": 100,
                 "MaxIterations": 50
-            }
+            },
+            {
+                "Wells": ["INJ", "TESTW"],
+                "Type": "CombinedWellSplineLengthInterwellDistanceReservoirBoundary",
+                "MinLength": 300,
+                "MaxLength": 800,
+                "MinDistance": 300,
+                "MaxIterations": 100,
+                "BoxImin": 0,
+                "BoxImax": 9,
+                "BoxJmin": 0,
+                "BoxJmax": 9,
+                "BoxKmin": 0,
+                "BoxKmax": 0                
+            }            
         ]
     },
     "Simulator": {
@@ -124,21 +138,21 @@
                         "TimeStep": 0,
                         "State": "Open",
                         "Mode": "BHP",
-                        "BHP": 2000.0,
+                        "BHP": 100.0,
                         "IsVariable": true
                     },
                     {
                         "TimeStep": 50,
                         "State": "Open",
                         "Mode": "BHP",
-                        "BHP": 2000.0,
+                        "BHP": 100.0,
                         "IsVariable": true
                     },
                     {
                         "TimeStep": 365,
                         "State": "Open",
                         "Mode": "BHP",
-                        "BHP": 2000.0,
+                        "BHP": 100.0,
                         "IsVariable": true
                     }
                 ]
@@ -199,7 +213,7 @@
                         "TimeStep": 0,
                         "State": "Open",
                         "Mode": "BHP",
-                        "BHP": 2000.0,
+                        "BHP": 100.0,
                         "IsVariable": true
                     }
                 ]

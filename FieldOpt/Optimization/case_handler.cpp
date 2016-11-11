@@ -1,4 +1,5 @@
 #include "case_handler.h"
+#include <iostream>
 
 namespace Optimization {
 
@@ -35,6 +36,7 @@ namespace Optimization {
     {
         if (evaluation_queue_.size() == 0) throw CaseHandlerException("The evaluation queue contains no cases.");
         evaluating_.append(evaluation_queue_.head());
+        std::cout << "evaluation_queue_.head()" << evaluation_queue_.head().toString().toStdString();
         return cases_[evaluation_queue_.dequeue()];
     }
 
