@@ -39,8 +39,7 @@ namespace Optimization {
 
             void step(); //!< Move to a new tentative best case found in the list of recently evaluated cases.
             void contract(); //!< Contract/reduce the radius of the region.
-            void expand(); //!< increase the radius of the region.
-            void perturb(); //!< Apply the pattern to generate new cases.
+
 
             // Optimizer interface
         public:
@@ -59,6 +58,8 @@ namespace Optimization {
 
         private:
             void iterate(); //!< Step or contract, perturb, and clear list of recently evaluated cases.
+            void completeModel();
+            void optimizationStep();
         };
 
     }}

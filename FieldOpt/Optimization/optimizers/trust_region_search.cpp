@@ -110,6 +110,14 @@ namespace Optimization {
             case_handler_->ClearRecentlyEvaluatedCases();
         }
 
+        void TrustRegionSearch::completeModel() {
+            // No need to complete model if it's already done
+            if(polymodel_.isModelReady()){return;}
+
+
+
+        }
+
         QString TrustRegionSearch::GetStatusStringHeader() const
         {
             return QString("%1,%2,%3,%4,%5,%6,%7")
