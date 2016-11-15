@@ -38,7 +38,13 @@ namespace Optimization {
             Eigen::VectorXd current_model_;
 
             void step(); //!< Move to a new tentative best case found in the list of recently evaluated cases.
-            void contract(); //!< Contract/reduce the radius of the region.
+            void scaleRadius(double k); //!< Scale the radius of the region by a factor k.
+            void initializeModel(); //!< Initialize polynomial model
+            void completeModel(); //!< Complete set of points for polynomial model and create model
+            void optimizationStep(); //!< Use current model in optimization step
+
+            //TO BE DELETED
+            void perturb();
 
 
             // Optimizer interface
@@ -58,8 +64,6 @@ namespace Optimization {
 
         private:
             void iterate(); //!< Step or contract, perturb, and clear list of recently evaluated cases.
-            void completeModel();
-            void optimizationStep();
         };
 
     }}

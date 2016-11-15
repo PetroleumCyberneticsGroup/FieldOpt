@@ -35,7 +35,8 @@ Optimization::Case* PolyModel::CaseFromPoint(Eigen::VectorXd point, Optimization
     // In order for case to exist outside poly_model, we use the new operator
     Optimization::Case *new_case = new Optimization::Case(prototype);
     new_case->SetRealVarValues(point);
-    //TODO: Objective value must be changed to not evalated, i.e. MAXLIMITSDOUBLE
+    new_case->set_objective_function_value(std::numeric_limits<double>::max());
+    //objective value must be changed to not evalated, i.e. MAXLIMITSDOUBLE
 
     return new_case;
 }

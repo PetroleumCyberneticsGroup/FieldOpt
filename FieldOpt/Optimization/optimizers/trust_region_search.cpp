@@ -16,18 +16,15 @@ namespace Optimization {
         {
             // applyNew.. sets best case so far to new best.
             // let's just go with the flow for now
+            PolyModel::CaseFromPoint(tentative_best_case_->GetRealVarVector(), tentative_best_case_);
+
             applyNewTentativeBestCase();
             polymodel_.addCenterPoint(GetTentativeBestCase());
         }
 
-        void TrustRegionSearch::contract()
+        void TrustRegionSearch::scaleRadius(double k)
         {
-            radius_ = radius_/2.0;
-        }
-
-        void TrustRegionSearch::expand()
-        {
-            radius_ = radius_*2.0;
+            radius_ = k*radius_;
         }
 
         void TrustRegionSearch::perturb()
@@ -64,35 +61,14 @@ namespace Optimization {
 
             // At the first iteration we initialze the PolyModel with base_case
             if (iteration_ == 0) {
-                polymodel_ = PolyModel(GetTentativeBestCase(), radius_);
-                polymodel_.complete_points();
-                // The set of points has been completed.
-                //TODO: Call runner to get objective function values of the set of points.
-                case_handler_->AddNewCases(polymodel_.get_cases_not_eval());
-                polymodel_.ClearCasesNotEval();
-                polymodel_.set_evaluations_complete();
-                std::cout << "successfully made model next step is compute case obj. values" << std::endl;
+                initializeModel();
             }
 
             /* Either the PolyModel is ready to give us a derivative, or
              * we need to update points or get cases evaluated
              */
             else if(!polymodel_.isModelReady()) {
-                std::cout << "Model is not ready" << std::endl;
-                // If set of points is not ready
-                if (polymodel_.ModelNeedsSetOfPoints()) {
-                    polymodel_.complete_points();
-                    case_handler_->AddNewCases(polymodel_.get_cases_not_eval());
-                    polymodel_.ClearCasesNotEval();
-                    polymodel_.set_evaluations_complete();
-                }
-                // If there are unevaluated cases send them to case_handler
-                else if (polymodel_.get_needs_evals()) {
-                    std::cout << "need to get case obj values, send to case handler" << std::endl;
-                    case_handler_->AddNewCases(polymodel_.get_cases_not_eval());
-                    polymodel_.ClearCasesNotEval();
-                    polymodel_.set_evaluations_complete();
-                }
+                completeModel();
             }
 
             else {
@@ -110,12 +86,18 @@ namespace Optimization {
             case_handler_->ClearRecentlyEvaluatedCases();
         }
 
+        void TrustRegionSearch::initializeModel() {
+            // Create polymodel with radius and center and complete set of points.
+            polymodel_ = PolyModel(GetTentativeBestCase(), radius_);
+            completeModel();
+        }
+
         void TrustRegionSearch::completeModel() {
-            // No need to complete model if it's already done
-            if(polymodel_.isModelReady()){return;}
-
-
-
+            polymodel_.complete_points();
+            // Add cases to case_handler and clear CasesNotEval queue
+            case_handler_->AddNewCases(polymodel_.get_cases_not_eval());
+            polymodel_.ClearCasesNotEval();
+            polymodel_.set_evaluations_complete();
         }
 
         QString TrustRegionSearch::GetStatusStringHeader() const
