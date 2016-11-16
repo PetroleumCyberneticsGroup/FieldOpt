@@ -19,9 +19,9 @@ namespace {
     };
 
     TEST_F(ReservoirBoundaryTest, Initialization) {
-        auto test_boundary = Optimization::Constraints::ReservoirBoundary(constraint_settings_reservoir_boundary_, variable_property_container_, grid_5spot_);
-        EXPECT_FALSE(test_boundary.CaseSatisfiesConstraint(test_case_5_));
-        test_boundary.SnapCaseToConstraints(test_case_5_);
-        EXPECT_TRUE(test_boundary.CaseSatisfiesConstraint(test_case_5_));
+        auto test_boundary = Optimization::Constraints::ReservoirBoundary(constraint_settings_reservoir_boundary_, varcont_prod_spline_, grid_5spot_);
+        EXPECT_FALSE(test_boundary.CaseSatisfiesConstraint(test_case_spline_));
+        test_boundary.SnapCaseToConstraints(test_case_spline_);
+        EXPECT_TRUE(test_boundary.CaseSatisfiesConstraint(test_case_spline_));
     }
 }
