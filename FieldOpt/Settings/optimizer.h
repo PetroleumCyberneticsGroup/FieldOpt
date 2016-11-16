@@ -19,6 +19,8 @@ namespace Settings {
         friend class Settings;
 
     public:
+        Optimizer(){}
+        Optimizer(QJsonObject json_optimizer);
         enum OptimizerType { Compass, ExhaustiveSearch2DVert };
         enum OptimizerMode { Maximize, Minimize };
         enum ConstraintType { BHP, Rate, SplinePoints,
@@ -69,7 +71,6 @@ namespace Settings {
 
     private:
         QList<Constraint> constraints_;
-        Optimizer(QJsonObject json_optimizer);
         OptimizerType type_;
         Parameters parameters_;
         Objective objective_;
