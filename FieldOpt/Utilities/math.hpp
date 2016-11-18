@@ -3,6 +3,7 @@
 #define MATH_FUNCTIONS_H
 
 #include <QList>
+#include <vector>
 
 /*!
  * @brief Calculate the average value of the items in the list. The returned value will always be a double.
@@ -30,6 +31,29 @@ inline T calc_median(QList<T> list) {
         return (list[size/2 - 1] + list[size/2])/2;
     else
         return list[size/2];
+}
+
+/*!
+ * @brief Linspace function. Create a list containing all elements in the range from start to (but not including) end
+ * with step between each element.
+ *
+ * Examples: range(1, 10, 1) = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+ *           range(0, 10, 3) = [0, 3, 6, 9]
+ * @tparam T A number type, e.g. int or double.
+ * @param start First number in range.
+ * @param end End of range.
+ * @param step Step length.
+ * @return
+ */
+template <typename T>
+inline std::vector<T> range(T start, T end, T step) {
+    int length = abs((end - start) / step);
+    auto ran = std::vector<T>(length);
+    ran[0] = start;
+    for (int i = 1; i < length; ++i) {
+        ran[i] = ran[i-1] + step;
+    }
+    return ran;
 }
 
 #endif // MATH_FUNCTIONS_H
