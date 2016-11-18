@@ -51,12 +51,56 @@ namespace Optimization {
             GSS(Settings::Optimizer *settings, Case *base_case, Model::Properties::VariablePropertyContainer *variables,
                 Reservoir::Grid::Grid *grid);
 
-        private:
+        protected:
             double step_tol_; //!< Step length convergence tolerance.
             double contr_fac_; //!< Step length contraction factor.
             double expan_fac_; //!< Step length expansion factor.
-            VectorXd step_length_; //!< Vector of step lengths.
-            vector<VectorXd> directions_; //!< Vector of search directions.
+            VectorXd step_lengths_; //!< Vector of step lengths.
+            vector<VectorXi> directions_; //!< Vector of search directions.
+
+            /*!
+             * @brief Contract the search pattern: step_lengths_ * contr_fac_
+             *
+             * @param dirs (optional) The direction indices to expand. If not provided,
+             * the expansion will be applied to all directions.
+             */
+            void contract(vector<int> dirs = vector<int>(0));
+
+            /*!
+             * @brief Expand the search pattern: step_lengths_ * expan_fac_
+             *
+             * @param dirs (optional) The direction indices to expand. If not provided,
+             * the expansion will be applied to all directions.
+             */
+            void expand(vector<int> dirs = vector<int>(0));
+
+            /*!
+             * @brief Generate a set of trial points.
+             * @param dirs (optional) The direction indices in which perturbations
+             * should be created.
+             *
+             * @return A list of new trial points.
+             */
+            QList<Case *> generate_trial_points(vector<int> dirs = vector<int>(0));
+
+            /*!
+             * @brief Check if the algorithm has converged, i.e. if all current step lengths
+             * are below the step length convergence tolerance.
+             * @return
+             */
+            bool is_converged();
+
+        private:
+
+            /*!
+             * @brief Create a perturbation from a point in the specified direction index.
+             * @tparam T An Eigen::VectorX object.
+             * @param base The point to perturb from.
+             * @param dir The direction index in which to perturb.
+             * @return A perturbation (trial point).
+             */
+            template <typename T>
+            Matrix<T, Dynamic, 1> perturb(Matrix<T, Dynamic, 1> base, int dir);
         };
 
     }
