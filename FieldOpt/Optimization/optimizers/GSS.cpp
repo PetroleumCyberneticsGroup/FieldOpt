@@ -27,10 +27,17 @@ namespace Optimization {
                  Model::Properties::VariablePropertyContainer *variables, Reservoir::Grid::Grid *grid)
                 : Optimizer(settings, base_case, variables, grid) {
             step_tol_ = settings->parameters().minimum_step_length;
-            // \TODO Contr fac -> Set in subclass
-            // \TODO Expan fac -> Set in subclass
-            // \TODO Directions -> Set in subclass
-            // \TODO Step length -> Resize to directions size, set all to initial step length
+
+            assert(step_lengths_.size() == directions_.size());
+        }
+
+        Optimizer::TerminationCondition GSS::IsFinished()
+        {
+            if (case_handler_->EvaluatedCases().size() >= max_evaluations_)
+                return MAX_EVALS_REACHED;
+            else if (is_converged())
+                return MINIMUM_STEP_LENGTH_REACHED;
+            else return NOT_FINISHED; // The value of not finished is 0, which evaluates to false.
         }
 
         void GSS::expand(vector<int> dirs) {
@@ -76,7 +83,7 @@ namespace Optimization {
 
         template<typename T>
         Matrix<T, Dynamic, 1> GSS::perturb(Matrix<T, Dynamic, 1> base, int dir) {
-            Matrix<T, Dynamic, 1> perturbation = base + directions_[dir].cast<T>() * step_lengths_[dir];
+            Matrix<T, Dynamic, 1> perturbation = base + directions_[dir].cast<T>() * step_lengths_(dir);
             return perturbation;
         }
 

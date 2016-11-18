@@ -51,6 +51,15 @@ namespace Optimization {
             GSS(Settings::Optimizer *settings, Case *base_case, Model::Properties::VariablePropertyContainer *variables,
                 Reservoir::Grid::Grid *grid);
 
+            /*!
+             * \brief IsFinished Check if the optimization is finished.
+             *
+             * This algorithm has two termination conditions: max number of objective function evaluations and
+             * minimum step length.
+             * \return True if the algorithm has finished, otherwise false.
+             */
+            TerminationCondition IsFinished();
+
         protected:
             double step_tol_; //!< Step length convergence tolerance.
             double contr_fac_; //!< Step length contraction factor.
