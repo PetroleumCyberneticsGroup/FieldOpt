@@ -21,35 +21,6 @@ namespace Optimization {
         mode_ = settings->mode();
     }
 
-    bool Optimizer::betterCaseFoundLastEvaluation()
-    {
-        for (Case* c : case_handler_->RecentlyEvaluatedCases()) {
-            if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
-                if (c->objective_function_value() > tentative_best_case_->objective_function_value())
-                    return true;
-            }
-            else if (mode_ == Settings::Optimizer::OptimizerMode::Minimize) {
-                if (c->objective_function_value() < tentative_best_case_->objective_function_value())
-                    return true;
-            }
-        }
-        return false;
-    }
-
-    void Optimizer::applyNewTentativeBestCase()
-    {
-        for (Case* c : case_handler_->RecentlyEvaluatedCases()) {
-            if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
-                if (c->objective_function_value() > tentative_best_case_->objective_function_value())
-                    tentative_best_case_ = c;
-            }
-            else if (mode_ == Settings::Optimizer::OptimizerMode::Minimize) {
-                if (c->objective_function_value() < tentative_best_case_->objective_function_value())
-                    tentative_best_case_ = c;
-            }
-        }
-    }
-
     Case *Optimizer::GetCaseForEvaluation()
     {
         if (case_handler_->QueuedCases().size() == 0) {
@@ -68,6 +39,18 @@ namespace Optimization {
 
     Case *Optimizer::GetTentativeBestCase() const {
         return tentative_best_case_;
+    }
+
+    bool Optimizer::isImprovement(Case *c) {
+        if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
+            if (c->objective_function_value() > tentative_best_case_->objective_function_value())
+                return true;
+        }
+        else if (mode_ == Settings::Optimizer::OptimizerMode::Minimize) {
+            if (c->objective_function_value() < tentative_best_case_->objective_function_value())
+                return true;
+        }
+        return false;
     }
 
     QString Optimizer::GetStatusStringHeader() const
@@ -101,18 +84,6 @@ namespace Optimization {
         verbosity_level_ = level;
         for (auto con : constraint_handler_->constraints())
             con->SetVerbosityLevel(level);
-    }
-
-    bool Optimizer::isImprovement(Case *c) {
-        if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
-            if (c->objective_function_value() > tentative_best_case_->objective_function_value())
-                return true;
-        }
-        else if (mode_ == Settings::Optimizer::OptimizerMode::Minimize) {
-            if (c->objective_function_value() < tentative_best_case_->objective_function_value())
-                return true;
-        }
-        return false;
     }
 
 

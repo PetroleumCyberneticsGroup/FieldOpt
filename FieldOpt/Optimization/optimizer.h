@@ -84,13 +84,6 @@ namespace Optimization {
                   Reservoir::Grid::Grid *grid);
 
         /*!
-         * \brief BetterCaseFoundLastEvaluation Searches the list of recently evaluated cases in the case handler for a case
-         * with a better objective function value than the current tentative best case.
-         * \return True if a better case is found, otherwise false.
-         */
-        bool betterCaseFoundLastEvaluation();
-
-        /*!
          * @brief Handle an incomming evaluated case. This is called at the end of the SubmitEvaluatedCase method.
          * @param c
          */
@@ -102,11 +95,6 @@ namespace Optimization {
          * @return True if improvement; otherwise false.
          */
         bool isImprovement(Case* c);
-
-        /*!
-         * \brief ApplyNewTentativeBestCase Sets the tentative best case to the best case found in the case handler (if one is found).
-         */
-        void applyNewTentativeBestCase();
 
         /*!
          * \brief iterate Performs an iteration, generating new cases and adding them to the case_handler.
