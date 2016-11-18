@@ -31,37 +31,25 @@ namespace {
     }
 
     TEST_F(CompassSearchTest, GetNewCases) {
+        test_case_1_3i_->set_objective_function_value(Sphere(test_case_1_3i_->GetRealVarVector()));
+        Optimization::Optimizer *maximizer = new CompassSearch(settings_compass_search_maximize_unconstrained_,
+                                                               test_case_1_3i_, varcont_prod_bhp_, grid_5spot_);
+
         // These four cases should change the values of the two first int vars, +50 then -50
-        Optimization::Case *new_case_1 = compass_search_->GetCaseForEvaluation();
-        Optimization::Case *new_case_2 = compass_search_->GetCaseForEvaluation();
-        Optimization::Case *new_case_3 = compass_search_->GetCaseForEvaluation();
-        Optimization::Case *new_case_4 = compass_search_->GetCaseForEvaluation();
+        Optimization::Case *new_case_1 = maximizer->GetCaseForEvaluation();
+        Optimization::Case *new_case_2 = maximizer->GetCaseForEvaluation();
+        Optimization::Case *new_case_3 = maximizer->GetCaseForEvaluation();
+        Optimization::Case *new_case_4 = maximizer->GetCaseForEvaluation();
         EXPECT_FALSE(new_case_1->id() == new_case_2->id());
         EXPECT_FALSE(new_case_3->id() == new_case_4->id());
 
-        EXPECT_EQ(new_case_1->GetIntegerVarVector()[0], base_->GetIntegerVarVector()[0] + 50);
-        EXPECT_EQ(new_case_2->GetIntegerVarVector()[0], base_->GetIntegerVarVector()[0] - 50);
-        EXPECT_EQ(new_case_3->GetIntegerVarVector()[1], base_->GetIntegerVarVector()[1] + 50);
-        EXPECT_EQ(new_case_4->GetIntegerVarVector()[1], base_->GetIntegerVarVector()[1] - 50);
-    }
+        EXPECT_EQ(test_case_1_3i_->GetIntegerVarVector()[0] + 8, new_case_1->GetIntegerVarVector()[0]);
+        EXPECT_EQ(test_case_1_3i_->GetIntegerVarVector()[1] + 0, new_case_1->GetIntegerVarVector()[1]);
+        EXPECT_EQ(test_case_1_3i_->GetIntegerVarVector()[2] + 0, new_case_1->GetIntegerVarVector()[2]);
 
-    TEST_F(CompassSearchTest, Pseudoiterations) {
-        Optimization::Case *tentative_best_0 = compass_search_->GetTentativeBestCase();
-        for (int i = 0; i < 100; ++i) {
-            Optimization::Case *new_case = compass_search_->GetCaseForEvaluation();
-            new_case->set_objective_function_value((i%3)*700);
-            compass_search_->SubmitEvaluatedCase(new_case);
-        }
-        Optimization::Case *tentative_best_1 = compass_search_->GetTentativeBestCase();
-        EXPECT_TRUE(tentative_best_1->objective_function_value() > tentative_best_0->objective_function_value());
-
-        for (int i = 100; i < 150; ++i) {
-            Optimization::Case *new_case = compass_search_->GetCaseForEvaluation();
-            new_case->set_objective_function_value((i%3)*800);
-            compass_search_->SubmitEvaluatedCase(new_case);
-        }
-        Optimization::Case *tentative_best_2 = compass_search_->GetTentativeBestCase();
-        EXPECT_TRUE(tentative_best_2->objective_function_value() > tentative_best_1->objective_function_value());
+        EXPECT_EQ(test_case_1_3i_->GetIntegerVarVector()[1] + 8, new_case_2->GetIntegerVarVector()[1]);
+        EXPECT_EQ(test_case_1_3i_->GetIntegerVarVector()[2] + 8, new_case_3->GetIntegerVarVector()[2]);
+        EXPECT_EQ(test_case_1_3i_->GetIntegerVarVector()[0] - 8, new_case_4->GetIntegerVarVector()[0]);
     }
 
     TEST_F(CompassSearchTest, TestFunctionSpherical) {
@@ -97,10 +85,10 @@ namespace {
         }
         auto best_case = minimizer->GetTentativeBestCase();
 
-        // The Rosenbrock function is hard. We don't expect Compass search to find the optimum.
-        EXPECT_NEAR(0.0, best_case->objective_function_value(), 1);
-        EXPECT_NEAR(1.0, best_case->GetRealVarVector()[0], 1);
-        EXPECT_NEAR(1.0, best_case->GetRealVarVector()[1], 1);
+        // The Rosenbrock function is hard. We don't expect Compass search to find the optimum exactly.
+        EXPECT_NEAR(0.0, best_case->objective_function_value(), 5);
+        EXPECT_NEAR(1.0, best_case->GetRealVarVector()[0], 2.5);
+        EXPECT_NEAR(1.0, best_case->GetRealVarVector()[1], 2.5);
     }
 
 }
