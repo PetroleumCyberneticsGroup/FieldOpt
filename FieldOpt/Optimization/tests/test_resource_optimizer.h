@@ -19,10 +19,12 @@ namespace TestResources {
             base_case_->set_objective_function_value(1000.0);
 
             settings_compass_search_minimize_unconstrained_ = new Settings::Optimizer(get_json_settings_compass_search_minimize_);
+            settings_compass_search_maximize_unconstrained_ = new Settings::Optimizer(get_json_settings_compass_search_maximize_);
         }
 
         Optimization::Case *base_case_;
         Settings::Optimizer *settings_compass_search_minimize_unconstrained_;
+        Settings::Optimizer *settings_compass_search_maximize_unconstrained_;
 
     private:
         QJsonObject obj_fun_ {
@@ -43,6 +45,17 @@ namespace TestResources {
                         {"MaxEvaluations", 100},
                         {"InitialStepLength", 0.25},
                         {"MinimumStepLength", 0.01}
+                }},
+                {"Objective", obj_fun_}
+        };
+
+        QJsonObject get_json_settings_compass_search_maximize_ {
+                {"Type", "Compass"},
+                {"Mode", "Maximize"},
+                {"Parameters", QJsonObject{
+                        {"MaxEvaluations", 100},
+                        {"InitialStepLength", 8},
+                        {"MinimumStepLength", 1}
                 }},
                 {"Objective", obj_fun_}
         };
