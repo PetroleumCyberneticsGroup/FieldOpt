@@ -102,6 +102,18 @@ namespace Optimization {
             con->SetVerbosityLevel(level);
     }
 
+    bool Optimizer::isImprovement(Case *c) {
+        if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
+            if (c->objective_function_value() > tentative_best_case_->objective_function_value())
+                return true;
+        }
+        else if (mode_ == Settings::Optimizer::OptimizerMode::Minimize) {
+            if (c->objective_function_value() < tentative_best_case_->objective_function_value())
+                return true;
+        }
+        return false;
+    }
+
 
 }
 

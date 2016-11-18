@@ -91,6 +91,13 @@ namespace Optimization {
         bool betterCaseFoundLastEvaluation();
 
         /*!
+         * @brief Check whether the Case c is an improvement on the tentative best case.
+         * @param c Case to be checked.
+         * @return True if improvement; otherwise false.
+         */
+        bool isImprovement(Case* c);
+
+        /*!
          * \brief ApplyNewTentativeBestCase Sets the tentative best case to the best case found in the case handler (if one is found).
          */
         void applyNewTentativeBestCase();
