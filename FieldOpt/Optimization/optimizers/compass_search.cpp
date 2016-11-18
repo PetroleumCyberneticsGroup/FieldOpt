@@ -1,3 +1,4 @@
+#include <iostream>
 #include "compass_search.h"
 
 namespace Optimization {
@@ -6,10 +7,32 @@ namespace Optimization {
         CompassSearch::CompassSearch(Settings::Optimizer *settings, Case *base_case,
                                      Model::Properties::VariablePropertyContainer *variables,
                                      Reservoir::Grid::Grid *grid)
-                : Optimizer(settings, base_case, variables, grid)
+                : GSS(settings, base_case, variables, grid)
         {
             step_length_ = settings->parameters().initial_step_length;
             minimum_step_length_ = settings->parameters().minimum_step_length;
+
+            contr_fac_ = settings->parameters().minimum_step_length;
+            expan_fac_ = 1.0;
+
+            int numRvars = base_case->GetRealVarVector().size();
+            int numIvars = base_case->GetIntegerVarVector().size();
+            int num_vars = numRvars + numIvars;
+            if (numRvars > 0 && numIvars > 0)
+                std::cout << "WARNING: Compass search may behave strangely when using both continuous and discrete variables." << std::endl;
+
+            // Generate set of direction vectors (all coordinate directions)
+            directions_ = std::vector<Eigen::VectorXi>(2*num_vars);
+            for (int i = 0; i < num_vars; ++i) {
+                Eigen::VectorXi dir = Eigen::VectorXi::Zero(num_vars);
+                dir(i) = 1;
+                directions_[i] = dir;
+                directions_[i+num_vars] = (-1) * dir;
+            }
+
+            // Generate list of step lengths
+            step_lengths_ = Eigen::VectorXd(num_vars);
+            step_lengths_.fill(settings->parameters().initial_step_length);
         }
 
         void CompassSearch::step()
@@ -82,6 +105,10 @@ namespace Optimization {
                     .arg(tentative_best_case_->id().toString())
                     .arg(tentative_best_case_->objective_function_value())
                     .arg(step_length_);
+        }
+
+        void CompassSearch::handleEvaluatedCase(Case *c) {
+
         }
 
     }}
