@@ -59,6 +59,9 @@ class ExhaustiveSearch2DVert : public Optimizer {
    */
   virtual void iterate() override;
 
+protected:
+    void handleEvaluatedCase(Case *c) override {}
+
 };
 
 }
