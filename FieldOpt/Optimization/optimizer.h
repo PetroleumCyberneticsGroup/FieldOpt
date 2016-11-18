@@ -91,6 +91,12 @@ namespace Optimization {
         bool betterCaseFoundLastEvaluation();
 
         /*!
+         * @brief Handle an incomming evaluated case. This is called at the end of the SubmitEvaluatedCase method.
+         * @param c
+         */
+        virtual void handleEvaluatedCase(Case *c) = 0;
+
+        /*!
          * @brief Check whether the Case c is an improvement on the tentative best case.
          * @param c Case to be checked.
          * @return True if improvement; otherwise false.

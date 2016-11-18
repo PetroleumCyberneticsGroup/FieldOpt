@@ -63,6 +63,7 @@ namespace Optimization {
     {
         case_handler_->UpdateCaseObjectiveFunctionValue(c->id(), c->objective_function_value());
         case_handler_->SetCaseEvaluated(c->id());
+        handleEvaluatedCase(c);
     }
 
     Case *Optimizer::GetTentativeBestCase() const {
