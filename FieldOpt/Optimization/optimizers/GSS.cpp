@@ -78,6 +78,10 @@ namespace Optimization {
                 }
                 trial_points.append(trial_point);
             }
+
+            for (Case *c : trial_points)
+                constraint_handler_->SnapCaseToConstraints(c);
+
             return trial_points;
         }
 
