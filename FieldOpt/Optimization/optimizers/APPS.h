@@ -37,10 +37,35 @@ namespace Optimization {
             void iterate() override;
 
         private:
-
+            int max_queue_length_; //!< Maximum length of queue.
             set<int> active_; //!< Set containing the indices of all active search directions.
-
+            void set_active(vector<int> dirs); //!< Mark the direction indices in the vector as active.
+            void set_inactive(vector<int> dirs); //!< Mark the direction indices in the vector as inactive.
+            void reset_active(); //!< Reset the list of active search directions.
             vector<int> inactive(); //!< Get vector containing all _inactive_ search directions.
+
+            /*!
+             * @brief Handle a successful iteration.
+             *
+             * Will be called by handleEvaluatedCase() if the most recently evaluated case is an improvement
+             * on the tentative_best_case_.
+             * @param c Most recently evaluated case.
+             */
+            void successful_iteration(Case *c);
+
+            /*!
+             * @brief Handle an unsuccessful iteration.
+             *
+             * Will be called by handleEvaluatedCase() if the most recently evaluated case is _not_ and improvement
+             * ono the tentative_best_case_.
+             * @param c Most recently evaluated case.
+             */
+            void unsuccessful_iteration(Case *c);
+
+            /*!
+             * @brief Prune the evaluation queue to max_queue_length_.
+             */
+            void prune_queue();
         };
 
     }
