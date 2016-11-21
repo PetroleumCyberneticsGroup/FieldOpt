@@ -18,6 +18,7 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 #include "APPS.h"
+#include "gss_patterns.hpp"
 
 namespace Optimization {
     namespace Optimizers {
@@ -25,6 +26,12 @@ namespace Optimization {
         APPS::APPS(Settings::Optimizer *settings, Case *base_case,
                    Model::Properties::VariablePropertyContainer *variables, Reservoir::Grid::Grid *grid)
                 : GSS(settings, base_case, variables, grid) {
+            directions_ = GSSPatterns::Compass(num_vars_);
+            step_lengths_ = Eigen::VectorXd(directions_.size());
+            step_lengths_.fill(settings->parameters().initial_step_length);
+        }
+
+        void APPS::iterate() {
 
         }
 
@@ -32,8 +39,12 @@ namespace Optimization {
 
         }
 
-        void APPS::iterate() {
-
+        vector<int> APPS::inactive() {
+            vector<int> inactive;
+            for (int i = 0; i < directions_.size(); ++i) {
+                if (active_.count(i) == 0) inactive.push_back(i);
+            }
+            return inactive;
         }
     }
 }

@@ -20,13 +20,13 @@
 #ifndef FIELDOPT_APPS_H
 #define FIELDOPT_APPS_H
 
+#include <set>
 #include "GSS.h"
 
 namespace Optimization {
     namespace Optimizers {
 
         class APPS : public GSS {
-        protected:
         public:
             APPS(Settings::Optimizer *settings, Case *base_case,
                  Model::Properties::VariablePropertyContainer *variables, Reservoir::Grid::Grid *grid);
@@ -35,6 +35,12 @@ namespace Optimization {
             void handleEvaluatedCase(Case *c) override;
 
             void iterate() override;
+
+        private:
+
+            set<int> active_; //!< Set containing the indices of all active search directions.
+
+            vector<int> inactive(); //!< Get vector containing all _inactive_ search directions.
         };
 
     }
