@@ -26,6 +26,8 @@ namespace Optimization {
         GSS::GSS(Settings::Optimizer *settings, Case *base_case,
                  Model::Properties::VariablePropertyContainer *variables, Reservoir::Grid::Grid *grid)
                 : Optimizer(settings, base_case, variables, grid) {
+            contr_fac_ = settings->parameters().contraction_factor;
+            expan_fac_ = settings->parameters().expansion_factor;
             step_tol_ = settings->parameters().minimum_step_length;
 
             assert(step_lengths_.size() == directions_.size());

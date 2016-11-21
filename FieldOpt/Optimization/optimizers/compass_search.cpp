@@ -9,9 +9,6 @@ namespace Optimization {
                                      Reservoir::Grid::Grid *grid)
                 : GSS(settings, base_case, variables, grid)
         {
-            contr_fac_ = 0.5;
-            expan_fac_ = 1.0;
-
             int numRvars = base_case->GetRealVarVector().size();
             int numIvars = base_case->GetIntegerVarVector().size();
             int num_vars = numRvars + numIvars;
