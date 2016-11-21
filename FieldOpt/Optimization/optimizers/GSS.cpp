@@ -86,6 +86,7 @@ namespace Optimization {
                 else if (rea_base.size() > 0) {
                     trial_point->SetRealVarValues(perturb(rea_base, dir));
                 }
+                trial_point->set_origin_data(tentative_best_case_, dir, step_lengths_(dir));
                 trial_points.append(trial_point);
             }
 
