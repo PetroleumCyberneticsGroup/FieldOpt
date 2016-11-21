@@ -9,7 +9,6 @@ namespace Optimization {
                                      Reservoir::Grid::Grid *grid)
                 : GSS(settings, base_case, variables, grid)
         {
-            step_tol_ = settings->parameters().minimum_step_length;
             contr_fac_ = 0.5;
             expan_fac_ = 1.0;
 

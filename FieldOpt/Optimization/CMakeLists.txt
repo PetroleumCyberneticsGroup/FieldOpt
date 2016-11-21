@@ -27,7 +27,6 @@ add_library(optimization
 		constraints/constraint_handler.cpp
 		constraints/reservoir_boundary.cpp
 		optimizer.cpp
-		optimizers/compass_search.cpp
 		constraints/well_spline_length.cpp
 		constraints/interwell_distance.cpp
 		constraints/well_spline_constraint.cpp
@@ -36,8 +35,10 @@ add_library(optimization
 		constraints/combined_spline_length_interwell_distance_reservoir_boundary.cpp
 		case_transfer_object.cpp
 		optimizers/ExhaustiveSearch2DVert.cpp
-		optimizers/ExhaustiveSearch2DVert.h
-		${EXPERIMENTAL_CONSTRAINTS_SRC} optimizers/GSS.cpp optimizers/GSS.h)
+		optimizers/GSS.cpp
+		optimizers/compass_search.cpp
+		optimizers/APPS.cpp
+		${EXPERIMENTAL_CONSTRAINTS_SRC} )
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
 target_link_libraries(optimization

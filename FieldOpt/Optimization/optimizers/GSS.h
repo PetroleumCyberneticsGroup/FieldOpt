@@ -48,6 +48,17 @@ namespace Optimization {
          */
         class GSS : public Optimizer {
         public:
+            /*!
+             * @brief General constructor for GSS algorithms. Sets the step_tol_ property and calls the primary
+             * Optimizer constructor.
+             *
+             * The following properties must be set in the constructur by classes extending this class:
+             *
+             *      contr_fac_  : The contraction factor.
+             *      expan_fac_  : The expansion factor.
+             *      directions_ : The set of search directions to be used.
+             *      step_lengths_ : The set of step lengts to be used (one per step direction).
+             */
             GSS(Settings::Optimizer *settings, Case *base_case, Model::Properties::VariablePropertyContainer *variables,
                 Reservoir::Grid::Grid *grid);
 
