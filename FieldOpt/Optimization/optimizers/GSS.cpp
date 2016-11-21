@@ -17,6 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
+#include <iostream>
 #include "GSS.h"
 #include "Utilities/math.hpp"
 
@@ -26,6 +27,13 @@ namespace Optimization {
         GSS::GSS(Settings::Optimizer *settings, Case *base_case,
                  Model::Properties::VariablePropertyContainer *variables, Reservoir::Grid::Grid *grid)
                 : Optimizer(settings, base_case, variables, grid) {
+
+            int numRvars = base_case->GetRealVarVector().size();
+            int numIvars = base_case->GetIntegerVarVector().size();
+            num_vars_ = numRvars + numIvars;
+            if (numRvars > 0 && numIvars > 0)
+                std::cout << ("WARNING: Compass search does not handle both continuous and discrete variables at the same time");
+
             contr_fac_ = settings->parameters().contraction_factor;
             expan_fac_ = settings->parameters().expansion_factor;
             step_tol_ = settings->parameters().minimum_step_length;

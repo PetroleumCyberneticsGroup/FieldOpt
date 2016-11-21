@@ -1,6 +1,6 @@
 #include <iostream>
 #include "compass_search.h"
-#include "gss_patterns.hpp.h"
+#include "gss_patterns.hpp"
 
 namespace Optimization {
     namespace Optimizers {
@@ -10,17 +10,8 @@ namespace Optimization {
                                      Reservoir::Grid::Grid *grid)
                 : GSS(settings, base_case, variables, grid)
         {
-            int numRvars = base_case->GetRealVarVector().size();
-            int numIvars = base_case->GetIntegerVarVector().size();
-            int num_vars = numRvars + numIvars;
-            if (numRvars > 0 && numIvars > 0)
-                std::cout << ("WARNING: Compass search does not handle both continuous and discrete variables at the same time");
-
-            // Generate set of direction vectors (all coordinate directions)
-            directions_ = GSSPatterns::Compass(num_vars);
-
-            // Generate list of step lengths
-            step_lengths_ = Eigen::VectorXd(2*num_vars);
+            directions_ = GSSPatterns::Compass(num_vars_);
+            step_lengths_ = Eigen::VectorXd(directions_.size());
             step_lengths_.fill(settings->parameters().initial_step_length);
         }
 

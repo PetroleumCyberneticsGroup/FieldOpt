@@ -31,8 +31,9 @@ namespace Optimization { namespace GSSPatterns {
          * This is the set used by CompassSearch.
          *
          * For 2D, the set is:
-         *
          * [1, 0], [0, 1], [-1, 0], [0, -1]
+         *
+         * Which looks like +.
          *
          * @param num_vars The number of variables in the problem.
          * @return The set of search directions in all coordinate directions, positive and negative.
