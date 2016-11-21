@@ -110,5 +110,9 @@ namespace Optimization {
             return true;
         }
 
+        void GSS::set_step_lengths(double len) {
+            step_lengths_.fill(len);
+        }
+
     }
 }

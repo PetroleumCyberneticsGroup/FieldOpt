@@ -96,6 +96,12 @@ namespace Optimization {
             void expand(vector<int> dirs = vector<int>(0));
 
             /*!
+             * @brief Set _all_ step lengts to the specified length.
+             * @param len The value all step lengths should be set to.
+             */
+            void set_step_lengths(double len);
+
+            /*!
              * @brief Generate a set of trial points.
              * @param dirs (optional) The direction indices in which perturbations
              * should be created.
