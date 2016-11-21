@@ -129,6 +129,10 @@ namespace Optimization {
          */
         void set_origin_data(Case* parent, int direction_index, double step_length);
 
+        Case* origin_case() const { return parent_; }
+        int origin_direction_index() const { return direction_index_; }
+        double origin_step_length() const { return step_length_; }
+
     private:
         QUuid id_; //!< Unique ID for the case.
 
