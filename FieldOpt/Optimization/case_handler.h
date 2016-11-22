@@ -78,6 +78,12 @@ namespace Optimization {
          */
         QList<Case *> EvaluatedCases() const;
 
+        /*!
+         * @brief Dequeue a case that will not be evaluated.
+         * @param id UUID of case to be dequeued.
+         */
+        void DequeueCase(QUuid id);
+
     private:
         QQueue<QUuid> evaluation_queue_; //!< Queue of the next keys to be evaluated.
         QList<QUuid> evaluating_; //!< List of keys for Cases currently being evaluated.

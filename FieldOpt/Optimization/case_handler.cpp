@@ -91,4 +91,8 @@ namespace Optimization {
         }
         return evaluated_cases;
     }
+
+    void CaseHandler::DequeueCase(QUuid id) {
+        evaluation_queue_.removeOne(id);
+    }
 }
