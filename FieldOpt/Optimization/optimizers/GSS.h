@@ -117,6 +117,11 @@ namespace Optimization {
              */
             bool is_converged();
 
+            /*!
+             * @brief Remove the case that has the worst origin from the evaluation queue.
+             */
+            void dequeue_case_with_worst_origin();
+
         private:
 
             /*!

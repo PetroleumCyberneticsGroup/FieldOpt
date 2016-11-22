@@ -104,7 +104,7 @@ namespace Optimization {
 
         bool GSS::is_converged() {
             for (int i = 0; i < step_lengths_.size(); ++i) {
-                if (step_lengths_(i) > step_tol_)
+                if (step_lengths_(i) >= step_tol_)
                     return false;
             }
             return true;
@@ -112,6 +112,15 @@ namespace Optimization {
 
         void GSS::set_step_lengths(double len) {
             step_lengths_.fill(len);
+        }
+
+        void GSS::dequeue_case_with_worst_origin() {
+            auto queued_cases = case_handler_->QueuedCases();
+            std::sort(queued_cases.begin(), queued_cases.end(),
+                      [this](const Case *c1, const Case *c2) -> bool {
+                          return isBetter(c1, c2);
+                      });
+            case_handler_->DequeueCase(queued_cases.last()->id());
         }
 
     }
