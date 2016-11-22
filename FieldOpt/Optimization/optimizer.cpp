@@ -19,6 +19,7 @@ namespace Optimization {
         constraint_handler_ = new Constraints::ConstraintHandler(settings->constraints(), variables, grid);
         iteration_ = 0;
         mode_ = settings->mode();
+        is_async_ = false;
     }
 
     Case *Optimizer::GetCaseForEvaluation()

@@ -33,6 +33,7 @@ namespace Optimization {
             step_lengths_ = Eigen::VectorXd(directions_.size());
             step_lengths_.fill(settings->parameters().initial_step_length);
             max_queue_length_ = directions_.size() * 2;
+            is_async_ = true;
         }
 
         void APPS::iterate() {
