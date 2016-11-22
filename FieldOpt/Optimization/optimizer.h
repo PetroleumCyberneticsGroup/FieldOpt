@@ -94,7 +94,12 @@ namespace Optimization {
          * @param c Case to be checked.
          * @return True if improvement; otherwise false.
          */
-        bool isImprovement(Case* c);
+        bool isImprovement(const Case* c);
+
+        /*!
+         * @brief Check if Case c1 is better than Case c2, taking into account if we're maximizing or minimizing.
+         */
+        bool isBetter(const Case* c1, const Case *c2);
 
         /*!
          * \brief iterate Performs an iteration, generating new cases and adding them to the case_handler.

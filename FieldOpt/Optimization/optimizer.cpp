@@ -41,13 +41,17 @@ namespace Optimization {
         return tentative_best_case_;
     }
 
-    bool Optimizer::isImprovement(Case *c) {
+    bool Optimizer::isImprovement(const Case *c) {
+        return isBetter(c, tentative_best_case_);
+    }
+
+    bool Optimizer::isBetter(const Case *c1, const Case *c2) {
         if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
-            if (c->objective_function_value() > tentative_best_case_->objective_function_value())
+            if (c1->objective_function_value() > c2->objective_function_value())
                 return true;
         }
         else if (mode_ == Settings::Optimizer::OptimizerMode::Minimize) {
-            if (c->objective_function_value() < tentative_best_case_->objective_function_value())
+            if (c1->objective_function_value() < c2->objective_function_value())
                 return true;
         }
         return false;
