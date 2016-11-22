@@ -17,6 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
+
 #include "APPS.h"
 #include "gss_patterns.hpp"
 
@@ -48,6 +49,7 @@ namespace Optimization {
             reset_active();
             prune_queue();
             iterate();
+
         }
 
         void APPS::unsuccessful_iteration(Case *c) {
@@ -77,7 +79,8 @@ namespace Optimization {
         vector<int> APPS::inactive() {
             vector<int> inactive;
             for (int i = 0; i < directions_.size(); ++i) {
-                if (active_.count(i) == 0) inactive.push_back(i);
+                if (active_.count(i) == 0 && step_lengths_(i) >= step_tol_)
+                    inactive.push_back(i);
             }
             return inactive;
         }
@@ -87,7 +90,7 @@ namespace Optimization {
                 return;
             else {
                 while (case_handler_->QueuedCases().size() > max_queue_length_ + directions_.size()) {
-                    case_handler_->QueuedCases().pop_back();
+                    dequeue_case_with_worst_origin();
                 }
                 return;
             }

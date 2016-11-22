@@ -42,7 +42,7 @@ namespace Optimization {
             void set_active(vector<int> dirs); //!< Mark the direction indices in the vector as active.
             void set_inactive(vector<int> dirs); //!< Mark the direction indices in the vector as inactive.
             void reset_active(); //!< Reset the list of active search directions.
-            vector<int> inactive(); //!< Get vector containing all _inactive_ search directions.
+            vector<int> inactive(); //!< Get vector containing all _inactive_ search directions with step length greater than step_tol_.
 
             /*!
              * @brief Handle a successful iteration.
