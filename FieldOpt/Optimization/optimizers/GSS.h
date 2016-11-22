@@ -85,7 +85,7 @@ namespace Optimization {
              * @param dirs (optional) The direction indices to expand. If not provided,
              * the expansion will be applied to all directions.
              */
-            void contract(vector<int> dirs = vector<int>(0));
+            void contract(vector<int> dirs = vector<int>{-1});
 
             /*!
              * @brief Expand the search pattern: step_lengths_ * expan_fac_
@@ -93,7 +93,7 @@ namespace Optimization {
              * @param dirs (optional) The direction indices to expand. If not provided,
              * the expansion will be applied to all directions.
              */
-            void expand(vector<int> dirs = vector<int>(0));
+            void expand(vector<int> dirs = vector<int>{-1});
 
             /*!
              * @brief Set _all_ step lengts to the specified length.
@@ -108,7 +108,7 @@ namespace Optimization {
              *
              * @return A list of new trial points.
              */
-            QList<Case *> generate_trial_points(vector<int> dirs = vector<int>(0));
+            QList<Case *> generate_trial_points(vector<int> dirs = vector<int>{-1});
 
             /*!
              * @brief Check if the algorithm has converged, i.e. if all current step lengths

@@ -51,7 +51,7 @@ namespace Optimization {
         }
 
         void GSS::expand(vector<int> dirs) {
-            if (dirs.size() == 0) {
+            if (dirs[0] == -1) {
                 step_lengths_ = step_lengths_ * expan_fac_;
             }
             else {
@@ -61,7 +61,7 @@ namespace Optimization {
         }
 
         void GSS::contract(vector<int> dirs) {
-            if (dirs.size() == 0) {
+            if (dirs[0] == -1) {
                 step_lengths_ = step_lengths_ * contr_fac_;
             }
             else {
@@ -72,7 +72,7 @@ namespace Optimization {
 
         QList<Case *> GSS::generate_trial_points(vector<int> dirs) {
             auto trial_points = QList<Case *>();
-            if (dirs.size() == 0)
+            if (dirs[0] == -1)
                 dirs = range(0, (int)directions_.size(), 1);
 
             VectorXi int_base = tentative_best_case_->GetIntegerVarVector();
