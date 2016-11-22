@@ -51,6 +51,7 @@ namespace Optimization {
         void APPS::successful_iteration(Case *c) {
             tentative_best_case_ = c;
             set_step_lengths(c->origin_step_length());
+            expand();
             reset_active();
             prune_queue();
             if (verbosity_level_ >= 1) print_state("SUCCESSFUL ITERATION");
