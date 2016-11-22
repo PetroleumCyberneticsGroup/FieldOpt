@@ -95,4 +95,8 @@ namespace Optimization {
     void CaseHandler::DequeueCase(QUuid id) {
         evaluation_queue_.removeOne(id);
     }
+
+    Case *CaseHandler::GetCase(const QUuid id) const {
+        return cases_[id];
+    }
 }
