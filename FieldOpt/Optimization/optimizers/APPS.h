@@ -66,6 +66,11 @@ namespace Optimization {
              * @brief Prune the evaluation queue to max_queue_length_.
              */
             void prune_queue();
+
+            /*!
+             * @brief Print the state of the optimizer. Detail level depends on the verbosity setting.
+             */
+            void print_state(string header);
         };
 
     }

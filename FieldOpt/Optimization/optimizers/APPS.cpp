@@ -18,8 +18,10 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+#include <iostream>
 #include "APPS.h"
 #include "gss_patterns.hpp"
+#include "Utilities/stringhelpers.hpp"
 
 namespace Optimization {
     namespace Optimizers {
@@ -34,8 +36,11 @@ namespace Optimization {
         }
 
         void APPS::iterate() {
-            case_handler_->AddNewCases(generate_trial_points(inactive()));
-            set_active(inactive());
+            if (inactive().size() > 0) {
+                case_handler_->AddNewCases(generate_trial_points(inactive()));
+                set_active(inactive());
+            }
+            if (verbosity_level_ >= 1) print_state("ITERATION START");
         }
 
         void APPS::handleEvaluatedCase(Case *c) {
@@ -48,17 +53,18 @@ namespace Optimization {
             set_step_lengths(c->origin_step_length());
             reset_active();
             prune_queue();
+            if (verbosity_level_ >= 1) print_state("SUCCESSFUL ITERATION");
             iterate();
-
         }
 
         void APPS::unsuccessful_iteration(Case *c) {
-            vector<int> unsuccessful_direction = vector<int>(0);
-            if (c->origin_case() == tentative_best_case_) {
+            vector<int> unsuccessful_direction;
+            if (c->origin_case()->Equals(tentative_best_case_)) {
                 unsuccessful_direction.push_back(c->origin_direction_index());
                 set_inactive(unsuccessful_direction);
                 contract(unsuccessful_direction);
             }
+            if (verbosity_level_ >= 1) print_state("UNSUCCESSFUL ITERATION");
             if (!is_converged()) iterate();
         }
 
@@ -89,11 +95,23 @@ namespace Optimization {
             if (case_handler_->QueuedCases().size() < max_queue_length_ + directions_.size())
                 return;
             else {
-                while (case_handler_->QueuedCases().size() > max_queue_length_ + directions_.size()) {
+                while (case_handler_->QueuedCases().size() > max_queue_length_ - directions_.size()) {
                     dequeue_case_with_worst_origin();
                 }
                 return;
             }
+        }
+
+        void APPS::print_state(string header) {
+            cout << "APPS state (" << header << ")" << "---------"<< endl;
+            cout << "step_lengths_  : " << vec_to_str(vector<double>(step_lengths_.data(), step_lengths_.data() + step_lengths_.size())) << endl;
+            cout << "active_        : " << vec_to_str(vector<int>(active_.begin(), active_.end())) << endl;
+            cout << "inactive()     : " << vec_to_str(inactive()) << endl;
+            cout << "queue size     : " << case_handler_->QueuedCases().size() << endl;
+
+            cout << "best case origin:" << endl;
+            cout << " direction idx : " << tentative_best_case_->origin_direction_index() << endl;
+            cout << " step length   : " << tentative_best_case_->origin_step_length() << endl;
         }
     }
 }
