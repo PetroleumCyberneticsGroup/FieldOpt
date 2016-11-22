@@ -70,7 +70,7 @@ namespace TestResources {
                 {"Parameters", QJsonObject{
                         {"MaxEvaluations", 500},
                         {"InitialStepLength", 0.64},
-                        {"MinimumStepLength", 0.01}
+                        {"MinimumStepLength", 0.005}
                 }},
                 {"Objective", obj_fun_}
         };
