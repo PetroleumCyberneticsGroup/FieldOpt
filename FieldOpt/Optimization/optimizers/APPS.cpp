@@ -44,18 +44,20 @@ namespace Optimization {
 
         void APPS::successful_iteration(Case *c) {
             tentative_best_case_ = c;
-            set_step_lengths(c->origin_direction_index());
+            set_step_lengths(c->origin_step_length());
             reset_active();
             prune_queue();
             iterate();
         }
 
         void APPS::unsuccessful_iteration(Case *c) {
-            vector<int> unsuccessful_direction;
-            if (c->origin_case() == tentative_best_case_)
+            vector<int> unsuccessful_direction = vector<int>(0);
+            if (c->origin_case() == tentative_best_case_) {
                 unsuccessful_direction.push_back(c->origin_direction_index());
-            set_inactive(unsuccessful_direction);
-            contract(unsuccessful_direction);
+                set_inactive(unsuccessful_direction);
+                contract(unsuccessful_direction);
+            }
+            if (!is_converged()) iterate();
         }
 
         void APPS::set_active(vector<int> dirs) {
