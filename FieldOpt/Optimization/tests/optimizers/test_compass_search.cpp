@@ -14,20 +14,17 @@ namespace {
                               public TestResources::TestResourceGrids {
     protected:
         CompassSearchTest() {
-            compass_search_ = new CompassSearch(settings_optimizer_, base_case_, model_->variables(), grid_5spot_);
             base_ = base_case_;
         }
         virtual ~CompassSearchTest() {}
         virtual void SetUp() {}
 
-        Optimization::Optimizer *compass_search_;
         Optimization::Case *base_;
 
 
     };
 
     TEST_F(CompassSearchTest, Constructor) {
-        EXPECT_FLOAT_EQ(1000.0, compass_search_->GetTentativeBestCase()->objective_function_value());
     }
 
     TEST_F(CompassSearchTest, GetNewCases) {
@@ -61,7 +58,6 @@ namespace {
             auto next_case = minimizer->GetCaseForEvaluation();
             next_case->set_objective_function_value(Sphere(next_case->GetRealVarVector()));
             minimizer->SubmitEvaluatedCase(next_case);
-            std::cout << "looped" << std::endl;
         }
         auto best_case = minimizer->GetTentativeBestCase();
         EXPECT_NEAR(0.0, best_case->objective_function_value(), 0.01);
