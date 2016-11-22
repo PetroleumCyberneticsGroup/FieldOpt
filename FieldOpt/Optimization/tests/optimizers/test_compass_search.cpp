@@ -32,7 +32,7 @@ namespace {
 
     TEST_F(CompassSearchTest, GetNewCases) {
         test_case_1_3i_->set_objective_function_value(Sphere(test_case_1_3i_->GetRealVarVector()));
-        Optimization::Optimizer *maximizer = new CompassSearch(settings_compass_search_maximize_unconstrained_,
+        Optimization::Optimizer *maximizer = new CompassSearch(settings_compass_search_max_unconstr_,
                                                                test_case_1_3i_, varcont_prod_bhp_, grid_5spot_);
 
         // These four cases should change the values of the two first int vars, +50 then -50
@@ -54,13 +54,14 @@ namespace {
 
     TEST_F(CompassSearchTest, TestFunctionSpherical) {
         test_case_2r_->set_objective_function_value(Sphere(test_case_2r_->GetRealVarVector()));
-        Optimization::Optimizer *minimizer = new CompassSearch(settings_compass_search_minimize_unconstrained_,
+        Optimization::Optimizer *minimizer = new CompassSearch(settings_compass_search_min_unconstr_,
                                                                test_case_2r_, varcont_prod_bhp_, grid_5spot_);
 
         while (!minimizer->IsFinished()) {
             auto next_case = minimizer->GetCaseForEvaluation();
             next_case->set_objective_function_value(Sphere(next_case->GetRealVarVector()));
             minimizer->SubmitEvaluatedCase(next_case);
+            std::cout << "looped" << std::endl;
         }
         auto best_case = minimizer->GetTentativeBestCase();
         EXPECT_NEAR(0.0, best_case->objective_function_value(), 0.01);
@@ -75,7 +76,7 @@ namespace {
         EXPECT_FLOAT_EQ(0.0, Rosenbrock(optimum));
 
         test_case_2r_->set_objective_function_value(Rosenbrock(test_case_2r_->GetRealVarVector()));
-        Optimization::Optimizer *minimizer = new CompassSearch(settings_compass_search_minimize_unconstrained_,
+        Optimization::Optimizer *minimizer = new CompassSearch(settings_compass_search_min_unconstr_,
                                                                test_case_2r_, varcont_prod_bhp_, grid_5spot_);
 
         while (!minimizer->IsFinished()) {

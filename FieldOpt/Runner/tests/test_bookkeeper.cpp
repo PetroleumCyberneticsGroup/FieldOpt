@@ -9,7 +9,7 @@ namespace {
     protected:
         BookkeeperTest() {
             test_case_2r_->set_objective_function_value(100.0);
-            compass_search_ = new ::Optimization::Optimizers::CompassSearch(settings_compass_search_maximize_unconstrained_,
+            compass_search_ = new ::Optimization::Optimizers::CompassSearch(settings_compass_search_max_unconstr_,
                                                                             test_case_2r_, model_->variables(),
                                                                             model_->grid());
             bookkeeper_ = new Runner::Bookkeeper(settings_full_, compass_search_->case_handler());
