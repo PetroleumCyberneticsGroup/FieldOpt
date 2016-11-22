@@ -62,7 +62,7 @@ namespace Optimization {
 
         void APPS::unsuccessful_iteration(Case *c) {
             vector<int> unsuccessful_direction;
-            if (c->origin_case()->Equals(tentative_best_case_)) {
+            if (c->origin_case()->id() == tentative_best_case_->id()) {
                 unsuccessful_direction.push_back(c->origin_direction_index());
                 set_inactive(unsuccessful_direction);
                 contract(unsuccessful_direction);
