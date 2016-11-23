@@ -119,8 +119,9 @@ namespace Optimization {
 
             /*!
              * @brief Remove the case that has the worst origin from the evaluation queue.
+             * @return Return a pointer to the case that is removed.
              */
-            void dequeue_case_with_worst_origin();
+            Case *dequeue_case_with_worst_origin();
 
         private:
 

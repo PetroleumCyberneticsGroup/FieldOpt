@@ -116,13 +116,14 @@ namespace Optimization {
             step_lengths_.fill(len);
         }
 
-        void GSS::dequeue_case_with_worst_origin() {
+        Case * GSS::dequeue_case_with_worst_origin() {
             auto queued_cases = case_handler_->QueuedCases();
             std::sort(queued_cases.begin(), queued_cases.end(),
                       [this](const Case *c1, const Case *c2) -> bool {
                           return isBetter(c1, c2);
                       });
             case_handler_->DequeueCase(queued_cases.last()->id());
+            return queued_cases.last();
         }
 
     }
