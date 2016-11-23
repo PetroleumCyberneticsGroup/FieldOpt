@@ -26,7 +26,6 @@ namespace Optimization {
     {
         if (case_handler_->QueuedCases().size() == 0) {
             iterate();
-            iteration_++;
         }
         return case_handler_->GetNextCaseForEvaluation();
     }

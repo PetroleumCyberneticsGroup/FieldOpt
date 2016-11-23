@@ -42,6 +42,7 @@ namespace Optimization {
                 case_handler_->AddNewCases(generate_trial_points(inactive()));
                 set_active(inactive());
             }
+            iteration_++;
             if (verbosity_level_ >= 1) print_state("ITERATION START");
         }
 
@@ -99,7 +100,9 @@ namespace Optimization {
                 return;
             else {
                 while (case_handler_->QueuedCases().size() > max_queue_length_ - directions_.size()) {
-                    dequeue_case_with_worst_origin();
+                    auto dequeued_case = dequeue_case_with_worst_origin();
+                    if (dequeued_case->origin_case()->id() == tentative_best_case_->id())
+                        set_inactive(vector<int>{dequeued_case->origin_direction_index()});
                 }
                 return;
             }

@@ -21,6 +21,7 @@ namespace Optimization {
                 contract();
             case_handler_->AddNewCases(generate_trial_points());
             case_handler_->ClearRecentlyEvaluatedCases();
+            iteration_++;
         }
 
         QString CompassSearch::GetStatusStringHeader() const
