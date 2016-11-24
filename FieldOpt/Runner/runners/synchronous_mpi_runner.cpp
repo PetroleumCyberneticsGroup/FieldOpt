@@ -34,7 +34,6 @@ namespace Runner {
             auto handle_new_case = [&]() mutable {
                 printMessage("Getting new case from optimizer.", 2);
                 auto new_case = optimizer_->GetCaseForEvaluation();
-                logger_->LogCase(new_case);
                 if (bookkeeper_->IsEvaluated(new_case, true)) {
                     printMessage("Case found in bookkeeper");
                     logger_->LogCase(new_case, "Case objective value set by bookkeeper.");
