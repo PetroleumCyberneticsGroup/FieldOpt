@@ -1,15 +1,17 @@
 {
     "Global": {
         "Name": "5spot",
-        "BookkeeperTolerance": 10.0
+        "BookkeeperTolerance": 16.0
     },
     "Optimizer": {
         "Type": "Compass",
         "Mode": "Maximize",
         "Parameters": {
-            "MaxEvaluations": 2000,
-            "InitialStepLength": 128.0,
-            "MinimumStepLength": 32.0
+            "MaxEvaluations": 1000,
+            "InitialStepLength": 256.0,
+            "MinimumStepLength": 32.0,
+            "ContractionFactor": 0.5,
+            "ExpansionFactor": 1.1
         },
         "Objective": {
             "Type": "WeightedSum",
