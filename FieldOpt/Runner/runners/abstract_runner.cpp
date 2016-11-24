@@ -218,16 +218,19 @@ namespace Runner {
         std::cout << "Best case at termination:" << optimizer_->GetTentativeBestCase()->id().toString().toStdString() << std::endl;
         std::cout << "Variable values: " << std::endl;
         for (auto var : optimizer_->GetTentativeBestCase()->integer_variables().keys()) {
-            auto prop = model_->variables()->GetDiscreteVariable(var);
-            std::cout << "\t" << prop->name().toStdString() << "\t" << prop->value() << std::endl;
+            auto prop_name = model_->variables()->GetDiscreteVariable(var)->name();
+            auto prop_val = optimizer_->GetTentativeBestCase()->integer_variables()[var];
+            std::cout << "\t" << prop_name.toStdString() << "\t" << prop_val << std::endl;
         }
         for (auto var : optimizer_->GetTentativeBestCase()->real_variables().keys()) {
-            auto prop = model_->variables()->GetContinousVariable(var);
-            std::cout << "\t" << prop->name().toStdString() << "\t" << prop->value() << std::endl;
+            auto prop_name = model_->variables()->GetContinousVariable(var)->name();
+            auto prop_val = optimizer_->GetTentativeBestCase()->real_variables()[var];
+            std::cout << "\t" << prop_name.toStdString() << "\t" << prop_val << std::endl;
         }
         for (auto var : optimizer_->GetTentativeBestCase()->binary_variables().keys()) {
-            auto prop = model_->variables()->GetBinaryVariable(var);
-            std::cout << "\t" << prop->name().toStdString() << "\t" << prop->value() << std::endl;
+            auto prop_name = model_->variables()->GetBinaryVariable(var)->name();
+            auto prop_val = optimizer_->GetTentativeBestCase()->binary_variables()[var];
+            std::cout << "\t" << prop_name.toStdString() << "\t" << prop_val << std::endl;
         }
     }
 
