@@ -43,7 +43,7 @@ namespace Optimization {
             void completeModel(); //!< Complete set of points for polynomial model and create model
             void optimizationStep(); //!< Use current model in optimization step
 
-            //TO BE DELETED
+            //TODO: TO BE DELETED
             void perturb();
 
 

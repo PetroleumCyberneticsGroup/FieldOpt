@@ -12,19 +12,10 @@ namespace Optimization {
             minimum_radius_ = settings->parameters().minimum_step_length;
         }
 
-        void TrustRegionSearch::step()
-        {
-            // applyNew.. sets best case so far to new best.
-            // let's just go with the flow for now
-            PolyModel::CaseFromPoint(tentative_best_case_->GetRealVarVector(), tentative_best_case_);
-
-            applyNewTentativeBestCase();
-            polymodel_.addCenterPoint(GetTentativeBestCase());
-        }
-
         void TrustRegionSearch::scaleRadius(double k)
         {
             radius_ = k*radius_;
+            polymodel_.setRadius(k);
         }
 
         void TrustRegionSearch::perturb()
@@ -61,6 +52,7 @@ namespace Optimization {
 
             // At the first iteration we initialze the PolyModel with base_case
             if (iteration_ == 0) {
+                std:: cout << "Initializing polymodel and completing points" << std::endl;
                 initializeModel();
             }
 
@@ -68,20 +60,16 @@ namespace Optimization {
              * we need to update points or get cases evaluated
              */
             else if(!polymodel_.isModelReady()) {
+                std:: cout << "Completing model" << std::endl;
                 completeModel();
             }
 
             else {
                 std::cout << "Model should be ready, we make some opt step " << std::endl;
-                /* TODO Here we can use current_model to do an optimization step, which
-                * should include finding a new (improved) point/case. Next use this
-                 * point as the new center_point in model and maybe reduce radius, then
-                * redo the updateModel thing
-                */
-                polymodel_.calculate_model_coeffs();
-                // Just a dummy thing to stop optimization
-                step();
+                //TODO Here we can use current_model to do an optimization step, which
+                optimizationStep();
                 std:: cout << "end of opt step part" << std::endl;
+
             }
             case_handler_->ClearRecentlyEvaluatedCases();
         }
@@ -98,6 +86,26 @@ namespace Optimization {
             case_handler_->AddNewCases(polymodel_.get_cases_not_eval());
             polymodel_.ClearCasesNotEval();
             polymodel_.set_evaluations_complete();
+        }
+
+        void TrustRegionSearch::optimizationStep()
+        {
+            polymodel_.calculate_model_coeffs();
+            // applyNew.. sets best case so far to new best.
+            // let's just go with the flow for now
+            QList<Case *> perturbations = QList<Case *>();
+            for (QUuid id : tentative_best_case_->integer_variables().keys())
+                perturbations.append(tentative_best_case_->Perturb(id, Case::SIGN::PLUS, radius_/3));
+            Case* c = perturbations.at(0);
+
+            case_handler_->AddNewCase(c);
+
+            applyNewTentativeBestCase();
+            /* Add new center point, this also sets
+             * polymodel_isModelReady to false.
+             */
+            polymodel_.addCenterPoint(c);
+            scaleRadius(0.5);
         }
 
         QString TrustRegionSearch::GetStatusStringHeader() const

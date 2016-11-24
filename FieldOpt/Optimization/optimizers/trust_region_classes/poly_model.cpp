@@ -51,13 +51,19 @@ Eigen::VectorXd PolyModel::find_new_point(Polynomial basis_function) {
     // Find largest monomial coefficient (excluding constant term which has already been assigned to first point)
     double max = 0.0;
     int max_coeff = -1;
-    for (int i = 1; i < basis_function.return_no_elements(); ++i) {
+    for (int i = 1; i < coeffs.size(); ++i) {
         if(fabs(coeffs(i)) > max) {
             max = fabs(coeffs(i));
             max_coeff = i;
         }
     }
-    if(max_coeff==-1){ std::cout << "Good point alg, Problem: all coefficients are zero, should never happen" << std::endl;}
+    if(max_coeff==-1){
+        std::cout << "Good point alg, Problem: all coefficients are zero, should never happen" << std::endl;
+        // LETS JUST PRINT A FEW OF THE COEFFS
+        for(int i=0; i<3; i++){
+            std::cout << coeffs[i] << std::endl;
+        }
+    }
     if(max_coeff<=dimension){
         // The largest coefficient is from a linear term
         x1(max_coeff-1) = 1; //subract 1 maybe if change polynomial form
@@ -123,7 +129,7 @@ void PolyModel::complete_points() {
      * to lower this tolerance in order to preserve as many stored
      * function evaluations as possible.
      */
-    double tol_pivot = 0.24;
+    double tol_pivot = 0.10;
     Eigen::VectorXd centre_point = points_.at(0);
 
     /* scaling points to a ball of radius 1
@@ -160,16 +166,24 @@ void PolyModel::complete_points() {
          * and its associated function evaluations.
          */
         if (max_abs > tol_pivot) {
+            std::cout << "didn't need to find new point, basis polynomial, i = " << i << std::endl;
             //YES sufficient pivot element aka. good point
             points_abs.swap(i, max_abs_ind);
             cases_.swap(i, max_abs_ind);
         }
         else {
-            std::cout << "find new point, i = " << i << std::endl;
             //NO sufficient pivot element aka. good point
             //Find new point using alg proposed by Conn
             Polynomial temp_poly_here = temp_basis.at(i);
+            //std::cout << "find new point, i = " << i << std::endl;
+            //std::cout << "number of polynomial basis = " << temp_basis.length() << std::endl;
+            if(i==39 || i==40){
+                std::cout << "variable dimension = " << dimension_ << std::endl << "polynomial length = " << temp_poly_here.return_no_elements() << std::endl;
+                std::cout << "current polynomial = " << std::endl << temp_poly_here.return_coeffs() << std::endl;
+                //std::cout << "current point = " << std::endl << points_abs.at(i) << std::endl;
+                std::cout << "center point = " << std::endl << center_ << std::endl;
 
+            }
             // Append new point and swap it to current position
             points_abs.append(find_new_point(temp_poly_here));
             points_abs.swap(i, points_abs.length() - 1);
@@ -190,6 +204,7 @@ void PolyModel::complete_points() {
         for (int j = i + 1; j < n_points; j++) {
             Polynomial uj = temp_basis.at(j);
             Polynomial ui = temp_basis.at(i);
+            if(uj.evaluate(temp_point) == ui.evaluate(temp_point)){std::cout << "ratio is inf, careful"<< std::endl;}
             double temp_ratio = uj.evaluate(temp_point) / ui.evaluate(temp_point);
             ui.multiply(-1.0 * temp_ratio);
             uj.add(ui);
@@ -236,6 +251,9 @@ void PolyModel::addCenterPoint(Optimization::Case *c) {
     points_.append(c->GetRealVarVector());
     // Put points in correct position, i.e. first in array
     points_.swap(0,points_.size()-1);
+    cases_.swap(0,points_.size()-1);
     center_ = points_.at(0);
+    // Set model not yet ready
+    is_model_complete_ = false;
 }
 

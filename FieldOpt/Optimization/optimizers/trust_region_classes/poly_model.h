@@ -107,10 +107,12 @@ public:
     }
 
     bool isModelReady() {
-        if(needs_set_of_points_){return false;}
-        else if(needs_evals_){return false;}
-        else{return true;}
+        return is_model_complete_;
     }
+
+    void setRadius(double k){
+        radius_ = k;
+    };
 
     /*!
      * @brief Complete set of interpolation points
@@ -125,12 +127,6 @@ public:
      * well poised set of points
      */
     void calculate_model_coeffs();
-
-    void add_point(Eigen::VectorXd point){
-        points_.append(point);
-        cases_not_eval_.append(CaseFromPoint(point, cases_.at(0)));
-        needs_evals_ = true;
-    }
 
     void set_evaluations_complete(){
         needs_evals_ = false;

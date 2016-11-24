@@ -37,13 +37,15 @@ namespace {
         poly_model.complete_points();
         std::cout << "Completed set of points" << std::endl;
         EXPECT_FALSE(poly_model.isModelReady());
+        //poly_model.calculate_model_coeffs();
+        //EXPECT_TRUE(poly_model.isModelReady());
     }
 
     TEST_F(TrustRegionSearchTest, OneIterationTest) {
         Optimization::Case *tentative_best_0 = trust_region_search_->GetTentativeBestCase();
-        for (int i = 0; i < 220; ++i) {
+        for (int iter = 0; iter < 300; ++iter) {
             Optimization::Case *new_case = trust_region_search_->GetCaseForEvaluation();
-            new_case->set_objective_function_value((i%3)*700);
+            new_case->set_objective_function_value((iter%3)*700);
             trust_region_search_->SubmitEvaluatedCase(new_case);
         }
 
