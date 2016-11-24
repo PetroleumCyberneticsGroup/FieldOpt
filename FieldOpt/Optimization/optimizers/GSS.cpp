@@ -35,11 +35,12 @@ namespace Optimization {
                 std::cout << ("WARNING: Compass search does not handle both continuous and discrete variables at the same time");
 
             contr_fac_ = settings->parameters().contraction_factor;
+            assert(contr_fac_ < 1.0);
 
-            if (settings->parameters().expansion_factor >= 1.0)
-                expan_fac_ = settings->parameters().expansion_factor;
+            expan_fac_ = settings->parameters().expansion_factor;
+            assert(expan_fac_ >= 1.0);
+
             step_tol_ = settings->parameters().minimum_step_length;
-
             assert(step_lengths_.size() == directions_.size());
         }
 
