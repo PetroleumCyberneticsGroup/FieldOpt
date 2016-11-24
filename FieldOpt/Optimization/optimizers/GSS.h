@@ -52,7 +52,7 @@ namespace Optimization {
              * @brief General constructor for GSS algorithms. Sets the step_tol_ property and calls the primary
              * Optimizer constructor.
              *
-             * The following properties must be set in the constructur by classes extending this class:
+             * The following properties must be set in the constructor by classes extending this class:
              *
              *      contr_fac_  : The contraction factor.
              *      expan_fac_  : The expansion factor.
