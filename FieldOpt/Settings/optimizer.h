@@ -38,6 +38,7 @@ namespace Settings {
             double minimum_step_length; //!< The minimum step length in the algorithm when applicable.
             double contraction_factor; //!< The contraction factor for GSS algorithms.
             double expansion_factor; //!< The expansion factor for GSS algorithms.
+            double max_queue_size; //!< Maximum size of evaluation queue.
             QString pattern; //!< The pattern to be used for GSS algorithms.
         };
 

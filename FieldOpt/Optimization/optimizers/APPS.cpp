@@ -32,7 +32,9 @@ namespace Optimization {
             directions_ = GSSPatterns::Compass(num_vars_);
             step_lengths_ = Eigen::VectorXd(directions_.size());
             step_lengths_.fill(settings->parameters().initial_step_length);
-            max_queue_length_ = directions_.size() * 2;
+
+            assert(settings->parameters().max_queue_size >= 1.0);
+            max_queue_length_ = directions_.size() * settings->parameters().max_queue_size;
             is_async_ = true;
             iterate();
         }
@@ -79,7 +81,8 @@ namespace Optimization {
 
         void APPS::set_inactive(vector<int> dirs) {
             for (int dir : dirs)
-                active_.erase(dir);
+                if (active_.count(dir) > 0)
+                    active_.erase(dir);
         }
 
         void APPS::reset_active() {
@@ -96,7 +99,7 @@ namespace Optimization {
         }
 
         void APPS::prune_queue() {
-            if (case_handler_->QueuedCases().size() < max_queue_length_ + directions_.size())
+            if (case_handler_->QueuedCases().size() <= max_queue_length_ - directions_.size())
                 return;
             else {
                 while (case_handler_->QueuedCases().size() > max_queue_length_ - directions_.size()) {

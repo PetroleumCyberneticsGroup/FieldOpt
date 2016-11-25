@@ -42,6 +42,9 @@ namespace Settings {
                 if (json_parameters.contains("ExpansionFactor"))
                     parameters_.expansion_factor = json_parameters["ExpansionFactor"].toDouble();
                 else parameters_.expansion_factor = 1.0;
+                if (json_parameters.contains("MaxQueueSize"))
+                    parameters_.max_queue_size = json_parameters["MaxQueueSize"].toDouble();
+                else parameters_.max_queue_size = 2;
                 if (json_parameters.contains("Pattern"))
                     parameters_.pattern = json_parameters["Pattern"].toString();
                 else parameters_.pattern = "Compass";
@@ -194,6 +197,15 @@ namespace Settings {
             if (optimizer_constraint.wells.length() != 2)
                 throw UnableToParseOptimizerConstraintsSectionException("WellSplineInterwellDistance constraint"
                                                                                 " needs a Wells array with exactly two well names specified.");
+        }
+
+        else if (QString::compare(constraint_type, "ReservoirBoundary") == 0) {
+            optimizer_constraint.box_imin = json_constraint["BoxImin"].toInt();
+            optimizer_constraint.box_imax = json_constraint["BoxImax"].toInt();
+            optimizer_constraint.box_jmin = json_constraint["BoxJmin"].toInt();
+            optimizer_constraint.box_jmax = json_constraint["BoxJmax"].toInt();
+            optimizer_constraint.box_kmin = json_constraint["BoxKmin"].toInt();
+            optimizer_constraint.box_kmax = json_constraint["BoxKmax"].toInt();
         }
         else if (QString::compare(constraint_type, "CombinedWellSplineLengthInterwellDistance") == 0) {
             optimizer_constraint.type = ConstraintType::CombinedWellSplineLengthInterwellDistance;
