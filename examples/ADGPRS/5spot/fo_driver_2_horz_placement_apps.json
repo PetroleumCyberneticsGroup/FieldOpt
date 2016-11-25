@@ -1,17 +1,18 @@
 {
     "Global": {
         "Name": "5spot",
-        "BookkeeperTolerance": 16.0
+        "BookkeeperTolerance": 32.0
     },
     "Optimizer": {
         "Type": "APPS",
         "Mode": "Maximize",
         "Parameters": {
             "MaxEvaluations": 1000,
-            "InitialStepLength": 256.0,
-            "MinimumStepLength": 32.0,
+            "InitialStepLength": 512.0,
+            "MinimumStepLength": 64.0,
             "ContractionFactor": 0.5,
             "ExpansionFactor": 1.1,
+            "MaxQueueSize": 1.5,
             "Pattern": "Compass"
         },
         "Objective": {
