@@ -38,6 +38,7 @@ namespace Runner {
                     printMessage("Case found in bookkeeper");
                     logger_->LogCase(new_case, "Case objective value set by bookkeeper.");
                     logger_->increment_bookkeeped_cases();
+                    optimizer_->SubmitEvaluatedCase(new_case);
                 }
                 else {
                     overseer_->AssignCase(new_case);
