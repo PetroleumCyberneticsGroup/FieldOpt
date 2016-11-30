@@ -57,6 +57,7 @@ Eigen::VectorXd PolyModel::find_new_point(Polynomial basis_function) {
             max_coeff = i;
         }
     }
+
     if(max_coeff==-1){
         std::cout << "Good point alg, Problem: all coefficients are zero, should never happen" << std::endl;
         // LETS JUST PRINT A FEW OF THE COEFFS
@@ -85,11 +86,12 @@ Eigen::VectorXd PolyModel::find_new_point(Polynomial basis_function) {
                 if (max_coeff == coeff_dummy) {
                     l = i;
                     m = j;
-                    break;
+                    goto endloop;
                 }
                 coeff_dummy = coeff_dummy+1;
             }
         }
+        endloop:
 
         x1(l) =  1.0/sqrt(2);
         x1(m) = -1.0/sqrt(2);
@@ -100,7 +102,7 @@ Eigen::VectorXd PolyModel::find_new_point(Polynomial basis_function) {
         }
     }
     Eigen::VectorXd best_point;
-    double best_value = 0;
+    double best_value = 0.0;
     QList<Eigen::VectorXd> points;
     points.append(x0);
     points.append(x1);
@@ -175,15 +177,7 @@ void PolyModel::complete_points() {
             //NO sufficient pivot element aka. good point
             //Find new point using alg proposed by Conn
             Polynomial temp_poly_here = temp_basis.at(i);
-            //std::cout << "find new point, i = " << i << std::endl;
-            //std::cout << "number of polynomial basis = " << temp_basis.length() << std::endl;
-            if(i==39 || i==40){
-                std::cout << "variable dimension = " << dimension_ << std::endl << "polynomial length = " << temp_poly_here.return_no_elements() << std::endl;
-                std::cout << "current polynomial = " << std::endl << temp_poly_here.return_coeffs() << std::endl;
-                //std::cout << "current point = " << std::endl << points_abs.at(i) << std::endl;
-                std::cout << "center point = " << std::endl << center_ << std::endl;
 
-            }
             // Append new point and swap it to current position
             points_abs.append(find_new_point(temp_poly_here));
             points_abs.swap(i, points_abs.length() - 1);
@@ -195,18 +189,32 @@ void PolyModel::complete_points() {
             // Append case to list of unevaluated cases
             cases_not_eval_.append(cases_.at(i));
             needs_evals_ = true;
+
+            //TODO: TEST PRINTING BELOW
+
+            //if(i==-1){
+            //    std::cout << "current polynomial = " << std::endl << temp_poly_here.return_coeffs() << std::endl;
+            //    std::cout << "found point = " << std::endl << points_abs.at(i) << std::endl;
+            //    std::cout << "poly(point) = " << temp_poly_here.evaluate(points_abs.at(i)) << std::endl;
+            //}
         }
 
         Polynomial temp_i = temp_basis.at(i);
         auto temp_point = points_abs.at(i);
 
-
-        for (int j = i + 1; j < n_points; j++) {
+        for (int j = i + 1; j < n_Polynomials; j++) {
             Polynomial uj = temp_basis.at(j);
             Polynomial ui = temp_basis.at(i);
-            if(uj.evaluate(temp_point) == ui.evaluate(temp_point)){std::cout << "ratio is inf, careful"<< std::endl;}
-            double temp_ratio = uj.evaluate(temp_point) / ui.evaluate(temp_point);
-            ui.multiply(-1.0 * temp_ratio);
+            double ratio;
+            //TODO: TESTING DIVISION BY ZERO
+            if(ui.evaluate(temp_point)==0 && j==i+1){
+                std::cout << "Division by zero because U_i(y_i) = 0" << std::endl;}
+            // END TESTING
+            if(uj.evaluate(temp_point) == ui.evaluate(temp_point)){
+                ratio = 1.0;
+            }
+            else{ratio = uj.evaluate(temp_point) / ui.evaluate(temp_point);}
+            ui.multiply(-1.0 * ratio);
             uj.add(ui);
             temp_basis[j] = uj;
         }
@@ -257,3 +265,7 @@ void PolyModel::addCenterPoint(Optimization::Case *c) {
     is_model_complete_ = false;
 }
 
+void PolyModel::optimizationStep() {
+    Eigen::VectorXd grad = get_model_coeffs();
+    //TODO: use gradient eval function in Polynomial class to get grad, then opt step
+}

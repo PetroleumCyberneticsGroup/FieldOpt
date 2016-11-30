@@ -134,6 +134,8 @@ public:
 
     void addCenterPoint(Optimization::Case *c);
 
+    void optimizationStep();
+
 };
 
 #endif //FIELDOPT_POLY_MODEL_H
