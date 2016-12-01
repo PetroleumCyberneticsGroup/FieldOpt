@@ -5,7 +5,7 @@
 #ifndef FIELDOPT_POLYNOMIAL_H
 #define FIELDOPT_POLYNOMIAL_H
 
-#include <Eigen/Core>
+#include <Eigen/Dense>
 #include <iostream>
 
 /*!

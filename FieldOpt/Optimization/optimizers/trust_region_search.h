@@ -35,17 +35,12 @@ namespace Optimization {
             double radius_; //!< The size of the perturbation for each variable.
             double minimum_radius_; //!< Smallest allowed step length for the optimizer. _This is a termination condition_.
             PolyModel polymodel_;
-            Eigen::VectorXd current_model_;
 
             void step(); //!< Move to a new tentative best case found in the list of recently evaluated cases.
             void scaleRadius(double k); //!< Scale the radius of the region by a factor k.
             void initializeModel(); //!< Initialize polynomial model
             void completeModel(); //!< Complete set of points for polynomial model and create model
             void optimizationStep(); //!< Use current model in optimization step
-
-            //TODO: TO BE DELETED
-            void perturb();
-
 
             // Optimizer interface
         public:

@@ -5,9 +5,8 @@
 #ifndef FIELDOPT_POLY_MODEL_H
 #define FIELDOPT_POLY_MODEL_H
 
-#include "Optimization/optimizer.h"
+#include "Optimization/case.h"
 #include "polynomial.h"
-#include <Eigen/Core>
 #include <QList>
 #include <iostream>
 
