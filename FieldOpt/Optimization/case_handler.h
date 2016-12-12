@@ -42,6 +42,11 @@ namespace Optimization {
         void SetCaseEvaluated(const QUuid id);
 
         /*!
+         * @brief Get a case by ID.
+         */
+        Case *GetCase(const QUuid id) const;
+
+        /*!
          * \brief UpdateCaseObjectiveFunctionValue updates the objective function value of a
          * case. This is needed when using, for instance, MPI based runners, where the case
          * object before and after evaluation is not the same one.
@@ -77,6 +82,12 @@ namespace Optimization {
          * \brief EvaluatedCases Get the list of cases that have been marked as evaluated.
          */
         QList<Case *> EvaluatedCases() const;
+
+        /*!
+         * @brief Dequeue a case that will not be evaluated.
+         * @param id UUID of case to be dequeued.
+         */
+        void DequeueCase(QUuid id);
 
     private:
         QQueue<QUuid> evaluation_queue_; //!< Queue of the next keys to be evaluated.

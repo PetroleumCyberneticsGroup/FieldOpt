@@ -1,5 +1,6 @@
 #include <iostream>
 #include "compass_search.h"
+#include "gss_patterns.hpp"
 
 namespace Optimization {
     namespace Optimizers {
@@ -9,27 +10,8 @@ namespace Optimization {
                                      Reservoir::Grid::Grid *grid)
                 : GSS(settings, base_case, variables, grid)
         {
-            step_tol_ = settings->parameters().minimum_step_length;
-            contr_fac_ = 0.5;
-            expan_fac_ = 1.0;
-
-            int numRvars = base_case->GetRealVarVector().size();
-            int numIvars = base_case->GetIntegerVarVector().size();
-            int num_vars = numRvars + numIvars;
-            if (numRvars > 0 && numIvars > 0)
-                std::cout << ("WARNING: Compass search does not handle both continuous and discrete variables at the same time");
-
-            // Generate set of direction vectors (all coordinate directions)
-            directions_ = std::vector<Eigen::VectorXi>(2*num_vars);
-            for (int i = 0; i < num_vars; ++i) {
-                Eigen::VectorXi dir = Eigen::VectorXi::Zero(num_vars);
-                dir(i) = 1;
-                directions_[i] = dir;
-                directions_[i+num_vars] = (-1) * dir;
-            }
-
-            // Generate list of step lengths
-            step_lengths_ = Eigen::VectorXd(2*num_vars);
+            directions_ = GSSPatterns::Compass(num_vars_);
+            step_lengths_ = Eigen::VectorXd(directions_.size());
             step_lengths_.fill(settings->parameters().initial_step_length);
         }
 
@@ -39,6 +21,7 @@ namespace Optimization {
                 contract();
             case_handler_->AddNewCases(generate_trial_points());
             case_handler_->ClearRecentlyEvaluatedCases();
+            iteration_++;
         }
 
         QString CompassSearch::GetStatusStringHeader() const

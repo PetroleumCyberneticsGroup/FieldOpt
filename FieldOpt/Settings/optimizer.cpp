@@ -14,6 +14,8 @@ namespace Settings {
         // Optimizer type
         if (QString::compare(type, "Compass") == 0)
             type_ = OptimizerType::Compass;
+        else if (QString::compare(type, "APPS") == 0)
+            type_ = OptimizerType::APPS;
         else if (QString::compare(type, "ExhaustiveSearch2DVert") == 0)
             type_ = OptimizerType::ExhaustiveSearch2DVert;
         else throw OptimizerTypeNotRecognizedException("The optimizer type " + type.toStdString() + " was not recognized.");
@@ -34,6 +36,18 @@ namespace Settings {
                 parameters_.max_evaluations = json_parameters["MaxEvaluations"].toInt();
                 parameters_.initial_step_length = json_parameters["InitialStepLength"].toDouble();
                 parameters_.minimum_step_length = json_parameters["MinimumStepLength"].toDouble();
+                if (json_parameters.contains("ContractionFactor"))
+                    parameters_.contraction_factor = json_parameters["ContractionFactor"].toDouble();
+                else parameters_.contraction_factor = 0.5;
+                if (json_parameters.contains("ExpansionFactor"))
+                    parameters_.expansion_factor = json_parameters["ExpansionFactor"].toDouble();
+                else parameters_.expansion_factor = 1.0;
+                if (json_parameters.contains("MaxQueueSize"))
+                    parameters_.max_queue_size = json_parameters["MaxQueueSize"].toDouble();
+                else parameters_.max_queue_size = 2;
+                if (json_parameters.contains("Pattern"))
+                    parameters_.pattern = json_parameters["Pattern"].toString();
+                else parameters_.pattern = "Compass";
             }
             catch (std::exception const &ex) {
                 throw UnableToParseOptimizerParametersSectionException("Unable to parse optimizer parameters: " + std::string(ex.what()));
@@ -183,6 +197,15 @@ namespace Settings {
             if (optimizer_constraint.wells.length() != 2)
                 throw UnableToParseOptimizerConstraintsSectionException("WellSplineInterwellDistance constraint"
                                                                                 " needs a Wells array with exactly two well names specified.");
+        }
+
+        else if (QString::compare(constraint_type, "ReservoirBoundary") == 0) {
+            optimizer_constraint.box_imin = json_constraint["BoxImin"].toInt();
+            optimizer_constraint.box_imax = json_constraint["BoxImax"].toInt();
+            optimizer_constraint.box_jmin = json_constraint["BoxJmin"].toInt();
+            optimizer_constraint.box_jmax = json_constraint["BoxJmax"].toInt();
+            optimizer_constraint.box_kmin = json_constraint["BoxKmin"].toInt();
+            optimizer_constraint.box_kmax = json_constraint["BoxKmax"].toInt();
         }
         else if (QString::compare(constraint_type, "CombinedWellSplineLengthInterwellDistance") == 0) {
             optimizer_constraint.type = ConstraintType::CombinedWellSplineLengthInterwellDistance;

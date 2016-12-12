@@ -72,6 +72,7 @@ namespace Optimization {
         virtual QString GetStatusString() const; //!< Get a CSV string describing the current state of the optimizer.
         void EnableConstraintLogging(QString output_directory_path); //!< Enable writing a text log for the constraint operations.
         void SetVerbosityLevel(int level);
+        bool IsAsync() const { return is_async_; } //!< Check if the optimizer is asynchronous.
 
     protected:
         /*!
@@ -94,7 +95,12 @@ namespace Optimization {
          * @param c Case to be checked.
          * @return True if improvement; otherwise false.
          */
-        bool isImprovement(Case* c);
+        bool isImprovement(const Case* c);
+
+        /*!
+         * @brief Check if Case c1 is better than Case c2, taking into account if we're maximizing or minimizing.
+         */
+        bool isBetter(const Case* c1, const Case *c2);
 
         /*!
          * \brief iterate Performs an iteration, generating new cases and adding them to the case_handler.
@@ -108,6 +114,7 @@ namespace Optimization {
         int iteration_; //!< The current iteration.
         int verbosity_level_; //!< The verbosity level for runtime console logging.
         ::Settings::Optimizer::OptimizerMode mode_; //!< The optimization mode, i.e. whether the objective function should be maximized or minimized.
+        bool is_async_; //!< Inidcates whether or not the optimizer is asynchronous. Defaults to false.
     };
 
 }

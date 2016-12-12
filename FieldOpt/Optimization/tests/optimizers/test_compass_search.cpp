@@ -14,25 +14,22 @@ namespace {
                               public TestResources::TestResourceGrids {
     protected:
         CompassSearchTest() {
-            compass_search_ = new CompassSearch(settings_optimizer_, base_case_, model_->variables(), grid_5spot_);
             base_ = base_case_;
         }
         virtual ~CompassSearchTest() {}
         virtual void SetUp() {}
 
-        Optimization::Optimizer *compass_search_;
         Optimization::Case *base_;
 
 
     };
 
     TEST_F(CompassSearchTest, Constructor) {
-        EXPECT_FLOAT_EQ(1000.0, compass_search_->GetTentativeBestCase()->objective_function_value());
     }
 
     TEST_F(CompassSearchTest, GetNewCases) {
         test_case_1_3i_->set_objective_function_value(Sphere(test_case_1_3i_->GetRealVarVector()));
-        Optimization::Optimizer *maximizer = new CompassSearch(settings_compass_search_maximize_unconstrained_,
+        Optimization::Optimizer *maximizer = new CompassSearch(settings_compass_search_max_unconstr_,
                                                                test_case_1_3i_, varcont_prod_bhp_, grid_5spot_);
 
         // These four cases should change the values of the two first int vars, +50 then -50
@@ -54,7 +51,7 @@ namespace {
 
     TEST_F(CompassSearchTest, TestFunctionSpherical) {
         test_case_2r_->set_objective_function_value(Sphere(test_case_2r_->GetRealVarVector()));
-        Optimization::Optimizer *minimizer = new CompassSearch(settings_compass_search_minimize_unconstrained_,
+        Optimization::Optimizer *minimizer = new CompassSearch(settings_compass_search_min_unconstr_,
                                                                test_case_2r_, varcont_prod_bhp_, grid_5spot_);
 
         while (!minimizer->IsFinished()) {
@@ -75,7 +72,7 @@ namespace {
         EXPECT_FLOAT_EQ(0.0, Rosenbrock(optimum));
 
         test_case_2r_->set_objective_function_value(Rosenbrock(test_case_2r_->GetRealVarVector()));
-        Optimization::Optimizer *minimizer = new CompassSearch(settings_compass_search_minimize_unconstrained_,
+        Optimization::Optimizer *minimizer = new CompassSearch(settings_compass_search_min_unconstr_,
                                                                test_case_2r_, varcont_prod_bhp_, grid_5spot_);
 
         while (!minimizer->IsFinished()) {

@@ -24,6 +24,7 @@
  *****************************************************************************/
 
 #include <Simulation/simulator_interfaces/flowsimulator.h>
+#include <Optimization/optimizers/APPS.h>
 #include "abstract_runner.h"
 #include "Optimization/optimizers/compass_search.h"
 #include "Optimization/optimizers/ExhaustiveSearch2DVert.h"
@@ -160,8 +161,18 @@ namespace Runner {
         switch (settings_->optimizer()->type()) {
             case Settings::Optimizer::OptimizerType::Compass:
                 if (runtime_settings_->verbosity_level()) std::cout << "Using CompassSearch optimization algorithm." << std::endl;
-                optimizer_ = new Optimization::Optimizers::CompassSearch(settings_->optimizer(), base_case_, model_->variables(),
+                optimizer_ = new Optimization::Optimizers::CompassSearch(settings_->optimizer(),
+                                                                         base_case_,
+                                                                         model_->variables(),
                                                                          model_->grid());
+                optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
+                break;
+            case Settings::Optimizer::OptimizerType::APPS:
+                if (runtime_settings_->verbosity_level()) std::cout << "Using APPS optimization algorithm." << std::endl;
+                optimizer_ = new Optimization::Optimizers::APPS(settings_->optimizer(),
+                                                                base_case_,
+                                                                model_->variables(),
+                                                                model_->grid());
                 optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
                 break;
             case Settings::Optimizer::OptimizerType::ExhaustiveSearch2DVert:
@@ -207,16 +218,19 @@ namespace Runner {
         std::cout << "Best case at termination:" << optimizer_->GetTentativeBestCase()->id().toString().toStdString() << std::endl;
         std::cout << "Variable values: " << std::endl;
         for (auto var : optimizer_->GetTentativeBestCase()->integer_variables().keys()) {
-            auto prop = model_->variables()->GetDiscreteVariable(var);
-            std::cout << "\t" << prop->name().toStdString() << "\t" << prop->value() << std::endl;
+            auto prop_name = model_->variables()->GetDiscreteVariable(var)->name();
+            auto prop_val = optimizer_->GetTentativeBestCase()->integer_variables()[var];
+            std::cout << "\t" << prop_name.toStdString() << "\t" << prop_val << std::endl;
         }
         for (auto var : optimizer_->GetTentativeBestCase()->real_variables().keys()) {
-            auto prop = model_->variables()->GetContinousVariable(var);
-            std::cout << "\t" << prop->name().toStdString() << "\t" << prop->value() << std::endl;
+            auto prop_name = model_->variables()->GetContinousVariable(var)->name();
+            auto prop_val = optimizer_->GetTentativeBestCase()->real_variables()[var];
+            std::cout << "\t" << prop_name.toStdString() << "\t" << prop_val << std::endl;
         }
         for (auto var : optimizer_->GetTentativeBestCase()->binary_variables().keys()) {
-            auto prop = model_->variables()->GetBinaryVariable(var);
-            std::cout << "\t" << prop->name().toStdString() << "\t" << prop->value() << std::endl;
+            auto prop_name = model_->variables()->GetBinaryVariable(var)->name();
+            auto prop_val = optimizer_->GetTentativeBestCase()->binary_variables()[var];
+            std::cout << "\t" << prop_name.toStdString() << "\t" << prop_val << std::endl;
         }
     }
 

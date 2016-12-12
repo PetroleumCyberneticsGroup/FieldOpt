@@ -4,6 +4,7 @@
 
 #include <QList>
 #include <vector>
+#include <boost/random.hpp>
 
 /*!
  * @brief Calculate the average value of the items in the list. The returned value will always be a double.
@@ -54,6 +55,18 @@ inline std::vector<T> range(T start, T end, T step) {
         ran[i] = ran[i-1] + step;
     }
     return ran;
+}
+
+/*!
+ * @brief Get a random integer in the range [lower .. upper]
+ * @param lower The lowest possible int.
+ * @param upper The highest possible int.
+ * @return A random integer.
+ */
+inline int random_integer(const int lower, const int upper) {
+    boost::random::mt19937 gen;
+    boost::random::uniform_int_distribution<> dist(lower, upper);
+    return dist(gen);
 }
 
 #endif // MATH_FUNCTIONS_H

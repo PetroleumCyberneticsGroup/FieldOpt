@@ -17,6 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
+#include <iostream>
 #include "GSS.h"
 #include "Utilities/math.hpp"
 
@@ -26,8 +27,20 @@ namespace Optimization {
         GSS::GSS(Settings::Optimizer *settings, Case *base_case,
                  Model::Properties::VariablePropertyContainer *variables, Reservoir::Grid::Grid *grid)
                 : Optimizer(settings, base_case, variables, grid) {
-            step_tol_ = settings->parameters().minimum_step_length;
 
+            int numRvars = base_case->GetRealVarVector().size();
+            int numIvars = base_case->GetIntegerVarVector().size();
+            num_vars_ = numRvars + numIvars;
+            if (numRvars > 0 && numIvars > 0)
+                std::cout << ("WARNING: Compass search does not handle both continuous and discrete variables at the same time");
+
+            contr_fac_ = settings->parameters().contraction_factor;
+            assert(contr_fac_ < 1.0);
+
+            expan_fac_ = settings->parameters().expansion_factor;
+            assert(expan_fac_ >= 1.0);
+
+            step_tol_ = settings->parameters().minimum_step_length;
             assert(step_lengths_.size() == directions_.size());
         }
 
@@ -41,7 +54,7 @@ namespace Optimization {
         }
 
         void GSS::expand(vector<int> dirs) {
-            if (dirs.size() == 0) {
+            if (dirs[0] == -1) {
                 step_lengths_ = step_lengths_ * expan_fac_;
             }
             else {
@@ -51,7 +64,7 @@ namespace Optimization {
         }
 
         void GSS::contract(vector<int> dirs) {
-            if (dirs.size() == 0) {
+            if (dirs[0] == -1) {
                 step_lengths_ = step_lengths_ * contr_fac_;
             }
             else {
@@ -62,7 +75,7 @@ namespace Optimization {
 
         QList<Case *> GSS::generate_trial_points(vector<int> dirs) {
             auto trial_points = QList<Case *>();
-            if (dirs.size() == 0)
+            if (dirs[0] == -1)
                 dirs = range(0, (int)directions_.size(), 1);
 
             VectorXi int_base = tentative_best_case_->GetIntegerVarVector();
@@ -76,6 +89,7 @@ namespace Optimization {
                 else if (rea_base.size() > 0) {
                     trial_point->SetRealVarValues(perturb(rea_base, dir));
                 }
+                trial_point->set_origin_data(tentative_best_case_, dir, step_lengths_(dir));
                 trial_points.append(trial_point);
             }
 
@@ -93,10 +107,24 @@ namespace Optimization {
 
         bool GSS::is_converged() {
             for (int i = 0; i < step_lengths_.size(); ++i) {
-                if (step_lengths_(i) > step_tol_)
+                if (step_lengths_(i) >= step_tol_)
                     return false;
             }
             return true;
+        }
+
+        void GSS::set_step_lengths(double len) {
+            step_lengths_.fill(len);
+        }
+
+        Case * GSS::dequeue_case_with_worst_origin() {
+            auto queued_cases = case_handler_->QueuedCases();
+            std::sort(queued_cases.begin(), queued_cases.end(),
+                      [this](const Case *c1, const Case *c2) -> bool {
+                          return isBetter(c1, c2);
+                      });
+            case_handler_->DequeueCase(queued_cases.last()->id());
+            return queued_cases.last();
         }
 
     }

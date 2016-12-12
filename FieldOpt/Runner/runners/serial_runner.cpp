@@ -25,7 +25,6 @@ void SerialRunner::Execute()
     logger_->LogProductionData(base_case_, simulator_->results());
     while (optimizer_->IsFinished() == Optimization::Optimizer::TerminationCondition::NOT_FINISHED) {
         auto new_case = optimizer_->GetCaseForEvaluation();
-        logger_->LogCase(new_case);
 
         if (bookkeeper_->IsEvaluated(new_case, true)) {
             logger_->LogCase(new_case, "Case objective value set by bookkeeper.");

@@ -18,13 +18,17 @@ namespace TestResources {
                                                 model_->variables()->GetContinousVariableValues());
             base_case_->set_objective_function_value(1000.0);
 
-            settings_compass_search_minimize_unconstrained_ = new Settings::Optimizer(get_json_settings_compass_search_minimize_);
-            settings_compass_search_maximize_unconstrained_ = new Settings::Optimizer(get_json_settings_compass_search_maximize_);
+            settings_compass_search_min_unconstr_ = new Settings::Optimizer(get_json_settings_compass_search_minimize_);
+            settings_compass_search_max_unconstr_ = new Settings::Optimizer(get_json_settings_compass_search_maximize_);
+            settings_apps_min_unconstr_ = new Settings::Optimizer(get_json_settings_apps_minimize_);
+            settings_apps_max_unconstr_ = new Settings::Optimizer(get_json_settings_apps_maximize_);
         }
 
         Optimization::Case *base_case_;
-        Settings::Optimizer *settings_compass_search_minimize_unconstrained_;
-        Settings::Optimizer *settings_compass_search_maximize_unconstrained_;
+        Settings::Optimizer *settings_compass_search_min_unconstr_;
+        Settings::Optimizer *settings_compass_search_max_unconstr_;
+        Settings::Optimizer *settings_apps_min_unconstr_;
+        Settings::Optimizer *settings_apps_max_unconstr_;
 
     private:
         QJsonObject obj_fun_ {
@@ -60,6 +64,27 @@ namespace TestResources {
                 {"Objective", obj_fun_}
         };
 
+        QJsonObject get_json_settings_apps_minimize_ {
+                {"Type", "APPS"},
+                {"Mode", "Minimize"},
+                {"Parameters", QJsonObject{
+                        {"MaxEvaluations", 500},
+                        {"InitialStepLength", 0.64},
+                        {"MinimumStepLength", 0.005}
+                }},
+                {"Objective", obj_fun_}
+        };
+
+        QJsonObject get_json_settings_apps_maximize_ {
+                {"Type", "APPS"},
+                {"Mode", "Maximize"},
+                {"Parameters", QJsonObject{
+                        {"MaxEvaluations", 500},
+                        {"InitialStepLength", 8},
+                        {"MinimumStepLength", 1}
+                }},
+                {"Objective", obj_fun_}
+        };
 
     };
 }
