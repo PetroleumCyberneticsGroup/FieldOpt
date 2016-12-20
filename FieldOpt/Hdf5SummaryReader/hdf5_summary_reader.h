@@ -39,6 +39,11 @@ public:
     const std::vector<double> &times_steps() const { return times_; }
 
     /*!
+     * Get the vector containing defining active cells.
+     */
+    const std::vector<int> &active_cells() const { return active_cells_; }
+
+    /*!
      * Get the number of wells found in the summary.
      */
     int number_of_wells() const { return nwells_; }
@@ -185,6 +190,7 @@ private:
     const H5std_string DATASET_NAME_TIMES; //!< The name of the dataset containing the time step vector in the HDF5 file.
     const H5std_string GROUP_NAME_FLOW_TRANSPORT; //!< The name of the flow transport group in the HDF5 file.
     const H5std_string DATASET_NAME_WELL_STATES; //!< The name of the dataset containing the well states in the HDF5 file.
+    const H5std_string DATASET_NAME_ACTIVE_CELLS; //!< The name of the dataset containing active cells vector.
 
     /*!
      * The wstype_t datatype represents the datatype in which well states are stored in the HDF5 file. Each element
@@ -243,6 +249,7 @@ private:
     };
 
     void readTimeVector(std::string file_path); //!< Read the time vector from the HDF5 summary file.
+    void readActiveCells(std::string file_path); //!< Read vector defining which cells are active from the HDF5 summary file.
     void readWellStates(std::string file_path); //!< Read all well state information from the HDF5 summary file.
     void parseWsVector(std::vector<wstype_t> &wsvec); //!< Populate well_states_ by creating well_data and perforation_data objects from the wstype_t vector.
     well_data parseWellState(std::vector<wstype_t> &ws, int wnr); //!< Parse the states for a single well and create a well_data object.
@@ -250,6 +257,7 @@ private:
     int nwells_; //!< Number of wells in summary.
     int ntimes_; //!< Number of time steps in the summary.
     int nphases_; //!< Number of phases in the model
+    std::vector<int> active_cells_; //!< Vector defining active cells (size equal to total number of cells) .
     std::vector<double> times_; //!< Vector containing all time steps.
 
     /*!
