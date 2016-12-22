@@ -33,6 +33,16 @@ namespace {
         }
     }
 
+    TEST_F(Hdf5SummaryReaderTest, ActiveCellVector) {
+        auto reader = Hdf5SummaryReader(file_path);
+        std::vector<int> active_cells = reader.active_cells();
+
+        for (int i = 0; i < active_cells.size(); ++i) {
+            // std::cout << active_cells[i] << std::endl;
+            EXPECT_EQ(active_cells[i], i);
+        }
+    }
+
     TEST_F(Hdf5SummaryReaderTest, IntegerData) {
         auto reader = Hdf5SummaryReader(file_path);
         int expected_types[5] = {1, -1, -1, -1, -1};

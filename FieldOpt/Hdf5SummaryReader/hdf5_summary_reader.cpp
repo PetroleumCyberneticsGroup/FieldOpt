@@ -4,11 +4,45 @@
 
 using namespace H5;
 Hdf5SummaryReader::Hdf5SummaryReader(const std::string file_path)
-: GROUP_NAME_RESTART(("RESTART")), DATASET_NAME_TIMES("TIMES"),
-  GROUP_NAME_FLOW_TRANSPORT("FLOW_TRANSPORT"), DATASET_NAME_WELL_STATES("WELL_STATES")
+: GROUP_NAME_RESTART("RESTART"),
+  DATASET_NAME_TIMES("TIMES"),
+  GROUP_NAME_FLOW_TRANSPORT("FLOW_TRANSPORT"),
+  DATASET_NAME_ACTIVE_CELLS("ACTIVE_CELLS"),
+  DATASET_NAME_WELL_STATES("WELL_STATES")
 {
     readTimeVector(file_path);
+    readActiveCells(file_path);
     readWellStates(file_path);
+}
+
+void Hdf5SummaryReader::readActiveCells(std::string file_path) {
+    // Read the file
+    H5File file(file_path, H5F_ACC_RDONLY);
+    Group group = Group(file.openGroup(GROUP_NAME_FLOW_TRANSPORT));
+    DataSet dataset = DataSet(group.openDataSet(DATASET_NAME_ACTIVE_CELLS));
+
+    DataSpace dataspace = dataset.getSpace();
+    hsize_t dims[2];
+
+    auto rank = dataspace.getSimpleExtentDims(dims, NULL);
+    // Uncomment to debug:
+    // std::cout << "dataset rank = " << rank << ", dimensions "
+    //     << (unsigned long)(dims[0]) << " x "
+    //     << (unsigned long)(dims[1]) << std::endl;
+
+    // Define hyperslab
+    hsize_t  count[2] = { dims[0], 1 };
+    hsize_t offset[2] = { 0, 0 };
+    dataspace.selectHyperslab( H5S_SELECT_SET, count, offset );
+
+    // Size of selected colum + define memory space
+    hsize_t col_sz[1] = { dims[0] };
+    DataSpace mspace( 1, col_sz );
+
+    std::vector<int> vector;
+    vector.resize(dims[0]);
+    dataset.read(vector.data(), PredType::NATIVE_INT, mspace, dataspace);
+    active_cells_ = vector;
 }
 
 void Hdf5SummaryReader::readTimeVector(std::string file_path) {
