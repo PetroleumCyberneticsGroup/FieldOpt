@@ -60,10 +60,22 @@ void Hdf5SummaryReader::readTimeVector(std::string file_path) {
     hsize_t dims[2];
     dataspace.getSimpleExtentDims(dims, NULL);
 
+    // Check size of time vector is > 1, otherwise tricky errors
+    // occurs further downstream in readWellStates()
+    if ( (int)dims[0] < 2) {
+        throw std::runtime_error("TIME vector has only one component! "
+                                 "Check your simulation H5 output.");
+    }
+
     std::vector<double> vector;
     vector.resize(dims[0]);
     dataset.read(vector.data(), PredType::NATIVE_DOUBLE);
     times_ = vector;
+
+    // Uncomment to debug:
+    //    std::cout << "size of time vector = "
+    //              << vector.size() << std::endl;
+
 }
 
 void Hdf5SummaryReader::readWellStates(std::string file_path) {
