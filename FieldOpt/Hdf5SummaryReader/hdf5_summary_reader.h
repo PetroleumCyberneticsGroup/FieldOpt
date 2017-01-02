@@ -26,8 +26,8 @@ public:
     /*!
      * Read the HDF5 summary file written by AD-GPRS at the specified path.
      *
-     * \note The provided path is not checked by this method, and should therefore be checked before
-     * invoking this.
+     * \note The provided path is not checked by this method, and should therefore be
+     * checked before invoking this.
      * @param file_path Path to a .H5 summary file.
      * @return A Hdf5SummaryReader object containing information from the summary.
      */
@@ -39,9 +39,34 @@ public:
     const std::vector<double> &times_steps() const { return times_; }
 
     /*!
-     * Get the vector containing defining active cells.
+     * Get reservoir pressure vector.
      */
-    const std::vector<int> &active_cells() const { return active_cells_; }
+    std::vector<std::vector<double>> reservoir_pressure() const { return pressure_; }
+
+    /*!
+     * Return vector of active grid cells.
+     */
+    const std::vector<int> &cells_active() { return cells_active_; }
+
+    /*!
+     * Return vector of active grid cell indices.
+     */
+    const std::vector<int> &cells_active_idx() { return cells_active_idx_; }
+
+    /*!
+     * Get total number of grid cells in model.
+     */
+    int cells_total_num() const { return cells_total_num_; }
+
+    /*!
+     * Get total number of active grid cells in model.
+     */
+    int cells_num_active() const { return cells_num_active_; }
+
+    /*!
+     * Get total number of inactive grid cells in model.
+     */
+    int cells_num_inactive() const { return cells_num_inactive_; }
 
     /*!
      * Get the number of wells found in the summary.
@@ -185,16 +210,19 @@ public:
     std::vector<double> field_cumulative_gas_injection_sc() const;
 
 
+
 private:
     const H5std_string GROUP_NAME_RESTART; //!< The name of the restart group in the HDF5 file.
     const H5std_string DATASET_NAME_TIMES; //!< The name of the dataset containing the time step vector in the HDF5 file.
     const H5std_string GROUP_NAME_FLOW_TRANSPORT; //!< The name of the flow transport group in the HDF5 file.
     const H5std_string DATASET_NAME_WELL_STATES; //!< The name of the dataset containing the well states in the HDF5 file.
     const H5std_string DATASET_NAME_ACTIVE_CELLS; //!< The name of the dataset containing active cells vector.
+    const H5std_string DATASET_NAME_PRESSURE; //!< The name of the dataset containing pressure and component data.
 
     /*!
-     * The wstype_t datatype represents the datatype in which well states are stored in the HDF5 file. Each element
-     * in the dataset contains information about a well and its perforations at a specific time step.
+     * The wstype_t datatype represents the datatype in which well states are stored in the HDF5 file.
+     * Each element in the dataset contains information about a well and its perforations at a specific
+     * time step.
      */
     typedef struct wstype_t {
         std::vector<double> vPressures;
@@ -214,8 +242,8 @@ private:
     } wstype_t;
 
     /*!
-     * The perforation_data struct holds vectors containing rate, pressure, temperature and density values at
-     * all time steps for a specific perforation in a well.
+     * The perforation_data struct holds vectors containing rate, pressure, temperature and density
+     * values at all time steps for a specific perforation in a well.
      */
     struct perforation_data {
         perforation_data(){}
@@ -229,8 +257,9 @@ private:
     };
 
     /*!
-     * The well_data struct holds information about a specific well, as well as a vector of perforation_data for
-     * all of its perforations, and vectors containing rate and pressure values at all time steps.
+     * The well_data struct holds information about a specific well, as well as a vector of
+     * perforation_data for all of its perforations, and vectors containing rate and pressure
+     * values at all time steps.
      */
     struct well_data {
         well_data(){}
@@ -249,16 +278,32 @@ private:
     };
 
     void readTimeVector(std::string file_path); //!< Read the time vector from the HDF5 summary file.
-    void readActiveCells(std::string file_path); //!< Read vector defining which cells are active from the HDF5 summary file.
     void readWellStates(std::string file_path); //!< Read all well state information from the HDF5 summary file.
     void parseWsVector(std::vector<wstype_t> &wsvec); //!< Populate well_states_ by creating well_data and perforation_data objects from the wstype_t vector.
     well_data parseWellState(std::vector<wstype_t> &ws, int wnr); //!< Parse the states for a single well and create a well_data object.
 
+    void readActiveCells(std::string file_path); //!< Read vector defining which cells are active from the HDF5 summary file.
+    void readReservoirPressure(std::string file_path); //!< Read reservoir cell pressures for each time step.
+
+    /*!
+     * variables containing information about the reservoir cell ensemble,
+     * e.g., number of active cells, corresponding active cell indices, etc.
+     */
+    std::vector<int> cells_all_vector_; //!< Vector def. status for all cells (size equal to total number of cells).
+    std::vector<int> cells_active_, cells_inactive_;
+    std::vector<int> cells_active_idx_, cells_inactive_idx_;
+    int cells_total_num_; //!< Total number of grid cells in model.
+    int cells_num_active_; //!< Total number of active grid cells in model.
+    int cells_num_inactive_; //!< Total number of inactive grid cells in model.
+
+    int cells_find_statuses(std::vector<int> &cells_all_vector_); //!< Fills inactive/active cells numbers and indices
+
     int nwells_; //!< Number of wells in summary.
     int ntimes_; //!< Number of time steps in the summary.
-    int nphases_; //!< Number of phases in the model
-    std::vector<int> active_cells_; //!< Vector defining active cells (size equal to total number of cells) .
+    int nphases_; //!< Number of phases in the model.
+
     std::vector<double> times_; //!< Vector containing all time steps.
+    std::vector<std::vector<double>> pressure_; //!< Vector containing reservoir pressures.
 
     /*!
      * Calculate the cumulative using the composite trapezoidal rule.
