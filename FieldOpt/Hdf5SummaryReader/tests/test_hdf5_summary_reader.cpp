@@ -1,5 +1,6 @@
 #include "../hdf5_summary_reader.h"
 #include <gtest/gtest.h>
+#include <hdf5_summary_reader.h>
 
 namespace {
     class Hdf5SummaryReaderTest : public ::testing::Test {
@@ -35,12 +36,43 @@ namespace {
 
     TEST_F(Hdf5SummaryReaderTest, ActiveCellVector) {
         auto reader = Hdf5SummaryReader(file_path);
-        std::vector<int> active_cells = reader.active_cells();
 
-        for (int i = 0; i < active_cells.size(); ++i) {
-            // std::cout << active_cells[i] << std::endl;
-            EXPECT_EQ(active_cells[i], i);
+           auto cells_total_num_ = reader.cells_total_num();
+          auto cells_num_active_ = reader.cells_num_active();
+        auto cells_num_inactive_ = reader.cells_num_inactive();
+
+            auto cells_active_ = reader.cells_active();
+        auto cells_active_idx_ = reader.cells_active_idx();
+
+        // Test based on all cells in test reservoir (5spot) being active
+        EXPECT_EQ(cells_total_num_, 3600);
+        EXPECT_EQ(cells_num_active_, cells_total_num_);
+        EXPECT_EQ(cells_num_inactive_, 0);
+
+        for (int i = 0; i < cells_num_active_; ++i) {
+            // std::cout << cells_num_active_[i] << std::endl;
+            EXPECT_EQ(cells_active_[i], i);
+            EXPECT_EQ(cells_active_idx_[i], i);
         }
+    }
+
+    TEST_F(Hdf5SummaryReaderTest, readReservoirPressure) {
+          auto reader = Hdf5SummaryReader(file_path);
+        auto pressure = reader.reservoir_pressure();
+
+        std::vector<double> def_pressure = {
+            370.555603, 370.55451121327735, 366.80490627652864,
+            281.07546615360917, 213.85427339240036, 179.59397120055957,
+            154.40334284097705, 151.17045510746573
+        };
+
+        // Test against first component of each pressure vector
+        // to confirm we're reading correct column and that the
+        // read vector has been correctly resized
+        for (int i = 0; i < pressure.size(); ++i) {
+            EXPECT_EQ(def_pressure[i], pressure[i][0]);
+        }
+
     }
 
     TEST_F(Hdf5SummaryReaderTest, IntegerData) {
