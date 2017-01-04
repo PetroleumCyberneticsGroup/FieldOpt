@@ -9,7 +9,8 @@ option( COPY_EXAMPLES    "Copy examples to build directory (needed for many unit
 option( BUILD_TESTING    "Build unit tests"                                               ON )
 
 if (BUILD_TESTING AND NOT COPY_EXAMPLES)
-    message("It is recommended to copy examples when building texts. Some of the tests use files in the examples directory.")
+    message("It is recommended to copy examples when building tests.
+    Some of the tests use files in the examples directory.")
 endif()
 
 if (NOT BUILD_WIC_ONLY)
