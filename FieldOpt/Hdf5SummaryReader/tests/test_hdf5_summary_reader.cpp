@@ -12,6 +12,7 @@ namespace {
         virtual void SetUp() {}
         virtual void TearDown() {}
         std::string file_path = "../examples/ADGPRS/5spot/5SPOT.vars.h5";
+        std::string file_path_gpt = "../examples/ADGPRS/5spot/5SPOT-gpt.vars.h5";
     };
 
 
@@ -56,6 +57,23 @@ namespace {
         }
     }
 
+    TEST_F(Hdf5SummaryReaderTest, readSaturation) {
+
+        auto reader_gpt = Hdf5SummaryReader(file_path_gpt);
+          auto soil_gpt = reader_gpt.soil();
+        // std::cout << "soil.size() = " << soil.size() << std::endl;
+        EXPECT_EQ(soil_gpt.size(), 8);
+        EXPECT_EQ(soil_gpt[0].size(), 3600);
+
+        auto reader = Hdf5SummaryReader(file_path);
+         auto  soil = reader.soil();
+        EXPECT_EQ(soil.size(), 8);
+        EXPECT_EQ(soil[0].size(), 3600);
+
+    }
+
+
+
     TEST_F(Hdf5SummaryReaderTest, readReservoirPressure) {
           auto reader = Hdf5SummaryReader(file_path);
         auto pressure = reader.reservoir_pressure();
@@ -71,9 +89,17 @@ namespace {
         // read vector has been correctly resized
         for (int i = 0; i < pressure.size(); ++i) {
             EXPECT_EQ(def_pressure[i], pressure[i][0]);
-        }
 
+            // Uncomment to debug:
+            // std::cout << "pressure[tt=" << ii << "].size() = "
+            //           << pressure[ii].size() << std::endl;
+        }
+        // Uncomment to debug:
+        // for (int rr = 0; rr < 10; ++rr) { // pressure_.size()
+        //      std::cout << "pressure = " << pressure_[0][rr] << std::endl;
+        // }
     }
+
 
     TEST_F(Hdf5SummaryReaderTest, IntegerData) {
         auto reader = Hdf5SummaryReader(file_path);

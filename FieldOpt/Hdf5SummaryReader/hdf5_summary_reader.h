@@ -44,6 +44,21 @@ public:
     std::vector<std::vector<double>> reservoir_pressure() const { return pressure_; }
 
     /*!
+     * Get sgas vector.
+     */
+    std::vector<std::vector<double>> sgas() const { return sgas_; }
+
+    /*!
+     * Get soil vector.
+     */
+    std::vector<std::vector<double>> soil() const { return soil_; }
+
+    /*!
+     * Get swat vector.
+     */
+    std::vector<std::vector<double>> swat() const { return swat_; }
+
+    /*!
      * Return vector of active grid cells.
      */
     const std::vector<int> &cells_active() { return cells_active_; }
@@ -218,7 +233,7 @@ private:
     const H5std_string DATASET_NAME_WELL_STATES; //!< The name of the dataset containing the well states in the HDF5 file.
     const H5std_string DATASET_NAME_ACTIVE_CELLS; //!< The name of the dataset containing active cells vector.
     const H5std_string DATASET_NAME_PRESSURE; //!< The name of the dataset containing pressure and component data.
-
+    const H5std_string DATASET_NAME_SATURATION; //!< The name of the dataset containing saturation data.
     /*!
      * The wstype_t datatype represents the datatype in which well states are stored in the HDF5 file.
      * Each element in the dataset contains information about a well and its perforations at a specific
@@ -284,6 +299,7 @@ private:
 
     void readActiveCells(std::string file_path); //!< Read vector defining which cells are active from the HDF5 summary file.
     void readReservoirPressure(std::string file_path); //!< Read reservoir cell pressures for each time step.
+    void readSaturation(std::string file_path); //!< Read cell saturations for each time step.
 
     /*!
      * variables containing information about the reservoir cell ensemble,
@@ -304,6 +320,11 @@ private:
 
     std::vector<double> times_; //!< Vector containing all time steps.
     std::vector<std::vector<double>> pressure_; //!< Vector containing reservoir pressures.
+    std::vector<std::vector<double>> soil_; //!< Vector containing oil saturation.
+    std::vector<std::vector<double>> sgas_; //!< Vector containing gas saturation.
+    std::vector<std::vector<double>> swat_; //!< Vector containing water saturation.
+
+    std::vector<std::vector<double>> getSaturation(H5::Group dataset, hsize_t sat_type);
 
     /*!
      * Calculate the cumulative using the composite trapezoidal rule.
