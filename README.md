@@ -72,17 +72,93 @@ make
 sudo make install
 ```
 
-5. Clone and build FieldOpt
+5. Clone FieldOpt
 ```bash
 # Clone FieldOpt into some directory
 git clone --recursive https://github.com/PetroleumCyberneticsGroup/FieldOpt.git
-mkdir fieldopt-build
-cd fieldopt-build
+```
+The WellIndexCalculator directory is a repository within the main FieldOpt directory. By cloning the main FieldOpt repository using the recursive flag (as in the above command), the WellIndexCalculator repository should automatically be cloned into the FieldOpt repository. If this is the case (check that the FieldOpt directory in your system contains the WellIndexCalculator directory, and that this directory is non-empty), then you can proceed with building FieldOpt (step 6).
+
+If the above commands gives you the following message:
+```bash
+...    
+Submodule 'FieldOpt/FieldOpt-WellIndexCalculator' (git@github.com:PetroleumCyberneticsGroup/FieldOpt-WellIndexCalculator.git) registered for path 'FieldOpt/FieldOpt-WellIndexCalculator'                                                                     
+Submodule 'FieldOpt/Optimization/experimental_constraints' (git@github.com:PetroleumCyberneticsGroup/experimental_constraints.git) registered for path 'FieldOpt/Optimization/experimental_constraints'                                                       
+Cloning into 'FieldOpt/FieldOpt-WellIndexCalculator'...                                                                        
+Permission denied (publickey).                                                                                             fatal: Could not read from remote repository.                                                                                      
+Please make sure you have the correct access rights
+and the repository exists.
+```
+please try one of the following:
+
+-step into the FieldOpt directory and fetch the WellIndexCalculator subrepo manually:
+```bash
+cd FieldOpt
+git submodule update --recursive --remote
+```
+
+-add your SSH key to your GitHub account and clone the FieldOpt repo with the recursive flag again. Here's [how to create an SSH key and add it to your Github account](https://help.github.com/articles/generating-an-ssh-key/).
+
+The FieldOpt directory should have the following structure:
+```
+FieldOpt
+│   
+└───examples
+│   └───Flow
+│   └───ECLIPSE
+│   └───ADGPRS        
+│   horzwell_bhp.json
+│   horzwell_perforation.json
+│
+└───FieldOpt
+│   │   
+│   └───ConstraintMath
+│   └───ERTWrapper
+│   └───FieldOpt-WellIndexCalculator
+│   └───Hdf5SummaryReader
+│   └───Model
+│   └───Optimization
+│   └───Reservoir
+│   └───Runner
+│   └───Settings
+│   └───Simulation
+│   └───Utilities
+│   CMakeLists.txt
+│    
+└───tools
+│   └───ipython_notebooks
+│   └───python_scripts
+│   └───wic-benchmark-results
+│   
+│ command_line_build.sh
+│ copyright_template
+│ create_release.sh
+│ Doxyfile
+│ LICENSE.md
+│ logo.png
+│ README.md
+│ run_tests.sh
+
+```
+
+6. Build FieldOpt
+
+Here we are setting the FieldOpt build directory outside the main FieldOpt directory, so these two directories should be alongside each other:
+```
+FieldOpt
+FieldOpt-build
+```
+
+Make the build directory and perform the make commands:
+```bash
+mkdir Fieldopt-build
+cd Fieldopt-build
 cmake ../FieldOpt/FieldOpt
 make
 ```
 
-6. Test that FieldOpt is working:
+
+7. Test that FieldOpt is working:
 ```bash
 # Run the unit tests
 make test
@@ -92,7 +168,7 @@ make test
 ./WellIndexCalculator --help
 ```
 
-7. Install a simulator. Either [Flow](http://opm-project.org?page_id=19), AD-GPRS or ECL100.
+8. Install a simulator. Either [Flow](http://opm-project.org?page_id=19), AD-GPRS or ECL100.
 
 ## AD-GPRS Libraries
 Because ADGPRS is linked with an old version of OpenMPI, we need to use the same version to be able to launch it from within FieldOpt. We also need to use a boost library linked with the same OpenMPI version.
