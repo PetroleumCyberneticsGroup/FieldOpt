@@ -66,7 +66,6 @@ namespace TestResources {
             VectorXd p1 = xtail - xhead.cwiseProduct(xhead);
             VectorXd p2 = xhead - VectorXd::Ones(xhead.size());
             return (100 * p1.cwiseProduct(p1) + p2.cwiseProduct(p2)).sum();
-
         }
 
     }
