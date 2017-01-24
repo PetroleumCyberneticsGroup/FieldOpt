@@ -72,6 +72,7 @@ namespace Optimization {
         virtual QString GetStatusString() const; //!< Get a CSV string describing the current state of the optimizer.
         void EnableConstraintLogging(QString output_directory_path); //!< Enable writing a text log for the constraint operations.
         void SetVerbosityLevel(int level);
+        bool IsAsync() const { return is_async_; } //!< Check if the optimizer is asynchronous.
 
     protected:
         /*!
@@ -84,16 +85,22 @@ namespace Optimization {
                   Reservoir::Grid::Grid *grid);
 
         /*!
-         * \brief BetterCaseFoundLastEvaluation Searches the list of recently evaluated cases in the case handler for a case
-         * with a better objective function value than the current tentative best case.
-         * \return True if a better case is found, otherwise false.
+         * @brief Handle an incomming evaluated case. This is called at the end of the SubmitEvaluatedCase method.
+         * @param c
          */
-        bool betterCaseFoundLastEvaluation();
+        virtual void handleEvaluatedCase(Case *c) = 0;
 
         /*!
-         * \brief ApplyNewTentativeBestCase Sets the tentative best case to the best case found in the case handler (if one is found).
+         * @brief Check whether the Case c is an improvement on the tentative best case.
+         * @param c Case to be checked.
+         * @return True if improvement; otherwise false.
          */
-        void applyNewTentativeBestCase();
+        bool isImprovement(const Case* c);
+
+        /*!
+         * @brief Check if Case c1 is better than Case c2, taking into account if we're maximizing or minimizing.
+         */
+        bool isBetter(const Case* c1, const Case *c2);
 
         /*!
          * \brief iterate Performs an iteration, generating new cases and adding them to the case_handler.
@@ -107,6 +114,7 @@ namespace Optimization {
         int iteration_; //!< The current iteration.
         int verbosity_level_; //!< The verbosity level for runtime console logging.
         ::Settings::Optimizer::OptimizerMode mode_; //!< The optimization mode, i.e. whether the objective function should be maximized or minimized.
+        bool is_async_; //!< Inidcates whether or not the optimizer is asynchronous. Defaults to false.
     };
 
 }

@@ -3,6 +3,7 @@
 
 #include <QHash>
 #include <QUuid>
+#include <Eigen/Core>
 #include "optimization_exceptions.h"
 
 namespace Optimization {
@@ -68,6 +69,70 @@ namespace Optimization {
 
         QString StringRepresentation();
 
+        /*!
+         * Get the real variables of this case as a Vector.
+         *
+         * @note This function will not work with Case objects created from CaseTransferObject.
+         * This implies that, when running in parallel, it will only work on the main process.
+         *
+         * This creates an ordering of the variables so that for future
+         * use the i'th index in the vector will always correspond to the
+         * same variable.
+         * @return Values of the real variables in a vector
+         */
+        Eigen::VectorXd GetRealVarVector();
+
+        /*!
+         * Sets the real variable values of this case from a given vector.
+         *
+         * @note This function will not work with Case objects created from CaseTransferObject.
+         * This implies that, when running in parallel, it will only work on the main process.
+         *
+         * The order of the variables as they appear in vector this case is preserved
+         * given that they were taken from this same case from the function GetRealVector()
+         * @param vec
+         */
+        void SetRealVarValues(Eigen::VectorXd vec);
+
+        /*!
+         * Get the integer variables of this case as a Vector.
+         *
+         * @note This function will not work with Case objects created from CaseTransferObject.
+         * This implies that, when running in parallel, it will only work on the main process.
+         *
+         * This creates an ordering of the variables so that for future
+         * use the i'th index in the vector will always correspond to the
+         * same variable.
+         * @return Values of the integer variables in a vector
+         */
+        Eigen::VectorXi GetIntegerVarVector();
+
+        /*!
+         * Sets the integer variable values of this case from a given vector.
+         *
+         * @note This function will not work with Case objects created from CaseTransferObject.
+         * This implies that, when running in parallel, it will only work on the main process.
+         *
+         * The order of the variables as they appear in vector this case is preserved
+         * given that they were taken from this same case from the function GetIntegerVarVector()
+         * @param vec
+         */
+        void SetIntegerVarValues(Eigen::VectorXi vec);
+
+        /*!
+         * @brief Set the origin info of this Case/trial point, i.e. which point it was generated
+         * from, in which direction it was perturbed, and with what magnitude. This method is
+         * needed by some optimization algorithms.
+         * @param parent The Case/trial point this was generated from.
+         * @param direction_index The direction index of the perturbation.
+         * @param step_length The magnitude of the perturbation.
+         */
+        void set_origin_data(Case* parent, int direction_index, double step_length);
+
+        Case* origin_case() const { return parent_; }
+        int origin_direction_index() const { return direction_index_; }
+        double origin_step_length() const { return step_length_; }
+
     private:
         QUuid id_; //!< Unique ID for the case.
 
@@ -75,6 +140,13 @@ namespace Optimization {
         QHash<QUuid, bool> binary_variables_;
         QHash<QUuid, int> integer_variables_;
         QHash<QUuid, double> real_variables_;
+
+        QList<QUuid> real_id_index_map_;
+        QList<QUuid> integer_id_index_map_;
+
+        Case* parent_; //!< The parent of this trial point. Needed by the APPS algorithm.
+        int direction_index_; //!< The direction index used to generate this trial point.
+        double step_length_; //!< The step length used to generate this trial point.
 
     };
 

@@ -27,7 +27,6 @@ add_library(optimization
 		constraints/constraint_handler.cpp
 		constraints/reservoir_boundary.cpp
 		optimizer.cpp
-		optimizers/compass_search.cpp
 		constraints/well_spline_length.cpp
 		constraints/interwell_distance.cpp
 		constraints/well_spline_constraint.cpp
@@ -35,6 +34,10 @@ add_library(optimization
 		constraints/rate_constraint.cpp
 		constraints/combined_spline_length_interwell_distance_reservoir_boundary.cpp
 		case_transfer_object.cpp
+		optimizers/ExhaustiveSearch2DVert.cpp
+		optimizers/GSS.cpp
+		optimizers/compass_search.cpp
+		optimizers/APPS.cpp
 		${EXPERIMENTAL_CONSTRAINTS_SRC} )
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
@@ -71,7 +74,8 @@ if (BUILD_TESTING)
 			tests/test_resource_optimizer.h
 			${EXPERIMENTAL_CONSTRAINTS_TESTS}
 			tests/constraints/test_rate_constraint.cpp
-			tests/test_case_transfer_object.cpp)
+			tests/test_case_transfer_object.cpp
+            tests/optimizers/test_apps.cpp)
 
 	target_link_libraries(test_optimization
 			fieldopt::optimization

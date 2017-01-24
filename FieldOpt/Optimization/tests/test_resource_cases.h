@@ -12,18 +12,20 @@ namespace TestResources {
     class TestResourceCases : public TestResources::TestResourceVariablePropertyContainer {
     public:
         TestResourceCases() {
-            test_case_1_ = new Optimization::Case(QHash<QUuid, bool>(), integer_variables_, QHash<QUuid, double>());
-            test_case_2_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), real_variables_);
-            test_case_2_->set_objective_function_value(100.0);
-            test_case_3_ = new Optimization::Case(binary_variables_, integer_variables_, real_variables_);
-            test_case_3_->set_objective_function_value(-50.0);
-            test_case_4_ = new Optimization::Case(binary_variables_, integer_variables_, real_variables_);
-            test_case_4_->set_objective_function_value(-50.0);
-            test_case_5_ = new Optimization::Case(variable_property_container_->GetBinaryVariableValues(),
-                                                  variable_property_container_->GetDiscreteVariableValues(),
-                                                  variable_property_container_->GetContinousVariableValues());
+            test_case_1_3i_ = new Optimization::Case(QHash<QUuid, bool>(), integer_variables_3d_, QHash<QUuid, double>());
+            test_case_2_3r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), real_variables_3d_);
+            test_case_2_3r_->set_objective_function_value(100.0);
+            test_case_3_4b3i3r_ = new Optimization::Case(binary_variables_4d_, integer_variables_3d_, real_variables_3d_);
+            test_case_3_4b3i3r_->set_objective_function_value(-50.0);
+            test_case_4_4b3i3r = new Optimization::Case(binary_variables_4d_, integer_variables_3d_, real_variables_3d_);
+            test_case_4_4b3i3r->set_objective_function_value(-50.0);
+            trivial_cases_ << test_case_1_3i_ << test_case_2_3r_ << test_case_3_4b3i3r_ << test_case_4_4b3i3r;
 
-            trivial_cases_ << test_case_1_ << test_case_2_ << test_case_3_ << test_case_4_;
+            test_case_spline_ = new Optimization::Case(varcont_prod_spline_->GetBinaryVariableValues(),
+                                                       varcont_prod_spline_->GetDiscreteVariableValues(),
+                                                       varcont_prod_spline_->GetContinousVariableValues());
+
+            test_case_2r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), real_variables_2d_);
         }
 
         QList<Optimization::Case *> trivial_cases_;
@@ -32,46 +34,56 @@ namespace TestResources {
          * Only integer variables.
          * OBjective function not evaluated.
          */
-        Optimization::Case *test_case_1_;
+        Optimization::Case *test_case_1_3i_;
 
         /* Case 2:
          * Only real variables.
          * Objective function evaluated.
          */
-        Optimization::Case *test_case_2_;
+        Optimization::Case *test_case_2_3r_;
 
         /* Case 3:
          * All variable types.
          * Objective function evaluated.
          */
-        Optimization::Case *test_case_3_;
+        Optimization::Case *test_case_3_4b3i3r_;
 
         /* Case 4:
          * Identical to case 3.
          */
-        Optimization::Case *test_case_4_;
+        Optimization::Case *test_case_4_4b3i3r;
 
         /* Case 5:
          * Spline well case
          */
-        Optimization::Case *test_case_5_;
+        Optimization::Case *test_case_spline_;
+
+        /* Case:
+         * Two real variables.
+         */
+        Optimization::Case *test_case_2r_;
 
     private:
-        const QHash<QUuid, bool> binary_variables_{
+        const QHash<QUuid, bool> binary_variables_4d_{
                 {QUuid::createUuid(), true},
                 {QUuid::createUuid(), true},
                 {QUuid::createUuid(), false},
                 {QUuid::createUuid(), false}
         };
-        const QHash<QUuid, int> integer_variables_{
+        const QHash<QUuid, int> integer_variables_3d_{
                 {QUuid::createUuid(), 1},
                 {QUuid::createUuid(), 2},
                 {QUuid::createUuid(), 5}
         };
-        const QHash<QUuid, double> real_variables_{
+        const QHash<QUuid, double> real_variables_3d_{
                 {QUuid::createUuid(), 1.0},
                 {QUuid::createUuid(), 4.0},
                 {QUuid::createUuid(), 2.5}
+        };
+
+        const QHash<QUuid, double> real_variables_2d_{
+                {QUuid::createUuid(), 2.0},
+                {QUuid::createUuid(), 3.0}
         };
 
     };

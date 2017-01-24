@@ -1,4 +1,6 @@
+#include <iostream>
 #include "compass_search.h"
+#include "gss_patterns.hpp"
 
 namespace Optimization {
     namespace Optimizers {
@@ -6,58 +8,20 @@ namespace Optimization {
         CompassSearch::CompassSearch(Settings::Optimizer *settings, Case *base_case,
                                      Model::Properties::VariablePropertyContainer *variables,
                                      Reservoir::Grid::Grid *grid)
-                : Optimizer(settings, base_case, variables, grid)
+                : GSS(settings, base_case, variables, grid)
         {
-            step_length_ = settings->parameters().initial_step_length;
-            minimum_step_length_ = settings->parameters().minimum_step_length;
-        }
-
-        void CompassSearch::step()
-        {
-            applyNewTentativeBestCase();
-        }
-
-        void CompassSearch::contract()
-        {
-            step_length_ = step_length_/2.0;
-        }
-
-        void CompassSearch::perturb()
-        {
-            QList<Case *> perturbations = QList<Case *>();
-            for (QUuid id : tentative_best_case_->integer_variables().keys())
-                perturbations.append(tentative_best_case_->Perturb(id, Case::SIGN::PLUSMINUS, step_length_));
-            for (QUuid id : tentative_best_case_->real_variables().keys())
-                perturbations.append(tentative_best_case_->Perturb(id, Case::SIGN::PLUSMINUS, step_length_));
-            for (Case *c : perturbations) {
-                constraint_handler_->SnapCaseToConstraints(c);
-            }
-            case_handler_->AddNewCases(perturbations);
-        }
-
-        Optimizer::TerminationCondition CompassSearch::IsFinished()
-        {
-            if (case_handler_->EvaluatedCases().size() >= max_evaluations_)
-                return MAX_EVALS_REACHED;
-            else if (step_length_ < minimum_step_length_)
-                return MINIMUM_STEP_LENGTH_REACHED;
-            else return NOT_FINISHED; // The value of not finished is 0, which evaluates to false.
+            directions_ = GSSPatterns::Compass(num_vars_);
+            step_lengths_ = Eigen::VectorXd(directions_.size());
+            step_lengths_.fill(settings->parameters().initial_step_length);
         }
 
         void CompassSearch::iterate()
         {
-            if (iteration_ == 0) {
-                perturb();
-            }
-            else if (betterCaseFoundLastEvaluation()) {
-                step();
-                perturb();
-            }
-            else {
+            if (!is_successful_iteration() && iteration_ != 0)
                 contract();
-                perturb();
-            }
+            case_handler_->AddNewCases(generate_trial_points());
             case_handler_->ClearRecentlyEvaluatedCases();
+            iteration_++;
         }
 
         QString CompassSearch::GetStatusStringHeader() const
@@ -81,7 +45,16 @@ namespace Optimization {
                     .arg(nr_recently_evaluated_cases())
                     .arg(tentative_best_case_->id().toString())
                     .arg(tentative_best_case_->objective_function_value())
-                    .arg(step_length_);
+                    .arg(step_lengths_[0]);
+        }
+
+        void CompassSearch::handleEvaluatedCase(Case *c) {
+            if (isImprovement(c))
+                tentative_best_case_ = c;
+        }
+
+        bool CompassSearch::is_successful_iteration() {
+            return case_handler_->RecentlyEvaluatedCases().contains(tentative_best_case_);
         }
 
     }}

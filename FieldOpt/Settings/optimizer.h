@@ -19,7 +19,9 @@ namespace Settings {
         friend class Settings;
 
     public:
-        enum OptimizerType { Compass };
+        Optimizer(){}
+        Optimizer(QJsonObject json_optimizer);
+        enum OptimizerType { Compass, APPS, ExhaustiveSearch2DVert };
         enum OptimizerMode { Maximize, Minimize };
         enum ConstraintType { BHP, Rate, SplinePoints,
             WellSplineLength, WellSplineInterwellDistance, WellSplineDomain,
@@ -34,6 +36,10 @@ namespace Settings {
             int max_evaluations; //!< Maximum number of evaluations allowed before terminating the optimization run.
             double initial_step_length; //!< The initial step length in the algorithm when applicable.
             double minimum_step_length; //!< The minimum step length in the algorithm when applicable.
+            double contraction_factor; //!< The contraction factor for GSS algorithms.
+            double expansion_factor; //!< The expansion factor for GSS algorithms.
+            double max_queue_size; //!< Maximum size of evaluation queue.
+            QString pattern; //!< The pattern to be used for GSS algorithms.
         };
 
         struct Objective {
@@ -69,7 +75,6 @@ namespace Settings {
 
     private:
         QList<Constraint> constraints_;
-        Optimizer(QJsonObject json_optimizer);
         OptimizerType type_;
         Parameters parameters_;
         Objective objective_;

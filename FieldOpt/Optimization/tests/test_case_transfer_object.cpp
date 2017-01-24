@@ -27,16 +27,16 @@ namespace {
 
 
     TEST_F(CaseTransferObjectTest, CaseConstructor) {
-        CaseTransferObject cto(test_case_3_);
-        EXPECT_STREQ(    test_case_3_->id_stdstr().c_str(),        cto.id_stdstr().c_str());
-        EXPECT_FLOAT_EQ( test_case_3_->objective_function_value(), cto.objective_function_value());
-        EXPECT_EQ(       test_case_3_->binary_variables().size(),  cto.binary_variables().size());
-        EXPECT_EQ(       test_case_3_->integer_variables().size(), cto.integer_variables().size());
-        EXPECT_EQ(       test_case_3_->real_variables().size(),    cto.real_variables().size());
+        CaseTransferObject cto(test_case_3_4b3i3r_);
+        EXPECT_STREQ(    test_case_3_4b3i3r_->id_stdstr().c_str(),        cto.id_stdstr().c_str());
+        EXPECT_FLOAT_EQ( test_case_3_4b3i3r_->objective_function_value(), cto.objective_function_value());
+        EXPECT_EQ(       test_case_3_4b3i3r_->binary_variables().size(),  cto.binary_variables().size());
+        EXPECT_EQ(       test_case_3_4b3i3r_->integer_variables().size(), cto.integer_variables().size());
+        EXPECT_EQ(       test_case_3_4b3i3r_->real_variables().size(),    cto.real_variables().size());
     }
 
     TEST_F(CaseTransferObjectTest, SerializationAndDeserializationAndGeneratedCase) {
-        auto cto1 = CaseTransferObject(test_case_3_); // create a populated cto
+        auto cto1 = CaseTransferObject(test_case_3_4b3i3r_); // create a populated cto
 
         // Serialize
         std::stringstream stream; // create a stream
@@ -52,19 +52,19 @@ namespace {
         auto c = cto2.CreateCase();
 
         // Check that the generated case matches with the original test_case_3
-        EXPECT_TRUE(test_case_3_->Equals(c));
-        EXPECT_STREQ(    test_case_3_->id_stdstr().c_str(),        c->id_stdstr().c_str());
-        EXPECT_FLOAT_EQ( test_case_3_->objective_function_value(), c->objective_function_value());
-        EXPECT_EQ(       test_case_3_->binary_variables().size(),  c->binary_variables().size());
-        EXPECT_EQ(       test_case_3_->integer_variables().size(), c->integer_variables().size());
-        EXPECT_EQ(       test_case_3_->real_variables().size(),    c->real_variables().size());
+        EXPECT_TRUE(test_case_3_4b3i3r_->Equals(c));
+        EXPECT_STREQ(    test_case_3_4b3i3r_->id_stdstr().c_str(),        c->id_stdstr().c_str());
+        EXPECT_FLOAT_EQ( test_case_3_4b3i3r_->objective_function_value(), c->objective_function_value());
+        EXPECT_EQ(       test_case_3_4b3i3r_->binary_variables().size(),  c->binary_variables().size());
+        EXPECT_EQ(       test_case_3_4b3i3r_->integer_variables().size(), c->integer_variables().size());
+        EXPECT_EQ(       test_case_3_4b3i3r_->real_variables().size(),    c->real_variables().size());
 
-        for (auto id : test_case_3_->integer_variables().keys())
-            EXPECT_EQ(      test_case_3_->integer_variables()[id], c->integer_variables()[id]);
-        for (auto id : test_case_3_->binary_variables().keys())
-            EXPECT_EQ(      test_case_3_->binary_variables()[id],  c->binary_variables()[id]);
-        for (auto id : test_case_3_->real_variables().keys())
-            EXPECT_FLOAT_EQ(test_case_3_->real_variables()[id],    c->real_variables()[id]);
+        for (auto id : test_case_3_4b3i3r_->integer_variables().keys())
+            EXPECT_EQ(      test_case_3_4b3i3r_->integer_variables()[id], c->integer_variables()[id]);
+        for (auto id : test_case_3_4b3i3r_->binary_variables().keys())
+            EXPECT_EQ(      test_case_3_4b3i3r_->binary_variables()[id],  c->binary_variables()[id]);
+        for (auto id : test_case_3_4b3i3r_->real_variables().keys())
+            EXPECT_FLOAT_EQ(test_case_3_4b3i3r_->real_variables()[id],    c->real_variables()[id]);
 
 
     }

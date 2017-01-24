@@ -44,23 +44,23 @@ namespace Runner {
         Model::Properties::VariablePropertyContainer *properties = model->variables();
 
         // Write header
-        Utilities::FileHandling::WriteLineToFile("UUID,name", property_uuid_name_map_path_);
+        Utilities::FileHandling::WriteLineToFile("UUID,\tname", property_uuid_name_map_path_);
 
         // Binary properties
         for (QUuid id : properties->GetBinaryVariables()->keys()) {
-            QString line = QString("%1,%2").arg(id.toString()).arg(properties->GetBinaryVariables()->value(id)->name());
+            QString line = QString("%1,\t%2").arg(id.toString()).arg(properties->GetBinaryVariables()->value(id)->name());
             Utilities::FileHandling::WriteLineToFile(line, property_uuid_name_map_path_);
         }
 
         // Continous properties
         for (QUuid id : properties->GetContinousVariables()->keys()) {
-            QString line = QString("%1,%2").arg(id.toString()).arg(properties->GetContinousVariables()->value(id)->name());
+            QString line = QString("%1,\t%2").arg(id.toString()).arg(properties->GetContinousVariables()->value(id)->name());
             Utilities::FileHandling::WriteLineToFile(line, property_uuid_name_map_path_);
         }
 
         // Discrete properties
         for (QUuid id : properties->GetDiscreteVariables()->keys()) {
-            QString line = QString("%1,%2").arg(id.toString()).arg(properties->GetDiscreteVariables()->value(id)->name());
+            QString line = QString("%1,\t%2").arg(id.toString()).arg(properties->GetDiscreteVariables()->value(id)->name());
             Utilities::FileHandling::WriteLineToFile(line, property_uuid_name_map_path_);
         }
     }
@@ -92,7 +92,7 @@ namespace Runner {
         if (line.size() != cas_header_.size())
             throw std::runtime_error("Case header/line length mismatch in logger.");
 
-        Utilities::FileHandling::WriteLineToFile(line.join(","), cas_log_path_);
+        Utilities::FileHandling::WriteLineToFile(line.join(",\t"), cas_log_path_);
 
         if (verbose_) {
             std::cout << "Case:_____________________________________" << std::endl;
@@ -112,7 +112,7 @@ namespace Runner {
         if (line.size() != opt_header_.size())
             throw std::runtime_error("Optimizer header/line length mismatch in logger. ");
 
-        Utilities::FileHandling::WriteLineToFile(line.join(","), opt_log_path_);
+        Utilities::FileHandling::WriteLineToFile(line.join(",\t"), opt_log_path_);
 
         if (verbose_) {
             std::cout << "Optimizer status:_________________________" << std::endl;
@@ -145,7 +145,7 @@ namespace Runner {
             if (line.size() != sim_header_.size())
                 throw std::runtime_error("Simulation header/line length mismatch in logger.");
 
-            Utilities::FileHandling::WriteLineToFile(line.join(","), sim_log_path_);
+            Utilities::FileHandling::WriteLineToFile(line.join(",\t"), sim_log_path_);
 
             if (verbose_) {
                 std::cout << "Simulation ended:_________________________" << std::endl;
@@ -214,19 +214,19 @@ namespace Runner {
         for (int i = 0; i < c->real_variables().count(); ++i)
             cas_header_ << "ReaVarID" << "ReaVarVal";
 
-        Utilities::FileHandling::WriteStringToFile(cas_header_.join(","), cas_log_path_);
+        Utilities::FileHandling::WriteStringToFile(cas_header_.join(",\t"), cas_log_path_);
     }
 
     void Logger::initializeOptimizerLog(const Optimization::Optimizer *opt)
     {
         opt_header_ = (QStringList() << "TimeStamp" << opt->GetStatusStringHeader().split(","));
-        Utilities::FileHandling::WriteStringToFile(opt_header_.join(","), opt_log_path_);
+        Utilities::FileHandling::WriteStringToFile(opt_header_.join(",\t"), opt_log_path_);
     }
 
     void Logger::initializeSimulationLog()
     {
         sim_header_ = (QStringList() << "StartTime" << "EndTime" << "Duration" << "CaseID");
-        Utilities::FileHandling::WriteStringToFile(sim_header_.join(","), sim_log_path_);
+        Utilities::FileHandling::WriteStringToFile(sim_header_.join(",\t"), sim_log_path_);
     }
 
     QString Logger::getTimeStampString()

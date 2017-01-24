@@ -19,42 +19,13 @@ namespace Optimization {
         constraint_handler_ = new Constraints::ConstraintHandler(settings->constraints(), variables, grid);
         iteration_ = 0;
         mode_ = settings->mode();
-    }
-
-    bool Optimizer::betterCaseFoundLastEvaluation()
-    {
-        for (Case* c : case_handler_->RecentlyEvaluatedCases()) {
-            if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
-                if (c->objective_function_value() > tentative_best_case_->objective_function_value())
-                    return true;
-            }
-            else if (mode_ == Settings::Optimizer::OptimizerMode::Minimize) {
-                if (c->objective_function_value() < tentative_best_case_->objective_function_value())
-                    return true;
-            }
-        }
-        return false;
-    }
-
-    void Optimizer::applyNewTentativeBestCase()
-    {
-        for (Case* c : case_handler_->RecentlyEvaluatedCases()) {
-            if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
-                if (c->objective_function_value() > tentative_best_case_->objective_function_value())
-                    tentative_best_case_ = c;
-            }
-            else if (mode_ == Settings::Optimizer::OptimizerMode::Minimize) {
-                if (c->objective_function_value() < tentative_best_case_->objective_function_value())
-                    tentative_best_case_ = c;
-            }
-        }
+        is_async_ = false;
     }
 
     Case *Optimizer::GetCaseForEvaluation()
     {
         if (case_handler_->QueuedCases().size() == 0) {
             iterate();
-            iteration_++;
         }
         return case_handler_->GetNextCaseForEvaluation();
     }
@@ -63,10 +34,27 @@ namespace Optimization {
     {
         case_handler_->UpdateCaseObjectiveFunctionValue(c->id(), c->objective_function_value());
         case_handler_->SetCaseEvaluated(c->id());
+        handleEvaluatedCase(case_handler_->GetCase(c->id()));
     }
 
     Case *Optimizer::GetTentativeBestCase() const {
         return tentative_best_case_;
+    }
+
+    bool Optimizer::isImprovement(const Case *c) {
+        return isBetter(c, tentative_best_case_);
+    }
+
+    bool Optimizer::isBetter(const Case *c1, const Case *c2) {
+        if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
+            if (c1->objective_function_value() > c2->objective_function_value())
+                return true;
+        }
+        else if (mode_ == Settings::Optimizer::OptimizerMode::Minimize) {
+            if (c1->objective_function_value() < c2->objective_function_value())
+                return true;
+        }
+        return false;
     }
 
     QString Optimizer::GetStatusStringHeader() const
