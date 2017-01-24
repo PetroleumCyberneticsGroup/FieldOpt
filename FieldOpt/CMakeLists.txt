@@ -4,12 +4,20 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-option( BUILD_WIC_ONLY   "Only build the WellIndexCalculator and its dependencies"        OFF)
+option( BUILD_LOCAL_BIN  "Build FieldOpt executable in local directory"                   ON )
+option( BUILD_WIC_ONLY   "Only build the WellIndexCalculator and its dependencies"        ON )
 option( COPY_EXAMPLES    "Copy examples to build directory (needed for many unit tests)"  ON )
-option( BUILD_TESTING    "Build unit tests"                                               ON )
+option( BUILD_TESTING    "Build unit tests"                                               OFF )
+
+if (BUILD_LOCAL_BIN)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/../build-FieldOpt)
+else()
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+endif()
 
 if (BUILD_TESTING AND NOT COPY_EXAMPLES)
-    message("It is recommended to copy examples when building texts. Some of the tests use files in the examples directory.")
+    message("It is recommended to copy examples when building texts.
+    Some of the tests use files in the examples directory.")
 endif()
 
 if (NOT BUILD_WIC_ONLY)
@@ -23,13 +31,13 @@ if (NOT BUILD_WIC_ONLY)
     include_directories(${HDF5_INCLUDE_DIRS})
     find_package(Threads REQUIRED)
 endif()
-
+            
 
 # Boost libraries
 find_package(Boost REQUIRED)
 if (Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIR})
-endif ()
+endif()
 set(Boost_USE_STATIC_LIBS OFF) # enable dynamic linking
 set(Boost_USE_MULTITHREAD ON) # enable multithreading
 find_package(Boost COMPONENTS REQUIRED program_options serialization mpi system filesystem)
