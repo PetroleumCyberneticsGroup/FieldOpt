@@ -5,33 +5,43 @@
 #include <H5Cpp.h>
 
 /*!
- * The Hdf5SummaryReader class reads the summaries written in the HDF5 format by the AD-GPRS reservoir simulator.
+ * The Hdf5SummaryReader class reads the summaries written
+ * in the HDF5 format by the AD-GPRS reservoir simulator.
  *
- * Currently the class supports getting rates and cumulatives for each well and for the field, as well as
- * bottom hole pressures and well type for each well.
+ * Currently the class supports getting rates and cumulatives
+ * for each well and for the field, as well as bottom hole
+ * pressures and well type for each well.
  *
- * Note that we do not have access to the well names in the summary, thus we use well numbers. This number
- * corresponds to the row on which information about the well is found. This number apparently does not correspond to
- * the order in which the wells were specified in the driver file, thus we have no way of distinguishing wells other
- * that by producer/injector. Note also that we do not know whether the order in which the wells appear can change
- * between subsequent runs of the simulator.
+ * Note that we do not have access to the well names in the
+ * summary, thus we use well numbers. This number corresponds
+ * to the row on which information about the well is found.
+ * This number apparentlydoes not correspond to the order in
+ * which the wells were specified in the driver file, thus we
+ * have no way of distinguishing wells other that by producer
+ * /injector. Note also that we do not know whether the order
+ * in which the wells appear can change between subsequent
+ * runs of the simulator.
  *
- * Note also that when you get the rates for an injector using the get_*_rates methods, the numbers will be negative,
- * whereas if you get them using the get_*_injection_rates methods, they will be positive.
+ * Note also that when you get the rates for an injector using
+ * the get_*_rates methods, the numbers will be negative, whereas
+ * if you get them using the get_*_injection_rates methods, they
+ * will be positive.
  *
- * \todo This must also be tested for a 3 phase black oil model, it has only been tested for 2 phase dead oil.
+ * \todo This must also be tested for a 3 phase black oil model,
+ * it has only been tested for 2 phase dead oil.
  */
 class Hdf5SummaryReader {
 public:
     /*!
      * Read the HDF5 summary file written by AD-GPRS at the specified path.
      *
-     * \note The provided path is not checked by this method, and should therefore be
-     * checked before invoking this.
+     * \note The provided path is not checked by this method,
+     * and should therefore be checked before invoking this.
      * @param file_path Path to a .H5 summary file.
+     * @param cell_data Flag for whether to read cell data or not (defaults to false)
      * @return A Hdf5SummaryReader object containing information from the summary.
      */
-    Hdf5SummaryReader(const std::string file_path);
+    Hdf5SummaryReader(const std::string file_path, bool cell_data = false);
 
     /*!
      * Get the vector containing all time steps in the summary.
@@ -94,7 +104,8 @@ public:
     int number_of_tsteps() const { return ntimes_; }
 
     /*!
-     * Get the type reported for a well. +1 indicates an injector, -1 indicates a producer.
+     * Get the type reported for a well.
+     * +1 indicates an injector, -1 indicates a producer.
      */
     int well_type(const int well_number) const;
 
@@ -318,6 +329,8 @@ private:
     int ntimes_; //!< Number of time steps in the summary.
     int nphases_; //!< Number of phases in the model.
 
+    bool cell_data; //!< Flag for whether to read cell data from h5 file
+
     std::vector<double> times_; //!< Vector containing all time steps.
     std::vector<std::vector<double>> pressure_; //!< Vector containing reservoir pressures.
     std::vector<std::vector<double>> soil_; //!< Vector containing oil saturation.
@@ -334,9 +347,10 @@ private:
      *  T(f, h) = \frac{h}{2} \sum_{k=1}^{M}\left[ f(x_{k-1}) + f(x_k) \right]
      * \f]
      *
-     * In our case, \f$ h \f$ (the time difference) is not constant but can vary from step to step in the time step
-     * vector \f$ t \f$, so \f$ h = f(k) = t_k - t_{k-1} \f$. Additionally, \f$ f(x_k) = r_k \f$ where \f$ r \f$ is
-     * the rate vector. We also need to compute the cumulative at various time steps, so \f$ M \f$ is a variable.
+     * In our case, \f$ h \f$ (the time difference) is not constant but can vary from
+     * step to step in the time step vector \f$ t \f$, so \f$ h = f(k) = t_k - t_{k-1} \f$.
+     * Additionally, \f$ f(x_k) = r_k \f$ where \f$ r \f$ is the rate vector. We also
+     * need to compute the cumulative at various time steps, so \f$ M \f$ is a variable.
      * So then we have
      * \f[
      *  T(M) = \sum_{k=1}^M \left[ \frac{t_k - t_{k-1}}{2} \left( r_{k-1} + r_k \right) \right]

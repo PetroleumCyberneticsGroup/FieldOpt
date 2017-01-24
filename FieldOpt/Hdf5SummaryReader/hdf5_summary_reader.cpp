@@ -3,7 +3,7 @@
 #include <assert.h>
 
 using namespace H5;
-Hdf5SummaryReader::Hdf5SummaryReader(const std::string file_path)
+Hdf5SummaryReader::Hdf5SummaryReader(const std::string file_path, bool cell_data)
 : GROUP_NAME_RESTART("RESTART"),
   DATASET_NAME_TIMES("TIMES"),
   GROUP_NAME_FLOW_TRANSPORT("FLOW_TRANSPORT"),
@@ -14,9 +14,15 @@ Hdf5SummaryReader::Hdf5SummaryReader(const std::string file_path)
 {
     readTimeVector(file_path);
     readWellStates(file_path);
-    readActiveCells(file_path);
-    readReservoirPressure(file_path);
-    readSaturation(file_path);
+
+    /*!
+     * These are only called if we want to extract cell data from
+     * the h5 file for postprocessing/visualization purposes
+     */
+    if (cell_data)
+        readActiveCells(file_path);
+        readReservoirPressure(file_path);
+        readSaturation(file_path);
 }
 
 void Hdf5SummaryReader::readSaturation(std::string file_path) {

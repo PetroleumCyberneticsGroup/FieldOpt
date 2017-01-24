@@ -36,7 +36,7 @@ namespace {
     }
 
     TEST_F(Hdf5SummaryReaderTest, ActiveCellVector) {
-        auto reader = Hdf5SummaryReader(file_path);
+        auto reader = Hdf5SummaryReader(file_path,true);
 
            auto cells_total_num_ = reader.cells_total_num();
           auto cells_num_active_ = reader.cells_num_active();
@@ -59,13 +59,13 @@ namespace {
 
     TEST_F(Hdf5SummaryReaderTest, readSaturation) {
 
-        auto reader_gpt = Hdf5SummaryReader(file_path_gpt);
+        auto reader_gpt = Hdf5SummaryReader(file_path_gpt,true);
           auto soil_gpt = reader_gpt.soil();
         // std::cout << "soil.size() = " << soil.size() << std::endl;
         EXPECT_EQ(soil_gpt.size(), 8);
         EXPECT_EQ(soil_gpt[0].size(), 3600);
 
-        auto reader = Hdf5SummaryReader(file_path);
+        auto reader = Hdf5SummaryReader(file_path,true);
          auto  soil = reader.soil();
         EXPECT_EQ(soil.size(), 8);
         EXPECT_EQ(soil[0].size(), 3600);
