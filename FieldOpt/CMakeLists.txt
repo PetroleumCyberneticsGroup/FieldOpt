@@ -2,13 +2,15 @@ cmake_minimum_required(VERSION 3.2)
 project(FieldOpt VERSION 0.3 LANGUAGES CXX)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-option( BUILD_LOCAL_BIN  "Build FieldOpt executable in local directory"                   ON )
-option( BUILD_WIC_ONLY   "Only build the WellIndexCalculator and its dependencies"        ON )
-option( COPY_EXAMPLES    "Copy examples to build directory (needed for many unit tests)"  ON )
-option( BUILD_TESTING    "Build unit tests"                                               OFF )
+# Options =======================================================================================
+option( BUILD_LOCAL_BIN   "Build FieldOpt executable in local directory"                   ON )
+option( COPY_EXAMPLES     "Copy examples to build directory (needed for many unit tests)"  ON )
+option( BUILD_TESTING     "Build unit tests"                                               OFF )
+option( BUILD_WIC_ONLY    "Only build the WellIndexCalculator and its dependencies"        OFF )
+option( BUILD_WIC_ADGPRS  "Building WellIndexCalculator as ADGPRS plugin"                  OFF )
 
+# Local bin =====================================================================================
 if (BUILD_LOCAL_BIN)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/../build-FieldOpt)
 else()
@@ -20,8 +22,8 @@ if (BUILD_TESTING AND NOT COPY_EXAMPLES)
     Some of the tests use files in the examples directory.")
 endif()
 
+# Qt libraries ==================================================================================
 if (NOT BUILD_WIC_ONLY)
-    # Qt libraries
     set(CMAKE_AUTOMOC ON)
     set(CMAKE_INCLUDE_CURRENT_DIR ON)
     find_package(Qt5Core REQUIRED)
@@ -31,22 +33,36 @@ if (NOT BUILD_WIC_ONLY)
     include_directories(${HDF5_INCLUDE_DIRS})
     find_package(Threads REQUIRED)
 endif()
-            
 
-# Boost libraries
-find_package(Boost REQUIRED)
+# Boost libraries ===============================================================================
+find_package(Boost REQUIRED) # 1.63
 if (Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIR})
 endif()
 set(Boost_USE_STATIC_LIBS OFF) # enable dynamic linking
-set(Boost_USE_MULTITHREAD ON) # enable multithreading
-find_package(Boost COMPONENTS REQUIRED program_options serialization mpi system filesystem)
+set(Boost_USE_MULTITHREAD ON)  # enable multithreading
 
+if (BUILD_WIC_ADGPRS)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++")
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++")
+
+    set(Boost_USE_STATIC_LIBS    ON)  # enable static linking
+    set(Boost_USE_MULTITHREADED  OFF) # enable multithreading
+
+    set(Boost_USE_STATIC_RUNTIME OFF) # enable static linking to c++ runtime
+    set(Boost_THREADAPI win32)
+    find_package(Boost COMPONENTS REQUIRED program_options)
+else()
+    find_package(Boost COMPONENTS REQUIRED program_options serialization mpi system filesystem)
+endif()
+
+# Eigen =========================================================================================
 find_package(Eigen3 REQUIRED)
 
 # Set this directory as the root dir
 include_directories(${CMAKE_SOURCE_DIR})
 
+# Testing =======================================================================================
 if (BUILD_TESTING)
     include(CTest)
     enable_testing()
