@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.2)
 project(FieldOpt VERSION 0.3 LANGUAGES CXX)
 
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 # Options =======================================================================================
 option( BUILD_TESTING     "Build unit tests"                                               ON )
 option( COPY_EXAMPLES     "Copy examples to build directory (needed for many unit tests)"  ON )
