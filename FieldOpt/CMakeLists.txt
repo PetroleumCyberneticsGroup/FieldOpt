@@ -47,9 +47,16 @@ if (BUILD_WIC_ADGPRS)
     set(Boost_USE_STATIC_RUNTIME OFF) # enable static linking to c++ runtime
     set(Boost_THREADAPI win32)
     find_package(Boost COMPONENTS REQUIRED program_options)
+elseif(BUILD_WIC_ONLY)
+    find_package(Boost COMPONENTS REQUIRED program_options system filesystem)
 else()
     find_package(Boost COMPONENTS REQUIRED program_options serialization mpi system filesystem)
 endif()
+
+# CMAKE_MODULE_PATH: Commands like include() and find_package() search for files in
+# directories listed by this variable before checking the default modules that come
+# with CMake. (Added by AGChitu) --> TODO: Check if really needed. Remove if not.
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 
 # Eigen =========================================================================================
 find_package(Eigen3 REQUIRED)
@@ -63,6 +70,7 @@ if (BUILD_TESTING)
     enable_testing()
 endif()
 
+# FieldOpt ======================================================================================
 add_subdirectory(ERTWrapper)
 add_subdirectory(Reservoir)
 add_subdirectory(FieldOpt-WellIndexCalculator)
