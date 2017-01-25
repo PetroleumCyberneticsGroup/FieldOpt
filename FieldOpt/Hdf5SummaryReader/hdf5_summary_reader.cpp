@@ -5,7 +5,8 @@
 
 using namespace H5;
 Hdf5SummaryReader::Hdf5SummaryReader(const std::string file_path,
-                                     bool cell_data)
+                                     std::string cell_data_STATUS,
+                                     bool debug)
 : GROUP_NAME_RESTART("RESTART"),
   DATASET_NAME_TIMES("TIMES"),
   GROUP_NAME_FLOW_TRANSPORT("FLOW_TRANSPORT"),
@@ -16,12 +17,13 @@ Hdf5SummaryReader::Hdf5SummaryReader(const std::string file_path,
 {
     readTimeVector(file_path);
     readWellStates(file_path);
+    debug_ = debug;
 
     /*!
      * These are only called if we want to extract cell data from
      * the h5 file for postprocessing/visualization purposes
      */
-    if (cell_data){
+    if (cell_data_STATUS.compare("cell_data_ON") == 0){
         readActiveCells(file_path);
         readReservoirPressure(file_path);
         readSaturation(file_path);
@@ -114,12 +116,13 @@ void Hdf5SummaryReader::readReservoirPressure(std::string file_path) {
     hsize_t dims[3];
 
     auto rank = dataspace.getSimpleExtentDims(dims, NULL);
-    if (debug)
-        std::cout << "[\033[1;33m" << BOOST_CURRENT_FUNCTION << "\033[0m] "
+    if (debug_){
+        std::cout << "[\033[1;33m" << BOOST_CURRENT_FUNCTION << ":\033[0m\n"
                   << "dataset rank " << rank << ", dims "
                   << (unsigned long)(dims[0]) << " x "
                   << (unsigned long)(dims[1]) << " x "
                   << (unsigned long)(dims[2]) << std::endl;
+    }
 
     // Define hyperslab
     hsize_t count[3] = {dims[0], 1, dims[2]};
@@ -169,11 +172,12 @@ void Hdf5SummaryReader::readActiveCells(std::string file_path) {
 
     // rank variable can be used for debug
     auto rank = dataspace.getSimpleExtentDims(dims, NULL);
-    if (debug)
-        std::cout << "[\033[1;33m" << BOOST_CURRENT_FUNCTION << "\033[0m] "
+    if (debug_){
+        std::cout << "[\033[1;33m" << BOOST_CURRENT_FUNCTION << ":\033[0m\n"
                   << "dataset rank " << rank << ", dims "
                   << (unsigned long)(dims[0]) << " x "
                   << (unsigned long)(dims[1]) << std::endl;
+    }
 
     // Define hyperslab
     hsize_t  count[2] = { dims[0], 1 };

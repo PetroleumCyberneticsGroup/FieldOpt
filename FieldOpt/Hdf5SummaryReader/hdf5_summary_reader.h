@@ -40,6 +40,12 @@
  * might exist in the H5 group (currently GRIDPROPTIME), e.g., 
  * soil/sgas, soil/sgas/swat, soil/swat, etc.
  *
+ * \todo To make thing much tidier, collect variables containing 
+ * information about the reservoir cell ensemble, i.e., 
+ * cells_all_vector_, cells_active_, cells_inactive_, etc, and of
+ * reservoir cell data, i.e., pressure_, soil_, sgas_, swat_, into 
+ * one or more reservoir cells/cell data structs.
+ *
  * \todo Later: to reduce the size of the H5 file, make ADGPRS/
  * Optimizer save the saturation data (and whatever else) as 
  * additional columns into the existing PTZ group (possibly 
@@ -53,15 +59,22 @@
 class Hdf5SummaryReader {
 public:
     /*!
-     * Read the HDF5 summary file written by AD-GPRS at the specified path.
+     * Read the HDF5 summary file written 
+     * by AD-GPRS at the specified path.
      *
      * \note The provided path is not checked by this method,
      * and should therefore be checked before invoking this.
      * @param file_path Path to a .H5 summary file.
-     * @param cell_data Flag for whether to read cell data or not (defaults to false)
-     * @return A Hdf5SummaryReader object containing information from the summary.
+     * @param cell_data_STATUS Flag for whether to read cell data
+     * or not (defaults to empty string)
+     * @param debug Flag to print H5 related data during testing
+     * (defaults to false)
+     * @return A Hdf5SummaryReader object containing 
+     * information from the summary.
      */
-    Hdf5SummaryReader(const std::string file_path, bool cell_data = false);
+    Hdf5SummaryReader(const std::string file_path,
+                      std::string cell_data_STATUS = "",
+                      bool debug = false);
 
     /*!
      * Get the vector containing all time steps in the summary.
@@ -255,11 +268,6 @@ public:
      */
     std::vector<double> field_cumulative_gas_injection_sc() const;
 
-    /*!
-     * Debug
-     */
-    bool debug; //!< Flag used by tests to get additional debug info
-
 private:
     const H5std_string GROUP_NAME_RESTART; //!< The name of the restart group in the HDF5 file.
     const H5std_string DATASET_NAME_TIMES; //!< The name of the dataset containing the time step vector in the HDF5 file.
@@ -336,7 +344,7 @@ private:
     void readSaturation(std::string file_path); //!< Read cell saturations for each time step.
 
     /*!
-     * variables containing information about the reservoir cell ensemble,
+     * Variables containing information about the reservoir cell ensemble,
      * e.g., number of active cells, corresponding active cell indices, etc.
      */
     std::vector<int> cells_all_vector_; //!< Vector def. status for all cells (size equal to total number of cells).
@@ -361,6 +369,12 @@ private:
     std::vector<std::vector<double>> swat_; //!< Vector containing water saturation.
 
     std::vector<std::vector<double>> getSaturation(H5::Group dataset, hsize_t sat_type);
+
+    /*!
+     * debug_ Flag used by tests (only) to get additional info from
+     * H5 read functions, e.g., data rank, etc.
+     */
+    bool debug_;
 
     /*!
      * Calculate the cumulative using the composite trapezoidal rule.
