@@ -255,7 +255,10 @@ public:
      */
     std::vector<double> field_cumulative_gas_injection_sc() const;
 
-
+    /*!
+     * Debug
+     */
+    bool debug; //!< Flag used by tests to get additional debug info
 
 private:
     const H5std_string GROUP_NAME_RESTART; //!< The name of the restart group in the HDF5 file.
