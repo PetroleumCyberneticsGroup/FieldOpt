@@ -1,9 +1,12 @@
 #include "hdf5_summary_reader.h"
 #include <iostream>
 #include <assert.h>
+#include <boost/current_function.hpp>
 
 using namespace H5;
-Hdf5SummaryReader::Hdf5SummaryReader(const std::string file_path)
+Hdf5SummaryReader::Hdf5SummaryReader(const std::string file_path,
+                                     bool get_cell_data,
+                                     bool debug)
 : GROUP_NAME_RESTART("RESTART"),
   DATASET_NAME_TIMES("TIMES"),
   GROUP_NAME_FLOW_TRANSPORT("FLOW_TRANSPORT"),
@@ -14,9 +17,17 @@ Hdf5SummaryReader::Hdf5SummaryReader(const std::string file_path)
 {
     readTimeVector(file_path);
     readWellStates(file_path);
-    readActiveCells(file_path);
-    readReservoirPressure(file_path);
-    readSaturation(file_path);
+    debug_ = debug;
+
+    /*!
+     * These are only called if we want to extract cell data from
+     * the h5 file for postprocessing/visualization purposes
+     */
+    if (get_cell_data){
+        readActiveCells(file_path);
+        readReservoirPressure(file_path);
+        readSaturation(file_path);
+    }
 }
 
 void Hdf5SummaryReader::readSaturation(std::string file_path) {
@@ -25,27 +36,9 @@ void Hdf5SummaryReader::readSaturation(std::string file_path) {
     H5File file(file_path, H5F_ACC_RDONLY);
     Group group = Group(file.openGroup(GROUP_NAME_FLOW_TRANSPORT));
     auto dataset_exists = H5Lexists(group.getId(), "GRIDPROPTIME", H5F_ACC_RDONLY);
-    // std::cout << "dataset_exists = " << dataset_exists << std::endl;
-
     std::vector<std::vector<double>> sgas, soil, swat;
 
-    /*!
-    \todo Overall, this needs a better implementation, e.g., read soil and sgas
-    at the same time from the H5 group, instead of one vector at a time, which
-    appears inefficient... on the other hand, this reading needs to be made 
-    flexible/robust against the different phase combinations that might exist
-    in GRIDPROPTIME, e.g., soil/sgas, soil/sgas/swat, soil/swat, etc. 
-    */
-
-    /*!
-    \todo Later: to save space, load saturation data as additional columns in 
-    PTZ (replacing current compositional columns? comtrolled by custom KEYWORD?),
-    and remove GRIDPROPTIME completely
-    */
-
     if (dataset_exists) {
-
-        // std::cout << "number of phases = " << number_of_phases() << std::endl;
 
         hsize_t SOIL, SWAT, SGAS;
         if (number_of_phases() < 3){
@@ -70,7 +63,8 @@ void Hdf5SummaryReader::readSaturation(std::string file_path) {
     }
 }
 
-std::vector<std::vector<double>> Hdf5SummaryReader::getSaturation(Group group, hsize_t sat_type) {
+std::vector<std::vector<double>> Hdf5SummaryReader::getSaturation(
+        Group group, hsize_t sat_type) {
 
     // Read the file
     DataSet dataset = DataSet(group.openDataSet(DATASET_NAME_SATURATION));
@@ -80,8 +74,6 @@ std::vector<std::vector<double>> Hdf5SummaryReader::getSaturation(Group group, h
 
     std::vector<double> vector;
     vector.resize(dims[0] * dims[2]);
-
-    // std::cout << "sat_type = " << (int)sat_type << std::endl;
     std::vector<std::vector<double>>  sat_; //!< Temporary saturation vector.
 
     if (sat_type > 0){
@@ -124,11 +116,13 @@ void Hdf5SummaryReader::readReservoirPressure(std::string file_path) {
     hsize_t dims[3];
 
     auto rank = dataspace.getSimpleExtentDims(dims, NULL);
-    // Uncomment to debug:
-    // std::cout << "dataset rank = " << rank << ", dimensions "
-    //     << (unsigned long)(dims[0]) << " x "
-    //     << (unsigned long)(dims[1]) << " x "
-    //     << (unsigned long)(dims[2]) << std::endl;
+    if (debug_){
+        std::cout << "[\033[1;33m" << BOOST_CURRENT_FUNCTION << ":\033[0m\n"
+                  << "dataset rank " << rank << ", dims "
+                  << (unsigned long)(dims[0]) << " x "
+                  << (unsigned long)(dims[1]) << " x "
+                  << (unsigned long)(dims[2]) << std::endl;
+    }
 
     // Define hyperslab
     hsize_t count[3] = {dims[0], 1, dims[2]};
@@ -145,7 +139,7 @@ void Hdf5SummaryReader::readReservoirPressure(std::string file_path) {
 
     // Reorder pressure vector
     // Note:
-    // Data/time component ordering inside vector:
+    // Data/time component ordering inside data vector:
     // Example: pressure vector with 5 cells over 8 time steps:
     // size of vector = ncells (x ndata_cols=1) x ntime_steps
     //
@@ -178,6 +172,12 @@ void Hdf5SummaryReader::readActiveCells(std::string file_path) {
 
     // rank variable can be used for debug
     auto rank = dataspace.getSimpleExtentDims(dims, NULL);
+    if (debug_){
+        std::cout << "[\033[1;33m" << BOOST_CURRENT_FUNCTION << ":\033[0m\n"
+                  << "dataset rank " << rank << ", dims "
+                  << (unsigned long)(dims[0]) << " x "
+                  << (unsigned long)(dims[1]) << std::endl;
+    }
 
     // Define hyperslab
     hsize_t  count[2] = { dims[0], 1 };
