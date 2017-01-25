@@ -65,7 +65,7 @@ public:
      * \note The provided path is not checked by this method,
      * and should therefore be checked before invoking this.
      * @param file_path Path to a .H5 summary file.
-     * @param cell_data_STATUS Flag for whether to read cell data
+     * @param get_cell_data Flag for whether to read cell data
      * or not (defaults to empty string)
      * @param debug Flag to print H5 related data during testing
      * (defaults to false)
@@ -73,7 +73,7 @@ public:
      * information from the summary.
      */
     Hdf5SummaryReader(const std::string file_path,
-                      std::string cell_data_STATUS = "",
+                      bool get_cell_data = false,
                       bool debug = false);
 
     /*!
@@ -360,7 +360,7 @@ private:
     int ntimes_; //!< Number of time steps in the summary.
     int nphases_; //!< Number of phases in the model.
 
-    bool cell_data; //!< Flag for whether to read cell data from h5 file
+    bool cell_data_; //!< Flag for whether to read cell data from h5 file
 
     std::vector<double> times_; //!< Vector containing all time steps.
     std::vector<std::vector<double>> pressure_; //!< Vector containing reservoir pressures.

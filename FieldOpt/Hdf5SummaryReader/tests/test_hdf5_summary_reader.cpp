@@ -33,9 +33,7 @@ namespace {
     }
 
     TEST_F(Hdf5SummaryReaderTest, ActiveCellVector) {
-        auto reader = Hdf5SummaryReader(file_path,
-                                        "cell_data_ON",
-                                        false);
+        auto reader = Hdf5SummaryReader(file_path, true, false);
 
            auto cells_total_num_ = reader.cells_total_num();
           auto cells_num_active_ = reader.cells_num_active();
@@ -57,25 +55,19 @@ namespace {
 
     TEST_F(Hdf5SummaryReaderTest, readSaturation) {
 
-        auto reader_gpt = Hdf5SummaryReader(file_path_gpt,
-                                            "cell_data_ON",
-                                            false);
+        auto reader_gpt = Hdf5SummaryReader(file_path_gpt, true, false);
           auto soil_gpt = reader_gpt.soil();
         EXPECT_EQ(soil_gpt.size(), 8);
         EXPECT_EQ(soil_gpt[0].size(), 3600);
 
-        auto reader = Hdf5SummaryReader(file_path,
-                                        "cell_data_ON",
-                                        false);
+        auto reader = Hdf5SummaryReader(file_path, true, false);
          auto  soil = reader.soil();
         EXPECT_EQ(soil.size(), 8);
         EXPECT_EQ(soil[0].size(), 3600);
     }
 
     TEST_F(Hdf5SummaryReaderTest, readReservoirPressure) {
-          auto reader = Hdf5SummaryReader(file_path,
-                                          "cell_data_ON",
-                                          false);
+          auto reader = Hdf5SummaryReader(file_path, true, false);
           auto pressure = reader.reservoir_pressure();
 
         std::vector<double> def_pressure = {

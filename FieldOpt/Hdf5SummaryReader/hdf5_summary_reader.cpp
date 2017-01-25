@@ -5,7 +5,7 @@
 
 using namespace H5;
 Hdf5SummaryReader::Hdf5SummaryReader(const std::string file_path,
-                                     std::string cell_data_STATUS,
+                                     bool get_cell_data,
                                      bool debug)
 : GROUP_NAME_RESTART("RESTART"),
   DATASET_NAME_TIMES("TIMES"),
@@ -23,7 +23,7 @@ Hdf5SummaryReader::Hdf5SummaryReader(const std::string file_path,
      * These are only called if we want to extract cell data from
      * the h5 file for postprocessing/visualization purposes
      */
-    if (cell_data_STATUS.compare("cell_data_ON") == 0){
+    if (get_cell_data){
         readActiveCells(file_path);
         readReservoirPressure(file_path);
         readSaturation(file_path);
