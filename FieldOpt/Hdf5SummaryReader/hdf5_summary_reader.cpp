@@ -31,27 +31,9 @@ void Hdf5SummaryReader::readSaturation(std::string file_path) {
     H5File file(file_path, H5F_ACC_RDONLY);
     Group group = Group(file.openGroup(GROUP_NAME_FLOW_TRANSPORT));
     auto dataset_exists = H5Lexists(group.getId(), "GRIDPROPTIME", H5F_ACC_RDONLY);
-    // std::cout << "dataset_exists = " << dataset_exists << std::endl;
-
     std::vector<std::vector<double>> sgas, soil, swat;
 
-    /*!
-    \todo Overall, this needs a better implementation, e.g., read soil and sgas
-    at the same time from the H5 group, instead of one vector at a time, which
-    appears inefficient... on the other hand, this reading needs to be made 
-    flexible/robust against the different phase combinations that might exist
-    in GRIDPROPTIME, e.g., soil/sgas, soil/sgas/swat, soil/swat, etc. 
-    */
-
-    /*!
-    \todo Later: to save space, load saturation data as additional columns in 
-    PTZ (replacing current compositional columns? comtrolled by custom KEYWORD?),
-    and remove GRIDPROPTIME completely
-    */
-
     if (dataset_exists) {
-
-        // std::cout << "number of phases = " << number_of_phases() << std::endl;
 
         hsize_t SOIL, SWAT, SGAS;
         if (number_of_phases() < 3){
@@ -151,7 +133,7 @@ void Hdf5SummaryReader::readReservoirPressure(std::string file_path) {
 
     // Reorder pressure vector
     // Note:
-    // Data/time component ordering inside vector:
+    // Data/time component ordering inside data vector:
     // Example: pressure vector with 5 cells over 8 time steps:
     // size of vector = ncells (x ndata_cols=1) x ntime_steps
     //

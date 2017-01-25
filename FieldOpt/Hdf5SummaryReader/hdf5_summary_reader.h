@@ -29,6 +29,26 @@
  *
  * \todo This must also be tested for a 3 phase black oil model,
  * it has only been tested for 2 phase dead oil.
+ *
+ * \todo Overall, Hdf5SummaryReader::readSaturation needs a better 
+ * implementation that reads soil and sgas at the same time/as a 
+ * single chunck from the H5 group, instead of reading from H5 one 
+ * vector at a time (the thinking is that the former is probably
+ * more efficient that the latter).
+ * In either case, the reading functionality needs to be flexible/
+ * /robust with respect to the different phase combinations that 
+ * might exist in the H5 group (currently GRIDPROPTIME), e.g., 
+ * soil/sgas, soil/sgas/swat, soil/swat, etc.
+ *
+ * \todo Later: to reduce the size of the H5 file, make ADGPRS/
+ * Optimizer save the saturation data (and whatever else) as 
+ * additional columns into the existing PTZ group (possibly 
+ * replacing current mobility columns), and remove GRIDPROPTIME 
+ * completely. 
+ * Additionally, which cell data types (including custom data 
+ * types) to print to H5 during simulation may be controlled by 
+ * custom simulator KEYWORD.
+ *
  */
 class Hdf5SummaryReader {
 public:
