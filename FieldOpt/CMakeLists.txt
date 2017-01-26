@@ -88,16 +88,20 @@ if (NOT BUILD_WIC_ONLY)
     # Copy execution scripts
     file(GLOB EXECUTION_SCRIPTS
             "Simulation/execution_scripts/*.sh")
-    file(COPY ${EXECUTION_SCRIPTS} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/execution_scripts)
+    file(COPY ${EXECUTION_SCRIPTS} DESTINATION
+              ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/execution_scripts)
 
     ## Copy the test driver file into the build dir
-    file(COPY ${CMAKE_SOURCE_DIR}/Settings/tests/driver/driver.json DESTINATION ${CMAKE_BINARY_DIR}/examples)
-    file(COPY ${CMAKE_SOURCE_DIR}/Settings/tests/driver/driver_sane.json DESTINATION ${CMAKE_BINARY_DIR}/examples)
+    file(COPY ${CMAKE_SOURCE_DIR}/Settings/tests/driver/driver.json
+              DESTINATION ${CMAKE_BINARY_DIR}/examples)
+    file(COPY ${CMAKE_SOURCE_DIR}/Settings/tests/driver/driver_sane.json
+              DESTINATION ${CMAKE_BINARY_DIR}/examples)
 
     ## Create an empty directory for test output
     file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fieldopt_output)
 endif ()
 
+# Copy data =======================================================================================
 if (COPY_EXAMPLES)
     ## Copy the examples into the build dir
     file(COPY ${CMAKE_SOURCE_DIR}/../examples DESTINATION ${CMAKE_BINARY_DIR}/)
