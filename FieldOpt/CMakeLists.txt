@@ -88,7 +88,7 @@ if (NOT BUILD_WIC_ONLY)
     # Copy execution scripts
     file(GLOB EXECUTION_SCRIPTS
             "Simulation/execution_scripts/*.sh")
-    file(COPY ${EXECUTION_SCRIPTS} DESTINATION ${CMAKE_BINARY_DIR}/execution_scripts)
+    file(COPY ${EXECUTION_SCRIPTS} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/execution_scripts)
 
     ## Copy the test driver file into the build dir
     file(COPY ${CMAKE_SOURCE_DIR}/Settings/tests/driver/driver.json DESTINATION ${CMAKE_BINARY_DIR}/examples)
