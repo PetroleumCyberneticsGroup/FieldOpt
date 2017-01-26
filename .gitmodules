@@ -1,0 +1,3 @@
+[submodule "FieldOpt/FieldOpt-WellIndexCalculator"]
+	path = FieldOpt/FieldOpt-WellIndexCalculator
+	url = git@github.com:bo-niu/FieldOpt-WellIndexCalculator.git
