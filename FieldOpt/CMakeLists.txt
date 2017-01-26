@@ -6,9 +6,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Options =======================================================================================
-option( BUILD_TESTING     "Build unit tests"                                               ON )
+option( BUILD_TESTING     "Build unit tests"                                               OFF )
 option( COPY_EXAMPLES     "Copy examples to build directory (needed for many unit tests)"  ON )
-option( BUILD_WIC_ONLY    "Only build the WellIndexCalculator and its dependencies"        OFF )
+option( BUILD_WIC_ONLY    "Only build the WellIndexCalculator and its dependencies"        ON )
 option( BUILD_WIC_ADGPRS  "Build WellIndexCalculator as ADGPRS plugin (WIN)"               OFF )
 
 # Local bin =====================================================================================
