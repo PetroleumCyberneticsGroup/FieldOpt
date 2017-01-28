@@ -25,19 +25,26 @@
 namespace Reservoir {
     namespace Grid {
 
-        ECLGrid::ECLGrid(std::string file_path)
+        using namespace std;
+
+        ECLGrid::ECLGrid(string file_path)
                 : Grid(GridSourceType::ECLIPSE, file_path)
         {
             if (!boost::filesystem::exists(file_path))
-                throw std::runtime_error("Grid file " + file_path + " not found.");
+                throw runtime_error("Grid file " + file_path + " not found.");
 
-            std::string init_file_path = file_path;
-            if (boost::algorithm::ends_with(file_path, ".EGRID"))
+            string init_file_path = file_path;
+            if (boost::algorithm::ends_with(file_path, ".EGRID")) {
                 boost::replace_all(init_file_path, ".EGRID", ".INIT");
-            else if (boost::algorithm::ends_with(file_path, ".GRID"))
+            }
+            else if (boost::algorithm::ends_with(file_path, ".GRID")) {
                 boost::replace_all(init_file_path, ".GRID", ".INIT");
-            if (!boost::filesystem::exists(init_file_path))
-                throw std::runtime_error("ECLGrid::ECLGrid: Reservoir init file " + init_file_path + " not found.");
+            }
+
+            if (!boost::filesystem::exists(init_file_path)){
+                throw runtime_error("ECLGrid::ECLGrid: Reservoir init file "
+                                    + init_file_path + " not found.");
+            }
 
             ecl_grid_reader_ = new ERTWrapper::ECLGrid::ECLGridReader();
             ecl_grid_reader_->ReadEclGrid(file_path_);
@@ -49,7 +56,9 @@ namespace Reservoir {
         }
 
         bool ECLGrid::IndexIsInsideGrid(int global_index) {
-            return global_index >= 0 && global_index < (Dimensions().nx*Dimensions().ny*Dimensions().nz);
+            return global_index >= 0 && global_index < (Dimensions().nx*
+                                                        Dimensions().ny*
+                                                        Dimensions().nz);
         }
 
         bool ECLGrid::IndexIsInsideGrid(int i, int j, int k) {
@@ -66,58 +75,99 @@ namespace Reservoir {
         {
             Dims dims;
             if (type_ == GridSourceType::ECLIPSE) {
-                ERTWrapper::ECLGrid::ECLGridReader::Dims eclDims = ecl_grid_reader_->Dimensions();
-                dims.nx = eclDims.nx;
-                dims.ny = eclDims.ny;
-                dims.nz = eclDims.nz;
+                ERTWrapper::ECLGrid::ECLGridReader::Dims
+                        eclDims = ecl_grid_reader_->Dimensions();
+                        dims.nx = eclDims.nx;
+                        dims.ny = eclDims.ny;
+                        dims.nz = eclDims.nz;
                 return dims;
             }
-            else throw std::runtime_error("ECLGrid::Dimensions: Grid source must be defined before getting grid dimensions.");
+            else{
+                throw runtime_error("ECLGrid::Dimensions(): Grid "
+                                    "source must be defined before "
+                                    "getting grid dimensions.");
+            }
         }
 
         Cell ECLGrid::GetCell(int global_index)
         {
-            if (!IndexIsInsideGrid(global_index)) throw std::runtime_error("Error getting grid cell. Global index is outside grid.");
+            // Check if global index cell is inside overall (i.e., active+inactive) grid
+            if (!IndexIsInsideGrid(global_index)) {
+                throw runtime_error("ECLGrid::GetCell(int global_index): Error getting "
+                                    "grid cell. Global index is outside grid.");
+            }
+
             if (type_ == GridSourceType::ECLIPSE) {
-                ERTWrapper::ECLGrid::ECLGridReader::Cell ertCell = ecl_grid_reader_->GetGridCell(global_index);
+                ERTWrapper::ECLGrid::ECLGridReader::Cell
+                        ertCell = ecl_grid_reader_->GetGridCell(global_index);
 
-                // Get IJK index
-                ERTWrapper::ECLGrid::ECLGridReader::IJKIndex ecl_ijk_index = ecl_grid_reader_->ConvertGlobalIndexToIJK(global_index);
-                IJKCoordinate ijk_index = IJKCoordinate(ecl_ijk_index.i, ecl_ijk_index.j, ecl_ijk_index.k);
+                // Get IJK index corresponding to global index
+                ERTWrapper::ECLGrid::ECLGridReader::IJKIndex
+                        ecl_ijk_index = ecl_grid_reader_->ConvertGlobalIndexToIJK(global_index);
+                IJKCoordinate ijk_index = IJKCoordinate(ecl_ijk_index.i,
+                                                        ecl_ijk_index.j,
+                                                        ecl_ijk_index.k);
 
-                // Get center coordinates
+                // Get cell center coordinates
                 auto center = Eigen::Vector3d(ertCell.center);
 
-                // Get the corners
-                std::vector<Eigen::Vector3d> corners;
+                // Get cell corners
+                vector<Eigen::Vector3d> corners;
                 for (auto corner : ertCell.corners) {
                     corners.push_back(corner);
                 }
-                return Cell(global_index, ijk_index,
-                            ertCell.volume, ertCell.porosity, ertCell.permx, ertCell.permy, ertCell.permz,
+
+                // Return cell info
+                return Cell(global_index,
+                            ijk_index,
+                            ertCell.volume,
+                            ertCell.porosity,
+                            ertCell.permx,
+                            ertCell.permy,
+                            ertCell.permz,
                             center, corners);
             }
-            else throw std::runtime_error("ECLGrid::GetCell: Grid source must be defined before getting a cell.");
+            else{
+                throw runtime_error("ECLGrid::GetCell(int global_index): Grid "
+                                    "source must be defined before getting a cell.");
+            }
         }
 
         Cell ECLGrid::GetCell(int i, int j, int k)
         {
-            if (!IndexIsInsideGrid(i, j, k)) throw std::runtime_error("Error getting grid cell. Index (i, j, k) is outside grid.");
+            // Check if IJK cell is inside overall (i.e., active+inactive) grid
+            if (!IndexIsInsideGrid(i, j, k)) {
+                throw runtime_error("ECLGrid::GetCell(int i, int j, int k): Error "
+                                    "getting grid cell. Index (i, j, k) is outside "
+                                    "grid.");
+            }
+
             if (type_ == GridSourceType::ECLIPSE) {
                 int global_index = ecl_grid_reader_->ConvertIJKToGlobalIndex(i, j, k);
                 return GetCell(global_index);
             }
-            else throw std::runtime_error("ECLGrid::GetCell: Grid source must be defined before getting a cell.");
+            else{
+                throw runtime_error("ECLGrid::GetCell(int i, int j, int k): Grid "
+                                    "source must be defined before getting a cell.");
+            }
         }
 
         Cell ECLGrid::GetCell(IJKCoordinate *ijk)
         {
-            if (!IndexIsInsideGrid(ijk)) throw std::runtime_error("ECLGrid::GetCell: Index ijk is outside grid.");
+            // Check if IJK cell is inside overall (i.e., active+inactive) grid
+            if (!IndexIsInsideGrid(ijk)) {
+                throw runtime_error("ECLGrid::GetCell(*ijk): Error getting grid "
+                                    "cell. Index (i, j, k) is outside grid.");
+            }
+
             if (type_ == GridSourceType::ECLIPSE) {
                 int global_index = ecl_grid_reader_->ConvertIJKToGlobalIndex(ijk->i(), ijk->j(), ijk->k());
                 return GetCell(global_index);
             }
-            else throw std::runtime_error("ECLGrid::GetCell: Grid source must be defined before getting a cell.");
+            else{
+                throw runtime_error("ECLGrid::GetCell(*ijk): Grid source must "
+                                    "be defined before getting a cell.");
+            }
         }
 
         Cell ECLGrid::GetCellEnvelopingPoint(double x, double y, double z)
@@ -130,10 +180,10 @@ namespace Reservoir {
                 }
             }
             // Throw an exception if no cell was found
-            throw std::runtime_error("Grid::GetCellEnvelopingPoint: Cell is outside grid ("
-                                     + std::to_string(x) + ", "
-                                     + std::to_string(y) + ", "
-                                     + std::to_string(z) + ")"
+            throw runtime_error("Grid::GetCellEnvelopingPoint: Cell is outside grid ("
+                                                                 + to_string(x) + ", "
+                                                                 + to_string(y) + ", "
+                                                                 + to_string(z) + ")"
             );
         }
 

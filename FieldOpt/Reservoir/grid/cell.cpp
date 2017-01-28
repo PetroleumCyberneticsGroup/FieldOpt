@@ -22,20 +22,25 @@
 namespace Reservoir {
     namespace Grid {
 
-
-        Cell::Cell(int global_index, IJKCoordinate ijk_index,
-                   double volume, double poro, double permx, double permy, double permz,
-                   Eigen::Vector3d center, std::vector<Eigen::Vector3d> corners)
+        Cell::Cell(int global_index,
+                   IJKCoordinate ijk_index,
+                   double volume,
+                   double poro,
+                   double permx,
+                   double permy,
+                   double permz,
+                   Eigen::Vector3d center,
+                   std::vector<Eigen::Vector3d> corners)
         {
             global_index_ = global_index;
-            ijk_index_ = ijk_index;
-            volume_ = volume;
-            porosity_ = poro;
-            permx_ = permx;
-            permy_ = permy;
-            permz_ = permz;
-            center_ = center;
-            corners_ = corners;
+               ijk_index_ = ijk_index;
+                  volume_ = volume;
+                porosity_ = poro;
+                   permx_ = permx;
+                   permy_ = permy;
+                   permz_ = permz;
+                  center_ = center;
+                 corners_ = corners;
             initializeFaces();
         }
 
@@ -74,7 +79,10 @@ namespace Reservoir {
                 face.corners.push_back(corners_[face_indices_points[ii][1]]);
                 face.corners.push_back(corners_[face_indices_points[ii][2]]);
                 face.corners.push_back(corners_[face_indices_points[ii][3]]);
-                face.normal_vector = (face.corners[2] - face.corners[0]).cross(face.corners[1] - face.corners[0]).normalized();
+
+                auto diffv_a = (face.corners[2] - face.corners[0]);
+                auto diffv_b = (face.corners[1] - face.corners[0]);
+                face.normal_vector = diffv_a.cross(diffv_b).normalized();
                 faces_.push_back(face);
             }
         }
