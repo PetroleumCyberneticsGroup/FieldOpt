@@ -97,7 +97,7 @@ add_subdirectory(ERTWrapper)
 add_subdirectory(Reservoir)
 add_subdirectory(FieldOpt-WellIndexCalculator)
 
-if (NOT BUILD_WIC_ONLY)
+if (NOT BUILD_WIC_ONLY AND NOT BUILD_WIC_ADGPRS)
     add_subdirectory(Utilities)
     add_subdirectory(Settings)
     add_subdirectory(Model)
