@@ -1,23 +1,27 @@
 cmake_minimum_required(VERSION 3.2)
 project(FieldOpt VERSION 0.3 LANGUAGES CXX)
 
+# Build dirs ===========================================================
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# Options =======================================================================================
-option( BUILD_TESTING     "Build unit tests"                                               ON )
-option( COPY_EXAMPLES     "Copy examples to build directory (needed for many unit tests)"  ON )
-option( BUILD_WIC_ONLY    "Only build the WellIndexCalculator and its dependencies"        OFF )
-option( BUILD_WIC_ADGPRS  "Build WellIndexCalculator as ADGPRS plugin (WIN)"               OFF )
+# Options 1: Unit tests, example dir ===================================
+option(BUILD_TESTING "Build unit tests"                 OFF)
+option(COPY_EXAMPLES "Copy examples to build directory" OFF)
 
-# Local bin =====================================================================================
 if (BUILD_TESTING AND NOT COPY_EXAMPLES)
-    message("It is recommended to copy examples when building texts.
-    Some of the tests use files in the examples directory.")
+    message("It is recommended to copy examples when building unit
+    tests. Several of the tests use files in the examples directory.")
 endif()
 
-# Qt libraries ==================================================================================
+# Options 2: Compile WIC sources only ==================================
+# Build standalone well index calculator executable
+option(BUILD_WIC_ONLY "Build well index calculator exe" OFF)
+# Build OS-dependent well index calculator (shared) library:
+option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"     ON)
+
+# Qt libraries =========================================================
 if (NOT BUILD_WIC_ONLY)
     set(CMAKE_AUTOMOC ON)
     set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -29,7 +33,7 @@ if (NOT BUILD_WIC_ONLY)
     find_package(Threads REQUIRED)
 endif()
 
-# Boost libraries ===============================================================================
+# Boost libraries: default-settings ====================================
 find_package(Boost REQUIRED) # 1.63
 if (Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIR})
@@ -37,40 +41,58 @@ endif()
 set(Boost_USE_STATIC_LIBS OFF) # enable dynamic linking
 set(Boost_USE_MULTITHREAD ON)  # enable multithreading
 
-if (BUILD_WIC_ADGPRS)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++")
-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++")
+# Boost libraries: option-dependent settings ===========================
+if (BUILD_WIC_ADGPRS)  # Implementation of BUILD_WIC_ADGPRS option
 
-    set(Boost_USE_STATIC_LIBS    ON)  # enable static linking
-    set(Boost_USE_MULTITHREADED  OFF) # enable multithreading
+    # CMAKE_EXE_LINKER_FLAGS --> TODO: Double-check if absolutely necessary
+    set(CMAKE_EXE_LINKER_FLAGS
+            "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++")
 
-    set(Boost_USE_STATIC_RUNTIME OFF) # enable static linking to c++ runtime
-    set(Boost_THREADAPI win32)
-    find_package(Boost COMPONENTS REQUIRED program_options)
-elseif(BUILD_WIC_ONLY)
-    find_package(Boost COMPONENTS REQUIRED program_options system filesystem)
-else()
-    find_package(Boost COMPONENTS REQUIRED program_options serialization mpi system filesystem)
+    # CMAKE_SHARED_LINKER_FLAGS --> TODO: Double-check if absolutely necessary
+    set(CMAKE_SHARED_LINKER_FLAGS
+            "${CMAKE_SHARED_LINKER_FLAGS} -static-libgcc -static-libstdc++")
+
+    # This is opposite of default settings --> TODO: Double-check if necessary
+    set(Boost_USE_STATIC_LIBS    ON)  # Enable static linking
+    set(Boost_USE_MULTITHREADED  OFF) # Enable multithreading
+
+    # Linking options
+    set(Boost_USE_STATIC_RUNTIME OFF) # Enable static linking to c++ runtime
+    set(Boost_THREADAPI win32) # Only needed for WIN32 option?
+
+    # Find packages
+    find_package(Boost COMPONENTS
+            REQUIRED program_options)
+
+elseif(BUILD_WIC_ONLY)  # Building WIC executable with dependencies only
+    find_package(Boost COMPONENTS
+            REQUIRED program_options system filesystem)
+
+else() # Building all FieldOpt sources
+    find_package(Boost COMPONENTS
+            REQUIRED program_options serialization mpi system filesystem)
 endif()
 
-# CMAKE_MODULE_PATH: Commands like include() and find_package() search for files in
-# directories listed by this variable before checking the default modules that come
-# with CMake. (Added by AGChitu) --> TODO: Check if really needed. Remove if not.
+# Boost libraries: option-dependent settings ===========================
+# CMAKE_MODULE_PATH: Commands like include() and find_package() search
+# for files in directories listed by this variable before checking the
+# default modules that come with CMake. (Added by AGChitu)
+# --> TODO: Check if really needed. Remove if not.
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 
-# Eigen =========================================================================================
+# Eigen ================================================================
 find_package(Eigen3 REQUIRED)
 
 # Set this directory as the root dir
 include_directories(${CMAKE_SOURCE_DIR})
 
-# Testing =======================================================================================
+# Testing ==============================================================
 if (BUILD_TESTING)
     include(CTest)
     enable_testing()
 endif()
 
-# FieldOpt ======================================================================================
+# Compile FieldOpt sources =============================================
 add_subdirectory(ERTWrapper)
 add_subdirectory(Reservoir)
 add_subdirectory(FieldOpt-WellIndexCalculator)
@@ -88,21 +110,22 @@ if (NOT BUILD_WIC_ONLY)
     # Copy execution scripts
     file(GLOB EXECUTION_SCRIPTS
             "Simulation/execution_scripts/*.sh")
-    file(COPY ${EXECUTION_SCRIPTS} DESTINATION
-              ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/execution_scripts)
+    file(COPY ${EXECUTION_SCRIPTS}
+            DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/execution_scripts)
 
     ## Copy the test driver file into the build dir
     file(COPY ${CMAKE_SOURCE_DIR}/Settings/tests/driver/driver.json
-              DESTINATION ${CMAKE_BINARY_DIR}/examples)
+            DESTINATION ${CMAKE_BINARY_DIR}/examples)
     file(COPY ${CMAKE_SOURCE_DIR}/Settings/tests/driver/driver_sane.json
-              DESTINATION ${CMAKE_BINARY_DIR}/examples)
+            DESTINATION ${CMAKE_BINARY_DIR}/examples)
 
     ## Create an empty directory for test output
     file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fieldopt_output)
 endif ()
 
-# Copy data =======================================================================================
+# Copy example files ===================================================
 if (COPY_EXAMPLES)
     ## Copy the examples into the build dir
-    file(COPY ${CMAKE_SOURCE_DIR}/../examples DESTINATION ${CMAKE_BINARY_DIR}/)
+    file(COPY ${CMAKE_SOURCE_DIR}/../examples
+            DESTINATION ${CMAKE_BINARY_DIR}/)
 endif()
