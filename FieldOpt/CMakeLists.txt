@@ -16,10 +16,11 @@ if (BUILD_TESTING AND NOT COPY_EXAMPLES)
 endif()
 
 # Options 2: Compile WIC sources only ==================================
+# NOTE: only one of these options should be ON
 # Build standalone well index calculator executable
 option(BUILD_WIC_ONLY "Build well index calculator exe" OFF)
 # Build OS-dependent well index calculator (shared) library:
-option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"     ON)
+option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    ON)
 
 # Qt libraries =========================================================
 if (NOT BUILD_WIC_ONLY)
@@ -53,7 +54,6 @@ if (BUILD_WIC_ADGPRS)  # Implementation of BUILD_WIC_ADGPRS option
             "${CMAKE_SHARED_LINKER_FLAGS} -static-libgcc -static-libstdc++")
 
     # This is opposite of default settings --> TODO: Double-check if necessary
-    set(Boost_USE_STATIC_LIBS    ON)  # Enable static linking
     set(Boost_USE_MULTITHREADED  OFF) # Enable multithreading
 
     # Linking options
@@ -62,7 +62,7 @@ if (BUILD_WIC_ADGPRS)  # Implementation of BUILD_WIC_ADGPRS option
 
     # Find packages
     find_package(Boost COMPONENTS
-            REQUIRED program_options)
+            REQUIRED program_options system filesystem)
 
 elseif(BUILD_WIC_ONLY)  # Building WIC executable with dependencies only
     find_package(Boost COMPONENTS
