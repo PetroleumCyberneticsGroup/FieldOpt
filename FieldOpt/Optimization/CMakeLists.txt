@@ -36,6 +36,8 @@ add_library(optimization
 		case_transfer_object.cpp
 		optimizers/ExhaustiveSearch2DVert.cpp
 		optimizers/GSS.cpp
+		optimizers/PSO.cpp
+		optimizers/Particle.cpp
 		optimizers/compass_search.cpp
 		optimizers/APPS.cpp
 		${EXPERIMENTAL_CONSTRAINTS_SRC} )
