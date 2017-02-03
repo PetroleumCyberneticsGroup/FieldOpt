@@ -18,6 +18,14 @@ target_compile_features(reservoir
         PUBLIC cxx_auto_type
         PUBLIC cxx_range_for)
 
+# Enable position independent code when compiling lib, so that
+# shared library libwellindexcalculator.so may be linked with
+# static reservoir and ertwrapper libraries
+if (BUILD_WIC_ADGPRS)
+    set_target_properties(reservoir
+            PROPERTIES COMPILE_FLAGS "-fPIC")
+endif()
+
 if (BUILD_TESTING)
     # Unit tests
     find_package(GTest REQUIRED)
