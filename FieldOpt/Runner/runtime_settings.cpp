@@ -176,7 +176,7 @@ namespace Runner {
         if (vm.count("help") || !vm.count("input-file") || !vm.count("output-dir")) { // Print help if --help present or input file/output dir not present
             std::cout << "Usage: ./FieldOpt input-file output-dir [options]" << std::endl;
             std::cout << desc << std::endl;
-            throw std::runtime_error("");
+            exit(EXIT_SUCCESS);
         }
 
         return vm;
