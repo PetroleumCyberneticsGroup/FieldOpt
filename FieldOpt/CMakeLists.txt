@@ -6,6 +6,31 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+# Install dirs =========================================================
+set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install)
+set(BUNDLE_NAME FieldOptBundle)
+set(BUNDLE_PATH "${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}")
+# use, i.e. don't skip the full RPATH for the build tree
+SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
+
+# when building, don't use the install RPATH already
+# (but later on when installing)
+SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+
+SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+
+# add the automatically determined parts of the RPATH
+# which point to directories outside the build tree to the install RPATH
+SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+
+# the RPATH to be used when installing, but only if it's not a system directory
+LIST(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
+IF("${isSystemDir}" STREQUAL "-1")
+    SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+ENDIF("${isSystemDir}" STREQUAL "-1")
+# END Install dirs =====================================================
+
 # Options 1: Unit tests, example dir ===================================
 option(BUILD_TESTING "Build unit tests"                 OFF)
 option(COPY_EXAMPLES "Copy examples to build directory" OFF)
@@ -20,14 +45,17 @@ endif()
 # Build standalone well index calculator executable
 option(BUILD_WIC_ONLY "Build well index calculator exe" OFF)
 # Build OS-dependent well index calculator (shared) library:
-option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    ON)
+option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    OFF)
+
+# Options 3: Create bundle =============================================
+option(CREATE_BUNDLE "Create a bundle with all libs and execs" OFF)
 
 # Qt libraries =========================================================
 if (NOT BUILD_WIC_ONLY)
     set(CMAKE_AUTOMOC ON)
     set(CMAKE_INCLUDE_CURRENT_DIR ON)
     find_package(Qt5Core REQUIRED)
-    include_directories(${Qt5Core_INCLUDE_DIRS} ${Qt5Gui_INCLUDE_DIRS})
+    include_directories(${Qt5Core_INCLUDE_DIRS})
     find_package(HDF5 REQUIRED COMPONENTS CXX)
     add_definitions(${HDF5_DEFINITIONS})
     include_directories(${HDF5_INCLUDE_DIRS})
@@ -121,6 +149,8 @@ if (NOT BUILD_WIC_ONLY AND NOT BUILD_WIC_ADGPRS)
 
     ## Create an empty directory for test output
     file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fieldopt_output)
+
+
 endif ()
 
 # Copy example files ===================================================

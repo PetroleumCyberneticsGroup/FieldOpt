@@ -37,3 +37,9 @@ if (BUILD_TESTING)
 
     add_test(NAME test_constraintmath COMMAND $<TARGET_FILE:test_constraintmath>)
 endif()
+
+install( TARGETS constraintmath
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib/static
+        )

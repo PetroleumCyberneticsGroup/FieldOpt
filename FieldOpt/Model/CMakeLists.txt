@@ -63,3 +63,9 @@ if (BUILD_TESTING)
 
     add_test(NAME test_model COMMAND $<TARGET_FILE:test_model>)
 endif()
+
+install( TARGETS model
+		RUNTIME DESTINATION bin
+		LIBRARY DESTINATION lib
+		ARCHIVE DESTINATION lib/static
+		)

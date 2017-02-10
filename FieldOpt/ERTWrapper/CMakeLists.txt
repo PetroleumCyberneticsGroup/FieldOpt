@@ -46,3 +46,9 @@ if (BUILD_TESTING)
 
     add_test(NAME test_ertwrapper COMMAND $<TARGET_FILE:test_ertwrapper>)
 endif()
+
+install( TARGETS ertwrapper
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib/static
+        )

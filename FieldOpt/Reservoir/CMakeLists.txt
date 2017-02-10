@@ -43,3 +43,9 @@ if (BUILD_TESTING)
 
     add_test(NAME test_reservoir COMMAND $<TARGET_FILE:test_reservoir>)
 endif()
+
+install( TARGETS reservoir
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib/static
+        )
