@@ -150,7 +150,14 @@ if (NOT BUILD_WIC_ONLY AND NOT BUILD_WIC_ADGPRS)
     ## Create an empty directory for test output
     file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fieldopt_output)
 
-
+#    if (CREATE_BUNDLE)
+#        list(APPEND APPS ${CMAKE_INSTALL_PREFIX}/bin/FieldOpt)
+#        list(APPEND DIRS ${CMAKE_INSTALL_PREFIX}/lib/ ${CMAKE_INSTALL_PREFIX}/lib/static/)
+#        install(CODE "
+#            include(BundleUtilities)
+#            fixup_bundle(\"${APPS}\" \"${fixup_bundle_libs}\" \"${DIRS}\")
+#        " COMPONENT Runtime)
+#    endif()
 endif ()
 
 # Copy example files ===================================================
