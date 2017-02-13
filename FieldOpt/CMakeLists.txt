@@ -32,8 +32,8 @@ ENDIF("${isSystemDir}" STREQUAL "-1")
 # END Install dirs =====================================================
 
 # Options 1: Unit tests, example dir ===================================
-option(BUILD_TESTING "Build unit tests"                 OFF)
-option(COPY_EXAMPLES "Copy examples to build directory" OFF)
+option(BUILD_TESTING "Build unit tests"                 ON)
+option(COPY_EXAMPLES "Copy examples to build directory" ON)
 
 if (BUILD_TESTING AND NOT COPY_EXAMPLES)
     message("It is recommended to copy examples when building unit
@@ -150,14 +150,6 @@ if (NOT BUILD_WIC_ONLY AND NOT BUILD_WIC_ADGPRS)
     ## Create an empty directory for test output
     file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fieldopt_output)
 
-#    if (CREATE_BUNDLE)
-#        list(APPEND APPS ${CMAKE_INSTALL_PREFIX}/bin/FieldOpt)
-#        list(APPEND DIRS ${CMAKE_INSTALL_PREFIX}/lib/ ${CMAKE_INSTALL_PREFIX}/lib/static/)
-#        install(CODE "
-#            include(BundleUtilities)
-#            fixup_bundle(\"${APPS}\" \"${fixup_bundle_libs}\" \"${DIRS}\")
-#        " COMPONENT Runtime)
-#    endif()
 endif ()
 
 # Copy example files ===================================================
