@@ -3,8 +3,9 @@ project(constraintmath LANGUAGES CXX)
 
 find_library(RpolyPlusPlus
         NAMES rpoly_plus_plus
-        HINTS ${CMAKE_CURRENT_BINARY_DIR}/libraries
+        HINTS ${CMAKE_BINARY_DIR}/libraries/lib
         REQUIRED)
+include_directories(${CMAKE_BINARY_DIR}/libraries/include/)
 
 add_library(constraintmath
         well_constraint_projections/well_constraint_projections.cpp

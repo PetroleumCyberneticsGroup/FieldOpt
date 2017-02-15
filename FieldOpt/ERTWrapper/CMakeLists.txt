@@ -4,12 +4,13 @@ project(ertwrapper)
 # ERT libraries
 find_library(ert_ecl
         NAMES ecl
-        HINTS ${CMAKE_CURRENT_BINARY_DIR}/libraries
+        HINTS ${CMAKE_BINARY_DIR}/libraries/lib
         REQUIRED)
 find_library(ert_util
         NAMES ert_util
-        HINTS ${CMAKE_CURRENT_BINARY_DIR}/libraries
+        HINTS ${CMAKE_BINARY_DIR}/libraries/lib
         REQUIRED)
+include_directories(${CMAKE_BINARY_DIR}/libraries/include/)
 
 add_library(ertwrapper
         ertwrapper_exceptions.h
