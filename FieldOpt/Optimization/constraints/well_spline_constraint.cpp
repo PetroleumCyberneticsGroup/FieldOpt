@@ -1,11 +1,12 @@
 #include "well_spline_constraint.h"
+#include <boost/lexical_cast.hpp>
 
 namespace Optimization {
     namespace Constraints {
 
         WellSplineConstraint::Well WellSplineConstraint::initializeWell(QList<Model::Properties::ContinousProperty *> vars) {
             if (vars.length() != 6)
-                throw std::runtime_error("Incorrect number of variables (" + std::to_string(vars.length())
+                throw std::runtime_error("Incorrect number of variables (" + boost::lexical_cast<std::string>(vars.length())
                                          + ")passed to the initialize well method.");
 
             Well well;

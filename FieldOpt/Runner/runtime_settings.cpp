@@ -17,6 +17,7 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 #include "runtime_settings.h"
+#include <boost/lexical_cast.hpp>
 
 namespace Runner {
 
@@ -115,8 +116,8 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
         std::cout << "Verbosity level:  " << verbosity_level_ << std::endl;
         std::cout << "Runner type:      " << runnerTypeString().toStdString() << std::endl;
         std::cout << "Overwr. old out files: " << overwrite_existing_ << std::endl;
-        std::cout << "Max parallel sims:   " << (max_parallel_sims_ > 0 ? std::to_string(max_parallel_sims_) : "default") << std::endl;
-        std::cout << "Threads pr sim:      " << std::to_string(threads_per_sim_) << std::endl;
+        std::cout << "Max parallel sims:   " << (max_parallel_sims_ > 0 ? boost::lexical_cast<std::string>(max_parallel_sims_) : "default") << std::endl;
+        std::cout << "Threads pr sim:      " << boost::lexical_cast<std::string>(threads_per_sim_) << std::endl;
         str_out = "Current/specified paths:";
         std::cout << "\n" << str_out << "\n" << std::string(str_out.length(),'-') << std::endl;
         std::cout << "Current dir:-------" << Utilities::FileHandling::GetCurrentDirectoryPath().toStdString() << std::endl;
