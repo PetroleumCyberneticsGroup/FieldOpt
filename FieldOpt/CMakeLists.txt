@@ -50,6 +50,7 @@ option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    OFF)
 # Options 3: Create bundle =============================================
 option(CREATE_BUNDLE "Create a bundle with all libs and execs" OFF)
 
+
 # Qt libraries =========================================================
 if (NOT BUILD_WIC_ONLY)
     set(CMAKE_AUTOMOC ON)
@@ -100,6 +101,11 @@ else() # Building all FieldOpt sources
     find_package(Boost COMPONENTS
             REQUIRED program_options serialization mpi system filesystem)
 endif()
+
+# ERT Include dir, primarily for use on cluster (Maur). This assumes that
+#  headers and libs are placed inside a 'libraries' directory in the build
+#  directory.
+include_directories(${CMAKE_BINARY_DIR}/libraries/include/)
 
 # Boost libraries: option-dependent settings ===========================
 # CMAKE_MODULE_PATH: Commands like include() and find_package() search
