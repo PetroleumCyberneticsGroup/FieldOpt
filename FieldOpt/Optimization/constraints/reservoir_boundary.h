@@ -17,6 +17,20 @@ namespace Constraints {
  *  coordinates. It can check wether or not a single
  *  well is inside the given box domain and, if needed,
  *  project the well onto the domain.
+ *
+ *  \todo Figure out a more effective way to enforce
+ *  the box constraints
+ *
+ *  Suggested teps:
+ *  -find the edge cells of the box,
+ *  -get the corner points for each of the cells,
+ *  -find the corner points of the entire box (assuming then
+ *  the box is a parallelogram, which may not be true for the
+ *  top and bottom planes)
+ *  -print the box data to log for external visualization
+ *  -figure out if the current point is inside or outside
+ *  the box, e.g., create a BoxEnvelopsPoint function
+ *  -if outside, project point onto nearest point on plane
  */
 class ReservoirBoundary : public Constraint, WellSplineConstraint
 {
