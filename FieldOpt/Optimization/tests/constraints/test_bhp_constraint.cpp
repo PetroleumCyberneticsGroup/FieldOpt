@@ -1,3 +1,22 @@
+/******************************************************************************
+   Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+
+   This file is part of the FieldOpt project.
+
+   FieldOpt is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   FieldOpt is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
+
 #include "gtest/gtest.h"
 #include "Optimization/constraints/bhp_constraint.h"
 #include "Settings/tests/test_resource_settings.hpp"
@@ -33,21 +52,21 @@ TEST_F(BhpConstraintTest, SatisfactionAfterModification) {
         bhp_ids.append(var->id());
     }
 
-    // set all bhps to 5000 (which exceeds the max value defined, 3000)
+    // set all bhps to 500 (which exceeds the max value defined, 300)
     for (QUuid key : bhp_ids) {
-        base_case_->set_real_variable_value(key, 5000);
+        base_case_->set_real_variable_value(key, 500);
     }
     EXPECT_FALSE(box_constraint_->CaseSatisfiesConstraint(base_case_));
 
-    // set all bhps to 100 (which is less than the min value defined, 1000)
+    // set all bhps to 50 (which is less than the min value defined, 100)
     for (QUuid key : bhp_ids) {
-        base_case_->set_real_variable_value(key, 100);
+        base_case_->set_real_variable_value(key, 50);
     }
     EXPECT_FALSE(box_constraint_->CaseSatisfiesConstraint(base_case_));
 
-    // set all bhps to 1125 (which is within the defined bounds)
+    // set all bhps to 125 (which is within the defined bounds)
     for (QUuid key : bhp_ids) {
-        base_case_->set_real_variable_value(key, 1125);
+        base_case_->set_real_variable_value(key, 125);
     }
     EXPECT_TRUE(box_constraint_->CaseSatisfiesConstraint(base_case_));
 }
@@ -59,18 +78,18 @@ TEST_F(BhpConstraintTest, SnappingValues) {
         bhp_ids.append(var->id());
     }
 
-    // set all bhps to 5000 (which exceeds the max value defined, 3000)
+    // set all bhps to 500 (which exceeds the max value defined, 300)
     for (QUuid key : bhp_ids) {
-        base_case_->set_real_variable_value(key, 5000);
+        base_case_->set_real_variable_value(key, 500);
     }
     EXPECT_FALSE(box_constraint_->CaseSatisfiesConstraint(base_case_));
     // Snap the values back and recheck
     box_constraint_->SnapCaseToConstraints(base_case_);
     EXPECT_TRUE(box_constraint_->CaseSatisfiesConstraint(base_case_));
 
-    // set all bhps to 100 (which is less than the min value defined, 1000)
+    // set all bhps to 50 (which is less than the min value defined, 100)
     for (QUuid key : bhp_ids) {
-        base_case_->set_real_variable_value(key, 100);
+        base_case_->set_real_variable_value(key, 50);
     }
     EXPECT_FALSE(box_constraint_->CaseSatisfiesConstraint(base_case_));
     // Snap the values back and recheck
