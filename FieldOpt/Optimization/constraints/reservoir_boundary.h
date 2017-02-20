@@ -90,7 +90,7 @@ class ReservoirBoundary : public Constraint, WellSplineConstraint
   Well affected_well_;
   QList<int> getListOfCellIndices();
 
-  QList<int> getListOfBoxEdgeCellIndices();
+  QList<int> getIndicesOfEdgeCells();
   QList<int> index_list_edge_;
 
   void printCornerXYZ(std::string str_out, Eigen::Vector3d vector_xyz);

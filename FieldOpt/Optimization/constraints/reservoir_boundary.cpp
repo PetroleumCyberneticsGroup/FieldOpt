@@ -59,8 +59,8 @@ void ReservoirBoundary::findCornerCells() {
     //        0   1
 
     // Get corner cells of box
-    QList<Eigen::Vector3d> upper_plane_left_bottom_cell_xyz = grid_->GetCell(imin_, jmin_, kmax_).corners();
-    QList<Eigen::Vector3d> upper_plane_left_top_cell_xyz = grid_->GetCell(imin_, jmax_, kmax_).corners();
+    std::vector<Eigen::Vector3d> upper_plane_left_bottom_cell_xyz = grid_->GetCell(imin_, jmin_, kmax_).corners();
+    std::vector<Eigen::Vector3d> upper_plane_left_top_cell_xyz = grid_->GetCell(imin_, jmax_, kmax_).corners();
     // Get cell vertex amounting to true box corner
     Eigen::Vector3d upper_plane_left_bottom_corner_xyz = upper_plane_left_bottom_cell_xyz[0];
     Eigen::Vector3d upper_plane_left_top_corner_xyz = upper_plane_left_top_cell_xyz[2];
@@ -76,8 +76,8 @@ void ReservoirBoundary::findCornerCells() {
     //        0   1
 
     // Get corner cells of box
-    QList<Eigen::Vector3d> upper_plane_right_bottom_cell_xyz = grid_->GetCell(imax_, jmin_, kmax_).corners();
-    QList<Eigen::Vector3d> upper_plane_right_top_cell_xyz = grid_->GetCell(imax_, jmax_, kmax_).corners();
+    std::vector<Eigen::Vector3d> upper_plane_right_bottom_cell_xyz = grid_->GetCell(imax_, jmin_, kmax_).corners();
+    std::vector<Eigen::Vector3d> upper_plane_right_top_cell_xyz = grid_->GetCell(imax_, jmax_, kmax_).corners();
     // Get cell vertex amounting to true box corner
     Eigen::Vector3d upper_plane_right_bottom_corner_xyz = upper_plane_right_bottom_cell_xyz[1];
     Eigen::Vector3d upper_plane_right_top_corner_xyz = upper_plane_right_top_cell_xyz[3];
@@ -96,8 +96,8 @@ void ReservoirBoundary::findCornerCells() {
     //         | |
 
     // Get corner cells of box
-    QList<Eigen::Vector3d> upper_plane_bottom_left_cell_xyz = grid_->GetCell(imin_, jmin_, kmax_).corners();
-    QList<Eigen::Vector3d> upper_plane_bottom_right_cell_xyz = grid_->GetCell(imax_, jmin_, kmax_).corners();
+    std::vector<Eigen::Vector3d> upper_plane_bottom_left_cell_xyz = grid_->GetCell(imin_, jmin_, kmax_).corners();
+    std::vector<Eigen::Vector3d> upper_plane_bottom_right_cell_xyz = grid_->GetCell(imax_, jmin_, kmax_).corners();
     // Get cell vertex amounting to true box corner
     Eigen::Vector3d upper_plane_bottom_left_corner_xyz = upper_plane_bottom_left_cell_xyz[0];
     Eigen::Vector3d upper_plane_bottom_right_corner_xyz = upper_plane_bottom_right_cell_xyz[1];
@@ -116,8 +116,8 @@ void ReservoirBoundary::findCornerCells() {
     //        0   1
 
     // Get corner cells of box
-    QList<Eigen::Vector3d> upper_plane_top_left_cell_xyz = grid_->GetCell(imin_, jmax_, kmax_).corners();
-    QList<Eigen::Vector3d> upper_plane_top_right_cell_xyz = grid_->GetCell(imax_, jmax_, kmax_).corners();
+    std::vector<Eigen::Vector3d> upper_plane_top_left_cell_xyz = grid_->GetCell(imin_, jmax_, kmax_).corners();
+    std::vector<Eigen::Vector3d> upper_plane_top_right_cell_xyz = grid_->GetCell(imax_, jmax_, kmax_).corners();
     // Get cell vertex amounting to true box corner
     Eigen::Vector3d upper_plane_top_left_corner_xyz = upper_plane_top_left_cell_xyz[2];
     Eigen::Vector3d upper_plane_top_right_corner_xyz = upper_plane_top_right_cell_xyz[3];
@@ -137,8 +137,8 @@ void ReservoirBoundary::findCornerCells() {
     //        4   5
 
     // Get corner cells of box
-    QList<Eigen::Vector3d> lower_plane_left_bottom_cell_xyz = grid_->GetCell(imin_, jmin_, kmin_).corners();
-    QList<Eigen::Vector3d> lower_plane_left_top_cell_xyz = grid_->GetCell(imin_, jmax_, kmin_).corners();
+    std::vector<Eigen::Vector3d> lower_plane_left_bottom_cell_xyz = grid_->GetCell(imin_, jmin_, kmin_).corners();
+    std::vector<Eigen::Vector3d> lower_plane_left_top_cell_xyz = grid_->GetCell(imin_, jmax_, kmin_).corners();
     // Get cell vertex amounting to true box corner
     Eigen::Vector3d lower_plane_left_bottom_corner_xyz = lower_plane_left_bottom_cell_xyz[4];
     Eigen::Vector3d lower_plane_left_top_corner_xyz = lower_plane_left_top_cell_xyz[6];
@@ -154,8 +154,8 @@ void ReservoirBoundary::findCornerCells() {
     //        4   5
 
     // Get corner cells of box
-    QList<Eigen::Vector3d> lower_plane_right_bottom_cell_xyz = grid_->GetCell(imax_, jmin_, kmin_).corners();
-    QList<Eigen::Vector3d> lower_plane_right_top_cell_xyz = grid_->GetCell(imax_, jmax_, kmin_).corners();
+    std::vector<Eigen::Vector3d> lower_plane_right_bottom_cell_xyz = grid_->GetCell(imax_, jmin_, kmin_).corners();
+    std::vector<Eigen::Vector3d> lower_plane_right_top_cell_xyz = grid_->GetCell(imax_, jmax_, kmin_).corners();
     // Get cell vertex amounting to true box corner
     Eigen::Vector3d lower_plane_right_bottom_corner_xyz = lower_plane_right_bottom_cell_xyz[5];
     Eigen::Vector3d lower_plane_right_top_corner_xyz = lower_plane_right_top_cell_xyz[7];
@@ -174,8 +174,8 @@ void ReservoirBoundary::findCornerCells() {
     //         | |
 
     // Get corner cells of box
-    QList<Eigen::Vector3d> lower_plane_bottom_left_cell_xyz = grid_->GetCell(imin_, jmin_, kmin_).corners();
-    QList<Eigen::Vector3d> lower_plane_bottom_right_cell_xyz = grid_->GetCell(imax_, jmin_, kmin_).corners();
+    std::vector<Eigen::Vector3d> lower_plane_bottom_left_cell_xyz = grid_->GetCell(imin_, jmin_, kmin_).corners();
+    std::vector<Eigen::Vector3d> lower_plane_bottom_right_cell_xyz = grid_->GetCell(imax_, jmin_, kmin_).corners();
     // Get cell vertex amounting to true box corner
     Eigen::Vector3d lower_plane_bottom_left_corner_xyz = lower_plane_bottom_left_cell_xyz[4];
     Eigen::Vector3d lower_plane_bottom_right_corner_xyz = lower_plane_bottom_right_cell_xyz[5];
@@ -194,8 +194,8 @@ void ReservoirBoundary::findCornerCells() {
     //        4   5
 
     // Get corner cells of box
-    QList<Eigen::Vector3d> lower_plane_top_left_cell_xyz = grid_->GetCell(imin_, jmax_, kmin_).corners();
-    QList<Eigen::Vector3d> lower_plane_top_right_cell_xyz = grid_->GetCell(imax_, jmax_, kmin_).corners();
+    std::vector<Eigen::Vector3d> lower_plane_top_left_cell_xyz = grid_->GetCell(imin_, jmax_, kmin_).corners();
+    std::vector<Eigen::Vector3d> lower_plane_top_right_cell_xyz = grid_->GetCell(imax_, jmax_, kmin_).corners();
     // Get cell vertex amounting to true box corner
     Eigen::Vector3d lower_plane_top_left_corner_xyz = lower_plane_top_left_cell_xyz[6];
     Eigen::Vector3d lower_plane_top_right_corner_xyz = lower_plane_top_right_cell_xyz[7];
@@ -230,10 +230,16 @@ QList<int> ReservoirBoundary::getIndicesOfEdgeCells() {
     QList<Eigen::Vector3d> upper_face_left_edge_xyz;
     QList<Eigen::Vector3d> upper_face_left_edge_xyz_max_min;
 
+    // Testing
+    std::vector<Eigen::Matrix<double,3,1,0,3,1>> upper_face_left_edge_xyz;
+    std::vector<Eigen::Matrix<double,3,1,0,3,1>> upper_face_left_edge_xyz_max_min;
+
     // UPPER CELL FACE: LEFT EDGE
     for (int j = jmin_; j <= jmax_; j++) {
         upper_face_left_edge_.append(grid_->GetCell(imin_, j, kmax_).global_index());
         upper_face_left_edge_xyz.append(grid_->GetCell(imin_, j, kmax_).corners());
+        // Testing
+        // upper_face_left_edge_xyz.push_back(grid_->GetCell(imin_, j, kmax_).corners());
     }
 
     // UPPER CELL FACE: BOTTOM EDGE
