@@ -80,6 +80,9 @@ class ReservoirBoundary : public Constraint, WellSplineConstraint
    */
   QList<int> returnListOfBoxEdgeCellIndices() const { return index_list_edge_; }
 
+  void findCornerCells();
+//            QList<int> index_corner_cells_;
+
  private:
   int imin_, imax_, jmin_, jmax_, kmin_, kmax_;
   QList<int> index_list_;
@@ -90,6 +93,7 @@ class ReservoirBoundary : public Constraint, WellSplineConstraint
   QList<int> getListOfBoxEdgeCellIndices();
   QList<int> index_list_edge_;
 
+  void printCornerXYZ(std::string str_out, Eigen::Vector3d vector_xyz);
 };
 }
 }

@@ -21,15 +21,205 @@ ReservoirBoundary::ReservoirBoundary(
     affected_well_ = initializeWell(variables->GetWellSplineVariables(settings.well));
 
     // QList with indices of box edge cells
-    index_list_edge_ = getListOfBoxEdgeCellIndices();
+    index_list_edge_ = getIndicesOfEdgeCells();
 
 }
 
-/* \brief Function getListOfBoxEdgeCellIndices uses the limits
- * defining the box constraint to find the cells that make up
- * the edges of the box
+
+void ReservoirBoundary::findCornerCells() {
+
+    //GENERAL
+
+    // box plane / cell face index ordering (viewed from above):
+
+    //   2___3    6___7
+    //   |   |    |   |
+    //   |___|    |___|
+    //   0   1    4   5
+
+    // Comment: this appears to be the correct index ordering for
+    // a grid cell. Check this ordering is consistent with the ordering
+    // used in:
+    // /ConstraintMath/well_constraint_projections/well_constraint_projections.cpp
+
+    // If now, how do the orderings correlate?
+
+    // TODO:
+    // move the output messages from here to the unit test of this function.
+
+    // ===============
+    // UPPER BOX PLANE
+    // ===============
+
+    // UPPER BOX PLANE: LEFT EDGE
+    std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
+    //        2___3
+    //  -->   |   |
+    //  -->   |___|
+    //        0   1
+
+    // Get corner cells of box
+    QList<Eigen::Vector3d> upper_plane_left_bottom_cell_xyz = grid_->GetCell(imin_, jmin_, kmax_).corners();
+    QList<Eigen::Vector3d> upper_plane_left_top_cell_xyz = grid_->GetCell(imin_, jmax_, kmax_).corners();
+    // Get cell vertex amounting to true box corner
+    Eigen::Vector3d upper_plane_left_bottom_corner_xyz = upper_plane_left_bottom_cell_xyz[0];
+    Eigen::Vector3d upper_plane_left_top_corner_xyz = upper_plane_left_top_cell_xyz[2];
+    // Print coordinates
+    printCornerXYZ("upper plane, left edge, bottom corner: ", upper_plane_left_bottom_corner_xyz);
+    printCornerXYZ("upper plane, left edge, top corner:    ", upper_plane_left_top_corner_xyz);
+
+    // UPPER BOX PLANE: RIGHT EDGE
+    std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
+    //        2___3
+    //        |   |  <--
+    //        |___|  <--
+    //        0   1
+
+    // Get corner cells of box
+    QList<Eigen::Vector3d> upper_plane_right_bottom_cell_xyz = grid_->GetCell(imax_, jmin_, kmax_).corners();
+    QList<Eigen::Vector3d> upper_plane_right_top_cell_xyz = grid_->GetCell(imax_, jmax_, kmax_).corners();
+    // Get cell vertex amounting to true box corner
+    Eigen::Vector3d upper_plane_right_bottom_corner_xyz = upper_plane_right_bottom_cell_xyz[1];
+    Eigen::Vector3d upper_plane_right_top_corner_xyz = upper_plane_right_top_cell_xyz[3];
+    // Print coordinates
+    printCornerXYZ("upper plane, right edge, bottom corner:", upper_plane_right_bottom_corner_xyz);
+    printCornerXYZ("upper plane, right edge, top corner:   ", upper_plane_right_top_corner_xyz);
+
+    // UPPER BOX PLANE: BOTTOM EDGE
+    std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
+    //        2___3
+    //        |   |
+    //        |___|
+    //        0   1
+
+    //         ^ ^
+    //         | |
+
+    // Get corner cells of box
+    QList<Eigen::Vector3d> upper_plane_bottom_left_cell_xyz = grid_->GetCell(imin_, jmin_, kmax_).corners();
+    QList<Eigen::Vector3d> upper_plane_bottom_right_cell_xyz = grid_->GetCell(imax_, jmin_, kmax_).corners();
+    // Get cell vertex amounting to true box corner
+    Eigen::Vector3d upper_plane_bottom_left_corner_xyz = upper_plane_bottom_left_cell_xyz[0];
+    Eigen::Vector3d upper_plane_bottom_right_corner_xyz = upper_plane_bottom_right_cell_xyz[1];
+    // Print coordinates
+    printCornerXYZ("upper plane, bottom edge, left corner: ", upper_plane_bottom_left_corner_xyz);
+    printCornerXYZ("upper plane, bottom edge, right corner:", upper_plane_bottom_right_corner_xyz);
+
+    // UPPER BOX PLANE: TOP EDGE
+    std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
+    //         | |
+    //         v v
+
+    //        2___3
+    //        |   |
+    //        |___|
+    //        0   1
+
+    // Get corner cells of box
+    QList<Eigen::Vector3d> upper_plane_top_left_cell_xyz = grid_->GetCell(imin_, jmax_, kmax_).corners();
+    QList<Eigen::Vector3d> upper_plane_top_right_cell_xyz = grid_->GetCell(imax_, jmax_, kmax_).corners();
+    // Get cell vertex amounting to true box corner
+    Eigen::Vector3d upper_plane_top_left_corner_xyz = upper_plane_top_left_cell_xyz[2];
+    Eigen::Vector3d upper_plane_top_right_corner_xyz = upper_plane_top_right_cell_xyz[3];
+    // Print coordinates
+    printCornerXYZ("upper plane, top edge, left corner:    ", upper_plane_top_left_corner_xyz);
+    printCornerXYZ("upper plane, top edge, right corner:   ", upper_plane_top_right_corner_xyz);
+
+    // ===============
+    // LOWER BOX PLANE
+    // ===============
+
+    // LOWER BOX PLANE: LEFT EDGE
+    std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
+    //        6___7
+    //  -->   |   |
+    //  -->   |___|
+    //        4   5
+
+    // Get corner cells of box
+    QList<Eigen::Vector3d> lower_plane_left_bottom_cell_xyz = grid_->GetCell(imin_, jmin_, kmin_).corners();
+    QList<Eigen::Vector3d> lower_plane_left_top_cell_xyz = grid_->GetCell(imin_, jmax_, kmin_).corners();
+    // Get cell vertex amounting to true box corner
+    Eigen::Vector3d lower_plane_left_bottom_corner_xyz = lower_plane_left_bottom_cell_xyz[4];
+    Eigen::Vector3d lower_plane_left_top_corner_xyz = lower_plane_left_top_cell_xyz[6];
+    // Print coordinates
+    printCornerXYZ("lower plane, left edge, bottom corner: ", lower_plane_left_bottom_corner_xyz);
+    printCornerXYZ("lower plane, left edge, top corner:    ", lower_plane_left_top_corner_xyz);
+
+    // LOWER BOX PLANE: RIGHT EDGE
+    std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
+    //        6___7
+    //        |   |  <--
+    //        |___|  <--
+    //        4   5
+
+    // Get corner cells of box
+    QList<Eigen::Vector3d> lower_plane_right_bottom_cell_xyz = grid_->GetCell(imax_, jmin_, kmin_).corners();
+    QList<Eigen::Vector3d> lower_plane_right_top_cell_xyz = grid_->GetCell(imax_, jmax_, kmin_).corners();
+    // Get cell vertex amounting to true box corner
+    Eigen::Vector3d lower_plane_right_bottom_corner_xyz = lower_plane_right_bottom_cell_xyz[5];
+    Eigen::Vector3d lower_plane_right_top_corner_xyz = lower_plane_right_top_cell_xyz[7];
+    // Print coordinates
+    printCornerXYZ("lower plane, right edge, bottom corner:", lower_plane_right_bottom_corner_xyz);
+    printCornerXYZ("lower plane, right edge, top corner:   ", lower_plane_right_top_corner_xyz);
+
+    // LOWER BOX PLANE: BOTTOM EDGE
+    std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
+    //        6___7
+    //        |   |
+    //        |___|
+    //        4   5
+
+    //         ^ ^
+    //         | |
+
+    // Get corner cells of box
+    QList<Eigen::Vector3d> lower_plane_bottom_left_cell_xyz = grid_->GetCell(imin_, jmin_, kmin_).corners();
+    QList<Eigen::Vector3d> lower_plane_bottom_right_cell_xyz = grid_->GetCell(imax_, jmin_, kmin_).corners();
+    // Get cell vertex amounting to true box corner
+    Eigen::Vector3d lower_plane_bottom_left_corner_xyz = lower_plane_bottom_left_cell_xyz[4];
+    Eigen::Vector3d lower_plane_bottom_right_corner_xyz = lower_plane_bottom_right_cell_xyz[5];
+    // Print coordinates
+    printCornerXYZ("lower plane, bottom edge, left corner: ", lower_plane_bottom_left_corner_xyz);
+    printCornerXYZ("lower plane, bottom edge, right corner:", lower_plane_bottom_right_corner_xyz);
+
+    // LOWER BOX PLANE: TOP EDGE
+    std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
+    //         | |
+    //         v v
+
+    //        6___7
+    //        |   |
+    //        |___|
+    //        4   5
+
+    // Get corner cells of box
+    QList<Eigen::Vector3d> lower_plane_top_left_cell_xyz = grid_->GetCell(imin_, jmax_, kmin_).corners();
+    QList<Eigen::Vector3d> lower_plane_top_right_cell_xyz = grid_->GetCell(imax_, jmax_, kmin_).corners();
+    // Get cell vertex amounting to true box corner
+    Eigen::Vector3d lower_plane_top_left_corner_xyz = lower_plane_top_left_cell_xyz[6];
+    Eigen::Vector3d lower_plane_top_right_corner_xyz = lower_plane_top_right_cell_xyz[7];
+    // Print coordinates
+    printCornerXYZ("lower plane, top edge, left corner:    ", lower_plane_top_left_corner_xyz);
+    printCornerXYZ("lower plane, top edge, right corner:   ", lower_plane_top_right_corner_xyz);
+
+    std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
+}
+
+void ReservoirBoundary::printCornerXYZ(std::string str_out, Eigen::Vector3d vector_xyz) {
+    std::cout << std::setfill(' ') << str_out ;
+    for( int i=0, size=vector_xyz.size(); i < size; i++ )
+    {
+        std::cout << std::setw(8) << vector_xyz[i] << "\t";
+    }
+    std::cout << std::endl;
+}
+
+/* \brief Function getIndicesOfEdgeCells uses the limits
+ * defining the box constraint to find the cells that make
+ * up the edges of the box
  */
-QList<int> ReservoirBoundary::getListOfBoxEdgeCellIndices() {
+QList<int> ReservoirBoundary::getIndicesOfEdgeCells() {
     QList<int> box_edge_cells_;
 
     QList<int> upper_face_left_edge_;
@@ -37,9 +227,13 @@ QList<int> ReservoirBoundary::getListOfBoxEdgeCellIndices() {
     QList<int> upper_face_right_edge_;
     QList<int> upper_face_top_edge_;
 
+    QList<Eigen::Vector3d> upper_face_left_edge_xyz;
+    QList<Eigen::Vector3d> upper_face_left_edge_xyz_max_min;
+
     // UPPER CELL FACE: LEFT EDGE
     for (int j = jmin_; j <= jmax_; j++) {
         upper_face_left_edge_.append(grid_->GetCell(imin_, j, kmax_).global_index());
+        upper_face_left_edge_xyz.append(grid_->GetCell(imin_, j, kmax_).corners());
     }
 
     // UPPER CELL FACE: BOTTOM EDGE
