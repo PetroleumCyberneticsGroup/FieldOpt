@@ -1,3 +1,22 @@
+/******************************************************************************
+   Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+
+   This file is part of the FieldOpt project.
+
+   FieldOpt is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   FieldOpt is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
+
 #ifndef FIELDOPT_RESERVOIRBOUNDARY_H
 #define FIELDOPT_RESERVOIRBOUNDARY_H
 
@@ -44,6 +63,9 @@ class ReservoirBoundary : public Constraint, WellSplineConstraint
   bool CaseSatisfiesConstraint(Case *c);
   void SnapCaseToConstraints(Case *c);
 
+  // Def. function that outputs box_edge_cells_ for testing
+  QList<int> returnListOfBoxEdgeCellIndices() const { return index_list_edge_; }
+
  private:
   int imin_, imax_, jmin_, jmax_, kmin_, kmax_;
   QList<int> index_list_;
@@ -53,7 +75,6 @@ class ReservoirBoundary : public Constraint, WellSplineConstraint
 
   QList<int> getListOfBoxEdgeCellIndices();
   QList<int> index_list_edge_;
-  QList<int> box_edge_cells_;
 
 };
 }
