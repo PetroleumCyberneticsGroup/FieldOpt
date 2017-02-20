@@ -35,9 +35,16 @@ namespace WellConstraintProjections {
             return proj_point;
         }
 
-        // If the above is false, projected point is outside face, The closest point lies on one of the four lines.
-        // We create an array containing the index for line segments in the face, and loop through the lines to
-        // find best point.
+        // If the above is false, then the projected point is outside of the plane defined by face.
+        // If so, then the closest point lies on one of the four lines defining the bound of the cell.
+        // We create an array containing the index for the line segments defining the face, then loop
+        // through the lines to find closest point.
+        //
+        // cell face index ordering:
+        // 0 -- 1
+        // |    |
+        // 2 -- 3
+        // (Double check this is correct; see WIC notes)
         int line_indices[4][2] = {{0, 1},
                                   {1, 3},
                                   {3, 2},
