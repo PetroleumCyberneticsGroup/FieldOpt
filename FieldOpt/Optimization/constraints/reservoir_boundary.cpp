@@ -16,9 +16,13 @@ ReservoirBoundary::ReservoirBoundary(
     kmin_ = settings.box_kmin;
     kmax_ = settings.box_kmax;
     grid_ = grid;
+
     index_list_ = getListOfCellIndices();
-    index_list_edge_ = getListOfBoxEdgeCellIndices();
     affected_well_ = initializeWell(variables->GetWellSplineVariables(settings.well));
+
+    // QList with indices of box edge cells
+    index_list_edge_ = getListOfBoxEdgeCellIndices();
+
 }
 
 /* \brief Function getListOfBoxEdgeCellIndices uses the limits

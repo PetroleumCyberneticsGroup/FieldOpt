@@ -38,18 +38,29 @@ namespace Constraints {
  *  project the well onto the domain.
  *
  *  \todo Figure out a more effective way to enforce
- *  the box constraints
+ *  the box constraints (TASK A), then figure out way
+ *  boundary constraints for non-box (parallelogram)
+ *  shapes (TASK B); finally, define this constraint
+ *  (out of ReservoirBoundary) as a standalone
+ *  constraint (call it Box) (TASK C)
  *
- *  Suggested teps:
- *  -find the edge cells of the box,
- *  -get the corner points for each of the cells,
- *  -find the corner points of the entire box (assuming then
- *  the box is a parallelogram, which may not be true for the
- *  top and bottom planes)
- *  -print the box data to log for external visualization
- *  -figure out if the current point is inside or outside
+ *  Steps for (A):
+ *  1. find the edge cells of the box [x] + unit test [],
+ *
+ *  2. get the corner points for each of the cells [] + unit test [],
+ *
+ *  3. find the corner points of the entire box (assuming the box is a
+ *  parallelogram, which may not be true for the top and bottom planes
+ *  -> figure out how to deal with this later) [] + unit test [],
+ *
+ *  4. print the box data to log for external visualization
+ *
+ *  5. figure out if the current point is inside or outside
  *  the box, e.g., create a BoxEnvelopsPoint function
- *  -if outside, project point onto nearest point on plane
+ *
+ *  6. if outside, project point onto nearest point on plane
+ *
+ *  Steps for (B):
  */
 class ReservoirBoundary : public Constraint, WellSplineConstraint
 {
@@ -63,7 +74,10 @@ class ReservoirBoundary : public Constraint, WellSplineConstraint
   bool CaseSatisfiesConstraint(Case *c);
   void SnapCaseToConstraints(Case *c);
 
-  // Def. function that outputs box_edge_cells_ for testing
+  /* \brief Function getListOfBoxEdgeCellIndices uses the limits
+   * defining the box constraint to find the cells that constitute
+   * the edges of the box
+   */
   QList<int> returnListOfBoxEdgeCellIndices() const { return index_list_edge_; }
 
  private:
