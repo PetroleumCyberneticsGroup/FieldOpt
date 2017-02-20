@@ -7,8 +7,8 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Options 1: Unit tests, example dir ===================================
-option(BUILD_TESTING "Build unit tests"                 OFF)
-option(COPY_EXAMPLES "Copy examples to build directory" OFF)
+option(BUILD_TESTING "Build unit tests"                 ON)
+option(COPY_EXAMPLES "Copy examples to build directory" ON)
 
 if (BUILD_TESTING AND NOT COPY_EXAMPLES)
     message("It is recommended to copy examples when building unit
@@ -20,7 +20,7 @@ endif()
 # Build standalone well index calculator executable
 option(BUILD_WIC_ONLY "Build well index calculator exe" OFF)
 # Build OS-dependent well index calculator (shared) library:
-option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    ON)
+option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    OFF)
 
 # Qt libraries =========================================================
 if (NOT BUILD_WIC_ONLY)
