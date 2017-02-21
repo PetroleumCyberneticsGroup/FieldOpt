@@ -11,14 +11,9 @@ add_library(fieldopt::reservoir ALIAS ${PROJECT_NAME})
 
 include_directories(${EIGEN3_INCLUDE_DIR})
 include_directories(${CMAKE_BINARY_DIR}/libraries/include/)
-#target_link_libraries (reservoir
-#        PUBLIC fieldopt::ertwrapper
-#        ${Boost_LIBRARIES})
-
 target_link_libraries (reservoir
         PUBLIC fieldopt::ertwrapper
-        ${Boost_LIBRARIES}
-        PUBLIC Qt5::Core)
+        ${Boost_LIBRARIES})
 
 target_compile_features(reservoir
         PUBLIC cxx_auto_type
@@ -38,19 +33,13 @@ if (BUILD_TESTING)
     include_directories(${GTEST_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR} tests)
     add_executable(test_reservoir
         tests/test_resource_grids.h
-        tests/test_resource_wic_welldir.h
-        tests/test_resource_wic_widata.h
         tests/grid/test_cell.cpp
         tests/grid/test_grid.cpp
         tests/grid/test_ijkcoordinate.cpp
-        tests/well_index_calculation/test_well_index_deviated_well.cpp
-        tests/test_resource_wic_diff_functions.h
         )
 target_link_libraries(test_reservoir
         fieldopt::reservoir
         fieldopt::ertwrapper
-        fieldopt::wellindexcalculator
-        Qt5::Core
         ${GTEST_BOTH_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
         ${Boost_LIBRARIES})

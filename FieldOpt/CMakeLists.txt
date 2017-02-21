@@ -151,7 +151,7 @@ if (NOT BUILD_WIC_ONLY AND NOT BUILD_WIC_ADGPRS)
             DESTINATION ${CMAKE_BINARY_DIR}/examples)
 
     ## Copy wic benchmark wells into the build dir
-    file(COPY ${CMAKE_SOURCE_DIR}/Reservoir/tests/well_index_calculation/wic-benchmark-wells
+    file(COPY ${CMAKE_SOURCE_DIR}/FieldOpt-WellIndexCalculator/tests/well_index_benchmark/wic-benchmark-wells
             DESTINATION ${CMAKE_BINARY_DIR}/)
 
     ## Create an empty directory for test output
