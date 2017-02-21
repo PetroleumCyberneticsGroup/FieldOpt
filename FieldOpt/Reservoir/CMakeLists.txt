@@ -41,12 +41,16 @@ if (BUILD_TESTING)
         tests/grid/test_ijkcoordinate.cpp
         tests/well_index_calculation/test_intersected_cells.cpp
         tests/well_index_calculation/test_single_cell_wellindex.cpp
-        tests/well_index_calculation/test_well_index_deviated_well.cpp tests/test_resource_wic_diff_functions.cpp tests/test_resource_wic_diff_functions.h)
+        tests/well_index_calculation/test_well_index_deviated_well.cpp
+        tests/test_resource_wic_diff_functions.cpp
+        tests/test_resource_wic_diff_functions.h
+        )
 target_link_libraries(test_reservoir
         fieldopt::reservoir
         fieldopt::ertwrapper
         ${GTEST_BOTH_LIBRARIES}
-        ${CMAKE_THREAD_LIBS_INIT})
+        ${CMAKE_THREAD_LIBS_INIT}
+        ${Boost_LIBRARIES})
 
     add_test(NAME test_reservoir COMMAND $<TARGET_FILE:test_reservoir>)
 endif()
