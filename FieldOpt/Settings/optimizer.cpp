@@ -200,6 +200,7 @@ namespace Settings {
         }
 
         else if (QString::compare(constraint_type, "ReservoirBoundary") == 0) {
+            optimizer_constraint.type = ConstraintType::ReservoirBoundary;
             optimizer_constraint.box_imin = json_constraint["BoxImin"].toInt();
             optimizer_constraint.box_imax = json_constraint["BoxImax"].toInt();
             optimizer_constraint.box_jmin = json_constraint["BoxJmin"].toInt();
