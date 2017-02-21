@@ -58,7 +58,7 @@ TEST_F(ControlTest, ProducerControl) {
     EXPECT_EQ(0, entry_.time_step);
     EXPECT_TRUE(all_controls_.first()->open());
     EXPECT_EQ(::Settings::Model::ControlMode::BHPControl, all_controls_.first()->mode());
-    EXPECT_FLOAT_EQ(2000, all_controls_.first()->bhp());
+    EXPECT_FLOAT_EQ(100, all_controls_.first()->bhp());
 }
 
 TEST_F(ControlTest, InjectorControl) {

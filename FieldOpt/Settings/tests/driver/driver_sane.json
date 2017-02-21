@@ -99,21 +99,21 @@
                         "TimeStep": 0,
                         "State": "Open",
                         "Mode": "BHP",
-                        "BHP": 2000.0,
+                        "BHP": 100.0,
                         "IsVariable": false
                     },
                     {
                         "TimeStep": 50,
                         "State": "Open",
                         "Mode": "BHP",
-                        "BHP": 2000.0,
+                        "BHP": 100.0,
                         "IsVariable": false
                     },
                     {
                         "TimeStep": 365,
                         "State": "Open",
                         "Mode": "BHP",
-                        "BHP": 2000.0,
+                        "BHP": 100.0,
                         "IsVariable": false
                     }
                 ]

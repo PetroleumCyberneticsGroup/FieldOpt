@@ -46,9 +46,6 @@ option(BUILD_WIC_ONLY "Build well index calculator exe" OFF)
 # Build OS-dependent well index calculator (shared) library:
 option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    OFF)
 
-# Options 3: Create bundle =============================================
-option(CREATE_BUNDLE "Create a bundle with all libs and execs" OFF)
-
 # Qt libraries =========================================================
 if (NOT BUILD_WIC_ONLY)
     set(CMAKE_AUTOMOC ON)
@@ -155,7 +152,6 @@ if (NOT BUILD_WIC_ONLY AND NOT BUILD_WIC_ADGPRS)
 
     ## Create an empty directory for test output
     file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fieldopt_output)
-
 endif ()
 
 # Copy example files ===================================================
