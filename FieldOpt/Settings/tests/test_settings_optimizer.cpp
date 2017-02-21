@@ -70,7 +70,7 @@ TEST_F(OptimizerSettingsTest, Objective) {
 
 
 TEST_F(OptimizerSettingsTest, Constraints) {
-    EXPECT_EQ(5, settings_optimizer_->constraints().length());
+    EXPECT_EQ(6, settings_optimizer_->constraints().length());
     EXPECT_EQ(Optimizer::ConstraintType::BHP, settings_optimizer_->constraints()[0].type);
     EXPECT_EQ(Optimizer::ConstraintType::WellSplineLength, settings_optimizer_->constraints()[1].type);
     EXPECT_EQ(Optimizer::ConstraintType::Rate, settings_optimizer_->constraints()[2].type);
@@ -82,7 +82,7 @@ TEST_F(OptimizerSettingsTest, BHPConstraint) {
     auto constr = settings_optimizer_->constraints()[0];
     EXPECT_STREQ("PROD", constr.well.toLatin1().constData());
     EXPECT_FLOAT_EQ(300.0, constr.max);
-    EXPECT_FLOAT_EQ(100.0, constr.min);
+    EXPECT_FLOAT_EQ(90.0, constr.min);
 }
 
 TEST_F(OptimizerSettingsTest, WellSplineLengthConstraint) {

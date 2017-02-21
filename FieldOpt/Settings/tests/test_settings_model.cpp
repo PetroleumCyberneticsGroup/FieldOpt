@@ -69,7 +69,7 @@ namespace {
             QString expected_name = QString("BHP#PROD#%1").arg(control.time_step);
             EXPECT_STREQ(expected_name.toLatin1().constData(), control.name.toLatin1().constData());
             EXPECT_EQ(Model::ControlMode::BHPControl, control.control_mode);
-            EXPECT_FLOAT_EQ(2000.0, control.bhp);
+            EXPECT_FLOAT_EQ(100.0, control.bhp);
             EXPECT_LE(0, control.time_step);
             EXPECT_GE(365, control.time_step);
             EXPECT_EQ(Model::WellState::WellOpen, control.state);
