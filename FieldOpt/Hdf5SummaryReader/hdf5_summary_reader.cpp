@@ -22,6 +22,8 @@
 #include <iostream>
 #include <assert.h>
 #include <boost/current_function.hpp>
+#include <boost/lexical_cast.hpp>
+#include <stdexcept>
 
 using namespace H5;
 Hdf5SummaryReader::Hdf5SummaryReader(const std::string file_path,
@@ -324,7 +326,7 @@ Hdf5SummaryReader::well_data Hdf5SummaryReader::parseWellState(std::vector<wstyp
             state.gas_rates_sc[t] = ws[i].vPhaseRatesAtSC[0];
             state.oil_rates_sc[t] = ws[i].vPhaseRatesAtSC[1];
             state.water_rates_sc[t] = ws[i].vPhaseRatesAtSC[2];
-        } else throw std::runtime_error("Can only handle models with 2 or 3 phases, found " + std::to_string(state.nphases));
+        } else throw std::runtime_error("Can only handle models with 2 or 3 phases, found " + boost::lexical_cast<std::string>(state.nphases));
         for (int p = 0; p < nperfs; ++p) { // Perforation data at each time step
             state.perforation_states[p] = perforation_data(ntimes_);
             state.perforation_states[p].pressures[t] = ws[i].vPressures[p+1];

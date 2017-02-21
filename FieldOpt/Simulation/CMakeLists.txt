@@ -66,3 +66,9 @@ if (BUILD_TESTING)
 
     add_test(NAME test_simulation COMMAND $<TARGET_FILE:test_simulation>)
 endif()
+
+install( TARGETS simulation
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib/static
+        )

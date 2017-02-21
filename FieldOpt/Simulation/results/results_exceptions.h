@@ -28,6 +28,7 @@
 
 #include <stdexcept>
 #include <string>
+#include <boost/lexical_cast.hpp>
 
 using std::string;
 
@@ -54,7 +55,7 @@ public:
 class ResultTimeIndexInvalidException : public std::runtime_error {
 public:
     ResultTimeIndexInvalidException(const int index)
-        : std::runtime_error("Time index " + std::to_string(index) + " is not valid for the current results.") {}
+        : std::runtime_error("Time index " + boost::lexical_cast<std::string>(index) + " is not valid for the current results.") {}
 };
 
 }}

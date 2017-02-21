@@ -38,3 +38,9 @@ if (BUILD_TESTING)
 
     add_test(NAME test_settings COMMAND $<TARGET_FILE:test_settings>)
 endif()
+
+install( TARGETS settings
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib/static
+        )

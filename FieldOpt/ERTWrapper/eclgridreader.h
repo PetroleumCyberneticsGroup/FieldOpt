@@ -23,6 +23,7 @@
 #include <ert/ecl/ecl_grid.h>
 #include <ert/ecl/ecl_file.h>
 #include <Eigen/Dense>
+#include <vector>
 
 namespace ERTWrapper {
 
