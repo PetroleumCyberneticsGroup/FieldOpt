@@ -15,14 +15,7 @@ namespace Optimization {
             dist_constr_settings.wells = settings.wells;
             dist_constr_settings.min = settings.min_distance;
             distance_constraint_ = new InterwellDistance(dist_constr_settings, variables);
-            Utilities::Settings::Settings global_settings_;
-            if (global_settings_.verbosity()>2) {
-                std::cout << "... ... initialized distance constraint for wells: ";
-                for (QString wname : settings.wells) {
-                    std::cout << wname.toStdString() << ", ";
-                }
-                std::cout << std::endl;
-            }
+            Settings::Settings global_settings_;
 
             length_constraints_ = QList<WellSplineLength *>();
             for (QString wname : settings.wells) {
