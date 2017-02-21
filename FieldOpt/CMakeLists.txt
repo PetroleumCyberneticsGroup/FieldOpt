@@ -19,10 +19,9 @@ SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 
 SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
-# add the automatically determined parts of the RPATH
-# which point to directories outside the build tree to the install RPATH
+# add the automatically determined parts of the RPATH which point
+# to directories outside the build tree to the install RPATH
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-
 
 # the RPATH to be used when installing, but only if it's not a system directory
 LIST(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
@@ -49,7 +48,6 @@ option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    OFF)
 
 # Options 3: Create bundle =============================================
 option(CREATE_BUNDLE "Create a bundle with all libs and execs" OFF)
-
 
 # Qt libraries =========================================================
 if (NOT BUILD_WIC_ONLY)
