@@ -21,6 +21,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/replace.hpp>
+#include <boost/lexical_cast.hpp>
 
 namespace Reservoir {
 namespace Grid {
@@ -175,9 +176,9 @@ Cell ECLGrid::GetCellEnvelopingPoint(double x, double y, double z)
   }
   // Throw an exception if no cell was found
   throw runtime_error("Grid::GetCellEnvelopingPoint: Cell is outside grid ("
-                          + to_string(x) + ", "
-                          + to_string(y) + ", "
-                          + to_string(z) + ")"
+                          + boost::lexical_cast<std::string>(x) + ", "
+                          + boost::lexical_cast<std::string>(y) + ", "
+                          + boost::lexical_cast<std::string>(z) + ")"
   );
 }
 

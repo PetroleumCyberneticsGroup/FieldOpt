@@ -32,3 +32,9 @@ if (BUILD_TESTING)
 
     add_test(NAME test_hdf5summaryreader COMMAND $<TARGET_FILE:test_hdf5summaryreader>)
 endif()
+
+install( TARGETS hdf5summaryreader
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib/static
+        )
