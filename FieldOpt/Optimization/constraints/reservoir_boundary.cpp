@@ -1,5 +1,6 @@
 #include "reservoir_boundary.h"
 #include "ConstraintMath/well_constraint_projections/well_constraint_projections.h"
+#include <iomanip>
 
 namespace Optimization {
 namespace Constraints {
@@ -231,13 +232,13 @@ QList<int> ReservoirBoundary::getIndicesOfEdgeCells() {
     QList<Eigen::Vector3d> upper_face_left_edge_xyz_max_min;
 
     // Testing
-    std::vector<Eigen::Matrix<double,3,1,0,3,1>> upper_face_left_edge_xyz;
-    std::vector<Eigen::Matrix<double,3,1,0,3,1>> upper_face_left_edge_xyz_max_min;
+//    std::vector<Eigen::Matrix<double,3,1,0,3,1>> upper_face_left_edge_xyz;
+//    std::vector<Eigen::Matrix<double,3,1,0,3,1>> upper_face_left_edge_xyz_max_min;
 
     // UPPER CELL FACE: LEFT EDGE
     for (int j = jmin_; j <= jmax_; j++) {
         upper_face_left_edge_.append(grid_->GetCell(imin_, j, kmax_).global_index());
-        upper_face_left_edge_xyz.append(grid_->GetCell(imin_, j, kmax_).corners());
+//        upper_face_left_edge_xyz.append(grid_->GetCell(imin_, j, kmax_).corners());
         // Testing
         // upper_face_left_edge_xyz.push_back(grid_->GetCell(imin_, j, kmax_).corners());
     }
