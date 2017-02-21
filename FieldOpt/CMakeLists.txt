@@ -150,8 +150,12 @@ if (NOT BUILD_WIC_ONLY AND NOT BUILD_WIC_ADGPRS)
     file(COPY ${CMAKE_SOURCE_DIR}/Settings/tests/driver/driver_sane.json
             DESTINATION ${CMAKE_BINARY_DIR}/examples)
 
+    ## Copy wic benchmark wells into the build dir
+    file(COPY ${CMAKE_SOURCE_DIR}/Reservoir/tests/well_index_calculation/wic-benchmark-wells
+            DESTINATION ${CMAKE_BINARY_DIR}/)
+
     ## Create an empty directory for test output
-    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fieldopt_output)
+    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fieldopt-output)
 endif ()
 
 # Copy example files ===================================================
