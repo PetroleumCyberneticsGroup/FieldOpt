@@ -10,6 +10,7 @@ add_library(reservoir
 add_library(fieldopt::reservoir ALIAS ${PROJECT_NAME})
 
 include_directories(${EIGEN3_INCLUDE_DIR})
+include_directories(${CMAKE_BINARY_DIR}/libraries/include/)
 target_link_libraries (reservoir
         PUBLIC fieldopt::ertwrapper
         ${Boost_LIBRARIES})
@@ -43,3 +44,9 @@ if (BUILD_TESTING)
 
     add_test(NAME test_reservoir COMMAND $<TARGET_FILE:test_reservoir>)
 endif()
+
+install( TARGETS reservoir
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib/static
+        )

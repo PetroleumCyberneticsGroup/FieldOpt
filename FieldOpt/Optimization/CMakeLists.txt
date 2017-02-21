@@ -90,3 +90,9 @@ if (BUILD_TESTING)
 
 	add_test(NAME test_optimization COMMAND $<TARGET_FILE:test_optimization>)
 endif()
+
+install( TARGETS optimization
+		RUNTIME DESTINATION bin
+		LIBRARY DESTINATION lib
+		ARCHIVE DESTINATION lib/static
+		)

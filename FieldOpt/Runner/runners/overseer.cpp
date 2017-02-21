@@ -1,4 +1,5 @@
 #include "overseer.h"
+#include <boost/lexical_cast.hpp>
 
 namespace Runner {
     namespace MPI {
@@ -21,7 +22,7 @@ namespace Runner {
             msg.c = c;
             runner_->SendMessage(msg);
             worker->start();
-            runner_->printMessage("Assigned case to worker " + std::to_string(worker->rank), 2);
+            runner_->printMessage("Assigned case to worker " + boost::lexical_cast<std::string>(worker->rank), 2);
             runner_->printMessage("Current status for workers:\n" + workerStatusSummary(), 2);
         }
 
@@ -29,8 +30,8 @@ namespace Runner {
             auto message = MPIRunner::Message();
             runner_->RecvMessage(message);
             workers_[message.source]->stop();
-            runner_->printMessage("Received case with tag " + std::to_string(message.tag)
-                                  + " from worker " + std::to_string(message.source), 2);
+            runner_->printMessage("Received case with tag " + boost::lexical_cast<std::string>(message.tag)
+                                  + " from worker " + boost::lexical_cast<std::string>(message.source), 2);
             runner_->printMessage("Current status for workers:\n" + workerStatusSummary(), 2);
             last_case_tag = message.get_tag();
             return message.c;
