@@ -32,15 +32,20 @@ if (BUILD_TESTING)
     find_package(GTest REQUIRED)
     include_directories(${GTEST_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR} tests)
     add_executable(test_reservoir
-            tests/test_resource_grids.h
-            tests/grid/test_cell.cpp
-            tests/grid/test_grid.cpp
-            tests/grid/test_ijkcoordinate.cpp)
-    target_link_libraries(test_reservoir
-            fieldopt::reservoir
-            ${Boost_LIBRARIES}
-            ${GTEST_BOTH_LIBRARIES}
-            ${CMAKE_THREAD_LIBS_INIT})
+        tests/test_resource_grids.h
+        tests/grid/test_cell.cpp
+        tests/grid/test_grid.cpp
+        tests/grid/test_ijkcoordinate.cpp
+        )
+target_link_libraries(test_reservoir
+        fieldopt::reservoir
+        fieldopt::ertwrapper
+        ${GTEST_BOTH_LIBRARIES}
+        ${CMAKE_THREAD_LIBS_INIT}
+        ${Boost_LIBRARIES})
+
+    set_target_properties(test_reservoir
+            PROPERTIES COMPILE_FLAGS "-fPIC")
 
     add_test(NAME test_reservoir COMMAND $<TARGET_FILE:test_reservoir>)
 endif()
