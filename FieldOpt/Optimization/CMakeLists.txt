@@ -35,6 +35,7 @@ add_library(optimization
 		constraints/combined_spline_length_interwell_distance_reservoir_boundary.cpp
 		case_transfer_object.cpp
 		optimizers/ExhaustiveSearch2DVert.cpp
+		optimizers/ExhaustiveSearch2DHorz.cpp
 		optimizers/GSS.cpp
 		optimizers/compass_search.cpp
 		optimizers/APPS.cpp
