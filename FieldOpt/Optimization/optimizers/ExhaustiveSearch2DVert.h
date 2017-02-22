@@ -26,16 +26,19 @@ namespace Optimization {
 namespace Optimizers {
 
 /*!
- * @brief This ExhaustiveSearch algorithm is intended for doing an exhaustive search
- * (i.e. check all possible permutations) for the placement of _one_ verical well
- * in two dimensions. It works by creating Case objects for all combinations of the
- * i and j variables that are inside the reservoir.
+ * @brief This ExhaustiveSearch algorithm is intended for doing
+ * an exhaustive search (i.e. check all possible permutations)
+ * for the placement of _one_ verical well in two dimensions.
+ * It works by creating Case objects for all combinations of
+ * the i and j variables that are inside the reservoir.
  */
 class ExhaustiveSearch2DVert : public Optimizer {
  public:
   /*!
-   * @brief Default constructor. Checks that the problem has exactly three variables: i,
-   * j and k coordinates for a well block. Also retrieves the UUIDs for the i and j variables.
+   * @brief Default constructor. Checks that the problem has
+   * exactly three variables: i, j and k coordinates for a
+   * well block. Also retrieves the UUIDs for the i and j
+   * variables.
    */
   ExhaustiveSearch2DVert(Settings::Optimizer *settings,
                          Case *base_case,
@@ -47,15 +50,17 @@ class ExhaustiveSearch2DVert : public Optimizer {
   QUuid j_varid;
 
   /*!
-   * @brief This will return NOT_FINISHED if either iterate() has not been called yet,
-   * or if all cases have not yet been evaluated.
+   * @brief This will return NOT_FINISHED if either iterate()
+   * has not been called yet, or if all cases have not yet
+   * been evaluated.
    * @return
    */
   virtual TerminationCondition IsFinished() override;
 
   /*!
-   * @brief Creates a Case for every permutation of the i and j variables that are inside
-   * the reservoir the first time its called. Calling it more than once has no effect.
+   * @brief Creates a Case for every permutation of the i and j
+   * variables that are inside the reservoir the first time its
+   * called. Calling it more than once has no effect.
    */
   virtual void iterate() override;
 
