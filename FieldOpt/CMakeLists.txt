@@ -156,6 +156,7 @@ if (NOT BUILD_WIC_ONLY AND NOT BUILD_WIC_ADGPRS)
 
     ## Create an empty directory for test output
     file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fieldopt-output)
+
 endif ()
 
 # Copy example files ===================================================
