@@ -14,7 +14,6 @@ namespace Optimization {
             dist_constr_settings.min = settings.min_distance;
             distance_constraint_ = new InterwellDistance(dist_constr_settings, variables);
 
-            int verbosity_level_ = 0;
             if (verbosity_level_>2){
                 std::cout << "... ... initialized distance constraint for wells: ";
                 for (QString wname : settings.wells) {

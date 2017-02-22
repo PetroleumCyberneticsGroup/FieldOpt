@@ -34,15 +34,18 @@ namespace Optimization {
 
     Case *CaseHandler::GetNextCaseForEvaluation()
     {
-        if (evaluation_queue_.size() == 0) throw CaseHandlerException("The evaluation queue contains no cases.");
+        if (evaluation_queue_.size() == 0)
+            throw CaseHandlerException(
+                "The evaluation queue contains no cases.");
         evaluating_.append(evaluation_queue_.head());
-        std::cout << "evaluation_queue_.head()" << evaluation_queue_.head().toString().toStdString();
         return cases_[evaluation_queue_.dequeue()];
     }
 
     void CaseHandler::SetCaseEvaluated(const QUuid id)
     {
-        if (!evaluating_.contains(id)) throw CaseHandlerException("The case id is not found in the list of cases being evaluated.");
+        if (!evaluating_.contains(id))
+            throw CaseHandlerException(
+                "The case id is not found in the list of cases being evaluated.");
         evaluating_.removeAll(id);
         evaluated_.append(id);
         evaluated_recently_.append(id);
