@@ -93,7 +93,8 @@ class ECLGridReader
   Eigen::Vector3d GetCellCenter(int global_index);
   std::vector<Eigen::Vector3d> GetCellCorners(int global_index);
   double getCellVolume(int global_index);
-  bool isActive(int global_index); //!< Check whether or not a cell is active.
+  int getActiveIndex(int global_index); //!< Get the active index for a cell. Returns -1 if the cell is inactive.
+  int getActiveIndex(IJKIndex global_ijk); //!< Get the active index for a cell. Returns -1 if the cell is inactive.
 
   ecl_kw_type *poro_kw_;
   ecl_kw_type *permx_kw_;

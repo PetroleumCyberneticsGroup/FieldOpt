@@ -154,12 +154,13 @@ ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index)
 
 ECLGridReader::CellProperties ECLGridReader::GetCellProperties(int global_index) {
     CellProperties props;
-    if (isActive(global_index)) {
+    int active_index = getActiveIndex(ConvertGlobalIndexToIJK(global_index));
+    if (active_index != -1) {
         props.is_active = true;
-        props.porosity = ecl_kw_iget_as_double(poro_kw_, global_index);
-        props.permx = ecl_kw_iget_as_double(permx_kw_, global_index);
-        props.permy = ecl_kw_iget_as_double(permy_kw_, global_index);
-        props.permz = ecl_kw_iget_as_double(permz_kw_, global_index);
+        props.porosity = ecl_kw_iget_as_double(poro_kw_, active_index);
+        props.permx = ecl_kw_iget_as_double(permx_kw_, active_index);
+        props.permy = ecl_kw_iget_as_double(permy_kw_, active_index);
+        props.permz = ecl_kw_iget_as_double(permz_kw_, active_index);
     }
     else {
         props.is_active = false;
@@ -179,8 +180,11 @@ bool ECLGridReader::GlobalIndexIsInsideGrid(int global_index)
     Dims dims = Dimensions();
     return global_index < dims.nx * dims.ny * dims.nz;
 }
-bool ECLGridReader::isActive(int global_index) {
+int ECLGridReader::getActiveIndex(int global_index) {
     return ecl_grid_get_active_index1(ecl_grid_, global_index) != -1;
+}
+int ECLGridReader::getActiveIndex(ECLGridReader::IJKIndex global_ijk) {
+    return ecl_grid_get_active_index3(ecl_grid_, global_ijk.i, global_ijk.j, global_ijk.k);
 }
 
 }
