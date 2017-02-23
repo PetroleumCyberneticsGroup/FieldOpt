@@ -24,20 +24,20 @@ namespace Grid {
 
 Cell::Cell(int global_index,
            IJKCoordinate ijk_index,
-           double volume, double poro,
-           double permx, double permy, double permz,
+           float volume,
            Eigen::Vector3d center,
            std::vector<Eigen::Vector3d> corners)
 {
     global_index_ = global_index;
     ijk_index_ = ijk_index;
     volume_ = volume;
-    porosity_ = poro;
-    permx_ = permx;
-    permy_ = permy;
-    permz_ = permz;
     center_ = center;
     corners_ = corners;
+    is_active_ = true;
+    porosity_ = 0;
+    permx_ = 0;
+    permy_ = 0;
+    permz_ = 0;
     initializeFaces();
 }
 
@@ -79,10 +79,17 @@ void Cell::initializeFaces() {
 
         face.normal_vector =
             (face.corners[2] - face.corners[0]).cross(
-            face.corners[1] - face.corners[0]).normalized();
+                face.corners[1] - face.corners[0]).normalized();
 
         faces_.push_back(face);
     }
+}
+void Cell::SetProperties(bool is_active, float porosity, float permx, float permy, float permz) {
+    is_active_ = is_active;
+    porosity_ = porosity;
+    permx_ = permx;
+    permy_ = permy;
+    permz_ = permz;
 }
 
 }
