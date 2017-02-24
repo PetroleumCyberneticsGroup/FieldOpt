@@ -23,15 +23,21 @@
 namespace Optimization {
 namespace Optimizers {
 
-ExhaustiveSearch2DVert::ExhaustiveSearch2DVert(Settings::Optimizer *settings, Case *base_case,
-                                               Model::Properties::VariablePropertyContainer *variables,
-                                               Reservoir::Grid::Grid *grid)
+ExhaustiveSearch2DVert::ExhaustiveSearch2DVert(
+    Settings::Optimizer *settings, Case *base_case,
+    Model::Properties::VariablePropertyContainer *variables,
+    Reservoir::Grid::Grid *grid)
     : Optimizer(settings, base_case, variables, grid) {
+
     grid_ = grid;
 
-    if (variables->BinaryVariableSize() != 0 || variables->ContinousVariableSize() != 0
+    // Check problem has exactly three discrete (IJK) variables
+    if (variables->BinaryVariableSize() != 0
+        || variables->ContinousVariableSize() != 0
         || variables->DiscreteVariableSize() != 3)
-        throw std::runtime_error("ExhaustiveSearch2DVert: Expecting to receive exactly three discrete variables.");
+        throw std::runtime_error(
+            "ExhaustiveSearch2DVert: Expecting to "
+                "receive exactly three discrete variables.");
 
     auto blockvars = variables->GetWellBlockVariables();
     if (blockvars.size() != 3)
