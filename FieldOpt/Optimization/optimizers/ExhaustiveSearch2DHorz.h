@@ -35,6 +35,43 @@ namespace Optimizers {
  */
 
 class ExhaustiveSearch2DHorz {
+ public:
+  /*!
+   * @brief Default constructor.
+   * Checks that the problem has six variables altogether:
+   * (x,y,z)_heel (x,y,z)_toe
+   * Retrieves the UUIDs for the x, y, z heel and toe variables
+   *
+   *
+   */
+
+  ExhaustiveSearch2DHorz(Settings::Optimizer *settings,
+                         Case *base_case,
+                         Model::Properties::VariablePropertyContainer *variables,
+                         Reservoir::Grid::Grid *grid);
+
+ private:
+  Reservoir::Grid::Grid *grid_;
+  QList<QUuid> xyz_heel_varid;
+  QList<QUuid> xyz_toe_varid;
+
+  /*!
+   * @brief Returns NOT_FINISHED if either iterate() has
+   * not been called yet, or if all cases have not yet
+   * been evaluated.
+   * @return
+   */
+  virtual TerminationCondition IsFinished() override;
+
+  /*!
+   * @brief Creates a Case for every permutation of the i and j
+   * variables that are inside the reservoir the first time its
+   * called. Calling it more than once has no effect.
+   */
+  virtual void iterate() override;
+
+ protected:
+  void handleEvaluatedCase(Case *c) override {}
 
 };
 
