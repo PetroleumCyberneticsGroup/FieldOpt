@@ -26,68 +26,77 @@
 #include "ERTWrapper/eclgridreader.h"
 
 namespace Reservoir {
-    namespace Grid {
+namespace Grid {
 
-        /*!
-         * \brief The abstract Grid class represents a reservoir grid. It indcludes basic operations for lookup,
-         * checks and calculations on grids.
-         */
-        class Grid
-        {
-        public:
-            /*!
-             * \brief The GridSourceType enum Enumerates the supported grid types.
-             */
-            enum GridSourceType {ECLIPSE};
-            Grid(const Grid& other) = delete;
+/*!
+ * \brief The abstract Grid class represents a reservoir grid. It indcludes basic operations for lookup,
+ * checks and calculations on grids.
+ */
+class Grid
+{
+ public:
+  /*!
+   * \brief The GridSourceType enum Enumerates the supported grid types.
+   */
+  enum GridSourceType {ECLIPSE};
+  Grid(const Grid& other) = delete;
 
-            /*!
-             * \brief The Dims struct Contains the grid dimensions.
-             */
-            struct Dims {
-                int nx; int ny; int nz;
-            };
+  /*!
+   * \brief The Dims struct Contains the grid dimensions.
+   */
+  struct Dims {
+    int nx; int ny; int nz;
+  };
 
-            virtual ~Grid();
+  virtual ~Grid();
 
-            /*!
-             * \brief Dimensions Returns the grid dimensions (number of blocks in x, y and z directions).
-             * \return
-             */
-            virtual Dims Dimensions() = 0;
+  /*!
+   * \brief Dimensions Returns the grid dimensions (number of blocks in x, y and z directions).
+   * \return
+   */
+  virtual Dims Dimensions() = 0;
 
-            /*!
-             * \brief GetCell Get a cell from its global index.
-             */
-            virtual Cell GetCell(int global_index) = 0;
+  /*!
+   * \brief GetCell Get a cell from its global index.
+   * \note This only gets the cell geometry.
+   */
+  virtual Cell GetCell(int global_index) = 0;
 
-            /*!
-             * \brief GetCell Get a cell from its (i,j,k) index.
-             */
-            virtual Cell GetCell(int i, int j, int k) = 0;
+  /*!
+   * \brief GetCell Get a cell from its (i,j,k) index.
+   * \note This only gets the cell geometry.
+   */
+  virtual Cell GetCell(int i, int j, int k) = 0;
 
-            /*!
-             * \brief GetCell Get a cell from its (i,j,k) index.
-             */
-            virtual Cell GetCell(IJKCoordinate* ijk) = 0;
+  /*!
+   * \brief GetCell Get a cell from its (i,j,k) index.
+   * \note This only gets the cell geometry.
+   */
+  virtual Cell GetCell(IJKCoordinate* ijk) = 0;
 
-            /*!
-             * \brief GetCellEnvelopingPoint Get the cell enveloping the point (x,y,z). Throws an exception if no cell is found.
-             */
-            virtual Cell GetCellEnvelopingPoint(double x, double y, double z) = 0;
+  /*!
+   * @brief Fill in the non-geometry properties of a cell/
+   * @param cell The cell to get the properties for.
+   */
+  virtual void FillCellProperties(Cell &cell) = 0;
 
-            /*!
-             * \brief GetCellEnvelopingPoint Get the cell enveloping the point (x,y,z). Throws an exception if no cell is found.
-             */
-            virtual Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz) = 0;
+  /*!
+   * \brief GetCellEnvelopingPoint Get the cell enveloping the point (x,y,z). Throws an exception if no cell is found.
+   */
+  virtual Cell GetCellEnvelopingPoint(double x, double y, double z) = 0;
 
-        protected:
-            GridSourceType type_;
-            std::string file_path_;
-            Grid(GridSourceType type, std::string file_path);
-        };
+  /*!
+   * \brief GetCellEnvelopingPoint Get the cell enveloping the point (x,y,z). Throws an exception if no cell is found.
+   */
+  virtual Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz) = 0;
 
-    }
+ protected:
+  GridSourceType type_;
+  std::string file_path_;
+  Grid(GridSourceType type, std::string file_path);
+};
+
+}
 }
 
 

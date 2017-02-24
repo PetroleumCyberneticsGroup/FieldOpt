@@ -118,14 +118,21 @@ Cell ECLGrid::GetCell(int global_index)
     // Return cell info
     return Cell(global_index,
                 ijk_index,
-                ertCell.volume, ertCell.porosity,
-                ertCell.permx, ertCell.permy, ertCell.permz,
+                ertCell.volume,
                 center, corners);
   }
   else{
     throw runtime_error("ECLGrid::GetCell(int global_index): Grid "
                             "source must be defined before getting a cell.");
   }
+}
+
+void ECLGrid::FillCellProperties(Cell &cell) {
+    auto props = ecl_grid_reader_->GetCellProperties(cell.global_index());
+    cell.SetProperties(props.is_active,
+                       props.porosity,
+                       props.permx, props.permy, props.permz
+    );
 }
 
 Cell ECLGrid::GetCell(int i, int j, int k)
