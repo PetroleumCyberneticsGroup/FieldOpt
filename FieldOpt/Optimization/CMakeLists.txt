@@ -38,7 +38,8 @@ add_library(optimization
 		optimizers/GSS.cpp
 		optimizers/compass_search.cpp
 		optimizers/APPS.cpp
-		${EXPERIMENTAL_CONSTRAINTS_SRC} )
+		optimizers/GeneticAlgorithm.cpp
+		${EXPERIMENTAL_CONSTRAINTS_SRC})
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
 target_link_libraries(optimization
