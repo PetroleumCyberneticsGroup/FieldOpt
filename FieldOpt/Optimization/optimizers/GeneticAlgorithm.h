@@ -20,6 +20,7 @@
 #ifndef FIELDOPT_GENETICALGORITHM_H
 #define FIELDOPT_GENETICALGORITHM_H
 
+#include <boost/random.hpp>
 #include "optimizer.h"
 
 using namespace std;
@@ -51,6 +52,7 @@ class GeneticAlgorithm : public Optimizer {
   void handleEvaluatedCase(Case *c) override;
   void iterate() override;
  private:
+  boost::random::mt19937 gen_; // Random number generator with the random functions in math.hpp
 
   /*!
    * @brief The Chromosome struct is used to hold variable values

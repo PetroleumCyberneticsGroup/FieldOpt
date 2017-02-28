@@ -28,6 +28,7 @@ GeneticAlgorithm::GeneticAlgorithm(Settings::Optimizer *settings,
                                    Case *base_case,
                                    Model::Properties::VariablePropertyContainer *variables,
                                    Reservoir::Grid::Grid *grid) : Optimizer(settings, base_case, variables, grid) {
+    gen_ = get_random_generator();
     max_generations_ = 50;
     n_ints_ = variables->DiscreteVariableSize();
     n_floats_ = variables->ContinousVariableSize();
@@ -51,8 +52,7 @@ GeneticAlgorithm::GeneticAlgorithm(Settings::Optimizer *settings,
     // todo: Generate initial chromosomes and add the cases to the queue
 }
 Optimizer::TerminationCondition GeneticAlgorithm::IsFinished() {
-    if (case_handler_->EvaluatedCases().size() > max_evaluations_ ||
-        generation_ > max_generations_)
+    if (generation_ > max_generations_)
         return TerminationCondition::MAX_EVALS_REACHED;
     else
         return TerminationCondition::NOT_FINISHED;
@@ -74,8 +74,8 @@ void GeneticAlgorithm::iterate() {
 vector<GeneticAlgorithm::Chromosome> GeneticAlgorithm::tournamentSelection() {
     vector<Chromosome> mating_pool;
     while (mating_pool.size() < population_size_) {
-        auto p1 = population_[random_integer(0, population_size_-1)];
-        auto p2 = population_[random_integer(0, population_size_-1)];
+        auto p1 = population_[random_integer(gen_, 0, population_size_-1)];
+        auto p2 = population_[random_integer(gen_, 0, population_size_-1)];
         if (isBetter(p1.c, p2.c))
             mating_pool.push_back(p1);
         else
@@ -84,9 +84,9 @@ vector<GeneticAlgorithm::Chromosome> GeneticAlgorithm::tournamentSelection() {
     return vector<Chromosome>();
 }
 vector<GeneticAlgorithm::Chromosome> GeneticAlgorithm::laplaceCrossover(vector<Chromosome> mating_pool) {
-    vector<float> us = random_floats(population_size_);
-    vector<float> rs = random_floats(population_size_);
-    vector<float> ps = random_floats(population_size_);
+    vector<float> us = random_floats(gen_, population_size_);
+    vector<float> rs = random_floats(gen_, population_size_);
+    vector<float> ps = random_floats(gen_, population_size_);
     vector<Chromosome> offspring;
 
     for (int i = 0; i < population_size_; i += 2) {
@@ -120,10 +120,10 @@ vector<GeneticAlgorithm::Chromosome> GeneticAlgorithm::laplaceCrossover(vector<C
     return offspring;
 }
 vector<GeneticAlgorithm::Chromosome> GeneticAlgorithm::powerMutation(vector<Chromosome> chromosomes) {
-    vector<float> ps = random_floats(population_size_);
-    vector<float> ss_int = random_floats(population_size_);
-    vector<float> ss_float = random_floats(population_size_);
-    vector<float> rs = random_floats(population_size_);
+    vector<float> ps = random_floats(gen_, population_size_);
+    vector<float> ss_int = random_floats(gen_, population_size_);
+    vector<float> ss_float = random_floats(gen_, population_size_);
+    vector<float> rs = random_floats(gen_, population_size_);
     for (int i = 0; i < population_size_; ++i) {
         if (rs[i] <= p_mutation_) {
             ss_int[i] = pow(ss_int[i], power_int_);
@@ -149,7 +149,8 @@ GeneticAlgorithm::Chromosome::Chromosome(Case *c) {
     rea_vars = c->GetRealVarVector();
 }
 void GeneticAlgorithm::Chromosome::truncateInts() {
-    vector<float> rs = random_floats(int_vars.size());
+    auto gen = get_random_generator();
+    vector<float> rs = random_floats(gen, int_vars.size());
     for (int i = 0; i < int_vars.size(); ++i) {
         float int_part = floor(int_vars[i]);
         if (rs[i] >= 0.5)
