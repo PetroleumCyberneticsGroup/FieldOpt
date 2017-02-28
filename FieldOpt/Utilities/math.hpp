@@ -138,4 +138,23 @@ inline std::vector<float> random_floats(boost::random::mt19937 &gen, const int n
     return rands;
 }
 
+/*!
+ * @brief Generate a vector of n random floats in the range [min, max)
+ * @param gen Random number generator. You can get one by calling get_random_generator().
+ * @param min Min limit for generated numbers.
+ * @param max Max limit for generated numbers.
+ * @param n Number numbers to generate.
+ * @return A vector containing n random floats.
+ */
+inline std::vector<float> random_floats(boost::random::mt19937 &gen, const float min, const float max, const int n) {
+    boost::uniform_real<> dist(min, max);
+    boost::variate_generator<boost::mt19937&, boost::uniform_real<> > rng(gen, dist);
+
+    std::vector<float> rands = std::vector<float>(n);
+    for (int i = 0; i < n; ++i) {
+        rands[i] = rng();
+    }
+    return rands;
+}
+
 #endif // MATH_FUNCTIONS_H
