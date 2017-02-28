@@ -29,24 +29,26 @@ GeneticAlgorithm::GeneticAlgorithm(Settings::Optimizer *settings,
                                    Model::Properties::VariablePropertyContainer *variables,
                                    Reservoir::Grid::Grid *grid) : Optimizer(settings, base_case, variables, grid) {
     gen_ = get_random_generator();
-    max_generations_ = 50;
     n_ints_ = variables->DiscreteVariableSize();
     n_floats_ = variables->ContinousVariableSize();
     generation_ = 0;
-    population_size_ = 20;
-    p_crossover_ = 0.8;
-    p_mutation_ = 0.01;
     location_parameter_ = 0.0;
-    scale_real_ = 0.15;
-    scale_int_ = 0.2;
-    power_real_ = 10.0;
-    power_int_= 4.0;
+    max_generations_ = settings->parameters().max_generations;
+    population_size_ = settings->parameters().population_size;
+    p_crossover_ = settings->parameters().p_crossover;
+    p_mutation_ = settings->parameters().p_mutation;
+    scale_real_ = settings->parameters().crossover_scale_real;
+    scale_int_ = settings->parameters().crossover_scale_int;
+    power_real_ = settings->parameters().mutation_power_real;
+    power_int_= settings->parameters().mutation_power_int;
     float_lower_bounds_ = Eigen::VectorXd::Zero(n_floats_);
+    float_lower_bounds_.fill(settings->parameters().lower_bound_real);
     float_upper_bounds_ = Eigen::VectorXd::Zero(n_floats_);
-    float_lower_bounds_.fill(1000.0);
+    float_upper_bounds_.fill(settings->parameters().upper_bound_real);
     int_lower_bounds_ = Eigen::VectorXd::Zero(n_ints_);
+    int_lower_bounds_.fill(settings->parameters().lower_bound_int);
     int_upper_bounds_ = Eigen::VectorXd::Zero(n_ints_);
-    int_upper_bounds_.fill(60.0);
+    int_upper_bounds_.fill(settings->parameters().upper_bound_int);
 
     assert(population_size_ % 2 == 0); // Ensure that the population size is an even number.
     // todo: Generate initial chromosomes and add the cases to the queue
