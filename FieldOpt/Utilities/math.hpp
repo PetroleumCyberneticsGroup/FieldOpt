@@ -5,6 +5,8 @@
 #include <QList>
 #include <vector>
 #include <boost/random.hpp>
+#include <boost/multiprecision/gmp.hpp>
+#include <boost/multiprecision/random.hpp>
 
 /*!
  * @brief Calculate the average value of the items in the list. The returned value will always be a double.
@@ -67,6 +69,21 @@ inline int random_integer(const int lower, const int upper) {
     boost::random::mt19937 gen;
     boost::random::uniform_int_distribution<> dist(lower, upper);
     return dist(gen);
+}
+
+/*!
+ * @brief Generate a vector of n random floats in the range [0, 1)
+ * @param n Number numbers to generate.
+ * @return A vector containing n random floats.
+ */
+inline std::vector<float> random_floats(int n) {
+    boost::random::uniform_01<boost::multiprecision::mpf_float_50> uf;
+    boost::random::independent_bits_engine<boost::random::mt19937, 50L*1000L/301L, boost::multiprecision::mpz_int> gen;
+    std::vector<float> rands = std::vector<float>(n);
+    for (int i = 0; i < n; ++i) {
+        rands[i] = static_cast<float>(uf(gen));
+    }
+    return rands;
 }
 
 #endif // MATH_FUNCTIONS_H
