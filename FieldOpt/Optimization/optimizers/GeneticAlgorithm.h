@@ -22,6 +22,8 @@
 
 #include "optimizer.h"
 
+using namespace std;
+
 namespace Optimization {
 namespace Optimizers {
 
@@ -33,7 +35,10 @@ namespace Optimizers {
  * The mutation operator used is Power Mutation; the crossover operator is Laplace
  * Crossover; and the selection operator is Tournament Selection.
  *
- * Note that the Power Mutation _requires_ upper and lower bounds on the variables.
+ * \note The Power Mutation _requires_ upper and lower bounds on the variables.
+ * This class does not support any other forms of constraints.
+ *
+ * \note The number of chromosomes must be an even number.
  */
 class GeneticAlgorithm : public Optimizer {
  public:
@@ -46,26 +51,70 @@ class GeneticAlgorithm : public Optimizer {
   void handleEvaluatedCase(Case *c) override;
   void iterate() override;
  private:
+
+  /*!
+   * @brief The Chromosome struct is used to hold variable values
+   * for a chromosome. It is used in place of cases because for
+   * the mixed-integer algorithm implemented here, the integer variables
+   * should be treated as floating point numbers until they are truncated
+   * at the very end.
+   */
+  struct Chromosome {
+    Eigen::VectorXd int_vars;
+    Eigen::VectorXd rea_vars;
+    Case *c;
+    Chromosome(Case *c);
+    Chromosome() {}
+    void createNewCase();
+   private:
+    void truncateInts();
+  };
+
+  vector<Chromosome> population_; //!< Holds the set of cases currently used as chromomes by the algorithm.
+  int n_ints_; //!< Number of integer variables.
+  int n_floats_; //!< Number of real variables.
+
   // Parameters for genetic algorithm in general.
   int max_generations_; //!< Maximum number of generations.
+  int generation_; //!< The curent interation number.
   int population_size_; //!< Size of population (number of chromosomes).
-  double p_crossover_; //!< Crossover probability.
-  double p_mutation_; //!< Mutation probability.
+  float p_crossover_; //!< Crossover probability.
+  float p_mutation_; //!< Mutation probability.
 
   // Parameters from Laplace Crossover.
-  double location_parameter_; //!< The location parameter used in the laplace distribution.
-  double scale_real_; //!< Scale parameter for real numbers. Higher values give a larger probability of offspring further from parents.
+  float location_parameter_; //!< The location parameter used in the laplace distribution.
+  float scale_real_; //!< Scale parameter for real numbers. Higher values give a larger probability of offspring further from parents.
   int scale_int_; //!< Scale parameter for integer numbers. Higher values give a larger probability of offspring further from parents.
 
   // Parameters for Power Mutation
-  double power_real_; //!< Strength of real power mutation.
-  double power_int_; //!< Strength of integer power mutation.
+  float power_real_; //!< Strength of real power mutation.
+  float power_int_; //!< Strength of integer power mutation.
 
   // Bound constraints for variables
-  std::vector<double> float_lower_bounds_; //!< Lower bounds for real numbers.
-  std::vector<double> float_upper_bounds_; //!< Upper bounds for real numbers.
-  std::vector<int> int_lower_bounds_; //!< Lower bounds for integer numbers.
-  std::vector<int> int_upper_bounds_; //!< Upper bounds for integer numbers.
+  Eigen::VectorXd float_lower_bounds_; //!< Lower bounds for real numbers.
+  Eigen::VectorXd float_upper_bounds_; //!< Upper bounds for real numbers.
+  Eigen::VectorXd int_lower_bounds_; //!< Lower bounds for integer numbers.
+  Eigen::VectorXd int_upper_bounds_; //!< Upper bounds for integer numbers.
+
+  /*!
+   * @brief Perform tournament selection on the population.
+   * @return The set of cases (chromomes) to be used mating pool.
+   */
+  vector<Chromosome> tournamentSelection();
+
+  /*!
+   * @brief Perform Laplace crossover on the members of the mating pool. This creates a new set of cases.
+   * @param mating_pool The list of cases to be used as a mating pool.
+   * @return A list of new cases resulting from the crossover.
+   */
+  vector<Chromosome> laplaceCrossover(vector<Chromosome> mating_pool);
+
+  /*!
+   * @brief Perform power mutation on the list of chromosomes.
+   * @param chromosomes The chromosomes to be mutated.
+   * @return A list of mutated chromosomes.
+   */
+  vector<Chromosome> powerMutation(vector<Chromosome> chromosomes);
 };
 
 }
