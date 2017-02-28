@@ -134,6 +134,25 @@ namespace Utilities {
         }
 
         /*!
+         * \brief CreateFile Creates an empty file at the given path.
+         * \param path Path to file to created.
+         * \param overwrite Whether or not existing files at the path 
+         * should be overwritten (i.e. deleted).
+         */
+        inline void CreateFile(QString file_path, bool overwrite=false)
+        {
+            if (FileExists(file_path) && overwrite==false)
+                throw std::runtime_error("File already existing and overwrite "
+                    "protection is on by default: File not created.");
+            else{
+                QFile file(file_path);
+                file.open(QIODevice::WriteOnly);
+                QTextStream out(&file);
+                file.close();
+            }
+        }
+
+        /*!
          * \brief DeleteFile Deletes the file at the given path.
          * \param path Path to file to be deleted.
          */
