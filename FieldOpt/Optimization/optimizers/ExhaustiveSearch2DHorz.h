@@ -34,7 +34,7 @@ namespace Optimizers {
  * parallel.
  */
 
-class ExhaustiveSearch2DHorz {
+class ExhaustiveSearch2DHorz : public Optimizer  {
  public:
   /*!
    * @brief Default constructor.

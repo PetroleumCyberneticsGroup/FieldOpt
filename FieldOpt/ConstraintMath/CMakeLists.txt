@@ -31,7 +31,7 @@ if (BUILD_TESTING)
     find_package(GTest REQUIRED)
     include_directories(${GTEST_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR})
     add_executable(test_constraintmath
-            tests/well_constraint_projections_tests.cpp
+            tests/test_well_constraint_projections.cpp
             tests/test_domain_boundary.cpp
             )
     target_link_libraries(test_constraintmath
