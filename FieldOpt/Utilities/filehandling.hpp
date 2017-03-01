@@ -90,18 +90,25 @@ namespace Utilities {
         }
 
         /*!
-         * \brief WriteStringToFile Write a string to a file. Removes existing file contents.
+         * \brief WriteStringToFile Write a string to a file.
+         * Removes existing file contents.
          *
-         * If the string does not end with a newline, it will be added.
          * \param string The string to be written.
          * \param file_path Path to the file to write the string into.
+         * \param add_endline If the string does not end with a
+         * newline, it will be added by default. Set flag to false
+         * to not add a newline.
          */
-        inline void WriteStringToFile(QString string, QString file_path)
+        inline void WriteStringToFile(QString string,
+                                      QString file_path,
+                                      bool add_endline=true)
         {
             if (!ParentDirectoryExists(file_path))
-                throw std::runtime_error("File's parent directory not found: " + file_path.toStdString());
+                throw std::runtime_error(
+                    "File's parent directory not found: "
+                        + file_path.toStdString());
 
-            if (!string.endsWith("\n"))
+            if (!string.endsWith("\n") && add_endline)
                 string.append("\n");
 
             QFile file(file_path);
@@ -114,16 +121,22 @@ namespace Utilities {
         /*!
          * \brief WriteLineToFile Append a string to a file.
          *
-         * If the string does not end with a newline, it will be added.
          * \param string The string/line to be written.
          * \param file_path The file to write the string/line to.
+         * \param add_endline If the line does not end with a
+         * newline, it will be added by default. Set flag to false
+         * to not add a newline.
          */
-        inline void WriteLineToFile(QString string, QString file_path)
+        inline void WriteLineToFile(QString string,
+                                    QString file_path,
+                                    bool add_endline=true)
         {
             if (!ParentDirectoryExists(file_path))
-                throw std::runtime_error("File's parent directory not found: " + file_path.toStdString());
+                throw std::runtime_error(
+                    "File's parent directory not found: "
+                        + file_path.toStdString());
 
-            if (!string.endsWith("\n"))
+            if (!string.endsWith("\n") && add_endline)
                 string.append("\n");
 
             QFile file(file_path);
@@ -142,7 +155,8 @@ namespace Utilities {
         inline void CreateFile(QString file_path, bool overwrite=false)
         {
             if (FileExists(file_path) && overwrite==false)
-                throw std::runtime_error("File already existing and overwrite "
+                throw std::runtime_error(
+                    "File already existing and overwrite "
                     "protection is on by default: File not created.");
             else{
                 QFile file(file_path);
