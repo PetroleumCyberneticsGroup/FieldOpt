@@ -24,5 +24,6 @@ if (BUILD_TESTING)
             PUBLIC cxx_auto_type
             PUBLIC cxx_range_for)
 
-    add_test(NAME test_utilities COMMAND $<TARGET_FILE:test_utilities>)
+    add_test(NAME test_utilities
+            COMMAND $<TARGET_FILE:test_utilities>)
 endif()
