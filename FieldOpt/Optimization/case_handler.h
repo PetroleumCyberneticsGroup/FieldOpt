@@ -1,3 +1,22 @@
+/******************************************************************************
+   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
+
+   This file is part of the FieldOpt project.
+
+   FieldOpt is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   FieldOpt is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
+
 #ifndef CASE_HANDLER_H
 #define CASE_HANDLER_H
 
@@ -21,19 +40,23 @@ class CaseHandler
   CaseHandler(Case *base_case);
 
   /*!
-   * \brief AddNewCase Add a new non-evaluated case to the queue.
+   * \brief AddNewCase Add a new non-evaluated case
+   * to the queue.
    */
   void AddNewCase(Case *c);
 
   /*!
-   * \brief AddNewCases Add any number of non-evaluated cases to the queue.
+   * \brief AddNewCases Add any number of non-evaluated
+   * cases to the queue.
    */
   void AddNewCases(QList<Case *> cases);
 
   /*!
-   * \brief GetNextCaseForEvaluation Get the next case to be evaluated.
+   * \brief GetNextCaseForEvaluation Get the next case
+   * to be evaluated.
    *
-   * The returned case is also added to the list of cases currently being evaluated.
+   * The returned case is also added to the list of cases
+   * currently being evaluated.
    */
   Case *GetNextCaseForEvaluation();
 
@@ -51,39 +74,48 @@ class CaseHandler
   Case *GetCase(const QUuid id) const;
 
   /*!
-   * \brief UpdateCaseObjectiveFunctionValue updates the objective function value of a
-   * case. This is needed when using, for instance, MPI based runners, where the case
-   * object before and after evaluation is not the same one.
+   * \brief UpdateCaseObjectiveFunctionValue updates the
+   * objective function value of a case. This is needed
+   * when using, for instance, MPI based runners, where
+   * the case object before and after evaluation is not
+   * the same one.
    * \param id The ID of the case to be updated.
-   * \param ofv The objective function value to be set for the case.
+   * \param ofv The objective function value to be set
+   * for the case.
    */
   void UpdateCaseObjectiveFunctionValue(const QUuid id, const double ofv);
 
   /*!
-   * \brief RecentlyEvaluatedCases Get the list of cases that has been marked as evaluated since the last
+   * \brief RecentlyEvaluatedCases Get the list of cases
+   * that has been marked as evaluated since the last
    * time ClearRecentlyEvaluatedCases() was called.
    */
   QList<Case *> RecentlyEvaluatedCases() const;
 
   /*!
-   * \brief ClearRecentlyEvaluatedCases Clear the list of recently evaluated cases. Should be called whenever
-   * a significant point is reached by the optimizer, for example at the end of an iteration.
+   * \brief ClearRecentlyEvaluatedCases Clear the list of
+   * recently evaluated cases. Should be called whenever
+   * a significant point is reached by the optimizer,
+   * for example at the end of an iteration.
    */
   void ClearRecentlyEvaluatedCases();
 
   /*!
-   * \brief QueuedCases Get the list of cases currently queued to be evaluated.
+   * \brief QueuedCases Get the list of cases currently
+   * queued to be evaluated.
    */
   QList<Case *> QueuedCases() const;
 
   /*!
-   * \brief CasesBeingEvaluated Get the list of cases currently being evaluated.
+   * \brief CasesBeingEvaluated Get the list of cases
+   * currently being evaluated.
    * \return
    */
   QList<Case *> CasesBeingEvaluated() const;
 
   /*!
-   * \brief EvaluatedCases Get the list of cases that have been marked as evaluated.
+   * \brief EvaluatedCases Get the list of cases that
+   * have been marked as evaluated.
    */
   QList<Case *> EvaluatedCases() const;
 
