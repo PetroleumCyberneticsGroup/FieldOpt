@@ -133,17 +133,17 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
       {"Mode", "Minimize"},
       {"Parameters", QJsonObject{
           {"MaxGenerations", 100},
-          {"PopulationSize", 20},
-          {"CrossoverProbability", 0.8},
-          {"MutationProbability", 0.05},
-          {"CrossoverScaleInt", 0.15},
-          {"CrossoverScaleReal", 0.25},
-          {"MutationPowerInt", 5.0},
-          {"MutationPowerReal", 2.0},
-          {"LowerBoundInt", 0.0},
-          {"UpperBoundInt", 10.0},
-          {"LowerBoundReal", 0.0},
-          {"UpperBoundReal", 100.0}
+          {"PopulationSize", 301},
+          {"CrossoverProbability", 0.55},
+          {"MutationProbability", 0.005},
+          {"CrossoverScaleInt", 0.35},
+          {"CrossoverScaleReal", 0.35},
+          {"MutationPowerInt", 0.25},
+          {"MutationPowerReal", 0.5},
+          {"LowerBoundInt", -5.12},
+          {"UpperBoundInt", 5.12},
+          {"LowerBoundReal", -5.12},
+          {"UpperBoundReal", 5.12}
 
       }},
       {"Objective", obj_fun_}
