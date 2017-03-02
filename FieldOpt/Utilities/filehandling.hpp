@@ -45,7 +45,7 @@ inline int GetFileSize(std::string file_path)
         f_sz = boost::filesystem::file_size(file_path);
     else
         throw std::runtime_error(
-            "File not found: " + file_path);
+            "File not found (GetFileSize): " + file_path);
 
     unsigned long int file_sz = static_cast<unsigned long int>(f_sz);
     return file_sz;
