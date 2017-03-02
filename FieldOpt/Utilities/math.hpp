@@ -146,11 +146,11 @@ inline std::vector<float> random_floats(boost::random::mt19937 &gen, const int n
  * @param n Number numbers to generate.
  * @return A vector containing n random floats.
  */
-inline std::vector<float> random_floats(boost::random::mt19937 &gen, const float min, const float max, const int n) {
+inline std::vector<double> random_doubles(boost::random::mt19937 &gen, const double min, const double max, const int n) {
     boost::uniform_real<> dist(min, max);
     boost::variate_generator<boost::mt19937&, boost::uniform_real<> > rng(gen, dist);
 
-    std::vector<float> rands = std::vector<float>(n);
+    std::vector<double> rands = std::vector<double>(n);
     for (int i = 0; i < n; ++i) {
         rands[i] = rng();
     }
