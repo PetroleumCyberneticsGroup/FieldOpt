@@ -40,6 +40,10 @@ namespace Optimizers {
  * This class does not support any other forms of constraints.
  *
  * \note The number of chromosomes must be an even number.
+ *
+ * \note The tournament size is fixed at two.
+ *
+ * \note Elitism is enforced. The best individual from the last generation is kept.
  */
 class GeneticAlgorithm : public Optimizer {
  public:
@@ -64,9 +68,10 @@ class GeneticAlgorithm : public Optimizer {
   struct Chromosome {
     Eigen::VectorXd int_vars;
     Eigen::VectorXd rea_vars;
-    Case *c;
+    Case *case_pointer;
     Chromosome(Case *c);
     Chromosome() {}
+    double ofv() { return case_pointer->objective_function_value(); }
     void createNewCase();
    private:
     void truncateInts();
@@ -74,11 +79,10 @@ class GeneticAlgorithm : public Optimizer {
 
   vector<Chromosome> population_; //!< Holds the set of cases currently used as chromomes by the algorithm.
   int n_ints_; //!< Number of integer variables.
-  int n_floats_; //!< Number of real variables.
+  int n_reas_; //!< Number of real variables.
 
   // Parameters for genetic algorithm in general.
   int max_generations_; //!< Maximum number of generations.
-  int generation_; //!< The curent interation number.
   int population_size_; //!< Size of population (number of chromosomes).
   float p_crossover_; //!< Crossover probability.
   float p_mutation_; //!< Mutation probability.
@@ -93,30 +97,44 @@ class GeneticAlgorithm : public Optimizer {
   float power_int_; //!< Strength of integer power mutation.
 
   // Bound constraints for variables
-  Eigen::VectorXd float_lower_bounds_; //!< Lower bounds for real numbers.
-  Eigen::VectorXd float_upper_bounds_; //!< Upper bounds for real numbers.
+  Eigen::VectorXd rea_lower_bounds_; //!< Lower bounds for real numbers.
+  Eigen::VectorXd rea_upper_bounds_; //!< Upper bounds for real numbers.
   Eigen::VectorXd int_lower_bounds_; //!< Lower bounds for integer numbers.
   Eigen::VectorXd int_upper_bounds_; //!< Upper bounds for integer numbers.
 
   /*!
-   * @brief Perform tournament selection on the population.
-   * @return The set of cases (chromomes) to be used mating pool.
+   * @brief Sort the population according to descending objective function values.
+   *
+   * This is used to ease the enforcement of elitism.
    */
-  vector<Chromosome> tournamentSelection();
+  void sortPopulation();
 
   /*!
-   * @brief Perform Laplace crossover on the members of the mating pool. This creates a new set of cases.
-   * @param mating_pool The list of cases to be used as a mating pool.
-   * @return A list of new cases resulting from the crossover.
+   * @brief Perform tournament selection on the population. The tournament is fixed at two.
+   *
+   * The first place in the mating pool is reserved for the best individual from
+   * the last generation (elitism).
    */
-  vector<Chromosome> laplaceCrossover(vector<Chromosome> mating_pool);
+  void tournamentSelection();
 
   /*!
-   * @brief Perform power mutation on the list of chromosomes.
-   * @param chromosomes The chromosomes to be mutated.
-   * @return A list of mutated chromosomes.
+   * @brief Perform Laplace crossover on the population.
+   *
+   * The first individual in the list is not touched, in order to enforce elitism.
    */
-  vector<Chromosome> powerMutation(vector<Chromosome> chromosomes);
+  void laplaceCrossover();
+
+  /*!
+   * @brief Perform power mutation on the population.
+   *
+   * The first individuals in the list is not touched, in order to enforce elitism.
+   */
+  void powerMutation();
+
+  /*!
+   * @brief Print a string representation of the population to stdout.
+   */
+  void printPopulation();
 };
 
 }
