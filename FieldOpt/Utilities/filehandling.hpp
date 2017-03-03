@@ -83,13 +83,20 @@ inline bool DirectoryIsEmpty(QString folder_path)
  * parent directory exists.
  * \param file_path Path a file (the file itself does not have
  * to exist).
+ * \param make_dir Flag: if set to true, it creates the parent
+ * directory is this directory does not exist
  * \return True if the parent directory exists, otherwise false.
  */
-inline bool ParentDirectoryExists(QString file_path)
+inline bool ParentDirectoryExists(QString file_path,
+                                  bool make_dir=false)
 {
     QFileInfo file(file_path);
     QDir parent_directory = file.dir();
-    return parent_directory.exists();
+    auto dir_exists = parent_directory.exists();
+
+    if (!dir_exists && make_dir)
+        parent_directory.mkdir(file_path);
+    return dir_exists;
 }
 
 /*!
