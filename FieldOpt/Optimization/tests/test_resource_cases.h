@@ -33,6 +33,11 @@ class TestResourceCases : public TestResources::TestResourceVariablePropertyCont
       for (double rand : rand_reals_30)
           real_variables_sph_rand_30d_.insert(QUuid::createUuid(), rand);
       test_case_ga_spherical_30r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), real_variables_sph_rand_30d_);
+
+      std::vector<double> rand_reals_6 = random_doubles(gen, -5.12, 5.12, 6);
+      for (double rand : rand_reals_6)
+          real_variables_sph_rand_6d_.insert(QUuid::createUuid(), rand);
+      test_case_ga_spherical_6r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), real_variables_sph_rand_6d_);
   }
 
   QList<Optimization::Case *> trivial_cases_;
@@ -77,6 +82,8 @@ class TestResourceCases : public TestResources::TestResourceVariablePropertyCont
    */
   Optimization::Case *test_case_ga_spherical_30r_;
 
+  Optimization::Case *test_case_ga_spherical_6r_;
+
  private:
   const QHash<QUuid, bool> binary_variables_4d_{
       {QUuid::createUuid(), true},
@@ -101,6 +108,8 @@ class TestResourceCases : public TestResources::TestResourceVariablePropertyCont
   };
 
   QHash<QUuid, double> real_variables_sph_rand_30d_;
+
+  QHash<QUuid, double> real_variables_sph_rand_6d_;
 
 };
 

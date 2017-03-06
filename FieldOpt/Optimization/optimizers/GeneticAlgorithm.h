@@ -84,17 +84,17 @@ class GeneticAlgorithm : public Optimizer {
   // Parameters for genetic algorithm in general.
   int max_generations_; //!< Maximum number of generations.
   int population_size_; //!< Size of population (number of chromosomes).
-  float p_crossover_; //!< Crossover probability.
-  float p_mutation_; //!< Mutation probability.
+  double p_crossover_; //!< Crossover probability.
+  double p_mutation_; //!< Mutation probability.
 
   // Parameters from Laplace Crossover.
-  float location_parameter_; //!< The location parameter used in the laplace distribution.
-  float scale_real_; //!< Scale parameter for real numbers. Higher values give a larger probability of offspring further from parents.
+  double location_parameter_; //!< The location parameter used in the laplace distribution.
+  double scale_real_; //!< Scale parameter for real numbers. Higher values give a larger probability of offspring further from parents.
   int scale_int_; //!< Scale parameter for integer numbers. Higher values give a larger probability of offspring further from parents.
 
   // Parameters for Power Mutation
-  float power_real_; //!< Strength of real power mutation.
-  float power_int_; //!< Strength of integer power mutation.
+  double power_real_; //!< Strength of real power mutation.
+  double power_int_; //!< Strength of integer power mutation.
 
   // Bound constraints for variables
   Eigen::VectorXd rea_lower_bounds_; //!< Lower bounds for real numbers.
@@ -111,30 +111,36 @@ class GeneticAlgorithm : public Optimizer {
 
   /*!
    * @brief Perform tournament selection on the population. The tournament is fixed at two.
+   * Return the index in the population of a new potential parent.
    *
    * The first place in the mating pool is reserved for the best individual from
    * the last generation (elitism).
+   *
+   * @param inverse Whether or not to do inverse selection (used for inserting newly evaluated individuals into the population).
+   * @return Index of new parent or new position to plce individual.
    */
-  void tournamentSelection();
+  int tournamentSelection(bool inverse=false);
 
   /*!
-   * @brief Perform Laplace crossover on the population.
+   * @brief Perform Laplace crossover on two parents.
    *
-   * The first individual in the list is not touched, in order to enforce elitism.
+   * @param p1_idx Index of first parent.
+   * @param p2_idx Index of second parent.
+   * @return Vector containing two new offspring chromosomes.
    */
-  void laplaceCrossover();
+  vector<Chromosome> laplaceCrossover(const int p1_idx, const int p2_idx);
 
   /*!
-   * @brief Perform power mutation on the population.
-   *
-   * The first individuals in the list is not touched, in order to enforce elitism.
+   * @brief Perform power mutation on a chromosome.
    */
-  void powerMutation();
+  Chromosome powerMutation(Chromosome chr);
 
   /*!
    * @brief Print a string representation of the population to stdout.
    */
   void printPopulation();
+
+  void printChromosome(Chromosome &chrom);
 };
 
 }

@@ -51,7 +51,6 @@ GeneticAlgorithm::GeneticAlgorithm(Settings::Optimizer *settings,
     int_upper_bounds_.fill(settings->parameters().upper_bound_int);
 
     assert(population_size_ > 3); // Because of the tournament size, the population must be at least 3.
-    assert(population_size_ % 2 == 1); // Ensure that the population size is an odd number.
 
     // todo: Generate initial chromosomes and add the cases to the queue
     for (int i = 0; i < population_size_; ++i) {
@@ -71,17 +70,17 @@ GeneticAlgorithm::GeneticAlgorithm(Settings::Optimizer *settings,
     }
 }
 Optimizer::TerminationCondition GeneticAlgorithm::IsFinished() {
-    bool all_the_same = true;
-    for (int i = 0; i < population_size_ - 1; ++i) {
-        if (population_[i].ofv() != population_[i+1].ofv())
-            all_the_same = false;
-    }
-    if (all_the_same && iteration_ > 0) {
-        cout << "All the same in iteration " << iteration_ << endl;
-        iteration_ = max_generations_+1;
-    }
+//    bool all_the_same = true;
+//    for (int i = 0; i < population_size_ - 1; ++i) {
+//        if (population_[i].ofv() != population_[i+1].ofv())
+//            all_the_same = false;
+//    }
+//    if (all_the_same && iteration_ > 0) {
+//        cout << "All the same in iteration " << iteration_ << endl;
+//        iteration_ = max_generations_+1;
+//    }
 
-    if (iteration_ > max_generations_)
+    if (iteration_ >= max_generations_)
         return TerminationCondition::MAX_EVALS_REACHED;
     else
         return TerminationCondition::NOT_FINISHED;
@@ -91,122 +90,113 @@ void GeneticAlgorithm::handleEvaluatedCase(Case *c) {
         tentative_best_case_ = c;
         cout << "Updated best case in generation " << iteration_ << ": " << c->objective_function_value() << endl;
     }
+    auto chrom = Chromosome(c);
+    int idx = tournamentSelection(true);
+    population_[idx] = chrom;
 }
 void GeneticAlgorithm::iterate() {
-    sortPopulation();
-    tournamentSelection();
-    laplaceCrossover();
-    powerMutation();
-    for (auto chrom : population_) {
-        chrom.createNewCase();
-        case_handler_->AddNewCase(chrom.case_pointer);
-    }
+//    sortPopulation();
+    cout << "=== ITERATION START" << endl;
+    printPopulation();
+    int p1_idx = tournamentSelection();
+    int p2_idx = tournamentSelection();
+    cout << "Selected: " << p1_idx << ", " << p2_idx << endl;
+    printChromosome(population_[p1_idx]);
+    printChromosome(population_[p2_idx]);
+    vector<Chromosome> offspring = laplaceCrossover(p1_idx, p2_idx);
+    cout << "After crossover:" << endl;
+    printChromosome(offspring[0]);
+    printChromosome(offspring[1]);
+    auto o1 = powerMutation(offspring[0]);
+    auto o2 = powerMutation(offspring[1]);
+    o1.createNewCase();
+    o2.createNewCase();
+    case_handler_->AddNewCase(o1.case_pointer);
+    case_handler_->AddNewCase(o2.case_pointer);
     iteration_++;
 }
-void GeneticAlgorithm::tournamentSelection() {
-    vector<Chromosome> mating_pool;
-    mating_pool.push_back(population_[0]);
-    while (mating_pool.size() < population_size_) {
-        vector<Chromosome> pool;
-        pool.push_back(population_[random_integer(gen_, 0, population_size_-1)]);
-        pool.push_back(population_[random_integer(gen_, 0, population_size_-1)]);
-        std::sort(pool.begin(), pool.end(), [&](Chromosome a, Chromosome b) {
-          return isBetter(a.case_pointer, b.case_pointer);
-        });
-        mating_pool.push_back(pool[0]);
-    }
-    population_ = mating_pool;
-}
-void GeneticAlgorithm::laplaceCrossover() {
-    vector<float> us = random_floats(gen_, population_size_);
-    vector<float> rs = random_floats(gen_, population_size_);
-    vector<float> ps = random_floats(gen_, population_size_);
-    vector<Chromosome> offspring;
-    offspring.push_back(population_[0]);
-
-    for (int i = 1; i < population_size_ - 1; i += 2) {
-        int p1_idx = random_integer(gen_, 0, population_size_-1);
-        int p2_idx = random_integer(gen_, 0, population_size_-1);
-        if (ps[i] > p_crossover_) { // Not doing crossover
-            offspring.push_back(population_[p1_idx]);
-            offspring.push_back(population_[p2_idx]);
-            continue;
-        } // else doing crossover
-
-        float beta_real, beta_int;
-        if (rs[i] <= 0.5) {
-            beta_real = location_parameter_ - scale_real_ * log(us[i]);
-            beta_int = location_parameter_ - scale_int_ * log(us[i]);
-        }
-        else {
-            beta_real = location_parameter_ + scale_real_ * log(us[i]);
-            beta_int = location_parameter_ + scale_int_ * log(us[i]);
-        }
-
-        auto p1 = population_[p1_idx]; // Parent 1
-        auto p2 = population_[p2_idx]; // Parent 2
-        auto o1 = Chromosome(p1.case_pointer); // Offspring 1
-        auto o2 = Chromosome(p2.case_pointer); // Offspring 2
-
-        if (n_ints_ > 0) {
-            o2.int_vars = p2.int_vars + beta_int * (p1.int_vars - p2.int_vars).cwiseAbs();
-            o1.int_vars = p1.int_vars + beta_int * (p1.int_vars - p2.int_vars).cwiseAbs();
-        }
-        if (n_reas_ > 0) {
-            o1.rea_vars = p1.rea_vars + beta_real * (p1.rea_vars - p2.rea_vars).cwiseAbs();
-            o2.rea_vars = p2.rea_vars + beta_real * (p1.rea_vars - p2.rea_vars).cwiseAbs();
-        }
-        offspring.push_back(o1);
-        offspring.push_back(o2);
-    }
-    population_ = offspring;
-}
-void GeneticAlgorithm::powerMutation() {
-    vector<float> ps, rs,ss_int, ss_float;
-    ps = random_floats(gen_, population_size_);
-    rs = random_floats(gen_, population_size_);
-    if (n_ints_ > 0)
-        ss_int = random_floats(gen_, population_size_);
-    if (n_reas_ > 0)
-        ss_float = random_floats(gen_, population_size_);
-
-    for (int i = 1; i < population_size_; ++i) {
-        if (rs[i] <= p_mutation_) { // Doing mutation
-            if (n_ints_ > 0) {
-                ss_int[i] = pow(ss_int[i], power_int_);
-                Eigen::VectorXd t_int = Eigen::VectorXd::Zero(n_ints_);
-                for (int j = 0; j < n_ints_; ++j) {
-                    t_int(j) = (population_[i].int_vars(j) - int_lower_bounds_(j))
-                        / (int_upper_bounds_(j) - population_[i].int_vars(j));
-                    if (t_int(j) < rs[i])
-                        population_[i].int_vars(j) = population_[i].int_vars(j)
-                            - ss_int[i] * (population_[i].int_vars(j) - int_lower_bounds_(j));
-                    else
-                        population_[i].int_vars(j) = population_[i].int_vars(j)
-                            + ss_int[i] * (int_upper_bounds_(j) - population_[i].int_vars(j));
-                }
-            }
-            if (n_reas_ > 0) {
-                ss_float[i] = pow(ss_float[i], power_real_);
-                Eigen::VectorXd t_rea = Eigen::VectorXd::Zero(n_reas_);
-                for (int k = 0; k < n_reas_; ++k) {
-                    t_rea(k) = (population_[i].rea_vars(k) - rea_lower_bounds_(k))
-                        / (rea_upper_bounds_(k) - population_[i].rea_vars(k));
-                    if (t_rea(k) < rs[i])
-                        population_[i].rea_vars(k) = population_[i].rea_vars(k)
-                            - ss_float[i] * (population_[i].rea_vars(k) - rea_lower_bounds_(k));
-                    else
-                        population_[i].rea_vars(k) = population_[i].rea_vars(k)
-                            + ss_float[i] * (rea_upper_bounds_(k) - population_[i].rea_vars(k));
-                }
-            }
-        }
-    }
+int GeneticAlgorithm::tournamentSelection(bool inverse) {
+    auto indices = random_integers(gen_, 0, population_size_-1, 3);
+    sort(indices.begin(), indices.end(), [&](int a, int b) {
+        return isBetter(population_[a].case_pointer, population_[b].case_pointer);
+    });
+    if (inverse)
+        reverse(indices.begin(), indices.end());
+    return indices[0];
 }
 void GeneticAlgorithm::sortPopulation() {
     std::sort(population_.begin(), population_.end(), [&](Chromosome a, Chromosome b) {
       return isBetter(a.case_pointer, b.case_pointer);
     });
+}
+vector<GeneticAlgorithm::Chromosome> GeneticAlgorithm::laplaceCrossover(const int p1_idx, const int p2_idx) {
+    if (random_double(gen_) > p_crossover_) { // Not doing crossover
+        vector<Chromosome> offspring = {population_[p1_idx], population_[p2_idx]};
+        return offspring;
+    } // else, doing crossover
+
+    double beta_real, beta_int;
+    double u = random_double(gen_);
+
+    if (random_double(gen_) <= 0.5) {
+        beta_real = location_parameter_ - scale_real_ * log(u);
+        beta_int = location_parameter_ - scale_int_ * log(u);
+    }
+    else {
+        beta_real = location_parameter_ + scale_real_ * log(u);
+        beta_int = location_parameter_ + scale_int_ * log(u);
+    }
+
+    auto p1 = population_[p1_idx]; // Parent 1
+    auto p2 = population_[p2_idx]; // Parent 2
+    auto o1 = Chromosome(p1.case_pointer); // Offspring 1
+    auto o2 = Chromosome(p2.case_pointer); // Offspring 2
+
+    if (n_ints_ > 0) {
+        o2.int_vars = p2.int_vars + beta_int * (p1.int_vars - p2.int_vars).cwiseAbs();
+        o1.int_vars = p1.int_vars + beta_int * (p1.int_vars - p2.int_vars).cwiseAbs();
+    }
+    if (n_reas_ > 0) {
+        o1.rea_vars = p1.rea_vars + beta_real * (p1.rea_vars - p2.rea_vars).cwiseAbs();
+        o2.rea_vars = p2.rea_vars + beta_real * (p1.rea_vars - p2.rea_vars).cwiseAbs();
+    }
+
+    vector<Chromosome> offspring = {o1, o2};
+    return offspring;
+}
+GeneticAlgorithm::Chromosome GeneticAlgorithm::powerMutation(Chromosome chr) {
+    double p, r, s_int, s_real;
+    p = random_double(gen_);
+    r = random_double(gen_);
+    s_int = pow(random_double(gen_), power_int_);
+    s_real = pow(random_double(gen_), power_real_);
+
+    if (p <= p_mutation_) { // Doing mutation
+        if (n_ints_ > 0) {
+            Eigen::VectorXd t_int = Eigen::VectorXd::Zero(n_ints_);
+            for (int j = 0; j < n_ints_; ++j) {
+                t_int(j) = (chr.int_vars(j) - int_lower_bounds_(j))
+                    / (int_upper_bounds_(j) - chr.int_vars(j));
+                if (t_int(j) < r)
+                    chr.int_vars(j) = chr.int_vars(j) - s_int * (chr.int_vars(j) - int_lower_bounds_(j));
+                else
+                    chr.int_vars(j) = chr.int_vars(j) + s_int * (int_upper_bounds_(j) - chr.int_vars(j));
+            }
+        }
+        if (n_reas_ > 0) {
+            Eigen::VectorXd t_rea = Eigen::VectorXd::Zero(n_reas_);
+            for (int k = 0; k < n_reas_; ++k) {
+                t_rea(k) = (chr.rea_vars(k) - rea_lower_bounds_(k))
+                    / (rea_upper_bounds_(k) - chr.rea_vars(k));
+                if (t_rea(k) < r)
+                    chr.rea_vars(k) = chr.rea_vars(k) - s_real * (chr.rea_vars(k) - rea_lower_bounds_(k));
+                else
+                    chr.rea_vars(k) = chr.rea_vars(k) + s_real * (rea_upper_bounds_(k) - chr.rea_vars(k));
+            }
+        }
+    }
+    return chr;
+
 }
 GeneticAlgorithm::Chromosome::Chromosome(Case *c) {
     case_pointer = c;
@@ -241,11 +231,14 @@ void GeneticAlgorithm::printPopulation() {
     cout << "Population:" << endl;
     cout << "\tchrom\tofv\t\tgenes" << endl;
     for (int i = 0; i < population_size_; ++i) {
-        cout << "\t" << i
-             << "\t\t" << population_[i].case_pointer->objective_function_value() << endl
-             << "\t" << population_[i].rea_vars
-             << endl;
+        cout << "\t" << i;
+        printChromosome(population_[i]);
     }
+}
+void GeneticAlgorithm::printChromosome(Chromosome &chrom) {
+    cout << "\t\t" << chrom.case_pointer->objective_function_value() << endl
+         << "\t" << chrom.rea_vars
+         << endl;
 }
 }
 }

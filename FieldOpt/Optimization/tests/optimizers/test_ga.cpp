@@ -29,9 +29,10 @@ TEST_F(GeneticAlgorithmTest, Constructor) {
 
 TEST_F(GeneticAlgorithmTest, TestFunctionSpherical) {
 //    test_case_2r_->set_objective_function_value(abs(Sphere(test_case_2r_->GetRealVarVector())));
-    test_case_ga_spherical_30r_->set_objective_function_value(abs(Sphere(test_case_ga_spherical_30r_->GetRealVarVector())));
+//    test_case_ga_spherical_30r_->set_objective_function_value(abs(Sphere(test_case_ga_spherical_30r_->GetRealVarVector())));
+    test_case_ga_spherical_6r_->set_objective_function_value(abs(Sphere(test_case_ga_spherical_6r_->GetRealVarVector())));
     Optimization::Optimizer *minimizer = new GeneticAlgorithm(settings_ga_min_,
-                                                              test_case_ga_spherical_30r_, varcont_prod_bhp_, grid_5spot_);
+                                                              test_case_ga_spherical_6r_, varcont_prod_bhp_, grid_5spot_);
 
     while (!minimizer->IsFinished()) {
         auto next_case = minimizer->GetCaseForEvaluation();
