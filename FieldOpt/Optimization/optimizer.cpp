@@ -45,7 +45,7 @@ namespace Optimization {
         return isBetter(c, tentative_best_case_);
     }
 
-    bool Optimizer::isBetter(const Case *c1, const Case *c2) {
+    bool Optimizer::isBetter(const Case *c1, const Case *c2) const {
         if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
             if (c1->objective_function_value() > c2->objective_function_value())
                 return true;
