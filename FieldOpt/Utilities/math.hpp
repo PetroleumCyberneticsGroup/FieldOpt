@@ -157,4 +157,15 @@ inline std::vector<double> random_doubles(boost::random::mt19937 &gen, const dou
     return rands;
 }
 
+/*!
+ * @brief Generate a random float (double precision) in the range [0.0 .. 1.0)
+ * @param gen
+ * @return One random float.
+ */
+inline double random_double(boost::random::mt19937 &gen) {
+    boost::uniform_real<> dist(0.0, 1.0);
+    boost::variate_generator<boost::mt19937&, boost::uniform_real<> > rng(gen, dist);
+    return rng();
+}
+
 #endif // MATH_FUNCTIONS_H
