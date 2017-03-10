@@ -4,6 +4,7 @@ project(ertwrapper)
 # ERT libraries
 find_library(ert_ecl NAMES ecl REQUIRED)
 find_library(ert_util NAMES ert_util REQUIRED)
+set(ERT_INCLUDE_DIR / CACHE PATH "Path to ert header files")
 
 add_library(ertwrapper
         ertwrapper_exceptions.h
@@ -11,7 +12,10 @@ add_library(ertwrapper
 		eclsummaryreader.cpp)
 add_library(fieldopt::ertwrapper ALIAS ${PROJECT_NAME})
 
-include_directories(${EIGEN3_INCLUDE_DIR})
+include_directories(
+        ${EIGEN3_INCLUDE_DIR}
+	${ERT_INCLUDE_DIR})
+
 target_link_libraries(ertwrapper
 		PUBLIC ${ert_ecl}
 		PUBLIC ${ert_util})

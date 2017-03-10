@@ -9,7 +9,8 @@ add_library(reservoir
 
 add_library(fieldopt::reservoir ALIAS ${PROJECT_NAME})
 
-include_directories(${EIGEN3_INCLUDE_DIR})
+include_directories(${EIGEN3_INCLUDE_DIR}
+	${ERT_INCLUDE_DIR})
 target_link_libraries (reservoir
         PUBLIC fieldopt::ertwrapper
         ${Boost_LIBRARIES})
