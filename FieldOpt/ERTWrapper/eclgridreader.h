@@ -61,6 +61,7 @@ namespace ERTWrapper {
             */
             struct Cell {
                 int global_index;
+                bool active;
                 double volume;
                 double porosity;
                 double permx;
@@ -110,7 +111,8 @@ namespace ERTWrapper {
             int ConvertIJKToGlobalIndex(int i, int j, int k);
 
             /*!
-                 * \brief ConvertGlobalIndexToIJK Converts a global index for a cell to the corresponding zero-offset (i,j,k) coordinates.
+                 * \brief ConvertGlobalIndexToIJK Converts a global index for a cell 
+                 * to the corresponding zero-offset (i,j,k) coordinates.
                  * \param global_index Global index for a cell.
                  * \return (i,j,k) Zero-offset coordinates
                  */
@@ -126,6 +128,12 @@ namespace ERTWrapper {
                  * \brief ActiveCells Number of active cells in the grid that has been read.
                  */
             int ActiveCells();
+            
+            
+            /*!
+             * \brief IsCellActive returns false if the cell identified by its global index is not active
+             */
+            bool IsCellActive(int global_index);
 
             /*!
                  * \brief GetGridCell get a Cell struct describing the cell with the specified global index.

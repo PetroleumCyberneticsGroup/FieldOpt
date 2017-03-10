@@ -134,8 +134,14 @@ namespace ERTWrapper {
 
         int ECLGridReader::ActiveCells()
         {
-            if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before gettign active cells.");
+            if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting the number of active cells.");
             else return ecl_grid_get_nactive(ecl_grid_);
+        }
+        
+        bool ECLGridReader::IsCellActive(int global_index)
+        {
+        	if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting the active status of cells.");
+        	else return ecl_grid_cell_active1(ecl_grid_, global_index);
         }
 
         ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index)
@@ -148,13 +154,20 @@ namespace ERTWrapper {
             cell.volume = GetCellVolume(global_index);
             cell.corners = GetCellCorners(global_index);
             cell.center = GetCellCenter(global_index);
-
-            // Get properties from the INIT file
-            cell.porosity = ecl_kw_iget_as_double(poro_kw_, global_index);
-            cell.permx = ecl_kw_iget_as_double(permx_kw_, global_index);
-            cell.permy = ecl_kw_iget_as_double(permy_kw_, global_index);
-            cell.permz = ecl_kw_iget_as_double(permz_kw_, global_index);
-
+            cell.active = IsCellActive(global_index);
+            
+            // Get properties from the INIT file - only possible if the cell is active
+            if (cell.active)
+            {
+            	int i, j, k;
+            	ecl_grid_get_ijk1(ecl_grid_, global_index, &i, &j, &k);            	
+            	int active_index = ecl_grid_get_active_index3(ecl_grid_ , i , j , k);
+				cell.porosity = ecl_kw_iget_as_double(poro_kw_, active_index);
+				cell.permx = ecl_kw_iget_as_double(permx_kw_, active_index);
+				cell.permy = ecl_kw_iget_as_double(permy_kw_, active_index);
+				cell.permz = ecl_kw_iget_as_double(permz_kw_, active_index);
+            }
+            
             return cell;
         }
 
