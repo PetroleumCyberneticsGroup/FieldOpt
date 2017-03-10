@@ -49,8 +49,10 @@ namespace Reservoir {
             delete ecl_grid_reader_;
         }
 
-        bool ECLGrid::IndexIsInsideGrid(int global_index) {
-            return global_index >= 0 && global_index < (Dimensions().nx*Dimensions().ny*Dimensions().nz);
+        bool ECLGrid::IndexIsInsideGrid(int global_index) 
+        {
+            return global_index >= 0 && 
+            		global_index < (Dimensions().nx*Dimensions().ny*Dimensions().nz);
         }
 
         bool ECLGrid::IndexIsInsideGrid(int i, int j, int k) {
@@ -78,8 +80,11 @@ namespace Reservoir {
 
         Cell ECLGrid::GetCell(int global_index)
         {
-            if (!IndexIsInsideGrid(global_index)) throw std::runtime_error("Error getting grid cell. Global index is outside grid.");
-            if (type_ == GridSourceType::ECLIPSE) {
+            if (!IndexIsInsideGrid(global_index)) 
+            	throw std::runtime_error("Error getting grid cell. Global index is outside grid.");
+            
+            if (type_ == GridSourceType::ECLIPSE) 
+            {
                 ERTWrapper::ECLGrid::ECLGridReader::Cell ertCell = ecl_grid_reader_->GetGridCell(global_index);
 
                 // Get IJK index
@@ -103,7 +108,9 @@ namespace Reservoir {
 
         Cell ECLGrid::GetCell(int i, int j, int k)
         {
-            if (!IndexIsInsideGrid(i, j, k)) throw std::runtime_error("Error getting grid cell. Index (i, j, k) is outside grid.");
+            if (!IndexIsInsideGrid(i, j, k)) 
+            	throw std::runtime_error("Error getting grid cell. Index (i, j, k) is outside grid.");
+            
             if (type_ == GridSourceType::ECLIPSE) {
                 int global_index = ecl_grid_reader_->ConvertIJKToGlobalIndex(i, j, k);
                 return GetCell(global_index);
@@ -124,30 +131,38 @@ namespace Reservoir {
         std::vector<int> ECLGrid::GetBoundingBoxCellIndices(double xi, double yi, double zi, double xf, double yf, double zf)
 		{
         	double x_i, y_i, z_i, x_f, y_f, z_f;
-        	if (xi > xf)
-        	{ x_i = xf; x_f = xi;}
-        	else
-        	{ x_i = xi; x_f = xf;}
-
-        	if (yi > yf)
-        	{ y_i = yf; y_f = yi;}
-        	else
-        	{ y_i = yi; y_f = yf;}
-
-        	if (zi > zf)
-        	{ z_i = zf; z_f = zi;}
-        	else
-        	{ z_i = zi; z_f = zf;}
-
-            int total_cells = Dimensions().nx * Dimensions().ny * Dimensions().nz;
-
+        	x_i = std::min(xi, xf);
+        	x_f = std::max(xi, xf);
+        	y_i = std::min(yi, yf);
+        	y_f = std::max(yi, yf);
+        	z_i = std::min(zi, zf);
+        	z_f = std::max(zi, zf);        	
+        	
+        	int total_cells = Dimensions().nx * Dimensions().ny * Dimensions().nz;
+            
             std::vector<int> indices_list;
-            for (int ii = 0; ii < total_cells; ii++) {
-            	if ((GetCell(ii).center().x() >= x_i) && (GetCell(ii).center().x() <= x_f) &&
-            		(GetCell(ii).center().y() >= y_i) && (GetCell(ii).center().y() <= y_f) &&
-            		(GetCell(ii).center().z() >= z_i) && (GetCell(ii).center().z() <= z_f))
+            for (int ii = 0; ii < total_cells; ii++) 
+            {
+            	Cell cell;
+            	// Try is here because we only want to get the list of active cells - that means defined cells
+            	try
             	{
-            		indices_list.push_back(ii);
+            		cell = GetCell(ii);
+            		// Calculate cell size
+            		double dx = (cell.corners()[5] - cell.corners()[4]).norm();
+            		double dy = (cell.corners()[6] - cell.corners()[4]).norm();
+            		double dz = (cell.corners()[0] - cell.corners()[4]).norm();
+            		// std::cout << cell.center().x() << " : " << cell.center().y() << " : " << cell.center().z() << std::endl;
+            		if ((cell.center().x() >= x_i - dx/1.7) && (cell.center().x() <= x_f + dx/1.7) &&
+            			(cell.center().y() >= y_i - dy/1.7) && (cell.center().y() <= y_f + dy/1.7) &&
+            			(cell.center().z() >= z_i - dz/1.7) && (cell.center().z() <= z_f + dz/1.7))
+            		{
+            			indices_list.push_back(ii);
+            		}
+            	}
+            	catch(const std::runtime_error& e)
+            	{
+            		std::cout << "non-active or inexistant cell " << e.what() << std::endl;
             	}
             }
 
@@ -204,5 +219,5 @@ namespace Reservoir {
         {
             return GetCellEnvelopingPoint(xyz.x(), xyz.y(), xyz.z(), search_set);
         }	
-}
+    }
 }
