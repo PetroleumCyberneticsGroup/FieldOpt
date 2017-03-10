@@ -1,6 +1,3 @@
-[submodule "FieldOpt/Optimization/experimental_constraints"]
-	path = FieldOpt/Optimization/experimental_constraints
-	url = git@github.com:PetroleumCyberneticsGroup/experimental_constraints.git
 [submodule "FieldOpt/FieldOpt-WellIndexCalculator"]
 	path = FieldOpt/FieldOpt-WellIndexCalculator
 	url = git@github.com:PetroleumCyberneticsGroup/FieldOpt-WellIndexCalculator.git
