@@ -50,12 +50,17 @@ namespace Reservoir {
             return this->global_index() == other.global_index();
         }
 
-        bool Cell::EnvelopsPoint(Eigen::Vector3d point) {
+        bool Cell::EnvelopsPoint(Eigen::Vector3d point) 
+        {
             bool point_inside = true;
-            for (Face face : faces_) {
-		double dot_prod = (point - face.corners[0]).dot(face.normal_vector);
-		if ( dot_prod < 0)
+            for (Face face : faces_) 
+            {
+            	double dot_prod = (point - face.corners[0]).dot(face.normal_vector);
+            	if ( dot_prod < 0)
+            	{
                     point_inside = false;
+                    break;
+            	}
             }
             return point_inside;
         }
