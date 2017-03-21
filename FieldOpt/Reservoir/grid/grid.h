@@ -97,6 +97,8 @@ namespace Reservoir {
             /*!
              * \brief GetCellEnvelopingPoint Get the cell enveloping the point (xyz.x(), xyz.y(), xyz.z()) searching a subsection of the grid.
              * Throws an exception if no cell is found.
+             * \param xyz Point to check
+             * \param search_set Set to check first
              */
             virtual Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz, std::vector<int> search_set) = 0;
 
