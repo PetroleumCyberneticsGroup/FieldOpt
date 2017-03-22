@@ -42,10 +42,7 @@ protected:
 TEST_F(FileHandlingTest, Existance) {
     EXPECT_TRUE(::Utilities::FileHandling::FileExists(TestResources::ExampleFilePaths::driver_example_));
     EXPECT_FALSE(::Utilities::FileHandling::FileExists(TestResources::ExampleFilePaths::driver_example_ + "wrong"));
-    EXPECT_FALSE(::Utilities::FileHandling::FileExists(TestResources::ExampleFilePaths::directory_output_));
 
-    EXPECT_TRUE(::Utilities::FileHandling::DirectoryExists(TestResources::ExampleFilePaths::directory_output_));
-    EXPECT_FALSE(::Utilities::FileHandling::DirectoryExists(TestResources::ExampleFilePaths::directory_output_ + "wrong"));
     EXPECT_FALSE(::Utilities::FileHandling::DirectoryExists(TestResources::ExampleFilePaths::driver_example_));
 }
 

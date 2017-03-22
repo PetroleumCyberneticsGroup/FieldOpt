@@ -113,48 +113,49 @@ class ECLGridReader
   /*!
        * \brief ConvertGlobalIndexToIJK Converts a global index for a cell
        * to the corresponding zero-offset (i,j,k) coordinates.
-       * \param global_index Global index for a cell.
-       * \return (i,j,k) Zero-offset coordinates
-       */
+   * \param global_index Global index for a cell.
+   * \return (i,j,k) Zero-offset coordinates
+   */
   IJKIndex ConvertGlobalIndexToIJK(int global_index);
 
   /*!
-       * \brief Dimensions returns the total dimensions of the grid that has been read.
-       * \return Dims struct containing the number of blocks in x, y and z direction.
-       */
+   * \brief Dimensions returns the total dimensions of the grid that has been read.
+   * \return Dims struct containing the number of blocks in x, y and z direction.
+   */
   Dims Dimensions();
 
   /*!
-       * \brief ActiveCells Number of active cells in the grid that has been read.
-       */
+   * \brief ActiveCells Number of active cells in the grid that has been read.
+   */
   int ActiveCells();
-
 
   /*!
    * \brief IsCellActive returns false if the cell identified by its global index is not active
    */
   bool IsCellActive(int global_index);
 
-  /*!
-       * \brief GetGridCell get a Cell struct describing the cell with the specified global index.
-       * \param global_index The global index of the cell to get.
-       * \return Cell struct.
-       */
+  /*
+   * \brief GetGridCell get a Cell struct describing the cell with the specified global index.
+   * \param global_index The global index of the cell to get.
+   * \return Cell struct.
+   */
   Cell GetGridCell(int global_index);
 
   /*!
-       * \brief GetGlobalIndexOfCellContainingPoint Gets the global index of any cell that envelops/contains the point (x,y,z).
-       *
-       * Searches the grid to check whether any cell envelops the point (x,y,z).
-       * If one is found, the global index is returned; if not, -1 is returned.
-       * An initial guess may be provided: the search will start from/around this global index. If no guess is
-       * provided the search will start at the global index 0.
-       * \param x coordinate in x-direction.
-       * \param y coordinate in y-direction.
-       * \param z coordinate in z-direction.
-       * \param initial_guess (optional) Global index to start search at/around
-       * \return Global index or -1.
-       */
+   * \brief GetGlobalIndexOfCellContainingPoint Gets the global index of any cell
+   * that envelops/contains the point (x,y,z).
+   *
+   * Searches the grid to check whether any cell envelops the point (x,y,z).
+   * If one is found, the global index is returned; if not, -1 is returned.
+   * An initial guess may be provided: the search will start from/around this
+   * global index. If no guess is provided the search will start at the global
+   * index 0.
+   * \param x coordinate in x-direction.
+   * \param y coordinate in y-direction.
+   * \param z coordinate in z-direction.
+   * \param initial_guess (optional) Global index to start search at/around
+   * \return Global index or -1.
+   */
   int GlobalIndexOfCellEnvelopingPoint(double x, double y, double z, int initial_guess=0);
 
   bool GlobalIndexIsInsideGrid(int global_index);

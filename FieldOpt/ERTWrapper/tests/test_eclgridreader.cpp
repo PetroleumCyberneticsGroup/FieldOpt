@@ -99,8 +99,8 @@ TEST_F(ECLGridReaderTest, GetCell) {
 }
 
 TEST_F(ECLGridReaderTest, CellProperties) {
-    ECLGridReader::Cell cell_1 = ecl_grid_reader_->GetGridCell(1);
-    ECLGridReader::Cell cell_1000 = ecl_grid_reader_->GetGridCell(1000);
+    auto cell_1 = ecl_grid_reader_->GetGridCell(1);
+    auto cell_1000 = ecl_grid_reader_->GetGridCell(1000);
     EXPECT_FLOAT_EQ(0.25, cell_1.porosity);
     EXPECT_FLOAT_EQ(100, cell_1.permx);
     EXPECT_FLOAT_EQ(100, cell_1.permy);

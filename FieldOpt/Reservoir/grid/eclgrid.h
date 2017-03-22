@@ -27,10 +27,11 @@ namespace Reservoir {
 namespace Grid {
 
 /*!
- * \brief The ECLGrid class is an implementation of the abstract Grid class for ECLIPSE grids.
+ * \brief The ECLGrid class is an implementation
+ * of the abstract Grid class for ECLIPSE grids.
  *
- * This class uses the ERT to read the generated grid files (.GRID or .EGRID) throug the ERTWrapper
- * library.
+ * This class uses the ERT to read the generated grid
+ * files (.GRID or .EGRID) through the ERTWrapper library.
  */
 class ECLGrid : public Grid
 {

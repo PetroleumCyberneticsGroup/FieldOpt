@@ -1,5 +1,6 @@
 #include "interwell_distance.h"
 #include "ConstraintMath/well_constraint_projections/well_constraint_projections.h"
+#include <boost/lexical_cast.hpp>
 
 namespace Optimization {
     namespace Constraints {
@@ -13,7 +14,7 @@ namespace Optimization {
                 affected_wells_.append(initializeWell(variables->GetWellSplineVariables(name)));
             }
             if (affected_wells_.length() != 2) {
-                throw std::runtime_error("Currently, the Interwell Distance constraint must be applied to exactly two wells. Found " + std::to_string(affected_wells_.length()));
+                throw std::runtime_error("Currently, the Interwell Distance constraint must be applied to exactly two wells. Found " + boost::lexical_cast<std::string>(affected_wells_.length()));
             }
         }
 

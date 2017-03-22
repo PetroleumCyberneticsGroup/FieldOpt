@@ -1,3 +1,22 @@
+/******************************************************************************
+   Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+
+   This file is part of the FieldOpt project.
+
+   FieldOpt is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   FieldOpt is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
+
 #include <gtest/gtest.h>
 #include <tests/test_resource_model.h>
 #include "Model/wells/control.h"
@@ -39,7 +58,7 @@ TEST_F(ControlTest, ProducerControl) {
     EXPECT_EQ(0, entry_.time_step);
     EXPECT_TRUE(all_controls_.first()->open());
     EXPECT_EQ(::Settings::Model::ControlMode::BHPControl, all_controls_.first()->mode());
-    EXPECT_FLOAT_EQ(2000, all_controls_.first()->bhp());
+    EXPECT_FLOAT_EQ(100, all_controls_.first()->bhp());
 }
 
 TEST_F(ControlTest, InjectorControl) {
