@@ -34,26 +34,26 @@ namespace Grid {
  */
 class ECLGrid : public Grid
 {
-public:
-    ECLGrid(std::string file_path);
-    virtual ~ECLGrid();
+ public:
+  ECLGrid(std::string file_path);
+  virtual ~ECLGrid();
 
-    Dims Dimensions();
-    Cell GetCell(int global_index);
-    Cell GetCell(int i, int j, int k);
-    Cell GetCell(IJKCoordinate* ijk);
-    std::vector<int> GetBoundingBoxCellIndices(double xi, double yi, double zi, double xf, double yf, double zf);
-    Cell GetCellEnvelopingPoint(double x, double y, double z);
-    Cell GetCellEnvelopingPoint(double x, double y, double z, std::vector<int> search_set);
-    Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz);
-    Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz, std::vector<int> search_set);
+  Dims Dimensions();
+  Cell GetCell(int global_index);
+  Cell GetCell(int i, int j, int k);
+  Cell GetCell(IJKCoordinate* ijk);
+  std::vector<int> GetBoundingBoxCellIndices(double xi, double yi, double zi, double xf, double yf, double zf);
+  Cell GetCellEnvelopingPoint(double x, double y, double z);
+  Cell GetCellEnvelopingPoint(double x, double y, double z, std::vector<int> search_set);
+  Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz);
+  Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz, std::vector<int> search_set);
 
 
-private:
-    ERTWrapper::ECLGrid::ECLGridReader* ecl_grid_reader_ = 0;
-    bool IndexIsInsideGrid(int global_index); //!< Check that global_index is less than nx*ny*nz
-    bool IndexIsInsideGrid(int i, int j, int k); //!< Check that (i,j,k) are >= 0 and less than n*.
-    bool IndexIsInsideGrid(IJKCoordinate *ijk); //!< Check that (i,j,k) are >= 0 and less than n*.
+ private:
+  ERTWrapper::ECLGrid::ECLGridReader* ecl_grid_reader_ = 0;
+  bool IndexIsInsideGrid(int global_index); //!< Check that global_index is less than nx*ny*nz
+  bool IndexIsInsideGrid(int i, int j, int k); //!< Check that (i,j,k) are >= 0 and less than n*.
+  bool IndexIsInsideGrid(IJKCoordinate *ijk); //!< Check that (i,j,k) are >= 0 and less than n*.
 
 };
 
