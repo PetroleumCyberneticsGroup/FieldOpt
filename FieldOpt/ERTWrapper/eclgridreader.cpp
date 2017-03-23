@@ -149,7 +149,9 @@ bool ECLGridReader::IsCellActive(int global_index)
 ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index)
 {
     if (!GlobalIndexIsInsideGrid(global_index))
-        throw InvalidIndexException("The global index " + std::to_string(global_index) + " is outside the grid.");
+        throw InvalidIndexException("The global index "
+                                        + boost::lexical_cast<std::string>(global_index)
+                                        + " is outside the grid.");
     if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting grid cells.");
     ECLGridReader::Cell cell;
     cell.global_index = global_index;
