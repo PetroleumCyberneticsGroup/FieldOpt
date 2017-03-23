@@ -66,14 +66,6 @@ class Optimizer
     int population_size;
     double p_crossover;
     double p_mutation;
-    double crossover_scale_int;
-    double crossover_scale_real;
-    double mutation_power_int;
-    double mutation_power_real;
-    double lower_bound_real;
-    double upper_bound_real;
-    double lower_bound_int;
-    double upper_bound_int;
   };
 
   struct Objective {

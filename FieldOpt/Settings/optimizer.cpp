@@ -81,22 +81,6 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
                 parameters_.p_crossover = json_parameters["CrossoverProbability"].toDouble();
             if (json_parameters.contains("MutationProbability"))
                 parameters_.p_mutation = json_parameters["MutationProbability"].toDouble();
-            if (json_parameters.contains("CrossoverScaleInt"))
-                parameters_.crossover_scale_int = json_parameters["CrossoverScaleInt"].toDouble();
-            if (json_parameters.contains("CrossoverScaleReal"))
-                parameters_.crossover_scale_real = json_parameters["CrossoverScaleReal"].toDouble();
-            if (json_parameters.contains("MutationPowerInt"))
-                parameters_.mutation_power_int = json_parameters["MutationPowerInt"].toDouble();
-            if (json_parameters.contains("MutationPowerReal"))
-                parameters_.mutation_power_real = json_parameters["MutationPowerReal"].toDouble();
-            if (json_parameters.contains("LowerBoundInt"))
-                parameters_.lower_bound_int = json_parameters["LowerBoundInt"].toDouble();
-            if (json_parameters.contains("UpperBoundInt"))
-                parameters_.upper_bound_int = json_parameters["UpperBoundInt"].toDouble();
-            if (json_parameters.contains("LowerBoundReal"))
-                parameters_.lower_bound_real = json_parameters["LowerBoundReal"].toDouble();
-            if (json_parameters.contains("UpperBoundReal"))
-                parameters_.upper_bound_real = json_parameters["UpperBoundReal"].toDouble();
         }
         catch (std::exception const &ex) {
             throw UnableToParseOptimizerParametersSectionException("Unable to parse optimizer parameters: " + std::string(ex.what()));

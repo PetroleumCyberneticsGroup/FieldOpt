@@ -29,21 +29,9 @@ namespace Optimization {
 namespace Optimizers {
 
 /*!
- * @brief The GeneticAlgorithm class is an implentation of the MI-LXPM algorithm
- * described in "A real coded genetic algorithm for solving integer and mixed integer
- * optimization problems" -- Deep, K. (2009).
- *
- * The mutation operator used is Power Mutation; the crossover operator is Laplace
- * Crossover; and the selection operator is Tournament Selection.
- *
- * \note The Power Mutation _requires_ upper and lower bounds on the variables.
- * This class does not support any other forms of constraints.
- *
- * \note The number of chromosomes must be an even number.
- *
- * \note The tournament size is fixed at two.
- *
- * \note Elitism is enforced. The best individual from the last generation is kept.
+ * @brief The abstract GeneticAlgorithm class a specification of the
+ * structure for a general genetic algorithm. Crossover, mutation and
+ * selection operators must be specified in a child class.
  */
 class GeneticAlgorithm : public Optimizer {
  public:
@@ -55,7 +43,7 @@ class GeneticAlgorithm : public Optimizer {
  protected:
   void handleEvaluatedCase(Case *c) override;
   void iterate() override;
- private:
+ protected:
   boost::random::mt19937 gen_; // Random number generator with the random functions in math.hpp
 
   /*!
@@ -66,74 +54,41 @@ class GeneticAlgorithm : public Optimizer {
    * at the very end.
    */
   struct Chromosome {
-    Eigen::VectorXd int_vars;
     Eigen::VectorXd rea_vars;
     Case *case_pointer;
     Chromosome(Case *c);
     Chromosome() {}
     double ofv() { return case_pointer->objective_function_value(); }
     void createNewCase();
-   private:
-    void truncateInts();
   };
 
-  vector<Chromosome> population_; //!< Holds the set of cases currently used as chromomes by the algorithm.
-  int n_ints_; //!< Number of integer variables.
-  int n_reas_; //!< Number of real variables.
+  vector<Chromosome> population_; //!< Holds the current population.
 
-  // Parameters for genetic algorithm in general.
   int max_generations_; //!< Maximum number of generations.
   int population_size_; //!< Size of population (number of chromosomes).
   double p_crossover_; //!< Crossover probability.
   double p_mutation_; //!< Mutation probability.
 
-  // Parameters from Laplace Crossover.
-  double location_parameter_; //!< The location parameter used in the laplace distribution.
-  double scale_real_; //!< Scale parameter for real numbers. Higher values give a larger probability of offspring further from parents.
-  int scale_int_; //!< Scale parameter for integer numbers. Higher values give a larger probability of offspring further from parents.
-
-  // Parameters for Power Mutation
-  double power_real_; //!< Strength of real power mutation.
-  double power_int_; //!< Strength of integer power mutation.
-
-  // Bound constraints for variables
-  Eigen::VectorXd rea_lower_bounds_; //!< Lower bounds for real numbers.
-  Eigen::VectorXd rea_upper_bounds_; //!< Upper bounds for real numbers.
-  Eigen::VectorXd int_lower_bounds_; //!< Lower bounds for integer numbers.
-  Eigen::VectorXd int_upper_bounds_; //!< Upper bounds for integer numbers.
+  /*!
+   * @brief Perform selection on the population.
+   * @param population The population to perform selection on.
+   * @return A vector containing the mating pool.
+   */
+  virtual vector<Chromosome> selection(vector<Chromosome> population) = 0;
 
   /*!
-   * @brief Sort the population according to descending objective function values.
-   *
-   * This is used to ease the enforcement of elitism.
+   * @brief Perform crossover on the mating pool.
+   * @param mating_pool The mating pool to perform crossover on.
+   * @return A vector containing offspring.
    */
-  void sortPopulation();
+  virtual vector<Chromosome> crossover(vector<Chromosome> mating_pool) = 0;
 
   /*!
-   * @brief Perform tournament selection on the population. The tournament is fixed at two.
-   * Return the index in the population of a new potential parent.
-   *
-   * The first place in the mating pool is reserved for the best individual from
-   * the last generation (elitism).
-   *
-   * @param inverse Whether or not to do inverse selection (used for inserting newly evaluated individuals into the population).
-   * @return Index of new parent or new position to plce individual.
+   * @brief Perform mutation on the offspring.
+   * @param offspring The individuals to perform mutation on.
+   * @return Mutated individuals.
    */
-  int tournamentSelection(bool inverse=false);
-
-  /*!
-   * @brief Perform Laplace crossover on two parents.
-   *
-   * @param p1_idx Index of first parent.
-   * @param p2_idx Index of second parent.
-   * @return Vector containing two new offspring chromosomes.
-   */
-  vector<Chromosome> laplaceCrossover(const int p1_idx, const int p2_idx);
-
-  /*!
-   * @brief Perform power mutation on a chromosome.
-   */
-  Chromosome powerMutation(Chromosome chr);
+  virtual vector<Chromosome> mutate(vector<Chromosome> offspring) = 0;
 
   /*!
    * @brief Print a string representation of the population to stdout.
