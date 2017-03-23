@@ -39,26 +39,30 @@ class ECLGridReader
 {
  public:
   /*!
-       * \brief The Dims struct holds the x,y and z dimensions of a grid.
-       */
+   * \brief The Dims struct holds the x,y and z dimensions of a grid.
+   */
   struct Dims {
     int nx, ny, nz;
   };
 
   /*!
-       * \brief The Cell struct represents a cell in the grid.
-       *
-       * The corners list contains all the corner points specifying the grid.
-       * The first four elements represent the corners in the lower layer,
-       * the four last represent the corners in the top layer:
-       *
-       * Bottom:  Top:
-       * 2---3    6---7
-       * |   |    |   |
-       * 0---1    4---5
-       *
-       * Bottom and Top here refers to z-values.
-  */
+   * \brief The Cell struct represents a cell in the grid.
+   *
+   * The cell struct also contains all non-geometric properties
+   * for a cell, i.e. permeabilities, porosities, and whether or
+   * not the cell is active
+   *
+   * The corners list contains all the corner points specifying the grid.
+   * The first four elements represent the corners in the lower layer,
+   * the four last represent the corners in the top layer:
+   *
+   * Bottom:  Top:
+   * 2---3    6---7
+   * |   |    |   |
+   * 0---1    4---5
+   *
+   * Bottom and Top here refers to z-values.
+   */
   struct Cell {
     int global_index;
     bool active;
@@ -97,22 +101,22 @@ class ECLGridReader
   virtual ~ECLGridReader(); //!< Frees the grid object if it has been set.
 
   /*!
-       * \brief ReadEclGrid reads an ECLIPSE .GRID or .EGRID file.
-       * \param file_name The path to the grid to be read, including suffix.
-       */
+   * \brief ReadEclGrid reads an ECLIPSE .GRID or .EGRID file.
+   * \param file_name The path to the grid to be read, including suffix.
+   */
   void ReadEclGrid(std::string file_name);
 
   /*!
-       * \brief ConvertIJKToGlobalIndex Converts a set of zero-offset (i,j,k) coordinates to the global index to that cell.
-       * \param ijk Zero-offset coordinates for a cell.
-       * \return global index
-       */
+   * \brief ConvertIJKToGlobalIndex Converts a set of zero-offset (i,j,k) coordinates to the global index to that cell.
+   * \param ijk Zero-offset coordinates for a cell.
+   * \return global index
+   */
   int ConvertIJKToGlobalIndex(IJKIndex ijk);
   int ConvertIJKToGlobalIndex(int i, int j, int k);
 
   /*!
-       * \brief ConvertGlobalIndexToIJK Converts a global index for a cell
-       * to the corresponding zero-offset (i,j,k) coordinates.
+   * \brief ConvertGlobalIndexToIJK Converts a global index for a cell
+   * to the corresponding zero-offset (i,j,k) coordinates.
    * \param global_index Global index for a cell.
    * \return (i,j,k) Zero-offset coordinates
    */
@@ -134,7 +138,7 @@ class ECLGridReader
    */
   bool IsCellActive(int global_index);
 
-  /*
+  /*!
    * \brief GetGridCell get a Cell struct describing the cell with the specified global index.
    * \param global_index The global index of the cell to get.
    * \return Cell struct.

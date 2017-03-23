@@ -37,12 +37,14 @@ class Cell
   Cell(){};
   Cell(int global_index,
        IJKCoordinate ijk_index,
-       double volume, double poro, double permx, double permy, double permz,
-       Eigen::Vector3d center, std::vector<Eigen::Vector3d> corners);
+       double volume, double poro,
+       double permx, double permy, double permz,
+       Eigen::Vector3d center,
+       std::vector<Eigen::Vector3d> corners);
 
   void SetProperties(bool is_active,
-                float porosity,
-                float permx, float permy, float permz);
+                     float porosity,
+                     float permx, float permy, float permz);
 
   /*!
    * \brief global_index Gets the cells global index in its parent grid.

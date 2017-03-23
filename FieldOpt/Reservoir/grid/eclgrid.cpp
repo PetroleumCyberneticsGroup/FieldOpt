@@ -52,8 +52,8 @@ ECLGrid::~ECLGrid()
 
 bool ECLGrid::IndexIsInsideGrid(int global_index)
 {
-    return global_index >= 0 &&
-        global_index < (Dimensions().nx*Dimensions().ny*Dimensions().nz);
+    return global_index >= 0
+        && global_index < (Dimensions().nx*Dimensions().ny*Dimensions().nz);
 }
 
 bool ECLGrid::IndexIsInsideGrid(int i, int j, int k) {
@@ -70,7 +70,7 @@ Grid::Dims ECLGrid::Dimensions()
 {
     Dims dims;
     if (type_ == GridSourceType::ECLIPSE) {
-        ERTWrapper::ECLGrid::ECLGridReader::Dims eclDims = ecl_grid_reader_->Dimensions();
+        auto eclDims = ecl_grid_reader_->Dimensions();
         dims.nx = eclDims.nx;
         dims.ny = eclDims.ny;
         dims.nz = eclDims.nz;
@@ -86,11 +86,13 @@ Cell ECLGrid::GetCell(int global_index)
 
     if (type_ == GridSourceType::ECLIPSE)
     {
-        ERTWrapper::ECLGrid::ECLGridReader::Cell ertCell = ecl_grid_reader_->GetGridCell(global_index);
+        auto ertCell = ecl_grid_reader_->GetGridCell(global_index);
 
         // Get IJK index
-        ERTWrapper::ECLGrid::ECLGridReader::IJKIndex ecl_ijk_index = ecl_grid_reader_->ConvertGlobalIndexToIJK(global_index);
-        IJKCoordinate ijk_index = IJKCoordinate(ecl_ijk_index.i, ecl_ijk_index.j, ecl_ijk_index.k);
+        auto ecl_ijk_index = ecl_grid_reader_->ConvertGlobalIndexToIJK(global_index);
+        auto ijk_index = IJKCoordinate(ecl_ijk_index.i,
+                                       ecl_ijk_index.j,
+                                       ecl_ijk_index.k);
 
         // Get center coordinates
         auto center = Eigen::Vector3d(ertCell.center);
@@ -101,7 +103,8 @@ Cell ECLGrid::GetCell(int global_index)
             corners.push_back(corner);
         }
         return Cell(global_index, ijk_index,
-                    ertCell.volume, ertCell.porosity, ertCell.permx, ertCell.permy, ertCell.permz,
+                    ertCell.volume, ertCell.porosity,
+                    ertCell.permx, ertCell.permy, ertCell.permz,
                     center, corners);
     }
     else throw std::runtime_error("ECLGrid::GetCell: Grid source must be defined before getting a cell.");
@@ -129,7 +132,8 @@ Cell ECLGrid::GetCell(IJKCoordinate *ijk)
     else throw std::runtime_error("ECLGrid::GetCell: Grid source must be defined before getting a cell.");
 }
 
-std::vector<int> ECLGrid::GetBoundingBoxCellIndices(double xi, double yi, double zi, double xf, double yf, double zf)
+std::vector<int> ECLGrid::GetBoundingBoxCellIndices(double xi, double yi, double zi,
+                                                    double xf, double yf, double zf)
 {
     double x_i, y_i, z_i, x_f, y_f, z_f;
     x_i = std::min(xi, xf);
@@ -153,7 +157,6 @@ std::vector<int> ECLGrid::GetBoundingBoxCellIndices(double xi, double yi, double
             double dx = (cell.corners()[5] - cell.corners()[4]).norm();
             double dy = (cell.corners()[6] - cell.corners()[4]).norm();
             double dz = (cell.corners()[0] - cell.corners()[4]).norm();
-            // std::cout << cell.center().x() << " : " << cell.center().y() << " : " << cell.center().z() << std::endl;
             if ((cell.center().x() >= x_i - dx/1.7) && (cell.center().x() <= x_f + dx/1.7) &&
                 (cell.center().y() >= y_i - dy/1.7) && (cell.center().y() <= y_f + dy/1.7) &&
                 (cell.center().z() >= z_i - dz/1.7) && (cell.center().z() <= z_f + dz/1.7))

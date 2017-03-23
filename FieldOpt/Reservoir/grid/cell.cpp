@@ -25,8 +25,10 @@ namespace Grid {
 
 
 Cell::Cell(int global_index, IJKCoordinate ijk_index,
-           double volume, double poro, double permx, double permy, double permz,
-           Eigen::Vector3d center, std::vector<Eigen::Vector3d> corners)
+           double volume, double poro,
+           double permx, double permy, double permz,
+           Eigen::Vector3d center,
+           std::vector<Eigen::Vector3d> corners)
 {
     global_index_ = global_index;
     ijk_index_ = ijk_index;
@@ -61,14 +63,14 @@ bool Cell::EnvelopsPoint(Eigen::Vector3d point) {
 }
 
 void Cell::initializeFaces() {
-            int face_indices_points[6][4] = {
-                     {0, 2, 1, 3},
-                     {4, 5, 6, 7},
-                     {0, 4, 2, 6},
-                     {1, 3, 5, 7},
-                     {0, 1, 4, 5},
-                     {2, 6, 3, 7}
-            };
+    int face_indices_points[6][4] = {
+        {0, 2, 1, 3},
+        {4, 5, 6, 7},
+        {0, 4, 2, 6},
+        {1, 3, 5, 7},
+        {0, 1, 4, 5},
+        {2, 6, 3, 7}
+    };
 
 
 //    int face_indices_points[6][4] = {
@@ -86,7 +88,9 @@ void Cell::initializeFaces() {
         face.corners.push_back(corners_[face_indices_points[ii][1]]);
         face.corners.push_back(corners_[face_indices_points[ii][2]]);
         face.corners.push_back(corners_[face_indices_points[ii][3]]);
-        face.normal_vector = (face.corners[2] - face.corners[0]).cross(face.corners[1] - face.corners[0]).normalized();
+        face.normal_vector = (
+            face.corners[2] - face.corners[0]).cross(
+            face.corners[1] - face.corners[0]).normalized();
         faces_.push_back(face);
     }
 }
