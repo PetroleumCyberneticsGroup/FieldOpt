@@ -46,7 +46,7 @@ std::vector<Eigen::Vector3d> ECLGridReader::GetCellCorners(int global_index)
     return corners;
 }
 
-double ECLGridReader::getCellVolume(int global_index)
+double ECLGridReader::GetCellVolume(int global_index)
 {
     return ecl_grid_get_cell_volume1(ecl_grid_, global_index);
 }
@@ -85,6 +85,7 @@ void ECLGridReader::ReadEclGrid(std::string file_name)
         ecl_grid_free(ecl_grid_);
         ecl_grid_ = ecl_grid_alloc(file_name_.c_str());
     }
+
     if (ecl_file_init_ == 0) {
         ecl_file_init_ = ecl_file_open(init_file_name_.c_str(), 0);
         poro_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PORO", 0);
@@ -135,39 +136,43 @@ ECLGridReader::Dims ECLGridReader::Dimensions()
 
 int ECLGridReader::ActiveCells()
 {
-    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before gettign active cells.");
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting the number of active cells.");
     else return ecl_grid_get_nactive(ecl_grid_);
+}
+
+bool ECLGridReader::IsCellActive(int global_index)
+{
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting the active status of cells.");
+    else return ecl_grid_cell_active1(ecl_grid_, global_index);
 }
 
 ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index)
 {
     if (!GlobalIndexIsInsideGrid(global_index))
-        throw InvalidIndexException("The global index " + boost::lexical_cast<std::string>(global_index) + " is outside the grid.");
+        throw InvalidIndexException("The global index "
+                                        + boost::lexical_cast<std::string>(global_index)
+                                        + " is outside the grid.");
     if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting grid cells.");
     ECLGridReader::Cell cell;
     cell.global_index = global_index;
-    cell.volume = getCellVolume(global_index);
+    cell.volume = GetCellVolume(global_index);
     cell.corners = GetCellCorners(global_index);
     cell.center = GetCellCenter(global_index);
-    return cell;
-}
+    cell.active = IsCellActive(global_index);
 
-ECLGridReader::CellProperties ECLGridReader::GetCellProperties(int global_index) {
-    CellProperties props;
-    int active_index = getActiveIndex(ConvertGlobalIndexToIJK(global_index));
-    if (active_index != -1) {
-        props.is_active = true;
-        props.porosity = ecl_kw_iget_as_double(poro_kw_, active_index);
-        props.permx = ecl_kw_iget_as_double(permx_kw_, active_index);
-        props.permy = ecl_kw_iget_as_double(permy_kw_, active_index);
-        props.permz = ecl_kw_iget_as_double(permz_kw_, active_index);
+    // Get properties from the INIT file - only possible if the cell is active
+    if (cell.active)
+    {
+        int i, j, k;
+        ecl_grid_get_ijk1(ecl_grid_, global_index, &i, &j, &k);
+        int active_index = ecl_grid_get_active_index3(ecl_grid_ , i , j , k);
+        cell.porosity = ecl_kw_iget_as_double(poro_kw_, active_index);
+        cell.permx = ecl_kw_iget_as_double(permx_kw_, active_index);
+        cell.permy = ecl_kw_iget_as_double(permy_kw_, active_index);
+        cell.permz = ecl_kw_iget_as_double(permz_kw_, active_index);
     }
-    else {
-        props.is_active = false;
-        props.porosity = 0;
-        props.permx, props.permy, props.permz = 0;
-    }
-    return props;
+
+    return cell;
 }
 
 int ECLGridReader::GlobalIndexOfCellEnvelopingPoint(double x, double y, double z, int initial_guess)
@@ -180,12 +185,5 @@ bool ECLGridReader::GlobalIndexIsInsideGrid(int global_index)
     Dims dims = Dimensions();
     return global_index < dims.nx * dims.ny * dims.nz;
 }
-int ECLGridReader::getActiveIndex(int global_index) {
-    return ecl_grid_get_active_index1(ecl_grid_, global_index) != -1;
-}
-int ECLGridReader::getActiveIndex(ECLGridReader::IJKIndex global_ijk) {
-    return ecl_grid_get_active_index3(ecl_grid_, global_ijk.i, global_ijk.j, global_ijk.k);
-}
-
 }
 }

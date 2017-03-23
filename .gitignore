@@ -43,6 +43,7 @@ libs/*
 
 # Manually compiled program
 build/*
+FieldOpt/build
 
 # Test folders
 test-*
@@ -71,3 +72,5 @@ test-*
 *.UNSMRY
 *.xml
 *.eclrun_dbg
+FieldOpt/CMakeCache.txt
+FieldOpt/CMakeFiles/cmake.check_cache

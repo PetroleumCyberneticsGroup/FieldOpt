@@ -63,7 +63,15 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
     auto toe = Eigen::Vector3d(toe_x_->value(), toe_y_->value(), toe_z_->value());
 
     auto wic = WellIndexCalculator(grid_);
-    auto block_data = wic.ComputeWellBlocks(heel, toe, well_settings_.wellbore_radius);
+
+    vector<WellDefinition> welldefs;
+    welldefs.push_back(WellDefinition());
+    welldefs[0].wellname = well_settings_.name.toStdString();
+    welldefs[0].radii.push_back(well_settings_.wellbore_radius);
+    welldefs[0].heels.push_back(heel);
+    welldefs[0].toes.push_back(toe);
+
+    auto block_data = wic.ComputeWellBlocks(welldefs)[well_settings_.name.toStdString()];
     QList<WellBlock *> *blocks = new QList<WellBlock *>();
     for (int i = 0; i < block_data.size(); ++i) {
         blocks->append(getWellBlock(block_data[i]));
@@ -75,7 +83,7 @@ WellBlock *WellSpline::getWellBlock(Reservoir::WellIndexCalculation::Intersected
 {
     auto wb = new WellBlock(block_data.ijk_index().i()+1, block_data.ijk_index().j()+1, block_data.ijk_index().k()+1);
     auto comp = new Completions::Perforation();
-    comp->setTransmissibility_factor(block_data.well_index());
+    comp->setTransmissibility_factor(block_data.cell_well_index());
     wb->AddCompletion(comp);
     return wb;
 }

@@ -39,44 +39,40 @@ class ECLGridReader
 {
  public:
   /*!
-       * \brief The Dims struct holds the x,y and z dimensions of a grid.
-       */
+   * \brief The Dims struct holds the x,y and z dimensions of a grid.
+   */
   struct Dims {
     int nx, ny, nz;
   };
 
   /*!
-       * \brief The Cell struct represents a cell in the grid.
-       *
-       * The corners list contains all the corner points specifying the grid.
-       * The first four elements represent the corners in the lower layer,
-       * the four last represent the corners in the top layer:
-       *
-       * Bottom:  Top:
-       * 2---3    6---7
-       * |   |    |   |
-       * 0---1    4---5
-       *
-       * Bottom and Top here refers to z-values.
-  */
+   * \brief The Cell struct represents a cell in the grid.
+   *
+   * The cell struct also contains all non-geometric properties
+   * for a cell, i.e. permeabilities, porosities, and whether or
+   * not the cell is active
+   *
+   * The corners list contains all the corner points specifying the grid.
+   * The first four elements represent the corners in the lower layer,
+   * the four last represent the corners in the top layer:
+   *
+   * Bottom:  Top:
+   * 2---3    6---7
+   * |   |    |   |
+   * 0---1    4---5
+   *
+   * Bottom and Top here refers to z-values.
+   */
   struct Cell {
     int global_index;
-    float volume;
+    bool active;
+    double volume;
+    double porosity;
+    double permx;
+    double permy;
+    double permz;
     std::vector<Eigen::Vector3d> corners;
     Eigen::Vector3d center;
-  };
-
-  /*!
-   * @brief The CellProperties struct contains all non-geometric properties
-   * for a cell, i.e. permeabilities, porosities, and whether or not the cell
-   * is active.
-   */
-  struct CellProperties {
-    bool is_active;
-    float porosity;
-    float permx;
-    float permy;
-    float permz;
   };
 
   struct IJKIndex {
@@ -92,14 +88,13 @@ class ECLGridReader
   ecl_file_type* ecl_file_init_;
   Eigen::Vector3d GetCellCenter(int global_index);
   std::vector<Eigen::Vector3d> GetCellCorners(int global_index);
-  double getCellVolume(int global_index);
-  int getActiveIndex(int global_index); //!< Get the active index for a cell. Returns -1 if the cell is inactive.
-  int getActiveIndex(IJKIndex global_ijk); //!< Get the active index for a cell. Returns -1 if the cell is inactive.
+  double GetCellVolume(int global_index);
 
   ecl_kw_type *poro_kw_;
   ecl_kw_type *permx_kw_;
   ecl_kw_type *permy_kw_;
   ecl_kw_type *permz_kw_;
+
  public:
   ECLGridReader();
   ECLGridReader(const ECLGridReader& other) = delete;
@@ -120,7 +115,8 @@ class ECLGridReader
   int ConvertIJKToGlobalIndex(int i, int j, int k);
 
   /*!
-   * \brief ConvertGlobalIndexToIJK Converts a global index for a cell to the corresponding zero-offset (i,j,k) coordinates.
+   * \brief ConvertGlobalIndexToIJK Converts a global index for a cell
+   * to the corresponding zero-offset (i,j,k) coordinates.
    * \param global_index Global index for a cell.
    * \return (i,j,k) Zero-offset coordinates
    */
@@ -138,25 +134,16 @@ class ECLGridReader
   int ActiveCells();
 
   /*!
-   * \brief GetGridCell get a Cell struct describing the cell with the
-   * specified global index. This method will retrieve the cell geometry
-   * from the .EGRID/.GRID file.
-   *
-   * \note This method will only retrieve the cell geometry. Use the
-   * FillCellProperties method to get permabilities etc. This is done
-   * in order to avoid crashes when one attempts to get inactive cells.
-   *
+   * \brief IsCellActive returns false if the cell identified by its global index is not active
+   */
+  bool IsCellActive(int global_index);
+
+  /*!
+   * \brief GetGridCell get a Cell struct describing the cell with the specified global index.
    * \param global_index The global index of the cell to get.
    * \return Cell struct.
    */
   Cell GetGridCell(int global_index);
-
-  /*!
-   * @brief Get the non-geometric properties of a cell. This will retrieve the
-   * prososity and permeability data from the .INIT file.
-   * @param global_index The global index of the cell to get the additional properties for.
-   */
-  CellProperties GetCellProperties(int global_index);
 
   /*!
    * \brief GetGlobalIndexOfCellContainingPoint Gets the global index of any cell
