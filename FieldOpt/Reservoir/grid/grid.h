@@ -74,6 +74,15 @@ class Grid
   /*!
    * \brief GetBoundingBoxCellIndices Searches for the bounding box of the space
    * defined by the two point and returns the list of all the cells in that bounding box.
+   *
+   * \todo The algorithm checks.
+   * I assume the .3 off is a slack to be sure the given cell is within
+   * the bounding box, and avoid numerical efforts. Though I think it
+   * is a little bit large for this purpose... on the other hand, I
+   * would not necessarily regarding the dx, dy, dz values as very
+   * accurate because dx_top may be different than dx_bottom, for
+   * example; maybe there is an ERT function that can provide mean dx,
+   * dy, dz values?
    */
   virtual std::vector<int> GetBoundingBoxCellIndices(double xi, double yi, double zi, double xf, double yf, double zf) = 0;
 
