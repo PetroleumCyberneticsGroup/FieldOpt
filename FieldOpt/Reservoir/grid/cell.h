@@ -168,6 +168,25 @@ namespace Reservoir {
 
              * \return double list of corner numbers for each face
              */
+            static constexpr const std::array<std::array<int,4>, 6> _faces_definition_earth_pointing_z = 
+				{{
+					{2, 0, 3, 1},
+					{6, 7, 4, 5},
+					{2, 6, 0, 4},
+					{3, 1, 7, 5},
+					{2, 3, 6, 7},
+					{0, 4, 1, 5}
+				}};
+            static constexpr const std::array<std::array<int,4>, 6> _faces_definition_ski_pointing_z = 
+				{{
+					 {0, 2, 1, 3},
+					 {4, 5, 6, 7},
+					 {0, 4, 2, 6},
+					 {1, 3, 5, 7},
+					 {0, 1, 4, 5},
+					 {2, 6, 3, 7}
+				}};
+            
             void initializeFaces();
         };
 

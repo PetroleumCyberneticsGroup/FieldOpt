@@ -1,6 +1,7 @@
 /******************************************************************************
    Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
-
+   Modified by Alin G. Chitu (2016-2017) <alin.chitu@tno.nl, chitu_alin@yahoo.com>
+   
    This file is part of the FieldOpt project.
 
    FieldOpt is free software: you can redistribute it and/or modify
@@ -96,9 +97,11 @@ namespace Reservoir {
 
                 // Get the corners
                 std::vector<Eigen::Vector3d> corners;
-                for (auto corner : ertCell.corners) {
+                for (auto corner : ertCell.corners) 
+                {
                     corners.push_back(corner);
                 }
+                
                 return Cell(global_index, ijk_index,
                             ertCell.volume, ertCell.porosity, ertCell.permx, ertCell.permy, ertCell.permz,
                             center, corners);
@@ -128,7 +131,10 @@ namespace Reservoir {
             else throw std::runtime_error("ECLGrid::GetCell: Grid source must be defined before getting a cell.");
         }
 
-        std::vector<int> ECLGrid::GetBoundingBoxCellIndices(double xi, double yi, double zi, double xf, double yf, double zf)
+        std::vector<int> ECLGrid::GetBoundingBoxCellIndices(
+        		double xi, double yi, double zi, double xf, double yf, double zf,
+        		double &bb_xi, double &bb_yi, double &bb_zi, double &bb_xf, double &bb_yf, double &bb_zf)
+        
 		{
         	double x_i, y_i, z_i, x_f, y_f, z_f;
         	x_i = std::min(xi, xf);
@@ -136,7 +142,14 @@ namespace Reservoir {
         	y_i = std::min(yi, yf);
         	y_f = std::max(yi, yf);
         	z_i = std::min(zi, zf);
-        	z_f = std::max(zi, zf);        	
+        	z_f = std::max(zi, zf);
+        	
+        	bb_xi = std::numeric_limits<double>::max();
+        	bb_yi = std::numeric_limits<double>::max();
+        	bb_zi = std::numeric_limits<double>::max();
+        	bb_xf = std::numeric_limits<double>::min();
+        	bb_yf = std::numeric_limits<double>::min();
+        	bb_zf = std::numeric_limits<double>::min();
         	
         	int total_cells = Dimensions().nx * Dimensions().ny * Dimensions().nz;
             
@@ -158,11 +171,18 @@ namespace Reservoir {
             			(cell.center().z() >= z_i - dz/1.7) && (cell.center().z() <= z_f + dz/1.7))
             		{
             			indices_list.push_back(ii);
+            			bb_xi = std::min(bb_xi, cell.center().x() - dx/2.0);
+            			bb_yi = std::min(bb_yi, cell.center().y() - dy/2.0);
+            			bb_zi = std::min(bb_zi, cell.center().z() - dz/2.0);
+            			bb_xf = std::max(bb_xf, cell.center().x() + dx/2.0);
+            			bb_yf = std::max(bb_yf, cell.center().y() + dy/2.0);
+            			bb_zf = std::max(bb_zf, cell.center().z() + dz/2.0);
             		}
             	}
             	catch(const std::runtime_error& e)
             	{
-            		std::cout << "non-active or inexistant cell " << e.what() << std::endl;
+            		// We shouls not end up here 
+            		// std::cout << "non-active or inexistant cell " << e.what() << std::endl;
             	}
             }
 

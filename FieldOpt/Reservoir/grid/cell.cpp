@@ -1,6 +1,7 @@
 /******************************************************************************
    Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
-
+   Modified by Alin G. Chitu (2016 - 2017) <alin.chitu@tno.nl, chitu_alin@yahoo.com>
+   
    This file is part of the FieldOpt project.
 
    FieldOpt is free software: you can redistribute it and/or modify
@@ -20,10 +21,10 @@
 #include "cell.h"
 #include <iostream>
 
-namespace Reservoir {
-    namespace Grid {
-
-
+namespace Reservoir 
+{
+    namespace Grid 
+    {
         Cell::Cell(int global_index, IJKCoordinate ijk_index,
                    double volume, double poro, double permx, double permy, double permz,
                    Eigen::Vector3d center, std::vector<Eigen::Vector3d> corners)
@@ -37,6 +38,7 @@ namespace Reservoir {
             permz_ = permz;
             center_ = center;
             corners_ = corners;
+            
             initializeFaces();
         }
 
@@ -65,28 +67,64 @@ namespace Reservoir {
             return point_inside;
         }
 
-        void Cell::initializeFaces() {
-//            int face_indices_points[6][4] = {
-//                     {0, 2, 1, 3},
-//                     {4, 5, 6, 7},
-//                     {0, 4, 2, 6},
-//                     {1, 3, 5, 7},
-//                     {0, 1, 4, 5},
-//                     {2, 6, 3, 7}
-//            };
-//
+        constexpr const std::array<std::array<int,4>, 6> Cell::_faces_definition_earth_pointing_z;
+        constexpr const std::array<std::array<int,4>, 6> Cell::_faces_definition_ski_pointing_z;
+        
+        void Cell::initializeFaces() 
+        {
+        	// The code assumes that the corners of the cell are given in the following order 
+        	//     Above:
+            //     2---3
+            //     |   |
+            //     0---1
+        	//
+            //     Below:
+            //     6---7
+            //     |   |
+            //     4---5       	
+        	//     
+            //     Above and below here mean position relative to eachother, i.e the "Above" layer sits above the "Below" layer 
+        	// with respect to the center of the Earth (Below is closer to the center of the Earth than Above)
+        	//
+        	// However the grids can be left-handed, i.e. the direction of increasing z will
+        	// point down towards the center of the Earth or right-handed, 
+        	// i.e. the direction of increasing z will be away from the center of the Earth.
+        	
+        	// Make sure there is a good definition of inside and outside of the cell.
+        	
+        	std::array<std::array<int,4>, 6> face_indices_points;
+        	if (corners_[0].z() < corners_[4].z()) // z-axis grows towards the center of the Earth - left-handed
+        	{
+        		face_indices_points = _faces_definition_earth_pointing_z; 
+        	}
+        	else // z-axis grows towards the ski - right-handed
+        	{
+				face_indices_points = _faces_definition_ski_pointing_z;
+        	}
 
-            int face_indices_points[6][4] = {
-                    {2, 0, 3, 1},
-                    {6, 7, 4, 5},
-                    {2, 6, 0, 4},
-                    {3, 1, 7, 5},
-                    {2, 3, 6, 7},
-                    {0, 4, 1, 5}
-            };
+//            int face_indices_points[6][4] = 
+//        	{
+//				 {0, 2, 1, 3},
+//				 {4, 5, 6, 7},
+//				 {0, 4, 2, 6},
+//				 {1, 3, 5, 7},
+//				 {0, 1, 4, 5},
+//				 {2, 6, 3, 7}
+//            };
+
+//            int face_indices_points[6][4] = 
+//            {
+//				{2, 0, 3, 1},
+//				{6, 7, 4, 5},
+//				{2, 6, 0, 4},
+//				{3, 1, 7, 5},
+//				{2, 3, 6, 7},
+//				{0, 4, 1, 5}
+//            };
 	    
-            for (int ii = 0; ii < 6; ii++) {               
-		Face face;
+            for (int ii = 0; ii < 6; ii++) 
+            {               
+            	Face face;
                 face.corners.push_back(corners_[face_indices_points[ii][0]]);
                 face.corners.push_back(corners_[face_indices_points[ii][1]]);
                 face.corners.push_back(corners_[face_indices_points[ii][2]]);

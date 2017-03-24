@@ -74,7 +74,8 @@ namespace Reservoir {
              * \brief GetBoundingBoxCellIndices Searches for the bounding box of the space
              * defined by the two point and returns the list of all the cells in that bounding box.
              */
-            virtual std::vector<int> GetBoundingBoxCellIndices(double xi, double yi, double zi, double xf, double yf, double zf) = 0;
+            virtual std::vector<int> GetBoundingBoxCellIndices(double xi, double yi, double zi, double xf, double yf, double zf,
+            		double &bb_xi, double &bb_yi, double &bb_zi, double &bb_xf, double &bb_yf, double &bb_zf) = 0;
 
             /*!
              * \brief GetCellEnvelopingPoint Get the cell enveloping the point (x,y,z) searching the entire grid.

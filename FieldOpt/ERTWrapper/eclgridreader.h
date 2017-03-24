@@ -82,6 +82,7 @@ namespace ERTWrapper {
             std::string init_file_name_;
             ecl_grid_type* ecl_grid_;
             ecl_file_type* ecl_file_init_;
+            
             Eigen::Vector3d GetCellCenter(int global_index);
             std::vector<Eigen::Vector3d> GetCellCorners(int global_index);
             double GetCellVolume(int global_index);

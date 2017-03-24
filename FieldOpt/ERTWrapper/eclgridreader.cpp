@@ -84,13 +84,16 @@ namespace ERTWrapper {
                 ecl_grid_ = ecl_grid_alloc(file_name_.c_str());
             }
 	    
-            if (ecl_file_init_ == 0) {
+            if (ecl_file_init_ == 0) 
+            {
                 ecl_file_init_ = ecl_file_open(init_file_name_.c_str(), 0);
                 poro_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PORO", 0);
                 permx_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMX", 0);
                 permy_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMY", 0);
                 permz_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMZ", 0);
-            } else {
+            } 
+            else 
+            {
                 ecl_file_close(ecl_file_init_);
                 ecl_file_init_ = ecl_file_open(init_file_name_.c_str(), 0);
                 poro_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PORO", 0);
