@@ -1,5 +1,6 @@
 /******************************************************************************
    Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+   Modified by Mathias Bellout (2017) <mathias.bellout@ntnu.no, chakibbb@gmail.com>
 
    This file is part of the FieldOpt project.
 
@@ -42,6 +43,9 @@ class Cell
        Eigen::Vector3d center,
        std::vector<Eigen::Vector3d> corners);
 
+  /*!
+   * \brief
+   */
   void SetProperties(bool is_active,
                      float porosity,
                      float permx, float permy, float permz);
@@ -247,11 +251,34 @@ class Cell
    * Generates a double array with the numbers of 3 corners
    * from each of the 6 faces of this cell that will be used
    * to create a normal vector for each face.
-
    * \todo Clarify this comment.
-
+   * 
    * \return double list of corner numbers for each face
    */
+  static constexpr const std::array<std::array<int,4>, 6>
+      _faces_definition_earth_pointing_z = {
+      {
+          {2, 0, 3, 1},
+          {6, 7, 4, 5},
+          {2, 6, 0, 4},
+          {3, 1, 7, 5},
+          {2, 3, 6, 7},
+          {0, 4, 1, 5}
+      }
+  };
+
+  static constexpr const std::array<std::array<int,4>, 6>
+      _faces_definition_ski_pointing_z = {
+      {
+          {0, 2, 1, 3},
+          {4, 5, 6, 7},
+          {0, 4, 2, 6},
+          {1, 3, 5, 7},
+          {0, 1, 4, 5},
+          {2, 6, 3, 7}
+      }
+  };
+
   void initializeFaces();
 };
 
