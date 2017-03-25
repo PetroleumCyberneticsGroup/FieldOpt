@@ -1,5 +1,6 @@
 /******************************************************************************
    Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+   Modified by Alin G. Chitu (2016 - 2017) <alin.chitu@tno.nl, chitu_alin@yahoo.com>
 
    This file is part of the FieldOpt project.
 
@@ -56,7 +57,10 @@ bool Cell::EnvelopsPoint(Eigen::Vector3d point) {
     for (Face face : faces_) {
         double dot_prod = (point - face.corners[0]).dot(face.normal_vector);
         if ( dot_prod < 0)
+        {
             point_inside = false;
+            break;
+        }
     }
     return point_inside;
 }
