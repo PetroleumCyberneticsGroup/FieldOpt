@@ -1,6 +1,7 @@
 /******************************************************************************
    Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
    Modified by Alin G. Chitu (2016 - 2017) <alin.chitu@tno.nl, chitu_alin@yahoo.com>
+   Modified by Mathias Bellout (2017) <mathias.bellout@ntnu.no, chakibbb@gmail.com>
 
    This file is part of the FieldOpt project.
 
@@ -70,7 +71,8 @@ constexpr const std::array<std::array<int,4>, 6> Cell::_faces_definition_ski_poi
 
 void Cell::initializeFaces()
 {
-    // The code assumes that the corners of the cell are given in the following order
+    // The code assumes the corners of the cell are given in the following order
+    //
     //     Above:
     //     2---3
     //     |   |
@@ -81,17 +83,25 @@ void Cell::initializeFaces()
     //     |   |
     //     4---5
     //
-    //     Above and below here mean position relative to eachother, i.e the "Above" layer sits above the "Below" layer
-    // with respect to the center of the Earth (Below is closer to the center of the Earth than Above)
+    // Above and below here refer to the relative position of the two cell faces
+    // with normal vectors less than 90 degrees relative to the axis from the center
+    // of the Earth. Here "Above" refers to the face that is farther away from the
+    // Earth center, while "Below" refers to the face closer to the center of the
+    // Earth.
     //
-    // However the grids can be left-handed, i.e. the direction of increasing z will
-    // point down towards the center of the Earth or right-handed,
-    // i.e. the direction of increasing z will be away from the center of the Earth.
+    // Reservoir grids can be either left- or right-handed. If left-handed, the
+    // direction of increasing z will point down towards the center of the Earth,
+    // while if right-handed, the direction of increasing z will be away from the
+    // center of the Earth.
+
+    // Here we determine whether the cell is left- or right-handed, which will
+    // later determine whether the vertex indices sets, (0-1-2-3) and (4-5-6-7),
+    // are assigned as "Above" or "Below" cell faces.
 
     // Make sure there is a good definition of inside and outside of the cell.
 
     std::array<std::array<int,4>, 6> face_indices_points;
-    if (corners_[0].z() < corners_[4].z()) // z-axis grows towards the center of the Earth - left-handed
+    if (corners_[0].z() < corners_[4].z()) // z-axis grows towards Earth's center (left-handed)
     {
         face_indices_points = _faces_definition_earth_pointing_z;
     }
@@ -100,24 +110,24 @@ void Cell::initializeFaces()
         face_indices_points = _faces_definition_ski_pointing_z;
     }
 
-//            int face_indices_points[6][4] =
-//        	{
-//				 {0, 2, 1, 3},
-//				 {4, 5, 6, 7},
-//				 {0, 4, 2, 6},
-//				 {1, 3, 5, 7},
-//				 {0, 1, 4, 5},
-//				 {2, 6, 3, 7}
-//            };
-
-//    int face_indices_points[6][4] = {
-//				{2, 0, 3, 1},
-//				{6, 7, 4, 5},
-//				{2, 6, 0, 4},
-//				{3, 1, 7, 5},
-//				{2, 3, 6, 7},
-//				{0, 4, 1, 5}
-//            };
+    // These should be removed eventually. Keep now for ref.
+    //int face_indices_points[6][4] = {
+    //    {0, 2, 1, 3},
+    //    {4, 5, 6, 7},
+    //    {0, 4, 2, 6},
+    //    {1, 3, 5, 7},
+    //    {0, 1, 4, 5},
+    //    {2, 6, 3, 7}
+    //};
+    //
+    //int face_indices_points[6][4] = {
+    //    {2, 0, 3, 1},
+    //    {6, 7, 4, 5},
+    //    {2, 6, 0, 4},
+    //    {3, 1, 7, 5},
+    //    {2, 3, 6, 7},
+    //    {0, 4, 1, 5}
+    //};
 
     for (int ii = 0; ii < 6; ii++) {
         Face face;
