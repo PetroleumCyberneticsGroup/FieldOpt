@@ -1,5 +1,6 @@
 /******************************************************************************
    Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+   Modified by Alin G. Chitu (2016-2017) <alin.chitu@tno.nl, chitu_alin@yahoo.com>
 
    This file is part of the FieldOpt project.
 
@@ -43,7 +44,11 @@ class ECLGrid : public Grid
   Cell GetCell(int global_index);
   Cell GetCell(int i, int j, int k);
   Cell GetCell(IJKCoordinate* ijk);
-  std::vector<int> GetBoundingBoxCellIndices(double xi, double yi, double zi, double xf, double yf, double zf);
+  std::vector<int> GetBoundingBoxCellIndices(
+      double xi, double yi, double zi,
+      double xf, double yf, double zf,
+      double &bb_xi, double &bb_yi, double &bb_zi,
+      double &bb_xf, double &bb_yf, double &bb_zf);
   Cell GetCellEnvelopingPoint(double x, double y, double z);
   Cell GetCellEnvelopingPoint(double x, double y, double z, std::vector<int> search_set);
   Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz);
