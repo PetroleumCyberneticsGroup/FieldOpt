@@ -1,6 +1,6 @@
 /******************************************************************************
    Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
-   Modified by Alin G. Chitu (2016 - 2017) <alin.chitu@tno.nl, chitu_alin@yahoo.com>
+   Modified by Alin G. Chitu (2016-2017) <alin.chitu@tno.nl, chitu_alin@yahoo.com>
 
    This file is part of the FieldOpt project.
 
@@ -154,15 +154,27 @@ Cell ECLGrid::GetCell(IJKCoordinate *ijk) {
     }
 }
 
-vector<int> ECLGrid::GetBoundingBoxCellIndices(double xi, double yi, double zi,
-                                               double xf, double yf, double zf) {
+std::vector<int> ECLGrid::GetBoundingBoxCellIndices(
+    double xi, double yi, double zi,
+    double xf, double yf, double zf,
+    double &bb_xi, double &bb_yi, double &bb_zi,
+    double &bb_xf, double &bb_yf, double &bb_zf)
+
+{
     double x_i, y_i, z_i, x_f, y_f, z_f;
-    x_i = std::min(xi, xf);
-    x_f = std::max(xi, xf);
-    y_i = std::min(yi, yf);
-    y_f = std::max(yi, yf);
-    z_i = std::min(zi, zf);
-    z_f = std::max(zi, zf);
+    x_i = min(xi, xf);
+    x_f = max(xi, xf);
+    y_i = min(yi, yf);
+    y_f = max(yi, yf);
+    z_i = min(zi, zf);
+    z_f = max(zi, zf);
+
+    bb_xi = numeric_limits<double>::max();
+    bb_yi = numeric_limits<double>::max();
+    bb_zi = numeric_limits<double>::max();
+    bb_xf = numeric_limits<double>::min();
+    bb_yf = numeric_limits<double>::min();
+    bb_zf = numeric_limits<double>::min();
 
     int total_cells = Dimensions().nx * Dimensions().ny * Dimensions().nz;
 
@@ -177,17 +189,24 @@ vector<int> ECLGrid::GetBoundingBoxCellIndices(double xi, double yi, double zi,
             double dx = (cell.corners()[5] - cell.corners()[4]).norm();
             double dy = (cell.corners()[6] - cell.corners()[4]).norm();
             double dz = (cell.corners()[0] - cell.corners()[4]).norm();
-            if ((cell.center().x() >= x_i - dx / 1.7) && (cell.center().x() <= x_f + dx / 1.7) &&
-                (cell.center().y() >= y_i - dy / 1.7) && (cell.center().y() <= y_f + dy / 1.7) &&
-                (cell.center().z() >= z_i - dz / 1.7) && (cell.center().z() <= z_f + dz / 1.7)) {
+
+            if ((cell.center().x() >= x_i - dx/1.7) && (cell.center().x() <= x_f + dx/1.7) &&
+                (cell.center().y() >= y_i - dy/1.7) && (cell.center().y() <= y_f + dy/1.7) &&
+                (cell.center().z() >= z_i - dz/1.7) && (cell.center().z() <= z_f + dz/1.7)) {
                 indices_list.push_back(ii);
+                bb_xi = min(bb_xi, cell.center().x() - dx/2.0);
+                bb_yi = min(bb_yi, cell.center().y() - dy/2.0);
+                bb_zi = min(bb_zi, cell.center().z() - dz/2.0);
+                bb_xf = max(bb_xf, cell.center().x() + dx/2.0);
+                bb_yf = max(bb_yf, cell.center().y() + dy/2.0);
+                bb_zf = max(bb_zf, cell.center().z() + dz/2.0);
             }
         }
-        catch (const runtime_error &e) {
-            cout << "non-active or inexistant cell " << e.what() << endl;
+        catch(const std::runtime_error& e) {
+            // We should not end up here
+            // cout << "non-active or inexistant cell " << e.what() << endl;
         }
     }
-
     return indices_list;
 }
 
