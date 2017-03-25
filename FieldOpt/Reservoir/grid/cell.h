@@ -252,7 +252,7 @@ class Cell
    * from each of the 6 faces of this cell that will be used
    * to create a normal vector for each face.
    * \todo Clarify this comment.
-   * 
+   *
    * \return double list of corner numbers for each face
    */
   static constexpr const std::array<std::array<int,4>, 6>
