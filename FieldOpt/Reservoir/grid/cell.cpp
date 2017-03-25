@@ -18,7 +18,6 @@
 ******************************************************************************/
 
 #include "cell.h"
-#include <iostream>
 
 namespace Reservoir {
 namespace Grid {
