@@ -41,8 +41,8 @@ class GeneticAlgorithm : public Optimizer {
                    Reservoir::Grid::Grid *grid);
   TerminationCondition IsFinished() override;
  protected:
-  void handleEvaluatedCase(Case *c) override;
-  void iterate() override;
+  virtual void handleEvaluatedCase(Case *c) = 0;
+  virtual void iterate() = 0;
  protected:
   boost::random::mt19937 gen_; // Random number generator with the random functions in math.hpp
 
@@ -68,6 +68,8 @@ class GeneticAlgorithm : public Optimizer {
   int population_size_; //!< Size of population (number of chromosomes).
   double p_crossover_; //!< Crossover probability.
   double p_mutation_; //!< Mutation probability.
+  double decay_rate_;
+  double mutation_strength_;
 
   /*!
    * @brief Perform selection on the population.
@@ -89,6 +91,11 @@ class GeneticAlgorithm : public Optimizer {
    * @return Mutated individuals.
    */
   virtual vector<Chromosome> mutate(vector<Chromosome> offspring) = 0;
+
+  /*!
+   * @brief Sort the population according to fitness
+   */
+  vector<Chromosome> sortPopulation(vector<Chromosome> population);
 
   /*!
    * @brief Print a string representation of the population to stdout.

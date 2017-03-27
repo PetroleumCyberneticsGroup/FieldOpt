@@ -34,8 +34,8 @@ GeneticAlgorithm::GeneticAlgorithm(Settings::Optimizer *settings,
     population_size_ = settings->parameters().population_size;
     p_crossover_ = settings->parameters().p_crossover;
     p_mutation_ = settings->parameters().p_mutation;
-
-    assert(population_size_ > 3); // Because of the tournament size, the population must be at least 3.
+    decay_rate_ = 2.0;
+    mutation_strength_ = 0.5;
 
     // todo: Generate initial chromosomes and add the cases to the queue
     for (int i = 0; i < population_size_; ++i) {
@@ -52,19 +52,6 @@ Optimizer::TerminationCondition GeneticAlgorithm::IsFinished() {
         return TerminationCondition::MAX_EVALS_REACHED;
     else
         return TerminationCondition::NOT_FINISHED;
-}
-void GeneticAlgorithm::handleEvaluatedCase(Case *c) {
-    // Check isImprovement(c)
-    // Update tentative_best_case_
-    /// \todo: Implement this.
-}
-void GeneticAlgorithm::iterate() {
-    // Selection
-    // Crossover
-    // Mutation
-    // Add cases to handler
-    // Increment iteration_
-    /// \todo Implement this
 }
 GeneticAlgorithm::Chromosome::Chromosome(Case *c) {
     case_pointer = c;
@@ -87,6 +74,12 @@ void GeneticAlgorithm::printChromosome(Chromosome &chrom) {
     cout << "\t\t" << chrom.case_pointer->objective_function_value() << endl
          << "\t" << chrom.rea_vars
          << endl;
+}
+vector<GeneticAlgorithm::Chromosome> GeneticAlgorithm::sortPopulation(vector<Chromosome> population) {
+    std::sort(population.begin(), population.end(), [&](Chromosome c1, Chromosome c2) {
+        return isBetter(c1.case_pointer, c2.case_pointer);
+    });
+    return population;
 }
 }
 }
