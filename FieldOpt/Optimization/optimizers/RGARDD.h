@@ -25,7 +25,7 @@
 namespace Optimization {
 namespace Optimizers {
 
-class RGARDD : GeneticAlgorithm {
+class RGARDD : public GeneticAlgorithm {
  public:
   RGARDD(Settings::Optimizer *settings,
          Case *base_case,
@@ -33,9 +33,10 @@ class RGARDD : GeneticAlgorithm {
          Reservoir::Grid::Grid *grid);
  private:
   vector<Chromosome> mating_pool_;
+  bool is_stagnant();
+  void repopulate();
   double discard_parameter_;
-  double lower_bound_;
-  double upper_bound_;
+  double stagnation_limit_;
   void iterate() override;
   vector<Chromosome> selection(vector<Chromosome> population) override;
   void handleEvaluatedCase(Optimization::Case *c) override;

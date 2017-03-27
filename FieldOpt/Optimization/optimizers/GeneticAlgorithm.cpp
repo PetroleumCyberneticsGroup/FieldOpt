@@ -31,25 +31,35 @@ GeneticAlgorithm::GeneticAlgorithm(Settings::Optimizer *settings,
                                    Reservoir::Grid::Grid *grid) : Optimizer(settings, base_case, variables, grid) {
     gen_ = get_random_generator();
     max_generations_ = settings->parameters().max_generations;
-    population_size_ = settings->parameters().population_size;
-    p_crossover_ = settings->parameters().p_crossover;
-    p_mutation_ = settings->parameters().p_mutation;
-    decay_rate_ = 2.0;
-    mutation_strength_ = 0.5;
+    population_size_ = std::min(10*variables->ContinousVariableSize(), 100);
+    if (population_size_ % 2 != 0) population_size_--;
+    p_crossover_ = 0.1;
+    lower_bound_ = -10.0;
+    upper_bound_ = 10.0;
+    decay_rate_ = 4.0;
+    mutation_strength_ = 0.25;
 
     // todo: Generate initial chromosomes and add the cases to the queue
     for (int i = 0; i < population_size_; ++i) {
-        auto new_case = new Case(base_case);
-        vector<double> rand_reals = random_doubles(gen_, 0, 1, variables->ContinousVariableSize());
-        Eigen::Map<Eigen::VectorXd> rand_rea_evec(rand_reals.data(), variables->ContinousVariableSize());
-        new_case->SetRealVarValues(rand_rea_evec);
+        auto new_case = generateRandomCase();
         population_.push_back(Chromosome(new_case));
         case_handler_->AddNewCase(new_case);
     }
+    if (verbosity_level_ > 1) {
+        cout << "Initial ";
+        printPopulation();
+    }
 }
 Optimizer::TerminationCondition GeneticAlgorithm::IsFinished() {
-    if (iteration_ >= max_generations_)
+    if (iteration_ >= max_generations_) {
+        cout << "Generations at termination: " << iteration_ << endl;
+        population_ = sortPopulation(population_);
+        if (verbosity_level_ > 1) {
+            cout << "Final ";
+            printPopulation();
+        }
         return TerminationCondition::MAX_EVALS_REACHED;
+    }
     else
         return TerminationCondition::NOT_FINISHED;
 }
@@ -64,22 +74,34 @@ void GeneticAlgorithm::Chromosome::createNewCase() {
 }
 void GeneticAlgorithm::printPopulation() {
     cout << "Population:" << endl;
-    cout << "\tchrom\tofv\t\tgenes" << endl;
     for (int i = 0; i < population_size_; ++i) {
-        cout << "\t" << i;
+        cout << "\t" << i << "\t";
         printChromosome(population_[i]);
     }
 }
 void GeneticAlgorithm::printChromosome(Chromosome &chrom) {
-    cout << "\t\t" << chrom.case_pointer->objective_function_value() << endl
-         << "\t" << chrom.rea_vars
-         << endl;
+    printf("%4.2f\t\t", chrom.ofv());
+    for (int i = 0; i < chrom.rea_vars.size(); ++i) {
+        printf("%2.4f\t", chrom.rea_vars(i));
+    }
+    cout << endl;
 }
 vector<GeneticAlgorithm::Chromosome> GeneticAlgorithm::sortPopulation(vector<Chromosome> population) {
     std::sort(population.begin(), population.end(), [&](Chromosome c1, Chromosome c2) {
         return isBetter(c1.case_pointer, c2.case_pointer);
     });
     return population;
+}
+Case *GeneticAlgorithm::generateRandomCase() {
+    auto new_case = new Case(tentative_best_case_);
+    vector<double> rands = random_doubles(gen_, lower_bound_, upper_bound_,
+                                          new_case->GetRealVarVector().size());
+    Eigen::VectorXd erands(new_case->GetRealVarVector().size());
+    for (int i = 0; i < rands.size(); ++i) {
+        erands(i) = rands[i];
+    }
+    new_case->SetRealVarValues(erands);
+    return  new_case;
 }
 }
 }

@@ -30,12 +30,23 @@ RGARDD::RGARDD(Settings::Optimizer *settings,
                                                                base_case,
                                                                variables,
                                                                grid) {
-    assert(population_size_ % 2); // Need an even number of chromosomes
-    discard_parameter_ = 0.25;
-    lower_bound_ = -10.0;
-    upper_bound_ = 10.0;
+    assert(population_size_ % 2 == 0); // Need an even number of chromosomes
+    discard_parameter_ = 1.0/population_size_;
+    mating_pool_ = population_;
+    stagnation_limit_ = 1e-10;
 }
 void RGARDD::iterate() {
+    population_ = sortPopulation(population_);
+
+    if (is_stagnant()) {
+        if (verbosity_level_ > 1) {
+            cout << "The population has stagnated in generation " << iteration_ << ". Repopulating." << endl;
+        }
+        repopulate();
+        iteration_++;
+        return;
+    }
+
     mating_pool_ = selection(population_);
     double r;
     for (int i = 0; i < population_size_ / 2; ++i) {
@@ -59,16 +70,23 @@ void RGARDD::iterate() {
     iteration_++;
 }
 void RGARDD::handleEvaluatedCase(Case *c) {
-    int index;
+    int index = -1;
     for (int i = 0; i < mating_pool_.size(); ++i) {
         if (mating_pool_[i].case_pointer == c)
             index = i;
     }
-    if (isBetter(c, population_[index].case_pointer))
+    if (isBetter(c, population_[index].case_pointer)) {
         population_[index] = mating_pool_[index];
+        if (isImprovement(c)) {
+            tentative_best_case_ = c;
+            if (verbosity_level_ > 1) {
+                cout << "New best in generation " << iteration_ << ": "
+                     << tentative_best_case_->objective_function_value() << endl;
+            }
+        }
+    }
 }
 vector<GeneticAlgorithm::Chromosome> RGARDD::selection(vector<Chromosome> population) {
-    population = sortPopulation(population);
     auto mating_pool = population_;
     int n_repl = floor(population_size_ * discard_parameter_);
     for (int i = population_size_-n_repl; i < population_size_; ++i) {
@@ -115,6 +133,31 @@ vector<GeneticAlgorithm::Chromosome> RGARDD::mutate(vector<Chromosome> offspring
     o1.rea_vars = p1.rea_vars + s * dir *(upper_bound_ - lower_bound_);
     o1.rea_vars = p2.rea_vars + s * dir *(upper_bound_ - lower_bound_);
     return population_;
+}
+bool RGARDD::is_stagnant() {
+    // Using the sums of the variable values in each chromosome
+    vector<double> sums;
+    for (auto chrom : population_) {
+        sums.push_back(chrom.rea_vars.sum());
+    }
+    double sum = std::accumulate(sums.begin(), sums.end(), 0.0);
+    double mean = sum / sums.size();
+    vector<double> diff(sums.size());
+    transform(sums.begin(), sums.end(), diff.begin(),
+              bind2nd(minus<double>(), mean)
+    );
+    double sq_sum = inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
+    double stdev = sqrt(sq_sum / sums.size());
+
+    return stdev <= stagnation_limit_;
+}
+void RGARDD::repopulate() {
+    for (int i = 0; i < population_size_ - 1; ++i) {
+        auto new_case = generateRandomCase();
+        population_[i+1] = Chromosome(new_case);
+        case_handler_->AddNewCase(new_case);
+    }
+    mating_pool_ = population_;
 }
 
 }

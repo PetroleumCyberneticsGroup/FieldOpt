@@ -70,6 +70,8 @@ class GeneticAlgorithm : public Optimizer {
   double p_mutation_; //!< Mutation probability.
   double decay_rate_;
   double mutation_strength_;
+  double lower_bound_;
+  double upper_bound_;
 
   /*!
    * @brief Perform selection on the population.
@@ -103,6 +105,8 @@ class GeneticAlgorithm : public Optimizer {
   void printPopulation();
 
   void printChromosome(Chromosome &chrom);
+
+  Case *generateRandomCase();
 };
 
 }
