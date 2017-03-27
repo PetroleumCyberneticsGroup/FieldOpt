@@ -34,10 +34,18 @@ class TestResourceCases : public TestResources::TestResourceVariablePropertyCont
           real_variables_sph_rand_30d_.insert(QUuid::createUuid(), rand);
       test_case_ga_spherical_30r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), real_variables_sph_rand_30d_);
 
+
+
       std::vector<double> rand_reals_6 = random_doubles(gen, -5.12, 5.12, 6);
-      for (double rand : rand_reals_6)
-          real_variables_sph_rand_6d_.insert(QUuid::createUuid(), rand);
-      test_case_ga_spherical_6r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), real_variables_sph_rand_6d_);
+      varcont_6r_ = new VariablePropertyContainer();
+      QString base_name = "BHP#PRODUCER#";
+      for (int i = 0; i < rand_reals_6.size(); ++i) {
+          ContinousProperty *prop = new ContinousProperty(rand_reals_6[i]);
+          prop->setName(base_name + QString::number(i));
+          varcont_6r_->AddVariable(prop);
+          real_variables_sph_rand_6d_.insert(QUuid::createUuid(), rand_reals_6[i]);
+      }
+      test_case_ga_spherical_6r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), varcont_6r_->GetContinousVariableValues());
   }
 
   QList<Optimization::Case *> trivial_cases_;
