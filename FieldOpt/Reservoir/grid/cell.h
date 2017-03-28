@@ -268,7 +268,7 @@ class Cell
   };
 
   static constexpr const std::array<std::array<int,4>, 6>
-      _faces_definition_ski_pointing_z = {
+      _faces_definition_sky_pointing_z = {
       {
           {0, 2, 1, 3},
           {4, 5, 6, 7},
