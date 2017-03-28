@@ -117,10 +117,11 @@ vector<GeneticAlgorithm::Chromosome> RGARDD::crossover(vector<Chromosome> mating
     o2.rea_vars = p2.rea_vars + s * dirs;
     return vector<Chromosome>{o1, o2};
 }
-vector<GeneticAlgorithm::Chromosome> RGARDD::mutate(vector<Chromosome> offspring) {
+vector<GeneticAlgorithm::Chromosome> RGARDD::mutate(vector<Chromosome> mating_pool) {
+    assert(mating_pool.size() == 2);
     double s = pow(1.0 - (iteration_*1.0/max_generations_), decay_rate_);
-    auto p1 = offspring[0];
-    auto p2 = offspring[1];
+    auto p1 = mating_pool[0];
+    auto p2 = mating_pool[1];
     auto o1 = Chromosome(p1);
     auto o2 = Chromosome(p2);
     Eigen::Map<Eigen::VectorXd> dir(

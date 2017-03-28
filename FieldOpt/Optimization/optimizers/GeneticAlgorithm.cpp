@@ -39,7 +39,6 @@ GeneticAlgorithm::GeneticAlgorithm(Settings::Optimizer *settings,
     decay_rate_ = 4.0;
     mutation_strength_ = 0.25;
 
-    // todo: Generate initial chromosomes and add the cases to the queue
     for (int i = 0; i < population_size_; ++i) {
         auto new_case = generateRandomCase();
         population_.push_back(Chromosome(new_case));

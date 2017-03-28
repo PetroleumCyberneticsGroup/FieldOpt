@@ -30,11 +30,15 @@ namespace Optimizers {
 
 /*!
  * @brief The abstract GeneticAlgorithm class a specification of the
- * structure for a general genetic algorithm. Crossover, mutation and
- * selection operators must be specified in a child class.
+ * structure for a general genetic algorithm. It specifies and initializes
+ * a few common member fields, creates the initial population, and provides some
+ * helper functions.
  */
 class GeneticAlgorithm : public Optimizer {
  public:
+  /*!
+   * @brief Set some common members and initialize the population.
+   */
   GeneticAlgorithm(Settings::Optimizer *settings,
                    Case *base_case,
                    Model::Properties::VariablePropertyContainer *variables,
@@ -44,14 +48,11 @@ class GeneticAlgorithm : public Optimizer {
   virtual void handleEvaluatedCase(Case *c) = 0;
   virtual void iterate() = 0;
  protected:
-  boost::random::mt19937 gen_; // Random number generator with the random functions in math.hpp
+  boost::random::mt19937 gen_; //!< Random number generator with the random functions in math.hpp
 
   /*!
    * @brief The Chromosome struct is used to hold variable values
-   * for a chromosome. It is used in place of cases because for
-   * the mixed-integer algorithm implemented here, the integer variables
-   * should be treated as floating point numbers until they are truncated
-   * at the very end.
+   * for a chromosome.
    */
   struct Chromosome {
     Eigen::VectorXd rea_vars;
@@ -65,13 +66,13 @@ class GeneticAlgorithm : public Optimizer {
   vector<Chromosome> population_; //!< Holds the current population.
 
   int max_generations_; //!< Maximum number of generations.
-  int population_size_; //!< Size of population (number of chromosomes).
+  int population_size_; //!< Size of population. This is automatically set to min(n_vars, 100);
   double p_crossover_; //!< Crossover probability.
   double p_mutation_; //!< Mutation probability.
   double decay_rate_;
   double mutation_strength_;
-  double lower_bound_;
-  double upper_bound_;
+  double lower_bound_; //!< Lower bounds for the variables (used for randomly generating populations and mutation)
+  double upper_bound_; //!< Upper bounds for the variables (used for randomly generating populations and mutation)
 
   /*!
    * @brief Perform selection on the population.
@@ -104,8 +105,15 @@ class GeneticAlgorithm : public Optimizer {
    */
   void printPopulation();
 
+  /*!
+   * @brief Print a string representation of one chromosome to stdout.
+   */
   void printChromosome(Chromosome &chrom);
 
+  /*!
+   * @brief Generate a random case with in the bounds.
+   * @return A pointer to a new case.
+   */
   Case *generateRandomCase();
 };
 
