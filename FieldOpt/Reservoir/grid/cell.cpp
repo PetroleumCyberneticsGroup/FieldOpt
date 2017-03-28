@@ -98,6 +98,12 @@ void Cell::initializeFaces()
   // later determine whether the vertex indices sets, (0-1-2-3) and (4-5-6-7),
   // are assigned as "Above" or "Below" cell faces.
 
+  // \todo To avoid having to perfom this check for every grid cell:
+  // move this check to grid constructor, e.g., there check only one
+  // cell to determine whether the entire grid is left or right-handed.
+  // Any cell object can later make use of this information by collecting
+  // it from the grid object
+
   // Make sure there is a good definition of inside and outside of the cell.
   std::array<std::array<int,4>, 6> face_indices_points;
 
