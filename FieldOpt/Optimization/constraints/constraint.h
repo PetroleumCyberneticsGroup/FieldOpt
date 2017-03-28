@@ -65,13 +65,29 @@ class Constraint
 
   /*!
    * @brief Get a vector defining the lower bounds for the variables.
+   *
+   * Note that variables that are not specified in a constraint will be
+   * left as 0. So, if multiple constraints are used, e.g. if we have
+   * multiple wells, the vectors from all constraints should be summed
+   * to get the correct vector.
+   *
+   * @param id_vector Vector containing the UUIDs of the variables
+   * in the correct order.
    */
-  virtual Eigen::VectorXd GetLowerBounds() const;
+  virtual Eigen::VectorXd GetLowerBounds(QList<QUuid> id_vector) const;
 
   /*!
    * @brief Get a vector defining the upper bounds for the variables.
+   *
+   * Note that variables that are not specified in a constraint will be
+   * left as 0. So, if multiple constraints are used, e.g. if we have
+   * multiple wells, the vectors from all constraints should be summed
+   * to get the correct vector.
+   *
+   * @param id_vector Vector containing the UUIDs of the variables
+   * in the correct order.
    */
-  virtual Eigen::VectorXd GetUpperBounds() const;
+  virtual Eigen::VectorXd GetUpperBounds(QList<QUuid> id_vector) const;
 
  protected:
   bool logging_enabled_;

@@ -33,10 +33,10 @@ void Constraint::EnableLogging(QString output_directory_path) {
 void Constraint::SetVerbosityLevel(int level) {
     verbosity_level_ = level;
 }
-Eigen::VectorXd Constraint::GetLowerBounds() const {
+Eigen::VectorXd Constraint::GetLowerBounds(QList<QUuid> id_vector) const {
     throw std::runtime_error("Attempted to get bounds from a non-bound cosntraint.");
 }
-Eigen::VectorXd Constraint::GetUpperBounds() const {
+Eigen::VectorXd Constraint::GetUpperBounds(QList<QUuid> id_vector) const {
     throw std::runtime_error("Attempted to get bounds from a non-bound cosntraint.");
 }
 

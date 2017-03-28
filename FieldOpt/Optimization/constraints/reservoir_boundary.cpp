@@ -1,3 +1,21 @@
+/******************************************************************************
+   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
+
+   This file is part of the FieldOpt project.
+
+   FieldOpt is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   FieldOpt is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
 #include "reservoir_boundary.h"
 #include "ConstraintMath/well_constraint_projections/well_constraint_projections.h"
 #include <iomanip>
@@ -368,6 +386,56 @@ QList<int> ReservoirBoundary::getListOfCellIndices() {
         }
     }
     return index_list;
+}
+Eigen::VectorXd ReservoirBoundary::GetLowerBounds(QList<QUuid> id_vector) const {
+    auto cell_min = grid_->GetCell(imin_, jmin_, kmin_);
+    auto cell_max = grid_->GetCell(imax_, jmax_, kmax_);
+    double xmin, ymin, zmin;
+    xmin = std::min(cell_max.center().x(), cell_min.center().x());
+    ymin = std::min(cell_max.center().y(), cell_min.center().y());
+    zmin = std::min(cell_max.center().z(), cell_min.center().z());
+
+    Eigen::VectorXd lbounds(id_vector.size());
+
+    int ind_heel_x = id_vector.indexOf(affected_well_.heel.x);
+    int ind_heel_y = id_vector.indexOf(affected_well_.heel.y);
+    int ind_heel_z = id_vector.indexOf(affected_well_.heel.z);
+    int ind_toe_x = id_vector.indexOf(affected_well_.toe.x);
+    int ind_toe_y = id_vector.indexOf(affected_well_.toe.y);
+    int ind_toe_z = id_vector.indexOf(affected_well_.toe.z);
+    lbounds(ind_heel_x) = xmin;
+    lbounds(ind_toe_x) = xmin;
+    lbounds(ind_heel_y) = ymin;
+    lbounds(ind_toe_y) = ymin;
+    lbounds(ind_heel_z) = zmin;
+    lbounds(ind_toe_z) = zmin;
+
+    return lbounds;
+}
+Eigen::VectorXd ReservoirBoundary::GetUpperBounds(QList<QUuid> id_vector) const {
+    auto cell_min = grid_->GetCell(imin_, jmin_, kmin_);
+    auto cell_max = grid_->GetCell(imax_, jmax_, kmax_);
+    double xmax, ymax, zmax;
+    xmax = std::max(cell_max.center().x(), cell_min.center().x());
+    ymax = std::max(cell_max.center().y(), cell_min.center().y());
+    zmax = std::max(cell_max.center().z(), cell_min.center().z());
+
+    Eigen::VectorXd ubounds(id_vector.size());
+
+    int ind_heel_x = id_vector.indexOf(affected_well_.heel.x);
+    int ind_heel_y = id_vector.indexOf(affected_well_.heel.y);
+    int ind_heel_z = id_vector.indexOf(affected_well_.heel.z);
+    int ind_toe_x = id_vector.indexOf(affected_well_.toe.x);
+    int ind_toe_y = id_vector.indexOf(affected_well_.toe.y);
+    int ind_toe_z = id_vector.indexOf(affected_well_.toe.z);
+    ubounds(ind_heel_x) = xmax;
+    ubounds(ind_toe_x) = xmax;
+    ubounds(ind_heel_y) = ymax;
+    ubounds(ind_toe_y) = ymax;
+    ubounds(ind_heel_z) = zmax;
+    ubounds(ind_toe_z) = zmax;
+
+    return ubounds;
 }
 
 }
