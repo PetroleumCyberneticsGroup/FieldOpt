@@ -47,25 +47,20 @@ TEST_F(GeneticAlgorithmTest, TestFunctionSpherical) {
 }
 
 TEST_F(GeneticAlgorithmTest, TestFunctionRosenbrock) {
+    test_case_ga_spherical_6r_->set_objective_function_value(abs(Rosenbrock(test_case_ga_spherical_6r_->GetRealVarVector())));
+    Optimization::Optimizer *minimizer = new RGARDD(settings_ga_min_,
+                                                    test_case_ga_spherical_6r_, varcont_6r_, grid_5spot_);
 
-    // First test the Rosenbrock function itself
-//    Eigen::VectorXd optimum(2); optimum << 1.0, 1.0;
-//    EXPECT_FLOAT_EQ(0.0, Rosenbrock(optimum));
-//
-//    test_case_2r_->set_objective_function_value(Rosenbrock(test_case_2r_->GetRealVarVector()));
-//    Optimization::Optimizer *minimizer = new GeneticAlgorithm(settings_ga_min_,
-//                                                           test_case_2r_, varcont_prod_bhp_, grid_5spot_);
-//
-//    while (!minimizer->IsFinished()) {
-//        auto next_case = minimizer->GetCaseForEvaluation();
-//        next_case->set_objective_function_value(Rosenbrock(next_case->GetRealVarVector()));
-//        minimizer->SubmitEvaluatedCase(next_case);
-//    }
-//    auto best_case = minimizer->GetTentativeBestCase();
-//
-//    EXPECT_NEAR(0.0, best_case->objective_function_value(), 5);
-//    EXPECT_NEAR(1.0, best_case->GetRealVarVector()[0], 2.5);
-//    EXPECT_NEAR(1.0, best_case->GetRealVarVector()[1], 2.5);
+    while (!minimizer->IsFinished()) {
+        auto next_case = minimizer->GetCaseForEvaluation();
+        next_case->set_objective_function_value(Rosenbrock(next_case->GetRealVarVector()));
+        minimizer->SubmitEvaluatedCase(next_case);
+    }
+    auto best_case = minimizer->GetTentativeBestCase();
+
+    EXPECT_NEAR(0.0, best_case->objective_function_value(), 5);
+    EXPECT_NEAR(1.0, best_case->GetRealVarVector()[0], 2.5);
+    EXPECT_NEAR(1.0, best_case->GetRealVarVector()[1], 2.5);
 }
 
 }
