@@ -76,6 +76,7 @@ namespace Optimization {
     }
     Eigen::VectorXd CombinedSplineLengthInterwellDistanceReservoirBoundary::GetLowerBounds(QList<QUuid> id_vector) const {
         Eigen::VectorXd lbounds(id_vector.size());
+        lbounds.fill(0);
         for (auto con : boundary_constraints_) {
             lbounds = lbounds + con->GetLowerBounds(id_vector);
         }
@@ -83,6 +84,7 @@ namespace Optimization {
     }
     Eigen::VectorXd CombinedSplineLengthInterwellDistanceReservoirBoundary::GetUpperBounds(QList<QUuid> id_vector) const {
         Eigen::VectorXd ubounds(id_vector.size());
+        ubounds.fill(0);
         for (auto con : boundary_constraints_) {
             ubounds = ubounds + con->GetUpperBounds(id_vector);
         }

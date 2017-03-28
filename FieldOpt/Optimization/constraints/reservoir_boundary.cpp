@@ -393,7 +393,10 @@ Eigen::VectorXd ReservoirBoundary::GetLowerBounds(QList<QUuid> id_vector) const 
     double xmin, ymin, zmin;
     xmin = std::min(cell_max.center().x(), cell_min.center().x());
     ymin = std::min(cell_max.center().y(), cell_min.center().y());
-    zmin = std::min(cell_max.center().z(), cell_min.center().z());
+    zmin = std::min(cell_max.corners()[0].z(), cell_max.corners()[7].z());
+    zmin = std::min(zmin, cell_min.corners()[0].z());
+    zmin = std::min(zmin, cell_min.corners()[7].z());
+
 
     Eigen::VectorXd lbounds(id_vector.size());
 
@@ -409,7 +412,6 @@ Eigen::VectorXd ReservoirBoundary::GetLowerBounds(QList<QUuid> id_vector) const 
     lbounds(ind_toe_y) = ymin;
     lbounds(ind_heel_z) = zmin;
     lbounds(ind_toe_z) = zmin;
-
     return lbounds;
 }
 Eigen::VectorXd ReservoirBoundary::GetUpperBounds(QList<QUuid> id_vector) const {
@@ -418,7 +420,9 @@ Eigen::VectorXd ReservoirBoundary::GetUpperBounds(QList<QUuid> id_vector) const 
     double xmax, ymax, zmax;
     xmax = std::max(cell_max.center().x(), cell_min.center().x());
     ymax = std::max(cell_max.center().y(), cell_min.center().y());
-    zmax = std::max(cell_max.center().z(), cell_min.center().z());
+    zmax = std::max(cell_max.corners()[0].z(), cell_max.corners()[7].z());
+    zmax = std::max(zmax, cell_min.corners()[0].z());
+    zmax = std::max(zmax, cell_min.corners()[7].z());
 
     Eigen::VectorXd ubounds(id_vector.size());
 
@@ -434,7 +438,6 @@ Eigen::VectorXd ReservoirBoundary::GetUpperBounds(QList<QUuid> id_vector) const 
     ubounds(ind_toe_y) = ymax;
     ubounds(ind_heel_z) = zmax;
     ubounds(ind_toe_z) = zmax;
-
     return ubounds;
 }
 
