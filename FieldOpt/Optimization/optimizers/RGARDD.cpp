@@ -31,9 +31,11 @@ RGARDD::RGARDD(Settings::Optimizer *settings,
                                                                variables,
                                                                grid) {
     assert(population_size_ % 2 == 0); // Need an even number of chromosomes
-    discard_parameter_ = 1.0/population_size_;
+    if (settings->parameters().discard_parameter < 0)
+        discard_parameter_ = 1.0/population_size_;
+    else discard_parameter_ = settings->parameters().discard_parameter;
+    stagnation_limit_ = settings->parameters().stagnation_limit;
     mating_pool_ = population_;
-    stagnation_limit_ = 1e-10;
 }
 void RGARDD::iterate() {
     population_ = sortPopulation(population_);

@@ -32,16 +32,19 @@ GeneticAlgorithm::GeneticAlgorithm(Settings::Optimizer *settings,
     n_vars_ = variables->ContinousVariableSize();
     gen_ = get_random_generator();
     max_generations_ = settings->parameters().max_generations;
-    population_size_ = std::min(10*n_vars_, 100);
-    if (population_size_ % 2 != 0) population_size_--;
-    p_crossover_ = 0.1;
-    decay_rate_ = 4.0;
-    mutation_strength_ = 0.25;
+    if (settings->parameters().population_size < 0)
+        population_size_ = std::min(10*n_vars_, 100);
+    else population_size_ = settings->parameters().population_size;
+    if (population_size_ % 2 != 0) population_size_--; // Make sure its an even number
+
+    p_crossover_ = settings->parameters().p_crossover;
+    decay_rate_ = settings->parameters().decay_rate;
+    mutation_strength_ = settings->parameters().mutation_strength;
 
     lower_bound_.resize(n_vars_);
     upper_bound_.resize(n_vars_);
-    lower_bound_.fill(-10.0);
-    upper_bound_.fill(10.0);
+    lower_bound_.fill(settings->parameters().lower_bound);
+    upper_bound_.fill(settings->parameters().upper_bound);
 
     for (int i = 0; i < population_size_; ++i) {
         auto new_case = generateRandomCase();

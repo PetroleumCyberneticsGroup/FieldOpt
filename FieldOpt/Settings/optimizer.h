@@ -62,10 +62,15 @@ class Optimizer
     QString pattern; //!< The pattern to be used for GSS algorithms.
 
     // GA parameters
-    int max_generations;
-    int population_size;
-    double p_crossover;
-    double p_mutation;
+    int max_generations;      //!< Max iterations. Default: 50
+    int population_size;      //!< Optional. Can be determined automatically. Default: min(10*nvars, 100).
+    double discard_parameter; //!< Fraction to be discarded during selection. Defaults: 1/population.
+    double p_crossover;       //!< Crossover probability. Default: 0.1.
+    double decay_rate;        //!< Decay rate. Default: 4.0.
+    double mutation_strength; //!< Mutation strength. Default: 0.25.
+    double stagnation_limit;  //!< Stagnation limit. Default: 1e-10.
+    double lower_bound;       //!< Simple lower bound. This is applied to _all_ variables. Default: -10.0.
+    double upper_bound;       //!< Simple upper bound. This is applied to _all_ variables. Default: +10.0.
   };
 
   struct Objective {

@@ -75,12 +75,31 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
             // GA parameters
             if (json_parameters.contains("MaxGenerations"))
                 parameters_.max_generations = json_parameters["MaxGenerations"].toInt();
+            else parameters_.max_generations = 50;
             if (json_parameters.contains("PopulationSize"))
                 parameters_.population_size = json_parameters["PopulationSize"].toInt();
+            else parameters_.population_size = -1; // Will be properly set in optimizer.
             if (json_parameters.contains("CrossoverProbability"))
                 parameters_.p_crossover = json_parameters["CrossoverProbability"].toDouble();
-            if (json_parameters.contains("MutationProbability"))
-                parameters_.p_mutation = json_parameters["MutationProbability"].toDouble();
+            else parameters_.p_crossover = 0.1;
+            if (json_parameters.contains("DiscardParameter"))
+                parameters_.discard_parameter = json_parameters["DiscardParameter"].toDouble();
+            else parameters_.discard_parameter = -1; // Will be properly set in optimizer
+            if (json_parameters.contains("DecayRate"))
+                parameters_.decay_rate = json_parameters["DecayRate"].toDouble();
+            else parameters_.decay_rate = 4.0;
+            if (json_parameters.contains("MutationStrength"))
+                parameters_.mutation_strength = json_parameters["MutationStrength"].toDouble();
+            else parameters_.mutation_strength = 0.25;
+            if (json_parameters.contains("StagnationLimit"))
+                parameters_.stagnation_limit = json_parameters["StagnationLimit"].toDouble();
+            else parameters_.stagnation_limit = 1e-10;
+            if (json_parameters.contains("LowerBound"))
+                parameters_.lower_bound = json_parameters["LowerBound"].toDouble();
+            else parameters_.lower_bound = -10;
+            if (json_parameters.contains("UpperBound"))
+                parameters_.upper_bound = json_parameters["UpperBound"].toDouble();
+            else parameters_.upper_bound = 10;
         }
         catch (std::exception const &ex) {
             throw UnableToParseOptimizerParametersSectionException("Unable to parse optimizer parameters: " + std::string(ex.what()));
