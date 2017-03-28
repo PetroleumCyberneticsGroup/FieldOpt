@@ -66,8 +66,8 @@ bool Cell::EnvelopsPoint(Eigen::Vector3d point) {
   return point_inside;
 }
 
-constexpr const std::array<std::array<int,4>, 6> Cell::_faces_definition_earth_pointing_z;
-constexpr const std::array<std::array<int,4>, 6> Cell::_faces_definition_sky_pointing_z;
+constexpr const std::array<std::array<int,4>, 6> Cell::faces_definition_earth_pointing_z_;
+constexpr const std::array<std::array<int,4>, 6> Cell::faces_definition_sky_pointing_z_;
 
 void Cell::initializeFaces()
 {
@@ -103,11 +103,11 @@ void Cell::initializeFaces()
 
   if (corners_[0].z() < corners_[4].z()) {
     // z-axis grows towards Earth's center (left-handed)
-    face_indices_points = _faces_definition_earth_pointing_z;
+    face_indices_points = faces_definition_earth_pointing_z_;
   }
   else {
     // z-axis grows towards the sky - right-handed
-    face_indices_points = _faces_definition_sky_pointing_z;
+    face_indices_points = faces_definition_sky_pointing_z_;
   }
 
   // These should be removed eventually. Keep now for ref.

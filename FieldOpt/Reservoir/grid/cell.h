@@ -256,7 +256,7 @@ class Cell
    * \return double list of corner numbers for each face
    */
   static constexpr const std::array<std::array<int,4>, 6>
-      _faces_definition_earth_pointing_z = {
+      faces_definition_earth_pointing_z_ = {
       {
           {2, 0, 3, 1},
           {6, 7, 4, 5},
@@ -268,7 +268,7 @@ class Cell
   };
 
   static constexpr const std::array<std::array<int,4>, 6>
-      _faces_definition_sky_pointing_z = {
+      faces_definition_sky_pointing_z_ = {
       {
           {0, 2, 1, 3},
           {4, 5, 6, 7},
