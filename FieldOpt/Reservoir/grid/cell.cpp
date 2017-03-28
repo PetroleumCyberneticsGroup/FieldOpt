@@ -20,16 +20,18 @@
 ******************************************************************************/
 
 #include "cell.h"
+#include <iostream>
 
 namespace Reservoir {
 namespace Grid {
 
+using namespace std;
 
 Cell::Cell(int global_index, IJKCoordinate ijk_index,
            double volume, double poro,
            double permx, double permy, double permz,
            Eigen::Vector3d center,
-           std::vector<Eigen::Vector3d> corners)
+           vector<Eigen::Vector3d> corners)
 {
   global_index_ = global_index;
   ijk_index_ = ijk_index;
@@ -57,8 +59,7 @@ bool Cell::EnvelopsPoint(Eigen::Vector3d point) {
   bool point_inside = true;
   for (Face face : faces_) {
     double dot_prod = (point - face.corners[0]).dot(face.normal_vector);
-    if ( dot_prod < 0)
-    {
+    if ( dot_prod < 0) {
       point_inside = false;
       break;
     }
@@ -89,6 +90,13 @@ void Cell::initializeFaces()
   // Earth center, while "Below" refers to the face closer to the center of the
   // Earth.
   //
+  // \todo double-check above assumption regarding which cell faces
+  // that have which index ordering; either way, the definitions of
+  // faces_definition_earth_pointing_z_ and
+  // faces_definition_sky_pointing_z_ are correct relative to each
+  // other, so this provides the necessary switching between pointing
+  // down or up z-axis
+  //
   // Reservoir grids can be either left- or right-handed. If left-handed, the
   // direction of increasing z will point down towards the center of the Earth,
   // while if right-handed, the direction of increasing z will be away from the
@@ -116,31 +124,13 @@ void Cell::initializeFaces()
     face_indices_points = faces_definition_sky_pointing_z_;
   }
 
-  // These should be removed eventually. Keep now for ref.
-  //int face_indices_points[6][4] = {
-  //    {0, 2, 1, 3},
-  //    {4, 5, 6, 7},
-  //    {0, 4, 2, 6},
-  //    {1, 3, 5, 7},
-  //    {0, 1, 4, 5},
-  //    {2, 6, 3, 7}
-  //};
-  //
-  //int face_indices_points[6][4] = {
-  //    {2, 0, 3, 1},
-  //    {6, 7, 4, 5},
-  //    {2, 6, 0, 4},
-  //    {3, 1, 7, 5},
-  //    {2, 3, 6, 7},
-  //    {0, 4, 1, 5}
-  //};
-
   for (int ii = 0; ii < 6; ii++) {
     Face face;
     face.corners.push_back(corners_[face_indices_points[ii][0]]);
     face.corners.push_back(corners_[face_indices_points[ii][1]]);
     face.corners.push_back(corners_[face_indices_points[ii][2]]);
     face.corners.push_back(corners_[face_indices_points[ii][3]]);
+
     face.normal_vector = (
         face.corners[2] - face.corners[0]).cross(
         face.corners[1] - face.corners[0]).normalized();

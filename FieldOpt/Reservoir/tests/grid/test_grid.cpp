@@ -47,6 +47,15 @@ TEST_F(GridTest, GridRead) {
   EXPECT_NO_THROW(grid_->Dimensions());
 }
 
+TEST_F(GridTest, CheckOrientation) {
+  // For grid_ = grid_horzwel_, this test checks upper corner
+  // is less than lower corner, i.e., that z axis grows towards
+  // Earth's center
+  Cell cell = grid_->GetCell(0);
+  auto corners_ = cell.corners();
+  EXPECT_TRUE(corners_[0].z() < corners_[4].z());
+}
+
 TEST_F(GridTest, CheckDimensions) {
   Grid::Dims dims = grid_->Dimensions();
   EXPECT_EQ(dims.nx, 20);
@@ -101,21 +110,41 @@ TEST_F(GridTest, GetCellEnvelopingPointAdditional) {
   auto cell_010 = grid_->GetCell(0, 1, 0);
   auto cell_001 = grid_->GetCell(0, 0, 1);
 
-  EXPECT_TRUE(cell_100.EnvelopsPoint(Eigen::Vector3d(1,1,7001))); // Should be inside first cell
-  EXPECT_TRUE(cell_100.EnvelopsPoint(Eigen::Vector3d(100,1,7001))); // Should be on the bound of first and second cell
+  // Should be inside first cell
+  EXPECT_TRUE(cell_100.EnvelopsPoint(Eigen::Vector3d(1,1,7001)));
 
-  EXPECT_TRUE(cell_200.EnvelopsPoint(Eigen::Vector3d(100,1,7001))); // Should be on the bound of first and second cell
-  EXPECT_FALSE(cell_200.EnvelopsPoint(Eigen::Vector3d(99,1,7001))); // Should be inside first cell
+  // Should be on the bound of first and second cell
+  EXPECT_TRUE(cell_100.EnvelopsPoint(Eigen::Vector3d(100,1,7001)));
 
-  EXPECT_TRUE(cell_010.EnvelopsPoint(Eigen::Vector3d(1, 310, 7001))); // Should be inside first cell
-  EXPECT_FALSE(cell_010.EnvelopsPoint(Eigen::Vector3d(1,1,7001))); // Should be inside the first cell
-  EXPECT_TRUE(cell_010.EnvelopsPoint(Eigen::Vector3d(1,300,7001))); // Should be on the interface between the first cell and cell 010
-  EXPECT_TRUE(cell_100.EnvelopsPoint(Eigen::Vector3d(1,300,7001))); // Should be on the interface between the first cell and cell 010
+  // Should be on the bound of first and second cell
+  EXPECT_TRUE(cell_200.EnvelopsPoint(Eigen::Vector3d(100,1,7001)));
 
-  EXPECT_TRUE(cell_001.EnvelopsPoint(Eigen::Vector3d(50,50,7055))); // Should be inside cell 001
-  EXPECT_FALSE(cell_001.EnvelopsPoint(Eigen::Vector3d(1,1,7049))); // Should be inside cell 100
-  EXPECT_TRUE(cell_001.EnvelopsPoint(Eigen::Vector3d(1,1,7050))); // Should be on the interface between cell 001 and 100
-  EXPECT_TRUE(cell_100.EnvelopsPoint(Eigen::Vector3d(1,1,7050))); // Should be on the interface between cell 001 and 100
+  // Should be inside first cell
+  EXPECT_FALSE(cell_200.EnvelopsPoint(Eigen::Vector3d(99,1,7001)));
+
+  EXPECT_TRUE(cell_010.EnvelopsPoint(Eigen::Vector3d(1, 310, 7001)));
+  // Should be inside first cell
+
+  // Should be inside the first cell
+  EXPECT_FALSE(cell_010.EnvelopsPoint(Eigen::Vector3d(1,1,7001)));
+
+  // Should be on the interface between the first cell and cell 010
+  EXPECT_TRUE(cell_010.EnvelopsPoint(Eigen::Vector3d(1,300,7001)));
+
+  // Should be on the interface between the first cell and cell 010
+  EXPECT_TRUE(cell_100.EnvelopsPoint(Eigen::Vector3d(1,300,7001)));
+
+  // Should be inside cell 001
+  EXPECT_TRUE(cell_001.EnvelopsPoint(Eigen::Vector3d(50,50,7055)));
+
+  // Should be inside cell 100
+  EXPECT_FALSE(cell_001.EnvelopsPoint(Eigen::Vector3d(1,1,7049)));
+
+  // Should be on the interface between cell 001 and 100
+  EXPECT_TRUE(cell_001.EnvelopsPoint(Eigen::Vector3d(1,1,7050)));
+
+  // Should be on the interface between cell 001 and 100
+  EXPECT_TRUE(cell_100.EnvelopsPoint(Eigen::Vector3d(1,1,7050)));
 }
 
 }

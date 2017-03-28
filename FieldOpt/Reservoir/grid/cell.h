@@ -28,6 +28,8 @@
 namespace Reservoir {
 namespace Grid {
 
+using namespace std;
+
 /*!
  * \brief The Cell class describes a cell in a grid, including it's
  * geometry and static properties like porosity and permeability.
@@ -112,7 +114,7 @@ class Cell
    * 0---1    4---5
    *
    */
-  std::vector<Eigen::Vector3d> corners() const { return corners_; }
+  vector<Eigen::Vector3d> corners() const { return corners_; }
 
   /*!
    * \brief Equals Check if the global indices of the two cells being
@@ -183,7 +185,7 @@ class Cell
    * of a line traversing the plane.
    */
   struct Face {
-    std::vector<Eigen::Vector3d> corners;
+    vector<Eigen::Vector3d> corners;
     Eigen::Vector3d normal_vector;
 
     /*!
@@ -220,7 +222,7 @@ class Cell
                                            const Eigen::Vector3d &p1) {
         Eigen::Vector3d line_vector = (p1 - p0).normalized();
         auto w = p0 - corners[0];
-        double s = normal_vector.dot(-w) / normal_vector.dot(line_vector);
+        auto s = normal_vector.dot(-w) / normal_vector.dot(line_vector);
         return p0 + s*line_vector;
     }
   };
@@ -229,7 +231,7 @@ class Cell
    * \brief Vector containing the six faces of the cell
    *
    */
-  std::vector<Face> faces() const { return faces_; }
+  vector<Face> faces() const { return faces_; }
 
 
  private:
@@ -238,12 +240,12 @@ class Cell
   bool is_active_; //!< Indicates whether or not the cell is active.
   float volume_;
   Eigen::Vector3d center_;
-  std::vector<Eigen::Vector3d> corners_;
+  vector<Eigen::Vector3d> corners_;
   float porosity_;
   float permx_;
   float permy_;
   float permz_;
-  std::vector<Face> faces_;
+  vector<Face> faces_;
 
   /*!
    * \brief Populates the faces_ field.
@@ -258,24 +260,24 @@ class Cell
   static constexpr const std::array<std::array<int,4>, 6>
       faces_definition_earth_pointing_z_ = {
       {
-          {2, 0, 3, 1},
-          {6, 7, 4, 5},
-          {2, 6, 0, 4},
-          {3, 1, 7, 5},
-          {2, 3, 6, 7},
-          {0, 4, 1, 5}
-      }
-  };
-
-  static constexpr const std::array<std::array<int,4>, 6>
-      faces_definition_sky_pointing_z_ = {
-      {
           {0, 2, 1, 3},
           {4, 5, 6, 7},
           {0, 4, 2, 6},
           {1, 3, 5, 7},
           {0, 1, 4, 5},
           {2, 6, 3, 7}
+      }
+  };
+
+  static constexpr const std::array<std::array<int,4>, 6>
+      faces_definition_sky_pointing_z_ = {
+      {
+          {2, 0, 3, 1},
+          {6, 7, 4, 5},
+          {2, 6, 0, 4},
+          {3, 1, 7, 5},
+          {2, 3, 6, 7}, // actual diff from indexes above
+          {0, 4, 1, 5}  // actual diff from indexes above
       }
   };
 

@@ -154,7 +154,7 @@ Cell ECLGrid::GetCell(IJKCoordinate *ijk) {
     }
 }
 
-std::vector<int> ECLGrid::GetBoundingBoxCellIndices(
+vector<int> ECLGrid::GetBoundingBoxCellIndices(
     double xi, double yi, double zi,
     double xf, double yf, double zf,
     double &bb_xi, double &bb_yi, double &bb_zi,
@@ -227,7 +227,8 @@ Cell ECLGrid::GetCellEnvelopingPoint(double x, double y, double z) {
     );
 }
 
-Cell ECLGrid::GetCellEnvelopingPoint(double x, double y, double z, std::vector<int> search_set) {
+Cell ECLGrid::GetCellEnvelopingPoint(double x, double y, double z,
+                                     vector<int> search_set) {
     // If the searching area is empty then search the entire grid
     if (search_set.size() == 0) {
         return GetCellEnvelopingPoint(x, y, z);
@@ -252,7 +253,8 @@ Cell ECLGrid::GetCellEnvelopingPoint(Eigen::Vector3d xyz) {
     return GetCellEnvelopingPoint(xyz.x(), xyz.y(), xyz.z());
 }
 
-Cell ECLGrid::GetCellEnvelopingPoint(Eigen::Vector3d xyz, std::vector<int> search_set) {
+Cell ECLGrid::GetCellEnvelopingPoint(Eigen::Vector3d xyz,
+                                     vector<int> search_set) {
     return GetCellEnvelopingPoint(xyz.x(), xyz.y(), xyz.z(), search_set);
 }
 }
