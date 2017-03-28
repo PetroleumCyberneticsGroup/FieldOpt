@@ -24,8 +24,11 @@ public:
                     Settings::Optimizer::Constraint settings,
                     Model::Properties::VariablePropertyContainer *variables,
                     Reservoir::Grid::Grid *grid);
+  bool IsBoundConstraint() const override;
+  Eigen::VectorXd GetLowerBounds(QList<QUuid> id_vector) const override;
+  Eigen::VectorXd GetUpperBounds(QList<QUuid> id_vector) const override;
 
-    // Constraint interface
+  // Constraint interface
 public:
     bool CaseSatisfiesConstraint(Case *c);
     void SnapCaseToConstraints(Case *c);
