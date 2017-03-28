@@ -41,10 +41,22 @@ GeneticAlgorithm::GeneticAlgorithm(Settings::Optimizer *settings,
     decay_rate_ = settings->parameters().decay_rate;
     mutation_strength_ = settings->parameters().mutation_strength;
 
-    lower_bound_.resize(n_vars_);
-    upper_bound_.resize(n_vars_);
-    lower_bound_.fill(settings->parameters().lower_bound);
-    upper_bound_.fill(settings->parameters().upper_bound);
+    if (constraint_handler_->HasBoundaryConstraints()) {
+        lower_bound_ = constraint_handler_->GetLowerBounds(base_case->GetRealVarIdVector());
+        upper_bound_ = constraint_handler_->GetUpperBounds(base_case->GetRealVarIdVector());
+        if (verbosity_level_ > 1) {
+            cout << "Using bounds from constraints: ";
+            cout << vec_to_str(vector<double>(lower_bound_.data(), lower_bound_.data() + lower_bound_.size()));
+            cout << vec_to_str(vector<double>(upper_bound_.data(), upper_bound_.data() + upper_bound_.size()));
+            cout << endl;
+        }
+    }
+    else {
+        lower_bound_.resize(n_vars_);
+        upper_bound_.resize(n_vars_);
+        lower_bound_.fill(settings->parameters().lower_bound);
+        upper_bound_.fill(settings->parameters().upper_bound);
+    }
 
     for (int i = 0; i < population_size_; ++i) {
         auto new_case = generateRandomCase();
