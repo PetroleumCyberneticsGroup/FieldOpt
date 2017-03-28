@@ -44,6 +44,11 @@ namespace Optimizers {
  * (except for the best individual) whenever a stagnation indicator
  * passes below the stagnation limit. The stagnation indicator used
  * is the standard deviation of the population.
+ *
+ * \note This algorithm requres either that simple max/min bounds are
+ * given (i.e. single numbers applying to all variables) as an optimizer
+ * argument or that some form of bound constraints are used (e.g. reservoir
+ * boundary or pressure/rate constraints).
  */
 class RGARDD : public GeneticAlgorithm {
  public:

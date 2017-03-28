@@ -71,8 +71,9 @@ class GeneticAlgorithm : public Optimizer {
   double p_mutation_; //!< Mutation probability.
   double decay_rate_;
   double mutation_strength_;
-  double lower_bound_; //!< Lower bounds for the variables (used for randomly generating populations and mutation)
-  double upper_bound_; //!< Upper bounds for the variables (used for randomly generating populations and mutation)
+  Eigen::VectorXd lower_bound_; //!< Lower bounds for the variables (used for randomly generating populations and mutation)
+  Eigen::VectorXd upper_bound_; //!< Upper bounds for the variables (used for randomly generating populations and mutation)
+  int n_vars_; //!< Number of variables in the problem.
 
   /*!
    * @brief Perform selection on the population.

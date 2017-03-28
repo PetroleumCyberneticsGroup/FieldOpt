@@ -29,15 +29,19 @@ GeneticAlgorithm::GeneticAlgorithm(Settings::Optimizer *settings,
                                    Case *base_case,
                                    Model::Properties::VariablePropertyContainer *variables,
                                    Reservoir::Grid::Grid *grid) : Optimizer(settings, base_case, variables, grid) {
+    n_vars_ = variables->ContinousVariableSize();
     gen_ = get_random_generator();
     max_generations_ = settings->parameters().max_generations;
-    population_size_ = std::min(10*variables->ContinousVariableSize(), 100);
+    population_size_ = std::min(10*n_vars_, 100);
     if (population_size_ % 2 != 0) population_size_--;
     p_crossover_ = 0.1;
-    lower_bound_ = -10.0;
-    upper_bound_ = 10.0;
     decay_rate_ = 4.0;
     mutation_strength_ = 0.25;
+
+    lower_bound_.resize(n_vars_);
+    upper_bound_.resize(n_vars_);
+    lower_bound_.fill(-10.0);
+    upper_bound_.fill(10.0);
 
     for (int i = 0; i < population_size_; ++i) {
         auto new_case = generateRandomCase();
@@ -87,17 +91,16 @@ void GeneticAlgorithm::printChromosome(Chromosome &chrom) {
 }
 vector<GeneticAlgorithm::Chromosome> GeneticAlgorithm::sortPopulation(vector<Chromosome> population) {
     std::sort(population.begin(), population.end(), [&](Chromosome c1, Chromosome c2) {
-        return isBetter(c1.case_pointer, c2.case_pointer);
+      return isBetter(c1.case_pointer, c2.case_pointer);
     });
     return population;
 }
 Case *GeneticAlgorithm::generateRandomCase() {
     auto new_case = new Case(tentative_best_case_);
-    vector<double> rands = random_doubles(gen_, lower_bound_, upper_bound_,
-                                          new_case->GetRealVarVector().size());
-    Eigen::VectorXd erands(new_case->GetRealVarVector().size());
-    for (int i = 0; i < rands.size(); ++i) {
-        erands(i) = rands[i];
+
+    Eigen::VectorXd erands(n_vars_);
+    for (int i = 0; i < n_vars_; ++i) {
+        erands(i) = random_doubles(gen_, lower_bound_(i), upper_bound_(i), 1)[0];
     }
     new_case->SetRealVarValues(erands);
     return  new_case;

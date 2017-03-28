@@ -131,8 +131,8 @@ vector<GeneticAlgorithm::Chromosome> RGARDD::mutate(vector<Chromosome> mating_po
                        p1.rea_vars.size()).data(),
         p1.rea_vars.size()
     );
-    o1.rea_vars = p1.rea_vars + s * dir *(upper_bound_ - lower_bound_);
-    o1.rea_vars = p2.rea_vars + s * dir *(upper_bound_ - lower_bound_);
+    o1.rea_vars = p1.rea_vars + s * dir.cwiseProduct(upper_bound_ - lower_bound_);
+    o1.rea_vars = p2.rea_vars + s * dir.cwiseProduct(upper_bound_ - lower_bound_);
     return population_;
 }
 bool RGARDD::is_stagnant() {
