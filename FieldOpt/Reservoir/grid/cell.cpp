@@ -67,8 +67,10 @@ bool Cell::EnvelopsPoint(Eigen::Vector3d point) {
   return point_inside;
 }
 
-constexpr const std::array<std::array<int,4>, 6> Cell::faces_definition_earth_pointing_z_;
-constexpr const std::array<std::array<int,4>, 6> Cell::faces_definition_sky_pointing_z_;
+constexpr const std::array<std::array<int,4>, 6>
+    Cell::faces_definition_earth_pointing_z_;
+constexpr const std::array<std::array<int,4>, 6>
+    Cell::faces_definition_sky_pointing_z_;
 
 void Cell::initializeFaces()
 {
