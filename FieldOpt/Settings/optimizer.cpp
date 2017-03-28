@@ -35,6 +35,8 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
         type_ = OptimizerType::Compass;
     else if (QString::compare(type, "APPS") == 0)
         type_ = OptimizerType::APPS;
+    else if (QString::compare(type, "GeneticAlgorithm") == 0)
+        type_ = OptimizerType::GeneticAlgorithm;
     else if (QString::compare(type, "ExhaustiveSearch2DVert") == 0)
         type_ = OptimizerType::ExhaustiveSearch2DVert;
     else throw OptimizerTypeNotRecognizedException("The optimizer type " + type.toStdString() + " was not recognized.");
