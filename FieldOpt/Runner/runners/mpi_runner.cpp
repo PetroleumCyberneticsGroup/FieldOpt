@@ -4,6 +4,7 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/mpi/status.hpp>
+#include <boost/lexical_cast.hpp>
 #include <iostream>
 
 BOOST_IS_MPI_DATATYPE(boost::uuids::uuid)
@@ -28,16 +29,16 @@ namespace Runner {
                 s = "";
             }
             world_.send(message.destination, message.tag, s);
-            printMessage("Sent a message to " + std::to_string(message.destination)
-                         + " with tag " + std::to_string(message.tag) + " (" + tag_to_string[message.tag] + ")");
+            printMessage("Sent a message to " + boost::lexical_cast<std::string>(message.destination)
+                         + " with tag " + boost::lexical_cast<std::string>(message.tag) + " (" + tag_to_string[message.tag] + ")");
         }
 
         void MPIRunner::RecvMessage(Message &message) {
             Optimization::CaseTransferObject cto;
             std::string s;
-            printMessage("Waiting to receive a message with tag " + std::to_string(message.tag)
+            printMessage("Waiting to receive a message with tag " + boost::lexical_cast<std::string>(message.tag)
                          + " (" + tag_to_string[message.tag] + ") "
-                         + " from source " + std::to_string(message.source), 2);
+                         + " from source " + boost::lexical_cast<std::string>(message.source), 2);
             mpi::status status = world_.recv(message.source, message.tag, s);
             message.set_status(status);
 

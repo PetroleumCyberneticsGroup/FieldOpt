@@ -5,33 +5,76 @@
 #include <H5Cpp.h>
 
 /*!
- * The Hdf5SummaryReader class reads the summaries written in the HDF5 format by the AD-GPRS reservoir simulator.
+ * The Hdf5SummaryReader class reads the summaries written
+ * in the HDF5 format by the AD-GPRS reservoir simulator.
  *
- * Currently the class supports getting rates and cumulatives for each well and for the field, as well as
- * bottom hole pressures and well type for each well.
+ * Currently the class supports getting rates and cumulatives
+ * for each well and for the field, as well as bottom hole
+ * pressures and well type for each well.
  *
- * Note that we do not have access to the well names in the summary, thus we use well numbers. This number
- * corresponds to the row on which information about the well is found. This number apparently does not correspond to
- * the order in which the wells were specified in the driver file, thus we have no way of distinguishing wells other
- * that by producer/injector. Note also that we do not know whether the order in which the wells appear can change
- * between subsequent runs of the simulator.
+ * Note that we do not have access to the well names in the
+ * summary, thus we use well numbers. This number corresponds
+ * to the row on which information about the well is found.
+ * This number apparentlydoes not correspond to the order in
+ * which the wells were specified in the driver file, thus we
+ * have no way of distinguishing wells other that by producer
+ * /injector. Note also that we do not know whether the order
+ * in which the wells appear can change between subsequent
+ * runs of the simulator.
  *
- * Note also that when you get the rates for an injector using the get_*_rates methods, the numbers will be negative,
- * whereas if you get them using the get_*_injection_rates methods, they will be positive.
+ * Note also that when you get the rates for an injector using
+ * the get_*_rates methods, the numbers will be negative, whereas
+ * if you get them using the get_*_injection_rates methods, they
+ * will be positive.
  *
- * \todo This must also be tested for a 3 phase black oil model, it has only been tested for 2 phase dead oil.
+ * \todo This must also be tested for a 3 phase black oil model,
+ * it has only been tested for 2 phase dead oil.
+ *
+ * \todo Overall, Hdf5SummaryReader::readSaturation needs a better 
+ * implementation that reads soil and sgas at the same time/as a 
+ * single chunck from the H5 group, instead of reading from H5 one 
+ * vector at a time (the thinking is that the former is probably
+ * more efficient that the latter).
+ * In either case, the reading functionality needs to be flexible/
+ * /robust with respect to the different phase combinations that 
+ * might exist in the H5 group (currently GRIDPROPTIME), e.g., 
+ * soil/sgas, soil/sgas/swat, soil/swat, etc.
+ *
+ * \todo To make thing much tidier, collect variables containing 
+ * information about the reservoir cell ensemble, i.e., 
+ * cells_all_vector_, cells_active_, cells_inactive_, etc, and of
+ * reservoir cell data, i.e., pressure_, soil_, sgas_, swat_, into 
+ * one or more reservoir cells/cell data structs.
+ *
+ * \todo Later: to reduce the size of the H5 file, make ADGPRS/
+ * Optimizer save the saturation data (and whatever else) as 
+ * additional columns into the existing PTZ group (possibly 
+ * replacing current mobility columns), and remove GRIDPROPTIME 
+ * completely. 
+ * Additionally, which cell data types (including custom data 
+ * types) to print to H5 during simulation may be controlled by 
+ * custom simulator KEYWORD.
+ *
  */
 class Hdf5SummaryReader {
 public:
     /*!
-     * Read the HDF5 summary file written by AD-GPRS at the specified path.
+     * Read the HDF5 summary file written 
+     * by AD-GPRS at the specified path.
      *
-     * \note The provided path is not checked by this method, and should therefore be
-     * checked before invoking this.
+     * \note The provided path is not checked by this method,
+     * and should therefore be checked before invoking this.
      * @param file_path Path to a .H5 summary file.
-     * @return A Hdf5SummaryReader object containing information from the summary.
+     * @param get_cell_data Flag for whether to read cell data
+     * or not (defaults to empty string)
+     * @param debug Flag to print H5 related data during testing
+     * (defaults to false)
+     * @return A Hdf5SummaryReader object containing 
+     * information from the summary.
      */
-    Hdf5SummaryReader(const std::string file_path);
+    Hdf5SummaryReader(const std::string file_path,
+                      bool get_cell_data = false,
+                      bool debug = false);
 
     /*!
      * Get the vector containing all time steps in the summary.
@@ -42,6 +85,21 @@ public:
      * Get reservoir pressure vector.
      */
     std::vector<std::vector<double>> reservoir_pressure() const { return pressure_; }
+
+    /*!
+     * Get sgas vector.
+     */
+    std::vector<std::vector<double>> sgas() const { return sgas_; }
+
+    /*!
+     * Get soil vector.
+     */
+    std::vector<std::vector<double>> soil() const { return soil_; }
+
+    /*!
+     * Get swat vector.
+     */
+    std::vector<std::vector<double>> swat() const { return swat_; }
 
     /*!
      * Return vector of active grid cells.
@@ -79,7 +137,8 @@ public:
     int number_of_tsteps() const { return ntimes_; }
 
     /*!
-     * Get the type reported for a well. +1 indicates an injector, -1 indicates a producer.
+     * Get the type reported for a well.
+     * +1 indicates an injector, -1 indicates a producer.
      */
     int well_type(const int well_number) const;
 
@@ -209,8 +268,6 @@ public:
      */
     std::vector<double> field_cumulative_gas_injection_sc() const;
 
-
-
 private:
     const H5std_string GROUP_NAME_RESTART; //!< The name of the restart group in the HDF5 file.
     const H5std_string DATASET_NAME_TIMES; //!< The name of the dataset containing the time step vector in the HDF5 file.
@@ -218,7 +275,7 @@ private:
     const H5std_string DATASET_NAME_WELL_STATES; //!< The name of the dataset containing the well states in the HDF5 file.
     const H5std_string DATASET_NAME_ACTIVE_CELLS; //!< The name of the dataset containing active cells vector.
     const H5std_string DATASET_NAME_PRESSURE; //!< The name of the dataset containing pressure and component data.
-
+    const H5std_string DATASET_NAME_SATURATION; //!< The name of the dataset containing saturation data.
     /*!
      * The wstype_t datatype represents the datatype in which well states are stored in the HDF5 file.
      * Each element in the dataset contains information about a well and its perforations at a specific
@@ -284,9 +341,10 @@ private:
 
     void readActiveCells(std::string file_path); //!< Read vector defining which cells are active from the HDF5 summary file.
     void readReservoirPressure(std::string file_path); //!< Read reservoir cell pressures for each time step.
+    void readSaturation(std::string file_path); //!< Read cell saturations for each time step.
 
     /*!
-     * variables containing information about the reservoir cell ensemble,
+     * Variables containing information about the reservoir cell ensemble,
      * e.g., number of active cells, corresponding active cell indices, etc.
      */
     std::vector<int> cells_all_vector_; //!< Vector def. status for all cells (size equal to total number of cells).
@@ -302,8 +360,21 @@ private:
     int ntimes_; //!< Number of time steps in the summary.
     int nphases_; //!< Number of phases in the model.
 
+    bool cell_data_; //!< Flag for whether to read cell data from h5 file
+
     std::vector<double> times_; //!< Vector containing all time steps.
     std::vector<std::vector<double>> pressure_; //!< Vector containing reservoir pressures.
+    std::vector<std::vector<double>> soil_; //!< Vector containing oil saturation.
+    std::vector<std::vector<double>> sgas_; //!< Vector containing gas saturation.
+    std::vector<std::vector<double>> swat_; //!< Vector containing water saturation.
+
+    std::vector<std::vector<double>> getSaturation(H5::Group dataset, hsize_t sat_type);
+
+    /*!
+     * debug_ Flag used by tests (only) to get additional info from
+     * H5 read functions, e.g., data rank, etc.
+     */
+    bool debug_;
 
     /*!
      * Calculate the cumulative using the composite trapezoidal rule.
@@ -313,9 +384,10 @@ private:
      *  T(f, h) = \frac{h}{2} \sum_{k=1}^{M}\left[ f(x_{k-1}) + f(x_k) \right]
      * \f]
      *
-     * In our case, \f$ h \f$ (the time difference) is not constant but can vary from step to step in the time step
-     * vector \f$ t \f$, so \f$ h = f(k) = t_k - t_{k-1} \f$. Additionally, \f$ f(x_k) = r_k \f$ where \f$ r \f$ is
-     * the rate vector. We also need to compute the cumulative at various time steps, so \f$ M \f$ is a variable.
+     * In our case, \f$ h \f$ (the time difference) is not constant but can vary from
+     * step to step in the time step vector \f$ t \f$, so \f$ h = f(k) = t_k - t_{k-1} \f$.
+     * Additionally, \f$ f(x_k) = r_k \f$ where \f$ r \f$ is the rate vector. We also
+     * need to compute the cumulative at various time steps, so \f$ M \f$ is a variable.
      * So then we have
      * \f[
      *  T(M) = \sum_{k=1}^M \left[ \frac{t_k - t_{k-1}}{2} \left( r_{k-1} + r_k \right) \right]

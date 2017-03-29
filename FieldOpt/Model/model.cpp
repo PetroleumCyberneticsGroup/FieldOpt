@@ -1,4 +1,5 @@
 #include "model.h"
+#include <boost/lexical_cast.hpp>
 
 namespace Model {
 
@@ -57,9 +58,9 @@ namespace Model {
             wb->j() < 1 || wb->j() > grid()->Dimensions().ny ||
             wb->k() < 1 || wb->k() > grid()->Dimensions().nz)
             throw std::runtime_error("Invalid well block detected: ("
-                                     + std::to_string(wb->i()) + ", "
-                                     + std::to_string(wb->j()) + ", "
-                                     + std::to_string(wb->k()) + ")"
+                                     + boost::lexical_cast<std::string>(wb->i()) + ", "
+                                     + boost::lexical_cast<std::string>(wb->j()) + ", "
+                                     + boost::lexical_cast<std::string>(wb->k()) + ")"
             );
     }
 

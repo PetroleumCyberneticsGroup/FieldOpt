@@ -1,6 +1,7 @@
 #include "eclresults.h"
 #include "ERTWrapper/ertwrapper_exceptions.h"
 #include <QVector>
+#include <boost/lexical_cast.hpp>
 
 namespace Simulation {
     namespace Results {
@@ -47,7 +48,7 @@ namespace Simulation {
         {
             if (!isAvailable()) throw ResultsNotAvailableException();
             if (time_index < 0 || time_index >= summary_reader_->time().size())
-                throw std::runtime_error("The time index " + std::to_string(time_index) + " is outside the range of the summary.");
+                throw std::runtime_error("The time index " + boost::lexical_cast<std::string>(time_index) + " is outside the range of the summary.");
             return GetValueVector(prop)[time_index];
         }
 
@@ -61,7 +62,7 @@ namespace Simulation {
         {
             if (!isAvailable()) throw ResultsNotAvailableException();
             if (time_index < 0 || time_index >= summary_reader_->time().size())
-                throw std::runtime_error("The time index " + std::to_string(time_index) + " is outside the range of the summary.");
+                throw std::runtime_error("The time index " + boost::lexical_cast<std::string>(time_index) + " is outside the range of the summary.");
             return GetValueVector(prop, well)[time_index];
         }
 

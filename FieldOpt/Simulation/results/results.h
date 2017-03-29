@@ -3,6 +3,7 @@
 
 #include <QString>
 #include "results_exceptions.h"
+#include <vector>
 
 namespace Simulation {
     namespace Results {
