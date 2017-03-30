@@ -74,8 +74,10 @@ void RGARDD::iterate() {
 void RGARDD::handleEvaluatedCase(Case *c) {
     int index = -1;
     for (int i = 0; i < mating_pool_.size(); ++i) {
-        if (mating_pool_[i].case_pointer == c)
+        if (mating_pool_[i].case_pointer == c) {
             index = i;
+            break;
+        }
     }
     if (isBetter(c, population_[index].case_pointer)) {
         population_[index] = mating_pool_[index];
