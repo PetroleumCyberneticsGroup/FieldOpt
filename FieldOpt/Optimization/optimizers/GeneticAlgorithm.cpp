@@ -91,16 +91,18 @@ void GeneticAlgorithm::Chromosome::createNewCase() {
     new_case->SetRealVarValues(rea_vars);
     case_pointer = new_case;
 }
-void GeneticAlgorithm::printPopulation() {
+void GeneticAlgorithm::printPopulation(vector<Chromosome> population) const {
+    if (population.size() == 0)
+        population = population_;
     cout << "Population:" << endl;
-    for (int i = 0; i < population_size_; ++i) {
+    for (int i = 0; i < population.size(); ++i) {
         cout << "\t" << i << "\t";
-        printChromosome(population_[i]);
+        printChromosome(population[i]);
     }
 }
-void GeneticAlgorithm::printChromosome(Chromosome &chrom) {
+void GeneticAlgorithm::printChromosome(Chromosome &chrom) const {
     printf("%4.2f\t\t", chrom.ofv());
-    for (int i = 0; i < chrom.rea_vars.size(); ++i) {
+    for (int i = 0; i < n_vars_; ++i) {
         printf("%2.4f\t", chrom.rea_vars(i));
     }
     cout << endl;

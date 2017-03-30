@@ -104,12 +104,12 @@ class GeneticAlgorithm : public Optimizer {
   /*!
    * @brief Print a string representation of the population to stdout.
    */
-  void printPopulation();
+  void printPopulation(vector<Chromosome> population = vector<Chromosome>()) const;
 
   /*!
    * @brief Print a string representation of one chromosome to stdout.
    */
-  void printChromosome(Chromosome &chrom);
+  void printChromosome(Chromosome &chrom) const;
 
   /*!
    * @brief Generate a random case with in the bounds.
