@@ -102,9 +102,9 @@ vector<GeneticAlgorithm::Chromosome> RGARDD::crossover(vector<Chromosome> mating
     assert(mating_pool.size() == 2);
     auto p1 = mating_pool[0];
     auto p2 = mating_pool[1];
-    auto r = random_doubles(gen_, 0, 1, p1.rea_vars.size());
-    Eigen::VectorXd dirs(r.size());
-    for (int i = 0; i < r.size(); ++i) {
+    auto r = random_doubles(gen_, 0, 1, n_vars_);
+    Eigen::VectorXd dirs(n_vars_);
+    for (int i = 0; i < n_vars_; ++i) {
         if (r[i] < 0.5) {
             dirs(i) = 0;
         }
@@ -128,16 +128,13 @@ vector<GeneticAlgorithm::Chromosome> RGARDD::mutate(vector<Chromosome> mating_po
     auto p2 = mating_pool[1];
     auto o1 = Chromosome(p1);
     auto o2 = Chromosome(p2);
-    Eigen::Map<Eigen::VectorXd> dir(
-        random_doubles(gen_,
-                       -mutation_strength_,
-                       mutation_strength_,
-                       p1.rea_vars.size()).data(),
-        p1.rea_vars.size()
-    );
+    Eigen::VectorXd dir = random_doubles_eigen(gen_,
+                                               -mutation_strength_,
+                                               mutation_strength_,
+                                               n_vars_);
     o1.rea_vars = p1.rea_vars + s * dir.cwiseProduct(upper_bound_ - lower_bound_);
-    o1.rea_vars = p2.rea_vars + s * dir.cwiseProduct(upper_bound_ - lower_bound_);
-    return population_;
+    o2.rea_vars = p2.rea_vars + s * dir.cwiseProduct(upper_bound_ - lower_bound_);
+    return vector<Chromosome>{o1, o2};
 }
 bool RGARDD::is_stagnant() {
     // Using the sums of the variable values in each chromosome
