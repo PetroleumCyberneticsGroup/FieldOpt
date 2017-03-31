@@ -60,6 +60,7 @@ Case *CaseHandler::GetNextCaseForEvaluation()
             "The evaluation queue contains no cases.");
     evaluating_.append(evaluation_queue_.head());
     cases_[evaluation_queue_.head()]->state.queue = Case::CaseState::QueueStatus::Q_DEQUEUED;
+    cases_[evaluation_queue_.head()]->SetEvalStart();
     return cases_[evaluation_queue_.dequeue()];
 }
 
@@ -70,6 +71,7 @@ void CaseHandler::SetCaseEvaluated(const QUuid id)
             "The case id is not found in the list of cases being evaluated.");
     evaluating_.removeAll(id);
     evaluated_.append(id);
+    cases_[id]->SetEvalDone();
     evaluated_recently_.append(id);
 }
 

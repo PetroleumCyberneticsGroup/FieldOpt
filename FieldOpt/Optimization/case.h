@@ -54,7 +54,8 @@ class Case
     enum EvalStatus : int {
       E_FAILED=-2, E_TIMEOUT=-1,
       E_PENDING=0,
-      E_CURRENT=1, E_DONE=2
+      E_CURRENT=1, E_DONE=2,
+      E_BOOKKEEPED=3
     };
     enum ConsStatus : int {
       C_PROJ_FAILED=-2, C_INFEASIBLE=-1,
@@ -195,8 +196,15 @@ class Case
   int origin_direction_index() const { return direction_index_; }
   double origin_step_length() const { return step_length_; }
 
+  void SetEvalStart() { eval_start_ = QDateTime::currentDateTime(); } //!< Set now as start time for evaluation
+  void SetEvalDone() { eval_done_ = QDateTime::currentDateTime(); } //!< Set now as done time for evaluation.
+  QDateTime GetEvalStart() { return eval_start_; }
+  QDateTime GetEvalDone() { return eval_done_; }
+
  private:
   QUuid id_; //!< Unique ID for the case.
+  QDateTime eval_start_;
+  QDateTime eval_done_;
 
   double objective_function_value_;
   QHash<QUuid, bool> binary_variables_;

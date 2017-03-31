@@ -16,6 +16,7 @@
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
+#include <Utilities/time.hpp>
 #include "optimizer.h"
 
 namespace Optimization {
@@ -109,7 +110,14 @@ void Optimizer::SetVerbosityLevel(int level) {
     for (auto con : constraint_handler_->constraints())
         con->SetVerbosityLevel(level);
 }
-
+int Optimizer::GetSimulationDuration(Case *c) {
+    auto cs = case_handler_->GetCase(c->id());
+    if (cs->state.eval != Case::CaseState::EvalStatus::E_DONE) {
+        return -1;
+    }
+    int time = time_span_seconds(cs->GetEvalStart(), cs->GetEvalDone());
+    return time;
+}
 
 }
 

@@ -92,6 +92,13 @@ class Optimizer
   void SetVerbosityLevel(int level);
   bool IsAsync() const { return is_async_; } //!< Check if the optimizer is asynchronous.
 
+  /*!
+   * @brief Get the simulation duration in seconds for a case.
+   * @param c Case to get simulation duration for.
+   * @return Simulation duration in seconds. -1 if the case has not been successfully simulated.
+   */
+  int GetSimulationDuration(Case *c);
+
  protected:
   /*!
    * \brief Optimizer
