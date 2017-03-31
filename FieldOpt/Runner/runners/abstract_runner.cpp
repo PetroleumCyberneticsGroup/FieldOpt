@@ -222,9 +222,6 @@ namespace Runner {
             default: std::cout << "Unknown termination reason." << std::endl;
         }
 
-        std::cout << logger_->GetTimeInfoString().toStdString() << std::endl;
-        std::cout << logger_->GetSimInfoString().toStdString() << std::endl;
-
         std::cout << "Best case at termination:" << optimizer_->GetTentativeBestCase()->id().toString().toStdString() << std::endl;
         std::cout << "Variable values: " << std::endl;
         for (auto var : optimizer_->GetTentativeBestCase()->integer_variables().keys()) {
@@ -245,10 +242,10 @@ namespace Runner {
     }
 
     int AbstractRunner::timeoutValue() const {
-        if (logger_->shortest_simulation_time() == 0 || runtime_settings_->simulation_timeout() == 0)
+        if (simulation_times_.size() == 0 || runtime_settings_->simulation_timeout() == 0)
             return 10000;
         else {
-            return calc_average(logger_->simulator_execution_times()) * runtime_settings_->simulation_timeout();
+            return calc_average(simulation_times_) * runtime_settings_->simulation_timeout();
         }
     }
 

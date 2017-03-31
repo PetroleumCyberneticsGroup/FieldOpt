@@ -35,7 +35,7 @@
  * @return The average value of the elements in the list as a double.
  */
 template<typename T>
-inline double calc_average(const QList<T> list) {
+inline double calc_average(const std::vector<T> list) {
     assert(!list.empty());
     return std::accumulate(list.begin(), list.end(), 0.0) / list.size();
 }
@@ -47,7 +47,7 @@ inline double calc_average(const QList<T> list) {
  * @return
  */
 template<typename T>
-inline T calc_median(QList<T> list) {
+inline T calc_median(std::vector<T> list) {
     assert(!list.empty());
     std::sort(list.begin(), list.end());
     size_t size = list.size();
