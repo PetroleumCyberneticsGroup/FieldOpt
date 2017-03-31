@@ -2,6 +2,8 @@
 #ifndef TIME_FUNCTIONS_H
 #define TIME_FUNCTIONS_H
 
+#include <QDateTime>
+
 /*!
  * @brief Get the number of seconds from t1 to t2.
  * @param t1 Fist time. Should be before t2.
