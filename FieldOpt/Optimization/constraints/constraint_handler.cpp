@@ -51,17 +51,27 @@ bool ConstraintHandler::CaseSatisfiesConstraints(Case *c)
 {
     for (Constraint *constraint : constraints_) {
         if (!constraint->CaseSatisfiesConstraint(c)) {
+            c->state.cons = Case::CaseState::ConsStatus::C_INFEASIBLE;
             return false;
         }
     }
+    c->state.cons = Case::CaseState::ConsStatus::C_FEASIBLE;
     return true;
 }
 
 void ConstraintHandler::SnapCaseToConstraints(Case *c)
 {
+    auto vec_before = c->GetRealVarVector();
     for (Constraint *constraint : constraints_) {
         constraint->SnapCaseToConstraints(c);
     }
+    if (vec_before != c->GetRealVarVector()) {
+        c->state.cons = Case::CaseState::ConsStatus::C_PROJECTED;
+    }
+    else {
+        c->state.cons = Case::CaseState::ConsStatus::C_FEASIBLE;
+    }
+
 }
 bool ConstraintHandler::HasBoundaryConstraints() const {
     for (auto con : constraints_) {

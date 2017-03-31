@@ -68,14 +68,24 @@ void SynchronousMPIRunner::Execute() {
       auto evaluated_case = overseer_->RecvEvaluatedCase(); // TODO: This is a duplicate case that wont get deleted, i.e. a MEMORY LEAK.
       logger_->LogCase(evaluated_case);
       printMessage("Evaluated case received.", 2);
+      switch (overseer_->last_case_tag) {
+          case MPIRunner::MsgTag::CASE_EVAL_SUCCESS:
+              evaluated_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
+              logger_->increment_simulated_cases();
+              break;
+          case MPIRunner::MsgTag::CASE_EVAL_INVALID:
+              evaluated_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_FAILED;
+              evaluated_case->state.err_msg = Optimization::Case::CaseState::ErrorMessage::ERR_UNKNOWN;
+              logger_->increment_invalid_cases();
+              break;
+          case MPIRunner::MsgTag::CASE_EVAL_TIMEOUT:
+              evaluated_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_TIMEOUT;
+              logger_->increment_timed_out_cases();
+              break;
+      }
       optimizer_->SubmitEvaluatedCase(evaluated_case);
       printMessage("Submitted evaluated case to optimizer.", 2);
       logger_->LogOptimizerStatus(optimizer_);
-      switch (overseer_->last_case_tag) {
-          case MPIRunner::MsgTag::CASE_EVAL_SUCCESS: logger_->increment_simulated_cases(); break;
-          case MPIRunner::MsgTag::CASE_EVAL_INVALID: logger_->increment_invalid_cases(); break;
-          case MPIRunner::MsgTag::CASE_EVAL_TIMEOUT: logger_->increment_timed_out_cases(); break;
-      }
     };
     if (rank() == 0) {
         logger_->LogSettings(settings_);

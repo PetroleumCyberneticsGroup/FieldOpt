@@ -52,6 +52,8 @@ void Optimizer::SubmitEvaluatedCase(Case *c)
 {
     case_handler_->UpdateCaseObjectiveFunctionValue(c->id(), c->objective_function_value());
     case_handler_->SetCaseEvaluated(c->id());
+    case_handler_->SetCaseEvalStatus(c->id(), c->state.eval);
+    case_handler_->SetCaseErrMsg(c->id(), c->state.err_msg);
     handleEvaluatedCase(case_handler_->GetCase(c->id()));
 }
 
