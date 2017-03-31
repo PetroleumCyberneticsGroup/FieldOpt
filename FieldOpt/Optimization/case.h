@@ -22,6 +22,7 @@
 #include <QHash>
 #include <QUuid>
 #include <Eigen/Core>
+#include <QtCore/QDateTime>
 #include "optimization_exceptions.h"
 
 namespace Optimization {
@@ -43,6 +44,45 @@ class Case
   Case(const QHash<QUuid, bool> &binary_variables, const QHash<QUuid, int> &integer_variables, const QHash<QUuid, double> &real_variables);
   Case(const Case &c) = delete;
   Case(const Case *c);
+
+  /*!
+   * @brief The CaseState struct holds information about the current
+   * status of the Case object, such as whether or not it has been
+   * evaluated and whether or not it has been modified by a constriant.
+   */
+  struct CaseState {
+    enum EvalStatus : int {
+      E_FAILED=-2, E_TIMEOUT=-1,
+      E_PENDING=0,
+      E_CURRENT=1, E_DONE=2
+    };
+    enum ConsStatus : int {
+      C_PROJ_FAILED=-2, C_INFEASIBLE=-1,
+      C_PENDING=0,
+      C_FEASIBLE=1, C_PROJECTED=2, C_PENALIZED=3,
+    };
+    enum QueueStatus : int {
+      Q_DISCARDED=-1,
+      Q_QUEUED=0,
+      Q_DEQUEUED=1
+    };
+    enum ErrorMessage : int {
+      ERR_WIC=-3, ERR_CONS=-2, ERR_UNKNOWN=-1,
+      ERR_OK=0
+    };
+    CaseState() {
+        eval = E_PENDING;
+        cons = C_PENDING;
+        queue = Q_QUEUED;
+        err_msg = ERR_OK;
+    }
+    EvalStatus eval;
+    ConsStatus cons;
+    QueueStatus queue;
+    ErrorMessage err_msg;
+  };
+
+  CaseState state; //!< The state of the Case, directly modifiable.
 
   /*!
    * \brief Equals Checks whether this case is equal to another case within some tolerance.
@@ -84,8 +124,6 @@ class Case
    * \return One or two cases where one variable has been perturbed.
    */
   QList<Case *> Perturb(QUuid variabe_id, SIGN sign, double magnitude);
-
-  QString StringRepresentation();
 
   /*!
    * Get the real variables of this case as a Vector.

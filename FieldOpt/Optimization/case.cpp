@@ -134,23 +134,6 @@ namespace Optimization {
         return new_cases;
     }
 
-    QString Case::StringRepresentation() {
-        QString str;
-        str = "--------------------------------------------------\n";
-        str = str + QString("Case ID: %1\n").arg(id_.toString());
-        str = str + "Binary variable values: ";
-        for (bool val : binary_variables_.values())
-            str = str + QString::number(val) + ", ";
-        str = str + "\nInteger variable values: ";
-        for (int val : integer_variables_.values())
-            str = str + QString::number(val) + ", ";
-        str = str + "\nReal variable values: ";
-        for (double val : real_variables().values())
-            str = str + QString::number(val) + ", ";
-        str = str + "\n--------------------------------------------------\n";
-        return str;
-    }
-
     Eigen::VectorXd Case::GetRealVarVector() {
         Eigen::VectorXd vec(real_id_index_map_.length());
         for (int i = 0; i < real_id_index_map_.length(); ++i) {
