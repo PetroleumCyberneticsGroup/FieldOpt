@@ -17,16 +17,19 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+#include <iomanip>
 #include "logger.h"
 #include "Utilities/time.hpp"
 
 namespace Runner {
 
-Logger::Logger(RuntimeSettings *rts, QString output_subdir)
+Logger::Logger(RuntimeSettings *rts,
+               QString output_subdir)
 {
     verbose_ = rts->verbosity_level();
     output_dir_ = rts->output_dir();
-    if (output_subdir.length() > 0) output_dir_.append("/" + output_subdir + "/");
+    if (output_subdir.length() > 0)
+        output_dir_ = output_dir_ + "/" + output_subdir + "/";
     opt_log_path_ = output_dir_ + "/log_optimization.csv";
     cas_log_path_ = output_dir_ + "/log_cases.csv";
     QStringList log_paths = (QStringList() << cas_log_path_ << opt_log_path_);
@@ -40,9 +43,40 @@ Logger::Logger(RuntimeSettings *rts, QString output_subdir)
             }
         }
     }
+
+    // Write headers
+    Utilities::FileHandling::WriteLineToFile(cas_log_header_,
+                                             cas_log_path_);
+    Utilities::FileHandling::WriteLineToFile(opt_log_header_, opt_log_path_);
+}
+void Logger::AddEntry(Loggable &obj) {
+    switch (obj.GetLogTarget()) {
+        case Loggable::LogTarget::LOG_CASE: logCase(obj);
+        case Loggable::LogTarget::LOG_OPTIMIZER: logOptimizer(obj);
+        case Loggable::LogTarget::LOG_EXTENDED: logExtended(obj);
+    }
 }
 
-void Logger::AddEntry(Loggable object) {
+void Logger::logCase(Loggable &obj) {
+    // "             TimeSt , EvalSt , ConsSt , ErrMsg ,   SimDur ,      OFnVal ,                                 CaseId";
+    stringstream entry;
+    entry << setw(cas_log_col_widths_.at("TimeSt")) << timestamp_string() << " , ";
+    entry << setw(cas_log_col_widths_.at("EvalSt")) << obj.GetState()["EvalSt"] << " , ";
+    entry << setw(cas_log_col_widths_.at("ConsSt")) << obj.GetState()["ConsSt"] << " , ";
+    entry << setw(cas_log_col_widths_.at("ErrMsg")) << obj.GetState()["ErrMsg"] << " , ";
+    entry << setw(cas_log_col_widths_.at("SimDur")) << timespan_string(obj.GetValues()["SimDur"][0]) << " , ";
+    entry << setw(cas_log_col_widths_.at("OFnVal")) << std::scientific << obj.GetValues()["EvalSt"][0] << " , ";
+    entry << setw(cas_log_col_widths_.at("CaseId")) << obj.GetId().toString().toStdString();
+    string str = entry.str();
+    Utilities::FileHandling::WriteLineToFile(QString::fromStdString(str), cas_log_path_);
+    return;
+}// .5E
+void Logger::logOptimizer(Loggable &obj) {
+    /// \todo Implement this
+    return;
+}
+void Logger::logExtended(Loggable &obj) {
+    /// \todo Implement this
     return;
 }
 

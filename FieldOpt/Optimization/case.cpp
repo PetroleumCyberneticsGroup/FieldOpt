@@ -19,6 +19,7 @@
 
 #include <boost/serialization/map.hpp>
 #include <QtCore/QUuid>
+#include <Utilities/time.hpp>
 #include "case.h"
 
 namespace Optimization {
@@ -201,14 +202,10 @@ map <string, string> Case::GetState() {
 QUuid Case::GetId() {
     return id();
 }
-map <string, vector<double>> Case::GetVaues() {
+map <string, vector<double>> Case::GetValues() {
     map<string, vector<double>> valmap;
-    for (auto id : real_variables_.keys()) {
-        valmap[id.toString().toStdString()] = vector<double>{real_variables_[id]};
-    }
-    for (auto id : integer_variables_.keys()) {
-        valmap[id.toString().toStdString()] = vector<double>{integer_variables_[id]};
-    }
+    valmap["OFnVal"] = vector<double>{objective_function_value_};
+    valmap["SimDur"] = vector<double>{time_span_seconds(eval_start_, eval_done_)};
     return valmap;
 }
 }

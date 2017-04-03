@@ -38,7 +38,8 @@ inline std::string timespan_string(int seconds) {
     int hrs = seconds/3600;
     int mins = (seconds - hrs*3600) / 60;
     int secs = seconds % 60;
-    std::string tstamp = std::to_string(hrs) + ":" + std::to_string(mins) + ":" + std::to_string(secs);
+    std::string tstamp = std::to_string(hrs) + ":" +
+        std::to_string(mins) + ":" + std::to_string(secs);
     return tstamp;
 }
 

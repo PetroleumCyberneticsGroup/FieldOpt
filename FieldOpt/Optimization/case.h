@@ -208,7 +208,7 @@ class Case : Loggable
   LogTarget GetLogTarget() override;
   map<string, string> GetState() override;
   QUuid GetId() override;
-  map<string, vector<double>> GetVaues() override;
+  map<string, vector<double>> GetValues() override;
   // End Logger interface
 
  private:

@@ -20,10 +20,11 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
+#include "string"
+#include "map"
 #include <QString>
 #include <QStringList>
 #include <QDateTime>
-#include <QHash>
 #include <QUuid>
 #include "Optimization/case.h"
 #include "Optimization/optimizer.h"
@@ -32,6 +33,8 @@
 #include "Model/model.h"
 #include "Simulation/results/results.h"
 #include "loggable.hpp"
+
+using namespace std;
 
 namespace Runner {
 
@@ -49,7 +52,7 @@ class Logger
    */
   Logger(RuntimeSettings *rts, QString output_subdir="");
 
-  void AddEntry(Loggable object);
+  void AddEntry(Loggable &obj);
 
 
  private:
@@ -58,8 +61,22 @@ class Logger
   QString opt_log_path_; //!< Path to the optimization log file.
   QString cas_log_path_; //!< Path to the case log file.
 
-  QStringList opt_header_; //!< CSV header for the optimization log
-  QStringList cas_header_; //!< CSV header for for the case log
+  /*!
+   * @brief The column widths count from after the leading comma (if there is one) up to the
+   * last letter in the name of the column. The trailing space and comma are added separately.
+   */
+  const map<string, int> cas_log_col_widths_ = {{"TimeSt", 19 },
+                                                {"EvalSt", 7}, {"ConsSt", 7}, {"ErrMsg", 7},
+                                                {"SimDur", 9},
+                                                {"OFnVal", 12},
+                                                {"CaseId", 41}
+  };
+  const QString cas_log_header_ = "             TimeSt , EvalSt , ConsSt , ErrMsg ,   SimDur ,      OFnVal ,                                 CaseId";
+  const QString opt_log_header_ = "             TimeSt ,   TimeEl , IterNr , TotlNr , EvalNr , BkpdNr , TimONr , FailNr , InvlNr ,      CBOFnV ,                                 CurBst";
+
+  void logCase(Loggable &obj);
+  void logOptimizer(Loggable &obj);
+  void logExtended(Loggable &obj);
 };
 
 }

@@ -21,6 +21,7 @@
 #define FIELDOPT_LOGGABLE_H
 
 #include <string>
+#include <map>
 
 using namespace std;
 
@@ -66,9 +67,11 @@ class Loggable {
    * The keys should be the column headers (or JSON keys) in the corresponding log,
    * and the values should be vectors containing the value(s) to be logged.
    *
-   * For case logging, string should be the UUID of the variable and the vector
-   * should be of length one and contain the value of that variable, e.g.
-   *    "{21912-0932f-32093d-1231241a}": [142.0]
+   * For case logging, string should be the OFnVal vector should be of length one
+   * and contain the objective function value; it should also contain the evaluation
+   * duration in second, e.g.
+   *    "OFnVal": [1422.0]
+   *    "SimDur": [122.1]
    * The logger will take care of converting the UUID to the name of the varible.
    *
    * For production data logs, the key should be the name of the vector, and the
@@ -76,7 +79,7 @@ class Loggable {
    *    "FOPT": [0.0, 200.0, 240.0]
    * @return A string-vector map of values.
    */
-  virtual map<string, vector<double>> GetVaues() = 0;
+  virtual map<string, vector<double>> GetValues() = 0;
 
 };
 
