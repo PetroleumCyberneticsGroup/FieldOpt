@@ -28,7 +28,7 @@ namespace Optimizers {
 /*!
  * @brief This implementation is based on the RGA-RDD (Real coded
  * Genetic Algorithm - Ranking selection, Direction-based crossover,
- * Dynamic random mutation) desciribed in
+ * Dynamic random mutation) described in
  *
  *  "A real-coded genetic algorithm with a selection-based crossover
  *  operator", Chuang, Chen & Hwang,  Elsevier Journal of Information
@@ -45,7 +45,7 @@ namespace Optimizers {
  * passes below the stagnation limit. The stagnation indicator used
  * is the standard deviation of the population.
  *
- * \note This algorithm requres either that simple max/min bounds are
+ * \note This algorithm requires either that simple max/min bounds are
  * given (i.e. single numbers applying to all variables) as an optimizer
  * argument or that some form of bound constraints are used (e.g. reservoir
  * boundary or pressure/rate constraints).
