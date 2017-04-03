@@ -38,28 +38,36 @@
 #endif
 
 namespace Optimization {
-    namespace Constraints {
+namespace Constraints {
 
-        /*!
-         * \brief The ConstraintHandler class facilitates the
-         * initialization and usage of multiple constraints.
-         */
-        class ConstraintHandler
-        {
-        public:
-            ConstraintHandler(QList<Settings::Optimizer::Constraint> constraints,
-                              Model::Properties::VariablePropertyContainer *variables,
-                              Reservoir::Grid::Grid *grid);
-            bool CaseSatisfiesConstraints(Case *c); //!< Check if a Case satisfies _all_ constraints.
-            void SnapCaseToConstraints(Case *c); //!< Snap all variables to _all_ constraints.
+/*!
+ * \brief The ConstraintHandler class facilitates the
+ * initialization and usage of multiple constraints.
+ */
+class ConstraintHandler
+{
+ public:
+  ConstraintHandler(QList<Settings::Optimizer::Constraint> constraints,
+                    Model::Properties::VariablePropertyContainer *variables,
+                    Reservoir::Grid::Grid *grid);
+  bool CaseSatisfiesConstraints(Case *c); //!< Check if a Case satisfies _all_ constraints.
+  void SnapCaseToConstraints(Case *c); //!< Snap all variables to _all_ constraints.
 
-            QList<Constraint *> constraints() const { return constraints_; }
+  QList<Constraint *> constraints() const { return constraints_; }
 
-        private:
-            QList<Constraint *> constraints_;
-        };
+  /*!
+   * @brief Check whether any of the constraints within are boundary constraints.
+   */
+  bool HasBoundaryConstraints() const;
 
-    }
+  Eigen::VectorXd GetLowerBounds(QList<QUuid> id_vector) const;
+  Eigen::VectorXd GetUpperBounds(QList<QUuid> id_vector) const;
+
+ private:
+  QList<Constraint *> constraints_;
+};
+
+}
 }
 
 #endif // CONSTRAINTHANDLER_H

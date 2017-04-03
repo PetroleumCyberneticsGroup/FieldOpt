@@ -1,5 +1,5 @@
 /******************************************************************************
-   Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
 
    This file is part of the FieldOpt project.
 
@@ -73,6 +73,15 @@ class ReservoirBoundary : public Constraint, WellSplineConstraint
  public:
   bool CaseSatisfiesConstraint(Case *c);
   void SnapCaseToConstraints(Case *c);
+  bool IsBoundConstraint() const override { return true; }
+
+  /*!
+   * @brief Get the lower bounds. This will return the x, y and
+   * z values for the _center_ of the cells in the corners of the
+   * defined box.
+   */
+  Eigen::VectorXd GetLowerBounds(QList<QUuid> id_vector) const override;
+  Eigen::VectorXd GetUpperBounds(QList<QUuid> id_vector) const override;
 
   /* \brief Function getListOfBoxEdgeCellIndices uses the limits
    * defining the box constraint to find the cells that constitute
