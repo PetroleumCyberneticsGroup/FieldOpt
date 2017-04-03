@@ -1,3 +1,22 @@
+/******************************************************************************
+   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
+
+   This file is part of the FieldOpt project.
+
+   FieldOpt is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   FieldOpt is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
+
 #ifndef MODEL_H
 #define MODEL_H
 
@@ -11,49 +30,56 @@
 #include "Model/wells/wellbore/wellblock.h"
 
 namespace Model {
-    class ModelSynchronizationObject;
+class ModelSynchronizationObject;
 
-    /*!
-     * \brief The Model class represents the reservoir model as a whole, including wells and
-     * any related variables, and the reservoir grid.
-     */
-    class Model
-    {
-        friend class ModelSynchronizationObject;
-    public:
-        Model(::Settings::Model settings);
+/*!
+ * \brief The Model class represents the reservoir model as a whole, including wells and
+ * any related variables, and the reservoir grid.
+ */
+class Model
+{
+  friend class ModelSynchronizationObject;
+ public:
+  Model(::Settings::Model settings);
 
-        /*!
-         * \brief reservoir Get the reservoir (i.e. grid).
-         */
-        Reservoir::Grid::Grid *grid() const { return grid_; }
+  /*!
+   * \brief reservoir Get the reservoir (i.e. grid).
+   */
+  Reservoir::Grid::Grid *grid() const { return grid_; }
 
-        /*!
-         * \brief variables Get the set of variable properties of all types.
-         */
-        Properties::VariablePropertyContainer *variables() const { return variable_container_; }
+  /*!
+   * \brief variables Get the set of variable properties of all types.
+   */
+  Properties::VariablePropertyContainer *variables() const { return variable_container_; }
 
-        /*!
-         * \brief wells Get a list of all the wells in the model.
-         */
-        QList<Wells::Well *> *wells() const { return wells_; }
+  /*!
+   * \brief wells Get a list of all the wells in the model.
+   */
+  QList<Wells::Well *> *wells() const { return wells_; }
 
-        /*!
-         * \brief ApplyCase Applies the variable values from a case to the variables in the model.
-         * \param c Case to apply the variable values of.
-         */
-        void ApplyCase(Optimization::Case *c);
+  /*!
+   * \brief ApplyCase Applies the variable values from a case to the variables in the model.
+   * \param c Case to apply the variable values of.
+   */
+  void ApplyCase(Optimization::Case *c);
 
-    private:
-        Reservoir::Grid::Grid *grid_;
-        Properties::VariablePropertyContainer *variable_container_;
-        QList<Wells::Well *> *wells_;
+  /*!
+   * @brief Get the UUId of last case applied to the Model.
+   * @return
+   */
+  QUuid GetCurrentCaseId() const { return current_case_id_; }
 
-        void verify(); //!< Verify the model. Throws an exception if it is not.
-        void verifyWells();
-        void verifyWellTrajectory(Wells::Well *w);
-        void verifyWellBlock(Wells::Wellbore::WellBlock *wb);
-    };
+ private:
+  Reservoir::Grid::Grid *grid_;
+  Properties::VariablePropertyContainer *variable_container_;
+  QList<Wells::Well *> *wells_;
+
+  void verify(); //!< Verify the model. Throws an exception if it is not.
+  void verifyWells();
+  void verifyWellTrajectory(Wells::Well *w);
+  void verifyWellBlock(Wells::Wellbore::WellBlock *wb);
+  QUuid current_case_id_;
+};
 
 }
 
