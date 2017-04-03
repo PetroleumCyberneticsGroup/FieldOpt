@@ -122,12 +122,27 @@ class CaseHandler
    */
   void DequeueCase(QUuid id);
 
+  int NumberTotal() const { return nr_totl_; }
+  int NumberSimulated() const { return nr_eval_; }
+  int NumberBookkeeped() const { return nr_bkpd_; }
+  int NumberTimeout() const { return  nr_timo_; }
+  int NumberInvalid() const { return nr_invl_; }
+  int NumberFailed() const { return nr_fail_; }
+
  private:
   QQueue<QUuid> evaluation_queue_; //!< Queue of the next keys to be evaluated.
   QList<QUuid> evaluating_; //!< List of keys for Cases currently being evaluated.
   QList<QUuid> evaluated_; //!< List of keys for Cases that have already been evaluated.
   QList<QUuid> evaluated_recently_; //!< List of keys that have recently been evaluated.
   QHash<QUuid, Case *> cases_;
+
+  // TotlNr , EvalNr , BkpdNr , TimONr , FailNr , InvlNr
+  int nr_totl_; //!< Total number of cases added to handler.
+  int nr_eval_; //!< Number of cases that have been simulated.
+  int nr_bkpd_; //!< Number of cases handled by bookkeeper.
+  int nr_timo_; //!< Number of cases interrupted because of timeout.
+  int nr_invl_; //!< Number of invalid cases (failed while being applied to model).
+  int nr_fail_; //!< Number of cases that have failed for some reason.
 };
 
 }

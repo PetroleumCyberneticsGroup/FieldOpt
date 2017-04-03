@@ -43,6 +43,7 @@ void CaseHandler::AddNewCase(Case *c)
     c->state.queue = Case::CaseState::QueueStatus::Q_QUEUED;
     evaluation_queue_.enqueue(c->id());
     cases_[c->id()] = c;
+    nr_totl_++;
 }
 
 void CaseHandler::AddNewCases(QList<Case *> cases)
@@ -73,6 +74,16 @@ void CaseHandler::SetCaseEvaluated(const QUuid id)
     evaluated_.append(id);
     cases_[id]->SetEvalDone();
     evaluated_recently_.append(id);
+
+    switch (cases_[id]->state.eval) {
+        case Case::CaseState::EvalStatus::E_DONE: nr_eval_++; break;
+        case Case::CaseState::EvalStatus::E_BOOKKEEPED: nr_bkpd_++; break;
+        case Case::CaseState::EvalStatus::E_TIMEOUT: nr_timo_++; break;
+        case Case::CaseState::EvalStatus::E_FAILED: nr_fail_++; break;
+    }
+    if (cases_[id]->state.err_msg != Case::CaseState::ErrorMessage::ERR_OK){
+        nr_invl_++;
+    }
 }
 
 void CaseHandler::UpdateCaseObjectiveFunctionValue(const QUuid id, const double ofv) {
