@@ -35,12 +35,6 @@ class Loggable {
   enum LogTarget {LOG_CASE, LOG_OPTIMIZER, LOG_EXTENDED};
 
   /*!
-   * @brief Notify the logger that a entry should be written.
-   * @param object The object to be logged.
-   */
-  virtual void NotifyLogger(Loggable object) = 0;
-
-  /*!
    * @brief Get the target log for the object. E.g. if LOG_CASE is returned,
    * an entry will be written to the case log when NotifyLogger is called.
    * @return The target log.
