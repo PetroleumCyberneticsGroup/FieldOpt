@@ -46,11 +46,9 @@ GeneticAlgorithm::GeneticAlgorithm(Settings::Optimizer *settings,
         upper_bound_ = constraint_handler_->GetUpperBounds(base_case->GetRealVarIdVector());
         if (verbosity_level_ > 1) {
             cout << "Using bounds from constraints: " << endl;
-            cout << vec_to_str(vector<double>(lower_bound_.data(),
-                                              lower_bound_.data() + lower_bound_.size()));
+            cout << vec_to_str(vector<double>(lower_bound_.data(), lower_bound_.data() + lower_bound_.size()));
             cout << endl;
-            cout << vec_to_str(vector<double>(upper_bound_.data(),
-                                              upper_bound_.data() + upper_bound_.size()));
+            cout << vec_to_str(vector<double>(upper_bound_.data(), upper_bound_.data() + upper_bound_.size()));
             cout << endl;
         }
     }
