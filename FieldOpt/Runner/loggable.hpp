@@ -66,9 +66,10 @@ class Loggable {
    * The keys should be the column headers (or JSON keys) in the corresponding log,
    * and the values should be vectors containing the value(s) to be logged.
    *
-   * For case logging, string should be the name of the variable and the vector
+   * For case logging, string should be the UUID of the variable and the vector
    * should be of length one and contain the value of that variable, e.g.
-   *    "PROD#PHP#20": [142.0]
+   *    "{21912-0932f-32093d-1231241a}": [142.0]
+   * The logger will take care of converting the UUID to the name of the varible.
    *
    * For production data logs, the key should be the name of the vector, and the
    * vector should contain the production data, e.g.

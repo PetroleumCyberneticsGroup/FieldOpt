@@ -17,6 +17,8 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+#include <boost/serialization/map.hpp>
+#include <QtCore/QUuid>
 #include "case.h"
 
 namespace Optimization {
@@ -167,4 +169,46 @@ namespace Optimization {
         direction_index_ = direction_index;
         step_length_ = step_length;
     }
+Loggable::LogTarget Case::GetLogTarget() {
+    return Loggable::LogTarget::LOG_CASE;
+}
+map <string, string> Case::GetState() {
+    map<string, string> statemap;
+    switch (state.eval) {
+        case CaseState::EvalStatus::E_FAILED: statemap["EvalSt"] = "FAIL";
+        case CaseState::EvalStatus::E_TIMEOUT: statemap["EvalSt"] = "TMOT";
+        case CaseState::EvalStatus::E_PENDING: statemap["EvalSt"] = "PEND";
+        case CaseState::EvalStatus::E_CURRENT: statemap["EvalSt"] = "CRNT";
+        case CaseState::EvalStatus::E_DONE: statemap["EvalSt"] = "OKAY";
+        case CaseState::EvalStatus::E_BOOKKEEPED: statemap["EvalSt"] = "BKPD";
+    }
+    switch (state.cons) {
+        case CaseState::ConsStatus::C_PROJ_FAILED: statemap["ConsSt"] = "PNFL";
+        case CaseState::ConsStatus::C_INFEASIBLE: statemap["ConsSt"] = "INFS";
+        case CaseState::ConsStatus::C_PENDING: statemap["ConsSt"] = "PEND";
+        case CaseState::ConsStatus::C_FEASIBLE: statemap["ConsSt"] = "OKAY";
+        case CaseState::ConsStatus::C_PROJECTED: statemap["ConsSt"] = "PROJ";
+        case CaseState::ConsStatus::C_PENALIZED: statemap["ConsSt"] = "PNZD";
+    }
+    switch (state.err_msg) {
+        case CaseState::ErrorMessage::ERR_WIC: statemap["ErrMsg"] = "WLIC";
+        case CaseState::ErrorMessage::ERR_CONS: statemap["ErrMsg"] = "CONS";
+        case CaseState::ErrorMessage::ERR_UNKNOWN: statemap["ErrMsg"] = "UNWN";
+        case CaseState::ErrorMessage::ERR_OK: statemap["ErrMsg"] = "OKAY";
+    }
+    return statemap;
+}
+QUuid Case::GetId() {
+    return id();
+}
+map <string, vector<double>> Case::GetVaues() {
+    map<string, vector<double>> valmap;
+    for (auto id : real_variables_.keys()) {
+        valmap[id.toString().toStdString()] = vector<double>{real_variables_[id]};
+    }
+    for (auto id : integer_variables_.keys()) {
+        valmap[id.toString().toStdString()] = vector<double>{integer_variables_[id]};
+    }
+    return valmap;
+}
 }

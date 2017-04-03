@@ -23,6 +23,7 @@
 #include <QUuid>
 #include <Eigen/Core>
 #include <QtCore/QDateTime>
+#include "Runner/loggable.hpp"
 #include "optimization_exceptions.h"
 
 namespace Optimization {
@@ -34,14 +35,16 @@ class CaseTransferObject;
  * \brief The Case class represents a specific case for the optimizer, i.e. a specific set of variable values
  * and the value of the objective function after evaluation.
  */
-class Case
+class Case : Loggable
 {
  public:
   friend class CaseHandler;
   friend class CaseTransferObject;
 
   Case();
-  Case(const QHash<QUuid, bool> &binary_variables, const QHash<QUuid, int> &integer_variables, const QHash<QUuid, double> &real_variables);
+  Case(const QHash<QUuid, bool> &binary_variables,
+       const QHash<QUuid, int> &integer_variables,
+       const QHash<QUuid, double> &real_variables);
   Case(const Case &c) = delete;
   Case(const Case *c);
 
@@ -200,6 +203,13 @@ class Case
   void SetEvalDone() { eval_done_ = QDateTime::currentDateTime(); } //!< Set now as done time for evaluation.
   QDateTime GetEvalStart() { return eval_start_; }
   QDateTime GetEvalDone() { return eval_done_; }
+
+  // Logger interface
+  LogTarget GetLogTarget() override;
+  map<string, string> GetState() override;
+  QUuid GetId() override;
+  map<string, vector<double>> GetVaues() override;
+  // End Logger interface
 
  private:
   QUuid id_; //!< Unique ID for the case.
