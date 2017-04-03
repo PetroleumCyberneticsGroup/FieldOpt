@@ -58,21 +58,32 @@ void Logger::AddEntry(Loggable &obj) {
 }
 
 void Logger::logCase(Loggable &obj) {
-    // "             TimeSt , EvalSt , ConsSt , ErrMsg ,   SimDur ,      OFnVal ,                                 CaseId";
     stringstream entry;
-    entry << setw(cas_log_col_widths_.at("TimeSt")) << timestamp_string() << " , ";
-    entry << setw(cas_log_col_widths_.at("EvalSt")) << obj.GetState()["EvalSt"] << " , ";
-    entry << setw(cas_log_col_widths_.at("ConsSt")) << obj.GetState()["ConsSt"] << " , ";
-    entry << setw(cas_log_col_widths_.at("ErrMsg")) << obj.GetState()["ErrMsg"] << " , ";
-    entry << setw(cas_log_col_widths_.at("SimDur")) << timespan_string(obj.GetValues()["SimDur"][0]) << " , ";
-    entry << setw(cas_log_col_widths_.at("OFnVal")) << std::scientific << obj.GetValues()["EvalSt"][0] << " , ";
+    entry << setw(cas_log_col_widths_.at("TimeSt")) << timestamp_string() << " ,";
+    entry << setw(cas_log_col_widths_.at("EvalSt")) << obj.GetState()["EvalSt"] << " ,";
+    entry << setw(cas_log_col_widths_.at("ConsSt")) << obj.GetState()["ConsSt"] << " ,";
+    entry << setw(cas_log_col_widths_.at("ErrMsg")) << obj.GetState()["ErrMsg"] << " ,";
+    entry << setw(cas_log_col_widths_.at("SimDur")) << timespan_string(obj.GetValues()["SimDur"][0]) << " ,";
+    entry << setw(cas_log_col_widths_.at("OFnVal")) << std::scientific << obj.GetValues()["EvalSt"][0] << " ,";
     entry << setw(cas_log_col_widths_.at("CaseId")) << obj.GetId().toString().toStdString();
     string str = entry.str();
     Utilities::FileHandling::WriteLineToFile(QString::fromStdString(str), cas_log_path_);
     return;
 }// .5E
 void Logger::logOptimizer(Loggable &obj) {
-    /// \todo Implement this
+//  ,                                 CurBst";
+    stringstream entry;
+    entry << setw(opt_log_col_widths_.at("TimeSt")) << timestamp_string() << " ,";
+    entry << setw(opt_log_col_widths_.at("TimeEl")) << timespan_string(obj.GetState()["TimeEl"][0]) << " ,";
+    entry << std::setfill('0') << setw(opt_log_col_widths_.at("IterNr")) << obj.GetState()["IterNr"][0] << " ,";
+    entry << std::setfill('0') << setw(opt_log_col_widths_.at("TotlNr")) << obj.GetState()["TotlNr"][0] << " ,";
+    entry << std::setfill('0') << setw(opt_log_col_widths_.at("EvalNr")) << obj.GetState()["EvalNr"][0] << " ,";
+    entry << std::setfill('0') << setw(opt_log_col_widths_.at("BkpdNr")) << obj.GetState()["BkpdNr"][0] << " ,";
+    entry << std::setfill('0') << setw(opt_log_col_widths_.at("TimONr")) << obj.GetState()["TimONr"][0] << " ,";
+    entry << std::setfill('0') << setw(opt_log_col_widths_.at("FailNr")) << obj.GetState()["FailNr"][0] << " ,";
+    entry << std::setfill('0') << setw(opt_log_col_widths_.at("InvlNr")) << obj.GetState()["InvlNr"][0] << " ,";
+    entry << setw(opt_log_col_widths_.at("CBOFnV")) << std::scientific << obj.GetValues()["CBOFnV"][0] << " ,";
+    entry << setw(opt_log_col_widths_.at("CurBst")) << obj.GetId().toString().toStdString();
     return;
 }
 void Logger::logExtended(Loggable &obj) {

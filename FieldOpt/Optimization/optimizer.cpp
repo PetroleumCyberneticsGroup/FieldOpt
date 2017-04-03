@@ -39,6 +39,7 @@ Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
     iteration_ = 0;
     mode_ = settings->mode();
     is_async_ = false;
+    start_time_ = QDateTime::currentDateTime();
 }
 
 Case *Optimizer::GetCaseForEvaluation()
@@ -52,9 +53,9 @@ Case *Optimizer::GetCaseForEvaluation()
 void Optimizer::SubmitEvaluatedCase(Case *c)
 {
     case_handler_->UpdateCaseObjectiveFunctionValue(c->id(), c->objective_function_value());
-    case_handler_->SetCaseEvaluated(c->id());
     case_handler_->SetCaseEvalStatus(c->id(), c->state.eval);
     case_handler_->SetCaseErrMsg(c->id(), c->state.err_msg);
+    case_handler_->SetCaseEvaluated(c->id());
     handleEvaluatedCase(case_handler_->GetCase(c->id()));
 }
 
@@ -117,6 +118,28 @@ int Optimizer::GetSimulationDuration(Case *c) {
     }
     int time = time_span_seconds(cs->GetEvalStart(), cs->GetEvalDone());
     return time;
+}
+Loggable::LogTarget Optimizer::GetLogTarget() {
+    return Loggable::LogTarget::LOG_OPTIMIZER;
+}
+map<string, string> Optimizer::GetState() {
+    return map<string, string>();
+}
+QUuid Optimizer::GetId() {
+    return tentative_best_case_->GetId();
+}
+map<string, vector<double>> Optimizer::GetValues() {
+    map<string, vector<double>> valmap;
+    valmap["TimeEl"] = vector<double>{time_since_seconds(start_time_)};
+    valmap["IterNr"] = vector<double>{iteration_};
+    valmap["TotlNr"] = vector<double>{case_handler_->NumberTotal()};
+    valmap["EvalNr"] = vector<double>{case_handler_->NumberSimulated()};
+    valmap["BkpdNr"] = vector<double>{case_handler_->NumberBookkeeped()};
+    valmap["TimONr"] = vector<double>{case_handler_->NumberTimeout()};
+    valmap["FailNr"] = vector<double>{case_handler_->NumberFailed()};
+    valmap["InvlNr"] = vector<double>{case_handler_->NumberInvalid()};
+    valmap["CBOFnV"] = vector<double>{tentative_best_case_->objective_function_value()};
+    return valmap;
 }
 
 }

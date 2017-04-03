@@ -72,6 +72,13 @@ class Logger
                                                 {"CaseId", 41}
   };
   const QString cas_log_header_ = "             TimeSt , EvalSt , ConsSt , ErrMsg ,   SimDur ,      OFnVal ,                                 CaseId";
+  const map<string, int> opt_log_col_widths_ = {{"TimeSt", 19},
+                                                {"TimeEl", 9},
+                                                {"IterNr", 7}, {"TotlNr", 7}, {"BkpdNr", 7}, {"TimONr", 7},
+                                                {"FailNr", 7}, {"InvlNr", 7}, {"IterNr", 7},
+                                                {"CBOFnV", 12},
+                                                {"CurBst", 41}
+  };
   const QString opt_log_header_ = "             TimeSt ,   TimeEl , IterNr , TotlNr , EvalNr , BkpdNr , TimONr , FailNr , InvlNr ,      CBOFnV ,                                 CurBst";
 
   void logCase(Loggable &obj);
