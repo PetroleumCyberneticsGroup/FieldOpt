@@ -42,7 +42,8 @@ void RGARDD::iterate() {
 
     if (is_stagnant()) {
         if (verbosity_level_ > 1) {
-            cout << "The population has stagnated in generation " << iteration_ << ". Repopulating." << endl;
+            cout << "The population has stagnated in generation "
+                 << iteration_ << ". Repopulating." << endl;
         }
         repopulate();
         iteration_++;

@@ -31,8 +31,8 @@ namespace Optimizers {
 /*!
  * @brief The abstract GeneticAlgorithm class a specification of the
  * structure for a general genetic algorithm. It specifies and initializes
- * a few common member fields, creates the initial population, and provides some
- * helper functions.
+ * a few common member fields, creates the initial population, and provides
+ * some helper functions.
  */
 class GeneticAlgorithm : public Optimizer {
  public:
