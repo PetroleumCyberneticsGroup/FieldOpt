@@ -73,12 +73,6 @@ class Simulator {
    */
   virtual void CleanUp() = 0;
 
-  /*!
-   * \brief GetCompdatString Get the compdat section used in the simulation's driver file.
-   * \return String containing the compdat section.
-   */
-  virtual QString GetCompdatString() = 0;
-
   void SetVerbosityLevel(int level);
 
  protected:

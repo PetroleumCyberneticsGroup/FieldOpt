@@ -63,11 +63,6 @@ void ECLSimulator::UpdateFilePaths()
     return;
 }
 
-QString ECLSimulator::GetCompdatString()
-{
-    return driver_file_writer_->GetCompdatString();
-}
-
 bool ECLSimulator::Evaluate(int timeout, int threads) {
     int t = timeout;
     if (timeout < 10) t = 10; // Always let simulations run for at least 10 seconds

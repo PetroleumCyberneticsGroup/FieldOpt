@@ -70,8 +70,6 @@ class ECLSimulator : public Simulator
 
   // Simulator interface
  public:
-  QString GetCompdatString();
-
   virtual bool Evaluate(int timeout, int threads=1) override;
 };
 

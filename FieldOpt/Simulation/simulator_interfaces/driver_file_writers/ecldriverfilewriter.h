@@ -54,7 +54,6 @@ private:
     ::Settings::Settings *settings_;
     QStringList *original_driver_file_contents_; //!< The content of the original (input) driver file.
     QString output_driver_file_name_; //!< Path to the driver file to be written.
-    QString GetCompdatString();
 };
 
 }

@@ -69,10 +69,14 @@ class Model
    */
   QUuid GetCurrentCaseId() const { return current_case_id_; }
 
+  void SetCompdatString(const QString compdat) { compdat_ = compdat; };
+  QString GetCompdatString() const { return compdat_; }
+
  private:
   Reservoir::Grid::Grid *grid_;
   Properties::VariablePropertyContainer *variable_container_;
   QList<Wells::Well *> *wells_;
+  QString compdat_; //!< The compdat generated from the list of well blocks. This is set by the simulator library.
 
   void verify(); //!< Verify the model. Throws an exception if it is not.
   void verifyWells();
