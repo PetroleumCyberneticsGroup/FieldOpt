@@ -176,26 +176,26 @@ Loggable::LogTarget Case::GetLogTarget() {
 map <string, string> Case::GetState() {
     map<string, string> statemap;
     switch (state.eval) {
-        case CaseState::EvalStatus::E_FAILED: statemap["EvalSt"] = "FAIL";
-        case CaseState::EvalStatus::E_TIMEOUT: statemap["EvalSt"] = "TMOT";
-        case CaseState::EvalStatus::E_PENDING: statemap["EvalSt"] = "PEND";
-        case CaseState::EvalStatus::E_CURRENT: statemap["EvalSt"] = "CRNT";
-        case CaseState::EvalStatus::E_DONE: statemap["EvalSt"] = "OKAY";
-        case CaseState::EvalStatus::E_BOOKKEEPED: statemap["EvalSt"] = "BKPD";
+        case CaseState::EvalStatus::E_FAILED: statemap["EvalSt"] = "FAIL"; break;
+        case CaseState::EvalStatus::E_TIMEOUT: statemap["EvalSt"] = "TMOT"; break;
+        case CaseState::EvalStatus::E_PENDING: statemap["EvalSt"] = "PEND"; break;
+        case CaseState::EvalStatus::E_CURRENT: statemap["EvalSt"] = "CRNT"; break;
+        case CaseState::EvalStatus::E_DONE: statemap["EvalSt"] = "OKAY"; break;
+        case CaseState::EvalStatus::E_BOOKKEEPED: statemap["EvalSt"] = "BKPD"; break;
     }
     switch (state.cons) {
-        case CaseState::ConsStatus::C_PROJ_FAILED: statemap["ConsSt"] = "PNFL";
-        case CaseState::ConsStatus::C_INFEASIBLE: statemap["ConsSt"] = "INFS";
-        case CaseState::ConsStatus::C_PENDING: statemap["ConsSt"] = "PEND";
-        case CaseState::ConsStatus::C_FEASIBLE: statemap["ConsSt"] = "OKAY";
-        case CaseState::ConsStatus::C_PROJECTED: statemap["ConsSt"] = "PROJ";
-        case CaseState::ConsStatus::C_PENALIZED: statemap["ConsSt"] = "PNZD";
+        case CaseState::ConsStatus::C_PROJ_FAILED: statemap["ConsSt"] = "PNFL"; break;
+        case CaseState::ConsStatus::C_INFEASIBLE: statemap["ConsSt"] = "INFS"; break;
+        case CaseState::ConsStatus::C_PENDING: statemap["ConsSt"] = "PEND"; break;
+        case CaseState::ConsStatus::C_FEASIBLE: statemap["ConsSt"] = "OKAY"; break;
+        case CaseState::ConsStatus::C_PROJECTED: statemap["ConsSt"] = "PROJ"; break;
+        case CaseState::ConsStatus::C_PENALIZED: statemap["ConsSt"] = "PNZD"; break;
     }
     switch (state.err_msg) {
-        case CaseState::ErrorMessage::ERR_WIC: statemap["ErrMsg"] = "WLIC";
-        case CaseState::ErrorMessage::ERR_CONS: statemap["ErrMsg"] = "CONS";
-        case CaseState::ErrorMessage::ERR_UNKNOWN: statemap["ErrMsg"] = "UNWN";
-        case CaseState::ErrorMessage::ERR_OK: statemap["ErrMsg"] = "OKAY";
+        case CaseState::ErrorMessage::ERR_WIC: statemap["ErrMsg"] = "WLIC"; break;
+        case CaseState::ErrorMessage::ERR_CONS: statemap["ErrMsg"] = "CONS"; break;
+        case CaseState::ErrorMessage::ERR_UNKNOWN: statemap["ErrMsg"] = "UNWN"; break;
+        case CaseState::ErrorMessage::ERR_OK: statemap["ErrMsg"] = "OKAY"; break;
     }
     return statemap;
 }
