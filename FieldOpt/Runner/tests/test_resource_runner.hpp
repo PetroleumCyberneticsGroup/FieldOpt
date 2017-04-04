@@ -41,7 +41,7 @@ class RunnerResources {
   };
  protected:
   Runner::RuntimeSettings *rts_ = new Runner::RuntimeSettings(argc, argv);
-  Logger *logger_ = new Logger(rts_, TestResources::ExampleFilePaths::directory_output_);
+  Logger *logger_ = new Logger(rts_, TestResources::ExampleFilePaths::directory_output_, false);
 };
 
 }

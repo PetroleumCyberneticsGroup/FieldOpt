@@ -46,9 +46,10 @@ Logger::Logger(Runner::RuntimeSettings *rts,
     }
 
     // Write headers
-    Utilities::FileHandling::WriteLineToFile(cas_log_header_,
-                                             cas_log_path_);
-    Utilities::FileHandling::WriteLineToFile(opt_log_header_, opt_log_path_);
+    if (write_logs_) {
+        Utilities::FileHandling::WriteLineToFile(cas_log_header_, cas_log_path_);
+        Utilities::FileHandling::WriteLineToFile(opt_log_header_, opt_log_path_);
+    }
 }
 void Logger::AddEntry(Loggable *obj) {
 
