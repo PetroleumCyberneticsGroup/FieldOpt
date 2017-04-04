@@ -36,7 +36,6 @@
 
 using namespace std;
 
-namespace Runner {
 
 /*!
  * \brief The Logger class is responsible for writing CSV logs to the disk, as well as printing
@@ -49,13 +48,15 @@ class Logger
    * \brief Logger
    * \param rts Runtime settings
    * \param output_subdir Optional subdirectory in the output directory to write the logs in.
+   * \param write_logs Whether or not the logs should be written. This setting is mainly here for tests.
    */
-  Logger(RuntimeSettings *rts, QString output_subdir="");
+  Logger(Runner::RuntimeSettings *rts, QString output_subdir="", bool write_logs=true);
 
-  void AddEntry(Loggable &obj);
+  void AddEntry(Loggable *obj);
 
 
  private:
+  bool write_logs_;
   bool verbose_; //!< Whether or not new log entries should also be printed to the console.
   QString output_dir_; //!< Directory in which the files will be written.
   QString opt_log_path_; //!< Path to the optimization log file.
@@ -65,27 +66,34 @@ class Logger
    * @brief The column widths count from after the leading comma (if there is one) up to the
    * last letter in the name of the column. The trailing space and comma are added separately.
    */
-  const map<string, int> cas_log_col_widths_ = {{"TimeSt", 19 },
-                                                {"EvalSt", 7}, {"ConsSt", 7}, {"ErrMsg", 7},
-                                                {"SimDur", 9},
-                                                {"OFnVal", 12},
-                                                {"CaseId", 41}
+  map<string, int> cas_log_col_widths_ {
+      {"TimeSt", 19 },
+      {"EvalSt", 7},
+      {"ConsSt", 7},
+      {"ErrMsg", 7},
+      {"SimDur", 9},
+      {"OFnVal", 12},
+      {"CaseId", 39}
   };
-  const QString cas_log_header_ = "             TimeSt , EvalSt , ConsSt , ErrMsg ,   SimDur ,      OFnVal ,                                 CaseId";
-  const map<string, int> opt_log_col_widths_ = {{"TimeSt", 19},
-                                                {"TimeEl", 9},
-                                                {"IterNr", 7}, {"TotlNr", 7}, {"BkpdNr", 7}, {"TimONr", 7},
-                                                {"FailNr", 7}, {"InvlNr", 7}, {"IterNr", 7},
-                                                {"CBOFnV", 12},
-                                                {"CurBst", 41}
+  const QString cas_log_header_ = "             TimeSt , EvalSt , ConsSt , ErrMsg ,   SimDur ,       OFnVal ,                                 CaseId";
+  map<string, int> opt_log_col_widths_ {
+      {"TimeSt", 19},
+      {"TimeEl", 9},
+      {"IterNr", 6},
+      {"TotlNr", 6},
+      {"EvalNr", 6},
+      {"BkpdNr", 6},
+      {"TimONr", 6},
+      {"FailNr", 6},
+      {"InvlNr", 6},
+      {"CBOFnV", 12},
+      {"CurBst", 41}
   };
-  const QString opt_log_header_ = "             TimeSt ,   TimeEl , IterNr , TotlNr , EvalNr , BkpdNr , TimONr , FailNr , InvlNr ,      CBOFnV ,                                 CurBst";
+  const QString opt_log_header_ = "             TimeSt ,   TimeEl , IterNr , TotlNr , EvalNr , BkpdNr , TimONr , FailNr , InvlNr ,       CBOFnV ,                                 CurBst";
 
-  void logCase(Loggable &obj);
-  void logOptimizer(Loggable &obj);
-  void logExtended(Loggable &obj);
+  void logCase(Loggable *obj);
+  void logOptimizer(Loggable *obj);
+  void logExtended(Loggable *obj);
 };
-
-}
 
 #endif // LOGGER_H

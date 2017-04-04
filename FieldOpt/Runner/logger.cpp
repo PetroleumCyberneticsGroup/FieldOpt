@@ -21,11 +21,12 @@
 #include "logger.h"
 #include "Utilities/time.hpp"
 
-namespace Runner {
 
-Logger::Logger(RuntimeSettings *rts,
-               QString output_subdir)
+Logger::Logger(Runner::RuntimeSettings *rts,
+               QString output_subdir,
+               bool write_logs)
 {
+    write_logs_ = write_logs;
     verbose_ = rts->verbosity_level();
     output_dir_ = rts->output_dir();
     if (output_subdir.length() > 0)
@@ -38,7 +39,7 @@ Logger::Logger(RuntimeSettings *rts,
     if (rts->overwrite_existing()) {
         for (auto path : log_paths) {
             if (Utilities::FileHandling::FileExists(path)) {
-                std::cout << "Force flag on. Deleting " << path.toStdString() << std::endl;
+                cout << "Force flag on. Deleting " << path.toStdString() << endl;
                 Utilities::FileHandling::DeleteFile(path);
             }
         }
@@ -49,46 +50,54 @@ Logger::Logger(RuntimeSettings *rts,
                                              cas_log_path_);
     Utilities::FileHandling::WriteLineToFile(opt_log_header_, opt_log_path_);
 }
-void Logger::AddEntry(Loggable &obj) {
-    switch (obj.GetLogTarget()) {
-        case Loggable::LogTarget::LOG_CASE: logCase(obj);
-        case Loggable::LogTarget::LOG_OPTIMIZER: logOptimizer(obj);
-        case Loggable::LogTarget::LOG_EXTENDED: logExtended(obj);
+void Logger::AddEntry(Loggable *obj) {
+
+    switch (obj->GetLogTarget()) {
+        case Loggable::LogTarget::LOG_CASE: logCase(obj); break;
+        case Loggable::LogTarget::LOG_OPTIMIZER: logOptimizer(obj); break;
+        case Loggable::LogTarget::LOG_EXTENDED: logExtended(obj); break;
     }
 }
 
-void Logger::logCase(Loggable &obj) {
+void Logger::logCase(Loggable *obj) {
     stringstream entry;
-    entry << setw(cas_log_col_widths_.at("TimeSt")) << timestamp_string() << " ,";
-    entry << setw(cas_log_col_widths_.at("EvalSt")) << obj.GetState()["EvalSt"] << " ,";
-    entry << setw(cas_log_col_widths_.at("ConsSt")) << obj.GetState()["ConsSt"] << " ,";
-    entry << setw(cas_log_col_widths_.at("ErrMsg")) << obj.GetState()["ErrMsg"] << " ,";
-    entry << setw(cas_log_col_widths_.at("SimDur")) << timespan_string(obj.GetValues()["SimDur"][0]) << " ,";
-    entry << setw(cas_log_col_widths_.at("OFnVal")) << std::scientific << obj.GetValues()["EvalSt"][0] << " ,";
-    entry << setw(cas_log_col_widths_.at("CaseId")) << obj.GetId().toString().toStdString();
+    entry << setw(cas_log_col_widths_["TimeSt"]) << timestamp_string() << " ,";
+    entry << setw(cas_log_col_widths_["EvalSt"]) << obj->GetState()["EvalSt"] << " ,";
+    entry << setw(cas_log_col_widths_["ConsSt"]) << obj->GetState()["ConsSt"] << " ,";
+    entry << setw(cas_log_col_widths_["ErrMsg"]) << obj->GetState()["ErrMsg"] << " ,";
+    entry << setw(cas_log_col_widths_["SimDur"]) << timespan_string(obj->GetValues()["SimDur"][0]) << " , ";
+    entry.precision(6);
+    entry << setw(cas_log_col_widths_["OFnVal"]) << scientific << obj->GetValues()["OFnVal"][0] << " ,";
+    entry << setw(cas_log_col_widths_["CaseId"]) << obj->GetId().toString().toStdString();
     string str = entry.str();
-    Utilities::FileHandling::WriteLineToFile(QString::fromStdString(str), cas_log_path_);
-    return;
-}// .5E
-void Logger::logOptimizer(Loggable &obj) {
-//  ,                                 CurBst";
-    stringstream entry;
-    entry << setw(opt_log_col_widths_.at("TimeSt")) << timestamp_string() << " ,";
-    entry << setw(opt_log_col_widths_.at("TimeEl")) << timespan_string(obj.GetState()["TimeEl"][0]) << " ,";
-    entry << std::setfill('0') << setw(opt_log_col_widths_.at("IterNr")) << obj.GetState()["IterNr"][0] << " ,";
-    entry << std::setfill('0') << setw(opt_log_col_widths_.at("TotlNr")) << obj.GetState()["TotlNr"][0] << " ,";
-    entry << std::setfill('0') << setw(opt_log_col_widths_.at("EvalNr")) << obj.GetState()["EvalNr"][0] << " ,";
-    entry << std::setfill('0') << setw(opt_log_col_widths_.at("BkpdNr")) << obj.GetState()["BkpdNr"][0] << " ,";
-    entry << std::setfill('0') << setw(opt_log_col_widths_.at("TimONr")) << obj.GetState()["TimONr"][0] << " ,";
-    entry << std::setfill('0') << setw(opt_log_col_widths_.at("FailNr")) << obj.GetState()["FailNr"][0] << " ,";
-    entry << std::setfill('0') << setw(opt_log_col_widths_.at("InvlNr")) << obj.GetState()["InvlNr"][0] << " ,";
-    entry << setw(opt_log_col_widths_.at("CBOFnV")) << std::scientific << obj.GetValues()["CBOFnV"][0] << " ,";
-    entry << setw(opt_log_col_widths_.at("CurBst")) << obj.GetId().toString().toStdString();
+    if (write_logs_)
+        Utilities::FileHandling::WriteLineToFile(QString::fromStdString(str), cas_log_path_);
     return;
 }
-void Logger::logExtended(Loggable &obj) {
+void Logger::logOptimizer(Loggable *obj) {
+    stringstream entry;
+    entry << setw(opt_log_col_widths_["TimeSt"]) << timestamp_string() << " ,";
+    entry << setw(opt_log_col_widths_["TimeEl"]) << timespan_string(obj->GetState()["TimeEl"][0]) << " , ";
+    entry.precision(0);
+    entry << fixed << setfill('0') << setw(opt_log_col_widths_["IterNr"]) << obj->GetValues()["IterNr"][0] << " , ";
+    entry << fixed << setfill('0') << setw(opt_log_col_widths_["TotlNr"]) << obj->GetValues()["TotlNr"][0] << " , ";
+    entry << fixed << setfill('0') << setw(opt_log_col_widths_["EvalNr"]) << obj->GetValues()["EvalNr"][0] << " , ";
+    entry << fixed << setfill('0') << setw(opt_log_col_widths_["BkpdNr"]) << obj->GetValues()["BkpdNr"][0] << " , ";
+    entry << fixed << setfill('0') << setw(opt_log_col_widths_["TimONr"]) << obj->GetValues()["TimONr"][0] << " , ";
+    entry << fixed << setfill('0') << setw(opt_log_col_widths_["FailNr"]) << obj->GetValues()["FailNr"][0] << " , ";
+    entry << fixed << setfill('0') << setw(opt_log_col_widths_["InvlNr"]) << obj->GetValues()["InvlNr"][0] << " , ";
+    entry.precision(6);
+    entry << setw(opt_log_col_widths_["CBOFnV"]) << scientific << obj->GetValues()["CBOFnV"][0] << " , ";
+    entry.precision(0);
+    entry << obj->GetId().toString().toStdString();
+    string str = entry.str();
+    if (write_logs_)
+        Utilities::FileHandling::WriteLineToFile(QString::fromStdString(str), opt_log_path_);
+    return;
+}
+void Logger::logExtended(Loggable *obj) {
     /// \todo Implement this
     return;
 }
 
-}
+
