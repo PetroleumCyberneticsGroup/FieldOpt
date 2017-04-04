@@ -82,6 +82,12 @@ class Model : public Loggable
 
   void SetResult(const std::string key, std::vector<double> vec);
 
+  /*!
+   * @brief Should be called at the end of the optimization run. Writes the last case
+   * to the extended log.
+   */
+  void Finalize();
+
  private:
   Reservoir::Grid::Grid *grid_;
   Properties::VariablePropertyContainer *variable_container_;

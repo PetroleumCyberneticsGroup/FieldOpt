@@ -112,6 +112,7 @@ void SynchronousMPIRunner::Execute() {
                 }
             }
         }
+        model_->Finalize();
         printMessage("Terminating workers.", 2);
         PrintCompletionMessage();
         overseer_->TerminateWorkers();

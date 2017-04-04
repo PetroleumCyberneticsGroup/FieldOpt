@@ -36,6 +36,10 @@ Model::Model(Settings::Model settings, Logger *logger)
     logger_ = logger;
 }
 
+void Model::Finalize() {
+    logger_->AddEntry(this);
+}
+
 void Model::ApplyCase(Optimization::Case *c)
 {
     for (QUuid key : c->binary_variables().keys()) {
