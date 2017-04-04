@@ -35,7 +35,7 @@ class CaseTransferObject;
  * \brief The Case class represents a specific case for the optimizer, i.e. a specific set of variable values
  * and the value of the objective function after evaluation.
  */
-class Case : Loggable
+class Case : public Loggable
 {
  public:
   friend class CaseHandler;
