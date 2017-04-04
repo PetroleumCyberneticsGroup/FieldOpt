@@ -3,6 +3,8 @@
 #define TIME_FUNCTIONS_H
 
 #include <QDateTime>
+#include <sstream>
+#include <iomanip>
 
 /*!
  * @brief Get the number of seconds from t1 to t2.
@@ -38,9 +40,13 @@ inline std::string timespan_string(int seconds) {
     int hrs = seconds/3600;
     int mins = (seconds - hrs*3600) / 60;
     int secs = seconds % 60;
-    std::string tstamp = std::to_string(hrs) + ":" +
-        std::to_string(mins) + ":" + std::to_string(secs);
-    return tstamp;
+
+    std::stringstream timestr;
+    timestr << std::setfill('0') << std::setw(2) << hrs << ":";
+    timestr << std::setfill('0') << std::setw(2) << mins << ":";
+    timestr << std::setfill('0') << std::setw(2) << secs;
+
+    return timestr.str();
 }
 
 #endif // TIME_FUNCTIONS_H
