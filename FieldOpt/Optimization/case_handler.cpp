@@ -29,6 +29,13 @@ CaseHandler::CaseHandler()
     evaluating_ = QList<QUuid>();
     evaluated_ = QList<QUuid>();
     evaluated_recently_ = QList<QUuid>();
+
+    nr_totl_ = 0;
+    nr_eval_ = 0;
+    nr_bkpd_ = 0;
+    nr_timo_ = 0;
+    nr_invl_ = 0;
+    nr_fail_ = 0;
 }
 
 CaseHandler::CaseHandler(Case *base_case)

@@ -136,7 +136,6 @@ class CaseHandler
   QList<QUuid> evaluated_recently_; //!< List of keys that have recently been evaluated.
   QHash<QUuid, Case *> cases_;
 
-  // TotlNr , EvalNr , BkpdNr , TimONr , FailNr , InvlNr
   int nr_totl_; //!< Total number of cases added to handler.
   int nr_eval_; //!< Number of cases that have been simulated.
   int nr_bkpd_; //!< Number of cases handled by bookkeeper.
