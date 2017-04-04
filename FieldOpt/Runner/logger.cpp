@@ -18,6 +18,7 @@
 ******************************************************************************/
 
 #include <iomanip>
+#include <QtCore/QJsonDocument>
 #include "logger.h"
 #include "Utilities/time.hpp"
 
@@ -33,7 +34,8 @@ Logger::Logger(Runner::RuntimeSettings *rts,
         output_dir_ = output_dir_ + "/" + output_subdir + "/";
     opt_log_path_ = output_dir_ + "/log_optimization.csv";
     cas_log_path_ = output_dir_ + "/log_cases.csv";
-    QStringList log_paths = (QStringList() << cas_log_path_ << opt_log_path_);
+    ext_log_path_ = output_dir_ + "/log_extended.json";
+    QStringList log_paths = (QStringList() << cas_log_path_ << opt_log_path_ << ext_log_path_);
 
     // Delete existing logs if --force flag is on
     if (rts->overwrite_existing()) {
@@ -49,10 +51,18 @@ Logger::Logger(Runner::RuntimeSettings *rts,
     if (write_logs_) {
         Utilities::FileHandling::WriteLineToFile(cas_log_header_, cas_log_path_);
         Utilities::FileHandling::WriteLineToFile(opt_log_header_, opt_log_path_);
+
+        // Create base JSON document
+        QJsonObject json_base;
+        json_base.insert("Cases", QJsonArray());
+        QJsonDocument json_doc = QJsonDocument(json_base);
+        QFile json_file(ext_log_path_);
+        json_file.open(QFile::WriteOnly);
+        json_file.write(json_doc.toJson(QJsonDocument::Indented));
+        json_file.close();
     }
 }
 void Logger::AddEntry(Loggable *obj) {
-
     switch (obj->GetLogTarget()) {
         case Loggable::LogTarget::LOG_CASE: logCase(obj); break;
         case Loggable::LogTarget::LOG_OPTIMIZER: logOptimizer(obj); break;
@@ -71,8 +81,9 @@ void Logger::logCase(Loggable *obj) {
     entry << setw(cas_log_col_widths_["OFnVal"]) << scientific << obj->GetValues()["OFnVal"][0] << " ,";
     entry << setw(cas_log_col_widths_["CaseId"]) << obj->GetId().toString().toStdString();
     string str = entry.str();
-    if (write_logs_)
+    if (write_logs_) {
         Utilities::FileHandling::WriteLineToFile(QString::fromStdString(str), cas_log_path_);
+    }
     return;
 }
 void Logger::logOptimizer(Loggable *obj) {
@@ -92,13 +103,72 @@ void Logger::logOptimizer(Loggable *obj) {
     entry.precision(0);
     entry << obj->GetId().toString().toStdString();
     string str = entry.str();
-    if (write_logs_)
+    if (write_logs_) {
         Utilities::FileHandling::WriteLineToFile(QString::fromStdString(str), opt_log_path_);
+    }
     return;
 }
 void Logger::logExtended(Loggable *obj) {
-    /// \todo Implement this
+    QJsonObject new_entry;
+
+    // UUID
+    new_entry.insert("UUID", obj->GetId().toString());
+
+    // Compdat string
+    new_entry.insert("COMPDAT", QString::fromStdString(obj->GetState()["COMPDAT"]));
+
+    // Variable values
+    QJsonArray vars;
+    for (auto const a : obj->GetValues()) {
+        if(a.first.compare(0, 4, "Var#") == 0) {
+            QJsonObject var;
+            var.insert(QString::fromStdString(a.first), a.second[0]);
+            vars.append(var);
+        }
+    }
+    new_entry.insert("Variables", vars);
+
+    // Production data
+    QJsonArray prod;
+    for (auto const a : obj->GetValues()) {
+        if(a.first.compare(0, 4, "Res#") == 0) {
+            QJsonObject data;
+            QJsonArray prod_vector;
+            for (int i = 0; i < a.second.size(); ++i) {
+                prod_vector.append(a.second[i]);
+            }
+            data.insert(QString::fromStdString(a.first), prod_vector);
+            prod.append(data);
+        }
+    }
+    new_entry.insert("ProductionData", prod);
+
+    if (write_logs_) {
+        // Open existing document
+        QFile json_file(ext_log_path_);
+
+        // First validating existing structure
+        json_file.open(QFile::ReadWrite);
+        QByteArray json_data = json_file.readAll();
+        QJsonObject json_obj = QJsonDocument::fromJson(json_data).object();
+        if (!json_obj.contains("Cases") || !json_obj["Cases"].isArray()) {
+            cout << "Invalid JSON log. Aborting." << endl;
+            exit(1);
+        }
+        json_file.close();
+
+        // Deleting file contents in preparation to rewrite
+        json_file.open(QFile::ReadWrite | QIODevice::Truncate);
+
+        // Add new case to JSON document
+        QJsonArray case_array = json_obj["Cases"].toArray();
+        case_array.append(new_entry);
+        json_obj["Cases"] = case_array;
+
+        // Write the updated log
+        QJsonDocument json_doc = QJsonDocument(json_obj);
+        json_file.write(json_doc.toJson(QJsonDocument::Indented));
+        json_file.close();
+    }
     return;
 }
-
-

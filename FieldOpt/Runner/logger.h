@@ -61,6 +61,7 @@ class Logger
   QString output_dir_; //!< Directory in which the files will be written.
   QString opt_log_path_; //!< Path to the optimization log file.
   QString cas_log_path_; //!< Path to the case log file.
+  QString ext_log_path_; //!< Path to the extended log file.
 
   /*!
    * @brief The column widths count from after the leading comma (if there is one) up to the
