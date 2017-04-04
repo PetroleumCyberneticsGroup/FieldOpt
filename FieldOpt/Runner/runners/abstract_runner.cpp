@@ -86,7 +86,7 @@ void AbstractRunner::InitializeModel()
     if (settings_ == 0)
         throw std::runtime_error("The Settings must be initialized before the Model.");
 
-    model_ = new Model::Model(*settings_->model());
+    model_ = new Model::Model(*settings_->model(), logger_);
 }
 
 void AbstractRunner::InitializeSimulator()

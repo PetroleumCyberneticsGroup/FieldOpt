@@ -27,8 +27,7 @@
 namespace {
 
 class BookkeeperTest : public ::testing::Test,
-                       public TestResources::TestResourceOptimizer,
-                       public TestResources::RunnerResources
+                       public TestResources::TestResourceOptimizer
 {
  protected:
   BookkeeperTest() {
@@ -38,7 +37,6 @@ class BookkeeperTest : public ::testing::Test,
                                                                       model_->variables(),
                                                                       model_->grid(),
                                                                       logger_
-
       );
       bookkeeper_ = new Runner::Bookkeeper(settings_full_, compass_search_->case_handler());
       c1 = compass_search_->GetCaseForEvaluation();

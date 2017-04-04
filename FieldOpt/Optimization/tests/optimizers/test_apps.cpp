@@ -32,8 +32,7 @@ using namespace Optimization::Optimizers;
 namespace {
 class APPSTest : public ::testing::Test,
                  public ::TestResources::TestResourceOptimizer,
-                 public ::TestResources::TestResourceGrids,
-                 public TestResources::RunnerResources
+                 public ::TestResources::TestResourceGrids
 {
  protected:
   APPSTest() {}

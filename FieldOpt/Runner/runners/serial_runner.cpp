@@ -23,6 +23,7 @@ namespace Runner {
 SerialRunner::SerialRunner(Runner::RuntimeSettings *runtime_settings)
     : AbstractRunner(runtime_settings)
 {
+    InitializeLogger();
     InitializeSettings();
     InitializeModel();
     InitializeSimulator();
@@ -31,7 +32,6 @@ SerialRunner::SerialRunner(Runner::RuntimeSettings *runtime_settings)
     InitializeBaseCase();
     InitializeOptimizer();
     InitializeBookkeeper();
-    InitializeLogger();
 }
 
 void SerialRunner::Execute()

@@ -14,8 +14,7 @@ namespace {
 
 class GeneticAlgorithmTest : public ::testing::Test,
                              public TestResources::TestResourceOptimizer,
-                             public TestResources::TestResourceGrids,
-                             public TestResources::RunnerResources
+                             public TestResources::TestResourceGrids
 {
  protected:
   GeneticAlgorithmTest() {

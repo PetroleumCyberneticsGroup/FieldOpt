@@ -28,6 +28,10 @@
 #include "Settings/model.h"
 #include "Optimization/case.h"
 #include "Model/wells/wellbore/wellblock.h"
+#include "Runner/loggable.hpp"
+#include "Runner/logger.h"
+
+class Logger;
 
 namespace Model {
 class ModelSynchronizationObject;
@@ -36,11 +40,16 @@ class ModelSynchronizationObject;
  * \brief The Model class represents the reservoir model as a whole, including wells and
  * any related variables, and the reservoir grid.
  */
-class Model
+class Model : public Loggable
 {
   friend class ModelSynchronizationObject;
  public:
-  Model(::Settings::Model settings);
+  Model(::Settings::Model settings, Logger *logger);
+
+  LogTarget GetLogTarget() override;
+  map<string, string> GetState() override;
+  QUuid GetId() override;
+  map<string, vector<double>> GetValues() override;
 
   /*!
    * \brief reservoir Get the reservoir (i.e. grid).
@@ -70,19 +79,23 @@ class Model
   QUuid GetCurrentCaseId() const { return current_case_id_; }
 
   void SetCompdatString(const QString compdat) { compdat_ = compdat; };
-  QString GetCompdatString() const { return compdat_; }
+
+  void SetResult(const std::string key, std::vector<double> vec);
 
  private:
   Reservoir::Grid::Grid *grid_;
   Properties::VariablePropertyContainer *variable_container_;
   QList<Wells::Well *> *wells_;
-  QString compdat_; //!< The compdat generated from the list of well blocks. This is set by the simulator library.
-
   void verify(); //!< Verify the model. Throws an exception if it is not.
+
   void verifyWells();
   void verifyWellTrajectory(Wells::Well *w);
   void verifyWellBlock(Wells::Wellbore::WellBlock *wb);
+
+  Logger *logger_;
   QUuid current_case_id_;
+  QString compdat_; //!< The compdat generated from the list of well blocks corresponding to the current case. This is set by the simulator library.
+  std::map<std::string, std::vector<double>> results_; //!< The results of the last simulation (i.e. the one performed with the current case).
 };
 
 }

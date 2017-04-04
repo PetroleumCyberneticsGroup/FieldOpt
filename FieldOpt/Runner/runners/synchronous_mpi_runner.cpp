@@ -28,6 +28,7 @@ SynchronousMPIRunner::SynchronousMPIRunner(RuntimeSettings *rts) : MPIRunner(rts
         std::cout << "00" << std::endl;
         InitializeSettings("rank" + QString::number(rank()));
 
+        InitializeLogger();
         InitializeModel();
         InitializeSimulator();
         EvaluateBaseModel();
@@ -35,7 +36,6 @@ SynchronousMPIRunner::SynchronousMPIRunner(RuntimeSettings *rts) : MPIRunner(rts
         InitializeBaseCase();
         InitializeOptimizer();
         InitializeBookkeeper();
-        InitializeLogger();
         overseer_ = new MPI::Overseer(this);
     }
     else {
