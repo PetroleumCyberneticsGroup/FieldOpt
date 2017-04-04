@@ -45,6 +45,7 @@ void ECLSimulator::Evaluate()
     driver_file_writer_->WriteDriverFile();
     ::Utilities::Unix::ExecShellScript(script_path_, script_args_);
     results_->ReadResults(driver_file_writer_->output_driver_file_name_);
+    updateResultsInModel();
 }
 
 void ECLSimulator::CleanUp()
@@ -73,6 +74,7 @@ bool ECLSimulator::Evaluate(int timeout, int threads) {
     bool success = ::Utilities::Unix::ExecShellScriptTimeout(script_path_, script_args_, t);
     std::cout << "Monitored simulation done." << std::endl;
     if (success) results_->ReadResults(driver_file_writer_->output_driver_file_name_);
+    updateResultsInModel();
     return success;
 }
 

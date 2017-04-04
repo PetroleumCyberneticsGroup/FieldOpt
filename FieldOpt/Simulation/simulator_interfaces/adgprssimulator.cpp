@@ -46,6 +46,7 @@ void AdgprsSimulator::Evaluate()
     driver_file_writer_->WriteDriverFile(output_directory_);
     ::Utilities::Unix::ExecShellScript(script_path_, script_args_);
     results_->ReadResults(output_h5_summary_file_path_);
+    updateResultsInModel();
 }
 
 void AdgprsSimulator::CleanUp()
@@ -91,6 +92,7 @@ bool AdgprsSimulator::Evaluate(int timeout, int threads) {
     if (success) {
         results_->ReadResults(output_h5_summary_file_path_);
     }
+    updateResultsInModel();
     return success;
 }
 

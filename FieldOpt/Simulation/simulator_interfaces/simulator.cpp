@@ -70,5 +70,12 @@ void Simulator::SetVerbosityLevel(int level) {
     verbosity_level_ = level;
 }
 
+void Simulator::updateResultsInModel() {
+    model_->SetResult("Time", results_->GetValueVector(Results::Results::Property::Time));
+    model_->SetResult("Time", results_->GetValueVector(Results::Results::Property::CumulativeGasProduction));
+    model_->SetResult("Time", results_->GetValueVector(Results::Results::Property::CumulativeOilProduction));
+    model_->SetResult("Time", results_->GetValueVector(Results::Results::Property::CumulativeWaterProduction));
+}
+
 }
 }
