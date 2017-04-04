@@ -74,9 +74,14 @@ class Loggable {
    *    "SimDur": [122.1]
    * The logger will take care of converting the UUID to the name of the varible.
    *
-   * For production data logs, the key should be the name of the vector, and the
-   * vector should contain the production data, e.g.
-   *    "FOPT": [0.0, 200.0, 240.0]
+   * For production data logs, the key should be the name of the vector, prepended
+   * with "Res#" and the vector should contain the production data, e.g.
+   *    "Res#CumulativeOilProductionTotal": [0.0, 200.0, 240.0]
+   *
+   * For variable values (from the Model to the extended log), the key should be
+   * the variable name prepended with "Var#", and the value should be a vector of
+   * length one containing the variable value:
+   *    "Var#PROD#BHP#1": [204.1]
    * @return A string-vector map of values.
    */
   virtual map<string, vector<double>> GetValues() = 0;
