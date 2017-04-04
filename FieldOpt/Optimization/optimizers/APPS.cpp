@@ -26,9 +26,13 @@
 namespace Optimization {
     namespace Optimizers {
 
-        APPS::APPS(Settings::Optimizer *settings, Case *base_case,
-                   Model::Properties::VariablePropertyContainer *variables, Reservoir::Grid::Grid *grid)
-                : GSS(settings, base_case, variables, grid) {
+        APPS::APPS(Settings::Optimizer *settings,
+                   Case *base_case,
+                   Model::Properties::VariablePropertyContainer *variables,
+                   Reservoir::Grid::Grid *grid,
+                   Logger *logger
+        )
+                : GSS(settings, base_case, variables, grid, logger) {
             directions_ = GSSPatterns::Compass(num_vars_);
             step_lengths_ = Eigen::VectorXd(directions_.size());
             step_lengths_.fill(settings->parameters().initial_step_length);

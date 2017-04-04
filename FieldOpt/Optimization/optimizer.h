@@ -26,6 +26,9 @@
 #include "optimization_exceptions.h"
 #include "Model/properties/variable_property_container.h"
 #include "Runner/loggable.hpp"
+#include "Runner/logger.h"
+
+class Logger;
 
 namespace Optimization {
 
@@ -33,7 +36,7 @@ namespace Optimization {
  * \brief The Optimizer class is the abstract parent class for all optimizers. It is primarily
  * designed to support direct search optimization algorithms.
  */
-class Optimizer : Loggable
+class Optimizer : public Loggable
 {
  public:
   Optimizer() = delete;
@@ -110,8 +113,10 @@ class Optimizer : Loggable
    */
   Optimizer(::Settings::Optimizer *settings,
             Case *base_case,
-            ::Model::Properties::VariablePropertyContainer *variables,
-            Reservoir::Grid::Grid *grid);
+            Model::Properties::VariablePropertyContainer *variables,
+            Reservoir::Grid::Grid *grid,
+            Logger *logger
+  );
 
   /*!
    * @brief Handle an incomming evaluated case. This is called at the end of the SubmitEvaluatedCase method.
@@ -151,6 +156,7 @@ class Optimizer : Loggable
   int verbosity_level_; //!< The verbosity level for runtime console logging.
   ::Settings::Optimizer::OptimizerMode mode_; //!< The optimization mode, i.e. whether the objective function should be maximized or minimized.
   bool is_async_; //!< Inidcates whether or not the optimizer is asynchronous. Defaults to false.
+  Logger *logger_;
 
  private:
   QDateTime start_time_;

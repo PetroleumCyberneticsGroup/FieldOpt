@@ -23,10 +23,13 @@
 namespace Optimization {
 namespace Optimizers {
 
-ExhaustiveSearch2DVert::ExhaustiveSearch2DVert(Settings::Optimizer *settings, Case *base_case,
+ExhaustiveSearch2DVert::ExhaustiveSearch2DVert(Settings::Optimizer *settings,
+                                               Case *base_case,
                                                Model::Properties::VariablePropertyContainer *variables,
-                                               Reservoir::Grid::Grid *grid)
-    : Optimizer(settings, base_case, variables, grid) {
+                                               Reservoir::Grid::Grid *grid,
+                                               Logger *logger
+)
+    : Optimizer(settings, base_case, variables, grid, logger) {
     grid_ = grid;
 
     if (variables->BinaryVariableSize() != 0 || variables->ContinousVariableSize() != 0

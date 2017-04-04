@@ -23,7 +23,9 @@ namespace Optimization {
 
 Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
                      Model::Properties::VariablePropertyContainer *variables,
-                     Reservoir::Grid::Grid *grid)
+                     Reservoir::Grid::Grid *grid,
+                     Logger *logger
+)
 {
     // Verify that the base case has been evaluated.
     try {
@@ -40,11 +42,14 @@ Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
     mode_ = settings->mode();
     is_async_ = false;
     start_time_ = QDateTime::currentDateTime();
+    logger_ = logger;
+    verbosity_level_ = 0;
 }
 
 Case *Optimizer::GetCaseForEvaluation()
 {
     if (case_handler_->QueuedCases().size() == 0) {
+        logger_->AddEntry(this);
         iterate();
     }
     return case_handler_->GetNextCaseForEvaluation();
@@ -57,6 +62,7 @@ void Optimizer::SubmitEvaluatedCase(Case *c)
     case_handler_->SetCaseErrMsg(c->id(), c->state.err_msg);
     case_handler_->SetCaseEvaluated(c->id());
     handleEvaluatedCase(case_handler_->GetCase(c->id()));
+    logger_->AddEntry(case_handler_->GetCase(c->id()));
 }
 
 Case *Optimizer::GetTentativeBestCase() const {

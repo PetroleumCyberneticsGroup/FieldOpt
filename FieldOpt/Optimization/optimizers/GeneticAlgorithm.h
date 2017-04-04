@@ -42,7 +42,9 @@ class GeneticAlgorithm : public Optimizer {
   GeneticAlgorithm(Settings::Optimizer *settings,
                    Case *base_case,
                    Model::Properties::VariablePropertyContainer *variables,
-                   Reservoir::Grid::Grid *grid);
+                   Reservoir::Grid::Grid *grid,
+                   Logger *logger
+  );
   TerminationCondition IsFinished() override;
  protected:
   virtual void handleEvaluatedCase(Case *c) = 0;

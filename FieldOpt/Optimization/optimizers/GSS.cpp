@@ -24,9 +24,13 @@
 namespace Optimization {
     namespace Optimizers {
 
-        GSS::GSS(Settings::Optimizer *settings, Case *base_case,
-                 Model::Properties::VariablePropertyContainer *variables, Reservoir::Grid::Grid *grid)
-                : Optimizer(settings, base_case, variables, grid) {
+        GSS::GSS(Settings::Optimizer *settings,
+                 Case *base_case,
+                 Model::Properties::VariablePropertyContainer *variables,
+                 Reservoir::Grid::Grid *grid,
+                 Logger *logger
+        )
+                : Optimizer(settings, base_case, variables, grid, logger) {
 
             int numRvars = base_case->GetRealVarVector().size();
             int numIvars = base_case->GetIntegerVarVector().size();

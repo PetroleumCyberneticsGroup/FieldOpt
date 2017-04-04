@@ -22,9 +22,12 @@ namespace Optimization {
         class CompassSearch : public GSS
         {
         public:
-            CompassSearch(::Settings::Optimizer *settings, Case *base_case,
+            CompassSearch(::Settings::Optimizer *settings,
+                          Case *base_case,
                           ::Model::Properties::VariablePropertyContainer *variables,
-                          Reservoir::Grid::Grid *grid);
+                          Reservoir::Grid::Grid *grid,
+                          Logger *logger
+            );
 
             QString GetStatusStringHeader() const;
             QString GetStatusString() const;

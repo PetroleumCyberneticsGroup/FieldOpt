@@ -40,7 +40,9 @@ class ExhaustiveSearch2DVert : public Optimizer {
   ExhaustiveSearch2DVert(Settings::Optimizer *settings,
                          Case *base_case,
                          Model::Properties::VariablePropertyContainer *variables,
-                         Reservoir::Grid::Grid *grid);
+                         Reservoir::Grid::Grid *grid,
+                         Logger *logger
+  );
  private:
   Reservoir::Grid::Grid *grid_;
   QUuid i_varid;

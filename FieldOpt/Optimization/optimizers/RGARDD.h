@@ -55,7 +55,9 @@ class RGARDD : public GeneticAlgorithm {
   RGARDD(Settings::Optimizer *settings,
          Case *base_case,
          Model::Properties::VariablePropertyContainer *variables,
-         Reservoir::Grid::Grid *grid);
+         Reservoir::Grid::Grid *grid,
+         Logger *logger
+  );
  private:
   vector<Chromosome> mating_pool_; //!< Holds the current mating pool.
   double discard_parameter_; //!< Determines the fraction of parents to be discarded in selection.

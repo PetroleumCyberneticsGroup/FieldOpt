@@ -28,7 +28,10 @@ namespace Optimizers {
 GeneticAlgorithm::GeneticAlgorithm(Settings::Optimizer *settings,
                                    Case *base_case,
                                    Model::Properties::VariablePropertyContainer *variables,
-                                   Reservoir::Grid::Grid *grid) : Optimizer(settings, base_case, variables, grid) {
+                                   Reservoir::Grid::Grid *grid,
+                                   Logger *logger
+)
+    : Optimizer(settings, base_case, variables, grid, logger) {
     n_vars_ = variables->ContinousVariableSize();
     gen_ = get_random_generator();
     max_generations_ = settings->parameters().max_generations;
