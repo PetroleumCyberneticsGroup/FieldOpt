@@ -33,6 +33,13 @@ class Loggable {
 
  public:
 
+  /*!
+   * @brief Determines in which file the log entry will be written.
+   *
+   * LOG_CASE - The case log (log_cases.csv)
+   * LOG_OPTIMIZER - The optimizer log (log_optimization.csv)
+   * LOG_EXTENDED - The extended log (log_extended.json)
+   */
   enum LogTarget {LOG_CASE, LOG_OPTIMIZER, LOG_EXTENDED};
 
   /*!

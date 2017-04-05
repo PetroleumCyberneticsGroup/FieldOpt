@@ -38,8 +38,16 @@ using namespace std;
 
 
 /*!
- * \brief The Logger class is responsible for writing CSV logs to the disk, as well as printing
- * information to the console at runtime.
+ * \brief The Logger class is responsible for writing CSV and JSON logs to the disk.
+ *
+ * The logger will write data into up to three files:
+ *
+ * LOG_CASE - The case log (log_cases.csv). Information about the generated cases.
+ * LOG_OPTIMIZER - The optimizer log (log_optimization.csv). Information about the
+ *  optmizer and runner states at each iteration.
+ * LOG_EXTENDED - The extended log (log_extended.json). JSON log containing extended
+ *  information, such as variable values, simulated production results and calculated
+ *  compdats.
  */
 class Logger
 {
