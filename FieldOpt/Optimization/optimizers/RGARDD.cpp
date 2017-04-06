@@ -38,6 +38,7 @@ RGARDD::RGARDD(Settings::Optimizer *settings,
     else discard_parameter_ = settings->parameters().discard_parameter;
     stagnation_limit_ = settings->parameters().stagnation_limit;
     mating_pool_ = population_;
+    logger_->AddEntry(new Summary(this));
 }
 void RGARDD::iterate() {
     population_ = sortPopulation(population_);
@@ -165,5 +166,34 @@ void RGARDD::repopulate() {
     mating_pool_ = population_;
 }
 
+Loggable::LogTarget RGARDD::Summary::GetLogTarget() {
+    return SUMMARY;
+}
+map<string, string> RGARDD::Summary::GetState() {
+    map<string, string> statemap;
+    statemap["Name"] = "Genetic Algorithm (RGARDD)";
+    statemap["Mode"] = opt_->mode_ == Settings::Optimizer::OptimizerMode::Maximize ? "Maximize" : "Minimize";
+    statemap["Max Generations"] = boost::lexical_cast<string>(opt_->max_generations_);
+    statemap["Max Evaluations"] = boost::lexical_cast<string>(opt_->max_evaluations_);
+    statemap["Population Size"] = boost::lexical_cast<string>(opt_->population_size_);
+    statemap["Discard Parameter"] = boost::lexical_cast<string>(opt_->discard_parameter_);
+    statemap["Crossover Probability"] = boost::lexical_cast<string>(opt_->p_crossover_);
+    statemap["Decay Rate"] = boost::lexical_cast<string>(opt_->decay_rate_);
+    statemap["Mutation Strength"] = boost::lexical_cast<string>(opt_->mutation_strength_);
+
+    string constraints_used = "";
+    for (auto cons : opt_->constraint_handler_->constraints()) {
+        constraints_used += " " + cons->name();
+    }
+    statemap["Constraints"] = constraints_used;
+    return statemap;
+}
+QUuid RGARDD::Summary::GetId() {
+    return QUuid(); // Null UUID
+}
+map<string, vector<double>> RGARDD::Summary::GetValues() {
+    map<string, vector<double>> valmap;
+    return valmap;
+}
 }
 }

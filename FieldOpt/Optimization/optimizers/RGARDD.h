@@ -122,6 +122,17 @@ class RGARDD : public GeneticAlgorithm {
    */
   void repopulate();
 
+  class Summary : public Loggable {
+   public:
+    Summary(RGARDD *opt) { opt_ = opt; }
+    LogTarget GetLogTarget() override;
+    map<string, string> GetState() override;
+    QUuid GetId() override;
+    map<string, vector<double>> GetValues() override;
+   private:
+    RGARDD *opt_;
+  };
+
 };
 
 }
