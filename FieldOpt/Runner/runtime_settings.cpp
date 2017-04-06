@@ -18,6 +18,7 @@
 ******************************************************************************/
 #include "runtime_settings.h"
 #include <boost/lexical_cast.hpp>
+#include <QtCore/QUuid>
 
 namespace Runner {
 
@@ -209,16 +210,16 @@ po::variables_map RuntimeSettings::createVariablesMap(int argc, const char **arg
     return vm;
 }
 Loggable::LogTarget RuntimeSettings::GetLogTarget() {
-    return Loggable::LogTarget::SUMMARY;
+    return Loggable::LogTarget::LOG_SUMMARY;
 }
 map<string, string> RuntimeSettings::GetState() {
     map<string, string> statemap;
     statemap["verbosity"] = boost::lexical_cast<string>(verbosity_level_);
-    statemap["sim_maxpar"] = boost::lexical_cast<string>(max_parallel_sims_);
-    statemap["sim_threads"] = boost::lexical_cast<string>(threads_per_sim_);
-    statemap["sim_timeout"] = boost::lexical_cast<string>(simulation_timeout_);
+    statemap["Max. parallel sims"] = boost::lexical_cast<string>(max_parallel_sims_);
+    statemap["Threads pr. sim"] = boost::lexical_cast<string>(threads_per_sim_);
+    statemap["Simulator timeout"] = boost::lexical_cast<string>(simulation_timeout_);
 
-    statemap["overwrite"] = overwrite_existing_ ? "Yes" : "No";
+    statemap["Overwrite existing files"] = overwrite_existing_ ? "Yes" : "No";
 
     switch (runner_type_) {
         case SERIAL: statemap["runner"] = "Serial"; break;
@@ -226,16 +227,16 @@ map<string, string> RuntimeSettings::GetState() {
         case MPISYNC: statemap["runner"] = "MPI Parallel"; break;
     }
 
-    statemap["path_driver"] = driver_file_.toStdString();
-    statemap["path_output"] = output_dir_.toStdString();
-    statemap["path_simdriver"] = simulator_driver_path_.toStdString();
-    statemap["path_grid"] = grid_file_path_.toStdString();
-    statemap["path_simexec"] = simulator_exec_script_path_.toStdString();
-    statemap["path_build"] = fieldopt_build_dir_.toStdString();
+    statemap["path FieldOpt driver"] = driver_file_.toStdString();
+    statemap["path Otput Directory"] = output_dir_.toStdString();
+    statemap["path Simulator base driver"] = simulator_driver_path_.toStdString();
+    statemap["path Grid file"] = grid_file_path_.toStdString();
+    statemap["path Simulator execution script"] = simulator_exec_script_path_.toStdString();
+    statemap["path FieldOpt build directory"] = fieldopt_build_dir_.toStdString();
     return statemap;
 }
 QUuid RuntimeSettings::GetId() {
-    return nullptr;
+    return QUuid(); // Null UUID
 }
 map<string, vector<double>> RuntimeSettings::GetValues() {
     map<string, vector<double>> valmap;

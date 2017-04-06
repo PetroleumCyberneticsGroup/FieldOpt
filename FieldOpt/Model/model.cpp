@@ -131,7 +131,7 @@ map<string, vector<double>> Model::GetValues() {
 }
 
 Loggable::LogTarget Model::Summary::GetLogTarget() {
-    return SUMMARY;
+    return LOG_SUMMARY;
 }
 map<string, string> Model::Summary::GetState() {
     map<string, string> statemap;
@@ -186,7 +186,7 @@ map<string, Loggable::WellDescription> Model::Summary::GetWellDescriptions() {
         }
 
         // Controls
-        for (Wells::Control *cont : well->controls()) {
+        for (Wells::Control *cont : *well->controls()) {
             Loggable::ControlDescription cd;
             if (cont->mode() == Settings::Model::ControlMode::RateControl) {
                 cd.control = "Rate";

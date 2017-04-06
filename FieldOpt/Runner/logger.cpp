@@ -47,8 +47,8 @@ Logger::Logger(Runner::RuntimeSettings *rts,
         }
     }
 
-    // Write headers
     if (write_logs_) {
+        // Write CSV headers
         Utilities::FileHandling::WriteLineToFile(cas_log_header_, cas_log_path_);
         Utilities::FileHandling::WriteLineToFile(opt_log_header_, opt_log_path_);
 
@@ -67,6 +67,7 @@ void Logger::AddEntry(Loggable *obj) {
         case Loggable::LogTarget::LOG_CASE: logCase(obj); break;
         case Loggable::LogTarget::LOG_OPTIMIZER: logOptimizer(obj); break;
         case Loggable::LogTarget::LOG_EXTENDED: logExtended(obj); break;
+        case Loggable::LogTarget::LOG_SUMMARY: logSummary(obj); break;
     }
 }
 
@@ -171,4 +172,66 @@ void Logger::logExtended(Loggable *obj) {
         json_file.close();
     }
     return;
+}
+
+void Logger::logSummary(Loggable *obj) {
+    if (obj->GetWellDescriptions().size() > 0) {
+        sum_wellmap = obj->GetWellDescriptions();
+        sum_mod_statemap_ = obj->GetState();
+        sum_mod_valmap_ = obj->GetValues();
+    }
+    else if (obj->GetState().count("verbosity") > 0) {
+        sum_rts_statemap_ = obj->GetState();
+        sum_rts_valmap_ = obj->GetValues();
+    }
+    else {
+        sum_opt_statemap_ = obj->GetState();
+        sum_opt_valmap_ = obj->GetValues();
+    }
+}
+
+void Logger::FinalizePrerunSummary() {
+    stringstream sum;
+
+    // ==> Header and TOC <==
+    sum << "# FieldOpt run: " << timestamp_string() << "\n\n";
+    sum << "* [Run-time settings](#run-time-settings)" << "\n";
+    sum << "* [Optimizer](#optimizer)" << "\n";
+    sum << "* [Base Case](#base-case)" << "\n";
+    sum << "\n";
+
+    // ==> Run-time settings <==
+    sum << "## Run-time settings" << "\n\n";
+    sum << "| Setting                        | Value                |\n";
+    sum << "| ------------------------------ | -------------------- |\n";
+    for (auto entry : sum_rts_statemap_) {
+        if (entry.first.compare(0, 4, "path") != 0)
+            sum << "| " << entry.first << setw(30-entry.first.size()) << left
+                << " | " << entry.second << setw(20-entry.second.size()) << left << " |\n";
+    }
+    sum << "\n";
+
+    // ==> Paths <==
+    sum << "### Paths" << "\n\n";
+    sum << "| Path                 | Value                          |\n";
+    sum << "| -------------------- | ------------------------------ |\n";
+    for (auto entry : sum_rts_statemap_) {
+        if (entry.first.compare(0, 4, "path") == 0)
+            sum << "| " << entry.first << setw(20-entry.first.size()) << left
+                << " | " << entry.second << setw(30-entry.second.size()) << left << " |\n";
+    }
+    sum << "\n";
+
+    // ==> Optimizer <==
+    sum << "## Optimizer" << "\n\n";
+    sum << "| Setting                        | Value                |\n";
+    sum << "| ------------------------------ | -------------------- |\n";
+    for (auto entry : sum_opt_statemap_) {
+        sum << "| " << entry.first << setw(30-entry.first.size()) << left
+            << " | " << entry.second << setw(20-entry.second.size()) << left << " |\n";
+    }
+    sum << "\n";
+
+
+    string str = sum.str();
 }

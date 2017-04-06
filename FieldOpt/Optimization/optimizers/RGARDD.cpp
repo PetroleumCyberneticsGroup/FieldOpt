@@ -167,7 +167,7 @@ void RGARDD::repopulate() {
 }
 
 Loggable::LogTarget RGARDD::Summary::GetLogTarget() {
-    return SUMMARY;
+    return LOG_SUMMARY;
 }
 map<string, string> RGARDD::Summary::GetState() {
     map<string, string> statemap;

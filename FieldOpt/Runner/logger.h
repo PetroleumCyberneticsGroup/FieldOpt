@@ -61,6 +61,7 @@ class Logger
   Logger(Runner::RuntimeSettings *rts, QString output_subdir="", bool write_logs=true);
 
   void AddEntry(Loggable *obj);
+  void FinalizePrerunSummary();
 
 
  private:
@@ -70,6 +71,14 @@ class Logger
   QString opt_log_path_; //!< Path to the optimization log file.
   QString cas_log_path_; //!< Path to the case log file.
   QString ext_log_path_; //!< Path to the extended log file.
+
+  map<string, vector<double>> sum_mod_valmap_; //!< Model summary value map.
+  map<string, vector<double>> sum_opt_valmap_; //!< Optimizer summary value map.
+  map<string, vector<double>> sum_rts_valmap_; //!< Runtime settings summary value map.
+  map<string, string> sum_mod_statemap_; //!< Model summary state map.
+  map<string, string> sum_opt_statemap_; //!< Optimizer summary state map.
+  map<string, string> sum_rts_statemap_; //!< Runtime settings summary state map.
+  map<string, Loggable::WellDescription> sum_wellmap; //!< Model summary well map.
 
   /*!
    * @brief The column widths count from after the leading comma (if there is one) up to the
@@ -103,6 +112,7 @@ class Logger
   void logCase(Loggable *obj);
   void logOptimizer(Loggable *obj);
   void logExtended(Loggable *obj);
+  void logSummary(Loggable *obj);
 };
 
 #endif // LOGGER_H
