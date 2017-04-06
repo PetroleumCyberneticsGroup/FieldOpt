@@ -34,10 +34,12 @@ Model::Model(Settings::Model settings, Logger *logger)
 
     variable_container_->CheckVariableNameUniqueness();
     logger_ = logger;
+    logger_->AddEntry(new Summary(this));
 }
 
 void Model::Finalize() {
     logger_->AddEntry(this);
+    logger_->AddEntry(new Summary(this));
 }
 
 void Model::ApplyCase(Optimization::Case *c)
@@ -128,5 +130,101 @@ map<string, vector<double>> Model::GetValues() {
     return valmap;
 }
 
+Loggable::LogTarget Model::Summary::GetLogTarget() {
+    return SUMMARY;
 }
+map<string, string> Model::Summary::GetState() {
+    map<string, string> statemap;
+    return statemap;
+}
+QUuid Model::Summary::GetId() {
+    return nullptr;
+}
+map<string, vector<double>> Model::Summary::GetValues() {
+    map<string, vector<double>> valmap;
+    return valmap;
+}
+map<string, Loggable::WellDescription> Model::Summary::GetWellDescriptions() {
+    map<string, Loggable::WellDescription> wellmap;
 
+    for (auto well : *model_->wells()) {
+        Loggable::WellDescription wdesc;
+        wdesc.name = well->name().toStdString();
+        wdesc.group = well->group().toStdString();
+        wdesc.wellbore_radius = well->wellbore_radius();
+        wdesc.type = well->IsProducer() ? "Producer" : "Injector";
+
+        switch (well->preferred_phase()) {
+            case Settings::Model::PreferredPhase::Oil: wdesc.pref_phase = "Oil"; break;
+            case Settings::Model::PreferredPhase::Gas: wdesc.pref_phase = "Gas"; break;
+            case Settings::Model::PreferredPhase::Water: wdesc.pref_phase = "Water"; break;
+            case Settings::Model::PreferredPhase::Liquid: wdesc.pref_phase = "Liquid"; break;
+        }
+
+        // Spline
+        if (model_->variables()->GetWellSplineVariables(well->name()).size() > 0) {
+            wdesc.def_type = "Spline";
+            for (auto prop : model_->variables()->GetWellSplineVariables(well->name())) {
+                if (prop->propertyInfo().spline_end == Properties::Property::SplineEnd::Heel) {
+                    switch (prop->propertyInfo().coord) {
+                        case Properties::Property::Coordinate::x: wdesc.spline.heel_x = prop->value(); break;
+                        case Properties::Property::Coordinate::y: wdesc.spline.heel_y = prop->value(); break;
+                        case Properties::Property::Coordinate::z: wdesc.spline.heel_z = prop->value(); break;
+                    }
+                }
+                else {
+                    switch (prop->propertyInfo().coord) {
+                        case Properties::Property::Coordinate::x: wdesc.spline.toe_x = prop->value(); break;
+                        case Properties::Property::Coordinate::y: wdesc.spline.toe_y = prop->value(); break;
+                        case Properties::Property::Coordinate::z: wdesc.spline.toe_z = prop->value(); break;
+                    }
+                }
+            }
+        }
+        else {
+            wdesc.def_type =  "Blocks";
+        }
+
+        // Controls
+        for (Wells::Control *cont : well->controls()) {
+            Loggable::ControlDescription cd;
+            if (cont->mode() == Settings::Model::ControlMode::RateControl) {
+                cd.control = "Rate";
+                cd.value = cont->rate();
+            }
+            else {
+                cd.control = "BHP";
+                cd.value = cont->bhp();
+            }
+            cd.state = cont->open() ? "Open" : "Shut";
+            cd.time_step = cont->time_step();
+            wdesc.controls.push_back(cd);
+        }
+        wellmap[well->name().toStdString()] = wdesc;
+    }
+
+    return wellmap;
+}
+}
+///*!
+// * @brief Description of a well used by summaries.
+// */
+//struct WellDescription {
+//  string name;
+//  string group;
+//  string type;
+//  string def_type;
+//  string pref_phase;
+//  string wellbore_radius;
+//  SplineDescription spline;
+//};
+//struct SplineDescription {
+//  bool is_variable;
+//  double heel_x;
+//  double heel_y;
+//  double heel_z;
+//  double toe_x;
+//  double toe_y;
+//  double toe_z;
+//};
+//

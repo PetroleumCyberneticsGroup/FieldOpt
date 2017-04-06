@@ -40,7 +40,7 @@ class Loggable {
    * LOG_OPTIMIZER - The optimizer log (log_optimization.csv)
    * LOG_EXTENDED - The extended log (log_extended.json)
    */
-  enum LogTarget {LOG_CASE, LOG_OPTIMIZER, LOG_EXTENDED, SUMMARY_PRERUN};
+  enum LogTarget {LOG_CASE, LOG_OPTIMIZER, LOG_EXTENDED, SUMMARY};
 
   /*!
    * @brief Get the target log for the object. E.g. if LOG_CASE is returned,
@@ -92,6 +92,48 @@ class Loggable {
    * @return A string-vector map of values.
    */
   virtual map<string, vector<double>> GetValues() = 0;
+
+  /*!
+   * @brief Description of a well spline used for summaries.
+   */
+  struct SplineDescription {
+    bool is_variable;
+    double heel_x;
+    double heel_y;
+    double heel_z;
+    double toe_x;
+    double toe_y;
+    double toe_z;
+  };
+
+  /*!
+   * @brief Description of a well control used for summaries.
+   */
+  struct ControlDescription {
+    int time_step;
+    string state;
+    string control;
+    double value;
+  };
+
+  /*!
+   * @brief Description of a well used by summaries.
+   */
+  struct WellDescription {
+    string name;
+    string group;
+    string type;
+    string def_type;
+    string pref_phase;
+    string wellbore_radius;
+    SplineDescription spline;
+    vector<ControlDescription> controls;
+  };
+
+  /*!
+   * @brief Get well descriptions. Used in summaries.
+   */
+  virtual map<string, WellDescription> GetWellDescriptions() { return map<string, WellDescription>(); }
 
 };
 

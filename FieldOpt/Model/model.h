@@ -102,6 +102,18 @@ class Model : public Loggable
   QUuid current_case_id_;
   QString compdat_; //!< The compdat generated from the list of well blocks corresponding to the current case. This is set by the simulator library.
   std::map<std::string, std::vector<double>> results_; //!< The results of the last simulation (i.e. the one performed with the current case).
+
+  class Summary : public Loggable {
+   public:
+    Summary(Model *model) { model_  = model; }
+    LogTarget GetLogTarget() override;
+    map<string, string> GetState() override;
+    map<string, WellDescription> GetWellDescriptions() override;
+    QUuid GetId() override;
+    map<string, vector<double>> GetValues() override;
+   private:
+    Model *model_;
+  };
 };
 
 }

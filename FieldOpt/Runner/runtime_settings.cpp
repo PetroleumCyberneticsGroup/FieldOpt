@@ -209,7 +209,7 @@ po::variables_map RuntimeSettings::createVariablesMap(int argc, const char **arg
     return vm;
 }
 Loggable::LogTarget RuntimeSettings::GetLogTarget() {
-    return Loggable::LogTarget::SUMMARY_PRERUN;
+    return Loggable::LogTarget::SUMMARY;
 }
 map<string, string> RuntimeSettings::GetState() {
     map<string, string> statemap;
