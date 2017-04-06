@@ -208,5 +208,38 @@ po::variables_map RuntimeSettings::createVariablesMap(int argc, const char **arg
 
     return vm;
 }
+Loggable::LogTarget RuntimeSettings::GetLogTarget() {
+    return Loggable::LogTarget::SUMMARY_PRERUN;
+}
+map<string, string> RuntimeSettings::GetState() {
+    map<string, string> statemap;
+    statemap["verbosity"] = boost::lexical_cast<string>(verbosity_level_);
+    statemap["sim_maxpar"] = boost::lexical_cast<string>(max_parallel_sims_);
+    statemap["sim_threads"] = boost::lexical_cast<string>(threads_per_sim_);
+    statemap["sim_timeout"] = boost::lexical_cast<string>(simulation_timeout_);
+
+    statemap["overwrite"] = overwrite_existing_ ? "Yes" : "No";
+
+    switch (runner_type_) {
+        case SERIAL: statemap["runner"] = "Serial"; break;
+        case ONEOFF: statemap["runner"] = "One-off"; break;
+        case MPISYNC: statemap["runner"] = "MPI Parallel"; break;
+    }
+
+    statemap["path_driver"] = driver_file_.toStdString();
+    statemap["path_output"] = output_dir_.toStdString();
+    statemap["path_simdriver"] = simulator_driver_path_.toStdString();
+    statemap["path_grid"] = grid_file_path_.toStdString();
+    statemap["path_simexec"] = simulator_exec_script_path_.toStdString();
+    statemap["path_build"] = fieldopt_build_dir_.toStdString();
+    return statemap;
+}
+QUuid RuntimeSettings::GetId() {
+    return nullptr;
+}
+map<string, vector<double>> RuntimeSettings::GetValues() {
+    map<string, vector<double>> valmap;
+    return valmap;
+}
 
 }

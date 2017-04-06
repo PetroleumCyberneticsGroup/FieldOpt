@@ -40,7 +40,7 @@ class Loggable {
    * LOG_OPTIMIZER - The optimizer log (log_optimization.csv)
    * LOG_EXTENDED - The extended log (log_extended.json)
    */
-  enum LogTarget {LOG_CASE, LOG_OPTIMIZER, LOG_EXTENDED};
+  enum LogTarget {LOG_CASE, LOG_OPTIMIZER, LOG_EXTENDED, SUMMARY_PRERUN};
 
   /*!
    * @brief Get the target log for the object. E.g. if LOG_CASE is returned,
