@@ -21,6 +21,7 @@
 #include <QtCore/QJsonDocument>
 #include "logger.h"
 #include "Utilities/time.hpp"
+#include <boost/algorithm/string.hpp>
 
 
 Logger::Logger(Runner::RuntimeSettings *rts,
@@ -232,6 +233,47 @@ void Logger::FinalizePrerunSummary() {
     }
     sum << "\n";
 
+    // ==> Base Case <==
+    // --> Well TOC <--
+    sum << "## Base Case" << "\n\n";
+    sum << "| Name                      | Group      | Type       |\n";
+    sum << "| ------------------------- | ---------- | ---------- |\n";
+    for (auto w : sum_wellmap) {
+        sum << "| [" << w.first << "](#" << boost::algorithm::to_lower_copy(w.first) << ")"
+            << " | " << w.second.group << " | " << w.second.type << " |\n";
+    }
+    sum << "\n";
+
+    // --> Loop over wells <--
+    for (auto w : sum_wellmap) {
+        sum << "###" << w.first << "\n\n";
+        sum << "#### General settings" << "\n\n";
+        sum << "| Setting              | Value           |\n";
+        sum << "| -------------------- | --------------- |\n";
+        sum << "| Name                 | " << w.second.name << setw(15-w.second.name.size()) << left << " |\n";
+        sum << "| Group                | " << w.second.group << setw(15-w.second.group.size()) << left << " |\n";
+        sum << "| Type                 | " << w.second.type << setw(15-w.second.type.size()) << left << " |\n";
+        sum << "| Definition type      | " << w.second.def_type << setw(15-w.second.def_type.size()) << left << " |\n";
+        sum << "| Prefered phase       | " << w.second.pref_phase << setw(15-w.second.pref_phase.size()) << left << " |\n";
+        sum << "| Wellbore radius      | " << w.second.wellbore_radius << setw(15) << left << " |\n";
+        sum << "\n";
+        sum << "#### Spline Definition\n\n";
+        sum << "| End point  | Coord | Value      |\n";
+        sum << "| ---------- | ----- | ---------- |\n";
+        sum << "| Heel       | x     | " << w.second.spline.heel_x << setw(10) << left << " |\n";
+        sum << "| Heel       | y     | " << w.second.spline.heel_y << setw(10) << left << " |\n";
+        sum << "| Heel       | z     | " << w.second.spline.heel_z << setw(10) << left << " |\n";
+        sum << "| Toe        | x     | " <<  << w.second.spline.toe_x << setw(10) << left << " |\n";
+        sum << "| Toe        | y     | " <<  << w.second.spline.toe_y << setw(10) << left << " |\n";
+        sum << "| Toe        | z     | " <<  << w.second.spline.toe_z << setw(10) << left << " |\n";
+        sum << "\n";
+        sum << "#### Controls";
+        sum << "| Time step  | State | Control    | Value      |\n";
+        sum << "| ---------- | ----- | ---------- | ---------- |\n";
+        for (auto c : w.second.controls) {
+            sum << "| " << c.time_step << " | " << c.state << " | " << c.control << " | " << c.value << " |\n";
+        }
+    }
 
     string str = sum.str();
 }
