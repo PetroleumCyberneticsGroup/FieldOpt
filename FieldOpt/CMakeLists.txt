@@ -94,7 +94,7 @@ elseif(BUILD_WIC_ONLY)  # Building WIC executable with dependencies only
 
 else() # Building all FieldOpt sources
     find_package(Boost COMPONENTS
-            REQUIRED program_options serialization mpi system filesystem)
+            REQUIRED program_options serialization mpi system filesystem random)
 endif()
 
 # ERT Include dir, primarily for use on cluster (Maur). This assumes that
