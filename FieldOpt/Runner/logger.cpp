@@ -263,9 +263,9 @@ void Logger::FinalizePrerunSummary() {
         sum << "| Heel       | x     | " << w.second.spline.heel_x << setw(10) << left << " |\n";
         sum << "| Heel       | y     | " << w.second.spline.heel_y << setw(10) << left << " |\n";
         sum << "| Heel       | z     | " << w.second.spline.heel_z << setw(10) << left << " |\n";
-        sum << "| Toe        | x     | " <<  << w.second.spline.toe_x << setw(10) << left << " |\n";
-        sum << "| Toe        | y     | " <<  << w.second.spline.toe_y << setw(10) << left << " |\n";
-        sum << "| Toe        | z     | " <<  << w.second.spline.toe_z << setw(10) << left << " |\n";
+        sum << "| Toe        | x     | " << w.second.spline.toe_x << setw(10) << left << " |\n";
+        sum << "| Toe        | y     | " << w.second.spline.toe_y << setw(10) << left << " |\n";
+        sum << "| Toe        | z     | " << w.second.spline.toe_z << setw(10) << left << " |\n";
         sum << "\n";
         sum << "#### Controls";
         sum << "| Time step  | State | Control    | Value      |\n";
