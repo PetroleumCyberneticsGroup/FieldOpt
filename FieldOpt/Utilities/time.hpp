@@ -28,7 +28,11 @@ inline int time_since_seconds(const QDateTime t) {
  * @return
  */
 inline std::string timestamp_string() {
-    return QDateTime::currentDateTime().toString(Qt::ISODate).toStdString();
+    return timestamp_string(QDateTime::currentDateTime());
+}
+
+inline std::string timestamp_string(const QDateTime dt) {
+    return dt.toString(Qt::ISODate).toStdString();
 }
 
 /*!
