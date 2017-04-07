@@ -38,7 +38,7 @@ RGARDD::RGARDD(Settings::Optimizer *settings,
     else discard_parameter_ = settings->parameters().discard_parameter;
     stagnation_limit_ = settings->parameters().stagnation_limit;
     mating_pool_ = population_;
-    logger_->AddEntry(new Summary(this));
+    logger_->AddEntry(new ConfigurationSummary(this));
 }
 void RGARDD::iterate() {
     population_ = sortPopulation(population_);
@@ -166,10 +166,10 @@ void RGARDD::repopulate() {
     mating_pool_ = population_;
 }
 
-Loggable::LogTarget RGARDD::Summary::GetLogTarget() {
+Loggable::LogTarget RGARDD::ConfigurationSummary::GetLogTarget() {
     return LOG_SUMMARY;
 }
-map<string, string> RGARDD::Summary::GetState() {
+map<string, string> RGARDD::ConfigurationSummary::GetState() {
     map<string, string> statemap;
     statemap["Name"] = "Genetic Algorithm (RGARDD)";
     statemap["Mode"] = opt_->mode_ == Settings::Optimizer::OptimizerMode::Maximize ? "Maximize" : "Minimize";
@@ -188,10 +188,10 @@ map<string, string> RGARDD::Summary::GetState() {
     statemap["Constraints"] = constraints_used;
     return statemap;
 }
-QUuid RGARDD::Summary::GetId() {
+QUuid RGARDD::ConfigurationSummary::GetId() {
     return QUuid(); // Null UUID
 }
-map<string, vector<double>> RGARDD::Summary::GetValues() {
+map<string, vector<double>> RGARDD::ConfigurationSummary::GetValues() {
     map<string, vector<double>> valmap;
     return valmap;
 }

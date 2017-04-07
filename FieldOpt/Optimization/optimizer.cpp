@@ -148,5 +148,28 @@ map<string, vector<double>> Optimizer::GetValues() {
     return valmap;
 }
 
+Loggable::LogTarget Optimizer::Summary::GetLogTarget() {
+    return LOG_SUMMARY;
+}
+map<string, string> Optimizer::Summary::GetState() {
+    map<string, string> statemap;
+    statemap["Start"] = timestamp_string(opt_->start_time_);
+    statemap["Duration"] = timespan_string(
+        time_span_seconds(opt_->start_time_, QDateTime::currentDateTime())
+    );
+    statemap["End"] = timestamp_string(QDateTime::currentDateTime());
+    switch (cond_) {
+        case MAX_EVALS_REACHED: statemap["Term. condition"] = "Reached max. sims"; break;
+        case MINIMUM_STEP_LENGTH_REACHED: statemap["Term. condition"] = "Reached min. step length"; break;
+        default: statemap["Term. condition"] = "Unknown";
+    }
+    return statemap;
+}
+QUuid Optimizer::Summary::GetId() {
+    return opt_->tentative_best_case_->GetId();
+}
+map<string, vector<double>> Optimizer::Summary::GetValues() {
+    return nullptr;
+}
 }
 

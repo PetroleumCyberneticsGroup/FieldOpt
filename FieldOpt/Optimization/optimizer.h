@@ -160,6 +160,18 @@ class Optimizer : public Loggable
 
  private:
   QDateTime start_time_;
+
+  class Summary : public Loggable {
+   public:
+    Summary(Optimizer *opt, TerminationCondition cond) { opt_ = opt; cond_ = cond; }
+    LogTarget GetLogTarget() override;
+    map<string, string> GetState() override;
+    QUuid GetId() override;
+    map<string, vector<double>> GetValues() override;
+   private:
+    Optimizer *opt_;
+    Optimizer::TerminationCondition cond_;
+  };
 };
 
 }

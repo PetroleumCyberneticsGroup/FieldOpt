@@ -122,9 +122,9 @@ class RGARDD : public GeneticAlgorithm {
    */
   void repopulate();
 
-  class Summary : public Loggable {
+  class ConfigurationSummary : public Loggable {
    public:
-    Summary(RGARDD *opt) { opt_ = opt; }
+    ConfigurationSummary(RGARDD *opt) { opt_ = opt; }
     LogTarget GetLogTarget() override;
     map<string, string> GetState() override;
     QUuid GetId() override;
