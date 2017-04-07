@@ -68,6 +68,7 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
     welldefs.push_back(WellDefinition());
     welldefs[0].wellname = well_settings_.name.toStdString();
     welldefs[0].radii.push_back(well_settings_.wellbore_radius);
+    welldefs[0].skins.push_back(0.0);
     welldefs[0].heels.push_back(heel);
     welldefs[0].toes.push_back(toe);
 
