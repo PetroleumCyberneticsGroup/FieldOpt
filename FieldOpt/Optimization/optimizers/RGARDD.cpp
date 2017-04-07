@@ -183,7 +183,7 @@ map<string, string> RGARDD::Summary::GetState() {
 
     string constraints_used = "";
     for (auto cons : opt_->constraint_handler_->constraints()) {
-        constraints_used += " " + cons->name();
+        constraints_used += cons->name() + " ";
     }
     statemap["Constraints"] = constraints_used;
     return statemap;

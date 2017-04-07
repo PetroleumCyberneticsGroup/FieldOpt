@@ -259,4 +259,11 @@ int AbstractRunner::timeoutValue() const {
     }
 }
 
+void AbstractRunner::FinalizeInitialization(bool write_logs) {
+    if (write_logs) {
+        logger_->AddEntry(runtime_settings_);
+        logger_->FinalizePrerunSummary();
+    }
+}
+
 }

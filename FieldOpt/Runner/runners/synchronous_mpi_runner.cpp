@@ -37,6 +37,7 @@ SynchronousMPIRunner::SynchronousMPIRunner(RuntimeSettings *rts) : MPIRunner(rts
         InitializeOptimizer();
         InitializeBookkeeper();
         overseer_ = new MPI::Overseer(this);
+        FinalizeInitialization(true);
     }
     else {
         InitializeSettings("rank" + QString::number(rank()));
@@ -45,6 +46,7 @@ SynchronousMPIRunner::SynchronousMPIRunner(RuntimeSettings *rts) : MPIRunner(rts
         InitializeObjectiveFunction();
         InitializeLogger("rank" + QString::number(rank()));
         worker_ = new MPI::Worker(this);
+        FinalizeInitialization(false);
     }
 }
 

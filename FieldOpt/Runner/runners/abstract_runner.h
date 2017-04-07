@@ -105,6 +105,7 @@ class AbstractRunner
   void InitializeBaseCase();
   void InitializeOptimizer();
   void InitializeBookkeeper();
+  void FinalizeInitialization(bool write_logs); //!< Write the pre-run summary
 
   /*!
    * @brief Initialize the logger.

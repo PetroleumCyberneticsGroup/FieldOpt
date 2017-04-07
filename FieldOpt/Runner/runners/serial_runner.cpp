@@ -32,6 +32,7 @@ SerialRunner::SerialRunner(Runner::RuntimeSettings *runtime_settings)
     InitializeBaseCase();
     InitializeOptimizer();
     InitializeBookkeeper();
+    FinalizeInitialization(true);
 }
 
 void SerialRunner::Execute()

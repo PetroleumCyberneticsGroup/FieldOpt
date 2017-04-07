@@ -36,7 +36,8 @@ Logger::Logger(Runner::RuntimeSettings *rts,
     opt_log_path_ = output_dir_ + "/log_optimization.csv";
     cas_log_path_ = output_dir_ + "/log_cases.csv";
     ext_log_path_ = output_dir_ + "/log_extended.json";
-    QStringList log_paths = (QStringList() << cas_log_path_ << opt_log_path_ << ext_log_path_);
+    summary_prerun_path_ = output_dir_ + output_subdir + "/summary_prerun.md";
+    QStringList log_paths = (QStringList() << cas_log_path_ << opt_log_path_ << ext_log_path_ << summary_prerun_path_);
 
     // Delete existing logs if --force flag is on
     if (rts->overwrite_existing()) {
@@ -177,7 +178,7 @@ void Logger::logExtended(Loggable *obj) {
 
 void Logger::logSummary(Loggable *obj) {
     if (obj->GetWellDescriptions().size() > 0) {
-        sum_wellmap = obj->GetWellDescriptions();
+        sum_wellmap_ = obj->GetWellDescriptions();
         sum_mod_statemap_ = obj->GetState();
         sum_mod_valmap_ = obj->GetValues();
     }
@@ -192,6 +193,9 @@ void Logger::logSummary(Loggable *obj) {
 }
 
 void Logger::FinalizePrerunSummary() {
+    if (!write_logs_)
+        return;
+
     stringstream sum;
 
     // ==> Header and TOC <==
@@ -207,73 +211,106 @@ void Logger::FinalizePrerunSummary() {
     sum << "| ------------------------------ | -------------------- |\n";
     for (auto entry : sum_rts_statemap_) {
         if (entry.first.compare(0, 4, "path") != 0)
-            sum << "| " << entry.first << setw(30-entry.first.size()) << left
-                << " | " << entry.second << setw(20-entry.second.size()) << left << " |\n";
+            sum << "| " << entry.first << setw(33-entry.first.size()) << right
+                << " | " << entry.second << setw(23-entry.second.size()) << right << " |\n";
     }
     sum << "\n";
 
     // ==> Paths <==
     sum << "### Paths" << "\n\n";
-    sum << "| Path                 | Value                          |\n";
-    sum << "| -------------------- | ------------------------------ |\n";
+    sum << "| Path                       | Value                          |\n";
+    sum << "| -------------------------- | ---------------------------------------- |\n";
     for (auto entry : sum_rts_statemap_) {
-        if (entry.first.compare(0, 4, "path") == 0)
-            sum << "| " << entry.first << setw(20-entry.first.size()) << left
-                << " | " << entry.second << setw(30-entry.second.size()) << left << " |\n";
+        if (entry.first.compare(0, 4, "path") == 0) {
+            // Remove "path " from the key.
+            string pathn = entry.first;
+            pathn.erase(pathn.begin(), pathn.begin()+5);
+
+            // Trim away everything up to "FieldOpt" in the path if possible
+            string path = entry.second;
+            int fo = path.find("FieldOpt");
+            if (fo != string::npos){
+                path.erase(path.begin(), path.begin() + fo);
+            }
+            sum << "| " << pathn << setw(29 - pathn.size()) << right
+                << " | " << path << setw(43 - path.size()) << right << " |\n";
+        }
     }
     sum << "\n";
 
     // ==> Optimizer <==
     sum << "## Optimizer" << "\n\n";
-    sum << "| Setting                        | Value                |\n";
-    sum << "| ------------------------------ | -------------------- |\n";
+    sum << "| Setting                   | Value                          |\n";
+    sum << "| ------------------------- | ------------------------------ |\n";
     for (auto entry : sum_opt_statemap_) {
-        sum << "| " << entry.first << setw(30-entry.first.size()) << left
-            << " | " << entry.second << setw(20-entry.second.size()) << left << " |\n";
+        sum << "| " << entry.first << setw(28-entry.first.size()) << right
+            << " | " << entry.second << setfill(' ') << setw(33-entry.second.size()) << right << " |\n";
     }
     sum << "\n";
 
     // ==> Base Case <==
     // --> Well TOC <--
     sum << "## Base Case" << "\n\n";
-    sum << "| Name                      | Group      | Type       |\n";
-    sum << "| ------------------------- | ---------- | ---------- |\n";
-    for (auto w : sum_wellmap) {
-        sum << "| [" << w.first << "](#" << boost::algorithm::to_lower_copy(w.first) << ")"
-            << " | " << w.second.group << " | " << w.second.type << " |\n";
-    }
-    sum << "\n";
+    appendWellToc(sum_wellmap_, sum);
 
     // --> Loop over wells <--
-    for (auto w : sum_wellmap) {
-        sum << "###" << w.first << "\n\n";
-        sum << "#### General settings" << "\n\n";
-        sum << "| Setting              | Value           |\n";
-        sum << "| -------------------- | --------------- |\n";
-        sum << "| Name                 | " << w.second.name << setw(15-w.second.name.size()) << left << " |\n";
-        sum << "| Group                | " << w.second.group << setw(15-w.second.group.size()) << left << " |\n";
-        sum << "| Type                 | " << w.second.type << setw(15-w.second.type.size()) << left << " |\n";
-        sum << "| Definition type      | " << w.second.def_type << setw(15-w.second.def_type.size()) << left << " |\n";
-        sum << "| Prefered phase       | " << w.second.pref_phase << setw(15-w.second.pref_phase.size()) << left << " |\n";
-        sum << "| Wellbore radius      | " << w.second.wellbore_radius << setw(15) << left << " |\n";
-        sum << "\n";
-        sum << "#### Spline Definition\n\n";
-        sum << "| End point  | Coord | Value      |\n";
-        sum << "| ---------- | ----- | ---------- |\n";
-        sum << "| Heel       | x     | " << w.second.spline.heel_x << setw(10) << left << " |\n";
-        sum << "| Heel       | y     | " << w.second.spline.heel_y << setw(10) << left << " |\n";
-        sum << "| Heel       | z     | " << w.second.spline.heel_z << setw(10) << left << " |\n";
-        sum << "| Toe        | x     | " << w.second.spline.toe_x << setw(10) << left << " |\n";
-        sum << "| Toe        | y     | " << w.second.spline.toe_y << setw(10) << left << " |\n";
-        sum << "| Toe        | z     | " << w.second.spline.toe_z << setw(10) << left << " |\n";
-        sum << "\n";
-        sum << "#### Controls";
-        sum << "| Time step  | State | Control    | Value      |\n";
-        sum << "| ---------- | ----- | ---------- | ---------- |\n";
-        for (auto c : w.second.controls) {
-            sum << "| " << c.time_step << " | " << c.state << " | " << c.control << " | " << c.value << " |\n";
-        }
+    for (auto w : sum_wellmap_) {
+        appendWellDescription(w, sum);
     }
 
     string str = sum.str();
+    Utilities::FileHandling::WriteStringToFile(QString::fromStdString(str), summary_prerun_path_);
+
+    sum_mod_valmap_.clear();
+    sum_opt_valmap_.clear();
+    sum_rts_valmap_.clear();
+    sum_mod_statemap_.clear();
+    sum_opt_statemap_.clear();
+    sum_rts_statemap_.clear();
+    sum_wellmap_.clear();
+}
+
+void Logger::appendWellToc(map<string, Loggable::WellDescription> wellmap, stringstream &sum) {
+    sum << "| Name                      | Group      | Type       |\n";
+    sum << "| ------------------------- | ---------- | ---------- |\n";
+    for (auto w : wellmap) {
+        sum << "| [" << w.first << "](#" << boost::algorithm::to_lower_copy(w.first) << ")" << setw(28-w.first.size()*2-5) << right
+            << " | " << w.second.group << setw(13-w.second.group.size()) << right
+            << " | " << w.second.type  << setw(13-w.second.type.size())  << right << " |\n";
+    }
+    sum << "\n";
+}
+
+void Logger::appendWellDescription(pair<string, Loggable::WellDescription> w, stringstream &sum) {
+    sum << "###" << w.first << "\n\n";
+    sum << "#### General settings" << "\n\n";
+    sum << "| Setting              | Value           |\n";
+    sum << "| -------------------- | --------------- |\n";
+    sum << "| Name                 | " << w.second.name       << setw(18-w.second.name.size())       << right << " |\n";
+    sum << "| Group                | " << w.second.group      << setw(18-w.second.group.size())      << right << " |\n";
+    sum << "| Type                 | " << w.second.type       << setw(18-w.second.type.size())       << right << " |\n";
+    sum << "| Definition type      | " << w.second.def_type   << setw(18-w.second.def_type.size())   << right << " |\n";
+    sum << "| Prefered phase       | " << w.second.pref_phase << setw(18-w.second.pref_phase.size()) << right << " |\n";
+    sum << "| Wellbore radius      | " << w.second.wellbore_radius << setw(18-w.second.wellbore_radius.size()) << right << " |\n";
+    sum << "\n";
+    sum << "#### Spline Definition\n\n";
+    sum << "| End point  | Coord | Value      |\n";
+    sum << "| ---------- | ----- | ---------- |\n";
+    sum << "| Heel       | x     | " << w.second.spline.heel_x << setw(10) << right << " |\n";
+    sum << "| Heel       | y     | " << w.second.spline.heel_y << setw(10) << right << " |\n";
+    sum << "| Heel       | z     | " << w.second.spline.heel_z << setw(10) << right << " |\n";
+    sum << "| Toe        | x     | " << w.second.spline.toe_x  << setw(10) << right << " |\n";
+    sum << "| Toe        | y     | " << w.second.spline.toe_y  << setw(10) << right << " |\n";
+    sum << "| Toe        | z     | " << w.second.spline.toe_z  << setw(10) << right << " |\n";
+    sum << "\n";
+    sum << "#### Controls\n";
+    sum << "| Time step  | State | Control    | Value      |\n";
+    sum << "| ---------- | ----- | ---------- | ---------- |\n";
+    for (auto c : w.second.controls) {
+        sum << "| " << c.time_step << setw(12)                  << right
+            << " | " << c.state    << setw(8-c.state.size())    << right
+            << " | " << c.control  << setw(13-c.control.size()) << right
+            << " | " << c.value    << setw(10)                  << right << " |\n";
+    }
+    sum << "\n";
 }

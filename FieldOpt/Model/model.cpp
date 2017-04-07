@@ -151,7 +151,7 @@ map<string, Loggable::WellDescription> Model::Summary::GetWellDescriptions() {
         Loggable::WellDescription wdesc;
         wdesc.name = well->name().toStdString();
         wdesc.group = well->group().toStdString();
-        wdesc.wellbore_radius = well->wellbore_radius();
+        wdesc.wellbore_radius = boost::lexical_cast<string>(well->wellbore_radius());
         wdesc.type = well->IsProducer() ? "Producer" : "Injector";
 
         switch (well->preferred_phase()) {
@@ -206,25 +206,3 @@ map<string, Loggable::WellDescription> Model::Summary::GetWellDescriptions() {
     return wellmap;
 }
 }
-///*!
-// * @brief Description of a well used by summaries.
-// */
-//struct WellDescription {
-//  string name;
-//  string group;
-//  string type;
-//  string def_type;
-//  string pref_phase;
-//  string wellbore_radius;
-//  SplineDescription spline;
-//};
-//struct SplineDescription {
-//  bool is_variable;
-//  double heel_x;
-//  double heel_y;
-//  double heel_z;
-//  double toe_x;
-//  double toe_y;
-//  double toe_z;
-//};
-//

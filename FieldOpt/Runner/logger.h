@@ -71,6 +71,7 @@ class Logger
   QString opt_log_path_; //!< Path to the optimization log file.
   QString cas_log_path_; //!< Path to the case log file.
   QString ext_log_path_; //!< Path to the extended log file.
+  QString summary_prerun_path_; //!< Path to the pre-run summary file.
 
   map<string, vector<double>> sum_mod_valmap_; //!< Model summary value map.
   map<string, vector<double>> sum_opt_valmap_; //!< Optimizer summary value map.
@@ -78,7 +79,7 @@ class Logger
   map<string, string> sum_mod_statemap_; //!< Model summary state map.
   map<string, string> sum_opt_statemap_; //!< Optimizer summary state map.
   map<string, string> sum_rts_statemap_; //!< Runtime settings summary state map.
-  map<string, Loggable::WellDescription> sum_wellmap; //!< Model summary well map.
+  map<string, Loggable::WellDescription> sum_wellmap_; //!< Model summary well map.
 
   /*!
    * @brief The column widths count from after the leading comma (if there is one) up to the
@@ -113,6 +114,20 @@ class Logger
   void logOptimizer(Loggable *obj);
   void logExtended(Loggable *obj);
   void logSummary(Loggable *obj);
+
+  /*!
+   * @brief Append a well description to the summary.
+   * @param w Well to append description of.
+   * @param sum Summary string to append the description to.
+   */
+  void appendWellDescription(pair<string, Loggable::WellDescription> w, stringstream &sum);
+
+  /*!
+   * @brief Append a well "table of contents" to the summary string.
+   * @param wellmap The map containing the well descriptions to be appended.
+   * @param sum The summary to append to.
+   */
+  void appendWellToc(map<string, Loggable::WellDescription> wellmap, stringstream &sum);
 };
 
 #endif // LOGGER_H
