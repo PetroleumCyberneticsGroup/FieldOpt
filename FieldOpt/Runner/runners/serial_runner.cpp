@@ -77,8 +77,7 @@ void SerialRunner::Execute()
             simulation_times_.push_back(optimizer_->GetSimulationDuration(new_case));
         }
     }
-    model_->Finalize();
-    PrintCompletionMessage();
+    FinalizeRun(true);
 }
 
 }

@@ -62,7 +62,7 @@ class Logger
 
   void AddEntry(Loggable *obj);
   void FinalizePrerunSummary();
-
+  void FinalizePostrunSummary();
 
  private:
   bool write_logs_;
@@ -72,6 +72,7 @@ class Logger
   QString cas_log_path_; //!< Path to the case log file.
   QString ext_log_path_; //!< Path to the extended log file.
   QString summary_prerun_path_; //!< Path to the pre-run summary file.
+  QString summary_postrun_path_; //!< Path to the pre-run summary file.
 
   map<string, vector<double>> sum_mod_valmap_; //!< Model summary value map.
   map<string, vector<double>> sum_opt_valmap_; //!< Optimizer summary value map.

@@ -266,4 +266,13 @@ void AbstractRunner::FinalizeInitialization(bool write_logs) {
     }
 }
 
+void AbstractRunner::FinalizeRun(bool write_logs) {
+    model_->ApplyCase(optimizer_->GetTentativeBestCase());
+    simulator_->WriteDriverFilesOnly();
+    model_->Finalize();
+    PrintCompletionMessage();
+    if (write_logs)
+        logger_->FinalizePostrunSummary();
+}
+
 }

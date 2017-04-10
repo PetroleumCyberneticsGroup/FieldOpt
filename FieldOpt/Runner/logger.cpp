@@ -37,7 +37,9 @@ Logger::Logger(Runner::RuntimeSettings *rts,
     cas_log_path_ = output_dir_ + "/log_cases.csv";
     ext_log_path_ = output_dir_ + "/log_extended.json";
     summary_prerun_path_ = output_dir_ + output_subdir + "/summary_prerun.md";
-    QStringList log_paths = (QStringList() << cas_log_path_ << opt_log_path_ << ext_log_path_ << summary_prerun_path_);
+    summary_postrun_path_ = output_dir_ + output_subdir + "/summary_postrun.md";
+    QStringList log_paths = (QStringList() << cas_log_path_ << opt_log_path_ << ext_log_path_
+                                           << summary_prerun_path_ << summary_postrun_path_);
 
     // Delete existing logs if --force flag is on
     if (rts->overwrite_existing()) {
@@ -268,6 +270,68 @@ void Logger::FinalizePrerunSummary() {
     sum_opt_statemap_.clear();
     sum_rts_statemap_.clear();
     sum_wellmap_.clear();
+}
+
+void Logger::FinalizePostrunSummary() {
+    if (!write_logs_)
+        return;
+
+    stringstream sum;
+
+    sum << "# FieldOpt summary\n\n";
+
+    // ==> TOC <==
+    sum << "* [Optimizer](#optimizer)\n";
+    sum << "* [Evaluation](#evaluation)\n";
+    sum << "* [Best Case](#best-case)\n";
+
+    // ==> Breif summary table <==
+    sum << "| Key                            | Value                                    |\n";
+    sum << "| -------------------- | ------------------------------ |\n";
+    for (auto item : sum_opt_statemap_) {
+        if (item.first.compare(0, 2, "bc") != 0) { // Filtering out the best case entries
+            sum << "| " << item.first << setw(23-item.first.size()) << right
+                << " | " << item.second << setw(33-item.second.size()) << right << " |\n";
+        }
+    }
+    sum << "\n";
+
+    // ==> Evaluation summary <==
+    sum << "## Evaluation\n\n";
+    sum << "| Cases                | Number     |\n";
+    sum << "| -------------------- | ---------- |\n";
+    for (auto item : sum_opt_valmap_) {
+        sum << "| " << item.first << setw(23-item.first.size()) << right
+            << " | " << item.second[0] << setw(10) << right << " |\n";
+    }
+    sum << "\n";
+
+    // ==> Best Case <==
+    sum << "## Best Case\n\n";
+    sum << "| Property | Value |\n";
+    sum << "| ------------------------------ | ---------------------------------------- |\n";
+    for (auto item : sum_opt_statemap_) {
+        if (item.first.compare(0, 2, "bc") == 0) { // Taking best case entries
+            string key = item.first;
+            key.erase(key.begin(), key.begin()+3); // Removing the prepended "bc "
+            sum << "| " << key << setw(33-key.size()) << right
+                << " | " << item.second << setw(43-item.second.size()) << right << " |\n";
+        }
+    }
+    sum << "\n";
+
+    appendWellToc(sum_wellmap_, sum);
+
+    // --> Loop over wells <--
+    for (auto w : sum_wellmap_) {
+        appendWellDescription(w, sum);
+    }
+
+    sum << "### Compdat\n\n";
+    sum << sum_mod_statemap_["compdat"];
+
+    string str = sum.str();
+    Utilities::FileHandling::WriteStringToFile(QString::fromStdString(str), summary_postrun_path_);
 }
 
 void Logger::appendWellToc(map<string, Loggable::WellDescription> wellmap, stringstream &sum) {
