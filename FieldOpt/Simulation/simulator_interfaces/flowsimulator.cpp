@@ -108,5 +108,9 @@ bool FlowSimulator::Evaluate(int timeout, int threads) {
     }
     return success;
 }
+void FlowSimulator::WriteDriverFilesOnly() {
+    copyDriverFiles();
+    driver_file_writer_->WriteDriverFile(output_directory_);
+}
 }
 }

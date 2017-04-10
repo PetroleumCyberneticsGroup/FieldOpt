@@ -31,6 +31,7 @@ class FlowSimulator : public Simulator {
 
   virtual void Evaluate() override;
   virtual bool Evaluate(int timeout, int threads=1) override;
+  void WriteDriverFilesOnly() override;
   virtual void CleanUp() override;
   virtual void UpdateFilePaths() override;
 

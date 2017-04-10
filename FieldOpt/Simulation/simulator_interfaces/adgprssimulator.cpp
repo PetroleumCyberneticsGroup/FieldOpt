@@ -95,6 +95,10 @@ bool AdgprsSimulator::Evaluate(int timeout, int threads) {
     updateResultsInModel();
     return success;
 }
+void AdgprsSimulator::WriteDriverFilesOnly() {
+    copyDriverFiles();
+    driver_file_writer_->WriteDriverFile(output_directory_);
+}
 
 }
 }

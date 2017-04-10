@@ -77,6 +77,9 @@ bool ECLSimulator::Evaluate(int timeout, int threads) {
     updateResultsInModel();
     return success;
 }
+void ECLSimulator::WriteDriverFilesOnly() {
+    driver_file_writer_->WriteDriverFile();
+}
 
 }
 }

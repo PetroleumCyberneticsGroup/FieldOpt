@@ -52,7 +52,7 @@ class ECLSimulator : public Simulator
    * \brief Evaluate Executes the simulation of the current model. The evaluation is blocking.
    */
   void Evaluate();
-
+  void WriteDriverFilesOnly() override;
   /*!
    * \brief CleanUp Deletes files created during the simulation.
    * All files except the .DATA, .UNSMRY, .SMSPEC  and .LOG are deleted.
