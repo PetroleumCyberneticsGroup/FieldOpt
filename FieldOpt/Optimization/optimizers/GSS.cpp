@@ -82,18 +82,18 @@ namespace Optimization {
             if (dirs[0] == -1)
                 dirs = range(0, (int)directions_.size(), 1);
 
-            VectorXi int_base = tentative_best_case_->GetIntegerVarVector();
-            VectorXd rea_base = tentative_best_case_->GetRealVarVector();
+            VectorXi int_base = GetTentativeBestCase()->GetIntegerVarVector();
+            VectorXd rea_base = GetTentativeBestCase()->GetRealVarVector();
 
             for (int dir : dirs) {
-                auto trial_point = new Case(tentative_best_case_);
+                auto trial_point = new Case(GetTentativeBestCase());
                 if (int_base.size() > 0) {
                     trial_point->SetIntegerVarValues(perturb(int_base, dir));
                 }
                 else if (rea_base.size() > 0) {
                     trial_point->SetRealVarValues(perturb(rea_base, dir));
                 }
-                trial_point->set_origin_data(tentative_best_case_, dir, step_lengths_(dir));
+                trial_point->set_origin_data(GetTentativeBestCase(), dir, step_lengths_(dir));
                 trial_points.append(trial_point);
             }
 

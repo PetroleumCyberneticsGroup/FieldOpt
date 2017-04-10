@@ -169,7 +169,13 @@ QUuid Optimizer::Summary::GetId() {
     return opt_->tentative_best_case_->GetId();
 }
 map<string, vector<double>> Optimizer::Summary::GetValues() {
-    return nullptr;
+    map<string, vector<double>> valmap;
+    return valmap;
+}
+
+void Optimizer::updateTentativeBestCase(Case *c) {
+    tentative_best_case_ = c;
+    tentative_best_case_iteration_ = iteration_;
 }
 }
 

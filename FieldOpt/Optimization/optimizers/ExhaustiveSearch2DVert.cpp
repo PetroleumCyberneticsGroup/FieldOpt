@@ -67,7 +67,7 @@ void ExhaustiveSearch2DVert::iterate() {
 
     for (int i = 1; i < i_max; ++i) {
         for (int j = 1; j < j_max; ++j) {
-            auto new_case = new Case(tentative_best_case_);
+            auto new_case = new Case(GetTentativeBestCase());
             new_case->set_integer_variable_value(i_varid, i);
             new_case->set_integer_variable_value(j_varid, j);
             case_handler_->AddNewCase(new_case);

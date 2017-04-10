@@ -117,7 +117,7 @@ vector<GeneticAlgorithm::Chromosome> GeneticAlgorithm::sortPopulation(vector<Chr
     return population;
 }
 Case *GeneticAlgorithm::generateRandomCase() {
-    auto new_case = new Case(tentative_best_case_);
+    auto new_case = new Case(GetTentativeBestCase());
 
     Eigen::VectorXd erands(n_vars_);
     for (int i = 0; i < n_vars_; ++i) {

@@ -86,10 +86,10 @@ void RGARDD::handleEvaluatedCase(Case *c) {
     if (isBetter(c, population_[index].case_pointer)) {
         population_[index] = mating_pool_[index];
         if (isImprovement(c)) {
-            tentative_best_case_ = c;
+            updateTentativeBestCase(c);
             if (verbosity_level_ > 1) {
                 cout << "New best in generation " << iteration_ << ": "
-                     << tentative_best_case_->objective_function_value() << endl;
+                     << GetTentativeBestCase()->objective_function_value() << endl;
             }
         }
     }

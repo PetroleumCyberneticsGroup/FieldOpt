@@ -58,7 +58,7 @@ namespace Optimization {
         }
 
         void APPS::successful_iteration(Case *c) {
-            tentative_best_case_ = c;
+            updateTentativeBestCase(c);
             set_step_lengths(c->origin_step_length());
             expand();
             reset_active();
@@ -69,7 +69,7 @@ namespace Optimization {
 
         void APPS::unsuccessful_iteration(Case *c) {
             vector<int> unsuccessful_direction;
-            if (c->origin_case()->id() == tentative_best_case_->id()) {
+            if (c->origin_case()->id() == GetTentativeBestCase()->id()) {
                 unsuccessful_direction.push_back(c->origin_direction_index());
                 set_inactive(unsuccessful_direction);
                 contract(unsuccessful_direction);
@@ -108,7 +108,7 @@ namespace Optimization {
             else {
                 while (case_handler_->QueuedCases().size() > max_queue_length_ - directions_.size()) {
                     auto dequeued_case = dequeue_case_with_worst_origin();
-                    if (dequeued_case->origin_case()->id() == tentative_best_case_->id())
+                    if (dequeued_case->origin_case()->id() == GetTentativeBestCase()->id())
                         set_inactive(vector<int>{dequeued_case->origin_direction_index()});
                 }
                 return;
@@ -123,8 +123,8 @@ namespace Optimization {
             cout << "queue size     : " << case_handler_->QueuedCases().size() << endl;
 
             cout << "best case origin:" << endl;
-            cout << " direction idx : " << tentative_best_case_->origin_direction_index() << endl;
-            cout << " step length   : " << tentative_best_case_->origin_step_length() << endl;
+            cout << " direction idx : " << GetTentativeBestCase()->origin_direction_index() << endl;
+            cout << " step length   : " << GetTentativeBestCase()->origin_step_length() << endl;
         }
     }
 }

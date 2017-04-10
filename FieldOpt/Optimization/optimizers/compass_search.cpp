@@ -46,18 +46,18 @@ namespace Optimization {
                     .arg(nr_evaluated_cases())
                     .arg(nr_queued_cases())
                     .arg(nr_recently_evaluated_cases())
-                    .arg(tentative_best_case_->id().toString())
-                    .arg(tentative_best_case_->objective_function_value())
+                    .arg(GetTentativeBestCase()->id().toString())
+                    .arg(GetTentativeBestCase()->objective_function_value())
                     .arg(step_lengths_[0]);
         }
 
         void CompassSearch::handleEvaluatedCase(Case *c) {
             if (isImprovement(c))
-                tentative_best_case_ = c;
+                updateTentativeBestCase(c);
         }
 
         bool CompassSearch::is_successful_iteration() {
-            return case_handler_->RecentlyEvaluatedCases().contains(tentative_best_case_);
+            return case_handler_->RecentlyEvaluatedCases().contains(GetTentativeBestCase());
         }
 
     }}

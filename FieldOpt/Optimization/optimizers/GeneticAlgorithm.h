@@ -66,7 +66,6 @@ class GeneticAlgorithm : public Optimizer {
   };
 
   vector<Chromosome> population_; //!< Holds the current population.
-
   int max_generations_; //!< Maximum number of generations.
   int population_size_; //!< Size of population. This is automatically set to min(n_vars, 100);
   double p_crossover_; //!< Crossover probability.
