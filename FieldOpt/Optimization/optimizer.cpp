@@ -164,7 +164,15 @@ map<string, string> Optimizer::Summary::GetState() {
         case MAX_ITERATIONS_REACHED: statemap["Term. condition"] = "Reached max. iterations"; break;
         default: statemap["Term. condition"] = "Unknown";
     }
-    statemap["Best case found in iter"] = boost::lexical_cast<string>(opt_->tentative_best_case_iteration_);
+    statemap["bc Best case found in iter"] = boost::lexical_cast<string>(opt_->tentative_best_case_iteration_);
+    statemap["bc UUID"] = opt_->tentative_best_case_->GetId().toString().toStdString();
+    statemap["bc Objective function value"] = boost::lexical_cast<string>(opt_->tentative_best_case_->objective_function_value());
+    statemap["bc Constraint status"] = statemap["bc Constraint status"] = opt_->tentative_best_case_->GetState()["ConsSt"];
+    statemap["bc Simulation time"] = timespan_string(
+        time_span_seconds(opt_->tentative_best_case_->GetEvalStart(),
+                          opt_->tentative_best_case_->GetEvalDone()
+        )
+    );
     return statemap;
 }
 QUuid Optimizer::Summary::GetId() {
