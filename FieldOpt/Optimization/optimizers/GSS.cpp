@@ -56,8 +56,9 @@ namespace Optimization {
             else if (is_converged())
                 tc = MINIMUM_STEP_LENGTH_REACHED;
 
-            if (tc != NOT_FINISHED)
+            if (tc != NOT_FINISHED) {
                 logger_->AddEntry(new Summary(this, tc));
+            }
             return tc;
         }
 
