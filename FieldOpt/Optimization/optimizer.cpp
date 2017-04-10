@@ -161,6 +161,7 @@ map<string, string> Optimizer::Summary::GetState() {
     switch (cond_) {
         case MAX_EVALS_REACHED: statemap["Term. condition"] = "Reached max. sims"; break;
         case MINIMUM_STEP_LENGTH_REACHED: statemap["Term. condition"] = "Reached min. step length"; break;
+        case MAX_ITERATIONS_REACHED: statemap["Term. condition"] = "Reached max. iterations"; break;
         default: statemap["Term. condition"] = "Unknown";
     }
     statemap["Best case found in iter"] = boost::lexical_cast<string>(opt_->tentative_best_case_iteration_);

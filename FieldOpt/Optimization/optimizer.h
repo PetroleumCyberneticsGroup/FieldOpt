@@ -78,7 +78,10 @@ class Optimizer : public Loggable
    * The TerminationCondition enum enumerates the reasons why an optimization run is deemed
    * finished. It is returned by the IsFinished method
    */
-  enum TerminationCondition : int {NOT_FINISHED=0, MAX_EVALS_REACHED=1, MINIMUM_STEP_LENGTH_REACHED=2};
+  enum TerminationCondition : int {NOT_FINISHED=0,
+    MAX_EVALS_REACHED=1, MINIMUM_STEP_LENGTH_REACHED=2,
+    MAX_ITERATIONS_REACHED=3
+  };
 
   /*!
    * \brief IsFinished Check whether the optimization is finished, i.e. if the the optimizer has
@@ -157,11 +160,6 @@ class Optimizer : public Loggable
   bool is_async_; //!< Inidcates whether or not the optimizer is asynchronous. Defaults to false.
   Logger *logger_;
 
- private:
-  QDateTime start_time_;
-  Case *tentative_best_case_; //!< The best case encountered thus far.
-  int tentative_best_case_iteration_; //!< The iteration in which the current tentative best case was found.
-
   class Summary : public Loggable {
    public:
     Summary(Optimizer *opt, TerminationCondition cond) { opt_ = opt; cond_ = cond; }
@@ -173,6 +171,12 @@ class Optimizer : public Loggable
     Optimizer *opt_;
     Optimizer::TerminationCondition cond_;
   };
+
+ private:
+  QDateTime start_time_;
+  Case *tentative_best_case_; //!< The best case encountered thus far.
+
+  int tentative_best_case_iteration_; //!< The iteration in which the current tentative best case was found.
 };
 
 }

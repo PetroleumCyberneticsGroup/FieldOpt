@@ -73,17 +73,18 @@ GeneticAlgorithm::GeneticAlgorithm(Settings::Optimizer *settings,
     }
 }
 Optimizer::TerminationCondition GeneticAlgorithm::IsFinished() {
-    if (iteration_ >= max_generations_) {
+    TerminationCondition tc = NOT_FINISHED;
+    if (iteration_ >= max_generations_)
+        tc = MAX_ITERATIONS_REACHED;
+    else if (case_handler_->NumberSimulated() > max_evaluations_)
+        tc = MAX_EVALS_REACHED;
+
+    if (tc != NOT_FINISHED) {
         cout << "Generations at termination: " << iteration_ << endl;
         population_ = sortPopulation(population_);
-        if (verbosity_level_ > 1) {
-            cout << "Final ";
-            printPopulation();
-        }
-        return TerminationCondition::MAX_EVALS_REACHED;
+        logger_->AddEntry(new Summary(this, tc));
     }
-    else
-        return TerminationCondition::NOT_FINISHED;
+    return tc;
 }
 GeneticAlgorithm::Chromosome::Chromosome(Case *c) {
     case_pointer = c;

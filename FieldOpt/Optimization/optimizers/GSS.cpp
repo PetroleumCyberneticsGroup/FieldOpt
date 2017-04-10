@@ -50,11 +50,15 @@ namespace Optimization {
 
         Optimizer::TerminationCondition GSS::IsFinished()
         {
+            TerminationCondition tc = NOT_FINISHED;
             if (case_handler_->EvaluatedCases().size() >= max_evaluations_)
-                return MAX_EVALS_REACHED;
+                tc = MAX_EVALS_REACHED;
             else if (is_converged())
-                return MINIMUM_STEP_LENGTH_REACHED;
-            else return NOT_FINISHED; // The value of not finished is 0, which evaluates to false.
+                tc = MINIMUM_STEP_LENGTH_REACHED;
+
+            if (tc != NOT_FINISHED)
+                logger_->AddEntry(new Summary(this, tc));
+            return tc;
         }
 
         void GSS::expand(vector<int> dirs) {
