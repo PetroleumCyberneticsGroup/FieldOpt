@@ -163,6 +163,7 @@ map<string, string> Optimizer::Summary::GetState() {
         case MINIMUM_STEP_LENGTH_REACHED: statemap["Term. condition"] = "Reached min. step length"; break;
         default: statemap["Term. condition"] = "Unknown";
     }
+    statemap["Best case found in iter"] = boost::lexical_cast<string>(opt_->tentative_best_case_iteration_);
     return statemap;
 }
 QUuid Optimizer::Summary::GetId() {
@@ -170,6 +171,12 @@ QUuid Optimizer::Summary::GetId() {
 }
 map<string, vector<double>> Optimizer::Summary::GetValues() {
     map<string, vector<double>> valmap;
+    valmap["generated"] = vector<double>{opt_->case_handler_->NumberTotal()};
+    valmap["simulated"] = vector<double>{opt_->case_handler_->NumberSimulated()};
+    valmap["invalid"] = vector<double>{opt_->case_handler_->NumberInvalid()};
+    valmap["failed"] = vector<double>{opt_->case_handler_->NumberFailed()};
+    valmap["timed out"] = vector<double>{opt_->case_handler_->NumberTimeout()};
+    valmap["bookkeeped"] = vector<double>{opt_->case_handler_->NumberBookkeeped()};
     return valmap;
 }
 
