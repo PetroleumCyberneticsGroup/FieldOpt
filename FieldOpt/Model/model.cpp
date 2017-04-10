@@ -38,7 +38,8 @@ Model::Model(Settings::Model settings, Logger *logger)
 }
 
 void Model::Finalize() {
-    logger_->AddEntry(this);
+
+    // logger_->AddEntry(this); // Removing this causes the last case to not be in the JSON file
     logger_->AddEntry(new Summary(this));
 }
 
@@ -135,6 +136,7 @@ Loggable::LogTarget Model::Summary::GetLogTarget() {
 }
 map<string, string> Model::Summary::GetState() {
     map<string, string> statemap;
+    statemap["compdat"] = model_->compdat_.toStdString();
     return statemap;
 }
 QUuid Model::Summary::GetId() {
