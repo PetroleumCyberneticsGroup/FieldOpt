@@ -284,9 +284,10 @@ void Logger::FinalizePostrunSummary() {
     sum << "* [Optimizer](#optimizer)\n";
     sum << "* [Evaluation](#evaluation)\n";
     sum << "* [Best Case](#best-case)\n";
+    sum << "\n";
 
     // ==> Breif summary table <==
-    sum << "| Key                            | Value                                    |\n";
+    sum << "| Key                  | Value                          |\n";
     sum << "| -------------------- | ------------------------------ |\n";
     for (auto item : sum_opt_statemap_) {
         if (item.first.compare(0, 2, "bc") != 0) { // Filtering out the best case entries
@@ -328,7 +329,9 @@ void Logger::FinalizePostrunSummary() {
     }
 
     sum << "### Compdat\n\n";
-    sum << sum_mod_statemap_["compdat"];
+    sum << "```\n";
+    sum << sum_mod_statemap_["compdat"] << "\n";
+    sum << "```\n";
 
     string str = sum.str();
     Utilities::FileHandling::WriteStringToFile(QString::fromStdString(str), summary_postrun_path_);
@@ -346,7 +349,7 @@ void Logger::appendWellToc(map<string, Loggable::WellDescription> wellmap, strin
 }
 
 void Logger::appendWellDescription(pair<string, Loggable::WellDescription> w, stringstream &sum) {
-    sum << "###" << w.first << "\n\n";
+    sum << "### " << w.first << "\n\n";
     sum << "#### General settings" << "\n\n";
     sum << "| Setting              | Value           |\n";
     sum << "| -------------------- | --------------- |\n";
