@@ -50,7 +50,10 @@ Case *Optimizer::GetCaseForEvaluation()
 {
     if (case_handler_->QueuedCases().size() == 0) {
         logger_->AddEntry(this);
+        time_t start = time(0);
         iterate();
+        time_t end = time(0);
+        seconds_spent_in_iterate_ = difftime(end, start) * 1000.0;
     }
     return case_handler_->GetNextCaseForEvaluation();
 }
@@ -138,6 +141,7 @@ map<string, vector<double>> Optimizer::GetValues() {
     map<string, vector<double>> valmap;
     valmap["TimeEl"] = vector<double>{time_since_seconds(start_time_)};
     valmap["IterNr"] = vector<double>{iteration_};
+    valmap["TimeIt"] = vector<double>{seconds_spent_in_iterate_};
     valmap["TotlNr"] = vector<double>{case_handler_->NumberTotal()};
     valmap["EvalNr"] = vector<double>{case_handler_->NumberSimulated()};
     valmap["BkpdNr"] = vector<double>{case_handler_->NumberBookkeeped()};

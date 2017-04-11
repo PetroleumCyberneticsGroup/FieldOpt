@@ -175,6 +175,7 @@ class Optimizer : public Loggable
  private:
   QDateTime start_time_;
   Case *tentative_best_case_; //!< The best case encountered thus far.
+  int seconds_spent_in_iterate_; //!< The number of seconds spent in the iterate() method.
 
   int tentative_best_case_iteration_; //!< The iteration in which the current tentative best case was found.
 };

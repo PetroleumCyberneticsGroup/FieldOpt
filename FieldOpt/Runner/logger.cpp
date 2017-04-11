@@ -95,6 +95,7 @@ void Logger::logOptimizer(Loggable *obj) {
     stringstream entry;
     entry << setw(opt_log_col_widths_["TimeSt"]) << timestamp_string() << " ,";
     entry << setw(opt_log_col_widths_["TimeEl"]) << timespan_string(obj->GetState()["TimeEl"][0]) << " , ";
+    entry << setw(opt_log_col_widths_["TimeIt"]) << timespan_string(obj->GetState()["TimeIt"][0]) << " , ";
     entry.precision(0);
     entry << fixed << setfill('0') << setw(opt_log_col_widths_["IterNr"]) << obj->GetValues()["IterNr"][0] << " , ";
     entry << fixed << setfill('0') << setw(opt_log_col_widths_["TotlNr"]) << obj->GetValues()["TotlNr"][0] << " , ";
