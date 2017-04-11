@@ -1,5 +1,5 @@
 /******************************************************************************
-   Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
 
    This file is part of the FieldOpt project.
 
@@ -19,12 +19,15 @@
 
 #include "wellspline.h"
 #include <iostream>
+#include <time.h>
 #include <wells/well_exceptions.h>
+#include <QtCore/QDateTime>
+#include <Utilities/time.hpp>
 
 namespace Model {
 namespace Wells {
 namespace Wellbore {
-    using namespace Reservoir::WellIndexCalculation;
+using namespace Reservoir::WellIndexCalculation;
 
 WellSpline::WellSpline(Settings::Model::Well well_settings,
                        Properties::VariablePropertyContainer *variable_container,
@@ -39,6 +42,7 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
     toe_x_ = new Model::Properties::ContinousProperty(well_settings.spline_toe.x);
     toe_y_ = new Model::Properties::ContinousProperty(well_settings.spline_toe.y);
     toe_z_ = new Model::Properties::ContinousProperty(well_settings.spline_toe.z);
+    seconds_spent_in_compute_wellblocks_ = 0;
 
     if (well_settings.spline_heel.is_variable) {
         heel_x_->setName(well_settings.spline_heel.name + "#x");
@@ -72,7 +76,11 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
     welldefs[0].heels.push_back(heel);
     welldefs[0].toes.push_back(toe);
 
+    auto start = QDateTime::currentDateTime();
     auto block_data = wic.ComputeWellBlocks(welldefs)[well_settings_.name.toStdString()];
+    auto end = QDateTime::currentDateTime();
+    seconds_spent_in_compute_wellblocks_ = time_span_seconds(start, end);
+
     QList<WellBlock *> *blocks = new QList<WellBlock *>();
     for (int i = 0; i < block_data.size(); ++i) {
         blocks->append(getWellBlock(block_data[i]));

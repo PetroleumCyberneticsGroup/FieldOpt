@@ -75,18 +75,12 @@ class CaseHandler
   void UpdateCaseObjectiveFunctionValue(const QUuid id, const double ofv);
 
   /*!
-   * @brief Set the evaluation status of a case.
+   * @brief Update the evaluation status, error message, and WIC time for a case.
    * @param id The id of the case to set the status for.
-   * @param status The status to be set.
+   * @param state The state to be set.
+   * @param wic_time The time to be set.
    */
-  void SetCaseEvalStatus(QUuid id, Case::CaseState::EvalStatus status);
-
-  /*!
-   * @brief Set the evaluation status of a case.
-   * @param id The id of the case to set the status for.
-   * @param status The status to be set.
-   */
-  void SetCaseErrMsg(QUuid id, Case::CaseState::ErrorMessage errmsg);
+  void SetCaseState(QUuid id, Case::CaseState state, int wic_time);
 
   /*!
    * \brief RecentlyEvaluatedCases Get the list of cases that has been marked as evaluated since the last

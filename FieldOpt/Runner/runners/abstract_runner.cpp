@@ -215,9 +215,9 @@ void AbstractRunner::InitializeBookkeeper()
     bookkeeper_ = new Bookkeeper(settings_, optimizer_->case_handler());
 }
 
-void AbstractRunner::InitializeLogger(QString output_subdir)
+void AbstractRunner::InitializeLogger(QString output_subdir, bool write_logs)
 {
-    logger_ = new Logger(runtime_settings_, output_subdir);
+    logger_ = new Logger(runtime_settings_, output_subdir, write_logs);
 }
 
 void AbstractRunner::PrintCompletionMessage() const {

@@ -206,6 +206,7 @@ map <string, vector<double>> Case::GetValues() {
     map<string, vector<double>> valmap;
     valmap["OFnVal"] = vector<double>{objective_function_value_};
     valmap["SimDur"] = vector<double>{time_span_seconds(eval_start_, eval_done_)};
+    valmap["WicDur"] = vector<double>{wic_time_sec_};
     return valmap;
 }
 }

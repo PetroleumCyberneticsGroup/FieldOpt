@@ -18,6 +18,7 @@
 ******************************************************************************/
 #include <Utilities/time.hpp>
 #include "optimizer.h"
+#include <time.h>
 
 namespace Optimization {
 
@@ -50,10 +51,11 @@ Case *Optimizer::GetCaseForEvaluation()
 {
     if (case_handler_->QueuedCases().size() == 0) {
         logger_->AddEntry(this);
-        time_t start = time(0);
+        time_t start, end;
+        time(&start);
         iterate();
-        time_t end = time(0);
-        seconds_spent_in_iterate_ = difftime(end, start) * 1000.0;
+        time(&end);
+        seconds_spent_in_iterate_ = difftime(end, start);
     }
     return case_handler_->GetNextCaseForEvaluation();
 }
@@ -61,8 +63,7 @@ Case *Optimizer::GetCaseForEvaluation()
 void Optimizer::SubmitEvaluatedCase(Case *c)
 {
     case_handler_->UpdateCaseObjectiveFunctionValue(c->id(), c->objective_function_value());
-    case_handler_->SetCaseEvalStatus(c->id(), c->state.eval);
-    case_handler_->SetCaseErrMsg(c->id(), c->state.err_msg);
+    case_handler_->SetCaseState(c->id(), c->state, c->GetWICTime());
     case_handler_->SetCaseEvaluated(c->id());
     handleEvaluatedCase(case_handler_->GetCase(c->id()));
     logger_->AddEntry(case_handler_->GetCase(c->id()));

@@ -56,6 +56,7 @@ class Trajectory
   WellBlock *GetWellBlock(int i, int j, int k); //!< Get the well block at index (i,j,k).
   QList<WellBlock *> *GetWellBlocks(); //!< Get a list containing all well blocks.
   void UpdateWellBlocks(); //!< Update the well blocks, in particular the ones defined by a spline.
+  int GetTimeSpentInWic() const;
 
  private:
   QList<WellBlock *> *well_blocks_;

@@ -95,7 +95,7 @@ class Logger
       {"OFnVal", 12},
       {"CaseId", 39}
   };
-  const QString cas_log_header_ = "             TimeSt , EvalSt , ConsSt , ErrMsg ,   SimDur ,       OFnVal ,                                 CaseId";
+  const QString cas_log_header_ = "             TimeSt , EvalSt , ConsSt , ErrMsg ,   SimDur ,   WicDur ,       OFnVal ,                                 CaseId";
   map<string, int> opt_log_col_widths_ {
       {"TimeSt", 19},
       {"TimeEl", 9},
@@ -109,7 +109,7 @@ class Logger
       {"CBOFnV", 12},
       {"CurBst", 41}
   };
-  const QString opt_log_header_ = "             TimeSt ,   TimeEl , IterNr , TotlNr , EvalNr , BkpdNr , TimONr , FailNr , InvlNr ,       CBOFnV ,                                 CurBst";
+  const QString opt_log_header_ = "             TimeSt ,   TimeEl ,   TimeIt , IterNr , TotlNr , EvalNr , BkpdNr , TimONr , FailNr , InvlNr ,       CBOFnV ,                                 CurBst";
 
   void logCase(Loggable *obj);
   void logOptimizer(Loggable *obj);

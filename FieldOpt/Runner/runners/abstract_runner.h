@@ -112,7 +112,7 @@ class AbstractRunner
    * @brief Initialize the logger.
    * @param output_subdir Optional subdir in the output dir to write the logs in.
    */
-  void InitializeLogger(QString output_subdir="");
+  void InitializeLogger(QString output_subdir="", bool write_logs=true);
 };
 
 }

@@ -42,6 +42,13 @@ Trajectory::Trajectory(Settings::Model::Well well_settings,
     }
 }
 
+int Trajectory::GetTimeSpentInWic() const {
+    if (well_spline_ != 0) {
+        return well_spline_->GetTimeSpentInWIC();
+    }
+    else return 0;
+}
+
 WellBlock *Trajectory::GetWellBlock(int i, int j, int k)
 {
     for (int idx = 0; idx < well_blocks_->size(); ++idx) {

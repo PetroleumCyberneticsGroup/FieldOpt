@@ -97,12 +97,10 @@ void CaseHandler::UpdateCaseObjectiveFunctionValue(const QUuid id, const double 
     cases_[id]->set_objective_function_value(ofv);
 }
 
-void CaseHandler::SetCaseEvalStatus(QUuid id, Case::CaseState::EvalStatus status) {
-    cases_[id]->state.eval = status;
-}
-
-void CaseHandler::SetCaseErrMsg(QUuid id, Case::CaseState::ErrorMessage errmsg) {
-    cases_[id]->state.err_msg = errmsg;
+void CaseHandler::SetCaseState(QUuid id, Case::CaseState state, int wic_time) {
+    cases_[id]->state.eval = state.eval;
+    cases_[id]->state.err_msg = state.err_msg;
+    cases_[id]->SetWICTime(wic_time);
 }
 
 QList<Case *> CaseHandler::RecentlyEvaluatedCases() const

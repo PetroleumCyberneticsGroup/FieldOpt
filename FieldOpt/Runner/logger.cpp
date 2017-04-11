@@ -76,22 +76,24 @@ void Logger::AddEntry(Loggable *obj) {
 }
 
 void Logger::logCase(Loggable *obj) {
+    if (!write_logs_)
+        return;
     stringstream entry;
     entry << setw(cas_log_col_widths_["TimeSt"]) << timestamp_string() << " ,";
     entry << setw(cas_log_col_widths_["EvalSt"]) << obj->GetState()["EvalSt"] << " ,";
     entry << setw(cas_log_col_widths_["ConsSt"]) << obj->GetState()["ConsSt"] << " ,";
     entry << setw(cas_log_col_widths_["ErrMsg"]) << obj->GetState()["ErrMsg"] << " ,";
     entry << setw(cas_log_col_widths_["SimDur"]) << timespan_string(obj->GetValues()["SimDur"][0]) << " , ";
+    entry << setw(cas_log_col_widths_["WicDur"]) << timespan_string(obj->GetValues()["WicDur"][0]) << " , ";
     entry.precision(6);
     entry << setw(cas_log_col_widths_["OFnVal"]) << scientific << obj->GetValues()["OFnVal"][0] << " ,";
     entry << setw(cas_log_col_widths_["CaseId"]) << obj->GetId().toString().toStdString();
     string str = entry.str();
-    if (write_logs_) {
-        Utilities::FileHandling::WriteLineToFile(QString::fromStdString(str), cas_log_path_);
-    }
+    Utilities::FileHandling::WriteLineToFile(QString::fromStdString(str), cas_log_path_);
     return;
 }
 void Logger::logOptimizer(Loggable *obj) {
+    if (!write_logs_) return;
     stringstream entry;
     entry << setw(opt_log_col_widths_["TimeSt"]) << timestamp_string() << " ,";
     entry << setw(opt_log_col_widths_["TimeEl"]) << timespan_string(obj->GetState()["TimeEl"][0]) << " , ";
@@ -109,12 +111,11 @@ void Logger::logOptimizer(Loggable *obj) {
     entry.precision(0);
     entry << obj->GetId().toString().toStdString();
     string str = entry.str();
-    if (write_logs_) {
-        Utilities::FileHandling::WriteLineToFile(QString::fromStdString(str), opt_log_path_);
-    }
+    Utilities::FileHandling::WriteLineToFile(QString::fromStdString(str), opt_log_path_);
     return;
 }
 void Logger::logExtended(Loggable *obj) {
+    if (!write_logs_) return;
     QJsonObject new_entry;
 
     // UUID
@@ -149,33 +150,31 @@ void Logger::logExtended(Loggable *obj) {
     }
     new_entry.insert("ProductionData", prod);
 
-    if (write_logs_) {
-        // Open existing document
-        QFile json_file(ext_log_path_);
+    // Open existing document
+    QFile json_file(ext_log_path_);
 
-        // First validating existing structure
-        json_file.open(QFile::ReadWrite);
-        QByteArray json_data = json_file.readAll();
-        QJsonObject json_obj = QJsonDocument::fromJson(json_data).object();
-        if (!json_obj.contains("Cases") || !json_obj["Cases"].isArray()) {
-            cout << "Invalid JSON log. Aborting." << endl;
-            exit(1);
-        }
-        json_file.close();
-
-        // Deleting file contents in preparation to rewrite
-        json_file.open(QFile::ReadWrite | QIODevice::Truncate);
-
-        // Add new case to JSON document
-        QJsonArray case_array = json_obj["Cases"].toArray();
-        case_array.append(new_entry);
-        json_obj["Cases"] = case_array;
-
-        // Write the updated log
-        QJsonDocument json_doc = QJsonDocument(json_obj);
-        json_file.write(json_doc.toJson(QJsonDocument::Indented));
-        json_file.close();
+    // First validating existing structure
+    json_file.open(QFile::ReadWrite);
+    QByteArray json_data = json_file.readAll();
+    QJsonObject json_obj = QJsonDocument::fromJson(json_data).object();
+    if (!json_obj.contains("Cases") || !json_obj["Cases"].isArray()) {
+        cout << "Invalid JSON log. Aborting." << endl;
+        exit(1);
     }
+    json_file.close();
+
+    // Deleting file contents in preparation to rewrite
+    json_file.open(QFile::ReadWrite | QIODevice::Truncate);
+
+    // Add new case to JSON document
+    QJsonArray case_array = json_obj["Cases"].toArray();
+    case_array.append(new_entry);
+    json_obj["Cases"] = case_array;
+
+    // Write the updated log
+    QJsonDocument json_doc = QJsonDocument(json_obj);
+    json_file.write(json_doc.toJson(QJsonDocument::Indented));
+    json_file.close();
     return;
 }
 
@@ -196,8 +195,7 @@ void Logger::logSummary(Loggable *obj) {
 }
 
 void Logger::FinalizePrerunSummary() {
-    if (!write_logs_)
-        return;
+    if (!write_logs_) return;
 
     stringstream sum;
 
@@ -274,8 +272,7 @@ void Logger::FinalizePrerunSummary() {
 }
 
 void Logger::FinalizePostrunSummary() {
-    if (!write_logs_)
-        return;
+    if (!write_logs_) return;
 
     stringstream sum;
 

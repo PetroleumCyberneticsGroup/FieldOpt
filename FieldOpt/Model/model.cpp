@@ -54,9 +54,12 @@ void Model::ApplyCase(Optimization::Case *c)
     for (QUuid key : c->real_variables().keys()) {
         variable_container_->SetContinousVariableValue(key, c->real_variables()[key]);
     }
+    int cumulative_wic_time = 0;
     for (Wells::Well *w : *wells_) {
         w->Update();
+        cumulative_wic_time += w->GetTimeSpentInWIC();
     }
+    c->SetWICTime(cumulative_wic_time);
     verify();
 
     // Notify the logger, and after that clear the results.

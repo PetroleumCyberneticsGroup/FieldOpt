@@ -211,10 +211,22 @@ class Case : public Loggable
   map<string, vector<double>> GetValues() override;
   // End Logger interface
 
+  /*!
+   * @brief Set the time spent computing the well blocs for this case.
+   * @param secs The number of seconds it took.
+   */
+  void SetWICTime(const int secs) { wic_time_sec_ = secs; }
+
+  /*!
+   * @brief Get the number of seconds spent computing the well blocks for this case.
+   */
+  int GetWICTime() const { return wic_time_sec_; }
+
  private:
   QUuid id_; //!< Unique ID for the case.
   QDateTime eval_start_;
   QDateTime eval_done_;
+  int wic_time_sec_; //!< The number of seconds spent computing the well index for this case.
 
   double objective_function_value_;
   QHash<QUuid, bool> binary_variables_;

@@ -40,6 +40,7 @@ SynchronousMPIRunner::SynchronousMPIRunner(RuntimeSettings *rts) : MPIRunner(rts
         FinalizeInitialization(true);
     }
     else {
+        InitializeLogger("rank" + QString::number(rank()), false);
         InitializeSettings("rank" + QString::number(rank()));
         InitializeModel();
         InitializeSimulator();
