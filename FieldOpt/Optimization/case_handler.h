@@ -78,9 +78,10 @@ class CaseHandler
    * @brief Update the evaluation status, error message, and WIC time for a case.
    * @param id The id of the case to set the status for.
    * @param state The state to be set.
-   * @param wic_time The time to be set.
+   * @param wic_time The well index calculation time.
+   * @param sim_time The simulator execution time.
    */
-  void SetCaseState(QUuid id, Case::CaseState state, int wic_time);
+  void SetCaseState(QUuid id, Case::CaseState state, int wic_time, int sim_time);
 
   /*!
    * \brief RecentlyEvaluatedCases Get the list of cases that has been marked as evaluated since the last

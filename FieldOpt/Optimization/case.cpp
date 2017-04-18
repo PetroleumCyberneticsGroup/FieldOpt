@@ -30,6 +30,7 @@ namespace Optimization {
         integer_variables_ = QHash<QUuid, int>();
         real_variables_ = QHash<QUuid, double>();
         objective_function_value_ = std::numeric_limits<double>::max();
+        sim_time_sec_ = -1;
     }
 
     Case::Case(const QHash<QUuid, bool> &binary_variables, const QHash<QUuid, int> &integer_variables, const QHash<QUuid, double> &real_variables)
@@ -42,6 +43,7 @@ namespace Optimization {
 
         real_id_index_map_ = real_variables_.keys();
         integer_id_index_map_ = integer_variables_.keys();
+        sim_time_sec_ = -1;
     }
 
     Case::Case(const Case *c)
@@ -54,6 +56,7 @@ namespace Optimization {
 
         real_id_index_map_ = c->real_id_index_map_;
         integer_id_index_map_ = c->integer_variables_.keys();
+        sim_time_sec_ = -1;
     }
 
     bool Case::Equals(const Case *other, double tolerance) const
@@ -205,7 +208,7 @@ QUuid Case::GetId() {
 map <string, vector<double>> Case::GetValues() {
     map<string, vector<double>> valmap;
     valmap["OFnVal"] = vector<double>{objective_function_value_};
-    valmap["SimDur"] = vector<double>{time_span_seconds(eval_start_, eval_done_)};
+    valmap["SimDur"] = vector<double>{sim_time_sec_};
     valmap["WicDur"] = vector<double>{wic_time_sec_};
     return valmap;
 }

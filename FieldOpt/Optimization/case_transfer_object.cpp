@@ -33,6 +33,7 @@ CaseTransferObject::CaseTransferObject(Optimization::Case *c) {
     integer_variables_ = qHashToStdMap(c->integer_variables_);
     real_variables_ = qHashToStdMap(c->real_variables_);
     wic_time_secs_ = c->GetWICTime();
+    sim_time_secs_ = c->GetSimTime();
 }
 
 Case *CaseTransferObject::CreateCase() {
@@ -43,6 +44,7 @@ Case *CaseTransferObject::CreateCase() {
     c->id_ = boostUuidToQuuid(id_);
     c->objective_function_value_ = objective_function_value_;
     c->SetWICTime(wic_time_secs_);
+    c->SetSimTime(sim_time_secs_);
     return c;
 }
 

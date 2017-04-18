@@ -199,10 +199,8 @@ class Case : public Loggable
   int origin_direction_index() const { return direction_index_; }
   double origin_step_length() const { return step_length_; }
 
-  void SetEvalStart() { eval_start_ = QDateTime::currentDateTime(); } //!< Set now as start time for evaluation
-  void SetEvalDone() { eval_done_ = QDateTime::currentDateTime(); } //!< Set now as done time for evaluation.
-  QDateTime GetEvalStart() { return eval_start_; }
-  QDateTime GetEvalDone() { return eval_done_; }
+  void SetSimTime(const int sec) { sim_time_sec_ = sec; }
+  int GetSimTime() const { return sim_time_sec_; }
 
   // Logger interface
   LogTarget GetLogTarget() override;
@@ -224,8 +222,7 @@ class Case : public Loggable
 
  private:
   QUuid id_; //!< Unique ID for the case.
-  QDateTime eval_start_;
-  QDateTime eval_done_;
+  int sim_time_sec_;
   int wic_time_sec_; //!< The number of seconds spent computing the well index for this case.
 
   double objective_function_value_;

@@ -50,6 +50,7 @@ class CaseTransferObject {
       ar & integer_variables_;
       ar & real_variables_;
       ar & wic_time_secs_;
+      ar & sim_time_secs_;
   }
 
  public:
@@ -77,11 +78,13 @@ class CaseTransferObject {
   map<uuid, int> integer_variables() const { return integer_variables_; }
   map<uuid, double> real_variables() const { return real_variables_; }
   int wic_time_secs() { return wic_time_secs_; }
+  int sim_time_secs() { return sim_time_secs_; }
 
  private:
   uuid id_;
   double objective_function_value_;
   int wic_time_secs_;
+  int sim_time_secs_;
   map<uuid, bool> binary_variables_;
   map<uuid, int> integer_variables_;
   map<uuid, double> real_variables_;

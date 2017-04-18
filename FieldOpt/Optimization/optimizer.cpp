@@ -63,7 +63,7 @@ Case *Optimizer::GetCaseForEvaluation()
 void Optimizer::SubmitEvaluatedCase(Case *c)
 {
     case_handler_->UpdateCaseObjectiveFunctionValue(c->id(), c->objective_function_value());
-    case_handler_->SetCaseState(c->id(), c->state, c->GetWICTime());
+    case_handler_->SetCaseState(c->id(), c->state, c->GetWICTime(), c->GetSimTime());
     case_handler_->SetCaseEvaluated(c->id());
     handleEvaluatedCase(case_handler_->GetCase(c->id()));
     logger_->AddEntry(case_handler_->GetCase(c->id()));
@@ -126,8 +126,7 @@ int Optimizer::GetSimulationDuration(Case *c) {
     if (cs->state.eval != Case::CaseState::EvalStatus::E_DONE) {
         return -1;
     }
-    int time = time_span_seconds(cs->GetEvalStart(), cs->GetEvalDone());
-    return time;
+    return c->GetSimTime();
 }
 Loggable::LogTarget Optimizer::GetLogTarget() {
     return Loggable::LogTarget::LOG_OPTIMIZER;
@@ -173,11 +172,7 @@ map<string, string> Optimizer::Summary::GetState() {
     statemap["bc UUID"] = opt_->tentative_best_case_->GetId().toString().toStdString();
     statemap["bc Objective function value"] = boost::lexical_cast<string>(opt_->tentative_best_case_->objective_function_value());
     statemap["bc Constraint status"] = statemap["bc Constraint status"] = opt_->tentative_best_case_->GetState()["ConsSt"];
-    statemap["bc Simulation time"] = timespan_string(
-        time_span_seconds(opt_->tentative_best_case_->GetEvalStart(),
-                          opt_->tentative_best_case_->GetEvalDone()
-        )
-    );
+    statemap["bc Simulation time"] = timespan_string(opt_->tentative_best_case_->GetSimTime());
     return statemap;
 }
 QUuid Optimizer::Summary::GetId() {

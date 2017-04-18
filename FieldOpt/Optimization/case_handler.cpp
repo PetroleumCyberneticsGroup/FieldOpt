@@ -68,7 +68,6 @@ Case *CaseHandler::GetNextCaseForEvaluation()
             "The evaluation queue contains no cases.");
     evaluating_.append(evaluation_queue_.head());
     cases_[evaluation_queue_.head()]->state.queue = Case::CaseState::QueueStatus::Q_DEQUEUED;
-    cases_[evaluation_queue_.head()]->SetEvalStart();
     return cases_[evaluation_queue_.dequeue()];
 }
 
@@ -79,7 +78,6 @@ void CaseHandler::SetCaseEvaluated(const QUuid id)
             "The case id is not found in the list of cases being evaluated.");
     evaluating_.removeAll(id);
     evaluated_.append(id);
-    cases_[id]->SetEvalDone();
     evaluated_recently_.append(id);
 
     switch (cases_[id]->state.eval) {
@@ -97,10 +95,11 @@ void CaseHandler::UpdateCaseObjectiveFunctionValue(const QUuid id, const double 
     cases_[id]->set_objective_function_value(ofv);
 }
 
-void CaseHandler::SetCaseState(QUuid id, Case::CaseState state, int wic_time) {
+void CaseHandler::SetCaseState(QUuid id, Case::CaseState state, int wic_time, int sim_time) {
     cases_[id]->state.eval = state.eval;
     cases_[id]->state.err_msg = state.err_msg;
     cases_[id]->SetWICTime(wic_time);
+    cases_[id]->SetSimTime(sim_time);
 }
 
 QList<Case *> CaseHandler::RecentlyEvaluatedCases() const

@@ -129,6 +129,7 @@ void SynchronousMPIRunner::Execute() {
                 bool simulation_success = true;
                 printMessage("Applying case to model.", 2);
                 model_->ApplyCase(worker_->GetCurrentCase());
+                auto start = QDateTime::currentDateTime();
                 if (simulation_times_.size() == 0 || runtime_settings_->simulation_timeout() == 0) {
                     printMessage("Starting model evaluation.", 2);
                     simulator_->Evaluate();
@@ -137,6 +138,8 @@ void SynchronousMPIRunner::Execute() {
                     printMessage("Starting model evaluation with timeout.", 2);
                     simulation_success = simulator_->Evaluate(timeoutValue(), runtime_settings_->threads_per_sim());
                 }
+                auto end = QDateTime::currentDateTime();
+                worker_->GetCurrentCase()->SetSimTime(time_span_seconds(start, end));
                 if (simulation_success) {
                     tag = MPIRunner::MsgTag::CASE_EVAL_SUCCESS;
                     printMessage("Setting objective function value.", 2);
@@ -150,7 +153,6 @@ void SynchronousMPIRunner::Execute() {
             } catch (std::runtime_error e) {
                 std::cout << e.what() << std::endl;
                 tag = MPIRunner::MsgTag::CASE_EVAL_INVALID;
-                printMessage("Invalid well block coordinate encountered. Setting obj. val. to sentinel value.");
                 printMessage("Invalid case. Setting objective function value to SENTINEL VALUE.", 2);
                 worker_->GetCurrentCase()->set_objective_function_value(sentinelValue());
             }

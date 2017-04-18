@@ -16,6 +16,7 @@
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
+#include <Utilities/time.hpp>
 #include "serial_runner.h"
 
 namespace Runner {
@@ -48,6 +49,7 @@ void SerialRunner::Execute()
                 bool simulation_success = true;
                 new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_CURRENT;
                 model_->ApplyCase(new_case);
+                auto start = QDateTime::currentDateTime();
                 if (simulation_times_.size() == 0 || runtime_settings_->simulation_timeout() == 0) {
                     simulator_->Evaluate();
                 }
@@ -57,6 +59,8 @@ void SerialRunner::Execute()
                         runtime_settings_->threads_per_sim()
                     );
                 }
+                auto end = QDateTime::currentDateTime();
+                new_case->SetSimTime(time_span_seconds(start, end));
                 if (simulation_success) {
                     new_case->set_objective_function_value(objective_function_->value());
                     new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
@@ -73,7 +77,7 @@ void SerialRunner::Execute()
             }
         }
         optimizer_->SubmitEvaluatedCase(new_case);
-        if (optimizer_->GetSimulationDuration(new_case) < 0) {
+        if (optimizer_->GetSimulationDuration(new_case) > 0) {
             simulation_times_.push_back(optimizer_->GetSimulationDuration(new_case));
         }
     }
