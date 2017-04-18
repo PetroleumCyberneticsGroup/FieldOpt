@@ -12,7 +12,9 @@
  * @param t2 Seconds time. Should be after t1.
  */
 inline int time_span_seconds(const QDateTime t1, const QDateTime t2) {
-    return t2.toMSecsSinceEpoch()/1000 - t1.toMSecsSinceEpoch()/1000;
+    double start = t1.toMSecsSinceEpoch() / 1000.0;
+    double end = t1.toMSecsSinceEpoch() / 1000.0;
+    return end - start;
 }
 
 /*!
