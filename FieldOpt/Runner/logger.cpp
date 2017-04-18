@@ -53,8 +53,10 @@ Logger::Logger(Runner::RuntimeSettings *rts,
 
     if (write_logs_) {
         // Write CSV headers
-        Utilities::FileHandling::WriteLineToFile(cas_log_header_, cas_log_path_);
-        Utilities::FileHandling::WriteLineToFile(opt_log_header_, opt_log_path_);
+        if (output_subdir.length() > 0) {
+            Utilities::FileHandling::WriteLineToFile(cas_log_header_, cas_log_path_);
+            Utilities::FileHandling::WriteLineToFile(opt_log_header_, opt_log_path_);
+        }
 
         // Create base JSON document
         QJsonObject json_base;
