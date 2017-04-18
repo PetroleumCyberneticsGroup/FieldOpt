@@ -195,6 +195,7 @@ map <string, string> Case::GetState() {
         case CaseState::ConsStatus::C_PENALIZED: statemap["ConsSt"] = "PNZD"; break;
     }
     switch (state.err_msg) {
+        case CaseState::ErrorMessage::ERR_SIM: statemap["ErrMsg"] = "SIML"; break;
         case CaseState::ErrorMessage::ERR_WIC: statemap["ErrMsg"] = "WLIC"; break;
         case CaseState::ErrorMessage::ERR_CONS: statemap["ErrMsg"] = "CONS"; break;
         case CaseState::ErrorMessage::ERR_UNKNOWN: statemap["ErrMsg"] = "UNWN"; break;

@@ -71,7 +71,7 @@ class Case : public Loggable
       Q_DEQUEUED=1
     };
     enum ErrorMessage : int {
-      ERR_WIC=-3, ERR_CONS=-2, ERR_UNKNOWN=-1,
+      ERR_SIM=-4, ERR_WIC=-3, ERR_CONS=-2, ERR_UNKNOWN=-1,
       ERR_OK=0
     };
     CaseState() {

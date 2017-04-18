@@ -96,8 +96,7 @@ void CaseHandler::UpdateCaseObjectiveFunctionValue(const QUuid id, const double 
 }
 
 void CaseHandler::SetCaseState(QUuid id, Case::CaseState state, int wic_time, int sim_time) {
-    cases_[id]->state.eval = state.eval;
-    cases_[id]->state.err_msg = state.err_msg;
+    cases_[id]->state = state;
     cases_[id]->SetWICTime(wic_time);
     cases_[id]->SetSimTime(sim_time);
 }

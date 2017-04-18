@@ -34,6 +34,11 @@ CaseTransferObject::CaseTransferObject(Optimization::Case *c) {
     real_variables_ = qHashToStdMap(c->real_variables_);
     wic_time_secs_ = c->GetWICTime();
     sim_time_secs_ = c->GetSimTime();
+
+    status_eval_ = c->state.eval;
+    status_cons_ = c->state.cons;
+    status_queue_ = c->state.queue;
+    status_err_msg_ = c->state.err_msg;
 }
 
 Case *CaseTransferObject::CreateCase() {
@@ -45,6 +50,10 @@ Case *CaseTransferObject::CreateCase() {
     c->objective_function_value_ = objective_function_value_;
     c->SetWICTime(wic_time_secs_);
     c->SetSimTime(sim_time_secs_);
+    c->state.eval = static_cast<Case::CaseState::EvalStatus>(status_eval_);
+    c->state.cons = static_cast<Case::CaseState::ConsStatus>(status_cons_);
+    c->state.queue = static_cast<Case::CaseState::QueueStatus>(status_queue_);
+    c->state.err_msg = static_cast<Case::CaseState::ErrorMessage >(status_err_msg_);
     return c;
 }
 

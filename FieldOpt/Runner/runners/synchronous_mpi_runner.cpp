@@ -69,20 +69,11 @@ void SynchronousMPIRunner::Execute() {
       printMessage("Waiting to receive evaluated case...", 2);
       auto evaluated_case = overseer_->RecvEvaluatedCase(); // TODO: This is a duplicate case that wont get deleted, i.e. a MEMORY LEAK.
       printMessage("Evaluated case received.", 2);
-      switch (overseer_->last_case_tag) {
-          case MPIRunner::MsgTag::CASE_EVAL_SUCCESS:
-              evaluated_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
-              if (optimizer_->GetSimulationDuration(evaluated_case) > 0){
-                  simulation_times_.push_back(optimizer_->GetSimulationDuration(evaluated_case));
-              }
-              break;
-          case MPIRunner::MsgTag::CASE_EVAL_INVALID:
-              evaluated_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_FAILED;
-              evaluated_case->state.err_msg = Optimization::Case::CaseState::ErrorMessage::ERR_UNKNOWN;
-              break;
-          case MPIRunner::MsgTag::CASE_EVAL_TIMEOUT:
-              evaluated_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_TIMEOUT;
-              break;
+      if (overseer_->last_case_tag == MPIRunner::MsgTag::CASE_EVAL_SUCCESS) {
+          evaluated_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
+          if (optimizer_->GetSimulationDuration(evaluated_case) > 0){
+              simulation_times_.push_back(optimizer_->GetSimulationDuration(evaluated_case));
+          }
       }
       optimizer_->SubmitEvaluatedCase(evaluated_case);
       printMessage("Submitted evaluated case to optimizer.", 2);
@@ -139,20 +130,26 @@ void SynchronousMPIRunner::Execute() {
                     simulation_success = simulator_->Evaluate(timeoutValue(), runtime_settings_->threads_per_sim());
                 }
                 auto end = QDateTime::currentDateTime();
-                worker_->GetCurrentCase()->SetSimTime(time_span_seconds(start, end));
+                int sim_time = time_span_seconds(start, end);
                 if (simulation_success) {
                     tag = MPIRunner::MsgTag::CASE_EVAL_SUCCESS;
                     printMessage("Setting objective function value.", 2);
                     worker_->GetCurrentCase()->set_objective_function_value(objective_function_->value());
+                    worker_->GetCurrentCase()->SetSimTime(sim_time);
+                    worker_->GetCurrentCase()->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
                 }
                 else {
                     tag = MPIRunner::MsgTag::CASE_EVAL_TIMEOUT;
                     printMessage("Timed out. Setting objective function value to SENTINEL VALUE.", 2);
+                    worker_->GetCurrentCase()->state.eval = Optimization::Case::CaseState::EvalStatus::E_TIMEOUT;
+                    worker_->GetCurrentCase()->state.err_msg = Optimization::Case::CaseState::ErrorMessage::ERR_SIM;
                     worker_->GetCurrentCase()->set_objective_function_value(sentinelValue());
                 }
             } catch (std::runtime_error e) {
                 std::cout << e.what() << std::endl;
                 tag = MPIRunner::MsgTag::CASE_EVAL_INVALID;
+                worker_->GetCurrentCase()->state.eval = Optimization::Case::CaseState::EvalStatus::E_FAILED;
+                worker_->GetCurrentCase()->state.err_msg = Optimization::Case::CaseState::ErrorMessage::ERR_WIC;
                 printMessage("Invalid case. Setting objective function value to SENTINEL VALUE.", 2);
                 worker_->GetCurrentCase()->set_objective_function_value(sentinelValue());
             }

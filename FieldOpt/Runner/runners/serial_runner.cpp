@@ -60,26 +60,29 @@ void SerialRunner::Execute()
                     );
                 }
                 auto end = QDateTime::currentDateTime();
-                new_case->SetSimTime(time_span_seconds(start, end));
+                int sim_time = time_span_seconds(start, end);
                 if (simulation_success) {
                     new_case->set_objective_function_value(objective_function_->value());
                     new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
+                    new_case->SetSimTime(sim_time);
+                    simulation_times_.push_back((sim_time));
                 }
                 else {
                     new_case->set_objective_function_value(sentinelValue());
                     new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_FAILED;
+                    new_case->state.err_msg = Optimization::Case::CaseState::ErrorMessage::ERR_SIM;
+                    if (sim_time >= timeoutValue())
+                        new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_TIMEOUT;
                 }
             } catch (std::runtime_error e) {
                 std::cout << e.what() << std::endl;
                 std::cout << "Invalid well block coordinate encountered. Setting obj. val. to sentinel value." << std::endl;
                 new_case->set_objective_function_value(sentinelValue());
                 new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_FAILED;
+                new_case->state.err_msg = Optimization::Case::CaseState::ErrorMessage::ERR_WIC;
             }
         }
         optimizer_->SubmitEvaluatedCase(new_case);
-        if (optimizer_->GetSimulationDuration(new_case) > 0) {
-            simulation_times_.push_back(optimizer_->GetSimulationDuration(new_case));
-        }
     }
     FinalizeRun(true);
 }

@@ -51,6 +51,10 @@ class CaseTransferObject {
       ar & real_variables_;
       ar & wic_time_secs_;
       ar & sim_time_secs_;
+      ar & status_eval_;
+      ar & status_cons_;
+      ar & status_queue_;
+      ar & status_err_msg_;
   }
 
  public:
@@ -88,6 +92,11 @@ class CaseTransferObject {
   map<uuid, bool> binary_variables_;
   map<uuid, int> integer_variables_;
   map<uuid, double> real_variables_;
+
+  int status_eval_;
+  int status_cons_;
+  int status_queue_;
+  int status_err_msg_;
 
   QUuid boostUuidToQuuid(const uuid buuid) const; //!< Create a QUuid from a boost::uuid.
   uuid qUuidToBoostUuid(const QUuid quuid) const; //!< Create a boost::uuid from a Quuid.
