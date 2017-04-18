@@ -255,7 +255,7 @@ int AbstractRunner::timeoutValue() const {
     if (simulation_times_.size() == 0 || runtime_settings_->simulation_timeout() == 0)
         return 10000;
     else {
-        return calc_average(simulation_times_) * runtime_settings_->simulation_timeout();
+        return calc_median(simulation_times_) * runtime_settings_->simulation_timeout();
     }
 }
 
