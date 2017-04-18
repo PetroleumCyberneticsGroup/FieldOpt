@@ -13,7 +13,7 @@
  */
 inline int time_span_seconds(const QDateTime t1, const QDateTime t2) {
     double start = t1.toMSecsSinceEpoch() / 1000.0;
-    double end = t1.toMSecsSinceEpoch() / 1000.0;
+    double end = t2.toMSecsSinceEpoch() / 1000.0;
     return end - start;
 }
 
