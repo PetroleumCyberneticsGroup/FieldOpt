@@ -29,6 +29,7 @@ Logger::Logger(Runner::RuntimeSettings *rts,
                bool write_logs)
 {
     write_logs_ = write_logs;
+    is_worker_ = output_subdir.length() > 0;
     verbose_ = rts->verbosity_level();
     output_dir_ = rts->output_dir();
     if (output_subdir.length() > 0)
@@ -53,7 +54,7 @@ Logger::Logger(Runner::RuntimeSettings *rts,
 
     if (write_logs_) {
         // Write CSV headers
-        if (output_subdir.length() > 0) {
+        if (!is_worker_) {
             Utilities::FileHandling::WriteLineToFile(cas_log_header_, cas_log_path_);
             Utilities::FileHandling::WriteLineToFile(opt_log_header_, opt_log_path_);
         }
@@ -78,7 +79,7 @@ void Logger::AddEntry(Loggable *obj) {
 }
 
 void Logger::logCase(Loggable *obj) {
-    if (!write_logs_)
+    if (!write_logs_ || is_worker_)
         return;
     stringstream entry;
     entry << setw(cas_log_col_widths_["TimeSt"]) << timestamp_string() << " ,";
@@ -95,7 +96,7 @@ void Logger::logCase(Loggable *obj) {
     return;
 }
 void Logger::logOptimizer(Loggable *obj) {
-    if (!write_logs_) return;
+    if (!write_logs_ || is_worker_) return;
     stringstream entry;
     entry << setw(opt_log_col_widths_["TimeSt"]) << timestamp_string() << " ,";
     entry << setw(opt_log_col_widths_["TimeEl"]) << timespan_string(obj->GetState()["TimeEl"][0]) << " , ";
@@ -180,6 +181,51 @@ void Logger::logExtended(Loggable *obj) {
     return;
 }
 
+void Logger::collectExtendedLogs() {
+    if (!write_logs_ || is_worker_) return;
+
+    QList<QJsonObject> worker_parts_;
+    int rank = 1;
+
+    // Read all the parts
+    while (true) {
+        QString subpath = output_dir_ + "/rank" + QString::number(rank) + "/log_extended.json";
+        if (!Utilities::FileHandling::FileExists(subpath)) {
+            break;
+        }
+        else {
+            QFile json_file(subpath);
+            json_file.open(QFile::ReadWrite);
+            QByteArray json_data = json_file.readAll();
+            worker_parts_.append(QJsonDocument::fromJson(json_data).object());
+            json_file.close();
+            rank++;
+        }
+    }
+    if (worker_parts_.size() == 0) // Return if there were no workers (we're running in serial)
+        return;
+
+    // Gather all cases in one array
+    QJsonArray all_cases;
+    for (QJsonObject part : worker_parts_) {
+        all_cases.append(part["Cases"].toArray());
+    }
+
+    QFile json_file(ext_log_path_);
+    // Deleting file contents in preparation to rewrite
+    json_file.open(QFile::ReadWrite | QIODevice::Truncate);
+
+    // Add all cases to JSON document
+    QJsonObject json_obj;
+    json_obj["Cases"] = all_cases;
+
+    // Write the updated log
+    QJsonDocument json_doc = QJsonDocument(json_obj);
+    json_file.write(json_doc.toJson(QJsonDocument::Indented));
+    json_file.close();
+    return;
+}
+
 void Logger::logSummary(Loggable *obj) {
     if (obj->GetWellDescriptions().size() > 0) {
         sum_wellmap_ = obj->GetWellDescriptions();
@@ -197,7 +243,7 @@ void Logger::logSummary(Loggable *obj) {
 }
 
 void Logger::FinalizePrerunSummary() {
-    if (!write_logs_) return;
+    if (!write_logs_ || is_worker_) return;
 
     stringstream sum;
 
@@ -274,7 +320,9 @@ void Logger::FinalizePrerunSummary() {
 }
 
 void Logger::FinalizePostrunSummary() {
-    if (!write_logs_) return;
+    if (!write_logs_ || is_worker_) return;
+
+    collectExtendedLogs(); // Collect all the extended json logs into one
 
     stringstream sum;
 

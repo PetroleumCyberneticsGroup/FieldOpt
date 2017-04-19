@@ -65,6 +65,7 @@ class Logger
   void FinalizePostrunSummary();
 
  private:
+  bool is_worker_; //!< Indicates whether or not this logger is on a worker process. This determines which logs are written.
   bool write_logs_;
   bool verbose_; //!< Whether or not new log entries should also be printed to the console.
   QString output_dir_; //!< Directory in which the files will be written.
@@ -129,6 +130,12 @@ class Logger
    * @param sum The summary to append to.
    */
   void appendWellToc(map<string, Loggable::WellDescription> wellmap, stringstream &sum);
+
+  /*!
+   * @brief Collects extended logs from worker subdirs and writes them all
+   * to a single JSON file in the root output dir.
+   */
+  void collectExtendedLogs();
 };
 
 #endif // LOGGER_H
