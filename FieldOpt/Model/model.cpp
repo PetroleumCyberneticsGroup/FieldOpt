@@ -38,8 +38,7 @@ Model::Model(Settings::Model settings, Logger *logger)
 }
 
 void Model::Finalize() {
-
-    // logger_->AddEntry(this); // Removing this causes the last case to not be in the JSON file
+    logger_->AddEntry(this); // Removing this causes the last case to not be in the JSON file
     logger_->AddEntry(new Summary(this));
 }
 
