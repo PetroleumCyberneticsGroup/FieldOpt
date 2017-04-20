@@ -28,10 +28,10 @@ RGARDD::RGARDD(Settings::Optimizer *settings,
                Model::Properties::VariablePropertyContainer *variables,
                Reservoir::Grid::Grid *grid,
                Logger *logger) : GeneticAlgorithm(settings,
-                                                          base_case,
-                                                          variables,
-                                                          grid,
-                                                          logger) {
+                                                  base_case,
+                                                  variables,
+                                                  grid,
+                                                  logger) {
     assert(population_size_ % 2 == 0); // Need an even number of chromosomes
     if (settings->parameters().discard_parameter < 0)
         discard_parameter_ = 1.0/population_size_;
@@ -138,7 +138,21 @@ vector<GeneticAlgorithm::Chromosome> RGARDD::mutate(vector<Chromosome> mating_po
                                                n_vars_);
     o1.rea_vars = p1.rea_vars + s * dir.cwiseProduct(upper_bound_ - lower_bound_);
     o2.rea_vars = p2.rea_vars + s * dir.cwiseProduct(upper_bound_ - lower_bound_);
-    return vector<Chromosome>{o1, o2};
+
+    // Snap to bound  constraints
+    for (int i = 0; i < o1.rea_vars.size(); ++i) {
+        if (o1.rea_vars(i) < lower_bound_(i))
+            o1.rea_vars(i) = lower_bound_(i);
+        else if (o1.rea_vars(i) > upper_bound_(i))
+            o1.rea_vars(i) = upper_bound_(i);
+    }
+    for (int i = 0; i < o2.rea_vars.size(); ++i) {
+        if (o2.rea_vars(i) < lower_bound_(i))
+            o2.rea_vars(i) = lower_bound_(i);
+        else if (o2.rea_vars(i) > upper_bound_(i))
+            o2.rea_vars(i) = upper_bound_(i);
+    }
+    return vector<Chromosome> {o1, o2};
 }
 bool RGARDD::is_stagnant() {
     // Using the sums of the variable values in each chromosome
