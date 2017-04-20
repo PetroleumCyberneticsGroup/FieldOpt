@@ -181,6 +181,7 @@ int ECLGridReader::GlobalIndexOfCellEnvelopingPoint(double x, double y, double z
     if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before searching for cells.");
     return ecl_grid_get_global_index_from_xyz(ecl_grid_, x, y, z, initial_guess);
 }
+
 bool ECLGridReader::GlobalIndexIsInsideGrid(int global_index)
 {
     Dims dims = Dimensions();
