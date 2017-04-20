@@ -38,7 +38,9 @@ add_library(optimization
 		optimizers/GSS.cpp
 		optimizers/compass_search.cpp
 		optimizers/APPS.cpp
-		${EXPERIMENTAL_CONSTRAINTS_SRC} )
+		optimizers/GeneticAlgorithm.cpp
+		optimizers/RGARDD.cpp
+		${EXPERIMENTAL_CONSTRAINTS_SRC})
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
 target_link_libraries(optimization
@@ -75,7 +77,8 @@ if (BUILD_TESTING)
 			${EXPERIMENTAL_CONSTRAINTS_TESTS}
 			tests/constraints/test_rate_constraint.cpp
 			tests/test_case_transfer_object.cpp
-            tests/optimizers/test_apps.cpp)
+            tests/optimizers/test_apps.cpp
+            tests/optimizers/test_ga.cpp)
 
 	target_link_libraries(test_optimization
 			fieldopt::optimization

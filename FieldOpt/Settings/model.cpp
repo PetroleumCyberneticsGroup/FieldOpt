@@ -151,8 +151,10 @@ namespace Settings {
             well.spline_toe.z = json_toe["z"].toDouble();
             if (json_heel.contains("IsVariable") && json_heel["IsVariable"].toBool())
                 well.spline_heel.is_variable = true;
+            else well.spline_heel.is_variable = false;
             if (json_toe.contains("IsVariable") && json_toe["IsVariable"].toBool())
                 well.spline_toe.is_variable = true;
+            else well.spline_toe.is_variable = false;
             well.spline_heel.name = "SplinePoint#" + well.name + "#heel";
             well.spline_toe.name = "SplinePoint#" + well.name + "#toe";
         }
