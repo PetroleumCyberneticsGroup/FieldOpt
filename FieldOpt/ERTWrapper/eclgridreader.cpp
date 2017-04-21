@@ -1,5 +1,6 @@
 /******************************************************************************
    Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+   Modified by Alin G. Chitu (2016-2017) <alin.chitu@tno.nl, chitu_alin@yahoo.com>
 
    This file is part of the FieldOpt project.
 
@@ -180,6 +181,7 @@ int ECLGridReader::GlobalIndexOfCellEnvelopingPoint(double x, double y, double z
     if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before searching for cells.");
     return ecl_grid_get_global_index_from_xyz(ecl_grid_, x, y, z, initial_guess);
 }
+
 bool ECLGridReader::GlobalIndexIsInsideGrid(int global_index)
 {
     Dims dims = Dimensions();
