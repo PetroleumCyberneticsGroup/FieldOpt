@@ -74,6 +74,8 @@ GeneticAlgorithm::GeneticAlgorithm(Settings::Optimizer *settings,
 }
 Optimizer::TerminationCondition GeneticAlgorithm::IsFinished() {
     TerminationCondition tc = NOT_FINISHED;
+    if (case_handler_->CasesBeingEvaluated().size() > 0)
+        return tc;
     if (iteration_ >= max_generations_)
         tc = MAX_ITERATIONS_REACHED;
     else if (case_handler_->NumberSimulated() > max_evaluations_)
