@@ -122,6 +122,12 @@ class RGARDD : public GeneticAlgorithm {
    */
   void repopulate();
 
+  /*!
+   * @brief Snap the variable values in a chromosome to the upper and lower bounds.
+   * @param chrom The chromosome to be snapped.
+   */
+  void snap_to_bounds(Chromosome &chrom);
+
   class ConfigurationSummary : public Loggable {
    public:
     ConfigurationSummary(RGARDD *opt) { opt_ = opt; }

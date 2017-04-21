@@ -123,6 +123,8 @@ vector<GeneticAlgorithm::Chromosome> RGARDD::crossover(vector<Chromosome> mating
         (population_[0].ofv() - population_[population_size_-1].ofv());
     o1.rea_vars = p1.rea_vars + s * dirs;
     o2.rea_vars = p2.rea_vars + s * dirs;
+    snap_to_bounds(o1);
+    snap_to_bounds(o2);
     return vector<Chromosome>{o1, o2};
 }
 vector<GeneticAlgorithm::Chromosome> RGARDD::mutate(vector<Chromosome> mating_pool) {
@@ -140,19 +142,17 @@ vector<GeneticAlgorithm::Chromosome> RGARDD::mutate(vector<Chromosome> mating_po
     o2.rea_vars = p2.rea_vars + s * dir.cwiseProduct(upper_bound_ - lower_bound_);
 
     // Snap to bound  constraints
-    for (int i = 0; i < o1.rea_vars.size(); ++i) {
-        if (o1.rea_vars(i) < lower_bound_(i))
-            o1.rea_vars(i) = lower_bound_(i);
-        else if (o1.rea_vars(i) > upper_bound_(i))
-            o1.rea_vars(i) = upper_bound_(i);
-    }
-    for (int i = 0; i < o2.rea_vars.size(); ++i) {
-        if (o2.rea_vars(i) < lower_bound_(i))
-            o2.rea_vars(i) = lower_bound_(i);
-        else if (o2.rea_vars(i) > upper_bound_(i))
-            o2.rea_vars(i) = upper_bound_(i);
-    }
+    snap_to_bounds(o1);
+    snap_to_bounds(o2);
     return vector<Chromosome> {o1, o2};
+}
+void RGARDD::snap_to_bounds(Chromosome &chrom) {
+    for (int i = 0; i < chrom.rea_vars.size(); ++i) {
+        if (chrom.rea_vars(i) < lower_bound_(i))
+            chrom.rea_vars(i) = lower_bound_(i);
+        else if (chrom.rea_vars(i) > upper_bound_(i))
+            chrom.rea_vars(i) = upper_bound_(i);
+    }
 }
 bool RGARDD::is_stagnant() {
     // Using the sums of the variable values in each chromosome
