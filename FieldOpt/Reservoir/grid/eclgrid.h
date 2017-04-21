@@ -39,8 +39,8 @@ using namespace std;
 class ECLGrid : public Grid
 {
 private:
-	int faces_permutation_index; 
-	
+	int faces_permutation_index_;
+
  public:
   ECLGrid(std::string file_path);
   virtual ~ECLGrid();

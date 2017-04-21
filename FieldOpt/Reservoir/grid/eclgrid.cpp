@@ -46,31 +46,31 @@ ECLGrid::ECLGrid(string file_path)
 
     ecl_grid_reader_ = new ERTWrapper::ECLGrid::ECLGridReader();
     ecl_grid_reader_->ReadEclGrid(file_path_);
-    
-    // Calculate the proper corner permutation for cell faces definition: 
+
+    // Calculate the proper corner permutation for cell faces definition:
     // This is a function of the z axis orientation.
-    // Somehow the grid reader it re-aranging the cell corners and I could not easily found a logic    
-    // so we are going to check all known permutations with the hoe tha one of them is suitable for 
+    // Somehow the grid reader it re-aranging the cell corners and I could not easily found a logic
+    // so we are going to check all known permutations with the hoe tha one of them is suitable for
     // the current grid - we do that based on the cell 0 in the grid
-    
+
     // Set faces permutation to first permutation type
-    faces_permutation_index = 0;
-    // Get the first cell 
+    faces_permutation_index_ = 0;
+    // Get the first cell
     Cell first_cell = GetCell(0);
     if (first_cell.EnvelopsPoint(first_cell.center()))
     {
 		return;
     }
-	
+
 	// Set faces permutation to second permutation type
-	faces_permutation_index = 1;
-	// Get the first cell 
+	faces_permutation_index_ = 1;
+	// Get the first cell
 	first_cell = GetCell(0);
 	if (first_cell.EnvelopsPoint(first_cell.center()))
 	{
 		return;
 	}
-	
+
 	// We should not have gotten here - if here then it means there we need more permutations schems
 	throw runtime_error("Unknown axis orientation");
 }
@@ -138,7 +138,7 @@ Cell ECLGrid::GetCell(int global_index) {
         return Cell(global_index, ijk_index,
                     ertCell.volume, ertCell.porosity,
                     ertCell.permx, ertCell.permy, ertCell.permz,
-                    center, corners, faces_permutation_index);
+                    center, corners, faces_permutation_index_);
     } else {
         throw runtime_error("ECLGrid::GetCell(int global_index): Grid "
                                 "source must be defined before getting a cell.");
@@ -226,7 +226,7 @@ vector<int> ECLGrid::GetBoundingBoxCellIndices(
                 bb_zf = max(bb_zf, cell.center().z() + dz/2.0);
             }
         }
-        catch(const std::runtime_error& e) 
+        catch(const std::runtime_error& e)
         {
             // We should never end up here
         }
