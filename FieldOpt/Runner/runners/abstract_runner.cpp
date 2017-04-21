@@ -267,10 +267,12 @@ void AbstractRunner::FinalizeInitialization(bool write_logs) {
 }
 
 void AbstractRunner::FinalizeRun(bool write_logs) {
-    model_->ApplyCase(optimizer_->GetTentativeBestCase());
-    simulator_->WriteDriverFilesOnly();
+    if (optimizer_ != 0) { // This indicates whether or not we're on a worker process
+        model_->ApplyCase(optimizer_->GetTentativeBestCase());
+        simulator_->WriteDriverFilesOnly();
+        PrintCompletionMessage();
+    }
     model_->Finalize();
-    PrintCompletionMessage();
     if (write_logs)
         logger_->FinalizePostrunSummary();
 }

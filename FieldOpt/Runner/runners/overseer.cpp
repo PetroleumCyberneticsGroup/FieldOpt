@@ -88,8 +88,20 @@ Overseer::WorkerStatus * Overseer::GetLongestRunningWorker() {
 void Overseer::TerminateWorkers() {
     for (int i = 1; i < runner_->world_.size(); ++i) {
         auto msg = MPIRunner::Message();
-        msg.destination = i; msg.tag = MPIRunner::MsgTag::TERMINATE;
+        msg.destination = i;
+        msg.tag = MPIRunner::MsgTag::TERMINATE;
         runner_->SendMessage(msg);
+    }
+}
+
+void Overseer::EnsureWorkerTermination() {
+    for (int i = 1; i < runner_->world_.size(); ++i) {
+        auto msg = MPIRunner::Message();
+        msg.tag = MPIRunner::MsgTag::TERMINATE;
+        msg.source = i;
+        runner_->RecvMessage(msg);
+        if (msg.tag != MPIRunner::MsgTag::TERMINATE)
+            throw runtime_error("Something's fishy in the termination.");
     }
 }
 

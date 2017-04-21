@@ -43,11 +43,18 @@ class Worker {
    */
   void SendEvaluatedCase(MPIRunner::MsgTag tag);
 
+  /*!
+   * @brief Send a message to the overseer confirming finalization.
+   */
+  void ConfirmFinalization();
+
   Optimization::Case *GetCurrentCase();
+  MPIRunner::MsgTag GetCurrentTag() { return current_tag_; }
 
  private:
   MPIRunner *runner_;
   Optimization::Case *current_case_;
+  MPIRunner::MsgTag current_tag_;
 };
 }
 }

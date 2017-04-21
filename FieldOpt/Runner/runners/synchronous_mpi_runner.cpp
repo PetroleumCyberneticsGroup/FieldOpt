@@ -82,7 +82,7 @@ void SynchronousMPIRunner::Execute() {
         printMessage("Performing initial distribution...", 2);
         initialDistribution();
         printMessage("Initial distribution done.", 2);
-        while (optimizer_->IsFinished() == false) {
+        while (optimizer_->IsFinished() == false || overseer_->NumberOfBusyWorkers() > 0) {
             if (optimizer_->nr_queued_cases() > 0) { // Queued cases in optimizer
                 printMessage("Queued cases available.", 2);
                 if (overseer_->NumberOfFreeWorkers() > 0) { // Free workers available
@@ -106,9 +106,12 @@ void SynchronousMPIRunner::Execute() {
                 }
             }
         }
-        FinalizeRun(true);
-        printMessage("Terminating workers.", 2);
         overseer_->TerminateWorkers();
+        printMessage("Terminating workers.", 2);
+        overseer_->EnsureWorkerTermination();
+        FinalizeRun(true);
+        env_.~environment();
+        return;
     }
     else {
         printMessage("Waiting to receive initial unevaluated case...", 2);
@@ -137,6 +140,7 @@ void SynchronousMPIRunner::Execute() {
                     worker_->GetCurrentCase()->set_objective_function_value(objective_function_->value());
                     worker_->GetCurrentCase()->SetSimTime(sim_time);
                     worker_->GetCurrentCase()->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
+                    simulation_times_.push_back(sim_time);
                 }
                 else {
                     tag = MPIRunner::MsgTag::CASE_EVAL_TIMEOUT;
@@ -157,8 +161,19 @@ void SynchronousMPIRunner::Execute() {
             worker_->SendEvaluatedCase(tag);
             printMessage("Waiting to reveive an unevaluated case...", 2);
             worker_->RecvUnevaluatedCase();
-            printMessage("Received an unevaluated case.", 2);
+            if (worker_->GetCurrentTag() == TERMINATE) {
+                printMessage("Received termination message. Breaking.", 2);
+                break;
+            }
+            else {
+                printMessage("Received an unevaluated case.", 2);
+            }
         }
+        FinalizeRun(false);
+        printMessage("Finalized on worker.", 2);
+        worker_->ConfirmFinalization();
+        env_.~environment();
+        return;
     }
 }
 

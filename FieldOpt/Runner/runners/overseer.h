@@ -46,6 +46,12 @@ class Overseer {
   Optimization::Case *RecvEvaluatedCase();
 
   /*!
+   * @brief Wait for a message with the TERMINATE tag from each of the workers to confirm termination
+   * before moving on to finalization.
+   */
+  void EnsureWorkerTermination();
+
+  /*!
    * @brief Terminate all workers by sending a message with the TERMINATE tag.
    */
   void TerminateWorkers();

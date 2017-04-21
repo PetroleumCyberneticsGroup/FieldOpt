@@ -33,7 +33,12 @@ void Worker::RecvUnevaluatedCase() {
     msg.source = runner_->scheduler_rank_;
     msg.tag = MPIRunner::MsgTag::CASE_UNEVAL;
     runner_->RecvMessage(msg);
-    current_case_ = msg.c;
+    current_tag_ = msg.get_tag();
+    if (msg.get_tag() != MPIRunner::MsgTag::TERMINATE)
+        current_case_ = msg.c;
+    else {
+        current_case_ = nullptr;
+    }
 }
 
 void Worker::SendEvaluatedCase(MPIRunner::MsgTag tag) {
@@ -41,6 +46,14 @@ void Worker::SendEvaluatedCase(MPIRunner::MsgTag tag) {
     msg.destination = runner_->scheduler_rank_;
     msg.c = current_case_;
     msg.tag = MPIRunner::MsgTag::CASE_EVAL_SUCCESS;
+    runner_->SendMessage(msg);
+}
+
+void Worker::ConfirmFinalization() {
+    auto msg = MPIRunner::Message();
+    msg.destination = runner_->scheduler_rank_;
+    msg.c = current_case_;
+    msg.tag = MPIRunner::MsgTag::TERMINATE;
     runner_->SendMessage(msg);
 }
 
