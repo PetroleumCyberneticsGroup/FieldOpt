@@ -70,6 +70,7 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
     welldefs[0].radii.push_back(well_settings_.wellbore_radius);
     welldefs[0].heels.push_back(heel);
     welldefs[0].toes.push_back(toe);
+    welldefs[0].skins.push_back(0.0);
 
     auto block_data = wic.ComputeWellBlocks(welldefs)[well_settings_.name.toStdString()];
     QList<WellBlock *> *blocks = new QList<WellBlock *>();
