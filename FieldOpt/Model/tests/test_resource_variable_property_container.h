@@ -57,10 +57,13 @@ namespace TestResources {
             varcont_prod_bhp_->AddVariable(prod_bhp_0_);
             varcont_prod_bhp_->AddVariable(prod_bhp_10_);
 
+
+
         }
 
         VariablePropertyContainer *varcont_prod_spline_;
         VariablePropertyContainer *varcont_prod_bhp_;
+        VariablePropertyContainer *varcont_6r_;
 
     private:
         ContinousProperty *prod_heel_x_;

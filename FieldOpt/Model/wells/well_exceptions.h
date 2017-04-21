@@ -70,6 +70,13 @@ public:
         : std::runtime_error("No well block found with id " + boost::lexical_cast<std::string>(id)) {}
 };
 
+class WellBlocksNotDefined : public std::runtime_error {
+ public:
+  WellBlocksNotDefined(const string& message)
+      : std::runtime_error("No well blocks defined for spline. " + message) {}
+};
+
+
 }
 }
 

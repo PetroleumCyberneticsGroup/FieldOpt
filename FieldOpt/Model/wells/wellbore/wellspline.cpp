@@ -19,6 +19,7 @@
 
 #include "wellspline.h"
 #include <iostream>
+#include <wells/well_exceptions.h>
 
 namespace Model {
 namespace Wells {
@@ -68,6 +69,7 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
     welldefs.push_back(WellDefinition());
     welldefs[0].wellname = well_settings_.name.toStdString();
     welldefs[0].radii.push_back(well_settings_.wellbore_radius);
+    welldefs[0].skins.push_back(0.0);
     welldefs[0].heels.push_back(heel);
     welldefs[0].toes.push_back(toe);
     welldefs[0].skins.push_back(0.0);
@@ -76,6 +78,9 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
     QList<WellBlock *> *blocks = new QList<WellBlock *>();
     for (int i = 0; i < block_data.size(); ++i) {
         blocks->append(getWellBlock(block_data[i]));
+    }
+    if (blocks->size() == 0) {
+        throw WellBlocksNotDefined("WIC could not compute.");
     }
     return blocks;
 }
