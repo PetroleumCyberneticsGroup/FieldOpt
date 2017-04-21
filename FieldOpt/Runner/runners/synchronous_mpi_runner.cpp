@@ -82,7 +82,7 @@ void SynchronousMPIRunner::Execute() {
         printMessage("Performing initial distribution...", 2);
         initialDistribution();
         printMessage("Initial distribution done.", 2);
-        while (optimizer_->IsFinished() == false || overseer_->NumberOfBusyWorkers() > 0) {
+        while (optimizer_->IsFinished() == false) {
             if (optimizer_->nr_queued_cases() > 0) { // Queued cases in optimizer
                 printMessage("Queued cases available.", 2);
                 if (overseer_->NumberOfFreeWorkers() > 0) { // Free workers available
