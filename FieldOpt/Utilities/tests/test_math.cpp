@@ -22,6 +22,9 @@
 #include <QtCore/QDate>
 #include <iostream>
 #include "Utilities/math.hpp"
+#include <vector>
+
+using namespace std;
 
 namespace {
 
@@ -31,10 +34,10 @@ class MathTest : public testing::Test {
 
 
 TEST_F(MathTest, Average) {
-    QList<int> l1 = {1, 1, 1, 1};
-    QList<int> l2 = {2, 2};
-    QList<int> l3 = {0};
-    QList<int> l4 = {1, 2, 1, 2, 1, 2};
+    vector<int> l1 = {1, 1, 1, 1};
+    vector<int> l2 = {2, 2};
+    vector<int> l3 = {0};
+    vector<int> l4 = {1, 2, 1, 2, 1, 2};
     EXPECT_FLOAT_EQ(1, calc_average(l1));
     EXPECT_FLOAT_EQ(2, calc_average(l2));
     EXPECT_FLOAT_EQ(0, calc_average(l3));
@@ -42,12 +45,12 @@ TEST_F(MathTest, Average) {
 }
 
 TEST_F(MathTest, Median) {
-    QList<int> l1 = {1, 1, 1};
-    QList<int> l2 = {1, 1, 1, 1};
-    QList<int> l3 = {1, 2, 3};
-    QList<int> l4 = {1, 2, 3, 4};
-    QList<double> l5 = {1.0, 2.5, 3.0};
-    QList<double> l6 = {1.5, 2.0};
+    vector<int> l1 = {1, 1, 1};
+    vector<int> l2 = {1, 1, 1, 1};
+    vector<int> l3 = {1, 2, 3};
+    vector<int> l4 = {1, 2, 3, 4};
+    vector<double> l5 = {1.0, 2.5, 3.0};
+    vector<double> l6 = {1.5, 2.0};
     EXPECT_EQ(1, calc_median(l1));
     EXPECT_EQ(1, calc_median(l2));
     EXPECT_EQ(2, calc_median(l3));

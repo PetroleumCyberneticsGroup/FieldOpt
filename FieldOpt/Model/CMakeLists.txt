@@ -26,6 +26,7 @@ target_link_libraries (model
 		PUBLIC fieldopt::wellindexcalculator
 		PUBLIC fieldopt::settings
 		PUBLIC fieldopt::constraintmath
+		PUBLIC fieldopt::runner
 		PUBLIC Qt5::Core
 		PUBLIC ${Boost_LIBRARIES})
 

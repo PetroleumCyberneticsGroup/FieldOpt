@@ -19,13 +19,8 @@ OneOffRunner::OneOffRunner(RuntimeSettings *runtime_settings)
 
 void OneOffRunner::Execute()
 {
-    logger_->LogSettings(settings_);
-    logger_->WritePropertyUuidNameMap(model_);
-    logger_->LogCase(base_case_);
-    logger_->LogCompdat(base_case_, simulator_->GetCompdatString());
     applyWellPositionFromArguments();
     EvaluateBaseModel();
-    logger_->LogProductionData(base_case_, simulator_->results());
     // Write objective function value to file
     Utilities::FileHandling::WriteLineToFile(QString("%1").arg(objective_function_->value()),settings_->output_directory() + "/f.out");
 //    std::cout << objective_function_->value() << std::endl;

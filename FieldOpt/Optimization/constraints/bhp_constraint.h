@@ -5,30 +5,32 @@
 #include <QPair>
 
 namespace Optimization {
-    namespace Constraints {
+namespace Constraints {
 
 /*!
  * \brief The BhpConstraint class Represents a is a simple max/min constraint for BHP
  * values for a well.
  */
-        class BhpConstraint : public Constraint
-        {
-        public:
-            BhpConstraint(::Settings::Optimizer::Constraint settings, ::Model::Properties::VariablePropertyContainer *variables); //!< This class' constructor should not be used directly. The constructors of subclasses should be used.
+class BhpConstraint : public Constraint
+{
+ public:
+  BhpConstraint(::Settings::Optimizer::Constraint settings, ::Model::Properties::VariablePropertyContainer *variables); //!< This class' constructor should not be used directly. The constructors of subclasses should be used.
 
-        // Constraint interface
-        public:
-            bool CaseSatisfiesConstraint(Case *c);
-            void SnapCaseToConstraints(Case *c);
+  string name() override { return "BhpConstraint"; }
 
-        private:
-            double min_;
-            double max_;
-            QStringList affected_well_names_;
-            QList<Model::Properties::ContinousProperty *> affected_real_variables_;
-        };
+  // Constraint interface
+ public:
+  bool CaseSatisfiesConstraint(Case *c);
+  void SnapCaseToConstraints(Case *c);
 
-    }
+ private:
+  double min_;
+  double max_;
+  QStringList affected_well_names_;
+  QList<Model::Properties::ContinousProperty *> affected_real_variables_;
+};
+
+}
 }
 
 #endif // BOXCONSTRAINT_H

@@ -22,6 +22,8 @@
 #include <QHash>
 #include <QUuid>
 #include <Eigen/Core>
+#include <QtCore/QDateTime>
+#include "Runner/loggable.hpp"
 #include "optimization_exceptions.h"
 
 namespace Optimization {
@@ -33,16 +35,58 @@ class CaseTransferObject;
  * \brief The Case class represents a specific case for the optimizer, i.e. a specific set of variable values
  * and the value of the objective function after evaluation.
  */
-class Case
+class Case : public Loggable
 {
  public:
   friend class CaseHandler;
   friend class CaseTransferObject;
 
   Case();
-  Case(const QHash<QUuid, bool> &binary_variables, const QHash<QUuid, int> &integer_variables, const QHash<QUuid, double> &real_variables);
+  Case(const QHash<QUuid, bool> &binary_variables,
+       const QHash<QUuid, int> &integer_variables,
+       const QHash<QUuid, double> &real_variables);
   Case(const Case &c) = delete;
   Case(const Case *c);
+
+  /*!
+   * @brief The CaseState struct holds information about the current
+   * status of the Case object, such as whether or not it has been
+   * evaluated and whether or not it has been modified by a constriant.
+   */
+  struct CaseState {
+    enum EvalStatus : int {
+      E_FAILED=-2, E_TIMEOUT=-1,
+      E_PENDING=0,
+      E_CURRENT=1, E_DONE=2,
+      E_BOOKKEEPED=3
+    };
+    enum ConsStatus : int {
+      C_PROJ_FAILED=-2, C_INFEASIBLE=-1,
+      C_PENDING=0,
+      C_FEASIBLE=1, C_PROJECTED=2, C_PENALIZED=3,
+    };
+    enum QueueStatus : int {
+      Q_DISCARDED=-1,
+      Q_QUEUED=0,
+      Q_DEQUEUED=1
+    };
+    enum ErrorMessage : int {
+      ERR_SIM=-4, ERR_WIC=-3, ERR_CONS=-2, ERR_UNKNOWN=-1,
+      ERR_OK=0
+    };
+    CaseState() {
+        eval = E_PENDING;
+        cons = C_PENDING;
+        queue = Q_QUEUED;
+        err_msg = ERR_OK;
+    }
+    EvalStatus eval;
+    ConsStatus cons;
+    QueueStatus queue;
+    ErrorMessage err_msg;
+  };
+
+  CaseState state; //!< The state of the Case, directly modifiable.
 
   /*!
    * \brief Equals Checks whether this case is equal to another case within some tolerance.
@@ -84,8 +128,6 @@ class Case
    * \return One or two cases where one variable has been perturbed.
    */
   QList<Case *> Perturb(QUuid variabe_id, SIGN sign, double magnitude);
-
-  QString StringRepresentation();
 
   /*!
    * Get the real variables of this case as a Vector.
@@ -157,8 +199,31 @@ class Case
   int origin_direction_index() const { return direction_index_; }
   double origin_step_length() const { return step_length_; }
 
+  void SetSimTime(const int sec) { sim_time_sec_ = sec; }
+  int GetSimTime() const { return sim_time_sec_; }
+
+  // Logger interface
+  LogTarget GetLogTarget() override;
+  map<string, string> GetState() override;
+  QUuid GetId() override;
+  map<string, vector<double>> GetValues() override;
+  // End Logger interface
+
+  /*!
+   * @brief Set the time spent computing the well blocs for this case.
+   * @param secs The number of seconds it took.
+   */
+  void SetWICTime(const int secs) { wic_time_sec_ = secs; }
+
+  /*!
+   * @brief Get the number of seconds spent computing the well blocks for this case.
+   */
+  int GetWICTime() const { return wic_time_sec_; }
+
  private:
   QUuid id_; //!< Unique ID for the case.
+  int sim_time_sec_;
+  int wic_time_sec_; //!< The number of seconds spent computing the well index for this case.
 
   double objective_function_value_;
   QHash<QUuid, bool> binary_variables_;

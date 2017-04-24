@@ -15,21 +15,21 @@ namespace Optimization { namespace Constraints {
  */
 class CombinedSplineLengthInterwellDistance : public Constraint
 {
-public:
-    CombinedSplineLengthInterwellDistance(Settings::Optimizer::Constraint settings,
-                                          Model::Properties::VariablePropertyContainer *variables);
+ public:
+  CombinedSplineLengthInterwellDistance(Settings::Optimizer::Constraint settings,
+                                        Model::Properties::VariablePropertyContainer *variables);
 
 
+  string name() override { return "CombinedSplineLengthInterwellDistance"; }
+  // Constraint interface
+ public:
+  bool CaseSatisfiesConstraint(Case *c);
+  void SnapCaseToConstraints(Case *c);
 
-    // Constraint interface
-public:
-    bool CaseSatisfiesConstraint(Case *c);
-    void SnapCaseToConstraints(Case *c);
-
-private:
-    int max_iterations_;
-    QList<WellSplineLength *> length_constraints_;
-    InterwellDistance *distance_constraint_;
+ private:
+  int max_iterations_;
+  QList<WellSplineLength *> length_constraints_;
+  InterwellDistance *distance_constraint_;
 };
 
 }}

@@ -42,7 +42,9 @@ class GeneticAlgorithm : public Optimizer {
   GeneticAlgorithm(Settings::Optimizer *settings,
                    Case *base_case,
                    Model::Properties::VariablePropertyContainer *variables,
-                   Reservoir::Grid::Grid *grid);
+                   Reservoir::Grid::Grid *grid,
+                   Logger *logger
+  );
   TerminationCondition IsFinished() override;
  protected:
   virtual void handleEvaluatedCase(Case *c) = 0;
@@ -64,7 +66,6 @@ class GeneticAlgorithm : public Optimizer {
   };
 
   vector<Chromosome> population_; //!< Holds the current population.
-
   int max_generations_; //!< Maximum number of generations.
   int population_size_; //!< Size of population. This is automatically set to min(n_vars, 100);
   double p_crossover_; //!< Crossover probability.

@@ -39,8 +39,9 @@ namespace Runner {
             printMessage("Waiting to receive a message with tag " + boost::lexical_cast<std::string>(message.tag)
                          + " (" + tag_to_string[message.tag] + ") "
                          + " from source " + boost::lexical_cast<std::string>(message.source), 2);
-            mpi::status status = world_.recv(message.source, message.tag, s);
+            mpi::status status = world_.recv(message.source, ANY_TAG, s);
             message.set_status(status);
+            message.tag = status.tag();
 
             auto handle_received_case = [&]() mutable {
                 std::istringstream iss(s);
@@ -50,6 +51,7 @@ namespace Runner {
             };
 
             if (message.tag == TERMINATE) {
+                message.c = nullptr;
                 printMessage("Received termination signal.");
                 return;
             }

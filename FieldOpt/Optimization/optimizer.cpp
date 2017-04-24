@@ -16,13 +16,17 @@
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
+#include <Utilities/time.hpp>
 #include "optimizer.h"
+#include <time.h>
 
 namespace Optimization {
 
 Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
                      Model::Properties::VariablePropertyContainer *variables,
-                     Reservoir::Grid::Grid *grid)
+                     Reservoir::Grid::Grid *grid,
+                     Logger *logger
+)
 {
     // Verify that the base case has been evaluated.
     try {
@@ -38,12 +42,20 @@ Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
     iteration_ = 0;
     mode_ = settings->mode();
     is_async_ = false;
+    start_time_ = QDateTime::currentDateTime();
+    logger_ = logger;
+    verbosity_level_ = 0;
 }
 
 Case *Optimizer::GetCaseForEvaluation()
 {
     if (case_handler_->QueuedCases().size() == 0) {
+        logger_->AddEntry(this);
+        time_t start, end;
+        time(&start);
         iterate();
+        time(&end);
+        seconds_spent_in_iterate_ = difftime(end, start);
     }
     return case_handler_->GetNextCaseForEvaluation();
 }
@@ -51,8 +63,10 @@ Case *Optimizer::GetCaseForEvaluation()
 void Optimizer::SubmitEvaluatedCase(Case *c)
 {
     case_handler_->UpdateCaseObjectiveFunctionValue(c->id(), c->objective_function_value());
+    case_handler_->SetCaseState(c->id(), c->state, c->GetWICTime(), c->GetSimTime());
     case_handler_->SetCaseEvaluated(c->id());
     handleEvaluatedCase(case_handler_->GetCase(c->id()));
+    logger_->AddEntry(case_handler_->GetCase(c->id()));
 }
 
 Case *Optimizer::GetTentativeBestCase() const {
@@ -107,7 +121,77 @@ void Optimizer::SetVerbosityLevel(int level) {
     for (auto con : constraint_handler_->constraints())
         con->SetVerbosityLevel(level);
 }
+int Optimizer::GetSimulationDuration(Case *c) {
+    auto cs = case_handler_->GetCase(c->id());
+    if (cs->state.eval != Case::CaseState::EvalStatus::E_DONE) {
+        return -1;
+    }
+    return c->GetSimTime();
+}
+Loggable::LogTarget Optimizer::GetLogTarget() {
+    return Loggable::LogTarget::LOG_OPTIMIZER;
+}
+map<string, string> Optimizer::GetState() {
+    return map<string, string>();
+}
+QUuid Optimizer::GetId() {
+    return tentative_best_case_->GetId();
+}
+map<string, vector<double>> Optimizer::GetValues() {
+    map<string, vector<double>> valmap;
+    valmap["TimeEl"] = vector<double>{time_since_seconds(start_time_)};
+    valmap["IterNr"] = vector<double>{iteration_};
+    valmap["TimeIt"] = vector<double>{seconds_spent_in_iterate_};
+    valmap["TotlNr"] = vector<double>{case_handler_->NumberTotal()};
+    valmap["EvalNr"] = vector<double>{case_handler_->NumberSimulated()};
+    valmap["BkpdNr"] = vector<double>{case_handler_->NumberBookkeeped()};
+    valmap["TimONr"] = vector<double>{case_handler_->NumberTimeout()};
+    valmap["FailNr"] = vector<double>{case_handler_->NumberFailed()};
+    valmap["InvlNr"] = vector<double>{case_handler_->NumberInvalid()};
+    valmap["CBOFnV"] = vector<double>{tentative_best_case_->objective_function_value()};
+    return valmap;
+}
 
+Loggable::LogTarget Optimizer::Summary::GetLogTarget() {
+    return LOG_SUMMARY;
+}
+map<string, string> Optimizer::Summary::GetState() {
+    map<string, string> statemap;
+    statemap["Start"] = timestamp_string(opt_->start_time_);
+    statemap["Duration"] = timespan_string(
+        time_span_seconds(opt_->start_time_, QDateTime::currentDateTime())
+    );
+    statemap["End"] = timestamp_string(QDateTime::currentDateTime());
+    switch (cond_) {
+        case MAX_EVALS_REACHED: statemap["Term. condition"] = "Reached max. sims"; break;
+        case MINIMUM_STEP_LENGTH_REACHED: statemap["Term. condition"] = "Reached min. step length"; break;
+        case MAX_ITERATIONS_REACHED: statemap["Term. condition"] = "Reached max. iterations"; break;
+        default: statemap["Term. condition"] = "Unknown";
+    }
+    statemap["bc Best case found in iter"] = boost::lexical_cast<string>(opt_->tentative_best_case_iteration_);
+    statemap["bc UUID"] = opt_->tentative_best_case_->GetId().toString().toStdString();
+    statemap["bc Objective function value"] = boost::lexical_cast<string>(opt_->tentative_best_case_->objective_function_value());
+    statemap["bc Constraint status"] = statemap["bc Constraint status"] = opt_->tentative_best_case_->GetState()["ConsSt"];
+    statemap["bc Simulation time"] = timespan_string(opt_->tentative_best_case_->GetSimTime());
+    return statemap;
+}
+QUuid Optimizer::Summary::GetId() {
+    return opt_->tentative_best_case_->GetId();
+}
+map<string, vector<double>> Optimizer::Summary::GetValues() {
+    map<string, vector<double>> valmap;
+    valmap["generated"] = vector<double>{opt_->case_handler_->NumberTotal()};
+    valmap["simulated"] = vector<double>{opt_->case_handler_->NumberSimulated()};
+    valmap["invalid"] = vector<double>{opt_->case_handler_->NumberInvalid()};
+    valmap["failed"] = vector<double>{opt_->case_handler_->NumberFailed()};
+    valmap["timed out"] = vector<double>{opt_->case_handler_->NumberTimeout()};
+    valmap["bookkeeped"] = vector<double>{opt_->case_handler_->NumberBookkeeped()};
+    return valmap;
+}
 
+void Optimizer::updateTentativeBestCase(Case *c) {
+    tentative_best_case_ = c;
+    tentative_best_case_iteration_ = iteration_;
+}
 }
 
