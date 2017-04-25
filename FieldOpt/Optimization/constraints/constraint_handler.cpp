@@ -31,7 +31,11 @@ ConstraintHandler::ConstraintHandler(QList<Settings::Optimizer::Constraint> cons
                                         (constraint, variables, grid));
                 break;
             case Settings::Optimizer::ConstraintType::ReservoirBoundary:
-                constraints_.append(new ReservoirBoundary(constraint, variables, grid));
+                for (auto wname : constraint.wells) {
+                    auto cons = Settings::Optimizer::Constraint(constraint);
+                    cons.well = wname;
+                    constraints_.append(new ReservoirBoundary(cons, variables, grid));
+                }
                 break;
 #ifdef WITH_EXPERIMENTAL_CONSTRAINTS
                 // Cases for constraints in the experimental_constraints directory go here
