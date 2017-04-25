@@ -56,14 +56,17 @@ class CompassSearch : public GSS
 
  private:
 
-  //!< Step or contract, perturb, and clear list of
-  //recently evaluated cases.
+  /*!
+   * Step or contract, perturb, and clear list of
+   * recently evaluated cases.
+   */
   void iterate();
 
-
-  //!< Check if this iteration was successful (i.e. if
-  //the current tent. best case was found in this
-  //iteration).
+  /*!
+   * Check if this iteration was successful (i.e. if
+   * the current tent. best case was found in this
+   * iteration).
+   */
   bool is_successful_iteration();
 
  protected:
