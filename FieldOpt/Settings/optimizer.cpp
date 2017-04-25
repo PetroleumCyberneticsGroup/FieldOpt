@@ -107,7 +107,8 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
             else parameters_.upper_bound = 10;
         }
         catch (std::exception const &ex) {
-            throw UnableToParseOptimizerParametersSectionException("Unable to parse optimizer parameters: " + std::string(ex.what()));
+            throw UnableToParseOptimizerParametersSectionException(
+                "Unable to parse optimizer parameters: " + std::string(ex.what()));
         }
     }
 
@@ -131,10 +132,12 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
                 objective_.weighted_sum.append(component);
             }
         }
-        else throw UnableToParseOptimizerObjectiveSectionException("Objective type " + objective_type.toStdString() + " not recognized");
+        else throw UnableToParseOptimizerObjectiveSectionException(
+                "Objective type " + objective_type.toStdString() + " not recognized");
     }
     catch (std::exception const &ex) {
-        throw UnableToParseOptimizerObjectiveSectionException("Unable to parse optimizer objective: " + std::string(ex.what()));
+        throw UnableToParseOptimizerObjectiveSectionException(
+            "Unable to parse optimizer objective: " + std::string(ex.what()));
     }
 
     // Optimizer constraints
@@ -146,7 +149,8 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
         }
     }
     catch (std::exception const &ex) {
-        throw UnableToParseOptimizerConstraintsSectionException("Unable to parse optimizer constraints: " + std::string(ex.what()));
+        throw UnableToParseOptimizerConstraintsSectionException(
+            "Unable to parse optimizer constraints: " + std::string(ex.what()));
     }
 }
 
@@ -166,7 +170,8 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
             optimizer_constraint.wells.append(wname.toString());
         }
     }
-    else throw std::runtime_error("A constraint must always specify either the Well or the Wells property.");
+    else throw std::runtime_error("A constraint must always specify "
+                                      "either the Well or the Wells property.");
 
     // Constraint types BHP and Rate
     QString constraint_type = json_constraint["Type"].toString();
@@ -217,7 +222,8 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
                 optimizer_constraint.spline_points_limits.append(limit);
             }
         }
-        else throw UnableToParseOptimizerConstraintsSectionException("Well spline constraint type not recognized.");
+        else throw UnableToParseOptimizerConstraintsSectionException(
+                "Well spline constraint type not recognized.");
     }
     else if (QString::compare(constraint_type, "WellSplineLength") == 0) {
         optimizer_constraint.type = ConstraintType::WellSplineLength;
@@ -229,7 +235,8 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
             optimizer_constraint.min = json_constraint["MinLength"].toDouble();
             optimizer_constraint.min_length = json_constraint["MinLength"].toDouble();
         }
-        else throw std::runtime_error("The MinLength field must be specified for well spline length constraints.");
+        else throw std::runtime_error("The MinLength field must be specified "
+                                          "for well spline length constraints.");
 
         if (json_constraint.contains("Max")) {
             optimizer_constraint.max = json_constraint["Max"].toDouble();
@@ -239,7 +246,8 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
             optimizer_constraint.max = json_constraint["MaxLength"].toDouble();
             optimizer_constraint.max_length = json_constraint["MaxLength"].toDouble();
         }
-        else throw std::runtime_error("The MaxLength field must be specified for well length constraints.");
+        else throw std::runtime_error("The MaxLength field must be specified "
+                                          "for well length constraints.");
     }
     else if (QString::compare(constraint_type, "WellSplineInterwellDistance") == 0) {
         optimizer_constraint.type = ConstraintType::WellSplineInterwellDistance;
@@ -252,11 +260,13 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
             optimizer_constraint.min_distance = json_constraint["MinDistance"].toDouble();
         }
         if (optimizer_constraint.wells.length() != 2)
-            throw UnableToParseOptimizerConstraintsSectionException("WellSplineInterwellDistance constraint"
-                                                                        " needs a Wells array with exactly two well names specified.");
+            throw UnableToParseOptimizerConstraintsSectionException(
+                "WellSplineInterwellDistance constraint"
+                    " needs a Wells array with exactly two well names specified.");
     }
 
-    else if (QString::compare(constraint_type, "ReservoirBoundary") == 0) {
+    else if (QString::compare(constraint_type,
+                              "ReservoirBoundary") == 0) {
         optimizer_constraint.type = ConstraintType::ReservoirBoundary;
         optimizer_constraint.box_imin = json_constraint["BoxImin"].toInt();
         optimizer_constraint.box_imax = json_constraint["BoxImax"].toInt();
@@ -265,17 +275,20 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
         optimizer_constraint.box_kmin = json_constraint["BoxKmin"].toInt();
         optimizer_constraint.box_kmax = json_constraint["BoxKmax"].toInt();
     }
-    else if (QString::compare(constraint_type, "CombinedWellSplineLengthInterwellDistance") == 0) {
+    else if (QString::compare(constraint_type,
+                              "CombinedWellSplineLengthInterwellDistance") == 0) {
         optimizer_constraint.type = ConstraintType::CombinedWellSplineLengthInterwellDistance;
         optimizer_constraint.min_length = json_constraint["MinLength"].toDouble();
         optimizer_constraint.max_length = json_constraint["MaxLength"].toDouble();
         optimizer_constraint.min_distance = json_constraint["MinDistance"].toDouble();
         optimizer_constraint.max_iterations = json_constraint["MaxIterations"].toInt();
         if (optimizer_constraint.wells.length() != 2)
-            throw UnableToParseOptimizerConstraintsSectionException("WellSplineInterwellDistance constraint"
-                                                                        " needs a Wells array with exactly two well names specified.");
+            throw UnableToParseOptimizerConstraintsSectionException(
+                "WellSplineInterwellDistance constraint"
+                    " needs a Wells array with exactly two well names specified.");
     }
-    else if (QString::compare(constraint_type, "CombinedWellSplineLengthInterwellDistanceReservoirBoundary") == 0) {
+    else if (QString::compare(constraint_type,
+                              "CombinedWellSplineLengthInterwellDistanceReservoirBoundary") == 0) {
         optimizer_constraint.type = ConstraintType::CombinedWellSplineLengthInterwellDistanceReservoirBoundary;
         optimizer_constraint.min_length = json_constraint["MinLength"].toDouble();
         optimizer_constraint.max_length = json_constraint["MaxLength"].toDouble();
@@ -289,9 +302,11 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
         optimizer_constraint.box_kmax = json_constraint["BoxKmax"].toInt();
         if (optimizer_constraint.wells.length() != 2)
             throw UnableToParseOptimizerConstraintsSectionException(
-                "WellSplineInterwellDistanceReservoirBoundary constraint needs a Wells array with exactly two well names specified.");
+                "WellSplineInterwellDistanceReservoirBoundary constraint "
+                    "needs a Wells array with exactly two well names specified.");
     }
-    else throw UnableToParseOptimizerConstraintsSectionException("Constraint type " + constraint_type.toStdString() + " not recognized.");
+    else throw UnableToParseOptimizerConstraintsSectionException(
+            "Constraint type " + constraint_type.toStdString() + " not recognized.");
     return optimizer_constraint;
 }
 
