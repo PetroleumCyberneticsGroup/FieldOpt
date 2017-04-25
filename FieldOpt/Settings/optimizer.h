@@ -29,9 +29,9 @@
 namespace Settings {
 
 /*!
- * \brief The Optimizer class contains optimizer-specific settings. Optimizer settings objects
- * may _only_ be created by the Settings class. They are created when reading a
- * JSON-formatted "driver file".
+ * \brief The Optimizer class contains optimizer-specific settings.
+ * Optimizer settings objects may _only_ be created by the Settings
+ * class. They are created when reading a JSON-formatted "driver file".
  */
 class Optimizer
 {
