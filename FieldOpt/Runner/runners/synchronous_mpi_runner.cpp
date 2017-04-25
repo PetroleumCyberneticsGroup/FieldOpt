@@ -67,7 +67,9 @@ void SynchronousMPIRunner::Execute() {
     };
     auto wait_for_evaluated_case = [&]() mutable {
       printMessage("Waiting to receive evaluated case...", 2);
-      auto evaluated_case = overseer_->RecvEvaluatedCase(); // TODO: This is a duplicate case that wont get deleted, i.e. a MEMORY LEAK.
+      // TODO: This is a duplicate case that wont get deleted, i.e. a MEMORY LEAK.
+      auto evaluated_case = overseer_->RecvEvaluatedCase();
+
       printMessage("Evaluated case received.", 2);
       if (overseer_->last_case_tag == MPIRunner::MsgTag::CASE_EVAL_SUCCESS) {
           evaluated_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
@@ -90,7 +92,8 @@ void SynchronousMPIRunner::Execute() {
                     handle_new_case();
                 }
                 else { // No workers available
-                    printMessage("No free workers available. Waiting for an evaluated case.", 2);
+                    printMessage("No free workers available. "
+                                     "Waiting for an evaluated case.", 2);
                     wait_for_evaluated_case();
                 }
             }
@@ -101,7 +104,8 @@ void SynchronousMPIRunner::Execute() {
                     handle_new_case();
                 }
                 else { // Some workers are performing simulations
-                    printMessage("Some workers are still evaluating cases from this iteration. Waiting for evaluated cases.", 2);
+                    printMessage("Some workers are still evaluating cases from "
+                                     "this iteration. Waiting for evaluated cases.", 2);
                     wait_for_evaluated_case();
                 }
             }
@@ -130,7 +134,8 @@ void SynchronousMPIRunner::Execute() {
                 }
                 else {
                     printMessage("Starting model evaluation with timeout.", 2);
-                    simulation_success = simulator_->Evaluate(timeoutValue(), runtime_settings_->threads_per_sim());
+                    simulation_success = simulator_->Evaluate(timeoutValue(),
+                                                              runtime_settings_->threads_per_sim());
                 }
                 auto end = QDateTime::currentDateTime();
                 int sim_time = time_span_seconds(start, end);
