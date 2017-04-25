@@ -33,24 +33,31 @@ ExhaustiveSearch2DVert::ExhaustiveSearch2DVert(
     : Optimizer(settings, base_case, variables, grid, logger) {
     grid_ = grid;
 
-    if (variables->BinaryVariableSize() != 0 || variables->ContinousVariableSize() != 0
-        || variables->DiscreteVariableSize() != 3)
-        throw std::runtime_error("ExhaustiveSearch2DVert: Expecting to "
-                                     "receive exactly three discrete variables.");
+    if (variables->BinaryVariableSize() != 0 ||
+        variables->ContinousVariableSize() != 0 ||
+        variables->DiscreteVariableSize() != 3)
+        throw std::runtime_error(
+            "ExhaustiveSearch2DVert: Expecting to "
+                "receive exactly three discrete variables.");
 
     auto blockvars = variables->GetWellBlockVariables();
     if (blockvars.size() != 3)
-        throw std::runtime_error("ExhaustiveSearch2DVert: Error getting variables.");
+        throw std::runtime_error("ExhaustiveSearch2DVert: "
+                                     "Error getting variables.");
 
     for (auto prop : blockvars) {
-        if (prop->propertyInfo().coord == Model::Properties::Property::Coordinate::i)
+        if (prop->propertyInfo().coord ==
+            Model::Properties::Property::Coordinate::i)
             i_varid = prop->id();
-        else if (prop->propertyInfo().coord == Model::Properties::Property::Coordinate::j)
+        else if (prop->propertyInfo().coord ==
+            Model::Properties::Property::Coordinate::j)
             j_varid = prop->id();
-        else if (prop->propertyInfo().coord == Model::Properties::Property::Coordinate::k)
+        else if (prop->propertyInfo().coord ==
+            Model::Properties::Property::Coordinate::k)
             continue;
         else
-            throw std::runtime_error("ExhaustiveSearch2DVert: Error getting variables.");
+            throw std::runtime_error(
+                "ExhaustiveSearch2DVert: Error getting variables.");
     }
 }
 Optimizer::TerminationCondition ExhaustiveSearch2DVert::IsFinished() {
@@ -58,6 +65,7 @@ Optimizer::TerminationCondition ExhaustiveSearch2DVert::IsFinished() {
     else if (case_handler_->QueuedCases().size() > 0) return NOT_FINISHED;
     else return MAX_EVALS_REACHED;
 }
+
 void ExhaustiveSearch2DVert::iterate() {
     int i_max = grid_->Dimensions().nx;
     int j_max = grid_->Dimensions().ny;
