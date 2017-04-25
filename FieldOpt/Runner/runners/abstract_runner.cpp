@@ -262,7 +262,7 @@ void AbstractRunner::InitializeOptimizer()
 
         case Settings::Optimizer::OptimizerType::WISmooothnessTest:
             if (runtime_settings_->verbosity_level()) {
-                cout << "Using WISmooothnessTest." << endl;
+                cout << "Running WISmooothnessTest." << endl;
             }
             optimizer_ = new Optimization::Optimizers::WISmooothnessTest(settings_->optimizer(),
                                                                          base_case_,
