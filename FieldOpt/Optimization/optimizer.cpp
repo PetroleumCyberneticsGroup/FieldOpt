@@ -16,23 +16,27 @@
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
+
 #include <Utilities/time.hpp>
 #include "optimizer.h"
 #include <time.h>
 
 namespace Optimization {
 
-Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
-                     Model::Properties::VariablePropertyContainer *variables,
-                     Reservoir::Grid::Grid *grid,
-                     Logger *logger
+Optimizer::Optimizer(
+    Settings::Optimizer *settings, Case *base_case,
+    Model::Properties::VariablePropertyContainer *variables,
+    Reservoir::Grid::Grid *grid,
+    Logger *logger
 )
 {
     // Verify that the base case has been evaluated.
     try {
         base_case->objective_function_value();
     } catch (ObjectiveFunctionException) {
-        throw OptimizerInitializationException("The objective function value of the base case must be set before initializing an Optimizer.");
+        throw OptimizerInitializationException(
+            "The objective function value of the base case "
+                "must be set before initializing an Optimizer.");
     }
 
     max_evaluations_ = settings->parameters().max_evaluations;

@@ -33,8 +33,9 @@ class Logger;
 namespace Optimization {
 
 /*!
- * \brief The Optimizer class is the abstract parent class for all optimizers. It is primarily
- * designed to support direct search optimization algorithms.
+ * \brief The Optimizer class is the abstract parent 
+ * class for all optimizers. It is primarily designed
+ * to support direct search optimization algorithms.
  */
 class Optimizer : public Loggable
 {
@@ -42,30 +43,39 @@ class Optimizer : public Loggable
   Optimizer() = delete;
 
   /*!
-   * \brief GetCaseForEvaluation Get a new, unevaluated case for evaluation.
+   * \brief GetCaseForEvaluation Get a new, unevaluated 
+   * case for evaluation.
    *
-   * If no unevaluated cases are currently available in the CaseHandler, the iterate()
-   * method is called to generate new cases.
+   * If no unevaluated cases are currently available in 
+   * the CaseHandler, the iterate() method is called to 
+   * generate new cases.
+   *
    * \return Pointer to a new, unevaluated case.
    */
   Case *GetCaseForEvaluation();
 
   /*!
-   * \brief SubmitEvaluatedCase Submit an already evaluated case to the optimizer.
+   * \brief SubmitEvaluatedCase Submit an already 
+   * evaluated case to the optimizer.
    *
-   * The submitted case is marked as recently evaluated in the CaseHandler.
+   * The submitted case is marked as recently evaluated 
+   * in the CaseHandler.
+   * 
    * \param c Case to submit.
    */
   void SubmitEvaluatedCase(Case *c);
 
   /*!
-   * \brief GetTentativeBestCase Get the best case found so far.
+   * \brief GetTentativeBestCase Get the best case 
+   * found so far.
+   *
    * \return
    */
   Case *GetTentativeBestCase() const;
 
   /*!
-   * \brief case_handler Get the case handler. Used by the bookkeeper in the runner lib.
+   * \brief case_handler Get the case handler. 
+   * Used by the bookkeeper in the runner lib.
    */
   CaseHandler *case_handler() const { return case_handler_; }
 
@@ -75,7 +85,8 @@ class Optimizer : public Loggable
   int nr_recently_evaluated_cases() const { return case_handler_->RecentlyEvaluatedCases().size(); }
 
   /*!
-   * The TerminationCondition enum enumerates the reasons why an optimization run is deemed
+   * The TerminationCondition enum enumerates the 
+   * reasons why an optimization run is deemed
    * finished. It is returned by the IsFinished method
    */
   enum TerminationCondition : int {NOT_FINISHED=0,
@@ -84,11 +95,15 @@ class Optimizer : public Loggable
   };
 
   /*!
-   * \brief IsFinished Check whether the optimization is finished, i.e. if the the optimizer has
-   * reached some  termination condition.
+   * \brief IsFinished Check whether the optimization 
+   * is finished, i.e. if the the optimizer has reached
+   * some termination condition.
    *
-   * This method should be called before attempting to get a new case for evaluation.
-   * \return NOT_FINISHED (0, =false) if the optimization has not finished, otherwise the non-zero reason
+   * This method should be called before attempting to 
+   * get a new case for evaluation.
+   * 
+   * \return NOT_FINISHED (0, =false) if the optimization 
+   * has not finished, otherwise the non-zero reason
    * for termination.
    */
   virtual TerminationCondition IsFinished() = 0;
@@ -100,15 +115,18 @@ class Optimizer : public Loggable
   bool IsAsync() const { return is_async_; } //!< Check if the optimizer is asynchronous.
 
   /*!
-   * @brief Get the simulation duration in seconds for a case.
+   * @brief Get the simulation duration in seconds 
+   * for a case.
    * @param c Case to get simulation duration for.
-   * @return Simulation duration in seconds. -1 if the case has not been successfully simulated.
+   * @return Simulation duration in seconds. -1 if 
+   * the case has not been successfully simulated.
    */
   int GetSimulationDuration(Case *c);
 
  protected:
   /*!
-   * \brief Base constructor for optimizers. Initializes constraints and sets some member values.
+   * \brief Base constructor for optimizers. Initializes 
+   * constraints and sets some member values.
    * \param settings Settings for the optimizer.
    * \param base_case The base case for optimizer. Must already have been evaluated (i.e. have an objective function value).
    * \param variables The variable property container from the Model (needed for initialization of constriants).
