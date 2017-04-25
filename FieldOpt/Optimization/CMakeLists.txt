@@ -1,10 +1,13 @@
 cmake_minimum_required(VERSION 3.2)
 project(optimization LANGUAGES CXX)
 
-set(EXPERIMENTAL_CONSTRAINTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/experimental_constraints)
+set(EXPERIMENTAL_CONSTRAINTS_DIR
+        ${CMAKE_CURRENT_SOURCE_DIR}/experimental_constraints)
 set(EXPERIMENTAL_CONSTRAINTS_SRC "")
 set(EXPERIMENTAL_CONSTRAINTS_TESTS "")
-if(EXISTS ${EXPERIMENTAL_CONSTRAINTS_DIR} AND IS_DIRECTORY ${EXPERIMENTAL_CONSTRAINTS_DIR})
+
+if(EXISTS ${EXPERIMENTAL_CONSTRAINTS_DIR}
+        AND IS_DIRECTORY ${EXPERIMENTAL_CONSTRAINTS_DIR})
 	message("Including experimental constraints")
 	add_definitions(-DWITH_EXPERIMENTAL_CONSTRIANTS)
 	set(EXPERIMENTAL_CONSTRAINTS_SRC
@@ -40,6 +43,7 @@ add_library(optimization
 		optimizers/APPS.cpp
 		optimizers/GeneticAlgorithm.cpp
 		optimizers/RGARDD.cpp
+		optimizers/wi_smoothness_test.cpp
 		${EXPERIMENTAL_CONSTRAINTS_SRC})
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
@@ -79,7 +83,8 @@ if (BUILD_TESTING)
 			tests/constraints/test_rate_constraint.cpp
 			tests/test_case_transfer_object.cpp
             tests/optimizers/test_apps.cpp
-            tests/optimizers/test_ga.cpp)
+            tests/optimizers/test_ga.cpp
+            tests/optimizers/test_wi_smoothness_test.cpp)
 
 	target_link_libraries(test_optimization
 			fieldopt::optimization
