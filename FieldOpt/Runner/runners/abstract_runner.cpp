@@ -26,6 +26,7 @@
 #include <Optimization/optimizers/APPS.h>
 #include <Optimization/optimizers/GeneticAlgorithm.h>
 #include <Optimization/optimizers/RGARDD.h>
+#include <Optimization/optimizers/wi_smoothness_test.h>
 #include "abstract_runner.h"
 #include "Optimization/optimizers/compass_search.h"
 #include "Optimization/optimizers/ExhaustiveSearch2DVert.h"
@@ -255,6 +256,19 @@ void AbstractRunner::InitializeOptimizer()
                                                                               model_->variables(),
                                                                               model_->grid(),
                                                                               logger_
+            );
+            optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
+            break;
+
+        case Settings::Optimizer::OptimizerType::WISmooothnessTest:
+            if (runtime_settings_->verbosity_level()) {
+                cout << "Using WISmooothnessTest." << endl;
+            }
+            optimizer_ = new Optimization::Optimizers::WISmooothnessTest(settings_->optimizer(),
+                                                                         base_case_,
+                                                                         model_->variables(),
+                                                                         model_->grid(),
+                                                                         logger_
             );
             optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
             break;
