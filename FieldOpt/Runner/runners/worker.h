@@ -25,26 +25,31 @@
 namespace Runner {
 namespace MPI {
 /*!
- * @brief The Worker class is responsible for receiving and sending from/to an overseer object.
- * The runner taken as a parameter in the constructor is primarily used for the common MPI helpers.
+ * @brief The Worker class is responsible for receiving 
+ * and sending from/to an overseer object.
+ * The runner taken as a parameter in the constructor 
+ * is primarily used for the common MPI helpers.
  */
 class Worker {
  public:
   Worker(MPIRunner *runner);
 
   /*!
-   * @brief Receive an unevaluated case from the Scheduler and set it as the current_case_.
+   * @brief Receive an unevaluated case from the 
+   * Scheduler and set it as the current_case_.
    */
   void RecvUnevaluatedCase();
 
   /*!
    * @brief Send the current_case_ back to the Scheduler.
-   * @param tag The tag the message should be sent with, indicating whether the evaluation was successful.
+   * @param tag The tag the message should be sent with, 
+   * indicating whether the evaluation was successful.
    */
   void SendEvaluatedCase(MPIRunner::MsgTag tag);
 
   /*!
-   * @brief Send a message to the overseer confirming finalization.
+   * @brief Send a message to the overseer confirming 
+   * finalization.
    */
   void ConfirmFinalization();
 
