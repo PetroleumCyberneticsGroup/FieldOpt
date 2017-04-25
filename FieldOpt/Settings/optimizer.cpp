@@ -39,7 +39,10 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
         type_ = OptimizerType::GeneticAlgorithm;
     else if (QString::compare(type, "ExhaustiveSearch2DVert") == 0)
         type_ = OptimizerType::ExhaustiveSearch2DVert;
-    else throw OptimizerTypeNotRecognizedException("The optimizer type " + type.toStdString() + " was not recognized.");
+    else if (QString::compare(type, "WISmooothnessTest") == 0)
+        type_ = OptimizerType::WISmooothnessTest;
+    else throw OptimizerTypeNotRecognizedException(
+            "The optimizer type " + type.toStdString() + " was not recognized.");
 
     // Optimizer mode
     if (type_ != ExhaustiveSearch2DVert) {
