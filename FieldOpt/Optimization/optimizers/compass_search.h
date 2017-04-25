@@ -1,3 +1,22 @@
+/******************************************************************************
+   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
+
+   This file is part of the FieldOpt project.
+
+   FieldOpt is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   FieldOpt is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
+
 #ifndef COMPASSSEARCH_H
 #define COMPASSSEARCH_H
 
@@ -30,8 +49,7 @@ class CompassSearch : public GSS
                 Case *base_case,
                 ::Model::Properties::VariablePropertyContainer *variables,
                 Reservoir::Grid::Grid *grid,
-                Logger *logger
-  );
+                Logger *logger);
 
   QString GetStatusStringHeader() const;
   QString GetStatusString() const;
@@ -40,13 +58,13 @@ class CompassSearch : public GSS
 
   //!< Step or contract, perturb, and clear list of
   //recently evaluated cases.
-  void iterate(); 
+  void iterate();
 
 
   //!< Check if this iteration was successful (i.e. if
   //the current tent. best case was found in this
   //iteration).
-  bool is_successful_iteration(); 
+  bool is_successful_iteration();
 
  protected:
   void handleEvaluatedCase(Case *c) override;
