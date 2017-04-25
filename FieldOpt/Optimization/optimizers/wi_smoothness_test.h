@@ -27,41 +27,31 @@ namespace Optimization {
 namespace Optimizers {
 
 /*!
- * @brief study of cost function smoothness as a 
+ * @brief study of cost function smoothness as a
  * function of well index (differing well paths)
  *
  */
-class WISmooothnessTest : public GSS {
+class WISmooothnessTest : public Optimizer {
  public:
-  WISmooothnessTest(::Settings::Optimizer *settings,
+  WISmooothnessTest(Settings::Optimizer *settings,
                     Case *base_case,
-                    ::Model::Properties::VariablePropertyContainer *variables,
+                    Model::Properties::VariablePropertyContainer *variables,
                     Reservoir::Grid::Grid *grid,
                     Logger *logger);
 
  private:
+  Reservoir::Grid::Grid *grid_;
+  QUuid i_varid;
+  QUuid j_varid;
+
   QString GetStatusStringHeader() const;
   QString GetStatusString() const;
-  VectorXi xdirections_;
 
   /*!
   * @brief
   * @return
   */
   void iterate();
-
-  /*!
-  * @brief
-  * @return
-  */
-  bool is_successful_iteration();
-
- protected:
-  /*!
-  * @brief
-  * @return
-  */
-  void handleEvaluatedCase(Case *c) override {}
 
 };
 
