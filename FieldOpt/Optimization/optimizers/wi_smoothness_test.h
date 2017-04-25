@@ -21,6 +21,7 @@
 #define FIELDOPT_WI_SMOOTHNESS_TEST_H
 
 #include "Optimization/optimizer.h"
+#include "GSS.h"
 
 namespace Optimization {
 namespace Optimizers {
@@ -31,28 +32,29 @@ namespace Optimizers {
  *
  */
 class WISmooothnessTest : public GSS {
-
  public:
-  /*!
-   * @brief
-   *
-   */
-  WISmooothnessTest(
-      Settings::Optimizer *settings,
-      Case *base_case,
-      Model::Properties::VariablePropertyContainer *variables,
-      Reservoir::Grid::Grid *grid,
-      Logger *logger);
+  WISmooothnessTest(::Settings::Optimizer *settings,
+                    Case *base_case,
+                    ::Model::Properties::VariablePropertyContainer *variables,
+                    Reservoir::Grid::Grid *grid,
+                    Logger *logger);
 
  private:
   QString GetStatusStringHeader() const;
   QString GetStatusString() const;
+  VectorXi xdirections_;
 
   /*!
   * @brief
   * @return
   */
   void iterate();
+
+  /*!
+  * @brief
+  * @return
+  */
+  bool is_successful_iteration();
 
  protected:
   /*!

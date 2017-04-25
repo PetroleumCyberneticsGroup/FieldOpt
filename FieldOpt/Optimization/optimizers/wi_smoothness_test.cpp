@@ -19,32 +19,43 @@
 
 #include <iostream>
 #include "wi_smoothness_test.h"
+#include "gss_patterns.hpp"
+
+using namespace Eigen;
 
 namespace Optimization {
 namespace Optimizers {
 
 WISmooothnessTest::WISmooothnessTest(
-    Settings::Optimizer *settings, Case *base_case,
-    Model::Properties::VariablePropertyContainer *variables,
+    ::Settings::Optimizer *settings,
+    Case *base_case,
+    ::Model::Properties::VariablePropertyContainer *variables,
     Reservoir::Grid::Grid *grid,
-    Logger *logger)
-    : Optimizer(settings, base_case, variables, grid, logger) {
+    Logger *logger
+)
+    : GSS(settings, base_case, variables, grid, logger) {
 
-    grid_ = grid;
+    // single out x direction from compass search dir matrix
+    directions_ = GSSPatterns::Compass(num_vars_);
+    xdirections_ = directions_[0];
 
-    // Check problem has exactly six continuous (XYZ) variables
-    if (variables->ContinousVariableSize() != 6
-        || variables->DiscreteVariableSize() != 0
-        || variables->BinaryVariableSize() != 0) {
-        throw std::runtime_error(
-                    "ExhaustiveSearch2DHrz: Expecting to "
-                        "receive exactly six continuous (XYZ) "
-                        "variables: (x,y,z)_heel (x,y,z)_toe.");
-    }
+    step_lengths_ = VectorXd(xdirections_.size());
+    step_lengths_.fill(settings->parameters().initial_step_length);
+}
 
+void WISmooothnessTest::iterate()
+{
+    if (!is_successful_iteration() && iteration_ != 0)
+        contract();
+    case_handler_->AddNewCases(generate_trial_points());
+    case_handler_->ClearRecentlyEvaluatedCases();
+    iteration_++;
+}
 
-
+bool WISmooothnessTest::is_successful_iteration() {
+    return case_handler_->RecentlyEvaluatedCases().contains(GetTentativeBestCase());
 }
 
 }
 }
+
