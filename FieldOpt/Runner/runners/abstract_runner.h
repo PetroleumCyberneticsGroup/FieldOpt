@@ -1,7 +1,5 @@
 /******************************************************************************
  *
- *
- *
  * Created: 16.12.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
@@ -42,14 +40,19 @@ namespace Runner {
 class MainRunner;
 
 /*!
- * \brief The AbstractRunner class is the abstract parent class for all runners. It should only be constructed by the MainRunner class.
+ * \brief The AbstractRunner class is the abstract parent 
+ * class for all runners. It should only be constructed 
+ * by the MainRunner class.
  *
- * This class initializes the primary objects needed and provides some utility functions for logging.
+ * This class initializes the primary objects needed 
+ * and provides some utility functions for logging.
  *
- * It also defines the purely virtual Execute() method which should be implemented by all concrete
- * runners.
+ * It also defines the purely virtual Execute() method 
+ * which should be implemented by all concrete runners.
  *
- * todo: Create a method to get the timeout it seconds that uses the recorded simulation times and the timeout argument.
+ * todo: Create a method to get the timeout it seconds 
+ * that uses the recorded simulation times and the 
+ * timeout argument.
  */
 class AbstractRunner
 {
@@ -57,10 +60,16 @@ class AbstractRunner
  private:
 
   /*!
-   * \brief Execute starts the actual optimization run and should not return until the optimization is done.
+   * \brief Execute starts the actual optimization run 
+   * and should not return until the optimization is done.
    */
   virtual void Execute() = 0;
-  const double sentinel_value_ = 0.0001; //!< Value to be used as a sentinel value for the objective function of cases that cannot be evaluated.
+
+  /*!
+   * Value to be used as a sentinel value for the 
+   * objective function of cases that cannot be evaluated.
+   */  
+  const double sentinel_value_ = 0.0001;
 
  protected:
   AbstractRunner(RuntimeSettings *runtime_settings);
@@ -79,20 +88,26 @@ class AbstractRunner
   void PrintCompletionMessage() const;
 
   /*!
-   * \brief sentinelValue Get the sentinel value to be used as objective function values for cases
-   * that cannot be evaluated.
+   * \brief sentinelValue Get the sentinel value to be 
+   * used as objective function values for cases that 
+   * cannot be evaluated.
    *
-   * When maximizing, this will be 0.0001; when minimizing, this will be -0.0001.
+   * When maximizing, this will be 0.0001; 
+   * when minimizing, this will be -0.0001.
    * \return
    */
   double sentinelValue() const;
 
   /*!
-   * @brief Get the timeout value to be used when starting simulations. It is calculated from the recorded
-   * (successful) simulation times and the timeout value provided as an argument when running the program.
+   * @brief Get the timeout value to be used when 
+   * starting simulations. It is calculated from the 
+   * recorded (successful) simulation times and the 
+   * timeout value provided as an argument when 
+   * running the program.
    *
-   * If there either have not been any recorded simulation times or the timeout argument was not provided, 10,000 will
-   * be returned.
+   * If there either haven't been any recorded  
+   * simulation times or the timeout argument was 
+   * not provided, then 10,000 will be returned.
    * @return
    */
   int timeoutValue() const;
@@ -105,12 +120,16 @@ class AbstractRunner
   void InitializeBaseCase();
   void InitializeOptimizer();
   void InitializeBookkeeper();
-  void FinalizeInitialization(bool write_logs); //!< Write the pre-run summary
-  void FinalizeRun(bool write_logs); //!< Finalize the run, writing data to the summary log.
+
+  //!< Write the pre-run summary
+  void FinalizeInitialization(bool write_logs); 
+  //!< Finalize the run, writing data to the summary log.
+  void FinalizeRun(bool write_logs); 
 
   /*!
    * @brief Initialize the logger.
-   * @param output_subdir Optional subdir in the output dir to write the logs in.
+   * @param output_subdir Optional subdir in 
+   the output dir to stor log files.
    */
   void InitializeLogger(QString output_subdir="", bool write_logs=true);
 };
