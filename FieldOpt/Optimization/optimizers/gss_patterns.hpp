@@ -28,7 +28,7 @@ namespace Optimization { namespace GSSPatterns {
 
 /*!
  * @brief Get the set of search directions containing all
- * coordinate directions, bot positive and negative.
+ * coordinate directions, both positive and negative.
  *
  * This is the set used by CompassSearch.
  *
