@@ -260,15 +260,15 @@ void AbstractRunner::InitializeOptimizer()
             optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
             break;
 
-        case Settings::Optimizer::OptimizerType::WISmooothnessTest:
+        case Settings::Optimizer::OptimizerType::WISmoothnessTest:
             if (runtime_settings_->verbosity_level()) {
-                cout << "Running WISmooothnessTest." << endl;
+                cout << "Running WISmoothnessTest." << endl;
             }
-            optimizer_ = new Optimization::Optimizers::WISmooothnessTest(settings_->optimizer(),
-                                                                         base_case_,
-                                                                         model_->variables(),
-                                                                         model_->grid(),
-                                                                         logger_
+            optimizer_ = new Optimization::Optimizers::WISmoothnessTest(settings_->optimizer(),
+                                                                        base_case_,
+                                                                        model_->variables(),
+                                                                        model_->grid(),
+                                                                        logger_
             );
             optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
             break;

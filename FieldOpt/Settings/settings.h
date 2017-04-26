@@ -58,39 +58,39 @@ class Settings
 
   QString driver_path() const { return driver_path_; }
 
-  //!< The name to be used for the run. Output file 
-  // and folder names are derived from this.
+  /*! The name to be used for the run. Output file 
+      and folder names are derived from this. */
   QString name() const { return name_; } 
 
-  //!< Path to a directory in which output files are to be placed.
+  /// Path to a directory in which output files are to be placed.
   QString output_directory() const { return output_directory_; } 
 
   // To be removed:
-  //!< Verbose mode (with or without debug printing).
+  /// Verbose mode (with or without debug printing).
   bool verbose() const { return verbose_; } 
   void set_verbosity(const bool verbosity) { verbose_ = verbosity; }
 
-  //!< Get the value for the bookkeeper tolerance. 
-  // Used by the Bookkeeper in the Runner library.
+  /*! Get the value for the bookkeeper tolerance. 
+      Used by the Bookkeeper in the Runner library. */
   double bookkeeper_tolerance() const { return bookkeeper_tolerance_; }
 
-  //!< Object containing model specific settings.
+  /// Object containing model specific settings.
   Model *model() const { return model_; } 
 
-  //!< Object containing optimizer specific settings.
+  /// Object containing optimizer specific settings.
   Optimizer *optimizer() const { return optimizer_; } 
 
-  //!< Object containing simulator specific settings.
+  /// Object containing simulator specific settings.
   Simulator *simulator() const { return simulator_; } 
 
-  //!< Get a string containing the 
-  // CSV header and contents for the log.
+  /*! Get a string containing the 
+      CSV header and contents for the log. */
   QString GetLogCsvString() const; 
 
-  //!< Get the to the FieldOpt build directory.
+  /// Get the to the FieldOpt build directory.
   const QString &build_path() const { return build_path_; } 
 
-  //!< Set the path to the FieldOpt build directory.
+  /// Set the path to the FieldOpt build directory.
   void set_build_path(const QString &build_path); 
 
  private:

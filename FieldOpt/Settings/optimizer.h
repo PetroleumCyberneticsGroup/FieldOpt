@@ -44,7 +44,7 @@ class Optimizer
 
   enum OptimizerType {
     Compass, APPS, ExhaustiveSearch2DVert,
-    GeneticAlgorithm, WISmooothnessTest };
+    GeneticAlgorithm, WISmoothnessTest };
 
   enum OptimizerMode { Maximize, Minimize };
 
@@ -64,110 +64,108 @@ class Optimizer
 
     // GSS parameters
     // --------------
-    //!< Maximum number of evaluations allowed
-    // before terminating the optimization run.
+    /*! Maximum number of evaluations allowed
+        before terminating the optimization run. */
     int max_evaluations;
 
-    //!< The initial step length in the algorithm
-    // when applicable.
+    /*! The initial step length in the algorithm
+        when applicable. */
     double initial_step_length;
 
-    //!< The minimum step length in the algorithm
-    // when applicable.
+    /*! The minimum step length in the algorithm
+        when applicable. */
     double minimum_step_length;
 
-    //!< The contraction factor for GSS algorithms.
+    /// The contraction factor for GSS algorithms.
     double contraction_factor;
 
-    //!< The expansion factor for GSS algorithms.
+    /// The expansion factor for GSS algorithms.
     double expansion_factor;
 
-    //!< Maximum size of evaluation queue.
+    /// Maximum size of evaluation queue.
     double max_queue_size;
 
-    //!< The pattern to be used for GSS algorithms.
+    /// The pattern to be used for GSS algorithms.
     QString pattern;
 
 
     // GA parameters
     // -------------
-    //!< Max iterations. Default: 50
+    /// Max iterations. Default: 50
     int max_generations;
 
-    //!< Optional. Can be determined automatically.
-    // Default: min(10*nvars, 100).
+    /*! Optional. Can be determined automatically.
+        Default: min(10*nvars, 100). */
     int population_size;
 
-    //!< Fraction to be discarded during selection.
-    // Defaults: 1/population.
+    /*! Fraction to be discarded during selection.
+        Defaults: 1/population. */
     double discard_parameter;
 
-    //!< Crossover probability. Default: 0.1.
+    /// Crossover probability. Default: 0.1.
     double p_crossover;
 
-    //!< Decay rate. Default: 4.0.
+    /// Decay rate. Default: 4.0.
     double decay_rate;
 
-    //!< Mutation strength. Default: 0.25.
+    /// Mutation strength. Default: 0.25.
     double mutation_strength;
 
-    //!< Stagnation limit. Default: 1e-10.
+    /// Stagnation limit. Default: 1e-10.
     double stagnation_limit;
 
-    //!< Simple lower bound. This is applied 
-    // to _all_ variables. Default: -10.0.
+    /*! Simple lower bound. This is applied 
+        to _all_ variables. Default: -10.0. */
     double lower_bound;
 
-    //!< Simple upper bound. This is applied 
-    // to _all_ variables. Default: +10.0.
+    /*! Simple upper bound. This is applied 
+        to _all_ variables. Default: +10.0. */
     double upper_bound;
   };
 
   struct Objective {
-    //!< Objective definition type (e.g. WeightedSum)
+    /// Objective definition type (e.g. WeightedSum)
     ObjectiveType type; 
 
     struct WeightedSumComponent { 
       double coefficient; QString property; 
       int time_step;
-      //!< A component of a weighted sum 
-      // formulatied objective function
+      /*! A component of a weighted sum 
+          formulatied objective function */
       bool is_well_prop; QString well; 
     }; 
 
-    //!< The expression for the Objective 
-    // function formulated as a weighted sum
+    /*! The expression for the Objective 
+        function formulated as a weighted sum */
     QList<WeightedSumComponent> weighted_sum; 
   };
 
   struct Constraint {
-    //!< Used to express (x,y,z) coordinates.
-    struct RealCoordinate 
+    /// Used to express (x,y,z) coordinates.
+    struct RealCoordinate
     { double x; double y; double z; }; 
 
-    //!< Used to define a box-shaped 3D area. 
-    // Max and min each define a corner.
+    /*! Used to define a box-shaped 3D area. 
+        Max and min each define a corner. */
     struct RealMaxMinLimit 
     { RealCoordinate max; RealCoordinate min; }; 
 
-    //!< The constraint type (e.g. BHP 
-    // or SplinePoints positions).
+    /// The constraint type (e.g. BHP or SplinePoints positions).
     ConstraintType type; 
     
-    //!< The name of the well this 
-    // Constraint applies to.
+    /// The name of the well this Constraint applies to.
     QString well; 
 
-    //!< List of well names if the constraint 
-    // applies to more than one.
+    /// Well name list if constraint applies to more than one.
     QStringList wells; 
 
-    //!< Max limit when using constraints like BHP.
-    double max; 
-    //!< Min limit when using constraints like BHP.
+    /// Max limit when using constraints like BHP.
+    double max;
+
+    /// Min limit when using constraints like BHP.
     double min; 
 
-    //!< Min max limits for geometrix box constraints.
+    /// Min max limits for geometrix box constraints.
     double 
     box_imin, box_imax, 
     box_jmin, box_jmax, 
@@ -178,29 +176,29 @@ class Optimizer
     double min_distance;
     int max_iterations;
 
-    //!< How the SplinePoints constraint is given 
-    // when SplinePoints constraint type is selected.
+    /*! How the SplinePoints constraint is given 
+        when SplinePoints constraint type is selected. */
     ConstraintWellSplinePointsType spline_points_type; 
 
-    //!< Box limits a spline point needs to be within 
-    // to be valid when SplinePoints constraint type 
-    // is selected.
+    /*! Box limits a spline point needs to be within 
+        to be valid when SplinePoints constraint type 
+        is selected. */
     QList<RealMaxMinLimit> spline_points_limits; 
   };
 
-  //!< Get the Optimizer type (e.g. Compass).
+  /// Get the Optimizer type (e.g. Compass).
   OptimizerType type() const { return type_; } 
  
-  //!< Get the optimizer mode (maximize/minimize).
+  /// Get the optimizer mode (maximize/minimize).
   OptimizerMode mode() const { return mode_; } 
 
-  //!< Get the optimizer parameters.
+  /// Get the optimizer parameters.
   Parameters parameters() const { return parameters_; } 
 
-  //!< Get the optimizer objective function.
+  /// Get the optimizer objective function.
   Objective objective() const { return objective_; } 
 
-  //!< Get the optimizer constraints.
+  /// Get the optimizer constraints.
   QList<Constraint> constraints() const { return constraints_; } 
 
  private:

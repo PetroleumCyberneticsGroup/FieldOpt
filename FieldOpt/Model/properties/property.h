@@ -40,24 +40,24 @@ class Property
 {
  public:
 
-  //!< The underlying datatype of the property's value.
+  /// The underlying datatype of the property's value.
   enum Type { Discrete, Continous, Binary };
 
-  //!< Get the underlying datatype of the property's value.
+  /// Get the underlying datatype of the property's value.
   Type type() const { return type_; }
 
-  //!< Get the name set for the variable. Returns
-  // an empty string if name has not been set.
+  /*! Get the name set for the variable. Returns
+      an empty string if name has not been set. */
   QString name() const { return name_;}
 
-  //!< Set the name of the variable.
+  /// Set the name of the variable.
   void setName(QString name) { name_ = name; }
 
-  //!< Check if the property is locked.
+  /// Check if the property is locked.
   bool IsLocked() const { return locked_; }
 
-  //!< Set the property to locked. The value
-  // of a locked property cannot be changed.
+  /*! Set the property to locked. The value
+      of a locked property cannot be changed. */
   void Lock() { locked_ = true; }
 
   //!< Unlock a property.
@@ -74,10 +74,10 @@ class Property
    */
   void SetVariable();
 
-  //!< Check if the property is variable.
+  /// Check if the property is variable.
   bool isVariable() { return is_variable_; }
 
-  //!< Unique ID for the property.
+  /// Unique ID for the property.
   QUuid id() const { return id_; }
 
   /*!
@@ -123,22 +123,27 @@ class Property
    * property is set variable.
    */
   struct PropertyInfo {
-    //!< Indicates whether the info has been set or not.
+    
+    /// Indicates whether the info has been set or not.
     bool is_set_ = false;
-    //!< The type of property this is (part) of.
+    
+    /// The type of property this is (part) of.
     PropertyType prop_type;
-    //!< The name of the well this property belongs to.
+    
+    /// The name of the well this property belongs to.
     QString parent_well_name;
-    //!< The number of the well block this property
-    // belongs to, or the time step of a control.
+
+    /*! The number of the well block this property
+        belongs to, or the time step of a control. */
     int index;
     SplineEnd spline_end;
     Coordinate coord;
   };
 
-  //!< Get an Info struc containing information
-  // about the variable. This is only set if
-  // the property is variable.
+  /*! Get an Info struc containing information
+   *  about the variable. This is only set if
+   *  the property is variable. 
+   */
   PropertyInfo propertyInfo() const;
 
  protected:
