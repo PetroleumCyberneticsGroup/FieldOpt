@@ -20,6 +20,7 @@
 #ifndef FIELDOPT_WI_SMOOTHNESS_TEST_H
 #define FIELDOPT_WI_SMOOTHNESS_TEST_H
 
+#include <Eigen/Dense>
 #include "Optimization/optimizer.h"
 #include "GSS.h"
 
@@ -31,21 +32,35 @@ namespace Optimizers {
  * function of well index (differing well paths)
  *
  */
-class WISmooothnessTest : public Optimizer {
+class WISmoothnessTest: public Optimizer {
  public:
-  WISmooothnessTest(Settings::Optimizer *settings,
+  WISmoothnessTest(Settings::Optimizer *settings,
                     Case *base_case,
                     Model::Properties::VariablePropertyContainer *variables,
                     Reservoir::Grid::Grid *grid,
                     Logger *logger);
 
+  void getXCoordVarID();
+  Eigen::Matrix<double,Dynamic,1> getPerturbations();
+
  private:
   Reservoir::Grid::Grid *grid_;
-  QUuid i_varid;
-  QUuid j_varid;
+  Model::Properties::VariablePropertyContainer *variables_;
+  QHash<QUuid, Model::Properties::ContinousProperty *> *xyzcoord_;
+  QUuid x_varid;
 
-  QString GetStatusStringHeader() const;
-  QString GetStatusString() const;
+  Eigen::Matrix<double,Dynamic,1> pertx_;
+  long nblocksx_ = 5;
+  long block_sz_ = 24;
+
+  // num of points including 'zero' point
+  long npointsx_ = 12;
+
+
+
+
+  // QString GetStatusStringHeader() const;
+  // QString GetStatusString() const;
 
   /*!
   * @brief
@@ -53,6 +68,10 @@ class WISmooothnessTest : public Optimizer {
   */
   void iterate();
 
+  virtual TerminationCondition IsFinished() override {};
+
+ protected:
+  void handleEvaluatedCase(Case *c) override {};
 };
 
 } // namespace Optimization

@@ -21,11 +21,12 @@
 #include "wi_smoothness_test.h"
 
 using namespace std;
+using namespace Eigen;
 
 namespace Optimization {
 namespace Optimizers {
 
-WISmooothnessTest::WISmooothnessTest(
+WISmoothnessTest::WISmoothnessTest(
     Settings::Optimizer *settings,
     Case *base_case,
     Model::Properties::VariablePropertyContainer *variables,
@@ -34,29 +35,92 @@ WISmooothnessTest::WISmooothnessTest(
 )
     : Optimizer(settings, base_case, variables, grid, logger) {
     grid_ = grid;
+    variables_ = variables;
 
-//    if (variables->BinaryVariableSize() != 0 ||
-//        variables->ContinousVariableSize() != 0 ||
-//        variables->DiscreteVariableSize() != 3){
-//        cout << "Optimizing IJK" << endl;
+    // Check routine input has exactly size: 3, type: cont
+
+    cout << variables->DiscreteVariableSize() << endl;
+    cout << variables->ContinousVariableSize() << endl;
+
+    if (variables->DiscreteVariableSize() != 0 ||
+        variables->ContinousVariableSize() != 3 ) {
+        throw runtime_error(
+            "WISmoothnessTest: 3 continuous coordinate "
+                "variables have not been defined.");
+    }
+    else {
+        cout << "Routine input contains "
+            "exactly 3 continuous variables" << endl;
+    }
+
+    getXCoordVarID();
+    getPerturbations();
+}
+
+void WISmoothnessTest::getXCoordVarID() {
+
+    // Get xyz coordinate point
+    xyzcoord_ = variables_->GetContinousVariables();
+
+    // Get variable id corresponding to x coord component
+    for (auto coord : *xyzcoord_) {
+        if (coord->propertyInfo().coord ==
+            Model::Properties::Property::Coordinate::x) {
+            x_varid = coord->id();
+        }
+    }
+}
+
+Eigen::Matrix<double,Dynamic,1> WISmoothnessTest::getPerturbations() {
+
+    //
+    pertx_.setLinSpaced(npointsx_-1,0,nblocksx_*block_sz_);
+
+    for (int ii=0; ii < pertx_.rows(); ++ii) {
+        cout << ii << ": " << pertx_[ii] << endl;
+    }
+
+//    pertx_.fill(0);
+//    pertx_.col(0) = VectorXi::LinSpaced(pertx_.rows(), 0, npointsx_);
 //
-//    } else if  (variables->ContinousVariableSize() != 0 ||
-//        variables->DiscreteVariableSize() != 0 ||
-//        variables->ContinousVariableSize() != 3){
-//        cout << "Optimizing XYZ" << endl;
-//    }
-
+//    // Make x component pertubations: linearly increasing integer vector
+//    auto high = (nblocksx_ * block_sz_) / npointsx_;
+//    auto low = (nblocksx_ * block_sz_) / npointsx_;
+//    auto step = (nblocksx_ * block_sz_) / npointsx_;
+//
+//    // low:step:hi vector
+//    pertx_.col(0) = VectorXi::LinSpaced(((high-low)/step)+1,
+//                                        low,
+//                                        low+step*(pertx_.rows()-1));
 
 }
 
-void WISmooothnessTest::iterate()
+void WISmoothnessTest::iterate()
 {
+    // Stop the optimizer for iterating more than once
+    if (iteration_ > 0) {
+        return;
+    }
 
 
-}
 
+    // Fill up case_handler with x component pertubations
+//    auto new_case = new Case(GetTentativeBestCase());
+//    new_case->set_real_variable_value(x_varid, perturbation)
+//
+//    case_handler_->AddNewCase(new_case);
 
-//QString WISmooothnessTest::GetStatusStringHeader() const
+    // "Perturb x coord component" << endl;
+
+//}
+
+//Optimizer::TerminationCondition WISmoothnessTest::IsFinished() {
+//    if (iteration_ == 0) return NOT_FINISHED;
+//    else if (case_handler_->QueuedCases().size() > 0) return NOT_FINISHED;
+//    else return MAX_EVALS_REACHED;
+//}
+
+//QString WISmoothnessTest::GetStatusStringHeader() const
 //{
 //    return QString("%1,%2,%3,%4,%5,%6,%7")
 //        .arg("Iteration")
@@ -68,7 +132,7 @@ void WISmooothnessTest::iterate()
 //        .arg("StepLength");
 //}
 
-//QString WISmooothnessTest::GetStatusString() const
+//QString WISmoothnessTest::GetStatusString() const
 //{
 //    return QString("%1,%2,%3,%4,%5,%6,%7")
 //        .arg(iteration_)

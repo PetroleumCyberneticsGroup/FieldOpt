@@ -70,20 +70,20 @@ if (BUILD_TESTING)
 	find_package(GTest REQUIRED)
 	include_directories(${GTEST_INCLUDE_DIRS} tests)
 	add_executable(test_optimization
-			tests/test_case.cpp
-			tests/test_case_handler.cpp
-			tests/constraints/test_bhp_constraint.cpp
-			tests/constraints/test_constraint_handler.cpp
-			tests/constraints/test_reservoir_boundary.cpp
-			tests/objective/test_weightedsum.cpp
-			tests/optimizers/test_compass_search.cpp
-			tests/test_resource_cases.h
-			tests/test_resource_optimizer.h
-			${EXPERIMENTAL_CONSTRAINTS_TESTS}
-			tests/constraints/test_rate_constraint.cpp
-			tests/test_case_transfer_object.cpp
-            tests/optimizers/test_apps.cpp
-            tests/optimizers/test_ga.cpp
+#			tests/test_case.cpp
+#			tests/test_case_handler.cpp
+#			tests/constraints/test_bhp_constraint.cpp
+#			tests/constraints/test_constraint_handler.cpp
+#			tests/constraints/test_reservoir_boundary.cpp
+#			tests/objective/test_weightedsum.cpp
+#			tests/optimizers/test_compass_search.cpp
+#			tests/test_resource_cases.h
+#			tests/test_resource_optimizer.h
+#			${EXPERIMENTAL_CONSTRAINTS_TESTS}
+#			tests/constraints/test_rate_constraint.cpp
+#			tests/test_case_transfer_object.cpp
+#            tests/optimizers/test_apps.cpp
+#            tests/optimizers/test_ga.cpp
             tests/optimizers/test_wi_smoothness_test.cpp)
 
 	target_link_libraries(test_optimization
