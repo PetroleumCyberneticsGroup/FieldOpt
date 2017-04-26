@@ -37,13 +37,17 @@ namespace Model {
 namespace Properties {
 
 /*!
- * \brief The VariablePropertyContainer class facilitates the handling of variable properties.
+ * \brief The VariablePropertyContainer class 
+ * facilitates the handling of variable properties.
  *
- * This class has members that hold all continous, discrete and binary properties that are
- * considered _variable_ in the model, as well as and methods to maintain the lists.
+ * This class has members that hold all continous, 
+ * discrete and binary properties that are considered
+ * _variable_ in the model, as well as and methods to 
+ * maintain the lists.
  *
- * This class also maintains unique IDs in the form of hashtable keys for every variable property
- * of each type.
+ * This class also maintains unique IDs in the form 
+ * of hashtable keys for every variable property of 
+ * each type.
  */
 class VariablePropertyContainer
 {
@@ -51,56 +55,114 @@ class VariablePropertyContainer
  public:
   VariablePropertyContainer();
 
-  void AddVariable(BinaryProperty *var); //!< Add a property to the container and mark it as variable
-  void AddVariable(DiscreteProperty *var); //!< Add a property to the container and mark it as variable
-  void AddVariable(ContinousProperty *var); //!< Add a property to the container and mark it as variable
+  /// Add a property to the container and mark it as variable
+  void AddVariable(BinaryProperty *var); 
 
-  int BinaryVariableSize() const { return binary_variables_->size(); } //!< Get the number of binary variables.
-  int DiscreteVariableSize() const { return discrete_variables_->size(); } //!< Get the number of discrete variables.
-  int ContinousVariableSize() const { return continous_variables_->size(); } //!< Get the number of continous variables.
+  /// Add a property to the container and mark it as variable
+  void AddVariable(DiscreteProperty *var); 
+ 
+  /// Add a property to the container and mark it as variable
+  void AddVariable(ContinousProperty *var); 
 
-  BinaryProperty *GetBinaryVariable(QUuid id) const; //!< Get the binary variable with index id.
-  DiscreteProperty *GetDiscreteVariable(QUuid id) const; //!< Get the discrete variable with index id.
-  ContinousProperty *GetContinousVariable(QUuid id) const; //!< Get the continous variable with index id.
+  /// Get the number of binary variables.
+  int BinaryVariableSize() const { return binary_variables_->size(); }
 
-  BinaryProperty *GetBinaryVariable(QString name) const; //!< Get the binary variable with the specified name.
-  DiscreteProperty *GetDiscreteVariable(QString name) const; //!< Get the discrete variable with the specified name.
-  ContinousProperty *GetContinousVariable(QString name) const; //!< Get the continous variable with the specified name.
+  /// Get the number of discrete variables.
+  int DiscreteVariableSize() const { return discrete_variables_->size(); } 
 
-  void SetBinaryVariableValue(QUuid id, bool val); //!< Set the value of a binary variable.
-  void SetDiscreteVariableValue(QUuid id, int val); //!< Set the value of a binary variable.
+  /// Get the number of continous variables.
+  int ContinousVariableSize() const { return continous_variables_->size(); } 
 
-  void SetContinousVariableValue(QUuid id, double val); //!< Set the value of a binary variable.
-  QHash<QUuid, BinaryProperty *> *GetBinaryVariables() const { return binary_variables_; } //!< Get all binary variables
-  QHash<QUuid, DiscreteProperty *> *GetDiscreteVariables() const { return discrete_variables_; } //!< Get all discrete variables
+  /// Get the binary variable with index id.
+  BinaryProperty *GetBinaryVariable(QUuid id) const; 
+  /// Get the discrete variable with index id.
+  DiscreteProperty *GetDiscreteVariable(QUuid id) const; 
+  /// Get the continous variable with index id.
+  ContinousProperty *GetContinousVariable(QUuid id) const; 
 
-  QHash<QUuid, ContinousProperty *> *GetContinousVariables() const { return continous_variables_; } //!< Get all continous variables
-  QHash<QUuid, bool> GetBinaryVariableValues() const; //!< Get a hashmap containing all binary variable values. The key represents each variable's ID.
-  QHash<QUuid, int> GetDiscreteVariableValues() const; //!< Get a hashmap containing all discrete variable values. The key represents each variable's ID.
+  /// Get the binary variable with the specified name.
+  BinaryProperty *GetBinaryVariable(QString name) const; 
 
-  QHash<QUuid, double> GetContinousVariableValues() const; //!< Get a hashmap containing all discrete varaible values. The key represents each variable's ID.
+  /// Get the discrete variable with the specified name.
+  DiscreteProperty *GetDiscreteVariable(QString name) const; 
 
-  QList<ContinousProperty *> GetWellControlVariables() const; //!< Get all control (rate/bhp) variables.
-  QList<ContinousProperty *> GetWellBHPVariables() const; //!< Get all BHP variables.
-  QList<ContinousProperty *> GetWellRateVariables() const ; //!< Get all BHP variables.
-  QList<ContinousProperty *> GetWellControlVariables(const QString well_name) const; //!< Get all control variables for a specific well
-  QList<ContinousProperty *> GetWellBHPVariables(const QString well_name) const; //!< Get all BHP variables for a specific well.
-  QList<ContinousProperty *> GetWellRateVariables(const QString well_name) const; //!< Get all BHP variables for a specific well.
-  QList<ContinousProperty *> GetWellSplineVariables(const QString well_name) const; //!< Get all variables for the spline defining a well.
-  QList<DiscreteProperty *> GetWellBlockVariables() const; //!< Get well block position variables.
-  QList<DiscreteProperty *> GetWellBlockVariables(const QString well_name) const; //!< Get well block position variables for a well.
-  QList<ContinousProperty *> GetTransmissibilityVariables() const; //!< Get all transmissibility variables.
-  QList<ContinousProperty *> GetTransmissibilityVariables(const QString well_name) const; //!< Get all transmissibility variables for a well.
+  /// Get the continous variable with the specified name.
+  ContinousProperty *GetContinousVariable(QString name) const; 
+
+  /// Set the value of a binary variable.
+  void SetBinaryVariableValue(QUuid id, bool val); 
+
+  /// Set the value of a binary variable.
+  void SetDiscreteVariableValue(QUuid id, int val); 
+
+  /// Set the value of a binary variable.
+  void SetContinousVariableValue(QUuid id, double val); 
+  
+  /// Get all binary variables
+  QHash<QUuid, BinaryProperty *> *GetBinaryVariables() const { return binary_variables_; } 
+  
+  /// Get all discrete variables
+  QHash<QUuid, DiscreteProperty *> *GetDiscreteVariables() const { return discrete_variables_; } 
+
+  /// Get all continous variables
+  QHash<QUuid, ContinousProperty *> *GetContinousVariables() const { return continous_variables_; } 
+
+  /*! Get a hashmap containing all binary variable  
+      values. The key represents each variable's ID. */
+  QHash<QUuid, bool> GetBinaryVariableValues() const; 
+
+  /*! Get a hashmap containing all discrete variable 
+      values. The key represents each variable's ID. */
+  QHash<QUuid, int> GetDiscreteVariableValues() const; 
+
+  /*! Get a hashmap containing all discrete varaible 
+      values. The key represents each variable's ID. */
+  QHash<QUuid, double> GetContinousVariableValues() const; 
+
+  /// Get all control (rate/bhp) variables.
+  QList<ContinousProperty *> GetWellControlVariables() const; 
+
+  /// Get all BHP variables.
+  QList<ContinousProperty *> GetWellBHPVariables() const; 
+
+  /// Get all BHP variables.
+  QList<ContinousProperty *> GetWellRateVariables() const ; 
+
+  /// Get all control variables for a specific well
+  QList<ContinousProperty *> GetWellControlVariables(const QString well_name) const; 
+
+  /// Get all BHP variables for a specific well.
+  QList<ContinousProperty *> GetWellBHPVariables(const QString well_name) const; 
+
+  /// Get all BHP variables for a specific well.
+  QList<ContinousProperty *> GetWellRateVariables(const QString well_name) const; 
+  
+  /// Get all variables for the spline defining a well.
+  QList<ContinousProperty *> GetWellSplineVariables(const QString well_name) const; 
+  
+  /// Get well block position variables.
+  QList<DiscreteProperty *> GetWellBlockVariables() const; 
+  
+  /// Get well block position variables for a well.
+  QList<DiscreteProperty *> GetWellBlockVariables(const QString well_name) const; 
+  
+  /// Get all transmissibility variables.
+  QList<ContinousProperty *> GetTransmissibilityVariables() const; 
+  
+  /// Get all transmissibility variables for a well.
+  QList<ContinousProperty *> GetTransmissibilityVariables(const QString well_name) const; 
 
   /*!
-   * @brief Get a list of properties in the same order as they occur in the
-   * input ID vector.
+   * @brief Get a list of properties in the same 
+   * order as they occur in the input ID vector.
    * @param ids IDs for properties to get.
    * @return A vector of properties.
    */
   QList<ContinousProperty *> GetContinuousProperties(QList<QUuid> ids) const;
 
-  void CheckVariableNameUniqueness(); //!< Check that all variable names are unique. If they are not, throw an error.
+  /*! Check that all variable names are unique. 
+      If they are not, throw an error. */
+  void CheckVariableNameUniqueness(); 
 
  private:
   QHash<QUuid, BinaryProperty *> *binary_variables_;

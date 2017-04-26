@@ -14,11 +14,14 @@ class TestResourceCases : public TestResources::TestResourceVariablePropertyCont
  public:
   TestResourceCases() {
       test_case_1_3i_ = new Optimization::Case(QHash<QUuid, bool>(), integer_variables_3d_, QHash<QUuid, double>());
+
       test_case_2_3r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), real_variables_3d_);
       test_case_2_3r_->set_objective_function_value(100.0);
+
       test_case_3_4b3i3r_ = new Optimization::Case(binary_variables_4d_, integer_variables_3d_, real_variables_3d_);
       test_case_3_4b3i3r_->set_objective_function_value(-50.0);
       test_case_3_4b3i3r_->SetWICTime(5);
+
       test_case_4_4b3i3r = new Optimization::Case(binary_variables_4d_, integer_variables_3d_, real_variables_3d_);
       test_case_4_4b3i3r->set_objective_function_value(-50.0);
       trivial_cases_ << test_case_1_3i_ << test_case_2_3r_ << test_case_3_4b3i3r_ << test_case_4_4b3i3r;
@@ -31,8 +34,9 @@ class TestResourceCases : public TestResources::TestResourceVariablePropertyCont
 
       auto gen = get_random_generator();
       std::vector<double> rand_reals_30 = random_doubles(gen, -5.12, 5.12, 30);
-      for (double rand : rand_reals_30)
-          real_variables_sph_rand_30d_.insert(QUuid::createUuid(), rand);
+      for (double rand : rand_reals_30){
+        real_variables_sph_rand_30d_.insert(QUuid::createUuid(), rand);
+      }
       test_case_ga_spherical_30r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), real_variables_sph_rand_30d_);
 
 

@@ -28,17 +28,30 @@ namespace TestResources {
 class RunnerResources {
  private:
   const int argc = 16;
+  // const char *argv[16] = {"FieldOpt",
+  //                         "/home/einar/Documents/GitHub/PCG/FieldOpt/examples/ADGPRS/5spot/fo_driver_5vert_wells.json",
+  //                         "/home/einar/PCG/FieldOpt/FieldOpt/cmake-build-debug/fieldopt-output",
+  //                         "-g", "/home/einar/Documents/GitHub/PCG/FieldOpt/examples/Flow/5spot/5SPOT.EGRID",
+  //                         "-s", "/home/einar/Documents/GitHub/PCG/FieldOpt/examples/Flow/5spot/5SPOT.DATA",
+  //                         "-b", "/home/einar/.CLion2016.2/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug/bin",
+  //                         "-r", "mpisync",
+  //                         "-f",
+  //                         "-v", "0",
+  //                         "-t", "1000"
+  // };
+
   const char *argv[16] = {"FieldOpt",
-                          "/home/einar/Documents/GitHub/PCG/FieldOpt/examples/ADGPRS/5spot/fo_driver_5vert_wells.json",
-                          "/home/einar/PCG/FieldOpt/FieldOpt/cmake-build-debug/fieldopt-output",
-                          "-g", "/home/einar/Documents/GitHub/PCG/FieldOpt/examples/Flow/5spot/5SPOT.EGRID",
-                          "-s", "/home/einar/Documents/GitHub/PCG/FieldOpt/examples/Flow/5spot/5SPOT.DATA",
-                          "-b", "/home/einar/.CLion2016.2/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug/bin",
+                          "../examples/ADGPRS/5spot/fo_driver_5vert_wells.json",
+                          "../fieldopt-output",
+                          "-g", "../examples/Flow/5spot/5SPOT.EGRID",
+                          "-s", "../examples/Flow/5spot/5SPOT.DATA",
+                          "-b", ".",
                           "-r", "mpisync",
                           "-f",
                           "-v", "0",
                           "-t", "1000"
   };
+
  protected:
   Runner::RuntimeSettings *rts_ = new Runner::RuntimeSettings(argc, argv);
   Logger *logger_ = new Logger(rts_, TestResources::ExampleFilePaths::directory_output_, false);
