@@ -90,7 +90,9 @@ class TestWISmoothnessTest : public ::testing::Test,
 TEST_F(TestWISmoothnessTest, TestGetXCoordVarID) {
 //    Optimization::Case *new_case_1 = maximizer->GetCaseForEvaluation();
 
-
+    for (int ii=0; ii < pertx_.rows(); ++ii) {
+        cout << ii << ": " << pertx_[ii] << endl;
+    }
 
 }
 

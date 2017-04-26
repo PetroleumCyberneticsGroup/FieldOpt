@@ -75,24 +75,6 @@ Eigen::Matrix<double,Dynamic,1> WISmoothnessTest::getPerturbations() {
 
     //
     pertx_.setLinSpaced(npointsx_-1,0,nblocksx_*block_sz_);
-
-    for (int ii=0; ii < pertx_.rows(); ++ii) {
-        cout << ii << ": " << pertx_[ii] << endl;
-    }
-
-//    pertx_.fill(0);
-//    pertx_.col(0) = VectorXi::LinSpaced(pertx_.rows(), 0, npointsx_);
-//
-//    // Make x component pertubations: linearly increasing integer vector
-//    auto high = (nblocksx_ * block_sz_) / npointsx_;
-//    auto low = (nblocksx_ * block_sz_) / npointsx_;
-//    auto step = (nblocksx_ * block_sz_) / npointsx_;
-//
-//    // low:step:hi vector
-//    pertx_.col(0) = VectorXi::LinSpaced(((high-low)/step)+1,
-//                                        low,
-//                                        low+step*(pertx_.rows()-1));
-
 }
 
 void WISmoothnessTest::iterate()
