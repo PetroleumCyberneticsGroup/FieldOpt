@@ -1,6 +1,7 @@
 /******************************************************************************
    Created by einar on 2/6/16.
    Copyright (C) 2017 Einar J.M. Baumann <einar.baumann@gmail.com>
+   Modified by M.Bellout (2017) <mathias.bellout@ntnu.no, chakibbb@gmail.com>
 
    This file is part of the FieldOpt project.
 
@@ -27,20 +28,35 @@
 #include "test_resource_cases.h"
 
 namespace TestResources {
-class TestResourceOptimizer : public TestResourceModel, public TestResourceCases {
+class TestResourceOptimizer :
+    public TestResourceModel,
+    public TestResourceCases {
  protected:
   TestResourceOptimizer() {
-      base_case_ = new Optimization::Case(model_->variables()->GetBinaryVariableValues(),
-                                          model_->variables()->GetDiscreteVariableValues(),
-                                          model_->variables()->GetContinousVariableValues());
+      base_case_ = new Optimization::Case(
+          model_->variables()->GetBinaryVariableValues(),
+          model_->variables()->GetDiscreteVariableValues(),
+          model_->variables()->GetContinousVariableValues())
+          ;
       base_case_->set_objective_function_value(1000.0);
 
-      settings_compass_search_min_unconstr_ = new Settings::Optimizer(get_json_settings_compass_search_minimize_);
-      settings_compass_search_max_unconstr_ = new Settings::Optimizer(get_json_settings_compass_search_maximize_);
-      settings_apps_min_unconstr_ = new Settings::Optimizer(get_json_settings_apps_minimize_);
-      settings_apps_max_unconstr_ = new Settings::Optimizer(get_json_settings_apps_maximize_);
-      settings_ga_min_ = new Settings::Optimizer(get_json_settings_ga_minimize_);
-      settings_ga_max_ = new Settings::Optimizer(get_json_settings_ga_maximize_);
+      // Compass search settings
+      settings_compass_search_min_unconstr_ =
+          new Settings::Optimizer(get_json_settings_compass_search_minimize_);
+      settings_compass_search_max_unconstr_ =
+          new Settings::Optimizer(get_json_settings_compass_search_maximize_);
+
+      // APPS settings
+      settings_apps_min_unconstr_ =
+          new Settings::Optimizer(get_json_settings_apps_minimize_);
+      settings_apps_max_unconstr_ =
+          new Settings::Optimizer(get_json_settings_apps_maximize_);
+
+      // GA settings
+      settings_ga_min_ =
+          new Settings::Optimizer(get_json_settings_ga_minimize_);
+      settings_ga_max_ =
+          new Settings::Optimizer(get_json_settings_ga_maximize_);
   }
 
   Optimization::Case *base_case_;
@@ -56,10 +72,16 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
       {"Type", "WeightedSum"},
       {"WeightedSumComponents", QJsonArray{
           QJsonObject{
-              {"Coefficient", 1.0}, {"Property", "CumulativeOilProduction"}, {"TimeStep", -1}, {"IsWellProp", false}
+              {"Coefficient", 1.0},
+              {"Property", "CumulativeOilProduction"},
+              {"TimeStep", -1},
+              {"IsWellProp", false}
           },
           QJsonObject{
-              {"Coefficient", 0.0}, {"Property", "CumulativeWaterProduction"}, {"TimeStep", -1}, {"IsWellProp", false}
+              {"Coefficient", 0.0},
+              {"Property", "CumulativeWaterProduction"},
+              {"TimeStep", -1},
+              {"IsWellProp", false}
           }
       }}
   };
