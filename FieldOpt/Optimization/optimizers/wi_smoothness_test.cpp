@@ -1,5 +1,6 @@
 /******************************************************************************
-   Copyright (C) 2017 Mathias C. Bellout <mathias.bellout@ntnu.no>
+   Copyright (C) 2017 M.Bellout (2017)
+   <mathias.bellout@ntnu.no, chakibbb@gmail.com>
 
    This file is part of the FieldOpt project.
 
@@ -21,7 +22,6 @@
 #include "wi_smoothness_test.h"
 
 using namespace std;
-using namespace Eigen;
 
 namespace Optimization {
 namespace Optimizers {
@@ -34,96 +34,68 @@ WISmoothnessTest::WISmoothnessTest(
     Logger *logger
 )
     : Optimizer(settings, base_case, variables, grid, logger) {
-    grid_ = grid;
     variables_ = variables;
 
-    // Check routine input has exactly size: 3, type: cont
-
-    cout << variables->DiscreteVariableSize() << endl;
-    cout << variables->ContinousVariableSize() << endl;
-
+    // Check routine input has exactly size: 6, type: cont
     if (variables->DiscreteVariableSize() != 0 ||
-        variables->ContinousVariableSize() != 3 ) {
+        variables->ContinousVariableSize() != 6 ) {
         throw runtime_error(
-            "WISmoothnessTest: 3 continuous coordinate "
-                "variables have not been defined.");
+            "WISmoothnessTest: en entire well, i.e., toe "
+                "and heel, needs to be defined in json driver.");
     }
     else {
-        cout << "Routine input contains "
-            "exactly 3 continuous variables" << endl;
+        cout << "Input to procedure contains exactly 6 "
+            "continuous variables (i.e., one spline well)" << endl;
     }
 
-    getXCoordVarID();
-    getPerturbations();
+    SetVarIDXCoord();
+    SetPerturbations();
 }
 
-void WISmoothnessTest::getXCoordVarID() {
+void WISmoothnessTest::SetVarIDXCoord() {
 
     // Get xyz coordinate point
     xyzcoord_ = variables_->GetContinousVariables();
+    bool is_xcoord, is_toe;
 
     // Get variable id corresponding to x coord component
     for (auto coord : *xyzcoord_) {
-        if (coord->propertyInfo().coord ==
-            Model::Properties::Property::Coordinate::x) {
-            x_varid = coord->id();
+        is_xcoord = coord->propertyInfo().coord ==
+            Model::Properties::Property::Coordinate::x;
+
+        is_toe = coord->propertyInfo().spline_end ==
+            Model::Properties::Property::SplineEnd::Toe;
+
+        if (is_xcoord && is_toe) {
+            x_varid_ = coord->id();
+            cout << "This procedure perturbs only the x "
+                "coordinate of the toe" << endl;
+            break;
         }
     }
 }
 
-Eigen::Matrix<double,Dynamic,1> WISmoothnessTest::getPerturbations() {
-
-    //
+Eigen::Matrix<double,Dynamic,1>
+WISmoothnessTest::SetPerturbations() {
     pertx_.setLinSpaced(npointsx_-1,0,nblocksx_*block_sz_);
 }
 
 void WISmoothnessTest::iterate()
 {
     // Stop the optimizer for iterating more than once
-    if (iteration_ > 0) {
-        return;
+    if (iteration_ > 0) { return; }
+
+    // Add one new case for each perturbation point
+    auto xvar = variables_->GetContinousVariable(x_varid_);
+    for (int ii=0; ii < pertx_.rows(); ++ii) {
+
+        auto new_case = new Case(GetTentativeBestCase());
+        variables_->SetContinousVariableValue(
+            x_varid_,
+            xvar->value() + pertx_[ii]
+        );
+        case_handler_->AddNewCase(new_case);
     }
-
-
-
-    // Fill up case_handler with x component pertubations
-//    auto new_case = new Case(GetTentativeBestCase());
-//    new_case->set_real_variable_value(x_varid, perturbation)
-//
-//    case_handler_->AddNewCase(new_case);
-
-    // "Perturb x coord component" << endl;
-
-//}
-
-//Optimizer::TerminationCondition WISmoothnessTest::IsFinished() {
-//    if (iteration_ == 0) return NOT_FINISHED;
-//    else if (case_handler_->QueuedCases().size() > 0) return NOT_FINISHED;
-//    else return MAX_EVALS_REACHED;
-//}
-
-//QString WISmoothnessTest::GetStatusStringHeader() const
-//{
-//    return QString("%1,%2,%3,%4,%5,%6,%7")
-//        .arg("Iteration")
-//        .arg("EvaluatedCases")
-//        .arg("QueuedCases")
-//        .arg("RecentlyEvaluatedCases")
-//        .arg("TentativeBestCaseID")
-//        .arg("TentativeBestCaseOFValue")
-//        .arg("StepLength");
-//}
-
-//QString WISmoothnessTest::GetStatusString() const
-//{
-//    return QString("%1,%2,%3,%4,%5,%6,%7")
-//        .arg(iteration_)
-//        .arg(nr_evaluated_cases())
-//        .arg(nr_queued_cases())
-//        .arg(nr_recently_evaluated_cases())
-//        .arg(GetTentativeBestCase()->id().toString())
-//        .arg(GetTentativeBestCase()->objective_function_value())
-//        .arg(step_lengths_[0]);
 }
 
 }

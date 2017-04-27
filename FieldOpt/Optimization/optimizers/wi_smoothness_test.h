@@ -35,32 +35,38 @@ namespace Optimizers {
 class WISmoothnessTest: public Optimizer {
  public:
   WISmoothnessTest(Settings::Optimizer *settings,
-                    Case *base_case,
-                    Model::Properties::VariablePropertyContainer *variables,
-                    Reservoir::Grid::Grid *grid,
-                    Logger *logger);
+                   Case *base_case,
+                   Model::Properties::VariablePropertyContainer *variables,
+                   Reservoir::Grid::Grid *grid,
+                   Logger *logger);
 
-  void getXCoordVarID();
-  Eigen::Matrix<double,Dynamic,1> getPerturbations();
+  ///
+  Eigen::Matrix<double,Dynamic,1> GetPerturbations() const { return pertx_; }
+
+  ///
+  QUuid GetVarIDXCoord() const { return x_varid_; }
 
  private:
-  Reservoir::Grid::Grid *grid_;
   Model::Properties::VariablePropertyContainer *variables_;
   QHash<QUuid, Model::Properties::ContinousProperty *> *xyzcoord_;
-  QUuid x_varid;
+  QUuid x_varid_;
 
+  // vector containing all perturbation points
   Eigen::Matrix<double,Dynamic,1> pertx_;
-  long nblocksx_ = 5;
-  long block_sz_ = 24;
+  long npointsx_ = 12; // num of points incl'zero' point
+  long block_sz_ = 24; // block size (m)
+  long nblocksx_ = 5;  // number of blocks
 
-  // num of points including 'zero' point
-  long npointsx_ = 12;
+  /*!
+  * @brief
+  */
+  void SetVarIDXCoord();
 
-
-
-
-  // QString GetStatusStringHeader() const;
-  // QString GetStatusString() const;
+  /*!
+  * @brief
+  * @return
+  */
+  Eigen::Matrix<double,Dynamic,1> SetPerturbations();
 
   /*!
   * @brief
