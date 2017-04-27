@@ -58,6 +58,9 @@ QString Settings::GetLogCsvString() const
 void Settings::readDriverFile()
 {
     QFile *file = new QFile(driver_path_);
+    QJsonParseError *error = new QJsonParseError();
+    QString error_str;
+
     if (!file->open(QIODevice::ReadOnly)){
         throw DriverFileReadException(
             "Unable to open the driver file");
@@ -65,10 +68,11 @@ void Settings::readDriverFile()
 
     QByteArray data = file->readAll();
 
-    QJsonDocument json = QJsonDocument::fromJson(data);
+    QJsonDocument json = QJsonDocument::fromJson(data, error);
     if (json.isNull()){
-        throw DriverFileJsonParsingException(
-            "Unable to parse the input file to JSON.");
+        error_str = "Unable to parse the input file to JSON -> "
+            + error->errorString();
+        throw DriverFileJsonParsingException(error_str.toStdString());
     }
 
     if (!json.isObject()){
