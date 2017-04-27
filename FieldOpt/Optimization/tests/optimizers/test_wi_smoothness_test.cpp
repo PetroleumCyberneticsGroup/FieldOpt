@@ -52,48 +52,70 @@ class TestWISmoothnessTest : public ::testing::Test,
   TestWISmoothnessTest() {
 
       // Define test variables
-      ContinousProperty *prod_toe_x_ = new ContinousProperty(500);
-      ContinousProperty *prod_toe_y_ = new ContinousProperty(600);
-      ContinousProperty *prod_toe_z_ = new ContinousProperty(1725.0);
+      ContinousProperty *prod_heel_x_ = new ContinousProperty(360);
+      ContinousProperty *prod_heel_y_ = new ContinousProperty(840);
+      ContinousProperty *prod_heel_z_ = new ContinousProperty(1712.0);
+      ContinousProperty *prod_toe_x_ = new ContinousProperty(360);
+      ContinousProperty *prod_toe_y_ = new ContinousProperty(360);
+      ContinousProperty *prod_toe_z_ = new ContinousProperty(1712.0);
 
+      prod_heel_x_->setName("SplinePoint#TESTW#heel#x");
+      prod_heel_y_->setName("SplinePoint#TESTW#heel#y");
+      prod_heel_z_->setName("SplinePoint#TESTW#heel#z");
       prod_toe_x_->setName("SplinePoint#TESTW#toe#x");
       prod_toe_y_->setName("SplinePoint#TESTW#toe#y");
       prod_toe_z_->setName("SplinePoint#TESTW#toe#z");
 
-      varcont_prod_toe_ = new VariablePropertyContainer();
-      varcont_prod_toe_->AddVariable(prod_toe_x_);
-      varcont_prod_toe_->AddVariable(prod_toe_y_);
-      varcont_prod_toe_->AddVariable(prod_toe_z_);
+      varcont_prod_wi_sm_ = new VariablePropertyContainer();
+      varcont_prod_wi_sm_->AddVariable(prod_heel_x_);
+      varcont_prod_wi_sm_->AddVariable(prod_heel_y_);
+      varcont_prod_wi_sm_->AddVariable(prod_heel_z_);
+      varcont_prod_wi_sm_->AddVariable(prod_toe_x_);
+      varcont_prod_wi_sm_->AddVariable(prod_toe_y_);
+      varcont_prod_wi_sm_->AddVariable(prod_toe_z_);
 
       // Further define test case
       test_case_spline_->set_objective_function_value(0);
 
       // Set up optimizer
-      maximizer = new WISmoothnessTest(
-          settings_compass_search_max_unconstr_,
+      sm_tester_ = new WISmoothnessTest(
+          settings_wi_smth_test_,
           test_case_spline_,
-          varcont_prod_toe_,
+          varcont_prod_wi_sm_,
           grid_5spot_,
           logger_
       );
   }
+
   virtual ~TestWISmoothnessTest() {}
   virtual void SetUp() {}
 
-  Optimization::Optimizer *maximizer;
-  VariablePropertyContainer *varcont_prod_toe_;
-
-//  Optimization::Case *base_;
+  Optimization::Optimizers::WISmoothnessTest *sm_tester_;
+  VariablePropertyContainer *varcont_prod_wi_sm_;
 
 };
 
-TEST_F(TestWISmoothnessTest, TestGetXCoordVarID) {
-//    Optimization::Case *new_case_1 = maximizer->GetCaseForEvaluation();
+TEST_F(TestWISmoothnessTest, TestSetVarIDXCoord) {
 
-    for (int ii=0; ii < pertx_.rows(); ++ii) {
-        cout << ii << ": " << pertx_[ii] << endl;
+    auto x_varid = sm_tester_->GetVarIDXCoord();
+    auto xvar = varcont_prod_wi_sm_->GetContinousVariable(x_varid);
+
+    cout << "Name of to-be-perturbed component: "
+         << xvar->name().toStdString() << endl;
+    cout << "Value of to-be-perturbed component: "
+         << xvar->value() << " of type ("
+         << xvar->type() << ") " << endl;
+
+    EXPECT_EQ(xvar->value(),360);
+}
+
+TEST_F(TestWISmoothnessTest, TestSetPerturbations) {
+
+    cout << "Perturbation points:" << endl;
+    auto pertx = sm_tester_->GetPerturbations();
+    for (int ii=0; ii < pertx.rows(); ++ii) {
+        cout << ii << ": " << pertx[ii] << endl;
     }
-
 }
 
 //TEST_F(TestWISmoothnessTest, TestPertVector) {
