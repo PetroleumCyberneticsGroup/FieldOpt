@@ -1,7 +1,8 @@
 /******************************************************************************
    Created by einar on 2/6/16.
    Copyright (C) 2017 Einar J.M. Baumann <einar.baumann@gmail.com>
-   Modified by M.Bellout (2017) <mathias.bellout@ntnu.no, chakibbb@gmail.com>
+   Modified by M.Bellout (2017)
+   <mathias.bellout@ntnu.no, chakibbb@gmail.com>
 
    This file is part of the FieldOpt project.
 
@@ -57,6 +58,10 @@ class TestResourceOptimizer :
           new Settings::Optimizer(get_json_settings_ga_minimize_);
       settings_ga_max_ =
           new Settings::Optimizer(get_json_settings_ga_maximize_);
+
+      // WI Smoothness test settings
+      settings_wi_smth_test_ =
+          new Settings::Optimizer(get_json_settings_wi_smth_test_);
   }
 
   Optimization::Case *base_case_;
@@ -66,9 +71,10 @@ class TestResourceOptimizer :
   Settings::Optimizer *settings_apps_max_unconstr_;
   Settings::Optimizer *settings_ga_min_;
   Settings::Optimizer *settings_ga_max_;
+  Settings::Optimizer *settings_wi_smth_test_;
 
  private:
-  QJsonObject obj_fun_ {
+  QJsonObject obj_fun_fopt_ {
       {"Type", "WeightedSum"},
       {"WeightedSumComponents", QJsonArray{
           QJsonObject{
@@ -85,6 +91,25 @@ class TestResourceOptimizer :
           }
       }}
   };
+
+  QJsonObject obj_fun_npv_ {
+      {"Type", "WeightedSum"},
+      {"WeightedSumComponents", QJsonArray{
+          QJsonObject{
+              {"Coefficient", 1.0},
+              {"Property", "CumulativeOilProduction"},
+              {"TimeStep", -1},
+              {"IsWellProp", false}
+          },
+          QJsonObject{
+              {"Coefficient", -0.2},
+              {"Property", "CumulativeWaterProduction"},
+              {"TimeStep", -1},
+              {"IsWellProp", false}
+          }
+      }}
+  };
+
   QJsonObject get_json_settings_compass_search_minimize_ {
       {"Type", "Compass"},
       {"Mode", "Minimize"},
@@ -93,7 +118,7 @@ class TestResourceOptimizer :
           {"InitialStepLength", 0.25},
           {"MinimumStepLength", 0.01}
       }},
-      {"Objective", obj_fun_}
+      {"Objective", obj_fun_fopt_}
   };
 
   QJsonObject get_json_settings_compass_search_maximize_ {
@@ -104,7 +129,7 @@ class TestResourceOptimizer :
           {"InitialStepLength", 8},
           {"MinimumStepLength", 1}
       }},
-      {"Objective", obj_fun_}
+      {"Objective", obj_fun_fopt_}
   };
 
   QJsonObject get_json_settings_apps_minimize_ {
@@ -115,7 +140,7 @@ class TestResourceOptimizer :
           {"InitialStepLength", 0.64},
           {"MinimumStepLength", 0.005}
       }},
-      {"Objective", obj_fun_}
+      {"Objective", obj_fun_fopt_}
   };
 
   QJsonObject get_json_settings_apps_maximize_ {
@@ -126,7 +151,7 @@ class TestResourceOptimizer :
           {"InitialStepLength", 8},
           {"MinimumStepLength", 1}
       }},
-      {"Objective", obj_fun_}
+      {"Objective", obj_fun_fopt_}
   };
 
   QJsonObject get_json_settings_ga_maximize_ {
@@ -147,7 +172,7 @@ class TestResourceOptimizer :
           {"UpperBoundReal", 100.0}
 
       }},
-      {"Objective", obj_fun_}
+      {"Objective", obj_fun_fopt_}
   };
 
   QJsonObject get_json_settings_ga_minimize_ {
@@ -164,7 +189,18 @@ class TestResourceOptimizer :
           {"UpperBound",            10.0}
 
       }},
-      {"Objective", obj_fun_}
+      {"Objective", obj_fun_fopt_}
+  };
+
+  QJsonObject get_json_settings_wi_smth_test_ {
+      {"Type", "WISmoothnessTest"},
+      {"Mode", "Minimize"},
+      {"Parameters", QJsonObject{
+          {"MaxEvaluations", 1},
+          {"InitialStepLength", 1},
+          {"MinimumStepLength", 0}
+      }},
+      {"Objective", obj_fun_npv_}
   };
 
 };
