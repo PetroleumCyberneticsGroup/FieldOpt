@@ -58,7 +58,7 @@ ECLGrid::ECLGrid(string file_path)
 
     // Find the first (active) cell index.
     int idx = 0;
-    while (true) {
+    while (idx < ecl_grid_reader_->ActiveCells()) {
         if (ecl_grid_reader_->IsCellActive(idx)) {
             break;
         }
