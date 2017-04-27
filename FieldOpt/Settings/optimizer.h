@@ -132,7 +132,8 @@ class Optimizer
       int time_step;
       /*! A component of a weighted sum 
           formulatied objective function */
-      bool is_well_prop; QString well; 
+      bool is_well_prop; 
+      QString well; 
     }; 
 
     /*! The expression for the Objective 
@@ -165,7 +166,7 @@ class Optimizer
     /// Min limit when using constraints like BHP.
     double min; 
 
-    /// Min max limits for geometrix box constraints.
+    /// Min max limits for geometric box constraints.
     double 
     box_imin, box_imax, 
     box_jmin, box_jmax, 

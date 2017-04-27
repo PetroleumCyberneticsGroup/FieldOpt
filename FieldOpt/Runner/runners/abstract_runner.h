@@ -121,9 +121,10 @@ class AbstractRunner
   void InitializeOptimizer();
   void InitializeBookkeeper();
 
-  //!< Write the pre-run summary
+  /// Write the pre-run summary
   void FinalizeInitialization(bool write_logs); 
-  //!< Finalize the run, writing data to the summary log.
+  
+  /// Finalize the run, writing data to the summary log.
   void FinalizeRun(bool write_logs); 
 
   /*!

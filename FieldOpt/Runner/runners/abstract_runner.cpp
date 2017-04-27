@@ -3,7 +3,7 @@
  * Created: 16.12.2015 2015 by einar
  *
  * Copyright (C) 2015-2015 Einar J.M. Baumann <einar.baumann@ntnu.no>
- * Modified by M.Bellout (2017) <mathias.bellout@ntnu.no, chakibbb@gmail.com> 
+ * Modified by M.Bellout (2017) <mathias.bellout@ntnu.no, chakibbb@gmail.com>
  *
  * This file is part of the FieldOpt project.
  *
@@ -70,23 +70,27 @@ void AbstractRunner::InitializeSettings(QString output_subdirectory)
         runtime_settings_->driver_file(), output_directory);
     settings_->set_verbosity(runtime_settings_->verbosity_level());
 
-    // Override simulator driver file if it has been passed as command line arguments
+    // Override simulator driver file if it has
+    // been passed as command line arguments
     if (runtime_settings_->simulator_driver_path().length() > 0){
         settings_->simulator()->set_driver_file_path(
             runtime_settings_->simulator_driver_path());
     }
-    // Override grid file if it has been passed as command line arguments
+    // Override grid file if it has been passed
+    // as command line arguments
     if (runtime_settings_->grid_file_path().length() > 0){
         settings_->model()->set_reservoir_grid_path(
             runtime_settings_->grid_file_path());
     }
-    // Override simulator executable path if it has been passed as command line arguments
+    // Override simulator executable path if it
+    // has been passed as command line arguments
     if (runtime_settings_->simulator_exec_script_path().length() > 0){
         settings_->simulator()->set_execution_script_path(
             runtime_settings_->simulator_exec_script_path());
     }
 
-    // Override FieldOpt build directory path if it has been passed as command line arguments
+    // Override FieldOpt build directory path if
+    // it has been passed as command line arguments
     if (runtime_settings_->fieldopt_build_dir().length() > 0){
         settings_->set_build_path(
             runtime_settings_->fieldopt_build_dir());
@@ -96,7 +100,8 @@ void AbstractRunner::InitializeSettings(QString output_subdirectory)
 void AbstractRunner::InitializeModel()
 {
     if (settings_ == 0)
-        throw runtime_error("The Settings must be initialized before the Model.");
+        throw runtime_error(
+            "The Settings must be initialized before the Model.");
 
     model_ = new Model::Model(*settings_->model(), logger_);
 }
@@ -104,7 +109,8 @@ void AbstractRunner::InitializeModel()
 void AbstractRunner::InitializeSimulator()
 {
     if (model_ == 0)
-        throw runtime_error("The Model must be initialized before the simulator.");
+        throw runtime_error(
+            "The Model must be initialized before the simulator.");
 
     switch (settings_->simulator()->type()) {
 
@@ -130,8 +136,9 @@ void AbstractRunner::InitializeSimulator()
             break;
 
         default:
-            throw runtime_error("Unable to initialize runner: simulator "
-                                    "set in driver file not recognized.");
+            throw runtime_error(
+                "Unable to initialize runner: simulator "
+                    "set in driver file not recognized.");
     }
     simulator_->SetVerbosityLevel(runtime_settings_->verbosity_level());
 }
@@ -139,8 +146,9 @@ void AbstractRunner::InitializeSimulator()
 void AbstractRunner::EvaluateBaseModel()
 {
     if (simulator_ == 0){
-        throw runtime_error("The simulator must be initialized "
-                                "before evaluating the base model.");
+        throw runtime_error(
+            "The simulator must be initialized "
+                "before evaluating the base model.");
     }
     if (!simulator_->results()->isAvailable()) {
         if (runtime_settings_->verbosity_level()) {
@@ -153,8 +161,9 @@ void AbstractRunner::EvaluateBaseModel()
 void AbstractRunner::InitializeObjectiveFunction()
 {
     if (simulator_ == 0 || settings_ == 0){
-        throw runtime_error("The Simulator and the Settings must be "
-                                "initialized before the Objective Function.");
+        throw runtime_error(
+            "The Simulator and the Settings must be "
+                "initialized before the Objective Function.");
     }
 
     switch (settings_->optimizer()->objective().type) {
@@ -168,8 +177,9 @@ void AbstractRunner::InitializeObjectiveFunction()
             break;
 
         default:
-            throw runtime_error("Unable to initialize runner: objective "
-                                    "function type not recognized.");
+            throw runtime_error(
+                "Unable to initialize runner: objective "
+                    "function type not recognized.");
 
     }
 }
@@ -177,8 +187,9 @@ void AbstractRunner::InitializeObjectiveFunction()
 void AbstractRunner::InitializeBaseCase()
 {
     if (objective_function_ == 0 || model_ == 0){
-        throw runtime_error("The Objective Function and the Model must "
-                                "be initialized before the Base Case.");
+        throw runtime_error(
+            "The Objective Function and the Model must "
+                "be initialized before the Base Case.");
     }
     base_case_ = new Optimization::Case(model_->variables()->GetBinaryVariableValues(),
                                         model_->variables()->GetDiscreteVariableValues(),
@@ -202,8 +213,9 @@ void AbstractRunner::InitializeBaseCase()
 void AbstractRunner::InitializeOptimizer()
 {
     if (base_case_ == 0 || model_ == 0){
-        throw runtime_error("The Base Case and the Model must "
-                                "be initialized before the Optimizer");
+        throw runtime_error(
+            "The Base Case and the Model must "
+                "be initialized before the Optimizer");
     }
 
     switch (settings_->optimizer()->type()) {
@@ -309,6 +321,7 @@ void AbstractRunner::PrintCompletionMessage() const {
 
     cout << "Best case at termination:"
          << optimizer_->GetTentativeBestCase()->id().toString().toStdString() << endl;
+
     cout << "Variable values: " << endl;
     for (auto var : optimizer_->GetTentativeBestCase()->integer_variables().keys()) {
         auto prop_name = model_->variables()->GetDiscreteVariable(var)->name();
