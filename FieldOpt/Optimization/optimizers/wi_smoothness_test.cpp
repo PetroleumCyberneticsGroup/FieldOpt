@@ -45,7 +45,7 @@ WISmoothnessTest::WISmoothnessTest(
     }
     else {
         cout << "Input to procedure contains exactly 6 "
-            "continuous variables (i.e., one spline well)" << endl;
+            "continuous variables (i.e., one spline well)." << endl;
     }
 
     SetVarIDXCoord();
@@ -69,7 +69,7 @@ void WISmoothnessTest::SetVarIDXCoord() {
         if (is_xcoord && is_toe) {
             x_varid_ = coord->id();
             cout << "This procedure perturbs only the x "
-                "coordinate of the toe" << endl;
+                "coordinate of the toe." << endl;
             break;
         }
     }
@@ -82,8 +82,11 @@ WISmoothnessTest::SetPerturbations() {
 
 void WISmoothnessTest::iterate()
 {
-    // Stop the optimizer for iterating more than once
-    if (iteration_ > 0) { return; }
+    // Stop the optimizer from iterating more than once
+    if (iteration_ > 0) {
+        cout << iteration_ << endl;
+        return;
+    }
 
     // Add one new case for each perturbation point
     auto xvar = variables_->GetContinousVariable(x_varid_);
@@ -96,6 +99,46 @@ void WISmoothnessTest::iterate()
         );
         case_handler_->AddNewCase(new_case);
     }
+}
+
+Optimizer::TerminationCondition
+WISmoothnessTest::IsFinished() {
+    if (iteration_ == 0) {
+        return NOT_FINISHED;
+    }
+    else if (case_handler_->QueuedCases().size() > 0) {
+        return NOT_FINISHED;
+    }
+    else return MAX_EVALS_REACHED;
+}
+
+//void WISmoothnessTest::handleEvaluatedCase(Case *c) {
+//    if (isImprovement(c))
+//        updateTentativeBestCase(c);
+//}
+
+QString WISmoothnessTest::GetStatusStringHeader() const
+{
+    return QString("%1,%2,%3,%4,%5,%6,%7")
+        .arg("Iteration")
+        .arg("Iteration")
+        .arg("EvaluatedCases")
+        .arg("QueuedCases")
+        .arg("RecentlyEvaluatedCases")
+        .arg("TentativeBestCaseID")
+        .arg("TentativeBestCaseOFValue");
+}
+
+QString WISmoothnessTest::GetStatusString() const
+{
+    return QString("%1,%2,%3,%4,%5,%6,%7")
+        .arg(iteration_)
+        .arg(iteration_)
+        .arg(nr_evaluated_cases())
+        .arg(nr_queued_cases())
+        .arg(nr_recently_evaluated_cases())
+        .arg(GetTentativeBestCase()->id().toString())
+        .arg(GetTentativeBestCase()->objective_function_value());
 }
 
 }

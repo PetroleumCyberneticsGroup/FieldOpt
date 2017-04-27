@@ -41,17 +41,21 @@ class WISmoothnessTest: public Optimizer {
                    Logger *logger);
 
   ///
-  Eigen::Matrix<double,Dynamic,1> GetPerturbations() const { return pertx_; }
+  Eigen::Matrix<double,Dynamic,1>
+  GetPerturbations() const { return pertx_; }
 
   ///
   QUuid GetVarIDXCoord() const { return x_varid_; }
+
+  QString GetStatusStringHeader() const;
+  QString GetStatusString() const;
 
  private:
   Model::Properties::VariablePropertyContainer *variables_;
   QHash<QUuid, Model::Properties::ContinousProperty *> *xyzcoord_;
   QUuid x_varid_;
 
-  // vector containing all perturbation points
+  // vector containing perturbation points
   Eigen::Matrix<double,Dynamic,1> pertx_;
   long npointsx_ = 12; // num of points incl'zero' point
   long block_sz_ = 24; // block size (m)
@@ -74,7 +78,7 @@ class WISmoothnessTest: public Optimizer {
   */
   void iterate();
 
-  virtual TerminationCondition IsFinished() override {};
+  virtual TerminationCondition IsFinished() override;
 
  protected:
   void handleEvaluatedCase(Case *c) override {};
