@@ -1,7 +1,7 @@
 #!/bin/bash
 # Parameter 1: Work direcory.
 # Parameter 2: Path to ADGPRS driver file
-# Parameter 3: Number of threads to excute with (optional)
+# Parameter 3: Number of threads to execute with (optional)
 # Note that this assumes that (a link to) ADGPRS is found at /usr/bin/adgprs
 
 # Determine number of threads
