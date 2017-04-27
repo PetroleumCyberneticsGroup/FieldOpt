@@ -73,8 +73,12 @@ class MPIRunner : public AbstractRunner {
    * terminate a worker.
    */
   enum MsgTag : int {
-    CASE_UNEVAL = 1, CASE_EVAL_SUCCESS = 2, CASE_EVAL_INVALID = 3, CASE_EVAL_TIMEOUT = 4,
-    MODEL_SYNC = 10, TERMINATE = 100,
+    CASE_UNEVAL = 1,
+    CASE_EVAL_SUCCESS = 2,
+    CASE_EVAL_INVALID = 3,
+    CASE_EVAL_TIMEOUT = 4,
+    MODEL_SYNC = 10,
+    TERMINATE = 100,
     ANY_TAG = MPI_ANY_TAG
   };
 
@@ -94,10 +98,14 @@ class MPIRunner : public AbstractRunner {
    */
   struct Message {
     Message() {
-        c = nullptr; this->tag = MPI_ANY_TAG; this->source = MPI_ANY_SOURCE; this->destination = MPI_ANY_SOURCE;
+        c = nullptr; this->tag = MPI_ANY_TAG;
+        this->source = MPI_ANY_SOURCE;
+        this->destination = MPI_ANY_SOURCE;
     }
     void set_status(mpi::status status) {
-        this->status = status; this->source = status.source(); this->tag = status.tag();
+        this->status = status;
+        this->source = status.source();
+        this->tag = status.tag();
     }
     MsgTag get_tag() {
         switch (tag) {
@@ -109,11 +117,11 @@ class MPIRunner : public AbstractRunner {
             case 100: return TERMINATE;
         }
     }
-    Optimization::Case *c; //!< The case associated with the message (if any).
-    int tag; //!< The tag for the message.
-    int source; //!< The rank of the process sending the message.
-    int destination; //!< The rank of the process receiving the message.
-    mpi::status status; //!< The status object for the message.
+    Optimization::Case *c; //!< Case associated with message (if any).
+    int tag; //!< Tag for the message.
+    int source; //!< Rank of the process sending the message.
+    int destination; //!< Rank of the process receiving the message.
+    mpi::status status; //!< Status object for the message.
   };
 
   /*!
