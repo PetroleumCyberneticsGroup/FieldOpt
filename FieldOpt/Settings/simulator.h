@@ -37,6 +37,7 @@ class Simulator
  public:
   enum SimulatorType { ECLIPSE, ADGPRS, Flow };
   enum SimulatorFluidModel { BlackOil, DeadOil };
+  enum SimulatorWellModel { Peaceman, Projection };
 
   /// Get the simulator type (e.g. ECLIPSE).
   SimulatorType type() const { return type_; }
@@ -70,10 +71,14 @@ class Simulator
   /// Get the fluid model
   SimulatorFluidModel fluid_model() const { return fluid_model_; }
 
+  /// Get the well model
+  SimulatorWellModel well_model() const { return well_model_; }
+
  private:
   Simulator(QJsonObject json_simulator);
   SimulatorType type_;
   SimulatorFluidModel fluid_model_;
+  SimulatorWellModel well_model_;
   QStringList *commands_;
   QString script_name_;
   QString driver_file_path_;
