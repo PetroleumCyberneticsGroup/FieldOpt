@@ -30,13 +30,15 @@ using std::string;
 namespace Model {
 namespace Wells {
 
-class WellCompletionNotRecognizedException : public std::runtime_error {
+class WellCompletionNotRecognizedException :
+    public std::runtime_error {
  public:
   WellCompletionNotRecognizedException(const string& message)
       : std::runtime_error(message) {}
 };
 
-class CompletionNotDefinedForWellBlockException : public std::runtime_error {
+class CompletionNotDefinedForWellBlockException :
+    public std::runtime_error {
  public:
   CompletionNotDefinedForWellBlockException(const int i, const int j, const int k)
       : std::runtime_error(
@@ -46,7 +48,8 @@ class CompletionNotDefinedForWellBlockException : public std::runtime_error {
           boost::lexical_cast<std::string>(k) + ").") {}
 };
 
-class PerforationNotDefinedForWellBlockException : public std::runtime_error {
+class PerforationNotDefinedForWellBlockException :
+    public std::runtime_error {
  public:
   PerforationNotDefinedForWellBlockException(const int i, const int j, const int k)
       : std::runtime_error(
