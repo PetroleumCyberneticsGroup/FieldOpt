@@ -37,8 +37,9 @@ namespace Model {
 class ModelSynchronizationObject;
 
 /*!
- * \brief The Model class represents the reservoir model as a whole, including wells and
- * any related variables, and the reservoir grid.
+ * \brief The Model class represents the reservoir
+ * model as a whole, including wells and any related
+ * variables, and the reservoir grid.
  */
 class Model : public Loggable
 {
@@ -57,7 +58,8 @@ class Model : public Loggable
   Reservoir::Grid::Grid *grid() const { return grid_; }
 
   /*!
-   * \brief variables Get the set of variable properties of all types.
+   * \brief variables Get the set of variable properties
+   * of all types.
    */
   Properties::VariablePropertyContainer *variables() const { return variable_container_; }
 
