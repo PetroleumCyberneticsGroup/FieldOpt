@@ -22,6 +22,7 @@
 
 #include "ecldriverpart.h"
 #include "../../adgprsdriverfilewriter.h"
+#include "Settings/simulator.h"
 #include "Model/wells/well.h"
 
 namespace Simulation {
@@ -56,6 +57,7 @@ class Compdat : public ECLDriverPart {
   QStringList createBlockEntry(QString well_name,
                                double wellbore_radius,
                                Model::Wells::Wellbore::WellBlock *well_block);
+  Settings::Simulator::SimulatorWellModel well_model_;
 };
 
 }

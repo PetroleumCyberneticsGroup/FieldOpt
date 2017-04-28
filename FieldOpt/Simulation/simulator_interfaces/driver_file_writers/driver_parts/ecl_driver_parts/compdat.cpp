@@ -14,7 +14,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
+   along with FieldOpt. If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
 #include "compdat.h"
@@ -43,7 +43,7 @@ QString Compdat::GetPartString()
     for (QStringList entry : entries_) {
         entries.append("    " + entry.join(" ") + " /\n");
     }
-    entries.append("\n" + foot_);
+    entries.append(foot_); // "\n" +
     return entries;
 }
 
@@ -72,13 +72,25 @@ QStringList Compdat::createBlockEntry(QString well_name,
     block_entry[3] = QString::number(well_block->k());
     block_entry[4] = QString::number(well_block->k());
 
+    auto block_wi = well_block->GetPerforation()->transmissibility_factor();
+    typedef Settings::Simulator::SimulatorWellModel WellModel;
+
     if (well_block->HasPerforation()) {
         block_entry[5] = "OPEN";
-        if (well_block->GetPerforation()->transmissibility_factor() >= 0.0)
-            block_entry[7] = QString::number(
-                well_block->GetPerforation()->transmissibility_factor()
-            );
-        // WI is defaulted if a negative value is provided.
+
+        if (block_wi >= 0.0 ){
+            switch (well_model_){
+                case WellModel::Peaceman:
+                    block_entry[7] = "*"; // Default: sim computes wi
+                    break;
+                case WellModel::Projection:
+                    block_entry[7] = QString::number(block_wi);
+                    break;
+                default:
+                    block_entry[7] = QString::number(block_wi);
+                    break;
+            }
+        }
     }
     else {
         block_entry[5] = "SHUT";
