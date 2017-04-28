@@ -87,7 +87,7 @@ Completions::Perforation *WellBlock::GetPerforation()
         Completions::Perforation *perf =
             static_cast<Completions::Perforation *>(completion_);
 
-        // If cast to perforation was successfull, return true.
+        // If cast to perforation was successfull, return perforation.
         if (perf != NULL)
             return perf;
     }
