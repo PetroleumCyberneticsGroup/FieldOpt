@@ -14,13 +14,14 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
+   along with FieldOpt. If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
 #ifndef COMPDAT_H
 #define COMPDAT_H
 
 #include "ecldriverpart.h"
+#include "../../adgprsdriverfilewriter.h"
 #include "Model/wells/well.h"
 
 namespace Simulation {
@@ -52,7 +53,9 @@ class Compdat : public ECLDriverPart {
 
  private:
   QList<QStringList> createWellEntries(Model::Wells::Well *well);
-  QStringList createBlockEntry(QString well_name, double wellbore_radius, Model::Wells::Wellbore::WellBlock *well_block);
+  QStringList createBlockEntry(QString well_name,
+                               double wellbore_radius,
+                               Model::Wells::Wellbore::WellBlock *well_block);
 };
 
 }
