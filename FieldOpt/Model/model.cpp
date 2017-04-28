@@ -105,17 +105,21 @@ void Model::verifyWellBlock(Wells::Wellbore::WellBlock *wb)
 void Model::SetResult(const std::string key, std::vector<double> vec) {
     results_[key] = vec;
 }
+
 Loggable::LogTarget Model::GetLogTarget() {
     return Loggable::LogTarget::LOG_EXTENDED;
 }
+
 map<string, string> Model::GetState() {
     map<string, string> statemap;
     statemap["COMPDAT"] = compdat_.toStdString();
     return statemap;
 }
+
 QUuid Model::GetId() {
     return current_case_id_;
 }
+
 map<string, vector<double>> Model::GetValues() {
     map<string, vector<double>> valmap;
     for (auto const item : results_) {
@@ -136,18 +140,22 @@ map<string, vector<double>> Model::GetValues() {
 Loggable::LogTarget Model::Summary::GetLogTarget() {
     return LOG_SUMMARY;
 }
+
 map<string, string> Model::Summary::GetState() {
     map<string, string> statemap;
     statemap["compdat"] = model_->compdat_.toStdString();
     return statemap;
 }
+
 QUuid Model::Summary::GetId() {
     return nullptr;
 }
+
 map<string, vector<double>> Model::Summary::GetValues() {
     map<string, vector<double>> valmap;
     return valmap;
 }
+
 map<string, Loggable::WellDescription> Model::Summary::GetWellDescriptions() {
     map<string, Loggable::WellDescription> wellmap;
 

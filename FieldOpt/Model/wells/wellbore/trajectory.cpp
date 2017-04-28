@@ -30,12 +30,14 @@ Trajectory::Trajectory(Settings::Model::Well well_settings,
                        ::Reservoir::Grid::Grid *grid)
 {
     well_blocks_ = new QList<WellBlock *>();
-    if (well_settings.definition_type == Settings::Model::WellDefinitionType::WellBlocks) {
+    if (well_settings.definition_type ==
+        Settings::Model::WellDefinitionType::WellBlocks) {
         initializeWellBlocks(well_settings, variable_container);
         calculateDirectionOfPenetration();
         well_spline_ = 0;
     }
-    else if (well_settings.definition_type == Settings::Model::WellDefinitionType::WellSpline) {
+    else if (well_settings.definition_type ==
+        Settings::Model::WellDefinitionType::WellSpline) {
         well_spline_ = new WellSpline(well_settings, variable_container, grid);
         well_blocks_ = well_spline_->GetWellBlocks();
         calculateDirectionOfPenetration();
@@ -52,7 +54,9 @@ int Trajectory::GetTimeSpentInWic() const {
 WellBlock *Trajectory::GetWellBlock(int i, int j, int k)
 {
     for (int idx = 0; idx < well_blocks_->size(); ++idx) {
-        if (well_blocks_->at(idx)->i() == i && well_blocks_->at(idx)->j() == j && well_blocks_->at(idx)->k() == k)
+        if (well_blocks_->at(idx)->i() == i &&
+            well_blocks_->at(idx)->j() == j &&
+            well_blocks_->at(idx)->k() == k)
             return well_blocks_->at(idx);
     }
     throw WellBlockNotFoundException(i, j, k);
@@ -65,7 +69,8 @@ QList<WellBlock *> *Trajectory::GetWellBlocks()
 
 void Trajectory::UpdateWellBlocks()
 {
-    // \todo This is the source of a memory leak: old well blocks are not deleted. Fix it.
+    // \todo This is the source of a memory leak: old
+    // well blocks are not deleted. Fix it.
     if (well_spline_ != 0) {
         well_blocks_ = well_spline_->GetWellBlocks();
     }
