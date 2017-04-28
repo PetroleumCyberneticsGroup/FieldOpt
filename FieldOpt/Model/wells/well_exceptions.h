@@ -39,36 +39,43 @@ class WellCompletionNotRecognizedException : public std::runtime_error {
 class CompletionNotDefinedForWellBlockException : public std::runtime_error {
  public:
   CompletionNotDefinedForWellBlockException(const int i, const int j, const int k)
-      : std::runtime_error("No completion defined for well block (" +
-      boost::lexical_cast<std::string>(i) + ", " +
-      boost::lexical_cast<std::string>(j) + ", " +
-      boost::lexical_cast<std::string>(k) + ").") {}
+      : std::runtime_error(
+      "No completion defined for well block (" +
+          boost::lexical_cast<std::string>(i) + ", " +
+          boost::lexical_cast<std::string>(j) + ", " +
+          boost::lexical_cast<std::string>(k) + ").") {}
 };
 
 class PerforationNotDefinedForWellBlockException : public std::runtime_error {
  public:
   PerforationNotDefinedForWellBlockException(const int i, const int j, const int k)
-      : std::runtime_error("No perforation defined for well block (" +
-      boost::lexical_cast<std::string>(i) + ", " +
-      boost::lexical_cast<std::string>(j) + ", " +
-      boost::lexical_cast<std::string>(k) + ").") {}
+      : std::runtime_error(
+      "No perforation defined for well block (" +
+          boost::lexical_cast<std::string>(i) + ", " +
+          boost::lexical_cast<std::string>(j) + ", " +
+          boost::lexical_cast<std::string>(k) + ").") {}
 };
 
 class WellBlockNotFoundException : public std::runtime_error {
  public:
   WellBlockNotFoundException(const int i, const int j, const int k)
-      : std::runtime_error("No well block defined at (" +
-      boost::lexical_cast<std::string>(i) + ", " +
-      boost::lexical_cast<std::string>(j) + ", " +
-      boost::lexical_cast<std::string>(k) + ").") {}
+      : std::runtime_error(
+      "No well block defined at (" +
+          boost::lexical_cast<std::string>(i) + ", " +
+          boost::lexical_cast<std::string>(j) + ", " +
+          boost::lexical_cast<std::string>(k) + ").") {}
+
   WellBlockNotFoundException(const int id)
-      : std::runtime_error("No well block found with id " + boost::lexical_cast<std::string>(id)) {}
+      : std::runtime_error(
+      "No well block found with id " +
+          boost::lexical_cast<std::string>(id)) {}
 };
 
 class WellBlocksNotDefined : public std::runtime_error {
  public:
   WellBlocksNotDefined(const string& message)
-      : std::runtime_error("No well blocks defined for spline. " + message) {}
+      : std::runtime_error(
+      "No well blocks defined for spline. " + message) {}
 };
 
 }
