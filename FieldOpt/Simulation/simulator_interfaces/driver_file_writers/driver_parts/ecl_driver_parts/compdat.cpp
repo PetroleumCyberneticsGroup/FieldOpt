@@ -72,12 +72,11 @@ QStringList Compdat::createBlockEntry(QString well_name,
     block_entry[3] = QString::number(well_block->k());
     block_entry[4] = QString::number(well_block->k());
 
-    auto block_wi = well_block->GetPerforation()->transmissibility_factor();
-    typedef Settings::Simulator::SimulatorWellModel WellModel;
-
     if (well_block->HasPerforation()) {
         block_entry[5] = "OPEN";
+        auto block_wi = well_block->GetPerforation()->transmissibility_factor();
 
+        typedef Settings::Simulator::SimulatorWellModel WellModel;
         if (block_wi >= 0.0 ){
             switch (well_model_){
                 case WellModel::Peaceman:
