@@ -93,9 +93,12 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
     return blocks;
 }
 
-WellBlock *WellSpline::getWellBlock(Reservoir::WellIndexCalculation::IntersectedCell block_data)
+WellBlock *WellSpline::getWellBlock(
+    Reservoir::WellIndexCalculation::IntersectedCell block_data)
 {
-    auto wb = new WellBlock(block_data.ijk_index().i()+1, block_data.ijk_index().j()+1, block_data.ijk_index().k()+1);
+    auto wb = new WellBlock(block_data.ijk_index().i()+1,
+                            block_data.ijk_index().j()+1,
+                            block_data.ijk_index().k()+1);
     auto comp = new Completions::Perforation();
     comp->setTransmissibility_factor(block_data.cell_well_index());
     wb->AddCompletion(comp);

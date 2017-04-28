@@ -25,8 +25,7 @@ namespace Wells {
 Well::Well(Settings::Model settings,
            int well_number,
            Properties::VariablePropertyContainer *variable_container,
-           Reservoir::Grid::Grid *grid)
-{
+           Reservoir::Grid::Grid *grid) {
     Settings::Model::Well well_settings = settings.wells().at(well_number);
 
     name_ = well_settings.name;
