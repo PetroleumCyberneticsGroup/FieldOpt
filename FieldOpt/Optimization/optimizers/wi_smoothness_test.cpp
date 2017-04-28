@@ -83,8 +83,9 @@ WISmoothnessTest::SetPerturbations() {
 void WISmoothnessTest::iterate()
 {
     // Stop the optimizer from iterating more than once
+    cout << endl << ">>>>> Current iteration: "
+         << iteration_ << " <<<<<<" << endl;
     if (iteration_ > 0) {
-        cout << iteration_ << endl;
         return;
     }
 
@@ -93,12 +94,13 @@ void WISmoothnessTest::iterate()
     for (int ii=0; ii < pertx_.rows(); ++ii) {
 
         auto new_case = new Case(GetTentativeBestCase());
-        variables_->SetContinousVariableValue(
+        new_case->set_real_variable_value(
             x_varid_,
             xvar->value() + pertx_[ii]
         );
         case_handler_->AddNewCase(new_case);
     }
+    iteration_++;
 }
 
 Optimizer::TerminationCondition

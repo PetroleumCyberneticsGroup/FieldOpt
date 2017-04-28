@@ -118,8 +118,11 @@ TEST_F(TestWISmoothnessTest, TestSetPerturbations) {
     }
 }
 
-//TEST_F(TestWISmoothnessTest, TestPertVector) {
-//}
+TEST_F(TestWISmoothnessTest, TestIterate) {
+
+    cout << "Performing one iteration" << endl;
+//    sm_tester_->iterate();
+}
 
 }
 
