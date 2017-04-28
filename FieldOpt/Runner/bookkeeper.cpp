@@ -30,6 +30,8 @@ Bookkeeper::Bookkeeper(Settings::Settings *settings,
 
 bool Bookkeeper::IsEvaluated(Optimization::Case *c, bool set_obj)
 {
+    if (tolerance_ < 0) return false;
+
     for (auto evaluated_c : case_handler_->EvaluatedCases()) {
         if (evaluated_c->Equals(c,tolerance_)) { // Case has been evaluated
             if (set_obj) {
