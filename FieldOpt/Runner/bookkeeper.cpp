@@ -21,26 +21,26 @@
 
 namespace Runner {
 
-    Bookkeeper::Bookkeeper(Settings::Settings *settings,
-                           Optimization::CaseHandler *case_handler)
-    {
-        tolerance_ = settings->bookkeeper_tolerance();
-        case_handler_ = case_handler;
-    }
+Bookkeeper::Bookkeeper(Settings::Settings *settings,
+                       Optimization::CaseHandler *case_handler)
+{
+    tolerance_ = settings->bookkeeper_tolerance();
+    case_handler_ = case_handler;
+}
 
-    bool Bookkeeper::IsEvaluated(Optimization::Case *c, bool set_obj)
-    {
-        for (auto evaluated_c : case_handler_->EvaluatedCases()) {
-            if (evaluated_c->Equals(c,tolerance_)) { // Case has been evaluated
-                if (set_obj) {
-                    c->set_objective_function_value(
-                        evaluated_c->objective_function_value()
-                    );
-                }
-                return true;
+bool Bookkeeper::IsEvaluated(Optimization::Case *c, bool set_obj)
+{
+    for (auto evaluated_c : case_handler_->EvaluatedCases()) {
+        if (evaluated_c->Equals(c,tolerance_)) { // Case has been evaluated
+            if (set_obj) {
+                c->set_objective_function_value(
+                    evaluated_c->objective_function_value()
+                );
             }
+            return true;
         }
-        return false;
     }
+    return false;
+}
 
 }
