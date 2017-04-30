@@ -50,6 +50,11 @@ class WISmoothnessTest: public Optimizer {
   QString GetStatusStringHeader() const;
   QString GetStatusString() const;
 
+  ///
+  Eigen::Matrix<double,Dynamic,1> SetPerturbations(long npointsx,
+                                                   long block_sz,
+                                                   long nblocksx);
+  
  private:
   Model::Properties::VariablePropertyContainer *variables_;
   QHash<QUuid, Model::Properties::ContinousProperty *> *xyzcoord_;
@@ -57,21 +62,12 @@ class WISmoothnessTest: public Optimizer {
 
   // vector containing perturbation points
   Eigen::Matrix<double,Dynamic,1> pertx_;
-  long npointsx_ = 12; // num of points incl'zero' point
-  long block_sz_ = 24; // block size (m)
-  long nblocksx_ = 5;  // number of blocks
 
   /*!
   * @brief
   */
   void SetVarIDXCoord();
-
-  /*!
-  * @brief
-  * @return
-  */
-  Eigen::Matrix<double,Dynamic,1> SetPerturbations();
-
+  
   /*!
   * @brief
   * @return

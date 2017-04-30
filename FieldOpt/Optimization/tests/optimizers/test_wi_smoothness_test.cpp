@@ -111,6 +111,11 @@ TEST_F(TestWISmoothnessTest, TestSetVarIDXCoord) {
 
 TEST_F(TestWISmoothnessTest, TestSetPerturbations) {
 
+    long npointsx = 12; // num of points incl'zero' point
+    long block_sz = 24; // block size (m)
+    long nblocksx = 5;  // number of blocks
+    sm_tester_->SetPerturbations(npointsx, block_sz, nblocksx);
+
     cout << "Perturbation points:" << endl;
     auto pertx = sm_tester_->GetPerturbations();
     for (int ii=0; ii < pertx.rows(); ++ii) {

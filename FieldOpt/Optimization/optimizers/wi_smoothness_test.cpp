@@ -49,7 +49,11 @@ WISmoothnessTest::WISmoothnessTest(
     }
 
     SetVarIDXCoord();
-    SetPerturbations();
+
+    long npointsx = 96*5; // num of points incl'zero' point
+    long block_sz = 24; // block size (m)
+    long nblocksx = 20;  // number of blocks
+    SetPerturbations(npointsx, block_sz, nblocksx);
 }
 
 void WISmoothnessTest::SetVarIDXCoord() {
@@ -76,8 +80,10 @@ void WISmoothnessTest::SetVarIDXCoord() {
 }
 
 Eigen::Matrix<double,Dynamic,1>
-WISmoothnessTest::SetPerturbations() {
-    pertx_.setLinSpaced(npointsx_-1,0,nblocksx_*block_sz_);
+WISmoothnessTest::SetPerturbations(long npointsx,
+                                   long nblocksx,
+                                   long block_sz) {
+    pertx_.setLinSpaced(npointsx-1,0,nblocksx*block_sz);
 }
 
 void WISmoothnessTest::iterate()
