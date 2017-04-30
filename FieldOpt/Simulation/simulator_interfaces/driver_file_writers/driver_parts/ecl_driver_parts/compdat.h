@@ -56,8 +56,9 @@ class Compdat : public ECLDriverPart {
   QList<QStringList> createWellEntries(Model::Wells::Well *well);
   QStringList createBlockEntry(QString well_name,
                                double wellbore_radius,
-                               Model::Wells::Wellbore::WellBlock *well_block);
-  Settings::Simulator::SimulatorWellModel well_model_;
+                               Model::Wells::Wellbore::WellBlock *well_block,
+                               Settings::Model::WellModel well_model
+  );
 };
 
 }

@@ -62,6 +62,8 @@ class Well
   bool IsProducer();
   bool IsInjector();
   ::Settings::Model::PreferredPhase preferred_phase() const { return preferred_phase_; }
+
+  ::Settings::Model::WellModel well_model() const { return well_model_; }
   double wellbore_radius() const { return wellbore_radius_->value(); }
   Wellbore::Trajectory *trajectory() { return trajectory_; }
   QList<Control *> *controls() { return controls_; }
@@ -77,6 +79,7 @@ class Well
   QString group_;
   ::Settings::Model::PreferredPhase preferred_phase_;
   Properties::ContinousProperty *wellbore_radius_;
+  ::Settings::Model::WellModel well_model_;
   Wellbore::Trajectory *trajectory_;
 
   Heel heel_;

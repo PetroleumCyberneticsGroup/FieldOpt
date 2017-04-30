@@ -166,6 +166,11 @@ map<string, Loggable::WellDescription> Model::Summary::GetWellDescriptions() {
         wdesc.wellbore_radius = boost::lexical_cast<string>(well->wellbore_radius());
         wdesc.type = well->IsProducer() ? "Producer" : "Injector";
 
+        switch (well->well_model()) {
+            case Settings::Model::WellModel::Peaceman: wdesc.well_model = "Peaceman"; break;
+            case Settings::Model::WellModel::Projection: wdesc.well_model = "Projection"; break;
+        }
+
         switch (well->preferred_phase()) {
             case Settings::Model::PreferredPhase::Oil: wdesc.pref_phase = "Oil"; break;
             case Settings::Model::PreferredPhase::Gas: wdesc.pref_phase = "Gas"; break;

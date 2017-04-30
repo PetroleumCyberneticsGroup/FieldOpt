@@ -26,6 +26,7 @@ Well::Well(Settings::Model settings,
            int well_number,
            Properties::VariablePropertyContainer *variable_container,
            Reservoir::Grid::Grid *grid) {
+
     Settings::Model::Well well_settings = settings.wells().at(well_number);
 
     name_ = well_settings.name;
@@ -35,8 +36,10 @@ Well::Well(Settings::Model settings,
     else group_ = "";
 
     preferred_phase_ = well_settings.preferred_phase;
+    well_model_ = well_settings.well_model;
 
-    wellbore_radius_ = new Properties::ContinousProperty(well_settings.wellbore_radius);
+    wellbore_radius_ =
+        new Properties::ContinousProperty(well_settings.wellbore_radius);
 
     controls_ = new QList<Control *>();
     for (int i = 0; i < well_settings.controls.size(); ++i)

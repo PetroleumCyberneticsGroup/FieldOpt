@@ -54,7 +54,8 @@ QList<QStringList> Compdat::createWellEntries(Model::Wells::Well *well)
         block_entries.append(
             createBlockEntry(well->name(),
                              well->wellbore_radius(),
-                             well->trajectory()->GetWellBlocks()->at(i)
+                             well->trajectory()->GetWellBlocks()->at(i),
+                             well->well_model()
             )
         );
     }
@@ -63,7 +64,8 @@ QList<QStringList> Compdat::createWellEntries(Model::Wells::Well *well)
 
 QStringList Compdat::createBlockEntry(QString well_name,
                                       double wellbore_radius,
-                                      Model::Wells::Wellbore::WellBlock *well_block)
+                                      Model::Wells::Wellbore::WellBlock *well_block,
+                                      Settings::Model::WellModel well_model)
 {
     QStringList block_entry = QStringList(base_entry_line_);
     block_entry[0] = well_name;
@@ -76,9 +78,9 @@ QStringList Compdat::createBlockEntry(QString well_name,
         block_entry[5] = "OPEN";
         auto block_wi = well_block->GetPerforation()->transmissibility_factor();
 
-        typedef Settings::Simulator::SimulatorWellModel WellModel;
+        typedef Settings::Model::WellModel WellModel;
         if (block_wi >= 0.0 ){
-            switch (well_model_){
+            switch (well_model){
                 case WellModel::Peaceman:
                     block_entry[7] = "*"; // Default: sim computes wi
                     break;

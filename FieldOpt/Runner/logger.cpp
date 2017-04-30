@@ -407,6 +407,7 @@ void Logger::appendWellDescription(pair<string, Loggable::WellDescription> w, st
     sum << "| Definition type      | " << w.second.def_type   << setw(18-w.second.def_type.size())   << right << " |\n";
     sum << "| Prefered phase       | " << w.second.pref_phase << setw(18-w.second.pref_phase.size()) << right << " |\n";
     sum << "| Wellbore radius      | " << w.second.wellbore_radius << setw(18-w.second.wellbore_radius.size()) << right << " |\n";
+    sum << "| Well model           | " << w.second.well_model << setw(18-w.second.wellbore_radius.size()) << right << " |\n";
     sum << "\n";
     sum << "#### Spline Definition\n\n";
     sum << "| End point  | Coord | Value      |\n";

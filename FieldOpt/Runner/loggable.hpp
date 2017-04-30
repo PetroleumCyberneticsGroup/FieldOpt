@@ -126,6 +126,7 @@ class Loggable {
     string def_type;
     string pref_phase;
     string wellbore_radius;
+    string well_model;
     SplineDescription spline;
     vector<ControlDescription> controls;
   };

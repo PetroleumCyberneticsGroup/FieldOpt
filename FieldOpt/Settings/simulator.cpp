@@ -83,18 +83,6 @@ Simulator::Simulator(QJsonObject json_simulator)
     }
     else fluid_model_ = SimulatorFluidModel::BlackOil;
 
-    // Simulator: WellModel
-    if (json_simulator.contains("WellModel")) {
-        QString fluid_model = json_simulator["WellModel"].toString();
-        if (QString::compare(fluid_model, "Peaceman") == 0) {
-            well_model_ = SimulatorWellModel::Peaceman;
-        }
-        else if (QString::compare(fluid_model, "BlackOil") == 0) {
-            well_model_ = SimulatorWellModel::Projection;
-        }
-    }
-    else well_model_ = SimulatorWellModel::Projection;
-
 }
 
 }
