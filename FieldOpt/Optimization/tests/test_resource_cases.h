@@ -1,3 +1,22 @@
+/******************************************************************************
+   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
+
+   This file is part of the FieldOpt project.
+
+   FieldOpt is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   FieldOpt is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with FieldOpt. If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
+
 #ifndef FIELDOPT_TEST_RESOURCE_CASES_H
 #define FIELDOPT_TEST_RESOURCE_CASES_H
 
@@ -10,34 +29,51 @@
 #include <QList>
 
 namespace TestResources {
-class TestResourceCases : public TestResources::TestResourceVariablePropertyContainer {
+class TestResourceCases :
+    public TestResources::TestResourceVariablePropertyContainer {
  public:
   TestResourceCases() {
-      test_case_1_3i_ = new Optimization::Case(QHash<QUuid, bool>(), integer_variables_3d_, QHash<QUuid, double>());
+      test_case_1_3i_ = new Optimization::Case(QHash<QUuid, bool>(),
+                                               integer_variables_3d_,
+                                               QHash<QUuid, double>());
 
-      test_case_2_3r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), real_variables_3d_);
+      test_case_2_3r_ = new Optimization::Case(QHash<QUuid, bool>(),
+                                               QHash<QUuid, int>(),
+                                               real_variables_3d_);
       test_case_2_3r_->set_objective_function_value(100.0);
 
-      test_case_3_4b3i3r_ = new Optimization::Case(binary_variables_4d_, integer_variables_3d_, real_variables_3d_);
+      test_case_3_4b3i3r_ = new Optimization::Case(binary_variables_4d_,
+                                                   integer_variables_3d_,
+                                                   real_variables_3d_);
       test_case_3_4b3i3r_->set_objective_function_value(-50.0);
       test_case_3_4b3i3r_->SetWICTime(5);
 
-      test_case_4_4b3i3r = new Optimization::Case(binary_variables_4d_, integer_variables_3d_, real_variables_3d_);
+      test_case_4_4b3i3r = new Optimization::Case(binary_variables_4d_,
+                                                  integer_variables_3d_,
+                                                  real_variables_3d_);
       test_case_4_4b3i3r->set_objective_function_value(-50.0);
-      trivial_cases_ << test_case_1_3i_ << test_case_2_3r_ << test_case_3_4b3i3r_ << test_case_4_4b3i3r;
+
+      trivial_cases_ << test_case_1_3i_
+                     << test_case_2_3r_
+                     << test_case_3_4b3i3r_
+                     << test_case_4_4b3i3r;
 
       test_case_spline_ = new Optimization::Case(varcont_prod_spline_->GetBinaryVariableValues(),
                                                  varcont_prod_spline_->GetDiscreteVariableValues(),
                                                  varcont_prod_spline_->GetContinousVariableValues());
 
-      test_case_2r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), real_variables_2d_);
+      test_case_2r_ = new Optimization::Case(QHash<QUuid, bool>(),
+                                             QHash<QUuid, int>(),
+                                             real_variables_2d_);
 
       auto gen = get_random_generator();
       std::vector<double> rand_reals_30 = random_doubles(gen, -5.12, 5.12, 30);
       for (double rand : rand_reals_30){
-        real_variables_sph_rand_30d_.insert(QUuid::createUuid(), rand);
+          real_variables_sph_rand_30d_.insert(QUuid::createUuid(), rand);
       }
-      test_case_ga_spherical_30r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), real_variables_sph_rand_30d_);
+      test_case_ga_spherical_30r_ = new Optimization::Case(QHash<QUuid, bool>(),
+                                                           QHash<QUuid, int>(),
+                                                           real_variables_sph_rand_30d_);
 
 
 
@@ -50,7 +86,9 @@ class TestResourceCases : public TestResources::TestResourceVariablePropertyCont
           varcont_6r_->AddVariable(prop);
           real_variables_sph_rand_6d_.insert(QUuid::createUuid(), rand_reals_6[i]);
       }
-      test_case_ga_spherical_6r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), varcont_6r_->GetContinousVariableValues());
+      test_case_ga_spherical_6r_ = new Optimization::Case(QHash<QUuid, bool>(),
+                                                          QHash<QUuid, int>(),
+                                                          varcont_6r_->GetContinousVariableValues());
   }
 
   QList<Optimization::Case *> trivial_cases_;
