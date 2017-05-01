@@ -32,8 +32,10 @@ Logger::Logger(Runner::RuntimeSettings *rts,
     is_worker_ = output_subdir.length() > 0;
     verbose_ = rts->verbosity_level();
     output_dir_ = rts->output_dir();
-    if (output_subdir.length() > 0)
+    if (output_subdir.length() > 0) {
         output_dir_ = output_dir_ + "/" + output_subdir + "/";
+        Utilities::FileHandling::CreateDirectory(output_dir_);
+    }
     opt_log_path_ = output_dir_ + "/log_optimization.csv";
     cas_log_path_ = output_dir_ + "/log_cases.csv";
     ext_log_path_ = output_dir_ + "/log_extended.json";
