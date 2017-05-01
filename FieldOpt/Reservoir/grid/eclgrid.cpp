@@ -53,9 +53,6 @@ ECLGrid::ECLGrid(string file_path)
     // so we are going to check all known permutations with the hoe tha one of them is suitable for
     // the current grid - we do that based on the cell 0 in the grid
 
-    // Set faces permutation to first permutation type
-    faces_permutation_index_ = 0;
-
     // Find the first (active) cell index.
     int idx = 0;
     while (idx < ecl_grid_reader_->ActiveCells()) {
@@ -67,6 +64,9 @@ ECLGrid::ECLGrid(string file_path)
         }
     }
 
+    // Set faces permutation to first permutation type
+    faces_permutation_index_ = 0;
+    // Get the first cell
     Cell first_cell = GetCell(idx);
 
     if (first_cell.EnvelopsPoint(first_cell.center()))
