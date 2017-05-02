@@ -24,6 +24,7 @@
 #include "optimizers/APPS.h"
 #include "tests/test_resource_test_functions.h"
 #include "Utilities/math.hpp"
+#include "Runner/tests/test_resource_runner.hpp"
 
 using namespace TestResources::TestFunctions;
 using namespace Optimization::Optimizers;
@@ -47,13 +48,19 @@ TEST_F(APPSTest, Constructor) {
     apps_minimizer_ = new APPS(settings_apps_min_unconstr_,
                                test_case_2r_,
                                varcont_prod_bhp_,
-                               grid_5spot_);
+                               grid_5spot_,
+                               logger_
+    );
 }
 
 TEST_F(APPSTest, GetNewCases) {
     test_case_1_3i_->set_objective_function_value(Sphere(test_case_1_3i_->GetRealVarVector()));
     Optimization::Optimizer *maximizer = new APPS(settings_apps_max_unconstr_,
-                                                  test_case_1_3i_, varcont_prod_bhp_, grid_5spot_);
+                                                  test_case_1_3i_,
+                                                  varcont_prod_bhp_,
+                                                  grid_5spot_,
+                                                  logger_
+    );
 
     // These four cases should change the values of the two first int vars, +50 then -50
     Optimization::Case *new_case_1 = maximizer->GetCaseForEvaluation();
@@ -76,7 +83,11 @@ TEST_F(APPSTest, TestFunctionSpherical) {
     auto gen = get_random_generator();
     test_case_2r_->set_objective_function_value(Sphere(test_case_2r_->GetRealVarVector()));
     Optimization::Optimizer *minimizer = new APPS(settings_apps_min_unconstr_,
-                                                  test_case_2r_, varcont_prod_bhp_, grid_5spot_);
+                                                  test_case_2r_,
+                                                  varcont_prod_bhp_,
+                                                  grid_5spot_,
+                                                  logger_
+    );
 
     QList<Optimization::Case *> under_eval = QList<Optimization::Case *>();
     for (int i = 0; i < 3; ++i)
@@ -107,7 +118,11 @@ TEST_F(APPSTest, TestFunctionRosenbrock) {
 
     test_case_2r_->set_objective_function_value(Rosenbrock(test_case_2r_->GetRealVarVector()));
     Optimization::Optimizer *minimizer = new APPS(settings_apps_min_unconstr_,
-                                                  test_case_2r_, varcont_prod_bhp_, grid_5spot_);
+                                                  test_case_2r_,
+                                                  varcont_prod_bhp_,
+                                                  grid_5spot_,
+                                                  logger_
+    );
 
     QList<Optimization::Case *> under_eval = QList<Optimization::Case *>();
     for (int i = 0; i < 3; ++i)

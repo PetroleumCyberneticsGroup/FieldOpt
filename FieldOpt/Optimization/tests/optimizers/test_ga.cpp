@@ -1,5 +1,6 @@
 
 #include <gtest/gtest.h>
+#include <Runner/tests/test_resource_runner.hpp>
 #include "optimizers/RGARDD.h"
 #include "Optimization/optimizers/GeneticAlgorithm.h"
 #include "Optimization/tests/test_resource_optimizer.h"
@@ -13,7 +14,8 @@ namespace {
 
 class GeneticAlgorithmTest : public ::testing::Test,
                              public TestResources::TestResourceOptimizer,
-                             public TestResources::TestResourceGrids {
+                             public TestResources::TestResourceGrids
+{
  protected:
   GeneticAlgorithmTest() {
       base_ = base_case_;
@@ -33,7 +35,11 @@ TEST_F(GeneticAlgorithmTest, TestFunctionSpherical) {
 //    test_case_ga_spherical_30r_->set_objective_function_value(abs(Sphere(test_case_ga_spherical_30r_->GetRealVarVector())));
     test_case_ga_spherical_6r_->set_objective_function_value(abs(Sphere(test_case_ga_spherical_6r_->GetRealVarVector())));
     Optimization::Optimizer *minimizer = new RGARDD(settings_ga_min_,
-                                                    test_case_ga_spherical_6r_, varcont_6r_, grid_5spot_);
+                                                    test_case_ga_spherical_6r_,
+                                                    varcont_6r_,
+                                                    grid_5spot_,
+                                                    logger_
+    );
 
     while (!minimizer->IsFinished()) {
         auto next_case = minimizer->GetCaseForEvaluation();
@@ -49,7 +55,11 @@ TEST_F(GeneticAlgorithmTest, TestFunctionSpherical) {
 TEST_F(GeneticAlgorithmTest, TestFunctionRosenbrock) {
     test_case_ga_spherical_6r_->set_objective_function_value(abs(Rosenbrock(test_case_ga_spherical_6r_->GetRealVarVector())));
     Optimization::Optimizer *minimizer = new RGARDD(settings_ga_min_,
-                                                    test_case_ga_spherical_6r_, varcont_6r_, grid_5spot_);
+                                                    test_case_ga_spherical_6r_,
+                                                    varcont_6r_,
+                                                    grid_5spot_,
+                                                    logger_
+    );
 
     while (!minimizer->IsFinished()) {
         auto next_case = minimizer->GetCaseForEvaluation();

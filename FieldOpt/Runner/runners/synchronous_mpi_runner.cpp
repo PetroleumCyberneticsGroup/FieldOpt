@@ -28,6 +28,7 @@ SynchronousMPIRunner::SynchronousMPIRunner(RuntimeSettings *rts) : MPIRunner(rts
         std::cout << "00" << std::endl;
         InitializeSettings("rank" + QString::number(rank()));
 
+        InitializeLogger();
         InitializeModel();
         InitializeSimulator();
         EvaluateBaseModel();
@@ -35,16 +36,18 @@ SynchronousMPIRunner::SynchronousMPIRunner(RuntimeSettings *rts) : MPIRunner(rts
         InitializeBaseCase();
         InitializeOptimizer();
         InitializeBookkeeper();
-        InitializeLogger();
         overseer_ = new MPI::Overseer(this);
+        FinalizeInitialization(true);
     }
     else {
+        InitializeLogger("rank" + QString::number(rank()));
         InitializeSettings("rank" + QString::number(rank()));
         InitializeModel();
         InitializeSimulator();
         InitializeObjectiveFunction();
         InitializeLogger("rank" + QString::number(rank()));
         worker_ = new MPI::Worker(this);
+        FinalizeInitialization(false);
     }
 }
 
@@ -54,8 +57,7 @@ void SynchronousMPIRunner::Execute() {
       auto new_case = optimizer_->GetCaseForEvaluation();
       if (bookkeeper_->IsEvaluated(new_case, true)) {
           printMessage("Case found in bookkeeper");
-          logger_->LogCase(new_case, "Case objective value set by bookkeeper.");
-          logger_->increment_bookkeeped_cases();
+          new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_BOOKKEEPED;
           optimizer_->SubmitEvaluatedCase(new_case);
       }
       else {
@@ -66,21 +68,17 @@ void SynchronousMPIRunner::Execute() {
     auto wait_for_evaluated_case = [&]() mutable {
       printMessage("Waiting to receive evaluated case...", 2);
       auto evaluated_case = overseer_->RecvEvaluatedCase(); // TODO: This is a duplicate case that wont get deleted, i.e. a MEMORY LEAK.
-      logger_->LogCase(evaluated_case);
       printMessage("Evaluated case received.", 2);
+      if (overseer_->last_case_tag == MPIRunner::MsgTag::CASE_EVAL_SUCCESS) {
+          evaluated_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
+          if (optimizer_->GetSimulationDuration(evaluated_case) > 0){
+              simulation_times_.push_back(optimizer_->GetSimulationDuration(evaluated_case));
+          }
+      }
       optimizer_->SubmitEvaluatedCase(evaluated_case);
       printMessage("Submitted evaluated case to optimizer.", 2);
-      logger_->LogOptimizerStatus(optimizer_);
-      switch (overseer_->last_case_tag) {
-          case MPIRunner::MsgTag::CASE_EVAL_SUCCESS: logger_->increment_simulated_cases(); break;
-          case MPIRunner::MsgTag::CASE_EVAL_INVALID: logger_->increment_invalid_cases(); break;
-          case MPIRunner::MsgTag::CASE_EVAL_TIMEOUT: logger_->increment_timed_out_cases(); break;
-      }
     };
     if (rank() == 0) {
-        logger_->LogSettings(settings_);
-        logger_->WritePropertyUuidNameMap(model_);
-        logger_->LogCase(base_case_);
         printMessage("Performing initial distribution...", 2);
         initialDistribution();
         printMessage("Initial distribution done.", 2);
@@ -107,11 +105,13 @@ void SynchronousMPIRunner::Execute() {
                     wait_for_evaluated_case();
                 }
             }
-            logger_->LogRunnerStats();
         }
-        printMessage("Terminating workers.", 2);
-        PrintCompletionMessage();
         overseer_->TerminateWorkers();
+        printMessage("Terminating workers.", 2);
+        overseer_->EnsureWorkerTermination();
+        FinalizeRun(true);
+        env_.~environment();
+        return;
     }
     else {
         printMessage("Waiting to receive initial unevaluated case...", 2);
@@ -123,9 +123,8 @@ void SynchronousMPIRunner::Execute() {
                 bool simulation_success = true;
                 printMessage("Applying case to model.", 2);
                 model_->ApplyCase(worker_->GetCurrentCase());
-                logger_->LogSimulation(worker_->GetCurrentCase());
-                logger_->LogCompdat(worker_->GetCurrentCase(), simulator_->GetCompdatString());
-                if (logger_->shortest_simulation_time() == 0 || runtime_settings_->simulation_timeout() == 0) {
+                auto start = QDateTime::currentDateTime();
+                if (simulation_times_.size() == 0 || runtime_settings_->simulation_timeout() == 0) {
                     printMessage("Starting model evaluation.", 2);
                     simulator_->Evaluate();
                 }
@@ -133,25 +132,28 @@ void SynchronousMPIRunner::Execute() {
                     printMessage("Starting model evaluation with timeout.", 2);
                     simulation_success = simulator_->Evaluate(timeoutValue(), runtime_settings_->threads_per_sim());
                 }
+                auto end = QDateTime::currentDateTime();
+                int sim_time = time_span_seconds(start, end);
                 if (simulation_success) {
                     tag = MPIRunner::MsgTag::CASE_EVAL_SUCCESS;
-                    logger_->LogSimulation(worker_->GetCurrentCase());
                     printMessage("Setting objective function value.", 2);
                     worker_->GetCurrentCase()->set_objective_function_value(objective_function_->value());
-                    logger_->LogProductionData(worker_->GetCurrentCase(), simulator_->results());
+                    worker_->GetCurrentCase()->SetSimTime(sim_time);
+                    worker_->GetCurrentCase()->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
+                    simulation_times_.push_back(sim_time);
                 }
                 else {
                     tag = MPIRunner::MsgTag::CASE_EVAL_TIMEOUT;
-                    logger_->LogSimulation(worker_->GetCurrentCase(), false);
                     printMessage("Timed out. Setting objective function value to SENTINEL VALUE.", 2);
+                    worker_->GetCurrentCase()->state.eval = Optimization::Case::CaseState::EvalStatus::E_TIMEOUT;
+                    worker_->GetCurrentCase()->state.err_msg = Optimization::Case::CaseState::ErrorMessage::ERR_SIM;
                     worker_->GetCurrentCase()->set_objective_function_value(sentinelValue());
                 }
-                logger_->increment_simulated_cases();
             } catch (std::runtime_error e) {
                 std::cout << e.what() << std::endl;
                 tag = MPIRunner::MsgTag::CASE_EVAL_INVALID;
-                printMessage("Invalid well block coordinate encountered. Setting obj. val. to sentinel value.");
-                logger_->increment_invalid_cases();
+                worker_->GetCurrentCase()->state.eval = Optimization::Case::CaseState::EvalStatus::E_FAILED;
+                worker_->GetCurrentCase()->state.err_msg = Optimization::Case::CaseState::ErrorMessage::ERR_WIC;
                 printMessage("Invalid case. Setting objective function value to SENTINEL VALUE.", 2);
                 worker_->GetCurrentCase()->set_objective_function_value(sentinelValue());
             }
@@ -159,8 +161,19 @@ void SynchronousMPIRunner::Execute() {
             worker_->SendEvaluatedCase(tag);
             printMessage("Waiting to reveive an unevaluated case...", 2);
             worker_->RecvUnevaluatedCase();
-            printMessage("Received an unevaluated case.", 2);
+            if (worker_->GetCurrentTag() == TERMINATE) {
+                printMessage("Received termination message. Breaking.", 2);
+                break;
+            }
+            else {
+                printMessage("Received an unevaluated case.", 2);
+            }
         }
+        FinalizeRun(false);
+        printMessage("Finalized on worker.", 2);
+        worker_->ConfirmFinalization();
+        env_.~environment();
+        return;
     }
 }
 

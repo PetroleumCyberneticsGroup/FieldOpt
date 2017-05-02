@@ -46,6 +46,7 @@ class AdgprsSimulator : public Simulator
 {
  public:
   AdgprsSimulator(Settings::Settings *settings, Model::Model *model);
+  void WriteDriverFilesOnly() override;
 
   // Simulator interface
  public:

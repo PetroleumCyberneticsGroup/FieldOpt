@@ -46,6 +46,7 @@ void AdgprsSimulator::Evaluate()
     driver_file_writer_->WriteDriverFile(output_directory_);
     ::Utilities::Unix::ExecShellScript(script_path_, script_args_);
     results_->ReadResults(output_h5_summary_file_path_);
+    updateResultsInModel();
 }
 
 void AdgprsSimulator::CleanUp()
@@ -79,11 +80,6 @@ void AdgprsSimulator::UpdateFilePaths()
     script_args_ = (QStringList() << output_directory_ << output_directory_+"/"+initial_driver_file_name_);
 }
 
-QString AdgprsSimulator::GetCompdatString()
-{
-    return driver_file_writer_->GetCompdatString();
-}
-
 bool AdgprsSimulator::Evaluate(int timeout, int threads) {
     script_args_[2] = QString::number(threads);
     int t = timeout;
@@ -96,7 +92,12 @@ bool AdgprsSimulator::Evaluate(int timeout, int threads) {
     if (success) {
         results_->ReadResults(output_h5_summary_file_path_);
     }
+    updateResultsInModel();
     return success;
+}
+void AdgprsSimulator::WriteDriverFilesOnly() {
+    copyDriverFiles();
+    driver_file_writer_->WriteDriverFile(output_directory_);
 }
 
 }

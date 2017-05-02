@@ -29,7 +29,10 @@ namespace Optimization {
         class APPS : public GSS {
         public:
             APPS(Settings::Optimizer *settings, Case *base_case,
-                 Model::Properties::VariablePropertyContainer *variables, Reservoir::Grid::Grid *grid);
+                 Model::Properties::VariablePropertyContainer *variables,
+                 Reservoir::Grid::Grid *grid,
+                 Logger *logger
+            );
 
         protected:
             void handleEvaluatedCase(Case *c) override;

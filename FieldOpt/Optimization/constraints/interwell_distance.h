@@ -6,27 +6,28 @@
 #include <Eigen/Core>
 
 namespace Optimization {
-    namespace Constraints {
+namespace Constraints {
 
-        class InterwellDistance : public Constraint, WellSplineConstraint
-        {
-        public:
-            InterwellDistance(Settings::Optimizer::Constraint settings,
-                              Model::Properties::VariablePropertyContainer *variables);
+class InterwellDistance : public Constraint, WellSplineConstraint
+{
+ public:
+  InterwellDistance(Settings::Optimizer::Constraint settings,
+                    Model::Properties::VariablePropertyContainer *variables);
 
+  string name() override { return "InterwellDistance"; }
 
-            // Constraint interface
-        public:
-            bool CaseSatisfiesConstraint(Case *c);
-            void SnapCaseToConstraints(Case *c);
+  // Constraint interface
+ public:
+  bool CaseSatisfiesConstraint(Case *c);
+  void SnapCaseToConstraints(Case *c);
 
-        private:
-            double distance_;
-            QList<Well> affected_wells_;
+ private:
+  double distance_;
+  QList<Well> affected_wells_;
 
-        };
+};
 
-    }
+}
 }
 
 #endif // INTERWELLDISTANCE_H

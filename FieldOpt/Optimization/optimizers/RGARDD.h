@@ -55,7 +55,9 @@ class RGARDD : public GeneticAlgorithm {
   RGARDD(Settings::Optimizer *settings,
          Case *base_case,
          Model::Properties::VariablePropertyContainer *variables,
-         Reservoir::Grid::Grid *grid);
+         Reservoir::Grid::Grid *grid,
+         Logger *logger
+  );
  private:
   vector<Chromosome> mating_pool_; //!< Holds the current mating pool.
   double discard_parameter_; //!< Determines the fraction of parents to be discarded in selection.
@@ -119,6 +121,23 @@ class RGARDD : public GeneticAlgorithm {
    * chromosomes. Expects the population to be pre-sorted.
    */
   void repopulate();
+
+  /*!
+   * @brief Snap the variable values in a chromosome to the upper and lower bounds.
+   * @param chrom The chromosome to be snapped.
+   */
+  void snap_to_bounds(Chromosome &chrom);
+
+  class ConfigurationSummary : public Loggable {
+   public:
+    ConfigurationSummary(RGARDD *opt) { opt_ = opt; }
+    LogTarget GetLogTarget() override;
+    map<string, string> GetState() override;
+    QUuid GetId() override;
+    map<string, vector<double>> GetValues() override;
+   private:
+    RGARDD *opt_;
+  };
 
 };
 

@@ -89,6 +89,12 @@ class Constraint
    */
   virtual Eigen::VectorXd GetUpperBounds(QList<QUuid> id_vector) const;
 
+  /*!
+   * @brief Get the name of the constraint. All constraints should override this.
+   * @return Name of the constraint.
+   */
+  virtual string name() { return "NONAME"; }
+
  protected:
   bool logging_enabled_;
   int verbosity_level_;

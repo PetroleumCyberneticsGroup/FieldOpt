@@ -5,10 +5,13 @@
 namespace Optimization {
     namespace Optimizers {
 
-        CompassSearch::CompassSearch(Settings::Optimizer *settings, Case *base_case,
+        CompassSearch::CompassSearch(Settings::Optimizer *settings,
+                                     Case *base_case,
                                      Model::Properties::VariablePropertyContainer *variables,
-                                     Reservoir::Grid::Grid *grid)
-                : GSS(settings, base_case, variables, grid)
+                                     Reservoir::Grid::Grid *grid,
+                                     Logger *logger
+        )
+                : GSS(settings, base_case, variables, grid, logger)
         {
             directions_ = GSSPatterns::Compass(num_vars_);
             step_lengths_ = Eigen::VectorXd(directions_.size());
@@ -43,18 +46,18 @@ namespace Optimization {
                     .arg(nr_evaluated_cases())
                     .arg(nr_queued_cases())
                     .arg(nr_recently_evaluated_cases())
-                    .arg(tentative_best_case_->id().toString())
-                    .arg(tentative_best_case_->objective_function_value())
+                    .arg(GetTentativeBestCase()->id().toString())
+                    .arg(GetTentativeBestCase()->objective_function_value())
                     .arg(step_lengths_[0]);
         }
 
         void CompassSearch::handleEvaluatedCase(Case *c) {
             if (isImprovement(c))
-                tentative_best_case_ = c;
+                updateTentativeBestCase(c);
         }
 
         bool CompassSearch::is_successful_iteration() {
-            return case_handler_->RecentlyEvaluatedCases().contains(tentative_best_case_);
+            return case_handler_->RecentlyEvaluatedCases().contains(GetTentativeBestCase());
         }
 
     }}

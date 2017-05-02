@@ -28,7 +28,10 @@ namespace Optimizers {
 GeneticAlgorithm::GeneticAlgorithm(Settings::Optimizer *settings,
                                    Case *base_case,
                                    Model::Properties::VariablePropertyContainer *variables,
-                                   Reservoir::Grid::Grid *grid) : Optimizer(settings, base_case, variables, grid) {
+                                   Reservoir::Grid::Grid *grid,
+                                   Logger *logger
+)
+    : Optimizer(settings, base_case, variables, grid, logger) {
     n_vars_ = variables->ContinousVariableSize();
     gen_ = get_random_generator();
     max_generations_ = settings->parameters().max_generations;
@@ -70,17 +73,21 @@ GeneticAlgorithm::GeneticAlgorithm(Settings::Optimizer *settings,
     }
 }
 Optimizer::TerminationCondition GeneticAlgorithm::IsFinished() {
-    if (iteration_ >= max_generations_) {
+    TerminationCondition tc = NOT_FINISHED;
+    if (case_handler_->CasesBeingEvaluated().size() > 0)
+        return tc;
+    if (iteration_ >= max_generations_)
+        tc = MAX_ITERATIONS_REACHED;
+    else if (case_handler_->NumberSimulated() > max_evaluations_)
+        tc = MAX_EVALS_REACHED;
+
+    if (tc != NOT_FINISHED) {
         cout << "Generations at termination: " << iteration_ << endl;
         population_ = sortPopulation(population_);
-        if (verbosity_level_ > 1) {
-            cout << "Final ";
-            printPopulation();
-        }
-        return TerminationCondition::MAX_EVALS_REACHED;
+        logger_->AddEntry(this);
+        logger_->AddEntry(new Summary(this, tc));
     }
-    else
-        return TerminationCondition::NOT_FINISHED;
+    return tc;
 }
 GeneticAlgorithm::Chromosome::Chromosome(Case *c) {
     case_pointer = c;
@@ -114,7 +121,7 @@ vector<GeneticAlgorithm::Chromosome> GeneticAlgorithm::sortPopulation(vector<Chr
     return population;
 }
 Case *GeneticAlgorithm::generateRandomCase() {
-    auto new_case = new Case(tentative_best_case_);
+    auto new_case = new Case(GetTentativeBestCase());
 
     Eigen::VectorXd erands(n_vars_);
     for (int i = 0; i < n_vars_; ++i) {

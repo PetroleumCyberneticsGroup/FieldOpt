@@ -89,10 +89,6 @@ void FlowSimulator::copyDriverFiles() {
     Utilities::FileHandling::CopyDirectory(initial_driver_file_parent_dir_path_+"/include", output_directory_+"/include");
 }
 
-QString FlowSimulator::GetCompdatString() {
-    return driver_file_writer_->GetCompdatString();
-}
-
 void FlowSimulator::UpdateFilePaths()
 {
     script_args_ = (QStringList() << output_directory_ << output_directory_+"/"+initial_driver_file_name_);
@@ -111,6 +107,10 @@ bool FlowSimulator::Evaluate(int timeout, int threads) {
         results_->ReadResults(driver_file_writer_->output_driver_file_name_);
     }
     return success;
+}
+void FlowSimulator::WriteDriverFilesOnly() {
+    copyDriverFiles();
+    driver_file_writer_->WriteDriverFile(output_directory_);
 }
 }
 }

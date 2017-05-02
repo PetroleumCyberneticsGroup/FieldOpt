@@ -55,6 +55,8 @@ void EclDriverFileWriter::WriteDriverFile()
     DriverParts::ECLDriverParts::Schedule schedule = DriverParts::ECLDriverParts::Schedule(model_->wells(),
                                                                                            settings_->model()->control_times());
 
+    model_->SetCompdatString(DriverParts::ECLDriverParts::Compdat(model_->wells()).GetPartString());
+
     QString complete_string = runspec.GetPartString() + grid.GetPartString()
             + props.GetPartString() + solution.GetPartString()
             + summary.GetPartString() + schedule.GetPartString();
@@ -64,11 +66,6 @@ void EclDriverFileWriter::WriteDriverFile()
         throw UnableToWriteDriverFileException("Cannot write driver file, specified output directory does not exist.");
 
     Utilities::FileHandling::WriteStringToFile(complete_string, output_driver_file_name_);
-}
-
-QString EclDriverFileWriter::GetCompdatString()
-{
-    return DriverParts::ECLDriverParts::Compdat(model_->wells()).GetPartString();
 }
 
 }

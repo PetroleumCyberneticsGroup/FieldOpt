@@ -69,15 +69,18 @@ class Simulator {
   virtual bool Evaluate(int timeout, int threads=1) = 0;
 
   /*!
+   * @brief Only write driver files; don't execute simulation.
+   *
+   * This should be used at the end of the run to write the best case
+   * driver files and add the best case compdat to the model.
+   * @return
+   */
+  virtual void WriteDriverFilesOnly() = 0;
+
+  /*!
    * \brief CleanUp Perform cleanup after simulation, i.e. delete output files.
    */
   virtual void CleanUp() = 0;
-
-  /*!
-   * \brief GetCompdatString Get the compdat section used in the simulation's driver file.
-   * \return String containing the compdat section.
-   */
-  virtual QString GetCompdatString() = 0;
 
   void SetVerbosityLevel(int level);
 
@@ -88,6 +91,8 @@ class Simulator {
    * @return
    */
   Simulator(Settings::Settings *settings);
+
+  void updateResultsInModel();
 
   QString initial_driver_file_path_; //!< Path to the driver file to be used as a base for the generated driver files.
   QString output_directory_; //!< The directory in which to write new driver files and execute simulations.

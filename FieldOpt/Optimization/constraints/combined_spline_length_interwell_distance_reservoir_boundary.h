@@ -19,25 +19,27 @@ namespace Optimization { namespace Constraints {
 
 class CombinedSplineLengthInterwellDistanceReservoirBoundary : public Constraint
 {
-public:
-    CombinedSplineLengthInterwellDistanceReservoirBoundary(
-                    Settings::Optimizer::Constraint settings,
-                    Model::Properties::VariablePropertyContainer *variables,
-                    Reservoir::Grid::Grid *grid);
+ public:
+  CombinedSplineLengthInterwellDistanceReservoirBoundary(
+      Settings::Optimizer::Constraint settings,
+      Model::Properties::VariablePropertyContainer *variables,
+      Reservoir::Grid::Grid *grid);
   bool IsBoundConstraint() const override;
   Eigen::VectorXd GetLowerBounds(QList<QUuid> id_vector) const override;
   Eigen::VectorXd GetUpperBounds(QList<QUuid> id_vector) const override;
 
-  // Constraint interface
-public:
-    bool CaseSatisfiesConstraint(Case *c);
-    void SnapCaseToConstraints(Case *c);
+  string name() override { return "CombinedSplineLengthInterwellDistanceReservoirBoundary"; }
 
-private:
-    int max_iterations_;
-    QList<WellSplineLength *> length_constraints_;
-    QList<ReservoirBoundary *> boundary_constraints_;
-    InterwellDistance *distance_constraint_;
+  // Constraint interface
+ public:
+  bool CaseSatisfiesConstraint(Case *c);
+  void SnapCaseToConstraints(Case *c);
+
+ private:
+  int max_iterations_;
+  QList<WellSplineLength *> length_constraints_;
+  QList<ReservoirBoundary *> boundary_constraints_;
+  InterwellDistance *distance_constraint_;
 };
 
 }}

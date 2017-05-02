@@ -7,8 +7,9 @@
         "Type": "GeneticAlgorithm",
         "Mode": "Maximize",
         "Parameters": {
-            "MaxEvaluations": 1000,
-            "MaxGenerations": 50.0,
+            "MaxEvaluations": 200,
+            "PopulationSize": 10,
+            "MaxGenerations": 2.0,
             "CrossoverProbability": 0.1,
             "DecayRate": 4.0,
             "MutationStrength": 0.25

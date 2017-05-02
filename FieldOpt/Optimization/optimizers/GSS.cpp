@@ -24,9 +24,13 @@
 namespace Optimization {
     namespace Optimizers {
 
-        GSS::GSS(Settings::Optimizer *settings, Case *base_case,
-                 Model::Properties::VariablePropertyContainer *variables, Reservoir::Grid::Grid *grid)
-                : Optimizer(settings, base_case, variables, grid) {
+        GSS::GSS(Settings::Optimizer *settings,
+                 Case *base_case,
+                 Model::Properties::VariablePropertyContainer *variables,
+                 Reservoir::Grid::Grid *grid,
+                 Logger *logger
+        )
+                : Optimizer(settings, base_case, variables, grid, logger) {
 
             int numRvars = base_case->GetRealVarVector().size();
             int numIvars = base_case->GetIntegerVarVector().size();
@@ -46,11 +50,19 @@ namespace Optimization {
 
         Optimizer::TerminationCondition GSS::IsFinished()
         {
+            TerminationCondition tc = NOT_FINISHED;
+            if (case_handler_->CasesBeingEvaluated().size() > 0)
+                return tc;
             if (case_handler_->EvaluatedCases().size() >= max_evaluations_)
-                return MAX_EVALS_REACHED;
+                tc = MAX_EVALS_REACHED;
             else if (is_converged())
-                return MINIMUM_STEP_LENGTH_REACHED;
-            else return NOT_FINISHED; // The value of not finished is 0, which evaluates to false.
+                tc = MINIMUM_STEP_LENGTH_REACHED;
+
+            if (tc != NOT_FINISHED) {
+                logger_->AddEntry(this);
+                logger_->AddEntry(new Summary(this, tc));
+            }
+            return tc;
         }
 
         void GSS::expand(vector<int> dirs) {
@@ -78,18 +90,18 @@ namespace Optimization {
             if (dirs[0] == -1)
                 dirs = range(0, (int)directions_.size(), 1);
 
-            VectorXi int_base = tentative_best_case_->GetIntegerVarVector();
-            VectorXd rea_base = tentative_best_case_->GetRealVarVector();
+            VectorXi int_base = GetTentativeBestCase()->GetIntegerVarVector();
+            VectorXd rea_base = GetTentativeBestCase()->GetRealVarVector();
 
             for (int dir : dirs) {
-                auto trial_point = new Case(tentative_best_case_);
+                auto trial_point = new Case(GetTentativeBestCase());
                 if (int_base.size() > 0) {
                     trial_point->SetIntegerVarValues(perturb(int_base, dir));
                 }
                 else if (rea_base.size() > 0) {
                     trial_point->SetRealVarValues(perturb(rea_base, dir));
                 }
-                trial_point->set_origin_data(tentative_best_case_, dir, step_lengths_(dir));
+                trial_point->set_origin_data(GetTentativeBestCase(), dir, step_lengths_(dir));
                 trial_points.append(trial_point);
             }
 

@@ -1,5 +1,6 @@
 /******************************************************************************
    Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+   Modified by Alin G. Chitu (2016-2017) <alin.chitu@tno.nl, chitu_alin@yahoo.com>
    Modified by Mathias Bellout (2017) <mathias.bellout@ntnu.no, chakibbb@gmail.com>
 
    This file is part of the FieldOpt project.
@@ -43,7 +44,9 @@ class Cell
        double volume, double poro,
        double permx, double permy, double permz,
        Eigen::Vector3d center,
-       std::vector<Eigen::Vector3d> corners);
+       vector<Eigen::Vector3d> corners,
+       int faces_permutation_index     
+  );
 
   /*!
    * \brief
@@ -256,32 +259,11 @@ class Cell
    * \todo Clarify this comment.
    *
    * \return double list of corner numbers for each face
-   */
-  static constexpr const std::array<std::array<int,4>, 6>
-      faces_definition_earth_pointing_z_ = {
-      {
-          {0, 2, 1, 3},
-          {4, 5, 6, 7},
-          {0, 4, 2, 6},
-          {1, 3, 5, 7},
-          {0, 1, 4, 5},
-          {2, 6, 3, 7}
-      }
-  };
+   */  
+  static vector<array<array<int,4>, 6>> faces_indices_permutation;
+  static vector<array<array<int,4>, 6>> MakeFacesPerturbation();
 
-  static constexpr const std::array<std::array<int,4>, 6>
-      faces_definition_sky_pointing_z_ = {
-      {
-          {2, 0, 3, 1},
-          {6, 7, 4, 5},
-          {2, 6, 0, 4},
-          {3, 1, 7, 5},
-          {2, 3, 6, 7}, // actual diff from indexes above
-          {0, 4, 1, 5}  // actual diff from indexes above
-      }
-  };
-
-  void initializeFaces();
+  void initializeFaces(int faces_permutation_index);
 };
 
 }

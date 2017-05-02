@@ -59,8 +59,12 @@ namespace Optimization {
              *      directions_ : The set of search directions to be used.
              *      step_lengths_ : The set of step lengts to be used (one per step direction).
              */
-            GSS(Settings::Optimizer *settings, Case *base_case, Model::Properties::VariablePropertyContainer *variables,
-                Reservoir::Grid::Grid *grid);
+            GSS(Settings::Optimizer *settings,
+                Case *base_case,
+                Model::Properties::VariablePropertyContainer *variables,
+                Reservoir::Grid::Grid *grid,
+                Logger *logger
+            );
 
             /*!
              * \brief IsFinished Check if the optimization is finished.
