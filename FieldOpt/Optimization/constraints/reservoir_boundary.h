@@ -68,6 +68,7 @@ class ReservoirBoundary : public Constraint, WellSplineConstraint
   ReservoirBoundary(const Settings::Optimizer::Constraint &settings,
                     Model::Properties::VariablePropertyContainer *variables,
                     Reservoir::Grid::Grid *grid);
+  string name() override { return "ReservoirBoundary"; }
 
   // Constraint interface
  public:

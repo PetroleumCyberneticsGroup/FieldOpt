@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <Runner/tests/test_resource_runner.hpp>
 #include "Optimization/optimizers/compass_search.h"
 #include "Optimization/tests/test_resource_optimizer.h"
 #include "Reservoir/tests/test_resource_grids.h"
@@ -11,7 +12,8 @@ namespace {
 
     class CompassSearchTest : public ::testing::Test,
                               public TestResources::TestResourceOptimizer,
-                              public TestResources::TestResourceGrids {
+                              public TestResources::TestResourceGrids
+    {
     protected:
         CompassSearchTest() {
             base_ = base_case_;
@@ -30,7 +32,11 @@ namespace {
     TEST_F(CompassSearchTest, GetNewCases) {
         test_case_1_3i_->set_objective_function_value(Sphere(test_case_1_3i_->GetRealVarVector()));
         Optimization::Optimizer *maximizer = new CompassSearch(settings_compass_search_max_unconstr_,
-                                                               test_case_1_3i_, varcont_prod_bhp_, grid_5spot_);
+                                                               test_case_1_3i_,
+                                                               varcont_prod_bhp_,
+                                                               grid_5spot_,
+                                                               logger_
+        );
 
         // These four cases should change the values of the two first int vars, +50 then -50
         Optimization::Case *new_case_1 = maximizer->GetCaseForEvaluation();
@@ -52,7 +58,11 @@ namespace {
     TEST_F(CompassSearchTest, TestFunctionSpherical) {
         test_case_2r_->set_objective_function_value(Sphere(test_case_2r_->GetRealVarVector()));
         Optimization::Optimizer *minimizer = new CompassSearch(settings_compass_search_min_unconstr_,
-                                                               test_case_2r_, varcont_prod_bhp_, grid_5spot_);
+                                                               test_case_2r_,
+                                                               varcont_prod_bhp_,
+                                                               grid_5spot_,
+                                                               logger_
+        );
 
         while (!minimizer->IsFinished()) {
             auto next_case = minimizer->GetCaseForEvaluation();
@@ -73,7 +83,11 @@ namespace {
 
         test_case_2r_->set_objective_function_value(Rosenbrock(test_case_2r_->GetRealVarVector()));
         Optimization::Optimizer *minimizer = new CompassSearch(settings_compass_search_min_unconstr_,
-                                                               test_case_2r_, varcont_prod_bhp_, grid_5spot_);
+                                                               test_case_2r_,
+                                                               varcont_prod_bhp_,
+                                                               grid_5spot_,
+                                                               logger_
+        );
 
         while (!minimizer->IsFinished()) {
             auto next_case = minimizer->GetCaseForEvaluation();

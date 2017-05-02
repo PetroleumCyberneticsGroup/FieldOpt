@@ -18,6 +18,7 @@ void AdgprsDriverFileWriter::WriteDriverFile(QString output_dir)
 {
     auto welspecs = DriverParts::ECLDriverParts::Welspecs(model_->wells());
     auto compdat = DriverParts::ECLDriverParts::Compdat(model_->wells());
+    model_->SetCompdatString(compdat.GetPartString());
     auto wellstre = DriverParts::AdgprsDriverParts::Wellstre(model_->wells(), settings_->simulator()->fluid_model());
     auto wellcontrols = DriverParts::AdgprsDriverParts::WellControls(model_->wells(), settings_->model()->control_times());
 
@@ -34,11 +35,6 @@ void AdgprsDriverFileWriter::WriteDriverFile(QString output_dir)
     else Utilities::FileHandling::WriteStringToFile(wellstre.GetPartString()
                                                     +wellcontrols.GetPartString(), output_dir+"/include/controls.in");
 
-}
-
-QString AdgprsDriverFileWriter::GetCompdatString()
-{
-    return DriverParts::ECLDriverParts::Compdat(model_->wells()).GetPartString();
 }
 
 }}}

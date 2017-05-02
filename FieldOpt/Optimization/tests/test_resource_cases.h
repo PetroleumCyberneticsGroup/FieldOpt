@@ -18,6 +18,7 @@ class TestResourceCases : public TestResources::TestResourceVariablePropertyCont
       test_case_2_3r_->set_objective_function_value(100.0);
       test_case_3_4b3i3r_ = new Optimization::Case(binary_variables_4d_, integer_variables_3d_, real_variables_3d_);
       test_case_3_4b3i3r_->set_objective_function_value(-50.0);
+      test_case_3_4b3i3r_->SetWICTime(5);
       test_case_4_4b3i3r = new Optimization::Case(binary_variables_4d_, integer_variables_3d_, real_variables_3d_);
       test_case_4_4b3i3r->set_objective_function_value(-50.0);
       trivial_cases_ << test_case_1_3i_ << test_case_2_3r_ << test_case_3_4b3i3r_ << test_case_4_4b3i3r;

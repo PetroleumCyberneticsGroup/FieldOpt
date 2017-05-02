@@ -23,10 +23,13 @@
 namespace Optimization {
 namespace Optimizers {
 
-ExhaustiveSearch2DVert::ExhaustiveSearch2DVert(Settings::Optimizer *settings, Case *base_case,
+ExhaustiveSearch2DVert::ExhaustiveSearch2DVert(Settings::Optimizer *settings,
+                                               Case *base_case,
                                                Model::Properties::VariablePropertyContainer *variables,
-                                               Reservoir::Grid::Grid *grid)
-    : Optimizer(settings, base_case, variables, grid) {
+                                               Reservoir::Grid::Grid *grid,
+                                               Logger *logger
+)
+    : Optimizer(settings, base_case, variables, grid, logger) {
     grid_ = grid;
 
     if (variables->BinaryVariableSize() != 0 || variables->ContinousVariableSize() != 0
@@ -64,7 +67,7 @@ void ExhaustiveSearch2DVert::iterate() {
 
     for (int i = 1; i < i_max; ++i) {
         for (int j = 1; j < j_max; ++j) {
-            auto new_case = new Case(tentative_best_case_);
+            auto new_case = new Case(GetTentativeBestCase());
             new_case->set_integer_variable_value(i_varid, i);
             new_case->set_integer_variable_value(j_varid, j);
             case_handler_->AddNewCase(new_case);

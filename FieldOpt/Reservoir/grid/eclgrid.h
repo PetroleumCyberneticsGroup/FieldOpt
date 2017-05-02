@@ -38,6 +38,9 @@ using namespace std;
  */
 class ECLGrid : public Grid
 {
+private:
+	int faces_permutation_index_;
+
  public:
   ECLGrid(std::string file_path);
   virtual ~ECLGrid();
@@ -61,19 +64,19 @@ class ECLGrid : public Grid
   Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz,
                               vector<int> search_set);
 
-
  private:
   ERTWrapper::ECLGrid::ECLGridReader* ecl_grid_reader_ = 0;
 
-  //!< Check that global_index is less than nx*ny*nz
+  /// Check that global_index is less than nx*ny*nz
   bool IndexIsInsideGrid(int global_index);
 
-  //!< Check that (i,j,k) are >= 0 and less than n*.
+  /// Check that (i,j,k) are >= 0 and less than n*.
   bool IndexIsInsideGrid(int i, int j, int k);
 
-  //!< Check that (i,j,k) are >= 0 and less than n*.
+  /// Check that (i,j,k) are >= 0 and less than n*.
   bool IndexIsInsideGrid(IJKCoordinate *ijk);
 
+  bool SetGridCellFacesPermutations();
 };
 
 }

@@ -26,16 +26,19 @@ namespace Optimizers {
 RGARDD::RGARDD(Settings::Optimizer *settings,
                Optimization::Case *base_case,
                Model::Properties::VariablePropertyContainer *variables,
-               Reservoir::Grid::Grid *grid) : GeneticAlgorithm(settings,
-                                                               base_case,
-                                                               variables,
-                                                               grid) {
+               Reservoir::Grid::Grid *grid,
+               Logger *logger) : GeneticAlgorithm(settings,
+                                                  base_case,
+                                                  variables,
+                                                  grid,
+                                                  logger) {
     assert(population_size_ % 2 == 0); // Need an even number of chromosomes
     if (settings->parameters().discard_parameter < 0)
         discard_parameter_ = 1.0/population_size_;
     else discard_parameter_ = settings->parameters().discard_parameter;
     stagnation_limit_ = settings->parameters().stagnation_limit;
     mating_pool_ = population_;
+    logger_->AddEntry(new ConfigurationSummary(this));
 }
 void RGARDD::iterate() {
     population_ = sortPopulation(population_);
@@ -83,10 +86,10 @@ void RGARDD::handleEvaluatedCase(Case *c) {
     if (isBetter(c, population_[index].case_pointer)) {
         population_[index] = mating_pool_[index];
         if (isImprovement(c)) {
-            tentative_best_case_ = c;
+            updateTentativeBestCase(c);
             if (verbosity_level_ > 1) {
                 cout << "New best in generation " << iteration_ << ": "
-                     << tentative_best_case_->objective_function_value() << endl;
+                     << GetTentativeBestCase()->objective_function_value() << endl;
             }
         }
     }
@@ -120,6 +123,8 @@ vector<GeneticAlgorithm::Chromosome> RGARDD::crossover(vector<Chromosome> mating
         (population_[0].ofv() - population_[population_size_-1].ofv());
     o1.rea_vars = p1.rea_vars + s * dirs;
     o2.rea_vars = p2.rea_vars + s * dirs;
+    snap_to_bounds(o1);
+    snap_to_bounds(o2);
     return vector<Chromosome>{o1, o2};
 }
 vector<GeneticAlgorithm::Chromosome> RGARDD::mutate(vector<Chromosome> mating_pool) {
@@ -135,7 +140,19 @@ vector<GeneticAlgorithm::Chromosome> RGARDD::mutate(vector<Chromosome> mating_po
                                                n_vars_);
     o1.rea_vars = p1.rea_vars + s * dir.cwiseProduct(upper_bound_ - lower_bound_);
     o2.rea_vars = p2.rea_vars + s * dir.cwiseProduct(upper_bound_ - lower_bound_);
-    return vector<Chromosome>{o1, o2};
+
+    // Snap to bound  constraints
+    snap_to_bounds(o1);
+    snap_to_bounds(o2);
+    return vector<Chromosome> {o1, o2};
+}
+void RGARDD::snap_to_bounds(Chromosome &chrom) {
+    for (int i = 0; i < chrom.rea_vars.size(); ++i) {
+        if (chrom.rea_vars(i) < lower_bound_(i))
+            chrom.rea_vars(i) = lower_bound_(i);
+        else if (chrom.rea_vars(i) > upper_bound_(i))
+            chrom.rea_vars(i) = upper_bound_(i);
+    }
 }
 bool RGARDD::is_stagnant() {
     // Using the sums of the variable values in each chromosome
@@ -163,5 +180,34 @@ void RGARDD::repopulate() {
     mating_pool_ = population_;
 }
 
+Loggable::LogTarget RGARDD::ConfigurationSummary::GetLogTarget() {
+    return LOG_SUMMARY;
+}
+map<string, string> RGARDD::ConfigurationSummary::GetState() {
+    map<string, string> statemap;
+    statemap["Name"] = "Genetic Algorithm (RGARDD)";
+    statemap["Mode"] = opt_->mode_ == Settings::Optimizer::OptimizerMode::Maximize ? "Maximize" : "Minimize";
+    statemap["Max Generations"] = boost::lexical_cast<string>(opt_->max_generations_);
+    statemap["Max Evaluations"] = boost::lexical_cast<string>(opt_->max_evaluations_);
+    statemap["Population Size"] = boost::lexical_cast<string>(opt_->population_size_);
+    statemap["Discard Parameter"] = boost::lexical_cast<string>(opt_->discard_parameter_);
+    statemap["Crossover Probability"] = boost::lexical_cast<string>(opt_->p_crossover_);
+    statemap["Decay Rate"] = boost::lexical_cast<string>(opt_->decay_rate_);
+    statemap["Mutation Strength"] = boost::lexical_cast<string>(opt_->mutation_strength_);
+
+    string constraints_used = "";
+    for (auto cons : opt_->constraint_handler_->constraints()) {
+        constraints_used += cons->name() + " ";
+    }
+    statemap["Constraints"] = constraints_used;
+    return statemap;
+}
+QUuid RGARDD::ConfigurationSummary::GetId() {
+    return QUuid(); // Null UUID
+}
+map<string, vector<double>> RGARDD::ConfigurationSummary::GetValues() {
+    map<string, vector<double>> valmap;
+    return valmap;
+}
 }
 }

@@ -33,6 +33,7 @@ namespace {
         EXPECT_EQ(       test_case_3_4b3i3r_->binary_variables().size(),  cto.binary_variables().size());
         EXPECT_EQ(       test_case_3_4b3i3r_->integer_variables().size(), cto.integer_variables().size());
         EXPECT_EQ(       test_case_3_4b3i3r_->real_variables().size(),    cto.real_variables().size());
+        EXPECT_EQ(       test_case_3_4b3i3r_->GetWICTime(),               cto.wic_time_secs());
     }
 
     TEST_F(CaseTransferObjectTest, SerializationAndDeserializationAndGeneratedCase) {
@@ -58,6 +59,7 @@ namespace {
         EXPECT_EQ(       test_case_3_4b3i3r_->binary_variables().size(),  c->binary_variables().size());
         EXPECT_EQ(       test_case_3_4b3i3r_->integer_variables().size(), c->integer_variables().size());
         EXPECT_EQ(       test_case_3_4b3i3r_->real_variables().size(),    c->real_variables().size());
+        EXPECT_EQ(       test_case_3_4b3i3r_->GetWICTime(),               c->GetWICTime());
 
         for (auto id : test_case_3_4b3i3r_->integer_variables().keys())
             EXPECT_EQ(      test_case_3_4b3i3r_->integer_variables()[id], c->integer_variables()[id]);

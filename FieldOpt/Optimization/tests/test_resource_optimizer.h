@@ -132,7 +132,7 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
       {"Type", "APPS"},
       {"Mode", "Minimize"},
       {"Parameters", QJsonObject{
-          {"MaxGenerations",        600},
+          {"MaxGenerations",        700},
           {"PopulationSize",        60},
           {"CrossoverProbability",  0.1},
           {"DecayRate",             4.0},

@@ -26,6 +26,8 @@
 #include <QPair>
 #include <stdexcept>
 #include "Utilities/filehandling.hpp"
+#include "loggable.hpp"
+
 namespace po = boost::program_options;
 
 namespace Runner {
@@ -35,7 +37,7 @@ namespace Runner {
  *
  * Boost's program options library is used.
  */
-class RuntimeSettings
+class RuntimeSettings : public Loggable
 {
  public:
   RuntimeSettings(int argc, const char *argv[]);
@@ -59,6 +61,10 @@ class RuntimeSettings
   RunnerType runner_type() const { return runner_type_; }
   QPair<QVector<double>, QVector<double>> prod_coords() const { return prod_coords_; }
   QPair<QVector<double>, QVector<double>> inje_coords() const { return inje_coords_; }
+  LogTarget GetLogTarget() override;
+  map<string, string> GetState() override;
+  QUuid GetId() override;
+  map<string, vector<double>> GetValues() override;
 
  private:
   std::string str_out; //!< Temporary variable for verbosity function

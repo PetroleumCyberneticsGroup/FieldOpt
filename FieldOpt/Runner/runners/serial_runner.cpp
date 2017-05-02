@@ -16,6 +16,7 @@
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
+#include <Utilities/time.hpp>
 #include "serial_runner.h"
 
 namespace Runner {
@@ -23,6 +24,7 @@ namespace Runner {
 SerialRunner::SerialRunner(Runner::RuntimeSettings *runtime_settings)
     : AbstractRunner(runtime_settings)
 {
+    InitializeLogger();
     InitializeSettings();
     InitializeModel();
     InitializeSimulator();
@@ -31,61 +33,58 @@ SerialRunner::SerialRunner(Runner::RuntimeSettings *runtime_settings)
     InitializeBaseCase();
     InitializeOptimizer();
     InitializeBookkeeper();
-    InitializeLogger();
+    FinalizeInitialization(true);
 }
 
 void SerialRunner::Execute()
 {
-    logger_->LogSettings(settings_);
-    logger_->WritePropertyUuidNameMap(model_);
-    logger_->LogCase(base_case_);
-    logger_->LogCompdat(base_case_, simulator_->GetCompdatString());
-    logger_->LogProductionData(base_case_, simulator_->results());
     while (optimizer_->IsFinished() == Optimization::Optimizer::TerminationCondition::NOT_FINISHED) {
         auto new_case = optimizer_->GetCaseForEvaluation();
 
         if (bookkeeper_->IsEvaluated(new_case, true)) {
-            logger_->LogCase(new_case, "Case objective value set by bookkeeper.");
-            logger_->increment_bookkeeped_cases();
+            new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_BOOKKEEPED;
         }
         else {
             try {
                 bool simulation_success = true;
+                new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_CURRENT;
                 model_->ApplyCase(new_case);
-                logger_->LogSimulation(new_case); // Log sim start
-                logger_->LogCompdat(new_case, simulator_->GetCompdatString()); // Log compdat
-                if (logger_->shortest_simulation_time() == 0 || runtime_settings_->simulation_timeout() == 0) {
+                auto start = QDateTime::currentDateTime();
+                if (simulation_times_.size() == 0 || runtime_settings_->simulation_timeout() == 0) {
                     simulator_->Evaluate();
                 }
                 else {
                     simulation_success = simulator_->Evaluate(
-                        logger_->shortest_simulation_time() * runtime_settings_->simulation_timeout(),
+                        timeoutValue(),
                         runtime_settings_->threads_per_sim()
                     );
                 }
+                auto end = QDateTime::currentDateTime();
+                int sim_time = time_span_seconds(start, end);
                 if (simulation_success) {
-                    logger_->LogSimulation(new_case);
                     new_case->set_objective_function_value(objective_function_->value());
-                    logger_->LogProductionData(new_case, simulator_->results());
+                    new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
+                    new_case->SetSimTime(sim_time);
+                    simulation_times_.push_back((sim_time));
                 }
                 else {
-                    logger_->LogSimulation(new_case, false);
                     new_case->set_objective_function_value(sentinelValue());
+                    new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_FAILED;
+                    new_case->state.err_msg = Optimization::Case::CaseState::ErrorMessage::ERR_SIM;
+                    if (sim_time >= timeoutValue())
+                        new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_TIMEOUT;
                 }
-                logger_->increment_simulated_cases();
             } catch (std::runtime_error e) {
                 std::cout << e.what() << std::endl;
                 std::cout << "Invalid well block coordinate encountered. Setting obj. val. to sentinel value." << std::endl;
-                logger_->increment_invalid_cases();
                 new_case->set_objective_function_value(sentinelValue());
+                new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_FAILED;
+                new_case->state.err_msg = Optimization::Case::CaseState::ErrorMessage::ERR_WIC;
             }
-            logger_->LogCase(new_case);
         }
         optimizer_->SubmitEvaluatedCase(new_case);
-        logger_->LogOptimizerStatus(optimizer_);
-        logger_->LogRunnerStats();
     }
-    PrintCompletionMessage();
+    FinalizeRun(true);
 }
 
 }

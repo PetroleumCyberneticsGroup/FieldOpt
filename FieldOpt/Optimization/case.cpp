@@ -17,6 +17,9 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+#include <boost/serialization/map.hpp>
+#include <QtCore/QUuid>
+#include <Utilities/time.hpp>
 #include "case.h"
 
 namespace Optimization {
@@ -27,6 +30,7 @@ namespace Optimization {
         integer_variables_ = QHash<QUuid, int>();
         real_variables_ = QHash<QUuid, double>();
         objective_function_value_ = std::numeric_limits<double>::max();
+        sim_time_sec_ = -1;
     }
 
     Case::Case(const QHash<QUuid, bool> &binary_variables, const QHash<QUuid, int> &integer_variables, const QHash<QUuid, double> &real_variables)
@@ -39,6 +43,7 @@ namespace Optimization {
 
         real_id_index_map_ = real_variables_.keys();
         integer_id_index_map_ = integer_variables_.keys();
+        sim_time_sec_ = -1;
     }
 
     Case::Case(const Case *c)
@@ -51,6 +56,7 @@ namespace Optimization {
 
         real_id_index_map_ = c->real_id_index_map_;
         integer_id_index_map_ = c->integer_variables_.keys();
+        sim_time_sec_ = -1;
     }
 
     bool Case::Equals(const Case *other, double tolerance) const
@@ -134,23 +140,6 @@ namespace Optimization {
         return new_cases;
     }
 
-    QString Case::StringRepresentation() {
-        QString str;
-        str = "--------------------------------------------------\n";
-        str = str + QString("Case ID: %1\n").arg(id_.toString());
-        str = str + "Binary variable values: ";
-        for (bool val : binary_variables_.values())
-            str = str + QString::number(val) + ", ";
-        str = str + "\nInteger variable values: ";
-        for (int val : integer_variables_.values())
-            str = str + QString::number(val) + ", ";
-        str = str + "\nReal variable values: ";
-        for (double val : real_variables().values())
-            str = str + QString::number(val) + ", ";
-        str = str + "\n--------------------------------------------------\n";
-        return str;
-    }
-
     Eigen::VectorXd Case::GetRealVarVector() {
         Eigen::VectorXd vec(real_id_index_map_.length());
         for (int i = 0; i < real_id_index_map_.length(); ++i) {
@@ -184,4 +173,44 @@ namespace Optimization {
         direction_index_ = direction_index;
         step_length_ = step_length;
     }
+Loggable::LogTarget Case::GetLogTarget() {
+    return Loggable::LogTarget::LOG_CASE;
+}
+map <string, string> Case::GetState() {
+    map<string, string> statemap;
+    switch (state.eval) {
+        case CaseState::EvalStatus::E_FAILED: statemap["EvalSt"] = "FAIL"; break;
+        case CaseState::EvalStatus::E_TIMEOUT: statemap["EvalSt"] = "TMOT"; break;
+        case CaseState::EvalStatus::E_PENDING: statemap["EvalSt"] = "PEND"; break;
+        case CaseState::EvalStatus::E_CURRENT: statemap["EvalSt"] = "CRNT"; break;
+        case CaseState::EvalStatus::E_DONE: statemap["EvalSt"] = "OKAY"; break;
+        case CaseState::EvalStatus::E_BOOKKEEPED: statemap["EvalSt"] = "BKPD"; break;
+    }
+    switch (state.cons) {
+        case CaseState::ConsStatus::C_PROJ_FAILED: statemap["ConsSt"] = "PNFL"; break;
+        case CaseState::ConsStatus::C_INFEASIBLE: statemap["ConsSt"] = "INFS"; break;
+        case CaseState::ConsStatus::C_PENDING: statemap["ConsSt"] = "PEND"; break;
+        case CaseState::ConsStatus::C_FEASIBLE: statemap["ConsSt"] = "OKAY"; break;
+        case CaseState::ConsStatus::C_PROJECTED: statemap["ConsSt"] = "PROJ"; break;
+        case CaseState::ConsStatus::C_PENALIZED: statemap["ConsSt"] = "PNZD"; break;
+    }
+    switch (state.err_msg) {
+        case CaseState::ErrorMessage::ERR_SIM: statemap["ErrMsg"] = "SIML"; break;
+        case CaseState::ErrorMessage::ERR_WIC: statemap["ErrMsg"] = "WLIC"; break;
+        case CaseState::ErrorMessage::ERR_CONS: statemap["ErrMsg"] = "CONS"; break;
+        case CaseState::ErrorMessage::ERR_UNKNOWN: statemap["ErrMsg"] = "UNWN"; break;
+        case CaseState::ErrorMessage::ERR_OK: statemap["ErrMsg"] = "OKAY"; break;
+    }
+    return statemap;
+}
+QUuid Case::GetId() {
+    return id();
+}
+map <string, vector<double>> Case::GetValues() {
+    map<string, vector<double>> valmap;
+    valmap["OFnVal"] = vector<double>{objective_function_value_};
+    valmap["SimDur"] = vector<double>{sim_time_sec_};
+    valmap["WicDur"] = vector<double>{wic_time_sec_};
+    return valmap;
+}
 }
