@@ -293,5 +293,8 @@ Cell ECLGrid::GetCellEnvelopingPoint(Eigen::Vector3d xyz,
                                      vector<int> search_set) {
     return GetCellEnvelopingPoint(xyz.x(), xyz.y(), xyz.z(), search_set);
 }
+Cell ECLGrid::GetSmallestCell() {
+    return GetCell(ecl_grid_reader_->FindSmallestCell().global_index);
+}
 }
 }
