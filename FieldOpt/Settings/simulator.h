@@ -48,7 +48,7 @@ class Simulator
   QString custom_simulator_execution_script_path() const { return custom_exec_script_path_; } //!< Get the path to the simulator execution script.
   QString output_directory() const { return output_directory_; } //!< Get the output directory path.
   SimulatorFluidModel fluid_model() const { return fluid_model_; } //!< Get the fluid model
-  int max_minutes() { return max_minutes_; } //!< Get the maximum number of minutes simulations are allowed to run if no timeout value can be calculated.
+  int max_minutes() { return max_minutes_; } //!< Get the maximum number of minutes simulations are allowed to run if no timeout value can be calculated. Returns -1 if field is not set.
 
  private:
   Simulator(QJsonObject json_simulator);
