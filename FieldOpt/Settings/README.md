@@ -211,6 +211,7 @@ In the simulator section we define settings and parameters needed to launch the 
 ```
 "Simulator": {
 	"Type": string,
+	"MaxMinutes": int
 	"Commands": string array,
 	"ExecutionScript": string,
 	"DriverPath": string,
@@ -221,6 +222,7 @@ In the simulator section we define settings and parameters needed to launch the 
 Note that the simulator driver path may be omitted from the driver file. If it is, the path must be passed as a command line parameter. If a path is specified both places, the one passed in the command line will be used.
 
 * `Type` denotes the simulator to be used. Currently, the only supported simulatorsare `ECLIPSE` and `ADGPRS`.
+* `MaxMinutes` is the maximum number of minutes a simulation is allowed to run if a "normal" timeout value cannot be calculated.
 * `Commands` is an array of (BASH) commands that should be executed in order to start the simulator.
 * `ExecutionScript` is the name of a script found in the `FieldOpt/execution_scripts` folder that should be used to execute simulations. The name should be given without the suffix (e.g. `"ExecutionScript": "csh_eclrun"`). If defined, this will override any commands given.
 * `DriverPath` is the path to a complete driver file for the model (e.g. the one run to generate the grid files). Fluid functions, rock properties etc. is taken from this file. This may be omitted.
