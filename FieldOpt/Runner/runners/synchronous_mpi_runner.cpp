@@ -124,9 +124,13 @@ void SynchronousMPIRunner::Execute() {
                 printMessage("Applying case to model.", 2);
                 model_->ApplyCase(worker_->GetCurrentCase());
                 auto start = QDateTime::currentDateTime();
-                if (simulation_times_.size() == 0 || runtime_settings_->simulation_timeout() == 0) {
+                if (runtime_settings_->simulation_timeout() == 0) {
                     printMessage("Starting model evaluation.", 2);
                     simulator_->Evaluate();
+                }
+                else if (simulation_times_.size() == 0 && settings_->simulator()->max_minutes() > 0) {
+                    simulation_success = simulator_->Evaluate(settings_->simulator()->max_minutes() * 60,
+                                                              runtime_settings_->threads_per_sim());
                 }
                 else {
                     printMessage("Starting model evaluation with timeout.", 2);
