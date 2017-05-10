@@ -23,6 +23,7 @@
 #include <QUuid>
 #include <Eigen/Core>
 #include <QtCore/QDateTime>
+#include <Model/properties/variable_property_container.h>
 #include "Runner/loggable.hpp"
 #include "optimization_exceptions.h"
 
@@ -75,10 +76,10 @@ class Case : public Loggable
       ERR_OK=0
     };
     CaseState() {
-        eval = E_PENDING;
-        cons = C_PENDING;
-        queue = Q_QUEUED;
-        err_msg = ERR_OK;
+      eval = E_PENDING;
+      cons = C_PENDING;
+      queue = Q_QUEUED;
+      err_msg = ERR_OK;
     }
     EvalStatus eval;
     ConsStatus cons;
@@ -97,7 +98,14 @@ class Case : public Loggable
   bool Equals(const Case *other, double tolerance=0.0) const;
 
   QUuid id() const { return id_; }
-  std::string id_stdstr() { return id_.toString().toStdString(); } //!< Get an std string representation of the case uuid.
+  string id_stdstr() { return id_.toString().toStdString(); } //!< Get an std string representation of the case uuid.
+
+  /*!
+   * @brief Get a string representation of this case, suitable for console printing.
+   * @param varcont Pointer to the variable container. This is needed to get variable names.
+   * @return An std string describing the case.
+   */
+  string StringRepresentation(Model::Properties::VariablePropertyContainer *varcont);
 
   QHash<QUuid, bool> binary_variables() const { return binary_variables_; }
   QHash<QUuid, int> integer_variables() const { return integer_variables_; }
@@ -236,7 +244,6 @@ class Case : public Loggable
   Case* parent_; //!< The parent of this trial point. Needed by the APPS algorithm.
   int direction_index_; //!< The direction index used to generate this trial point.
   double step_length_; //!< The step length used to generate this trial point.
-
 };
 
 }
