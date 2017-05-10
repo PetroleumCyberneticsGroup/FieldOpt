@@ -150,7 +150,9 @@ Cell ECLGrid::GetCell(int global_index) {
         return Cell(global_index, ijk_index,
                     ertCell.volume, ertCell.porosity,
                     ertCell.permx, ertCell.permy, ertCell.permz,
-                    center, corners, faces_permutation_index_);
+                    center, corners, faces_permutation_index_,
+                    ertCell.active
+        );
     } else {
         throw runtime_error("ECLGrid::GetCell(int global_index): Grid "
                                 "source must be defined before getting a cell.");

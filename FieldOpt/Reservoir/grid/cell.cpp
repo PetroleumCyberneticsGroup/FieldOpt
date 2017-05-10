@@ -32,120 +32,122 @@ Cell::Cell(int global_index, IJKCoordinate ijk_index,
            double permx, double permy, double permz,
            Eigen::Vector3d center,
            vector<Eigen::Vector3d> corners,
-           int faces_permutation_index)
+           int faces_permutation_index,
+           bool active)
 {
-  global_index_ = global_index;
-  ijk_index_ = ijk_index;
-  volume_ = volume;
-  porosity_ = poro;
-  permx_ = permx;
-  permy_ = permy;
-  permz_ = permz;
-  center_ = center;
-  corners_ = corners;
-    
-  initializeFaces(faces_permutation_index);
+    global_index_ = global_index;
+    ijk_index_ = ijk_index;
+    volume_ = volume;
+    porosity_ = poro;
+    permx_ = permx;
+    permy_ = permy;
+    permz_ = permz;
+    center_ = center;
+    corners_ = corners;
+    is_active_ = active;
+
+    initializeFaces(faces_permutation_index);
 }
 
 bool Cell::Equals(const Cell *other) const
 {
-  return this->global_index() == other->global_index();
+    return this->global_index() == other->global_index();
 }
 
 bool Cell::Equals(const Cell &other) const
 {
-  return this->global_index() == other.global_index();
+    return this->global_index() == other.global_index();
 }
 
-bool Cell::EnvelopsPoint(Eigen::Vector3d point) 
+bool Cell::EnvelopsPoint(Eigen::Vector3d point)
 {
-  bool point_inside = true;
-  for (Face face : faces_) 
-  {
-    double dot_prod = (point - face.corners[0]).dot(face.normal_vector);
-    if ( dot_prod < 0) 
+    bool point_inside = true;
+    for (Face face : faces_)
     {
-      point_inside = false;
-      break;
+        double dot_prod = (point - face.corners[0]).dot(face.normal_vector);
+        if ( dot_prod < 0)
+        {
+            point_inside = false;
+            break;
+        }
     }
-  }
 
-  return point_inside;
+    return point_inside;
 }
 
 vector<array<array<int,4>, 6>> Cell::MakeFacesPerturbation()
 {
-	vector<array<array<int,4>, 6>> v;
-	v.push_back(
-			array<array<int,4>,6>{{
-		{0, 2, 1, 3},
-		{4, 5, 6, 7},
-		{0, 4, 2, 6},
-		{1, 3, 5, 7},
-		{0, 1, 4, 5},
-		{2, 6, 3, 7}}
-	});
+    vector<array<array<int,4>, 6>> v;
+    v.push_back(
+        array<array<int,4>,6>{{
+                                  {0, 2, 1, 3},
+                                  {4, 5, 6, 7},
+                                  {0, 4, 2, 6},
+                                  {1, 3, 5, 7},
+                                  {0, 1, 4, 5},
+                                  {2, 6, 3, 7}}
+        });
 
-	v.push_back(
-			array<array<int,4>,6>{{
-		{2, 0, 3, 1},
-		{6, 7, 4, 5},
-		{2, 6, 0, 4},
-		{3, 1, 7, 5},
-		{2, 3, 6, 7},  // actual diff from indexes above
-		{0, 4, 1, 5}}  // actual diff from indexes above
-	});
-		
+    v.push_back(
+        array<array<int,4>,6>{{
+                                  {2, 0, 3, 1},
+                                  {6, 7, 4, 5},
+                                  {2, 6, 0, 4},
+                                  {3, 1, 7, 5},
+                                  {2, 3, 6, 7},  // actual diff from indexes above
+                                  {0, 4, 1, 5}}  // actual diff from indexes above
+        });
+
     return v;
 }
 
-vector<array<array<int,4>, 6>> Cell::faces_indices_permutation = MakeFacesPerturbation(); 
+vector<array<array<int,4>, 6>> Cell::faces_indices_permutation = MakeFacesPerturbation();
 
 void Cell::initializeFaces(int faces_permutation_index)
 {
-  // The code assumes the corners of the cell are given in the following order
-  //
-  //     Above:
-  //     2---3
-  //     |   |
-  //     0---1
-  //
-  //     Below:
-  //     6---7
-  //     |   |
-  //     4---5
-  //
-  // Above and below here refer to the relative position of the two cell faces
-  // with normal vectors less than 90 degrees relative to the axis from the center
-  // of the Earth. Here "Above" refers to the face that is farther away from the
-  // Earth center, while "Below" refers to the face closer to the center of the
-  // Earth.
-  //
-  // \todo double-check above assumption regarding which cell faces
-  // that have which index ordering; either way, the definitions of
-  // faces_definition_earth_pointing_z_ and
-  // faces_definition_sky_pointing_z_ are correct relative to each
-  // other, so this provides the necessary switching between pointing
-  // down or up z-axis
-  //
-  // Reservoir grids can be either left- or right-handed. If left-handed, the
-  // direction of increasing z will point down towards the center of the Earth,
-  // while if right-handed, the direction of increasing z will be away from the
-  // center of the Earth.
+    // The code assumes the corners of the cell are given in the following order
+    //
+    //     Above:
+    //     2---3
+    //     |   |
+    //     0---1
+    //
+    //     Below:
+    //     6---7
+    //     |   |
+    //     4---5
+    //
+    // Above and below here refer to the relative position of the two cell faces
+    // with normal vectors less than 90 degrees relative to the axis from the center
+    // of the Earth. Here "Above" refers to the face that is farther away from the
+    // Earth center, while "Below" refers to the face closer to the center of the
+    // Earth.
+    //
+    // \todo double-check above assumption regarding which cell faces
+    // that have which index ordering; either way, the definitions of
+    // faces_definition_earth_pointing_z_ and
+    // faces_definition_sky_pointing_z_ are correct relative to each
+    // other, so this provides the necessary switching between pointing
+    // down or up z-axis
+    //
+    // Reservoir grids can be either left- or right-handed. If left-handed, the
+    // direction of increasing z will point down towards the center of the Earth,
+    // while if right-handed, the direction of increasing z will be away from the
+    // center of the Earth.
 
-  // Here we determine whether the cell is left- or right-handed, which will
-  // later determine whether the vertex indices sets, (0-1-2-3) and (4-5-6-7),
-  // are assigned as "Above" or "Below" cell faces.
+    // Here we determine whether the cell is left- or right-handed, which will
+    // later determine whether the vertex indices sets, (0-1-2-3) and (4-5-6-7),
+    // are assigned as "Above" or "Below" cell faces.
 
-  // \todo To avoid having to perfom this check for every grid cell:
-  // move this check to grid constructor, e.g., there check only one
-  // cell to determine whether the entire grid is left or right-handed.
-  // Any cell object can later make use of this information by collecting
-  // it from the grid object
+    // \todo To avoid having to perfom this check for every grid cell:
+    // move this check to grid constructor, e.g., there check only one
+    // cell to determine whether the entire grid is left or right-handed.
+    // Any cell object can later make use of this information by collecting
+    // it from the grid object
 
-  // Make sure there is a good definition of inside and outside of the cell.
+    // Make sure there is a good definition of inside and outside of the cell.
 
-	//  std::array<std::array<int,4>, 6> face_indices_points;
+    //  std::array<std::array<int,4>, 6> face_indices_points;
 //
 //  if (corners_[0].z() < corners_[4].z()) {
 //    // z-axis grows towards Earth's center (left-handed)
@@ -159,18 +161,18 @@ void Cell::initializeFaces(int faces_permutation_index)
 //    std::cout << "^" << std::endl;
 //  }
 
-  for (int ii = 0; ii < 6; ii++) {
-    Face face;
-    face.corners.push_back(corners_[faces_indices_permutation[faces_permutation_index][ii][0]]);
-    face.corners.push_back(corners_[faces_indices_permutation[faces_permutation_index][ii][1]]);
-    face.corners.push_back(corners_[faces_indices_permutation[faces_permutation_index][ii][2]]);
-    face.corners.push_back(corners_[faces_indices_permutation[faces_permutation_index][ii][3]]);
+    for (int ii = 0; ii < 6; ii++) {
+        Face face;
+        face.corners.push_back(corners_[faces_indices_permutation[faces_permutation_index][ii][0]]);
+        face.corners.push_back(corners_[faces_indices_permutation[faces_permutation_index][ii][1]]);
+        face.corners.push_back(corners_[faces_indices_permutation[faces_permutation_index][ii][2]]);
+        face.corners.push_back(corners_[faces_indices_permutation[faces_permutation_index][ii][3]]);
 
-    face.normal_vector = (
-        face.corners[2] - face.corners[0]).cross(
-        face.corners[1] - face.corners[0]).normalized();
-    faces_.push_back(face);
-  }
+        face.normal_vector = (
+            face.corners[2] - face.corners[0]).cross(
+            face.corners[1] - face.corners[0]).normalized();
+        faces_.push_back(face);
+    }
 }
 }
 }
