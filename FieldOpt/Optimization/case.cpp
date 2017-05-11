@@ -20,6 +20,7 @@
 #include <boost/serialization/map.hpp>
 #include <QtCore/QUuid>
 #include <Utilities/time.hpp>
+#include <boost/lexical_cast.hpp>
 #include "case.h"
 
 namespace Optimization {
@@ -223,7 +224,7 @@ string Case::StringRepresentation(Model::Properties::VariablePropertyContainer *
         for (auto key : real_variables_.keys()) {
             string varname = varcont->GetContinousVariables()->value(key)->name().toStdString();
             str << "| > " << varname << ": " << std::setw (51 - varname.size())
-                << to_string(real_variables_[key]) << " |" << endl;
+                << boost::lexical_cast<string>(real_variables_[key]) << " |" << endl;
         }
     }
     if (integer_variables_.size() > 0) {
@@ -231,7 +232,7 @@ string Case::StringRepresentation(Model::Properties::VariablePropertyContainer *
         for (auto key : integer_variables_.keys()) {
             string varname = varcont->GetDiscreteVariables()->value(key)->name().toStdString();
             str << "| > " << varname << ": " << std::setw (51 - varname.size())
-                << to_string(integer_variables_[key]) << " |" << endl;
+                << boost::lexical_cast<string>(integer_variables_[key]) << " |" << endl;
         }
     }
     if (binary_variables_.size() > 0) {
@@ -239,7 +240,7 @@ string Case::StringRepresentation(Model::Properties::VariablePropertyContainer *
         for (auto key : binary_variables_.keys()) {
             string varname = varcont->GetBinaryVariables()->value(key)->name().toStdString();
             str << "| > " << varname << ": " << std::setw (51 - varname.size())
-                << to_string(binary_variables_[key]) << " |" << endl;
+                << boost::lexical_cast<string>(binary_variables_[key]) << " |" << endl;
         }
     }
     str << "|=========================================================|" << endl;
