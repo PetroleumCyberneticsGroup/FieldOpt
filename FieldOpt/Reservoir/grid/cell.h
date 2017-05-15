@@ -237,6 +237,8 @@ class Cell
    */
   vector<Face> faces() const { return faces_; }
 
+  string to_string() const;
+
 
  private:
   int global_index_;

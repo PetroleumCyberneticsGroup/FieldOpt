@@ -103,6 +103,12 @@ vector<array<array<int,4>, 6>> Cell::MakeFacesPerturbation()
 
 vector<array<array<int,4>, 6>> Cell::faces_indices_permutation = MakeFacesPerturbation();
 
+string Cell::to_string() const {
+    std::stringstream str;
+    str << "Cell " << global_index_ << ijk_index().to_string();
+    return str.str();
+}
+
 void Cell::initializeFaces(int faces_permutation_index)
 {
     // The code assumes the corners of the cell are given in the following order
