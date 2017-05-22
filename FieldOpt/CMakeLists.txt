@@ -118,7 +118,6 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 # Set this directory as the root dir
 include_directories(${CMAKE_SOURCE_DIR}  ${ERT_INCLUDE_DIR})
 
-
 # Testing ==============================================================
 if (BUILD_TESTING)
     include(CTest)
