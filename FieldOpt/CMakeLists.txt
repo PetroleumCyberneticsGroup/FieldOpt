@@ -45,6 +45,7 @@ endif()
 option(BUILD_WIC_ONLY "Build well index calculator exe" OFF)
 # Build OS-dependent well index calculator (shared) library:
 option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    OFF)
+option(BUILD_BENCHMARK "Build exec for wic RMS benchmark" ON)
 
 # Qt libraries =========================================================
 if (NOT BUILD_WIC_ONLY)

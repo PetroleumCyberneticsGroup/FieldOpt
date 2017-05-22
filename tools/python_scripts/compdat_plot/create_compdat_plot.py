@@ -37,7 +37,8 @@ args = parser.parse_args()
 lines = args.infile.readlines()
 lines = [line.strip() for line in lines]  # Strip leading/trailing whitespace
 lines = [line.replace('\t', '') for line in lines]  # Remove tabs
-lines = lines[1:]  # Remove header line
+lines = lines[2:]  # Remove header line
+lines = lines[:-1]  # Remove tail line
 
 # Create empty grid
 grid = np.zeros([args.dimi, args.dimj])
@@ -49,10 +50,11 @@ grid_ylabels = [y + 1 for y in y_vals]
 # Extract well block data and fill the WI values into the grid
 for line in lines:
     elems = line.split(',')
+    # print(elems)
     i = int(elems[0]) - 1
     j = int(elems[1]) - 1
     k = int(elems[2]) - 1
-    wi = float(elems[3])
+    wi = float(elems[4])
     grid[j, i] = wi  # Flip the indices (because imgplot does it)
 
 

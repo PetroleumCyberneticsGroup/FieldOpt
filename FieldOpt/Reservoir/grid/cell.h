@@ -45,7 +45,8 @@ class Cell
        double permx, double permy, double permz,
        Eigen::Vector3d center,
        vector<Eigen::Vector3d> corners,
-       int faces_permutation_index     
+       int faces_permutation_index,
+       bool active
   );
 
   /*!
@@ -211,7 +212,7 @@ class Cell
      */
     bool point_on_same_side(const Eigen::Vector3d &point,
                             const double slack) {
-        return (point - corners[0]).dot(normal_vector) >= 0.0 - slack;
+      return (point - corners[0]).dot(normal_vector) >= 0.0 - slack;
     }
 
     /*!
@@ -223,10 +224,10 @@ class Cell
      */
     Eigen::Vector3d intersection_with_line(const Eigen::Vector3d &p0,
                                            const Eigen::Vector3d &p1) {
-        Eigen::Vector3d line_vector = (p1 - p0).normalized();
-        auto w = p0 - corners[0];
-        auto s = normal_vector.dot(-w) / normal_vector.dot(line_vector);
-        return p0 + s*line_vector;
+      Eigen::Vector3d line_vector = (p1 - p0).normalized();
+      auto w = p0 - corners[0];
+      auto s = normal_vector.dot(-w) / normal_vector.dot(line_vector);
+      return p0 + s*line_vector;
     }
   };
 
@@ -235,6 +236,8 @@ class Cell
    *
    */
   vector<Face> faces() const { return faces_; }
+
+  string to_string() const;
 
 
  private:
@@ -259,7 +262,7 @@ class Cell
    * \todo Clarify this comment.
    *
    * \return double list of corner numbers for each face
-   */  
+   */
   static vector<array<array<int,4>, 6>> faces_indices_permutation;
   static vector<array<array<int,4>, 6>> MakeFacesPerturbation();
 

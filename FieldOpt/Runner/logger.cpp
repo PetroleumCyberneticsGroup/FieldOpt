@@ -39,9 +39,10 @@ Logger::Logger(Runner::RuntimeSettings *rts,
     opt_log_path_ = output_dir_ + "/log_optimization.csv";
     cas_log_path_ = output_dir_ + "/log_cases.csv";
     ext_log_path_ = output_dir_ + "/log_extended.json";
+    run_state_path_ = output_dir_ + "/state_runner.txt";
     summary_prerun_path_ = output_dir_ + output_subdir + "/summary_prerun.md";
     summary_postrun_path_ = output_dir_ + output_subdir + "/summary_postrun.md";
-    QStringList log_paths = (QStringList() << cas_log_path_ << opt_log_path_ << ext_log_path_
+    QStringList log_paths = (QStringList() << cas_log_path_ << opt_log_path_ << ext_log_path_ << run_state_path_
                                            << summary_prerun_path_ << summary_postrun_path_);
 
     // Delete existing logs if --force flag is on
@@ -77,9 +78,19 @@ void Logger::AddEntry(Loggable *obj) {
         case Loggable::LogTarget::LOG_OPTIMIZER: logOptimizer(obj); break;
         case Loggable::LogTarget::LOG_EXTENDED: logExtended(obj); break;
         case Loggable::LogTarget::LOG_SUMMARY: logSummary(obj); break;
+        case Loggable::LogTarget::STATE_RUNNER: logRunnerState(obj); break;
     }
 }
-
+void Logger::logRunnerState(Loggable *obj) {
+    if (!write_logs_ || !is_worker_) // Only workers should do this
+        return;
+    stringstream st;
+    st << obj->GetState()["case-desc"] << "\n\n";
+    st << "Model update done?  " << obj->GetState()["mod-update-done"] << "\n";
+    st << "Simulation done?    " << obj->GetState()["sim-done"] << "\n\n";
+    st << "Last update: " << obj->GetState()["last-update"];
+    Utilities::FileHandling::WriteStringToFile(QString::fromStdString(st.str()), run_state_path_);
+}
 void Logger::logCase(Loggable *obj) {
     if (!write_logs_ || is_worker_)
         return;

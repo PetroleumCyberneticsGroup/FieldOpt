@@ -164,6 +164,12 @@ class ECLGridReader
   int GlobalIndexOfCellEnvelopingPoint(double x, double y, double z, int initial_guess=0);
 
   bool GlobalIndexIsInsideGrid(int global_index);
+
+  /*!
+   * @brief Find the cell in the reservoir with the smallest volume.
+   * @return The smallest cell in the reservoir.
+   */
+  Cell FindSmallestCell();
 };
 }
 }

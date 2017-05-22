@@ -17,28 +17,36 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+#include <string>
+#include <sstream>
 #include "ijkcoordinate.h"
 
 namespace Reservoir {
-    namespace Grid {
+namespace Grid {
 
-        IJKCoordinate::IJKCoordinate(int i, int j, int k)
-                : i_(i), j_(j), k_(k)
-        {
-        }
+IJKCoordinate::IJKCoordinate(int i, int j, int k)
+    : i_(i), j_(j), k_(k)
+{
+}
 
-        bool IJKCoordinate::Equals(const IJKCoordinate *other) const
-        {
-            return this->i() == other->i() && this->j() == other->j() && this->k() == other->k();
-        }
+bool IJKCoordinate::Equals(const IJKCoordinate *other) const
+{
+    return this->i() == other->i() && this->j() == other->j() && this->k() == other->k();
+}
 
-        IJKCoordinate *IJKCoordinate::Add(const IJKCoordinate *other) const
-        {
-            return new IJKCoordinate(
-                    this->i() + other->i(),
-                    this->j() + other->j(),
-                    this->k() + other->k());
-        }
+IJKCoordinate *IJKCoordinate::Add(const IJKCoordinate *other) const
+{
+    return new IJKCoordinate(
+        this->i() + other->i(),
+        this->j() + other->j(),
+        this->k() + other->k());
+}
 
-    }
+std::string IJKCoordinate::to_string() const {
+    std::stringstream str;
+    str << "(" << i_ << ", " << j_ << ", " << k_ << ")";
+    return str.str();
+}
+
+}
 }

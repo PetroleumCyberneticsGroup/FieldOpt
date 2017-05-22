@@ -48,6 +48,12 @@ using namespace std;
  * LOG_EXTENDED - The extended log (log_extended.json). JSON log containing extended
  *  information, such as variable values, simulated production results and calculated
  *  compdats.
+ *
+ * In addition to these, two markdown-formatted summary logs (summary_prerun.md and
+ * summary_postrun) will be written at the start and at the end of the run.
+ *
+ * Finally, files indicating the current state of each worker will be written when
+ * running in parallel (state_runner.txt).
  */
 class Logger
 {
@@ -72,6 +78,7 @@ class Logger
   QString opt_log_path_; //!< Path to the optimization log file.
   QString cas_log_path_; //!< Path to the case log file.
   QString ext_log_path_; //!< Path to the extended log file.
+  QString run_state_path_; //!< Path to the runner state file.
   QString summary_prerun_path_; //!< Path to the pre-run summary file.
   QString summary_postrun_path_; //!< Path to the pre-run summary file.
 
@@ -116,6 +123,7 @@ class Logger
   void logOptimizer(Loggable *obj);
   void logExtended(Loggable *obj);
   void logSummary(Loggable *obj);
+  void logRunnerState(Loggable *obj);
 
   /*!
    * @brief Append a well description to the summary.

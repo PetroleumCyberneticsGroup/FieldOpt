@@ -35,15 +35,21 @@ namespace MPI {
  *   - Probably some more logging and console debug messages
  *   - Logging of runner stats
  */
-class SynchronousMPIRunner : public MPIRunner {
+class SynchronousMPIRunner : public MPIRunner, public Loggable {
  public:
+  LogTarget GetLogTarget() override;
   SynchronousMPIRunner(RuntimeSettings *rts);
+  map<string, string> GetState() override;
+  QUuid GetId() override;
 
   virtual void Execute();
 
  private:
   MPI::Overseer *overseer_;
   MPI::Worker *worker_;
+
+  bool model_update_done_;
+  bool simulation_done_;
 
   /*!
    * @brief Distribute cases to be evaluated to all but one worker.
