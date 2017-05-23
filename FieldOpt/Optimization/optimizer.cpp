@@ -19,6 +19,7 @@
 #include <Utilities/time.hpp>
 #include "optimizer.h"
 #include <time.h>
+#include <cmath>
 
 namespace Optimization {
 
@@ -192,6 +193,26 @@ map<string, vector<double>> Optimizer::Summary::GetValues() {
 void Optimizer::updateTentativeBestCase(Case *c) {
     tentative_best_case_ = c;
     tentative_best_case_iteration_ = iteration_;
+}
+
+void Optimizer::initializeNormalizers() {
+    initializeOfvNormalizer();
+    /// \todo Initialize constraint normalizers
+}
+
+void Optimizer::initializeOfvNormalizer() {
+    if (case_handler_->EvaluatedCases().size() == 0 || normalizer_ofv_.is_ready())
+        throw runtime_error("Unable to initialize normalizer with no evaluated cases available.");
+
+    vector<double> abs_ofvs;
+    for (auto c : case_handler_->EvaluatedCases()) {
+        abs_ofvs.push_back(abs(c->objective_function_value()));
+    }
+    long double max_ofv = *max_element(abs_ofvs.begin(), abs_ofvs.end());
+
+    normalizer_ofv_.set_max(1.0L);
+    normalizer_ofv_.set_midpoint(max_ofv);
+    normalizer_ofv_.set_steepness(1.0L / max_ofv);
 }
 }
 
