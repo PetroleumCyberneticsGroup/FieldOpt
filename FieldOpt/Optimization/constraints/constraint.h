@@ -118,6 +118,13 @@ class Constraint
    */
   virtual double Penalty(Case *c);
 
+  /*!
+   * @brief Get the normalized penalty value for the case.
+   * @param c Case to get the penalty for.
+   * @return Normalized penalty.
+   */
+  virtual long double PenaltyNormalized(Case *c);
+
  protected:
   bool logging_enabled_;
   int verbosity_level_;
