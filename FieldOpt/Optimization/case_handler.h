@@ -112,6 +112,11 @@ class CaseHandler
   QList<Case *> EvaluatedCases() const;
 
   /*!
+   * @brief Get _all_ cases.
+   */
+  QList<Case *> AllCases() const;
+
+  /*!
    * @brief Dequeue a case that will not be evaluated.
    * @param id UUID of case to be dequeued.
    */
