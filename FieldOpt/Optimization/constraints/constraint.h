@@ -19,6 +19,7 @@
 #ifndef CONSTRAINT_H
 #define CONSTRAINT_H
 
+#include "Optimization/normalizer.h"
 #include "Optimization/case.h"
 #include "Settings/optimizer.h"
 #include "Model/properties/variable_property_container.h"
@@ -95,9 +96,32 @@ class Constraint
    */
   virtual string name() { return "NONAME"; }
 
+  /*!
+   * @brief Initialize the normalizer, setting the parameters.
+   *
+   * This default implementation should be overridden by subclasses.
+   * This sets the parameters to
+   *  - x_0 = 0.0
+   *  - k = 1.0
+   *  - L = 1.0
+   * @param cases A list of cases to be used for calculating the normalization parameters.
+   */
+  virtual void InitializeNormalizer(QList<Case *> cases);
+
+  /*!
+   * @brief Get the penalty term for a case.
+   *
+   * This default implementation should be overridden by subclasses.
+   * This default implementation returns 0.0;
+   * @param c Case to compute the violation for.
+   * @return The penalty term for a case (0.0 if it does not violate the constraint).
+   */
+  virtual double Penalty(Case *c);
+
  protected:
   bool logging_enabled_;
   int verbosity_level_;
+  Normalizer normalizer_; //!< Normalizer for constraint violation value; to be used with penalty functions.
 
  private:
   QString constraint_log_path_; //!< Path to the constraint log path to be written.
