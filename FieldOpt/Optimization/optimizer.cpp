@@ -197,7 +197,7 @@ void Optimizer::updateTentativeBestCase(Case *c) {
 
 void Optimizer::initializeNormalizers() {
     initializeOfvNormalizer();
-    /// \todo Initialize constraint normalizers
+    constraint_handler_->InitializeNormalizers(case_handler_->AllCases());
 }
 
 void Optimizer::initializeOfvNormalizer() {

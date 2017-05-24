@@ -1,3 +1,4 @@
+#include "Utilities/math.hpp"
 #include "well_spline_length.h"
 #include "ConstraintMath/well_constraint_projections/well_constraint_projections.h"
 
@@ -68,6 +69,32 @@ namespace Optimization {
             c->set_real_variable_value(affected_well_.toe.y, projection.last()(1));
             c->set_real_variable_value(affected_well_.toe.z, projection.last()(2));
         }
+    void WellSplineLength::InitializeNormalizer(QList<Case *> cases) {
+        vector<double> well_lengths;
+        for (auto c : cases) {
+            auto endpts = GetEndpointValueVectors(c, affected_well_);
+            well_lengths.push_back( (endpts.first - endpts.second).norm() );
+        }
+        long double med_well_length = calc_median(well_lengths);
+        long double min_well_length = *min_element(well_lengths.begin(), well_lengths.end());
+        long double max_well_length = *max_element(well_lengths.begin(), well_lengths.end());
+        normalizer_.set_max(1.0L);
+        normalizer_.set_midpoint(med_well_length);
+        normalizer_.set_steepness(1.0L / (max_length_ - min_length_));
+    }
+    double WellSplineLength::Penalty(Case *c) {
+        auto endpts = GetEndpointValueVectors(c, affected_well_);
+        double well_length =  (endpts.first - endpts.second).norm();
+        if (well_length > max_length_)
+            return well_length - max_length_;
+        else if (well_length < min_length_)
+            return min_length_ - well_length;
+        else
+            return 0.0;
+    }
+    long double WellSplineLength::PenaltyNormalized(Case *c) {
+        return normalizer_.normalize(Penalty(c));
+    }
 
     }
 }

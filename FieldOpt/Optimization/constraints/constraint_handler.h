@@ -60,6 +60,12 @@ class ConstraintHandler
    */
   bool HasBoundaryConstraints() const;
 
+  /*!
+   * @brief Initialize the normalizers for all constraints.
+   * @param cases Cases to be used for determining parameters.
+   */
+  void InitializeNormalizers(QList<Case *> cases);
+
   Eigen::VectorXd GetLowerBounds(QList<QUuid> id_vector) const;
   Eigen::VectorXd GetUpperBounds(QList<QUuid> id_vector) const;
 

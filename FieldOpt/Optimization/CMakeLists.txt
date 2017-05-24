@@ -82,7 +82,9 @@ if (BUILD_TESTING)
             tests/optimizers/test_apps.cpp
             tests/optimizers/test_ga.cpp
 			tests/test_normalizer.cpp
-			)
+            tests/constraints/test_interwell_distance.cpp
+            tests/constraints/test_spline_well_length.cpp
+            )
 
 	target_link_libraries(test_optimization
 			fieldopt::optimization

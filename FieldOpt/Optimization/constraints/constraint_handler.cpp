@@ -104,6 +104,11 @@ Eigen::VectorXd ConstraintHandler::GetUpperBounds(QList<QUuid> id_vector) const 
     }
     return ubounds;
 }
+void ConstraintHandler::InitializeNormalizers(QList<Case *> cases) {
+    for (auto con : constraints_) {
+        con->InitializeNormalizer(cases);
+    }
+}
 
 }
 }
