@@ -95,8 +95,6 @@ void WellSplineLength::InitializeNormalizer(QList<Case *> cases) {
         well_lengths.push_back( (endpts.first - endpts.second).norm() );
     }
     long double med_well_length = calc_median(well_lengths);
-    long double min_well_length = *min_element(well_lengths.begin(), well_lengths.end());
-    long double max_well_length = *max_element(well_lengths.begin(), well_lengths.end());
     normalizer_.set_max(1.0L);
     normalizer_.set_midpoint(med_well_length);
     normalizer_.set_steepness(1.0L / (max_length_ - min_length_));
