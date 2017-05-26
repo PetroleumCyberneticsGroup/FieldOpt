@@ -77,6 +77,40 @@ class ReservoirBoundary : public Constraint, WellSplineConstraint
   bool IsBoundConstraint() const override { return true; }
 
   /*!
+   * @brief Initialize the normalizer parameters.
+   *
+   * For now just sets the parameters to the default value.
+   *
+   * \todo Properly implement this.
+   *
+   * @param cases Cases to be used when calculating the parameters.
+   */
+  void InitializeNormalizer(QList<Case *> cases) override;
+
+  /*!
+   * @brief Get the penalty for a case.
+   *
+   * For now, this returns INFINITY if the constraint is violated; otherwise
+   * it returns 0.0. This corresponds to death penalty.
+   *
+   * \todo Propery implement this.
+   * @param c The case to calculate the penalty for.
+   * @return INFINITY if the constraint is violated; otherwise false.
+   */
+  double Penalty(Case *c) override;
+
+  /*!
+   * @brief Get the normalized penalty for a case.
+   *
+   * For now, this returns 1.0 if the constraint is violated; otherwise it returns
+   * 0.0. This corresponds to death penalty.
+   * \todo Properly implement this.
+   * @param c The case to calculate the penalty for.
+   * @return 1.0 if the constraint is violated; otherwise false.
+   */
+  long double PenaltyNormalized(Case *c) override;
+
+  /*!
    * @brief Get the lower bounds. This will return the x, y and
    * z values for the _center_ of the cells in the corners of the
    * defined box.
