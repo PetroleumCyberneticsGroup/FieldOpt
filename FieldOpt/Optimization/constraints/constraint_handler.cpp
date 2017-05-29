@@ -109,6 +109,14 @@ void ConstraintHandler::InitializeNormalizers(QList<Case *> cases) {
         con->InitializeNormalizer(cases);
     }
 }
+long double ConstraintHandler::GetWeightedNormalizedPenalties(Case *c) {
+    long double wnp = 0.0L;
+    for (auto con : constraints_) {
+        long double pen = con->PenaltyNormalized(c);
+        wnp += pen * con->GetPenaltyWeight();
+    }
+    return wnp;
+}
 
 }
 }
