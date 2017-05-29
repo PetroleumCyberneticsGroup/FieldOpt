@@ -188,6 +188,13 @@ class Optimizer : public Loggable
    * from the cases that have been evaluated so far.
    */
   void initializeOfvNormalizer();
+
+  /*!
+   * @brief Calculate the penalized objective function value for a case.
+   * @param c Case to calculate the penalized objective function value for.
+   * @return The penalized objective function value.
+   */
+  double PenalizedOFV(Case *c);
 };
 
 }

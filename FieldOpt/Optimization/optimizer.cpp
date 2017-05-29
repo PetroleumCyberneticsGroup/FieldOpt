@@ -214,5 +214,18 @@ void Optimizer::initializeOfvNormalizer() {
     normalizer_ofv_.set_midpoint(max_ofv);
     normalizer_ofv_.set_steepness(1.0L / max_ofv);
 }
+
+double Optimizer::PenalizedOFV(Case *c) {
+    long double norm_ofv = normalizer_ofv_.normalize(c->objective_function_value());
+    long double penalty = constraint_handler_->GetWeightedNormalizedPenalties(c);
+    long double norm_pen_ovf = norm_ofv - penalty;
+
+    if (norm_pen_ovf <= 0.0L) {
+        return 0.0;
+    }
+    else {
+        return normalizer_ofv_.denormalize(norm_pen_ovf);
+    }
+}
 }
 
