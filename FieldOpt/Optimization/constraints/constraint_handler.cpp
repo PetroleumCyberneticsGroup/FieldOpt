@@ -17,7 +17,11 @@ ConstraintHandler::ConstraintHandler(QList<Settings::Optimizer::Constraint> cons
                 constraints_.append(new RateConstraint(constraint, variables));
                 break;
             case Settings::Optimizer::ConstraintType::WellSplineLength:
-                constraints_.append(new WellSplineLength(constraint, variables));
+                for (auto wname : constraint.wells) {
+                    auto cons = Settings::Optimizer::Constraint(constraint);
+                    cons.well = wname;
+                    constraints_.append(new WellSplineLength(cons, variables));
+                }
                 break;
             case Settings::Optimizer::ConstraintType::WellSplineInterwellDistance:
                 constraints_.append(new InterwellDistance(constraint, variables));
@@ -105,6 +109,7 @@ Eigen::VectorXd ConstraintHandler::GetUpperBounds(QList<QUuid> id_vector) const 
     return ubounds;
 }
 void ConstraintHandler::InitializeNormalizers(QList<Case *> cases) {
+    cout << "ConstraintHandler Initializing constraint normalizers" << endl;
     for (auto con : constraints_) {
         con->InitializeNormalizer(cases);
     }
