@@ -36,6 +36,7 @@ ReservoirBoundary::ReservoirBoundary(
     kmin_ = settings.box_kmin;
     kmax_ = settings.box_kmax;
     grid_ = grid;
+    penalty_weight_ = settings.penalty_weight;
 
     index_list_ = getListOfCellIndices();
     affected_well_ = initializeWell(variables->GetWellSplineVariables(settings.well));

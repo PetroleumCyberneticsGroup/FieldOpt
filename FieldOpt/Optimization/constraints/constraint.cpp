@@ -24,6 +24,7 @@ namespace Constraints {
 
 Constraint::Constraint() {
     logging_enabled_ = false;
+    penalty_weight_ = 0.0;
 }
 
 void Constraint::EnableLogging(QString output_directory_path) {

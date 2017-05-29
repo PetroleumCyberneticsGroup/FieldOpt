@@ -29,6 +29,7 @@ InterwellDistance::InterwellDistance(Settings::Optimizer::Constraint settings,
                                      Model::Properties::VariablePropertyContainer *variables)
 {
     distance_ = settings.min;
+    penalty_weight_ = settings.penalty_weight;
 
     for (QString name : settings.wells) {
         affected_wells_.append(initializeWell(variables->GetWellSplineVariables(name)));

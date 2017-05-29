@@ -29,6 +29,7 @@ WellSplineLength::WellSplineLength(Settings::Optimizer::Constraint settings,
 {
     min_length_ = settings.min;
     max_length_ = settings.max;
+    penalty_weight_ = settings.penalty_weight;
 
     affected_well_ = initializeWell(variables->GetWellSplineVariables(settings.well));
 

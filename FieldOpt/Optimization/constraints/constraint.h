@@ -125,10 +125,13 @@ class Constraint
    */
   virtual long double PenaltyNormalized(Case *c);
 
+  long double GetPenaltyWeight() { return penalty_weight_; }
+
  protected:
   bool logging_enabled_;
   int verbosity_level_;
   Normalizer normalizer_; //!< Normalizer for constraint violation value; to be used with penalty functions.
+  long double penalty_weight_; //!< The weight to be used when considering the constraint in a penalty function. (default: 0.0)
 
  private:
   QString constraint_log_path_; //!< Path to the constraint log path to be written.

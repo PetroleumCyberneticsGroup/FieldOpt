@@ -165,6 +165,14 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
     }
     else throw std::runtime_error("A constraint must always specify either the Well or the Wells property.");
 
+    // Penalty function weight for the constraint
+    if (json_constraint.contains("PenaltyWeight")) {
+        optimizer_constraint.penalty_weight = json_constraint["PenaltyWeight"].toDouble();
+    }
+    else {
+        optimizer_constraint.penalty_weight = 0.0;
+    }
+
     // Constraint types BHP and Rate
     QString constraint_type = json_constraint["Type"].toString();
     if (QString::compare(constraint_type, "BHP") == 0) {
@@ -182,7 +190,7 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
             optimizer_constraint.min = json_constraint["Min"].toDouble();
     }
 
-        // Constraint type Well Spline Points
+    // Constraint type Well Spline Points
     else if (QString::compare(constraint_type, "WellSplinePoints") == 0) {
         optimizer_constraint.type = ConstraintType::SplinePoints;
 
