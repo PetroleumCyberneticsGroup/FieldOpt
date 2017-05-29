@@ -75,6 +75,7 @@ class Optimizer
 
   struct Objective {
     ObjectiveType type; //!< The objective definition type (e.g. WeightedSum)
+    bool use_penalty_function; //!< Whether or not to use penalty function (default: false).
     struct WeightedSumComponent {
       double coefficient; QString property; int time_step;
       bool is_well_prop; QString well; }; //!< A component of a weighted sum formulatied objective function

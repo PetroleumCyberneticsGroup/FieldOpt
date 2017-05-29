@@ -129,6 +129,12 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
             }
         }
         else throw UnableToParseOptimizerObjectiveSectionException("Objective type " + objective_type.toStdString() + " not recognized");
+        if (json_objective.contains("UsePenaltyFunction")) {
+            objective_.use_penalty_function = json_objective["UsePenaltyFunction"].toBool();
+        }
+        else {
+            objective_.use_penalty_function = false;
+        }
     }
     catch (std::exception const &ex) {
         throw UnableToParseOptimizerObjectiveSectionException("Unable to parse optimizer objective: " + std::string(ex.what()));
@@ -190,7 +196,7 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
             optimizer_constraint.min = json_constraint["Min"].toDouble();
     }
 
-    // Constraint type Well Spline Points
+        // Constraint type Well Spline Points
     else if (QString::compare(constraint_type, "WellSplinePoints") == 0) {
         optimizer_constraint.type = ConstraintType::SplinePoints;
 

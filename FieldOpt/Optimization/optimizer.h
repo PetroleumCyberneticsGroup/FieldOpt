@@ -160,6 +160,7 @@ class Optimizer : public Loggable
   ::Settings::Optimizer::OptimizerMode mode_; //!< The optimization mode, i.e. whether the objective function should be maximized or minimized.
   bool is_async_; //!< Inidcates whether or not the optimizer is asynchronous. Defaults to false.
   Logger *logger_;
+  bool penalize_; //!< Switch for whether or not to use penalty function to account for constraints.
 
   Normalizer normalizer_ofv_; //!< Normalizer for objective function values.
 
@@ -177,6 +178,13 @@ class Optimizer : public Loggable
     Optimizer::TerminationCondition cond_;
   };
 
+  /*!
+   * @brief Calculate the penalized objective function value for a case.
+   * @param c Case to calculate the penalized objective function value for.
+   * @return The penalized objective function value.
+   */
+  double PenalizedOFV(Case *c);
+
  private:
   QDateTime start_time_;
   Case *tentative_best_case_; //!< The best case encountered thus far.
@@ -188,13 +196,6 @@ class Optimizer : public Loggable
    * from the cases that have been evaluated so far.
    */
   void initializeOfvNormalizer();
-
-  /*!
-   * @brief Calculate the penalized objective function value for a case.
-   * @param c Case to calculate the penalized objective function value for.
-   * @return The penalized objective function value.
-   */
-  double PenalizedOFV(Case *c);
 };
 
 }
