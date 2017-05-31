@@ -124,19 +124,28 @@ void SynchronousMPIRunner::Execute() {
         while (worker_->GetCurrentCase() != nullptr) {
             MPIRunner::MsgTag tag = MPIRunner::MsgTag::CASE_EVAL_SUCCESS; // Tag to be sent along with the case.
             try {
+                model_update_done_ = false;
+                simulation_done_ = false;
+                logger_->AddEntry(this);
                 bool simulation_success = true;
                 printMessage("Applying case to model.", 2);
                 model_->ApplyCase(worker_->GetCurrentCase());
+                model_update_done_ = true; logger_->AddEntry(this);
                 auto start = QDateTime::currentDateTime();
-                if (simulation_times_.size() == 0 || runtime_settings_->simulation_timeout() == 0) {
+                if (runtime_settings_->simulation_timeout() == 0 && settings_->simulator()->max_minutes() < 0) {
                     printMessage("Starting model evaluation.", 2);
                     simulator_->Evaluate();
+                }
+                else if (simulation_times_.size() == 0 && settings_->simulator()->max_minutes() > 0) {
+                    simulation_success = simulator_->Evaluate(settings_->simulator()->max_minutes() * 60,
+                                                              runtime_settings_->threads_per_sim());
                 }
                 else {
                     printMessage("Starting model evaluation with timeout.", 2);
                     simulation_success = simulator_->Evaluate(timeoutValue(),
                                                               runtime_settings_->threads_per_sim());
                 }
+                simulation_done_ = true; logger_->AddEntry(this);
                 auto end = QDateTime::currentDateTime();
                 int sim_time = time_span_seconds(start, end);
                 if (simulation_success) {
@@ -186,6 +195,20 @@ void SynchronousMPIRunner::initialDistribution() {
     while (optimizer_->nr_queued_cases() > 0 && overseer_->NumberOfFreeWorkers() > 1) { // Leave one free worker
         overseer_->AssignCase(optimizer_->GetCaseForEvaluation());
     }
+}
+Loggable::LogTarget SynchronousMPIRunner::GetLogTarget() {
+    return STATE_RUNNER;
+}
+map<string, string> SynchronousMPIRunner::GetState() {
+    map<string, string> statemap;
+    statemap["case-desc"] = worker_->GetCurrentCase()->StringRepresentation(model_->variables());
+    statemap["mod-update-done"] = model_update_done_ ? "yes" : "no";
+    statemap["sim-done"] = simulation_done_ ? "yes" : "no";
+    statemap["last-update"] = timestamp_string();
+    return statemap;
+}
+QUuid SynchronousMPIRunner::GetId() {
+    return QUuid();
 }
 }
 }

@@ -55,6 +55,7 @@ private:
       double xf, double yf, double zf,
       double &bb_xi, double &bb_yi, double &bb_zi,
       double &bb_xf, double &bb_yf, double &bb_zf);
+  Cell GetSmallestCell() override;
 
   Cell GetCellEnvelopingPoint(double x, double y, double z);
   Cell GetCellEnvelopingPoint(double x, double y, double z,

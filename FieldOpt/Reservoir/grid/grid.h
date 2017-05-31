@@ -1,7 +1,7 @@
 /******************************************************************************
    Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
    Modified by Alin G. Chitu (2016-2017) <alin.chitu@tno.nl, chitu_alin@yahoo.com>
-   
+
    This file is part of the FieldOpt project.
 
    FieldOpt is free software: you can redistribute it and/or modify
@@ -108,8 +108,8 @@ class Grid
   virtual Cell GetCellEnvelopingPoint(double x, double y, double z,
                                       std::vector<int> search_set) = 0;
 
-  /*!add 
-   * \brief GetCellEnvelopingPoint Get the cell enveloping the point 
+  /*!add
+   * \brief GetCellEnvelopingPoint Get the cell enveloping the point
    * (xyz.x(), xyz.y(), xyz.z()) searching the entire grid. Throws an
    * exception if no cell is found.
    */
@@ -124,6 +124,12 @@ class Grid
    */
   virtual Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz,
                                       std::vector<int> search_set) = 0;
+
+  /*!
+   * @brief Get the smallest cell in the reservoir.
+   * @return The cell in the reservoir that has the smallest volume.
+   */
+  virtual Cell GetSmallestCell() = 0;
 
  protected:
   GridSourceType type_;

@@ -39,8 +39,10 @@ class Loggable {
    * LOG_CASE - The case log (log_cases.csv)
    * LOG_OPTIMIZER - The optimizer log (log_optimization.csv)
    * LOG_EXTENDED - The extended log (log_extended.json)
+   * LOG_SUMMARY - Markdown-formatted summaries printed at the beginning and the end (summary_(pre/post)run.md)
+   * STATE_RUNNER - A temporary log for debugging purposes. This log is frequently deleted as it only descibes the current state.
    */
-  enum LogTarget {LOG_CASE, LOG_OPTIMIZER, LOG_EXTENDED, LOG_SUMMARY};
+  enum LogTarget {LOG_CASE, LOG_OPTIMIZER, LOG_EXTENDED, LOG_SUMMARY, STATE_RUNNER};
 
   /*!
    * @brief Get the target log for the object. E.g. if LOG_CASE is returned,
@@ -61,7 +63,7 @@ class Loggable {
    *
    * @return A string-string map of column headers and state indicators.
    */
-  virtual map<string, string> GetState() = 0;
+  virtual map<string, string> GetState() { return map<string, string>(); }
 
   /*!
    * @brief Get the UUID of the object to be written to the log.
@@ -91,7 +93,7 @@ class Loggable {
    *    "Var#PROD#BHP#1": [204.1]
    * @return A string-vector map of values.
    */
-  virtual map<string, vector<double>> GetValues() = 0;
+  virtual map<string, vector<double>> GetValues() { return map<string, vector<double>>(); }
 
   /*!
    * @brief Description of a well spline used for summaries.

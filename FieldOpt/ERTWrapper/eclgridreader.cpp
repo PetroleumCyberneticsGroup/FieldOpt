@@ -187,5 +187,24 @@ bool ECLGridReader::GlobalIndexIsInsideGrid(int global_index)
     Dims dims = Dimensions();
     return global_index < dims.nx * dims.ny * dims.nz;
 }
+
+ECLGridReader::Cell ECLGridReader::FindSmallestCell() {
+    auto dims = Dimensions();
+    int max_index = dims.nx * dims.ny * dims.nz;
+    int index_with_smallest_volume = 0;
+    double smallest_volume = 1e7;
+    double volume;
+    for (int global_index = 0; global_index < max_index; ++global_index) {
+        if (IsCellActive(global_index)) {
+            volume = GetCellVolume(global_index);
+            if (volume < smallest_volume) {
+                index_with_smallest_volume = global_index;
+                smallest_volume = volume;
+            }
+        }
+    }
+    return GetGridCell(index_with_smallest_volume);
+}
+
 }
 }

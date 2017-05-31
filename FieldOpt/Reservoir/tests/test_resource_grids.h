@@ -27,14 +27,18 @@ namespace TestResources {
 class TestResourceGrids {
  protected:
   TestResourceGrids() {
-    grid_horzwel_ = new Reservoir::Grid::ECLGrid(
-        "../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID");
-    grid_5spot_ = new Reservoir::Grid::ECLGrid(
-        "../examples/ADGPRS/5spot/ECL_5SPOT.EGRID");
+      grid_horzwel_ = new Reservoir::Grid::ECLGrid(
+          "../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID");
+      grid_5spot_ = new Reservoir::Grid::ECLGrid(
+          "../examples/ADGPRS/5spot/ECL_5SPOT.EGRID");
+      grid_norne_ = new Reservoir::Grid::ECLGrid(
+          "../examples/Flow/norne/NORNE_ATW2013.EGRID"
+      );
   }
 
   Reservoir::Grid::Grid *grid_5spot_;
   Reservoir::Grid::Grid *grid_horzwel_;
+  Reservoir::Grid::Grid *grid_norne_;
 };
 }
 

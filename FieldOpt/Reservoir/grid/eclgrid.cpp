@@ -53,10 +53,22 @@ ECLGrid::ECLGrid(string file_path)
     // so we are going to check all known permutations with the hoe tha one of them is suitable for
     // the current grid - we do that based on the cell 0 in the grid
 
+    // Find the first (active) cell index.
+    int idx = 0;
+    while (idx < ecl_grid_reader_->ActiveCells()) {
+        if (ecl_grid_reader_->IsCellActive(idx)) {
+            break;
+        }
+        else {
+            idx++;
+        }
+    }
+
     // Set faces permutation to first permutation type
     faces_permutation_index_ = 0;
     // Get the first cell
-    Cell first_cell = GetCell(0);
+    Cell first_cell = GetCell(idx);
+
     if (first_cell.EnvelopsPoint(first_cell.center()))
     {
 		return;
@@ -65,7 +77,7 @@ ECLGrid::ECLGrid(string file_path)
 	// Set faces permutation to second permutation type
 	faces_permutation_index_ = 1;
 	// Get the first cell
-	first_cell = GetCell(0);
+	first_cell = GetCell(idx);
 	if (first_cell.EnvelopsPoint(first_cell.center()))
 	{
 		return;
@@ -138,7 +150,9 @@ Cell ECLGrid::GetCell(int global_index) {
         return Cell(global_index, ijk_index,
                     ertCell.volume, ertCell.porosity,
                     ertCell.permx, ertCell.permy, ertCell.permz,
-                    center, corners, faces_permutation_index_);
+                    center, corners, faces_permutation_index_,
+                    ertCell.active
+        );
     } else {
         throw runtime_error("ECLGrid::GetCell(int global_index): Grid "
                                 "source must be defined before getting a cell.");
@@ -280,6 +294,9 @@ Cell ECLGrid::GetCellEnvelopingPoint(Eigen::Vector3d xyz) {
 Cell ECLGrid::GetCellEnvelopingPoint(Eigen::Vector3d xyz,
                                      vector<int> search_set) {
     return GetCellEnvelopingPoint(xyz.x(), xyz.y(), xyz.z(), search_set);
+}
+Cell ECLGrid::GetSmallestCell() {
+    return GetCell(ecl_grid_reader_->FindSmallestCell().global_index);
 }
 }
 }

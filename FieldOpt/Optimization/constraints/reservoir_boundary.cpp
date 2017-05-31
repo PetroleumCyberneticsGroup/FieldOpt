@@ -399,6 +399,7 @@ Eigen::VectorXd ReservoirBoundary::GetLowerBounds(QList<QUuid> id_vector) const 
 
 
     Eigen::VectorXd lbounds(id_vector.size());
+    lbounds.fill(0);
 
     int ind_heel_x = id_vector.indexOf(affected_well_.heel.x);
     int ind_heel_y = id_vector.indexOf(affected_well_.heel.y);
@@ -425,6 +426,7 @@ Eigen::VectorXd ReservoirBoundary::GetUpperBounds(QList<QUuid> id_vector) const 
     zmax = std::max(zmax, cell_min.corners()[7].z());
 
     Eigen::VectorXd ubounds(id_vector.size());
+    ubounds.fill(0);
 
     int ind_heel_x = id_vector.indexOf(affected_well_.heel.x);
     int ind_heel_y = id_vector.indexOf(affected_well_.heel.y);
