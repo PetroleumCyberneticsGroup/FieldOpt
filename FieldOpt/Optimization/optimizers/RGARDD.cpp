@@ -79,11 +79,6 @@ void RGARDD::iterate() {
     iteration_++;
 }
 void RGARDD::handleEvaluatedCase(Case *c) {
-    if (penalize_ && iteration_ > 0) {
-        double penalized_ofv = PenalizedOFV(c);
-        c->set_objective_function_value(penalized_ofv);
-    }
-
     int index = -1;
     for (int i = 0; i < mating_pool_.size(); ++i) {
         if (mating_pool_[i].case_pointer == c) {

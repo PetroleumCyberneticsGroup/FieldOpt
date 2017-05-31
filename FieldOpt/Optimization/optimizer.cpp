@@ -64,6 +64,10 @@ Case *Optimizer::GetCaseForEvaluation()
 
 void Optimizer::SubmitEvaluatedCase(Case *c)
 {
+    if (penalize_ && iteration_ > 0) {
+        double penalized_ofv = PenalizedOFV(c);
+        c->set_objective_function_value(penalized_ofv);
+    }
     case_handler_->UpdateCaseObjectiveFunctionValue(c->id(), c->objective_function_value());
     case_handler_->SetCaseState(c->id(), c->state, c->GetWICTime(), c->GetSimTime());
     case_handler_->SetCaseEvaluated(c->id());
@@ -222,6 +226,7 @@ double Optimizer::PenalizedOFV(Case *c) {
     long double norm_pen_ovf = norm_ofv - penalty;
 
     if (norm_pen_ovf <= 0.0L) {
+        cout << "RETURNING ZERO OFV" << endl;
         return 0.0;
     }
     else {
