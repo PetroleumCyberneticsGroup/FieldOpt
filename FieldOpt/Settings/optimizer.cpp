@@ -129,6 +129,12 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
             }
         }
         else throw UnableToParseOptimizerObjectiveSectionException("Objective type " + objective_type.toStdString() + " not recognized");
+        if (json_objective.contains("UsePenaltyFunction")) {
+            objective_.use_penalty_function = json_objective["UsePenaltyFunction"].toBool();
+        }
+        else {
+            objective_.use_penalty_function = false;
+        }
     }
     catch (std::exception const &ex) {
         throw UnableToParseOptimizerObjectiveSectionException("Unable to parse optimizer objective: " + std::string(ex.what()));
@@ -164,6 +170,14 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
         }
     }
     else throw std::runtime_error("A constraint must always specify either the Well or the Wells property.");
+
+    // Penalty function weight for the constraint
+    if (json_constraint.contains("PenaltyWeight")) {
+        optimizer_constraint.penalty_weight = json_constraint["PenaltyWeight"].toDouble();
+    }
+    else {
+        optimizer_constraint.penalty_weight = 0.0;
+    }
 
     // Constraint types BHP and Rate
     QString constraint_type = json_constraint["Type"].toString();

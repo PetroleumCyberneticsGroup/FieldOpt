@@ -51,7 +51,9 @@ inline T calc_median(std::vector<T> list) {
     assert(!list.empty());
     std::sort(list.begin(), list.end());
     size_t size = list.size();
-    if (size % 2 == 0)
+    if (size == 1)
+        return list[0];
+    else if (size % 2 == 0)
         return (list[size/2 - 1] + list[size/2])/2;
     else
         return list[size/2];

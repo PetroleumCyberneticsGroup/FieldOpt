@@ -23,6 +23,9 @@ class TestResourceCases : public TestResources::TestResourceVariablePropertyCont
       test_case_4_4b3i3r->set_objective_function_value(-50.0);
       trivial_cases_ << test_case_1_3i_ << test_case_2_3r_ << test_case_3_4b3i3r_ << test_case_4_4b3i3r;
 
+      test_case_two_well_splines_ = new Optimization::Case(varcont_two_spline_wells_->GetBinaryVariableValues(),
+                                                           varcont_two_spline_wells_->GetDiscreteVariableValues(),
+                                                           varcont_two_spline_wells_->GetContinousVariableValues());
       test_case_spline_ = new Optimization::Case(varcont_prod_spline_->GetBinaryVariableValues(),
                                                  varcont_prod_spline_->GetDiscreteVariableValues(),
                                                  varcont_prod_spline_->GetContinousVariableValues());
@@ -83,6 +86,11 @@ class TestResourceCases : public TestResources::TestResourceVariablePropertyCont
    * Two real variables.
    */
   Optimization::Case *test_case_2r_;
+
+  /*Case:
+   * Two well splines, parallel and 20 meters apart.
+   */
+  Optimization::Case *test_case_two_well_splines_;
 
   /*!
    * Case:

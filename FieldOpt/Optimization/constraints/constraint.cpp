@@ -16,6 +16,7 @@
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
+#include <iostream>
 #include "constraint.h"
 
 namespace Optimization {
@@ -23,6 +24,7 @@ namespace Constraints {
 
 Constraint::Constraint() {
     logging_enabled_ = false;
+    penalty_weight_ = 0.0;
 }
 
 void Constraint::EnableLogging(QString output_directory_path) {
@@ -38,6 +40,21 @@ Eigen::VectorXd Constraint::GetLowerBounds(QList<QUuid> id_vector) const {
 }
 Eigen::VectorXd Constraint::GetUpperBounds(QList<QUuid> id_vector) const {
     throw std::runtime_error("Attempted to get bounds from a non-bound cosntraint.");
+}
+double Constraint::Penalty(Case *c) {
+    return 0.0;
+}
+long double Constraint::PenaltyNormalized(Case *c)
+{
+    return normalizer_.normalize(Penalty(c));
+}
+void Constraint::InitializeNormalizer(QList<Case *> cases) {
+    if (!normalizer_.is_ready()) {
+        cout << "WARNING: using default normalization parameter values" << endl;
+        normalizer_.set_midpoint(0.0L);
+        normalizer_.set_max(1.0L);
+        normalizer_.set_steepness(1.0L);
+    }
 }
 
 }

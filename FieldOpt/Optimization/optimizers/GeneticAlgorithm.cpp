@@ -130,5 +130,12 @@ Case *GeneticAlgorithm::generateRandomCase() {
     new_case->SetRealVarValues(erands);
     return  new_case;
 }
+void GeneticAlgorithm::penalizeInitialGeneration() {
+    initializeNormalizers();
+    for (auto chrom : population_) {
+        double pen_ofv = PenalizedOFV(chrom.case_pointer);
+        chrom.case_pointer->set_objective_function_value(pen_ofv);
+    }
+}
 }
 }

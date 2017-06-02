@@ -19,6 +19,7 @@
 #include "reservoir_boundary.h"
 #include "ConstraintMath/well_constraint_projections/well_constraint_projections.h"
 #include <iomanip>
+#include "Utilities/math.hpp"
 
 namespace Optimization {
 namespace Constraints {
@@ -35,6 +36,7 @@ ReservoirBoundary::ReservoirBoundary(
     kmin_ = settings.box_kmin;
     kmax_ = settings.box_kmax;
     grid_ = grid;
+    penalty_weight_ = settings.penalty_weight;
 
     index_list_ = getListOfCellIndices();
     affected_well_ = initializeWell(variables->GetWellSplineVariables(settings.well));
@@ -441,6 +443,23 @@ Eigen::VectorXd ReservoirBoundary::GetUpperBounds(QList<QUuid> id_vector) const 
     ubounds(ind_heel_z) = zmax;
     ubounds(ind_toe_z) = zmax;
     return ubounds;
+}
+void ReservoirBoundary::InitializeNormalizer(QList<Case *> cases) {
+    normalizer_.set_max(1.0L);
+    normalizer_.set_midpoint(0.0L);
+    normalizer_.set_steepness(1.0L);
+}
+double ReservoirBoundary::Penalty(Case *c) {
+    if (CaseSatisfiesConstraint(c))
+        return 0.0;
+    else
+        return INFINITY;
+}
+long double ReservoirBoundary::PenaltyNormalized(Case *c) {
+    if (CaseSatisfiesConstraint(c))
+        return 0.0L;
+    else
+        return 1.0L;
 }
 
 }

@@ -115,7 +115,9 @@ void CaseHandler::ClearRecentlyEvaluatedCases()
     if (evaluated_recently_.size() > 0)
         evaluated_recently_.clear();
 }
-
+QList<Case *> CaseHandler::AllCases() const {
+    return cases_.values();
+}
 QList<Case *> CaseHandler::QueuedCases() const
 {
     QList<Case *> queued_cases = QList<Case *>();

@@ -19,6 +19,7 @@
 #include <Utilities/time.hpp>
 #include "optimizer.h"
 #include <time.h>
+#include <cmath>
 
 namespace Optimization {
 
@@ -45,6 +46,7 @@ Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
     start_time_ = QDateTime::currentDateTime();
     logger_ = logger;
     verbosity_level_ = 0;
+    penalize_ = settings->objective().use_penalty_function;
 }
 
 Case *Optimizer::GetCaseForEvaluation()
@@ -62,6 +64,10 @@ Case *Optimizer::GetCaseForEvaluation()
 
 void Optimizer::SubmitEvaluatedCase(Case *c)
 {
+    if (penalize_ && iteration_ > 0) {
+        double penalized_ofv = PenalizedOFV(c);
+        c->set_objective_function_value(penalized_ofv);
+    }
     case_handler_->UpdateCaseObjectiveFunctionValue(c->id(), c->objective_function_value());
     case_handler_->SetCaseState(c->id(), c->state, c->GetWICTime(), c->GetSimTime());
     case_handler_->SetCaseEvaluated(c->id());
@@ -192,6 +198,40 @@ map<string, vector<double>> Optimizer::Summary::GetValues() {
 void Optimizer::updateTentativeBestCase(Case *c) {
     tentative_best_case_ = c;
     tentative_best_case_iteration_ = iteration_;
+}
+
+void Optimizer::initializeNormalizers() {
+    initializeOfvNormalizer();
+    constraint_handler_->InitializeNormalizers(case_handler_->AllCases());
+}
+
+void Optimizer::initializeOfvNormalizer() {
+    if (case_handler_->EvaluatedCases().size() == 0 || normalizer_ofv_.is_ready())
+        throw runtime_error("Unable to initialize normalizer with no evaluated cases available.");
+
+    vector<double> abs_ofvs;
+    for (auto c : case_handler_->EvaluatedCases()) {
+        abs_ofvs.push_back(abs(c->objective_function_value()));
+    }
+    long double max_ofv = *max_element(abs_ofvs.begin(), abs_ofvs.end());
+
+    normalizer_ofv_.set_max(1.0L);
+    normalizer_ofv_.set_midpoint(max_ofv);
+    normalizer_ofv_.set_steepness(1.0L / max_ofv);
+}
+
+double Optimizer::PenalizedOFV(Case *c) {
+    long double norm_ofv = normalizer_ofv_.normalize(c->objective_function_value());
+    long double penalty = constraint_handler_->GetWeightedNormalizedPenalties(c);
+    long double norm_pen_ovf = norm_ofv - penalty;
+
+    if (norm_pen_ovf <= 0.0L) {
+        cout << "RETURNING ZERO OFV" << endl;
+        return 0.0;
+    }
+    else {
+        return normalizer_ofv_.denormalize(norm_pen_ovf);
+    }
 }
 }
 

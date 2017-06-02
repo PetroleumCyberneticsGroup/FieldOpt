@@ -27,6 +27,7 @@
 #include "Model/properties/variable_property_container.h"
 #include "Runner/loggable.hpp"
 #include "Runner/logger.h"
+#include "normalizer.h"
 
 class Logger;
 
@@ -159,6 +160,11 @@ class Optimizer : public Loggable
   ::Settings::Optimizer::OptimizerMode mode_; //!< The optimization mode, i.e. whether the objective function should be maximized or minimized.
   bool is_async_; //!< Inidcates whether or not the optimizer is asynchronous. Defaults to false.
   Logger *logger_;
+  bool penalize_; //!< Switch for whether or not to use penalty function to account for constraints.
+
+  Normalizer normalizer_ofv_; //!< Normalizer for objective function values.
+
+  void initializeNormalizers(); //!< Initialize all normalization parameters.
 
   class Summary : public Loggable {
    public:
@@ -172,12 +178,24 @@ class Optimizer : public Loggable
     Optimizer::TerminationCondition cond_;
   };
 
+  /*!
+   * @brief Calculate the penalized objective function value for a case.
+   * @param c Case to calculate the penalized objective function value for.
+   * @return The penalized objective function value.
+   */
+  double PenalizedOFV(Case *c);
+
  private:
   QDateTime start_time_;
   Case *tentative_best_case_; //!< The best case encountered thus far.
   int seconds_spent_in_iterate_; //!< The number of seconds spent in the iterate() method.
-
   int tentative_best_case_iteration_; //!< The iteration in which the current tentative best case was found.
+
+  /*!
+   * @brief Initialize the OFV normalizer, setting the parameters for it
+   * from the cases that have been evaluated so far.
+   */
+  void initializeOfvNormalizer();
 };
 
 }

@@ -40,6 +40,7 @@ add_library(optimization
 		optimizers/APPS.cpp
 		optimizers/GeneticAlgorithm.cpp
 		optimizers/RGARDD.cpp
+        normalizer.cpp
 		${EXPERIMENTAL_CONSTRAINTS_SRC})
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
@@ -79,7 +80,11 @@ if (BUILD_TESTING)
 			tests/constraints/test_rate_constraint.cpp
 			tests/test_case_transfer_object.cpp
             tests/optimizers/test_apps.cpp
-            tests/optimizers/test_ga.cpp)
+            tests/optimizers/test_ga.cpp
+			tests/test_normalizer.cpp
+            tests/constraints/test_interwell_distance.cpp
+            tests/constraints/test_spline_well_length.cpp
+            )
 
 	target_link_libraries(test_optimization
 			fieldopt::optimization

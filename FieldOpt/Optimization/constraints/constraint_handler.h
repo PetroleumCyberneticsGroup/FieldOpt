@@ -60,6 +60,19 @@ class ConstraintHandler
    */
   bool HasBoundaryConstraints() const;
 
+  /*!
+   * @brief Initialize the normalizers for all constraints.
+   * @param cases Cases to be used for determining parameters.
+   */
+  void InitializeNormalizers(QList<Case *> cases);
+
+  /*!
+   * @brief Get the sum of all normalized penalties multiplied by their respective weights.
+   * @param c The case to get the penalties for.
+   * @return Weighted sum of all normalized penalties
+   */
+  long double GetWeightedNormalizedPenalties(Case *c);
+
   Eigen::VectorXd GetLowerBounds(QList<QUuid> id_vector) const;
   Eigen::VectorXd GetUpperBounds(QList<QUuid> id_vector) const;
 

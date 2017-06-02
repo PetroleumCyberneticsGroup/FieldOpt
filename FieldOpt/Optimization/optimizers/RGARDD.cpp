@@ -41,6 +41,9 @@ RGARDD::RGARDD(Settings::Optimizer *settings,
     logger_->AddEntry(new ConfigurationSummary(this));
 }
 void RGARDD::iterate() {
+    if (iteration_ == 0 && penalize_) { // If we're done evaluating the initial population ...
+        penalizeInitialGeneration();
+    }
     population_ = sortPopulation(population_);
 
     if (is_stagnant()) {

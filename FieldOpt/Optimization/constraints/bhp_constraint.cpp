@@ -9,6 +9,7 @@ namespace Optimization {
             min_ = settings.min;
             max_ = settings.max;
             affected_well_names_ = settings.wells;
+            penalty_weight_ = settings.penalty_weight;
             for (auto wname : affected_well_names_) {
                 affected_real_variables_.append(variables->GetWellBHPVariables(wname));
             }

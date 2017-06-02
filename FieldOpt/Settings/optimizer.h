@@ -75,6 +75,7 @@ class Optimizer
 
   struct Objective {
     ObjectiveType type; //!< The objective definition type (e.g. WeightedSum)
+    bool use_penalty_function; //!< Whether or not to use penalty function (default: false).
     struct WeightedSumComponent {
       double coefficient; QString property; int time_step;
       bool is_well_prop; QString well; }; //!< A component of a weighted sum formulatied objective function
@@ -93,6 +94,7 @@ class Optimizer
     double max_length;
     double min_length;
     double min_distance;
+    long double penalty_weight; //!< The weight to be used when considering the constraint in a penalty function. (default: 0.0)
     int max_iterations;
     ConstraintWellSplinePointsType spline_points_type; //!< How the SplinePoints constraint is given when SplinePoints constraint type is selected.
     QList<RealMaxMinLimit> spline_points_limits; //!< Box limits a spline point needs to be within to be valid when SplinePoints constraint type is selected.
