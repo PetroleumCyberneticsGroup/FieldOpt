@@ -50,6 +50,7 @@ target_link_libraries(optimization
         PUBLIC fieldopt::constraintmath
 		PUBLIC fieldopt::reservoir
         PUBLIC fieldopt::runner
+		PUBLIC gp
         Qt5::Core
 		PUBLIC ${Boost_LIBRARIES})
 
