@@ -1,3 +1,6 @@
 [submodule "FieldOpt/FieldOpt-WellIndexCalculator"]
 	path = FieldOpt/FieldOpt-WellIndexCalculator
 	url = git@github.com:PetroleumCyberneticsGroup/FieldOpt-WellIndexCalculator.git
+[submodule "FieldOpt/libgp"]
+	path = FieldOpt/libgp
+	url = git@github.com:PetroleumCyberneticsGroup/libgp.git
