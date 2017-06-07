@@ -45,7 +45,7 @@ endif()
 option(BUILD_WIC_ONLY "Build well index calculator exe" OFF)
 # Build OS-dependent well index calculator (shared) library:
 option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    OFF)
-option(BUILD_BENCHMARK "Build exec for wic RMS benchmark" ON)
+option(BUILD_BENCHMARK "Build exec for wic RMS benchmark" OFF)
 
 # Qt libraries =========================================================
 if (NOT BUILD_WIC_ONLY)
@@ -118,7 +118,6 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 # Set this directory as the root dir
 include_directories(${CMAKE_SOURCE_DIR}  ${ERT_INCLUDE_DIR})
 
-
 # Testing ==============================================================
 if (BUILD_TESTING)
     include(CTest)
@@ -152,14 +151,16 @@ if (NOT BUILD_WIC_ONLY AND NOT BUILD_WIC_ADGPRS)
     file(COPY ${CMAKE_SOURCE_DIR}/Settings/tests/driver/driver_sane.json
             DESTINATION ${CMAKE_BINARY_DIR}/examples)
 
-    ## Copy wic benchmark wells into the build dir
-    file(COPY ${CMAKE_SOURCE_DIR}/FieldOpt-WellIndexCalculator/tests/well_index_benchmark/wic-benchmark-wells
-            DESTINATION ${CMAKE_BINARY_DIR}/)
+    if(BUILD_BENCHMARK)
+        ## Copy wic benchmark wells into the build dir
+        file(COPY ${CMAKE_SOURCE_DIR}/FieldOpt-WellIndexCalculator/tests/well_index_benchmark/wic-benchmark-wells
+                DESTINATION ${CMAKE_BINARY_DIR}/)
+    endif()
 
     ## Create an empty directory for test output
     file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fieldopt-output)
 
-endif ()
+endif()
 
 # Copy example files ===================================================
 if (COPY_EXAMPLES)
