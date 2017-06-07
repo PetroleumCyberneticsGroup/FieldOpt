@@ -41,7 +41,12 @@ add_library(optimization
 		optimizers/GeneticAlgorithm.cpp
 		optimizers/RGARDD.cpp
         normalizer.cpp
-		${EXPERIMENTAL_CONSTRAINTS_SRC})
+		optimizers/bayesian_optimization/AcquisitionFunction.cpp
+		optimizers/bayesian_optimization/af_optimizers/AFPSO.cpp
+		optimizers/bayesian_optimization/af_optimizers/AFOptimizer.cpp
+		optimizers/bayesian_optimization/EGO.cpp
+		${EXPERIMENTAL_CONSTRAINTS_SRC}
+		)
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
 target_link_libraries(optimization

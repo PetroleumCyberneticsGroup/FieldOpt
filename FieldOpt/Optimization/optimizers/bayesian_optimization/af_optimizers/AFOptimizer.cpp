@@ -1,5 +1,5 @@
 /******************************************************************************
-   Created by einar on 6/2/17.
+   Created by einar on 6/6/17.
    Copyright (C) 2017 Einar J.M. Baumann <einar.baumann@gmail.com>
 
    This file is part of the FieldOpt project.
@@ -17,22 +17,16 @@
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#include "AcquisitionFunction.h"
+#include "AFOptimizer.h"
 
 namespace Optimization {
 namespace Optimizers {
 namespace BayesianOptimization {
+namespace AFOptimizers {
 
-AcquisitionFunction::AcquisitionFunction() {}
+AFOptimizer::AFOptimizer() {}
 
-AcquisitionFunction::AcquisitionFunction(Settings::Optimizer::Parameters settings) {
-    weight_ev_ = 0.5;
-    weight_var_ = 0.5;
 }
-double AcquisitionFunction::Evaluate(libgp::GaussianProcess *gp, Eigen::VectorXd x) {
-    return weight_ev_ * gp->f(x.data()) + weight_var_ * gp->var(x.data());
-}
-
 }
 }
 }
