@@ -17,6 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
+#include "libgp/include/rprop.h"
 #include "Utilities/math.hpp"
 #include "optimizers/bayesian_optimization/af_optimizers/AFPSO.h"
 #include "EGO.h"
@@ -30,12 +31,21 @@ EGO::EGO(Settings::Optimizer *settings,
          Model::Properties::VariablePropertyContainer *variables,
          Reservoir::Grid::Grid *grid,
          Logger *logger) : Optimizer(settings, base_case, variables, grid, logger) {
-    auto lb = constraint_handler_->GetLowerBounds(base_case->GetRealVarIdVector());
-    auto ub = constraint_handler_->GetUpperBounds(base_case->GetRealVarIdVector());
+    VectorXd lb, ub;
+    if (constraint_handler_->HasBoundaryConstraints()) {
+        auto lb = constraint_handler_->GetLowerBounds(base_case->GetRealVarIdVector());
+        auto ub = constraint_handler_->GetUpperBounds(base_case->GetRealVarIdVector());
+    }
+    else {
+        lb.resize(base_case->GetRealVarIdVector().size());
+        ub.resize(base_case->GetRealVarIdVector().size());
+        lb.fill(settings->parameters().lower_bound);
+        ub.fill(settings->parameters().upper_bound);
+    }
     n_initial_guesses_ = variables->ContinousVariableSize() * 2;
     af_ = AcquisitionFunction(settings->parameters());
     af_opt_ = AFOptimizers::AFPSO(lb, ub);
-    gp_ = new libgp::GaussianProcess(variables->ContinousVariableSize(), "CovSum ( CovSEiso, CovNoise)");
+    gp_ = new libgp::GaussianProcess(variables->ContinousVariableSize(), "CovMatern5iso");
 
     // Guess some random initial positions
     auto rng = get_random_generator();
@@ -44,6 +54,9 @@ EGO::EGO(Settings::Optimizer *settings,
         for (int i = 0; i < lb.size(); ++i) {
             pos(i) = random_double(rng, lb(i), ub(i));
         }
+        Case * init_case = new Case(base_case);
+        init_case->SetRealVarValues(pos);
+        case_handler_->AddNewCase(init_case);
     }
 }
 Optimization::Optimizer::TerminationCondition EGO::IsFinished() {
@@ -60,12 +73,33 @@ Optimization::Optimizer::TerminationCondition EGO::IsFinished() {
 }
 void EGO::handleEvaluatedCase(Case *c) {
     gp_->add_pattern(c->GetRealVarVector().data(), c->objective_function_value());
+    if (isImprovement(c)) {
+        updateTentativeBestCase(c);
+        cout << "Found new tent. best: " << c->objective_function_value() << endl;
+    }
 }
 void EGO::iterate() {
-    VectorXd new_position = af_opt_.Optimize(gp_, af_);
+    if (iteration_ % 100 == 0) {
+        cout << "Optimizing hyperparameters ... ";
+        Eigen::VectorXd params(2);
+        params << -1, -1;
+        gp_->covf().set_loghyper(params);
+
+        libgp::RProp rprop;
+        rprop.init();
+        rprop.maximize(gp_, 50, 0);
+
+        VectorXd zero = VectorXd::Zero(GetTentativeBestCase()->GetRealVarVector().size());
+        cout << "EV at (0,...,0): " << gp_->f(zero.data());
+        cout << " ; VAR at (0,...,0): " << gp_->var(zero.data()) << endl;
+        cout << "Evaluated cases: " << case_handler_->NumberSimulated() << endl;
+    }
+//    cout << "Iterating" << endl;
+    VectorXd new_position = af_opt_.Optimize(gp_, af_, GetTentativeBestCase()->objective_function_value());
     Case *new_case = new Case(case_handler_->AllCases()[0]);
     new_case->SetRealVarValues(new_position);
     case_handler_->AddNewCase(new_case);
+    iteration_++;
 }
 }
 }

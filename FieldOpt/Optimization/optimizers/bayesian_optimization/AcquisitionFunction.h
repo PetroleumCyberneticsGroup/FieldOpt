@@ -54,9 +54,10 @@ class AcquisitionFunction {
    * Process instance.
    * @param gp Gaussian process to infer from.
    * @param x Coordinate to be evaluated.
+   * @param target Incumbet target; usually the best observed value.
    * @return The Acquisition function value at the point x according to the GP.
    */
-  double Evaluate(libgp::GaussianProcess *gp, Eigen::VectorXd x);
+  double Evaluate(libgp::GaussianProcess *gp, Eigen::VectorXd x, double target=0);
 
  private:
   double weight_ev_; //!< Expected value weight. (default: 0.5)

@@ -53,7 +53,7 @@ namespace AFOptimizers {
 class AFPSO : public AFOptimizer {
 
  public:
-  VectorXd Optimize(libgp::GaussianProcess *gp, AcquisitionFunction &af) override;
+  Eigen::VectorXd Optimize(libgp::GaussianProcess *gp, AcquisitionFunction &af, double target) override;
 
   AFPSO();
 
@@ -79,7 +79,7 @@ class AFPSO : public AFOptimizer {
     /*!
      * @brief Initialize the particle to a random position bounded by the lower and upper bounds.
      */
-    Particle();
+    Particle(VectorXd &lb, VectorXd &ub, boost::mt19937 &gen);
 
     /*!
      * @brief Update the velocity of this particle according to
@@ -91,7 +91,7 @@ class AFPSO : public AFOptimizer {
      * for each dimension i, where \f$ r_{1/2, i} \f$ are random numbers from a uniform
      * distribution [0, 1], different for each dimensional compontent.
      */
-    void update_velocity();
+    void update_velocity(double intertia, double c1, double c2, boost::random::mt19937 &gen);
 
     /*!
      * @brief Update the position of this particle according to
@@ -99,7 +99,7 @@ class AFPSO : public AFOptimizer {
      *  x(k+1) = x(k) + v(k+1)
      * \f]
      */
-    void update_position();
+    void update_position(VectorXd &lb, VectorXd &ub);
 
    private:
     /*!
@@ -107,7 +107,7 @@ class AFPSO : public AFOptimizer {
      * apply absorption (set the value to the bound value if it is broken,
      * and set the velocity along the dimension to zero).
      */
-    void check_boundaries();
+    void check_boundaries(VectorXd &lb, VectorXd &ub);
   };
 
   int n_particles_; //!< Number of particles to be used.
@@ -118,12 +118,12 @@ class AFPSO : public AFOptimizer {
   int iteration_; //!< Iteration counter.
   vector<Particle> pop_;
 
-  static boost::random::mt19937 gen_; //!< Random number generator.
-  static double c1_; //!< Cognitive scaling parameter. (c_1)
-  static double c2_; //!< Social scaling parameter. (c_2)
-  static double inertia_; //!< Inertia term for the velocity update (omega)
-  static VectorXd lb_; //!< Lower bounds for the variables.
-  static VectorXd ub_; //!< Upper bounds for the variables.
+  boost::random::mt19937 gen_; //!< Random number generator.
+  double c1_; //!< Cognitive scaling parameter. (c_1)
+  double c2_; //!< Social scaling parameter. (c_2)
+  double inertia_; //!< Inertia term for the velocity update (omega)
+  VectorXd lb_; //!< Lower bounds for the variables.
+  VectorXd ub_; //!< Upper bounds for the variables.
 
 };
 
