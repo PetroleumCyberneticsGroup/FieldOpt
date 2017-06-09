@@ -1,5 +1,5 @@
 /******************************************************************************
-   Created by einar on 6/6/17.
+   Created by einar on 6/7/17.
    Copyright (C) 2017 Einar J.M. Baumann <einar.baumann@gmail.com>
 
    This file is part of the FieldOpt project.
@@ -17,39 +17,33 @@
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#ifndef FIELDOPT_AFOPTIMIZER_H
-#define FIELDOPT_AFOPTIMIZER_H
+#ifndef FIELDOPT_AFMONTECARLO_H
+#define FIELDOPT_AFMONTECARLO_H
 
-#include <Settings/optimizer.h>
+#include <boost/random.hpp>
+#include "AFOptimizer.h"
 #include <Eigen/Core>
-#include <libgp/include/gp.h>
-#include <optimizers/bayesian_optimization/AcquisitionFunction.h>
+
+using namespace Eigen;
+using namespace std;
+
 namespace Optimization {
 namespace Optimizers {
 namespace BayesianOptimization {
 namespace AFOptimizers {
 
-/*!
- * @brief The AFOptimizer (Acquisition Function Optimizer) class defines an interface
- * for acquisition function optimizers, i.e. optimizers for the acquisition function
- * that determines the next case to be evaluated by optimizing the expected value and
- * uncertainty in the gaussian process.
- */
-class AFOptimizer {
+class AFMonteCarlo : public AFOptimizer {
  public:
+  AFMonteCarlo() {}
+  AFMonteCarlo(VectorXd lb, VectorXd ub);
+  Eigen::VectorXd Optimize(libgp::GaussianProcess *gp, AcquisitionFunction &af, double target) override;
+ private:
+  VectorXd lb_;
+  VectorXd ub_;
+  boost::random::mt19937 gen_;
+  int trials_;
 
-  AFOptimizer();
-
-  /*!
-   * @brief Optimize the acquisiton function wrt. the gaussian process, returning one
-   * optima.
-   * @param gp Gaussion process model.
-   * @param af Acquisition function.
-   * @param target Target (current best objective function value) used by acquisition function.
-   * @return One (local) optima for the acquisition function.
-   */
-  virtual Eigen::VectorXd Optimize(libgp::GaussianProcess *gp, AcquisitionFunction &af, double target) = 0;
-
+  Eigen::VectorXd generateRandomVector();
 };
 
 }
@@ -57,4 +51,4 @@ class AFOptimizer {
 }
 }
 
-#endif //FIELDOPT_AFOPTIMIZER_H
+#endif //FIELDOPT_AFMONTECARLO_H

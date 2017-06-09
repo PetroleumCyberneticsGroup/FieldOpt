@@ -8,7 +8,7 @@ if(EXISTS ${EXPERIMENTAL_CONSTRAINTS_DIR} AND IS_DIRECTORY ${EXPERIMENTAL_CONSTR
 	message("Including experimental constraints")
 	add_definitions(-DWITH_EXPERIMENTAL_CONSTRIANTS)
 	set(EXPERIMENTAL_CONSTRAINTS_SRC
-			${EXPERIMENTAL_CONSTRAINTS_DIR}/)
+			${EXPERIMENTAL_CONSTRAINTS_DIR}/ )
 	set(EXPERIMENTAL_CONSTRAINTS_TESTS
 			${EXPERIMENTAL_CONSTRAINTS_DIR}/tests/)
 else()
@@ -44,9 +44,10 @@ add_library(optimization
 		optimizers/bayesian_optimization/AcquisitionFunction.cpp
 		optimizers/bayesian_optimization/af_optimizers/AFPSO.cpp
 		optimizers/bayesian_optimization/af_optimizers/AFOptimizer.cpp
+		optimizers/bayesian_optimization/af_optimizers/AFMonteCarlo.cpp
 		optimizers/bayesian_optimization/EGO.cpp
 		${EXPERIMENTAL_CONSTRAINTS_SRC}
-		)
+        optimizers/bayesian_optimization/af_optimizers/AFCompassSearch.cpp optimizers/bayesian_optimization/af_optimizers/AFCompassSearch.h)
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
 target_link_libraries(optimization
@@ -90,6 +91,7 @@ if (BUILD_TESTING)
 			tests/test_normalizer.cpp
             tests/constraints/test_interwell_distance.cpp
             tests/constraints/test_spline_well_length.cpp
+			tests/optimizers/test_ego.cpp
             )
 
 	target_link_libraries(test_optimization

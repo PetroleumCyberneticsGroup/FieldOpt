@@ -20,10 +20,12 @@
 #ifndef FIELDOPT_EGO_H
 #define FIELDOPT_EGO_H
 
+#include <optimizers/bayesian_optimization/af_optimizers/AFMonteCarlo.h>
 #include "Optimization/optimizer.h"
 #include "libgp/include/gp.h"
-#include "optimizers/bayesian_optimization/af_optimizers/AFOptimizer.h"
 #include "AcquisitionFunction.h"
+#include "af_optimizers/AFPSO.h"
+#include "af_optimizers/AFCompassSearch.h"
 
 namespace Optimization {
 namespace Optimizers {

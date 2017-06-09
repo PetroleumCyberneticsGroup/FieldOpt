@@ -27,14 +27,13 @@ namespace BayesianOptimization {
 namespace AFOptimizers {
 
 AFPSO::AFPSO() {
-    c1_ = 1.193;
-    c2_ = 1.193;
-    inertia_ = 0.721;
-    n_particles_ = 50;
-    n_neighbourhoods_ = 10;
-    n_iters_ = 20;
+    c1_ = 2.8;
+    c2_ = 1.2;
+    inertia_ = 1.2;
+    n_particles_ = 200;
+    n_neighbourhoods_ = 20;
     gen_ = get_random_generator();
-    n_iterations_ = 50;
+    n_iterations_ = 500;
     iteration_ = 0;
 }
 AFPSO::AFPSO(VectorXd lb, VectorXd ub) : AFPSO() {
@@ -42,21 +41,16 @@ AFPSO::AFPSO(VectorXd lb, VectorXd ub) : AFPSO() {
     ub_ = ub;
     n_dims_ = lb.size();
 }
-VectorXd AFPSO::Optimize(libgp::GaussianProcess *gp, AcquisitionFunction &af) {
+Eigen::VectorXd AFPSO::Optimize(libgp::GaussianProcess *gp, AcquisitionFunction &af, double target) {
     pop_.clear();
 
     // Generate initial population
     for (int i = 0; i < n_particles_; ++i) {
-        pop_.push_back(Particle());
-    }
-
-    // Evaluate initial population
-    for (int j = 0; j < n_particles_; ++j) {
-        pop_[j].fit = af.Evaluate(gp, pop_[j].pos);
+        pop_.push_back(Particle(lb_, ub_, gen_));
     }
 
     // Generate neighbourhoods
-    assert(n_particles_ & n_neighbourhoods_ == 0);
+    assert(n_particles_ % n_neighbourhoods_ == 0);
     int part_per_nbhd = n_particles_ / n_neighbourhoods_;
     for (int k = 0; k < n_neighbourhoods_; ++k) {
         int p = k*part_per_nbhd;
@@ -70,6 +64,17 @@ VectorXd AFPSO::Optimize(libgp::GaussianProcess *gp, AcquisitionFunction &af) {
         pop_[p+part_per_nbhd-1].nbr_2_idx = p;
     }
 
+    // Evaluate initial population
+    for (int j = 0; j < n_particles_; ++j) {
+        pop_[j].fit = af.Evaluate(gp, pop_[j].pos, target);
+        pop_[j].fit_best_self = pop_[j].fit;
+        pop_[j].fit_best_nbhd = pop_[j].fit;
+    }
+
+//    for (int i = 0; i < n_particles_; ++i) {
+//        cout << "P" << i << " self: " << pop_[i].fit << " sbst: " << pop_[i].fit_best_self << " nbst: " << pop_[i].fit_best_nbhd << endl;
+//    }
+
     // Main loop (iterations)
     while (iteration_ < n_iterations_) {
 
@@ -77,19 +82,30 @@ VectorXd AFPSO::Optimize(libgp::GaussianProcess *gp, AcquisitionFunction &af) {
         for (int i = 0; i < n_particles_; ++i) {
 
             // Update best in neighbourhood
-            if (pop_[i].fit < pop_[pop_[i].nbr_1_idx].fit) {
-                pop_[i].pos_best_nbhd = pop_[pop_[i].nbr_1_idx].pos;
-                pop_[i].fit_best_nbhd = pop_[pop_[i].nbr_1_idx].fit;
+            if (pop_[i].fit_best_self < pop_[pop_[i].nbr_1_idx].fit_best_self) {
+                if (pop_[i].fit_best_nbhd < pop_[pop_[i].nbr_1_idx].fit_best_self) {
+                    pop_[i].pos_best_nbhd = pop_[pop_[i].nbr_1_idx].pos_best_self;
+                    pop_[i].fit_best_nbhd = pop_[pop_[i].nbr_1_idx].fit_best_self;
+                }
             }
-            else if (pop_[i].fit < pop_[pop_[i].nbr_2_idx].fit) {
-                pop_[i].pos_best_nbhd = pop_[pop_[i].nbr_2_idx].pos;
-                pop_[i].fit_best_nbhd = pop_[pop_[i].nbr_2_idx].fit;
+            else if (pop_[i].fit_best_self < pop_[pop_[i].nbr_2_idx].fit_best_self) {
+                if (pop_[i].fit_best_nbhd < pop_[pop_[i].nbr_2_idx].fit_best_self) {
+                    pop_[i].pos_best_nbhd = pop_[pop_[i].nbr_2_idx].pos_best_self;
+                    pop_[i].fit_best_nbhd = pop_[pop_[i].nbr_2_idx].fit_best_self;
+                }
+            }
+            else {
+                if (pop_[i].fit_best_nbhd < pop_[i].fit_best_self) {
+                    pop_[i].pos_best_nbhd = pop_[i].pos_best_self;
+                    pop_[i].fit_best_nbhd = pop_[i].fit_best_self;
+                }
             }
 
             // Update velocity, pos and fitness
-            pop_[i].update_velocity();
-            pop_[i].update_position();
-            pop_[i].fit = af.Evaluate(gp, pop_[i].pos);
+            pop_[i].update_velocity(inertia_, c1_, c2_, gen_);
+            pop_[i].update_position(lb_, ub_);
+
+            pop_[i].fit = af.Evaluate(gp, pop_[i].pos, target);
 
             // Check if new best fitness for particle
             if (pop_[i].fit > pop_[i].fit_best_self) {
@@ -97,46 +113,48 @@ VectorXd AFPSO::Optimize(libgp::GaussianProcess *gp, AcquisitionFunction &af) {
                 pop_[i].pos_best_self = pop_[i].pos;
             }
         }
-        // Iteration done
-        iteration_++;
+        iteration_++; // Iteration done
     }
     sort(pop_.begin(), pop_.end(), [](Particle &a, Particle &b) {
       return a.fit_best_nbhd > b.fit_best_nbhd;
     });
+//    cout << "f: " << gp->f(pop_[0].pos_best_nbhd.data()) << " v: " << gp->var(pop_[0].pos_best_nbhd.data()) << endl;
     return pop_[0].pos_best_nbhd;
 }
 
-AFPSO::Particle::Particle() {
-    pos = VectorXd::Zero(lb_.size());
-    for (int i = 0; i < lb_.size(); ++i) {
-        pos(i) = random_double(gen_, lb_(i), ub_(i));
+AFPSO::Particle::Particle(VectorXd &lb, VectorXd &ub, boost::mt19937 &gen) {
+    pos = VectorXd::Zero(lb.size());
+    vel = VectorXd::Zero(lb.size());
+    for (int i = 0; i < lb.size(); ++i) {
+        pos(i) = random_double(gen, lb(i), ub(i));
+        double velocity_sign = random_double(gen) <= 0.5 ? 1.0 : -1.0;
+        vel(i) = 0.1* velocity_sign * random_double(gen) * (ub(i) - lb(i));
     }
-    double velocity_sign = random_double(gen_) <= 0.5 ? 1.0 : -1.0;
-    vel = velocity_sign * random_double(gen_) * (ub_ - lb_);
     pos_best_self = pos;
     pos_best_nbhd = pos;
     fit = 0.0;
     fit_best_self = fit;
+    fit_best_nbhd = fit;
 }
-void AFPSO::Particle::update_velocity() {
-    for (int i = 0; i < lb_.size(); ++i) {
-        vel(i) = inertia_ * vel(i)
-            + c1_ * random_double(gen_) * (pos_best_self(i) - pos(i))
-            + c2_ * random_double(gen_) * (pos_best_nbhd(i) - pos(i));
+void AFPSO::Particle::update_velocity(double intertia, double c1, double c2, boost::random::mt19937 &gen) {
+    for (int i = 0; i < pos.size(); ++i) {
+        vel(i) = intertia * vel(i)
+            + c1 * random_double(gen) * (pos_best_self(i) - pos(i))
+            + c2 * random_double(gen) * (pos_best_nbhd(i) - pos(i));
     }
 }
-void AFPSO::Particle::update_position() {
+void AFPSO::Particle::update_position(VectorXd &lb, VectorXd &ub) {
     pos = pos + vel;
-    check_boundaries();
+    check_boundaries(lb, ub);
 }
-void AFPSO::Particle::check_boundaries() {
-    for (int i = 0; i < lb_.size(); ++i) {
-        if (pos(i) < lb_(i)) {
-            pos(i) = lb_(i);
+void AFPSO::Particle::check_boundaries(VectorXd &lb, VectorXd &ub) {
+    for (int i = 0; i < lb.size(); ++i) {
+        if (pos(i) < lb(i)) {
+            pos(i) = lb(i);
             vel(i) = 0.0;
         }
-        else if (pos(i) > ub_(i)) {
-            pos(i) = ub_(i);
+        else if (pos(i) > ub(i)) {
+            pos(i) = ub(i);
             vel(i) = 0.0;
         }
     }

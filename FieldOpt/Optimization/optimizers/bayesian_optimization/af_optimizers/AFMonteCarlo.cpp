@@ -1,5 +1,5 @@
 /******************************************************************************
-   Created by einar on 6/2/17.
+   Created by einar on 6/7/17.
    Copyright (C) 2017 Einar J.M. Baumann <einar.baumann@gmail.com>
 
    This file is part of the FieldOpt project.
@@ -17,32 +17,43 @@
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#include "AcquisitionFunction.h"
-#include <stdio.h>
-#include <libgp/include/gp_utils.h>
-#include <math.h>
+#include <Utilities/math.hpp>
+#include "AFMonteCarlo.h"
+
 
 namespace Optimization {
 namespace Optimizers {
 namespace BayesianOptimization {
+namespace AFOptimizers {
 
-AcquisitionFunction::AcquisitionFunction() {}
-
-AcquisitionFunction::AcquisitionFunction(Settings::Optimizer::Parameters settings) {
-    weight_ev_ = 0.95;
-    weight_var_ = 0.05;
+AFMonteCarlo::AFMonteCarlo(VectorXd lb, VectorXd ub) {
+    lb_ = lb;
+    ub_ = ub;
+    trials_ = 1000;
+    gen_ = get_random_generator();
 }
-double AcquisitionFunction::Evaluate(libgp::GaussianProcess *gp, Eigen::VectorXd x, double target) {
-    double g = (gp->f(x.data()) - target) / sqrt(gp->var(x.data()));
-//    double ei = ( gp->f(x.data()) - target) * libgp::Utils::cdf_norm(g)
-//        + sqrt(gp->var(x.data())) * 1/(2*M_PI)*exp(-1*(g*g)/2);
-    double ei = sqrt(gp->var(x.data()))
-        * (g * libgp::Utils::cdf_norm(g)
-            + 1.0/(2*M_PI) * exp(-0.5*g*g)
-        );
-    return ei;
+Eigen::VectorXd AFMonteCarlo::Optimize(libgp::GaussianProcess *gp, AcquisitionFunction &af, double target) {
+    VectorXd best = generateRandomVector();
+    double targ = target;
+    for (int i = 0; i < trials_; ++i) {
+        auto rand = generateRandomVector();
+        double afv = af.Evaluate(gp, rand, targ);
+        if (gp->f(rand.data()) > targ) {
+            best = rand;
+            targ = gp->f(rand.data());
+        }
+    }
+    return best;
+}
+VectorXd AFMonteCarlo::generateRandomVector() {
+    VectorXd rands = VectorXd::Zero(lb_.size());
+    for (int i = 0; i < lb_.size(); ++i) {
+        rands(i) = random_double(gen_, lb_(i), ub_(i));
+    }
+    return rands;
 }
 
+}
 }
 }
 }
