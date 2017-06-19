@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.2)
-project(FieldOpt VERSION 0.3 LANGUAGES CXX)
+cmake_minimum_required(VERSION 2.8)
+project(FieldOpt)
 
 # Build dirs ===========================================================
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)

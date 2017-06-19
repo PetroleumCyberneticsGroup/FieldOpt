@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.2)
-project(utilities LANGUAGES CXX)
+cmake_minimum_required(VERSION 2.8)
+project(utilities)
 
 
 include_directories(utilities PUBLIC
@@ -20,9 +20,7 @@ if (BUILD_TESTING)
             ${GTEST_BOTH_LIBRARIES}
             ${CMAKE_THREAD_LIBS_INIT})
 
-    target_compile_features(test_utilities
-            PUBLIC cxx_auto_type
-            PUBLIC cxx_range_for)
+    add_compile_options(-std=c++11)
 
     add_test(NAME test_utilities COMMAND $<TARGET_FILE:test_utilities>)
 endif()
