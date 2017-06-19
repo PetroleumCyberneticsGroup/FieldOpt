@@ -538,6 +538,7 @@ VectorXd coeff_vector(Vector3d D, Matrix3d Qinv, Vector3d b) {
     double sum_i = D1 + D2 + D3;
     double sum_ij = D1*D2 + D2*D3 + D3*D1;
     double prod_i = D1*D2*D3;
+
     double Qtb_1 = Qinv.row(0) * ( b * (Qinv.row(0) * b) );
     double Qtb_2 = Qinv.row(1) * ( b * (Qinv.row(1) * b) );
     double Qtb_3 = Qinv.row(2) * ( b * (Qinv.row(2) * b) );
