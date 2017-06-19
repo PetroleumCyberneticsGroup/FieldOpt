@@ -1,5 +1,5 @@
-cmake_minimum_required( VERSION 3.2 )
-project(simulation LANGUAGES CXX)
+cmake_minimum_required( VERSION 2.8 )
+project(simulation)
 
 add_library(simulation
         simulator_interfaces/simulator_exceptions.h
@@ -34,9 +34,7 @@ target_link_libraries(simulation
         PUBLIC ${Boost_LIBRARIES}
         PUBLIC fieldopt::hdf5summaryreader)
 
-target_compile_features(ertwrapper
-        PUBLIC cxx_auto_type
-        PUBLIC cxx_range_for)
+add_compile_options(-std=c++11)
 
 if (BUILD_TESTING)
     # Unit tests

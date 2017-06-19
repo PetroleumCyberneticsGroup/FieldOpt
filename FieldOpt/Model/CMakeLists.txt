@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.2)
-project(model LANGUAGES CXX)
+cmake_minimum_required(VERSION 2.8)
+project(model)
 
 add_library(model
 		model.cpp
@@ -36,9 +36,7 @@ target_include_directories(model PUBLIC
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/wells/wellbore>
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/wells/wellbore/completions>)
 
-target_compile_features(model
-		PUBLIC cxx_auto_type
-		PUBLIC cxx_range_for)
+add_compile_options(-std=c++11)
 
 if (BUILD_TESTING)
     # Unit tests

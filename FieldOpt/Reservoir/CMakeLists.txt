@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.2)
-project(reservoir LANGUAGES CXX)
+cmake_minimum_required(VERSION 2.8)
+project(reservoir)
 
 add_library(reservoir
         grid/cell.cpp
@@ -15,9 +15,7 @@ target_link_libraries (reservoir
         PUBLIC fieldopt::ertwrapper
         ${Boost_LIBRARIES})
 
-target_compile_features(reservoir
-        PUBLIC cxx_auto_type
-        PUBLIC cxx_range_for)
+add_compile_options(-std=c++11)
 
 # Enable position independent code when compiling lib, so that
 # shared library libwellindexcalculator.so may be linked with
