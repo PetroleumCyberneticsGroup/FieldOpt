@@ -70,6 +70,8 @@ set(Boost_USE_MULTITHREAD ON)  # enable multithreading
 # Boost libraries: option-dependent settings ===========================
 if (BUILD_WIC_ADGPRS)  # Implementation of BUILD_WIC_ADGPRS option
 
+    set(Boost_USE_STATIC_LIBS ON) # enable dynamic linking
+
     # CMAKE_EXE_LINKER_FLAGS --> TODO: Double-check if absolutely necessary
     set(CMAKE_EXE_LINKER_FLAGS
             "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++")
