@@ -23,7 +23,6 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/lexical_cast.hpp>
-#include <string>
 
 #include "ertwrapper_exceptions.h"
 

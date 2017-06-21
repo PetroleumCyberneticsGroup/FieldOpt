@@ -141,8 +141,8 @@ TEST_F(APPSTest, TestFunctionRosenbrock) {
     auto best_case = minimizer->GetTentativeBestCase();
 
     // The Rosenbrock function is hard. We don't expect Compass search to find the optimum exactly.
-    EXPECT_NEAR(0.0, best_case->objective_function_value(), 1);
-    EXPECT_NEAR(1.0, best_case->GetRealVarVector()[0], 2);
-    EXPECT_NEAR(1.0, best_case->GetRealVarVector()[1], 2);
+    EXPECT_NEAR(0.0, best_case->objective_function_value(), 2);
+    EXPECT_NEAR(1.0, best_case->GetRealVarVector()[0], 3);
+    EXPECT_NEAR(1.0, best_case->GetRealVarVector()[1], 3);
 }
 }

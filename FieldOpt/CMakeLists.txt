@@ -39,6 +39,8 @@ if (BUILD_TESTING AND NOT COPY_EXAMPLES)
     tests. Several of the tests use files in the examples directory.")
 endif()
 
+add_compile_options(-std=c++11)
+
 # Options 2: Compile WIC sources only ==================================
 # NOTE: only one of these options should be ON
 # Build standalone well index calculator executable

@@ -113,7 +113,9 @@ namespace Optimization {
 
         template<typename T>
         Matrix<T, Dynamic, 1> GSS::perturb(Matrix<T, Dynamic, 1> base, int dir) {
-            Matrix<T, Dynamic, 1> perturbation = base + directions_[dir].cast<T>() * step_lengths_(dir);
+            Matrix<T, Dynamic, 1> dirc = directions_[dir].cast<T>();
+            T sl = step_lengths_(dir);
+            Matrix<T, Dynamic, 1> perturbation = base + dirc * sl;
             return perturbation;
         }
 
