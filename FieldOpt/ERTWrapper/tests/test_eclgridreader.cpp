@@ -18,6 +18,7 @@
 ******************************************************************************/
 
 #include <gtest/gtest.h>
+#include <boost/lexical_cast.hpp>
 #include "ERTWrapper/eclgridreader.h"
 
 using namespace ERTWrapper::ECLGrid;
@@ -42,6 +43,7 @@ class ECLGridReaderTest : public ::testing::Test {
 
   ECLGridReader* ecl_grid_reader_;
   std::string file_name_ = "../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID";
+  std::string norne_file_name_ = "/home/einar/testpit/Brugge_xyz_snopt/brugge_xyz_snopt/ECL/BRUGGE.EGRID";
 
   // Objects declared here can be used by all tests in this test case.
 
@@ -118,6 +120,18 @@ TEST_F(ECLGridReaderTest, GlobalIndexOfCellEncompasingPoint) {
     EXPECT_EQ(global_index_1, 1);
     EXPECT_GT(global_index_2, -1);
     EXPECT_EQ(global_index_3, -1);
+}
+
+TEST_F(ECLGridReaderTest, BoundingCentroids) {
+    ECLGridReader *norne_reader = new ECLGridReader();
+    norne_reader->ReadEclGrid(norne_file_name_);
+    auto bounding_centroids = norne_reader->GetBoundingCellCentroids();
+    cout << endl;
+    for (auto centroid : bounding_centroids) {
+        cout << boost::lexical_cast<string>(centroid.x())
+             << ", " << boost::lexical_cast<string>(centroid.y())
+             << ", " << boost::lexical_cast<string>(centroid.z()) << endl;
+    }
 }
 
 }
