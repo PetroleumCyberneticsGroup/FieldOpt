@@ -142,19 +142,8 @@ int ECLGridReader::ActiveCells()
 
 bool ECLGridReader::IsCellActive(int global_index)
 {
-    auto ijk = ConvertGlobalIndexToIJK(global_index);
     if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting the active status of cells.");
-    else if (global_index > ecl_grid_get_nactive(ecl_grid_) - 1)
-        return false;
-    if (ecl_grid_get_active_index3(ecl_grid_ , ijk.i, ijk.j, ijk.k) == -1)
-        return false;
-    else if (!ecl_grid_cell_active1(ecl_grid_, global_index))
-        return false;
-    else if (!ecl_grid_cell_valid1(ecl_grid_, global_index))
-        return false;
-    else if (ecl_kw_iget_as_double(poro_kw_, global_index) < 0.0)
-        return false;
-    else return true;
+    else return ecl_grid_cell_active1(ecl_grid_, global_index);
 }
 
 ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index)
