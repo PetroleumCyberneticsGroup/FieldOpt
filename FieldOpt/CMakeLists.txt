@@ -40,11 +40,13 @@ if (BUILD_TESTING AND NOT COPY_EXAMPLES)
 endif()
 
 # Options 2: Compile WIC sources only ==================================
-# NOTE: only one of these options should be ON
-# Build standalone well index calculator executable
+# NOTE: only one of the following two options should be ON at same time
+# [1] Build standalone well index calculator executable
 option(BUILD_WIC_ONLY "Build well index calculator exe" OFF)
-# Build OS-dependent well index calculator (shared) library:
+# [2] Build OS-dependent well index calculator (shared) library:
 option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    OFF)
+
+# OTHER: Build executable for WI benchmarktests
 option(BUILD_BENCHMARK "Build exec for wic RMS benchmark" OFF)
 
 # Qt libraries =========================================================
@@ -70,7 +72,7 @@ set(Boost_USE_MULTITHREAD ON)  # enable multithreading
 # Boost libraries: option-dependent settings ===========================
 if (BUILD_WIC_ADGPRS)  # Implementation of BUILD_WIC_ADGPRS option
 
-    set(Boost_USE_STATIC_LIBS ON) # enable dynamic linking
+    set(Boost_USE_STATIC_LIBS OFF) # enable dynamic linking
 
     # CMAKE_EXE_LINKER_FLAGS --> TODO: Double-check if absolutely necessary
     set(CMAKE_EXE_LINKER_FLAGS
