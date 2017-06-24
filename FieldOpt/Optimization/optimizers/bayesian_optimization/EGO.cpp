@@ -72,30 +72,30 @@ Optimization::Optimizer::TerminationCondition EGO::IsFinished() {
     return tc;
 }
 void EGO::handleEvaluatedCase(Case *c) {
-    gp_->add_pattern(c->GetRealVarVector().data(), c->objective_function_value());
+    if (!normalizer_ofv_.is_ready())
+        initializeNormalizers();
+
+    gp_->add_pattern(c->GetRealVarVector().data(), normalizer_ofv_.normalize(c->objective_function_value()));
     if (isImprovement(c)) {
         updateTentativeBestCase(c);
         cout << "Found new tent. best: " << c->objective_function_value() << endl;
     }
 }
 void EGO::iterate() {
-    if (iteration_ % 100 == 0) {
-        cout << "Optimizing hyperparameters ... ";
-        Eigen::VectorXd params(2);
-        params << -1, -1;
-        gp_->covf().set_loghyper(params);
+    if (!normalizer_ofv_.is_ready())
+        initializeNormalizers();
 
-        libgp::RProp rprop;
-        rprop.init();
-        rprop.maximize(gp_, 50, 0);
+    Eigen::VectorXd params(2);
+    params << -1, -1;
+    gp_->covf().set_loghyper(params);
 
-        VectorXd zero = VectorXd::Zero(GetTentativeBestCase()->GetRealVarVector().size());
-        cout << "EV at (0,...,0): " << gp_->f(zero.data());
-        cout << " ; VAR at (0,...,0): " << gp_->var(zero.data()) << endl;
-        cout << "Evaluated cases: " << case_handler_->NumberSimulated() << endl;
-    }
-//    cout << "Iterating" << endl;
-    VectorXd new_position = af_opt_.Optimize(gp_, af_, GetTentativeBestCase()->objective_function_value());
+    libgp::RProp rprop;
+    rprop.init();
+    rprop.maximize(gp_, 50, 0);
+
+    VectorXd new_position = af_opt_.Optimize(gp_, af_, normalizer_ofv_.normalize(
+        GetTentativeBestCase()->objective_function_value())
+    );
     Case *new_case = new Case(case_handler_->AllCases()[0]);
     new_case->SetRealVarValues(new_position);
     case_handler_->AddNewCase(new_case);

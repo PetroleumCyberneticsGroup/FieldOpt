@@ -151,8 +151,8 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
       {"Type", "EGO"},
       {"Mode", "Maximize"},
       {"Parameters", QJsonObject{
-          {"LowerBound", -5},
-          {"UpperBound",  5},
+          {"LowerBound", -3},
+          {"UpperBound",  3},
           {"MaxEvaluations", 1000}
       }},
       {"Objective", obj_fun_},

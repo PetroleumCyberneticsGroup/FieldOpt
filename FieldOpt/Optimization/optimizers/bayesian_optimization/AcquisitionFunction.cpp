@@ -26,7 +26,10 @@ namespace Optimization {
 namespace Optimizers {
 namespace BayesianOptimization {
 
-AcquisitionFunction::AcquisitionFunction() {}
+AcquisitionFunction::AcquisitionFunction() {
+    weight_ev_ = 0.95;
+    weight_var_ = 0.05;
+}
 
 AcquisitionFunction::AcquisitionFunction(Settings::Optimizer::Parameters settings) {
     weight_ev_ = 0.95;
