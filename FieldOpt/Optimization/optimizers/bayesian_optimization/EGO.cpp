@@ -17,6 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
+#include "Utilities/stringhelpers.hpp"
 #include "libgp/include/rprop.h"
 #include "Utilities/math.hpp"
 #include "optimizers/bayesian_optimization/af_optimizers/AFPSO.h"
@@ -31,28 +32,30 @@ EGO::EGO(Settings::Optimizer *settings,
          Model::Properties::VariablePropertyContainer *variables,
          Reservoir::Grid::Grid *grid,
          Logger *logger) : Optimizer(settings, base_case, variables, grid, logger) {
-    VectorXd lb, ub;
     if (constraint_handler_->HasBoundaryConstraints()) {
-        auto lb = constraint_handler_->GetLowerBounds(base_case->GetRealVarIdVector());
-        auto ub = constraint_handler_->GetUpperBounds(base_case->GetRealVarIdVector());
+        lb_ = constraint_handler_->GetLowerBounds(base_case->GetRealVarIdVector());
+        ub_ = constraint_handler_->GetUpperBounds(base_case->GetRealVarIdVector());
     }
     else {
-        lb.resize(base_case->GetRealVarIdVector().size());
-        ub.resize(base_case->GetRealVarIdVector().size());
-        lb.fill(settings->parameters().lower_bound);
-        ub.fill(settings->parameters().upper_bound);
+        lb_.resize(base_case->GetRealVarIdVector().size());
+        ub_.resize(base_case->GetRealVarIdVector().size());
+        lb_.fill(settings->parameters().lower_bound);
+        ub_.fill(settings->parameters().upper_bound);
     }
     n_initial_guesses_ = variables->ContinousVariableSize() * 2;
     af_ = AcquisitionFunction(settings->parameters());
-    af_opt_ = AFOptimizers::AFPSO(lb, ub);
+    af_opt_ = AFOptimizers::AFPSO(lb_, ub_);
     gp_ = new libgp::GaussianProcess(variables->ContinousVariableSize(), "CovMatern5iso");
+
+    cout << "Lower bounds: " << eigenvec_to_str(lb_) << endl;
+    cout << "Upper bounds: " << eigenvec_to_str(ub_) << endl;
 
     // Guess some random initial positions
     auto rng = get_random_generator();
     for (int i = 0; i < n_initial_guesses_; ++i) {
-        VectorXd pos = VectorXd::Zero(lb.size());
-        for (int i = 0; i < lb.size(); ++i) {
-            pos(i) = random_double(rng, lb(i), ub(i));
+        VectorXd pos = VectorXd::Zero(lb_.size());
+        for (int i = 0; i < lb_.size(); ++i) {
+            pos(i) = random_double(rng, lb_(i), ub_(i));
         }
         Case * init_case = new Case(base_case);
         init_case->SetRealVarValues(pos);
@@ -96,6 +99,15 @@ void EGO::iterate() {
     VectorXd new_position = af_opt_.Optimize(gp_, af_, normalizer_ofv_.normalize(
         GetTentativeBestCase()->objective_function_value())
     );
+    for (int i = 0; i < new_position.size(); ++i) {
+        if (new_position(i) < lb_(i)) {
+            new_position(i) = lb_(i);
+            cout << "Snapped to LB." << endl;
+        } else if (new_position(i) > ub_(i)) {
+            new_position(i) = ub_(i);
+            cout << "Snapped to UB." << endl;
+        }
+    }
     Case *new_case = new Case(case_handler_->AllCases()[0]);
     new_case->SetRealVarValues(new_position);
     case_handler_->AddNewCase(new_case);

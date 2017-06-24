@@ -52,6 +52,7 @@ class EGO : public Optimizer {
   void iterate() override;
 
  private:
+  VectorXd lb_, ub_; //!< Upper and lower bounds
   int n_initial_guesses_; //!< Number of random cases to be generated initially.
   libgp::GaussianProcess *gp_; //!< The gaussian process to be used throughout the optimization run.
   BayesianOptimization::AcquisitionFunction af_; //!< Acquisition function to be used throughout the optimization run.
