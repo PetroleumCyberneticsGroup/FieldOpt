@@ -1,0 +1,362 @@
+RUNSPEC   == specifications of simulation =============================
+TITLE     -- title of the run
+  BRUGGE EXERCISE
+
+DIMENS    -- dimensions of the model
+-- NX    NY   NZ
+   139   48    9 /
+
+-- specify the phases present
+OIL       -- we run basically two phase black oil here
+GAS
+DISGAS
+WATER
+
+--FIELD     -- unit specification
+
+START     -- starting date for simulation run
+  1 'JAN' 2001  /
+
+-- some other sizes and dimensions necessary for memory allocation:
+EQLDIMS   -- equilibration table size 
+    1  1000   10    1   20 /
+    
+TABDIMS   -- size of saturation and pvt tables
+    1    1   40   40 /
+
+WELLDIMS  -- max numb of WELLS/CONN per WELL/GROUPS/WELLperGROUP
+    30    40    2    20 /			
+
+NSTACK
+   40 /
+
+--FMTOUT
+UNIFOUT
+
+GRID      == geometry of our model =====================================
+
+INCLUDE
+-- realisation.grdecl /
+ grid073.grdecl /
+
+--INCLUDE
+-- actnum.in /
+--INCLUDE
+-- poro073.in /
+
+-- request init and grid file, necessary for post processing of the simulation
+-- with floviz
+INIT
+GRIDFILE
+ 2 /
+
+-- OUTPUT OF DX, DY, DZ, PERMX, PERMY, PERMZ, MULTZ, PORO AND TOPS DATA
+-- IS REQUESTED, AND OF THE CALCULATED PORE VOLUMES AND X, Y AND Z
+-- TRANSMISSIBILITIES
+--RPTGRID
+--  1  1  1  1  1  1  0  0  1  1  0  1  1  0  1  1  1 /
+RPTGRID
+ DX DY DZ TRANX TRANY TRANZ NNC ALLNNC FAULTS/
+
+
+PROPS     == pvt and relperm tables =============================
+
+PVTO
+      0.178108   1.0002722       1.062        1.04 /
+     16.118774   18.011704        1.15       0.975 /
+      32.05944   35.023135       1.207        0.91 /
+     66.078068   69.045998       1.295        0.83 /
+     113.27669   137.09172       1.435       0.695 /
+      138.0337   171.11459         1.5       0.641 /
+     165.64044   205.13745       1.565       0.594 /
+     226.19716   273.18318       1.695        0.51
+                 613.41181       1.579        0.74 /
+/
+
+
+PVTW
+-- Pref    Bref    Comp           Visc  Viscosibility
+   170     1.029   4.599848e-5    0.31     0.0 /
+/
+
+PVDG
+     1.0002722 0.93575959       0.008
+     18.011704 0.067897116      0.0096
+     35.023135 0.035225875      0.0112
+     69.045998 0.017949812      0.014
+     137.09172 0.0090619321     0.0189
+     171.11459 0.0072652665     0.0208
+     205.13745 0.0060637464     0.0228
+     273.18318 0.0045534244     0.0268
+     341.2289  0.0036438624     0.0309
+     613.41181 0.0021672279     0.047
+/
+
+ROCK
+      1.000272   4.4088E-5 /
+
+DENSITY
+      786.5064    1037.836   0.9697576 /	  
+
+SWOF
+0.1	  0	    1	    0
+0.15	0.003	0.875	0
+0.2	  0.012	0.757	0
+0.25	0.028	0.647	0
+0.3	  0.049	0.545	0
+0.35	0.077	0.451	0
+0.4	  0.11	0.365	0
+0.45	0.15	0.287	0
+0.5	  0.196	0.217	0
+0.55	0.248	0.156	0
+0.6	  0.306	0.104	0
+0.65	0.37	0.062	0
+0.7	  0.441	0.03	0
+0.75	0.517	0.008	0
+0.8	  0.6	  0	    0
+1	    1 	  0	    0
+/
+
+SGOF
+-- SWOF for garn3. numerical layer #1
+-- Swi=0.18. Sgc=0.1. and Sorg=0.1
+--Sg		  krg	    krog	  pcog
+0.0000		0.0000	1.0000	0
+0.1000		0.0000	0.4500	0
+0.1310		0.0101	0.3858	0
+0.1620		0.0285	0.3281	0
+0.1930		0.0523	0.2764	0
+0.2240		0.0805	0.2304	0
+0.2550		0.1125	0.1898	0
+0.2860		0.1479	0.1544	0
+0.3170		0.1864	0.1236	0
+0.3480		0.2277	0.0972	0
+0.3790		0.2717	0.0749	0
+0.4100		0.3182	0.0562	0
+0.4410		0.3671	0.0410	0
+0.4720		0.4183	0.0288	0
+0.5030		0.4716	0.0193	0
+0.5340		0.5271	0.0122	0
+0.5650		0.5846	0.0070	0
+0.5960		0.6440	0.0036	0
+0.6270		0.7053	0.0015	0
+0.6580		0.7684	0.0004	0
+0.6890		0.8334	0.0001	0
+0.7200		0.9000	0.0000	0
+/
+
+
+SKIP                         
+
+PVCDO      -- pvt for live oil
+-- Pressure   	Bo	compressibility viscosity 
+170         0.978    1.3430E-4    1.294
+/ 
+
+PVTW   
+170         0.9927   4.3511E-05    0.320
+/
+     
+
+SWOF     -- oil-water Relative Permeabilities and Pcog
+--TABLE      Sw       KRw      KROw     PCow
+0.2550      0.00E+00      4.00E-01      1.0815
+0.2556	    6.00E-10      3.98E-01      1.0191
+0.2562      4.80E-09      3.96E-01      0.9567
+0.2580      7.50E-08      3.90E-01      0.8146
+0.2610      6.00E-07      3.80E-01      0.6701
+0.2669      4.80E-06      3.62E-01      0.5125
+0.2848      7.50E-05      3.10E-01      0.3307
+0.3145      6.00E-04      2.36E-01      0.2251
+0.3740      4.80E-03      1.31E-01      0.1491
+0.4335    	1.62E-02      6.72E-02      0.1178
+0.4930      3.84E-02      3.11E-02      0.0977
+0.5525      7.50E-02      1.25E-02      0.0852
+0.6120      1.30E-01      4.10E-03      0.0764
+0.6715      2.06E-01      9.72E-04      0.0696
+0.7310      3.07E-01      1.28E-04      0.0639
+0.7905      4.37E-01      4.00E-06      0.0597
+0.8202      5.14E-01      1.25E-07      0.0579
+0.8381      5.65E-01      1.28E-09      0.0568
+0.8440      5.82E-01      4.00E-11      0.0564
+0.8470      5.91E-01      1.25E-12      0.0562
+0.8488      5.96E-01      1.28E-14      0.0561
+0.8494      5.98E-01      4.00E-16      0.0561
+0.8500      6.00E-01      0.00E+00      0.0561
+1.0000      1.00E+00      0.00E+00      0.0468
+/
+
+
+ROCK       -- reference Pressure and rock compressibility
+        170    5.0763E-05  
+/
+
+DENSITY   -- oil wat gas @surface(lbm/scf)
+        897.0286  1002.7623   
+/
+
+ENDSKIP
+
+-- OUTPUT CONTROLS FOR PROPS DATA
+-- ACTIVATED FOR SOF3, SWFN, SGFN, PVTW, PVDG, DENSITY AND ROCK KEYWORDS
+RPTPROPS
+1  1  1  0  1  1  1  1  /
+
+	
+
+------!!! notice the oil-water contact face, and 
+SOLUTION   == initial state of solution variables =====================
+EQUIL      -- DATA FOR INITIALISING FLUIDS TO POTENTIAL EQUILIBRIUM
+--    DATUM  DATUM   OWC    OWC    GOC    GOC    RSVD   RVVD   SOLN
+--    DEPTH  PRESS  DEPTH   PCOW  DEPTH   PCOG  TABLE  TABLE   METH
+       1600    170   1650      0   1600      0      0      0      0
+/
+
+
+
+--INCLUDE
+-- swat073.grdecl /
+
+-- OUTPUT CONTROLS (SWITCH ON OUTPUT OF INITIAL GRID BLOCK PRESSURES)
+RPTSOL
+PRESSURE SGAS SWAT /
+
+SUMMARY    == output written to summary *.RSM file ====================
+RUNSUM     -- additional table in *.PRT file
+SEPARATE   -- write a seperate *.RSM file
+ALL
+
+
+SCHEDULE   == operations to be simulated ==============================
+-- CONTROLS ON OUTPUT AT EACH REPORT TIME
+RPTSCHED                                         FIELD   10:29 13 JUN 85
+   1   1   1   1   1   0   0   0   1   0   0   2   0   1   2   0   0
+   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   /
+
+RPTRST    -- request restart file
+'BASIC=2'
+/
+
+-- RPTRST
+-- 3 0 1 0 0 2 /
+
+TUNING  -- min/max timestep (3 sections)
+0.1	30	/
+5*	 0.1	/
+2*   100 	/
+
+
+INCLUDE
+ opt.sched /
+ 
+ 
+END
+
+
+-- WELLS ----------------------
+
+INCLUDE
+ brugge.wel /
+
+
+-- SCHEDULE -------------------
+
+WCONPROD
+ 'P01'   'SHUT' 'BHP'    5*                      	        145.8991/ --BHP control
+/
+WCONPROD
+ 'P02'   'SHUT' 'BHP'    5*                      	        146.3064/ --BHP control
+/
+WCONPROD
+ 'P03'   'SHUT' 'BHP'    5*                      	        143.1727/ --BHP control
+/
+WCONPROD
+ 'P04'   'SHUT' 'BHP'    5*                      	        138.0956/ --BHP control
+/
+WCONPROD
+ 'P05'   'OPEN' 'BHP'    5*                      	        153.1711/ --BHP control
+/
+WCONPROD
+ 'P06'   'SHUT' 'BHP'    5*                      	        144.7302/ --BHP control
+/
+WCONPROD
+ 'P07'   'SHUT' 'BHP'    5*                      	        138.5150/ --BHP control
+/
+WCONPROD
+ 'P08'   'SHUT' 'BHP'    5*                      	        133.2226/ --BHP control
+/
+WCONPROD
+ 'P09'   'SHUT' 'BHP'    5*                      	        49.7740/ --BHP control
+/
+WCONPROD
+ 'P10'   'SHUT' 'BHP'    5*                      	        162.1286/ --BHP control
+/
+WCONPROD
+ 'P11'   'SHUT' 'BHP'    5*                      	        157.4816/ --BHP control
+/
+WCONPROD
+ 'P12'   'SHUT' 'BHP'    5*                      	        159.1153/ --BHP control
+/
+WCONPROD
+ 'P13'   'SHUT' 'BHP'    5*                      	        159.5198/ --BHP control
+/
+WCONPROD
+ 'P14'   'SHUT' 'BHP'    5*                      	        160.4328/ --BHP control
+/
+WCONPROD
+ 'P15'   'SHUT' 'BHP'    5*                      	        160.3718/ --BHP control
+/
+WCONPROD
+ 'P16'   'SHUT' 'BHP'    5*                      	        155.6589/ --BHP control
+/
+WCONPROD
+ 'P17'   'SHUT' 'BHP'    5*                      	        155.9323/ --BHP control
+/
+WCONPROD
+ 'P18'   'SHUT' 'BHP'    5*                      	        156.5024/ --BHP control
+/
+WCONPROD
+ 'P19'   'SHUT' 'BHP'    5*                      	        153.6519/ --BHP control
+/
+WCONPROD
+ 'P20'   'SHUT' 'BHP'    5*                      	        154.1072/ --BHP control
+/
+WCONINJE
+ 'I01'  'WATER' 'SHUT'   'BHP'  2*                            148.0981/ --BHP control
+/
+WCONINJE
+ 'I02'  'WATER' 'SHUT'   'BHP'  2*                            149.4057/ --BHP control
+/
+WCONINJE
+ 'I03'  'WATER' 'SHUT'   'BHP'  2*                            148.8565/ --BHP control
+/
+WCONINJE
+ 'I04'  'WATER' 'SHUT'   'BHP'  2*                            143.8648/ --BHP control
+/
+WCONINJE
+ 'I05'  'WATER' 'SHUT'   'BHP'  2*                            144.4634/ --BHP control
+/
+WCONINJE
+ 'I06'  'WATER' 'SHUT'   'BHP'  2*                            140.6113/ --BHP control
+/
+WCONINJE
+ 'I07'  'WATER' 'SHUT'   'BHP'  2*                            140.9203/ --BHP control
+/
+WCONINJE
+ 'I08'  'WATER' 'SHUT'   'BHP'  2*                            142.2708/ --BHP control
+/
+WCONINJE
+ 'I09'  'WATER' 'SHUT'   'BHP'  2*                            139.4832/ --BHP control
+/
+WCONINJE
+ 'I10'  'WATER' 'SHUT'   'BHP'  2*                            138.0692/ --BHP control
+/
+
+--TSTEP
+--1
+--/
+INCLUDE
+ brugge.sch /
+
+END
