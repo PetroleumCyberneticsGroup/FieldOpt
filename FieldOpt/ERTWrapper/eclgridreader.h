@@ -26,6 +26,9 @@
 #include <Eigen/Dense>
 #include <vector>
 
+using namespace std;
+using namespace Eigen;
+
 namespace ERTWrapper {
 
 namespace ECLGrid {
@@ -72,8 +75,8 @@ class ECLGridReader
     double permx;
     double permy;
     double permz;
-    std::vector<Eigen::Vector3d> corners;
-    Eigen::Vector3d center;
+    vector<Vector3d> corners;
+    Vector3d center;
   };
 
   struct IJKIndex {
@@ -83,12 +86,12 @@ class ECLGridReader
   };
 
  private:
-  std::string file_name_;
-  std::string init_file_name_;
+  string file_name_;
+  string init_file_name_;
   ecl_grid_type* ecl_grid_;
   ecl_file_type* ecl_file_init_;
-  Eigen::Vector3d GetCellCenter(int global_index);
-  std::vector<Eigen::Vector3d> GetCellCorners(int global_index);
+  Vector3d GetCellCenter(int global_index);
+  vector<Vector3d> GetCellCorners(int global_index);
   double GetCellVolume(int global_index);
 
   ecl_kw_type *poro_kw_;
@@ -105,7 +108,7 @@ class ECLGridReader
    * \brief ReadEclGrid reads an ECLIPSE .GRID or .EGRID file.
    * \param file_name The path to the grid to be read, including suffix.
    */
-  void ReadEclGrid(std::string file_name);
+  void ReadEclGrid(string file_name);
 
   /*!
    * \brief ConvertIJKToGlobalIndex Converts a set of zero-offset (i,j,k) coordinates to the global index to that cell.
@@ -170,6 +173,13 @@ class ECLGridReader
    * @return The smallest cell in the reservoir.
    */
   Cell FindSmallestCell();
+
+  /*!
+   * Get a list containing the centroids of all bounding cells, i.e. the
+   * outermost cells of the reservoir.
+   * @return
+   */
+  vector<Vector3d> GetBoundingCellCentroids();
 };
 }
 }

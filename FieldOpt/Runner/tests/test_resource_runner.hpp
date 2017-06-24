@@ -29,11 +29,11 @@ class RunnerResources {
  private:
   const int argc = 16;
   const char *argv[16] = {"FieldOpt",
-                          "/home/einar/Documents/GitHub/PCG/FieldOpt/examples/ADGPRS/5spot/fo_driver_5vert_wells.json",
-                          "/home/einar/PCG/FieldOpt/FieldOpt/cmake-build-debug/fieldopt-output",
-                          "-g", "/home/einar/Documents/GitHub/PCG/FieldOpt/examples/Flow/5spot/5SPOT.EGRID",
-                          "-s", "/home/einar/Documents/GitHub/PCG/FieldOpt/examples/Flow/5spot/5SPOT.DATA",
-                          "-b", "/home/einar/.CLion2016.2/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug/bin",
+                          "/home/einar/git/pcg/FieldOpt/examples/ADGPRS/5spot/fo_driver_5vert_wells.json",
+                          "/home/einar/git/pcg/FieldOpt/FieldOpt/cmake-build-debug/fieldopt-output",
+                          "-g", "/home/einar/git/pcg/FieldOpt/examples/Flow/5spot/5SPOT.EGRID",
+                          "-s", "/home/einar/git/pcg/FieldOpt/examples/Flow/5spot/5SPOT.DATA",
+                          "-b", "/home/einar/git/pcg/FieldOpt/FieldOpt/cmake-build-debug/bin",
                           "-r", "mpisync",
                           "-f",
                           "-v", "0",

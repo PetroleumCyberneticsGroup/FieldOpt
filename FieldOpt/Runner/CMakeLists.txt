@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.2)
-project(runner LANGUAGES CXX)
+cmake_minimum_required(VERSION 2.8)
+project(runner)
 
 find_package(MPI REQUIRED)
 include_directories(${MPI_INCLUDE_PATH})
@@ -76,13 +76,7 @@ target_include_directories(runner PUBLIC
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/runners>)
 
-target_compile_features(FieldOpt
-		PUBLIC cxx_auto_type
-		PUBLIC cxx_range_for)
-
-target_compile_features(runner
-		PUBLIC cxx_auto_type
-		PUBLIC cxx_range_for)
+add_compile_options(-std=c++11)
 
 if (BUILD_TESTING)
 	# Unit tests

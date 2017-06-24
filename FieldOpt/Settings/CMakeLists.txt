@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.2)
-project(settings LANGUAGES CXX)
+cmake_minimum_required(VERSION 2.8)
+project(settings)
 
 add_library(settings
         settings_exceptions.h
@@ -16,9 +16,7 @@ target_link_libraries(settings
 target_include_directories(settings PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 
-target_compile_features(settings
-        PUBLIC cxx_auto_type
-        PUBLIC cxx_range_for)
+add_compile_options(-std=c++11)
 
 if (BUILD_TESTING)
     # Unit tests
