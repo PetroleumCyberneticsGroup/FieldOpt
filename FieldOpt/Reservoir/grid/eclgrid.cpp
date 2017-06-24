@@ -71,20 +71,20 @@ ECLGrid::ECLGrid(string file_path)
 
     if (first_cell.EnvelopsPoint(first_cell.center()))
     {
-		return;
+        return;
     }
 
-	// Set faces permutation to second permutation type
-	faces_permutation_index_ = 1;
-	// Get the first cell
-	first_cell = GetCell(idx);
-	if (first_cell.EnvelopsPoint(first_cell.center()))
-	{
-		return;
-	}
+    // Set faces permutation to second permutation type
+    faces_permutation_index_ = 1;
+    // Get the first cell
+    first_cell = GetCell(idx);
+    if (first_cell.EnvelopsPoint(first_cell.center()))
+    {
+        return;
+    }
 
-	// We should not have gotten here - if here then it means there we need more permutations schems
-	throw runtime_error("Unknown axis orientation");
+    // We should not have gotten here - if here then it means there we need more permutations schems
+    throw runtime_error("Unknown axis orientation");
 }
 
 ECLGrid::~ECLGrid() {
@@ -162,9 +162,12 @@ Cell ECLGrid::GetCell(int global_index) {
 Cell ECLGrid::GetCell(int i, int j, int k) {
     // Check if IJK cell is inside overall (i.e., active+inactive) grid
     if (!IndexIsInsideGrid(i, j, k)) {
-        throw runtime_error("ECLGrid::GetCell(int i, int j, int k): Error "
-                                "getting grid cell. Index (i, j, k) is outside "
-                                "grid.");
+        string errstring = "ECLGrid::GetCell(int i, int j, int k): Error "
+            "getting grid cell. Index ( "
+            + boost::lexical_cast<string>(j) + ", "
+            + boost::lexical_cast<string>(j) + ", "
+            + boost::lexical_cast<string>(k) + ") is outside grid.";
+        throw runtime_error(errstring);
     }
 
     if (type_ == GridSourceType::ECLIPSE) {
