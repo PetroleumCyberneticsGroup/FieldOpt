@@ -51,7 +51,20 @@ class ECLGridReader
    *
    * The cell struct also contains all non-geometric properties
    * for a cell, i.e. permeabilities, porosities, and whether or
-   * not the cell is active
+   * not the cell is active.
+   * 
+   * In case of a dual grid the active status of matrix and fracture
+   * will be recorded and the properties for all grids is stored. 
+   * 
+   * The ecl_grid specifies the active status is encoded as: 
+   *                  0 - inactive, 
+   *                  1 - active in matrix, 
+   *                  2 - active in fracture 
+   *                  3 - active in both.
+   * Here we use two booleans to store the active status.
+   * The properties are stored in a vector with one or two items depending
+   * on the active status. If the cell is active both in the matrix grid as 
+   * well as in the fracture grid the matrix values will be stored first.
    *
    * The corners list contains all the corner points specifying the grid.
    * The first four elements represent the corners in the lower layer,
@@ -66,12 +79,13 @@ class ECLGridReader
    */
   struct Cell {
     int global_index;
-    bool active;
+    bool matrix_active;
+    bool fracture_active;
     double volume;
-    double porosity;
-    double permx;
-    double permy;
-    double permz;
+    std::vector<double> porosity;
+    std::vector<double> permx;
+    std::vector<double> permy;
+    std::vector<double> permz;
     std::vector<Eigen::Vector3d> corners;
     Eigen::Vector3d center;
   };
@@ -130,15 +144,28 @@ class ECLGridReader
   Dims Dimensions();
 
   /*!
-   * \brief ActiveCells Number of active cells in the grid that has been read.
+   * \brief NumActiveMatrixCells Number of active cells in the matrix in the grid that has been read.
    */
-  int ActiveCells();
+  int NumActiveMatrixCells();
 
   /*!
-   * \brief IsCellActive returns false if the cell identified by its global index is not active
+   * \brief NumActiveFractureCells Number of active cells in the fracture grid that has been read.
+   * This only makes sense for dual grids
    */
-  bool IsCellActive(int global_index);
+  int NumActiveMatrixCells();
+  
+  /*!
+   * \brief IsCellMatrixActive returns false if the cell identified by its global index 
+   * is not active in the matrix grid
+   */
+  bool IsCellMatrixActive(int global_index);
 
+  /*!
+   * \brief IsCellFractureActive returns false if the cell identified by its global index 
+   * is not active in the facture grid in the case of dual grid
+   */
+  bool IsCellFractureActive(int global_index);
+  
   /*!
    * \brief GetGridCell get a Cell struct describing the cell with the specified global index.
    * \param global_index The global index of the cell to get.
