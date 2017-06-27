@@ -94,6 +94,7 @@ namespace Settings {
                 bool is_variable;
                 QString name;
             };
+            bool is_2d; //!< Indicates whether this well is in a two-dimensional reservoir (if so, it will not vary in the z-direction)
             PreferredPhase preferred_phase; //!< The preferred phase for the well
             QString name; //!< The name to be used for the well.
             WellType type; //!< The well type, i.e. producer or injector.

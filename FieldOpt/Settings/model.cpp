@@ -87,6 +87,11 @@ namespace Settings {
         // Well name
         well.name = json_well["Name"].toString();
 
+        // Dimensionality
+        if (json_well.contains("Is2D") && json_well["Is2D"].toBool() == true)
+            well.is_2d = true;
+        else well.is_2d = false;
+
         // Well Type
         QString type = json_well["Type"].toString();
 
