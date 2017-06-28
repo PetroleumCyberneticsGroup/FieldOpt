@@ -46,7 +46,7 @@ add_compile_options(-std=c++11)
 # [1] Build standalone well index calculator executable
 option(BUILD_WIC_ONLY "Build well index calculator exe" OFF)
 # [2] Build OS-dependent well index calculator (shared) library:
-option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    ON)
+option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    OFF)
 
 # OTHER: Build executable for WI benchmarktests
 option(BUILD_BENCHMARK "Build exec for wic RMS benchmark" OFF)
