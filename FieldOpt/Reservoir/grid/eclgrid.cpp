@@ -20,7 +20,9 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/lexical_cast.hpp>
-#include <iostream>
+#include <FieldOpt-WellIndexCalculator/wellindexcalculator.h>
+
+#include "FieldOpt-WellIndexCalculator/tests/wic_debug.hpp"
 
 namespace Reservoir {
 namespace Grid {
@@ -49,9 +51,10 @@ ECLGrid::ECLGrid(string file_path)
 
     // Calculate the proper corner permutation for cell faces definition:
     // This is a function of the z axis orientation.
-    // Somehow the grid reader it re-aranging the cell corners and I could not easily found a logic
-    // so we are going to check all known permutations with the hoe tha one of them is suitable for
-    // the current grid - we do that based on the cell 0 in the grid
+    // Somehow the grid reader it re-aranging the cell corners and I could n
+    // ot easily found a logic so we are going to check all known permutations
+    // with the toe that one of them is suitable for the current grid - we do
+    // that based on the cell 0 in the grid
 
     // Find the first (active) cell index.
     int idx = 0;
@@ -83,7 +86,8 @@ ECLGrid::ECLGrid(string file_path)
 		return;
 	}
 
-	// We should not have gotten here - if here then it means there we need more permutations schems
+	// We should not have gotten here - if here then it
+    // means there we need more permutations schemes
 	throw runtime_error("Unknown axis orientation");
 }
 
@@ -197,7 +201,6 @@ vector<int> ECLGrid::GetBoundingBoxCellIndices(
     double xf, double yf, double zf,
     double &bb_xi, double &bb_yi, double &bb_zi,
     double &bb_xf, double &bb_yf, double &bb_zf)
-
 {
     double x_i, y_i, z_i, x_f, y_f, z_f;
     x_i = min(xi, xf);
@@ -223,15 +226,19 @@ vector<int> ECLGrid::GetBoundingBoxCellIndices(
         // cells - that means defined cells
         try {
             cell = GetCell(ii);
+
             // Calculate cell size
             double dx = (cell.corners()[5] - cell.corners()[4]).norm();
             double dy = (cell.corners()[6] - cell.corners()[4]).norm();
             double dz = (cell.corners()[0] - cell.corners()[4]).norm();
 
+            // Test if cell dims (dx,dy,dz) are within bbox corners
             if ((cell.center().x() >= x_i - dx/1.7) && (cell.center().x() <= x_f + dx/1.7) &&
                 (cell.center().y() >= y_i - dy/1.7) && (cell.center().y() <= y_f + dy/1.7) &&
-                (cell.center().z() >= z_i - dz/1.7) && (cell.center().z() <= z_f + dz/1.7)) {
+                (cell.center().z() >= z_i - dz/1.7) && (cell.center().z() <= z_f + dz/1.7))
+            {
                 indices_list.push_back(ii);
+                // Adjust bbox corners
                 bb_xi = min(bb_xi, cell.center().x() - dx/2.0);
                 bb_yi = min(bb_yi, cell.center().y() - dy/2.0);
                 bb_zi = min(bb_zi, cell.center().z() - dz/2.0);
@@ -243,8 +250,12 @@ vector<int> ECLGrid::GetBoundingBoxCellIndices(
         catch(const std::runtime_error& e)
         {
             // We should never end up here
+            std::cout << e.what() << endl;
+            throw std::runtime_error("Something");
         }
     }
+
+    // Return
     return indices_list;
 }
 

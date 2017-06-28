@@ -111,7 +111,8 @@ class ECLGridReader
   void ReadEclGrid(string file_name);
 
   /*!
-   * \brief ConvertIJKToGlobalIndex Converts a set of zero-offset (i,j,k) coordinates to the global index to that cell.
+   * \brief ConvertIJKToGlobalIndex Converts a set of zero-offset
+   * (i,j,k) coordinates to the global index to that cell.
    * \param ijk Zero-offset coordinates for a cell.
    * \return global index
    */
@@ -119,8 +120,8 @@ class ECLGridReader
   int ConvertIJKToGlobalIndex(int i, int j, int k);
 
   /*!
-   * \brief ConvertGlobalIndexToIJK Converts a global index for a cell
-   * to the corresponding zero-offset (i,j,k) coordinates.
+   * \brief ConvertGlobalIndexToIJK Converts a global index for a
+   * cell to the corresponding zero-offset (i,j,k) coordinates.
    * \param global_index Global index for a cell.
    * \return (i,j,k) Zero-offset coordinates
    */
@@ -175,11 +176,12 @@ class ECLGridReader
   Cell FindSmallestCell();
 
   /*!
-   * Get a list containing the centroids of all bounding cells, i.e. the
+   * Get list of reservoir boundary cell centroids, i.e.
    * outermost cells of the reservoir.
    * @return
    */
-  vector<Vector3d> GetBoundingCellCentroids();
+  vector<Vector3d> GetBoundaryCentroids();
+
 };
 }
 }

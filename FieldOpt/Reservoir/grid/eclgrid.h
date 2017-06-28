@@ -24,6 +24,7 @@
 #include <vector>
 #include "grid.h"
 
+
 namespace Reservoir {
 namespace Grid {
 
@@ -78,6 +79,10 @@ private:
   bool IndexIsInsideGrid(IJKCoordinate *ijk);
 
   bool SetGridCellFacesPermutations();
+
+  // WIC Debug
+  bool dbg_mode = true; //!< On/off printing of debug messages
+
 };
 
 }

@@ -88,17 +88,17 @@ void ECLGridReader::ReadEclGrid(std::string file_name)
 
     if (ecl_file_init_ == 0) {
         ecl_file_init_ = ecl_file_open(init_file_name_.c_str(), 0);
-        poro_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PORO", 0);
         permx_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMX", 0);
         permy_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMY", 0);
         permz_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMZ", 0);
+        poro_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PORO", 0);
     } else {
         ecl_file_close(ecl_file_init_);
         ecl_file_init_ = ecl_file_open(init_file_name_.c_str(), 0);
-        poro_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PORO", 0);
         permx_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMX", 0);
         permy_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMY", 0);
         permz_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMZ", 0);
+        poro_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PORO", 0);
     }
 }
 
@@ -181,10 +181,10 @@ ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index)
         int i, j, k;
         ecl_grid_get_ijk1(ecl_grid_, global_index, &i, &j, &k);
         int active_index = ecl_grid_get_active_index3(ecl_grid_ , i , j , k);
-        cell.porosity = ecl_kw_iget_as_double(poro_kw_, active_index);
         cell.permx = ecl_kw_iget_as_double(permx_kw_, active_index);
         cell.permy = ecl_kw_iget_as_double(permy_kw_, active_index);
         cell.permz = ecl_kw_iget_as_double(permz_kw_, active_index);
+        cell.porosity = ecl_kw_iget_as_double(poro_kw_, active_index);
     }
 
     return cell;
@@ -219,7 +219,7 @@ ECLGridReader::Cell ECLGridReader::FindSmallestCell() {
     }
     return GetGridCell(index_with_smallest_volume);
 }
-vector<Vector3d> ECLGridReader::GetBoundingCellCentroids() {
+vector<Vector3d> ECLGridReader::GetBoundaryCentroids() {
     auto dims = Dimensions();
     vector<Vector3d> bounding_centroids;
 

@@ -31,8 +31,8 @@ ENDIF("${isSystemDir}" STREQUAL "-1")
 # END Install dirs =====================================================
 
 # Options 1: Unit tests, example dir ===================================
-option(BUILD_TESTING "Build unit tests"                 ON)
-option(COPY_EXAMPLES "Copy examples to build directory" ON)
+option(BUILD_TESTING "Build unit tests"                 OFF)
+option(COPY_EXAMPLES "Copy examples to build directory" OFF)
 
 if (BUILD_TESTING AND NOT COPY_EXAMPLES)
     message("It is recommended to copy examples when building unit
@@ -46,7 +46,7 @@ add_compile_options(-std=c++11)
 # [1] Build standalone well index calculator executable
 option(BUILD_WIC_ONLY "Build well index calculator exe" OFF)
 # [2] Build OS-dependent well index calculator (shared) library:
-option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    OFF)
+option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    ON)
 
 # OTHER: Build executable for WI benchmarktests
 option(BUILD_BENCHMARK "Build exec for wic RMS benchmark" OFF)
@@ -167,6 +167,8 @@ if (NOT BUILD_WIC_ONLY AND NOT BUILD_WIC_ADGPRS)
     file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fieldopt-output)
 
 endif()
+
+add_compile_options(-std=fPIC)
 
 # Copy example files ===================================================
 if (COPY_EXAMPLES)

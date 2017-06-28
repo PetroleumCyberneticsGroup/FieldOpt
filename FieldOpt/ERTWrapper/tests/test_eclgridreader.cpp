@@ -125,7 +125,7 @@ TEST_F(ECLGridReaderTest, GlobalIndexOfCellEncompasingPoint) {
 TEST_F(ECLGridReaderTest, BoundingCentroids) {
     ECLGridReader *norne_reader = new ECLGridReader();
     norne_reader->ReadEclGrid(norne_file_name_);
-    auto bounding_centroids = norne_reader->GetBoundingCellCentroids();
+    auto bounding_centroids = norne_reader->GetBoundaryCentroids();
     cout << endl;
     for (auto centroid : bounding_centroids) {
         cout << boost::lexical_cast<string>(centroid.x())
