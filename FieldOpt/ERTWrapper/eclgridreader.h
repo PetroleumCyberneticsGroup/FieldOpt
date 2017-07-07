@@ -130,6 +130,14 @@ class ECLGridReader
   int ConvertIJKToGlobalIndex(int i, int j, int k);
 
   /*!
+   * \brief ConvertMatrixActiveIndexToGlobalIndex Converts a zero-offset index in the set of cells active in the matrix grid 
+   * to the global index.
+   * \param index Zero-offset index for a cell active in the matrix grid
+   * \return global index
+   */
+  int ConvertMatrixActiveIndexToGlobalIndex(int index);
+  
+  /*!
    * \brief ConvertGlobalIndexToIJK Converts a global index for a cell
    * to the corresponding zero-offset (i,j,k) coordinates.
    * \param global_index Global index for a cell.
@@ -144,7 +152,7 @@ class ECLGridReader
   Dims Dimensions();
 
   /*!
-   * \brief NumActiveMatrixCells Number of active cells in the matrix in the grid that has been read.
+   * \brief NumActiveCells Number of active cells in the matrix in the grid that has been read.
    */
   int NumActiveMatrixCells();
 
@@ -152,7 +160,13 @@ class ECLGridReader
    * \brief NumActiveFractureCells Number of active cells in the fracture grid that has been read.
    * This only makes sense for dual grids
    */
-  int NumActiveMatrixCells();
+  int NumActiveFractureCells();
+
+  /*!
+   * \brief IsCellActive returns false if the cell identified by its global index 
+   * is not active in the matrix grid nor in the fracture
+   */
+  bool IsCellActive(int global_index);
   
   /*!
    * \brief IsCellMatrixActive returns false if the cell identified by its global index 
