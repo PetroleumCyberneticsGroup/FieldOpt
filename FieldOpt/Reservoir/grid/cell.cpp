@@ -28,12 +28,12 @@ namespace Grid {
 using namespace std;
 
 Cell::Cell(int global_index, IJKCoordinate ijk_index,
-           double volume, double poro,
-           double permx, double permy, double permz,
+           double volume, vector<double> poro,
+           vector<double> permx, vector<double> permy, vector<double> permz,
            Eigen::Vector3d center,
            vector<Eigen::Vector3d> corners,
            int faces_permutation_index,
-           bool active)
+           bool active_matrix, bool active_fracture)
 {
     global_index_ = global_index;
     ijk_index_ = ijk_index;
@@ -44,7 +44,8 @@ Cell::Cell(int global_index, IJKCoordinate ijk_index,
     permz_ = permz;
     center_ = center;
     corners_ = corners;
-    is_active_ = active;
+    is_active_matrix_ = active_matrix;
+    is_active_fracture_ = active_fracture;
 
     initializeFaces(faces_permutation_index);
 }
