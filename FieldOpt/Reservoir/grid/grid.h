@@ -98,22 +98,29 @@ class Grid
    * (x,y,z) searching the entire grid. Throws an exception if no cell
    * is found.
    */
-  virtual Cell GetCellEnvelopingPoint(double x, double y, double z) = 0;
+  // OV: 20170709
+  virtual bool GetCellEnvelopingPoint(Cell& cell, double x, double y, double z) = 0;
+  // virtual Cell GetCellEnvelopingPoint(double x, double y, double z) = 0;
 
   /*!
    * \brief GetCellEnvelopingPoint Get the cell enveloping the point
    * (x,y,z) searching a subsection of the grid. Throws an exception
    * if no cell is found.
    */
-  virtual Cell GetCellEnvelopingPoint(double x, double y, double z,
+  // OV: 20170709
+  virtual bool GetCellEnvelopingPoint(Cell& cell, double x, double y, double z,
                                       std::vector<int> search_set) = 0;
+  // virtual Cell GetCellEnvelopingPoint(double x, double y, double z,
+  //                                     std::vector<int> search_set) = 0;
 
   /*!add
    * \brief GetCellEnvelopingPoint Get the cell enveloping the point
    * (xyz.x(), xyz.y(), xyz.z()) searching the entire grid. Throws an
    * exception if no cell is found.
    */
-  virtual Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz) = 0;
+  // OV: 20170709
+  virtual bool GetCellEnvelopingPoint(Cell& cell, Eigen::Vector3d xyz) = 0;
+  // virtual Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz) = 0;
 
   /*!
    * \brief GetCellEnvelopingPoint Get the cell enveloping the point
@@ -122,8 +129,11 @@ class Grid
    * \param xyz Point to check
    * \param search_set Set to check first
    */
-  virtual Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz,
+  // OV: 20170709
+  virtual bool GetCellEnvelopingPoint(Cell& cell, Eigen::Vector3d xyz,
                                       std::vector<int> search_set) = 0;
+  // virtual Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz,
+  //                                     std::vector<int> search_set) = 0;
 
   /*!
    * @brief Get the smallest cell in the reservoir.
