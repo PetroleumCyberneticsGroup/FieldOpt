@@ -55,13 +55,13 @@ class Cell
   /*!
    * \brief Set cell properties at a later stage
    */
-  void SetProperties(bool is_active_matrix,
+  /*void SetProperties(bool is_active_matrix,
 		  bool is_active_fracture,
           vector<double> porosity,
           vector<double> permx,
           vector<double> permy,
           vector<double> permz);
-
+*/
   /*!
    * \brief global_index Gets the cells global index in its parent grid.
    */
@@ -79,25 +79,25 @@ class Cell
 
   /*!
    * \brief porosity Gets the cell's porosity vector 
-   * One value for all grid in which it is active.
+   * One value for each grid in which it is active.
    */
   vector<double> porosity() const { return porosity_; }
 
   /*!
    * \brief porosity Gets the cell's x-permeability vector.
-   * One value for all grid in which it is active.
+   * One value for each grid in which it is active.
    */
   vector<double> permx() const { return permx_; }
 
   /*!
    * \brief porosity Gets the cell's y-permeability vector.
-   * One value for all grid in which it is active.
+   * One value for each grid in which it is active.
    */
   vector<double> permy() const { return permy_; }
 
   /*!
    * \brief porosity Gets the cell's z-permeability vector.
-   * One value for all grid in which it is active.
+   * One value for each grid in which it is active.
    */
   vector<double> permz() const { return permz_; }
 

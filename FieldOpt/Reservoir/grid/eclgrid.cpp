@@ -137,7 +137,7 @@ Cell ECLGrid::GetCell(int global_index) {
         for (auto corner : ertCell.corners) {
             corners.push_back(corner);
         }
-
+        
         // Return cell info
         return Cell(global_index, ijk_index,
                     ertCell.volume, ertCell.porosity,
@@ -210,11 +210,10 @@ vector<int> ECLGrid::GetBoundingBoxCellIndices(
 
     vector<int> indices_list;
     for (int ii = 0; ii < total_cells; ii++) {
-        Cell cell;
         // Try is here because we only want to get the list of active
         // cells - that means defined cells
         try {
-            cell = GetCell(ii);
+            Cell cell = GetCell(ii);
             // Calculate cell size
             double dx = (cell.corners()[5] - cell.corners()[4]).norm();
             double dy = (cell.corners()[6] - cell.corners()[4]).norm();

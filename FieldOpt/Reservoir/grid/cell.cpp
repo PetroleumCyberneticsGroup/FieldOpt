@@ -28,8 +28,8 @@ namespace Grid {
 using namespace std;
 
 Cell::Cell(int global_index, IJKCoordinate ijk_index,
-           double volume, vector<double> poro,
-           vector<double> permx, vector<double> permy, vector<double> permz,
+           double volume, vector<double> poro_in,
+           vector<double> permx_in, vector<double> permy_in, vector<double> permz_in,
            Eigen::Vector3d center,
            vector<Eigen::Vector3d> corners,
            int faces_permutation_index,
@@ -38,10 +38,10 @@ Cell::Cell(int global_index, IJKCoordinate ijk_index,
     global_index_ = global_index;
     ijk_index_ = ijk_index;
     volume_ = volume;
-    porosity_ = poro;
-    permx_ = permx;
-    permy_ = permy;
-    permz_ = permz;
+    porosity_ = poro_in;
+    permx_ = permx_in;
+    permy_ = permy_in;
+    permz_ = permz_in;
     center_ = center;
     corners_ = corners;
     is_active_matrix_ = active_matrix;

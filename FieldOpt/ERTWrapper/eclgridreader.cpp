@@ -162,7 +162,12 @@ bool ECLGridReader::IsCellActive(int global_index)
 bool ECLGridReader::IsCellMatrixActive(int global_index)
 {
     if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting the active status of cells.");
-    else return ecl_grid_cell_active1(ecl_grid_, global_index);
+    else 
+    {
+    	int active_matrix_index = ecl_grid_get_active_index1(ecl_grid_, global_index);
+    	if (active_matrix_index < 0) return false;
+    	else return true;
+    }
 }
 
 bool ECLGridReader::IsCellFractureActive(int global_index)
@@ -171,7 +176,7 @@ bool ECLGridReader::IsCellFractureActive(int global_index)
     else
     {
     	int active_fracture_index = ecl_grid_get_active_fracture_index1(ecl_grid_, global_index);
-    	if (active_fracture_index == -1) return false;
+    	if (active_fracture_index < 0) return false;
     	else return true;
     }
  }
@@ -194,7 +199,7 @@ ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index)
     // Get properties from the INIT file - only possible if the cell is active
     // Matrix grid
 	int active_index = ecl_grid_get_active_index1(ecl_grid_, global_index);
-	if (active_index > 0)
+	if (active_index >= 0)
 	{
 		cell.porosity.push_back(ecl_kw_iget_as_double(poro_kw_, active_index));
 		cell.permx.push_back(ecl_kw_iget_as_double(permx_kw_, active_index));
@@ -204,7 +209,7 @@ ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index)
     
 	// Fracture grid
 	active_index = ecl_grid_get_active_fracture_index1(ecl_grid_, global_index);
-	if (active_index > 0)
+	if (active_index >= 0)
 	{
 		cell.porosity.push_back(ecl_kw_iget_as_double(poro_kw_, active_index));
 		cell.permx.push_back(ecl_kw_iget_as_double(permx_kw_, active_index));
