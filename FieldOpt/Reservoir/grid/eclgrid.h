@@ -70,13 +70,13 @@ class ECLGrid : public Grid
 
   // Cell GetSmallestCell() override;
 
-  // Cell GetCellEnvelopingPoint(double x, double y, double z);
-  // Cell GetCellEnvelopingPoint(double x, double y, double z,
-  //                             vector<int> search_set);
+  Cell GetCellEnvelopingPoint(double x, double y, double z);
+  Cell GetCellEnvelopingPoint(double x, double y, double z,
+                              vector<int> search_set);
 
-  // Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz);
-  // Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz,
-  //                             vector<int> search_set);
+  Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz);
+  Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz,
+                              vector<int> search_set);
 
  private:
   // OV: 20170709

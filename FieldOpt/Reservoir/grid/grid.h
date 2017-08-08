@@ -100,7 +100,9 @@ class Grid
    */
   // OV: 20170709
   virtual bool GetCellEnvelopingPoint(Cell& cell, double x, double y, double z) = 0;
-  // virtual Cell GetCellEnvelopingPoint(double x, double y, double z) = 0;
+
+  // Version that returns cell
+  virtual Cell GetCellEnvelopingPoint(double x, double y, double z) = 0;
 
   /*!
    * \brief GetCellEnvelopingPoint Get the cell enveloping the point
@@ -110,8 +112,10 @@ class Grid
   // OV: 20170709
   virtual bool GetCellEnvelopingPoint(Cell& cell, double x, double y, double z,
                                       std::vector<int> search_set) = 0;
-  // virtual Cell GetCellEnvelopingPoint(double x, double y, double z,
-  //                                     std::vector<int> search_set) = 0;
+
+  // Version that returns cell
+  virtual Cell GetCellEnvelopingPoint(double x, double y, double z,
+                                      std::vector<int> search_set) = 0;
 
   /*!add
    * \brief GetCellEnvelopingPoint Get the cell enveloping the point
@@ -120,7 +124,9 @@ class Grid
    */
   // OV: 20170709
   virtual bool GetCellEnvelopingPoint(Cell& cell, Eigen::Vector3d xyz) = 0;
-  // virtual Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz) = 0;
+
+  // Version that returns cell
+  virtual Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz) = 0;
 
   /*!
    * \brief GetCellEnvelopingPoint Get the cell enveloping the point
@@ -132,8 +138,10 @@ class Grid
   // OV: 20170709
   virtual bool GetCellEnvelopingPoint(Cell& cell, Eigen::Vector3d xyz,
                                       std::vector<int> search_set) = 0;
-  // virtual Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz,
-  //                                     std::vector<int> search_set) = 0;
+
+  // Version that returns cell
+  virtual Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz,
+                                      std::vector<int> search_set) = 0;
 
   /*!
    * @brief Get the smallest cell in the reservoir.

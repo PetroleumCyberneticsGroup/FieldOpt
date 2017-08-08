@@ -6,25 +6,33 @@ find_library(ert_ecl
         NAMES ecl
         HINTS ${CMAKE_BINARY_DIR}/libraries/lib
         REQUIRED)
+
 find_library(ert_util
         NAMES ert_util
         HINTS ${CMAKE_BINARY_DIR}/libraries/lib
         REQUIRED)
+
 include_directories(${CMAKE_BINARY_DIR}/libraries/include/)
+
+find_package(Boost COMPONENTS
+        REQUIRED program_options system filesystem)
 
 add_library(ertwrapper
         ertwrapper_exceptions.h
         eclgridreader.cpp
-        eclsummaryreader.cpp)
+        eclsummaryreader.cpp
+        eclgridrotator.cpp
+        )
 add_library(fieldopt::ertwrapper ALIAS ${PROJECT_NAME})
 
 include_directories(
         ${EIGEN3_INCLUDE_DIR}
-	${ERT_INCLUDE_DIR})
+        ${ERT_INCLUDE_DIR})
 
 target_link_libraries(ertwrapper
         PUBLIC ${ert_ecl}
-        PUBLIC ${ert_util})
+        PUBLIC ${ert_util}
+        PUBLIC ${Boost_LIBRARIES})
 
 target_include_directories(ertwrapper PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
@@ -39,23 +47,56 @@ if (BUILD_WIC_ADGPRS)
             PROPERTIES COMPILE_FLAGS "-fPIC")
 endif()
 
+#
+#option(MAKE_GRIDROTATOR_EXECUTABLE ON)
+#if (MAKE_GRIDROTATOR_EXECUTABLE)
+
+set(SOURCE_FILES
+        main_gridrotator.cpp
+        eclgridrotator.cpp
+        eclgridreader.cpp
+        )
+set(HEADER_FILES
+        eclgridrotator.h
+        eclgridreader.h
+        ertwrapper_exceptions.h
+        )
+
+add_executable(grid_rotator
+        ${SOURCE_FILES}
+        ${HEADER_FILES}
+        )
+
+target_link_libraries(grid_rotator
+        fieldopt::ertwrapper
+        ${Boost_LIBRARIES}
+        ${ert_ecl}
+        ${ert_util}
+        )
+
+#endif()
+
 # Unit tests
 if (BUILD_TESTING)
     find_package(GTest REQUIRED)
     include_directories(${GTEST_INCLUDE_DIRS})
+
     add_executable(test_ertwrapper
-            tests/test_eclgridreader.cpp
-            tests/test_eclsummaryreader.cpp
+#            tests/test_eclgridreader.cpp
+            #            tests/test_eclsummaryreader.cpp
+            tests/test_eclgridrotator.cpp
             )
+
     target_link_libraries(test_ertwrapper
             fieldopt::ertwrapper
             ${GTEST_BOTH_LIBRARIES}
             ${CMAKE_THREAD_LIBS_INIT})
 
-    add_test(NAME test_ertwrapper COMMAND $<TARGET_FILE:test_ertwrapper>)
+    add_test(NAME test_ertwrapper
+            COMMAND $<TARGET_FILE:test_ertwrapper>)
 endif()
 
-install( TARGETS ertwrapper
+install(TARGETS ertwrapper
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib/static

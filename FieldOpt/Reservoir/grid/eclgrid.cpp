@@ -229,7 +229,6 @@ vector<int> ECLGrid::GetBoundingBoxCellIndices(
         // Try is here because we only want to get the list of active
         // cells - that means defined cells
         try {
-
             cell = GetCell(ii);
 
             // Calculate cell size
@@ -266,30 +265,27 @@ vector<int> ECLGrid::GetBoundingBoxCellIndices(
 
 // OV: 20170709
 bool ECLGrid::GetCellEnvelopingPoint(Cell& cell, double x, double y, double z){
-// Cell ECLGrid::GetCellEnvelopingPoint(double x, double y, double z) {
+    int total_cells = Dimensions().nx * Dimensions().ny * Dimensions().nz;
 
-    int total_cells =
-        Dimensions().nx *
-            Dimensions().ny *
-            Dimensions().nz;
-
-    // OV: 20170709
-    for (int ii = 0; ii < total_cells; ii++)
-    {
-        if (GetCell(ii).EnvelopsPoint(Eigen::Vector3d(x, y, z)))
-        {
+    for (int ii = 0; ii < total_cells; ii++) {
+        if (GetCell(ii).EnvelopsPoint(Eigen::Vector3d(x, y, z))) {
             cell = GetCell(ii);
             return true;
         }
     }
 
     return false;
+}
 
-    // for (int ii = 0; ii < total_cells; ii++) {
-    //     if (GetCell(ii).EnvelopsPoint(Eigen::Vector3d(x, y, z))) {
-    //         return GetCell(ii);
-    //     }
-    // }
+// Version that returns cell
+Cell ECLGrid::GetCellEnvelopingPoint(double x, double y, double z) {
+    int total_cells = Dimensions().nx * Dimensions().ny * Dimensions().nz;
+
+    for (int ii = 0; ii < total_cells; ii++) {
+        if (GetCell(ii).EnvelopsPoint(Eigen::Vector3d(x, y, z))) {
+            return GetCell(ii);
+        }
+    }
 
     // Throw an exception if no cell was found
     /*throw runtime_error("Grid::GetCellEnvelopingPoint: The point is outside the grid ("
@@ -299,36 +295,41 @@ bool ECLGrid::GetCellEnvelopingPoint(Cell& cell, double x, double y, double z){
                        );*/
 }
 
+
+
 // OV: 20170709
 bool ECLGrid::GetCellEnvelopingPoint(Cell& cell, double x, double y, double z,
                                      vector<int> search_set){
-// Cell ECLGrid::GetCellEnvelopingPoint(double x, double y, double z,
-//                                      vector<int> search_set) {
 
     // If the searching area is empty then search the entire grid
     if (search_set.size() == 0) {
-        // OV: 20170709
         return GetCellEnvelopingPoint(cell, x, y, z);
-        // return GetCellEnvelopingPoint(x, y, z);
     }
 
-    // OV: 20170709
-    for (int iCell = 0; iCell < search_set.size(); iCell++)
-    {
-        if (GetCell(search_set[iCell]).EnvelopsPoint(Eigen::Vector3d(x, y, z)))
-        {
+    for (int iCell = 0; iCell < search_set.size(); iCell++) {
+        if (GetCell(search_set[iCell]).EnvelopsPoint(Eigen::Vector3d(x, y, z))) {
             cell = GetCell(search_set[iCell]);
             return true;
         }
     }
 
     return false;
-    
-    // for (int iCell = 0; iCell < search_set.size(); iCell++) {
-    //     if (GetCell(search_set[iCell]).EnvelopsPoint(Eigen::Vector3d(x, y, z))) {
-    //         return GetCell(search_set[iCell]);
-    //     }
-    // }
+}
+
+// Version that returns cell
+Cell ECLGrid::GetCellEnvelopingPoint(double x, double y, double z,
+                                     vector<int> search_set) {
+
+    // If the searching area is empty then search the entire grid
+    if (search_set.size() == 0) {
+        return GetCellEnvelopingPoint(x, y, z);
+    }
+
+    for (int iCell = 0; iCell < search_set.size(); iCell++) {
+        if (GetCell(search_set[iCell]).EnvelopsPoint(Eigen::Vector3d(x, y, z))) {
+            return GetCell(search_set[iCell]);
+        }
+    }
 
     // Throw an exception if no cell was found
     /*throw runtime_error("Grid::GetCellEnvelopingPoint: The point is outside "
@@ -343,17 +344,23 @@ bool ECLGrid::GetCellEnvelopingPoint(Cell& cell, double x, double y, double z,
 bool ECLGrid::GetCellEnvelopingPoint(Cell& cell, Eigen::Vector3d xyz) {
     return GetCellEnvelopingPoint(cell, xyz.x(), xyz.y(), xyz.z());
 }
-// Cell ECLGrid::GetCellEnvelopingPoint(Eigen::Vector3d xyz) {
-// return GetCellEnvelopingPoint(xyz.x(), xyz.y(), xyz.z());
+
+// Version that returns cell
+Cell ECLGrid::GetCellEnvelopingPoint(Eigen::Vector3d xyz) {
+    return GetCellEnvelopingPoint(xyz.x(), xyz.y(), xyz.z());
+}
 
 // OV: 20170709
 bool ECLGrid::GetCellEnvelopingPoint(Cell& cell, Eigen::Vector3d xyz,
                                      vector<int> search_set) {
     return GetCellEnvelopingPoint(cell, xyz.x(), xyz.y(), xyz.z(), search_set);
 }
-// Cell ECLGrid::GetCellEnvelopingPoint(Eigen::Vector3d xyz,
-//                                      vector<int> search_set) {
-// return GetCellEnvelopingPoint(xyz.x(), xyz.y(), xyz.z(), search_set);
+
+// Version that returns cell
+Cell ECLGrid::GetCellEnvelopingPoint(Eigen::Vector3d xyz,
+                                     vector<int> search_set) {
+    return GetCellEnvelopingPoint(xyz.x(), xyz.y(), xyz.z(), search_set);
+}
 
 Cell ECLGrid::GetSmallestCell() {
     return GetCell(ecl_grid_reader_->FindSmallestCell().global_index);

@@ -31,7 +31,7 @@ ENDIF("${isSystemDir}" STREQUAL "-1")
 # END Install dirs =====================================================
 
 # Options 1: Unit tests, example dir ===================================
-option(BUILD_TESTING "Build unit tests"                 OFF)
+option(BUILD_TESTING "Build unit tests"                 ON)
 option(COPY_EXAMPLES "Copy examples to build directory" OFF)
 
 if (BUILD_TESTING AND NOT COPY_EXAMPLES)

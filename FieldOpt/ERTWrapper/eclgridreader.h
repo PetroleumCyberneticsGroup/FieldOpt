@@ -21,9 +21,17 @@
 #ifndef ECLGRIDREADER_H
 #define ECLGRIDREADER_H
 
+// ERT
 #include <ert/ecl/ecl_grid.h>
 #include <ert/ecl/ecl_file.h>
+#include <ert/ecl/ecl_kw.h>
+#include <ert/ecl/ecl_kw_magic.h>
+//#include <ert/ecl/ecl_type.h>
+
+// EIGEN
 #include <Eigen/Dense>
+
+// STANDARD
 #include <vector>
 
 using namespace std;
@@ -47,6 +55,37 @@ class ECLGridReader
    */
   struct Dims {
     int nx, ny, nz;
+  };
+
+  /*!
+   * \brief The Index struct holds a series of indexing vectors that
+   * correspond to the total number of cells, as well as indexing of
+   * active/inactive cells in the grid.
+   *
+   * See hdf5_summary_reader.h for similiar type of variables
+   */
+  struct Gidx {
+    int n_total; //!< total number of cells = nx*ny*nz
+    int n_active; //!< total number of active cells
+
+    /*! vector (sz=n_total) containing sorted indices of all cells
+     * in grid, i.e., list of global index
+     * */
+    VectorXi idx_total;
+
+    /*! vector (sz=n_total) containing active cells indices based on
+     * actnum data, i.e., only those vector components that correspond
+     * to active cells are nonzero (set equal to their associated global
+     * indices), all other components corresponding to inactive cells
+     * are equal to zero
+     */
+    VectorXd idx_actnum;
+
+    /*! vector (sz=n_total) containing actual actnum data */
+    VectorXd dat_actnum;
+
+    /*! vector (sz=n_active) containing global indices of each active cell */
+    VectorXi idx_active;
   };
 
   /*!
@@ -85,19 +124,32 @@ class ECLGridReader
     int k;
   };
 
+  struct GridData {
+    VectorXd coord, coord_rxryrz;
+    Matrix<double, Dynamic, 3, RowMajor> coord_xyz, coord_rxryrz_xyz;
+    VectorXd zcorn, zcorn_rxryrz;
+  };
+
+  Gidx gidx_;
+  GridData gridData_;
+
+
  private:
   string file_name_;
   string init_file_name_;
   ecl_grid_type* ecl_grid_;
+  ecl_file_type* ecl_file_grid_;
   ecl_file_type* ecl_file_init_;
   Vector3d GetCellCenter(int global_index);
-  vector<Vector3d> GetCellCorners(int global_index);
   double GetCellVolume(int global_index);
 
   ecl_kw_type *poro_kw_;
   ecl_kw_type *permx_kw_;
   ecl_kw_type *permy_kw_;
   ecl_kw_type *permz_kw_;
+  ecl_kw_type *actnum_kw_;
+  ecl_kw_type *coord_kw_;
+  ecl_kw_type *zcorn_kw_;
 
  public:
   ECLGridReader();
@@ -134,6 +186,27 @@ class ECLGridReader
   Dims Dimensions();
 
   /*!
+   * \brief
+   * \param
+   * \return
+   */
+  void GetCOORDZCORNData();
+
+  /*!
+   * \brief
+   * \param
+   * \return
+   */
+  void GetGridSummary();
+
+  /*!
+   * \brief Retrieve useful indices that specify total number of grid cells,
+   * and which cells are active/inactive
+   * \return Gidx struc
+   */
+  void GetGridIndices();
+
+  /*!
    * \brief ActiveCells Number of active cells in the grid that has been read.
    */
   int ActiveCells();
@@ -149,6 +222,20 @@ class ECLGridReader
    * \return Cell struct.
    */
   Cell GetGridCell(int global_index);
+
+  /*!
+   * \brief GetCellCorners returns xyz corners (8) of cell
+   * \param global_index Global index for a cell.
+   * \return xyz corners
+   */
+  vector<Vector3d> GetCellCorners(int global_index);
+
+  /*!
+   * \brief GetCellCorners returns xyz corners (8) of cell
+   * \param global_index Global index for a cell.
+   * \return xyz corners
+   */
+  MatrixXd GetCellCornersM(int global_index);
 
   /*!
    * \brief GetGlobalIndexOfCellContainingPoint Gets the global index of any cell
