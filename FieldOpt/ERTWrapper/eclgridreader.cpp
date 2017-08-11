@@ -238,21 +238,16 @@ void ECLGridReader::GetGridIndices() {
 
     // Get actnum data, set actnum indices
     int a_idx = 0;
+    // Keep for ref:
+    // actnum_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ACTNUM", 0);
+    for (int g_idx = 0; g_idx < gidx.n_total; ++g_idx) {
+        gidx.dat_actnum(g_idx) = ecl_kw_iget_as_double(actnum_kw_, g_idx);
 
-    try {
-        // Keep for ref:
-        // actnum_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ACTNUM", 0);
-        for (int g_idx = 0; g_idx < gidx.n_total; ++g_idx) {
-            gidx.dat_actnum(g_idx) = ecl_kw_iget_as_double(actnum_kw_, g_idx);
-
-            if (gidx.dat_actnum(g_idx) > 0) {
-                gidx.idx_actnum(g_idx) = g_idx;
-                gidx.idx_active(a_idx) = g_idx;
-                ++a_idx;
-            }
+        if (gidx.dat_actnum(g_idx) > 0) {
+            gidx.idx_actnum(g_idx) = g_idx;
+            gidx.idx_active(a_idx) = g_idx;
+            ++a_idx;
         }
-    } catch (std::runtime_error& e) {
-        cout << "Could not read ACTNUM => not set. Error: " << e.what();
     }
     gidx_ = gidx;
 }
