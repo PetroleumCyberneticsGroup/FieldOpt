@@ -31,6 +31,7 @@ using namespace std;
 
 ECLGrid::ECLGrid(string file_path)
     : Grid(GridSourceType::ECLIPSE, file_path) {
+
     if (!boost::filesystem::exists(file_path))
         throw runtime_error("Grid file " + file_path + " not found.");
 

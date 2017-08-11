@@ -65,11 +65,14 @@ ECLGridReader::ECLGridReader() {
     ecl_grid_ = 0;
     ecl_file_grid_ = 0;
     ecl_file_init_ = 0;
+    ecl_file_egrid_ = 0;
     poro_kw_ = 0;
     permx_kw_ = 0;
     permy_kw_ = 0;
     permz_kw_ = 0;
     actnum_kw_ = 0;
+    coord_kw_ = 0;
+    zcorn_kw_ = 0;
 }
 
 ECLGridReader::~ECLGridReader() {
@@ -82,13 +85,22 @@ ECLGridReader::~ECLGridReader() {
 }
 
 void ECLGridReader::ReadEclGrid(std::string file_name) {
-    file_name_ = file_name;
-    init_file_name_ = file_name;
-    if (boost::algorithm::ends_with(file_name, ".EGRID"))
-        boost::replace_all(init_file_name_, ".EGRID", ".INIT");
 
-    else if (boost::algorithm::ends_with(file_name, ".GRID"))
+    file_name_ = file_name;
+
+    // Set egrid name
+    egrid_file_name_ = file_name;
+    if (boost::algorithm::ends_with(file_name, ".GRID")) {
+        boost::replace_all(egrid_file_name_, ".GRID", ".EGRID");
+    }
+
+    // Set init name
+    init_file_name_ = file_name;
+    if (boost::algorithm::ends_with(file_name, ".EGRID")) {
+        boost::replace_all(init_file_name_, ".EGRID", ".INIT");
+    } else if (boost::algorithm::ends_with(file_name, ".GRID")) {
         boost::replace_all(init_file_name_, ".GRID", ".INIT");
+    }
 
     if (ecl_grid_ == 0) {
         ecl_grid_ = ecl_grid_alloc(file_name_.c_str());
@@ -105,7 +117,6 @@ void ECLGridReader::ReadEclGrid(std::string file_name) {
         permy_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMY", 0);
         permz_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMZ", 0);
         poro_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PORO", 0);
-        actnum_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ACTNUM", 0);
     } else {
         ecl_file_close(ecl_file_init_);
         ecl_file_init_ = ecl_file_open(init_file_name_.c_str(), 0);
@@ -113,11 +124,46 @@ void ECLGridReader::ReadEclGrid(std::string file_name) {
         permy_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMY", 0);
         permz_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMZ", 0);
         poro_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PORO", 0);
-        actnum_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ACTNUM", 0);
     }
 
-    GetGridIndices(); // Extract grid index data
-    GetCOORDZCORNData(); // Get grid coord data
+    if (ecl_file_has_kw(ecl_file_grid_, "ACTNUM")) {
+        actnum_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ACTNUM", 0);
+        coord_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "COORD", 0);
+        zcorn_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ZCORN", 0);
+    } else {
+        cout << "This is a libwellindexcalculator-adgprs issue: "
+             << "for some reason ecl_file_iget_named_kw cannot find "
+             << "ACTNUM, COORD and ZCORN in GRID file when called from "
+             << "shared library" << endl;
+
+        ecl_file_egrid_ = ecl_grid_alloc_EGRID(egrid_file_name_.c_str(), 0);
+        ecl_grid_summarize(ecl_file_egrid_);
+
+        int * actnm_data = ecl_grid_alloc_actnum_data(ecl_file_egrid_);
+
+        double * coord_data = ecl_grid_alloc_actnum_data(ecl_file_egrid_);
+        int * zcorn_data = ecl_grid_alloc_actnum_data(ecl_file_egrid_);
+
+        ecl_kw_type * actnum_kw = ecl_grid_alloc_actnum_kw(ecl_file_egrid_);
+
+
+
+
+        actnum_kw_ = actnum_kw;
+
+//        actnum_kw_= actnum_kw;
+//        coord_kw_ = coord_kw;
+//        zcorn_kw_ = zcorn_kw;
+
+        free(actnum_kw);
+        free(coord_kw);
+        free(zcorn_kw);
+
+    }
+
+
+    // GetGridIndices(); // Extract grid index data, loads ACTNUM from egrid obj
+    // GetCOORDZCORNData(); // Get grid coord data
 }
 
 void ECLGridReader::GetGridSummary(){
@@ -160,7 +206,7 @@ ECLGridReader::Dims ECLGridReader::Dimensions() {
 void ECLGridReader::GetCOORDZCORNData() {
 
     // COORD
-    coord_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "COORD", 0);
+    // coord_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "COORD", 0);
     int coord_kw_sz = ecl_kw_get_size(coord_kw_);
     gridData_.coord.resize(coord_kw_sz, 1);
     gridData_.coord.fill(0);
@@ -170,7 +216,7 @@ void ECLGridReader::GetCOORDZCORNData() {
     }
 
     // ZCORN
-    zcorn_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ZCORN", 0);
+    // zcorn_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ZCORN", 0);
     int zcorn_sz = ecl_grid_get_zcorn_size(ecl_grid_);
     gridData_.zcorn.resize(zcorn_sz, 1);
     gridData_.zcorn.fill(0);
@@ -203,15 +249,20 @@ void ECLGridReader::GetGridIndices() {
 
     // Get actnum data, set actnum indices
     int a_idx = 0;
-    actnum_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ACTNUM", 0);
-    for (int g_idx = 0; g_idx < gidx.n_total; ++g_idx) {
-        gidx.dat_actnum(g_idx) = ecl_kw_iget_as_double(actnum_kw_, g_idx);
+    try {
+        cout << "Loading actnum data" << endl;
+        actnum_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ACTNUM", 0);
+        for (int g_idx = 0; g_idx < gidx.n_total; ++g_idx) {
+            gidx.dat_actnum(g_idx) = ecl_kw_iget_as_double(actnum_kw_, g_idx);
 
-        if (gidx.dat_actnum(g_idx) > 0) {
-            gidx.idx_actnum(g_idx) = g_idx;
-            gidx.idx_active(a_idx) = g_idx;
-            ++a_idx;
+            if (gidx.dat_actnum(g_idx) > 0) {
+                gidx.idx_actnum(g_idx) = g_idx;
+                gidx.idx_active(a_idx) = g_idx;
+                ++a_idx;
+            }
         }
+    } catch (std::runtime_error& e) {    
+        cout << "Could not read ACTNUM => not set. Error: " << e.what();
     }
     gidx_ = gidx;
 }

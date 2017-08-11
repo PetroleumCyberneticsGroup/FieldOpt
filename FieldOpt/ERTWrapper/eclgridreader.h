@@ -137,9 +137,11 @@ class ECLGridReader
  private:
   string file_name_;
   string init_file_name_;
+  string egrid_file_name_;
   ecl_grid_type* ecl_grid_;
   ecl_file_type* ecl_file_grid_;
   ecl_file_type* ecl_file_init_;
+  ecl_grid_type* ecl_file_egrid_;
   Vector3d GetCellCenter(int global_index);
   double GetCellVolume(int global_index);
 
