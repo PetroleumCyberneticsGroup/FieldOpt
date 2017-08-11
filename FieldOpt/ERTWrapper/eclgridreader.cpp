@@ -88,6 +88,13 @@ void ECLGridReader::ReadEclGrid(std::string file_name) {
 
     file_name_ = file_name;
 
+    /* This is a libwellindexcalculator-adgprs.so issue: ecl_file_iget_named_kw
+     * cannot find ACTNUM, COORD and ZCORN in GRID file when called from ADGPRS. 
+     * Likely b/c ADGPRS provides GRID and not EGRID file name to the *so. This
+     * is hardwired, and has been changed, but the problem persists, somehow...
+     * This check assures EGRID files is always read in, regardless of input.
+     */
+
     // Set egrid name
     egrid_file_name_ = file_name;
     if (boost::algorithm::ends_with(file_name, ".GRID")) {
@@ -102,13 +109,14 @@ void ECLGridReader::ReadEclGrid(std::string file_name) {
         boost::replace_all(init_file_name_, ".GRID", ".INIT");
     }
 
+    // Make sure to load EGRID and not GRID!
     if (ecl_grid_ == 0) {
-        ecl_grid_ = ecl_grid_alloc(file_name_.c_str());
-        ecl_file_grid_ = ecl_file_open(file_name_.c_str(), 0);
+        ecl_grid_ = ecl_grid_alloc(egrid_file_name_.c_str());
+        ecl_file_grid_ = ecl_file_open(egrid_file_name_.c_str(), 0);
     } else {
         ecl_grid_free(ecl_grid_);
-        ecl_grid_ = ecl_grid_alloc(file_name_.c_str());
-        ecl_file_grid_ = ecl_file_open(file_name_.c_str(), 0);
+        ecl_grid_ = ecl_grid_alloc(egrid_file_name_.c_str());
+        ecl_file_grid_ = ecl_file_open(egrid_file_name_.c_str(), 0);
     }
 
     if (ecl_file_init_ == 0) {
@@ -127,46 +135,25 @@ void ECLGridReader::ReadEclGrid(std::string file_name) {
     }
 
     if (ecl_file_has_kw(ecl_file_grid_, "ACTNUM")) {
+
         actnum_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ACTNUM", 0);
         coord_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "COORD", 0);
         zcorn_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ZCORN", 0);
+
+        GetGridIndices(); // Extract and order grid index data
+        GetCOORDZCORNData(); // Get grid coord data
+
     } else {
-        cout << "This is a libwellindexcalculator-adgprs issue: "
-             << "for some reason ecl_file_iget_named_kw cannot find "
-             << "ACTNUM, COORD and ZCORN in GRID file when called from "
-             << "shared library" << endl;
+        printf("%s\n", "Grid object does not contain ACTNUM, COORD, ZCORN data.\n"
+               "Make sure that you have provided the EGRID and not GRID\n file name.\n");
 
-        ecl_file_egrid_ = ecl_grid_alloc_EGRID(egrid_file_name_.c_str(), 0);
-        ecl_grid_summarize(ecl_file_egrid_);
-
-        int * actnm_data = ecl_grid_alloc_actnum_data(ecl_file_egrid_);
-
-        double * coord_data = ecl_grid_alloc_actnum_data(ecl_file_egrid_);
-        int * zcorn_data = ecl_grid_alloc_actnum_data(ecl_file_egrid_);
-
-        ecl_kw_type * actnum_kw = ecl_grid_alloc_actnum_kw(ecl_file_egrid_);
-
-
-
-
-        actnum_kw_ = actnum_kw;
-
-//        actnum_kw_= actnum_kw;
-//        coord_kw_ = coord_kw;
-//        zcorn_kw_ = zcorn_kw;
-
-        free(actnum_kw);
-        free(coord_kw);
-        free(zcorn_kw);
-
+        // Debug
+        // printf("%s\n", "Current grid file contains the following keywords:\n");
+        // ecl_file_fprintf_kw_list(ecl_file_grid_,stdout);
     }
-
-
-    // GetGridIndices(); // Extract grid index data, loads ACTNUM from egrid obj
-    // GetCOORDZCORNData(); // Get grid coord data
 }
 
-void ECLGridReader::GetGridSummary(){
+void ECLGridReader::GetGridSummary() {
     // Provide summary information about grid
      ecl_grid_summarize(ecl_grid_);
 }
@@ -206,6 +193,7 @@ ECLGridReader::Dims ECLGridReader::Dimensions() {
 void ECLGridReader::GetCOORDZCORNData() {
 
     // COORD
+    // Keep for ref:
     // coord_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "COORD", 0);
     int coord_kw_sz = ecl_kw_get_size(coord_kw_);
     gridData_.coord.resize(coord_kw_sz, 1);
@@ -216,6 +204,7 @@ void ECLGridReader::GetCOORDZCORNData() {
     }
 
     // ZCORN
+    // Keep for ref:
     // zcorn_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ZCORN", 0);
     int zcorn_sz = ecl_grid_get_zcorn_size(ecl_grid_);
     gridData_.zcorn.resize(zcorn_sz, 1);
@@ -249,9 +238,10 @@ void ECLGridReader::GetGridIndices() {
 
     // Get actnum data, set actnum indices
     int a_idx = 0;
+
     try {
-        cout << "Loading actnum data" << endl;
-        actnum_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ACTNUM", 0);
+        // Keep for ref:
+        // actnum_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ACTNUM", 0);
         for (int g_idx = 0; g_idx < gidx.n_total; ++g_idx) {
             gidx.dat_actnum(g_idx) = ecl_kw_iget_as_double(actnum_kw_, g_idx);
 
@@ -261,7 +251,7 @@ void ECLGridReader::GetGridIndices() {
                 ++a_idx;
             }
         }
-    } catch (std::runtime_error& e) {    
+    } catch (std::runtime_error& e) {
         cout << "Could not read ACTNUM => not set. Error: " << e.what();
     }
     gidx_ = gidx;
