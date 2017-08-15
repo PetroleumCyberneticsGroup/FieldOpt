@@ -142,23 +142,8 @@ int ECLGridReader::ActiveCells()
 
 bool ECLGridReader::IsCellActive(int global_index)
 {
-    auto ijk = ConvertGlobalIndexToIJK(global_index);
     if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting the active status of cells.");
-    else if (global_index > ecl_grid_get_nactive(ecl_grid_) - 1)
-        return false;
-    if (ecl_grid_get_active_index3(ecl_grid_ , ijk.i, ijk.j, ijk.k) <= 0)
-        return false;
-    else if (!ecl_grid_cell_active1(ecl_grid_, global_index))
-        return false;
-    else {
-        if (ecl_grid_cell_valid1(ecl_grid_, global_index)) {
-            if (!ecl_grid_cell_valid1(ecl_grid_, global_index))
-                return false;
-            if (ecl_kw_iget_as_double(poro_kw_, global_index) > 0)
-                return true;
-        }
-        else return false;
-    }
+    else return ecl_grid_cell_active1(ecl_grid_, global_index);
 }
 
 ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index)
@@ -218,53 +203,6 @@ ECLGridReader::Cell ECLGridReader::FindSmallestCell() {
         }
     }
     return GetGridCell(index_with_smallest_volume);
-}
-vector<Vector3d> ECLGridReader::GetBoundingCellCentroids() {
-    auto dims = Dimensions();
-    vector<Vector3d> bounding_centroids;
-
-    for (int k = 0; k < dims.nz; ++k) {
-        for (int j = 0; j < dims.ny; ++j) {
-            int i = 0;
-            while (!IsCellActive(ConvertIJKToGlobalIndex(i, j, k)) && i < dims.nx - 1)
-                i++;
-            bounding_centroids.push_back(GetCellCenter(ConvertIJKToGlobalIndex(i, j, k)));
-
-            i = dims.nx - 1;
-            while (!IsCellActive(ConvertIJKToGlobalIndex(i, j, k)) && i > 0)
-                i--;
-            bounding_centroids.push_back(GetCellCenter(ConvertIJKToGlobalIndex(i, j, k)));
-        }
-    }
-
-    for (int k = 0; k < dims.nz; ++k) {
-        for (int i = 0; i < dims.nx; ++i) {
-            int j = 0;
-            while (!IsCellActive(ConvertIJKToGlobalIndex(i, j, k)) && j < dims.ny - 1)
-                j++;
-            bounding_centroids.push_back(GetCellCenter(ConvertIJKToGlobalIndex(i, j, k)));
-
-            j = dims.ny - 1;
-            while (!IsCellActive(ConvertIJKToGlobalIndex(i, j, k)) && j > 0)
-                j--;
-            bounding_centroids.push_back(GetCellCenter(ConvertIJKToGlobalIndex(i, j, k)));
-        }
-    }
-
-    for (int j = 0; j < dims.ny; ++j) {
-        for (int i = 0; i < dims.nx; ++i) {
-            int k = 0;
-            while (!IsCellActive(ConvertIJKToGlobalIndex(i, j, k)) && k < dims.nz - 1)
-                k++;
-            bounding_centroids.push_back(GetCellCenter(ConvertIJKToGlobalIndex(i, j, k)));
-
-            k = dims.nz - 1;
-            while (!IsCellActive(ConvertIJKToGlobalIndex(i, j, k)) && k > 0)
-                k--;
-            bounding_centroids.push_back(GetCellCenter(ConvertIJKToGlobalIndex(i, j, k)));
-        }
-    }
-    return bounding_centroids;
 }
 
 }
