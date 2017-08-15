@@ -53,17 +53,9 @@ ECLGrid::ECLGrid(string file_path)
     // so we are going to check all known permutations with the hoe tha one of them is suitable for
     // the current grid - we do that based on the cell 0 in the grid
 
-    // Find the first (active) cell index.
-    int idx = 0;
-    while (idx < ecl_grid_reader_->ActiveCells()) {
-        if (ecl_grid_reader_->IsCellActive(idx)) {
-            break;
-        }
-        else {
-            idx++;
-        }
-    }
-
+    // Find the first (active) cell index in the matrix.
+    int idx = ecl_grid_reader_->ConvertMatrixActiveIndexToGlobalIndex(0);
+    
     // Set faces permutation to first permutation type
     faces_permutation_index_ = 0;
     // Get the first cell
@@ -145,13 +137,13 @@ Cell ECLGrid::GetCell(int global_index) {
         for (auto corner : ertCell.corners) {
             corners.push_back(corner);
         }
-
+        
         // Return cell info
         return Cell(global_index, ijk_index,
                     ertCell.volume, ertCell.porosity,
                     ertCell.permx, ertCell.permy, ertCell.permz,
                     center, corners, faces_permutation_index_,
-                    ertCell.active
+                    ertCell.matrix_active, ertCell.fracture_active
         );
     } else {
         throw runtime_error("ECLGrid::GetCell(int global_index): Grid "
@@ -221,11 +213,10 @@ vector<int> ECLGrid::GetBoundingBoxCellIndices(
 
     vector<int> indices_list;
     for (int ii = 0; ii < total_cells; ii++) {
-        Cell cell;
         // Try is here because we only want to get the list of active
         // cells - that means defined cells
         try {
-            cell = GetCell(ii);
+            Cell cell = GetCell(ii);
             // Calculate cell size
             double dx = (cell.corners()[5] - cell.corners()[4]).norm();
             double dy = (cell.corners()[6] - cell.corners()[4]).norm();

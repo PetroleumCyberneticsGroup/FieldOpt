@@ -124,6 +124,12 @@ ECLGridReader::IJKIndex ECLGridReader::ConvertGlobalIndexToIJK(int global_index)
     return ijk;
 }
 
+int ECLGridReader::ConvertMatrixActiveIndexToGlobalIndex(int index)
+{
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before converting indices.");
+    else return ecl_grid_get_global_index1A(ecl_grid_, index);
+}
+
 ECLGridReader::Dims ECLGridReader::Dimensions()
 {
     ECLGridReader::Dims dims;
@@ -134,17 +140,45 @@ ECLGridReader::Dims ECLGridReader::Dimensions()
     return dims;
 }
 
-int ECLGridReader::ActiveCells()
+int ECLGridReader::NumActiveMatrixCells()
 {
     if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting the number of active cells.");
     else return ecl_grid_get_nactive(ecl_grid_);
 }
 
+int ECLGridReader::NumActiveFractureCells()
+{
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting the number of active cells.");
+    else return ecl_grid_get_nactive_fracture(ecl_grid_);
+}
+
 bool ECLGridReader::IsCellActive(int global_index)
 {
     if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting the active status of cells.");
-    else return ecl_grid_cell_active1(ecl_grid_, global_index);
+    else return (IsCellMatrixActive(global_index) || IsCellFractureActive(global_index));
 }
+
+bool ECLGridReader::IsCellMatrixActive(int global_index)
+{
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting the active status of cells.");
+    else 
+    {
+    	int active_matrix_index = ecl_grid_get_active_index1(ecl_grid_, global_index);
+    	if (active_matrix_index < 0) return false;
+    	else return true;
+    }
+}
+
+bool ECLGridReader::IsCellFractureActive(int global_index)
+{
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting the active status of cells.");
+    else
+    {
+    	int active_fracture_index = ecl_grid_get_active_fracture_index1(ecl_grid_, global_index);
+    	if (active_fracture_index < 0) return false;
+    	else return true;
+    }
+ }
 
 ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index)
 {
@@ -158,19 +192,29 @@ ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index)
     cell.volume = GetCellVolume(global_index);
     cell.corners = GetCellCorners(global_index);
     cell.center = GetCellCenter(global_index);
-    cell.active = IsCellActive(global_index);
-
+    cell.matrix_active = IsCellMatrixActive(global_index);
+    cell.fracture_active = IsCellFractureActive(global_index);
+        
     // Get properties from the INIT file - only possible if the cell is active
-    if (cell.active)
-    {
-        int i, j, k;
-        ecl_grid_get_ijk1(ecl_grid_, global_index, &i, &j, &k);
-        int active_index = ecl_grid_get_active_index3(ecl_grid_ , i , j , k);
-        cell.porosity = ecl_kw_iget_as_double(poro_kw_, active_index);
-        cell.permx = ecl_kw_iget_as_double(permx_kw_, active_index);
-        cell.permy = ecl_kw_iget_as_double(permy_kw_, active_index);
-        cell.permz = ecl_kw_iget_as_double(permz_kw_, active_index);
-    }
+    // Matrix grid
+	int active_index = ecl_grid_get_active_index1(ecl_grid_, global_index);
+	if (active_index >= 0)
+	{
+		cell.porosity.push_back(ecl_kw_iget_as_double(poro_kw_, active_index));
+		cell.permx.push_back(ecl_kw_iget_as_double(permx_kw_, active_index));
+		cell.permy.push_back(ecl_kw_iget_as_double(permy_kw_, active_index));
+		cell.permz.push_back(ecl_kw_iget_as_double(permz_kw_, active_index));
+	}
+    
+	// Fracture grid
+	active_index = ecl_grid_get_active_fracture_index1(ecl_grid_, global_index);
+	if (active_index >= 0)
+	{
+		cell.porosity.push_back(ecl_kw_iget_as_double(poro_kw_, active_index));
+		cell.permx.push_back(ecl_kw_iget_as_double(permx_kw_, active_index));
+		cell.permy.push_back(ecl_kw_iget_as_double(permy_kw_, active_index));
+		cell.permz.push_back(ecl_kw_iget_as_double(permz_kw_, active_index));
+	}
 
     return cell;
 }
@@ -203,53 +247,6 @@ ECLGridReader::Cell ECLGridReader::FindSmallestCell() {
         }
     }
     return GetGridCell(index_with_smallest_volume);
-}
-vector<Vector3d> ECLGridReader::GetBoundingCellCentroids() {
-    auto dims = Dimensions();
-    vector<Vector3d> bounding_centroids;
-
-    for (int k = 0; k < dims.nz; ++k) {
-        for (int j = 0; j < dims.ny; ++j) {
-            int i = 0;
-            while (!IsCellActive(ConvertIJKToGlobalIndex(i, j, k)) && i < dims.nx - 1)
-                i++;
-            bounding_centroids.push_back(GetCellCenter(ConvertIJKToGlobalIndex(i, j, k)));
-
-            i = dims.nx - 1;
-            while (!IsCellActive(ConvertIJKToGlobalIndex(i, j, k)) && i > 0)
-                i--;
-            bounding_centroids.push_back(GetCellCenter(ConvertIJKToGlobalIndex(i, j, k)));
-        }
-    }
-
-    for (int k = 0; k < dims.nz; ++k) {
-        for (int i = 0; i < dims.nx; ++i) {
-            int j = 0;
-            while (!IsCellActive(ConvertIJKToGlobalIndex(i, j, k)) && j < dims.ny - 1)
-                j++;
-            bounding_centroids.push_back(GetCellCenter(ConvertIJKToGlobalIndex(i, j, k)));
-
-            j = dims.ny - 1;
-            while (!IsCellActive(ConvertIJKToGlobalIndex(i, j, k)) && j > 0)
-                j--;
-            bounding_centroids.push_back(GetCellCenter(ConvertIJKToGlobalIndex(i, j, k)));
-        }
-    }
-
-    for (int j = 0; j < dims.ny; ++j) {
-        for (int i = 0; i < dims.nx; ++i) {
-            int k = 0;
-            while (!IsCellActive(ConvertIJKToGlobalIndex(i, j, k)) && k < dims.nz - 1)
-                k++;
-            bounding_centroids.push_back(GetCellCenter(ConvertIJKToGlobalIndex(i, j, k)));
-
-            k = dims.nz - 1;
-            while (!IsCellActive(ConvertIJKToGlobalIndex(i, j, k)) && k > 0)
-                k--;
-            bounding_centroids.push_back(GetCellCenter(ConvertIJKToGlobalIndex(i, j, k)));
-        }
-    }
-    return bounding_centroids;
 }
 
 }

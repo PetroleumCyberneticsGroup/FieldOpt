@@ -26,9 +26,6 @@
 #include <Eigen/Dense>
 #include <vector>
 
-using namespace std;
-using namespace Eigen;
-
 namespace ERTWrapper {
 
 namespace ECLGrid {
@@ -54,7 +51,20 @@ class ECLGridReader
    *
    * The cell struct also contains all non-geometric properties
    * for a cell, i.e. permeabilities, porosities, and whether or
-   * not the cell is active
+   * not the cell is active.
+   * 
+   * In case of a dual grid the active status of matrix and fracture
+   * will be recorded and the properties for all grids is stored. 
+   * 
+   * The ecl_grid specifies the active status is encoded as: 
+   *                  0 - inactive, 
+   *                  1 - active in matrix, 
+   *                  2 - active in fracture 
+   *                  3 - active in both.
+   * Here we use two booleans to store the active status.
+   * The properties are stored in a vector with one or two items depending
+   * on the active status. If the cell is active both in the matrix grid as 
+   * well as in the fracture grid the matrix values will be stored first.
    *
    * The corners list contains all the corner points specifying the grid.
    * The first four elements represent the corners in the lower layer,
@@ -69,14 +79,15 @@ class ECLGridReader
    */
   struct Cell {
     int global_index;
-    bool active;
+    bool matrix_active;
+    bool fracture_active;
     double volume;
-    double porosity;
-    double permx;
-    double permy;
-    double permz;
-    vector<Vector3d> corners;
-    Vector3d center;
+    std::vector<double> porosity;
+    std::vector<double> permx;
+    std::vector<double> permy;
+    std::vector<double> permz;
+    std::vector<Eigen::Vector3d> corners;
+    Eigen::Vector3d center;
   };
 
   struct IJKIndex {
@@ -86,12 +97,12 @@ class ECLGridReader
   };
 
  private:
-  string file_name_;
-  string init_file_name_;
+  std::string file_name_;
+  std::string init_file_name_;
   ecl_grid_type* ecl_grid_;
   ecl_file_type* ecl_file_init_;
-  Vector3d GetCellCenter(int global_index);
-  vector<Vector3d> GetCellCorners(int global_index);
+  Eigen::Vector3d GetCellCenter(int global_index);
+  std::vector<Eigen::Vector3d> GetCellCorners(int global_index);
   double GetCellVolume(int global_index);
 
   ecl_kw_type *poro_kw_;
@@ -108,7 +119,7 @@ class ECLGridReader
    * \brief ReadEclGrid reads an ECLIPSE .GRID or .EGRID file.
    * \param file_name The path to the grid to be read, including suffix.
    */
-  void ReadEclGrid(string file_name);
+  void ReadEclGrid(std::string file_name);
 
   /*!
    * \brief ConvertIJKToGlobalIndex Converts a set of zero-offset (i,j,k) coordinates to the global index to that cell.
@@ -118,6 +129,14 @@ class ECLGridReader
   int ConvertIJKToGlobalIndex(IJKIndex ijk);
   int ConvertIJKToGlobalIndex(int i, int j, int k);
 
+  /*!
+   * \brief ConvertMatrixActiveIndexToGlobalIndex Converts a zero-offset index in the set of cells active in the matrix grid 
+   * to the global index.
+   * \param index Zero-offset index for a cell active in the matrix grid
+   * \return global index
+   */
+  int ConvertMatrixActiveIndexToGlobalIndex(int index);
+  
   /*!
    * \brief ConvertGlobalIndexToIJK Converts a global index for a cell
    * to the corresponding zero-offset (i,j,k) coordinates.
@@ -133,15 +152,34 @@ class ECLGridReader
   Dims Dimensions();
 
   /*!
-   * \brief ActiveCells Number of active cells in the grid that has been read.
+   * \brief NumActiveCells Number of active cells in the matrix in the grid that has been read.
    */
-  int ActiveCells();
+  int NumActiveMatrixCells();
 
   /*!
-   * \brief IsCellActive returns false if the cell identified by its global index is not active
+   * \brief NumActiveFractureCells Number of active cells in the fracture grid that has been read.
+   * This only makes sense for dual grids
+   */
+  int NumActiveFractureCells();
+
+  /*!
+   * \brief IsCellActive returns false if the cell identified by its global index 
+   * is not active in the matrix grid nor in the fracture
    */
   bool IsCellActive(int global_index);
+  
+  /*!
+   * \brief IsCellMatrixActive returns false if the cell identified by its global index 
+   * is not active in the matrix grid
+   */
+  bool IsCellMatrixActive(int global_index);
 
+  /*!
+   * \brief IsCellFractureActive returns false if the cell identified by its global index 
+   * is not active in the facture grid in the case of dual grid
+   */
+  bool IsCellFractureActive(int global_index);
+  
   /*!
    * \brief GetGridCell get a Cell struct describing the cell with the specified global index.
    * \param global_index The global index of the cell to get.
@@ -173,13 +211,6 @@ class ECLGridReader
    * @return The smallest cell in the reservoir.
    */
   Cell FindSmallestCell();
-
-  /*!
-   * Get a list containing the centroids of all bounding cells, i.e. the
-   * outermost cells of the reservoir.
-   * @return
-   */
-  vector<Vector3d> GetBoundingCellCentroids();
 };
 }
 }

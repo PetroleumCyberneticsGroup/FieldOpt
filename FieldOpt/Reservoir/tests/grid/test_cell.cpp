@@ -100,10 +100,10 @@ TEST_F(CellTest, Corners) {
 
 TEST_F(CellTest, Properties) {
     auto cell = grid_->GetCell(1);
-    EXPECT_FLOAT_EQ(0.25, cell.porosity());
-    EXPECT_FLOAT_EQ(100, cell.permx());
-    EXPECT_FLOAT_EQ(100, cell.permy());
-    EXPECT_FLOAT_EQ(5, cell.permz());
+    EXPECT_FLOAT_EQ(0.25, cell.porosity()[0]);
+    EXPECT_FLOAT_EQ(100, cell.permx()[0]);
+    EXPECT_FLOAT_EQ(100, cell.permy()[0]);
+    EXPECT_FLOAT_EQ(5, cell.permz()[0]);
 }
 
 }
