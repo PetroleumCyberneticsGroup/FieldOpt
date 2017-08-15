@@ -106,7 +106,7 @@ TEST_F(EGOTest, GP5SpotExhaustiveTestData) {
     auto gen = get_random_generator();
     Optimization::Normalizer normalizer = Optimization::Normalizer();
 
-    QFile file("/home/einar/git/pcg/FieldOpt/FieldOpt/Optimization/tests/optimizers/test_case_log_exhaustive.csv");
+    QFile file("/home/einar/PCG/FieldOpt/FieldOpt/Optimization/tests/optimizers/test_case_log_exhaustive.csv");
     if(!file.open(QIODevice::ReadOnly)) {
         cout << "Unable to open file." << endl;
     }
@@ -184,7 +184,7 @@ TEST_F(EGOTest, GP5SpotExhaustiveTestData) {
 }
 
 TEST_F(EGOTest, GPNorneTestData) {
-    QFile file("/home/einar/git/pcg/FieldOpt/FieldOpt/Optimization/tests/optimizers/test_case_log.csv");
+    QFile file("/home/einar/PCG/FieldOpt/FieldOpt/Optimization/tests/optimizers/test_case_log.csv");
     if(!file.open(QIODevice::ReadOnly)) {
         cout << "Unable to open file." << endl;
     }

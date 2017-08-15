@@ -153,7 +153,7 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
       {"Parameters", QJsonObject{
           {"LowerBound", -3},
           {"UpperBound",  3},
-          {"MaxEvaluations", 1000}
+          {"MaxEvaluations", 50}
       }},
       {"Objective", obj_fun_},
 //      {"Constraints", QJsonArray{
