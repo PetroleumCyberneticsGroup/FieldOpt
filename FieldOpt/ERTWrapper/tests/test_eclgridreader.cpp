@@ -56,7 +56,7 @@ class ECLGridReaderTest : public ::testing::Test {
 };
 
 TEST_F(ECLGridReaderTest, ReadGrid) {
-    EXPECT_EQ(1620, ecl_grid_reader_->ActiveCells());
+    EXPECT_EQ(1620, ecl_grid_reader_->NumActiveMatrixCells());
 }
 
 TEST_F(ECLGridReaderTest, ConvertIJKToGlobalIndex) {
@@ -101,14 +101,14 @@ TEST_F(ECLGridReaderTest, GetCell) {
 TEST_F(ECLGridReaderTest, CellProperties) {
     auto cell_1 = ecl_grid_reader_->GetGridCell(1);
     auto cell_1000 = ecl_grid_reader_->GetGridCell(1000);
-    EXPECT_FLOAT_EQ(0.25, cell_1.porosity);
-    EXPECT_FLOAT_EQ(100, cell_1.permx);
-    EXPECT_FLOAT_EQ(100, cell_1.permy);
-    EXPECT_FLOAT_EQ(5, cell_1.permz);
-    EXPECT_FLOAT_EQ(0.25, cell_1000.porosity);
-    EXPECT_FLOAT_EQ(100, cell_1000.permx);
-    EXPECT_FLOAT_EQ(100, cell_1000.permy);
-    EXPECT_FLOAT_EQ(5, cell_1000.permz);
+    EXPECT_FLOAT_EQ(0.25, cell_1.porosity[0]);
+    EXPECT_FLOAT_EQ(100, cell_1.permx[0]);
+    EXPECT_FLOAT_EQ(100, cell_1.permy[0]);
+    EXPECT_FLOAT_EQ(5, cell_1.permz[0]);
+    EXPECT_FLOAT_EQ(0.25, cell_1000.porosity[0]);
+    EXPECT_FLOAT_EQ(100, cell_1000.permx[0]);
+    EXPECT_FLOAT_EQ(100, cell_1000.permy[0]);
+    EXPECT_FLOAT_EQ(5, cell_1000.permz[0]);
 }
 
 TEST_F(ECLGridReaderTest, GlobalIndexOfCellEncompasingPoint) {

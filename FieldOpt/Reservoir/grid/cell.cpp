@@ -28,23 +28,24 @@ namespace Grid {
 using namespace std;
 
 Cell::Cell(int global_index, IJKCoordinate ijk_index,
-           double volume, double poro,
-           double permx, double permy, double permz,
+           double volume, vector<double> poro_in,
+           vector<double> permx_in, vector<double> permy_in, vector<double> permz_in,
            Eigen::Vector3d center,
            vector<Eigen::Vector3d> corners,
            int faces_permutation_index,
-           bool active)
+           bool active_matrix, bool active_fracture)
 {
     global_index_ = global_index;
     ijk_index_ = ijk_index;
     volume_ = volume;
-    porosity_ = poro;
-    permx_ = permx;
-    permy_ = permy;
-    permz_ = permz;
+    porosity_ = poro_in;
+    permx_ = permx_in;
+    permy_ = permy_in;
+    permz_ = permz_in;
     center_ = center;
     corners_ = corners;
-    is_active_ = active;
+    is_active_matrix_ = active_matrix;
+    is_active_fracture_ = active_fracture;
 
     initializeFaces(faces_permutation_index);
 }

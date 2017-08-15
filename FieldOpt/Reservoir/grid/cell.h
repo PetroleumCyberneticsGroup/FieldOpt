@@ -41,21 +41,27 @@ class Cell
   Cell(){};
   Cell(int global_index,
        IJKCoordinate ijk_index,
-       double volume, double poro,
-       double permx, double permy, double permz,
+       double volume, 
+       vector<double> poro,
+       vector<double> permx, 
+       vector<double> permy, 
+       vector<double> permz,
        Eigen::Vector3d center,
        vector<Eigen::Vector3d> corners,
        int faces_permutation_index,
-       bool active
+       bool active_matrix, bool active_fracture
   );
 
   /*!
-   * \brief
+   * \brief Set cell properties at a later stage
    */
-  void SetProperties(bool is_active,
-                     float porosity,
-                     float permx, float permy, float permz);
-
+  /*void SetProperties(bool is_active_matrix,
+		  bool is_active_fracture,
+          vector<double> porosity,
+          vector<double> permx,
+          vector<double> permy,
+          vector<double> permz);
+*/
   /*!
    * \brief global_index Gets the cells global index in its parent grid.
    */
@@ -69,36 +75,53 @@ class Cell
   /*!
    * \brief volume Gets the cells volume.
    */
-  float volume() const { return volume_; }
+  double volume() const { return volume_; }
 
   /*!
-   * \brief porosity Gets the cell's porosity.
+   * \brief porosity Gets the cell's porosity vector 
+   * One value for each grid in which it is active.
    */
-  float porosity() const { return porosity_; }
+  vector<double> porosity() const { return porosity_; }
 
   /*!
-   * \brief porosity Gets the cell's x-permeability.
+   * \brief porosity Gets the cell's x-permeability vector.
+   * One value for each grid in which it is active.
    */
-  float permx() const { return permx_; }
+  vector<double> permx() const { return permx_; }
 
   /*!
-   * \brief porosity Gets the cell's y-permeability.
+   * \brief porosity Gets the cell's y-permeability vector.
+   * One value for each grid in which it is active.
    */
-  float permy() const { return permy_; }
+  vector<double> permy() const { return permy_; }
 
   /*!
-   * \brief porosity Gets the cell's z-permeability.
+   * \brief porosity Gets the cell's z-permeability vector.
+   * One value for each grid in which it is active.
    */
-  float permz() const { return permz_; }
+  vector<double> permz() const { return permz_; }
 
   /*!
    * @brief Check whether or not a cell is active. Note that before
    * SetProperties is called, all cells are assumed to be active.
    * @return
+   */  
+  bool is_active() const { return is_active_matrix_ || is_active_fracture_; }
+  
+  /*!
+   * @brief Check whether or not a cell is active. Note that before
+   * SetProperties is called, all cells are assumed to be active.
+   * @return
    */
-  bool is_active() const { return is_active_; }
+  bool is_active_matrix() const { return is_active_matrix_; }
 
-
+  /*!
+   * @brief Check whether or not a cell is active in the fracture grid. 
+   * Note that before SetProperties is called, all cells are assumed to be active.
+   * @return
+   */
+  bool is_active_fracture() const { return is_active_fracture_; }
+  
   /*!
    * \brief center Gets the (x, y, z) position of the cells center.
    * \todo Find how these are computed by ERT
@@ -243,14 +266,15 @@ class Cell
  private:
   int global_index_;
   IJKCoordinate ijk_index_;
-  bool is_active_; //!< Indicates whether or not the cell is active.
-  float volume_;
+  bool is_active_matrix_; //!< Indicates whether or not the cell is active in the matrix grid.
+  bool is_active_fracture_; //!< Indicates whether or not the cell is active in the fracture grid.
+  double volume_;
   Eigen::Vector3d center_;
   vector<Eigen::Vector3d> corners_;
-  float porosity_;
-  float permx_;
-  float permy_;
-  float permz_;
+  vector<double> porosity_;
+  vector<double> permx_;
+  vector<double> permy_;
+  vector<double> permz_;
   vector<Face> faces_;
 
   /*!
