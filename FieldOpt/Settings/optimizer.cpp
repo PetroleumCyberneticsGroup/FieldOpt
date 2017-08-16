@@ -196,7 +196,7 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
             optimizer_constraint.min = json_constraint["Min"].toDouble();
     }
     else if (QString::compare(constraint_type, "Boundary2D") == 0) {
-        optimizer_constraint.type = ConstraintType::Boundary2D;
+        optimizer_constraint.type = ConstraintType::PseudoContBoundary2D;
         optimizer_constraint.box_imin = json_constraint["Imin"].toDouble();
         optimizer_constraint.box_imax = json_constraint["Imax"].toDouble();
         optimizer_constraint.box_jmin = json_constraint["Jmin"].toDouble();

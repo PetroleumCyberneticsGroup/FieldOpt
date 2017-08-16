@@ -41,6 +41,7 @@ add_library(optimization
 		optimizers/GeneticAlgorithm.cpp
 		optimizers/RGARDD.cpp
         normalizer.cpp
+		constraints/pseudo_cont_boundary_2d.h
 		${EXPERIMENTAL_CONSTRAINTS_SRC})
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
