@@ -18,7 +18,7 @@ add_library(model
 		properties/continous_property.cpp
 		properties/discrete_property.cpp
         properties/property.cpp
-        model_synchronization_object.cpp )
+        model_synchronization_object.cpp wells/wellbore/pseudo_cont_vert.cpp wells/wellbore/pseudo_cont_vert.h)
 add_library(fieldopt::model ALIAS ${PROJECT_NAME})
 
 target_link_libraries (model
