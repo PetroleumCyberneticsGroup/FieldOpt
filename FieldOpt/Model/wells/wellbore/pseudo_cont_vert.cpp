@@ -17,6 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
+#include <iostream>
 #include "pseudo_cont_vert.h"
 
 namespace Model {
@@ -28,7 +29,19 @@ PseudoContVert::PseudoContVert(Settings::Model::Well well_settings,
     grid_ = grid;
     int i_idx = well_settings.pseudo_cont_position.i;
     int j_idx = well_settings.pseudo_cont_position.j;
-    auto init_cell = grid_->GetCell(i_idx, j_idx, 0);
+
+    assert(i_idx >= 0 && i_idx < grid->Dimensions().nx);
+    assert(j_idx >= 0 && j_idx < grid->Dimensions().ny);
+
+    Reservoir::Grid::Cell init_cell;
+
+    try {
+        init_cell = grid_->GetCell(i_idx, j_idx, 0);
+    } catch (std::exception const &e) {
+        std::cerr << "Error: Could not initialize PseudoContVert for well " << well_settings.name.toStdString()
+                  << ". Initial cell is outside grid" << std::endl;
+        exit(1);
+    }
     z_pos_ = init_cell.center().z();
     x_pos_ = new Properties::ContinousProperty(init_cell.center().x());
     y_pos_ = new Properties::ContinousProperty(init_cell.center().y());

@@ -46,6 +46,7 @@ class Model
   friend class Settings;
 
  public:
+  Model(QJsonObject json_model); // This should only be accessed externally for testing purposes.
   enum ReservoirGridSourceType : int { ECLIPSE=1 };
   enum WellType : int { Injector=011, Producer=12 };
   enum ControlMode : int { BHPControl=21, RateControl=22 };
@@ -118,7 +119,6 @@ class Model
   QList<int> control_times() const { return control_times_; } //!< Get the control times for the schedule
 
  private:
-  Model(QJsonObject json_model);
   Reservoir reservoir_;
   QList<Well> wells_;
   QList<int> control_times_;

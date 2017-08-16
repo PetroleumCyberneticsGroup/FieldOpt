@@ -87,12 +87,14 @@ bool PseudoContBoundary2D::IsBoundConstraint() const {
 }
 Eigen::VectorXd PseudoContBoundary2D::GetLowerBounds(QList<QUuid> id_vector) const {
     Eigen::VectorXd lbounds(id_vector.size());
+    lbounds.fill(0);
     lbounds[id_vector.indexOf(affected_x_var_id_)] = x_min_;
     lbounds[id_vector.indexOf(affected_y_var_id_)] = y_min_;
     return lbounds;
 }
 Eigen::VectorXd PseudoContBoundary2D::GetUpperBounds(QList<QUuid> id_vector) const {
     Eigen::VectorXd ubounds(id_vector.size());
+    ubounds.fill(0);
     ubounds[id_vector.indexOf(affected_x_var_id_)] = x_max_;
     ubounds[id_vector.indexOf(affected_y_var_id_)] = y_max_;
     return ubounds;

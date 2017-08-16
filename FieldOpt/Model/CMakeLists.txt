@@ -54,7 +54,7 @@ if (BUILD_TESTING)
             tests/wells/test_well.cpp
             tests/wells/test_wellblock.cpp
             tests/test_resource_variable_property_container.h
-            tests/test_resource_model.h)
+            tests/test_resource_model.h tests/wells/test_pseudo_cont_vert.cpp)
     target_link_libraries(test_model
             fieldopt::model
             fieldopt::reservoir
