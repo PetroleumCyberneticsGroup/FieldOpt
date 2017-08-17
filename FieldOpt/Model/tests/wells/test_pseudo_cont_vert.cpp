@@ -41,9 +41,11 @@ TEST_F(PseudoContVertTest, ConstructorAndGetter) {
     auto well = Model::Wells::Wellbore::PseudoContVert(wsettings, varcont, TestResources::TestResourceGrids::grid_5spot_);
 
     auto block = well.GetWellBlock();
-    EXPECT_EQ(block->i(), 5);
-    EXPECT_EQ(block->j(), 5);
-    EXPECT_EQ(block->k(), 0);
+
+    // These should be 1 higher, as well blocks use 1-indexing instead of 0-indexing.
+    EXPECT_EQ(block->i(), 6);
+    EXPECT_EQ(block->j(), 6);
+    EXPECT_EQ(block->k(), 1);
 }
 
 }
