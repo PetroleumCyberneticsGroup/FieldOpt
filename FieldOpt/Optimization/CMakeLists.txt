@@ -46,8 +46,9 @@ add_library(optimization
 		optimizers/bayesian_optimization/af_optimizers/AFOptimizer.cpp
 		optimizers/bayesian_optimization/af_optimizers/AFMonteCarlo.cpp
 		optimizers/bayesian_optimization/EGO.cpp
-		${EXPERIMENTAL_CONSTRAINTS_SRC}
-        optimizers/bayesian_optimization/af_optimizers/AFCompassSearch.cpp optimizers/bayesian_optimization/af_optimizers/AFCompassSearch.h)
+        optimizers/bayesian_optimization/af_optimizers/AFCompassSearch.cpp
+		constraints/pseudo_cont_boundary_2d.cpp
+		${EXPERIMENTAL_CONSTRAINTS_SRC})
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
 target_link_libraries(optimization
@@ -90,7 +91,8 @@ if (BUILD_TESTING)
             tests/constraints/test_interwell_distance.cpp
             tests/constraints/test_spline_well_length.cpp
 			tests/optimizers/test_ego.cpp
-            )
+            tests/constraints/test_pseudo_cont_boundary_2d.cpp)
+
 
 	target_link_libraries(test_optimization
 			fieldopt::optimization

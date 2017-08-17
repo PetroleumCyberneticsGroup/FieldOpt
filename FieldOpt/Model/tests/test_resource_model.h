@@ -23,6 +23,7 @@
 #include <Runner/tests/test_resource_runner.hpp>
 #include "Model/model.h"
 #include "Settings/tests/test_resource_settings.hpp"
+#include "test_resource_model_setting_snippets.hpp"
 
 namespace TestResources {
 class TestResourceModel : public TestResourceSettings,

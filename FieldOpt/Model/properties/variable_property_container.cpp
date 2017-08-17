@@ -153,6 +153,23 @@ QList<ContinousProperty *> VariablePropertyContainer::GetWellSplineVariables(con
     return spline_vars;
 }
 
+QList<ContinousProperty *> VariablePropertyContainer::GetPseudoContVertVariables(const QString well_name) const {
+    QList<ContinousProperty *> pcv_vars;
+    for (auto var : continous_variables_->values()) {
+        if (var->propertyInfo().prop_type == Property::PropertyType::PseudoContVert &&
+            QString::compare(well_name, var->propertyInfo().parent_well_name) == 0) {
+            pcv_vars.append(var);
+        }
+    }
+    if (pcv_vars.size() != 2) {
+        std::cerr << "Error: Incorrect number (" << pcv_vars.size() << ") found for well " << well_name.toStdString() << std::endl;
+        throw std::runtime_error("Incorrect number of pseudocontinuous variables found.");
+    }
+    if (pcv_vars[0]->propertyInfo().coord != Property::Coordinate::x)
+        pcv_vars.swap(0, 1);
+    return pcv_vars;
+}
+
 
 QList<ContinousProperty *> VariablePropertyContainer::GetWellControlVariables() const {
     QList<ContinousProperty *> well_controls;

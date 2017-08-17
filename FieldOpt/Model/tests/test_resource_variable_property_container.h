@@ -29,69 +29,80 @@ class TestResourceVariablePropertyContainer {
 
  public:
   TestResourceVariablePropertyContainer() {
-      prod_heel_x_ = new ContinousProperty(5.0);
-      prod_heel_y_ = new ContinousProperty(5.0);
-      prod_heel_z_ = new ContinousProperty(200.0);
-      prod_toe_x_ = new ContinousProperty(12);
-      prod_toe_y_ = new ContinousProperty(120.1);
-      prod_toe_z_ = new ContinousProperty(300.0);
+        prod_heel_x_ = new ContinousProperty(5.0);
+        prod_heel_y_ = new ContinousProperty(5.0);
+        prod_heel_z_ = new ContinousProperty(200.0);
+        prod_toe_x_ = new ContinousProperty(12);
+        prod_toe_y_ = new ContinousProperty(120.1);
+        prod_toe_z_ = new ContinousProperty(300.0);
 
-      inje_heel_x_ = new ContinousProperty(25.0);
-      inje_heel_y_ = new ContinousProperty(5.0);
-      inje_heel_z_ = new ContinousProperty(200.0);
-      inje_toe_x_ = new ContinousProperty(32);
-      inje_toe_y_ = new ContinousProperty(120.1);
-      inje_toe_z_ = new ContinousProperty(300.0);
+        inje_heel_x_ = new ContinousProperty(25.0);
+        inje_heel_y_ = new ContinousProperty(5.0);
+        inje_heel_z_ = new ContinousProperty(200.0);
+        inje_toe_x_ = new ContinousProperty(32);
+        inje_toe_y_ = new ContinousProperty(120.1);
+        inje_toe_z_ = new ContinousProperty(300.0);
 
-      prod_heel_x_->setName("SplinePoint#TESTW#heel#x");
-      prod_heel_y_->setName("SplinePoint#TESTW#heel#y");
-      prod_heel_z_->setName("SplinePoint#TESTW#heel#z");
-      prod_toe_x_->setName("SplinePoint#TESTW#toe#x");
-      prod_toe_y_->setName("SplinePoint#TESTW#toe#y");
-      prod_toe_z_->setName("SplinePoint#TESTW#toe#z");
+        pseudocont_x_ = new ContinousProperty(200);
+        pseudocont_y_ = new ContinousProperty(200);
 
-      inje_heel_x_->setName("SplinePoint#INJE#heel#x");
-      inje_heel_y_->setName("SplinePoint#INJE#heel#y");
-      inje_heel_z_->setName("SplinePoint#INJE#heel#z");
-      inje_toe_x_->setName("SplinePoint#INJE#toe#x");
-      inje_toe_y_->setName("SplinePoint#INJE#toe#y");
-      inje_toe_z_->setName("SplinePoint#INJE#toe#z");
+        prod_heel_x_->setName("SplinePoint#TESTW#heel#x");
+        prod_heel_y_->setName("SplinePoint#TESTW#heel#y");
+        prod_heel_z_->setName("SplinePoint#TESTW#heel#z");
+        prod_toe_x_->setName("SplinePoint#TESTW#toe#x");
+        prod_toe_y_->setName("SplinePoint#TESTW#toe#y");
+        prod_toe_z_->setName("SplinePoint#TESTW#toe#z");
 
-      varcont_prod_spline_ = new VariablePropertyContainer();
-      varcont_prod_spline_->AddVariable(prod_heel_x_);
-      varcont_prod_spline_->AddVariable(prod_heel_y_);
-      varcont_prod_spline_->AddVariable(prod_heel_z_);
-      varcont_prod_spline_->AddVariable(prod_toe_x_);
-      varcont_prod_spline_->AddVariable(prod_toe_y_);
-      varcont_prod_spline_->AddVariable(prod_toe_z_);
+        inje_heel_x_->setName("SplinePoint#INJE#heel#x");
+        inje_heel_y_->setName("SplinePoint#INJE#heel#y");
+        inje_heel_z_->setName("SplinePoint#INJE#heel#z");
+        inje_toe_x_->setName("SplinePoint#INJE#toe#x");
+        inje_toe_y_->setName("SplinePoint#INJE#toe#y");
+        inje_toe_z_->setName("SplinePoint#INJE#toe#z");
 
-      varcont_two_spline_wells_ = new VariablePropertyContainer();
-      varcont_two_spline_wells_->AddVariable(prod_heel_x_);
-      varcont_two_spline_wells_->AddVariable(prod_heel_y_);
-      varcont_two_spline_wells_->AddVariable(prod_heel_z_);
-      varcont_two_spline_wells_->AddVariable(prod_toe_x_);
-      varcont_two_spline_wells_->AddVariable(prod_toe_y_);
-      varcont_two_spline_wells_->AddVariable(prod_toe_z_);
-      varcont_two_spline_wells_->AddVariable(inje_heel_x_);
-      varcont_two_spline_wells_->AddVariable(inje_heel_y_);
-      varcont_two_spline_wells_->AddVariable(inje_heel_z_);
-      varcont_two_spline_wells_->AddVariable(inje_toe_x_);
-      varcont_two_spline_wells_->AddVariable(inje_toe_y_);
-      varcont_two_spline_wells_->AddVariable(inje_toe_z_);
+        pseudocont_x_->setName("PseudoContVert#TESTW#x");
+        pseudocont_y_->setName("PseudoContVert#TESTW#y");
 
-      prod_bhp_0_ = new ContinousProperty(1.0);
-      prod_bhp_10_ = new ContinousProperty(1.0);
-      prod_bhp_0_->setName("BHP#PRODUCER#0");
-      prod_bhp_10_->setName("BHP#PRODUCER#10");
-      varcont_prod_bhp_ = new VariablePropertyContainer();
-      varcont_prod_bhp_->AddVariable(prod_bhp_0_);
-      varcont_prod_bhp_->AddVariable(prod_bhp_10_);
+        varcont_prod_spline_ = new VariablePropertyContainer();
+        varcont_prod_spline_->AddVariable(prod_heel_x_);
+        varcont_prod_spline_->AddVariable(prod_heel_y_);
+        varcont_prod_spline_->AddVariable(prod_heel_z_);
+        varcont_prod_spline_->AddVariable(prod_toe_x_);
+        varcont_prod_spline_->AddVariable(prod_toe_y_);
+        varcont_prod_spline_->AddVariable(prod_toe_z_);
+
+        varcont_two_spline_wells_ = new VariablePropertyContainer();
+        varcont_two_spline_wells_->AddVariable(prod_heel_x_);
+        varcont_two_spline_wells_->AddVariable(prod_heel_y_);
+        varcont_two_spline_wells_->AddVariable(prod_heel_z_);
+        varcont_two_spline_wells_->AddVariable(prod_toe_x_);
+        varcont_two_spline_wells_->AddVariable(prod_toe_y_);
+        varcont_two_spline_wells_->AddVariable(prod_toe_z_);
+        varcont_two_spline_wells_->AddVariable(inje_heel_x_);
+        varcont_two_spline_wells_->AddVariable(inje_heel_y_);
+        varcont_two_spline_wells_->AddVariable(inje_heel_z_);
+        varcont_two_spline_wells_->AddVariable(inje_toe_x_);
+        varcont_two_spline_wells_->AddVariable(inje_toe_y_);
+        varcont_two_spline_wells_->AddVariable(inje_toe_z_);
+
+        varcont_pseudocont_ = new VariablePropertyContainer();
+        varcont_pseudocont_->AddVariable(pseudocont_x_);
+        varcont_pseudocont_->AddVariable(pseudocont_y_);
+
+        prod_bhp_0_ = new ContinousProperty(1.0);
+        prod_bhp_10_ = new ContinousProperty(1.0);
+        prod_bhp_0_->setName("BHP#PRODUCER#0");
+        prod_bhp_10_->setName("BHP#PRODUCER#10");
+        varcont_prod_bhp_ = new VariablePropertyContainer();
+        varcont_prod_bhp_->AddVariable(prod_bhp_0_);
+        varcont_prod_bhp_->AddVariable(prod_bhp_10_);
 
 
 
   }
 
   VariablePropertyContainer *varcont_prod_spline_;
+  VariablePropertyContainer *varcont_pseudocont_;
   VariablePropertyContainer *varcont_two_spline_wells_;
   VariablePropertyContainer *varcont_prod_bhp_;
   VariablePropertyContainer *varcont_6r_;
@@ -112,6 +123,9 @@ class TestResourceVariablePropertyContainer {
 
   ContinousProperty *prod_bhp_0_;
   ContinousProperty *prod_bhp_10_;
+
+  ContinousProperty *pseudocont_x_;
+  ContinousProperty *pseudocont_y_;
 };
 }
 
