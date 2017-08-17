@@ -48,14 +48,12 @@ TEST_F(ModelTest, ApplyCase) {
     auto producer_vars = model_->variables()->GetWellBHPVariables("PROD");
     producer_vars.append(model_->variables()->GetTransmissibilityVariables("PROD"));
     for (auto var : producer_vars) {
-        std::cout << "Setting value for " << var->id().toString().toStdString() << std::endl;
         c->set_real_variable_value(var->id(), 1.0);
     }
 
     // Set all integer coordinates to 1 (should affect positions for all well blocks)
     auto producer_wb_vars = model_->variables()->GetWellBlockVariables("PROD");
     for (auto var : producer_wb_vars) {
-        std::cout << "Setting value for " << var->id().toString().toStdString() << std::endl;
         c->set_integer_variable_value(var->id(), 1);
     }
 
@@ -89,14 +87,12 @@ TEST_F(ModelTest, Logging) {
     auto producer_vars = model_->variables()->GetWellBHPVariables("PROD");
     producer_vars.append(model_->variables()->GetTransmissibilityVariables("PROD"));
     for (auto var : producer_vars) {
-        std::cout << "Setting value for " << var->id().toString().toStdString() << std::endl;
         c->set_real_variable_value(var->id(), 1.0);
     }
 
     // Set all integer coordinates to 1 (should affect positions for all well blocks)
     auto producer_wb_vars = model_->variables()->GetWellBlockVariables("PROD");
     for (auto var : producer_wb_vars) {
-        std::cout << "Setting value for " << var->id().toString().toStdString() << std::endl;
         c->set_integer_variable_value(var->id(), 1);
     }
 

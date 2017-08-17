@@ -6,10 +6,10 @@ namespace {
     class RuntimeSettingsTest : public testing::Test {
         int argc = 16;
         const char *argv[16] = {"FieldOpt",
-                        "/home/einar/Documents/GitHub/PCG/FieldOpt/examples/ADGPRS/5spot/fo_driver_5vert_wells.json",
+                        "/home/einar/PCG/FieldOpt/examples/ADGPRS/5spot/fo_driver_5vert_wells.json",
                         "/home/einar/fieldopt_output",
-                        "-g", "/home/einar/Documents/GitHub/PCG/FieldOpt/examples/Flow/5spot/5SPOT.EGRID",
-                        "-s", "/home/einar/Documents/GitHub/PCG/FieldOpt/examples/Flow/5spot/5SPOT.DATA",
+                        "-g", "/home/einar/PCG/FieldOpt/examples/Flow/5spot/5SPOT.EGRID",
+                        "-s", "/home/einar/PCG/FieldOpt/examples/examples/Flow/5spot/5SPOT.DATA",
                         "-b", "/home/einar/.CLion2016.2/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug/bin",
                         "-r", "mpisync",
                         "-f",

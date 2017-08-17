@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.2)
-project(optimization LANGUAGES CXX)
+cmake_minimum_required(VERSION 2.8)
+project(optimization)
 
 set(EXPERIMENTAL_CONSTRAINTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/experimental_constraints)
 set(EXPERIMENTAL_CONSTRAINTS_SRC "")
@@ -59,9 +59,7 @@ target_include_directories(optimization PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/objective>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/optimizers>)
 
-target_compile_features(optimization
-        PUBLIC cxx_auto_type
-        PUBLIC cxx_range_for)
+add_compile_options(-std=c++11)
 
 if (BUILD_TESTING)
 	# Unit tests
