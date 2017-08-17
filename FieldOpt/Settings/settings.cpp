@@ -10,7 +10,6 @@ namespace Settings {
 
     Settings::Settings(QString driver_path, QString output_directory)
     {
-        std::cout << "Reading driver: " + driver_path.toStdString() << std::endl;
         if (!::Utilities::FileHandling::FileExists(driver_path))
             throw FileNotFoundException(driver_path.toStdString());
         driver_path_ = driver_path;

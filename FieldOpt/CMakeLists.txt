@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.2)
-project(FieldOpt VERSION 0.3 LANGUAGES CXX)
+cmake_minimum_required(VERSION 2.8)
+project(FieldOpt)
 
 # Build dirs ===========================================================
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -38,6 +38,8 @@ if (BUILD_TESTING AND NOT COPY_EXAMPLES)
     message("It is recommended to copy examples when building unit
     tests. Several of the tests use files in the examples directory.")
 endif()
+
+add_compile_options(-std=c++11)
 
 # Options 2: Compile WIC sources only ==================================
 # NOTE: only one of these options should be ON
