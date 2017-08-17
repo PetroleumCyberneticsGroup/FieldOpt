@@ -55,7 +55,9 @@ PseudoContVert::PseudoContVert(Settings::Model::Well well_settings,
 }
 WellBlock * PseudoContVert::GetWellBlock() {
     auto block = grid_->GetCellEnvelopingPoint(x_pos_->value(), y_pos_->value(), z_pos_);
-    auto wb = new WellBlock(block.ijk_index().i(), block.ijk_index().j(), block.ijk_index().k());
+    auto wb = new WellBlock(block.ijk_index().i()+1,
+                            block.ijk_index().j()+1,
+                            block.ijk_index().k()+1);
     auto comp = new Completions::Perforation();
     comp->setTransmissibility_factor(-1.0);
     wb->AddCompletion(comp);

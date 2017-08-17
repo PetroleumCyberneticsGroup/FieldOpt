@@ -45,7 +45,7 @@ ConstraintHandler::ConstraintHandler(QList<Settings::Optimizer::Constraint> cons
                 for (auto wname : constraint.wells) {
                     auto cons = Settings::Optimizer::Constraint(constraint);
                     cons.well = wname;
-                    constraints_.append(new ReservoirBoundary(cons, variables, grid));
+                    constraints_.append(new PseudoContBoundary2D(cons, variables, grid));
                 }
                 break;
 #ifdef WITH_EXPERIMENTAL_CONSTRAINTS
