@@ -35,12 +35,13 @@
 #include "Simulation/simulator_interfaces/adgprssimulator.h"
 #include "Utilities/math.hpp"
 
+using std::cout;
+
 namespace Runner {
 
 AbstractRunner::AbstractRunner(RuntimeSettings *runtime_settings)
 {
     runtime_settings_ = runtime_settings;
-
     settings_ = 0;
     model_ = 0;
     simulator_ = 0;
@@ -60,22 +61,33 @@ double AbstractRunner::sentinelValue() const
 void AbstractRunner::InitializeSettings(QString output_subdirectory)
 {
     QString output_directory = runtime_settings_->output_dir();
-    if (output_subdirectory.length() > 0)
+    if (output_subdirectory.length() > 0) { // if mpirunner
         output_directory.append(QString("/%1/").arg(output_subdirectory));
-    Utilities::FileHandling::CreateDirectory(output_directory);
+    }
 
-    settings_ = new Settings::Settings(runtime_settings_->driver_file(), output_directory);
-    settings_->set_verbosity(runtime_settings_->verbosity_level());
+    Utilities::FileHandling::CreateDirectory(output_directory);
+    QString include_directory = runtime_settings_->include_dir();
+
+    settings_ = new Settings::Settings(runtime_settings_->driver_file(),
+                                       output_directory, include_directory);
+    settings_->set_verbosity_level(runtime_settings_->verbosity_level());
+
+    if (output_subdirectory.length() > 0) { // if mpirunner
+        settings_->set_mpirunner_subdirectory("../");
+    }
 
     // Override simulator driver file if it has been passed as command line arguments
     if (runtime_settings_->simulator_driver_path().length() > 0)
         settings_->simulator()->set_driver_file_path(runtime_settings_->simulator_driver_path());
+
     // Override grid file if it has been passed as command line arguments
     if (runtime_settings_->grid_file_path().length() > 0)
         settings_->model()->set_reservoir_grid_path(runtime_settings_->grid_file_path());
+
     // Override simulator executable path if it has been passed as command line arguments
     if (runtime_settings_->simulator_exec_script_path().length() > 0)
         settings_->simulator()->set_execution_script_path(runtime_settings_->simulator_exec_script_path());
+
     // Override FieldOpt build directory path if it has been passed as command line arguments
     if (runtime_settings_->fieldopt_build_dir().length() > 0)
         settings_->set_build_path(runtime_settings_->fieldopt_build_dir());
@@ -96,15 +108,15 @@ void AbstractRunner::InitializeSimulator()
 
     switch (settings_->simulator()->type()) {
         case ::Settings::Simulator::SimulatorType::ECLIPSE:
-            if (runtime_settings_->verbosity_level()) std::cout << "Using ECL100 reservoir simulator." << std::endl;
+            if (runtime_settings_->verbosity_level()) cout << "Using ECL100 reservoir simulator." << endl;
             simulator_ = new Simulation::SimulatorInterfaces::ECLSimulator(settings_, model_);
             break;
         case ::Settings::Simulator::SimulatorType::ADGPRS:
-            if (runtime_settings_->verbosity_level()) std::cout << "Using ADGPRS reservoir simulator." << std::endl;
+            if (runtime_settings_->verbosity_level()) cout << "Using ADGPRS reservoir simulator." << endl;
             simulator_ = new Simulation::SimulatorInterfaces::AdgprsSimulator(settings_, model_);
             break;
         case ::Settings::Simulator::SimulatorType::Flow:
-            if (runtime_settings_->verbosity_level()) std::cout << "Using Flow reservoir simulator." << std::endl;
+            if (runtime_settings_->verbosity_level()) cout << "Using Flow reservoir simulator." << endl;
             simulator_ = new Simulation::SimulatorInterfaces::FlowSimulator(settings_, model_);
             break;
         default:
@@ -118,7 +130,7 @@ void AbstractRunner::EvaluateBaseModel()
     if (simulator_ == 0)
         throw std::runtime_error("The simulator must be initialized before evaluating the base model.");
     if (!simulator_->results()->isAvailable()) {
-        if (runtime_settings_->verbosity_level()) std::cout << "Simulating base case." << std::endl;
+        if (runtime_settings_->verbosity_level()) cout << "Simulating base case." << endl;
         simulator_->Evaluate();
     }
 }
@@ -130,7 +142,7 @@ void AbstractRunner::InitializeObjectiveFunction()
 
     switch (settings_->optimizer()->objective().type) {
         case Settings::Optimizer::ObjectiveType::WeightedSum:
-            if (runtime_settings_->verbosity_level()) std::cout << "Using WeightedSum-type objective function." << std::endl;
+            if (runtime_settings_->verbosity_level()) cout << "Using WeightedSum-type objective function." << endl;
             objective_function_ = new Optimization::Objective::WeightedSum(settings_->optimizer(), simulator_->results());
             break;
         default:
@@ -147,12 +159,12 @@ void AbstractRunner::InitializeBaseCase()
                                         model_->variables()->GetContinousVariableValues());
     if (!simulator_->results()->isAvailable()) {
         if (runtime_settings_->verbosity_level())
-            std::cout << "Simulation results are unavailable. Setting base case objective function value to sentinel value." << std::endl;
+            cout << "Simulation results are unavailable. Setting base case objective function value to sentinel value." << endl;
         base_case_->set_objective_function_value(sentinelValue());
     }
     else
         base_case_->set_objective_function_value(objective_function_->value());
-    if (runtime_settings_->verbosity_level()) std::cout << "Base case objective function value set to: " << base_case_->objective_function_value() << std::endl;
+    if (runtime_settings_->verbosity_level()) cout << "Base case objective function value set to: " << base_case_->objective_function_value() << endl;
 }
 
 void AbstractRunner::InitializeOptimizer()
@@ -162,7 +174,7 @@ void AbstractRunner::InitializeOptimizer()
 
     switch (settings_->optimizer()->type()) {
         case Settings::Optimizer::OptimizerType::Compass:
-            if (runtime_settings_->verbosity_level()) std::cout << "Using CompassSearch optimization algorithm." << std::endl;
+            if (runtime_settings_->verbosity_level()) cout << "Using CompassSearch optimization algorithm." << endl;
             optimizer_ = new Optimization::Optimizers::CompassSearch(settings_->optimizer(),
                                                                      base_case_,
                                                                      model_->variables(),
@@ -172,7 +184,7 @@ void AbstractRunner::InitializeOptimizer()
             optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
             break;
         case Settings::Optimizer::OptimizerType::APPS:
-            if (runtime_settings_->verbosity_level()) std::cout << "Using APPS optimization algorithm." << std::endl;
+            if (runtime_settings_->verbosity_level()) cout << "Using APPS optimization algorithm." << endl;
             optimizer_ = new Optimization::Optimizers::APPS(settings_->optimizer(),
                                                             base_case_,
                                                             model_->variables(),
@@ -182,7 +194,7 @@ void AbstractRunner::InitializeOptimizer()
             optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
             break;
         case Settings::Optimizer::OptimizerType::GeneticAlgorithm:
-            if (runtime_settings_->verbosity_level()) std::cout << "Using GeneticAlgorithm optimization algorithm." << std::endl;
+            if (runtime_settings_->verbosity_level()) cout << "Using GeneticAlgorithm optimization algorithm." << endl;
             optimizer_ = new Optimization::Optimizers::RGARDD(settings_->optimizer(),
                                                               base_case_,
                                                               model_->variables(),
@@ -192,7 +204,7 @@ void AbstractRunner::InitializeOptimizer()
             optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
             break;
         case Settings::Optimizer::OptimizerType::ExhaustiveSearch2DVert:
-            if (runtime_settings_->verbosity_level()) std::cout << "Using ExhaustiveSearch2DVert." << std::endl;
+            if (runtime_settings_->verbosity_level()) cout << "Using ExhaustiveSearch2DVert." << endl;
             optimizer_ = new Optimization::Optimizers::ExhaustiveSearch2DVert(settings_->optimizer(),
                                                                               base_case_,
                                                                               model_->variables(),
@@ -221,33 +233,33 @@ void AbstractRunner::InitializeLogger(QString output_subdir, bool write_logs)
 }
 
 void AbstractRunner::PrintCompletionMessage() const {
-    std::cout << "Optimization complete: ";
+    cout << "Optimization complete: ";
     switch (optimizer_->IsFinished()) {
         case Optimization::Optimizer::TerminationCondition::MAX_EVALS_REACHED:
-            std::cout << "maximum number of evaluations reached (not converged)." << std::endl;
+            cout << "maximum number of evaluations reached (not converged)." << endl;
             break;
         case Optimization::Optimizer::TerminationCondition::MINIMUM_STEP_LENGTH_REACHED:
-            std::cout << "minimum step length reached (converged)." << std::endl;
+            cout << "minimum step length reached (converged)." << endl;
             break;
-        default: std::cout << "Unknown termination reason." << std::endl;
+        default: cout << "Unknown termination reason." << endl;
     }
 
-    std::cout << "Best case at termination:" << optimizer_->GetTentativeBestCase()->id().toString().toStdString() << std::endl;
-    std::cout << "Variable values: " << std::endl;
+    cout << "Best case at termination:" << optimizer_->GetTentativeBestCase()->id().toString().toStdString() << endl;
+    cout << "Variable values: " << endl;
     for (auto var : optimizer_->GetTentativeBestCase()->integer_variables().keys()) {
         auto prop_name = model_->variables()->GetDiscreteVariable(var)->name();
         auto prop_val = optimizer_->GetTentativeBestCase()->integer_variables()[var];
-        std::cout << "\t" << prop_name.toStdString() << "\t" << prop_val << std::endl;
+        cout << "\t" << prop_name.toStdString() << "\t" << prop_val << endl;
     }
     for (auto var : optimizer_->GetTentativeBestCase()->real_variables().keys()) {
         auto prop_name = model_->variables()->GetContinousVariable(var)->name();
         auto prop_val = optimizer_->GetTentativeBestCase()->real_variables()[var];
-        std::cout << "\t" << prop_name.toStdString() << "\t" << prop_val << std::endl;
+        cout << "\t" << prop_name.toStdString() << "\t" << prop_val << endl;
     }
     for (auto var : optimizer_->GetTentativeBestCase()->binary_variables().keys()) {
         auto prop_name = model_->variables()->GetBinaryVariable(var)->name();
         auto prop_val = optimizer_->GetTentativeBestCase()->binary_variables()[var];
-        std::cout << "\t" << prop_name.toStdString() << "\t" << prop_val << std::endl;
+        cout << "\t" << prop_name.toStdString() << "\t" << prop_val << endl;
     }
 }
 

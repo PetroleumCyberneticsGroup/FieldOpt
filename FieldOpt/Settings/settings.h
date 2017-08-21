@@ -28,6 +28,7 @@
 
 #include <QString>
 #include <QJsonObject>
+#include <Runner/runtime_settings.h>
 
 #include "simulator.h"
 #include "optimizer.h"
@@ -52,16 +53,23 @@ class Settings
 {
  public:
   Settings(){}
-  Settings(QString driver_path, QString output_directory);
+  Settings(QString driver_path, QString output_directory, QString include_directory);
 
   QString driver_path() const { return driver_path_; }
 
   QString name() const { return name_; } //!< The name to be used for the run. Output file and folder names are derived from this.
   QString output_directory() const { return output_directory_; } //!< Path to a directory in which output files are to be placed.
+  QString include_directory() const { return include_directory_; } //!< Path to a include directory
+
+  QString mpirunner_subdirectory() const { return mpirunner_subdirectory_; } //!<
+  QString set_mpirunner_subdirectory(const QString mpi_subdir) { mpirunner_subdirectory_ = mpi_subdir; } //!<
 
   // To be removed:
   bool verbose() const { return verbose_; } //!< Verbose mode (with or without debug printing).
   void set_verbosity(const bool verbosity) { verbose_ = verbosity; }
+
+  int verbosity_level() const { return verbosity_level_; }
+  int set_verbosity_level(const int verbosity_level) { verbosity_level_ = verbosity_level; }
 
   //!< Get the value for the bookkeeper tolerance. Used by the Bookkeeper in the Runner library.
   double bookkeeper_tolerance() const { return bookkeeper_tolerance_; }
@@ -81,11 +89,15 @@ class Settings
   QString name_;
   double bookkeeper_tolerance_;
   QString output_directory_;
+  QString include_directory_;
+  QString mpirunner_subdirectory_;
+
   bool verbose_ = false;
   Model *model_;
   Optimizer *optimizer_;
   Simulator *simulator_;
   QString build_path_;
+  int verbosity_level_; //!< Verbosity level
 
   void readDriverFile();
   void readGlobalSection();

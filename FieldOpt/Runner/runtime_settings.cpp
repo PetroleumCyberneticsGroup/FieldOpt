@@ -20,6 +20,8 @@
 #include <boost/lexical_cast.hpp>
 #include <QtCore/QUuid>
 
+using std::cout;
+
 namespace Runner {
 
 RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
@@ -37,6 +39,12 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
         if (!Utilities::FileHandling::DirectoryExists(output_dir_))
             throw std::runtime_error("The specified output directory does not exist: " + output_dir_.toStdString());
     } else throw std::runtime_error("An output directory must be specified.");
+
+    if (vm.count("include-dir")) {
+        include_dir_ = QString::fromStdString(vm["include-dir"].as<std::string>());
+        if (!Utilities::FileHandling::DirectoryExists(include_dir_))
+            throw std::runtime_error("The specified include directory does not exist: " + include_dir_.toStdString());
+    } else include_dir_ = "include";
 
     if (vm.count("verbose")) verbosity_level_ = vm["verbose"].as<int>();
     else verbosity_level_ = 0;
@@ -102,6 +110,7 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
         prod_coords_.first = QVector<double>() << coords[0] << coords[1] << coords[2];
         prod_coords_.second = QVector<double>() << coords[3] << coords[4] << coords[5];
     }
+
     if (vm.count("well-inj-points")) {
         if (vm["well-inj-points"].as<std::vector<double>>().size() != 6)
             throw std::runtime_error("Exactly six coordinates must be provided for the injection well position.");
@@ -113,25 +122,28 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
 
     if (verbosity_level_) {
         str_out = "FieldOpt runtime settings";
-        std::cout << "\n" << str_out << "\n" << std::string(str_out.length(),'=') << std::endl;
-        std::cout << "Verbosity level:  " << verbosity_level_ << std::endl;
-        std::cout << "Runner type:      " << runnerTypeString().toStdString() << std::endl;
-        std::cout << "Overwr. old out files: " << overwrite_existing_ << std::endl;
-        std::cout << "Max parallel sims:   " << (max_parallel_sims_ > 0 ? boost::lexical_cast<std::string>(max_parallel_sims_) : "default") << std::endl;
-        std::cout << "Threads pr sim:      " << boost::lexical_cast<std::string>(threads_per_sim_) << std::endl;
+        cout << "\n" << str_out << "\n" << std::string(str_out.length(),'=') << endl;
+        cout << "Verbosity level:  " << verbosity_level_ << endl;
+        cout << "Runner type:      " << runnerTypeString().toStdString() << endl;
+        cout << "Overwr. old out files: " << overwrite_existing_ << endl;
+        cout << "Max parallel sims:   " << (max_parallel_sims_ > 0 ? boost::lexical_cast<std::string>(max_parallel_sims_) : "default") << endl;
+        cout << "Threads pr sim:      " << boost::lexical_cast<std::string>(threads_per_sim_) << endl;
+
         str_out = "Current/specified paths:";
-        std::cout << "\n" << str_out << "\n" << std::string(str_out.length(),'-') << std::endl;
-        std::cout << "Current dir:-------" << Utilities::FileHandling::GetCurrentDirectoryPath().toStdString() << std::endl;
-        std::cout << "Input file:--------" << driver_file_.toStdString() << std::endl;
-        std::cout << "Output dir:--------" << output_dir().toStdString() << std::endl;
-        std::cout << "Sim driver file:---" << (simulator_driver_path_.length() > 0 ? simulator_driver_path_.toStdString() : "from FieldOpt driver file") << std::endl;
-        std::cout << "Grid file path:----" << (grid_file_path_.length() > 0 ? grid_file_path_.toStdString() : "from FieldOpt driver file") << std::endl;
-        std::cout << "Exec file path:----" << (simulator_exec_script_path_.length() > 0 ? simulator_exec_script_path_.toStdString() : "from FieldOpt driver file") << std::endl;
-        std::cout << "Build dir:---------" << fieldopt_build_dir_.toStdString() << std::endl;
+        cout << "\n" << str_out << "\n" << std::string(str_out.length(),'-') << endl;
+        cout << "Current dir:-------" << Utilities::FileHandling::GetCurrentDirectoryPath().toStdString() << endl;
+        cout << "Input file:--------" << driver_file_.toStdString() << endl;
+        cout << "Output dir:--------" << output_dir().toStdString() << endl;
+        cout << "Include dir:-------" << include_dir().toStdString() << endl;
+
+        cout << "Sim driver file:---" << (simulator_driver_path_.length() > 0 ? simulator_driver_path_.toStdString() : "from FieldOpt driver file") << endl;
+        cout << "Grid file path:----" << (grid_file_path_.length() > 0 ? grid_file_path_.toStdString() : "from FieldOpt driver file") << endl;
+        cout << "Exec file path:----" << (simulator_exec_script_path_.length() > 0 ? simulator_exec_script_path_.toStdString() : "from FieldOpt driver file") << endl;
+        cout << "Build dir:---------" << fieldopt_build_dir_.toStdString() << endl;
         if (vm.count("well-prod-points"))
-            std::cout << "Producer coordinates:   " << wellSplineCoordinateString(prod_coords_).toStdString() << std::endl;
+            cout << "Producer coordinates:   " << wellSplineCoordinateString(prod_coords_).toStdString() << endl;
         if (vm.count("well-prod-points"))
-            std::cout << "Injector coordinates:   " << wellSplineCoordinateString(inje_coords_).toStdString() << std::endl;
+            cout << "Injector coordinates:   " << wellSplineCoordinateString(inje_coords_).toStdString() << endl;
     }
 }
 
@@ -159,19 +171,19 @@ po::variables_map RuntimeSettings::createVariablesMap(int argc, const char **arg
     int verbosity_level;
     po::options_description desc("FieldOpt options");
     desc.add_options()
-        ("help,h", "print help message")
+        ("help,h", "Print help message")
         ("verbose,v", po::value<int>(&verbosity_level)->default_value(0),
-         "verbosity level for runtime console logging")
+         "Verbosity level for runtime console logging")
         ("force,f", po::value<int>()->implicit_value(0),
-         "overwrite existing output files")
+         "Overwrite existing output files")
         ("max-parallel-simulations,m", po::value<int>(&max_par_sims)->default_value(0),
-         "start max <arg> parallel simulations")
+         "Start max <arg> parallel simulations")
         ("threads-per-simulation,n", po::value<int>(&thr_per_sim)->default_value(1),
-         "number of threads allocated to each simulation")
+         "Number of threads allocated to each simulation")
         ("runner-type,r", po::value<std::string>(),
-         "type of runner (serial/oneoff/mpisync)")
+         "Type of runner (serial/oneoff/mpisync)")
         ("grid-path,g", po::value<std::string>(),
-         "path to model grid file (e.g. *.GRID)")
+         "Path to model grid file (e.g. *.GRID)")
         ("sim-exec-path,e", po::value<std::string>(),
          "path to script that executes the reservoir simulation")
         ("fieldopt-build-dir,b", po::value<std::string>(),
@@ -185,9 +197,11 @@ po::variables_map RuntimeSettings::createVariablesMap(int argc, const char **arg
         ("well-inj-points,i", po::value<std::vector<double>>()->multitoken(),
          "Injection well position coordinates")
         ("input-file", po::value<std::string>(),
-         "path to FieldOpt driver file")
+         "Path to FieldOpt driver file")
         ("output-dir", po::value<std::string>(),
-         "path to folder in which to store the results.")
+         "Path to folder in which to store the results.")
+        ("include-dir", po::value<std::string>(),
+         "Name of simulator include folder.")
         ;
     // Positional arguments
     po::positional_options_description p;
@@ -202,8 +216,8 @@ po::variables_map RuntimeSettings::createVariablesMap(int argc, const char **arg
 
     // If called with --help or -h flag:
     if (vm.count("help") || !vm.count("input-file") || !vm.count("output-dir")) { // Print help if --help present or input file/output dir not present
-        std::cout << "Usage: ./FieldOpt input-file output-dir [options]" << std::endl;
-        std::cout << desc << std::endl;
+        cout << "Usage: ./FieldOpt input-file output-dir [options]" << endl;
+        cout << desc << endl;
         exit(EXIT_SUCCESS);
     }
 
@@ -228,7 +242,8 @@ map<string, string> RuntimeSettings::GetState() {
     }
 
     statemap["path FieldOpt driver"] = driver_file_.toStdString();
-    statemap["path Otput Directory"] = output_dir_.toStdString();
+    statemap["path Output directory"] = output_dir_.toStdString();
+    statemap["path Include directory"] = include_dir_.toStdString();
     statemap["path Simulator base driver"] = simulator_driver_path_.toStdString();
     statemap["path Grid file"] = grid_file_path_.toStdString();
     statemap["path Simulator execution script"] = simulator_exec_script_path_.toStdString();
