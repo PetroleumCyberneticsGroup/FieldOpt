@@ -20,9 +20,7 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/lexical_cast.hpp>
-#include <FieldOpt-WellIndexCalculator/wellindexcalculator.h>
-
-#include "FieldOpt-WellIndexCalculator/tests/wic_debug.hpp"
+#include <iostream>
 
 namespace Reservoir {
 namespace Grid {
@@ -31,7 +29,6 @@ using namespace std;
 
 ECLGrid::ECLGrid(string file_path)
     : Grid(GridSourceType::ECLIPSE, file_path) {
-
     if (!boost::filesystem::exists(file_path))
         throw runtime_error("Grid file " + file_path + " not found.");
 
@@ -52,22 +49,13 @@ ECLGrid::ECLGrid(string file_path)
 
     // Calculate the proper corner permutation for cell faces definition:
     // This is a function of the z axis orientation.
-    // Somehow the grid reader it re-aranging the cell corners and I could n
-    // ot easily found a logic so we are going to check all known permutations
-    // with the toe that one of them is suitable for the current grid - we do
-    // that based on the cell 0 in the grid
+    // Somehow the grid reader it re-aranging the cell corners and I could not easily found a logic
+    // so we are going to check all known permutations with the hoe tha one of them is suitable for
+    // the current grid - we do that based on the cell 0 in the grid
 
-    // Find the first (active) cell index.
-    int idx = 0;
-    while (idx < ecl_grid_reader_->ActiveCells()) {
-        if (ecl_grid_reader_->IsCellActive(idx)) {
-            break;
-        }
-        else {
-            idx++;
-        }
-    }
-
+    // Find the first (active) cell index in the matrix.
+    int idx = ecl_grid_reader_->ConvertMatrixActiveIndexToGlobalIndex(0);
+    
     // Set faces permutation to first permutation type
     faces_permutation_index_ = 0;
     // Get the first cell
@@ -75,21 +63,20 @@ ECLGrid::ECLGrid(string file_path)
 
     if (first_cell.EnvelopsPoint(first_cell.center()))
     {
-        return;
+		return;
     }
 
-    // Set faces permutation to second permutation type
-    faces_permutation_index_ = 1;
-    // Get the first cell
-    first_cell = GetCell(idx);
-    if (first_cell.EnvelopsPoint(first_cell.center()))
-    {
-        return;
-    }
+	// Set faces permutation to second permutation type
+	faces_permutation_index_ = 1;
+	// Get the first cell
+	first_cell = GetCell(idx);
+	if (first_cell.EnvelopsPoint(first_cell.center()))
+	{
+		return;
+	}
 
-    // We should not have gotten here - if here then it
-    // means there we need more permutations schemes
-    throw runtime_error("Unknown axis orientation");
+	// We should not have gotten here - if here then it means there we need more permutations schems
+	throw runtime_error("Unknown axis orientation");
 }
 
 ECLGrid::~ECLGrid() {
@@ -150,13 +137,13 @@ Cell ECLGrid::GetCell(int global_index) {
         for (auto corner : ertCell.corners) {
             corners.push_back(corner);
         }
-
+        
         // Return cell info
         return Cell(global_index, ijk_index,
                     ertCell.volume, ertCell.porosity,
                     ertCell.permx, ertCell.permy, ertCell.permz,
                     center, corners, faces_permutation_index_,
-                    ertCell.active
+                    ertCell.matrix_active, ertCell.fracture_active
         );
     } else {
         throw runtime_error("ECLGrid::GetCell(int global_index): Grid "
@@ -201,8 +188,9 @@ vector<int> ECLGrid::GetBoundingBoxCellIndices(
     double xi, double yi, double zi,
     double xf, double yf, double zf,
     double &bb_xi, double &bb_yi, double &bb_zi,
-    double &bb_xf, double &bb_yf, double &bb_zf) {
+    double &bb_xf, double &bb_yf, double &bb_zf)
 
+{
     double x_i, y_i, z_i, x_f, y_f, z_f;
     x_i = min(xi, xf);
     x_f = max(xi, xf);
@@ -214,36 +202,27 @@ vector<int> ECLGrid::GetBoundingBoxCellIndices(
     bb_xi = numeric_limits<double>::max();
     bb_yi = numeric_limits<double>::max();
     bb_zi = numeric_limits<double>::max();
-    bb_xf = numeric_limits<double>::lowest();
-    bb_yf = numeric_limits<double>::lowest();
-    bb_zf = numeric_limits<double>::lowest();
+    bb_xf = numeric_limits<double>::min();
+    bb_yf = numeric_limits<double>::min();
+    bb_zf = numeric_limits<double>::min();
 
-    int total_cells =
-        Dimensions().nx *
-            Dimensions().ny *
-            Dimensions().nz;
+    int total_cells = Dimensions().nx * Dimensions().ny * Dimensions().nz;
 
     vector<int> indices_list;
     for (int ii = 0; ii < total_cells; ii++) {
-
-        Cell cell;
         // Try is here because we only want to get the list of active
         // cells - that means defined cells
         try {
-            cell = GetCell(ii);
-
+            Cell cell = GetCell(ii);
             // Calculate cell size
             double dx = (cell.corners()[5] - cell.corners()[4]).norm();
             double dy = (cell.corners()[6] - cell.corners()[4]).norm();
             double dz = (cell.corners()[0] - cell.corners()[4]).norm();
 
-            // Test if cell dims (dx,dy,dz) are within bbox corners
             if ((cell.center().x() >= x_i - dx/1.7) && (cell.center().x() <= x_f + dx/1.7) &&
                 (cell.center().y() >= y_i - dy/1.7) && (cell.center().y() <= y_f + dy/1.7) &&
                 (cell.center().z() >= z_i - dz/1.7) && (cell.center().z() <= z_f + dz/1.7)) {
-
                 indices_list.push_back(ii);
-                // Adjust bbox corners
                 bb_xi = min(bb_xi, cell.center().x() - dx/2.0);
                 bb_yi = min(bb_yi, cell.center().y() - dy/2.0);
                 bb_zi = min(bb_zi, cell.center().z() - dz/2.0);
@@ -255,30 +234,11 @@ vector<int> ECLGrid::GetBoundingBoxCellIndices(
         catch(const std::runtime_error& e)
         {
             // We should never end up here
-            std::cout << e.what() << endl;
-            throw std::runtime_error("Something");
         }
     }
-
-    // Return
     return indices_list;
 }
 
-// OV: 20170709
-bool ECLGrid::GetCellEnvelopingPoint(Cell& cell, double x, double y, double z){
-    int total_cells = Dimensions().nx * Dimensions().ny * Dimensions().nz;
-
-    for (int ii = 0; ii < total_cells; ii++) {
-        if (GetCell(ii).EnvelopsPoint(Eigen::Vector3d(x, y, z))) {
-            cell = GetCell(ii);
-            return true;
-        }
-    }
-
-    return false;
-}
-
-// Version that returns cell
 Cell ECLGrid::GetCellEnvelopingPoint(double x, double y, double z) {
     int total_cells = Dimensions().nx * Dimensions().ny * Dimensions().nz;
 
@@ -289,38 +249,15 @@ Cell ECLGrid::GetCellEnvelopingPoint(double x, double y, double z) {
     }
 
     // Throw an exception if no cell was found
-    /*throw runtime_error("Grid::GetCellEnvelopingPoint: The point is outside the grid ("
-                        + boost::lexical_cast<std::string>(x) + ", "
-                        + boost::lexical_cast<std::string>(y) + ", "
-                        + boost::lexical_cast<std::string>(z) + ")"
-                       );*/
+    throw runtime_error("Grid::GetCellEnvelopingPoint: The point is outside the grid ("
+                            + boost::lexical_cast<std::string>(x) + ", "
+                            + boost::lexical_cast<std::string>(y) + ", "
+                            + boost::lexical_cast<std::string>(z) + ")"
+    );
 }
 
-
-
-// OV: 20170709
-bool ECLGrid::GetCellEnvelopingPoint(Cell& cell, double x, double y, double z,
-                                     vector<int> search_set){
-
-    // If the searching area is empty then search the entire grid
-    if (search_set.size() == 0) {
-        return GetCellEnvelopingPoint(cell, x, y, z);
-    }
-
-    for (int iCell = 0; iCell < search_set.size(); iCell++) {
-        if (GetCell(search_set[iCell]).EnvelopsPoint(Eigen::Vector3d(x, y, z))) {
-            cell = GetCell(search_set[iCell]);
-            return true;
-        }
-    }
-
-    return false;
-}
-
-// Version that returns cell
 Cell ECLGrid::GetCellEnvelopingPoint(double x, double y, double z,
                                      vector<int> search_set) {
-
     // If the searching area is empty then search the entire grid
     if (search_set.size() == 0) {
         return GetCellEnvelopingPoint(x, y, z);
@@ -333,39 +270,24 @@ Cell ECLGrid::GetCellEnvelopingPoint(double x, double y, double z,
     }
 
     // Throw an exception if no cell was found
-    /*throw runtime_error("Grid::GetCellEnvelopingPoint: The point is outside "
-                        "the searching area or even outside the grid ("
-                        + boost::lexical_cast<std::string>(x) + ", "
-                        + boost::lexical_cast<std::string>(y) + ", "
-                        + boost::lexical_cast<std::string>(z) + ")"
-                       );*/
+    throw runtime_error("Grid::GetCellEnvelopingPoint: The point is outside "
+                            "the searching area or even outside the grid ("
+                            + boost::lexical_cast<std::string>(x) + ", "
+                            + boost::lexical_cast<std::string>(y) + ", "
+                            + boost::lexical_cast<std::string>(z) + ")"
+    );
 }
 
-// OV: 20170709
-bool ECLGrid::GetCellEnvelopingPoint(Cell& cell, Eigen::Vector3d xyz) {
-    return GetCellEnvelopingPoint(cell, xyz.x(), xyz.y(), xyz.z());
-}
-
-// Version that returns cell
 Cell ECLGrid::GetCellEnvelopingPoint(Eigen::Vector3d xyz) {
     return GetCellEnvelopingPoint(xyz.x(), xyz.y(), xyz.z());
 }
 
-// OV: 20170709
-bool ECLGrid::GetCellEnvelopingPoint(Cell& cell, Eigen::Vector3d xyz,
-                                     vector<int> search_set) {
-    return GetCellEnvelopingPoint(cell, xyz.x(), xyz.y(), xyz.z(), search_set);
-}
-
-// Version that returns cell
 Cell ECLGrid::GetCellEnvelopingPoint(Eigen::Vector3d xyz,
                                      vector<int> search_set) {
     return GetCellEnvelopingPoint(xyz.x(), xyz.y(), xyz.z(), search_set);
 }
-
 Cell ECLGrid::GetSmallestCell() {
     return GetCell(ecl_grid_reader_->FindSmallestCell().global_index);
 }
-
 }
 }

@@ -97,7 +97,7 @@ WellBlock *WellSpline::getWellBlock(Reservoir::WellIndexCalculation::Intersected
 {
     auto wb = new WellBlock(block_data.ijk_index().i()+1, block_data.ijk_index().j()+1, block_data.ijk_index().k()+1);
     auto comp = new Completions::Perforation();
-    comp->setTransmissibility_factor(block_data.cell_well_index());
+    comp->setTransmissibility_factor(block_data.cell_well_index_matrix());
     wb->AddCompletion(comp);
     return wb;
 }

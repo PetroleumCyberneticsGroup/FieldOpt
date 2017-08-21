@@ -1,7 +1,6 @@
 /******************************************************************************
    Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
    Modified by Alin G. Chitu (2016-2017) <alin.chitu@tno.nl, chitu_alin@yahoo.com>
-   Modified by M.Bellout (2017) <mathias.bellout@ntnu.no, chakibbb@gmail.com>
 
    This file is part of the FieldOpt project.
 
@@ -20,24 +19,24 @@
 ******************************************************************************/
 
 #include "eclgridreader.h"
-#include "ertwrapper_exceptions.h"
-
+#include <iostream>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include <iostream>
+#include "ertwrapper_exceptions.h"
 
 namespace ERTWrapper {
 namespace ECLGrid {
-
-Eigen::Vector3d ECLGridReader::GetCellCenter(int global_index) {
+Eigen::Vector3d ECLGridReader::GetCellCenter(int global_index)
+{
     double cx, cy, cz;
     ecl_grid_get_xyz1(ecl_grid_, global_index, &cx, &cy, &cz);
     return Eigen::Vector3d(cx, cy, cz);
 }
 
-std::vector<Eigen::Vector3d> ECLGridReader::GetCellCorners(int global_index) {
+std::vector<Eigen::Vector3d> ECLGridReader::GetCellCorners(int global_index)
+{
     std::vector<Eigen::Vector3d> corners;
     for (int i = 0; i < 8; ++i) {
         double x, y, z;
@@ -47,132 +46,77 @@ std::vector<Eigen::Vector3d> ECLGridReader::GetCellCorners(int global_index) {
     return corners;
 }
 
-MatrixXd ECLGridReader::GetCellCornersM(int global_index) {
-    MatrixXd corners(8,3);
-    for (int i = 0; i < 8; ++i) {
-        double x, y, z;
-        ecl_grid_get_cell_corner_xyz1(ecl_grid_, global_index, i, &x, &y, &z);
-        corners.row(i) << x, y, z;
-    }
-    return corners;
-}
-
-double ECLGridReader::GetCellVolume(int global_index) {
+double ECLGridReader::GetCellVolume(int global_index)
+{
     return ecl_grid_get_cell_volume1(ecl_grid_, global_index);
 }
 
-ECLGridReader::ECLGridReader() {
+ECLGridReader::ECLGridReader()
+{
     ecl_grid_ = 0;
-    ecl_file_grid_ = 0;
     ecl_file_init_ = 0;
-    ecl_file_egrid_ = 0;
     poro_kw_ = 0;
     permx_kw_ = 0;
     permy_kw_ = 0;
     permz_kw_ = 0;
-    actnum_kw_ = 0;
-    coord_kw_ = 0;
-    zcorn_kw_ = 0;
 }
 
-ECLGridReader::~ECLGridReader() {
+ECLGridReader::~ECLGridReader()
+{
     if (ecl_grid_ != 0)
         ecl_grid_free(ecl_grid_);
-    if (ecl_file_grid_ != 0)
-        ecl_file_close(ecl_file_grid_);
     if (ecl_file_init_ != 0)
         ecl_file_close(ecl_file_init_);
 }
 
-void ECLGridReader::ReadEclGrid(std::string file_name) {
-
+void ECLGridReader::ReadEclGrid(std::string file_name)
+{
     file_name_ = file_name;
-
-    /* This is a libwellindexcalculator-adgprs.so issue: ecl_file_iget_named_kw
-     * cannot find ACTNUM, COORD and ZCORN in GRID file when called from ADGPRS. 
-     * Likely b/c ADGPRS provides GRID and not EGRID file name to the *so. This
-     * is hardwired, and has been changed, but the problem persists, somehow...
-     * This check assures EGRID files is always read in, regardless of input.
-     */
-
-    // Set egrid name
-    egrid_file_name_ = file_name;
-    if (boost::algorithm::ends_with(file_name, ".GRID")) {
-        boost::replace_all(egrid_file_name_, ".GRID", ".EGRID");
-    }
-
-    // Set init name
     init_file_name_ = file_name;
-    if (boost::algorithm::ends_with(file_name, ".EGRID")) {
+    if (boost::algorithm::ends_with(file_name, ".EGRID"))
         boost::replace_all(init_file_name_, ".EGRID", ".INIT");
-    } else if (boost::algorithm::ends_with(file_name, ".GRID")) {
-        boost::replace_all(init_file_name_, ".GRID", ".INIT");
-    }
 
-    // Make sure to load EGRID and not GRID!
+    else if (boost::algorithm::ends_with(file_name, ".GRID"))
+        boost::replace_all(init_file_name_, ".GRID", ".INIT");
+
     if (ecl_grid_ == 0) {
-        ecl_grid_ = ecl_grid_alloc(egrid_file_name_.c_str());
-        ecl_file_grid_ = ecl_file_open(egrid_file_name_.c_str(), 0);
+        ecl_grid_ = ecl_grid_alloc(file_name_.c_str());
     } else {
         ecl_grid_free(ecl_grid_);
-        ecl_grid_ = ecl_grid_alloc(egrid_file_name_.c_str());
-        ecl_file_grid_ = ecl_file_open(egrid_file_name_.c_str(), 0);
+        ecl_grid_ = ecl_grid_alloc(file_name_.c_str());
     }
 
     if (ecl_file_init_ == 0) {
         ecl_file_init_ = ecl_file_open(init_file_name_.c_str(), 0);
+        poro_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PORO", 0);
         permx_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMX", 0);
         permy_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMY", 0);
         permz_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMZ", 0);
-        poro_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PORO", 0);
     } else {
         ecl_file_close(ecl_file_init_);
         ecl_file_init_ = ecl_file_open(init_file_name_.c_str(), 0);
+        poro_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PORO", 0);
         permx_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMX", 0);
         permy_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMY", 0);
         permz_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMZ", 0);
-        poro_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PORO", 0);
-    }
-
-    if (ecl_file_has_kw(ecl_file_grid_, "ACTNUM")) {
-
-        actnum_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ACTNUM", 0);
-        coord_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "COORD", 0);
-        zcorn_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ZCORN", 0);
-
-        GetGridIndices(); // Extract and order grid index data
-        GetCOORDZCORNData(); // Get grid coord data
-
-    } else {
-        printf("%s\n", "Grid object does not contain ACTNUM, COORD, ZCORN data.\n"
-               "Make sure that you have provided the EGRID and not GRID\n file name.\n");
-
-        // Debug
-        // printf("%s\n", "Current grid file contains the following keywords:\n");
-        // ecl_file_fprintf_kw_list(ecl_file_grid_,stdout);
     }
 }
 
-void ECLGridReader::GetGridSummary() {
-    // Provide summary information about grid
-     ecl_grid_summarize(ecl_grid_);
-}
-
-int ECLGridReader::ConvertIJKToGlobalIndex(ECLGridReader::IJKIndex ijk) {
-    if (ecl_grid_ == 0) throw GridNotReadException(
-            "Grid must be read before IJK to global index.");
+int ECLGridReader::ConvertIJKToGlobalIndex(ECLGridReader::IJKIndex ijk)
+{
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before converting indices.");
     return ecl_grid_get_global_index3(ecl_grid_, ijk.i, ijk.j, ijk.k);
 }
 
-int ECLGridReader::ConvertIJKToGlobalIndex(int i, int j, int k) {
-    if (ecl_grid_ == 0) throw GridNotReadException(
-            "Grid must be read before IJK to global index.");
+int ECLGridReader::ConvertIJKToGlobalIndex(int i, int j, int k)
+{
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before converting indices.");
     return ecl_grid_get_global_index3(ecl_grid_, i, j, k);
 }
 
-ECLGridReader::IJKIndex ECLGridReader::ConvertGlobalIndexToIJK(int global_index) {
-    if (ecl_grid_ == 0) throw GridNotReadException(
-            "Grid must be read before converting global indices to IJK.");
+ECLGridReader::IJKIndex ECLGridReader::ConvertGlobalIndexToIJK(int global_index)
+{
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before converting indices.");
     int i, j, k;
     ecl_grid_get_ijk1(ecl_grid_, global_index, &i, &j, &k);
     ECLGridReader::IJKIndex ijk;
@@ -180,158 +124,109 @@ ECLGridReader::IJKIndex ECLGridReader::ConvertGlobalIndexToIJK(int global_index)
     return ijk;
 }
 
-ECLGridReader::Dims ECLGridReader::Dimensions() {
+int ECLGridReader::ConvertMatrixActiveIndexToGlobalIndex(int index)
+{
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before converting indices.");
+    else return ecl_grid_get_global_index1A(ecl_grid_, index);
+}
+
+ECLGridReader::Dims ECLGridReader::Dimensions()
+{
     ECLGridReader::Dims dims;
-    if (ecl_grid_ == 0) throw GridNotReadException(
-            "Grid must be read before getting dimensions.");
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting dimensions.");
     int x, y, z;
     ecl_grid_get_dims(ecl_grid_, &x, &y, &z, NULL);
     dims.nx = x; dims.ny = y; dims.nz = z;
     return dims;
 }
 
-void ECLGridReader::GetCOORDZCORNData() {
-
-    // COORD
-    // Keep for ref:
-    // coord_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "COORD", 0);
-    int coord_kw_sz = ecl_kw_get_size(coord_kw_);
-    gridData_.coord.resize(coord_kw_sz, 1);
-    gridData_.coord.fill(0);
-
-    for (int ii = 0; ii < coord_kw_sz; ++ii) {
-        gridData_.coord(ii) = ecl_kw_iget_as_double(coord_kw_, ii);
-    }
-
-    // ZCORN
-    // Keep for ref:
-    // zcorn_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ZCORN", 0);
-    int zcorn_sz = ecl_grid_get_zcorn_size(ecl_grid_);
-    gridData_.zcorn.resize(zcorn_sz, 1);
-    gridData_.zcorn.fill(0);
-
-    for (int ii = 0; ii < zcorn_sz; ++ii) {
-        gridData_.zcorn(ii) = ecl_kw_iget_as_double(zcorn_kw_, ii);
-    }
-
-    gridData_.zcorn_rxryrz.resize(zcorn_sz, 1);
-    gridData_.zcorn_rxryrz.fill(0);
-
-}
-
-void ECLGridReader::GetGridIndices() {
-    ECLGridReader::Gidx gidx;
-    if (ecl_grid_ == 0) throw GridNotReadException(
-            "Grid must be read before getting grid indices.");
-
-    // Get total number of cells, # of active cells in grid
-    gidx.n_total = ecl_grid_get_global_size(ecl_grid_);
-    gidx.n_active = ecl_grid_get_nactive(ecl_grid_);
-
-    // Allocated actnum/active vectors
-    gidx.dat_actnum.resize(gidx.n_total, 1);
-    gidx.dat_actnum.fill(-1);
-    gidx.idx_actnum.resize(gidx.n_total, 1);
-    gidx.idx_actnum.fill(0);
-    gidx.idx_active.resize(gidx.n_active, 1);
-    gidx.idx_active.fill(-1);
-
-    // Get actnum data, set actnum indices
-    int a_idx = 0;
-    // Keep for ref:
-    // actnum_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ACTNUM", 0);
-    for (int g_idx = 0; g_idx < gidx.n_total; ++g_idx) {
-        gidx.dat_actnum(g_idx) = ecl_kw_iget_as_double(actnum_kw_, g_idx);
-
-        if (gidx.dat_actnum(g_idx) > 0) {
-            gidx.idx_actnum(g_idx) = g_idx;
-            gidx.idx_active(a_idx) = g_idx;
-            ++a_idx;
-        }
-    }
-    gidx_ = gidx;
-}
-
-int ECLGridReader::ActiveCells() {
-    if (ecl_grid_ == 0) {
-        throw GridNotReadException(
-            "Grid must be read before getting active cell number.");
-    }
+int ECLGridReader::NumActiveMatrixCells()
+{
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting the number of active cells.");
     else return ecl_grid_get_nactive(ecl_grid_);
 }
 
-//ResinsightERT: elc_grid.c
-//bool ecl_grid_cell_active1(const ecl_grid_type * ecl_grid , int global_index) {
-//    if (ecl_grid->index_map[global_index] >= 0)
-//        return true;
-//    else
-//        return false;
-//}
+int ECLGridReader::NumActiveFractureCells()
+{
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting the number of active cells.");
+    else return ecl_grid_get_nactive_fracture(ecl_grid_);
+}
 
-bool ECLGridReader::IsCellActive(int global_index) {
-    auto ijk = ConvertGlobalIndexToIJK(global_index);
-    if (ecl_grid_ == 0) {
-        throw GridNotReadException(
-            "Grid must be read before getting the active status of cells.");
-    }
-    else if (global_index > ecl_grid_get_nactive(ecl_grid_) - 1)
-        return false;
-    if (ecl_grid_get_active_index3(ecl_grid_ , ijk.i, ijk.j, ijk.k) <= 0)
-        return false;
-    else if (!ecl_grid_cell_active1(ecl_grid_, global_index))
-        return false;
-    else {
-        if (ecl_grid_cell_valid1(ecl_grid_, global_index)) {
-            if (!ecl_grid_cell_valid1(ecl_grid_, global_index))
-                return false;
-            if (ecl_kw_iget_as_double(poro_kw_, global_index) > 0)
-                return true;
-        }
-        else return false;
+bool ECLGridReader::IsCellActive(int global_index)
+{
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting the active status of cells.");
+    else return (IsCellMatrixActive(global_index) || IsCellFractureActive(global_index));
+}
+
+bool ECLGridReader::IsCellMatrixActive(int global_index)
+{
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting the active status of cells.");
+    else 
+    {
+    	int active_matrix_index = ecl_grid_get_active_index1(ecl_grid_, global_index);
+    	if (active_matrix_index < 0) return false;
+    	else return true;
     }
 }
 
-ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index) {
-    if (!GlobalIndexIsInsideGrid(global_index)) {
-        throw InvalidIndexException(
-            "The global index "
-                + boost::lexical_cast<std::string>(global_index)
-                + " is outside the grid.");
+bool ECLGridReader::IsCellFractureActive(int global_index)
+{
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting the active status of cells.");
+    else
+    {
+    	int active_fracture_index = ecl_grid_get_active_fracture_index1(ecl_grid_, global_index);
+    	if (active_fracture_index < 0) return false;
+    	else return true;
     }
-    if (ecl_grid_ == 0) {
-        throw GridNotReadException(
-            "Grid must be read before getting grid cells.");
-    }
+ }
 
+ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index)
+{
+    if (!GlobalIndexIsInsideGrid(global_index))
+        throw InvalidIndexException("The global index "
+                                        + boost::lexical_cast<std::string>(global_index)
+                                        + " is outside the grid.");
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting grid cells.");
     ECLGridReader::Cell cell;
     cell.global_index = global_index;
     cell.volume = GetCellVolume(global_index);
     cell.corners = GetCellCorners(global_index);
     cell.center = GetCellCenter(global_index);
-    cell.active = IsCellActive(global_index);
-
+    cell.matrix_active = IsCellMatrixActive(global_index);
+    cell.fracture_active = IsCellFractureActive(global_index);
+        
     // Get properties from the INIT file - only possible if the cell is active
-    if (cell.active) {
-        int i, j, k;
-        ecl_grid_get_ijk1(ecl_grid_, global_index, &i, &j, &k);
-        int active_index = ecl_grid_get_active_index3(ecl_grid_ , i , j , k);
-        cell.permx = ecl_kw_iget_as_double(permx_kw_, active_index);
-        cell.permy = ecl_kw_iget_as_double(permy_kw_, active_index);
-        cell.permz = ecl_kw_iget_as_double(permz_kw_, active_index);
-        cell.porosity = ecl_kw_iget_as_double(poro_kw_, active_index);
-    }
+    // Matrix grid
+	int active_index = ecl_grid_get_active_index1(ecl_grid_, global_index);
+	if (active_index >= 0)
+	{
+		cell.porosity.push_back(ecl_kw_iget_as_double(poro_kw_, active_index));
+		cell.permx.push_back(ecl_kw_iget_as_double(permx_kw_, active_index));
+		cell.permy.push_back(ecl_kw_iget_as_double(permy_kw_, active_index));
+		cell.permz.push_back(ecl_kw_iget_as_double(permz_kw_, active_index));
+	}
+    
+	// Fracture grid
+	active_index = ecl_grid_get_active_fracture_index1(ecl_grid_, global_index);
+	if (active_index >= 0)
+	{
+		cell.porosity.push_back(ecl_kw_iget_as_double(poro_kw_, active_index));
+		cell.permx.push_back(ecl_kw_iget_as_double(permx_kw_, active_index));
+		cell.permy.push_back(ecl_kw_iget_as_double(permy_kw_, active_index));
+		cell.permz.push_back(ecl_kw_iget_as_double(permz_kw_, active_index));
+	}
 
     return cell;
 }
 
-int ECLGridReader::GlobalIndexOfCellEnvelopingPoint(double x, double y, double z,
-                                                    int initial_guess) {
-    if (ecl_grid_ == 0) throw GridNotReadException(
-            "Grid must be read before searching for cells.");
+int ECLGridReader::GlobalIndexOfCellEnvelopingPoint(double x, double y, double z, int initial_guess)
+{
+    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before searching for cells.");
     return ecl_grid_get_global_index_from_xyz(ecl_grid_, x, y, z, initial_guess);
 }
 
-bool ECLGridReader::GlobalIndexIsInsideGrid(int global_index) {
+bool ECLGridReader::GlobalIndexIsInsideGrid(int global_index)
+{
     Dims dims = Dimensions();
     return global_index < dims.nx * dims.ny * dims.nz;
 }
@@ -352,54 +247,6 @@ ECLGridReader::Cell ECLGridReader::FindSmallestCell() {
         }
     }
     return GetGridCell(index_with_smallest_volume);
-}
-
-vector<Vector3d> ECLGridReader::GetBoundaryCentroids() {
-    auto dims = Dimensions();
-    vector<Vector3d> bounding_centroids;
-
-    for (int k = 0; k < dims.nz; ++k) {
-        for (int j = 0; j < dims.ny; ++j) {
-            int i = 0;
-            while (!IsCellActive(ConvertIJKToGlobalIndex(i, j, k)) && i < dims.nx - 1)
-                i++;
-            bounding_centroids.push_back(GetCellCenter(ConvertIJKToGlobalIndex(i, j, k)));
-
-            i = dims.nx - 1;
-            while (!IsCellActive(ConvertIJKToGlobalIndex(i, j, k)) && i > 0)
-                i--;
-            bounding_centroids.push_back(GetCellCenter(ConvertIJKToGlobalIndex(i, j, k)));
-        }
-    }
-
-    for (int k = 0; k < dims.nz; ++k) {
-        for (int i = 0; i < dims.nx; ++i) {
-            int j = 0;
-            while (!IsCellActive(ConvertIJKToGlobalIndex(i, j, k)) && j < dims.ny - 1)
-                j++;
-            bounding_centroids.push_back(GetCellCenter(ConvertIJKToGlobalIndex(i, j, k)));
-
-            j = dims.ny - 1;
-            while (!IsCellActive(ConvertIJKToGlobalIndex(i, j, k)) && j > 0)
-                j--;
-            bounding_centroids.push_back(GetCellCenter(ConvertIJKToGlobalIndex(i, j, k)));
-        }
-    }
-
-    for (int j = 0; j < dims.ny; ++j) {
-        for (int i = 0; i < dims.nx; ++i) {
-            int k = 0;
-            while (!IsCellActive(ConvertIJKToGlobalIndex(i, j, k)) && k < dims.nz - 1)
-                k++;
-            bounding_centroids.push_back(GetCellCenter(ConvertIJKToGlobalIndex(i, j, k)));
-
-            k = dims.nz - 1;
-            while (!IsCellActive(ConvertIJKToGlobalIndex(i, j, k)) && k > 0)
-                k--;
-            bounding_centroids.push_back(GetCellCenter(ConvertIJKToGlobalIndex(i, j, k)));
-        }
-    }
-    return bounding_centroids;
 }
 
 }
