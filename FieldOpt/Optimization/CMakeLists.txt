@@ -41,6 +41,7 @@ add_library(optimization
 		optimizers/GeneticAlgorithm.cpp
 		optimizers/RGARDD.cpp
         normalizer.cpp
+		constraints/pseudo_cont_boundary_2d.cpp
 		${EXPERIMENTAL_CONSTRAINTS_SRC})
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
@@ -82,7 +83,7 @@ if (BUILD_TESTING)
 			tests/test_normalizer.cpp
             tests/constraints/test_interwell_distance.cpp
             tests/constraints/test_spline_well_length.cpp
-            )
+            tests/constraints/test_pseudo_cont_boundary_2d.cpp)
 
 	target_link_libraries(test_optimization
 			fieldopt::optimization

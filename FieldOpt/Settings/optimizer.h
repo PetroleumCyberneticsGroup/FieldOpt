@@ -46,7 +46,7 @@ class Optimizer
     WellSplineLength, WellSplineInterwellDistance, WellSplineDomain,
     CombinedWellSplineLengthInterwellDistance,
     CombinedWellSplineLengthInterwellDistanceReservoirBoundary,
-    ReservoirBoundary
+    ReservoirBoundary, PseudoContBoundary2D
   };
   enum ConstraintWellSplinePointsType { MaxMin, Function};
   enum ObjectiveType { WeightedSum };

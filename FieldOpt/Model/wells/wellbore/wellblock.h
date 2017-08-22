@@ -12,6 +12,9 @@ namespace Wellbore {
 /*!
  * \brief The WellBlock class represents a single well block. It contains references to any completion
  * defined within it.
+ *
+ * Note that wellblocks should use 1-indexed IJK-indices, instead of 0-indexing as is used in the rest
+ * of FieldOpt and ERT. This is because the IJK-values will be used directly by the simulator interface.
  */
 class WellBlock
 {

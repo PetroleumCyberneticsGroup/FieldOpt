@@ -179,7 +179,7 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
         optimizer_constraint.penalty_weight = 0.0;
     }
 
-    // Constraint types BHP and Rate
+    // Constraint types BHP, Rate and Boundary2D
     QString constraint_type = json_constraint["Type"].toString();
     if (QString::compare(constraint_type, "BHP") == 0) {
         optimizer_constraint.type = ConstraintType::BHP;
@@ -195,6 +195,14 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
         if (json_constraint.contains("Min"))
             optimizer_constraint.min = json_constraint["Min"].toDouble();
     }
+    else if (QString::compare(constraint_type, "Boundary2D") == 0) {
+        optimizer_constraint.type = ConstraintType::PseudoContBoundary2D;
+        optimizer_constraint.box_imin = json_constraint["Imin"].toDouble();
+        optimizer_constraint.box_imax = json_constraint["Imax"].toDouble();
+        optimizer_constraint.box_jmin = json_constraint["Jmin"].toDouble();
+        optimizer_constraint.box_jmax = json_constraint["Jmax"].toDouble();
+    }
+
 
         // Constraint type Well Spline Points
     else if (QString::compare(constraint_type, "WellSplinePoints") == 0) {

@@ -89,6 +89,7 @@ class VariablePropertyContainer
   QList<ContinousProperty *> GetWellSplineVariables(const QString well_name) const; //!< Get all variables for the spline defining a well.
   QList<DiscreteProperty *> GetWellBlockVariables() const; //!< Get well block position variables.
   QList<DiscreteProperty *> GetWellBlockVariables(const QString well_name) const; //!< Get well block position variables for a well.
+  QList<ContinousProperty *> GetPseudoContVertVariables(const QString well_name) const; //!< Get x and y pseudo-continuous vertical well variables for a well. First element is x; second is y.
   QList<ContinousProperty *> GetTransmissibilityVariables() const; //!< Get all transmissibility variables.
   QList<ContinousProperty *> GetTransmissibilityVariables(const QString well_name) const; //!< Get all transmissibility variables for a well.
 

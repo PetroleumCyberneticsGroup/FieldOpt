@@ -18,7 +18,8 @@ add_library(model
 		properties/continous_property.cpp
 		properties/discrete_property.cpp
         properties/property.cpp
-        model_synchronization_object.cpp )
+        model_synchronization_object.cpp
+		wells/wellbore/pseudo_cont_vert.cpp)
 add_library(fieldopt::model ALIAS ${PROJECT_NAME})
 
 target_link_libraries (model
@@ -52,7 +53,7 @@ if (BUILD_TESTING)
             tests/wells/test_well.cpp
             tests/wells/test_wellblock.cpp
             tests/test_resource_variable_property_container.h
-            tests/test_resource_model.h)
+            tests/test_resource_model.h tests/wells/test_pseudo_cont_vert.cpp)
     target_link_libraries(test_model
             fieldopt::model
             fieldopt::reservoir

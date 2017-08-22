@@ -28,6 +28,7 @@
 #include "Settings/model.h"
 #include "Model/properties/variable_property_container.h"
 #include "Model/properties/property.h"
+#include "pseudo_cont_vert.h"
 
 #include <QList>
 
@@ -62,6 +63,7 @@ class Trajectory
   QList<WellBlock *> *well_blocks_;
 
   WellSpline *well_spline_; //!< Used to defined trajectories with a spline. When used, this generates the well blocks.
+  PseudoContVert *pseudo_cont_vert_; //!< A pseudo-continuous vertical well.
 
   void initializeWellBlocks(Settings::Model::Well well,
                             Properties::VariablePropertyContainer *variable_container);
