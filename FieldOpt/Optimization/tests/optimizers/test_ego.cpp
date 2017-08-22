@@ -183,78 +183,6 @@ TEST_F(EGOTest, GP5SpotExhaustiveTestData) {
 
 }
 
-TEST_F(EGOTest, GPNorneTestData) {
-    QFile file("/home/einar/PCG/FieldOpt/FieldOpt/Optimization/tests/optimizers/test_case_log.csv");
-    if(!file.open(QIODevice::ReadOnly)) {
-        cout << "Unable to open file." << endl;
-    }
-    QTextStream in(&file);
-    vector<pair<Eigen::VectorXd, double>> cases;
-    while(!in.atEnd()) {
-        QString line = in.readLine();
-        QStringList fields = line.split(";");
-        QStringList varstrings = fields[0].split(",");
-        double ofv = fields[1].toDouble();
-        Eigen::VectorXd vars = Eigen::VectorXd::Zero(12);
-        for (int i = 0; i < varstrings.size(); ++i) {
-            vars(i) = varstrings[i].toDouble();
-        }
-        cases.push_back(pair<Eigen::VectorXd, double>(vars, ofv));
-    }
-    file.close();
-    cout << "Number of cases: " << cases.size() << endl;
-
-    libgp::GaussianProcess gp(2, "CovProd(CovSEiso, CovMatern3iso)");
-    Eigen::VectorXd params(4);
-    params << 1, 1, 1, 1;
-    gp.covf().set_loghyper(params);
-
-    cout << "Training model..." << endl;
-    for (int j = 0; j < cases.size() - 50; ++j) {
-        gp.add_pattern(cases[j].first.data(), cases[j].second);
-    }
-
-    cout << "Optimizing hyperparameters..." << endl;
-    gp.covf().set_loghyper(params);
-    libgp::RProp rprop;
-    rprop.init();
-    rprop.maximize(&gp, 50, 0);
-
-    cout << "Infering from model:" << endl;
-    for (int k = cases.size() - 50; k < cases.size(); ++k) {
-        double actual = cases[k].second;
-        double inferred = gp.f(cases[k].first.data());
-        double variance = gp.var(cases[k].first.data());
-        double diff = abs(inferred-actual);
-        double rel_diff = diff/actual * 100;
-        cout << "Difference: " << diff << " (" << rel_diff << "%) ; Variance: " << variance
-             << " ; Inferred: " << inferred << " ; Actual: " << actual << endl;
-    }
-
-    cout << "Training model..." << endl;
-    for (int j = 50; j < cases.size() - 500; j += 2) {
-//        if (j % 20 == 0) {
-//            cout << "Optimizing hyperparameters..." << endl;
-//            params(0) = -1; params(1) = -1;
-//            gp.covf().set_loghyper(params);
-//            libgp::RProp rprop;
-//            rprop.init();
-//            rprop.maximize(&gp, 50, 0);
-//        }
-
-        auto training_case = cases[j];
-        gp.add_pattern(training_case.first.data(), training_case.second);
-
-        auto test_case = cases[j+1];
-        double actual = test_case.second;
-        double inferred = gp.f(test_case.first.data());
-        double variance = gp.var(test_case.first.data());
-        double diff = abs(inferred-actual);
-        double rel_diff = diff/actual * 100;
-        cout << "Difference: " << diff << " (" << rel_diff << "%) ; Variance: " << variance
-             << " ; Inferred: " << inferred << " ; Actual: " << actual << endl;
-    }
-}
 
 TEST_F(EGOTest, SingleIteration) {
     test_case_ga_spherical_6r_->set_objective_function_value(- abs(Sphere(test_case_ga_spherical_6r_->GetRealVarVector())));
@@ -278,26 +206,26 @@ TEST_F(EGOTest, SingleIteration) {
     cout << next_case->objective_function_value() << endl;
 }
 
-TEST_F(EGOTest, TestFunctionSpherical) {
-    test_case_ga_spherical_6r_->set_objective_function_value(- abs(Sphere(test_case_ga_spherical_6r_->GetRealVarVector())));
-    Optimization::Optimizer *ego = new BayesianOptimization::EGO(settings_ego_max_,
-                                                                 test_case_ga_spherical_6r_,
-                                                                 varcont_6r_,
-                                                                 grid_5spot_,
-                                                                 logger_
-    );
-
-    while (ego->IsFinished() == Optimization::Optimizer::TerminationCondition::NOT_FINISHED) {
-        auto next_case = ego->GetCaseForEvaluation();
-        next_case->set_objective_function_value(- abs(Sphere(next_case->GetRealVarVector())));
-        next_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
-        ego->SubmitEvaluatedCase(next_case);
-    }
-    auto best_case = ego->GetTentativeBestCase();
-    EXPECT_NEAR(0.0, best_case->objective_function_value(), 0.1);
-    EXPECT_NEAR(0.0, best_case->GetRealVarVector()[0], 0.1);
-    EXPECT_NEAR(0.0, best_case->GetRealVarVector()[1], 0.1);
-}
+//TEST_F(EGOTest, TestFunctionSpherical) {
+//    test_case_ga_spherical_6r_->set_objective_function_value(- abs(Sphere(test_case_ga_spherical_6r_->GetRealVarVector())));
+//    Optimization::Optimizer *ego = new BayesianOptimization::EGO(settings_ego_max_,
+//                                                                 test_case_ga_spherical_6r_,
+//                                                                 varcont_6r_,
+//                                                                 grid_5spot_,
+//                                                                 logger_
+//    );
+//
+//    while (ego->IsFinished() == Optimization::Optimizer::TerminationCondition::NOT_FINISHED) {
+//        auto next_case = ego->GetCaseForEvaluation();
+//        next_case->set_objective_function_value(- abs(Sphere(next_case->GetRealVarVector())));
+//        next_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
+//        ego->SubmitEvaluatedCase(next_case);
+//    }
+//    auto best_case = ego->GetTentativeBestCase();
+//    EXPECT_NEAR(0.0, best_case->objective_function_value(), 0.1);
+//    EXPECT_NEAR(0.0, best_case->GetRealVarVector()[0], 0.1);
+//    EXPECT_NEAR(0.0, best_case->GetRealVarVector()[1], 0.1);
+//}
 
 
 }
