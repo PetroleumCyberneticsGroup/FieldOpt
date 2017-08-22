@@ -162,7 +162,7 @@ Loggable::LogTarget Optimizer::Summary::GetLogTarget() {
     return LOG_SUMMARY;
 }
 map<string, string> Optimizer::Summary::GetState() {
-    map<string, string> statemap;
+    map<string, string> statemap  = ext_state_;
     statemap["Start"] = timestamp_string(opt_->start_time_);
     statemap["Duration"] = timespan_string(
         time_span_seconds(opt_->start_time_, QDateTime::currentDateTime())

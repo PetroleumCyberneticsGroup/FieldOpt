@@ -20,6 +20,7 @@
 #include "Utilities/stringhelpers.hpp"
 #include "libgp/include/rprop.h"
 #include "Utilities/math.hpp"
+#include "Utilities/time.hpp"
 #include "optimizers/bayesian_optimization/af_optimizers/AFPSO.h"
 #include "EGO.h"
 
@@ -61,6 +62,14 @@ EGO::EGO(Settings::Optimizer *settings,
         init_case->SetRealVarValues(pos);
         case_handler_->AddNewCase(init_case);
     }
+
+    // Initialize GP hyperparameters
+    Eigen::VectorXd params(2);
+    params << -1, -1;
+    gp_->covf().set_loghyper(params);
+
+    time_fitting_ = 0;
+    time_af_opt_ = 0;
 }
 Optimization::Optimizer::TerminationCondition EGO::IsFinished() {
     TerminationCondition tc = NOT_FINISHED;
@@ -69,8 +78,11 @@ Optimization::Optimizer::TerminationCondition EGO::IsFinished() {
     if (case_handler_->NumberSimulated() > max_evaluations_)
         tc = MAX_EVALS_REACHED;
     if (tc != NOT_FINISHED) {
+        map<string, string> ext_state;
+        ext_state["Time in AF opt"] = boost::lexical_cast<string>(time_af_opt_);
+        ext_state["Time in GP opt"] = boost::lexical_cast<string>(time_fitting_);
         logger_->AddEntry(this);
-        logger_->AddEntry(new Summary(this, tc));
+        logger_->AddEntry(new Summary(this, tc, ext_state));
     }
     return tc;
 }
@@ -88,17 +100,25 @@ void EGO::iterate() {
     if (!normalizer_ofv_.is_ready())
         initializeNormalizers();
 
-    Eigen::VectorXd params(2);
-    params << -1, -1;
-    gp_->covf().set_loghyper(params);
-
+    // Optimize GP hyperparameters
     libgp::RProp rprop;
     rprop.init();
-    rprop.maximize(gp_, 50, 0);
 
-    VectorXd new_position = af_opt_.Optimize(gp_, af_, normalizer_ofv_.normalize(
-        GetTentativeBestCase()->objective_function_value())
+    QDateTime start, end;
+
+    start = QDateTime::currentDateTime();
+    rprop.maximize(gp_, 50, 0);
+    end = QDateTime::currentDateTime();
+    time_fitting_ += time_span_seconds(start, end);
+
+    start = QDateTime::currentDateTime();
+    VectorXd new_position = af_opt_.Optimize(
+        gp_, af_,
+        normalizer_ofv_.normalize(GetTentativeBestCase()->objective_function_value())
     );
+    end = QDateTime::currentDateTime();
+    time_af_opt_ += time_span_seconds(start, end);
+
     for (int i = 0; i < new_position.size(); ++i) {
         if (new_position(i) < lb_(i)) {
             new_position(i) = lb_(i);
@@ -113,6 +133,32 @@ void EGO::iterate() {
     case_handler_->AddNewCase(new_case);
     iteration_++;
 }
+
+Loggable::LogTarget EGO::ConfigurationSummary::GetLogTarget() {
+    return LOG_SUMMARY;
+}
+map<string, string> EGO::ConfigurationSummary::GetState() {
+    map<string, string> statemap;
+    statemap["Name"] = "Efficient Global Optimization (EGO)";
+    statemap["AF Optimizer"] = "PSO";
+    statemap["Mode"] = opt_->mode_ == Settings::Optimizer::OptimizerMode::Maximize ? "Maximize" : "Minimize";
+    statemap["Max Evaluations"] = boost::lexical_cast<string>(opt_->max_evaluations_);
+
+    string constraints_used = "";
+    for (auto cons : opt_->constraint_handler_->constraints()) {
+        constraints_used += cons->name() + " ";
+    }
+    statemap["Constraints"] = constraints_used;
+    return statemap;
+}
+QUuid EGO::ConfigurationSummary::GetId() {
+    return QUuid(); // Null UUID
+}
+map<string, vector<double>> EGO::ConfigurationSummary::GetValues() {
+    map<string, vector<double>> valmap;
+    return valmap;
+}
+
 }
 }
 }

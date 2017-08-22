@@ -57,6 +57,20 @@ class EGO : public Optimizer {
   libgp::GaussianProcess *gp_; //!< The gaussian process to be used throughout the optimization run.
   BayesianOptimization::AcquisitionFunction af_; //!< Acquisition function to be used throughout the optimization run.
   BayesianOptimization::AFOptimizers::AFPSO af_opt_; //!< Aquisition function optimizer to be used throughout the optimization run.
+
+  long int time_af_opt_;
+  long int time_fitting_;
+
+  class ConfigurationSummary : public Loggable {
+   public:
+    ConfigurationSummary(EGO *opt) { opt_ = opt; }
+    LogTarget GetLogTarget() override;
+    map<string, string> GetState() override;
+    QUuid GetId() override;
+    map<string, vector<double>> GetValues() override;
+   private:
+    EGO *opt_;
+  };
 };
 
 }
