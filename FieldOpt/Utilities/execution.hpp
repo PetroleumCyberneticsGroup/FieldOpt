@@ -64,10 +64,13 @@ inline QString Exec(QString directory, QStringList commands, bool verbose=false)
  * \param script_path Absolute path to the shell script.
  * \param args Arguments to be passed to the script.
  */
-inline void ExecShellScript(QString script_path, QStringList args)
-{
-    if (!Utilities::FileHandling::FileExists(script_path))
-        throw std::runtime_error("File not found: " + script_path.toStdString());
+inline void ExecShellScript(QString script_path, QStringList args) {
+
+    if (!Utilities::FileHandling::FileExists(script_path)) {
+        cout << "script_path: " << script_path.toStdString() << endl;
+        cout << "args: " << args[0].toStdString() << ", " << args[1].toStdString()<< endl;
+        throw std::runtime_error("ExecShellScript file not found: " + script_path.toStdString());
+    }
     QString command = script_path + " " + args.join(" ");
     system(command.toLatin1().constData());
 }

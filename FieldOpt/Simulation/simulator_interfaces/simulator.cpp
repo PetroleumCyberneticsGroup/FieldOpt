@@ -52,10 +52,13 @@ Simulator::Simulator(Settings::Settings *settings) {
     if (settings->build_path().length() > 0)
         build_dir_ = settings->build_path() + "/";
 
-    if (settings->simulator()->custom_simulator_execution_script_path().length() > 0)
+    if (settings->simulator()->custom_simulator_execution_script_path().length() > 0) {
+        cout << "script_path_:" << settings->simulator()->custom_simulator_execution_script_path().toStdString() << endl;
         script_path_ = settings->simulator()->custom_simulator_execution_script_path();
-    else
+    }
+    else {
         script_path_ = build_dir_ + ExecutionScripts::GetScriptPath(settings->simulator()->script_name());
+    }
 
     script_args_ = (QStringList() << output_directory_
                                   << settings_->mpirunner_subdirectory() + output_directory_ + "/" + initial_driver_file_name_
