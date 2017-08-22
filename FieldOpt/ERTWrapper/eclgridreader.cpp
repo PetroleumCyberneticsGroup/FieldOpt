@@ -1,6 +1,7 @@
 /******************************************************************************
    Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
    Modified by Alin G. Chitu (2016-2017) <alin.chitu@tno.nl, chitu_alin@yahoo.com>
+   Modified by M.Bellout (2017) <mathias.bellout@ntnu.no, chakibbb@gmail.com>
 
    This file is part of the FieldOpt project.
 
@@ -19,12 +20,12 @@
 ******************************************************************************/
 
 #include "eclgridreader.h"
+#include "ertwrapper_exceptions.h"
+
 #include <iostream>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/lexical_cast.hpp>
-
-#include "ertwrapper_exceptions.h"
 
 namespace ERTWrapper {
 namespace ECLGrid {
@@ -46,44 +47,76 @@ std::vector<Eigen::Vector3d> ECLGridReader::GetCellCorners(int global_index)
     return corners;
 }
 
-double ECLGridReader::GetCellVolume(int global_index)
-{
+MatrixXd ECLGridReader::GetCellCornersM(int global_index) {
+    MatrixXd corners(8,3);
+    for (int i = 0; i < 8; ++i) {
+        double x, y, z;
+        ecl_grid_get_cell_corner_xyz1(ecl_grid_, global_index, i, &x, &y, &z);
+        corners.row(i) << x, y, z;
+    }
+    return corners;
+}
+
+double ECLGridReader::GetCellVolume(int global_index) {
     return ecl_grid_get_cell_volume1(ecl_grid_, global_index);
 }
 
-ECLGridReader::ECLGridReader()
-{
+ECLGridReader::ECLGridReader() {
     ecl_grid_ = 0;
+    ecl_file_grid_ = 0;
     ecl_file_init_ = 0;
+    ecl_file_egrid_ = 0;
     poro_kw_ = 0;
     permx_kw_ = 0;
     permy_kw_ = 0;
     permz_kw_ = 0;
+    actnum_kw_ = 0;
+    coord_kw_ = 0;
+    zcorn_kw_ = 0;
 }
 
-ECLGridReader::~ECLGridReader()
-{
+ECLGridReader::~ECLGridReader() {
     if (ecl_grid_ != 0)
         ecl_grid_free(ecl_grid_);
+    if (ecl_file_grid_ != 0)
+        ecl_file_close(ecl_file_grid_);
     if (ecl_file_init_ != 0)
         ecl_file_close(ecl_file_init_);
 }
 
-void ECLGridReader::ReadEclGrid(std::string file_name)
-{
+void ECLGridReader::ReadEclGrid(std::string file_name) {
+
     file_name_ = file_name;
+
+    /* This is a libwellindexcalculator-adgprs.so issue: ecl_file_iget_named_kw
+     * cannot find ACTNUM, COORD and ZCORN in GRID file when called from ADGPRS. 
+     * Likely b/c ADGPRS provides GRID and not EGRID file name to the *so. This
+     * is hardwired, and has been changed, but the problem persists, somehow...
+     * This check assures EGRID files is always read in, regardless of input.
+     */
+
+    // Set egrid name
+    egrid_file_name_ = file_name;
+    if (boost::algorithm::ends_with(file_name, ".GRID")) {
+        boost::replace_all(egrid_file_name_, ".GRID", ".EGRID");
+    }
+
+    // Set init name
     init_file_name_ = file_name;
-    if (boost::algorithm::ends_with(file_name, ".EGRID"))
+    if (boost::algorithm::ends_with(file_name, ".EGRID")) {
         boost::replace_all(init_file_name_, ".EGRID", ".INIT");
-
-    else if (boost::algorithm::ends_with(file_name, ".GRID"))
+    } else if (boost::algorithm::ends_with(file_name, ".GRID")) {
         boost::replace_all(init_file_name_, ".GRID", ".INIT");
+    }
 
+    // Make sure to load EGRID and not GRID!
     if (ecl_grid_ == 0) {
-        ecl_grid_ = ecl_grid_alloc(file_name_.c_str());
+        ecl_grid_ = ecl_grid_alloc(egrid_file_name_.c_str());
+        ecl_file_grid_ = ecl_file_open(egrid_file_name_.c_str(), 0);
     } else {
         ecl_grid_free(ecl_grid_);
-        ecl_grid_ = ecl_grid_alloc(file_name_.c_str());
+        ecl_grid_ = ecl_grid_alloc(egrid_file_name_.c_str());
+        ecl_file_grid_ = ecl_file_open(egrid_file_name_.c_str(), 0);
     }
 
     if (ecl_file_init_ == 0) {
@@ -92,6 +125,7 @@ void ECLGridReader::ReadEclGrid(std::string file_name)
         permx_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMX", 0);
         permy_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMY", 0);
         permz_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMZ", 0);
+        poro_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PORO", 0);        
     } else {
         ecl_file_close(ecl_file_init_);
         ecl_file_init_ = ecl_file_open(init_file_name_.c_str(), 0);
@@ -99,24 +133,48 @@ void ECLGridReader::ReadEclGrid(std::string file_name)
         permx_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMX", 0);
         permy_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMY", 0);
         permz_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PERMZ", 0);
+        poro_kw_ = ecl_file_iget_named_kw(ecl_file_init_, "PORO", 0);        
+    }
+
+    if (ecl_file_has_kw(ecl_file_grid_, "ACTNUM")) {
+
+        actnum_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ACTNUM", 0);
+        coord_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "COORD", 0);
+        zcorn_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ZCORN", 0);
+
+        GetGridIndices(); // Extract and order grid index data
+        GetCOORDZCORNData(); // Get grid coord data
+
+    } else {
+        printf("%s\n", "Grid object does not contain ACTNUM, COORD, ZCORN data.\n"
+               "Make sure that you have provided the EGRID and not GRID\n file name.\n");
+
+        // Debug
+        // printf("%s\n", "Current grid file contains the following keywords:\n");
+        // ecl_file_fprintf_kw_list(ecl_file_grid_,stdout);
     }
 }
 
-int ECLGridReader::ConvertIJKToGlobalIndex(ECLGridReader::IJKIndex ijk)
-{
-    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before converting indices.");
+void ECLGridReader::GetGridSummary() {
+    // Provide summary information about grid
+     ecl_grid_summarize(ecl_grid_);
+}
+
+int ECLGridReader::ConvertIJKToGlobalIndex(ECLGridReader::IJKIndex ijk) {
+    if (ecl_grid_ == 0) throw GridNotReadException(
+            "Grid must be read before IJK to global index.");
     return ecl_grid_get_global_index3(ecl_grid_, ijk.i, ijk.j, ijk.k);
 }
 
-int ECLGridReader::ConvertIJKToGlobalIndex(int i, int j, int k)
-{
-    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before converting indices.");
+int ECLGridReader::ConvertIJKToGlobalIndex(int i, int j, int k) {
+    if (ecl_grid_ == 0) throw GridNotReadException(
+            "Grid must be read before IJK to global index.");
     return ecl_grid_get_global_index3(ecl_grid_, i, j, k);
 }
 
-ECLGridReader::IJKIndex ECLGridReader::ConvertGlobalIndexToIJK(int global_index)
-{
-    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before converting indices.");
+ECLGridReader::IJKIndex ECLGridReader::ConvertGlobalIndexToIJK(int global_index) {
+    if (ecl_grid_ == 0) throw GridNotReadException(
+            "Grid must be read before converting global indices to IJK.");
     int i, j, k;
     ecl_grid_get_ijk1(ecl_grid_, global_index, &i, &j, &k);
     ECLGridReader::IJKIndex ijk;
@@ -130,14 +188,76 @@ int ECLGridReader::ConvertMatrixActiveIndexToGlobalIndex(int index)
     else return ecl_grid_get_global_index1A(ecl_grid_, index);
 }
 
-ECLGridReader::Dims ECLGridReader::Dimensions()
-{
+ECLGridReader::Dims ECLGridReader::Dimensions() {
     ECLGridReader::Dims dims;
-    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting dimensions.");
+    if (ecl_grid_ == 0) throw GridNotReadException(
+            "Grid must be read before getting dimensions.");
     int x, y, z;
     ecl_grid_get_dims(ecl_grid_, &x, &y, &z, NULL);
     dims.nx = x; dims.ny = y; dims.nz = z;
     return dims;
+}
+
+void ECLGridReader::GetCOORDZCORNData() {
+
+    // COORD
+    // Keep for ref:
+    // coord_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "COORD", 0);
+    int coord_kw_sz = ecl_kw_get_size(coord_kw_);
+    gridData_.coord.resize(coord_kw_sz, 1);
+    gridData_.coord.fill(0);
+
+    for (int ii = 0; ii < coord_kw_sz; ++ii) {
+        gridData_.coord(ii) = ecl_kw_iget_as_double(coord_kw_, ii);
+    }
+
+    // ZCORN
+    // Keep for ref:
+    // zcorn_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ZCORN", 0);
+    int zcorn_sz = ecl_grid_get_zcorn_size(ecl_grid_);
+    gridData_.zcorn.resize(zcorn_sz, 1);
+    gridData_.zcorn.fill(0);
+
+    for (int ii = 0; ii < zcorn_sz; ++ii) {
+        gridData_.zcorn(ii) = ecl_kw_iget_as_double(zcorn_kw_, ii);
+    }
+
+    gridData_.zcorn_rxryrz.resize(zcorn_sz, 1);
+    gridData_.zcorn_rxryrz.fill(0);
+
+}
+
+void ECLGridReader::GetGridIndices() {
+    ECLGridReader::Gidx gidx;
+    if (ecl_grid_ == 0) throw GridNotReadException(
+            "Grid must be read before getting grid indices.");
+
+    // Get total number of cells, # of active cells in grid
+    gidx.n_total = ecl_grid_get_global_size(ecl_grid_);
+    gidx.n_active = ecl_grid_get_nactive(ecl_grid_);
+
+    // Allocated actnum/active vectors
+    gidx.dat_actnum.resize(gidx.n_total, 1);
+    gidx.dat_actnum.fill(-1);
+    gidx.idx_actnum.resize(gidx.n_total, 1);
+    gidx.idx_actnum.fill(0);
+    gidx.idx_active.resize(gidx.n_active, 1);
+    gidx.idx_active.fill(-1);
+
+    // Get actnum data, set actnum indices
+    int a_idx = 0;
+    // Keep for ref:
+    // actnum_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ACTNUM", 0);
+    for (int g_idx = 0; g_idx < gidx.n_total; ++g_idx) {
+        gidx.dat_actnum(g_idx) = ecl_kw_iget_as_double(actnum_kw_, g_idx);
+
+        if (gidx.dat_actnum(g_idx) > 0) {
+            gidx.idx_actnum(g_idx) = g_idx;
+            gidx.idx_active(a_idx) = g_idx;
+            ++a_idx;
+        }
+    }
+    gidx_ = gidx;
 }
 
 int ECLGridReader::NumActiveMatrixCells()
@@ -180,13 +300,18 @@ bool ECLGridReader::IsCellFractureActive(int global_index)
     }
  }
 
-ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index)
-{
-    if (!GlobalIndexIsInsideGrid(global_index))
-        throw InvalidIndexException("The global index "
-                                        + boost::lexical_cast<std::string>(global_index)
-                                        + " is outside the grid.");
-    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting grid cells.");
+ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index) {
+    if (!GlobalIndexIsInsideGrid(global_index)) {
+        throw InvalidIndexException(
+            "The global index "
+                + boost::lexical_cast<std::string>(global_index)
+                + " is outside the grid.");
+    }
+    if (ecl_grid_ == 0) {
+        throw GridNotReadException(
+            "Grid must be read before getting grid cells.");
+    }
+
     ECLGridReader::Cell cell;
     cell.global_index = global_index;
     cell.volume = GetCellVolume(global_index);
@@ -219,14 +344,14 @@ ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index)
     return cell;
 }
 
-int ECLGridReader::GlobalIndexOfCellEnvelopingPoint(double x, double y, double z, int initial_guess)
-{
-    if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before searching for cells.");
+int ECLGridReader::GlobalIndexOfCellEnvelopingPoint(double x, double y, double z,
+                                                    int initial_guess) {
+    if (ecl_grid_ == 0) throw GridNotReadException(
+            "Grid must be read before searching for cells.");
     return ecl_grid_get_global_index_from_xyz(ecl_grid_, x, y, z, initial_guess);
 }
 
-bool ECLGridReader::GlobalIndexIsInsideGrid(int global_index)
-{
+bool ECLGridReader::GlobalIndexIsInsideGrid(int global_index) {
     Dims dims = Dimensions();
     return global_index < dims.nx * dims.ny * dims.nz;
 }
