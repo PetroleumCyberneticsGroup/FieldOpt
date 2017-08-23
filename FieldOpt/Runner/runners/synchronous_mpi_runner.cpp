@@ -177,6 +177,7 @@ void SynchronousMPIRunner::Execute() {
             else {
                 printMessage("Received an unevaluated case.", 2);
             }
+            logger_->collectExtendedLogs();
         }
         FinalizeRun(false);
         printMessage("Finalized on worker.", 2);

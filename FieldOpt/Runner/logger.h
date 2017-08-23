@@ -70,6 +70,12 @@ class Logger
   void FinalizePrerunSummary();
   void FinalizePostrunSummary();
 
+  /*!
+   * @brief Collects extended logs from worker subdirs and writes them all
+   * to a single JSON file in the root output dir.
+   */
+  void collectExtendedLogs();
+
  private:
   bool is_worker_; //!< Indicates whether or not this logger is on a worker process. This determines which logs are written.
   bool write_logs_;
@@ -139,11 +145,7 @@ class Logger
    */
   void appendWellToc(map<string, Loggable::WellDescription> wellmap, stringstream &sum);
 
-  /*!
-   * @brief Collects extended logs from worker subdirs and writes them all
-   * to a single JSON file in the root output dir.
-   */
-  void collectExtendedLogs();
+
 };
 
 #endif // LOGGER_H

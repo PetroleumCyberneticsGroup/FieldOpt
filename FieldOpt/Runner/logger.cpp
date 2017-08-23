@@ -195,8 +195,8 @@ void Logger::logExtended(Loggable *obj) {
 }
 
 void Logger::collectExtendedLogs() {
-    if (!write_logs_ || is_worker_) return;
-
+//    if (!write_logs_ || is_worker_) return;
+    cout << "Collecting logs." << endl;
     QList<QJsonObject> worker_parts_;
     int rank = 1;
 
