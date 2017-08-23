@@ -143,6 +143,7 @@ map<string, string> EGO::ConfigurationSummary::GetState() {
     statemap["AF Optimizer"] = "PSO";
     statemap["Mode"] = opt_->mode_ == Settings::Optimizer::OptimizerMode::Maximize ? "Maximize" : "Minimize";
     statemap["Max Evaluations"] = boost::lexical_cast<string>(opt_->max_evaluations_);
+    statemap["Num. initial guesses"] = boost::lexical_cast<string>(opt_->n_initial_guesses_);
 
     string constraints_used = "";
     for (auto cons : opt_->constraint_handler_->constraints()) {
