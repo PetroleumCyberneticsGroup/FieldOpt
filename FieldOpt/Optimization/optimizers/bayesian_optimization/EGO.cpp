@@ -70,6 +70,8 @@ EGO::EGO(Settings::Optimizer *settings,
 
     time_fitting_ = 0;
     time_af_opt_ = 0;
+
+    logger_->AddEntry(new ConfigurationSummary(this));
 }
 Optimization::Optimizer::TerminationCondition EGO::IsFinished() {
     TerminationCondition tc = NOT_FINISHED;
