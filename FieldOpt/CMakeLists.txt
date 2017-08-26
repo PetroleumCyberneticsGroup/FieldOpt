@@ -160,9 +160,10 @@ if(COMPILATION_AT_MAUR)
     message(STATUS "ERT_INCL_DIR: ${ERT_INCL_DIR}")
     message(STATUS "ert_ecl: ${ert_ecl}")
     message(STATUS "ert_util: ${ert_util}")
+    include_directories(${EIGEN3_INCLUDE_DIR}/Dense)
 
+    # DEBUG
     include_directories($ENV{HOME}/git/libraries/eigen3.3-beta1-2)
-    include_directories(${ERT_INCL_DIR})
     include_directories(${ERT_INCL_DIR}/Dense)
 else()
     find_package(Eigen3 REQUIRED)
