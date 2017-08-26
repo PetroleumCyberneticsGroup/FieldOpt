@@ -1,6 +1,30 @@
 cmake_minimum_required(VERSION 2.8)
 project(FieldOpt)
 
+# System info ==========================================================
+cmake_host_system_information(RESULT HOST_HOSTNAME QUERY HOSTNAME)
+cmake_host_system_information(RESULT HOST_NUMBER_OF_LOGICAL_CORES QUERY NUMBER_OF_LOGICAL_CORES)
+cmake_host_system_information(RESULT HOST_NUMBER_OF_PHYSICAL_CORES QUERY NUMBER_OF_PHYSICAL_CORES)
+cmake_host_system_information(RESULT HOST_TOTAL_VIRTUAL_MEMORY QUERY TOTAL_VIRTUAL_MEMORY)
+cmake_host_system_information(RESULT HOST_AVAILABLE_VIRTUAL_MEMORY QUERY AVAILABLE_VIRTUAL_MEMORY)
+cmake_host_system_information(RESULT HOST_TOTAL_PHYSICAL_MEMORY QUERY TOTAL_PHYSICAL_MEMORY)
+cmake_host_system_information(RESULT HOST_AVAILABLE_PHYSICAL_MEMORY QUERY AVAILABLE_PHYSICAL_MEMORY)
+
+message(STATUS "HOSTNAME: ${HOST_HOSTNAME}")
+message(STATUS "NUMBER_OF_LOGICAL_CORES: ${HOST_NUMBER_OF_LOGICAL_CORES}")
+message(STATUS "NUMBER_OF_PHYSICAL_CORES: ${HOST_NUMBER_OF_PHYSICAL_CORES}")
+message(STATUS "TOTAL_VIRTUAL_MEMORY: ${HOST_TOTAL_VIRTUAL_MEMORY}")
+message(STATUS "AVAILABLE_VIRTUAL_MEMORY: ${HOST_AVAILABLE_VIRTUAL_MEMORY}")
+message(STATUS "TOTAL_PHYSICAL_MEMORY: ${HOST_TOTAL_PHYSICAL_MEMORY}")
+message(STATUS "AVAILABLE_PHYSICAL_MEMORY: ${HOST_AVAILABLE_PHYSICAL_MEMORY}")
+
+# Compilation at Maur ==================================================
+if(${HOST_HOSTNAME} MATCHES login.* OR ${HOST_HOSTNAME} MATCHES compute.*)
+    option(COMPILATION_AT_MAUR " " ON)
+else()
+    option(COMPILATION_AT_MAUR " " OFF)
+endif()
+
 # Build dirs ===========================================================
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -124,9 +148,19 @@ include_directories(${CMAKE_BINARY_DIR}/libraries/include/)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 
 # Eigen ================================================================
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
-find_package(Eigen3 REQUIRED)
+message("=============================================================")
+if(COMPILATION_AT_MAUR)
+    set(EIGEN3_INCLUDE_DIR /home/bellout/git/libraries/eigen3.3-beta1-2/Eigen)
+else()
+    find_package(Eigen3 REQUIRED)
+endif()
+message(STATUS "EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR}")
 include_directories(${EIGEN3_INCLUDE_DIR})
+
+# Source dir ===========================================================
+message("=============================================================")
+message(STATUS "CMAKE_MODULE_PATH: ${PROJECT_SOURCE_DIR}")
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 
 # Set this directory as the root dir
 include_directories(${CMAKE_SOURCE_DIR}  ${ERT_INCLUDE_DIR})
@@ -142,7 +176,7 @@ add_subdirectory(ERTWrapper)
 add_subdirectory(Reservoir)
 add_subdirectory(FieldOpt-WellIndexCalculator)
 
-if (NOT BUILD_WIC_ONLY AND NOT BUILD_WIC_ADGPRS)
+if (NOT (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS))
     add_subdirectory(Utilities)
     add_subdirectory(Settings)
     add_subdirectory(Model)
