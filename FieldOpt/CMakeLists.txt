@@ -152,13 +152,14 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 message("=============================================================")
 if(COMPILATION_AT_MAUR)
     set(EIGEN3_INCLUDE_DIR $ENV{HOME}/git/libraries/eigen3.3-beta1-2/Eigen)
+    message(STATUS "EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR}")
 
     # DEBUG
     include_directories($ENV{HOME}/git/libraries/eigen3.3-beta1-2)
     include_directories(${EIGEN3_INCLUDE_DIR})
-    include_directories(${EIGEN3_INCLUDE_DIR}/Dense)
-    include_directories(${EIGEN3_INCLUDE_DIR}/Eigen)
-    include_directories(${EIGEN3_INCLUDE_DIR}/Core)
+#    include_directories(${EIGEN3_INCLUDE_DIR}/Dense)
+#    include_directories(${EIGEN3_INCLUDE_DIR}/Eigen)
+#    include_directories(${EIGEN3_INCLUDE_DIR}/Core)
 
     set(ERT_LIB $ENV{HOME}/git/libraries/ert/lib64)
     set(ERT_INCL_DIR $ENV{HOME}/git/libraries/ert/include)
@@ -168,7 +169,7 @@ if(COMPILATION_AT_MAUR)
     message(STATUS "ERT_INCL_DIR: ${ERT_INCL_DIR}")
     message(STATUS "ert_ecl: ${ert_ecl}")
     message(STATUS "ert_util: ${ert_util}")
-        
+
     # DEBUG
     include_directories(${ERT_INCL_DIR})
     include_directories(${ERT_INCL_DIR}/ert/ecl)
