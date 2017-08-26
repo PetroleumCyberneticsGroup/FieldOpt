@@ -150,7 +150,16 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 # Eigen ================================================================
 message("=============================================================")
 if(COMPILATION_AT_MAUR)
-    set(EIGEN3_INCLUDE_DIR /home/bellout/git/libraries/eigen3.3-beta1-2/Eigen)
+    set(EIGEN3_INCLUDE_DIR $ENV{HOME}/git/libraries/eigen3.3-beta1-2/Eigen)
+    set(ERT_LIB $ENV{HOME}/git/libraries/ert/lib64)
+    set(ERT_INCL_DIR $ENV{HOME}/git/libraries/ert/include)
+    set(ert_ecl $ENV{HOME}/git/libraries/ert/lib64/libecl.so)
+    set(ert_util $ENV{HOME}/git/libraries/ert/lib64/libert_util.so)
+    message(STATUS "ERT_LIB: ${ERT_LIB}")
+    message(STATUS "ERT_INCL_DIR: ${ERT_INCL_DIR}")
+    message(STATUS "ert_ecl: ${ert_ecl}")
+    message(STATUS "ert_util: ${ert_util}")
+    include_directories(${ERT_INCL_DIR})
 else()
     find_package(Eigen3 REQUIRED)
 endif()
@@ -200,7 +209,8 @@ if (NOT (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS))
 
     if(BUILD_BENCHMARK)
         ## Copy wic benchmark wells into the build dir
-        file(COPY ${CMAKE_SOURCE_DIR}/FieldOpt-WellIndexCalculator/tests/well_index_benchmark/wic-benchmark-wells
+        set(WIC_DIR "${CMAKE_SOURCE_DIR}/FieldOpt-WellIndexCalculator")
+        file(COPY "${WIC_DIR}/tests/well_index_benchmark/wic-benchmark-wells"
                 DESTINATION ${CMAKE_BINARY_DIR}/)
     endif()
 
