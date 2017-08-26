@@ -52,7 +52,13 @@ option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    ON)
 option(BUILD_BENCHMARK "Build exec for wic RMS benchmark" OFF)
 
 # Qt libraries =========================================================
-if (NOT BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS)
+message("=============================================================")
+if (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS)
+    message(STATUS "Building BUILD_WIC_ONLY: ${BUILD_WIC_ONLY}")
+    message(STATUS "Building BUILD_WIC_ADGPRS: ${BUILD_WIC_ADGPRS}")
+    message(STATUS "Skipping: Qt5Core and HDF5")
+else()
+    message(STATUS "Building FIELDOPT. Loading: Qt5Core and HDF5")
     set(CMAKE_AUTOMOC ON)
     set(CMAKE_INCLUDE_CURRENT_DIR ON)
     find_package(Qt5Core REQUIRED)
@@ -64,6 +70,7 @@ if (NOT BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS)
 endif()
 
 # Boost libraries: default-settings ====================================
+message("=============================================================")
 find_package(Boost REQUIRED) # 1.63
 if (Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIR})
