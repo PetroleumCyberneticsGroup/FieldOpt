@@ -164,7 +164,7 @@ if(COMPILATION_AT_MAUR)
 
     # DEBUG
     include_directories($ENV{HOME}/git/libraries/eigen3.3-beta1-2)
-    include_directories(${ERT_INCL_DIR}/Dense)
+    include_directories(${EIGEN3_INCLUDE_DIR}/Dense)
 else()
     find_package(Eigen3 REQUIRED)
 endif()
