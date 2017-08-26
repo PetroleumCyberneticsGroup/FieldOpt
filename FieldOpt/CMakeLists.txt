@@ -46,13 +46,13 @@ add_compile_options(-std=c++11)
 # [1] Build standalone well index calculator executable
 option(BUILD_WIC_ONLY "Build well index calculator exe" OFF)
 # [2] Build OS-dependent well index calculator (shared) library:
-option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    OFF)
+option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    ON)
 
 # OTHER: Build executable for WI benchmarktests
 option(BUILD_BENCHMARK "Build exec for wic RMS benchmark" OFF)
 
 # Qt libraries =========================================================
-if (NOT BUILD_WIC_ONLY)
+if (NOT BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS)
     set(CMAKE_AUTOMOC ON)
     set(CMAKE_INCLUDE_CURRENT_DIR ON)
     find_package(Qt5Core REQUIRED)
