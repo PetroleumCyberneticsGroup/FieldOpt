@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 project(FieldOpt)
 
 # System info ==========================================================
+message("=============================================================")
 cmake_host_system_information(RESULT HOST_HOSTNAME QUERY HOSTNAME)
 cmake_host_system_information(RESULT HOST_NUMBER_OF_LOGICAL_CORES QUERY NUMBER_OF_LOGICAL_CORES)
 cmake_host_system_information(RESULT HOST_NUMBER_OF_PHYSICAL_CORES QUERY NUMBER_OF_PHYSICAL_CORES)
@@ -165,6 +166,13 @@ else()
 endif()
 message(STATUS "EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR}")
 include_directories(${EIGEN3_INCLUDE_DIR})
+
+# Debug ===============================================================
+message("=============================================================")
+get_property(DIRS DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+foreach(DIR ${DIRS})
+    message(STATUS "DIR='${DIR}'")
+endforeach()
 
 # Source dir ===========================================================
 message("=============================================================")
