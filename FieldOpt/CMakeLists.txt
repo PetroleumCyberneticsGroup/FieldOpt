@@ -160,7 +160,10 @@ if(COMPILATION_AT_MAUR)
     message(STATUS "ERT_INCL_DIR: ${ERT_INCL_DIR}")
     message(STATUS "ert_ecl: ${ert_ecl}")
     message(STATUS "ert_util: ${ert_util}")
+
+    include_directories($ENV{HOME}/git/libraries/eigen3.3-beta1-2)
     include_directories(${ERT_INCL_DIR})
+    include_directories(${ERT_INCL_DIR}/Dense)
 else()
     find_package(Eigen3 REQUIRED)
 endif()
@@ -169,6 +172,7 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 
 # Debug ===============================================================
 message("=============================================================")
+message(STATUS "Include dirs: ")
 get_property(DIRS DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
 foreach(DIR ${DIRS})
     message(STATUS "DIR='${DIR}'")
