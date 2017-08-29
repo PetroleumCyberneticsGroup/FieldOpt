@@ -98,6 +98,8 @@ void SynchronousMPIRunner::Execute() {
                 printMessage("No queued cases available.", 2);
                 if (overseer_->NumberOfBusyWorkers() == 0) { // All workers are free
                     printMessage("No workers are busy. Starting next iteration.", 2);
+                    if (optimizer_->nr_evaluated_cases() > 1)
+                        logger_->collectExtendedLogs();
                     handle_new_case();
                 }
                 else { // Some workers are performing simulations
@@ -177,7 +179,6 @@ void SynchronousMPIRunner::Execute() {
             else {
                 printMessage("Received an unevaluated case.", 2);
             }
-            logger_->collectExtendedLogs();
         }
         FinalizeRun(false);
         printMessage("Finalized on worker.", 2);
