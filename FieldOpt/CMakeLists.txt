@@ -80,6 +80,10 @@ option(BUILD_BENCHMARK "Build exec for wic RMS benchmark" OFF)
 message("=============================================================")
 if(COMPILATION_AT_MAUR)
 
+    # RPOLYPOLY
+    set(RPOLYPOLY_LIB $ENV{HOME}/git/libraries/RpolyPlusPlus/cmake-build-debug/lib)
+    include_directories(${RPOLYPOLY_LIB})
+
     # QT
     set(QT_LIB $ENV{HOME}/git/libraries/qt5.5.1/lib)
     set(Qt5Core_INCLUDE_DIRS $ENV{HOME}/git/libraries/qt5.5.1/include)
@@ -93,6 +97,7 @@ if(COMPILATION_AT_MAUR)
     include_directories($ENV{HOME}/git/libraries/eigen3.3-beta1-2)
     include_directories(${EIGEN3_INCLUDE_DIR})
     message(STATUS "EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR}")
+    message(STATUS "EIGEN VERION: ${EIGEN_VERSION}")
 
     # ERT
     set(ERT_LIB $ENV{HOME}/git/libraries/ert/lib64)
