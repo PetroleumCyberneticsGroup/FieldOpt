@@ -254,6 +254,13 @@ endif()
 
 add_compile_options(-std=fPIC)
 
+# Make backup copy of previous build + libs ============================
+file(COPY ${CMAKE_BINARY_DIR}/lib
+        DESTINATION ${CMAKE_BINARY_DIR}/../cmake-build-debug-saved)
+
+file(COPY ${CMAKE_BINARY_DIR}/bin
+        DESTINATION ${CMAKE_BINARY_DIR}/../cmake-build-debug-saved)
+
 # Copy example files ===================================================
 if (COPY_EXAMPLES)
     ## Copy the examples into the build dir
