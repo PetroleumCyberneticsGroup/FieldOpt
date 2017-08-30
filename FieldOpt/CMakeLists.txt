@@ -76,6 +76,45 @@ option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    ON)
 # OTHER: Build executable for WI benchmarktests
 option(BUILD_BENCHMARK "Build exec for wic RMS benchmark" OFF)
 
+# Maur =================================================================
+message("=============================================================")
+if(COMPILATION_AT_MAUR)
+
+    # QT
+    set(QT_LIB $ENV{HOME}/git/libraries/qt5.5.1/lib)
+    set(Qt5Core_INCLUDE_DIRS $ENV{HOME}/git/libraries/qt5.5.1/include)
+    include_directories(${QT_LIB})
+    include_directories(${Qt5Core_INCLUDE_DIRS})
+    message(STATUS "QT_LIB: ${QT_LIB}")
+    message(STATUS "Qt5Core_INCLUDE_DIRS: ${Qt5Core_INCLUDE_DIRS}")
+
+    # EIGEN
+    set(EIGEN3_INCLUDE_DIR $ENV{HOME}/git/libraries/eigen3.3-beta1-2/Eigen)
+    include_directories($ENV{HOME}/git/libraries/eigen3.3-beta1-2)
+    include_directories(${EIGEN3_INCLUDE_DIR})
+    message(STATUS "EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR}")
+
+    # ERT
+    set(ERT_LIB $ENV{HOME}/git/libraries/ert/lib64)
+    set(ERT_INCL_DIR $ENV{HOME}/git/libraries/ert/include)
+    set(ert_ecl $ENV{HOME}/git/libraries/ert/lib64/libecl.so)
+    set(ert_util $ENV{HOME}/git/libraries/ert/lib64/libert_util.so)
+    include_directories(${ERT_INCL_DIR})
+    include_directories(${ERT_INCL_DIR}/ert/ecl)
+    include_directories(${ERT_INCL_DIR}/ert/ecl_well)
+    include_directories(${ERT_INCL_DIR}/ert/geometry)
+    include_directories(${ERT_INCL_DIR}/ert/util)
+    message(STATUS "ERT_LIB: ${ERT_LIB}")
+    message(STATUS "ERT_INCL_DIR: ${ERT_INCL_DIR}")
+    message(STATUS "ert_ecl: ${ert_ecl}")
+    message(STATUS "ert_util: ${ert_util}")
+
+else()
+    find_package(Eigen3 REQUIRED)
+    include_directories(${EIGEN3_INCLUDE_DIR})
+    message(STATUS "EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR}")
+endif()
+
 # Qt libraries =========================================================
 message("=============================================================")
 if (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS)
@@ -86,12 +125,16 @@ else()
     message(STATUS "Building FIELDOPT. Loading: Qt5Core and HDF5")
     set(CMAKE_AUTOMOC ON)
     set(CMAKE_INCLUDE_CURRENT_DIR ON)
-    find_package(Qt5Core REQUIRED)
-    include_directories(${Qt5Core_INCLUDE_DIRS})
     find_package(HDF5 REQUIRED COMPONENTS CXX)
     add_definitions(${HDF5_DEFINITIONS})
     include_directories(${HDF5_INCLUDE_DIRS})
     find_package(Threads REQUIRED)
+
+    if(NOT COMPILATION_AT_MAUR)
+        find_package(Qt5Core REQUIRED)
+        include_directories(${Qt5Core_INCLUDE_DIRS})
+    endif()
+
 endif()
 
 # Boost libraries: default-settings ====================================
@@ -147,41 +190,6 @@ include_directories(${CMAKE_BINARY_DIR}/libraries/include/)
 # default modules that come with CMake. (Added by AGChitu)
 # --> TODO: Check if really needed. Remove if not.
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
-
-# Eigen ================================================================
-message("=============================================================")
-if(COMPILATION_AT_MAUR)
-    set(EIGEN3_INCLUDE_DIR $ENV{HOME}/git/libraries/eigen3.3-beta1-2/Eigen)
-    message(STATUS "EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR}")
-
-    # DEBUG
-    include_directories($ENV{HOME}/git/libraries/eigen3.3-beta1-2)
-    include_directories(${EIGEN3_INCLUDE_DIR})
-#    include_directories(${EIGEN3_INCLUDE_DIR}/Dense)
-#    include_directories(${EIGEN3_INCLUDE_DIR}/Eigen)
-#    include_directories(${EIGEN3_INCLUDE_DIR}/Core)
-
-    set(ERT_LIB $ENV{HOME}/git/libraries/ert/lib64)
-    set(ERT_INCL_DIR $ENV{HOME}/git/libraries/ert/include)
-    set(ert_ecl $ENV{HOME}/git/libraries/ert/lib64/libecl.so)
-    set(ert_util $ENV{HOME}/git/libraries/ert/lib64/libert_util.so)
-    message(STATUS "ERT_LIB: ${ERT_LIB}")
-    message(STATUS "ERT_INCL_DIR: ${ERT_INCL_DIR}")
-    message(STATUS "ert_ecl: ${ert_ecl}")
-    message(STATUS "ert_util: ${ert_util}")
-
-    # DEBUG
-    include_directories(${ERT_INCL_DIR})
-    include_directories(${ERT_INCL_DIR}/ert/ecl)
-    include_directories(${ERT_INCL_DIR}/ert/ecl_well)
-    include_directories(${ERT_INCL_DIR}/ert/geometry)
-    include_directories(${ERT_INCL_DIR}/ert/util)
-else()
-    find_package(Eigen3 REQUIRED)
-    message(STATUS "EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR}")
-    include_directories(${EIGEN3_INCLUDE_DIR})
-endif()
-
 
 # Debug ===============================================================
 message("--------------------------------------------------------------")
