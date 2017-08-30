@@ -83,31 +83,22 @@ if(COMPILATION_AT_MAUR)
     # RPOLYPOLY
     set(RPOLYPOLY_LIB $ENV{HOME}/git/libraries/RpolyPlusPlus/cmake-build-debug/lib)
     set(RpolyPlusPlus ${RPOLYPOLY_LIB}/librpoly_plus_plus.so)
-    include_directories(${RPOLYPOLY_LIB})
+    set(RPOLYPOLY_INCLUDE_DIR $ENV{HOME}/git/libraries/RpolyPlusPlus/include)
+    include_directories(${RPOLYPOLY_INCLUDE_DIR})
     message(STATUS "RPOLYPOLY_LIB: ${RPOLYPOLY_LIB}")
     message(STATUS "RpolyPlusPlus: ${RpolyPlusPlus}")
+    message(STATUS "RPOLYPOLY_LIB: ${RPOLYPOLY_INCLUDE_DIR}")
 
     # QT
-    set(QT_LIB $ENV{HOME}/git/libraries/qt5.5.1/lib)
-    set(Qt5Core_INCLUDE_DIRS $ENV{HOME}/git/libraries/qt5.5.1/include)
-    set(QT_MODULE $ENV{HOME}/git/libraries/qt5.5.1/lib/cmake)
-
-#/usr/include/x86_64-linux-gnu/qt5/;/usr/include/x86_64-linux-gnu/qt5/QtCore;/usr/lib/x86_64-linux-gnu/qt5//mkspecs/linux-g++-64
-#    include_directories(${QT_LIB})
-    include_directories(${Qt5Core_INCLUDE_DIRS})
-#    include_directories(${Qt5Core_INCLUDE_DIRS}/QtCore)
-    include_directories(${QT_MODULE})
-    include_directories(${QT_MODULE}/Qt5Core)
-
-    message(STATUS "QT_LIB: ${QT_LIB}")
-    message(STATUS "Qt5Core_INCLUDE_DIRS: ${Qt5Core_INCLUDE_DIRS}")
+    set(CMAKE_PREFIX_PATH "$ENV{HOME}/git/libraries/qt5.5.1")
+    message(STATUS "CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
 
     # EIGEN
     set(EIGEN3_INCLUDE_DIR $ENV{HOME}/git/libraries/eigen3.3-beta1-2/Eigen)
     include_directories($ENV{HOME}/git/libraries/eigen3.3-beta1-2)
     include_directories(${EIGEN3_INCLUDE_DIR})
     message(STATUS "EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR}")
-    message(STATUS "EIGEN VERION: ${EIGEN_VERSION}")
+    message(STATUS "EIGEN VERSION: ${EIGEN_VERSION}")
 
     # ERT
     set(ERT_LIB $ENV{HOME}/git/libraries/ert/lib64)
@@ -151,11 +142,10 @@ else()
     include_directories(${HDF5_INCLUDE_DIRS})
     find_package(Threads REQUIRED)
 
-#    if(NOT COMPILATION_AT_MAUR)
-        find_package(Qt5Core REQUIRED)
-        message(STATUS "Qt5Core_INCLUDE_DIRS: ${Qt5Core_INCLUDE_DIRS}")
-        include_directories(${Qt5Core_INCLUDE_DIRS})
-#    endif()
+    find_package(Qt5Core REQUIRED)
+    message(STATUS "Qt5Core_QTMAIN_LIBRARIES: ${Qt5Core_QTMAIN_LIBRARIES}")
+    message(STATUS "Qt5Core_INCLUDE_DIRS: ${Qt5Core_INCLUDE_DIRS}")
+    include_directories(${Qt5Core_INCLUDE_DIRS})
 
 endif()
 
