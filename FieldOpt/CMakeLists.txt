@@ -82,7 +82,10 @@ if(COMPILATION_AT_MAUR)
 
     # RPOLYPOLY
     set(RPOLYPOLY_LIB $ENV{HOME}/git/libraries/RpolyPlusPlus/cmake-build-debug/lib)
+    set(RpolyPlusPlus ${RPOLYPOLY_LIB}/librpoly_plus_plus.so)
     include_directories(${RPOLYPOLY_LIB})
+    message(STATUS "RPOLYPOLY_LIB: ${RPOLYPOLY_LIB}")
+    message(STATUS "RpolyPlusPlus: ${RpolyPlusPlus}")
 
     # QT
     set(QT_LIB $ENV{HOME}/git/libraries/qt5.5.1/lib)
@@ -118,6 +121,12 @@ else()
     find_package(Eigen3 REQUIRED)
     include_directories(${EIGEN3_INCLUDE_DIR})
     message(STATUS "EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR}")
+
+    find_library(RpolyPlusPlus
+            NAMES rpoly_plus_plus
+            HINTS ${CMAKE_BINARY_DIR}/libraries/lib
+            REQUIRED)
+
 endif()
 
 # Qt libraries =========================================================

@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 2.8)
 project(constraintmath)
 
-find_library(RpolyPlusPlus
-        NAMES rpoly_plus_plus
-        HINTS ${CMAKE_BINARY_DIR}/libraries/lib
-        REQUIRED)
-include_directories(${CMAKE_BINARY_DIR}/libraries/include/)
+#find_library(RpolyPlusPlus
+#        NAMES rpoly_plus_plus
+#        HINTS ${CMAKE_BINARY_DIR}/libraries/lib
+#        REQUIRED)
+#include_directories(${CMAKE_BINARY_DIR}/libraries/include/)
 
 add_library(constraintmath
         well_constraint_projections/well_constraint_projections.cpp
