@@ -90,11 +90,19 @@ if(COMPILATION_AT_MAUR)
     # QT
     set(QT_LIB $ENV{HOME}/git/libraries/qt5.5.1/lib)
     set(Qt5Core_INCLUDE_DIRS $ENV{HOME}/git/libraries/qt5.5.1/include)
-    include_directories(${QT_LIB})
+    set(QT_MODULE $ENV{HOME}/git/libraries/qt5.5.1/lib/cmake)
+
+#    include_directories(${QT_LIB})
     include_directories(${Qt5Core_INCLUDE_DIRS})
-    include_directories(${Qt5Core_INCLUDE_DIRS}/QtCore)
+#    include_directories(${Qt5Core_INCLUDE_DIRS}/QtCore)
+    include_directories(${QT_MODULE})
+    include_directories(${QT_MODULE}/QtCore)
+
     message(STATUS "QT_LIB: ${QT_LIB}")
     message(STATUS "Qt5Core_INCLUDE_DIRS: ${Qt5Core_INCLUDE_DIRS}")
+
+
+
 
     # EIGEN
     set(EIGEN3_INCLUDE_DIR $ENV{HOME}/git/libraries/eigen3.3-beta1-2/Eigen)
