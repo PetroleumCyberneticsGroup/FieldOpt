@@ -92,17 +92,15 @@ if(COMPILATION_AT_MAUR)
     set(Qt5Core_INCLUDE_DIRS $ENV{HOME}/git/libraries/qt5.5.1/include)
     set(QT_MODULE $ENV{HOME}/git/libraries/qt5.5.1/lib/cmake)
 
+#/usr/include/x86_64-linux-gnu/qt5/;/usr/include/x86_64-linux-gnu/qt5/QtCore;/usr/lib/x86_64-linux-gnu/qt5//mkspecs/linux-g++-64
 #    include_directories(${QT_LIB})
     include_directories(${Qt5Core_INCLUDE_DIRS})
 #    include_directories(${Qt5Core_INCLUDE_DIRS}/QtCore)
     include_directories(${QT_MODULE})
-    include_directories(${QT_MODULE}/QtCore)
+    include_directories(${QT_MODULE}/Qt5Core)
 
     message(STATUS "QT_LIB: ${QT_LIB}")
     message(STATUS "Qt5Core_INCLUDE_DIRS: ${Qt5Core_INCLUDE_DIRS}")
-
-
-
 
     # EIGEN
     set(EIGEN3_INCLUDE_DIR $ENV{HOME}/git/libraries/eigen3.3-beta1-2/Eigen)
@@ -153,10 +151,11 @@ else()
     include_directories(${HDF5_INCLUDE_DIRS})
     find_package(Threads REQUIRED)
 
-    if(NOT COMPILATION_AT_MAUR)
+#    if(NOT COMPILATION_AT_MAUR)
         find_package(Qt5Core REQUIRED)
+        message(STATUS "Qt5Core_INCLUDE_DIRS: ${Qt5Core_INCLUDE_DIRS}")
         include_directories(${Qt5Core_INCLUDE_DIRS})
-    endif()
+#    endif()
 
 endif()
 
