@@ -30,6 +30,8 @@ ECLSimulator::ECLSimulator(Settings::Settings *settings, Model::Model *model)
 {
     model_ = model;
     driver_file_writer_ = new DriverFileWriters::EclDriverFileWriter(settings, model_);
+
+    // Set if statement whether running in serial or mpi
     script_args_ = (QStringList() << output_directory_ << "../" + driver_file_writer_->output_driver_file_name_);
 
     results_ = new Results::ECLResults();

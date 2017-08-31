@@ -35,8 +35,10 @@ namespace Optimization {
             int numRvars = base_case->GetRealVarVector().size();
             int numIvars = base_case->GetIntegerVarVector().size();
             num_vars_ = numRvars + numIvars;
-            if (numRvars > 0 && numIvars > 0)
-                std::cout << ("WARNING: Compass search does not handle both continuous and discrete variables at the same time");
+            if (numRvars > 0 && numIvars > 0) {
+                std::cout << ("WARNING: Compass search does not handle "
+                    "both continuous and discrete variables at the same time");
+            }
 
             contr_fac_ = settings->parameters().contraction_factor;
             assert(contr_fac_ < 1.0);
@@ -45,6 +47,11 @@ namespace Optimization {
             assert(expan_fac_ >= 1.0);
 
             step_tol_ = settings->parameters().minimum_step_length;
+
+            std::vector<double> v = settings->parameters().
+                minimum_step_length_vector.toVector().toStdVector();
+            Map<VectorXd> step_tol_vector_(v.data(), v.size(), 1);
+
             assert(step_lengths_.size() == directions_.size());
         }
 
@@ -120,9 +127,16 @@ namespace Optimization {
         }
 
         bool GSS::is_converged() {
-            for (int i = 0; i < step_lengths_.size(); ++i) {
-                if (step_lengths_(i) >= step_tol_)
-                    return false;
+            if (step_tol_vector_.size() > 0) {
+                for (int i = 0; i < step_tol_vector_.size(); ++i) {
+                    if (step_lengths_(i) >= step_tol_vector_(i))
+                        return false;
+                }
+            } else {
+                for (int i = 0; i < step_lengths_.size(); ++i) {
+                    if (step_lengths_(i) >= step_tol_)
+                        return false;
+                }
             }
             return true;
         }

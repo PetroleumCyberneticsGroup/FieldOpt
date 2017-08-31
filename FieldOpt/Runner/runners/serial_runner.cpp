@@ -76,7 +76,8 @@ void SerialRunner::Execute()
                 }
             } catch (std::runtime_error e) {
                 std::cout << e.what() << std::endl;
-                std::cout << "Invalid well block coordinate encountered. Setting obj. val. to sentinel value." << std::endl;
+                std::cout << "Invalid well block coordinate encountered. "
+                    "Setting obj. val. to sentinel value." << std::endl;
                 new_case->set_objective_function_value(sentinelValue());
                 new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_FAILED;
                 new_case->state.err_msg = Optimization::Case::CaseState::ErrorMessage::ERR_WIC;

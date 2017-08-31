@@ -38,12 +38,15 @@ namespace Settings {
             readReservoir(json_reservoir);
         }
         catch (std::exception const &ex) {
-            throw UnableToParseReservoirModelSectionException("Unable to parse reservoir model section: " + std::string(ex.what()));
+            throw UnableToParseReservoirModelSectionException(
+                "Unable to parse reservoir model section: " + std::string(ex.what()));
         }
 
         // Control times
-        if (!json_model.contains("ControlTimes") || !json_model["ControlTimes"].isArray())
-            throw UnableToParseModelSectionException("The ControlTimes array must be defined with at leas one time for the model.");
+        if (!json_model.contains("ControlTimes") || !json_model["ControlTimes"].isArray()) {
+            throw UnableToParseModelSectionException(
+                "The ControlTimes array must be defined with at leas one time for the model.");
+        }
         control_times_ = QList<int>();
         for (int i = 0; i < json_model["ControlTimes"].toArray().size(); ++i) {
             control_times_.append(json_model["ControlTimes"].toArray().at(i).toInt());
@@ -60,7 +63,8 @@ namespace Settings {
         }
 
         catch (std::exception const &ex) {
-            throw UnableToParseWellsModelSectionException("Unable to parse wells model section: " + std::string(ex.what()));
+            throw UnableToParseWellsModelSectionException(
+                "Unable to parse wells model section: " + std::string(ex.what()));
         }
     }
 
@@ -70,7 +74,8 @@ namespace Settings {
         QString type = json_reservoir["Type"].toString();
         if (QString::compare(type, "ECLIPSE") == 0)
             reservoir_.type = ReservoirGridSourceType::ECLIPSE;
-        else throw UnableToParseReservoirModelSectionException("Grid source type " + type.toStdString() +  "not recognized.");
+        else throw UnableToParseReservoirModelSectionException(
+                "Grid source type " + type.toStdString() +  "not recognized.");
 
         // Reservoir grid path
         if (json_reservoir.contains("Path") && json_reservoir["Path"].toString().length() > 0) {
@@ -99,7 +104,10 @@ namespace Settings {
             well.type = WellType::Producer;
         else if (QString::compare(type, "Injector") == 0)
             well.type = WellType::Injector;
-        else throw UnableToParseWellsModelSectionException("Well type " + type.toStdString() + " not recognized for well " + well.name.toStdString());
+        else {
+            throw UnableToParseWellsModelSectionException(
+                "Well type " + type.toStdString() + " not recognized for well " + well.name.toStdString());
+        }
 
         // Well definition type
         QString definition_type = json_well["DefinitionType"].toString();
@@ -138,8 +146,10 @@ namespace Settings {
         else if (QString::compare(definition_type, "WellSpline") == 0) {
             well.definition_type = WellDefinitionType::WellSpline;
             QJsonObject json_points = json_well["SplinePoints"].toObject();
-            if (!json_points.contains("Heel") || !json_points.contains("Toe"))
-                throw UnableToParseWellsModelSectionException("Both Heel and Toe must be defined for spline-type wells.");
+            if (!json_points.contains("Heel") || !json_points.contains("Toe")) {
+                throw UnableToParseWellsModelSectionException(
+                    "Both Heel and Toe must be defined for spline-type wells.");
+            }
 
             QJsonObject json_heel = json_points["Heel"].toObject();
             QJsonObject json_toe = json_points["Toe"].toObject();
@@ -158,11 +168,17 @@ namespace Settings {
             well.spline_heel.name = "SplinePoint#" + well.name + "#heel";
             well.spline_toe.name = "SplinePoint#" + well.name + "#toe";
         }
-        else throw UnableToParseWellsModelSectionException("Well definition type " + definition_type.toStdString() + " not recognized for well " + well.name.toStdString());
+        else {
+            throw UnableToParseWellsModelSectionException(
+                "Well definition type " + definition_type.toStdString()
+                    + " not recognized for well " + well.name.toStdString());
+        }
 
         // Wellbore radius
-        if (!json_well.contains("WellboreRadius"))
-            throw UnableToParseWellsModelSectionException("The wellbore radius must be defined for all wells.");
+        if (!json_well.contains("WellboreRadius")) {
+            throw UnableToParseWellsModelSectionException(
+                "The wellbore radius must be defined for all wells.");
+        }
         well.wellbore_radius = json_well["WellboreRadius"].toDouble();
 
         // Direction of penetration
@@ -180,8 +196,11 @@ namespace Settings {
         for (int i = 0; i < json_controls.size(); ++i) {
             Well::ControlEntry control;
 
-            if (!controlTimeIsDeclared(json_controls.at(i).toObject()["TimeStep"].toInt()))
-                throw UnableToParseWellsModelSectionException("All time steps must be declared in the ControlTimes array. Inconsistency detected in Controls declaration.");
+            if (!controlTimeIsDeclared(json_controls.at(i).toObject()["TimeStep"].toInt())) {
+                throw UnableToParseWellsModelSectionException(
+                    "All time steps must be declared in the ControlTimes array. "
+                        "Inconsistency detected in Controls declaration.");
+            }
             else control.time_step = json_controls.at(i).toObject()["TimeStep"].toInt();
 
             // State (Open or shut)

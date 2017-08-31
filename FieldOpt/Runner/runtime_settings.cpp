@@ -30,8 +30,10 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
 
     if (vm.count("input-file")) {
         driver_file_ = QString::fromStdString(vm["input-file"].as<std::string>());
-        if (!Utilities::FileHandling::FileExists(driver_file_))
-            throw std::runtime_error("The specified driver file does not exist: " + driver_file_.toStdString());
+        if (!Utilities::FileHandling::FileExists(driver_file_)) {
+            throw std::runtime_error("The specified driver file does not exist: "
+                                         + driver_file_.toStdString());
+        }
     } else throw std::runtime_error("An input file must be specified.");
 
     if (vm.count("output-dir")) {

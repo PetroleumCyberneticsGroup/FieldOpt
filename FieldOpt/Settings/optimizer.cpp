@@ -39,7 +39,10 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
         type_ = OptimizerType::GeneticAlgorithm;
     else if (QString::compare(type, "ExhaustiveSearch2DVert") == 0)
         type_ = OptimizerType::ExhaustiveSearch2DVert;
-    else throw OptimizerTypeNotRecognizedException("The optimizer type " + type.toStdString() + " was not recognized.");
+    else {
+        throw OptimizerTypeNotRecognizedException(
+            "The optimizer type " + type.toStdString() + " was not recognized.");
+    }
 
     // Optimizer mode
     if (type_ != ExhaustiveSearch2DVert) {
@@ -49,30 +52,58 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
                 mode_ = OptimizerMode::Minimize;
             else if (QString::compare(mode, "Maximize", Qt::CaseInsensitive) == 0)
                 mode_ = OptimizerMode::Maximize;
-            else throw UnableToParseOptimizerSectionException("Did not recognize optimizer Mode setting.");
-        } else throw UnableToParseOptimizerSectionException("Optimizer Mode keyword must be specified.");
+            else {
+                throw UnableToParseOptimizerSectionException(
+                    "Did not recognize optimizer Mode setting.");
+            }
+        } else {
+            throw UnableToParseOptimizerSectionException(
+                "Optimizer Mode keyword must be specified.");
+        }
 
         // Optimizer parameters
         try {
             // GSS parameters
             if (json_parameters.contains("MaxEvaluations"))
                 parameters_.max_evaluations = json_parameters["MaxEvaluations"].toInt();
+
             if (json_parameters.contains("InitialStepLength"))
                 parameters_.initial_step_length = json_parameters["InitialStepLength"].toDouble();
+
             if (json_parameters.contains("MinimumStepLength"))
                 parameters_.minimum_step_length = json_parameters["MinimumStepLength"].toDouble();
-            if (json_parameters.contains("ContractionFactor"))
+
+            if (json_parameters.contains("InitialStepLengthVector")) {
+                parameters_.initial_step_length_vector = QList<double>();
+                for (int i = 0; i < json_parameters["InitialStepLengthVector"].toArray().size(); ++i) {
+                    parameters_.initial_step_length_vector.append(
+                        json_parameters["InitialStepLengthVector"].toArray().at(i).toDouble());
+                }
+            }
+
+            if (json_parameters.contains("MinimumStepLengthVector")) {
+                parameters_.minimum_step_length_vector = QList<double>();
+                for (int i = 0; i < json_parameters["MinimumStepLengthVector"].toArray().size(); ++i) {
+                    parameters_.minimum_step_length_vector.append(
+                        json_parameters["MinimumStepLengthVector"].toArray().at(i).toDouble());
+                }
+            }
+
+            if (json_parameters.contains("ContractionFactor")) {
                 parameters_.contraction_factor = json_parameters["ContractionFactor"].toDouble();
-            else parameters_.contraction_factor = 0.5;
-            if (json_parameters.contains("ExpansionFactor"))
+            } else { parameters_.contraction_factor = 0.5; }
+
+            if (json_parameters.contains("ExpansionFactor")) {
                 parameters_.expansion_factor = json_parameters["ExpansionFactor"].toDouble();
-            else parameters_.expansion_factor = 1.0;
-            if (json_parameters.contains("MaxQueueSize"))
-                parameters_.max_queue_size = json_parameters["MaxQueueSize"].toDouble();
-            else parameters_.max_queue_size = 2;
-            if (json_parameters.contains("Pattern"))
+            } else { parameters_.expansion_factor = 1.0; }
+
+            if (json_parameters.contains("MaxQueueSize")) {
+                parameters_.expansion_factor = json_parameters["MaxQueueSize"].toDouble();
+            } else { parameters_.max_queue_size = 2; }
+
+            if (json_parameters.contains("Pattern")) {
                 parameters_.pattern = json_parameters["Pattern"].toString();
-            else parameters_.pattern = "Compass";
+            } else { parameters_.pattern = "Compass"; }
 
             // GA parameters
             if (json_parameters.contains("MaxGenerations"))
@@ -104,7 +135,8 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
             else parameters_.upper_bound = 10;
         }
         catch (std::exception const &ex) {
-            throw UnableToParseOptimizerParametersSectionException("Unable to parse optimizer parameters: " + std::string(ex.what()));
+            throw UnableToParseOptimizerParametersSectionException(
+                "Unable to parse optimizer parameters: " + std::string(ex.what()));
         }
     }
 
@@ -128,7 +160,10 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
                 objective_.weighted_sum.append(component);
             }
         }
-        else throw UnableToParseOptimizerObjectiveSectionException("Objective type " + objective_type.toStdString() + " not recognized");
+        else {
+            throw UnableToParseOptimizerObjectiveSectionException(
+                "Objective type " + objective_type.toStdString() + " not recognized");
+        }
         if (json_objective.contains("UsePenaltyFunction")) {
             objective_.use_penalty_function = json_objective["UsePenaltyFunction"].toBool();
         }
@@ -137,7 +172,8 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
         }
     }
     catch (std::exception const &ex) {
-        throw UnableToParseOptimizerObjectiveSectionException("Unable to parse optimizer objective: " + std::string(ex.what()));
+        throw UnableToParseOptimizerObjectiveSectionException(
+            "Unable to parse optimizer objective: " + std::string(ex.what()));
     }
 
     // Optimizer constraints
@@ -149,7 +185,8 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
         }
     }
     catch (std::exception const &ex) {
-        throw UnableToParseOptimizerConstraintsSectionException("Unable to parse optimizer constraints: " + std::string(ex.what()));
+        throw UnableToParseOptimizerConstraintsSectionException(
+            "Unable to parse optimizer constraints: " + std::string(ex.what()));
     }
 }
 
@@ -169,7 +206,10 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
             optimizer_constraint.wells.append(wname.toString());
         }
     }
-    else throw std::runtime_error("A constraint must always specify either the Well or the Wells property.");
+    else {
+        throw std::runtime_error(
+            "A constraint must always specify either the Well or the Wells property.");
+    }
 
     // Penalty function weight for the constraint
     if (json_constraint.contains("PenaltyWeight")) {
@@ -228,7 +268,10 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
                 optimizer_constraint.spline_points_limits.append(limit);
             }
         }
-        else throw UnableToParseOptimizerConstraintsSectionException("Well spline constraint type not recognized.");
+        else {
+            throw UnableToParseOptimizerConstraintsSectionException(
+                "Well spline constraint type not recognized.");
+        }
     }
     else if (QString::compare(constraint_type, "WellSplineLength") == 0) {
         optimizer_constraint.type = ConstraintType::WellSplineLength;
