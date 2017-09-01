@@ -207,8 +207,8 @@ ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index)
 	}
     
 	// Fracture grid
-	active_index = ecl_grid_get_active_fracture_index1(ecl_grid_, global_index);
-	if (active_index >= 0)
+	active_index = NumActiveMatrixCells() + ecl_grid_get_active_fracture_index1(ecl_grid_, global_index);
+	if (active_index >= NumActiveMatrixCells())
 	{
 		cell.porosity.push_back(ecl_kw_iget_as_double(poro_kw_, active_index));
 		cell.permx.push_back(ecl_kw_iget_as_double(permx_kw_, active_index));

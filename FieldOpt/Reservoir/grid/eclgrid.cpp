@@ -143,7 +143,8 @@ Cell ECLGrid::GetCell(int global_index) {
                     ertCell.volume, ertCell.porosity,
                     ertCell.permx, ertCell.permy, ertCell.permz,
                     center, corners, faces_permutation_index_,
-                    ertCell.matrix_active, ertCell.fracture_active
+                    ertCell.matrix_active, ertCell.fracture_active,
+                    Dimensions().nz + ijk_index.k()
         );
     } else {
         throw runtime_error("ECLGrid::GetCell(int global_index): Grid "

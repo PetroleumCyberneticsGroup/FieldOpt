@@ -33,10 +33,11 @@ Cell::Cell(int global_index, IJKCoordinate ijk_index,
            Eigen::Vector3d center,
            vector<Eigen::Vector3d> corners,
            int faces_permutation_index,
-           bool active_matrix, bool active_fracture)
+           bool active_matrix, bool active_fracture, int k_fracture_index)
 {
     global_index_ = global_index;
     ijk_index_ = ijk_index;
+    k_fracture_index_ = k_fracture_index;
     volume_ = volume;
     porosity_ = poro_in;
     permx_ = permx_in;

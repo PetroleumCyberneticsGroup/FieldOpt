@@ -49,7 +49,8 @@ class Cell
        Eigen::Vector3d center,
        vector<Eigen::Vector3d> corners,
        int faces_permutation_index,
-       bool active_matrix, bool active_fracture
+       bool active_matrix, bool active_fracture,
+       int k_fracture_index
   );
 
   /*!
@@ -69,6 +70,10 @@ class Cell
 
   /*!
    * \brief ijk_index Gets the cells (i, j, k) index in its parent grid.
+   * The k index is the index in the matrix grid in fact 
+   * in the case of a dual grid. 
+   * For the k index in the fracure grid use k_fracture_index.
+   * This is most likely NZ + k but it is saved apart anyway. 
    */
   IJKCoordinate ijk_index() const { return ijk_index_; }
 
@@ -121,6 +126,13 @@ class Cell
    * @return
    */
   bool is_active_fracture() const { return is_active_fracture_; }
+  
+  /*!
+   * @brief The k index of the corresponding cell for this cell in the fracture grid 
+   * if this cell is active in the fracture grid as well. 
+   * @return
+   */  
+  int k_fracture_index() const { return k_fracture_index_; }
   
   /*!
    * \brief center Gets the (x, y, z) position of the cells center.
@@ -268,6 +280,7 @@ class Cell
   IJKCoordinate ijk_index_;
   bool is_active_matrix_; //!< Indicates whether or not the cell is active in the matrix grid.
   bool is_active_fracture_; //!< Indicates whether or not the cell is active in the fracture grid.
+  int k_fracture_index_;
   double volume_;
   Eigen::Vector3d center_;
   vector<Eigen::Vector3d> corners_;
