@@ -152,19 +152,26 @@ void AbstractRunner::InitializeObjectiveFunction()
 
 void AbstractRunner::InitializeBaseCase()
 {
-    if (objective_function_ == 0 || model_ == 0)
-        throw std::runtime_error("The Objective Function and the Model must be initialized before the Base Case.");
+    if (objective_function_ == 0 || model_ == 0) {
+        throw std::runtime_error("The Objective Function and the Model "
+                                         "must be initialized before the Base Case.");
+    }
     base_case_ = new Optimization::Case(model_->variables()->GetBinaryVariableValues(),
                                         model_->variables()->GetDiscreteVariableValues(),
                                         model_->variables()->GetContinousVariableValues());
     if (!simulator_->results()->isAvailable()) {
-        if (runtime_settings_->verbosity_level())
-            cout << "Simulation results are unavailable. Setting base case objective function value to sentinel value." << endl;
+        if (runtime_settings_->verbosity_level()) {
+            cout << "Simulation results are unavailable. Setting base "
+                    "case objective function value to sentinel value." << endl;
+        }
         base_case_->set_objective_function_value(sentinelValue());
     }
     else
         base_case_->set_objective_function_value(objective_function_->value());
-    if (runtime_settings_->verbosity_level()) cout << "Base case objective function value set to: " << base_case_->objective_function_value() << endl;
+    if (runtime_settings_->verbosity_level()) {
+        cout << "Base case objective function value set to: "
+             << base_case_->objective_function_value() << endl;
+    }
 }
 
 void AbstractRunner::InitializeOptimizer()
@@ -174,7 +181,8 @@ void AbstractRunner::InitializeOptimizer()
 
     switch (settings_->optimizer()->type()) {
         case Settings::Optimizer::OptimizerType::Compass:
-            if (runtime_settings_->verbosity_level()) cout << "Using CompassSearch optimization algorithm." << endl;
+            if (runtime_settings_->verbosity_level())
+                cout << "Using CompassSearch optimization algorithm." << endl;
             optimizer_ = new Optimization::Optimizers::CompassSearch(settings_->optimizer(),
                                                                      base_case_,
                                                                      model_->variables(),
@@ -184,7 +192,8 @@ void AbstractRunner::InitializeOptimizer()
             optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
             break;
         case Settings::Optimizer::OptimizerType::APPS:
-            if (runtime_settings_->verbosity_level()) cout << "Using APPS optimization algorithm." << endl;
+            if (runtime_settings_->verbosity_level())
+                cout << "Using APPS optimization algorithm." << endl;
             optimizer_ = new Optimization::Optimizers::APPS(settings_->optimizer(),
                                                             base_case_,
                                                             model_->variables(),

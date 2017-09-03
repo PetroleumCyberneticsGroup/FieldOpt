@@ -71,6 +71,35 @@ void Model::ApplyCase(Optimization::Case *c)
     results_.clear();
 }
 
+void Model::ApplyCase(Optimization::Case *c, int rank)
+{
+    for (QUuid key : c->binary_variables().keys()) {
+        variable_container_->SetBinaryVariableValue(key, c->binary_variables()[key]);
+    }
+    for (QUuid key : c->integer_variables().keys()) {
+        variable_container_->SetDiscreteVariableValue(key, c->integer_variables()[key]);
+    }
+    for (QUuid key : c->real_variables().keys()) {
+        variable_container_->SetContinousVariableValue(key, c->real_variables()[key]);
+    }
+    int cumulative_wic_time = 0;
+    for (Wells::Well *w : *wells_) {
+        w->Update(rank);
+        cumulative_wic_time += w->GetTimeSpentInWIC();
+    }
+    c->SetWICTime(cumulative_wic_time);
+    verify();
+
+    // Notify the logger, and after that clear the results.
+    // First check that we have results (if not, this is the first evaluation,
+    // and we have nothing to notify the logger about).
+    if (results_.size() > 0){
+        logger_->AddEntry(this);
+    }
+    current_case_id_ = c->id();
+    results_.clear();
+}
+
 void Model::verify()
 {
     verifyWells();

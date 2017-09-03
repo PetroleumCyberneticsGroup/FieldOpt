@@ -62,8 +62,8 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
     }
 }
 
-QList<WellBlock *> *WellSpline::GetWellBlocks()
-{
+QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
+
     auto heel = Eigen::Vector3d(heel_x_->value(), heel_y_->value(), heel_z_->value());
     auto toe = Eigen::Vector3d(toe_x_->value(), toe_y_->value(), toe_z_->value());
 
@@ -79,13 +79,17 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
     welldefs[0].skins.push_back(0.0);
 
     auto start = QDateTime::currentDateTime();
-    auto block_data = wic.ComputeWellBlocks(welldefs)[well_settings_.name.toStdString()];
+    // auto block_data = wic.ComputeWellBlocks(welldefs)[well_settings_.name.toStdString()];
+    map<string, vector<IntersectedCell>> block_data;
+    wic.ComputeWellBlocks(block_data, welldefs, rank);
+    auto well_block_data = block_data[well_settings_.name.toStdString()];
+
     auto end = QDateTime::currentDateTime();
     seconds_spent_in_compute_wellblocks_ = time_span_seconds(start, end);
 
     QList<WellBlock *> *blocks = new QList<WellBlock *>();
     for (int i = 0; i < block_data.size(); ++i) {
-        blocks->append(getWellBlock(block_data[i]));
+        blocks->append(getWellBlock(well_block_data[i]));
     }
     if (blocks->size() == 0) {
         throw WellBlocksNotDefined("WIC could not compute.");
@@ -93,9 +97,15 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
     return blocks;
 }
 
-WellBlock *WellSpline::getWellBlock(Reservoir::WellIndexCalculation::IntersectedCell block_data)
-{
-    auto wb = new WellBlock(block_data.ijk_index().i()+1, block_data.ijk_index().j()+1, block_data.ijk_index().k()+1);
+QList<WellBlock *> *WellSpline::GetWellBlocks() {
+    return GetWellBlocks(0);
+}
+
+WellBlock *WellSpline::getWellBlock(
+    Reservoir::WellIndexCalculation::IntersectedCell block_data) {
+    auto wb = new WellBlock(block_data.ijk_index().i()+1,
+                            block_data.ijk_index().j()+1,
+                            block_data.ijk_index().k()+1);
     auto comp = new Completions::Perforation();
     comp->setTransmissibility_factor(block_data.cell_well_index_matrix());
     wb->AddCompletion(comp);

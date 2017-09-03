@@ -103,7 +103,8 @@ void SynchronousMPIRunner::Execute() {
                     handle_new_case();
                 }
                 else { // Some workers are performing simulations
-                    printMessage("Some workers are still evaluating cases from this iteration. Waiting for evaluated cases.", 2);
+                    printMessage("Some workers are still evaluating cases from this "
+                                         "iteration. Waiting for evaluated cases.", 2);
                     wait_for_evaluated_case();
                 }
             }
@@ -126,11 +127,15 @@ void SynchronousMPIRunner::Execute() {
                 simulation_done_ = false;
                 logger_->AddEntry(this);
                 bool simulation_success = true;
-                printMessage("Applying case to model.", 2);
-                model_->ApplyCase(worker_->GetCurrentCase());
+
+                int rank = this->world().rank();
+                printMessage("Applying case to model. RANK: " + to_string(rank), 2);
+                model_->ApplyCase(worker_->GetCurrentCase(), rank);
                 model_update_done_ = true; logger_->AddEntry(this);
+
                 auto start = QDateTime::currentDateTime();
-                if (runtime_settings_->simulation_timeout() == 0 && settings_->simulator()->max_minutes() < 0) {
+                if (runtime_settings_->simulation_timeout() == 0 &&
+                        settings_->simulator()->max_minutes() < 0) {
                     printMessage("Starting model evaluation.", 2);
                     simulator_->Evaluate();
                 }
@@ -140,7 +145,8 @@ void SynchronousMPIRunner::Execute() {
                 }
                 else {
                     printMessage("Starting model evaluation with timeout.", 2);
-                    simulation_success = simulator_->Evaluate(timeoutValue(), runtime_settings_->threads_per_sim());
+                    simulation_success = simulator_->Evaluate(timeoutValue(),
+                                                              runtime_settings_->threads_per_sim());
                 }
                 simulation_done_ = true; logger_->AddEntry(this);
                 auto end = QDateTime::currentDateTime();
@@ -189,7 +195,8 @@ void SynchronousMPIRunner::Execute() {
 }
 
 void SynchronousMPIRunner::initialDistribution() {
-    while (optimizer_->nr_queued_cases() > 0 && overseer_->NumberOfFreeWorkers() > 1) { // Leave one free worker
+    while (optimizer_->nr_queued_cases() > 0 &&
+        overseer_->NumberOfFreeWorkers() > 1) { // Leave one free worker
         overseer_->AssignCase(optimizer_->GetCaseForEvaluation());
     }
 }

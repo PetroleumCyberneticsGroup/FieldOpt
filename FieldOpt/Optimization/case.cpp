@@ -34,7 +34,9 @@ Case::Case() {
     sim_time_sec_ = -1;
 }
 
-Case::Case(const QHash<QUuid, bool> &binary_variables, const QHash<QUuid, int> &integer_variables, const QHash<QUuid, double> &real_variables)
+Case::Case(const QHash<QUuid, bool> &binary_variables,
+           const QHash<QUuid, int> &integer_variables,
+           const QHash<QUuid, double> &real_variables)
 {
     id_ = QUuid::createUuid();
     binary_variables_ = binary_variables;
@@ -67,14 +69,17 @@ bool Case::Equals(const Case *other, double tolerance) const
         || this->integer_variables().size() != other->integer_variables().size()
         || this->real_variables().size() != other->real_variables().size())
         return false;
+
     for (QUuid key : this->binary_variables().keys()) {
         if (std::abs(this->binary_variables()[key] - other->binary_variables()[key]) > tolerance)
             return false;
     }
+
     for (QUuid key : this->integer_variables().keys()) {
         if (std::abs(this->integer_variables()[key] - other->integer_variables()[key]) > tolerance)
             return false;
     }
+
     for (QUuid key : this->real_variables().keys()) {
         if (std::abs(this->real_variables()[key] - other->real_variables()[key]) > tolerance)
             return false;
@@ -92,19 +97,25 @@ double Case::objective_function_value() const {
 
 void Case::set_integer_variable_value(const QUuid id, const int val)
 {
-    if (!integer_variables_.contains(id)) throw VariableException("Unable to set value of variable " + id.toString());
+    if (!integer_variables_.contains(id)) {
+        throw VariableException("Unable to set value of variable " + id.toString());
+    }
     integer_variables_[id] = val;
 }
 
 void Case::set_binary_variable_value(const QUuid id, const bool val)
 {
-    if (!binary_variables_.contains(id)) throw VariableException("Unable to set value of variable " + id.toString());
+    if (!binary_variables_.contains(id)) {
+        throw VariableException("Unable to set value of variable " + id.toString());
+    }
     binary_variables_[id] = val;
 }
 
 void Case::set_real_variable_value(const QUuid id, const double val)
 {
-    if (!real_variables_.contains(id)) throw VariableException("Unable to set value of variable " + id.toString());
+    if (!real_variables_.contains(id)) {
+        throw VariableException("Unable to set value of variable " + id.toString());
+    }
     real_variables_[id] = val;
 }
 

@@ -72,6 +72,8 @@ class Model : public Loggable
    */
   void ApplyCase(Optimization::Case *c);
 
+  void ApplyCase(Optimization::Case *c, int rank);
+
   /*!
    * @brief Get the UUId of last case applied to the Model.
    * @return
@@ -83,8 +85,8 @@ class Model : public Loggable
   void SetResult(const std::string key, std::vector<double> vec);
 
   /*!
-   * @brief Should be called at the end of the optimization run. Writes the last case
-   * to the extended log.
+   * @brief Should be called at the end of the optimization run.
+   * Writes the last case to the extended log.
    */
   void Finalize();
 
@@ -100,8 +102,12 @@ class Model : public Loggable
 
   Logger *logger_;
   QUuid current_case_id_;
-  QString compdat_; //!< The compdat generated from the list of well blocks corresponding to the current case. This is set by the simulator library.
-  std::map<std::string, std::vector<double>> results_; //!< The results of the last simulation (i.e. the one performed with the current case).
+
+  QString compdat_; //!< The compdat generated from the list of well blocks
+    //!< corresponding to the current case. This is set by the simulator library.
+
+  std::map<std::string, std::vector<double>> results_; //!< The results of the
+    //!< last simulation (i.e. the one performed with the current case).
 
   class Summary : public Loggable {
    public:

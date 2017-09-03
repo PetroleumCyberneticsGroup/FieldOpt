@@ -17,26 +17,20 @@ CompassSearch::CompassSearch(Settings::Optimizer *settings,
     step_lengths_ = Eigen::VectorXd(directions_.size());
     Matrix<double, Dynamic, Dynamic> step_lengths_test_;
 
-
     if (settings->parameters().initial_step_length_vector.count() > 0) {
-    
-        // Convert to eigen vector (1):
-//        for( int i=0; i<settings->parameters().initial_step_length_vector.count(); ++i ) {
-//            step_lengths_(i) = settings->parameters().initial_step_length_vector[i];
-//        }
 
         // Convert to eigen vector (2):
         std::vector<double> v = settings->parameters().
             initial_step_length_vector.toVector().toStdVector();
         Map<Matrix<double, Dynamic, Dynamic>> step_lengths_test_(v.data(),v.size(),1);
-    
+
     } else {
 
     }
 
     step_lengths_.fill(settings->parameters().initial_step_length);
 
-    // Assert conversion to eigen vector is ok 
+    // Assert conversion to eigen vector is ok
     for( int i=0; i<step_lengths_test_.rows(); ++i ) {
         assert(step_lengths_test_(0) == step_lengths_[0]);
     }
