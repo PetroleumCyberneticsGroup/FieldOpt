@@ -18,6 +18,8 @@
 ******************************************************************************/
 #include "synchronous_mpi_runner.h"
 
+using std::to_string;
+
 namespace Runner {
 namespace MPI {
 
