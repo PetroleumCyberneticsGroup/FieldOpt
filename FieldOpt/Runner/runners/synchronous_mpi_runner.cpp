@@ -18,8 +18,6 @@
 ******************************************************************************/
 #include "synchronous_mpi_runner.h"
 
-using std::to_string;
-
 namespace Runner {
 namespace MPI {
 
@@ -131,7 +129,8 @@ void SynchronousMPIRunner::Execute() {
                 bool simulation_success = true;
 
                 int rank = this->world().rank();
-                printMessage("Applying case to model. RANK: " + to_string(rank), 2);
+                stringstream ss; ss << setw(3) << setfill('0') << rank;
+                printMessage("Applying case to model. RANK: " + ss.str(), 2);
                 model_->ApplyCase(worker_->GetCurrentCase(), rank);
                 model_update_done_ = true; logger_->AddEntry(this);
 
