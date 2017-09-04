@@ -79,18 +79,21 @@ QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
     welldefs[0].skins.push_back(0.0);
 
     auto start = QDateTime::currentDateTime();
-    // auto block_data = wic.ComputeWellBlocks(welldefs)[well_settings_.name.toStdString()];
-    map<string, vector<IntersectedCell>> block_data;
-    wic.ComputeWellBlocks(block_data, welldefs, rank);
-    auto well_block_data = block_data[well_settings_.name.toStdString()];
+
+//    auto block_data = wic.ComputeWellBlocks(welldefs)[well_settings_.name.toStdString()];
+
+     map<string, vector<IntersectedCell>> well_block_data;
+     wic.ComputeWellBlocks(well_block_data, welldefs, rank);
+     auto block_data = well_block_data[well_settings_.name.toStdString()];
 
     auto end = QDateTime::currentDateTime();
     seconds_spent_in_compute_wellblocks_ = time_span_seconds(start, end);
 
     QList<WellBlock *> *blocks = new QList<WellBlock *>();
     for (int i = 0; i < block_data.size(); ++i) {
-        blocks->append(getWellBlock(well_block_data[i]));
+        blocks->append(getWellBlock(block_data[i]));
     }
+
     if (blocks->size() == 0) {
         throw WellBlocksNotDefined("WIC could not compute.");
     }

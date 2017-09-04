@@ -33,9 +33,17 @@ InterwellDistance::InterwellDistance(Settings::Optimizer::Constraint settings,
 
     for (QString name : settings.wells) {
         affected_wells_.append(initializeWell(variables->GetWellSplineVariables(name)));
+
+        if (verbosity_level_>2) {
+            std::cout << "... ... initialized interwell distance constraint for well: "
+                      << name.toStdString() << std::endl;
+        }
     }
+
     if (affected_wells_.length() != 2) {
-        throw std::runtime_error("Currently, the Interwell Distance constraint must be applied to exactly two wells. Found " + boost::lexical_cast<std::string>(affected_wells_.length()));
+        throw std::runtime_error(
+            "Currently, the Interwell Distance constraint must be applied to exactly two wells. "
+                "Found " + boost::lexical_cast<std::string>(affected_wells_.length()));
     }
 }
 

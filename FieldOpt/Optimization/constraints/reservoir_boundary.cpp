@@ -44,6 +44,11 @@ ReservoirBoundary::ReservoirBoundary(
     // QList with indices of box edge cells
     index_list_edge_ = getIndicesOfEdgeCells();
 
+    if (verbosity_level_>2) {
+        std::cout << "... ... initialized boundary.ijk constraint for well: "
+                  << settings.well.toStdString() << std::endl;
+    }
+
 }
 
 
