@@ -33,9 +33,10 @@ WellSplineLength::WellSplineLength(Settings::Optimizer::Constraint settings,
 
     affected_well_ = initializeWell(variables->GetWellSplineVariables(settings.well));
 
-    if (verbosity_level_>2)
+    if (verbosity_level_>2) {
         std::cout << "... ... initialized length constraint for well: "
                   << settings.well.toStdString() << std::endl;
+    }
 }
 
 bool WellSplineLength::CaseSatisfiesConstraint(Case *c)
@@ -61,8 +62,8 @@ bool WellSplineLength::CaseSatisfiesConstraint(Case *c)
     return heel_vals.isApprox(projection.first(), 0.01) && toe_vals.isApprox(projection.last(), 0.01);
 }
 
-void WellSplineLength::SnapCaseToConstraints(Case *c)
-{
+void WellSplineLength::SnapCaseToConstraints(Case *c) {
+
     double heel_x_val = c->real_variables()[affected_well_.heel.x];
     double heel_y_val = c->real_variables()[affected_well_.heel.y];
     double heel_z_val = c->real_variables()[affected_well_.heel.z];
@@ -76,10 +77,10 @@ void WellSplineLength::SnapCaseToConstraints(Case *c)
     heel_vals << heel_x_val, heel_y_val, heel_z_val;
     toe_vals << toe_x_val, toe_y_val, toe_z_val;
 
-    QList<Eigen::Vector3d> projection = WellConstraintProjections::well_length_projection(
-        heel_vals, toe_vals,
-        max_length_, min_length_,
-        0.001);
+    QList<Eigen::Vector3d> projection =
+        WellConstraintProjections::well_length_projection(heel_vals, toe_vals,
+                                                          max_length_, min_length_,
+                                                          0.001);
 
     c->set_real_variable_value(affected_well_.heel.x, projection.first()(0));
     c->set_real_variable_value(affected_well_.heel.y, projection.first()(1));
@@ -89,6 +90,7 @@ void WellSplineLength::SnapCaseToConstraints(Case *c)
     c->set_real_variable_value(affected_well_.toe.y, projection.last()(1));
     c->set_real_variable_value(affected_well_.toe.z, projection.last()(2));
 }
+
 void WellSplineLength::InitializeNormalizer(QList<Case *> cases) {
     vector<double> well_lengths;
     for (auto c : cases) {
@@ -100,6 +102,7 @@ void WellSplineLength::InitializeNormalizer(QList<Case *> cases) {
     normalizer_.set_midpoint(med_well_length);
     normalizer_.set_steepness(1.0L / (max_length_ - min_length_));
 }
+
 double WellSplineLength::Penalty(Case *c) {
     auto endpts = GetEndpointValueVectors(c, affected_well_);
     double well_length =  (endpts.first - endpts.second).norm();
@@ -110,6 +113,7 @@ double WellSplineLength::Penalty(Case *c) {
     else
         return 0.0;
 }
+
 long double WellSplineLength::PenaltyNormalized(Case *c) {
     return normalizer_.normalize(Penalty(c));
 }

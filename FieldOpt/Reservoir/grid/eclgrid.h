@@ -78,13 +78,15 @@ class ECLGrid : public Grid
   Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz,
                               vector<int> search_set);
 
+  /// Check that global_index is less than nx*ny*nz
+  bool IndexIsInsideGrid(int global_index);
+
  private:
   // OV: 20170709
   ERTWrapper::ECLGrid::ECLGridReader* ecl_grid_reader_;
   // ERTWrapper::ECLGrid::ECLGridReader* ecl_grid_reader_ = 0;
 
-  /// Check that global_index is less than nx*ny*nz
-  bool IndexIsInsideGrid(int global_index);
+
 
   /// Check that (i,j,k) are >= 0 and less than n*.
   bool IndexIsInsideGrid(int i, int j, int k);
@@ -95,7 +97,7 @@ class ECLGrid : public Grid
   bool SetGridCellFacesPermutations();
 
   // WIC Debug
-  bool dbg_mode = true; //!< On/off printing of debug messages  
+  bool dbg_mode = true; //!< On/off printing of debug messages
 };
 
 }

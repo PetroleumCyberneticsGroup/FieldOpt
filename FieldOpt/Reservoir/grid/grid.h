@@ -149,6 +149,8 @@ class Grid
    */
   virtual Cell GetSmallestCell() = 0;
 
+  virtual bool IndexIsInsideGrid(int global_index) = 0;
+
  protected:
   GridSourceType type_;
   std::string file_path_;
