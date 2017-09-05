@@ -6,16 +6,19 @@ namespace Constraints {
 
 ConstraintHandler::ConstraintHandler(QList<Settings::Optimizer::Constraint> constraints,
                                      Model::Properties::VariablePropertyContainer *variables,
-                                     Reservoir::Grid::Grid *grid)
-{
+                                     Reservoir::Grid::Grid *grid) {
+
     for (Settings::Optimizer::Constraint constraint : constraints) {
         switch (constraint.type) {
+
             case Settings::Optimizer::ConstraintType::BHP:
                 constraints_.append(new BhpConstraint(constraint, variables));
                 break;
+
             case Settings::Optimizer::ConstraintType::Rate:
                 constraints_.append(new RateConstraint(constraint, variables));
                 break;
+
             case Settings::Optimizer::ConstraintType::WellSplineLength:
                 for (auto wname : constraint.wells) {
                     auto cons = Settings::Optimizer::Constraint(constraint);
@@ -23,17 +26,27 @@ ConstraintHandler::ConstraintHandler(QList<Settings::Optimizer::Constraint> cons
                     constraints_.append(new WellSplineLength(cons, variables));
                 }
                 break;
+
             case Settings::Optimizer::ConstraintType::WellSplineInterwellDistance:
                 constraints_.append(new InterwellDistance(constraint, variables));
                 break;
+
             case Settings::Optimizer::ConstraintType::CombinedWellSplineLengthInterwellDistance:
                 constraints_.append(new CombinedSplineLengthInterwellDistance(constraint, variables));
                 break;
+
             case Settings::Optimizer::ConstraintType::
                 CombinedWellSplineLengthInterwellDistanceReservoirBoundary:
                 constraints_.append(new CombinedSplineLengthInterwellDistanceReservoirBoundary
                                         (constraint, variables, grid));
                 break;
+
+//            case Settings::Optimizer::ConstraintType::
+//                CombinedInterwellDistanceReservoirBoundary:
+//                constraints_.append(new CombinedInterwellDistanceReservoirBoundary
+//                                        (constraint, variables, grid));
+//                break;
+
             case Settings::Optimizer::ConstraintType::ReservoirBoundary:
                 for (auto wname : constraint.wells) {
                     auto cons = Settings::Optimizer::Constraint(constraint);
@@ -41,6 +54,7 @@ ConstraintHandler::ConstraintHandler(QList<Settings::Optimizer::Constraint> cons
                     constraints_.append(new ReservoirBoundary(cons, variables, grid));
                 }
                 break;
+
 #ifdef WITH_EXPERIMENTAL_CONSTRAINTS
                 // Cases for constraints in the experimental_constraints directory go here
 #endif
@@ -48,6 +62,7 @@ ConstraintHandler::ConstraintHandler(QList<Settings::Optimizer::Constraint> cons
                 break;
         }
     }
+
 #ifdef WITH_EXPERIMENTAL_CONSTRAINTS
     std::cout << "Using experimental constraints" << std::endl;
 #else
