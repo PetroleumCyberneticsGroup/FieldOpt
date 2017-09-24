@@ -119,6 +119,7 @@ Grid::Dims ECLGrid::Dimensions() {
 }
 
 Cell ECLGrid::GetCell(int global_index) {
+
     // Check if global index cell is inside overall (i.e., active+inactive) grid
     if (!IndexIsInsideGrid(global_index)) {
         throw runtime_error("ECLGrid::GetCell(int global_index): Error getting "
