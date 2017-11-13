@@ -16,8 +16,9 @@ namespace Simulation {
                     QString WellControls::GetPartString()
                     {
                         QString part = "";
-                        int prev_time = 0;
-                        for (int time : time_entries_.keys()) {
+                        double prev_time = 0;
+
+                        for (double time : time_entries_.keys()) {
                             part.append(createTimeEntry(time, prev_time));
                             prev_time = time;
                             if (time_entries_[time]->has_well_setting) {
@@ -68,13 +69,13 @@ namespace Simulation {
                         }
                     }
 
-                    QString WellControls::createTimeEntry(int time, int prev_time)
+                    QString WellControls::createTimeEntry(double time, double prev_time)
                     {
                         if (time == 0) {
                             return QString(""); // A Time entry should not be created for the initial step
                         }
-                        int delta_time = time - prev_time; // The amount of time to advance
-                        return QString("TSTEP\n   %1*2/\n\n").arg(delta_time/2);
+                        double delta_time = time - prev_time; // The amount of time to advance
+                        return QString("TSTEP\n   2*%1/\n\n").arg(delta_time/2);
                     }
 
                     QString WellControls::createProducerEntry(WellControls::WellSetting *setting)
@@ -90,10 +91,14 @@ namespace Simulation {
                             case ::Settings::Model::ControlMode::BHPControl:
                                 producer_entry_line[2] = "BHP";
                                 producer_entry_line[8] = QString::number(setting->control->bhp());
+                                if (setting->control->rate() != -1)
+                                    producer_entry_line[6] = QString::number(setting->control->rate());
                                 break;
                             case ::Settings::Model::ControlMode::RateControl:
                                 producer_entry_line[2] = "LRAT";
                                 producer_entry_line[6] = QString::number(setting->control->rate());
+                                if (setting->control->bhp() != -1)
+                                    producer_entry_line[8] = QString::number(setting->control->bhp());
                                 break;
                             default:
                                 throw std::runtime_error("Producer control mode not recognized.");
@@ -125,10 +130,14 @@ namespace Simulation {
                             case ::Settings::Model::ControlMode::BHPControl:
                                 injector_entry_line[3] = "BHP";
                                 injector_entry_line[6] = QString::number(setting->control->bhp());
+                                if (setting->control->rate() != -1)
+                                    injector_entry_line[4] = QString::number(setting->control->rate());
                                 break;
                             case ::Settings::Model::ControlMode::RateControl:
                                 injector_entry_line[3] = "RATE";
                                 injector_entry_line[4] = QString::number(setting->control->rate());
+                                if (setting->control->bhp() != -1)
+                                    injector_entry_line[6] = QString::number(setting->control->bhp());
                                 break;
                             default:
                                 throw std::runtime_error("Producer control mode not recognized.");

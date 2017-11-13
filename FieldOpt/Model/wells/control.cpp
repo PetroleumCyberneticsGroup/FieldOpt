@@ -26,6 +26,8 @@ namespace Model {
                         bhp_->setName(entry.name);
                         variables->AddVariable(bhp_);
                     }
+                    // If set, this will be passed as the upper rate limit to the simulator
+                    rate_ = new Properties::ContinousProperty(entry.rate);
                     break;
                 case ::Settings::Model::ControlMode::RateControl:
                     mode_ = entry.control_mode;
@@ -34,6 +36,8 @@ namespace Model {
                         rate_->setName(entry.name);
                         variables->AddVariable(rate_);
                     }
+                    // If set, this will be passed as the lower (upper for injector) BHP limit to the simulator
+                    bhp_ = new Properties::ContinousProperty(entry.bhp);
             }
 
         }

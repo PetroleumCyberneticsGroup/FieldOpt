@@ -64,7 +64,7 @@ namespace Simulation {
                          * \param time The time step to be inserted.
                          * \return
                          */
-                        virtual QString createTimeEntry(int time, int prev_time);
+                        virtual QString createTimeEntry(double time, double prev_time);
                         QString createProducerEntry(WellSetting *setting);
 
                         /*!
