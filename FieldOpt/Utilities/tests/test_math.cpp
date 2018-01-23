@@ -82,7 +82,7 @@ TEST_F(MathTest, RandomInts) {
     // random single int
     int r1 = random_integer(gen, 0, 10);
     int r2 = random_integer(gen, 0, 10);
-    EXPECT_NE(r1, r2);
+//    EXPECT_NE(r1, r2);
     EXPECT_GE(r1, 0);
     EXPECT_GE(r2, 0);
     EXPECT_LE(r1, 10);
@@ -92,9 +92,13 @@ TEST_F(MathTest, RandomInts) {
     std::vector<int> rands1 = random_integers(gen, 0, 10000, 10);
     std::vector<int> rands2 = random_integers(gen, 0, 10000, 10);
     EXPECT_EQ(10, rands1.size());
+
+    // Check that all numbers are different
     for (int j = 0; j < rands1.size() - 1; ++j) {
         EXPECT_NE(rands1[j], rands1[j+1]);
     }
+
+    // Check that the two sets of rands are different
     for (int i = 0; i < rands1.size(); ++i) {
         EXPECT_NE(rands1[i], rands2[i]);
     }

@@ -124,13 +124,13 @@ void ECLGridRotator::RotateZCORN(bool rotateGrid) {
 
 void ECLGridRotator::RotateCOORD() {
 
-    // Transpose ERT vector into [x,y,z] columns
+    // cout << CYAN << "Transpose ERT vector into [x,y,z] columns" << END << endl;
     Map<MatrixXd, Unaligned, Stride<1,3>>
         coord_xyz(ecl_grid_reader_->gridData_.coord.data(),
                   ecl_grid_reader_->gridData_.coord.rows()/3, 3);
     ecl_grid_reader_->gridData_.coord_xyz = coord_xyz;
 
-    // Set rotation center coordinates
+    // cout << CYAN << "Set center coordinates for rotation" << END << endl;
     if(ROTATION_MODE=="IJK") {
 
         int center_idx = ecl_grid_reader_->ConvertIJKToGlobalIndex(
@@ -140,13 +140,19 @@ void ECLGridRotator::RotateCOORD() {
 
     } else if(ROTATION_MODE=="XYZ") {
         // Already read-in from json
-    } else if(ROTATION_MODE=="NONE") {
+    } else if(ROTATION_MODE=="NONE" || ROTATION_MODE=="") {
         RCENTER.fill(0);
     }
-    cout << CYAN << "CENTER COORDINATE: " << END
-         << RCENTER.transpose() << endl;
 
-    // Resize center offset
+    try {
+        cout << CYAN << "CENTER COORDINATE: " << END
+            << RCENTER.transpose() << endl;
+    } catch (const std::exception& e) {
+        cout << "Error: " << e.what() << endl;
+        cout << "RCENTER.rows() = " << RCENTER.rows() << endl;
+    }
+
+    // cout << CYAN << "Resize center and offset vectors" << END << endl;
     auto rcenter = RCENTER.replicate(1,coord_xyz.rows()).transpose();
     auto roffset = ROFFSET.replicate(1,coord_xyz.rows()).transpose();
 
@@ -163,7 +169,7 @@ void ECLGridRotator::RotateCOORD() {
         ecl_grid_reader_->gridData_.coord_rxryrz_xyz = coord_xyz;
     }
 
-    // Reshape back into vector form
+    // cout << CYAN << "Reshape back into vector form" << END << endl;
     Map<MatrixXd> coord(
         ecl_grid_reader_->gridData_.coord_rxryrz_xyz.data(),
         ecl_grid_reader_->gridData_.coord.rows(), 1);
@@ -198,19 +204,23 @@ void ECLGridRotator::SetRotationMatrix(MatrixXd rx_ry_rz, bool dbg) {
     }
 }
 
+void ECLGridRotator::GetParametersFromJSON(){
+    int argc_dummy = 0;
+    const char * argv_dummy[0];
+    ECLGridRotator::GetParametersFromJSON(argc_dummy, argv_dummy);
+}
+
 void ECLGridRotator::GetParametersFromJSON(int argc, const char **argv){
 
     // Get input file name
     if (argc >= 2){
         param_file_ = argv[1]; // char
     }else{
-        cout << "No parameter file passed as argument. "
-            "Correct usage is: " << argv[0]
-             << " /path/to/params-grid-rotation.json" << endl;
+        cout << "No parameter file passed as argument. " << endl;
+        cout << "Correct usage is: grid_rotator /path/to/params-grid-rotation.json" << endl;
 
-        param_file_ = "../examples/ECLIPSE/5spot_exp/params-grid-rotation.json";
-        cout << "Using input parameters file in current folder"
-            " (if present):\n"
+        param_file_ = "../examples/ECLIPSE/5spot_exp/5spot-params-grid-rotation.json";
+        cout << "Using input parameters file in current folder (if present):\n"
              << param_file_ << endl;
     }
 
@@ -247,8 +257,13 @@ void ECLGridRotator::GetParametersFromJSON(int argc, const char **argv){
     cout << CYAN << ROTANGLE << ": " << END
          << RX_RY_RZ.transpose() << endl;
 
-    // Load roation origo option
+    // Load rotation origo option
     ROTATION_MODE = pt.get<string>(ROTMODE);
+
+    // Inform about rotation center option (re-set rotation
+    // center after eclgrid has been defined)
+    cout << CYAN << "ROTATION CENTER OPTION: " << END
+         << ROTATION_MODE << endl;
 
     // Load rotation center
     vector<double> rc, vc;
@@ -258,10 +273,8 @@ void ECLGridRotator::GetParametersFromJSON(int argc, const char **argv){
     Map<MatrixXd> rcenter(rc.data(), rc.size(), 1);
     RCENTER = rcenter;
 
-    // Inform about rotation center option (re-set rotation
-    // center after eclgrid has been defined)
-    cout << CYAN << "ROTATION CENTER OPTION: " << END
-         << ROTATION_MODE << endl;
+    cout << CYAN << "CENTER COORDINATE: " << END
+         << RCENTER.transpose() << endl;
 
     // Load offset
     vector<double> ro, vo;

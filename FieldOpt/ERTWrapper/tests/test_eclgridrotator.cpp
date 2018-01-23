@@ -80,19 +80,22 @@ TEST_F(ECLGridRotatorTest, TestCOORDAfterRotationSizes) {
 
     // Test experimental 5spot grid ------------------------------
     Matrix<double,3,1> rx_ry_rz;
-    rx_ry_rz << 0.1, 0.0, 0.0;
+    rx_ry_rz << 0.0, 0.0, 0.0;
     ecl_grid_rotator_5spot_exp_->SetRotationMatrix(rx_ry_rz);
+    // ecl_grid_rotator_5spot_exp_->GetParametersFromJSON();
 
     // Check COORD data is nonzero
+    cout << YELLOW << "== Check COORD data is nonzero ==" << END << endl;
     ecl_grid_rotator_5spot_exp_->ecl_grid_reader_->GetCOORDZCORNData();
     EXPECT_EQ(22326, ecl_grid_rotator_5spot_exp_->
         ecl_grid_reader_->gridData_.coord.size());
 
     // Rotate grid
+    cout << YELLOW << "== Rotate grid ==" << END << endl;
     ecl_grid_rotator_5spot_exp_->RotateCOORD();
 
     // Compare original COORD data againts rotated COORD data: should
-    // be the same since ax = ay = az = 0
+    // be the same since rx = ry = rz = 0
     auto coord = ecl_grid_rotator_5spot_exp_->ecl_grid_reader_->gridData_.coord;
     auto coord_rxryrz = ecl_grid_rotator_5spot_exp_->ecl_grid_reader_->gridData_.coord_rxryrz;
 

@@ -11,6 +11,7 @@ namespace TestResources {
     namespace ExampleFilePaths {
         static QString driver_example_ = "../examples/driver.json";
         static QString directory_output_ = "../fieldopt-output";
+        static QString include_dir_ = "../fieldopt-output";
 
         static QString grid_horzwel_ = "../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID";
         static QString grid_5spot_ = "../examples/ADGPRS/5spot/ECL_5SPOT.EGRID";

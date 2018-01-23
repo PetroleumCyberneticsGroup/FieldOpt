@@ -61,6 +61,8 @@ class ECLGridRotator {
    * \return
    */
   void GetParametersFromJSON(int argc, const char **argv);
+  void GetParametersFromJSON();
+
   string param_file_;
   string output_file_;
   string grid_file_;
@@ -68,8 +70,8 @@ class ECLGridRotator {
   string ECL_GRID_FILE_PATH;
   string ROTATION_MODE;
   MatrixXd RX_RY_RZ;
-  MatrixXd RCENTER;
-  MatrixXd ROFFSET;
+  Matrix<double,3,1> RCENTER;
+  Matrix<double,3,1> ROFFSET;
 
   /*! JSON OBJECT STRINGS */
   string OUTPUTFILE = "OUTPUT_FILE";

@@ -82,8 +82,8 @@ if (BUILD_TESTING)
     include_directories(${GTEST_INCLUDE_DIRS})
 
     add_executable(test_ertwrapper
-#            tests/test_eclgridreader.cpp
-            #            tests/test_eclsummaryreader.cpp
+            tests/test_eclgridreader.cpp
+            tests/test_eclsummaryreader.cpp
             tests/test_eclgridrotator.cpp
             )
 

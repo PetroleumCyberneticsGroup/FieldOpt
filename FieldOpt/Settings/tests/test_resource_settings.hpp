@@ -30,7 +30,8 @@ class TestResourceSettings {
   TestResourceSettings() {
       settings_full_ = new Settings::Settings(
           ExampleFilePaths::driver_example_,
-          ExampleFilePaths::directory_output_);
+          ExampleFilePaths::directory_output_,
+          ExampleFilePaths::include_dir_);
       settings_optimizer_ = settings_full_->optimizer();
       settings_simulator_ = settings_full_->simulator();
       settings_model_ = settings_full_->model();
