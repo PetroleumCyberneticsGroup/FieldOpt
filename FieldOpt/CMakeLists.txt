@@ -1,121 +1,71 @@
 cmake_minimum_required(VERSION 2.8)
 project(FieldOpt)
 
-# System info ==========================================================
-message("=============================================================")
-cmake_host_system_information(RESULT HOST_HOSTNAME QUERY HOSTNAME)
-cmake_host_system_information(RESULT HOST_NUMBER_OF_LOGICAL_CORES QUERY NUMBER_OF_LOGICAL_CORES)
-cmake_host_system_information(RESULT HOST_NUMBER_OF_PHYSICAL_CORES QUERY NUMBER_OF_PHYSICAL_CORES)
-cmake_host_system_information(RESULT HOST_TOTAL_VIRTUAL_MEMORY QUERY TOTAL_VIRTUAL_MEMORY)
-cmake_host_system_information(RESULT HOST_AVAILABLE_VIRTUAL_MEMORY QUERY AVAILABLE_VIRTUAL_MEMORY)
-cmake_host_system_information(RESULT HOST_TOTAL_PHYSICAL_MEMORY QUERY TOTAL_PHYSICAL_MEMORY)
-cmake_host_system_information(RESULT HOST_AVAILABLE_PHYSICAL_MEMORY QUERY AVAILABLE_PHYSICAL_MEMORY)
+# General config =======================================================
+# CMAKE_MODULE_PATH: Commands like include() and find_package() search
+# for files in directories listed by this variable before checking the
+# default modules that come with CMake.
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
+include(GetSysInfo.cmake)
+include(MaurConfig.cmake)
 
-message(STATUS "HOSTNAME: ${HOST_HOSTNAME}")
-message(STATUS "NUMBER_OF_LOGICAL_CORES: ${HOST_NUMBER_OF_LOGICAL_CORES}")
-message(STATUS "NUMBER_OF_PHYSICAL_CORES: ${HOST_NUMBER_OF_PHYSICAL_CORES}")
-message(STATUS "TOTAL_VIRTUAL_MEMORY: ${HOST_TOTAL_VIRTUAL_MEMORY}")
-message(STATUS "AVAILABLE_VIRTUAL_MEMORY: ${HOST_AVAILABLE_VIRTUAL_MEMORY}")
-message(STATUS "TOTAL_PHYSICAL_MEMORY: ${HOST_TOTAL_PHYSICAL_MEMORY}")
-message(STATUS "AVAILABLE_PHYSICAL_MEMORY: ${HOST_AVAILABLE_PHYSICAL_MEMORY}")
-
-# Compilation at Maur ==================================================
-if(${HOST_HOSTNAME} MATCHES login.* OR ${HOST_HOSTNAME} MATCHES compute.*)
-    option(COMPILATION_AT_MAUR " " ON)
-else()
-    option(COMPILATION_AT_MAUR " " OFF)
-endif()
+# Compile options ======================================================
+set (CMAKE_CXX_STANDARD 11)
 
 # Build dirs ===========================================================
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+
+# ------ IS THIS CODE NECESSARY? WHAT DOES IT DO? REMOVE IF OBSOLETE ---
 # Install dirs =========================================================
 set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install)
 set(BUNDLE_NAME FieldOptBundle)
 set(BUNDLE_PATH "${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}")
 # use, i.e. don't skip the full RPATH for the build tree
-SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
+set(CMAKE_SKIP_BUILD_RPATH  FALSE)
 
 # when building, don't use the install RPATH already
 # (but later on when installing)
-SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 
-SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
 # add the automatically determined parts of the RPATH which point
 # to directories outside the build tree to the install RPATH
-SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 # the RPATH to be used when installing, but only if it's not a system directory
-LIST(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
-IF("${isSystemDir}" STREQUAL "-1")
+list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
+if("${isSystemDir}" STREQUAL "-1")
     SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-ENDIF("${isSystemDir}" STREQUAL "-1")
+endif("${isSystemDir}" STREQUAL "-1")
 # END Install dirs =====================================================
+# ------ IS THIS CODE NECESSARY? WHAT DOES IT DO? REMOVE IF OBSOLETE ---
 
-# Options 1: Unit tests, example dir ===================================
-option(BUILD_TESTING "Build unit tests"                 OFF)
-option(COPY_EXAMPLES "Copy examples to build directory" OFF)
+
+# Enable unit tests + example dir ======================================
+option(BUILD_TESTING "Build unit tests"                 ON)
+option(COPY_EXAMPLES "Copy examples to build directory" ON)
 
 if (BUILD_TESTING AND NOT COPY_EXAMPLES)
     message("It is recommended to copy examples when building unit
     tests. Several of the tests use files in the examples directory.")
 endif()
 
-add_compile_options(-std=c++11)
-
-# Options 2: Compile WIC sources only ==================================
+# Enable compilation of WIC as standalone executable and/or lib ========
 # NOTE: only one of the following two options should be ON at same time
 # [1] Build standalone well index calculator executable
 option(BUILD_WIC_ONLY "Build well index calculator exe" OFF)
 # [2] Build OS-dependent well index calculator (shared) library:
 option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    OFF)
 
-# OTHER: Build executable for WI benchmarktests
+# Build executable for WI benchmarktests ===============================
 option(BUILD_BENCHMARK "Build exec for wic RMS benchmark" OFF)
 
-# Maur =================================================================
-message("=============================================================")
-if(COMPILATION_AT_MAUR)
-
-    # RPOLYPOLY
-    set(RPOLYPOLY_LIB $ENV{HOME}/git/libraries/RpolyPlusPlus/cmake-build-debug/lib)
-    set(RpolyPlusPlus ${RPOLYPOLY_LIB}/librpoly_plus_plus.so)
-    set(RPOLYPOLY_INCLUDE_DIR $ENV{HOME}/git/libraries/RpolyPlusPlus/include)
-    include_directories(${RPOLYPOLY_INCLUDE_DIR})
-    message(STATUS "RPOLYPOLY_LIB: ${RPOLYPOLY_LIB}")
-    message(STATUS "RpolyPlusPlus: ${RpolyPlusPlus}")
-    message(STATUS "RPOLYPOLY_LIB: ${RPOLYPOLY_INCLUDE_DIR}")
-
-    # QT
-    set(CMAKE_PREFIX_PATH "$ENV{HOME}/git/libraries/qt5.5.1")
-    message(STATUS "CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
-
-    # EIGEN
-    set(EIGEN3_INCLUDE_DIR $ENV{HOME}/git/libraries/eigen3.3-beta1-2/Eigen)
-    include_directories($ENV{HOME}/git/libraries/eigen3.3-beta1-2)
-    include_directories(${EIGEN3_INCLUDE_DIR})
-    message(STATUS "EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR}")
-    message(STATUS "EIGEN VERSION: ${EIGEN_VERSION}")
-
-    # ERT
-    set(ERT_LIB $ENV{HOME}/git/libraries/ert/lib64)
-    set(ERT_INCL_DIR $ENV{HOME}/git/libraries/ert/include)
-    set(ert_ecl $ENV{HOME}/git/libraries/ert/lib64/libecl.so)
-    set(ert_util $ENV{HOME}/git/libraries/ert/lib64/libert_util.so)
-    include_directories(${ERT_INCL_DIR})
-    include_directories(${ERT_INCL_DIR}/ert/ecl)
-    include_directories(${ERT_INCL_DIR}/ert/ecl_well)
-    include_directories(${ERT_INCL_DIR}/ert/geometry)
-    include_directories(${ERT_INCL_DIR}/ert/util)
-    message(STATUS "ERT_LIB: ${ERT_LIB}")
-    message(STATUS "ERT_INCL_DIR: ${ERT_INCL_DIR}")
-    message(STATUS "ert_ecl: ${ert_ecl}")
-    message(STATUS "ert_util: ${ert_util}")
-
-else()
+# Include Eigen + RpolyPlusPlus ========================================
+if(NOT COMPILATION_AT_MAUR)
     find_package(Eigen3 REQUIRED)
     include_directories(${EIGEN3_INCLUDE_DIR})
     message(STATUS "EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR}")
@@ -127,7 +77,8 @@ else()
 
 endif()
 
-# Qt libraries =========================================================
+# Build WIC executable  and/or WIC ADGPRS lib ==========================
+# Include HDF5 + Qt5 ===================================================
 message("=============================================================")
 if (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS)
     message(STATUS "Building BUILD_WIC_ONLY: ${BUILD_WIC_ONLY}")
@@ -146,7 +97,6 @@ else()
     message(STATUS "Qt5Core_QTMAIN_LIBRARIES: ${Qt5Core_QTMAIN_LIBRARIES}")
     message(STATUS "Qt5Core_INCLUDE_DIRS: ${Qt5Core_INCLUDE_DIRS}")
     include_directories(${Qt5Core_INCLUDE_DIRS})
-
 endif()
 
 # Boost libraries: default-settings ====================================
@@ -191,35 +141,16 @@ else() # Building all FieldOpt sources
             REQUIRED program_options serialization mpi system filesystem random)
 endif()
 
-# ERT Include dir, primarily for use on cluster (Maur). This assumes that
-#  headers and libs are placed inside a 'libraries' directory in the build
-#  directory.
-include_directories(${CMAKE_BINARY_DIR}/libraries/include/)
-
-# Boost libraries: option-dependent settings ===========================
-# CMAKE_MODULE_PATH: Commands like include() and find_package() search
-# for files in directories listed by this variable before checking the
-# default modules that come with CMake. (Added by AGChitu)
-# --> TODO: Check if really needed. Remove if not.
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
-
-# Debug ===============================================================
-message("--------------------------------------------------------------")
-message(STATUS "Debug include dirs [Eigen/ert]: ")
-get_property(DIRS DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
-foreach(DIR ${DIRS})
-    message(STATUS "DIR='${DIR}'")
-endforeach()
-
-# Source dir ===========================================================
-message("=============================================================")
-message(STATUS "CMAKE_MODULE_PATH: ${PROJECT_SOURCE_DIR}")
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
+# Pring debug info: include dirs + source dirs =========================
+include(DebugMsg.cmake)
 
 # Set this directory as the root dir
-include_directories(${CMAKE_SOURCE_DIR}  ${ERT_INCLUDE_DIR})
+include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR})
 
-# Testing ==============================================================
+# TO BE REMOVED
+#include_directories(${CMAKE_BINARY_DIR}/libraries/include/)
+
+# Enable testing =======================================================
 if (BUILD_TESTING)
     include(CTest)
     enable_testing()
@@ -261,9 +192,9 @@ if (NOT (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS))
 
     ## Create an empty directory for test output
     file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fieldopt-output)
-
 endif()
 
+# Compile options ======================================================
 add_compile_options(-std=fPIC)
 
 # Copy example files ===================================================
