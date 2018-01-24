@@ -24,6 +24,14 @@ namespace Model {
              * \param variables The variable container to which any created variables that are declared _variable_ should be added.
              * \param variable_handler Used to check if a control has been declared _variable_.
              */
+
+            /*!
+             * BHP control mode checks whether there is an argument for a rate aswell as the designated control mode.
+             * If a rate is given, the argument is used to set an upper limit for producer / injector
+             *
+             * Equivallently Rate Control Mode checks whether there is an argument for a BHP aswell as the designated control mode.
+             * If BHP limit is given, the argument is used to set an upper limit / lower limit for producer / injector
+             */
             Control(::Settings::Model::Well::ControlEntry entry,
                     ::Settings::Model::Well well,
                     ::Model::Properties::VariablePropertyContainer *variables);

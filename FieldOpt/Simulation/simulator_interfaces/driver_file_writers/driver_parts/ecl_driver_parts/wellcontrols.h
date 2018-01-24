@@ -61,7 +61,9 @@ namespace Simulation {
                          *
                          * \endcode
                          * Including the trailing blank line.
-                         * \param time The time step to be inserted.
+                         * \param time The time step to be inserted. double time and double prev_time is selected
+                         * in order to divide by 2 of any odd or even interval of days. This allows a more flexible
+                         * selection of report steps
                          * \return
                          */
                         virtual QString createTimeEntry(double time, double prev_time);
