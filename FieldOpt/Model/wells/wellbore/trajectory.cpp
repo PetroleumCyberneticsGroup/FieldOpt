@@ -38,7 +38,9 @@ Trajectory::Trajectory(Settings::Model::Well well_settings,
     }
     else if (well_settings.definition_type == Settings::Model::WellDefinitionType::WellSpline) {
         well_spline_ = new WellSpline(well_settings, variable_container, grid);
+        std::cout << "  Define well spline." << std::endl;
         well_blocks_ = well_spline_->GetWellBlocks();
+        std::cout << "  Got well blocks." << std::endl;
         calculateDirectionOfPenetration();
     }
     else if (well_settings.definition_type == Settings::Model::WellDefinitionType::PseudoContVertical2D) {

@@ -67,6 +67,7 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
     auto heel = Eigen::Vector3d(heel_x_->value(), heel_y_->value(), heel_z_->value());
     auto toe = Eigen::Vector3d(toe_x_->value(), toe_y_->value(), toe_z_->value());
 
+    std::cout << "  Calling WIC." << std::endl;
     auto wic = WellIndexCalculator(grid_);
 
     vector<WellDefinition> welldefs;

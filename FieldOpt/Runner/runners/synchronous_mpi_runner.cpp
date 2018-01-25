@@ -27,11 +27,20 @@ SynchronousMPIRunner::SynchronousMPIRunner(RuntimeSettings *rts) : MPIRunner(rts
     if (world_.rank() == 0) {
         std::cout << "00" << std::endl;
         InitializeSettings("rank" + QString::number(rank()));
+        std::cout << "Initialized settings." << std::endl;
 
         InitializeLogger();
+        std::cout << "Initialized Logger." << std::endl;
+
         InitializeModel();
+        std::cout << "Initialized Model." << std::endl;
+
         InitializeSimulator();
+        std::cout << "Initialized Simulator." << std::endl;
+
         EvaluateBaseModel();
+        std::cout << "Evaluated BaseModel." << std::endl;
+
         InitializeObjectiveFunction();
         InitializeBaseCase();
         InitializeOptimizer();

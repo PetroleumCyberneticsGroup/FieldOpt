@@ -17,6 +17,7 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+#include <iostream>
 #include "well.h"
 
 namespace Model {
@@ -28,6 +29,7 @@ Well::Well(Settings::Model settings,
            Reservoir::Grid::Grid *grid)
 {
     Settings::Model::Well well_settings = settings.wells().at(well_number);
+    std::cout << "  Set: well_settings" << std::endl;
 
     name_ = well_settings.name;
     type_ = well_settings.type;
@@ -44,6 +46,7 @@ Well::Well(Settings::Model settings,
         controls_->append(new Control(well_settings.controls[i], well_settings, variable_container));
 
     trajectory_ = new Wellbore::Trajectory(well_settings, variable_container, grid);
+    std::cout << "  Set: trajectory_" << std::endl;
 
     heel_.i = trajectory_->GetWellBlocks()->first()->i();
     heel_.j = trajectory_->GetWellBlocks()->first()->j();

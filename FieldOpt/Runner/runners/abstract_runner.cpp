@@ -118,7 +118,8 @@ void AbstractRunner::EvaluateBaseModel()
     if (simulator_ == 0)
         throw std::runtime_error("The simulator must be initialized before evaluating the base model.");
     if (!simulator_->results()->isAvailable()) {
-        if (runtime_settings_->verbosity_level()) std::cout << "Simulating base case." << std::endl;
+//        if (runtime_settings_->verbosity_level())
+            std::cout << "Simulating base case." << std::endl;
         simulator_->Evaluate();
     }
 }
