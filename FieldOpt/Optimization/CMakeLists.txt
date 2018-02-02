@@ -42,7 +42,7 @@ add_library(optimization
 		optimizers/RGARDD.cpp
         normalizer.cpp
 		constraints/pseudo_cont_boundary_2d.cpp
-		${EXPERIMENTAL_CONSTRAINTS_SRC})
+		${EXPERIMENTAL_CONSTRAINTS_SRC} optimizers/DFO.cpp optimizers/DFO.h)
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
 target_link_libraries(optimization
@@ -73,6 +73,7 @@ if (BUILD_TESTING)
 			tests/constraints/test_reservoir_boundary.cpp
 			tests/objective/test_weightedsum.cpp
 			tests/optimizers/test_compass_search.cpp
+			tests/optimizers/test_dfo.cpp
 			tests/test_resource_cases.h
 			tests/test_resource_optimizer.h
 			${EXPERIMENTAL_CONSTRAINTS_TESTS}
@@ -84,6 +85,7 @@ if (BUILD_TESTING)
             tests/constraints/test_interwell_distance.cpp
             tests/constraints/test_spline_well_length.cpp
             tests/constraints/test_pseudo_cont_boundary_2d.cpp)
+
 
 	target_link_libraries(test_optimization
 			fieldopt::optimization

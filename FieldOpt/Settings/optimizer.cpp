@@ -39,6 +39,8 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
         type_ = OptimizerType::GeneticAlgorithm;
     else if (QString::compare(type, "ExhaustiveSearch2DVert") == 0)
         type_ = OptimizerType::ExhaustiveSearch2DVert;
+    else if (QString::compare(type, "DFO"))
+        type_ = OptimizerType::DFO;
     else {
         throw OptimizerTypeNotRecognizedException(
             "The optimizer type " + type.toStdString() + " was not recognized.");
@@ -111,6 +113,12 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
             if (json_parameters.contains("UpperBound"))
                 parameters_.upper_bound = json_parameters["UpperBound"].toDouble();
             else parameters_.upper_bound = 10;
+
+            // DFO params
+            if (json_parameters.contains("TrustRadius"))
+                parameters_.trust_radius = json_parameters["TrustRadius"].toDouble();
+            else
+                parameters_.trust_radius = -1.0;
         }
         catch (std::exception const &ex) {
             throw UnableToParseOptimizerParametersSectionException("Unable to parse optimizer parameters: " + std::string(ex.what()));

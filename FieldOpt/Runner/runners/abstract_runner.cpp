@@ -27,6 +27,7 @@
 #include <Optimization/optimizers/APPS.h>
 #include <Optimization/optimizers/GeneticAlgorithm.h>
 #include <Optimization/optimizers/RGARDD.h>
+#include "Optimization/optimizers/DFO.h"
 #include "abstract_runner.h"
 #include "Optimization/optimizers/compass_search.h"
 #include "Optimization/optimizers/ExhaustiveSearch2DVert.h"
@@ -203,6 +204,16 @@ void AbstractRunner::InitializeOptimizer()
                                                               model_->grid(),
                                                               logger_
             );
+            break;
+        case Settings::Optimizer::OptimizerType::DFO:
+            if (runtime_settings_->verbosity_level()) cout << "Using DFO optimization algorithm." << endl;
+            optimizer_ = new Optimization::Optimizers::DFO(settings_->optimizer(),
+                                                              base_case_,
+                                                              model_->variables(),
+                                                              model_->grid(),
+                                                              logger_
+            );
+            optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
             break;
         case Settings::Optimizer::OptimizerType::ExhaustiveSearch2DVert:
             if (runtime_settings_->verbosity_level() > 0) std::cout << "Using ExhaustiveSearch2DVert." << std::endl;

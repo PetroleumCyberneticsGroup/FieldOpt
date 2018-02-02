@@ -40,7 +40,7 @@ class Optimizer
  public:
   Optimizer(){}
   Optimizer(QJsonObject json_optimizer);
-  enum OptimizerType { Compass, APPS, ExhaustiveSearch2DVert, GeneticAlgorithm };
+  enum OptimizerType { Compass, APPS, ExhaustiveSearch2DVert, GeneticAlgorithm, DFO };
   enum OptimizerMode { Maximize, Minimize };
   enum ConstraintType { BHP, Rate, SplinePoints,
     WellSplineLength, WellSplineInterwellDistance, WellSplineDomain,
@@ -71,6 +71,9 @@ class Optimizer
     double stagnation_limit;  //!< Stagnation limit. Default: 1e-10.
     double lower_bound;       //!< Simple lower bound. This is applied to _all_ variables. Default: -10.0.
     double upper_bound;       //!< Simple upper bound. This is applied to _all_ variables. Default: +10.0.
+
+    // DFO Parameters
+    double trust_radius;
   };
 
   struct Objective {
