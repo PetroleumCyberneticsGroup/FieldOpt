@@ -61,9 +61,9 @@ Simulator::Simulator(Settings::Settings *settings) {
                   << "initial_driver_file_name_ : " << initial_driver_file_name_.toStdString() << std::endl
                   << "# of control times: " << control_times_.size() << std::endl
                   << "script_path_: " << script_path_.toStdString() << std::endl
-                  << "output_directory_: " << script_args_.at(0).toStdString() << std::endl
                   << "script_args_[0]: " << script_args_.at(0).toStdString() << std::endl
                   << "script_args_[1]: " << script_args_.at(1).toStdString() << std::endl
+                  << "script_args_[2]: " << script_args_.at(2).toStdString() << std::endl
                   << std::endl;
     }
 }
