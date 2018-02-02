@@ -31,12 +31,6 @@ ECLSimulator::ECLSimulator(Settings::Settings *settings, Model::Model *model)
     model_ = model;
     driver_file_writer_ = new DriverFileWriters::EclDriverFileWriter(settings, model_);
 
-    // Use custom execution script if provided in runtime settings, else use the one from json driver file
-    if (settings->simulator()->custom_simulator_execution_script_path().length() > 0)
-        script_path_ = settings->simulator()->custom_simulator_execution_script_path();
-    else
-        script_path_ = ExecutionScripts::GetScriptPath(settings->simulator()->script_name());
-
     script_args_ = (QStringList() << output_directory_ << driver_file_writer_->output_driver_file_name_);
     if (settings_->verbosity_level() > 4) std::cout << "EclDriverFileWriter set. " << endl
                                                     << "script_path_: " << script_path_.toStdString() << endl

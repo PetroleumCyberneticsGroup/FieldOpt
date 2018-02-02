@@ -46,6 +46,7 @@ Simulator::Simulator(Settings::Settings *settings) {
     if (settings->build_path().length() > 0)
         build_dir_ = settings->build_path() + "/";
 
+    // Use custom execution script if provided in runtime settings, else use the one from json driver file
     if (settings->simulator()->custom_simulator_execution_script_path().length() > 0)
         script_path_ = settings->simulator()->custom_simulator_execution_script_path();
     else
