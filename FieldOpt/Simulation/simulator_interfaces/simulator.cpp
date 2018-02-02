@@ -26,10 +26,13 @@ Simulator::Simulator(Settings::Settings *settings) {
     settings_ = settings;
 
     if (settings->driver_path().length() == 0)
-        throw DriverFileInvalidException("A path to a valid simulator driver file must be specified in the FieldOpt driver file or as a command line parameter.");
+        throw DriverFileInvalidException(
+            "A path to a valid simulator driver file must be specified "
+                "in the FieldOpt driver file or as a command line parameter.");
 
     if (!Utilities::FileHandling::FileExists(settings->simulator()->driver_file_path()))
         DriverFileDoesNotExistException(settings->simulator()->driver_file_path());
+
     initial_driver_file_path_ = settings->simulator()->driver_file_path();
     control_times_ = settings->model()->control_times();
 
@@ -50,6 +53,18 @@ Simulator::Simulator(Settings::Settings *settings) {
     script_args_ = (QStringList() << output_directory_
                                   << output_directory_+"/"+initial_driver_file_name_
                                   << QString::number(1));
+
+    if (settings_->verbosity_level() > 4) {
+        std::cout << "Simulator. -> " << std::endl
+                  << "initial_driver_file_path_: " << initial_driver_file_path_.toStdString()
+                  << "initial_driver_file_name_: " << initial_driver_file_name_.toStdString()
+                  << "control_times_.size() : " << control_times_.size()
+                  << "script_path_: " << script_path_.toStdString()
+                  << "output_directory_: " << script_args_.at(0).toStdString()
+                  << "script_args_[0]: " << script_args_.at(0).toStdString()
+                  << "script_args_[1]: " << script_args_.at(1).toStdString()
+                  << std::endl;
+    }
 }
 
 void Simulator::SetOutputDirectory(QString output_directory)
