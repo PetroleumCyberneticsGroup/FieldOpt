@@ -33,7 +33,8 @@ namespace po = boost::program_options;
 namespace Runner {
 
 /*!
- * \brief The RuntimeSettings class Parses, validates and stores any settings passed to FieldOpt through the command line.
+ * \brief The RuntimeSettings class Parses, validates and stores
+ * any settings passed to FieldOpt through the command line.
  *
  * Boost's program options library is used.
  */

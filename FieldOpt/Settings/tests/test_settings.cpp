@@ -34,13 +34,19 @@ protected:
 };
 
 TEST_F(SettingsTest, ConstructorAndTestFileValidity) {
-    EXPECT_NO_THROW(auto settings = ::Settings::Settings(TestResources::ExampleFilePaths::driver_example_, TestResources::ExampleFilePaths::directory_output_));
+    EXPECT_NO_THROW(auto settings = ::Settings::Settings(
+                        TestResources::ExampleFilePaths::driver_example_,
+                        TestResources::ExampleFilePaths::directory_output_,
+                        5)); // <-verbosity level
 }
 
 TEST_F(SettingsTest, GlobalSettings) {
-    auto settings = ::Settings::Settings(TestResources::ExampleFilePaths::driver_example_, TestResources::ExampleFilePaths::directory_output_);
+    auto settings = ::Settings::Settings(TestResources::ExampleFilePaths::driver_example_,
+                                         TestResources::ExampleFilePaths::directory_output_,
+                                         5); // <-verbosity level
     EXPECT_STREQ("TestRun", settings.name().toLatin1().constData());
-    EXPECT_STREQ(TestResources::ExampleFilePaths::driver_example_.toLatin1().constData(), settings.driver_path().toLatin1().constData());
+    EXPECT_STREQ(TestResources::ExampleFilePaths::driver_example_.toLatin1().constData(),
+                 settings.driver_path().toLatin1().constData());
 //    EXPECT_EQ(true, settings.verbosity()>0);
 }
 

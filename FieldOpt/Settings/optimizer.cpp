@@ -39,7 +39,10 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
         type_ = OptimizerType::GeneticAlgorithm;
     else if (QString::compare(type, "ExhaustiveSearch2DVert") == 0)
         type_ = OptimizerType::ExhaustiveSearch2DVert;
-    else throw OptimizerTypeNotRecognizedException("The optimizer type " + type.toStdString() + " was not recognized.");
+    else {
+        throw OptimizerTypeNotRecognizedException(
+            "The optimizer type " + type.toStdString() + " was not recognized.");
+    }
 
     // Optimizer mode
     if (type_ != ExhaustiveSearch2DVert) {
@@ -49,8 +52,14 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
                 mode_ = OptimizerMode::Minimize;
             else if (QString::compare(mode, "Maximize", Qt::CaseInsensitive) == 0)
                 mode_ = OptimizerMode::Maximize;
-            else throw UnableToParseOptimizerSectionException("Did not recognize optimizer Mode setting.");
-        } else throw UnableToParseOptimizerSectionException("Optimizer Mode keyword must be specified.");
+            else {
+                throw UnableToParseOptimizerSectionException(
+                    "Did not recognize optimizer Mode setting.");
+            }
+        } else {
+            throw UnableToParseOptimizerSectionException(
+                "Optimizer Mode keyword must be specified.");
+        }
 
         // Optimizer parameters
         try {
@@ -128,7 +137,10 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
                 objective_.weighted_sum.append(component);
             }
         }
-        else throw UnableToParseOptimizerObjectiveSectionException("Objective type " + objective_type.toStdString() + " not recognized");
+        else {
+            throw UnableToParseOptimizerObjectiveSectionException(
+                "Objective type " + objective_type.toStdString() + " not recognized");
+        }
         if (json_objective.contains("UsePenaltyFunction")) {
             objective_.use_penalty_function = json_objective["UsePenaltyFunction"].toBool();
         }
@@ -137,7 +149,8 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
         }
     }
     catch (std::exception const &ex) {
-        throw UnableToParseOptimizerObjectiveSectionException("Unable to parse optimizer objective: " + std::string(ex.what()));
+        throw UnableToParseOptimizerObjectiveSectionException(
+            "Unable to parse optimizer objective: " + std::string(ex.what()));
     }
 
     // Optimizer constraints
@@ -149,7 +162,8 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
         }
     }
     catch (std::exception const &ex) {
-        throw UnableToParseOptimizerConstraintsSectionException("Unable to parse optimizer constraints: " + std::string(ex.what()));
+        throw UnableToParseOptimizerConstraintsSectionException(
+            "Unable to parse optimizer constraints: " + std::string(ex.what()));
     }
 }
 
@@ -169,7 +183,10 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
             optimizer_constraint.wells.append(wname.toString());
         }
     }
-    else throw std::runtime_error("A constraint must always specify either the Well or the Wells property.");
+    else {
+        throw std::runtime_error(
+            "A constraint must always specify either the Well or the Wells property.");
+    }
 
     // Penalty function weight for the constraint
     if (json_constraint.contains("PenaltyWeight")) {
@@ -236,7 +253,10 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
                 optimizer_constraint.spline_points_limits.append(limit);
             }
         }
-        else throw UnableToParseOptimizerConstraintsSectionException("Well spline constraint type not recognized.");
+        else {
+            throw UnableToParseOptimizerConstraintsSectionException(
+                "Well spline constraint type not recognized.");
+        }
     }
     else if (QString::compare(constraint_type, "WellSplineLength") == 0) {
         optimizer_constraint.type = ConstraintType::WellSplineLength;
