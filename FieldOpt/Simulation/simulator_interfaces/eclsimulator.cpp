@@ -31,13 +31,19 @@ ECLSimulator::ECLSimulator(Settings::Settings *settings, Model::Model *model)
     model_ = model;
     driver_file_writer_ = new DriverFileWriters::EclDriverFileWriter(settings, model_);
 
-    script_path_ = ExecutionScripts::GetScriptPath(settings->simulator()->script_name());
     script_args_ = (QStringList() << output_directory_ << driver_file_writer_->output_driver_file_name_);
+    if (settings_->verbosity_level() > 4) std::cout << "EclDriverFileWriter set. " << endl
+                                                    << "script_path_: " << script_path_.toStdString() << endl
+                                                    << "Script args. ->" << endl
+                                                    << "output dir: " << script_args_.at(0).toStdString() << endl
+                                                    << "driver file: " << script_args_.at(1).toStdString() << endl
+                                                    << endl;
 
     results_ = new Results::ECLResults();
     try {
         results()->ReadResults(driver_file_writer_->output_driver_file_name_);
-    } catch (...) {} // At this stage we don't really care if the results can be read, we just want to set the path.
+    } catch (...) {}
+    // At this stage we don't really care if the results can be read, we just want to set the path.
 }
 
 void ECLSimulator::Evaluate()

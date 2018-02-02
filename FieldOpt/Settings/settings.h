@@ -52,7 +52,7 @@ class Settings
 {
  public:
   Settings(){}
-  Settings(QString driver_path, QString output_directory);
+  Settings(QString driver_path, QString output_directory, int verbosity_level);
 
   QString driver_path() const { return driver_path_; }
 
@@ -60,8 +60,11 @@ class Settings
   QString output_directory() const { return output_directory_; } //!< Path to a directory in which output files are to be placed.
 
   // To be removed:
-  bool verbose() const { return verbose_; } //!< Verbose mode (with or without debug printing).
-  void set_verbosity(const bool verbosity) { verbose_ = verbosity; }
+  // bool verbose() const { return verbose_; } //!< Verbose mode (with or without debug printing).
+  // void set_verbosity(const bool verbosity) { verbose_ = verbosity; }
+
+  int verbosity_level() const { return verbosity_level_; }
+  int set_verbosity_level(const int verbosity_level) { verbosity_level_ = verbosity_level; }
 
   //!< Get the value for the bookkeeper tolerance. Used by the Bookkeeper in the Runner library.
   double bookkeeper_tolerance() const { return bookkeeper_tolerance_; }
@@ -86,6 +89,7 @@ class Settings
   Optimizer *optimizer_;
   Simulator *simulator_;
   QString build_path_;
+  int verbosity_level_; //!< Verbosity level
 
   void readDriverFile();
   void readGlobalSection();
