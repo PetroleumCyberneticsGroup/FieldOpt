@@ -8,6 +8,7 @@
 #include <QTextStream>
 #include <QDir>
 #include <stdexcept>
+#include <iostream>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/operations.hpp>
 
@@ -222,6 +223,17 @@ inline QString GetAbsoluteFilePath(QString file)
 {
     QFileInfo fileInfo(file);
     return fileInfo.absoluteFilePath();
+}
+
+/*!
+ * \brief GetAbsoluteFilePath Gets absolute path of file.
+ *
+ * \param file (relative) path to file
+ */
+inline void ThrowRuntimeError(std::string error_msg)
+{
+    std::cout << "RUNTIME ERROR: " << error_msg << std::endl;
+    throw std::runtime_error(error_msg);
 }
 
 }
