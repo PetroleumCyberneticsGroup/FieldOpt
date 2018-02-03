@@ -202,7 +202,6 @@ inline void CopyDirectory(QString origin, QString destination)
     }
 }
 
-
 /*!
  * \brief GetCurrentDirectoryPath Gets the absolute path to the current directory.
  *
@@ -212,6 +211,17 @@ inline QString GetCurrentDirectoryPath()
 {
     QDir path = QDir::currentPath(); // Get current directory
     return path.absolutePath();
+}
+
+/*!
+ * \brief GetAbsoluteFilePath Gets absolute path of file.
+ *
+ * \param file (relative) path to file
+ */
+inline QString GetAbsoluteFilePath(QString file)
+{
+    QFileInfo fileInfo(file);
+    return fileInfo.absoluteFilePath();
 }
 
 }
