@@ -32,25 +32,29 @@ ECLSimulator::ECLSimulator(Settings::Settings *settings, Model::Model *model)
     driver_file_writer_ = new DriverFileWriters::EclDriverFileWriter(settings, model_);
 
     script_args_ = (QStringList() << output_directory_ << driver_file_writer_->output_driver_file_name_);
-    if (settings_->verbosity_level() > 4) std::cout << "EclDriverFileWriter set. " << endl
-                                                    << "script_path_: " << script_path_.toStdString() << endl
-                                                    << "Script args. ->" << endl
-                                                    << "output dir: " << script_args_.at(0).toStdString() << endl
-                                                    << "driver file: " << script_args_.at(1).toStdString() << endl
-                                                    << endl;
+    if (settings_->verbosity_level() > 4 || settings_->verb_vector()[2] == 1)
+        std::cout << "EclDriverFileWriter set. " << endl
+                  << "script_path_: " << script_path_.toStdString() << endl
+                  << "Script args. ->" << endl
+                  << "output dir: " << script_args_.at(0).toStdString() << endl
+                  << "driver file: " << script_args_.at(1).toStdString() << endl
+                  << endl;
 
     results_ = new Results::ECLResults();
     try {
-        results()->ReadResults(driver_file_writer_->output_driver_file_name_);
+        results()->ReadResults(driver_file_writer_->output_driver_file_name_,
+                               settings_->verb_vector());
     } catch (...) {}
-    // At this stage we don't really care if the results can be read, we just want to set the path.
+    // At this stage we don't really care if the results
+    // can be read, we just want to set the path.
 }
 
 void ECLSimulator::Evaluate()
 {
     driver_file_writer_->WriteDriverFile();
     ::Utilities::Unix::ExecShellScript(script_path_, script_args_);
-    results_->ReadResults(driver_file_writer_->output_driver_file_name_);
+    results_->ReadResults(driver_file_writer_->output_driver_file_name_,
+                          settings_->verb_vector());
     updateResultsInModel();
 }
 

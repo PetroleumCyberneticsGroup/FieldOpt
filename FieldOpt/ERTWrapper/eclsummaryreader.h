@@ -41,7 +41,8 @@ class ECLSummaryReader
    * \brief ECLSummaryReader Reads the summary file specified in the parameter.
    * \param file_name Path to the eclipse summary, with or without file suffix.
    */
-  ECLSummaryReader(string file_name);
+  explicit ECLSummaryReader(string file_name);
+  ECLSummaryReader(string file_name, vector<int> verb_vector);
   ~ECLSummaryReader();
 
   /*!
@@ -100,6 +101,7 @@ class ECLSummaryReader
 
  private:
   string file_name_;
+  vector<int> verb_vector_; //!<
 
   ecl_sum_type *ecl_sum_;
 

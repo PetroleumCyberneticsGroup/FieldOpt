@@ -11,6 +11,7 @@ using std::cout;
 
 namespace Settings {
 
+// Left for backcompatibility with tests, etc -- fix that, then delete
 Settings::Settings(QString driver_path,
                    QString output_directory,
                    int verbosity_level) {
@@ -23,6 +24,22 @@ Settings::Settings(QString driver_path,
     output_directory_ = output_directory;
     simulator_->output_directory_ = output_directory;
     set_verbosity_level(verbosity_level);
+}
+
+Settings::Settings(QString driver_path,
+                   QString output_directory,
+                   std::vector<int> verb_vector) {
+
+    if (!::Utilities::FileHandling::FileExists(driver_path))
+        throw FileNotFoundException(driver_path.toStdString());
+    driver_path_ = driver_path;
+    readDriverFile();
+
+    output_directory_ = output_directory;
+    simulator_->output_directory_ = output_directory;
+    set_verbosity_vector(verb_vector);
+    set_verbosity_level(6); // back-compatibility
+
 }
 
 QString Settings::GetLogCsvString() const
@@ -114,13 +131,13 @@ void Settings::readOptimizerSection()
         cout << "\n" << str_out << "\n" << std::string(str_out.length(), '=') << endl;
         if (optimizer_->type() == Optimizer::OptimizerType::Compass ||
             optimizer_->type() == Optimizer::OptimizerType::APPS) {
-            cout << "MaxEvaluations:...." << optimizer_->parameters_.max_evaluations << endl;
-            cout << "InitialStepLength:...." << optimizer_->parameters_.initial_step_length << endl;
-            cout << "MinimumStepLength:...." << optimizer_->parameters_.minimum_step_length << endl;
-            cout << "ContractionFactor:...." << optimizer_->parameters_.contraction_factor << endl;
-            cout << "ExpansionFactor:...." << optimizer_->parameters_.expansion_factor << endl;
-            cout << "MaxQueueSize:...." << optimizer_->parameters_.expansion_factor << endl;
-            cout << "Pattern:...." << optimizer_->parameters_.pattern.toStdString() << endl;
+            cout << "MaxEvaluations:--------" << optimizer_->parameters_.max_evaluations << endl;
+            cout << "InitialStepLength:-----" << optimizer_->parameters_.initial_step_length << endl;
+            cout << "MinimumStepLength:-----" << optimizer_->parameters_.minimum_step_length << endl;
+            cout << "ContractionFactor:-----" << optimizer_->parameters_.contraction_factor << endl;
+            cout << "ExpansionFactor:-------" << optimizer_->parameters_.expansion_factor << endl;
+            cout << "MaxQueueSize:----------" << optimizer_->parameters_.expansion_factor << endl;
+            cout << "Pattern:---------------" << optimizer_->parameters_.pattern.toStdString() << endl;
         } else if (optimizer_->type() == Optimizer::OptimizerType::GeneticAlgorithm) {
         }
     }

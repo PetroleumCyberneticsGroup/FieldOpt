@@ -44,6 +44,14 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
     if (vm.count("verbose")) verbosity_level_ = vm["verbose"].as<int>();
     else verbosity_level_ = 0;
 
+    if (vm.count("verbosity-vector")) {
+        verb_vector_str_ = vm["verbosity-vector"].as<std::string>();
+        for (int i=0; i < verb_vector_str_.length(); i++ ) {
+            verb_vector_.push_back(boost::lexical_cast<int>(verb_vector_str_[i]));
+        }
+    }
+    else verb_vector_ = std::vector<int>(8,0);
+
     overwrite_existing_ = vm.count("force") != 0;
     if (!overwrite_existing_ && !Utilities::FileHandling::DirectoryIsEmpty(output_dir_))
         throw std::runtime_error("Output directory is not empty. Use the --force flag to "
@@ -119,23 +127,36 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
     }
 
 
-    if (verbosity_level_) {
+    if (verbosity_level_ > 0 || find (verb_vector_.begin(), verb_vector_.end(), 1) != verb_vector_.end()) {
         str_out = "FieldOpt runtime settings";
         std::cout << "\n" << str_out << "\n" << std::string(str_out.length(),'=') << std::endl;
-        std::cout << "Verbosity level:  " << verbosity_level_ << std::endl;
-        std::cout << "Runner type:      " << runnerTypeString().toStdString() << std::endl;
-        std::cout << "Overwr. old out files: " << overwrite_existing_ << std::endl;
-        std::cout << "Max parallel sims:   " << (max_parallel_sims_ > 0 ? boost::lexical_cast<std::string>(max_parallel_sims_) : "default") << std::endl;
-        std::cout << "Threads pr sim:      " << boost::lexical_cast<std::string>(threads_per_sim_) << std::endl;
+        std::cout << "Verbosity level:-------" << verbosity_level_ << std::endl;
+//        std::cout << "True?" << (find (verb_vector_.begin(), verb_vector_.end(), 1) != verb_vector_.end()) << std::endl;
+//        for (int i= 0; i < verb_vector_.size(); ++i) std::cout << verb_vector()[i] << std::endl;
+        std::cout << "Verbosity vector:------";
+        std::cout << "none=" << verb_vector_.at(0);
+        std::cout << ", init=" << verb_vector_.at(1);
+        std::cout << ", sim=" << verb_vector_.at(2);
+        std::cout << ", opt=" << verb_vector_.at(3);
+        std::cout << ", const=" << verb_vector_.at(4);
+        std::cout << ", wic=" << verb_vector_.at(5);
+        std::cout << ", mpi=" << verb_vector_.at(6);
+        std::cout << ", free=" << verb_vector_.at(7);
+        std::cout << "." << std::endl;
+
+        std::cout << "Runner type:-----------" << runnerTypeString().toStdString() << std::endl;
+        std::cout << "Overwr. old out files:-" << overwrite_existing_ << std::endl;
+        std::cout << "Max parallel sims:-----" << (max_parallel_sims_ > 0 ? boost::lexical_cast<std::string>(max_parallel_sims_) : "default") << std::endl;
+        std::cout << "Threads pr sim:--------" << boost::lexical_cast<std::string>(threads_per_sim_) << std::endl;
         str_out = "Current/specified paths:";
-        std::cout << "\n" << str_out << "\n" << std::string(str_out.length(),'-') << std::endl;
-        std::cout << "Current dir:-------" << Utilities::FileHandling::GetCurrentDirectoryPath().toStdString() << std::endl;
-        std::cout << "Input file:--------" << driver_file_.toStdString() << std::endl;
-        std::cout << "Output dir:--------" << output_dir().toStdString() << std::endl;
-        std::cout << "Sim driver file:---" << (simulator_driver_path_.length() > 0 ? simulator_driver_path_.toStdString() : "from FieldOpt driver file") << std::endl;
-        std::cout << "Grid file path:----" << (grid_file_path_.length() > 0 ? grid_file_path_.toStdString() : "from FieldOpt driver file") << std::endl;
-        std::cout << "Exec file path:----" << (simulator_exec_script_path_.length() > 0 ? simulator_exec_script_path_.toStdString() : "from FieldOpt driver file") << std::endl;
-        std::cout << "Build dir:---------" << fieldopt_build_dir_.toStdString() << std::endl;
+        std::cout << std::endl << std::string(str_out.length(),'-') << std::endl << str_out << std::endl;
+        std::cout << "Current dir:-----------" << Utilities::FileHandling::GetCurrentDirectoryPath().toStdString() << std::endl;
+        std::cout << "Input file:------------" << driver_file_.toStdString() << std::endl;
+        std::cout << "Output dir:------------" << output_dir().toStdString() << std::endl;
+        std::cout << "Sim driver file:-------" << (simulator_driver_path_.length() > 0 ? simulator_driver_path_.toStdString() : "from FieldOpt driver file") << std::endl;
+        std::cout << "Grid file path:--------" << (grid_file_path_.length() > 0 ? grid_file_path_.toStdString() : "from FieldOpt driver file") << std::endl;
+        std::cout << "Exec file path:--------" << (simulator_exec_script_path_.length() > 0 ? simulator_exec_script_path_.toStdString() : "from FieldOpt driver file") << std::endl;
+        std::cout << "Build dir:-------------" << fieldopt_build_dir_.toStdString() << std::endl;
         if (vm.count("well-prod-points"))
             std::cout << "Producer coordinates:   " << wellSplineCoordinateString(prod_coords_).toStdString() << std::endl;
         if (vm.count("well-prod-points"))
@@ -170,6 +191,8 @@ po::variables_map RuntimeSettings::createVariablesMap(int argc, const char **arg
         ("help,h", "print help message")
         ("verbose,v", po::value<int>(&verbosity_level)->default_value(0),
          "verbosity level for runtime console logging")
+        ("verbosity-vector,c", po::value<std::string>(),
+         "verbosity vector for section-wise console logging durting runtime")
         ("force,f", po::value<int>()->implicit_value(0),
          "overwrite existing output files")
         ("max-parallel-simulations,m", po::value<int>(&max_par_sims)->default_value(0),
@@ -223,6 +246,7 @@ Loggable::LogTarget RuntimeSettings::GetLogTarget() {
 map<string, string> RuntimeSettings::GetState() {
     map<string, string> statemap;
     statemap["verbosity"] = boost::lexical_cast<string>(verbosity_level_);
+    statemap["xxxx verbosity vector"] = verb_vector_str_;
     statemap["Max. parallel sims"] = boost::lexical_cast<string>(max_parallel_sims_);
     statemap["Threads pr. sim"] = boost::lexical_cast<string>(threads_per_sim_);
     statemap["Simulator timeout"] = boost::lexical_cast<string>(simulation_timeout_);

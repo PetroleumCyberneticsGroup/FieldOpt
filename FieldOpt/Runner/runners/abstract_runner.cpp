@@ -63,10 +63,10 @@ void AbstractRunner::InitializeSettings(QString output_subdirectory)
     if (output_subdirectory.length() > 0)
         output_directory.append(QString("/%1/").arg(output_subdirectory));
     Utilities::FileHandling::CreateDirectory(output_directory);
-
+    
     settings_ = new Settings::Settings(runtime_settings_->driver_file(),
                                        output_directory,
-                                       runtime_settings_->verbosity_level());
+                                       runtime_settings_->verb_vector());
 
     // Override simulator driver file if it has been passed as command line arguments
     if (runtime_settings_->simulator_driver_path().length() > 0)
@@ -81,7 +81,7 @@ void AbstractRunner::InitializeSettings(QString output_subdirectory)
     if (runtime_settings_->fieldopt_build_dir().length() > 0)
         settings_->set_build_path(runtime_settings_->fieldopt_build_dir());
 
-    if (runtime_settings_->verbosity_level() > 4)
+    if (settings_->verb_vector()[1] == 1) // idx:1 => init verbose
         std::cout << "Initialized Settings." << std::endl;
 }
 

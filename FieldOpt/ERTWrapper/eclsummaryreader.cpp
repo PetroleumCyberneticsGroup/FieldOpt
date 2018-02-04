@@ -27,11 +27,22 @@
 namespace ERTWrapper {
 namespace ECLSummary {
 
+// Left for backcompatibility, delete later after fixing dependencies
 ECLSummaryReader::ECLSummaryReader(string file_name)
 {
     file_name_ = file_name;
     ecl_sum_ = ecl_sum_fread_alloc_case(file_name_.c_str(), "");
     if (ecl_sum_ == NULL) throw SummaryFileNotFoundAtPathException(file_name);
+    populateKeyLists();
+    initializeVectors();
+}
+
+ECLSummaryReader::ECLSummaryReader(string file_name, const vector<int> verb_vector)
+{
+    verb_vector_ = verb_vector;
+    file_name_ = file_name;
+    ecl_sum_ = ecl_sum_fread_alloc_case(file_name_.c_str(), "");
+    if (ecl_sum_ == NULL) throw SummaryFileNotFoundAtPathException(file_name_);
     populateKeyLists();
     initializeVectors();
 }
@@ -126,10 +137,13 @@ void ECLSummaryReader::populateKeyLists() {
     stringlist_free(field_keys);
     stringlist_free(well_keys);
 
-    cout << "Found wells: " << boost::algorithm::join(wells_, ", ") << endl;
-    cout << "Found keys: " << boost::algorithm::join(keys_, ", ") << endl;
-    cout << "Found field keys: " << boost::algorithm::join(field_keys_, ", ") << endl;
-    cout << "Found well keys: " << boost::algorithm::join(well_keys_, ", ") << endl;
+    if (verb_vector_[2] == 1) { // idx:2 => sim verbose
+        cout << "Found wells: " << boost::algorithm::join(wells_, ", ") << endl;
+        cout << "Found keys: " << boost::algorithm::join(keys_, ", ") << endl;
+        cout << "Found field keys: " << boost::algorithm::join(field_keys_, ", ") << endl;
+        cout << "Found well keys: " << boost::algorithm::join(well_keys_, ", ") << endl;
+    }
+
 }
 
 void ECLSummaryReader::initializeVectors() {
