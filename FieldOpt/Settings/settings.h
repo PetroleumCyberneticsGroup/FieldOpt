@@ -60,10 +60,7 @@ class Settings
   QString name() const { return name_; } //!< The name to be used for the run. Output file and folder names are derived from this.
   QString output_directory() const { return output_directory_; } //!< Path to a directory in which output files are to be placed.
 
-  // To be removed:
-  // bool verbose() const { return verbose_; } //!< Verbose mode (with or without debug printing).
-  // void set_verbosity(const bool verbosity) { verbose_ = verbosity; }
-
+  // Left for backcompatibility with tests, etc -- fix that, then delete
   int verbosity_level() const { return verbosity_level_; }
   int set_verbosity_level(const int verbosity_level) { verbosity_level_ = verbosity_level; }
 
