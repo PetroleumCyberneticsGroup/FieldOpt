@@ -118,8 +118,6 @@ void AbstractRunner::InitializeSimulator()
             throw std::runtime_error("Unable to initialize runner: simulator set in driver file not recognized.");
     }
     simulator_->SetVerbosityLevel(runtime_settings_->verbosity_level());
-    if (runtime_settings_->verbosity_level() > 4)
-        std::cout << "Initialized Simulator." << std::endl;
 }
 
 void AbstractRunner::EvaluateBaseModel()
@@ -142,14 +140,16 @@ void AbstractRunner::InitializeObjectiveFunction()
 
     switch (settings_->optimizer()->objective().type) {
         case Settings::Optimizer::ObjectiveType::WeightedSum:
-            if (runtime_settings_->verbosity_level()) std::cout << "Using WeightedSum-type objective function." << std::endl;
-            objective_function_ = new Optimization::Objective::WeightedSum(settings_->optimizer(), simulator_->results());
+            if (runtime_settings_->verbosity_level() > 0)
+                std::cout << "Using WeightedSum-type objective function." << std::endl;
+            objective_function_ = new Optimization::Objective::WeightedSum(settings_->optimizer(),
+                                                                           simulator_->results());
             break;
         default:
             throw std::runtime_error("Unable to initialize runner: objective function type not recognized.");
     }
-    if (runtime_settings_->verbosity_level() > 4)
-        std::cout << "Initialized Objective Function." << std::endl;
+
+    objective_function_->SetVerbosityLevel(runtime_settings_->verbosity_level());
 }
 
 void AbstractRunner::InitializeBaseCase()
@@ -160,7 +160,7 @@ void AbstractRunner::InitializeBaseCase()
                                         model_->variables()->GetDiscreteVariableValues(),
                                         model_->variables()->GetContinousVariableValues());
     if (!simulator_->results()->isAvailable()) {
-        if (runtime_settings_->verbosity_level())
+        if (runtime_settings_->verbosity_level() > 0)
             std::cout << "Simulation results are unavailable. Setting base case objective function value to sentinel value." << std::endl;
         base_case_->set_objective_function_value(sentinelValue());
     }
@@ -219,7 +219,6 @@ void AbstractRunner::InitializeOptimizer()
     }
     optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
     optimizer_->EnableConstraintLogging(runtime_settings_->output_dir());
-    if (runtime_settings_->verbosity_level() > 4) std::cout << "Initialized Optimizer." << std::endl;
 }
 
 void AbstractRunner::InitializeBookkeeper()
