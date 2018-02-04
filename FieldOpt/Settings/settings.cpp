@@ -126,7 +126,7 @@ void Settings::readOptimizerSection()
             "Unable to parse driver file optimizer section: " + string(ex.what()));
     }
 
-    if (this->verbosity_level() > 0) {
+    if (this->verb_vector_[3] > 0) { // idx:3 => opt verbose
         string str_out = "Optimizer settings";
         cout << "\n" << str_out << "\n" << std::string(str_out.length(), '=') << endl;
         if (optimizer_->type() == Optimizer::OptimizerType::Compass ||

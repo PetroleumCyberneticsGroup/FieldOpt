@@ -50,7 +50,7 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
             verb_vector_.push_back(boost::lexical_cast<int>(verb_vector_str_[i]));
         }
     }
-    else verb_vector_ = std::vector<int>(8,0);
+    else verb_vector_ = std::vector<int>(8,1);
 
     overwrite_existing_ = vm.count("force") != 0;
     if (!overwrite_existing_ && !Utilities::FileHandling::DirectoryIsEmpty(output_dir_))
