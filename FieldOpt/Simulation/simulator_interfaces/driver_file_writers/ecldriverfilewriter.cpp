@@ -45,7 +45,12 @@ EclDriverFileWriter::EclDriverFileWriter(Settings::Settings *settings, Model::Mo
     if (settings_->verbosity_level() > 4) std::cout << "Reading simulator driver file... ";
     original_driver_file_contents_ = ::Utilities::FileHandling::ReadFileToStringList(settings_->simulator()->driver_file_path());
     output_driver_file_name_ = settings->output_directory() + "/" + settings->name().toUpper() + ".DATA";
+
     if (settings_->verbosity_level() > 4) std::cout << "done." << endl << "output_driver_file_name_: " << output_driver_file_name_.toStdString() << std::endl;
+
+    if (settings_->verbosity_level() > 4){
+
+    }
 }
 
 void EclDriverFileWriter::WriteDriverFile()
