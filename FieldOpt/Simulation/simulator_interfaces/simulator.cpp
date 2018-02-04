@@ -83,6 +83,7 @@ void Simulator::SetOutputDirectory(QString output_directory)
 }
 
 void Simulator::SetVerbosityLevel(int level) {
+    if (level > 4) std::cout << "Initialized Simulator." << std::endl;
     verbosity_level_ = level;
 }
 
@@ -91,6 +92,7 @@ void Simulator::updateResultsInModel() {
     model_->SetResult("Time", results_->GetValueVector(Results::Results::Property::CumulativeGasProduction));
     model_->SetResult("Time", results_->GetValueVector(Results::Results::Property::CumulativeOilProduction));
     model_->SetResult("Time", results_->GetValueVector(Results::Results::Property::CumulativeWaterProduction));
+    model_->SetResult("Time", results_->GetValueVector(Results::Results::Property::CumulativeWaterInjection));
 }
 
 }
