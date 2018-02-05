@@ -55,15 +55,14 @@ Simulator::Simulator(Settings::Settings *settings) {
                                   << output_directory_+"/"+initial_driver_file_name_
                                   << QString::number(1));
 
-    if (settings_->verbosity_level() > 4) {
-        std::cout << "Setting up Simulator object. Parameters -> " << std::endl
-                  << "initial_driver_file_path_ : " << initial_driver_file_path_.toStdString() << std::endl
-                  << "initial_driver_file_name_ : " << initial_driver_file_name_.toStdString() << std::endl
-                  << "# of control times: " << control_times_.size() << std::endl
-                  << "script_path_: " << script_path_.toStdString() << std::endl
-                  << "script_args_[0]: " << script_args_.at(0).toStdString() << std::endl
-                  << "script_args_[1]: " << script_args_.at(1).toStdString() << std::endl
-                  << "script_args_[2]: " << script_args_.at(2).toStdString() << std::endl
+    if (settings_->verb_vector()[2] == 2) { // idx:2 -> sim verbose (detailed)
+        std::cout << "Simulator set up w/:---" << std::endl
+                  << "init_drvr_file_path_---: " << initial_driver_file_path_.toStdString() << std::endl
+                  << "init_drvr_file_name_---: " << initial_driver_file_name_.toStdString() << std::endl
+                  << "script_path_-----------: " << script_path_.toStdString() << std::endl
+                  << "script_args_[0]--------: " << script_args_.at(0).toStdString() << std::endl
+                  << "script_args_[1]--------: " << script_args_.at(1).toStdString() << std::endl
+                  << "script_args_[2]--------: " << script_args_.at(2).toStdString() << std::endl
                   << std::endl;
     }
 }

@@ -137,7 +137,7 @@ void ECLSummaryReader::populateKeyLists() {
     stringlist_free(field_keys);
     stringlist_free(well_keys);
 
-    if (verb_vector_[2] == 1) { // idx:2 => sim verbose
+    if (verb_vector_[1] == 2) {  // idx:1 -> ert (ERTWrapper)
         cout << "Found wells: " << boost::algorithm::join(wells_, ", ") << endl;
         cout << "Found keys: " << boost::algorithm::join(keys_, ", ") << endl;
         cout << "Found field keys: " << boost::algorithm::join(field_keys_, ", ") << endl;
@@ -160,7 +160,8 @@ void ECLSummaryReader::initializeTimeVector() {
     for (int i = 0; i < double_vector_size(time); ++i) {
         time_[i] = (double_vector_safe_iget(time, i));
     }
-    time_[0] = 0; // For some reason this is often not 0, but something > 1e8. Probably the time since epoch.
+    time_[0] = 0; // For some reason this is often not 0, but something > 1e8.
+    // Probably the time since epoch.
     double_vector_free(time);
 }
 
@@ -309,7 +310,7 @@ void ECLSummaryReader::initializeFieldCumulatives() {
         double_vector_free(data);
     }
     else {
-        warnPropertyNotFound("FOPT");
+        if(verb_vector_[1] == 2) warnPropertyNotFound("FOPT"); // idx:1 -> ert (ERTWrapper)
         for (auto wname : wells_) {
             for (int i = 0; i < time_.size(); ++i) {
                 fopt_[i] += wopt_[wname][i];
@@ -329,7 +330,7 @@ void ECLSummaryReader::initializeFieldCumulatives() {
         double_vector_free(data);
     }
     else {
-        warnPropertyNotFound("FWPT");
+        if(verb_vector_[1] == 2) warnPropertyNotFound("FWPT"); // idx:1 -> ert (ERTWrapper)
         for (auto wname : wells_) {
             for (int i = 0; i < time_.size(); ++i) {
                 fwpt_[i] += wwpt_[wname][i];
@@ -349,7 +350,7 @@ void ECLSummaryReader::initializeFieldCumulatives() {
         double_vector_free(data);
     }
     else {
-        warnPropertyNotFound("FGPT");
+        if(verb_vector_[1] == 2) warnPropertyNotFound("FGPT"); // idx:1 -> ert (ERTWrapper)
         for (auto wname : wells_) {
             for (int i = 0; i < time_.size(); ++i) {
                 fgpt_[i] += wgpt_[wname][i];
@@ -369,7 +370,7 @@ void ECLSummaryReader::initializeFieldCumulatives() {
         double_vector_free(data);
     }
     else {
-        warnPropertyNotFound("FWIT");
+        if(verb_vector_[1] == 2) warnPropertyNotFound("FWIT"); // idx:1 -> ert (ERTWrapper)
         for (auto wname : wells_) {
             for (int i = 0; i < time_.size(); ++i) {
                 fwit_[i] += wwit_[wname][i];
@@ -389,7 +390,7 @@ void ECLSummaryReader::initializeFieldCumulatives() {
         double_vector_free(data);
     }
     else {
-        warnPropertyNotFound("FGIT");
+        if(verb_vector_[1] == 2) warnPropertyNotFound("FGIT"); // idx:1 -> ert (ERTWrapper)
         for (auto wname : wells_) {
             for (int i = 0; i < time_.size(); ++i) {
                 fgit_[i] += wgit_[wname][i];
@@ -402,7 +403,7 @@ const std::vector<double> ECLSummaryReader::wopt(const string well_name) const {
     if (wells_.find(well_name) == wells_.end())
         throw SummaryVariableDoesNotExistException(
             "The well " + well_name + " was not found in the summary.");
-    if (wopt_.at(well_name).back() == 0.0)
+    if (wopt_.at(well_name).back() == 0.0 && verb_vector_[1] == 2) // idx:1 -> ert (ERTWrapper)
         warnPropertyZero(well_name, "WOPT");
     return wopt_.at(well_name);
 }
@@ -411,7 +412,7 @@ const std::vector<double> ECLSummaryReader::wwpt(const string well_name) const {
     if (wells_.find(well_name) == wells_.end())
         throw SummaryVariableDoesNotExistException(
             "The well " + well_name + " was not found in the summary.");
-    if (wwpt_.at(well_name).back() == 0.0)
+    if (wwpt_.at(well_name).back() == 0.0 && verb_vector_[1] == 2) // idx:1 -> ert (ERTWrapper)
         warnPropertyZero(well_name, "WWPT");
     return wwpt_.at(well_name);
 }
@@ -420,7 +421,7 @@ const std::vector<double> ECLSummaryReader::wgpt(const string well_name) const {
     if (wells_.find(well_name) == wells_.end())
         throw SummaryVariableDoesNotExistException(
             "The well " + well_name + " was not found in the summary.");
-    if (wgpt_.at(well_name).back() == 0.0)
+    if (wgpt_.at(well_name).back() == 0.0 && verb_vector_[1] == 2) // idx:1 -> ert (ERTWrapper)
         warnPropertyZero(well_name, "WGPT");
     return wgpt_.at(well_name);
 }
@@ -429,7 +430,7 @@ const std::vector<double> ECLSummaryReader::wwit(const string well_name) const {
     if (wells_.find(well_name) == wells_.end())
         throw SummaryVariableDoesNotExistException(
             "The well " + well_name + " was not found in the summary.");
-    if (wwit_.at(well_name).back() == 0.0)
+    if (wwit_.at(well_name).back() == 0.0 && verb_vector_[1] == 2) // idx:1 -> ert (ERTWrapper)
         warnPropertyZero(well_name, "WWIT");
     return wwit_.at(well_name);
 }
@@ -438,7 +439,7 @@ const std::vector<double> ECLSummaryReader::wgit(const string well_name) const {
     if (wells_.find(well_name) == wells_.end())
         throw SummaryVariableDoesNotExistException(
             "The well " + well_name + " was not found in the summary.");
-    if (wgit_.at(well_name).back() == 0.0)
+    if (wgit_.at(well_name).back() == 0.0 && verb_vector_[1] == 2) // idx:1 -> ert (ERTWrapper)
         warnPropertyZero(well_name, "WGIT");
     return wgit_.at(well_name);
 }
@@ -465,31 +466,31 @@ void ECLSummaryReader::warnPropertyZero(string propname) const {
 
 const std::vector<double> &ECLSummaryReader::fopt() const {
     if (fopt_.back() == 0.0)
-        warnPropertyZero("FOPT");
+        if(verb_vector_[1] == 2) warnPropertyZero("FOPT"); // idx:1 -> ert (ERTWrapper)
     return fopt_;
 }
 
 const std::vector<double> &ECLSummaryReader::fwpt() const {
     if (fwpt_.back() == 0.0)
-        warnPropertyZero("WOPT");
+        if(verb_vector_[1] == 2) warnPropertyZero("WOPT"); // idx:1 -> ert (ERTWrapper)
     return fwpt_;
 }
 
 const std::vector<double> &ECLSummaryReader::fgpt() const {
     if (fgpt_.back() == 0.0)
-        warnPropertyZero("FGPT");
+        if(verb_vector_[1] == 2) warnPropertyZero("FGPT"); // idx:1 -> ert (ERTWrapper)
     return fgpt_;
 }
 
 const std::vector<double> &ECLSummaryReader::fwit() const {
     if (fwit_.back() == 0.0)
-        warnPropertyZero("FWIT");
+        if(verb_vector_[1] == 2) warnPropertyZero("FWIT"); // idx:1 -> ert (ERTWrapper)
     return fwit_;
 }
 
 const std::vector<double> &ECLSummaryReader::fgit() const {
     if (fgit_.back() == 0.0)
-        warnPropertyZero("FGIT");
+        if(verb_vector_[1] == 2) warnPropertyZero("FGIT"); // idx:1 -> ert (ERTWrapper)
     return fgit_;
 }
 

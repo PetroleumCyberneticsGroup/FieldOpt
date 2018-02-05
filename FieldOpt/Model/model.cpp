@@ -25,17 +25,28 @@ namespace Model {
 Model::Model(Settings::Model settings, Logger *logger)
 {
     grid_ = new Reservoir::Grid::ECLGrid(settings.reservoir().path.toStdString());
-    std::cout << "  Set grid_" << std::endl;
+    if (settings.verb_vector()[8] >= 1) // idx:5 -> mod (Model)
+        std::cout << "Init ECLGrid_.--------" << std::endl;
+
     variable_container_ = new Properties::VariablePropertyContainer();
-    std::cout << "  Set: variable_container_" << std::endl;
+    if (settings.verb_vector()[8] >= 1) // idx:5 -> mod (Model)
+        std::cout << "Init var_container_.--" << std::endl;
+
+    if (settings.verb_vector()[8] >= 1) // idx:5 -> mod (Model)
+        std::cout << "Add wells->wellList.--";
 
     wells_ = new QList<Wells::Well *>();
     for (int well_nr = 0; well_nr < settings.wells().size(); ++well_nr) {
-        std::cout << "  Adding well: " << settings.wells().at(well_nr).name.toStdString()
-                  << " out of " << settings.wells().size() << "wells" << std::endl;
+
+        auto wname = settings.wells().at(well_nr).name.toStdString();
+        if (settings.verb_vector()[8] >= 1) // idx:5 -> mod (Model)
+            std::cout << "wname=" << wname << " - ";
+
         wells_->append(new Wells::Well(settings, well_nr, variable_container_, grid_));
-        std::cout << "  Added well: " << well_nr << " out of " << settings.wells().size() << std::endl;
     }
+
+    if (settings.verb_vector()[8] >= 1) // idx:5 -> mod (Model)
+        std::cout << "- - total nr. of wells: " << settings.wells().size() << std::endl;
 
     variable_container_->CheckVariableNameUniqueness();
     logger_ = logger;

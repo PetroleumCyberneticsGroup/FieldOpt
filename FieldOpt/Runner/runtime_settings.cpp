@@ -126,22 +126,22 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
         inje_coords_.second = QVector<double>() << coords[3] << coords[4] << coords[5];
     }
 
-
     if (verbosity_level_ > 0 || find (verb_vector_.begin(), verb_vector_.end(), 1) != verb_vector_.end()) {
         str_out = "FieldOpt runtime settings";
         std::cout << "\n" << str_out << "\n" << std::string(str_out.length(),'=') << std::endl;
         std::cout << "Verbosity level:-------" << verbosity_level_ << std::endl;
-//        std::cout << "True?" << (find (verb_vector_.begin(), verb_vector_.end(), 1) != verb_vector_.end()) << std::endl;
-//        for (int i= 0; i < verb_vector_.size(); ++i) std::cout << verb_vector()[i] << std::endl;
         std::cout << "Verbosity vector:------";
-        std::cout << "none=" << verb_vector_.at(0);
-        std::cout << ", init=" << verb_vector_.at(1);
-        std::cout << ", sim=" << verb_vector_.at(2);
-        std::cout << ", opt=" << verb_vector_.at(3);
-        std::cout << ", const=" << verb_vector_.at(4);
-        std::cout << ", wic=" << verb_vector_.at(5);
-        std::cout << ", mpi=" << verb_vector_.at(6);
-        std::cout << ", free=" << verb_vector_.at(7);
+        std::cout << "run=" << verb_vector_[0]; // (Runner)
+        std::cout << ", ert=" << verb_vector_[1]; // (ERTWrapper)
+        std::cout << ", hd5=" << verb_vector_[2]; // (Hdf5SummaryReader)
+        std::cout << ", wic=" << verb_vector_[3]; // (FieldOpt-WellIndexCalculator)
+        std::cout << ", con=" << verb_vector_[4]; // (ConstraintMath)
+        std::cout << ", mod=" << verb_vector_[5]; // (Model)
+        std::cout << ", opt=" << verb_vector_[6]; // (Optimization)
+        std::cout << ", res=" << verb_vector_[7]; // (Reservoir)
+        std::cout << ", sim=" << verb_vector_[8]; // (Simulation)
+        std::cout << ", set=" << verb_vector_[9]; // (Settings)
+        std::cout << ", uti=" << verb_vector_[10]; // (Utilities)
         std::cout << "." << std::endl;
 
         std::cout << "Runner type:-----------" << runnerTypeString().toStdString() << std::endl;
@@ -260,7 +260,7 @@ map<string, string> RuntimeSettings::GetState() {
     }
 
     statemap["path FieldOpt driver"] = driver_file_.toStdString();
-    statemap["path Otput Directory"] = output_dir_.toStdString();
+    statemap["path Output Directory"] = output_dir_.toStdString();
     statemap["path Simulator base driver"] = simulator_driver_path_.toStdString();
     statemap["path Grid file"] = grid_file_path_.toStdString();
     statemap["path Simulator execution script"] = simulator_exec_script_path_.toStdString();

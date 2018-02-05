@@ -30,6 +30,9 @@ Settings::Settings(QString driver_path,
                    QString output_directory,
                    std::vector<int> verb_vector) {
 
+    set_verbosity_vector(verb_vector);
+    set_verbosity_level(6); // back-compatibility
+
     if (!::Utilities::FileHandling::FileExists(driver_path))
         throw FileNotFoundException(driver_path.toStdString());
     driver_path_ = driver_path;
@@ -37,9 +40,6 @@ Settings::Settings(QString driver_path,
 
     output_directory_ = output_directory;
     simulator_->output_directory_ = output_directory;
-    set_verbosity_vector(verb_vector);
-    set_verbosity_level(6); // back-compatibility
-
 }
 
 QString Settings::GetLogCsvString() const
@@ -153,6 +153,7 @@ void Settings::readModelSection()
         throw UnableToParseModelSectionException(
             "Unable to parse model section: " + string(ex.what()));
     }
+    model_->set_verbosity_vector(verb_vector());
 }
 
 void Settings::set_build_path(const QString &build_path)

@@ -30,15 +30,12 @@ ECLSimulator::ECLSimulator(Settings::Settings *settings, Model::Model *model)
 {
     model_ = model;
     driver_file_writer_ = new DriverFileWriters::EclDriverFileWriter(settings, model_);
+    script_args_ = (QStringList() << output_directory_
+                                  << driver_file_writer_->output_driver_file_name_);
 
-    script_args_ = (QStringList() << output_directory_ << driver_file_writer_->output_driver_file_name_);
-    if (settings_->verbosity_level() > 4 || settings_->verb_vector()[2] == 1)
-        std::cout << "EclDriverFileWriter set. " << endl
-                  << "script_path_: " << script_path_.toStdString() << endl
-                  << "Script args. ->" << endl
-                  << "output dir: " << script_args_.at(0).toStdString() << endl
-                  << "driver file: " << script_args_.at(1).toStdString() << endl
-                  << endl;
+    if (settings_->verb_vector()[8] > 1) // idx:8 -> sim (Simulation)
+        cout << "script arg[0]:---------" << script_args_[0].toStdString() << endl
+             << "script arg[1]:---------" << script_args_[1].toStdString() << endl;
 
     results_ = new Results::ECLResults();
     try {

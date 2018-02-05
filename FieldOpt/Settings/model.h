@@ -111,12 +111,16 @@ class Model
     SplinePoint spline_toe; //!< Toe (end) point to be used when calculating the well path from a spline.
     PseudoContPosition pseudo_cont_position; //!< Initial position when using pseudo-continous positioning variables.
     QList<ControlEntry> controls; //!< List of well controls
+    std::vector<int> verb_vector_;
   };
 
   Reservoir reservoir() const { return reservoir_; } //!< Get the struct containing reservoir settings.
   void set_reservoir_grid_path(const QString path) { reservoir_.path = path; } //!< Set the reservoir grid path. Used when the path is passed by command line argument.
   QList<Well> wells() const { return wells_; } //!< Get the struct containing settings for the well(s) in the model.
   QList<int> control_times() const { return control_times_; } //!< Get the control times for the schedule
+
+  void set_verbosity_vector(const std::vector<int> verb_vector) { verb_vector_ = verb_vector; }
+  std::vector<int> verb_vector() const { return verb_vector_; }
 
  private:
   Reservoir reservoir_;
@@ -127,7 +131,9 @@ class Model
   Well readSingleWell(QJsonObject json_well);
 
   bool controlTimeIsDeclared(int time) const;
-};
+  
+  std::vector<int> verb_vector_ = std::vector<int>(8,0); //!<
+  };
 
 }
 

@@ -33,8 +33,11 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
                        Properties::VariablePropertyContainer *variable_container,
                        Reservoir::Grid::Grid *grid)
 {
+
     grid_ = grid;
     well_settings_ = well_settings;
+    if (well_settings_.verb_vector_[1] > 2) // idx:1 -> init verbose
+        std::cout << "Define well spline.----" << std::endl;
 
     heel_x_ = new Model::Properties::ContinousProperty(well_settings.spline_heel.x);
     heel_y_ = new Model::Properties::ContinousProperty(well_settings.spline_heel.y);
@@ -64,10 +67,12 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
 
 QList<WellBlock *> *WellSpline::GetWellBlocks()
 {
+    if (well_settings_.verb_vector_[1] > 2) // idx:1 -> init verbose
+        std::cout << "Get well blocks.-------" << std::endl;
+
     auto heel = Eigen::Vector3d(heel_x_->value(), heel_y_->value(), heel_z_->value());
     auto toe = Eigen::Vector3d(toe_x_->value(), toe_y_->value(), toe_z_->value());
 
-    std::cout << "  Calling WIC." << std::endl;
     auto wic = WellIndexCalculator(grid_);
 
     vector<WellDefinition> welldefs;
@@ -84,6 +89,11 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
     auto end = QDateTime::currentDateTime();
     seconds_spent_in_compute_wellblocks_ = time_span_seconds(start, end);
 
+    if (well_settings_.verb_vector_[1] > 2) // idx:1 -> init verbose
+        std::cout << "Computing well blocks.--"
+                  << seconds_spent_in_compute_wellblocks_/60
+                  << "mins" << std::endl;
+
     QList<WellBlock *> *blocks = new QList<WellBlock *>();
     for (int i = 0; i < block_data.size(); ++i) {
         blocks->append(getWellBlock(block_data[i]));
@@ -96,7 +106,9 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
 
 WellBlock *WellSpline::getWellBlock(Reservoir::WellIndexCalculation::IntersectedCell block_data)
 {
-    auto wb = new WellBlock(block_data.ijk_index().i()+1, block_data.ijk_index().j()+1, block_data.ijk_index().k()+1);
+    auto wb = new WellBlock(block_data.ijk_index().i()+1,
+                            block_data.ijk_index().j()+1,
+                            block_data.ijk_index().k()+1);
     auto comp = new Completions::Perforation();
     comp->setTransmissibility_factor(block_data.cell_well_index_matrix());
     wb->AddCompletion(comp);

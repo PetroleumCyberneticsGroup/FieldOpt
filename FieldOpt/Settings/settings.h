@@ -64,8 +64,8 @@ class Settings
   int verbosity_level() const { return verbosity_level_; }
   int set_verbosity_level(const int verbosity_level) { verbosity_level_ = verbosity_level; }
 
+  void set_verbosity_vector(const std::vector<int> verb_vector) { verb_vector_ = verb_vector; }
   std::vector<int> verb_vector() const { return verb_vector_; }
-  std::vector<int> set_verbosity_vector(const std::vector<int> verb_vector) { verb_vector_ = verb_vector; }
 
   //!< Get the value for the bookkeeper tolerance. Used by the Bookkeeper in the Runner library.
   double bookkeeper_tolerance() const { return bookkeeper_tolerance_; }
@@ -92,7 +92,7 @@ class Settings
 
   // bool verbose_ = false; // obsolte, delete later
   int verbosity_level_; //!< Verbosity level
-  std::vector<int> verb_vector_ = std::vector<int>(8.0); //!<
+  std::vector<int> verb_vector_ = std::vector<int>(11,0); //!<
 
   void readDriverFile();
   void readGlobalSection();
