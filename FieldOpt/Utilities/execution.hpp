@@ -72,9 +72,9 @@ inline void ExecShellScript(QString script_path, QStringList args)
 
     QString command = script_path + " " + args.join(" ");
 
-//    if (settings_->verb_vector()[2] == 1) { // idx:2 => sim verbose
-        std::cout << "Current dir:-----------" << Utilities::FileHandling::GetCurrentDirectoryPath().toStdString() << endl;
-        std::cout << "Run command:-----------" << command.toStdString() << endl;
+//    if (settings_->verb_vector()[10] == 1) { // idx:10 -> uti (Utilities)
+        std::cout << "[uti]Current dir:-----------" << Utilities::FileHandling::GetCurrentDirectoryPath().toStdString() << endl;
+        std::cout << "[uti]Run command:-----------" << command.toStdString() << endl;
 //    }
 
     system(command.toLatin1().constData());

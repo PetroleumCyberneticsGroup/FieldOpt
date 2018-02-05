@@ -30,8 +30,8 @@ Well::Well(Settings::Model settings,
 {
     Settings::Model::Well well_settings = settings.wells().at(well_number);
     well_settings.verb_vector_ = settings.verb_vector();
-    if (well_settings.verb_vector_[2] > 1) // idx:2 -> sim verbose
-        std::cout << "Reading well settings.-" << std::endl;
+    if (well_settings.verb_vector_[5] > 1) // idx:5 -> mod (Model)
+        std::cout << "[mod]Reading well settings.- " << std::endl;
 
     name_ = well_settings.name;
     type_ = well_settings.type;
@@ -46,9 +46,7 @@ Well::Well(Settings::Model settings,
     for (int i = 0; i < well_settings.controls.size(); ++i)
         controls_->append(new Control(well_settings.controls[i], well_settings, variable_container));
 
-
     trajectory_ = new Wellbore::Trajectory(well_settings, variable_container, grid);
-    if (well_settings.verb_vector_[2] > 1) std::cout << "ok.-" << std::endl; // idx:2 -> sim verbose
 
     heel_.i = trajectory_->GetWellBlocks()->first()->i();
     heel_.j = trajectory_->GetWellBlocks()->first()->j();

@@ -59,7 +59,8 @@ class WeightedSum : public Objective
    * \param settings The Settings object from which to create the objective.
    * \param results The Results object from which to get property values.
    */
-  WeightedSum(Settings::Optimizer *settings, Simulation::Results::Results *results);
+  WeightedSum(Settings::Optimizer *settings,
+              Simulation::Results::Results *results);
 
   double value() const;
 
@@ -81,6 +82,7 @@ class WeightedSum : public Objective
 
   QList<Component *> *components_; //!< List of gamma, k pairs.
   Simulation::Results::Results *results_;  //!< Object providing access to simulator results.
+  Settings::Optimizer *settings_;
 };
 
 }

@@ -43,14 +43,14 @@ EclDriverFileWriter::EclDriverFileWriter(Settings::Settings *settings,
     model_ = model;
     settings_ = settings;
 
-    if (settings_->verb_vector()[8] >= 1) // idx:8 -> sim (Simulation)
-        std::cout << "Reading ECL drv file.-" << std::endl;
+    if (settings_->verb_vector()[8] > 1) // idx:8 -> sim (Simulation)
+        std::cout << "[sim]Reading ECL drv file.- " << std::endl;
 
     original_driver_file_contents_ = ::Utilities::FileHandling::ReadFileToStringList(settings_->simulator()->driver_file_path());
     output_driver_file_name_ = settings->output_directory() + "/" + settings->name().toUpper() + ".DATA";
 
     if (settings_->verb_vector()[8] >= 1) // idx:8 -> sim (Simulation)
-        std::cout << "DriverFileNane:-------"
+        std::cout << "[sim]DriverFileName:------- "
                   << output_driver_file_name_.toStdString() << std::endl;
 }
 

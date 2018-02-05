@@ -126,18 +126,18 @@ void Settings::readOptimizerSection()
             "Unable to parse driver file optimizer section: " + string(ex.what()));
     }
 
-    if (this->verb_vector_[3] > 0) { // idx:3 => opt verbose
-        string str_out = "Optimizer settings";
-        cout << "\n" << str_out << "\n" << std::string(str_out.length(), '=') << endl;
+    if (this->verb_vector_[9] > 0) { // idx:9 -> set (Settings)
+        string str_out = "[set]Optimizer settings";
+        cout << "\n" << BLDON << str_out << AEND << "\n" << std::string(str_out.length(), '=') << endl;
         if (optimizer_->type() == Optimizer::OptimizerType::Compass ||
             optimizer_->type() == Optimizer::OptimizerType::APPS) {
-            cout << "MaxEvaluations:--------" << optimizer_->parameters_.max_evaluations << endl;
-            cout << "InitialStepLength:-----" << optimizer_->parameters_.initial_step_length << endl;
-            cout << "MinimumStepLength:-----" << optimizer_->parameters_.minimum_step_length << endl;
-            cout << "ContractionFactor:-----" << optimizer_->parameters_.contraction_factor << endl;
-            cout << "ExpansionFactor:-------" << optimizer_->parameters_.expansion_factor << endl;
-            cout << "MaxQueueSize:----------" << optimizer_->parameters_.expansion_factor << endl;
-            cout << "Pattern:---------------" << optimizer_->parameters_.pattern.toStdString() << endl;
+            cout << "MaxEvaluations:-------- " << optimizer_->parameters_.max_evaluations << endl;
+            cout << "InitialStepLength:----- " << optimizer_->parameters_.initial_step_length << endl;
+            cout << "MinimumStepLength:----- " << optimizer_->parameters_.minimum_step_length << endl;
+            cout << "ContractionFactor:----- " << optimizer_->parameters_.contraction_factor << endl;
+            cout << "ExpansionFactor:------- " << optimizer_->parameters_.expansion_factor << endl;
+            cout << "MaxQueueSize:---------- " << optimizer_->parameters_.expansion_factor << endl;
+            cout << "Pattern:--------------- " << optimizer_->parameters_.pattern.toStdString() << endl;
         } else if (optimizer_->type() == Optimizer::OptimizerType::GeneticAlgorithm) {
         }
     }

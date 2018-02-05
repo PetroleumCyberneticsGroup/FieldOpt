@@ -11,6 +11,7 @@
 #include <iostream>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/operations.hpp>
+#include "colors.hpp"
 
 namespace Utilities {
 namespace FileHandling {
