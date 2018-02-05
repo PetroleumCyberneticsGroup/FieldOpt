@@ -132,7 +132,7 @@ class Model
 
   bool controlTimeIsDeclared(int time) const;
   
-  std::vector<int> verb_vector_ = std::vector<int>(8,0); //!<
+  std::vector<int> verb_vector_ = std::vector<int>(11,0); //!<
   };
 
 }

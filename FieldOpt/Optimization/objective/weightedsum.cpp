@@ -58,7 +58,7 @@ double WeightedSum::value() const
     for (int i = 0; i < components_->size(); ++i) {
         value += components_->at(i)->resolveValue(results_);
 
-        if (verbosity_level_ > 4) { // debug againt sim.output
+        if (settings_->verb_vector()[5] > 1) { // idx:6 -> mod (Model)
             QString prop_name = components_->at(i)->property_name;
             double prop_coeff = components_->at(i)->coefficient;
             std::cout << "ObjFunctionProp[i=" << i << "]: "
