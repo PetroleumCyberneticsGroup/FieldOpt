@@ -109,6 +109,9 @@ class Optimizer
   Objective objective() const { return objective_; } //!< Get the optimizer objective function.
   QList<Constraint> constraints() const { return constraints_; } //!< Get the optimizer constraints.
 
+  void set_verbosity_vector(const std::vector<int> verb_vector) { verb_vector_ = verb_vector; }
+  std::vector<int> verb_vector() const { return verb_vector_; }
+
  private:
   QList<Constraint> constraints_;
   OptimizerType type_;
@@ -116,6 +119,8 @@ class Optimizer
   Objective objective_;
   OptimizerMode mode_;
   Constraint parseSingleConstraint(QJsonObject json_constraint);
+
+  std::vector<int> verb_vector_ = std::vector<int>(11,0); //!<
 };
 
 }

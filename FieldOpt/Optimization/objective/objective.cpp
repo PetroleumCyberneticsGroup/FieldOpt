@@ -23,6 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
+#include <iostream>
 #include "objective.h"
 
 namespace Optimization {
@@ -30,6 +31,11 @@ namespace Objective {
 
 Objective::Objective()
 {
+}
+
+void Objective::SetVerbosityLevel(int level) {
+    verbosity_level_ = level;
+    if (level > 4) std::cout << "Initialized Objective Function." << std::endl;
 }
 
 }

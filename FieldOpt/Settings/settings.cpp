@@ -11,6 +11,7 @@ using std::cout;
 
 namespace Settings {
 
+// Left for backcompatibility with tests, etc -- fix that, then delete
 Settings::Settings(QString driver_path,
                    QString output_directory,
                    int verbosity_level) {
@@ -23,6 +24,22 @@ Settings::Settings(QString driver_path,
     output_directory_ = output_directory;
     simulator_->output_directory_ = output_directory;
     set_verbosity_level(verbosity_level);
+}
+
+Settings::Settings(QString driver_path,
+                   QString output_directory,
+                   std::vector<int> verb_vector) {
+
+    set_verbosity_vector(verb_vector);
+    set_verbosity_level(6); // back-compatibility
+
+    if (!::Utilities::FileHandling::FileExists(driver_path))
+        throw FileNotFoundException(driver_path.toStdString());
+    driver_path_ = driver_path;
+    readDriverFile();
+
+    output_directory_ = output_directory;
+    simulator_->output_directory_ = output_directory;
 }
 
 QString Settings::GetLogCsvString() const
@@ -108,19 +125,20 @@ void Settings::readOptimizerSection()
         throw UnableToParseOptimizerSectionException(
             "Unable to parse driver file optimizer section: " + string(ex.what()));
     }
+    optimizer_->set_verbosity_vector(verb_vector());
 
-    if (this->verbosity_level() > 0) {
-        string str_out = "Optimizer settings";
-        cout << "\n" << str_out << "\n" << std::string(str_out.length(), '=') << endl;
+    if (optimizer_->verb_vector_[9] > 0) { // idx:9 -> set (Settings)
+        string str_out = "[set]Optimizer settings";
+        cout << "\n" << BLDON << str_out << AEND << "\n" << std::string(str_out.length(), '=') << endl;
         if (optimizer_->type() == Optimizer::OptimizerType::Compass ||
             optimizer_->type() == Optimizer::OptimizerType::APPS) {
-            cout << "MaxEvaluations:...." << optimizer_->parameters_.max_evaluations << endl;
-            cout << "InitialStepLength:...." << optimizer_->parameters_.initial_step_length << endl;
-            cout << "MinimumStepLength:...." << optimizer_->parameters_.minimum_step_length << endl;
-            cout << "ContractionFactor:...." << optimizer_->parameters_.contraction_factor << endl;
-            cout << "ExpansionFactor:...." << optimizer_->parameters_.expansion_factor << endl;
-            cout << "MaxQueueSize:...." << optimizer_->parameters_.expansion_factor << endl;
-            cout << "Pattern:...." << optimizer_->parameters_.pattern.toStdString() << endl;
+            cout << "MaxEvaluations:-------- " << optimizer_->parameters_.max_evaluations << endl;
+            cout << "InitialStepLength:----- " << optimizer_->parameters_.initial_step_length << endl;
+            cout << "MinimumStepLength:----- " << optimizer_->parameters_.minimum_step_length << endl;
+            cout << "ContractionFactor:----- " << optimizer_->parameters_.contraction_factor << endl;
+            cout << "ExpansionFactor:------- " << optimizer_->parameters_.expansion_factor << endl;
+            cout << "MaxQueueSize:---------- " << optimizer_->parameters_.expansion_factor << endl;
+            cout << "Pattern:--------------- " << optimizer_->parameters_.pattern.toStdString() << endl;
         } else if (optimizer_->type() == Optimizer::OptimizerType::GeneticAlgorithm) {
         }
     }
@@ -136,6 +154,7 @@ void Settings::readModelSection()
         throw UnableToParseModelSectionException(
             "Unable to parse model section: " + string(ex.what()));
     }
+    model_->set_verbosity_vector(verb_vector());
 }
 
 void Settings::set_build_path(const QString &build_path)

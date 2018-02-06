@@ -26,8 +26,7 @@ namespace Optimization {
 Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
                      Model::Properties::VariablePropertyContainer *variables,
                      Reservoir::Grid::Grid *grid,
-                     Logger *logger
-)
+                     Logger *logger)
 {
     // Verify that the base case has been evaluated.
     try {
@@ -124,9 +123,11 @@ void Optimizer::EnableConstraintLogging(QString output_directory_path) {
 
 void Optimizer::SetVerbosityLevel(int level) {
     verbosity_level_ = level;
+    if (level > 4) std::cout << "Initialized Optimizer." << std::endl;
     for (auto con : constraint_handler_->constraints())
         con->SetVerbosityLevel(level);
 }
+
 int Optimizer::GetSimulationDuration(Case *c) {
     auto cs = case_handler_->GetCase(c->id());
     if (cs->state.eval != Case::CaseState::EvalStatus::E_DONE) {
@@ -134,15 +135,19 @@ int Optimizer::GetSimulationDuration(Case *c) {
     }
     return c->GetSimTime();
 }
+
 Loggable::LogTarget Optimizer::GetLogTarget() {
     return Loggable::LogTarget::LOG_OPTIMIZER;
 }
+
 map<string, string> Optimizer::GetState() {
     return map<string, string>();
 }
+
 QUuid Optimizer::GetId() {
     return tentative_best_case_->GetId();
 }
+
 map<string, vector<double>> Optimizer::GetValues() {
     map<string, vector<double>> valmap;
     valmap["TimeEl"] = vector<double>{time_since_seconds(start_time_)};
@@ -161,6 +166,7 @@ map<string, vector<double>> Optimizer::GetValues() {
 Loggable::LogTarget Optimizer::Summary::GetLogTarget() {
     return LOG_SUMMARY;
 }
+
 map<string, string> Optimizer::Summary::GetState() {
     map<string, string> statemap;
     statemap["Start"] = timestamp_string(opt_->start_time_);
@@ -181,9 +187,11 @@ map<string, string> Optimizer::Summary::GetState() {
     statemap["bc Simulation time"] = timespan_string(opt_->tentative_best_case_->GetSimTime());
     return statemap;
 }
+
 QUuid Optimizer::Summary::GetId() {
     return opt_->tentative_best_case_->GetId();
 }
+
 map<string, vector<double>> Optimizer::Summary::GetValues() {
     map<string, vector<double>> valmap;
     valmap["generated"] = vector<double>{opt_->case_handler_->NumberTotal()};

@@ -53,18 +53,19 @@ class Settings
  public:
   Settings(){}
   Settings(QString driver_path, QString output_directory, int verbosity_level);
+  Settings(QString driver_path, QString output_directory, std::vector<int> verb_vector);
 
   QString driver_path() const { return driver_path_; }
 
   QString name() const { return name_; } //!< The name to be used for the run. Output file and folder names are derived from this.
   QString output_directory() const { return output_directory_; } //!< Path to a directory in which output files are to be placed.
 
-  // To be removed:
-  // bool verbose() const { return verbose_; } //!< Verbose mode (with or without debug printing).
-  // void set_verbosity(const bool verbosity) { verbose_ = verbosity; }
-
+  // Left for backcompatibility with tests, etc -- fix that, then delete
   int verbosity_level() const { return verbosity_level_; }
   int set_verbosity_level(const int verbosity_level) { verbosity_level_ = verbosity_level; }
+
+  void set_verbosity_vector(const std::vector<int> verb_vector) { verb_vector_ = verb_vector; }
+  std::vector<int> verb_vector() const { return verb_vector_; }
 
   //!< Get the value for the bookkeeper tolerance. Used by the Bookkeeper in the Runner library.
   double bookkeeper_tolerance() const { return bookkeeper_tolerance_; }
@@ -84,12 +85,14 @@ class Settings
   QString name_;
   double bookkeeper_tolerance_;
   QString output_directory_;
-  bool verbose_ = false;
   Model *model_;
   Optimizer *optimizer_;
   Simulator *simulator_;
   QString build_path_;
+
+  // bool verbose_ = false; // obsolte, delete later
   int verbosity_level_; //!< Verbosity level
+  std::vector<int> verb_vector_ = std::vector<int>(11,0); //!<
 
   void readDriverFile();
   void readGlobalSection();

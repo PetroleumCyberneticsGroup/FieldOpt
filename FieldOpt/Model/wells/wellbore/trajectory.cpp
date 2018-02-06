@@ -38,9 +38,7 @@ Trajectory::Trajectory(Settings::Model::Well well_settings,
     }
     else if (well_settings.definition_type == Settings::Model::WellDefinitionType::WellSpline) {
         well_spline_ = new WellSpline(well_settings, variable_container, grid);
-        std::cout << "  Define well spline." << std::endl;
         well_blocks_ = well_spline_->GetWellBlocks();
-        std::cout << "  Got well blocks." << std::endl;
         calculateDirectionOfPenetration();
     }
     else if (well_settings.definition_type == Settings::Model::WellDefinitionType::PseudoContVertical2D) {
@@ -60,7 +58,9 @@ int Trajectory::GetTimeSpentInWic() const {
 WellBlock *Trajectory::GetWellBlock(int i, int j, int k)
 {
     for (int idx = 0; idx < well_blocks_->size(); ++idx) {
-        if (well_blocks_->at(idx)->i() == i && well_blocks_->at(idx)->j() == j && well_blocks_->at(idx)->k() == k)
+        if (well_blocks_->at(idx)->i() == i &&
+            well_blocks_->at(idx)->j() == j &&
+            well_blocks_->at(idx)->k() == k)
             return well_blocks_->at(idx);
     }
     throw WellBlockNotFoundException(i, j, k);

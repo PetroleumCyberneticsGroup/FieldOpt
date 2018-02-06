@@ -34,20 +34,26 @@ void Constraint::EnableLogging(QString output_directory_path) {
 
 void Constraint::SetVerbosityLevel(int level) {
     verbosity_level_ = level;
+    if (level > 4) std::cout << "Initialized Constraint." << std::endl;
 }
+
 Eigen::VectorXd Constraint::GetLowerBounds(QList<QUuid> id_vector) const {
     throw std::runtime_error("Attempted to get bounds from a non-bound cosntraint.");
 }
+
 Eigen::VectorXd Constraint::GetUpperBounds(QList<QUuid> id_vector) const {
     throw std::runtime_error("Attempted to get bounds from a non-bound cosntraint.");
 }
+
 double Constraint::Penalty(Case *c) {
     return 0.0;
 }
+
 long double Constraint::PenaltyNormalized(Case *c)
 {
     return normalizer_.normalize(Penalty(c));
 }
+
 void Constraint::InitializeNormalizer(QList<Case *> cases) {
     if (!normalizer_.is_ready()) {
         cout << "WARNING: using default normalization parameter values" << endl;

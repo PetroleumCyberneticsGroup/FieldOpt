@@ -30,8 +30,10 @@ Logger::Logger(Runner::RuntimeSettings *rts,
 {
     write_logs_ = write_logs;
     is_worker_ = output_subdir.length() > 0;
-    verbose_ = rts->verbosity_level();
     output_dir_ = rts->output_dir();
+    verbose_ = rts->verbosity_level();
+    verb_vector_ = rts->verb_vector();
+
     if (output_subdir.length() > 0) {
         output_dir_ = output_dir_ + "/" + output_subdir + "/";
         Utilities::FileHandling::CreateDirectory(output_dir_);
@@ -49,7 +51,9 @@ Logger::Logger(Runner::RuntimeSettings *rts,
     if (rts->overwrite_existing()) {
         for (auto path : log_paths) {
             if (Utilities::FileHandling::FileExists(path)) {
-                cout << "Force flag on. Deleting " << path.toStdString() << endl;
+                if (verb_vector_[1] == 1) {// idx:1 => init verbose
+                    cout << "Force flag on. Deleting " << path.toStdString() << endl;
+                }
                 Utilities::FileHandling::DeleteFile(path);
             }
         }
