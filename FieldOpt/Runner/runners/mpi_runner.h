@@ -16,7 +16,8 @@ class Overseer;
 namespace Runner {
 namespace MPI {
 /*!
- * @brief The MPIRunner class is the base class for runners using MPI for parallelization.
+ * @brief The MPIRunner class is the base class
+ * for runners using MPI for parallelization.
  */
 class MPIRunner : public AbstractRunner {
 
@@ -34,15 +35,27 @@ class MPIRunner : public AbstractRunner {
    * @brief Tags used when sending and receiving.
    *
    * CASE_UNEVAL: To be used when sending unevaluated cases.
-   * CASE_EVAL_SUCCESS: To be used when sending successfully evaluated cases.
-   * CASE_EVAL_INVALID: To be used when sending cases that were some some reason deemed invalid.
-   * CASE_EVAL_TIMEOUT: To be used when sending cases whose simulation was terminated by a timeout condition.
-   * MODEL_SYNC: To be used when sending model synchronization objects.
+   *
+   * CASE_EVAL_SUCCESS: To be used when sending successfully
+   * evaluated cases.
+   *
+   * CASE_EVAL_INVALID: To be used when sending cases that
+   * were some some reason deemed invalid.
+   *
+   * CASE_EVAL_TIMEOUT: To be used when sending cases whose
+   * simulation was terminated by a timeout condition.
+   *
+   * MODEL_SYNC: To be used when sending model synchronization
+   * objects.
+   *
    * ANY_TAG: This will match any tag.
-   * TERMINATE: This tag should be sent by the overseer to terminate a worker.
+   *
+   * TERMINATE: This tag should be sent by the overseer to
+   * terminate a worker.
    */
   enum MsgTag : int {
-    CASE_UNEVAL = 1, CASE_EVAL_SUCCESS = 2, CASE_EVAL_INVALID = 3, CASE_EVAL_TIMEOUT = 4,
+    CASE_UNEVAL = 1, CASE_EVAL_SUCCESS = 2,
+    CASE_EVAL_INVALID = 3, CASE_EVAL_TIMEOUT = 4,
     MODEL_SYNC = 10, TERMINATE = 100,
     ANY_TAG = MPI_ANY_TAG
   };
@@ -58,12 +71,12 @@ class MPIRunner : public AbstractRunner {
   };
 
   /*!
-   * @brief The Message struct should be used when sending and receiving any message.
+   * @brief The Message struct should be used when sending
+   * and receiving any message.
    */
   struct Message {
     Message() {
-        c = nullptr;
-        this->tag = MPI_ANY_TAG;
+        c = nullptr; this->tag = MPI_ANY_TAG;
         this->source = MPI_ANY_SOURCE;
         this->destination = MPI_ANY_SOURCE;
     }
@@ -99,11 +112,15 @@ class MPIRunner : public AbstractRunner {
   /*!
    * @brief Receive a message potentially containing a Case.
    *
-   * If the source or tag is specified in the message parameter, only messages with this tag and/or source
-   * will be received. If not, a message will be received from any source and/or with any tag, and the
-   * values will be entered in the Message object.
+   * If the source or tag is specified in the message parameter,
+   * only messages with this tag and/or source will be received.
+   * If not, a message will be received from any source and/or
+   * with any tag, and the values will be entered in the Message
+   * object.
    *
-   * If a case is received, the c field in the parameter message object will be set to it.
+   * If a case is received, the c field in the parameter message
+   * object will be set to it.
+   *
    * @param message
    * @return
    */

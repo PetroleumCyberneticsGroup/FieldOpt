@@ -29,7 +29,8 @@ void MPIRunner::SendMessage(Message &message) {
         s = "";
     }
     world_.send(message.destination, message.tag, s);
-    printMessage("Sent a message to " + boost::lexical_cast<std::string>(message.destination)
+    printMessage("Sent a message to "
+                     + boost::lexical_cast<std::string>(message.destination)
                      + " with tag " + boost::lexical_cast<std::string>(message.tag)
                      + " (" + tag_to_string[message.tag] + ")");
 }
@@ -37,7 +38,8 @@ void MPIRunner::SendMessage(Message &message) {
 void MPIRunner::RecvMessage(Message &message) {
     Optimization::CaseTransferObject cto;
     std::string s;
-    printMessage("Waiting to receive a message with tag " + boost::lexical_cast<std::string>(message.tag)
+    printMessage("Waiting to receive a message with tag "
+                     + boost::lexical_cast<std::string>(message.tag)
                      + " (" + tag_to_string[message.tag] + ") "
                      + " from source " + boost::lexical_cast<std::string>(message.source), 6);
     mpi::status status = world_.recv(message.source, ANY_TAG, s);
@@ -57,9 +59,12 @@ void MPIRunner::RecvMessage(Message &message) {
         return;
     }
     else if (message.tag == MODEL_SYNC) {
-        printMessage("Received message with MODEL_SYNC tag. RecvMessage method cannot handle this. Throwing exception.");
-        throw std::runtime_error("RecvMessage is unable to handle model synchronization objects. "
-                                     "This should be handled by the RecvModelSynchronizationObject method.");
+        printMessage("Received message with MODEL_SYNC tag. "
+                         "RecvMessage method cannot handle this. "
+                         "Throwing exception.");
+        throw std::runtime_error("RecvMessage is unable to handle model synchronization"
+                                     "objects. This should be handled by the "
+                                     "RecvModelSynchronizationObject method.");
     }
     else if (message.tag == CASE_UNEVAL) {
         printMessage("Received an unevaluated case.", 6);
@@ -83,7 +88,10 @@ void MPIRunner::RecvMessage(Message &message) {
 }
 
 void MPIRunner::BroadcastModel() {
-    if (rank() != 0) throw std::runtime_error("BroadcastModel should only be called on the root process.");
+    if (rank() != 0) {
+        throw std::runtime_error(
+            "BroadcastModel should only be called on the root process.");
+    }
     auto mso = Model::ModelSynchronizationObject(model_);
     std::ostringstream oss;
     boost::archive::text_oarchive oa(oss);
@@ -95,7 +103,10 @@ void MPIRunner::BroadcastModel() {
 }
 
 void MPIRunner::RecvModelSynchronizationObject() {
-    if (rank() == 0) std::runtime_error("RecvModelSynchronizationObject should not be called on the root process.");
+    if (rank() == 0) {
+        std::runtime_error(
+            "RecvModelSynchronizationObject should not be called on the root process.");
+    }
     Model::ModelSynchronizationObject mso;
     std::string s;
     world_.recv(0, MODEL_SYNC, s);
