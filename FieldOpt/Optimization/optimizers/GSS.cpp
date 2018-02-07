@@ -102,7 +102,8 @@ QList<Case *> GSS::generate_trial_points(vector<int> dirs) {
         else if (rea_base.size() > 0) {
             trial_point->SetRealVarValues(perturb(rea_base, dir));
         }
-        trial_point->set_origin_data(GetTentativeBestCase(), dir, step_lengths_(dir));
+        trial_point->set_origin_data(GetTentativeBestCase(), dir,
+                                     step_lengths_(dir));
         trial_points.append(trial_point);
     }
 

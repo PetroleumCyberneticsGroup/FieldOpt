@@ -55,6 +55,8 @@ class Optimizer
     // GSS parameters
     int max_evaluations; //!< Maximum number of evaluations allowed before terminating the optimization run.
     double initial_step_length; //!< The initial step length in the algorithm when applicable.
+    QList<double > initial_step_length_vector;
+    QList<double > minimum_step_length_vector;
     double minimum_step_length; //!< The minimum step length in the algorithm when applicable.
     double contraction_factor; //!< The contraction factor for GSS algorithms.
     double expansion_factor; //!< The expansion factor for GSS algorithms.

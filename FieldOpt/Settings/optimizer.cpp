@@ -66,19 +66,41 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
             // GSS parameters
             if (json_parameters.contains("MaxEvaluations"))
                 parameters_.max_evaluations = json_parameters["MaxEvaluations"].toInt();
+
             if (json_parameters.contains("InitialStepLength"))
                 parameters_.initial_step_length = json_parameters["InitialStepLength"].toDouble();
+
             if (json_parameters.contains("MinimumStepLength"))
                 parameters_.minimum_step_length = json_parameters["MinimumStepLength"].toDouble();
+
+            if (json_parameters.contains("InitialStepLengthVector")) {
+                parameters_.initial_step_length_vector = QList<double>();
+                for (int i = 0; i < json_parameters["InitialStepLengthVector"].toArray().size(); ++i) {
+                    parameters_.initial_step_length_vector.append(
+                        json_parameters["InitialStepLengthVector"].toArray().at(i).toDouble());
+                }
+            }
+
+            if (json_parameters.contains("MinimumStepLengthVector")) {
+                parameters_.minimum_step_length_vector = QList<double>();
+                for (int i = 0; i < json_parameters["MinimumStepLengthVector"].toArray().size(); ++i) {
+                    parameters_.minimum_step_length_vector.append(
+                        json_parameters["MinimumStepLengthVector"].toArray().at(i).toDouble());
+                }
+            }
+
             if (json_parameters.contains("ContractionFactor"))
                 parameters_.contraction_factor = json_parameters["ContractionFactor"].toDouble();
             else parameters_.contraction_factor = 0.5;
+
             if (json_parameters.contains("ExpansionFactor"))
                 parameters_.expansion_factor = json_parameters["ExpansionFactor"].toDouble();
             else parameters_.expansion_factor = 1.0;
+
             if (json_parameters.contains("MaxQueueSize"))
                 parameters_.max_queue_size = json_parameters["MaxQueueSize"].toDouble();
             else parameters_.max_queue_size = 2;
+
             if (json_parameters.contains("Pattern"))
                 parameters_.pattern = json_parameters["Pattern"].toString();
             else parameters_.pattern = "Compass";
@@ -113,7 +135,8 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
             else parameters_.upper_bound = 10;
         }
         catch (std::exception const &ex) {
-            throw UnableToParseOptimizerParametersSectionException("Unable to parse optimizer parameters: " + std::string(ex.what()));
+            throw UnableToParseOptimizerParametersSectionException(
+                "Unable to parse optimizer parameters: " + std::string(ex.what()));
         }
     }
 
