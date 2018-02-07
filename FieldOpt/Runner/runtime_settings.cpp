@@ -243,13 +243,15 @@ po::variables_map RuntimeSettings::createVariablesMap(int argc, const char **arg
 
     return vm;
 }
+
 Loggable::LogTarget RuntimeSettings::GetLogTarget() {
     return Loggable::LogTarget::LOG_SUMMARY;
 }
+
 map<string, string> RuntimeSettings::GetState() {
     map<string, string> statemap;
-    statemap["verbosity"] = boost::lexical_cast<string>(verbosity_level_);
-    statemap["xxxx verbosity vector"] = verb_vector_str_;
+    statemap["Verbosity"] = boost::lexical_cast<string>(verbosity_level_);
+    statemap["Verbosity vector"] = verb_vector_str_;
     statemap["Max. parallel sims"] = boost::lexical_cast<string>(max_parallel_sims_);
     statemap["Threads pr. sim"] = boost::lexical_cast<string>(threads_per_sim_);
     statemap["Simulator timeout"] = boost::lexical_cast<string>(simulation_timeout_);
@@ -257,9 +259,9 @@ map<string, string> RuntimeSettings::GetState() {
     statemap["Overwrite existing files"] = overwrite_existing_ ? "Yes" : "No";
 
     switch (runner_type_) {
-        case SERIAL: statemap["runner"] = "Serial"; break;
-        case ONEOFF: statemap["runner"] = "One-off"; break;
-        case MPISYNC: statemap["runner"] = "MPI Parallel"; break;
+        case SERIAL: statemap["Runner"] = "Serial"; break;
+        case ONEOFF: statemap["Runner"] = "One-off"; break;
+        case MPISYNC: statemap["Runner"] = "MPI Parallel"; break;
     }
 
     statemap["path FieldOpt driver"] = driver_file_.toStdString();
