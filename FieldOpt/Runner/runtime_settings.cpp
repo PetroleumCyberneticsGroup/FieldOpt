@@ -272,9 +272,11 @@ map<string, string> RuntimeSettings::GetState() {
     statemap["path FieldOpt build directory"] = fieldopt_build_dir_.toStdString();
     return statemap;
 }
+
 QUuid RuntimeSettings::GetId() {
     return QUuid(); // Null UUID
 }
+
 map<string, vector<double>> RuntimeSettings::GetValues() {
     map<string, vector<double>> valmap;
     return valmap;

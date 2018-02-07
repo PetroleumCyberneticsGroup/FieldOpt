@@ -57,7 +57,7 @@ void FlowSimulator::Evaluate() {
     if (results_->isAvailable()) results_->DumpResults();
     copyDriverFiles();
     driver_file_writer_->WriteDriverFile(output_directory_);
-    ::Utilities::Unix::ExecShellScript(script_path_, script_args_);
+    ::Utilities::Unix::ExecShellScript(script_path_, script_args_, settings_->verb_vector());
     results_->ReadResults(driver_file_writer_->output_driver_file_name_);
 }
 

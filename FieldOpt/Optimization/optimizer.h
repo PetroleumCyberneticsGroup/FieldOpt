@@ -34,8 +34,9 @@ class Logger;
 namespace Optimization {
 
 /*!
- * \brief The Optimizer class is the abstract parent class for all optimizers. It is primarily
- * designed to support direct search optimization algorithms.
+ * \brief The Optimizer class is the abstract parent class for all
+ * optimizers. It is primarily designed to support direct search
+ * optimization algorithms.
  */
 class Optimizer : public Loggable
 {
@@ -43,16 +44,19 @@ class Optimizer : public Loggable
   Optimizer() = delete;
 
   /*!
-   * \brief GetCaseForEvaluation Get a new, unevaluated case for evaluation.
+   * \brief GetCaseForEvaluation Get a new, unevaluated case for
+   * evaluation.
    *
-   * If no unevaluated cases are currently available in the CaseHandler, the iterate()
-   * method is called to generate new cases.
+   * If no unevaluated cases are currently available in the CaseHandler,
+   * the iterate() method is called to generate new cases.
+   *
    * \return Pointer to a new, unevaluated case.
    */
   Case *GetCaseForEvaluation();
 
   /*!
-   * \brief SubmitEvaluatedCase Submit an already evaluated case to the optimizer.
+   * \brief SubmitEvaluatedCase Submit an already evaluated case to the
+   * optimizer.
    *
    * The submitted case is marked as recently evaluated in the CaseHandler.
    * \param c Case to submit.
@@ -66,7 +70,8 @@ class Optimizer : public Loggable
   Case *GetTentativeBestCase() const;
 
   /*!
-   * \brief case_handler Get the case handler. Used by the bookkeeper in the runner lib.
+   * \brief case_handler Get the case handler. Used by the bookkeeper in
+   * the runner lib.
    */
   CaseHandler *case_handler() const { return case_handler_; }
 
@@ -76,8 +81,8 @@ class Optimizer : public Loggable
   int nr_recently_evaluated_cases() const { return case_handler_->RecentlyEvaluatedCases().size(); }
 
   /*!
-   * The TerminationCondition enum enumerates the reasons why an optimization run is deemed
-   * finished. It is returned by the IsFinished method
+   * The TerminationCondition enum enumerates the reasons why an optimization
+   * run is deemed finished. It is returned by the IsFinished method
    */
   enum TerminationCondition : int {NOT_FINISHED=0,
     MAX_EVALS_REACHED=1, MINIMUM_STEP_LENGTH_REACHED=2,
@@ -85,19 +90,23 @@ class Optimizer : public Loggable
   };
 
   /*!
-   * \brief IsFinished Check whether the optimization is finished, i.e. if the the optimizer has
-   * reached some  termination condition.
+   * \brief IsFinished Check whether the optimization is finished, i.e. if
+   * the optimizer has reached some termination condition.
    *
-   * This method should be called before attempting to get a new case for evaluation.
-   * \return NOT_FINISHED (0, =false) if the optimization has not finished, otherwise the non-zero reason
-   * for termination.
+   * This method should be called before attempting to get a new case for
+   * evaluation.
+   *
+   * \return NOT_FINISHED (0, =false) if the optimization has not finished,
+   * otherwise the non-zero reason for termination.
    */
   virtual TerminationCondition IsFinished() = 0;
 
   virtual QString GetStatusStringHeader() const; //!< Get the CSV header for the status string.
   virtual QString GetStatusString() const; //!< Get a CSV string describing the current state of the optimizer.
   void EnableConstraintLogging(QString output_directory_path); //!< Enable writing a text log for the constraint operations.
+
   void SetVerbosityLevel(int level);
+
   bool IsAsync() const { return is_async_; } //!< Check if the optimizer is asynchronous.
 
   /*!

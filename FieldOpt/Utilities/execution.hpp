@@ -64,7 +64,7 @@ inline QString Exec(QString directory, QStringList commands, bool verbose=false)
  * \param script_path Absolute path to the shell script.
  * \param args Arguments to be passed to the script.
  */
-inline void ExecShellScript(QString script_path, QStringList args)
+inline void ExecShellScript(QString script_path, QStringList args, std::vector<int> verb_vector)
 {
     if (!Utilities::FileHandling::FileExists(script_path)) {
         Utilities::FileHandling::ThrowRuntimeError("File not found: " + script_path.toStdString());
@@ -72,10 +72,12 @@ inline void ExecShellScript(QString script_path, QStringList args)
 
     QString command = script_path + " " + args.join(" ");
 
-//    if (settings_->verb_vector()[10] == 1) { // idx:10 -> uti (Utilities)
-        std::cout << "[uti]Current dir:-----------" << Utilities::FileHandling::GetCurrentDirectoryPath().toStdString() << endl;
-        std::cout << "[uti]Run command:-----------" << command.toStdString() << endl;
-//    }
+    if (verb_vector[10] == 1) { // idx:10 -> uti (Utilities)
+        std::cout << "[uti]Current dir:-----------"
+                  << Utilities::FileHandling::GetCurrentDirectoryPath().toStdString() << endl;
+        std::cout << "[uti]Run command:-----------"
+                  << command.toStdString() << endl;
+    }
 
     system(command.toLatin1().constData());
 }
@@ -117,7 +119,8 @@ inline pid_t fork_child(QString script_path, QStringList arglist)
 }
 
 /*!
- * Check if a process with the given PID is running (after waiting for defunct processes to terminate properly).
+ * Check if a process with the given PID is running (after
+ * waiting for defunct processes to terminate properly).
  * @param pid The PID of the process to check.
  * @return True if the process is running; otherwise false.
  */
@@ -132,7 +135,8 @@ inline bool is_pid_running(int pid)
 }
 
 /*!
- * After checking if the process is running using the is_pid_running function, terminate it.
+ * After checking if the process is running using
+ * the is_pid_running function, terminate it.
  * @param pid The PID of the process to terminate.
  */
 inline void terminate_process(int pid)
@@ -177,7 +181,8 @@ inline bool ExecShellScriptTimeout(QString script_path, QStringList args, int ti
     to.tv_sec = timeout;
     to.tv_nsec = 0;
 
-    std::cout << "Monitoring child process with pid " << pid << ". Timeout set to " << to.tv_sec << std::endl;
+    std::cout << "Monitoring child process with pid " << pid
+              << ". Timeout set to " << to.tv_sec << std::endl;
     do {
         if (!helpers::is_pid_running(pid)) // If the child no longer exists, return true
             return true;

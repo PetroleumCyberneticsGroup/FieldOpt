@@ -5,7 +5,7 @@
 #include "GSS.h"
 
 namespace Optimization {
-    namespace Optimizers {
+namespace Optimizers {
 
 /*!
  * \brief The CompassSearch class is an implementation of the Compass Search optimization algorithm
@@ -19,27 +19,27 @@ namespace Optimization {
  *  "Optimization by direct search: New perspectives on some classical and modern methods."
  *  SIAM review 45.3 (2003): 385-482.
  */
-        class CompassSearch : public GSS
-        {
-        public:
-            CompassSearch(::Settings::Optimizer *settings,
-                          Case *base_case,
-                          ::Model::Properties::VariablePropertyContainer *variables,
-                          Reservoir::Grid::Grid *grid,
-                          Logger *logger
-            );
+class CompassSearch : public GSS
+{
+ public:
+  CompassSearch(::Settings::Optimizer *settings,
+                Case *base_case,
+                ::Model::Properties::VariablePropertyContainer *variables,
+                Reservoir::Grid::Grid *grid,
+                Logger *logger
+  );
 
-            QString GetStatusStringHeader() const;
-            QString GetStatusString() const;
+  QString GetStatusStringHeader() const;
+  QString GetStatusString() const;
 
-        private:
-            void iterate(); //!< Step or contract, perturb, and clear list of recently evaluated cases.
-            bool is_successful_iteration(); //!< Check if this iteration was successful (i.e. if the current tent. best case was found in this iteration).
+ private:
+  void iterate(); //!< Step or contract, perturb, and clear list of recently evaluated cases.
+  bool is_successful_iteration(); //!< Check if this iteration was successful (i.e. if the current tent. best case was found in this iteration).
 
-        protected:
-            void handleEvaluatedCase(Case *c) override;
-        };
+ protected:
+  void handleEvaluatedCase(Case *c) override;
+};
 
-    }}
+}}
 
 #endif // COMPASSSEARCH_H

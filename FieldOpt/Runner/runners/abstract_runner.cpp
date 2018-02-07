@@ -63,7 +63,7 @@ void AbstractRunner::InitializeSettings(QString output_subdirectory)
     if (output_subdirectory.length() > 0)
         output_directory.append(QString("/%1/").arg(output_subdirectory));
     Utilities::FileHandling::CreateDirectory(output_directory);
-    
+
     settings_ = new Settings::Settings(runtime_settings_->driver_file(),
                                        output_directory,
                                        runtime_settings_->verb_vector());
@@ -81,8 +81,8 @@ void AbstractRunner::InitializeSettings(QString output_subdirectory)
     if (runtime_settings_->fieldopt_build_dir().length() > 0)
         settings_->set_build_path(runtime_settings_->fieldopt_build_dir());
 
-    if (settings_->verb_vector()[1] == 1) // idx:1 => init verbose
-        std::cout << "Initialized Settings." << std::endl;
+    if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
+        std::cout << "[run]Initialized Settings.--" << std::endl;
 }
 
 void AbstractRunner::InitializeModel()
@@ -91,8 +91,8 @@ void AbstractRunner::InitializeModel()
         throw std::runtime_error("The Settings must be initialized before the Model.");
 
     model_ = new Model::Model(*settings_->model(), logger_);
-    if (runtime_settings_->verbosity_level() > 4)
-        std::cout << "Initialized Model." << std::endl;
+    if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
+        std::cout << "[run]Initialized Model.-----" << std::endl;
 
 }
 
@@ -125,12 +125,12 @@ void AbstractRunner::EvaluateBaseModel()
     if (simulator_ == 0)
         throw std::runtime_error("The simulator must be initialized before evaluating the base model.");
     if (!simulator_->results()->isAvailable()) {
-        if (runtime_settings_->verbosity_level() > 0)
-            std::cout << "Simulating base case." << std::endl;
+        if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
+            std::cout << "[run]Simulating base case." << std::endl;
         simulator_->Evaluate();
     }
-    if (runtime_settings_->verbosity_level() > 4)
-        std::cout << "Evaluated BaseModel." << std::endl;
+    if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
+        std::cout << "[run]Evaluated BaseModel.--" << std::endl;
 }
 
 void AbstractRunner::InitializeObjectiveFunction()
@@ -160,15 +160,20 @@ void AbstractRunner::InitializeBaseCase()
                                         model_->variables()->GetDiscreteVariableValues(),
                                         model_->variables()->GetContinousVariableValues());
     if (!simulator_->results()->isAvailable()) {
-        if (runtime_settings_->verbosity_level() > 0)
-            std::cout << "Simulation results are unavailable. Setting base case objective function value to sentinel value." << std::endl;
+        if (settings_->verb_vector()[0] >= 1) { // idx:0 -> run (Runner)
+            std::cout << "[run]Sim.rslts unavailable.- Setting BaseCase OFV set to sentinel value (="
+                      << sentinelValue() << ")" << std::endl;
+        }
         base_case_->set_objective_function_value(sentinelValue());
     }
     else
         base_case_->set_objective_function_value(objective_function_->value());
-    if (runtime_settings_->verbosity_level() > 0)
-        std::cout << "Initialized BaseCase. Base case objective function value set to: "
-                  << base_case_->objective_function_value() << std::endl;
+
+    if (settings_->verb_vector()[0] >= 1) { // idx:0 -> run (Runner)
+        std::cout << "[run]Initialized BaseCase.--" << std::endl;
+        std::cout << "[run]BaseCase OFV set to:---" << base_case_->objective_function_value() << std::endl;
+    }
+
 }
 
 void AbstractRunner::InitializeOptimizer()
@@ -227,15 +232,15 @@ void AbstractRunner::InitializeBookkeeper()
         throw std::runtime_error("The Settings and the Optimizer must be initialized before the Bookkeeper.");
 
     bookkeeper_ = new Bookkeeper(settings_, optimizer_->case_handler());
-    if (runtime_settings_->verbosity_level() > 4)
-        std::cout << "Initialized Bookkeeper." << std::endl;
+    if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
+        std::cout << "[run]Initialized Bookkeeper." << std::endl;
 }
 
 void AbstractRunner::InitializeLogger(QString output_subdir, bool write_logs)
 {
     logger_ = new Logger(runtime_settings_, output_subdir, write_logs);
-    if (runtime_settings_->verbosity_level() > 4)
-        std::cout << "Initialized Logger." << std::endl;
+    if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
+        std::cout << "[run]Initialized Logger.----" << std::endl;
 }
 
 void AbstractRunner::PrintCompletionMessage() const {
@@ -250,8 +255,10 @@ void AbstractRunner::PrintCompletionMessage() const {
         default: std::cout << "Unknown termination reason." << std::endl;
     }
 
-    std::cout << "Best case at termination:" << optimizer_->GetTentativeBestCase()->id().toString().toStdString() << std::endl;
+    std::cout << "Best case at termination:"
+              << optimizer_->GetTentativeBestCase()->id().toString().toStdString() << std::endl;
     std::cout << "Variable values: " << std::endl;
+
     for (auto var : optimizer_->GetTentativeBestCase()->integer_variables().keys()) {
         auto prop_name = model_->variables()->GetDiscreteVariable(var)->name();
         auto prop_val = optimizer_->GetTentativeBestCase()->integer_variables()[var];

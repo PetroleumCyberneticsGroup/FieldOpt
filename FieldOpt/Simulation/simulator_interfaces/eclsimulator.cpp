@@ -49,7 +49,7 @@ ECLSimulator::ECLSimulator(Settings::Settings *settings, Model::Model *model)
 void ECLSimulator::Evaluate()
 {
     driver_file_writer_->WriteDriverFile();
-    ::Utilities::Unix::ExecShellScript(script_path_, script_args_);
+    ::Utilities::Unix::ExecShellScript(script_path_, script_args_, settings_->verb_vector());
     results_->ReadResults(driver_file_writer_->output_driver_file_name_,
                           settings_->verb_vector());
     updateResultsInModel();
