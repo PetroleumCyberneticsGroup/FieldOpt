@@ -40,7 +40,8 @@ namespace Unix {
 inline QString Exec(QString directory, QStringList commands, bool verbose=false)
 {
     if (!Utilities::FileHandling::DirectoryExists(directory))
-        throw std::runtime_error("Directory for command execution not found: " + directory.toStdString());
+        throw std::runtime_error("Directory for command execution not found: "
+                                     + directory.toStdString());
 
     QString cmd = "cd " + directory + "; " + commands.join("; ");
     FILE* pipe = popen(cmd.toStdString().c_str(), "r");
@@ -53,7 +54,6 @@ inline QString Exec(QString directory, QStringList commands, bool verbose=false)
             if (verbose)
                 std::cout << buffer << std::endl;
         }
-
     }
     pclose(pipe);
     return result;
@@ -66,9 +66,17 @@ inline QString Exec(QString directory, QStringList commands, bool verbose=false)
  */
 inline void ExecShellScript(QString script_path, QStringList args)
 {
-    if (!Utilities::FileHandling::FileExists(script_path))
-        throw std::runtime_error("File not found: " + script_path.toStdString());
+    if (!Utilities::FileHandling::FileExists(script_path)) {
+        Utilities::FileHandling::ThrowRuntimeError("File not found: " + script_path.toStdString());
+    }
+
     QString command = script_path + " " + args.join(" ");
+
+//    if (settings_->verb_vector()[10] == 1) { // idx:10 -> uti (Utilities)
+        std::cout << "[uti]Current dir:-----------" << Utilities::FileHandling::GetCurrentDirectoryPath().toStdString() << endl;
+        std::cout << "[uti]Run command:-----------" << command.toStdString() << endl;
+//    }
+
     system(command.toLatin1().constData());
 }
 
@@ -136,7 +144,7 @@ inline void terminate_process(int pid)
 }
 
 /*!
- * @brief ExecShellScriptTimeout execututes a shell script with the given set of parameters, and
+ * @brief ExecShellScriptTimeout executes a shell script with the given set of parameters, and
  * terminates the process after a set time has passed if it has not returned by then.
  *
  * \todo In this function, in the else block, we can also, at a later stage, monitor the output files

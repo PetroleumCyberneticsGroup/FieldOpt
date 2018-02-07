@@ -31,8 +31,9 @@ namespace Wells {
 namespace Wellbore {
 
 /*!
- * \brief The WellSpline class Generates the well blocks making up the trajectory from a set of spline points.
- * It uses the WellIndexCalculation library to do this.
+ * \brief The WellSpline class Generates the well blocks making
+ * up the trajectory from a set of spline points. It uses the
+ * WellIndexCalculation library to do this.
  */
 class WellSpline
 {

@@ -49,7 +49,8 @@ class ECLSimulator : public Simulator
   ECLSimulator(Settings::Settings *settings, Model::Model *model);
 
   /*!
-   * \brief Evaluate Executes the simulation of the current model. The evaluation is blocking.
+   * \brief Evaluate Executes the simulation of the current model.
+   * The evaluation is blocking.
    */
   void Evaluate();
   void WriteDriverFilesOnly() override;
@@ -61,7 +62,6 @@ class ECLSimulator : public Simulator
 
  private:
   DriverFileWriters::EclDriverFileWriter *driver_file_writer_;
-  QString script_path_;
   QStringList script_args_;
 
   // Simulator interface

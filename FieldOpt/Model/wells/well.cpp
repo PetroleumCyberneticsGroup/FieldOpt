@@ -29,7 +29,9 @@ Well::Well(Settings::Model settings,
            Reservoir::Grid::Grid *grid)
 {
     Settings::Model::Well well_settings = settings.wells().at(well_number);
-    std::cout << "  Set: well_settings" << std::endl;
+    well_settings.verb_vector_ = settings.verb_vector();
+    if (well_settings.verb_vector_[5] > 1) // idx:5 -> mod (Model)
+        std::cout << "[mod]Reading well settings.- " << std::endl;
 
     name_ = well_settings.name;
     type_ = well_settings.type;
@@ -38,7 +40,6 @@ Well::Well(Settings::Model settings,
     else group_ = "";
 
     preferred_phase_ = well_settings.preferred_phase;
-
     wellbore_radius_ = new Properties::ContinousProperty(well_settings.wellbore_radius);
 
     controls_ = new QList<Control *>();
@@ -46,7 +47,6 @@ Well::Well(Settings::Model settings,
         controls_->append(new Control(well_settings.controls[i], well_settings, variable_container));
 
     trajectory_ = new Wellbore::Trajectory(well_settings, variable_container, grid);
-    std::cout << "  Set: trajectory_" << std::endl;
 
     heel_.i = trajectory_->GetWellBlocks()->first()->i();
     heel_.j = trajectory_->GetWellBlocks()->first()->j();

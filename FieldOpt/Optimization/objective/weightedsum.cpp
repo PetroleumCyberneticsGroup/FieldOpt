@@ -23,20 +23,26 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
+#include <iostream>
 #include "weightedsum.h"
 
 namespace Optimization {
 namespace Objective {
 
-WeightedSum::WeightedSum(Settings::Optimizer *settings, Simulation::Results::Results *results)
+WeightedSum::WeightedSum(Settings::Optimizer *settings,
+                         Simulation::Results::Results *results)
 {
+    settings_ = settings;
     results_ = results;
     components_ = new QList<WeightedSum::Component *>();
+
     for (int i = 0; i < settings->objective().weighted_sum.size(); ++i) {
         WeightedSum::Component *comp = new WeightedSum::Component();
-        comp->property = results_->GetPropertyKeyFromString(settings->objective().weighted_sum.at(i).property);
+        comp->property_name = settings->objective().weighted_sum.at(i).property;
+        comp->property = results_->GetPropertyKeyFromString(comp->property_name);
         comp->coefficient = settings->objective().weighted_sum.at(i).coefficient;
         comp->time_step = settings->objective().weighted_sum.at(i).time_step;
+
         if (settings->objective().weighted_sum.at(i).is_well_prop) {
             comp->is_well_property = true;
             comp->well = settings->objective().weighted_sum.at(i).well;
@@ -51,6 +57,15 @@ double WeightedSum::value() const
     double value = 0;
     for (int i = 0; i < components_->size(); ++i) {
         value += components_->at(i)->resolveValue(results_);
+
+        if (settings_->verb_vector()[5] > 1) { // idx:6 -> mod (Model)
+            QString prop_name = components_->at(i)->property_name;
+            double prop_coeff = components_->at(i)->coefficient;
+            std::cout << "ObjFunctionProp[i=" << i << "]: "
+                      << prop_name.toStdString() << " -> " << prop_coeff << " * "
+                      << results_->GetValue(results_->GetPropertyKeyFromString(prop_name))
+                      << std::endl;
+        }
     }
     return value;
 }
