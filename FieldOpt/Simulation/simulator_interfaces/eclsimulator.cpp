@@ -34,8 +34,8 @@ ECLSimulator::ECLSimulator(Settings::Settings *settings, Model::Model *model)
                                   << driver_file_writer_->output_driver_file_name_);
 
     if (settings_->verb_vector()[8] > 1) // idx:8 -> sim (Simulation)
-        cout << "[sim]script arg[0]:--------" << script_args_[0].toStdString() << endl
-             << "[sim]script arg[1]:--------" << script_args_[1].toStdString() << endl;
+        cout << "[sim]script arg[0]:---------- " << script_args_[0].toStdString() << endl
+             << "[sim]script arg[1]:---------- " << script_args_[1].toStdString() << endl;
 
     results_ = new Results::ECLResults();
     try {

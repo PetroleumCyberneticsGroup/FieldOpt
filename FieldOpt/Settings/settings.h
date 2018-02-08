@@ -61,7 +61,7 @@ class Settings
   QString output_directory() const { return output_directory_; } //!< Path to a directory in which output files are to be placed.
 
   // Left for backcompatibility with tests, etc -- fix that, then delete
-  int verbosity_level() const { return verbosity_level_; }
+  // int verbosity_level() const { return verbosity_level_; }
   int set_verbosity_level(const int verbosity_level) { verbosity_level_ = verbosity_level; }
 
   void set_verbosity_vector(const std::vector<int> verb_vector) { verb_vector_ = verb_vector; }

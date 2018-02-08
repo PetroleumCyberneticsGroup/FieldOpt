@@ -134,10 +134,20 @@ void Settings::readOptimizerSection()
             optimizer_->type() == Optimizer::OptimizerType::APPS) {
             cout << "MaxEvaluations:-------- " << optimizer_->parameters_.max_evaluations << endl;
             cout << "InitialStepLength:----- " << optimizer_->parameters_.initial_step_length << endl;
+            cout << "InitStepLengthVector:-- ";
+            for( int i=0; i<optimizer_->parameters_.initial_step_length_vector.count(); ++i ) {
+                cout << optimizer_->parameters_.initial_step_length_vector[i] << " ";
+            }
+            cout << endl;
             cout << "MinimumStepLength:----- " << optimizer_->parameters_.minimum_step_length << endl;
+            cout << "MinStepLengthVector:--- ";
+            for( int i=0; i<optimizer_->parameters_.minimum_step_length_vector.count(); ++i ) {
+                cout << optimizer_->parameters_.minimum_step_length_vector[i] << " ";
+            }
+            cout << endl;
             cout << "ContractionFactor:----- " << optimizer_->parameters_.contraction_factor << endl;
             cout << "ExpansionFactor:------- " << optimizer_->parameters_.expansion_factor << endl;
-            cout << "MaxQueueSize:---------- " << optimizer_->parameters_.expansion_factor << endl;
+            cout << "MaxQueueSize:---------- " << optimizer_->parameters_.max_queue_size << endl;
             cout << "Pattern:--------------- " << optimizer_->parameters_.pattern.toStdString() << endl;
         } else if (optimizer_->type() == Optimizer::OptimizerType::GeneticAlgorithm) {
         }

@@ -56,13 +56,13 @@ Simulator::Simulator(Settings::Settings *settings) {
                                   << QString::number(1));
 
     if (settings_->verb_vector()[8] > 1) { // idx:8 -> sim (Simulation)
-        std::cout << "[sim]Simulator set up w/:---" << std::endl
-                  << "[sim]init_drvr_file_path_---: " << initial_driver_file_path_.toStdString() << std::endl
-                  << "[sim]init_drvr_file_name_---: " << initial_driver_file_name_.toStdString() << std::endl
-                  << "[sim]script_path_-----------: " << script_path_.toStdString() << std::endl
-                  << "[sim]script_args_[0]--------: " << script_args_.at(0).toStdString() << std::endl
-                  << "[sim]script_args_[1]--------: " << script_args_.at(1).toStdString() << std::endl
-                  << "[sim]script_args_[2]--------: " << script_args_.at(2).toStdString() << std::endl
+        std::cout << "[sim]Simulator set up w/:---- " << std::endl
+                  << "[sim]init_drvr_file_path_:--- " << initial_driver_file_path_.toStdString() << std::endl
+                  << "[sim]init_drvr_file_name_:--- " << initial_driver_file_name_.toStdString() << std::endl
+                  << "[sim]script_path_:----------- " << script_path_.toStdString() << std::endl
+                  << "[sim]script_args_[0]:-------- " << script_args_.at(0).toStdString() << std::endl
+                  << "[sim]script_args_[1]:-------- " << script_args_.at(1).toStdString() << std::endl
+                  << "[sim]script_args_[2]:-------- " << script_args_.at(2).toStdString() << std::endl
                   << std::endl;
     }
 }

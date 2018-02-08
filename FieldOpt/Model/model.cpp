@@ -26,14 +26,14 @@ Model::Model(Settings::Model settings, Logger *logger)
 {
     grid_ = new Reservoir::Grid::ECLGrid(settings.reservoir().path.toStdString());
     if (settings.verb_vector()[5] > 1) // idx:5 -> mod (Model)
-        std::cout << "[mod]Init ECLGrid_.-------- " << std::endl;
+        std::cout << "[mod]Init ECLGrid_.---------- " << std::endl;
 
     variable_container_ = new Properties::VariablePropertyContainer();
     if (settings.verb_vector()[5] > 1) // idx:5 -> mod (Model)
-        std::cout << "[mod]Init var_prop_cont_.--" << std::endl;
+        std::cout << "[mod]Init var_prop_cont_.----" << std::endl;
 
     if (settings.verb_vector()[5] >= 1) // idx:5 -> mod (Model)
-        std::cout << "[mod]Add wells->wellList.-- ";
+        std::cout << "[mod]Add wells->wellList:---- ";
 
     wells_ = new QList<Wells::Well *>();
     for (int well_nr = 0; well_nr < settings.wells().size(); ++well_nr) {

@@ -55,10 +55,10 @@ class GSS : public Optimizer {
    * The following properties must be set in the constructor by classes
    * extending this class:
    *
-   *      contr_fac_  : The contraction factor.
-   *      expan_fac_  : The expansion factor.
-   *      directions_ : The set of search directions to be used.
-   *      step_lengths_ : The set of step lengts to be used (one per step direction).
+   *      contr_fac_  : Contraction factor.
+   *      expan_fac_  : Expansion factor.
+   *      directions_ : Set of search directions.
+   *      step_lengths_ : Set of step lengths (one per step direction).
    */
   GSS(Settings::Optimizer *settings,
       Case *base_case,
@@ -78,11 +78,13 @@ class GSS : public Optimizer {
 
  protected:
   int num_vars_; //!< Number of vars in problem. Used in initialization.
-  double step_tol_; //!< Step length convergence tolerance.
   double contr_fac_; //!< Step length contraction factor.
   double expan_fac_; //!< Step length expansion factor.
+  VectorXd step_tol_; //!< Vector of step length convergence tolerances.
   VectorXd step_lengths_; //!< Vector of step lengths.
   vector<VectorXi> directions_; //!< Vector of search directions.
+
+  Settings::Optimizer *settings_;
 
   /*!
    * @brief Contract the search pattern: step_lengths_ * contr_fac_

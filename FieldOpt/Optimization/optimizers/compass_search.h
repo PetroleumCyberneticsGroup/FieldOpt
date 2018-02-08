@@ -8,15 +8,19 @@ namespace Optimization {
 namespace Optimizers {
 
 /*!
- * \brief The CompassSearch class is an implementation of the Compass Search optimization algorithm
- * described by Torczon, Lewis and Kolda. It is an extension of the abstract GSS class.
+ * \brief The CompassSearch class is an implementation of
+ * the Compass Search optimization algorithm described by
+ * Torczon, Lewis and Kolda. It is an extension of the
+ * abstract GSS class.
  *
- * This algorithm only supports integer and real variables, and not both at the same time.
+ * This algorithm only supports integer and real variables,
+ * and not both at the same time.
  *
  * Reference:
  *
  * Kolda, Tamara G., Robert Michael Lewis, and Virginia Torczon.
- *  "Optimization by direct search: New perspectives on some classical and modern methods."
+ *  "Optimization by direct search: New perspectives on some
+ *  classical and modern methods."
  *  SIAM review 45.3 (2003): 385-482.
  */
 class CompassSearch : public GSS
