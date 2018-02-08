@@ -18,47 +18,55 @@
 ******************************************************************************/
 
 #include "worker.h"
+#include <iomanip>
+
+using std::cout;
+using std::endl;
 
 namespace Runner {
 namespace MPI {
 
 Worker::Worker(MPIRunner *runner) {
-    runner_ = runner;
-    runner_->RecvModelSynchronizationObject();
-    std::cout << "Initialized Worker on " << runner_->world().rank() << std::endl;
+  runner_ = runner;
+  runner_->RecvModelSynchronizationObject();
+
+  stringstream ss;
+  ss << "Initializing worker at Rank=" << setfill('0')
+     << setw(2) << setprecision(0) << runner_->world().rank();
+  runner_->printMessage(ss.str());
 }
 
 void Worker::RecvUnevaluatedCase() {
-    auto msg = MPIRunner::Message();
-    msg.source = runner_->scheduler_rank_;
-    msg.tag = MPIRunner::MsgTag::CASE_UNEVAL;
-    runner_->RecvMessage(msg);
-    current_tag_ = msg.get_tag();
-    if (msg.get_tag() != MPIRunner::MsgTag::TERMINATE)
-        current_case_ = msg.c;
-    else {
-        current_case_ = nullptr;
-    }
+  auto msg = MPIRunner::Message();
+  msg.source = runner_->scheduler_rank_;
+  msg.tag = MPIRunner::MsgTag::CASE_UNEVAL;
+  runner_->RecvMessage(msg);
+  current_tag_ = msg.get_tag();
+  if (msg.get_tag() != MPIRunner::MsgTag::TERMINATE)
+    current_case_ = msg.c;
+  else {
+    current_case_ = nullptr;
+  }
 }
 
 void Worker::SendEvaluatedCase(MPIRunner::MsgTag tag) {
-    auto msg = MPIRunner::Message();
-    msg.destination = runner_->scheduler_rank_;
-    msg.c = current_case_;
-    msg.tag = MPIRunner::MsgTag::CASE_EVAL_SUCCESS;
-    runner_->SendMessage(msg);
+  auto msg = MPIRunner::Message();
+  msg.destination = runner_->scheduler_rank_;
+  msg.c = current_case_;
+  msg.tag = MPIRunner::MsgTag::CASE_EVAL_SUCCESS;
+  runner_->SendMessage(msg);
 }
 
 void Worker::ConfirmFinalization() {
-    auto msg = MPIRunner::Message();
-    msg.destination = runner_->scheduler_rank_;
-    msg.c = current_case_;
-    msg.tag = MPIRunner::MsgTag::TERMINATE;
-    runner_->SendMessage(msg);
+  auto msg = MPIRunner::Message();
+  msg.destination = runner_->scheduler_rank_;
+  msg.c = current_case_;
+  msg.tag = MPIRunner::MsgTag::TERMINATE;
+  runner_->SendMessage(msg);
 }
 
 Optimization::Case *Worker::GetCurrentCase() {
-    return current_case_;
+  return current_case_;
 }
 
 }

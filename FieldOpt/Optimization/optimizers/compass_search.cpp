@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include "compass_search.h"
 #include "gss_patterns.hpp"
 
@@ -34,8 +35,9 @@ CompassSearch::CompassSearch(Settings::Optimizer *settings,
   }
 
   if (settings->verb_vector()[6] >= 1) { // idx:6 -> opt (Optimization)
+    cout << fixed << setw(6) << setprecision(1);
     cout << "[opt]Step length vector:------" << endl;
-    IOFormat CleanFmt(4, 0, "", "", "", "", "[", "]");
+    IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
     cout << step_lengths_.format(CleanFmt) << endl;
   }
 
@@ -55,8 +57,9 @@ CompassSearch::CompassSearch(Settings::Optimizer *settings,
 
   if (settings_->verb_vector()[6] >= 1) { // idx:6 -> opt (Optimization)
     cout << "[opt]Step tol vector:---------" << endl;
-    IOFormat CleanFmt(4, 0, "", "", "", "", "[", "]");
+    IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
     cout << step_tol_.format(CleanFmt) << endl;
+    cout << fixed << setprecision(8);
   }
 
 }

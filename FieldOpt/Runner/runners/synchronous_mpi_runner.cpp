@@ -18,192 +18,210 @@
 ******************************************************************************/
 #include "synchronous_mpi_runner.h"
 
+using std::cout;
+using std::endl;
+
 namespace Runner {
 namespace MPI {
 
 SynchronousMPIRunner::SynchronousMPIRunner(RuntimeSettings *rts) : MPIRunner(rts) {
-    assert(world_.size() >= 2 && "The SynchronousMPIRunner requires at least two MPI processes.");
+  assert(world_.size() >= 2 && "The SynchronousMPIRunner requires at least two MPI processes.");
 
-    if (world_.rank() == 0) {
-        std::cout << "00" << std::endl;
-        InitializeSettings("rank" + QString::number(rank()));
-        InitializeLogger();
-        InitializeModel();
-        InitializeSimulator();
-        EvaluateBaseModel();
-        InitializeObjectiveFunction();
-        InitializeBaseCase();
-        InitializeOptimizer();
-        InitializeBookkeeper();
+  if (world_.rank() == 0) {
+    cout << "00" << endl;
+    InitializeSettings("rank" + QString::number(rank()));
+    InitializeLogger();
+    InitializeModel();
+    InitializeSimulator();
+    EvaluateBaseModel();
+    InitializeObjectiveFunction();
+    InitializeBaseCase();
+    InitializeOptimizer();
+    InitializeBookkeeper();
 
-        overseer_ = new MPI::Overseer(this);
-        FinalizeInitialization(true);
-    }
-    else {
-        InitializeSettings("rank" + QString::number(rank()));
-        InitializeLogger("rank" + QString::number(rank()));
-        InitializeModel();
-        InitializeSimulator();
-        InitializeObjectiveFunction();
-        InitializeLogger("rank" + QString::number(rank()));
-        worker_ = new MPI::Worker(this);
-        FinalizeInitialization(false);
-    }
+    overseer_ = new MPI::Overseer(this);
+    FinalizeInitialization(true);
+  }
+  else {
+    InitializeSettings("rank" + QString::number(rank()));
+    InitializeLogger("rank" + QString::number(rank()));
+    InitializeModel();
+    InitializeSimulator();
+    InitializeObjectiveFunction();
+    InitializeLogger("rank" + QString::number(rank()));
+    worker_ = new MPI::Worker(this);
+    FinalizeInitialization(false);
+  }
 }
 
 void SynchronousMPIRunner::Execute() {
-    auto handle_new_case = [&]() mutable {
-      printMessage("Getting new case from optimizer.", 6);
-      auto new_case = optimizer_->GetCaseForEvaluation();
-      if (bookkeeper_->IsEvaluated(new_case, true)) {
-          printMessage("Case found in bookkeeper");
-          new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_BOOKKEEPED;
-          optimizer_->SubmitEvaluatedCase(new_case);
-      }
-      else {
-          overseer_->AssignCase(new_case);
-          printMessage("New case assigned to worker.", 6);
-      }
-    };
-    auto wait_for_evaluated_case = [&]() mutable {
-      printMessage("Waiting to receive evaluated case...", 6);
-      auto evaluated_case = overseer_->RecvEvaluatedCase(); // TODO: This is a duplicate case that wont get deleted, i.e. a MEMORY LEAK.
-      printMessage("Evaluated case received.", 2);
-      if (overseer_->last_case_tag == MPIRunner::MsgTag::CASE_EVAL_SUCCESS) {
-          evaluated_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
-          if (optimizer_->GetSimulationDuration(evaluated_case) > 0){
-              simulation_times_.push_back(optimizer_->GetSimulationDuration(evaluated_case));
-          }
-      }
-      optimizer_->SubmitEvaluatedCase(evaluated_case);
-      printMessage("Submitted evaluated case to optimizer.", 6);
-    };
-    if (rank() == 0) {
-        printMessage("Performing initial distribution...", 6);
-        initialDistribution();
-        printMessage("Initial distribution done.", 6);
-        while (optimizer_->IsFinished() == false) {
-            if (optimizer_->nr_queued_cases() > 0) { // Queued cases in optimizer
-                printMessage("Queued cases available.", 6);
-                if (overseer_->NumberOfFreeWorkers() > 0) { // Free workers available
-                    printMessage("Free workers available. Handling next case.", 6);
-                    handle_new_case();
-                }
-                else { // No workers available
-                    printMessage("No free workers available. Waiting for an evaluated case.", 6);
-                    wait_for_evaluated_case();
-                }
-            }
-            else { // No queued cases in optimizer
-                printMessage("No queued cases available.", 6);
-                if (overseer_->NumberOfBusyWorkers() == 0) { // All workers are free
-                    printMessage("No workers are busy. Starting next iteration.", 6);
-                    handle_new_case();
-                }
-                else { // Some workers are performing simulations
-                    printMessage("Some workers are still evaluating cases from this iteration. Waiting for evaluated cases.", 2);
-                    wait_for_evaluated_case();
-                }
-            }
-        }
-        overseer_->TerminateWorkers();
-        printMessage("Terminating workers.", 6);
-        overseer_->EnsureWorkerTermination();
-        FinalizeRun(true);
-        env_.~environment();
-        return;
+
+  auto handle_new_case = [&]() mutable {
+    printMessage("Getting new case from optimizer.");
+    auto new_case = optimizer_->GetCaseForEvaluation();
+    printMessage("New case received from optimizer.");
+
+    if (bookkeeper_->IsEvaluated(new_case, true)) {
+      printMessage("Case found in bookkeeper");
+      new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_BOOKKEEPED;
+      optimizer_->SubmitEvaluatedCase(new_case);
     }
     else {
-        printMessage("Waiting to receive initial unevaluated case...", 6);
-        worker_->RecvUnevaluatedCase();
-        printMessage("Reveived initial unevaluated case.", 6);
-        while (worker_->GetCurrentCase() != nullptr) {
-            MPIRunner::MsgTag tag = MPIRunner::MsgTag::CASE_EVAL_SUCCESS; // Tag to be sent along with the case.
-            try {
-                model_update_done_ = false;
-                simulation_done_ = false;
-                logger_->AddEntry(this);
-                bool simulation_success = true;
-                printMessage("Applying case to model.", 6);
-                model_->ApplyCase(worker_->GetCurrentCase());
-                model_update_done_ = true; logger_->AddEntry(this);
-                auto start = QDateTime::currentDateTime();
-                if (runtime_settings_->simulation_timeout() == 0 && settings_->simulator()->max_minutes() < 0) {
-                    printMessage("Starting model evaluation.", 6);
-                    simulator_->Evaluate();
-                }
-                else if (simulation_times_.size() == 0 && settings_->simulator()->max_minutes() > 0) {
-                    simulation_success = simulator_->Evaluate(settings_->simulator()->max_minutes() * 60,
-                                                              runtime_settings_->threads_per_sim());
-                }
-                else {
-                    printMessage("Starting model evaluation with timeout.", 6);
-                    simulation_success = simulator_->Evaluate(timeoutValue(), runtime_settings_->threads_per_sim());
-                }
-                simulation_done_ = true; logger_->AddEntry(this);
-                auto end = QDateTime::currentDateTime();
-                int sim_time = time_span_seconds(start, end);
-                if (simulation_success) {
-                    tag = MPIRunner::MsgTag::CASE_EVAL_SUCCESS;
-                    printMessage("Setting objective function value.", 6);
-                    worker_->GetCurrentCase()->set_objective_function_value(objective_function_->value());
-                    worker_->GetCurrentCase()->SetSimTime(sim_time);
-                    worker_->GetCurrentCase()->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
-                    simulation_times_.push_back(sim_time);
-                }
-                else {
-                    tag = MPIRunner::MsgTag::CASE_EVAL_TIMEOUT;
-                    printMessage("Timed out. Setting objective function value to SENTINEL VALUE.", 6);
-                    worker_->GetCurrentCase()->state.eval = Optimization::Case::CaseState::EvalStatus::E_TIMEOUT;
-                    worker_->GetCurrentCase()->state.err_msg = Optimization::Case::CaseState::ErrorMessage::ERR_SIM;
-                    worker_->GetCurrentCase()->set_objective_function_value(sentinelValue());
-                }
-            } catch (std::runtime_error e) {
-                std::cout << e.what() << std::endl;
-                tag = MPIRunner::MsgTag::CASE_EVAL_INVALID;
-                worker_->GetCurrentCase()->state.eval = Optimization::Case::CaseState::EvalStatus::E_FAILED;
-                worker_->GetCurrentCase()->state.err_msg = Optimization::Case::CaseState::ErrorMessage::ERR_WIC;
-                printMessage("Invalid case. Setting objective function value to SENTINEL VALUE.", 6);
-                worker_->GetCurrentCase()->set_objective_function_value(sentinelValue());
-            }
-            printMessage("Sending back evaluated case.", 6);
-            worker_->SendEvaluatedCase(tag);
-            printMessage("Waiting to reveive an unevaluated case...", 6);
-            worker_->RecvUnevaluatedCase();
-            if (worker_->GetCurrentTag() == TERMINATE) {
-                printMessage("Received termination message. Breaking.", 6);
-                break;
-            }
-            else {
-                printMessage("Received an unevaluated case.", 6);
-            }
-        }
-        FinalizeRun(false);
-        printMessage("Finalized on worker.", 2);
-        worker_->ConfirmFinalization();
-        env_.~environment();
-        return;
+      overseer_->AssignCase(new_case);
+      printMessage("New case assigned to worker.");
     }
+  };
+
+  auto wait_for_evaluated_case = [&]() mutable {
+    printMessage("Waiting to receive evaluated case...");
+
+    // TODO: This is a duplicate case that wont get deleted, i.e. a MEMORY LEAK.
+    auto evaluated_case = overseer_->RecvEvaluatedCase();
+    printMessage("Evaluated case received.");
+
+    if (overseer_->last_case_tag == MPIRunner::MsgTag::CASE_EVAL_SUCCESS) {
+      evaluated_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
+      if (optimizer_->GetSimulationDuration(evaluated_case) > 0){
+        simulation_times_.push_back(optimizer_->GetSimulationDuration(evaluated_case));
+      }
+    }
+    optimizer_->SubmitEvaluatedCase(evaluated_case);
+    printMessage("Submitted evaluated case to optimizer.");
+  };
+
+  if (rank() == 0) {
+    printMessage("Performing initial distribution...");
+    initialDistribution();
+    printMessage("Initial distribution done.");
+
+    while (optimizer_->IsFinished() == false) {
+      if (optimizer_->nr_queued_cases() > 0) { // Queued cases in optimizer
+        printMessage("Queued cases available.");
+        if (overseer_->NumberOfFreeWorkers() > 0) { // Free workers available
+          printMessage("Free workers available. Handling next case.");
+          handle_new_case();
+        }
+        else { // No workers available
+          printMessage("No free workers available. Waiting for an evaluated case.");
+          wait_for_evaluated_case();
+        }
+      }
+      else { // No queued cases in optimizer
+        printMessage("No queued cases available.");
+        if (overseer_->NumberOfBusyWorkers() == 0) { // All workers are free
+          printMessage("No workers are busy. Starting next iteration.");
+          handle_new_case();
+        }
+        else { // Some workers are performing simulations
+          printMessage("Some workers are still evaluating "
+                           "cases from this iteration. Waiting for evaluated cases.");
+          wait_for_evaluated_case();
+        }
+      }
+    }
+
+    overseer_->TerminateWorkers();
+    printMessage("Terminating workers.");
+    overseer_->EnsureWorkerTermination();
+    FinalizeRun(true);
+    env_.~environment();
+    return;
+
+  }
+  else { // ! rank() == 0
+    printMessage("Waiting to receive initial unevaluated case...");
+    worker_->RecvUnevaluatedCase();
+    printMessage("Reveived initial unevaluated case.");
+    while (worker_->GetCurrentCase() != nullptr) {
+      MPIRunner::MsgTag tag = MPIRunner::MsgTag::CASE_EVAL_SUCCESS; // Tag to be sent along with the case.
+      try {
+        model_update_done_ = false;
+        simulation_done_ = false;
+        logger_->AddEntry(this);
+        bool simulation_success = true;
+        printMessage("Applying case to model.");
+        model_->ApplyCase(worker_->GetCurrentCase());
+        model_update_done_ = true; logger_->AddEntry(this);
+        auto start = QDateTime::currentDateTime();
+        if (runtime_settings_->simulation_timeout() == 0 && settings_->simulator()->max_minutes() < 0) {
+          printMessage("Starting model evaluation.");
+          simulator_->Evaluate();
+        }
+        else if (simulation_times_.size() == 0 && settings_->simulator()->max_minutes() > 0) {
+          simulation_success = simulator_->Evaluate(settings_->simulator()->max_minutes() * 60,
+                                                    runtime_settings_->threads_per_sim());
+        }
+        else {
+          printMessage("Starting model evaluation with timeout.");
+          simulation_success = simulator_->Evaluate(timeoutValue(), runtime_settings_->threads_per_sim());
+        }
+        simulation_done_ = true; logger_->AddEntry(this);
+        auto end = QDateTime::currentDateTime();
+        int sim_time = time_span_seconds(start, end);
+        if (simulation_success) {
+          tag = MPIRunner::MsgTag::CASE_EVAL_SUCCESS;
+          printMessage("Setting objective function value.");
+          worker_->GetCurrentCase()->set_objective_function_value(objective_function_->value());
+          worker_->GetCurrentCase()->SetSimTime(sim_time);
+          worker_->GetCurrentCase()->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
+          simulation_times_.push_back(sim_time);
+        }
+        else {
+          tag = MPIRunner::MsgTag::CASE_EVAL_TIMEOUT;
+          printMessage("Timed out. Setting objective function value to SENTINEL VALUE.");
+          worker_->GetCurrentCase()->state.eval = Optimization::Case::CaseState::EvalStatus::E_TIMEOUT;
+          worker_->GetCurrentCase()->state.err_msg = Optimization::Case::CaseState::ErrorMessage::ERR_SIM;
+          worker_->GetCurrentCase()->set_objective_function_value(sentinelValue());
+        }
+      } catch (std::runtime_error e) {
+        std::cout << e.what() << std::endl;
+        tag = MPIRunner::MsgTag::CASE_EVAL_INVALID;
+        worker_->GetCurrentCase()->state.eval = Optimization::Case::CaseState::EvalStatus::E_FAILED;
+        worker_->GetCurrentCase()->state.err_msg = Optimization::Case::CaseState::ErrorMessage::ERR_WIC;
+        printMessage("Invalid case. Setting objective function value to SENTINEL VALUE.");
+        worker_->GetCurrentCase()->set_objective_function_value(sentinelValue());
+      }
+      printMessage("Sending back evaluated case.");
+      worker_->SendEvaluatedCase(tag);
+      printMessage("Waiting to reveive an unevaluated case...");
+      worker_->RecvUnevaluatedCase();
+      if (worker_->GetCurrentTag() == TERMINATE) {
+        printMessage("Received termination message. Breaking.");
+        break;
+      }
+      else {
+        printMessage("Received an unevaluated case.");
+      }
+    }
+    FinalizeRun(false);
+    printMessage("Finalized on worker.");
+    worker_->ConfirmFinalization();
+    env_.~environment();
+    return;
+  }
 }
 
 void SynchronousMPIRunner::initialDistribution() {
-    while (optimizer_->nr_queued_cases() > 0 && overseer_->NumberOfFreeWorkers() > 1) { // Leave one free worker
-        overseer_->AssignCase(optimizer_->GetCaseForEvaluation());
-    }
+  while (optimizer_->nr_queued_cases() > 0 &&
+      overseer_->NumberOfFreeWorkers() > 1) { // Leave one free worker
+    overseer_->AssignCase(optimizer_->GetCaseForEvaluation());
+  }
 }
+
 Loggable::LogTarget SynchronousMPIRunner::GetLogTarget() {
-    return STATE_RUNNER;
+  return STATE_RUNNER;
 }
+
 map<string, string> SynchronousMPIRunner::GetState() {
-    map<string, string> statemap;
-    statemap["case-desc"] = worker_->GetCurrentCase()->StringRepresentation(model_->variables());
-    statemap["mod-update-done"] = model_update_done_ ? "yes" : "no";
-    statemap["sim-done"] = simulation_done_ ? "yes" : "no";
-    statemap["last-update"] = timestamp_string();
-    return statemap;
+  map<string, string> statemap;
+  statemap["case-desc"] = worker_->GetCurrentCase()->StringRepresentation(model_->variables());
+  statemap["mod-update-done"] = model_update_done_ ? "yes" : "no";
+  statemap["sim-done"] = simulation_done_ ? "yes" : "no";
+  statemap["last-update"] = timestamp_string();
+  return statemap;
 }
 QUuid SynchronousMPIRunner::GetId() {
-    return QUuid();
+  return QUuid();
 }
 }
 }

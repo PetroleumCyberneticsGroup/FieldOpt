@@ -129,9 +129,11 @@ class Constraint
 
  protected:
   bool logging_enabled_;
-  int verbosity_level_;
+  int verbosity_level_=1;
   Normalizer normalizer_; //!< Normalizer for constraint violation value; to be used with penalty functions.
   long double penalty_weight_; //!< The weight to be used when considering the constraint in a penalty function. (default: 0.0)
+
+  Settings::Optimizer *settings_;
 
  private:
   QString constraint_log_path_; //!< Path to the constraint log path to be written.

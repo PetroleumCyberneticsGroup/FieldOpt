@@ -20,33 +20,37 @@
 #include "model.h"
 #include <boost/lexical_cast.hpp>
 
+using std::cout;
+using std::endl;
+
 namespace Model {
 
 Model::Model(Settings::Model settings, Logger *logger)
 {
     grid_ = new Reservoir::Grid::ECLGrid(settings.reservoir().path.toStdString());
     if (settings.verb_vector()[5] > 1) // idx:5 -> mod (Model)
-        std::cout << "[mod]Init ECLGrid_.---------- " << std::endl;
+        cout << "[mod]Init ECLGrid_.---------- " << endl;
 
     variable_container_ = new Properties::VariablePropertyContainer();
     if (settings.verb_vector()[5] > 1) // idx:5 -> mod (Model)
-        std::cout << "[mod]Init var_prop_cont_.----" << std::endl;
+        cout << "[mod]Init var_prop_cont_.----" << endl;
 
     if (settings.verb_vector()[5] >= 1) // idx:5 -> mod (Model)
-        std::cout << "[mod]Add wells->wellList:---- ";
+        cout << "[mod]Add wells->wellList:---- ";
 
     wells_ = new QList<Wells::Well *>();
     for (int well_nr = 0; well_nr < settings.wells().size(); ++well_nr) {
 
         auto wname = settings.wells().at(well_nr).name.toStdString();
         if (settings.verb_vector()[5] >= 1) // idx:5 -> mod (Model)
-            std::cout << "wname=" << wname << " - ";
+            cout << "wname=" << wname << " - ";
 
         wells_->append(new Wells::Well(settings, well_nr, variable_container_, grid_));
     }
 
     if (settings.verb_vector()[5] >= 1) // idx:5 -> mod (Model)
-        std::cout << "- - total nr. of wells: " << settings.wells().size() << std::endl;
+        cout << "----total nr. of wells: " << settings.wells().size()
+             << "----" << endl;
 
     variable_container_->CheckVariableNameUniqueness();
     logger_ = logger;

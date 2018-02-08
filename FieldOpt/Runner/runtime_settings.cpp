@@ -20,6 +20,9 @@
 #include <boost/lexical_cast.hpp>
 #include <QtCore/QUuid>
 
+using std::cout;
+using std::endl;
+
 namespace Runner {
 
 RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
@@ -131,39 +134,39 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
         find (verb_vector_.begin(), verb_vector_.end(), 1) != verb_vector_.end() ||
         find (verb_vector_.begin(), verb_vector_.end(), 2) != verb_vector_.end() ) {
         str_out = "[run]FieldOpt runtime settings";
-        std::cout << "\n" << BLDON << str_out << AEND << "\n" << std::string(str_out.length(),'=') << std::endl;
-        std::cout << "Verbosity level:------- " << verbosity_level_ << std::endl;
-        std::cout << "Verbosity vector:------ ";
-        std::cout << "run=" << verb_vector_[0]; // (Runner)
-        std::cout << ", ert=" << verb_vector_[1]; // (ERTWrapper)
-        std::cout << ", hd5=" << verb_vector_[2]; // (Hdf5SummaryReader)
-        std::cout << ", wic=" << verb_vector_[3]; // (FieldOpt-WellIndexCalculator)
-        std::cout << ", con=" << verb_vector_[4]; // (ConstraintMath)
-        std::cout << ", mod=" << verb_vector_[5]; // (Model)
-        std::cout << ", opt=" << verb_vector_[6]; // (Optimization)
-        std::cout << ", res=" << verb_vector_[7]; // (Reservoir)
-        std::cout << ", sim=" << verb_vector_[8]; // (Simulation)
-        std::cout << ", set=" << verb_vector_[9]; // (Settings)
-        std::cout << ", uti=" << verb_vector_[10]; // (Utilities)
-        std::cout << "." << std::endl;
+        cout << "\n" << BLDON << str_out << AEND << "\n" << std::string(str_out.length(),'=') << endl;
+        cout << "Verbosity level:------- " << verbosity_level_ << endl;
+        cout << "Verbosity vector:------ ";
+        cout << "run=" << verb_vector_[0]; // (Runner)
+        cout << ", ert=" << verb_vector_[1]; // (ERTWrapper)
+        cout << ", hd5=" << verb_vector_[2]; // (Hdf5SummaryReader)
+        cout << ", wic=" << verb_vector_[3]; // (FieldOpt-WellIndexCalculator)
+        cout << ", con=" << verb_vector_[4]; // (ConstraintMath)
+        cout << ", mod=" << verb_vector_[5]; // (Model)
+        cout << ", opt=" << verb_vector_[6]; // (Optimization)
+        cout << ", res=" << verb_vector_[7]; // (Reservoir)
+        cout << ", sim=" << verb_vector_[8]; // (Simulation)
+        cout << ", set=" << verb_vector_[9]; // (Settings)
+        cout << ", uti=" << verb_vector_[10]; // (Utilities)
+        cout << "." << endl;
 
-        std::cout << "Runner type:----------- " << runnerTypeString().toStdString() << std::endl;
-        std::cout << "Overwr. old out files:- " << overwrite_existing_ << std::endl;
-        std::cout << "Max parallel sims:----- " << (max_parallel_sims_ > 0 ? boost::lexical_cast<std::string>(max_parallel_sims_) : "default") << std::endl;
-        std::cout << "Threads pr sim:-------- " << boost::lexical_cast<std::string>(threads_per_sim_) << std::endl;
+        cout << "Runner type:----------- " << runnerTypeString().toStdString() << endl;
+        cout << "Overwr. old out files:- " << overwrite_existing_ << endl;
+        cout << "Max parallel sims:----- " << (max_parallel_sims_ > 0 ? boost::lexical_cast<std::string>(max_parallel_sims_) : "default") << endl;
+        cout << "Threads pr sim:-------- " << boost::lexical_cast<std::string>(threads_per_sim_) << endl;
         str_out = "[run]Current/specified paths:";
-        std::cout << std::endl << std::string(str_out.length(),'-') << std::endl << str_out << std::endl;
-        std::cout << "Current dir:----------- " << Utilities::FileHandling::GetCurrentDirectoryPath().toStdString() << std::endl;
-        std::cout << "Input file:------------ " << driver_file_.toStdString() << std::endl;
-        std::cout << "Output dir:------------ " << output_dir().toStdString() << std::endl;
-        std::cout << "Sim driver file:------- " << (simulator_driver_path_.length() > 0 ? simulator_driver_path_.toStdString() : "from FieldOpt driver file") << std::endl;
-        std::cout << "Grid file path:-------- " << (grid_file_path_.length() > 0 ? grid_file_path_.toStdString() : "from FieldOpt driver file") << std::endl;
-        std::cout << "Exec file path:-------- " << (simulator_exec_script_path_.length() > 0 ? simulator_exec_script_path_.toStdString() : "from FieldOpt driver file") << std::endl;
-        std::cout << "Build dir:------------- " << fieldopt_build_dir_.toStdString() << std::endl;
+        cout << endl << std::string(str_out.length(),'-') << endl << str_out << endl;
+        cout << "Current dir:----------- " << Utilities::FileHandling::GetCurrentDirectoryPath().toStdString() << endl;
+        cout << "Input file:------------ " << driver_file_.toStdString() << endl;
+        cout << "Output dir:------------ " << output_dir().toStdString() << endl;
+        cout << "Sim driver file:------- " << (simulator_driver_path_.length() > 0 ? simulator_driver_path_.toStdString() : "from FieldOpt driver file") << endl;
+        cout << "Grid file path:-------- " << (grid_file_path_.length() > 0 ? grid_file_path_.toStdString() : "from FieldOpt driver file") << endl;
+        cout << "Exec file path:-------- " << (simulator_exec_script_path_.length() > 0 ? simulator_exec_script_path_.toStdString() : "from FieldOpt driver file") << endl;
+        cout << "Build dir:------------- " << fieldopt_build_dir_.toStdString() << endl;
         if (vm.count("well-prod-points"))
-            std::cout << "Producer coordinates:   " << wellSplineCoordinateString(prod_coords_).toStdString() << std::endl;
+            cout << "Producer coordinates:   " << wellSplineCoordinateString(prod_coords_).toStdString() << endl;
         if (vm.count("well-prod-points"))
-            std::cout << "Injector coordinates:   " << wellSplineCoordinateString(inje_coords_).toStdString() << std::endl;
+            cout << "Injector coordinates:   " << wellSplineCoordinateString(inje_coords_).toStdString() << endl;
     }
 }
 
@@ -236,8 +239,8 @@ po::variables_map RuntimeSettings::createVariablesMap(int argc, const char **arg
 
     // If called with --help or -h flag:
     if (vm.count("help") || !vm.count("input-file") || !vm.count("output-dir")) { // Print help if --help present or input file/output dir not present
-        std::cout << "Usage: ./FieldOpt input-file output-dir [options]" << std::endl;
-        std::cout << desc << std::endl;
+        cout << "Usage: ./FieldOpt input-file output-dir [options]" << endl;
+        cout << desc << endl;
         exit(EXIT_SUCCESS);
     }
 

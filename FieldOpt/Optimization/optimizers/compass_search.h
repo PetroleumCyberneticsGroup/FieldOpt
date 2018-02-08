@@ -37,8 +37,18 @@ class CompassSearch : public GSS
   QString GetStatusString() const;
 
  private:
-  void iterate(); //!< Step or contract, perturb, and clear list of recently evaluated cases.
-  bool is_successful_iteration(); //!< Check if this iteration was successful (i.e. if the current tent. best case was found in this iteration).
+
+  /*!
+   * @brief Step or contract, perturb, and clear list of recently
+   * evaluated cases..
+   */
+  void iterate();
+
+  /*!
+   * @brief Check if this iteration was successful (i.e. if
+   * the current tent. best case was found in this iteration).
+   */
+  bool is_successful_iteration();
 
  protected:
   void handleEvaluatedCase(Case *c) override;

@@ -35,10 +35,12 @@
 #include "Simulation/simulator_interfaces/adgprssimulator.h"
 #include "Utilities/math.hpp"
 
-namespace Runner {
+#include <iomanip>
 
 using std::cout;
 using std::endl;
+
+namespace Runner {
 
 AbstractRunner::AbstractRunner(RuntimeSettings *runtime_settings)
 {
@@ -140,7 +142,7 @@ void AbstractRunner::EvaluateBaseModel()
         "Simulator must be initialized before evaluating the base model.");
   if (!simulator_->results()->isAvailable()) {
     if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
-      std::cout << "[run]Simulating base case." << std::endl;
+      std::cout << "[run]Simulating base case.---" << std::endl;
     simulator_->Evaluate();
   }
   if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
@@ -179,7 +181,8 @@ void AbstractRunner::InitializeBaseCase()
     if (settings_->verb_vector()[0] >= 1) { // idx:0 -> run (Runner)
       std::cout << "[run]Sim.rslts unavailable.-- "
                 << "Setting BaseCase OFV set to sentinel value (="
-                << sentinelValue() << ")" << std::endl;
+                << fixed << setprecision(8) << sentinelValue() << ")"
+                << std::endl;
     }
     base_case_->set_objective_function_value(sentinelValue());
   }
@@ -188,7 +191,7 @@ void AbstractRunner::InitializeBaseCase()
 
   if (settings_->verb_vector()[0] >= 1) { // idx:0 -> run (Runner)
     std::cout << "[run]Initialized BaseCase.---" << std::endl;
-    std::cout << "[run]BaseCase OFV set to:---- "
+    std::cout << "[run]BaseCase OFV set to:---- " << fixed << setprecision(8)
               << base_case_->objective_function_value() << std::endl;
   }
 }
@@ -243,8 +246,10 @@ void AbstractRunner::InitializeOptimizer()
           "Unable to initialize runner: optimization algorithm "
               "set in driver file not recognized.");
   }
-  optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
+
   optimizer_->EnableConstraintLogging(runtime_settings_->output_dir());
+  if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
+    cout << "[opt]Initialized Optimizer.---" << endl;
 }
 
 void AbstractRunner::InitializeBookkeeper()

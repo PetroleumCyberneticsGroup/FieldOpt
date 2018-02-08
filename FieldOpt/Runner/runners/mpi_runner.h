@@ -76,30 +76,30 @@ class MPIRunner : public AbstractRunner {
    */
   struct Message {
     Message() {
-        c = nullptr; this->tag = MPI_ANY_TAG;
-        this->source = MPI_ANY_SOURCE;
-        this->destination = MPI_ANY_SOURCE;
+      c = nullptr; this->tag = MPI_ANY_TAG;
+      this->source = MPI_ANY_SOURCE;
+      this->destination = MPI_ANY_SOURCE;
     }
     void set_status(mpi::status status) {
-        this->status = status;
-        this->source = status.source();
-        this->tag = status.tag();
+      this->status = status;
+      this->source = status.source();
+      this->tag = status.tag();
     }
     MsgTag get_tag() {
-        switch (tag) {
-            case 1: return CASE_UNEVAL;
-            case 2: return CASE_EVAL_SUCCESS;
-            case 3: return CASE_EVAL_INVALID;
-            case 4: return CASE_EVAL_TIMEOUT;
-            case 10: return MODEL_SYNC;
-            case 100: return TERMINATE;
-        }
+      switch (tag) {
+        case 1: return CASE_UNEVAL;
+        case 2: return CASE_EVAL_SUCCESS;
+        case 3: return CASE_EVAL_INVALID;
+        case 4: return CASE_EVAL_TIMEOUT;
+        case 10: return MODEL_SYNC;
+        case 100: return TERMINATE;
+      }
     }
-    Optimization::Case *c; //!< The case associated with the message (if any).
-    int tag; //!< The tag for the message.
-    int source; //!< The rank of the process sending the message.
-    int destination; //!< The rank of the process receiving the message.
-    mpi::status status; //!< The status object for the message.
+    Optimization::Case *c; //!< Case associated with the message (if any).
+    int tag; //!< Message tag.
+    int source; //!< Rank of process sending the message.
+    int destination; //!< Rank of process receiving the message.
+    mpi::status status; //!< Status object for message.
   };
 
   /*!
@@ -107,7 +107,6 @@ class MPIRunner : public AbstractRunner {
    * @param message The message to be sent.
    */
   void SendMessage(Message &message);
-
 
   /*!
    * @brief Receive a message potentially containing a Case.
@@ -127,16 +126,17 @@ class MPIRunner : public AbstractRunner {
   void RecvMessage(Message &message);
 
   /*!
-   * @brief Create a ModelSynchronizationObject and send it to all other processes.
+   * @brief Create a ModelSynchronizationObject, then send it
+   * to all other processes.
    *
-   * This should be called by the process with rank 0, in order to make the variable UUIDs match across
-   * all processes.
+   * This should be called by the process with rank 0, in order
+   * to make the variable UUIDs match across all processes.
    */
   void BroadcastModel();
 
   /*!
-   * @brief Receive the ModelSynchronizationObject broadcast by the root process. This is applied to the
-   * model object.
+   * @brief Receive ModelSynchronizationObject broadcast by
+   * the root process. This is applied to the model object.
    */
   void RecvModelSynchronizationObject();
 
@@ -153,7 +153,7 @@ class MPIRunner : public AbstractRunner {
    * @param message The message to be printed.
    * @param min_verb The minimum verbosity level required for the message to be printed.
    */
-  void printMessage(std::string message, int min_verb=6);
+  void printMessage(std::string message);
 };
 }
 }

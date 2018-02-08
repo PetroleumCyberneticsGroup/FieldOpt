@@ -5,30 +5,31 @@
 
 namespace Runner {
 
-    MainRunner::MainRunner(RuntimeSettings *rts)
-    {
-        runtime_settings_ = rts;
+MainRunner::MainRunner(RuntimeSettings *rts)
+{
+  runtime_settings_ = rts;
 
-        switch (runtime_settings_->runner_type()) {
-            case RuntimeSettings::RunnerType::SERIAL:
-                runner_ = new SerialRunner(runtime_settings_);
-                break;
-            case RuntimeSettings::RunnerType::ONEOFF:
-                runner_ = new OneOffRunner(runtime_settings_);
-                break;
-            case RuntimeSettings::RunnerType::MPISYNC:
-                runner_ = new MPI::SynchronousMPIRunner(runtime_settings_);
-                break;
-            default:
-                throw std::runtime_error("Runner type not recognized.");
-        }
-    }
+  switch (runtime_settings_->runner_type()) {
+    case RuntimeSettings::RunnerType::SERIAL:
+      runner_ = new SerialRunner(runtime_settings_);
+      break;
+    case RuntimeSettings::RunnerType::ONEOFF:
+      runner_ = new OneOffRunner(runtime_settings_);
+      break;
+    case RuntimeSettings::RunnerType::MPISYNC:
+      runner_ = new MPI::SynchronousMPIRunner(runtime_settings_);
+      break;
+    default:
+      throw std::runtime_error("Runner type not recognized.");
+  }
+}
 
-    void MainRunner::Execute()
-    {
-        if (runtime_settings_->verb_vector()[0] >= 0) // idx:0 -> run (Runner)
-            std::cout << "[run]Starting optimization.-" << std::endl;
-        runner_->Execute();
-    }
+void MainRunner::Execute()
+{
+  cout << fixed << setprecision(8);
+  if (runtime_settings_->verb_vector()[0] >= 0) // idx:0 -> run (Runner)
+    std::cout << "[run]Starting optimization.--" << std::endl;
+  runner_->Execute();
+}
 
 }

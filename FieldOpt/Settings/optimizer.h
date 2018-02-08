@@ -29,9 +29,10 @@
 namespace Settings {
 
 /*!
- * \brief The Optimizer class contains optimizer-specific settings. Optimizer settings objects
- * may _only_ be created by the Settings class. They are created when reading a
- * JSON-formatted "driver file".
+ * \brief The Optimizer class contains optimizer-specific settings.
+ * Optimizer settings objects may _only_ be created by the Settings
+ * class. They are created when reading a JSON-formatted "driver file".
+ *
  */
 class Optimizer
 {
@@ -53,8 +54,8 @@ class Optimizer
 
   struct Parameters {
     // GSS parameters
-    int max_evaluations; //!< Maximum number of evaluations allowed before terminating the optimization run.
-    double initial_step_length; //!< The initial step length in the algorithm when applicable.
+    int max_evaluations; //!< Max # of evaluations allowed before terminating optimization.
+    double initial_step_length; //!< Initial step length in the algorithm when applicable.
     QList<double > initial_step_length_vector; //!<
     QList<double > minimum_step_length_vector; //!<
     double minimum_step_length; //!< The minimum step length in the algorithm when applicable.
@@ -108,6 +109,7 @@ class Optimizer
   Objective objective() const { return objective_; } //!< Get the optimizer objective function.
   QList<Constraint> constraints() const { return constraints_; } //!< Get the optimizer constraints.
 
+  // Should really be inhereited by Friend Class: Settings.
   void set_verbosity_vector(const std::vector<int> verb_vector) { verb_vector_ = verb_vector; }
   std::vector<int> verb_vector() const { return verb_vector_; }
 

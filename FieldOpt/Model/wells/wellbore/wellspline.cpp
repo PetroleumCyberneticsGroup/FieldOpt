@@ -37,7 +37,7 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
     grid_ = grid;
     well_settings_ = well_settings;
     if (well_settings_.verb_vector_[5] > 1) // idx:5 -> mod (Model)
-        std::cout << "[mod]Define well spline.---- " << std::endl;
+        std::cout << "[mod]Define well spline.----- " << std::endl;
 
     heel_x_ = new Model::Properties::ContinousProperty(well_settings.spline_heel.x);
     heel_y_ = new Model::Properties::ContinousProperty(well_settings.spline_heel.y);
@@ -68,7 +68,7 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
 QList<WellBlock *> *WellSpline::GetWellBlocks()
 {
     if (well_settings_.verb_vector_[5] > 1) // idx:5 -> mod (Model)
-        std::cout << "[mod]Get well blocks.------- " << std::endl;
+        std::cout << "[mod]Get well blocks.-------- " << std::endl;
 
     auto heel = Eigen::Vector3d(heel_x_->value(), heel_y_->value(), heel_z_->value());
     auto toe = Eigen::Vector3d(toe_x_->value(), toe_y_->value(), toe_z_->value());

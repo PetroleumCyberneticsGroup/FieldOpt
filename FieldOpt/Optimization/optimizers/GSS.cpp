@@ -18,6 +18,7 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 #include <iostream>
+#include <iomanip>
 #include "GSS.h"
 #include "Utilities/math.hpp"
 
@@ -48,6 +49,7 @@ GSS::GSS(Settings::Optimizer *settings,
 
   contr_fac_ = settings->parameters().contraction_factor;
   assert(contr_fac_ < 1.0);
+  cout << fixed << setprecision(8);
   if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
     cout << "[opt]Contraction factor:------ " << contr_fac_ << endl;
 
@@ -55,6 +57,7 @@ GSS::GSS(Settings::Optimizer *settings,
   assert(expan_fac_ >= 1.0);
   if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
     cout << "[opt]Expansion factor:-------- " << expan_fac_ << endl;
+  cout << fixed << setprecision(1);
 
 }
 
@@ -133,9 +136,10 @@ Matrix<T, Dynamic, 1> GSS::perturb(Matrix<T, Dynamic, 1> base, int dir) {
 bool GSS::is_converged() {
 
   if (settings_->verb_vector()[6] >= 1) { // idx:6 -> opt (Optimization)
-    cout << "[run]Step tol vector:---------" << endl;
-    IOFormat CleanFmt(4, 0, "", "", "", "", "[", "]");
-    cout << step_lengths_.format(CleanFmt) << endl;
+    cout << "[opt]Step tol vector:---------" << endl;
+    IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
+    cout << step_tol_.format(CleanFmt) << endl;
+    cout << fixed << setprecision(8);
   }
 
   for (int i = 0; i < step_lengths_.size(); ++i) {
