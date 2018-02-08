@@ -61,6 +61,8 @@ class Worker {
   MPIRunner *runner_;
   Optimization::Case *current_case_;
   MPIRunner::MsgTag current_tag_;
+
+  Settings::Settings *settings_;
 };
 }
 }
