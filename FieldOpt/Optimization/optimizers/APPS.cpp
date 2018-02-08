@@ -96,7 +96,7 @@ namespace Optimization {
         vector<int> APPS::inactive() {
             vector<int> inactive;
             for (int i = 0; i < directions_.size(); ++i) {
-                if (active_.count(i) == 0 && step_lengths_(i) >= step_tol_)
+                if (active_.count(i) == 0 && step_lengths_(i) >= step_tol_(i))
                     inactive.push_back(i);
             }
             return inactive;
@@ -117,8 +117,12 @@ namespace Optimization {
 
         void APPS::print_state(string header) {
             cout << "APPS state (" << header << ")" << "---------"<< endl;
-            cout << "step_lengths_  : " << vec_to_str(vector<double>(step_lengths_.data(), step_lengths_.data() + step_lengths_.size())) << endl;
-            cout << "active_        : " << vec_to_str(vector<int>(active_.begin(), active_.end())) << endl;
+            cout << "step_lengths_  : " << vec_to_str(vector<double>(
+                step_lengths_.data(),
+                step_lengths_.data() + step_lengths_.size())) << endl;
+            cout << "active_        : " << vec_to_str(vector<int>(
+                active_.begin(),
+                active_.end())) << endl;
             cout << "inactive()     : " << vec_to_str(inactive()) << endl;
             cout << "queue size     : " << case_handler_->QueuedCases().size() << endl;
 
