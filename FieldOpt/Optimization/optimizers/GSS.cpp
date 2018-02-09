@@ -99,6 +99,10 @@ void GSS::contract(vector<int> dirs) {
 }
 
 QList<Case *> GSS::generate_trial_points(vector<int> dirs) {
+
+  if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
+    cout << "[opt]Generating trial points.-" << endl;
+
   auto trial_points = QList<Case *>();
   if (dirs[0] == -1)
     dirs = range(0, (int)directions_.size(), 1);
@@ -106,16 +110,37 @@ QList<Case *> GSS::generate_trial_points(vector<int> dirs) {
   VectorXi int_base = GetTentativeBestCase()->GetIntegerVarVector();
   VectorXd rea_base = GetTentativeBestCase()->GetRealVarVector();
 
+  QList<QUuid> idv = GetTentativeBestCase()->GetRealVarIdVector();
+  GetTentativeBestCase()->real_variables();
+  GetTentativeBestCase()->GetValues()
+
+  if (settings_->verb_vector()[6] >= 1) { // idx:6 -> opt (Optimization)
+    cout << "[opt]GetRealVarVector:--------" << endl;
+    IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
+    cout << setw(10) << rea_base.format(CleanFmt) << endl;
+
+    for (int i = 0; i < idv.length(); ++i) {
+      cout << "UUID[" << i << "]: " << idv.at(i).toString().toStdString() << endl;
+    }
+
+    cout << fixed << setprecision(8);
+  }
+
+  if (settings_->verb_vector()[6] >= 2) // idx:6 -> opt (Optimization)
+    cout << "[opt]Perturbations:-----------" << endl;
+
   for (int dir : dirs) {
     auto trial_point = new Case(GetTentativeBestCase());
+
     if (int_base.size() > 0) {
       trial_point->SetIntegerVarValues(perturb(int_base, dir));
     }
     else if (rea_base.size() > 0) {
       trial_point->SetRealVarValues(perturb(rea_base, dir));
     }
-    trial_point->set_origin_data(GetTentativeBestCase(), dir,
-                                 step_lengths_(dir));
+
+    trial_point->set_origin_data(GetTentativeBestCase(),
+                                 dir, step_lengths_(dir));
     trial_points.append(trial_point);
   }
 
@@ -127,10 +152,19 @@ QList<Case *> GSS::generate_trial_points(vector<int> dirs) {
 
 template<typename T>
 Matrix<T, Dynamic, 1> GSS::perturb(Matrix<T, Dynamic, 1> base, int dir) {
+
   Matrix<T, Dynamic, 1> dirc = directions_[dir].cast<T>();
   T sl = step_lengths_(dir);
   Matrix<T, Dynamic, 1> perturbation = base + dirc * sl;
+
+  if (settings_->verb_vector()[6] >= 2) { // idx:6 -> opt (Optimization)
+    IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
+    cout << setw(10) << perturbation.format(CleanFmt) << endl;
+    cout << fixed << setprecision(8);
+  }
+
   return perturbation;
+
 }
 
 bool GSS::is_converged() {

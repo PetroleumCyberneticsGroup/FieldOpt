@@ -177,6 +177,7 @@ void AbstractRunner::InitializeBaseCase()
   base_case_ = new Optimization::Case(model_->variables()->GetBinaryVariableValues(),
                                       model_->variables()->GetDiscreteVariableValues(),
                                       model_->variables()->GetContinousVariableValues());
+
   if (!simulator_->results()->isAvailable()) {
     if (settings_->verb_vector()[0] >= 1) { // idx:0 -> run (Runner)
       std::cout << "[run]Sim.rslts unavailable.-- "

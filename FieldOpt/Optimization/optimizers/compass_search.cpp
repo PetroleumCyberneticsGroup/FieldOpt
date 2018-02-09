@@ -68,6 +68,8 @@ void CompassSearch::iterate()
 {
   if (!is_successful_iteration() && iteration_ != 0)
     contract();
+  if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
+    cout << "[opt]Launching opt.iteration.-" << endl;
   case_handler_->AddNewCases(generate_trial_points());
   case_handler_->ClearRecentlyEvaluatedCases();
   iteration_++;

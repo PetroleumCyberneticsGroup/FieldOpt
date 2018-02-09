@@ -37,13 +37,17 @@ namespace Model {
 namespace Properties {
 
 /*!
- * \brief The VariablePropertyContainer class facilitates the handling of variable properties.
+ * \brief The VariablePropertyContainer class
+ * facilitates the handling of variable properties.
  *
- * This class has members that hold all continous, discrete and binary properties that are
- * considered _variable_ in the model, as well as and methods to maintain the lists.
+ * This class has members that hold all continuous,
+ * discrete and binary properties that are considered
+ * _variable_ in the model, as well as and methods to
+ * maintain the lists.
  *
- * This class also maintains unique IDs in the form of hashtable keys for every variable property
- * of each type.
+ * This class also maintains unique IDs in the form
+ * of hashtable keys for every variable property of
+ * each type.
  */
 class VariablePropertyContainer
 {
