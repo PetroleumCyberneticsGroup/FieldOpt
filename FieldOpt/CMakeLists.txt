@@ -130,6 +130,7 @@ endif()
 add_subdirectory(ERTWrapper)
 add_subdirectory(Reservoir)
 add_subdirectory(FieldOpt-WellIndexCalculator)
+add_subdirectory(FieldOpt-3rdPartySolvers)
 
 if (NOT BUILD_WIC_ONLY AND NOT BUILD_WIC_ADGPRS)
     add_subdirectory(Utilities)
