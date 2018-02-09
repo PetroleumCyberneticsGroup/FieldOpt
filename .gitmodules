@@ -1,3 +1,6 @@
 [submodule "FieldOpt/FieldOpt-WellIndexCalculator"]
 	path = FieldOpt/FieldOpt-WellIndexCalculator
 	url = git@github.com:PetroleumCyberneticsGroup/FieldOpt-WellIndexCalculator.git
+[submodule "FieldOpt/FieldOpt-3rdPartySolvers"]
+	path = FieldOpt/FieldOpt-3rdPartySolvers
+	url = git@github.com:PetroleumCyberneticsGroup/FieldOpt-3rdPartySolvers.git
