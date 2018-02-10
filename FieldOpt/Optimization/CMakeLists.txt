@@ -42,7 +42,12 @@ add_library(optimization
 		optimizers/RGARDD.cpp
         normalizer.cpp
 		constraints/pseudo_cont_boundary_2d.cpp
-		${EXPERIMENTAL_CONSTRAINTS_SRC})
+        optimizers/SNOPTSolver.cpp
+        ../FieldOpt-3rdPartySolvers/handlers/SNOPTHandler.cpp
+        ../FieldOpt-3rdPartySolvers/handlers/LibraryHandler.c
+        ../FieldOpt-3rdPartySolvers/handlers/SNOPTLoader.c
+		${EXPERIMENTAL_CONSTRAINTS_SRC}
+        )
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
 target_link_libraries(optimization

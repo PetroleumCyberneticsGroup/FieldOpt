@@ -40,7 +40,7 @@ namespace Optimization {
 class Optimizer : public Loggable
 {
  public:
-  Optimizer() = delete;
+  Optimizer() = default;
 
   /*!
    * \brief GetCaseForEvaluation Get a new, unevaluated case for evaluation.
