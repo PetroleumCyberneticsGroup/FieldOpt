@@ -31,7 +31,7 @@ ENDIF("${isSystemDir}" STREQUAL "-1")
 # END Install dirs =====================================================
 
 # Options 1: Unit tests, example dir ===================================
-option(BUILD_TESTING "Build unit tests"                 ON)
+option(BUILD_TESTING "Build unit tests"                 OFF)
 option(COPY_EXAMPLES "Copy examples to build directory" ON)
 
 if (BUILD_TESTING AND NOT COPY_EXAMPLES)
@@ -119,6 +119,11 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 
 # Set this directory as the root dir
 include_directories(${CMAKE_SOURCE_DIR}  ${ERT_INCLUDE_DIR})
+
+# SNOPT ================================================================
+include_directories(${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/include/snopt)
+include_directories(${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/handlers)
+#include_directories(${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/lib)
 
 # Testing ==============================================================
 if (BUILD_TESTING)

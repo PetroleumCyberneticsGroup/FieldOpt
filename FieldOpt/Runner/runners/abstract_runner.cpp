@@ -27,6 +27,7 @@
 #include <Optimization/optimizers/APPS.h>
 #include <Optimization/optimizers/GeneticAlgorithm.h>
 #include <Optimization/optimizers/RGARDD.h>
+#include <Optimization/optimizers/SNOPTSolver.h>
 #include "abstract_runner.h"
 #include "Optimization/optimizers/compass_search.h"
 #include "Optimization/optimizers/ExhaustiveSearch2DVert.h"
@@ -97,16 +98,16 @@ void AbstractRunner::InitializeSimulator()
     switch (settings_->simulator()->type()) {
         case ::Settings::Simulator::SimulatorType::ECLIPSE:
             if (runtime_settings_->verbosity_level()) std::cout << "Using ECL100 reservoir simulator." << std::endl;
-            simulator_ = new Simulation::SimulatorInterfaces::ECLSimulator(settings_, model_);
-            break;
+        simulator_ = new Simulation::SimulatorInterfaces::ECLSimulator(settings_, model_);
+        break;
         case ::Settings::Simulator::SimulatorType::ADGPRS:
             if (runtime_settings_->verbosity_level()) std::cout << "Using ADGPRS reservoir simulator." << std::endl;
-            simulator_ = new Simulation::SimulatorInterfaces::AdgprsSimulator(settings_, model_);
-            break;
+        simulator_ = new Simulation::SimulatorInterfaces::AdgprsSimulator(settings_, model_);
+        break;
         case ::Settings::Simulator::SimulatorType::Flow:
             if (runtime_settings_->verbosity_level()) std::cout << "Using Flow reservoir simulator." << std::endl;
-            simulator_ = new Simulation::SimulatorInterfaces::FlowSimulator(settings_, model_);
-            break;
+        simulator_ = new Simulation::SimulatorInterfaces::FlowSimulator(settings_, model_);
+        break;
         default:
             throw std::runtime_error("Unable to initialize runner: simulator set in driver file not recognized.");
     }
@@ -131,8 +132,8 @@ void AbstractRunner::InitializeObjectiveFunction()
     switch (settings_->optimizer()->objective().type) {
         case Settings::Optimizer::ObjectiveType::WeightedSum:
             if (runtime_settings_->verbosity_level()) std::cout << "Using WeightedSum-type objective function." << std::endl;
-            objective_function_ = new Optimization::Objective::WeightedSum(settings_->optimizer(), simulator_->results());
-            break;
+        objective_function_ = new Optimization::Objective::WeightedSum(settings_->optimizer(), simulator_->results());
+        break;
         default:
             throw std::runtime_error("Unable to initialize runner: objective function type not recognized.");
     }
@@ -163,44 +164,54 @@ void AbstractRunner::InitializeOptimizer()
     switch (settings_->optimizer()->type()) {
         case Settings::Optimizer::OptimizerType::Compass:
             if (runtime_settings_->verbosity_level()) std::cout << "Using CompassSearch optimization algorithm." << std::endl;
-            optimizer_ = new Optimization::Optimizers::CompassSearch(settings_->optimizer(),
-                                                                     base_case_,
-                                                                     model_->variables(),
-                                                                     model_->grid(),
-                                                                     logger_
-            );
-            optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
-            break;
+        optimizer_ = new Optimization::Optimizers::CompassSearch(settings_->optimizer(),
+                                                                 base_case_,
+                                                                 model_->variables(),
+                                                                 model_->grid(),
+                                                                 logger_
+        );
+        optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
+        break;
         case Settings::Optimizer::OptimizerType::APPS:
             if (runtime_settings_->verbosity_level()) std::cout << "Using APPS optimization algorithm." << std::endl;
-            optimizer_ = new Optimization::Optimizers::APPS(settings_->optimizer(),
-                                                            base_case_,
-                                                            model_->variables(),
-                                                            model_->grid(),
-                                                            logger_
-            );
-            optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
-            break;
+        optimizer_ = new Optimization::Optimizers::APPS(settings_->optimizer(),
+                                                        base_case_,
+                                                        model_->variables(),
+                                                        model_->grid(),
+                                                        logger_
+        );
+        optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
+        break;
         case Settings::Optimizer::OptimizerType::GeneticAlgorithm:
             if (runtime_settings_->verbosity_level()) std::cout << "Using GeneticAlgorithm optimization algorithm." << std::endl;
-            optimizer_ = new Optimization::Optimizers::RGARDD(settings_->optimizer(),
-                                                              base_case_,
-                                                              model_->variables(),
-                                                              model_->grid(),
-                                                              logger_
-            );
-            optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
-            break;
+        optimizer_ = new Optimization::Optimizers::RGARDD(settings_->optimizer(),
+                                                          base_case_,
+                                                          model_->variables(),
+                                                          model_->grid(),
+                                                          logger_
+        );
+        optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
+        break;
         case Settings::Optimizer::OptimizerType::ExhaustiveSearch2DVert:
             if (runtime_settings_->verbosity_level()) std::cout << "Using ExhaustiveSearch2DVert." << std::endl;
-            optimizer_ = new Optimization::Optimizers::ExhaustiveSearch2DVert(settings_->optimizer(),
-                                                                              base_case_,
-                                                                              model_->variables(),
-                                                                              model_->grid(),
-                                                                              logger_
-            );
-            optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
-            break;
+        optimizer_ = new Optimization::Optimizers::ExhaustiveSearch2DVert(settings_->optimizer(),
+                                                                          base_case_,
+                                                                          model_->variables(),
+                                                                          model_->grid(),
+                                                                          logger_
+        );
+        optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
+        break;
+        case Settings::Optimizer::OptimizerType::SNOPTSolver:
+            if (runtime_settings_->verbosity_level()) std::cout << "Using SNOPT solver." << std::endl;
+        optimizer_ = new Optimization::Optimizers::SNOPTSolver(settings_->optimizer(),
+                                                               base_case_,
+                                                               model_->variables(),
+                                                               model_->grid(),
+                                                               logger_
+        );
+        optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
+        break;
         default:
             throw std::runtime_error("Unable to initialize runner: optimization algorithm set in driver file not recognized.");
     }
@@ -225,10 +236,10 @@ void AbstractRunner::PrintCompletionMessage() const {
     switch (optimizer_->IsFinished()) {
         case Optimization::Optimizer::TerminationCondition::MAX_EVALS_REACHED:
             std::cout << "maximum number of evaluations reached (not converged)." << std::endl;
-            break;
+        break;
         case Optimization::Optimizer::TerminationCondition::MINIMUM_STEP_LENGTH_REACHED:
             std::cout << "minimum step length reached (converged)." << std::endl;
-            break;
+        break;
         default: std::cout << "Unknown termination reason." << std::endl;
     }
 

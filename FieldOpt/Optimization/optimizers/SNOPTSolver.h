@@ -5,39 +5,55 @@
 #ifndef FIELDOPT_SNOPTSOLVER_H
 #define FIELDOPT_SNOPTSOLVER_H
 
-#include "FieldOpt-3rdPartySolvers/include/snopt/snopt.hpp"
+#include "Optimization/optimizer.h"
+
+//#include "FieldOpt-3rdPartySolvers/include/snopt/snopt.hpp"
+//included in snopt.hpp: #include "FieldOpt-3rdPartySolvers/include/snopt/f2c.h"
+
+#include "FieldOpt-3rdPartySolvers/handlers/SNOPTLoader.h"
+//included in SNOPTLoader.h: #include "FieldOpt-3rdPartySolvers/include/snopt/snopt.hpp"
+
+//included in SNOPTHandler.h: #include "FieldOpt-3rdPartySolvers/include/snopt/snopt.hpp"
 #include "FieldOpt-3rdPartySolvers/handlers/SNOPTHandler.h"
+
+namespace Optimization {
+namespace Optimizers {
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 int SNOPTusrFG_( integer    *Status, integer *n,    doublereal x[],
                  integer    *needF,  integer *neF,  doublereal F[],
                  integer    *needG,  integer *neG,  doublereal G[],
                  char       *cu,     integer *lencu,
                  integer    iu[],    integer *leniu,
                  doublereal ru[],    integer *lenru);
-
 #ifdef __cplusplus
 }
 #endif
 
-#include "Optimization/optimizer.h"
-
-namespace Optimization {
-namespace Optimizers {
-
 class SNOPTSolver : public Optimizer {
-
  public:
-  SNOPTSolver();
+  SNOPTSolver(){}
+  SNOPTSolver(Settings::Optimizer *settings,
+              Case *base_case,
+              Model::Properties::VariablePropertyContainer *variables,
+              Reservoir::Grid::Grid *grid,
+              Logger *logger);
+
   ~SNOPTSolver();
 
-  void callSNOPT();
-  void setOptionsForSNOPT(SNOPTHandler& optimizeWithSNOPT);
+ private:
 
   bool loadSNOPT(string libname = "libsnopt-7.2.12.2.so");
+  SNOPTHandler initSNOPTHandler();
+  void setOptionsForSNOPT(SNOPTHandler& snoptHandler_);
+
+  void callSNOPT();
+
+  void iterate();
+  void handleEvaluatedCase(Case *c) override;
+  TerminationCondition IsFinished();
 
 };
 
