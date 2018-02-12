@@ -18,33 +18,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 
-# ------ IS THIS CODE NECESSARY? WHAT DOES IT DO? REMOVE IF OBSOLETE ---
-# Install dirs =========================================================
-#set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install)
-#set(BUNDLE_NAME FieldOptBundle)
-#set(BUNDLE_PATH "${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}")
-## use, i.e. don't skip the full RPATH for the build tree
-#set(CMAKE_SKIP_BUILD_RPATH  FALSE)
-#
-## when building, don't use the install RPATH already
-## (but later on when installing)
-#set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
-#
-#set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-#
-## add the automatically determined parts of the RPATH which point
-## to directories outside the build tree to the install RPATH
-#set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-#
-## the RPATH to be used when installing, but only if it's not a system directory
-#list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
-#if("${isSystemDir}" STREQUAL "-1")
-#    SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-#endif("${isSystemDir}" STREQUAL "-1")
-# END Install dirs =====================================================
-# ------ IS THIS CODE NECESSARY? WHAT DOES IT DO? REMOVE IF OBSOLETE ---
-
-
 # Enable unit tests + example dir ======================================
 option(BUILD_TESTING "Build unit tests"                 OFF)
 option(COPY_EXAMPLES "Copy examples to build directory" ON)
@@ -150,6 +123,11 @@ include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR})
 # TO BE REMOVED
 #include_directories(${CMAKE_BINARY_DIR}/libraries/include/)
 
+# SNOPT ================================================================
+include_directories(${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/include/snopt)
+include_directories(${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/handlers)
+#include_directories(${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/lib)
+
 # Enable testing =======================================================
 if (BUILD_TESTING)
     include(CTest)
@@ -160,6 +138,7 @@ endif()
 add_subdirectory(ERTWrapper)
 add_subdirectory(Reservoir)
 add_subdirectory(FieldOpt-WellIndexCalculator)
+add_subdirectory(FieldOpt-3rdPartySolvers)
 
 if (NOT (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS))
     add_subdirectory(Utilities)

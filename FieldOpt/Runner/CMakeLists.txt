@@ -42,6 +42,7 @@ target_link_libraries(FieldOpt
 		PUBLIC fieldopt::ertwrapper
 		PUBLIC fieldopt::hdf5summaryreader
 		PUBLIC fieldopt::constraintmath
+		PUBLIC fieldopt::3rdpartysolvers
 		PUBLIC ${CMAKE_THREAD_LIBS_INIT}
 		PUBLIC ${Boost_LIBRARIES}
         PUBLIC ${MPI_LIBRARIES})
@@ -54,6 +55,7 @@ target_link_libraries(runner
 		PUBLIC fieldopt::ertwrapper
 		PUBLIC fieldopt::hdf5summaryreader
 		PUBLIC fieldopt::constraintmath
+        PUBLIC fieldopt::3rdpartysolvers
 		PUBLIC ${CMAKE_THREAD_LIBS_INIT}
 		PUBLIC ${Boost_LIBRARIES})
 
