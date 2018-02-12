@@ -45,7 +45,9 @@ Model::Model(Settings::Model settings, Logger *logger)
     if (settings.verb_vector()[5] >= 1) // idx:5 -> mod (Model)
       cout << "wname=" << wname << " - ";
 
-    wells_->append(new Wells::Well(settings, well_nr, variable_container_, grid_));
+    wells_->append(new Wells::Well(settings, well_nr,
+                                   variable_container_,
+                                   grid_));
   }
 
   if (settings.verb_vector()[5] >= 1) // idx:5 -> mod (Model)

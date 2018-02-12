@@ -17,23 +17,16 @@ CompassSearch::CompassSearch(Settings::Optimizer *settings,
 )
     : GSS(settings, base_case, variables, grid, logger)
 {
+
+  // Initiate CompassSearch
   directions_ = GSSPatterns::Compass(num_vars_);
-  step_lengths_ = Eigen::VectorXd(directions_.size());
   if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
     cout << "[opt]Init. CompassSearch.-----" << endl;
 
-  auto islv = settings->parameters().initial_step_length_vector;
-
-  if(islv.length() > 0) {
-    assert(step_lengths_.rows() == 2 * islv.length());
-    for (int i = 0; i < islv.length(); ++i) {
-      step_lengths_(i) = settings->parameters().initial_step_length_vector[i];
-      step_lengths_(i + islv.length()) = settings->parameters().initial_step_length_vector[i];
-    }
-  } else {
-    step_lengths_.fill(settings->parameters().initial_step_length);
-  }
-
+  // Set step lengths
+  step_lengths_ = Eigen::VectorXd(directions_.size());
+  this->set_step_lengths();
+  assert(step_lengths_.size() == directions_.size());
   if (settings->verb_vector()[6] >= 1) { // idx:6 -> opt (Optimization)
     cout << fixed << setw(6) << setprecision(1);
     cout << "[opt]Step length vector:------" << endl;
@@ -41,20 +34,10 @@ CompassSearch::CompassSearch(Settings::Optimizer *settings,
     cout << step_lengths_.format(CleanFmt) << endl;
   }
 
-  assert(step_lengths_.size() == directions_.size());
+  // Set step tolerances
   step_tol_ = Eigen::VectorXd(directions_.size());
-  auto stolv = settings->parameters().minimum_step_length_vector;
-  assert(step_tol_.size() == 2 * stolv.size());
-
-  if(stolv.length() > 0) {
-    for (int i = 0; i < stolv.length(); ++i) {
-      step_tol_(i) = stolv[i];
-      step_tol_(i + stolv.length()) = stolv[i];
-    }
-  } else {
-    step_tol_.fill(settings->parameters().minimum_step_length);
-  }
-
+  this->set_step_tolerances();
+  assert(step_tol_.size() == step_lengths_.size());
   if (settings_->verb_vector()[6] >= 1) { // idx:6 -> opt (Optimization)
     cout << "[opt]Step tol vector:---------" << endl;
     IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");

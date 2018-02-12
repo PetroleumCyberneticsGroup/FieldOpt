@@ -12,27 +12,11 @@ using std::cout;
 
 namespace Settings {
 
-// Left for backcompatibility with tests, etc -- fix that, then delete
-Settings::Settings(QString driver_path,
-                   QString output_directory,
-                   int verbosity_level) {
-
-  if (!::Utilities::FileHandling::FileExists(driver_path))
-    throw FileNotFoundException(driver_path.toStdString());
-  driver_path_ = driver_path;
-  readDriverFile();
-
-  output_directory_ = output_directory;
-  simulator_->output_directory_ = output_directory;
-  set_verbosity_level(verbosity_level);
-}
-
 Settings::Settings(QString driver_path,
                    QString output_directory,
                    std::vector<int> verb_vector) {
 
   set_verbosity_vector(verb_vector);
-  set_verbosity_level(6); // back-compatibility
 
   if (!::Utilities::FileHandling::FileExists(driver_path))
     throw FileNotFoundException(driver_path.toStdString());
@@ -136,15 +120,15 @@ void Settings::readOptimizerSection()
       cout << fixed << setprecision(1);
       cout << "MaxEvaluations:-------- " << optimizer_->parameters_.max_evaluations << endl;
       cout << "InitialStepLength:----- " << optimizer_->parameters_.initial_step_length << endl;
-      cout << "InitStepLengthVector:-- ";
-      for( int i=0; i<optimizer_->parameters_.initial_step_length_vector.count(); ++i ) {
-        cout << optimizer_->parameters_.initial_step_length_vector[i] << " ";
+      cout << "InitialStepLengthXYZ:-- ";
+      for( int i=0; i<optimizer_->parameters_.initial_step_length_xyz.count(); ++i ) {
+        cout << optimizer_->parameters_.initial_step_length_xyz[i] << " ";
       }
       cout << endl;
       cout << "MinimumStepLength:----- " << optimizer_->parameters_.minimum_step_length << endl;
-      cout << "MinStepLengthVector:--- ";
-      for( int i=0; i<optimizer_->parameters_.minimum_step_length_vector.count(); ++i ) {
-        cout << optimizer_->parameters_.minimum_step_length_vector[i] << " ";
+      cout << "MinimumStepLengthXYZ:-- ";
+      for( int i=0; i<optimizer_->parameters_.minimum_step_length_xyz.count(); ++i ) {
+        cout << optimizer_->parameters_.minimum_step_length_xyz[i] << " ";
       }
       cout << endl;
       cout << fixed << setprecision(8);

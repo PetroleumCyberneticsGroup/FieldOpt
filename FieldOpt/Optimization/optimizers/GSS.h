@@ -20,6 +20,7 @@
 #ifndef FIELDOPT_GSS_H
 #define FIELDOPT_GSS_H
 
+//#include "Model/properties/variable_property_container.h"
 #include "Optimization/optimizer.h"
 #include <Eigen/Core>
 #include <vector>
@@ -83,6 +84,8 @@ class GSS : public Optimizer {
   VectorXd step_tol_; //!< Vector of step length convergence tolerances.
   VectorXd step_lengths_; //!< Vector of step lengths.
   vector<VectorXi> directions_; //!< Vector of search directions.
+  QList<QUuid> realvar_uuid_;
+  Model::Properties::VariablePropertyContainer *varcont_;
 
   Settings::Optimizer *settings_;
 
@@ -107,6 +110,8 @@ class GSS : public Optimizer {
    * @param len The value all step lengths should be set to.
    */
   void set_step_lengths(double len);
+  void set_step_lengths();
+  void set_step_tolerances();
 
   /*!
    * @brief Generate a set of trial points.
