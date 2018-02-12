@@ -54,7 +54,11 @@ namespace Simulation { namespace ExecutionScripts {
             return Script::bash_adgprs;
         else if (QString::compare(name, "bash_flow") == 0)
             return Script::bash_flow;
-        else throw std::runtime_error("Script " + name.toStdString() + " not recognized.");
+        else {
+            std::string err_str = "Script " + name.toStdString() + " not recognized. ";
+            std::cout << err_str << "Throwing runtime_error." << std::endl;
+            throw std::runtime_error(err_str);
+        }
     }
 
     static QString GetScriptPath(QString name) {

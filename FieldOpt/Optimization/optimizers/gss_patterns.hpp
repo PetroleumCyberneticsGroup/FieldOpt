@@ -25,31 +25,33 @@
 
 namespace Optimization { namespace GSSPatterns {
 
-        /*!
-         * @brief Get the set of search directions containing all coordinate directions, bot positive and negative.
-         *
-         * This is the set used by CompassSearch.
-         *
-         * For 2D, the set is:
-         * [1, 0], [0, 1], [-1, 0], [0, -1]
-         *
-         * Which looks like +.
-         *
-         * @param num_vars The number of variables in the problem.
-         * @return The set of search directions in all coordinate directions, positive and negative.
-         */
-        inline std::vector<Eigen::VectorXi> Compass(int num_vars) {
-            auto directions = std::vector<Eigen::VectorXi>(2*num_vars);
-            for (int i = 0; i < num_vars; ++i) {
-                Eigen::VectorXi dir = Eigen::VectorXi::Zero(num_vars);
-                dir(i) = 1;
-                directions[i] = dir;
-                directions[i+num_vars] = (-1) * dir;
-            }
-            return directions;
-        }
-
+/*!
+ * @brief Get the set of search directions containing all coordinate
+ * directions, bot positive and negative.
+ *
+ * This is the set used by CompassSearch.
+ *
+ * For 2D, the set is:
+ * [1, 0], [0, 1], [-1, 0], [0, -1]
+ *
+ * Which looks like +.
+ *
+ * @param num_vars The number of variables in the problem.
+ * @return The set of search directions in all coordinate directions,
+ * positive and negative.
+ */
+inline std::vector<Eigen::VectorXi> Compass(int num_vars) {
+    auto directions = std::vector<Eigen::VectorXi>(2*num_vars);
+    for (int i = 0; i < num_vars; ++i) {
+        Eigen::VectorXi dir = Eigen::VectorXi::Zero(num_vars);
+        dir(i) = 1;
+        directions[i] = dir;
+        directions[i+num_vars] = (-1) * dir;
     }
+    return directions;
+}
+
+}
 }
 
 #endif //FIELDOPT_GSS_PATTERNS_HPP_H

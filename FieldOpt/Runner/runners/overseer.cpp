@@ -41,8 +41,8 @@ void Overseer::AssignCase(Optimization::Case *c) {
     runner_->SendMessage(msg);
     worker->start();
     c->state.eval = Optimization::Case::CaseState::EvalStatus::E_CURRENT;
-    runner_->printMessage("Assigned case to worker " + boost::lexical_cast<std::string>(worker->rank), 2);
-    runner_->printMessage("Current status for workers:\n" + workerStatusSummary(), 2);
+    runner_->printMessage("Assigned case to worker " + boost::lexical_cast<std::string>(worker->rank));
+    runner_->printMessage("Current status for workers:\n" + workerStatusSummary());
 }
 
 Optimization::Case *Overseer::RecvEvaluatedCase() {
@@ -50,8 +50,8 @@ Optimization::Case *Overseer::RecvEvaluatedCase() {
     runner_->RecvMessage(message);
     workers_[message.source]->stop();
     runner_->printMessage("Received case with tag " + boost::lexical_cast<std::string>(message.tag)
-                              + " from worker " + boost::lexical_cast<std::string>(message.source), 2);
-    runner_->printMessage("Current status for workers:\n" + workerStatusSummary(), 2);
+                              + " from worker " + boost::lexical_cast<std::string>(message.source));
+    runner_->printMessage("Current status for workers:\n" + workerStatusSummary());
     last_case_tag = message.get_tag();
     return message.c;
 }
