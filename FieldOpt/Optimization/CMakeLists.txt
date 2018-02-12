@@ -42,7 +42,12 @@ add_library(optimization
 		optimizers/RGARDD.cpp
         normalizer.cpp
 		constraints/pseudo_cont_boundary_2d.cpp
-		${EXPERIMENTAL_CONSTRAINTS_SRC})
+        optimizers/SNOPTSolver.cpp
+#        ../FieldOpt-3rdPartySolvers/handlers/SNOPTHandler.cpp
+#        ../FieldOpt-3rdPartySolvers/handlers/LibraryHandler.c
+#        ../FieldOpt-3rdPartySolvers/handlers/SNOPTLoader.c
+		${EXPERIMENTAL_CONSTRAINTS_SRC}
+        )
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
 target_link_libraries(optimization
@@ -51,13 +56,18 @@ target_link_libraries(optimization
         PUBLIC fieldopt::constraintmath
 		PUBLIC fieldopt::reservoir
         PUBLIC fieldopt::runner
+        PUBLIC fieldopt::3rdpartysolvers
         Qt5::Core
+        ${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/lib/libsnopt-7.2.12.2.so
 		PUBLIC ${Boost_LIBRARIES})
 
 target_include_directories(optimization PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/constraints>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/objective>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/optimizers>)
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/optimizers>
+#        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../FieldOpt-3rdPartySolvers/handlers>
+#        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../FieldOpt-3rdPartySolvers/include/snopt>
+        )
 
 add_compile_options(-std=c++11)
 
@@ -99,7 +109,7 @@ if (BUILD_TESTING)
 	add_test(NAME test_optimization COMMAND $<TARGET_FILE:test_optimization>)
 endif()
 
-install( TARGETS optimization
+install(TARGETS optimization
 		RUNTIME DESTINATION bin
 		LIBRARY DESTINATION lib
 		ARCHIVE DESTINATION lib/static

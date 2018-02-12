@@ -123,6 +123,11 @@ include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR})
 # TO BE REMOVED
 #include_directories(${CMAKE_BINARY_DIR}/libraries/include/)
 
+# SNOPT ================================================================
+include_directories(${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/include/snopt)
+include_directories(${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/handlers)
+#include_directories(${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/lib)
+
 # Enable testing =======================================================
 if (BUILD_TESTING)
     include(CTest)
@@ -133,6 +138,7 @@ endif()
 add_subdirectory(ERTWrapper)
 add_subdirectory(Reservoir)
 add_subdirectory(FieldOpt-WellIndexCalculator)
+add_subdirectory(FieldOpt-3rdPartySolvers)
 
 if (NOT (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS))
     add_subdirectory(Utilities)
