@@ -243,7 +243,6 @@ void AbstractRunner::InitializeOptimizer()
                                                                         model_->grid(),
                                                                           logger_
         );
-        optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
         break;
         case Settings::Optimizer::OptimizerType::SNOPTSolver:
             if (runtime_settings_->verbosity_level()) std::cout << "Using SNOPT solver." << std::endl;

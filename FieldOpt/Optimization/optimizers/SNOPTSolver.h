@@ -35,7 +35,7 @@ int SNOPTusrFG_( integer    *Status, integer *n,    doublereal x[],
 class SNOPTSolver : public Optimizer {
  public:
 
-  SNOPTSolver(::Settings::Optimizer *settings,
+  SNOPTSolver(Settings::Optimizer *settings,
               Case *base_case,
               Model::Properties::VariablePropertyContainer *variables,
               Reservoir::Grid::Grid *grid,
@@ -54,7 +54,7 @@ class SNOPTSolver : public Optimizer {
 
   void callSNOPT();
 
-
+  Settings::Optimizer *settings_;
 
   void iterate() {};
   bool is_successful_iteration(){};
