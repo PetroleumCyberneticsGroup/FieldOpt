@@ -34,14 +34,17 @@ int SNOPTusrFG_( integer    *Status, integer *n,    doublereal x[],
 
 class SNOPTSolver : public Optimizer {
  public:
-  SNOPTSolver(){}
-  SNOPTSolver(Settings::Optimizer *settings,
+
+  SNOPTSolver(::Settings::Optimizer *settings,
               Case *base_case,
               Model::Properties::VariablePropertyContainer *variables,
               Reservoir::Grid::Grid *grid,
               Logger *logger);
 
   ~SNOPTSolver();
+
+  QString GetStatusStringHeader() const {};
+  QString GetStatusString() const {};
 
  private:
 
@@ -51,9 +54,15 @@ class SNOPTSolver : public Optimizer {
 
   void callSNOPT();
 
-  void iterate();
-  void handleEvaluatedCase(Case *c) override;
-  TerminationCondition IsFinished();
+
+
+  void iterate() {};
+  bool is_successful_iteration(){};
+
+  void handleEvaluatedCase(Case *c) override {};
+  TerminationCondition IsFinished() {};
+
+
 
 };
 
