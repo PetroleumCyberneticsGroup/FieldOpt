@@ -53,17 +53,22 @@ class Optimizer
   enum ObjectiveType { WeightedSum };
 
   struct Parameters {
+
     // GSS parameters
     int max_evaluations; //!< Max # of evaluations allowed before terminating optimization.
     double contraction_factor; //!< The contraction factor for GSS algorithms.
     double expansion_factor; //!< The expansion factor for GSS algorithms.
     double max_queue_size; //!< Maximum size of evaluation queue.
     QString pattern; //!< The pattern to be used for GSS algorithms.
-
     double initial_step_length; //!< Initial step length in the algorithm when applicable.
     QList<double > initial_step_length_xyz; //!< XYZ scaled initial step length
     double minimum_step_length; //!< The minimum step length in the algorithm when applicable.
     QList<double > minimum_step_length_xyz; //!< XYZ scaled minimum step length
+
+    // 3rd party solver parameters
+    QString thrdps_optn_file;
+    QString thrdps_smry_file;
+    QString thrdps_prnt_file;
 
     // GA parameters
     int max_generations;      //!< Max iterations. Default: 50

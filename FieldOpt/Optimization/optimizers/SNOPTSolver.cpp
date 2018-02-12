@@ -15,6 +15,11 @@ SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
                          Reservoir::Grid::Grid *grid,
                          Logger *logger)
     : Optimizer(settings, base_case, variables, grid, logger) {
+
+  if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
+    cout << "[opt]Init. SNOPTSolver.-------" << endl;
+
+  settings_ = settings;
   loadSNOPT();
   callSNOPT();
 }
@@ -24,13 +29,16 @@ SNOPTSolver::~SNOPTSolver(){}
 
 SNOPTHandler SNOPTSolver::initSNOPTHandler(){
   string prnt_file, smry_file, optn_file;
-  prnt_file = ".opt.prnt";
-  smry_file = ".opt.summ";
-  optn_file = ".opt.optn";
+  optn_file = settings_->parameters().thrdps_optn_file.toStdString() + ".opt.optn";
+  smry_file = settings_->parameters().thrdps_smry_file.toStdString() + ".opt.summ";
+  prnt_file = settings_->parameters().thrdps_prnt_file.toStdString() + ".opt.prnt";
 
   SNOPTHandler snoptHandler(prnt_file.c_str(),
                             smry_file.c_str(),
                             optn_file.c_str());
+  if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
+    cout << "[opt]Init. SNOPTHandler.------" << endl;
+
   return snoptHandler;
 }
 
@@ -359,6 +367,9 @@ void SNOPTSolver::callSNOPT()
 void SNOPTSolver::setOptionsForSNOPT(SNOPTHandler& snoptHandler)
 {
 
+  if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
+    cout << "[opt]Set options for SNOPT.---" << endl;
+
   //snoptHandler.setParameter("Backup basis file              0");
 //  snoptHandler.setRealParameter("Central difference interval", 2 * derivativeRelativePerturbation);
 
@@ -443,6 +454,9 @@ void SNOPTSolver::setOptionsForSNOPT(SNOPTHandler& snoptHandler)
   //snoptHandler.setParameter("Unbounded step size             1.0e+18");
   snoptHandler.setIntParameter("Verify level", -1);
   snoptHandler.setRealParameter("Violation limit", 1e-8);
+
+//  if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
+//    cout << "[opt]Set options for SNOPT.---" << endl;
 
 }
 

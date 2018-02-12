@@ -39,13 +39,26 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
     type_ = OptimizerType::GeneticAlgorithm;
   else if (QString::compare(type, "ExhaustiveSearch2DVert") == 0)
     type_ = OptimizerType::ExhaustiveSearch2DVert;
+  else if (QString::compare(type, "SNOPTSolver") == 0)
+    type_ = OptimizerType::SNOPTSolver;
   else {
     throw OptimizerTypeNotRecognizedException(
         "The optimizer type " + type.toStdString() + " was not recognized.");
   }
 
-  // Optimizer mode
+  if (type_ == SNOPTSolver) {
+    // IO files
+    if (json_parameters.contains("OptionFile"))
+      parameters_.thrdps_optn_file = json_parameters["OptionFile"].toString();
+    if (json_parameters.contains("SummaryFile"))
+      parameters_.thrdps_smry_file = json_parameters["SummaryFile"].toString();
+    if (json_parameters.contains("PrintFile"))
+      parameters_.thrdps_prnt_file = json_parameters["PrintFile"].toString();
+  }
+
   if (type_ != ExhaustiveSearch2DVert) {
+
+    // Optimizer mode
     if (json_optimizer.contains("Mode")) {
       QString mode = json_optimizer["Mode"].toString();
       if (QString::compare(mode, "Minimize", Qt::CaseInsensitive) == 0)
@@ -60,7 +73,6 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
       throw UnableToParseOptimizerSectionException(
           "Optimizer Mode keyword must be specified.");
     }
-
 
     // Optimizer parameters
     try {
