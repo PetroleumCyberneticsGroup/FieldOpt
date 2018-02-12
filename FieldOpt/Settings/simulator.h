@@ -50,6 +50,10 @@ class Simulator
   SimulatorFluidModel fluid_model() const { return fluid_model_; } //!< Get the fluid model
   int max_minutes() { return max_minutes_; } //!< Get the maximum number of minutes simulations are allowed to run if no timeout value can be calculated. Returns -1 if field is not set.
 
+  // Should really be inhereited by Friend Class: Settings.
+  void set_verbosity_vector(const std::vector<int> verb_vector) { verb_vector_ = verb_vector; }
+  std::vector<int> verb_vector() const { return verb_vector_; }
+
  private:
   Simulator(QJsonObject json_simulator);
   SimulatorType type_;
@@ -60,6 +64,8 @@ class Simulator
   QString output_directory_;
   QString custom_exec_script_path_;
   int max_minutes_;
+
+  std::vector<int> verb_vector_ = std::vector<int>(11,0); //!<
 };
 
 }

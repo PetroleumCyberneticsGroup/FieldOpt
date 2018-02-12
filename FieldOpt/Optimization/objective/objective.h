@@ -39,14 +39,16 @@ namespace Objective {
  */
 class Objective
 {
-public:
-    /*!
-     * \brief value Get the evaluated value of the objective function.
-     */
-    virtual double value() const = 0;
+ public:
+  /*!
+   * \brief value Get the evaluated value of the objective function.
+   */
+  virtual double value() const = 0;
+  void SetVerbosityLevel(int level);
 
-protected:
-    Objective();
+ protected:
+  Objective();
+  int verbosity_level_;
 
 };
 

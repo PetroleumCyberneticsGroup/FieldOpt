@@ -28,12 +28,15 @@
 
 #include <QString>
 #include <QJsonObject>
+#include <vector>
 
 #include "simulator.h"
 #include "optimizer.h"
 #include "model.h"
 
 namespace Settings {
+
+using std::vector;
 
 class Simulator;
 class Model;
@@ -52,16 +55,16 @@ class Settings
 {
  public:
   Settings(){}
-  Settings(QString driver_path, QString output_directory);
+  Settings(QString driver_path, QString output_directory, int verbosity_level);
+  Settings(QString driver_path, QString output_directory, vector<int> verb_vector);
 
   QString driver_path() const { return driver_path_; }
 
   QString name() const { return name_; } //!< The name to be used for the run. Output file and folder names are derived from this.
   QString output_directory() const { return output_directory_; } //!< Path to a directory in which output files are to be placed.
 
-  // To be removed:
-  bool verbose() const { return verbose_; } //!< Verbose mode (with or without debug printing).
-  void set_verbosity(const bool verbosity) { verbose_ = verbosity; }
+  void set_verbosity_vector(const vector<int> verb_vector) { verb_vector_ = verb_vector; }
+  vector<int> verb_vector() const { return verb_vector_; }
 
   //!< Get the value for the bookkeeper tolerance. Used by the Bookkeeper in the Runner library.
   double bookkeeper_tolerance() const { return bookkeeper_tolerance_; }
@@ -81,11 +84,12 @@ class Settings
   QString name_;
   double bookkeeper_tolerance_;
   QString output_directory_;
-  bool verbose_ = false;
   Model *model_;
   Optimizer *optimizer_;
   Simulator *simulator_;
   QString build_path_;
+
+  std::vector<int> verb_vector_ = std::vector<int>(11,0); //!<
 
   void readDriverFile();
   void readGlobalSection();

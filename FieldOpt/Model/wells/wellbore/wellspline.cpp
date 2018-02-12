@@ -33,73 +33,87 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
                        Properties::VariablePropertyContainer *variable_container,
                        Reservoir::Grid::Grid *grid)
 {
-    grid_ = grid;
-    well_settings_ = well_settings;
+  grid_ = grid;
+  well_settings_ = well_settings;
+  if (well_settings_.verb_vector_[5] > 1) // idx:5 -> mod (Model)
+    std::cout << "[mod]Define well spline.----- " << std::endl;
 
-    heel_x_ = new Model::Properties::ContinousProperty(well_settings.spline_heel.x);
-    heel_y_ = new Model::Properties::ContinousProperty(well_settings.spline_heel.y);
-    heel_z_ = new Model::Properties::ContinousProperty(well_settings.spline_heel.z);
-    toe_x_ = new Model::Properties::ContinousProperty(well_settings.spline_toe.x);
-    toe_y_ = new Model::Properties::ContinousProperty(well_settings.spline_toe.y);
-    toe_z_ = new Model::Properties::ContinousProperty(well_settings.spline_toe.z);
-    seconds_spent_in_compute_wellblocks_ = 0;
+  heel_x_ = new Model::Properties::ContinousProperty(well_settings.spline_heel.x);
+  heel_y_ = new Model::Properties::ContinousProperty(well_settings.spline_heel.y);
+  heel_z_ = new Model::Properties::ContinousProperty(well_settings.spline_heel.z);
+  toe_x_ = new Model::Properties::ContinousProperty(well_settings.spline_toe.x);
+  toe_y_ = new Model::Properties::ContinousProperty(well_settings.spline_toe.y);
+  toe_z_ = new Model::Properties::ContinousProperty(well_settings.spline_toe.z);
+  seconds_spent_in_compute_wellblocks_ = 0;
 
-    if (well_settings.spline_heel.is_variable) {
-        heel_x_->setName(well_settings.spline_heel.name + "#x");
-        heel_y_->setName(well_settings.spline_heel.name + "#y");
-        heel_z_->setName(well_settings.spline_heel.name + "#z");
-        variable_container->AddVariable(heel_x_);
-        variable_container->AddVariable(heel_y_);
-        variable_container->AddVariable(heel_z_);
-    }
-    if (well_settings.spline_toe.is_variable) {
-        toe_x_->setName(well_settings.spline_toe.name + "#x");
-        toe_y_->setName(well_settings.spline_toe.name + "#y");
-        toe_z_->setName(well_settings.spline_toe.name + "#z");
-        variable_container->AddVariable(toe_x_);
-        variable_container->AddVariable(toe_y_);
-        variable_container->AddVariable(toe_z_);
-    }
+  if (well_settings.spline_heel.is_variable) {
+    heel_x_->setName(well_settings.spline_heel.name + "#x");
+    heel_y_->setName(well_settings.spline_heel.name + "#y");
+    heel_z_->setName(well_settings.spline_heel.name + "#z");
+    variable_container->AddVariable(heel_x_);
+    variable_container->AddVariable(heel_y_);
+    variable_container->AddVariable(heel_z_);
+  }
+  if (well_settings.spline_toe.is_variable) {
+    toe_x_->setName(well_settings.spline_toe.name + "#x");
+    toe_y_->setName(well_settings.spline_toe.name + "#y");
+    toe_z_->setName(well_settings.spline_toe.name + "#z");
+    variable_container->AddVariable(toe_x_);
+    variable_container->AddVariable(toe_y_);
+    variable_container->AddVariable(toe_z_);
+  }
 }
 
 QList<WellBlock *> *WellSpline::GetWellBlocks()
 {
-    auto heel = Eigen::Vector3d(heel_x_->value(), heel_y_->value(), heel_z_->value());
-    auto toe = Eigen::Vector3d(toe_x_->value(), toe_y_->value(), toe_z_->value());
+  if (well_settings_.verb_vector_[5] > 1) // idx:5 -> mod (Model)
+    std::cout << "[mod]Get well blocks.-------- " << std::endl;
 
-    auto wic = WellIndexCalculator(grid_);
+  auto heel = Eigen::Vector3d(heel_x_->value(), heel_y_->value(), heel_z_->value());
+  auto toe = Eigen::Vector3d(toe_x_->value(), toe_y_->value(), toe_z_->value());
 
-    vector<WellDefinition> welldefs;
-    welldefs.push_back(WellDefinition());
-    welldefs[0].wellname = well_settings_.name.toStdString();
-    welldefs[0].radii.push_back(well_settings_.wellbore_radius);
-    welldefs[0].skins.push_back(0.0);
-    welldefs[0].heels.push_back(heel);
-    welldefs[0].toes.push_back(toe);
-    welldefs[0].skins.push_back(0.0);
+  auto wic = WellIndexCalculator(grid_);
 
-    auto start = QDateTime::currentDateTime();
-    auto block_data = wic.ComputeWellBlocks(welldefs)[well_settings_.name.toStdString()];
-    auto end = QDateTime::currentDateTime();
-    seconds_spent_in_compute_wellblocks_ = time_span_seconds(start, end);
+  vector<WellDefinition> welldefs;
+  welldefs.push_back(WellDefinition());
+  welldefs[0].wellname = well_settings_.name.toStdString();
+  welldefs[0].radii.push_back(well_settings_.wellbore_radius);
+  welldefs[0].skins.push_back(0.0);
+  welldefs[0].heels.push_back(heel);
+  welldefs[0].toes.push_back(toe);
+  welldefs[0].skins.push_back(0.0);
 
-    QList<WellBlock *> *blocks = new QList<WellBlock *>();
-    for (int i = 0; i < block_data.size(); ++i) {
-        blocks->append(getWellBlock(block_data[i]));
-    }
-    if (blocks->size() == 0) {
-        throw WellBlocksNotDefined("WIC could not compute.");
-    }
-    return blocks;
+  auto start = QDateTime::currentDateTime();
+  auto block_data = wic.ComputeWellBlocks(welldefs)[well_settings_.name.toStdString()];
+  auto end = QDateTime::currentDateTime();
+  seconds_spent_in_compute_wellblocks_ = time_span_seconds(start, end);
+
+  if (well_settings_.verb_vector_[5] > 1) { // idx:5 -> mod verbose
+    std::cout << "[mod]Computing well blocks.-- "
+              << seconds_spent_in_compute_wellblocks_ << "secs - "
+              << seconds_spent_in_compute_wellblocks_ / 60.0 << "mins"
+              << std::endl;
+  }
+
+  QList<WellBlock *> *blocks = new QList<WellBlock *>();
+  for (int i = 0; i < block_data.size(); ++i) {
+    blocks->append(getWellBlock(block_data[i]));
+  }
+  if (blocks->size() == 0) {
+    throw WellBlocksNotDefined("WIC could not compute.");
+  }
+  return blocks;
 }
 
 WellBlock *WellSpline::getWellBlock(Reservoir::WellIndexCalculation::IntersectedCell block_data)
 {
-    auto wb = new WellBlock(block_data.ijk_index().i()+1, block_data.ijk_index().j()+1, block_data.ijk_index().k()+1);
-    auto comp = new Completions::Perforation();
-    comp->setTransmissibility_factor(block_data.cell_well_index_matrix());
-    wb->AddCompletion(comp);
-    return wb;
+  auto wb = new WellBlock(block_data.ijk_index().i()+1,
+                          block_data.ijk_index().j()+1,
+                          block_data.ijk_index().k()+1);
+  auto comp = new Completions::Perforation();
+  comp->setTransmissibility_factor(block_data.cell_well_index_matrix());
+  wb->AddCompletion(comp);
+  return wb;
 }
 
 }

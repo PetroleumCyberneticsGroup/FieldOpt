@@ -37,8 +37,9 @@ namespace Model {
 class ModelSynchronizationObject;
 
 /*!
- * \brief The Model class represents the reservoir model as a whole, including wells and
- * any related variables, and the reservoir grid.
+ * \brief The Model class represents the reservoir model as
+ * a whole, including wells and any related variables, and
+ * the reservoir grid.
  */
 class Model : public Loggable
 {
@@ -57,9 +58,11 @@ class Model : public Loggable
   Reservoir::Grid::Grid *grid() const { return grid_; }
 
   /*!
-   * \brief variables Get the set of variable properties of all types.
+   * \brief variables Get the set of variable properties
+   * of all types.
    */
-  Properties::VariablePropertyContainer *variables() const { return variable_container_; }
+  Properties::VariablePropertyContainer *variables() const
+  { return variable_container_; }
 
   /*!
    * \brief wells Get a list of all the wells in the model.
@@ -67,7 +70,8 @@ class Model : public Loggable
   QList<Wells::Well *> *wells() const { return wells_; }
 
   /*!
-   * \brief ApplyCase Applies the variable values from a case to the variables in the model.
+   * \brief ApplyCase Applies the variable values from a
+   * case to the variables in the model.
    * \param c Case to apply the variable values of.
    */
   void ApplyCase(Optimization::Case *c);
@@ -83,8 +87,8 @@ class Model : public Loggable
   void SetResult(const std::string key, std::vector<double> vec);
 
   /*!
-   * @brief Should be called at the end of the optimization run. Writes the last case
-   * to the extended log.
+   * @brief Should be called at the end of the optimization
+   * run. Writes the last case to the extended log.
    */
   void Finalize();
 
@@ -92,7 +96,11 @@ class Model : public Loggable
   Reservoir::Grid::Grid *grid_;
   Properties::VariablePropertyContainer *variable_container_;
   QList<Wells::Well *> *wells_;
-  void verify(); //!< Verify the model. Throws an exception if it is not.
+
+  /*!
+   * \brief Verify the model. Throws an exception if it is not.
+   */
+  void verify();
 
   void verifyWells();
   void verifyWellTrajectory(Wells::Well *w);
@@ -100,8 +108,20 @@ class Model : public Loggable
 
   Logger *logger_;
   QUuid current_case_id_;
-  QString compdat_; //!< The compdat generated from the list of well blocks corresponding to the current case. This is set by the simulator library.
-  std::map<std::string, std::vector<double>> results_; //!< The results of the last simulation (i.e. the one performed with the current case).
+
+  /*!
+   * \brief Compdat list generated from the list of well
+   * blocks corresponding to the current case. This is
+   * set by the simulator library.
+   */
+  QString compdat_;
+
+  /*!
+   * \brief The results of the last simulation (i.e.
+   * the one performed with the current case).
+   */
+  std::map<std::string, std::vector<double>> results_;
+
 
   class Summary : public Loggable {
    public:

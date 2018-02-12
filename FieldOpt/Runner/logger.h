@@ -74,6 +74,8 @@ class Logger
   bool is_worker_; //!< Indicates whether or not this logger is on a worker process. This determines which logs are written.
   bool write_logs_;
   bool verbose_; //!< Whether or not new log entries should also be printed to the console.
+  std::vector<int> verb_vector_;
+
   QString output_dir_; //!< Directory in which the files will be written.
   QString opt_log_path_; //!< Path to the optimization log file.
   QString cas_log_path_; //!< Path to the case log file.

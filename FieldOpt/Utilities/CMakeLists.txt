@@ -13,7 +13,7 @@ if (BUILD_TESTING)
             tests/test_filehandling.cpp
             tests/test_execution.cpp
             tests/test_time.cpp
-            tests/test_math.cpp)
+            tests/test_math.cpp colors.hpp)
     target_link_libraries(test_utilities
             Qt5::Core
             ${Boost_LIBRARIES}

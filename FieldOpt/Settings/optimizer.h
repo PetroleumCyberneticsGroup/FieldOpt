@@ -29,9 +29,10 @@
 namespace Settings {
 
 /*!
- * \brief The Optimizer class contains optimizer-specific settings. Optimizer settings objects
- * may _only_ be created by the Settings class. They are created when reading a
- * JSON-formatted "driver file".
+ * \brief The Optimizer class contains optimizer-specific settings.
+ * Optimizer settings objects may _only_ be created by the Settings
+ * class. They are created when reading a JSON-formatted "driver file".
+ *
  */
 class Optimizer
 {
@@ -52,14 +53,22 @@ class Optimizer
   enum ObjectiveType { WeightedSum };
 
   struct Parameters {
+
     // GSS parameters
-    int max_evaluations; //!< Maximum number of evaluations allowed before terminating the optimization run.
-    double initial_step_length; //!< The initial step length in the algorithm when applicable.
-    double minimum_step_length; //!< The minimum step length in the algorithm when applicable.
+    int max_evaluations; //!< Max # of evaluations allowed before terminating optimization.
     double contraction_factor; //!< The contraction factor for GSS algorithms.
     double expansion_factor; //!< The expansion factor for GSS algorithms.
     double max_queue_size; //!< Maximum size of evaluation queue.
     QString pattern; //!< The pattern to be used for GSS algorithms.
+    double initial_step_length; //!< Initial step length in the algorithm when applicable.
+    QList<double > initial_step_length_xyz; //!< XYZ scaled initial step length
+    double minimum_step_length; //!< The minimum step length in the algorithm when applicable.
+    QList<double > minimum_step_length_xyz; //!< XYZ scaled minimum step length
+
+    // 3rd party solver parameters
+    QString thrdps_optn_file;
+    QString thrdps_smry_file;
+    QString thrdps_prnt_file;
 
     // GA parameters
     int max_generations;      //!< Max iterations. Default: 50
@@ -106,6 +115,10 @@ class Optimizer
   Objective objective() const { return objective_; } //!< Get the optimizer objective function.
   QList<Constraint> constraints() const { return constraints_; } //!< Get the optimizer constraints.
 
+  // Should really be inhereited by Friend Class: Settings.
+  void set_verbosity_vector(const std::vector<int> verb_vector) { verb_vector_ = verb_vector; }
+  std::vector<int> verb_vector() const { return verb_vector_; }
+
  private:
   QList<Constraint> constraints_;
   OptimizerType type_;
@@ -113,6 +126,8 @@ class Optimizer
   Objective objective_;
   OptimizerMode mode_;
   Constraint parseSingleConstraint(QJsonObject json_constraint);
+
+  std::vector<int> verb_vector_ = std::vector<int>(11,0); //!<
 };
 
 }

@@ -20,6 +20,9 @@
 #include <boost/lexical_cast.hpp>
 #include <QtCore/QUuid>
 
+using std::cout;
+using std::endl;
+
 namespace Runner {
 
 RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
@@ -29,21 +32,33 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
     if (vm.count("input-file")) {
         driver_file_ = QString::fromStdString(vm["input-file"].as<std::string>());
         if (!Utilities::FileHandling::FileExists(driver_file_))
-            throw std::runtime_error("The specified driver file does not exist: " + driver_file_.toStdString());
+            throw std::runtime_error("The specified driver file does not exist: "
+                                         + driver_file_.toStdString());
     } else throw std::runtime_error("An input file must be specified.");
 
     if (vm.count("output-dir")) {
-        output_dir_ = QString::fromStdString(vm["output-dir"].as<std::string>());
+        output_dir_ = Utilities::FileHandling::GetAbsoluteFilePath(
+            QString::fromStdString(vm["output-dir"].as<std::string>()));
         if (!Utilities::FileHandling::DirectoryExists(output_dir_))
-            throw std::runtime_error("The specified output directory does not exist: " + output_dir_.toStdString());
+            throw std::runtime_error("The specified output directory does not exist: "
+                                         + output_dir_.toStdString());
     } else throw std::runtime_error("An output directory must be specified.");
 
     if (vm.count("verbose")) verbosity_level_ = vm["verbose"].as<int>();
     else verbosity_level_ = 0;
 
+    if (vm.count("verbosity-vector")) {
+        verb_vector_str_ = vm["verbosity-vector"].as<std::string>();
+        for (int i=0; i < verb_vector_str_.length(); i++ ) {
+            verb_vector_.push_back(boost::lexical_cast<int>(verb_vector_str_[i]));
+        }
+    }
+    else verb_vector_ = std::vector<int>(8,1);
+
     overwrite_existing_ = vm.count("force") != 0;
     if (!overwrite_existing_ && !Utilities::FileHandling::DirectoryIsEmpty(output_dir_))
-        throw std::runtime_error("Output directory is not empty. Use the --force flag to overwrite existing content in: " + output_dir_.toStdString());
+        throw std::runtime_error("Output directory is not empty. Use the --force flag to "
+                                     "overwrite existing content in: " + output_dir_.toStdString());
 
     if (vm.count("max-parallel-simulations")) {
         max_parallel_sims_ = vm["max-parallel-simulations"].as<int>();
@@ -71,14 +86,18 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
         QString sim_drv_path = QString::fromStdString(vm["sim-drv-path"].as<std::string>());
         if (!Utilities::FileHandling::FileExists(sim_drv_path))
             throw std::runtime_error("Simulation driver file specified as argument does not exist: " + sim_drv_path.toStdString());
-        else simulator_driver_path_ = sim_drv_path;
+        else {
+            simulator_driver_path_ = Utilities::FileHandling::GetAbsoluteFilePath(sim_drv_path);
+        }
     } else simulator_driver_path_ = "";
 
     if (vm.count("sim-exec-path")) {
         QString sim_exec_path = QString::fromStdString(vm["sim-exec-path"].as<std::string>());
         if (!Utilities::FileHandling::FileExists(sim_exec_path))
             throw std::runtime_error("Custom executable file path specified as argument does not exist: " + sim_exec_path.toStdString());
-        else simulator_exec_script_path_ = sim_exec_path;
+        else {
+            simulator_exec_script_path_ = Utilities::FileHandling::GetAbsoluteFilePath(sim_exec_path);
+        }
     } else simulator_exec_script_path_ = "";
 
     if (vm.count("fieldopt-build-dir")) {
@@ -110,28 +129,44 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
         inje_coords_.second = QVector<double>() << coords[3] << coords[4] << coords[5];
     }
 
+    // idx:0 -> run (Runner)
+    if (verbosity_level_ > 0 ||
+        find (verb_vector_.begin(), verb_vector_.end(), 1) != verb_vector_.end() ||
+        find (verb_vector_.begin(), verb_vector_.end(), 2) != verb_vector_.end() ) {
+        str_out = "[run]FieldOpt runtime settings";
+        cout << "\n" << BLDON << str_out << AEND << "\n" << std::string(str_out.length(),'=') << endl;
+        cout << "Verbosity level:------- " << verbosity_level_ << endl;
+        cout << "Verbosity vector:------ ";
+        cout << "run=" << verb_vector_[0]; // (Runner)
+        cout << ", ert=" << verb_vector_[1]; // (ERTWrapper)
+        cout << ", hd5=" << verb_vector_[2]; // (Hdf5SummaryReader)
+        cout << ", wic=" << verb_vector_[3]; // (FieldOpt-WellIndexCalculator)
+        cout << ", con=" << verb_vector_[4]; // (ConstraintMath)
+        cout << ", mod=" << verb_vector_[5]; // (Model)
+        cout << ", opt=" << verb_vector_[6]; // (Optimization)
+        cout << ", res=" << verb_vector_[7]; // (Reservoir)
+        cout << ", sim=" << verb_vector_[8]; // (Simulation)
+        cout << ", set=" << verb_vector_[9]; // (Settings)
+        cout << ", uti=" << verb_vector_[10]; // (Utilities)
+        cout << "." << endl;
 
-    if (verbosity_level_) {
-        str_out = "FieldOpt runtime settings";
-        std::cout << "\n" << str_out << "\n" << std::string(str_out.length(),'=') << std::endl;
-        std::cout << "Verbosity level:  " << verbosity_level_ << std::endl;
-        std::cout << "Runner type:      " << runnerTypeString().toStdString() << std::endl;
-        std::cout << "Overwr. old out files: " << overwrite_existing_ << std::endl;
-        std::cout << "Max parallel sims:   " << (max_parallel_sims_ > 0 ? boost::lexical_cast<std::string>(max_parallel_sims_) : "default") << std::endl;
-        std::cout << "Threads pr sim:      " << boost::lexical_cast<std::string>(threads_per_sim_) << std::endl;
-        str_out = "Current/specified paths:";
-        std::cout << "\n" << str_out << "\n" << std::string(str_out.length(),'-') << std::endl;
-        std::cout << "Current dir:-------" << Utilities::FileHandling::GetCurrentDirectoryPath().toStdString() << std::endl;
-        std::cout << "Input file:--------" << driver_file_.toStdString() << std::endl;
-        std::cout << "Output dir:--------" << output_dir().toStdString() << std::endl;
-        std::cout << "Sim driver file:---" << (simulator_driver_path_.length() > 0 ? simulator_driver_path_.toStdString() : "from FieldOpt driver file") << std::endl;
-        std::cout << "Grid file path:----" << (grid_file_path_.length() > 0 ? grid_file_path_.toStdString() : "from FieldOpt driver file") << std::endl;
-        std::cout << "Exec file path:----" << (simulator_exec_script_path_.length() > 0 ? simulator_exec_script_path_.toStdString() : "from FieldOpt driver file") << std::endl;
-        std::cout << "Build dir:---------" << fieldopt_build_dir_.toStdString() << std::endl;
+        cout << "Runner type:----------- " << runnerTypeString().toStdString() << endl;
+        cout << "Overwr. old out files:- " << overwrite_existing_ << endl;
+        cout << "Max parallel sims:----- " << (max_parallel_sims_ > 0 ? boost::lexical_cast<std::string>(max_parallel_sims_) : "default") << endl;
+        cout << "Threads pr sim:-------- " << boost::lexical_cast<std::string>(threads_per_sim_) << endl;
+        str_out = "[run]Current/specified paths:";
+        cout << endl << std::string(str_out.length(),'-') << endl << str_out << endl;
+        cout << "Current dir:----------- " << Utilities::FileHandling::GetCurrentDirectoryPath().toStdString() << endl;
+        cout << "Input file:------------ " << driver_file_.toStdString() << endl;
+        cout << "Output dir:------------ " << output_dir().toStdString() << endl;
+        cout << "Sim driver file:------- " << (simulator_driver_path_.length() > 0 ? simulator_driver_path_.toStdString() : "from FieldOpt driver file") << endl;
+        cout << "Grid file path:-------- " << (grid_file_path_.length() > 0 ? grid_file_path_.toStdString() : "from FieldOpt driver file") << endl;
+        cout << "Exec file path:-------- " << (simulator_exec_script_path_.length() > 0 ? simulator_exec_script_path_.toStdString() : "from FieldOpt driver file") << endl;
+        cout << "Build dir:------------- " << fieldopt_build_dir_.toStdString() << endl;
         if (vm.count("well-prod-points"))
-            std::cout << "Producer coordinates:   " << wellSplineCoordinateString(prod_coords_).toStdString() << std::endl;
+            cout << "Producer coordinates:   " << wellSplineCoordinateString(prod_coords_).toStdString() << endl;
         if (vm.count("well-prod-points"))
-            std::cout << "Injector coordinates:   " << wellSplineCoordinateString(inje_coords_).toStdString() << std::endl;
+            cout << "Injector coordinates:   " << wellSplineCoordinateString(inje_coords_).toStdString() << endl;
     }
 }
 
@@ -162,6 +197,8 @@ po::variables_map RuntimeSettings::createVariablesMap(int argc, const char **arg
         ("help,h", "print help message")
         ("verbose,v", po::value<int>(&verbosity_level)->default_value(0),
          "verbosity level for runtime console logging")
+        ("verbosity-vector,c", po::value<std::string>(),
+         "verbosity vector for section-wise console logging durting runtime")
         ("force,f", po::value<int>()->implicit_value(0),
          "overwrite existing output files")
         ("max-parallel-simulations,m", po::value<int>(&max_par_sims)->default_value(0),
@@ -202,19 +239,22 @@ po::variables_map RuntimeSettings::createVariablesMap(int argc, const char **arg
 
     // If called with --help or -h flag:
     if (vm.count("help") || !vm.count("input-file") || !vm.count("output-dir")) { // Print help if --help present or input file/output dir not present
-        std::cout << "Usage: ./FieldOpt input-file output-dir [options]" << std::endl;
-        std::cout << desc << std::endl;
+        cout << "Usage: ./FieldOpt input-file output-dir [options]" << endl;
+        cout << desc << endl;
         exit(EXIT_SUCCESS);
     }
 
     return vm;
 }
+
 Loggable::LogTarget RuntimeSettings::GetLogTarget() {
     return Loggable::LogTarget::LOG_SUMMARY;
 }
+
 map<string, string> RuntimeSettings::GetState() {
     map<string, string> statemap;
-    statemap["verbosity"] = boost::lexical_cast<string>(verbosity_level_);
+    statemap["Verbosity"] = boost::lexical_cast<string>(verbosity_level_);
+    statemap["Verbosity vector"] = verb_vector_str_;
     statemap["Max. parallel sims"] = boost::lexical_cast<string>(max_parallel_sims_);
     statemap["Threads pr. sim"] = boost::lexical_cast<string>(threads_per_sim_);
     statemap["Simulator timeout"] = boost::lexical_cast<string>(simulation_timeout_);
@@ -222,22 +262,24 @@ map<string, string> RuntimeSettings::GetState() {
     statemap["Overwrite existing files"] = overwrite_existing_ ? "Yes" : "No";
 
     switch (runner_type_) {
-        case SERIAL: statemap["runner"] = "Serial"; break;
-        case ONEOFF: statemap["runner"] = "One-off"; break;
-        case MPISYNC: statemap["runner"] = "MPI Parallel"; break;
+        case SERIAL: statemap["Runner"] = "Serial"; break;
+        case ONEOFF: statemap["Runner"] = "One-off"; break;
+        case MPISYNC: statemap["Runner"] = "MPI Parallel"; break;
     }
 
     statemap["path FieldOpt driver"] = driver_file_.toStdString();
-    statemap["path Otput Directory"] = output_dir_.toStdString();
+    statemap["path Output Directory"] = output_dir_.toStdString();
     statemap["path Simulator base driver"] = simulator_driver_path_.toStdString();
     statemap["path Grid file"] = grid_file_path_.toStdString();
     statemap["path Simulator execution script"] = simulator_exec_script_path_.toStdString();
     statemap["path FieldOpt build directory"] = fieldopt_build_dir_.toStdString();
     return statemap;
 }
+
 QUuid RuntimeSettings::GetId() {
     return QUuid(); // Null UUID
 }
+
 map<string, vector<double>> RuntimeSettings::GetValues() {
     map<string, vector<double>> valmap;
     return valmap;
