@@ -40,30 +40,13 @@ GSS::GSS(Settings::Optimizer *settings,
   settings_ = settings;
   realvar_uuid_ = GetTentativeBestCase()->GetRealVarIdVector();
   varcont_ = variables;
+
   if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
     cout << "[opt]Init. Abs.Class GSS.-----" << endl;
 
-  int numRvars = (int)base_case->GetRealVarVector().size();
-  int numIvars = (int)base_case->GetIntegerVarVector().size();
-  num_vars_ = numRvars + numIvars;
-  if (numRvars > 0 && numIvars > 0)
-    cout << ("WARNING: Compass search does not handle both "
-        "continuous and discrete variables at the same time");
-
-  // Set contraction factor
-  contr_fac_ = settings->parameters().contraction_factor;
-  assert(contr_fac_ < 1.0);
-  cout << fixed << setprecision(8);
-  if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
-    cout << "[opt]Contraction factor:------ " << contr_fac_ << endl;
-
-  // Set expansion factor
-  expan_fac_ = settings->parameters().expansion_factor;
-  assert(expan_fac_ >= 1.0);
-  if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
-    cout << "[opt]Expansion factor:-------- " << expan_fac_ << endl;
-  cout << fixed << setprecision(1);
-
+  set_num_vars(base_case);
+  set_contraction_factor();
+  set_expansion_factor();
 }
 
 Optimizer::TerminationCondition GSS::IsFinished()
@@ -159,15 +142,15 @@ Matrix<T, Dynamic, 1> GSS::perturb(Matrix<T, Dynamic, 1> base, int dir) {
   }
 
   return perturbation;
-
 }
 
 bool GSS::is_converged() {
 
   if (settings_->verb_vector()[6] >= 1) { // idx:6 -> opt (Optimization)
     cout << "[opt]Step tol vector:---------" << endl;
+    cout << fixed << setprecision(1);
     IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
-    cout << step_tol_.format(CleanFmt) << endl;
+    cout << setw(6) << step_tol_.format(CleanFmt) << endl;
     cout << fixed << setprecision(8);
   }
 
@@ -178,70 +161,94 @@ bool GSS::is_converged() {
   return true;
 }
 
+void GSS::set_num_vars(Case* base_case) {
+  int numRvars = (int)base_case->GetRealVarVector().size();
+  int numIvars = (int)base_case->GetIntegerVarVector().size();
+  num_vars_ = numRvars + numIvars;
+  if (numRvars > 0 && numIvars > 0)
+    cout << ("WARNING: Compass search does not handle both "
+        "continuous and discrete variables at the same time");
+}
+
+void GSS::set_contraction_factor(){
+  contr_fac_ = settings_->parameters().contraction_factor;
+  assert(contr_fac_ < 1.0);
+  cout << fixed << setprecision(8);
+  if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
+    cout << "[opt]Contraction factor:------ " << contr_fac_ << endl;
+}
+
+void GSS::set_expansion_factor(){
+  expan_fac_ = settings_->parameters().expansion_factor;
+  assert(expan_fac_ >= 1.0);
+  if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
+    cout << "[opt]Expansion factor:-------- " << expan_fac_ << endl;
+  cout << fixed << setprecision(1);
+}
+
 void GSS::set_step_lengths(double len) {
   step_lengths_.fill(len);
 }
 
 void GSS::set_step_lengths() {
-
-  QList<double> islxyz = settings_->parameters().initial_step_length_xyz;
-  QList<double> isl; isl << settings_->parameters().initial_step_length;
-
-  if(islxyz.length() > 0) { // differentiate b/e xys coords and other continuous vars
-    for (int i = 0; i < realvar_uuid_.length(); ++i) {
-      auto prop = varcont_->GetContinousVariable(realvar_uuid_[i]);
-      if (prop->propertyInfo().spline_end == Model::Properties::Property::SplineEnd::Heel ||
-          prop->propertyInfo().spline_end == Model::Properties::Property::SplineEnd::Toe) {
-        switch (prop->propertyInfo().coord) {
-          case Model::Properties::Property::Coordinate::x:
-            step_lengths_[i] = islxyz[0];
-            step_lengths_[i+step_lengths_.rows()] = islxyz[0]; break;// x
-          case Model::Properties::Property::Coordinate::y:
-            step_lengths_[i] = islxyz[1];
-            step_lengths_[i+step_lengths_.rows()] = islxyz[1]; break;// y
-          case Model::Properties::Property::Coordinate::z:
-            step_lengths_[i] = islxyz[2];
-            step_lengths_[i+step_lengths_.rows()] = islxyz[2]; break;// z
-        }
-      } else if (isl.length() == 1){
-        step_lengths_[i] = isl[0];
-        step_lengths_[i+step_lengths_.rows()] = isl[0];
-      }
-    }
-  } else {
-    step_lengths_.fill(isl[0]);
-  }
+  step_lengths_ = Eigen::VectorXd(directions_.size());
+  GSS::set_step_vector(settings_->parameters().initial_step_length,
+                       settings_->parameters().initial_step_length_xyz,
+                       step_lengths_);
 }
 
 void GSS::set_step_tolerances() {
+  step_tol_ = Eigen::VectorXd(directions_.size());
+  GSS::set_step_vector(settings_->parameters().minimum_step_length,
+                       settings_->parameters().minimum_step_length_xyz,
+                       step_tol_);
+}
 
-  QList<double> istxyz = settings_->parameters().minimum_step_length_xyz;
-  QList<double> ist; ist << settings_->parameters().minimum_step_length;
+void GSS::set_step_vector(double isval,
+                          QList<double> vecxyz,
+                          Eigen::VectorXd& st_vec) {
 
-  if(istxyz.length() > 0) { // differentiate b/e xys coords and other continuous vars
+  QList<double> sval; sval << isval;
+  if (settings_->verb_vector()[6] >= 2) { // idx:6 -> opt (Optimization)
+    cout << "[opt]Sz step_length/step_tol_: " << st_vec.rows() << endl;
+    cout << "[opt]Sz init.step l_xyz/t_xyz: " << vecxyz.size() << endl;
+    cout << "[opt]Sz init.step lenght/tol:- " << sval.size() << endl;
+  }
+
+  if(vecxyz.length() > 0) { // differentiate b/e xys coords and other continuous vars
+    int nvar = realvar_uuid_.length();
     for (int i = 0; i < realvar_uuid_.length(); ++i) {
       auto prop = varcont_->GetContinousVariable(realvar_uuid_[i]);
       if (prop->propertyInfo().spline_end == Model::Properties::Property::SplineEnd::Heel ||
           prop->propertyInfo().spline_end == Model::Properties::Property::SplineEnd::Toe) {
         switch (prop->propertyInfo().coord) {
           case Model::Properties::Property::Coordinate::x:
-            step_tol_[i] = istxyz[0];
-            step_tol_[i+step_tol_.rows()] = istxyz[0]; break;// x
+            st_vec[i] = vecxyz[0];
+            st_vec[i+nvar] = vecxyz[0]; break;// x
           case Model::Properties::Property::Coordinate::y:
-            step_tol_[i] = istxyz[1];
-            step_tol_[i+step_tol_.rows()] = istxyz[1]; break;// y
+            st_vec[i] = vecxyz[1];
+            st_vec[i+nvar] = vecxyz[1]; break;// y
           case Model::Properties::Property::Coordinate::z:
-            step_tol_[i] = istxyz[2];
-            step_tol_[i+step_tol_.rows()] = istxyz[2]; break;// z
+            st_vec[i] = vecxyz[2];
+            st_vec[i+nvar] = vecxyz[2]; break;// z
         }
-      } else if (ist.length() == 1){
-        step_tol_[i] = ist[0];
-        step_tol_[i+step_tol_.rows()] = ist[0];
+      } else if (sval.length() == 1){
+        st_vec[i] = sval[0];
+        st_vec[i+nvar] = sval[0];
       }
     }
   } else {
-    step_tol_.fill(ist[0]);
+    st_vec.fill(sval[0]);
   }
+
+  if (settings_->verb_vector()[6] >= 2) { // idx:6 -> opt (Optimization)
+    cout << "[opt]Step lenght/tol vector:--";
+    cout << fixed << setprecision(1);
+    IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
+    cout << setw(6) << st_vec.format(CleanFmt) << endl;
+    cout << fixed << setprecision(8);
+  }
+
 }
 
 Case * GSS::dequeue_case_with_worst_origin() {
