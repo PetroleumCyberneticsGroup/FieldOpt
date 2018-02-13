@@ -24,26 +24,12 @@ CompassSearch::CompassSearch(Settings::Optimizer *settings,
     cout << "[opt]Init. CompassSearch.-----" << endl;
 
   // Set step lengths
-  step_lengths_ = Eigen::VectorXd(directions_.size());
   this->set_step_lengths();
   assert(step_lengths_.size() == directions_.size());
-  if (settings->verb_vector()[6] >= 1) { // idx:6 -> opt (Optimization)
-    cout << fixed << setw(6) << setprecision(1);
-    cout << "[opt]Step length vector:------" << endl;
-    IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
-    cout << step_lengths_.format(CleanFmt) << endl;
-  }
 
   // Set step tolerances
-  step_tol_ = Eigen::VectorXd(directions_.size());
   this->set_step_tolerances();
   assert(step_tol_.size() == step_lengths_.size());
-  if (settings_->verb_vector()[6] >= 1) { // idx:6 -> opt (Optimization)
-    cout << "[opt]Step tol vector:---------" << endl;
-    IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
-    cout << step_tol_.format(CleanFmt) << endl;
-    cout << fixed << setprecision(8);
-  }
 
 }
 

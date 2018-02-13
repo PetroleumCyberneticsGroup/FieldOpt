@@ -112,6 +112,13 @@ class GSS : public Optimizer {
   void set_step_lengths(double len);
   void set_step_lengths();
   void set_step_tolerances();
+  void set_step_vector(double isval,
+                       QList<double> vecxyz,
+                       Eigen::VectorXd& st_vec);
+
+  void set_num_vars(Case* base_case);
+  void set_contraction_factor();
+  void set_expansion_factor();
 
   /*!
    * @brief Generate a set of trial points.
