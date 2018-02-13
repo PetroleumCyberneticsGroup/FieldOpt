@@ -16,7 +16,7 @@ SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
                          Logger *logger)
     : Optimizer(settings, base_case, variables, grid, logger) {
 
-  if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
+  if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
     cout << "[opt]Init. SNOPTSolver.-------" << endl;
 
   settings_ = settings;
