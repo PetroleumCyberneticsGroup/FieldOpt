@@ -94,7 +94,7 @@ void AbstractRunner::InitializeSettings(QString output_subdirectory)
     settings_->set_build_path(runtime_settings_->fieldopt_build_dir());
 
   if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
-    std::cout << "[run]Initialized Settings.---" << std::endl;
+    cout << "[run]Initialized Settings.---" << endl;
 }
 
 void AbstractRunner::InitializeModel()
@@ -104,7 +104,7 @@ void AbstractRunner::InitializeModel()
 
   model_ = new Model::Model(*settings_->model(), logger_);
   if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
-    std::cout << "[run]Initialized Model.------" << std::endl;
+    cout << "[run]Initialized Model.------" << endl;
 
 }
 
@@ -116,17 +116,17 @@ void AbstractRunner::InitializeSimulator()
   switch (settings_->simulator()->type()) {
     case ::Settings::Simulator::SimulatorType::ECLIPSE:
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
-        std::cout << "[run]Reservoir simulator:---- ECL100" << std::endl;
+        cout << "[run]Reservoir simulator:---- ECL100" << endl;
       simulator_ = new Simulation::SimulatorInterfaces::ECLSimulator(settings_, model_);
       break;
     case ::Settings::Simulator::SimulatorType::ADGPRS:
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
-        std::cout << "[run]Reservoir simulator:---- ADGPRS" << std::endl;
+        cout << "[run]Reservoir simulator:---- ADGPRS" << endl;
       simulator_ = new Simulation::SimulatorInterfaces::AdgprsSimulator(settings_, model_);
       break;
     case ::Settings::Simulator::SimulatorType::Flow:
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
-        std::cout << "[run]Reservoir simulator:---- Flow" << std::endl;
+        cout << "[run]Reservoir simulator:---- Flow" << endl;
       simulator_ = new Simulation::SimulatorInterfaces::FlowSimulator(settings_, model_);
       break;
     default:
@@ -143,11 +143,11 @@ void AbstractRunner::EvaluateBaseModel()
         "Simulator must be initialized before evaluating the base model.");
   if (!simulator_->results()->isAvailable()) {
     if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
-      std::cout << "[run]Simulating base case.---" << std::endl;
+      cout << "[run]Simulating base case.---" << endl;
     simulator_->Evaluate();
   }
   if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
-    std::cout << "[run]Evaluated BaseModel.----" << std::endl;
+    cout << "[run]Evaluated BaseModel.----" << endl;
 }
 
 void AbstractRunner::InitializeObjectiveFunction()
@@ -159,7 +159,7 @@ void AbstractRunner::InitializeObjectiveFunction()
   switch (settings_->optimizer()->objective().type) {
     case Settings::Optimizer::ObjectiveType::WeightedSum:
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
-        std::cout << "[run]Objective function type: WeightedSum" << std::endl;
+        cout << "[run]Objective function type: WeightedSum" << endl;
       objective_function_ = new Optimization::Objective::WeightedSum(settings_->optimizer(),
                                                                      simulator_->results());
       break;
@@ -181,10 +181,10 @@ void AbstractRunner::InitializeBaseCase()
 
   if (!simulator_->results()->isAvailable()) {
     if (settings_->verb_vector()[0] >= 1) { // idx:0 -> run (Runner)
-      std::cout << "[run]Sim.rslts unavailable.-- "
-                << "Setting BaseCase OFV set to sentinel value (="
-                << fixed << setprecision(8) << sentinelValue() << ")"
-                << std::endl;
+      cout << "[run]Sim.rslts unavailable.-- "
+           << "Setting BaseCase OFV set to sentinel value (="
+           << fixed << setprecision(8) << sentinelValue() << ")"
+           << endl;
     }
     base_case_->set_objective_function_value(sentinelValue());
   }
@@ -192,9 +192,9 @@ void AbstractRunner::InitializeBaseCase()
     base_case_->set_objective_function_value(objective_function_->value());
 
   if (settings_->verb_vector()[0] >= 1) { // idx:0 -> run (Runner)
-    std::cout << "[run]Initialized BaseCase.---" << std::endl;
-    std::cout << "[run]BaseCase OFV set to:---- " << fixed << setprecision(8)
-              << base_case_->objective_function_value() << std::endl;
+    cout << "[run]Initialized BaseCase.---" << endl;
+    cout << "[run]BaseCase OFV set to:---- " << fixed << setprecision(8)
+         << base_case_->objective_function_value() << endl;
   }
 }
 
@@ -207,8 +207,8 @@ void AbstractRunner::InitializeOptimizer()
   switch (settings_->optimizer()->type()) {
     case Settings::Optimizer::OptimizerType::Compass:
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
-        std::cout << "[run]Optimization algo.:----- "
-                  << FRED << "CompassSearch" << END << std::endl;
+        cout << "[run]Optimization algo.:----- "
+             << FRED << "CompassSearch" << END << endl;
       optimizer_ = new Optimization::Optimizers::CompassSearch(settings_->optimizer(),
                                                                base_case_,
                                                                model_->variables(),
@@ -217,8 +217,8 @@ void AbstractRunner::InitializeOptimizer()
       break;
     case Settings::Optimizer::OptimizerType::APPS:
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
-        std::cout << "[run]Optimization algo.:----- "
-                  << FRED << "APPS" << END << std::endl;
+        cout << "[run]Optimization algo.:----- "
+             << FRED << "APPS" << END << endl;
       optimizer_ = new Optimization::Optimizers::APPS(settings_->optimizer(),
                                                       base_case_,
                                                       model_->variables(),
@@ -227,7 +227,7 @@ void AbstractRunner::InitializeOptimizer()
       break;
     case Settings::Optimizer::OptimizerType::GeneticAlgorithm:
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
-        std::cout << "[run]Optimization algo.:----- GeneticAlgorithm" << std::endl;
+        cout << "[run]Optimization algo.:----- GeneticAlgorithm" << endl;
       optimizer_ = new Optimization::Optimizers::RGARDD(settings_->optimizer(),
                                                         base_case_,
                                                         model_->variables(),
@@ -236,21 +236,22 @@ void AbstractRunner::InitializeOptimizer()
       break;
     case Settings::Optimizer::OptimizerType::ExhaustiveSearch2DVert:
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
-        std::cout << "[run]Optimization algo.:----- ExhaustiveSearch2DVert" << std::endl;
+        cout << "[run]Optimization algo.:----- ExhaustiveSearch2DVert" << endl;
       optimizer_ = new Optimization::Optimizers::ExhaustiveSearch2DVert(settings_->optimizer(),
                                                                         base_case_,
                                                                         model_->variables(),
                                                                         model_->grid(),
-                                                                          logger_
-        );
-        break;
-        case Settings::Optimizer::OptimizerType::SNOPTSolver:
-            if (runtime_settings_->verbosity_level()) std::cout << "Using SNOPT solver." << std::endl;
-        optimizer_ = new Optimization::Optimizers::SNOPTSolver(settings_->optimizer(),
-                                                               base_case_,
-                                                               model_->variables(),
-                                                               model_->grid(),
-                                                                        logger_);
+                                                                        logger_
+      );
+      break;
+    case Settings::Optimizer::OptimizerType::SNOPTSolver:
+      if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
+        cout << "[run]Optimization algo.:----- Using SNOPT solver" << endl;
+      optimizer_ = new Optimization::Optimizers::SNOPTSolver(settings_->optimizer(),
+                                                             base_case_,
+                                                             model_->variables(),
+                                                             model_->grid(),
+                                                             logger_);
       break;
     default:
       throw std::runtime_error(
@@ -272,46 +273,46 @@ void AbstractRunner::InitializeBookkeeper()
 
   bookkeeper_ = new Bookkeeper(settings_, optimizer_->case_handler());
   if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
-    std::cout << "[run]Initialized Bookkeeper." << std::endl;
+    cout << "[run]Initialized Bookkeeper." << endl;
 }
 
 void AbstractRunner::InitializeLogger(QString output_subdir, bool write_logs)
 {
   logger_ = new Logger(runtime_settings_, output_subdir, write_logs);
   if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
-    std::cout << "[run]Initialized Logger.-----" << std::endl;
+    cout << "[run]Initialized Logger.-----" << endl;
 }
 
 void AbstractRunner::PrintCompletionMessage() const {
-  std::cout << "[run]Optimization complete:- ";
+  cout << "[run]Optimization complete:- ";
   switch (optimizer_->IsFinished()) {
     case Optimization::Optimizer::TerminationCondition::MAX_EVALS_REACHED:
-      std::cout << "maximum number of evaluations reached (not converged)." << std::endl;
+      cout << "maximum number of evaluations reached (not converged)." << endl;
       break;
     case Optimization::Optimizer::TerminationCondition::MINIMUM_STEP_LENGTH_REACHED:
-      std::cout << "minimum step length reached (converged)." << std::endl;
+      cout << "minimum step length reached (converged)." << endl;
       break;
-    default: std::cout << "Unknown termination reason." << std::endl;
+    default: cout << "Unknown termination reason." << endl;
   }
 
-  std::cout << "[run]Best.case @ opt.end:--- "
-            << optimizer_->GetTentativeBestCase()->id().toString().toStdString() << std::endl;
-  std::cout << "[run]Variable values:------- " << std::endl;
+  cout << "[run]Best.case @ opt.end:--- "
+       << optimizer_->GetTentativeBestCase()->id().toString().toStdString() << endl;
+  cout << "[run]Variable values:------- " << endl;
 
   for (auto var : optimizer_->GetTentativeBestCase()->integer_variables().keys()) {
     auto prop_name = model_->variables()->GetDiscreteVariable(var)->name();
     auto prop_val = optimizer_->GetTentativeBestCase()->integer_variables()[var];
-    std::cout << "\t" << prop_name.toStdString() << "\t" << prop_val << std::endl;
+    cout << "\t" << prop_name.toStdString() << "\t" << prop_val << endl;
   }
   for (auto var : optimizer_->GetTentativeBestCase()->real_variables().keys()) {
     auto prop_name = model_->variables()->GetContinousVariable(var)->name();
     auto prop_val = optimizer_->GetTentativeBestCase()->real_variables()[var];
-    std::cout << "\t" << prop_name.toStdString() << "\t" << prop_val << std::endl;
+    cout << "\t" << prop_name.toStdString() << "\t" << prop_val << endl;
   }
   for (auto var : optimizer_->GetTentativeBestCase()->binary_variables().keys()) {
     auto prop_name = model_->variables()->GetBinaryVariable(var)->name();
     auto prop_val = optimizer_->GetTentativeBestCase()->binary_variables()[var];
-    std::cout << "\t" << prop_name.toStdString() << "\t" << prop_val << std::endl;
+    cout << "\t" << prop_name.toStdString() << "\t" << prop_val << endl;
   }
 }
 
