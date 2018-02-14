@@ -238,26 +238,26 @@ void GSS::print_dbg_msg(string dbg_str, int vlevel, VectorXd eigvec){
 
   if (settings_->verb_vector()[6] >= vlevel) { // idx:6 -> opt (Optimization)
 
-    if (dbg_str == "[opt]Init. Abs.Class GSS.----- "
-        || dbg_str == "[opt]Generating trial points.- "
-        || dbg_str == "[opt]Init. CompassSearch.----- "
-        || dbg_str == "[opt]Launching opt.iteration.- ") {
+    if (   dbg_str == "[opt]Init. Abs.Class GSS.---- "
+        || dbg_str == "[opt]Generating trial points. "
+        || dbg_str == "[opt]Init. CompassSearch.---- "
+        ||     dbg_str == "[opt]Launching opt.iteration. ") {
       cout << dbg_str << endl;
 
-    } else if (dbg_str == "[opt]GetRealVarVector:-------- ") {
+    } else if (dbg_str == "[opt]GetRealVarVector:------- ") {
       cout << dbg_str << endl;
       IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
       cout << setw(10) << eigvec.format(CleanFmt) << endl;
 
-    } else if (dbg_str == "[opt]Perturbations:----------- ") {
+    } else if (dbg_str == "[opt]Perturbations:---------- ") {
       cout << dbg_str << endl;
 
-    } else if (dbg_str == "[opt]Perturbations.all:------- ") {
+    } else if (dbg_str == "[opt]Perturbations.all:------ ") {
       IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
       cout << setw(10) << eigvec.format(CleanFmt) << endl;
       cout << fixed << setprecision(8);
 
-    } else if (dbg_str == "[opt]Conv.check_tol.vector:--- ") {
+    } else if (dbg_str == "[opt]Conv.check_tol.vector:-- ") {
       cout << dbg_str << endl;
       cout << fixed << setprecision(1);
       IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
@@ -266,22 +266,22 @@ void GSS::print_dbg_msg(string dbg_str, int vlevel, VectorXd eigvec){
       cout << setw(10) << eigvec.block(r/2,0,r/2,1).format(CleanFmt) << endl;
       cout << fixed << setprecision(8);
 
-    } else if (dbg_str == "[opt]Contraction factor:------ ") {
+    } else if (dbg_str == "[opt]Contraction factor:----- ") {
       cout << fixed << setprecision(8);
       cout << dbg_str << eigvec << endl;
       cout << fixed << setprecision(1);
 
-    } else if (dbg_str == "[opt]Expansion factor:-------- ") {
+    } else if (dbg_str == "[opt]Expansion factor:------- ") {
       cout << fixed << setprecision(8);
       cout << dbg_str << eigvec << endl;
       cout << fixed << setprecision(1);
 
-    } else if (dbg_str == "[opt]Sz step_length/step_tol_: ") {
+    } else if (dbg_str == "[opt]Sz step_length/step_tol: ") {
       cout << "[opt]Sz step_length/step_tol_: " << eigvec[0] << endl;
       cout << "[opt]Sz init.step l_xyz/t_xyz: " << eigvec[1] << endl;
       cout << "[opt]Sz init.step lenght/tol:- " << eigvec[2] << endl;
 
-    } else if (dbg_str == "[opt]Step lenght/tol vector:--") {
+    } else if (dbg_str == "[opt]Step lenght/tol vector:-") {
       cout << dbg_str << endl;
       cout << fixed << setprecision(1);
       IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
