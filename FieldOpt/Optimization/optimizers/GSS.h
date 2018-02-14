@@ -143,6 +143,10 @@ class GSS : public Optimizer {
    */
   Case *dequeue_case_with_worst_origin();
 
+  void print_dbg_msg(string dbg_str,
+                     int vlevel,
+                     VectorXd eigvec = Eigen::VectorXd(0));
+
  private:
 
   /*!

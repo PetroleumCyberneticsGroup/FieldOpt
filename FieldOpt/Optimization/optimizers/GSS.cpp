@@ -41,8 +41,7 @@ GSS::GSS(Settings::Optimizer *settings,
   realvar_uuid_ = GetTentativeBestCase()->GetRealVarIdVector();
   varcont_ = variables;
 
-  if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
-    cout << "[opt]Init. Abs.Class GSS.-----" << endl;
+  print_dbg_msg("[opt]Init. Abs.Class GSS.-----", 1);
 
   set_num_vars(base_case);
   set_contraction_factor();
@@ -92,22 +91,15 @@ QList<Case *> GSS::generate_trial_points(vector<int> dirs) {
   auto trial_points = QList<Case *>();
   if (dirs[0] == -1)
     dirs = range(0, (int)directions_.size(), 1);
-  if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
-    cout << "[opt]Generating trial points.-" << endl;
+  print_dbg_msg("[opt]Generating trial points.- ", 1);
 
   // Get base vectors
   VectorXi int_base = GetTentativeBestCase()->GetIntegerVarVector();
   VectorXd rea_base = GetTentativeBestCase()->GetRealVarVector();
-  if (settings_->verb_vector()[6] >= 1) { // idx:6 -> opt (Optimization)
-    cout << "[opt]GetRealVarVector:--------" << endl;
-    IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
-    cout << setw(10) << rea_base.format(CleanFmt) << endl;
-  }
+  print_dbg_msg("[opt]GetRealVarVector:-------- ", 1, rea_base);
 
   // Develop sampling points using base vector
-  if (settings_->verb_vector()[6] >= 2) // idx:6 -> opt (Optimization)
-    cout << "[opt]Perturbations:-----------" << endl;
-  
+  print_dbg_msg("[opt]Perturbations:----------- ", 2);
   for (int dir : dirs) {
     auto trial_point = new Case(GetTentativeBestCase());
     if (int_base.size() > 0)
@@ -135,25 +127,14 @@ Matrix<T, Dynamic, 1> GSS::perturb(Matrix<T, Dynamic, 1> base, int dir) {
   T sl = step_lengths_(dir);
   Matrix<T, Dynamic, 1> perturbation = base + dirc * sl;
 
-  if (settings_->verb_vector()[6] >= 2) { // idx:6 -> opt (Optimization)
-    IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
-    cout << setw(10) << perturbation.format(CleanFmt) << endl;
-    cout << fixed << setprecision(8);
-  }
-
+  VectorXd vec = perturbation.template cast<double>();
+  print_dbg_msg("[opt]Perturbations.all:------- ", 2, vec);
   return perturbation;
 }
 
 bool GSS::is_converged() {
 
-  if (settings_->verb_vector()[6] >= 1) { // idx:6 -> opt (Optimization)
-    cout << "[opt]Step tol vector:---------" << endl;
-    cout << fixed << setprecision(1);
-    IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
-    cout << setw(6) << step_tol_.format(CleanFmt) << endl;
-    cout << fixed << setprecision(8);
-  }
-
+  print_dbg_msg("[opt]Conv.check_tol.vector:--- ", 2, step_tol_);
   for (int i = 0; i < step_lengths_.size(); ++i) {
     if (step_lengths_(i) >= step_tol_(i))
       return false;
@@ -173,17 +154,17 @@ void GSS::set_num_vars(Case* base_case) {
 void GSS::set_contraction_factor(){
   contr_fac_ = settings_->parameters().contraction_factor;
   assert(contr_fac_ < 1.0);
-  cout << fixed << setprecision(8);
-  if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
-    cout << "[opt]Contraction factor:------ " << contr_fac_ << endl;
+
+  VectorXd vec(1); vec << contr_fac_;
+  print_dbg_msg("[opt]Contraction factor:------ ", 1, vec);
 }
 
 void GSS::set_expansion_factor(){
   expan_fac_ = settings_->parameters().expansion_factor;
   assert(expan_fac_ >= 1.0);
-  if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
-    cout << "[opt]Expansion factor:-------- " << expan_fac_ << endl;
-  cout << fixed << setprecision(1);
+
+  VectorXd vec(1); vec << expan_fac_;
+  print_dbg_msg("[opt]Expansion factor:-------- ", 1, vec);
 }
 
 void GSS::set_step_lengths(double len) {
@@ -209,11 +190,10 @@ void GSS::set_step_vector(double isval,
                           Eigen::VectorXd& st_vec) {
 
   QList<double> sval; sval << isval;
-  if (settings_->verb_vector()[6] >= 2) { // idx:6 -> opt (Optimization)
-    cout << "[opt]Sz step_length/step_tol_: " << st_vec.rows() << endl;
-    cout << "[opt]Sz init.step l_xyz/t_xyz: " << vecxyz.size() << endl;
-    cout << "[opt]Sz init.step lenght/tol:- " << sval.size() << endl;
-  }
+
+  VectorXd vec(3); vec[0] = (double)st_vec.rows();
+  vec[1] = (double)vecxyz.size(); vec[2] = (double)sval.size();
+  print_dbg_msg("[opt]Sz step_length/step_tol_: ", 2, vec);
 
   if(vecxyz.length() > 0) { // differentiate b/e xys coords and other continuous vars
     int nvar = realvar_uuid_.length();
@@ -241,14 +221,7 @@ void GSS::set_step_vector(double isval,
     st_vec.fill(sval[0]);
   }
 
-  if (settings_->verb_vector()[6] >= 2) { // idx:6 -> opt (Optimization)
-    cout << "[opt]Step lenght/tol vector:--";
-    cout << fixed << setprecision(1);
-    IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
-    cout << setw(6) << st_vec.format(CleanFmt) << endl;
-    cout << fixed << setprecision(8);
-  }
-
+  print_dbg_msg("[opt]Step lenght/tol vector:-- ", 2, st_vec);
 }
 
 Case * GSS::dequeue_case_with_worst_origin() {
@@ -259,6 +232,65 @@ Case * GSS::dequeue_case_with_worst_origin() {
             });
   case_handler_->DequeueCase(queued_cases.last()->id());
   return queued_cases.last();
+}
+
+void GSS::print_dbg_msg(string dbg_str, int vlevel, VectorXd eigvec){
+
+  if (settings_->verb_vector()[6] >= vlevel) { // idx:6 -> opt (Optimization)
+
+    if (dbg_str == "[opt]Init. Abs.Class GSS.----- "
+        || dbg_str == "[opt]Generating trial points.- "
+        || dbg_str == "[opt]Init. CompassSearch.----- "
+        || dbg_str == "[opt]Launching opt.iteration.- ") {
+      cout << dbg_str << endl;
+
+    } else if (dbg_str == "[opt]GetRealVarVector:-------- ") {
+      cout << dbg_str << endl;
+      IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
+      cout << setw(10) << eigvec.format(CleanFmt) << endl;
+
+    } else if (dbg_str == "[opt]Perturbations:----------- ") {
+      cout << dbg_str << endl;
+
+    } else if (dbg_str == "[opt]Perturbations.all:------- ") {
+      IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
+      cout << setw(10) << eigvec.format(CleanFmt) << endl;
+      cout << fixed << setprecision(8);
+
+    } else if (dbg_str == "[opt]Conv.check_tol.vector:--- ") {
+      cout << dbg_str << endl;
+      cout << fixed << setprecision(1);
+      IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
+      int r = (int)eigvec.rows();
+      cout << setw(10) << eigvec.block(  0,0,r/2,1).format(CleanFmt) << endl;
+      cout << setw(10) << eigvec.block(r/2,0,r/2,1).format(CleanFmt) << endl;
+      cout << fixed << setprecision(8);
+
+    } else if (dbg_str == "[opt]Contraction factor:------ ") {
+      cout << fixed << setprecision(8);
+      cout << dbg_str << eigvec << endl;
+      cout << fixed << setprecision(1);
+
+    } else if (dbg_str == "[opt]Expansion factor:-------- ") {
+      cout << fixed << setprecision(8);
+      cout << dbg_str << eigvec << endl;
+      cout << fixed << setprecision(1);
+
+    } else if (dbg_str == "[opt]Sz step_length/step_tol_: ") {
+      cout << "[opt]Sz step_length/step_tol_: " << eigvec[0] << endl;
+      cout << "[opt]Sz init.step l_xyz/t_xyz: " << eigvec[1] << endl;
+      cout << "[opt]Sz init.step lenght/tol:- " << eigvec[2] << endl;
+
+    } else if (dbg_str == "[opt]Step lenght/tol vector:--") {
+      cout << dbg_str << endl;
+      cout << fixed << setprecision(1);
+      IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
+      cout << setw(10) << eigvec.format(CleanFmt) << endl;
+      cout << fixed << setprecision(8);
+    };
+
+  }
+
 }
 
 }
