@@ -40,10 +40,15 @@ Optimizer::Optimizer(Settings::Optimizer *settings,
 
   settings_ = settings;
   max_evaluations_ = settings_->parameters().max_evaluations;
+
   tentative_best_case_ = base_case;
-  case_handler_ = new CaseHandler(tentative_best_case_);
-  constraint_handler_ = new Constraints::ConstraintHandler(settings_->constraints(),
-                                                           variables, grid);
+  case_handler_ = new CaseHandler(tentative_best_case_,
+                                  settings);
+
+  constraint_handler_ = new Constraints::ConstraintHandler(
+      settings_->constraints(),
+      variables, grid);
+
   iteration_ = 0;
   mode_ = settings->mode();
   is_async_ = false;
@@ -54,7 +59,6 @@ Optimizer::Optimizer(Settings::Optimizer *settings,
 
 Case *Optimizer::GetCaseForEvaluation()
 {
-
   if (settings_->verb_vector()[6] >= 1) { // idx:6 -> opt (Optimization)
     cout << "[opt]Get next case for eval.- " << endl;
     cout << "[opt]Size of QueuedCases:---- "

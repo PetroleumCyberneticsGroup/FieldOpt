@@ -32,15 +32,24 @@ APPS::APPS(Settings::Optimizer *settings,
            Reservoir::Grid::Grid *grid,
            Logger *logger
 )
-    : GSS(settings, base_case, variables, grid, logger) {
-  settings_ = settings;
+    : GSS(settings, base_case, variables, grid, logger)
+{
+
   directions_ = GSSPatterns::Compass(num_vars_);
-  step_lengths_ = Eigen::VectorXd(directions_.size());
-  step_lengths_.fill(settings->parameters().initial_step_length);
+  GSS::print_dbg_msg("[opt]Init. Asynch.PttrnSrch.-- ", 1);
+
+  set_step_lengths();
+  assert(step_lengths_.size() == directions_.size());
+
+  set_step_tolerances();
+  assert(step_tol_.size() == step_lengths_.size());
 
   assert(settings_->parameters().max_queue_size >= 1.0);
-  max_queue_length_ = directions_.size() * settings->parameters().max_queue_size;
+  max_queue_length_ =
+      (int)directions_.size() * (int)settings->parameters().max_queue_size;
+
   is_async_ = true;
+//  active_.clear(); // ??
   iterate();
 }
 
@@ -61,7 +70,9 @@ void APPS::handleEvaluatedCase(Case *c) {
 
 void APPS::successful_iteration(Case *c) {
   updateTentativeBestCase(c);
-  set_step_lengths(c->origin_step_length());
+
+  set_step_lengths(c->origin_step_length()); // <- fix for scaled step vector
+
   expand();
   reset_active();
   prune_queue();

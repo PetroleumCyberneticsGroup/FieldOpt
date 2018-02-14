@@ -265,7 +265,8 @@ void AbstractRunner::InitializeBookkeeper()
     std::cout << "[run]Initialized Bookkeeper." << std::endl;
 }
 
-void AbstractRunner::InitializeLogger(QString output_subdir, bool write_logs)
+void AbstractRunner::InitializeLogger(QString output_subdir,
+                                      bool write_logs)
 {
   logger_ = new Logger(runtime_settings_, output_subdir, write_logs);
   if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
