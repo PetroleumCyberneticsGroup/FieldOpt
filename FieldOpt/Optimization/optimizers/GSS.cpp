@@ -41,7 +41,7 @@ GSS::GSS(Settings::Optimizer *settings,
   realvar_uuid_ = GetTentativeBestCase()->GetRealVarIdVector();
   varcont_ = variables;
 
-  print_dbg_msg("[opt]Init. Abs.Class GSS.-----", 1);
+  print_dbg_msg("[opt]Init. Abs.Class GSS.---- ", 1);
 
   set_num_vars(base_case);
   set_contraction_factor();
@@ -66,6 +66,7 @@ Optimizer::TerminationCondition GSS::IsFinished()
 }
 
 void GSS::expand(vector<int> dirs) {
+  print_dbg_msg("[opt]GGS: expanding.--------- ", 2);
   if (dirs[0] == -1) {
     step_lengths_ = step_lengths_ * expan_fac_;
   }
@@ -76,6 +77,7 @@ void GSS::expand(vector<int> dirs) {
 }
 
 void GSS::contract(vector<int> dirs) {
+  print_dbg_msg("[opt]GGS: contracting.------- ", 2);
   if (dirs[0] == -1) {
     step_lengths_ = step_lengths_ * contr_fac_;
   }
@@ -91,15 +93,15 @@ QList<Case *> GSS::generate_trial_points(vector<int> dirs) {
   auto trial_points = QList<Case *>();
   if (dirs[0] == -1)
     dirs = range(0, (int)directions_.size(), 1);
-  print_dbg_msg("[opt]Generating trial points.- ", 1);
+  print_dbg_msg("[opt]Generating trial points. ", 1);
 
   // Get base vectors
   VectorXi int_base = GetTentativeBestCase()->GetIntegerVarVector();
   VectorXd rea_base = GetTentativeBestCase()->GetRealVarVector();
-  print_dbg_msg("[opt]GetRealVarVector:-------- ", 1, rea_base);
+  print_dbg_msg("[opt]GetRealVarVector:------- ", 1, rea_base);
 
   // Develop sampling points using base vector
-  print_dbg_msg("[opt]Perturbations:----------- ", 2);
+  print_dbg_msg("[opt]Perturbations:---------- ", 2);
   for (int dir : dirs) {
     auto trial_point = new Case(GetTentativeBestCase());
     if (int_base.size() > 0)
@@ -128,13 +130,13 @@ Matrix<T, Dynamic, 1> GSS::perturb(Matrix<T, Dynamic, 1> base, int dir) {
   Matrix<T, Dynamic, 1> perturbation = base + dirc * sl;
 
   VectorXd vec = perturbation.template cast<double>();
-  print_dbg_msg("[opt]Perturbations.all:------- ", 2, vec);
+  print_dbg_msg("[opt]Perturbations.all:------ ", 2, vec);
   return perturbation;
 }
 
 bool GSS::is_converged() {
 
-  print_dbg_msg("[opt]Conv.check_tol.vector:--- ", 2, step_tol_);
+  print_dbg_msg("[opt]Conv.check_tol.vector:-- ", 2, step_tol_);
   for (int i = 0; i < step_lengths_.size(); ++i) {
     if (step_lengths_(i) >= step_tol_(i))
       return false;
@@ -156,7 +158,7 @@ void GSS::set_contraction_factor(){
   assert(contr_fac_ < 1.0);
 
   VectorXd vec(1); vec << contr_fac_;
-  print_dbg_msg("[opt]Contraction factor:------ ", 1, vec);
+  print_dbg_msg("[opt]Contraction factor:----- ", 1, vec);
 }
 
 void GSS::set_expansion_factor(){
@@ -164,7 +166,7 @@ void GSS::set_expansion_factor(){
   assert(expan_fac_ >= 1.0);
 
   VectorXd vec(1); vec << expan_fac_;
-  print_dbg_msg("[opt]Expansion factor:-------- ", 1, vec);
+  print_dbg_msg("[opt]Expansion factor:------- ", 1, vec);
 }
 
 void GSS::set_step_lengths(double len) {
@@ -193,9 +195,9 @@ void GSS::set_step_vector(double isval,
 
   VectorXd vec(3); vec[0] = (double)st_vec.rows();
   vec[1] = (double)vecxyz.size(); vec[2] = (double)sval.size();
-  print_dbg_msg("[opt]Sz step_length/step_tol_: ", 2, vec);
+  print_dbg_msg("[opt]Sz step_length/step_tol: ", 2, vec);
 
-  if(vecxyz.length() > 0) { // differentiate b/e xys coords and other continuous vars
+  if(vecxyz.length() > 0) { // differentiate b/e xyz coords and other continuous vars
     int nvar = realvar_uuid_.length();
     for (int i = 0; i < realvar_uuid_.length(); ++i) {
       auto prop = varcont_->GetContinousVariable(realvar_uuid_[i]);
@@ -221,7 +223,7 @@ void GSS::set_step_vector(double isval,
     st_vec.fill(sval[0]);
   }
 
-  print_dbg_msg("[opt]Step lenght/tol vector:-- ", 2, st_vec);
+  print_dbg_msg("[opt]Step length/tol vector:-- ", 2, st_vec);
 }
 
 Case * GSS::dequeue_case_with_worst_origin() {
@@ -248,6 +250,12 @@ void GSS::print_dbg_msg(string dbg_str, int vlevel, VectorXd eigvec){
       cout << dbg_str << endl;
       IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
       cout << setw(10) << eigvec.format(CleanFmt) << endl;
+
+    } else if (dbg_str == "[opt]GGS: expanding.--------- ") {
+      cout << dbg_str << endl;
+
+    } else if (dbg_str == "[opt]GGS: contracting.------- ") {
+      cout << dbg_str << endl;
 
     } else if (dbg_str == "[opt]Perturbations:---------- ") {
       cout << dbg_str << endl;
@@ -277,16 +285,21 @@ void GSS::print_dbg_msg(string dbg_str, int vlevel, VectorXd eigvec){
       cout << fixed << setprecision(1);
 
     } else if (dbg_str == "[opt]Sz step_length/step_tol: ") {
-      cout << "[opt]Sz step_length/step_tol_: " << eigvec[0] << endl;
-      cout << "[opt]Sz init.step l_xyz/t_xyz: " << eigvec[1] << endl;
-      cout << "[opt]Sz init.step lenght/tol:- " << eigvec[2] << endl;
+      cout << "[opt]Sz step_length/step_tol: " << eigvec[0] << endl;
+      cout << "[opt]Sz init.stp l_xyz/t_xyz: " << eigvec[1] << endl;
+      cout << "[opt]Sz init.stp lenght/tol:- " << eigvec[2] << endl;
 
-    } else if (dbg_str == "[opt]Step lenght/tol vector:-") {
+    } else if (dbg_str == "[opt]Step length/tol vector:-- ") {
       cout << dbg_str << endl;
       cout << fixed << setprecision(1);
       IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
-      cout << setw(10) << eigvec.format(CleanFmt) << endl;
+      int r = (int)eigvec.rows();
+      cout << setw(10) << eigvec.block(  0,0,r/2,1).format(CleanFmt) << endl;
+      cout << setw(10) << eigvec.block(r/2,0,r/2,1).format(CleanFmt) << endl;
       cout << fixed << setprecision(8);
+
+    } else {
+      cout << "[opt]****WRONG DBG.SMG:****** " << dbg_str << endl;
     };
 
   }

@@ -57,8 +57,7 @@ Optimizer::Optimizer(Settings::Optimizer *settings,
   penalize_ = settings->objective().use_penalty_function;
 }
 
-Case *Optimizer::GetCaseForEvaluation()
-{
+Case *Optimizer::GetCaseForEvaluation() {
   if (settings_->verb_vector()[6] >= 1) { // idx:6 -> opt (Optimization)
     cout << "[opt]Get next case for eval.- " << endl;
     cout << "[opt]Size of QueuedCases:---- "
@@ -69,22 +68,30 @@ Case *Optimizer::GetCaseForEvaluation()
     logger_->AddEntry(this);
     time_t start, end;
     time(&start);
+
+    if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
+      cout << "[opt]Starting iteration.----- " << endl;
     iterate();
     time(&end);
-    seconds_spent_in_iterate_ = difftime(end, start);
+    seconds_spent_in_iterate_ = (int)difftime(end, start);
   }
 
   return case_handler_->GetNextCaseForEvaluation();
 }
 
-void Optimizer::SubmitEvaluatedCase(Case *c)
-{
+void Optimizer::SubmitEvaluatedCase(Case *c) {
   if (penalize_ && iteration_ > 0) {
     double penalized_ofv = PenalizedOFV(c);
     c->set_objective_function_value(penalized_ofv);
   }
-  case_handler_->UpdateCaseObjectiveFunctionValue(c->id(), c->objective_function_value());
-  case_handler_->SetCaseState(c->id(), c->state, c->GetWICTime(), c->GetSimTime());
+  case_handler_->UpdateCaseObjectiveFunctionValue(c->id(),
+                                                  c->objective_function_value());
+
+  case_handler_->SetCaseState(c->id(),
+                              c->state,
+                              c->GetWICTime(),
+                              c->GetSimTime());
+
   case_handler_->SetCaseEvaluated(c->id());
   handleEvaluatedCase(case_handler_->GetCase(c->id()));
   logger_->AddEntry(case_handler_->GetCase(c->id()));
@@ -110,8 +117,7 @@ bool Optimizer::isBetter(const Case *c1, const Case *c2) const {
   return false;
 }
 
-QString Optimizer::GetStatusStringHeader() const
-{
+QString Optimizer::GetStatusStringHeader() const {
   return QString("%1,%2,%3,%4,%5,%6\n")
       .arg("Iteration")
       .arg("EvaluatedCases")
@@ -121,8 +127,7 @@ QString Optimizer::GetStatusStringHeader() const
       .arg("TentativeBestCaseOFValue");
 }
 
-QString Optimizer::GetStatusString() const
-{
+QString Optimizer::GetStatusString() const {
   return QString("%1,%2,%3,%4,%5,%6\n")
       .arg(iteration_)
       .arg(nr_evaluated_cases())
@@ -187,18 +192,33 @@ map<string, string> Optimizer::Summary::GetState() {
   statemap["Duration"] = timespan_string(
       time_span_seconds(opt_->start_time_, QDateTime::currentDateTime())
   );
+
   statemap["End"] = timestamp_string(QDateTime::currentDateTime());
   switch (cond_) {
-    case MAX_EVALS_REACHED: statemap["Term. condition"] = "Reached max. sims"; break;
-    case MINIMUM_STEP_LENGTH_REACHED: statemap["Term. condition"] = "Reached min. step length"; break;
-    case MAX_ITERATIONS_REACHED: statemap["Term. condition"] = "Reached max. iterations"; break;
+    case MAX_EVALS_REACHED:
+      statemap["Term. condition"] = "Reached max. sims"; break;
+    case MINIMUM_STEP_LENGTH_REACHED:
+      statemap["Term. condition"] = "Reached min. step length"; break;
+    case MAX_ITERATIONS_REACHED:
+      statemap["Term. condition"] = "Reached max. iterations"; break;
     default: statemap["Term. condition"] = "Unknown";
   }
-  statemap["bc Best case found in iter"] = boost::lexical_cast<string>(opt_->tentative_best_case_iteration_);
-  statemap["bc UUID"] = opt_->tentative_best_case_->GetId().toString().toStdString();
-  statemap["bc Objective function value"] = boost::lexical_cast<string>(opt_->tentative_best_case_->objective_function_value());
-  statemap["bc Constraint status"] = statemap["bc Constraint status"] = opt_->tentative_best_case_->GetState()["ConsSt"];
-  statemap["bc Simulation time"] = timespan_string(opt_->tentative_best_case_->GetSimTime());
+  statemap["bc Best case found in iter"] =
+      boost::lexical_cast<string>(opt_->tentative_best_case_iteration_);
+
+  statemap["bc UUID"] =
+      opt_->tentative_best_case_->GetId().toString().toStdString();
+
+  statemap["bc Objective function value"] =
+      boost::lexical_cast<string>(
+          opt_->tentative_best_case_->objective_function_value());
+
+  statemap["bc Constraint status"] =
+      opt_->tentative_best_case_->GetState()["ConsSt"];
+
+  statemap["bc Simulation time"] =
+      timespan_string(opt_->tentative_best_case_->GetSimTime());
+
   return statemap;
 }
 
@@ -229,7 +249,8 @@ void Optimizer::initializeNormalizers() {
 
 void Optimizer::initializeOfvNormalizer() {
   if (case_handler_->EvaluatedCases().size() == 0 || normalizer_ofv_.is_ready())
-    throw runtime_error("Unable to initialize normalizer with no evaluated cases available.");
+    throw runtime_error("Unable to initialize normalizer "
+                            "with no evaluated cases available.");
 
   vector<double> abs_ofvs;
   for (auto c : case_handler_->EvaluatedCases()) {

@@ -38,22 +38,29 @@ using namespace std;
 
 
 /*!
- * \brief The Logger class is responsible for writing CSV and JSON logs to the disk.
+ * \brief The Logger class is responsible for writing CSV and
+ * JSON logs to the disk.
  *
  * The logger will write data into up to three files:
  *
- * LOG_CASE - The case log (log_cases.csv). Information about the generated cases.
- * LOG_OPTIMIZER - The optimizer log (log_optimization.csv). Information about the
- *  optmizer and runner states at each iteration.
- * LOG_EXTENDED - The extended log (log_extended.json). JSON log containing extended
- *  information, such as variable values, simulated production results and calculated
- *  compdats.
+ * LOG_CASE - The case log (log_cases.csv). Information about
+ * the generated cases.
  *
- * In addition to these, two markdown-formatted summary logs (summary_prerun.md and
- * summary_postrun) will be written at the start and at the end of the run.
+ * LOG_OPTIMIZER - The optimizer log (log_optimization.csv).
+ * Information about the optmizer and runner states at each
+ * iteration.
  *
- * Finally, files indicating the current state of each worker will be written when
- * running in parallel (state_runner.txt).
+ * LOG_EXTENDED - The extended log (log_extended.json). JSON
+ * log containing extended information, such as variable values,
+ * simulated production results and calculated compdats.
+ *
+ * In addition to these, two markdown-formatted summary logs
+ * (summary_prerun.md and summary_postrun) will be written at
+ * the start and at the end of the run.
+ *
+ * Finally, files indicating the current state of each worker
+ * will be written when running in parallel (state_runner.txt).
+ *
  */
 class Logger
 {
@@ -61,10 +68,13 @@ class Logger
   /*!
    * \brief Logger
    * \param rts Runtime settings
-   * \param output_subdir Optional subdirectory in the output directory to write the logs in.
-   * \param write_logs Whether or not the logs should be written. This setting is mainly here for tests.
+   * \param output_subdir Optional subdirectory in the output
+   * directory to write the logs in.
+   * \param write_logs Whether or not the logs should be written.
+   * This setting is mainly here for tests.
    */
-  Logger(Runner::RuntimeSettings *rts, QString output_subdir="", bool write_logs=true);
+  Logger(Runner::RuntimeSettings *rts, QString output_subdir="",
+         bool write_logs=true);
 
   void AddEntry(Loggable *obj);
   void FinalizePrerunSummary();

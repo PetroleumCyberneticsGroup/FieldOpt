@@ -23,426 +23,456 @@
 #include "Utilities/time.hpp"
 #include <boost/algorithm/string.hpp>
 
-
 Logger::Logger(Runner::RuntimeSettings *rts,
                QString output_subdir,
                bool write_logs)
 {
-    write_logs_ = write_logs;
-    is_worker_ = output_subdir.length() > 0;
-    output_dir_ = rts->output_dir();
-    verbose_ = rts->verbosity_level();
-    verb_vector_ = rts->verb_vector();
+  write_logs_ = write_logs;
+  is_worker_ = output_subdir.length() > 0;
+  output_dir_ = rts->output_dir();
 
-    if (output_subdir.length() > 0) {
-        output_dir_ = output_dir_ + "/" + output_subdir + "/";
-        Utilities::FileHandling::CreateDirectory(output_dir_);
-    }
-    opt_log_path_ = output_dir_ + "/log_optimization.csv";
-    cas_log_path_ = output_dir_ + "/log_cases.csv";
-    ext_log_path_ = output_dir_ + "/log_extended.json";
-    run_state_path_ = output_dir_ + "/state_runner.txt";
-    summary_prerun_path_ = output_dir_ + output_subdir + "/summary_prerun.md";
-    summary_postrun_path_ = output_dir_ + output_subdir + "/summary_postrun.md";
-    QStringList log_paths = (QStringList() << cas_log_path_ << opt_log_path_ << ext_log_path_ << run_state_path_
-                                           << summary_prerun_path_ << summary_postrun_path_);
+  verbose_ = rts->verbosity_level();
+  verb_vector_ = rts->verb_vector();
+  if (verb_vector_[0] >= 1) // idx:0 -> run (Runner)
+    std::cout << "[run]Initialized Logger.-----" << std::endl;
 
-    // Delete existing logs if --force flag is on
-    if (rts->overwrite_existing()) {
-        for (auto path : log_paths) {
-            if (Utilities::FileHandling::FileExists(path)) {
-                if (verb_vector_[1] == 1) {// idx:1 => init verbose
-                    cout << "Force flag on. Deleting " << path.toStdString() << endl;
-                }
-                Utilities::FileHandling::DeleteFile(path);
-            }
+  if (output_subdir.length() > 0) {
+    output_dir_ = output_dir_ + "/" + output_subdir + "/";
+    Utilities::FileHandling::CreateDirectory(output_dir_);
+  }
+  opt_log_path_ = output_dir_ + "/log_optimization.csv";
+  cas_log_path_ = output_dir_ + "/log_cases.csv";
+  ext_log_path_ = output_dir_ + "/log_extended.json";
+  run_state_path_ = output_dir_ + "/state_runner.txt";
+  summary_prerun_path_ = output_dir_ + output_subdir + "/summary_prerun.md";
+  summary_postrun_path_ = output_dir_ + output_subdir + "/summary_postrun.md";
+  QStringList log_paths = (QStringList() << cas_log_path_ << opt_log_path_ << ext_log_path_ << run_state_path_
+                                         << summary_prerun_path_ << summary_postrun_path_);
+
+  // Delete existing logs if --force flag is on
+  if (rts->overwrite_existing()) {
+    for (auto path : log_paths) {
+      if (Utilities::FileHandling::FileExists(path)) {
+        if (verb_vector_[1] == 1) {// idx:1 => init verbose
+          cout << "Force flag on. Deleting " << path.toStdString() << endl;
         }
+        Utilities::FileHandling::DeleteFile(path);
+      }
+    }
+  }
+
+  if (write_logs_) {
+    // Write CSV headers
+    if (!is_worker_) {
+      Utilities::FileHandling::WriteLineToFile(cas_log_header_, cas_log_path_);
+      Utilities::FileHandling::WriteLineToFile(opt_log_header_, opt_log_path_);
     }
 
-    if (write_logs_) {
-        // Write CSV headers
-        if (!is_worker_) {
-            Utilities::FileHandling::WriteLineToFile(cas_log_header_, cas_log_path_);
-            Utilities::FileHandling::WriteLineToFile(opt_log_header_, opt_log_path_);
-        }
-
-        // Create base JSON document
-        QJsonObject json_base;
-        json_base.insert("Cases", QJsonArray());
-        QJsonDocument json_doc = QJsonDocument(json_base);
-        QFile json_file(ext_log_path_);
-        json_file.open(QFile::WriteOnly);
-        json_file.write(json_doc.toJson(QJsonDocument::Indented));
-        json_file.close();
-    }
-}
-void Logger::AddEntry(Loggable *obj) {
-    switch (obj->GetLogTarget()) {
-        case Loggable::LogTarget::LOG_CASE: logCase(obj); break;
-        case Loggable::LogTarget::LOG_OPTIMIZER: logOptimizer(obj); break;
-        case Loggable::LogTarget::LOG_EXTENDED: logExtended(obj); break;
-        case Loggable::LogTarget::LOG_SUMMARY: logSummary(obj); break;
-        case Loggable::LogTarget::STATE_RUNNER: logRunnerState(obj); break;
-    }
-}
-void Logger::logRunnerState(Loggable *obj) {
-    if (!write_logs_ || !is_worker_) // Only workers should do this
-        return;
-    stringstream st;
-    st << obj->GetState()["case-desc"] << "\n\n";
-    st << "Model update done?  " << obj->GetState()["mod-update-done"] << "\n";
-    st << "Simulation done?    " << obj->GetState()["sim-done"] << "\n\n";
-    st << "Last update: " << obj->GetState()["last-update"];
-    Utilities::FileHandling::WriteStringToFile(QString::fromStdString(st.str()), run_state_path_);
-}
-void Logger::logCase(Loggable *obj) {
-    if (!write_logs_ || is_worker_)
-        return;
-    stringstream entry;
-    entry << setw(cas_log_col_widths_["TimeSt"]) << timestamp_string() << " ,";
-    entry << setw(cas_log_col_widths_["EvalSt"]) << obj->GetState()["EvalSt"] << " ,";
-    entry << setw(cas_log_col_widths_["ConsSt"]) << obj->GetState()["ConsSt"] << " ,";
-    entry << setw(cas_log_col_widths_["ErrMsg"]) << obj->GetState()["ErrMsg"] << " ,";
-    entry << setw(cas_log_col_widths_["SimDur"]) << timespan_string(obj->GetValues()["SimDur"][0]) << " , ";
-    entry << setw(cas_log_col_widths_["WicDur"]) << timespan_string(obj->GetValues()["WicDur"][0]) << " , ";
-    entry.precision(6);
-    entry << setw(cas_log_col_widths_["OFnVal"]) << scientific << obj->GetValues()["OFnVal"][0] << " ,";
-    entry << setw(cas_log_col_widths_["CaseId"]) << obj->GetId().toString().toStdString();
-    string str = entry.str();
-    Utilities::FileHandling::WriteLineToFile(QString::fromStdString(str), cas_log_path_);
-    return;
-}
-void Logger::logOptimizer(Loggable *obj) {
-    if (!write_logs_ || is_worker_) return;
-    stringstream entry;
-    entry << setw(opt_log_col_widths_["TimeSt"]) << timestamp_string() << " ,";
-    entry << setw(opt_log_col_widths_["TimeEl"]) << timespan_string(obj->GetState()["TimeEl"][0]) << " , ";
-    entry << setw(opt_log_col_widths_["TimeIt"]) << timespan_string(obj->GetState()["TimeIt"][0]) << " , ";
-    entry.precision(0);
-    entry << fixed << setfill('0') << setw(opt_log_col_widths_["IterNr"]) << obj->GetValues()["IterNr"][0] << " , ";
-    entry << fixed << setfill('0') << setw(opt_log_col_widths_["TotlNr"]) << obj->GetValues()["TotlNr"][0] << " , ";
-    entry << fixed << setfill('0') << setw(opt_log_col_widths_["EvalNr"]) << obj->GetValues()["EvalNr"][0] << " , ";
-    entry << fixed << setfill('0') << setw(opt_log_col_widths_["BkpdNr"]) << obj->GetValues()["BkpdNr"][0] << " , ";
-    entry << fixed << setfill('0') << setw(opt_log_col_widths_["TimONr"]) << obj->GetValues()["TimONr"][0] << " , ";
-    entry << fixed << setfill('0') << setw(opt_log_col_widths_["FailNr"]) << obj->GetValues()["FailNr"][0] << " , ";
-    entry << fixed << setfill('0') << setw(opt_log_col_widths_["InvlNr"]) << obj->GetValues()["InvlNr"][0] << " , ";
-    entry.precision(6);
-    entry << setw(opt_log_col_widths_["CBOFnV"]) << scientific << obj->GetValues()["CBOFnV"][0] << " , ";
-    entry.precision(0);
-    entry << obj->GetId().toString().toStdString();
-    string str = entry.str();
-    Utilities::FileHandling::WriteLineToFile(QString::fromStdString(str), opt_log_path_);
-    return;
-}
-void Logger::logExtended(Loggable *obj) {
-    if (!write_logs_) return;
-    QJsonObject new_entry;
-
-    // UUID
-    new_entry.insert("UUID", obj->GetId().toString());
-
-    // Compdat string
-    new_entry.insert("COMPDAT", QString::fromStdString(obj->GetState()["COMPDAT"]));
-
-    // Variable values
-    QJsonArray vars;
-    for (auto const a : obj->GetValues()) {
-        if(a.first.compare(0, 4, "Var#") == 0) {
-            QJsonObject var;
-            var.insert(QString::fromStdString(a.first), a.second[0]);
-            vars.append(var);
-        }
-    }
-    new_entry.insert("Variables", vars);
-
-    // Production data
-    QJsonArray prod;
-    for (auto const a : obj->GetValues()) {
-        if(a.first.compare(0, 4, "Res#") == 0) {
-            QJsonObject data;
-            QJsonArray prod_vector;
-            for (int i = 0; i < a.second.size(); ++i) {
-                prod_vector.append(a.second[i]);
-            }
-            data.insert(QString::fromStdString(a.first), prod_vector);
-            prod.append(data);
-        }
-    }
-    new_entry.insert("ProductionData", prod);
-
-    // Open existing document
+    // Create base JSON document
+    QJsonObject json_base;
+    json_base.insert("Cases", QJsonArray());
+    QJsonDocument json_doc = QJsonDocument(json_base);
     QFile json_file(ext_log_path_);
-
-    // First validating existing structure
-    json_file.open(QFile::ReadWrite);
-    QByteArray json_data = json_file.readAll();
-    QJsonObject json_obj = QJsonDocument::fromJson(json_data).object();
-    if (!json_obj.contains("Cases") || !json_obj["Cases"].isArray()) {
-        cout << "Invalid JSON log. Aborting." << endl;
-        exit(1);
-    }
-    json_file.close();
-
-    // Deleting file contents in preparation to rewrite
-    json_file.open(QFile::ReadWrite | QIODevice::Truncate);
-
-    // Add new case to JSON document
-    QJsonArray case_array = json_obj["Cases"].toArray();
-    case_array.append(new_entry);
-    json_obj["Cases"] = case_array;
-
-    // Write the updated log
-    QJsonDocument json_doc = QJsonDocument(json_obj);
+    json_file.open(QFile::WriteOnly);
     json_file.write(json_doc.toJson(QJsonDocument::Indented));
     json_file.close();
+  }
+}
+
+void Logger::AddEntry(Loggable *obj) {
+
+  if (verb_vector_[0] >= 3) // idx:0 -> run (Runner)
+    std::cout << "[run]Addding log entry.------" << std::endl;
+
+  switch (obj->GetLogTarget()) {
+    case Loggable::LogTarget::LOG_CASE: logCase(obj); break;
+    case Loggable::LogTarget::LOG_OPTIMIZER: logOptimizer(obj); break;
+    case Loggable::LogTarget::LOG_EXTENDED: logExtended(obj); break;
+    case Loggable::LogTarget::LOG_SUMMARY: logSummary(obj); break;
+    case Loggable::LogTarget::STATE_RUNNER: logRunnerState(obj); break;
+  }
+
+  if (verb_vector_[0] >= 3) // idx:0 -> run (Runner)
+    std::cout << "[run]Addding log entry (end)." << std::endl;
+}
+
+void Logger::logRunnerState(Loggable *obj) {
+  if (!write_logs_ || !is_worker_) // Only workers should do this
     return;
+  stringstream st;
+  st << obj->GetState()["case-desc"] << "\n\n";
+  st << "Model update done?  " << obj->GetState()["mod-update-done"] << "\n";
+  st << "Simulation done?    " << obj->GetState()["sim-done"] << "\n\n";
+  st << "Last update: " << obj->GetState()["last-update"];
+  Utilities::FileHandling::WriteStringToFile(QString::fromStdString(st.str()), run_state_path_);
+}
+
+void Logger::logCase(Loggable *obj) {
+  if (!write_logs_ || is_worker_)
+    return;
+  stringstream entry;
+  entry << setw(cas_log_col_widths_["TimeSt"]) << timestamp_string() << " ,";
+  entry << setw(cas_log_col_widths_["EvalSt"]) << obj->GetState()["EvalSt"] << " ,";
+  entry << setw(cas_log_col_widths_["ConsSt"]) << obj->GetState()["ConsSt"] << " ,";
+  entry << setw(cas_log_col_widths_["ErrMsg"]) << obj->GetState()["ErrMsg"] << " ,";
+  entry << setw(cas_log_col_widths_["SimDur"]) << timespan_string(obj->GetValues()["SimDur"][0]) << " , ";
+  entry << setw(cas_log_col_widths_["WicDur"]) << timespan_string(obj->GetValues()["WicDur"][0]) << " , ";
+  entry.precision(6);
+  entry << setw(cas_log_col_widths_["OFnVal"]) << scientific << obj->GetValues()["OFnVal"][0] << " ,";
+  entry << setw(cas_log_col_widths_["CaseId"]) << obj->GetId().toString().toStdString();
+  string str = entry.str();
+  Utilities::FileHandling::WriteLineToFile(QString::fromStdString(str), cas_log_path_);
+
+  if (verb_vector_[0] >= 3) // idx:0 -> run (Runner)
+    std::cout << "[run]Writing to log:--------- " << str << std::endl;
+  return;
+}
+
+void Logger::logOptimizer(Loggable *obj) {
+  if (!write_logs_ || is_worker_) return;
+  stringstream entry;
+  entry << setw(opt_log_col_widths_["TimeSt"]) << timestamp_string() << " ,";
+  entry << setw(opt_log_col_widths_["TimeEl"]) << timespan_string(obj->GetState()["TimeEl"][0]) << " , ";
+  entry << setw(opt_log_col_widths_["TimeIt"]) << timespan_string(obj->GetState()["TimeIt"][0]) << " , ";
+  entry.precision(0);
+  entry << fixed << setfill('0') << setw(opt_log_col_widths_["IterNr"]) << obj->GetValues()["IterNr"][0] << " , ";
+  entry << fixed << setfill('0') << setw(opt_log_col_widths_["TotlNr"]) << obj->GetValues()["TotlNr"][0] << " , ";
+  entry << fixed << setfill('0') << setw(opt_log_col_widths_["EvalNr"]) << obj->GetValues()["EvalNr"][0] << " , ";
+  entry << fixed << setfill('0') << setw(opt_log_col_widths_["BkpdNr"]) << obj->GetValues()["BkpdNr"][0] << " , ";
+  entry << fixed << setfill('0') << setw(opt_log_col_widths_["TimONr"]) << obj->GetValues()["TimONr"][0] << " , ";
+  entry << fixed << setfill('0') << setw(opt_log_col_widths_["FailNr"]) << obj->GetValues()["FailNr"][0] << " , ";
+  entry << fixed << setfill('0') << setw(opt_log_col_widths_["InvlNr"]) << obj->GetValues()["InvlNr"][0] << " , ";
+  entry.precision(6);
+  entry << setw(opt_log_col_widths_["CBOFnV"]) << scientific << obj->GetValues()["CBOFnV"][0] << " , ";
+  entry.precision(0);
+  entry << obj->GetId().toString().toStdString();
+  string str = entry.str();
+  Utilities::FileHandling::WriteLineToFile(QString::fromStdString(str), opt_log_path_);
+
+  if (verb_vector_[0] >= 3) // idx:0 -> run (Runner)
+    std::cout << "[run]Writing to log (optz):-- " << str << std::endl;
+  return;
+}
+
+void Logger::logExtended(Loggable *obj) {
+  if (!write_logs_) return;
+  QJsonObject new_entry;
+
+  // UUID
+  new_entry.insert("UUID", obj->GetId().toString());
+
+  // Compdat string
+  new_entry.insert("COMPDAT", QString::fromStdString(obj->GetState()["COMPDAT"]));
+
+  // Variable values
+  QJsonArray vars;
+  for (auto const a : obj->GetValues()) {
+    if(a.first.compare(0, 4, "Var#") == 0) {
+      QJsonObject var;
+      var.insert(QString::fromStdString(a.first), a.second[0]);
+      vars.append(var);
+    }
+  }
+  new_entry.insert("Variables", vars);
+
+  // Production data
+  QJsonArray prod;
+  for (auto const a : obj->GetValues()) {
+    if(a.first.compare(0, 4, "Res#") == 0) {
+      QJsonObject data;
+      QJsonArray prod_vector;
+      for (int i = 0; i < a.second.size(); ++i) {
+        prod_vector.append(a.second[i]);
+      }
+      data.insert(QString::fromStdString(a.first), prod_vector);
+      prod.append(data);
+    }
+  }
+  new_entry.insert("ProductionData", prod);
+
+  // Open existing document
+  QFile json_file(ext_log_path_);
+
+  // First validating existing structure
+  json_file.open(QFile::ReadWrite);
+  QByteArray json_data = json_file.readAll();
+  QJsonObject json_obj = QJsonDocument::fromJson(json_data).object();
+  if (!json_obj.contains("Cases") || !json_obj["Cases"].isArray()) {
+    cout << "Invalid JSON log. Aborting." << endl;
+    exit(1);
+  }
+  json_file.close();
+
+  // Deleting file contents in preparation to rewrite
+  json_file.open(QFile::ReadWrite | QIODevice::Truncate);
+
+  // Add new case to JSON document
+  QJsonArray case_array = json_obj["Cases"].toArray();
+  case_array.append(new_entry);
+  json_obj["Cases"] = case_array;
+
+  // Write the updated log
+  QJsonDocument json_doc = QJsonDocument(json_obj);
+  json_file.write(json_doc.toJson(QJsonDocument::Indented));
+  json_file.close();
+  return;
 }
 
 void Logger::collectExtendedLogs() {
-    if (!write_logs_ || is_worker_) return;
+  if (!write_logs_ || is_worker_) return;
 
-    QList<QJsonObject> worker_parts_;
-    int rank = 1;
+  QList<QJsonObject> worker_parts_;
+  int rank = 1;
 
-    // Read all the parts
-    while (true) {
-        QString subpath = output_dir_ + "/rank" + QString::number(rank) + "/log_extended.json";
-        if (!Utilities::FileHandling::FileExists(subpath)) {
-            break;
-        }
-        else {
-            QFile json_file(subpath);
-            json_file.open(QFile::ReadWrite);
-            QByteArray json_data = json_file.readAll();
-            worker_parts_.append(QJsonDocument::fromJson(json_data).object());
-            json_file.close();
-            rank++;
-        }
+  // Read all the parts
+  while (true) {
+    QString subpath = output_dir_ + "/rank" +
+        QString::number(rank) + "/log_extended.json";
+
+    if (!Utilities::FileHandling::FileExists(subpath)) {
+      break;
     }
-    if (worker_parts_.size() == 0) // Return if there were no workers (we're running in serial)
-        return;
-
-    // Gather all cases in one array
-    QJsonArray all_cases;
-    for (QJsonObject part : worker_parts_) {
-        all_cases.append(part["Cases"].toArray());
+    else {
+      QFile json_file(subpath);
+      json_file.open(QFile::ReadWrite);
+      QByteArray json_data = json_file.readAll();
+      worker_parts_.append(QJsonDocument::fromJson(json_data).object());
+      json_file.close();
+      rank++;
     }
-
-    QFile json_file(ext_log_path_);
-    // Deleting file contents in preparation to rewrite
-    json_file.open(QFile::ReadWrite | QIODevice::Truncate);
-
-    // Add all cases to JSON document
-    QJsonObject json_obj;
-    json_obj["Cases"] = all_cases;
-
-    // Write the updated log
-    QJsonDocument json_doc = QJsonDocument(json_obj);
-    json_file.write(json_doc.toJson(QJsonDocument::Indented));
-    json_file.close();
+  }
+  if (worker_parts_.size() == 0) // Return if there were no workers (we're running in serial)
     return;
+
+  // Gather all cases in one array
+  QJsonArray all_cases;
+  for (QJsonObject part : worker_parts_) {
+    all_cases.append(part["Cases"].toArray());
+  }
+
+  QFile json_file(ext_log_path_);
+  // Deleting file contents in preparation to rewrite
+  json_file.open(QFile::ReadWrite | QIODevice::Truncate);
+
+  // Add all cases to JSON document
+  QJsonObject json_obj;
+  json_obj["Cases"] = all_cases;
+
+  // Write the updated log
+  QJsonDocument json_doc = QJsonDocument(json_obj);
+  json_file.write(json_doc.toJson(QJsonDocument::Indented));
+  json_file.close();
+  return;
 }
 
 void Logger::logSummary(Loggable *obj) {
-    if (obj->GetWellDescriptions().size() > 0) {
-        sum_wellmap_ = obj->GetWellDescriptions();
-        sum_mod_statemap_ = obj->GetState();
-        sum_mod_valmap_ = obj->GetValues();
-    }
-    else if (obj->GetState().count("verbosity") > 0) {
-        sum_rts_statemap_ = obj->GetState();
-        sum_rts_valmap_ = obj->GetValues();
-    }
-    else {
-        sum_opt_statemap_ = obj->GetState();
-        sum_opt_valmap_ = obj->GetValues();
-    }
+  if (obj->GetWellDescriptions().size() > 0) {
+    sum_wellmap_ = obj->GetWellDescriptions();
+    sum_mod_statemap_ = obj->GetState();
+    sum_mod_valmap_ = obj->GetValues();
+  }
+  else if (obj->GetState().count("verbosity") > 0) {
+    sum_rts_statemap_ = obj->GetState();
+    sum_rts_valmap_ = obj->GetValues();
+  }
+  else {
+    sum_opt_statemap_ = obj->GetState();
+    sum_opt_valmap_ = obj->GetValues();
+  }
 }
 
 void Logger::FinalizePrerunSummary() {
-    if (!write_logs_ || is_worker_) return;
+  if (!write_logs_ || is_worker_) return;
 
-    stringstream sum;
+  stringstream sum;
 
-    // ==> Header and TOC <==
-    sum << "# FieldOpt run: " << timestamp_string() << "\n\n";
-    sum << "* [Run-time settings](#run-time-settings)" << "\n";
-    sum << "* [Optimizer](#optimizer)" << "\n";
-    sum << "* [Base Case](#base-case)" << "\n";
-    sum << "\n";
+  // ==> Header and TOC <==
+  sum << "# FieldOpt run: " << timestamp_string() << "\n\n";
+  sum << "* [Run-time settings](#run-time-settings)" << "\n";
+  sum << "* [Optimizer](#optimizer)" << "\n";
+  sum << "* [Base Case](#base-case)" << "\n";
+  sum << "\n";
 
-    // ==> Run-time settings <==
-    sum << "## Run-time settings" << "\n\n";
-    sum << "| Setting                        | Value                |\n";
-    sum << "| ------------------------------ | -------------------- |\n";
-    for (auto entry : sum_rts_statemap_) {
-        if (entry.first.compare(0, 4, "path") != 0)
-            sum << "| " << entry.first << setw(33-entry.first.size()) << right
-                << " | " << entry.second << setw(23-entry.second.size()) << right << " |\n";
+  // ==> Run-time settings <==
+  sum << "## Run-time settings" << "\n\n";
+  sum << "| Setting                        | Value                |\n";
+  sum << "| ------------------------------ | -------------------- |\n";
+  for (auto entry : sum_rts_statemap_) {
+    if (entry.first.compare(0, 4, "path") != 0)
+      sum << "| " << entry.first << setw(33-entry.first.size()) << right
+          << " | " << entry.second << setw(23-entry.second.size()) << right << " |\n";
+  }
+  sum << "\n";
+
+  // ==> Paths <==
+  sum << "### Paths" << "\n\n";
+  sum << "| Path                       | Value                          |\n";
+  sum << "| -------------------------- | ---------------------------------------- |\n";
+  for (auto entry : sum_rts_statemap_) {
+    if (entry.first.compare(0, 4, "path") == 0) {
+      // Remove "path " from the key.
+      string pathn = entry.first;
+      pathn.erase(pathn.begin(), pathn.begin()+5);
+
+      // Trim away everything up to "FieldOpt" in the path if possible
+      string path = entry.second;
+      int fo = path.find("FieldOpt");
+      if (fo != string::npos){
+        path.erase(path.begin(), path.begin() + fo);
+      }
+      sum << "| " << pathn << setw(29 - pathn.size()) << right
+          << " | " << path << setw(43 - path.size()) << right << " |\n";
     }
-    sum << "\n";
+  }
+  sum << "\n";
 
-    // ==> Paths <==
-    sum << "### Paths" << "\n\n";
-    sum << "| Path                       | Value                          |\n";
-    sum << "| -------------------------- | ---------------------------------------- |\n";
-    for (auto entry : sum_rts_statemap_) {
-        if (entry.first.compare(0, 4, "path") == 0) {
-            // Remove "path " from the key.
-            string pathn = entry.first;
-            pathn.erase(pathn.begin(), pathn.begin()+5);
+  // ==> Optimizer <==
+  sum << "## Optimizer" << "\n\n";
+  sum << "| Setting                   | Value                          |\n";
+  sum << "| ------------------------- | ------------------------------ |\n";
+  for (auto entry : sum_opt_statemap_) {
+    sum << "| " << entry.first << setw(28-entry.first.size()) << right
+        << " | " << entry.second << setfill(' ') << setw(33-entry.second.size()) << right << " |\n";
+  }
+  sum << "\n";
 
-            // Trim away everything up to "FieldOpt" in the path if possible
-            string path = entry.second;
-            int fo = path.find("FieldOpt");
-            if (fo != string::npos){
-                path.erase(path.begin(), path.begin() + fo);
-            }
-            sum << "| " << pathn << setw(29 - pathn.size()) << right
-                << " | " << path << setw(43 - path.size()) << right << " |\n";
-        }
-    }
-    sum << "\n";
+  // ==> Base Case <==
+  // --> Well TOC <--
+  sum << "## Base Case" << "\n\n";
+  appendWellToc(sum_wellmap_, sum);
 
-    // ==> Optimizer <==
-    sum << "## Optimizer" << "\n\n";
-    sum << "| Setting                   | Value                          |\n";
-    sum << "| ------------------------- | ------------------------------ |\n";
-    for (auto entry : sum_opt_statemap_) {
-        sum << "| " << entry.first << setw(28-entry.first.size()) << right
-            << " | " << entry.second << setfill(' ') << setw(33-entry.second.size()) << right << " |\n";
-    }
-    sum << "\n";
+  // --> Loop over wells <--
+  for (auto w : sum_wellmap_) {
+    appendWellDescription(w, sum);
+  }
 
-    // ==> Base Case <==
-    // --> Well TOC <--
-    sum << "## Base Case" << "\n\n";
-    appendWellToc(sum_wellmap_, sum);
+  string str = sum.str();
+  Utilities::FileHandling::WriteStringToFile(QString::fromStdString(str),
+                                             summary_prerun_path_);
 
-    // --> Loop over wells <--
-    for (auto w : sum_wellmap_) {
-        appendWellDescription(w, sum);
-    }
-
-    string str = sum.str();
-    Utilities::FileHandling::WriteStringToFile(QString::fromStdString(str), summary_prerun_path_);
-
-    sum_mod_valmap_.clear();
-    sum_opt_valmap_.clear();
-    sum_rts_valmap_.clear();
-    sum_mod_statemap_.clear();
-    sum_opt_statemap_.clear();
-    sum_rts_statemap_.clear();
-    sum_wellmap_.clear();
+  sum_mod_valmap_.clear();
+  sum_opt_valmap_.clear();
+  sum_rts_valmap_.clear();
+  sum_mod_statemap_.clear();
+  sum_opt_statemap_.clear();
+  sum_rts_statemap_.clear();
+  sum_wellmap_.clear();
 }
 
 void Logger::FinalizePostrunSummary() {
-    if (!write_logs_ || is_worker_) return;
+  if (!write_logs_ || is_worker_) return;
 
-    collectExtendedLogs(); // Collect all the extended json logs into one
+  collectExtendedLogs(); // Collect all the extended json logs into one
 
-    stringstream sum;
+  stringstream sum;
 
-    sum << "# FieldOpt summary\n\n";
+  sum << "# FieldOpt summary\n\n";
 
-    // ==> TOC <==
-    sum << "* [Optimizer](#optimizer)\n";
-    sum << "* [Evaluation](#evaluation)\n";
-    sum << "* [Best Case](#best-case)\n";
-    sum << "\n";
+  // ==> TOC <==
+  sum << "* [Optimizer](#optimizer)\n";
+  sum << "* [Evaluation](#evaluation)\n";
+  sum << "* [Best Case](#best-case)\n";
+  sum << "\n";
 
-    // ==> Breif summary table <==
-    sum << "| Key                  | Value                          |\n";
-    sum << "| -------------------- | ------------------------------ |\n";
-    for (auto item : sum_opt_statemap_) {
-        if (item.first.compare(0, 2, "bc") != 0) { // Filtering out the best case entries
-            sum << "| " << item.first << setw(23-item.first.size()) << right
-                << " | " << item.second << setw(33-item.second.size()) << right << " |\n";
-        }
+  // ==> Breif summary table <==
+  sum << "| Key                  | Value                          |\n";
+  sum << "| -------------------- | ------------------------------ |\n";
+  for (auto item : sum_opt_statemap_) {
+    if (item.first.compare(0, 2, "bc") != 0) { // Filtering out the best case entries
+      sum << "| " << item.first << setw(23-item.first.size()) << right
+          << " | " << item.second << setw(33-item.second.size()) << right << " |\n";
     }
-    sum << "\n";
+  }
+  sum << "\n";
 
-    // ==> Evaluation summary <==
-    sum << "## Evaluation\n\n";
-    sum << "| Cases                | Number     |\n";
-    sum << "| -------------------- | ---------- |\n";
-    for (auto item : sum_opt_valmap_) {
-        sum << "| " << item.first << setw(23-item.first.size()) << right
-            << " | " << item.second[0] << setw(10) << right << " |\n";
+  // ==> Evaluation summary <==
+  sum << "## Evaluation\n\n";
+  sum << "| Cases                | Number     |\n";
+  sum << "| -------------------- | ---------- |\n";
+  for (auto item : sum_opt_valmap_) {
+    sum << "| " << item.first << setw(23-item.first.size()) << right
+        << " | " << item.second[0] << setw(10) << right << " |\n";
+  }
+  sum << "\n";
+
+  // ==> Best Case <==
+  sum << "## Best Case\n\n";
+  sum << "| Property | Value |\n";
+  sum << "| ------------------------------ | ---------------------------------------- |\n";
+  for (auto item : sum_opt_statemap_) {
+    if (item.first.compare(0, 2, "bc") == 0) { // Taking best case entries
+      string key = item.first;
+      key.erase(key.begin(), key.begin()+3); // Removing the prepended "bc "
+      sum << "| " << key << setw(33-key.size()) << right
+          << " | " << item.second << setw(43-item.second.size()) << right << " |\n";
     }
-    sum << "\n";
+  }
+  sum << "\n";
 
-    // ==> Best Case <==
-    sum << "## Best Case\n\n";
-    sum << "| Property | Value |\n";
-    sum << "| ------------------------------ | ---------------------------------------- |\n";
-    for (auto item : sum_opt_statemap_) {
-        if (item.first.compare(0, 2, "bc") == 0) { // Taking best case entries
-            string key = item.first;
-            key.erase(key.begin(), key.begin()+3); // Removing the prepended "bc "
-            sum << "| " << key << setw(33-key.size()) << right
-                << " | " << item.second << setw(43-item.second.size()) << right << " |\n";
-        }
-    }
-    sum << "\n";
+  appendWellToc(sum_wellmap_, sum);
 
-    appendWellToc(sum_wellmap_, sum);
+  // --> Loop over wells <--
+  for (auto w : sum_wellmap_) {
+    appendWellDescription(w, sum);
+  }
 
-    // --> Loop over wells <--
-    for (auto w : sum_wellmap_) {
-        appendWellDescription(w, sum);
-    }
+  sum << "### Compdat\n\n";
+  sum << "```\n";
+  sum << sum_mod_statemap_["compdat"] << "\n";
+  sum << "```\n";
 
-    sum << "### Compdat\n\n";
-    sum << "```\n";
-    sum << sum_mod_statemap_["compdat"] << "\n";
-    sum << "```\n";
-
-    string str = sum.str();
-    Utilities::FileHandling::WriteStringToFile(QString::fromStdString(str), summary_postrun_path_);
+  string str = sum.str();
+  Utilities::FileHandling::WriteStringToFile(QString::fromStdString(str),
+                                             summary_postrun_path_);
 }
 
-void Logger::appendWellToc(map<string, Loggable::WellDescription> wellmap, stringstream &sum) {
-    sum << "| Name                      | Group      | Type       |\n";
-    sum << "| ------------------------- | ---------- | ---------- |\n";
-    for (auto w : wellmap) {
-        sum << "| [" << w.first << "](#" << boost::algorithm::to_lower_copy(w.first) << ")" << setw(28-w.first.size()*2-5) << right
-            << " | " << w.second.group << setw(13-w.second.group.size()) << right
-            << " | " << w.second.type  << setw(13-w.second.type.size())  << right << " |\n";
-    }
-    sum << "\n";
+void Logger::appendWellToc(map<string, Loggable::WellDescription> wellmap,
+                           stringstream &sum) {
+
+  sum << "| Name                      | Group      | Type       |\n";
+  sum << "| ------------------------- | ---------- | ---------- |\n";
+  for (auto w : wellmap) {
+    sum << "| [" << w.first << "](#" << boost::algorithm::to_lower_copy(w.first) << ")" << setw(28-w.first.size()*2-5) << right
+        << " | " << w.second.group << setw(13-w.second.group.size()) << right
+        << " | " << w.second.type  << setw(13-w.second.type.size())  << right << " |\n";
+  }
+  sum << "\n";
+
 }
 
-void Logger::appendWellDescription(pair<string, Loggable::WellDescription> w, stringstream &sum) {
-    sum << "### " << w.first << "\n\n";
-    sum << "#### General settings" << "\n\n";
-    sum << "| Setting              | Value           |\n";
-    sum << "| -------------------- | --------------- |\n";
-    sum << "| Name                 | " << w.second.name       << setw(18-w.second.name.size())       << right << " |\n";
-    sum << "| Group                | " << w.second.group      << setw(18-w.second.group.size())      << right << " |\n";
-    sum << "| Type                 | " << w.second.type       << setw(18-w.second.type.size())       << right << " |\n";
-    sum << "| Definition type      | " << w.second.def_type   << setw(18-w.second.def_type.size())   << right << " |\n";
-    sum << "| Prefered phase       | " << w.second.pref_phase << setw(18-w.second.pref_phase.size()) << right << " |\n";
-    sum << "| Wellbore radius      | " << w.second.wellbore_radius << setw(18-w.second.wellbore_radius.size()) << right << " |\n";
-    sum << "\n";
-    sum << "#### Spline Definition\n\n";
-    sum << "| End point  | Coord | Value      |\n";
-    sum << "| ---------- | ----- | ---------- |\n";
-    sum << "| Heel       | x     | " << w.second.spline.heel_x << setw(10) << right << " |\n";
-    sum << "| Heel       | y     | " << w.second.spline.heel_y << setw(10) << right << " |\n";
-    sum << "| Heel       | z     | " << w.second.spline.heel_z << setw(10) << right << " |\n";
-    sum << "| Toe        | x     | " << w.second.spline.toe_x  << setw(10) << right << " |\n";
-    sum << "| Toe        | y     | " << w.second.spline.toe_y  << setw(10) << right << " |\n";
-    sum << "| Toe        | z     | " << w.second.spline.toe_z  << setw(10) << right << " |\n";
-    sum << "\n";
-    sum << "#### Controls\n";
-    sum << "| Time step  | State | Control    | Value      |\n";
-    sum << "| ---------- | ----- | ---------- | ---------- |\n";
-    for (auto c : w.second.controls) {
-        sum << "| " << c.time_step << setw(12)                  << right
-            << " | " << c.state    << setw(8-c.state.size())    << right
-            << " | " << c.control  << setw(13-c.control.size()) << right
-            << " | " << c.value    << setw(10)                  << right << " |\n";
-    }
-    sum << "\n";
+void Logger::appendWellDescription(pair<string, Loggable::WellDescription> w,
+                                   stringstream &sum) {
+
+  sum << "### " << w.first << "\n\n";
+  sum << "#### General settings" << "\n\n";
+  sum << "| Setting              | Value           |\n";
+  sum << "| -------------------- | --------------- |\n";
+  sum << "| Name                 | " << w.second.name       << setw(18-w.second.name.size())       << right << " |\n";
+  sum << "| Group                | " << w.second.group      << setw(18-w.second.group.size())      << right << " |\n";
+  sum << "| Type                 | " << w.second.type       << setw(18-w.second.type.size())       << right << " |\n";
+  sum << "| Definition type      | " << w.second.def_type   << setw(18-w.second.def_type.size())   << right << " |\n";
+  sum << "| Prefered phase       | " << w.second.pref_phase << setw(18-w.second.pref_phase.size()) << right << " |\n";
+  sum << "| Wellbore radius      | " << w.second.wellbore_radius << setw(18-w.second.wellbore_radius.size()) << right << " |\n";
+  sum << "\n";
+  sum << "#### Spline Definition\n\n";
+  sum << "| End point  | Coord | Value      |\n";
+  sum << "| ---------- | ----- | ---------- |\n";
+  sum << "| Heel       | x     | " << w.second.spline.heel_x << setw(10) << right << " |\n";
+  sum << "| Heel       | y     | " << w.second.spline.heel_y << setw(10) << right << " |\n";
+  sum << "| Heel       | z     | " << w.second.spline.heel_z << setw(10) << right << " |\n";
+  sum << "| Toe        | x     | " << w.second.spline.toe_x  << setw(10) << right << " |\n";
+  sum << "| Toe        | y     | " << w.second.spline.toe_y  << setw(10) << right << " |\n";
+  sum << "| Toe        | z     | " << w.second.spline.toe_z  << setw(10) << right << " |\n";
+  sum << "\n";
+  sum << "#### Controls\n";
+  sum << "| Time step  | State | Control    | Value      |\n";
+  sum << "| ---------- | ----- | ---------- | ---------- |\n";
+  for (auto c : w.second.controls) {
+    sum << "| " << c.time_step << setw(12)                  << right
+        << " | " << c.state    << setw(8-c.state.size())    << right
+        << " | " << c.control  << setw(13-c.control.size()) << right
+        << " | " << c.value    << setw(10)                  << right << " |\n";
+  }
+  sum << "\n";
+
 }

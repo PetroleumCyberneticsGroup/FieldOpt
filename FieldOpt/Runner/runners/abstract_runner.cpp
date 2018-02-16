@@ -250,7 +250,7 @@ void AbstractRunner::InitializeOptimizer()
 
   optimizer_->EnableConstraintLogging(runtime_settings_->output_dir());
   if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
-    cout << "[opt]Initialized Optimizer.---" << endl;
+    cout << "[opt]Initialized Optimizer.--" << endl;
 }
 
 void AbstractRunner::InitializeBookkeeper()
@@ -262,7 +262,7 @@ void AbstractRunner::InitializeBookkeeper()
 
   bookkeeper_ = new Bookkeeper(settings_, optimizer_->case_handler());
   if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
-    std::cout << "[run]Initialized Bookkeeper." << std::endl;
+    std::cout << "[run]Initialized Bookkeeper.-" << std::endl;
 }
 
 void AbstractRunner::InitializeLogger(QString output_subdir,
