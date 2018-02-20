@@ -55,7 +55,7 @@ double     ru[],    integer *lenru )
     int  nf = *neF;
     //double x2 = x[1];
     //cout << x1 << "\t" << x2 << endl;
-    cout << "[SNOPTusrFG_] \t The x vector is: " <<  "\t ";
+    cout << "[SNOPTusrFG_] \t The x vector is: \t ";
     for (int i = 0; i < *n; i++ ){
         cout << x[i] << "\t";
     }
@@ -243,8 +243,8 @@ void SNOPTSolver::callSNOPT()
     iGfun[0] = 0;
     jGvar[0] = 0;
 
-    iGfun[1] = 1;
-    jGvar[1] = 0;
+    iGfun[1] = 0;
+    jGvar[1] = 1;
 
 //  OptimizationProblem->get_bounds_info(n, xlow, xupp,
 //                                       m + numberOfLinearConstraints,
@@ -257,11 +257,18 @@ void SNOPTSolver::callSNOPT()
       Fstate[i] = 0;
       xstate[i] = 0;
       x[i] = 0.0;
-      F[i] = 0.0;
+
+
+      //trying:
+      xmul[i] = 0;
   }
 
+    for (int h = 0; h < neF; h++){
+        F[h] = 0.0;
+    }
 
-  // initial guess for the controls
+
+    // initial guess for the controls
   bool desire_values_for_x      = true;
   bool desire_values_for_dual   = false;
   bool desire_values_for_lambda = false;
@@ -283,7 +290,7 @@ void SNOPTSolver::callSNOPT()
   // Multipliers. It will be always zero except in very rare cases of
   // benchmarking performance with them set to some initial guess.
   for (i = 0; i < neF; i++)
-    Fmul[i] = 0;
+    Fmul[i] = 0.0;
 
   // This is the nonzero structure of the Jacobian
 
