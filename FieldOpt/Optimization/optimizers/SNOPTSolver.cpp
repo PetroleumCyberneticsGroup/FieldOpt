@@ -55,7 +55,7 @@ double     ru[],    integer *lenru )
     int  nf = *neF;
     //double x2 = x[1];
     //cout << x1 << "\t" << x2 << endl;
-    cout << "[SNOPTusrFG_] \t The x vector is: " <<  "\n[SNOPTusrFG_] \t ";
+    cout << "[SNOPTusrFG_] \t The x vector is: " <<  "\t ";
     for (int i = 0; i < *n; i++ ){
         cout << x[i] << "\t";
     }
@@ -254,8 +254,10 @@ void SNOPTSolver::callSNOPT()
 
   // When we have an initial guess the states should be zero
   for (i = 0; i < n; i++){
+      Fstate[i] = 0;
       xstate[i] = 0;
       x[i] = 0.0;
+      F[i] = 0.0;
   }
 
 
