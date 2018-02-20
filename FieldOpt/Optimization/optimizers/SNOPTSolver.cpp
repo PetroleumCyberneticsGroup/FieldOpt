@@ -51,7 +51,18 @@ char       *cu,     integer *lencu,
 integer    iu[],    integer *leniu,
 double     ru[],    integer *lenru )
 {
-//==================================================================
+
+    int  nf = *neF;
+    //double x2 = x[1];
+    //cout << x1 << "\t" << x2 << endl;
+    cout << "[SNOPTusrFG_] \t The x vector is: " <<  "\n[SNOPTusrFG_] \t ";
+    for (int i = 0; i < *n; i++ ){
+        cout << x[i] << "\t";
+    }
+    cout << endl;
+
+
+     //==================================================================
 // Computes the nonlinear objective and constraint terms for the
 // problem featured of interest. The problem is considered to be
 // written as:
@@ -84,8 +95,10 @@ double     ru[],    integer *lenru )
 int m = *neF - 1;
 
 // If the values for the objective and/or the constraints are desired
-if ( *needF > 0 )
+if ( *needF > 0)
 {
+    F[0] = - (x[0]-1.2)*(x[0]-1.2) - (x[1]-3.1)*(x[1]-3.1);
+
 // the value of the objective goes to the first entry of F
 //    if (FAILED == optdata.pOptimizationProblem->eval_f(*n, x, true, F[0]))
 //    {
@@ -95,18 +108,22 @@ if ( *needF > 0 )
 
 // the values of the constraints follow that of the objective
 if ( m ){
+
 //      optdata.pOptimizationProblem->eval_g(*n, x, false, m, &F[1]);
 }
 }
 
-if ( *needG > 0 )
+if ( *needG > 0)
 {
+    G[0] = -2*(x[0]-1.2);
+    G[1] = -2*(x[1]-3.1);
 
 // we have as many derivatives as the number of the controls, n
 //    optdata.pOptimizationProblem->eval_grad_f(*n, x, false, G);
 
 // and the derivatives of the constraints follow
 if ( m ){
+//    G[1] = 100*4*x1*x1*x1;//-4*(x2-0.7);
 //      optdata.pOptimizationProblem->eval_jac_g(*n, x, false, m, *neG, 0, 0, &G[*n]);
 }
 
@@ -130,6 +147,7 @@ void SNOPTSolver::callSNOPT()
   int nnz_h_lag;
 //  Ipopt::TNLP::IndexStyleEnum index_style;
 
+    n = 2;
   m = 0; // number of nonlinear constraints
   integer neF     = m + 1;
   integer lenA    = 0;
@@ -168,7 +186,8 @@ void SNOPTSolver::callSNOPT()
   // the controls
   double* x       = new double[n];
 
-  // controls lower and upper bounds
+
+    // controls lower and upper bounds
   double* xlow    = new double[n];
   double* xupp    = new double[n];
 
@@ -216,13 +235,29 @@ void SNOPTSolver::callSNOPT()
   Flow[0] = -infinity;
   Fupp[0] = infinity;
 
+    xlow[0] = -2;
+    xupp[0] = 2;
+    xlow[1] = -4;
+    xupp[1] = 4;
+
+    iGfun[0] = 0;
+    jGvar[0] = 0;
+
+    iGfun[1] = 1;
+    jGvar[1] = 0;
+
 //  OptimizationProblem->get_bounds_info(n, xlow, xupp,
 //                                       m + numberOfLinearConstraints,
 //                                       &Flow[1], &Fupp[1]);
 
+
+
   // When we have an initial guess the states should be zero
-  for (i = 0; i < n; i++)
-    xstate[i] = 0;
+  for (i = 0; i < n; i++){
+      xstate[i] = 0;
+      x[i] = 0.0;
+  }
+
 
   // initial guess for the controls
   bool desire_values_for_x      = true;
@@ -303,6 +338,7 @@ void SNOPTSolver::callSNOPT()
   // arrays  A, iAfun, jAvar, iGfun, jGvar.
   // Load the data for ToyProb ...
 
+
   snoptHandler.setProblemSize( n, neF );
   snoptHandler.setObjective  ( ObjRow );
   snoptHandler.setA          ( lenA, iAfun, jAvar, A );
@@ -334,6 +370,17 @@ void SNOPTSolver::callSNOPT()
   vector<double> fsol;
   snoptHandler.solve( Cold, xsol, fsol);
 
+
+    cout << "xsol: " << endl;
+    for (int j = 0; j < n; j++){
+        cout << xsol[j] << endl;
+    }
+    cout << endl <<"Objective values:" << endl;
+    for (int j = 0; j < neF; j++){
+        cout << fsol[j] << endl;
+    }
+
+
 //  ParameterMapping& maps = ParameterMapping::reference();
 //  if (maps.isReducingControlSpaceViaMultiScale)
 //    maps.objectiveFinalValue = fsol[0];
@@ -342,6 +389,8 @@ void SNOPTSolver::callSNOPT()
 
   delete[] iGfun;
   delete[] jGvar;
+
+
 
   delete[] x;
   delete[] xlow;
