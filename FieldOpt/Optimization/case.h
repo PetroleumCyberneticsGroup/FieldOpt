@@ -33,8 +33,9 @@ class CaseHandler;
 class CaseTransferObject;
 
 /*!
- * \brief The Case class represents a specific case for the optimizer, i.e. a specific set of variable values
- * and the value of the objective function after evaluation.
+ * \brief The Case class represents a specific case for the optimizer,
+ * i.e. a specific set of variable values and the value of the objective
+ * function after evaluation.
  */
 class Case : public Loggable
 {
@@ -87,49 +88,80 @@ class Case : public Loggable
     ErrorMessage err_msg;
   };
 
-  CaseState state; //!< The state of the Case, directly modifiable.
+  CaseState state; //!< State of Case, directly modifiable.
 
   /*!
-   * \brief Equals Checks whether this case is equal to another case within some tolerance.
+   * \brief Equals Checks whether this case is equal to another
+   * case within some tolerance.
+   *
    * \param other Case to compare with.
+   *
    * \param tolerance The allowed deviation between two cases.
-   * \return True if the cases are equal within the tolerance, otherwise false.
+   *
+   * \return True if cases are equal within given tolerance,
+   * otherwise false.
    */
   bool Equals(const Case *other, double tolerance=0.0) const;
 
   QUuid id() const { return id_; }
-  string id_stdstr() { return id_.toString().toStdString(); } //!< Get an std string representation of the case uuid.
+
+  //!< Get an std string representation of the case uuid.
+  string id_stdstr() { return id_.toString().toStdString(); }
 
   /*!
-   * @brief Get a string representation of this case, suitable for console printing.
-   * @param varcont Pointer to the variable container. This is needed to get variable names.
+   * @brief Get a string representation of this case, suitable
+   * for console printing.
+   *
+   * @param varcont Pointer to the variable container. This is
+   * needed to get variable names.
+   *
    * @return An std string describing the case.
    */
-  string StringRepresentation(Model::Properties::VariablePropertyContainer *varcont);
+  string StringRepresentation(
+      Model::Properties::VariablePropertyContainer *varcont);
 
   QHash<QUuid, bool> binary_variables() const { return binary_variables_; }
   QHash<QUuid, int> integer_variables() const { return integer_variables_; }
   QHash<QUuid, double> real_variables() const { return real_variables_; }
-  void set_binary_variables(const QHash<QUuid, bool> &binary_variables) { binary_variables_ = binary_variables; }
-  void set_integer_variables(const QHash<QUuid, int> &integer_variables) { integer_variables_ = integer_variables; }
-  void set_real_variables(const QHash<QUuid, double> &real_variables) { real_variables_ = real_variables; }
 
-  double objective_function_value() const; //!< Get the objective function value. Throws an exception if the value has not been defined.
-  void set_objective_function_value(double objective_function_value) { objective_function_value_ = objective_function_value; }
+  void set_binary_variables(const QHash<QUuid, bool> &binary_variables)
+  { binary_variables_ = binary_variables; }
 
-  void set_integer_variable_value(const QUuid id, const int val); //!< Set the value of an integer variable in the case.
-  void set_binary_variable_value(const QUuid id, const bool val); //!< Set the value of a boolean variable in the case.
-  void set_real_variable_value(const QUuid id, const double val); //!< Set the value of a real variable in the case.
+  void set_integer_variables(const QHash<QUuid, int> &integer_variables)
+  { integer_variables_ = integer_variables; }
+
+  void set_real_variables(const QHash<QUuid, double> &real_variables)
+  { real_variables_ = real_variables; }
+
+  /*!
+   * \brief Get objective function value. Throws an exception
+   * if the value has not been defined.
+   */
+  double objective_function_value() const;
+
+  void set_objective_function_value(double objective_function_value)
+  { objective_function_value_ = objective_function_value; }
+
+  //!< Set the value of an integer variable in the case.
+  void set_integer_variable_value(const QUuid id, const int val);
+
+  //!< Set the value of a boolean variable in the case.
+  void set_binary_variable_value(const QUuid id, const bool val);
+
+  //!< Set the value of a real variable in the case.
+  void set_real_variable_value(const QUuid id, const double val);
 
   enum SIGN { PLUS, MINUS, PLUSMINUS};
 
   /*!
-   * \brief Perturb Creates variations of this Case where the value of one variable has been changed.
+   * \brief Perturb Creates variations of this Case where the value
+   * of one variable has been changed.
    *
-   * If PLUS or MINUS is selected as the sign, _one_ case is returned. If PLUSMINUS is selected, _two_
-   * cases are returned.
+   * If PLUS or MINUS is selected as the sign, _one_ case is returned.
+   * If PLUSMINUS is selected, _two_ cases are returned.
    *
    * Note that this method only handles integer and real variables.
+   *
    * \param variabe_id The UUID of the variable to be perturbed.
    * \param sign The sign/direction of the perturbation.
    * \param magnitude The magnitude of the perturbaton.
@@ -140,12 +172,14 @@ class Case : public Loggable
   /*!
    * Get the real variables of this case as a Vector.
    *
-   * @note This function will not work with Case objects created from CaseTransferObject.
-   * This implies that, when running in parallel, it will only work on the main process.
+   * @note This function will not work with Case objects created from
+   * CaseTransferObject. This implies that, when running in parallel,
+   * it will only work on the main process.
    *
    * This creates an ordering of the variables so that for future
    * use the i'th index in the vector will always correspond to the
    * same variable.
+   *
    * @return Values of the real variables in a vector
    */
   Eigen::VectorXd GetRealVarVector();
@@ -153,30 +187,35 @@ class Case : public Loggable
   /*!
    * Sets the real variable values of this case from a given vector.
    *
-   * @note This function will not work with Case objects created from CaseTransferObject.
-   * This implies that, when running in parallel, it will only work on the main process.
+   * @note This function will not work with Case objects created from
+   * CaseTransferObject. This implies that, when running in parallel,
+   * it will only work on the main process.
    *
-   * The order of the variables as they appear in vector this case is preserved
-   * given that they were taken from this same case from the function GetRealVector()
+   * The order of the variables as they appear in vector this case is
+   * preserved given that they were taken from this same case from the
+   * function GetRealVector()
+   *
    * @param vec
    */
   void SetRealVarValues(Eigen::VectorXd vec);
 
   /*!
-   * @brief Get a vector containing the variable UUIDs in the same order they appear
-   * in in the vector from GetRealVarVector.
+   * @brief Get a vector containing the variable UUIDs in the same
+   * order they appear in the vector from GetRealVarVector.
    */
   QList<QUuid> GetRealVarIdVector() { return real_id_index_map_; }
 
   /*!
    * Get the integer variables of this case as a Vector.
    *
-   * @note This function will not work with Case objects created from CaseTransferObject.
-   * This implies that, when running in parallel, it will only work on the main process.
+   * @note This function will not work with Case objects created from
+   * CaseTransferObject. This implies that, when running in parallel,
+   * it will only work on the main process.
    *
    * This creates an ordering of the variables so that for future
    * use the i'th index in the vector will always correspond to the
    * same variable.
+   *
    * @return Values of the integer variables in a vector
    */
   Eigen::VectorXi GetIntegerVarVector();
@@ -184,19 +223,24 @@ class Case : public Loggable
   /*!
    * Sets the integer variable values of this case from a given vector.
    *
-   * @note This function will not work with Case objects created from CaseTransferObject.
-   * This implies that, when running in parallel, it will only work on the main process.
+   * @note This function will not work with Case objects created from
+   * CaseTransferObject. This implies that, when running in parallel,
+   * it will only work on the main process.
    *
-   * The order of the variables as they appear in vector this case is preserved
-   * given that they were taken from this same case from the function GetIntegerVarVector()
+   * The order of the variables as they appear in vector this case is
+   * preserved given that they were taken from this same case from the
+   * function GetIntegerVarVector()
+   *
    * @param vec
    */
   void SetIntegerVarValues(Eigen::VectorXi vec);
 
   /*!
-   * @brief Set the origin info of this Case/trial point, i.e. which point it was generated
-   * from, in which direction it was perturbed, and with what magnitude. This method is
-   * needed by some optimization algorithms.
+   * @brief Set the origin info of this Case/trial point, i.e. which
+   * point it was generated from, in which direction it was perturbed,
+   * and with what magnitude. This method is needed by some optimization
+   * algorithms.
+   *
    * @param parent The Case/trial point this was generated from.
    * @param direction_index The direction index of the perturbation.
    * @param step_length The magnitude of the perturbation.
@@ -224,14 +268,17 @@ class Case : public Loggable
   void SetWICTime(const int secs) { wic_time_sec_ = secs; }
 
   /*!
-   * @brief Get the number of seconds spent computing the well blocks for this case.
+   * @brief Get the number of seconds spent computing the well blocks
+   * for this case.
    */
   int GetWICTime() const { return wic_time_sec_; }
 
  private:
   QUuid id_; //!< Unique ID for the case.
   int sim_time_sec_;
-  int wic_time_sec_; //!< The number of seconds spent computing the well index for this case.
+
+  //!< # of seconds spent computing the well index for this case.
+  int wic_time_sec_;
 
   double objective_function_value_;
   QHash<QUuid, bool> binary_variables_;
@@ -241,9 +288,14 @@ class Case : public Loggable
   QList<QUuid> real_id_index_map_;
   QList<QUuid> integer_id_index_map_;
 
-  Case* parent_; //!< The parent of this trial point. Needed by the APPS algorithm.
-  int direction_index_; //!< The direction index used to generate this trial point.
-  double step_length_; //!< The step length used to generate this trial point.
+  //!< The parent of this trial point. Needed by the APPS algorithm.
+  Case* parent_;
+
+  //!< The direction index used to generate this trial point.
+  int direction_index_;
+
+  //!< The step length used to generate this trial point.
+  double step_length_;
 };
 
 }

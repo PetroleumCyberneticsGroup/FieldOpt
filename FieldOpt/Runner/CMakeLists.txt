@@ -93,7 +93,7 @@ if (BUILD_TESTING)
 	add_test(NAME test_runner COMMAND $<TARGET_FILE:test_runner>)
 endif()
 
-install( TARGETS FieldOpt runner
+install(TARGETS FieldOpt runner
 		RUNTIME DESTINATION bin
 		LIBRARY DESTINATION lib
 		ARCHIVE DESTINATION lib/static

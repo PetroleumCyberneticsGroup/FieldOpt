@@ -16,7 +16,17 @@ double AdgprsResults::GetValue(int well_nr, Results::Property prop, int time_ind
     throw std::runtime_error("Well properties are not available for ADGPRS results.");
 }
 
+// Left for backcompatibility with tests, etc -- fix that, then delete
 void AdgprsResults::ReadResults(QString file_path)
+{
+    if (file_path.split(".vars.h5").length() == 1)
+        file_path = file_path + ".vars.h5"; // Append the suffix if it's not already there
+    file_path_ = file_path;
+    summary_reader_ = new Hdf5SummaryReader(file_path_.toStdString());
+    setAvailable();
+}
+
+void AdgprsResults::ReadResults(QString file_path, const std::vector<int> verb_vector)
 {
     if (file_path.split(".vars.h5").length() == 1)
         file_path = file_path + ".vars.h5"; // Append the suffix if it's not already there

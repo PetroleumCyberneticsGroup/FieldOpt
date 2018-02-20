@@ -17,6 +17,7 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+#include <iostream>
 #include "well.h"
 
 namespace Model {
@@ -27,44 +28,50 @@ Well::Well(Settings::Model settings,
            Properties::VariablePropertyContainer *variable_container,
            Reservoir::Grid::Grid *grid)
 {
-    Settings::Model::Well well_settings = settings.wells().at(well_number);
+  Settings::Model::Well well_settings = settings.wells().at(well_number);
+  well_settings.verb_vector_ = settings.verb_vector();
+  if (well_settings.verb_vector_[5] > 1) // idx:5 -> mod (Model)
+    std::cout << "[mod]Reading well settings.- " << std::endl;
 
-    name_ = well_settings.name;
-    type_ = well_settings.type;
-    if (well_settings.group.length() >= 1)
-        group_ = well_settings.group;
-    else group_ = "";
+  name_ = well_settings.name;
+  type_ = well_settings.type;
+  if (well_settings.group.length() >= 1)
+    group_ = well_settings.group;
+  else group_ = "";
 
-    preferred_phase_ = well_settings.preferred_phase;
+  preferred_phase_ = well_settings.preferred_phase;
+  wellbore_radius_ = new Properties::ContinousProperty(well_settings.wellbore_radius);
 
-    wellbore_radius_ = new Properties::ContinousProperty(well_settings.wellbore_radius);
+  controls_ = new QList<Control *>();
+  for (int i = 0; i < well_settings.controls.size(); ++i)
+    controls_->append(new Control(well_settings.controls[i],
+                                  well_settings,
+                                  variable_container));
 
-    controls_ = new QList<Control *>();
-    for (int i = 0; i < well_settings.controls.size(); ++i)
-        controls_->append(new Control(well_settings.controls[i], well_settings, variable_container));
+  trajectory_ = new Wellbore::Trajectory(well_settings,
+                                         variable_container,
+                                         grid);
 
-    trajectory_ = new Wellbore::Trajectory(well_settings, variable_container, grid);
-
-    heel_.i = trajectory_->GetWellBlocks()->first()->i();
-    heel_.j = trajectory_->GetWellBlocks()->first()->j();
-    heel_.k = trajectory_->GetWellBlocks()->first()->k();
+  heel_.i = trajectory_->GetWellBlocks()->first()->i();
+  heel_.j = trajectory_->GetWellBlocks()->first()->j();
+  heel_.k = trajectory_->GetWellBlocks()->first()->k();
 }
 
 bool Well::IsProducer()
 {
-    return type_ == ::Settings::Model::WellType::Producer;
+  return type_ == ::Settings::Model::WellType::Producer;
 }
 
 bool Well::IsInjector()
 {
-    return type_ == ::Settings::Model::WellType::Injector;
+  return type_ == ::Settings::Model::WellType::Injector;
 }
 
 void Well::Update() {
-    trajectory_->UpdateWellBlocks();
-    heel_.i = trajectory_->GetWellBlocks()->first()->i();
-    heel_.j = trajectory_->GetWellBlocks()->first()->j();
-    heel_.k = trajectory_->GetWellBlocks()->first()->k();
+  trajectory_->UpdateWellBlocks();
+  heel_.i = trajectory_->GetWellBlocks()->first()->i();
+  heel_.j = trajectory_->GetWellBlocks()->first()->j();
+  heel_.k = trajectory_->GetWellBlocks()->first()->k();
 }
 
 

@@ -31,8 +31,9 @@ namespace Wells {
 namespace Wellbore {
 
 /*!
- * \brief The WellSpline class Generates the well blocks making up the trajectory from a set of spline points.
- * It uses the WellIndexCalculation library to do this.
+ * \brief The WellSpline class Generates the well blocks making
+ * up the trajectory from a set of spline points. It uses the
+ * WellIndexCalculation library to do this.
  */
 class WellSpline
 {
@@ -42,16 +43,20 @@ class WellSpline
              Reservoir::Grid::Grid *grid);
 
   /*!
-   * \brief GetWellBlocks Get the set of well blocks with proper WI's defined by the spline.
+   * \brief GetWellBlocks Get the set of well blocks with proper
+   * WI's defined by the spline.
    * \return
    */
   QList<WellBlock *> *GetWellBlocks();
-  int GetTimeSpentInWIC() const { return seconds_spent_in_compute_wellblocks_; }
+  int GetTimeSpentInWIC() const
+  { return seconds_spent_in_compute_wellblocks_; }
 
  private:
   Reservoir::Grid::Grid *grid_;
   Settings::Model::Well well_settings_;
-  int seconds_spent_in_compute_wellblocks_; //!< Number of seconds spent in the ComputeWellBlocks() method.
+
+  //!< Number of seconds spent in the ComputeWellBlocks() method.
+  int seconds_spent_in_compute_wellblocks_;
 
 
   Model::Properties::ContinousProperty *heel_x_;
@@ -62,10 +67,16 @@ class WellSpline
   Model::Properties::ContinousProperty *toe_z_;
 
   /*!
-   * \brief getWellBlock Convert the BlockData returned by the WIC to a WellBlock with a Perforation.
-   * \note The IJK indexes are incremented by on to account for the zero-inclusive indices used by
-   * the ERT library. This is necessary because ECL and ADGPRS both use zero-exclusive indices.
+   * \brief getWellBlock Convert the BlockData returned by WIC
+   * to a WellBlock with a Perforation.
+   *
+   * \note The IJK indexes are incremented by on to account for
+   * the zero-inclusive indices used by the ERT library. This is
+   * necessary because ECL and ADGPRS both use zero-exclusive
+   * indices.
+   *
    * \param block_data
+   *
    * \return
    */
   WellBlock *getWellBlock(Reservoir::WellIndexCalculation::IntersectedCell block_data);
