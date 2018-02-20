@@ -27,12 +27,13 @@ Optimizer::Optimizer(Settings::Optimizer *settings,
                      Case *base_case,
                      Model::Properties::VariablePropertyContainer *variables,
                      Reservoir::Grid::Grid *grid,
-                     Logger *logger)
-{
+                     Logger *logger) {
+
   // Verify that the base case has been evaluated.
   try {
     base_case->objective_function_value();
-  } catch (ObjectiveFunctionException) {
+  }
+  catch (ObjectiveFunctionException) {
     throw OptimizerInitializationException(
         "The objective function value of the base case "
             "must be set before initializing an Optimizer.");
@@ -46,8 +47,7 @@ Optimizer::Optimizer(Settings::Optimizer *settings,
                                   settings);
 
   constraint_handler_ = new Constraints::ConstraintHandler(
-      settings_->constraints(),
-      variables, grid);
+      settings_->constraints(), variables, grid, settings);
 
   iteration_ = 0;
   mode_ = settings->mode();
@@ -84,8 +84,9 @@ void Optimizer::SubmitEvaluatedCase(Case *c) {
     double penalized_ofv = PenalizedOFV(c);
     c->set_objective_function_value(penalized_ofv);
   }
-  case_handler_->UpdateCaseObjectiveFunctionValue(c->id(),
-                                                  c->objective_function_value());
+  case_handler_->UpdateCaseObjectiveFunctionValue(
+      c->id(),
+      c->objective_function_value());
 
   case_handler_->SetCaseState(c->id(),
                               c->state,

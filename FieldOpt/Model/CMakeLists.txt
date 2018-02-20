@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
 project(model)
 
+message("=============================================================")
+message(STATUS "PROJECT_NAME => ${PROJECT_NAME}")
+message(STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
+
 add_library(model
 		model.cpp
 		wells/well.cpp
@@ -54,6 +58,7 @@ if (BUILD_TESTING)
             tests/wells/test_wellblock.cpp
             tests/test_resource_variable_property_container.h
             tests/test_resource_model.h tests/wells/test_pseudo_cont_vert.cpp)
+
     target_link_libraries(test_model
             fieldopt::model
             fieldopt::reservoir
@@ -64,7 +69,7 @@ if (BUILD_TESTING)
     add_test(NAME test_model COMMAND $<TARGET_FILE:test_model>)
 endif()
 
-install( TARGETS model
+install(TARGETS model
 		RUNTIME DESTINATION bin
 		LIBRARY DESTINATION lib
 		ARCHIVE DESTINATION lib/static

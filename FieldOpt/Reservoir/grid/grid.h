@@ -37,7 +37,8 @@ class Grid
 {
  public:
   /*!
-   * \brief The GridSourceType enum Enumerates the supported grid types.
+   * \brief The GridSourceType enum Enumerates the supported grid
+   * types.
    */
   enum GridSourceType {ECLIPSE};
   Grid(const Grid& other) = delete;

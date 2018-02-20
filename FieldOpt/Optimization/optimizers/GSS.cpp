@@ -116,6 +116,7 @@ QList<Case *> GSS::generate_trial_points(vector<int> dirs) {
   }
 
   // Apply constraints
+  print_dbg_msg("[opt]Applying constraints.--- ", 1);
   for (Case *c : trial_points)
     constraint_handler_->SnapCaseToConstraints(c);
 

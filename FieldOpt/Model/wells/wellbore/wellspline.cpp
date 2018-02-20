@@ -23,6 +23,7 @@
 #include <wells/well_exceptions.h>
 #include <QtCore/QDateTime>
 #include <Utilities/time.hpp>
+#include <FieldOpt-WellIndexCalculator/wicalc_ri.h>
 
 namespace Model {
 namespace Wells {
@@ -73,6 +74,7 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
   auto toe = Eigen::Vector3d(toe_x_->value(), toe_y_->value(), toe_z_->value());
 
   auto wic = WellIndexCalculator(grid_);
+  auto wicalc_ri = wicalc_ri(well_settings_, grid_);
 
   vector<WellDefinition> welldefs;
   welldefs.push_back(WellDefinition());

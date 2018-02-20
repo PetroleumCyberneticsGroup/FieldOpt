@@ -33,16 +33,19 @@ Trajectory::Trajectory(Settings::Model::Well well_settings,
   well_spline_ = 0;
   pseudo_cont_vert_ = 0;
 
-  if (well_settings.definition_type == Settings::Model::WellDefinitionType::WellBlocks) {
+  if (well_settings.definition_type ==
+      Settings::Model::WellDefinitionType::WellBlocks) {
     initializeWellBlocks(well_settings, variable_container);
     calculateDirectionOfPenetration();
   }
-  else if (well_settings.definition_type == Settings::Model::WellDefinitionType::WellSpline) {
+  else if (well_settings.definition_type ==
+      Settings::Model::WellDefinitionType::WellSpline) {
     well_spline_ = new WellSpline(well_settings, variable_container, grid);
     well_blocks_ = well_spline_->GetWellBlocks();
     calculateDirectionOfPenetration();
   }
-  else if (well_settings.definition_type == Settings::Model::WellDefinitionType::PseudoContVertical2D) {
+  else if (well_settings.definition_type ==
+      Settings::Model::WellDefinitionType::PseudoContVertical2D) {
     pseudo_cont_vert_ = new PseudoContVert(well_settings, variable_container, grid);
     well_blocks_->append(pseudo_cont_vert_->GetWellBlock());
     calculateDirectionOfPenetration();
@@ -56,8 +59,8 @@ int Trajectory::GetTimeSpentInWic() const {
   else return 0;
 }
 
-WellBlock *Trajectory::GetWellBlock(int i, int j, int k)
-{
+WellBlock *Trajectory::GetWellBlock(int i, int j, int k) {
+
   for (int idx = 0; idx < well_blocks_->size(); ++idx) {
     if (well_blocks_->at(idx)->i() == i &&
         well_blocks_->at(idx)->j() == j &&
@@ -67,14 +70,15 @@ WellBlock *Trajectory::GetWellBlock(int i, int j, int k)
   throw WellBlockNotFoundException(i, j, k);
 }
 
-QList<WellBlock *> *Trajectory::GetWellBlocks()
-{
+QList<WellBlock *> *Trajectory::GetWellBlocks() {
+
   return well_blocks_;
 }
 
 void Trajectory::UpdateWellBlocks()
 {
-  // \todo This is the source of a memory leak: old well blocks are not deleted. Fix it.
+  /// \todo This is the source of a memory leak: old
+  /// well blocks are not deleted. Fix it.
   if (well_spline_ != 0) {
     well_blocks_ = well_spline_->GetWellBlocks();
   }

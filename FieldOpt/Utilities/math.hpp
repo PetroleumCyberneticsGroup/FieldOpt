@@ -30,9 +30,11 @@
 #include <Eigen/Core>
 
 /*!
- * @brief Calculate the average value of the items in the list. The returned value will always be a double.
+ * @brief Calculate the average value of the items in the list.
+ * The returned value will always be a double.
  * @param list
- * @return The average value of the elements in the list as a double.
+ * @return The average value of the elements in the list as a
+ * double.
  */
 template<typename T>
 inline double calc_average(const std::vector<T> list) {
@@ -41,8 +43,11 @@ inline double calc_average(const std::vector<T> list) {
 }
 
 /*!
- * @brief Calculate the median of a list. The returned value will have the same type as the elements in the list.
- * If the values are integers and the list has an even number of elements, the result will be floored.
+ * @brief Calculate the median of a list. The returned value
+ * will have the same type as the elements in the list. If
+ * the values are integers and the list has an even number
+ * of elements, the result will be floored.
+ *
  * @param list
  * @return
  */
@@ -83,7 +88,8 @@ inline std::vector<T> range(T start, T end, T step) {
 }
 
 /*!
- * @brief Get a random generator (Mersenne Twister) for use with the random functions in this file.
+ * @brief Get a random generator (Mersenne Twister)
+ * for use with the random functions in this file.
  * @return A Mersenne Twister RNG.
  */
 inline boost::random::mt19937 get_random_generator() {
@@ -94,7 +100,8 @@ inline boost::random::mt19937 get_random_generator() {
 
 /*!
  * @brief Get a random integer in the range [lower .. upper]
- * @param gen Random number generator. You can get one by calling get_random_generator().
+ * @param gen Random number generator. You can get one by
+ * calling get_random_generator().
  * @param lower The lowest possible int.
  * @param upper The highest possible int.
  * @return A random integer.
