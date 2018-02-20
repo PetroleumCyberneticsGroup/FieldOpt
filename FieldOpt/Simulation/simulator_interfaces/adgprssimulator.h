@@ -28,12 +28,10 @@ namespace Simulation {
 namespace SimulatorInterfaces {
 
 /*!
- * \brief The AdgprsSimulator class implements simulation
- * of models using the AD-GPRS reservoir simulator.
+ * \brief The AdgprsSimulator class implements simulation of models using the AD-GPRS reservoir simulator.
  *
- * This class should not be used directly except for instantiation.
- * All other actions should be called through the Simulator class.
- * The intended use is as follows:
+ * This class should not be used directly except for instantiation. All other actions should be
+ * called through the Simulator class. The intended use is as follows:
  *
  * \code
  *  Simulator sim = new AdgprsSimulator();
