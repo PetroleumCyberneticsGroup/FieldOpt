@@ -22,18 +22,25 @@
 
 #include "case.h"
 #include <QQueue>
+#include <Settings/settings.h>
 
 namespace Optimization {
 
 /*!
- * \brief The CaseHandler class acts as a handler for cases for the optimizer. It keeps track of the cases
- * that have been evaluated and the ones that have not.
+ * \brief The CaseHandler class acts as a handler for cases for the
+ * optimizer. It keeps track of the cases that have been evaluated
+ * and the ones that have not.
  */
 class CaseHandler
 {
  public:
-  CaseHandler();
-  CaseHandler(Case *base_case); //!< Call the default constructor and add the base case to list of evaluated cases.
+  CaseHandler(Settings::Optimizer *settings);
+
+  /*!
+ * \brief Call the default constructor and add the base case to
+   * list of evaluated cases.
+ */
+  CaseHandler(Case *base_case, Settings::Optimizer *settings);
 
   /*!
    * \brief AddNewCase Add a new non-evaluated case to the queue.
@@ -41,14 +48,17 @@ class CaseHandler
   void AddNewCase(Case *c);
 
   /*!
-   * \brief AddNewCases Add any number of non-evaluated cases to the queue.
+   * \brief AddNewCases Add any number of non-evaluated cases to
+   * the queue.
    */
   void AddNewCases(QList<Case *> cases);
 
   /*!
-   * \brief GetNextCaseForEvaluation Get the next case to be evaluated.
+   * \brief GetNextCaseForEvaluation Get next case to be
+   * evaluated.
    *
-   * The returned case is also added to the list of cases currently being evaluated.
+   * The returned case is also added to the list of cases
+   * currently being evaluated.
    */
   Case *GetNextCaseForEvaluation();
 
@@ -66,16 +76,21 @@ class CaseHandler
   Case *GetCase(const QUuid id) const;
 
   /*!
-   * \brief UpdateCaseObjectiveFunctionValue updates the objective function value of a
-   * case. This is needed when using, for instance, MPI based runners, where the case
-   * object before and after evaluation is not the same one.
+   * \brief UpdateCaseObjectiveFunctionValue updates the
+   * objective function value of a case. This is needed
+   * when using, for instance, MPI based runners, where
+   * the case object before and after evaluation is not
+   * the same one.
+   *
    * \param id The ID of the case to be updated.
-   * \param ofv The objective function value to be set for the case.
+   * \param ofv The objective function value to be set
+   * for the case.
    */
   void UpdateCaseObjectiveFunctionValue(const QUuid id, const double ofv);
 
   /*!
-   * @brief Update the evaluation status, error message, and WIC time for a case.
+   * @brief Update the evaluation status, error message, and WIC time
+   * for a case.
    * @param id The id of the case to set the status for.
    * @param state The state to be set.
    * @param wic_time The well index calculation time.
@@ -84,30 +99,35 @@ class CaseHandler
   void SetCaseState(QUuid id, Case::CaseState state, int wic_time, int sim_time);
 
   /*!
-   * \brief RecentlyEvaluatedCases Get the list of cases that has been marked as evaluated since the last
-   * time ClearRecentlyEvaluatedCases() was called.
+   * \brief RecentlyEvaluatedCases Get the list of cases that has been
+   * marked as evaluated since the last time ClearRecentlyEvaluatedCases()
+   * was called.
+   *
    */
   QList<Case *> RecentlyEvaluatedCases() const;
 
   /*!
-   * \brief ClearRecentlyEvaluatedCases Clear the list of recently evaluated cases. Should be called whenever
-   * a significant point is reached by the optimizer, for example at the end of an iteration.
+   * \brief ClearRecentlyEvaluatedCases Clear the list of recently
+   * evaluated cases. Should be called whenever a significant point
+   * is reached by the optimizer, for example at the end of an
+   * iteration.
+   *
    */
   void ClearRecentlyEvaluatedCases();
 
   /*!
-   * \brief QueuedCases Get the list of cases currently queued to be evaluated.
+   * \brief QueuedCases Get list of cases currently queued to be evaluated.
    */
   QList<Case *> QueuedCases() const;
 
   /*!
-   * \brief CasesBeingEvaluated Get the list of cases currently being evaluated.
+   * \brief CasesBeingEvaluated Get list of cases currently being evaluated.
    * \return
    */
   QList<Case *> CasesBeingEvaluated() const;
 
   /*!
-   * \brief EvaluatedCases Get the list of cases that have been marked as evaluated.
+   * \brief EvaluatedCases Get list of cases that have been marked as evaluated.
    */
   QList<Case *> EvaluatedCases() const;
 
@@ -142,6 +162,8 @@ class CaseHandler
   int nr_timo_; //!< Number of cases interrupted because of timeout.
   int nr_invl_; //!< Number of invalid cases (failed while being applied to model).
   int nr_fail_; //!< Number of cases that have failed for some reason.
+
+  Settings::Optimizer *settings_;
 };
 
 }

@@ -71,28 +71,28 @@ class Property
   void UpdateId(QUuid new_id);
 
   /*!
-   * \brief The type of property represented. This type decides which field in the
-   * Info datastructure is set.
+   * \brief The type of property represented. This type decides which
+   * field in the Info datastructure is set.
    */
-  enum PropertyType : int {BHP=2001, Rate=2002, SplinePoint=2003, WellBlock=2004,
-    Transmissibility=2005, PseudoContVert=2006
+  enum PropertyType : int {BHP=2001, Rate=2002, SplinePoint=2003,
+    WellBlock=2004, Transmissibility=2005, PseudoContVert=2006
   };
 
   /*!
-   * \brief For SplinePoint type properties, this is used to indicate whether the property
-   * is for the heel or the toe of the well.
+   * \brief For SplinePoint type properties, this is used to indicate
+   * whether  the property is for the heel or the toe of the well.
    */
   enum SplineEnd : int {Heel=3001, Toe=3002};
 
   /*!
-   * \brief For SplinePoint and WellBlock type variables, this indicates which coordinate
-   * the property is for.
+   * \brief For SplinePoint and WellBlock type variables, this indicates
+   * which coordinate the property is for.
    */
   enum Coordinate : int {x=4001, y=4002, z=4003, i=4004, j=4005, k=4006};
 
   /*!
-   * \brief The PropertyInfo struct contains information about what the property represents.
-   *
+   * \brief The PropertyInfo struct contains information about what the
+   * property represents.
    * This struct is only populated if the property is set variable.
    */
   struct PropertyInfo {
