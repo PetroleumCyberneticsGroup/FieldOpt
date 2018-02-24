@@ -49,14 +49,15 @@ class WellSpline
    */
   QList<WellBlock *> *GetWellBlocks();
   int GetTimeSpentInWIC() const
-  { return seconds_spent_in_compute_wellblocks_; }
+  { return time_cwb_wic_pcg_; }
 
  private:
   Reservoir::Grid::Grid *grid_;
   Settings::Model::Well well_settings_;
 
   //!< Number of seconds spent in the ComputeWellBlocks() method.
-  int seconds_spent_in_compute_wellblocks_;
+  int time_cwb_wic_pcg_;
+  int time_cwb_wic_rins_;
 
 
   Model::Properties::ContinousProperty *heel_x_;

@@ -117,7 +117,7 @@ void Trajectory::calculateDirectionOfPenetration()
   }
   // All but the last block use forward direction
   for (int i = 0; i < well_blocks_->size()-1; ++i) {
-    if (     std::abs(well_blocks_->at(i)->i() - well_blocks_->at(i+1)->i()) == 1 &&
+    if (std::abs(well_blocks_->at(i)->i() - well_blocks_->at(i+1)->i()) == 1 &&
         std::abs(well_blocks_->at(i)->j() - well_blocks_->at(i+1)->j()) == 0 &&
         std::abs(well_blocks_->at(i)->k() - well_blocks_->at(i+1)->k()) == 0)
       well_blocks_->at(i)->setDirectionOfPenetration(WellBlock::DirectionOfPenetration::X);
@@ -134,7 +134,7 @@ void Trajectory::calculateDirectionOfPenetration()
   }
 
   // Last block uses backward direction
-  if (     std::abs(well_blocks_->last()->i() - well_blocks_->at(well_blocks_->size()-2)->i()) == 1 &&
+  if (std::abs(well_blocks_->last()->i() - well_blocks_->at(well_blocks_->size()-2)->i()) == 1 &&
       std::abs(well_blocks_->last()->j() - well_blocks_->at(well_blocks_->size()-2)->j()) == 0 &&
       std::abs(well_blocks_->last()->k() - well_blocks_->at(well_blocks_->size()-2)->k()) == 0)
     well_blocks_->last()->setDirectionOfPenetration(WellBlock::DirectionOfPenetration::X);
