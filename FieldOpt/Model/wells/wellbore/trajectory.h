@@ -54,9 +54,13 @@ class Trajectory
   Trajectory(::Settings::Model::Well well_settings,
              Properties::VariablePropertyContainer *variable_container,
              Reservoir::Grid::Grid *grid);
+
   WellBlock *GetWellBlock(int i, int j, int k); //!< Get the well block at index (i,j,k).
   QList<WellBlock *> *GetWellBlocks(); //!< Get a list containing all well blocks.
+
   void UpdateWellBlocks(); //!< Update the well blocks, in particular the ones defined by a spline.
+  void UpdateWellBlocks(int rank);
+
   int GetTimeSpentInWic() const;
 
  private:

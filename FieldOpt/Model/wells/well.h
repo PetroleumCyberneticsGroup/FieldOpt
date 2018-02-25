@@ -44,7 +44,8 @@ class Well
   /*!
    * \brief Well Default constructor.
    * \param settings The settings object to create a well from.
-   * \param well_number The index of the sepcific well in the Model.Wells list to create a well from.
+   * \param well_number The index of the sepcific well in the Model.
+   * Wells list to create a well from.
    * \param variables The variables object to add all new variable variables to.
    */
   Well(Settings::Model settings,
@@ -68,7 +69,10 @@ class Well
   int heel_i() const { return heel_.i; }
   int heel_j() const { return heel_.j; }
   int heel_k() const { return heel_.k; }
+
   void Update();
+  void Update(int rank);
+
   int GetTimeSpentInWIC() const { return trajectory_->GetTimeSpentInWic(); }
 
  private:
