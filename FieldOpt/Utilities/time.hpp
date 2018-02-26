@@ -15,25 +15,25 @@
  * @param t1 Fist time. Should be before t2.
  * @param t2 Seconds time. Should be after t1.
  */
-inline int time_span_seconds(const QDateTime t1,
-                             const QDateTime t2) {
+inline int time_span_secs(const QDateTime t1,
+                          const QDateTime t2) {
   double start = t1.toMSecsSinceEpoch() / 1000.0;
   double end = t2.toMSecsSinceEpoch() / 1000.0;
   return end - start;
 }
 
-// -----------------------------------------------------------------
-inline const clock_t set_tstart() {
-  clock_t tstart = std::clock();
-  return tstart;
-}
-
-// -----------------------------------------------------------------
-inline double get_tend(clock_t tstart) {
-  double tend = float(std::clock() - tstart) /  CLOCKS_PER_SEC;
-  std::cout << "TIME: " << tend << std::endl;
-  return tend;
-}
+//// -----------------------------------------------------------------
+//inline const clock_t set_tstart() {
+//  clock_t tstart = std::clock();
+//  return tstart;
+//}
+//
+//// -----------------------------------------------------------------
+//inline double get_tend(clock_t tstart) {
+//  double tend = float(std::clock() - tstart) /  CLOCKS_PER_SEC;
+//  std::cout << "TIME: " << tend << std::endl;
+//  return tend;
+//}
 
 // -----------------------------------------------------------------
 /*!
@@ -41,8 +41,8 @@ inline double get_tend(clock_t tstart) {
  * @param t1 Fist time. Should be before t2.
  * @param t2 Seconds time. Should be after t1.
  */
-inline uint time_span_milliseconds(const QDateTime t1,
-                                   const QDateTime t2) {
+inline uint time_span_msecs(const QDateTime t1,
+                            const QDateTime t2) {
   qint64 start = t1.toMSecsSinceEpoch();
   qint64 end = t2.toMSecsSinceEpoch();
   auto tdiff = end - start;
@@ -56,8 +56,8 @@ inline uint time_span_milliseconds(const QDateTime t1,
  * t1 until now.
  * @param t The time to get the number of seconds from.
  */
-inline int time_since_seconds(const QDateTime t) {
-  return time_span_seconds(t, QDateTime::currentDateTime());
+inline int time_since_secs(const QDateTime t) {
+  return time_span_secs(t, QDateTime::currentDateTime());
 }
 
 // -----------------------------------------------------------------
@@ -66,8 +66,8 @@ inline int time_since_seconds(const QDateTime t) {
  * from t1 until now.
  * @param t The time to get the number of seconds from.
  */
-inline int time_since_milliseconds(const QDateTime t) {
-  return time_span_milliseconds(t, QDateTime::currentDateTime());
+inline int time_since_msecs(const QDateTime t) {
+  return time_span_msecs(t, QDateTime::currentDateTime());
 }
 
 // -----------------------------------------------------------------

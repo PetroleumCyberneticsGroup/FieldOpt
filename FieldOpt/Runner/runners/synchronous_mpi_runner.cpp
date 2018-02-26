@@ -157,7 +157,7 @@ void SynchronousMPIRunner::Execute() {
         }
         simulation_done_ = true; logger_->AddEntry(this);
         auto end = QDateTime::currentDateTime();
-        int sim_time = time_span_seconds(start, end);
+        int sim_time = time_span_secs(start, end);
         if (simulation_success) {
           tag = MPIRunner::MsgTag::CASE_EVAL_SUCCESS;
           printMessage("Setting objective function value.");

@@ -74,6 +74,8 @@ class Grid
    */
   virtual Cell GetCell(IJKCoordinate* ijk) = 0;
 
+  virtual string GetFilePath() { return file_path_; };
+
   /*!
    * \brief GetBoundingBoxCellIndices Searches for the bounding
    * box of the space defined by the two point and returns the
@@ -100,7 +102,8 @@ class Grid
    * is found.
    */
   // OV: 20170709
-  virtual bool GetCellEnvelopingPoint(Cell& cell, double x, double y, double z) = 0;
+  virtual bool GetCellEnvelopingPoint(Cell& cell,
+                                      double x, double y, double z) = 0;
 
   // Version that returns cell
   virtual Cell GetCellEnvelopingPoint(double x, double y, double z) = 0;

@@ -17,16 +17,31 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
-#include "wellspline.h"
+// -----------------------------------------------------------------
+// STD
 #include <iostream>
-#include <time.h>
-#include <wells/well_exceptions.h>
+#include <fstream>
+//#include <time.h>
+
+// -----------------------------------------------------------------
+// EIGEN
+#include <Eigen/Core>
+
+// -----------------------------------------------------------------
+// Qt
 #include <QtCore/QDateTime>
+
+// -----------------------------------------------------------------
+// FieldOpt: Utilities
+#include "wellspline.h"
 #include <Utilities/time.hpp>
 #include <Utilities/debug.hpp>
-#include <FieldOpt-WellIndexCalculator/wicalc_rins.h>
+#include <wells/well_exceptions.h>
 
-#include <fstream>
+// -----------------------------------------------------------------
+// FieldOpt: WIC
+#include <FieldOpt-WellIndexCalculator/wicalc_rins.h>
+#include <FieldOpt-WellIndexCalculator/wicalc_rinx.h>
 
 namespace Model {
 namespace Wells {
@@ -70,13 +85,17 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
 }
 
 // -----------------------------------------------------------------
-QList<WellBlock *> *WellSpline::GetWellBlocks() {
+QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
 
   int lvl = well_settings_.verb_vector_[5];
   print_dbg_msg_wellspline(__func__, "gwb", 0.0, lvl, 1);
 
-  auto heel = Eigen::Vector3d(heel_x_->value(), heel_y_->value(), heel_z_->value());
-  auto toe = Eigen::Vector3d(toe_x_->value(), toe_y_->value(), toe_z_->value());
+  auto heel = Eigen::Vector3d(heel_x_->value(),
+                              heel_y_->value(),
+                              heel_z_->value());
+  auto toe = Eigen::Vector3d(toe_x_->value(),
+                             toe_y_->value(),
+                             toe_z_->value());
 
   vector<WellDefinition> welldefs;
   welldefs.push_back(WellDefinition());
@@ -85,56 +104,66 @@ QList<WellBlock *> *WellSpline::GetWellBlocks() {
   welldefs[0].skins.push_back(0.0);
   welldefs[0].heels.push_back(heel);
   welldefs[0].toes.push_back(toe);
-  welldefs[0].skins.push_back(0.0);
+  welldefs[0].well_length.push_back(sqrt((toe - heel).norm()));
+  welldefs[0].heel_md.push_back(heel(2));
+  welldefs[0].toe_md.push_back(welldefs[0].heel_md.back() + welldefs[0].well_length.back());
+
+//  welldefs[0].skins.push_back(0.0); // Repeated
+
+//
+//  auto start = QDateTime::currentDateTime();
+//  Reservoir::WellIndexCalculation::wicalc_rins wicalc_rins =
+//      Reservoir::WellIndexCalculation::wicalc_rins(well_settings_, grid_);
+//
+//  map<string, vector<IntersectedCell>> well_block_data_rins;
+////  wicalc_rins.ComputeWellBlocks(well_block_data_rins, welldefs, rank);
+////  auto block_data_rins = well_block_data_rins[well_settings_.name.toStdString()];
+//
+//  // Dbg file
+//  time_cwb_wic_rins_ = time_span_msecs(start, QDateTime::currentDateTime());
+//  print_dbg_msg_wellspline(__func__, "cwb-rins", time_cwb_wic_rins_, lvl, 1);
 
 
   // ResInsight-based WIC
   auto start = QDateTime::currentDateTime();
-  Reservoir::WellIndexCalculation::wicalc_rins wicalc_rins =
-      Reservoir::WellIndexCalculation::wicalc_rins(well_settings_, grid_);
+  Reservoir::WellIndexCalculation::wicalc_rinx wicalc_rinx =
+      Reservoir::WellIndexCalculation::wicalc_rinx(well_settings_, grid_);
 
-//  auto block_data_rins =
-//      wicalc_rins.ComputeWellBlocks(welldefs)[well_settings_.name.toStdString()];
-
-  time_cwb_wic_rins_ =
-      time_span_milliseconds(start, QDateTime::currentDateTime());
-  print_dbg_msg_wellspline(__func__, "cwb-rins", time_cwb_wic_rins_, lvl, 1);
+  map<string, vector<IntersectedCell>> well_block_data_rinx;
+  wicalc_rinx.ComputeWellBlocks(well_block_data_rinx, welldefs, rank);
+  auto block_data_rinx = well_block_data_rinx[well_settings_.name.toStdString()];
 
   // Dbg file
-  ofstream wicalc_rins_file;
-  wicalc_rins_file.open ("wicalc_rins.dbg", ios::ate);
-
-//  QList<WellBlock *> *blocks = new QList<WellBlock *>();
-//  for (int i = 0; i < block_data.size(); ++i) {
-//    blocks->append(getWellBlock(block_data[i]));
-//    wicalc_rins_file << block_data[i].ijk_index().to_string();
-//  }
-
-  wicalc_rins_file.close();
+  time_cwb_wic_rinx_ = time_span_msecs(start, QDateTime::currentDateTime());
+  print_dbg_msg_wellspline(__func__, "cwb-rinx", time_cwb_wic_rinx_, lvl, 1);
+  print_dbg_msg_wellspline_wic_coords(__func__, "wicalc_rinx.dbg", well_settings_,
+                                      block_data_rinx, lvl, 1);
 
   // PCG WIC
   start = QDateTime::currentDateTime();
   auto wic = WellIndexCalculator(grid_);
-  auto block_data = wic.ComputeWellBlocks(welldefs)[well_settings_.name.toStdString()];
-  time_cwb_wic_pcg_ = time_span_seconds(start, QDateTime::currentDateTime());
-  print_dbg_msg_wellspline(__func__, "cwb-pcg", time_cwb_wic_pcg_, lvl, 1);
+
+  map<string, vector<IntersectedCell>> well_block_data_pcg;
+  wic.ComputeWellBlocks(well_block_data_pcg, welldefs, rank);
+  auto block_data_pcg = well_block_data_pcg[well_settings_.name.toStdString()];
 
   // Dbg file
-  ofstream wicalc_pcg_file;
-  wicalc_pcg_file.open ("wicalc_pcg.dbg", ios::ate);
+  time_cwb_wic_pcg_ = time_span_secs(start, QDateTime::currentDateTime());
+  print_dbg_msg_wellspline(__func__, "cwb-pcg", time_cwb_wic_pcg_, lvl, 1);
+  print_dbg_msg_wellspline_wic_coords(__func__, "wicalc_pcg.dbg", well_settings_,
+                                      block_data_pcg, lvl, 1);
 
+  // Collect: select b/e pcg or rins data
+  auto block_data = block_data_pcg;
+//  auto block_data = block_data_rinx;
   QList<WellBlock *> *blocks = new QList<WellBlock *>();
   for (int i = 0; i < block_data.size(); ++i) {
     blocks->append(getWellBlock(block_data[i]));
-    wicalc_pcg_file << block_data[i].ijk_index().to_string();
   }
-
-  wicalc_pcg_file.close();
 
   if (blocks->size() == 0) {
     throw WellBlocksNotDefined("WIC could not compute.");
   }
-
 
   return blocks;
 }

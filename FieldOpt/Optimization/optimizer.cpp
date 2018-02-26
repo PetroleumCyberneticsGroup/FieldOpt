@@ -170,7 +170,7 @@ QUuid Optimizer::GetId() {
 
 map<string, vector<double>> Optimizer::GetValues() {
   map<string, vector<double>> valmap;
-  valmap["TimeEl"] = vector<double>{time_since_seconds(start_time_)};
+  valmap["TimeEl"] = vector<double>{time_since_secs(start_time_)};
   valmap["IterNr"] = vector<double>{iteration_};
   valmap["TimeIt"] = vector<double>{seconds_spent_in_iterate_};
   valmap["TotlNr"] = vector<double>{case_handler_->NumberTotal()};
@@ -191,7 +191,7 @@ map<string, string> Optimizer::Summary::GetState() {
   map<string, string> statemap;
   statemap["Start"] = timestamp_string(opt_->start_time_);
   statemap["Duration"] = timespan_string(
-      time_span_seconds(opt_->start_time_, QDateTime::currentDateTime())
+      time_span_secs(opt_->start_time_, QDateTime::currentDateTime())
   );
 
   statemap["End"] = timestamp_string(QDateTime::currentDateTime());

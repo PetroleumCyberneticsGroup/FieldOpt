@@ -79,7 +79,7 @@ void AdgprsSimulator::verifyOriginalDriverFileDirectory()
 void AdgprsSimulator::UpdateFilePaths() {
     output_h5_summary_file_path_ = output_directory_ + "/" + initial_driver_file_name_.split(".").first() + ".vars.h5";
     script_args_ = (QStringList() << output_directory_
-                                  << settings_->mpirunner_subdirectory() + output_directory_+ "/" +initial_driver_file_name_);
+                                  << output_directory_+ "/" +initial_driver_file_name_);
 }
 
 bool AdgprsSimulator::Evaluate(int timeout, int threads) {
@@ -91,11 +91,11 @@ bool AdgprsSimulator::Evaluate(int timeout, int threads) {
 
     driver_file_writer_->WriteDriverFile(output_directory_);
     cout << "Starting monitored simulation with timeout " << timeout << endl;
-    if (settings_->verbosity_level() > 4) {
-        cout << "script_args_: " << script_args_[0].toStdString()
-             << ", " << script_args_[1].toStdString()
-             << ", " << script_args_[2].toStdString() << endl;
-    }
+//    if (settings_->verbosity_level() > 4) {
+//        cout << "script_args_: " << script_args_[0].toStdString()
+//             << ", " << script_args_[1].toStdString()
+//             << ", " << script_args_[2].toStdString() << endl;
+//    }
 
     bool success = ::Utilities::Unix::ExecShellScriptTimeout(script_path_, script_args_, t);
     if (success) {

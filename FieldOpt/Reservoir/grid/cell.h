@@ -41,10 +41,10 @@ class Cell
   Cell(){};
   Cell(int global_index,
        IJKCoordinate ijk_index,
-       double volume, 
+       double volume,
        vector<double> poro,
-       vector<double> permx, 
-       vector<double> permy, 
+       vector<double> permx,
+       vector<double> permy,
        vector<double> permz,
        Eigen::Vector3d center,
        vector<Eigen::Vector3d> corners,
@@ -70,10 +70,10 @@ class Cell
 
   /*!
    * \brief ijk_index Gets the cells (i, j, k) index in its parent grid.
-   * The k index is the index in the matrix grid in fact 
-   * in the case of a dual grid. 
+   * The k index is the index in the matrix grid in fact
+   * in the case of a dual grid.
    * For the k index in the fracure grid use k_fracture_index.
-   * This is most likely NZ + k but it is saved apart anyway. 
+   * This is most likely NZ + k but it is saved apart anyway.
    */
   IJKCoordinate ijk_index() const { return ijk_index_; }
 
@@ -83,7 +83,7 @@ class Cell
   double volume() const { return volume_; }
 
   /*!
-   * \brief porosity Gets the cell's porosity vector 
+   * \brief porosity Gets the cell's porosity vector
    * One value for each grid in which it is active.
    */
   vector<double> porosity() const { return porosity_; }
@@ -110,9 +110,9 @@ class Cell
    * @brief Check whether or not a cell is active. Note that before
    * SetProperties is called, all cells are assumed to be active.
    * @return
-   */  
+   */
   bool is_active() const { return is_active_matrix_ || is_active_fracture_; }
-  
+
   /*!
    * @brief Check whether or not a cell is active. Note that before
    * SetProperties is called, all cells are assumed to be active.
@@ -121,19 +121,19 @@ class Cell
   bool is_active_matrix() const { return is_active_matrix_; }
 
   /*!
-   * @brief Check whether or not a cell is active in the fracture grid. 
+   * @brief Check whether or not a cell is active in the fracture grid.
    * Note that before SetProperties is called, all cells are assumed to be active.
    * @return
    */
   bool is_active_fracture() const { return is_active_fracture_; }
-  
+
   /*!
-   * @brief The k index of the corresponding cell for this cell in the fracture grid 
-   * if this cell is active in the fracture grid as well. 
+   * @brief The k index of the corresponding cell for this cell in the fracture grid
+   * if this cell is active in the fracture grid as well.
    * @return
-   */  
+   */
   int k_fracture_index() const { return k_fracture_index_; }
-  
+
   /*!
    * \brief center Gets the (x, y, z) position of the cells center.
    * \todo Find how these are computed by ERT

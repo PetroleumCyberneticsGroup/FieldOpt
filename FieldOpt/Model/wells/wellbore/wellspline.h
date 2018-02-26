@@ -47,7 +47,7 @@ class WellSpline
    * WI's defined by the spline.
    * \return
    */
-  QList<WellBlock *> *GetWellBlocks();
+  QList<WellBlock *> *GetWellBlocks(int rank=0);
   int GetTimeSpentInWIC() const
   { return time_cwb_wic_pcg_; }
 
@@ -58,7 +58,7 @@ class WellSpline
   //!< Number of seconds spent in the ComputeWellBlocks() method.
   int time_cwb_wic_pcg_;
   int time_cwb_wic_rins_;
-
+  int time_cwb_wic_rinx_;
 
   Model::Properties::ContinousProperty *heel_x_;
   Model::Properties::ContinousProperty *heel_y_;
