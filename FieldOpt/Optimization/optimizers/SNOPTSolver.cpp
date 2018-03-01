@@ -97,7 +97,7 @@ int m = *neF - 1;
 // If the values for the objective and/or the constraints are desired
 if ( *needF > 0)
 {
-    F[0] = - (x[0]-1.2)*(x[0]-1.2) - (x[1]-3.1)*(x[1]-3.1);
+    F[0] = - (x[0]-1.2)*(x[0]-1.2) - (x[1]-3.1)*(x[1]-3.1) - (x[2]-7.7)*(x[2]-7.7);
 
 // the value of the objective goes to the first entry of F
 //    if (FAILED == optdata.pOptimizationProblem->eval_f(*n, x, true, F[0]))
@@ -117,6 +117,7 @@ if ( *needG > 0)
 {
     G[0] = -2*(x[0]-1.2);
     G[1] = -2*(x[1]-3.1);
+    G[2] = -2*(x[2]-7.7);
 
 // we have as many derivatives as the number of the controls, n
 //    optdata.pOptimizationProblem->eval_grad_f(*n, x, false, G);
@@ -147,7 +148,7 @@ void SNOPTSolver::callSNOPT()
   int nnz_h_lag;
 //  Ipopt::TNLP::IndexStyleEnum index_style;
 
-    n = 2;
+    n = 3;
   m = 0; // number of nonlinear constraints
   integer neF     = m + 1;
   integer lenA    = 0;
@@ -235,17 +236,21 @@ void SNOPTSolver::callSNOPT()
   Flow[0] = -infinity;
   Fupp[0] = infinity;
 
-    xlow[0] = -2;
-    xupp[0] = 2;
-    xlow[1] = -4;
-    xupp[1] = 4;
+    xlow[0] = -2;     xupp[0] = 2;
+    xlow[1] = -4;     xupp[1] = 4;
+    xlow[2] = -6;     xupp[2] = 6;
 
-    iGfun[0] = 0;
-    jGvar[0] = 0;
+    integer a = 0;
 
-    iGfun[1] = 0;
-    jGvar[1] = 1;
+    iGfun[a] = (integer)0;
+    jGvar[a] = (integer)0;
+a ++;
 
+   iGfun[a] = (integer)0;
+   jGvar[a] = (integer)1;
+  a ++;
+  iGfun[a] = (integer)0;
+  jGvar[a] = (integer)2;
 //  OptimizationProblem->get_bounds_info(n, xlow, xupp,
 //                                       m + numberOfLinearConstraints,
 //                                       &Flow[1], &Fupp[1]);
@@ -433,15 +438,17 @@ void SNOPTSolver::setOptionsForSNOPT(SNOPTHandler& snoptHandler)
 
   //snoptHandler.setIntParameter("Check frequency",           60);
   //snoptHandler.setParameter("Cold Start                     Cold");
-  //snoptHandler.setParameter("Crash option                   3");
+
+    //snoptHandler.setParameter("Crash option                   3");
   //snoptHandler.setParameter("Crash tolerance                0.1");
   //snoptHandler.setParameter("Derivative level               3");
 
 //  if ( (optdata.optimizationType == HISTORY_MATCHING) || hasNonderivativeLinesearch )
 //    snoptHandler.setParameter((char*)"Nonderivative linesearch");
 //  else
-  snoptHandler.setParameter((char*)"Derivative linesearch");
-  snoptHandler.setIntParameter("Derivative option", 1);
+  //snoptHandler.setParameter((char*)"Derivative linesearch");
+//  snoptHandler.setIntParameter("Derivative option", 1);
+
 //  snoptHandler.setRealParameter("Difference interval", optdata.derivativeRelativePerturbation);
 
   //snoptHandler.setParameter("Dump file                      0");
@@ -476,13 +483,13 @@ void SNOPTSolver::setOptionsForSNOPT(SNOPTHandler& snoptHandler)
   //target complementarity gap
 //  snoptHandler.setRealParameter("Major optimality tolerance", optdata.convergenceTolerance);
 
-  //snoptHandler.setParameter("Major Print level  000001");
+  //snoptHandler.setParameter("Major Print level  11111"); //  000001"
 //  snoptHandler.setRealParameter("Major step limit", optdata.majorStepLimit);
-  snoptHandler.setIntParameter("Minor iterations limit", 200);
+  //snoptHandler.setIntParameter("Minor iterations limit", 200); // 200
 
   //for satisfying the QP bounds
 //  snoptHandler.setRealParameter("Minor feasibility tolerance", optdata.constraintTolerance);
-  snoptHandler.setIntParameter("Minor print level", 0);
+  snoptHandler.setIntParameter("Minor print level", 10);
   //snoptHandler.setParameter("New basis file                 0");
   //snoptHandler.setParameter("New superbasics limit          99");
   //snoptHandler.setParameter("Objective Row");
@@ -497,7 +504,7 @@ void SNOPTSolver::setOptionsForSNOPT(SNOPTHandler& snoptHandler)
   snoptHandler.setIntParameter("Scale option", 1);
   //snoptHandler.setParameter("Scale tolerance                0.9");
   snoptHandler.setParameter((char*)"Scale Print");
-  snoptHandler.setParameter((char*)"Solution  yes");
+  snoptHandler.setParameter((char*)"Solution  Yes");
   //snoptHandler.setParameter("Start Objective Check at Column 1");
   //snoptHandler.setParameter("Start Constraint Check at Column 1");
   //snoptHandler.setParameter("Stop Objective Check at Column");
@@ -506,12 +513,12 @@ void SNOPTSolver::setOptionsForSNOPT(SNOPTHandler& snoptHandler)
   //snoptHandler.setParameter("Summary frequency               100");
   //snoptHandler.setParameter("Superbasics limit");
   //snoptHandler.setParameter("Suppress parameters");
-  snoptHandler.setParameter((char*)"System information  No");
+  //snoptHandler.setParameter((char*)"System information  No");
   //snoptHandler.setParameter("Timing level                    3");
   //snoptHandler.setRealParameter("Unbounded objective value   1.0e+15");
   //snoptHandler.setParameter("Unbounded step size             1.0e+18");
-  snoptHandler.setIntParameter("Verify level", -1);
-  snoptHandler.setRealParameter("Violation limit", 1e-8);
+  //snoptHandler.setIntParameter("Verify level", -1); //-1
+  //snoptHandler.setRealParameter("Violation limit", 1e-8); //1e-8
 
 //  if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
 //    cout << "[opt]Set options for SNOPT.---" << endl;
