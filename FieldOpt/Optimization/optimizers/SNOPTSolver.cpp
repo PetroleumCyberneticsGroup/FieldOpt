@@ -98,6 +98,7 @@ int m = *neF - 1;
 if ( *needF > 0)
 {
     F[0] = - (x[0]-1.2)*(x[0]-1.2) - (x[1]-3.1)*(x[1]-3.1);
+    F[3] = 0.7*(x[0]*x[0]);// + x[1]*x[1]);
 
 // the value of the objective goes to the first entry of F
 //    if (FAILED == optdata.pOptimizationProblem->eval_f(*n, x, true, F[0]))
@@ -121,8 +122,11 @@ if ( *needG > 0)
 // we have as many derivatives as the number of the controls, n
 //    optdata.pOptimizationProblem->eval_grad_f(*n, x, false, G);
 
+  G[2] = 1.4*x[0];
+  //G[3] = 1.4*x[1];
 // and the derivatives of the constraints follow
 if ( m ){
+
 //    G[1] = 100*4*x1*x1*x1;//-4*(x2-0.7);
 //      optdata.pOptimizationProblem->eval_jac_g(*n, x, false, m, *neG, 0, 0, &G[*n]);
 }
@@ -148,7 +152,7 @@ void SNOPTSolver::callSNOPT()
 //  Ipopt::TNLP::IndexStyleEnum index_style;
 
     n = 2;
-  m = 0; // number of nonlinear constraints
+  m = 1; // number of nonlinear constraints
   integer neF     = m + 1;
   integer lenA    = 4;
   integer nxnames = 1;
@@ -181,6 +185,8 @@ void SNOPTSolver::callSNOPT()
   // the indices (row, column) of the Jacobian (objective,
   // constraints) combined
   neF+=2; // Two linear constraints
+  //lenG = 3;
+  lenG--; // We only have 1 derivative for the nonlinear constraint (it doesn't depend upon both variables)
   integer* iGfun  = new integer[lenG];
   integer* jGvar  = new integer[lenG];
 
@@ -251,6 +257,7 @@ jAvar[3] = 1;
   Flow[0] = -infinity;    Fupp[0] = infinity;
   Flow[1] = -2;           Fupp[1] = 4;
   Flow[2] = -3;           Fupp[2] = 10;
+  Flow[3] = 0;           Fupp[3] = 1;
 
 
     xlow[0] = -2;     xupp[0] = 2;
@@ -264,6 +271,14 @@ a ++;
 
    iGfun[a] = (integer)0;
    jGvar[a] = (integer)1;
+  a ++;
+
+  iGfun[a] = (integer)3;
+  jGvar[a] = (integer)0;
+  //a ++;
+
+  //iGfun[a] = (integer)3;
+  //jGvar[a] = (integer)1;
 
 //  OptimizationProblem->get_bounds_info(n, xlow, xupp,
 //                                       m + numberOfLinearConstraints,
