@@ -150,7 +150,7 @@ void SNOPTSolver::callSNOPT()
     n = 2;
   m = 0; // number of nonlinear constraints
   integer neF     = m + 1;
-  integer lenA    = 2;
+  integer lenA    = 4;
   integer nxnames = 1;
   integer nFnames = 1;
 
@@ -180,7 +180,7 @@ void SNOPTSolver::callSNOPT()
 
   // the indices (row, column) of the Jacobian (objective,
   // constraints) combined
-  neF++; // One linear constraint
+  neF+=2; // Two linear constraints
   integer* iGfun  = new integer[lenG];
   integer* jGvar  = new integer[lenG];
 
@@ -188,12 +188,17 @@ void SNOPTSolver::callSNOPT()
   jAvar = new integer[lenA];
   A     = new double[lenA];
   iAfun[0] = 1;
-  jAvar[0] = 0;
-  iAfun[1] = 1;
-  jAvar[1] = 1;
+jAvar[0] = 0;
+iAfun[1] = 1;
+jAvar[1] = 1;
+iAfun[2] = 2;
+jAvar[2] = 0;
+iAfun[3] = 2;
+jAvar[3] = 1;
   A[0] = 1.0;
   A[1] = 1.2;
-
+  A[2] = 0.9;
+  A[3] = 3.0;
   // the controls
   double* x       = new double[n];
 
@@ -245,11 +250,11 @@ void SNOPTSolver::callSNOPT()
   const double infinity = 1e20;
   Flow[0] = -infinity;    Fupp[0] = infinity;
   Flow[1] = -2;           Fupp[1] = 4;
+  Flow[2] = -3;           Fupp[2] = 10;
 
 
     xlow[0] = -2;     xupp[0] = 2;
     xlow[1] = -4;     xupp[1] = 4;
-    xlow[2] = -6;     xupp[2] = 6;
 
     integer a = 0;
 
