@@ -97,7 +97,7 @@ int m = *neF - 1;
 // If the values for the objective and/or the constraints are desired
 if ( *needF > 0)
 {
-    F[0] = - (x[0]-1.2)*(x[0]-1.2) - (x[1]-3.1)*(x[1]-3.1) - (x[2]-7.7)*(x[2]-7.7);
+    F[0] = - (x[0]-1.2)*(x[0]-1.2) - (x[1]-3.1)*(x[1]-3.1);
 
 // the value of the objective goes to the first entry of F
 //    if (FAILED == optdata.pOptimizationProblem->eval_f(*n, x, true, F[0]))
@@ -117,7 +117,6 @@ if ( *needG > 0)
 {
     G[0] = -2*(x[0]-1.2);
     G[1] = -2*(x[1]-3.1);
-    G[2] = -2*(x[2]-7.7);
 
 // we have as many derivatives as the number of the controls, n
 //    optdata.pOptimizationProblem->eval_grad_f(*n, x, false, G);
@@ -148,10 +147,10 @@ void SNOPTSolver::callSNOPT()
   int nnz_h_lag;
 //  Ipopt::TNLP::IndexStyleEnum index_style;
 
-    n = 3;
+    n = 2;
   m = 0; // number of nonlinear constraints
   integer neF     = m + 1;
-  integer lenA    = 0;
+  integer lenA    = 2;
   integer nxnames = 1;
   integer nFnames = 1;
 
@@ -181,8 +180,19 @@ void SNOPTSolver::callSNOPT()
 
   // the indices (row, column) of the Jacobian (objective,
   // constraints) combined
+  neF++; // One linear constraint
   integer* iGfun  = new integer[lenG];
   integer* jGvar  = new integer[lenG];
+
+  iAfun = new integer[lenA];
+  jAvar = new integer[lenA];
+  A     = new double[lenA];
+  iAfun[0] = 1;
+  jAvar[0] = 0;
+  iAfun[1] = 1;
+  jAvar[1] = 1;
+  A[0] = 1.0;
+  A[1] = 1.2;
 
   // the controls
   double* x       = new double[n];
@@ -233,8 +243,9 @@ void SNOPTSolver::callSNOPT()
 
   // this is the value SNOPT considers as infinity
   const double infinity = 1e20;
-  Flow[0] = -infinity;
-  Fupp[0] = infinity;
+  Flow[0] = -infinity;    Fupp[0] = infinity;
+  Flow[1] = -2;           Fupp[1] = 4;
+
 
     xlow[0] = -2;     xupp[0] = 2;
     xlow[1] = -4;     xupp[1] = 4;
@@ -248,9 +259,7 @@ a ++;
 
    iGfun[a] = (integer)0;
    jGvar[a] = (integer)1;
-  a ++;
-  iGfun[a] = (integer)0;
-  jGvar[a] = (integer)2;
+
 //  OptimizationProblem->get_bounds_info(n, xlow, xupp,
 //                                       m + numberOfLinearConstraints,
 //                                       &Flow[1], &Fupp[1]);
