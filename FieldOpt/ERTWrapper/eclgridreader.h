@@ -21,23 +21,25 @@
 #ifndef ECLGRIDREADER_H
 #define ECLGRIDREADER_H
 
+// -----------------------------------------------------------------
 // ERT
 #include <ert/ecl/ecl_grid.h>
 #include <ert/ecl/ecl_file.h>
 #include <ert/ecl/ecl_kw.h>
 #include <ert/ecl/ecl_kw_magic.h>
 
+// -----------------------------------------------------------------
 // EIGEN
 #include <Eigen/Dense>
 
-// STANDARD
+// -----------------------------------------------------------------
+// STD
 #include <vector>
 
 using namespace std;
 using namespace Eigen;
 
 namespace ERTWrapper {
-
 namespace ECLGrid {
 
 /*!
@@ -129,6 +131,7 @@ class ECLGridReader
     std::vector<double> permz;
     std::vector<Eigen::Vector3d> corners;
     Eigen::Vector3d center;
+    Eigen::Vector3d dxdydz;
   };
 
   struct IJKIndex {
@@ -156,6 +159,7 @@ string file_name_;
   ecl_file_type* ecl_file_init_;
   ecl_grid_type* ecl_file_egrid_;
   Eigen::Vector3d GetCellCenter(int global_index);
+  Eigen::Vector3d GetCellDxDyDz(int global_index);
   std::vector<Eigen::Vector3d> GetCellCorners(int global_index);
   double GetCellVolume(int global_index);
 
@@ -302,7 +306,10 @@ string file_name_;
    * \param initial_guess (optional) Global index to start search at/around
    * \return Global index or -1.
    */
-  int GlobalIndexOfCellEnvelopingPoint(double x, double y, double z, int initial_guess=0);
+  int GlobalIndexOfCellEnvelopingPoint(double x,
+                                       double y,
+                                       double z,
+                                       int initial_guess=0);
 
   bool GlobalIndexIsInsideGrid(int global_index);
 

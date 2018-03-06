@@ -21,13 +21,16 @@
 #ifndef GRID_H
 #define GRID_H
 
+// -----------------------------------------------------------------
 #include "cell.h"
 #include "ijkcoordinate.h"
 #include "ERTWrapper/eclgridreader.h"
 
+// -----------------------------------------------------------------
 namespace Reservoir {
 namespace Grid {
 
+// =================================================================
 /*!
  * \brief The abstract Grid class represents a reservoir grid. It
  * includes basic operations for lookup, checks and calculations
@@ -114,7 +117,8 @@ class Grid
    * if no cell is found.
    */
   // OV: 20170709
-  virtual bool GetCellEnvelopingPoint(Cell& cell, double x, double y, double z,
+  virtual bool GetCellEnvelopingPoint(Cell& cell,
+                                      double x, double y, double z,
                                       std::vector<int> search_set) = 0;
 
   // Version that returns cell
@@ -127,7 +131,8 @@ class Grid
    * exception if no cell is found.
    */
   // OV: 20170709
-  virtual bool GetCellEnvelopingPoint(Cell& cell, Eigen::Vector3d xyz) = 0;
+  virtual bool GetCellEnvelopingPoint(Cell& cell,
+                                      Eigen::Vector3d xyz) = 0;
 
   // Version that returns cell
   virtual Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz) = 0;
@@ -158,7 +163,8 @@ class Grid
  protected:
   GridSourceType type_;
   std::string file_path_;
-  Grid(GridSourceType type, std::string file_path);
+  Grid(GridSourceType type,
+       std::string file_path);
 };
 
 }

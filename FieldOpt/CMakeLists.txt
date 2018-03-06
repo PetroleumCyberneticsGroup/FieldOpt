@@ -1,22 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(FieldOpt)
 
-# ResInsight ===========================================================
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-  add_definitions(-DCVF_LINUX)
-endif()
-
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCVF_LINUX -pipe -Wextra ")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual -Wformat")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-narrowing -Wno-sign-compare")
-  set(CMAKE_CXX_FLAGS_DEBUG "-ggdb -g3 -O0 -DDEBUG -D_DEBUG")
-  set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNO_DEBUG")
-  #pragma warning(disable: 4345)
-
-endif()
-
 # General config =======================================================
 # CMAKE_MODULE_PATH: Commands like include() and find_package() search
 # for files in directories listed by this variable before checking the
@@ -24,9 +8,25 @@ endif()
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 include(GetSysInfo.cmake)
 include(MaurConfig.cmake)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-narrowing -Wno-sign-compare")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual -Wformat")
 
 # Compile options ======================================================
-set (CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+# ResInsight ===========================================================
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+  add_definitions(-DCVF_LINUX)
+  message(STATUS "CMAKE_SYSTEM_NAME => ${CMAKE_SYSTEM_NAME}")
+endif()
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -DCVF_LINUX -pipe -Wextra ")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+  set(CMAKE_CXX_FLAGS_DEBUG "-ggdb -g3 -O0 -DDEBUG -D_DEBUG")
+  set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNO_DEBUG")
+endif()
 
 # Build dirs ===========================================================
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -182,7 +182,6 @@ endif()
 
 # Compile options ======================================================
 add_compile_options(-std=fPIC)
-#add_compile_options(/w4101)
 
 # Copy example files ===================================================
 if (COPY_EXAMPLES)

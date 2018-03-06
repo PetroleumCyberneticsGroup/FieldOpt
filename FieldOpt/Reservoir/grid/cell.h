@@ -39,6 +39,7 @@ class Cell
 {
  public:
   Cell(){};
+  Cell(int ncells);
   Cell(int global_index,
        IJKCoordinate ijk_index,
        double volume,
@@ -47,6 +48,7 @@ class Cell
        vector<double> permy,
        vector<double> permz,
        Eigen::Vector3d center,
+       Eigen::Vector3d dxdydz,
        vector<Eigen::Vector3d> corners,
        int faces_permutation_index,
        bool active_matrix, bool active_fracture,
@@ -56,17 +58,18 @@ class Cell
   /*!
    * \brief Set cell properties at a later stage
    */
-  /*void SetProperties(bool is_active_matrix,
-		  bool is_active_fracture,
-          vector<double> porosity,
-          vector<double> permx,
-          vector<double> permy,
-          vector<double> permz);
-*/
+  void SetProperties(bool is_active_matrix,
+                     bool is_active_fracture,
+                     vector<double> permx,
+                     vector<double> permy,
+                     vector<double> permz);
+
+
   /*!
    * \brief global_index Gets the cells global index in its parent grid.
    */
   int global_index() const { return global_index_; }
+  void set_global_index(int gidx) { global_index_ = gidx; };
 
   /*!
    * \brief ijk_index Gets the cells (i, j, k) index in its parent grid.
@@ -76,6 +79,7 @@ class Cell
    * This is most likely NZ + k but it is saved apart anyway.
    */
   IJKCoordinate ijk_index() const { return ijk_index_; }
+  void set_ijk_index(IJKCoordinate ijk) { ijk_index_ = ijk; }
 
   /*!
    * \brief volume Gets the cells volume.
@@ -139,6 +143,7 @@ class Cell
    * \todo Find how these are computed by ERT
    */
   Eigen::Vector3d center() const { return center_; }
+  Eigen::Vector3d dxdydz() const { return dxdydz_; }
 
   /*!
    * \brief corners Gets the (x, y, z) coordinates of each of the
@@ -285,6 +290,7 @@ class Cell
   int k_fracture_index_;
   double volume_;
   Eigen::Vector3d center_;
+  Eigen::Vector3d dxdydz_;
   vector<Eigen::Vector3d> corners_;
   vector<double> porosity_;
   vector<double> permx_;

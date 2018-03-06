@@ -5,7 +5,9 @@ add_library(reservoir
     grid/cell.cpp
     grid/grid.cpp
     grid/ijkcoordinate.cpp
-    grid/eclgrid.cpp)
+    grid/eclgrid.cpp
+    ../FieldOpt-WellIndexCalculator/resinxx/rixx_grid/rigrid.cpp
+    ../FieldOpt-WellIndexCalculator/resinxx/rixx_grid/ricell.cpp ../FieldOpt-WellIndexCalculator/resinxx/rixx_grid/ricell.h)
 
 add_library(fieldopt::reservoir ALIAS ${PROJECT_NAME})
 

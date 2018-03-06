@@ -21,15 +21,22 @@
 #ifndef ECLGRID_H
 #define ECLGRID_H
 
+// -----------------------------------------------------------------
+// STD
 #include <vector>
+
+// -----------------------------------------------------------------
+// FieldOpt
 #include "grid.h"
 
-
+// -----------------------------------------------------------------
 namespace Reservoir {
 namespace Grid {
 
 using namespace std;
+using std::string;
 
+// =================================================================
 /*!
  * \brief The ECLGrid class is an implementation
  * of the abstract Grid class for ECLIPSE grids.
@@ -43,7 +50,7 @@ class ECLGrid : public Grid
   int faces_permutation_index_;
 
  public:
-  ECLGrid(std::string file_path);
+  ECLGrid(string file_path);
   virtual ~ECLGrid();
 
   Dims Dimensions();

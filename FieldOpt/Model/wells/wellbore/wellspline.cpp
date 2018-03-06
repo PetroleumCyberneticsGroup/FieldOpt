@@ -126,18 +126,18 @@ QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
 
   // ResInsight-based WIC
   auto start = QDateTime::currentDateTime();
-  Reservoir::WellIndexCalculation::wicalc_rinx wicalc_rinx =
-      Reservoir::WellIndexCalculation::wicalc_rinx(well_settings_, grid_);
-
-  map<string, vector<IntersectedCell>> well_block_data_rinx;
-  wicalc_rinx.ComputeWellBlocks(well_block_data_rinx, welldefs, rank);
-  auto block_data_rinx = well_block_data_rinx[well_settings_.name.toStdString()];
-
-  // Dbg file
-  time_cwb_wic_rinx_ = time_span_msecs(start, QDateTime::currentDateTime());
-  print_dbg_msg_wellspline(__func__, "cwb-rinx", time_cwb_wic_rinx_, lvl, 1);
-  print_dbg_msg_wellspline_wic_coords(__func__, "wicalc_rinx.dbg", well_settings_,
-                                      block_data_rinx, lvl, 1);
+//  Reservoir::WellIndexCalculation::wicalc_rinx wicalc_rinx =
+//      Reservoir::WellIndexCalculation::wicalc_rinx(well_settings_, grid_);
+//
+//  map<string, vector<IntersectedCell>> well_block_data_rinx;
+//  wicalc_rinx.ComputeWellBlocks(well_block_data_rinx, welldefs, rank);
+//  auto block_data_rinx = well_block_data_rinx[well_settings_.name.toStdString()];
+//
+//  // Dbg file
+//  time_cwb_wic_rinx_ = time_span_msecs(start, QDateTime::currentDateTime());
+//  print_dbg_msg_wellspline(__func__, "cwb-rinx", time_cwb_wic_rinx_, lvl, 1);
+//  print_dbg_msg_wellspline_wic_coords(__func__, "wicalc_rinx.dbg", well_settings_,
+//                                      block_data_rinx, lvl, 1);
 
   // PCG WIC
   start = QDateTime::currentDateTime();

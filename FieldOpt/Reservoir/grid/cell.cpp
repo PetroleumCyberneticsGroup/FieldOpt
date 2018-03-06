@@ -27,13 +27,60 @@ namespace Grid {
 
 using namespace std;
 
-Cell::Cell(int global_index, IJKCoordinate ijk_index,
-           double volume, vector<double> poro_in,
-           vector<double> permx_in, vector<double> permy_in, vector<double> permz_in,
+Cell::Cell(int ncells) {
+
+  global_index_ = -1;
+  ijk_index_ = IJKCoordinate(-1,-1,-1);
+  k_fracture_index_ = -1;
+  volume_ = -1.0;
+
+  vector<double> prop;
+  prop.push_back(-1.0);
+  porosity_ = prop;
+  permx_ = prop;
+  permy_ = prop;
+  permz_ = prop;
+
+  Eigen::Vector3d center;
+  center_ = center;
+
+  Eigen::Vector3d dxdydz;
+  dxdydz_ = dxdydz;
+
+  vector<Eigen::Vector3d> corners;
+  corners.resize(8*ncells);
+  corners_ = corners;
+
+}
+
+void Cell::SetProperties(bool is_active_matrix,
+                   bool is_active_fracture,
+                   vector<double> permx,
+                   vector<double> permy,
+                   vector<double> permz) {
+
+  is_active_matrix_ = is_active_matrix;
+  is_active_fracture_ = is_active_fracture;
+  permx_ = permx;
+  permy_ = permy;
+  permz_ = permz;
+
+}
+
+Cell::Cell(int global_index,
+           IJKCoordinate ijk_index,
+           double volume,
+           vector<double> poro_in,
+           vector<double> permx_in,
+           vector<double> permy_in,
+           vector<double> permz_in,
            Eigen::Vector3d center,
+           Eigen::Vector3d dxdydz,
            vector<Eigen::Vector3d> corners,
            int faces_permutation_index,
-           bool active_matrix, bool active_fracture, int k_fracture_index) {
+           bool active_matrix,
+           bool active_fracture,
+           int k_fracture_index) {
 
   global_index_ = global_index;
   ijk_index_ = ijk_index;
@@ -44,6 +91,7 @@ Cell::Cell(int global_index, IJKCoordinate ijk_index,
   permy_ = permy_in;
   permz_ = permz_in;
   center_ = center;
+  dxdydz_ = dxdydz;
   corners_ = corners;
   is_active_matrix_ = active_matrix;
   is_active_fracture_ = active_fracture;

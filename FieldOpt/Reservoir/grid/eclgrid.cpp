@@ -15,20 +15,32 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+// -----------------------------------------------------------------
+// STD
+
+// -----------------------------------------------------------------
+// FieldOpt
 #include "eclgrid.h"
+
+// -----------------------------------------------------------------
+// FieldOpt: WIC
+#include <FieldOpt-WellIndexCalculator/wellindexcalculator.h>
+#include "FieldOpt-WellIndexCalculator/tests/wic_debug.hpp"
+
+// -----------------------------------------------------------------
+// Boost
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include <FieldOpt-WellIndexCalculator/wellindexcalculator.h>
-#include "FieldOpt-WellIndexCalculator/tests/wic_debug.hpp"
-
+// -----------------------------------------------------------------
 namespace Reservoir {
 namespace Grid {
 
 using namespace std;
 
+// =================================================================
 ECLGrid::ECLGrid(string file_path)
     : Grid(GridSourceType::ECLIPSE, file_path) {
 
@@ -65,8 +77,7 @@ ECLGrid::ECLGrid(string file_path)
   // Get the first cell
   Cell first_cell = GetCell(idx);
 
-  if (first_cell.EnvelopsPoint(first_cell.center()))
-  {
+  if (first_cell.EnvelopsPoint(first_cell.center())) {
     return;
   }
 
@@ -74,8 +85,7 @@ ECLGrid::ECLGrid(string file_path)
   faces_permutation_index_ = 1;
   // Get the first cell
   first_cell = GetCell(idx);
-  if (first_cell.EnvelopsPoint(first_cell.center()))
-  {
+  if (first_cell.EnvelopsPoint(first_cell.center())) {
     return;
   }
 
@@ -137,6 +147,7 @@ Cell ECLGrid::GetCell(int global_index) {
 
     // Get cell center coordinates
     auto center = Eigen::Vector3d(ertCell.center);
+    auto dxdydz = Eigen::Vector3d(ertCell.dxdydz);
 
     // Get cell corners
     vector<Eigen::Vector3d> corners;
@@ -145,11 +156,19 @@ Cell ECLGrid::GetCell(int global_index) {
     }
 
     // Return cell info
-    return Cell(global_index, ijk_index,
-                ertCell.volume, ertCell.porosity,
-                ertCell.permx, ertCell.permy, ertCell.permz,
-                center, corners, faces_permutation_index_,
-                ertCell.matrix_active, ertCell.fracture_active,
+    return Cell(global_index,
+                ijk_index,
+                ertCell.volume,
+                ertCell.porosity,
+                ertCell.permx,
+                ertCell.permy,
+                ertCell.permz,
+                center,
+                dxdydz,
+                corners,
+                faces_permutation_index_,
+                ertCell.matrix_active,
+                ertCell.fracture_active,
                 Dimensions().nz + ijk_index.k()
     );
   } else {
