@@ -59,6 +59,7 @@ class WellSpline
   int time_cwb_wic_pcg_;
   int time_cwb_wic_rins_;
   int time_cwb_wic_rinx_;
+  int time_cwb_wic_rixx_;
 
   Model::Properties::ContinousProperty *heel_x_;
   Model::Properties::ContinousProperty *heel_y_;

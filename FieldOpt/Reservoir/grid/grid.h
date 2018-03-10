@@ -25,6 +25,7 @@
 #include "cell.h"
 #include "ijkcoordinate.h"
 #include "ERTWrapper/eclgridreader.h"
+#include <QString>
 
 // -----------------------------------------------------------------
 namespace Reservoir {
@@ -78,6 +79,9 @@ class Grid
   virtual Cell GetCell(IJKCoordinate* ijk) = 0;
 
   virtual string GetFilePath() { return file_path_; };
+
+  virtual QString GetFilePathQString()
+  { return QString::fromStdString(file_path_); };
 
   /*!
    * \brief GetBoundingBoxCellIndices Searches for the bounding

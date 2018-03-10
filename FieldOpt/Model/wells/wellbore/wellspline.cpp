@@ -40,8 +40,9 @@
 
 // -----------------------------------------------------------------
 // FieldOpt: WIC
-#include <FieldOpt-WellIndexCalculator/wicalc_rins.h>
-#include <FieldOpt-WellIndexCalculator/wicalc_rinx.h>
+//#include <FieldOpt-WellIndexCalculator/wicalc_rins.h>
+//#include <FieldOpt-WellIndexCalculator/wicalc_rinx.h>
+#include <FieldOpt-WellIndexCalculator/wicalc_rixx.h>
 
 namespace Model {
 namespace Wells {
@@ -97,6 +98,7 @@ QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
                              toe_y_->value(),
                              toe_z_->value());
 
+  // -----------------------------------------------------------------
   vector<WellDefinition> welldefs;
   welldefs.push_back(WellDefinition());
   welldefs[0].wellname = well_settings_.name.toStdString();
@@ -110,7 +112,7 @@ QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
 
 //  welldefs[0].skins.push_back(0.0); // Repeated
 
-//
+// PROOF-OF-CONCEPT
 //  auto start = QDateTime::currentDateTime();
 //  Reservoir::WellIndexCalculation::wicalc_rins wicalc_rins =
 //      Reservoir::WellIndexCalculation::wicalc_rins(well_settings_, grid_);
@@ -124,8 +126,10 @@ QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
 //  print_dbg_msg_wellspline(__func__, "cwb-rins", time_cwb_wic_rins_, lvl, 1);
 
 
+  // TEST INTEGRATION
+
   // ResInsight-based WIC
-  auto start = QDateTime::currentDateTime();
+//  auto start = QDateTime::currentDateTime();
 //  Reservoir::WellIndexCalculation::wicalc_rinx wicalc_rinx =
 //      Reservoir::WellIndexCalculation::wicalc_rinx(well_settings_, grid_);
 //
@@ -139,7 +143,23 @@ QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
 //  print_dbg_msg_wellspline_wic_coords(__func__, "wicalc_rinx.dbg", well_settings_,
 //                                      block_data_rinx, lvl, 1);
 
-  // PCG WIC
+  // ResInsight-based WIC --------------------------------------------
+  auto start = QDateTime::currentDateTime();
+  Reservoir::WellIndexCalculation::wicalc_rixx wicalc_rixx =
+      Reservoir::WellIndexCalculation::wicalc_rixx(well_settings_, grid_);
+
+  map<string, vector<IntersectedCell>> well_block_data_rixx;
+  wicalc_rixx.ComputeWellBlocks(well_block_data_rixx, welldefs, rank);
+  auto block_data_rixx = well_block_data_rixx[well_settings_.name.toStdString()];
+
+  // Dbg file
+  time_cwb_wic_rixx_ = time_span_msecs(start, QDateTime::currentDateTime());
+  print_dbg_msg_wellspline(__func__, "cwb-rixx", time_cwb_wic_rixx_, lvl, 1);
+  print_dbg_msg_wellspline_wic_coords(__func__, "wicalc_rixx.dbg", well_settings_,
+                                      block_data_rixx, lvl, 1);
+
+
+  // PCG WIC ---------------------------------------------------------
   start = QDateTime::currentDateTime();
   auto wic = WellIndexCalculator(grid_);
 
@@ -153,7 +173,7 @@ QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
   print_dbg_msg_wellspline_wic_coords(__func__, "wicalc_pcg.dbg", well_settings_,
                                       block_data_pcg, lvl, 1);
 
-  // Collect: select b/e pcg or rins data
+  // Collect: select b/e pcg or rins data --------------------------
   auto block_data = block_data_pcg;
 //  auto block_data = block_data_rinx;
   QList<WellBlock *> *blocks = new QList<WellBlock *>();
