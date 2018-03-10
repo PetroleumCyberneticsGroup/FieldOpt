@@ -85,13 +85,13 @@ TEST_F(ECLGridRotatorTest, TestCOORDAfterRotationSizes) {
     // ecl_grid_rotator_5spot_exp_->GetParametersFromJSON();
 
     // Check COORD data is nonzero
-    cout << YELLOW << "== Check COORD data is nonzero ==" << END << endl;
+    cout << FYELLOW << "== Check COORD data is nonzero ==" << AEND << endl;
     ecl_grid_rotator_5spot_exp_->ecl_grid_reader_->GetCOORDZCORNData();
     EXPECT_EQ(22326, ecl_grid_rotator_5spot_exp_->
         ecl_grid_reader_->gridData_.coord.size());
 
     // Rotate grid
-    cout << YELLOW << "== Rotate grid ==" << END << endl;
+    cout << FYELLOW << "== Rotate grid ==" << END << endl;
     ecl_grid_rotator_5spot_exp_->RotateCOORD();
 
     // Compare original COORD data againts rotated COORD data: should
@@ -100,7 +100,7 @@ TEST_F(ECLGridRotatorTest, TestCOORDAfterRotationSizes) {
     auto coord_rxryrz = ecl_grid_rotator_5spot_exp_->ecl_grid_reader_->gridData_.coord_rxryrz;
 
     // Check data sizes
-    cout << YELLOW << "== COORD.SIZE() ==" << END << endl;
+    cout << FYELLOW << "== COORD.SIZE() ==" << AEND << endl;
     cout << "[coord.rows() coord.cols()]: ["
          << coord.rows() << " " << coord.cols() << "]" << endl;
     cout << "[coord_rxryrz.rows() coord_rxryrz.cols()]: ["
@@ -109,7 +109,7 @@ TEST_F(ECLGridRotatorTest, TestCOORDAfterRotationSizes) {
 
     // View COORD data (column format)
     cout.precision(2); cout.setf(ios::fixed, ios::floatfield);
-    cout << YELLOW << "== COORD.DATA() ==" << END << endl;
+    cout << FYELLOW << "== COORD.DATA() ==" << AEND << endl;
     cout << "coord:" << endl << coord.block(0,0,9,1).transpose() << endl;
     cout << "coord_rxryrz:" << endl << coord_rxryrz.block(0,0,9,1).transpose() << endl;
 
@@ -132,7 +132,7 @@ TEST_F(ECLGridRotatorTest, TestCOORDAfterRotationRx) {
 
     // View COORD data (XYZ format)
     cout.precision(5); cout.setf(ios::fixed, ios::floatfield);
-    cout << YELLOW << "== COORD.DATA().XYZ AFTER RX ROTATION ==" << END << endl;
+    cout << FYELLOW << "== COORD.DATA().XYZ AFTER RX ROTATION ==" << AEND << endl;
     cout << "coord_xzy:" << endl << coord_xyz.block(0,0,9,3) << endl;
     cout << "coord_rxryrz_xzy:" << endl << coord_rxryrz_xyz.block(0,0,9,3) << endl;
 
@@ -160,7 +160,7 @@ TEST_F(ECLGridRotatorTest, TestCOORDAfterRotationRy) {
 
     // View COORD data (XYZ format)
     cout.precision(5); cout.setf(ios::fixed, ios::floatfield);
-    cout << YELLOW << "== COORD.DATA().XYZ AFTER RY ROTATION ==" << END << endl;
+    cout << FYELLOW << "== COORD.DATA().XYZ AFTER RY ROTATION ==" << AEND << endl;
     cout << "coord_xzy:" << endl << coord_xyz.block(0,0,9,3) << endl;
     cout << "coord_rxryrz_xzy:" << endl << coord_rxryrz_xyz.block(0,0,9,3) << endl;
 
@@ -187,7 +187,7 @@ TEST_F(ECLGridRotatorTest, TestCOORDAfterRotationRz) {
 
     // View COORD data (XYZ format)
     cout.precision(5); cout.setf(ios::fixed, ios::floatfield);
-    cout << YELLOW << "== COORD.DATA().XYZ AFTER RZ ROTATION ==" << END << endl;
+    cout << FYELLOW << "== COORD.DATA().XYZ AFTER RZ ROTATION ==" << AEND << endl;
     cout << "coord_xzy:" << endl << coord_xyz.block(0,0,9,3) << endl;
     cout << "coord_rxryrz_xzy:" << endl << coord_rxryrz_xyz.block(0,0,9,3) << endl;
 

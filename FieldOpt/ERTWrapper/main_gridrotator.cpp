@@ -29,21 +29,21 @@ namespace ECLGrid {
 }
 
 int main(int argc, const char *argv[]) {
-    ECLGridRotator ecl_grid_rotator = ECLGridRotator();
-    ECLGridRotator *ecl_grid_rotator_p = &ecl_grid_rotator;
+  ECLGridRotator ecl_grid_rotator = ECLGridRotator();
+  ECLGridRotator *ecl_grid_rotator_p = &ecl_grid_rotator;
 
-    ecl_grid_rotator_p->GetParametersFromJSON(argc, argv);
-    ecl_grid_rotator_p->ecl_grid_reader_->ReadEclGrid(
-        ecl_grid_rotator_p->ECL_GRID_FILE_PATH);
+  ecl_grid_rotator_p->GetParametersFromJSON(argc, argv);
+  ecl_grid_rotator_p->ecl_grid_reader_->ReadEclGrid(
+      ecl_grid_rotator_p->ECL_GRID_FILE_PATH);
 
-    cout << CYAN << "GRID INFO:" << END << endl;
-    ecl_grid_rotator_p->ecl_grid_reader_->GetGridSummary();
+  cout << FCYAN << "GRID INFO:" << AEND << endl;
+  ecl_grid_rotator_p->ecl_grid_reader_->GetGridSummary();
 
-    ecl_grid_rotator_p->ecl_grid_reader_->GetCOORDZCORNData();
-    ecl_grid_rotator_p->RotateCOORD();
-    ecl_grid_rotator_p->RotateZCORN(true);
+  ecl_grid_rotator_p->ecl_grid_reader_->GetCOORDZCORNData();
+  ecl_grid_rotator_p->RotateCOORD();
+  ecl_grid_rotator_p->RotateZCORN(true);
 
-    ecl_grid_rotator_p->PrintCoordZcornData();
+  ecl_grid_rotator_p->PrintCoordZcornData();
 
 }
 

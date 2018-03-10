@@ -34,16 +34,18 @@ protected:
 };
 
 TEST_F(SettingsTest, ConstructorAndTestFileValidity) {
+  std::vector<int> verb_vector_ = std::vector<int>(11,0);
     EXPECT_NO_THROW(auto settings = ::Settings::Settings(
                         TestResources::ExampleFilePaths::driver_example_,
                         TestResources::ExampleFilePaths::directory_output_,
-                        5)); // <-verbosity level
+                        verb_vector_)); // <-verbosity level
 }
 
 TEST_F(SettingsTest, GlobalSettings) {
+  std::vector<int> verb_vector_ = std::vector<int>(11,0);
     auto settings = ::Settings::Settings(TestResources::ExampleFilePaths::driver_example_,
                                          TestResources::ExampleFilePaths::directory_output_,
-                                         5); // <-verbosity level
+                                         verb_vector_); // <-verbosity level
     EXPECT_STREQ("TestRun", settings.name().toLatin1().constData());
     EXPECT_STREQ(TestResources::ExampleFilePaths::driver_example_.toLatin1().constData(),
                  settings.driver_path().toLatin1().constData());

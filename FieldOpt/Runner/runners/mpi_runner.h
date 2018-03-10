@@ -153,7 +153,7 @@ class MPIRunner : public AbstractRunner {
    * @param message The message to be printed.
    * @param min_verb The minimum verbosity level required for the message to be printed.
    */
-  void printMessage(std::string message, int min_verb=1);
+  void printMessage(std::string message);
 };
 }
 }

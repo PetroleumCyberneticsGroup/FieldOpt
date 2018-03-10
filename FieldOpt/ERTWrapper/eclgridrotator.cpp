@@ -145,14 +145,14 @@ void ECLGridRotator::RotateCOORD() {
     }
 
     try {
-        cout << CYAN << "CENTER COORDINATE: " << END
+        cout << FCYAN << "CENTER COORDINATE: " << AEND
             << RCENTER.transpose() << endl;
     } catch (const std::exception& e) {
         cout << "Error: " << e.what() << endl;
         cout << "RCENTER.rows() = " << RCENTER.rows() << endl;
     }
 
-    // cout << CYAN << "Resize center and offset vectors" << END << endl;
+    // cout << FCYAN << "Resize center and offset vectors" << AEND << endl;
     auto rcenter = RCENTER.replicate(1,coord_xyz.rows()).transpose();
     auto roffset = ROFFSET.replicate(1,coord_xyz.rows()).transpose();
 
@@ -169,7 +169,7 @@ void ECLGridRotator::RotateCOORD() {
         ecl_grid_reader_->gridData_.coord_rxryrz_xyz = coord_xyz;
     }
 
-    // cout << CYAN << "Reshape back into vector form" << END << endl;
+    // cout << FCYAN << "Reshape back into vector form" << AEND << endl;
     Map<MatrixXd> coord(
         ecl_grid_reader_->gridData_.coord_rxryrz_xyz.data(),
         ecl_grid_reader_->gridData_.coord.rows(), 1);
@@ -197,9 +197,9 @@ void ECLGridRotator::SetRotationMatrix(MatrixXd rx_ry_rz, bool dbg) {
     if (dbg){
         cout.setf(ios::fixed, ios::floatfield);
         cout.precision(6);
-        cout << CYAN << "Rx: " << END << endl << Rx_ << endl
-             << CYAN << "Ry: " << END << endl << Ry_ << endl
-             << CYAN << "Rz: " << END << endl << Rz_ << endl
+        cout << FCYAN << "Rx: " << AEND << endl << Rx_ << endl
+             << FCYAN << "Ry: " << AEND << endl << Ry_ << endl
+             << FCYAN << "Rz: " << AEND << endl << Rz_ << endl
              << endl;
     }
 }
@@ -233,7 +233,7 @@ void ECLGridRotator::GetParametersFromJSON(int argc, const char **argv){
     output_file_ = pt.get<string>(OUTPUTFILE);
     OUTPUT_FILE_PATH = param_path.parent_path().string()
         + "/" + output_file_;
-    cout << CYAN << OUTPUTFILE << ": " << END
+    cout << FCYAN << OUTPUTFILE << ": " << AEND
          << OUTPUT_FILE_PATH << endl;
 
     // Load EGRID path: looks for the grid file in the same
@@ -241,7 +241,7 @@ void ECLGridRotator::GetParametersFromJSON(int argc, const char **argv){
     grid_file_ = pt.get<string>(GRIDPATH);
     ECL_GRID_FILE_PATH = param_path.parent_path().string()
         + "/" + grid_file_;
-    cout << CYAN << GRIDPATH << ": " << END
+    cout << FCYAN << GRIDPATH << ": " << AEND
         << ECL_GRID_FILE_PATH << endl;
 
     // Get path and stem of output file
@@ -254,7 +254,7 @@ void ECLGridRotator::GetParametersFromJSON(int argc, const char **argv){
     }
     Map<MatrixXd> rx_ry_rz(ra.data(), ra.size(), 1);
     RX_RY_RZ = rx_ry_rz;
-    cout << CYAN << ROTANGLE << ": " << END
+    cout << FCYAN << ROTANGLE << ": " << AEND
          << RX_RY_RZ.transpose() << endl;
 
     // Load rotation origo option
@@ -262,7 +262,7 @@ void ECLGridRotator::GetParametersFromJSON(int argc, const char **argv){
 
     // Inform about rotation center option (re-set rotation
     // center after eclgrid has been defined)
-    cout << CYAN << "ROTATION CENTER OPTION: " << END
+    cout << FCYAN << "ROTATION CENTER OPTION: " << AEND
          << ROTATION_MODE << endl;
 
     // Load rotation center
@@ -273,7 +273,7 @@ void ECLGridRotator::GetParametersFromJSON(int argc, const char **argv){
     Map<MatrixXd> rcenter(rc.data(), rc.size(), 1);
     RCENTER = rcenter;
 
-    cout << CYAN << "CENTER COORDINATE: " << END
+    cout << FCYAN << "CENTER COORDINATE: " << AEND
          << RCENTER.transpose() << endl;
 
     // Load offset
@@ -284,7 +284,7 @@ void ECLGridRotator::GetParametersFromJSON(int argc, const char **argv){
     Map<MatrixXd> roffset(ro.data(), ro.size(), 1);
     ROFFSET = roffset;
 
-    cout << CYAN << "OFFSET COORDINATE: " << END
+    cout << FCYAN << "OFFSET COORDINATE: " << AEND
          << ROFFSET.transpose() << endl;
 
     // Set rotation matrix

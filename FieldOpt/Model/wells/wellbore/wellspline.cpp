@@ -64,7 +64,7 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
   }
 }
 
-QList<WellBlock *> *WellSpline::GetWellBlocks()
+QList<WellBlock *> *WellSpline::GetWellBlocks(int rank)
 {
   if (well_settings_.verb_vector_[5] > 1) // idx:5 -> mod (Model)
     std::cout << "[mod]Get well blocks.-------- " << std::endl;
@@ -84,7 +84,11 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
   welldefs[0].skins.push_back(0.0);
 
   auto start = QDateTime::currentDateTime();
-  auto block_data = wic.ComputeWellBlocks(welldefs)[well_settings_.name.toStdString()];
+
+  map<string, vector<IntersectedCell>> well_block_data;
+  wic.ComputeWellBlocks(well_block_data, welldefs, rank);
+  auto block_data = well_block_data[well_settings_.name.toStdString()];
+
   auto end = QDateTime::currentDateTime();
   seconds_spent_in_compute_wellblocks_ = time_span_seconds(start, end);
 

@@ -47,8 +47,7 @@ class WellSpline
    * WI's defined by the spline.
    * \return
    */
-  QList<WellBlock *> *GetWellBlocks();
-  QList<WellBlock *> *GetWellBlocks(int rank);
+  QList<WellBlock *> *GetWellBlocks(int rank=0);
   int GetTimeSpentInWIC() const { return seconds_spent_in_compute_wellblocks_; }
 
  private:
@@ -70,7 +69,7 @@ class WellSpline
    * \brief getWellBlock Convert the BlockData returned by WIC
    * to a WellBlock with a Perforation.
    *
-   * \note The IJK indexes are incremented by on to account for
+   * \note The IJK indexes are incremented by one to account for
    * the zero-inclusive indices used by the ERT library. This is
    * necessary because ECL and ADGPRS both use zero-exclusive
    * indices.

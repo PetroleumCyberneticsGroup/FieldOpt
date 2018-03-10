@@ -55,7 +55,6 @@ class Settings
 {
  public:
   Settings(){}
-  Settings(QString driver_path, QString output_directory, int verbosity_level);
   Settings(QString driver_path, QString output_directory, vector<int> verb_vector);
 
   QString driver_path() const { return driver_path_; }

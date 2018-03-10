@@ -28,14 +28,15 @@ namespace TestResources {
 class TestResourceSettings {
  protected:
   TestResourceSettings() {
-      settings_full_ = new Settings::Settings(
-          ExampleFilePaths::driver_example_,
-          ExampleFilePaths::directory_output_,
-          5); // <-verbosity level
 
-      settings_optimizer_ = settings_full_->optimizer();
-      settings_simulator_ = settings_full_->simulator();
-      settings_model_ = settings_full_->model();
+    settings_full_ = new Settings::Settings(
+        ExampleFilePaths::driver_example_,
+        ExampleFilePaths::directory_output_,
+        std::vector<int>(11,0)); // <-verbosity level
+
+    settings_optimizer_ = settings_full_->optimizer();
+    settings_simulator_ = settings_full_->simulator();
+    settings_model_ = settings_full_->model();
 
 //      settings_flow_5spot_ = new Settings::Settings(ExampleFilePaths::driver_5spot_flow_,
 //                                                    "/home/einar/.CLion2016.2/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug/fieldopt_output/");
