@@ -166,67 +166,68 @@ void ECLSummaryReader::initializeTimeVector() {
 }
 
 void ECLSummaryReader::initializeWellRates() {
-    const ecl_smspec_type * smspec = ecl_sum_get_smspec(ecl_sum_);
-    for (auto wname : wells_) {
-        wopr_[wname] = std::vector<double>(time_.size(), 0.0);
-        if (hasWellVar(wname, "WOPR")) {
-            int index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WOPR");
-            auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
-            assert(double_vector_size(data) == time_.size());
-            for (int i = 0; i < time_.size(); ++i) {
-                wopr_[wname][i] = double_vector_safe_iget(data, i);
-            }
-            wopr_[wname][0] = GetWellVar(wname, "WOPR", 0);
-            double_vector_free(data);
-        }
+            const ecl_smspec_type * smspec;
+            smspec = ecl_sum_get_smspec(ecl_sum_);
+            for(auto wname : wells_) {
+                wopr_[wname] = std::vector<double>(time_.size(), 0.0);
+                if (hasWellVar(wname, "WOPR")) {
+                    int index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WOPR");
+                    auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
+                    assert(double_vector_size(data) == time_.size());
+                    for (int i = 0; i < time_.size(); ++i) {
+                        wopr_[wname][i] = double_vector_safe_iget(data, i);
+                    }
+                    wopr_[wname][0] = GetWellVar(wname, "WOPR", 0);
+                    double_vector_free(data);
+                }
 
-        wwpr_[wname] = std::vector<double>(time_.size(), 0.0);
-        if (hasWellVar(wname, "WWPR")) {
-            int index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WWPR");
-            auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
-            assert(double_vector_size(data) == time_.size());
-            for (int i = 0; i < time_.size(); ++i) {
-                wwpr_[wname][i] = double_vector_safe_iget(data, i);
-            }
-            wwpr_[wname][0] = GetWellVar(wname, "WWPR", 0);
-            double_vector_free(data);
-        }
+                wwpr_[wname] = std::vector<double>(time_.size(), 0.0);
+                if (hasWellVar(wname, "WWPR")) {
+                    int index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WWPR");
+                    auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
+                    assert(double_vector_size(data) == time_.size());
+                    for (int i = 0; i < time_.size(); ++i) {
+                        wwpr_[wname][i] = double_vector_safe_iget(data, i);
+                    }
+                    wwpr_[wname][0] = GetWellVar(wname, "WWPR", 0);
+                    double_vector_free(data);
+                }
 
-        wgpr_[wname] = std::vector<double>(time_.size(), 0.0);
-        if (hasWellVar(wname, "WGPR")) {
-            int index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WGPR");
-            auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
-            assert(double_vector_size(data) == time_.size());
-            for (int i = 0; i < time_.size(); ++i) {
-                wgpr_[wname][i] = double_vector_safe_iget(data, i);
-            }
-            wgpr_[wname][0] = GetWellVar(wname, "WGPR", 0);
-            double_vector_free(data);
-        }
+                wgpr_[wname] = std::vector<double>(time_.size(), 0.0);
+                if (hasWellVar(wname, "WGPR")) {
+                    int index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WGPR");
+                    auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
+                    assert(double_vector_size(data) == time_.size());
+                    for (int i = 0; i < time_.size(); ++i) {
+                        wgpr_[wname][i] = double_vector_safe_iget(data, i);
+                    }
+                    wgpr_[wname][0] = GetWellVar(wname, "WGPR", 0);
+                    double_vector_free(data);
+                }
 
-        wwir_[wname] = std::vector<double>(time_.size(), 0.0);
-        if (hasWellVar(wname, "WWIR")) {
-            int index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WWIR");
-            auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
-            assert(double_vector_size(data) == time_.size());
-            for (int i = 0; i < time_.size(); ++i) {
-                wwir_[wname][i] = double_vector_safe_iget(data, i);
-            }
-            wgpr_[wname][0] = GetWellVar(wname, "WGPR", 0);
-            double_vector_free(data);
-        }
+                wwir_[wname] = std::vector<double>(time_.size(), 0.0);
+                if (hasWellVar(wname, "WWIR")) {
+                    int index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WWIR");
+                    auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
+                    assert(double_vector_size(data) == time_.size());
+                    for (int i = 0; i < time_.size(); ++i) {
+                        wwir_[wname][i] = double_vector_safe_iget(data, i);
+                    }
+                    wgpr_[wname][0] = GetWellVar(wname, "WGPR", 0);
+                    double_vector_free(data);
+                }
 
-        wgir_[wname] = std::vector<double>(time_.size(), 0.0);
-        if (hasWellVar(wname, "WGIR")) {
-            int index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WGIR");
-            auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
-            assert(double_vector_size(data) == time_.size());
-            for (int i = 0; i < time_.size(); ++i) {
-                wgir_[wname][i] = double_vector_safe_iget(data, i);
-            }
-            wgir_[wname][0] = GetWellVar(wname, "WGIR", 0);
-            double_vector_free(data);
-        }
+                wgir_[wname] = std::vector<double>(time_.size(), 0.0);
+                if (hasWellVar(wname, "WGIR")) {
+                    int index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WGIR");
+                    auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
+                    assert(double_vector_size(data) == time_.size());
+                    for (int i = 0; i < time_.size(); ++i) {
+                        wgir_[wname][i] = double_vector_safe_iget(data, i);
+                    }
+                    wgir_[wname][0] = GetWellVar(wname, "WGIR", 0);
+                    double_vector_free(data);
+                }
     }
 }
 
