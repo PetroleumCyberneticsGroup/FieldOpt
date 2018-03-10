@@ -74,6 +74,13 @@ void Well::Update() {
   heel_.k = trajectory_->GetWellBlocks()->first()->k();
 }
 
+void Well::Update(int rank) {
+    trajectory_->UpdateWellBlocks(rank);
+    heel_.i = trajectory_->GetWellBlocks()->first()->i();
+    heel_.j = trajectory_->GetWellBlocks()->first()->j();
+    heel_.k = trajectory_->GetWellBlocks()->first()->k();
+}
+
 
 }
 }

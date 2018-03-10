@@ -1,0 +1,121 @@
+RUNSPEC   == specifications of simulation =============================
+TITLE     -- title of the run
+  BRUGGE EXERCISE
+
+NOECHO
+
+DIMENS    -- dimensions of the model
+-- NX    NY   NZ
+   139   48    9 /
+
+-- specify the phases present
+OIL       -- we run basically two phase black oil here
+GAS
+DISGAS
+WATER
+
+--FIELD     -- unit specification
+
+START     -- starting date for simulation run
+  1 'SEP' 2017  /
+
+EQLDIMS   -- equilibration table size 
+    1  1000   10    1   20 /
+    
+TABDIMS   -- size of saturation and pvt tables
+    1    1   40   40 /
+
+WELLDIMS  -- max numb of WELLS/CONN per WELL/GROUPS/WELLperGROUP
+    30    40    2    20 /			
+
+NSTACK
+   40 /
+
+--FMTOUT
+UNIFOUT
+
+
+
+
+
+GRID      == geometry of our model =====================================
+INIT
+GRIDFILE
+ 2 1 /
+
+--MAPUNITS
+--'METRES' /
+--
+--GRIDUNIT
+--'METRES' 'MAP' /
+
+--COORDSYS
+--1 9 /
+
+--INCLUDE
+--grid073_COORD_TRTS.grdecl /
+
+INCLUDE
+BRUGGE_PORO_PERMXYZ.INC /
+
+INCLUDE
+BRUGGE_ACTNUM.INC / 
+
+INCLUDE
+ BRUGGE_COORD_ZCORN_RXRYRZ.INC /
+
+INCLUDE
+BRUGGE_NTG.INC /
+
+
+
+
+PROPS     == pvt and relperm tables =============================
+
+INCLUDE
+BRUGGE_PROPS.INC / 
+
+-- OUTPUT CONTROLS FOR PROPS DATA
+-- ACTIVATED FOR SOF3, SWFN, SGFN, PVTW, PVDG, DENSITY AND ROCK KEYWORDS
+RPTPROPS
+NOTHING
+/
+
+------!!! notice the oil-water contact face, and 
+SOLUTION   == initial state of solution variables =====================
+EQUIL      -- DATA FOR INITIALISING FLUIDS TO POTENTIAL EQUILIBRIUM
+--    DATUM  DATUM   OWC    OWC    GOC    GOC    RSVD   RVVD   SOLN
+--    DEPTH  PRESS  DEPTH   PCOW  DEPTH   PCOG  TABLE  TABLE   METH
+       1600    170   1650      0   1600      0      0      0      0
+/
+
+
+
+
+
+
+NOECHO
+
+SUMMARY    == output written to summary *.RSM file ====================
+
+INCLUDE
+BRUGGE_SUMMARY.INC /
+
+
+
+
+SCHEDULE   == operations to be simulated ==============================
+
+RPTRST    -- request restart file
+'BASIC=3'
+/
+
+TUNING  -- min/max timestep (3 sections)
+0.1	30	/
+5*	 0.1	/
+2*   100 	/
+
+INCLUDE
+opt.sched /
+ 
+END

@@ -74,15 +74,22 @@ QList<WellBlock *> *Trajectory::GetWellBlocks()
 
 void Trajectory::UpdateWellBlocks()
 {
-  // \todo This is the source of a memory leak: old well blocks are not deleted. Fix it.
-  if (well_spline_ != 0) {
-    well_blocks_ = well_spline_->GetWellBlocks();
-  }
-  else if (pseudo_cont_vert_ != 0) {
-    well_blocks_ = new QList<WellBlock *>();
-    well_blocks_->append(pseudo_cont_vert_->GetWellBlock());
-  }
-  calculateDirectionOfPenetration();
+    // \todo This is the source of a memory leak:
+    // old well blocks are not deleted. Fix it.
+    if (well_spline_ != 0) {
+        well_blocks_ = well_spline_->GetWellBlocks();
+    }
+    calculateDirectionOfPenetration();
+}
+
+void Trajectory::UpdateWellBlocks(int rank)
+{
+    // \todo This is the source of a memory leak:
+    // old well blocks are not deleted. Fix it.
+    if (well_spline_ != 0) {
+        well_blocks_ = well_spline_->GetWellBlocks(rank);
+    }
+    calculateDirectionOfPenetration();
 }
 
 void Trajectory::initializeWellBlocks(Settings::Model::Well well,

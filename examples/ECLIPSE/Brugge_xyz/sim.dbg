@@ -1,0 +1,286 @@
+Running version 2013.2
+Running Eclipse on Machine type linux_x86_64 version 2013.2
+
+Running Eclipse on Machine type linux_x86_64 version 2013.2
+
+ ECLIPSE   Version 2013.2. Build Number  7112013. (Arch : Linux X86_64 (64 bit, LINUX_REL5IL64OPT))
+
+ Proprietary Notice
+ This application contains the confidential and
+ proprietary trade secrets of Schlumberger and may 
+ not be copied or stored in an information retrieval
+ system, transferred, used, distributed, translated,
+ or retransmitted in any form or by any means, electron
+ or mechanical, in whole or in part, without the
+ express written permission of the copyright owner.
+
+ ECLIPSE is a mark of Schlumberger. Copyright (c)
+ 1981-2013 Schlumberger. All rights reserved.
+
+     1 READING RUNSPEC 
+     2 READING TITLE   
+     3 READING NOECHO  
+     4 READING DIMENS  
+     5 READING OIL     
+     6 READING GAS     
+     7 READING DISGAS  
+     8 READING WATER   
+     9 READING START   
+    10 READING EQLDIMS 
+    11 READING TABDIMS 
+    12 READING WELLDIMS
+    13 READING NSTACK  
+    14 READING UNIFOUT 
+    15 READING GRID    
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-SEP-2017):
+ @           CHECKING FOR LICENSES                                           
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-SEP-2017):
+ @           THE MEMORY REQUIRED TO PROCESS THE GRID SECTION IS              
+ @                23315 KBYTES                                               
+    16 READING INIT    
+    17 READING GRIDFILE
+    18 READING INCLUDE BRUGGE_PORO_PERMXYZ.INC                           
+    19 READING PORO    
+    20 READING PERMX   
+    21 READING PERMY   
+    22 READING PERMZ   
+               END OF INCLUDE FILE 
+    23 READING INCLUDE BRUGGE_ACTNUM.INC                                 
+    24 READING ACTNUM  
+               END OF INCLUDE FILE 
+    25 READING INCLUDE BRUGGE_COORD_ZCORN_RXRYRZ.INC                     
+    26 READING COORD   
+    27 READING ZCORN   
+               END OF INCLUDE FILE 
+    28 READING INCLUDE BRUGGE_NTG.INC                                    
+    29 READING NTG     
+               END OF INCLUDE FILE 
+    30 READING PROPS   
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-SEP-2017):
+ @           NEITHER OLDTRAN,OLDTRANR NOR NEWTRAN SPECIFIED                  
+ @           TRANSMISSIBILITIES TO BE CALCULATED                             
+ @           USING  NEWTRAN                                                  
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-SEP-2017):
+ @           152 NON-NEIGHBOUR CONNECTIONS PRESENT                           
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-SEP-2017):
+ @           NUMBER OF ACTIVE CELLS IS 43847                                 
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-SEP-2017):
+ @           NSTACK=    40 IS GREATER THAN THE CURRENT VALUE OF LITMAX=    25
+ @           THE EXCESS MEMORY REQUESTED BY NSTACK WILL NOT BE USED          
+ @           AND WILL REDUCE PERFORMANCE AND MAY CAUSE MEMORY OVERFLOW.      
+ @           IF TUNING KEYWORDS ARE NOT USED LATER IN THE RUN TO             
+ @           INCREASE LITMAX IT IS RECOMMENDED THAT NSTACK BE REDUCED        
+ @           TO THE MAXIMUM OF 25 AND THE LATEST LITMAX VALUE IN THE         
+ @           TUNING KEYWORD. (THIS MESSAGE WILL REPEAT UP TO 10 TIMES)       
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-SEP-2017):
+ @           THE MEMORY REQUIRED TO PROCESS THE SOLUTION SECTION IS          
+ @                64391 KBYTES                                               
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-SEP-2017):
+ @              62370 CHARACTER VARIABLES USED                               
+    31 READING INCLUDE BRUGGE_PROPS.INC                                  
+    32 READING PVTO    
+    33 READING PVTW    
+    34 READING PVDG    
+    35 READING ROCK    
+    36 READING DENSITY 
+    37 READING SWOF    
+    38 READING SGOF    
+               END OF INCLUDE FILE 
+    39 READING RPTPROPS
+    40 READING SOLUTION
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-SEP-2017):
+ @            NEGATIVE COMPRESSIBILITY FOUND IN GAS                          
+ @            PRESSURE TABLE     1 AND OIL PRESSURE                          
+ @            TABLE     1 AT A SAMPLE PRESSURE VALUE                         
+ @              402.23542 . ADJUST SATURATED FLUID                           
+ @            PROPERTY VALUES AT THIS PRESSURE.                              
+ @            NEGATIVE COMPRESSIBILITIES OCCUR                               
+ @            FOR GAS SATURATIONS LESS THAN     0.02286                      
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-SEP-2017):
+ @            NEGATIVE COMPRESSIBILITY FOUND IN GAS                          
+ @            PRESSURE TABLE     1 AND OIL PRESSURE                          
+ @            TABLE     1 AT A SAMPLE PRESSURE VALUE                         
+ @              423.35306 . ADJUST SATURATED FLUID                           
+ @            PROPERTY VALUES AT THIS PRESSURE.                              
+ @            NEGATIVE COMPRESSIBILITIES OCCUR                               
+ @            FOR GAS SATURATIONS LESS THAN     0.08736                      
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-SEP-2017):
+ @            NEGATIVE COMPRESSIBILITY FOUND IN GAS                          
+ @            PRESSURE TABLE     1 AND OIL PRESSURE                          
+ @            TABLE     1 AT A SAMPLE PRESSURE VALUE                         
+ @              444.47070 . ADJUST SATURATED FLUID                           
+ @            PROPERTY VALUES AT THIS PRESSURE.                              
+ @            NEGATIVE COMPRESSIBILITIES OCCUR                               
+ @            FOR GAS SATURATIONS LESS THAN     0.14638                      
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-SEP-2017):
+ @            NEGATIVE COMPRESSIBILITY FOUND IN GAS                          
+ @            PRESSURE TABLE     1 AND OIL PRESSURE                          
+ @            TABLE     1 AT A SAMPLE PRESSURE VALUE                         
+ @              465.58834 . ADJUST SATURATED FLUID                           
+ @            PROPERTY VALUES AT THIS PRESSURE.                              
+ @            NEGATIVE COMPRESSIBILITIES OCCUR                               
+ @            FOR GAS SATURATIONS LESS THAN     0.20066                      
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-SEP-2017):
+ @            NEGATIVE COMPRESSIBILITY FOUND IN GAS                          
+ @            PRESSURE TABLE     1 AND OIL PRESSURE                          
+ @            TABLE     1 AT A SAMPLE PRESSURE VALUE                         
+ @              486.70597 . ADJUST SATURATED FLUID                           
+ @            PROPERTY VALUES AT THIS PRESSURE.                              
+ @            NEGATIVE COMPRESSIBILITIES OCCUR                               
+ @            FOR GAS SATURATIONS LESS THAN     0.25079                      
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-SEP-2017):
+ @            NEGATIVE COMPRESSIBILITY FOUND IN GAS                          
+ @            PRESSURE TABLE     1 AND OIL PRESSURE                          
+ @            TABLE     1 AT A SAMPLE PRESSURE VALUE                         
+ @              507.82361 . ADJUST SATURATED FLUID                           
+ @            PROPERTY VALUES AT THIS PRESSURE.                              
+ @            NEGATIVE COMPRESSIBILITIES OCCUR                               
+ @            FOR GAS SATURATIONS LESS THAN     0.29730                      
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-SEP-2017):
+ @            NEGATIVE COMPRESSIBILITY FOUND IN GAS                          
+ @            PRESSURE TABLE     1 AND OIL PRESSURE                          
+ @            TABLE     1 AT A SAMPLE PRESSURE VALUE                         
+ @              528.94125 . ADJUST SATURATED FLUID                           
+ @            PROPERTY VALUES AT THIS PRESSURE.                              
+ @            NEGATIVE COMPRESSIBILITIES OCCUR                               
+ @            FOR GAS SATURATIONS LESS THAN     0.34061                      
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-SEP-2017):
+ @            NEGATIVE COMPRESSIBILITY FOUND IN GAS                          
+ @            PRESSURE TABLE     1 AND OIL PRESSURE                          
+ @            TABLE     1 AT A SAMPLE PRESSURE VALUE                         
+ @              550.05889 . ADJUST SATURATED FLUID                           
+ @            PROPERTY VALUES AT THIS PRESSURE.                              
+ @            NEGATIVE COMPRESSIBILITIES OCCUR                               
+ @            FOR GAS SATURATIONS LESS THAN     0.38111                      
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-SEP-2017):
+ @            NEGATIVE COMPRESSIBILITY FOUND IN GAS                          
+ @            PRESSURE TABLE     1 AND OIL PRESSURE                          
+ @            TABLE     1 AT A SAMPLE PRESSURE VALUE                         
+ @              571.17653 . ADJUST SATURATED FLUID                           
+ @            PROPERTY VALUES AT THIS PRESSURE.                              
+ @            NEGATIVE COMPRESSIBILITIES OCCUR                               
+ @            FOR GAS SATURATIONS LESS THAN     0.41910                      
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-SEP-2017):
+ @            NEGATIVE COMPRESSIBILITY FOUND IN GAS                          
+ @            PRESSURE TABLE     1 AND OIL PRESSURE                          
+ @            TABLE     1 AT A SAMPLE PRESSURE VALUE                         
+ @              592.29417 . ADJUST SATURATED FLUID                           
+ @            PROPERTY VALUES AT THIS PRESSURE.                              
+ @            NEGATIVE COMPRESSIBILITIES OCCUR                               
+ @            FOR GAS SATURATIONS LESS THAN     0.45486                      
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-SEP-2017):
+ @            NEGATIVE COMPRESSIBILITY FOUND IN GAS                          
+ @            PRESSURE TABLE     1 AND OIL PRESSURE                          
+ @            TABLE     1 AT A SAMPLE PRESSURE VALUE                         
+ @              613.41181 . ADJUST SATURATED FLUID                           
+ @            PROPERTY VALUES AT THIS PRESSURE.                              
+ @            NEGATIVE COMPRESSIBILITIES OCCUR                               
+ @            FOR GAS SATURATIONS LESS THAN     0.48864                      
+    41 READING EQUIL   
+    42 READING NOECHO  
+    43 READING SUMMARY 
+    44 READING INCLUDE BRUGGE_SUMMARY.INC                                
+    45 READING RUNSUM  
+    46 READING SEPARATE
+    47 READING WBHP    
+    48 READING FPR     
+    49 READING WOPT    
+    50 READING WGPT    
+    51 READING WWPT    
+    52 READING WWIT    
+    53 READING WOPR    
+    54 READING WGPR    
+    55 READING WWPR    
+    56 READING WWIR    
+    57 READING WWCT    
+    58 READING FOPT    
+    59 READING FGPT    
+    60 READING FWPT    
+    61 READING FWIT    
+    62 READING NARROW  
+    63 READING RPTSMRY 
+    64 READING SUMTHIN 
+               END OF INCLUDE FILE 
+    65 READING SCHEDULE
+    66 READING RPTRST  
+    67 READING TUNING  
+    68 READING INCLUDE opt.sched                                         
+    69 READING WELSPECS
+    70 READING COMPDAT 
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-SEP-2017):
+ @           WELL P01      CONNECTS WITH A DEAD BLOCK                        
+ @           (  76  44   2). THIS CONNECTION WILL BE IGNORED.                
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-SEP-2017):
+ @           WELL P01      CONNECTS WITH A DEAD BLOCK                        
+ @           (  77  44   2). THIS CONNECTION WILL BE IGNORED.                
+    71 READING WCONPROD
+    72 READING WCONINJE
+    73 READING TSTEP   
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-SEP-2017):
+ @           DRSDT KEYWORD HAS NOT BEEN ENTERED, SO THE                      
+ @           MAXIMUM GAS RE-SOLUTION RATE IS DEFAULTED TO INFINITY.          
+ STEP    1 TIME=      2.40 HOURS (    +2.4 HOURS INIT  3 ITS) (1-SEP-2017)       
+  PAV=   170.6  BARSA  WCT=1.000 GOR= 0.00000   SM3/SM3 WGR=   0.0000  SM3/SM3   
+ STEP    2 TIME=      9.60 HOURS (    +7.2 HOURS MAXF  2 ITS) (1-SEP-2017)       
+  PAV=   170.3  BARSA  WCT=1.000 GOR= 0.00000   SM3/SM3 WGR=   0.0000  SM3/SM3   
+ STEP    3 TIME=      1.08  DAYS (   +16.4 HOURS TRNC  3 ITS) (2-SEP-2017)       
+  PAV=   169.7  BARSA  WCT=1.000 GOR= 0.00000   SM3/SM3 WGR=   0.0000  SM3/SM3   
+ STEP    4 TIME=      2.00  DAYS (   +22.0 HOURS REPT  3 ITS) (3-SEP-2017)       
+  PAV=   168.9  BARSA  WCT=1.000 GOR= 0.00000   SM3/SM3 WGR=   0.0000  SM3/SM3   
+
+ @--MESSAGE  AT TIME        2.0   DAYS    ( 3-SEP-2017):
+ @           RESTART FILE WRITTEN   REPORT     1                             
+ STEP    5 TIME=      4.00  DAYS (    +2.0  DAYS REPT  3 ITS) (5-SEP-2017)       
+  PAV=   167.4  BARSA  WCT=1.000 GOR= 0.00000   SM3/SM3 WGR=   0.0000  SM3/SM3   
+
+ @--MESSAGE  AT TIME        4.0   DAYS    ( 5-SEP-2017):
+ @           RESTART FILE WRITTEN   REPORT     2                             
+               END OF INCLUDE FILE 
+    74 READING END     
+          133 Mbytes of storage required                         
+   3.1127     KB/active cell                                     
+          216 Mbytes (image size)                                
+
+ Error summary 
+ Comments               0
+ Warnings              14
+ Problems               0
+ Errors                 0
+ Bugs                   0
+ Final cpu       8.83 elapsed       8.98
+ Total number of time steps forced to be accepted          0
+ PRODUCING RUN SUMMARIES
+ BRUGGE.SMSPEC exists
+ SPEC file succesfully read
+ Opened file BRUGGE.UNSMRY
+     1 files exist containing        3 timesteps
+ Summary file BRUGGE.UNSMRY opened
+         307  vectors loaded
+ RUN SUMMARIES COMPLETE
+Requesting explicit heartbeat: on
+Thread spawned successfully
+Total number of jobs:0
+Checking manual heartbeat:
+Manual heartbeat thread shutting down normally.

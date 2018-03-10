@@ -48,8 +48,8 @@ class WellSpline
    * \return
    */
   QList<WellBlock *> *GetWellBlocks();
-  int GetTimeSpentInWIC() const
-  { return seconds_spent_in_compute_wellblocks_; }
+  QList<WellBlock *> *GetWellBlocks(int rank);
+  int GetTimeSpentInWIC() const { return seconds_spent_in_compute_wellblocks_; }
 
  private:
   Reservoir::Grid::Grid *grid_;

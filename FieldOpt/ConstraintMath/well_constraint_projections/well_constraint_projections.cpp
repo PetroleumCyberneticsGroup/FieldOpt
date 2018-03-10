@@ -28,6 +28,7 @@ namespace WellConstraintProjections {
 using namespace Eigen;
 
 Vector3d point_to_cell_shortest(Reservoir::Grid::Cell cell, Vector3d point) {
+
     if (cell.EnvelopsPoint(point)) {
         return point;
     }
@@ -47,7 +48,9 @@ Vector3d point_to_cell_shortest(Reservoir::Grid::Cell cell, Vector3d point) {
     return closest_point;
 }
 
-Vector3d point_to_face_shortest(Reservoir::Grid::Cell::Face face, Vector3d point, Reservoir::Grid::Cell cell) {
+Vector3d point_to_face_shortest(Reservoir::Grid::Cell::Face face,
+                                Vector3d point, Reservoir::Grid::Cell cell) {
+
     // Calculate normal vector and normalize
     auto n_vec = face.normal_vector.normalized();
 
@@ -132,7 +135,9 @@ VectorXd rm_entries_eps_coeffs(VectorXd m, double eps) {
 
 
 QList<Vector3d> interwell_constraint_projection(QList<Vector3d> coords, double d) {
-    // If the two line segments already satisfy the interwell distance constraint, return the coordinates.
+
+    // If the two line segments already satisfy the
+    // interwell distance constraint, return the coordinates.
     if (shortest_distance(coords) >= d) {
         return coords;
     }
@@ -145,7 +150,6 @@ QList<Vector3d> interwell_constraint_projection(QList<Vector3d> coords, double d
     double cost = INFINITY;
 
     // ################## 2 POINT PART ############################
-    // ################ END 2 POINT PART ##########################
     int two_point_index[4][2] = {{0, 2},
                                  {0, 3},
                                  {1, 2},
@@ -171,6 +175,7 @@ QList<Vector3d> interwell_constraint_projection(QList<Vector3d> coords, double d
     }
     // ################ END 2 POINT PART ##########################
 
+
     // ################## 3 POINT PART ############################
     // If no 2 point movements were succesful, try moving 3 points.
     int three_point_index[4][3] = {{2, 0, 1},
@@ -181,7 +186,8 @@ QList<Vector3d> interwell_constraint_projection(QList<Vector3d> coords, double d
         // Reset moved coords to initial state
         moved_coords = coords;
 
-        // Choose which 3 points to move. (order is important, second and third entry should belong to same line segment)
+        // Choose which 3 points to move. (order is important, second
+        // and third entry should belong to same line segment)
         QList<Vector3d> input_cords_3p;
         for (int jj = 0; jj < 3; jj++) {
             input_cords_3p.append(coords.at(three_point_index[ii][jj]));
@@ -189,10 +195,10 @@ QList<Vector3d> interwell_constraint_projection(QList<Vector3d> coords, double d
         Matrix3d temp_A = build_A_3p(input_cords_3p);
         Vector3d temp_b = build_b_3p(input_cords_3p, d);
 
-        /* The kkt_eg_solutions solver handles some numerical issues
+        /* The kkt_eq_solutions solver handles some numerical issues
          * like A having some values close to machine epsilon and
          * eigenvalues being close to 0. Just assume that any solution
-         * must be among the ones given in solution candidates. we check
+         * must be among the ones given in solution candidates. We check
          * all of them.
          */
         QList<Vector3d> solution_candidates = kkt_eq_solutions(temp_A, temp_b);
@@ -228,7 +234,7 @@ QList<Vector3d> interwell_constraint_projection(QList<Vector3d> coords, double d
     std::cout << "Found no 3-point solution. Try 4 points" << std::endl;
 
     // Get all candidates for vector s
-    /* The kkt_eg_solutions solver handles some numerical issues
+    /* The kkt_eq_solutions solver handles some numerical issues
      * like A having some values close to machine epsilon and
      * eigenvalues being close to 0. Just assume that any solution
      * must be among the ones given in solution candidates. we check
@@ -276,11 +282,15 @@ double shortest_distance_n_wells(QList<QList<Vector3d>> wells, int n) {
     return distance;
 }
 
-QList<QList<Vector3d>> interwell_constraint_multiple_wells(QList<QList<Vector3d>> wells, double d, double tol) {
+QList<QList<Vector3d>> interwell_constraint_multiple_wells(
+    QList<QList<Vector3d>> wells,
+    double d, double tol) {
+
     double shortest_distance = 0;
 
-    // Loop through all wells as long as some pair of wells violate inter-well distance
-    // constraint. Tolerance tol added for quicker convergence.
+    // Loop through all wells as long as some pair of wells
+    // violate inter-well distance constraint. Tolerance tol
+    // added for quicker convergence.
     int max_iter = 10000;
     int iter = 0;
     while (shortest_distance < d - tol && iter < max_iter) {
@@ -307,25 +317,32 @@ QList<QList<Vector3d>> interwell_constraint_multiple_wells(QList<QList<Vector3d>
         shortest_distance = shortest_distance_n_wells(wells, wells.length());
         iter += 1;
     }
-    if (iter == max_iter)
-        std::cout << "No convergence in interwell distance constraints after max iterations "
+    if (iter == max_iter) {
+        std::cout << "No convergence in interwell distance "
+                  << "constraints after max iterations "
                   << iter << " reached" << std::endl;
+    }
 
     return wells;
 }
 
-QList<QList<Vector3d> > well_length_constraint_multiple_wells(QList<QList<Vector3d> > wells,
-                                                              double max, double min, double epsilon) {
+QList<QList<Vector3d> > well_length_constraint_multiple_wells(
+    QList<QList<Vector3d> > wells,
+    double max, double min, double epsilon) {
+
     QList<QList<Vector3d>> projected_wells;
     for (int i = 0; i < wells.length(); i++) {
         Vector3d current_heel = wells[i][0];
         Vector3d current_toe = wells[i][1];
-        projected_wells.append(well_length_projection(current_heel, current_toe, max, min, epsilon));
+        projected_wells.append(well_length_projection(current_heel, current_toe,
+                                                      max, min, epsilon));
     }
     return projected_wells;
 }
 
-bool feasible_well_length(QList<QList<Vector3d>> wells, double max, double min, double tol) {
+bool feasible_well_length(QList<QList<Vector3d>> wells,
+                          double max, double min, double tol) {
+
     bool is_feasible = true;
     for (int i = 0; i < wells.length(); i++) {
         double current_well_length;
@@ -339,7 +356,9 @@ bool feasible_well_length(QList<QList<Vector3d>> wells, double max, double min, 
     return is_feasible;
 }
 
-bool feasible_interwell_distance(QList<QList<Vector3d>> wells, double d, double tol) {
+bool feasible_interwell_distance(QList<QList<Vector3d>> wells,
+                                 double d, double tol) {
+
     // Number of wells
     bool is_feasible = true;
     if (shortest_distance_n_wells(wells, wells.length()) < d - tol) {
@@ -348,8 +367,10 @@ bool feasible_interwell_distance(QList<QList<Vector3d>> wells, double d, double 
     return is_feasible;
 }
 
-QList<QList<Vector3d> > both_constraints_multiple_wells(QList<QList<Vector3d> > wells, double d,
-                                                        double tol, double max, double min, double epsilon) {
+QList<QList<Vector3d> > both_constraints_multiple_wells(
+    QList<QList<Vector3d> > wells, double d,
+    double tol, double max, double min, double epsilon) {
+
     int iter = 0;
 
     // While at least one of the constraints is violated, continue projecting
@@ -360,14 +381,17 @@ QList<QList<Vector3d> > both_constraints_multiple_wells(QList<QList<Vector3d> > 
 
         iter += 1;
         if (iter > 100) {
-            std::cout << "In both_both_constraints_multiple_wells: above max number of iterations" << std::endl;
+            std::cout << "In both_both_constraints_multiple_wells: "
+                "above max number of iterations" << std::endl;
             return wells;
         }
     }
     return wells;
 }
 
-Vector3d well_domain_constraint(Vector3d point, QList<Reservoir::Grid::Cell> cells) {
+Vector3d well_domain_constraint(Vector3d point,
+                                QList<Reservoir::Grid::Cell> cells) {
+
     double minimum = INFINITY;
     Vector3d best_point;
 
@@ -383,7 +407,9 @@ Vector3d well_domain_constraint(Vector3d point, QList<Reservoir::Grid::Cell> cel
     return best_point;
 }
 
-Vector3d well_domain_constraint_indices(Vector3d point, Reservoir::Grid::Grid *grid, QList<int> index_list) {
+Vector3d well_domain_constraint_indices(Vector3d point,
+                                        Reservoir::Grid::Grid *grid,
+                                        QList<int> index_list) {
     QList<Reservoir::Grid::Cell> cells;
     for (int index : index_list) {
         cells.append(grid->GetCell(index));
@@ -392,13 +418,16 @@ Vector3d well_domain_constraint_indices(Vector3d point, Reservoir::Grid::Grid *g
 }
 
 double shortest_distance(QList<Vector3d> coords) {
+
     auto closest_p_q = closest_points_on_lines(coords[0], coords[1], coords[2], coords[3]);
     Vector3d closest_distance_vec = closest_p_q.second - closest_p_q.first;
+
     double distance = sqrt(closest_distance_vec.transpose() * closest_distance_vec);
     return distance;
 }
 
-QList<Vector3d> well_length_projection(Vector3d heel, Vector3d toe, double max, double min, double epsilon) {
+QList<Vector3d> well_length_projection(Vector3d heel, Vector3d toe,
+                                       double max, double min, double epsilon) {
     QList<Vector3d> projected_points;
     Vector3d moved_heel;
     Vector3d moved_toe;
@@ -451,15 +480,17 @@ QList<Vector3d> non_inv_solution(Matrix3d A, Vector3d b) {
     }
     else null_space = nu;
 
-    // \todo Hilmar, check this (the 4 next lines). Its to avoid problems if the polynomial is a constant.
+    // \todo Hilmar, check this (the 4 next lines). It's
+    // to avoid problems if the polynomial is a constant.
     auto coeffs = non_inv_quad_coeffs(x, null_space);
     if (coeffs[0] == 0.0 && coeffs[1] == 0.0) {
         return solution_vectors;
     }
 
     VectorXd real_roots, complex_roots;
-    rpoly_plus_plus::FindPolynomialRootsJenkinsTraub(coeffs, &real_roots, &complex_roots);
-
+    rpoly_plus_plus::FindPolynomialRootsJenkinsTraub(coeffs,
+                                                     &real_roots,
+                                                     &complex_roots);
 
     if (complex_roots(0) == 0) {
         Vector3d s0 = x + real_roots(0) * null_space;
@@ -489,7 +520,9 @@ Matrix3d build_A_4p(QList<Vector3d> coords) {
     vec3 = vec3 - avg_vec;
     vec4 = vec4 - avg_vec;
 
-    return vec1 * vec1.transpose() + vec2 * vec2.transpose() + vec3 * vec3.transpose() +
+    return vec1 * vec1.transpose() +
+        vec2 * vec2.transpose() +
+        vec3 * vec3.transpose() +
         vec4 * vec4.transpose();
 }
 
@@ -516,7 +549,9 @@ Matrix3d build_A_3p(QList<Vector3d> coords) {
     vec1 = vec1 - avg_vec;
     vec2 = vec2 - avg_vec;
     vec3 = vec3 - avg_vec;
-    return vec1 * vec1.transpose() + vec2 * vec2.transpose() + vec3 * vec3.transpose();
+    return vec1 * vec1.transpose() +
+        vec2 * vec2.transpose() +
+        vec3 * vec3.transpose();
 }
 
 Vector3d build_b_3p(QList<Vector3d> coords, double d) {
@@ -562,11 +597,17 @@ VectorXd coeff_vector(Vector3d D, Matrix3d Qinv, Vector3d b) {
     return lambda;
 }
 
-double movement_cost(QList<Vector3d> old_coords, QList<Vector3d> new_coords) {
+double movement_cost(QList<Vector3d> old_coords,
+                     QList<Vector3d> new_coords) {
+
     double n_of_points = old_coords.length();
+
     if (new_coords.length() != n_of_points) {
-        throw std::runtime_error("Error in movement_cost: Lists of points are not the same length");
+        throw std::runtime_error(
+            "Error in movement_cost: Lists "
+                "of points are not the same length");
     }
+
     double cost_squares = 0;
     for (int ii = 0; ii < n_of_points; ii++) {
         cost_squares += (old_coords.at(ii) - new_coords.at(ii)).squaredNorm();
@@ -575,6 +616,7 @@ double movement_cost(QList<Vector3d> old_coords, QList<Vector3d> new_coords) {
 }
 
 QList<Vector3d> move_points_4p(QList<Vector3d> coords, double d, Vector3d s) {
+
     // Normalize s in case it is not of unit length
     s.normalize();
     Vector3d avg_point = 0.25 * (coords.at(0) + coords.at(1) + coords.at(2) + coords.at(3));
@@ -590,6 +632,7 @@ QList<Vector3d> move_points_4p(QList<Vector3d> coords, double d, Vector3d s) {
 }
 
 QList<Vector3d> move_points_3p(QList<Vector3d> coords, double d, Vector3d s) {
+
     // Normalize s in case it is not of unit length
     s.normalize();
     Vector3d avg_point = (1.0 / 3) * (coords.at(0) + coords.at(1) + coords.at(2));
@@ -603,15 +646,20 @@ QList<Vector3d> move_points_3p(QList<Vector3d> coords, double d, Vector3d s) {
     return QList<Vector3d>({x0moved, x1moved, x2moved});
 }
 
-Vector3d project_point_to_plane(Vector3d point, Vector3d normal_vector, Vector3d plane_point) {
+Vector3d project_point_to_plane(Vector3d point,
+                                Vector3d normal_vector,
+                                Vector3d plane_point) {
+
     Vector3d proj_point = point - normal_vector * ((point - plane_point).transpose() * normal_vector);
     return proj_point;
 }
 
 QList<Vector3d> kkt_eq_solutions(Matrix3d A, Vector3d b) {
+
     QList<Vector3d> candidate_solutions;
 
-    // Assume that A-\mu I has an inverse - find it and solve a sixth degree eq. for \mu
+    // Assume that A-\mu I has an inverse
+    // Find it and solve a sixth degree eq. for \mu
     A = rm_entries_eps_matrix(A, 10e-12);
     SelfAdjointEigenSolver<Matrix3d> A_es(A);
 
@@ -621,8 +669,9 @@ QList<Vector3d> kkt_eq_solutions(Matrix3d A, Vector3d b) {
     // Compute coefficients of 6th degree polynomial
     VectorXd coeffs = coeff_vector(eigenvalues, A_es.eigenvectors().inverse(), b);
 
-    /* There is an issue where coefficients should be zero but are not. Because of numerical issues
-     * these need to be handled manually. Set all whise fabs(x) < 10e-12 to zero. */
+    /* There is an issue where coefficients should be zero but are not.
+     * Because of numerical issues these need to be handled manually.
+     * Set all whise fabs(x) < 10e-12 to zero. */
     coeffs = rm_entries_eps_coeffs(coeffs, 10e-12);
 
     // Compute roots of polynomial
@@ -631,6 +680,7 @@ QList<Vector3d> kkt_eq_solutions(Matrix3d A, Vector3d b) {
     rpoly_plus_plus::FindPolynomialRootsJenkinsTraub(coeffs, &realroots, &comproots);
 
     for (int ii = 0; ii < 6; ii++) {
+
         // Root may not be complex or an eigenvalue of A
         if (comproots[ii] == 0 && eigenvalues[0] != realroots[ii] &&
             eigenvalues[1] != realroots[ii] && eigenvalues[2] != realroots[ii]) {
@@ -645,9 +695,11 @@ QList<Vector3d> kkt_eq_solutions(Matrix3d A, Vector3d b) {
         }
     }
 
-    /* Now for the second part assume that A-\mu I is not invertible, i.e. \mu is an eigenvalue of A. Then
-     * we either have an infinite amount of solutions of (A-\mu I)s = b. Require s have length 1 to find
-     * at most two solutions as long as all points are not on the same line. */
+    /* Now for the second part assume that A-\mu I is not invertible,
+     * i.e. \mu is an eigenvalue of A. Then we either have an infinite
+     * amount of solutions of (A-\mu I)s = b. Require s have length 1
+     * to find at most two solutions as long as all points are not on
+     * the same line. */
     for (int i = 0; i < 3; i++) { // Loop through all 3 eigenvalues of A
         QList<Vector3d> eigenvalue_solutions;
 
@@ -655,19 +707,25 @@ QList<Vector3d> kkt_eq_solutions(Matrix3d A, Vector3d b) {
         Matrix3d A_eig = A - eigenvalues[i] * Matrix3d::Identity();
         Vector3d b_eig = b;
 
-        if (solution_existence(A_eig, b_eig)) { // Check for existence of solution
+        // Check for existence of solution
+        if (solution_existence(A_eig, b_eig)) {
             eigenvalue_solutions = non_inv_solution(A_eig, b_eig);
         }
-        for (auto solution : eigenvalue_solutions) { // If any solutions, add them to solution_vectors
+
+        // If any solutions, add them to solution_vectors
+        for (auto solution : eigenvalue_solutions) {
             candidate_solutions.append(solution);
         }
     }
     return candidate_solutions;
 }
 
-QPair<Vector3d, Vector3d> closest_points_on_lines(Vector3d P0, Vector3d P1, Vector3d Q0, Vector3d Q1) {
-    /* Function runs through all possible combinations of where the two closest points could be located.
-     * This function is a slightly edited version of the one from:
+QPair<Vector3d, Vector3d> closest_points_on_lines(Vector3d P0, Vector3d P1,
+                                                  Vector3d Q0, Vector3d Q1) {
+
+    /* Function runs through all possible combinations of where
+     * the two closest points could be located. This function is
+     * a slightly edited version of the one from:
      * http://www.geometrictools.com/GTEngine/Include/Mathematics/GteDistSegmentSegmentExact.h
      *
      * David Eberly, Geometric Tools, Redmond WA 98052
@@ -818,8 +876,8 @@ QPair<Vector3d, Vector3d> closest_points_on_lines(Vector3d P0, Vector3d P1, Vect
                 s = bmd / a;
         }
         else { // 0 < t < 1
-            // The point (0,e/c) is on the line and domain, so we have one
-            // point at which R is a minimum.
+            // The point (0,e/c) is on the line and domain,
+            // so we have one point at which R is a minimum.
             s = zero;
             t = e / c;
         }

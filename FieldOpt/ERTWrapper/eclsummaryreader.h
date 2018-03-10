@@ -25,6 +25,7 @@
 #include <map>
 #include <vector>
 #include <set>
+#include <string>
 
 namespace ERTWrapper {
 namespace ECLSummary {

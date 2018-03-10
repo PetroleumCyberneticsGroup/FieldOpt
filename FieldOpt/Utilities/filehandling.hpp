@@ -123,7 +123,9 @@ inline void WriteStringToFile(QString string, QString file_path)
 inline void WriteLineToFile(QString string, QString file_path)
 {
     if (!ParentDirectoryExists(file_path))
-        throw std::runtime_error("File's parent directory not found: " + file_path.toStdString());
+        throw std::runtime_error(
+            "File's parent directory not found: "
+                + file_path.toStdString());
 
     if (!string.endsWith("\n"))
         string.append("\n");
@@ -145,7 +147,9 @@ inline void DeleteFile(QString path)
         QFile file(path);
         file.remove();
     }
-    else throw std::runtime_error("File not found: " + path.toStdString());
+    else throw std::runtime_error(
+            "File not found: "
+                + path.toStdString());
 }
 
 /*!
@@ -165,10 +169,13 @@ inline void CreateDirectory(QString path)
  * \param destination Path to the copy of the file.
  * \param overwrite Overwrite existing file.
  */
-inline void CopyFile(QString origin, QString destination, bool overwrite)
+inline void CopyFile(QString origin, QString destination,
+                     bool overwrite)
 {
     if (!FileExists(origin))
-        throw std::runtime_error("Error copying. Original file not found: " + origin.toStdString());
+        throw std::runtime_error(
+            "Error copying. Original file not found: "
+                + origin.toStdString());
 
     if (overwrite)
         boost::filesystem::copy_file(origin.toStdString(),
@@ -235,6 +242,21 @@ inline void ThrowRuntimeError(std::string error_msg)
 {
     std::cout << "RUNTIME ERROR: " << error_msg << std::endl;
     throw std::runtime_error(error_msg);
+}
+
+}
+}
+
+/*!
+ * \brief GetCurrentDirectoryPath Gets the absolute
+ * path to the current directory.
+ *
+ * \todo Improve this.
+ */
+inline QString GetCurrentDirectoryPath()
+{
+    QDir path = QDir::currentPath(); // Get current directory
+    return path.absolutePath();
 }
 
 }

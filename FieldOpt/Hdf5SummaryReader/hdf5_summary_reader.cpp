@@ -1,6 +1,6 @@
 /******************************************************************************
    Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
-   Additions by M.Bellout (2017) <mathias.bellout@ntnu.no>
+   Additions by M.Bellout (2017) <mathias.bellout@ntnu.no, chakibbb@gmail.com>
 
    This file is part of the FieldOpt project.
 
