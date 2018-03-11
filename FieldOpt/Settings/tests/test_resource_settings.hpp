@@ -31,7 +31,7 @@ class TestResourceSettings {
       settings_full_ = new Settings::Settings(
           ExampleFilePaths::driver_example_,
           ExampleFilePaths::directory_output_,
-          5); // <-verbosity level
+          std::vector<int>(11,0)); // <-verbosity level
 
       settings_optimizer_ = settings_full_->optimizer();
       settings_simulator_ = settings_full_->simulator();

@@ -16,6 +16,6 @@ namespace {
         QTime time2 = QTime(10, 10, 10);
         auto t1 = QDateTime(date, time1, Qt::UTC, 0);
         auto t2 = QDateTime(date, time2, Qt::UTC, 0);
-        EXPECT_EQ(10, time_span_seconds(t1, t2));
+        EXPECT_EQ(10, time_span_secs(t1, t2));
     }
 }
