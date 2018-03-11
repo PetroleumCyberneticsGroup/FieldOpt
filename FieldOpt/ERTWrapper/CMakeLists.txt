@@ -1,77 +1,105 @@
 cmake_minimum_required(VERSION 2.8)
 project(ertwrapper)
 
-# ERT libraries
-#find_library(ert_ecl
-#        NAMES ecl
-#        HINTS ${CMAKE_BINARY_DIR}/libraries/lib
-#        REQUIRED)
+# Dbg ==================================================================
+message("\n============================================================")
+message(STATUS "PROJECT_NAME => ${PROJECT_NAME}")
+message(STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
+message(STATUS "CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
+
+# Options ==============================================================
+
+
+# Find libraries =======================================================
+# ERT (
+# lib_ecl.so linked by ERTWrapper and WIC
+# ERTWrapper lib linked into Reservoir
+# Reservoir linked into Model
+# Model linked into Simulation
+# Runner linking ERTWrapper, Model, Simulation, Settings,
+# Optimization, hdf5summaryreader, constraintmath
+if (ERT_STANDARD)
+    find_library(ert_ecl
+            NAMES ecl
+            HINTS ${CMAKE_BINARY_DIR}/libraries/lib
+            REQUIRED)
+    set(RIERTLIB ${ert_ecl})
+else()
+    set(RIERTLIB ${RIERTWIC}/cmake-build-debug/lib/libecl.so)
+endif ()
+
+message("\n*************************************************")
+message("--------> Set RIERTLIB: ${RIERTLIB} <--------")
+message("*************************************************")
 
 find_library(ert_util
         NAMES ert_util
         HINTS ${CMAKE_BINARY_DIR}/libraries/lib
         REQUIRED)
 
-#include_directories(${CMAKE_BINARY_DIR}/libraries/include/)
-
+# Add library ==========================================================
 add_library(ertwrapper
-    ertwrapper_exceptions.h
-    eclgridreader.cpp
-    eclsummaryreader.cpp)
+        ertwrapper_exceptions.h
+        eclgridreader.cpp
+        eclsummaryreader.cpp)
 add_library(fieldopt::ertwrapper ALIAS ${PROJECT_NAME})
 
-include_directories(
-    ${EIGEN3_INCLUDE_DIR}
-    ${ERT_INCLUDE_DIR})
+# Include dirs =========================================================
+#include_directories(
+#        ${EIGEN3_INCLUDE_DIR}
+#        ${ERT_INCLUDE_DIR})
 
-#target_link_libraries(ertwrapper
-#        PUBLIC ${ert_ecl}
-#        PUBLIC ${ert_util})
+# Target link libraries ================================================
+if (ERT_STANDARD)
+    target_link_libraries(ertwrapper
+            PUBLIC ${ert_ecl}
+            PUBLIC ${ert_util}
+            )
 
-target_link_libraries(ertwrapper
-    PUBLIC ${CMAKE_SOURCE_DIR}/FieldOpt-WellIndexCalculator/resinsight/Ert/cmake-build-debug/lib/libecl.so
-    PUBLIC ${ert_util}
-    )
+else()
+    target_link_libraries(ertwrapper
+            PUBLIC ${CMAKE_SOURCE_DIR}/${RIERTLIB}
+            PUBLIC ${ert_util}
+            )
+endif ()
 
+# Target include directories ===========================================
 target_include_directories(ertwrapper PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 
+# Compile options ======================================================
 add_compile_options(-std=c++11)
 
 # Enable position independent code when compiling lib, so that
 # shared library libwellindexcalculator.so may be linked with
 # static reservoir and ertwrapper libraries
 if (BUILD_WIC_ADGPRS)
-  set_target_properties(ertwrapper
-      PROPERTIES COMPILE_FLAGS "-fPIC")
+    set_target_properties(ertwrapper
+            PROPERTIES COMPILE_FLAGS "-fPIC")
 endif()
 
-# Unit tests
+# Unit tests ===========================================================
 if (BUILD_TESTING)
-  find_package(GTest REQUIRED)
-  include_directories(${GTEST_INCLUDE_DIRS})
-  add_executable(test_ertwrapper
-      tests/test_eclgridreader.cpp
-      tests/test_eclsummaryreader.cpp
-      )
-  target_link_libraries(test_ertwrapper
-      fieldopt::ertwrapper
-      ${GTEST_BOTH_LIBRARIES}
-      ${CMAKE_THREAD_LIBS_INIT})
+    find_package(GTest REQUIRED)
+    include_directories(${GTEST_INCLUDE_DIRS})
+    add_executable(test_ertwrapper
+            tests/test_eclgridreader.cpp
+            tests/test_eclsummaryreader.cpp
+            )
+    target_link_libraries(test_ertwrapper
+            fieldopt::ertwrapper
+            ${GTEST_BOTH_LIBRARIES}
+            ${CMAKE_THREAD_LIBS_INIT})
 
-  add_test(NAME test_ertwrapper COMMAND $<TARGET_FILE:test_ertwrapper>)
+    add_test(NAME test_ertwrapper COMMAND $<TARGET_FILE:test_ertwrapper>)
 endif()
 
-install( TARGETS ertwrapper
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib/static
-    )
+# Install targets ======================================================
+install(TARGETS ertwrapper
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib/static
+        )
 
 # Debug: include dirs ==================================================
-message(".............................................................")
-message(STATUS "List current include dirs:")
-get_property(DIRS DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
-foreach(DIR ${DIRS})
-  message(STATUS "DIR='${DIR}'")
-endforeach()
+include(../InclDirDbg.cmake)

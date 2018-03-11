@@ -1,48 +1,55 @@
 cmake_minimum_required(VERSION 2.8)
 project(model)
 
-message("=============================================================")
+# Dbg ==================================================================
+message("\n============================================================")
 message(STATUS "PROJECT_NAME => ${PROJECT_NAME}")
 message(STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
+message(STATUS "CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
 
+# Add library ==========================================================
 add_library(model
-		model.cpp
-		wells/well.cpp
-		wells/well_exceptions.h
-		wells/wellbore/completions/completion.cpp
-		wells/wellbore/completions/perforation.cpp
-		wells/wellbore/trajectory.cpp
-		wells/wellbore/wellspline.cpp
-		wells/control.cpp
-		wells/wellbore/wellblock.cpp
-		properties/property.h
-		properties/property_exceptions.h
-		properties/binary_property.cpp
-		properties/variable_property_container.cpp
-		properties/continous_property.cpp
-		properties/discrete_property.cpp
+        model.cpp
+        wells/well.cpp
+        wells/well_exceptions.h
+        wells/wellbore/completions/completion.cpp
+        wells/wellbore/completions/perforation.cpp
+        wells/wellbore/trajectory.cpp
+        wells/wellbore/wellspline.cpp
+        wells/control.cpp
+        wells/wellbore/wellblock.cpp
+        properties/property.h
+        properties/property_exceptions.h
+        properties/binary_property.cpp
+        properties/variable_property_container.cpp
+        properties/continous_property.cpp
+        properties/discrete_property.cpp
         properties/property.cpp
         model_synchronization_object.cpp
-		wells/wellbore/pseudo_cont_vert.cpp)
+        wells/wellbore/pseudo_cont_vert.cpp)
 add_library(fieldopt::model ALIAS ${PROJECT_NAME})
 
+# Target link libraries ================================================
 target_link_libraries (model
         PUBLIC fieldopt::reservoir
-		PUBLIC fieldopt::wellindexcalculator
-		PUBLIC fieldopt::settings
-		PUBLIC fieldopt::constraintmath
-		PUBLIC fieldopt::runner
-		PUBLIC Qt5::Core
-		PUBLIC ${Boost_LIBRARIES})
+        PUBLIC fieldopt::wellindexcalculator
+        PUBLIC fieldopt::settings
+        PUBLIC fieldopt::constraintmath
+        PUBLIC fieldopt::runner
+        PUBLIC Qt5::Core
+        PUBLIC ${Boost_LIBRARIES})
 
+# Target include directories ===========================================
 target_include_directories(model PUBLIC
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/properties>
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/wells>
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/wells/wellbore>
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/wells/wellbore/completions>)
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/properties>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/wells>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/wells/wellbore>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/wells/wellbore/completions>)
 
+# Compile options ======================================================
 add_compile_options(-std=c++11)
 
+# Unit tests ===========================================================
 if (BUILD_TESTING)
     # Unit tests
     find_package(GTest REQUIRED)
@@ -70,16 +77,12 @@ if (BUILD_TESTING)
     add_test(NAME test_model COMMAND $<TARGET_FILE:test_model>)
 endif()
 
+# Install targets ======================================================
 install(TARGETS model
-		RUNTIME DESTINATION bin
-		LIBRARY DESTINATION lib
-		ARCHIVE DESTINATION lib/static
-		)
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib/static
+        )
 
 # Debug: include dirs ==================================================
-message(".............................................................")
-message(STATUS "List current include dirs:")
-get_property(DIRS DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
-foreach(DIR ${DIRS})
-	message(STATUS "DIR='${DIR}'")
-endforeach()
+include(../InclDirDbg.cmake)

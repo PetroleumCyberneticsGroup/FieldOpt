@@ -1,9 +1,17 @@
 cmake_minimum_required(VERSION 2.8)
 project(runner)
 
+# Dbg ==================================================================
+message("\n============================================================")
+message(STATUS "PROJECT_NAME => ${PROJECT_NAME}")
+message(STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
+message(STATUS "CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
+
+# Find libraries =======================================================
 find_package(MPI REQUIRED)
 include_directories(${MPI_INCLUDE_PATH})
 
+# Add execuable ========================================================
 add_executable(FieldOpt
     main.cpp
     runtime_settings.cpp
@@ -19,6 +27,7 @@ add_executable(FieldOpt
     bookkeeper.cpp
     )
 
+# Add library ==========================================================
 add_library(runner
     runtime_settings.cpp
     runners/main_runner.cpp
@@ -34,6 +43,7 @@ add_library(runner
     )
 add_library(fieldopt::runner ALIAS runner)
 
+# Target link libraries ================================================
 target_link_libraries(FieldOpt
     PUBLIC fieldopt::model
     PUBLIC fieldopt::simulation
@@ -57,6 +67,9 @@ target_link_libraries(runner
     PUBLIC ${CMAKE_THREAD_LIBS_INIT}
     PUBLIC ${Boost_LIBRARIES})
 
+# Compile options ======================================================
+add_compile_options(-std=c++11)
+
 if(MPI_COMPILE_FLAGS)
   set_target_properties(runner PROPERTIES
       COMPILE_FLAGS "${MPI_COMPILE_FLAGS}")
@@ -67,7 +80,7 @@ if(MPI_LINK_FLAGS)
       LINK_FLAGS "${MPI_LINK_FLAGS}")
 endif()
 
-
+# Target include directories ===========================================
 target_include_directories(FieldOpt PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/runners>)
@@ -76,8 +89,7 @@ target_include_directories(runner PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/runners>)
 
-add_compile_options(-std=c++11)
-
+# Unit tests ===========================================================
 if (BUILD_TESTING)
   # Unit tests
   find_package(GTest REQUIRED)
@@ -93,9 +105,12 @@ if (BUILD_TESTING)
   add_test(NAME test_runner COMMAND $<TARGET_FILE:test_runner>)
 endif()
 
+# Install targets ======================================================
 install(TARGETS FieldOpt runner
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib/static
     )
 
+# Debug: include dirs ==================================================
+include(../InclDirDbg.cmake)

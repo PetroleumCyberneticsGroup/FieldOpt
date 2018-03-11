@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 2.8)
 project(reservoir)
 
+# Dbg ==================================================================
+message("\n============================================================")
+message(STATUS "PROJECT_NAME => ${PROJECT_NAME}")
+message(STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
+message(STATUS "CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
+
+# Add library ==========================================================
 add_library(reservoir
         grid/cell.cpp
         grid/grid.cpp
@@ -9,14 +16,17 @@ add_library(reservoir
         ../FieldOpt-WellIndexCalculator/resinxx/rixx_grid/rigrid.cpp
         ../FieldOpt-WellIndexCalculator/resinxx/rixx_grid/ricell.cpp
         )
-
 add_library(fieldopt::reservoir ALIAS ${PROJECT_NAME})
 
-include_directories(${EIGEN3_INCLUDE_DIR})
+
+#include_directories(${EIGEN3_INCLUDE_DIR})
+
+# Target link libraries ================================================
 target_link_libraries (reservoir
         PUBLIC fieldopt::ertwrapper
         ${Boost_LIBRARIES})
 
+# Compile options ======================================================
 #add_compile_options(-std=c++11)
 #set_target_properties(reservoir
 #    PROPERTIES COMPILE_FLAGS "-fPIC")
@@ -29,6 +39,7 @@ if (BUILD_WIC_ADGPRS)
             PROPERTIES COMPILE_FLAGS "-fPIC")
 endif()
 
+# Unit tests ===========================================================
 if (BUILD_TESTING)
     # Unit tests
     find_package(GTest REQUIRED)
@@ -52,16 +63,12 @@ if (BUILD_TESTING)
     add_test(NAME test_reservoir COMMAND $<TARGET_FILE:test_reservoir>)
 endif()
 
-install( TARGETS reservoir
+# Install targets ======================================================
+install(TARGETS reservoir
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib/static
         )
 
 # Debug: include dirs ==================================================
-message(".............................................................")
-message(STATUS "List current include dirs:")
-get_property(DIRS DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
-foreach(DIR ${DIRS})
-    message(STATUS "DIR='${DIR}'")
-endforeach()
+include(../InclDirDbg.cmake)
