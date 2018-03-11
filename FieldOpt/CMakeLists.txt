@@ -64,6 +64,11 @@ if(NOT COMPILATION_AT_MAUR)
       REQUIRED)
 endif()
 
+# Custom ERT include dir (ResInsight) ==================================
+# Placed early on so it overrides standard include dir (at /usr/include)
+set(ERT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/resinsight/Ert/lib/include)
+include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR})
+
 # Build WIC executable  and/or WIC ADGPRS lib ==========================
 # Include HDF5 + Qt5 ===================================================
 message("=============================================================")
@@ -129,8 +134,6 @@ else() # Building all FieldOpt sources
 endif()
 
 # Pring debug info: include dirs + source dirs =========================
-include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR})
-
 include(DebugMsg.cmake)
 
 # TO BE REMOVED

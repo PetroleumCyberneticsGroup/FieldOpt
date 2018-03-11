@@ -57,7 +57,8 @@ if (BUILD_TESTING)
             tests/wells/test_well.cpp
             tests/wells/test_wellblock.cpp
             tests/test_resource_variable_property_container.h
-            tests/test_resource_model.h tests/wells/test_pseudo_cont_vert.cpp)
+            tests/test_resource_model.h t
+            ests/wells/test_pseudo_cont_vert.cpp)
 
     target_link_libraries(test_model
             fieldopt::model
@@ -74,3 +75,11 @@ install(TARGETS model
 		LIBRARY DESTINATION lib
 		ARCHIVE DESTINATION lib/static
 		)
+
+# Debug: include dirs ==================================================
+message(".............................................................")
+message(STATUS "List current include dirs:")
+get_property(DIRS DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+foreach(DIR ${DIRS})
+	message(STATUS "DIR='${DIR}'")
+endforeach()

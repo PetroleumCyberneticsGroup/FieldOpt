@@ -12,7 +12,7 @@ find_library(ert_util
         HINTS ${CMAKE_BINARY_DIR}/libraries/lib
         REQUIRED)
 
-include_directories(${CMAKE_BINARY_DIR}/libraries/include/)
+#include_directories(${CMAKE_BINARY_DIR}/libraries/include/)
 
 add_library(ertwrapper
     ertwrapper_exceptions.h
@@ -67,3 +67,11 @@ install( TARGETS ertwrapper
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib/static
     )
+
+# Debug: include dirs ==================================================
+message(".............................................................")
+message(STATUS "List current include dirs:")
+get_property(DIRS DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+foreach(DIR ${DIRS})
+  message(STATUS "DIR='${DIR}'")
+endforeach()
