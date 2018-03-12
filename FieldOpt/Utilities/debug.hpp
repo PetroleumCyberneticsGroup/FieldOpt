@@ -336,9 +336,9 @@ void inline print_dbg_msg_wellspline(string fstr, // function str
     cout << FLBLUE << ss1.str()
          << " computing well blocks" << AEND << endl;
   }
-  else if ((cstr == "cwb-rins" || cstr == "cwb-rinx") && l > lt) {
+  else if ((cstr == "cwb-rixx") && l > lt) {
     cout << FLBLUE << ss1.str()
-         << " time computing well blocks (rins-wic): "
+         << " time computing well blocks (rixx-wic): "
          << t << "ms  -  " << t / 1000.0 << "secs  -  "
          << t / 1000 / 60.0 << "mins" << AEND << endl;
   }
