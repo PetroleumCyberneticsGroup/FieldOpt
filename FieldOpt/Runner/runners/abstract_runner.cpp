@@ -28,6 +28,7 @@
 #include <Optimization/optimizers/GeneticAlgorithm.h>
 #include <Optimization/optimizers/RGARDD.h>
 #include <Optimization/optimizers/SNOPTSolver.h>
+#include <Optimization/optimizers/DFO.h>
 #include "abstract_runner.h"
 #include "Optimization/optimizers/compass_search.h"
 #include "Optimization/optimizers/ExhaustiveSearch2DVert.h"
@@ -248,6 +249,15 @@ void AbstractRunner::InitializeOptimizer()
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
         cout << "[run]Optimization algo.:----- Using SNOPT solver" << endl;
       optimizer_ = new Optimization::Optimizers::SNOPTSolver(settings_->optimizer(),
+                                                             base_case_,
+                                                             model_->variables(),
+                                                             model_->grid(),
+                                                             logger_);
+      break;
+    case Settings::Optimizer::OptimizerType::DFO:
+      if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
+        cout << "[run]Optimization algo.:----- Using DFO solver" << endl;
+      optimizer_ = new Optimization::Optimizers::DFO(settings_->optimizer(),
                                                              base_case_,
                                                              model_->variables(),
                                                              model_->grid(),
