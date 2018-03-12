@@ -21,8 +21,7 @@
 #include <iostream>
 
 namespace Optimization {
-
-CaseHandler::CaseHandler(Settings::Settings *settings)
+CaseHandler::CaseHandler(Settings::Optimizer *settings)
 {
   cases_ = QHash<QUuid, Case *>();
   evaluation_queue_ = QQueue<QUuid>();
@@ -40,8 +39,8 @@ CaseHandler::CaseHandler(Settings::Settings *settings)
   settings_ = settings;
 }
 
-CaseHandler::CaseHandler(Case *base_case)
-    : CaseHandler(settings_)
+CaseHandler::CaseHandler(Case *base_case, Settings::Optimizer *settings)
+    : CaseHandler(settings)
 {
   cases_[base_case->id()] = base_case;
   evaluated_.append(base_case->id());
@@ -69,7 +68,7 @@ Case *CaseHandler::GetNextCaseForEvaluation()
   if (evaluation_queue_.size() == 0)
     throw CaseHandlerException(
         "The evaluation queue contains no cases.");
-
+  cout << settings_->verb_vector()[0]<< endl;
   if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
     cout << "[opt]Size of eval.queue:------ "
          << evaluation_queue_.length() << endl;

@@ -34,13 +34,13 @@ namespace Optimization {
 class CaseHandler
 {
  public:
-  CaseHandler(Settings::Settings *settings);
+  CaseHandler(Settings::Optimizer *settings);
 
   /*!
  * \brief Call the default constructor and add the base case to
    * list of evaluated cases.
  */
-  CaseHandler(Case *base_case);
+  CaseHandler(Case *base_case, Settings::Optimizer *settings);
 
   /*!
    * \brief AddNewCase Add a new non-evaluated case to the queue.
@@ -159,7 +159,7 @@ class CaseHandler
   int nr_invl_; //!< Number of invalid cases (failed while being applied to model).
   int nr_fail_; //!< Number of cases that have failed for some reason.
 
-  Settings::Settings *settings_;
+  Settings::Optimizer *settings_;
 };
 
 }

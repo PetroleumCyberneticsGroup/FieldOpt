@@ -41,7 +41,7 @@ Optimizer::Optimizer(Settings::Optimizer *settings,
   settings_ = settings;
   max_evaluations_ = settings_->parameters().max_evaluations;
   tentative_best_case_ = base_case;
-  case_handler_ = new CaseHandler(tentative_best_case_);
+  case_handler_ = new CaseHandler(tentative_best_case_, settings_);
   constraint_handler_ = new Constraints::ConstraintHandler(settings_->constraints(),
                                                            variables, grid);
   iteration_ = 0;
