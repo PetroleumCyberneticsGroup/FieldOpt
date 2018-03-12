@@ -66,7 +66,7 @@ endif()
 # [1] Build standalone well index calculator executable
 option(BUILD_WIC_ONLY "Build well index calculator exe" OFF)
 # [2] Build OS-dependent well index calculator (shared) library:
-option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    ON)
+option(BUILD_WIC_ADGPRS "Build WIC as SHARED lib"       OFF)
 
 # Build executable for WI benchmarktests ===============================
 option(BUILD_BENCHMARK "Build exec for wic RMS benchmark" OFF)
@@ -78,9 +78,9 @@ if(NOT COMPILATION_AT_MAUR)
     message(STATUS "EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR}")
 
     find_library(RpolyPlusPlus
-            NAMES rpoly_plus_plus
-            HINTS ${CMAKE_BINARY_DIR}/libraries/lib
-            REQUIRED)
+        NAMES rpoly_plus_plus
+        HINTS ${CMAKE_BINARY_DIR}/libraries/lib
+        REQUIRED)
 endif()
 
 # Build WIC executable  and/or WIC ADGPRS lib ==========================
@@ -121,11 +121,11 @@ if (BUILD_WIC_ADGPRS)  # Implementation of BUILD_WIC_ADGPRS option
 
     # CMAKE_EXE_LINKER_FLAGS --> TODO: Double-check if absolutely necessary
     set(CMAKE_EXE_LINKER_FLAGS
-            "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++")
+        "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++")
 
     # CMAKE_SHARED_LINKER_FLAGS --> TODO: Double-check if absolutely necessary
     set(CMAKE_SHARED_LINKER_FLAGS
-            "${CMAKE_SHARED_LINKER_FLAGS} -static-libgcc -static-libstdc++")
+        "${CMAKE_SHARED_LINKER_FLAGS} -static-libgcc -static-libstdc++")
 
     # This is opposite of default settings --> TODO: Double-check if necessary
     set(Boost_USE_MULTITHREADED  OFF) # Enable multithreading
@@ -136,15 +136,15 @@ if (BUILD_WIC_ADGPRS)  # Implementation of BUILD_WIC_ADGPRS option
 
     # Find packages
     find_package(Boost COMPONENTS
-            REQUIRED program_options system filesystem)
+        REQUIRED program_options system filesystem)
 
 elseif(BUILD_WIC_ONLY)  # Building WIC executable with dependencies only
     find_package(Boost COMPONENTS
-            REQUIRED program_options system filesystem)
+        REQUIRED program_options system filesystem)
 
 else() # Building all FieldOpt sources
     find_package(Boost COMPONENTS
-            REQUIRED program_options serialization mpi system filesystem random)
+        REQUIRED program_options serialization mpi system filesystem random)
 endif()
 
 # Pring debug info: include dirs + source dirs =========================
@@ -176,21 +176,21 @@ if (NOT (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS))
 
     # Copy execution scripts
     file(GLOB EXECUTION_SCRIPTS
-            "Simulation/execution_scripts/*.sh")
+        "Simulation/execution_scripts/*.sh")
     file(COPY ${EXECUTION_SCRIPTS}
-            DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/execution_scripts)
+        DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/execution_scripts)
 
     ## Copy the test driver file into the build dir
     file(COPY ${CMAKE_SOURCE_DIR}/Settings/tests/driver/driver.json
-            DESTINATION ${CMAKE_BINARY_DIR}/examples)
+        DESTINATION ${CMAKE_BINARY_DIR}/examples)
     file(COPY ${CMAKE_SOURCE_DIR}/Settings/tests/driver/driver_sane.json
-            DESTINATION ${CMAKE_BINARY_DIR}/examples)
+        DESTINATION ${CMAKE_BINARY_DIR}/examples)
 
     if(BUILD_BENCHMARK)
         ## Copy wic benchmark wells into the build dir
         set(WIC_DIR "${CMAKE_SOURCE_DIR}/FieldOpt-WellIndexCalculator")
         file(COPY "${WIC_DIR}/tests/well_index_benchmark/wic-benchmark-wells"
-                DESTINATION ${CMAKE_BINARY_DIR}/)
+            DESTINATION ${CMAKE_BINARY_DIR}/)
     endif()
 
     ## Create an empty directory for test output
@@ -204,7 +204,7 @@ add_compile_options(-std=fPIC)
 if (COPY_EXAMPLES)
     ## Copy the examples into the build dir
     file(COPY ${CMAKE_SOURCE_DIR}/../examples
-            DESTINATION ${CMAKE_BINARY_DIR}/)
+        DESTINATION ${CMAKE_BINARY_DIR}/)
 endif()
 
 
