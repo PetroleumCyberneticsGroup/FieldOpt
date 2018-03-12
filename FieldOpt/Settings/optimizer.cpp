@@ -41,6 +41,8 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
     type_ = OptimizerType::ExhaustiveSearch2DVert;
   else if (QString::compare(type, "SNOPTSolver") == 0)
     type_ = OptimizerType::SNOPTSolver;
+  else if (QString::compare(type, "DFO") == 0)
+    type_ = OptimizerType::DFO;
   else {
     throw OptimizerTypeNotRecognizedException(
         "The optimizer type " + type.toStdString() + " was not recognized.");
@@ -146,6 +148,14 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
       if (json_parameters.contains("UpperBound"))
         parameters_.upper_bound = json_parameters["UpperBound"].toDouble();
       else parameters_.upper_bound = 10;
+
+
+      // DFO parameters
+      if (json_parameters.contains("InitialTrustRegionRadius"))
+        parameters_.initial_trust_region_radius = json_parameters["InitialTrustRegionRadius"].toDouble();
+      else parameters_.initial_trust_region_radius = 600;
+
+
     }
     catch (std::exception const &ex) {
       throw UnableToParseOptimizerParametersSectionException(
