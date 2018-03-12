@@ -151,7 +151,10 @@ void Settings::readOptimizerSection()
       cout << "Summary file:---------- " << optimizer_->parameters_.thrdps_smry_file.toStdString() << endl;
       cout << "Print file:------------ " << optimizer_->parameters_.thrdps_prnt_file.toStdString() << endl;
     } else if (optimizer_->type() == Optimizer::OptimizerType::GeneticAlgorithm) {
+    } else if (optimizer_->type() == Optimizer::OptimizerType::DFO){
+      cout << "InitialTrustRegionRadius" << optimizer_->parameters_.initial_trust_region_radius << endl;
     }
+
   }
 }
 
