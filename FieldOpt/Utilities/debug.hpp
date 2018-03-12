@@ -354,28 +354,38 @@ void inline print_dbg_msg_wellspline(string fstr, // function str
 // -----------------------------------------------------------------
 void inline print_dbg_msg_wic_ri(string fstr, // function str
                                  string cstr, // comment str
-                                 double t, int l, bool el = true) {
+                                 double t, // time var
+                                 int l, // 0:NONE, 1:START, 2:END
+                                 bool el = true, // print function header
+                                 int cl = 1, // current level for dbg msg to print
+                                 int tl = 2 // threshhold level for dbg msg to print
+) {
 
-  stringstream ss0, ss1;
-  if (el) {
-    ss0 << "[wic-ri]" << fstr << ":";
-    ss1 << setw(40) << left << setfill('-') << ss0.str();
-  }
+  if (cl > tl) {
 
-  if( l==0 ) {
-    cout << FLYELLOW << ss1.str() << " " << cstr
-         << AEND;
-  }
-  else if( l==1 ) {
-    cout << FLYELLOW << ss1.str() << " " << cstr
-         <<  "-- TSTART" << AEND;
-  }
-  else if( l==2 ) {
-    cout << FLYELLOW << ss1.str() << " " << cstr
-         <<  "-- TEND=" << t << "ms" << AEND;
-  }
+    stringstream ss0, ss1;
+    if (el) {
+      ss0 << "[wic-ri]" << fstr << ":";
+      ss1 << setw(40) << left << setfill('-') << ss0.str();
+    }
 
-  if (el) cout << endl;
+    if( l==0 ) {
+      cout << FLYELLOW << ss1.str() << " " << cstr
+           << AEND;
+    }
+    else if( l==1 ) {
+      cout << FLYELLOW << ss1.str() << " " << cstr
+           <<  "-- TSTART" << AEND;
+    }
+    else if( l==2 ) {
+      cout << FLYELLOW << ss1.str() << " " << cstr
+           <<  "-- TEND=" << t << "ms" << AEND;
+    }
+
+    if (el) cout << endl;
+
+
+  }
 
 }
 
