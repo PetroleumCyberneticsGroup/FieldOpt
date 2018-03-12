@@ -8,45 +8,52 @@ project(FieldOpt)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 include(GetSysInfo.cmake)
 include(MaurConfig.cmake)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-narrowing -Wno-sign-compare")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual -Wformat")
 
 # Compile options ======================================================
-set (CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_COLOR_MAKEFILE ON)
+# set(CMAKE_VERBOSE_MAKEFILE ON)
+
+# Custom ERT include dir (ResInsight) ==================================
+option(ERT_STANDARD "Use standard Ert library" ON)
+set(RIERTWIC FieldOpt-WellIndexCalculator/resinsight/Ert)
+
+if (NOT ERT_STANDARD)
+    # Placed early on so it overrides standard include dir (at /usr/include)
+    set(ERT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/${RIERTWIC}/lib/include)
+    include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR})
+    message("*************************************************")
+    message("**** Set ERT_INCLUDE_DIR: ${ERT_INCLUDE_DIR} ****")
+    message("*************************************************")
+    # ==> lib_ecl.so set in ERTWrapper/CMakeLists.txt
+endif ()
+
+# Include dirs =========================================================
+include_directories(${PROJECT_SOURCE_DIR})
+
+# ResInsight ===========================================================
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    add_definitions(-DCVF_LINUX)
+    message(STATUS "CMAKE_SYSTEM_NAME => ${CMAKE_SYSTEM_NAME}")
+endif()
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -DCVF_LINUX -pipe -Wextra ")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+    set(CMAKE_CXX_FLAGS_DEBUG "-ggdb -g3 -O0 -DDEBUG -D_DEBUG")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNO_DEBUG")
+endif()
 
 # Build dirs ===========================================================
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-
-# ------ IS THIS CODE NECESSARY? WHAT DOES IT DO? REMOVE IF OBSOLETE ---
-# Install dirs =========================================================
-#set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install)
-#set(BUNDLE_NAME FieldOptBundle)
-#set(BUNDLE_PATH "${CMAKE_INSTALL_PREFIX}/${BUNDLE_NAME}")
-## use, i.e. don't skip the full RPATH for the build tree
-#set(CMAKE_SKIP_BUILD_RPATH  FALSE)
-#
-## when building, don't use the install RPATH already
-## (but later on when installing)
-#set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
-#
-#set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-#
-## add the automatically determined parts of the RPATH which point
-## to directories outside the build tree to the install RPATH
-#set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-#
-## the RPATH to be used when installing, but only if it's not a system directory
-#list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
-#if("${isSystemDir}" STREQUAL "-1")
-#    SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-#endif("${isSystemDir}" STREQUAL "-1")
-# END Install dirs =====================================================
-# ------ IS THIS CODE NECESSARY? WHAT DOES IT DO? REMOVE IF OBSOLETE ---
-
-
 # Enable unit tests + example dir ======================================
-option(BUILD_TESTING "Build unit tests"                 ON)
+option(BUILD_TESTING "Build unit tests"                 OFF)
 option(COPY_EXAMPLES "Copy examples to build directory" ON)
 
 if (BUILD_TESTING AND NOT COPY_EXAMPLES)
@@ -59,7 +66,7 @@ endif()
 # [1] Build standalone well index calculator executable
 option(BUILD_WIC_ONLY "Build well index calculator exe" OFF)
 # [2] Build OS-dependent well index calculator (shared) library:
-option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    OFF)
+option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    ON)
 
 # Build executable for WI benchmarktests ===============================
 option(BUILD_BENCHMARK "Build exec for wic RMS benchmark" OFF)
@@ -74,33 +81,32 @@ if(NOT COMPILATION_AT_MAUR)
             NAMES rpoly_plus_plus
             HINTS ${CMAKE_BINARY_DIR}/libraries/lib
             REQUIRED)
-
 endif()
 
 # Build WIC executable  and/or WIC ADGPRS lib ==========================
 # Include HDF5 + Qt5 ===================================================
-message("=============================================================")
-if (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS)
-    message(STATUS "Building BUILD_WIC_ONLY: ${BUILD_WIC_ONLY}")
-    message(STATUS "Building BUILD_WIC_ADGPRS: ${BUILD_WIC_ADGPRS}")
-    message(STATUS "Skipping: Qt5Core and HDF5")
-else()
-    message(STATUS "Building FIELDOPT. Loading: Qt5Core and HDF5")
-    set(CMAKE_AUTOMOC ON)
-    set(CMAKE_INCLUDE_CURRENT_DIR ON)
-    find_package(HDF5 REQUIRED COMPONENTS CXX)
-    add_definitions(${HDF5_DEFINITIONS})
-    include_directories(${HDF5_INCLUDE_DIRS})
-    find_package(Threads REQUIRED)
+message(".............................................................")
+#if (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS)
+#    message(STATUS "Building BUILD_WIC_ONLY: ${BUILD_WIC_ONLY}")
+#    message(STATUS "Building BUILD_WIC_ADGPRS: ${BUILD_WIC_ADGPRS}")
+#    message(STATUS "Skipping: Qt5Core and HDF5")
+#else()
+message(STATUS "Building FIELDOPT. Loading: Qt5Core and HDF5")
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+find_package(HDF5 REQUIRED COMPONENTS CXX)
+add_definitions(${HDF5_DEFINITIONS})
+include_directories(${HDF5_INCLUDE_DIRS})
+find_package(Threads REQUIRED)
 
-    find_package(Qt5Core REQUIRED)
-    message(STATUS "Qt5Core_QTMAIN_LIBRARIES: ${Qt5Core_QTMAIN_LIBRARIES}")
-    message(STATUS "Qt5Core_INCLUDE_DIRS: ${Qt5Core_INCLUDE_DIRS}")
-    include_directories(${Qt5Core_INCLUDE_DIRS})
-endif()
+find_package(Qt5Core REQUIRED)
+message(STATUS "Qt5Core_QTMAIN_LIBRARIES: ${Qt5Core_QTMAIN_LIBRARIES}")
+message(STATUS "Qt5Core_INCLUDE_DIRS: ${Qt5Core_INCLUDE_DIRS}")
+include_directories(${Qt5Core_INCLUDE_DIRS})
+#endif()
 
 # Boost libraries: default-settings ====================================
-message("=============================================================")
+message(".............................................................")
 find_package(Boost REQUIRED) # 1.63
 if (Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIR})
@@ -144,17 +150,14 @@ endif()
 # Pring debug info: include dirs + source dirs =========================
 include(DebugMsg.cmake)
 
-# Set this directory as the root dir
-include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR})
-
-# TO BE REMOVED
-#include_directories(${CMAKE_BINARY_DIR}/libraries/include/)
-
 # Enable testing =======================================================
 if (BUILD_TESTING)
     include(CTest)
     enable_testing()
 endif()
+
+message(STATUS "END MAIN PROJECT (${PROJECT_NAME}) ==> STARTING SUBDIRS")
+message("============================================================\n")
 
 # Compile FieldOpt sources =============================================
 add_subdirectory(ERTWrapper)
@@ -203,3 +206,5 @@ if (COPY_EXAMPLES)
     file(COPY ${CMAKE_SOURCE_DIR}/../examples
             DESTINATION ${CMAKE_BINARY_DIR}/)
 endif()
+
+
