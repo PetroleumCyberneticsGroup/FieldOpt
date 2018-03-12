@@ -9,7 +9,6 @@ namespace {
         CaseHandlerTest(){}
         virtual ~CaseHandlerTest(){}
         virtual void SetUp() {
-            case_handler_ = new Optimization::CaseHandler();
             for (Optimization::Case *c : trivial_cases_) {
                 case_handler_->AddNewCase(c);
             }

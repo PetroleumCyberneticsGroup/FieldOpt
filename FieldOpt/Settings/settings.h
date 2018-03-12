@@ -68,6 +68,7 @@ class Settings
 
   //!< Get the value for the bookkeeper tolerance. Used by the Bookkeeper in the Runner library.
   double bookkeeper_tolerance() const { return bookkeeper_tolerance_; }
+  QString runner_type() const { return runner_type_; }
 
   Model *model() const { return model_; } //!< Object containing model specific settings.
   Optimizer *optimizer() const { return optimizer_; } //!< Object containing optimizer specific settings.
@@ -83,6 +84,7 @@ class Settings
   QJsonObject *json_driver_;
   QString name_;
   double bookkeeper_tolerance_;
+  QString runner_type_;
   QString output_directory_;
   Model *model_;
   Optimizer *optimizer_;

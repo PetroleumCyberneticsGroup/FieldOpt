@@ -72,7 +72,7 @@ class WellSpline
    * \brief getWellBlock Convert the BlockData returned by WIC
    * to a WellBlock with a Perforation.
    *
-   * \note The IJK indexes are incremented by on to account for
+   * \note The IJK indexes are incremented by one to account for
    * the zero-inclusive indices used by the ERT library. This is
    * necessary because ECL and ADGPRS both use zero-exclusive
    * indices.

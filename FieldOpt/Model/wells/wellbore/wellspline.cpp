@@ -88,9 +88,12 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
 // -----------------------------------------------------------------
 QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
 
+  if (well_settings_.verb_vector_[5] > 1) // idx:5 -> mod (Model)
+    std::cout << "[mod]Get well blocks.-------- " << std::endl;  
+
   int lvl = well_settings_.verb_vector_[5];
   print_dbg_msg_wellspline(__func__, "gwb", 0.0, lvl, 1);
-
+  
   auto heel = Eigen::Vector3d(heel_x_->value(),
                               heel_y_->value(),
                               heel_z_->value());
