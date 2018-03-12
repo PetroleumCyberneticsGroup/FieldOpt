@@ -408,16 +408,15 @@ Author(s): Oleg Volkov          (ovolkov@stanford.edu)
             int  nf = *neF;
             //double x2 = x[1];
             //cout << x1 << "\t" << x2 << endl;
-            cout << "[SNOPTusrFG_] \t The x vector is: \t ";
-            for (int i = 0; i < *n; i++ ){
-                cout << x[i] << "\t";
-            }
-            cout << endl;
+            //cout << "[SNOPTusrFG_] \t The x vector is: \t ";
+            //for (int i = 0; i < *n; i++ ){
+            //    cout << x[i] << "\t";
+            //}
+            //cout << endl;
 
 
-			//
+			/// Calculate objective function value
 			double mx = constant;
-
 			for (int i=0; i<*n; i++){
 				mx += gradient[i]*x[i];
 				double temp=0;
@@ -426,6 +425,20 @@ Author(s): Oleg Volkov          (ovolkov@stanford.edu)
 				}
 				mx += temp*x[i];
 			}
+            //F[0] = mx;
+
+            /// Calculate the gradient of the objective function.
+            for (int i = 0; i <*n; i++){
+                //G[i] = gradient[i];
+                for(int j=0; j <*n; j++){
+                    //G[i] += hessian[i + j*(*n)]*x[j];
+                }
+            }
+
+            /// Calculate constraint values.
+
+
+            /// Calculate gradient of constraints.
 
 
             //==================================================================
@@ -463,7 +476,7 @@ Author(s): Oleg Volkov          (ovolkov@stanford.edu)
 // If the values for the objective and/or the constraints are desired
             if ( *needF > 0)
             {
-                F[0] = - (x[0]-1.2)*(x[0]-1.2) - (x[1]-3.1)*(x[1]-3.1);
+                F[0] = - (x[0]-1.2)*(x[0]-1.2) - (x[1]-3.1)*(x[1]-3.1) + constant;
                 F[3] = 0.7*(x[0]*x[0]);// + x[1]*x[1]);
 
 // the value of the objective goes to the first entry of F
