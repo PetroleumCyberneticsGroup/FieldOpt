@@ -43,6 +43,9 @@ add_library(optimization
         normalizer.cpp
 		constraints/pseudo_cont_boundary_2d.cpp
         optimizers/SNOPTSolver.cpp
+		optimizers/Subproblem.cpp
+		optimizers/DFO.cpp
+#		optimizers/testOne.cpp
 #        ../FieldOpt-3rdPartySolvers/handlers/SNOPTHandler.cpp
 #        ../FieldOpt-3rdPartySolvers/handlers/LibraryHandler.c
 #        ../FieldOpt-3rdPartySolvers/handlers/SNOPTLoader.c
