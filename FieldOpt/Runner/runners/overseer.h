@@ -76,7 +76,7 @@ class Overseer {
     bool working = false; //!< Indicates if the worker is currently performing simulations.
     QDateTime working_since; //!< The last time a job was sent to the worker.
     int working_seconds() { //!< Number of seconds since last work was sent to the process.
-        return time_since_seconds(working_since);
+        return time_since_secs(working_since);
     }
     /*!
      * @brief Start the worker. Should be called whenever work is sent to the worker. This marks is as

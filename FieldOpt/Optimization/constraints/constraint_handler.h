@@ -50,7 +50,10 @@ class ConstraintHandler
  public:
   ConstraintHandler(QList<Settings::Optimizer::Constraint> constraints,
                     Model::Properties::VariablePropertyContainer *variables,
-                    Reservoir::Grid::Grid *grid);
+                    Reservoir::Grid::Grid *grid,
+                    Settings::Optimizer *settings
+  );
+
   bool CaseSatisfiesConstraints(Case *c); //!< Check if a Case satisfies _all_ constraints.
   void SnapCaseToConstraints(Case *c); //!< Snap all variables to _all_ constraints.
 

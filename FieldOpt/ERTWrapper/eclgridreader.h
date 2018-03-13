@@ -21,13 +21,25 @@
 #ifndef ECLGRIDREADER_H
 #define ECLGRIDREADER_H
 
+// -----------------------------------------------------------------
+// ERT
 #include <ert/ecl/ecl_grid.h>
 #include <ert/ecl/ecl_file.h>
+#include <ert/ecl/ecl_kw.h>
+#include <ert/ecl/ecl_kw_magic.h>
+
+// -----------------------------------------------------------------
+// EIGEN
 #include <Eigen/Dense>
+
+// -----------------------------------------------------------------
+// STD
 #include <vector>
 
-namespace ERTWrapper {
+using namespace std;
+using namespace Eigen;
 
+namespace ERTWrapper {
 namespace ECLGrid {
 
 /*!
@@ -47,23 +59,54 @@ class ECLGridReader
   };
 
   /*!
+   * \brief The Index struct holds a series of indexing vectors that
+   * correspond to the total number of cells, as well as indexing of
+   * active/inactive cells in the grid.
+   *
+   * See hdf5_summary_reader.h for similiar type of variables
+   */
+  struct Gidx {
+    int n_total; //!< total number of cells = nx*ny*nz
+    int n_active; //!< total number of active cells
+
+    /*! vector (sz=n_total) containing sorted indices of all cells
+     * in grid, i.e., list of global index
+     * */
+    VectorXi idx_total;
+
+    /*! vector (sz=n_total) containing active cells indices based on
+     * actnum data, i.e., only those vector components that correspond
+     * to active cells are nonzero (set equal to their associated global
+     * indices), all other components corresponding to inactive cells
+     * are equal to zero
+     */
+    VectorXd idx_actnum;
+
+    /*! vector (sz=n_total) containing actual actnum data */
+    VectorXd dat_actnum;
+
+    /*! vector (sz=n_active) containing global indices of each active cell */
+    VectorXi idx_active;
+  };
+
+  /*!
    * \brief The Cell struct represents a cell in the grid.
    *
    * The cell struct also contains all non-geometric properties
    * for a cell, i.e. permeabilities, porosities, and whether or
    * not the cell is active.
-   * 
+   *
    * In case of a dual grid the active status of matrix and fracture
-   * will be recorded and the properties for all grids is stored. 
-   * 
-   * The ecl_grid specifies the active status is encoded as: 
-   *                  0 - inactive, 
-   *                  1 - active in matrix, 
-   *                  2 - active in fracture 
+   * will be recorded and the properties for all grids is stored.
+   *
+   * The ecl_grid specifies the active status is encoded as:
+   *                  0 - inactive,
+   *                  1 - active in matrix,
+   *                  2 - active in fracture
    *                  3 - active in both.
    * Here we use two booleans to store the active status.
    * The properties are stored in a vector with one or two items depending
-   * on the active status. If the cell is active both in the matrix grid as 
+   * on the active status. If the cell is active both in the matrix grid as
    * well as in the fracture grid the matrix values will be stored first.
    *
    * The corners list contains all the corner points specifying the grid.
@@ -88,6 +131,7 @@ class ECLGridReader
     std::vector<double> permz;
     std::vector<Eigen::Vector3d> corners;
     Eigen::Vector3d center;
+    Eigen::Vector3d dxdydz;
   };
 
   struct IJKIndex {
@@ -96,12 +140,26 @@ class ECLGridReader
     int k;
   };
 
+  struct GridData {
+    VectorXd coord, coord_rxryrz;
+    Matrix<double, Dynamic, 3, RowMajor> coord_xyz, coord_rxryrz_xyz;
+    VectorXd zcorn, zcorn_rxryrz;
+  };
+
+  Gidx gidx_;
+  GridData gridData_;
+
  private:
-  std::string file_name_;
-  std::string init_file_name_;
+string file_name_;
+  string init_file_name_;
+  string egrid_file_name_;
+
   ecl_grid_type* ecl_grid_;
+  ecl_file_type* ecl_file_grid_;
   ecl_file_type* ecl_file_init_;
+  ecl_grid_type* ecl_file_egrid_;
   Eigen::Vector3d GetCellCenter(int global_index);
+  Eigen::Vector3d GetCellDxDyDz(int global_index);
   std::vector<Eigen::Vector3d> GetCellCorners(int global_index);
   double GetCellVolume(int global_index);
 
@@ -109,6 +167,9 @@ class ECLGridReader
   ecl_kw_type *permx_kw_;
   ecl_kw_type *permy_kw_;
   ecl_kw_type *permz_kw_;
+  ecl_kw_type *actnum_kw_;
+  ecl_kw_type *coord_kw_;
+  ecl_kw_type *zcorn_kw_;
 
  public:
   ECLGridReader();
@@ -122,7 +183,8 @@ class ECLGridReader
   void ReadEclGrid(std::string file_name);
 
   /*!
-   * \brief ConvertIJKToGlobalIndex Converts a set of zero-offset (i,j,k) coordinates to the global index to that cell.
+   * \brief ConvertIJKToGlobalIndex Converts a set of zero-offset
+   * (i,j,k) coordinates to the global index to that cell.
    * \param ijk Zero-offset coordinates for a cell.
    * \return global index
    */
@@ -130,16 +192,16 @@ class ECLGridReader
   int ConvertIJKToGlobalIndex(int i, int j, int k);
 
   /*!
-   * \brief ConvertMatrixActiveIndexToGlobalIndex Converts a zero-offset index in the set of cells active in the matrix grid 
+   * \brief ConvertMatrixActiveIndexToGlobalIndex Converts a zero-offset index in the set of cells active in the matrix grid
    * to the global index.
    * \param index Zero-offset index for a cell active in the matrix grid
    * \return global index
    */
   int ConvertMatrixActiveIndexToGlobalIndex(int index);
-  
+
   /*!
-   * \brief ConvertGlobalIndexToIJK Converts a global index for a cell
-   * to the corresponding zero-offset (i,j,k) coordinates.
+   * \brief ConvertGlobalIndexToIJK Converts a global index for a
+   * cell to the corresponding zero-offset (i,j,k) coordinates.
    * \param global_index Global index for a cell.
    * \return (i,j,k) Zero-offset coordinates
    */
@@ -150,6 +212,32 @@ class ECLGridReader
    * \return Dims struct containing the number of blocks in x, y and z direction.
    */
   Dims Dimensions();
+
+  /*!
+   * \brief
+   * \param
+   * \return
+   */
+  void GetCOORDZCORNData();
+
+  /*!
+   * \brief
+   * \param
+   * \return
+   */
+  void GetGridSummary();
+
+  /*!
+   * \brief Retrieve useful indices that specify total number of grid cells,
+   * and which cells are active/inactive
+   * \return Gidx struc
+   */
+  void GetGridIndices();
+
+  /*!
+   * \brief ActiveCells Number of active cells in the grid that has been read.
+   */
+  int ActiveCells();
 
   /*!
    * \brief NumActiveCells Number of active cells in the matrix in the grid that has been read.
@@ -163,29 +251,45 @@ class ECLGridReader
   int NumActiveFractureCells();
 
   /*!
-   * \brief IsCellActive returns false if the cell identified by its global index 
+   * \brief IsCellActive returns false if the cell identified by its global index
    * is not active in the matrix grid nor in the fracture
    */
   bool IsCellActive(int global_index);
-  
+
   /*!
-   * \brief IsCellMatrixActive returns false if the cell identified by its global index 
+   * \brief IsCellMatrixActive returns false if the cell identified by its global index
    * is not active in the matrix grid
    */
   bool IsCellMatrixActive(int global_index);
 
   /*!
-   * \brief IsCellFractureActive returns false if the cell identified by its global index 
+   * \brief IsCellFractureActive returns false if the cell identified by its global index
    * is not active in the facture grid in the case of dual grid
    */
   bool IsCellFractureActive(int global_index);
-  
+
   /*!
    * \brief GetGridCell get a Cell struct describing the cell with the specified global index.
    * \param global_index The global index of the cell to get.
    * \return Cell struct.
    */
   Cell GetGridCell(int global_index);
+
+  /*!
+   * \brief GetCellCorners returns xyz corners (8) of cell
+   * \param global_index Global index for a cell.
+   * \return xyz corners
+   */
+//  vector<Vector3d> GetCellCorners(int global_index);
+
+  /*!
+   * \brief GetCellCorners returns xyz corners (8) of cell
+   * \param global_index Global index for a cell.
+   * \return xyz corners
+   */
+  MatrixXd GetCellCornersM(int global_index);
+
+  /*!
 
   /*!
    * \brief GetGlobalIndexOfCellContainingPoint Gets the global index of any cell
@@ -202,7 +306,10 @@ class ECLGridReader
    * \param initial_guess (optional) Global index to start search at/around
    * \return Global index or -1.
    */
-  int GlobalIndexOfCellEnvelopingPoint(double x, double y, double z, int initial_guess=0);
+  int GlobalIndexOfCellEnvelopingPoint(double x,
+                                       double y,
+                                       double z,
+                                       int initial_guess=0);
 
   bool GlobalIndexIsInsideGrid(int global_index);
 

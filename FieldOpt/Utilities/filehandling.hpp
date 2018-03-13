@@ -205,7 +205,8 @@ inline void CopyDirectory(QString origin, QString destination)
 }
 
 /*!
- * \brief GetCurrentDirectoryPath Gets the absolute path to the current directory.
+ * \brief GetCurrentDirectoryPath Gets the absolute
+ * path to the current directory.
  *
  * \todo Improve this.
  */
@@ -227,9 +228,9 @@ inline QString GetAbsoluteFilePath(QString file)
 }
 
 /*!
- * \brief GetAbsoluteFilePath Gets absolute path of file.
+ * \brief
  *
- * \param file (relative) path to file
+ * \param
  */
 inline void ThrowRuntimeError(std::string error_msg)
 {

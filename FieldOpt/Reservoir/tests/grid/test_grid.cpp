@@ -95,7 +95,8 @@ TEST_F(GridTest, AttemptGetCellWithIndexOutsideGrid) {
 }
 
 TEST_F(GridTest, AttemptFindCellOutsideGrid) {
-    EXPECT_THROW(grid_->GetCellEnvelopingPoint(100.0f, 1000.0, 7100.0), std::runtime_error);
+    EXPECT_THROW(grid_->GetCellEnvelopingPoint(100.0, 1000.0, 7100.0),
+                 std::runtime_error);
 }
 
 TEST_F(GridTest, GetCellEnvelopingPoint) {

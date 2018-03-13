@@ -54,10 +54,11 @@ class CaseHandler
   void AddNewCases(QList<Case *> cases);
 
   /*!
-   * \brief GetNextCaseForEvaluation Get next case to be evaluated.
+   * \brief GetNextCaseForEvaluation Get next case to be
+   * evaluated.
    *
-   * The returned case is also added to the list of cases currently
-   * being evaluated.
+   * The returned case is also added to the list of cases
+   * currently being evaluated.
    */
   Case *GetNextCaseForEvaluation();
 
@@ -75,13 +76,15 @@ class CaseHandler
   Case *GetCase(const QUuid id) const;
 
   /*!
-   * \brief UpdateCaseObjectiveFunctionValue updates the objective
-   * function value of a case. This is needed when using, for instance,
-   * MPI based runners, where the case object before and after evaluation
-   * is not the same one.
+   * \brief UpdateCaseObjectiveFunctionValue updates the
+   * objective function value of a case. This is needed
+   * when using, for instance, MPI based runners, where
+   * the case object before and after evaluation is not
+   * the same one.
    *
    * \param id The ID of the case to be updated.
-   * \param ofv The objective function value to be set for the case.
+   * \param ofv The objective function value to be set
+   * for the case.
    */
   void UpdateCaseObjectiveFunctionValue(const QUuid id, const double ofv);
 
@@ -104,9 +107,10 @@ class CaseHandler
   QList<Case *> RecentlyEvaluatedCases() const;
 
   /*!
-   * \brief ClearRecentlyEvaluatedCases Clear the list of recently evaluated
-   * cases. Should be called whenever a significant point is reached by the
-   * optimizer, for example at the end of an iteration.
+   * \brief ClearRecentlyEvaluatedCases Clear the list of recently
+   * evaluated cases. Should be called whenever a significant point
+   * is reached by the optimizer, for example at the end of an
+   * iteration.
    *
    */
   void ClearRecentlyEvaluatedCases();

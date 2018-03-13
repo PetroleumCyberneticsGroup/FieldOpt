@@ -96,6 +96,7 @@ class Simulator {
 
   QString initial_driver_file_path_; //!< Path to the driver file to be used as a base for the generated driver files.
   QString output_directory_; //!< The directory in which to write new driver files and execute simulations.
+  QString include_directory_; //!< Simulator include directory
   QString initial_driver_file_name_;
 
   ::Simulation::Results::Results *results_;

@@ -17,22 +17,43 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
-#include "wellspline.h"
+// -----------------------------------------------------------------
+// STD
 #include <iostream>
-#include <time.h>
-#include <wells/well_exceptions.h>
+#include <fstream>
+//#include <time.h>
+
+// -----------------------------------------------------------------
+// EIGEN
+#include <Eigen/Core>
+
+// -----------------------------------------------------------------
+// Qt
 #include <QtCore/QDateTime>
+
+// -----------------------------------------------------------------
+// FieldOpt: Utilities
+#include "wellspline.h"
 #include <Utilities/time.hpp>
+#include <Utilities/debug.hpp>
+#include <wells/well_exceptions.h>
+
+// -----------------------------------------------------------------
+// FieldOpt: WIC
+//#include <FieldOpt-WellIndexCalculator/wicalc_rins.h>
+//#include <FieldOpt-WellIndexCalculator/wicalc_rinx.h>
+#include <FieldOpt-WellIndexCalculator/wicalc_rixx.h>
 
 namespace Model {
 namespace Wells {
 namespace Wellbore {
 using namespace Reservoir::WellIndexCalculation;
 
+// -----------------------------------------------------------------
 WellSpline::WellSpline(Settings::Model::Well well_settings,
                        Properties::VariablePropertyContainer *variable_container,
-                       Reservoir::Grid::Grid *grid)
-{
+                       Reservoir::Grid::Grid *grid) {
+
   grid_ = grid;
   well_settings_ = well_settings;
   if (well_settings_.verb_vector_[5] > 1) // idx:5 -> mod (Model)
@@ -44,7 +65,7 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
   toe_x_ = new Model::Properties::ContinousProperty(well_settings.spline_toe.x);
   toe_y_ = new Model::Properties::ContinousProperty(well_settings.spline_toe.y);
   toe_z_ = new Model::Properties::ContinousProperty(well_settings.spline_toe.z);
-  seconds_spent_in_compute_wellblocks_ = 0;
+  time_cwb_wic_pcg_ = 0;
 
   if (well_settings.spline_heel.is_variable) {
     heel_x_->setName(well_settings.spline_heel.name + "#x");
@@ -64,16 +85,23 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
   }
 }
 
-QList<WellBlock *> *WellSpline::GetWellBlocks()
-{
+// -----------------------------------------------------------------
+QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
+
   if (well_settings_.verb_vector_[5] > 1) // idx:5 -> mod (Model)
-    std::cout << "[mod]Get well blocks.-------- " << std::endl;
+    std::cout << "[mod]Get well blocks.-------- " << std::endl;  
 
-  auto heel = Eigen::Vector3d(heel_x_->value(), heel_y_->value(), heel_z_->value());
-  auto toe = Eigen::Vector3d(toe_x_->value(), toe_y_->value(), toe_z_->value());
+  int lvl = well_settings_.verb_vector_[5];
+  print_dbg_msg_wellspline(__func__, "gwb", 0.0, lvl, 1);
+  
+  auto heel = Eigen::Vector3d(heel_x_->value(),
+                              heel_y_->value(),
+                              heel_z_->value());
+  auto toe = Eigen::Vector3d(toe_x_->value(),
+                             toe_y_->value(),
+                             toe_z_->value());
 
-  auto wic = WellIndexCalculator(grid_);
-
+  // -----------------------------------------------------------------
   vector<WellDefinition> welldefs;
   welldefs.push_back(WellDefinition());
   welldefs[0].wellname = well_settings_.name.toStdString();
@@ -81,38 +109,66 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
   welldefs[0].skins.push_back(0.0);
   welldefs[0].heels.push_back(heel);
   welldefs[0].toes.push_back(toe);
-  welldefs[0].skins.push_back(0.0);
+  welldefs[0].well_length.push_back(sqrt((toe - heel).norm()));
+  welldefs[0].heel_md.push_back(heel(2));
+  welldefs[0].toe_md.push_back(welldefs[0].heel_md.back() + welldefs[0].well_length.back());
 
+  // ResInsight-based WIC --------------------------------------------
   auto start = QDateTime::currentDateTime();
-  auto block_data = wic.ComputeWellBlocks(welldefs)[well_settings_.name.toStdString()];
-  auto end = QDateTime::currentDateTime();
-  seconds_spent_in_compute_wellblocks_ = time_span_seconds(start, end);
+  Reservoir::WellIndexCalculation::wicalc_rixx wicalc_rixx =
+      Reservoir::WellIndexCalculation::wicalc_rixx(well_settings_, grid_);
 
-  if (well_settings_.verb_vector_[5] > 1) { // idx:5 -> mod verbose
-    std::cout << "[mod]Computing well blocks.-- "
-              << seconds_spent_in_compute_wellblocks_ << "secs - "
-              << seconds_spent_in_compute_wellblocks_ / 60.0 << "mins"
-              << std::endl;
-  }
+  map<string, vector<IntersectedCell>> well_block_data_rixx;
+  wicalc_rixx.ComputeWellBlocks(well_block_data_rixx, welldefs, rank);
+  auto block_data_rixx = well_block_data_rixx[well_settings_.name.toStdString()];
 
+  // Dbg file
+  time_cwb_wic_rixx_ = time_span_msecs(start, QDateTime::currentDateTime());
+  print_dbg_msg_wellspline(__func__, "cwb-rixx", time_cwb_wic_rixx_, lvl, 1);
+  print_dbg_msg_wellspline_wic_coords(__func__, "wicalc_rixx.dbg", well_settings_,
+                                      block_data_rixx, lvl, 1);
+
+
+  // PCG WIC ---------------------------------------------------------
+  // start = QDateTime::currentDateTime();
+  // auto wic = WellIndexCalculator(grid_);
+
+  // map<string, vector<IntersectedCell>> well_block_data_pcg;
+  // wic.ComputeWellBlocks(well_block_data_pcg, welldefs, rank);
+  // auto block_data_pcg = well_block_data_pcg[well_settings_.name.toStdString()];
+
+  // Dbg file
+  // time_cwb_wic_pcg_ = time_span_secs(start, QDateTime::currentDateTime());
+  // print_dbg_msg_wellspline(__func__, "cwb-pcg", time_cwb_wic_pcg_, lvl, 1);
+  // print_dbg_msg_wellspline_wic_coords(__func__, "wicalc_pcg.dbg", well_settings_,
+  //                                    block_data_pcg, lvl, 1);
+
+  // Collect: select b/e pcg or rins data --------------------------
+  // auto block_data = block_data_pcg;
+  auto block_data = block_data_rixx;
   QList<WellBlock *> *blocks = new QList<WellBlock *>();
   for (int i = 0; i < block_data.size(); ++i) {
     blocks->append(getWellBlock(block_data[i]));
   }
+
   if (blocks->size() == 0) {
     throw WellBlocksNotDefined("WIC could not compute.");
   }
+
   return blocks;
 }
 
-WellBlock *WellSpline::getWellBlock(Reservoir::WellIndexCalculation::IntersectedCell block_data)
-{
+// -----------------------------------------------------------------
+WellBlock *WellSpline::getWellBlock(IntersectedCell block_data) {
+
   auto wb = new WellBlock(block_data.ijk_index().i()+1,
                           block_data.ijk_index().j()+1,
                           block_data.ijk_index().k()+1);
+
   auto comp = new Completions::Perforation();
   comp->setTransmissibility_factor(block_data.cell_well_index_matrix());
   wb->AddCompletion(comp);
+
   return wb;
 }
 

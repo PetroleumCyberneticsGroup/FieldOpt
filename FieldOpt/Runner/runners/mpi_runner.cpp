@@ -128,13 +128,6 @@ void MPIRunner::printMessage(std::string message) {
   int rank = world_.rank();
   string cstr;
 
-//  if (rank % 6 == 0) cstr = BLRED;
-//  else if (rank % 6 == 1) cstr = BLGREEN;
-//  else if (rank % 6 == 2) cstr = BLYELLOW;
-//  else if (rank % 6 == 3) cstr = BLBLUE;
-//  else if (rank % 6 == 4) cstr = BLMAGENTA;
-//  else if (rank % 6 == 5) cstr = BLCYAN;
-
   if (rank % 6 == 0) cstr = BRED;
   else if (rank % 6 == 1) cstr = BGREEN;
   else if (rank % 6 == 2) cstr = BYELLOW;

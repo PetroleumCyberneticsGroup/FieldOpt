@@ -1,10 +1,20 @@
 cmake_minimum_required(VERSION 2.8)
 project(optimization)
 
-set(EXPERIMENTAL_CONSTRAINTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/experimental_constraints)
+# Dbg ==================================================================
+message("\n============================================================")
+message(STATUS "PROJECT_NAME => ${PROJECT_NAME}")
+message(STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
+message(STATUS "CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
+
+# Options ==============================================================
+set(EXPERIMENTAL_CONSTRAINTS_DIR
+        ${CMAKE_CURRENT_SOURCE_DIR}/experimental_constraints)
 set(EXPERIMENTAL_CONSTRAINTS_SRC "")
 set(EXPERIMENTAL_CONSTRAINTS_TESTS "")
-if(EXISTS ${EXPERIMENTAL_CONSTRAINTS_DIR} AND IS_DIRECTORY ${EXPERIMENTAL_CONSTRAINTS_DIR})
+
+if(EXISTS ${EXPERIMENTAL_CONSTRAINTS_DIR}
+        AND IS_DIRECTORY ${EXPERIMENTAL_CONSTRAINTS_DIR})
 	message("Including experimental constraints")
 	add_definitions(-DWITH_EXPERIMENTAL_CONSTRIANTS)
 	set(EXPERIMENTAL_CONSTRAINTS_SRC
@@ -16,8 +26,9 @@ else()
 	add_definitions(-DWITHOUT_EXPERIMENTAL_CONSTRAINTS)
 endif()
 
+# Add library ==========================================================
 add_library(optimization
-        optimization_exceptions.h
+		optimization_exceptions.h
 		objective/objective.cpp
 		objective/weightedsum.cpp
 		case.cpp
@@ -40,40 +51,31 @@ add_library(optimization
 		optimizers/APPS.cpp
 		optimizers/GeneticAlgorithm.cpp
 		optimizers/RGARDD.cpp
-        normalizer.cpp
+		normalizer.cpp
 		constraints/pseudo_cont_boundary_2d.cpp
-        optimizers/SNOPTSolver.cpp
-		optimizers/Subproblem.cpp
-		optimizers/DFO.cpp
-#		optimizers/testOne.cpp
-#        ../FieldOpt-3rdPartySolvers/handlers/SNOPTHandler.cpp
-#        ../FieldOpt-3rdPartySolvers/handlers/LibraryHandler.c
-#        ../FieldOpt-3rdPartySolvers/handlers/SNOPTLoader.c
-		${EXPERIMENTAL_CONSTRAINTS_SRC}
-        )
+		${EXPERIMENTAL_CONSTRAINTS_SRC})
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
+# Target link libraries ================================================
 target_link_libraries(optimization
-        PUBLIC fieldopt::model
-        PUBLIC fieldopt::simulation
-        PUBLIC fieldopt::constraintmath
+		PUBLIC fieldopt::model
+		PUBLIC fieldopt::simulation
+		PUBLIC fieldopt::constraintmath
 		PUBLIC fieldopt::reservoir
-        PUBLIC fieldopt::runner
-        PUBLIC fieldopt::3rdpartysolvers
-        Qt5::Core
-        ${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/lib/libsnopt-7.2.12.2.so
+		PUBLIC fieldopt::runner
+		Qt5::Core
 		PUBLIC ${Boost_LIBRARIES})
 
+# Target include directories ===========================================
 target_include_directories(optimization PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/constraints>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/objective>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/optimizers>
-#        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../FieldOpt-3rdPartySolvers/handlers>
-#        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../FieldOpt-3rdPartySolvers/include/snopt>
-        )
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/constraints>
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/objective>
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/optimizers>)
 
+# Compile options ======================================================
 add_compile_options(-std=c++11)
 
+# Unit tests ===========================================================
 if (BUILD_TESTING)
 	# Unit tests
 	find_package(GTest REQUIRED)
@@ -91,12 +93,12 @@ if (BUILD_TESTING)
 			${EXPERIMENTAL_CONSTRAINTS_TESTS}
 			tests/constraints/test_rate_constraint.cpp
 			tests/test_case_transfer_object.cpp
-            tests/optimizers/test_apps.cpp
-            tests/optimizers/test_ga.cpp
+			tests/optimizers/test_apps.cpp
+			tests/optimizers/test_ga.cpp
 			tests/test_normalizer.cpp
-            tests/constraints/test_interwell_distance.cpp
-            tests/constraints/test_spline_well_length.cpp
-            tests/constraints/test_pseudo_cont_boundary_2d.cpp)
+			tests/constraints/test_interwell_distance.cpp
+			tests/constraints/test_spline_well_length.cpp
+			tests/constraints/test_pseudo_cont_boundary_2d.cpp)
 
 	target_link_libraries(test_optimization
 			fieldopt::optimization
@@ -112,8 +114,12 @@ if (BUILD_TESTING)
 	add_test(NAME test_optimization COMMAND $<TARGET_FILE:test_optimization>)
 endif()
 
+# Install targets ======================================================
 install(TARGETS optimization
 		RUNTIME DESTINATION bin
 		LIBRARY DESTINATION lib
 		ARCHIVE DESTINATION lib/static
 		)
+
+# Debug: include dirs ==================================================
+include(../InclDirDbg.cmake)

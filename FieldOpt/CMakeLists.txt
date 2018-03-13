@@ -8,15 +8,49 @@ project(FieldOpt)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 include(GetSysInfo.cmake)
 include(MaurConfig.cmake)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-narrowing -Wno-sign-compare")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual -Wformat")
 
 # Compile options ======================================================
-set (CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_COLOR_MAKEFILE ON)
+# set(CMAKE_VERBOSE_MAKEFILE ON)
+
+# Custom ERT include dir (ResInsight) ==================================
+option(ERT_STANDARD "Use standard Ert library" ON)
+set(RIERTWIC FieldOpt-WellIndexCalculator/resinsight/Ert)
+
+if (NOT ERT_STANDARD)
+    # Placed early on so it overrides standard include dir (at /usr/include)
+    set(ERT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/${RIERTWIC}/lib/include)
+    include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR})
+    message("*************************************************")
+    message("**** Set ERT_INCLUDE_DIR: ${ERT_INCLUDE_DIR} ****")
+    message("*************************************************")
+    # ==> lib_ecl.so set in ERTWrapper/CMakeLists.txt
+endif ()
+
+# Include dirs =========================================================
+include_directories(${PROJECT_SOURCE_DIR})
+
+# ResInsight ===========================================================
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    add_definitions(-DCVF_LINUX)
+    message(STATUS "CMAKE_SYSTEM_NAME => ${CMAKE_SYSTEM_NAME}")
+endif()
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -DCVF_LINUX -pipe -Wextra ")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+    set(CMAKE_CXX_FLAGS_DEBUG "-ggdb -g3 -O0 -DDEBUG -D_DEBUG")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNO_DEBUG")
+endif()
 
 # Build dirs ===========================================================
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
 
 # Enable unit tests + example dir ======================================
 option(BUILD_TESTING "Build unit tests"                 OFF)
@@ -32,7 +66,7 @@ endif()
 # [1] Build standalone well index calculator executable
 option(BUILD_WIC_ONLY "Build well index calculator exe" OFF)
 # [2] Build OS-dependent well index calculator (shared) library:
-option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    OFF)
+option(BUILD_WIC_ADGPRS "Build WIC as SHARED lib"       OFF)
 
 # Build executable for WI benchmarktests ===============================
 option(BUILD_BENCHMARK "Build exec for wic RMS benchmark" OFF)
@@ -44,36 +78,35 @@ if(NOT COMPILATION_AT_MAUR)
     message(STATUS "EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR}")
 
     find_library(RpolyPlusPlus
-            NAMES rpoly_plus_plus
-            HINTS ${CMAKE_BINARY_DIR}/libraries/lib
-            REQUIRED)
-
+        NAMES rpoly_plus_plus
+        HINTS ${CMAKE_BINARY_DIR}/libraries/lib
+        REQUIRED)
 endif()
 
 # Build WIC executable  and/or WIC ADGPRS lib ==========================
 # Include HDF5 + Qt5 ===================================================
-message("=============================================================")
-if (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS)
-    message(STATUS "Building BUILD_WIC_ONLY: ${BUILD_WIC_ONLY}")
-    message(STATUS "Building BUILD_WIC_ADGPRS: ${BUILD_WIC_ADGPRS}")
-    message(STATUS "Skipping: Qt5Core and HDF5")
-else()
-    message(STATUS "Building FIELDOPT. Loading: Qt5Core and HDF5")
-    set(CMAKE_AUTOMOC ON)
-    set(CMAKE_INCLUDE_CURRENT_DIR ON)
-    find_package(HDF5 REQUIRED COMPONENTS CXX)
-    add_definitions(${HDF5_DEFINITIONS})
-    include_directories(${HDF5_INCLUDE_DIRS})
-    find_package(Threads REQUIRED)
+message(".............................................................")
+#if (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS)
+#    message(STATUS "Building BUILD_WIC_ONLY: ${BUILD_WIC_ONLY}")
+#    message(STATUS "Building BUILD_WIC_ADGPRS: ${BUILD_WIC_ADGPRS}")
+#    message(STATUS "Skipping: Qt5Core and HDF5")
+#else()
+message(STATUS "Building FIELDOPT. Loading: Qt5Core and HDF5")
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+find_package(HDF5 REQUIRED COMPONENTS CXX)
+add_definitions(${HDF5_DEFINITIONS})
+include_directories(${HDF5_INCLUDE_DIRS})
+find_package(Threads REQUIRED)
 
-    find_package(Qt5Core REQUIRED)
-    message(STATUS "Qt5Core_QTMAIN_LIBRARIES: ${Qt5Core_QTMAIN_LIBRARIES}")
-    message(STATUS "Qt5Core_INCLUDE_DIRS: ${Qt5Core_INCLUDE_DIRS}")
-    include_directories(${Qt5Core_INCLUDE_DIRS})
-endif()
+find_package(Qt5Core REQUIRED)
+message(STATUS "Qt5Core_QTMAIN_LIBRARIES: ${Qt5Core_QTMAIN_LIBRARIES}")
+message(STATUS "Qt5Core_INCLUDE_DIRS: ${Qt5Core_INCLUDE_DIRS}")
+include_directories(${Qt5Core_INCLUDE_DIRS})
+#endif()
 
 # Boost libraries: default-settings ====================================
-message("=============================================================")
+message(".............................................................")
 find_package(Boost REQUIRED) # 1.63
 if (Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIR})
@@ -88,11 +121,11 @@ if (BUILD_WIC_ADGPRS)  # Implementation of BUILD_WIC_ADGPRS option
 
     # CMAKE_EXE_LINKER_FLAGS --> TODO: Double-check if absolutely necessary
     set(CMAKE_EXE_LINKER_FLAGS
-            "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++")
+        "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++")
 
     # CMAKE_SHARED_LINKER_FLAGS --> TODO: Double-check if absolutely necessary
     set(CMAKE_SHARED_LINKER_FLAGS
-            "${CMAKE_SHARED_LINKER_FLAGS} -static-libgcc -static-libstdc++")
+        "${CMAKE_SHARED_LINKER_FLAGS} -static-libgcc -static-libstdc++")
 
     # This is opposite of default settings --> TODO: Double-check if necessary
     set(Boost_USE_MULTITHREADED  OFF) # Enable multithreading
@@ -103,36 +136,28 @@ if (BUILD_WIC_ADGPRS)  # Implementation of BUILD_WIC_ADGPRS option
 
     # Find packages
     find_package(Boost COMPONENTS
-            REQUIRED program_options system filesystem)
+        REQUIRED program_options system filesystem)
 
 elseif(BUILD_WIC_ONLY)  # Building WIC executable with dependencies only
     find_package(Boost COMPONENTS
-            REQUIRED program_options system filesystem)
+        REQUIRED program_options system filesystem)
 
 else() # Building all FieldOpt sources
     find_package(Boost COMPONENTS
-            REQUIRED program_options serialization mpi system filesystem random)
+        REQUIRED program_options serialization mpi system filesystem random)
 endif()
 
 # Pring debug info: include dirs + source dirs =========================
 include(DebugMsg.cmake)
-
-# Set this directory as the root dir
-include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR})
-
-# TO BE REMOVED
-#include_directories(${CMAKE_BINARY_DIR}/libraries/include/)
-
-# SNOPT ================================================================
-include_directories(${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/include/snopt)
-include_directories(${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/handlers)
-#include_directories(${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/lib)
 
 # Enable testing =======================================================
 if (BUILD_TESTING)
     include(CTest)
     enable_testing()
 endif()
+
+message(STATUS "END MAIN PROJECT (${PROJECT_NAME}) ==> STARTING SUBDIRS")
+message("============================================================\n")
 
 # Compile FieldOpt sources =============================================
 add_subdirectory(ERTWrapper)
@@ -152,21 +177,21 @@ if (NOT (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS))
 
     # Copy execution scripts
     file(GLOB EXECUTION_SCRIPTS
-            "Simulation/execution_scripts/*.sh")
+        "Simulation/execution_scripts/*.sh")
     file(COPY ${EXECUTION_SCRIPTS}
-            DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/execution_scripts)
+        DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/execution_scripts)
 
     ## Copy the test driver file into the build dir
     file(COPY ${CMAKE_SOURCE_DIR}/Settings/tests/driver/driver.json
-            DESTINATION ${CMAKE_BINARY_DIR}/examples)
+        DESTINATION ${CMAKE_BINARY_DIR}/examples)
     file(COPY ${CMAKE_SOURCE_DIR}/Settings/tests/driver/driver_sane.json
-            DESTINATION ${CMAKE_BINARY_DIR}/examples)
+        DESTINATION ${CMAKE_BINARY_DIR}/examples)
 
     if(BUILD_BENCHMARK)
         ## Copy wic benchmark wells into the build dir
         set(WIC_DIR "${CMAKE_SOURCE_DIR}/FieldOpt-WellIndexCalculator")
         file(COPY "${WIC_DIR}/tests/well_index_benchmark/wic-benchmark-wells"
-                DESTINATION ${CMAKE_BINARY_DIR}/)
+            DESTINATION ${CMAKE_BINARY_DIR}/)
     endif()
 
     ## Create an empty directory for test output
@@ -180,5 +205,7 @@ add_compile_options(-std=fPIC)
 if (COPY_EXAMPLES)
     ## Copy the examples into the build dir
     file(COPY ${CMAKE_SOURCE_DIR}/../examples
-            DESTINATION ${CMAKE_BINARY_DIR}/)
+        DESTINATION ${CMAKE_BINARY_DIR}/)
 endif()
+
+

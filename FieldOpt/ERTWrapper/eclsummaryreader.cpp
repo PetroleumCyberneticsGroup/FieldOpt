@@ -166,7 +166,8 @@ void ECLSummaryReader::initializeTimeVector() {
 }
 
 void ECLSummaryReader::initializeWellRates() {
-    const ecl_smspec_type * smspec = ecl_sum_get_smspec(ecl_sum_);
+    const ecl_smspec_type * smspec;
+    smspec = ecl_sum_get_smspec(ecl_sum_);
     for (auto wname : wells_) {
         wopr_[wname] = std::vector<double>(time_.size(), 0.0);
         if (hasWellVar(wname, "WOPR")) {

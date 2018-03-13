@@ -1,0 +1,223 @@
+--set BHP reference depth to -1, then Eclipse will set it as default, which is better.
+WELSPECS   == WELL SPECIFICATION DATA ================================
+--   WELL   GROUP LOCATION  BHP   PI
+--   NAME     NAME     I  J   DEPTH   DEFN
+    'P01' 'PRODUCER'  82 44     -1    'OIL' / 
+/
+COMPDAT    -- COMPLETION SPECIFICATION DATA
+--   WELL   LOCATION          OPEN/ SAT CONN  WELL  KH  S  D  AXIS
+--   NAME    I    J  K1  K2   SHUT  TAB FACT  DIAM
+     P01    82   44   1   8   OPEN   0   -1   0.1524/ 
+/
+
+WELSPECS
+    'P02' 'PRODUCER'  97 38     -1    'OIL' / 
+/
+COMPDAT
+     P02    97   38   1   8   OPEN   0   -1   0.1524/ 
+/
+
+WELSPECS
+    'P03' 'PRODUCER'  67  42     -1    'OIL' / 
+/
+COMPDAT
+     P03    67    42   1   8   OPEN   0   -1   0.1524/ 
+/
+
+WELSPECS
+    'P04' 'PRODUCER'  76  42     -1    'OIL' / 
+/
+COMPDAT
+     P04    76    42   1   8   OPEN   0   -1   0.1524/ 
+/
+
+WELSPECS
+    'P05' 'PRODUCER'  43  46     -1    'OIL' / 
+/
+COMPDAT
+     P05    43   46   1   5   OPEN   0   -1   0.1524/ 
+/
+
+WELSPECS
+    'P06' 'PRODUCER'  53  46     -1    'OIL' / 
+/
+COMPDAT
+     P06    53   46   1   8   OPEN   0   -1   0.1524/ 
+/
+
+WELSPECS
+    'P07' 'PRODUCER'  62  47     -1    'OIL' / 
+/
+COMPDAT
+     P07    62   47   1   8   OPEN   0   -1   0.1524/ 
+/
+
+WELSPECS
+    'P08' 'PRODUCER'  70  46     -1    'OIL' / 
+/
+COMPDAT
+     P08    70   46   1   8   OPEN   0   -1   0.1524/ 
+/
+
+WELSPECS
+    'P09' 'PRODUCER'  96  45     -1    'OIL' / 
+/
+COMPDAT
+     P09    96   45   1   5   OPEN   0   -1   0.1524/ 
+/
+
+WELSPECS
+    'P10' 'PRODUCER' 102  45     -1    'OIL' / 
+/
+COMPDAT
+     P10   102   45   1   8   OPEN   0   -1   0.1524/ 
+/
+
+WELSPECS
+    'P11' 'PRODUCER' 104  40     -1    'OIL' / 
+/
+COMPDAT
+     P11   104   40   1   8   OPEN   0   -1   0.1524/ 
+/
+
+WELSPECS
+    'P12' 'PRODUCER' 99  35     -1    'OIL' / 
+/
+COMPDAT
+     P12    99   35   1   8   OPEN   0   -1   0.1524/ 
+/
+
+WELSPECS
+    'P13' 'PRODUCER'  91  33     -1    'OIL' / 
+/
+COMPDAT
+     P13    91   33   1   8   OPEN   0   -1   0.1524/ 
+/
+
+WELSPECS
+    'P14' 'PRODUCER'  83  33     -1    'OIL' / 
+/
+COMPDAT
+     P14    83   33   1   5   OPEN   0   -1   0.1524/ 
+/
+
+WELSPECS
+    'P15' 'PRODUCER'  75  33     -1    'OIL' / 
+/
+COMPDAT
+     P15    75   33   1   8   OPEN   0   -1   0.1524/ 
+/
+
+WELSPECS
+    'P16' 'PRODUCER'  72  38     -1    'OIL' / 
+/
+COMPDAT
+     P16    72   38   1   8   OPEN   0   -1   0.1524/ 
+/
+
+WELSPECS
+    'P17' 'PRODUCER'  65  37     -1    'OIL' / 
+/
+COMPDAT
+     P17    65   37   1   8   OPEN   0   -1   0.1524/ 
+/
+
+WELSPECS
+    'P18' 'PRODUCER'  55  38     -1    'OIL' / 
+/
+COMPDAT
+     P18    55   38   1   8   OPEN   0   -1   0.1524/ 
+/
+
+WELSPECS
+    'P19' 'PRODUCER'  52  43     -1    'OIL' / 
+/
+COMPDAT
+     P19    52   43   1   8   OPEN   0   -1   0.1524/ 
+/
+
+WELSPECS
+    'P20' 'PRODUCER'  45  42     -1    'OIL' / 
+/
+COMPDAT
+     P20    45   42   1   8   OPEN   0   -1   0.1524/ 
+/
+
+
+
+-- INJECTORS ---------------
+
+WELSPECS   == WELL SPECIFICATION DATA ================================
+--   WELL   GROUP  LOCATION  BHP   PI
+--   NAME   NAME       I  J    DEPTH DEFN
+    'I01' 'INJECTOR'  32  44     -1  'WATER' / 
+/
+
+COMPDAT    -- COMPLETION SPECIFICATION DATA
+--   WELL  LOCATION          OPEN/ SAT CONN  WELL  KH  S  D  AXIS
+--   NAME    I    J  K1  K2   SHUT  TAB FACT  DIAM
+     I01    32   44   1   9   OPEN   0   -1   0.1524/
+/
+
+WELSPECS 
+    'I02' 'INJECTOR'  38  39     -1  'WATER' / 
+/
+COMPDAT
+     I02    38   39   1   9   OPEN   0   -1   0.1524/
+/
+
+WELSPECS 
+    'I03' 'INJECTOR'  47  35     -1  'WATER' / 
+/
+COMPDAT
+     I03    47   35   1   9   OPEN   0   -1   0.1524/
+/
+
+WELSPECS 
+    'I04' 'INJECTOR'  55  28     -1  'WATER' / 
+/
+COMPDAT
+     I04    55   28   1   9   OPEN   0   -1   0.1524/
+/
+
+WELSPECS 
+    'I05' 'INJECTOR'  63  27     -1  'WATER' / 
+/
+COMPDAT
+     I05    63   27   1   9   OPEN   0   -1   0.1524/
+/
+
+WELSPECS 
+    'I06' 'INJECTOR'  72  29     -1  'WATER' / 
+/
+COMPDAT
+     I06    72   29   1   9   OPEN   0   -1   0.1524/
+/
+
+WELSPECS 
+    'I07' 'INJECTOR'  82  28     -1  'WATER' / 
+/
+COMPDAT
+     I07    82   28   1   9   OPEN   0   -1   0.1524/
+/
+
+WELSPECS 
+    'I08' 'INJECTOR'  93  27     -1  'WATER' / 
+/
+COMPDAT
+     I08    93   27   1   9   OPEN   0   -1   0.1524/
+/
+
+WELSPECS 
+    'I09' 'INJECTOR' 105  32     -1  'WATER' / 
+/
+COMPDAT
+     I09   105   32   1   9   OPEN   0   -1   0.1524/
+/
+
+WELSPECS 
+    'I10' 'INJECTOR' 112  43     -1  'WATER' / 
+/
+COMPDAT
+     I10   112   43   1   9   OPEN   0   -1   0.1524/
+/

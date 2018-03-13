@@ -21,13 +21,17 @@
 #ifndef GRID_H
 #define GRID_H
 
+// -----------------------------------------------------------------
 #include "cell.h"
 #include "ijkcoordinate.h"
 #include "ERTWrapper/eclgridreader.h"
+#include <QString>
 
+// -----------------------------------------------------------------
 namespace Reservoir {
 namespace Grid {
 
+// =================================================================
 /*!
  * \brief The abstract Grid class represents a reservoir grid. It
  * includes basic operations for lookup, checks and calculations
@@ -37,7 +41,8 @@ class Grid
 {
  public:
   /*!
-   * \brief The GridSourceType enum Enumerates the supported grid types.
+   * \brief The GridSourceType enum Enumerates the supported grid
+   * types.
    */
   enum GridSourceType {ECLIPSE};
   Grid(const Grid& other) = delete;
@@ -73,6 +78,11 @@ class Grid
    */
   virtual Cell GetCell(IJKCoordinate* ijk) = 0;
 
+  virtual string GetFilePath() { return file_path_; };
+
+  virtual QString GetFilePathQString()
+  { return QString::fromStdString(file_path_); };
+
   /*!
    * \brief GetBoundingBoxCellIndices Searches for the bounding
    * box of the space defined by the two point and returns the
@@ -98,6 +108,11 @@ class Grid
    * (x,y,z) searching the entire grid. Throws an exception if no cell
    * is found.
    */
+  // OV: 20170709
+  virtual bool GetCellEnvelopingPoint(Cell& cell,
+                                      double x, double y, double z) = 0;
+
+  // Version that returns cell
   virtual Cell GetCellEnvelopingPoint(double x, double y, double z) = 0;
 
   /*!
@@ -105,6 +120,12 @@ class Grid
    * (x,y,z) searching a subsection of the grid. Throws an exception
    * if no cell is found.
    */
+  // OV: 20170709
+  virtual bool GetCellEnvelopingPoint(Cell& cell,
+                                      double x, double y, double z,
+                                      std::vector<int> search_set) = 0;
+
+  // Version that returns cell
   virtual Cell GetCellEnvelopingPoint(double x, double y, double z,
                                       std::vector<int> search_set) = 0;
 
@@ -113,6 +134,11 @@ class Grid
    * (xyz.x(), xyz.y(), xyz.z()) searching the entire grid. Throws an
    * exception if no cell is found.
    */
+  // OV: 20170709
+  virtual bool GetCellEnvelopingPoint(Cell& cell,
+                                      Eigen::Vector3d xyz) = 0;
+
+  // Version that returns cell
   virtual Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz) = 0;
 
   /*!
@@ -122,6 +148,11 @@ class Grid
    * \param xyz Point to check
    * \param search_set Set to check first
    */
+  // OV: 20170709
+  virtual bool GetCellEnvelopingPoint(Cell& cell, Eigen::Vector3d xyz,
+                                      std::vector<int> search_set) = 0;
+
+  // Version that returns cell
   virtual Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz,
                                       std::vector<int> search_set) = 0;
 
@@ -131,10 +162,13 @@ class Grid
    */
   virtual Cell GetSmallestCell() = 0;
 
+  virtual bool IndexIsInsideGrid(int global_index) = 0;
+
  protected:
   GridSourceType type_;
   std::string file_path_;
-  Grid(GridSourceType type, std::string file_path);
+  Grid(GridSourceType type,
+       std::string file_path);
 };
 
 }

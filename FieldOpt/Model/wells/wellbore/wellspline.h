@@ -47,17 +47,19 @@ class WellSpline
    * WI's defined by the spline.
    * \return
    */
-  QList<WellBlock *> *GetWellBlocks();
+  QList<WellBlock *> *GetWellBlocks(int rank=0);
   int GetTimeSpentInWIC() const
-  { return seconds_spent_in_compute_wellblocks_; }
+  { return time_cwb_wic_pcg_; }
 
  private:
   Reservoir::Grid::Grid *grid_;
   Settings::Model::Well well_settings_;
 
   //!< Number of seconds spent in the ComputeWellBlocks() method.
-  int seconds_spent_in_compute_wellblocks_;
-
+  int time_cwb_wic_pcg_;
+  int time_cwb_wic_rins_;
+  int time_cwb_wic_rinx_;
+  int time_cwb_wic_rixx_;
 
   Model::Properties::ContinousProperty *heel_x_;
   Model::Properties::ContinousProperty *heel_y_;
@@ -70,7 +72,7 @@ class WellSpline
    * \brief getWellBlock Convert the BlockData returned by WIC
    * to a WellBlock with a Perforation.
    *
-   * \note The IJK indexes are incremented by on to account for
+   * \note The IJK indexes are incremented by one to account for
    * the zero-inclusive indices used by the ERT library. This is
    * necessary because ECL and ADGPRS both use zero-exclusive
    * indices.
