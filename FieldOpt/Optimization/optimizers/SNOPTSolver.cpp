@@ -5,6 +5,8 @@
 #include "SNOPTSolver.h"
 #include <iostream>
 #include <iomanip>
+#include "Subproblem.cpp"
+#include "testOne.h"
 
 namespace Optimization {
 namespace Optimizers {
@@ -18,11 +20,66 @@ SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
 
   if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
     cout << "[opt]Init. SNOPTSolver.-------" << endl;
+    settings_ = settings;
+    //testOne myTestOne(settings);
+    //myTestOne.loadSNOPT();
+    //myTestOne.callSNOPT();
 
-  settings_ = settings;
-  loadSNOPT();
-  callSNOPT();
-}
+  Eigen::VectorXd vars = base_case->GetRealVarVector();
+
+  Optimization::Case *newCase = new Case(base_case);
+  newCase->SetRealVarValues(vars);
+  newCase->set_objective_function_value(std::numeric_limits<double>::max());
+  case_handler_->AddNewCase(newCase);
+
+
+    //loadSNOPT();
+    //SNOPTHandler snopthandler = initSNOPTHandler();
+
+    //SNOPTHandler mySNOPTHandler = initSNOPTHandler2();
+    //Subproblem mySub = Subproblem(settings);
+
+    /*
+    mySub.setConstant();
+     mySub.setGradient();
+     mySub.setHessian();
+     */
+    //vector<double> xsol;
+    //vector<double> fsol;
+    //vector<double> solutions;
+    /*
+    mySub.Solve(xsol, fsol, (char*)"Maximize"); //(char*)"Maximize"
+
+    cout << "xsol: " << endl;
+    for (int j = 0; j < 2; j++) {
+        cout << xsol[j] << endl;
+    }
+    cout << endl << "Objective values:" << endl;
+    for (int j = 0; j < 4; j++) {
+        cout << fsol[j] << endl;
+    }
+
+*/
+    /*
+    mySub.setConstant(0);
+    for (int i = 1; i <= 4; i++){
+        mySub.Solve(xsol, fsol, (char*)"Maximize"); //(char*)"Maximize"
+        mySub.setConstant(i*4);
+        solutions.push_back(fsol[0]);
+        //cout << fsol[0] << endl;
+    }
+
+    cout << endl << "\n Objective values:" << endl;
+    for (int i = 0; i < 4; i++){
+        cout << solutions[i] << endl;
+    }
+    */
+
+    //settings_ = settings;
+
+  //callSNOPT();
+
+     }
 
 SNOPTSolver::~SNOPTSolver(){}
 
@@ -33,6 +90,7 @@ SNOPTHandler SNOPTSolver::initSNOPTHandler(){
   smry_file = settings_->parameters().thrdps_smry_file.toStdString() + ".opt.summ";
   prnt_file = settings_->parameters().thrdps_prnt_file.toStdString() + ".opt.prnt";
 
+    cout << optn_file << endl;
   SNOPTHandler snoptHandler(prnt_file.c_str(),
                             smry_file.c_str(),
                             optn_file.c_str());

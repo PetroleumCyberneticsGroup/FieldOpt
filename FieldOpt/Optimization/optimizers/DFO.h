@@ -27,6 +27,7 @@ class DFO : public Optimizer {
  private:
   //void iterate() override;
   void iterate() {
+    iterations_++;
     cout << "just did an ITERATE" << endl;
   };
   bool is_successful_iteration(){};
@@ -35,7 +36,10 @@ class DFO : public Optimizer {
     cout << "just handled an evaluated case!" << endl;
   };
   TerminationCondition IsFinished() {
-    return TerminationCondition::NOT_FINISHED;
+    cout << "JUST CALLED ISFINISHED" << endl;
+
+    if (iterations_!=0)
+      return TerminationCondition::NOT_FINISHED;
   };
 
 
@@ -46,6 +50,7 @@ class DFO : public Optimizer {
   double trust_radius_;
   QList<QUuid> realvar_uuid_;
   Settings::Optimizer *settings_;
+  int iterations_;
 
 
 

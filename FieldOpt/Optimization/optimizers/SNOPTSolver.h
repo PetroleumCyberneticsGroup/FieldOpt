@@ -60,7 +60,9 @@ class SNOPTSolver : public Optimizer {
   bool is_successful_iteration(){};
 
   void handleEvaluatedCase(Case *c) override {};
-  TerminationCondition IsFinished() {};
+  TerminationCondition IsFinished() {
+    //return TerminationCondition::NOT_FINISHED;
+  };
 
 
 

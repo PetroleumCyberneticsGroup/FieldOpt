@@ -21,8 +21,9 @@ DFO::DFO(Settings::Optimizer *settings,
 
   cout << "[DFO constructor] ..." << endl;
   settings_ = settings;
+  iterations_ = 0;
 
-  cout << settings_->verb_vector()[0] << endl;
+  //cout << settings_->verb_vector()[0] << endl;
   realvar_uuid_ = GetTentativeBestCase()->GetRealVarIdVector();
 
 
@@ -31,12 +32,12 @@ DFO::DFO(Settings::Optimizer *settings,
   cout<< "realvar \n" << vars << endl;
 
 
-  vars[0] += 100;
-  vars[1] += 100;
-  vars[2] += 100;
-  vars[3] += 100;
-  vars[4] += 100;
-  vars[5] += 100;
+  vars[0] += 1;
+  vars[1] += 1;
+  vars[2] += 1;
+  vars[3] += 1;
+  vars[4] += 1;
+  vars[5] += 1;
   Optimization::Case *newCase = new Case(base_case);
   newCase->SetRealVarValues(vars);
   newCase->set_objective_function_value(std::numeric_limits<double>::max());
