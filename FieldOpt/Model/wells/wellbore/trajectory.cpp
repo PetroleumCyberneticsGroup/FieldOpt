@@ -27,23 +27,31 @@ namespace Wellbore {
 
 Trajectory::Trajectory(Settings::Model::Well well_settings,
                        Properties::VariablePropertyContainer *variable_container,
-                       ::Reservoir::Grid::Grid *grid)
-{
+                       ::Reservoir::Grid::Grid *grid) {
+
   well_blocks_ = new QList<WellBlock *>();
-  well_spline_ = 0;
+        well_spline_ = 0;
   pseudo_cont_vert_ = 0;
 
-  if (well_settings.definition_type == Settings::Model::WellDefinitionType::WellBlocks) {
-    initializeWellBlocks(well_settings, variable_container);
+  if (well_settings.definition_type ==
+      Settings::Model::WellDefinitionType::WellBlocks) {
+    initializeWellBlocks(well_settings,
+                         variable_container);
     calculateDirectionOfPenetration();
   }
-  else if (well_settings.definition_type == Settings::Model::WellDefinitionType::WellSpline) {
-    well_spline_ = new WellSpline(well_settings, variable_container, grid);
+  else if (well_settings.definition_type ==
+      Settings::Model::WellDefinitionType::WellSpline) {
+    well_spline_ = new WellSpline(well_settings,
+                                  variable_container,
+                                  grid);
     well_blocks_ = well_spline_->GetWellBlocks();
     calculateDirectionOfPenetration();
   }
-  else if (well_settings.definition_type == Settings::Model::WellDefinitionType::PseudoContVertical2D) {
-    pseudo_cont_vert_ = new PseudoContVert(well_settings, variable_container, grid);
+  else if (well_settings.definition_type ==
+      Settings::Model::WellDefinitionType::PseudoContVertical2D) {
+    pseudo_cont_vert_ = new PseudoContVert(well_settings,
+                                           variable_container,
+                                           grid);
     well_blocks_->append(pseudo_cont_vert_->GetWellBlock());
     calculateDirectionOfPenetration();
   }
@@ -56,8 +64,8 @@ int Trajectory::GetTimeSpentInWic() const {
   else return 0;
 }
 
-WellBlock *Trajectory::GetWellBlock(int i, int j, int k)
-{
+WellBlock *Trajectory::GetWellBlock(int i, int j, int k) {
+
   for (int idx = 0; idx < well_blocks_->size(); ++idx) {
     if (well_blocks_->at(idx)->i() == i &&
         well_blocks_->at(idx)->j() == j &&
@@ -67,14 +75,15 @@ WellBlock *Trajectory::GetWellBlock(int i, int j, int k)
   throw WellBlockNotFoundException(i, j, k);
 }
 
-QList<WellBlock *> *Trajectory::GetWellBlocks()
-{
+QList<WellBlock *> *Trajectory::GetWellBlocks() {
+
   return well_blocks_;
 }
 
 void Trajectory::UpdateWellBlocks()
 {
-  // \todo This is the source of a memory leak: old well blocks are not deleted. Fix it.
+    // \todo This is the source of a memory leak:
+    // old well blocks are not deleted. Fix it.
   if (well_spline_ != 0) {
     well_blocks_ = well_spline_->GetWellBlocks();
   }
@@ -85,9 +94,23 @@ void Trajectory::UpdateWellBlocks()
   calculateDirectionOfPenetration();
 }
 
-void Trajectory::initializeWellBlocks(Settings::Model::Well well,
-                                      Properties::VariablePropertyContainer *variable_container)
+void Trajectory::UpdateWellBlocks(int rank)
 {
+  // \todo This is the source of a memory leak:
+  // old well blocks are not deleted. Fix it.
+  if (well_spline_ != 0) {
+    well_blocks_ = well_spline_->GetWellBlocks(rank);
+  }
+  else if (pseudo_cont_vert_ != 0) {
+    well_blocks_ = new QList<WellBlock *>();
+    well_blocks_->append(pseudo_cont_vert_->GetWellBlock());
+  }
+  calculateDirectionOfPenetration();
+}
+
+void
+Trajectory::initializeWellBlocks(Settings::Model::Well well,
+                                 Properties::VariablePropertyContainer *variable_container) {
   QList<Settings::Model::Well::WellBlock> blocks = well.well_blocks;
   for (int i = 0; i < blocks.size(); ++i) {
     well_blocks_->append(new WellBlock(blocks[i].i, blocks[i].j, blocks[i].k));
@@ -105,15 +128,16 @@ void Trajectory::initializeWellBlocks(Settings::Model::Well well,
   }
 }
 
-void Trajectory::calculateDirectionOfPenetration()
-{
+void Trajectory::calculateDirectionOfPenetration() {
+
   if (well_blocks_->size() == 1) { // Assuming that the well is vertical if it only has one block
     well_blocks_->first()->setDirectionOfPenetration(WellBlock::DirectionOfPenetration::Z);
     return;
   }
+
   // All but the last block use forward direction
   for (int i = 0; i < well_blocks_->size()-1; ++i) {
-    if (     std::abs(well_blocks_->at(i)->i() - well_blocks_->at(i+1)->i()) == 1 &&
+    if (std::abs(well_blocks_->at(i)->i() - well_blocks_->at(i+1)->i()) == 1 &&
         std::abs(well_blocks_->at(i)->j() - well_blocks_->at(i+1)->j()) == 0 &&
         std::abs(well_blocks_->at(i)->k() - well_blocks_->at(i+1)->k()) == 0)
       well_blocks_->at(i)->setDirectionOfPenetration(WellBlock::DirectionOfPenetration::X);
@@ -130,7 +154,7 @@ void Trajectory::calculateDirectionOfPenetration()
   }
 
   // Last block uses backward direction
-  if (     std::abs(well_blocks_->last()->i() - well_blocks_->at(well_blocks_->size()-2)->i()) == 1 &&
+  if (std::abs(well_blocks_->last()->i() - well_blocks_->at(well_blocks_->size()-2)->i()) == 1 &&
       std::abs(well_blocks_->last()->j() - well_blocks_->at(well_blocks_->size()-2)->j()) == 0 &&
       std::abs(well_blocks_->last()->k() - well_blocks_->at(well_blocks_->size()-2)->k()) == 0)
     well_blocks_->last()->setDirectionOfPenetration(WellBlock::DirectionOfPenetration::X);

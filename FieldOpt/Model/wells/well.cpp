@@ -26,8 +26,8 @@ namespace Wells {
 Well::Well(Settings::Model settings,
            int well_number,
            Properties::VariablePropertyContainer *variable_container,
-           Reservoir::Grid::Grid *grid)
-{
+           Reservoir::Grid::Grid *grid) {
+
   Settings::Model::Well well_settings = settings.wells().at(well_number);
   well_settings.verb_vector_ = settings.verb_vector();
   if (well_settings.verb_vector_[5] > 1) // idx:5 -> mod (Model)
@@ -40,7 +40,8 @@ Well::Well(Settings::Model settings,
   else group_ = "";
 
   preferred_phase_ = well_settings.preferred_phase;
-  wellbore_radius_ = new Properties::ContinousProperty(well_settings.wellbore_radius);
+  wellbore_radius_ =
+      new Properties::ContinousProperty(well_settings.wellbore_radius);
 
   controls_ = new QList<Control *>();
   for (int i = 0; i < well_settings.controls.size(); ++i)
@@ -69,6 +70,13 @@ bool Well::IsInjector()
 
 void Well::Update() {
   trajectory_->UpdateWellBlocks();
+  heel_.i = trajectory_->GetWellBlocks()->first()->i();
+  heel_.j = trajectory_->GetWellBlocks()->first()->j();
+  heel_.k = trajectory_->GetWellBlocks()->first()->k();
+}
+
+void Well::Update(int rank) {
+  trajectory_->UpdateWellBlocks(rank);
   heel_.i = trajectory_->GetWellBlocks()->first()->i();
   heel_.j = trajectory_->GetWellBlocks()->first()->j();
   heel_.k = trajectory_->GetWellBlocks()->first()->k();

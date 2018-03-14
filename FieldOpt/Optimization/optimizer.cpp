@@ -27,12 +27,13 @@ Optimizer::Optimizer(Settings::Optimizer *settings,
                      Case *base_case,
                      Model::Properties::VariablePropertyContainer *variables,
                      Reservoir::Grid::Grid *grid,
-                     Logger *logger)
-{
+                     Logger *logger) {
+
   // Verify that the base case has been evaluated.
   try {
     base_case->objective_function_value();
-  } catch (ObjectiveFunctionException) {
+  }
+  catch (ObjectiveFunctionException) {
     throw OptimizerInitializationException(
         "The objective function value of the base case "
             "must be set before initializing an Optimizer.");
@@ -46,8 +47,7 @@ Optimizer::Optimizer(Settings::Optimizer *settings,
                                   settings);
 
   constraint_handler_ = new Constraints::ConstraintHandler(
-      settings_->constraints(),
-      variables, grid);
+      settings_->constraints(), variables, grid, settings);
 
   iteration_ = 0;
   mode_ = settings->mode();
@@ -84,8 +84,9 @@ void Optimizer::SubmitEvaluatedCase(Case *c) {
     double penalized_ofv = PenalizedOFV(c);
     c->set_objective_function_value(penalized_ofv);
   }
-  case_handler_->UpdateCaseObjectiveFunctionValue(c->id(),
-                                                  c->objective_function_value());
+  case_handler_->UpdateCaseObjectiveFunctionValue(
+      c->id(),
+      c->objective_function_value());
 
   case_handler_->SetCaseState(c->id(),
                               c->state,
@@ -169,7 +170,7 @@ QUuid Optimizer::GetId() {
 
 map<string, vector<double>> Optimizer::GetValues() {
   map<string, vector<double>> valmap;
-  valmap["TimeEl"] = vector<double>{time_since_seconds(start_time_)};
+  valmap["TimeEl"] = vector<double>{time_since_secs(start_time_)};
   valmap["IterNr"] = vector<double>{iteration_};
   valmap["TimeIt"] = vector<double>{seconds_spent_in_iterate_};
   valmap["TotlNr"] = vector<double>{case_handler_->NumberTotal()};
@@ -190,7 +191,7 @@ map<string, string> Optimizer::Summary::GetState() {
   map<string, string> statemap;
   statemap["Start"] = timestamp_string(opt_->start_time_);
   statemap["Duration"] = timespan_string(
-      time_span_seconds(opt_->start_time_, QDateTime::currentDateTime())
+      time_span_secs(opt_->start_time_, QDateTime::currentDateTime())
   );
 
   statemap["End"] = timestamp_string(QDateTime::currentDateTime());

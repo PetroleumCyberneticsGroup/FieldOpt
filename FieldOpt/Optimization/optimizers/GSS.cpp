@@ -48,8 +48,7 @@ GSS::GSS(Settings::Optimizer *settings,
   set_expansion_factor();
 }
 
-Optimizer::TerminationCondition GSS::IsFinished()
-{
+Optimizer::TerminationCondition GSS::IsFinished() {
   TerminationCondition tc = NOT_FINISHED;
   if (case_handler_->CasesBeingEvaluated().size() > 0)
     return tc;
@@ -88,7 +87,6 @@ void GSS::contract(vector<int> dirs) {
 }
 
 QList<Case *> GSS::generate_trial_points(vector<int> dirs) {
-
   // Generating sample points
   auto trial_points = QList<Case *>();
   if (dirs[0] == -1)
@@ -116,6 +114,7 @@ QList<Case *> GSS::generate_trial_points(vector<int> dirs) {
   }
 
   // Apply constraints
+  print_dbg_msg("[opt]Applying constraints.--- ", 1);
   for (Case *c : trial_points)
     constraint_handler_->SnapCaseToConstraints(c);
 
@@ -123,7 +122,8 @@ QList<Case *> GSS::generate_trial_points(vector<int> dirs) {
 }
 
 template<typename T>
-Matrix<T, Dynamic, 1> GSS::perturb(Matrix<T, Dynamic, 1> base, int dir) {
+Matrix<T, Dynamic, 1>
+GSS::perturb(Matrix<T, Dynamic, 1> base, int dir) {
 
   Matrix<T, Dynamic, 1> dirc = directions_[dir].cast<T>();
   T sl = step_lengths_(dir);
@@ -236,29 +236,25 @@ Case * GSS::dequeue_case_with_worst_origin() {
   return queued_cases.last();
 }
 
-void GSS::print_dbg_msg(string dbg_str, int vlevel, VectorXd eigvec){
+void
+GSS::print_dbg_msg(string dbg_str, int vlevel, VectorXd eigvec){
 
   if (settings_->verb_vector()[6] >= vlevel) { // idx:6 -> opt (Optimization)
 
     if (   dbg_str == "[opt]Init. Abs.Class GSS.---- "
         || dbg_str == "[opt]Generating trial points. "
         || dbg_str == "[opt]Init. CompassSearch.---- "
-        ||     dbg_str == "[opt]Launching opt.iteration. ") {
+        || dbg_str == "[opt]Launching opt.iteration. "
+        || dbg_str == "[opt]GGS: expanding.--------- "
+        || dbg_str == "[opt]GGS: contracting.------- "
+        || dbg_str == "[opt]Perturbations:---------- "
+        ) {
       cout << dbg_str << endl;
 
     } else if (dbg_str == "[opt]GetRealVarVector:------- ") {
       cout << dbg_str << endl;
       IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
       cout << setw(10) << eigvec.format(CleanFmt) << endl;
-
-    } else if (dbg_str == "[opt]GGS: expanding.--------- ") {
-      cout << dbg_str << endl;
-
-    } else if (dbg_str == "[opt]GGS: contracting.------- ") {
-      cout << dbg_str << endl;
-
-    } else if (dbg_str == "[opt]Perturbations:---------- ") {
-      cout << dbg_str << endl;
 
     } else if (dbg_str == "[opt]Perturbations.all:------ ") {
       IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");

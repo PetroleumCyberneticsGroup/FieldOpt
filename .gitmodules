@@ -4,3 +4,6 @@
 [submodule "FieldOpt/FieldOpt-3rdPartySolvers"]
 	path = FieldOpt/FieldOpt-3rdPartySolvers
 	url = git@github.com:PetroleumCyberneticsGroup/FieldOpt-3rdPartySolvers.git
+[submodule "FieldOpt/Optimization/experimental_constraints"]
+	path = FieldOpt/Optimization/experimental_constraints
+	url = git@github.com:PetroleumCyberneticsGroup/experimental_constraints.git

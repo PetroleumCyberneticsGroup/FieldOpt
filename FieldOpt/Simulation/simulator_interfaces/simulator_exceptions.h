@@ -41,6 +41,12 @@ public:
         : std::runtime_error("The specified output directory does not exist: " + path.toStdString()) {}
 };
 
+class IncludeDirectoryDoesNotExistException : public std::runtime_error {
+ public:
+  IncludeDirectoryDoesNotExistException(const QString path)
+      : std::runtime_error("The specified include directory does not exist: " + path.toStdString()) {}
+};
+
 class DriverFileDoesNotExistException : public std::runtime_error {
 public:
     DriverFileDoesNotExistException(const QString path)

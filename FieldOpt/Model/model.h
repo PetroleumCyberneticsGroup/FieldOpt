@@ -75,6 +75,7 @@ class Model : public Loggable
    * \param c Case to apply the variable values of.
    */
   void ApplyCase(Optimization::Case *c);
+  void ApplyCase(Optimization::Case *c, int rank);
 
   /*!
    * @brief Get the UUId of last case applied to the Model.

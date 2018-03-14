@@ -1,0 +1,109 @@
+WCONPROD
+     'P01'  'OPEN' 'BHP'    5*                      	    3000    / --BHP control
+/
+WCONPROD
+     'P02'  'OPEN' 'BHP'    5*                      	    3000    / --BHP control
+/
+WCONPROD
+     'P03'  'OPEN' 'BHP'    5*                      	    3000    / --BHP control
+/
+WCONPROD
+     'P04'  'OPEN' 'BHP'    5*                      	    3000    / --BHP control
+/
+WCONPROD
+     'P05'  'OPEN' 'BHP'    5*                      	    3000    / --BHP control
+/
+WCONPROD
+     'P06'  'OPEN' 'BHP'    5*                      	    3000    / --BHP control
+/
+WCONPROD
+     'P07'  'OPEN' 'BHP'    5*                      	    3000    / --BHP control
+/
+WCONPROD
+     'P08'  'OPEN' 'BHP'    5*                      	    3000    / --BHP control
+/
+WCONPROD
+     'P09'  'OPEN' 'BHP'    5*                      	    3000    / --BHP control
+/
+WCONPROD
+     'P10'  'OPEN' 'BHP'    5*                      	    3000    / --BHP control
+/
+WCONPROD
+     'P11'  'OPEN' 'BHP'    5*                      	    3000    / --BHP control
+/
+WCONPROD
+     'P12'  'OPEN' 'BHP'    5*                      	    3000    / --BHP control
+/
+WCONPROD
+     'P13'  'OPEN' 'BHP'    5*                      	    3000    / --BHP control
+/
+WCONPROD
+     'P14'  'OPEN' 'BHP'    5*                      	    3000    / --BHP control
+/
+WCONPROD
+     'P15'  'OPEN' 'BHP'    5*                      	    3000    / --BHP control
+/
+WCONPROD
+     'P16'  'OPEN' 'BHP'    5*                      	    3000    / --BHP control
+/
+WCONPROD
+     'P17'  'OPEN' 'BHP'    5*                      	    3000    / --BHP control
+/
+WCONPROD
+     'P18'  'OPEN' 'BHP'    5*                      	    3000    / --BHP control
+/
+WCONPROD
+     'P19'  'OPEN' 'BHP'    5*                      	    3000    / --BHP control
+/
+WCONPROD
+     'P20'  'OPEN' 'BHP'    5*                      	    3000    / --BHP control
+/
+
+
+WCONINJE  
+     'I01'  'WATER' 'OPEN'   'BHP'  2*                    7000    / --BHP control
+/
+WCONINJE  
+     'I02'  'WATER' 'OPEN'   'BHP'  2*                    7000    / --BHP control
+/
+WCONINJE  
+     'I03'  'WATER' 'OPEN'   'BHP'  2*                    7000    / --BHP control
+/
+WCONINJE  
+     'I04'  'WATER' 'OPEN'   'BHP'  2*                    7000    / --BHP control
+/
+WCONINJE  
+     'I05'  'WATER' 'OPEN'   'BHP'  2*                    7000    / --BHP control
+/
+WCONINJE  
+     'I06'  'WATER' 'OPEN'   'BHP'  2*                    7000    / --BHP control
+/
+WCONINJE  
+     'I07'  'WATER' 'OPEN'   'BHP'  2*                    7000    / --BHP control
+/
+WCONINJE  
+     'I08'  'WATER' 'OPEN'   'BHP'  2*                    7000    / --BHP control
+/
+WCONINJE  
+     'I09'  'WATER' 'OPEN'   'BHP'  2*                    7000    / --BHP control
+/
+WCONINJE  
+     'I10'  'WATER' 'OPEN'   'BHP'  2*                    7000    / --BHP control
+/
+
+
+
+
+TSTEP 
+100
+/
+WCONPROD
+     'P01'  'OPEN' 'BHP'    5*                      	    3000    / --BHP control
+/
+
+TSTEP 
+100
+/
+WCONPROD
+     'P01'  'OPEN' 'BHP'    5*                      	    3000    / --BHP control
+/

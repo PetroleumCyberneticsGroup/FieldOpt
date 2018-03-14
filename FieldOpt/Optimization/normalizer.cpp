@@ -17,6 +17,7 @@
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
+
 #include "normalizer.h"
 #include <stdexcept>
 #include <cmath>
@@ -25,28 +26,32 @@ using namespace std;
 
 namespace Optimization {
 Normalizer::Normalizer() {
-    midpoint_ = -99;
-    steepness_ = -99;
-    max_ = -99;
+  midpoint_ = -99;
+  steepness_ = -99;
+  max_ = -99;
 }
+
 bool Normalizer::is_ready() const {
-    if (midpoint_ == -99 || steepness_ == -99 || max_ == -99)
-        return false;
-    else
-        return true;
+  if (midpoint_ == -99 || steepness_ == -99 || max_ == -99)
+    return false;
+  else
+    return true;
 }
+
 long double Normalizer::normalize(const double val) const {
-    if (!is_ready())
-        throw runtime_error("Attempting to use an untrained normalizer.");
-    long double nval = max_ / (1.0 +
-        exp( (-1.0L) * steepness_ * (val - midpoint_) )
-    );
-    return nval;
+  if (!is_ready())
+    throw runtime_error("Attempting to use an untrained normalizer.");
+  long double nval = max_ / (1.0 +
+      exp( (-1.0L) * steepness_ * (val - midpoint_) )
+  );
+  return nval;
 }
+
 double Normalizer::denormalize(const long double nval) const {
-    if (!is_ready())
-        throw runtime_error("Attempting to use an untrained normalizer.");
-    double val = midpoint_ - log(max_ / nval - 1) / steepness_;
-    return val;
+  if (!is_ready())
+    throw runtime_error("Attempting to use an untrained normalizer.");
+  double val = midpoint_ - log(max_ / nval - 1) / steepness_;
+  return val;
 }
+
 }

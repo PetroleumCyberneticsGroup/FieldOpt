@@ -39,14 +39,16 @@ class Cell
 {
  public:
   Cell(){};
+  Cell(int ncells);
   Cell(int global_index,
        IJKCoordinate ijk_index,
-       double volume, 
+       double volume,
        vector<double> poro,
-       vector<double> permx, 
-       vector<double> permy, 
+       vector<double> permx,
+       vector<double> permy,
        vector<double> permz,
        Eigen::Vector3d center,
+       Eigen::Vector3d dxdydz,
        vector<Eigen::Vector3d> corners,
        int faces_permutation_index,
        bool active_matrix, bool active_fracture,
@@ -56,26 +58,28 @@ class Cell
   /*!
    * \brief Set cell properties at a later stage
    */
-  /*void SetProperties(bool is_active_matrix,
-		  bool is_active_fracture,
-          vector<double> porosity,
-          vector<double> permx,
-          vector<double> permy,
-          vector<double> permz);
-*/
+  void SetProperties(bool is_active_matrix,
+                     bool is_active_fracture,
+                     vector<double> permx,
+                     vector<double> permy,
+                     vector<double> permz);
+
+
   /*!
    * \brief global_index Gets the cells global index in its parent grid.
    */
   int global_index() const { return global_index_; }
+  void set_global_index(int gidx) { global_index_ = gidx; };
 
   /*!
    * \brief ijk_index Gets the cells (i, j, k) index in its parent grid.
-   * The k index is the index in the matrix grid in fact 
-   * in the case of a dual grid. 
+   * The k index is the index in the matrix grid in fact
+   * in the case of a dual grid.
    * For the k index in the fracure grid use k_fracture_index.
-   * This is most likely NZ + k but it is saved apart anyway. 
+   * This is most likely NZ + k but it is saved apart anyway.
    */
   IJKCoordinate ijk_index() const { return ijk_index_; }
+  void set_ijk_index(IJKCoordinate ijk) { ijk_index_ = ijk; }
 
   /*!
    * \brief volume Gets the cells volume.
@@ -83,7 +87,7 @@ class Cell
   double volume() const { return volume_; }
 
   /*!
-   * \brief porosity Gets the cell's porosity vector 
+   * \brief porosity Gets the cell's porosity vector
    * One value for each grid in which it is active.
    */
   vector<double> porosity() const { return porosity_; }
@@ -110,9 +114,9 @@ class Cell
    * @brief Check whether or not a cell is active. Note that before
    * SetProperties is called, all cells are assumed to be active.
    * @return
-   */  
+   */
   bool is_active() const { return is_active_matrix_ || is_active_fracture_; }
-  
+
   /*!
    * @brief Check whether or not a cell is active. Note that before
    * SetProperties is called, all cells are assumed to be active.
@@ -121,24 +125,25 @@ class Cell
   bool is_active_matrix() const { return is_active_matrix_; }
 
   /*!
-   * @brief Check whether or not a cell is active in the fracture grid. 
+   * @brief Check whether or not a cell is active in the fracture grid.
    * Note that before SetProperties is called, all cells are assumed to be active.
    * @return
    */
   bool is_active_fracture() const { return is_active_fracture_; }
-  
+
   /*!
-   * @brief The k index of the corresponding cell for this cell in the fracture grid 
-   * if this cell is active in the fracture grid as well. 
+   * @brief The k index of the corresponding cell for this cell in the fracture grid
+   * if this cell is active in the fracture grid as well.
    * @return
-   */  
+   */
   int k_fracture_index() const { return k_fracture_index_; }
-  
+
   /*!
    * \brief center Gets the (x, y, z) position of the cells center.
    * \todo Find how these are computed by ERT
    */
   Eigen::Vector3d center() const { return center_; }
+  Eigen::Vector3d dxdydz() const { return dxdydz_; }
 
   /*!
    * \brief corners Gets the (x, y, z) coordinates of each of the
@@ -245,8 +250,9 @@ class Cell
      *
      * \todo Discuss what the magnitude of the slack should be
      */
-    bool point_on_same_side(const Eigen::Vector3d &point,
-                            const double slack) {
+    bool point_on_same_side(const Eigen::Vector3d& point,
+                            const double slack)
+    {
       return (point - corners[0]).dot(normal_vector) >= 0.0 - slack;
     }
 
@@ -257,12 +263,13 @@ class Cell
      * \param p1 Point defining other end of the line.
      * \return The point of intersection.
      */
-    Eigen::Vector3d intersection_with_line(const Eigen::Vector3d &p0,
-                                           const Eigen::Vector3d &p1) {
+    Eigen::Vector3d intersection_with_line(const Eigen::Vector3d& p0,
+                                           const Eigen::Vector3d& p1)
+    {
       Eigen::Vector3d line_vector = (p1 - p0).normalized();
       auto w = p0 - corners[0];
       auto s = normal_vector.dot(-w) / normal_vector.dot(line_vector);
-      return p0 + s*line_vector;
+      return p0 + s * line_vector;
     }
   };
 
@@ -283,6 +290,7 @@ class Cell
   int k_fracture_index_;
   double volume_;
   Eigen::Vector3d center_;
+  Eigen::Vector3d dxdydz_;
   vector<Eigen::Vector3d> corners_;
   vector<double> porosity_;
   vector<double> permx_;

@@ -34,19 +34,21 @@ protected:
 };
 
 TEST_F(SettingsTest, ConstructorAndTestFileValidity) {
-    EXPECT_NO_THROW(auto settings = ::Settings::Settings(
-                        TestResources::ExampleFilePaths::driver_example_,
-                        TestResources::ExampleFilePaths::directory_output_,
-                        5)); // <-verbosity level
+  std::vector<int> verb_vector_ = std::vector<int>(11,0);
+  EXPECT_NO_THROW(auto settings = ::Settings::Settings(
+      TestResources::ExampleFilePaths::driver_example_,
+      TestResources::ExampleFilePaths::directory_output_,
+                      verb_vector_)); // <-verbosity level
 }
 
 TEST_F(SettingsTest, GlobalSettings) {
-    auto settings = ::Settings::Settings(TestResources::ExampleFilePaths::driver_example_,
-                                         TestResources::ExampleFilePaths::directory_output_,
-                                         5); // <-verbosity level
-    EXPECT_STREQ("TestRun", settings.name().toLatin1().constData());
-    EXPECT_STREQ(TestResources::ExampleFilePaths::driver_example_.toLatin1().constData(),
-                 settings.driver_path().toLatin1().constData());
+  std::vector<int> verb_vector_ = std::vector<int>(11,0);
+  auto settings = ::Settings::Settings(TestResources::ExampleFilePaths::driver_example_,
+                                       TestResources::ExampleFilePaths::directory_output_,
+                                       verb_vector_); // <-verbosity level
+  EXPECT_STREQ("TestRun", settings.name().toLatin1().constData());
+  EXPECT_STREQ(TestResources::ExampleFilePaths::driver_example_.toLatin1().constData(),
+               settings.driver_path().toLatin1().constData());
 //    EXPECT_EQ(true, settings.verbosity()>0);
 }
 

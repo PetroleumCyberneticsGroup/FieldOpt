@@ -15,8 +15,7 @@ CompassSearch::CompassSearch(Settings::Optimizer *settings,
                              Reservoir::Grid::Grid *grid,
                              Logger *logger
 )
-    : GSS(settings, base_case, variables, grid, logger)
-{
+    : GSS(settings, base_case, variables, grid, logger) {
 
   directions_ = GSSPatterns::Compass(num_vars_);
   GSS::print_dbg_msg("[opt]Init. CompassSearch.----- ", 1);
@@ -29,8 +28,7 @@ CompassSearch::CompassSearch(Settings::Optimizer *settings,
 
 }
 
-void CompassSearch::iterate()
-{
+void CompassSearch::iterate() {
   GSS::print_dbg_msg("[opt]Launching opt.iteration. ", 1);
   if (!is_successful_iteration() && iteration_ != 0) {
     contract();

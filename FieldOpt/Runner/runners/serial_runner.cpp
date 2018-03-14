@@ -60,7 +60,7 @@ void SerialRunner::Execute()
           );
         }
         auto end = QDateTime::currentDateTime();
-        int sim_time = time_span_seconds(start, end);
+        int sim_time = time_span_secs(start, end);
         if (simulation_success) {
           new_case->set_objective_function_value(objective_function_->value());
           new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;

@@ -21,14 +21,22 @@
 #ifndef ECLGRID_H
 #define ECLGRID_H
 
+// -----------------------------------------------------------------
+// STD
 #include <vector>
+
+// -----------------------------------------------------------------
+// FieldOpt
 #include "grid.h"
 
+// -----------------------------------------------------------------
 namespace Reservoir {
 namespace Grid {
 
 using namespace std;
+using std::string;
 
+// =================================================================
 /*!
  * \brief The ECLGrid class is an implementation
  * of the abstract Grid class for ECLIPSE grids.
@@ -38,11 +46,11 @@ using namespace std;
  */
 class ECLGrid : public Grid
 {
-private:
-	int faces_permutation_index_;
+ private:
+  int faces_permutation_index_;
 
  public:
-  ECLGrid(std::string file_path);
+  ECLGrid(string file_path);
   virtual ~ECLGrid();
 
   Dims Dimensions();
@@ -53,9 +61,21 @@ private:
   vector<int> GetBoundingBoxCellIndices(
       double xi, double yi, double zi,
       double xf, double yf, double zf,
-      double &bb_xi, double &bb_yi, double &bb_zi,
-      double &bb_xf, double &bb_yf, double &bb_zf);
-  Cell GetSmallestCell() override;
+      double& bb_xi, double& bb_yi, double& bb_zi,
+      double& bb_xf, double& bb_yf, double& bb_zf);
+
+  // OV: 20170709
+  Cell GetSmallestCell();
+
+  bool GetCellEnvelopingPoint(Cell& cell, double x, double y, double z);
+  bool GetCellEnvelopingPoint(Cell& cell, double x, double y, double z,
+                              vector<int> search_set);
+
+  bool GetCellEnvelopingPoint(Cell& cell, Eigen::Vector3d xyz);
+  bool GetCellEnvelopingPoint(Cell& cell, Eigen::Vector3d xyz,
+                              vector<int> search_set);
+
+  // Cell GetSmallestCell() override;
 
   Cell GetCellEnvelopingPoint(double x, double y, double z);
   Cell GetCellEnvelopingPoint(double x, double y, double z,
@@ -65,11 +85,15 @@ private:
   Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz,
                               vector<int> search_set);
 
- private:
-  ERTWrapper::ECLGrid::ECLGridReader* ecl_grid_reader_ = 0;
-
   /// Check that global_index is less than nx*ny*nz
   bool IndexIsInsideGrid(int global_index);
+
+ private:
+  // OV: 20170709
+  ERTWrapper::ECLGrid::ECLGridReader* ecl_grid_reader_;
+  // ERTWrapper::ECLGrid::ECLGridReader* ecl_grid_reader_ = 0;
+
+
 
   /// Check that (i,j,k) are >= 0 and less than n*.
   bool IndexIsInsideGrid(int i, int j, int k);
@@ -78,6 +102,9 @@ private:
   bool IndexIsInsideGrid(IJKCoordinate *ijk);
 
   bool SetGridCellFacesPermutations();
+
+  // WIC Debug
+  bool dbg_mode = true; //!< On/off printing of debug messages
 };
 
 }

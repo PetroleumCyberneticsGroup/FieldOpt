@@ -4,50 +4,74 @@
 namespace Optimization {
 namespace Constraints {
 
-ConstraintHandler::ConstraintHandler(QList<Settings::Optimizer::Constraint> constraints,
-                                     Model::Properties::VariablePropertyContainer *variables,
-                                     Reservoir::Grid::Grid *grid)
-{
+ConstraintHandler::ConstraintHandler(
+    QList<Settings::Optimizer::Constraint> constraints,
+    Model::Properties::VariablePropertyContainer *variables,
+    Reservoir::Grid::Grid *grid,
+    Settings::Optimizer *settings) {
+
   for (Settings::Optimizer::Constraint constraint : constraints) {
+
     switch (constraint.type) {
-      case Settings::Optimizer::ConstraintType::BHP:
+
+      case Settings::Optimizer::ConstraintType::
+        BHP:
         constraints_.append(new BhpConstraint(constraint, variables));
         break;
-      case Settings::Optimizer::ConstraintType::Rate:
+
+      case
+        Settings::Optimizer::ConstraintType::
+        Rate:
         constraints_.append(new RateConstraint(constraint, variables));
         break;
-      case Settings::Optimizer::ConstraintType::WellSplineLength:
+
+      case
+        Settings::Optimizer::ConstraintType::
+        WellSplineLength:
         for (auto wname : constraint.wells) {
           auto cons = Settings::Optimizer::Constraint(constraint);
           cons.well = wname;
           constraints_.append(new WellSplineLength(cons, variables));
         }
         break;
-      case Settings::Optimizer::ConstraintType::WellSplineInterwellDistance:
+
+      case
+        Settings::Optimizer::ConstraintType::
+        WellSplineInterwellDistance:
         constraints_.append(new InterwellDistance(constraint, variables));
         break;
-      case Settings::Optimizer::ConstraintType::CombinedWellSplineLengthInterwellDistance:
-        constraints_.append(new CombinedSplineLengthInterwellDistance(constraint, variables));
+
+      case Settings::Optimizer::ConstraintType::
+        CombinedWellSplineLengthInterwellDistance:
+        constraints_.append(
+            new CombinedSplineLengthInterwellDistance(constraint, variables));
         break;
+
       case Settings::Optimizer::ConstraintType::
         CombinedWellSplineLengthInterwellDistanceReservoirBoundary:
-        constraints_.append(new CombinedSplineLengthInterwellDistanceReservoirBoundary
-                                (constraint, variables, grid));
+        constraints_.append(
+            new CombinedSplineLengthInterwellDistanceReservoirBoundary(
+                constraint, variables, grid));
         break;
-      case Settings::Optimizer::ConstraintType::ReservoirBoundary:
+
+      case Settings::Optimizer::ConstraintType::
+        ReservoirBoundary:
         for (auto wname : constraint.wells) {
           auto cons = Settings::Optimizer::Constraint(constraint);
           cons.well = wname;
           constraints_.append(new ReservoirBoundary(cons, variables, grid));
         }
         break;
-      case Settings::Optimizer::ConstraintType::PseudoContBoundary2D:
+
+      case Settings::Optimizer::ConstraintType::
+        PseudoContBoundary2D:
         for (auto wname : constraint.wells) {
           auto cons = Settings::Optimizer::Constraint(constraint);
           cons.well = wname;
           constraints_.append(new PseudoContBoundary2D(cons, variables, grid));
         }
         break;
+
 #ifdef WITH_EXPERIMENTAL_CONSTRAINTS
         // Cases for constraints in the experimental_constraints directory go here
 #endif
@@ -62,8 +86,8 @@ ConstraintHandler::ConstraintHandler(QList<Settings::Optimizer::Constraint> cons
 #endif
 }
 
-bool ConstraintHandler::CaseSatisfiesConstraints(Case *c)
-{
+bool ConstraintHandler::CaseSatisfiesConstraints(Case *c) {
+
   for (Constraint *constraint : constraints_) {
     if (!constraint->CaseSatisfiesConstraint(c)) {
       c->state.cons = Case::CaseState::ConsStatus::C_INFEASIBLE;
@@ -74,12 +98,13 @@ bool ConstraintHandler::CaseSatisfiesConstraints(Case *c)
   return true;
 }
 
-void ConstraintHandler::SnapCaseToConstraints(Case *c)
-{
+void ConstraintHandler::SnapCaseToConstraints(Case *c) {
+
   auto vec_before = c->GetRealVarVector();
   for (Constraint *constraint : constraints_) {
     constraint->SnapCaseToConstraints(c);
   }
+
   if (vec_before != c->GetRealVarVector()) {
     c->state.cons = Case::CaseState::ConsStatus::C_PROJECTED;
   }
@@ -90,6 +115,7 @@ void ConstraintHandler::SnapCaseToConstraints(Case *c)
 }
 
 bool ConstraintHandler::HasBoundaryConstraints() const {
+
   for (auto con : constraints_) {
     if (con->IsBoundConstraint())
       return true;

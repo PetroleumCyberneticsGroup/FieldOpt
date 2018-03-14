@@ -22,12 +22,14 @@
 #include "simulator_exceptions.h"
 #include "Simulation/results/adgprsresults.h"
 
+using std::cout;
+
 namespace Simulation {
 namespace SimulatorInterfaces {
 
 AdgprsSimulator::AdgprsSimulator(Settings::Settings *settings, Model::Model *model)
-    : Simulator(settings)
-{
+    : Simulator(settings) {
+
     QStringList tmp = initial_driver_file_path_.split("/");
     tmp.removeLast();
     initial_driver_file_parent_dir_path_ = tmp.join("/");
@@ -56,9 +58,9 @@ void AdgprsSimulator::CleanUp()
 
 void AdgprsSimulator::copyDriverFiles()
 {
-    Utilities::FileHandling::CopyFile(initial_driver_file_path_, output_directory_+"/"+initial_driver_file_name_, true);
-    Utilities::FileHandling::CreateDirectory(output_directory_+"/include");
-    Utilities::FileHandling::CopyDirectory(initial_driver_file_parent_dir_path_+"/include", output_directory_+"/include");
+    Utilities::FileHandling::CopyFile(initial_driver_file_path_, output_directory_ + "/" + initial_driver_file_name_, true);
+    Utilities::FileHandling::CreateDirectory(output_directory_ + "/include");
+    Utilities::FileHandling::CopyDirectory(initial_driver_file_parent_dir_path_ + "/include", output_directory_ + "/include");
 }
 
 void AdgprsSimulator::verifyOriginalDriverFileDirectory()
@@ -74,10 +76,10 @@ void AdgprsSimulator::verifyOriginalDriverFileDirectory()
     }
 }
 
-void AdgprsSimulator::UpdateFilePaths()
-{
+void AdgprsSimulator::UpdateFilePaths() {
     output_h5_summary_file_path_ = output_directory_ + "/" + initial_driver_file_name_.split(".").first() + ".vars.h5";
-    script_args_ = (QStringList() << output_directory_ << output_directory_+"/"+initial_driver_file_name_);
+    script_args_ = (QStringList() << output_directory_
+                                  << output_directory_+ "/" +initial_driver_file_name_);
 }
 
 bool AdgprsSimulator::Evaluate(int timeout, int threads) {
@@ -86,8 +88,9 @@ bool AdgprsSimulator::Evaluate(int timeout, int threads) {
     if (timeout < 10) t = 10; // Always let simulations run for at least 10 seconds
     if (results_->isAvailable()) results()->DumpResults();
     copyDriverFiles();
+
     driver_file_writer_->WriteDriverFile(output_directory_);
-    std::cout << "Starting monitored simulation with timeout " << timeout << std::endl;
+    cout << "Starting monitored simulation with timeout " << timeout << endl;
     bool success = ::Utilities::Unix::ExecShellScriptTimeout(script_path_, script_args_, t);
     if (success) {
         results_->ReadResults(output_h5_summary_file_path_);
