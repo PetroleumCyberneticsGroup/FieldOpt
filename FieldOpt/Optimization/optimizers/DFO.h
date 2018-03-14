@@ -6,6 +6,7 @@
 #define FIELDOPT_DFO_H
 
 #include "Optimization/optimizer.h"
+#include "Subproblem.h"
 
 namespace Optimization {
 namespace Optimizers {
@@ -25,21 +26,23 @@ class DFO : public Optimizer {
   QString GetStatusStringHeader() const {};
   QString GetStatusString() const {};
  private:
+  Model::Properties::VariablePropertyContainer *varcont_;
   //void iterate() override;
   void iterate() {
     iterations_++;
-    cout << "just did an ITERATE" << endl;
+    //cout << "just did an ITERATE" << endl;
   };
   bool is_successful_iteration(){};
 
   void handleEvaluatedCase(Case *c) override {
-    cout << "just handled an evaluated case!" << endl;
+    //cout << "just handled an evaluated case!" << endl;
   };
   TerminationCondition IsFinished() {
     cout << "JUST CALLED ISFINISHED" << endl;
 
-    if (iterations_!=0)
-      return TerminationCondition::NOT_FINISHED;
+    //if (iterations_!=0)
+      //return TerminationCondition::NOT_FINISHED;
+    return TerminationCondition::MAX_EVALS_REACHED;
   };
 
 
