@@ -18,7 +18,7 @@ if(EXISTS ${EXPERIMENTAL_CONSTRAINTS_DIR}
 	message("Including experimental constraints")
 	add_definitions(-DWITH_EXPERIMENTAL_CONSTRIANTS)
 	set(EXPERIMENTAL_CONSTRAINTS_SRC
-			${EXPERIMENTAL_CONSTRAINTS_DIR}/)
+			${EXPERIMENTAL_CONSTRAINTS_DIR}/ optimizers/OptimizationProblem.cpp optimizers/OptimizationProblem.h)
 	set(EXPERIMENTAL_CONSTRAINTS_TESTS
 			${EXPERIMENTAL_CONSTRAINTS_DIR}/tests/)
 else()
@@ -51,6 +51,13 @@ add_library(optimization
 		optimizers/APPS.cpp
 		optimizers/GeneticAlgorithm.cpp
 		optimizers/RGARDD.cpp
+		optimizers/DFO.cpp
+		optimizers/SNOPTSolver.cpp
+		optimizers/OptimizationProblem.cpp
+        ../FieldOpt-3rdPartySolvers/handlers/SNOPTHandler.cpp
+        ../FieldOpt-3rdPartySolvers/handlers/LibraryHandler.c
+        ../FieldOpt-3rdPartySolvers/handlers/SNOPTLoader.c
+		optimizers/Subproblem.cpp
 		normalizer.cpp
 		constraints/pseudo_cont_boundary_2d.cpp
 		${EXPERIMENTAL_CONSTRAINTS_SRC})
@@ -64,6 +71,8 @@ target_link_libraries(optimization
 		PUBLIC fieldopt::reservoir
 		PUBLIC fieldopt::runner
 		Qt5::Core
+        PUBLIC fieldopt::3rdpartysolvers
+        ${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/lib/libsnopt-7.2.12.2.so
 		PUBLIC ${Boost_LIBRARIES})
 
 # Target include directories ===========================================

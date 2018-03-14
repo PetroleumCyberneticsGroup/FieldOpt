@@ -27,6 +27,8 @@
 #include <Optimization/optimizers/APPS.h>
 #include <Optimization/optimizers/GeneticAlgorithm.h>
 #include <Optimization/optimizers/RGARDD.h>
+#include <Optimization/optimizers/DFO.h>
+#include <Optimization/optimizers/SNOPTSolver.h>
 #include "abstract_runner.h"
 #include "Optimization/optimizers/compass_search.h"
 #include "Optimization/optimizers/ExhaustiveSearch2DVert.h"
@@ -237,6 +239,24 @@ void AbstractRunner::InitializeOptimizer()
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
         std::cout << "[run]Optimization algo.:----- ExhaustiveSearch2DVert" << std::endl;
       optimizer_ = new Optimization::Optimizers::ExhaustiveSearch2DVert(settings_->optimizer(),
+                                                                        base_case_,
+                                                                        model_->variables(),
+                                                                        model_->grid(),
+                                                                        logger_);
+      break;
+    case Settings::Optimizer::OptimizerType::SNOPTSolver:
+      if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
+        std::cout << "[run]Optimization algo.:----- SNOPTSolver" << std::endl;
+      optimizer_ = new Optimization::Optimizers::SNOPTSolver(settings_->optimizer(),
+                                                     base_case_,
+                                                     model_->variables(),
+                                                     model_->grid(),
+                                                     logger_);
+      break;
+    case Settings::Optimizer::OptimizerType::DFO:
+      if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
+        std::cout << "[run]Optimization algo.:----- DFO" << std::endl;
+      optimizer_ = new Optimization::Optimizers::DFO(settings_->optimizer(),
                                                                         base_case_,
                                                                         model_->variables(),
                                                                         model_->grid(),
