@@ -7,7 +7,6 @@
 
 #include <Eigen/Core>
 #include <Eigen/Dense>
-#include "SNOPTSolver.h"
 #include "FieldOpt-3rdPartySolvers/handlers/SNOPTHandler.h"
 #include "FieldOpt-3rdPartySolvers/handlers/SNOPTLoader.h"
 #include "Optimization/optimizer.h"
