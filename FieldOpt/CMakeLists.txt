@@ -150,6 +150,16 @@ endif()
 # Pring debug info: include dirs + source dirs =========================
 include(DebugMsg.cmake)
 
+
+
+## ADDED
+## Set this directory as the root dir
+include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR})
+#
+## SNOPT ================================================================
+include_directories(${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/include/snopt)
+include_directories(${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/handlers)
+
 # Enable testing =======================================================
 if (BUILD_TESTING)
     include(CTest)
@@ -163,7 +173,6 @@ message("============================================================\n")
 add_subdirectory(ERTWrapper)
 add_subdirectory(Reservoir)
 add_subdirectory(FieldOpt-WellIndexCalculator)
-add_subdirectory(FieldOpt-3rdPartySolvers)
 
 if (NOT (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS))
     add_subdirectory(Utilities)
@@ -174,6 +183,7 @@ if (NOT (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS))
     add_subdirectory(Runner)
     add_subdirectory(ConstraintMath)
     add_subdirectory(Hdf5SummaryReader)
+    add_subdirectory(FieldOpt-3rdPartySolvers)
 
     # Copy execution scripts
     file(GLOB EXECUTION_SCRIPTS
