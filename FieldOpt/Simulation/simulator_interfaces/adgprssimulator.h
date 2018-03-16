@@ -57,6 +57,7 @@ class AdgprsSimulator : public Simulator
   virtual bool Evaluate(int timeout, int threads=1) override;
 
  private:
+  QString initial_driver_file_name_opt_;
   QString initial_driver_file_parent_dir_path_;
   QString output_h5_summary_file_path_;
   Simulation::SimulatorInterfaces::DriverFileWriters::AdgprsDriverFileWriter *driver_file_writer_;

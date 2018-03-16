@@ -94,6 +94,7 @@ class Simulator {
 
   void updateResultsInModel();
 
+  QString initial_driver_file_path_opt_;
   QString initial_driver_file_path_; //!< Path to the driver file to be used as a base for the generated driver files.
   QString output_directory_; //!< The directory in which to write new driver files and execute simulations.
   QString include_directory_; //!< Simulator include directory

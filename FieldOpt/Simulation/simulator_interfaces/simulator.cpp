@@ -52,7 +52,7 @@ Simulator::Simulator(Settings::Settings *settings) {
     else
         script_path_ = build_dir_ + ExecutionScripts::GetScriptPath(settings->simulator()->script_name());
     script_args_ = (QStringList() << output_directory_
-                                  << output_directory_+"/"+initial_driver_file_name_
+                                  << output_directory_ + "/" + initial_driver_file_name_
                                   << QString::number(1));
 
     if (settings_->verb_vector()[8] > 1) { // idx:8 -> sim (Simulation)
