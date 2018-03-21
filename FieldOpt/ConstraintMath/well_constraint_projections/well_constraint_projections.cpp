@@ -138,9 +138,11 @@ VectorXd rm_entries_eps_coeffs(VectorXd m, double eps) {
   return m;
 }
 
+// -----------------------------------------------------------------
+QList<Vector3d>
+interwell_constraint_projection(QList<Vector3d> coords, double d) {
 
-QList<Vector3d> interwell_constraint_projection(QList<Vector3d> coords, double d) {
-
+  // ---------------------------------------------------------------
   // If the two line segments already satisfy the
   // interwell distance constraint, return the coordinates.
   if (shortest_distance(coords) >= d) {
@@ -148,9 +150,11 @@ QList<Vector3d> interwell_constraint_projection(QList<Vector3d> coords, double d
   }
   QList<Vector3d> solution_coords, moved_coords, temp_coords;
 
-  /* Iterate through moving points. First try moving 2 points, then 3 points
-   * then 4 points. If problem can be solved moving k points, moving k+1 points
-   * will be a worse solution. Return the best k point solution.
+  // ---------------------------------------------------------------
+  /* Iterate through moving points. First try moving 2 points,
+   * then 3 points then 4 points. If problem can be solved moving
+   * k points, moving k+1 points will be a worse solution. Return
+   * the best k point solution.
    */
   double cost = INFINITY;
 
@@ -160,20 +164,29 @@ QList<Vector3d> interwell_constraint_projection(QList<Vector3d> coords, double d
                                {1, 2},
                                {1, 3}};
 
+  // ---------------------------------------------------------------
   for (int ii = 0; ii < 4; ii++) {
+
     moved_coords = coords;
     temp_coords = well_length_projection(coords[two_point_index[ii][0]],
                                          coords[two_point_index[ii][1]],
                                          INFINITY, d, 10e-5);
+
     moved_coords.replace(two_point_index[ii][0], temp_coords[0]);
     moved_coords.replace(two_point_index[ii][1], temp_coords[1]);
+
     if (shortest_distance(moved_coords) >= d &&
         movement_cost(coords, moved_coords) < cost) {
-      // If several moves of two points work, save the one with lowest movement cost
+
+      // If several moves of two points work,
+      // save the one with lowest movement cost
       cost = movement_cost(coords, moved_coords);
       solution_coords = moved_coords;
+
     }
   }
+
+  // ---------------------------------------------------------------
   // If there were any succesful configurations, return the best one.
   if (cost < INFINITY) {
     return solution_coords;
@@ -187,19 +200,24 @@ QList<Vector3d> interwell_constraint_projection(QList<Vector3d> coords, double d
                                  {3, 0, 1},
                                  {0, 2, 3},
                                  {1, 2, 3}};
+
   for (int ii = 0; ii < 4; ii++) {
     // Reset moved coords to initial state
     moved_coords = coords;
 
+    // ---------------------------------------------------------------
     // Choose which 3 points to move. (order is important, second
     // and third entry should belong to same line segment)
     QList<Vector3d> input_cords_3p;
+
     for (int jj = 0; jj < 3; jj++) {
       input_cords_3p.append(coords.at(three_point_index[ii][jj]));
     }
+
     Matrix3d temp_A = build_A_3p(input_cords_3p);
     Vector3d temp_b = build_b_3p(input_cords_3p, d);
 
+    // ---------------------------------------------------------------
     /* The kkt_eq_solutions solver handles some numerical issues
      * like A having some values close to machine epsilon and
      * eigenvalues being close to 0. Just assume that any solution
@@ -208,10 +226,12 @@ QList<Vector3d> interwell_constraint_projection(QList<Vector3d> coords, double d
      */
     QList<Vector3d> solution_candidates = kkt_eq_solutions(temp_A, temp_b);
 
+    // ---------------------------------------------------------------
     for (int sol_num = 0; sol_num < solution_candidates.length(); sol_num++) {
       // Solution of three point problem
       temp_coords = move_points_3p(input_cords_3p, d,
                                    solution_candidates.at(sol_num));
+
       if (temp_coords.length() < 1) { temp_coords = input_cords_3p; }
 
       for (int jj = 0; jj < 3; jj++) {
