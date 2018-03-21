@@ -17,29 +17,36 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+// ---------------------------------------------------------
 #ifndef INTERWELLDISTANCE_H
 #define INTERWELLDISTANCE_H
 
+// ---------------------------------------------------------
 #include "constraint.h"
 #include "well_spline_constraint.h"
 #include <Eigen/Core>
 
+// ---------------------------------------------------------
 namespace Optimization {
 namespace Constraints {
 
+// ---------------------------------------------------------
 class InterwellDistance : public Constraint, WellSplineConstraint
 {
  public:
+  // -------------------------------------------------------
   InterwellDistance(Settings::Optimizer::Constraint settings,
                     Model::Properties::VariablePropertyContainer *variables);
 
   string name() override { return "InterwellDistance"; }
 
+  // -------------------------------------------------------
   // Constraint interface
  public:
   bool CaseSatisfiesConstraint(Case *c);
   void SnapCaseToConstraints(Case *c);
 
+  // -------------------------------------------------------
   /*!
    * @brief Set the normalizer parameters.
    *
@@ -53,9 +60,11 @@ class InterwellDistance : public Constraint, WellSplineConstraint
   long double PenaltyNormalized(Case *c) override;
 
  private:
+  // -------------------------------------------------------
   double distance_;
   QList<Well> affected_wells_;
 
+  // -------------------------------------------------------
   //! Calculate the distances between the endpoints for two wells
   vector<double> endpointDistances(Case *c);
 

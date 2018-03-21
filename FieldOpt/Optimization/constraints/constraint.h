@@ -16,44 +16,59 @@
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
+
+// -----------------------------------------------------------------
 #ifndef CONSTRAINT_H
 #define CONSTRAINT_H
 
+// -----------------------------------------------------------------
 #include "Optimization/normalizer.h"
 #include "Optimization/case.h"
 #include "Settings/optimizer.h"
 #include "Model/properties/variable_property_container.h"
 
+// -----------------------------------------------------------------
 namespace Optimization {
 namespace Constraints {
 
+// -----------------------------------------------------------------
 /*!
- * \brief The Constraint class is the abstract parent class to all other constraint classes. One Constraint
- * object should be created for each defined constraint.
+ * \brief The Constraint class is the abstract parent class to
+ * all other constraint classes. One Constraint object should
+ * be created for each defined constraint.
+ *
  */
 class Constraint
 {
  public:
   Constraint();
 
+  // ---------------------------------------------------------------
   /*!
-   * \brief CaseSatisfiesConstraint checks whether a case satisfies the constraints for all
-   * applicable variables.
+   * \brief CaseSatisfiesConstraint checks whether a case
+   * satisfies the constraints for all applicable variables.
+   *
    * \param c The case to be checked.
-   * \return True if the constraint is satisfied; otherwise false.
+   * \return True if constraint is satisfied; otherwise false.
    */
   virtual bool CaseSatisfiesConstraint(Case *c) = 0;
 
+  // ---------------------------------------------------------------
   /*!
-   * \brief SnapCaseToConstraints Snaps all variable values in the case to the closest value
-   * that satisfies the constraint.
+   * \brief SnapCaseToConstraints Snaps all variable values
+   * in Case to closest value that satisfies the constraint.
+   *
    * \param c The case that should have it's variable values snapped.
    */
   virtual void SnapCaseToConstraints(Case *c) = 0;
 
+  // ---------------------------------------------------------------
   void EnableLogging(QString output_directory_path);
-  void SetVerbosityLevel(int level);
 
+
+  // void SetVerbosityLevel(int level);
+
+  // ---------------------------------------------------------------
   /*!
    * @brief Indicates whether the constaint is a bound constraint.
    *
@@ -64,6 +79,7 @@ class Constraint
    */
   virtual bool IsBoundConstraint() const { return false; }
 
+  // ---------------------------------------------------------------
   /*!
    * @brief Get a vector defining the lower bounds for the variables.
    *
@@ -77,6 +93,7 @@ class Constraint
    */
   virtual Eigen::VectorXd GetLowerBounds(QList<QUuid> id_vector) const;
 
+  // ---------------------------------------------------------------
   /*!
    * @brief Get a vector defining the upper bounds for the variables.
    *
@@ -90,12 +107,14 @@ class Constraint
    */
   virtual Eigen::VectorXd GetUpperBounds(QList<QUuid> id_vector) const;
 
+  // ---------------------------------------------------------------
   /*!
    * @brief Get the name of the constraint. All constraints should override this.
    * @return Name of the constraint.
    */
   virtual string name() { return "NONAME"; }
 
+  // ---------------------------------------------------------------
   /*!
    * @brief Initialize the normalizer, setting the parameters.
    *
@@ -108,6 +127,7 @@ class Constraint
    */
   virtual void InitializeNormalizer(QList<Case *> cases);
 
+  // ---------------------------------------------------------------
   /*!
    * @brief Get the penalty term for a case.
    *
@@ -118,6 +138,7 @@ class Constraint
    */
   virtual double Penalty(Case *c);
 
+  // ---------------------------------------------------------------
   /*!
    * @brief Get the normalized penalty value for the case.
    * @param c Case to get the penalty for.
@@ -125,18 +146,27 @@ class Constraint
    */
   virtual long double PenaltyNormalized(Case *c);
 
+  // ---------------------------------------------------------------
   long double GetPenaltyWeight() { return penalty_weight_; }
 
  protected:
+  // ---------------------------------------------------------------
   bool logging_enabled_;
   int verbosity_level_=1;
-  Normalizer normalizer_; //!< Normalizer for constraint violation value; to be used with penalty functions.
-  long double penalty_weight_; //!< The weight to be used when considering the constraint in a penalty function. (default: 0.0)
+
+  // Normalizer for constraint violation value;
+  // to be used with penalty functions.
+  Normalizer normalizer_;
+
+  // The weight to be used when considering the
+  // constraint in a penalty function. (default: 0.0)
+  long double penalty_weight_;
 
   Settings::Optimizer *settings_;
 
  private:
-  QString constraint_log_path_; //!< Path to the constraint log path to be written.
+  // Path to the constraint log path to be written.
+  QString constraint_log_path_;
 };
 
 }

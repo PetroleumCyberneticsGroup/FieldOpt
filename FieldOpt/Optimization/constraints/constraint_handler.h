@@ -17,8 +17,12 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+// -----------------------------------------------------------------
 #ifndef CONSTRAINTHANDLER_H
 #define CONSTRAINTHANDLER_H
+
+// -----------------------------------------------------------------
+// FIELDOPT::CONSTRAINTS
 #include "constraint.h"
 #include "bhp_constraint.h"
 #include "well_spline_length.h"
@@ -28,19 +32,26 @@
 #include "reservoir_boundary.h"
 #include "pseudo_cont_boundary_2d.h"
 #include "rate_constraint.h"
+
+// -----------------------------------------------------------------
+// FIELDOPT::OPTIMIZATION/MODEL/SETTINGS/RESERVOIR
 #include "Optimization/case.h"
 #include "Model/properties/variable_property_container.h"
 #include "Settings/optimizer.h"
 #include "Reservoir/grid/grid.h"
 
+// -----------------------------------------------------------------
+// Qt
 #include <QList>
 #ifdef WITH_EXPERIMENTAL_CONSTRIANTS
 // Includes for constraints in the experimental_constraints dir go here.
 #endif
 
+// -----------------------------------------------------------------
 namespace Optimization {
 namespace Constraints {
 
+// -----------------------------------------------------------------
 /*!
  * \brief The ConstraintHandler class facilitates the
  * initialization and usage of multiple constraints.
@@ -54,22 +65,31 @@ class ConstraintHandler
                     Settings::Optimizer *settings
   );
 
-  bool CaseSatisfiesConstraints(Case *c); //!< Check if a Case satisfies _all_ constraints.
-  void SnapCaseToConstraints(Case *c); //!< Snap all variables to _all_ constraints.
+  // -----------------------------------------------------------------
+  // Check if a Case satisfies _all_ constraints.
+  bool CaseSatisfiesConstraints(Case *c);
 
+  // -----------------------------------------------------------------
+  // Snap all variables to _all_ constraints.
+  void SnapCaseToConstraints(Case *c);
+
+  // -----------------------------------------------------------------
   QList<Constraint *> constraints() const { return constraints_; }
 
+  // -----------------------------------------------------------------
   /*!
    * @brief Check whether any of the constraints within are boundary constraints.
    */
   bool HasBoundaryConstraints() const;
 
+  // -----------------------------------------------------------------
   /*!
    * @brief Initialize the normalizers for all constraints.
    * @param cases Cases to be used for determining parameters.
    */
   void InitializeNormalizers(QList<Case *> cases);
 
+  // -----------------------------------------------------------------
   /*!
    * @brief Get the sum of all normalized penalties multiplied by their respective weights.
    * @param c The case to get the penalties for.
@@ -77,6 +97,7 @@ class ConstraintHandler
    */
   long double GetWeightedNormalizedPenalties(Case *c);
 
+  // -----------------------------------------------------------------
   Eigen::VectorXd GetLowerBounds(QList<QUuid> id_vector) const;
   Eigen::VectorXd GetUpperBounds(QList<QUuid> id_vector) const;
 

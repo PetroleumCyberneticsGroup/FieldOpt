@@ -15,17 +15,22 @@
 
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
+
 ******************************************************************************/
 
+// -----------------------------------------------------------------
 #ifndef CASE_HANDLER_H
 #define CASE_HANDLER_H
 
+// -----------------------------------------------------------------
 #include "case.h"
 #include <QQueue>
 #include <Settings/settings.h>
 
+// -----------------------------------------------------------------
 namespace Optimization {
 
+// -----------------------------------------------------------------
 /*!
  * \brief The CaseHandler class acts as a handler for cases for the
  * optimizer. It keeps track of the cases that have been evaluated
@@ -36,23 +41,27 @@ class CaseHandler
  public:
   CaseHandler(Settings::Optimizer *settings);
 
+  // ---------------------------------------------------------------
   /*!
  * \brief Call the default constructor and add the base case to
    * list of evaluated cases.
  */
   CaseHandler(Case *base_case, Settings::Optimizer *settings);
 
+  // ---------------------------------------------------------------
   /*!
    * \brief AddNewCase Add a new non-evaluated case to the queue.
    */
   void AddNewCase(Case *c);
 
+  // ---------------------------------------------------------------
   /*!
    * \brief AddNewCases Add any number of non-evaluated cases to
    * the queue.
    */
   void AddNewCases(QList<Case *> cases);
 
+  // ---------------------------------------------------------------
   /*!
    * \brief GetNextCaseForEvaluation Get next case to be
    * evaluated.
@@ -62,6 +71,7 @@ class CaseHandler
    */
   Case *GetNextCaseForEvaluation();
 
+  // ---------------------------------------------------------------
   /*!
    * \brief SetCaseEvaluated Mark a case as evaluated.
    *
@@ -70,11 +80,13 @@ class CaseHandler
    */
   void SetCaseEvaluated(const QUuid id);
 
+  // ---------------------------------------------------------------
   /*!
    * @brief Get a case by ID.
    */
   Case *GetCase(const QUuid id) const;
 
+  // ---------------------------------------------------------------
   /*!
    * \brief UpdateCaseObjectiveFunctionValue updates the
    * objective function value of a case. This is needed
@@ -88,6 +100,7 @@ class CaseHandler
    */
   void UpdateCaseObjectiveFunctionValue(const QUuid id, const double ofv);
 
+  // ---------------------------------------------------------------
   /*!
    * @brief Update the evaluation status, error message, and WIC time
    * for a case.
@@ -98,6 +111,7 @@ class CaseHandler
    */
   void SetCaseState(QUuid id, Case::CaseState state, int wic_time, int sim_time);
 
+  // ---------------------------------------------------------------
   /*!
    * \brief RecentlyEvaluatedCases Get the list of cases that has been
    * marked as evaluated since the last time ClearRecentlyEvaluatedCases()
@@ -106,6 +120,7 @@ class CaseHandler
    */
   QList<Case *> RecentlyEvaluatedCases() const;
 
+  // ---------------------------------------------------------------
   /*!
    * \brief ClearRecentlyEvaluatedCases Clear the list of recently
    * evaluated cases. Should be called whenever a significant point
@@ -115,33 +130,39 @@ class CaseHandler
    */
   void ClearRecentlyEvaluatedCases();
 
+  // ---------------------------------------------------------------
   /*!
    * \brief QueuedCases Get list of cases currently queued to be evaluated.
    */
   QList<Case *> QueuedCases() const;
 
+  // ---------------------------------------------------------------
   /*!
    * \brief CasesBeingEvaluated Get list of cases currently being evaluated.
    * \return
    */
   QList<Case *> CasesBeingEvaluated() const;
 
+  // ---------------------------------------------------------------
   /*!
-   * \brief EvaluatedCases Get list of cases that have been marked as evaluated.
+   * \brief EvaluatedCases Get list of cases marked as evaluated.
    */
   QList<Case *> EvaluatedCases() const;
 
+  // ---------------------------------------------------------------
   /*!
    * @brief Get _all_ cases.
    */
   QList<Case *> AllCases() const;
 
+  // ---------------------------------------------------------------
   /*!
    * @brief Dequeue a case that will not be evaluated.
    * @param id UUID of case to be dequeued.
    */
   void DequeueCase(QUuid id);
 
+  // ---------------------------------------------------------------
   int NumberTotal() const { return nr_totl_; }
   int NumberSimulated() const { return nr_eval_; }
   int NumberBookkeeped() const { return nr_bkpd_; }

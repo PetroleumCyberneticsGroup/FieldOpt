@@ -16,19 +16,26 @@
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
+
+// ---------------------------------------------------------------
 #include <Utilities/time.hpp>
 #include "optimizer.h"
+
+// ---------------------------------------------------------------
 #include <time.h>
 #include <cmath>
 
+// ---------------------------------------------------------------
 namespace Optimization {
 
+// ---------------------------------------------------------------
 Optimizer::Optimizer(Settings::Optimizer *settings,
                      Case *base_case,
                      Model::Properties::VariablePropertyContainer *variables,
                      Reservoir::Grid::Grid *grid,
                      Logger *logger) {
 
+  // -------------------------------------------------------------
   // Verify that the base case has been evaluated.
   try {
     base_case->objective_function_value();
@@ -39,6 +46,7 @@ Optimizer::Optimizer(Settings::Optimizer *settings,
             "must be set before initializing an Optimizer.");
   }
 
+  // -------------------------------------------------------------
   settings_ = settings;
   max_evaluations_ = settings_->parameters().max_evaluations;
 
@@ -46,9 +54,11 @@ Optimizer::Optimizer(Settings::Optimizer *settings,
   case_handler_ = new CaseHandler(tentative_best_case_,
                                   settings);
 
+  // -------------------------------------------------------------
   constraint_handler_ = new Constraints::ConstraintHandler(
       settings_->constraints(), variables, grid, settings);
 
+  // -------------------------------------------------------------
   iteration_ = 0;
   mode_ = settings->mode();
   is_async_ = false;
@@ -57,13 +67,17 @@ Optimizer::Optimizer(Settings::Optimizer *settings,
   penalize_ = settings->objective().use_penalty_function;
 }
 
+// ---------------------------------------------------------------
 Case *Optimizer::GetCaseForEvaluation() {
+
+  // -------------------------------------------------------------
   if (settings_->verb_vector()[6] >= 1) { // idx:6 -> opt (Optimization)
     cout << "[opt]Get next case for eval.- " << endl;
     cout << "[opt]Size of QueuedCases:---- "
          << case_handler_->QueuedCases().size() << endl;
   }
 
+  // -------------------------------------------------------------
   if (case_handler_->QueuedCases().size() == 0) {
     logger_->AddEntry(this);
     time_t start, end;
@@ -79,34 +93,45 @@ Case *Optimizer::GetCaseForEvaluation() {
   return case_handler_->GetNextCaseForEvaluation();
 }
 
+// ---------------------------------------------------------------
 void Optimizer::SubmitEvaluatedCase(Case *c) {
+
+  // -------------------------------------------------------------
   if (penalize_ && iteration_ > 0) {
     double penalized_ofv = PenalizedOFV(c);
     c->set_objective_function_value(penalized_ofv);
   }
+
+  // -------------------------------------------------------------
   case_handler_->UpdateCaseObjectiveFunctionValue(
       c->id(),
       c->objective_function_value());
 
+  // -------------------------------------------------------------
   case_handler_->SetCaseState(c->id(),
                               c->state,
                               c->GetWICTime(),
                               c->GetSimTime());
 
+  // -------------------------------------------------------------
   case_handler_->SetCaseEvaluated(c->id());
   handleEvaluatedCase(case_handler_->GetCase(c->id()));
   logger_->AddEntry(case_handler_->GetCase(c->id()));
 }
 
+// ---------------------------------------------------------------
 Case *Optimizer::GetTentativeBestCase() const {
   return tentative_best_case_;
 }
 
+// ---------------------------------------------------------------
 bool Optimizer::isImprovement(const Case *c) {
   return isBetter(c, tentative_best_case_);
 }
 
+// ---------------------------------------------------------------
 bool Optimizer::isBetter(const Case *c1, const Case *c2) const {
+
   if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
     if (c1->objective_function_value() > c2->objective_function_value())
       return true;
@@ -118,6 +143,7 @@ bool Optimizer::isBetter(const Case *c1, const Case *c2) const {
   return false;
 }
 
+// ---------------------------------------------------------------
 QString Optimizer::GetStatusStringHeader() const {
   return QString("%1,%2,%3,%4,%5,%6\n")
       .arg("Iteration")
@@ -128,6 +154,7 @@ QString Optimizer::GetStatusStringHeader() const {
       .arg("TentativeBestCaseOFValue");
 }
 
+// ---------------------------------------------------------------
 QString Optimizer::GetStatusString() const {
   return QString("%1,%2,%3,%4,%5,%6\n")
       .arg(iteration_)
@@ -138,16 +165,19 @@ QString Optimizer::GetStatusString() const {
       .arg(tentative_best_case_->objective_function_value());
 }
 
+// ---------------------------------------------------------------
 void Optimizer::EnableConstraintLogging(QString output_directory_path) {
   for (Constraints::Constraint *con : constraint_handler_->constraints())
     con->EnableLogging(output_directory_path);
 }
 
+// ---------------------------------------------------------------
 //void Optimizer::SetVerbosityLevel(int level) {
 //  for (auto con : constraint_handler_->constraints())
 //    con->SetVerbosityLevel(1);
 //}
 
+// ---------------------------------------------------------------
 int Optimizer::GetSimulationDuration(Case *c) {
   auto cs = case_handler_->GetCase(c->id());
   if (cs->state.eval != Case::CaseState::EvalStatus::E_DONE) {
@@ -156,19 +186,24 @@ int Optimizer::GetSimulationDuration(Case *c) {
   return c->GetSimTime();
 }
 
+// ---------------------------------------------------------------
 Loggable::LogTarget Optimizer::GetLogTarget() {
   return Loggable::LogTarget::LOG_OPTIMIZER;
 }
 
+// ---------------------------------------------------------------
 map<string, string> Optimizer::GetState() {
   return map<string, string>();
 }
 
+// ---------------------------------------------------------------
 QUuid Optimizer::GetId() {
   return tentative_best_case_->GetId();
 }
 
+// ---------------------------------------------------------------
 map<string, vector<double>> Optimizer::GetValues() {
+
   map<string, vector<double>> valmap;
   valmap["TimeEl"] = vector<double>{time_since_secs(start_time_)};
   valmap["IterNr"] = vector<double>{iteration_};
@@ -183,12 +218,16 @@ map<string, vector<double>> Optimizer::GetValues() {
   return valmap;
 }
 
+// ---------------------------------------------------------------
 Loggable::LogTarget Optimizer::Summary::GetLogTarget() {
   return LOG_SUMMARY;
 }
 
+// ---------------------------------------------------------------
 map<string, string> Optimizer::Summary::GetState() {
+
   map<string, string> statemap;
+
   statemap["Start"] = timestamp_string(opt_->start_time_);
   statemap["Duration"] = timespan_string(
       time_span_secs(opt_->start_time_, QDateTime::currentDateTime())
@@ -204,6 +243,7 @@ map<string, string> Optimizer::Summary::GetState() {
       statemap["Term. condition"] = "Reached max. iterations"; break;
     default: statemap["Term. condition"] = "Unknown";
   }
+
   statemap["bc Best case found in iter"] =
       boost::lexical_cast<string>(opt_->tentative_best_case_iteration_);
 
@@ -223,10 +263,12 @@ map<string, string> Optimizer::Summary::GetState() {
   return statemap;
 }
 
+// ---------------------------------------------------------------
 QUuid Optimizer::Summary::GetId() {
   return opt_->tentative_best_case_->GetId();
 }
 
+// ---------------------------------------------------------------
 map<string, vector<double>> Optimizer::Summary::GetValues() {
   map<string, vector<double>> valmap;
   valmap["generated"] = vector<double>{opt_->case_handler_->NumberTotal()};
@@ -238,17 +280,21 @@ map<string, vector<double>> Optimizer::Summary::GetValues() {
   return valmap;
 }
 
+// ---------------------------------------------------------------
 void Optimizer::updateTentativeBestCase(Case *c) {
   tentative_best_case_ = c;
   tentative_best_case_iteration_ = iteration_;
 }
 
+// ---------------------------------------------------------------
 void Optimizer::initializeNormalizers() {
   initializeOfvNormalizer();
   constraint_handler_->InitializeNormalizers(case_handler_->AllCases());
 }
 
+// ---------------------------------------------------------------
 void Optimizer::initializeOfvNormalizer() {
+
   if (case_handler_->EvaluatedCases().size() == 0 || normalizer_ofv_.is_ready())
     throw runtime_error("Unable to initialize normalizer "
                             "with no evaluated cases available.");
@@ -264,6 +310,7 @@ void Optimizer::initializeOfvNormalizer() {
   normalizer_ofv_.set_steepness(1.0L / max_ofv);
 }
 
+// ---------------------------------------------------------------
 double Optimizer::PenalizedOFV(Case *c) {
   long double norm_ofv = normalizer_ofv_.normalize(c->objective_function_value());
   long double penalty = constraint_handler_->GetWeightedNormalizedPenalties(c);
@@ -277,5 +324,6 @@ double Optimizer::PenalizedOFV(Case *c) {
     return normalizer_ofv_.denormalize(norm_pen_ovf);
   }
 }
-}
+
+} // namespace
 
