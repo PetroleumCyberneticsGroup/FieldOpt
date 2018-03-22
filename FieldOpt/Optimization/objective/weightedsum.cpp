@@ -69,9 +69,9 @@ double WeightedSum::value() const
       QString prop_name = components_->at(i)->property_name;
       double prop_coeff = components_->at(i)->coefficient;
       cout << scientific << setprecision(8);
-      cout << "ObjFunctionProp[i=" << i << "]: " << prop_name.toStdString()
-           << " -> " << prop_coeff << " * (" << prop_name.toStdString()
-           << ")" << results_->GetValue(results_->GetPropertyKeyFromString(prop_name))
+      cout << "ObjFunctionProp[i=" << i << "]: -> (Coeff.) "
+           << prop_coeff << " * (" << prop_name.toStdString() << ") "
+           << results_->GetValue(results_->GetPropertyKeyFromString(prop_name))
            << endl;
     }
   }

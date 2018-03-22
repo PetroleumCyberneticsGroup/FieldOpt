@@ -138,10 +138,10 @@ void ECLSummaryReader::populateKeyLists() {
     stringlist_free(well_keys);
 
     if (verb_vector_[1] > 1) {  // idx:1 -> ert (ERTWrapper)
-        cout << "[ert]Found wells:----------" << boost::algorithm::join(wells_, ", ") << endl;
-        cout << "[ert]Found keys:-----------" << boost::algorithm::join(keys_, ", ") << endl;
-        cout << "[ert]Found field keys:-----" << boost::algorithm::join(field_keys_, ", ") << endl;
-        cout << "[ert]Found well keys:------" << boost::algorithm::join(well_keys_, ", ") << endl;
+        cout << "[ert]Found wells:------------ " << boost::algorithm::join(wells_, ", ") << endl;
+        cout << "[ert]Found keys:------------- " << boost::algorithm::join(keys_, ", ") << endl;
+        cout << "[ert]Found field keys:------- " << boost::algorithm::join(field_keys_, ", ") << endl;
+        cout << "[ert]Found well keys:-------- " << boost::algorithm::join(well_keys_, ", ") << endl;
     }
 
 }

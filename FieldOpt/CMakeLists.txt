@@ -150,6 +150,16 @@ endif()
 # Pring debug info: include dirs + source dirs =========================
 include(DebugMsg.cmake)
 
+
+
+## ADDED
+## Set this directory as the root dir
+include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR})
+#
+## SNOPT ================================================================
+include_directories(${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/include/snopt)
+include_directories(${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/handlers)
+
 # Enable testing =======================================================
 if (BUILD_TESTING)
   include(CTest)

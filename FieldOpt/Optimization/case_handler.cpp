@@ -71,7 +71,6 @@ Case *CaseHandler::GetNextCaseForEvaluation() {
   if (evaluation_queue_.size() == 0)
     throw CaseHandlerException(
         "The evaluation queue contains no cases.");
-
   if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
     cout << "[opt]Size of eval.queue:------ "
          << evaluation_queue_.length() << endl;

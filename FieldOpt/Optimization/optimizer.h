@@ -47,7 +47,7 @@ namespace Optimization {
 class Optimizer : public Loggable
 {
  public:
-  Optimizer() = delete;
+  Optimizer() = default;
 
   // ---------------------------------------------------------------
   /*!

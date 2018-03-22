@@ -98,6 +98,13 @@ void Settings::readSimulatorSection()
     throw UnableToParseSimulatorSectionException(
         "Unable to parse driver file simulator section: " + string(ex.what()));
   }
+
+  simulator_->set_verbosity_vector(verb_vector());
+  if (simulator_->verb_vector_[9] > 0) { // idx:9 -> set (Settings)
+    string str_out = "[set]Simulator settings";
+    cout << "\n" << BLDON << str_out << AEND << "\n"
+         << std::string(str_out.length(), '=') << endl;
+  }
 }
 
 void Settings::readOptimizerSection()
@@ -110,11 +117,12 @@ void Settings::readOptimizerSection()
     throw UnableToParseOptimizerSectionException(
         "Unable to parse driver file optimizer section: " + string(ex.what()));
   }
-  optimizer_->set_verbosity_vector(verb_vector());
 
+  optimizer_->set_verbosity_vector(verb_vector());
   if (optimizer_->verb_vector_[9] > 0) { // idx:9 -> set (Settings)
     string str_out = "[set]Optimizer settings";
-    cout << "\n" << BLDON << str_out << AEND << "\n" << std::string(str_out.length(), '=') << endl;
+    cout << "\n" << BLDON << str_out << AEND << "\n"
+         << std::string(str_out.length(), '=') << endl;
     if (optimizer_->type() == Optimizer::OptimizerType::Compass ||
         optimizer_->type() == Optimizer::OptimizerType::APPS) {
       cout << fixed << setprecision(1);
@@ -137,8 +145,16 @@ void Settings::readOptimizerSection()
       cout << fixed << setprecision(1);
       cout << "MaxQueueSize:---------- " << optimizer_->parameters_.max_queue_size << endl;
       cout << "Pattern:--------------- " << optimizer_->parameters_.pattern.toStdString() << endl;
+    } else if (optimizer_->type() == Optimizer::OptimizerType::SNOPTSolver) {
+      cout << fixed << setprecision(1);
+      cout << "Option file:----------- " << optimizer_->parameters_.thrdps_optn_file.toStdString() << endl;
+      cout << "Summary file:---------- " << optimizer_->parameters_.thrdps_smry_file.toStdString() << endl;
+      cout << "Print file:------------ " << optimizer_->parameters_.thrdps_prnt_file.toStdString() << endl;
     } else if (optimizer_->type() == Optimizer::OptimizerType::GeneticAlgorithm) {
+    } else if (optimizer_->type() == Optimizer::OptimizerType::DFO){
+      cout << "InitialTrustRegionRadius" << optimizer_->parameters_.initial_trust_region_radius << endl;
     }
+
   }
 }
 
@@ -152,7 +168,13 @@ void Settings::readModelSection()
     throw UnableToParseModelSectionException(
         "Unable to parse model section: " + string(ex.what()));
   }
+
   model_->set_verbosity_vector(verb_vector());
+  if (model_->verb_vector_[9] > 0) { // idx:9 -> set (Settings)
+    string str_out = "[set]model_ settings---";
+    cout << "\n" << BLDON << str_out << AEND << "\n"
+         << std::string(str_out.length(), '=') << endl;
+  }
 }
 
 void Settings::set_build_path(const QString &build_path)
