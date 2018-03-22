@@ -9,129 +9,134 @@ message(STATUS "CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
 
 # Options ==============================================================
 set(EXPERIMENTAL_CONSTRAINTS_DIR
-        ${CMAKE_CURRENT_SOURCE_DIR}/experimental_constraints)
+    ${CMAKE_CURRENT_SOURCE_DIR}/experimental_constraints)
 set(EXPERIMENTAL_CONSTRAINTS_SRC "")
 set(EXPERIMENTAL_CONSTRAINTS_TESTS "")
 
 if(EXISTS ${EXPERIMENTAL_CONSTRAINTS_DIR}
-        AND IS_DIRECTORY ${EXPERIMENTAL_CONSTRAINTS_DIR})
-	message("Including experimental constraints")
-	add_definitions(-DWITH_EXPERIMENTAL_CONSTRIANTS)
-	set(EXPERIMENTAL_CONSTRAINTS_SRC
-	${EXPERIMENTAL_CONSTRAINTS_DIR}/ optimizers/OptimizationProblem.cpp optimizers/OptimizationProblem.h
-			${EXPERIMENTAL_CONSTRAINTS_DIR}/
-			constraints/iwd_constraint.cpp
-			constraints/iwd_constraint.h)
-	set(EXPERIMENTAL_CONSTRAINTS_TESTS
-			${EXPERIMENTAL_CONSTRAINTS_DIR}/tests/)
+    AND IS_DIRECTORY ${EXPERIMENTAL_CONSTRAINTS_DIR})
+  message("Including experimental constraints")
+  add_definitions(-DWITH_EXPERIMENTAL_CONSTRIANTS)
+  set(EXPERIMENTAL_CONSTRAINTS_SRC
+      ${EXPERIMENTAL_CONSTRAINTS_DIR}/)
+  set(EXPERIMENTAL_CONSTRAINTS_TESTS
+      ${EXPERIMENTAL_CONSTRAINTS_DIR}/tests/)
 else()
-	message("Experimental constraints not found")
-	add_definitions(-DWITHOUT_EXPERIMENTAL_CONSTRAINTS)
+  message("Experimental constraints not found")
+  add_definitions(-DWITHOUT_EXPERIMENTAL_CONSTRAINTS)
 endif()
 
 # Add library ==========================================================
 add_library(optimization
-		optimization_exceptions.h
-		objective/objective.cpp
-		objective/weightedsum.cpp
-		case.cpp
-		case_handler.cpp
-		constraints/constraint.cpp
-		constraints/bhp_constraint.cpp
-		constraints/constraint_handler.cpp
-		constraints/reservoir_boundary.cpp
-		optimizer.cpp
-		constraints/well_spline_length.cpp
-		constraints/interwell_distance.cpp
-		constraints/well_spline_constraint.cpp
-		constraints/combined_spline_length_interwell_distance.cpp
-		constraints/rate_constraint.cpp
-		constraints/combined_spline_length_interwell_distance_reservoir_boundary.cpp
-		case_transfer_object.cpp
-		optimizers/ExhaustiveSearch2DVert.cpp
-		optimizers/GSS.cpp
-		optimizers/compass_search.cpp
-		optimizers/APPS.cpp
-		optimizers/GeneticAlgorithm.cpp
-		optimizers/RGARDD.cpp
-		optimizers/DFO.cpp
-		optimizers/SNOPTSolver.cpp
-		optimizers/OptimizationProblem.cpp
-        ../FieldOpt-3rdPartySolvers/handlers/SNOPTHandler.cpp
-        ../FieldOpt-3rdPartySolvers/handlers/LibraryHandler.c
-        ../FieldOpt-3rdPartySolvers/handlers/SNOPTLoader.c
-		optimizers/Subproblem.cpp
-		normalizer.cpp
-		constraints/pseudo_cont_boundary_2d.cpp
-		${EXPERIMENTAL_CONSTRAINTS_SRC})
+    # CASE
+    case.cpp
+    case_handler.cpp
+    case_transfer_object.cpp
+    # OPTIMIZER
+    optimizer.cpp
+    optimizers/ExhaustiveSearch2DVert.cpp
+    optimizers/GSS.cpp
+    optimizers/compass_search.cpp
+    optimizers/APPS.cpp
+    optimizers/GeneticAlgorithm.cpp
+    optimizers/RGARDD.cpp
+    optimizers/DFO.cpp
+    optimizers/SNOPTSolver.cpp
+    optimizers/OptimizationProblem.cpp
+    optimizers/Subproblem.cpp
+    # CONSTRAINTS
+    constraints/constraint_handler.cpp
+    constraints/constraint.cpp
+    constraints/bhp_constraint.cpp
+    constraints/reservoir_boundary.cpp
+    constraints/well_spline_length.cpp
+    constraints/interwell_distance.cpp
+    constraints/well_spline_constraint.cpp
+    constraints/combined_spline_length_interwell_distance.cpp
+    constraints/rate_constraint.cpp
+    constraints/combined_spline_length_interwell_distance_reservoir_boundary.cpp
+    constraints/pseudo_cont_boundary_2d.cpp
+    constraints/iwd_constraint.cpp
+    ${EXPERIMENTAL_CONSTRAINTS_SRC}
+    # OBJECTIVES
+    objective/objective.cpp
+    objective/weightedsum.cpp
+    normalizer.cpp
+    # AUX
+    optimization_exceptions.h
+    # SNOPT
+    ../FieldOpt-3rdPartySolvers/handlers/SNOPTHandler.cpp
+    ../FieldOpt-3rdPartySolvers/handlers/LibraryHandler.c
+    ../FieldOpt-3rdPartySolvers/handlers/SNOPTLoader.c
+    )
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
 # Target link libraries ================================================
 target_link_libraries(optimization
-		PUBLIC fieldopt::model
-		PUBLIC fieldopt::simulation
-		PUBLIC fieldopt::constraintmath
-		PUBLIC fieldopt::reservoir
-		PUBLIC fieldopt::runner
-		Qt5::Core
-        PUBLIC fieldopt::3rdpartysolvers
-        ${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/lib/libsnopt-7.2.12.2.so
-		PUBLIC ${Boost_LIBRARIES})
+    PUBLIC fieldopt::model
+    PUBLIC fieldopt::simulation
+    PUBLIC fieldopt::constraintmath
+    PUBLIC fieldopt::reservoir
+    PUBLIC fieldopt::runner
+    PUBLIC Qt5::Core
+    PUBLIC fieldopt::3rdpartysolvers
+    ${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/lib/libsnopt-7.2.12.2.so
+    PUBLIC ${Boost_LIBRARIES})
 
 # Target include directories ===========================================
 target_include_directories(optimization PUBLIC
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/constraints>
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/objective>
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/optimizers>)
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/constraints>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/objective>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/optimizers>)
 
 # Compile options ======================================================
 add_compile_options(-std=c++11)
 
 # Unit tests ===========================================================
 if (BUILD_TESTING)
-	# Unit tests
-	find_package(GTest REQUIRED)
-	include_directories(${GTEST_INCLUDE_DIRS} tests)
-	add_executable(test_optimization
-			tests/test_case.cpp
-			tests/test_case_handler.cpp
-			tests/constraints/test_bhp_constraint.cpp
-			tests/constraints/test_constraint_handler.cpp
-			tests/constraints/test_reservoir_boundary.cpp
-			tests/objective/test_weightedsum.cpp
-			tests/optimizers/test_compass_search.cpp
-			tests/test_resource_cases.h
-			tests/test_resource_optimizer.h
-			${EXPERIMENTAL_CONSTRAINTS_TESTS}
-			tests/constraints/test_rate_constraint.cpp
-			tests/test_case_transfer_object.cpp
-			tests/optimizers/test_apps.cpp
-			tests/optimizers/test_ga.cpp
-			tests/test_normalizer.cpp
-			tests/constraints/test_interwell_distance.cpp
-			tests/constraints/test_spline_well_length.cpp
-			tests/constraints/test_pseudo_cont_boundary_2d.cpp)
+  # Unit tests
+  find_package(GTest REQUIRED)
+  include_directories(${GTEST_INCLUDE_DIRS} tests)
+  add_executable(test_optimization
+      tests/test_case.cpp
+      tests/test_case_handler.cpp
+      tests/constraints/test_bhp_constraint.cpp
+      tests/constraints/test_constraint_handler.cpp
+      tests/constraints/test_reservoir_boundary.cpp
+      tests/objective/test_weightedsum.cpp
+      tests/optimizers/test_compass_search.cpp
+      tests/test_resource_cases.h
+      tests/test_resource_optimizer.h
+      ${EXPERIMENTAL_CONSTRAINTS_TESTS}
+      tests/constraints/test_rate_constraint.cpp
+      tests/test_case_transfer_object.cpp
+      tests/optimizers/test_apps.cpp
+      tests/optimizers/test_ga.cpp
+      tests/test_normalizer.cpp
+      tests/constraints/test_interwell_distance.cpp
+      tests/constraints/test_spline_well_length.cpp
+      tests/constraints/test_pseudo_cont_boundary_2d.cpp)
 
-	target_link_libraries(test_optimization
-			fieldopt::optimization
-			${GTEST_BOTH_LIBRARIES}
-			${CMAKE_THREAD_LIBS_INIT})
+  target_link_libraries(test_optimization
+      fieldopt::optimization
+      ${GTEST_BOTH_LIBRARIES}
+      ${CMAKE_THREAD_LIBS_INIT})
 
-	target_include_directories(test_optimization PUBLIC
-			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tests>
-			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/constraints>
-			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/objective>
-			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/optimizers>)
+  target_include_directories(test_optimization PUBLIC
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tests>
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/constraints>
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/objective>
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/optimizers>)
 
-	add_test(NAME test_optimization COMMAND $<TARGET_FILE:test_optimization>)
+  add_test(NAME test_optimization COMMAND $<TARGET_FILE:test_optimization>)
 endif()
 
 # Install targets ======================================================
 install(TARGETS optimization
-		RUNTIME DESTINATION bin
-		LIBRARY DESTINATION lib
-		ARCHIVE DESTINATION lib/static
-		)
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib/static
+    )
 
 # Debug: include dirs ==================================================
 include(../InclDirDbg.cmake)
