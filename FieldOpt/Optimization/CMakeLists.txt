@@ -18,7 +18,7 @@ if(EXISTS ${EXPERIMENTAL_CONSTRAINTS_DIR}
 	message("Including experimental constraints")
 	add_definitions(-DWITH_EXPERIMENTAL_CONSTRIANTS)
 	set(EXPERIMENTAL_CONSTRAINTS_SRC
-			${EXPERIMENTAL_CONSTRAINTS_DIR}/)
+			${EXPERIMENTAL_CONSTRAINTS_DIR}/ constraints/iwd_constraint.cpp constraints/iwd_constraint.h)
 	set(EXPERIMENTAL_CONSTRAINTS_TESTS
 			${EXPERIMENTAL_CONSTRAINTS_DIR}/tests/)
 else()

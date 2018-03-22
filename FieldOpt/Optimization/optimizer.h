@@ -138,7 +138,13 @@ class Optimizer : public Loggable
   /*!
    * @brief
    */
-  void set_verbosity_vector(const std::vector<int> verb_vector) { verb_vector_ = verb_vector; }
+  void set_verbosity_vector(const std::vector<int> verb_vector)
+  { verb_vector_ = verb_vector; }
+
+  // ---------------------------------------------------------------
+  /*!
+   * @brief
+   */
   std::vector<int> verb_vector() const { return verb_vector_; }
 
   // ---------------------------------------------------------------
@@ -296,7 +302,10 @@ class Optimizer : public Loggable
   class Summary : public Loggable {
 
    public:
-    Summary(Optimizer *opt, TerminationCondition cond) { opt_ = opt; cond_ = cond; }
+
+    Summary(Optimizer *opt, TerminationCondition cond)
+    { opt_ = opt; cond_ = cond; }
+
     LogTarget GetLogTarget() override;
     map<string, string> GetState() override;
     QUuid GetId() override;
@@ -343,9 +352,6 @@ class Optimizer : public Loggable
   int tentative_best_case_iteration_;
 
   // ---------------------------------------------------------------
-  /*!
-   * @brief
-   */
   std::vector<int> verb_vector_ = std::vector<int>(11,0);
 
   // ---------------------------------------------------------------

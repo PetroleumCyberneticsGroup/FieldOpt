@@ -65,8 +65,18 @@ class Constraint
   // ---------------------------------------------------------------
   void EnableLogging(QString output_directory_path);
 
+  // ---------------------------------------------------------------
+  /*!
+   * @brief
+   */
+  void set_verbosity_vector(const std::vector<int> verb_vector)
+  { verb_vector_ = verb_vector; }
 
-  // void SetVerbosityLevel(int level);
+  // ---------------------------------------------------------------
+  /*!
+   * @brief
+   */
+  std::vector<int> verb_vector() const { return verb_vector_; }
 
   // ---------------------------------------------------------------
   /*!
@@ -150,6 +160,7 @@ class Constraint
   long double GetPenaltyWeight() { return penalty_weight_; }
 
  protected:
+
   // ---------------------------------------------------------------
   bool logging_enabled_;
   int verbosity_level_=1;
@@ -167,6 +178,10 @@ class Constraint
  private:
   // Path to the constraint log path to be written.
   QString constraint_log_path_;
+
+  // ---------------------------------------------------------------
+  std::vector<int> verb_vector_ = std::vector<int>(11,0);
+
 };
 
 }
