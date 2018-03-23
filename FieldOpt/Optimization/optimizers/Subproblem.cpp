@@ -106,8 +106,7 @@ void Subproblem::Solve(vector<double> &xsol,
   ResetSubproblem();
   passParametersToSNOPTHandler(snoptHandler);
   integer Cold = 0, Basis = 1, Warm = 2;
-  //vector<double> xsol;
-  //vector<double> fsol;
+
   snoptHandler.solve(Cold, xsol, fsol);
 
 /*
@@ -172,7 +171,7 @@ void Subproblem::setConstraintsAndDimensions() {
   n_ = 2;
   m_ = 1;
   neF_ = m_ + 1;
-  lenA_ = 4;
+  lenA_ = 0;
   lenG_ = n_ + m_ * n_;
 
   // ---------------------------------------------------------------
@@ -185,13 +184,19 @@ void Subproblem::setConstraintsAndDimensions() {
   hessian = new double[n_ * n_];
 
   // ---------------------------------------------------------------
-  neF_ += 2; // Two linear constraints
-  lenG_--; // We only have 1 derivative for the nonlinear
+  // neF_ += 2; // Two linear constraints
+  // lenG_--; // We only have 1 derivative for the nonlinear
   // constraint (it doesn't depend upon both variables)
 
   // ---------------------------------------------------------------
   iGfun_ = new integer[lenG_];
   jGvar_ = new integer[lenG_];
+
+  iAfun_  = NULL;
+  jAvar_  = NULL;
+  A_       = NULL;
+
+   /*
   iAfun_ = new integer[lenA_];
   jAvar_ = new integer[lenA_];
   A_ = new double[lenA_];
@@ -224,12 +229,13 @@ void Subproblem::setConstraintsAndDimensions() {
   // Bounds objective
   Flow_[0] = -infinity_;
   Fupp_[0] = infinity_;
+<<<<<<< HEAD
 
   // ---------------------------------------------------------------
   // Bounds [1] constraint
-  Flow_[1] = -2;
-  Fupp_[1] = 4;
-
+  Flow_[1] = 3;
+  Fupp_[1] = 10;
+  
   // ---------------------------------------------------------------
   // Bounds [2] constraint
   Flow_[2] = -3;
@@ -247,15 +253,25 @@ void Subproblem::setConstraintsAndDimensions() {
 
   xlow_[1] = -4;
   xupp_[1] = 4;
+*/
 
-  // ---------------------------------------------------------------
-  integer a = 0;
-  iGfun_[a] = (integer) 0;
-  jGvar_[a++] = (integer) 0;
-  iGfun_[a] = (integer) 0;
-  jGvar_[a++] = (integer) 1;
-  iGfun_[a] = (integer) 3;
-  jGvar_[a++] = (integer) 0;
+  xlow_[0] = -infinity_;
+  xupp_[0] = infinity_;
+  xlow_[1] = -infinity_;
+  xupp_[1] = infinity_;
+
+  //Objective function
+  iGfun_[0] = 0;
+  jGvar_[0] = 0;
+  iGfun_[1] = 0;
+  jGvar_[1] = 1;
+
+  //Trust region radius
+  iGfun_[2] = 1;
+  jGvar_[2] = 0;
+  iGfun_[3] = 1;
+  jGvar_[3] = 1;
+
 
   // ---------------------------------------------------------------
   neG_ = lenG_;
@@ -303,7 +319,7 @@ void Subproblem::setOptionsForSNOPT(SNOPTHandler &snoptHandler) {
 //    snoptHandler.setParameter((char*)"Nonderivative linesearch");
 //  else
   //snoptHandler.setParameter((char*)"Derivative linesearch");
-//  snoptHandler.setIntParameter("Derivative option", 1);
+  //snoptHandler.setIntParameter("Derivative option", 0);
 
 //  snoptHandler.setRealParameter("Difference interval", optdata.derivativeRelativePerturbation);
 
@@ -328,19 +344,21 @@ void Subproblem::setOptionsForSNOPT(SNOPTHandler &snoptHandler) {
   //snoptHandler.setParameter("Log frequency                  100");
   //snoptHandler.setParameter("LU factor tolerance            3.99");
   //snoptHandler.setParameter("LU update tolerance            3.99");
+  //snoptHandler.setRealParameter("LU factor tolerance", 3.99);
+  //snoptHandler.setRealParameter("LU update tolerance", 3.99);
   //snoptHandler.setParameter("LU partial pivoting");
   //snoptHandler.setParameter("LU density tolerance           0.6");
   //snoptHandler.setParameter("LU singularity tolerance       3.2e-11");
 
   //target nonlinear constraint violation
-//  snoptHandler.setRealParameter("Major feasibility tolerance", optdata.constraintTolerance);
-//  snoptHandler.setIntParameter("Major Iterations Limit", optdata.maxNumberOfIterations);
+ //snoptHandler.setRealParameter("Major feasibility tolerance", 0.000001);
+  //snoptHandler.setIntParameter("Major Iterations Limit", 1000);
 
   //target complementarity gap
-//  snoptHandler.setRealParameter("Major optimality tolerance", optdata.convergenceTolerance);
+  //snoptHandler.setRealParameter("Major optimality tolerance", 0.0001);
 
   //snoptHandler.setParameter("Major Print level  11111"); //  000001"
-//  snoptHandler.setRealParameter("Major step limit", optdata.majorStepLimit);
+  //snoptHandler.setRealParameter("Major step limit", 0.2);
   //snoptHandler.setIntParameter("Minor iterations limit", 200); // 200
 
   //for satisfying the QP bounds
@@ -451,6 +469,20 @@ int SNOPTusrFG3_(integer *Status, integer *n, double x[],
                  integer iu[], integer *leniu,
                  double ru[], integer *lenru) {
 
+
+  F[0] = x[0]*x[0] + x[1] + x[1];
+  F[1] = x[0] + 2*x[1];
+  G[0] = 2*x[0];
+  G[1] = 2*x[1];
+  G[2] = 1;
+  G[3] = 2;
+  /*
+  Eigen::MatrixXd H(2,2);
+  //H.setOnes();
+  H << 1, 0, 0, 1;
+  Eigen::VectorXd g(2);
+  g.setZero();
+  double c = 0;
   int nf = *neF;
   //double x2 = x[1];
   //cout << x1 << "\t" << x2 << endl;
@@ -459,38 +491,74 @@ int SNOPTusrFG3_(integer *Status, integer *n, double x[],
   //    cout << x[i] << "\t";
   //}
   //cout << endl;
+  Eigen::VectorXd xvec(*n);
+  for (int i = 0; i < *n; ++i){
+    xvec[i] = x[i];
+  }
 
   // -----------------------------------------------------------------
   // Calculate objective function value
-  double mx = constant;
+  double mx = c;
   for (int i = 0; i < *n; i++) {
-    mx += gradient[i] * x[i];
-    double temp = 0;
+    mx += g[i] * x[i];
+   double temp = 0;
     for (int j = 0; j < *n; j++) {
-      temp += x[j] * hessian[i + j * (*n)];
+      temp += x[j] * H(i,j);
     }
     mx += temp * x[i];
   }
-  //F[0] = mx;
 
+  F[0] = mx;
+
+  //F[0] = c + g.transpose()*xvec + xvec.transpose()*H*xvec;
   // -----------------------------------------------------------------
   // Calculate the gradient of the objective function.
   for (int i = 0; i < *n; i++) {
-    //G[i] = gradient[i];
+    G[i] = g[i];
     for (int j = 0; j < *n; j++) {
-      //G[i] += hessian[i + j*(*n)]*x[j];
+      G[i] += H(i,j)*x[j];
     }
   }
+  //Eigen::VectorXd newgrad(2);
+  //newgrad = g + H*xvec;
 
-  // -----------------------------------------------------------------
-  // Calculate constraint values.
-  Eigen::VectorXd asd(2);
-  asd << 1, 2;
-  Eigen::VectorXd dd(2);
-  dd << 4, 4;
-  double sum;
-  sum = (asd.transpose() * dd);
-  cout << "Did it work? " << sum << endl;
+  //G[0] = newgrad[0];G[1] = newgrad[1];
+
+  //double rho = 30.0;
+  /// Calculate constraint values.
+  // The trust region constraint
+  double constraint = xvec(0) + xvec(1);
+  F[1] = constraint;
+
+
+
+  //Eigen::VectorXd gradientOfC(2);
+  //if ( std::abs( xvec.norm()) <= 0.00001){
+  //    gradientOfC.setZero();
+  //}
+  //else
+  //gradientOfC = xvec/(xvec.norm() + 0.00000000000000000000001);
+
+  //G[2] = gradientOfC[0];
+  //G[3] = gradientOfC[1];
+  G[2] = 1;
+  G[3] = 1;
+*/
+   /*
+  for (int i = 0; i < *n; i++){
+    G[*n + i] = gradientOfC[i];
+  }
+*/
+  /*
+  double h = 0.001;
+  Eigen::VectorXd xper = xvec;
+  xper[0] += h;
+  G[2] = (xper.norm() - xvec.norm()) / h;
+
+  xper = xvec;
+  xper[1] += h;
+  G[3] = (xper.norm() - xvec.norm()) / h;
+*/
 
   // -----------------------------------------------------------------
   // Calculate gradient of constraints.
@@ -532,8 +600,8 @@ int SNOPTusrFG3_(integer *Status, integer *n, double x[],
   // -----------------------------------------------------------------
   // If the values for the objective are desired
   if (*needF > 0) {
-    F[0] = -(x[0] - 1.2) * (x[0] - 1.2) - (x[1] - 3.1) * (x[1] - 3.1) + constant;
-    F[3] = 0.7 * (x[0] * x[0]);// + x[1]*x[1]);
+    //F[0] = -(x[0] - 1.2) * (x[0] - 1.2) - (x[1] - 3.1) * (x[1] - 3.1) + constant;
+    //F[3] = 0.7 * (x[0] * x[0]);// + x[1]*x[1]);
 
     // ADGPRS LEGACY
     // The value of the objective goes to the first entry of F
@@ -554,14 +622,14 @@ int SNOPTusrFG3_(integer *Status, integer *n, double x[],
   // -----------------------------------------------------------------
   // If the values for the constraints are desired
   if (*needG > 0) {
-    G[0] = -2 * (x[0] - 1.2);
-    G[1] = -2 * (x[1] - 3.1);
+    //G[0] = -2 * (x[0] - 1.2);
+    //G[1] = -2 * (x[1] - 3.1);
 
     // ADGPRS LEGACY
     // We have as many derivatives as the number of the controls, n
     //    optdata.pOptimizationProblem->eval_grad_f(*n, x, false, G);
 
-    G[2] = 1.4 * x[0];
+    //G[2] = 1.4 * x[0];
     //G[3] = 1.4*x[1];
     // and the derivatives of the constraints follow
 
