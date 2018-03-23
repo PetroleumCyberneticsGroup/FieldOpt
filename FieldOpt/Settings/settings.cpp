@@ -1,15 +1,24 @@
+
+// -----------------------------------------------------------------
 #include "settings.h"
 #include "Runner/runtime_settings.h"
 #include "settings_exceptions.h"
 #include "Utilities/filehandling.hpp"
 
+// -----------------------------------------------------------------
+// Qt
 #include <QJsonDocument>
+
+// -----------------------------------------------------------------
+// STD
 #include <iostream>
 #include <iomanip>
 
+// -----------------------------------------------------------------
 using std::string;
 using std::cout;
 
+// -----------------------------------------------------------------
 namespace Settings {
 
 Settings::Settings(QString driver_path,
@@ -27,8 +36,9 @@ Settings::Settings(QString driver_path,
   simulator_->output_directory_ = output_directory;
 }
 
-QString Settings::GetLogCsvString() const
-{
+// -----------------------------------------------------------------
+QString Settings::GetLogCsvString() const {
+
   QStringList header  = QStringList();
   QStringList content = QStringList();
   header  << "name"
@@ -43,8 +53,9 @@ QString Settings::GetLogCsvString() const
   return QString("%1\n%2").arg(header.join(",")).arg(content.join(","));
 }
 
-void Settings::readDriverFile()
-{
+// -----------------------------------------------------------------
+void Settings::readDriverFile() {
+
   QFile *file = new QFile(driver_path_);
   if (!file->open(QIODevice::ReadOnly))
     throw DriverFileReadException("Unable to open the driver file");
@@ -70,8 +81,8 @@ void Settings::readDriverFile()
   file->close();
 }
 
-void Settings::readGlobalSection()
-{
+// -----------------------------------------------------------------
+void Settings::readGlobalSection() {
   try {
     QJsonObject global = json_driver_->value("Global").toObject();
     name_ = global["Name"].toString();
@@ -87,8 +98,9 @@ void Settings::readGlobalSection()
   }
 }
 
-void Settings::readSimulatorSection()
-{
+// -----------------------------------------------------------------
+void Settings::readSimulatorSection() {
+
   // Simulator root
   try {
     QJsonObject json_simulator = json_driver_->value("Simulator").toObject();
@@ -107,8 +119,8 @@ void Settings::readSimulatorSection()
   }
 }
 
-void Settings::readOptimizerSection()
-{
+// -----------------------------------------------------------------
+void Settings::readOptimizerSection() {
   try {
     QJsonObject optimizer = json_driver_->value("Optimizer").toObject();
     optimizer_ = new Optimizer(optimizer);
@@ -158,8 +170,9 @@ void Settings::readOptimizerSection()
   }
 }
 
-void Settings::readModelSection()
-{
+// -----------------------------------------------------------------
+void Settings::readModelSection() {
+
   try {
     QJsonObject model = json_driver_->value("Model").toObject();
     model_ = new Model(model);
@@ -177,8 +190,9 @@ void Settings::readModelSection()
   }
 }
 
-void Settings::set_build_path(const QString &build_path)
-{
+// -----------------------------------------------------------------
+void Settings::set_build_path(const QString &build_path) {
+
   if (!Utilities::FileHandling::DirectoryExists(build_path))
     throw std::runtime_error(
         "Attempted to set the build path to a non-existent directory.");

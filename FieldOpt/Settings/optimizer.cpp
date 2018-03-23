@@ -17,19 +17,23 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+// -----------------------------------------------------------------
 #include "optimizer.h"
 #include "settings_exceptions.h"
 
+// -----------------------------------------------------------------
 namespace Settings {
 
-Optimizer::Optimizer(QJsonObject json_optimizer)
-{
+Optimizer::Optimizer(QJsonObject json_optimizer) {
+
+  // ---------------------------------------------------------------
   // Get the root objects.
   QJsonObject json_parameters = json_optimizer["Parameters"].toObject();
   QJsonObject json_objective = json_optimizer["Objective"].toObject();
   QJsonArray json_constraints = json_optimizer["Constraints"].toArray();
   QString type = json_optimizer["Type"].toString();
 
+  // ---------------------------------------------------------------
   // Optimizer type
   if (QString::compare(type, "Compass") == 0)
     type_ = OptimizerType::Compass;

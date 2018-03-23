@@ -192,9 +192,9 @@ void Subproblem::setConstraintsAndDimensions() {
   iGfun_ = new integer[lenG_];
   jGvar_ = new integer[lenG_];
 
-  iAfun_  = NULL;
-  jAvar_  = NULL;
-  A_       = NULL;
+  iAfun_ = nullptr;
+  jAvar_ = nullptr;
+  A_     = nullptr;
 
    /*
   iAfun_ = new integer[lenA_];
@@ -235,7 +235,7 @@ void Subproblem::setConstraintsAndDimensions() {
   // Bounds [1] constraint
   Flow_[1] = 3;
   Fupp_[1] = 10;
-  
+
   // ---------------------------------------------------------------
   // Bounds [2] constraint
   Flow_[2] = -3;
@@ -472,10 +472,12 @@ int SNOPTusrFG3_(integer *Status, integer *n, double x[],
 
   F[0] = x[0]*x[0] + x[1] + x[1];
   F[1] = x[0] + 2*x[1];
+
   G[0] = 2*x[0];
   G[1] = 2*x[1];
   G[2] = 1;
   G[3] = 2;
+
   /*
   Eigen::MatrixXd H(2,2);
   //H.setOnes();

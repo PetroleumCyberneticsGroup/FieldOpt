@@ -2,15 +2,18 @@
 // Created by bellout on 2/10/18.
 //
 
+// -----------------------------------------------------------------
 #include "SNOPTSolver.h"
 #include <iostream>
 #include <iomanip>
 #include "Subproblem.cpp"
 #include "testOne.h"
 
+// -----------------------------------------------------------------
 namespace Optimization {
 namespace Optimizers {
 
+// -----------------------------------------------------------------
 SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
                          Case *base_case,
                          Model::Properties::VariablePropertyContainer *variables,
@@ -18,6 +21,7 @@ SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
                          Logger *logger)
     : Optimizer(settings, base_case, variables, grid, logger) {
 
+  // ---------------------------------------------------------------
   if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
     cout << "[opt]Init. SNOPTSolver.-------" << endl;
     settings_ = settings;
@@ -81,9 +85,11 @@ SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
 
      }
 
+// -----------------------------------------------------------------
 SNOPTSolver::~SNOPTSolver(){}
 
 
+// -----------------------------------------------------------------
 SNOPTHandler SNOPTSolver::initSNOPTHandler(){
   string prnt_file, smry_file, optn_file;
   optn_file = settings_->parameters().thrdps_optn_file.toStdString() + ".opt.optn";
@@ -100,8 +106,7 @@ SNOPTHandler SNOPTSolver::initSNOPTHandler(){
   return snoptHandler;
 }
 
-
-
+// -----------------------------------------------------------------
 int SNOPTusrFG_( integer    *Status, integer *n,    double x[],
 integer    *needF,  integer *neF,  double F[],
     integer    *needG,  integer *neG,  double G[],
@@ -196,8 +201,9 @@ return 0;
 
 
 
-void SNOPTSolver::callSNOPT()
-{
+// -----------------------------------------------------------------
+void SNOPTSolver::callSNOPT() {
+
   SNOPTHandler snoptHandler = initSNOPTHandler();
   setOptionsForSNOPT(snoptHandler);
 
@@ -513,9 +519,8 @@ a ++;
 
 
 
-
-void SNOPTSolver::setOptionsForSNOPT(SNOPTHandler& snoptHandler)
-{
+// -----------------------------------------------------------------
+void SNOPTSolver::setOptionsForSNOPT(SNOPTHandler& snoptHandler) {
 
   if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
     cout << "[opt]Set options for SNOPT.---" << endl;
