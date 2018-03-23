@@ -9,7 +9,12 @@ namespace Optimization {
 namespace Optimizers {
 
 
-OptimizationProblem::OptimizationProblem(int numberOfVariables, int numberOfNonlinearConstraints, int numberOfLinearConstraints, int numberOfElementsF, int numberOfElementsG, int objectiveRow)  {
+OptimizationProblem::OptimizationProblem(int numberOfVariables,
+                                         int numberOfNonlinearConstraints,
+                                         int numberOfLinearConstraints,
+                                         int numberOfElementsF,
+                                         int numberOfElementsG,
+                                         int objectiveRow)  {
 
   n_ = numberOfVariables;
   m_ = numberOfNonlinearConstraints;
