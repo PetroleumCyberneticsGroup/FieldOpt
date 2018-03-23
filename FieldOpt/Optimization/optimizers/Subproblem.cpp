@@ -1,8 +1,12 @@
 
+// -----------------------------------------------------------------
 #include "Subproblem.h"
+
+// -----------------------------------------------------------------
 namespace Optimization {
 namespace Optimizers {
 
+// -----------------------------------------------------------------
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -16,30 +20,40 @@ int SNOPTusrFG3_(integer *Status, integer *n, doublereal x[],
 }
 #endif
 
+// -----------------------------------------------------------------
 static double *gradient;
 static double *hessian;
 static double constant;
 
+// -----------------------------------------------------------------
+using std::vector;
+
+// -----------------------------------------------------------------
 //Subproblem::Subproblem(SNOPTHandler snoptHandler) {
 Subproblem::Subproblem(Settings::Optimizer *settings) {
   settings_ = settings;
 
   loadSNOPT();
-  setConstraintsAndDimensions(); // This one should set the iGfun/jGvar and so on.
+  setConstraintsAndDimensions(); // This one sets iGfun/jGvar, etc.
   setAndInitializeSNOPTParameters();
 
   ResetSubproblem();
 
 }
 
+// -----------------------------------------------------------------
 SNOPTHandler Subproblem::initSNOPTHandler() {
+
+  // ---------------------------------------------------------------
   string prnt_file, smry_file, optn_file;
   optn_file = settings_->parameters().thrdps_optn_file.toStdString() + ".opt.optn";
   smry_file = settings_->parameters().thrdps_smry_file.toStdString() + ".opt.summ";
   prnt_file = settings_->parameters().thrdps_prnt_file.toStdString() + ".opt.prnt";
+
   SNOPTHandler snoptHandler(prnt_file.c_str(),
                             smry_file.c_str(),
                             optn_file.c_str());
+
   /*
   prnt_file = "snopt_print.opt.prnt";
   smry_file = "snopt_summary.opt.summ";
@@ -48,17 +62,21 @@ SNOPTHandler Subproblem::initSNOPTHandler() {
   SNOPTHandler snoptHandler(prnt_file.c_str(),
                             smry_file.c_str(),
                             optn_file.c_str());*/
+
   cout << "[opt]Init. SNOPTHandler.------" << endl;
   return snoptHandler;
 }
 
+// -----------------------------------------------------------------
 void Subproblem::setAndInitializeSNOPTParameters() {
-  // the controls
+
+  // Controls
   x_ = new double[n_];
-  // the initial guess for Lagrange multipliers
+
+  // Initial guess for Lagrange multipliers
   xmul_ = new double[n_];
-  // the state of the variables (whether the optimal is likely to be on
-  // the boundary or not)
+
+  // State of variables (whether x* is likely to be on the boundary or not) <-- ??
   xstate_ = new integer[n_];
   F_ = new double[neF_];
   Fmul_ = new double[neF_];
@@ -71,15 +89,20 @@ void Subproblem::setAndInitializeSNOPTParameters() {
 
 }
 
-void Subproblem::Solve(std::vector<double> &xsol, std::vector<double> &fsol, char *optimizationType) {
-  // The snoptHandler must be setup and loaded
+// -----------------------------------------------------------------
+void Subproblem::Solve(vector<double> &xsol,
+                       vector<double> &fsol,
+                       char *optimizationType) {
 
+  // ---------------------------------------------------------------
+  // The snoptHandler must be setup and loaded
   SNOPTHandler snoptHandler = initSNOPTHandler();
   snoptHandler.setProbName("SNOPTSolver");
   snoptHandler.setParameter(optimizationType);
 
   setOptionsForSNOPT(snoptHandler);
 
+  // ---------------------------------------------------------------
   ResetSubproblem();
   passParametersToSNOPTHandler(snoptHandler);
   integer Cold = 0, Basis = 1, Warm = 2;
@@ -99,7 +122,10 @@ void Subproblem::Solve(std::vector<double> &xsol, std::vector<double> &fsol, cha
 */
 }
 
+// -----------------------------------------------------------------
 void Subproblem::ResetSubproblem() {
+
+  // ---------------------------------------------------------------
   for (int i = 0; i < n_; i++) {
     Fstate_[i] = 0;
     xstate_[i] = 0;
@@ -107,6 +133,7 @@ void Subproblem::ResetSubproblem() {
     xmul_[i] = 0;
   }
 
+  // ---------------------------------------------------------------
   for (int h = 0; h < neF_; h++) {
     F_[h] = 0.0;
     Fmul_[h] = 0.0;
@@ -114,42 +141,62 @@ void Subproblem::ResetSubproblem() {
 
 }
 
+// -----------------------------------------------------------------
 void Subproblem::passParametersToSNOPTHandler(SNOPTHandler &snoptHandler) {
+
+  // ---------------------------------------------------------------
   snoptHandler.setProblemSize(n_, neF_);
   snoptHandler.setObjective(objRow_);
   snoptHandler.setA(lenA_, iAfun_, jAvar_, A_);
   snoptHandler.setG(lenG_, iGfun_, jGvar_);
+
+  // ---------------------------------------------------------------
   snoptHandler.setX(x_, xlow_, xupp_, xmul_, xstate_);
   snoptHandler.setF(F_, Flow_, Fupp_, Fmul_, Fstate_);
   snoptHandler.setXNames(xnames_, nxnames_);
   snoptHandler.setFNames(Fnames_, nFnames_);
+
+  // ---------------------------------------------------------------
   snoptHandler.setNeA(neA_);
   snoptHandler.setNeG(neG_);
   snoptHandler.setUserFun(SNOPTusrFG3_);
+
 }
 
+// -----------------------------------------------------------------
 void Subproblem::setConstraintsAndDimensions() {
-  // This must be set before compiling the code. It cannot be done during runtime through function calls.
+
+  // ---------------------------------------------------------------
+  // This must be set before compiling the code. It cannot
+  // be done during runtime through function calls.
   n_ = 2;
   m_ = 1;
   neF_ = m_ + 1;
   lenA_ = 4;
   lenG_ = n_ + m_ * n_;
-  objRow_ = 0; // In theory the objective function could be any of the elements in F.
+
+  // ---------------------------------------------------------------
+  objRow_ = 0; // In theory the objective function could be any component of F.
   objAdd_ = 0.0;
 
+  // ---------------------------------------------------------------
   constant = 0;
   gradient = new double[n_];
   hessian = new double[n_ * n_];
 
+  // ---------------------------------------------------------------
   neF_ += 2; // Two linear constraints
-  lenG_--; // We only have 1 derivative for the nonlinear constraint (it doesn't depend upon both variables)
+  lenG_--; // We only have 1 derivative for the nonlinear
+  // constraint (it doesn't depend upon both variables)
+
+  // ---------------------------------------------------------------
   iGfun_ = new integer[lenG_];
   jGvar_ = new integer[lenG_];
   iAfun_ = new integer[lenA_];
   jAvar_ = new integer[lenA_];
   A_ = new double[lenA_];
 
+  // ---------------------------------------------------------------
   iAfun_[0] = 1;
   jAvar_[0] = 0;
   iAfun_[1] = 1;
@@ -158,32 +205,50 @@ void Subproblem::setConstraintsAndDimensions() {
   jAvar_[2] = 0;
   iAfun_[3] = 2;
   jAvar_[3] = 1;
+
+  // ---------------------------------------------------------------
   A_[0] = 1.0;
   A_[1] = 1.2;
   A_[2] = 0.9;
   A_[3] = 3.0;
 
-  // controls lower and upper bounds
+  // ---------------------------------------------------------------
+  // Controls lower and upper bounds
   xlow_ = new double[n_];
   xupp_ = new double[n_];
 
   Flow_ = new double[neF_];
   Fupp_ = new double[neF_];
 
+  // ---------------------------------------------------------------
+  // Bounds objective
   Flow_[0] = -infinity_;
   Fupp_[0] = infinity_;
+
+  // ---------------------------------------------------------------
+  // Bounds [1] constraint
   Flow_[1] = -2;
   Fupp_[1] = 4;
+
+  // ---------------------------------------------------------------
+  // Bounds [2] constraint
   Flow_[2] = -3;
   Fupp_[2] = 10;
+
+  // ---------------------------------------------------------------
+  // Bounds [3] constraint
   Flow_[3] = 0;
   Fupp_[3] = 1;
 
+  // ---------------------------------------------------------------
+  // Bounds x
   xlow_[0] = -2;
   xupp_[0] = 2;
+
   xlow_[1] = -4;
   xupp_[1] = 4;
 
+  // ---------------------------------------------------------------
   integer a = 0;
   iGfun_[a] = (integer) 0;
   jGvar_[a++] = (integer) 0;
@@ -192,11 +257,13 @@ void Subproblem::setConstraintsAndDimensions() {
   iGfun_[a] = (integer) 3;
   jGvar_[a++] = (integer) 0;
 
+  // ---------------------------------------------------------------
   neG_ = lenG_;
   neA_ = lenA_;
 
 }
 
+// -----------------------------------------------------------------
 Subproblem::~Subproblem() {
   delete[] iGfun_;
   delete[] jGvar_;
@@ -216,6 +283,7 @@ Subproblem::~Subproblem() {
   delete[] hessian;
 }
 
+// -----------------------------------------------------------------
 void Subproblem::setOptionsForSNOPT(SNOPTHandler &snoptHandler) {
 
   //if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
@@ -319,6 +387,7 @@ Author(s): Oleg Volkov          (ovolkov@stanford.edu)
            Vladislav Bukshtynov (bukshtu@stanford.edu)
 ******************************************************/
 
+// -------------------------------------------------------------------
 bool Subproblem::loadSNOPT(const string libname) {
 
 //#ifdef NDEBUG
@@ -330,7 +399,7 @@ bool Subproblem::loadSNOPT(const string libname) {
   char buf[256];
   int rc;
   if (libname.empty()) {
-    rc = LSL_loadSNOPTLib(NULL, buf, 255);
+    rc = LSL_loadSNOPTLib(nullptr, buf, 255);
   } else {
     rc = LSL_loadSNOPTLib(libname.c_str(), buf, 255);
   }
@@ -350,6 +419,7 @@ bool Subproblem::loadSNOPT(const string libname) {
   return true;
 }
 
+// -------------------------------------------------------------------
 /*
 		SNOPTHandler initSNOPTHandler2() {
 			loadSNOPT2();
@@ -373,7 +443,7 @@ bool Subproblem::loadSNOPT(const string libname) {
 		}
 */
 
-
+// -------------------------------------------------------------------
 int SNOPTusrFG3_(integer *Status, integer *n, double x[],
                  integer *needF, integer *neF, double F[],
                  integer *needG, integer *neG, double G[],
@@ -390,8 +460,8 @@ int SNOPTusrFG3_(integer *Status, integer *n, double x[],
   //}
   //cout << endl;
 
-
-  /// Calculate objective function value
+  // -----------------------------------------------------------------
+  // Calculate objective function value
   double mx = constant;
   for (int i = 0; i < *n; i++) {
     mx += gradient[i] * x[i];
@@ -403,7 +473,8 @@ int SNOPTusrFG3_(integer *Status, integer *n, double x[],
   }
   //F[0] = mx;
 
-  /// Calculate the gradient of the objective function.
+  // -----------------------------------------------------------------
+  // Calculate the gradient of the objective function.
   for (int i = 0; i < *n; i++) {
     //G[i] = gradient[i];
     for (int j = 0; j < *n; j++) {
@@ -411,8 +482,8 @@ int SNOPTusrFG3_(integer *Status, integer *n, double x[],
     }
   }
 
-  /// Calculate constraint values.
-
+  // -----------------------------------------------------------------
+  // Calculate constraint values.
   Eigen::VectorXd asd(2);
   asd << 1, 2;
   Eigen::VectorXd dd(2);
@@ -420,74 +491,86 @@ int SNOPTusrFG3_(integer *Status, integer *n, double x[],
   double sum;
   sum = (asd.transpose() * dd);
   cout << "Did it work? " << sum << endl;
-  /// Calculate gradient of constraints.
 
+  // -----------------------------------------------------------------
+  // Calculate gradient of constraints.
 
-  //==================================================================
-// Computes the nonlinear objective and constraint terms for the
-// problem featured of interest. The problem is considered to be
-// written as:
-//
-//       Minimize     Fobj(x)
-//          x
-//
-//    subject to:
-//
-//        bounds      l_x <=   x  <= u_x
-//   constraints      l_F <= F(x) <= u_F
-//
-// The triples (g(k),iGfun(k),jGvar(k)), k = 1:neG, define
-// the sparsity pattern and values of the nonlinear elements
-// of the Jacobian.
-//==================================================================
+  // =================================================================
+  // Computes the nonlinear objective and constraint terms for the
+  // problem featured of interest. The problem is considered to be
+  // written as:
+  //
+  //       Minimize     Fobj(x)
+  //          x
+  //
+  //    subject to:
+  //
+  //        bounds      l_x <=   x  <= u_x
+  //   constraints      l_F <= F(x) <= u_F
+  //
+  // The triples (g(k),iGfun(k),jGvar(k)), k = 1:neG, define
+  // the sparsity pattern and values of the nonlinear elements
+  // of the Jacobian.
+  // =================================================================
 
-//  OptimizationData& optdata =  OptimizationData::reference();
-//
-//  if (( optdata.numberOfSimulations >= optdata.maxNumberOfSimulations ) &&
-//      ( optdata.maxNumberOfSimulations != 0 ))
-//  {
-//    *Status = -2;
-//    return 0;
-//  }
+  // ADGPRS LEGACY
+  //  OptimizationData& optdata =  OptimizationData::reference();
+  //
+  //  if (( optdata.numberOfSimulations >= optdata.maxNumberOfSimulations ) &&
+  //      ( optdata.maxNumberOfSimulations != 0 ))
+  //  {
+  //    *Status = -2;
+  //    return 0;
+  //  }
 
-// number of constraints; neF is the total number of constraints
-// plus the objective
-//  int m = *neF - 1 - optdata.numberOfLinearConstraints;
+  // -----------------------------------------------------------------
+  // number of constraints; neF is the total number of constraints
+  // plus the objective
+  //  int m = *neF - 1 - optdata.numberOfLinearConstraints;
   int m = *neF - 1;
 
-// If the values for the objective and/or the constraints are desired
+  // -----------------------------------------------------------------
+  // If the values for the objective are desired
   if (*needF > 0) {
     F[0] = -(x[0] - 1.2) * (x[0] - 1.2) - (x[1] - 3.1) * (x[1] - 3.1) + constant;
     F[3] = 0.7 * (x[0] * x[0]);// + x[1]*x[1]);
 
-// the value of the objective goes to the first entry of F
-//    if (FAILED == optdata.pOptimizationProblem->eval_f(*n, x, true, F[0]))
-//    {
-//      *Status = -1;
-//      return 0;
-//    }
+    // ADGPRS LEGACY
+    // The value of the objective goes to the first entry of F
+    //    if (FAILED == optdata.pOptimizationProblem->eval_f(*n, x, true, F[0]))
+    //    {
+    //      *Status = -1;
+    //      return 0;
+    //    }
 
-// the values of the constraints follow that of the objective
+    // the values of the constraints follow that of the objective
     if (m) {
 
-//      optdata.pOptimizationProblem->eval_g(*n, x, false, m, &F[1]);
+      // ADGPRS LEGACY
+      // optdata.pOptimizationProblem->eval_g(*n, x, false, m, &F[1]);
     }
   }
 
+  // -----------------------------------------------------------------
+  // If the values for the constraints are desired
   if (*needG > 0) {
     G[0] = -2 * (x[0] - 1.2);
     G[1] = -2 * (x[1] - 3.1);
 
-// we have as many derivatives as the number of the controls, n
-//    optdata.pOptimizationProblem->eval_grad_f(*n, x, false, G);
+    // ADGPRS LEGACY
+    // We have as many derivatives as the number of the controls, n
+    //    optdata.pOptimizationProblem->eval_grad_f(*n, x, false, G);
 
     G[2] = 1.4 * x[0];
     //G[3] = 1.4*x[1];
-// and the derivatives of the constraints follow
+    // and the derivatives of the constraints follow
+
     if (m) {
 
-//    G[1] = 100*4*x1*x1*x1;//-4*(x2-0.7);
-//      optdata.pOptimizationProblem->eval_jac_g(*n, x, false, m, *neG, 0, 0, &G[*n]);
+      // ADGPRS LEGACY
+      // G[1] = 100*4*x1*x1*x1;//-4*(x2-0.7);
+      // optdata.pOptimizationProblem->eval_jac_g(*n, x, false, m, *neG, 0, 0, &G[*n]);
+
     }
 
   }
@@ -495,7 +578,10 @@ int SNOPTusrFG3_(integer *Status, integer *n, double x[],
   return 0;
 }
 
-void Subproblem::setQuadraticModel(double c, Eigen::VectorXd g, Eigen::MatrixXd H) {
+// -------------------------------------------------------------------
+void Subproblem::setQuadraticModel(double c,
+                                   Eigen::VectorXd g,
+                                   Eigen::MatrixXd H) {
   constant = c;
   int n = g.rows();
   for (int i = 0; i < n; ++i) {
@@ -506,6 +592,7 @@ void Subproblem::setQuadraticModel(double c, Eigen::VectorXd g, Eigen::MatrixXd 
   }
 }
 
+// -------------------------------------------------------------------
 void Subproblem::setGradient(Eigen::VectorXd g) {
   int n = g.rows();
   for (int i = 0; i < n; ++i) {
@@ -513,6 +600,7 @@ void Subproblem::setGradient(Eigen::VectorXd g) {
   }
 }
 
+// -------------------------------------------------------------------
 void Subproblem::setHessian(Eigen::MatrixXd H) {
   int n = H.rows();
   for (int i = 0; i < n; ++i) {
@@ -522,6 +610,7 @@ void Subproblem::setHessian(Eigen::MatrixXd H) {
   }
 }
 
+// -------------------------------------------------------------------
 void Subproblem::setConstant(double c) {
   constant = c;
 }
