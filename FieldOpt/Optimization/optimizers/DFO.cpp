@@ -24,7 +24,7 @@ DFO::DFO(Settings::Optimizer *settings,
   iterations_ = 0;
 
 
-  Eigen::MatrixXd hess;
+  Eigen::MatrixXd hess(2,2);
   hess.setOnes();
   Eigen::VectorXd grad(2);
   grad << 1,2;
@@ -35,6 +35,17 @@ DFO::DFO(Settings::Optimizer *settings,
   vector<double> xsol;
   vector<double> fsol;
   mySub.Solve(xsol, fsol, (char*)"Maximize");
+
+  cout << "xsol: " << endl;
+  for (int j = 0; j < 2; j++) {
+    cout << xsol[j] << endl;
+  }
+  cout << endl << "Objective values:" << endl;
+  for (int j = 0; j < 2; j++) {
+    cout << fsol[j] << endl;
+  }
+
+  cout << "stop " << endl;
 
 
   /*
