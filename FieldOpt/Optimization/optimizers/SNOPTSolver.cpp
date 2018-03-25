@@ -24,10 +24,10 @@ SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
   // ---------------------------------------------------------------
   if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
     cout << "[opt]Init. SNOPTSolver.-------" << endl;
-    settings_ = settings;
-    //testOne myTestOne(settings);
-    //myTestOne.loadSNOPT();
-    //myTestOne.callSNOPT();
+  settings_ = settings;
+  //testOne myTestOne(settings);
+  //myTestOne.loadSNOPT();
+  //myTestOne.callSNOPT();
 
   Eigen::VectorXd vars = base_case->GetRealVarVector();
 
@@ -37,53 +37,53 @@ SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
   case_handler_->AddNewCase(newCase);
 
 
-    //loadSNOPT();
-    //SNOPTHandler snopthandler = initSNOPTHandler();
+  //loadSNOPT();
+  //SNOPTHandler snopthandler = initSNOPTHandler();
 
-    //SNOPTHandler mySNOPTHandler = initSNOPTHandler2();
-    //Subproblem mySub = Subproblem(settings);
+  //SNOPTHandler mySNOPTHandler = initSNOPTHandler2();
+  //Subproblem mySub = Subproblem(settings);
 
-    /*
-    mySub.setConstant();
-     mySub.setGradient();
-     mySub.setHessian();
-     */
-    //vector<double> xsol;
-    //vector<double> fsol;
-    //vector<double> solutions;
-    /*
-    mySub.Solve(xsol, fsol, (char*)"Maximize"); //(char*)"Maximize"
+  /*
+  mySub.setConstant();
+   mySub.setGradient();
+   mySub.setHessian();
+   */
+  //vector<double> xsol;
+  //vector<double> fsol;
+  //vector<double> solutions;
+  /*
+  mySub.Solve(xsol, fsol, (char*)"Maximize"); //(char*)"Maximize"
 
-    cout << "xsol: " << endl;
-    for (int j = 0; j < 2; j++) {
-        cout << xsol[j] << endl;
-    }
-    cout << endl << "Objective values:" << endl;
-    for (int j = 0; j < 4; j++) {
-        cout << fsol[j] << endl;
-    }
+  cout << "xsol: " << endl;
+  for (int j = 0; j < 2; j++) {
+      cout << xsol[j] << endl;
+  }
+  cout << endl << "Objective values:" << endl;
+  for (int j = 0; j < 4; j++) {
+      cout << fsol[j] << endl;
+  }
 
 */
-    /*
-    mySub.setConstant(0);
-    for (int i = 1; i <= 4; i++){
-        mySub.Solve(xsol, fsol, (char*)"Maximize"); //(char*)"Maximize"
-        mySub.setConstant(i*4);
-        solutions.push_back(fsol[0]);
-        //cout << fsol[0] << endl;
-    }
+  /*
+  mySub.setConstant(0);
+  for (int i = 1; i <= 4; i++){
+      mySub.Solve(xsol, fsol, (char*)"Maximize"); //(char*)"Maximize"
+      mySub.setConstant(i*4);
+      solutions.push_back(fsol[0]);
+      //cout << fsol[0] << endl;
+  }
 
-    cout << endl << "\n Objective values:" << endl;
-    for (int i = 0; i < 4; i++){
-        cout << solutions[i] << endl;
-    }
-    */
+  cout << endl << "\n Objective values:" << endl;
+  for (int i = 0; i < 4; i++){
+      cout << solutions[i] << endl;
+  }
+  */
 
-    //settings_ = settings;
+  //settings_ = settings;
 
   //callSNOPT();
 
-     }
+}
 
 // -----------------------------------------------------------------
 SNOPTSolver::~SNOPTSolver(){}
@@ -96,7 +96,7 @@ SNOPTHandler SNOPTSolver::initSNOPTHandler(){
   smry_file = settings_->parameters().thrdps_smry_file.toStdString() + ".opt.summ";
   prnt_file = settings_->parameters().thrdps_prnt_file.toStdString() + ".opt.prnt";
 
-    cout << optn_file << endl;
+  cout << optn_file << endl;
   SNOPTHandler snoptHandler(prnt_file.c_str(),
                             smry_file.c_str(),
                             optn_file.c_str());
@@ -108,24 +108,24 @@ SNOPTHandler SNOPTSolver::initSNOPTHandler(){
 
 // -----------------------------------------------------------------
 int SNOPTusrFG_( integer    *Status, integer *n,    double x[],
-integer    *needF,  integer *neF,  double F[],
-    integer    *needG,  integer *neG,  double G[],
-char       *cu,     integer *lencu,
-integer    iu[],    integer *leniu,
-double     ru[],    integer *lenru )
+                 integer    *needF,  integer *neF,  double F[],
+                 integer    *needG,  integer *neG,  double G[],
+                 char       *cu,     integer *lencu,
+                 integer    iu[],    integer *leniu,
+                 double     ru[],    integer *lenru )
 {
 
-    int  nf = *neF;
-    //double x2 = x[1];
-    //cout << x1 << "\t" << x2 << endl;
-    cout << "[SNOPTusrFG_] \t The x vector is: \t ";
-    for (int i = 0; i < *n; i++ ){
-        cout << x[i] << "\t";
-    }
-    cout << endl;
+  int  nf = *neF;
+  //double x2 = x[1];
+  //cout << x1 << "\t" << x2 << endl;
+  cout << "[SNOPTusrFG_] \t The x vector is: \t ";
+  for (int i = 0; i < *n; i++ ){
+    cout << x[i] << "\t";
+  }
+  cout << endl;
 
 
-     //==================================================================
+  //==================================================================
 // Computes the nonlinear objective and constraint terms for the
 // problem featured of interest. The problem is considered to be
 // written as:
@@ -155,11 +155,11 @@ double     ru[],    integer *lenru )
 // number of constraints; neF is the total number of constraints
 // plus the objective
 //  int m = *neF - 1 - optdata.numberOfLinearConstraints;
-int m = *neF - 1;
+  int m = *neF - 1;
 
 // If the values for the objective and/or the constraints are desired
-if ( *needF > 0)
-{
+  if ( *needF > 0)
+  {
     F[0] = - (x[0]-1.2)*(x[0]-1.2) - (x[1]-3.1)*(x[1]-3.1);
     F[3] = 0.7*(x[0]*x[0]);// + x[1]*x[1]);
 
@@ -171,32 +171,32 @@ if ( *needF > 0)
 //    }
 
 // the values of the constraints follow that of the objective
-if ( m ){
+    if ( m ){
 
 //      optdata.pOptimizationProblem->eval_g(*n, x, false, m, &F[1]);
-}
-}
+    }
+  }
 
-if ( *needG > 0)
-{
+  if ( *needG > 0)
+  {
     G[0] = -2*(x[0]-1.2);
     G[1] = -2*(x[1]-3.1);
 
 // we have as many derivatives as the number of the controls, n
 //    optdata.pOptimizationProblem->eval_grad_f(*n, x, false, G);
 
-  G[2] = 1.4*x[0];
-  //G[3] = 1.4*x[1];
+    G[2] = 1.4*x[0];
+    //G[3] = 1.4*x[1];
 // and the derivatives of the constraints follow
-if ( m ){
+    if ( m ){
 
 //    G[1] = 100*4*x1*x1*x1;//-4*(x2-0.7);
 //      optdata.pOptimizationProblem->eval_jac_g(*n, x, false, m, *neG, 0, 0, &G[*n]);
-}
+    }
 
-}
+  }
 
-return 0;
+  return 0;
 }
 
 
@@ -215,7 +215,7 @@ void SNOPTSolver::callSNOPT() {
   int nnz_h_lag;
 //  Ipopt::TNLP::IndexStyleEnum index_style;
 
-    n = 2;
+  n = 2;
   m = 1; // number of nonlinear constraints
   integer neF     = m + 1;
   integer lenA    = 4;
@@ -250,7 +250,9 @@ void SNOPTSolver::callSNOPT() {
   // constraints) combined
   neF+=2; // Two linear constraints
   //lenG = 3;
-  lenG--; // We only have 1 derivative for the nonlinear constraint (it doesn't depend upon both variables)
+  lenG--; // We only have 1 derivative for the nonlinear
+  // constraint (it doesn't depend upon both variables)
+
   integer* iGfun  = new integer[lenG];
   integer* jGvar  = new integer[lenG];
 
@@ -258,13 +260,13 @@ void SNOPTSolver::callSNOPT() {
   jAvar = new integer[lenA];
   A     = new double[lenA];
   iAfun[0] = 1;
-jAvar[0] = 0;
-iAfun[1] = 1;
-jAvar[1] = 1;
-iAfun[2] = 2;
-jAvar[2] = 0;
-iAfun[3] = 2;
-jAvar[3] = 1;
+  jAvar[0] = 0;
+  iAfun[1] = 1;
+  jAvar[1] = 1;
+  iAfun[2] = 2;
+  jAvar[2] = 0;
+  iAfun[3] = 2;
+  jAvar[3] = 1;
   A[0] = 1.0;
   A[1] = 1.2;
   A[2] = 0.9;
@@ -273,7 +275,7 @@ jAvar[3] = 1;
   double* x       = new double[n];
 
 
-    // controls lower and upper bounds
+  // controls lower and upper bounds
   double* xlow    = new double[n];
   double* xupp    = new double[n];
 
@@ -324,17 +326,17 @@ jAvar[3] = 1;
   Flow[3] = 0;           Fupp[3] = 1;
 
 
-    xlow[0] = -2;     xupp[0] = 2;
-    xlow[1] = -4;     xupp[1] = 4;
+  xlow[0] = -2;     xupp[0] = 2;
+  xlow[1] = -4;     xupp[1] = 4;
 
-    integer a = 0;
+  integer a = 0;
 
-    iGfun[a] = (integer)0;
-    jGvar[a] = (integer)0;
-a ++;
+  iGfun[a] = (integer)0;
+  jGvar[a] = (integer)0;
+  a ++;
 
-   iGfun[a] = (integer)0;
-   jGvar[a] = (integer)1;
+  iGfun[a] = (integer)0;
+  jGvar[a] = (integer)1;
   a ++;
 
   iGfun[a] = (integer)3;
@@ -352,21 +354,21 @@ a ++;
 
   // When we have an initial guess the states should be zero
   for (i = 0; i < n; i++){
-      Fstate[i] = 0;
-      xstate[i] = 0;
-      x[i] = 0.0;
+    Fstate[i] = 0;
+    xstate[i] = 0;
+    x[i] = 0.0;
 
 
-      //trying:
-      xmul[i] = 0;
+    //trying:
+    xmul[i] = 0;
   }
 
-    for (int h = 0; h < neF; h++){
-        F[h] = 0.0;
-    }
+  for (int h = 0; h < neF; h++){
+    F[h] = 0.0;
+  }
 
 
-    // initial guess for the controls
+  // initial guess for the controls
   bool desire_values_for_x      = true;
   bool desire_values_for_dual   = false;
   bool desire_values_for_lambda = false;
@@ -478,14 +480,14 @@ a ++;
   snoptHandler.solve( Cold, xsol, fsol);
 
 
-    cout << "xsol: " << endl;
-    for (int j = 0; j < n; j++){
-        cout << xsol[j] << endl;
-    }
-    cout << endl <<"Objective values:" << endl;
-    for (int j = 0; j < neF; j++){
-        cout << fsol[j] << endl;
-    }
+  cout << "xsol: " << endl;
+  for (int j = 0; j < n; j++){
+    cout << xsol[j] << endl;
+  }
+  cout << endl <<"Objective values:" << endl;
+  for (int j = 0; j < neF; j++){
+    cout << fsol[j] << endl;
+  }
 
 
 //  ParameterMapping& maps = ParameterMapping::reference();
@@ -531,7 +533,7 @@ void SNOPTSolver::setOptionsForSNOPT(SNOPTHandler& snoptHandler) {
   //snoptHandler.setIntParameter("Check frequency",           60);
   //snoptHandler.setParameter("Cold Start                     Cold");
 
-    //snoptHandler.setParameter("Crash option                   3");
+  //snoptHandler.setParameter("Crash option                   3");
   //snoptHandler.setParameter("Crash tolerance                0.1");
   //snoptHandler.setParameter("Derivative level               3");
 

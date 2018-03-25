@@ -220,7 +220,9 @@ class Subproblem {
  // ----------------------------------------------------------------
  public:
 
-  void setQuadraticModel(double c, Eigen::VectorXd g, Eigen::MatrixXd H);
+  void setQuadraticModel(double c,
+                         Eigen::VectorXd g,
+                         Eigen::MatrixXd H);
 
   void setGradient(Eigen::VectorXd g);
 
@@ -242,7 +244,9 @@ class Subproblem {
 
   //void Solve(vector<double> *xsol, vector<double> *fsol, char *optimizationType);
 
-  void Solve(vector<double> &xsol, vector<double> &fsol, char *optimizationType);
+  void Solve(vector<double> &xsol,
+             vector<double> &fsol,
+             char *optimizationType);
 };
 
 

@@ -46,22 +46,16 @@ SNOPTHandler Subproblem::initSNOPTHandler() {
 
   // ---------------------------------------------------------------
   string prnt_file, smry_file, optn_file;
-  optn_file = settings_->parameters().thrdps_optn_file.toStdString() + ".opt.optn";
-  smry_file = settings_->parameters().thrdps_smry_file.toStdString() + ".opt.summ";
-  prnt_file = settings_->parameters().thrdps_prnt_file.toStdString() + ".opt.prnt";
+  optn_file = settings_->parameters()
+      .thrdps_optn_file.toStdString() + ".opt.optn";
+  smry_file = settings_->parameters()
+      .thrdps_smry_file.toStdString() + ".opt.summ";
+  prnt_file = settings_->parameters()
+      .thrdps_prnt_file.toStdString() + ".opt.prnt";
 
   SNOPTHandler snoptHandler(prnt_file.c_str(),
                             smry_file.c_str(),
                             optn_file.c_str());
-
-  /*
-  prnt_file = "snopt_print.opt.prnt";
-  smry_file = "snopt_summary.opt.summ";
-  optn_file = "snopt_options.opt.optn";
-
-  SNOPTHandler snoptHandler(prnt_file.c_str(),
-                            smry_file.c_str(),
-                            optn_file.c_str());*/
 
   cout << "[opt]Init. SNOPTHandler.------" << endl;
   return snoptHandler;
@@ -78,6 +72,7 @@ void Subproblem::setAndInitializeSNOPTParameters() {
 
   // State of variables (whether x* is likely to be on the boundary or not) <-- ??
   xstate_ = new integer[n_];
+
   F_ = new double[neF_];
   Fmul_ = new double[neF_];
   Fstate_ = new integer[neF_];
@@ -105,20 +100,22 @@ void Subproblem::Solve(vector<double> &xsol,
   // ---------------------------------------------------------------
   ResetSubproblem();
   passParametersToSNOPTHandler(snoptHandler);
-  integer Cold = 0, Basis = 1, Warm = 2;
+  integer Cold = 0;
+  integer Basis = 1;
+  integer Warm = 2;
 
   snoptHandler.solve(Cold, xsol, fsol);
 
-/*
-			cout << "xsol: " << endl;
-			for (int j = 0; j < n_; j++) {
-				cout << xsol[j] << endl;
-			}
-			cout << endl << "Objective values:" << endl;
-			for (int j = 0; j < neF_; j++) {
-				cout << fsol[j] << endl;
-			}
-*/
+///*
+  cout << "xsol: " << endl;
+  for (int j = 0; j < n_; j++) {
+    cout << xsol[j] << endl;
+  }
+  cout << endl << "Objective values:" << endl;
+  for (int j = 0; j < neF_; j++) {
+    cout << fsol[j] << endl;
+  }
+//*/
 }
 
 // -----------------------------------------------------------------
@@ -168,15 +165,42 @@ void Subproblem::setConstraintsAndDimensions() {
   // ---------------------------------------------------------------
   // This must be set before compiling the code. It cannot
   // be done during runtime through function calls.
-  n_ = 2;
-  m_ = 1;
+  n_ = 2; // # of variables?
+  m_ = 1; // # of nonlinear constraints?
+
+  // ---------------------------------------------------------------
+  // total # of constraints + objective (length of F vector)
   neF_ = m_ + 1;
+
+  // ---------------------------------------------------------------
+  // # of linear constraints
   lenA_ = 0;
+
+  // ---------------------------------------------------------------
+  // Length of gradient vector (dimension of iGfun jGvar arrays)
+  // --> (length of obj.grad) + (# of constraints) * (# of vars)
   lenG_ = n_ + m_ * n_;
 
   // ---------------------------------------------------------------
-  objRow_ = 0; // In theory the objective function could be any component of F.
-  objAdd_ = 0.0;
+  // In theory the objective function could be any component of F.
+  // Here we specify the objective is the first component of F
+  objRow_ = 0;
+
+  // ---------------------------------------------------------------
+  objAdd_ = 0.0; // Add nothing to the objective for output purposes
+
+  // ---------------------------------------------------------------
+  // No linear constraints
+  // iAfun_ = new integer[lenA_];
+  // jAvar_ = new integer[lenA_];
+  // A_ = new double[lenA_];
+  iAfun_ = nullptr;
+  jAvar_ = nullptr;
+  A_     = nullptr;
+
+  // ---------------------------------------------------------------
+  iGfun_ = new integer[lenG_];
+  jGvar_ = new integer[lenG_];
 
   // ---------------------------------------------------------------
   constant = 0;
@@ -189,76 +213,25 @@ void Subproblem::setConstraintsAndDimensions() {
   // constraint (it doesn't depend upon both variables)
 
   // ---------------------------------------------------------------
-  iGfun_ = new integer[lenG_];
-  jGvar_ = new integer[lenG_];
-
-  iAfun_ = nullptr;
-  jAvar_ = nullptr;
-  A_     = nullptr;
-
-   /*
-  iAfun_ = new integer[lenA_];
-  jAvar_ = new integer[lenA_];
-  A_ = new double[lenA_];
-
-  // ---------------------------------------------------------------
-  iAfun_[0] = 1;
-  jAvar_[0] = 0;
-  iAfun_[1] = 1;
-  jAvar_[1] = 1;
-  iAfun_[2] = 2;
-  jAvar_[2] = 0;
-  iAfun_[3] = 2;
-  jAvar_[3] = 1;
-
-  // ---------------------------------------------------------------
-  A_[0] = 1.0;
-  A_[1] = 1.2;
-  A_[2] = 0.9;
-  A_[3] = 3.0;
-
-  // ---------------------------------------------------------------
-  // Controls lower and upper bounds
-  xlow_ = new double[n_];
-  xupp_ = new double[n_];
-
-  Flow_ = new double[neF_];
-  Fupp_ = new double[neF_];
+  // Objective
+  F_ = new double[neF_];
+  Fmul_ = new double[neF_];
+  Fstate_ = new integer[neF_];
 
   // ---------------------------------------------------------------
   // Bounds objective
   Flow_[0] = -infinity_;
   Fupp_[0] = infinity_;
-<<<<<<< HEAD
 
   // ---------------------------------------------------------------
-  // Bounds [1] constraint
-  Flow_[1] = 3;
-  Fupp_[1] = 10;
-
-  // ---------------------------------------------------------------
-  // Bounds [2] constraint
-  Flow_[2] = -3;
-  Fupp_[2] = 10;
-
-  // ---------------------------------------------------------------
-  // Bounds [3] constraint
-  Flow_[3] = 0;
-  Fupp_[3] = 1;
-
-  // ---------------------------------------------------------------
-  // Bounds x
-  xlow_[0] = -2;
-  xupp_[0] = 2;
-
-  xlow_[1] = -4;
-  xupp_[1] = 4;
-*/
-
-  xlow_[0] = -infinity_;
+  // Upper bounds x1, x2
   xupp_[0] = infinity_;
-  xlow_[1] = -infinity_;
   xupp_[1] = infinity_;
+
+  // ---------------------------------------------------------------
+  // Lower bounds x1, x2
+  xlow_[0] = -infinity_;
+  xlow_[1] = -infinity_;
 
   //Objective function
   iGfun_[0] = 0;
@@ -272,10 +245,63 @@ void Subproblem::setConstraintsAndDimensions() {
   iGfun_[3] = 1;
   jGvar_[3] = 1;
 
-
   // ---------------------------------------------------------------
   neG_ = lenG_;
   neA_ = lenA_;
+
+  /*
+
+
+ // ---------------------------------------------------------------
+ iAfun_[0] = 1;
+ jAvar_[0] = 0;
+ iAfun_[1] = 1;
+ jAvar_[1] = 1;
+ iAfun_[2] = 2;
+ jAvar_[2] = 0;
+ iAfun_[3] = 2;
+ jAvar_[3] = 1;
+
+ // ---------------------------------------------------------------
+ A_[0] = 1.0;
+ A_[1] = 1.2;
+ A_[2] = 0.9;
+ A_[3] = 3.0;
+
+ // ---------------------------------------------------------------
+ // Controls lower and upper bounds
+ xlow_ = new double[n_];
+ xupp_ = new double[n_];
+
+ Flow_ = new double[neF_];
+ Fupp_ = new double[neF_];
+
+
+<<<<<<< HEAD
+
+ // ---------------------------------------------------------------
+ // Bounds [1] constraint
+ Flow_[1] = 3;
+ Fupp_[1] = 10;
+
+ // ---------------------------------------------------------------
+ // Bounds [2] constraint
+ Flow_[2] = -3;
+ Fupp_[2] = 10;
+
+ // ---------------------------------------------------------------
+ // Bounds [3] constraint
+ Flow_[3] = 0;
+ Fupp_[3] = 1;
+
+ // ---------------------------------------------------------------
+ // Bounds x
+ xlow_[0] = -2;
+ xupp_[0] = 2;
+
+ xlow_[1] = -4;
+ xupp_[1] = 4;
+*/
 
 }
 
@@ -351,7 +377,7 @@ void Subproblem::setOptionsForSNOPT(SNOPTHandler &snoptHandler) {
   //snoptHandler.setParameter("LU singularity tolerance       3.2e-11");
 
   //target nonlinear constraint violation
- //snoptHandler.setRealParameter("Major feasibility tolerance", 0.000001);
+  //snoptHandler.setRealParameter("Major feasibility tolerance", 0.000001);
   //snoptHandler.setIntParameter("Major Iterations Limit", 1000);
 
   //target complementarity gap
@@ -438,30 +464,6 @@ bool Subproblem::loadSNOPT(const string libname) {
 }
 
 // -------------------------------------------------------------------
-/*
-		SNOPTHandler initSNOPTHandler2() {
-			loadSNOPT2();
-			string prnt_file, smry_file, optn_file;
-			//optn_file = settings_->parameters().thrdps_optn_file.toStdString() + ".opt.optn";
-			//smry_file = settings_->parameters().thrdps_smry_file.toStdString() + ".opt.summ";
-			//prnt_file = settings_->parameters().thrdps_prnt_file.toStdString() + ".opt.prnt";
-			//SNOPTHandler snoptHandler(prnt_file.c_str(),
-			//						  smry_file.c_str(),
-			//						  optn_file.c_str());
-
-			prnt_file = "snopt_print.opt.prnt";
-			smry_file = "snopt_summary.opt.summ";
-			optn_file = "snopt_options.opt.optn";
-
-			SNOPTHandler snoptHandler(prnt_file.c_str(),
-									  smry_file.c_str(),
-									  optn_file.c_str());
-			cout << "[opt]Init. SNOPTHandler.------" << endl;
-			return snoptHandler;
-		}
-*/
-
-// -------------------------------------------------------------------
 int SNOPTusrFG3_(integer *Status, integer *n, double x[],
                  integer *needF, integer *neF, double F[],
                  integer *needG, integer *neG, double G[],
@@ -470,11 +472,11 @@ int SNOPTusrFG3_(integer *Status, integer *n, double x[],
                  double ru[], integer *lenru) {
 
 
-  F[0] = x[0]*x[0] + x[1] + x[1];
-  F[1] = x[0] + 2*x[1];
+  F[0] = x[0] * x[0] + x[1] + x[1]; // objective function
+  F[1] = x[0] + 2 * x[1]; // nonlinear constraint 1
 
-  G[0] = 2*x[0];
-  G[1] = 2*x[1];
+  G[0] = 2 * x[0];
+  G[1] = 2 * x[1];
   G[2] = 1;
   G[3] = 2;
 
@@ -546,10 +548,10 @@ int SNOPTusrFG3_(integer *Status, integer *n, double x[],
   G[2] = 1;
   G[3] = 1;
 */
-   /*
-  for (int i = 0; i < *n; i++){
-    G[*n + i] = gradientOfC[i];
-  }
+  /*
+ for (int i = 0; i < *n; i++){
+   G[*n + i] = gradientOfC[i];
+ }
 */
   /*
   double h = 0.001;
