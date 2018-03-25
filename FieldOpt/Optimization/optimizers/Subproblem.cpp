@@ -73,10 +73,13 @@ void Subproblem::setAndInitializeSNOPTParameters() {
   // State of variables (whether x* is likely to be on the boundary or not) <-- ??
   xstate_ = new integer[n_];
 
+  // ---------------------------------------------------------------
+  // Objective
   F_ = new double[neF_];
   Fmul_ = new double[neF_];
   Fstate_ = new integer[neF_];
 
+  // ---------------------------------------------------------------
   nxnames_ = 1;
   nFnames_ = 1;
   xnames_ = new char[nxnames_ * 8];
@@ -143,6 +146,8 @@ void Subproblem::passParametersToSNOPTHandler(SNOPTHandler &snoptHandler) {
   // ---------------------------------------------------------------
   snoptHandler.setProblemSize(n_, neF_);
   snoptHandler.setObjective(objRow_);
+
+  // ---------------------------------------------------------------
   snoptHandler.setA(lenA_, iAfun_, jAvar_, A_);
   snoptHandler.setG(lenG_, iGfun_, jGvar_);
 
@@ -165,12 +170,12 @@ void Subproblem::setConstraintsAndDimensions() {
   // ---------------------------------------------------------------
   // This must be set before compiling the code. It cannot
   // be done during runtime through function calls.
-  n_ = 2; // # of variables?
-  m_ = 1; // # of nonlinear constraints?
+  n_ = 2; // # of variables
+  m_ = 1; // # of nonlinear constraints
 
   // ---------------------------------------------------------------
   // total # of constraints + objective (length of F vector)
-  neF_ = m_ + 1;
+  neF_ = m_ + 1; // l=2
 
   // ---------------------------------------------------------------
   // # of linear constraints
@@ -178,8 +183,9 @@ void Subproblem::setConstraintsAndDimensions() {
 
   // ---------------------------------------------------------------
   // Length of gradient vector (dimension of iGfun jGvar arrays)
-  // --> (length of obj.grad) + (# of constraints) * (# of vars)
-  lenG_ = n_ + m_ * n_;
+  // --> n: (length of obj.grad = # of vars) +
+  // --> m * n: (# of constraints) * (# of vars)
+  lenG_ = n_ + m_ * n_; // 2+1*2=4
 
   // ---------------------------------------------------------------
   // In theory the objective function could be any component of F.
@@ -191,21 +197,23 @@ void Subproblem::setConstraintsAndDimensions() {
 
   // ---------------------------------------------------------------
   // No linear constraints
+
   // iAfun_ = new integer[lenA_];
   // jAvar_ = new integer[lenA_];
   // A_ = new double[lenA_];
+
   iAfun_ = nullptr;
   jAvar_ = nullptr;
   A_     = nullptr;
 
   // ---------------------------------------------------------------
-  iGfun_ = new integer[lenG_];
-  jGvar_ = new integer[lenG_];
+  iGfun_ = new integer[lenG_]; // l=4
+  jGvar_ = new integer[lenG_]; // l=4
 
   // ---------------------------------------------------------------
   constant = 0;
-  gradient = new double[n_];
-  hessian = new double[n_ * n_];
+  gradient = new double[n_]; // l=2
+  hessian = new double[n_ * n_]; // l=4
 
   // ---------------------------------------------------------------
   // neF_ += 2; // Two linear constraints
@@ -213,15 +221,11 @@ void Subproblem::setConstraintsAndDimensions() {
   // constraint (it doesn't depend upon both variables)
 
   // ---------------------------------------------------------------
-  // Objective
-  F_ = new double[neF_];
-  Fmul_ = new double[neF_];
-  Fstate_ = new integer[neF_];
-
-  // ---------------------------------------------------------------
   // Bounds objective
   Flow_[0] = -infinity_;
   Fupp_[0] = infinity_;
+  Flow_[1] = 3;
+  Fupp_[1] = 10;
 
   // ---------------------------------------------------------------
   // Upper bounds x1, x2
@@ -233,75 +237,24 @@ void Subproblem::setConstraintsAndDimensions() {
   xlow_[0] = -infinity_;
   xlow_[1] = -infinity_;
 
-  //Objective function
+  // ---------------------------------------------------------------
+  // Indexing gradient vector
   iGfun_[0] = 0;
-  jGvar_[0] = 0;
   iGfun_[1] = 0;
-  jGvar_[1] = 1;
-
-  //Trust region radius
   iGfun_[2] = 1;
-  jGvar_[2] = 0;
   iGfun_[3] = 1;
+
+  // ---------------------------------------------------------------
+  // Indexing function vector
+  jGvar_[0] = 0;
+  jGvar_[1] = 1;
+  jGvar_[2] = 0;
   jGvar_[3] = 1;
 
   // ---------------------------------------------------------------
+  // This is the nonzero structure of the Jacobian
   neG_ = lenG_;
   neA_ = lenA_;
-
-  /*
-
-
- // ---------------------------------------------------------------
- iAfun_[0] = 1;
- jAvar_[0] = 0;
- iAfun_[1] = 1;
- jAvar_[1] = 1;
- iAfun_[2] = 2;
- jAvar_[2] = 0;
- iAfun_[3] = 2;
- jAvar_[3] = 1;
-
- // ---------------------------------------------------------------
- A_[0] = 1.0;
- A_[1] = 1.2;
- A_[2] = 0.9;
- A_[3] = 3.0;
-
- // ---------------------------------------------------------------
- // Controls lower and upper bounds
- xlow_ = new double[n_];
- xupp_ = new double[n_];
-
- Flow_ = new double[neF_];
- Fupp_ = new double[neF_];
-
-
-<<<<<<< HEAD
-
- // ---------------------------------------------------------------
- // Bounds [1] constraint
- Flow_[1] = 3;
- Fupp_[1] = 10;
-
- // ---------------------------------------------------------------
- // Bounds [2] constraint
- Flow_[2] = -3;
- Fupp_[2] = 10;
-
- // ---------------------------------------------------------------
- // Bounds [3] constraint
- Flow_[3] = 0;
- Fupp_[3] = 1;
-
- // ---------------------------------------------------------------
- // Bounds x
- xlow_[0] = -2;
- xupp_[0] = 2;
-
- xlow_[1] = -4;
- xupp_[1] = 4;
-*/
 
 }
 
