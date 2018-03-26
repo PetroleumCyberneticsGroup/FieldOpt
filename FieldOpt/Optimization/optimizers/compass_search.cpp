@@ -1,33 +1,41 @@
+
+// ---------------------------------------------------------
 #include <iostream>
 #include <iomanip>
 #include "compass_search.h"
 #include "gss_patterns.hpp"
 
+// ---------------------------------------------------------
 using std::cout;
 using std::endl;
 
+// ---------------------------------------------------------
 namespace Optimization {
 namespace Optimizers {
 
+// ---------------------------------------------------------
 CompassSearch::CompassSearch(Settings::Optimizer *settings,
                              Case *base_case,
                              Model::Properties::VariablePropertyContainer *variables,
                              Reservoir::Grid::Grid *grid,
-                             Logger *logger
-)
+                             Logger *logger)
     : GSS(settings, base_case, variables, grid, logger) {
 
+  // -------------------------------------------------------
   directions_ = GSSPatterns::Compass(num_vars_);
   GSS::print_dbg_msg("[opt]Init. CompassSearch.----- ", 1);
 
+  // -------------------------------------------------------
   set_step_lengths();
   assert(step_lengths_.size() == directions_.size());
 
+  // -------------------------------------------------------
   set_step_tolerances();
   assert(step_tol_.size() == step_lengths_.size());
 
 }
 
+// ---------------------------------------------------------
 void CompassSearch::iterate() {
   GSS::print_dbg_msg("[opt]Launching opt.iteration. ", 1);
   if (!is_successful_iteration() && iteration_ != 0) {
@@ -39,6 +47,7 @@ void CompassSearch::iterate() {
   iteration_++;
 }
 
+// ---------------------------------------------------------
 QString CompassSearch::GetStatusStringHeader() const {
 
   if(settings_->parameters().initial_step_length_xyz.length() > 0) {
@@ -65,6 +74,7 @@ QString CompassSearch::GetStatusStringHeader() const {
   }
 }
 
+// ---------------------------------------------------------
 QString CompassSearch::GetStatusString() const {
 
   if(settings_->parameters().initial_step_length_xyz.length() > 0) {
@@ -112,13 +122,16 @@ QString CompassSearch::GetStatusString() const {
   }
 }
 
+// ---------------------------------------------------------
 void CompassSearch::handleEvaluatedCase(Case *c) {
   if (isImprovement(c))
     updateTentativeBestCase(c);
 }
 
+// ---------------------------------------------------------
 bool CompassSearch::is_successful_iteration() {
   return case_handler_->RecentlyEvaluatedCases().contains(GetTentativeBestCase());
 }
 
-}}
+}
+}

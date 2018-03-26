@@ -196,6 +196,21 @@ void Subproblem::setConstraintsAndDimensions() {
   objAdd_ = 0.0; // Add nothing to the objective for output purposes
 
   // ---------------------------------------------------------------
+  // Allocate memory
+
+  // Objective
+  Flow_ = new double[neF_];
+  Fupp_ = new double[neF_];
+
+  // Variables
+  xlow_ = new double[n_];
+  xupp_ = new double[n_];
+
+
+  iGfun_ = new integer[lenG_];
+  jGvar_ = new integer[lenG_];
+
+  // ---------------------------------------------------------------
   // No linear constraints
 
   // iAfun_ = new integer[lenA_];
@@ -205,15 +220,6 @@ void Subproblem::setConstraintsAndDimensions() {
   iAfun_ = nullptr;
   jAvar_ = nullptr;
   A_     = nullptr;
-
-  // ---------------------------------------------------------------
-  iGfun_ = new integer[lenG_]; // l=4
-  jGvar_ = new integer[lenG_]; // l=4
-
-  // ---------------------------------------------------------------
-  constant = 0;
-  gradient = new double[n_]; // l=2
-  hessian = new double[n_ * n_]; // l=4
 
   // ---------------------------------------------------------------
   // neF_ += 2; // Two linear constraints

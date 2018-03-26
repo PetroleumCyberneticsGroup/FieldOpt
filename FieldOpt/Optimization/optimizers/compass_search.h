@@ -1,12 +1,17 @@
+
+// ---------------------------------------------------------
 #ifndef COMPASSSEARCH_H
 #define COMPASSSEARCH_H
 
+// ---------------------------------------------------------
 #include "Optimization/optimizer.h"
 #include "GSS.h"
 
+// ---------------------------------------------------------
 namespace Optimization {
 namespace Optimizers {
 
+// ---------------------------------------------------------
 /*!
  * \brief The CompassSearch class is an implementation of
  * the Compass Search optimization algorithm described by
@@ -26,6 +31,8 @@ namespace Optimizers {
 class CompassSearch : public GSS
 {
  public:
+
+  // -------------------------------------------------------
   CompassSearch(::Settings::Optimizer *settings,
                 Case *base_case,
                 ::Model::Properties::VariablePropertyContainer *variables,
@@ -33,17 +40,20 @@ class CompassSearch : public GSS
                 Logger *logger
   );
 
+  // -------------------------------------------------------
   QString GetStatusStringHeader() const;
   QString GetStatusString() const;
 
  private:
 
+  // -------------------------------------------------------
   /*!
    * @brief Step or contract, perturb, and clear list of recently
    * evaluated cases..
    */
   void iterate();
 
+  // -------------------------------------------------------
   /*!
    * @brief Check if this iteration was successful (i.e. if
    * the current tent. best case was found in this iteration).
@@ -51,6 +61,7 @@ class CompassSearch : public GSS
   bool is_successful_iteration();
 
  protected:
+  // -------------------------------------------------------
   void handleEvaluatedCase(Case *c) override;
 };
 

@@ -32,6 +32,7 @@
 #include "reservoir_boundary.h"
 #include "pseudo_cont_boundary_2d.h"
 #include "rate_constraint.h"
+#include "iwd_constraint.h"
 
 // -----------------------------------------------------------------
 // FIELDOPT::OPTIMIZATION/MODEL/SETTINGS/RESERVOIR
@@ -39,6 +40,7 @@
 #include "Model/properties/variable_property_container.h"
 #include "Settings/optimizer.h"
 #include "Reservoir/grid/grid.h"
+#include <Runner/logger.h>
 
 // -----------------------------------------------------------------
 // Qt
@@ -59,11 +61,13 @@ namespace Constraints {
 class ConstraintHandler
 {
  public:
-  ConstraintHandler(QList<Settings::Optimizer::Constraint> constraints,
-                    Model::Properties::VariablePropertyContainer *variables,
-                    Reservoir::Grid::Grid *grid,
-                    Settings::Optimizer *settings
-  );
+
+  // -----------------------------------------------------------------
+  ConstraintHandler(
+      QList<Settings::Optimizer::Constraint> constraints,
+      Model::Properties::VariablePropertyContainer *variables,
+      Reservoir::Grid::Grid *grid,
+      Settings::Optimizer *settings);
 
   // -----------------------------------------------------------------
   // Check if a Case satisfies _all_ constraints.
@@ -103,6 +107,7 @@ class ConstraintHandler
 
  private:
   QList<Constraint *> constraints_;
+
 };
 
 }

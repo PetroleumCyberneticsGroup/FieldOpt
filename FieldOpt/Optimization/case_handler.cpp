@@ -26,6 +26,7 @@ namespace Optimization {
 
 // -----------------------------------------------------------------
 CaseHandler::CaseHandler(Settings::Optimizer *settings) {
+
   cases_ = QHash<QUuid, Case *>();
   evaluation_queue_ = QQueue<QUuid>();
   evaluating_ = QList<QUuid>();
@@ -45,6 +46,7 @@ CaseHandler::CaseHandler(Settings::Optimizer *settings) {
 // -----------------------------------------------------------------
 CaseHandler::CaseHandler(Case *base_case,
                          Settings::Optimizer *settings) {
+
   cases_[base_case->id()] = base_case;
   evaluated_.append(base_case->id());
   settings_ = settings;
@@ -52,6 +54,7 @@ CaseHandler::CaseHandler(Case *base_case,
 
 // -----------------------------------------------------------------
 void CaseHandler::AddNewCase(Case *c) {
+
   c->state.queue = Case::CaseState::QueueStatus::Q_QUEUED;
   evaluation_queue_.enqueue(c->id());
   cases_[c->id()] = c;
@@ -60,6 +63,7 @@ void CaseHandler::AddNewCase(Case *c) {
 
 // -----------------------------------------------------------------
 void CaseHandler::AddNewCases(QList<Case *> cases) {
+
   for (Case *c : cases) {
     c->state.queue = Case::CaseState::QueueStatus::Q_QUEUED;
     AddNewCase(c);
@@ -68,12 +72,15 @@ void CaseHandler::AddNewCases(QList<Case *> cases) {
 
 // -----------------------------------------------------------------
 Case *CaseHandler::GetNextCaseForEvaluation() {
+
   if (evaluation_queue_.size() == 0)
     throw CaseHandlerException(
         "The evaluation queue contains no cases.");
+
   if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
     cout << "[opt]Size of eval.queue:------ "
          << evaluation_queue_.length() << endl;
+
   evaluating_.append(evaluation_queue_.head());
 
   cases_[evaluation_queue_.head()]->state.queue =
@@ -84,6 +91,7 @@ Case *CaseHandler::GetNextCaseForEvaluation() {
 
 // -----------------------------------------------------------------
 void CaseHandler::SetCaseEvaluated(const QUuid id) {
+
   if (!evaluating_.contains(id))
     throw CaseHandlerException(
         "The case id is not found in the list of cases being evaluated.");
@@ -140,6 +148,7 @@ QList<Case *> CaseHandler::AllCases() const {
 
 // -----------------------------------------------------------------
 QList<Case *> CaseHandler::QueuedCases() const {
+
   QList<Case *> queued_cases = QList<Case *>();
   for (QUuid id : evaluation_queue_) {
     queued_cases.append(cases_[id]);
@@ -158,6 +167,7 @@ QList<Case *> CaseHandler::CasesBeingEvaluated() const {
 
 // -----------------------------------------------------------------
 QList<Case *> CaseHandler::EvaluatedCases() const {
+
   QList<Case *> evaluated_cases = QList<Case *>();
   for (QUuid id : evaluated_) {
     evaluated_cases.append(cases_[id]);
@@ -167,6 +177,7 @@ QList<Case *> CaseHandler::EvaluatedCases() const {
 
 // -----------------------------------------------------------------
 void CaseHandler::DequeueCase(QUuid id) {
+
   cases_[id]->state.queue = Case::CaseState::QueueStatus::Q_DISCARDED;
   evaluation_queue_.removeOne(id);
 }

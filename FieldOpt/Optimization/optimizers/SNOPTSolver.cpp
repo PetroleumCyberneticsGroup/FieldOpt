@@ -19,69 +19,22 @@ SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
                          Model::Properties::VariablePropertyContainer *variables,
                          Reservoir::Grid::Grid *grid,
                          Logger *logger)
-    : Optimizer(settings, base_case, variables, grid, logger) {
+    : Optimizer(settings, base_case, variables = nullptr, grid = nullptr, logger = nullptr) {
+//    : Optimizer(settings, base_case, variables = nullptr, grid = nullptr, logger = nullptr) {
 
   // ---------------------------------------------------------------
   if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
     cout << "[opt]Init. SNOPTSolver.-------" << endl;
   settings_ = settings;
-  //testOne myTestOne(settings);
-  //myTestOne.loadSNOPT();
-  //myTestOne.callSNOPT();
 
+  // ---------------------------------------------------------------
   Eigen::VectorXd vars = base_case->GetRealVarVector();
 
+  // ---------------------------------------------------------------
   Optimization::Case *newCase = new Case(base_case);
   newCase->SetRealVarValues(vars);
   newCase->set_objective_function_value(std::numeric_limits<double>::max());
   case_handler_->AddNewCase(newCase);
-
-
-  //loadSNOPT();
-  //SNOPTHandler snopthandler = initSNOPTHandler();
-
-  //SNOPTHandler mySNOPTHandler = initSNOPTHandler2();
-  //Subproblem mySub = Subproblem(settings);
-
-  /*
-  mySub.setConstant();
-   mySub.setGradient();
-   mySub.setHessian();
-   */
-  //vector<double> xsol;
-  //vector<double> fsol;
-  //vector<double> solutions;
-  /*
-  mySub.Solve(xsol, fsol, (char*)"Maximize"); //(char*)"Maximize"
-
-  cout << "xsol: " << endl;
-  for (int j = 0; j < 2; j++) {
-      cout << xsol[j] << endl;
-  }
-  cout << endl << "Objective values:" << endl;
-  for (int j = 0; j < 4; j++) {
-      cout << fsol[j] << endl;
-  }
-
-*/
-  /*
-  mySub.setConstant(0);
-  for (int i = 1; i <= 4; i++){
-      mySub.Solve(xsol, fsol, (char*)"Maximize"); //(char*)"Maximize"
-      mySub.setConstant(i*4);
-      solutions.push_back(fsol[0]);
-      //cout << fsol[0] << endl;
-  }
-
-  cout << endl << "\n Objective values:" << endl;
-  for (int i = 0; i < 4; i++){
-      cout << solutions[i] << endl;
-  }
-  */
-
-  //settings_ = settings;
-
-  //callSNOPT();
 
 }
 
@@ -100,98 +53,109 @@ SNOPTHandler SNOPTSolver::initSNOPTHandler(){
   SNOPTHandler snoptHandler(prnt_file.c_str(),
                             smry_file.c_str(),
                             optn_file.c_str());
+
   if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
     cout << "[opt]Init. SNOPTHandler.------" << endl;
 
   return snoptHandler;
 }
 
-// -----------------------------------------------------------------
+// -------------------------------------------------------------------
 int SNOPTusrFG_( integer    *Status, integer *n,    double x[],
                  integer    *needF,  integer *neF,  double F[],
                  integer    *needG,  integer *neG,  double G[],
                  char       *cu,     integer *lencu,
                  integer    iu[],    integer *leniu,
-                 double     ru[],    integer *lenru )
-{
+                 double     ru[],    integer *lenru ) {
 
-  int  nf = *neF;
-  //double x2 = x[1];
-  //cout << x1 << "\t" << x2 << endl;
-  cout << "[SNOPTusrFG_] \t The x vector is: \t ";
+  int nf = *neF;
+
+  // -----------------------------------------------------------------
+  cout << "[opt]SNOPTusrFG_.------------- x=";
   for (int i = 0; i < *n; i++ ){
-    cout << x[i] << "\t";
+    cout << x[i] << " ";
   }
   cout << endl;
 
+  // -----------------------------------------------------------------
+  // Toy problem
+  F[0] = x[0] * x[0] + x[1] + x[1]; // objective function
+  F[1] = x[0] + 2 * x[1]; // nonlinear constraint 1
 
-  //==================================================================
-// Computes the nonlinear objective and constraint terms for the
-// problem featured of interest. The problem is considered to be
-// written as:
-//
-//       Minimize     Fobj(x)
-//          x
-//
-//    subject to:
-//
-//        bounds      l_x <=   x  <= u_x
-//   constraints      l_F <= F(x) <= u_F
-//
-// The triples (g(k),iGfun(k),jGvar(k)), k = 1:neG, define
-// the sparsity pattern and values of the nonlinear elements
-// of the Jacobian.
-//==================================================================
+  G[0] = 2 * x[0];
+  G[1] = 2 * x[1];
+  G[2] = 1;
+  G[3] = 2;
 
-//  OptimizationData& optdata =  OptimizationData::reference();
-//
-//  if (( optdata.numberOfSimulations >= optdata.maxNumberOfSimulations ) &&
-//      ( optdata.maxNumberOfSimulations != 0 ))
-//  {
-//    *Status = -2;
-//    return 0;
-//  }
+  // =================================================================
+  // Computes the nonlinear objective and constraint terms for the
+  // problem featured of interest. The problem is considered to be
+  // written as:
+  //
+  //       Minimize     Fobj(x)
+  //          x
+  //
+  //    subject to:
+  //
+  //        bounds      l_x <=   x  <= u_x
+  //   constraints      l_F <= F(x) <= u_F
+  //
+  // The triples (g(k),iGfun(k),jGvar(k)), k = 1:neG, define
+  // the sparsity pattern and values of the nonlinear elements
+  // of the Jacobian.
+  // =================================================================
 
-// number of constraints; neF is the total number of constraints
-// plus the objective
-//  int m = *neF - 1 - optdata.numberOfLinearConstraints;
-  int m = *neF - 1;
+  // ADGPRS LEGACY (keep for ref.)
+  //  OptimizationData& optdata =  OptimizationData::reference();
+  //
+  //  if (( optdata.numberOfSimulations >= optdata.maxNumberOfSimulations ) &&
+  //      ( optdata.maxNumberOfSimulations != 0 ))
+  //  {
+  //    *Status = -2;
+  //    return 0;
+  //  }
 
-// If the values for the objective and/or the constraints are desired
-  if ( *needF > 0)
-  {
-    F[0] = - (x[0]-1.2)*(x[0]-1.2) - (x[1]-3.1)*(x[1]-3.1);
-    F[3] = 0.7*(x[0]*x[0]);// + x[1]*x[1]);
+  // -----------------------------------------------------------------
+  // # of constraints; neF is the total number of constraints + obj.
+  //  int m = *neF - 1 - optdata.numberOfLinearConstraints;
+  int m = (int)*neF - 1;
 
-// the value of the objective goes to the first entry of F
-//    if (FAILED == optdata.pOptimizationProblem->eval_f(*n, x, true, F[0]))
-//    {
-//      *Status = -1;
-//      return 0;
-//    }
+  // -----------------------------------------------------------------
+  // Function call from SNOPT for objective/gradient computation
+  if (*needF > 0) {
 
-// the values of the constraints follow that of the objective
-    if ( m ){
+    // ADGPRS LEGACY (keep for ref.)
+    // The value of the objective goes to the first entry of F
+    //    if (FAILED ==
+    //        optdata.pOptimizationProblem->eval_f(*n, x, true, F[0])) {
+    //      *Status = -1;
+    //      return 0;
+    //    }
 
-//      optdata.pOptimizationProblem->eval_g(*n, x, false, m, &F[1]);
+    // the values of the constraints follow that of the objective
+    if (m) {
+
+      // ADGPRS LEGACY (keep for ref.)
+      // optdata.pOptimizationProblem->eval_g(*n, x, false, m, &F[1]);
     }
   }
 
-  if ( *needG > 0)
-  {
-    G[0] = -2*(x[0]-1.2);
-    G[1] = -2*(x[1]-3.1);
+  // -----------------------------------------------------------------
+  // If the values for the constraints are desired
+  if (*needG > 0) {
 
-// we have as many derivatives as the number of the controls, n
-//    optdata.pOptimizationProblem->eval_grad_f(*n, x, false, G);
+    // ADGPRS LEGACY (keep for ref.)
+    // We have as many derivatives as the number of the controls, n
+    //    optdata.pOptimizationProblem->eval_grad_f(*n, x, false, G);
 
-    G[2] = 1.4*x[0];
-    //G[3] = 1.4*x[1];
-// and the derivatives of the constraints follow
-    if ( m ){
+    // Derivatives of constraints:
+    if (m) {
 
-//    G[1] = 100*4*x1*x1*x1;//-4*(x2-0.7);
-//      optdata.pOptimizationProblem->eval_jac_g(*n, x, false, m, *neG, 0, 0, &G[*n]);
+      // ADGPRS LEGACY (keep for ref.)
+      // G[1] = 100*4*x1*x1*x1;//-4*(x2-0.7);
+      // optdata.pOptimizationProblem->eval_jac_g(*n, x, false, m,
+      //                                          *neG, 0, 0, &G[*n]);
+
     }
 
   }

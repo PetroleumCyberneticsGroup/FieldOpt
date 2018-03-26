@@ -23,6 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
+// ---------------------------------------------------------
 #include <Simulation/simulator_interfaces/flowsimulator.h>
 #include <Optimization/optimizers/APPS.h>
 #include <Optimization/optimizers/GeneticAlgorithm.h>
@@ -37,13 +38,17 @@
 #include "Simulation/simulator_interfaces/adgprssimulator.h"
 #include "Utilities/math.hpp"
 
+// ---------------------------------------------------------
 #include <iomanip>
 
+// ---------------------------------------------------------
 using std::cout;
 using std::endl;
 
+// ---------------------------------------------------------
 namespace Runner {
 
+// ---------------------------------------------------------
 AbstractRunner::AbstractRunner(RuntimeSettings *runtime_settings)
 {
   runtime_settings_ = runtime_settings;
@@ -57,15 +62,17 @@ AbstractRunner::AbstractRunner(RuntimeSettings *runtime_settings)
   bookkeeper_ = 0;
 }
 
-double AbstractRunner::sentinelValue() const
-{
+// ---------------------------------------------------------
+double AbstractRunner::sentinelValue() const {
+
   if (settings_->optimizer()->mode() == Settings::Optimizer::OptimizerMode::Minimize)
     return -1*sentinel_value_;
   return sentinel_value_;
 }
 
-void AbstractRunner::InitializeSettings(QString output_subdirectory)
-{
+// ---------------------------------------------------------
+void AbstractRunner::InitializeSettings(QString output_subdirectory) {
+
   QString output_directory = runtime_settings_->output_dir();
   if (output_subdirectory.length() > 0)
     output_directory.append(QString("/%1/").arg(output_subdirectory));
@@ -98,8 +105,8 @@ void AbstractRunner::InitializeSettings(QString output_subdirectory)
     std::cout << "[run]Initialized Settings.---" << std::endl;
 }
 
-void AbstractRunner::InitializeModel()
-{
+// ---------------------------------------------------------
+void AbstractRunner::InitializeModel() {
   if (settings_ == 0)
     throw std::runtime_error("The Settings must be initialized before the Model.");
 
@@ -109,8 +116,9 @@ void AbstractRunner::InitializeModel()
 
 }
 
-void AbstractRunner::InitializeSimulator()
-{
+// ---------------------------------------------------------
+void AbstractRunner::InitializeSimulator() {
+
   if (model_ == 0)
     throw std::runtime_error("The Model must be initialized before the simulator.");
 
@@ -137,8 +145,9 @@ void AbstractRunner::InitializeSimulator()
   simulator_->SetVerbosityLevel(runtime_settings_->verbosity_level());
 }
 
-void AbstractRunner::EvaluateBaseModel()
-{
+// ---------------------------------------------------------
+void AbstractRunner::EvaluateBaseModel() {
+
   if (simulator_ == 0)
     throw std::runtime_error(
         "Simulator must be initialized before evaluating the base model.");
@@ -151,8 +160,8 @@ void AbstractRunner::EvaluateBaseModel()
     std::cout << "[run]Evaluated BaseModel.----" << std::endl;
 }
 
-void AbstractRunner::InitializeObjectiveFunction()
-{
+// ---------------------------------------------------------
+void AbstractRunner::InitializeObjectiveFunction() {
   if (simulator_ == 0 || settings_ == 0)
     throw std::runtime_error(
         "Simulator & Settings must be initialized before Objective Function.");
@@ -171,8 +180,9 @@ void AbstractRunner::InitializeObjectiveFunction()
   objective_function_->SetVerbosityLevel(runtime_settings_->verbosity_level());
 }
 
-void AbstractRunner::InitializeBaseCase()
-{
+// ---------------------------------------------------------
+void AbstractRunner::InitializeBaseCase() {
+
   if (objective_function_ == 0 || model_ == 0)
     throw std::runtime_error(
         "Objective Function & Model must be initialized before BaseCase.");
@@ -199,8 +209,9 @@ void AbstractRunner::InitializeBaseCase()
   }
 }
 
-void AbstractRunner::InitializeOptimizer()
-{
+// ---------------------------------------------------------
+void AbstractRunner::InitializeOptimizer() {
+
   if (base_case_ == 0 || model_ == 0)
     throw std::runtime_error(
         "BaseCase & Model must be initialized before Optimizer");
@@ -273,8 +284,9 @@ void AbstractRunner::InitializeOptimizer()
     cout << "[opt]Initialized Optimizer.--" << endl;
 }
 
-void AbstractRunner::InitializeBookkeeper()
-{
+// ---------------------------------------------------------
+void AbstractRunner::InitializeBookkeeper() {
+
   if (settings_ == 0 || optimizer_ == 0)
     throw std::runtime_error(
         "The Settings and the Optimizer must "
@@ -285,14 +297,16 @@ void AbstractRunner::InitializeBookkeeper()
     std::cout << "[run]Initialized Bookkeeper.-" << std::endl;
 }
 
+// ---------------------------------------------------------
 void AbstractRunner::InitializeLogger(QString output_subdir,
-                                      bool write_logs)
-{
+                                      bool write_logs) {
+
   logger_ = new Logger(runtime_settings_, output_subdir, write_logs);
   if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
     std::cout << "[run]Initialized Logger.-----" << std::endl;
 }
 
+// ---------------------------------------------------------
 void AbstractRunner::PrintCompletionMessage() const {
   std::cout << "[run]Optimization complete:- ";
   switch (optimizer_->IsFinished()) {
@@ -326,7 +340,9 @@ void AbstractRunner::PrintCompletionMessage() const {
   }
 }
 
+// ---------------------------------------------------------
 int AbstractRunner::timeoutValue() const {
+
   if (simulation_times_.size() == 0 || runtime_settings_->simulation_timeout() == 0)
     return 10000;
   else {
@@ -334,7 +350,9 @@ int AbstractRunner::timeoutValue() const {
   }
 }
 
+// ---------------------------------------------------------
 void AbstractRunner::FinalizeInitialization(bool write_logs) {
+
   if (write_logs) {
     logger_->AddEntry(runtime_settings_);
     logger_->FinalizePrerunSummary();

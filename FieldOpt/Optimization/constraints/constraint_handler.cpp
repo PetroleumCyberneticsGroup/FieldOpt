@@ -20,6 +20,12 @@ ConstraintHandler::ConstraintHandler(
     // -------------------------------------------------------------
     switch (constraint.type) {
 
+      // -----------------------------------------------------------
+      // IWD W/ SNOPT
+      case Settings::Optimizer::ConstraintType::IWD:
+        constraints_.append(new IWDConstraint(settings, variables));
+        break;
+
         // ---------------------------------------------------------
         // BHP
       case Settings::Optimizer::ConstraintType::BHP:

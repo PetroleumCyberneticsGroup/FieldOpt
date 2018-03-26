@@ -17,17 +17,22 @@
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
+
+// ---------------------------------------------------------
 #ifndef FIELDOPT_GSS_H
 #define FIELDOPT_GSS_H
 
+// ---------------------------------------------------------
 //#include "Model/properties/variable_property_container.h"
 #include "Optimization/optimizer.h"
 #include <Eigen/Core>
 #include <vector>
 
+// ---------------------------------------------------------
 using namespace Eigen;
 using namespace std;
 
+// ---------------------------------------------------------
 namespace Optimization {
 namespace Optimizers {
 
@@ -47,6 +52,7 @@ namespace Optimizers {
  * class (e.g. like the CompassSearch class) to provide specific patterns
  * and contraction/expansion parameter values.
  */
+// ---------------------------------------------------------
 class GSS : public Optimizer {
  public:
   /*!

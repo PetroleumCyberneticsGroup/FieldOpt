@@ -21,6 +21,8 @@ namespace Optimizers {
  */
 class DFO : public Optimizer {
  public:
+
+  // -------------------------------------------------------
   DFO(Settings::Optimizer *settings,
       Case *base_case,
       Model::Properties::VariablePropertyContainer *variables,

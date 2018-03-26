@@ -41,7 +41,7 @@ DFO::DFO(Settings::Optimizer *settings,
   grad << 1, 2;
 
   // -----------------------------------------------------
-  // Set ip subproblem
+  // Set up subproblem
   Subproblem mySub(settings);
   mySub.setConstant(1.2);
   mySub.setGradient(grad);
@@ -60,7 +60,7 @@ DFO::DFO(Settings::Optimizer *settings,
   for (int j = 0; j < 2; j++) {
     cout << xsol[j] << endl;
   }
-  
+
   cout << endl << "Objective values:" << endl;
   for (int j = 0; j < 2; j++) {
     cout << fsol[j] << endl;
