@@ -7,6 +7,7 @@
 
 #include "Optimization/optimizer.h"
 #include "Subproblem.h"
+#include "DFO_Model.h"
 
 namespace Optimization {
 namespace Optimizers {
@@ -25,18 +26,29 @@ class DFO : public Optimizer {
   //TerminationCondition IsFinished() override;
   QString GetStatusStringHeader() const {};
   QString GetStatusString() const {};
+  QList<Case *> ConvertPointsToCases(Eigen::MatrixXd points);
+
  private:
   Model::Properties::VariablePropertyContainer *varcont_;
-  //void iterate() override;
+  DFO_Model DFO_model_;
+  void iterate() override;
+  int number_of_interpolation_points_;
+  int number_of_variables_;
+  Optimization::Case *base_case_;
+  int last_action_;
+
+
+  /*
   void iterate() {
     iterations_++;
     //cout << "just did an ITERATE" << endl;
   };
+   */
   bool is_successful_iteration(){};
 
-  void handleEvaluatedCase(Case *c) override {
-    //cout << "just handled an evaluated case!" << endl;
-  };
+
+  void handleEvaluatedCase(Case *c);
+
   TerminationCondition IsFinished() {
     cout << "JUST CALLED ISFINISHED" << endl;
 
@@ -50,7 +62,9 @@ class DFO : public Optimizer {
   //void handleEvaluatedCase(Case *c) override;
 
  private:
-  double trust_radius_;
+  int previous_iterate_type_;
+  double initial_trust_region_radius_;
+  double required_poisedness_;
   QList<QUuid> realvar_uuid_;
   Settings::Optimizer *settings_;
   int iterations_;
