@@ -53,6 +53,7 @@ add_library(optimization
 		optimizers/RGARDD.cpp
 		optimizers/DFO.cpp
 		optimizers/SNOPTSolver.cpp
+		optimizers/DFO_Model.cpp
 		optimizers/OptimizationProblem.cpp
         ../FieldOpt-3rdPartySolvers/handlers/SNOPTHandler.cpp
         ../FieldOpt-3rdPartySolvers/handlers/LibraryHandler.c
