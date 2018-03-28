@@ -16,8 +16,11 @@ int SNOPTusrFG3_(integer *Status, integer *n, doublereal x[],
 }
 #endif
 
-static double *gradient;
-static double *hessian;
+//static double *gradient;
+//static double *hessian;
+//static double constant;
+static Eigen::MatrixXd hessian;
+static Eigen::VectorXd gradient;
 static double constant;
 
 //Subproblem::Subproblem(SNOPTHandler snoptHandler) {
@@ -85,17 +88,24 @@ void Subproblem::Solve(std::vector<double> &xsol, std::vector<double> &fsol, cha
   integer Cold = 0, Basis = 1, Warm = 2;
 
   snoptHandler.solve(Cold, xsol, fsol);
+  integer exitCode = snoptHandler.getExitCode();
+  if (exitCode == 32){
+    cout << "The major iteration limit was reached, trying to increase it to improve on the result" << endl;
+    ResetSubproblem();
+    snoptHandler.setIntParameter("Major Iterations Limit", 10000);
+    snoptHandler.setRealParameter("Major step limit", 1);
+    snoptHandler.solve(Cold, xsol, fsol);
+  }
+  exitCode = snoptHandler.getExitCode();
+  if (exitCode == 32 || exitCode == 31){
+    cout << "The major iteration limit or the iteration limit was reached, trying to increase it to improve on the result" << endl;
+    ResetSubproblem();
+    snoptHandler.setIntParameter("Major Iterations Limit", 12000);
+    snoptHandler.setRealParameter("Major step limit", 0.8);
+    snoptHandler.setIntParameter("Iterations limit", 20000);
+    snoptHandler.solve(Cold, xsol, fsol);
+  }
 
-/*
-			cout << "xsol: " << endl;
-			for (int j = 0; j < n_; j++) {
-				cout << xsol[j] << endl;
-			}
-			cout << endl << "Objective values:" << endl;
-			for (int j = 0; j < neF_; j++) {
-				cout << fsol[j] << endl;
-			}
-*/
 }
 
 void Subproblem::ResetSubproblem() {
@@ -129,20 +139,13 @@ void Subproblem::passParametersToSNOPTHandler(SNOPTHandler &snoptHandler) {
 
 void Subproblem::setConstraintsAndDimensions() {
   // This must be set before compiling the code. It cannot be done during runtime through function calls.
-  n_ = 2;
+  n_ = 10;
   m_ = 1;
   neF_ = m_ + 1;
   lenA_ = 0;
   lenG_ = n_ + m_ * n_;
   objRow_ = 0; // In theory the objective function could be any of the elements in F.
   objAdd_ = 0.0;
-
-  constant = 0;
-  gradient = new double[n_];
-  hessian = new double[n_ * n_];
-
-  //neF_ += 2; // Two linear constraints
-  //lenG_--; // We only have 1 derivative for the nonlinear constraint (it doesn't depend upon both variables)
 
   iGfun_ = new integer[lenG_];
   jGvar_ = new integer[lenG_];
@@ -151,10 +154,10 @@ void Subproblem::setConstraintsAndDimensions() {
   jAvar_  = NULL;
   A_       = NULL;
 
-   /*
-  iAfun_ = new integer[lenA_];
-  jAvar_ = new integer[lenA_];
-  A_ = new double[lenA_];
+  /*
+ iAfun_ = new integer[lenA_];
+ jAvar_ = new integer[lenA_];
+ A_ = new double[lenA_];
 */
   /*
   iAfun_[0] = 1;
@@ -177,11 +180,12 @@ void Subproblem::setConstraintsAndDimensions() {
   Flow_ = new double[neF_];
   Fupp_ = new double[neF_];
 
+/*
   Flow_[0] = -infinity_;
   Fupp_[0] = infinity_;
   Flow_[1] = 3;
   Fupp_[1] = 10;
-  /*
+
   Flow_[2] = -3;
   Fupp_[2] = 10;
   Flow_[3] = 0;
@@ -193,6 +197,9 @@ void Subproblem::setConstraintsAndDimensions() {
   xupp_[1] = 4;
 */
 
+
+
+  /*
   xlow_[0] = -infinity_;
   xupp_[0] = infinity_;
   xlow_[1] = -infinity_;
@@ -209,7 +216,40 @@ void Subproblem::setConstraintsAndDimensions() {
   jGvar_[2] = 0;
   iGfun_[3] = 1;
   jGvar_[3] = 1;
+*/
 
+  // Objective function
+  Flow_[0] = -infinity_;
+  Fupp_[0] =  infinity_;
+
+  // Trust region radius
+  Flow_[1] = 0;
+  Fupp_[1] =  285;
+
+  for(int i = 0; i < n_; ++i){
+    xlow_[i] = -infinity_;
+    xupp_[i] = infinity_;
+  }
+
+  // first the objective
+  for (int i = 0; i < n_; i++)
+  {
+    iGfun_[i] = 0;
+    jGvar_[i] = i;
+  }
+
+  if (m_ != 0)
+  {
+    // and then the constraints
+    for (int j = 1; j <= m_; j++)
+    {
+      for (int i = 0; i < n_; i++)
+      {
+        iGfun_[i + j * n_] = j;
+        jGvar_[i + j * n_] = i;
+      }
+    }
+  }
 
   neG_ = lenG_;
   neA_ = lenA_;
@@ -228,11 +268,9 @@ Subproblem::~Subproblem() {
   delete[] Flow_;
   delete[] Fupp_;
   delete[] Fmul_;
-  delete[] Fstate_;
+  //delete[] Fstate_;
   delete[] xnames_;
   delete[] Fnames_;
-  delete[] gradient;
-  delete[] hessian;
 }
 
 void Subproblem::setOptionsForSNOPT(SNOPTHandler &snoptHandler) {
@@ -286,19 +324,19 @@ void Subproblem::setOptionsForSNOPT(SNOPTHandler &snoptHandler) {
   //snoptHandler.setParameter("LU singularity tolerance       3.2e-11");
 
   //target nonlinear constraint violation
- //snoptHandler.setRealParameter("Major feasibility tolerance", 0.000001);
-  //snoptHandler.setIntParameter("Major Iterations Limit", 1000);
+  //snoptHandler.setRealParameter("Major feasibility tolerance", 0.000001);
+  snoptHandler.setIntParameter("Major Iterations Limit", 1000);
 
   //target complementarity gap
   //snoptHandler.setRealParameter("Major optimality tolerance", 0.0001);
 
   //snoptHandler.setParameter("Major Print level  11111"); //  000001"
-  //snoptHandler.setRealParameter("Major step limit", 0.2);
+  snoptHandler.setRealParameter("Major step limit", 0.2);
   //snoptHandler.setIntParameter("Minor iterations limit", 200); // 200
 
   //for satisfying the QP bounds
 //  snoptHandler.setRealParameter("Minor feasibility tolerance", optdata.constraintTolerance);
-  snoptHandler.setIntParameter("Minor print level", 10);
+  //snoptHandler.setIntParameter("Minor print level", 10);
   //snoptHandler.setParameter("New basis file                 0");
   //snoptHandler.setParameter("New superbasics limit          99");
   //snoptHandler.setParameter("Objective Row");
@@ -371,28 +409,6 @@ bool Subproblem::loadSNOPT(const string libname) {
   return true;
 }
 
-/*
-		SNOPTHandler initSNOPTHandler2() {
-			loadSNOPT2();
-			string prnt_file, smry_file, optn_file;
-			//optn_file = settings_->parameters().thrdps_optn_file.toStdString() + ".opt.optn";
-			//smry_file = settings_->parameters().thrdps_smry_file.toStdString() + ".opt.summ";
-			//prnt_file = settings_->parameters().thrdps_prnt_file.toStdString() + ".opt.prnt";
-			//SNOPTHandler snoptHandler(prnt_file.c_str(),
-			//						  smry_file.c_str(),
-			//						  optn_file.c_str());
-
-			prnt_file = "snopt_print.opt.prnt";
-			smry_file = "snopt_summary.opt.summ";
-			optn_file = "snopt_options.opt.optn";
-
-			SNOPTHandler snoptHandler(prnt_file.c_str(),
-									  smry_file.c_str(),
-									  optn_file.c_str());
-			cout << "[opt]Init. SNOPTHandler.------" << endl;
-			return snoptHandler;
-		}
-*/
 
 
 int SNOPTusrFG3_(integer *Status, integer *n, double x[],
@@ -401,200 +417,81 @@ int SNOPTusrFG3_(integer *Status, integer *n, double x[],
                  char *cu, integer *lencu,
                  integer iu[], integer *leniu,
                  double ru[], integer *lenru) {
+  // Testing with 20 (wells) * 6 (variables pr wells) = 120 variables.
 
-
-  F[0] = x[0]*x[0] + x[1] + x[1];
-  F[1] = x[0] + 2*x[1];
-  G[0] = 2*x[0];
-  G[1] = 2*x[1];
-  G[2] = 1;
-  G[3] = 2;
-  /*
-  Eigen::MatrixXd H(2,2);
-  //H.setOnes();
-  H << 1, 0, 0, 1;
-  Eigen::VectorXd g(2);
-  g.setZero();
-  double c = 0;
-  int nf = *neF;
-  //double x2 = x[1];
-  //cout << x1 << "\t" << x2 << endl;
-  //cout << "[SNOPTusrFG_] \t The x vector is: \t ";
-  //for (int i = 0; i < *n; i++ ){
-  //    cout << x[i] << "\t";
-  //}
-  //cout << endl;
   Eigen::VectorXd xvec(*n);
   for (int i = 0; i < *n; ++i){
     xvec[i] = x[i];
   }
 
-  /// Calculate objective function value
-  double mx = c;
-  for (int i = 0; i < *n; i++) {
-    mx += g[i] * x[i];
-   double temp = 0;
-    for (int j = 0; j < *n; j++) {
-      temp += x[j] * H(i,j);
-    }
-    mx += temp * x[i];
-  }
-
-  F[0] = mx;
-
-  //F[0] = c + g.transpose()*xvec + xvec.transpose()*H*xvec;
-  /// Calculate the gradient of the objective function.
-  for (int i = 0; i < *n; i++) {
-    G[i] = g[i];
-    for (int j = 0; j < *n; j++) {
-      G[i] += H(i,j)*x[j];
-    }
-  }
-  //Eigen::VectorXd newgrad(2);
-  //newgrad = g + H*xvec;
-
-  //G[0] = newgrad[0];G[1] = newgrad[1];
-
-  //double rho = 30.0;
-  /// Calculate constraint values.
-  // The trust region constraint
-  double constraint = xvec(0) + xvec(1);
-  F[1] = constraint;
-
-
-
-  //Eigen::VectorXd gradientOfC(2);
-  //if ( std::abs( xvec.norm()) <= 0.00001){
-  //    gradientOfC.setZero();
-  //}
-  //else
-  //gradientOfC = xvec/(xvec.norm() + 0.00000000000000000000001);
-
-  //G[2] = gradientOfC[0];
-  //G[3] = gradientOfC[1];
-  G[2] = 1;
-  G[3] = 1;
-*/
-   /*
-  for (int i = 0; i < *n; i++){
-    G[*n + i] = gradientOfC[i];
-  }
-*/
-  /*
-  double h = 0.001;
-  Eigen::VectorXd xper = xvec;
-  xper[0] += h;
-  G[2] = (xper.norm() - xvec.norm()) / h;
-
-  xper = xvec;
-  xper[1] += h;
-  G[3] = (xper.norm() - xvec.norm()) / h;
-*/
-  /// Calculate gradient of constraints.
-
-
-  //==================================================================
-// Computes the nonlinear objective and constraint terms for the
-// problem featured of interest. The problem is considered to be
-// written as:
-//
-//       Minimize     Fobj(x)
-//          x
-//
-//    subject to:
-//
-//        bounds      l_x <=   x  <= u_x
-//   constraints      l_F <= F(x) <= u_F
-//
-// The triples (g(k),iGfun(k),jGvar(k)), k = 1:neG, define
-// the sparsity pattern and values of the nonlinear elements
-// of the Jacobian.
-//==================================================================
-
-//  OptimizationData& optdata =  OptimizationData::reference();
-//
-//  if (( optdata.numberOfSimulations >= optdata.maxNumberOfSimulations ) &&
-//      ( optdata.maxNumberOfSimulations != 0 ))
-//  {
-//    *Status = -2;
-//    return 0;
-//  }
-
-// number of constraints; neF is the total number of constraints
-// plus the objective
-//  int m = *neF - 1 - optdata.numberOfLinearConstraints;
   int m = *neF - 1;
 
-// If the values for the objective and/or the constraints are desired
+
+
+  // If the values for the objective and/or the constraints are desired
   if (*needF > 0) {
-    //F[0] = -(x[0] - 1.2) * (x[0] - 1.2) - (x[1] - 3.1) * (x[1] - 3.1) + constant;
-    //F[3] = 0.7 * (x[0] * x[0]);// + x[1]*x[1]);
-
-// the value of the objective goes to the first entry of F
-//    if (FAILED == optdata.pOptimizationProblem->eval_f(*n, x, true, F[0]))
-//    {
-//      *Status = -1;
-//      return 0;
-//    }
-
-// the values of the constraints follow that of the objective
+    /// The objective function
+    F[0] = constant + gradient.transpose()*xvec + xvec.transpose()*hessian*xvec;
     if (m) {
-
-//      optdata.pOptimizationProblem->eval_g(*n, x, false, m, &F[1]);
+      /// The constraints
+      F[1] = xvec.norm();
     }
   }
+
 
   if (*needG > 0) {
-    //G[0] = -2 * (x[0] - 1.2);
-    //G[1] = -2 * (x[1] - 3.1);
-
-// we have as many derivatives as the number of the controls, n
-//    optdata.pOptimizationProblem->eval_grad_f(*n, x, false, G);
-
-    //G[2] = 1.4 * x[0];
-    //G[3] = 1.4*x[1];
-// and the derivatives of the constraints follow
-    if (m) {
-
-//    G[1] = 100*4*x1*x1*x1;//-4*(x2-0.7);
-//      optdata.pOptimizationProblem->eval_jac_g(*n, x, false, m, *neG, 0, 0, &G[*n]);
+    /// The Derivatives of the objective function
+    Eigen::VectorXd grad(*n);
+    grad = gradient + hessian*xvec;
+    for (int i = 0; i < *n; ++i){
+      G[i] = grad(i);
     }
 
+    /// The derivatives of the constraints
+    if (m) {
+      Eigen::VectorXd gradConstraint(*n);
+      gradConstraint = xvec/(xvec.norm() + 0.000000000000001);
+      for (int i = 0; i < *n; ++i){
+        G[i+*n] = gradConstraint(i);
+      }
+    }
   }
 
+  // The sphere
+  /*
+  F[0] = 0;
+  for (int i = 0; i < *n; i++){
+    F[0] += (xvec(i))*(xvec(i));
+    G[i] = 2*(xvec(i));
+  }
+  F[1] = xvec.norm();
+  Eigen::VectorXd gradConstraint(*n);
+  gradConstraint = xvec/(xvec.norm()+0.00000000001);
+  for (int i = 0; i < *n; ++i){
+    G[i+*n] = gradConstraint(i);
+  }
+  */
   return 0;
 }
 
 void Subproblem::setQuadraticModel(double c, Eigen::VectorXd g, Eigen::MatrixXd H) {
   constant = c;
-  int n = g.rows();
-  for (int i = 0; i < n; ++i) {
-    gradient[i] = g(i);
-    for (int j = 0; j < n; ++j) {
-      hessian[i * n + j] = H(i, j);
-    }
-  }
+  gradient = g;
+  hessian = H;
 }
 
 void Subproblem::setGradient(Eigen::VectorXd g) {
-  int n = g.rows();
-  for (int i = 0; i < n; ++i) {
-    gradient[i] = g(i);
-  }
+  gradient = g;
 }
 
 void Subproblem::setHessian(Eigen::MatrixXd H) {
-  int n = H.rows();
-  for (int i = 0; i < n; ++i) {
-    for (int j = 0; j < n; ++j) {
-      hessian[i * n + j] = H(i, j);
-    }
-  }
+  hessian = H;
 }
 
 void Subproblem::setConstant(double c) {
   constant = c;
 }
+
 
 }
 }

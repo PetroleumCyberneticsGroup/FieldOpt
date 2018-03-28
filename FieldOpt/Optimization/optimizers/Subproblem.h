@@ -11,8 +11,8 @@
 #include "FieldOpt-3rdPartySolvers/handlers/SNOPTLoader.h"
 #include "Optimization/optimizer.h"
 namespace Optimization {
-    namespace Optimizers {
-        class Subproblem {
+namespace Optimizers {
+class Subproblem {
 
 /*
  This class will find _one_ maximum of a quadratic function (specified by c_, g_ and H_) subject to some specified constraints.
@@ -113,95 +113,90 @@ namespace Optimization {
 */
 
 
-        private:
+ private:
 
-            int n_; // Number of variables
-            int m_;    // Number of nonlinear constraints
-            integer neF_; // Number of element in F
-            integer neG_;
-            integer lenG_;
-            integer objRow_;
-            double objAdd_;
+  int n_; // Number of variables
+  int m_;    // Number of nonlinear constraints
+  integer neF_; // Number of element in F
+  integer neG_;
+  integer lenG_;
+  integer objRow_;
+  double objAdd_;
 
-            integer *iAfun_ = NULL;
-            integer *jAvar_ = NULL;
-            double *A_ = NULL;
-            integer lenA_;
-            integer neA_;
+  integer *iAfun_ = NULL;
+  integer *jAvar_ = NULL;
+  double *A_ = NULL;
+  integer lenA_;
+  integer neA_;
 
-            integer *iGfun_ = NULL;
-            integer *jGvar_ = NULL;
+  integer *iGfun_ = NULL;
+  integer *jGvar_ = NULL;
 
-            double *x_;
+  double *x_;
 
+  // controls lower and upper bounds
+  double *xlow_ = NULL;
+  double *xupp_ = NULL;
 
-            // controls lower and upper bounds
-            double *xlow_ = NULL;
-            double *xupp_ = NULL;
+  // the initial guess for Lagrange multipliers
+  double *xmul_ = NULL;;
 
-            // the initial guess for Lagrange multipliers
-            double *xmul_ = NULL;;
+  // the state of the variables (whether the optimal is likely to be on
+  // the boundary or not)
+  integer *xstate_ = NULL;
 
-            // the state of the variables (whether the optimal is likely to be on
-            // the boundary or not)
-            integer *xstate_ = NULL;
+  double *F_ = NULL;
+  double *Flow_ = NULL;
+  double *Fupp_ = NULL;
+  double *Fmul_ = NULL;
+  integer *Fstate_ = NULL;
+  char *xnames_ = NULL;
+  char *Fnames_ = NULL;
 
-            double *F_ = NULL;
-            double *Flow_ = NULL;
-            double *Fupp_ = NULL;
-            double *Fmul_ = NULL;
-            integer *Fstate_ = NULL;
-            char *xnames_ = NULL;
-            char *Fnames_ = NULL;
+  integer nxnames_;
+  integer nFnames_;
+  Settings::Optimizer *settings_;
 
-            integer nxnames_;
-            integer nFnames_;
-            Settings::Optimizer *settings_;
+  // this is the value SNOPT considers as infinity
+  double infinity_ = 1e20;
 
-            // this is the value SNOPT considers as infinity
-            const double infinity_ = 1e20;
+  void setConstraintsAndDimensions();
 
+  void setOptionsForSNOPT(SNOPTHandler &snoptHandler);
 
+  bool loadSNOPT(string libname = "libsnopt-7.2.12.2.so");
 
-            void setConstraintsAndDimensions();
+  void setAndInitializeSNOPTParameters();
 
-            void setOptionsForSNOPT(SNOPTHandler &snoptHandler);
+  void passParametersToSNOPTHandler(SNOPTHandler &snoptHandler);
 
-            bool loadSNOPT(string libname = "libsnopt-7.2.12.2.so");
+ public:
 
-            void setAndInitializeSNOPTParameters();
+  void setQuadraticModel(double c, Eigen::VectorXd g, Eigen::MatrixXd H);
 
-            void passParametersToSNOPTHandler(SNOPTHandler &snoptHandler);
+  void setGradient(Eigen::VectorXd g);
 
+  void setHessian(Eigen::MatrixXd H);
 
-        public:
+  void setConstant(double constant);
 
-            void setQuadraticModel(double c, Eigen::VectorXd g, Eigen::MatrixXd H);
+  ~Subproblem();
 
-            void setGradient(Eigen::VectorXd g);
+  SNOPTHandler initSNOPTHandler();
 
-            void setHessian(Eigen::MatrixXd H);
+  explicit Subproblem(Settings::Optimizer *settings);
+  Subproblem(){};
 
-            void setConstant(double constant);
+  void ResetSubproblem();
 
-            ~Subproblem();
+  //void Solve(std::vector<double> xsol, std::vector<double> fsol, char *optimizationType);
 
-            SNOPTHandler initSNOPTHandler();
+  //void Solve(vector<double> *xsol, vector<double> *fsol, char *optimizationType);
 
-            explicit Subproblem(Settings::Optimizer *settings);
+  void Solve(vector<double> &xsol, vector<double> &fsol, char *optimizationType);
+};
 
-
-            void ResetSubproblem();
-
-             //void Solve(std::vector<double> xsol, std::vector<double> fsol, char *optimizationType);
-
-            //void Solve(vector<double> *xsol, vector<double> *fsol, char *optimizationType);
-
-            void Solve(vector<double> &xsol, vector<double> &fsol, char *optimizationType);
-        };
-
-
-    }
+}
 }
 
 #endif //FIELDOPT_SUBPROBLEM_H
