@@ -84,6 +84,9 @@ class Optimizer
 
     // DFO parameters
     double initial_trust_region_radius;
+    int number_of_interpolation_points;
+    int number_of_variables;
+    double required_poisedness;
   };
 
   struct Objective {

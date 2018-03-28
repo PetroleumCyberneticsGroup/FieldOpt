@@ -153,6 +153,9 @@ void Settings::readOptimizerSection()
     } else if (optimizer_->type() == Optimizer::OptimizerType::GeneticAlgorithm) {
     } else if (optimizer_->type() == Optimizer::OptimizerType::DFO){
       cout << "InitialTrustRegionRadius" << optimizer_->parameters_.initial_trust_region_radius << endl;
+      cout << "NumberOfInterpolationPoints" << optimizer_->parameters_.number_of_interpolation_points << endl;
+      cout << "NumberOfVariables" << optimizer_->parameters_.number_of_variables << endl;
+      cout << "RequiredPoisedness" << optimizer_->parameters_.required_poisedness << endl;
     }
 
   }

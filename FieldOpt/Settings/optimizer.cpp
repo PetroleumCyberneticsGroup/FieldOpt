@@ -155,6 +155,17 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
         parameters_.initial_trust_region_radius = json_parameters["InitialTrustRegionRadius"].toDouble();
       else parameters_.initial_trust_region_radius = 600;
 
+      if (json_parameters.contains("NumberOfInterpolationPoints"))
+        parameters_.number_of_interpolation_points = json_parameters["NumberOfInterpolationPoints"].toInt();
+      else parameters_.number_of_interpolation_points = 21;
+
+      if (json_parameters.contains("NumberOfVariables"))
+        parameters_.number_of_variables = json_parameters["NumberOfVariables"].toDouble();
+      else parameters_.number_of_variables = 10;
+      if (json_parameters.contains("RequiredPoisedness"))
+        parameters_.required_poisedness = json_parameters["RequiredPoisedness"].toDouble();
+      else parameters_.required_poisedness = 10;
+
 
     }
     catch (std::exception const &ex) {
