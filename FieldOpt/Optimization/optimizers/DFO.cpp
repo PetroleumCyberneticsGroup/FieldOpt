@@ -5,6 +5,14 @@
 #include "DFO.h"
 #define MODEL_IMPROVEMENT_ALGORITHM 0
 #define FOUND_NEW_OPTIMUM_CANDIDATE 1
+#define CRITICALITY_STEP 2
+#define MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND 3
+#define MODEL_IMPROVEMENT_ALGORITHM_FINISHED 4
+#define INITIALIZED_MODEL 5
+#define TRUST_REGION_RADIUS_UPDATE_STEP 6
+#define TRUST_REGION_RADIUS_UPDATE 7
+#define CRITICALITY_STEP_FINISHED 8
+#define TRIAL_POINT_FOUND 9
 
 
 /// Test functions - start
@@ -205,8 +213,19 @@ void DFO::iterate() {
   // This loop is used for testing. Instead of running simulations, a simple analytical function is used.
   // Most of the content in this loop should be in "iterate()", when the testing is done.
   bool notConverged = true;
+  double r = 2; // expansion factor of the trust-region radius to accept more points. (even though they are outside the "true" trust region)
+  double w = 0.9; // decreasing factor of the trust-region radius during the criticality step.
+  double u = 0.8;
+  double beta = 0.7;
+  double epsilon_c = 1;
+  int criticality_step_iteration = 0;
+  double trust_region_radius_tilde = 0;
+  double trust_region_radius_inc = 0;
   while(notConverged){
     Eigen::MatrixXd new_points;
+    Eigen::VectorXd new_point(number_of_variables_);
+    int index = 0;
+
 
 
     if (iterations_ == 0){
@@ -217,13 +236,86 @@ void DFO::iterate() {
     }
     else if(DFO_model_.isModelInitialized()==false){
       DFO_model_.initializeModel();
+      last_action_ = INITIALIZED_MODEL;
     }
-    else if (last_action_ == MODEL_IMPROVEMENT_ALGORITHM){
+    if (last_action_ == INITIALIZED_MODEL || last_action_ == TRUST_REGION_RADIUS_UPDATE){
+      Eigen::VectorXd gradient = DFO_model_.GetGradient();
+      if (gradient.norm() > epsilon_c){
+        DFO_model_.SetTrustRegionRadius(trust_region_radius_inc);
+        last_action_ = CRITICALITY_STEP_FINISHED;
+      }
+      else{
+        DFO_model_.findWorstPointInInterpolationSet(new_point,index); //Check if it is lambda-poised.
+        Eigen::VectorXd gradient = DFO_model_.GetGradient();
+        if (index != -1 || trust_region_radius_inc > u * gradient.norm() ){
+          criticality_step_iteration = 0;
+          DFO_model_.SetTrustRegionRadius(r*trust_region_radius_inc);
+          DFO_model_.findWorstPointInInterpolationSet(new_point,index);
+          last_action_ = MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND;
+        }
+        else{
+          DFO_model_.SetTrustRegionRadius(trust_region_radius_inc);
+        }
+      }
+    }
+    else if(last_action_ == CRITICALITY_STEP){
+
+    }
+    else if (last_action_ == MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND){
       //We are in the middle of trying to increase the poisedness of the interpolation set.
       //Meaning that we must update the model with the new point and keep on checking the poisedness of the interpolation set.
-      //DFO_model_.update(d, funcVal, yk, DFO_Model::IMPROVE_POISEDNESS);
+
+      DFO_model_.update(new_point, funcVal, index, DFO_Model::IMPROVE_POISEDNESS); //add the point
+      DFO_model_.findWorstPointInInterpolationSet(new_point,index); //Check if it is lambda-poised.
+
+      if (index != -1){
+        // keep doing the model improvement algorithm
+      }
+      else{
+        last_action_ = MODEL_IMPROVEMENT_ALGORITHM_FINISHED;
+      }
+      //DFO_model_.SetTrustRegionRadiusForSubproblem( r*pow(w,criticality_step_iteration)*DFO_model_.GetTrustRegionRadius() );
+      //rho_tilde = omega^i-1, rho_inc.
+      //if (index != -1 or rho_inc > u*||g_inc||) {
+      // use alg4
+
+      //}
+
+    }
+    if (last_action_ == MODEL_IMPROVEMENT_ALGORITHM_FINISHED){
+      //We are back to the criticality step.
+      trust_region_radius_tilde = pow(w,criticality_step_iteration);
+
+      //Do "convergence test" for the criticality step.
+      Eigen::VectorXd gradient = DFO_model_.GetGradient();
+      if (trust_region_radius_tilde > u*(gradient.norm())){
+        //"converged"
+        double temp = max(trust_region_radius_tilde, beta*gradient.norm());
+        double new_trust_region_radius = min(temp, trust_region_radius_inc);
+        DFO_model_.SetTrustRegionRadius(new_trust_region_radius);
+      }
+      else{ // Reduce the radius and run the model improvement algorithm.
+        criticality_step_iteration++;
+        DFO_model_.SetTrustRegionRadiusForSubproblem(r*trust_region_radius_inc*pow(w,criticality_step_iteration));
+        DFO_model_.findWorstPointInInterpolationSet(new_point,index);
+        last_action_ = MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND;
+      }
     }
     else if (last_action_ == FOUND_NEW_OPTIMUM_CANDIDATE){
+      // We must check how good the model predicts the objective function.
+    }
+
+    if (last_action_ == CRITICALITY_STEP_FINISHED){
+      //Now at step2.
+      DFO_model_.SetTrustRegionRadiusForSubproblem(DFO_model_.GetTrustRegionRadius());
+      new_point = DFO_model_.FindLocalOptimum();
+      last_action_ = TRIAL_POINT_FOUND;
+    }
+    else if (last_action_ == TRIAL_POINT_FOUND){
+      //find yt.
+      int t = DFO_model_.findPointToReplaceWithNewOptimum(new_point);
+      double rho = (fvals[t] - funcVal)/(DFO_model_.evaluateQuadraticModel(bestPoint) - DFO_model_.evaluateQuadraticModel(bestPoint+newPoint));
+      
 
     }
 
