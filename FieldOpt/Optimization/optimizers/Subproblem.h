@@ -122,6 +122,7 @@ class Subproblem {
   integer lenG_;
   integer objRow_;
   double objAdd_;
+  double trustRegionRadius_;
 
   integer *iAfun_ = NULL;
   integer *jAvar_ = NULL;
@@ -194,6 +195,11 @@ class Subproblem {
   //void Solve(vector<double> *xsol, vector<double> *fsol, char *optimizationType);
 
   void Solve(vector<double> &xsol, vector<double> &fsol, char *optimizationType);
+
+  void SetTrustRegionRadius(double radius){
+    trustRegionRadius_ = radius;
+    Flow_[0] = trustRegionRadius_;
+  }
 };
 
 }

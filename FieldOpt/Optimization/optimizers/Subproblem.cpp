@@ -224,7 +224,7 @@ void Subproblem::setConstraintsAndDimensions() {
 
   // Trust region radius
   Flow_[1] = 0;
-  Fupp_[1] =  285;
+  Fupp_[1] = trustRegionRadius_;
 
   for(int i = 0; i < n_; ++i){
     xlow_[i] = -infinity_;
