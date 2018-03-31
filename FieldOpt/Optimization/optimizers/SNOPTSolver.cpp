@@ -3,9 +3,11 @@
 //
 
 // -----------------------------------------------------------------
-#include "SNOPTSolver.h"
 #include <iostream>
 #include <iomanip>
+
+// -----------------------------------------------------------------
+#include "SNOPTSolver.h"
 #include "Subproblem.cpp"
 #include "testOne.h"
 
@@ -18,9 +20,7 @@ SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
                          Case *base_case,
                          Model::Properties::VariablePropertyContainer *variables,
                          Reservoir::Grid::Grid *grid,
-                         Logger *logger)
-    : Optimizer(settings, base_case, variables = nullptr, grid = nullptr, logger = nullptr) {
-//    : Optimizer(settings, base_case, variables = nullptr, grid = nullptr, logger = nullptr) {
+                         Logger *logger) {
 
   // ---------------------------------------------------------------
   if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
@@ -34,7 +34,7 @@ SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
   Optimization::Case *newCase = new Case(base_case);
   newCase->SetRealVarValues(vars);
   newCase->set_objective_function_value(std::numeric_limits<double>::max());
-  case_handler_->AddNewCase(newCase);
+//  case_handler_->AddNewCase(newCase);
 
 }
 

@@ -18,8 +18,6 @@ IWDConstraint::IWDConstraint(
   settings_ = settings;
   variables_ = variables;
 
-
-
 }
 
 // ---------------------------------------------------------
@@ -55,10 +53,14 @@ void IWDConstraint::SnapCaseToConstraints(Case *current_case) {
 
       // -------------------------------------------------------
       SNOPTSolver_ =
-          new Optimization::Optimizers::SNOPTSolver(settings_,
-                                                    current_case);
+          new Optimization::Optimizers::SNOPTSolver(
+              settings_,
+              current_case_,
+              variables_,
+              grid_,
+              logger_);
 
-      // ---------------------------------------------------
+  // ---------------------------------------------------
       // Apply interwell distance constraint
 //      distance_constraint_->SnapCaseToConstraints(c);
 

@@ -8,21 +8,23 @@
 
 // ---------------------------------------------------------
 // FIELDOPT: SNOPT
-// #include "../optimizers/SNOPTSolver.h"
+#include "../optimizers/SNOPTSolver.h"
 
-namespace Optimization {
-namespace Optimizers {
-class SNOPTSolver;
-}
-}
+
+//namespace Optimization {
+//namespace Optimizers {
+//class SNOPTSolver;
+//}
+//}
 
 // -----------------------------------------------------------------
 class Logger;
 
 // ---------------------------------------------------------
+#include <Reservoir/grid/grid.h>
 #include "constraint.h"
-#include "well_spline_length.h"
-#include "interwell_distance.h"
+//#include "well_spline_length.h"
+//#include "interwell_distance.h"
 
 // ---------------------------------------------------------
 namespace Optimization {
@@ -44,7 +46,9 @@ class IWDConstraint : public Constraint {
   // Input var to SNOPTSolver
   Settings::Optimizer *settings_;
   Model::Properties::VariablePropertyContainer *variables_;
-  Case *base_case_;
+  Case *current_case_;
+  Reservoir::Grid::Grid *grid_;
+  Logger* logger_;
 
   Optimization::Optimizers::SNOPTSolver* SNOPTSolver_;
 
@@ -57,8 +61,8 @@ class IWDConstraint : public Constraint {
  private:
   // -------------------------------------------------------
   int max_iterations_;
-  QList<WellSplineLength *> length_constraints_;
-  InterwellDistance *distance_constraint_;
+//  QList<WellSplineLength *> length_constraints_;
+//  InterwellDistance *distance_constraint_;
 
 };
 

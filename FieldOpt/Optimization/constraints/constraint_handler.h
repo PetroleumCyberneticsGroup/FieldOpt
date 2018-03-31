@@ -40,11 +40,13 @@
 #include "Model/properties/variable_property_container.h"
 #include "Settings/optimizer.h"
 #include "Reservoir/grid/grid.h"
-#include <Runner/logger.h>
+//#include <Runner/logger.h>
 
 // -----------------------------------------------------------------
 // Qt
 #include <QList>
+
+
 #ifdef WITH_EXPERIMENTAL_CONSTRIANTS
 // Includes for constraints in the experimental_constraints dir go here.
 #endif

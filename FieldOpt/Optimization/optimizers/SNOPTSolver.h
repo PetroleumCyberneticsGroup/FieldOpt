@@ -13,8 +13,6 @@
 #include "FieldOpt-3rdPartySolvers/handlers/SNOPTLoader.h"
 #include "FieldOpt-3rdPartySolvers/handlers/SNOPTHandler.h"
 
-
-
 // ---------------------------------------------------------
 namespace Optimization {
 namespace Optimizers {
@@ -34,7 +32,7 @@ int SNOPTusrFG_( integer    *Status, integer *n,    doublereal x[],
 #endif
 
 // ---------------------------------------------------------
-class Logger;
+//class Logger;
 
 // ---------------------------------------------------------
 class SNOPTSolver : public Optimizer
@@ -46,15 +44,22 @@ class SNOPTSolver : public Optimizer
               Case *base_case,
               Model::Properties::VariablePropertyContainer *variables,
               Reservoir::Grid::Grid *grid,
-              Logger *logger
-  );
+              Logger *logger);
 
   // -------------------------------------------------------
   ~SNOPTSolver();
 
   // -------------------------------------------------------
-  QString GetStatusStringHeader() const {};
-  QString GetStatusString() const {};
+  TerminationCondition IsFinished() {
+    return TerminationCondition::NOT_FINISHED;
+  };
+
+  // -------------------------------------------------------
+  void handleEvaluatedCase(Case *c) override { };
+
+  // -------------------------------------------------------
+//  QString GetStatusStringHeader() const {};
+//  QString GetStatusString() const {};
 
  private:
 
@@ -77,9 +82,7 @@ class SNOPTSolver : public Optimizer
   // -------------------------------------------------------
   // void handleEvaluatedCase(Case *c) override {};
 
-  // TerminationCondition IsFinished() {
-    //return TerminationCondition::NOT_FINISHED;
-  //};
+
 
 };
 
