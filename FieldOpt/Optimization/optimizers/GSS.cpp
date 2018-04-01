@@ -126,9 +126,9 @@ QList<Case *> GSS::generate_trial_points(vector<int> dirs) {
     else if (rea_base.size() > 0)
       trial_point->SetRealVarValues(perturb(rea_base, dir));
 
-    // Append to trial points
     trial_point->set_origin_data(GetTentativeBestCase(),
                                  dir, step_lengths_(dir));
+    // Append to trial points
     trial_points.append(trial_point);
   }
 
@@ -233,7 +233,9 @@ void GSS::set_step_vector(double isval,
   print_dbg_msg("[opt]Sz step_length/step_tol: ", 2, vec);
 
   // -------------------------------------------------------
-  if(vecxyz.length() > 0) { // differentiate b/e xyz coords and other continuous vars
+  // Differentiate positioning of xyz components in var vector
+  // based on current base case variable information
+  if(vecxyz.length() > 0) {
     int nvar = realvar_uuid_.length();
     for (int i = 0; i < realvar_uuid_.length(); ++i) {
       auto prop = varcont_->GetContinousVariable(realvar_uuid_[i]);

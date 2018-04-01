@@ -33,10 +33,11 @@ Case::Case() {
   binary_variables_ = QHash<QUuid, bool>();
   integer_variables_ = QHash<QUuid, int>();
   real_variables_ = QHash<QUuid, double>();
-  real_wplc_variables_ = QHash<QUuid, double>();
 
   objective_function_value_ = std::numeric_limits<double>::max();
   sim_time_sec_ = -1;
+
+  real_wplc_variables_ = QHash<QUuid, double>();
 }
 
 // ---------------------------------------------------------
@@ -48,11 +49,12 @@ Case::Case(const QHash<QUuid, bool> &binary_variables,
   binary_variables_ = binary_variables;
   integer_variables_ = integer_variables;
   real_variables_ = real_variables;
+
   objective_function_value_ = std::numeric_limits<double>::max();
+  sim_time_sec_ = -1;
 
   real_id_index_map_ = real_variables_.keys();
   integer_id_index_map_ = integer_variables_.keys();
-  sim_time_sec_ = -1;
 
   real_wplc_variables_ = real_variables; // <<<<<<<----------------------------
   real_wplc_id_index_map_ = real_wplc_variables_.keys();
@@ -70,6 +72,10 @@ Case::Case(const Case *c) {
   real_id_index_map_ = c->real_id_index_map_;
   integer_id_index_map_ = c->integer_variables_.keys();
   sim_time_sec_ = -1;
+
+  real_wplc_variables_ = QHash<QUuid, double> (c->real_wplc_variables());
+  real_wplc_id_index_map_ = c->real_wplc_variables_.keys();
+
 }
 
 // ---------------------------------------------------------
