@@ -179,6 +179,9 @@ class Optimizer : public Loggable
    *
    * \param grid Grid to be used (needed for initializtion of some
    * constraints).
+   *
+   * \param Logger
+   *
    */
   Optimizer(::Settings::Optimizer *settings,
             Case *base_case,

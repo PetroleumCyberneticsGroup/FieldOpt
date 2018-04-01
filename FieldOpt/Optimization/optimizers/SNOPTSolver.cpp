@@ -8,12 +8,23 @@
 
 // -----------------------------------------------------------------
 #include "SNOPTSolver.h"
-#include "Subproblem.cpp"
-#include "testOne.h"
+//#include "Subproblem.cpp"
+//#include "testOne.h"
 
 // -----------------------------------------------------------------
 namespace Optimization {
 namespace Optimizers {
+
+// -----------------------------------------------------------------
+SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
+                         Case *base_case) {
+
+  // ---------------------------------------------------------------
+  if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
+    cout << "[opt]Init. SNOPTSolver.-------" << endl;
+  settings_ = settings;
+
+}
 
 // -----------------------------------------------------------------
 SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
@@ -41,6 +52,10 @@ SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
 // -----------------------------------------------------------------
 SNOPTSolver::~SNOPTSolver(){}
 
+// ---------------------------------------------------------
+Optimizer::TerminationCondition SNOPTSolver::IsFinished() {
+  Optimizer::TerminationCondition tc = NOT_FINISHED;
+}
 
 // -----------------------------------------------------------------
 SNOPTHandler SNOPTSolver::initSNOPTHandler(){

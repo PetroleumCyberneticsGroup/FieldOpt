@@ -53,12 +53,8 @@ void IWDConstraint::SnapCaseToConstraints(Case *current_case) {
 
       // -------------------------------------------------------
       SNOPTSolver_ =
-          new Optimization::Optimizers::SNOPTSolver(
-              settings_,
-              current_case_,
-              variables_,
-              grid_,
-              logger_);
+          new Optimization::Optimizers::SNOPTSolver(settings_,
+                                                    current_case_);
 
   // ---------------------------------------------------
       // Apply interwell distance constraint

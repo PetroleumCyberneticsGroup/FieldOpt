@@ -7,7 +7,7 @@
 #define FIELDOPT_SNOPTSOLVER_H
 
 // ---------------------------------------------------------
-#include "Optimization/optimizer.h"
+//#include "Optimization/optimizer.h"
 
 // ---------------------------------------------------------
 #include "FieldOpt-3rdPartySolvers/handlers/SNOPTLoader.h"
@@ -32,7 +32,11 @@ int SNOPTusrFG_( integer    *Status, integer *n,    doublereal x[],
 #endif
 
 // ---------------------------------------------------------
-//class Logger;
+class Logger;
+
+namespace Optimization {
+class Optimizer;
+}
 
 // ---------------------------------------------------------
 class SNOPTSolver : public Optimizer
@@ -41,21 +45,21 @@ class SNOPTSolver : public Optimizer
 
   // -------------------------------------------------------
   SNOPTSolver(Settings::Optimizer *settings,
+              Case *base_case);
+
+  // -------------------------------------------------------
+  SNOPTSolver(Settings::Optimizer *settings,
               Case *base_case,
               Model::Properties::VariablePropertyContainer *variables,
               Reservoir::Grid::Grid *grid,
-              Logger *logger);
+              Logger *logger
+  );
 
   // -------------------------------------------------------
   ~SNOPTSolver();
 
   // -------------------------------------------------------
-  TerminationCondition IsFinished() {
-    return TerminationCondition::NOT_FINISHED;
-  };
-
-  // -------------------------------------------------------
-  void handleEvaluatedCase(Case *c) override { };
+  TerminationCondition IsFinished();
 
   // -------------------------------------------------------
 //  QString GetStatusStringHeader() const {};
@@ -79,8 +83,10 @@ class SNOPTSolver : public Optimizer
   void iterate() {};
   bool is_successful_iteration(){};
 
+ protected:
+
   // -------------------------------------------------------
-  // void handleEvaluatedCase(Case *c) override {};
+   void handleEvaluatedCase(Case *c) override;
 
 
 

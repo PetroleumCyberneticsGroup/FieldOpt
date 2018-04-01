@@ -20,7 +20,10 @@
 // -----------------------------------------------------------------
 class Logger;
 
+
+
 // ---------------------------------------------------------
+#include "Optimization/optimizer.h"
 #include <Reservoir/grid/grid.h>
 #include "constraint.h"
 //#include "well_spline_length.h"
@@ -45,12 +48,13 @@ class IWDConstraint : public Constraint {
   // -------------------------------------------------------
   // Input var to SNOPTSolver
   Settings::Optimizer *settings_;
-  Model::Properties::VariablePropertyContainer *variables_;
+//  Model::Properties::VariablePropertyContainer *variables_;
   Case *current_case_;
-  Reservoir::Grid::Grid *grid_;
-  Logger* logger_;
+//  Reservoir::Grid::Grid *grid_;
+//  Logger* logger_;
 
-  Optimization::Optimizers::SNOPTSolver* SNOPTSolver_;
+  Optimizer *SNOPTSolver_;
+//  Optimization::Optimizers::SNOPTSolver* SNOPTSolver_;
 
   // -------------------------------------------------------
   // Constraint interface
