@@ -21,8 +21,16 @@ SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
 
   // ---------------------------------------------------------------
   if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
-    cout << "[opt]Init. SNOPTSolver.-------" << endl;
+    cout << "[opt]Init. SNOPTSolver.------- Constraint-handling." << endl;
+
+  // ---------------------------------------------------------------
   settings_ = settings;
+  SNOPTHandler SNOPTHandler = initSNOPTHandler();
+  SNOPTHandler_ = &SNOPTHandler;
+
+  n_ = base_case.Get
+
+
 
 }
 
@@ -58,7 +66,8 @@ Optimizer::TerminationCondition SNOPTSolver::IsFinished() {
 }
 
 // -----------------------------------------------------------------
-SNOPTHandler SNOPTSolver::initSNOPTHandler(){
+SNOPTHandler SNOPTSolver::initSNOPTHandler() {
+
   string prnt_file, smry_file, optn_file;
   optn_file = settings_->parameters().thrdps_optn_file.toStdString() + ".opt.optn";
   smry_file = settings_->parameters().thrdps_smry_file.toStdString() + ".opt.summ";
@@ -70,7 +79,7 @@ SNOPTHandler SNOPTSolver::initSNOPTHandler(){
                             optn_file.c_str());
 
   if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
-    cout << "[opt]Init. SNOPTHandler.------" << endl;
+    cout << "[opt]SNOPTHandler set.----------" << endl;
 
   return snoptHandler;
 }

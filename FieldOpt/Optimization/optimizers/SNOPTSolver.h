@@ -1,13 +1,31 @@
-//
-// Created by bellout on 2/10/18.
-//
+/******************************************************************************
+   Copyright (C) 2017
+   Mathias C. Bellout <mathias.bellout@ntnu.no>
+   Oleg Volkov <ovolkov@stanford.edu>
+   Created by bellout 10/2/18.
+
+   This file is part of the FieldOpt project.
+
+   FieldOpt is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   FieldOpt is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with FieldOpt. If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
 
 // ---------------------------------------------------------
 #ifndef FIELDOPT_SNOPTSOLVER_H
 #define FIELDOPT_SNOPTSOLVER_H
 
 // ---------------------------------------------------------
-//#include "Optimization/optimizer.h"
+#include "Optimization/optimizer.h"
 
 // ---------------------------------------------------------
 #include "FieldOpt-3rdPartySolvers/handlers/SNOPTLoader.h"
@@ -30,13 +48,6 @@ int SNOPTusrFG_( integer    *Status, integer *n,    doublereal x[],
 #ifdef __cplusplus
 }
 #endif
-
-// ---------------------------------------------------------
-class Logger;
-
-namespace Optimization {
-class Optimizer;
-}
 
 // ---------------------------------------------------------
 class SNOPTSolver : public Optimizer
@@ -62,14 +73,64 @@ class SNOPTSolver : public Optimizer
   TerminationCondition IsFinished();
 
   // -------------------------------------------------------
+   void handleEvaluatedCase(Case *c){};
+
+  // -------------------------------------------------------
 //  QString GetStatusStringHeader() const {};
 //  QString GetStatusString() const {};
 
+  // -------------------------------------------------------
  private:
+
+  int n_;       // Number of variables
+  int m_;       // Number of nonlinear constraints
+  integer neF_; // Number of element in F
+  integer neG_;
+  integer lenG_;
+  integer objRow_;
+  double objAdd_;
+
+  integer *iAfun_ = nullptr;
+  integer *jAvar_ = nullptr;
+  double *A_ = nullptr;
+  integer lenA_;
+  integer neA_;
+
+  integer *iGfun_ = nullptr;
+  integer *jGvar_ = nullptr;
+
+  double *x_;
+
+  // -------------------------------------------------------
+  // Controls lower and upper bounds
+  double *xlow_ = nullptr;
+  double *xupp_ = nullptr;
+
+  // -------------------------------------------------------
+  // Initial guess for Lagrange multipliers
+  double *xmul_ = nullptr;;
+
+  // -------------------------------------------------------
+  // State of the variables (whether the optimal is likely
+  // to be on the boundary or not)
+  integer *xstate_ = nullptr;
+
+  // -------------------------------------------------------
+  double *F_ = nullptr;
+  double *Flow_ = nullptr;
+  double *Fupp_ = nullptr;
+  double *Fmul_ = nullptr;
+  integer *Fstate_ = nullptr;
+  char *xnames_ = nullptr;
+  char *Fnames_ = nullptr;
+
+  integer nxnames_;
+  integer nFnames_;
 
   // -------------------------------------------------------
   bool loadSNOPT(string libname = "libsnopt-7.2.12.2.so");
 
+  SNOPTHandler* SNOPTHandler_;
   SNOPTHandler initSNOPTHandler();
 
   // -------------------------------------------------------
@@ -80,15 +141,11 @@ class SNOPTSolver : public Optimizer
 
   Settings::Optimizer *settings_;
 
+  // -------------------------------------------------------
   void iterate() {};
   bool is_successful_iteration(){};
 
  protected:
-
-  // -------------------------------------------------------
-   void handleEvaluatedCase(Case *c) override;
-
-
 
 };
 

@@ -1,6 +1,22 @@
-//
-// Created by bellout on 3/22/18.
-//
+/******************************************************************************
+   Copyright (C) 2017 Mathias C. Bellout <mathias.bellout@ntnu.no>
+   Created by bellout on 22/3/18.
+
+   This file is part of the FieldOpt project.
+
+   FieldOpt is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   FieldOpt is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with FieldOpt. If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
 
 // ---------------------------------------------------------
 #ifndef FIELDOPT_IWD_CONSTRAINT_H
@@ -8,22 +24,13 @@
 
 // ---------------------------------------------------------
 // FIELDOPT: SNOPT
-#include "../optimizers/SNOPTSolver.h"
-
-
-//namespace Optimization {
-//namespace Optimizers {
-//class SNOPTSolver;
-//}
-//}
-
-// -----------------------------------------------------------------
-class Logger;
-
-
+namespace Optimization {
+namespace Optimizers {
+class SNOPTSolver;
+}
+}
 
 // ---------------------------------------------------------
-#include "Optimization/optimizer.h"
 #include <Reservoir/grid/grid.h>
 #include "constraint.h"
 //#include "well_spline_length.h"
@@ -48,13 +55,13 @@ class IWDConstraint : public Constraint {
   // -------------------------------------------------------
   // Input var to SNOPTSolver
   Settings::Optimizer *settings_;
-//  Model::Properties::VariablePropertyContainer *variables_;
+  Model::Properties::VariablePropertyContainer *variables_;
   Case *current_case_;
+
 //  Reservoir::Grid::Grid *grid_;
 //  Logger* logger_;
 
-  Optimizer *SNOPTSolver_;
-//  Optimization::Optimizers::SNOPTSolver* SNOPTSolver_;
+  Optimization::Optimizers::SNOPTSolver *SNOPTSolver_;
 
   // -------------------------------------------------------
   // Constraint interface

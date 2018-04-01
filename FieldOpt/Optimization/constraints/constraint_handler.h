@@ -46,7 +46,6 @@
 // Qt
 #include <QList>
 
-
 #ifdef WITH_EXPERIMENTAL_CONSTRIANTS
 // Includes for constraints in the experimental_constraints dir go here.
 #endif
