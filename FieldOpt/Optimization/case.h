@@ -188,12 +188,12 @@ class Case : public Loggable
    *
    * Note that this method only handles integer and real variables.
    *
-   * \param variabe_id The UUID of the variable to be perturbed.
+   * \param variable_id The UUID of the variable to be perturbed.
    * \param sign The sign/direction of the perturbation.
    * \param magnitude The magnitude of the perturbaton.
    * \return One or two cases where one variable has been perturbed.
    */
-  QList<Case *> Perturb(QUuid variabe_id, SIGN sign, double magnitude);
+  QList<Case *> Perturb(QUuid variable_id, SIGN sign, double magnitude);
 
   // -------------------------------------------------------
   /*!

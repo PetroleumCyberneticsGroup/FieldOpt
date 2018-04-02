@@ -40,17 +40,18 @@ namespace Runner {
 class MainRunner;
 
 /*!
- * \brief The AbstractRunner class is the abstract parent class for all
- * runners. It should only be constructed by the MainRunner class.
+ * \brief The AbstractRunner class is the abstract parent class
+ * for all runners. It should only be constructed by the MainRunner
+ * class.
  *
- * This class initializes the primary objects needed and provides some
- * utility functions for logging.
+ * This class initializes the primary objects needed and provides
+ * some utility functions for logging.
  *
- * It also defines the purely virtual Execute() method which should be
- * implemented by all concrete runners.
+ * It also defines the purely virtual Execute() method which should
+ * be implemented by all concrete runners.
  *
- * \todo: Create a method to get the timeout it seconds that uses the
- * recorded simulation times and the timeout argument.
+ * \todo: Create a method to get the timeout it seconds that uses
+ * the recorded simulation times and the timeout argument.
  */
 class AbstractRunner
 {

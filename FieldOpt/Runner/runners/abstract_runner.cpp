@@ -205,8 +205,9 @@ void AbstractRunner::InitializeObjectiveFunction() {
     case Settings::Optimizer::ObjectiveType::WeightedSum:
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
         std::cout << "[run]Objective function type: WeightedSum" << std::endl;
-      objective_function_ = new Optimization::Objective::WeightedSum(settings_->optimizer(),
-                                                                     simulator_->results());
+      objective_function_ =
+          new Optimization::Objective::WeightedSum(settings_->optimizer(),
+                                                   simulator_->results());
       break;
 
       // ---------------------------------------------------
@@ -228,6 +229,14 @@ void AbstractRunner::InitializeBaseCase() {
         "Objective Function & Model must be initialized before BaseCase.");
 
   // -------------------------------------------------------
+  if(model_->wells()->size() > 0) {
+    for(Model::Wells::Well *well : *model_->wells()) {
+      model_->variables()->GetWellSplineVariables(well->name());
+
+    }
+
+  }
+
   base_case_ = new Optimization::Case(model_->variables()->GetBinaryVariableValues(),
                                       model_->variables()->GetDiscreteVariableValues(),
                                       model_->variables()->GetContinousVariableValues());
