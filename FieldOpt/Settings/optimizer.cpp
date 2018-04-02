@@ -52,6 +52,7 @@ Optimizer::Optimizer(QJsonObject json_optimizer) {
         "The optimizer type " + type.toStdString() + " was not recognized.");
   }
 
+  // ---------------------------------------------------------------
   if (type_ == SNOPTSolver) {
     // IO files
     if (json_parameters.contains("OptionFile"))
@@ -62,9 +63,11 @@ Optimizer::Optimizer(QJsonObject json_optimizer) {
       parameters_.thrdps_prnt_file = json_parameters["PrintFile"].toString();
   }
 
+  // ---------------------------------------------------------------
   if (type_ != ExhaustiveSearch2DVert) {
 
     // Optimizer mode
+    // -------------------------------------------------------------
     if (json_optimizer.contains("Mode")) {
       QString mode = json_optimizer["Mode"].toString();
       if (QString::compare(mode, "Minimize", Qt::CaseInsensitive) == 0)
@@ -83,6 +86,7 @@ Optimizer::Optimizer(QJsonObject json_optimizer) {
     // Optimizer parameters
     try {
       // GSS parameters
+      // -----------------------------------------------------------
       if (json_parameters.contains("MaxEvaluations"))
         parameters_.max_evaluations = json_parameters["MaxEvaluations"].toInt();
 
@@ -153,8 +157,8 @@ Optimizer::Optimizer(QJsonObject json_optimizer) {
         parameters_.upper_bound = json_parameters["UpperBound"].toDouble();
       else parameters_.upper_bound = 10;
 
-
       // DFO parameters
+      // -----------------------------------------------------------
       if (json_parameters.contains("InitialTrustRegionRadius"))
         parameters_.initial_trust_region_radius = json_parameters["InitialTrustRegionRadius"].toDouble();
       else parameters_.initial_trust_region_radius = 600;
@@ -169,20 +173,24 @@ Optimizer::Optimizer(QJsonObject json_optimizer) {
 
   // Optimizer objective
   try {
+    // -------------------------------------------------------------
     QString objective_type = json_objective["Type"].toString();
     if (QString::compare(objective_type, "WeightedSum") == 0) {
       objective_.type = ObjectiveType::WeightedSum;
       objective_.weighted_sum = QList<Objective::WeightedSumComponent>();
       QJsonArray json_components = json_objective["WeightedSumComponents"].toArray();
+
       for (int i = 0; i < json_components.size(); ++i) {
         Objective::WeightedSumComponent component;
         component.coefficient = json_components.at(i).toObject()["Coefficient"].toDouble();
         component.property = json_components.at(i).toObject()["Property"].toString();
+
         if (json_components.at(i).toObject()["IsWellProp"].toBool()) {
           component.is_well_prop = true;
           component.well = json_components.at(i).toObject()["Well"].toString();
         }
         else component.is_well_prop = false;
+
         component.time_step = json_components.at(i).toObject()["TimeStep"].toInt();
         objective_.weighted_sum.append(component);
       }
@@ -191,6 +199,7 @@ Optimizer::Optimizer(QJsonObject json_optimizer) {
       throw UnableToParseOptimizerObjectiveSectionException(
           "Objective type " + objective_type.toStdString() + " not recognized");
     }
+
     if (json_objective.contains("UsePenaltyFunction")) {
       objective_.use_penalty_function = json_objective["UsePenaltyFunction"].toBool();
     }
@@ -204,6 +213,7 @@ Optimizer::Optimizer(QJsonObject json_optimizer) {
   }
 
   // Optimizer constraints
+  // ---------------------------------------------------------------
   try {
     constraints_ = QList<Constraint>();
     for (int i = 0; i < json_constraints.size(); ++i) { // Iterate over all constraints
@@ -217,10 +227,12 @@ Optimizer::Optimizer(QJsonObject json_optimizer) {
   }
 }
 
-Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constraint)
-{
-  Constraint optimizer_constraint;
+// -----------------------------------------------------------------
+Optimizer::Constraint
+Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
 
+  Constraint optimizer_constraint;
+  // ---------------------------------------------------------------
   if (json_constraint.contains("Well")) {
     optimizer_constraint.well = json_constraint["Well"].toString();
     optimizer_constraint.wells.append(optimizer_constraint.well);
@@ -238,6 +250,7 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
         "A constraint must always specify either the Well or the Wells property.");
   }
 
+  // ---------------------------------------------------------------
   // Penalty function weight for the constraint
   if (json_constraint.contains("PenaltyWeight")) {
     optimizer_constraint.penalty_weight = json_constraint["PenaltyWeight"].toDouble();
@@ -246,8 +259,10 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
     optimizer_constraint.penalty_weight = 0.0;
   }
 
+  // ---------------------------------------------------------------
   // Constraint types BHP, Rate and Boundary2D
   QString constraint_type = json_constraint["Type"].toString();
+
   if (QString::compare(constraint_type, "BHP") == 0) {
     optimizer_constraint.type = ConstraintType::BHP;
     if (json_constraint.contains("Max"))
@@ -276,7 +291,9 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
     optimizer_constraint.type = ConstraintType::SplinePoints;
 
     // Spline points constraint input type
-    QString optimizer_constraints_spline_points_type = json_constraint["WellSplinePointsInputType"].toString();
+    QString optimizer_constraints_spline_points_type =
+        json_constraint["WellSplinePointsInputType"].toString();
+
     if (QString::compare(optimizer_constraints_spline_points_type, "Function") == 0) {
       optimizer_constraint.spline_points_type = ConstraintWellSplinePointsType::Function;
       json_constraint["Function"].toString();
@@ -285,6 +302,7 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
       optimizer_constraint.spline_points_type = ConstraintWellSplinePointsType::MaxMin;
       optimizer_constraint.spline_points_limits = QList<Constraint::RealMaxMinLimit>();
       QJsonArray well_spline_point_limits = json_constraint["WellSplinePointLimits"].toArray();
+
       for (int i = 0; i < well_spline_point_limits.size(); ++i) {
         QJsonObject well_spline_point_limit = well_spline_point_limits[i].toObject();
         QJsonArray min_array = well_spline_point_limit["Min"].toArray();
@@ -364,8 +382,10 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
       throw UnableToParseOptimizerConstraintsSectionException("WellSplineInterwellDistance constraint"
                                                                   " needs a Wells array with exactly two well names specified.");
   }
-  else if (QString::compare(constraint_type, "CombinedWellSplineLengthInterwellDistanceReservoirBoundary") == 0) {
-    optimizer_constraint.type = ConstraintType::CombinedWellSplineLengthInterwellDistanceReservoirBoundary;
+  else if (QString::compare(constraint_type, "CombinedWellSplineLengthInterwellDistanceReservoirBoundary") == 0
+      || QString::compare(constraint_type, "IWD") == 0) {
+//    optimizer_constraint.type = ConstraintType::CombinedWellSplineLengthInterwellDistanceReservoirBoundary;
+    optimizer_constraint.type = ConstraintType::IWD;
     optimizer_constraint.min_length = json_constraint["MinLength"].toDouble();
     optimizer_constraint.max_length = json_constraint["MaxLength"].toDouble();
     optimizer_constraint.min_distance = json_constraint["MinDistance"].toDouble();

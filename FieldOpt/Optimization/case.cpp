@@ -18,26 +18,63 @@
 ******************************************************************************/
 
 // ---------------------------------------------------------
-#include <boost/serialization/map.hpp>
+// Qt / BOOST
 #include <QtCore/QUuid>
-#include <Utilities/time.hpp>
+#include <boost/serialization/map.hpp>
 #include <boost/lexical_cast.hpp>
+
+// ---------------------------------------------------------
+// FIELDOPT
 #include "case.h"
+#include <Utilities/time.hpp>
+
 
 // ---------------------------------------------------------
 namespace Optimization {
 
 // ---------------------------------------------------------
-Case::Case() {
+Case::Case(const Model::Properties::VariablePropertyContainer* v) {
+
+  // -------------------------------------------------------
   id_ = QUuid::createUuid();
+  objective_function_value_ = std::numeric_limits<double>::max();
+  sim_time_sec_ = -1;
+
+  // -------------------------------------------------------
+  // Differentiate vars by intrinsic type
+  binary_variables_ = v->GetBinaryVariableValues();
+  integer_variables_ = v->GetDiscreteVariableValues();
+  real_variables_ = v->GetContinousVariableValues();
+
+  // Store keys
+  integer_id_index_map_ = integer_variables_.keys();
+  real_id_index_map_ = real_variables_.keys();
+
+  // -------------------------------------------------------
+  // Differentiate vars by extrinsic type
+  real_wspline_vars_ = v->GetWellSplineVariables(); // <- new
+
+  // Store keys
+  real_wspline_id_index_map_ = real_wspline_vars_.keys(); // <- new
+}
+
+// ---------------------------------------------------------
+Case::Case() {
+
+  // -------------------------------------------------------
+  id_ = QUuid::createUuid();
+  objective_function_value_ = std::numeric_limits<double>::max();
+  sim_time_sec_ = -1;
+
+  // -------------------------------------------------------
+  // Differentiate vars by intrinsic type
   binary_variables_ = QHash<QUuid, bool>();
   integer_variables_ = QHash<QUuid, int>();
   real_variables_ = QHash<QUuid, double>();
 
-  objective_function_value_ = std::numeric_limits<double>::max();
-  sim_time_sec_ = -1;
-
-  real_wplc_variables_ = QHash<QUuid, double>();
+  // -------------------------------------------------------
+  // Differentiate vars by extrinsic type
+  // Nullptr by default?
 }
 
 // ---------------------------------------------------------
@@ -45,37 +82,51 @@ Case::Case(const QHash<QUuid, bool> &binary_variables,
            const QHash<QUuid, int> &integer_variables,
            const QHash<QUuid, double> &real_variables) {
 
+  // -------------------------------------------------------
   id_ = QUuid::createUuid();
+  objective_function_value_ = std::numeric_limits<double>::max();
+  sim_time_sec_ = -1;
+
+  // -------------------------------------------------------
+  // Differentiate vars by intrinsic type
   binary_variables_ = binary_variables;
   integer_variables_ = integer_variables;
   real_variables_ = real_variables;
 
-  objective_function_value_ = std::numeric_limits<double>::max();
-  sim_time_sec_ = -1;
-
+  // Store keys
   real_id_index_map_ = real_variables_.keys();
   integer_id_index_map_ = integer_variables_.keys();
 
-  real_wplc_variables_ = real_variables; // <<<<<<<----------------------------
-  real_wplc_id_index_map_ = real_wplc_variables_.keys();
+  // -------------------------------------------------------
+  // Differentiate vars by extrinsic type
+  // Nullptr by default?
 }
 
 // ---------------------------------------------------------
 Case::Case(const Case *c) {
 
+  // -------------------------------------------------------
   id_ = QUuid::createUuid();
+  objective_function_value_ = c->objective_function_value_;
+
+  // -------------------------------------------------------
+  // Differentiate vars by intrinsic type
   binary_variables_ = QHash<QUuid, bool>(c->binary_variables());
   integer_variables_ = QHash<QUuid, int> (c->integer_variables());
   real_variables_ = QHash<QUuid, double> (c->real_variables());
-  objective_function_value_ = c->objective_function_value_;
 
+  // Store keys
   real_id_index_map_ = c->real_id_index_map_;
   integer_id_index_map_ = c->integer_variables_.keys();
   sim_time_sec_ = -1;
 
-  real_wplc_variables_ = QHash<QUuid, double> (c->real_wplc_variables());
-  real_wplc_id_index_map_ = c->real_wplc_variables_.keys();
+  // -------------------------------------------------------
+  // Differentiate vars by extrinsic type, i.e., parameter is
+  // used to reprensent, i.e., well spline, control, etc.
+  real_wspline_vars_ = QHash<QUuid, double> (c->real_wspline_vars());
 
+  // Store keys
+  real_wspline_id_index_map_ = c->real_wspline_vars_.keys();
 }
 
 // ---------------------------------------------------------
@@ -192,12 +243,14 @@ QList<Case *> Case::Perturb(QUuid variable_id,
 }
 
 // ---------------------------------------------------------
-  Eigen::VectorXd GetRealWellPlcVarVector() {
+Eigen::VectorXd Case::GetRealWSplineVarVector() {
 
+  Eigen::VectorXd vec(real_wspline_id_index_map_.length());
+  for (int i = 0; i < real_wspline_id_index_map_.length(); ++i) {
+    vec[i] = real_variables_.value(real_wspline_id_index_map_[i]);
+  }
+  return vec;
 }
-
-// ---------------------------------------------------------
-//  QList<QUuid> GetRealWellPlcVarIdVector() { return real_wplc_id_index_map_; }
 
 // ---------------------------------------------------------
 Eigen::VectorXd Case::GetRealVarVector() {

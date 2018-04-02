@@ -195,6 +195,22 @@ VariablePropertyContainer::GetWellSplineVariables(
 }
 
 // ---------------------------------------------------------
+QHash<QUuid, double>
+VariablePropertyContainer::GetWellSplineVariables() const {
+
+  QHash<QUuid, double> spline_vars = QHash<QUuid, double>();
+  // -------------------------------------------------------
+  for (QUuid key : continous_variables_->keys()) {
+    if (continous_variables_->value(key)->propertyInfo().prop_type
+        == Property::PropertyType::SplinePoint) {
+      spline_vars[key] = continous_variables_->value(key)->value();
+    }
+  }
+
+  return spline_vars;
+}
+
+// ---------------------------------------------------------
 QList<ContinousProperty *>
 VariablePropertyContainer::GetPseudoContVertVariables(
     const QString well_name) const {

@@ -127,6 +127,8 @@ class SNOPTSolver : public Optimizer
   integer nxnames_;
   integer nFnames_;
 
+  const double infinity_ = 1e20;
+
   // -------------------------------------------------------
   bool loadSNOPT(string libname = "libsnopt-7.2.12.2.so");
 

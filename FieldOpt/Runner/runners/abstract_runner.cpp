@@ -24,18 +24,21 @@
  *****************************************************************************/
 
 // ---------------------------------------------------------
-#include <Simulation/simulator_interfaces/flowsimulator.h>
+#include "abstract_runner.h"
+
+#include "Optimization/optimizers/compass_search.h"
+#include "Optimization/optimizers/ExhaustiveSearch2DVert.h"
 #include <Optimization/optimizers/APPS.h>
 #include <Optimization/optimizers/GeneticAlgorithm.h>
 #include <Optimization/optimizers/RGARDD.h>
 #include <Optimization/optimizers/DFO.h>
 #include <Optimization/optimizers/SNOPTSolver.h>
-#include "abstract_runner.h"
-#include "Optimization/optimizers/compass_search.h"
-#include "Optimization/optimizers/ExhaustiveSearch2DVert.h"
 #include "Optimization/objective/weightedsum.h"
+
+#include <Simulation/simulator_interfaces/flowsimulator.h>
 #include "Simulation/simulator_interfaces/eclsimulator.h"
 #include "Simulation/simulator_interfaces/adgprssimulator.h"
+
 #include "Utilities/math.hpp"
 
 // ---------------------------------------------------------
@@ -229,19 +232,12 @@ void AbstractRunner::InitializeBaseCase() {
         "Objective Function & Model must be initialized before BaseCase.");
 
   // -------------------------------------------------------
-  if(model_->wells()->size() > 0) {
-    for(Model::Wells::Well *well : *model_->wells()) {
-      model_->variables()->GetWellSplineVariables(well->name());
+  base_case_ = new Optimization::Case(model_->variables());
+  // Removes since all variables are passed to Case above
+  // base_case_ = new Optimization::Case(model_->variables()->GetBinaryVariableValues(),
+  //                                    model_->variables()->GetDiscreteVariableValues(),
+  //                                    model_->variables()->GetContinousVariableValues());
 
-    }
-
-  }
-
-  base_case_ = new Optimization::Case(model_->variables()->GetBinaryVariableValues(),
-                                      model_->variables()->GetDiscreteVariableValues(),
-                                      model_->variables()->GetContinousVariableValues());
-
-//  model_.
 
   // -------------------------------------------------------
   if (!simulator_->results()->isAvailable()) {
@@ -322,20 +318,20 @@ void AbstractRunner::InitializeOptimizer() {
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
         std::cout << "[run]Optimization algo.:----- SNOPTSolver" << std::endl;
       optimizer_ = new Optimization::Optimizers::SNOPTSolver(settings_->optimizer(),
-                                                     base_case_,
-                                                     model_->variables(),
-                                                     model_->grid(),
-                                                     logger_);
+                                                             base_case_,
+                                                             model_->variables(),
+                                                             model_->grid(),
+                                                             logger_);
       break;
       // ---------------------------------------------------
     case Settings::Optimizer::OptimizerType::DFO:
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
         std::cout << "[run]Optimization algo.:----- DFO" << std::endl;
       optimizer_ = new Optimization::Optimizers::DFO(settings_->optimizer(),
-                                                                        base_case_,
-                                                                        model_->variables(),
-                                                                        model_->grid(),
-                                                                        logger_);
+                                                     base_case_,
+                                                     model_->variables(),
+                                                     model_->grid(),
+                                                     logger_);
       break;
       // ---------------------------------------------------
     default:

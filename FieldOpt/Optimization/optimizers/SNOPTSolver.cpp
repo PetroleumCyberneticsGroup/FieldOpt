@@ -28,9 +28,166 @@ SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
   SNOPTHandler SNOPTHandler = initSNOPTHandler();
   SNOPTHandler_ = &SNOPTHandler;
 
-  n_ = base_case.Get
+  // ---------------------------------------------------------------
+  // Set problem dimensions
+//  n_ = (int)base_case->GetRealWSplineVarVector().rows();
+  n_ = 2;
+  m_ = 0;        // # of nonlinear constraints
+  neF_ = m_ + 1; // # of elements in F vector
+  lenA_ = 0;     // # of linear constraints
 
+  nFnames_ = 1;
+  nxnames_ = 1;
 
+  lenG_    = n_  // derivatives of the objective
+      + m_ * n_; // derivatives of the constraints
+
+  objRow_ = 0;   // row # of objective
+  objAdd_ = 0;   // add nothing to objective
+
+  iAfun_ = nullptr; // no linear constraints (introduce later)
+  jAvar_ = nullptr;
+  A_     = nullptr;
+
+  iGfun_ = new integer[lenG_];
+  jGvar_ = new integer[lenG_];
+
+  x_ = new double[n_];    // controls
+  xlow_ = new double[n_]; // lower bounds
+  xupp_ = new double[n_]; // upper bounds
+  xmul_ = new double[n_]; // initial guess Lagrange multipliers
+
+  xstate_ = new integer[n_]; // state of variables
+
+  F_ = new double[neF_];
+  Flow_ = new double[neF_];
+  Fupp_ = new double[neF_];
+  Fmul_ = new double[neF_];
+  Fstate_ = new integer[neF_];
+
+  xnames_ = new char[nxnames_ * 8];
+  Fnames_ = new char[nxnames_ * 8];
+
+  Flow_[0] = -infinity_;
+  Fupp_[0] = infinity_;
+
+  // ---------------------------------------------------------------
+  // Set F bounds according to what's reasonable (overrides infinity_)
+
+  // ---------------------------------------------------------------
+  // Set bounds for x according to spline var ordering
+  // xlow_
+  // xupp_
+
+  // ---------------------------------------------------------------
+  // When we have an initial guess the states should be zero
+  for (int i = 0; i < n_; i++)
+    xstate_[i] = 0;
+
+  // ---------------------------------------------------------------
+  // Initial guess for the controls
+  bool desire_values_for_x      = true;
+  bool desire_values_for_dual   = false;
+  bool desire_values_for_lambda = false;
+
+  // ---------------------------------------------------------------
+  // Fmul is the vector with the estimation of the Lagrange
+  // Multipliers. It will be always zero except in very rare cases of
+  // benchmarking performance with them set to some initial guess.
+  for (int i = 0; i < neF_; i++)
+    Fmul_[i] = 0;
+
+  // ---------------------------------------------------------------
+  // The nonzero structure of the Jacobian
+  neG_ = lenG_;
+  neA_ = lenA_;
+
+  // ---------------------------------------------------------------
+  // Fill in first the objective
+  for (int i = 0; i < n_; i++)
+  {
+    iGfun_[i] = 0;
+    jGvar_[i] = i;
+
+    for (int ilc = 0; ilc < m_; ilc++)
+    {
+      iAfun_[i + ilc * n_] = m_ + 1 + ilc;
+      jAvar_[i + ilc * n_] = i;
+//      A_[i + ilc * n_] = ((ConstraintFunctional*)func_list[ilc])->ad_value.derivative(i);
+      A_[i + ilc * n_] = 0;
+
+      // ad_value.derivative(i) =>
+      // get the derivative at column i (0 is returned if it does not exist)
+    }
+  }
+
+  // ---------------------------------------------------------------
+  if (m_ != 0)
+  {
+    // Then fill in the constraints
+    for (int j = 1; j <= m_; j++)
+    {
+      for (int i = 0; i < n_; i++)
+      {
+        iGfun_[i + j * n_] = j;
+        jGvar_[i + j * n_] = i;
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------
+  // dbg
+  Matrix<integer,1,Dynamic> XiAfun_((integer)iAfun_);
+  Matrix<integer,1,Dynamic> XiAvar_((integer)jAvar_);
+
+  Matrix<integer,1,Dynamic> XiGfun_((integer)iGfun_);
+  Matrix<integer,1,Dynamic> XiGvar_((integer)jGvar_);
+
+  // ---------------------------------------------------------------
+  SNOPTHandler.setProblemSize( n_, neF_ );
+  SNOPTHandler.setObjective  ( objRow_ );
+  SNOPTHandler.setA          ( lenA_, iAfun_, jAvar_, A_ );
+  SNOPTHandler.setG          ( lenG_, iGfun_, jGvar_ );
+  SNOPTHandler.setX          ( x_, xlow_, xupp_, xmul_, xstate_ );
+  SNOPTHandler.setF          ( F_, Flow_, Fupp_, Fmul_, Fstate_ );
+  SNOPTHandler.setXNames     ( xnames_, nxnames_ );
+  SNOPTHandler.setFNames     ( Fnames_, nFnames_ );
+  SNOPTHandler.setNeA         ( neA_ );
+  SNOPTHandler.setNeG         ( neG_ );
+
+  // ---------------------------------------------------------------
+  // Sets the usrfun that supplies G and F.
+  SNOPTHandler.setUserFun( SNOPTusrFG_ );
+  SNOPTHandler.setProbName( "SNOPTSolver" );
+  if (!SNOPTHandler.has_snopt_option_file)
+    setOptionsForSNOPT(SNOPTHandler);
+
+  // ---------------------------------------------------------------
+  SNOPTHandler.setParameter((char*)"Maximize");
+  integer Cold = 0, Basis = 1, Warm = 2;
+
+  vector<double> xsol;
+  vector<double> fsol;
+  SNOPTHandler.solve( Cold, xsol, fsol);
+
+  // ---------------------------------------------------------------
+  delete[] iGfun_;
+  delete[] jGvar_;
+
+  delete[] x_;
+  delete[] xlow_;
+  delete[] xupp_;
+  delete[] xmul_;
+  delete[] xstate_;
+
+  delete[] F_;
+  delete[] Flow_;
+  delete[] Fupp_;
+  delete[] Fmul_;
+  delete[] Fstate_;
+
+  delete[] xnames_;
+  delete[] Fnames_;
 
 }
 
@@ -104,12 +261,12 @@ int SNOPTusrFG_( integer    *Status, integer *n,    double x[],
   // -----------------------------------------------------------------
   // Toy problem
   F[0] = x[0] * x[0] + x[1] + x[1]; // objective function
-  F[1] = x[0] + 2 * x[1]; // nonlinear constraint 1
+//  F[1] = x[0] + 2 * x[1]; // nonlinear constraint 1
 
   G[0] = 2 * x[0];
   G[1] = 2 * x[1];
-  G[2] = 1;
-  G[3] = 2;
+//  G[2] = 1;
+//  G[3] = 2;
 
   // =================================================================
   // Computes the nonlinear objective and constraint terms for the

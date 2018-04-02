@@ -22,10 +22,13 @@
 #define CASE_H
 
 // ---------------------------------------------------------
+// Qt/Eigen
 #include <QHash>
 #include <QUuid>
-#include <Eigen/Core>
 #include <QtCore/QDateTime>
+#include <Eigen/Core>
+
+// ---------------------------------------------------------
 #include <Model/properties/variable_property_container.h>
 #include "Runner/loggable.hpp"
 #include "optimization_exceptions.h"
@@ -39,9 +42,9 @@ class CaseTransferObject;
 
 // ---------------------------------------------------------
 /*!
- * \brief The Case class represents a specific case for the optimizer,
- * i.e. a specific set of variable values and the value of the objective
- * function after evaluation.
+ * \brief The Case class represents a specific case for the
+ * optimizer, i.e. a specific set of variable values and the
+ * value of the objective function after evaluation.
  */
 class Case : public Loggable
 {
@@ -52,6 +55,7 @@ class Case : public Loggable
 
   // -------------------------------------------------------
   Case();
+  Case(const Model::Properties::VariablePropertyContainer* v);
   Case(const QHash<QUuid, bool> &binary_variables,
        const QHash<QUuid, int> &integer_variables,
        const QHash<QUuid, double> &real_variables);
@@ -60,9 +64,10 @@ class Case : public Loggable
 
   // -------------------------------------------------------
   /*!
-   * @brief The CaseState struct holds information about the current
-   * status of the Case object, such as whether or not it has been
-   * evaluated and whether or not it has been modified by a constriant.
+   * @brief The CaseState struct holds information about the
+   * current status of the Case object, such as whether or
+   * not it has been evaluated and whether or not it has been
+   * modified by a constriant.
    */
   struct CaseState {
 
@@ -107,12 +112,13 @@ class Case : public Loggable
   CaseState state; //!< State of Case, directly modifiable.
 
   /*!
-   * \brief Equals Checks whether this case is equal to another
-   * case within some tolerance.
+   * \brief Equals Checks whether this case is equal to
+   * another case within some tolerance.
    *
    * \param other Case to compare with.
    *
-   * \param tolerance The allowed deviation between two cases.
+   * \param tolerance The allowed deviation between two
+   * cases.
    *
    * \return True if cases are equal within given tolerance,
    * otherwise false.
@@ -139,12 +145,15 @@ class Case : public Loggable
       Model::Properties::VariablePropertyContainer *varcont);
 
   // -------------------------------------------------------
+  // Differentiate vars by intrinsic type
   QHash<QUuid, bool> binary_variables() const { return binary_variables_; }
   QHash<QUuid, int> integer_variables() const { return integer_variables_; }
   QHash<QUuid, double> real_variables() const { return real_variables_; }
 
-  QHash<QUuid, double> real_wplc_variables() const { return real_wplc_variables_; }
+  // Differentiate vars by extrinsic type
+  QHash<QUuid, double> real_wspline_vars() const { return real_wspline_vars_; }
 
+  // -------------------------------------------------------
   void set_binary_variables(const QHash<QUuid, bool> &binary_variables)
   { binary_variables_ = binary_variables; }
 
@@ -154,8 +163,8 @@ class Case : public Loggable
   void set_real_variables(const QHash<QUuid, double> &real_variables)
   { real_variables_ = real_variables; }
 
-  void set_real_wplc_variables(const QHash<QUuid, double> &real_wplc_variables)
-  { real_wplc_variables_ = real_wplc_variables; }
+  void set_real_wspline_vars(const QHash<QUuid, double> &real_wspline_vars)
+  { real_wspline_vars_ = real_wspline_vars; }
 
   // -------------------------------------------------------
   /*!
@@ -164,17 +173,21 @@ class Case : public Loggable
    */
   double objective_function_value() const;
 
-  void set_objective_function_value(double objective_function_value)
-  { objective_function_value_ = objective_function_value; }
+  void set_objective_function_value(double objective_function_value) {
+    objective_function_value_ = objective_function_value;
+  }
 
   //!< Set the value of an integer variable in the case.
-  void set_integer_variable_value(const QUuid id, const int val);
+  void set_integer_variable_value(const QUuid id,
+                                  const int val);
 
   //!< Set the value of a boolean variable in the case.
-  void set_binary_variable_value(const QUuid id, const bool val);
+  void set_binary_variable_value(const QUuid id,
+                                 const bool val);
 
   //!< Set the value of a real variable in the case.
-  void set_real_variable_value(const QUuid id, const double val);
+  void set_real_variable_value(const QUuid id,
+                               const double val);
 
   enum SIGN { PLUS, MINUS, PLUSMINUS};
 
@@ -193,7 +206,9 @@ class Case : public Loggable
    * \param magnitude The magnitude of the perturbaton.
    * \return One or two cases where one variable has been perturbed.
    */
-  QList<Case *> Perturb(QUuid variable_id, SIGN sign, double magnitude);
+  QList<Case *> Perturb(QUuid variable_id,
+                        SIGN sign,
+                        double magnitude);
 
   // -------------------------------------------------------
   /*!
@@ -202,7 +217,7 @@ class Case : public Loggable
    *
    * @return Values of the real well placement variables.
    */
-  Eigen::VectorXd GetRealWellPlcVarVector();
+  Eigen::VectorXd GetRealWSplineVarVector();
 
   // -------------------------------------------------------
   /*!
@@ -210,7 +225,9 @@ class Case : public Loggable
    * in the same order they appear in the vector from
    * GetRealWellPlcVarVector.
    */
-  QList<QUuid> GetRealWellPlcVarIdVector() { return real_wplc_id_index_map_; }
+  QList<QUuid> GetRealWSplineVarIdVector() {
+    return real_wspline_id_index_map_;
+  }
 
   // -------------------------------------------------------
   /*!
@@ -343,12 +360,12 @@ class Case : public Loggable
   QHash<QUuid, bool> binary_variables_;
   QHash<QUuid, int> integer_variables_;
   QHash<QUuid, double> real_variables_;
-  QHash<QUuid, double> real_wplc_variables_;
+  QHash<QUuid, double> real_wspline_vars_;
 
   // -------------------------------------------------------
   QList<QUuid> real_id_index_map_;
   QList<QUuid> integer_id_index_map_;
-  QList<QUuid> real_wplc_id_index_map_;
+  QList<QUuid> real_wspline_id_index_map_;
 
   // -------------------------------------------------------
   //!< The parent of this trial point. Needed by the APPS algorithm.
