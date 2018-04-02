@@ -13,6 +13,8 @@
 #define TRUST_REGION_RADIUS_UPDATE 7
 #define CRITICALITY_STEP_FINISHED 8
 #define TRIAL_POINT_FOUND 9
+#define TRIAL_POINT_IS_NOT_NEW_OPTIMUM 10
+#define NEW_POINT_INCLUDED 11
 
 
 /// Test functions - start
@@ -218,6 +220,8 @@ void DFO::iterate() {
   double u = 0.8;
   double beta = 0.7;
   double epsilon_c = 1;
+  double tau = 0.6;
+  double eta1 = 0.25;
   int criticality_step_iteration = 0;
   double trust_region_radius_tilde = 0;
   double trust_region_radius_inc = 0;
@@ -309,24 +313,51 @@ void DFO::iterate() {
       //Now at step2.
       DFO_model_.SetTrustRegionRadiusForSubproblem(DFO_model_.GetTrustRegionRadius());
       new_point = DFO_model_.FindLocalOptimum();
-      last_action_ = TRIAL_POINT_FOUND;
+
+      double maxDistance = DFO_model_.findLargestDistanceBetweenPointsAndOptimum();
+      if (new_point.norm() >= tau*maxDistance) {
+        last_action_ = TRIAL_POINT_FOUND;
+      } else{
+        last_action_ = TRIAL_POINT_IS_NOT_NEW_OPTIMUM;
+      }
     }
     else if (last_action_ == TRIAL_POINT_FOUND){
-      //find yt.
+      DFO_model_.SetTrustRegionRadiusForSubproblem(r*DFO_model_.GetTrustRegionRadius());
       int t = DFO_model_.findPointToReplaceWithNewOptimum(new_point);
       double rho = (fvals[t] - funcVal)/(DFO_model_.evaluateQuadraticModel(bestPoint) - DFO_model_.evaluateQuadraticModel(bestPoint+newPoint));
-      
+      Eigen::VectorXd dummyVec(number_of_variables_);
+      dummyVec.setZero();
+      int dummyInt = 0;
+      DFO_model_.findWorstPointInInterpolationSet(dummyVec,dummyInt); //Check if it is lambda-poised.
+      if ((rho >= eta1) || (dummyInt == -1 && rho > 0)){
+        DFO_model_.update(new_point, funcVal, t, DFO_Model::INCLUDE_NEW_OPTIMUM);
+        last_action_ = NEW_POINT_INCLUDED;
+      }
+      else{
+        last_action_ =  TRIAL_POINT_IS_NOT_NEW_OPTIMUM;
 
+        if ((DFO_model_.GetPoint(t) - DFO_model_.GetBestPoint()).norm() > r*DFO_model_.GetTrustRegionRadius() ||
+            abs(DFO_model_.ComputeLagrangePolynomial(t, new_point)) > 1 ){
+            DFO_model_.update(new_point,funcVal,t,DFO_Model::INCLUDE_NEW_POINT);
+          last_action_ = NEW_POINT_INCLUDED;
+        }
+      }
     }
+    if (last_action_ == TRIAL_POINT_IS_NOT_NEW_OPTIMUM){
+      //Do the model improvement step.
+    }
+
+
+  }
 
 
     // QList<Case *> new_cases = ConvertPointsToCases(new_points);
     // case_handler_->AddNewCases(new_cases);
 
     iterations_++;
-  }
-
 }
+
+
 QList<Case *> DFO::ConvertPointsToCases(Eigen::MatrixXd points) {
 
   QList<Case *> new_cases = QList<Case *>();
