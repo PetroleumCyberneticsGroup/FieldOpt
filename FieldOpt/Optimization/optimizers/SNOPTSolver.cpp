@@ -242,13 +242,13 @@ void SNOPTSolver::callSNOPT() {
 
   // ---------------------------------------------------------------
   // Set bounds for x according to spline var ordering
-  xlow_[0] = -infinity_;
-  xlow_[1] = -infinity_;
-  xupp_[0] = infinity_;
-  xupp_[1] = infinity_;
 
-  // xlow_
-  // xupp_
+  // ---------------------------------------------------------------
+  // Fill in lower & upper bounds
+  for (int i = 0; i < n_; i++) {
+    xlow_[i] = -infinity_;
+    xupp_[i] = infinity_;
+  }
 
   // ---------------------------------------------------------------
   // When we have an initial guess the states should be zero
@@ -265,8 +265,9 @@ void SNOPTSolver::callSNOPT() {
   // Fmul is the vector with the estimation of the Lagrange
   // Multipliers. It will be always zero except in very rare cases of
   // benchmarking performance with them set to some initial guess.
-  for (int i = 0; i < neF_; i++)
+  for (int i = 0; i < neF_; i++) {
     Fmul_[i] = 0;
+  }
 
   // ---------------------------------------------------------------
   // The nonzero structure of the Jacobian
@@ -280,12 +281,13 @@ void SNOPTSolver::callSNOPT() {
     iGfun_[i] = 0;
     jGvar_[i] = i;
 
+    // ilc: loop over # of constraints
     for (int ilc = 0; ilc < m_; ilc++)
     {
       iAfun_[i + ilc * n_] = m_ + 1 + ilc;
       jAvar_[i + ilc * n_] = i;
-//      A_[i + ilc * n_] = ((ConstraintFunctional*)func_list[ilc])->ad_value.derivative(i);
       A_[i + ilc * n_] = 0;
+//      A_[i + ilc * n_] = ((ConstraintFunctional*)func_list[ilc])->ad_value.derivative(i);
 
       // ad_value.derivative(i) =>
       // get the derivative at column i (0 is returned if it does not exist)
@@ -308,13 +310,17 @@ void SNOPTSolver::callSNOPT() {
 
   // ---------------------------------------------------------------
   // dbg
-  Matrix<integer,1,Dynamic> XiAfun_((integer)iAfun_);
-  Matrix<integer,1,Dynamic> XiAvar_((integer)jAvar_);
+  Matrix<integer, 1, Dynamic> XiAfun_, XiAvar_;
+  XiAvar_.fill((integer)jAvar_);
+  XiAfun_.fill((integer)iAfun_);
 
-  Matrix<integer,1,Dynamic> XiGfun_((integer)iGfun_);
-  Matrix<integer,1,Dynamic> XiGvar_((integer)jGvar_);
+  Matrix<integer, 1, Dynamic> XiGfun_, XiGvar_;
+  XiGvar_.fill((integer)jGvar_);
+  XiGfun_.fill((integer)iGfun_);
 
   cout << "XiAfun_.rows(): " << XiAfun_.rows() << endl;
+  cout << "XiAfun_: " << XiAfun_ << endl;
+
   cout << "XiAvar_.rows(): " << XiAvar_.rows() << endl;
   cout << "XiGfun_.rows(): " << XiGfun_.rows() << endl;
   cout << "XiGvar_.rows(): " << XiGvar_.rows() << endl;
