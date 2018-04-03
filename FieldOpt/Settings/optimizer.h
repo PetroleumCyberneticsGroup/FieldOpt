@@ -132,6 +132,11 @@ class Optimizer
     int max_iterations;
     ConstraintWellSplinePointsType spline_points_type; //!< How the SplinePoints constraint is given when SplinePoints constraint type is selected.
     QList<RealMaxMinLimit> spline_points_limits; //!< Box limits a spline point needs to be within to be valid when SplinePoints constraint type is selected.
+
+    // 3rd party solver parameters
+    QString thrdps_optn_file;
+    QString thrdps_smry_file;
+    QString thrdps_prnt_file;
   };
 
   // -------------------------------------------------------

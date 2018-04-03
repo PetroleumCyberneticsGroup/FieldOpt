@@ -133,10 +133,11 @@ class SNOPTSolver : public Optimizer
   bool loadSNOPT(string libname = "libsnopt-7.2.12.2.so");
 
   SNOPTHandler* SNOPTHandler_;
-  SNOPTHandler initSNOPTHandler();
+//  SNOPTHandler initSNOPTHandler();
+  void initSNOPTHandler();
 
   // -------------------------------------------------------
-  void setOptionsForSNOPT(SNOPTHandler& snoptHandler_);
+  void setOptionsForSNOPT(SNOPTHandler* snoptHandler_);
 
   // -------------------------------------------------------
   void callSNOPT();

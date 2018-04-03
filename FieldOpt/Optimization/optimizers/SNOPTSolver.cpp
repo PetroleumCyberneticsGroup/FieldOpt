@@ -21,12 +21,12 @@ SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
 
   // ---------------------------------------------------------------
   if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
-    cout << "[opt]Init. SNOPTSolver.------- Constraint-handling." << endl;
+    cout << "[opt]Init. SNOPTSolver.------ Constraint-handling." << endl;
 
   // ---------------------------------------------------------------
   settings_ = settings;
-  SNOPTHandler SNOPTHandler = initSNOPTHandler();
-  SNOPTHandler_ = &SNOPTHandler;
+  loadSNOPT();
+  initSNOPTHandler();
 
   // ---------------------------------------------------------------
   // Set problem dimensions
@@ -143,32 +143,37 @@ SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
   Matrix<integer,1,Dynamic> XiGfun_((integer)iGfun_);
   Matrix<integer,1,Dynamic> XiGvar_((integer)jGvar_);
 
+  cout << XiAfun_;
+  cout << XiAvar_;
+  cout << XiGfun_;
+  cout << XiGvar_;
+
   // ---------------------------------------------------------------
-  SNOPTHandler.setProblemSize( n_, neF_ );
-  SNOPTHandler.setObjective  ( objRow_ );
-  SNOPTHandler.setA          ( lenA_, iAfun_, jAvar_, A_ );
-  SNOPTHandler.setG          ( lenG_, iGfun_, jGvar_ );
-  SNOPTHandler.setX          ( x_, xlow_, xupp_, xmul_, xstate_ );
-  SNOPTHandler.setF          ( F_, Flow_, Fupp_, Fmul_, Fstate_ );
-  SNOPTHandler.setXNames     ( xnames_, nxnames_ );
-  SNOPTHandler.setFNames     ( Fnames_, nFnames_ );
-  SNOPTHandler.setNeA         ( neA_ );
-  SNOPTHandler.setNeG         ( neG_ );
+  SNOPTHandler_->setProblemSize( n_, neF_ );
+  SNOPTHandler_->setObjective  ( objRow_ );
+  SNOPTHandler_->setA          ( lenA_, iAfun_, jAvar_, A_ );
+  SNOPTHandler_->setG          ( lenG_, iGfun_, jGvar_ );
+  SNOPTHandler_->setX          ( x_, xlow_, xupp_, xmul_, xstate_ );
+  SNOPTHandler_->setF          ( F_, Flow_, Fupp_, Fmul_, Fstate_ );
+  SNOPTHandler_->setXNames     ( xnames_, nxnames_ );
+  SNOPTHandler_->setFNames     ( Fnames_, nFnames_ );
+  SNOPTHandler_->setNeA         ( neA_ );
+  SNOPTHandler_->setNeG         ( neG_ );
 
   // ---------------------------------------------------------------
   // Sets the usrfun that supplies G and F.
-  SNOPTHandler.setUserFun( SNOPTusrFG_ );
-  SNOPTHandler.setProbName( "SNOPTSolver" );
-  if (!SNOPTHandler.has_snopt_option_file)
-    setOptionsForSNOPT(SNOPTHandler);
+  SNOPTHandler_->setUserFun( SNOPTusrFG_ );
+  SNOPTHandler_->setProbName( "SNOPTSolver" );
+//  if (!SNOPTHandler_->has_snopt_option_file)
+    setOptionsForSNOPT(SNOPTHandler_);
 
   // ---------------------------------------------------------------
-  SNOPTHandler.setParameter((char*)"Maximize");
+  SNOPTHandler_->setParameter((char*)"Maximize");
   integer Cold = 0, Basis = 1, Warm = 2;
 
   vector<double> xsol;
   vector<double> fsol;
-  SNOPTHandler.solve( Cold, xsol, fsol);
+  SNOPTHandler_->solve( Cold, xsol, fsol);
 
   // ---------------------------------------------------------------
   delete[] iGfun_;
@@ -223,22 +228,26 @@ Optimizer::TerminationCondition SNOPTSolver::IsFinished() {
 }
 
 // -----------------------------------------------------------------
-SNOPTHandler SNOPTSolver::initSNOPTHandler() {
+void SNOPTSolver::initSNOPTHandler() {
 
   string prnt_file, smry_file, optn_file;
+
   optn_file = settings_->parameters().thrdps_optn_file.toStdString() + ".opt.optn";
   smry_file = settings_->parameters().thrdps_smry_file.toStdString() + ".opt.summ";
   prnt_file = settings_->parameters().thrdps_prnt_file.toStdString() + ".opt.prnt";
 
-  cout << optn_file << endl;
-  SNOPTHandler snoptHandler(prnt_file.c_str(),
-                            smry_file.c_str(),
-                            optn_file.c_str());
+  cout << "optn_file: " << optn_file << endl;
+  cout << "smry_file: " << smry_file << endl;
+  cout << "prnt_file: " << prnt_file << endl;
+
+  SNOPTHandler_ = new SNOPTHandler(prnt_file.c_str(),
+                                   smry_file.c_str(),
+                                   optn_file.c_str());
 
   if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
     cout << "[opt]SNOPTHandler set.----------" << endl;
 
-  return snoptHandler;
+//  return snoptHandler;
 }
 
 // -------------------------------------------------------------------
@@ -349,8 +358,8 @@ int SNOPTusrFG_( integer    *Status, integer *n,    double x[],
 // -----------------------------------------------------------------
 void SNOPTSolver::callSNOPT() {
 
-  SNOPTHandler snoptHandler = initSNOPTHandler();
-  setOptionsForSNOPT(snoptHandler);
+//  SNOPTHandler snoptHandler = initSNOPTHandler();
+//  setOptionsForSNOPT(snoptHandler);
 
   int i;
   // Allocate and initialize;
@@ -667,7 +676,7 @@ void SNOPTSolver::callSNOPT() {
 
 
 // -----------------------------------------------------------------
-void SNOPTSolver::setOptionsForSNOPT(SNOPTHandler& snoptHandler) {
+void SNOPTSolver::setOptionsForSNOPT(SNOPTHandler* snoptHandler) {
 
   if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
     cout << "[opt]Set options for SNOPT.---" << endl;

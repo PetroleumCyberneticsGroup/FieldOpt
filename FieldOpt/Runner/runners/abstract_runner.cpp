@@ -233,7 +233,7 @@ void AbstractRunner::InitializeBaseCase() {
 
   // -------------------------------------------------------
   base_case_ = new Optimization::Case(model_->variables());
-  // Removes since all variables are passed to Case above
+  // Removed since all variables are passed to Case above
   // base_case_ = new Optimization::Case(model_->variables()->GetBinaryVariableValues(),
   //                                    model_->variables()->GetDiscreteVariableValues(),
   //                                    model_->variables()->GetContinousVariableValues());
