@@ -22,9 +22,20 @@ are based upon [3]. Almost everything else is based upon [2] (practical approach
 */
 namespace Optimization {
 namespace Optimizers {
+
 class DFO_Model {
 
  private:
+
+
+  bool cmp(const Eigen::VectorXd& a, const Eigen::VectorXd& b)
+  {
+    // you should probably also add some code to prevent dividing by zero...
+    return ( a.norm() > b.norm());
+  }
+
+
+
   Settings::Optimizer *settings_;
   Subproblem subproblem;
   unsigned int m; // Number of interpolation points used to create the model. Does not change.
@@ -315,6 +326,8 @@ class DFO_Model {
   */
   Eigen::VectorXd findHighValueOfAbsoluteLagrangePolynomial(int i);
 
+  Eigen::VectorXd FindLocalOptimumOfAbsoluteLagrangePolynomial(int t);
+
   /**
   Finds the point that is best to replace with the new one.
 
@@ -396,6 +409,8 @@ class DFO_Model {
   double findLargestDistanceBetweenPointsAndOptimum();
 
   double ComputeLagrangePolynomial(int t, Eigen::VectorXd point);
+
+  Eigen::MatrixXd GetInterpolationPointsSortedByDistanceFromBestPoint();
 };
 }
 }

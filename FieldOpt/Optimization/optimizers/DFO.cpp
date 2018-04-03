@@ -345,6 +345,17 @@ void DFO::iterate() {
     }
     if (last_action_ == TRIAL_POINT_IS_NOT_NEW_OPTIMUM){
       //Do the model improvement step.
+      int t = DFO_model_.findPointFarthestAwayFromOptimum();
+      DFO_model_.SetTrustRegionRadiusForSubproblem(DFO_model_.GetTrustRegionRadius());
+      new_point = DFO_model_.FindLocalOptimumOfAbsoluteLagrangePolynomial(t);
+
+      if (((new_point - DFO_model_.GetBestPoint()).norm() > r*DFO_model_.GetTrustRegionRadius()) ||
+          (abs(DFO_model_.ComputeLagrangePolynomial(t,new_point)) > required_poisedness_ )){
+        //ok, get the function evaluation.
+      } else{
+        //Keep on looking.
+        //
+      }
     }
 
 

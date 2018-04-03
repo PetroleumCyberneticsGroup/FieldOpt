@@ -270,7 +270,12 @@ double DFO_Model::evaluateLowerBoundQuadraticPolynomial(double radius, double b,
   }
 }
 
-DFO_Model::DFO_Model(unsigned int m, unsigned int n, Eigen::VectorXd y0, double rhoBeg, double lambda,Settings::Optimizer *settings)
+DFO_Model::DFO_Model(unsigned int m,
+                     unsigned int n,
+                     Eigen::VectorXd y0,
+                     double rhoBeg,
+                     double lambda,
+                     Settings::Optimizer *settings)
     : subproblem(settings) {
   this->m = m;
   this->n = n;
@@ -319,7 +324,7 @@ Eigen::MatrixXd DFO_Model::findFirstSetOfInterpolationPoints() {
       Y.col(i)[i - 1] += rho;
       Y.col(i + n)[i - 1] -= rho;
     }
-    numberOfPointsFound = 2*n;
+    numberOfPointsFound = 2 * n;
   } else if (m >= n + 2 && m <= 2 * n) {
     for (int i = 1; i <= n; ++i) {
       Y.col(i)[i - 1] += rho;
@@ -336,8 +341,7 @@ Eigen::MatrixXd DFO_Model::findFirstSetOfInterpolationPoints() {
     std::exit(1);
   }
 
-
-  return Y.block(0,0,n, numberOfPointsFound);
+  return Y.block(0, 0, n, numberOfPointsFound);
 }
 
 Eigen::MatrixXd DFO_Model::findLastSetOfInterpolationPoints() {
@@ -386,7 +390,7 @@ Eigen::MatrixXd DFO_Model::findLastSetOfInterpolationPoints() {
     std::cout << "findLastSetOfInterpilationPoints() was called when m <= 2*n + 1" << std::endl;
   }
   initialInterpolationPointsFound = true;
-  return Y.block(0,2*n,n, m-2*n);
+  return Y.block(0, 2 * n, n, m - 2 * n);
 }
 
 void DFO_Model::initializeModel() {
@@ -395,7 +399,6 @@ void DFO_Model::initializeModel() {
   modelInitialized = true;
 
 }
-
 
 void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, UpdateReason updateReason) {
   if (updateReason == INCLUDE_NEW_OPTIMUM) {
@@ -601,7 +604,7 @@ void DFO_Model::findLowerAndUpperBoundOnAbsoluteLagrangePolynomial(int i, double
   }
 }
 
-void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &indexOfWorstPoint){
+void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &indexOfWorstPoint) {
   // For hvert lagrange polynom l_i: finn max |l_i(x)| innenfor sirkelen.
   // Altså: max { max(l_i(x)), max(-l_i(x))  }
 
@@ -629,31 +632,29 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
     vector<double> fsolMax;
     vector<double> xsolMin;
     vector<double> fsolMin;
-    subproblem.Solve(xsolMax, fsolMax, (char*)"Maximize");
-    subproblem.Solve(xsolMin, fsolMin, (char*)"Minimize");
+    subproblem.Solve(xsolMax, fsolMax, (char *) "Maximize");
+    subproblem.Solve(xsolMin, fsolMin, (char *) "Minimize");
 
     double temp = 0;
-    if ((abs(fsolMax[0]) >= abs(fsolMin[0])) &&  abs(fsolMax[0]) >= worstPoisedness){
+    if ((abs(fsolMax[0]) >= abs(fsolMin[0])) && abs(fsolMax[0]) >= worstPoisedness) {
       worstPoisedness = abs(fsolMax[0]);
-      for (int i = 0; i < xsolMax.size(); ++i){
+      for (int i = 0; i < xsolMax.size(); ++i) {
         dNew[i] = xsolMax[i];
       }
       index = t;
-    }
-    else if ((abs(fsolMin[0]) > abs(fsolMax[0])) &&  abs(fsolMin[0]) >= worstPoisedness){
+    } else if ((abs(fsolMin[0]) > abs(fsolMax[0])) && abs(fsolMin[0]) >= worstPoisedness) {
       worstPoisedness = abs(fsolMin[0]);
-      for (int i = 0; i < xsolMin.size(); ++i){
+      for (int i = 0; i < xsolMin.size(); ++i) {
         dNew[i] = xsolMin[i];
       }
       index = t;
     }
   }
-  if (worstPoisedness > lambda){
+  if (worstPoisedness > lambda) {
     indexOfWorstPoint = index;
-  } else{
+  } else {
     indexOfWorstPoint = -1; // Indicates that the required poisedness is already achieved
   }
-
 }
 
 void DFO_Model::findPointToImprovePoisedness(Eigen::VectorXd &dNew, int &yk) {
@@ -887,7 +888,7 @@ void DFO_Model::compareHMatrices() {
   std::cout << "H:" << std::endl << H << std::endl << std::endl;
 }
 void DFO_Model::SetFunctionValue(int t, double value) {
-  fvals[t-1] = value;
+  fvals[t - 1] = value;
 }
 void DFO_Model::SetTrustRegionRadiusForSubproblem(double radius) {
   subproblem.SetTrustRegionRadius(radius);
@@ -896,33 +897,33 @@ Eigen::VectorXd DFO_Model::FindLocalOptimum() {
   Eigen::VectorXd localOptimum(n);
   vector<double> xsol;
   vector<double> fsol;
-  subproblem.Solve(xsol, fsol, (char*)"Maximize");
-  for (int i = 0; i < n; i++){
+  subproblem.Solve(xsol, fsol, (char *) "Maximize");
+  for (int i = 0; i < n; i++) {
     localOptimum[i] = xsol[i];
   }
   return localOptimum;
 }
 
-int DFO_Model::findPointFarthestAwayFromOptimum(){
-  int t=-1;
+int DFO_Model::findPointFarthestAwayFromOptimum() {
+  int t = -1;
   double maxDistance = -1;
-  for (int i = 0; i < m; ++i){
+  for (int i = 0; i < m; ++i) {
     double dist = (Y.col(i) - bestPoint).norm();
-    if (dist > maxDistance){
-      t = i+1;
+    if (dist > maxDistance) {
+      t = i + 1;
       maxDistance = dist;
     }
   }
   return t;
 }
 
-double DFO_Model::findLargestDistanceBetweenPointsAndOptimum(){
-  int t=-1;
+double DFO_Model::findLargestDistanceBetweenPointsAndOptimum() {
+  int t = -1;
   double maxDistance = -1;
-  for (int i = 0; i < m; ++i){
+  for (int i = 0; i < m; ++i) {
     double dist = (Y.col(i) - bestPoint).norm();
-    if (dist > maxDistance){
-      t = i+1;
+    if (dist > maxDistance) {
+      t = i + 1;
       maxDistance = dist;
     }
   }
@@ -938,9 +939,55 @@ double DFO_Model::ComputeLagrangePolynomial(int t, Eigen::VectorXd point) {
     hess += Z.row(k - 1) * S * (Z.row(t - 1)).transpose() * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
   }
 
-  double val = c + grad.transpose()*point + point.transpose()*hess*point;
+  double val = c + grad.transpose() * point + point.transpose() * hess * point;
 
   return val;
+}
+Eigen::VectorXd DFO_Model::FindLocalOptimumOfAbsoluteLagrangePolynomial(int t) {
+  Eigen::VectorXd grad;
+  Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(n, n);
+  // Creating the lagrange polynomial.
+  hess.setZero();
+  double c = Xi(0, t - 1);
+  grad = (Xi.col(t - 1)).tail(n);
+  for (int k = 1; k <= m; ++k) {
+    hess += Z.row(k - 1) * S * (Z.row(t - 1)).transpose() * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
+  }
+
+  // Find min and max of l_t(x)
+  subproblem.setConstant(c);
+  subproblem.setGradient(grad);
+  subproblem.setHessian(hess);
+  vector<double> xsolMax;
+  vector<double> fsolMax;
+  vector<double> xsolMin;
+  vector<double> fsolMin;
+  subproblem.Solve(xsolMax, fsolMax, (char *) "Maximize");
+  subproblem.Solve(xsolMin, fsolMin, (char *) "Minimize");
+
+  Eigen::VectorXd optimum(n);
+
+  for (int i = 0; i < xsolMax.size(); ++i) {
+    if (abs(fsolMax[0]) >= abs(fsolMin[0])) {
+      optimum[i] = xsolMax[i];
+    } else {
+      optimum[i] = xsolMin[i];
+    }
+  }
+  return optimum;
+}
+
+
+
+Eigen::MatrixXd DFO_Model::GetInterpolationPointsSortedByDistanceFromBestPoint() {
+
+  //std::sort(m.col(3).data(), m.col(3).data() + m.rows());
+  Eigen::MatrixXd copyY = Y;
+  //std::sort(Y.data(), "end", "comp");
+  copyY.col(0),
+  std::sort(copyY.col(0), copyY.col(m), cmp );
+
+  return Eigen::MatrixXd();
 }
 
 }
