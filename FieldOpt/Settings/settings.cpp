@@ -29,11 +29,13 @@ Settings::Settings(QString driver_path,
 
   if (!::Utilities::FileHandling::FileExists(driver_path))
     throw FileNotFoundException(driver_path.toStdString());
+
   driver_path_ = driver_path;
   readDriverFile();
 
   output_directory_ = output_directory;
   simulator_->output_directory_ = output_directory;
+  optimizer_->output_dir_ = output_directory;
 }
 
 // -----------------------------------------------------------------

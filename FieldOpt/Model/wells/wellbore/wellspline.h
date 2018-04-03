@@ -17,19 +17,26 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+// ---------------------------------------------------------
 #ifndef WELLSPLINE_H
 #define WELLSPLINE_H
 
+// ---------------------------------------------------------
 #include "trajectory.h"
 #include "Reservoir/grid/eclgrid.h"
 #include "Model/wells/wellbore/wellblock.h"
 #include "FieldOpt-WellIndexCalculator/wellindexcalculator.h"
 #include <QList>
 
+// ---------------------------------------------------------
+#include "FieldOpt-WellIndexCalculator/resinxx/well_path.h"
+
+// ---------------------------------------------------------
 namespace Model {
 namespace Wells {
 namespace Wellbore {
 
+// ---------------------------------------------------------
 /*!
  * \brief The WellSpline class Generates the well blocks making
  * up the trajectory from a set of spline points. It uses the
@@ -38,13 +45,23 @@ namespace Wellbore {
 class WellSpline
 {
  public:
+  // -------------------------------------------------------
+//  WellSpline(::Settings::Model::Well well_settings,
+//             Properties::VariablePropertyContainer *variable_container,
+//             Reservoir::Grid::Grid *grid);
+
+  // -------------------------------------------------------
   WellSpline(::Settings::Model::Well well_settings,
              Properties::VariablePropertyContainer *variable_container,
-             Reservoir::Grid::Grid *grid);
+             Reservoir::Grid::Grid *grid,
+             RICaseData *RICaseData,
+             RIReaderECL *RIReaderECL,
+             RIGrid *RIGrid);
 
+  // -------------------------------------------------------
   /*!
-   * \brief GetWellBlocks Get the set of well blocks with proper
-   * WI's defined by the spline.
+   * \brief GetWellBlocks Get the set of well blocks with
+   * proper WI's defined by the spline.
    * \return
    */
   QList<WellBlock *> *GetWellBlocks(int rank=0);
@@ -52,15 +69,23 @@ class WellSpline
   { return time_cwb_wic_pcg_; }
 
  private:
+  // -------------------------------------------------------
   Reservoir::Grid::Grid *grid_;
   Settings::Model::Well well_settings_;
 
-  //!< Number of seconds spent in the ComputeWellBlocks() method.
+  // -------------------------------------------------------
+  RIGrid* RIGrid_;
+  RICaseData* RICaseData_;
+  RIReaderECL* RIReaderECL_;
+
+  // -------------------------------------------------------
+  //!< # of seconds spent in the ComputeWellBlocks() method.
   int time_cwb_wic_pcg_;
   int time_cwb_wic_rins_;
   int time_cwb_wic_rinx_;
   int time_cwb_wic_rixx_;
 
+  // -------------------------------------------------------
   Model::Properties::ContinousProperty *heel_x_;
   Model::Properties::ContinousProperty *heel_y_;
   Model::Properties::ContinousProperty *heel_z_;
@@ -68,6 +93,7 @@ class WellSpline
   Model::Properties::ContinousProperty *toe_y_;
   Model::Properties::ContinousProperty *toe_z_;
 
+  // -------------------------------------------------------
   /*!
    * \brief getWellBlock Convert the BlockData returned by WIC
    * to a WellBlock with a Perforation.
@@ -81,7 +107,8 @@ class WellSpline
    *
    * \return
    */
-  WellBlock *getWellBlock(Reservoir::WellIndexCalculation::IntersectedCell block_data);
+  WellBlock *getWellBlock(
+      Reservoir::WellIndexCalculation::IntersectedCell block_data);
 };
 
 }

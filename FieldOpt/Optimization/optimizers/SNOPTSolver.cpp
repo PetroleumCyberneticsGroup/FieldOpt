@@ -17,7 +17,7 @@ namespace Optimizers {
 
 // -----------------------------------------------------------------
 SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
-                         Case *base_case) {
+                         Case *wcpl_ch_case) {
 
   // ---------------------------------------------------------------
   if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
@@ -25,12 +25,14 @@ SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
 
   // ---------------------------------------------------------------
   settings_ = settings;
+  wcpl_ch_case_ = wcpl_ch_case;
+  opt_prob_ = "Rosenbrock";
+  // opt_prob_ = "Wplc_WL";
+
+  // ---------------------------------------------------------------
   loadSNOPT();
   initSNOPTHandler();
-  callSNOPT();
-
-
-
+  callSNOPT(opt_prob_);
 }
 
 // -----------------------------------------------------------------
@@ -70,9 +72,10 @@ void SNOPTSolver::initSNOPTHandler() {
   // ---------------------------------------------------------------
   string prnt_file, smry_file, optn_file;
 
-  optn_file = settings_->parameters().thrdps_optn_file.toStdString() + ".opt.optn";
-  smry_file = settings_->parameters().thrdps_smry_file.toStdString() + ".opt.summ";
-  prnt_file = settings_->parameters().thrdps_prnt_file.toStdString() + ".opt.prnt";
+  string cdir = settings_->output_dir_.toStdString() + "/";
+  optn_file = cdir + settings_->constraints()[0].thrdps_optn_file.toStdString() + ".opt.optn";
+  smry_file = cdir + settings_->constraints()[0].thrdps_smry_file.toStdString() + ".opt.summ";
+  prnt_file = cdir + settings_->constraints()[0].thrdps_prnt_file.toStdString() + ".opt.prnt";
 
   cout << "optn_file: " << optn_file << endl;
   cout << "smry_file: " << smry_file << endl;
@@ -90,6 +93,53 @@ void SNOPTSolver::initSNOPTHandler() {
 }
 
 // -------------------------------------------------------------------
+int Rosenbrock_( integer    *Status, integer *n,    double x[],
+                 integer    *needF,  integer *neF,  double F[],
+                 integer    *needG,  integer *neG,  double G[],
+                 char       *cu,     integer *lencu,
+                 integer    iu[],    integer *leniu,
+                 double     ru[],    integer *lenru ) {
+  // -----------------------------------------------------------------
+  // Rosenbrock testproblem
+  F[0] = (1.0 - x[0]) * (1.0 - x[0]) + 100.0 * (x[1] - x[0] * x[0]) * (x[1] - x[0] * x[0]);
+  F[1] = x[0] * x[0] + x[1] * x[1]; // nonlinear constraint: unit disk
+
+  // dF/dx0, dF/dx1
+  G[0] = -2.0 * (1.0 - x[0]) - 400.0 * x[0] * (x[1] - x[0] * x[0]);
+  G[1] = 200.0 * (x[1] - x[0] * x[0]);
+
+  // dC/dx0, dC/dx1
+  G[2] = 2.0 * x[0];
+  G[3] = 2.0 * x[1];
+
+  // -----------------------------------------------------------------
+  cout << "[opt]Rosenbrock_.-------------" << endl;
+
+  for (int i = 0; i < *n; i++ ) {
+    cout << "x[" << i << "]:" << x[i] << " ";
+  }
+  cout << endl;
+
+  cout << "F[0]: " << F[0] << endl;
+  cout << "F[1]: " << F[1] << endl;
+  cout << "G[0]: " << G[0] << endl;
+  cout << "G[1]: " << G[1] << endl;
+  cout << "G[2]: " << G[2] << endl;
+  cout << "G[3]: " << G[3] << endl;
+
+  // -----------------------------------------------------------------
+  // SOLUTION
+  //  x[0]:  0.78641516  <- x0*
+  //  x[1]:  0.61769831  <- x1*
+  //  F[0]:  0.04567481  <- f*
+  //  F[1]:  1.00000000  <- on constraint boundary
+  //  G[0]: -0.19109155
+  //  G[1]: -0.15009765
+  //  G[2]:  1.57283031
+  //  G[3]:  1.23539662
+}
+
+// -------------------------------------------------------------------
 int SNOPTusrFG_( integer    *Status, integer *n,    double x[],
                  integer    *needF,  integer *neF,  double F[],
                  integer    *needG,  integer *neG,  double G[],
@@ -98,23 +148,6 @@ int SNOPTusrFG_( integer    *Status, integer *n,    double x[],
                  double     ru[],    integer *lenru ) {
 
   int nf = *neF;
-
-  // -----------------------------------------------------------------
-  cout << "[opt]SNOPTusrFG_.------------- x=";
-  for (int i = 0; i < *n; i++ ){
-    cout << x[i] << " ";
-  }
-  cout << endl;
-
-  // -----------------------------------------------------------------
-  // Toy problem
-  F[0] = x[0] * x[0] + x[1] + x[1]; // objective function
-//  F[1] = x[0] + 2 * x[1]; // nonlinear constraint 1
-
-  G[0] = 2 * x[0];
-  G[1] = 2 * x[1];
-//  G[2] = 1;
-//  G[3] = 2;
 
   // =================================================================
   // Computes the nonlinear objective and constraint terms for the
@@ -193,13 +226,21 @@ int SNOPTusrFG_( integer    *Status, integer *n,    double x[],
 }
 
 // -----------------------------------------------------------------
-void SNOPTSolver::callSNOPT() {
+void SNOPTSolver::callSNOPT(string opt_prob_) {
 
   // ---------------------------------------------------------------
   // Set problem dimensions
-//  n_ = (int)base_case->GetRealWSplineVarVector().rows();
-  n_ = 2;
-  m_ = 0;        // # of nonlinear constraints
+  if(opt_prob_ == "Rosenbrock") {
+    n_ = 2;
+    m_ = 1;        // # of nonlinear constraints
+
+  } else if(opt_prob_ == "Wplc_WL") {
+    n_ = (int)wcpl_ch_case_->GetRealWSplineVarVector().rows();
+    m_ = 1;        // # of nonlinear constraints
+  }
+
+  // ---------------------------------------------------------------
+  // Set problem dimensions
   neF_ = m_ + 1; // # of elements in F vector
   lenA_ = 0;     // # of linear constraints
 
@@ -235,23 +276,60 @@ void SNOPTSolver::callSNOPT() {
   xnames_ = new char[nxnames_ * 8];
   Fnames_ = new char[nxnames_ * 8];
 
-  // ---------------------------------------------------------------
-  // Set F bounds according to what's reasonable (overrides infinity_)
-  Flow_[0] = -infinity_;
-  Fupp_[0] = infinity_;
 
   // ---------------------------------------------------------------
-  // Set bounds for x according to spline var ordering
+  // Set F bounds (objective + nonlinear constraint)
+  if(opt_prob_.compare("Rosenbrock")) {
 
-  // ---------------------------------------------------------------
-  // Fill in lower & upper bounds
-  for (int i = 0; i < n_; i++) {
-    xlow_[i] = -infinity_;
-    xupp_[i] = infinity_;
+    // -------------------------------------------------------------
+    // Objective bounds Rosenbrock test case
+    Flow_[0] = -infinity_;
+    Fupp_[0] = infinity_;
+
+    // Constraint bounds
+    Flow_[1] = 0;
+    Fupp_[1] = 1;
+
+    // Fill in lower & upper bounds for x
+    for (int i = 0; i < n_; i++) {
+      xlow_[i] = -infinity_;
+      xupp_[i] = infinity_;
+    }
+
+    // Initial point
+    for (int i = 0; i < n_; i++)
+      x_[i] = 0.0e1;
+
+  } else if(opt_prob_.compare("Wplc_WL")) {
+
+    // -------------------------------------------------------------
+    // Later: Set F bounds according to uuid
+    Flow_[0] = -infinity_;
+    Fupp_[0] = infinity_;
+
+    // Constraint bounds => lw
+    Flow_[1] = settings_->constraints()[0].min_length;
+    Fupp_[1] = settings_->constraints()[0].max_length;
+
+    // Constraint bounds => iwd
+//    Flow_[2] = settings_->constraints()[0].min_distance;
+//    Fupp_[2] = infinity_;
+
+    // Later: Set bounds for x according to spline var ordering
+    for (int i = 0; i < n_; i++) {
+      xlow_[i] = -infinity_;
+      xupp_[i] = infinity_;
+    }
+
+    // Initial point
+    for (int i = 0; i < n_; i++)
+      x_[i] = 0.0e1;
+
+    SNOPTHandler_->setParameter((char*)"Minimize");
   }
 
   // ---------------------------------------------------------------
-  // When we have an initial guess the states should be zero
+  // If we provide an initial guess then the states should be zero
   for (int i = 0; i < n_; i++)
     xstate_[i] = 0;
 
@@ -282,13 +360,13 @@ void SNOPTSolver::callSNOPT() {
     jGvar_[i] = i;
 
     // ilc: loop over # of constraints
-    for (int ilc = 0; ilc < m_; ilc++)
+    for (int ilc = 0; ilc < lenA_; ilc++)
     {
-      iAfun_[i + ilc * n_] = m_ + 1 + ilc;
+      iAfun_[i + ilc * n_] = m_ + 1 + ilc; // <- sure about this m_?
       jAvar_[i + ilc * n_] = i;
-      A_[i + ilc * n_] = 0;
-//      A_[i + ilc * n_] = ((ConstraintFunctional*)func_list[ilc])->ad_value.derivative(i);
+      A_[i + ilc * n_] = 0; // <- coeff. of linear constraints
 
+      // A_[i + ilc * n_] = ((ConstraintFunctional*)func_list[ilc])->ad_value.derivative(i);
       // ad_value.derivative(i) =>
       // get the derivative at column i (0 is returned if it does not exist)
     }
@@ -326,6 +404,7 @@ void SNOPTSolver::callSNOPT() {
   cout << "XiGvar_.rows(): " << XiGvar_.rows() << endl;
 
   // ---------------------------------------------------------------
+  // Set SNOPT dims
   SNOPTHandler_->setProblemSize( n_, neF_ );
   SNOPTHandler_->setObjective  ( objRow_ );
   SNOPTHandler_->setA          ( lenA_, iAfun_, jAvar_, A_ );
@@ -334,18 +413,31 @@ void SNOPTSolver::callSNOPT() {
   SNOPTHandler_->setF          ( F_, Flow_, Fupp_, Fmul_, Fstate_ );
   SNOPTHandler_->setXNames     ( xnames_, nxnames_ );
   SNOPTHandler_->setFNames     ( Fnames_, nFnames_ );
-  SNOPTHandler_->setNeA         ( neA_ );
-  SNOPTHandler_->setNeG         ( neG_ );
+  SNOPTHandler_->setNeA        ( neA_ );
+  SNOPTHandler_->setNeG        ( neG_ );
 
   // ---------------------------------------------------------------
   // Sets the usrfun that supplies G and F.
-  SNOPTHandler_->setUserFun( SNOPTusrFG_ );
-  SNOPTHandler_->setProbName( "SNOPTSolver" );
-//  if (!SNOPTHandler_->has_snopt_option_file)
-  setOptionsForSNOPT();
+  if(opt_prob_ == "Rosenbrock") {
+
+    SNOPTHandler_->setUserFun( Rosenbrock_ );
+    SNOPTHandler_->setProbName( "Rosenbrock" );
+
+  } else if(opt_prob_ == "Wplc_WL" ||
+      opt_prob_ == "Wplc_IWD" ||
+      opt_prob_ == "Wplc_WL+IWD" ||
+      opt_prob_ == "Wplc_WL+IWD+BND" ) {
+
+    SNOPTHandler_->setUserFun( SNOPTusrFG_ );
+    SNOPTHandler_->setProbName( opt_prob_.c_str() );
+
+  }
+
+  SNOPTHandler_->setParameter((char*)"Minimize");
+  if (!SNOPTHandler_->has_snopt_option_file)
+    setOptionsForSNOPT();
 
   // ---------------------------------------------------------------
-  SNOPTHandler_->setParameter((char*)"Maximize");
   integer Cold = 0, Basis = 1, Warm = 2;
 
   vector<double> xsol;

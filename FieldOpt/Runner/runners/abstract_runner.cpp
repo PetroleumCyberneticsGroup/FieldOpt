@@ -129,7 +129,6 @@ void AbstractRunner::InitializeModel() {
   model_ = new Model::Model(*settings_->model(), logger_);
   if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
     std::cout << "[run]Initialized Model.------" << std::endl;
-
 }
 
 // ---------------------------------------------------------

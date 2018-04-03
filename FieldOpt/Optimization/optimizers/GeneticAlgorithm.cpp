@@ -32,6 +32,7 @@ GeneticAlgorithm::GeneticAlgorithm(Settings::Optimizer *settings,
                                    Logger *logger
 )
     : Optimizer(settings, base_case, variables, grid, logger) {
+
   settings_ = settings;
   n_vars_ = variables->ContinousVariableSize();
   gen_ = get_random_generator();

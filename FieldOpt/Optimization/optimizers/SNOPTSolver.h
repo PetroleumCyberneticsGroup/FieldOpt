@@ -39,6 +39,13 @@ namespace Optimizers {
 #ifdef __cplusplus
 extern "C" {
 #endif
+int Rosenbrock_( integer    *Status, integer *n,    doublereal x[],
+                 integer    *needF,  integer *neF,  doublereal F[],
+                 integer    *needG,  integer *neG,  doublereal G[],
+                 char       *cu,     integer *lencu,
+                 integer    iu[],    integer *leniu,
+                 doublereal ru[],    integer *lenru);
+
 int SNOPTusrFG_( integer    *Status, integer *n,    doublereal x[],
                  integer    *needF,  integer *neF,  doublereal F[],
                  integer    *needG,  integer *neG,  doublereal G[],
@@ -133,11 +140,13 @@ class SNOPTSolver : public Optimizer
   bool loadSNOPT(string libname = "libsnopt-7.2.12.2.so");
   void initSNOPTHandler();
   void setOptionsForSNOPT();
-  void callSNOPT();
+  void callSNOPT(string opt_prob_);
 
   // -------------------------------------------------------
-  SNOPTHandler* SNOPTHandler_;
+  SNOPTHandler *SNOPTHandler_;
   Settings::Optimizer *settings_;
+  Case *wcpl_ch_case_;
+  string opt_prob_;
 
   // -------------------------------------------------------
   void iterate() {};

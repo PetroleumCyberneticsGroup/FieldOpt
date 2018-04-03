@@ -71,6 +71,11 @@ class Optimizer
   enum ObjectiveType { WeightedSum };
 
   // -------------------------------------------------------
+//  struct Runtime {
+//    QString output_dir_;
+//  };
+
+  // -------------------------------------------------------
   struct Parameters {
 
     // GSS parameters
@@ -150,6 +155,8 @@ class Optimizer
   // Should really be inherited by Friend Class: Settings.
   void set_verbosity_vector(const std::vector<int> verb_vector) { verb_vector_ = verb_vector; }
   std::vector<int> verb_vector() const { return verb_vector_; }
+
+  QString output_dir_;
 
  private:
   // -------------------------------------------------------

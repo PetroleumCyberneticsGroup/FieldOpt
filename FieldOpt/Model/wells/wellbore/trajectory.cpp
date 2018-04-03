@@ -17,38 +17,73 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+// ---------------------------------------------------------
 #include "trajectory.h"
 #include "Model/wells/well_exceptions.h"
 #include <iostream>
 
+// ---------------------------------------------------------
 namespace Model {
 namespace Wells {
 namespace Wellbore {
 
+// ---------------------------------------------------------
 Trajectory::Trajectory(Settings::Model::Well well_settings,
                        Properties::VariablePropertyContainer *variable_container,
-                       ::Reservoir::Grid::Grid *grid) {
+                       ::Reservoir::Grid::Grid *grid,
+                       RICaseData *RICaseData,
+                       RIReaderECL *RIReaderECL,
+                       RIGrid *RIGrid) {
 
+  RICaseData_ = RICaseData;
+  RIReaderECL_ = RIReaderECL;
+  RIGrid_ = RIGrid;
+//  Trajectory(*well_settings, variable_container, grid);
+//
+//}
+//
+//// ---------------------------------------------------------
+//Trajectory::Trajectory(Settings::Model::Well well_settings,
+//                       Properties::VariablePropertyContainer *variable_container,
+//                       ::Reservoir::Grid::Grid *grid) {
+
+  // -------------------------------------------------------
   well_blocks_ = new QList<WellBlock *>();
         well_spline_ = 0;
   pseudo_cont_vert_ = 0;
 
+  // -------------------------------------------------------
   if (well_settings.definition_type ==
       Settings::Model::WellDefinitionType::WellBlocks) {
+
+    // -----------------------------------------------------
     initializeWellBlocks(well_settings,
                          variable_container);
     calculateDirectionOfPenetration();
-  }
-  else if (well_settings.definition_type ==
+
+  } else if (well_settings.definition_type ==
       Settings::Model::WellDefinitionType::WellSpline) {
+
+    // -----------------------------------------------------
     well_spline_ = new WellSpline(well_settings,
                                   variable_container,
-                                  grid);
+                                  grid,
+                                  RICaseData_,
+                                  RIReaderECL_,
+                                  RIGrid_);
+
+    // -----------------------------------------------------
+    // well_spline_ = new WellSpline(well_settings,
+    //                              variable_container,
+    //                              grid);
+
     well_blocks_ = well_spline_->GetWellBlocks();
     calculateDirectionOfPenetration();
-  }
-  else if (well_settings.definition_type ==
+
+  } else if (well_settings.definition_type ==
       Settings::Model::WellDefinitionType::PseudoContVertical2D) {
+
+    // -----------------------------------------------------
     pseudo_cont_vert_ = new PseudoContVert(well_settings,
                                            variable_container,
                                            grid);
@@ -57,6 +92,7 @@ Trajectory::Trajectory(Settings::Model::Well well_settings,
   }
 }
 
+// ---------------------------------------------------------
 int Trajectory::GetTimeSpentInWic() const {
   if (well_spline_ != 0) {
     return well_spline_->GetTimeSpentInWIC();
@@ -64,6 +100,7 @@ int Trajectory::GetTimeSpentInWic() const {
   else return 0;
 }
 
+// ---------------------------------------------------------
 WellBlock *Trajectory::GetWellBlock(int i, int j, int k) {
 
   for (int idx = 0; idx < well_blocks_->size(); ++idx) {
@@ -75,13 +112,14 @@ WellBlock *Trajectory::GetWellBlock(int i, int j, int k) {
   throw WellBlockNotFoundException(i, j, k);
 }
 
+// ---------------------------------------------------------
 QList<WellBlock *> *Trajectory::GetWellBlocks() {
 
   return well_blocks_;
 }
 
-void Trajectory::UpdateWellBlocks()
-{
+// ---------------------------------------------------------
+void Trajectory::UpdateWellBlocks() {
     // \todo This is the source of a memory leak:
     // old well blocks are not deleted. Fix it.
   if (well_spline_ != 0) {
@@ -94,8 +132,8 @@ void Trajectory::UpdateWellBlocks()
   calculateDirectionOfPenetration();
 }
 
-void Trajectory::UpdateWellBlocks(int rank)
-{
+// ---------------------------------------------------------
+void Trajectory::UpdateWellBlocks(int rank) {
   // \todo This is the source of a memory leak:
   // old well blocks are not deleted. Fix it.
   if (well_spline_ != 0) {
@@ -108,9 +146,12 @@ void Trajectory::UpdateWellBlocks(int rank)
   calculateDirectionOfPenetration();
 }
 
+// ---------------------------------------------------------
 void
-Trajectory::initializeWellBlocks(Settings::Model::Well well,
-                                 Properties::VariablePropertyContainer *variable_container) {
+Trajectory::initializeWellBlocks(
+    Settings::Model::Well well,
+    Properties::VariablePropertyContainer *variable_container) {
+
   QList<Settings::Model::Well::WellBlock> blocks = well.well_blocks;
   for (int i = 0; i < blocks.size(); ++i) {
     well_blocks_->append(new WellBlock(blocks[i].i, blocks[i].j, blocks[i].k));
@@ -128,6 +169,7 @@ Trajectory::initializeWellBlocks(Settings::Model::Well well,
   }
 }
 
+// ---------------------------------------------------------
 void Trajectory::calculateDirectionOfPenetration() {
 
   if (well_blocks_->size() == 1) { // Assuming that the well is vertical if it only has one block
