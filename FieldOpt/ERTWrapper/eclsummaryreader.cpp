@@ -151,8 +151,9 @@ namespace ERTWrapper {
         }
 
         void ECLSummaryReader::initializeWellRates() {
-            const ecl_smspec_type * smspec = ecl_sum_get_smspec(ecl_sum_);
-            for (auto wname : wells_) {
+            const ecl_smspec_type * smspec;
+            smspec = ecl_sum_get_smspec(ecl_sum_);
+            for(auto wname : wells_) {
                 wopr_[wname] = std::vector<double>(time_.size(), 0.0);
                 if (hasWellVar(wname, "WOPR")) {
                     int index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WOPR");

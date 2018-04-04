@@ -42,7 +42,8 @@ Runspec::Runspec(QStringList *driver_file_contents, QList<Model::Wells::Well *> 
 
     // Create proper WELLDIMS keyword
     int maxwells = wells->size();
-    int maxconns = wells->first()->trajectory()->GetWellBlocks()->size() * (maxwells +1);
+//    int maxconns = wells->first()->trajectory()->GetWellBlocks()->size() * (maxwells +1);
+    int maxconns = 300;
     int maxgroups = wells->size();
     QString welldims = QString("WELLDIMS\n   %1   %2   %3   %4 /\n").arg(maxwells).arg(maxconns).arg(maxgroups).arg(maxwells);
 

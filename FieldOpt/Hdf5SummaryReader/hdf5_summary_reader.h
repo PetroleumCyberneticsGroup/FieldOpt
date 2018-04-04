@@ -84,22 +84,22 @@ public:
     /*!
      * Get reservoir pressure vector.
      */
-    std::vector<std::vector<double>> reservoir_pressure() const { return pressure_; }
+    std::vector< std::vector<double> > reservoir_pressure() const { return pressure_; }
 
     /*!
      * Get sgas vector.
      */
-    std::vector<std::vector<double>> sgas() const { return sgas_; }
+    std::vector< std::vector<double> > sgas() const { return sgas_; }
 
     /*!
      * Get soil vector.
      */
-    std::vector<std::vector<double>> soil() const { return soil_; }
+    std::vector< std::vector<double> > soil() const { return soil_; }
 
     /*!
      * Get swat vector.
      */
-    std::vector<std::vector<double>> swat() const { return swat_; }
+    std::vector< std::vector<double> > swat() const { return swat_; }
 
     /*!
      * Return vector of active grid cells.
@@ -363,10 +363,10 @@ private:
     bool cell_data_; //!< Flag for whether to read cell data from h5 file
 
     std::vector<double> times_; //!< Vector containing all time steps.
-    std::vector<std::vector<double>> pressure_; //!< Vector containing reservoir pressures.
-    std::vector<std::vector<double>> soil_; //!< Vector containing oil saturation.
-    std::vector<std::vector<double>> sgas_; //!< Vector containing gas saturation.
-    std::vector<std::vector<double>> swat_; //!< Vector containing water saturation.
+    std::vector< std::vector<double> > pressure_; //!< Vector containing reservoir pressures.
+    std::vector< std::vector<double> > soil_; //!< Vector containing oil saturation.
+    std::vector< std::vector<double> > sgas_; //!< Vector containing gas saturation.
+    std::vector< std::vector<double> > swat_; //!< Vector containing water saturation.
 
     std::vector<std::vector<double>> getSaturation(H5::Group dataset, hsize_t sat_type);
 
