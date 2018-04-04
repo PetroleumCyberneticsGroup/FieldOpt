@@ -12,7 +12,10 @@ ConstraintHandler::ConstraintHandler(
     QList<Settings::Optimizer::Constraint> constraints,
     Model::Properties::VariablePropertyContainer *variables,
     Reservoir::Grid::Grid *grid,
-    Settings::Optimizer *settings) {
+    Settings::Optimizer *settings,
+    RICaseData *RICaseData = nullptr,
+    RIReaderECL *RIReaderECL = nullptr,
+    RIGrid *RIGrid = nullptr) {
 
   // ---------------------------------------------------------------
   for (Settings::Optimizer::Constraint constraint : constraints) {
@@ -23,7 +26,9 @@ ConstraintHandler::ConstraintHandler(
       // -----------------------------------------------------------
       // IWD W/ SNOPT
       case Settings::Optimizer::ConstraintType::IWD:
-        constraints_.append(new IWDConstraint(settings, variables));
+        constraints_.append(new IWDConstraint(settings, variables,
+                                              grid, RICaseData,
+                                              RIReaderECL, RIGrid));
         break;
 
         // ---------------------------------------------------------

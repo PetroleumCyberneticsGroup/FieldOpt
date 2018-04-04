@@ -29,7 +29,11 @@ namespace Constraints {
 // ---------------------------------------------------------
 IWDConstraint::IWDConstraint(
     Settings::Optimizer* settings,
-    Model::Properties::VariablePropertyContainer *variables) {
+    Model::Properties::VariablePropertyContainer *variables,
+    ::Reservoir::Grid::Grid *grid,
+    RICaseData *RICaseData,
+    RIReaderECL *RIReaderECL,
+    RIGrid *RIGrid) {
 
   // -------------------------------------------------------
   settings_ = settings;
@@ -38,7 +42,11 @@ IWDConstraint::IWDConstraint(
   // -------------------------------------------------------
   SNOPTSolver_ =
       new Optimization::Optimizers::SNOPTSolver(settings_,
-                                                current_case_);
+                                                current_case_,
+                                                grid_,
+                                                RICaseData_,
+                                                RIReaderECL_,
+                                                RIGrid_);
 
 }
 

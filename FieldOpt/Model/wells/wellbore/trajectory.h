@@ -48,12 +48,14 @@ class WellSpline;
 
 // ---------------------------------------------------------
 /*!
- * \brief The Trajectory class describes the trajectory of the wellbore as a set of well blocks
- * in the reservoir grid.
+ * \brief The Trajectory class describes the trajectory of
+ * the wellbore as a set of well blocks in the reservoir
+ * grid.
  *
- * A trajectory may be described either as a set of well blocks directly, or as a spline which
- * a set of well blocks is calculated from. Either way it is always percieved as a set of blocks
- * from the outside.
+ * A trajectory may be described either as a set of well
+ * blocks directly, or as a spline which a set of well
+ * blocks is calculated from. Either way it is always
+ * percieved as a set of blocks from the outside.
  *
  * \todo Initialize ICDs.
  */

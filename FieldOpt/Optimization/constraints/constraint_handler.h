@@ -42,6 +42,8 @@
 #include "Reservoir/grid/grid.h"
 //#include <Runner/logger.h>
 
+#include "FieldOpt-WellIndexCalculator/resinxx/well_path.h"
+
 // -----------------------------------------------------------------
 // Qt
 #include <QList>
@@ -68,7 +70,10 @@ class ConstraintHandler
       QList<Settings::Optimizer::Constraint> constraints,
       Model::Properties::VariablePropertyContainer *variables,
       Reservoir::Grid::Grid *grid,
-      Settings::Optimizer *settings);
+      Settings::Optimizer *settings,
+      RICaseData *RICaseData,
+      RIReaderECL *RIReaderECL,
+      RIGrid *RIGrid);
 
   // -----------------------------------------------------------------
   // Check if a Case satisfies _all_ constraints.

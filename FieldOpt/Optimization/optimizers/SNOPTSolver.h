@@ -63,7 +63,11 @@ class SNOPTSolver : public Optimizer
 
   // -------------------------------------------------------
   SNOPTSolver(Settings::Optimizer *settings,
-              Case *base_case);
+              Case *base_case,
+              ::Reservoir::Grid::Grid *grid,
+              RICaseData *RICaseData,
+              RIReaderECL *RIReaderECL,
+              RIGrid *RIGrid);
 
   // -------------------------------------------------------
   SNOPTSolver(Settings::Optimizer *settings,
@@ -140,13 +144,19 @@ class SNOPTSolver : public Optimizer
   bool loadSNOPT(string libname = "libsnopt-7.2.12.2.so");
   void initSNOPTHandler();
   void setOptionsForSNOPT();
-  void callSNOPT(string opt_prob_);
+  void callSNOPT();
 
   // -------------------------------------------------------
   SNOPTHandler *SNOPTHandler_;
   Settings::Optimizer *settings_;
   Case *wcpl_ch_case_;
   string opt_prob_;
+
+  // -------------------------------------------------------
+  RIGrid* RIGrid_;
+  RICaseData* RICaseData_;
+  RIReaderECL* RIReaderECL_;
+  Reservoir::Grid::Grid *grid_;
 
   // -------------------------------------------------------
   void iterate() {};

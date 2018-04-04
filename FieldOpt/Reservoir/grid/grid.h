@@ -40,6 +40,7 @@ namespace Grid {
 class Grid
 {
  public:
+  // ---------------------------------------------------------------
   /*!
    * \brief The GridSourceType enum Enumerates the supported grid
    * types.
@@ -47,6 +48,7 @@ class Grid
   enum GridSourceType {ECLIPSE};
   Grid(const Grid& other) = delete;
 
+  // ---------------------------------------------------------------
   /*!
    * \brief The Dims struct Contains the grid dimensions.
    */
@@ -54,8 +56,10 @@ class Grid
     int nx; int ny; int nz;
   };
 
+  // ---------------------------------------------------------------
   virtual ~Grid();
 
+  // ---------------------------------------------------------------
   /*!
    * \brief Dimensions Returns the grid dimensions
    * (number of blocks in x, y and z directions).
@@ -63,26 +67,32 @@ class Grid
    */
   virtual Dims Dimensions() = 0;
 
+  // ---------------------------------------------------------------
   /*!
    * \brief GetCell Get a cell from its global index.
    */
   virtual Cell GetCell(int global_index) = 0;
 
+  // ---------------------------------------------------------------
   /*!
    * \brief GetCell Get a cell from its (i,j,k) index.
    */
   virtual Cell GetCell(int i, int j, int k) = 0;
 
+  // ---------------------------------------------------------------
   /*!
    * \brief GetCell Get a cell from its (i,j,k) index.
    */
   virtual Cell GetCell(IJKCoordinate* ijk) = 0;
 
+  // ---------------------------------------------------------------
   virtual string GetFilePath() { return file_path_; };
 
+  // ---------------------------------------------------------------
   virtual QString GetFilePathQString()
   { return QString::fromStdString(file_path_); };
 
+  // ---------------------------------------------------------------
   /*!
    * \brief GetBoundingBoxCellIndices Searches for the bounding
    * box of the space defined by the two point and returns the
@@ -103,6 +113,7 @@ class Grid
       double &bb_xi, double &bb_yi, double &bb_zi,
       double &bb_xf, double &bb_yf, double &bb_zf) = 0;
 
+  // ---------------------------------------------------------------
   /*!
    * \brief GetCellEnvelopingPoint Get the cell enveloping the point
    * (x,y,z) searching the entire grid. Throws an exception if no cell
@@ -112,9 +123,11 @@ class Grid
   virtual bool GetCellEnvelopingPoint(Cell& cell,
                                       double x, double y, double z) = 0;
 
+  // ---------------------------------------------------------------
   // Version that returns cell
   virtual Cell GetCellEnvelopingPoint(double x, double y, double z) = 0;
 
+  // ---------------------------------------------------------------
   /*!
    * \brief GetCellEnvelopingPoint Get the cell enveloping the point
    * (x,y,z) searching a subsection of the grid. Throws an exception
@@ -125,10 +138,12 @@ class Grid
                                       double x, double y, double z,
                                       std::vector<int> search_set) = 0;
 
+  // ---------------------------------------------------------------
   // Version that returns cell
   virtual Cell GetCellEnvelopingPoint(double x, double y, double z,
                                       std::vector<int> search_set) = 0;
 
+  // ---------------------------------------------------------------
   /*!add
    * \brief GetCellEnvelopingPoint Get the cell enveloping the point
    * (xyz.x(), xyz.y(), xyz.z()) searching the entire grid. Throws an
@@ -138,9 +153,11 @@ class Grid
   virtual bool GetCellEnvelopingPoint(Cell& cell,
                                       Eigen::Vector3d xyz) = 0;
 
+  // ---------------------------------------------------------------
   // Version that returns cell
   virtual Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz) = 0;
 
+  // ---------------------------------------------------------------
   /*!
    * \brief GetCellEnvelopingPoint Get the cell enveloping the point
    * (xyz.x(), xyz.y(), xyz.z()) searching a subsection of the grid.
@@ -152,19 +169,23 @@ class Grid
   virtual bool GetCellEnvelopingPoint(Cell& cell, Eigen::Vector3d xyz,
                                       std::vector<int> search_set) = 0;
 
+  // ---------------------------------------------------------------
   // Version that returns cell
   virtual Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz,
                                       std::vector<int> search_set) = 0;
 
+  // ---------------------------------------------------------------
   /*!
    * @brief Get the smallest cell in the reservoir.
    * @return The cell in the reservoir that has the smallest volume.
    */
   virtual Cell GetSmallestCell() = 0;
 
+  // ---------------------------------------------------------------
   virtual bool IndexIsInsideGrid(int global_index) = 0;
 
  protected:
+  // ---------------------------------------------------------------
   GridSourceType type_;
   std::string file_path_;
   Grid(GridSourceType type,

@@ -17,11 +17,26 @@ namespace Optimizers {
 
 // -----------------------------------------------------------------
 SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
-                         Case *wcpl_ch_case) {
+                         Case *wcpl_ch_case,
+                         ::Reservoir::Grid::Grid *grid,
+                         RICaseData *RICaseData,
+                         RIReaderECL *RIReaderECL,
+                         RIGrid *RIGrid) {
 
   // ---------------------------------------------------------------
   if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
     cout << "[opt]Init. SNOPTSolver.------ Constraint-handling." << endl;
+
+  // ---------------------------------------------------------------
+  RICaseData_ = RICaseData;
+  RIReaderECL_ = RIReaderECL;
+  RIGrid_ = RIGrid;
+  grid_ = grid;
+
+  auto gbb = RICaseData_
+      ->activeCellInfo(PorosityModelType::MATRIX_MODEL)
+      ->geometryBoundingBox();
+  cout << gbb.debugString().toStdString();
 
   // ---------------------------------------------------------------
   settings_ = settings;
@@ -32,7 +47,7 @@ SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
   // ---------------------------------------------------------------
   loadSNOPT();
   initSNOPTHandler();
-  callSNOPT(opt_prob_);
+  callSNOPT();
 }
 
 // -----------------------------------------------------------------
@@ -226,7 +241,7 @@ int SNOPTusrFG_( integer    *Status, integer *n,    double x[],
 }
 
 // -----------------------------------------------------------------
-void SNOPTSolver::callSNOPT(string opt_prob_) {
+void SNOPTSolver::callSNOPT() {
 
   // ---------------------------------------------------------------
   // Set problem dimensions

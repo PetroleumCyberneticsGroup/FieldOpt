@@ -57,7 +57,8 @@ class Model : public Loggable
   friend class ModelSynchronizationObject;
  public:
   // -------------------------------------------------------
-  Model(::Settings::Model settings, Logger *logger);
+  Model(::Settings::Model settings,
+        Logger *logger);
 
   // -------------------------------------------------------
   LogTarget GetLogTarget() override;
