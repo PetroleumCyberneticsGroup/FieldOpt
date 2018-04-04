@@ -13,9 +13,9 @@ ConstraintHandler::ConstraintHandler(
     Model::Properties::VariablePropertyContainer *variables,
     Reservoir::Grid::Grid *grid,
     Settings::Optimizer *settings,
-    RICaseData *RICaseData = nullptr,
-    RIReaderECL *RIReaderECL = nullptr,
-    RIGrid *RIGrid = nullptr) {
+    RICaseData *RICaseData,
+    RIReaderECL *RIReaderECL,
+    RIGrid *RIGrid) {
 
   // ---------------------------------------------------------------
   for (Settings::Optimizer::Constraint constraint : constraints) {

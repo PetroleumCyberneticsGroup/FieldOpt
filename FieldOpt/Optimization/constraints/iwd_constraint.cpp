@@ -43,10 +43,10 @@ IWDConstraint::IWDConstraint(
   SNOPTSolver_ =
       new Optimization::Optimizers::SNOPTSolver(settings_,
                                                 current_case_,
-                                                grid_,
-                                                RICaseData_,
-                                                RIReaderECL_,
-                                                RIGrid_);
+                                                grid,
+                                                RICaseData,
+                                                RIReaderECL,
+                                                RIGrid);
 
 }
 
