@@ -44,8 +44,7 @@ add_library(optimization
 		optimizers/bayesian_optimization/AcquisitionFunction.cpp
 		optimizers/bayesian_optimization/af_optimizers/AFPSO.cpp
 		optimizers/bayesian_optimization/af_optimizers/AFOptimizer.cpp
-		optimizers/bayesian_optimization/af_optimizers/AFMonteCarlo.cpp
-		optimizers/bayesian_optimization/EGO.cpp
+        optimizers/bayesian_optimization/EGO.cpp
         optimizers/bayesian_optimization/af_optimizers/AFCompassSearch.cpp
 		constraints/pseudo_cont_boundary_2d.cpp
 		${EXPERIMENTAL_CONSTRAINTS_SRC})
