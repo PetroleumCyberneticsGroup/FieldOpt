@@ -275,63 +275,84 @@ void AbstractRunner::InitializeOptimizer() {
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
         std::cout << "[run]Optimization algo.:----- "
                   << FRED << "CompassSearch" << END << std::endl;
-      optimizer_ = new Optimization::Optimizers::CompassSearch(settings_->optimizer(),
-                                                               base_case_,
-                                                               model_->variables(),
-                                                               model_->grid(),
-                                                               logger_);
+
+      optimizer_ = new Optimization::Optimizers::CompassSearch(
+          settings_->optimizer(),
+          base_case_,
+          model_->variables(),
+          model_->grid(),
+          logger_,
+          model_->ricasedata(),
+          model_->rireaderecl(),
+          model_->rigrid());
       break;
+
       // ---------------------------------------------------
     case Settings::Optimizer::OptimizerType::APPS:
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
         std::cout << "[run]Optimization algo.:----- "
                   << FRED << "APPS" << END << std::endl;
-      optimizer_ = new Optimization::Optimizers::APPS(settings_->optimizer(),
-                                                      base_case_,
-                                                      model_->variables(),
-                                                      model_->grid(),
-                                                      logger_);
+
+      optimizer_ = new Optimization::Optimizers::APPS(
+          settings_->optimizer(),
+          base_case_,
+          model_->variables(),
+          model_->grid(),
+          logger_);
       break;
+
       // ---------------------------------------------------
     case Settings::Optimizer::OptimizerType::GeneticAlgorithm:
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
         std::cout << "[run]Optimization algo.:----- GeneticAlgorithm" << std::endl;
-      optimizer_ = new Optimization::Optimizers::RGARDD(settings_->optimizer(),
-                                                        base_case_,
-                                                        model_->variables(),
-                                                        model_->grid(),
-                                                        logger_);
+
+      optimizer_ = new Optimization::Optimizers::RGARDD(
+          settings_->optimizer(),
+          base_case_,
+          model_->variables(),
+          model_->grid(),
+          logger_);
       break;
+
       // ---------------------------------------------------
     case Settings::Optimizer::OptimizerType::ExhaustiveSearch2DVert:
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
         std::cout << "[run]Optimization algo.:----- ExhaustiveSearch2DVert" << std::endl;
-      optimizer_ = new Optimization::Optimizers::ExhaustiveSearch2DVert(settings_->optimizer(),
-                                                                        base_case_,
-                                                                        model_->variables(),
-                                                                        model_->grid(),
-                                                                        logger_);
+
+      optimizer_ = new Optimization::Optimizers::ExhaustiveSearch2DVert(
+          settings_->optimizer(),
+          base_case_,
+          model_->variables(),
+          model_->grid(),
+          logger_);
       break;
+
       // ---------------------------------------------------
     case Settings::Optimizer::OptimizerType::SNOPTSolver:
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
         std::cout << "[run]Optimization algo.:----- SNOPTSolver" << std::endl;
-      optimizer_ = new Optimization::Optimizers::SNOPTSolver(settings_->optimizer(),
-                                                             base_case_,
-                                                             model_->variables(),
-                                                             model_->grid(),
-                                                             logger_);
+
+      optimizer_ = new Optimization::Optimizers::SNOPTSolver(
+          settings_->optimizer(),
+          base_case_,
+          model_->variables(),
+          model_->grid(),
+          logger_);
       break;
+
       // ---------------------------------------------------
     case Settings::Optimizer::OptimizerType::DFO:
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
         std::cout << "[run]Optimization algo.:----- DFO" << std::endl;
-      optimizer_ = new Optimization::Optimizers::DFO(settings_->optimizer(),
-                                                     base_case_,
-                                                     model_->variables(),
-                                                     model_->grid(),
-                                                     logger_);
+
+      optimizer_ = new Optimization::Optimizers::DFO(
+          settings_->optimizer(),
+          base_case_,
+          model_->variables(),
+          model_->grid(),
+          logger_);
       break;
+
       // ---------------------------------------------------
     default:
       throw std::runtime_error(

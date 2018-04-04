@@ -71,6 +71,9 @@ class Model : public Loggable
    * \brief reservoir Get the reservoir (i.e. grid).
    */
   Reservoir::Grid::Grid *grid() const { return grid_; }
+  RICaseData *ricasedata() const { return RICaseData_; }
+  RIReaderECL *rireaderecl() const { return RIReaderECL_; }
+  RIGrid *rigrid() const { return RIGrid_; }
 
   // -------------------------------------------------------
   /*!

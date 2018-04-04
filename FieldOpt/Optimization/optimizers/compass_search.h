@@ -37,7 +37,10 @@ class CompassSearch : public GSS
                 Case *base_case,
                 ::Model::Properties::VariablePropertyContainer *variables,
                 Reservoir::Grid::Grid *grid,
-                Logger *logger
+                Logger *logger,
+                RICaseData *RICaseData = nullptr,
+                RIReaderECL *RIReaderECL = nullptr,
+                RIGrid *RIGrid = nullptr
   );
 
   // -------------------------------------------------------

@@ -37,8 +37,12 @@ GSS::GSS(Settings::Optimizer *settings,
          Case *base_case,
          Model::Properties::VariablePropertyContainer *variables,
          Reservoir::Grid::Grid *grid,
-         Logger *logger)
-    : Optimizer(settings, base_case, variables, grid, logger) {
+         Logger *logger,
+         RICaseData *RICaseData,
+         RIReaderECL *RIReaderECL,
+         RIGrid *RIGrid)
+    : Optimizer(settings, base_case, variables, grid, logger,
+                RICaseData, RIReaderECL, RIGrid) {
 
   // -------------------------------------------------------
   // Initalize GSS

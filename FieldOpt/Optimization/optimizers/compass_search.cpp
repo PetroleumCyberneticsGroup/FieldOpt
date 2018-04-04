@@ -18,8 +18,12 @@ CompassSearch::CompassSearch(Settings::Optimizer *settings,
                              Case *base_case,
                              Model::Properties::VariablePropertyContainer *variables,
                              Reservoir::Grid::Grid *grid,
-                             Logger *logger)
-    : GSS(settings, base_case, variables, grid, logger) {
+                             Logger *logger,
+                             RICaseData *RICaseData,
+                             RIReaderECL *RIReaderECL,
+                             RIGrid *RIGrid)
+    : GSS(settings, base_case, variables, grid, logger,
+          RICaseData, RIReaderECL, RIGrid) {
 
   // -------------------------------------------------------
   directions_ = GSSPatterns::Compass(num_vars_);

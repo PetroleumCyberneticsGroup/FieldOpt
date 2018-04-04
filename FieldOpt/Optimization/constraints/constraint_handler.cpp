@@ -17,6 +17,10 @@ ConstraintHandler::ConstraintHandler(
     RIReaderECL *RIReaderECL,
     RIGrid *RIGrid) {
 
+  if(RICaseData == nullptr) {
+    cout << "RICaseData is null" << endl;
+  }
+
   // ---------------------------------------------------------------
   for (Settings::Optimizer::Constraint constraint : constraints) {
 
@@ -26,9 +30,12 @@ ConstraintHandler::ConstraintHandler(
       // -----------------------------------------------------------
       // IWD W/ SNOPT
       case Settings::Optimizer::ConstraintType::IWD:
-        constraints_.append(new IWDConstraint(settings, variables,
-                                              grid, RICaseData,
-                                              RIReaderECL, RIGrid));
+        constraints_.append(new IWDConstraint(settings,
+                                              variables,
+                                              grid,
+                                              RICaseData,
+                                              RIReaderECL,
+                                              RIGrid));
         break;
 
         // ---------------------------------------------------------

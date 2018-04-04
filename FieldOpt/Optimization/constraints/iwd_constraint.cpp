@@ -39,6 +39,10 @@ IWDConstraint::IWDConstraint(
   settings_ = settings;
   variables_ = variables;
 
+  if(RICaseData == nullptr) {
+    cout << "[iwd]RICaseData is null!.---- " << endl;
+  }
+
   // -------------------------------------------------------
   SNOPTSolver_ =
       new Optimization::Optimizers::SNOPTSolver(settings_,

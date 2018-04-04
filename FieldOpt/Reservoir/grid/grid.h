@@ -45,7 +45,7 @@ class Grid
    * \brief The GridSourceType enum Enumerates the supported grid
    * types.
    */
-  enum GridSourceType {ECLIPSE};
+  enum GridSourceType { ECLIPSE };
   Grid(const Grid& other) = delete;
 
   // ---------------------------------------------------------------

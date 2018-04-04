@@ -11,6 +11,11 @@
 //#include "Subproblem.cpp"
 //#include "testOne.h"
 
+//enum PorosityModelType {
+//  MATRIX_MODEL,
+//  FRACTURE_MODEL
+//};
+
 // -----------------------------------------------------------------
 namespace Optimization {
 namespace Optimizers {
@@ -33,8 +38,10 @@ SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
   RIGrid_ = RIGrid;
   grid_ = grid;
 
+//  cout << "RICaseData_->gridCount()" << RICaseData_->gridCount() << endl;
+
   auto gbb = RICaseData_
-      ->activeCellInfo(PorosityModelType::MATRIX_MODEL)
+      ->activeCellInfo(RICaseData_->PorosityModelTypeMATRIX_)
       ->geometryBoundingBox();
   cout << gbb.debugString().toStdString();
 
