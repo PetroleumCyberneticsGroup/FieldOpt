@@ -30,15 +30,14 @@ endif()
 
 # Unit tests
 if (BUILD_TESTING)
-    find_package(GTest REQUIRED)
-    include_directories(${GTEST_INCLUDE_DIRS})
     add_executable(test_ertwrapper
             tests/test_eclgridreader.cpp
             tests/test_eclsummaryreader.cpp
             )
     target_link_libraries(test_ertwrapper
             fieldopt::ertwrapper
-            ${GTEST_BOTH_LIBRARIES}
+            ${gtest}
+            ${gtest_main}
             ${CMAKE_THREAD_LIBS_INIT})
 
     add_test(NAME test_ertwrapper COMMAND $<TARGET_FILE:test_ertwrapper>)

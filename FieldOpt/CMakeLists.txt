@@ -138,6 +138,10 @@ include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR})
 if (BUILD_TESTING)
     include(CTest)
     enable_testing()
+    find_library(gtest NAMES gtest HINTS ${PROJECT_SOURCE_DIR}/ThirdParty/libraries/lib REQUIRED)
+    find_library(gtest_main NAMES gtest_main HINTS ${PROJECT_SOURCE_DIR}/ThirdParty/libraries/lib REQUIRED)
+    message(STATUS "gtest:      ${gtest}")
+    message(STATUS "gtest_main: ${gtest_main}")
 endif()
 
 # Compile FieldOpt sources =============================================

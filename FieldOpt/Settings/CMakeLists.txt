@@ -20,8 +20,6 @@ add_compile_options(-std=c++11)
 
 if (BUILD_TESTING)
     # Unit tests
-    find_package(GTest REQUIRED)
-    include_directories(${GTEST_INCLUDE_DIRS})
     add_executable(test_settings
             tests/test_settings.cpp
             tests/test_settings_model.cpp
@@ -31,7 +29,8 @@ if (BUILD_TESTING)
     target_link_libraries(test_settings
             fieldopt::settings
             ${Boost_LIBRARIES}
-            ${GTEST_BOTH_LIBRARIES}
+            ${gtest}
+            ${gtest_main}
             ${CMAKE_THREAD_LIBS_INIT})
 
     add_test(NAME test_settings COMMAND $<TARGET_FILE:test_settings>)
