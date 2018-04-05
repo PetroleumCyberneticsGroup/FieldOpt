@@ -30,10 +30,12 @@ message("CMake install prefix: ${CMAKE_INSTALL_PREFIX}")
 
 option(BUILD_GP    "Build Gaussian Process library (gp)" ON )
 option(BUILD_GTEST "Build Google test framework"         ON)
+option(BUILD_RPPP  "Build RpolyPlusPlus library"         ON )
 option(BUILD_ECL   "Build ecl library from ERT"          OFF)
 
 message(STATUS "BUILD_GP:     ${BUILD_GP}" )
 message(STATUS "BUILD_GTEST:  ${BUILD_GTEST}")
+message(STATUS "BUILD_RPPP:   ${BUILD_RPPP}" )
 message(STATUS "BUILD_ECL:    ${BUILD_ECL}")
 
 message("*************************************************************")
@@ -46,7 +48,7 @@ message("Configuring libgp ...")
 add_subdirectory(libgp)
 message("Done configuring libgp")
 message("=============================================================")
-endif(BUILD_GP)
+endif()
 
 
 if(BUILD_ECL)
@@ -55,7 +57,7 @@ message("Configuring libecl ...")
 add_subdirectory(libecl)
 message("Done configuring libecl")
 message("=============================================================")
-endif(BUILD_ECL)
+endif()
 
 
 if(BUILD_GTEST)
@@ -64,5 +66,14 @@ message("Configuring gtest ...")
 add_subdirectory(googletest)
 message("Done configuring gtest")
 message("=============================================================")
-endif(BUILD_GTEST)
+endif()
+
+
+if(BUILD_RPPP)
+message("=============================================================")
+message("Configuring RpolyPlusPlus ...")
+add_subdirectory(RpolyPlusPlus)
+message("Done configuring RpolyPlusPlus")
+message("=============================================================")
+endif()
 

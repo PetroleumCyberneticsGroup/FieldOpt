@@ -10,3 +10,6 @@
 [submodule "FieldOpt/ThirdParty/googletest"]
 	path = FieldOpt/ThirdParty/googletest
 	url = git@github.com:PetroleumCyberneticsGroup/googletest.git
+[submodule "FieldOpt/ThirdParty/RpolyPlusPlus"]
+	path = FieldOpt/ThirdParty/RpolyPlusPlus
+	url = git@github.com:PetroleumCyberneticsGroup/RpolyPlusPlus.git
