@@ -4,3 +4,6 @@
 [submodule "FieldOpt/libgp"]
 	path = FieldOpt/ThirdParty/libgp
 	url = git@github.com:PetroleumCyberneticsGroup/libgp.git
+[submodule "FieldOpt/ThirdParty/libecl"]
+	path = FieldOpt/ThirdParty/libecl
+	url = git@github.com:PetroleumCyberneticsGroup/libecl.git
