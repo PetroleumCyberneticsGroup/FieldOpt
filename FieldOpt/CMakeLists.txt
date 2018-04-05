@@ -17,6 +17,9 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+# Add local third party include dirs
+include_directories(${CMAKE_SOURCE_DIR}/ThirdParty/libraries/include)
+
 
 # Enable unit tests + example dir ======================================
 option(BUILD_TESTING "Build unit tests"                 ON)
@@ -70,6 +73,13 @@ else()
     message(STATUS "Qt5Core_QTMAIN_LIBRARIES: ${Qt5Core_QTMAIN_LIBRARIES}")
     message(STATUS "Qt5Core_INCLUDE_DIRS: ${Qt5Core_INCLUDE_DIRS}")
     include_directories(${Qt5Core_INCLUDE_DIRS})
+
+    message(STATUS "Loading potentially local libraries:")
+    find_library(gp NAMES gp HINTS ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib REQUIRED)
+    find_library(ert_ecl NAMES ecl HINTS ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib REQUIRED)
+    message(STATUS "ecl: ${ert_ecl}")
+    message(STATUS "gp: ${gp}")
+
 endif()
 
 # Boost libraries: default-settings ====================================
@@ -120,6 +130,7 @@ include(DebugMsg.cmake)
 # Set this directory as the root dir
 include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR})
 
+
 # TO BE REMOVED
 #include_directories(${CMAKE_BINARY_DIR}/libraries/include/)
 
@@ -138,7 +149,6 @@ if (NOT (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS))
     add_subdirectory(Utilities)
     add_subdirectory(Settings)
     add_subdirectory(Model)
-    add_subdirectory(libgp)
     add_subdirectory(Optimization)
     add_subdirectory(Simulation)
     add_subdirectory(Runner)

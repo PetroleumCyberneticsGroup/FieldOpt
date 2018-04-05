@@ -16,6 +16,7 @@ else()
 	add_definitions(-DWITHOUT_EXPERIMENTAL_CONSTRAINTS)
 endif()
 
+
 add_library(optimization
         optimization_exceptions.h
 		objective/objective.cpp
@@ -56,7 +57,7 @@ target_link_libraries(optimization
         PUBLIC fieldopt::constraintmath
 		PUBLIC fieldopt::reservoir
         PUBLIC fieldopt::runner
-		PUBLIC gp
+		PUBLIC ${gp}
         Qt5::Core
 		PUBLIC ${Boost_LIBRARIES})
 

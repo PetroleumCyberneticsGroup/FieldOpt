@@ -21,7 +21,7 @@
 #define FIELDOPT_ACQUISITIONFUNCTION_H
 
 #include <Settings/optimizer.h>
-#include <libgp/include/gp.h>
+#include "gp/gp.h"
 namespace Optimization {
 namespace Optimizers {
 namespace BayesianOptimization {

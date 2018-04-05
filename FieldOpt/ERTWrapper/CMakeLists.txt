@@ -1,16 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(ertwrapper)
 
-# ERT libraries
-find_library(ert_ecl
-        NAMES ecl
-        HINTS ${CMAKE_BINARY_DIR}/libraries/lib
-        REQUIRED)
-find_library(ert_util
-        NAMES ert_util
-        HINTS ${CMAKE_BINARY_DIR}/libraries/lib
-        REQUIRED)
-include_directories(${CMAKE_BINARY_DIR}/libraries/include/)
 
 add_library(ertwrapper
         ertwrapper_exceptions.h
@@ -23,8 +13,7 @@ include_directories(
 	${ERT_INCLUDE_DIR})
 
 target_link_libraries(ertwrapper
-        PUBLIC ${ert_ecl}
-        PUBLIC ${ert_util})
+        PUBLIC ${ert_ecl})
 
 target_include_directories(ertwrapper PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
