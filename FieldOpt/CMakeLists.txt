@@ -42,15 +42,20 @@ option(BUILD_BENCHMARK "Build exec for wic RMS benchmark" OFF)
 
 # Include Eigen + RpolyPlusPlus ========================================
 if(NOT COMPILATION_AT_MAUR)
-    find_package(Eigen3 REQUIRED)
+    find_package(Eigen3)
+    if(NOT EIGEN3_FOUND)
+        message(STATUS "Using local Eigen3")
+        set(EIGEN3_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/ThirdParty/Eigen3)
+    endif()
     include_directories(${EIGEN3_INCLUDE_DIR})
     message(STATUS "EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR}")
 
     find_library(RpolyPlusPlus
             NAMES rpoly_plus_plus
-            HINTS ${CMAKE_BINARY_DIR}/libraries/lib
+            HINTS ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib
+                  ${CMAKE_BINARY_DIR}/libraries/lib
             REQUIRED)
-
+    message(STATUS "RpolyPlusPlus: ${RpolyPlusPlus}")
 endif()
 
 # Build WIC executable  and/or WIC ADGPRS lib ==========================
