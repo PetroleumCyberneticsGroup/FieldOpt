@@ -46,17 +46,10 @@ class WellSpline
 {
  public:
   // -------------------------------------------------------
-//  WellSpline(::Settings::Model::Well well_settings,
-//             Properties::VariablePropertyContainer *variable_container,
-//             Reservoir::Grid::Grid *grid);
-
-  // -------------------------------------------------------
   WellSpline(::Settings::Model::Well well_settings,
              Properties::VariablePropertyContainer *variable_container,
              Reservoir::Grid::Grid *grid,
-             RICaseData *RICaseData,
-             RIReaderECL *RIReaderECL,
-             RIGrid *RIGrid);
+             RICaseData *ricasedata);
 
   // -------------------------------------------------------
   /*!
@@ -74,9 +67,10 @@ class WellSpline
   Settings::Model::Well well_settings_;
 
   // -------------------------------------------------------
-  RIGrid* RIGrid_;
-  RICaseData* RICaseData_;
-  RIReaderECL* RIReaderECL_;
+  RICaseData* ricasedata_;
+  // RIReaderECL rireaderecl_;
+  // RIGrid* rigrid_;
+  // cvf::ref<RICaseData> ricasedatap_;
 
   // -------------------------------------------------------
   //!< # of seconds spent in the ComputeWellBlocks() method.

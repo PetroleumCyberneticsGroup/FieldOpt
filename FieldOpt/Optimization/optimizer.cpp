@@ -34,10 +34,7 @@ Optimizer::Optimizer(Settings::Optimizer *settings,
                      Model::Properties::VariablePropertyContainer *variables,
                      Reservoir::Grid::Grid *grid,
                      Logger *logger,
-                     RICaseData *RICaseData,
-                     RIReaderECL *RIReaderECL,
-                     RIGrid *RIGrid
-) {
+                     RICaseData *ricasedata) {
 
   // -------------------------------------------------------------
   // Verify that the base case has been evaluated.
@@ -59,16 +56,14 @@ Optimizer::Optimizer(Settings::Optimizer *settings,
                                   settings);
 
   // -------------------------------------------------------------
-  if(RICaseData == nullptr
-      && RIReaderECL == nullptr
-      && RIGrid == nullptr) {
+  if(ricasedata == nullptr) {
     constraint_handler_ = new Constraints::ConstraintHandler(
         settings_->constraints(), variables, grid, settings);
 
   } else {
     constraint_handler_ = new Constraints::ConstraintHandler(
         settings_->constraints(), variables, grid, settings,
-        RICaseData, RIReaderECL, RIGrid);
+        ricasedata);
   }
 
 

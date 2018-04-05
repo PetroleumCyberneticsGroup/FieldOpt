@@ -24,26 +24,32 @@ namespace Optimizers {
 SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
                          Case *wcpl_ch_case,
                          ::Reservoir::Grid::Grid *grid,
-                         RICaseData *RICaseData,
-                         RIReaderECL *RIReaderECL,
-                         RIGrid *RIGrid) {
+                         RICaseData *ricasedata) {
 
   // ---------------------------------------------------------------
   if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
     cout << "[opt]Init. SNOPTSolver.------ Constraint-handling." << endl;
 
   // ---------------------------------------------------------------
-  RICaseData_ = RICaseData;
-  RIReaderECL_ = RIReaderECL;
-  RIGrid_ = RIGrid;
+  ricasedata_ = ricasedata;
   grid_ = grid;
+
+  size_t cellcount = ricasedata_->mainGrid()->cellCount();
+
+//  auto startp = ricasedata_->mainGrid()->gridPointCoordinate(1,1,1);
+//  auto endp = ricasedata_->mainGrid()->gridPointCoordinate(1,1,1);
+
+  auto startp = ricasedata_->mainGrid()->cellCentroid(1);
+  auto endp = ricasedata_->mainGrid()->cellCentroid(cellcount);
+  cout << "x:" << startp.x() << " y:" << startp.y() << " z:" << startp.z() << endl;
+  cout << "x:" << endp.x() << " y:" << endp.y() << " z:" << endp.z() << endl;
 
 //  cout << "RICaseData_->gridCount()" << RICaseData_->gridCount() << endl;
 
-  auto gbb = RICaseData_
-      ->activeCellInfo(RICaseData_->PorosityModelTypeMATRIX_)
-      ->geometryBoundingBox();
-  cout << gbb.debugString().toStdString();
+//  auto gbb = ricasedata_
+//      ->activeCellInfo(ricasedata_->PorosityModelTypeMATRIX_)
+//      ->geometryBoundingBox();
+//  cout << gbb.debugString().toStdString();
 
   // ---------------------------------------------------------------
   settings_ = settings;
@@ -135,19 +141,21 @@ int Rosenbrock_( integer    *Status, integer *n,    double x[],
   G[3] = 2.0 * x[1];
 
   // -----------------------------------------------------------------
-  cout << "[opt]Rosenbrock_.-------------" << endl;
+  if(0) {
+    cout << "[opt]Rosenbrock_.-------------" << endl;
 
-  for (int i = 0; i < *n; i++ ) {
-    cout << "x[" << i << "]:" << x[i] << " ";
+    for (int i = 0; i < *n; i++) {
+      cout << "x[" << i << "]:" << x[i] << " ";
+    }
+    cout << endl;
+
+    cout << "F[0]: " << F[0] << endl;
+    cout << "F[1]: " << F[1] << endl;
+    cout << "G[0]: " << G[0] << endl;
+    cout << "G[1]: " << G[1] << endl;
+    cout << "G[2]: " << G[2] << endl;
+    cout << "G[3]: " << G[3] << endl;
   }
-  cout << endl;
-
-  cout << "F[0]: " << F[0] << endl;
-  cout << "F[1]: " << F[1] << endl;
-  cout << "G[0]: " << G[0] << endl;
-  cout << "G[1]: " << G[1] << endl;
-  cout << "G[2]: " << G[2] << endl;
-  cout << "G[3]: " << G[3] << endl;
 
   // -----------------------------------------------------------------
   // SOLUTION

@@ -13,11 +13,9 @@ ConstraintHandler::ConstraintHandler(
     Model::Properties::VariablePropertyContainer *variables,
     Reservoir::Grid::Grid *grid,
     Settings::Optimizer *settings,
-    RICaseData *RICaseData,
-    RIReaderECL *RIReaderECL,
-    RIGrid *RIGrid) {
+    RICaseData *ricasedata) {
 
-  if(RICaseData == nullptr) {
+  if(ricasedata == nullptr) {
     cout << "RICaseData is null" << endl;
   }
 
@@ -33,9 +31,7 @@ ConstraintHandler::ConstraintHandler(
         constraints_.append(new IWDConstraint(settings,
                                               variables,
                                               grid,
-                                              RICaseData,
-                                              RIReaderECL,
-                                              RIGrid));
+                                              ricasedata));
         break;
 
         // ---------------------------------------------------------

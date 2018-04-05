@@ -65,17 +65,14 @@ class SNOPTSolver : public Optimizer
   SNOPTSolver(Settings::Optimizer *settings,
               Case *base_case,
               ::Reservoir::Grid::Grid *grid,
-              RICaseData *RICaseData,
-              RIReaderECL *RIReaderECL,
-              RIGrid *RIGrid);
+              RICaseData *ricasedata);
 
   // -------------------------------------------------------
   SNOPTSolver(Settings::Optimizer *settings,
               Case *base_case,
               Model::Properties::VariablePropertyContainer *variables,
               Reservoir::Grid::Grid *grid,
-              Logger *logger
-  );
+              Logger *logger);
 
   // -------------------------------------------------------
 //  ~SNOPTSolver();
@@ -153,9 +150,7 @@ class SNOPTSolver : public Optimizer
   string opt_prob_;
 
   // -------------------------------------------------------
-  RIGrid* RIGrid_;
-  RICaseData* RICaseData_;
-  RIReaderECL* RIReaderECL_;
+  RICaseData* ricasedata_;
   Reservoir::Grid::Grid *grid_;
 
   // -------------------------------------------------------

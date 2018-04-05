@@ -282,9 +282,7 @@ void AbstractRunner::InitializeOptimizer() {
           model_->variables(),
           model_->grid(),
           logger_,
-          model_->ricasedata(),
-          model_->rireaderecl(),
-          model_->rigrid());
+          model_->ricasedata());
       break;
 
       // ---------------------------------------------------

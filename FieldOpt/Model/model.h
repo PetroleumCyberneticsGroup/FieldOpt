@@ -71,9 +71,9 @@ class Model : public Loggable
    * \brief reservoir Get the reservoir (i.e. grid).
    */
   Reservoir::Grid::Grid *grid() const { return grid_; }
-  RICaseData *ricasedata() const { return RICaseData_; }
-  RIReaderECL *rireaderecl() const { return RIReaderECL_; }
-  RIGrid *rigrid() const { return RIGrid_; }
+  RICaseData *ricasedata() const { return ricasedata_; }
+  // RIReaderECL *rireaderecl() const { return rireaderecl_; }
+  // RIGrid *rigrid() const { return rigrid_; }
 
   // -------------------------------------------------------
   /*!
@@ -124,9 +124,9 @@ class Model : public Loggable
   QList<Wells::Well *> *wells_;
 
   // -------------------------------------------------------
-  RIGrid* RIGrid_;
-  RICaseData* RICaseData_;
-  RIReaderECL* RIReaderECL_;
+  RICaseData* ricasedata_;
+  // RIReaderECL rireaderecl_;
+  // RIGrid* rigrid_;
 
   // -------------------------------------------------------
   /*!

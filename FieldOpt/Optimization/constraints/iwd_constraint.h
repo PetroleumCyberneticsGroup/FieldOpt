@@ -53,9 +53,7 @@ class IWDConstraint : public Constraint {
   IWDConstraint(Settings::Optimizer* settings,
   Model::Properties::VariablePropertyContainer *variables,
                 ::Reservoir::Grid::Grid *grid,
-                RICaseData *RICaseData,
-                RIReaderECL *RIReaderECL,
-                RIGrid *RIGrid);
+                RICaseData *ricasedata);
 
   // -------------------------------------------------------
   string name() override { return "IWDConstraint"; }

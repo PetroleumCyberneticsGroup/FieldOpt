@@ -63,24 +63,20 @@ class Trajectory
 {
  public:
   // ---------------------------------------------------------
-//  Trajectory(::Settings::Model::Well well_settings,
-//             Properties::VariablePropertyContainer *variable_container,
-//             Reservoir::Grid::Grid *grid);
-
-  // ---------------------------------------------------------
   Trajectory(Settings::Model::Well well_settings,
              Properties::VariablePropertyContainer *variable_container,
              ::Reservoir::Grid::Grid *grid,
-             RICaseData *RICaseData,
-             RIReaderECL *RIReaderECL,
-             RIGrid *RIGrid);
+             RICaseData *ricasedata);
 
   // ---------------------------------------------------------
-  WellBlock *GetWellBlock(int i, int j, int k); //!< Get the well block at index (i,j,k).
-  QList<WellBlock *> *GetWellBlocks(); //!< Get a list containing all well blocks.
+  // Get the well block at index (i,j,k).
+  WellBlock *GetWellBlock(int i, int j, int k);
+  // Get a list containing all well blocks.
+  QList<WellBlock *> *GetWellBlocks();
 
   // ---------------------------------------------------------
-  void UpdateWellBlocks(); //!< Update the well blocks, in particular the ones defined by a spline.
+  // Update the well blocks, in particular the ones defined by a spline.
+  void UpdateWellBlocks();
   void UpdateWellBlocks(int rank);
 
   int GetTimeSpentInWic() const;
@@ -89,14 +85,13 @@ class Trajectory
   // ---------------------------------------------------------
   QList<WellBlock *> *well_blocks_;
 
-  // -------------------------------------------------------
-  RIGrid* RIGrid_;
-  RICaseData* RICaseData_;
-  RIReaderECL* RIReaderECL_;
-
   // ---------------------------------------------------------
-  WellSpline *well_spline_; //!< Used to defined trajectories with a spline. When used, this generates the well blocks.
-  PseudoContVert *pseudo_cont_vert_; //!< A pseudo-continuous vertical well.
+  //Used to defined trajectories with a spline.
+  // When used, this generates the well blocks.
+  WellSpline *well_spline_;
+
+  // A pseudo-continuous vertical well.
+  PseudoContVert *pseudo_cont_vert_;
 
   // ---------------------------------------------------------
   void initializeWellBlocks(Settings::Model::Well well,

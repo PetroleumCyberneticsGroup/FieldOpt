@@ -53,25 +53,12 @@ using namespace Reservoir::WellIndexCalculation;
 WellSpline::WellSpline(::Settings::Model::Well well_settings,
                        Properties::VariablePropertyContainer *variable_container,
                        Reservoir::Grid::Grid *grid,
-                       RICaseData *RICaseData,
-                       RIReaderECL *RIReaderECL,
-                       RIGrid *RIGrid) {
-
-  RICaseData_ = RICaseData;
-  RIReaderECL_ = RIReaderECL;
-  RIGrid_ = RIGrid;
-//  well_settings_ = well_settings;
-//  WellSpline(well_settings, variable_container, grid);
-//
-//}
-//
-//// -----------------------------------------------------------------
-//WellSpline::WellSpline(Settings::Model::Well well_settings,
-//                       Properties::VariablePropertyContainer *variable_container,
-//                       Reservoir::Grid::Grid *grid) {
+                       RICaseData *ricasedata) {
 
   // ---------------------------------------------------------------
   grid_ = grid;
+  ricasedata_ = ricasedata;
+
   well_settings_ = well_settings;
   if (well_settings_.verb_vector_[5] > 1) // idx:5 -> mod (Model)
     std::cout << "[mod]Define well spline.----- " << std::endl;
@@ -139,12 +126,27 @@ QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
 
   // ResInsight-based WIC ------------------------------------------
   auto start = QDateTime::currentDateTime();
+
+  // auto grid_count = ricasedata_->mainGrid()->gridCount();
+  // auto cell_count = ricasedata_->mainGrid()->cellCount();
+  // auto gcellarray_sz = ricasedata_->mainGrid()->globalCellArray().size();
+  // cout << "grid_->gridCount(): " << grid_count
+  //     << " -- grid_->cellCount(): " << cell_count
+  //     << " -- grid_->globalCellArray().size(): "
+  //     << gcellarray_sz << endl;
+
+  // ---------------------------------------------------------------
   Reservoir::WellIndexCalculation::wicalc_rixx wicalc_rixx =
-      Reservoir::WellIndexCalculation::wicalc_rixx(well_settings_, grid_);
+      Reservoir::WellIndexCalculation::wicalc_rixx(well_settings_,
+                                                   grid_);
 
   // ---------------------------------------------------------------
   map<string, vector<IntersectedCell>> well_block_data_rixx;
+
+  // cout << "[mod]wicalc_rixx-04.---------- " << endl;
   wicalc_rixx.ComputeWellBlocks(well_block_data_rixx, welldefs, rank);
+
+  // cout << "[mod]wicalc_rixx-11.---------- " << endl;
   auto block_data_rixx = well_block_data_rixx[well_settings_.name.toStdString()];
 
   // ---------------------------------------------------------------
@@ -169,7 +171,7 @@ QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
   // print_dbg_msg_wellspline_wic_coords(__func__, "wicalc_pcg.dbg", well_settings_,
   //                                    block_data_pcg, lvl, 1);
 
-  // Collect: select b/e pcg or rins data --------------------------
+  // Collect: select b/e pcg or rixx data --------------------------
   // auto block_data = block_data_pcg;
   auto block_data = block_data_rixx;
   QList<WellBlock *> *blocks = new QList<WellBlock *>();

@@ -40,14 +40,55 @@ Model::Model(Settings::Model settings, Logger *logger) {
   // -------------------------------------------------------
   if (settings.verb_vector()[5] > 1) // idx:5 -> mod (Model)
     cout << "[mod]Init RIGrid_.----------- " << endl;
-  RIReaderECL_ = new RIReaderECL();
-  RICaseData_ = new RICaseData(grid_->GetFilePath());
-  RIReaderECL_->open(grid_->GetFilePathQString(), RICaseData_);
 
-  RICaseData_->computeActiveCellBoundingBoxes();
-  RICaseData_->mainGrid()->computeCachedData();
+  RIReaderECL *rireaderecl = new RIReaderECL();
+  ricasedata_ = new RICaseData(grid_->GetFilePath());
+  rireaderecl->open(grid_->GetFilePathQString(), ricasedata_);
 
-  RIGrid_ = RICaseData_->mainGrid();
+  // rireaderecl->staticResult()
+
+  ricasedata_->computeActiveCellBoundingBoxes();
+  ricasedata_->mainGrid()->computeCachedData();
+
+  // -------------------------------------------------------------
+  size_t idx;
+  for (idx = 0; idx < ricasedata_->mainGrid()->cellCount(); idx++) {
+
+    size_t i, j, k;
+    ricasedata_->mainGrid()->ijkFromCellIndex(idx, &i, &j, &k);
+    cout << "i:" << i << " j:" << j << " k:" << k << endl;
+    //cout << ricasedata_->mainGrid()->cellCentroid(idx).x();
+
+    std::array<cvf::Vec3d, 8> hc;
+    ricasedata_->mainGrid()->cellCornerVertices(idx, hc.data());
+    cout << "hc_x:" << hc[0].x() << " hc_y:" << hc[0].y() << " hc_z:" << hc[0].z() << endl;
+
+    auto cc = ricasedata_->mainGrid()->cell(idx).center();
+    cout << "cc_x:" << cc.x() << " cc_y:" << cc.y() << " cc_z:" << cc.z() << endl;
+
+  }
+
+  const RICell& cell = ricasedata_->mainGrid()->globalCellArray()[0];
+
+
+//  ricasedata_->grid(0).
+//  ricasedata_->mainGrid()->findIntersectingCells();
+
+  // RIGrid_ = RICaseData_->mainGrid();
+
+  size_t cellcount = ricasedata_->mainGrid()->cellCount();
+
+//  for (size_t ii=0; ii < cellcount; ++ii) {
+//    auto point = ricasedata_->mainGrid()->cell(ii).volume();
+    cout << "volume:" << cell.volume() << endl;
+    // cout << "x:" << point.x() << " y:" << point.y() << " z:" << point.z() << endl;
+//  }
+
+  auto startp = ricasedata_->grid(0)->cellCentroid(1);
+  auto endp = ricasedata_->grid(0)->cellCentroid(cellcount);
+
+  cout << "x:" << startp.x() << " y:" << startp.y() << " z:" << startp.z() << endl;
+  cout << "x:" << endp.x() << " y:" << endp.y() << " z:" << endp.z() << endl;
 
   // -------------------------------------------------------
   variable_container_ = new Properties::VariablePropertyContainer();
@@ -71,9 +112,7 @@ Model::Model(Settings::Model settings, Logger *logger) {
     wells_->append(new Wells::Well(settings, well_nr,
                                    variable_container_,
                                    grid_,
-                                   RICaseData_,
-                                   RIReaderECL_,
-                                   RIGrid_));
+                                   ricasedata_));
   }
 
   // -------------------------------------------------------

@@ -31,26 +31,12 @@ namespace Wellbore {
 Trajectory::Trajectory(Settings::Model::Well well_settings,
                        Properties::VariablePropertyContainer *variable_container,
                        ::Reservoir::Grid::Grid *grid,
-                       RICaseData *RICaseData,
-                       RIReaderECL *RIReaderECL,
-                       RIGrid *RIGrid) {
-
-  RICaseData_ = RICaseData;
-  RIReaderECL_ = RIReaderECL;
-  RIGrid_ = RIGrid;
-//  Trajectory(*well_settings, variable_container, grid);
-//
-//}
-//
-//// ---------------------------------------------------------
-//Trajectory::Trajectory(Settings::Model::Well well_settings,
-//                       Properties::VariablePropertyContainer *variable_container,
-//                       ::Reservoir::Grid::Grid *grid) {
+                       RICaseData *ricasedata) {
 
   // -------------------------------------------------------
   well_blocks_ = new QList<WellBlock *>();
-        well_spline_ = 0;
-  pseudo_cont_vert_ = 0;
+        well_spline_ = nullptr;
+  pseudo_cont_vert_ = nullptr;
 
   // -------------------------------------------------------
   if (well_settings.definition_type ==
@@ -68,15 +54,9 @@ Trajectory::Trajectory(Settings::Model::Well well_settings,
     well_spline_ = new WellSpline(well_settings,
                                   variable_container,
                                   grid,
-                                  RICaseData_,
-                                  RIReaderECL_,
-                                  RIGrid_);
+                                  ricasedata);
 
     // -----------------------------------------------------
-    // well_spline_ = new WellSpline(well_settings,
-    //                              variable_container,
-    //                              grid);
-
     well_blocks_ = well_spline_->GetWellBlocks();
     calculateDirectionOfPenetration();
 
@@ -122,6 +102,7 @@ QList<WellBlock *> *Trajectory::GetWellBlocks() {
 void Trajectory::UpdateWellBlocks() {
     // \todo This is the source of a memory leak:
     // old well blocks are not deleted. Fix it.
+  cout << "[trj]UpdateWellBlocks.----- done" << endl;
   if (well_spline_ != 0) {
     well_blocks_ = well_spline_->GetWellBlocks();
   }
@@ -136,6 +117,7 @@ void Trajectory::UpdateWellBlocks() {
 void Trajectory::UpdateWellBlocks(int rank) {
   // \todo This is the source of a memory leak:
   // old well blocks are not deleted. Fix it.
+  cout << "[trj]UpdateWellBlocks.----- done" << endl;
   if (well_spline_ != 0) {
     well_blocks_ = well_spline_->GetWellBlocks(rank);
   }

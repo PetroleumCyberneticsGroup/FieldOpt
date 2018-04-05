@@ -57,9 +57,7 @@ class Well
        int well_number,
        ::Model::Properties::VariablePropertyContainer *variable_container,
        ::Reservoir::Grid::Grid *grid,
-       RICaseData *RICaseData,
-       RIReaderECL *RIReaderECL,
-       RIGrid *RIGrid);
+       RICaseData *ricasedata);
 
   // -------------------------------------------------------
   struct Heel { int i; int j; int k; };

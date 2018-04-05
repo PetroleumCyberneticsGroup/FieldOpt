@@ -31,15 +31,13 @@ IWDConstraint::IWDConstraint(
     Settings::Optimizer* settings,
     Model::Properties::VariablePropertyContainer *variables,
     ::Reservoir::Grid::Grid *grid,
-    RICaseData *RICaseData,
-    RIReaderECL *RIReaderECL,
-    RIGrid *RIGrid) {
+    RICaseData *ricasedata) {
 
   // -------------------------------------------------------
   settings_ = settings;
   variables_ = variables;
 
-  if(RICaseData == nullptr) {
+  if(ricasedata == nullptr) {
     cout << "[iwd]RICaseData is null!.---- " << endl;
   }
 
@@ -48,9 +46,7 @@ IWDConstraint::IWDConstraint(
       new Optimization::Optimizers::SNOPTSolver(settings_,
                                                 current_case_,
                                                 grid,
-                                                RICaseData,
-                                                RIReaderECL,
-                                                RIGrid);
+                                                ricasedata);
 
 }
 

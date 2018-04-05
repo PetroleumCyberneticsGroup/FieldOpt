@@ -30,9 +30,7 @@ Well::Well(Settings::Model settings,
            int well_number,
            Properties::VariablePropertyContainer *variable_container,
            Reservoir::Grid::Grid *grid,
-           RICaseData *RICaseData,
-           RIReaderECL *RIReaderECL,
-           RIGrid *RIGrid) {
+           RICaseData *ricasedata) {
 
   // -------------------------------------------------------
   Settings::Model::Well well_settings = settings.wells().at(well_number);
@@ -65,9 +63,7 @@ Well::Well(Settings::Model settings,
   trajectory_ = new Wellbore::Trajectory(well_settings,
                                          variable_container,
                                          grid,
-                                         RICaseData,
-                                         RIReaderECL,
-                                         RIGrid);
+                                         ricasedata);
 
   // -------------------------------------------------------
   heel_.i = trajectory_->GetWellBlocks()->first()->i();

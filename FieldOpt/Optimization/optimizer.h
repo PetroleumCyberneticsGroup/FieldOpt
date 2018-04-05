@@ -188,9 +188,7 @@ class Optimizer : public Loggable
             Model::Properties::VariablePropertyContainer *variables,
             Reservoir::Grid::Grid *grid,
             Logger *logger,
-            RICaseData *RICaseData = nullptr,
-            RIReaderECL *RIReaderECL = nullptr,
-            RIGrid *RIGrid = nullptr
+            RICaseData *RICaseData = nullptr
   );
 
   // ---------------------------------------------------------------

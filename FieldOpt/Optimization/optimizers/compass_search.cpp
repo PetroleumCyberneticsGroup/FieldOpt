@@ -19,11 +19,8 @@ CompassSearch::CompassSearch(Settings::Optimizer *settings,
                              Model::Properties::VariablePropertyContainer *variables,
                              Reservoir::Grid::Grid *grid,
                              Logger *logger,
-                             RICaseData *RICaseData,
-                             RIReaderECL *RIReaderECL,
-                             RIGrid *RIGrid)
-    : GSS(settings, base_case, variables, grid, logger,
-          RICaseData, RIReaderECL, RIGrid) {
+                             RICaseData *ricasedata)
+    : GSS(settings, base_case, variables, grid, logger, ricasedata) {
 
   // -------------------------------------------------------
   directions_ = GSSPatterns::Compass(num_vars_);
@@ -41,11 +38,14 @@ CompassSearch::CompassSearch(Settings::Optimizer *settings,
 
 // ---------------------------------------------------------
 void CompassSearch::iterate() {
+
+  // -------------------------------------------------------
   GSS::print_dbg_msg("[opt]Launching opt.iteration. ", 1);
   if (!is_successful_iteration() && iteration_ != 0) {
     contract();
   }
 
+  // -------------------------------------------------------
   case_handler_->AddNewCases(generate_trial_points());
   case_handler_->ClearRecentlyEvaluatedCases();
   iteration_++;
@@ -55,6 +55,7 @@ void CompassSearch::iterate() {
 QString CompassSearch::GetStatusStringHeader() const {
 
   if(settings_->parameters().initial_step_length_xyz.length() > 0) {
+
     return QString("%1,%2,%3,%4,%5,%6,%7,%8,%9")
         .arg("Iteration")
         .arg("EvaluatedCases")
@@ -65,7 +66,9 @@ QString CompassSearch::GetStatusStringHeader() const {
         .arg("StepLengthX")
         .arg("StepLengthY")
         .arg("StepLengthZ");
+
   } else {
+
     return QString("%1,%2,%3,%4,%5,%6,%7")
         .arg("Iteration")
         .arg("EvaluatedCases")
@@ -81,6 +84,7 @@ QString CompassSearch::GetStatusStringHeader() const {
 // ---------------------------------------------------------
 QString CompassSearch::GetStatusString() const {
 
+  // -------------------------------------------------------
   if(settings_->parameters().initial_step_length_xyz.length() > 0) {
 
     vector<double> stepx, stepy, stepz;
@@ -134,7 +138,8 @@ void CompassSearch::handleEvaluatedCase(Case *c) {
 
 // ---------------------------------------------------------
 bool CompassSearch::is_successful_iteration() {
-  return case_handler_->RecentlyEvaluatedCases().contains(GetTentativeBestCase());
+  return case_handler_->
+      RecentlyEvaluatedCases().contains(GetTentativeBestCase());
 }
 
 }

@@ -71,9 +71,7 @@ class ConstraintHandler
       Model::Properties::VariablePropertyContainer *variables,
       Reservoir::Grid::Grid *grid,
       Settings::Optimizer *settings,
-      RICaseData *RICaseData = nullptr,
-      RIReaderECL *RIReaderECL = nullptr,
-      RIGrid *RIGrid = nullptr);
+      RICaseData *ricasedata = nullptr);
 
   // -----------------------------------------------------------------
   // Check if a Case satisfies _all_ constraints.
