@@ -28,11 +28,13 @@ SET(CMAKE_BUILD_TYPE Release)
 set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/libraries)
 message("CMake install prefix: ${CMAKE_INSTALL_PREFIX}")
 
-option(BUILD_GP  "Build Gaussian Process library (gp)" ON)
-option(BUILD_ECL "Build ecl library from ERT"          ON)
+option(BUILD_GP    "Build Gaussian Process library (gp)" ON )
+option(BUILD_GTEST "Build Google test framework"         ON)
+option(BUILD_ECL   "Build ecl library from ERT"          OFF)
 
-message(STATUS "BUILD_GP:   ${BUILD_GP}" )
-message(STATUS "BUILD_ECL:  ${BUILD_ECL}")
+message(STATUS "BUILD_GP:     ${BUILD_GP}" )
+message(STATUS "BUILD_GTEST:  ${BUILD_GTEST}")
+message(STATUS "BUILD_ECL:    ${BUILD_ECL}")
 
 message("*************************************************************")
 message("Starting dependency builds ...")
@@ -54,3 +56,13 @@ add_subdirectory(libecl)
 message("Done configuring libecl")
 message("=============================================================")
 endif(BUILD_ECL)
+
+
+if(BUILD_GTEST)
+message("=============================================================")
+message("Configuring gtest ...")
+add_subdirectory(googletest)
+message("Done configuring gtest")
+message("=============================================================")
+endif(BUILD_GTEST)
+
