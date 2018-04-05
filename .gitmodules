@@ -13,3 +13,6 @@
 [submodule "FieldOpt/ThirdParty/RpolyPlusPlus"]
 	path = FieldOpt/ThirdParty/RpolyPlusPlus
 	url = git@github.com:PetroleumCyberneticsGroup/RpolyPlusPlus.git
+[submodule "FieldOpt/ThirdParty/Eigen3"]
+	path = FieldOpt/ThirdParty/Eigen3
+	url = git@github.com:PetroleumCyberneticsGroup/eigen-git-mirror.git
