@@ -168,12 +168,14 @@ class Optimizer : public Loggable
 
   class Summary : public Loggable {
    public:
-    Summary(Optimizer *opt, TerminationCondition cond) { opt_ = opt; cond_ = cond; }
+    Summary(Optimizer *opt, TerminationCondition cond,
+            map<string, string> ext_state=map<string, string>()) { opt_ = opt; cond_ = cond; ext_state_ = ext_state; }
     LogTarget GetLogTarget() override;
     map<string, string> GetState() override;
     QUuid GetId() override;
     map<string, vector<double>> GetValues() override;
    private:
+    map<string, string> ext_state_;
     Optimizer *opt_;
     Optimizer::TerminationCondition cond_;
   };

@@ -41,6 +41,7 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
       settings_apps_max_unconstr_ = new Settings::Optimizer(get_json_settings_apps_maximize_);
       settings_ga_min_ = new Settings::Optimizer(get_json_settings_ga_minimize_);
       settings_ga_max_ = new Settings::Optimizer(get_json_settings_ga_maximize_);
+      settings_ego_max_ = new Settings::Optimizer(get_json_settings_ego_maximize_);
   }
 
   Optimization::Case *base_case_;
@@ -50,6 +51,7 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
   Settings::Optimizer *settings_apps_max_unconstr_;
   Settings::Optimizer *settings_ga_min_;
   Settings::Optimizer *settings_ga_max_;
+  Settings::Optimizer *settings_ego_max_;
 
  private:
   QJsonObject obj_fun_ {
@@ -143,6 +145,30 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
 
       }},
       {"Objective", obj_fun_}
+  };
+
+  QJsonObject get_json_settings_ego_maximize_ {
+      {"Type", "EGO"},
+      {"Mode", "Maximize"},
+      {"Parameters", QJsonObject{
+          {"LowerBound", -3},
+          {"UpperBound",  3},
+          {"MaxEvaluations", 50}
+      }},
+      {"Objective", obj_fun_},
+//      {"Constraints", QJsonArray{
+//          QJsonObject{
+//              {"Type", "ReservoirBoundary"},
+//              {"Wells", QJsonArray{"INJECTOR", "PRODUCER"}},
+//              {"PenaltyWeight", 0.01},
+//              {"BoxImin", 8},
+//              {"BoxImax", 26},
+//              {"BoxJmin", 11},
+//              {"BoxJmax", 50},
+//              {"BoxKmin", 6},
+//              {"BoxKmax", 7}
+//          }
+//      }}
   };
 
 };
