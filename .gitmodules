@@ -7,3 +7,6 @@
 [submodule "FieldOpt/ThirdParty/libecl"]
 	path = FieldOpt/ThirdParty/libecl
 	url = git@github.com:PetroleumCyberneticsGroup/libecl.git
+[submodule "FieldOpt/ThirdParty/googletest"]
+	path = FieldOpt/ThirdParty/googletest
+	url = git@github.com:PetroleumCyberneticsGroup/googletest.git
