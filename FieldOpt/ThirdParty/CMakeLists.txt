@@ -24,12 +24,33 @@ project(FieldOptThirdPartyDependencies)
 #   - Google Test framework
 ########################################################################
 
+SET(CMAKE_BUILD_TYPE Release)
+set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/libraries)
+message("CMake install prefix: ${CMAKE_INSTALL_PREFIX}")
+
+option(BUILD_GP  "Build Gaussian Process library (gp)" ON)
+option(BUILD_ECL "Build ecl library from ERT"          ON)
+
+message(STATUS "BUILD_GP:   ${BUILD_GP}" )
+message(STATUS "BUILD_ECL:  ${BUILD_ECL}")
+
 message("*************************************************************")
 message("Starting dependency builds ...")
 message("*************************************************************")
 
+if(BUILD_GP)
 message("=============================================================")
-message("Building libgp ...")
+message("Configuring libgp ...")
 add_subdirectory(libgp)
-message("Done building libgp")
+message("Done configuring libgp")
 message("=============================================================")
+endif(BUILD_GP)
+
+
+if(BUILD_ECL)
+message("=============================================================")
+message("Configuring libecl ...")
+add_subdirectory(libecl)
+message("Done configuring libecl")
+message("=============================================================")
+endif(BUILD_ECL)
