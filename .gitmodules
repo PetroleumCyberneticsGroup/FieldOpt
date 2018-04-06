@@ -16,3 +16,6 @@
 [submodule "FieldOpt/ThirdParty/Eigen3"]
 	path = FieldOpt/ThirdParty/Eigen3
 	url = git@github.com:PetroleumCyberneticsGroup/eigen-git-mirror.git
+[submodule "FieldOpt/ThirdParty/qtbase"]
+	path = FieldOpt/ThirdParty/qtbase
+	url = git@github.com:PetroleumCyberneticsGroup/qtbase.git
