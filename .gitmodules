@@ -1,21 +1,21 @@
 [submodule "FieldOpt/FieldOpt-WellIndexCalculator"]
 	path = FieldOpt/FieldOpt-WellIndexCalculator
-	url = https://github.com:PetroleumCyberneticsGroup/FieldOpt-WellIndexCalculator.git
+	url = https://github.com/PetroleumCyberneticsGroup/FieldOpt-WellIndexCalculator.git
 [submodule "FieldOpt/libgp"]
 	path = FieldOpt/ThirdParty/libgp
-	url = https://github.com:PetroleumCyberneticsGroup/libgp.git
+	url = https://github.com/PetroleumCyberneticsGroup/libgp.git
 [submodule "FieldOpt/ThirdParty/libecl"]
 	path = FieldOpt/ThirdParty/libecl
-	url = https://github.com:PetroleumCyberneticsGroup/libecl.git
+	url = https://github.com/PetroleumCyberneticsGroup/libecl.git
 [submodule "FieldOpt/ThirdParty/googletest"]
 	path = FieldOpt/ThirdParty/googletest
-	url = https://github.com:PetroleumCyberneticsGroup/googletest.git
+	url = https://github.com/PetroleumCyberneticsGroup/googletest.git
 [submodule "FieldOpt/ThirdParty/RpolyPlusPlus"]
 	path = FieldOpt/ThirdParty/RpolyPlusPlus
-	url = https://github.com:PetroleumCyberneticsGroup/RpolyPlusPlus.git
+	url = https://github.com/PetroleumCyberneticsGroup/RpolyPlusPlus.git
 [submodule "FieldOpt/ThirdParty/Eigen3"]
 	path = FieldOpt/ThirdParty/Eigen3
-	url = https://github.com:PetroleumCyberneticsGroup/eigen-git-mirror.git
+	url = https://github.com/PetroleumCyberneticsGroup/eigen-git-mirror.git
 [submodule "FieldOpt/ThirdParty/qtbase"]
 	path = FieldOpt/ThirdParty/qtbase
-	url = https://github.com:PetroleumCyberneticsGroup/qtbase.git
+	url = https://github.com/PetroleumCyberneticsGroup/qtbase.git
