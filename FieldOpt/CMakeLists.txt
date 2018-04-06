@@ -74,6 +74,7 @@ else()
     include_directories(${HDF5_INCLUDE_DIRS})
     find_package(Threads REQUIRED)
 
+    set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib/cmake")
     find_package(Qt5Core REQUIRED)
     message(STATUS "Qt5Core_QTMAIN_LIBRARIES: ${Qt5Core_QTMAIN_LIBRARIES}")
     message(STATUS "Qt5Core_INCLUDE_DIRS: ${Qt5Core_INCLUDE_DIRS}")
