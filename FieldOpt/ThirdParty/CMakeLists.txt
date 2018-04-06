@@ -29,10 +29,11 @@ set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/libraries)
 message("CMake install prefix: ${CMAKE_INSTALL_PREFIX}")
 
 option(BUILD_GP         "Build Gaussian Process library (gp)" ON )
-option(BUILD_GTEST      "Build Google test framework"         ON)
+option(BUILD_GTEST      "Build Google test framework"         ON )
 option(BUILD_RPPP       "Build RpolyPlusPlus library"         ON )
 option(BUILD_ECL        "Build ecl library from ERT"          OFF)
-option(USE_LOCAL_EIGEN3 "Use the local Eigen3 package"        ON)
+option(BUILD_QT5        "Build Qt5 base libraries"            OFF)
+option(USE_LOCAL_EIGEN3 "Use the local Eigen3 package"        ON )
 
 message(STATUS "BUILD_GP:         ${BUILD_GP}" )
 message(STATUS "BUILD_GTEST:      ${BUILD_GTEST}")
@@ -84,3 +85,49 @@ message("Done configuring RpolyPlusPlus")
 message("=============================================================")
 endif()
 
+if(BUILD_QT5)
+message("=============================================================")
+message("Configuring Qt5 ...")
+set(QT5_DIRECTORY "${PROJECT_SOURCE_DIR}/qtbase")
+set(QT5_C_FLAG_PREFIX "-prefix")
+set(QT5_C_PREFIX "${PROJECT_SOURCE_DIR}/libraries")
+set(QT5_C_FLAG_XCB "-qt-xcb")
+set(QT5_C_FLAG_REL "-release")
+set(QT5_C_FLAG_OPS "-opensource")
+set(QT5_C_FLAG_CLI "-confirm-license")
+set(QT5_C_COMMAND "${QT5_DIRECTORY}/configure")
+execute_process(COMMAND ${QT5_C_COMMAND}
+                        ${QT5_C_FLAG_PREFIX} ${QT5_C_PREFIX}
+                        ${QT5_C_FLAG_XCB} ${QT5_C_FLAG_REL}
+                        ${QT5_C_FLAG_OPS} ${QT5_C_FLAG_CLI}
+                WORKING_DIRECTORY ${QT5_DIRECTORY}
+                RESULT_VARIABLE QT_C_RESULT
+                OUTPUT_VARIABLE QT_C_OUTPUT
+                #OUTPUT_QUIET
+                )
+message("Done configuring Qt5:" ${QT_C_RESULT})
+
+message("Compiling Qt5 ...")
+set(QT5_M_COMMAND "make")
+execute_process(COMMAND ${QT5_M_COMMAND}
+                WORKING_DIRECTORY ${QT5_DIRECTORY}
+                RESULT_VARIABLE QT_M_RESULT
+                OUTPUT_VARIABLE QT_M_OUTPUT)
+message("Done compiling Qt5:" ${QT_M_RESULT})
+
+message("Installing Qt5 ...")
+set(QT5_I_COMMAND "make")
+set(QT5_I_ARG "install")
+execute_process(COMMAND ${QT5_I_COMMAND} ${QT5_I_ARG}
+                WORKING_DIRECTORY ${QT5_DIRECTORY}
+                RESULT_VARIABLE QT_I_RESULT
+                OUTPUT_VARIABLE QT_I_OUTPUT)
+message("Done installing Qt5:" ${QT_I_RESULT})
+message("=============================================================")
+endif()
+
+message("\n*************************************************************")
+message("Configuring done. If no errors occured, perform next steps:")
+message("  1. make            to compile.")
+message("  2. make install    to copy compiled files into libraries directory.")
+message("*************************************************************")
