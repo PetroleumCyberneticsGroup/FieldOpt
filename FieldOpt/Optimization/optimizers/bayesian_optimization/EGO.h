@@ -21,7 +21,7 @@
 #define FIELDOPT_EGO_H
 
 #include "Optimization/optimizer.h"
-#include "libgp/include/gp.h"
+#include "gp/gp.h"
 #include "AcquisitionFunction.h"
 #include "af_optimizers/AFPSO.h"
 

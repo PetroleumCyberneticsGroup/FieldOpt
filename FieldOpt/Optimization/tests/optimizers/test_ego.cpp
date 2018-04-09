@@ -25,7 +25,7 @@
 #include "Reservoir/tests/test_resource_grids.h"
 #include "Optimization/tests/test_resource_test_functions.h"
 #include "Optimization/optimizers/bayesian_optimization/EGO.h"
-#include "libgp/include/rprop.h"
+#include "gp/rprop.h"
 #include "Optimization/normalizer.h"
 #include "Utilities/math.hpp"
 #include "Utilities/stringhelpers.hpp"

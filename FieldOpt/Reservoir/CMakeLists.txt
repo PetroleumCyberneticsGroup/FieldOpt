@@ -27,7 +27,6 @@ endif()
 
 if (BUILD_TESTING)
     # Unit tests
-    find_package(GTest REQUIRED)
     include_directories(${GTEST_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR} tests)
     add_executable(test_reservoir
         tests/test_resource_grids.h
@@ -38,7 +37,8 @@ if (BUILD_TESTING)
 target_link_libraries(test_reservoir
         fieldopt::reservoir
         fieldopt::ertwrapper
-        ${GTEST_BOTH_LIBRARIES}
+        ${gtest}
+        ${gtest_main}
         ${CMAKE_THREAD_LIBS_INIT}
         ${Boost_LIBRARIES})
 

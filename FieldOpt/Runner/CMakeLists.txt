@@ -80,14 +80,13 @@ add_compile_options(-std=c++11)
 
 if (BUILD_TESTING)
 	# Unit tests
-	find_package(GTest REQUIRED)
-	include_directories(${GTEST_INCLUDE_DIRS})
 	add_executable(test_runner
 			tests/test_bookkeeper.cpp
 			tests/test_runtime_settings.cpp)
 	target_link_libraries(test_runner
 			fieldopt::runner
-			${GTEST_BOTH_LIBRARIES}
+			${gtest}
+			${gtest_main}
 			${CMAKE_THREAD_LIBS_INIT})
 
 	add_test(NAME test_runner COMMAND $<TARGET_FILE:test_runner>)

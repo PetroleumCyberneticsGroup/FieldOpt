@@ -41,8 +41,6 @@ add_compile_options(-std=c++11)
 
 if (BUILD_TESTING)
     # Unit tests
-    find_package(GTest REQUIRED)
-    include_directories(${GTEST_INCLUDE_DIRS} tests)
     add_executable(test_model
             tests/test_model.cpp
             tests/variables/test_properties.cpp
@@ -58,7 +56,8 @@ if (BUILD_TESTING)
             fieldopt::model
             fieldopt::reservoir
             fieldopt::optimization
-            ${GTEST_BOTH_LIBRARIES}
+            ${gtest}
+			${gtest_main}
             ${CMAKE_THREAD_LIBS_INIT})
 
     add_test(NAME test_model COMMAND $<TARGET_FILE:test_model>)

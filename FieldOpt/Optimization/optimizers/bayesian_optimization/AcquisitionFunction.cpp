@@ -19,7 +19,7 @@
 ******************************************************************************/
 #include "AcquisitionFunction.h"
 #include <stdio.h>
-#include <libgp/include/gp_utils.h>
+#include "gp/gp_utils.h"
 #include <math.h>
 
 namespace Optimization {

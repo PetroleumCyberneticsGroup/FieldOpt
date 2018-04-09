@@ -22,7 +22,7 @@
 
 #include <Settings/optimizer.h>
 #include <Eigen/Core>
-#include "libgp/include/gp.h"
+#include "gp/gp.h"
 #include "Optimization/optimizers/bayesian_optimization/AcquisitionFunction.h"
 namespace Optimization {
 namespace Optimizers {

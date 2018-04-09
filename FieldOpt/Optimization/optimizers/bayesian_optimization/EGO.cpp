@@ -18,7 +18,7 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 #include "Utilities/stringhelpers.hpp"
-#include "libgp/include/rprop.h"
+#include "gp/rprop.h"
 #include "Utilities/math.hpp"
 #include "Utilities/time.hpp"
 #include "optimizers/bayesian_optimization/af_optimizers/AFPSO.h"

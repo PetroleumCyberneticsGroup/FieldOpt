@@ -16,6 +16,7 @@ else()
 	add_definitions(-DWITHOUT_EXPERIMENTAL_CONSTRAINTS)
 endif()
 
+
 add_library(optimization
         optimization_exceptions.h
 		objective/objective.cpp
@@ -56,7 +57,7 @@ target_link_libraries(optimization
         PUBLIC fieldopt::constraintmath
 		PUBLIC fieldopt::reservoir
         PUBLIC fieldopt::runner
-		PUBLIC gp
+		PUBLIC ${gp}
         Qt5::Core
 		PUBLIC ${Boost_LIBRARIES})
 
@@ -69,8 +70,6 @@ add_compile_options(-std=c++11)
 
 if (BUILD_TESTING)
 	# Unit tests
-	find_package(GTest REQUIRED)
-	include_directories(${GTEST_INCLUDE_DIRS} tests)
 	add_executable(test_optimization
 			tests/test_case.cpp
 			tests/test_case_handler.cpp
@@ -95,7 +94,8 @@ if (BUILD_TESTING)
 
 	target_link_libraries(test_optimization
 			fieldopt::optimization
-			${GTEST_BOTH_LIBRARIES}
+			${gtest}
+			${gtest_main}
 			${CMAKE_THREAD_LIBS_INIT})
 
 	target_include_directories(test_optimization PUBLIC

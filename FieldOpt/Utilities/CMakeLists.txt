@@ -7,8 +7,6 @@ include_directories(utilities PUBLIC
 
 if (BUILD_TESTING)
     # Unit tests
-    find_package(GTest REQUIRED)
-    include_directories(${GTEST_INCLUDE_DIRS})
     add_executable(test_utilities
             tests/test_filehandling.cpp
             tests/test_execution.cpp
@@ -17,7 +15,8 @@ if (BUILD_TESTING)
     target_link_libraries(test_utilities
             Qt5::Core
             ${Boost_LIBRARIES}
-            ${GTEST_BOTH_LIBRARIES}
+            ${gtest}
+            ${gtest_main}
             ${CMAKE_THREAD_LIBS_INIT})
 
     add_compile_options(-std=c++11)

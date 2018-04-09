@@ -17,15 +17,15 @@ add_compile_options(-std=c++11)
 
 if (BUILD_TESTING)
     # Unit tests
-    find_package(GTest REQUIRED)
-    include_directories(${GTEST_INCLUDE_DIRS} ${HDF5_INCLUDE_DIRS})
+    include_directories(${HDF5_INCLUDE_DIRS})
     add_executable(test_hdf5summaryreader
             tests/test_hdf5_summary_reader.cpp)
 
     target_link_libraries(test_hdf5summaryreader
             fieldopt::hdf5summaryreader
             ${HDF5_LIBRARIES}
-            ${GTEST_BOTH_LIBRARIES}
+            ${gtest}
+            ${gtest_main}
             ${CMAKE_THREAD_LIBS_INIT})
 
     add_test(NAME test_hdf5summaryreader COMMAND $<TARGET_FILE:test_hdf5summaryreader>)
