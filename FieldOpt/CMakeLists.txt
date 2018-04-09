@@ -7,7 +7,6 @@ project(FieldOpt)
 # default modules that come with CMake.
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
 include(GetSysInfo.cmake)
-include(MaurConfig.cmake)
 
 # Compile options ======================================================
 set (CMAKE_CXX_STANDARD 11)
