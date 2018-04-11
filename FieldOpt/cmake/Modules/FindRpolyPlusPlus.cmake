@@ -1,9 +1,9 @@
 # - Try to find RpolyPlusPlus
 # Once done, this will define
 #
-#  Magick++_FOUND - system has Magick++
-#  Magick++_INCLUDE_DIRS - the Magick++ include directories
-#  Magick++_LIBRARIES - link these to use Magick++
+#  RpolyPlusPlus_FOUND - system has RpolyPlusPlus
+#  RpolyPlusPlus_INCLUDE_DIRS - the RpolyPlusPlus include directories
+#  RpolyPlusPlus_LIBRARIES - link these to use RpolyPlusPlus
 
 include(LibFindMacros)
 
