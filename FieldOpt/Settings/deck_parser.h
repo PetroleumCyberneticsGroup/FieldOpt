@@ -51,6 +51,18 @@ class DeckParser {
  public:
   DeckParser(std::string deck_file);
 
+ private:
+  size_t num_wells_;
+  size_t num_groups_;
+  size_t num_timesteps_;
+
+  std::vector< const Opm::Well * > wells_;
+  const Opm::Tuning *tuning_;
+  const Opm::Events *events_;
+  const Opm::TimeMap *time_map_;
+
+ private:
+
 
 };
 }

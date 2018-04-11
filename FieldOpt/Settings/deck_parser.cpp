@@ -18,6 +18,7 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 #include "deck_parser.h"
+#include <ctime>
 
 namespace Settings {
 
@@ -35,9 +36,22 @@ DeckParser::DeckParser(std::string deck_file) {
                                 state.runspec().phases(),
                                 opm_parse_context);
 
-    std::cout << "Num wells: " << opm_schedule.numWells() << std::endl;
+    num_wells_ = opm_schedule.numWells();
+    num_groups_ = opm_schedule.numGroups();
+    wells_ = opm_schedule.getWells();
+    tuning_ = &opm_schedule.getTuning();
+    events_ = &opm_schedule.getEvents();
+    time_map_ = &opm_schedule.getTimeMap();
+    num_timesteps_ = time_map_->numTimesteps();
 
-
+    // Print time steps as dates (YYYY.MM.DD)
+//    for (int t = 0; t < num_timesteps_; ++t) {
+//        time_t time = time_map_->getStartTime(t);
+//        std::tm * ptm = std::localtime(&time);
+//        char buffer[12];
+//        std::strftime(buffer, 12, "%Y.%m.%d", ptm);
+//        std::cout << buffer << std::endl;
+//    }
 }
 
 }
