@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 2.8)
 project(FieldOpt)
 
+
 # General config =======================================================
 # CMAKE_MODULE_PATH: Commands like include() and find_package() search
 # for files in directories listed by this variable before checking the
 # default modules that come with CMake.
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
 include(GetSysInfo.cmake)
 
 # Compile options ======================================================
@@ -16,8 +17,13 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+# Set bundled dependencies first in package search path
+set(CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib/cmake)
+message(STATUS "CMAKE_PREFIX_PATH:" ${CMAKE_PREFIX_PATH})
+
 # Add local third party include dirs
 include_directories(${CMAKE_SOURCE_DIR}/ThirdParty/libraries/include)
+
 
 
 # Enable unit tests + example dir ======================================
@@ -40,25 +46,20 @@ option(BUILD_WIC_ADGPRS "Build WIC as ADGPRS plugin"    OFF)
 option(BUILD_BENCHMARK "Build exec for wic RMS benchmark" OFF)
 
 # Include Eigen + RpolyPlusPlus ========================================
-if(NOT COMPILATION_AT_MAUR)
-    find_package(Eigen3)
-    if(NOT EIGEN3_FOUND)
-        message(STATUS "Using local Eigen3")
-        set(EIGEN3_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/ThirdParty/Eigen3)
-    endif()
-    include_directories(${EIGEN3_INCLUDE_DIR})
-    message(STATUS "EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR}")
 
-    find_library(RpolyPlusPlus
-            NAMES rpoly_plus_plus
-            HINTS ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib
-                  ${CMAKE_BINARY_DIR}/libraries/lib
-            REQUIRED)
-    message(STATUS "RpolyPlusPlus: ${RpolyPlusPlus}")
+find_package(Eigen3)
+if(NOT EIGEN3_FOUND)
+    message(STATUS "Using local Eigen3")
+    set(EIGEN3_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/ThirdParty/Eigen3)
 endif()
+include_directories(${EIGEN3_INCLUDE_DIR})
+message(STATUS "EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR}")
+
+find_package(RpolyPlusPlus REQUIRED)
+
 
 # Build WIC executable  and/or WIC ADGPRS lib ==========================
-# Include HDF5 + Qt5 ===================================================
+# Include HDF5 + Qt5 + GP + ECL ========================================
 message("=============================================================")
 if (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS)
     message(STATUS "Building BUILD_WIC_ONLY: ${BUILD_WIC_ONLY}")
@@ -73,17 +74,18 @@ else()
     include_directories(${HDF5_INCLUDE_DIRS})
     find_package(Threads REQUIRED)
 
-    set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib/cmake")
+    message(STATUS "Loading potentially local libraries:")
     find_package(Qt5Core REQUIRED)
     message(STATUS "Qt5Core_QTMAIN_LIBRARIES: ${Qt5Core_QTMAIN_LIBRARIES}")
     message(STATUS "Qt5Core_INCLUDE_DIRS: ${Qt5Core_INCLUDE_DIRS}")
     include_directories(${Qt5Core_INCLUDE_DIRS})
 
-    message(STATUS "Loading potentially local libraries:")
     find_library(gp NAMES gp HINTS ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib REQUIRED)
-    find_library(ert_ecl NAMES ecl HINTS ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib REQUIRED)
-    message(STATUS "ecl: ${ert_ecl}")
+    find_package(ecl REQUIRED)
+    find_package(opm-common REQUIRED)
+    message(STATUS "ecl: ${ecl_LIBRARIES}")
     message(STATUS "gp: ${gp}")
+    message(STATUS "opm-common: ${opm-common_LIBRARIES}")
 
 endif()
 
