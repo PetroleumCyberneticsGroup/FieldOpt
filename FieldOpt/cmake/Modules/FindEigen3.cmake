@@ -15,6 +15,9 @@
 # Copyright (c) 2009 Benoit Jacob <jacob.benoit.1@gmail.com>
 # Redistribution and use is allowed according to the terms of the 2-clause BSD license.
 
+
+
+
 if(NOT Eigen3_FIND_VERSION)
   if(NOT Eigen3_FIND_VERSION_MAJOR)
     set(Eigen3_FIND_VERSION_MAJOR 2)
@@ -68,6 +71,7 @@ else (EIGEN3_INCLUDE_DIR)
 
   find_path(EIGEN3_INCLUDE_DIR NAMES signature_of_eigen3_matrix_library
       PATHS
+      ${CMAKE_SOURCE_DIR}/ThirdParty/Eigen3
       ${CMAKE_INSTALL_PREFIX}/include
       ${EIGEN_ADDITIONAL_SEARCH_PATHS}
       ${KDE4_INCLUDE_DIR}
