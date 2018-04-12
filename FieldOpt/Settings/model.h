@@ -48,13 +48,13 @@ class Model
  public:
   Model(QJsonObject json_model); // This should only be accessed externally for testing purposes.
   enum ReservoirGridSourceType : int { ECLIPSE=1 };
-  enum WellType : int { Injector=011, Producer=12 };
-  enum ControlMode : int { BHPControl=21, RateControl=22 };
+  enum WellType : int { Injector=11, Producer=12, UNKNOWN_TYPE=19 };
+  enum ControlMode : int { BHPControl=21, RateControl=22, UNKNOWN_CONTROL=29 };
   enum InjectionType : int { WaterInjection=31, GasInjection=32 };
   enum WellDefinitionType : int { WellBlocks=41, WellSpline=42, PseudoContVertical2D=43 };
   enum WellCompletionType : int { Perforation=61 };
   enum WellState : int { WellOpen=71, WellShut=72 };
-  enum PreferredPhase : int { Oil=81, Water=82, Gas=83, Liquid=84 };
+  enum PreferredPhase : int { Oil=81, Water=82, Gas=83, Liquid=84, UNKNOWN_PHASE=89 };
   enum Direction : int { X=91, Y=92, Z=93 };
 
   struct Reservoir {
