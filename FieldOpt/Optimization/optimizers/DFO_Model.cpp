@@ -2,6 +2,12 @@
 namespace Optimization {
 namespace Optimizers {
 
+bool cmp(Eigen::VectorXd a,Eigen::VectorXd b)
+{
+  return ((a.topRows(a.rows()-1)).norm() > (b.topRows(b.rows()-1)).norm());
+}
+
+
 bool DFO_Model::isApproxZero(double value, double zeroLimit) {
   if (std::abs(value) <= zeroLimit)
     return true;
@@ -979,15 +985,24 @@ Eigen::VectorXd DFO_Model::FindLocalOptimumOfAbsoluteLagrangePolynomial(int t) {
 
 
 
-Eigen::MatrixXd DFO_Model::GetInterpolationPointsSortedByDistanceFromBestPoint() {
+Eigen::VectorXd DFO_Model::GetInterpolationPointsSortedByDistanceFromBestPoint() {
 
-  //std::sort(m.col(3).data(), m.col(3).data() + m.rows());
-  Eigen::MatrixXd copyY = Y;
-  //std::sort(Y.data(), "end", "comp");
-  copyY.col(0),
-  std::sort(copyY.col(0), copyY.col(m), cmp );
+  std::vector<Eigen::VectorXd> tmp;
+  for (int i = 0; i < m; ++i){
+    Eigen::VectorXd t(n+1);
+    for (int j = 0; j < m; ++j){
+      t(j) = Y(j,i);
+    }
+    t(n) = i+1;
+    tmp.push_back(t);
+  }
+  std::sort(tmp.begin(), tmp.end(), cmp);
 
-  return Eigen::MatrixXd();
+  Eigen::VectorXd indicesSortedByDescendingNorm(m);
+  for (int i = 0; i < m; ++i) {
+    indicesSortedByDescendingNorm[i] = tmp[n, i];
+  }
+  return indicesSortedByDescendingNorm;
 }
 
 }

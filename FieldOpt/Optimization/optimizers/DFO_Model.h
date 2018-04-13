@@ -410,7 +410,7 @@ class DFO_Model {
 
   double ComputeLagrangePolynomial(int t, Eigen::VectorXd point);
 
-  Eigen::MatrixXd GetInterpolationPointsSortedByDistanceFromBestPoint();
+  Eigen::VectorXd GetInterpolationPointsSortedByDistanceFromBestPoint();
 };
 }
 }
