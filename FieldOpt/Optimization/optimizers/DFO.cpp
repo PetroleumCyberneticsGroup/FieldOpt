@@ -15,6 +15,7 @@
 #define TRIAL_POINT_FOUND 9
 #define TRIAL_POINT_IS_NOT_NEW_OPTIMUM 10
 #define NEW_POINT_INCLUDED 11
+#define MODEL_IMPROVEMENT_POINT_FOUND 12
 
 
 /// Test functions - start
@@ -222,6 +223,7 @@ void DFO::iterate() {
   double epsilon_c = 1;
   double tau = 0.6;
   double eta1 = 0.25;
+  double rho = 0;
   int criticality_step_iteration = 0;
   double trust_region_radius_tilde = 0;
   double trust_region_radius_inc = 0;
@@ -307,6 +309,7 @@ void DFO::iterate() {
     }
     else if (last_action_ == FOUND_NEW_OPTIMUM_CANDIDATE){
       // We must check how good the model predicts the objective function.
+      rho = 123;
     }
 
     if (last_action_ == CRITICALITY_STEP_FINISHED){
@@ -346,16 +349,28 @@ void DFO::iterate() {
     if (last_action_ == TRIAL_POINT_IS_NOT_NEW_OPTIMUM){
       //Do the model improvement step.
       int t = DFO_model_.findPointFarthestAwayFromOptimum();
+      Eigen::VectorXd pointsSortedByDistanceFromOptimum = DFO_model_.GetInterpolationPointsSortedByDistanceFromBestPoint();
       DFO_model_.SetTrustRegionRadiusForSubproblem(DFO_model_.GetTrustRegionRadius());
-      new_point = DFO_model_.FindLocalOptimumOfAbsoluteLagrangePolynomial(t);
-
-      if (((new_point - DFO_model_.GetBestPoint()).norm() > r*DFO_model_.GetTrustRegionRadius()) ||
-          (abs(DFO_model_.ComputeLagrangePolynomial(t,new_point)) > required_poisedness_ )){
-        //ok, get the function evaluation.
-      } else{
-        //Keep on looking.
-        //
+      index = -1;
+      for (int i = 0; i < number_of_interpolation_points_; ++i){
+        new_point = DFO_model_.FindLocalOptimumOfAbsoluteLagrangePolynomial(pointsSortedByDistanceFromOptimum[i]);
+        if (((new_point - DFO_model_.GetBestPoint()).norm() > r*DFO_model_.GetTrustRegionRadius()) ||
+            (abs(DFO_model_.ComputeLagrangePolynomial(t,new_point)) > required_poisedness_ )){
+          index = pointsSortedByDistanceFromOptimum[i];
+            //Get the function evaluation. The point should be replaced.
+          last_action_ = MODEL_IMPROVEMENT_POINT_FOUND;
+          break;
+        }
       }
+
+    if (last_action_ == TRIAL_POINT_IS_NOT_NEW_OPTIMUM || NEW_POINT_INCLUDED || MODEL_IMPROVEMENT_POINT_FOUND){
+      // Update the trust-region radius
+      if (rho >= eta1){
+        trust_region_radius_inc = 234;//
+      }
+    }
+
+
     }
 
 
