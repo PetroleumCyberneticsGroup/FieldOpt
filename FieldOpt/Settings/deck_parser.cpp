@@ -30,8 +30,17 @@ DeckParser::DeckParser(std::string deck_file) {
     Opm::ParseContext opm_parse_context;
     Opm::Parser opm_parser;
 
+    // Update error policies to be more permissive when it comes
+    // to the non-schedule parts of the deck.
+    opm_parse_context.update("PARSE_MISSING_DIMS_KEYWORD", Opm::InputError::WARN);
+
+
+
+    std::cout << "Parsing file ..." << std::endl;
     auto opm_deck_ = opm_parser.parseFile(deck_file, opm_parse_context);
+    std::cout << "Creating state ..." << std::endl;
     Opm::EclipseState state( opm_deck_, opm_parse_context );
+    std::cout << "Creating Schedule object ..." << std::endl;
     Opm::Schedule opm_schedule( opm_deck_,
                                 state.getInputGrid(),
                                 state.get3DProperties(),
@@ -47,6 +56,7 @@ DeckParser::DeckParser(std::string deck_file) {
     num_timesteps_ = time_map_->numTimesteps();
 
     initializeTimeVectors();
+
 
 }
 
@@ -87,7 +97,10 @@ Model::WellType DeckParser::determineWellType(const Opm::Well *opm_well) {
     bool is_injector = false;
     bool is_producer = false;
 
-    for (int t = 0; t < num_timesteps_; ++t) {
+    for (int t = opm_well->firstTimeStep(); t < num_timesteps_; ++t) {
+        if (opm_well->getStatus(t) != Opm::WellCommon::StatusEnum::OPEN) {
+            continue; // Go to next time step if the well is not yet open
+        }
         if (!is_injector && opm_well->isInjector(t)) {
             if (is_producer) {
                 std::cerr << "WARNING: Well " << opm_well->name()
@@ -96,12 +109,10 @@ Model::WellType DeckParser::determineWellType(const Opm::Well *opm_well) {
                               " Ignoring switch from producer to injector. "
                           << time_dates_[t]
                           << std::endl;
-                continue;
+                break;
             }
             else {
                 is_injector = true;
-                std::cout << "Well " << opm_well->name() << " set as injector "
-                          << time_dates_[t] << std::endl;
             }
         }
         if (!is_producer && opm_well->isProducer(t)) {
@@ -112,11 +123,9 @@ Model::WellType DeckParser::determineWellType(const Opm::Well *opm_well) {
                               " Ignoring switch from injector to producer."
                           << time_dates_[t]
                           << std::endl;
-                continue;
+                break;
             }
             is_producer = true;
-            std::cout << "Well " << opm_well->name() << " set as producer "
-                      << time_dates_[t] << std::endl;
         }
     }
 
@@ -159,8 +168,6 @@ double DeckParser::determineWellboreRadius(const Opm::Well *opm_well) {
         radii_sum += comp.getDiameter() / 2.0;
     }
     double avg_radius = radii_sum / (double)opm_comps.size();
-    std::cout << "Wellbore radius set to " << boost::lexical_cast<std::string>(avg_radius)
-              << " for well " << opm_well->name() << std::endl;
     return avg_radius;
 }
 
@@ -188,9 +195,27 @@ QList<Model::Well::WellBlock> DeckParser::opmToWellBlocks(const Opm::CompletionS
 
 QList<Model::Well::ControlEntry> DeckParser::opmToControlEntries(const Opm::Well *opm_well) {
     auto control_entries = QList<Model::Well::ControlEntry>();
-    for (int t = 0; t < num_timesteps_; ++t) {
+    for (int t = opm_well->firstTimeStep(); t < num_timesteps_; ++t) {
         Model::Well::ControlEntry ce;
-        ce.state = Model::WellState::WellOpen;
+        switch (opm_well->getStatus(t))
+        {
+            case Opm::WellCommon::StatusEnum::OPEN:
+                ce.state = Model::WellState::WellOpen;
+                break;
+            case Opm::WellCommon::StatusEnum::AUTO:
+                ce.state = Model::WellState::WellOpen;
+                break;
+            case Opm::WellCommon::StatusEnum::SHUT:
+                ce.state = Model::WellState::WellShut;
+                break;
+            case Opm::WellCommon::StatusEnum::STOP:
+                ce.state = Model::WellState::WellShut;
+                break;
+            default:
+                // @todo I honestly don't know what could make it go here, but maybe it's that it hasnt changed.
+                continue;
+        }
+
         ce.control_mode = determineWellControlMode(opm_well, t);
         ce.rate = determineRate(opm_well, t);
         ce.bhp = determineBhp(opm_well, t);
@@ -198,6 +223,10 @@ QList<Model::Well::ControlEntry> DeckParser::opmToControlEntries(const Opm::Well
             ce.injection_type = determineInjectorType(opm_well, t);
         }
         ce.time_step = time_days_[t];
+
+        // Add the new control if it is different from the last one added
+        if (control_entries.size() == 0 || control_entries.last().isDifferent(ce))
+            control_entries.push_back(ce);
     }
     return control_entries;
 }

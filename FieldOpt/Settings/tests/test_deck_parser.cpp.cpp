@@ -39,7 +39,29 @@ class DeckParserTest : public ::testing::Test {
 };
 
 TEST_F(DeckParserTest, Initialization) {
-    EXPECT_NO_THROW(Settings::DeckParser(TestResources::ExampleFilePaths::deck_horzwel_.toStdString()));
+    DeckParser dp = DeckParser("/home/einar/Documents/GitHub/PCG/Models/ECLIPSE/olympus_ensemble/OLYMPUS_1/OLYMPUS_1.DATA");
+//    DeckParser dp = DeckParser(TestResources::ExampleFilePaths::deck_horzwel_.toStdString());
+    auto wells = dp.GetWellData();
+
+//    for (int i = 0; i < num_timesteps_; ++i) {
+//        std::cout << i << "\t" << dp.GetTimeDays()[i] << "\t" << dp.GetTimeDates()[i] << std::endl;
+//    }
+//
+//    std::cout << wells[0].toString();
+//
+//    for (auto control : wells[0].controls) {
+//        std::cout << control.toString() << std::endl;
+//    }
+    auto events = dp.GetEvents();
+    std::cout << std::endl;
+    std::cout << std::endl;
+    for (int i = 0; i < dp.GetTimeDays().size(); ++i) {
+        if (events->hasEvent(Opm::ScheduleEvents::COMPLETION_CHANGE, i)) {
+            std::cout << "New well event at timestep " << i << std::endl;
+        }
+    }
+    std::cout << std::endl;
+    std::cout << std::endl;
 }
 
 
