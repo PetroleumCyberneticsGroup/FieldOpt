@@ -98,6 +98,8 @@ class Model
       InjectionType injection_type; //!< Injector type (water/gas)
       bool is_variable;
       QString name;
+      bool isDifferent(ControlEntry other);
+      std::string toString();
     };
     PreferredPhase preferred_phase; //!< The preferred phase for the well
     QString name; //!< The name to be used for the well.
@@ -111,6 +113,7 @@ class Model
     SplinePoint spline_toe; //!< Toe (end) point to be used when calculating the well path from a spline.
     PseudoContPosition pseudo_cont_position; //!< Initial position when using pseudo-continous positioning variables.
     QList<ControlEntry> controls; //!< List of well controls
+    std::string toString();
   };
 
   Reservoir reservoir() const { return reservoir_; } //!< Get the struct containing reservoir settings.

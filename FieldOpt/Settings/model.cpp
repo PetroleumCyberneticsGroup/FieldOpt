@@ -24,6 +24,7 @@
  *****************************************************************************/
 
 #include <iostream>
+#include <sstream>
 #include "model.h"
 #include "settings_exceptions.h"
 #include "Utilities/filehandling.hpp"
@@ -246,6 +247,44 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
 bool Model::controlTimeIsDeclared(int time) const
 {
     return control_times_.contains(time);
+}
+
+std::string Model::Well::ControlEntry::toString() {
+    std::stringstream ce;
+    ce << "ControlEntry - Timestep:  " << time_step << "\n";
+    ce << "               State:     " << (state == WellState::WellOpen ? "Open" : "Shut") << "\n";
+    ce << "               Mode:      " << (control_mode == ControlMode::RateControl ? "Rate" : "BHP") << "\n";
+    ce << "               BHP:       " << bhp << "\n";
+    ce << "               Rate:      " << rate << "\n";
+    ce << "               Inj. type: " << (injection_type == InjectionType::WaterInjection ? "Water" : "Gas/UNKWN") << "\n";
+    ce << "               Variable:  " << (is_variable ? "Yes" : "No") << "\n";
+    return ce.str();
+}
+
+std::string Model::Well::toString() {
+    std::stringstream ce;
+    ce << "Well - Name:           " << name.toStdString() << "\n";
+    ce << "       Type:           " << (type == WellType::Injector ? "Injector" : "Producer") << "\n";
+    ce << "       Group:          " << group.toStdString() << "\n";
+    ce << "       Radius:         " << wellbore_radius << "\n";
+    ce << "       Direction:      " << direction << "\n";
+    ce << "       Pref. phase:    " << preferred_phase << "\n";
+    ce << "       Def. type:      " << definition_type << "\n";
+    ce << "       N. well blocks: " << well_blocks.size() << "\n";
+    ce << "       N. controls:    " << controls.size() << "\n";
+    return ce.str();
+}
+
+bool Model::Well::ControlEntry::isDifferent(ControlEntry other) {
+    if (state != other.state)
+        return true;
+    if (rate != other.rate)
+        return true;
+    if (bhp != other.bhp)
+        return true;
+    if (control_mode != other.control_mode)
+        return true;
+    return false; // Assume they're equal if none of the above hits.
 }
 
 
