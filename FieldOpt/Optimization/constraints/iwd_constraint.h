@@ -37,6 +37,7 @@ class SNOPTSolver;
 // ---------------------------------------------------------
 #include "FieldOpt-WellIndexCalculator/resinxx/well_path.h"
 
+// ---------------------------------------------------------
 //#include "well_spline_length.h"
 //#include "interwell_distance.h"
 
