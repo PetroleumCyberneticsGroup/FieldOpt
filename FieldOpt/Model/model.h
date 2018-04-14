@@ -75,6 +75,10 @@ class Model : public Loggable
   // RIReaderECL *rireaderecl() const { return rireaderecl_; }
   // RIGrid *rigrid() const { return rigrid_; }
 
+  RimIntersection* rimintersection_;
+  RivIntersectionPartMgr* intersectionpartmgr_;
+
+
   // -------------------------------------------------------
   /*!
    * \brief variables Get the set of variable properties

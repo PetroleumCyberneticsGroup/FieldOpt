@@ -50,9 +50,15 @@ Model::Model(Settings::Model settings, Logger *logger) {
   ricasedata_->computeActiveCellBoundingBoxes();
   ricasedata_->mainGrid()->computeCachedData();
 
+  rimintersection_ = new RimIntersection();
+
+  intersectionpartmgr_ = new RivIntersectionPartMgr(rimintersection_);
+
+
   // -------------------------------------------------------------
   size_t idx;
-  for (idx = 0; idx < ricasedata_->mainGrid()->cellCount(); idx++) {
+//  for (idx = 0; idx < ricasedata_->mainGrid()->cellCount(); idx++) {
+  for (idx = 0; idx < 10; idx++) {
 
     size_t i, j, k;
     ricasedata_->mainGrid()->ijkFromCellIndex(idx, &i, &j, &k);
