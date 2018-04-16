@@ -57,7 +57,7 @@ class Model : public Loggable
   friend class ModelSynchronizationObject;
  public:
   // -------------------------------------------------------
-  Model(::Settings::Model settings,
+  Model(::Settings::Model *settings,
         Logger *logger);
 
   // -------------------------------------------------------
@@ -76,8 +76,6 @@ class Model : public Loggable
   // RIGrid *rigrid() const { return rigrid_; }
 
   RimIntersection* rimintersection_;
-  RivIntersectionPartMgr* intersectionpartmgr_;
-
 
   // -------------------------------------------------------
   /*!
@@ -144,6 +142,7 @@ class Model : public Loggable
 
   // -------------------------------------------------------
   Logger *logger_;
+  Settings::Model *settings_;
   QUuid current_case_id_;
 
   // -------------------------------------------------------

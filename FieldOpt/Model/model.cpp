@@ -1,25 +1,30 @@
-/******************************************************************************
-   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
+/***********************************************************
 
-   This file is part of the FieldOpt project.
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
 
-   FieldOpt is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+ This file is part of the FieldOpt project.
 
-   FieldOpt is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+ FieldOpt is free software: you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation, either version
+ 3 of the License, or (at your option) any later version.
 
-   You should have received a copy of the GNU General Public License
-   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
-******************************************************************************/
+ FieldOpt is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty
+ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
+
+ You should have received a copy of the GNU
+ General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+
+***********************************************************/
 
 // ---------------------------------------------------------
 #include "model.h"
 #include <boost/lexical_cast.hpp>
+#include <FieldOpt-WellIndexCalculator/resinxx/rixx_prj_viz/RivIntersectionGeometryGenerator.h>
 
 // ---------------------------------------------------------
 using std::cout;
@@ -29,36 +34,36 @@ using std::endl;
 namespace Model {
 
 // ---------------------------------------------------------
-Model::Model(Settings::Model settings, Logger *logger) {
+Model::Model(Settings::Model *settings, Logger *logger) {
 
   // -------------------------------------------------------
-  if (settings.verb_vector()[5] > 1) // idx:5 -> mod (Model)
+  if (settings->verb_vector()[5] > 1) // idx:5 -> mod (Model)
     cout << "[mod]Init ECLGrid_.---------- " << endl;
   grid_ = new Reservoir::Grid::ECLGrid(
-      settings.reservoir().path.toStdString());
+      settings->reservoir().path.toStdString());
 
   // -------------------------------------------------------
-  if (settings.verb_vector()[5] > 1) // idx:5 -> mod (Model)
+  if (settings->verb_vector()[5] > 1) // idx:5 -> mod (Model)
     cout << "[mod]Init RIGrid_.----------- " << endl;
 
+  // -------------------------------------------------------
   RIReaderECL *rireaderecl = new RIReaderECL();
   ricasedata_ = new RICaseData(grid_->GetFilePath());
   rireaderecl->open(grid_->GetFilePathQString(), ricasedata_);
 
-  // rireaderecl->staticResult()
-
+  // -------------------------------------------------------
   ricasedata_->computeActiveCellBoundingBoxes();
   ricasedata_->mainGrid()->computeCachedData();
 
-  rimintersection_ = new RimIntersection();
+  ricasedata_->mainGrid()->calculateFaults(ricasedata_->activeCellInfo(MATRIX_MODEL));
 
-  intersectionpartmgr_ = new RivIntersectionPartMgr(rimintersection_);
 
 
   // -------------------------------------------------------------
+  std::vector<cvf::Vec3d> ccv, ccc;
   size_t idx;
 //  for (idx = 0; idx < ricasedata_->mainGrid()->cellCount(); idx++) {
-  for (idx = 0; idx < 10; idx++) {
+  for (idx = 0; idx < 4; idx++) {
 
     size_t i, j, k;
     ricasedata_->mainGrid()->ijkFromCellIndex(idx, &i, &j, &k);
@@ -68,62 +73,90 @@ Model::Model(Settings::Model settings, Logger *logger) {
     std::array<cvf::Vec3d, 8> hc;
     ricasedata_->mainGrid()->cellCornerVertices(idx, hc.data());
     cout << "hc_x:" << hc[0].x() << " hc_y:" << hc[0].y() << " hc_z:" << hc[0].z() << endl;
+    ccc.push_back(hc[0]);
 
-    auto cc = ricasedata_->mainGrid()->cell(idx).center();
+    cvf::Vec3d cc = ricasedata_->mainGrid()->cell(idx).center();
     cout << "cc_x:" << cc.x() << " cc_y:" << cc.y() << " cc_z:" << cc.z() << endl;
+    ccv.push_back(cc);
 
   }
 
-  const RICell& cell = ricasedata_->mainGrid()->globalCellArray()[0];
+  std::array<cvf::Vec3d, 8> hc;
+  ricasedata_->mainGrid()->cellCornerVertices(0, hc.data());
+  ccc.push_back(hc[0]);
+
+  // -------------------------------------------------------
+  rimintersection_ = new RimIntersection(ricasedata_->mainGrid(),
+                                         ricasedata_,
+                                         settings);
+
+  for (int ii=0; ii < 2; ++ii) {
+    // cout << "size ccc" << ccc.size() << endl;
+    cout << "appendPointToPolyLine(ccc[" << ii << "])" << endl;
+    rimintersection_->appendPointToPolyLine(ccc[ii]);
+  }
+
+  RivIntersectionPartMgr* imgr = rimintersection_->intersectionPartMgr();
+
+  RivIntersectionGeometryGenerator* icsec = imgr->getCrossSectionGenerator();
+
+  size_t vx_count = icsec->m_cellBorderLineVxes.p()->size();
+  for (size_t ivx = 0; ivx < vx_count; ivx++) {
+    auto vx_x = icsec->m_cellBorderLineVxes.p()->val(ivx).x();
+    auto vx_y = icsec->m_cellBorderLineVxes.p()->val(ivx).y();
+    auto vx_z = icsec->m_cellBorderLineVxes.p()->val(ivx).z();
+    cout << "vx_x: " << vx_x << " "
+         << "vx_y: " << vx_y << " "
+         << "vx_z: " << vx_z << endl;
+  }
 
 
-//  ricasedata_->grid(0).
-//  ricasedata_->mainGrid()->findIntersectingCells();
-
-  // RIGrid_ = RICaseData_->mainGrid();
+  // -------------------------------------------------------
+  if (settings->verb_vector()[5] > 1) // idx:5 -> mod (Model)
+    cout << "[mod]Init RIGrid_.----------- RICell& cell" << endl;
 
   size_t cellcount = ricasedata_->mainGrid()->cellCount();
+  const RICell& cell = ricasedata_->mainGrid()->globalCellArray()[cellcount];
 
-//  for (size_t ii=0; ii < cellcount; ++ii) {
-//    auto point = ricasedata_->mainGrid()->cell(ii).volume();
-    cout << "volume:" << cell.volume() << endl;
-    // cout << "x:" << point.x() << " y:" << point.y() << " z:" << point.z() << endl;
-//  }
+  cout << "volume:" << cell.volume() << " count:" << cellcount<< endl;
 
-  auto startp = ricasedata_->grid(0)->cellCentroid(1);
-  auto endp = ricasedata_->grid(0)->cellCentroid(cellcount);
+  auto startp = ricasedata_->grid(0)->cell(0).center();
+  auto endp = ricasedata_->grid(0)->cell(cellcount-1).center();
 
   cout << "x:" << startp.x() << " y:" << startp.y() << " z:" << startp.z() << endl;
   cout << "x:" << endp.x() << " y:" << endp.y() << " z:" << endp.z() << endl;
 
+
+
+
   // -------------------------------------------------------
   variable_container_ = new Properties::VariablePropertyContainer();
-  if (settings.verb_vector()[5] > 1) // idx:5 -> mod (Model)
+  if (settings->verb_vector()[5] > 1) // idx:5 -> mod (Model)
     cout << "[mod]Init var_prop_cont_.----" << endl;
 
   // -------------------------------------------------------
-  if (settings.verb_vector()[5] >= 1) // idx:5 -> mod (Model)
+  if (settings->verb_vector()[5] >= 1) // idx:5 -> mod (Model)
     cout << "[mod]Add wells->wellList:---- ";
 
   // -------------------------------------------------------
   wells_ = new QList<Wells::Well *>();
-  for (int well_nr = 0; well_nr < settings.wells().size(); ++well_nr) {
+  for (int well_nr = 0; well_nr < settings->wells().size(); ++well_nr) {
 
     // -----------------------------------------------------
-    auto wname = settings.wells().at(well_nr).name.toStdString();
-    if (settings.verb_vector()[5] >= 1) // idx:5 -> mod (Model)
+    auto wname = settings->wells().at(well_nr).name.toStdString();
+    if (settings->verb_vector()[5] >= 1) // idx:5 -> mod (Model)
       cout << "wname=" << wname << " - ";
 
     // -----------------------------------------------------
-    wells_->append(new Wells::Well(settings, well_nr,
+    wells_->append(new Wells::Well(*settings, well_nr,
                                    variable_container_,
                                    grid_,
                                    ricasedata_));
   }
 
   // -------------------------------------------------------
-  if (settings.verb_vector()[5] >= 1) // idx:5 -> mod (Model)
-    cout << "----total nr. of wells: " << settings.wells().size()
+  if (settings->verb_vector()[5] >= 1) // idx:5 -> mod (Model)
+    cout << "----total nr. of wells: " << settings->wells().size()
          << "----" << endl;
 
   // -------------------------------------------------------

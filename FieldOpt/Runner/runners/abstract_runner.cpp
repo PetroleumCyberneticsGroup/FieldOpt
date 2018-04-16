@@ -126,7 +126,9 @@ void AbstractRunner::InitializeModel() {
         "The Settings must be initialized before the Model.");
 
   // -------------------------------------------------------
-  model_ = new Model::Model(*settings_->model(), logger_);
+  // model_ = new Model::Model(*settings_->model(), logger_);
+  model_ = new Model::Model(settings_->model(), logger_);
+
   if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
     std::cout << "[run]Initialized Model.------" << std::endl;
 }
