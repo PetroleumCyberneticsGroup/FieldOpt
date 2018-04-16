@@ -115,6 +115,10 @@ class Subproblem {
 
  private:
 
+  int normType_;
+  Eigen::VectorXd y0_;
+  Eigen::VectorXd bestPointDisplacement_;
+
   int n_; // Number of variables
   int m_;    // Number of nonlinear constraints
   integer neF_; // Number of element in F
@@ -138,6 +142,9 @@ class Subproblem {
   // controls lower and upper bounds
   double *xlow_ = NULL;
   double *xupp_ = NULL;
+
+  Eigen::VectorXd xlowCopy_;
+  Eigen::VectorXd xuppCopy_;
 
   // the initial guess for Lagrange multipliers
   double *xmul_ = NULL;;
@@ -171,7 +178,16 @@ class Subproblem {
 
   void passParametersToSNOPTHandler(SNOPTHandler &snoptHandler);
 
+  void setNormType(int type);
+  void setCenterPointOfModel(Eigen::VectorXd cp);
+  void setCurrentBestPointDisplacement(Eigen::VectorXd db);
+
  public:
+
+  enum NormType {
+    INFINITY_NORM = 0,
+    L2_NORM = 2,
+  };
 
   void setQuadraticModel(double c, Eigen::VectorXd g, Eigen::MatrixXd H);
 
@@ -180,6 +196,12 @@ class Subproblem {
   void setHessian(Eigen::MatrixXd H);
 
   void setConstant(double constant);
+
+
+  void SetNormType(int type){
+    normType_ = type;
+  }
+
 
   ~Subproblem();
 
@@ -194,7 +216,7 @@ class Subproblem {
 
   //void Solve(vector<double> *xsol, vector<double> *fsol, char *optimizationType);
 
-  void Solve(vector<double> &xsol, vector<double> &fsol, char *optimizationType);
+  void Solve(vector<double> &xsol, vector<double> &fsol, char *optimizationType,   Eigen::VectorXd y0, Eigen::VectorXd bestPointDisplacement);
 
   void SetTrustRegionRadius(double radius){
     trustRegionRadius_ = radius;

@@ -19,6 +19,10 @@ int SNOPTusrFG3_(integer *Status, integer *n, doublereal x[],
 //static double *gradient;
 //static double *hessian;
 //static double constant;
+static Eigen::VectorXd yb_rel;
+static Eigen::VectorXd y0;
+static int normType;
+
 static Eigen::MatrixXd hessian;
 static Eigen::VectorXd gradient;
 static double constant;
@@ -26,7 +30,11 @@ static double constant;
 //Subproblem::Subproblem(SNOPTHandler snoptHandler) {
 Subproblem::Subproblem(Settings::Optimizer *settings) {
   settings_ = settings;
-
+  n_ = settings->parameters().number_of_variables;
+  y0_ = Eigen::VectorXd::Zero(n_);
+  bestPointDisplacement_ = Eigen::VectorXd::Zero(n_);
+  xlowCopy_ = Eigen::VectorXd::Zero(n_); /// OBS should be set by the driver file....
+  xuppCopy_ = Eigen::VectorXd::Zero(n_);
   loadSNOPT();
   setConstraintsAndDimensions(); // This one should set the iGfun/jGvar and so on.
   setAndInitializeSNOPTParameters();
@@ -74,9 +82,25 @@ void Subproblem::setAndInitializeSNOPTParameters() {
 
 }
 
-void Subproblem::Solve(std::vector<double> &xsol, std::vector<double> &fsol, char *optimizationType) {
-  // The snoptHandler must be setup and loaded
+void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimizationType, Eigen::VectorXd y0, Eigen::VectorXd bestPointDisplacement) {
+  y0_ = y0;
+  bestPointDisplacement_ = bestPointDisplacement;
+  // Set norm specific constraints
+  if (normType_ == INFINITY_NORM){
+    for (int i = 0; i < n_; ++i){
+      xlow_[i] = std::max(bestPointDisplacement[i] - trustRegionRadius_, xlowCopy_[i]);
+      xupp_[i] = std::min(bestPointDisplacement[i] + trustRegionRadius_, xuppCopy_[i]);
+    }
+  }
+  else if (normType_ == L2_NORM){
+    for (int i = 0; i < n_; ++i){
+      xlow_[i] = xlowCopy_[i];
+      xupp_[i] = xuppCopy_[i];
+    }
+  }
 
+
+  // The snoptHandler must be setup and loaded
   SNOPTHandler snoptHandler = initSNOPTHandler();
   snoptHandler.setProbName("SNOPTSolver");
   snoptHandler.setParameter(optimizationType);
@@ -139,8 +163,12 @@ void Subproblem::passParametersToSNOPTHandler(SNOPTHandler &snoptHandler) {
 
 void Subproblem::setConstraintsAndDimensions() {
   // This must be set before compiling the code. It cannot be done during runtime through function calls.
-  n_ = 10;
-  m_ = 1;
+  //n_ = 10;
+
+  m_ = 0;
+  if (normType_ == Subproblem::L2_NORM){
+    m_++;
+  }
   neF_ = m_ + 1;
   lenA_ = 0;
   lenG_ = n_ + m_ * n_;
@@ -152,7 +180,7 @@ void Subproblem::setConstraintsAndDimensions() {
 
   iAfun_  = NULL;
   jAvar_  = NULL;
-  A_       = NULL;
+  A_      = NULL;
 
   /*
  iAfun_ = new integer[lenA_];
@@ -228,7 +256,9 @@ void Subproblem::setConstraintsAndDimensions() {
 
   for(int i = 0; i < n_; ++i){
     xlow_[i] = -infinity_;
+    xlowCopy_[i] = xlow_[i];
     xupp_[i] = infinity_;
+    xuppCopy_[i] = xupp_[i];
   }
 
   // first the objective
@@ -253,6 +283,7 @@ void Subproblem::setConstraintsAndDimensions() {
 
   neG_ = lenG_;
   neA_ = lenA_;
+
 
 }
 
@@ -417,8 +448,8 @@ int SNOPTusrFG3_(integer *Status, integer *n, double x[],
                  char *cu, integer *lencu,
                  integer iu[], integer *leniu,
                  double ru[], integer *lenru) {
-  // Testing with 20 (wells) * 6 (variables pr wells) = 120 variables.
 
+  // Convert std::vector into Eigen3 vector
   Eigen::VectorXd xvec(*n);
   for (int i = 0; i < *n; ++i){
     xvec[i] = x[i];
@@ -431,10 +462,12 @@ int SNOPTusrFG3_(integer *Status, integer *n, double x[],
   // If the values for the objective and/or the constraints are desired
   if (*needF > 0) {
     /// The objective function
-    F[0] = constant + gradient.transpose()*xvec + xvec.transpose()*hessian*xvec;
+    F[0] = constant + gradient.transpose() * xvec + xvec.transpose() * hessian * xvec;
     if (m) {
       /// The constraints
-      F[1] = xvec.norm();
+      if (normType == Subproblem::L2_NORM) {
+        F[1] = (xvec - yb_rel).norm();
+      }
     }
   }
 
@@ -450,9 +483,11 @@ int SNOPTusrFG3_(integer *Status, integer *n, double x[],
     /// The derivatives of the constraints
     if (m) {
       Eigen::VectorXd gradConstraint(*n);
-      gradConstraint = xvec/(xvec.norm() + 0.000000000000001);
-      for (int i = 0; i < *n; ++i){
-        G[i+*n] = gradConstraint(i);
+      if (normType == Subproblem::L2_NORM) {
+        gradConstraint = (xvec - yb_rel) / ((xvec - yb_rel).norm() + 0.000000000000001);
+        for (int i = 0; i < *n; ++i) {
+          G[i + *n] = gradConstraint(i);
+        }
       }
     }
   }
@@ -474,6 +509,8 @@ int SNOPTusrFG3_(integer *Status, integer *n, double x[],
   return 0;
 }
 
+
+
 void Subproblem::setQuadraticModel(double c, Eigen::VectorXd g, Eigen::MatrixXd H) {
   constant = c;
   gradient = g;
@@ -491,7 +528,15 @@ void Subproblem::setHessian(Eigen::MatrixXd H) {
 void Subproblem::setConstant(double c) {
   constant = c;
 }
-
+void Subproblem::setNormType(int type) {
+  normType = type;
+}
+void Subproblem::setCenterPointOfModel(Eigen::VectorXd cp) {
+  y0 = cp;
+}
+void Subproblem::setCurrentBestPointDisplacement(Eigen::VectorXd db) {
+  bestPointDisplacement_ = db;
+}
 
 }
 }
