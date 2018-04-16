@@ -10,7 +10,7 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
 include(GetSysInfo.cmake)
 
 # Compile options ======================================================
-set (CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
 
 # Build dirs ===========================================================
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -128,7 +128,7 @@ elseif(BUILD_WIC_ONLY)  # Building WIC executable with dependencies only
 
 else() # Building all FieldOpt sources
     find_package(Boost COMPONENTS
-            REQUIRED program_options serialization mpi system filesystem random)
+            REQUIRED regex program_options serialization mpi system filesystem random)
 endif()
 
 # Pring debug info: include dirs + source dirs =========================
