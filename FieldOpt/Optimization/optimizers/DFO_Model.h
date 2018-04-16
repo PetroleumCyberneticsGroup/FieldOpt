@@ -53,8 +53,10 @@ class DFO_Model {
   Eigen::VectorXd fvals; // Holds the function evaluations for the interpolation points.
 
   Eigen::VectorXd bestPoint; // Displacement of the optimal point from y0. Absolute point: y0 + bestPoint;
-  int
-      bestPointIndex; // This assumes that the point is in the interpolation set (not sure if this will be discarded in future work)
+  int bestPointIndex; // This assumes that the point is in the interpolation set (not sure if this will be discarded in future work)
+
+  Eigen::VectorXd bestPointAllTime;
+  double bestPointAllTimeFunctionValue;
 
 
   //These 4 variables are only used in the case m>2*n+1. How to calculate the p's and q's are well explained in [1], for sigma see [2].
@@ -382,6 +384,10 @@ class DFO_Model {
   void SetFunctionValue(int t, double value);
 
   void SetTrustRegionRadiusForSubproblem(double radius);
+
+  double GetFunctionValue(int t){
+    return fvals[t-1];
+  }
 
   double GetTrustRegionRadius(){
     return rho;

@@ -290,6 +290,8 @@ DFO_Model::DFO_Model(unsigned int m,
   this->lambda = lambda;
 
   this->bestPoint = Eigen::VectorXd::Zero(n);
+  this->bestPointAllTime = Eigen::VectorXd::Zero(n);
+  this->bestPointAllTimeFunctionValue = std::numeric_limits<double>::max();
   this->Y = Eigen::MatrixXd::Zero(n, m);
   this->fvals = Eigen::VectorXd(m);
   this->Xi = Eigen::MatrixXd::Zero(n + 1, m);
@@ -408,9 +410,14 @@ void DFO_Model::initializeModel() {
 
 void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, UpdateReason updateReason) {
   if (updateReason == INCLUDE_NEW_OPTIMUM) {
-    //This functionality is not yet implemented;
+    if (fvalNew < bestPointAllTimeFunctionValue){
+      bestPointAllTimeFunctionValue = fvalNew;
+      bestPointAllTime = yNew;
+      std::cout << "NEW BEST POINT IS FOUND! (ALL TIME)" << std::endl;
+    }
   }
-  //else if(updateReason == IMPROVE_POISEDNESS), then t is already chosen!
+
+
 
   if (fvalNew < fvals[bestPointIndex - 1]) {
     bestPoint = yNew;
@@ -422,14 +429,24 @@ void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, Upd
 
   Y.col(t - 1) = yNew;
   fvals(t - 1) = fvalNew;
-  if (bestPointIndex == t) {
-    bestPointIndex = 1;
-    for (int j = 2; j <= m; ++j) {
-      if (fvals[j - 1] < fvals[bestPointIndex - 1]) {
-        bestPointIndex = j;
+
+  if (updateReason == IMPROVE_POISEDNESS || updateReason == INCLUDE_NEW_POINT){
+    if (t == bestPointIndex) { // removing optimum :(
+      bestPointIndex = 1;
+      for (int j = 2; j <= m; ++j) {
+        if (fvals[j - 1] < fvals[bestPointIndex - 1]) {
+          bestPointIndex = j;
+        }
+      }
+      bestPoint = Y.col(bestPointIndex - 1);
+
+      if (updateReason == IMPROVE_POISEDNESS){
+        std::cout << "Replaced optimum while IMPROVE_POISEDNESS" << std::endl;
+      }
+      if (updateReason == INCLUDE_NEW_POINT){
+        std::cout << "Replaced optimum while INCLUDE_NEW_POINT" << std::endl;
       }
     }
-    bestPoint = Y.col(bestPointIndex - 1);
   }
 
 }
@@ -523,6 +540,7 @@ void DFO_Model::shiftCenterPointOfQuadraticModel(Eigen::VectorXd s) {
     Y.col(i - 1) -= s;
   }
   bestPoint -= s;
+  bestPointAllTime -= s;
   y0 += s;
 }
 
