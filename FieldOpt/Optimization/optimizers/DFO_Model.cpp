@@ -656,8 +656,8 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
     vector<double> fsolMax;
     vector<double> xsolMin;
     vector<double> fsolMin;
-    subproblem.Solve(xsolMax, fsolMax, (char *) "Maximize");
-    subproblem.Solve(xsolMin, fsolMin, (char *) "Minimize");
+    subproblem.Solve(xsolMax, fsolMax, (char *) "Maximize", y0, bestPoint);
+    subproblem.Solve(xsolMin, fsolMin, (char *) "Minimize", y0, bestPoint);
 
     double temp = 0;
     if ((abs(fsolMax[0]) >= abs(fsolMin[0])) && abs(fsolMax[0]) >= worstPoisedness) {
@@ -921,7 +921,7 @@ Eigen::VectorXd DFO_Model::FindLocalOptimum() {
   Eigen::VectorXd localOptimum(n);
   vector<double> xsol;
   vector<double> fsol;
-  subproblem.Solve(xsol, fsol, (char *) "Maximize");
+  subproblem.Solve(xsol, fsol, (char *) "Maximize", y0, bestPoint);
   for (int i = 0; i < n; i++) {
     localOptimum[i] = xsol[i];
   }
@@ -986,8 +986,8 @@ Eigen::VectorXd DFO_Model::FindLocalOptimumOfAbsoluteLagrangePolynomial(int t) {
   vector<double> fsolMax;
   vector<double> xsolMin;
   vector<double> fsolMin;
-  subproblem.Solve(xsolMax, fsolMax, (char *) "Maximize");
-  subproblem.Solve(xsolMin, fsolMin, (char *) "Minimize");
+  subproblem.Solve(xsolMax, fsolMax, (char *) "Maximize", y0, bestPoint);
+  subproblem.Solve(xsolMin, fsolMin, (char *) "Minimize", y0, bestPoint);
 
   Eigen::VectorXd optimum(n);
 
