@@ -76,6 +76,8 @@ void DFO_Model::initializeQuadraticModel() {
   }
   bestPointIndex = indexBest;
   bestPoint = Y.col(bestPointIndex - 1);
+  bestPointAllTime = bestPoint;
+  bestPointAllTimeFunctionValue = fvals(bestPointIndex-1)
 
 }
 
@@ -417,8 +419,6 @@ void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, Upd
     }
   }
 
-
-
   if (fvalNew < fvals[bestPointIndex - 1]) {
     bestPoint = yNew;
     bestPointIndex = t;
@@ -431,7 +431,7 @@ void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, Upd
   fvals(t - 1) = fvalNew;
 
   if (updateReason == IMPROVE_POISEDNESS || updateReason == INCLUDE_NEW_POINT){
-    if (t == bestPointIndex) { // removing optimum :(
+    if (t == bestPointIndex && fvalNew > fvals[bestPointIndex - 1]) { // removing optimum :(
       bestPointIndex = 1;
       for (int j = 2; j <= m; ++j) {
         if (fvals[j - 1] < fvals[bestPointIndex - 1]) {
