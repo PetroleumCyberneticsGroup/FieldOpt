@@ -396,6 +396,19 @@ class DFO_Model {
     rho = radius;
   }
 
+  void SetRequiredPoisedness(double lambda){
+    this->lambda = lambda;
+  }
+  void SetInitialStartPoint(Eigen::VectorXd startPoint){
+    y0 = startPoint;
+  }
+  void SetNumberOfVariables(int n){
+    this->n = n;
+  }
+  void SetNumberOfInterpolationPoints(int m){
+    this->m = m;
+  }
+
   Eigen::VectorXd GetGradient(){
     return gradient;
   }

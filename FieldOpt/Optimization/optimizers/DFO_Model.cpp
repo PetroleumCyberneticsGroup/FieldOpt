@@ -300,7 +300,7 @@ DFO_Model::DFO_Model(unsigned int m,
     : subproblem(settings) {
   this->m = m;
   this->n = n;
-  //this->y0 = y0;
+  this->y0 = y0;
   this->y0 = Eigen::VectorXd::Zero(n);
   this->y0 << 1,2;
   this->rho = rhoBeg;
@@ -333,7 +333,7 @@ DFO_Model::DFO_Model(unsigned int m,
   this->modelInitialized = false;
   this->settings_ = settings;
 
-  subproblem.SetNormType(Subproblem::L2_NORM);
+  //subproblem.SetNormType(Subproblem::L2_NORM);
 
 /*
   vector<double> xsol;
@@ -668,6 +668,7 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
   // Altså: max { max(l_i(x)), max(-l_i(x))  }
 
   //
+  std::cout <<"Z\n"<< Z << "\nS\n"<<S.diagonal()<<"\nY\n" << Y << "\n\n";
   double worstPoisedness = 0;
 
   int index = -1;
@@ -680,7 +681,9 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
     double c = Xi(0, t - 1);
     grad = (Xi.col(t - 1)).tail(n);
     for (int k = 1; k <= m; ++k) {
-      hess += Z.row(k - 1) * S * (Z.row(t - 1)).transpose() * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
+      double tmp = Z.row(k - 1) * S * (Z.row(t - 1)).transpose();
+      hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
+      //hess += Z.row(k - 1) * S * (Z.row(t - 1)).transpose() * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
     }
 
     // Find min and max of l_t(x)
@@ -966,12 +969,9 @@ Eigen::VectorXd DFO_Model::FindLocalOptimum() {
   vector<double> xsol;
   vector<double> fsol;
   Eigen::VectorXd a(n);
+  std::cout << "n" << n << std::endl;
   a.setZero();
-  Eigen::VectorXd b(n);
-  b.setZero();
-  std::cout << "bestPOint\n" << bestPoint << "\ny0 \n" << y0 << "\n";
-  std::cout << "a\n" << a << "\nb \n" << b << "\n";
-  subproblem.Solve(xsol, fsol, (char *) "Maximize", a, b);
+  subproblem.Solve(xsol, fsol, (char *) "Minimize", a, a);
   for (int i = 0; i < n; i++) {
     localOptimum[i] = xsol[i];
   }
