@@ -54,7 +54,7 @@ class DFO : public Optimizer {
 
     //if (iterations_!=0)
       //return TerminationCondition::NOT_FINISHED;
-    return TerminationCondition::MAX_EVALS_REACHED;
+    return TerminationCondition::NOT_FINISHED;
   };
 
 

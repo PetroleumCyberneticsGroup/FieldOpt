@@ -9,6 +9,7 @@
 #include <Settings/optimizer.h>
 #include <Subproblem.h>
 #include "Subproblem.h"
+#include "EigenUtil.h"
 /* References
 This implementation is based upon the following papers and book, and I would recommend anyone who
 is trying to understand the code to actively use those references.
@@ -27,12 +28,6 @@ class DFO_Model {
 
  private:
 
-
-  bool cmp(const Eigen::VectorXd& a, const Eigen::VectorXd& b)
-  {
-    // you should probably also add some code to prevent dividing by zero...
-    return ( a.norm() > b.norm());
-  }
 
 
 
@@ -168,6 +163,9 @@ class DFO_Model {
   @return the lower bound.
   */
   double evaluateLowerBoundQuadraticPolynomial(double radius, double b, int type);
+
+
+  static bool cmp(Eigen::VectorXd a,Eigen::VectorXd b);
 
  public:
 

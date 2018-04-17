@@ -300,8 +300,8 @@ Subproblem::~Subproblem() {
   delete[] Fupp_;
   delete[] Fmul_;
   //delete[] Fstate_;
-  delete[] xnames_;
-  delete[] Fnames_;
+  //delete[] xnames_;
+  //delete[] Fnames_;
 }
 
 void Subproblem::setOptionsForSNOPT(SNOPTHandler &snoptHandler) {

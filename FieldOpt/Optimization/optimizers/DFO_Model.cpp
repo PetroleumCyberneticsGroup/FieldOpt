@@ -2,7 +2,7 @@
 namespace Optimization {
 namespace Optimizers {
 
-bool cmp(Eigen::VectorXd a,Eigen::VectorXd b)
+bool DFO_Model::cmp(Eigen::VectorXd a,Eigen::VectorXd b)
 {
   return ((a.topRows(a.rows()-1)).norm() > (b.topRows(b.rows()-1)).norm());
 }
@@ -77,7 +77,7 @@ void DFO_Model::initializeQuadraticModel() {
   bestPointIndex = indexBest;
   bestPoint = Y.col(bestPointIndex - 1);
   bestPointAllTime = bestPoint;
-  bestPointAllTimeFunctionValue = fvals(bestPointIndex-1)
+  bestPointAllTimeFunctionValue = fvals(bestPointIndex-1);
 
 }
 
@@ -126,7 +126,8 @@ void DFO_Model::updateInverseKKTMatrix(Eigen::VectorXd yNew, double fvalNew, uns
   for (int i = 1; i <= m; ++i) {
     w(i - 1) = 0.5 * std::pow((Y.col(i - 1)).transpose() * (yNew), 2);
   }
-  w.tail(n) = yNew;
+  //w.tail(n) = yNew;
+  eigen_tail(w,yNew,n);
   w(m) = 1;
 
   //Start by performing orthogonal rotations to the Z matrix. It will put zeros in the (t-1)'th row of Z;
@@ -164,8 +165,10 @@ void DFO_Model::updateInverseKKTMatrix(Eigen::VectorXd yNew, double fvalNew, uns
       double cosTheta = Z(t - 1, baseColPos) / length;
       double sinTheta = Z(t - 1, i) / length;
       Eigen::VectorXd newBaseCol = cosTheta * Z.col(baseColPos) + sinTheta * Z.col(i);
-      Z.col(i) = cosTheta * Z.col(i) - sinTheta * Z.col(baseColPos);
-      Z.col(baseColPos) = newBaseCol;
+      //Z.col(i) = cosTheta * Z.col(i) - sinTheta * Z.col(baseColPos);
+      eigen_col(Z,cosTheta * Z.col(i) - sinTheta * Z.col(baseColPos),i);
+      //Z.col(baseColPos) = newBaseCol;
+      eigen_col(Z, newBaseCol, baseColPos);
     }
   }
 
@@ -174,8 +177,10 @@ void DFO_Model::updateInverseKKTMatrix(Eigen::VectorXd yNew, double fvalNew, uns
   // Calculate Hw = H*w
   Eigen::VectorXd Hw = Eigen::VectorXd::Zero(m + n + 1);
 
-  Hw.head(m) = Z * S * (Z.transpose()) * (w.head(m)) + Xi.transpose() * (w.tail(n + 1));
-  Hw.tail(n + 1) = Xi * w.head(m) + Upsilon * w.tail(n + 1);
+  //Hw.head(m) = Z * S * (Z.transpose()) * (w.head(m)) + Xi.transpose() * (w.tail(n + 1));
+  eigen_head(Hw, Z * S * (Z.transpose()) * (w.head(m)) + Xi.transpose() * (w.tail(n + 1)), m);
+  //Hw.tail(n + 1) = Xi * w.head(m) + Upsilon * w.tail(n + 1);
+  eigen_tail(Hw,Xi * w.head(m) + Upsilon * w.tail(n + 1), n+1);
 
   // Calculate the updating parameters
   double alpha = Z.row(t - 1) * S * Z.row(t - 1).transpose();
@@ -204,8 +209,8 @@ void DFO_Model::updateInverseKKTMatrix(Eigen::VectorXd yNew, double fvalNew, uns
 
     S.diagonal()(baseColPos) = sign(sigma);
     Hw(t - 1) -= 1.0;
-    Z.col(baseColPos) =
-        1.0 / (std::sqrt(std::abs(sigma))) * (tau * Z.col(baseColPos) + Z(t - 1, baseColPos) * (-Hw.head(m)));
+    //Z.col(baseColPos) = 1.0 / (std::sqrt(std::abs(sigma))) * (tau * Z.col(baseColPos) + Z(t - 1, baseColPos) * (-Hw.head(m)));
+    eigen_col(Z,1.0 / (std::sqrt(std::abs(sigma))) * (tau * Z.col(baseColPos) + Z(t - 1, baseColPos) * (-Hw.head(m))),baseColPos);
     Hw(t - 1) += 1.0;
 
   }
@@ -221,11 +226,15 @@ void DFO_Model::updateInverseKKTMatrix(Eigen::VectorXd yNew, double fvalNew, uns
       S.diagonal()(baseColNeg) = -sign(sigma);
 
       Hw(t - 1) -= 1.0;
-      Z.col(baseColPos) =
-          1.0 / (std::sqrt(std::abs(zeta))) * (tau * Z.col(baseColPos) + Z(t - 1, baseColPos) * (-Hw.head(m)));
-      Z.col(baseColNeg) = 1.0 / (std::sqrt(std::abs(zeta * sigma)))
+      //Z.col(baseColPos) =
+      //    1.0 / (std::sqrt(std::abs(zeta))) * (tau * Z.col(baseColPos) + Z(t - 1, baseColPos) * (-Hw.head(m)));
+      eigen_col(Z,1.0 / (std::sqrt(std::abs(zeta))) * (tau * Z.col(baseColPos) + Z(t - 1, baseColPos) * (-Hw.head(m))), baseColPos);
+      //Z.col(baseColNeg) = 1.0 / (std::sqrt(std::abs(zeta * sigma)))
+      //    * (-beta * Z(t - 1, baseColPos) * Z(t - 1, baseColNeg) * Z.col(baseColPos) + zeta * Z.col(baseColNeg)
+      //        + tau * Z(t - 1, baseColNeg) * (-Hw.head(m)));
+      eigen_col(Z, 1.0 / (std::sqrt(std::abs(zeta * sigma)))
           * (-beta * Z(t - 1, baseColPos) * Z(t - 1, baseColNeg) * Z.col(baseColPos) + zeta * Z.col(baseColNeg)
-              + tau * Z(t - 1, baseColNeg) * (-Hw.head(m)));
+              + tau * Z(t - 1, baseColNeg) * (-Hw.head(m))), baseColNeg);
       Hw(t - 1) += 1.0;
 
     } else {
@@ -234,11 +243,15 @@ void DFO_Model::updateInverseKKTMatrix(Eigen::VectorXd yNew, double fvalNew, uns
       S.diagonal()(baseColNeg) = -1; //Not really necessary to write this explicitly. Should be negative anyways!
 
       Hw(t - 1) -= 1.0;
-      Z.col(baseColPos) = 1.0 / (std::sqrt(std::abs(zeta * sigma)))
+      //Z.col(baseColPos) = 1.0 / (std::sqrt(std::abs(zeta * sigma)))
+      //    * (zeta * Z.col(baseColPos) + beta * Z(t - 1, baseColPos) * Z(t - 1, baseColNeg) * Z.col(baseColNeg)
+      //        + tau * Z(t - 1, baseColPos) * (-Hw.head(m)));
+      eigen_col(Z, 1.0 / (std::sqrt(std::abs(zeta * sigma)))
           * (zeta * Z.col(baseColPos) + beta * Z(t - 1, baseColPos) * Z(t - 1, baseColNeg) * Z.col(baseColNeg)
-              + tau * Z(t - 1, baseColPos) * (-Hw.head(m)));
-      Z.col(baseColNeg) =
-          1.0 / (std::sqrt(std::abs(zeta))) * (tau * Z.col(baseColNeg) + Z(t - 1, baseColNeg) * (-Hw.head(m)));
+              + tau * Z(t - 1, baseColPos) * (-Hw.head(m))), baseColPos);
+      //Z.col(baseColNeg) =
+      //    1.0 / (std::sqrt(std::abs(zeta))) * (tau * Z.col(baseColNeg) + Z(t - 1, baseColNeg) * (-Hw.head(m)));
+      eigen_col(Z, 1.0 / (std::sqrt(std::abs(zeta))) * (tau * Z.col(baseColNeg) + Z(t - 1, baseColNeg) * (-Hw.head(m))), baseColNeg);
       Hw(t - 1) += 1.0;
     }
 
@@ -287,7 +300,9 @@ DFO_Model::DFO_Model(unsigned int m,
     : subproblem(settings) {
   this->m = m;
   this->n = n;
-  this->y0 = y0;
+  //this->y0 = y0;
+  this->y0 = Eigen::VectorXd::Zero(n);
+  this->y0 << 1,2;
   this->rho = rhoBeg;
   this->lambda = lambda;
 
@@ -318,6 +333,7 @@ DFO_Model::DFO_Model(unsigned int m,
   this->modelInitialized = false;
   this->settings_ = settings;
 
+  subproblem.SetNormType(Subproblem::L2_NORM);
 
 /*
   vector<double> xsol;
@@ -331,16 +347,20 @@ Eigen::MatrixXd DFO_Model::findFirstSetOfInterpolationPoints() {
   int numberOfPointsFound = 0;
   if (m >= 2 * n + 1 && m <= (n + 1) * (n + 2) * 0.5) {
     for (int i = 1; i <= n; ++i) {
-      Y.col(i)[i - 1] += rho;
-      Y.col(i + n)[i - 1] -= rho;
+      //Y.col(i)[i - 1] += rho;
+      Y(i - 1,i) += rho;
+      //Y.col(i + n)[i - 1] -= rho;
+      Y(i - 1, i + n) -= rho;
     }
     numberOfPointsFound = 2 * n;
   } else if (m >= n + 2 && m <= 2 * n) {
     for (int i = 1; i <= n; ++i) {
-      Y.col(i)[i - 1] += rho;
+      //Y.col(i)[i - 1] += rho;
+      Y(i - 1, i) += rho;
     }
     for (int i = 1; i < m - n; ++i) {
-      Y.col(i + n)[i - 1] -= rho;
+      //Y.col(i + n)[i - 1] -= rho;
+      Y(i - 1,i + n) -= rho;
     }
     numberOfPointsFound = m;
     initialInterpolationPointsFound = true;
@@ -389,8 +409,8 @@ Eigen::MatrixXd DFO_Model::findLastSetOfInterpolationPoints() {
       qs[index] = q;
       is[index] = i;
 
-      Y.col(i - 1)[p - 1] += rho * sigmas[p - 1];
-      Y.col(i - 1)[q - 1] += rho * sigmas[q - 1];
+      Y(p - 1, i - 1) += rho * sigmas[p - 1];
+      Y(q - 1, i - 1) += rho * sigmas[q - 1];
 
       index++;
       j++;
@@ -427,7 +447,8 @@ void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, Upd
   updateInverseKKTMatrix(yNew, fvalNew, t);
   updateQuadraticModel(yNew, fvalNew, t);
 
-  Y.col(t - 1) = yNew;
+  //Y.col(t - 1) = yNew;
+  eigen_col(Y, yNew, t-1);
   fvals(t - 1) = fvalNew;
 
   if (updateReason == IMPROVE_POISEDNESS || updateReason == INCLUDE_NEW_POINT){
@@ -469,18 +490,25 @@ void DFO_Model::shiftCenterPointOfQuadraticModel(Eigen::VectorXd s) {
   double squaredNorm = s.squaredNorm();
   for (int k = 1; k <= m; ++k) {
     r = Y.col(k - 1) - 0.5 * s;
-    P.col(k - 1) = (s.transpose() * r) * r + 0.25 * squaredNorm * s;
+    //P.col(k - 1) = (s.transpose() * r) * r + 0.25 * squaredNorm * s;
+    Eigen::VectorXd tmp1 = (s.transpose() * r) * r;
+    Eigen::VectorXd tmp2 = 0.25 * squaredNorm * s;
+    eigen_col(P, tmp1 + tmp2, k-1);
   }
 
   // Pre multiply by inverse(transpose(omega_X))
   for (int i = 1; i <= n; ++i) {
-    Xi.row(0) += 0.5 * s(i - 1) * Xi.row(i);
-    Upsilon.row(0) += 0.5 * s(i - 1) * Upsilon.row(i);
+    // Xi.row(0) += 0.5 * s(i - 1) * Xi.row(i);
+    eigen_row(Xi, Xi.row(0) + 0.5 * s(i - 1) * Xi.row(i), 0 );
+
+    //Upsilon.row(0) += 0.5 * s(i - 1) * Upsilon.row(i);
+    eigen_row(Upsilon, Upsilon.row(0) + 0.5 * s(i - 1) * Upsilon.row(i), 0);
   }
 
   // Post multiply by inverse(omega_X)
   for (int i = 1; i <= n; ++i) {
-    Upsilon.col(0) += 0.5 * s(i - 1) * Upsilon.col(i);
+    //Upsilon.col(0) += 0.5 * s(i - 1) * Upsilon.col(i);
+    eigen_col(Upsilon, Upsilon.col(0) + 0.5 * s(i - 1) * Upsilon.col(i), 0);
   }
 
   Eigen::MatrixXd Omega(m, m);
@@ -492,26 +520,32 @@ void DFO_Model::shiftCenterPointOfQuadraticModel(Eigen::VectorXd s) {
   // Pre multiply by inverse(transpose(omega_A)) and post multiply by inverse(omega_A)
   for (int i = 1; i <= n; ++i) {
     for (int k = 1; k <= m; ++k) {
-      Upsilon.row(i) += P(i - 1, k - 1) * CopyXiT.row(k - 1);
-      Xi.row(i) += P(i - 1, k - 1) * Omega.row(k - 1);
+      //Upsilon.row(i) += P(i - 1, k - 1) * CopyXiT.row(k - 1);
+      eigen_row(Upsilon,Upsilon.row(i) + P(i - 1, k - 1) * CopyXiT.row(k - 1), i);
+      //Xi.row(i) += P(i - 1, k - 1) * Omega.row(k - 1);
+      eigen_row(Xi, Xi.row(i) + P(i - 1, k - 1) * Omega.row(k - 1), i);
     }
   }
 
   for (int k = 1; k <= m; ++k) {
     for (int i = 1; i <= n; ++i) {
-      Upsilon.col(i) += P(i - 1, k - 1) * Xi.col(k - 1);
+      //Upsilon.col(i) += P(i - 1, k - 1) * Xi.col(k - 1);
+      eigen_col(Upsilon, Upsilon.col(i) + P(i - 1, k - 1) * Xi.col(k - 1), i);
     }
   }
 
   // Pre multiply by inverse(transpose(omega_X))
   for (int i = 1; i <= n; ++i) {
-    Xi.row(0) += 0.5 * s(i - 1) * Xi.row(i);
-    Upsilon.row(0) += 0.5 * s(i - 1) * Upsilon.row(i);
+    //Xi.row(0) += 0.5 * s(i - 1) * Xi.row(i);
+    eigen_row(Xi, Xi.row(0) + 0.5 * s(i - 1) * Xi.row(i), 0);
+    //Upsilon.row(0) += 0.5 * s(i - 1) * Upsilon.row(i);
+    eigen_row(Upsilon, Upsilon.row(0) + 0.5 * s(i - 1) * Upsilon.row(i), 0);
   }
 
   // Post multiply by inverse(omega_X)
   for (int i = 1; i <= n; ++i) {
-    Upsilon.col(0) += 0.5 * s(i - 1) * Upsilon.col(i);
+    //Upsilon.col(0) += 0.5 * s(i - 1) * Upsilon.col(i);
+    eigen_col(Upsilon, Upsilon.col(0) + 0.5 * s(i - 1) * Upsilon.col(i),0);
   }
 
   //Update the stored constant
@@ -537,7 +571,8 @@ void DFO_Model::shiftCenterPointOfQuadraticModel(Eigen::VectorXd s) {
   // Update Y because it should be the vectors of displacements of the
   //     interpolation points from the center point.
   for (int i = 1; i <= m; ++i) {
-    Y.col(i - 1) -= s;
+    //Y.col(i - 1) -= s;
+    eigen_col(Y, Y.col(i - 1) - s,i-1);
   }
   bestPoint -= s;
   bestPointAllTime -= s;
@@ -762,13 +797,16 @@ int DFO_Model::findPointToReplaceWithNewOptimum(Eigen::VectorXd yNew) {
   for (int i = 1; i <= m; ++i) {
     w(i - 1) = 0.5 * std::pow((Y.col(i - 1)).transpose() * (yNew), 2);
   }
-  w.tail(n) = yNew;
+  //w.tail(n) = yNew;
+  eigen_tail(w, yNew,n);
   w(m) = 1;
 
   Eigen::VectorXd Hw = Eigen::VectorXd::Zero(m + n + 1);
 
-  Hw.head(m) = Z * S * (Z.transpose()) * (w.head(m)) + Xi.transpose() * (w.tail(n + 1));
-  Hw.tail(n + 1) = Xi * w.head(m) + Upsilon * w.tail(n + 1);
+  //Hw.head(m) = Z * S * (Z.transpose()) * (w.head(m)) + Xi.transpose() * (w.tail(n + 1));
+  eigen_head(Hw, Z * S * (Z.transpose()) * (w.head(m)) + Xi.transpose() * (w.tail(n + 1)), m);
+  //Hw.tail(n + 1) = Xi * w.head(m) + Upsilon * w.tail(n + 1);
+  eigen_tail(Hw, Xi * w.head(m) + Upsilon * w.tail(n + 1), n+1);
 
   int indexToBeReplaced = 1;
   double currentMax = -1;
@@ -842,7 +880,11 @@ void DFO_Model::printSlowShiftCenterPointOfQuadraticModel(Eigen::VectorXd s) {
   double squaredNorm = s.squaredNorm();
   for (int k = 1; k <= m; ++k) {
     r = Y.col(k - 1) - 0.5 * s;
-    P.col(k - 1) = (s.transpose() * r) * r + 0.25 * squaredNorm * s;
+    //P.col(k - 1) = (s.transpose() * r) * r + 0.25 * squaredNorm * s;
+    Eigen::VectorXd tmp1 = (s.transpose() * r) * r;
+    Eigen::VectorXd tmp2 = 0.25 * squaredNorm * s;
+    //Eigen::VectorXd tmp = tmp1 + tmp2;
+    eigen_col(P, tmp1 + tmp2, k-1);
   }
 
   Eigen::MatrixXd Omega(m, m);
@@ -858,7 +900,8 @@ void DFO_Model::printSlowShiftCenterPointOfQuadraticModel(Eigen::VectorXd s) {
   invOmegaXtranspose.setIdentity();
   invOmegaATranspose.setIdentity();
 
-  (invOmegaXtranspose.row(m)).tail(n) = 0.5 * s.transpose();
+  //(invOmegaXtranspose.row(m)).tail(n) = 0.5 * s.transpose();
+  eigen_block(invOmegaXtranspose,0.5 * s.transpose(),m,m+n+1-n);
 
   invOmegaATranspose.bottomLeftCorner(n, m) = P;
 
@@ -881,7 +924,8 @@ void DFO_Model::compareHMatrices() {
 
   X.row(0).setOnes();
   for (int i = 1; i <= m; ++i) {
-    (X.col(i - 1)).tail(n) = Y.col(i - 1);
+    //(X.col(i - 1)).tail(n) = Y.col(i - 1);
+    eigen_block(X,Y.col(i - 1), n+1-n ,i - 1);
   }
 
   W.topLeftCorner(m, m) = A;
@@ -921,7 +965,13 @@ Eigen::VectorXd DFO_Model::FindLocalOptimum() {
   Eigen::VectorXd localOptimum(n);
   vector<double> xsol;
   vector<double> fsol;
-  subproblem.Solve(xsol, fsol, (char *) "Maximize", y0, bestPoint);
+  Eigen::VectorXd a(n);
+  a.setZero();
+  Eigen::VectorXd b(n);
+  b.setZero();
+  std::cout << "bestPOint\n" << bestPoint << "\ny0 \n" << y0 << "\n";
+  std::cout << "a\n" << a << "\nb \n" << b << "\n";
+  subproblem.Solve(xsol, fsol, (char *) "Maximize", a, b);
   for (int i = 0; i < n; i++) {
     localOptimum[i] = xsol[i];
   }
@@ -1018,7 +1068,7 @@ Eigen::VectorXd DFO_Model::GetInterpolationPointsSortedByDistanceFromBestPoint()
 
   Eigen::VectorXd indicesSortedByDescendingNorm(m);
   for (int i = 0; i < m; ++i) {
-    indicesSortedByDescendingNorm[i] = tmp[n, i];
+    indicesSortedByDescendingNorm[i] = tmp[i][n];
   }
   return indicesSortedByDescendingNorm;
 }

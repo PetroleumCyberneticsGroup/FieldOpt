@@ -349,7 +349,7 @@ void Logger::FinalizePrerunSummary() {
   string str = sum.str();
   Utilities::FileHandling::WriteStringToFile(QString::fromStdString(str),
                                              summary_prerun_path_);
-
+/*
   sum_mod_valmap_.clear();
   sum_opt_valmap_.clear();
   sum_rts_valmap_.clear();
@@ -357,7 +357,8 @@ void Logger::FinalizePrerunSummary() {
   sum_opt_statemap_.clear();
   sum_rts_statemap_.clear();
   sum_wellmap_.clear();
-}
+*/
+ }
 
 void Logger::FinalizePostrunSummary() {
   if (!write_logs_ || is_worker_) return;

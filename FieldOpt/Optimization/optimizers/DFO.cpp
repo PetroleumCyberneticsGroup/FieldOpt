@@ -231,7 +231,8 @@ void DFO::iterate() {
   double trust_region_radius_inc = 0;
   double trust_region_radius_max = 600;
 
-  Eigen::VectorXd function_evaluations;
+  Eigen::VectorXd function_evaluations(number_of_interpolation_points_);
+  function_evaluations.setZero();
   double function_evaluation;
 
   // These are the ones that are used the most. Used in all other places than "Step 4 - Model Improvement".
@@ -287,7 +288,9 @@ step1:
 
       Eigen::VectorXd gradient = DFO_model_.GetGradient();
       if (gradient.norm() > epsilon_c){
-        DFO_model_.SetTrustRegionRadius(trust_region_radius_inc);
+        if (last_action_ == TRUST_REGION_RADIUS_UPDATE_STEP){
+          DFO_model_.SetTrustRegionRadius(trust_region_radius_inc);
+        }
         last_action_ = CRITICALITY_STEP_FINISHED;
       }
       else{
