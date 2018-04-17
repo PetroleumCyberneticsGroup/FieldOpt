@@ -41,7 +41,8 @@ DFO::DFO(Settings::Optimizer *settings,
          Model::Properties::VariablePropertyContainer *variables,
          Reservoir::Grid::Grid *grid,
          Logger *logger)
-    : Optimizer(settings, base_case, variables, grid, logger) {
+    : Optimizer(settings, base_case, variables, grid, logger),
+      DFO_model_(settings->parameters().number_of_interpolation_points, settings->parameters().number_of_variables, base_case->GetRealVarVector(), settings->parameters().initial_trust_region_radius, settings->parameters().required_poisedness,settings) {
     // Set parameters and stuff here
   if (settings->parameters().initial_trust_region_radius > 0.0)
     initial_trust_region_radius_ = settings->parameters().initial_trust_region_radius;
@@ -74,12 +75,27 @@ DFO::DFO(Settings::Optimizer *settings,
 
   // Set up the DFO model.
   Eigen::VectorXd initialStartPoint = base_case->GetRealVarVector();
-  DFO_model_ = DFO_Model(number_of_interpolation_points_, number_of_variables_, initialStartPoint, initial_trust_region_radius_, required_poisedness_,settings_);
 
-
-
-
+  /*
+  vector<double> xsol;
+  vector<double> fsol;
   Subproblem mySub(settings);
+  Eigen::VectorXd ttt(2);
+  ttt.setZero();
+  mySub.Solve(xsol, fsol, (char*)"Minimize",ttt,ttt);
+  std::cout << "\n\n\n\n ----------------------------------------------------------------------------\n\n\n\n";
+*/
+
+  //DFO_model_ = DFO_Model(number_of_interpolation_points_, number_of_variables_, initialStartPoint, initial_trust_region_radius_, required_poisedness_,settings_);
+  //Eigen::VectorXd tt(number_of_variables_);
+  //tt = DFO_model_.FindLocalOptimum();
+
+
+
+
+
+
+  //Subproblem mySub(settings);
 /*
   vector<double> xsol;
   vector<double> fsol;
@@ -246,6 +262,18 @@ void DFO::iterate() {
 
   // Only used in the initialization process.
   int number_of_new_interpolation_points = 0;
+  Eigen::VectorXd a1(40);
+  a1.setZero();
+  Eigen::VectorXd b1(40);
+  b1.setZero();
+  Eigen::VectorXd a2(40);
+  a2.setZero();
+  Eigen::VectorXd b2(40);
+  b2.setZero();
+  Eigen::VectorXd a3(100);
+  a3.setZero();
+  Eigen::VectorXd b3(500);
+  b3.setZero();
 
   while(notConverged){
     Eigen::MatrixXd new_points;
@@ -294,6 +322,9 @@ step1:
         last_action_ = CRITICALITY_STEP_FINISHED;
       }
       else{
+        Eigen::VectorXd b5(1000);
+        b5.setZero();
+        std::cout << "new point: \n" << new_point << "index of new point \n" << index_of_new_point << "\n\n";
         DFO_model_.findWorstPointInInterpolationSet(new_point,index_of_new_point); //Check if it is lambda-poised.
         Eigen::VectorXd gradient = DFO_model_.GetGradient();
         if (index_of_new_point != -1 || trust_region_radius_inc > u * gradient.norm() ){
@@ -465,6 +496,7 @@ step1:
       function_evaluation = matyasFunction(new_point + DFO_model_.getCenterPoint());
     }
 
+
     iterations_++;
 
   }/// End of while loop
@@ -476,7 +508,7 @@ step1:
 
 }
 
-
+/*
 QList<Case *> DFO::ConvertPointsToCases(Eigen::MatrixXd points) {
 
   QList<Case *> new_cases = QList<Case *>();
@@ -492,7 +524,7 @@ QList<Case *> DFO::ConvertPointsToCases(Eigen::MatrixXd points) {
   }
   return new_cases;
 }
-
+*/
 
 
 }
