@@ -168,6 +168,7 @@ class DFO_Model {
   static bool cmp(Eigen::VectorXd a,Eigen::VectorXd b);
 
  public:
+  //EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
   enum UpdateReason {
     IMPROVE_POISEDNESS = -1,
