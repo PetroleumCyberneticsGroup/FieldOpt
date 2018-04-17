@@ -36,6 +36,8 @@ Subproblem::Subproblem(Settings::Optimizer *settings) {
   xlowCopy_ = Eigen::VectorXd::Zero(n_); /// OBS should be set by the driver file....
   xuppCopy_ = Eigen::VectorXd::Zero(n_);
   loadSNOPT();
+  normType_ = Subproblem::INFINITY_NORM;
+  normType = Subproblem::INFINITY_NORM;
   setConstraintsAndDimensions(); // This one should set the iGfun/jGvar and so on.
   setAndInitializeSNOPTParameters();
 
@@ -82,9 +84,11 @@ void Subproblem::setAndInitializeSNOPTParameters() {
 
 }
 
-void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimizationType, Eigen::VectorXd y0, Eigen::VectorXd bestPointDisplacement) {
-  y0_ = y0;
+void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimizationType, Eigen::VectorXd centerPoint, Eigen::VectorXd bestPointDisplacement) {
+  y0_ = centerPoint;
+  y0 = y0_;
   bestPointDisplacement_ = bestPointDisplacement;
+  yb_rel = bestPointDisplacement_;
   // Set norm specific constraints
   if (normType_ == INFINITY_NORM){
     for (int i = 0; i < n_; ++i){
@@ -413,7 +417,7 @@ bool Subproblem::loadSNOPT(const string libname) {
 
 //#ifdef NDEBUG
   if (LSL_isSNOPTLoaded()) {
-    printf("\x1b[33mSnopt loaded.\n\x1b[0m");
+    printf("\x1b[33mSnopt is already loaded.\n\x1b[0m");
     return true;
   }
 
@@ -456,9 +460,17 @@ int SNOPTusrFG3_(integer *Status, integer *n, double x[],
   }
 
   int m = *neF - 1;
-
-
-
+/*
+  Eigen::MatrixXd h = Eigen::MatrixXd::Zero(2,2);
+  h << 1, 2, 2, -1;
+  Eigen::VectorXd g(2);
+  g << 1, 0.9;
+  double c = 12;
+  constant = c;
+  hessian = h;
+  gradient = g;
+  //normType = 2;
+*/
   // If the values for the objective and/or the constraints are desired
   if (*needF > 0) {
     /// The objective function
@@ -536,6 +548,14 @@ void Subproblem::setCenterPointOfModel(Eigen::VectorXd cp) {
 }
 void Subproblem::setCurrentBestPointDisplacement(Eigen::VectorXd db) {
   bestPointDisplacement_ = db;
+  yb_rel = bestPointDisplacement_;
+}
+void Subproblem::SetCenterPoint(Eigen::VectorXd cp) {
+  y0_ = cp;
+  y0 = y0_;
+}
+void Subproblem::SetBestPointRelativeToCenterPoint(Eigen::VectorXd bp) {
+
 }
 
 }

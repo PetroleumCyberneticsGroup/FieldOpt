@@ -184,6 +184,10 @@ class Subproblem {
 
  public:
 
+
+ //EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+
   enum NormType {
     INFINITY_NORM = 0,
     L2_NORM = 2,
@@ -202,12 +206,16 @@ class Subproblem {
     normType_ = type;
   }
 
+  void SetCenterPoint(Eigen::VectorXd cp);
+
+  void SetBestPointRelativeToCenterPoint(Eigen::VectorXd bp);
+
 
   ~Subproblem();
 
   SNOPTHandler initSNOPTHandler();
 
-  explicit Subproblem(Settings::Optimizer *settings);
+  Subproblem(Settings::Optimizer *settings);
   Subproblem(){};
 
   void ResetSubproblem();
