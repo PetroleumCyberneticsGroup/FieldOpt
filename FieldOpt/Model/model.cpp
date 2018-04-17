@@ -90,17 +90,43 @@ Model::Model(Settings::Model *settings, Logger *logger) {
                                          ricasedata_,
                                          settings);
 
-  for (int ii=0; ii < 2; ++ii) {
-    // cout << "size ccc" << ccc.size() << endl;
-    cout << "appendPointToPolyLine(ccc[" << ii << "])" << endl;
-    rimintersection_->appendPointToPolyLine(ccc[ii]);
-  }
+//   95 25 -2005
+//   5 55 -2005
+//  cvf::Vec3d p1 = cvf::Vec3d(95, 25, -2005);
+//  cvf::Vec3d p2 = cvf::Vec3d(5, 55, -2005);
+//  rimintersection_->appendPointToPolyLine(p1);
+//  rimintersection_->appendPointToPolyLine(p2);
+
+//  95 35 -2005
+//  35 5 -2005
+//  5 35 -2005
+//  35 95 -2005
+//  95 35 -2005
+
+  cvf::Vec3d p1 = cvf::Vec3d(95, 35, -2005);
+  cvf::Vec3d p2 = cvf::Vec3d(35, 5, -2005);
+  cvf::Vec3d p3 = cvf::Vec3d(5, 35, -2005);
+  cvf::Vec3d p4 = cvf::Vec3d(35, 95, -2005);
+  cvf::Vec3d p5 = cvf::Vec3d(95, 35, -2005);
+  rimintersection_->appendPointToPolyLine(p1);
+  rimintersection_->appendPointToPolyLine(p2);
+  rimintersection_->appendPointToPolyLine(p3);
+  rimintersection_->appendPointToPolyLine(p4);
+  rimintersection_->appendPointToPolyLine(p5);
+
+//  for (int ii=0; ii < 2; ++ii) {
+//    cout << "Polypoint " << ii <<  ": ";
+//    cout << ccc[ii].x() << " " << ccc[ii].y() << " " << ccc[ii].z() << endl;
+//    // cout << "appendPointToPolyLine(ccc[" << ii << "])" << endl;
+//    rimintersection_->appendPointToPolyLine(ccc[ii]);
+//  }
 
   RivIntersectionPartMgr* imgr = rimintersection_->intersectionPartMgr();
 
   RivIntersectionGeometryGenerator* icsec = imgr->getCrossSectionGenerator();
 
   size_t vx_count = icsec->m_cellBorderLineVxes.p()->size();
+
   for (size_t ivx = 0; ivx < vx_count; ivx++) {
     auto vx_x = icsec->m_cellBorderLineVxes.p()->val(ivx).x();
     auto vx_y = icsec->m_cellBorderLineVxes.p()->val(ivx).y();
@@ -110,6 +136,11 @@ Model::Model(Settings::Model *settings, Logger *logger) {
          << "vx_z: " << vx_z << endl;
   }
 
+  print_ri_hck_vec3f("", "", "", cvf::Vec3f::ZERO, true, false);
+  for (size_t ivx = 0; ivx < vx_count; ivx++) {
+    print_ri_hck_vec3f("", "", "",
+                       icsec->m_cellBorderLineVxes.p()->val(ivx));
+  }
 
   // -------------------------------------------------------
   if (settings->verb_vector()[5] > 1) // idx:5 -> mod (Model)
