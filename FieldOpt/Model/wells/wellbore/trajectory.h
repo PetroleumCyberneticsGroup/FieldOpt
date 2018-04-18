@@ -66,11 +66,15 @@ class Trajectory
   // ---------------------------------------------------------
   // Get the well block at index (i,j,k).
   WellBlock *GetWellBlock(int i, int j, int k);
+
   // Get a list containing all well blocks.
   QList<WellBlock *> *GetWellBlocks();
 
   // ---------------------------------------------------------
-  // Update the well blocks, in particular the ones defined by a spline.
+  WellSpline* GetWellSpline() { return well_spline_; };
+
+  // ---------------------------------------------------------
+  // Update well blocks, in particular those defined by a spline.
   void UpdateWellBlocks();
   void UpdateWellBlocks(int rank);
 
@@ -89,10 +93,14 @@ class Trajectory
   PseudoContVert *pseudo_cont_vert_;
 
   // ---------------------------------------------------------
+
+  // ---------------------------------------------------------
   void initializeWellBlocks(Settings::Model::Well well,
                             Properties::VariablePropertyContainer *variable_container);
 
-  void calculateDirectionOfPenetration(); // Calculate direction of penetration for all well blocks
+  // ---------------------------------------------------------
+  // Calculate direction of penetration for all well blocks
+  void calculateDirectionOfPenetration();
 
 };
 

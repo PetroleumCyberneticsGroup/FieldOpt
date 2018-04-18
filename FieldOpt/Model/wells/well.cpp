@@ -25,7 +25,7 @@
 namespace Model {
 namespace Wells {
 
-// ---------------------------------------------------------
+// =========================================================
 Well::Well(Settings::Model settings,
            int well_number,
            Properties::VariablePropertyContainer *variable_container,
@@ -36,6 +36,9 @@ Well::Well(Settings::Model settings,
   well_settings.verb_vector_ = settings.verb_vector();
   if (well_settings.verb_vector_[5] > 1) // idx:5 -> mod (Model)
     std::cout << "[mod]Reading well settings.- " << std::endl;
+
+  // -------------------------------------------------------
+  grid_ = grid;
 
   // -------------------------------------------------------
   name_ = well_settings.name;
@@ -64,22 +67,63 @@ Well::Well(Settings::Model settings,
                                          grid);
 
   // -------------------------------------------------------
+  drilling_sequence_ = well_settings.drilling_sequence;
+  drilling_time_ = well_settings.drilling_time;
+
+  ComputeDrillingTime();
+
+  // -------------------------------------------------------
   heel_.i = trajectory_->GetWellBlocks()->first()->i();
   heel_.j = trajectory_->GetWellBlocks()->first()->j();
   heel_.k = trajectory_->GetWellBlocks()->first()->k();
+
+  toe_.i = trajectory_->GetWellBlocks()->last()->i();
+  toe_.j = trajectory_->GetWellBlocks()->last()->j();
+  toe_.k = trajectory_->GetWellBlocks()->last()->k();
+
 }
 
 // ---------------------------------------------------------
+void Well::ComputeDrillingTime() {
+
+  if (drilling_time_ < 0) {
+
+    double dx, dy, dz;
+
+    // -------------------------------------------------------
+    if (type_ == Settings::Model::WellDefinitionType::WellBlocks) {
+
+      Eigen::Vector3d heel_c =
+          grid_->GetCell(toe_.i, toe_.j, toe_.k).center();
+
+      Eigen::Vector3d toe_c =
+          grid_->GetCell(toe_.i, toe_.j, toe_.k).center();
+
+      dx = heel_c(0)
+
+      // -----------------------------------------------------
+    } else if (type_== Settings::Model::WellDefinitionType::WellSpline) {
+
+      dx = trajectory_->GetWellSpline()->GetSplineDx();
+      dy = trajectory_->GetWellSpline()->GetSplineDy();
+      dz = trajectory_->GetWellSpline()->GetSplineDz();
+
+    }
+
+  }
+}
+
+// =========================================================
 bool Well::IsProducer() {
   return type_ == ::Settings::Model::WellType::Producer;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 bool Well::IsInjector() {
   return type_ == ::Settings::Model::WellType::Injector;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void Well::Update() {
   trajectory_->UpdateWellBlocks();
   heel_.i = trajectory_->GetWellBlocks()->first()->i();
@@ -87,7 +131,7 @@ void Well::Update() {
   heel_.k = trajectory_->GetWellBlocks()->first()->k();
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void Well::Update(int rank) {
   trajectory_->UpdateWellBlocks(rank);
   heel_.i = trajectory_->GetWellBlocks()->first()->i();

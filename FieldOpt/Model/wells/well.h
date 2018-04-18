@@ -58,9 +58,22 @@ class Well
        ::Model::Properties::VariablePropertyContainer *variable_container,
        ::Reservoir::Grid::Grid *grid);
 
-  // -------------------------------------------------------
-  struct Heel { int i; int j; int k; };
+  Reservoir::Grid::Grid *grid_;
 
+  // -------------------------------------------------------
+  struct Heel {
+    int i;
+    int j;
+    int k;
+  };
+
+  struct Toe {
+    int i;
+    int j;
+    int k;
+  };
+
+  // -------------------------------------------------------
   enum PreferredPhase { Oil, Gas, Water, Liquid };
 
   // -------------------------------------------------------
@@ -77,6 +90,8 @@ class Well
   // -------------------------------------------------------
   Wellbore::Trajectory *trajectory() { return trajectory_; }
   QList<Control *> *controls() { return controls_; }
+
+  // -------------------------------------------------------
   int heel_i() const { return heel_.i; }
   int heel_j() const { return heel_.j; }
   int heel_k() const { return heel_.k; }
@@ -86,6 +101,12 @@ class Well
 
   // -------------------------------------------------------
   int GetTimeSpentInWIC() const { return trajectory_->GetTimeSpentInWic(); }
+
+  // -------------------------------------------------------
+  void ComputeDrillingTime();
+
+  // -------------------------------------------------------
+  double GetDrillingTime() { return drilling_time_;};
 
  private:
 
@@ -100,7 +121,12 @@ class Well
   Wellbore::Trajectory *trajectory_;
 
   // -------------------------------------------------------
+  double drilling_time_;
+  std::vector<int> drilling_sequence_;
+
+  // -------------------------------------------------------
   Heel heel_;
+  Toe toe_;
   QList<Control *> *controls_;
 };
 

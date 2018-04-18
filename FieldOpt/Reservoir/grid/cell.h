@@ -19,25 +19,32 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+// ---------------------------------------------------------
 #ifndef CELL_H
 #define CELL_H
 
+// ---------------------------------------------------------
 #include <Eigen/Dense>
 #include "ijkcoordinate.h"
 #include <vector>
 
+// ---------------------------------------------------------
 namespace Reservoir {
 namespace Grid {
 
+// ---------------------------------------------------------
 using namespace std;
 
+// =========================================================
 /*!
- * \brief The Cell class describes a cell in a grid, including it's
- * geometry and static properties like porosity and permeability.
+ * \brief The Cell class describes a cell in a grid,
+ * including it's geometry and static properties like
+ * porosity and permeability.
  */
 class Cell
 {
  public:
+  // ---------------------------------------------------------
   Cell(){};
   Cell(int ncells);
   Cell(int global_index,
@@ -55,6 +62,7 @@ class Cell
        int k_fracture_index
   );
 
+  // ---------------------------------------------------------
   /*!
    * \brief Set cell properties at a later stage
    */
@@ -65,12 +73,14 @@ class Cell
                      vector<double> permz);
 
 
+  // ---------------------------------------------------------
   /*!
    * \brief global_index Gets the cells global index in its parent grid.
    */
   int global_index() const { return global_index_; }
   void set_global_index(int gidx) { global_index_ = gidx; };
 
+  // ---------------------------------------------------------
   /*!
    * \brief ijk_index Gets the cells (i, j, k) index in its parent grid.
    * The k index is the index in the matrix grid in fact
@@ -81,35 +91,41 @@ class Cell
   IJKCoordinate ijk_index() const { return ijk_index_; }
   void set_ijk_index(IJKCoordinate ijk) { ijk_index_ = ijk; }
 
+  // ---------------------------------------------------------
   /*!
    * \brief volume Gets the cells volume.
    */
   double volume() const { return volume_; }
 
+  // ---------------------------------------------------------
   /*!
    * \brief porosity Gets the cell's porosity vector
    * One value for each grid in which it is active.
    */
   vector<double> porosity() const { return porosity_; }
 
+  // ---------------------------------------------------------
   /*!
    * \brief porosity Gets the cell's x-permeability vector.
    * One value for each grid in which it is active.
    */
   vector<double> permx() const { return permx_; }
 
+  // ---------------------------------------------------------
   /*!
    * \brief porosity Gets the cell's y-permeability vector.
    * One value for each grid in which it is active.
    */
   vector<double> permy() const { return permy_; }
 
+  // ---------------------------------------------------------
   /*!
    * \brief porosity Gets the cell's z-permeability vector.
    * One value for each grid in which it is active.
    */
   vector<double> permz() const { return permz_; }
 
+  // ---------------------------------------------------------
   /*!
    * @brief Check whether or not a cell is active. Note that before
    * SetProperties is called, all cells are assumed to be active.
@@ -117,6 +133,7 @@ class Cell
    */
   bool is_active() const { return is_active_matrix_ || is_active_fracture_; }
 
+  // ---------------------------------------------------------
   /*!
    * @brief Check whether or not a cell is active. Note that before
    * SetProperties is called, all cells are assumed to be active.
@@ -124,6 +141,7 @@ class Cell
    */
   bool is_active_matrix() const { return is_active_matrix_; }
 
+  // ---------------------------------------------------------
   /*!
    * @brief Check whether or not a cell is active in the fracture grid.
    * Note that before SetProperties is called, all cells are assumed to be active.
@@ -131,6 +149,7 @@ class Cell
    */
   bool is_active_fracture() const { return is_active_fracture_; }
 
+  // ---------------------------------------------------------
   /*!
    * @brief The k index of the corresponding cell for this cell in the fracture grid
    * if this cell is active in the fracture grid as well.
@@ -138,6 +157,7 @@ class Cell
    */
   int k_fracture_index() const { return k_fracture_index_; }
 
+  // ---------------------------------------------------------
   /*!
    * \brief center Gets the (x, y, z) position of the cells center.
    * \todo Find how these are computed by ERT
@@ -145,6 +165,7 @@ class Cell
   Eigen::Vector3d center() const { return center_; }
   Eigen::Vector3d dxdydz() const { return dxdydz_; }
 
+  // ---------------------------------------------------------
   /*!
    * \brief corners Gets the (x, y, z) coordinates of each of the
    * cell's 8 corners.
@@ -160,6 +181,7 @@ class Cell
    */
   vector<Eigen::Vector3d> corners() const { return corners_; }
 
+  // ---------------------------------------------------------
   /*!
    * \brief Equals Check if the global indices of the two cells being
    * compared are equal.
@@ -167,6 +189,7 @@ class Cell
   bool Equals(const Cell *other) const;
   bool Equals(const Cell &other) const;
 
+  // ---------------------------------------------------------
   /*!
    * \brief Check whether a given point is inside or on the boundary
    * of a cell. This function has similar logic as the function
@@ -221,6 +244,7 @@ class Cell
    */
   bool EnvelopsPoint(Eigen::Vector3d point);
 
+  // ---------------------------------------------------------
   /*!
    * \brief Face Struc that contains coordinate information about
    * a single face, i.e., its corners, and normal vector. Also, it
@@ -251,11 +275,12 @@ class Cell
      * \todo Discuss what the magnitude of the slack should be
      */
     bool point_on_same_side(const Eigen::Vector3d& point,
-                            const double slack)
-    {
+                            const double slack) {
+
       return (point - corners[0]).dot(normal_vector) >= 0.0 - slack;
     }
 
+    // -------------------------------------------------------
     /*!
      * \brief Find the point of intersection between a line and this plane.
      *
@@ -264,8 +289,8 @@ class Cell
      * \return The point of intersection.
      */
     Eigen::Vector3d intersection_with_line(const Eigen::Vector3d& p0,
-                                           const Eigen::Vector3d& p1)
-    {
+                                           const Eigen::Vector3d& p1) {
+
       Eigen::Vector3d line_vector = (p1 - p0).normalized();
       auto w = p0 - corners[0];
       auto s = normal_vector.dot(-w) / normal_vector.dot(line_vector);
@@ -273,6 +298,7 @@ class Cell
     }
   };
 
+  // ---------------------------------------------------------
   /*!
    * \brief Vector containing the six faces of the cell
    *
@@ -283,10 +309,13 @@ class Cell
 
 
  private:
+  // ---------------------------------------------------------
   int global_index_;
   IJKCoordinate ijk_index_;
+
   bool is_active_matrix_; //!< Indicates whether or not the cell is active in the matrix grid.
   bool is_active_fracture_; //!< Indicates whether or not the cell is active in the fracture grid.
+
   int k_fracture_index_;
   double volume_;
   Eigen::Vector3d center_;
@@ -298,6 +327,7 @@ class Cell
   vector<double> permz_;
   vector<Face> faces_;
 
+  // ---------------------------------------------------------
   /*!
    * \brief Populates the faces_ field.
    *
@@ -311,6 +341,7 @@ class Cell
   static vector<array<array<int,4>, 6>> faces_indices_permutation;
   static vector<array<array<int,4>, 6>> MakeFacesPerturbation();
 
+  // ---------------------------------------------------------
   void initializeFaces(int faces_permutation_index);
 };
 

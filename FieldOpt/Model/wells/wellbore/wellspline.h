@@ -56,6 +56,11 @@ class WellSpline
   int GetTimeSpentInWIC() const
   { return time_cwb_wic_pcg_; }
 
+  // -------------------------------------------------------
+  double GetSplineDx() { return toe_x_->value() - heel_x_->value(); };
+  double GetSplineDy() { return toe_y_->value() - heel_y_->value(); };
+  double GetSplineDz() { return toe_z_->value() - heel_z_->value(); };
+
  private:
   // -------------------------------------------------------
   Reservoir::Grid::Grid *grid_;

@@ -49,7 +49,7 @@ namespace Wells {
 namespace Wellbore {
 using namespace Reservoir::WellIndexCalculation;
 
-// -----------------------------------------------------------------
+// =================================================================
 WellSpline::WellSpline(Settings::Model::Well well_settings,
                        Properties::VariablePropertyContainer *variable_container,
                        Reservoir::Grid::Grid *grid) {
@@ -90,7 +90,8 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
   }
 }
 
-// -----------------------------------------------------------------
+
+// =================================================================
 QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
 
   // ---------------------------------------------------------------
@@ -168,17 +169,21 @@ QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
   return blocks;
 }
 
-// -----------------------------------------------------------------
+
+// =========================================================
 WellBlock *WellSpline::getWellBlock(IntersectedCell block_data) {
 
+  // ---------------------------------------------------------------
   auto wb = new WellBlock(block_data.ijk_index().i()+1,
                           block_data.ijk_index().j()+1,
                           block_data.ijk_index().k()+1);
 
+  // ---------------------------------------------------------------
   auto comp = new Completions::Perforation();
   comp->setTransmissibility_factor(block_data.cell_well_index_matrix());
   wb->AddCompletion(comp);
 
+  // ---------------------------------------------------------------
   return wb;
 }
 
