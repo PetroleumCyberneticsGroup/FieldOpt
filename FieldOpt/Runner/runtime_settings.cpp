@@ -16,19 +16,26 @@
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
+
+// -------------------------------------------------------------
 #include "runtime_settings.h"
 #include <boost/lexical_cast.hpp>
 #include <QtCore/QUuid>
 
+// -------------------------------------------------------------
 using std::cout;
 using std::endl;
 
+// -------------------------------------------------------------
 namespace Runner {
 
-RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
-{
+// ===============================================================
+RuntimeSettings::RuntimeSettings(int argc, const char *argv[]) {
+
+  // -------------------------------------------------------------
   auto vm = createVariablesMap(argc, argv);
 
+  // -------------------------------------------------------------
   if (vm.count("input-file")) {
     driver_file_ = QString::fromStdString(vm["input-file"].as<std::string>());
     if (!Utilities::FileHandling::FileExists(driver_file_))
@@ -36,6 +43,7 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
                                    + driver_file_.toStdString());
   } else throw std::runtime_error("An input file must be specified.");
 
+  // -------------------------------------------------------------
   if (vm.count("output-dir")) {
     output_dir_ = Utilities::FileHandling::GetAbsoluteFilePath(
         QString::fromStdString(vm["output-dir"].as<std::string>()));
@@ -44,9 +52,11 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
                                    + output_dir_.toStdString());
   } else throw std::runtime_error("An output directory must be specified.");
 
+  // -------------------------------------------------------------
   if (vm.count("verbose")) verbosity_level_ = vm["verbose"].as<int>();
   else verbosity_level_ = 0;
 
+  // -------------------------------------------------------------
   if (vm.count("verbosity-vector")) {
     verb_vector_str_ = vm["verbosity-vector"].as<std::string>();
     for (int i=0; i < verb_vector_str_.length(); i++ ) {
@@ -55,23 +65,28 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
   }
   else verb_vector_ = std::vector<int>(8,1);
 
+  // -------------------------------------------------------------
   overwrite_existing_ = vm.count("force") != 0;
   if (!overwrite_existing_ && !Utilities::FileHandling::DirectoryIsEmpty(output_dir_))
     throw std::runtime_error("Output directory is not empty. Use the --force flag to "
                                  "overwrite existing content in: " + output_dir_.toStdString());
 
+  // -------------------------------------------------------------
   if (vm.count("max-parallel-simulations")) {
     max_parallel_sims_ = vm["max-parallel-simulations"].as<int>();
   } else max_parallel_sims_ = 0;
 
+  // -------------------------------------------------------------
   if (vm.count("threads-per-simulation")) {
     threads_per_sim_ = vm["threads-per-simulation"].as<int>();
   } else threads_per_sim_ = 1;
 
+  // -------------------------------------------------------------
   if (vm.count("simulation-timeout")) {
     simulation_timeout_ = vm["simulation-timeout"].as<int>();
   } else simulation_timeout_ = 0;
 
+  // -------------------------------------------------------------
   if (vm.count("runner-type")) {
     QString runner_str = QString::fromStdString(vm["runner-type"].as<std::string>());
     if (QString::compare(runner_str, "serial") == 0)
@@ -82,6 +97,7 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
       runner_type_ = RunnerType::MPISYNC;
   } else runner_type_ = RunnerType::SERIAL;
 
+  // -------------------------------------------------------------
   if (vm.count("sim-drv-path")) {
     QString sim_drv_path = QString::fromStdString(vm["sim-drv-path"].as<std::string>());
     if (!Utilities::FileHandling::FileExists(sim_drv_path))
@@ -91,6 +107,7 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
     }
   } else simulator_driver_path_ = "";
 
+  // -------------------------------------------------------------
   if (vm.count("sim-exec-path")) {
     QString sim_exec_path = QString::fromStdString(vm["sim-exec-path"].as<std::string>());
     if (!Utilities::FileHandling::FileExists(sim_exec_path))
@@ -100,6 +117,7 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
     }
   } else simulator_exec_script_path_ = "";
 
+  // -------------------------------------------------------------
   if (vm.count("fieldopt-build-dir")) {
     QString fieldopt_build_dir = QString::fromStdString(vm["fieldopt-build-dir"].as<std::string>());
     if (!Utilities::FileHandling::DirectoryExists(fieldopt_build_dir))
@@ -107,6 +125,7 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
     else fieldopt_build_dir_ = fieldopt_build_dir;
   } else fieldopt_build_dir_ = "";
 
+  // -------------------------------------------------------------
   if (vm.count("grid-path")) {
     QString grid_path = QString::fromStdString(vm["grid-path"].as<std::string>());
     if (!Utilities::FileHandling::FileExists(grid_path))
@@ -114,6 +133,7 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
     else grid_file_path_ = grid_path;
   } else grid_file_path_ = "";
 
+  // -------------------------------------------------------------
   if (vm.count("well-prod-points")) {
     if (vm["well-prod-points"].as<std::vector<double>>().size() != 6)
       throw std::runtime_error("Exactly six coordinates must be provided for the production well position.");
@@ -121,6 +141,8 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
     prod_coords_.first = QVector<double>() << coords[0] << coords[1] << coords[2];
     prod_coords_.second = QVector<double>() << coords[3] << coords[4] << coords[5];
   }
+
+  // -------------------------------------------------------------
   if (vm.count("well-inj-points")) {
     if (vm["well-inj-points"].as<std::vector<double>>().size() != 6)
       throw std::runtime_error("Exactly six coordinates must be provided for the injection well position.");
@@ -129,6 +151,7 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
     inje_coords_.second = QVector<double>() << coords[3] << coords[4] << coords[5];
   }
 
+  // -------------------------------------------------------------
   // idx:0 -> run (Runner)
   if (verbosity_level_ > 0 ||
       find (verb_vector_.begin(), verb_vector_.end(), 1) != verb_vector_.end() ||
@@ -170,13 +193,14 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
   }
 }
 
+// ===============================================================
 QString RuntimeSettings::wellSplineCoordinateString(const QPair<QVector<double>, QVector<double>> spline) const {
   return QString("(%1, %2, %3) - (%4, %5, %6)")
       .arg(spline.first[0]).arg(spline.first[1]).arg(spline.first[2])
       .arg(spline.second[0]).arg(spline.second[1]).arg(spline.second[2]);
 }
 
-
+// ===============================================================
 QString RuntimeSettings::runnerTypeString() const {
   if (runner_type_ == RunnerType::SERIAL)
     return "serial";
@@ -187,6 +211,7 @@ QString RuntimeSettings::runnerTypeString() const {
   else return "NOT SET";
 }
 
+// ===============================================================
 po::variables_map RuntimeSettings::createVariablesMap(int argc, const char **argv) {
   int max_par_sims;
   int thr_per_sim;
@@ -247,10 +272,12 @@ po::variables_map RuntimeSettings::createVariablesMap(int argc, const char **arg
   return vm;
 }
 
+// ===============================================================
 Loggable::LogTarget RuntimeSettings::GetLogTarget() {
   return Loggable::LogTarget::LOG_SUMMARY;
 }
 
+// ===============================================================
 map<string, string> RuntimeSettings::GetState() {
   map<string, string> statemap;
   statemap["Verbosity"] = boost::lexical_cast<string>(verbosity_level_);
@@ -276,10 +303,12 @@ map<string, string> RuntimeSettings::GetState() {
   return statemap;
 }
 
+// ===============================================================
 QUuid RuntimeSettings::GetId() {
   return QUuid(); // Null UUID
 }
 
+// ===============================================================
 map<string, vector<double>> RuntimeSettings::GetValues() {
   map<string, vector<double>> valmap;
   return valmap;

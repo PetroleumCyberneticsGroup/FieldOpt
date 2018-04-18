@@ -1,27 +1,32 @@
-/******************************************************************************
+/****************************************************************
  *
- * model.cpp
+ * model.h
  *
  * Created: 28.09.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
  *
- * Copyright (C) 2015-2015 Einar J.M. Baumann <einar.baumann@ntnu.no>
+ * Copyright (C) 2015-2015
+ * Einar J.M. Baumann <einar.baumann@ntnu.no>
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or (at your option) any later
+ * version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * PURPOSE.  See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
- *****************************************************************************/
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA  02110-1301 USA
+ *
+ ****************************************************************/
 
 // ---------------------------------------------------------------
 #include <iostream>
@@ -200,115 +205,231 @@ Model::Well Model::readSingleWell(QJsonObject json_well) {
     // -------------------------------------------------------------
     // Well definition type: WellSpline
   } else if (QString::compare(definition_type, "WellSpline") == 0) {
+
     well.definition_type = WellDefinitionType::WellSpline;
     QJsonObject json_points = json_well["SplinePoints"].toObject();
-    if (!json_points.contains("Heel") || !json_points.contains("Toe"))
-      throw UnableToParseWellsModelSectionException("Both Heel and Toe must be defined for spline-type wells.");
 
+    // -------------------------------------------------------------
+    if (!json_points.contains("Heel") || !json_points.contains("Toe")){
+      throw UnableToParseWellsModelSectionException(
+          "Both Heel and Toe must be defined for spline-type wells.");
+    }
+
+    // -------------------------------------------------------------
     QJsonObject json_heel = json_points["Heel"].toObject();
     QJsonObject json_toe = json_points["Toe"].toObject();
+
+    // -------------------------------------------------------------
     well.spline_heel.x = json_heel["x"].toDouble();
     well.spline_heel.y = json_heel["y"].toDouble();
     well.spline_heel.z = json_heel["z"].toDouble();
+
+    // -------------------------------------------------------------
     well.spline_toe.x = json_toe["x"].toDouble();
     well.spline_toe.y = json_toe["y"].toDouble();
     well.spline_toe.z = json_toe["z"].toDouble();
-    if (json_heel.contains("IsVariable") && json_heel["IsVariable"].toBool())
+
+    // -------------------------------------------------------------
+    if (json_heel.contains("IsVariable")
+        && json_heel["IsVariable"].toBool()) {
       well.spline_heel.is_variable = true;
-    else well.spline_heel.is_variable = false;
-    if (json_toe.contains("IsVariable") && json_toe["IsVariable"].toBool())
+
+    } else well.spline_heel.is_variable = false;
+
+    // -------------------------------------------------------------
+    if (json_toe.contains("IsVariable")
+        && json_toe["IsVariable"].toBool()) {
       well.spline_toe.is_variable = true;
-    else well.spline_toe.is_variable = false;
+
+    } else well.spline_toe.is_variable = false;
+
+    // -------------------------------------------------------------
     well.spline_heel.name = "SplinePoint#" + well.name + "#heel";
     well.spline_toe.name = "SplinePoint#" + well.name + "#toe";
-  }
-  else if (QString::compare(definition_type, "PseudoContVertical2D") == 0) {
+
+    // -------------------------------------------------------------
+  } else if (QString::compare(definition_type,
+                              "PseudoContVertical2D") == 0) {
+
+    // -------------------------------------------------------------
     QJsonObject json_position = json_well["Position"].toObject();
     well.definition_type = WellDefinitionType::PseudoContVertical2D;
     well.pseudo_cont_position.i = json_position["i"].toInt();
     well.pseudo_cont_position.j = json_position["j"].toInt();
+
+    // -------------------------------------------------------------
     if (json_position.contains("IsVariable") && json_position["IsVariable"].toBool() == true) {
       well.pseudo_cont_position.is_variable = true;
     }
     else well.spline_heel.is_variable = false;
-  }
-  else throw UnableToParseWellsModelSectionException("Well definition type " + definition_type.toStdString() + " not recognized for well " + well.name.toStdString());
 
+  } else {
+    // -------------------------------------------------------------
+    throw UnableToParseWellsModelSectionException(
+        "Well definition type " + definition_type.toStdString()
+            + " not recognized for well " + well.name.toStdString());
+  }
+
+  // ---------------------------------------------------------------
   // Wellbore radius
-  if (!json_well.contains("WellboreRadius"))
-    throw UnableToParseWellsModelSectionException("The wellbore radius must be defined for all wells.");
+  if (!json_well.contains("WellboreRadius")) {
+    throw UnableToParseWellsModelSectionException(
+        "The wellbore radius must be defined for all wells.");
+  }
   well.wellbore_radius = json_well["WellboreRadius"].toDouble();
 
-  // Direction of penetration
-  if (json_well.contains("Direction")) { // Direction must be specified for horizontal wells
-    if (well.definition_type == WellDefinitionType::WellSpline)
-      throw std::runtime_error("Direction should not be specified for spline-defined wells");
-    if (QString::compare("X", json_well["Direction"].toString()) == 0) well.direction = Direction::X;
-    if (QString::compare("Y", json_well["Direction"].toString()) == 0) well.direction = Direction::Y;
-    if (QString::compare("Z", json_well["Direction"].toString()) == 0) well.direction = Direction::Z;
+  // ---------------------------------------------------------------
+  // Drilling time
+  if (json_well.contains("DrillingTime")) {
+    well.drilling_time = json_well["DrillingTime"].toDouble();
   }
 
+  // ---------------------------------------------------------------
+  // Drilling sequence
+  well.drilling_sequence = std::vector<int>(2,-1);
+  if (json_well.contains("DrillingSequence")) {
+    for (int i = 0; i < json_well["DrillingSequence"].toArray().size(); ++i) {
+      well.drilling_sequence
+          .push_back(json_well["ControlTimes"].toArray().at(i).toInt());
+    }
+  }
+
+  // ---------------------------------------------------------------
+  // Direction of penetration
+  // Direction must be specified for horizontal wells
+  if (json_well.contains("Direction")) {
+
+    // -------------------------------------------------------------
+    if (well.definition_type == WellDefinitionType::WellSpline) {
+      throw std::runtime_error(
+          "Direction should not be specified for spline-defined wells");
+    }
+
+    // -------------------------------------------------------------
+    if (QString::compare("X", json_well["Direction"].toString()) == 0) {
+      well.direction = Direction::X;
+    }
+
+    // -------------------------------------------------------------
+    if (QString::compare("Y", json_well["Direction"].toString()) == 0) {
+      well.direction = Direction::Y;
+    }
+
+    // -------------------------------------------------------------
+    if (QString::compare("Z", json_well["Direction"].toString()) == 0) {
+      well.direction = Direction::Z;
+    }
+  }
+
+  // ---------------------------------------------------------------
   // Controls
   QJsonArray json_controls = json_well["Controls"].toArray();
   well.controls = QList<Well::ControlEntry>();
+
+  // ---------------------------------------------------------------
   for (int i = 0; i < json_controls.size(); ++i) {
     Well::ControlEntry control;
 
-    if (!controlTimeIsDeclared(json_controls.at(i).toObject()["TimeStep"].toInt()))
-      throw UnableToParseWellsModelSectionException("All time steps must be declared in the ControlTimes array. Inconsistency detected in Controls declaration.");
+    // -------------------------------------------------------------
+    if (!controlTimeIsDeclared(
+        json_controls.at(i).toObject()["TimeStep"].toInt())) {
+
+      throw UnableToParseWellsModelSectionException(
+          "All time steps must be declared in the ControlTimes array. "
+              "Inconsistency detected in Controls declaration.");
+    }
     else control.time_step = json_controls.at(i).toObject()["TimeStep"].toInt();
 
+    // -------------------------------------------------------------
     // State (Open or shut)
-    if (QString::compare("Shut", json_controls.at(i).toObject()["State"].toString()) == 0)
+    if (QString::compare(
+        "Shut", json_controls.at(i).toObject()["State"].toString()) == 0){
       control.state = WellState::WellShut;
-    else
-      control.state = WellState::WellOpen;
 
+    } else control.state = WellState::WellOpen;
 
+    // -------------------------------------------------------------
     // Control mode
-    if (QString::compare("BHP", json_controls.at(i).toObject()["Mode"].toString()) == 0) {
+    if (QString::compare(
+        "BHP", json_controls.at(i).toObject()["Mode"].toString()) == 0) {
+
+      // -----------------------------------------------------------
       control.control_mode = ControlMode::BHPControl;
       control.bhp = json_controls.at(i).toObject()["BHP"].toDouble();
       control.name = "BHP#" + well.name + "#" + QString::number(control.time_step);
-    }
-    else if (QString::compare("Rate", json_controls.at(i).toObject()["Mode"].toString()) == 0) {
+
+      // -----------------------------------------------------------
+    } else if (QString::compare(
+        "Rate", json_controls.at(i).toObject()["Mode"].toString()) == 0) {
+
+      // -----------------------------------------------------------
       control.control_mode = ControlMode::RateControl;
       control.rate = json_controls.at(i).toObject()["Rate"].toDouble();
       control.name = "Rate#" + well.name + "#" + QString::number(control.time_step);
-    }
-    else throw UnableToParseWellsModelSectionException("Well control type " + json_controls.at(i).toObject()["Mode"].toString().toStdString() + " not recognized for well " + well.name.toStdString());
 
+    } else {
+      throw UnableToParseWellsModelSectionException(
+          "Well control type " +
+              json_controls.at(i).toObject()["Mode"].toString().toStdString()
+              + " not recognized for well " + well.name.toStdString());
+    }
+
+    // -------------------------------------------------------------
     // Injection type
     if (well.type == WellType::Injector) {
-      if (!json_controls.at(i).toObject().contains("Type"))
-        throw UnableToParseWellsModelSectionException("Type (water/gas) must be specified for injector wells.");
-      if (QString::compare("Water", json_controls.at(i).toObject()["Type"].toString()) == 0)
+
+      // -----------------------------------------------------------
+      if (!json_controls.at(i).toObject().contains("Type")) {
+        throw UnableToParseWellsModelSectionException(
+            "Type (water/gas) must be specified for injector wells.");
+      }
+
+      // -----------------------------------------------------------
+      if (QString::compare(
+          "Water", json_controls.at(i).toObject()["Type"].toString()) == 0) {
         control.injection_type = InjectionType::WaterInjection;
-      else if (QString::compare("Gas", json_controls.at(i).toObject()["Type"].toString()) == 0)
+
+      } else if (QString::compare(
+          "Gas", json_controls.at(i).toObject()["Type"].toString()) == 0) {
         control.injection_type = InjectionType::GasInjection;
+      }
     }
-    if (json_controls[i].toObject()["IsVariable"].toBool())
+
+    // -------------------------------------------------------------
+    if (json_controls[i].toObject()["IsVariable"].toBool()) {
       control.is_variable = true;
-    else
+    } else {
       control.is_variable = false;
+    }
+
+    // -------------------------------------------------------------
     well.controls.append(control);
   }
 
+  // ---------------------------------------------------------------
   // Preferred Phase
-  if (QString::compare("Oil", json_well["PreferredPhase"].toString()) == 0)
+  if (QString::compare(
+      "Oil", json_well["PreferredPhase"].toString()) == 0) {
     well.preferred_phase = PreferredPhase::Oil;
-  else if (QString::compare("Water", json_well["PreferredPhase"].toString()) == 0)
-    well.preferred_phase = PreferredPhase::Water;
-  else if (QString::compare("Gas", json_well["PreferredPhase"].toString()) == 0)
-    well.preferred_phase = PreferredPhase::Gas;
-  else if (QString::compare("Liquid", json_well["PreferredPhase"].toString()) == 0)
-    well.preferred_phase = PreferredPhase::Liquid;
 
+  } else if (QString::compare(
+      "Water", json_well["PreferredPhase"].toString()) == 0) {
+    well.preferred_phase = PreferredPhase::Water;
+
+  } else if (QString::compare(
+      "Gas", json_well["PreferredPhase"].toString()) == 0) {
+    well.preferred_phase = PreferredPhase::Gas;
+
+  } else if (QString::compare(
+      "Liquid", json_well["PreferredPhase"].toString()) == 0) {
+    well.preferred_phase = PreferredPhase::Liquid;
+  }
+
+  // ---------------------------------------------------------------
   return well;
 }
 
-bool Model::controlTimeIsDeclared(int time) const
-{
+bool Model::controlTimeIsDeclared(int time) const {
   return control_times_.contains(time);
 }
 
