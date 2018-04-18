@@ -54,11 +54,13 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
                        Properties::VariablePropertyContainer *variable_container,
                        Reservoir::Grid::Grid *grid) {
 
+  // ---------------------------------------------------------------
   grid_ = grid;
   well_settings_ = well_settings;
   if (well_settings_.verb_vector_[5] > 1) // idx:5 -> mod (Model)
     std::cout << "[mod]Define well spline.----- " << std::endl;
 
+  // ---------------------------------------------------------------
   heel_x_ = new Model::Properties::ContinousProperty(well_settings.spline_heel.x);
   heel_y_ = new Model::Properties::ContinousProperty(well_settings.spline_heel.y);
   heel_z_ = new Model::Properties::ContinousProperty(well_settings.spline_heel.z);
@@ -67,6 +69,7 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
   toe_z_ = new Model::Properties::ContinousProperty(well_settings.spline_toe.z);
   time_cwb_wic_pcg_ = 0;
 
+  // ---------------------------------------------------------------
   if (well_settings.spline_heel.is_variable) {
     heel_x_->setName(well_settings.spline_heel.name + "#x");
     heel_y_->setName(well_settings.spline_heel.name + "#y");
@@ -75,6 +78,8 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
     variable_container->AddVariable(heel_y_);
     variable_container->AddVariable(heel_z_);
   }
+
+  // ---------------------------------------------------------------
   if (well_settings.spline_toe.is_variable) {
     toe_x_->setName(well_settings.spline_toe.name + "#x");
     toe_y_->setName(well_settings.spline_toe.name + "#y");
@@ -88,12 +93,15 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
 // -----------------------------------------------------------------
 QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
 
+  // ---------------------------------------------------------------
   if (well_settings_.verb_vector_[5] > 1) // idx:5 -> mod (Model)
-    std::cout << "[mod]Get well blocks.-------- " << std::endl;  
+    std::cout << "[mod]Get well blocks.-------- " << std::endl;
 
+  // ---------------------------------------------------------------
   int lvl = well_settings_.verb_vector_[5];
   print_dbg_msg_wellspline(__func__, "gwb", 0.0, lvl, 1);
-  
+
+  // ---------------------------------------------------------------
   auto heel = Eigen::Vector3d(heel_x_->value(),
                               heel_y_->value(),
                               heel_z_->value());
@@ -101,7 +109,7 @@ QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
                              toe_y_->value(),
                              toe_z_->value());
 
-  // -----------------------------------------------------------------
+  // ---------------------------------------------------------------
   vector<WellDefinition> welldefs;
   welldefs.push_back(WellDefinition());
   welldefs[0].wellname = well_settings_.name.toStdString();
@@ -113,15 +121,17 @@ QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
   welldefs[0].heel_md.push_back(heel(2));
   welldefs[0].toe_md.push_back(welldefs[0].heel_md.back() + welldefs[0].well_length.back());
 
-  // ResInsight-based WIC --------------------------------------------
+  // ResInsight-based WIC ------------------------------------------
   auto start = QDateTime::currentDateTime();
   Reservoir::WellIndexCalculation::wicalc_rixx wicalc_rixx =
       Reservoir::WellIndexCalculation::wicalc_rixx(well_settings_, grid_);
 
+  // ---------------------------------------------------------------
   map<string, vector<IntersectedCell>> well_block_data_rixx;
   wicalc_rixx.ComputeWellBlocks(well_block_data_rixx, welldefs, rank);
   auto block_data_rixx = well_block_data_rixx[well_settings_.name.toStdString()];
 
+  // ---------------------------------------------------------------
   // Dbg file
   time_cwb_wic_rixx_ = time_span_msecs(start, QDateTime::currentDateTime());
   print_dbg_msg_wellspline(__func__, "cwb-rixx", time_cwb_wic_rixx_, lvl, 1);
@@ -143,7 +153,7 @@ QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
   // print_dbg_msg_wellspline_wic_coords(__func__, "wicalc_pcg.dbg", well_settings_,
   //                                    block_data_pcg, lvl, 1);
 
-  // Collect: select b/e pcg or rins data --------------------------
+  // Collect: select b/e pcg or rixx data --------------------------
   // auto block_data = block_data_pcg;
   auto block_data = block_data_rixx;
   QList<WellBlock *> *blocks = new QList<WellBlock *>();

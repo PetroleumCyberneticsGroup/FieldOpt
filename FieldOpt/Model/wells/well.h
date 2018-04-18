@@ -17,9 +17,11 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+// ---------------------------------------------------------
 #ifndef WELL_H
 #define WELL_H
 
+// ---------------------------------------------------------
 #include "Settings/settings.h"
 #include "Settings/model.h"
 #include "Model/wells/wellbore/completions/completion.h"
@@ -32,15 +34,18 @@
 
 #include <QList>
 
+// ---------------------------------------------------------
 namespace Model {
 namespace Wells {
 
+// ---------------------------------------------------------
 /*!
  * \brief The Well class represents any well in the model.
  */
 class Well
 {
  public:
+  // -------------------------------------------------------
   /*!
    * \brief Well Default constructor.
    * \param settings The settings object to create a well from.
@@ -53,17 +58,23 @@ class Well
        ::Model::Properties::VariablePropertyContainer *variable_container,
        ::Reservoir::Grid::Grid *grid);
 
+  // -------------------------------------------------------
   struct Heel { int i; int j; int k; };
 
   enum PreferredPhase { Oil, Gas, Water, Liquid };
 
+  // -------------------------------------------------------
   QString name() const { return name_; }
   ::Settings::Model::WellType type() const { return type_; }
   QString group() const { return group_; }
   bool IsProducer();
   bool IsInjector();
+
+  // -------------------------------------------------------
   ::Settings::Model::PreferredPhase preferred_phase() const { return preferred_phase_; }
   double wellbore_radius() const { return wellbore_radius_->value(); }
+
+  // -------------------------------------------------------
   Wellbore::Trajectory *trajectory() { return trajectory_; }
   QList<Control *> *controls() { return controls_; }
   int heel_i() const { return heel_.i; }
@@ -73,16 +84,22 @@ class Well
   void Update();
   void Update(int rank);
 
+  // -------------------------------------------------------
   int GetTimeSpentInWIC() const { return trajectory_->GetTimeSpentInWic(); }
 
  private:
+
+  // -------------------------------------------------------
   QString name_;
   ::Settings::Model::WellType type_;
   QString group_;
+
+  // -------------------------------------------------------
   ::Settings::Model::PreferredPhase preferred_phase_;
   Properties::ContinousProperty *wellbore_radius_;
   Wellbore::Trajectory *trajectory_;
 
+  // -------------------------------------------------------
   Heel heel_;
   QList<Control *> *controls_;
 };

@@ -17,17 +17,21 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+// ---------------------------------------------------------
 #ifndef SETTINGS_OPTIMIZER_H
 #define SETTINGS_OPTIMIZER_H
 
+// ---------------------------------------------------------
 #include "settings.h"
 
 #include <QList>
 #include <QString>
 #include <QStringList>
 
+// ---------------------------------------------------------
 namespace Settings {
 
+// ---------------------------------------------------------
 /*!
  * \brief The Optimizer class contains optimizer-specific settings.
  * Optimizer settings objects may _only_ be created by the Settings
@@ -39,19 +43,39 @@ class Optimizer
   friend class Settings;
 
  public:
+  // -------------------------------------------------------
   Optimizer(){}
   Optimizer(QJsonObject json_optimizer);
-  enum OptimizerType { Compass, APPS, ExhaustiveSearch2DVert, GeneticAlgorithm, SNOPTSolver, DFO };
+
+  // -------------------------------------------------------
+  enum OptimizerType {
+    Compass, APPS, ExhaustiveSearch2DVert,
+    GeneticAlgorithm, SNOPTSolver, DFO };
+
+  // -------------------------------------------------------
   enum OptimizerMode { Maximize, Minimize };
-  enum ConstraintType { BHP, Rate, SplinePoints,
+
+  // -------------------------------------------------------
+  enum ConstraintType {
+    IWD, BHP, Rate, SplinePoints,
     WellSplineLength, WellSplineInterwellDistance, WellSplineDomain,
     CombinedWellSplineLengthInterwellDistance,
     CombinedWellSplineLengthInterwellDistanceReservoirBoundary,
     ReservoirBoundary, PseudoContBoundary2D
   };
+
+  // -------------------------------------------------------
   enum ConstraintWellSplinePointsType { MaxMin, Function};
+
+  // -------------------------------------------------------
   enum ObjectiveType { WeightedSum };
 
+  // -------------------------------------------------------
+//  struct Runtime {
+//    QString output_dir_;
+//  };
+
+  // -------------------------------------------------------
   struct Parameters {
 
     // GSS parameters
@@ -86,6 +110,7 @@ class Optimizer
     double initial_trust_region_radius;
   };
 
+  // -------------------------------------------------------
   struct Objective {
     ObjectiveType type; //!< The objective definition type (e.g. WeightedSum)
     bool use_penalty_function; //!< Whether or not to use penalty function (default: false).
@@ -95,6 +120,7 @@ class Optimizer
     QList<WeightedSumComponent> weighted_sum; //!< The expression for the Objective function formulated as a weighted sum
   };
 
+  // -------------------------------------------------------
   struct Constraint {
     struct RealCoordinate { double x; double y; double z; }; //!< Used to express (x,y,z) coordinates.
     struct RealMaxMinLimit { RealCoordinate max; RealCoordinate min; }; //!< Used to define a box-shaped 3D area. Max and min each define a corner.
@@ -111,19 +137,29 @@ class Optimizer
     int max_iterations;
     ConstraintWellSplinePointsType spline_points_type; //!< How the SplinePoints constraint is given when SplinePoints constraint type is selected.
     QList<RealMaxMinLimit> spline_points_limits; //!< Box limits a spline point needs to be within to be valid when SplinePoints constraint type is selected.
+
+    // 3rd party solver parameters
+    QString thrdps_optn_file;
+    QString thrdps_smry_file;
+    QString thrdps_prnt_file;
   };
 
+  // -------------------------------------------------------
   OptimizerType type() const { return type_; } //!< Get the Optimizer type (e.g. Compass).
   OptimizerMode mode() const { return mode_; } //!< Get the optimizer mode (maximize/minimize).
   Parameters parameters() const { return parameters_; } //!< Get the optimizer parameters.
   Objective objective() const { return objective_; } //!< Get the optimizer objective function.
   QList<Constraint> constraints() const { return constraints_; } //!< Get the optimizer constraints.
 
-  // Should really be inhereited by Friend Class: Settings.
+  // -------------------------------------------------------
+  // Should really be inherited by Friend Class: Settings.
   void set_verbosity_vector(const std::vector<int> verb_vector) { verb_vector_ = verb_vector; }
   std::vector<int> verb_vector() const { return verb_vector_; }
 
+  QString output_dir_;
+
  private:
+  // -------------------------------------------------------
   QList<Constraint> constraints_;
   OptimizerType type_;
   Parameters parameters_;

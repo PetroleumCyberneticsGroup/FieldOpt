@@ -47,62 +47,75 @@ using std::string;
 class ECLGrid : public Grid
 {
  private:
+  // ---------------------------------------------------------------
   int faces_permutation_index_;
 
  public:
+  // ---------------------------------------------------------------
   ECLGrid(string file_path);
   virtual ~ECLGrid();
 
+  // ---------------------------------------------------------------
   Dims Dimensions();
   Cell GetCell(int global_index);
   Cell GetCell(int i, int j, int k);
   Cell GetCell(IJKCoordinate* ijk);
 
+  // ---------------------------------------------------------------
   vector<int> GetBoundingBoxCellIndices(
       double xi, double yi, double zi,
       double xf, double yf, double zf,
       double& bb_xi, double& bb_yi, double& bb_zi,
       double& bb_xf, double& bb_yf, double& bb_zf);
 
+  // ---------------------------------------------------------------
   // OV: 20170709
   Cell GetSmallestCell();
 
+  // ---------------------------------------------------------------
   bool GetCellEnvelopingPoint(Cell& cell, double x, double y, double z);
   bool GetCellEnvelopingPoint(Cell& cell, double x, double y, double z,
                               vector<int> search_set);
 
+  // ---------------------------------------------------------------
   bool GetCellEnvelopingPoint(Cell& cell, Eigen::Vector3d xyz);
   bool GetCellEnvelopingPoint(Cell& cell, Eigen::Vector3d xyz,
                               vector<int> search_set);
 
   // Cell GetSmallestCell() override;
 
+  // ---------------------------------------------------------------
   Cell GetCellEnvelopingPoint(double x, double y, double z);
   Cell GetCellEnvelopingPoint(double x, double y, double z,
                               vector<int> search_set);
 
+  // ---------------------------------------------------------------
   Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz);
   Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz,
                               vector<int> search_set);
 
+  // ---------------------------------------------------------------
   /// Check that global_index is less than nx*ny*nz
   bool IndexIsInsideGrid(int global_index);
 
  private:
+  // ---------------------------------------------------------------
   // OV: 20170709
   ERTWrapper::ECLGrid::ECLGridReader* ecl_grid_reader_;
   // ERTWrapper::ECLGrid::ECLGridReader* ecl_grid_reader_ = 0;
 
-
-
+  // ---------------------------------------------------------------
   /// Check that (i,j,k) are >= 0 and less than n*.
   bool IndexIsInsideGrid(int i, int j, int k);
 
+  // ---------------------------------------------------------------
   /// Check that (i,j,k) are >= 0 and less than n*.
   bool IndexIsInsideGrid(IJKCoordinate *ijk);
 
+  // ---------------------------------------------------------------
   bool SetGridCellFacesPermutations();
 
+  // ---------------------------------------------------------------
   // WIC Debug
   bool dbg_mode = true; //!< On/off printing of debug messages
 };

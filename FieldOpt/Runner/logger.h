@@ -17,15 +17,19 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+// ---------------------------------------------------------
 #ifndef LOGGER_H
 #define LOGGER_H
 
+// ---------------------------------------------------------
 #include "string"
 #include "map"
 #include <QString>
 #include <QStringList>
 #include <QDateTime>
 #include <QUuid>
+
+// ---------------------------------------------------------
 #include "Optimization/case.h"
 #include "Optimization/optimizer.h"
 #include "runtime_settings.h"
@@ -34,9 +38,10 @@
 #include "Simulation/results/results.h"
 #include "loggable.hpp"
 
+// ---------------------------------------------------------
 using namespace std;
 
-
+// ---------------------------------------------------------
 /*!
  * \brief The Logger class is responsible for writing CSV and
  * JSON logs to the disk.
@@ -65,6 +70,8 @@ using namespace std;
 class Logger
 {
  public:
+
+  // -------------------------------------------------------
   /*!
    * \brief Logger
    * \param rts Runtime settings
@@ -73,13 +80,15 @@ class Logger
    * \param write_logs Whether or not the logs should be written.
    * This setting is mainly here for tests.
    */
-  Logger(Runner::RuntimeSettings *rts, QString output_subdir="",
+  Logger(Runner::RuntimeSettings *rts,
+         QString output_subdir="",
          bool write_logs=true);
 
   void AddEntry(Loggable *obj);
   void FinalizePrerunSummary();
   void FinalizePostrunSummary();
 
+  // -------------------------------------------------------
   /*!
    * @brief Collects extended logs from worker subdirs and writes them all
    * to a single JSON file in the root output dir.

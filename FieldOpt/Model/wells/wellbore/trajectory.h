@@ -17,9 +17,11 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+// ---------------------------------------------------------
 #ifndef TRAJECTORY_H
 #define TRAJECTORY_H
 
+// ---------------------------------------------------------
 #include "wellblock.h"
 #include "wellspline.h"
 #include "completions/completion.h"
@@ -32,43 +34,61 @@
 
 #include <QList>
 
+// ---------------------------------------------------------
 namespace Model {
 namespace Wells {
 namespace Wellbore {
 
+// ---------------------------------------------------------
 class WellSpline;
 
+// ---------------------------------------------------------
 /*!
- * \brief The Trajectory class describes the trajectory of the wellbore as a set of well blocks
- * in the reservoir grid.
+ * \brief The Trajectory class describes the trajectory of
+ * the wellbore as a set of well blocks in the reservoir
+ * grid.
  *
- * A trajectory may be described either as a set of well blocks directly, or as a spline which
- * a set of well blocks is calculated from. Either way it is always percieved as a set of blocks
- * from the outside.
+ * A trajectory may be described either as a set of well
+ * blocks directly, or as a spline which a set of well
+ * blocks is calculated from. Either way it is always
+ * percieved as a set of blocks from the outside.
  *
  * \todo Initialize ICDs.
  */
 class Trajectory
 {
  public:
-  Trajectory(::Settings::Model::Well well_settings,
+  // ---------------------------------------------------------
+  Trajectory(Settings::Model::Well well_settings,
              Properties::VariablePropertyContainer *variable_container,
              Reservoir::Grid::Grid *grid);
 
-  WellBlock *GetWellBlock(int i, int j, int k); //!< Get the well block at index (i,j,k).
-  QList<WellBlock *> *GetWellBlocks(); //!< Get a list containing all well blocks.
+  // ---------------------------------------------------------
+  // Get the well block at index (i,j,k).
+  WellBlock *GetWellBlock(int i, int j, int k);
+  // Get a list containing all well blocks.
+  QList<WellBlock *> *GetWellBlocks();
 
-  void UpdateWellBlocks(); //!< Update the well blocks, in particular the ones defined by a spline.
+  // ---------------------------------------------------------
+  // Update the well blocks, in particular the ones defined by a spline.
+  void UpdateWellBlocks();
   void UpdateWellBlocks(int rank);
 
   int GetTimeSpentInWic() const;
 
  private:
+  // ---------------------------------------------------------
   QList<WellBlock *> *well_blocks_;
 
-  WellSpline *well_spline_; //!< Used to defined trajectories with a spline. When used, this generates the well blocks.
-  PseudoContVert *pseudo_cont_vert_; //!< A pseudo-continuous vertical well.
+  // ---------------------------------------------------------
+  //Used to defined trajectories with a spline.
+  // When used, this generates the well blocks.
+  WellSpline *well_spline_;
 
+  // A pseudo-continuous vertical well.
+  PseudoContVert *pseudo_cont_vert_;
+
+  // ---------------------------------------------------------
   void initializeWellBlocks(Settings::Model::Well well,
                             Properties::VariablePropertyContainer *variable_container);
 

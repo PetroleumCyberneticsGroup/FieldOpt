@@ -17,20 +17,29 @@
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
+
+// ---------------------------------------------------------
 #ifndef FIELDOPT_GSS_H
 #define FIELDOPT_GSS_H
 
+// ---------------------------------------------------------
 //#include "Model/properties/variable_property_container.h"
 #include "Optimization/optimizer.h"
+
+// ---------------------------------------------------------
+// Qt / STD
 #include <Eigen/Core>
 #include <vector>
 
+// ---------------------------------------------------------
 using namespace Eigen;
 using namespace std;
 
+// ---------------------------------------------------------
 namespace Optimization {
 namespace Optimizers {
 
+// ---------------------------------------------------------
 /*!
  * @brief The _abstract_ GSS class implements a generalized form of the
  * Generating Set Search algorithm presented by Kolda, Torczon and Lewis
@@ -49,6 +58,8 @@ namespace Optimizers {
  */
 class GSS : public Optimizer {
  public:
+
+  // -------------------------------------------------------
   /*!
    * @brief General constructor for GSS algorithms. Sets the step_tol_
    * property and calls the primary Optimizer constructor.
@@ -68,6 +79,7 @@ class GSS : public Optimizer {
       Logger *logger
   );
 
+  // -------------------------------------------------------
   /*!
    * \brief IsFinished Check if the optimization is finished.
    *
@@ -78,6 +90,8 @@ class GSS : public Optimizer {
   TerminationCondition IsFinished();
 
  protected:
+
+  // ---------------------------------------------------------
   int num_vars_; //!< Number of vars in problem. Used in initialization.
   double contr_fac_; //!< Step length contraction factor.
   double expan_fac_; //!< Step length expansion factor.
@@ -87,8 +101,10 @@ class GSS : public Optimizer {
   QList<QUuid> realvar_uuid_;
   Model::Properties::VariablePropertyContainer *varcont_;
 
+  // ---------------------------------------------------------
   Settings::Optimizer *settings_;
 
+  // ---------------------------------------------------------
   /*!
    * @brief Contract the search pattern: step_lengths_ * contr_fac_
    *
@@ -97,6 +113,7 @@ class GSS : public Optimizer {
    */
   void contract(vector<int> dirs = vector<int>{-1});
 
+  // ---------------------------------------------------------
   /*!
    * @brief Expand the search pattern: step_lengths_ * expan_fac_
    *
@@ -105,6 +122,7 @@ class GSS : public Optimizer {
    */
   void expand(vector<int> dirs = vector<int>{-1});
 
+  // ---------------------------------------------------------
   /*!
    * @brief Set _all_ step lengts to the specified length.
    * @param len The value all step lengths should be set to.
@@ -120,6 +138,7 @@ class GSS : public Optimizer {
   void set_contraction_factor();
   void set_expansion_factor();
 
+  // ---------------------------------------------------------
   /*!
    * @brief Generate a set of trial points.
    * @param dirs (optional) The direction indices in which
@@ -129,6 +148,7 @@ class GSS : public Optimizer {
    */
   QList<Case *> generate_trial_points(vector<int> dirs = vector<int>{-1});
 
+  // ---------------------------------------------------------
   /*!
    * @brief Check if the algorithm has converged, i.e. if all current
    * step lengths are below the step length convergence tolerance.
@@ -136,6 +156,7 @@ class GSS : public Optimizer {
    */
   bool is_converged();
 
+  // ---------------------------------------------------------
   /*!
    * @brief Remove the case that has the worst origin from the
    * evaluation queue.
@@ -143,12 +164,14 @@ class GSS : public Optimizer {
    */
   Case *dequeue_case_with_worst_origin();
 
+  // ---------------------------------------------------------
   void print_dbg_msg(string dbg_str,
                      int vlevel,
                      VectorXd eigvec = Eigen::VectorXd(0));
 
  private:
 
+  // ---------------------------------------------------------
   /*!
    * @brief Create a perturbation from a point in the specified
    * direction index.

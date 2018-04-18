@@ -1,30 +1,30 @@
 
-// ---------------------------------------------------------------
+// ---------------------------------------------------------
 #include "combined_spline_length_interwell_distance.h"
 #include <iostream>
 
-// ---------------------------------------------------------------
+// ---------------------------------------------------------
 namespace Optimization {
 namespace Constraints {
 
-// ---------------------------------------------------------------
+// ---------------------------------------------------------
 CombinedSplineLengthInterwellDistance::
 CombinedSplineLengthInterwellDistance(
     Settings::Optimizer::Constraint settings,
     Model::Properties::VariablePropertyContainer *variables) {
 
-  // -------------------------------------------------------------
+  // -------------------------------------------------------
   max_iterations_ = settings.max_iterations;
   Settings::Optimizer::Constraint dist_constr_settings;
   dist_constr_settings.wells = settings.wells;
   dist_constr_settings.min = settings.min_distance;
 
-  // -------------------------------------------------------------
+  // -------------------------------------------------------
   // Establish (single) interwell interwell distance object
   distance_constraint_ = new InterwellDistance(dist_constr_settings,
                                                variables);
 
-  // -------------------------------------------------------------
+  // -------------------------------------------------------
   if (verbosity_level_>2){
     std::cout << "... ... initialized distance constraint for wells: ";
     for (QString wname : settings.wells) {
@@ -33,7 +33,7 @@ CombinedSplineLengthInterwellDistance(
     std::cout << std::endl;
   }
 
-  // -------------------------------------------------------------
+  // -------------------------------------------------------
   // Establish QList of length constraint objects
   length_constraints_ = QList<WellSplineLength *>();
 
@@ -52,15 +52,15 @@ CombinedSplineLengthInterwellDistance(
   }
 }
 
-// ---------------------------------------------------------------
+// ---------------------------------------------------------
 bool CombinedSplineLengthInterwellDistance::CaseSatisfiesConstraint(Case *c) {
 
-  // -------------------------------------------------------------
+  // -------------------------------------------------------
   if (!distance_constraint_->CaseSatisfiesConstraint(c)){
     return false;
   }
 
-  // -------------------------------------------------------------
+  // -------------------------------------------------------
   for (WellSplineLength *wsl : length_constraints_) {
     if (!wsl->CaseSatisfiesConstraint(c))
       return false;
@@ -69,10 +69,10 @@ bool CombinedSplineLengthInterwellDistance::CaseSatisfiesConstraint(Case *c) {
   return true;
 }
 
-// ---------------------------------------------------------------
+// ---------------------------------------------------------
 void CombinedSplineLengthInterwellDistance::SnapCaseToConstraints(Case *c) {
 
-  // -------------------------------------------------------------
+  // -------------------------------------------------------
   // Limit the sequential application to a max # of iterations
   for (int i = 0; i < max_iterations_; ++i) {
 
@@ -82,11 +82,11 @@ void CombinedSplineLengthInterwellDistance::SnapCaseToConstraints(Case *c) {
     }
     else {
 
-      // ---------------------------------------------------------
+      // ---------------------------------------------------
       // Apply interwell distance constraint
       distance_constraint_->SnapCaseToConstraints(c);
 
-      // ---------------------------------------------------------
+      // ---------------------------------------------------
       // Apply well length constraint to each well sequentially
       for (WellSplineLength *wsl : length_constraints_) {
         wsl->SnapCaseToConstraints(c);

@@ -1,17 +1,18 @@
 
-// ---------------------------------------------------------------
+// ---------------------------------------------------------
 #ifndef COMBINEDSPLINELENGTHINTERWELLDISTANCE_H
 #define COMBINEDSPLINELENGTHINTERWELLDISTANCE_H
 
-// ---------------------------------------------------------------
+// ---------------------------------------------------------
 #include "constraint.h"
 #include "well_spline_length.h"
 #include "interwell_distance.h"
 
-// ---------------------------------------------------------------
-namespace Optimization { namespace Constraints {
+// ---------------------------------------------------------
+namespace Optimization {
+namespace Constraints {
 
-// ---------------------------------------------------------------
+// ---------------------------------------------------------
 /*!
  * \brief The CombinedSplineLengthInterwellDistance class
  * combines the WellSplineLength and InterwellDistance constraints.
@@ -25,13 +26,14 @@ namespace Optimization { namespace Constraints {
 class CombinedSplineLengthInterwellDistance : public Constraint
 {
  public:
-  // ---------------------------------------------------------------
+  // -------------------------------------------------------
   CombinedSplineLengthInterwellDistance(
       Settings::Optimizer::Constraint settings,
       Model::Properties::VariablePropertyContainer *variables);
 
-  // ---------------------------------------------------------------
-  string name() override { return "CombinedSplineLengthInterwellDistance"; }
+  // -------------------------------------------------------
+  string name() override { return
+        "CombinedSplineLengthInterwellDistance"; }
 
   // Constraint interface
  public:
@@ -39,7 +41,7 @@ class CombinedSplineLengthInterwellDistance : public Constraint
   void SnapCaseToConstraints(Case *c) override;
 
  private:
-  // ---------------------------------------------------------------
+  // -------------------------------------------------------
   int max_iterations_;
   QList<WellSplineLength *> length_constraints_;
   InterwellDistance *distance_constraint_;
