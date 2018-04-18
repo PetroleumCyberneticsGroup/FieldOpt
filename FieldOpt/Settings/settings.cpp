@@ -119,6 +119,35 @@ void Settings::readSimulatorSection() {
     string str_out = "[set]Simulator settings";
     cout << "\n" << BLDON << str_out << AEND << "\n"
          << std::string(str_out.length(), '=') << endl;
+
+    // ---------------------------------------------------------
+      cout << "VerbosityVector:--------"
+           << simulator_->verb_vector_[9]<< endl;
+
+    // ---------------------------------------------------------
+      cout << "DriverFilePath:---------"
+           << simulator_->driver_file_path_.toStdString() << endl;
+
+    // ---------------------------------------------------------
+      cout << "CustomExecScript:-------"
+           << simulator_->custom_exec_script_path_.toStdString() << endl;
+
+    // ---------------------------------------------------------
+      cout << "IncludeDirectory:-------"
+           << simulator_->include_directory_.toStdString() << endl;
+
+    // ---------------------------------------------------------
+      cout << "OutputDirectory:--------"
+           << simulator_->output_directory_.toStdString() << endl;
+
+    // ---------------------------------------------------------
+      cout << "FluidModel:-------------"
+           << simulator_->fluid_model_ << endl;
+
+    // ---------------------------------------------------------
+      cout << "MaxMinutes:-------------"
+           << simulator_->max_minutes_ << endl;
+
   }
 }
 
