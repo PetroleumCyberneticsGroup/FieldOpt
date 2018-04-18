@@ -8,6 +8,7 @@
 #include "Optimization/optimizer.h"
 #include "Subproblem.h"
 #include "DFO_Model.h"
+#include <ncurses.h>
 
 namespace Optimization {
 namespace Optimizers {
