@@ -88,7 +88,9 @@ class WellBlock
 
   // ---------------------------------------------------------
   Completions::Completion *completion_;
-  DirectionOfPenetration direction_of_penetration_; //!< The well's direction of penetration through this block.
+
+  // The well's direction of penetration through this block.
+  DirectionOfPenetration direction_of_penetration_;
 };
 
 }

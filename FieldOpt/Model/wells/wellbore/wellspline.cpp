@@ -57,6 +57,8 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
   // ---------------------------------------------------------------
   grid_ = grid;
   well_settings_ = well_settings;
+
+  // ---------------------------------------------------------------
   if (well_settings_.verb_vector_[5] > 1) // idx:5 -> mod (Model)
     std::cout << "[mod]Define well spline.----- " << std::endl;
 

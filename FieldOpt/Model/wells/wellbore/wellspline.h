@@ -60,6 +60,7 @@ class WellSpline
   double GetSplineDx() { return toe_x_->value() - heel_x_->value(); };
   double GetSplineDy() { return toe_y_->value() - heel_y_->value(); };
   double GetSplineDz() { return toe_z_->value() - heel_z_->value(); };
+  double GetSplineZe() { return toe_z_->value(); };
 
  private:
   // -------------------------------------------------------

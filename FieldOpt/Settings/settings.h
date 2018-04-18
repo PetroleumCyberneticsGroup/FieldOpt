@@ -90,7 +90,7 @@ class Settings
   Simulator *simulator_;
   QString build_path_;
 
-  std::vector<int> verb_vector_ = std::vector<int>(11,0); //!<
+  std::vector<int> verb_vector_ = std::vector<int>(11,0);
 
   void readDriverFile();
   void readGlobalSection();

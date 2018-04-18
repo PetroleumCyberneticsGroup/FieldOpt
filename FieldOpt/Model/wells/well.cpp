@@ -34,7 +34,10 @@ Well::Well(Settings::Model settings,
   // -------------------------------------------------------
   Settings::Model::Well well_settings = settings.wells().at(well_number);
   well_settings.verb_vector_ = settings.verb_vector();
-  if (well_settings.verb_vector_[5] > 1) // idx:5 -> mod (Model)
+
+  // -------------------------------------------------------
+  verb_vector_ = settings.verb_vector();
+  if (verb_vector_[5] > 1) // idx:5 -> mod (Model)
     std::cout << "[mod]Reading well settings.- " << std::endl;
 
   // -------------------------------------------------------
@@ -43,6 +46,7 @@ Well::Well(Settings::Model settings,
   // -------------------------------------------------------
   name_ = well_settings.name;
   type_ = well_settings.type;
+  deftype_ = well_settings.definition_type;
   if (well_settings.group.length() >= 1)
     group_ = well_settings.group;
   else group_ = "";
@@ -69,7 +73,6 @@ Well::Well(Settings::Model settings,
   // -------------------------------------------------------
   drilling_sequence_ = well_settings.drilling_sequence;
   drilling_time_ = well_settings.drilling_time;
-
   ComputeDrillingTime();
 
   // -------------------------------------------------------
@@ -88,27 +91,49 @@ void Well::ComputeDrillingTime() {
 
   if (drilling_time_ < 0) {
 
-    double dx, dy, dz;
+    double dx = 0, dy = 0, ze = 0, dxdy = 0;
 
-    // -------------------------------------------------------
-    if (type_ == Settings::Model::WellDefinitionType::WellBlocks) {
+    // -----------------------------------------------------
+    if (deftype_
+        == Settings::Model::WellDefinitionType::WellBlocks) {
 
       Eigen::Vector3d heel_c =
-          grid_->GetCell(toe_.i, toe_.j, toe_.k).center();
+          grid_->GetCell(heel_.i, heel_.j, heel_.k).center();
 
       Eigen::Vector3d toe_c =
           grid_->GetCell(toe_.i, toe_.j, toe_.k).center();
 
-      dx = heel_c(0)
+      dx = toe_c(0) - heel_c(0);
+      dy = toe_c(1) - heel_c(1);
+      ze = toe_c(2);
 
-      // -----------------------------------------------------
-    } else if (type_== Settings::Model::WellDefinitionType::WellSpline) {
+      // ---------------------------------------------------
+    } else if (deftype_
+        == Settings::Model::WellDefinitionType::WellSpline) {
 
       dx = trajectory_->GetWellSpline()->GetSplineDx();
       dy = trajectory_->GetWellSpline()->GetSplineDy();
-      dz = trajectory_->GetWellSpline()->GetSplineDz();
+      ze = trajectory_->GetWellSpline()->GetSplineZe();
 
     }
+
+    // -----------------------------------------------------
+    // Drilling time according to Olympus case formula
+    // tD = 0.015 * Ze + 0.02 * |DXDY|
+    // where
+    // |DXDY| = sqrt( DX^2 + DY^2 )
+    // with
+    // DX, DY: hz. offset of well endpoint from kick-off point
+    // Ze: z coord of well end point
+
+    dxdy = sqrt(pow(dx, 2.0) + pow(dy, 2.0));
+    drilling_time_ = 0.015 * ze + 0.02 * dxdy;
+
+    // -----------------------------------------------------
+    if (verb_vector_[5] > 1) // idx:5 -> mod (Model)
+      std::cout << "[mod]Drilling time for well: "
+                << name_.toStdString() << " -> "
+                << drilling_time_ << std::endl;
 
   }
 }

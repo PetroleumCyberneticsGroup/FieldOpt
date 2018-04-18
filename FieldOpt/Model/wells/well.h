@@ -58,6 +58,7 @@ class Well
        ::Model::Properties::VariablePropertyContainer *variable_container,
        ::Reservoir::Grid::Grid *grid);
 
+  // -------------------------------------------------------
   Reservoir::Grid::Grid *grid_;
 
   // -------------------------------------------------------
@@ -84,8 +85,11 @@ class Well
   bool IsInjector();
 
   // -------------------------------------------------------
-  ::Settings::Model::PreferredPhase preferred_phase() const { return preferred_phase_; }
-  double wellbore_radius() const { return wellbore_radius_->value(); }
+  ::Settings::Model::PreferredPhase preferred_phase()
+  const { return preferred_phase_; }
+
+  double wellbore_radius() const
+  { return wellbore_radius_->value(); }
 
   // -------------------------------------------------------
   Wellbore::Trajectory *trajectory() { return trajectory_; }
@@ -100,7 +104,8 @@ class Well
   void Update(int rank);
 
   // -------------------------------------------------------
-  int GetTimeSpentInWIC() const { return trajectory_->GetTimeSpentInWic(); }
+  int GetTimeSpentInWIC() const
+  { return trajectory_->GetTimeSpentInWic(); }
 
   // -------------------------------------------------------
   void ComputeDrillingTime();
@@ -113,6 +118,7 @@ class Well
   // -------------------------------------------------------
   QString name_;
   ::Settings::Model::WellType type_;
+  ::Settings::Model::WellDefinitionType deftype_;
   QString group_;
 
   // -------------------------------------------------------
@@ -128,6 +134,10 @@ class Well
   Heel heel_;
   Toe toe_;
   QList<Control *> *controls_;
+
+  // -------------------------------------------------------
+  std::vector<int> verb_vector_ = std::vector<int>(11,0);
+
 };
 
 }
