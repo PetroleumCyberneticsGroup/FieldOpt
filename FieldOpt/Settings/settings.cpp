@@ -241,11 +241,11 @@ void Settings::readModelSection() {
       cout << "Drilling time:--------- ";
       cout << model_->wells_[i].drilling_time << "\n";
 
-      cout << "Drilling sequence:----- Group/Seq.: [ ";
+      cout << "Drilling sequence:----- (G#/S#) [ ";
       for( int j=0; j<model_->wells_[i].drilling_sequence.size(); ++j ) {
         cout << model_->wells_[i].drilling_sequence[j] << " ";
       }
-      cout << " ]\n";
+      cout << "]\n";
     }
     cout << endl;
 

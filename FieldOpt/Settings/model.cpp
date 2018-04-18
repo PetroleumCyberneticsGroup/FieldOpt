@@ -286,11 +286,11 @@ Model::Well Model::readSingleWell(QJsonObject json_well) {
 
   // ---------------------------------------------------------------
   // Drilling sequence
-  well.drilling_sequence = std::vector<int>(2,-1);
+  well.drilling_sequence = std::vector<int>(2,-1); // Default vals
   if (json_well.contains("DrillingSequence")) {
     for (int i = 0; i < json_well["DrillingSequence"].toArray().size(); ++i) {
-      well.drilling_sequence
-          .push_back(json_well["ControlTimes"].toArray().at(i).toInt());
+      well.drilling_sequence[i] =
+          json_well["DrillingSequence"].toArray().at(i).toInt();
     }
   }
 
