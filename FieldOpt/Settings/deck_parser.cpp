@@ -88,7 +88,7 @@ Model::Well DeckParser::opmWellToWellStruct(const Opm::Well *opm_well) {
     well_struct.type = determineWellType(opm_well);
     well_struct.preferred_phase = determinePreferredPhase(opm_well);
     well_struct.wellbore_radius = determineWellboreRadius(opm_well);
-    well_struct.well_blocks = opmToWellBlocks(opm_well->getCompletions());
+    well_struct.well_blocks = opmToWellBlocks(opm_well);
     well_struct.controls = opmToControlEntries(opm_well);
 
     return well_struct;
@@ -173,8 +173,10 @@ double DeckParser::determineWellboreRadius(const Opm::Well *opm_well) {
     return avg_radius;
 }
 
-QList<Model::Well::WellBlock> DeckParser::opmToWellBlocks(const Opm::CompletionSet &comp_set) {
-    auto well_blocks = QList<Model::Well::WellBlock>();
+QList<Model::Well::WellBlock> DeckParser::opmToWellBlocks(const Opm::Well *opm_well) {
+    auto comp_set = opm_well->getCompletions();
+    auto well_blocks =  QList<Model::Well::WellBlock>();
+    int i = 0;
     for (auto opm_comp : comp_set) {
         Model::Well::Completion comp;
         comp.type = Model::WellCompletionType::Perforation;
@@ -185,12 +187,15 @@ QList<Model::Well::WellBlock> DeckParser::opmToWellBlocks(const Opm::CompletionS
             comp.transmissibility_factor = -1;
         }
         Model::Well::WellBlock wb;
+        comp.name = "Transmissibility#" + QString::fromStdString(opm_well->name()) + "#" + QString::number(i);
         wb.completion = comp;
         wb.has_completion = true;
         wb.i = opm_comp.getI();
         wb.j = opm_comp.getJ();
         wb.k = opm_comp.getK();
+        wb.name = "WellBlock#" + QString::fromStdString(opm_well->name()) + "#" + QString::number(i);
         well_blocks.push_back(wb);
+        ++i;
     }
     return well_blocks;
 }
@@ -229,8 +234,15 @@ QList<Model::Well::ControlEntry> DeckParser::opmToControlEntries(const Opm::Well
             ce.time_step = time_days_[t];
 
             // Add the new control if it is different from the last one added
-            if (control_entries.size() == 0 || control_entries.last().isDifferent(ce))
+            if (control_entries.size() == 0 || control_entries.last().isDifferent(ce)) {
+                if (ce.control_mode == Model::ControlMode::RateControl) {
+                    ce.name = "Rate#" + QString::fromStdString(opm_well->name()) + "#" + QString::number(t);
+                }
+                else {
+                    ce.name = "BHP#" + QString::fromStdString(opm_well->name()) + "#" + QString::number(t);
+                }
                 control_entries.push_back(ce);
+            }
         }
     }
     return control_entries;

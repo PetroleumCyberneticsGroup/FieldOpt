@@ -116,7 +116,7 @@ class DeckParser {
    * @brief Convert an OPM completion set to a list of FieldOpt settings
    * WellBlocks.
    */
-  QList<Model::Well::WellBlock> opmToWellBlocks(const Opm::CompletionSet &comp_set);
+  QList<Model::Well::WellBlock> opmToWellBlocks(const Opm::Well *opm_well);
 
   /*!
    * @brief Convert OPMs representation of well controls to a list of
