@@ -29,10 +29,11 @@
 #include "model.h"
 #include "settings_exceptions.h"
 #include "Utilities/filehandling.hpp"
+#include "deck_parser.h"
 
 namespace Settings {
 
-Model::Model(QJsonObject json_model)
+Model::Model(QJsonObject json_model, QString schedule_path)
 {
     // Reservoir
     try {
@@ -41,6 +42,10 @@ Model::Model(QJsonObject json_model)
     }
     catch (std::exception const &ex) {
         throw UnableToParseReservoirModelSectionException("Unable to parse reservoir model section: " + std::string(ex.what()));
+    }
+
+    if (schedule_path.length() > 0) { // Parse simulator schedule
+        deck_parser_ = new DeckParser(schedule_path.toStdString());
     }
 
     // Control times

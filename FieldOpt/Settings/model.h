@@ -33,7 +33,10 @@
 #include <QJsonArray>
 #include <assert.h>
 
+
 namespace Settings {
+
+class DeckParser;
 
 /*!
  * \brief The Model class contains model-specific settings. Model settings objects may _only_ be
@@ -46,7 +49,7 @@ class Model
   friend class Settings;
 
  public:
-  Model(QJsonObject json_model); // This should only be accessed externally for testing purposes.
+  Model(QJsonObject json_model, QString schedule_path); // This should only be accessed externally for testing purposes.
   enum ReservoirGridSourceType : int { ECLIPSE=1 };
   enum WellType : int { Injector=11, Producer=12, UNKNOWN_TYPE=19 };
   enum ControlMode : int { BHPControl=21, RateControl=22, UNKNOWN_CONTROL=29 };
@@ -125,6 +128,7 @@ class Model
   Reservoir reservoir_;
   QList<Well> wells_;
   QList<int> control_times_;
+  DeckParser *deck_parser_;
 
   void readReservoir(QJsonObject json_reservoir);
   Well readSingleWell(QJsonObject json_well);

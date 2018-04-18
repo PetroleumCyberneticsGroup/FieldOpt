@@ -307,4 +307,17 @@ Model::InjectionType DeckParser::determineInjectorType(const Opm::Well *opm_well
     }
 }
 
+const std::vector<int> DeckParser::GetTimeDays() {
+    return time_days_;
+}
+
+const std::vector<std::string> DeckParser::GetTimeDates() {
+    return time_dates_;
+}
+
+const Opm::Events * DeckParser::GetEvents() {
+    return events_;
+}
+
+
 }

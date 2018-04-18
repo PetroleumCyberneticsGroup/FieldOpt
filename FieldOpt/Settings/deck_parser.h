@@ -20,6 +20,8 @@
 #ifndef FIELDOPT_DECKPARSER_H
 #define FIELDOPT_DECKPARSER_H
 
+#include "model.h"
+
 #include <string>
 #include <vector>
 
@@ -31,7 +33,7 @@
 #include <opm/parser/eclipse/EclipseState/EclipseState.hpp>
 #include <opm/parser/eclipse/EclipseState/SummaryConfig/SummaryConfig.hpp>
 #include <opm/parser/eclipse/EclipseState/Schedule/Schedule.hpp>
-#include "Settings/model.h"
+
 
 namespace Settings {
 
@@ -61,9 +63,9 @@ class DeckParser {
 
   std::vector<Model::Well> GetWellData();
 
-  const std::vector<int> GetTimeDays() { return time_days_; }
-  const std::vector<std::string> GetTimeDates() { return time_dates_; }
-  const Opm::Events * GetEvents() { return events_; }
+  const std::vector<int> GetTimeDays();
+  const std::vector<std::string> GetTimeDates();
+  const Opm::Events * GetEvents();
 
  private:
   size_t num_wells_;

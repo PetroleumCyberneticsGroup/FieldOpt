@@ -99,7 +99,7 @@ namespace Settings {
     {
         try {
             QJsonObject model = json_driver_->value("Model").toObject();
-            model_ = new Model(model);
+            model_ = new Model(model, simulator_->schedule_file_path_);
         }
         catch (std::exception const &ex) {
             throw UnableToParseModelSectionException("Unable to parse model section: " + std::string(ex.what()));
