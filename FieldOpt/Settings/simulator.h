@@ -110,6 +110,7 @@ class Simulator
   QStringList *commands_;
   QString script_name_;
   QString driver_file_path_;
+  QString driver_directory_;
   QString schedule_file_path_;
   QString output_directory_;
   QString custom_exec_script_path_;

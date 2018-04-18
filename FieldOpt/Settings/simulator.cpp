@@ -28,12 +28,18 @@ namespace Settings {
 Simulator::Simulator(QJsonObject json_simulator)
 {
     // Driver path
-    if (json_simulator.contains("DriverPath"))
+    if (json_simulator.contains("DriverPath")) {
         driver_file_path_ = json_simulator["DriverPath"].toString();
-    else driver_file_path_ = "";
+        auto tmp = driver_file_path_.split("/");
+        tmp.removeLast();
+        driver_directory_ = tmp.join("/");
+    }
+    else {
+        driver_file_path_ = "";
+    }
 
     if (json_simulator.contains("SchedulePath")) {
-        auto schedule_path = json_simulator["SchedulePath"].toString();
+        auto schedule_path = driver_directory_ + "/" + json_simulator["SchedulePath"].toString();
          if (!FileExists(schedule_path))
              throw std::runtime_error("No file found at SchedulePath: " + schedule_path.toStdString());
         schedule_file_path_ = schedule_path;
