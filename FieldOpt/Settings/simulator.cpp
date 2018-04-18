@@ -19,6 +19,9 @@
 
 #include "simulator.h"
 #include "settings_exceptions.h"
+#include "Utilities/filehandling.hpp"
+
+using namespace Utilities::FileHandling;
 
 namespace Settings {
 
@@ -28,6 +31,13 @@ Simulator::Simulator(QJsonObject json_simulator)
     if (json_simulator.contains("DriverPath"))
         driver_file_path_ = json_simulator["DriverPath"].toString();
     else driver_file_path_ = "";
+
+    if (json_simulator.contains("SchedulePath")) {
+        auto schedule_path = json_simulator["SchedulePath"].toString();
+         if (!FileExists(schedule_path))
+             throw std::runtime_error("No file found at SchedulePath: " + schedule_path.toStdString());
+        schedule_file_path_ = schedule_path;
+    }
 
     // Simulator type
     QString type = json_simulator["Type"].toString();
