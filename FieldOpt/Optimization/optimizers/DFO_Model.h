@@ -417,7 +417,7 @@ class DFO_Model {
   }
 
   Eigen::VectorXd GetBestPoint(){
-    return Y.col(bestPointIndex);
+    return Y.col(bestPointIndex-1);
   }
 
   Eigen::VectorXd FindLocalOptimum();

@@ -302,7 +302,7 @@ DFO_Model::DFO_Model(unsigned int m,
   this->n = n;
   this->y0 = y0;
   this->y0 = Eigen::VectorXd::Zero(n);
-  this->y0 << 1,2;
+  //this->y0 << 20,10;
   this->rho = rhoBeg;
   this->lambda = lambda;
 
@@ -435,7 +435,9 @@ void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, Upd
     if (fvalNew < bestPointAllTimeFunctionValue){
       bestPointAllTimeFunctionValue = fvalNew;
       bestPointAllTime = yNew;
-      std::cout << "NEW BEST POINT IS FOUND! (ALL TIME)" << std::endl;
+      printf("\x1b[33mNEW BEST POINT IS FOUND! (ALL TIME): \n\x1b[0m");
+      std::cout << "\t fvalNew" << fvalNew << "\n";
+      //std::cout << "NEW BEST POINT IS FOUND! (ALL TIME)" << std::endl;
     }
   }
 
@@ -478,7 +480,8 @@ double DFO_Model::evaluateQuadraticModel(Eigen::VectorXd point) {
   value += gradient.transpose() * (point);
   value += 0.5 * (point).transpose() * (Gamma * (point));
   for (int i = 1; i <= m; ++i) {
-    value += 0.5 * (point).transpose() * ((gammas(i - 1) * (Y.col(i - 1)).transpose() * (point)) * Y.col(i - 1));
+    double tmp = (gammas(i - 1) * (Y.col(i - 1)).transpose() * (point));
+    value += 0.5 * (point).transpose() * (tmp * Y.col(i - 1));
   }
   return value;
 }
@@ -587,7 +590,8 @@ void DFO_Model::findLowerAndUpperBoundOnAbsoluteLagrangePolynomial(int i, double
   double c = Xi(0, i - 1);
   grad = (Xi.col(i - 1)).tail(n);
   for (int k = 1; k <= m; ++k) {
-    hess += Z.row(k - 1) * S * (Z.row(i - 1)).transpose() * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
+    double tmp = Z.row(k - 1) * S * (Z.row(i - 1)).transpose();
+    hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
   }
 
   int type = 0;
@@ -668,7 +672,7 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
   // Altså: max { max(l_i(x)), max(-l_i(x))  }
 
   //
-  std::cout <<"Z\n"<< Z << "\nS\n"<<S.diagonal()<<"\nY\n" << Y << "\n\n";
+  //std::cout <<"Z\n"<< Z << "\nS\n"<<S.diagonal()<<"\nY\n" << Y << "\n\n";
   double worstPoisedness = 0;
 
   int index = -1;
@@ -740,7 +744,8 @@ void DFO_Model::findPointToImprovePoisedness(Eigen::VectorXd &dNew, int &yk) {
   double c = Xi(0, rowIndex + 1 - 1);
   grad = (Xi.col(rowIndex + 1 - 1)).tail(n);
   for (int k = 1; k <= m; ++k) {
-    hess += Z.row(k - 1) * S * (Z.row(rowIndex + 1 - 1)).transpose() * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
+    double tmp = Z.row(k - 1) * S * (Z.row(rowIndex + 1 - 1)).transpose();
+    hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
   }
 
   if (highestPoisednessUpperBound > lambda) {
@@ -761,7 +766,8 @@ Eigen::VectorXd DFO_Model::findHighValueOfAbsoluteLagrangePolynomial(int t) {
   double c = Xi(0, t - 1);
   grad = (Xi.col(t - 1)).tail(n);
   for (int k = 1; k <= m; ++k) {
-    hess += Z.row(k - 1) * S * (Z.row(t - 1)).transpose() * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
+    double tmp = Z.row(k - 1) * S * (Z.row(t - 1)).transpose();
+    hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
   }
 
   Eigen::VectorXd yTry(n); //Displacement from current center point
@@ -965,16 +971,35 @@ void DFO_Model::SetTrustRegionRadiusForSubproblem(double radius) {
   subproblem.SetTrustRegionRadius(radius);
 }
 Eigen::VectorXd DFO_Model::FindLocalOptimum() {
+  Eigen::MatrixXd Hessian(n, n);
+  Hessian = Gamma;
+  for (int i = 1; i <= m; ++i) {
+    Hessian += gammas(i - 1) * Y.col(i - 1) * (Y.col(i - 1)).transpose();
+  }
+  subproblem.setHessian(Hessian);
+  subproblem.setGradient(gradient);
+  subproblem.setConstant(constant);
+
+
+
   Eigen::VectorXd localOptimum(n);
   vector<double> xsol;
   vector<double> fsol;
   Eigen::VectorXd a(n);
   std::cout << "n" << n << std::endl;
   a.setZero();
+  printf("\x1b[33mLooking for new optimum: \n\x1b[0m");
+  //streambuf *old = cout.rdbuf(0);
+  //cout << "Hidden text!\n";
+
   subproblem.Solve(xsol, fsol, (char *) "Minimize", a, a);
   for (int i = 0; i < n; i++) {
     localOptimum[i] = xsol[i];
   }
+  //cout.rdbuf(old);
+  std::cout << fsol[0]<<"\n";
+  std::cout << xsol[0] << "\t" << xsol[1] <<"\n";
+  subproblem.printModel();
   return localOptimum;
 }
 
@@ -1010,7 +1035,8 @@ double DFO_Model::ComputeLagrangePolynomial(int t, Eigen::VectorXd point) {
   double c = Xi(0, t - 1);
   grad = (Xi.col(t - 1)).tail(n);
   for (int k = 1; k <= m; ++k) {
-    hess += Z.row(k - 1) * S * (Z.row(t - 1)).transpose() * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
+    double tmp = Z.row(k - 1) * S * (Z.row(t - 1)).transpose();
+    hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
   }
 
   double val = c + grad.transpose() * point + point.transpose() * hess * point;
@@ -1025,7 +1051,8 @@ Eigen::VectorXd DFO_Model::FindLocalOptimumOfAbsoluteLagrangePolynomial(int t) {
   double c = Xi(0, t - 1);
   grad = (Xi.col(t - 1)).tail(n);
   for (int k = 1; k <= m; ++k) {
-    hess += Z.row(k - 1) * S * (Z.row(t - 1)).transpose() * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
+    double tmp = Z.row(k - 1) * S * (Z.row(t - 1)).transpose();
+    hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
   }
 
   // Find min and max of l_t(x)
@@ -1058,7 +1085,7 @@ Eigen::VectorXd DFO_Model::GetInterpolationPointsSortedByDistanceFromBestPoint()
   std::vector<Eigen::VectorXd> tmp;
   for (int i = 0; i < m; ++i){
     Eigen::VectorXd t(n+1);
-    for (int j = 0; j < m; ++j){
+    for (int j = 0; j < n; ++j){
       t(j) = Y(j,i);
     }
     t(n) = i+1;
