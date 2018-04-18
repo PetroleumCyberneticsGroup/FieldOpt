@@ -38,6 +38,9 @@ Simulator::Simulator(QJsonObject json_simulator)
              throw std::runtime_error("No file found at SchedulePath: " + schedule_path.toStdString());
         schedule_file_path_ = schedule_path;
     }
+    else {
+        schedule_file_path_ = "";
+    }
 
     // Simulator type
     QString type = json_simulator["Type"].toString();
