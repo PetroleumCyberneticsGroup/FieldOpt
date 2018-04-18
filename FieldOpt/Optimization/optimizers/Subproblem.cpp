@@ -36,8 +36,8 @@ Subproblem::Subproblem(Settings::Optimizer *settings) {
   xlowCopy_ = Eigen::VectorXd::Zero(n_); /// OBS should be set by the driver file....
   xuppCopy_ = Eigen::VectorXd::Zero(n_);
   loadSNOPT();
-  normType_ = Subproblem::INFINITY_NORM;
-  normType = Subproblem::INFINITY_NORM;
+  normType_ = Subproblem::L2_NORM;
+  normType = Subproblem::L2_NORM;
   setConstraintsAndDimensions(); // This one should set the iGfun/jGvar and so on.
   setAndInitializeSNOPTParameters();
 
@@ -61,7 +61,7 @@ SNOPTHandler Subproblem::initSNOPTHandler() {
   SNOPTHandler snoptHandler(prnt_file.c_str(),
                             smry_file.c_str(),
                             optn_file.c_str());*/
-  cout << "[opt]Init. SNOPTHandler.------" << endl;
+  //cout << "[opt]Init. SNOPTHandler.------" << endl;
   return snoptHandler;
 }
 
@@ -117,6 +117,7 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
 
   snoptHandler.solve(Cold, xsol, fsol);
   integer exitCode = snoptHandler.getExitCode();
+  /*
   if (exitCode == 32){
     cout << "The major iteration limit was reached, trying to increase it to improve on the result" << endl;
     ResetSubproblem();
@@ -133,6 +134,7 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
     snoptHandler.setIntParameter("Iterations limit", 20000);
     snoptHandler.solve(Cold, xsol, fsol);
   }
+   */
 
 }
 
@@ -311,7 +313,7 @@ Subproblem::~Subproblem() {
 void Subproblem::setOptionsForSNOPT(SNOPTHandler &snoptHandler) {
 
   //if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
-  cout << "[opt]Set options for SNOPT.---" << endl;
+  //cout << "[opt]Set options for SNOPT.---" << endl;
 
   //snoptHandler.setParameter("Backup basis file              0");
 //  snoptHandler.setRealParameter("Central difference interval", 2 * derivativeRelativePerturbation);
@@ -365,13 +367,13 @@ void Subproblem::setOptionsForSNOPT(SNOPTHandler &snoptHandler) {
   //target complementarity gap
   //snoptHandler.setRealParameter("Major optimality tolerance", 0.0001);
 
-  //snoptHandler.setParameter("Major Print level  11111"); //  000001"
+  snoptHandler.setParameter("Major Print level  00000"); //  000001"
   snoptHandler.setRealParameter("Major step limit", 0.2);
   //snoptHandler.setIntParameter("Minor iterations limit", 200); // 200
 
   //for satisfying the QP bounds
 //  snoptHandler.setRealParameter("Minor feasibility tolerance", optdata.constraintTolerance);
-  //snoptHandler.setIntParameter("Minor print level", 10);
+  snoptHandler.setIntParameter("Minor print level", 0);
   //snoptHandler.setParameter("New basis file                 0");
   //snoptHandler.setParameter("New superbasics limit          99");
   //snoptHandler.setParameter("Objective Row");
@@ -555,6 +557,13 @@ void Subproblem::SetCenterPoint(Eigen::VectorXd cp) {
   y0 = y0_;
 }
 void Subproblem::SetBestPointRelativeToCenterPoint(Eigen::VectorXd bp) {
+
+}
+void Subproblem::printModel() {
+  std::cout << "The model of the subproblem \n";
+  std::cout << "constant = \n" << constant << std::endl;
+  std::cout << "gradient = \n" << gradient << std::endl;
+  std::cout << "hessian = \n" << hessian << std::endl;
 
 }
 

@@ -201,6 +201,8 @@ class Subproblem {
 
   void setConstant(double constant);
 
+  void printModel();
+
 
   void SetNormType(int type){
     normType_ = type;
