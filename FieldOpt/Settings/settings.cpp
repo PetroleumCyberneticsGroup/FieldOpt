@@ -126,14 +126,16 @@ void Settings::readSimulatorSection() {
             cout << simulator_->verb_vector_[i] << " ";
           }
       cout << endl;
-    auto simulator_type = simulator_->type();
+    auto SimTMP = json_driver_->value("Simulator").toObject();
+
     // ---------------------------------------------------------
-    cout << "FluidModel:------------- "
-         << simulator_type << endl;
+      cout << "SimulatorType:---------- "
+           << SimTMP["Type"].toString().toUtf8().constData() << endl;
 
     // ---------------------------------------------------------
       cout << "FluidModel:------------- "
-           << simulator_->fluid_model_ << endl;
+           << SimTMP["FluidModel"].toString().toUtf8().constData() << endl;
+
 
     // ---------------------------------------------------------
       cout << "MaxMinutes:------------- "
