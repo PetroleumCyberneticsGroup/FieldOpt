@@ -26,7 +26,6 @@
 #include <QList>
 
 #include <opm/parser/eclipse/Parser/Parser.hpp>
-#include <opm/parser/eclipse/Parser/MessageContainer.hpp>
 #include <opm/parser/eclipse/Parser/ParseContext.hpp>
 #include <opm/parser/eclipse/Deck/Deck.hpp>
 #include <opm/parser/eclipse/EclipseState/EclipseState.hpp>
@@ -49,6 +48,10 @@ namespace Settings {
  * @note This should work with ECL and Flow decks. With some tweaks,
  * it should also, in time, work with AD-GPRS decks, as their schedule
  * sections are identical.
+ *
+ * @bug The controls appear to not be read in correctly. The time steps
+ * are usually off by one or two dates, and the numbers are wrong.
+ * As such, the results should not be used in practice.
  *
  * @todo Add support for multisegment wells.
  */

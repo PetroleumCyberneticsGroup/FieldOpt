@@ -25,6 +25,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <boost/lexical_cast.hpp>
 #include "model.h"
 #include "settings_exceptions.h"
 #include "Utilities/filehandling.hpp"
@@ -254,8 +255,8 @@ std::string Model::Well::ControlEntry::toString() {
     ce << "ControlEntry - Timestep:  " << time_step << "\n";
     ce << "               State:     " << (state == WellState::WellOpen ? "Open" : "Shut") << "\n";
     ce << "               Mode:      " << (control_mode == ControlMode::RateControl ? "Rate" : "BHP") << "\n";
-    ce << "               BHP:       " << bhp << "\n";
-    ce << "               Rate:      " << rate << "\n";
+    ce << "               BHP:       " << boost::lexical_cast<std::string>(bhp) << "\n";
+    ce << "               Rate:      " << boost::lexical_cast<std::string>(rate) << "\n";
     ce << "               Inj. type: " << (injection_type == InjectionType::WaterInjection ? "Water" : "Gas/UNKWN") << "\n";
     ce << "               Variable:  " << (is_variable ? "Yes" : "No") << "\n";
     return ce.str();

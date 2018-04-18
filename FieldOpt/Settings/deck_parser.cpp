@@ -33,6 +33,7 @@ DeckParser::DeckParser(std::string deck_file) {
     // Update error policies to be more permissive when it comes
     // to the non-schedule parts of the deck.
     opm_parse_context.update("PARSE_MISSING_DIMS_KEYWORD", Opm::InputError::WARN);
+    opm_parse_context.update("PARSE_RANDOM_SLASH", Opm::InputError::WARN);
 
 
 
@@ -106,9 +107,11 @@ Model::WellType DeckParser::determineWellType(const Opm::Well *opm_well) {
                 std::cerr << "WARNING: Well " << opm_well->name()
                           << " is detected as an alternating produer/injector well."
                               " This is not currently supported."
-                              " Ignoring switch from producer to injector. "
+                              " Using last defined state (injector). "
                           << time_dates_[t]
                           << std::endl;
+                is_producer = false;
+                is_injector = true;
                 break;
             }
             else {
@@ -120,9 +123,11 @@ Model::WellType DeckParser::determineWellType(const Opm::Well *opm_well) {
                 std::cerr << "WARNING: Well " << opm_well->name()
                           << " is detected as an alternating produer/injector well."
                               " This is not currently supported."
-                              " Ignoring switch from injector to producer."
+                              " Using last defined state (producer)"
                           << time_dates_[t]
                           << std::endl;
+                is_producer = true;
+                is_injector = false;
                 break;
             }
             is_producer = true;
@@ -147,13 +152,10 @@ Model::PreferredPhase DeckParser::determinePreferredPhase(const Opm::Well *opm_w
     {
         case Opm::Phase::OIL:
             return Model::PreferredPhase::Oil;
-            break;
         case Opm::Phase::WATER:
             return Model::PreferredPhase::Water;
-            break;
         case Opm::Phase::GAS:
             return Model::PreferredPhase::Gas;
-            break;
         default:
             std::cerr << "WARNING: Deck parser was unable to determine the preferred phase"
                 "for well " << opm_well->name() << std::endl;
@@ -165,7 +167,7 @@ double DeckParser::determineWellboreRadius(const Opm::Well *opm_well) {
     auto opm_comps = opm_well->getCompletions();
     double radii_sum = 0;
     for (auto comp : opm_comps) {
-        radii_sum += comp.getDiameter() / 2.0;
+        radii_sum += (comp.getDiameter() / 2.0);
     }
     double avg_radius = radii_sum / (double)opm_comps.size();
     return avg_radius;
@@ -196,37 +198,40 @@ QList<Model::Well::WellBlock> DeckParser::opmToWellBlocks(const Opm::CompletionS
 QList<Model::Well::ControlEntry> DeckParser::opmToControlEntries(const Opm::Well *opm_well) {
     auto control_entries = QList<Model::Well::ControlEntry>();
     for (int t = opm_well->firstTimeStep(); t < num_timesteps_; ++t) {
-        Model::Well::ControlEntry ce;
-        switch (opm_well->getStatus(t))
-        {
-            case Opm::WellCommon::StatusEnum::OPEN:
-                ce.state = Model::WellState::WellOpen;
-                break;
-            case Opm::WellCommon::StatusEnum::AUTO:
-                ce.state = Model::WellState::WellOpen;
-                break;
-            case Opm::WellCommon::StatusEnum::SHUT:
-                ce.state = Model::WellState::WellShut;
-                break;
-            case Opm::WellCommon::StatusEnum::STOP:
-                ce.state = Model::WellState::WellShut;
-                break;
-            default:
-                // @todo I honestly don't know what could make it go here, but maybe it's that it hasnt changed.
-                continue;
-        }
+//        switch (opm_well->getStatus(t))
+//        {
+//            case Opm::WellCommon::StatusEnum::OPEN:
+//                ce.state = Model::WellState::WellOpen;
+//                break;
+//            case Opm::WellCommon::StatusEnum::AUTO:
+//                ce.state = Model::WellState::WellOpen;
+//                break;
+//            case Opm::WellCommon::StatusEnum::SHUT:
+//                ce.state = Model::WellState::WellShut;
+//                break;
+//            case Opm::WellCommon::StatusEnum::STOP:
+//                ce.state = Model::WellState::WellShut;
+//                break;
+//            default:
+//                // @todo I honestly don't know what could make it go here, but maybe it's that it hasnt changed.
+//                continue;
+//        }
 
-        ce.control_mode = determineWellControlMode(opm_well, t);
-        ce.rate = determineRate(opm_well, t);
-        ce.bhp = determineBhp(opm_well, t);
-        if (opm_well->isInjector(t)) {
-            ce.injection_type = determineInjectorType(opm_well, t);
-        }
-        ce.time_step = time_days_[t];
+        if (determineWellControlMode(opm_well, t) != Model::ControlMode::UNKNOWN_CONTROL) {
+            Model::Well::ControlEntry ce;
+            ce.state = Model::WellState::WellOpen;
+            ce.control_mode = determineWellControlMode(opm_well, t);
+            ce.rate = determineRate(opm_well, t);
+            ce.bhp = determineBhp(opm_well, t);
+            if (opm_well->isInjector(t)) {
+                ce.injection_type = determineInjectorType(opm_well, t);
+            }
+            ce.time_step = time_days_[t];
 
-        // Add the new control if it is different from the last one added
-        if (control_entries.size() == 0 || control_entries.last().isDifferent(ce))
-            control_entries.push_back(ce);
+            // Add the new control if it is different from the last one added
+            if (control_entries.size() == 0 || control_entries.last().isDifferent(ce))
+                control_entries.push_back(ce);
+        }
     }
     return control_entries;
 }
@@ -237,19 +242,15 @@ Model::ControlMode DeckParser::determineWellControlMode( const Opm::Well *opm_we
         switch (opm_wpp.controlMode) {
             case Opm::WellProducer::ControlModeEnum::ORAT:
                 return Model::ControlMode::RateControl;
-                break;
             case Opm::WellProducer::ControlModeEnum::RESV:
                 return Model::ControlMode::RateControl;
-                break;
             case Opm::WellProducer::ControlModeEnum::LRAT:
                 return Model::ControlMode::RateControl;
-                break;
             case Opm::WellProducer::ControlModeEnum::BHP:
                 return Model::ControlMode::BHPControl;
-                break;
             default:
+                std::cerr << "WARNING: Unable to determine control mode: " << opm_wpp.controlMode << std::endl;
                 return Model::ControlMode::UNKNOWN_CONTROL;
-                std::cerr << "WARNING: Unable to determine control mode." << std::endl;
         }
     }
     else {
@@ -257,17 +258,13 @@ Model::ControlMode DeckParser::determineWellControlMode( const Opm::Well *opm_we
         switch (opm_wip.controlMode) {
             case Opm::WellInjector::ControlModeEnum::RATE:
                 return Model::ControlMode::RateControl;
-                break;
             case Opm::WellInjector::ControlModeEnum::RESV:
                 return Model::ControlMode::RateControl;
-                break;
             case Opm::WellInjector::ControlModeEnum::BHP:
                 return Model::ControlMode::BHPControl;
-                break;
             default:
+                std::cerr << "WARNING: Unable to determine control mode. Unknown control type" << std::endl;
                 return Model::ControlMode::UNKNOWN_CONTROL;
-                std::cerr << "WARNING: Unable to determine control mode."
-                    " Unknown control type" << std::endl;
         }
     }
 }
