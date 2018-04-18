@@ -143,7 +143,9 @@ Trajectory::initializeWellBlocks(
   // ---------------------------------------------------------
   QList<Settings::Model::Well::WellBlock> blocks = well.well_blocks;
   for (int i = 0; i < blocks.size(); ++i) {
-    well_blocks_->append(new WellBlock(blocks[i].i, blocks[i].j, blocks[i].k));
+    well_blocks_->append(new WellBlock(blocks[i].i,
+                                       blocks[i].j,
+                                       blocks[i].k));
 
     // -------------------------------------------------------
     if (blocks[i].is_variable) {

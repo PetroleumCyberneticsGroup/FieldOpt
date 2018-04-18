@@ -84,6 +84,16 @@ Well::Well(Settings::Model settings,
   toe_.j = trajectory_->GetWellBlocks()->last()->j();
   toe_.k = trajectory_->GetWellBlocks()->last()->k();
 
+  // -----------------------------------------------------
+  if (verb_vector_[5] > 1) // idx:5 -> mod (Model)
+    std::cout << "[mod]Heel/Toe IJK: --------- "
+              << "Heel: I=" << heel_.i
+              << " J=" << heel_.j
+              << " K=" << heel_.k
+              << " Toe: I=" << toe_.i
+              << " J=" << toe_.j
+              << " K=" << toe_.k
+              << std::endl;
 }
 
 // ---------------------------------------------------------
