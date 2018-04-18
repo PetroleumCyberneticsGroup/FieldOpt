@@ -80,8 +80,8 @@ Case *Optimizer::GetCaseForEvaluation() {
 }
 
 void Optimizer::SubmitEvaluatedCase(Case *c) {
-  if (penalize_ && iteration_ > 0) {
-    double penalized_ofv = PenalizedOFV(c);
+  if (penalize_ && iteration_ > 0 && c->objective_function_value() > -0.02) {
+    double penalized_ofv = PenalizedLengthOFV(c);
     c->set_objective_function_value(penalized_ofv);
   }
   case_handler_->UpdateCaseObjectiveFunctionValue(
@@ -276,6 +276,19 @@ double Optimizer::PenalizedOFV(Case *c) {
   else {
     return normalizer_ofv_.denormalize(norm_pen_ovf);
   }
+}
+double Optimizer::PenalizedLengthOFV(Case *c) {
+    long double norm_ofv = c->objective_function_value();
+    long double penalty = constraint_handler_->GetWeightedLengthPenalties(c);
+    long double norm_pen_ovf = norm_ofv - penalty;
+
+    if (norm_pen_ovf <= 0.0L) {
+        cout << "RETURNING ZERO OFV" << endl;
+        return 0.0;
+    }
+    else {
+        return norm_pen_ovf;
+    }
 }
 }
 

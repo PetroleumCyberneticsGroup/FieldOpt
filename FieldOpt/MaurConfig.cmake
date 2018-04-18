@@ -7,13 +7,13 @@ else()
 endif()
 
 # Maur =================================================================
-message(".............................................................")
+message("=============================================================")
 if(COMPILATION_AT_MAUR)
 
     # RPOLYPOLY
-    set(RPOLYPOLY_LIB $ENV{HOME}/git/libraries/RpolyPlusPlus/cmake-build-debug/lib)
+    set(RPOLYPOLY_LIB $ENV{HOME}/git/libraries/RpolyPlusPlus/lib)
     set(RpolyPlusPlus ${RPOLYPOLY_LIB}/librpoly_plus_plus.so)
-    set(RPOLYPOLY_INCLUDE_DIR $ENV{HOME}/git/libraries/RpolyPlusPlus/include)
+    set(RPOLYPOLY_INCLUDE_DIR /home/bragesk/git/libraries/RpolyPlusPlus/include)
     include_directories(${RPOLYPOLY_INCLUDE_DIR})
     message(STATUS "RPOLYPOLY_LIB: ${RPOLYPOLY_LIB}")
     message(STATUS "RpolyPlusPlus: ${RpolyPlusPlus}")
@@ -24,8 +24,8 @@ if(COMPILATION_AT_MAUR)
     message(STATUS "CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
 
     # EIGEN
-    set(EIGEN3_INCLUDE_DIR $ENV{HOME}/git/libraries/eigen3.3-beta1-2/Eigen)
-    include_directories($ENV{HOME}/git/libraries/eigen3.3-beta1-2)
+    set(EIGEN3_INCLUDE_DIR $ENV{HOME}/git/libraries/eigen/include/eigen3)
+    include_directories($ENV{HOME}/git/libraries/eigen/include/Eigen/include)
     include_directories(${EIGEN3_INCLUDE_DIR})
     message(STATUS "EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR}")
     message(STATUS "EIGEN VERSION: ${EIGEN_VERSION}")

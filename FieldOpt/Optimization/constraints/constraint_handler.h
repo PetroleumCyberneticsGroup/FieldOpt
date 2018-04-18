@@ -76,7 +76,7 @@ class ConstraintHandler
    * @return Weighted sum of all normalized penalties
    */
   long double GetWeightedNormalizedPenalties(Case *c);
-
+  long double GetWeightedLengthPenalties(Case *c);
   Eigen::VectorXd GetLowerBounds(QList<QUuid> id_vector) const;
   Eigen::VectorXd GetUpperBounds(QList<QUuid> id_vector) const;
 

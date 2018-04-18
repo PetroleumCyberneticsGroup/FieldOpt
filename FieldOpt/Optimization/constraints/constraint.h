@@ -124,6 +124,7 @@ class Constraint
    * @return Normalized penalty.
    */
   virtual long double PenaltyNormalized(Case *c);
+  virtual long double PenaltyLength(Case *c);
 
   long double GetPenaltyWeight() { return penalty_weight_; }
 
