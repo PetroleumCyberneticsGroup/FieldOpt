@@ -1,27 +1,47 @@
+/***********************************************************
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
 
-// -----------------------------------------------------------------
+ This file is part of the FieldOpt project.
+
+ FieldOpt is free software: you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation, either version
+ 3 of the License, or (at your option) any later version.
+
+ FieldOpt is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty
+ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
+
+ You should have received a copy of the
+ GNU General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
+
+// -----------------------------------------------------------
 #include "settings.h"
 #include "Runner/runtime_settings.h"
 #include "settings_exceptions.h"
 #include "Utilities/filehandling.hpp"
 
-// -----------------------------------------------------------------
+// -----------------------------------------------------------
 // Qt
 #include <QJsonDocument>
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 // STD
 #include <iostream>
 #include <iomanip>
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 using std::string;
 using std::cout;
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 namespace Settings {
 
-// ===============================================================
+// =========================================================
 Settings::Settings(QString driver_path,
                    QString output_directory,
                    std::vector<int> verb_vector) {
@@ -39,7 +59,7 @@ Settings::Settings(QString driver_path,
   optimizer_->output_dir_ = output_directory;
 }
 
-// ===============================================================
+// =========================================================
 QString Settings::GetLogCsvString() const {
 
   QStringList header  = QStringList();
@@ -56,7 +76,7 @@ QString Settings::GetLogCsvString() const {
   return QString("%1\n%2").arg(header.join(",")).arg(content.join(","));
 }
 
-// ===============================================================
+// =========================================================
 void Settings::readDriverFile() {
 
   QFile *file = new QFile(driver_path_);
@@ -84,7 +104,7 @@ void Settings::readDriverFile() {
   file->close();
 }
 
-// ===============================================================
+// =========================================================
 void Settings::readGlobalSection() {
   try {
     QJsonObject global = json_driver_->value("Global").toObject();
@@ -101,19 +121,23 @@ void Settings::readGlobalSection() {
   }
 }
 
-// ===============================================================
+// =========================================================
 void Settings::readSimulatorSection() {
 
+  // -------------------------------------------------------
   // Simulator root
   try {
-    QJsonObject json_simulator = json_driver_->value("Simulator").toObject();
+    QJsonObject json_simulator =
+        json_driver_->value("Simulator").toObject();
     simulator_ = new Simulator(json_simulator);
   }
   catch (std::exception const &ex) {
     throw UnableToParseSimulatorSectionException(
-        "Unable to parse driver file simulator section: " + string(ex.what()));
+        "Unable to parse driver file "
+            "simulator section: " + string(ex.what()));
   }
 
+  // -------------------------------------------------------
   simulator_->set_verbosity_vector(verb_vector());
   if (simulator_->verb_vector_[9] > 0) { // idx:9 -> set (Settings)
     string str_out = "[set]Simulator settings";
@@ -137,18 +161,20 @@ void Settings::readSimulatorSection() {
            << SimTMP["FluidModel"].toString().toUtf8().constData() << endl;
 
 
-    // ---------------------------------------------------------
-      cout << "MaxMinutes:------------- "
-           << simulator_->max_minutes_ << endl;
+    // -----------------------------------------------------
+    cout << "MaxMinutes:------------- "
+         << simulator_->max_minutes_ << endl;
 
   }
 }
 
-// ===============================================================
+// =========================================================
 void Settings::readOptimizerSection() {
 
+  // -------------------------------------------------------
   try {
-    QJsonObject optimizer = json_driver_->value("Optimizer").toObject();
+    QJsonObject optimizer =
+        json_driver_->value("Optimizer").toObject();
     optimizer_ = new Optimizer(optimizer);
   }
   catch (std::exception const &ex) {
@@ -156,48 +182,50 @@ void Settings::readOptimizerSection() {
         "Unable to parse driver file optimizer section: " + string(ex.what()));
   }
 
-  // -------------------------------------------------------------
+  // -------------------------------------------------------
   optimizer_->set_verbosity_vector(verb_vector());
   if (optimizer_->verb_vector_[9] > 0) { // idx:9 -> set (Settings)
     string str_out = "[set]Optimizer settings";
     cout << "\n" << BLDON << str_out << AEND << "\n"
          << std::string(str_out.length(), '=') << endl;
 
-    // -----------------------------------------------------------
+    // -----------------------------------------------------
     if (optimizer_->type() == Optimizer::OptimizerType::Compass ||
         optimizer_->type() == Optimizer::OptimizerType::APPS) {
 
-      // ---------------------------------------------------------
+      // ---------------------------------------------------
       cout << fixed << setprecision(1);
       cout << "MaxEvaluations:-------- "
            << optimizer_->parameters_.max_evaluations << endl;
       cout << "InitialStepLength:----- "
            << optimizer_->parameters_.initial_step_length << endl;
 
-      // ---------------------------------------------------------
+      // ---------------------------------------------------
       cout << "InitialStepLengthXYZ:-- ";
-      for( int i=0; i<optimizer_->parameters_.initial_step_length_xyz.count(); ++i ) {
+      for(int i=0; i<optimizer_->
+          parameters_.initial_step_length_xyz.count(); ++i ) {
         cout << optimizer_->parameters_.initial_step_length_xyz[i] << " ";
       }
       cout << endl;
 
-      // ---------------------------------------------------------
+      // ---------------------------------------------------
       cout << "MinimumStepLength:----- "
            << optimizer_->parameters_.minimum_step_length << endl;
       cout << "MinimumStepLengthXYZ:-- ";
-      for( int i=0; i<optimizer_->parameters_.minimum_step_length_xyz.count(); ++i ) {
+      for(int i=0; i<optimizer_->
+          parameters_.minimum_step_length_xyz.count(); ++i ) {
         cout << optimizer_->parameters_.minimum_step_length_xyz[i] << " ";
       }
       cout << endl;
 
-      // ---------------------------------------------------------
+      // ---------------------------------------------------
       cout << fixed << setprecision(8);
       cout << "ContractionFactor:----- "
            << optimizer_->parameters_.contraction_factor << endl;
       cout << "ExpansionFactor:------- "
            << optimizer_->parameters_.expansion_factor << endl;
 
-      // ---------------------------------------------------------
+      // ---------------------------------------------------
       cout << fixed << setprecision(1);
       cout << "MaxQueueSize:---------- "
            << optimizer_->parameters_.max_queue_size << endl;

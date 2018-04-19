@@ -32,18 +32,26 @@ using std::endl;
 // ---------------------------------------------------------
 namespace Model {
 
-Model::Model(Settings::Model settings, Logger *logger)
-{
-  grid_ = new Reservoir::Grid::ECLGrid(settings.reservoir().path.toStdString());
-  if (settings.verb_vector()[5] > 1) // idx:5 -> mod (Model)
-    cout << "[mod]Init ECLGrid_.---------- " << endl;
+Model::Model(Settings::Model settings, Logger *logger) {
 
+  // -------------------------------------------------------
+  grid_ = new Reservoir::Grid::ECLGrid(
+      settings.reservoir().path.toStdString());
+
+  // -------------------------------------------------------
+  if (settings.verb_vector()[5] > 1) { // idx:5 -> mod (Model)
+    cout << BRED << "[mod]Building Model.---------" << AEND << endl;
+    cout << "[mod]Init ECLGrid_.---------- " << endl;
+  }
+
+  // -------------------------------------------------------
   variable_container_ = new Properties::VariablePropertyContainer();
   if (settings.verb_vector()[5] > 1) // idx:5 -> mod (Model)
     cout << "[mod]Init var_prop_cont_.----" << endl;
 
+  // -------------------------------------------------------
   if (settings.verb_vector()[5] >= 1) // idx:5 -> mod (Model)
-    cout << "[mod]Add wells->wellList:---- ";
+    cout << "[mod]Adding wells:----------- \n";
 
   // -------------------------------------------------------
   wells_ = new QList<Wells::Well *>();
@@ -51,13 +59,16 @@ Model::Model(Settings::Model settings, Logger *logger)
 
     auto wname = settings.wells().at(well_nr).name.toStdString();
     if (settings.verb_vector()[5] >= 1) // idx:5 -> mod (Model)
-      cout << "wname=" << wname << " - ";
+      cout << FCYAN << "\nWell=" << wname
+           << "\n----------------------------- \n" << AEND;
 
+    // -----------------------------------------------------
     wells_->append(new Wells::Well(settings, well_nr,
                                    variable_container_,
                                    grid_));
   }
 
+  // -------------------------------------------------------
   if (settings.verb_vector()[5] >= 1) // idx:5 -> mod (Model)
     cout << "----total nr. of wells: " << settings.wells().size()
          << "----" << endl;
@@ -66,6 +77,12 @@ Model::Model(Settings::Model settings, Logger *logger)
   variable_container_->CheckVariableNameUniqueness();
   logger_ = logger;
   logger_->AddEntry(new Summary(this));
+
+  // -------------------------------------------------------
+  if (settings.verb_vector()[5] > 1) // idx:5 -> mod (Model)
+    cout << BRED << "[mod]Finished building Model." << AEND << endl;
+
+
 }
 
 // ---------------------------------------------------------

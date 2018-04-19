@@ -1,21 +1,23 @@
-/******************************************************************************
-   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
+/***********************************************************
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
 
-   This file is part of the FieldOpt project.
+ This file is part of the FieldOpt project.
 
-   FieldOpt is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+ FieldOpt is free software: you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation, either version
+ 3 of the License, or (at your option) any later version.
 
-   FieldOpt is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+ FieldOpt is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty
+ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
-******************************************************************************/
+ You should have received a copy of the
+ GNU General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
 
 // ---------------------------------------------------------
 #include <iostream>
@@ -32,13 +34,15 @@ Well::Well(Settings::Model settings,
            Reservoir::Grid::Grid *grid) {
 
   // -------------------------------------------------------
-  Settings::Model::Well well_settings = settings.wells().at(well_number);
+  Settings::Model::Well
+      well_settings = settings.wells().at(well_number);
   well_settings.verb_vector_ = settings.verb_vector();
 
   // -------------------------------------------------------
   verb_vector_ = settings.verb_vector();
   if (verb_vector_[5] > 1) // idx:5 -> mod (Model)
-    std::cout << "[mod]Reading well settings.- " << std::endl;
+    std::cout << FCYAN << "[mod]Reading well settings.-- "
+              << AEND << std::endl;
 
   // -------------------------------------------------------
   grid_ = grid;
@@ -47,6 +51,8 @@ Well::Well(Settings::Model settings,
   name_ = well_settings.name;
   type_ = well_settings.type;
   deftype_ = well_settings.definition_type;
+
+  // -------------------------------------------------------
   if (well_settings.group.length() >= 1)
     group_ = well_settings.group;
   else group_ = "";
@@ -73,7 +79,12 @@ Well::Well(Settings::Model settings,
   // -------------------------------------------------------
   drilling_sequence_ = well_settings.drilling_sequence;
   drilling_time_ = well_settings.drilling_time;
+  UpdateHeelToeIJK();
   ComputeDrillingTime();
+}
+
+// ---------------------------------------------------------
+void Well::UpdateHeelToeIJK() {
 
   // -------------------------------------------------------
   heel_.i = trajectory_->GetWellBlocks()->first()->i();
@@ -85,15 +96,15 @@ Well::Well(Settings::Model settings,
   toe_.k = trajectory_->GetWellBlocks()->last()->k();
 
   // -----------------------------------------------------
-  if (verb_vector_[5] > 1) // idx:5 -> mod (Model)
-    std::cout << "[mod]Heel/Toe IJK: --------- "
-              << "Heel: I=" << heel_.i
-              << " J=" << heel_.j
-              << " K=" << heel_.k
-              << " Toe: I=" << toe_.i
-              << " J=" << toe_.j
-              << " K=" << toe_.k
-              << std::endl;
+  if (verb_vector_[5] > 2) // idx:5 -> mod (Model)
+    cout << "[mod]Heel/Toe IJK: --------- "
+         << "Heel: I=" << heel_.i
+         << " J=" << heel_.j
+         << " K=" << heel_.k
+         << " Toe: I=" << toe_.i
+         << " J=" << toe_.j
+         << " K=" << toe_.k
+         << endl;
 }
 
 // ---------------------------------------------------------
@@ -108,10 +119,10 @@ void Well::ComputeDrillingTime() {
         == Settings::Model::WellDefinitionType::WellBlocks) {
 
       Eigen::Vector3d heel_c =
-          grid_->GetCell(heel_.i, heel_.j, heel_.k).center();
+          grid_->GetCell(heel_.i-1, heel_.j-1, heel_.k-1).center();
 
       Eigen::Vector3d toe_c =
-          grid_->GetCell(toe_.i, toe_.j, toe_.k).center();
+          grid_->GetCell(toe_.i-1, toe_.j-1, toe_.k-1).center();
 
       dx = toe_c(0) - heel_c(0);
       dy = toe_c(1) - heel_c(1);

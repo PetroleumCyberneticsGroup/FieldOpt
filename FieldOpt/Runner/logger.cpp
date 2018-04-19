@@ -1,54 +1,71 @@
-/******************************************************************************
-   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
+/***********************************************************
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
 
-   This file is part of the FieldOpt project.
+ This file is part of the FieldOpt project.
 
-   FieldOpt is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+ FieldOpt is free software: you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation, either version
+ 3 of the License, or (at your option) any later version.
 
-   FieldOpt is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+ FieldOpt is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty
+ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
-******************************************************************************/
+ You should have received a copy of the
+ GNU General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
 
-#include <iomanip>
-#include <QtCore/QJsonDocument>
+// ---------------------------------------------------------
 #include "logger.h"
 #include "Utilities/time.hpp"
-#include <boost/algorithm/string.hpp>
 
+// ---------------------------------------------------------
+// STD / BOOST / QT
+#include <boost/algorithm/string.hpp>
+#include <iomanip>
+#include <QtCore/QJsonDocument>
+
+// =========================================================
 Logger::Logger(Runner::RuntimeSettings *rts,
                QString output_subdir,
-               bool write_logs)
-{
+               bool write_logs) {
+
+  // -------------------------------------------------------
   write_logs_ = write_logs;
   is_worker_ = output_subdir.length() > 0;
   output_dir_ = rts->output_dir();
 
+  // -------------------------------------------------------
   verbose_ = rts->verbosity_level();
   verb_vector_ = rts->verb_vector();
+
+  // -------------------------------------------------------
   if (verb_vector_[0] >= 1) // idx:0 -> run (Runner)
     std::cout << "[run]Initialized Logger.-----" << std::endl;
 
+  // -------------------------------------------------------
   if (output_subdir.length() > 0) {
     output_dir_ = output_dir_ + "/" + output_subdir + "/";
     Utilities::FileHandling::CreateDirectory(output_dir_);
   }
+
+  // -------------------------------------------------------
   opt_log_path_ = output_dir_ + "/log_optimization.csv";
   cas_log_path_ = output_dir_ + "/log_cases.csv";
   ext_log_path_ = output_dir_ + "/log_extended.json";
   run_state_path_ = output_dir_ + "/state_runner.txt";
+
+  // -------------------------------------------------------
   summary_prerun_path_ = output_dir_ + output_subdir + "/summary_prerun.md";
   summary_postrun_path_ = output_dir_ + output_subdir + "/summary_postrun.md";
   QStringList log_paths = (QStringList() << cas_log_path_ << opt_log_path_ << ext_log_path_ << run_state_path_
                                          << summary_prerun_path_ << summary_postrun_path_);
 
+  // -------------------------------------------------------
   // Delete existing logs if --force flag is on
   if (rts->overwrite_existing()) {
     for (auto path : log_paths) {
@@ -61,6 +78,7 @@ Logger::Logger(Runner::RuntimeSettings *rts,
     }
   }
 
+  // -------------------------------------------------------
   if (write_logs_) {
     // Write CSV headers
     if (!is_worker_) {
@@ -68,6 +86,7 @@ Logger::Logger(Runner::RuntimeSettings *rts,
       Utilities::FileHandling::WriteLineToFile(opt_log_header_, opt_log_path_);
     }
 
+    // -----------------------------------------------------
     // Create base JSON document
     QJsonObject json_base;
     json_base.insert("Cases", QJsonArray());
@@ -79,11 +98,14 @@ Logger::Logger(Runner::RuntimeSettings *rts,
   }
 }
 
+// =========================================================
 void Logger::AddEntry(Loggable *obj) {
 
+  // -------------------------------------------------------
   if (verb_vector_[0] >= 3) // idx:0 -> run (Runner)
     std::cout << "[run]Addding log entry.------" << std::endl;
 
+  // -------------------------------------------------------
   switch (obj->GetLogTarget()) {
     case Loggable::LogTarget::LOG_CASE: logCase(obj); break;
     case Loggable::LogTarget::LOG_OPTIMIZER: logOptimizer(obj); break;
@@ -96,6 +118,7 @@ void Logger::AddEntry(Loggable *obj) {
     std::cout << "[run]Addding log entry (end)." << std::endl;
 }
 
+// =========================================================
 void Logger::logRunnerState(Loggable *obj) {
   if (!write_logs_ || !is_worker_) // Only workers should do this
     return;
@@ -107,6 +130,7 @@ void Logger::logRunnerState(Loggable *obj) {
   Utilities::FileHandling::WriteStringToFile(QString::fromStdString(st.str()), run_state_path_);
 }
 
+// =========================================================
 void Logger::logCase(Loggable *obj) {
   if (!write_logs_ || is_worker_)
     return;
@@ -128,6 +152,7 @@ void Logger::logCase(Loggable *obj) {
   return;
 }
 
+// =========================================================
 void Logger::logOptimizer(Loggable *obj) {
   if (!write_logs_ || is_worker_) return;
   stringstream entry;
@@ -154,6 +179,7 @@ void Logger::logOptimizer(Loggable *obj) {
   return;
 }
 
+// =========================================================
 void Logger::logExtended(Loggable *obj) {
   if (!write_logs_) return;
   QJsonObject new_entry;
@@ -218,6 +244,7 @@ void Logger::logExtended(Loggable *obj) {
   return;
 }
 
+// =========================================================
 void Logger::collectExtendedLogs() {
   if (!write_logs_ || is_worker_) return;
 
@@ -265,6 +292,7 @@ void Logger::collectExtendedLogs() {
   return;
 }
 
+// =========================================================
 void Logger::logSummary(Loggable *obj) {
   if (obj->GetWellDescriptions().size() > 0) {
     sum_wellmap_ = obj->GetWellDescriptions();
@@ -281,6 +309,7 @@ void Logger::logSummary(Loggable *obj) {
   }
 }
 
+// =========================================================
 void Logger::FinalizePrerunSummary() {
   if (!write_logs_ || is_worker_) return;
 
@@ -359,6 +388,7 @@ void Logger::FinalizePrerunSummary() {
   sum_wellmap_.clear();
 }
 
+// =========================================================
 void Logger::FinalizePostrunSummary() {
   if (!write_logs_ || is_worker_) return;
 
@@ -426,6 +456,7 @@ void Logger::FinalizePostrunSummary() {
                                              summary_postrun_path_);
 }
 
+// =========================================================
 void Logger::appendWellToc(map<string, Loggable::WellDescription> wellmap,
                            stringstream &sum) {
 
@@ -440,6 +471,7 @@ void Logger::appendWellToc(map<string, Loggable::WellDescription> wellmap,
 
 }
 
+// =========================================================
 void Logger::appendWellDescription(pair<string, Loggable::WellDescription> w,
                                    stringstream &sum) {
 
