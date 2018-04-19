@@ -302,7 +302,7 @@ DFO_Model::DFO_Model(unsigned int m,
   this->n = n;
   this->y0 = y0;
   this->y0 = Eigen::VectorXd::Zero(n);
-  //this->y0 << 20,10;
+  this->y0 << 20,10;
   this->rho = rhoBeg;
   this->lambda = lambda;
 
@@ -436,7 +436,7 @@ void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, Upd
       bestPointAllTimeFunctionValue = fvalNew;
       bestPointAllTime = yNew;
       printf("\x1b[33mNEW BEST POINT IS FOUND! (ALL TIME): \n\x1b[0m");
-      std::cout << "\t fvalNew" << fvalNew << "\n";
+      std::cout << "\t fvalNew\n" << fvalNew << "\n";
       //std::cout << "NEW BEST POINT IS FOUND! (ALL TIME)" << std::endl;
     }
   }
@@ -494,7 +494,8 @@ void DFO_Model::shiftCenterPointOfQuadraticModel(Eigen::VectorXd s) {
   for (int k = 1; k <= m; ++k) {
     r = Y.col(k - 1) - 0.5 * s;
     //P.col(k - 1) = (s.transpose() * r) * r + 0.25 * squaredNorm * s;
-    Eigen::VectorXd tmp1 = (s.transpose() * r) * r;
+    double tmp0 = (s.transpose() * r);
+    Eigen::VectorXd tmp1 = tmp0 * r;
     Eigen::VectorXd tmp2 = 0.25 * squaredNorm * s;
     eigen_col(P, tmp1 + tmp2, k-1);
   }
@@ -555,13 +556,15 @@ void DFO_Model::shiftCenterPointOfQuadraticModel(Eigen::VectorXd s) {
   constant += gradient.transpose() * s;
   constant += 0.5 * (s).transpose() * (Gamma * (s));
   for (int i = 1; i <= m; ++i) {
-    constant += 0.5 * (s).transpose() * ((gammas(i - 1) * (Y.col(i - 1)).transpose() * (s)) * Y.col(i - 1));
+    double tmp0 = (gammas(i - 1) * (Y.col(i - 1)).transpose() * (s));
+    constant += 0.5 * (s).transpose() * (tmp0 * Y.col(i - 1));
   }
 
   //Update the stored gradient
   gradient += Gamma * s;
   for (int i = 1; i <= m; ++i) {
-    gradient += ((gammas(i - 1) * (Y.col(i - 1)).transpose() * (s)) * Y.col(i - 1));
+    double tmp0 = (gammas(i - 1) * (Y.col(i - 1)).transpose() * (s));
+    gradient += (tmp0 * Y.col(i - 1));
   }
 
   //Update the stored Gamma
@@ -876,7 +879,7 @@ void DFO_Model::printQuadraticModel() {
     hess += gammas(i - 1) * Y.col(i - 1) * (Y.col(i - 1)).transpose();
   }
 
-  std::cout << "---------------- Extracted form the object----" << std::endl;
+  //std::cout << "---------------- Extracted form the object----" << std::endl;
   std::cout << "c = " << constant << std::endl;
   std::cout << "gradient = " << std::endl << gradient << std::endl;
   std::cout << "hessian = " << std::endl << hess << std::endl;
@@ -992,14 +995,16 @@ Eigen::VectorXd DFO_Model::FindLocalOptimum() {
   //streambuf *old = cout.rdbuf(0);
   //cout << "Hidden text!\n";
 
-  subproblem.Solve(xsol, fsol, (char *) "Minimize", a, a);
+  subproblem.Solve(xsol, fsol, (char *) "Minimize",y0,bestPoint);
   for (int i = 0; i < n; i++) {
     localOptimum[i] = xsol[i];
   }
   //cout.rdbuf(old);
   std::cout << fsol[0]<<"\n";
-  std::cout << xsol[0] << "\t" << xsol[1] <<"\n";
-  subproblem.printModel();
+  std::cout << "new point " <<xsol[0] << "\t" << xsol[1] <<"\n";
+  std::cout << "best point " << bestPoint[0] << "\t" << bestPoint[1] <<"\n";
+
+  //subproblem.printModel();
   return localOptimum;
 }
 

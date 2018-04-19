@@ -283,7 +283,7 @@ class DFO_Model {
 
   @return the center point of the quadratic model
   */
-  Eigen::MatrixXd getCenterPoint() {
+  Eigen::VectorXd getCenterPoint() {
     return y0;
   }
 
