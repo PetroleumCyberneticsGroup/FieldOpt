@@ -48,6 +48,7 @@ Well::Well(Settings::Model settings,
   grid_ = grid;
 
   // -------------------------------------------------------
+  // Set name and type (prod/inj, well block/spline)
   name_ = well_settings.name;
   type_ = well_settings.type;
   deftype_ = well_settings.definition_type;
@@ -60,18 +61,11 @@ Well::Well(Settings::Model settings,
   // -------------------------------------------------------
   preferred_phase_ = well_settings.preferred_phase;
   wellbore_radius_ =
-      new Properties::ContinousProperty(well_settings.wellbore_radius);
+      new Properties::ContinousProperty(
+          well_settings.wellbore_radius);
 
   // -------------------------------------------------------
-  controls_ = new QList<Control *>();
-  for (int i = 0; i < well_settings.controls.size(); ++i) {
-
-    controls_->append(new Control(well_settings.controls[i],
-                                  well_settings,
-                                  variable_container));
-  }
-
-  // -------------------------------------------------------
+  // Set trajectory
   trajectory_ = new Wellbore::Trajectory(well_settings,
                                          variable_container,
                                          grid);
@@ -81,6 +75,18 @@ Well::Well(Settings::Model settings,
   drilling_time_ = well_settings.drilling_time;
   UpdateHeelToeIJK();
   ComputeDrillingTime();
+
+  // -------------------------------------------------------
+  // Set controls
+  controls_ = new QList<Control *>();
+  for (int i = 0; i < well_settings.controls.size(); ++i) {
+
+    // -----------------------------------------------------
+    controls_->append(new Control(well_settings.controls[i],
+                                  well_settings,
+                                  variable_container));
+  }
+
 }
 
 // ---------------------------------------------------------
@@ -112,7 +118,7 @@ void Well::ComputeDrillingTime() {
 
   if (drilling_time_ < 0) {
 
-    int testing = true;
+    // int testing = false;
     double dx = 0, dy = 0, ze = 0, dxdy = 0;
 
     // -----------------------------------------------------
@@ -131,7 +137,7 @@ void Well::ComputeDrillingTime() {
 
       // Drilling and completion time for vert.well at 2000m
       // depth: 30 days, cost: 10 million $.
-      if(testing) ze = 2000; dxdy = 0;
+      // if(testing) ze = 2000; dxdy = 0;
 
       // ---------------------------------------------------
     } else if (deftype_
@@ -144,7 +150,7 @@ void Well::ComputeDrillingTime() {
       // Drilling and completion time for hz.well w/ end point
       // at 2000m depth and 2000m offset from the platform:
       // 70 days, cost: 30 million $.
-      if(testing) ze = 2000; dxdy = 2000;
+      // if(testing) ze = 2000; dxdy = 2000;
 
     }
 
@@ -157,7 +163,8 @@ void Well::ComputeDrillingTime() {
     // DX, DY: hz. offset of well endpoint from kick-off point
     // Ze: z coord of well end point
 
-    if(!testing) dxdy = sqrt(pow(dx, 2.0) + pow(dy, 2.0));
+    //if(!testing)
+    dxdy = sqrt(pow(dx, 2.0) + pow(dy, 2.0));
     drilling_time_ = 0.015 * ze + 0.02 * dxdy;
 
     // -----------------------------------------------------
@@ -182,9 +189,16 @@ bool Well::IsInjector() {
 // =========================================================
 void Well::Update(int rank) {
 
+  // -------------------------------------------------------
+  if (verb_vector_[5] > 1) // idx:5 -> mod (Model)
+    cout << FCYAN << "[mod]Updating: TRJ, IJK & DT. " << AEND << endl;
+
+  // -------------------------------------------------------
   trajectory_->UpdateWellBlocks(rank);
 
+  // -------------------------------------------------------
   UpdateHeelToeIJK();
+  ComputeDrillingTime();
 
 //  heel_.i = trajectory_->GetWellBlocks()->first()->i();
 //  heel_.j = trajectory_->GetWellBlocks()->first()->j();

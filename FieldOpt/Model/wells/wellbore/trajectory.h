@@ -77,8 +77,7 @@ class Trajectory
 
   // ---------------------------------------------------------
   // Update well blocks, in particular those defined by a spline.
-  void UpdateWellBlocks();
-  void UpdateWellBlocks(int rank);
+  void UpdateWellBlocks(int rank=0);
 
   int GetTimeSpentInWic() const;
 
