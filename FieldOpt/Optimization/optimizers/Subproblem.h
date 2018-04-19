@@ -230,7 +230,8 @@ class Subproblem {
 
   void SetTrustRegionRadius(double radius){
     trustRegionRadius_ = radius;
-    Flow_[0] = trustRegionRadius_;
+    Flow_[1] = 0;
+    Fupp_[1] = trustRegionRadius_;
   }
 };
 

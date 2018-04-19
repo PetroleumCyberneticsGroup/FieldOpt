@@ -476,7 +476,7 @@ int SNOPTusrFG3_(integer *Status, integer *n, double x[],
   // If the values for the objective and/or the constraints are desired
   if (*needF > 0) {
     /// The objective function
-    F[0] = constant + gradient.transpose() * xvec + xvec.transpose() * hessian * xvec;
+    F[0] = constant + gradient.transpose() * xvec + 0.5* xvec.transpose() * hessian * xvec;
     if (m) {
       /// The constraints
       if (normType == Subproblem::L2_NORM) {
@@ -564,6 +564,7 @@ void Subproblem::printModel() {
   std::cout << "constant = \n" << constant << std::endl;
   std::cout << "gradient = \n" << gradient << std::endl;
   std::cout << "hessian = \n" << hessian << std::endl;
+  std::cout << "trust region radius = " << trustRegionRadius_ << std::endl;
 
 }
 
