@@ -289,10 +289,10 @@ void DFO::iterate() {
   while(notConverged){
     std::cout <<  "\033[1;34;m " << " ---------- New iterate "<< iterations_ << " ---------- " << "\033[0m" << std::endl;
     if (iterations_%50 == 0){
-      std::cout << "Y = \n" << *printme << "\n fvals: \n" << *printme2 << "\nbestIndex = " << DFO_model_.getBestPointIndex() << std::endl;
+      std::cout << "Y = \n" << *printme << "\nfvals: \n" << *printme2 << "\nbestIndex = " << DFO_model_.getBestPointIndex() << std::endl;
       std::cout << "Trust region radius is: " << DFO_model_.GetTrustRegionRadius() << std::endl;
       std::cout << "best function value all time: " << DFO_model_.GetBestFunctionValueAllTime() << "\n";
-      DFO_model_.SetTrustRegionRadius(5);
+      //DFO_model_.SetTrustRegionRadius(5);
       DFO_model_.printQuadraticModel();
     }
     Eigen::MatrixXd new_points;
@@ -467,10 +467,11 @@ step1:
     else if (last_action_ == TRIAL_POINT_FOUND){
       DFO_model_.SetTrustRegionRadiusForSubproblem(r*DFO_model_.GetTrustRegionRadius());
       int t = DFO_model_.findPointToReplaceWithNewOptimum(new_point);
-      double rho = ( DFO_model_.GetFunctionValue(DFO_model_.getBestPointIndex())- function_evaluation)/(DFO_model_.evaluateQuadraticModel(DFO_model_.GetBestPoint()) - DFO_model_.evaluateQuadraticModel(new_point));
+      rho = ( DFO_model_.GetFunctionValue(DFO_model_.getBestPointIndex())- function_evaluation)/(DFO_model_.evaluateQuadraticModel(DFO_model_.GetBestPoint()) - DFO_model_.evaluateQuadraticModel(new_point));
       Eigen::VectorXd dummyVec(number_of_variables_);
       dummyVec.setZero();
       int dummyInt = 0;
+      std::cout << "eta1 = " << eta1 << "\trho = " << rho <<"\n";
       DFO_model_.findWorstPointInInterpolationSet(dummyVec,dummyInt); //Check if it is lambda-poised.
       if ((rho >= eta1) || (dummyInt == -1 && rho > 0)){
         DFO_model_.update(new_point, function_evaluation, t, DFO_Model::INCLUDE_NEW_OPTIMUM);
@@ -517,7 +518,7 @@ step1:
       // Update the trust-region radius
       if (rho >= eta1){
         double tmp = std::min(gamma_inc*DFO_model_.GetTrustRegionRadius(), trust_region_radius_max);
-        trust_region_radius_inc = 0.8*DFO_model_.GetTrustRegionRadius() + 0.2*tmp;
+        trust_region_radius_inc = 0.2*DFO_model_.GetTrustRegionRadius() + 0.8*tmp;
       }
       else{
         //Check CFL.
