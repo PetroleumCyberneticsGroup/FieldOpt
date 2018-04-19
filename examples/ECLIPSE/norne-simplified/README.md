@@ -27,3 +27,4 @@ The wells remaining in the model are
 | F-1H      | Injector | 1999-05-20 | 17        | 2/0
 
 The N. Controls field indicates N. total/N. non-zero.
+The open date is the time of the first non-zero control.

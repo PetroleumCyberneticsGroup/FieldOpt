@@ -78,6 +78,10 @@ QList<Model::Well> DeckParser::GetWellData() {
     auto well_structs = QList<Model::Well>();
     for (int i = 0; i < num_wells_; ++i) {
         well_structs.append(opmWellToWellStruct(wells_[i]));
+        std::cout << "Imported " << wells_[i]->name()
+                  << "\t(" << (well_structs.last().type == Model::WellType::Injector ? "injector" : "producer") << "); "
+                  << "\t start time: " << well_structs.last().controls[0].time_step << " days; "
+                  << "\t nr. connections: " << well_structs.last().well_blocks.size() <<std::endl;
     }
     return well_structs;
 }
@@ -105,9 +109,9 @@ Model::WellType DeckParser::determineWellType(const Opm::Well *opm_well) {
         if (!is_injector && opm_well->isInjector(t)) {
             if (is_producer) {
                 std::cerr << "WARNING: Well " << opm_well->name()
-                          << " is detected as an alternating produer/injector well."
+                          << " is detected as an alternating prodcuer/injector well."
                               " This is not currently supported."
-                              " Using last defined state (injector). "
+                              " Using last defined state (injector) "
                           << time_dates_[t]
                           << std::endl;
                 is_producer = false;
@@ -121,15 +125,28 @@ Model::WellType DeckParser::determineWellType(const Opm::Well *opm_well) {
         if (!is_producer && opm_well->isProducer(t)) {
             if (is_injector) {
                 std::cerr << "WARNING: Well " << opm_well->name()
-                          << " is detected as an alternating produer/injector well."
+                          << " is detected as an alternating prodcuer/injector well."
                               " This is not currently supported."
-                              " Using last defined state (producer)"
+                              " Using last defined state (producer) "
                           << time_dates_[t]
                           << std::endl;
                 is_producer = true;
                 is_injector = false;
                 break;
             }
+            is_producer = true;
+        }
+    }
+
+    if (!is_injector && !is_producer) {
+        std::cerr << "WARNING: Deck parser was unable to determine well type for " << opm_well->name() << std::endl;
+        std::cerr << "         Defaulting to type at first control: ";
+        if (opm_well->isInjector(opm_well->firstTimeStep())) {
+            std::cerr << "injector" << std::endl;
+            is_injector = true;
+        }
+        else {
+            std::cerr << "producer" << std::endl;
             is_producer = true;
         }
     }
@@ -141,7 +158,7 @@ Model::WellType DeckParser::determineWellType(const Opm::Well *opm_well) {
         return Model::WellType::Producer;
     }
     else {
-        std::cerr << "WARNING: Deck parser was unable to determine well type." << std::endl;
+        std::cerr << "WARNING: Deck parser was unable to determine well type for " << opm_well->name() << std::endl;
         return Model::WellType::UNKNOWN_TYPE;
     }
 }
@@ -245,6 +262,9 @@ QList<Model::Well::ControlEntry> DeckParser::opmToControlEntries(const Opm::Well
             }
         }
     }
+    if (control_entries.size() == 0) {
+        std::cerr << "WARNING: Unable to create any valid controls for well " << opm_well->name() << std::endl;
+    }
     return control_entries;
 }
 
@@ -261,7 +281,6 @@ Model::ControlMode DeckParser::determineWellControlMode( const Opm::Well *opm_we
             case Opm::WellProducer::ControlModeEnum::BHP:
                 return Model::ControlMode::BHPControl;
             default:
-                std::cerr << "WARNING: Unable to determine control mode: " << opm_wpp.controlMode << std::endl;
                 return Model::ControlMode::UNKNOWN_CONTROL;
         }
     }
@@ -275,7 +294,6 @@ Model::ControlMode DeckParser::determineWellControlMode( const Opm::Well *opm_we
             case Opm::WellInjector::ControlModeEnum::BHP:
                 return Model::ControlMode::BHPControl;
             default:
-                std::cerr << "WARNING: Unable to determine control mode. Unknown control type" << std::endl;
                 return Model::ControlMode::UNKNOWN_CONTROL;
         }
     }

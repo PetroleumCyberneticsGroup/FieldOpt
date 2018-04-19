@@ -132,8 +132,15 @@ class Model
 
   void readReservoir(QJsonObject json_reservoir);
   Well readSingleWell(QJsonObject json_well);
+  void setImportedWellDefaults(QJsonObject json_model);
+  void parseImportedWellOverrides(QJsonArray json_wells);
 
   bool controlTimeIsDeclared(int time) const;
+
+  /*!
+   * Get the control time that is closest to the time imported from the deck.
+   */
+  int getClosestControlTime(int deck_time);
 };
 
 }

@@ -100,24 +100,4 @@ TEST_F(DeckParserTest, NumberOfConnections) {
 
 }
 
-TEST_F(DeckParserTest, NumberOfControls) {
-    DeckParser dp = DeckParser("../examples/ECLIPSE/norne-simplified/NORNE_SIMPLIFIED.DATA");
-    auto wells = dp.GetWellData();
-    std::vector<int> n_contrs = {3,  // C-4H
-                                 2,  // B-2H
-                                 2,  // D-2H
-                                 3,  // B-4H
-                                 4,  // D-4H
-                                 3,  // C-1H
-                                 4,  // E-3H
-                                 2,  // C-2H
-                                 3,  // B-1H
-                                 4,  // C-3H
-                                 2   // F-1H
-    };
-    for (int i = 0; i < wells.size(); ++i) {
-        EXPECT_EQ(n_contrs[i], wells[i].controls.size());
-    }
-}
-
 }

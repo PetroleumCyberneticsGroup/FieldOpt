@@ -30,6 +30,9 @@ Simulator::Simulator(QJsonObject json_simulator)
     // Driver path
     if (json_simulator.contains("DriverPath")) {
         driver_file_path_ = json_simulator["DriverPath"].toString();
+        if (!FileExists(driver_file_path_)) {
+            throw std::runtime_error("No file found at DriverPath: " + driver_file_path_.toStdString());
+        }
         auto tmp = driver_file_path_.split("/");
         tmp.removeLast();
         driver_directory_ = tmp.join("/");

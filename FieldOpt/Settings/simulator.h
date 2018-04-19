@@ -36,6 +36,7 @@ class Simulator
   friend class Settings;
 
  public:
+  Simulator(QJsonObject json_simulator);
   enum SimulatorType { ECLIPSE, ADGPRS, Flow };
   enum SimulatorFluidModel { BlackOil, DeadOil };
 
@@ -104,7 +105,6 @@ class Simulator
   int max_minutes() { return max_minutes_; }
 
  private:
-  Simulator(QJsonObject json_simulator);
   SimulatorType type_;
   SimulatorFluidModel fluid_model_;
   QStringList *commands_;
