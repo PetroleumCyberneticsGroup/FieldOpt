@@ -111,6 +111,7 @@ void Settings::readGlobalSection() {
     QJsonObject global = json_driver_->value("Global").toObject();
     name_ = global["Name"].toString();
     bookkeeper_tolerance_ = global["BookkeeperTolerance"].toDouble();
+
     if (bookkeeper_tolerance_ < 0.0) {
       throw UnableToParseGlobalSectionException(
           "The bookkeeper tolerance must be a positive number.");
@@ -120,6 +121,9 @@ void Settings::readGlobalSection() {
     throw UnableToParseGlobalSectionException(
         "Unable to parse driver file global section: " + string(ex.what()));
   }
+      cout << "BookkeeperTolerance:--- "
+           << bookkeeper_tolerance() << endl;
+
 }
 
 // =========================================================
@@ -147,7 +151,7 @@ void Settings::readSimulatorSection() {
          << std::string(str_out.length(), '=') << endl;
 
     // -----------------------------------------------------
-      cout << "VerbosityVector:-------- ";
+      cout << "VerbosityVector:------- ";
           for (int i=0; i < simulator_->verb_vector_.size(); i++) {
             cout << simulator_->verb_vector_[i] << " ";
           }
@@ -155,17 +159,17 @@ void Settings::readSimulatorSection() {
     auto SimTMP = json_driver_->value("Simulator").toObject();
 
     // -----------------------------------------------------
-      cout << "SimulatorType:---------- "
+      cout << "SimulatorType:--------- "
            << SimTMP["Type"].toString().toUtf8().constData() << endl;
 
     // -----------------------------------------------------
-      cout << "FluidModel:------------- "
+      cout << "FluidModel:------------ "
            << SimTMP["FluidModel"].toString().toUtf8().constData() << endl;
 
 
     // -----------------------------------------------------
-    cout << "MaxMinutes:------------- "
-         << simulator_->max_minutes_ << endl;
+      cout << "MaxMinutes:------------ "
+           << simulator_->max_minutes_ << endl;
 
   }
 }
@@ -247,6 +251,25 @@ void Settings::readOptimizerSection() {
 
     } else if (optimizer_->type() ==
         Optimizer::OptimizerType::GeneticAlgorithm) {
+
+      cout << fixed << setprecision(1);
+      cout << "DecayRate:------------- "
+           << optimizer_->parameters_.decay_rate << endl;
+      // ---------------------------------------------------------
+      cout << "MutationStrength:------ "
+           << optimizer_->parameters_.mutation_strength << endl;
+      // ---------------------------------------------------------
+      cout << "MaxGenerations:-------- "
+           << optimizer_->parameters_.max_generations << endl;
+      // ---------------------------------------------------------
+      cout << "PopulationSize:-------- "
+           << optimizer_->parameters_.population_size << endl;
+      // ---------------------------------------------------------
+      cout << "PopulationCrossover:--- "
+           << optimizer_->parameters_.p_crossover << endl;
+
+
+
 
     } else if (optimizer_->type() ==
         Optimizer::OptimizerType::DFO){
