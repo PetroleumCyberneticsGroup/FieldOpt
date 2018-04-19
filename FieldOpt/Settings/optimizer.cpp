@@ -165,7 +165,36 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
       if (json_parameters.contains("RequiredPoisedness"))
         parameters_.required_poisedness = json_parameters["RequiredPoisedness"].toDouble();
       else parameters_.required_poisedness = 10;
-
+      if (json_parameters.contains("r"))
+        parameters_.r = json_parameters["r"].toDouble();
+      else parameters_.r = 2;
+      if (json_parameters.contains("w"))
+        parameters_.w = json_parameters["w"].toDouble();
+      else parameters_.w = 0.9;
+      if (json_parameters.contains("u"))
+        parameters_.u = json_parameters["u"].toDouble();
+      else parameters_.u = 0.8;
+      if (json_parameters.contains("beta"))
+        parameters_.beta = json_parameters["beta"].toDouble();
+      else parameters_.beta = 0.7;
+      if (json_parameters.contains("epsilon_c"))
+        parameters_.epsilon_c = json_parameters["epsilon_c"].toDouble();
+      else parameters_.epsilon_c  = 1;
+      if (json_parameters.contains("tau"))
+        parameters_.tau = json_parameters["tau"].toDouble();
+      else parameters_.tau = 0.01;
+      if (json_parameters.contains("eta1"))
+        parameters_.eta1 = json_parameters["eta1"].toDouble();
+      else parameters_.eta1 = 0.2;
+      if (json_parameters.contains("gamma"))
+        parameters_.gamma = json_parameters["gamma"].toDouble();
+      else parameters_.gamma = 0.8;
+      if (json_parameters.contains("gamma_inc"))
+        parameters_.gamma_inc = json_parameters["gamma_inc"].toDouble();
+      else parameters_.gamma_inc = 1.4;
+      if (json_parameters.contains("MaxTrustRegionRadius"))
+        parameters_.max_trust_region_radius = json_parameters["MaxTrustRegionRadius"].toDouble();
+      else parameters_.max_trust_region_radius = 20;
 
     }
     catch (std::exception const &ex) {

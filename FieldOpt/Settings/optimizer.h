@@ -84,9 +84,19 @@ class Optimizer
 
     // DFO parameters
     double initial_trust_region_radius;
+    double max_trust_region_radius;
     int number_of_interpolation_points;
     int number_of_variables;
     double required_poisedness;
+    double r;
+    double w;
+    double u;
+    double beta;
+    double epsilon_c;
+    double tau;
+    double eta1;
+    double gamma;
+    double gamma_inc;
   };
 
   struct Objective {
