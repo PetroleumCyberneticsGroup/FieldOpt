@@ -81,7 +81,8 @@ void Settings::readDriverFile() {
 
   QFile *file = new QFile(driver_path_);
   if (!file->open(QIODevice::ReadOnly))
-    throw DriverFileReadException("Unable to open the driver file");
+    throw DriverFileReadException(
+        "Unable to open the driver file");
 
   QByteArray data = file->readAll();
 
@@ -126,8 +127,9 @@ void Settings::readSimulatorSection() {
 
   // -------------------------------------------------------
   // Simulator root
+  QJsonObject json_simulator;
   try {
-    QJsonObject json_simulator =
+    json_simulator =
         json_driver_->value("Simulator").toObject();
     simulator_ = new Simulator(json_simulator);
   }
@@ -144,7 +146,7 @@ void Settings::readSimulatorSection() {
     cout << "\n" << BLDON << str_out << AEND << "\n"
          << std::string(str_out.length(), '=') << endl;
 
-    // ---------------------------------------------------------
+    // -----------------------------------------------------
       cout << "VerbosityVector:-------- ";
           for (int i=0; i < simulator_->verb_vector_.size(); i++) {
             cout << simulator_->verb_vector_[i] << " ";
@@ -152,11 +154,11 @@ void Settings::readSimulatorSection() {
       cout << endl;
     auto SimTMP = json_driver_->value("Simulator").toObject();
 
-    // ---------------------------------------------------------
+    // -----------------------------------------------------
       cout << "SimulatorType:---------- "
            << SimTMP["Type"].toString().toUtf8().constData() << endl;
 
-    // ---------------------------------------------------------
+    // -----------------------------------------------------
       cout << "FluidModel:------------- "
            << SimTMP["FluidModel"].toString().toUtf8().constData() << endl;
 

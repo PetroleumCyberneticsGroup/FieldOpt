@@ -1,5 +1,4 @@
 /***********************************************************
-
  Copyright (C) 2015-2017
  Einar J.M. Baumann <einar.baumann@gmail.com>
 
@@ -18,7 +17,6 @@
  You should have received a copy of the GNU
  General Public License along with FieldOpt.
  If not, see <http://www.gnu.org/licenses/>.
-
 ***********************************************************/
 
 // ---------------------------------------------------------
@@ -97,15 +95,18 @@ void Model::Finalize() {
 void Model::ApplyCase(Optimization::Case *c) {
 
   for (QUuid key : c->binary_variables().keys()) {
-    variable_container_->SetBinaryVariableValue(key, c->binary_variables()[key]);
+    variable_container_->SetBinaryVariableValue(
+        key, c->binary_variables()[key]);
   }
 
   for (QUuid key : c->integer_variables().keys()) {
-    variable_container_->SetDiscreteVariableValue(key, c->integer_variables()[key]);
+    variable_container_->SetDiscreteVariableValue(
+        key, c->integer_variables()[key]);
   }
 
   for (QUuid key : c->real_variables().keys()) {
-    variable_container_->SetContinousVariableValue(key, c->real_variables()[key]);
+    variable_container_->SetContinousVariableValue(
+        key, c->real_variables()[key]);
   }
 
   int cumulative_wic_time = 0;

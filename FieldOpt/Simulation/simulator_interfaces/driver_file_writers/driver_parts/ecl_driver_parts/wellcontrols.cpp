@@ -32,9 +32,10 @@ namespace ECLDriverParts {
 
 // =========================================================
 WellControls::WellControls(QList<Model::Wells::Well *> *wells,
-                           QList<int> control_times) {
+                           QList<double> control_times) {
   initializeBaseEntryLine(12);
-  initializeTimeEntries(wells, control_times);
+  initializeTimeEntries(wells,
+                        control_times);
 }
 
 // =========================================================
@@ -72,7 +73,7 @@ QString WellControls::GetPartString() {
 // =========================================================
 void WellControls::
 initializeTimeEntries(QList<Model::Wells::Well *> *wells,
-                      QList<int> control_times) {
+                      QList<double> control_times) {
 
   // -------------------------------------------------------
   time_entries_ = QMap<int, TimeEntry *>();
@@ -118,7 +119,7 @@ initializeTimeEntries(QList<Model::Wells::Well *> *wells,
 
           time_entry->well_settings =
               QList<WellSetting *>({well_setting});
-          
+
           time_entry->has_well_setting = true;
           time_entries_.insert(time_entry->time,
                                time_entry);

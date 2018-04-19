@@ -106,7 +106,7 @@ class Simulator {
   QString build_dir_;
   QString script_path_;
   QStringList script_args_;
-  QList<int> control_times_;
+  QList<double> control_times_;
   virtual void UpdateFilePaths() = 0;
   int verbosity_level_; //!< Verbosity level for runtime console logging.
 };

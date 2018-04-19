@@ -33,7 +33,7 @@ namespace ECLDriverParts {
 
 // =========================================================
 Schedule::Schedule(QList<Model::Wells::Well *> *wells,
-                   QList<int> control_times) {
+                   QList<double> control_times) {
 
   // -------------------------------------------------------
   welspecs_ = new Welspecs(wells);

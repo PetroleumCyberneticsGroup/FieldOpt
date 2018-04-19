@@ -43,7 +43,8 @@ Model::Model(QJsonObject json_model) {
   }
   catch (std::exception const &ex) {
     throw UnableToParseReservoirModelSectionException(
-        "Unable to parse reservoir model section: " + std::string(ex.what()));
+        "Unable to parse reservoir model section: "
+            + std::string(ex.what()));
   }
 
   // -------------------------------------------------------------
@@ -52,20 +53,24 @@ Model::Model(QJsonObject json_model) {
       || !json_model["ControlTimes"].isArray())
     throw UnableToParseModelSectionException(
         "The ControlTimes array must be defined "
-            "with at leas one time for the model.");
+            "with at least one time for the model.");
 
   // -------------------------------------------------------------
   // Append control times
-  control_times_ = QList<int>();
+  control_times_ = QList<double>();
   for (int i = 0; i < json_model["ControlTimes"].toArray().size(); ++i) {
-    control_times_.append(json_model["ControlTimes"].toArray().at(i).toInt());
+    control_times_.append(json_model["ControlTimes"].toArray().at(i).toDouble());
   }
 
   // -------------------------------------------------------------
   // Wells
   try {
+
+    // -----------------------------------------------------------
     QJsonArray json_wells = json_model["Wells"].toArray();
     wells_ = QList<Well>();
+
+    // -----------------------------------------------------------
     for (int i = 0; i < json_wells.size(); ++i) {
       QJsonObject json_well = json_wells[i].toObject();
       wells_.append(readSingleWell(json_well));
@@ -73,7 +78,8 @@ Model::Model(QJsonObject json_model) {
 
   } catch (std::exception const &ex) {
     throw UnableToParseWellsModelSectionException(
-        "Unable to parse wells model section: " + std::string(ex.what()));
+        "Unable to parse wells model section: "
+            + std::string(ex.what()));
   }
 }
 
@@ -128,7 +134,8 @@ Model::Well Model::readSingleWell(QJsonObject json_well) {
   else {
     throw UnableToParseWellsModelSectionException(
         "Well type " + type.toStdString()
-            + " not recognized for well " + well.name.toStdString());
+            + " not recognized for well "
+            + well.name.toStdString());
   }
 
   // -------------------------------------------------------------
@@ -253,7 +260,8 @@ Model::Well Model::readSingleWell(QJsonObject json_well) {
     well.pseudo_cont_position.j = json_position["j"].toInt();
 
     // -------------------------------------------------------------
-    if (json_position.contains("IsVariable") && json_position["IsVariable"].toBool() == true) {
+    if (json_position.contains("IsVariable")
+        && json_position["IsVariable"].toBool() == true) {
       well.pseudo_cont_position.is_variable = true;
     }
     else well.spline_heel.is_variable = false;
@@ -326,14 +334,14 @@ Model::Well Model::readSingleWell(QJsonObject json_well) {
     Well::ControlEntry control;
 
     // -------------------------------------------------------------
-    if (!controlTimeIsDeclared(
-        json_controls.at(i).toObject()["TimeStep"].toInt())) {
+    double ctime = json_controls.at(i).toObject()["TimeStep"].toDouble();
+    if (!controlTimeIsDeclared(ctime)) {
 
       throw UnableToParseWellsModelSectionException(
           "All time steps must be declared in the ControlTimes array. "
               "Inconsistency detected in Controls declaration.");
     }
-    else control.time_step = json_controls.at(i).toObject()["TimeStep"].toInt();
+    else control.time_step = ctime;
 
     // -------------------------------------------------------------
     // State (Open or shut)
@@ -424,11 +432,10 @@ Model::Well Model::readSingleWell(QJsonObject json_well) {
   return well;
 }
 
-bool Model::controlTimeIsDeclared(int time) const {
+// ===============================================================
+bool Model::controlTimeIsDeclared(double time) const {
   return control_times_.contains(time);
 }
-
-
 
 }
 

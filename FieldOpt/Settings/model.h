@@ -128,7 +128,7 @@ class Model
 
     // -----------------------------------------------------------
     struct ControlEntry {
-      int time_step; //!< The time step this control is to be applied at.
+      double time_step; //!< The time step this control is to be applied at.
       WellState state; //!< Whether the well is open or shut.
       ControlMode control_mode; //!< Control mode.
       double bhp; //!< Bhp target when well is on bhp control.
@@ -165,7 +165,7 @@ class Model
 
   // -------------------------------------------------------------
   QList<Well> wells() const { return wells_; } //!< Get the struct containing settings for the well(s) in the model.
-  QList<int> control_times() const { return control_times_; } //!< Get the control times for the schedule
+  QList<double> control_times() const { return control_times_; } //!< Get the control times for the schedule
 
   // -------------------------------------------------------------
   void set_verbosity_vector(const std::vector<int> verb_vector) { verb_vector_ = verb_vector; }
@@ -175,14 +175,14 @@ class Model
   // -------------------------------------------------------------
   Reservoir reservoir_;
   QList<Well> wells_;
-  QList<int> control_times_;
+  QList<double> control_times_;
 
   // -------------------------------------------------------------
   void readReservoir(QJsonObject json_reservoir);
   Well readSingleWell(QJsonObject json_well);
 
   // -------------------------------------------------------------
-  bool controlTimeIsDeclared(int time) const;
+  bool controlTimeIsDeclared(double time) const;
 
   // -------------------------------------------------------------
   std::vector<int> verb_vector_ = std::vector<int>(11,0); //!<
