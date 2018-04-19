@@ -29,7 +29,11 @@ class DFO : public Optimizer {
   QString GetStatusString() const {};
   QList<Case *> ConvertPointsToCases(Eigen::MatrixXd points);
 
+  void UpdateLastAction(int a);
+
  private:
+  std::string color_from= "31";
+  std::string color_to = "33";
   Model::Properties::VariablePropertyContainer *varcont_;
   DFO_Model DFO_model_;
   void iterate() override;
@@ -37,6 +41,7 @@ class DFO : public Optimizer {
   int number_of_variables_;
   Optimization::Case *base_case_;
   int last_action_;
+  std::string getActionName(int a);
 
 
   /*

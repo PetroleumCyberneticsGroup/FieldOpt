@@ -257,16 +257,16 @@ void DFO::iterate() {
   double w = 0.9; // decreasing factor of the trust-region radius during the criticality step.
   double u = 0.8;
   double beta = 0.7;
-  double epsilon_c = 5;
-  double tau = 0.6;
-  double eta1 = 0.25;
+  double epsilon_c = 1;
+  double tau = 0.01;
+  double eta1 = 0.1;
   double rho = 0;
   double gamma = 0.9;
   double gamma_inc = 1.2;
   int criticality_step_iteration = 0;
   double trust_region_radius_tilde = 0;
   double trust_region_radius_inc = settings_->parameters().initial_trust_region_radius;
-  double trust_region_radius_max = 600;
+  double trust_region_radius_max = 20;
 
   Eigen::VectorXd function_evaluations(number_of_interpolation_points_);
   function_evaluations.setZero();
@@ -283,21 +283,14 @@ void DFO::iterate() {
 
   // Only used in the initialization process.
   int number_of_new_interpolation_points = 0;
-  Eigen::VectorXd a1(40);
-  a1.setZero();
-  Eigen::VectorXd b1(40);
-  b1.setZero();
-  Eigen::VectorXd a2(40);
-  a2.setZero();
-  Eigen::VectorXd b2(40);
-  b2.setZero();
-  Eigen::VectorXd a3(100);
-  a3.setZero();
-  Eigen::VectorXd b3(500);
-  b3.setZero();
+
+  Eigen::VectorXd* printme2 = DFO_model_.getFvalsReference();
+  Eigen::MatrixXd* printme = DFO_model_.getYReference();
+
+
 
   while(notConverged){
-    std::cout <<  "\033[1;34;m " << " ---------- New iterate ---------- " << "\033[0m" << std::endl;
+    std::cout <<  "\033[1;34;m " << " ---------- New iterate "<< iterations_ << " ---------- " << "\033[0m" << std::endl;
     Eigen::MatrixXd new_points;
 
 
@@ -306,13 +299,15 @@ void DFO::iterate() {
       number_of_new_interpolation_points = new_points.cols();
     }
     else if(DFO_model_.isInitialInterpolationPointsFound() == false) {
+      //std::cout << "function evaluations from _simulator_ \n" << function_evaluations << "\n";
       for (int i = 0; i < number_of_new_interpolation_points; ++i){
         DFO_model_.SetFunctionValue(i+1, function_evaluations[i]);
       }
+      //std::cout << "function values \n" << *printme2 << "\nend" << std::endl;
       new_points = DFO_model_.findLastSetOfInterpolationPoints();
     }
     else if(DFO_model_.isModelInitialized() == false){
-      if (number_of_new_interpolation_points != 0){
+      if (iterations_== 1){
         for (int i = 0; i < number_of_new_interpolation_points; ++i){
           DFO_model_.SetFunctionValue(i+1, function_evaluations[i]);
         }
@@ -323,21 +318,22 @@ void DFO::iterate() {
           DFO_model_.SetFunctionValue(i+1, function_evaluations[i-number_of_new_interpolation_points]);
         }
       }
+      //std::cout << "function values \n" << *printme2 << "\nend" << std::endl;
+
 
       DFO_model_.initializeModel();
 
+      UpdateLastAction(INITIALIZED_MODEL);
 
-      std::cout << "From " << "\033[1;31m " << getActionName(last_action_) << "\033[0m";
-      last_action_ = INITIALIZED_MODEL;
-      std::cout << "\tTo " << "\033[1;"+color_to+";m " << getActionName(last_action_) << "\033[0m" << std::endl;
       DFO_model_.printQuadraticModel();
+      DFO_model_.shiftCenterPointOfQuadraticModel(-DFO_model_.getCenterPoint());
+      DFO_model_.printQuadraticModel();
+
     }
 
     if (last_action_ == MODEL_IMPROVEMENT_POINT_FOUND) {
       DFO_model_.update(new_point,function_evaluation,index_of_new_point,DFO_Model::INCLUDE_NEW_POINT);
-      std::cout << "From " << "\033[1;"+color_from+"m " << getActionName(last_action_) << "\033[0m";
-      last_action_ = MODEL_IMPROVEMENT_POINT_ADDED;
-      std::cout << "\tTo " << "\033[1;"+color_to+";m " << getActionName(last_action_) << "\033[0m" << std::endl;
+      UpdateLastAction(MODEL_IMPROVEMENT_POINT_ADDED);
     }
 
 step1:
@@ -349,9 +345,7 @@ step1:
         if (last_action_ == TRUST_REGION_RADIUS_UPDATE_STEP){
           DFO_model_.SetTrustRegionRadius(trust_region_radius_inc);
         }
-        std::cout << "From " << "\033[1;"+color_from+"m " << getActionName(last_action_) << "\033[0m";
-        last_action_ = CRITICALITY_STEP_FINISHED;
-        std::cout << "\tTo " << "\033[1;"+color_to+";m " << getActionName(last_action_) << "\033[0m" << std::endl;
+        UpdateLastAction(CRITICALITY_STEP_FINISHED);
       }
       else{
         //std::cout << "new point: \n" << new_point  << "\nindex of new point \n" << index_of_new_point << "\n\n";
@@ -361,9 +355,12 @@ step1:
           criticality_step_iteration = 0;
           DFO_model_.SetTrustRegionRadius(r*trust_region_radius_inc);
           DFO_model_.findWorstPointInInterpolationSet(new_point,index_of_new_point);
-          std::cout << "From " << "\033[1;"+color_from+"m " << getActionName(last_action_) << "\033[0m";
-          last_action_ = MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND; // OBS OBS OBS! The set might be poised in the chosen area!
-          std::cout << "\tTo " << "\033[1;"+color_to+";m " << getActionName(last_action_) << "\033[0m" << std::endl;
+          UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND);
+
+          if (index_of_new_point == -1){
+            UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_FINISHED);
+
+          }
         }
         else{
           DFO_model_.SetTrustRegionRadius(trust_region_radius_inc);
@@ -379,22 +376,18 @@ step1:
 
       DFO_model_.update(new_point, function_evaluation, index_of_new_point, DFO_Model::IMPROVE_POISEDNESS); //add the point
 
-      std::cout << "From " << "\033[1;"+color_from+"m " << getActionName(last_action_) << "\033[0m";
-      last_action_ = MODEL_IMPROVEMENT_ALGORITHM_POINT_ADDED;
-      std::cout << "\tTo " << "\033[1;"+color_to+";m " << getActionName(last_action_) << "\033[0m" << std::endl;
+      UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_POINT_ADDED);
+
 
 
       DFO_model_.findWorstPointInInterpolationSet(new_point, index_of_new_point); //Check if it is lambda-poised.
 
       if (index_of_new_point == -1){
-        std::cout << "From " << "\033[1;"+color_from+"m " << getActionName(last_action_) << "\033[0m";
-        last_action_ = MODEL_IMPROVEMENT_ALGORITHM_FINISHED;
-        std::cout << "\tTo " << "\033[1;"+color_to+";m " << getActionName(last_action_) << "\033[0m" << std::endl;
+        UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_FINISHED);
+
       }
       else{
-        std::cout << "From " << "\033[1;"+color_from+"m " << getActionName(last_action_) << "\033[0m";
-        last_action_ = MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND;
-        std::cout << "\tTo " << "\033[1;"+color_to+";m " << getActionName(last_action_) << "\033[0m" << std::endl;
+        UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND);
       }
 
       //DFO_model_.SetTrustRegionRadiusForSubproblem( r*pow(w,criticality_step_iteration)*DFO_model_.GetTrustRegionRadius() );
@@ -417,17 +410,13 @@ step1:
         double new_trust_region_radius = min(temp, trust_region_radius_inc);
         DFO_model_.SetTrustRegionRadius(new_trust_region_radius);
 
-        std::cout << "From " << "\033[1;"+color_from+"m " << getActionName(last_action_) << "\033[0m";
-        last_action_ = CRITICALITY_STEP_FINISHED;
-        std::cout << "\tTo " << "\033[1;"+color_to+";m " << getActionName(last_action_) << "\033[0m" << std::endl;
+        UpdateLastAction(CRITICALITY_STEP_FINISHED);
       }
       else{ // Reduce the radius and run the model improvement algorithm.
         criticality_step_iteration++;
         DFO_model_.SetTrustRegionRadiusForSubproblem(r*trust_region_radius_inc*pow(w,criticality_step_iteration));
         DFO_model_.findWorstPointInInterpolationSet(new_point,index_of_new_point);
-        std::cout << "From " << "\033[1;"+color_from+"m " << getActionName(last_action_) << "\033[0m";
-        last_action_ = MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND;
-        std::cout << "\tTo " << "\033[1;"+color_to+";m " << getActionName(last_action_) << "\033[0m" << std::endl;
+        UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND);
       }
     }
     //else if (last_action_ == FOUND_NEW_OPTIMUM_CANDIDATE){
@@ -439,17 +428,13 @@ step1:
       //Now at step2.
       DFO_model_.SetTrustRegionRadiusForSubproblem(DFO_model_.GetTrustRegionRadius());
       new_point = DFO_model_.FindLocalOptimum();
+      UpdateLastAction(TRIAL_POINT_FOUND);
 
 
+      /// OBS OBS. Hva skjer dersom punktet ikke har en "stor nok" distanse fra beste punktet? Should probably print "local optimum found" or similar
       double maxDistance = DFO_model_.findLargestDistanceBetweenPointsAndOptimum();
-      if ((new_point + DFO_model_.GetBestPoint()).norm() >= tau*maxDistance) {
-        std::cout << "From " << "\033[1;"+color_from+"m " << getActionName(last_action_) << "\033[0m";
-        last_action_ = TRIAL_POINT_FOUND;
-        std::cout << "\tTo " << "\033[1;"+color_to+";m " << getActionName(last_action_) << "\033[0m" << std::endl;
-      } else{
-        std::cout << "From " << "\033[1;"+color_from+"m " << getActionName(last_action_) << "\033[0m";
-        last_action_ = TRIAL_POINT_IS_NOT_NEW_OPTIMUM;
-        std::cout << "\tTo " << "\033[1;"+color_to+";m " << getActionName(last_action_) << "\033[0m" << std::endl;
+      if ((new_point - DFO_model_.GetBestPoint()).norm() < tau*maxDistance) {
+        UpdateLastAction(TRIAL_POINT_IS_NOT_NEW_OPTIMUM);
       }
     }
     else if (last_action_ == TRIAL_POINT_FOUND){
@@ -462,14 +447,11 @@ step1:
       DFO_model_.findWorstPointInInterpolationSet(dummyVec,dummyInt); //Check if it is lambda-poised.
       if ((rho >= eta1) || (dummyInt == -1 && rho > 0)){
         DFO_model_.update(new_point, function_evaluation, t, DFO_Model::INCLUDE_NEW_OPTIMUM);
-        std::cout << "From " << "\033[1;"+color_from+"m " << getActionName(last_action_) << "\033[0m";
-        last_action_ = NEW_POINT_INCLUDED;
-        std::cout << "\tTo " << "\033[1;"+color_to+";m " << getActionName(last_action_) << "\033[0m" << std::endl;
+        UpdateLastAction(NEW_POINT_INCLUDED);
+        //DFO_model_.printQuadraticModel();
       }
       else{
-        std::cout << "From " << "\033[1;"+color_from+"m " << getActionName(last_action_) << "\033[0m";
-        last_action_ =  TRIAL_POINT_IS_NOT_NEW_OPTIMUM;
-        std::cout << "\tTo " << "\033[1;"+color_to+";m " << getActionName(last_action_) << "\033[0m" << std::endl;
+        UpdateLastAction(TRIAL_POINT_IS_NOT_NEW_OPTIMUM);
 
         if ((DFO_model_.GetPoint(t) - DFO_model_.GetBestPoint()).norm() > r*DFO_model_.GetTrustRegionRadius() ||
             abs(DFO_model_.ComputeLagrangePolynomial(t, new_point)) > 1 ){
@@ -497,9 +479,7 @@ step1:
 
           index_of_new_point = t;
           /// Get the function evaluation. The point should be replaced. OBS OBS
-          std::cout << "From " << "\033[1;"+color_from+"m " << getActionName(last_action_) << "\033[0m";
-          last_action_ = MODEL_IMPROVEMENT_POINT_FOUND;
-          std::cout << "\tTo " << "\033[1;"+color_to+";m " << getActionName(last_action_) << "\033[0m" << std::endl;
+          UpdateLastAction(MODEL_IMPROVEMENT_POINT_FOUND);
           rho = 0;
           break;
         }
@@ -528,9 +508,7 @@ step1:
         }
       }
       if (last_action_ == TRIAL_POINT_IS_NOT_NEW_OPTIMUM ||last_action_ ==  NEW_POINT_INCLUDED){
-        std::cout << "From " << "\033[1;"+color_from+"m " << getActionName(last_action_) << "\033[0m";
-        last_action_ = TRUST_REGION_RADIUS_UPDATE_STEP;
-        std::cout << "\tTo " << "\033[1;"+color_to+";m " << getActionName(last_action_) << "\033[0m" << std::endl;
+        UpdateLastAction(TRUST_REGION_RADIUS_UPDATE_STEP);
         goto step1; // To avoid having fieldopt cancel the optimization because the queue (of new cases) is empty.
       }
     }
@@ -544,10 +522,10 @@ step1:
 
     */
 
-    if (iterations_ == 0 || iterations_ == 1){
+    if (iterations_ == 0 || (iterations_ == 1 && DFO_model_.isModelInitialized() == false)){
       /// Get the function evaluations for the first set of interpolation points.
       for (int i = 0; i < new_points.cols(); ++i){
-        function_evaluations[i] = matyasFunction(new_points.col(i) + DFO_model_.getCenterPoint());
+        function_evaluations[i] = sphere(new_points.col(i) + DFO_model_.getCenterPoint());
       }
     }
 
@@ -563,7 +541,8 @@ step1:
           }
       }
       /// Get one new point.
-      function_evaluation = matyasFunction(new_point + DFO_model_.getCenterPoint());
+      function_evaluation = sphere(new_point + DFO_model_.getCenterPoint());
+      cout << "The new function evaluation is: " << function_evaluation << endl << endl;
     }
 
 
@@ -576,6 +555,29 @@ step1:
     // QList<Case *> new_cases = ConvertPointsToCases(new_points);
     // case_handler_->AddNewCases(new_cases);
 
+}
+
+std::string DFO::getActionName(int a){
+  switch (a){
+    case 3: return  "MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND";
+    case 4: return  "MODEL_IMPROVEMENT_ALGORITHM_FINISHED   ";
+    case 5: return  "INITIALIZED_MODEL                      ";
+    case 6: return  "TRUST_REGION_RADIUS_UPDATE_STEP        ";
+    case 8: return  "CRITICALITY_STEP_FINISHED              ";
+    case 9: return  "TRIAL_POINT_FOUND                      ";
+    case 10: return "TRIAL_POINT_IS_NOT_NEW_OPTIMUM         ";
+    case 11: return "NEW_POINT_INCLUDED                     ";
+    case 12: return "MODEL_IMPROVEMENT_POINT_FOUND          ";
+    case 13: return "MODEL_IMPROVEMENT_POINT_ADDED          ";
+    case 14: return "MODEL_IMPROVEMENT_ALGORITHM_POINT_ADDED";
+    default:
+      return        "Not a valid state                      ";
+  }
+}
+void DFO::UpdateLastAction(int a){
+    std::cout << "From " << "\033[1;"+color_from+"m " << getActionName(last_action_) << "\033[0m";
+    last_action_ = a;
+    std::cout << "\tTo " << "\033[1;"+color_to+";m " << getActionName(last_action_) << "\033[0m" << std::endl;
 }
 
 /*
