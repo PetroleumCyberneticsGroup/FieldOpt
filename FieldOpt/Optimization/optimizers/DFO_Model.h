@@ -420,6 +420,10 @@ class DFO_Model {
     return Y.col(bestPointIndex-1);
   }
 
+  double GetBestFunctionValueAllTime(){
+    return bestPointAllTimeFunctionValue;
+  }
+
   Eigen::VectorXd FindLocalOptimum();
 
   int findPointFarthestAwayFromOptimum();

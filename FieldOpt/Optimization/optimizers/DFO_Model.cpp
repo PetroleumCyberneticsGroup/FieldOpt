@@ -122,6 +122,9 @@ void DFO_Model::initializeInverseKKTMatrix() {
 }
 
 void DFO_Model::updateInverseKKTMatrix(Eigen::VectorXd yNew, double fvalNew, unsigned int t) {
+  //std::cout << "Start update" << std::endl;
+  //std::cout << S.diagonal() << std::endl;
+  //std::cout << "t = " << t << ", Z \n" << Z << std::endl;
   Eigen::VectorXd w(n + m + 1);
   for (int i = 1; i <= m; ++i) {
     w(i - 1) = 0.5 * std::pow((Y.col(i - 1)).transpose() * (yNew), 2);
@@ -161,17 +164,17 @@ void DFO_Model::updateInverseKKTMatrix(Eigen::VectorXd yNew, double fvalNew, uns
         baseCol = baseColNeg;
       }
 
-      double length = std::sqrt(std::pow(Z(t - 1, baseColPos), 2) + std::pow(Z(t - 1, i), 2));
-      double cosTheta = Z(t - 1, baseColPos) / length;
+      double length = std::sqrt(std::pow(Z(t - 1, baseCol), 2) + std::pow(Z(t - 1, i), 2));
+      double cosTheta = Z(t - 1, baseCol) / length;
       double sinTheta = Z(t - 1, i) / length;
-      Eigen::VectorXd newBaseCol = cosTheta * Z.col(baseColPos) + sinTheta * Z.col(i);
+      Eigen::VectorXd newBaseCol = cosTheta * Z.col(baseCol) + sinTheta * Z.col(i);
       //Z.col(i) = cosTheta * Z.col(i) - sinTheta * Z.col(baseColPos);
-      eigen_col(Z,cosTheta * Z.col(i) - sinTheta * Z.col(baseColPos),i);
+      eigen_col(Z,cosTheta * Z.col(i) - sinTheta * Z.col(baseCol),i);
       //Z.col(baseColPos) = newBaseCol;
-      eigen_col(Z, newBaseCol, baseColPos);
+      eigen_col(Z, newBaseCol, baseCol);
     }
   }
-
+  //std::cout << "t = " << t << ", Z \n" << Z << std::endl;
   //Orthogonal rotations are now done.
 
   // Calculate Hw = H*w
@@ -182,11 +185,21 @@ void DFO_Model::updateInverseKKTMatrix(Eigen::VectorXd yNew, double fvalNew, uns
   //Hw.tail(n + 1) = Xi * w.head(m) + Upsilon * w.tail(n + 1);
   eigen_tail(Hw,Xi * w.head(m) + Upsilon * w.tail(n + 1), n+1);
 
+
   // Calculate the updating parameters
   double alpha = Z.row(t - 1) * S * Z.row(t - 1).transpose();
-  double beta = 0.5 * std::pow(yNew.squaredNorm(), 2) - w.transpose() * Hw;
+  //double beta = 0.5 * std::pow(yNew.squaredNorm(), 2) - w.transpose() * Hw;
+  double beta = std::max(0.0, 0.5*std::pow(yNew.squaredNorm(), 2) - w.transpose()*Hw);
   double tau = Hw[t - 1];
   double sigma = alpha * beta + std::pow(tau, 2);
+
+  /*
+  std::cout << "l(x+) = " << Hw(t - 1) << "\t this should be nonzero \n \n \n";
+  std::cout << "alpha = " << alpha << ". >= 0 ??" << std::endl;
+  std::cout << "beta = " << beta << ". >= 0 ??" << std::endl;
+  std::cout << "tau = " << tau << ". " << std::endl;
+  std::cout << "sigma = " << sigma << ". 1/sigma is in the updating formula --> abs(sigma) shouldn't be too small" << std::endl << std::endl;
+*/
 
   // Need to store some rows and columns such that we don't use a partly updated matrix instead of the original one.
   Eigen::VectorXd rowOmega = Z.row(t - 1) * S * Z.transpose();
@@ -216,6 +229,9 @@ void DFO_Model::updateInverseKKTMatrix(Eigen::VectorXd yNew, double fvalNew, uns
   }
 
     // Update Omega in the case when there are also 1 negative value in S.
+
+    /// What to do when there is only 1 value in S ...?
+    /// Tror vi kan
   else {
     // 1 = baseColPos;
     // 2 = baseColNeg;
@@ -226,12 +242,9 @@ void DFO_Model::updateInverseKKTMatrix(Eigen::VectorXd yNew, double fvalNew, uns
       S.diagonal()(baseColNeg) = -sign(sigma);
 
       Hw(t - 1) -= 1.0;
-      //Z.col(baseColPos) =
-      //    1.0 / (std::sqrt(std::abs(zeta))) * (tau * Z.col(baseColPos) + Z(t - 1, baseColPos) * (-Hw.head(m)));
+      //Z.col(baseColPos) = 1.0 / (std::sqrt(std::abs(zeta))) * (tau * Z.col(baseColPos) + Z(t - 1, baseColPos) * (-Hw.head(m)));
       eigen_col(Z,1.0 / (std::sqrt(std::abs(zeta))) * (tau * Z.col(baseColPos) + Z(t - 1, baseColPos) * (-Hw.head(m))), baseColPos);
-      //Z.col(baseColNeg) = 1.0 / (std::sqrt(std::abs(zeta * sigma)))
-      //    * (-beta * Z(t - 1, baseColPos) * Z(t - 1, baseColNeg) * Z.col(baseColPos) + zeta * Z.col(baseColNeg)
-      //        + tau * Z(t - 1, baseColNeg) * (-Hw.head(m)));
+      Z.col(baseColNeg) = 1.0 / (std::sqrt(std::abs(zeta * sigma))) * (-beta * Z(t - 1, baseColPos) * Z(t - 1, baseColNeg) * Z.col(baseColPos) + zeta * Z.col(baseColNeg) + tau * Z(t - 1, baseColNeg) * (-Hw.head(m)));
       eigen_col(Z, 1.0 / (std::sqrt(std::abs(zeta * sigma)))
           * (-beta * Z(t - 1, baseColPos) * Z(t - 1, baseColNeg) * Z.col(baseColPos) + zeta * Z.col(baseColNeg)
               + tau * Z(t - 1, baseColNeg) * (-Hw.head(m))), baseColNeg);
@@ -243,20 +256,22 @@ void DFO_Model::updateInverseKKTMatrix(Eigen::VectorXd yNew, double fvalNew, uns
       S.diagonal()(baseColNeg) = -1; //Not really necessary to write this explicitly. Should be negative anyways!
 
       Hw(t - 1) -= 1.0;
-      //Z.col(baseColPos) = 1.0 / (std::sqrt(std::abs(zeta * sigma)))
-      //    * (zeta * Z.col(baseColPos) + beta * Z(t - 1, baseColPos) * Z(t - 1, baseColNeg) * Z.col(baseColNeg)
-      //        + tau * Z(t - 1, baseColPos) * (-Hw.head(m)));
+      //Z.col(baseColPos) = 1.0 / (std::sqrt(std::abs(zeta * sigma))) * (zeta * Z.col(baseColPos) + beta * Z(t - 1, baseColPos) * Z(t - 1, baseColNeg) * Z.col(baseColNeg) + tau * Z(t - 1, baseColPos) * (-Hw.head(m)));
       eigen_col(Z, 1.0 / (std::sqrt(std::abs(zeta * sigma)))
           * (zeta * Z.col(baseColPos) + beta * Z(t - 1, baseColPos) * Z(t - 1, baseColNeg) * Z.col(baseColNeg)
               + tau * Z(t - 1, baseColPos) * (-Hw.head(m))), baseColPos);
-      //Z.col(baseColNeg) =
-      //    1.0 / (std::sqrt(std::abs(zeta))) * (tau * Z.col(baseColNeg) + Z(t - 1, baseColNeg) * (-Hw.head(m)));
+      //Z.col(baseColNeg) = 1.0 / (std::sqrt(std::abs(zeta))) * (tau * Z.col(baseColNeg) + Z(t - 1, baseColNeg) * (-Hw.head(m)));
       eigen_col(Z, 1.0 / (std::sqrt(std::abs(zeta))) * (tau * Z.col(baseColNeg) + Z(t - 1, baseColNeg) * (-Hw.head(m))), baseColNeg);
       Hw(t - 1) += 1.0;
     }
 
   }
-}
+  /*
+  std::cout << "---------" << std::endl;
+  std::cout << S.diagonal() << std::endl;
+  std::cout << "End update" << std::endl;
+*/
+   }
 
 void DFO_Model::updateQuadraticModel(Eigen::VectorXd yNew, double fvalNew, unsigned int t) {
   double modelValueYNew = evaluateQuadraticModel(yNew);
@@ -445,6 +460,8 @@ void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, Upd
     bestPoint = yNew;
     bestPointIndex = t;
   }
+
+  //std::cout << "Old point: \n" << Y.col(t-1) << "\nNew point: \n" << yNew << std::endl;
 
   updateInverseKKTMatrix(yNew, fvalNew, t);
   updateQuadraticModel(yNew, fvalNew, t);
@@ -1001,8 +1018,8 @@ Eigen::VectorXd DFO_Model::FindLocalOptimum() {
   }
   //cout.rdbuf(old);
   std::cout << fsol[0]<<"\n";
-  std::cout << "new point " <<xsol[0] << "\t" << xsol[1] <<"\n";
-  std::cout << "best point " << bestPoint[0] << "\t" << bestPoint[1] <<"\n";
+  std::cout << "new point " <<xsol[0] + y0(0) << "\t" << xsol[1]+ y0(1) <<"\n";
+  std::cout << "best point " << bestPoint[0] + y0(0) << "\t" << bestPoint[1] + y0(1) <<"\n";
 
   //subproblem.printModel();
   return localOptimum;
