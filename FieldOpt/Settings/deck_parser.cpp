@@ -74,10 +74,10 @@ void DeckParser::initializeTimeVectors() {
     }
 }
 
-std::vector<Model::Well> DeckParser::GetWellData() {
-    std::vector<Model::Well> well_structs = std::vector<Model::Well>(num_wells_);
+QList<Model::Well> DeckParser::GetWellData() {
+    auto well_structs = QList<Model::Well>();
     for (int i = 0; i < num_wells_; ++i) {
-        well_structs[i] = opmWellToWellStruct(wells_[i]);
+        well_structs.append(opmWellToWellStruct(wells_[i]));
     }
     return well_structs;
 }

@@ -61,7 +61,7 @@ class DeckParser {
  public:
   DeckParser(std::string deck_file);
 
-  std::vector<Model::Well> GetWellData();
+  QList<Model::Well> GetWellData();
 
   const std::vector<int> GetTimeDays();
   const std::vector<std::string> GetTimeDates();
