@@ -433,6 +433,9 @@ class DFO_Model {
   double ComputeLagrangePolynomial(int t, Eigen::VectorXd point);
 
   Eigen::VectorXd GetInterpolationPointsSortedByDistanceFromBestPoint();
+
+  bool FindPointToReplaceWithPointOutsideScaledTrustRegion(int t,Eigen::VectorXd &dNew);
+
 };
 }
 }

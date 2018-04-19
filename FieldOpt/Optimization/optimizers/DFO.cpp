@@ -283,7 +283,7 @@ void DFO::iterate() {
 
   Eigen::VectorXd* printme2 = DFO_model_.getFvalsReference();
   Eigen::MatrixXd* printme = DFO_model_.getYReference();
-
+  bool isTrialPointNewOptimum = false;
 
 
   while(notConverged){
@@ -351,8 +351,39 @@ step1:
         UpdateLastAction(CRITICALITY_STEP_FINISHED);
       }
       else{
+
+        // Kan finne punkt som er utenfor r*delta...
+
+
+
         //std::cout << "new point: \n" << new_point  << "\nindex of new point \n" << index_of_new_point << "\n\n";
         //DFO_model_.SetTrustRegionRadius(trust_region_radius_inc);
+
+        //See if possible to do a cheap replacement (i.e., no need to optimize all lagrange polynomials twice).
+        int index_far_away_point = DFO_model_.findPointFarthestAwayFromOptimum();
+        double distance = (DFO_model_.GetPoint(index_far_away_point) - DFO_model_.GetBestPoint()).norm();
+        bool cheapImprovementPossible = false;
+        if (distance > r*DFO_model_.GetTrustRegionRadius()){
+          cheapImprovementPossible =  DFO_model_.FindPointToReplaceWithPointOutsideScaledTrustRegion(index_far_away_point,new_point);
+        }
+
+
+        /*
+        else{
+          DFO_model_.findWorstPointInInterpolationSet(new_point, index_of_new_point); //Check if it is lambda-poised.
+          if (index_of_new_point == -1){
+            UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_FINISHED);
+          }
+          else{
+            UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND);
+          }
+        }
+        */
+        if (cheapImprovementPossible) {
+          index_of_new_point = index_far_away_point;
+          UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND);
+        }
+        else{
         DFO_model_.SetTrustRegionRadiusForSubproblem(r*DFO_model_.GetTrustRegionRadius());
         DFO_model_.findWorstPointInInterpolationSet(new_point,index_of_new_point); //Check if it is lambda-poised.
 
@@ -371,6 +402,7 @@ step1:
           UpdateLastAction(CRITICALITY_STEP_FINISHED);
           //DFO_model_.SetTrustRegionRadius(trust_region_radius_inc);
         }
+        }
       }
     }
 //    else if(last_action_ == CRITICALITY_STEP){
@@ -384,17 +416,30 @@ step1:
 
       UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_POINT_ADDED);
 
+      //See if possible to do a cheap replacement (i.e., no need to optimize all lagrange polynomials twice).
+      int index_far_away_point = DFO_model_.findPointFarthestAwayFromOptimum();
+      double distance = (DFO_model_.GetPoint(index_far_away_point) - DFO_model_.GetBestPoint()).norm();
+      bool cheapImprovementPossible = false;
+      if (distance > r*DFO_model_.GetTrustRegionRadius()){
+        cheapImprovementPossible =  DFO_model_.FindPointToReplaceWithPointOutsideScaledTrustRegion(index_far_away_point,new_point);
+      }
 
-
-      DFO_model_.findWorstPointInInterpolationSet(new_point, index_of_new_point); //Check if it is lambda-poised.
-
-      if (index_of_new_point == -1){
-        UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_FINISHED);
+      if (cheapImprovementPossible) {
+        index_of_new_point = index_far_away_point;
+        UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND);
 
       }
       else{
-        UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND);
+        DFO_model_.findWorstPointInInterpolationSet(new_point, index_of_new_point); //Check if it is lambda-poised.
+        if (index_of_new_point == -1){
+          UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_FINISHED);
+        }
+        else{
+          UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND);
+
+        }
       }
+
 
       //DFO_model_.SetTrustRegionRadiusForSubproblem( r*pow(w,criticality_step_iteration)*DFO_model_.GetTrustRegionRadius() );
       //rho_tilde = omega^i-1, rho_inc.
@@ -458,7 +503,6 @@ step1:
       UpdateLastAction(TRIAL_POINT_FOUND);
 
 
-      /// OBS OBS. Hva skjer dersom punktet ikke har en "stor nok" distanse fra beste punktet? Should probably print "local optimum found" or similar
       double maxDistance = DFO_model_.findLargestDistanceBetweenPointsAndOptimum();
       if ((new_point - DFO_model_.GetBestPoint()).norm() < tau*maxDistance) {
         UpdateLastAction(TRIAL_POINT_IS_NOT_NEW_OPTIMUM);
@@ -474,13 +518,15 @@ step1:
       std::cout << "eta1 = " << eta1 << "\trho = " << rho <<"\n";
       DFO_model_.findWorstPointInInterpolationSet(dummyVec,dummyInt); //Check if it is lambda-poised.
       if ((rho >= eta1) || (dummyInt == -1 && rho > 0)){
+        isTrialPointNewOptimum = true;
         DFO_model_.update(new_point, function_evaluation, t, DFO_Model::INCLUDE_NEW_OPTIMUM);
         UpdateLastAction(NEW_POINT_INCLUDED);
         //DFO_model_.printQuadraticModel();
       }
       else{
+        isTrialPointNewOptimum = false;
         UpdateLastAction(TRIAL_POINT_IS_NOT_NEW_OPTIMUM);
-
+        //int t = DFO_model_.findPointFarthestAwayFromOptimum();
         if ((DFO_model_.GetPoint(t) - DFO_model_.GetBestPoint()).norm() > r*DFO_model_.GetTrustRegionRadius() ||
             abs(DFO_model_.ComputeLagrangePolynomial(t, new_point)) > 1 ){
             DFO_model_.update(new_point,function_evaluation,t,DFO_Model::INCLUDE_NEW_POINT);
@@ -497,6 +543,14 @@ step1:
           pointsSortedByDistanceFromOptimum = DFO_model_.GetInterpolationPointsSortedByDistanceFromBestPoint();
       DFO_model_.SetTrustRegionRadiusForSubproblem(DFO_model_.GetTrustRegionRadius());
       index_of_new_point = -1;
+
+      Eigen::MatrixXd Ydelete(number_of_variables_, number_of_interpolation_points_);
+      for (int j = 0; j < number_of_new_interpolation_points; ++j){
+        Eigen::VectorXd sd = (*printme).col(pointsSortedByDistanceFromOptimum[j]-1);
+        eigen_col(Ydelete,sd,j);
+      }
+      std::cout << "Points sorted by distance \n" << Ydelete << std::endl;
+
       for (int i = 0; i < number_of_interpolation_points_; ++i) {
         int t = pointsSortedByDistanceFromOptimum[i];
         new_point = DFO_model_.FindLocalOptimumOfAbsoluteLagrangePolynomial(t);
@@ -512,6 +566,9 @@ step1:
           break;
         }
       }
+      if (rho != 0){
+        std::cin.get();
+      }
     }
 
     if (last_action_ == TRIAL_POINT_IS_NOT_NEW_OPTIMUM ||last_action_ ==  NEW_POINT_INCLUDED ||last_action_ ==  MODEL_IMPROVEMENT_POINT_FOUND){
@@ -526,13 +583,21 @@ step1:
         int tmp2;
         DFO_model_.SetTrustRegionRadiusForSubproblem(r*DFO_model_.GetTrustRegionRadius());
         DFO_model_.findWorstPointInInterpolationSet(tmp,tmp2); //Check if it is lambda-poised. (CFL)
-        if (tmp2 != -1){
+        if (tmp2 == -1){
           // model is CFL -> reduce radius
           trust_region_radius_inc = gamma*DFO_model_.GetTrustRegionRadius();
         }
         else{
           // model is not fully linear -> keep radius
-          trust_region_radius_inc = DFO_model_.GetTrustRegionRadius();
+          /// OBS OBS
+          /// OBS OBS
+          /// OBS OBS
+          /// OBS OBS
+          /// OBS OBS
+          /// OBS OBS
+          /// OBS OBS Find out why the radius doesn't decrease without this 0.9.
+          /// Probably something wrong with the criticality stuff. Check. and check again.
+          trust_region_radius_inc = 0.9*DFO_model_.GetTrustRegionRadius();
         }
       }
       if (last_action_ == TRIAL_POINT_IS_NOT_NEW_OPTIMUM ||last_action_ ==  NEW_POINT_INCLUDED){
@@ -570,7 +635,11 @@ step1:
       }
       /// Get one new point.
       function_evaluation = sphere(new_point + DFO_model_.getCenterPoint());
-      cout << "The new function evaluation is: " << function_evaluation << endl << endl;
+      if (last_action_ == TRIAL_POINT_FOUND){
+        if (function_evaluation < DFO_model_.GetBestFunctionValueAllTime()){
+          cout << "\033[1;36;mThe new function evaluation is: \033[0m" << function_evaluation << endl << endl;
+        }
+      }
     }
 
 

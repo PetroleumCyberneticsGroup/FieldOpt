@@ -450,8 +450,8 @@ void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, Upd
     if (fvalNew < bestPointAllTimeFunctionValue){
       bestPointAllTimeFunctionValue = fvalNew;
       bestPointAllTime = yNew;
-      printf("\x1b[33mNEW BEST POINT IS FOUND! (ALL TIME): \n\x1b[0m");
-      std::cout << "\t fvalNew\n" << fvalNew << "\n";
+      printf("\x1b[33mNEW BEST POINT IS FOUND! (ALL TIME): \x1b[0m");
+      std::cout << fvalNew << "\n";
       //std::cout << "NEW BEST POINT IS FOUND! (ALL TIME)" << std::endl;
     }
   }
@@ -1118,6 +1118,16 @@ Eigen::VectorXd DFO_Model::GetInterpolationPointsSortedByDistanceFromBestPoint()
   }
   return indicesSortedByDescendingNorm;
 }
+bool DFO_Model::FindPointToReplaceWithPointOutsideScaledTrustRegion(int t,Eigen::VectorXd &dNew) {
+  subproblem.SetTrustRegionRadius(rho);
+  dNew = FindLocalOptimumOfAbsoluteLagrangePolynomial(t);
+  if (ComputeLagrangePolynomial(t,dNew) > lambda){
+    return true;
+  }
+  return false;
+}
+
+
 
 }
 }
