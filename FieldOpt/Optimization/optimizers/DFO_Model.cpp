@@ -1005,10 +1005,7 @@ Eigen::VectorXd DFO_Model::FindLocalOptimum() {
   Eigen::VectorXd localOptimum(n);
   vector<double> xsol;
   vector<double> fsol;
-  Eigen::VectorXd a(n);
-  std::cout << "n" << n << std::endl;
-  a.setZero();
-  printf("\x1b[33mLooking for new optimum: \n\x1b[0m");
+  //printf("\x1b[33mLooking for new optimum: \n\x1b[0m");
   //streambuf *old = cout.rdbuf(0);
   //cout << "Hidden text!\n";
 
@@ -1017,9 +1014,9 @@ Eigen::VectorXd DFO_Model::FindLocalOptimum() {
     localOptimum[i] = xsol[i];
   }
   //cout.rdbuf(old);
-  std::cout << fsol[0]<<"\n";
-  std::cout << "new point " <<xsol[0] + y0(0) << "\t" << xsol[1]+ y0(1) <<"\n";
-  std::cout << "best point " << bestPoint[0] + y0(0) << "\t" << bestPoint[1] + y0(1) <<"\n";
+  //std::cout << fsol[0]<<"\n";
+  //std::cout << "new point " <<xsol[0] + y0(0) << "\t" << xsol[1]+ y0(1) <<"\n";
+  //std::cout << "best point " << bestPoint[0] + y0(0) << "\t" << bestPoint[1] + y0(1) <<"\n";
 
   //subproblem.printModel();
   return localOptimum;
