@@ -104,8 +104,8 @@ class Well
   int heel_j() const { return heel_.j; }
   int heel_k() const { return heel_.k; }
 
-  void Update();
-  void Update(int rank);
+  // -------------------------------------------------------
+  void Update(int rank=0);
 
   // -------------------------------------------------------
   int GetTimeSpentInWIC() const

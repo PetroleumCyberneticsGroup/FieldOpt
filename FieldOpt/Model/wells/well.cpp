@@ -112,6 +112,7 @@ void Well::ComputeDrillingTime() {
 
   if (drilling_time_ < 0) {
 
+    int testing = true;
     double dx = 0, dy = 0, ze = 0, dxdy = 0;
 
     // -----------------------------------------------------
@@ -128,6 +129,10 @@ void Well::ComputeDrillingTime() {
       dy = toe_c(1) - heel_c(1);
       ze = toe_c(2);
 
+      // Drilling and completion time for vert.well at 2000m
+      // depth: 30 days, cost: 10 million $.
+      if(testing) ze = 2000; dxdy = 0;
+
       // ---------------------------------------------------
     } else if (deftype_
         == Settings::Model::WellDefinitionType::WellSpline) {
@@ -135,6 +140,11 @@ void Well::ComputeDrillingTime() {
       dx = trajectory_->GetWellSpline()->GetSplineDx();
       dy = trajectory_->GetWellSpline()->GetSplineDy();
       ze = trajectory_->GetWellSpline()->GetSplineZe();
+
+      // Drilling and completion time for hz.well w/ end point
+      // at 2000m depth and 2000m offset from the platform:
+      // 70 days, cost: 30 million $.
+      if(testing) ze = 2000; dxdy = 2000;
 
     }
 
@@ -147,7 +157,7 @@ void Well::ComputeDrillingTime() {
     // DX, DY: hz. offset of well endpoint from kick-off point
     // Ze: z coord of well end point
 
-    dxdy = sqrt(pow(dx, 2.0) + pow(dy, 2.0));
+    if(!testing) dxdy = sqrt(pow(dx, 2.0) + pow(dy, 2.0));
     drilling_time_ = 0.015 * ze + 0.02 * dxdy;
 
     // -----------------------------------------------------
@@ -170,19 +180,15 @@ bool Well::IsInjector() {
 }
 
 // =========================================================
-void Well::Update() {
-  trajectory_->UpdateWellBlocks();
-  heel_.i = trajectory_->GetWellBlocks()->first()->i();
-  heel_.j = trajectory_->GetWellBlocks()->first()->j();
-  heel_.k = trajectory_->GetWellBlocks()->first()->k();
-}
-
-// =========================================================
 void Well::Update(int rank) {
+
   trajectory_->UpdateWellBlocks(rank);
-  heel_.i = trajectory_->GetWellBlocks()->first()->i();
-  heel_.j = trajectory_->GetWellBlocks()->first()->j();
-  heel_.k = trajectory_->GetWellBlocks()->first()->k();
+
+  UpdateHeelToeIJK();
+
+//  heel_.i = trajectory_->GetWellBlocks()->first()->i();
+//  heel_.j = trajectory_->GetWellBlocks()->first()->j();
+//  heel_.k = trajectory_->GetWellBlocks()->first()->k();
 }
 
 
