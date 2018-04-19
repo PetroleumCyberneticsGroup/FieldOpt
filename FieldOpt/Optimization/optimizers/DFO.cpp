@@ -252,21 +252,23 @@ void DFO::iterate() {
 
   // This loop is used for testing. Instead of running simulations, a simple analytical function is used.
   // Most of the content in this loop should be in "iterate()", when the testing is done.
+  double r =                        settings_->parameters().r; // expansion factor of the trust-region radius to accept more points. (even though they are outside the "true" trust region)
+  double w =                        settings_->parameters().w; // decreasing factor of the trust-region radius during the criticality step.
+  double u =                        settings_->parameters().u;
+  double beta =                     settings_->parameters().beta;
+  double epsilon_c =                settings_->parameters().epsilon_c;
+  double tau =                      settings_->parameters().tau;
+  double eta1 =                     settings_->parameters().eta1;
+  double gamma =                    settings_->parameters().gamma;
+  double gamma_inc =                settings_->parameters().gamma_inc;
+  double trust_region_radius_inc =  settings_->parameters().initial_trust_region_radius;
+  double trust_region_radius_max =  settings_->parameters().max_trust_region_radius;
+
+
   bool notConverged = true;
-  double r = 2; // expansion factor of the trust-region radius to accept more points. (even though they are outside the "true" trust region)
-  double w = 0.9; // decreasing factor of the trust-region radius during the criticality step.
-  double u = 0.8;
-  double beta = 0.7;
-  double epsilon_c = 1;
-  double tau = 0.01;
-  double eta1 = 0.1;
   double rho = 0;
-  double gamma = 0.9;
-  double gamma_inc = 1.2;
   int criticality_step_iteration = 0;
   double trust_region_radius_tilde = 0;
-  double trust_region_radius_inc = settings_->parameters().initial_trust_region_radius;
-  double trust_region_radius_max = 20;
 
   Eigen::VectorXd function_evaluations(number_of_interpolation_points_);
   function_evaluations.setZero();
@@ -275,11 +277,6 @@ void DFO::iterate() {
   // These are the ones that are used the most. Used in all other places than "Step 4 - Model Improvement".
   Eigen::VectorXd new_point(number_of_variables_);
   int index_of_new_point = -1;
-
-  // These are used in the case when the new trial point (found  by solving the subproblem), is not the new optimum.
-  // They are found in the "Step 4 - Model Improvement";
-  // Eigen::VectorXd new_point2(number_of_variables_);
-  // int index2 = -100;
 
   // Only used in the initialization process.
   int number_of_new_interpolation_points = 0;
@@ -291,6 +288,13 @@ void DFO::iterate() {
 
   while(notConverged){
     std::cout <<  "\033[1;34;m " << " ---------- New iterate "<< iterations_ << " ---------- " << "\033[0m" << std::endl;
+    if (iterations_%50 == 0){
+      std::cout << "Y = \n" << *printme << "\n fvals: \n" << *printme2 << "\nbestIndex = " << DFO_model_.getBestPointIndex() << std::endl;
+      std::cout << "Trust region radius is: " << DFO_model_.GetTrustRegionRadius() << std::endl;
+      std::cout << "best function value all time: " << DFO_model_.GetBestFunctionValueAllTime() << "\n";
+      DFO_model_.SetTrustRegionRadius(5);
+      DFO_model_.printQuadraticModel();
+    }
     Eigen::MatrixXd new_points;
 
 
@@ -338,23 +342,24 @@ void DFO::iterate() {
 
 step1:
     if (last_action_ == INITIALIZED_MODEL || last_action_ == TRUST_REGION_RADIUS_UPDATE_STEP || last_action_ == MODEL_IMPROVEMENT_POINT_ADDED){
-
+      if (last_action_ == TRUST_REGION_RADIUS_UPDATE_STEP){
+        DFO_model_.SetTrustRegionRadius(trust_region_radius_inc);
+      }
       Eigen::VectorXd gradient = DFO_model_.GetGradient();
       //std::cout <<"gradient of the model: \n"<<gradient<<"\n\n";
       if (gradient.norm() > epsilon_c){
-        if (last_action_ == TRUST_REGION_RADIUS_UPDATE_STEP){
-          DFO_model_.SetTrustRegionRadius(trust_region_radius_inc);
-        }
         UpdateLastAction(CRITICALITY_STEP_FINISHED);
       }
       else{
         //std::cout << "new point: \n" << new_point  << "\nindex of new point \n" << index_of_new_point << "\n\n";
+        //DFO_model_.SetTrustRegionRadius(trust_region_radius_inc);
+        DFO_model_.SetTrustRegionRadiusForSubproblem(r*DFO_model_.GetTrustRegionRadius());
         DFO_model_.findWorstPointInInterpolationSet(new_point,index_of_new_point); //Check if it is lambda-poised.
-        Eigen::VectorXd gradient = DFO_model_.GetGradient();
+
         if (index_of_new_point != -1 || trust_region_radius_inc > u * gradient.norm() ){
           criticality_step_iteration = 0;
-          DFO_model_.SetTrustRegionRadius(r*trust_region_radius_inc);
-          DFO_model_.findWorstPointInInterpolationSet(new_point,index_of_new_point);
+
+          //DFO_model_.findWorstPointInInterpolationSet(new_point,index_of_new_point);
           UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND);
 
           if (index_of_new_point == -1){
@@ -363,7 +368,8 @@ step1:
           }
         }
         else{
-          DFO_model_.SetTrustRegionRadius(trust_region_radius_inc);
+          UpdateLastAction(CRITICALITY_STEP_FINISHED);
+          //DFO_model_.SetTrustRegionRadius(trust_region_radius_inc);
         }
       }
     }
@@ -400,11 +406,13 @@ step1:
     }
     if (last_action_ == MODEL_IMPROVEMENT_ALGORITHM_FINISHED){
       //We are back to the criticality step.
-      trust_region_radius_tilde = pow(w,criticality_step_iteration);
+      trust_region_radius_tilde = pow(w,criticality_step_iteration)*trust_region_radius_inc;
 
       //Do "convergence test" for the criticality step.
       Eigen::VectorXd gradient = DFO_model_.GetGradient();
-      if (trust_region_radius_tilde > u*(gradient.norm())){
+      double norm_of_gradient = gradient.norm();
+      std::cout << "The norm of the gradient of the model is: " << norm_of_gradient << std::endl;
+      if (trust_region_radius_tilde <= u*(norm_of_gradient)){
         //"converged"
         double temp = max(trust_region_radius_tilde, beta*gradient.norm());
         double new_trust_region_radius = min(temp, trust_region_radius_inc);
@@ -413,16 +421,35 @@ step1:
         UpdateLastAction(CRITICALITY_STEP_FINISHED);
       }
       else{ // Reduce the radius and run the model improvement algorithm.
-        criticality_step_iteration++;
-        DFO_model_.SetTrustRegionRadiusForSubproblem(r*trust_region_radius_inc*pow(w,criticality_step_iteration));
-        DFO_model_.findWorstPointInInterpolationSet(new_point,index_of_new_point);
-        UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND);
+        // Maybe the set is already "well poised" in the new radius???
+        std::cout << "decreasing the radius:" << std::endl;
+        do {
+          criticality_step_iteration++;
+          trust_region_radius_tilde = pow(w, criticality_step_iteration)*trust_region_radius_inc;
+
+          std::cout << r * trust_region_radius_tilde<< std::endl;
+          DFO_model_.SetTrustRegionRadiusForSubproblem( r * trust_region_radius_tilde);
+          DFO_model_.findWorstPointInInterpolationSet(new_point, index_of_new_point);
+        }
+        while( (index_of_new_point == -1) && (trust_region_radius_tilde > u*(norm_of_gradient)) );
+
+        if (index_of_new_point != -1) {
+          UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND);
+        }
+        else if (trust_region_radius_tilde <= u * (norm_of_gradient)) {
+          double temp = max(trust_region_radius_tilde, beta * gradient.norm());
+          double new_trust_region_radius = min(temp, trust_region_radius_inc);
+          DFO_model_.SetTrustRegionRadius(new_trust_region_radius);
+          UpdateLastAction(CRITICALITY_STEP_FINISHED);
+        }
+        else {
+          std::cout << "whhaaaaat" << std::endl;
+          std::cin.get();
+        }
+
+        //UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND);
       }
     }
-    //else if (last_action_ == FOUND_NEW_OPTIMUM_CANDIDATE){
-      // We must check how good the model predicts the objective function.
-     // rho = 123;
-    //}
 
     if (last_action_ == CRITICALITY_STEP_FINISHED){
       //Now at step2.
