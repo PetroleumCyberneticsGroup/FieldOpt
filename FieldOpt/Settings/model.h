@@ -207,7 +207,8 @@ class Model
     DrillingMode mode;
     vector<pair<string, double>> time;
     vector<pair<string, pair<int, int>>> order;
-    multimap<int, pair<int, string>> seq_by_group;
+    multimap<int, pair<int, string>> seq_by_group_mp;
+    vector<vector<pair<int, string>>> seq_by_group_vec;
   };
 
   // -------------------------------------------------------

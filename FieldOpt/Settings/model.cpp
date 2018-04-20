@@ -30,6 +30,10 @@
 #include "Utilities/filehandling.hpp"
 
 // ---------------------------------------------------------
+using std::cout;
+using std::endl;
+
+// ---------------------------------------------------------
 namespace Settings {
 
 // =========================================================
@@ -98,14 +102,16 @@ Model::Model(QJsonObject json_model) {
   // Main drilling order maps (pairs)
   for (int i = 0; i < wells_.size(); ++i) {
 
-    std::pair<std::string, std::pair<int, int>> well_order;
-    well_order.first = wells_[i].name.toStdString();
-    well_order.second = wells_[i].drilling_order;
+    // -----------------------------------------------------------
+    std::pair<std::string, std::pair<int, int>>
+        well_order(wells_[i].name.toStdString(),
+                   wells_[i].drilling_order);
     drilling_.order.push_back(well_order);
 
-    std::pair<std::string, double> well_time;
-    well_time.first = wells_[i].name.toStdString();
-    well_time.second = wells_[i].drilling_time;
+    // -----------------------------------------------------------
+    std::pair<std::string, double>
+        well_time(wells_[i].name.toStdString(),
+                  wells_[i].drilling_time);
     drilling_.time.push_back(well_time);
 
   }
@@ -116,28 +122,64 @@ Model::Model(QJsonObject json_model) {
 
     std::pair<int, string> p(drilling_.order[i].second.second,
                              drilling_.order[i].first);
-    drilling_.seq_by_group.emplace(drilling_.order[i].second.first, p);
+    drilling_.seq_by_group_mp.emplace(drilling_.order[i].second.first, p);
 
   }
 
 
   // -------------------------------------------------------------
   // Loop by group
-  decltype(drilling_.seq_by_group.equal_range(int())) range;
+  decltype(drilling_.seq_by_group_mp.equal_range(int())) range;
 
-  for (auto i = drilling_.seq_by_group.begin();
-    i != drilling_.seq_by_group.end(); i = range.second) {
+  for (auto i = drilling_.seq_by_group_mp.begin();
+    i != drilling_.seq_by_group_mp.end(); i = range.second) {
 
-    range = drilling_.seq_by_group.equal_range(i->first);
+    range = drilling_.seq_by_group_mp.equal_range(i->first);
 
     // -----------------------------------------------------------
-    // Dbg
-    for(auto d = range.first; d != range.second; ++d)
+    vector<pair<int, string>> isv;
+    for(auto d = range.first; d != range.second; ++d) {
+
+      // Dbg
       std::cout << "Grp:" << d->first
                 << " Order w/i grp: " << d->second.first
                 << " Well:" << d->second.second << std::endl;
 
+      pair<int, string> is(d->second.first, d->second.second);
+      isv.push_back(is);
+
+    }
+
+    drilling_.seq_by_group_vec.push_back(isv);
   }
+
+  // -------------------------------------------------------------
+  multimap<int,string> mp;
+  for (int j=0; j<drilling_.seq_by_group_vec.size(); j++) {
+
+    for (int k=0; k<drilling_.seq_by_group_vec[j].size(); k++) {
+
+      mp.emplace(drilling_.seq_by_group_vec[j][k].first,
+                drilling_.seq_by_group_vec[j][k].second);
+
+      // Dbg
+      cout << "[ " << drilling_.seq_by_group_vec[j][k].first << " -- "
+           << drilling_.seq_by_group_vec[j][k].second << " ]" << endl;
+    }
+  }
+
+  // -------------------------------------------------------------
+  decltype(mp.equal_range(int())) range2;
+  for (auto i = mp.begin(); i != mp.end(); i = range2.second) {
+    range2 = mp.equal_range(i->first);
+    for(auto d = range2.first; d != range2.second; ++d) {
+      // Dbg
+      std::cout << "[ " << d->first
+                << " ## " << d->second
+                << " ]" << std::endl;
+    }
+  }
+
 
 }
 
