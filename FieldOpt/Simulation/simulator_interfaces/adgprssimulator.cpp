@@ -28,9 +28,6 @@ namespace SimulatorInterfaces {
 AdgprsSimulator::AdgprsSimulator(Settings::Settings *settings, Model::Model *model)
     : Simulator(settings)
 {
-    QStringList tmp = initial_driver_file_path_.split("/");
-    tmp.removeLast();
-    initial_driver_file_parent_dir_path_ = tmp.join("/");
     verifyOriginalDriverFileDirectory();
     output_h5_summary_file_path_ = output_directory_ + "/" + initial_driver_file_name_.split(".").first() + ".vars.h5";
 

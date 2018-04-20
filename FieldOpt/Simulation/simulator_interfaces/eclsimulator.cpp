@@ -25,59 +25,87 @@
 namespace Simulation {
 namespace SimulatorInterfaces {
 
+using namespace Utilities::FileHandling;
+
 ECLSimulator::ECLSimulator(Settings::Settings *settings, Model::Model *model)
     : Simulator(settings)
 {
     model_ = model;
     driver_file_writer_ = new DriverFileWriters::EclDriverFileWriter(settings, model_);
 
-    script_args_ = (QStringList() << output_directory_ << driver_file_writer_->output_driver_file_name_);
+    UpdateFilePaths();
+    script_args_ = (QStringList() << output_directory_ << output_driver_file_path_);
 
     results_ = new Results::ECLResults();
     try {
-        results()->ReadResults(driver_file_writer_->output_driver_file_name_);
+        results()->ReadResults(output_driver_file_path_);
     } catch (...) {} // At this stage we don't really care if the results can be read, we just want to set the path.
 }
 
 void ECLSimulator::Evaluate()
 {
-    driver_file_writer_->WriteDriverFile();
-    ::Utilities::Unix::ExecShellScript(script_path_, script_args_);
-    results_->ReadResults(driver_file_writer_->output_driver_file_name_);
-    updateResultsInModel();
+    UpdateFilePaths();
+    copyDriverFiles();
+    driver_file_writer_->WriteDriverFile(output_schedule_file_path_);
+//    ::Utilities::Unix::ExecShellScript(script_path_, script_args_);
+//    results_->ReadResults(driver_file_writer_->output_driver_file_name_);
+//    updateResultsInModel();
+}
+
+bool ECLSimulator::Evaluate(int timeout, int threads) {
+    UpdateFilePaths();
+    copyDriverFiles();
+//    int t = timeout;
+//    if (timeout < 10) t = 10; // Always let simulations run for at least 10 seconds
+//    script_args_[2] = QString::number(threads);
+//
+//    driver_file_writer_->WriteDriverFile(output_schedule_file_path_);
+//    std::cout << "Starting monitored simulation with timeout " << timeout << std::endl;
+//    bool success = ::Utilities::Unix::ExecShellScriptTimeout(script_path_, script_args_, t);
+//    std::cout << "Monitored simulation done." << std::endl;
+//    if (success) results_->ReadResults(driver_file_writer_->output_driver_file_name_);
+//    updateResultsInModel();
+//    return success;
 }
 
 void ECLSimulator::CleanUp()
 {
+    UpdateFilePaths();
     QStringList file_endings_to_delete{"DBG", "ECLEND", "ECLRUN", "EGRID", "GRID",
                                        "h5", "INIT","INSPEC", "MSG", "PRT",
                                        "RSSPEC", "UNRST"};
-    QString base_file_path = driver_file_writer_->output_driver_file_name_.split(".DATA").first();
+    QString base_file_path = output_driver_file_path_.split(".DATA").first();
+
     for (QString ending : file_endings_to_delete) {
-        Utilities::FileHandling::DeleteFile(base_file_path + "." + ending);
+        DeleteFile(base_file_path + "." + ending);
     }
 }
 
 void ECLSimulator::UpdateFilePaths()
 {
-    return;
+    current_output_deck_parent_dir_path_ = output_directory_ + "/" + initial_driver_file_parent_dir_name_;
+    output_driver_file_path_ = current_output_deck_parent_dir_path_ + "/" + initial_driver_file_name_;
+    output_schedule_file_path_ = initial_schedule_path_;
+    output_schedule_file_path_.replace(initial_driver_file_parent_dir_path_,current_output_deck_parent_dir_path_);
 }
 
-bool ECLSimulator::Evaluate(int timeout, int threads) {
-    int t = timeout;
-    if (timeout < 10) t = 10; // Always let simulations run for at least 10 seconds
-    script_args_[2] = QString::number(threads);
-
-    driver_file_writer_->WriteDriverFile();
-    std::cout << "Starting monitored simulation with timeout " << timeout << std::endl;
-    bool success = ::Utilities::Unix::ExecShellScriptTimeout(script_path_, script_args_, t);
-    std::cout << "Monitored simulation done." << std::endl;
-    if (success) results_->ReadResults(driver_file_writer_->output_driver_file_name_);
-    updateResultsInModel();
-    return success;
-}
 void ECLSimulator::WriteDriverFilesOnly() {
-    driver_file_writer_->WriteDriverFile();
+    UpdateFilePaths();
+    driver_file_writer_->WriteDriverFile(current_output_deck_parent_dir_path_);
+}
+
+void ECLSimulator::copyDriverFiles() {
+    if (!DirectoryExists(output_directory_)) {
+        std::cout << "Output parent directory does not exist; creating it: " << output_directory_.toStdString() << std::endl;
+        CreateDirectory(output_directory_);
+    }
+    if (!DirectoryExists(current_output_deck_parent_dir_path_)) {
+        std::cout << "Output deck directory not found; copying input deck: "
+                  << "\t" << initial_driver_file_parent_dir_path_.toStdString() << " -> "
+                  << "\t" << current_output_deck_parent_dir_path_.toStdString() << std::endl;
+        CreateDirectory(current_output_deck_parent_dir_path_);
+        CopyDirectory(initial_driver_file_parent_dir_path_, current_output_deck_parent_dir_path_, true);
+    }
 }
 
 }

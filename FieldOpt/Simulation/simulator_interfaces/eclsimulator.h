@@ -52,6 +52,7 @@ class ECLSimulator : public Simulator
    * \brief Evaluate Executes the simulation of the current model. The evaluation is blocking.
    */
   void Evaluate();
+  virtual bool Evaluate(int timeout, int threads=1) override;
   void WriteDriverFilesOnly() override;
   /*!
    * \brief CleanUp Deletes files created during the simulation.
@@ -61,15 +62,14 @@ class ECLSimulator : public Simulator
 
  private:
   DriverFileWriters::EclDriverFileWriter *driver_file_writer_;
+  QString output_driver_file_path_;
+  QString output_schedule_file_path_;
   QStringList script_args_;
+  void copyDriverFiles();
 
   // Simulator interface
  protected:
   void UpdateFilePaths();
-
-  // Simulator interface
- public:
-  virtual bool Evaluate(int timeout, int threads=1) override;
 };
 
 }
