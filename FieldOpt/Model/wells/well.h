@@ -133,7 +133,7 @@ class Well
 
   // -------------------------------------------------------
   double drilling_time_;
-  std::vector<int> drilling_sequence_;
+  std::pair<int, int> drilling_order_;
 
   // -------------------------------------------------------
   Heel heel_;

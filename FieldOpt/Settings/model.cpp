@@ -59,22 +59,12 @@ Model::Model(QJsonObject json_model) {
   // Append control times
   control_times_ = QList<double>();
   for (int i = 0; i < json_model["ControlTimes"].toArray().size(); ++i) {
-    control_times_.append(json_model["ControlTimes"].toArray().at(i).toDouble());
+    control_times_.append(
+        json_model["ControlTimes"].toArray().at(i).toDouble());
   }
 
   // -------------------------------------------------------------
-  // Drilling sequence
-  QString drilling = json_model["Drilling"].toString();
-  if (QString::compare(drilling, "Synchronous") == 0) {
-    drilling_ = Drilling::Synchronous;
-  } else if (QString::compare(drilling, "Sequential") == 0) {
-    drilling_ = Drilling::Sequential;
-  } else {
-    drilling_ = Drilling::Synchronous;
-  }
-
-  // -------------------------------------------------------------
-  // Wells
+  // Loop through wells
   try {
 
     // -----------------------------------------------------------
@@ -92,6 +82,63 @@ Model::Model(QJsonObject json_model) {
         "Unable to parse wells model section: "
             + std::string(ex.what()));
   }
+
+  // -------------------------------------------------------------
+  // Drilling sequence mode
+  QString drilling = json_model["Drilling"].toString();
+  if (QString::compare(drilling, "Synchronous") == 0) {
+    drilling_.mode = DrillingMode::Synchronous;
+  } else if (QString::compare(drilling, "Sequential") == 0) {
+    drilling_.mode = DrillingMode::Sequential;
+  } else {
+    drilling_.mode = DrillingMode::Synchronous;
+  }
+
+  // -------------------------------------------------------------
+  // Main drilling order maps (pairs)
+  for (int i = 0; i < wells_.size(); ++i) {
+
+    std::pair<std::string, std::pair<int, int>> well_order;
+    well_order.first = wells_[i].name.toStdString();
+    well_order.second = wells_[i].drilling_order;
+    drilling_.order.push_back(well_order);
+
+    std::pair<std::string, double> well_time;
+    well_time.first = wells_[i].name.toStdString();
+    well_time.second = wells_[i].drilling_time;
+    drilling_.time.push_back(well_time);
+
+  }
+
+  // -------------------------------------------------------------
+  // Drilling sequence by group (<int, string>)
+  for (int i = 0; i < drilling_.order.size(); ++i) {
+
+    std::pair<int, string> p(drilling_.order[i].second.second,
+                             drilling_.order[i].first);
+    drilling_.seq_by_group.emplace(drilling_.order[i].second.first, p);
+
+  }
+
+
+  // -------------------------------------------------------------
+  // Loop by group
+  decltype(drilling_.seq_by_group.equal_range(int())) range;
+
+  for (auto i = drilling_.seq_by_group.begin();
+    i != drilling_.seq_by_group.end(); i = range.second) {
+
+    range = drilling_.seq_by_group.equal_range(i->first);
+
+    // -----------------------------------------------------------
+    // Dbg
+    for(auto d = range.first; d != range.second; ++d)
+      std::cout << "Grp:" << d->first
+                << " Order w/i grp: " << d->second.first
+                << " Well:" << d->second.second << std::endl;
+
+  }
+
 }
 
 // =========================================================
@@ -300,12 +347,14 @@ Model::Well Model::readSingleWell(QJsonObject json_well) {
 
   // ---------------------------------------------------------
   // Drilling sequence
-  well.drilling_sequence = std::vector<int>(2,-1); // Default vals
+  well.drilling_order = std::pair<int, int>(2,-1); // Default vals
   if (json_well.contains("DrillingSequence")) {
-    for (int i = 0; i < json_well["DrillingSequence"].toArray().size(); ++i) {
-      well.drilling_sequence[i] =
-          json_well["DrillingSequence"].toArray().at(i).toInt();
-    }
+
+    well.drilling_order.first =
+        json_well["DrillingSequence"].toArray().at(0).toInt();
+    well.drilling_order.second =
+        json_well["DrillingSequence"].toArray().at(1).toInt();
+
   }
 
   // ---------------------------------------------------------

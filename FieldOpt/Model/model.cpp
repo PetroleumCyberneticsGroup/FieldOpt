@@ -112,7 +112,7 @@ void Model::ComputeDrillingSequence() {
   for (int wnr = 0; wnr < settings_->wells().size(); ++wnr) {
 
     grouping[settings_->wells().at(wnr).name] = // well data
-        settings_->wells().at(wnr).drilling_sequence[0] - 1; // group #
+        settings_->wells().at(wnr).drilling_order.first - 1; // group #
   }
 
   // -------------------------------------------------------
@@ -167,10 +167,10 @@ void Model::ComputeDrillingSequence() {
       for (int wnr = 0; wnr < groups_temp[gnr].size(); ++wnr) { // wells in group
 
         cout << "groups_temp[gnr][wnr].drilling_sequence[1] - 1= "
-             << groups_temp[gnr][wnr].drilling_sequence[1] - 1
+             << groups_temp[gnr][wnr].drilling_order.second - 1
              << " wo= " << wo <<  endl;
 
-        if (wo == groups_temp[gnr][wnr].drilling_sequence[1] - 1) {
+        if (wo == groups_temp[gnr][wnr].drilling_order.second - 1) {
           temp_group.push_back(groups_temp[gnr][wnr]);
           cout << "wnr" << wnr  << endl;
         }

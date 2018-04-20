@@ -37,9 +37,14 @@
 #include <QJsonArray>
 #include <assert.h>
 #include <string>
+#include <map>
+#include <vector>
 
 // ---------------------------------------------------------
 using std::string;
+using std::pair;
+using std::vector;
+using std::multimap;
 
 // ---------------------------------------------------------
 namespace Settings {
@@ -102,9 +107,9 @@ class Model
   enum Direction : int { X=91, Y=92, Z=93 };
 
   // ---------------------------------------------------------
-  enum Drilling : int { Synchronous=101, Sequential=102 };
+  enum DrillingMode : int { Synchronous=101, Sequential=102 };
 
-  inline const string getDrillingStr(Drilling drilling) {
+  inline const string getDrillingStr(DrillingMode drilling) {
     switch (drilling) {
           case Synchronous : return "Synchronous";
           case Sequential : return "Sequential";
@@ -175,12 +180,15 @@ class Model
     PreferredPhase preferred_phase; //!< The preferred phase for the well
     QString name; //!< The name to be used for the well.
     WellType type; //!< The well type, i.e. producer or injector.
-    QString group; //!< The group of the well.
 
     // -----------------------------------------------------
     double wellbore_radius; //!< The wellbore radius
+    QString group; //!< The group of the well.
+
+    // -----------------------------------------------------
+    // Drilling sequence for each well
     double drilling_time;
-    std::vector<int> drilling_sequence;
+    std::pair<int, int> drilling_order;
 
     // -----------------------------------------------------
     Direction direction; //!< Direction of penetration
@@ -194,15 +202,34 @@ class Model
   };
 
   // -------------------------------------------------------
-  Reservoir reservoir() const { return reservoir_; } //!< Get the struct containing reservoir settings.
-  void set_reservoir_grid_path(const QString path) { reservoir_.path = path; } //!< Set the reservoir grid path. Used when the path is passed by command line argument.
+  // Drilling sequence for all wells
+  struct Drilling {
+    DrillingMode mode;
+    vector<pair<string, double>> time;
+    vector<pair<string, pair<int, int>>> order;
+    multimap<int, pair<int, string>> seq_by_group;
+  };
 
   // -------------------------------------------------------
-  QList<Well> wells() const { return wells_; } //!< Get the struct containing settings for the well(s) in the model.
-  QList<double> control_times() const { return control_times_; } //!< Get the control times for the schedule
+  // Get the struct containing reservoir settings.
+  Reservoir reservoir() const { return reservoir_; }
+
+  // Set the reservoir grid path. Used when
+  // path is passed by command line argument.
+  void set_reservoir_grid_path(const QString path)
+  { reservoir_.path = path; }
 
   // -------------------------------------------------------
-  void set_verbosity_vector(const std::vector<int> verb_vector) { verb_vector_ = verb_vector; }
+  // Get the struct containing settings for the well(s) in
+  // the model.
+  QList<Well> wells() const { return wells_; }
+
+  // Get the control times for the schedule
+  QList<double> control_times() const { return control_times_; }
+
+  // -------------------------------------------------------
+  void set_verbosity_vector(const std::vector<int> verb_vector)
+  { verb_vector_ = verb_vector; }
   std::vector<int> verb_vector() const { return verb_vector_; }
 
   Model::Well getWell(QString well_name);

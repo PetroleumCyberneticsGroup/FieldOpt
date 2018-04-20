@@ -71,10 +71,10 @@ Well::Well(Settings::Model settings,
                                          grid);
 
   // -------------------------------------------------------
-  drilling_sequence_ = well_settings.drilling_sequence;
+  drilling_order_ = well_settings.drilling_order;
   drilling_time_ = well_settings.drilling_time;
   UpdateHeelToeIJK();
-  ComputeDrillingTime();
+  // ComputeDrillingTime();
 
   // -------------------------------------------------------
   // Set controls

@@ -337,8 +337,8 @@ void Settings::readModelSection() {
 
     // ---------------------------------------------------------
     // Drilling type
-    cout << "Drilling:-------------- "
-         << model_->getDrillingStr(model_->drilling_) << endl;
+    cout << "Drilling mode:--------- "
+         << model_->getDrillingStr(model_->drilling_.mode) << endl;
 
     // ---------------------------------------------------------
     for( int i=0; i<model_->wells_.size(); ++i ) {
@@ -350,12 +350,9 @@ void Settings::readModelSection() {
       cout << model_->wells_[i].drilling_time << "\n";
 
       cout << "Drilling sequence:----- (G#/S#) [ ";
+      cout << model_->wells_[i].drilling_order.first << " ";
+      cout << model_->wells_[i].drilling_order.second << "]\n";
 
-      for( int j=0; j<model_->wells_[i].drilling_sequence.size(); ++j ) {
-        cout << model_->wells_[i].drilling_sequence[j] << " ";
-      }
-
-      cout << "]\n";
     }
     cout << endl;
 
