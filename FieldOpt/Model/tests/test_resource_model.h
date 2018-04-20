@@ -33,9 +33,13 @@ class TestResourceModel : public TestResourceSettings,
   TestResourceModel() {
       settings_model_->set_reservoir_grid_path(ExampleFilePaths::grid_5spot_);
       model_ = new Model::Model(*settings_model_, logger_);
+
+      settings_norne_model_->set_reservoir_grid_path(ExampleFilePaths::norne_grid_);
+      norne_model_ = new Model::Model(*settings_norne_model_, logger_norne_);
   }
 
   Model::Model *model_;
+  Model::Model *norne_model_;
 };
 }
 
