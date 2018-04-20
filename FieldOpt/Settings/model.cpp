@@ -334,8 +334,8 @@ void Model::parseImportedWellOverrides(QJsonArray json_wells) {
     for (auto w : json_wells) {
 
         auto well = w.toObject();
-        auto json_control = well["Controls"].toObject();
-        if (json_control["IsVariable"].toBool()) {
+        auto json_control = well["ControlOverrides"].toObject();
+        if (json_control.contains("IsVariable") && json_control["IsVariable"].toBool()) {
             for (int i = 0; i < wells_.size(); ++i) {
                 if (QString::compare(wells_[i].name, well["name"].toString()) ==0){
                     auto control = wells_[i].controls[0];

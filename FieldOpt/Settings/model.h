@@ -98,7 +98,7 @@ class Model
       ControlMode control_mode; //!< Control mode.
       double bhp; //!< Bhp target when well is on bhp control.
       double rate; //!< Rate target when well is on rate control.
-      InjectionType injection_type; //!< Injector type (water/gas)
+      InjectionType injection_type = WaterInjection; //!< Injector type (water/gas). Defaults to water.
       bool is_variable;
       QString name;
       bool isDifferent(ControlEntry other);
