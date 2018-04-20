@@ -1,21 +1,23 @@
-/******************************************************************************
-   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
+/***********************************************************
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
 
-   This file is part of the FieldOpt project.
+ This file is part of the FieldOpt project.
 
-   FieldOpt is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+ FieldOpt is free software: you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation, either version
+ 3 of the License, or (at your option) any later version.
 
-   FieldOpt is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+ FieldOpt is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty
+ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
-******************************************************************************/
+ You should have received a copy of the GNU
+ General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
 
 // ---------------------------------------------------------
 #ifndef VARIABLE_PROPERTY_CONTAINER_H
@@ -41,7 +43,7 @@ class ModelSynchronizationObject;
 namespace Model {
 namespace Properties {
 
-// ---------------------------------------------------------
+// =========================================================
 /*!
  * \brief The VariablePropertyContainer class
  * facilitates the handling of variable properties.
@@ -57,8 +59,11 @@ namespace Properties {
  */
 class VariablePropertyContainer
 {
+  // ---------------------------------------------------------
   friend class ::Model::ModelSynchronizationObject;
+
  public:
+  // ---------------------------------------------------------
   VariablePropertyContainer();
 
   void AddVariable(BinaryProperty *var); //!< Add a property to the container and mark it as variable
@@ -112,8 +117,9 @@ class VariablePropertyContainer
 
   // ---------------------------------------------------------
   /*!
-   * @brief Get a list of properties in the same order as they occur in the
-   * input ID vector.
+   * @brief Get a list of properties in the same order
+   * as they occur in the input ID vector.
+   *
    * @param ids IDs for properties to get.
    * @return A vector of properties.
    */

@@ -1,21 +1,23 @@
-/******************************************************************************
-   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
+/***********************************************************
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
 
-   This file is part of the FieldOpt project.
+ This file is part of the FieldOpt project.
 
-   FieldOpt is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+ FieldOpt is free software: you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation, either version
+ 3 of the License, or (at your option) any later version.
 
-   FieldOpt is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+ FieldOpt is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty
+ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
-******************************************************************************/
+ You should have received a copy of the GNU
+ General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
 
 // ---------------------------------------------------------
 #include "variable_property_container.h"
@@ -55,36 +57,40 @@ void VariablePropertyContainer::AddVariable(ContinousProperty *var) {
 
 // ---------------------------------------------------------
 BinaryProperty *VariablePropertyContainer::GetBinaryVariable(QUuid id) const {
-  if (!binary_variables_->contains(id))
-    throw VariableIdDoesNotExistException("Binary variable not found.");
-  return binary_variables_->value(id);
+  if (!binary_variables_->contains(id)) {
+    throw VariableIdDoesNotExistException(
+        "Binary variable not found.");
+  } return binary_variables_->value(id);
 }
 
 // ---------------------------------------------------------
 DiscreteProperty
 *VariablePropertyContainer::GetDiscreteVariable(QUuid id) const {
 
-  if (!discrete_variables_->contains(id))
-    throw VariableIdDoesNotExistException("Discrete variable not found.");
-  return discrete_variables_->value(id);
+  if (!discrete_variables_->contains(id)) {
+    throw VariableIdDoesNotExistException(
+        "Discrete variable not found.");
+  } return discrete_variables_->value(id);
 }
 
 // ---------------------------------------------------------
 ContinousProperty
 *VariablePropertyContainer::GetContinousVariable(QUuid id) const {
 
-  if (!continous_variables_->contains(id))
-    throw VariableIdDoesNotExistException("Continous variable not found.");
-  return continous_variables_->value(id);
+  if (!continous_variables_->contains(id)) {
+    throw VariableIdDoesNotExistException(
+        "Continous variable not found.");
+  } return continous_variables_->value(id);
 }
 
 // ---------------------------------------------------------
 void
 VariablePropertyContainer::SetBinaryVariableValue(QUuid id, bool val) {
 
-  if (!binary_variables_->contains(id))
-    throw VariableIdDoesNotExistException("Binary variable not found.");
-  else binary_variables_->value(id)->setValue(val);
+  if (!binary_variables_->contains(id)) {
+    throw VariableIdDoesNotExistException(
+        "Binary variable not found.");
+  } else binary_variables_->value(id)->setValue(val);
 }
 
 // ---------------------------------------------------------
@@ -96,13 +102,15 @@ VariablePropertyContainer::SetDiscreteVariableValue(QUuid id, int val) {
   else discrete_variables_->value(id)->setValue(val);
 }
 
-// ---------------------------------------------------------
-void
-VariablePropertyContainer::SetContinousVariableValue(QUuid id, double val) {
+// =========================================================
+void VariablePropertyContainer::
+SetContinousVariableValue(QUuid id,
+                          double val) {
 
-  if (!continous_variables_->contains(id))
-    throw VariableIdDoesNotExistException("Continous variable not found.");
-  else continous_variables_->value(id)->setValue(val);
+  if (!continous_variables_->contains(id)) {
+    throw VariableIdDoesNotExistException(
+        "Continous variable not found.");
+  } else continous_variables_->value(id)->setValue(val);
 }
 
 // ---------------------------------------------------------

@@ -140,7 +140,8 @@ class Model : public Loggable
 
     vector<pair<string, pair<int, int>>> order;
     multimap<int, pair<int, string>> seq_by_group_mp;
-    vector<vector<pair<int, string>>> seq_by_group_vec;
+    vector<vector<pair<int, string>>> seq_grouped_sorted_vec;
+    vector<int> drill_groups_;
   };
 
   Properties::DiscreteProperty *drill_seq_var_;
@@ -152,6 +153,7 @@ class Model : public Loggable
   QList<Wells::Well *> *wells_;
   Drilling drilling_;
 
+  // -------------------------------------------------------
   /*!
    * \brief Verify the model. Throws an exception if it is not.
    */

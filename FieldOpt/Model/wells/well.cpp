@@ -207,9 +207,6 @@ void Well::Update(int rank) {
   UpdateHeelToeIJK();
   ComputeDrillingTime();
 
-//  heel_.i = trajectory_->GetWellBlocks()->first()->i();
-//  heel_.j = trajectory_->GetWellBlocks()->first()->j();
-//  heel_.k = trajectory_->GetWellBlocks()->first()->k();
 }
 
 

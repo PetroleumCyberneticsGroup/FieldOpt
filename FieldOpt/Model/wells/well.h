@@ -42,7 +42,7 @@
 namespace Model {
 namespace Wells {
 
-// ---------------------------------------------------------
+// =========================================================
 /*!
  * \brief The Well class represents any well in the model.
  */
@@ -52,10 +52,11 @@ class Well
   // -------------------------------------------------------
   /*!
    * \brief Well Default constructor.
-   * \param settings The settings object to create a well from.
-   * \param well_number The index of the sepcific well in the Model.
+   * \param settings Settings object to create a well from.
+   * \param well_number Index of specific well in the Model.
    * Wells list to create a well from.
-   * \param variables The variables object to add all new variable variables to.
+   * \param variables Variables object to add all new
+   * variable variables to.
    */
   Well(Settings::Model settings,
        int well_number,

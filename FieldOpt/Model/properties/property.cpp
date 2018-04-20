@@ -1,43 +1,85 @@
+/***********************************************************
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
+
+ This file is part of the FieldOpt project.
+
+ FieldOpt is free software: you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation, either version
+ 3 of the License, or (at your option) any later version.
+
+ FieldOpt is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty
+ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
+
+ You should have received a copy of the
+ GNU General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
+
+// ---------------------------------------------------------
 #include "property.h"
 #include <QStringList>
 
+// ---------------------------------------------------------
 namespace Model {
 namespace Properties {
 
+// =========================================================
 void Property::SetVariable() {
-    if (name_.length() == 1)
-        throw std::runtime_error("Cannot set an unnamed property to variable.");
+    if (name_.length() == 1) {
+        throw std::runtime_error(
+            "Cannot set an unnamed property to variable.");
+    }
 
+    // ---------------------------------------------------------
     is_variable_ = true;
     set_property_info();
 }
 
+// =========================================================
 Property::PropertyInfo Property::propertyInfo() const {
-    if (info_.is_set_)
+    if (info_.is_set_) {
         return info_;
-    else throw std::runtime_error("Cannot get information about a property that is not variable.");
+    } else throw std::runtime_error(
+            "Cannot get information about a "
+                "property that is not variable.");
 }
 
+// =========================================================
 void Property::set_property_info() {
+
+    // -----------------------------------------------------
     info_.prop_type = get_prop_type_name(name_);
     info_.parent_well_name = get_well_name(name_);
 
-    if (info_.prop_type == PropertyType::SplinePoint)
+    // -----------------------------------------------------
+    if (info_.prop_type == PropertyType::SplinePoint) {
         info_.spline_end = get_spline_end(name_);
+    }
 
+    // -----------------------------------------------------
     if (info_.prop_type == WellBlock
         || info_.prop_type == Transmissibility
         || info_.prop_type == BHP
-        || info_.prop_type == Rate)
+        || info_.prop_type == Rate) {
         info_.index = get_prop_index(name_);
+    }
 
-    if (info_.prop_type == SplinePoint || info_.prop_type == WellBlock || info_.prop_type == PseudoContVert)
+    // -----------------------------------------------------
+    if (info_.prop_type == SplinePoint
+        || info_.prop_type == WellBlock
+        || info_.prop_type == PseudoContVert) {
         info_.coord = get_prop_coord(name_);
+    }
 
+    // -----------------------------------------------------
     info_.is_set_ = true;
 }
 
-
+// =========================================================
 Property::SplineEnd Model::Properties::Property::get_spline_end(const QString prop_name) const {
     if (prop_name.split("#").length() != 4)
         throw std::runtime_error("Invalid SplinePoint format " + prop_name.toStdString()
@@ -51,8 +93,12 @@ Property::SplineEnd Model::Properties::Property::get_spline_end(const QString pr
                                       + ", unable to extract heel/toe info.");
 }
 
-Property::PropertyType Property::get_prop_type_name(const QString prop_name) const {
+// =========================================================
+Property::PropertyType
+Property::get_prop_type_name(const QString prop_name) const {
+
     QString propstr = prop_name.split("#")[0];
+
     if (QString::compare("BHP", propstr) == 0)
         return BHP;
     else if (QString::compare("Rate", propstr) == 0)
@@ -65,13 +111,17 @@ Property::PropertyType Property::get_prop_type_name(const QString prop_name) con
         return Transmissibility;
     else if (QString::compare("PseudoContVert", propstr) == 0)
         return PseudoContVert;
-    else throw std::runtime_error("Unable to recognize property type " + propstr.toStdString());
+    else throw std::runtime_error(
+            "Unable to recognize property type "
+                + propstr.toStdString());
 }
 
+// =========================================================
 QString Property::get_well_name(const QString prop_name) const {
     return prop_name.split("#")[1];
 }
 
+// =========================================================
 int Property::get_prop_index(const QString prop_name) const {
     int index;
     bool cast_ok;
@@ -81,6 +131,7 @@ int Property::get_prop_index(const QString prop_name) const {
     else throw std::runtime_error("Unable to extract index from property name " + prop_name.toStdString());
 }
 
+// =========================================================
 Property::Coordinate Property::get_prop_coord(const QString prop_name) const {
     QString cstr = prop_name.split("#").last();
     if (QString::compare("x", cstr) == 0) return x;
@@ -92,6 +143,7 @@ Property::Coordinate Property::get_prop_coord(const QString prop_name) const {
     else throw std::runtime_error("Unable to extract coordinate from property name " + prop_name.toStdString());
 }
 
+// =========================================================
 void Property::UpdateId(QUuid new_id) {
     id_ = new_id;
 }

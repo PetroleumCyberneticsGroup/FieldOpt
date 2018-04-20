@@ -80,8 +80,16 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   SetDrillingSeq(); // Establishes all fields in drilling_
   GetDrillingStr(); // Dbg
 
-  drill_seq_var_ = new Properties::DiscreteProperty(
-      drilling_.);
+  // -------------------------------------------------------
+  // NEED TO CREATE GROUP THAT INCLUDES WELLS!!!
+//  QList<Properties::DiscreteProperty> drill_group_var_;
+//  for (int i=0; i < drilling_.drill_groups_.size(); ++i ) {
+//
+//    Properties::DiscreteProperty *group_var_ =
+//    new Properties::DiscreteProperty(drilling_.drill_groups_[i]);
+//
+//    variable_container_->AddVariable(group_var_);
+//  }
 
   // -------------------------------------------------------
   variable_container_->CheckVariableNameUniqueness();
@@ -227,17 +235,20 @@ map<string, vector<double>> Model::GetValues() {
   }
 
   // -------------------------------------------------------
-  for (auto const var : variable_container_->GetContinousVariables()->values()) {
+  for (auto const var :
+      variable_container_->GetContinousVariables()->values()) {
     valmap["Var#"+var->name().toStdString()] = vector<double>{var->value()};
   }
 
   // -------------------------------------------------------
-  for (auto const var : variable_container_->GetDiscreteVariables()->values()) {
+  for (auto const var :
+      variable_container_->GetDiscreteVariables()->values()) {
     valmap["Var#"+var->name().toStdString()] = vector<double>{var->value()};
   }
 
   // -------------------------------------------------------
-  for (auto const var : variable_container_->GetBinaryVariables()->values()) {
+  for (auto const var :
+      variable_container_->GetBinaryVariables()->values()) {
     valmap["Var#"+var->name().toStdString()] = vector<double>{var->value()};
   }
 
@@ -368,12 +379,20 @@ Model::Summary::GetWellDescriptions() {
 void Model::GetDrillingStr() {
 
   // ---------------------------------------------------------
-  auto seq_vec_group = drilling_.seq_by_group_vec;
-  for( int i=0; i < seq_vec_group.size(); ++i ) {
+  for(int i=0; i < drilling_.drill_groups_.size(); ++i) {
 
-    for (int j=0; j<seq_vec_group[i].size(); j++) {
+    cout << "Group: [ "
+         << drilling_.drill_groups_[i] << " ]" << endl;
 
-      cout << "[ "
+  }
+
+  // ---------------------------------------------------------
+  auto seq_vec_group = drilling_.seq_grouped_sorted_vec;
+  for(int i=0; i < seq_vec_group.size(); ++i) {
+
+    for (int j=0; j<seq_vec_group[i].size(); ++j) {
+
+      cout << "IntSeq: [ "
            << seq_vec_group[i][j].first << " -- "
            << seq_vec_group[i][j].second << " ]"
            << endl;
@@ -384,9 +403,9 @@ void Model::GetDrillingStr() {
 
   // ---------------------------------------------------------
   auto seq_vec_time = drilling_.seq_wname_time_vec;
-  for( int i=0; i < seq_vec_time.size(); ++i ) {
+  for(int i=0; i < seq_vec_time.size(); ++i) {
 
-    cout << "[ "
+    cout << "TimeSeq: [ "
          << seq_vec_time[i].first << " -- "
          << seq_vec_time[i].second << " ]"
          << endl;
@@ -416,6 +435,7 @@ void Model::SetDrillingSeq() {
   // -------------------------------------------------------
   // Use multimap to group well pairs (<int, pair<int, string>>)
   // into groups
+  std::set<int> groups;
   for (int i = 0; i < drilling_.order.size(); ++i) {
 
     // -----------------------------------------------------
@@ -426,7 +446,14 @@ void Model::SetDrillingSeq() {
     drilling_.seq_by_group_mp.emplace(
         drilling_.order[i].second.first, p);
 
+    // -----------------------------------------------------
+    groups.emplace(drilling_.order[i].second.first);
+
   }
+
+  // -------------------------------------------------------
+  drilling_.drill_groups_ =
+      std::vector<int> (groups.begin(), groups.end());
 
   // -------------------------------------------------------
   // Order each multimap group into a (pair<int, string>)
@@ -457,16 +484,16 @@ void Model::SetDrillingSeq() {
     sort(group_vec.begin(), group_vec.end());
 
     // ---------------------------------------------------
-    drilling_.seq_by_group_vec.push_back(group_vec);
+    drilling_.seq_grouped_sorted_vec.push_back(group_vec);
   }
 
   // -------------------------------------------------------
-  for( int i=0; i < drilling_.seq_by_group_vec.size(); ++i ) {
+  for( int i=0; i < drilling_.seq_grouped_sorted_vec.size(); ++i ) {
 
-    for (int j=0; j< drilling_.seq_by_group_vec[i].size(); j++) {
+    for (int j=0; j< drilling_.seq_grouped_sorted_vec[i].size(); j++) {
 
       // ---------------------------------------------------
-      string wn = drilling_.seq_by_group_vec[i][j].second;
+      string wn = drilling_.seq_grouped_sorted_vec[i][j].second;
       pair<string, double> p(wn,
                              drilling_.time.find(wn)->second);
 
