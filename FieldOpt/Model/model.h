@@ -56,8 +56,10 @@ class Model : public Loggable
 {
   // -------------------------------------------------------
   friend class ModelSynchronizationObject;
+
  public:
-  Model(::Settings::Model settings, Logger *logger);
+  // -------------------------------------------------------
+  Model(::Settings::Model* settings, Logger *logger);
 
   // -------------------------------------------------------
   LogTarget GetLogTarget() override;
@@ -71,6 +73,7 @@ class Model : public Loggable
    */
   Reservoir::Grid::Grid *grid() const { return grid_; }
 
+  // -------------------------------------------------------
   /*!
    * \brief variables Get the set of variable properties
    * of all types.
@@ -90,8 +93,7 @@ class Model : public Loggable
    * case to the variables in the model.
    * \param c Case to apply the variable values of.
    */
-  void ApplyCase(Optimization::Case *c);
-  void ApplyCase(Optimization::Case *c, int rank);
+  void ApplyCase(Optimization::Case *c, int rank=0);
 
   // -------------------------------------------------------
   /*!
@@ -101,9 +103,12 @@ class Model : public Loggable
   QUuid GetCurrentCaseId() const { return current_case_id_; }
 
   // -------------------------------------------------------
-  void SetCompdatString(const QString compdat) { compdat_ = compdat; };
+  void SetCompdatString(const QString compdat)
+  { compdat_ = compdat; };
 
-  void SetResult(const std::string key, std::vector<double> vec);
+  // -------------------------------------------------------
+  void SetResult(const std::string key,
+                 std::vector<double> vec);
 
   // -------------------------------------------------------
   /*!
@@ -111,6 +116,14 @@ class Model : public Loggable
    * run. Writes the last case to the extended log.
    */
   void Finalize();
+
+  // -------------------------------------------------------
+  /*!
+   * @brief
+   */
+  void ComputeDrillingSequence();
+
+  Wells::Well* getWell(QString well_name);
 
  private:
   // -------------------------------------------------------
@@ -130,6 +143,7 @@ class Model : public Loggable
   // -------------------------------------------------------
   Logger *logger_;
   QUuid current_case_id_;
+  Settings::Model* settings_;
 
   // -------------------------------------------------------
   /*!

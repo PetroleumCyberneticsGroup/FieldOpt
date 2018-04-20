@@ -19,13 +19,13 @@
  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************/
 
-// -----------------------------------------------------------
+// ---------------------------------------------------------
 #include "settings.h"
 #include "Runner/runtime_settings.h"
 #include "settings_exceptions.h"
 #include "Utilities/filehandling.hpp"
 
-// -----------------------------------------------------------
+// ---------------------------------------------------------
 // Qt
 #include <QJsonDocument>
 
@@ -46,14 +46,18 @@ Settings::Settings(QString driver_path,
                    QString output_directory,
                    std::vector<int> verb_vector) {
 
+  // -------------------------------------------------------
   set_verbosity_vector(verb_vector);
 
+  // -------------------------------------------------------
   if (!::Utilities::FileHandling::FileExists(driver_path))
     throw FileNotFoundException(driver_path.toStdString());
 
+  // -------------------------------------------------------
   driver_path_ = driver_path;
   readDriverFile();
 
+  // -------------------------------------------------------
   output_directory_ = output_directory;
   simulator_->output_directory_ = output_directory;
   optimizer_->output_dir_ = output_directory;
@@ -62,12 +66,17 @@ Settings::Settings(QString driver_path,
 // =========================================================
 QString Settings::GetLogCsvString() const {
 
+  // -------------------------------------------------------
   QStringList header  = QStringList();
   QStringList content = QStringList();
+
+  // -------------------------------------------------------
   header  << "name"
           << "maxevals"
           << "initstep"
           << "minstep";
+
+  // -------------------------------------------------------
   content << name_
           << QString::number(optimizer_->parameters().max_evaluations)
           << QString::number(optimizer_->parameters().initial_step_length)
@@ -79,22 +88,27 @@ QString Settings::GetLogCsvString() const {
 // =========================================================
 void Settings::readDriverFile() {
 
+  // -------------------------------------------------------
   QFile *file = new QFile(driver_path_);
   if (!file->open(QIODevice::ReadOnly))
     throw DriverFileReadException(
         "Unable to open the driver file");
 
+  // -------------------------------------------------------
   QByteArray data = file->readAll();
 
+  // -------------------------------------------------------
   QJsonDocument json = QJsonDocument::fromJson(data);
   if (json.isNull())
     throw DriverFileJsonParsingException(
         "Unable to parse the input file to JSON.");
 
+  // -------------------------------------------------------
   if (!json.isObject())
     throw DriverFileFormatException(
         "Driver file format incorrect. Must be a JSON object.");
 
+  // -------------------------------------------------------
   json_driver_ = new QJsonObject(json.object());
 
   readGlobalSection();
@@ -107,19 +121,25 @@ void Settings::readDriverFile() {
 
 // =========================================================
 void Settings::readGlobalSection() {
+
   try {
+
+    // -----------------------------------------------------
     QJsonObject global = json_driver_->value("Global").toObject();
     name_ = global["Name"].toString();
     bookkeeper_tolerance_ = global["BookkeeperTolerance"].toDouble();
 
+    // -----------------------------------------------------
     if (bookkeeper_tolerance_ < 0.0) {
       throw UnableToParseGlobalSectionException(
           "The bookkeeper tolerance must be a positive number.");
     }
-  }
-  catch (std::exception const &ex) {
+
+    // -----------------------------------------------------
+  } catch (std::exception const &ex) {
     throw UnableToParseGlobalSectionException(
-        "Unable to parse driver file global section: " + string(ex.what()));
+        "Unable to parse driver file global section: "
+            + string(ex.what()));
   }
       cout << "BookkeeperTolerance:--- "
            << bookkeeper_tolerance() << endl;
@@ -132,12 +152,16 @@ void Settings::readSimulatorSection() {
   // -------------------------------------------------------
   // Simulator root
   QJsonObject json_simulator;
+
   try {
+
+    // -----------------------------------------------------
     json_simulator =
         json_driver_->value("Simulator").toObject();
     simulator_ = new Simulator(json_simulator);
-  }
-  catch (std::exception const &ex) {
+
+    // -----------------------------------------------------
+  } catch (std::exception const &ex) {
     throw UnableToParseSimulatorSectionException(
         "Unable to parse driver file "
             "simulator section: " + string(ex.what()));
@@ -146,31 +170,34 @@ void Settings::readSimulatorSection() {
   // -------------------------------------------------------
   simulator_->set_verbosity_vector(verb_vector());
   if (simulator_->verb_vector_[9] > 0) { // idx:9 -> set (Settings)
+
+    // -----------------------------------------------------
     string str_out = "[set]Simulator settings";
     cout << "\n" << BLDON << str_out << AEND << "\n"
          << std::string(str_out.length(), '=') << endl;
 
     // -----------------------------------------------------
-      cout << "VerbosityVector:------- ";
-          for (int i=0; i < simulator_->verb_vector_.size(); i++) {
-            cout << simulator_->verb_vector_[i] << " ";
-          }
-      cout << endl;
+    cout << "VerbosityVector:-------- ";
+    for (int i=0; i < simulator_->verb_vector_.size(); i++) {
+      cout << simulator_->verb_vector_[i] << " ";
+    }
+    cout << endl;
+
+    // -----------------------------------------------------
     auto SimTMP = json_driver_->value("Simulator").toObject();
 
     // -----------------------------------------------------
-      cout << "SimulatorType:--------- "
-           << SimTMP["Type"].toString().toUtf8().constData() << endl;
+    cout << "SimulatorType:---------- "
+         << SimTMP["Type"].toString().toUtf8().constData() << endl;
 
     // -----------------------------------------------------
-      cout << "FluidModel:------------ "
-           << SimTMP["FluidModel"].toString().toUtf8().constData() << endl;
+    cout << "FluidModel:------------- "
+         << SimTMP["FluidModel"].toString().toUtf8().constData() << endl;
 
 
     // -----------------------------------------------------
-      cout << "MaxMinutes:------------ "
-           << simulator_->max_minutes_ << endl;
-
+    cout << "MaxMinutes:------------- "
+         << simulator_->max_minutes_ << endl;
   }
 }
 
@@ -303,13 +330,19 @@ void Settings::readModelSection() {
          << std::string(str_out.length(), '=') << endl;
 
     // ---------------------------------------------------------
+    // Reservoir type
     cout << fixed << setprecision(1);
-    // cout << "----------------------- "
     cout << "Reservoir type:-------- "
-         << model_->reservoir_.type<< endl;
+         << model_->getResType(model_->reservoir_.type) << endl;
+
+    // ---------------------------------------------------------
+    // Drilling type
+    cout << "Drilling:-------------- "
+         << model_->getDrillingStr(model_->drilling_) << endl;
 
     // ---------------------------------------------------------
     for( int i=0; i<model_->wells_.size(); ++i ) {
+
       cout << "Well:------------------ ";
       cout << model_->wells_[i].name.toStdString() << "\n";
 
@@ -317,9 +350,11 @@ void Settings::readModelSection() {
       cout << model_->wells_[i].drilling_time << "\n";
 
       cout << "Drilling sequence:----- (G#/S#) [ ";
+
       for( int j=0; j<model_->wells_[i].drilling_sequence.size(); ++j ) {
         cout << model_->wells_[i].drilling_sequence[j] << " ";
       }
+
       cout << "]\n";
     }
     cout << endl;

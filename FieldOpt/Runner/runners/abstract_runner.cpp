@@ -102,7 +102,7 @@ AbstractRunner::InitializeSettings(QString output_subdirectory) {
         runtime_settings_->grid_file_path());
 
   // -------------------------------------------------------
-  // Override simulator executable path if it has been passed as command line arguments
+  // Override sim exe path if it has been passed as command line arguments
   if (runtime_settings_->simulator_exec_script_path().length() > 0)
     settings_->simulator()->set_execution_script_path(
         runtime_settings_->simulator_exec_script_path());
@@ -126,8 +126,8 @@ void AbstractRunner::InitializeModel() {
         "The Settings must be initialized before the Model.");
 
   // -------------------------------------------------------
-  model_ = new Model::Model(*settings_->model(), logger_);
-  // model_ = new Model::Model(settings_->model(), logger_);
+  // model_ = new Model::Model(*settings_->model(), logger_);
+  model_ = new Model::Model(settings_->model(), logger_);
 
   if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
     std::cout << "[run]Initialized Model.------" << std::endl;
@@ -138,27 +138,34 @@ void AbstractRunner::InitializeSimulator() {
 
   // -------------------------------------------------------
   if (model_ == 0)
-    throw std::runtime_error("The Model must be initialized before the simulator.");
+    throw std::runtime_error(
+        "The Model must be initialized before the simulator.");
 
   // -------------------------------------------------------
   switch (settings_->simulator()->type()) {
 
     // -----------------------------------------------------
-    case ::Settings::Simulator::SimulatorType::ECLIPSE:
+    case ::Settings::Simulator::SimulatorType::ECLIPSE :
+
+      // ---------------------------------------------------
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
         std::cout << "[run]Reservoir simulator:---- ECL100" << std::endl;
       simulator_ = new Simulation::SimulatorInterfaces::ECLSimulator(settings_, model_);
       break;
 
       // ---------------------------------------------------
-    case ::Settings::Simulator::SimulatorType::ADGPRS:
+    case ::Settings::Simulator::SimulatorType::ADGPRS :
+
+      // ---------------------------------------------------
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
         std::cout << "[run]Reservoir simulator:---- ADGPRS" << std::endl;
       simulator_ = new Simulation::SimulatorInterfaces::AdgprsSimulator(settings_, model_);
       break;
 
       // ---------------------------------------------------
-    case ::Settings::Simulator::SimulatorType::Flow:
+    case ::Settings::Simulator::SimulatorType::Flow :
+
+      // ---------------------------------------------------
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
         std::cout << "[run]Reservoir simulator:---- Flow" << std::endl;
       simulator_ = new Simulation::SimulatorInterfaces::FlowSimulator(settings_, model_);
@@ -167,7 +174,8 @@ void AbstractRunner::InitializeSimulator() {
       // ---------------------------------------------------
     default:
       throw std::runtime_error(
-          "Unable to initialize runner: simulator set in driver file not recognized.");
+          "Unable to initialize runner: simulator "
+              "set in driver file not recognized.");
   }
 
   // -------------------------------------------------------

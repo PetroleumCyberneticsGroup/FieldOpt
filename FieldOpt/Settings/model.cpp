@@ -23,16 +23,16 @@
  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************/
 
-// ---------------------------------------------------------------
+// ---------------------------------------------------------
 #include <iostream>
 #include "model.h"
 #include "settings_exceptions.h"
 #include "Utilities/filehandling.hpp"
 
-// ---------------------------------------------------------------
+// ---------------------------------------------------------
 namespace Settings {
 
-// ===============================================================
+// =========================================================
 Model::Model(QJsonObject json_model) {
 
   // -------------------------------------------------------------
@@ -63,6 +63,17 @@ Model::Model(QJsonObject json_model) {
   }
 
   // -------------------------------------------------------------
+  // Drilling sequence
+  QString drilling = json_model["Drilling"].toString();
+  if (QString::compare(drilling, "Synchronous") == 0) {
+    drilling_ = Drilling::Synchronous;
+  } else if (QString::compare(drilling, "Sequential") == 0) {
+    drilling_ = Drilling::Sequential;
+  } else {
+    drilling_ = Drilling::Synchronous;
+  }
+
+  // -------------------------------------------------------------
   // Wells
   try {
 
@@ -83,7 +94,7 @@ Model::Model(QJsonObject json_model) {
   }
 }
 
-// ===============================================================
+// =========================================================
 void Model::readReservoir(QJsonObject json_reservoir) {
 
   // -------------------------------------------------------------
@@ -106,7 +117,7 @@ void Model::readReservoir(QJsonObject json_reservoir) {
 
 }
 
-// ===============================================================
+// =========================================================
 Model::Well Model::readSingleWell(QJsonObject json_well) {
 
   // -------------------------------------------------------------
@@ -273,7 +284,7 @@ Model::Well Model::readSingleWell(QJsonObject json_well) {
             + " not recognized for well " + well.name.toStdString());
   }
 
-  // ---------------------------------------------------------------
+  // ---------------------------------------------------------
   // Wellbore radius
   if (!json_well.contains("WellboreRadius")) {
     throw UnableToParseWellsModelSectionException(
@@ -281,13 +292,13 @@ Model::Well Model::readSingleWell(QJsonObject json_well) {
   }
   well.wellbore_radius = json_well["WellboreRadius"].toDouble();
 
-  // ---------------------------------------------------------------
+  // ---------------------------------------------------------
   // Drilling time
   if (json_well.contains("DrillingTime")) {
     well.drilling_time = json_well["DrillingTime"].toDouble();
   }
 
-  // ---------------------------------------------------------------
+  // ---------------------------------------------------------
   // Drilling sequence
   well.drilling_sequence = std::vector<int>(2,-1); // Default vals
   if (json_well.contains("DrillingSequence")) {
@@ -297,7 +308,7 @@ Model::Well Model::readSingleWell(QJsonObject json_well) {
     }
   }
 
-  // ---------------------------------------------------------------
+  // ---------------------------------------------------------
   // Direction of penetration
   // Direction must be specified for horizontal wells
   if (json_well.contains("Direction")) {
@@ -324,12 +335,12 @@ Model::Well Model::readSingleWell(QJsonObject json_well) {
     }
   }
 
-  // ---------------------------------------------------------------
+  // ---------------------------------------------------------
   // Controls
   QJsonArray json_controls = json_well["Controls"].toArray();
   well.controls = QList<Well::ControlEntry>();
 
-  // ---------------------------------------------------------------
+  // ---------------------------------------------------------
   for (int i = 0; i < json_controls.size(); ++i) {
     Well::ControlEntry control;
 
@@ -409,7 +420,7 @@ Model::Well Model::readSingleWell(QJsonObject json_well) {
     well.controls.append(control);
   }
 
-  // ---------------------------------------------------------------
+  // ---------------------------------------------------------
   // Preferred Phase
   if (QString::compare(
       "Oil", json_well["PreferredPhase"].toString()) == 0) {
@@ -428,13 +439,24 @@ Model::Well Model::readSingleWell(QJsonObject json_well) {
     well.preferred_phase = PreferredPhase::Liquid;
   }
 
-  // ---------------------------------------------------------------
+  // -------------------------------------------------------
   return well;
 }
 
-// ===============================================================
+// =========================================================
 bool Model::controlTimeIsDeclared(double time) const {
   return control_times_.contains(time);
+}
+
+// =========================================================
+Model::Well Model::getWell(QString well_name) {
+
+  // -------------------------------------------------------
+  for (int wnr = 0; wnr < wells_.size(); ++wnr) {
+    if(wells_.at(wnr).name.compare(well_name)) {
+      return wells_.at(wnr);
+    }
+  }
 }
 
 }

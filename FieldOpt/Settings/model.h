@@ -23,24 +23,28 @@
  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************/
 
-// ---------------------------------------------------------------
+// ---------------------------------------------------------
 #ifndef SETTINGS_MODEL_H
 #define SETTINGS_MODEL_H
 
-// ---------------------------------------------------------------
+// ---------------------------------------------------------
 #include "settings.h"
 
-// ---------------------------------------------------------------
-// QT
+// ---------------------------------------------------------
+// QT / STD
 #include <QString>
 #include <QList>
 #include <QJsonArray>
 #include <assert.h>
+#include <string>
 
-// ---------------------------------------------------------------
+// ---------------------------------------------------------
+using std::string;
+
+// ---------------------------------------------------------
 namespace Settings {
 
-// ===============================================================
+// =========================================================
 /*!
  * \brief The Model class contains model-specific settings.
  * Model settings objects may _only_ be created by the Settings
@@ -52,26 +56,43 @@ namespace Settings {
  */
 class Model
 {
-  // -------------------------------------------------------------
+  // ---------------------------------------------------------
   friend class Settings;
 
  public:
-  // -------------------------------------------------------------
+  // ---------------------------------------------------------
   // This should only be accessed externally for testing purposes.
   Model(QJsonObject json_model);
 
-  // -------------------------------------------------------------
+  // ---------------------------------------------------------
   enum ReservoirGridSourceType : int { ECLIPSE=1 };
 
+  inline const string getResType(ReservoirGridSourceType resType) {
+    switch (resType) {
+      case ECLIPSE : return "ECLIPSE";
+    }
+  }
+
+  // ---------------------------------------------------------
   enum WellType : int { Injector=011, Producer=12 };
 
   enum ControlMode : int { BHPControl=21, RateControl=22 };
 
   enum InjectionType : int { WaterInjection=31, GasInjection=32 };
 
+  // ---------------------------------------------------------
   enum WellDefinitionType : int { WellBlocks=41,
     WellSpline=42, PseudoContVertical2D=43 };
 
+  inline const string getWellDefTypeStr(WellDefinitionType wellDefType) {
+    switch (wellDefType) {
+      case WellBlocks : return "WellBlocks";
+      case WellSpline : return "WellSpline";
+      case PseudoContVertical2D : return "PseudoContVertical2D";
+    }
+  }
+
+  // ---------------------------------------------------------
   enum WellCompletionType : int { Perforation=61 };
 
   enum WellState : int { WellOpen=71, WellShut=72 };
@@ -80,29 +101,41 @@ class Model
 
   enum Direction : int { X=91, Y=92, Z=93 };
 
-  // -------------------------------------------------------------
+  // ---------------------------------------------------------
+  enum Drilling : int { Synchronous=101, Sequential=102 };
+
+  inline const string getDrillingStr(Drilling drilling) {
+    switch (drilling) {
+          case Synchronous : return "Synchronous";
+          case Sequential : return "Sequential";
+      }
+  }
+
+// ---------------------------------------------------------
   struct Reservoir {
-    // The source of the grid file (which reservoir simulator produced it).
+    // Source of grid file (i.e., which simulator produced it).
     ReservoirGridSourceType type;
 
-    // Path to reservoir grid file, e.g. a .EGRID or .GRID file produced by ECLIPSE.
+    // Path to .EGRID or .GRID file produced by ECLIPSE.
     QString path;
   };
 
-  // -------------------------------------------------------------
+// ---------------------------------------------------------
   struct Well {
     Well(){}
 
-    // -----------------------------------------------------------
+    // -----------------------------------------------------
     struct Completion {
       Completion(){}
-      WellCompletionType type; //!< Which type of completion this is (Perforation/ICD)
-      double transmissibility_factor; //!< The transmissibility factor for this completion (used for perforations)
+      // Type of completion (Perforation/ICD)
+      WellCompletionType type;
+      // Transmissibility factor for completion (used for perforations)
+      double transmissibility_factor;
       bool is_variable;
       QString name;
     };
 
-    // -----------------------------------------------------------
+    // -----------------------------------------------------
     struct WellBlock {
       WellBlock(){}
       bool is_variable;
@@ -112,7 +145,7 @@ class Model
       int i, j, k;
     };
 
-    // -----------------------------------------------------------
+    // -----------------------------------------------------
     struct SplinePoint {
       SplinePoint(){}
       QString name;
@@ -120,13 +153,13 @@ class Model
       bool is_variable;
     };
 
-    // -----------------------------------------------------------
+    // -----------------------------------------------------
     struct PseudoContPosition {
       int i, j;
       bool is_variable;
     };
 
-    // -----------------------------------------------------------
+    // -----------------------------------------------------
     struct ControlEntry {
       double time_step; //!< The time step this control is to be applied at.
       WellState state; //!< Whether the well is open or shut.
@@ -138,17 +171,18 @@ class Model
       QString name;
     };
 
-    // -----------------------------------------------------------
+    // -----------------------------------------------------
     PreferredPhase preferred_phase; //!< The preferred phase for the well
     QString name; //!< The name to be used for the well.
     WellType type; //!< The well type, i.e. producer or injector.
     QString group; //!< The group of the well.
 
-    // -----------------------------------------------------------
+    // -----------------------------------------------------
     double wellbore_radius; //!< The wellbore radius
     double drilling_time;
     std::vector<int> drilling_sequence;
 
+    // -----------------------------------------------------
     Direction direction; //!< Direction of penetration
     WellDefinitionType definition_type; //!< How the well path is defined.
     QList<WellBlock> well_blocks; //!< Well blocks when the well path is defined by WellBlocks.
@@ -159,33 +193,36 @@ class Model
     std::vector<int> verb_vector_;
   };
 
-  // -------------------------------------------------------------
+  // -------------------------------------------------------
   Reservoir reservoir() const { return reservoir_; } //!< Get the struct containing reservoir settings.
   void set_reservoir_grid_path(const QString path) { reservoir_.path = path; } //!< Set the reservoir grid path. Used when the path is passed by command line argument.
 
-  // -------------------------------------------------------------
+  // -------------------------------------------------------
   QList<Well> wells() const { return wells_; } //!< Get the struct containing settings for the well(s) in the model.
   QList<double> control_times() const { return control_times_; } //!< Get the control times for the schedule
 
-  // -------------------------------------------------------------
+  // -------------------------------------------------------
   void set_verbosity_vector(const std::vector<int> verb_vector) { verb_vector_ = verb_vector; }
   std::vector<int> verb_vector() const { return verb_vector_; }
 
+  Model::Well getWell(QString well_name);
+
  private:
-  // -------------------------------------------------------------
+// ---------------------------------------------------------
   Reservoir reservoir_;
   QList<Well> wells_;
   QList<double> control_times_;
+  Drilling drilling_;
 
-  // -------------------------------------------------------------
+  // ---------------------------------------------------------
   void readReservoir(QJsonObject json_reservoir);
   Well readSingleWell(QJsonObject json_well);
 
-  // -------------------------------------------------------------
+// ---------------------------------------------------------
   bool controlTimeIsDeclared(double time) const;
 
-  // -------------------------------------------------------------
-  std::vector<int> verb_vector_ = std::vector<int>(11,0); //!<
+// ---------------------------------------------------------
+  std::vector<int> verb_vector_ = std::vector<int>(11,0);
 };
 
 }
