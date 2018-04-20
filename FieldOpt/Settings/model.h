@@ -202,19 +202,6 @@ class Model
   };
 
   // -------------------------------------------------------
-  // Drilling sequence for all wells
-  struct Drilling {
-    DrillingMode mode;
-
-    multimap<string, double> time;
-    vector<pair<string, double>> seq_wname_time_vec;
-
-    vector<pair<string, pair<int, int>>> order;
-    multimap<int, pair<int, string>> seq_by_group_mp;
-    vector<vector<pair<int, string>>> seq_by_group_vec;
-  };
-
-  // -------------------------------------------------------
   // Get the struct containing reservoir settings.
   Reservoir reservoir() const { return reservoir_; }
 
@@ -238,21 +225,22 @@ class Model
 
   Model::Well getWell(QString well_name);
 
-  Drilling GetDrilling() {return drilling_; };
+  DrillingMode drillingMode_;
 
-  void UpdateDrilling(Drilling& drilling);
+//  Drilling GetDrilling() {return drilling_; };
 
-  void GetDrillingStr(Drilling& drilling) const;
-
-  void SetDrillingSeq(Drilling& drilling,
-                      QList<Well>& wells) const;
+//  void UpdateDrilling(Drilling& drilling);
+//
+//  void GetDrillingStr(Drilling& drilling) const;
+//
+//  void SetDrillingSeq(Drilling& drilling,
+//                      QList<Well>& wells) const;
 
  private:
 // ---------------------------------------------------------
   Reservoir reservoir_;
   QList<Well> wells_;
   QList<double> control_times_;
-  Drilling drilling_;
 
   // ---------------------------------------------------------
   void readReservoir(QJsonObject json_reservoir);

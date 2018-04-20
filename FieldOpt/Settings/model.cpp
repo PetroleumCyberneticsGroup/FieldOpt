@@ -91,16 +91,15 @@ Model::Model(QJsonObject json_model) {
   // Drilling sequence mode
   QString drilling = json_model["Drilling"].toString();
   if (QString::compare(drilling, "Synchronous") == 0) {
-    drilling_.mode = DrillingMode::Synchronous;
+    drillingMode_ = DrillingMode::Synchronous;
   } else if (QString::compare(drilling, "Sequential") == 0) {
-    drilling_.mode = DrillingMode::Sequential;
+    drillingMode_ = DrillingMode::Sequential;
   } else {
-    drilling_.mode = DrillingMode::Synchronous;
+    drillingMode_ = DrillingMode::Synchronous;
   }
 
   // -------------------------------------------------------
-  SetDrillingSeq(drilling_,
-                 wells_);
+  // Compute drilling sequence (use Model.cpp const function)
 
 }
 
@@ -471,122 +470,7 @@ Model::Well Model::getWell(QString well_name) {
   }
 }
 
-// =========================================================
-void Model::GetDrillingStr(Drilling& drilling) const {
 
-  // ---------------------------------------------------------
-  auto seq_vec_group = drilling.seq_by_group_vec;
-  for( int i=0; i < seq_vec_group.size(); ++i ) {
-
-    for (int j=0; j<seq_vec_group[i].size(); j++) {
-
-      cout << "[ "
-           << seq_vec_group[i][j].first << " -- "
-           << seq_vec_group[i][j].second << " ]"
-           << endl;
-
-    }
-
-  }
-
-  // ---------------------------------------------------------
-  auto seq_vec_time = drilling.seq_wname_time_vec;
-  for( int i=0; i < seq_vec_time.size(); ++i ) {
-
-    cout << "[ "
-         << seq_vec_time[i].first << " -- "
-         << seq_vec_time[i].second << " ]"
-         << endl;
-
-  }
-
-}
-
-// =========================================================
-void Model::SetDrillingSeq(Drilling& drilling,
-                           QList<Well>& wells) const {
-
-
-  // -------------------------------------------------------
-  // Main drilling order maps (pairs)
-  for (int i = 0; i < wells.size(); ++i) {
-
-    // -----------------------------------------------------
-    pair<string, pair<int, int>>
-        well_order(wells[i].name.toStdString(),
-                   wells[i].drilling_order);
-    drilling.order.push_back(well_order);
-
-    // -----------------------------------------------------
-    drilling.time.emplace(wells[i].name.toStdString(),
-                          wells[i].drilling_time);
-  }
-
-  // -------------------------------------------------------
-  // Use multimap to group well pairs (<int, pair<int, string>>)
-  // into groups
-  for (int i = 0; i < drilling.order.size(); ++i) {
-
-    // -----------------------------------------------------
-    pair<int, string> p(drilling.order[i].second.second,
-                        drilling.order[i].first);
-
-    // -----------------------------------------------------
-    drilling.seq_by_group_mp.emplace(
-        drilling.order[i].second.first, p);
-
-  }
-
-  // -------------------------------------------------------
-  // Order each multimap group into a (pair<int, string>)
-  // vector with wells within each group sorted
-  decltype(drilling.seq_by_group_mp.equal_range(int())) range;
-
-  // -----------------------------------------------------
-  // Find equal ranges in multimap
-  for (auto i = drilling.seq_by_group_mp.begin();
-       i != drilling.seq_by_group_mp.end(); i = range.second) {
-
-    range = drilling.seq_by_group_mp.equal_range(i->first);
-
-    // ---------------------------------------------------
-    // Insert each well in group into vector
-    vector<pair<int, string>> group_vec;
-    for(auto d = range.first; d != range.second; ++d) {
-
-      // -------------------------------------------------
-      // Assemble well pair
-      pair<int, string> well_pair(d->second.first,
-                                  d->second.second);
-      group_vec.push_back(well_pair);
-    }
-
-    // ---------------------------------------------------
-    // Sort group vector
-    sort(group_vec.begin(), group_vec.end());
-
-    // ---------------------------------------------------
-    drilling.seq_by_group_vec.push_back(group_vec);
-  }
-
-  // -------------------------------------------------------
-  for( int i=0; i < drilling.seq_by_group_vec.size(); ++i ) {
-
-    for (int j=0; j< drilling.seq_by_group_vec[i].size(); j++) {
-
-      // ---------------------------------------------------
-      string wn = drilling.seq_by_group_vec[i][j].second;
-      pair<string, double> p(wn,
-                             drilling.time.find(wn)->second);
-
-      // ---------------------------------------------------
-      drilling.seq_wname_time_vec.push_back(p);
-
-    }
-
-  }
-
-}
 
 }
 

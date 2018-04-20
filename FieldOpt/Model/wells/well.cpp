@@ -54,6 +54,13 @@ Well::Well(Settings::Model settings,
   deftype_ = well_settings.definition_type;
 
   // -------------------------------------------------------
+  // Drilling dependent on well length
+  drilling_time_ = well_settings.drilling_time;
+
+  // -------------------------------------------------------
+  drilling_order_ = well_settings.drilling_order;
+
+  // -------------------------------------------------------
   if (well_settings.group.length() >= 1)
     group_ = well_settings.group;
   else group_ = "";

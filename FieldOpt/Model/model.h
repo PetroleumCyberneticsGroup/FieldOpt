@@ -71,7 +71,8 @@ class Model : public Loggable
   /*!
    * \brief reservoir Get the reservoir (i.e. grid).
    */
-  Reservoir::Grid::Grid *grid() const { return grid_; }
+  Reservoir::Grid::Grid *grid() const
+  { return grid_; }
 
   // -------------------------------------------------------
   /*!
@@ -85,7 +86,8 @@ class Model : public Loggable
   /*!
    * \brief wells Get a list of all the wells in the model.
    */
-  QList<Wells::Well *> *wells() const { return wells_; }
+  QList<Wells::Well *> *wells() const
+  { return wells_; }
 
   // -------------------------------------------------------
   /*!
@@ -93,14 +95,16 @@ class Model : public Loggable
    * case to the variables in the model.
    * \param c Case to apply the variable values of.
    */
-  void ApplyCase(Optimization::Case *c, int rank=0);
+  void ApplyCase(Optimization::Case *c,
+                 int rank=0);
 
   // -------------------------------------------------------
   /*!
    * @brief Get the UUId of last case applied to the Model.
    * @return
    */
-  QUuid GetCurrentCaseId() const { return current_case_id_; }
+  QUuid GetCurrentCaseId() const
+  { return current_case_id_; }
 
   // -------------------------------------------------------
   void SetCompdatString(const QString compdat)
@@ -121,15 +125,32 @@ class Model : public Loggable
   /*!
    * @brief
    */
-  void ComputeDrillingSequence();
+  void SetDrillingSeq();
+  void GetDrillingStr();
 
   Wells::Well* getWell(QString well_name);
+
+  // -------------------------------------------------------
+  // Drilling sequence for all wells
+  struct Drilling {
+    Settings::Model::DrillingMode mode;
+
+    multimap<string, double> time;
+    vector<pair<string, double>> seq_wname_time_vec;
+
+    vector<pair<string, pair<int, int>>> order;
+    multimap<int, pair<int, string>> seq_by_group_mp;
+    vector<vector<pair<int, string>>> seq_by_group_vec;
+  };
+
+  Properties::DiscreteProperty *drill_seq_var_;
 
  private:
   // -------------------------------------------------------
   Reservoir::Grid::Grid *grid_;
   Properties::VariablePropertyContainer *variable_container_;
   QList<Wells::Well *> *wells_;
+  Drilling drilling_;
 
   /*!
    * \brief Verify the model. Throws an exception if it is not.

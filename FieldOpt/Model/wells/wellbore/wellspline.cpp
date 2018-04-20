@@ -1,77 +1,93 @@
-/******************************************************************************
-   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
+/***********************************************************
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
 
-   This file is part of the FieldOpt project.
+ This file is part of the FieldOpt project.
 
-   FieldOpt is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+ FieldOpt is free software: you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation, either version
+ 3 of the License, or (at your option) any later version.
 
-   FieldOpt is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+ FieldOpt is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty
+ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
-******************************************************************************/
+ You should have received a copy of the GNU
+ General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 // STD
 #include <iostream>
 #include <fstream>
 //#include <time.h>
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 // EIGEN
 #include <Eigen/Core>
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 // Qt
 #include <QtCore/QDateTime>
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 // FieldOpt: Utilities
 #include "wellspline.h"
 #include <Utilities/time.hpp>
 #include <Utilities/debug.hpp>
 #include <wells/well_exceptions.h>
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 // FieldOpt: WIC
 //#include <FieldOpt-WellIndexCalculator/wicalc_rins.h>
 //#include <FieldOpt-WellIndexCalculator/wicalc_rinx.h>
 #include <FieldOpt-WellIndexCalculator/wicalc_rixx.h>
 
+// ---------------------------------------------------------
 namespace Model {
 namespace Wells {
 namespace Wellbore {
 using namespace Reservoir::WellIndexCalculation;
 
-// =================================================================
-WellSpline::WellSpline(Settings::Model::Well well_settings,
-                       Properties::VariablePropertyContainer *variable_container,
-                       Reservoir::Grid::Grid *grid) {
+// =========================================================
+WellSpline::WellSpline(
+    Settings::Model::Well well_settings,
+    Properties::VariablePropertyContainer *variable_container,
+    Reservoir::Grid::Grid *grid) {
 
-  // ---------------------------------------------------------------
+  // -------------------------------------------------------
   grid_ = grid;
   well_settings_ = well_settings;
 
-  // ---------------------------------------------------------------
+  // -------------------------------------------------------
   if (well_settings_.verb_vector_[5] > 1) // idx:5 -> mod (Model)
     std::cout << "[mod]Define well spline.----- " << std::endl;
 
-  // ---------------------------------------------------------------
-  heel_x_ = new Model::Properties::ContinousProperty(well_settings.spline_heel.x);
-  heel_y_ = new Model::Properties::ContinousProperty(well_settings.spline_heel.y);
-  heel_z_ = new Model::Properties::ContinousProperty(well_settings.spline_heel.z);
-  toe_x_ = new Model::Properties::ContinousProperty(well_settings.spline_toe.x);
-  toe_y_ = new Model::Properties::ContinousProperty(well_settings.spline_toe.y);
-  toe_z_ = new Model::Properties::ContinousProperty(well_settings.spline_toe.z);
+  // -------------------------------------------------------
+  heel_x_ = new Model::Properties::ContinousProperty(
+      well_settings.spline_heel.x);
+
+  heel_y_ = new Model::Properties::ContinousProperty(
+      well_settings.spline_heel.y);
+
+  heel_z_ = new Model::Properties::ContinousProperty(
+      well_settings.spline_heel.z);
+
+  toe_x_ = new Model::Properties::ContinousProperty(
+      well_settings.spline_toe.x);
+
+  toe_y_ = new Model::Properties::ContinousProperty(
+      well_settings.spline_toe.y);
+
+  toe_z_ = new Model::Properties::ContinousProperty(
+      well_settings.spline_toe.z);
+
   time_cwb_wic_pcg_ = 0;
 
-  // ---------------------------------------------------------------
+  // -------------------------------------------------------
   if (well_settings.spline_heel.is_variable) {
     heel_x_->setName(well_settings.spline_heel.name + "#x");
     heel_y_->setName(well_settings.spline_heel.name + "#y");
@@ -81,7 +97,7 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
     variable_container->AddVariable(heel_z_);
   }
 
-  // ---------------------------------------------------------------
+  // -------------------------------------------------------
   if (well_settings.spline_toe.is_variable) {
     toe_x_->setName(well_settings.spline_toe.name + "#x");
     toe_y_->setName(well_settings.spline_toe.name + "#y");
@@ -93,7 +109,7 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
 }
 
 
-// =================================================================
+// =========================================================
 QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
 
   // ---------------------------------------------------------------

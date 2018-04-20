@@ -338,12 +338,12 @@ void Settings::readModelSection() {
     // ---------------------------------------------------------
     // Drilling type
     cout << "Drilling mode:--------- "
-         << model_->getDrillingStr(model_->drilling_.mode) << endl;
+         << model_->getDrillingStr(model_->drillingMode_) << endl;
 
     // ---------------------------------------------------------
     // Drilling sequence
-    cout << "Drilling sequence:----- " << endl;
-    model_->GetDrillingStr(model_->drilling_);
+    // cout << "Drilling sequence:----- " << endl;
+    // model_->GetDrillingStr(model_->drilling_);
 
   }
 }

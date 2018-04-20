@@ -118,11 +118,11 @@ class Well
   void UpdateHeelToeIJK();
 
   // -------------------------------------------------------
-  double GetDrillingTime() const
-  { return drilling_time_;};
+  double GetDrillingTime()
+  { return drilling_time_; };
 
-  std::pair<int, int> GetDrillingOrder() const
-  { return drilling_order_;};
+  std::pair<int, int> GetDrillingOrder()
+  { return drilling_order_; };
 
  private:
 
@@ -147,7 +147,8 @@ class Well
   QList<Control *> *controls_;
 
   // -------------------------------------------------------
-  std::vector<int> verb_vector_ = std::vector<int>(11,0);
+  std::vector<int> verb_vector_ =
+      std::vector<int>(11,0);
 
 };
 
