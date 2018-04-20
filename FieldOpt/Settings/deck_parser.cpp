@@ -21,6 +21,7 @@
 #include <numeric>
 #include <boost/lexical_cast.hpp>
 #include "Utilities/time.hpp"
+#include <opm/parser/eclipse/Units/Units.hpp>
 
 namespace Settings {
 
@@ -94,6 +95,7 @@ Model::Well DeckParser::opmWellToWellStruct(const Opm::Well *opm_well) {
     well_struct.wellbore_radius = determineWellboreRadius(opm_well);
     well_struct.well_blocks = opmToWellBlocks(opm_well);
     well_struct.controls = opmToControlEntries(opm_well);
+    well_struct.definition_type = Model::WellDefinitionType::WellBlocks;
 
     return well_struct;
 }
@@ -193,12 +195,12 @@ double DeckParser::determineWellboreRadius(const Opm::Well *opm_well) {
 QList<Model::Well::WellBlock> DeckParser::opmToWellBlocks(const Opm::Well *opm_well) {
     auto comp_set = opm_well->getCompletions();
     auto well_blocks =  QList<Model::Well::WellBlock>();
-    int i = 0;
-    for (auto opm_comp : comp_set) {
+    for (int i = 0; i < comp_set.size(); ++i) {
         Model::Well::Completion comp;
         comp.type = Model::WellCompletionType::Perforation;
-        if (opm_comp.getConnectionTransmissibilityFactorAsValueObject().hasValue()) {
-            comp.transmissibility_factor = opm_comp.getConnectionTransmissibilityFactor();
+        if (comp_set.get(i).getConnectionTransmissibilityFactorAsValueObject().hasValue()) {
+            double trans = comp_set.get(i).getConnectionTransmissibilityFactor();
+            comp.transmissibility_factor = Opm::unit::convert::to(trans, Opm::Metric::Transmissibility);
         }
         else {
             comp.transmissibility_factor = -1;
@@ -207,12 +209,25 @@ QList<Model::Well::WellBlock> DeckParser::opmToWellBlocks(const Opm::Well *opm_w
         comp.name = "Transmissibility#" + QString::fromStdString(opm_well->name()) + "#" + QString::number(i);
         wb.completion = comp;
         wb.has_completion = true;
-        wb.i = opm_comp.getI();
-        wb.j = opm_comp.getJ();
-        wb.k = opm_comp.getK();
+        wb.i = comp_set.get(i).getI() + 1;
+        wb.j = comp_set.get(i).getJ() + 1;
+        wb.k = comp_set.get(i).getK() + 1;
         wb.name = "WellBlock#" + QString::fromStdString(opm_well->name()) + "#" + QString::number(i);
         well_blocks.push_back(wb);
-        ++i;
+    }
+
+    if (abs(well_blocks[0].i) > 10000) { // This tends to happen for some weird reason. Default to well head position.
+        if (abs(opm_well->getHeadI()) < 10000 )
+            well_blocks[0].i = opm_well->getHeadI() + 1;
+        else well_blocks[0].i = well_blocks[1].i - 1;
+    }
+    if ((well_blocks[0].j) > 10000) { // This tends to happen for some weird reason. Default to well head position.
+        if (abs(opm_well->getHeadJ()) < 10000 )
+            well_blocks[0].j = opm_well->getHeadJ() + 1;
+        else well_blocks[0].j = well_blocks[1].j - 1;
+    }
+    if (abs(well_blocks[0].k) > 10000) { // This tends to happen for some weird reason. Default to well head position.
+        well_blocks[0].k = well_blocks[1].k - 1;
     }
     return well_blocks;
 }
@@ -300,29 +315,52 @@ Model::ControlMode DeckParser::determineWellControlMode( const Opm::Well *opm_we
 }
 
 double DeckParser::determineRate(const Opm::Well *opm_well, const int timestep) {
+    double rate = 0;
     if (opm_well->isInjector(timestep)) {
         auto ips = opm_well->getInjectionProperties(timestep);
-        std::vector<double> rates {ips.surfaceInjectionRate, ips.reservoirInjectionRate};
-        return *std::max_element(rates.begin(), rates.end());
+        if (ips.surfaceInjectionRate > ips.reservoirInjectionRate) {
+            rate = Opm::unit::convert::to(ips.surfaceInjectionRate, Opm::Metric::LiquidSurfaceVolume);
+        }
+        else {
+            rate = Opm::unit::convert::to(ips.reservoirInjectionRate, Opm::Metric::ReservoirVolume);
+        }
     }
     else {
         auto pps = opm_well->getProductionProperties(timestep);
-        std::vector<double> rates {pps.OilRate, pps.LiquidRate, pps.ResVRate};
-        return *std::max_element(rates.begin(), rates.end());
+        if (pps.OilRate > pps.LiquidRate && pps.OilRate > pps.ResVRate) {
+            rate = Opm::unit::convert::to(pps.OilRate, Opm::Metric::LiquidSurfaceVolume);
+        }
+        else if (pps.LiquidRate > pps.OilRate && pps.LiquidRate > pps.ResVRate) {
+            rate = Opm::unit::convert::to(pps.LiquidRate, Opm::Metric::LiquidSurfaceVolume);
+        }
+        else {
+            rate = Opm::unit::convert::to(pps.ResVRate, Opm::Metric::ReservoirVolume);
+        }
     }
+    return rate;
 }
 
 double DeckParser::determineBhp(const Opm::Well *opm_well, const int timestep) {
+    double bhp = 0;
     if (opm_well->isInjector(timestep)) {
         auto ips = opm_well->getInjectionProperties(timestep);
-        std::vector<double> bhps {ips.BHPLimit, ips.THPLimit};
-        return *std::max_element(bhps.begin(), bhps.end());
+        if (ips.BHPLimit > ips.THPLimit) {
+            bhp = Opm::unit::convert::to(ips.THPLimit, Opm::Metric::Pressure);
+        }
+        else {
+            bhp = Opm::unit::convert::to(ips.BHPLimit, Opm::Metric::Pressure);
+        }
     }
     else {
         auto pps = opm_well->getProductionProperties(timestep);
-        std::vector<double> bhps {pps.BHPLimit, pps.THPLimit};
-        return *std::max_element(bhps.begin(), bhps.end());
+        if (pps.BHPLimit > pps.THPLimit) {
+            bhp = Opm::unit::convert::to(pps.THPLimit, Opm::Metric::Pressure);
+        }
+        else {
+            bhp = Opm::unit::convert::to(pps.BHPLimit, Opm::Metric::Pressure);
+        }
     }
+    return bhp;
 }
 
 Model::InjectionType DeckParser::determineInjectorType(const Opm::Well *opm_well, const int timestep) {

@@ -47,6 +47,9 @@ namespace Settings {
  *
  * @note For now, only the Schedule part of the deck is used.
  *
+ * @note Potentially important COMPDAT properties that are not handled
+ * as of now: Effective Kh and Pressure equivalent radius (r_0)
+ *
  * @note This should work with ECL and Flow decks. With some tweaks,
  * it should also, in time, work with AD-GPRS decks, as their schedule
  * sections are identical.
@@ -54,6 +57,12 @@ namespace Settings {
  * @bug The controls appear to not be read in correctly. The time steps
  * are usually off by one or two dates, and the numbers are wrong.
  * As such, the results should not be used in practice.
+ *
+ * @bug The first well block (i.e. the first record in the COMPDAT)
+ * appears to be parsed incorrectly. The I, J and K indices returned
+ * are plain gibberish. As such, the first well block is here get the
+ * same I and J indices as the well head (which _is_ parsed correctly),
+ * and the K index is set to one less than the second block.
  *
  * @todo Add support for multisegment wells.
  */
