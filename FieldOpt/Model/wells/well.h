@@ -85,6 +85,8 @@ class Well
   QString name() const { return name_; }
   ::Settings::Model::WellType type() const { return type_; }
   QString group() const { return group_; }
+
+  // -------------------------------------------------------
   bool IsProducer();
   bool IsInjector();
 
@@ -116,7 +118,11 @@ class Well
   void UpdateHeelToeIJK();
 
   // -------------------------------------------------------
-  double GetDrillingTime() { return drilling_time_;};
+  double GetDrillingTime() const
+  { return drilling_time_;};
+
+  std::pair<int, int> GetDrillingOrder() const
+  { return drilling_order_;};
 
  private:
 

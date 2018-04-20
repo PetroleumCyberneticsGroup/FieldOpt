@@ -141,8 +141,8 @@ void Settings::readGlobalSection() {
         "Unable to parse driver file global section: "
             + string(ex.what()));
   }
-      cout << "BookkeeperTolerance:--- "
-           << bookkeeper_tolerance() << endl;
+  cout << "BookkeeperTolerance:--- "
+       << bookkeeper_tolerance() << endl;
 
 }
 
@@ -341,20 +341,9 @@ void Settings::readModelSection() {
          << model_->getDrillingStr(model_->drilling_.mode) << endl;
 
     // ---------------------------------------------------------
-    for( int i=0; i<model_->wells_.size(); ++i ) {
-
-      cout << "Well:------------------ ";
-      cout << model_->wells_[i].name.toStdString() << "\n";
-
-      cout << "Drilling time:--------- ";
-      cout << model_->wells_[i].drilling_time << "\n";
-
-      cout << "Drilling sequence:----- (G#/S#) [ ";
-      cout << model_->wells_[i].drilling_order.first << " ";
-      cout << model_->wells_[i].drilling_order.second << "]\n";
-
-    }
-    cout << endl;
+    // Drilling sequence
+    cout << "Drilling sequence:----- " << endl;
+    model_->GetDrillingStr(model_->drilling_);
 
   }
 }

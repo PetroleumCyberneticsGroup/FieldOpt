@@ -187,8 +187,8 @@ class Model
 
     // -----------------------------------------------------
     // Drilling sequence for each well
-    double drilling_time;
-    std::pair<int, int> drilling_order;
+    mutable double drilling_time;
+    mutable std::pair<int, int> drilling_order;
 
     // -----------------------------------------------------
     Direction direction; //!< Direction of penetration
@@ -205,7 +205,10 @@ class Model
   // Drilling sequence for all wells
   struct Drilling {
     DrillingMode mode;
-    vector<pair<string, double>> time;
+
+    multimap<string, double> time;
+    vector<pair<string, double>> seq_wname_time_vec;
+
     vector<pair<string, pair<int, int>>> order;
     multimap<int, pair<int, string>> seq_by_group_mp;
     vector<vector<pair<int, string>>> seq_by_group_vec;
@@ -234,6 +237,15 @@ class Model
   std::vector<int> verb_vector() const { return verb_vector_; }
 
   Model::Well getWell(QString well_name);
+
+  Drilling GetDrilling() {return drilling_; };
+
+  void UpdateDrilling(Drilling& drilling);
+
+  void GetDrillingStr(Drilling& drilling) const;
+
+  void SetDrillingSeq(Drilling& drilling,
+                      QList<Well>& wells) const;
 
  private:
 // ---------------------------------------------------------

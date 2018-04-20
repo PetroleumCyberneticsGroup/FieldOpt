@@ -41,18 +41,18 @@ Model::Model(Settings::Model* settings, Logger *logger) {
       settings_->reservoir().path.toStdString());
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[5] > 1) { // idx:5 -> mod (Model)
+  if (settings_->verb_vector()[5] > 1) { // idx:5 -> mod
     cout << BRED << "[mod]Building Model.---------" << AEND << endl;
     cout << "[mod]Init ECLGrid_.---------- " << endl;
   }
 
   // -------------------------------------------------------
   variable_container_ = new Properties::VariablePropertyContainer();
-  if (settings_->verb_vector()[5] > 1) // idx:5 -> mod (Model)
+  if (settings_->verb_vector()[5] > 1) // idx:5 -> mod
     cout << "[mod]Init var_prop_cont_.----" << endl;
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[5] >= 1) // idx:5 -> mod (Model)
+  if (settings_->verb_vector()[5] >= 1) // idx:5 -> mod
     cout << "[mod]Adding wells:----------- \n";
 
   // -------------------------------------------------------
@@ -73,9 +73,32 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   }
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[5] >= 1) // idx:5 -> mod (Model)
+  if (settings_->verb_vector()[5] >= 1) // idx:5 -> mod
     cout << "\n[mod]Compute drilling seq.--- \n";
-  ComputeDrillingSequence();
+
+
+  QList<Settings::Model::Well> well_settings;
+  well_settings = settings_->wells();
+
+  for(int i = 0; wells_->size(); i++) {
+
+//    well_settings.at(i).name = wells_->at(i)->name();
+    well_settings.at(i).drilling_time = wells_->at(i)->GetDrillingTime();
+    well_settings.at(i).drilling_order = wells_->at(i)->GetDrillingOrder();
+
+  }
+
+  Settings::Model::Drilling drilling;
+  drilling = settings_->GetDrilling();
+
+  settings_->SetDrillingSeq(drilling,
+                            well_settings);
+
+  settings_->GetDrillingStr(drilling);
+
+
+
+  // ComputeDrillingSequence();
 
   // -------------------------------------------------------
   variable_container_->CheckVariableNameUniqueness();

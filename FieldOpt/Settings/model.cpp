@@ -39,7 +39,7 @@ namespace Settings {
 // =========================================================
 Model::Model(QJsonObject json_model) {
 
-  // -------------------------------------------------------------
+  // -------------------------------------------------------
   // Reservoir
   try {
     QJsonObject json_reservoir = json_model["Reservoir"].toObject();
@@ -51,7 +51,7 @@ Model::Model(QJsonObject json_model) {
             + std::string(ex.what()));
   }
 
-  // -------------------------------------------------------------
+  // -------------------------------------------------------
   // Check control times listing
   if (!json_model.contains("ControlTimes")
       || !json_model["ControlTimes"].isArray())
@@ -59,7 +59,7 @@ Model::Model(QJsonObject json_model) {
         "The ControlTimes array must be defined "
             "with at least one time for the model.");
 
-  // -------------------------------------------------------------
+  // -------------------------------------------------------
   // Append control times
   control_times_ = QList<double>();
   for (int i = 0; i < json_model["ControlTimes"].toArray().size(); ++i) {
@@ -67,15 +67,15 @@ Model::Model(QJsonObject json_model) {
         json_model["ControlTimes"].toArray().at(i).toDouble());
   }
 
-  // -------------------------------------------------------------
+  // -------------------------------------------------------
   // Loop through wells
   try {
 
-    // -----------------------------------------------------------
+    // -----------------------------------------------------
     QJsonArray json_wells = json_model["Wells"].toArray();
     wells_ = QList<Well>();
 
-    // -----------------------------------------------------------
+    // -----------------------------------------------------
     for (int i = 0; i < json_wells.size(); ++i) {
       QJsonObject json_well = json_wells[i].toObject();
       wells_.append(readSingleWell(json_well));
@@ -87,7 +87,7 @@ Model::Model(QJsonObject json_model) {
             + std::string(ex.what()));
   }
 
-  // -------------------------------------------------------------
+  // -------------------------------------------------------
   // Drilling sequence mode
   QString drilling = json_model["Drilling"].toString();
   if (QString::compare(drilling, "Synchronous") == 0) {
@@ -98,88 +98,9 @@ Model::Model(QJsonObject json_model) {
     drilling_.mode = DrillingMode::Synchronous;
   }
 
-  // -------------------------------------------------------------
-  // Main drilling order maps (pairs)
-  for (int i = 0; i < wells_.size(); ++i) {
-
-    // -----------------------------------------------------------
-    std::pair<std::string, std::pair<int, int>>
-        well_order(wells_[i].name.toStdString(),
-                   wells_[i].drilling_order);
-    drilling_.order.push_back(well_order);
-
-    // -----------------------------------------------------------
-    std::pair<std::string, double>
-        well_time(wells_[i].name.toStdString(),
-                  wells_[i].drilling_time);
-    drilling_.time.push_back(well_time);
-
-  }
-
-  // -------------------------------------------------------------
-  // Drilling sequence by group (<int, string>)
-  for (int i = 0; i < drilling_.order.size(); ++i) {
-
-    std::pair<int, string> p(drilling_.order[i].second.second,
-                             drilling_.order[i].first);
-    drilling_.seq_by_group_mp.emplace(drilling_.order[i].second.first, p);
-
-  }
-
-
-  // -------------------------------------------------------------
-  // Loop by group
-  decltype(drilling_.seq_by_group_mp.equal_range(int())) range;
-
-  for (auto i = drilling_.seq_by_group_mp.begin();
-    i != drilling_.seq_by_group_mp.end(); i = range.second) {
-
-    range = drilling_.seq_by_group_mp.equal_range(i->first);
-
-    // -----------------------------------------------------------
-    vector<pair<int, string>> isv;
-    for(auto d = range.first; d != range.second; ++d) {
-
-      // Dbg
-      std::cout << "Grp:" << d->first
-                << " Order w/i grp: " << d->second.first
-                << " Well:" << d->second.second << std::endl;
-
-      pair<int, string> is(d->second.first, d->second.second);
-      isv.push_back(is);
-
-    }
-
-    drilling_.seq_by_group_vec.push_back(isv);
-  }
-
-  // -------------------------------------------------------------
-  multimap<int,string> mp;
-  for (int j=0; j<drilling_.seq_by_group_vec.size(); j++) {
-
-    for (int k=0; k<drilling_.seq_by_group_vec[j].size(); k++) {
-
-      mp.emplace(drilling_.seq_by_group_vec[j][k].first,
-                drilling_.seq_by_group_vec[j][k].second);
-
-      // Dbg
-      cout << "[ " << drilling_.seq_by_group_vec[j][k].first << " -- "
-           << drilling_.seq_by_group_vec[j][k].second << " ]" << endl;
-    }
-  }
-
-  // -------------------------------------------------------------
-  decltype(mp.equal_range(int())) range2;
-  for (auto i = mp.begin(); i != mp.end(); i = range2.second) {
-    range2 = mp.equal_range(i->first);
-    for(auto d = range2.first; d != range2.second; ++d) {
-      // Dbg
-      std::cout << "[ " << d->first
-                << " ## " << d->second
-                << " ]" << std::endl;
-    }
-  }
-
+  // -------------------------------------------------------
+  SetDrillingSeq(drilling_,
+                 wells_);
 
 }
 
@@ -548,6 +469,123 @@ Model::Well Model::getWell(QString well_name) {
       return wells_.at(wnr);
     }
   }
+}
+
+// =========================================================
+void Model::GetDrillingStr(Drilling& drilling) const {
+
+  // ---------------------------------------------------------
+  auto seq_vec_group = drilling.seq_by_group_vec;
+  for( int i=0; i < seq_vec_group.size(); ++i ) {
+
+    for (int j=0; j<seq_vec_group[i].size(); j++) {
+
+      cout << "[ "
+           << seq_vec_group[i][j].first << " -- "
+           << seq_vec_group[i][j].second << " ]"
+           << endl;
+
+    }
+
+  }
+
+  // ---------------------------------------------------------
+  auto seq_vec_time = drilling.seq_wname_time_vec;
+  for( int i=0; i < seq_vec_time.size(); ++i ) {
+
+    cout << "[ "
+         << seq_vec_time[i].first << " -- "
+         << seq_vec_time[i].second << " ]"
+         << endl;
+
+  }
+
+}
+
+// =========================================================
+void Model::SetDrillingSeq(Drilling& drilling,
+                           QList<Well>& wells) const {
+
+
+  // -------------------------------------------------------
+  // Main drilling order maps (pairs)
+  for (int i = 0; i < wells.size(); ++i) {
+
+    // -----------------------------------------------------
+    pair<string, pair<int, int>>
+        well_order(wells[i].name.toStdString(),
+                   wells[i].drilling_order);
+    drilling.order.push_back(well_order);
+
+    // -----------------------------------------------------
+    drilling.time.emplace(wells[i].name.toStdString(),
+                          wells[i].drilling_time);
+  }
+
+  // -------------------------------------------------------
+  // Use multimap to group well pairs (<int, pair<int, string>>)
+  // into groups
+  for (int i = 0; i < drilling.order.size(); ++i) {
+
+    // -----------------------------------------------------
+    pair<int, string> p(drilling.order[i].second.second,
+                        drilling.order[i].first);
+
+    // -----------------------------------------------------
+    drilling.seq_by_group_mp.emplace(
+        drilling.order[i].second.first, p);
+
+  }
+
+  // -------------------------------------------------------
+  // Order each multimap group into a (pair<int, string>)
+  // vector with wells within each group sorted
+  decltype(drilling.seq_by_group_mp.equal_range(int())) range;
+
+  // -----------------------------------------------------
+  // Find equal ranges in multimap
+  for (auto i = drilling.seq_by_group_mp.begin();
+       i != drilling.seq_by_group_mp.end(); i = range.second) {
+
+    range = drilling.seq_by_group_mp.equal_range(i->first);
+
+    // ---------------------------------------------------
+    // Insert each well in group into vector
+    vector<pair<int, string>> group_vec;
+    for(auto d = range.first; d != range.second; ++d) {
+
+      // -------------------------------------------------
+      // Assemble well pair
+      pair<int, string> well_pair(d->second.first,
+                                  d->second.second);
+      group_vec.push_back(well_pair);
+    }
+
+    // ---------------------------------------------------
+    // Sort group vector
+    sort(group_vec.begin(), group_vec.end());
+
+    // ---------------------------------------------------
+    drilling.seq_by_group_vec.push_back(group_vec);
+  }
+
+  // -------------------------------------------------------
+  for( int i=0; i < drilling.seq_by_group_vec.size(); ++i ) {
+
+    for (int j=0; j< drilling.seq_by_group_vec[i].size(); j++) {
+
+      // ---------------------------------------------------
+      string wn = drilling.seq_by_group_vec[i][j].second;
+      pair<string, double> p(wn,
+                             drilling.time.find(wn)->second);
+
+      // ---------------------------------------------------
+      drilling.seq_wname_time_vec.push_back(p);
+
+    }
+
+  }
+
 }
 
 }
