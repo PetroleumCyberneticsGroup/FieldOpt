@@ -32,7 +32,7 @@ namespace Simulation {
                     {
                         QList<QStringList> block_entries = QList<QStringList>();
                         for (int i = 0; i < well->trajectory()->GetWellBlocks()->size(); ++i) {
-                            block_entries.append(createBlockEntry(well->name(), well->wellbore_radius(), well->trajectory()->GetWellBlocks()->at(i)));
+                            block_entries.append(createBlockEntry(well->name(), well->wellbore_radius()*2.0, well->trajectory()->GetWellBlocks()->at(i)));
                         }
                         return block_entries;
                     }
