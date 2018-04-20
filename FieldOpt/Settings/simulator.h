@@ -63,6 +63,11 @@ class Simulator
   QString driver_file_path() const { return driver_file_path_; }
 
   /*!
+   * Get the path of the parent directory of the driver file.
+   */
+  QString driver_parent_directory() const { return driver_directory_; }
+
+  /*!
    * Get the path to the file containing the schedule section
    (or the part of it that is to be manipulated).
    */
@@ -112,8 +117,9 @@ class Simulator
   QString driver_file_path_;
   QString driver_directory_;
   QString schedule_file_path_;
-  QString output_directory_;
   QString custom_exec_script_path_;
+
+  QString output_directory_;
   int max_minutes_;
 };
 

@@ -41,10 +41,10 @@ Simulator::Simulator(QJsonObject json_simulator)
         driver_file_path_ = "";
     }
 
-    if (json_simulator.contains("SchedulePath")) {
-        auto schedule_path = driver_directory_ + "/" + json_simulator["SchedulePath"].toString();
+    if (json_simulator.contains("ScheduleFile")) {
+        auto schedule_path = driver_directory_ + "/" + json_simulator["ScheduleFile"].toString();
          if (!FileExists(schedule_path))
-             throw std::runtime_error("No file found at SchedulePath: " + schedule_path.toStdString());
+             throw std::runtime_error("No file found at ScheduleFile: " + schedule_path.toStdString());
         schedule_file_path_ = schedule_path;
     }
     else {
