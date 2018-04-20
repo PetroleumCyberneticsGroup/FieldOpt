@@ -436,6 +436,8 @@ class DFO_Model {
 
   bool FindPointToReplaceWithPointOutsideScaledTrustRegion(int t,Eigen::VectorXd &dNew);
 
+  bool FindPointToIncreasePoisedness(Eigen::VectorXd &dNew, int &t);
+
 };
 }
 }
