@@ -188,7 +188,7 @@ class Model
     // -----------------------------------------------------
     // Drilling sequence for each well
     mutable double drilling_time;
-    mutable std::pair<int, int> drilling_order;
+    std::pair<int, int> drilling_order;
 
     // -----------------------------------------------------
     Direction direction; //!< Direction of penetration
@@ -227,7 +227,7 @@ class Model
 
   DrillingMode drillingMode_;
 
-//  Drilling GetDrilling() {return drilling_; };
+//  Drilling GetDrilling() {return drillseq_; };
 
 //  void UpdateDrilling(Drilling& drilling);
 //

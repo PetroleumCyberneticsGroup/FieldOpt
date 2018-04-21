@@ -66,30 +66,72 @@ class VariablePropertyContainer
   // ---------------------------------------------------------
   VariablePropertyContainer();
 
-  void AddVariable(BinaryProperty *var); //!< Add a property to the container and mark it as variable
-  void AddVariable(DiscreteProperty *var); //!< Add a property to the container and mark it as variable
-  void AddVariable(ContinousProperty *var); //!< Add a property to the container and mark it as variable
+  // Add a property to the container and mark it as variable
+  void AddVariable(BinaryProperty *var);
 
-  int BinaryVariableSize() const { return binary_variables_->size(); } //!< Get the number of binary variables.
-  int DiscreteVariableSize() const { return discrete_variables_->size(); } //!< Get the number of discrete variables.
-  int ContinousVariableSize() const { return continous_variables_->size(); } //!< Get the number of continous variables.
+  // Add a property to the container and mark it as variable
+  void AddVariable(DiscreteProperty *var);
 
-  BinaryProperty *GetBinaryVariable(QUuid id) const; //!< Get the binary variable with index id.
-  DiscreteProperty *GetDiscreteVariable(QUuid id) const; //!< Get the discrete variable with index id.
-  ContinousProperty *GetContinousVariable(QUuid id) const; //!< Get the continous variable with index id.
+  // Add a property to the container and mark it as variable
+  void AddVariable(ContinousProperty *var);
 
-  BinaryProperty *GetBinaryVariable(QString name) const; //!< Get the binary variable with the specified name.
-  DiscreteProperty *GetDiscreteVariable(QString name) const; //!< Get the discrete variable with the specified name.
-  ContinousProperty *GetContinousVariable(QString name) const; //!< Get the continous variable with the specified name.
+  // ---------------------------------------------------------
+  // Get the number of binary variables.
+  int BinaryVariableSize() const
+  { return binary_variables_->size(); }
 
-  void SetBinaryVariableValue(QUuid id, bool val); //!< Set the value of a binary variable.
-  void SetDiscreteVariableValue(QUuid id, int val); //!< Set the value of a binary variable.
+  // Get the number of discrete variables.
+  int DiscreteVariableSize() const
+  { return discrete_variables_->size(); }
 
-  void SetContinousVariableValue(QUuid id, double val); //!< Set the value of a binary variable.
-  QHash<QUuid, BinaryProperty *> *GetBinaryVariables() const { return binary_variables_; } //!< Get all binary variables
-  QHash<QUuid, DiscreteProperty *> *GetDiscreteVariables() const { return discrete_variables_; } //!< Get all discrete variables
+  // Get the number of continous variables.
+  int ContinousVariableSize() const
+  { return continous_variables_->size(); }
 
-  QHash<QUuid, ContinousProperty *> *GetContinousVariables() const { return continous_variables_; } //!< Get all continous variables
+  // ---------------------------------------------------------
+  // Get the binary variable with index id.
+  BinaryProperty *GetBinaryVariable(QUuid id) const;
+
+  // Get the discrete variable with index id.
+  DiscreteProperty *GetDiscreteVariable(QUuid id) const;
+
+  // Get the continuous variable with index id.
+  ContinousProperty *GetContinousVariable(QUuid id) const;
+
+  // ---------------------------------------------------------
+  // Get the binary variable with the specified name.
+  BinaryProperty *GetBinaryVariable(QString name) const;
+
+  // Get the discrete variable with the specified name.
+  DiscreteProperty *GetDiscreteVariable(QString name) const;
+
+  // Get the continous variable with the specified name.
+  ContinousProperty *GetContinousVariable(QString name) const;
+
+  // ---------------------------------------------------------
+  // Set the value of a binary variable.
+  void SetBinaryVariableValue(QUuid id, bool val);
+
+  // Set the value of a discrete variable.
+  void SetDiscreteVariableValue(QUuid id, int val);
+
+  // Set the value of a binary variable.
+  void SetContinousVariableValue(QUuid id, double val);
+
+  // ---------------------------------------------------------
+  // Get all binary variables
+  QHash<QUuid, BinaryProperty *> *GetBinaryVariables() const
+  { return binary_variables_; }
+
+  // Get all discrete variables
+  QHash<QUuid, DiscreteProperty *> *GetDiscreteVariables() const
+  { return discrete_variables_; }
+
+  // Get all continuous variables
+  QHash<QUuid, ContinousProperty *> *GetContinousVariables() const
+  { return continous_variables_; }
+
+  // ---------------------------------------------------------
   QHash<QUuid, bool> GetBinaryVariableValues() const; //!< Get a hashmap containing all binary variable values. The key represents each variable's ID.
   QHash<QUuid, int> GetDiscreteVariableValues() const; //!< Get a hashmap containing all discrete variable values. The key represents each variable's ID.
 

@@ -163,7 +163,7 @@ void ECLGridReader::ReadEclGrid(std::string file_name) {
     coord_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "COORD", 0);
     zcorn_kw_ = ecl_file_iget_named_kw(ecl_file_grid_, "ZCORN", 0);
 
-    GetGridIndices(); // Extract and order grid index data
+    GetGridIndices(); // Extract and name_vs_order grid index data
     GetCOORDZCORNData(); // Get grid coord data
 
   } else {

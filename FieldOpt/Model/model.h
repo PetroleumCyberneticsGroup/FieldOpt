@@ -38,9 +38,17 @@
 #include "Runner/loggable.hpp"
 #include "Runner/logger.h"
 #include "Utilities/colors.hpp"
+#include "wells/well_group.h"
 
 // ---------------------------------------------------------
 class Logger;
+
+// ---------------------------------------------------------
+namespace Model {
+namespace WellGroups {
+class WellGroup;
+}
+}
 
 // ---------------------------------------------------------
 namespace Model {
@@ -122,6 +130,28 @@ class Model : public Loggable
   void Finalize();
 
   // -------------------------------------------------------
+  // Drilling sequence for all wells
+  struct Drilling {
+    Settings::Model::DrillingMode mode;
+
+    // Main orderings
+    vector<pair<string, pair<int, int>>> name_vs_order;
+    map<string, int> name_vs_num;
+    multimap<string, double> name_vs_time;
+
+    // Transformation map
+    multimap<int, pair<int, string>> mp_wells_into_groups;
+
+    // Resulting vecotrs
+    vector<vector<pair<int, string>>> wseq_grpd_sorted_name;
+
+    // Resulting aux vectors
+    vector<int> drill_groups_;
+    vector<pair<string, double>> wseq_grpd_sorted_vs_time;
+
+  };
+
+  // -------------------------------------------------------
   /*!
    * @brief
    */
@@ -130,28 +160,15 @@ class Model : public Loggable
 
   Wells::Well* getWell(QString well_name);
 
-  // -------------------------------------------------------
-  // Drilling sequence for all wells
-  struct Drilling {
-    Settings::Model::DrillingMode mode;
-
-    multimap<string, double> time;
-    vector<pair<string, double>> seq_wname_time_vec;
-
-    vector<pair<string, pair<int, int>>> order;
-    multimap<int, pair<int, string>> seq_by_group_mp;
-    vector<vector<pair<int, string>>> seq_grouped_sorted_vec;
-    vector<int> drill_groups_;
-  };
-
-  Properties::DiscreteProperty *drill_seq_var_;
 
  private:
   // -------------------------------------------------------
   Reservoir::Grid::Grid *grid_;
   Properties::VariablePropertyContainer *variable_container_;
+
   QList<Wells::Well *> *wells_;
-  Drilling drilling_;
+  QList<WellGroups::WellGroup *> *well_groups_;
+  Drilling *drillseq_;
 
   // -------------------------------------------------------
   /*!
@@ -182,6 +199,11 @@ class Model : public Loggable
    * the one performed with the current case).
    */
   std::map<std::string, std::vector<double>> results_;
+
+  // -------------------------------------------------------
+  void CreateWells();
+  void CreateWellGroups();
+
 
   // -------------------------------------------------------
   class Summary : public Loggable {

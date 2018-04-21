@@ -45,9 +45,11 @@ using namespace std;
 ECLGrid::ECLGrid(string file_path)
     : Grid(GridSourceType::ECLIPSE, file_path) {
 
+  // -------------------------------------------------------
   if (!boost::filesystem::exists(file_path))
     throw runtime_error("Grid file " + file_path + " not found.");
 
+  // -------------------------------------------------------
   string init_file_path = file_path;
   if (boost::algorithm::ends_with(file_path, ".EGRID")) {
     boost::replace_all(init_file_path, ".EGRID", ".INIT");
@@ -55,33 +57,42 @@ ECLGrid::ECLGrid(string file_path)
     boost::replace_all(init_file_path, ".GRID", ".INIT");
   }
 
+  // -------------------------------------------------------
   if (!boost::filesystem::exists(init_file_path)) {
     throw runtime_error("ECLGrid::ECLGrid: Reservoir init file "
                             + init_file_path + " not found.");
   }
 
+  // -------------------------------------------------------
   ecl_grid_reader_ = new ERTWrapper::ECLGrid::ECLGridReader();
   ecl_grid_reader_->ReadEclGrid(file_path_);
 
-  // Calculate the proper corner permutation for cell faces definition:
-  // This is a function of the z axis orientation.
-  // Somehow the grid reader it re-aranging the cell corners and I could
-  // not easily found a logic so we are going to check all known permutations
-  // with the toe that one of them is suitable for the current grid - we do
-  // that based on the cell 0 in the grid
+  // -------------------------------------------------------
+  // Calculate the proper corner permutation for cell faces
+  // definition: This is a function of the z axis orientation.
+  //
+  // Somehow the grid reader it re-aranging the cell corners
+  // and I could not easily found a logic so we are going to
+  // check all known permutations with the toe that one of
+  // them is suitable for the current grid - we do that
+  // based on the cell 0 in the grid
 
+  // -------------------------------------------------------
   // Find the first (active) cell index in the matrix.
   int idx = ecl_grid_reader_->ConvertMatrixActiveIndexToGlobalIndex(0);
 
+  // -------------------------------------------------------
   // Set faces permutation to first permutation type
   faces_permutation_index_ = 0;
   // Get the first cell
   Cell first_cell = GetCell(idx);
 
+  // -------------------------------------------------------
   if (first_cell.EnvelopsPoint(first_cell.center())) {
     return;
   }
 
+  // -------------------------------------------------------
   // Set faces permutation to second permutation type
   faces_permutation_index_ = 1;
   // Get the first cell
@@ -90,6 +101,7 @@ ECLGrid::ECLGrid(string file_path)
     return;
   }
 
+  // -------------------------------------------------------
   // We should not have gotten here - if here then it
   // means there we need more permutations schemes
   throw runtime_error("Unknown axis orientation");

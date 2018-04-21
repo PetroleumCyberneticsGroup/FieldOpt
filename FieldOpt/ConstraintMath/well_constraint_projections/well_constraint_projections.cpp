@@ -206,7 +206,7 @@ interwell_constraint_projection(QList<Vector3d> coords, double d) {
     moved_coords = coords;
 
     // ---------------------------------------------------------------
-    // Choose which 3 points to move. (order is important, second
+    // Choose which 3 points to move. (name_vs_order is important, second
     // and third entry should belong to same line segment)
     QList<Vector3d> input_cords_3p;
 

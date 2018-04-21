@@ -161,7 +161,7 @@ string Cell::to_string() const {
 
 void Cell::initializeFaces(int faces_permutation_index)
 {
-  // The code assumes the corners of the cell are given in the following order
+  // The code assumes the corners of the cell are given in the following name_vs_order
   //
   //     Above:
   //     2---3

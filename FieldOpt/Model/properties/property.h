@@ -1,48 +1,54 @@
-/******************************************************************************
- *
- * variable.h
- *
- * Created: 22.09.2015 2015 by einar
- *
- * This file is part of the FieldOpt project.
- *
- * Copyright (C) 2015-2015 Einar J.M. Baumann <einar.baumann@ntnu.no>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
- *****************************************************************************/
 
+/***********************************************************
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
+
+ Created: 22.09.2015 2015 by einar
+
+ This file is part of the FieldOpt project.
+
+ FieldOpt is free software: you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation, either version
+ 3 of the License, or (at your option) any later version.
+
+ FieldOpt is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty
+ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
+
+ You should have received a copy of the
+ GNU General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
+
+// ---------------------------------------------------------
 #ifndef PROPERTY_H
 #define PROPERTY_H
+// ---------------------------------------------------------
 
 #include "property_exceptions.h"
 #include <QString>
 #include <QUuid>
 
+// ---------------------------------------------------------
 namespace Model {
 namespace Properties {
 
+// =========================================================
 /*!
- * \brief The Property class is an abstract class implemented by
- * specific property types, i.e. integer, real and binary. It holds
- * and to some extends describes the value of a property in the model.
+ * \brief Property class is an abstract class implemented
+ * by specific property types, i.e. integer, real and binary.
+ * It holds and to some extends describes the value of a
+ * property in the model.
  */
 class Property
 {
  public:
+  // ---------------------------------------------------------
   enum Type { Discrete, Continous, Binary }; //!< The underlying datatype of the property's value.
 
+  // ---------------------------------------------------------
   Type type() const { return type_; } //!< Get the underlying datatype of the property's value.
   QString name() const { return name_;} //!< Get the name set for the variable. Returns an empty string if name has not been set.
   void setName(QString name) { name_ = name; } //!< Set the name of the variable.

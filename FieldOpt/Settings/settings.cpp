@@ -343,7 +343,7 @@ void Settings::readModelSection() {
     // ---------------------------------------------------------
     // Drilling sequence
     // cout << "Drilling sequence:----- " << endl;
-    // model_->GetDrillingStr(model_->drilling_);
+    // model_->GetDrillingStr(model_->drillseq_);
 
   }
 }
