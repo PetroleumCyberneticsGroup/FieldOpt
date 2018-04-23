@@ -58,7 +58,7 @@ class WellGroup {
       ::Reservoir::Grid::Grid *grid);
 
   // -------------------------------------------------------
-  QList<Wells::Well *> *group_of_wells_;
+  QList<Wells::Well *> *wells_;
 
   ::Model::Properties::DiscreteProperty *drill_seq_;
 

@@ -93,9 +93,12 @@ class Model : public Loggable
   /*!
    * \brief wells Get a list of all the wells in the model.
    */
-  QList<Wells::Well *> *wells() const
-  { return wells_; }
+  QList<Wells::Well *> *wells(int gnr) const
+  { return well_groups_->at(gnr); }
 
+  QList<WellGroups::WellGroup *> *well_group(int gnr) const
+  { return well_groups_[gnr]; }
+  
   // -------------------------------------------------------
   /*!
    * \brief ApplyCase Applies the variable values from a
@@ -157,7 +160,7 @@ class Model : public Loggable
   void SetDrillingSeq();
   void GetDrillingStr();
 
-  Wells::Well* getWell(QString well_name);
+//  Wells::Well* getWell(QString well_name);
 
 
  private:
@@ -165,7 +168,7 @@ class Model : public Loggable
   Reservoir::Grid::Grid *grid_;
   Properties::VariablePropertyContainer *variable_container_;
 
-  QList<Wells::Well *> *wells_;
+  // QList<Wells::Well *> *wells_;
   QList<WellGroups::WellGroup *> *well_groups_;
   Drilling *drillseq_;
 
@@ -200,7 +203,7 @@ class Model : public Loggable
   std::map<std::string, std::vector<double>> results_;
 
   // -------------------------------------------------------
-  void CreateWells();
+//  void CreateWells();
   void CreateWellGroups();
 
 

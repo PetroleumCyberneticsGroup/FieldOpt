@@ -61,15 +61,15 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   SetDrillingSeq(); // Establishes all fields in drillseq_
   GetDrillingStr(); // Dbg
 
-  if(drillseq_->drill_groups_.size() > 1) {
+//  if(drillseq_->drill_groups_.size() > 1) {
 
   // -------------------------------------------------------
     CreateWellGroups();
 
-  } else {
+//  } else {
     // -----------------------------------------------------
-    CreateWells();
-  }
+//    CreateWells();
+//  }
 
   // -------------------------------------------------------
   variable_container_->CheckVariableNameUniqueness();
@@ -87,6 +87,7 @@ void Model::CreateWellGroups() {
 
   // -------------------------------------------------------
   // Empty QList to contain groups of wells
+  // wells_ = new QList<Wells::Well *>();
   well_groups_ = new QList<WellGroups::WellGroup *>();
   for (int gnr = 0; gnr < drillseq_->drill_groups_.size(); ++gnr) {
 
@@ -107,38 +108,38 @@ void Model::CreateWellGroups() {
 }
 
 // =========================================================
-void Model::CreateWells() {
+//void Model::CreateWells() {
+//
+//  // -------------------------------------------------------
+//  // Create wells
+//  wells_ = new QList<Wells::Well *>();
+//  for (int wnr = 0; wnr < settings_->wells().size(); ++wnr) {
+//
+//    // -----------------------------------------------------
+//    auto wname = settings_->wells().at(wnr).name.toStdString();
+//    if (settings_->verb_vector()[5] >= 1) // idx:5 -> mod (Model)
+//      cout << FCYAN << "\nWell=" << wname
+//           << "\n----------------------------- \n" << AEND;
+//
+//    // -----------------------------------------------------
+//    wells_->append(new Wells::Well(*settings_,
+//                                   wnr,
+//                                   variable_container_,
+//                                   grid_));
+//  }
+//
+//}
 
-  // -------------------------------------------------------
-  // Create wells
-  wells_ = new QList<Wells::Well *>();
-  for (int wnr = 0; wnr < settings_->wells().size(); ++wnr) {
-
-    // -----------------------------------------------------
-    auto wname = settings_->wells().at(wnr).name.toStdString();
-    if (settings_->verb_vector()[5] >= 1) // idx:5 -> mod (Model)
-      cout << FCYAN << "\nWell=" << wname
-           << "\n----------------------------- \n" << AEND;
-
-    // -----------------------------------------------------
-    wells_->append(new Wells::Well(*settings_,
-                                   wnr,
-                                   variable_container_,
-                                   grid_));
-  }
-
-}
-
-// =========================================================
-Wells::Well* Model::getWell(QString well_name) {
-
-  // -------------------------------------------------------
-  for (int wnr = 0; wnr < wells_->size(); ++wnr) {
-    if(wells_->at(wnr)->name().compare(well_name)) {
-      return wells_->at(wnr);
-    }
-  }
-}
+//// =========================================================
+//Wells::Well* Model::getWell(QString well_name) {
+//
+//  // -------------------------------------------------------
+//  for (int wnr = 0; wnr < wells_->size(); ++wnr) {
+//    if(wells_->at(wnr)->name().compare(well_name)) {
+//      return wells_->at(wnr);
+//    }
+//  }
+//}
 
 // =========================================================
 void Model::Finalize() {
@@ -171,9 +172,11 @@ void Model::ApplyCase(Optimization::Case *c, int rank) {
 
   // -------------------------------------------------------
   int cumulative_wic_time = 0;
-  for (Wells::Well *w : *wells_) {
-    w->Update(rank);
-    cumulative_wic_time += w->GetTimeSpentInWIC();
+  for (WellGroups::WellGroup *g : *well_groups_) {
+    for (Wells::Well *w : *g->wells_) {
+      w->Update(rank);
+      cumulative_wic_time += w->GetTimeSpentInWIC();
+    }
   }
 
   // -------------------------------------------------------
@@ -201,8 +204,10 @@ void Model::verify() {
 
 // =========================================================
 void Model::verifyWells() {
-  for (Wells::Well *well : *wells_) {
-    verifyWellTrajectory(well);
+  for (WellGroups::WellGroup *g : *well_groups_) {
+    for (Wells::Well *w : *g->wells_) {
+      verifyWellTrajectory(w);
+    }
   }
 }
 

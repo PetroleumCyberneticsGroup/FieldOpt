@@ -67,7 +67,7 @@ WellGroup::WellGroup(
 
   // -------------------------------------------------------
   // Empty QList to contain wells in group
-  group_of_wells_ = new QList<Wells::Well *>();
+  wells_ = new QList<Wells::Well *>();
 
   // -------------------------------------------------------
   for (int wnr = 0; wnr < wells_in_group_.size(); ++wnr) {
@@ -79,12 +79,10 @@ WellGroup::WellGroup(
            << "\n----------------------------- \n" << AEND;
 
     // -----------------------------------------------------
-    group_of_wells_->append(
-        new Wells::Well(well_settings,
-                        orig_wnum,
-                        variable_container,
-                        grid));
-
+    wells_->append(new Wells::Well(well_settings,
+                                  orig_wnum,
+                                  variable_container,
+                                  grid));
 
   }
 
