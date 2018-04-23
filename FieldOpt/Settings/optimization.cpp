@@ -43,6 +43,9 @@ Optimization::Optimization(QJsonObject json_optimization) {
   QJsonArray json_var_assignment =
       json_optimization["VariableAssignment"].toArray();
 
+  QJsonArray json_opt_structure =
+      json_optimization["OptStructure"].toArray();
+
   // optimizers_ = QList<Constraint>();
 
 }

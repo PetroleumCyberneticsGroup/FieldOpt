@@ -39,7 +39,8 @@ Model::Model(Settings::Model* settings, Logger *logger) {
 
   // -------------------------------------------------------
   if (settings_->verb_vector()[5] > 1) { // idx:5 -> mod
-    cout << BRED << "[mod]Building Model.---------" << AEND << endl;
+    cout << BRED
+         << "[mod]Building Model.---------" << AEND << endl;
     cout << "[mod]Init ECLGrid_.---------- " << endl;
   }
 
@@ -50,12 +51,12 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   // -------------------------------------------------------
   if (settings_->verb_vector()[5] > 1) // idx:5 -> mod
     cout << "[mod]Init var container.-----" << endl;
-  variable_container_ = new Properties::VariablePropertyContainer();
+  variable_container_ =
+      new Properties::VariablePropertyContainer();
 
   // -------------------------------------------------------
   drillseq_ = new Model::Drilling;
   SetDrillingSeq(); // Establishes all fields in drillseq_
-  GetDrillingStr(); // Dbg
 
   // -------------------------------------------------------
   CreateWellGroups();
@@ -69,13 +70,24 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   }
 
   // -------------------------------------------------------
+  // Use current drilling seq + drill times for each well
+  UpdateControlTimes();
+  GetDrillingStr(); // Dbg
+
+  // -------------------------------------------------------
   variable_container_->CheckVariableNameUniqueness();
   logger_ = logger;
   logger_->AddEntry(new Summary(this));
 
 // -------------------------------------------------------
-  if (settings_->verb_vector()[5] > 1) // idx:5 -> mod (Model)
-    cout << BRED << "[mod]Finished building Model." << AEND << endl;
+  if (settings_->verb_vector()[5] > 1) // idx:5 -> mod
+    cout << BRED
+         << "[mod]Finished building Model." << AEND << endl;
+
+}
+
+// =========================================================
+void Model::UpdateControlTimes() {
 
 }
 

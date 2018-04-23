@@ -165,6 +165,7 @@ class Model : public Loggable
    */
   void SetDrillingSeq();
   void GetDrillingStr();
+  void UpdateControlTimes();
 
  private:
   // -------------------------------------------------------

@@ -71,18 +71,27 @@ WellGroup::WellGroup(
 
   // -------------------------------------------------------
   for (int wnr = 0; wnr < wells_in_group_.size(); ++wnr) {
+
+    // -----------------------------------------------------
     string wn = wells_in_group_[wnr].second;
     int orig_wnum = drilling.name_vs_num[wn];
 
+    // -----------------------------------------------------
     if (well_settings.verb_vector()[5] >= 1) // idx:5 -> mod
       cout << FCYAN << "\nWell=" << wn
            << "\n----------------------------- \n" << AEND;
 
     // -----------------------------------------------------
-    group_wells_->append(new Wells::Well(well_settings,
-                                  orig_wnum,
-                                  variable_container,
-                                  grid));
+    auto well = new Wells::Well(well_settings,
+                                orig_wnum,
+                                variable_container,
+                                grid);
+    group_wells_->append(well);
+
+    // -----------------------------------------------------
+    auto it = drilling.name_vs_time.find(wn);
+    drilling.name_vs_time.insert(
+        it, std::pair(wn,well->GetDrillingTime()));
 
   }
 
