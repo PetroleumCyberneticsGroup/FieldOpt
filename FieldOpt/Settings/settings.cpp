@@ -151,7 +151,7 @@ void Settings::readGlobalSection() {
       string str_out = "[set]Global settings---";
       cout << "\n" << BLDON << str_out << AEND << "\n"
            << std::string(str_out.length(), '=') << endl;
-
+    // -----------------------------------------------------
       cout << "Name:------------------ "
            << name_.toStdString() << endl;
 
