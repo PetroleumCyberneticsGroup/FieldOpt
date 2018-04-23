@@ -37,26 +37,33 @@ VariablePropertyContainer::VariablePropertyContainer() {
 }
 
 // ---------------------------------------------------------
-void VariablePropertyContainer::AddVariable(BinaryProperty *var) {
+void VariablePropertyContainer::
+AddVariable(BinaryProperty *var) {
 
   var->SetVariable();
   binary_variables_->insert(var->id(), var);
 }
 
 // ---------------------------------------------------------
-void VariablePropertyContainer::AddVariable(DiscreteProperty *var) {
+void VariablePropertyContainer::
+AddVariable(DiscreteProperty *var) {
+
   var->SetVariable();
   discrete_variables_->insert(var->id(), var);
 }
 
 // ---------------------------------------------------------
-void VariablePropertyContainer::AddVariable(ContinousProperty *var) {
+void VariablePropertyContainer::
+AddVariable(ContinousProperty *var) {
+
   var->SetVariable();
   continous_variables_->insert(var->id(), var);
 }
 
 // ---------------------------------------------------------
-BinaryProperty *VariablePropertyContainer::GetBinaryVariable(QUuid id) const {
+BinaryProperty *VariablePropertyContainer::
+GetBinaryVariable(QUuid id) const {
+
   if (!binary_variables_->contains(id)) {
     throw VariableIdDoesNotExistException(
         "Binary variable not found.");
@@ -64,8 +71,8 @@ BinaryProperty *VariablePropertyContainer::GetBinaryVariable(QUuid id) const {
 }
 
 // ---------------------------------------------------------
-DiscreteProperty
-*VariablePropertyContainer::GetDiscreteVariable(QUuid id) const {
+DiscreteProperty *VariablePropertyContainer::
+GetDiscreteVariable(QUuid id) const {
 
   if (!discrete_variables_->contains(id)) {
     throw VariableIdDoesNotExistException(
@@ -74,8 +81,8 @@ DiscreteProperty
 }
 
 // ---------------------------------------------------------
-ContinousProperty
-*VariablePropertyContainer::GetContinousVariable(QUuid id) const {
+ContinousProperty *VariablePropertyContainer::
+GetContinousVariable(QUuid id) const {
 
   if (!continous_variables_->contains(id)) {
     throw VariableIdDoesNotExistException(
@@ -84,8 +91,8 @@ ContinousProperty
 }
 
 // ---------------------------------------------------------
-void
-VariablePropertyContainer::SetBinaryVariableValue(QUuid id, bool val) {
+void VariablePropertyContainer::
+SetBinaryVariableValue(QUuid id, bool val) {
 
   if (!binary_variables_->contains(id)) {
     throw VariableIdDoesNotExistException(
@@ -94,11 +101,12 @@ VariablePropertyContainer::SetBinaryVariableValue(QUuid id, bool val) {
 }
 
 // ---------------------------------------------------------
-void
-VariablePropertyContainer::SetDiscreteVariableValue(QUuid id, int val) {
+void VariablePropertyContainer::
+SetDiscreteVariableValue(QUuid id, int val) {
 
   if (!discrete_variables_->contains(id))
-    throw VariableIdDoesNotExistException("Integer variable not found.");
+    throw VariableIdDoesNotExistException(
+        "Integer variable not found.");
   else discrete_variables_->value(id)->setValue(val);
 }
 

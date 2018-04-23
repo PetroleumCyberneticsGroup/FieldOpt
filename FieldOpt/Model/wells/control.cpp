@@ -33,7 +33,8 @@ Control::Control(
     ::Model::Properties::VariablePropertyContainer *variables) {
 
   // -------------------------------------------------------
-  time_step_ = new Properties::DiscreteProperty(entry.time_step);
+  time_step_ =
+      new Properties::DiscreteProperty(entry.time_step);
 
   // -------------------------------------------------------
   if (well.type == ::Settings::Model::WellType::Injector)

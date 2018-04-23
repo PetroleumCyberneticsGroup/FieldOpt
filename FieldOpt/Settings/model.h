@@ -100,20 +100,23 @@ class Model
   // ---------------------------------------------------------
   enum WellCompletionType : int { Perforation=61 };
 
-  enum WellState : int { WellOpen=71, WellShut=72 };
+  enum WellState : int {
+    WellOpen=71, WellShut=72 };
 
-  enum PreferredPhase : int { Oil=81, Water=82, Gas=83, Liquid=84 };
+  enum PreferredPhase : int {
+    Oil=81, Water=82, Gas=83, Liquid=84 };
 
   enum Direction : int { X=91, Y=92, Z=93 };
 
   // ---------------------------------------------------------
-  enum DrillingMode : int { Synchronous=101, Sequential=102 };
+  enum DrillingMode : int {
+    Synchronous=101, Sequential=102 };
 
   inline const string getDrillingStr(DrillingMode drilling) {
     switch (drilling) {
-          case Synchronous : return "Synchronous";
-          case Sequential : return "Sequential";
-      }
+      case Synchronous : return "Synchronous";
+      case Sequential : return "Sequential";
+    }
   }
 
 // ---------------------------------------------------------
@@ -166,38 +169,82 @@ class Model
 
     // -----------------------------------------------------
     struct ControlEntry {
-      double time_step; //!< The time step this control is to be applied at.
-      WellState state; //!< Whether the well is open or shut.
-      ControlMode control_mode; //!< Control mode.
-      double bhp; //!< Bhp target when well is on bhp control.
-      double rate; //!< Rate target when well is on rate control.
-      InjectionType injection_type; //!< Injector type (water/gas)
+
+      // The time step this control is to be applied at.
+      double time_step;
+
+      WellState state; // The time step this control is to
+      // be applied at. Whether the well is open or shut.
+
+      // Control mode.
+      ControlMode control_mode;
+
+      // Bhp target when well is on bhp control.
+      double bhp;
+
+      // Rate target when well is on rate control.
+      double rate;
+
+      // Injector type (water/gas)
+      InjectionType injection_type;
       bool is_variable;
       QString name;
     };
 
     // -----------------------------------------------------
-    PreferredPhase preferred_phase; //!< The preferred phase for the well
-    QString name; //!< The name to be used for the well.
-    WellType type; //!< The well type, i.e. producer or injector.
+    // The preferred phase for the well
+    PreferredPhase preferred_phase;
+
+    // The name to be used for the well.
+    QString name;
+
+    // The well type, i.e. producer or injector.
+    WellType type;
 
     // -----------------------------------------------------
-    double wellbore_radius; //!< The wellbore radius
-    QString group; //!< The group of the well.
+    // The wellbore radius
+    double wellbore_radius;
+
+    // The group of the well.
+    QString group;
 
     // -----------------------------------------------------
     // Drilling sequence for each well
     mutable double drilling_time;
     std::pair<int, int> drilling_order;
 
+    double GetDrillingTime() const
+    { return drilling_time; };
+
+    std::pair<int, int> GetDrillingOrder() const
+    { return drilling_order; };
+
     // -----------------------------------------------------
-    Direction direction; //!< Direction of penetration
-    WellDefinitionType definition_type; //!< How the well path is defined.
-    QList<WellBlock> well_blocks; //!< Well blocks when the well path is defined by WellBlocks.
-    SplinePoint spline_heel; //!< Heel (start) point to be used when calculating the well path from a spline.
-    SplinePoint spline_toe; //!< Toe (end) point to be used when calculating the well path from a spline.
-    PseudoContPosition pseudo_cont_position; //!< Initial position when using pseudo-continous positioning variables.
-    QList<ControlEntry> controls; //!< List of well controls
+    // Direction of penetration
+    Direction direction;
+
+    // How the well path is defined.
+    WellDefinitionType definition_type;
+
+    // Well blocks when well path is defined by WellBlocks.
+    QList<WellBlock> well_blocks;
+
+    // -------------------------------------------------------
+    // Heel (start) point used when
+    // calculating well path from spline.
+    SplinePoint spline_heel;
+
+    // Toe (end) point used when calculating
+    // well path from spline.
+    SplinePoint spline_toe;
+
+    // -------------------------------------------------------
+    // Initial position when using
+    // pseudo-continous positioning variables.
+    PseudoContPosition pseudo_cont_position;
+
+    // List of well controls
+    QList<ControlEntry> controls;
     std::vector<int> verb_vector_;
   };
 
@@ -223,6 +270,7 @@ class Model
   { verb_vector_ = verb_vector; }
   std::vector<int> verb_vector() const { return verb_vector_; }
 
+  // -------------------------------------------------------
   Model::Well getWell(QString well_name);
 
   DrillingMode drillingMode_;

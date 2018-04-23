@@ -42,23 +42,28 @@ WellGroup::WellGroup(
     ::Reservoir::Grid::Grid *grid) {
 
   // -------------------------------------------------------
+  // Select wells from that group; these wells are sorted
+  // by drill sequence (which is given, i.e., non-variable)
+  vector<pair<int, string>> wells_in_group_ =
+      drilling.wseq_grpd_sorted_name[group_nr];
+
+  // -------------------------------------------------------
+  // Set up variable name (concatenate well names)
+  string wname;
+  for (int i = 0; i < wells_in_group_.size(); ++i)
+    wname = wname + wells_in_group_[i].second;
+
+  QString gname = "WellGroup#" +
+      QString::fromStdString(wname) +
+      "#" + QString::number(group_nr);
+
+  // -------------------------------------------------------
   // Set up variable corresponding to well group
   drill_seq_ = new ::Model::Properties::DiscreteProperty(
       drilling.drill_groups_[group_nr]);
 
-  QString gname = "group#" + group_nr;
   drill_seq_->setName(gname);
   variable_container->AddVariable(drill_seq_);
-
-  // -------------------------------------------------------
-  // Use number of group: gnr
-  int gnr = drill_seq_->value();
-
-  // -------------------------------------------------------
-  // Select wells from that group; these wells are sorted
-  // by (given, i.e., non-variable) drill sequence
-  vector<pair<int, string>> wells_in_group_ =
-      drilling.wseq_grpd_sorted_name[gnr];
 
   // -------------------------------------------------------
   // Empty QList to contain wells in group
@@ -68,6 +73,10 @@ WellGroup::WellGroup(
   for (int wnr = 0; wnr < wells_in_group_.size(); ++wnr) {
     string wn = wells_in_group_[wnr].second;
     int orig_wnum = drilling.name_vs_num[wn];
+
+    if (well_settings.verb_vector()[5] >= 1) // idx:5 -> mod
+      cout << FCYAN << "\nWell=" << wn
+           << "\n----------------------------- \n" << AEND;
 
     // -----------------------------------------------------
     group_of_wells_->append(

@@ -376,12 +376,16 @@ Model::Well Model::readSingleWell(QJsonObject json_well) {
     // -------------------------------------------------------------
     // Control mode
     if (QString::compare(
-        "BHP", json_controls.at(i).toObject()["Mode"].toString()) == 0) {
+        "BHP",
+        json_controls.at(i).toObject()["Mode"].toString()) == 0) {
 
       // -----------------------------------------------------------
       control.control_mode = ControlMode::BHPControl;
-      control.bhp = json_controls.at(i).toObject()["BHP"].toDouble();
-      control.name = "BHP#" + well.name + "#" + QString::number(control.time_step);
+      control.bhp = json_controls.at(i)
+          .toObject()["BHP"].toDouble();
+
+      control.name = "BHP#" + well.name + "#"
+          + QString::number(control.time_step);
 
       // -----------------------------------------------------------
     } else if (QString::compare(
@@ -389,8 +393,11 @@ Model::Well Model::readSingleWell(QJsonObject json_well) {
 
       // -----------------------------------------------------------
       control.control_mode = ControlMode::RateControl;
-      control.rate = json_controls.at(i).toObject()["Rate"].toDouble();
-      control.name = "Rate#" + well.name + "#" + QString::number(control.time_step);
+      control.rate = json_controls
+          .at(i).toObject()["Rate"].toDouble();
+
+      control.name = "Rate#" + well.name + "#"
+          + QString::number(control.time_step);
 
     } else {
       throw UnableToParseWellsModelSectionException(

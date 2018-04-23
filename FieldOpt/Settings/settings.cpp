@@ -125,7 +125,9 @@ void Settings::readGlobalSection() {
   try {
 
     // -----------------------------------------------------
-    QJsonObject global = json_driver_->value("Global").toObject();
+    QJsonObject global =
+        json_driver_->value("Global").toObject();
+
     name_ = global["Name"].toString();
     bookkeeper_tolerance_ = global["BookkeeperTolerance"].toDouble();
 

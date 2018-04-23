@@ -59,7 +59,8 @@ class ContinousProperty : public Property
    * \param epsilon Optional tolerance. Default: 0.0
    * \return True if abs(this->value() - other->value()) <= epsilon; otherwise false.
    */
-  bool Equals(const ContinousProperty *other, double epsilon=0.0) const;
+  bool Equals(const ContinousProperty *other,
+              double epsilon=0.0) const;
 
   QString ToString() const;
 

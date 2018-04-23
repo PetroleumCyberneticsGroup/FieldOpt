@@ -38,7 +38,6 @@
 #include "Runner/loggable.hpp"
 #include "Runner/logger.h"
 #include "Utilities/colors.hpp"
-#include "wells/well_group.h"
 
 // ---------------------------------------------------------
 class Logger;
