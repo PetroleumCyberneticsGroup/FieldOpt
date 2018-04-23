@@ -57,6 +57,7 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   // -------------------------------------------------------
   drillseq_ = new Model::Drilling;
   SetDrillingSeq(); // Establishes all fields in drillseq_
+  GetDrillingStr(); // Dbg
 
   // -------------------------------------------------------
   CreateWellGroups();
@@ -71,7 +72,10 @@ Model::Model(Settings::Model* settings, Logger *logger) {
 
   // -------------------------------------------------------
   // Use current drilling seq + drill times for each well
-  UpdateControlTimes();
+  // UpdateControlTimes();
+
+  UpdateNamevsTimeMap();
+  SetDrillTimeVec();
   GetDrillingStr(); // Dbg
 
   // -------------------------------------------------------
@@ -87,9 +91,9 @@ Model::Model(Settings::Model* settings, Logger *logger) {
 }
 
 // =========================================================
-void Model::UpdateControlTimes() {
-
-}
+//void Model::UpdateControlTimes() {
+//
+//}
 
 // =========================================================
 void Model::CreateWellGroups() {
@@ -405,7 +409,7 @@ void Model::GetDrillingStr() {
 
   }
 
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   auto seq_vec_group = drillseq_->wseq_grpd_sorted_name;
   for(int i=0; i < seq_vec_group.size(); ++i) {
 
@@ -531,7 +535,16 @@ void Model::SetDrillingSeq() {
 
   // -------------------------------------------------------
   if (settings_->verb_vector()[5] >= 4) // idx:5 -> mod
-    cout << "[mod]DrillSeq: set up vctrs.- " << endl;
+    cout << "[mod]DrillSeq: set timevec.-- " << endl;
+
+  SetDrillTimeVec();
+
+}
+
+// =========================================================
+void Model::SetDrillTimeVec() {
+
+  drillseq_->wseq_grpd_sorted_vs_time.clear();
 
   // -------------------------------------------------------
   for( int i=0; i < drillseq_->wseq_grpd_sorted_name.size(); ++i ) {
@@ -550,6 +563,20 @@ void Model::SetDrillingSeq() {
     }
 
   }
+}
+
+// =========================================================
+void Model::UpdateNamevsTimeMap() {
+
+  drillseq_->name_vs_time.clear();
+
+  // -------------------------------------------------------
+  for (Wells::Well *w : *wells()) {
+    drillseq_->name_vs_time.emplace(
+        w->name().toStdString(),
+        w->GetDrillingTime());
+  }
 
 }
+
 }

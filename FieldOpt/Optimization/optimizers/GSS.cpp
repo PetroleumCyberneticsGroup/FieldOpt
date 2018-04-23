@@ -341,6 +341,7 @@ GSS::print_dbg_msg_d(string dbg_str, int vlevel, VectorXd eigvec) {
         || dbg_str == "[opt]GGS: expanding.--------- "
         || dbg_str == "[opt]GGS: contracting.------- "
         || dbg_str == "[opt]Perturbations:---------- "
+        || dbg_str == "[opt]Applying constraints.--- "
         ) {
       cout << dbg_str << endl;
 

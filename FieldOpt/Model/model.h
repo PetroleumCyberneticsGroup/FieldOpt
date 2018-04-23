@@ -165,7 +165,11 @@ class Model : public Loggable
    */
   void SetDrillingSeq();
   void GetDrillingStr();
-  void UpdateControlTimes();
+
+  void UpdateNamevsTimeMap();
+  void SetDrillTimeVec();
+
+  // void UpdateControlTimes();
 
  private:
   // -------------------------------------------------------

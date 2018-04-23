@@ -88,14 +88,9 @@ WellGroup::WellGroup(
                                 grid);
     group_wells_->append(well);
 
-    // -----------------------------------------------------
-    auto it = drilling.name_vs_time.find(wn);
-    drilling.name_vs_time.insert(
-        it, std::pair(wn,well->GetDrillingTime()));
-
   }
 
 }
-}
 
+}
 }
