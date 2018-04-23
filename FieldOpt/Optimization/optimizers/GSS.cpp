@@ -143,7 +143,7 @@ QList<Case *> GSS::generate_trial_points(vector<int> dirs) {
 
     // TEMP SHUT OFF
 //    if (int_base.size() > 0) {
-//      trial_point->SetIntegerVarValues(perturb(int_base, dir));
+      // trial_point->SetIntegerVarValues(perturb(int_base, dir));
 //
 //    } else if (rea_base.size() > 0) {
       trial_point->SetRealVarValues(perturb(rea_base, dir));
@@ -199,7 +199,8 @@ void GSS::set_num_vars(Case* base_case) {
 
   int numRvars = (int)base_case->GetRealVarVector().size();
   int numIvars = (int)base_case->GetIntegerVarVector().size();
-  num_vars_ = numRvars + numIvars;
+  // num_vars_ = numRvars + numIvars;
+  num_vars_ = numRvars;
   if (numRvars > 0 && numIvars > 0)
     cout << ("WARNING: Compass search does not handle both "
         "continuous and discrete variables at the same time\n");
