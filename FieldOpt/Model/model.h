@@ -38,16 +38,17 @@
 #include "Runner/loggable.hpp"
 #include "Runner/logger.h"
 #include "Utilities/colors.hpp"
+#include "wells/well_group.h"
 
 // ---------------------------------------------------------
 class Logger;
 
 // ---------------------------------------------------------
-namespace Model {
-namespace WellGroups {
-class WellGroup;
-}
-}
+//namespace Model {
+//namespace WellGroups {
+//class WellGroup;
+//}
+//}
 
 // ---------------------------------------------------------
 namespace Model {
@@ -94,15 +95,15 @@ class Model : public Loggable
    * \brief wells Get a list of all the wells in the model.
    */
   QList<Wells::Well *> *wells(int gnr) const
-  { return well_groups_->at(gnr); }
+  { return well_groups_->at(gnr)->wells_; }
 
-  QList<WellGroups::WellGroup *> *well_group(int gnr) const
-  { return well_groups_[gnr]; }
-  
+  QList<WellGroups::WellGroup *> *well_groups() const
+  { return well_groups_; }
+
   // -------------------------------------------------------
   /*!
-   * \brief ApplyCase Applies the variable values from a
-   * case to the variables in the model.
+   * \brief ApplyCase Applies the variable values
+   * from a case to the variables in the model.
    * \param c Case to apply the variable values of.
    */
   void ApplyCase(Optimization::Case *c,

@@ -29,7 +29,7 @@
 #include "Settings/settings.h"
 #include "Settings/model.h"
 #include "well.h"
-#include "Model/model.h"
+// #include "Model/model.h"
 #include "Reservoir/grid/eclgrid.h"
 #include "Model/properties/variable_property_container.h"
 #include "Model/properties/discrete_property.h"
@@ -39,6 +39,11 @@
 #include <string>
 #include <vector>
 #include <map>
+
+// ---------------------------------------------------------
+namespace Model {
+struct Drilling{};
+}
 
 // ---------------------------------------------------------
 namespace Model {
@@ -59,6 +64,13 @@ class WellGroup {
 
   // -------------------------------------------------------
   QList<Wells::Well *> *wells_;
+
+  // -------------------------------------------------------
+  /*!
+   * \brief wells Get a list of all the wells in the model.
+   */
+  QList<Wells::Well *> *wells() const
+  { return wells_; }
 
   ::Model::Properties::DiscreteProperty *drill_seq_;
 

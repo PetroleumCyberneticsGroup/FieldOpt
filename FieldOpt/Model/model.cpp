@@ -317,90 +317,94 @@ Model::Summary::GetWellDescriptions() {
   map<string, Loggable::WellDescription> wellmap;
 
   // -------------------------------------------------------
-  for (auto well : *model_->wells()) {
+  for (auto group : *model_->well_groups()) {
 
-    // -----------------------------------------------------
-    Loggable::WellDescription wdesc;
-    wdesc.name = well->name().toStdString();
-    wdesc.group = well->group().toStdString();
-    wdesc.wellbore_radius = boost::lexical_cast<string>(well->wellbore_radius());
-    wdesc.type = well->IsProducer() ? "Producer" : "Injector";
+    // -------------------------------------------------------
+    for (auto well : *group->wells()) {
 
-    // -----------------------------------------------------
-    switch (well->preferred_phase()) {
-      case Settings::Model::PreferredPhase::Oil:
-        wdesc.pref_phase = "Oil"; break;
+      // -----------------------------------------------------
+      Loggable::WellDescription wdesc;
+      wdesc.name = well->name().toStdString();
+      wdesc.group = well->group().toStdString();
+      wdesc.wellbore_radius = boost::lexical_cast<string>(well->wellbore_radius());
+      wdesc.type = well->IsProducer() ? "Producer" : "Injector";
 
-      case Settings::Model::PreferredPhase::Gas:
-        wdesc.pref_phase = "Gas"; break;
+      // -----------------------------------------------------
+      switch (well->preferred_phase()) {
+        case Settings::Model::PreferredPhase::Oil:wdesc.pref_phase = "Oil";
+          break;
 
-      case Settings::Model::PreferredPhase::Water:
-        wdesc.pref_phase = "Water"; break;
+        case Settings::Model::PreferredPhase::Gas:wdesc.pref_phase = "Gas";
+          break;
 
-      case Settings::Model::PreferredPhase::Liquid:
-        wdesc.pref_phase = "Liquid"; break;
-    }
+        case Settings::Model::PreferredPhase::Water:wdesc.pref_phase = "Water";
+          break;
 
-    // -----------------------------------------------------
-    // Spline
-    if (model_->variables()->
-        GetWellSplineVariables(well->name()).size() > 0) {
-      wdesc.def_type = "Spline";
+        case Settings::Model::PreferredPhase::Liquid:wdesc.pref_phase = "Liquid";
+          break;
+      }
 
-      // ---------------------------------------------------
-      for (auto prop :
-          model_->variables()->
-              GetWellSplineVariables(well->name())) {
+      // -----------------------------------------------------
+      // Spline
+      if (model_->variables()->
+          GetWellSplineVariables(well->name()).size() > 0) {
+        wdesc.def_type = "Spline";
 
-        // -------------------------------------------------
-        if (prop->propertyInfo().spline_end ==
-            Properties::Property::SplineEnd::Heel) {
+        // ---------------------------------------------------
+        for (auto prop :
+            model_->variables()->
+                GetWellSplineVariables(well->name())) {
 
-          switch (prop->propertyInfo().coord) {
-            case Properties::Property::Coordinate::x:
-              wdesc.spline.heel_x = prop->value(); break;
+          // -------------------------------------------------
+          if (prop->propertyInfo().spline_end ==
+              Properties::Property::SplineEnd::Heel) {
 
-            case Properties::Property::Coordinate::y:
-              wdesc.spline.heel_y = prop->value(); break;
+            switch (prop->propertyInfo().coord) {
+              case Properties::Property::Coordinate::x:wdesc.spline.heel_x = prop->value();
+                break;
 
-            case Properties::Property::Coordinate::z:
-              wdesc.spline.heel_z = prop->value(); break;
-          }
-        } else {
-          switch (prop->propertyInfo().coord) {
-            case Properties::Property::Coordinate::x:
-              wdesc.spline.toe_x = prop->value(); break;
+              case Properties::Property::Coordinate::y:wdesc.spline.heel_y = prop->value();
+                break;
 
-            case Properties::Property::Coordinate::y:
-              wdesc.spline.toe_y = prop->value(); break;
+              case Properties::Property::Coordinate::z:wdesc.spline.heel_z = prop->value();
+                break;
+            }
+          } else {
+            switch (prop->propertyInfo().coord) {
+              case Properties::Property::Coordinate::x:wdesc.spline.toe_x = prop->value();
+                break;
 
-            case Properties::Property::Coordinate::z:
-              wdesc.spline.toe_z = prop->value(); break;
+              case Properties::Property::Coordinate::y:wdesc.spline.toe_y = prop->value();
+                break;
+
+              case Properties::Property::Coordinate::z:wdesc.spline.toe_z = prop->value();
+                break;
+            }
           }
         }
+
+      } else {
+        wdesc.def_type = "Blocks";
       }
 
-    } else {
-      wdesc.def_type =  "Blocks";
+      // -----------------------------------------------------
+      // Controls
+      for (Wells::Control *cont : *well->controls()) {
+        Loggable::ControlDescription cd;
+        if (cont->mode() == Settings::Model::ControlMode::RateControl) {
+          cd.control = "Rate";
+          cd.value = cont->rate();
+        } else {
+          cd.control = "BHP";
+          cd.value = cont->bhp();
+        }
+        cd.state = cont->open() ? "Open" : "Shut";
+        cd.time_step = cont->time_step();
+        wdesc.controls.push_back(cd);
+      }
+      wellmap[well->name().toStdString()] = wdesc;
     }
 
-    // -----------------------------------------------------
-    // Controls
-    for (Wells::Control *cont : *well->controls()) {
-      Loggable::ControlDescription cd;
-      if (cont->mode() == Settings::Model::ControlMode::RateControl) {
-        cd.control = "Rate";
-        cd.value = cont->rate();
-      }
-      else {
-        cd.control = "BHP";
-        cd.value = cont->bhp();
-      }
-      cd.state = cont->open() ? "Open" : "Shut";
-      cd.time_step = cont->time_step();
-      wdesc.controls.push_back(cd);
-    }
-    wellmap[well->name().toStdString()] = wdesc;
   }
 
   return wellmap;
