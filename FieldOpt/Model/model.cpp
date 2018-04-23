@@ -53,30 +53,27 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   variable_container_ = new Properties::VariablePropertyContainer();
 
   // -------------------------------------------------------
-  // if (settings_->verb_vector()[5] >= 1) // idx:5 -> mod
-  //  cout << "[mod]Adding wells:----------- \n";
-
-  // -------------------------------------------------------
   drillseq_ = new Model::Drilling;
   SetDrillingSeq(); // Establishes all fields in drillseq_
   GetDrillingStr(); // Dbg
 
-//  if(drillseq_->drill_groups_.size() > 1) {
-
   // -------------------------------------------------------
-    CreateWellGroups();
+  CreateWellGroups();
 
-//  } else {
-    // -----------------------------------------------------
-//    CreateWells();
-//  }
+  // For subsequent calculations that are group-independent
+  wells_ = new QList<Wells::Well *>();
+  for (auto group : *well_groups()) {
+    for (auto well : *group->group_wells()) {
+      wells_->append(well);
+    }
+  }
 
   // -------------------------------------------------------
   variable_container_->CheckVariableNameUniqueness();
   logger_ = logger;
   logger_->AddEntry(new Summary(this));
 
-  // -------------------------------------------------------
+// -------------------------------------------------------
   if (settings_->verb_vector()[5] > 1) // idx:5 -> mod (Model)
     cout << BRED << "[mod]Finished building Model." << AEND << endl;
 
@@ -92,10 +89,10 @@ void Model::CreateWellGroups() {
   for (int gnr = 0; gnr < drillseq_->drill_groups_.size(); ++gnr) {
 
     // -----------------------------------------------------
-    auto wname = settings_->wells().at(gnr).name.toStdString();
-    if (settings_->verb_vector()[5] >= 1) // idx:5 -> mod (Model)
-      cout << BCYAN << "\nGroup=" << wname
-           << "\n----------------------------- \n" << AEND;
+    if (settings_->verb_vector()[5] >= 1) { // idx:5 -> mod
+      cout << endl << BCYAN << "Group = " << gnr << AEND << endl;
+      cout << "----------------------------- \n";
+    }
 
     // -----------------------------------------------------
     well_groups_->append(
@@ -106,40 +103,6 @@ void Model::CreateWellGroups() {
                                   grid_));
   }
 }
-
-// =========================================================
-//void Model::CreateWells() {
-//
-//  // -------------------------------------------------------
-//  // Create wells
-//  wells_ = new QList<Wells::Well *>();
-//  for (int wnr = 0; wnr < settings_->wells().size(); ++wnr) {
-//
-//    // -----------------------------------------------------
-//    auto wname = settings_->wells().at(wnr).name.toStdString();
-//    if (settings_->verb_vector()[5] >= 1) // idx:5 -> mod (Model)
-//      cout << FCYAN << "\nWell=" << wname
-//           << "\n----------------------------- \n" << AEND;
-//
-//    // -----------------------------------------------------
-//    wells_->append(new Wells::Well(*settings_,
-//                                   wnr,
-//                                   variable_container_,
-//                                   grid_));
-//  }
-//
-//}
-
-//// =========================================================
-//Wells::Well* Model::getWell(QString well_name) {
-//
-//  // -------------------------------------------------------
-//  for (int wnr = 0; wnr < wells_->size(); ++wnr) {
-//    if(wells_->at(wnr)->name().compare(well_name)) {
-//      return wells_->at(wnr);
-//    }
-//  }
-//}
 
 // =========================================================
 void Model::Finalize() {
@@ -172,11 +135,9 @@ void Model::ApplyCase(Optimization::Case *c, int rank) {
 
   // -------------------------------------------------------
   int cumulative_wic_time = 0;
-  for (WellGroups::WellGroup *g : *well_groups_) {
-    for (Wells::Well *w : *g->wells_) {
+    for (Wells::Well *w : *wells()) {
       w->Update(rank);
       cumulative_wic_time += w->GetTimeSpentInWIC();
-    }
   }
 
   // -------------------------------------------------------
@@ -204,17 +165,17 @@ void Model::verify() {
 
 // =========================================================
 void Model::verifyWells() {
-  for (WellGroups::WellGroup *g : *well_groups_) {
-    for (Wells::Well *w : *g->wells_) {
-      verifyWellTrajectory(w);
-    }
+  for (Wells::Well *w : *wells()) {
+    verifyWellTrajectory(w);
   }
 }
 
 // =========================================================
 void Model::verifyWellTrajectory(Wells::Well *w) {
 
-  for (Wells::Wellbore::WellBlock *wb : *w->trajectory()->GetWellBlocks()) {
+  // -------------------------------------------------------
+  for (Wells::Wellbore::WellBlock
+        *wb : *w->trajectory()->GetWellBlocks()) {
     verifyWellBlock(wb);
   }
 }
@@ -222,6 +183,7 @@ void Model::verifyWellTrajectory(Wells::Well *w) {
 // =========================================================
 void Model::verifyWellBlock(Wells::Wellbore::WellBlock *wb) {
 
+  // -------------------------------------------------------
   if (wb->i() < 1 || wb->i() > grid()->Dimensions().nx ||
       wb->j() < 1 || wb->j() > grid()->Dimensions().ny ||
       wb->k() < 1 || wb->k() > grid()->Dimensions().nz)
@@ -317,94 +279,100 @@ Model::Summary::GetWellDescriptions() {
   map<string, Loggable::WellDescription> wellmap;
 
   // -------------------------------------------------------
-  for (auto group : *model_->well_groups()) {
+  for (auto well : *model_->wells()) {
 
-    // -------------------------------------------------------
-    for (auto well : *group->wells()) {
+    // -----------------------------------------------------
+    Loggable::WellDescription wdesc;
+    wdesc.name = well->name().toStdString();
+    wdesc.group = well->group().toStdString();
+    wdesc.wellbore_radius =
+        boost::lexical_cast<string>(well->wellbore_radius());
+    wdesc.type = well->IsProducer() ? "Producer" : "Injector";
 
-      // -----------------------------------------------------
-      Loggable::WellDescription wdesc;
-      wdesc.name = well->name().toStdString();
-      wdesc.group = well->group().toStdString();
-      wdesc.wellbore_radius = boost::lexical_cast<string>(well->wellbore_radius());
-      wdesc.type = well->IsProducer() ? "Producer" : "Injector";
+    // -----------------------------------------------------
+    switch (well->preferred_phase()) {
+      case Settings::Model::PreferredPhase::
+        Oil:wdesc.pref_phase = "Oil";
+        break;
 
-      // -----------------------------------------------------
-      switch (well->preferred_phase()) {
-        case Settings::Model::PreferredPhase::Oil:wdesc.pref_phase = "Oil";
-          break;
+      case Settings::Model::PreferredPhase::
+        Gas:wdesc.pref_phase = "Gas";
+        break;
 
-        case Settings::Model::PreferredPhase::Gas:wdesc.pref_phase = "Gas";
-          break;
+      case Settings::Model::PreferredPhase::
+        Water:wdesc.pref_phase = "Water";
+        break;
 
-        case Settings::Model::PreferredPhase::Water:wdesc.pref_phase = "Water";
-          break;
-
-        case Settings::Model::PreferredPhase::Liquid:wdesc.pref_phase = "Liquid";
-          break;
-      }
-
-      // -----------------------------------------------------
-      // Spline
-      if (model_->variables()->
-          GetWellSplineVariables(well->name()).size() > 0) {
-        wdesc.def_type = "Spline";
-
-        // ---------------------------------------------------
-        for (auto prop :
-            model_->variables()->
-                GetWellSplineVariables(well->name())) {
-
-          // -------------------------------------------------
-          if (prop->propertyInfo().spline_end ==
-              Properties::Property::SplineEnd::Heel) {
-
-            switch (prop->propertyInfo().coord) {
-              case Properties::Property::Coordinate::x:wdesc.spline.heel_x = prop->value();
-                break;
-
-              case Properties::Property::Coordinate::y:wdesc.spline.heel_y = prop->value();
-                break;
-
-              case Properties::Property::Coordinate::z:wdesc.spline.heel_z = prop->value();
-                break;
-            }
-          } else {
-            switch (prop->propertyInfo().coord) {
-              case Properties::Property::Coordinate::x:wdesc.spline.toe_x = prop->value();
-                break;
-
-              case Properties::Property::Coordinate::y:wdesc.spline.toe_y = prop->value();
-                break;
-
-              case Properties::Property::Coordinate::z:wdesc.spline.toe_z = prop->value();
-                break;
-            }
-          }
-        }
-
-      } else {
-        wdesc.def_type = "Blocks";
-      }
-
-      // -----------------------------------------------------
-      // Controls
-      for (Wells::Control *cont : *well->controls()) {
-        Loggable::ControlDescription cd;
-        if (cont->mode() == Settings::Model::ControlMode::RateControl) {
-          cd.control = "Rate";
-          cd.value = cont->rate();
-        } else {
-          cd.control = "BHP";
-          cd.value = cont->bhp();
-        }
-        cd.state = cont->open() ? "Open" : "Shut";
-        cd.time_step = cont->time_step();
-        wdesc.controls.push_back(cd);
-      }
-      wellmap[well->name().toStdString()] = wdesc;
+      case Settings::Model::PreferredPhase::
+        Liquid:wdesc.pref_phase = "Liquid";
+        break;
     }
 
+    // -----------------------------------------------------
+    // Spline
+    if (model_->variables()->
+        GetWellSplineVariables(well->name()).size() > 0) {
+      wdesc.def_type = "Spline";
+
+      // ---------------------------------------------------
+      for (auto prop :
+          model_->variables()->
+              GetWellSplineVariables(well->name())) {
+
+        // -------------------------------------------------
+        if (prop->propertyInfo().spline_end ==
+            Properties::Property::SplineEnd::Heel) {
+
+          switch (prop->propertyInfo().coord) {
+            case Properties::Property::Coordinate::x:
+              wdesc.spline.heel_x = prop->value();
+              break;
+
+            case Properties::Property::Coordinate::y:
+              wdesc.spline.heel_y = prop->value();
+              break;
+
+            case Properties::Property::Coordinate::z:
+              wdesc.spline.heel_z = prop->value();
+              break;
+          }
+        } else {
+          switch (prop->propertyInfo().coord) {
+            case Properties::Property::Coordinate::x:
+              wdesc.spline.toe_x = prop->value();
+              break;
+
+            case Properties::Property::Coordinate::y:
+              wdesc.spline.toe_y = prop->value();
+              break;
+
+            case Properties::Property::Coordinate::z:
+              wdesc.spline.toe_z = prop->value();
+              break;
+          }
+        }
+      }
+
+    } else {
+      wdesc.def_type = "Blocks";
+    }
+
+    // -----------------------------------------------------
+    // Controls
+    for (Wells::Control *cont : *well->controls()) {
+      Loggable::ControlDescription cd;
+      if (cont->mode() == Settings::Model::ControlMode::RateControl) {
+        cd.control = "Rate";
+        cd.value = cont->rate();
+      } else {
+        cd.control = "BHP";
+        cd.value = cont->bhp();
+      }
+      cd.state = cont->open() ? "Open" : "Shut";
+      cd.time_step = cont->time_step();
+      wdesc.controls.push_back(cd);
+    }
+    wellmap[well->name().toStdString()] = wdesc;
   }
 
   return wellmap;
@@ -453,14 +421,14 @@ void Model::GetDrillingStr() {
 void Model::SetDrillingSeq() {
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[5] >= 1) // idx:5 -> mod
-    cout << "\n[mod]Compute drilling seq.--- \n";
+  if (settings_->verb_vector()[5] >= 2) // idx:5 -> mod
+    cout << "[mod]Computing drilling seq.- " << endl;
   drillseq_->mode = settings_->drillingMode_;
 
   // -------------------------------------------------------
   // Main drilling name_vs_order maps (pairs)
-  // if (settings_->verb_vector()[5] >= 2) // idx:5 -> mod
-    cout << "\n[mod]DrillSeq: set up maps.-- \n";
+  if (settings_->verb_vector()[5] >= 4) // idx:5 -> mod
+    cout << "[mod]DrillSeq: set up maps.-- " << endl;
 
   // -------------------------------------------------------
   for (int i = 0; i < settings_->wells().size(); ++i) {
@@ -485,8 +453,8 @@ void Model::SetDrillingSeq() {
   // -------------------------------------------------------
   // Use multimap to group well pairs (<int, pair<int, string>>)
   // into groups
-   // if (settings_->verb_vector()[5] >= 2) // idx:5 -> mod
-    cout << "\n[mod]DrillSeq: multimap.----- \n";
+  if (settings_->verb_vector()[5] >= 4) // idx:5 -> mod
+    cout << "[mod]DrillSeq: multimap.----- " << endl;
 
   // -------------------------------------------------------
   std::set<int> groups;
@@ -516,8 +484,8 @@ void Model::SetDrillingSeq() {
 
   // -----------------------------------------------------
   // Find equal ranges in multimap
-  //if (settings_->verb_vector()[5] >= 2) // idx:5 -> mod
-    cout << "\n[mod]DrillSeq: find ranges.-- \n";
+  if (settings_->verb_vector()[5] >= 4) // idx:5 -> mod
+    cout << "[mod]DrillSeq: find ranges.-- " << endl;
 
   // -------------------------------------------------------
   for (auto i = drillseq_->mp_wells_into_groups.begin();
@@ -546,8 +514,8 @@ void Model::SetDrillingSeq() {
   }
 
   // -------------------------------------------------------
-  //if (settings_->verb_vector()[5] >= 2) // idx:5 -> mod
-    cout << "\n[mod]DrillSeq: set up vctrs.- \n";
+  if (settings_->verb_vector()[5] >= 4) // idx:5 -> mod
+    cout << "[mod]DrillSeq: set up vctrs.- " << endl;
 
   // -------------------------------------------------------
   for( int i=0; i < drillseq_->wseq_grpd_sorted_name.size(); ++i ) {

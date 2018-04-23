@@ -47,7 +47,7 @@ GSS::GSS(Settings::Optimizer *settings,
   realvar_uuid_ = GetTentativeBestCase()->GetRealVarIdVector();
   varcont_ = variables;
 
-  print_dbg_msg("[opt]Init. Abs.Class GSS.---- ", 1);
+  print_dbg_msg_d("[opt]Init. Abs.Class GSS.---- ", 1);
 
 //  // -------------------------------------------------------------
 //  // Override constraint_handler_ from optimizer.cpp
@@ -81,11 +81,13 @@ Optimizer::TerminationCondition GSS::IsFinished() {
 
 // ---------------------------------------------------------
 void GSS::expand(vector<int> dirs) {
-  print_dbg_msg("[opt]GGS: expanding.--------- ", 2);
+  print_dbg_msg_d("[opt]GGS: expanding.--------- ", 2);
+
+  // -------------------------------------------------------
   if (dirs[0] == -1) {
     step_lengths_ = step_lengths_ * expan_fac_;
-  }
-  else {
+
+  } else {
     for (int dir : dirs)
       step_lengths_(dir) = step_lengths_(dir) * expan_fac_;
   }
@@ -93,11 +95,13 @@ void GSS::expand(vector<int> dirs) {
 
 // ---------------------------------------------------------
 void GSS::contract(vector<int> dirs) {
-  print_dbg_msg("[opt]GGS: contracting.------- ", 2);
+  print_dbg_msg_d("[opt]GGS: contracting.------- ", 2);
+
+  // -------------------------------------------------------
   if (dirs[0] == -1) {
     step_lengths_ = step_lengths_ * contr_fac_;
-  }
-  else {
+
+  } else {
     for (int dir : dirs)
       step_lengths_(dir) = step_lengths_(dir) * contr_fac_;
   }
@@ -105,37 +109,58 @@ void GSS::contract(vector<int> dirs) {
 
 // ---------------------------------------------------------
 QList<Case *> GSS::generate_trial_points(vector<int> dirs) {
-  // Generating sample points
-  auto trial_points = QList<Case *>();
-  if (dirs[0] == -1)
-    dirs = range(0, (int)directions_.size(), 1);
-  print_dbg_msg("[opt]Generating trial points. ", 1);
 
   // -------------------------------------------------------
-  // Get base vectors
-  VectorXi int_base = GetTentativeBestCase()->GetIntegerVarVector();
+  // Generating sample points
+  auto trial_points = QList<Case *>();
+
+  // -------------------------------------------------------
+  if (dirs[0] == -1)
+    dirs = range(0, (int)directions_.size(), 1);
+  print_dbg_msg_d("[opt]Generating trial points. ", 1);
+
+  // -------------------------------------------------------
+  // Get base vectors (real)
   VectorXd rea_base = GetTentativeBestCase()->GetRealVarVector();
-  print_dbg_msg("[opt]GetRealVarVector:------- ", 1, rea_base);
+  print_dbg_msg_d("[opt]GetRealVarVector:------- ", 1, rea_base);
+
+  // Get base vectors (int)
+  VectorXi int_base = GetTentativeBestCase()->GetIntegerVarVector();
+  print_dbg_msg_i("[opt]GetIntVarVector:-------- ", 1, int_base);
 
   // -------------------------------------------------------
   // Develop sampling points using base vector
-  print_dbg_msg("[opt]Perturbations:---------- ", 2);
+  print_dbg_msg_d("[opt]Perturbations:---------- ", 2);
+
+  // -------------------------------------------------------
+  // Set up in settings:
+  // Upper-level Optimization section: includes Optimizers
+  // + an overall configuration subsection with the following
+  // fields:
+
   for (int dir : dirs) {
     auto trial_point = new Case(GetTentativeBestCase());
-    if (int_base.size() > 0)
-      trial_point->SetIntegerVarValues(perturb(int_base, dir));
-    else if (rea_base.size() > 0)
-      trial_point->SetRealVarValues(perturb(rea_base, dir));
 
+    // TEMP SHUT OFF
+//    if (int_base.size() > 0) {
+//      trial_point->SetIntegerVarValues(perturb(int_base, dir));
+//
+//    } else if (rea_base.size() > 0) {
+      trial_point->SetRealVarValues(perturb(rea_base, dir));
+//    }
+
+    // -----------------------------------------------------
     trial_point->set_origin_data(GetTentativeBestCase(),
                                  dir, step_lengths_(dir));
+
+    // -----------------------------------------------------
     // Append to trial points
     trial_points.append(trial_point);
   }
 
   // -------------------------------------------------------
   // Apply constraints
-  print_dbg_msg("[opt]Applying constraints.--- ", 1);
+  print_dbg_msg_d("[opt]Applying constraints.--- ", 1);
   for (Case *c : trial_points)
     constraint_handler_->SnapCaseToConstraints(c);
 
@@ -153,7 +178,7 @@ GSS::perturb(Matrix<T, Dynamic, 1> base, int dir) {
 
   // -------------------------------------------------------
   VectorXd vec = perturbation.template cast<double>();
-  print_dbg_msg("[opt]Perturbations.all:------ ", 2, vec);
+  print_dbg_msg_d("[opt]Perturbations.all:------ ", 2, vec);
   return perturbation;
 }
 
@@ -161,7 +186,7 @@ GSS::perturb(Matrix<T, Dynamic, 1> base, int dir) {
 bool GSS::is_converged() {
 
   // -------------------------------------------------------
-  print_dbg_msg("[opt]Conv.check_tol.vector:-- ", 2, step_tol_);
+  print_dbg_msg_d("[opt]Conv.check_tol.vector:-- ", 2, step_tol_);
   for (int i = 0; i < step_lengths_.size(); ++i) {
     if (step_lengths_(i) >= step_tol_(i))
       return false;
@@ -177,7 +202,7 @@ void GSS::set_num_vars(Case* base_case) {
   num_vars_ = numRvars + numIvars;
   if (numRvars > 0 && numIvars > 0)
     cout << ("WARNING: Compass search does not handle both "
-        "continuous and discrete variables at the same time");
+        "continuous and discrete variables at the same time\n");
 }
 
 // ---------------------------------------------------------
@@ -187,7 +212,7 @@ void GSS::set_contraction_factor(){
   assert(contr_fac_ < 1.0);
 
   VectorXd vec(1); vec << contr_fac_;
-  print_dbg_msg("[opt]Contraction factor:----- ", 1, vec);
+  print_dbg_msg_d("[opt]Contraction factor:----- ", 1, vec);
 }
 
 // ---------------------------------------------------------
@@ -197,7 +222,7 @@ void GSS::set_expansion_factor(){
   assert(expan_fac_ >= 1.0);
 
   VectorXd vec(1); vec << expan_fac_;
-  print_dbg_msg("[opt]Expansion factor:------- ", 1, vec);
+  print_dbg_msg_d("[opt]Expansion factor:------- ", 1, vec);
 }
 
 // ---------------------------------------------------------
@@ -231,38 +256,54 @@ void GSS::set_step_vector(double isval,
   // -------------------------------------------------------
   VectorXd vec(3); vec[0] = (double)st_vec.rows();
   vec[1] = (double)vecxyz.size(); vec[2] = (double)sval.size();
-  print_dbg_msg("[opt]Sz step_length/step_tol: ", 2, vec);
+  print_dbg_msg_d("[opt]Sz step_length/step_tol: ", 2, vec);
 
   // -------------------------------------------------------
   // Differentiate positioning of xyz components in var vector
   // based on current base case variable information
   if(vecxyz.length() > 0) {
     int nvar = realvar_uuid_.length();
+
+    // -----------------------------------------------------
     for (int i = 0; i < realvar_uuid_.length(); ++i) {
       auto prop = varcont_->GetContinousVariable(realvar_uuid_[i]);
-      if (prop->propertyInfo().spline_end == Model::Properties::Property::SplineEnd::Heel ||
-          prop->propertyInfo().spline_end == Model::Properties::Property::SplineEnd::Toe) {
+
+      // ---------------------------------------------------
+      if (prop->propertyInfo().spline_end ==
+          Model::Properties::Property::SplineEnd::Heel
+          || prop->propertyInfo().spline_end ==
+              Model::Properties::Property::SplineEnd::Toe) {
+
+        // -------------------------------------------------
         switch (prop->propertyInfo().coord) {
+
+          // -----------------------------------------------
           case Model::Properties::Property::Coordinate::x:
             st_vec[i] = vecxyz[0];
             st_vec[i+nvar] = vecxyz[0]; break;// x
+
+            // ---------------------------------------------
           case Model::Properties::Property::Coordinate::y:
             st_vec[i] = vecxyz[1];
             st_vec[i+nvar] = vecxyz[1]; break;// y
+
+            // ---------------------------------------------
           case Model::Properties::Property::Coordinate::z:
             st_vec[i] = vecxyz[2];
             st_vec[i+nvar] = vecxyz[2]; break;// z
         }
-      } else if (sval.length() == 1){
+
+      } else if (sval.length() == 1) {
         st_vec[i] = sval[0];
         st_vec[i+nvar] = sval[0];
       }
     }
+
   } else {
     st_vec.fill(sval[0]);
   }
 
-  print_dbg_msg("[opt]Step length/tol vector:-- ", 2, st_vec);
+  print_dbg_msg_d("[opt]Step length/tol vector:- ", 2, st_vec);
 }
 
 // ---------------------------------------------------------
@@ -279,9 +320,17 @@ Case * GSS::dequeue_case_with_worst_origin() {
 
 // ---------------------------------------------------------
 void
-GSS::print_dbg_msg(string dbg_str, int vlevel, VectorXd eigvec) {
+GSS::print_dbg_msg_i(string dbg_str, int vlevel, VectorXi eigvec) {
 
-  if (settings_->verb_vector()[6] >= vlevel) { // idx:6 -> opt (Optimization)
+  print_dbg_msg_d(dbg_str, vlevel, eigvec.cast<double> ());
+
+}
+
+// ---------------------------------------------------------
+void
+GSS::print_dbg_msg_d(string dbg_str, int vlevel, VectorXd eigvec) {
+
+  if (settings_->verb_vector()[6] >= vlevel) { // idx:6 -> opt
 
     // -----------------------------------------------------
     if (   dbg_str == "[opt]Init. Abs.Class GSS.---- "
@@ -295,7 +344,8 @@ GSS::print_dbg_msg(string dbg_str, int vlevel, VectorXd eigvec) {
       cout << dbg_str << endl;
 
       // ---------------------------------------------------
-    } else if (dbg_str == "[opt]GetRealVarVector:------- ") {
+    } else if (dbg_str == "[opt]GetRealVarVector:------- "
+        || dbg_str == "[opt]GetIntVarVector:-------- ") {
       cout << dbg_str << endl;
       IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");
       cout << setw(10) << eigvec.format(CleanFmt) << endl;
@@ -335,7 +385,7 @@ GSS::print_dbg_msg(string dbg_str, int vlevel, VectorXd eigvec) {
       cout << "[opt]Sz init.stp lenght/tol:- " << eigvec[2] << endl;
 
       // ---------------------------------------------------
-    } else if (dbg_str == "[opt]Step length/tol vector:-- ") {
+    } else if (dbg_str == "[opt]Step length/tol vector:- ") {
       cout << dbg_str << endl;
       cout << fixed << setprecision(1);
       IOFormat CleanFmt(1, 0, "", "", "", "", "[", "]");

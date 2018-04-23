@@ -114,6 +114,8 @@ void Settings::readDriverFile() {
   readGlobalSection();
   readSimulatorSection();
   readModelSection();
+
+  readOptimizationSection();
   readOptimizerSection();
 
   file->close();

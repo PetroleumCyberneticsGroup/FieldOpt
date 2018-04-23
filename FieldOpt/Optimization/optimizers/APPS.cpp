@@ -36,7 +36,7 @@ APPS::APPS(Settings::Optimizer *settings,
 {
 
   directions_ = GSSPatterns::Compass(num_vars_);
-  GSS::print_dbg_msg("[opt]Init. Asynch.PttrnSrch.-- ", 1);
+  GSS::print_dbg_msg_d("[opt]Init. Asynch.PttrnSrch.-- ", 1);
 
   set_step_lengths();
   assert(step_lengths_.size() == directions_.size());

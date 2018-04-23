@@ -38,17 +38,17 @@
 #include "Runner/loggable.hpp"
 #include "Runner/logger.h"
 #include "Utilities/colors.hpp"
-#include "wells/well_group.h"
+//#include "wells/well_group.h"
 
 // ---------------------------------------------------------
 class Logger;
 
 // ---------------------------------------------------------
-//namespace Model {
-//namespace WellGroups {
-//class WellGroup;
-//}
-//}
+namespace Model {
+namespace WellGroups {
+class WellGroup;
+}
+}
 
 // ---------------------------------------------------------
 namespace Model {
@@ -91,14 +91,19 @@ class Model : public Loggable
   { return variable_container_; }
 
   // -------------------------------------------------------
-  /*!
-   * \brief wells Get a list of all the wells in the model.
-   */
-  QList<Wells::Well *> *wells(int gnr) const
-  { return well_groups_->at(gnr)->wells_; }
+  // QList<Wells::Well *> *wells_in_group(int gnr) const
+  // { return well_groups_->at(gnr)->wells_; }
 
   QList<WellGroups::WellGroup *> *well_groups() const
   { return well_groups_; }
+
+  // -------------------------------------------------------
+  /*!
+   * \brief wells Get a list of all the wells in the model.
+   */
+  QList<Wells::Well *> *wells() const {
+    return wells_;
+  }
 
   // -------------------------------------------------------
   /*!
@@ -161,15 +166,12 @@ class Model : public Loggable
   void SetDrillingSeq();
   void GetDrillingStr();
 
-//  Wells::Well* getWell(QString well_name);
-
-
  private:
   // -------------------------------------------------------
   Reservoir::Grid::Grid *grid_;
   Properties::VariablePropertyContainer *variable_container_;
 
-  // QList<Wells::Well *> *wells_;
+  QList<Wells::Well *> *wells_;
   QList<WellGroups::WellGroup *> *well_groups_;
   Drilling *drillseq_;
 

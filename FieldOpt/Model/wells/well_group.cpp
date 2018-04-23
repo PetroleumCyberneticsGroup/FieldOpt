@@ -33,7 +33,7 @@ using std::pair;
 using std::vector;
 using std::string;
 
-// ---------------------------------------------------------
+// =========================================================
 WellGroup::WellGroup(
     Settings::Model well_settings,
     int group_nr,
@@ -67,7 +67,7 @@ WellGroup::WellGroup(
 
   // -------------------------------------------------------
   // Empty QList to contain wells in group
-  wells_ = new QList<Wells::Well *>();
+  group_wells_ = new QList<Wells::Well *>();
 
   // -------------------------------------------------------
   for (int wnr = 0; wnr < wells_in_group_.size(); ++wnr) {
@@ -79,7 +79,7 @@ WellGroup::WellGroup(
            << "\n----------------------------- \n" << AEND;
 
     // -----------------------------------------------------
-    wells_->append(new Wells::Well(well_settings,
+    group_wells_->append(new Wells::Well(well_settings,
                                   orig_wnum,
                                   variable_container,
                                   grid));
