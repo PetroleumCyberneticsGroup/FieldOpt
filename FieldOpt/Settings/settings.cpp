@@ -131,6 +131,7 @@ void Settings::readGlobalSection() {
         json_driver_->value("Global").toObject();
 
     name_ = global["Name"].toString();
+
     bookkeeper_tolerance_ = global["BookkeeperTolerance"].toDouble();
 
     // -----------------------------------------------------
@@ -145,9 +146,20 @@ void Settings::readGlobalSection() {
         "Unable to parse driver file global section: "
             + string(ex.what()));
   }
-  cout << "BookkeeperTolerance:--- "
-       << bookkeeper_tolerance() << endl;
 
+  if (verb_vector_[9] > 0){
+      string str_out = "[set]Global settings---";
+      cout << "\n" << BLDON << str_out << AEND << "\n"
+           << std::string(str_out.length(), '=') << endl;
+
+      cout << "Name:------------------ "
+           << name_.toStdString() << endl;
+
+
+    // -----------------------------------------------------
+      cout << "BookkeeperTolerance:--- "
+           << bookkeeper_tolerance() << endl;
+  }
 }
 
 // =========================================================
@@ -181,26 +193,23 @@ void Settings::readSimulatorSection() {
          << std::string(str_out.length(), '=') << endl;
 
     // -----------------------------------------------------
-    cout << "VerbosityVector:-------- ";
+    cout << "VerbosityVector:------- ";
     for (int i=0; i < simulator_->verb_vector_.size(); i++) {
       cout << simulator_->verb_vector_[i] << " ";
     }
     cout << endl;
 
     // -----------------------------------------------------
-    auto SimTMP = json_driver_->value("Simulator").toObject();
+    cout << "SimulatorType:--------- "
+         << json_simulator["Type"].toString().toUtf8().constData() << endl;
 
     // -----------------------------------------------------
-    cout << "SimulatorType:---------- "
-         << SimTMP["Type"].toString().toUtf8().constData() << endl;
-
-    // -----------------------------------------------------
-    cout << "FluidModel:------------- "
-         << SimTMP["FluidModel"].toString().toUtf8().constData() << endl;
+    cout << "FluidModel:------------ "
+         << json_simulator["FluidModel"].toString().toUtf8().constData() << endl;
 
 
     // -----------------------------------------------------
-    cout << "MaxMinutes:------------- "
+    cout << "MaxMinutes:------------ "
          << simulator_->max_minutes_ << endl;
   }
 }
