@@ -393,6 +393,10 @@ Model::Summary::GetWellDescriptions() {
 // =========================================================
 void Model::GetDrillingStr() {
 
+  string str_out = "[dbg]GetDrillingStr          ";
+  cout << "\n" << BLDON << str_out << AEND << "\n"
+       << std::string(str_out.length(), '-') << endl;
+
   // ---------------------------------------------------------
   for(int i=0; i < drillseq_->drill_groups_.size(); ++i) {
 
@@ -426,7 +430,7 @@ void Model::GetDrillingStr() {
          << endl;
 
   }
-
+  cout << endl;
 }
 
 // =========================================================
