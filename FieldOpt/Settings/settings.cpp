@@ -218,6 +218,17 @@ void Settings::readOptimizationSection() {
             + string(ex.what()));
   }
 
+  // Fields:
+  // -Optimizers
+  // -Optimization structure:
+  // -Variable assignment, i.e., which optimizers that
+  // should deal with which variable types (no overlap
+  // possible); types refers to either intrinsic or
+  // extrinsic variable types, e.g., distinction by
+  // continuous, discrete and/or categorical; and
+  // well placement, well controls, completions, etc.
+
+
 }
 
 // =========================================================

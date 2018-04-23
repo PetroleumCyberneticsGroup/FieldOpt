@@ -41,6 +41,7 @@
 // ---------------------------------------------------------
 #include "simulator.h"
 #include "optimizer.h"
+#include "optimization.h"
 #include "model.h"
 #include "Utilities/colors.hpp"
 
@@ -54,6 +55,7 @@ using std::vector;
 class Simulator;
 class Model;
 class Optimizer;
+class Optimization;
 
 // =========================================================
 /*!
@@ -128,16 +130,6 @@ class Settings
 
   // Set path of FieldOpt build directory.
   void set_build_path(const QString &build_path);
-
-  // =========================================================
-  class Optimization {
-    // ---------------------------------------------------------
-    friend class Settings;
-
-   public:
-    // ---------------------------------------------------------
-    Optimization(QJsonObject json_model){};
-  };
 
  private:
   // -------------------------------------------------------
