@@ -70,48 +70,101 @@ class Optimizer;
 class Settings
 {
  public:
+  // -------------------------------------------------------
   Settings(){}
-  Settings(QString driver_path, QString output_directory, vector<int> verb_vector);
+  Settings(QString driver_path,
+           QString output_directory,
+           vector<int> verb_vector);
 
+  // -------------------------------------------------------
   QString driver_path() const { return driver_path_; }
 
-  QString name() const { return name_; } //!< The name to be used for the run. Output file and folder names are derived from this.
-  QString output_directory() const { return output_directory_; } //!< Path to a directory in which output files are to be placed.
+  // -------------------------------------------------------
+  // The name to be used for the run. Output file
+  // and folder names are derived from this.
+  QString name() const { return name_; }
 
-  void set_verbosity_vector(const vector<int> verb_vector) { verb_vector_ = verb_vector; }
+  // -------------------------------------------------------
+  // The name to be used for the run. Output file
+  // and folder names are derived from this.
+  QString output_directory() const
+
+  // -------------------------------------------------------
+  // Path to directory in which output files are to be placed.
+  { return output_directory_; }
+
+  // -------------------------------------------------------
+  void set_verbosity_vector(const vector<int> verb_vector)
+  { verb_vector_ = verb_vector; }
+
   vector<int> verb_vector() const { return verb_vector_; }
 
-  //!< Get the value for the bookkeeper tolerance. Used by the Bookkeeper in the Runner library.
-  double bookkeeper_tolerance() const { return bookkeeper_tolerance_; }
+  // -------------------------------------------------------
+  // Get the value for the bookkeeper tolerance.
+  // Used by the Bookkeeper in the Runner library.
+  double bookkeeper_tolerance() const
+  { return bookkeeper_tolerance_; }
+
+  // -------------------------------------------------------
   QString runner_type() const { return runner_type_; }
 
-  Model *model() const { return model_; } //!< Object containing model specific settings.
-  Optimizer *optimizer() const { return optimizer_; } //!< Object containing optimizer specific settings.
-  Simulator *simulator() const { return simulator_; } //!< Object containing simulator specific settings.
+  // -------------------------------------------------------
+  // Object containing model specific settings.
+  Model *model() const { return model_; }
 
-  QString GetLogCsvString() const; //!< Get a string containing the CSV header and contents for the log.
+  // Object containing optimizer specific settings.
+  Optimizer *optimizer() const { return optimizer_; }
 
-  const QString &build_path() const { return build_path_; } //!< Get the to the FieldOpt build directory.
-  void set_build_path(const QString &build_path); //!< Set the path to the FieldOpt build directory.
+  // Object containing simulator specific settings.
+  Simulator *simulator() const { return simulator_; }
+
+  // -------------------------------------------------------
+  // Get string containing CSV header and contents for log.
+  QString GetLogCsvString() const;
+
+  // -------------------------------------------------------
+  // Get the to the FieldOpt build directory.
+  const QString &build_path() const { return build_path_; }
+
+  // Set path of FieldOpt build directory.
+  void set_build_path(const QString &build_path);
+
+  // =========================================================
+  class Optimization {
+    // ---------------------------------------------------------
+    friend class Settings;
+
+   public:
+    // ---------------------------------------------------------
+    Optimization(QJsonObject json_model){};
+  };
 
  private:
+  // -------------------------------------------------------
   QString driver_path_;
   QJsonObject *json_driver_;
   QString name_;
   double bookkeeper_tolerance_;
   QString runner_type_;
   QString output_directory_;
-  Model *model_;
-  Optimizer *optimizer_;
-  Simulator *simulator_;
   QString build_path_;
 
+  // -------------------------------------------------------
+  Model *model_;
+  Simulator *simulator_;
+  Optimizer *optimizer_;
+  Optimization *optimization_;
+
+  // -------------------------------------------------------
   std::vector<int> verb_vector_ = std::vector<int>(11,0);
 
+  // -------------------------------------------------------
   void readDriverFile();
   void readGlobalSection();
   void readSimulatorSection();
   void readModelSection();
+
+  void readOptimizationSection();
   void readOptimizerSection();
 };
 

@@ -204,6 +204,23 @@ void Settings::readSimulatorSection() {
 }
 
 // =========================================================
+void Settings::readOptimizationSection() {
+
+  // -------------------------------------------------------
+  try {
+    QJsonObject optimization =
+        json_driver_->value("Optimization").toObject();
+    optimization_ = new Optimization(optimization);
+  }
+  catch (std::exception const &ex) {
+    throw UnableToParseOptimizerSectionException(
+        "Unable to parse driver file Optimizaton section: "
+            + string(ex.what()));
+  }
+
+}
+
+// =========================================================
 void Settings::readOptimizerSection() {
 
   // -------------------------------------------------------
@@ -214,12 +231,15 @@ void Settings::readOptimizerSection() {
   }
   catch (std::exception const &ex) {
     throw UnableToParseOptimizerSectionException(
-        "Unable to parse driver file optimizer section: " + string(ex.what()));
+        "Unable to parse driver file optimizer section: "
+            + string(ex.what()));
   }
 
   // -------------------------------------------------------
   optimizer_->set_verbosity_vector(verb_vector());
-  if (optimizer_->verb_vector_[9] > 0) { // idx:9 -> set (Settings)
+  if (optimizer_->verb_vector_[9] > 0) { // idx:9 -> set
+
+    // -----------------------------------------------------
     string str_out = "[set]Optimizer settings";
     cout << "\n" << BLDON << str_out << AEND << "\n"
          << std::string(str_out.length(), '=') << endl;
