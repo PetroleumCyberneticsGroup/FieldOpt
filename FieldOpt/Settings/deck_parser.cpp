@@ -210,6 +210,7 @@ QList<Model::Well::WellBlock> DeckParser::opmToWellBlocks(const Opm::Well *opm_w
         wb.j = comp_set.get(i).getJ() + 1;
         wb.k = comp_set.get(i).getK() + 1;
         wb.name = "WellBlock#" + QString::fromStdString(opm_well->name()) + "#" + QString::number(i);
+        wb.is_variable = false;
         well_blocks.push_back(wb);
     }
 

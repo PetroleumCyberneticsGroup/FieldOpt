@@ -335,9 +335,9 @@ void Model::parseImportedWellOverrides(QJsonArray json_wells) {
 
         auto well = w.toObject();
         auto json_control = well["ControlOverrides"].toObject();
-        if (json_control.contains("IsVariable") && json_control["IsVariable"].toBool()) {
-            for (int i = 0; i < wells_.size(); ++i) {
-                if (QString::compare(wells_[i].name, well["name"].toString()) ==0){
+        if (json_control.contains("IsVariable") && json_control["IsVariable"].toBool() == true) {
+            for (int i = 0; i < wells_.size(); ++i) { // Find the correct well
+                if (QString::compare(wells_[i].name, well["Name"].toString()) ==0){
                     auto control = wells_[i].controls[0];
                     control.is_variable = true;
                     auto name_root_lst = control.name.split("#");
@@ -357,6 +357,11 @@ void Model::parseImportedWellOverrides(QJsonArray json_wells) {
                     }
                     wells_[i].controls = new_control_set;
                     break;
+                }
+                else {
+                    if (i == wells_.size() - 1) { // Passed the final well without finding a match.
+                        throw std::runtime_error("Unable to find matching well for ControlOverrides");
+                    }
                 }
             }
         }

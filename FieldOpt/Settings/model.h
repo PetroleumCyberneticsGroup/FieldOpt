@@ -71,7 +71,7 @@ class Model
       Completion(){}
       WellCompletionType type; //!< Which type of completion this is (Perforation/ICD)
       double transmissibility_factor; //!< The transmissibility factor for this completion (used for perforations)
-      bool is_variable;
+      bool is_variable = false;
       QString name;
     };
     struct WellBlock {
@@ -86,11 +86,11 @@ class Model
       SplinePoint(){}
       QString name;
       double x, y, z;
-      bool is_variable;
+      bool is_variable = false;
     };
     struct PseudoContPosition {
       int i, j;
-      bool is_variable;
+      bool is_variable = false;
     };
     struct ControlEntry {
       int time_step; //!< The time step this control is to be applied at.
@@ -99,7 +99,7 @@ class Model
       double bhp; //!< Bhp target when well is on bhp control.
       double rate; //!< Rate target when well is on rate control.
       InjectionType injection_type = WaterInjection; //!< Injector type (water/gas). Defaults to water.
-      bool is_variable;
+      bool is_variable = false;
       QString name;
       bool isDifferent(ControlEntry other);
       std::string toString();
