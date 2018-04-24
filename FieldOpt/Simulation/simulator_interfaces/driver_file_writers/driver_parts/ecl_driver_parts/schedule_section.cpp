@@ -51,12 +51,17 @@ Schedule::Schedule(
     QList<double> control_times) {
 
   // -------------------------------------------------------
-  welspecs_ = new Welspecs(wells);
-  compdat_ = new Compdat(wells);
+  for (auto wg : *well_groups) {
 
-  // -------------------------------------------------------
-  wellcontrols_ = new WellControls(wells,
-                                   control_times);
+    // -----------------------------------------------------
+    welspecs_ = new Welspecs(wg->group_wells());
+    compdat_ = new Compdat(wg->group_wells());
+
+  }
+
+//  // -------------------------------------------------------
+//  wellcontrols_ = new WellControls(wells,
+//                                   control_times);
 
 }
 
