@@ -125,11 +125,6 @@ namespace ERTWrapper {
             stringlist_free(wells);
             stringlist_free(field_keys);
             stringlist_free(well_keys);
-
-            cout << "Found wells: " << boost::algorithm::join(wells_, ", ") << endl;
-            cout << "Found keys: " << boost::algorithm::join(keys_, ", ") << endl;
-            cout << "Found field keys: " << boost::algorithm::join(field_keys_, ", ") << endl;
-            cout << "Found well keys: " << boost::algorithm::join(well_keys_, ", ") << endl;
         }
 
         void ECLSummaryReader::initializeVectors() {
