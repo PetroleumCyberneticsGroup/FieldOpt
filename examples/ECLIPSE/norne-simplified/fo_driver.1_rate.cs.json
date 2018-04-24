@@ -37,7 +37,7 @@
         "Type": "ECLIPSE",
         "FluidModel": "BlackOil",
         "DriverPath": "../examples/ECLIPSE/norne-simplified/NORNE_SIMPLIFIED.DATA",
-        "ExecutionScript": "csh_eclrun",
+        "ExecutionScript": "bash_ecl",
         "ScheduleFile": "INCLUDE/BC0407_HIST01122006.SCH"
     },
     "Model": {
@@ -48,7 +48,7 @@
         "Import": {
             "Keywords": ["AllWells"],
             "InjectorDefaultRate": 2000,
-            "ProducerDefaultBHP": 150
+            "ProducerDefaultBHP": 260
         },
         "Wells": [
             {
