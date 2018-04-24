@@ -35,11 +35,6 @@ class TestResourceSettings {
       settings_simulator_ = settings_full_->simulator();
       settings_model_ = settings_full_->model();
 
-      settings_norne_full_ = new Settings::Settings(ExampleFilePaths::norne_driver_example_,
-                                                    ExampleFilePaths::norne_test_output_);
-      settings_norne_optimizer_ = settings_norne_full_->optimizer();
-      settings_norne_simulator_ = settings_norne_full_->simulator();
-      settings_norne_model_ = settings_norne_full_->model();
 
 //      settings_flow_5spot_ = new Settings::Settings(ExampleFilePaths::driver_5spot_flow_,
 //                                                    "/home/einar/.CLion2016.2/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug/fieldopt_output/");
@@ -51,10 +46,6 @@ class TestResourceSettings {
   Settings::Optimizer *settings_optimizer_;
   Settings::Simulator *settings_simulator_;
   Settings::Model *settings_model_;
-  Settings::Settings *settings_norne_full_;
-  Settings::Optimizer *settings_norne_optimizer_;
-  Settings::Simulator *settings_norne_simulator_;
-  Settings::Model *settings_norne_model_;
 //        Settings::Settings *settings_flow_5spot_;
 };
 
