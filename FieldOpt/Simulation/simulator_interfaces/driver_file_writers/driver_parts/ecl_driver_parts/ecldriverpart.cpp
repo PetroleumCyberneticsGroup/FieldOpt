@@ -39,6 +39,14 @@ void ECLDriverPart::initializeBaseEntryLine(int n)
     }
 }
 
+QStringList ECLDriverPart::GetBaseEntryLine(const int n) const {
+    auto base_entry_line = QStringList();
+    while (base_entry_line.size() < n) {
+        base_entry_line.append("1*");
+    }
+    return base_entry_line;
+}
+
 }
 }
 }

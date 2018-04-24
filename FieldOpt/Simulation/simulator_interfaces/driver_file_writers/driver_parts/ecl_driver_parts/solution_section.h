@@ -43,7 +43,7 @@ class Solution : public ECLDriverPart
 {
 public:
     Solution(QStringList *driver_file_contents);
-    QString GetPartString();
+    QString GetPartString() const;
 
 private:
     QString solution_;
