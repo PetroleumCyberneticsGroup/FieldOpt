@@ -38,11 +38,8 @@ DeckParser::DeckParser(std::string deck_file) {
 
 
 
-    std::cout << "Parsing file ..." << std::endl;
     auto opm_deck_ = opm_parser.parseFile(deck_file, opm_parse_context);
-    std::cout << "Creating state ..." << std::endl;
     Opm::EclipseState state( opm_deck_, opm_parse_context );
-    std::cout << "Creating Schedule object ..." << std::endl;
     Opm::Schedule opm_schedule( opm_deck_,
                                 state.getInputGrid(),
                                 state.get3DProperties(),
@@ -58,8 +55,6 @@ DeckParser::DeckParser(std::string deck_file) {
     num_timesteps_ = time_map_->numTimesteps();
 
     initializeTimeVectors();
-
-
 }
 
 void DeckParser::initializeTimeVectors() {
@@ -183,7 +178,9 @@ Model::PreferredPhase DeckParser::determinePreferredPhase(const Opm::Well *opm_w
 }
 
 double DeckParser::determineWellboreRadius(const Opm::Well *opm_well) {
-    auto opm_comps = opm_well->getCompletions();
+    Opm::CompletionSet opm_comps;
+    opm_comps = opm_well->getCompletions();
+
     double radii_sum = 0;
     for (auto comp : opm_comps) {
         radii_sum += (comp.getDiameter() / 2.0);
@@ -386,6 +383,4 @@ const std::vector<std::string> DeckParser::GetTimeDates() {
 const Opm::Events * DeckParser::GetEvents() {
     return events_;
 }
-
-
 }
