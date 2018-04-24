@@ -76,7 +76,7 @@ class Simulator
   /*!
    * Set the driver file path. Used when the path is passed by command line argument.
    */
-  void set_driver_file_path(const QString path) { driver_file_path_ = path; }
+  void set_driver_file_path(const QString path);
 
   /*!
    * Set the execution script path.
