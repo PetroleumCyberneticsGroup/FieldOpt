@@ -325,7 +325,7 @@ void Model::setImportedWellDefaults(QJsonObject json_import) {
         }
         else { // Producer
             wells_[i].controls[0].control_mode = BHPControl;
-            wells_[i].controls[0].rate = json_import["ProducerDefaultBHP"].toDouble();
+            wells_[i].controls[0].bhp = json_import["ProducerDefaultBHP"].toDouble();
         }
     }
 }
