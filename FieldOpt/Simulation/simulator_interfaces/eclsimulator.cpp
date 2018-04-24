@@ -31,7 +31,7 @@ ECLSimulator::ECLSimulator(Settings::Settings *settings, Model::Model *model)
     : Simulator(settings)
 {
     model_ = model;
-    driver_file_writer_ = new DriverFileWriters::EclDriverFileWriter(settings, model_);
+    settings_ = settings;
     UpdateFilePaths();
     deck_name_ = initial_driver_file_name_.split(".DATA").first();
 
@@ -46,8 +46,8 @@ void ECLSimulator::Evaluate()
     UpdateFilePaths();
     copyDriverFiles();
     script_args_ = (QStringList() << current_output_deck_parent_dir_path_ << deck_name_);
-    driver_file_writer_->WriteDriverFile(output_schedule_file_path_);
-    std::cout << "Well is injector? " << std::endl;
+    auto driver_file_writer = DriverFileWriters::EclDriverFileWriter(settings_, model_);
+    driver_file_writer.WriteDriverFile(output_schedule_file_path_);
     for (auto well : *model_->wells()) {
         std::cout << well->name().toStdString() << ": " << (well->IsInjector() ? "yes" : "no") << std::endl;
     }
@@ -60,7 +60,8 @@ bool ECLSimulator::Evaluate(int timeout, int threads) {
     UpdateFilePaths();
     copyDriverFiles();
     script_args_ = (QStringList() << current_output_deck_parent_dir_path_ << deck_name_ << QString::number(threads));
-    driver_file_writer_->WriteDriverFile(output_schedule_file_path_);
+    auto driver_file_writer = DriverFileWriters::EclDriverFileWriter(settings_, model_);
+    driver_file_writer.WriteDriverFile(output_schedule_file_path_);
     int t = timeout;
     if (timeout < 10)
         t = 10; // Always let simulations run for at least 10 seconds
@@ -97,7 +98,8 @@ void ECLSimulator::UpdateFilePaths()
 
 void ECLSimulator::WriteDriverFilesOnly() {
     UpdateFilePaths();
-    driver_file_writer_->WriteDriverFile(current_output_deck_parent_dir_path_);
+    auto driver_file_writer = DriverFileWriters::EclDriverFileWriter(settings_, model_);
+    driver_file_writer.WriteDriverFile(output_schedule_file_path_);
 }
 
 void ECLSimulator::copyDriverFiles() {
@@ -112,6 +114,9 @@ void ECLSimulator::copyDriverFiles() {
         CreateDirectory(current_output_deck_parent_dir_path_);
         CopyDirectory(initial_driver_file_parent_dir_path_, current_output_deck_parent_dir_path_, true);
     }
+    assert(DirectoryExists(current_output_deck_parent_dir_path_, true));
+    assert(FileExists(output_driver_file_path_, true));
+    assert(FileExists(output_schedule_file_path_, true));
 }
 
 }
