@@ -198,7 +198,7 @@ namespace ERTWrapper {
                     for (int i = 0; i < time_.size(); ++i) {
                         wwir_[wname][i] = double_vector_safe_iget(data, i);
                     }
-                    wgpr_[wname][0] = GetWellVar(wname, "WGPR", 0);
+                    wwir_[wname][0] = GetWellVar(wname, "WWIR", 0);
                     double_vector_free(data);
                 }
 
@@ -275,7 +275,7 @@ namespace ERTWrapper {
                     for (int i = 0; i < time_.size(); ++i) {
                         wgit_[wname][i] = double_vector_safe_iget(wgit, i);
                     }
-                    wwit_[wname][0] = 0.0;
+                    wgit_[wname][0] = 0.0;
                     double_vector_free(wgit);
                 }
             }
