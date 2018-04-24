@@ -72,10 +72,11 @@ Model::Model(Settings::Model* settings, Logger *logger) {
 
   // -------------------------------------------------------
   // Use current drilling seq + drill times for each well
-  // UpdateControlTimes();
-
   UpdateNamevsTimeMap();
-  SetDrillTimeVec();
+
+  // -------------------------------------------------------
+  // Compute all
+  ExpandControlTimeVec();
   GetDrillingStr(); // Dbg
 
   // -------------------------------------------------------
@@ -91,16 +92,19 @@ Model::Model(Settings::Model* settings, Logger *logger) {
 }
 
 // =========================================================
-//void Model::UpdateControlTimes() {
-//
-//}
+void Model::ExpandControlTimeVec() {
+
+  for(auto tp : drillseq_->wseq_grpd_sorted_vs_time) {
+    settings_->append_control_step(tp.second);
+  }
+
+}
 
 // =========================================================
 void Model::CreateWellGroups() {
 
   // -------------------------------------------------------
   // Empty QList to contain groups of wells
-  // wells_ = new QList<Wells::Well *>();
   well_groups_ = new QList<WellGroups::WellGroup *>();
   for (int gnr = 0; gnr < drillseq_->drill_groups_.size(); ++gnr) {
 
@@ -397,11 +401,12 @@ Model::Summary::GetWellDescriptions() {
 // =========================================================
 void Model::GetDrillingStr() {
 
+  // -------------------------------------------------------
   string str_out = "[dbg]GetDrillingStr          ";
   cout << "\n" << BLDON << str_out << AEND << "\n"
        << std::string(str_out.length(), '-') << endl;
 
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   for(int i=0; i < drillseq_->drill_groups_.size(); ++i) {
 
     cout << "Group: [ "
@@ -424,7 +429,7 @@ void Model::GetDrillingStr() {
 
   }
 
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   auto seq_vec_time = drillseq_->wseq_grpd_sorted_vs_time;
   for(int i=0; i < seq_vec_time.size(); ++i) {
 
@@ -434,7 +439,15 @@ void Model::GetDrillingStr() {
          << endl;
 
   }
-  cout << endl;
+
+  // -------------------------------------------------------
+  cout << "ControlTimes: [ ";
+  for(int i=0; i < settings_->control_times().size(); ++i) {
+    cout << fixed << setprecision(1)
+         << settings_->control_times()[i] << "  ";
+  }
+
+  cout << "]" << endl << endl;
 }
 
 // =========================================================
@@ -576,6 +589,9 @@ void Model::UpdateNamevsTimeMap() {
         w->name().toStdString(),
         w->GetDrillingTime());
   }
+
+  // -------------------------------------------------------
+  SetDrillTimeVec();
 
 }
 

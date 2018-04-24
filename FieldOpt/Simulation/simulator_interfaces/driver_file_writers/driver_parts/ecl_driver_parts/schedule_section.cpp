@@ -32,15 +32,34 @@ namespace DriverParts {
 namespace ECLDriverParts {
 
 // =========================================================
-Schedule::Schedule(QList<Model::Wells::Well *> *wells,
-                   QList<double> control_times) {
+Schedule::Schedule(
+    QList<Model::Wells::Well *> *wells,
+    QList<double> control_times) {
 
   // -------------------------------------------------------
   welspecs_ = new Welspecs(wells);
   compdat_ = new Compdat(wells);
+
+  // -------------------------------------------------------
   wellcontrols_ = new WellControls(wells,
                                    control_times);
 }
+
+// =========================================================
+Schedule::Schedule(
+    QList<Model::WellGroups::WellGroup *> *well_groups,
+    QList<double> control_times) {
+
+  // -------------------------------------------------------
+  welspecs_ = new Welspecs(wells);
+  compdat_ = new Compdat(wells);
+
+  // -------------------------------------------------------
+  wellcontrols_ = new WellControls(wells,
+                                   control_times);
+
+}
+
 
 // =========================================================
 QString Schedule::GetPartString() {

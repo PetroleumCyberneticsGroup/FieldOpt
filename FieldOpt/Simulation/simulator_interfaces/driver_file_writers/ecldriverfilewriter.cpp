@@ -74,7 +74,8 @@ void EclDriverFileWriter::WriteDriverFile() {
   // RUNSPEC
   DriverParts::ECLDriverParts::Runspec runspec =
       DriverParts::ECLDriverParts::Runspec(
-      original_driver_file_contents_, model_->wells());
+      original_driver_file_contents_,
+      model_->wells());
 
   // -------------------------------------------------------
   // GRID

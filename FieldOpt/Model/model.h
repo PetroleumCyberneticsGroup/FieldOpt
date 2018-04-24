@@ -24,9 +24,10 @@
 #define MODEL_H
 
 // ---------------------------------------------------------
-// QT
+// QT / STD
 #include <QString>
 #include <QList>
+#include <iomanip>
 
 // ---------------------------------------------------------
 #include "Reservoir/grid/eclgrid.h"
@@ -169,7 +170,7 @@ class Model : public Loggable
   void UpdateNamevsTimeMap();
   void SetDrillTimeVec();
 
-  // void UpdateControlTimes();
+  void ExpandControlTimeVec();
 
  private:
   // -------------------------------------------------------

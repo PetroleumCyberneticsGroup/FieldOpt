@@ -39,6 +39,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <algorithm>
 
 // ---------------------------------------------------------
 using std::string;
@@ -263,12 +264,20 @@ class Model
   QList<Well> wells() const { return wells_; }
 
   // Get the control times for the schedule
-  QList<double> control_times() const { return control_times_; }
+  QList<double> control_times() const
+  { return control_times_; }
 
   // -------------------------------------------------------
-  void set_verbosity_vector(const std::vector<int> verb_vector)
+  void append_control_step(double step) {
+    control_times_.append(step);
+    // std::sort(control_times_.begin(),
+    //          control_times_.end());
+  }
+
+  // -------------------------------------------------------
+  void set_verbosity_vector(const vector<int> verb_vector)
   { verb_vector_ = verb_vector; }
-  std::vector<int> verb_vector() const { return verb_vector_; }
+  vector<int> verb_vector() const { return verb_vector_; }
 
   // -------------------------------------------------------
   Model::Well getWell(QString well_name);
@@ -298,7 +307,7 @@ class Model
   bool controlTimeIsDeclared(double time) const;
 
 // ---------------------------------------------------------
-  std::vector<int> verb_vector_ = std::vector<int>(11,0);
+  vector<int> verb_vector_ = vector<int>(11,0);
 };
 
 }

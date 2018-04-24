@@ -44,6 +44,20 @@ Welspecs::Welspecs(QList<Model::Wells::Well *> *wells) {
 }
 
 // =========================================================
+Welspecs::Welspecs(
+    QList<Model::WellGroups::WellGroup *> *well_groups) {
+
+  // -------------------------------------------------------
+  initializeBaseEntryLine(10);
+  head_ = "RPTRST\n'BASIC=3'\n/\n\nWELSPECS";
+  foot_ = "/\n\n";
+  for (int i = 0; i < wells->size(); ++i) {
+    if (wells->at(i)->trajectory()->GetWellBlocks()->size() > 0)
+      entries_.append(createWellEntry(wells->at(i)));
+  }
+}
+
+// =========================================================
 QString Welspecs::GetPartString() {
 
   // -------------------------------------------------------
