@@ -64,6 +64,7 @@ class ECLSimulator : public Simulator
   DriverFileWriters::EclDriverFileWriter *driver_file_writer_;
   QString output_driver_file_path_;
   QString output_schedule_file_path_;
+  QString deck_name_; //!< Driver file name without the final .DATA
   QStringList script_args_;
   void copyDriverFiles();
 

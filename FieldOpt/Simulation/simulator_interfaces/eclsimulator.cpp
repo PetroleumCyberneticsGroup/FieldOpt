@@ -32,9 +32,8 @@ ECLSimulator::ECLSimulator(Settings::Settings *settings, Model::Model *model)
 {
     model_ = model;
     driver_file_writer_ = new DriverFileWriters::EclDriverFileWriter(settings, model_);
-
     UpdateFilePaths();
-    script_args_ = (QStringList() << output_directory_ << output_driver_file_path_);
+    deck_name_ = initial_driver_file_name_.split(".DATA").first();
 
     results_ = new Results::ECLResults();
     try {
@@ -46,26 +45,33 @@ void ECLSimulator::Evaluate()
 {
     UpdateFilePaths();
     copyDriverFiles();
+    script_args_ = (QStringList() << current_output_deck_parent_dir_path_ << deck_name_);
     driver_file_writer_->WriteDriverFile(output_schedule_file_path_);
-//    ::Utilities::Unix::ExecShellScript(script_path_, script_args_);
-//    results_->ReadResults(driver_file_writer_->output_driver_file_name_);
-//    updateResultsInModel();
+    std::cout << "Well is injector? " << std::endl;
+    for (auto well : *model_->wells()) {
+        std::cout << well->name().toStdString() << ": " << (well->IsInjector() ? "yes" : "no") << std::endl;
+    }
+    ::Utilities::Unix::ExecShellScript(script_path_, script_args_);
+    results_->ReadResults(current_output_deck_parent_dir_path_ + "/" +initial_driver_file_name_);
+    updateResultsInModel();
 }
 
 bool ECLSimulator::Evaluate(int timeout, int threads) {
     UpdateFilePaths();
     copyDriverFiles();
-//    int t = timeout;
-//    if (timeout < 10) t = 10; // Always let simulations run for at least 10 seconds
-//    script_args_[2] = QString::number(threads);
-//
-//    driver_file_writer_->WriteDriverFile(output_schedule_file_path_);
-//    std::cout << "Starting monitored simulation with timeout " << timeout << std::endl;
-//    bool success = ::Utilities::Unix::ExecShellScriptTimeout(script_path_, script_args_, t);
-//    std::cout << "Monitored simulation done." << std::endl;
-//    if (success) results_->ReadResults(driver_file_writer_->output_driver_file_name_);
-//    updateResultsInModel();
-//    return success;
+    script_args_ = (QStringList() << current_output_deck_parent_dir_path_ << deck_name_ << QString::number(threads));
+    driver_file_writer_->WriteDriverFile(output_schedule_file_path_);
+    int t = timeout;
+    if (timeout < 10)
+        t = 10; // Always let simulations run for at least 10 seconds
+
+    std::cout << "Starting monitored simulation with timeout " << timeout << std::endl;
+    bool success = ::Utilities::Unix::ExecShellScriptTimeout(script_path_, script_args_, t);
+    std::cout << "Monitored simulation done." << std::endl;
+    if (success)
+        results_->ReadResults(current_output_deck_parent_dir_path_ + "/" +initial_driver_file_name_);
+    updateResultsInModel();
+    return success;
 }
 
 void ECLSimulator::CleanUp()
