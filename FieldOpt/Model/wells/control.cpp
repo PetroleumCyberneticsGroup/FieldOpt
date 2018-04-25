@@ -21,10 +21,15 @@
 
 // ---------------------------------------------------------
 #include "control.h"
+#include <iostream>
 
 // ---------------------------------------------------------
 namespace Model {
 namespace Wells {
+
+// ---------------------------------------------------------
+using std::cout;
+using std::endl;
 
 // =========================================================
 Control::Control(
@@ -33,14 +38,26 @@ Control::Control(
     ::Model::Properties::VariablePropertyContainer *variables) {
 
   // -------------------------------------------------------
+  if (well.verb_vector_[5] > 4) // idx:5 -> mod
+    cout << "[mod:Control.cpp]------------ "
+        << "time_step: " << entry.time_step;
+//         << entry.ControlEntryStr().toStdString()
+//         << endl;
+
+  // -------------------------------------------------------
   // time_step_ =
   //    new Properties::DiscreteProperty(entry.time_step);
   time_step_ =
       new Properties::ContinousProperty(entry.time_step);
 
   // -------------------------------------------------------
-  if (well.type == ::Settings::Model::WellType::Injector)
+  if (well.type == ::Settings::Model::WellType::Injector) {
     injection_fluid_ = entry.injection_type;
+    if (well.verb_vector_[5] > 4) { // idx:5 -> mod
+      cout << " injection_fluid_: " << injection_fluid_;
+    }
+  }
+  cout << endl;
 
   // -------------------------------------------------------
   // Open/Closed
@@ -52,10 +69,6 @@ Control::Control(
   }
 
   // -------------------------------------------------------
-  if(entry.time_step < well.drilling_time)
-    open_ = new Properties::BinaryProperty(false);
-
-  // -------------------------------------------------------
   switch (entry.control_mode) {
 
     // -----------------------------------------------------
@@ -63,6 +76,13 @@ Control::Control(
 
       mode_ = entry.control_mode;
       bhp_ = new Properties::ContinousProperty(entry.bhp);
+
+      // ---------------------------------------------------
+      if (well.verb_vector_[5] > 4) // idx:5 -> mod
+//        cout << " open_: " << open_->ToString().toStdString()
+//             // << " mode_: " << mode_
+//             << " bhp_: " << bhp_->value()
+//             << endl;
 
       // ---------------------------------------------------
       if (entry.is_variable) {
@@ -78,10 +98,18 @@ Control::Control(
       rate_ = new Properties::ContinousProperty(entry.rate);
 
       // ---------------------------------------------------
+      if (well.verb_vector_[5] > 4) // idx:5 -> mod
+//        cout << " open_: " << open_->ToString().toStdString()
+//             // << " mode_: " << mode_
+//             << " rate_: " << rate_->value()
+//             << endl;
+
+      // ---------------------------------------------------
       if (entry.is_variable) {
         rate_->setName(entry.name);
         variables->AddVariable(rate_);
       }
+      break;
   }
 
 }

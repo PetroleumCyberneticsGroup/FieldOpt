@@ -47,7 +47,6 @@ Trajectory::Trajectory(
     // -----------------------------------------------------
     initializeWellBlocks(well_settings,
                          variable_container);
-    // calculateDirectionOfPenetration();
 
   } else if (well_settings.definition_type ==
       Settings::Model::WellDefinitionType::WellSpline) {
@@ -59,7 +58,6 @@ Trajectory::Trajectory(
 
     // -----------------------------------------------------
     well_blocks_ = well_spline_->GetWellBlocks();
-    // calculateDirectionOfPenetration();
 
   } else if (well_settings.definition_type ==
       Settings::Model::WellDefinitionType::PseudoContVertical2D) {
@@ -71,7 +69,6 @@ Trajectory::Trajectory(
 
     // -----------------------------------------------------
     well_blocks_->append(pseudo_cont_vert_->GetWellBlock());
-    // calculateDirectionOfPenetration();
   }
 
   // -------------------------------------------------------
@@ -136,13 +133,14 @@ Trajectory::initializeWellBlocks(
     Properties::VariablePropertyContainer *variable_container) {
 
   // -------------------------------------------------------
-  QList<Settings::Model::Well::WellBlock> blocks = well.well_blocks;
+  QList<Settings::Model::Well::WellBlock>
+      blocks = well.well_blocks;
 
   // -------------------------------------------------------
   for (int i = 0; i < blocks.size(); ++i) {
 
     // -----------------------------------------------------
-    if (well.verb_vector_[5] > 2) // idx:5 -> mod (Model)
+    if (well.verb_vector_[5] > 4) // idx:5 -> mod
       cout << "[mod]Init wblock IJK (#="
            << blocks.size() << "):- [ "
            << blocks[i].i << ", "

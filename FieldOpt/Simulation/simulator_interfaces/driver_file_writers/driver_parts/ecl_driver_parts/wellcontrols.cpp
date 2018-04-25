@@ -153,70 +153,108 @@ initializeTimeEntries(QList<Model::Wells::Well *> *wells,
 QString WellControls::createTimeEntry(double time,
                                       double prev_time) {
 
+  // -------------------------------------------------------
+  // A Time entry should not be created for the initial step
   if (time == 0) {
-    return QString(""); // A Time entry should not be created for the initial step
+    return QString("");
   }
-  double delta_time = time - prev_time; // The amount of time to advance
-  return QString("TSTEP\n 2*%1 /\n\n").arg(delta_time/2.0);
+
+  // -------------------------------------------------------
+  // The amount of time to advance
+  double delta_time = time - prev_time;
+  return QString("TSTEP\n%1 /\n\n").arg(delta_time);
 }
 
 // =========================================================
 QString WellControls::
 createProducerEntry(WellControls::WellSetting *setting) {
 
+  // -------------------------------------------------------
   initializeBaseEntryLine(9);
   QStringList producer_entry_line = QStringList(base_entry_line_);
   producer_entry_line[0] = setting->well_name;
 
-  if (setting->control->open()) producer_entry_line[1] = "OPEN";
-  else producer_entry_line[1] = "SHUT";
+  // -------------------------------------------------------
+  if (setting->control->open()) {
+    producer_entry_line[1] = "OPEN";
+  } else {
+    producer_entry_line[1] = "SHUT";
+  }
 
+  // -------------------------------------------------------
   switch (setting->control->mode()) {
+
     case ::Settings::Model::ControlMode::BHPControl:
       producer_entry_line[2] = "BHP";
-      producer_entry_line[8] = QString::number(setting->control->bhp());
+      producer_entry_line[8] =
+          QString::number(setting->control->bhp());
       break;
+
     case ::Settings::Model::ControlMode::RateControl:
       producer_entry_line[2] = "LRAT";
-      producer_entry_line[6] = QString::number(setting->control->rate());
+      producer_entry_line[6] =
+          QString::number(setting->control->rate());
       break;
+
     default:
-      throw std::runtime_error("Producer control mode not recognized.");
+      throw std::runtime_error(
+          "Producer control mode not recognized.");
   }
-  return "WCONPROD\n   " + producer_entry_line.join(" ") + "/\n/\n\n";
+
+  return "WCONPROD\n   "
+      + producer_entry_line.join(" ") + "/\n/\n\n";
 }
 
 // =========================================================
 QString WellControls::
 createInjectorEntry(WellControls::WellSetting *setting) {
 
+  // -------------------------------------------------------
   initializeBaseEntryLine(7);
   QStringList injector_entry_line = QStringList(base_entry_line_);
   injector_entry_line[0] = setting->well_name;
 
+  // -------------------------------------------------------
   switch (setting->control->injection_fluid()) {
+
     case ::Settings::Model::InjectionType::WaterInjection:
       injector_entry_line[1] = "WATER";
       break;
+
     case ::Settings::Model::InjectionType::GasInjection:
       injector_entry_line[1] = "GAS";
       break;
+
     default:
+      cout << "injector_entry_line[0]: "
+           << injector_entry_line[0].toStdString() << endl
+           << "injector_entry_line[1]:"
+           << setting->control->injection_fluid() << endl;
+
       throw std::runtime_error("Injector type not recognized.");
   }
 
-  if (setting->control->open()) injector_entry_line[2] = "OPEN";
-  else injector_entry_line[2] = "SHUT";
+  // -------------------------------------------------------
+  if (setting->control->open()) {
+    injector_entry_line[2] = "OPEN";
 
+  } else {
+    injector_entry_line[2] = "SHUT";
+  }
+
+  // -------------------------------------------------------
   switch (setting->control->mode()) {
+
     case ::Settings::Model::ControlMode::BHPControl:
       injector_entry_line[3] = "BHP";
       injector_entry_line[6] = QString::number(setting->control->bhp());
       break;
+
     case ::Settings::Model::ControlMode::RateControl:
       injector_entry_line[3] = "RATE";
       injector_entry_line[4] = QString::number(setting->control->rate());
       break;
+
     default:
       throw std::runtime_error("Producer control mode not recognized.");
   }

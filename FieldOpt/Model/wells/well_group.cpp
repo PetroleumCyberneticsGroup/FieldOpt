@@ -23,6 +23,7 @@
 
 // ---------------------------------------------------------
 #include "well_group.h"
+#include <iostream>
 
 // ---------------------------------------------------------
 namespace Model {
@@ -32,12 +33,14 @@ namespace WellGroups {
 using std::pair;
 using std::vector;
 using std::string;
+using std::cout;
+using std::endl;
 
 // =========================================================
 WellGroup::WellGroup(
     Settings::Model well_settings,
     int group_nr,
-    Model::Drilling drilling,
+    ::Model::DrillingSequence drilling,
     ::Model::Properties::VariablePropertyContainer *variable_container,
     ::Reservoir::Grid::Grid *grid) {
 
@@ -79,8 +82,8 @@ WellGroup::WellGroup(
 
     // -----------------------------------------------------
     if (well_settings.verb_vector()[5] >= 1) // idx:5 -> mod
-      cout << FCYAN << "\nWell=" << wn
-           << "\n----------------------------- \n" << AEND;
+      cout << BCYAN << FBLUE << "Well=" << wn
+           << "-------------------- " << AEND << endl;
 
     // -----------------------------------------------------
     auto well = new Wells::Well(well_settings,

@@ -97,10 +97,6 @@ Model::Model(QJsonObject json_model) {
   } else {
     drillingMode_ = DrillingMode::Synchronous;
   }
-
-  // -------------------------------------------------------
-  // Compute drilling sequence (use Model.cpp const function)
-
 }
 
 // =========================================================
@@ -473,6 +469,8 @@ Model::Well Model::getWell(QString well_name) {
   for (int wnr = 0; wnr < wells_.size(); ++wnr) {
     if(wells_.at(wnr).name.compare(well_name)) {
       return wells_.at(wnr);
+    } else {
+      throw std::runtime_error("Finding well by name failed.");
     }
   }
 }

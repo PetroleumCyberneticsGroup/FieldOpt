@@ -28,11 +28,15 @@
 // ---------------------------------------------------------
 #include "Settings/settings.h"
 #include "Settings/model.h"
-#include "well.h"
-#include "Model/model.h"
+
 #include "Reservoir/grid/eclgrid.h"
 #include "Model/properties/variable_property_container.h"
 #include "Model/properties/discrete_property.h"
+
+#include "well.h"
+#include "drilling_sequence.h"
+// #include "Model/model.h"
+
 
 // ---------------------------------------------------------
 // STD
@@ -58,7 +62,7 @@ class WellGroup {
   WellGroup(
       Settings::Model settings,
       int group_nr,
-      Model::Drilling drilling,
+      ::Model::DrillingSequence drilling,
       ::Model::Properties::VariablePropertyContainer *variable_container,
       ::Reservoir::Grid::Grid *grid);
 

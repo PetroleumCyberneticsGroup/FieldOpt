@@ -54,13 +54,6 @@ Well::Well(Settings::Model settings,
   deftype_ = well_settings.definition_type;
 
   // -------------------------------------------------------
-  // Drilling dependent on well length
-  // drilling_time_ = well_settings.drilling_time;
-
-  // -------------------------------------------------------
-  //drilling_order_ = well_settings.drilling_order;
-
-  // -------------------------------------------------------
   if (well_settings.group.length() >= 1)
     group_ = well_settings.group;
   else group_ = "";
@@ -76,6 +69,7 @@ Well::Well(Settings::Model settings,
   trajectory_ = new Wellbore::Trajectory(well_settings,
                                          variable_container,
                                          grid);
+  UpdateHeelToeIJK();
 
   // -------------------------------------------------------
   // Set default drilling time
@@ -85,8 +79,6 @@ Well::Well(Settings::Model settings,
   // -------------------------------------------------------
   // Recompute drilling time dependent on well length
   ComputeDrillingTime(); // updates drilling_time_
-
-  UpdateHeelToeIJK();
 
   // -------------------------------------------------------
   // Set controls
@@ -117,13 +109,13 @@ void Well::UpdateHeelToeIJK() {
   // -----------------------------------------------------
   if (verb_vector_[5] > 2) // idx:5 -> mod (Model)
     cout << "[mod]Heel/Toe IJK: --------- "
-         << "Heel: I=" << heel_.i
+         << "[ Heel: I=" << heel_.i
          << " J=" << heel_.j
          << " K=" << heel_.k
-         << " Toe: I=" << toe_.i
+         << " ] -- [ Toe: I=" << toe_.i
          << " J=" << toe_.j
          << " K=" << toe_.k
-         << endl;
+         << " ]" << endl;
 }
 
 // ---------------------------------------------------------
@@ -201,10 +193,6 @@ bool Well::IsInjector() {
 
 // =========================================================
 void Well::Update(int rank) {
-
-  // -------------------------------------------------------
-  if (verb_vector_[5] > 1) // idx:5 -> mod (Model)
-    cout << FCYAN << "[mod]Updating: TRJ, IJK & DT. " << AEND << endl;
 
   // -------------------------------------------------------
   trajectory_->UpdateWellBlocks(rank);

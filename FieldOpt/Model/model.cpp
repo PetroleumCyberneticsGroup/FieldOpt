@@ -54,20 +54,24 @@ Model::Model(Settings::Model* settings, Logger *logger) {
       new Properties::VariablePropertyContainer();
 
   // -------------------------------------------------------
-  // drilling_seq_
-  drillseq_ = new Model::Drilling;
-  SetDrillingSeq(); // Establishes all fields in drillseq_
+  drilling_seq_ = new DrillingSequence();
+  // drilling_seq_ = new Model::Drilling;
+  SetDrillingSeq(); // Establishes all fields in drilling_seq_
   GetDrillingStr(); // Dbg
 
   // -------------------------------------------------------
   CreateWellGroups();
 
   // -------------------------------------------------------
+   if (settings_->verb_vector()[5] > 1) // idx:5 -> mod
+    cout << "[mod]Setting up well_ QList.- " << endl;
   // Set up regular well QList for subsequent calculations
   // that are group-independent -> this carries over the
   // order of wells set up in well groups
-  for (auto group : *well_groups()) {
-    for (auto well : *group->group_wells()) {
+  wells_ = new QList<Wells::Well *>();
+  for (WellGroups::WellGroup* group : *well_groups()) {
+    for (Wells::Well* well : *group->group_wells()) {
+      // Wells::Well* cp = well;
       wells_->append(well);
     }
   }
@@ -84,42 +88,8 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   // + add these time steps for main control_time vector
   // + add these timesteps to each well, set time steps previous
   // to these equal to SHUT or CLOSE
-
-  // -------------------------------------------------------
-  //
-  ExpandControlTimeVec();
+  InsertDrillingTStep();
   GetDrillingStr(); // Dbg
-
-  // -------------------------------------------------------
-  // Add control entry defining drill time
-  for (Wells::Well *w : *wells()) {
-
-    // Make new control
-    Settings::Model::Well::ControlEntry d_control_entry =
-        settings_->getWell(w->name()).controls[0];
-
-    Wells::Control *d_control_tstep =
-        new Wells::Control(d_control_entry,
-                           settings_->getWell(w->name()),
-                           variable_container_);
-
-    // Associated drilling time with new control
-    d_control_tstep->setTStep(
-        drillseq_->wseq_grpd_sorted_vs_tstep
-        [w->name().toStdString()]);
-
-    // Append control to list of well controls
-    w->controls()->append(d_control_tstep);
-
-    // Shut down wells for all control steps prior
-    // to drilling step
-    for (Wells::Control *c : *w->controls()) {
-      if(c->time_step() < d_control_tstep->time_step()) {
-        c->setOpen(false);
-      }
-
-    }
-  }
 
   // -------------------------------------------------------
   variable_container_->CheckVariableNameUniqueness();
@@ -134,12 +104,64 @@ Model::Model(Settings::Model* settings, Logger *logger) {
 }
 
 // =========================================================
-void Model::ExpandControlTimeVec() {
+void Model::InsertDrillingTStep() {
 
   // -------------------------------------------------------
-  for(auto tp : drillseq_->wseq_grpd_sorted_vs_time) {
-    settings_->append_control_step(tp.second);
+  if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
+    cout << "[mod]InsertDrillingTStep().-- " << endl;
+
+  // -------------------------------------------------------
+  // Add control entry defining drill time
+  for (Wells::Well *w : *wells()) {
+
+    auto test = settings_->getWell(w->name()).controls[1];
+
+    // -----------------------------------------------------
+    if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
+      cout << "[mod]Looping through wells.-- " << endl;
+
+    // -----------------------------------------------------
+    // Make new control
+//    Settings::Model::Well
+//        well_settings = settings_->wells().;
+
+    Wells::Control *d_control_tstep =
+        new Wells::Control(settings_->getWell(w->name()).controls[1],
+                           settings_->getWell(w->name()),
+                           variable_container_);
+
+    // -----------------------------------------------------
+    // Associate drilling time with new control
+    double d_time_step =
+        drilling_seq_->
+            wseq_grpd_sorted_vs_tstep[w->name().toStdString()];
+    d_control_tstep->setTStep(d_time_step);
+
+    // -----------------------------------------------------
+    // Append control to list of well controls
+    w->controls()->append(d_control_tstep);
+
+    // -----------------------------------------------------
+    // Shut down wells for all control steps prior
+    // to drilling step
+    for (Wells::Control *c : *w->controls()) {
+      if(c->time_step() < d_control_tstep->time_step()) {
+        c->setOpen(false);
+      }
+    }
+
+    // -----------------------------------------------------
+    // Add drilling tstep to overall control tstep vector
+    settings_->control_times().append(d_time_step);
   }
+
+  // -------------------------------------------------------
+  // Sort overall control tstep vector
+  settings_->sort_control_steps();
+
+  // -------------------------------------------------------
+  if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
+    cout << "[mod]InsertDrillingTStep().-- DONE" << endl;
 
 }
 
@@ -149,19 +171,19 @@ void Model::CreateWellGroups() {
   // -------------------------------------------------------
   // Empty QList to contain groups of wells
   well_groups_ = new QList<WellGroups::WellGroup *>();
-  for (int gnr = 0; gnr < drillseq_->drill_groups_.size(); ++gnr) {
+  for (int gnr = 0; gnr < drilling_seq_->drill_groups_.size(); ++gnr) {
 
     // -----------------------------------------------------
     if (settings_->verb_vector()[5] >= 1) { // idx:5 -> mod
-      cout << endl << BCYAN << "Group = " << gnr << AEND << endl;
-      cout << "----------------------------- \n";
+      cout << endl << BCYAN << FRED << "Group=" << gnr
+           << "----------------------" << AEND << endl;
     }
 
     // -----------------------------------------------------
     well_groups_->append(
         new WellGroups::WellGroup(*settings_,
                                   gnr,
-                                  *drillseq_,
+                                  *drilling_seq_,
                                   variable_container_,
                                   grid_));
   }
@@ -177,6 +199,10 @@ void Model::Finalize() {
 
 // =========================================================
 void Model::ApplyCase(Optimization::Case *c, int rank) {
+
+  // -------------------------------------------------------
+  if (settings_->verb_vector()[5] > 1) // idx:5 -> mod (Model)
+    cout << FCYAN << "[mod]Applying case.---------- " << AEND << endl;
 
   // -------------------------------------------------------
   for (QUuid key : c->binary_variables().keys()) {
@@ -197,10 +223,13 @@ void Model::ApplyCase(Optimization::Case *c, int rank) {
   }
 
   // -------------------------------------------------------
+  if (settings_->verb_vector()[5] > 1) // idx:5 -> mod (Model)
+    cout << FCYAN << "[mod]Updating wells.--------- " << AEND << endl;
+
   int cumulative_wic_time = 0;
-    for (Wells::Well *w : *wells()) {
-      w->Update(rank);
-      cumulative_wic_time += w->GetTimeSpentInWIC();
+  for (Wells::Well *w : *wells()) {
+    w->Update(rank);
+    cumulative_wic_time += w->GetTimeSpentInWIC();
   }
 
   // -------------------------------------------------------
@@ -293,19 +322,22 @@ map<string, vector<double>> Model::GetValues() {
   // -------------------------------------------------------
   for (auto const var :
       variable_container_->GetContinousVariables()->values()) {
-    valmap["Var#"+var->name().toStdString()] = vector<double>{var->value()};
+    valmap["Var#"+var->name().toStdString()] =
+        vector<double>{var->value()};
   }
 
   // -------------------------------------------------------
   for (auto const var :
       variable_container_->GetDiscreteVariables()->values()) {
-    valmap["Var#"+var->name().toStdString()] = vector<double>{var->value()};
+    valmap["Var#"+var->name().toStdString()] =
+        vector<double>{var->value()};
   }
 
   // -------------------------------------------------------
   for (auto const var :
       variable_container_->GetBinaryVariables()->values()) {
-    valmap["Var#"+var->name().toStdString()] = vector<double>{var->value()};
+    valmap["Var#"+var->name().toStdString()] =
+        vector<double>{var->value()};
   }
 
   return valmap;
@@ -450,15 +482,15 @@ void Model::GetDrillingStr() {
        << std::string(str_out.length(), '-') << endl;
 
   // -------------------------------------------------------
-  for(int i=0; i < drillseq_->drill_groups_.size(); ++i) {
+  for(int i=0; i < drilling_seq_->drill_groups_.size(); ++i) {
 
     cout << "Group: [ "
-         << drillseq_->drill_groups_[i] << " ]" << endl;
+         << drilling_seq_->drill_groups_[i] << " ]" << endl;
 
   }
 
   // -------------------------------------------------------
-  auto seq_vec_group = drillseq_->wseq_grpd_sorted_name;
+  auto seq_vec_group = drilling_seq_->wseq_grpd_sorted_name;
   for(int i=0; i < seq_vec_group.size(); ++i) {
 
     for (int j=0; j<seq_vec_group[i].size(); ++j) {
@@ -473,7 +505,7 @@ void Model::GetDrillingStr() {
   }
 
   // -------------------------------------------------------
-  auto seq_vec_time = drillseq_->wseq_grpd_sorted_vs_time;
+  auto seq_vec_time = drilling_seq_->wseq_grpd_sorted_vs_time;
   for(int i=0; i < seq_vec_time.size(); ++i) {
 
     cout << "TimeSeq: [ "
@@ -499,7 +531,7 @@ void Model::SetDrillingSeq() {
   // -------------------------------------------------------
   if (settings_->verb_vector()[5] >= 2) // idx:5 -> mod
     cout << "[mod]Computing drilling seq.- " << endl;
-  drillseq_->mode = settings_->drillingMode_;
+  drilling_seq_->mode = settings_->drillingMode_;
 
   // -------------------------------------------------------
   // Main drilling name_vs_order maps (pairs)
@@ -513,15 +545,15 @@ void Model::SetDrillingSeq() {
     pair<string, pair<int, int>>
         well_order(settings_->wells().at(i).name.toStdString(),
                    settings_->wells().at(i).GetDrillingOrder());
-    drillseq_->name_vs_order.push_back(well_order);
+    drilling_seq_->name_vs_order.push_back(well_order);
 
     // -----------------------------------------------------
-    drillseq_->name_vs_time.emplace(
+    drilling_seq_->name_vs_time.emplace(
         settings_->wells().at(i).name.toStdString(),
         settings_->wells().at(i).GetDrillingTime());
 
     // -----------------------------------------------------
-    drillseq_->name_vs_num
+    drilling_seq_->name_vs_num
     [settings_->wells().at(i).name.toStdString()] = i;
 
   }
@@ -534,29 +566,29 @@ void Model::SetDrillingSeq() {
 
   // -------------------------------------------------------
   std::set<int> groups;
-  for (int i = 0; i < drillseq_->name_vs_order.size(); ++i) {
+  for (int i = 0; i < drilling_seq_->name_vs_order.size(); ++i) {
 
     // -----------------------------------------------------
-    pair<int, string> p(drillseq_->name_vs_order[i].second.second,
-                        drillseq_->name_vs_order[i].first);
+    pair<int, string> p(drilling_seq_->name_vs_order[i].second.second,
+                        drilling_seq_->name_vs_order[i].first);
 
     // -----------------------------------------------------
-    drillseq_->mp_wells_into_groups.emplace(
-        drillseq_->name_vs_order[i].second.first, p);
+    drilling_seq_->mp_wells_into_groups.emplace(
+        drilling_seq_->name_vs_order[i].second.first, p);
 
     // -----------------------------------------------------
-    groups.emplace(drillseq_->name_vs_order[i].second.first);
+    groups.emplace(drilling_seq_->name_vs_order[i].second.first);
 
   }
 
   // -------------------------------------------------------
-  drillseq_->drill_groups_ =
+  drilling_seq_->drill_groups_ =
       std::vector<int> (groups.begin(), groups.end());
 
   // -------------------------------------------------------
   // Order each multimap group into a (pair<int, string>)
   // vector with wells within each group sorted
-  decltype(drillseq_->mp_wells_into_groups.equal_range(int())) range;
+  decltype(drilling_seq_->mp_wells_into_groups.equal_range(int())) range;
 
   // -----------------------------------------------------
   // Find equal ranges in multimap
@@ -564,10 +596,10 @@ void Model::SetDrillingSeq() {
     cout << "[mod]DrillSeq: find ranges.-- " << endl;
 
   // -------------------------------------------------------
-  for (auto i = drillseq_->mp_wells_into_groups.begin();
-       i != drillseq_->mp_wells_into_groups.end(); i = range.second) {
+  for (auto i = drilling_seq_->mp_wells_into_groups.begin();
+       i != drilling_seq_->mp_wells_into_groups.end(); i = range.second) {
 
-    range = drillseq_->mp_wells_into_groups.equal_range(i->first);
+    range = drilling_seq_->mp_wells_into_groups.equal_range(i->first);
 
     // ---------------------------------------------------
     // Insert each well in group into vector
@@ -586,7 +618,7 @@ void Model::SetDrillingSeq() {
     sort(group_vec.begin(), group_vec.end());
 
     // ---------------------------------------------------
-    drillseq_->wseq_grpd_sorted_name.push_back(group_vec);
+    drilling_seq_->wseq_grpd_sorted_name.push_back(group_vec);
   }
 
   // -------------------------------------------------------
@@ -600,27 +632,31 @@ void Model::SetDrillingSeq() {
 // =========================================================
 void Model::SetDrillTimeVec() {
 
-  drillseq_->wseq_grpd_sorted_vs_time.clear();
+  // -------------------------------------------------------
+  if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
+    cout << "[mod]SetDrillTimeVec().------ " << endl;
+
+  drilling_seq_->wseq_grpd_sorted_vs_time.clear();
   double d_tstep = 0;
 
   // -------------------------------------------------------
-  for( int i=0; i < drillseq_->wseq_grpd_sorted_name.size(); ++i ) {
+  for( int i=0; i < drilling_seq_->wseq_grpd_sorted_name.size(); ++i ) {
 
-    for (int j=0; j< drillseq_->wseq_grpd_sorted_name[i].size(); j++) {
+    for (int j=0; j< drilling_seq_->wseq_grpd_sorted_name[i].size(); j++) {
 
-      string wn = drillseq_->wseq_grpd_sorted_name[i][j].second;
+      string wn = drilling_seq_->wseq_grpd_sorted_name[i][j].second;
 
       // ---------------------------------------------------
       pair<string, double>
           p(wn,
-            drillseq_->name_vs_time.find(wn)->second);
-      drillseq_->wseq_grpd_sorted_vs_time.push_back(p);
+            drilling_seq_->name_vs_time.find(wn)->second);
+      drilling_seq_->wseq_grpd_sorted_vs_time.push_back(p);
 
       // ---------------------------------------------------
-      d_tstep = d_tstep + drillseq_->name_vs_time.find(wn)->second;
+      d_tstep = d_tstep + drilling_seq_->name_vs_time.find(wn)->second;
       // pair<string, double> c(wn, d_tstep);
-      // drillseq_->wseq_grpd_sorted_vs_time_cum.push_back(c);
-      drillseq_->wseq_grpd_sorted_vs_tstep[wn] = d_tstep;
+      // drilling_seq_->wseq_grpd_sorted_vs_time_cum.push_back(c);
+      drilling_seq_->wseq_grpd_sorted_vs_tstep[wn] = d_tstep;
 
     }
 
@@ -630,11 +666,15 @@ void Model::SetDrillTimeVec() {
 // =========================================================
 void Model::UpdateNamevsTimeMap() {
 
-  drillseq_->name_vs_time.clear();
+  // -------------------------------------------------------
+  if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
+    cout << "[mod]UpdateNamevsTimeMap().-- " << endl;
+
+  drilling_seq_->name_vs_time.clear();
 
   // -------------------------------------------------------
   for (Wells::Well *w : *wells()) {
-    drillseq_->name_vs_time.emplace(
+    drilling_seq_->name_vs_time.emplace(
         w->name().toStdString(),
         w->GetDrillingTime());
   }

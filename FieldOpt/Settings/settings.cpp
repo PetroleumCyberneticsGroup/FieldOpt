@@ -377,7 +377,8 @@ void Settings::readModelSection() {
     // Reservoir type
     cout << fixed << setprecision(1);
     cout << "Reservoir type:-------- "
-         << model_->getResType(model_->reservoir_.type) << endl;
+         << model_->getResType(
+             model_->reservoir_.type).toStdString() << endl;
 
     // ---------------------------------------------------------
     // Drilling type

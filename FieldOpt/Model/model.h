@@ -41,18 +41,18 @@
 #include "Utilities/colors.hpp"
 
 #include "wells/drilling_sequence.h"
-#include "wells/well_group.h"
 #include "wells/control.h"
+ #include "wells/well_group.h"
 
 // ---------------------------------------------------------
 class Logger;
 
 // ---------------------------------------------------------
-namespace Model {
-namespace WellGroups {
-class WellGroup;
-}
-}
+//namespace Model {
+//namespace WellGroups {
+//class WellGroup;
+//}
+//}
 
 // ---------------------------------------------------------
 namespace Model {
@@ -142,29 +142,6 @@ class Model : public Loggable
   void Finalize();
 
   // -------------------------------------------------------
-  // Drilling sequence for all wells
-  struct Drilling {
-    Settings::Model::DrillingMode mode;
-
-    // Main orderings
-    vector<pair<string, pair<int, int>>> name_vs_order;
-    map<string, int> name_vs_num;
-    multimap<string, double> name_vs_time;
-
-    // Transformation map
-    multimap<int, pair<int, string>> mp_wells_into_groups;
-
-    // Resulting vecotrs
-    vector<vector<pair<int, string>>> wseq_grpd_sorted_name;
-
-    // Resulting aux vectors / maps
-    vector<int> drill_groups_;
-    vector<pair<string, double>> wseq_grpd_sorted_vs_time;
-    map<string, double> wseq_grpd_sorted_vs_tstep;
-
-  };
-
-  // -------------------------------------------------------
   /*!
    * @brief
    */
@@ -173,8 +150,7 @@ class Model : public Loggable
 
   void UpdateNamevsTimeMap();
   void SetDrillTimeVec();
-
-  void ExpandControlTimeVec();
+  void InsertDrillingTStep();
 
  private:
   // -------------------------------------------------------
@@ -184,8 +160,9 @@ class Model : public Loggable
   QList<Wells::Well *> *wells_;
   QList<WellGroups::WellGroup *> *well_groups_;
 
-  Drilling *drillseq_;
+  // Drilling *drillseq_;
   DrillingSequence *drilling_seq_;
+
 
   // -------------------------------------------------------
   /*!

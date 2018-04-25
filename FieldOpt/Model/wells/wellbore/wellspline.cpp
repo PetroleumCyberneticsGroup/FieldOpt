@@ -50,7 +50,11 @@
 namespace Model {
 namespace Wells {
 namespace Wellbore {
+
+// ---------------------------------------------------------
 using namespace Reservoir::WellIndexCalculation;
+using std::cout;
+using std::endl;
 
 // =========================================================
 WellSpline::WellSpline(
@@ -114,7 +118,8 @@ QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
 
   // ---------------------------------------------------------------
   if (well_settings_.verb_vector_[5] > 1) // idx:5 -> mod (Model)
-    std::cout << "[mod]Get well blocks.-------- " << std::endl;
+    cout << "[mod]Get blocks for well:---- "
+         << well_settings_.name.toStdString() << endl;
 
   // ---------------------------------------------------------------
   int lvl = well_settings_.verb_vector_[5];

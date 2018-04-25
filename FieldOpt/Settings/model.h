@@ -73,7 +73,7 @@ class Model
   // ---------------------------------------------------------
   enum ReservoirGridSourceType : int { ECLIPSE=1 };
 
-  inline const string getResType(ReservoirGridSourceType resType) {
+  inline const static QString getResType(ReservoirGridSourceType resType) {
     switch (resType) {
       case ECLIPSE : return "ECLIPSE";
     }
@@ -82,15 +82,38 @@ class Model
   // ---------------------------------------------------------
   enum WellType : int { Injector=011, Producer=12 };
 
+  inline const static QString WellTypeStr(WellType wellType) {
+    switch (wellType) {
+      case Injector : return "Injector";
+      case Producer : return "Producer";
+    }
+  }
+
+  // ---------------------------------------------------------
   enum ControlMode : int { BHPControl=21, RateControl=22 };
 
+  inline const static QString ControlModeStr(ControlMode controlMode) {
+    switch (controlMode) {
+      case BHPControl : return "BHPControl";
+      case RateControl : return "RateControl";
+    }
+  }
+
+  // ---------------------------------------------------------
   enum InjectionType : int { WaterInjection=31, GasInjection=32 };
+
+  inline const static QString InjectionTypeStr(InjectionType injectionType) {
+    switch (injectionType) {
+      case WaterInjection : return "WaterInjection";
+      case GasInjection : return "GasInjection";
+    }
+  }
 
   // ---------------------------------------------------------
   enum WellDefinitionType : int { WellBlocks=41,
     WellSpline=42, PseudoContVertical2D=43 };
 
-  inline const string getWellDefTypeStr(WellDefinitionType wellDefType) {
+  inline const static QString WellDefTypeStr(WellDefinitionType wellDefType) {
     switch (wellDefType) {
       case WellBlocks : return "WellBlocks";
       case WellSpline : return "WellSpline";
@@ -101,12 +124,37 @@ class Model
   // ---------------------------------------------------------
   enum WellCompletionType : int { Perforation=61 };
 
+  inline const static QString WellCompTypeStr(WellCompletionType wellCompType) {
+    switch (wellCompType) {
+      case Perforation : return "Perforation";
+    }
+  }
+
+  // ---------------------------------------------------------
   enum WellState : int {
     WellOpen=71, WellShut=72 };
 
+  inline const static QString WellStateStr(WellState wellState) {
+    switch (wellState) {
+      case WellOpen : return "WellOpen";
+      case WellShut : return "WellShut";
+    }
+  }
+
+  // ---------------------------------------------------------
   enum PreferredPhase : int {
     Oil=81, Water=82, Gas=83, Liquid=84 };
 
+  inline const static QString PreferredPhaseStr(PreferredPhase prefPhase) {
+    switch (prefPhase) {
+      case Oil : return "Oil";
+      case Water : return "Water";
+      case Gas : return "Gas";
+      case Liquid : return "Liquid";
+    }
+  }
+
+  // ---------------------------------------------------------
   enum Direction : int { X=91, Y=92, Z=93 };
 
   // ---------------------------------------------------------
@@ -190,6 +238,20 @@ class Model
       InjectionType injection_type;
       bool is_variable;
       QString name;
+
+      // -----------------------------------------------------
+      QString ControlEntryStr() {
+        QString str;
+        str += " name: " + name;
+        str += " time_step: " + QString::number(time_step);
+        str += " state: " + WellStateStr(state);
+        str += " mode: " + ControlModeStr(control_mode);
+        str += " inj_type: " + InjectionTypeStr(injection_type);
+        str += " is_variable: " + QString::number(is_variable);
+        return str;
+
+      };
+
     };
 
     // -----------------------------------------------------
@@ -247,6 +309,9 @@ class Model
     // List of well controls
     QList<ControlEntry> controls;
     std::vector<int> verb_vector_;
+
+
+
   };
 
   // -------------------------------------------------------
@@ -268,10 +333,14 @@ class Model
   { return control_times_; }
 
   // -------------------------------------------------------
-  void append_control_step(double step) {
-    control_times_.append(step);
-    // std::sort(control_times_.begin(),
-    //          control_times_.end());
+//  void append_control_step(double step) {
+//    control_times_.append(step);
+//  }
+
+  // -------------------------------------------------------
+  void sort_control_steps() {
+    std::sort(control_times_.begin(),
+              control_times_.end());
   }
 
   // -------------------------------------------------------
@@ -284,29 +353,20 @@ class Model
 
   DrillingMode drillingMode_;
 
-//  Drilling GetDrilling() {return drillseq_; };
-
-//  void UpdateDrilling(Drilling& drilling);
-//
-//  void GetDrillingStr(Drilling& drilling) const;
-//
-//  void SetDrillingSeq(Drilling& drilling,
-//                      QList<Well>& wells) const;
-
  private:
-// ---------------------------------------------------------
+  // -------------------------------------------------------
   Reservoir reservoir_;
   QList<Well> wells_;
   QList<double> control_times_;
 
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   void readReservoir(QJsonObject json_reservoir);
   Well readSingleWell(QJsonObject json_well);
 
-// ---------------------------------------------------------
+  // -------------------------------------------------------
   bool controlTimeIsDeclared(double time) const;
 
-// ---------------------------------------------------------
+  // -------------------------------------------------------
   vector<int> verb_vector_ = vector<int>(11,0);
 };
 
