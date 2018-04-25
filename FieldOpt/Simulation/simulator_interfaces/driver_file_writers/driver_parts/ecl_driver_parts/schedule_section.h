@@ -53,10 +53,6 @@ class Schedule : public ECLDriverPart
   Schedule(QList<Model::Wells::Well *> *wells,
            QList<double> control_times);
 
-  // ---------------------------------------------------------
-  Schedule(QList<Model::WellGroups::WellGroup *> *well_groups,
-           QList<double> control_times);
-
   QString GetPartString();
 
  private:

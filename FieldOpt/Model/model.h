@@ -160,7 +160,7 @@ class Model : public Loggable
     // Resulting aux vectors / maps
     vector<int> drill_groups_;
     vector<pair<string, double>> wseq_grpd_sorted_vs_time;
-    map<string, double> wseq_grpd_sorted_vs_cum_time;
+    map<string, double> wseq_grpd_sorted_vs_tstep;
 
   };
 

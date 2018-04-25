@@ -45,26 +45,6 @@ Schedule::Schedule(
                                    control_times);
 }
 
-// =========================================================
-Schedule::Schedule(
-    QList<Model::WellGroups::WellGroup *> *well_groups,
-    QList<double> control_times) {
-
-  // -------------------------------------------------------
-  for (auto wg : *well_groups) {
-
-    // -----------------------------------------------------
-    welspecs_ = new Welspecs(wg->group_wells());
-    compdat_ = new Compdat(wg->group_wells());
-
-  }
-
-//  // -------------------------------------------------------
-//  wellcontrols_ = new WellControls(wells,
-//                                   control_times);
-
-}
-
 
 // =========================================================
 QString Schedule::GetPartString() {

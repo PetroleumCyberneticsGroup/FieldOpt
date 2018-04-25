@@ -94,35 +94,32 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   // Add control entry defining drill time
   for (Wells::Well *w : *wells()) {
 
+    // Make new control
     Settings::Model::Well::ControlEntry d_control_entry =
         settings_->getWell(w->name()).controls[0];
 
-    Wells::Control d_control_tstep(d_control_entry,
-                                   settings_->getWell(w->name()),
-                                   variable_container_);
+    Wells::Control *d_control_tstep =
+        new Wells::Control(d_control_entry,
+                           settings_->getWell(w->name()),
+                           variable_container_);
 
-    d_control_tstep.setTStep(
-        drillseq_->wseq_grpd_sorted_vs_cum_time
+    // Associated drilling time with new control
+    d_control_tstep->setTStep(
+        drillseq_->wseq_grpd_sorted_vs_tstep
         [w->name().toStdString()]);
 
+    // Append control to list of well controls
     w->controls()->append(d_control_tstep);
 
+    // Shut down wells for all control steps prior
+    // to drilling step
+    for (Wells::Control *c : *w->controls()) {
+      if(c->time_step() < d_control_tstep->time_step()) {
+        c->setOpen(false);
+      }
+
+    }
   }
-
-
-
-
-
-
-
-  drill_tstep = well_settings.controls[0];
-
-  // add
-  drill_tstep.time_step = drilling_time_;
-  controls_->append(new Control(drill_tstep,
-                                well_settings,
-                                variable_container));
-
 
   // -------------------------------------------------------
   variable_container_->CheckVariableNameUniqueness();
@@ -623,8 +620,7 @@ void Model::SetDrillTimeVec() {
       d_tstep = d_tstep + drillseq_->name_vs_time.find(wn)->second;
       // pair<string, double> c(wn, d_tstep);
       // drillseq_->wseq_grpd_sorted_vs_time_cum.push_back(c);
-      drillseq_->wseq_grpd_sorted_vs_cum_time[wn] = d_tstep;
-
+      drillseq_->wseq_grpd_sorted_vs_tstep[wn] = d_tstep;
 
     }
 

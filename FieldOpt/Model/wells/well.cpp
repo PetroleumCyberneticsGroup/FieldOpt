@@ -78,11 +78,15 @@ Well::Well(Settings::Model settings,
                                          grid);
 
   // -------------------------------------------------------
-  // Drilling dependent on well length
+  // Set default drilling time
   drilling_order_ = well_settings.drilling_order;
   drilling_time_ = well_settings.drilling_time;
+
+  // -------------------------------------------------------
+  // Recompute drilling time dependent on well length
+  ComputeDrillingTime(); // updates drilling_time_
+
   UpdateHeelToeIJK();
-  ComputeDrillingTime();
 
   // -------------------------------------------------------
   // Set controls
