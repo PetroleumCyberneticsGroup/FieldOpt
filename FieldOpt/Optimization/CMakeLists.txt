@@ -18,7 +18,7 @@ if(EXISTS ${EXPERIMENTAL_CONSTRAINTS_DIR}
 	message("Including experimental constraints")
 	add_definitions(-DWITH_EXPERIMENTAL_CONSTRIANTS)
 	set(EXPERIMENTAL_CONSTRAINTS_SRC
-			${EXPERIMENTAL_CONSTRAINTS_DIR}/ optimizers/OptimizationProblem.cpp optimizers/OptimizationProblem.h optimizers/EigenUtil.h)
+			${EXPERIMENTAL_CONSTRAINTS_DIR}/ optimizers/OptimizationProblem.cpp optimizers/OptimizationProblem.h optimizers/EigenUtil.h optimizers/GradientEnhancedModel.cpp optimizers/GradientEnhancedModel.h)
 	set(EXPERIMENTAL_CONSTRAINTS_TESTS
 			${EXPERIMENTAL_CONSTRAINTS_DIR}/tests/)
 else()
@@ -61,7 +61,7 @@ add_library(optimization
 		optimizers/Subproblem.cpp
 		normalizer.cpp
 		constraints/pseudo_cont_boundary_2d.cpp
-		${EXPERIMENTAL_CONSTRAINTS_SRC} optimizers/EigenUtil.h)
+		${EXPERIMENTAL_CONSTRAINTS_SRC} optimizers/EigenUtil.h optimizers/GradientEnhancedModel.cpp optimizers/GradientEnhancedModel.h)
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
 # Target link libraries ================================================
