@@ -85,30 +85,14 @@ Well::Well(Settings::Model settings,
   ComputeDrillingTime();
 
   // -------------------------------------------------------
-  // Add control entry defining drill time
-  Settings::Model::Well::ControlEntry drill_tstep;
-  drill_tstep = well_settings.controls[0];
-
-  // add
-  drill_tstep.time_step = drilling_time_;
-
-  // -------------------------------------------------------
   // Set controls
   controls_ = new QList<Control *>();
-  controls_->append(new Control(drill_tstep,
-                                well_settings,
-                                variable_container));
-
-  // -----------------------------------------------------
   for (int i = 0; i < well_settings.controls.size(); ++i) {
 
     // -----------------------------------------------------
     controls_->append(new Control(well_settings.controls[i],
                                   well_settings,
                                   variable_container));
-
-    // -----------------------------------------------------
-
 
   }
 

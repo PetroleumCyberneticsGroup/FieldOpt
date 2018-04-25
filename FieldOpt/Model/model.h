@@ -39,7 +39,10 @@
 #include "Runner/loggable.hpp"
 #include "Runner/logger.h"
 #include "Utilities/colors.hpp"
-//#include "wells/well_group.h"
+
+#include "wells/drilling_sequence.h"
+#include "wells/well_group.h"
+#include "wells/control.h"
 
 // ---------------------------------------------------------
 class Logger;
@@ -154,9 +157,10 @@ class Model : public Loggable
     // Resulting vecotrs
     vector<vector<pair<int, string>>> wseq_grpd_sorted_name;
 
-    // Resulting aux vectors
+    // Resulting aux vectors / maps
     vector<int> drill_groups_;
     vector<pair<string, double>> wseq_grpd_sorted_vs_time;
+    map<string, double> wseq_grpd_sorted_vs_cum_time;
 
   };
 
@@ -179,7 +183,9 @@ class Model : public Loggable
 
   QList<Wells::Well *> *wells_;
   QList<WellGroups::WellGroup *> *well_groups_;
+
   Drilling *drillseq_;
+  DrillingSequence *drilling_seq_;
 
   // -------------------------------------------------------
   /*!

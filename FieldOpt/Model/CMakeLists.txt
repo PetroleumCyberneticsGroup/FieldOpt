@@ -27,7 +27,7 @@ add_library(model
     properties/property.cpp
     model_synchronization_object.cpp
     wells/wellbore/pseudo_cont_vert.cpp
-    wells/well_group.cpp)
+    wells/well_group.cpp wells/drilling_sequence.cpp wells/drilling_sequence.h)
 add_library(fieldopt::model ALIAS ${PROJECT_NAME})
 
 # Target link libraries ================================================

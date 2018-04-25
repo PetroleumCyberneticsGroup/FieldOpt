@@ -99,8 +99,11 @@ class Well
   { return wellbore_radius_->value(); }
 
   // -------------------------------------------------------
-  Wellbore::Trajectory *trajectory() { return trajectory_; }
-  QList<Control *> *controls() { return controls_; }
+  Wellbore::Trajectory *trajectory()
+  { return trajectory_; }
+
+  QList<Control *> *controls()
+  { return controls_; }
 
   // -------------------------------------------------------
   int heel_i() const { return heel_.i; }
@@ -122,6 +125,9 @@ class Well
   double GetDrillingTime()
   { return drilling_time_; };
 
+  double GetDrillingTStep()
+  { return drilling_tstep_; };
+
   std::pair<int, int> GetDrillingOrder()
   { return drilling_order_; };
 
@@ -140,6 +146,7 @@ class Well
 
   // -------------------------------------------------------
   double drilling_time_;
+  double drilling_tstep_;
   std::pair<int, int> drilling_order_;
 
   // -------------------------------------------------------
