@@ -3,6 +3,8 @@
 //
 
 #include "DFO.h"
+#include "GradientEnhancedModel.h"
+
 #define MODEL_IMPROVEMENT_ALGORITHM 0
 #define FOUND_NEW_OPTIMUM_CANDIDATE 1
 #define CRITICALITY_STEP 2
@@ -287,6 +289,12 @@ void DFO::iterate() {
   Eigen::MatrixXd *printme = DFO_model_.getYReference();
   bool isTrialPointNewOptimum = false;
 
+  Eigen::MatrixXd derivatives = Eigen::MatrixXd::Zero(2, number_of_interpolation_points_);
+  Eigen::VectorXd weights(3);
+  weights << 1,0.8,0.3;
+  GradientEnhancedModel enhancedModel(number_of_variables_,number_of_interpolation_points_, 2, weights, 0.5);
+
+
   while (notConverged) {
     if (iterations_ > 1000){
       DFO_model_.printQuadraticModel();
@@ -334,11 +342,18 @@ void DFO::iterate() {
       UpdateLastAction(INITIALIZED_MODEL);
 
       DFO_model_.printQuadraticModel();
-      DFO_model_.shiftCenterPointOfQuadraticModel(-DFO_model_.getCenterPoint());
-      DFO_model_.printQuadraticModel();
+      //DFO_model_.shiftCenterPointOfQuadraticModel(-DFO_model_.getCenterPoint());
+      //DFO_model_.printQuadraticModel();
+
+      Eigen::MatrixXd hess(number_of_variables_, number_of_variables_);
+      Eigen::VectorXd grad(number_of_variables_);
+      double constant;
+      enhancedModel.ComputeModel( (*printme),derivatives, DFO_model_.GetGradient(), *(printme2),DFO_model_.getCenterPoint(), DFO_model_.GetBestPoint(),
+      DFO_model_.GetTrustRegionRadius(), r);
+      enhancedModel.GetModel(constant, grad,hess);
 
     }
-
+/*
     if (last_action_ == MODEL_IMPROVEMENT_POINT_FOUND) {
       DFO_model_.update(new_point, function_evaluation, index_of_new_point, DFO_Model::INCLUDE_NEW_POINT);
       UpdateLastAction(MODEL_IMPROVEMENT_POINT_ADDED);
@@ -372,7 +387,7 @@ void DFO::iterate() {
               DFO_model_.FindPointToReplaceWithPointOutsideScaledTrustRegion(index_far_away_point, new_point);
         }
 
-
+*/
         /*
         else{
           DFO_model_.findWorstPointInInterpolationSet(new_point, index_of_new_point); //Check if it is lambda-poised.
@@ -384,6 +399,7 @@ void DFO::iterate() {
           }
         }
         */
+    /*
         if (cheapImprovementPossible) {
           std::cout << *printme << std::endl;
           std::cout << "Cheap improvement is possible" << std::endl;
@@ -621,7 +637,7 @@ void DFO::iterate() {
 
 
 
-
+*/
     /*
 
               Get the function evaluation(s)
