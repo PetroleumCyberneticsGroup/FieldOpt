@@ -79,7 +79,8 @@ class Control
 
  private:
   // ---------------------------------------------------------
-  Properties::DiscreteProperty *time_step_;
+  // Properties::DiscreteProperty *time_step_;
+  Properties::ContinousProperty *time_step_;
   Properties::BinaryProperty *open_;
   Properties::ContinousProperty *bhp_;
   Properties::ContinousProperty *rate_;

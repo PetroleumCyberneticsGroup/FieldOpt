@@ -53,6 +53,7 @@ WellGroup::WellGroup(
   for (int i = 0; i < wells_in_group_.size(); ++i)
     wname = wname + wells_in_group_[i].second;
 
+  // -------------------------------------------------------
   QString gname = "WellGroup#" +
       QString::fromStdString(wname) +
       "#" + QString::number(group_nr);

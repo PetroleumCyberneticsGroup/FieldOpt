@@ -62,7 +62,10 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   // -------------------------------------------------------
   CreateWellGroups();
 
-  // For subsequent calculations that are group-independent
+  // -------------------------------------------------------
+  // Set up regular well QList for subsequent calculations
+  // that are group-independent -> this carries over the
+  // order of wells set up in well groups
   wells_ = new QList<Wells::Well *>();
   for (auto group : *well_groups()) {
     for (auto well : *group->group_wells()) {
@@ -71,11 +74,20 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   }
 
   // -------------------------------------------------------
-  // Use current drilling seq + drill times for each well
+  // Update main name_vs_time map and wseq_grpd_sorted_vs_time
+  // aux vector in drilling_ object with drilling_times computed
+  // at each well creation (wells_ must be set before this)
   UpdateNamevsTimeMap();
 
   // -------------------------------------------------------
-  // Compute all
+  // Function: create cumulative drilling time steps based on
+  // current drill sequence (implicitly given by well_ ordering)
+  // + add these time steps for main control_time vector
+  // + add these timesteps to each well, set time steps previous
+  // to these equal to SHUT or CLOSE
+
+  // -------------------------------------------------------
+  //
   ExpandControlTimeVec();
   GetDrillingStr(); // Dbg
 
@@ -94,6 +106,7 @@ Model::Model(Settings::Model* settings, Logger *logger) {
 // =========================================================
 void Model::ExpandControlTimeVec() {
 
+  // -------------------------------------------------------
   for(auto tp : drillseq_->wseq_grpd_sorted_vs_time) {
     settings_->append_control_step(tp.second);
   }

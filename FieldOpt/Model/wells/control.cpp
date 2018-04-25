@@ -33,8 +33,10 @@ Control::Control(
     ::Model::Properties::VariablePropertyContainer *variables) {
 
   // -------------------------------------------------------
+  // time_step_ =
+  //    new Properties::DiscreteProperty(entry.time_step);
   time_step_ =
-      new Properties::DiscreteProperty(entry.time_step);
+      new Properties::ContinousProperty(entry.time_step);
 
   // -------------------------------------------------------
   if (well.type == ::Settings::Model::WellType::Injector)
@@ -48,6 +50,10 @@ Control::Control(
   } else if (entry.state == ::Settings::Model::WellState::WellShut) {
     open_ = new Properties::BinaryProperty(false);
   }
+
+  // -------------------------------------------------------
+  if(entry.time_step < well.drilling_time)
+    open_ = new Properties::BinaryProperty(false);
 
   // -------------------------------------------------------
   switch (entry.control_mode) {
