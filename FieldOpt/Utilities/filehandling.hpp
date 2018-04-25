@@ -8,9 +8,11 @@
 #include <QTextStream>
 #include <QDir>
 #include <stdexcept>
+#include <string>
 #include <iostream>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/operations.hpp>
+#include <vector>
 
 namespace Utilities {
 namespace FileHandling {
@@ -21,8 +23,7 @@ namespace FileHandling {
  * \param verbose Whether the path being checked should be printed.
  * \return True if a file exists at the specified path, otherwise false.
  */
-inline bool FileExists(QString file_path, bool verbose=false)
-{
+inline bool FileExists(const QString &file_path, const bool &verbose=false) {
     QFileInfo file(file_path);
     QFileInfo file_relative(file.absoluteFilePath());
     if (file.exists() && file.isFile()) {
@@ -40,13 +41,20 @@ inline bool FileExists(QString file_path, bool verbose=false)
 }
 
 /*!
+ * Overload of the FileExists(QString, bool) function. Creates a
+ * QString from the std string and calls the other function.
+ */
+inline bool FileExists(const std::string file_path, const bool verbose=false) {
+    return FileExists(QString::fromStdString(file_path), verbose);
+}
+
+/*!
  * \brief DirectoryExists Checks whether or not a folder exists at the specified path.
  * \param folder_path Path to a folder that may or may not exist.
  * \param verbose Whether the path being checked should be printed.
  * \return True if a folder exists at the specified path, otherwise false.
  */
-inline bool DirectoryExists(QString directory_path, bool verbose=false)
-{
+inline bool DirectoryExists(const QString &directory_path, const bool &verbose=false) {
     QFileInfo folder(directory_path);
     if (folder.exists() && folder.isDir()) {
         if (verbose) std::cout << "Directory exists at path: " << directory_path.toStdString() << std::endl;
@@ -56,6 +64,14 @@ inline bool DirectoryExists(QString directory_path, bool verbose=false)
         if (verbose) std::cout << "Directory does not exists at path: " << directory_path.toStdString() << std::endl;
         return false;
     }
+}
+
+/*!
+ * Overload of the DirectoryExists(QString, bool) function. Creates a
+ * QString from the std string and calls the other function.
+ */
+inline bool DirectoryExists(const std::string &directory_path, const bool &verbose=false) {
+    return DirectoryExists(QString::fromStdString(directory_path), verbose);
 }
 
 
@@ -89,7 +105,7 @@ inline bool ParentDirectoryExists(QString file_path)
  * \param file_path The file to create a list from.
  * \return List where each element is a line in the file.
  */
-inline QStringList *ReadFileToStringList(QString file_path)
+inline QStringList *ReadFileToStringList(const QString &file_path)
 {
     QStringList *string_list = new QStringList();
     QFile file(file_path);
@@ -106,6 +122,19 @@ inline QStringList *ReadFileToStringList(QString file_path)
     }
     file.close();
     return string_list;
+}
+
+inline std::vector<std::string> ReadFileToStdStringList(const std::string &filepath) {
+    auto qt_string_list = ReadFileToStringList(QString::fromStdString(filepath));
+    auto stringlist = std::vector<std::string>(qt_string_list->size());
+
+    for (int i = 0; i < qt_string_list->size(); ++i) {
+        stringlist[i] = qt_string_list->at(i).toStdString();
+    }
+    qt_string_list->clear();
+    delete qt_string_list;
+
+    return stringlist;
 }
 
 /*!
@@ -246,6 +275,20 @@ inline QString GetAbsoluteFilePath(QString file)
 {
     QFileInfo fileInfo(file);
     return fileInfo.absoluteFilePath();
+}
+
+/*!
+ * Get the path to a file's parent directory (i.e. remove everyting
+ * after the final slash)
+ */
+inline QString GetParentDirectoryPath(const QString &file_path) {
+    QStringList parts = file_path.split("/");
+    parts.removeLast();
+    return parts.join("/");
+}
+
+inline std::string GetParentDirectoryPath(const std::string &file_path) {
+    return GetParentDirectoryPath(QString::fromStdString(file_path)).toStdString();
 }
 
 }
