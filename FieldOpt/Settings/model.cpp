@@ -124,6 +124,25 @@ void Model::readReservoir(QJsonObject json_reservoir) {
 }
 
 // =========================================================
+Model::Well Model::EmptyModel(){
+  Well well;
+  well.name = "TEST";
+  well.group = "";
+  well.type = WellType::Injector;
+  well.definition_type = WellDefinitionType::WellBlocks;
+  well.controls = QList<Well::ControlEntry>();
+
+  Well::ControlEntry control;
+  control.time_step = 10.0;
+  control.state = WellState::WellOpen;
+  control.control_mode = ControlMode::BHPControl;
+  well.type == WellType::Injector;
+  control.injection_type = InjectionType::GasInjection;
+  control.is_variable = false;
+  well.controls.append(control);
+}
+
+// =========================================================
 Model::Well Model::readSingleWell(QJsonObject json_well) {
 
   // -------------------------------------------------------------

@@ -72,6 +72,7 @@ class Model
   // -------------------------------------------------------
   // This should only be accessed externally for testing purposes.
   Model(QJsonObject json_model);
+  Model(){};
 
   // -------------------------------------------------------
   enum ReservoirGridSourceType : int { ECLIPSE=1 };
@@ -356,10 +357,14 @@ class Model
 
   DrillingMode drillingMode_;
 
+  QList<Well> wells_;
+
+  Model::Well EmptyModel();
+
  private:
   // -------------------------------------------------------
   Reservoir reservoir_;
-  QList<Well> wells_;
+
   QList<double> control_times_;
 
   // -------------------------------------------------------

@@ -118,7 +118,16 @@ void Model::InsertDrillingTStep() {
     if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
       cout << "[mod]Looping through wells.-- " << endl;
 
+    Settings::Model *test_mod = new Settings::Model();
+
+    test_mod->EmptyModel();
+
+    // -----------------------------------------------------
+    if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
+      cout << "[mod]testing 1.-- " << endl;
+
     Settings::Model::Well::ControlEntry c_entry;
+
     c_entry.time_step = 0.0;
     c_entry.bhp = 100.0;
     c_entry.name = "TEST";
@@ -130,10 +139,13 @@ void Model::InsertDrillingTStep() {
     cout << "[mod:Control.cpp]------------ "
          << "time_step: " << c_entry.time_step;
 
-    auto entry = settings_->getWell(w->name()).controls[0];
+    Settings::Model::Well::ControlEntry*
+        entry = new Settings::Model::Well::ControlEntry();
 
-    cout << "[mod:Control.cpp]------------ "
-         << "time_step: " << entry.time_step;
+    entry = &settings_->getWell(w->name()).controls[0];
+
+    // cout << "[mod:Control.cpp]------------ "
+    //     << "time_step: " << entry.time_step;
 
     // -----------------------------------------------------
     // Make new control
@@ -147,13 +159,18 @@ void Model::InsertDrillingTStep() {
     // -------------------------------------------------------
     if (settings_->verb_vector()[5] > 4) // idx:5 -> mod
       cout << "[mod:Model.cpp]-------------- "
-           << Settings::Model::ControlStr(entry).toStdString();
+           << Settings::Model::ControlStr(*entry).toStdString();
 
 
     Wells::Control *d_control_tstep =
-        new Wells::Control(settings_->getWell(w->name()).controls[0],
-                       settings_->getWell(w->name()),
-                       variable_container_);
+        new Wells::Control(*entry,
+                           settings_->getWell(w->name()),
+                           variable_container_);
+
+//    Wells::Control *d_control_tstep =
+//        new Wells::Control(settings_->getWell(w->name()).controls[0],
+//                       settings_->getWell(w->name()),
+//                       variable_container_);
 
     // -----------------------------------------------------
     if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
