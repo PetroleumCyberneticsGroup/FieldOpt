@@ -234,17 +234,32 @@ void GradientEnhancedModel::solveLinearSystem(Eigen::MatrixXd D,
                                               Eigen::VectorXd funcVals,
                                               Eigen::VectorXd weights_least_square,
                                               Eigen::VectorXd &ans) {
-  //funcVals[0] = 0.0818000000000001;
-  //funcVals[1] = 0.2797999999999998;
-  //funcVals[2] = 0.5977999999999994;
 
+  /// Test for the convert functions. The answer is on the right. Case: ng_=4 and n_=5;
+  //int t1 = convert_h_ij_to_t_vectorized(1,1); // 1
+  //int t2 = convert_h_ij_to_t_vectorized(5,3); // 12
+  //int t3 = convert_h_ij_to_t_vectorized(5,5); // 15
+  //int t1 = convert_h_ij_to_t_lsq(2,1); // 13
+  //int t2 = convert_h_ij_to_t_lsq(5,3); // 3
+  //int t3 = convert_h_ij_to_t_lsq(5,5); // 5
+  //std::cout << "t1 = " << t1 << "\t t2 = " << t2 << "\t t3 = " << t3 << "\n\n";
+
+  //int ii1, jj1, ii2, jj2, ii3, jj3;
+  //convert_t_to_ij_vectorized(1,ii1,jj1);  // (1,1)
+  //convert_t_to_ij_vectorized(12,ii2,jj2); // (5,3)
+  //convert_t_to_ij_vectorized(15,ii3,jj3); // (5,5)
+  //std::cout << ii1 << ", " << jj1 << "\t"<< ii2 << ", " << jj2 << "\t"<< ii3 << ", " << jj3 << "\n";
+  //convert_t_to_ij_lsq(13,ii1,jj1); // (2,1)
+  //convert_t_to_ij_lsq(3,ii2,jj2);  // (5,3)
+  //convert_t_to_ij_lsq(5,ii3,jj3);  // (5,5)
+  //std::cout << ii1 << ", " << jj1 << "\t"<< ii2 << ", " << jj2 << "\t"<< ii3 << ", " << jj3 << "\n";
 
 
   // dL/dhij, (n² + n)/2
   // ans = [h11, h21, h31, h41, ... hn1, h22, h32, h42, h52, ... hn1,  ......, g1,g2,g3,...,gn, c, lambda1,lambda2,...,lambdam]
-  std::cout << "D\n" << D << std::endl;
-  std::cout << "v\n" << v << std::endl;
-  std::cout << "funcVals\n" << funcVals << std::endl;
+  //std::cout << "D\n" << D << std::endl;
+  //std::cout << "v\n" << v << std::endl;
+  //std::cout << "funcVals\n" << funcVals << std::endl;
   int colsD = 0;
   int y = n_;
   for (int i = 0; i < ng_; ++i) {
@@ -326,10 +341,7 @@ void GradientEnhancedModel::solveLinearSystem(Eigen::MatrixXd D,
     for (int t = 1; t <= n_; ++t){
       A(row, start_g_i + t -1) = points_(t-1,k-1);
     }
-    int t1 = convert_h_ij_to_t_vectorized(1,1); // 1
-    int t2 = convert_h_ij_to_t_vectorized(2,1); // 2
-    int t3 = convert_h_ij_to_t_vectorized(2,2); // 3
-    std::cout << "t1 = " << t1 << "\t t2 = " << t2 << "\t t3 = " << t3 << "\n\n";
+
     for (int i = 1; i <= n_; ++i) {
       for (int j = 1; j <= i; ++j) {
         if (i == j){
@@ -357,13 +369,11 @@ void GradientEnhancedModel::solveLinearSystem(Eigen::MatrixXd D,
 
 int GradientEnhancedModel::convert_h_ij_to_t_lsq(int i, int j) {
   int t = 0;
-  if (i <= ng_ && i >= (n_ - ng_)){
     for (int p = n_; p>i; --p){
       t += p;
     }
 
     t+=j;
-  }
   return t;
 }
 

@@ -37,6 +37,13 @@ Eigen::VectorXd matyasFunctionWithGradients(Eigen::VectorXd x) {
   return ret;
 }
 
+Eigen::VectorXd test(Eigen::VectorXd x){
+  Eigen::VectorXd ret(1+4);
+  ret.setOnes();
+  ret[0] = x.norm();
+  return ret;
+}
+
 double sphere(Eigen::VectorXd x) {
   double val = 0;
   for (int i = 0; i < x.rows(); i++) {
@@ -239,6 +246,7 @@ void DFO::handleEvaluatedCase(Optimization::Case *c) {
 }
 
 void DFO::iterate() {
+  int ng = 2;
   std::string color_from = "31";
   std::string color_to = "33";
 
@@ -269,10 +277,10 @@ void DFO::iterate() {
   double trust_region_radius_tilde = 0;
 
   Eigen::VectorXd function_evaluations(number_of_interpolation_points_);
-  Eigen::MatrixXd functionValsAndGrad(1+2,number_of_interpolation_points_);
+  Eigen::MatrixXd functionValsAndGrad(1+ng,number_of_interpolation_points_);
   functionValsAndGrad.setZero();
   function_evaluations.setZero();
-  Eigen::VectorXd functionValAndGrad(1+2);
+  Eigen::VectorXd functionValAndGrad(1+ng);
   double function_evaluation;
 
   // These are the ones that are used the most. Used in all other places than "Step 4 - Model Improvement".
@@ -290,7 +298,7 @@ void DFO::iterate() {
   //Eigen::MatrixXd derivatives = Eigen::MatrixXd::Zero(2, number_of_interpolation_points_);
   Eigen::VectorXd weights(3);
   weights << 1,0.8,0.3;
-  GradientEnhancedModel enhancedModel(number_of_variables_,number_of_interpolation_points_, 2, weights, 1);
+  GradientEnhancedModel enhancedModel(number_of_variables_,number_of_interpolation_points_, ng, weights, 1);
 
 
   while (notConverged) {
@@ -300,7 +308,7 @@ void DFO::iterate() {
     std::cout << "\033[1;34;m " << " ---------- New iterate " << iterations_ << " ---------- " << "\033[0m"
               << std::endl;
     std::cout << "\033[1;34;m " << "Y = \n" << "\033[0m" << *refY << "\n";
-    if (iterations_ != 0 && iterations_ != 1) {
+    if (iterations_ != 0 && iterations_ != 1 && iterations_ != 2) {
       std::cout << "\033[1;34;m " << "Ybest = \n" << "\033[0m" << DFO_model_.GetBestPoint() << "\n";
 
     }
@@ -351,9 +359,9 @@ void DFO::iterate() {
       Eigen::MatrixXd hess(number_of_variables_, number_of_variables_);
       Eigen::VectorXd grad(number_of_variables_);
       double constant;
-      Eigen::MatrixXd ycop = (*refY).block(0,1,2,3);
-      Eigen::MatrixXd dercopy = (*refDerivatives).block(0,1,2,3);
-      Eigen::VectorXd funccopy = (*refFuncVals).tail(3);
+      //Eigen::MatrixXd ycop = (*refY).block(0,1,2,3);
+      //Eigen::MatrixXd dercopy = (*refDerivatives).block(0,1,2,3);
+      //Eigen::VectorXd funccopy = (*refFuncVals).tail(3);
 
       enhancedModel.ComputeModel( (*refY), (*refDerivatives), DFO_model_.GetGradient(), (*refFuncVals),DFO_model_.getCenterPoint(), DFO_model_.GetBestPoint(),
                                   DFO_model_.GetTrustRegionRadius(), r);
