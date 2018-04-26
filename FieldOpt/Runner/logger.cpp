@@ -31,7 +31,7 @@ Logger::Logger(Runner::RuntimeSettings *rts,
     write_logs_ = write_logs;
     is_worker_ = output_subdir.length() > 0;
     verbose_ = rts->verbosity_level();
-    output_dir_ = rts->output_dir();
+    output_dir_ = QString::fromStdString(rts->paths().GetPath(Paths::OUTPUT_DIR));
     if (output_subdir.length() > 0) {
         output_dir_ = output_dir_ + "/" + output_subdir + "/";
         Utilities::FileHandling::CreateDirectory(output_dir_);

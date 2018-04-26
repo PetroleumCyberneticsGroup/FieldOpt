@@ -8,7 +8,8 @@ add_library(settings
         model.cpp
         settings.cpp
         deck_parser.cpp
-        ensemble.cpp)
+        ensemble.cpp
+        paths.cpp)
 add_library(fieldopt::settings ALIAS ${PROJECT_NAME})
 
 target_link_libraries(settings

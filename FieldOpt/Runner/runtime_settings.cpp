@@ -22,32 +22,27 @@
 
 namespace Runner {
 
+using namespace Utilities::FileHandling;
+
 RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
 {
     auto vm = createVariablesMap(argc, argv);
 
     if (vm.count("input-file")) {
-        driver_file_ = QString::fromStdString(vm["input-file"].as<std::string>());
-        if (!Utilities::FileHandling::FileExists(driver_file_))
-            throw std::runtime_error("The specified driver file does not exist: "
-                                         + driver_file_.toStdString());
+        paths_.SetPath(Paths::DRIVER_FILE, vm["input-file"].as<std::string>());
     } else throw std::runtime_error("An input file must be specified.");
 
     if (vm.count("output-dir")) {
-        output_dir_ = Utilities::FileHandling::GetAbsoluteFilePath(
-            QString::fromStdString(vm["output-dir"].as<std::string>()));
-        if (!Utilities::FileHandling::DirectoryExists(output_dir_))
-            throw std::runtime_error("The specified output directory does not exist: "
-                                         + output_dir_.toStdString());
+        paths_.SetPath(Paths::OUTPUT_DIR, vm["output-dir"].as<std::string>());
     } else throw std::runtime_error("An output directory must be specified.");
 
     if (vm.count("verbose")) verbosity_level_ = vm["verbose"].as<int>();
     else verbosity_level_ = 0;
 
     overwrite_existing_ = vm.count("force") != 0;
-    if (!overwrite_existing_ && !Utilities::FileHandling::DirectoryIsEmpty(output_dir_))
+    if (!overwrite_existing_ && !DirectoryIsEmpty(paths_.GetPath(Paths::OUTPUT_DIR)))
         throw std::runtime_error("Output directory is not empty. Use the --force flag to "
-                                     "overwrite existing content in: " + output_dir_.toStdString());
+                                     "overwrite existing content in: " + paths_.GetPath(Paths::OUTPUT_DIR));
 
     if (vm.count("max-parallel-simulations")) {
         max_parallel_sims_ = vm["max-parallel-simulations"].as<int>();
@@ -72,36 +67,20 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
     } else runner_type_ = RunnerType::SERIAL;
 
     if (vm.count("sim-drv-path")) {
-        QString sim_drv_path = QString::fromStdString(vm["sim-drv-path"].as<std::string>());
-        if (!Utilities::FileHandling::FileExists(sim_drv_path))
-            throw std::runtime_error("Simulation driver file specified as argument does not exist: " + sim_drv_path.toStdString());
-        else {
-            simulator_driver_path_ = Utilities::FileHandling::GetAbsoluteFilePath(sim_drv_path);
-        }
-    } else simulator_driver_path_ = "";
+        paths_.SetPath(Paths::SIM_DRIVER_FILE, GetAbsoluteFilePath(vm["sim-drv-path"].as<std::string>()));
+    }
 
     if (vm.count("sim-exec-path")) {
-        QString sim_exec_path = QString::fromStdString(vm["sim-exec-path"].as<std::string>());
-        if (!Utilities::FileHandling::FileExists(sim_exec_path))
-            throw std::runtime_error("Custom executable file path specified as argument does not exist: " + sim_exec_path.toStdString());
-        else {
-            simulator_exec_script_path_ = Utilities::FileHandling::GetAbsoluteFilePath(sim_exec_path);
-        }
-    } else simulator_exec_script_path_ = "";
+        paths_.SetPath(Paths::SIM_EXEC_SCRIPT_FILE, GetAbsoluteFilePath(vm["sim-exec-path"].as<std::string>()));
+    }
 
     if (vm.count("fieldopt-build-dir")) {
-        QString fieldopt_build_dir = QString::fromStdString(vm["fieldopt-build-dir"].as<std::string>());
-        if (!Utilities::FileHandling::DirectoryExists(fieldopt_build_dir))
-            throw std::runtime_error("FieldOpt build directory specified as argument does not exist: " + fieldopt_build_dir.toStdString());
-        else fieldopt_build_dir_ = fieldopt_build_dir;
-    } else fieldopt_build_dir_ = "";
+        paths_.SetPath(Paths::BUILD_DIR, vm["fieldopt-build-dir"].as<std::string>());
+    }
 
     if (vm.count("grid-path")) {
-        QString grid_path = QString::fromStdString(vm["grid-path"].as<std::string>());
-        if (!Utilities::FileHandling::FileExists(grid_path))
-            throw std::runtime_error("Grid file path specified as argument does not exist: " + fieldopt_build_dir_.toStdString());
-        else grid_file_path_ = grid_path;
-    } else grid_file_path_ = "";
+        paths_.SetPath(Paths::GRID_FILE, vm["grid-path"].as<std::string>());
+    }
 
     if (vm.count("well-prod-points")) {
         if (vm["well-prod-points"].as<std::vector<double>>().size() != 6)
@@ -129,13 +108,13 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
         std::cout << "Threads pr sim:      " << boost::lexical_cast<std::string>(threads_per_sim_) << std::endl;
         str_out = "Current/specified paths:";
         std::cout << "\n" << str_out << "\n" << std::string(str_out.length(),'-') << std::endl;
-        std::cout << "Current dir:-------" << Utilities::FileHandling::GetCurrentDirectoryPath().toStdString() << std::endl;
-        std::cout << "Input file:--------" << driver_file_.toStdString() << std::endl;
-        std::cout << "Output dir:--------" << output_dir().toStdString() << std::endl;
-        std::cout << "Sim driver file:---" << (simulator_driver_path_.length() > 0 ? simulator_driver_path_.toStdString() : "from FieldOpt driver file") << std::endl;
-        std::cout << "Grid file path:----" << (grid_file_path_.length() > 0 ? grid_file_path_.toStdString() : "from FieldOpt driver file") << std::endl;
-        std::cout << "Exec file path:----" << (simulator_exec_script_path_.length() > 0 ? simulator_exec_script_path_.toStdString() : "from FieldOpt driver file") << std::endl;
-        std::cout << "Build dir:---------" << fieldopt_build_dir_.toStdString() << std::endl;
+        std::cout << "Current dir:-------" << GetCurrentDirectoryPath().toStdString() << std::endl;
+        std::cout << "Input file:--------" << paths_.GetPath(Paths::DRIVER_FILE) << std::endl;
+        std::cout << "Output dir:--------" << paths_.GetPath(Paths::OUTPUT_DIR) << std::endl;
+        std::cout << "Sim driver file:---" << paths_.GetPath(Paths::SIM_DRIVER_FILE) << std::endl;
+        std::cout << "Grid file path:----" << paths_.GetPath(Paths::GRID_FILE) << std::endl;
+        std::cout << "Exec file path:----" << paths_.GetPath(Paths::SIM_EXEC_SCRIPT_FILE) << std::endl;
+        std::cout << "Build dir:---------" << paths_.GetPath(Paths::BUILD_DIR) << std::endl;
         if (vm.count("well-prod-points"))
             std::cout << "Producer coordinates:   " << wellSplineCoordinateString(prod_coords_).toStdString() << std::endl;
         if (vm.count("well-prod-points"))
@@ -235,12 +214,12 @@ map<string, string> RuntimeSettings::GetState() {
         case MPISYNC: statemap["runner"] = "MPI Parallel"; break;
     }
 
-    statemap["path FieldOpt driver"] = driver_file_.toStdString();
-    statemap["path Otput Directory"] = output_dir_.toStdString();
-    statemap["path Simulator base driver"] = simulator_driver_path_.toStdString();
-    statemap["path Grid file"] = grid_file_path_.toStdString();
-    statemap["path Simulator execution script"] = simulator_exec_script_path_.toStdString();
-    statemap["path FieldOpt build directory"] = fieldopt_build_dir_.toStdString();
+    statemap["path FieldOpt driver"] = paths_.GetPath(Paths::DRIVER_FILE);
+    statemap["path Otput Directory"] = paths_.GetPath(Paths::OUTPUT_DIR);
+    statemap["path Simulator base driver"] = paths_.GetPath(Paths::SIM_DRIVER_FILE);
+    statemap["path Grid file"] = paths_.GetPath(Paths::GRID_FILE);
+    statemap["path Simulator execution script"] = paths_.GetPath(Paths::SIM_EXEC_SCRIPT_FILE);
+    statemap["path FieldOpt build directory"] = paths_.GetPath(Paths::BUILD_DIR);
     return statemap;
 }
 QUuid RuntimeSettings::GetId() {

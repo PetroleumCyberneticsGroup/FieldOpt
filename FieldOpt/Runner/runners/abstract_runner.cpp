@@ -60,26 +60,29 @@ double AbstractRunner::sentinelValue() const
 
 void AbstractRunner::InitializeSettings(QString output_subdirectory)
 {
-    QString output_directory = runtime_settings_->output_dir();
+    QString output_directory = QString::fromStdString(runtime_settings_->paths().GetPath(Paths::OUTPUT_DIR));
     if (output_subdirectory.length() > 0)
         output_directory.append(QString("/%1/").arg(output_subdirectory));
     Utilities::FileHandling::CreateDirectory(output_directory);
 
-    settings_ = new Settings::Settings(runtime_settings_->driver_file(), output_directory);
+    settings_ = new Settings::Settings(
+        QString::fromStdString(runtime_settings_->paths().GetPath(Paths::DRIVER_FILE)),
+        QString::fromStdString(runtime_settings_->paths().GetPath(Paths::OUTPUT_DIR)));
     settings_->set_verbosity(runtime_settings_->verbosity_level());
 
     // Override simulator driver file if it has been passed as command line arguments
-    if (runtime_settings_->simulator_driver_path().length() > 0)
-        settings_->simulator()->set_driver_file_path(runtime_settings_->simulator_driver_path());
+    /// \todo Move this into settings when passing Paths object as constructor to it.
+    if (runtime_settings_->paths().IsSet(Paths::SIM_DRIVER_FILE))
+        settings_->simulator()->set_driver_file_path(QString::fromStdString(runtime_settings_->paths().GetPath(Paths::SIM_DRIVER_FILE)));
     // Override grid file if it has been passed as command line arguments
-    if (runtime_settings_->grid_file_path().length() > 0)
-        settings_->model()->set_reservoir_grid_path(runtime_settings_->grid_file_path());
+    if (runtime_settings_->paths().IsSet(Paths::GRID_FILE))
+        settings_->model()->set_reservoir_grid_path(QString::fromStdString(runtime_settings_->paths().GetPath(Paths::GRID_FILE)));
     // Override simulator executable path if it has been passed as command line arguments
-    if (runtime_settings_->simulator_exec_script_path().length() > 0)
-        settings_->simulator()->set_execution_script_path(runtime_settings_->simulator_exec_script_path());
+    if (runtime_settings_->paths().IsSet(Paths::SIM_EXEC_SCRIPT_FILE))
+        settings_->simulator()->set_execution_script_path(QString::fromStdString(runtime_settings_->paths().GetPath(Paths::SIM_EXEC_SCRIPT_FILE)));
     // Override FieldOpt build directory path if it has been passed as command line arguments
-    if (runtime_settings_->fieldopt_build_dir().length() > 0)
-        settings_->set_build_path(runtime_settings_->fieldopt_build_dir());
+    if (runtime_settings_->paths().IsSet(Paths::BUILD_DIR))
+        settings_->set_build_path(QString::fromStdString(runtime_settings_->paths().GetPath(Paths::BUILD_DIR)));
 }
 
 void AbstractRunner::InitializeModel()
@@ -215,7 +218,7 @@ void AbstractRunner::InitializeOptimizer()
         default:
             throw std::runtime_error("Unable to initialize runner: optimization algorithm set in driver file not recognized.");
     }
-    optimizer_->EnableConstraintLogging(runtime_settings_->output_dir());
+    optimizer_->EnableConstraintLogging(QString::fromStdString(runtime_settings_->paths().GetPath(Paths::OUTPUT_DIR)));
 }
 
 void AbstractRunner::InitializeBookkeeper()
