@@ -148,7 +148,7 @@ class Settings
   Optimization *optimization_;
 
   // -------------------------------------------------------
-  std::vector<int> verb_vector_ = std::vector<int>(11,0);
+  vector<int> verb_vector_ = vector<int>(11,0);
 
   // -------------------------------------------------------
   void readDriverFile();

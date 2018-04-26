@@ -89,13 +89,13 @@ class WellControls : public ECLDriverPart
    *
    */
   struct TimeEntry {
-    int time;
+    double time;
     bool has_well_setting = false;
     QList<WellSetting *> well_settings;
   };
 
   // ------------------------------------------------------
-  QMap<int, TimeEntry *> time_entries_;
+  QMap<double, TimeEntry *> time_entries_;
 
   void initializeTimeEntries(QList<Model::Wells::Well *> *wells,
                              QList<double> control_times);

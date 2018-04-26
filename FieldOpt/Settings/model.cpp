@@ -37,7 +37,11 @@ using std::endl;
 namespace Settings {
 
 // =========================================================
-Model::Model(QJsonObject json_model) {
+Model::Model(QJsonObject json_model,
+             vector<int> verb_vector) {
+
+  // -------------------------------------------------------
+  verb_vector_ = verb_vector;
 
   // -------------------------------------------------------
   // Reservoir
@@ -124,25 +128,6 @@ void Model::readReservoir(QJsonObject json_reservoir) {
 }
 
 // =========================================================
-Model::Well Model::EmptyModel(){
-  Well well;
-  well.name = "TEST";
-  well.group = "";
-  well.type = WellType::Injector;
-  well.definition_type = WellDefinitionType::WellBlocks;
-  well.controls = QList<Well::ControlEntry>();
-
-  Well::ControlEntry control;
-  control.time_step = 10.0;
-  control.state = WellState::WellOpen;
-  control.control_mode = ControlMode::BHPControl;
-  well.type == WellType::Injector;
-  control.injection_type = InjectionType::GasInjection;
-  control.is_variable = false;
-  well.controls.append(control);
-}
-
-// =========================================================
 Model::Well Model::readSingleWell(QJsonObject json_well) {
 
   // -------------------------------------------------------------
@@ -151,6 +136,7 @@ Model::Well Model::readSingleWell(QJsonObject json_well) {
   // -------------------------------------------------------------
   // Well name
   well.name = json_well["Name"].toString();
+  well.verb_vector_ = verb_vector();
 
   // -------------------------------------------------------------
   // Well Type
@@ -486,16 +472,17 @@ bool Model::controlTimeIsDeclared(double time) const {
 Model::Well Model::getWell(QString well_name) {
 
   // -------------------------------------------------------
-  for (int wnr = 0; wnr < wells_.size(); ++wnr) {
-    if(wells_.at(wnr).name.compare(well_name)) {
-      return wells_.at(wnr);
+  for (int wnr = 0; wnr < wells().size(); wnr++) {
+
+    if(wells().at(wnr).name.compare(well_name) == 0) {
+      return wells().at(wnr);
+
     } else {
-      throw std::runtime_error("Finding well by name failed.");
+      std::runtime_error("Finding well by name failed.");
     }
+
   }
 }
-
-
 
 }
 

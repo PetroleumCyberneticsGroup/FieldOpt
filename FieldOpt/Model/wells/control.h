@@ -42,7 +42,7 @@ namespace Wells {
 class Control
 {
  public:
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   /*!
    * \brief Control
    * \param entry Settings entry to create a control from.
@@ -56,40 +56,54 @@ class Control
           ::Settings::Model::Well well,
           ::Model::Properties::VariablePropertyContainer *variables);
 
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   double time_step() const { return time_step_->value(); }
-  void setTStep(double tstep) { time_step_->setValue(tstep); }
+  // void setTStep(double tstep) { time_step_->setValue(tstep); }
 
   bool open() const { return open_->value(); }
   void setOpen(bool open) { open_->setValue(open); }
 
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   double bhp() const { return bhp_->value(); }
-  void setBhp(double bhp) { bhp_->setValue(bhp); }
+  // void setBhp(double bhp) { bhp_->setValue(bhp); }
 
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   double rate() const { return rate_->value(); }
-  void setRate(double rate) { rate_->setValue(rate); }
+  // void setRate(double rate) { rate_->setValue(rate); }
 
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   ::Settings::Model::ControlMode mode() const
   { return mode_; }
 
   void setMode(::Settings::Model::ControlMode mode)
   { mode_ = mode; }
 
+  // -------------------------------------------------------
   ::Settings::Model::InjectionType injection_fluid() const
   { return injection_fluid_; }
 
+  // void setInjFluid(::Settings::Model::InjectionType injfluid)
+  // { injection_fluid_ = injfluid; }
+
  private:
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   // Properties::DiscreteProperty *time_step_;
   Properties::ContinousProperty *time_step_;
   Properties::BinaryProperty *open_;
-  Properties::ContinousProperty *bhp_;
-  Properties::ContinousProperty *rate_;
-  ::Settings::Model::ControlMode mode_;
-  ::Settings::Model::InjectionType injection_fluid_;
+
+  // -------------------------------------------------------
+  Properties::ContinousProperty *bhp_ =
+      new Properties::ContinousProperty(-1.0);
+
+  Properties::ContinousProperty *rate_ =
+      new Properties::ContinousProperty(-1.0);
+
+  // -------------------------------------------------------
+  ::Settings::Model::ControlMode mode_ =
+      ::Settings::Model::BHPControl;
+
+  ::Settings::Model::InjectionType injection_fluid_
+      = ::Settings::Model::WaterInjection;
 };
 
 }

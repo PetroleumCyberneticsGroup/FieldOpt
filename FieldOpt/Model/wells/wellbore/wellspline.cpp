@@ -67,7 +67,7 @@ WellSpline::WellSpline(
   well_settings_ = well_settings;
 
   // -------------------------------------------------------
-  if (well_settings_.verb_vector_[5] > 1) // idx:5 -> mod (Model)
+  if (well_settings_.verb_vector_[5] > 1) // idx:5 -> mod
     std::cout << "[mod]Define well spline.----- " << std::endl;
 
   // -------------------------------------------------------
@@ -117,13 +117,13 @@ WellSpline::WellSpline(
 QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
 
   // ---------------------------------------------------------------
-  if (well_settings_.verb_vector_[5] > 1) // idx:5 -> mod (Model)
+  if (well_settings_.verb_vector_[5] > 1) // idx:5 -> mod
     cout << "[mod]Get blocks for well:---- "
          << well_settings_.name.toStdString() << endl;
 
   // ---------------------------------------------------------------
   int lvl = well_settings_.verb_vector_[5];
-  print_dbg_msg_wellspline(__func__, "gwb", 0.0, lvl, 1);
+  print_dbg_msg_wellspline(__func__, "gwb", 0.0, lvl, 3);
 
   // ---------------------------------------------------------------
   auto heel = Eigen::Vector3d(heel_x_->value(),
@@ -158,7 +158,7 @@ QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
   // ---------------------------------------------------------------
   // Dbg file
   time_cwb_wic_rixx_ = time_span_msecs(start, QDateTime::currentDateTime());
-  print_dbg_msg_wellspline(__func__, "cwb-rixx", time_cwb_wic_rixx_, lvl, 1);
+  print_dbg_msg_wellspline(__func__, "cwb-rixx", time_cwb_wic_rixx_, lvl, 2);
   print_dbg_msg_wellspline_wic_coords(__func__, "wicalc_rixx.dbg", well_settings_,
                                       block_data_rixx, lvl, 1);
 
@@ -194,19 +194,21 @@ QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
 
 
 // =========================================================
-WellBlock *WellSpline::getWellBlock(IntersectedCell block_data) {
+WellBlock *WellSpline::getWellBlock(
+    IntersectedCell block_data) {
 
-  // ---------------------------------------------------------------
+  // -------------------------------------------------------
   auto wb = new WellBlock(block_data.ijk_index().i()+1,
                           block_data.ijk_index().j()+1,
                           block_data.ijk_index().k()+1);
 
-  // ---------------------------------------------------------------
+  // -------------------------------------------------------
   auto comp = new Completions::Perforation();
-  comp->setTransmissibility_factor(block_data.cell_well_index_matrix());
+  comp->setTransmissibility_factor(
+      block_data.cell_well_index_matrix());
   wb->AddCompletion(comp);
 
-  // ---------------------------------------------------------------
+  // -------------------------------------------------------
   return wb;
 }
 

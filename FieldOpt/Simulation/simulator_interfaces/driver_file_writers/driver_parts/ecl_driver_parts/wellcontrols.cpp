@@ -76,7 +76,7 @@ initializeTimeEntries(QList<Model::Wells::Well *> *wells,
                       QList<double> control_times) {
 
   // -------------------------------------------------------
-  time_entries_ = QMap<int, TimeEntry *>();
+  time_entries_ = QMap<double, TimeEntry *>();
 
   // -------------------------------------------------------
   for (int i = 0; i < wells->size(); ++i) {
@@ -88,7 +88,7 @@ initializeTimeEntries(QList<Model::Wells::Well *> *wells,
       for (int j = 0; j < wells->at(i)->controls()->size(); ++j) {
 
         // -------------------------------------------------
-        int current_time_step =
+        double current_time_step =
             wells->at(i)->controls()->at(j)->time_step();
 
         // -------------------------------------------------
@@ -161,8 +161,14 @@ QString WellControls::createTimeEntry(double time,
 
   // -------------------------------------------------------
   // The amount of time to advance
+  QString tstep;
   double delta_time = time - prev_time;
-  return QString("TSTEP\n%1 /\n\n").arg(delta_time);
+
+  tstep.sprintf(
+      "===> T=%4.3f <===\nTSTEP\n%4.3f /\n\n",
+      time,
+      delta_time);
+  return tstep;
 }
 
 // =========================================================

@@ -359,7 +359,7 @@ void Settings::readModelSection() {
   // -------------------------------------------------------------
   try {
     QJsonObject model = json_driver_->value("Model").toObject();
-    model_ = new Model(model);
+    model_ = new Model(model, verb_vector());
   }
   catch (std::exception const &ex) {
     throw UnableToParseModelSectionException(
@@ -367,7 +367,6 @@ void Settings::readModelSection() {
   }
 
   // -------------------------------------------------------------
-  model_->set_verbosity_vector(verb_vector());
   if (model_->verb_vector_[9] > 0) { // idx:9 -> set (Settings)
     string str_out = "[set]model settings----";
     cout << "\n" << BLDON << str_out << AEND << "\n"

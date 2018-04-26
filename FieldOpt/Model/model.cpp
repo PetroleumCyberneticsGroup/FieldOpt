@@ -65,6 +65,7 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   // -------------------------------------------------------
    if (settings_->verb_vector()[5] > 1) // idx:5 -> mod
     cout << "[mod]Setting up well_ QList.- " << endl;
+
   // Set up regular well QList for subsequent calculations
   // that are group-independent -> this carries over the
   // order of wells set up in well groups
@@ -108,7 +109,7 @@ void Model::InsertDrillingTStep() {
 
   // -------------------------------------------------------
   if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
-    cout << "[mod]InsertDrillingTStep().-- " << endl;
+    cout << BGREEN << "[mod]InsertDrillingTStep().-- " << AEND << endl;
 
   // -------------------------------------------------------
   // Add control entry defining drill time
@@ -118,74 +119,42 @@ void Model::InsertDrillingTStep() {
     if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
       cout << "[mod]Looping through wells.-- " << endl;
 
-    Settings::Model *test_mod = new Settings::Model();
-
-    test_mod->EmptyModel();
-
-    // -----------------------------------------------------
-    if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
-      cout << "[mod]testing 1.-- " << endl;
-
-    Settings::Model::Well::ControlEntry c_entry;
-
-    c_entry.time_step = 0.0;
-    c_entry.bhp = 100.0;
-    c_entry.name = "TEST";
-    c_entry.control_mode = Settings::Model::BHPControl;
-    c_entry.injection_type = Settings::Model::GasInjection;
-    c_entry.is_variable = false;
-    c_entry.state = Settings::Model::WellOpen;
-
-    cout << "[mod:Control.cpp]------------ "
-         << "time_step: " << c_entry.time_step;
-
-    Settings::Model::Well::ControlEntry*
-        entry = new Settings::Model::Well::ControlEntry();
-
-    entry = &settings_->getWell(w->name()).controls[0];
-
-    // cout << "[mod:Control.cpp]------------ "
-    //     << "time_step: " << entry.time_step;
-
-    // -----------------------------------------------------
-    // Make new control
-//    Wells::Control d_control_tstep =
-//        Wells::Control(settings_->getWell(w->name()).controls[0],
-//                       settings_->getWell(w->name()),
-//                       variable_container_);
-
-
-
-    // -------------------------------------------------------
-    if (settings_->verb_vector()[5] > 4) // idx:5 -> mod
-      cout << "[mod:Model.cpp]-------------- "
-           << Settings::Model::ControlStr(*entry).toStdString();
-
-
-    Wells::Control *d_control_tstep =
-        new Wells::Control(*entry,
-                           settings_->getWell(w->name()),
-                           variable_container_);
-
-//    Wells::Control *d_control_tstep =
-//        new Wells::Control(settings_->getWell(w->name()).controls[0],
-//                       settings_->getWell(w->name()),
-//                       variable_container_);
-
-    // -----------------------------------------------------
-    if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
-      cout << "[mod]Make new control entry.- " << endl;
-
     // -----------------------------------------------------
     // Associate drilling time with new control
     double d_time_step =
         drilling_seq_->
             wseq_grpd_sorted_vs_tstep[w->name().toStdString()];
-    d_control_tstep->setTStep(d_time_step);
 
     // -----------------------------------------------------
     if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
-      cout << "[mod]Append to control list.- " << endl;
+      cout << BGREEN << "[mod]Make new control entry.- " << AEND << endl;
+
+    // -----------------------------------------------------
+    // Careful with uninitialized variables in Settings::Model
+    // Adjust Setting::Control
+    ::Settings::Model::Well well_entry;
+    well_entry = settings_->getWell(w->name());
+    well_entry.verb_vector_ = settings_->verb_vector();
+
+    ::Settings::Model::Well::ControlEntry
+        control_entry = well_entry.controls[0];
+    control_entry.time_step = d_time_step;
+
+    // -----------------------------------------------------
+    if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
+      cout << BGREEN << "[mod]Make new control step.-- " << AEND << endl;
+
+    // -----------------------------------------------------
+    // Make Well::Control
+    Wells::Control *d_control_tstep =
+        new Wells::Control(control_entry,
+                           well_entry,
+                           variable_container_);
+
+
+    // -----------------------------------------------------
+    if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
+      cout << BGREEN << "[mod]Append to control list.- " << AEND << endl;
 
     // -----------------------------------------------------
     // Append control to list of well controls
@@ -210,8 +179,8 @@ void Model::InsertDrillingTStep() {
   settings_->sort_control_steps();
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
-    cout << "[mod]InsertDrillingTStep().-- DONE" << endl;
+  // if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
+    cout << BGREEN << "[mod]InsertDrillingTStep().-- DONE" << AEND << endl;
 
 }
 
@@ -529,7 +498,7 @@ void Model::GetDrillingStr() {
   // -------------------------------------------------------
   string str_out = "[dbg]GetDrillingStr          ";
   cout << "\n" << BLDON << str_out << AEND << "\n"
-       << std::string(str_out.length(), '-') << endl;
+       << string(str_out.length(), '-') << endl;
 
   // -------------------------------------------------------
   for(int i=0; i < drilling_seq_->drill_groups_.size(); ++i) {
@@ -560,6 +529,7 @@ void Model::GetDrillingStr() {
 
     cout << "TimeSeq: [ "
          << seq_vec_time[i].first << " -- "
+         << setprecision(3) << fixed
          << seq_vec_time[i].second << " ]"
          << endl;
 

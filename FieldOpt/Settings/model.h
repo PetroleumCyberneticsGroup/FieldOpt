@@ -71,8 +71,8 @@ class Model
  public:
   // -------------------------------------------------------
   // This should only be accessed externally for testing purposes.
-  Model(QJsonObject json_model);
-  Model(){};
+  Model(QJsonObject json_model,
+        vector<int> verb_vector);
 
   // -------------------------------------------------------
   enum ReservoirGridSourceType : int { ECLIPSE=1 };
@@ -88,8 +88,8 @@ class Model
 
   inline const static QString WellTypeStr(WellType wellType) {
     switch (wellType) {
-      case Injector : return "Injector";
-      case Producer : return "Producer";
+      case Injector : return "Inj";
+      case Producer : return "Prod";
     }
   }
 
@@ -98,18 +98,18 @@ class Model
 
   inline const static QString ControlModeStr(ControlMode controlMode) {
     switch (controlMode) {
-      case BHPControl : return "BHPControl";
-      case RateControl : return "RateControl";
+      case BHPControl : return "BHP";
+      case RateControl : return "Rate";
     }
   }
 
   // -------------------------------------------------------
   enum InjectionType : int { WaterInjection=31, GasInjection=32 };
 
-  inline const static QString InjectionTypeStr(InjectionType injectionType) {
-    switch (injectionType) {
-      case WaterInjection : return "WaterInjection";
-      case GasInjection : return "GasInjection";
+  inline const static QString InjTypeStr(InjectionType injType) {
+    switch (injType) {
+      case WaterInjection : return "WatInj";
+      case GasInjection : return "GasInj";
     }
   }
 
@@ -140,8 +140,8 @@ class Model
 
   inline const static QString WellStateStr(WellState wellState) {
     switch (wellState) {
-      case WellOpen : return "WellOpen";
-      case WellShut : return "WellShut";
+      case WellOpen : return "Open";
+      case WellShut : return "Shut";
     }
   }
 
@@ -224,24 +224,26 @@ class Model
     struct ControlEntry {
 
       // The time step this control is to be applied at.
-      double time_step;
+      double time_step = -1.0;
 
-      WellState state; // The time step this control is to
-      // be applied at. Whether the well is open or shut.
+      WellState state = WellOpen; // The time step this control
+      // is to be applied at. Whether the well is open or shut.
 
       // Control mode.
-      ControlMode control_mode;
+      ControlMode control_mode = BHPControl;
 
       // Bhp target when well is on bhp control.
-      double bhp;
+      double bhp = -1.0;
 
       // Rate target when well is on rate control.
-      double rate;
+      double rate = -1.0;
 
       // Injector type (water/gas)
-      InjectionType injection_type;
-      bool is_variable;
-      QString name;
+      InjectionType injection_type = WaterInjection;
+
+      bool is_variable = false;
+
+      QString name = "NONE";
 
     };
 
@@ -299,22 +301,23 @@ class Model
 
     // List of well controls
     QList<ControlEntry> controls;
-    std::vector<int> verb_vector_;
 
+    // -------------------------------------------------------
+    vector<int> verb_vector_ = vector<int>(11,0);
   };
 
   // -------------------------------------------------------
   inline static QString ControlStr(Well::ControlEntry c_entry) {
 
     QString str;
-    str += " name: " + c_entry.name;
-    str += " time_step: " + QString::number(c_entry.time_step);
-//    str += " state: " + WellStateStr(c_entry.state);
-//    str += " mode: " + ControlModeStr(c_entry.control_mode);
-//    str += " inj_type: " + InjectionTypeStr(c_entry.injection_type);
-//    str += " is_variable: " + QString::number(c_entry.is_variable);
-
-    // cout << "ControlStr: " << str.toStdString();
+    str += " [N: " + c_entry.name;
+    str += "] [TS: " + QString::number(c_entry.time_step);
+    str += "] [ST: " + WellStateStr(c_entry.state);
+    str += "] [M: " + ControlModeStr(c_entry.control_mode);
+    str += "] [BHP: " + QString::number(c_entry.bhp);
+    str += "] [RATE: " + QString::number(c_entry.rate);
+    str += "] [IN: " + InjTypeStr(c_entry.injection_type);
+    str += "] [V: " + QString::number(c_entry.is_variable) + "]";
     return str;
   }
 
@@ -337,11 +340,6 @@ class Model
   { return control_times_; }
 
   // -------------------------------------------------------
-//  void append_control_step(double step) {
-//    control_times_.append(step);
-//  }
-
-  // -------------------------------------------------------
   void sort_control_steps() {
     std::sort(control_times_.begin(),
               control_times_.end());
@@ -357,14 +355,10 @@ class Model
 
   DrillingMode drillingMode_;
 
-  QList<Well> wells_;
-
-  Model::Well EmptyModel();
-
  private:
   // -------------------------------------------------------
   Reservoir reservoir_;
-
+  QList<Well> wells_;
   QList<double> control_times_;
 
   // -------------------------------------------------------

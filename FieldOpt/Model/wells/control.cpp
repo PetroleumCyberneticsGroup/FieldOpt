@@ -24,6 +24,10 @@
 #include <iostream>
 
 // ---------------------------------------------------------
+// QT / STD
+#include <QString>
+
+// ---------------------------------------------------------
 namespace Model {
 namespace Wells {
 
@@ -39,8 +43,9 @@ Control::Control(
 
   // -------------------------------------------------------
   if (well.verb_vector_[5] > 4) // idx:5 -> mod
-    cout << "[mod:Control.cpp]------------ "
-        << Settings::Model::ControlStr(entry).toStdString();
+    cout << FLYELLOW << "[mod:Control.cpp]------------ "
+         << Settings::Model::ControlStr(entry).toStdString()
+         << AEND << endl;
 
   // -------------------------------------------------------
   // time_step_ =
@@ -49,14 +54,8 @@ Control::Control(
       new Properties::ContinousProperty(entry.time_step);
 
   // -------------------------------------------------------
-  if (well.type == ::Settings::Model::WellType::Injector) {
+  if (well.type == ::Settings::Model::WellType::Injector)
     injection_fluid_ = entry.injection_type;
-    if (well.verb_vector_[5] > 4) { // idx:5 -> mod
-      cout << " injection_fluid_: " << injection_fluid_;
-    }
-  }
-  if (well.verb_vector_[5] > 4) // idx:5 -> mod
-    cout << endl;
 
   // -------------------------------------------------------
   // Open/Closed
@@ -71,17 +70,10 @@ Control::Control(
   switch (entry.control_mode) {
 
     // -----------------------------------------------------
-    case ::Settings::Model::ControlMode::BHPControl:
+    case ::Settings::Model::ControlMode::BHPControl :
 
       mode_ = entry.control_mode;
       bhp_ = new Properties::ContinousProperty(entry.bhp);
-
-      // ---------------------------------------------------
-      if (well.verb_vector_[5] > 4) // idx:5 -> mod
-//        cout << " open_: " << open_->ToString().toStdString()
-//             // << " mode_: " << mode_
-//             << " bhp_: " << bhp_->value()
-//             << endl;
 
       // ---------------------------------------------------
       if (entry.is_variable) {
@@ -91,17 +83,10 @@ Control::Control(
       break;
 
       // ---------------------------------------------------
-    case ::Settings::Model::ControlMode::RateControl:
+    case ::Settings::Model::ControlMode::RateControl :
 
       mode_ = entry.control_mode;
       rate_ = new Properties::ContinousProperty(entry.rate);
-
-      // ---------------------------------------------------
-      if (well.verb_vector_[5] > 4) // idx:5 -> mod
-//        cout << " open_: " << open_->ToString().toStdString()
-//             // << " mode_: " << mode_
-//             << " rate_: " << rate_->value()
-//             << endl;
 
       // ---------------------------------------------------
       if (entry.is_variable) {
@@ -110,6 +95,21 @@ Control::Control(
       }
       break;
   }
+
+  // -------------------------------------------------------
+  QString str;
+  str += " [N: " + entry.name;
+  str += "] [TS: " + QString::number(time_step_->value());
+  // str += "] [ST: " + open_->ToString();
+  str += "] [M: " + Settings::Model::ControlModeStr(mode_);
+  str += "] [BHP: " + QString::number(bhp_->value());
+  str += "] [RATE: " + QString::number(rate_->value());
+  str += "] [IN: " + Settings::Model::InjTypeStr(injection_fluid_)
+      + "]";
+
+  if (well.verb_vector_[5] > 4)// idx:5 -> mod
+    cout << FGREEN << "[mod:Control.cpp]------------ "
+         << str.toStdString() << AEND << endl;
 
 }
 
