@@ -231,7 +231,8 @@ createInjectorEntry(WellControls::WellSetting *setting) {
            << "injector_entry_line[1]:"
            << setting->control->injection_fluid() << endl;
 
-      throw std::runtime_error("Injector type not recognized.");
+      throw std::runtime_error(
+          "Injector type not recognized.");
   }
 
   // -------------------------------------------------------
@@ -256,9 +257,11 @@ createInjectorEntry(WellControls::WellSetting *setting) {
       break;
 
     default:
-      throw std::runtime_error("Producer control mode not recognized.");
+      throw std::runtime_error(
+          "Producer control mode not recognized.");
   }
-  return "WCONINJE\n   " + injector_entry_line.join(" ") + "/\n/\n\n";
+  return "WCONINJE\n   "
+          + injector_entry_line.join(" ") + "/\n/\n\n";
 }
 
 

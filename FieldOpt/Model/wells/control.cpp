@@ -40,9 +40,7 @@ Control::Control(
   // -------------------------------------------------------
   if (well.verb_vector_[5] > 4) // idx:5 -> mod
     cout << "[mod:Control.cpp]------------ "
-        << "time_step: " << entry.time_step;
-//         << entry.ControlEntryStr().toStdString()
-//         << endl;
+        << Settings::Model::ControlStr(entry).toStdString();
 
   // -------------------------------------------------------
   // time_step_ =
@@ -57,7 +55,8 @@ Control::Control(
       cout << " injection_fluid_: " << injection_fluid_;
     }
   }
-  cout << endl;
+  if (well.verb_vector_[5] > 4) // idx:5 -> mod
+    cout << endl;
 
   // -------------------------------------------------------
   // Open/Closed

@@ -377,13 +377,14 @@ void Settings::readModelSection() {
     // Reservoir type
     cout << fixed << setprecision(1);
     cout << "Reservoir type:-------- "
-         << model_->getResType(
+         << model_->ResTypeStr(
              model_->reservoir_.type).toStdString() << endl;
 
     // ---------------------------------------------------------
     // Drilling type
     cout << "Drilling mode:--------- "
-         << model_->getDrillingStr(model_->drillingMode_) << endl;
+         << model_->DrillingStr(
+             model_->drillingMode_).toStdString() << endl;
 
     // ---------------------------------------------------------
     // Drilling sequence

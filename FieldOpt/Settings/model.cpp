@@ -42,7 +42,8 @@ Model::Model(QJsonObject json_model) {
   // -------------------------------------------------------
   // Reservoir
   try {
-    QJsonObject json_reservoir = json_model["Reservoir"].toObject();
+    QJsonObject json_reservoir =
+        json_model["Reservoir"].toObject();
     readReservoir(json_reservoir);
   }
   catch (std::exception const &ex) {

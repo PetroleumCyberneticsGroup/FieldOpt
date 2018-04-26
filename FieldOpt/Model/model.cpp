@@ -122,13 +122,24 @@ void Model::InsertDrillingTStep() {
 
     // -----------------------------------------------------
     // Make new control
-//    Settings::Model::Well
-//        well_settings = settings_->wells().;
+//    Wells::Control d_control_tstep =
+//        Wells::Control(settings_->getWell(w->name()).controls[0],
+//                       settings_->getWell(w->name()),
+//                       variable_container_);
+
+    // -------------------------------------------------------
+    if (settings_->verb_vector()[5] > 4) // idx:5 -> mod
+      cout << "[mod:Model.cpp]-------------- "
+           << Settings::Model::ControlStr(test).toStdString();
 
     Wells::Control *d_control_tstep =
-        new Wells::Control(settings_->getWell(w->name()).controls[1],
-                           settings_->getWell(w->name()),
-                           variable_container_);
+        new Wells::Control(settings_->getWell(w->name()).controls[0],
+                       settings_->getWell(w->name()),
+                       variable_container_);
+
+    // -----------------------------------------------------
+    if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
+      cout << "[mod]Make new control entry.- " << endl;
 
     // -----------------------------------------------------
     // Associate drilling time with new control
@@ -136,6 +147,10 @@ void Model::InsertDrillingTStep() {
         drilling_seq_->
             wseq_grpd_sorted_vs_tstep[w->name().toStdString()];
     d_control_tstep->setTStep(d_time_step);
+
+    // -----------------------------------------------------
+    if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
+      cout << "[mod]Append to control list.- " << endl;
 
     // -----------------------------------------------------
     // Append control to list of well controls

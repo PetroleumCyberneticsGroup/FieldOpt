@@ -40,12 +40,15 @@
 #include <map>
 #include <vector>
 #include <algorithm>
+#include <iostream>
 
 // ---------------------------------------------------------
 using std::string;
 using std::pair;
 using std::vector;
 using std::multimap;
+using std::cout;
+using std::endl;
 
 // ---------------------------------------------------------
 namespace Settings {
@@ -62,24 +65,24 @@ namespace Settings {
  */
 class Model
 {
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   friend class Settings;
 
  public:
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   // This should only be accessed externally for testing purposes.
   Model(QJsonObject json_model);
 
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   enum ReservoirGridSourceType : int { ECLIPSE=1 };
 
-  inline const static QString getResType(ReservoirGridSourceType resType) {
+  inline const static QString ResTypeStr(ReservoirGridSourceType resType) {
     switch (resType) {
       case ECLIPSE : return "ECLIPSE";
     }
   }
 
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   enum WellType : int { Injector=011, Producer=12 };
 
   inline const static QString WellTypeStr(WellType wellType) {
@@ -89,7 +92,7 @@ class Model
     }
   }
 
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   enum ControlMode : int { BHPControl=21, RateControl=22 };
 
   inline const static QString ControlModeStr(ControlMode controlMode) {
@@ -99,7 +102,7 @@ class Model
     }
   }
 
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   enum InjectionType : int { WaterInjection=31, GasInjection=32 };
 
   inline const static QString InjectionTypeStr(InjectionType injectionType) {
@@ -109,7 +112,7 @@ class Model
     }
   }
 
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   enum WellDefinitionType : int { WellBlocks=41,
     WellSpline=42, PseudoContVertical2D=43 };
 
@@ -121,7 +124,7 @@ class Model
     }
   }
 
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   enum WellCompletionType : int { Perforation=61 };
 
   inline const static QString WellCompTypeStr(WellCompletionType wellCompType) {
@@ -130,7 +133,7 @@ class Model
     }
   }
 
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   enum WellState : int {
     WellOpen=71, WellShut=72 };
 
@@ -141,7 +144,7 @@ class Model
     }
   }
 
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   enum PreferredPhase : int {
     Oil=81, Water=82, Gas=83, Liquid=84 };
 
@@ -154,21 +157,21 @@ class Model
     }
   }
 
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   enum Direction : int { X=91, Y=92, Z=93 };
 
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   enum DrillingMode : int {
     Synchronous=101, Sequential=102 };
 
-  inline const string getDrillingStr(DrillingMode drilling) {
+  inline const static QString DrillingStr(DrillingMode drilling) {
     switch (drilling) {
       case Synchronous : return "Synchronous";
       case Sequential : return "Sequential";
     }
   }
 
-// ---------------------------------------------------------
+  // -------------------------------------------------------
   struct Reservoir {
     // Source of grid file (i.e., which simulator produced it).
     ReservoirGridSourceType type;
@@ -177,7 +180,7 @@ class Model
     QString path;
   };
 
-// ---------------------------------------------------------
+  // -------------------------------------------------------
   struct Well {
     Well(){}
 
@@ -239,19 +242,6 @@ class Model
       bool is_variable;
       QString name;
 
-      // -----------------------------------------------------
-      QString ControlEntryStr() {
-        QString str;
-        str += " name: " + name;
-        str += " time_step: " + QString::number(time_step);
-        str += " state: " + WellStateStr(state);
-        str += " mode: " + ControlModeStr(control_mode);
-        str += " inj_type: " + InjectionTypeStr(injection_type);
-        str += " is_variable: " + QString::number(is_variable);
-        return str;
-
-      };
-
     };
 
     // -----------------------------------------------------
@@ -310,9 +300,22 @@ class Model
     QList<ControlEntry> controls;
     std::vector<int> verb_vector_;
 
-
-
   };
+
+  // -------------------------------------------------------
+  inline static QString ControlStr(Well::ControlEntry c_entry) {
+
+    QString str;
+    str += " name: " + c_entry.name;
+    str += " time_step: " + QString::number(c_entry.time_step);
+//    str += " state: " + WellStateStr(c_entry.state);
+//    str += " mode: " + ControlModeStr(c_entry.control_mode);
+//    str += " inj_type: " + InjectionTypeStr(c_entry.injection_type);
+//    str += " is_variable: " + QString::number(c_entry.is_variable);
+
+    // cout << "ControlStr: " << str.toStdString();
+    return str;
+  }
 
   // -------------------------------------------------------
   // Get the struct containing reservoir settings.
