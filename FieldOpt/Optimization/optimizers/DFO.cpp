@@ -21,27 +21,20 @@
 #define MODEL_IMPROVEMENT_POINT_ADDED 13
 #define MODEL_IMPROVEMENT_ALGORITHM_POINT_ADDED 14
 
-std::string getActionName(int a) {
-  switch (a) {
-    case 3: return "MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND";
-    case 4: return "MODEL_IMPROVEMENT_ALGORITHM_FINISHED   ";
-    case 5: return "INITIALIZED_MODEL                      ";
-    case 6: return "TRUST_REGION_RADIUS_UPDATE_STEP        ";
-    case 8: return "CRITICALITY_STEP_FINISHED              ";
-    case 9: return "TRIAL_POINT_FOUND                      ";
-    case 10: return "TRIAL_POINT_IS_NOT_NEW_OPTIMUM         ";
-    case 11: return "NEW_POINT_INCLUDED                     ";
-    case 12: return "MODEL_IMPROVEMENT_POINT_FOUND          ";
-    case 13: return "MODEL_IMPROVEMENT_POINT_ADDED          ";
-    case 14: return "MODEL_IMPROVEMENT_ALGORITHM_POINT_ADDED";
-    default:return "Not a valid state                      ";
-  }
-}
 
 /// Test functions - start
 double matyasFunction(Eigen::VectorXd x) {
   double val = 0.26 * (x(0) * x(0) + x(1) * x(1)) - 0.46 * x(0) * x(1);
   return val;
+}
+
+Eigen::VectorXd matyasFunctionWithGradients(Eigen::VectorXd x) {
+  double val = 0.26 * (x(0) * x(0) + x(1) * x(1)) - 0.46 * x(0) * x(1);
+  Eigen::VectorXd ret(1+2);
+  ret[0] = val;
+  ret[1] = 0.52*x(0) - 0.46 * x(1);
+  ret[2] = 0.52*x(1) - 0.46 * x(0);
+  return ret;
 }
 
 double sphere(Eigen::VectorXd x) {
@@ -64,6 +57,7 @@ DFO::DFO(Settings::Optimizer *settings,
     : Optimizer(settings, base_case, variables, grid, logger),
       DFO_model_(settings->parameters().number_of_interpolation_points,
                  settings->parameters().number_of_variables,
+                 2,
                  base_case->GetRealVarVector(),
                  settings->parameters().initial_trust_region_radius,
                  settings->parameters().required_poisedness,
@@ -275,7 +269,10 @@ void DFO::iterate() {
   double trust_region_radius_tilde = 0;
 
   Eigen::VectorXd function_evaluations(number_of_interpolation_points_);
+  Eigen::MatrixXd functionValsAndGrad(1+2,number_of_interpolation_points_);
+  functionValsAndGrad.setZero();
   function_evaluations.setZero();
+  Eigen::VectorXd functionValAndGrad(1+2);
   double function_evaluation;
 
   // These are the ones that are used the most. Used in all other places than "Step 4 - Model Improvement".
@@ -285,14 +282,15 @@ void DFO::iterate() {
   // Only used in the initialization process.
   int number_of_new_interpolation_points = 0;
 
-  Eigen::VectorXd *printme2 = DFO_model_.getFvalsReference();
-  Eigen::MatrixXd *printme = DFO_model_.getYReference();
+  Eigen::VectorXd *refFuncVals = DFO_model_.getFvalsReference();
+  Eigen::MatrixXd *refY = DFO_model_.getYReference();
+  Eigen::MatrixXd *refDerivatives = DFO_model_.getDerivativeReference();
   bool isTrialPointNewOptimum = false;
 
-  Eigen::MatrixXd derivatives = Eigen::MatrixXd::Zero(2, number_of_interpolation_points_);
+  //Eigen::MatrixXd derivatives = Eigen::MatrixXd::Zero(2, number_of_interpolation_points_);
   Eigen::VectorXd weights(3);
   weights << 1,0.8,0.3;
-  GradientEnhancedModel enhancedModel(number_of_variables_,number_of_interpolation_points_, 2, weights, 0.5);
+  GradientEnhancedModel enhancedModel(number_of_variables_,number_of_interpolation_points_, 2, weights, 1);
 
 
   while (notConverged) {
@@ -301,7 +299,7 @@ void DFO::iterate() {
     }
     std::cout << "\033[1;34;m " << " ---------- New iterate " << iterations_ << " ---------- " << "\033[0m"
               << std::endl;
-    std::cout << "\033[1;34;m " << "Y = \n" << "\033[0m" << *printme << "\n";
+    std::cout << "\033[1;34;m " << "Y = \n" << "\033[0m" << *refY << "\n";
     if (iterations_ != 0 && iterations_ != 1) {
       std::cout << "\033[1;34;m " << "Ybest = \n" << "\033[0m" << DFO_model_.GetBestPoint() << "\n";
 
@@ -318,23 +316,26 @@ void DFO::iterate() {
     } else if (DFO_model_.isInitialInterpolationPointsFound() == false) {
       //std::cout << "function evaluations from _simulator_ \n" << function_evaluations << "\n";
       for (int i = 0; i < number_of_new_interpolation_points; ++i) {
-        DFO_model_.SetFunctionValue(i + 1, function_evaluations[i]);
+        //DFO_model_.SetFunctionValue(i + 1, function_evaluations[i]);
+        DFO_model_.SetFunctionValueAndDerivatives(i + 1, functionValsAndGrad.col(i));
       }
-      //std::cout << "function values \n" << *printme2 << "\nend" << std::endl;
+      //std::cout << "function values \n" << *refFuncVals << "\nend" << std::endl;
       new_points = DFO_model_.findLastSetOfInterpolationPoints();
     } else if (DFO_model_.isModelInitialized() == false) {
       if (iterations_ == 1) {
         for (int i = 0; i < number_of_new_interpolation_points; ++i) {
-          DFO_model_.SetFunctionValue(i + 1, function_evaluations[i]);
+          //DFO_model_.SetFunctionValue(i + 1, function_evaluations[i]);
+          DFO_model_.SetFunctionValueAndDerivatives(i + 1, functionValsAndGrad.col(i));
         }
       }
 
       if (number_of_new_interpolation_points != number_of_interpolation_points_) {
         for (int i = number_of_new_interpolation_points; i < number_of_interpolation_points_; ++i) {
-          DFO_model_.SetFunctionValue(i + 1, function_evaluations[i - number_of_new_interpolation_points]);
+          //DFO_model_.SetFunctionValue(i + 1, function_evaluations[i - number_of_new_interpolation_points]);
+          DFO_model_.SetFunctionValueAndDerivatives(i+1, functionValsAndGrad.col(i - number_of_new_interpolation_points));
         }
       }
-      //std::cout << "function values \n" << *printme2 << "\nend" << std::endl;
+      //std::cout << "function values \n" << *refFuncVals << "\nend" << std::endl;
 
 
       DFO_model_.initializeModel();
@@ -344,14 +345,25 @@ void DFO::iterate() {
       DFO_model_.printQuadraticModel();
       //DFO_model_.shiftCenterPointOfQuadraticModel(-DFO_model_.getCenterPoint());
       //DFO_model_.printQuadraticModel();
+      std::cout << "------------Gradients ---------" << std::endl;
+      std::cout << *refDerivatives << std::endl;
 
       Eigen::MatrixXd hess(number_of_variables_, number_of_variables_);
       Eigen::VectorXd grad(number_of_variables_);
       double constant;
-      enhancedModel.ComputeModel( (*printme),derivatives, DFO_model_.GetGradient(), *(printme2),DFO_model_.getCenterPoint(), DFO_model_.GetBestPoint(),
-      DFO_model_.GetTrustRegionRadius(), r);
-      enhancedModel.GetModel(constant, grad,hess);
+      Eigen::MatrixXd ycop = (*refY).block(0,1,2,3);
+      Eigen::MatrixXd dercopy = (*refDerivatives).block(0,1,2,3);
+      Eigen::VectorXd funccopy = (*refFuncVals).tail(3);
 
+      enhancedModel.ComputeModel( (*refY), (*refDerivatives), DFO_model_.GetGradient(), (*refFuncVals),DFO_model_.getCenterPoint(), DFO_model_.GetBestPoint(),
+                                  DFO_model_.GetTrustRegionRadius(), r);
+      //enhancedModel.ComputeModel( ycop,dercopy, DFO_model_.GetGradient(), funccopy,DFO_model_.getCenterPoint(), DFO_model_.GetBestPoint(),
+      //DFO_model_.GetTrustRegionRadius(), r);
+      enhancedModel.GetModel(constant, grad,hess);
+      std::cout << "------------Enhanced model? ---------" << std::endl;
+      std::cout << "c = " << constant << std::endl;
+      std::cout << "gradient = " << std::endl << grad << std::endl;
+      std::cout << "hessian = " << std::endl << hess << std::endl;
     }
 /*
     if (last_action_ == MODEL_IMPROVEMENT_POINT_FOUND) {
@@ -401,7 +413,7 @@ void DFO::iterate() {
         */
     /*
         if (cheapImprovementPossible) {
-          std::cout << *printme << std::endl;
+          std::cout << *refY << std::endl;
           std::cout << "Cheap improvement is possible" << std::endl;
           index_of_new_point = index_far_away_point;
           UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND);
@@ -575,7 +587,7 @@ void DFO::iterate() {
 
       Eigen::MatrixXd Ydelete(number_of_variables_, number_of_interpolation_points_);
       for (int j = 0; j < number_of_new_interpolation_points; ++j) {
-        Eigen::VectorXd sd = (*printme).col(pointsSortedByDistanceFromOptimum[j] - 1);
+        Eigen::VectorXd sd = (*refY).col(pointsSortedByDistanceFromOptimum[j] - 1);
         eigen_col(Ydelete, sd, j);
       }
       //std::cout << "Points sorted by distance \n" << Ydelete << std::endl;
@@ -647,7 +659,8 @@ void DFO::iterate() {
     if (iterations_ == 0 || (iterations_ == 1 && DFO_model_.isModelInitialized() == false)) {
       /// Get the function evaluations for the first set of interpolation points.
       for (int i = 0; i < new_points.cols(); ++i) {
-        function_evaluations[i] = sphere(new_points.col(i) + DFO_model_.getCenterPoint());
+        //function_evaluations[i] = sphere(new_points.col(i) + DFO_model_.getCenterPoint());
+        functionValsAndGrad.col(i) = matyasFunctionWithGradients(new_points.col(i) + DFO_model_.getCenterPoint());
       }
     } else {
       if (index_of_new_point < 0) {
@@ -662,7 +675,8 @@ void DFO::iterate() {
         }
       }
       /// Get one new point.
-      function_evaluation = sphere(new_point + DFO_model_.getCenterPoint());
+      //function_evaluation = sphere(new_point + DFO_model_.getCenterPoint());
+      functionValAndGrad = matyasFunctionWithGradients(new_point + DFO_model_.getCenterPoint());
       if (last_action_ == TRIAL_POINT_FOUND) {
         if (function_evaluation < DFO_model_.GetBestFunctionValueAllTime()) {
           cout << "\033[1;36;mThe new function evaluation is: \033[0m" << function_evaluation << endl << endl;

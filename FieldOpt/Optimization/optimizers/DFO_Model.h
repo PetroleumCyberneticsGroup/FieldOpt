@@ -45,6 +45,8 @@ class DFO_Model {
       Y;  // Container for the interpolation points. The interpolation point i is given in the following way:
   // yi = y0 + Y.col(i); i.e. Y contains the displacements away from y0.
 
+  Eigen::MatrixXd derivatives;
+
   Eigen::VectorXd fvals; // Holds the function evaluations for the interpolation points.
 
   Eigen::VectorXd bestPoint; // Displacement of the optimal point from y0. Absolute point: y0 + bestPoint;
@@ -200,6 +202,7 @@ class DFO_Model {
   */
   DFO_Model(unsigned int m,
             unsigned int n,
+            unsigned int ng,
             Eigen::VectorXd y0,
             double rhoBeg,
             double lambda,
@@ -277,6 +280,11 @@ class DFO_Model {
   Eigen::MatrixXd *getYReference() {
     return &(this->Y);
   }
+
+  Eigen::MatrixXd *getDerivativeReference() {
+    return &(this->derivatives);
+  }
+
 
   /**
   Returns the center point of the quadratic model
@@ -381,6 +389,8 @@ class DFO_Model {
   void compareHMatrices();
 
   void SetFunctionValue(int t, double value);
+
+  void SetFunctionValueAndDerivatives(int t, Eigen::VectorXd values);
 
   void SetTrustRegionRadiusForSubproblem(double radius);
 

@@ -314,6 +314,7 @@ double DFO_Model::evaluateLowerBoundQuadraticPolynomial(double radius, double b,
 
 DFO_Model::DFO_Model(unsigned int m,
                      unsigned int n,
+                     unsigned int ng,
                      Eigen::VectorXd y0,
                      double rhoBeg,
                      double lambda,
@@ -323,7 +324,7 @@ DFO_Model::DFO_Model(unsigned int m,
   this->n = n;
   this->y0 = y0;
   this->y0 = Eigen::VectorXd::Zero(n);
-  this->y0 << 20, 10;
+  this->y0 << 0, 0;
   this->rho = rhoBeg;
   this->lambda = lambda;
 
@@ -331,6 +332,7 @@ DFO_Model::DFO_Model(unsigned int m,
   this->bestPointAllTime = Eigen::VectorXd::Zero(n);
   this->bestPointAllTimeFunctionValue = std::numeric_limits<double>::max();
   this->Y = Eigen::MatrixXd::Zero(n, m);
+  this->derivatives = Eigen::MatrixXd(ng, m);
   this->fvals = Eigen::VectorXd(m);
   this->Xi = Eigen::MatrixXd::Zero(n + 1, m);
   this->Upsilon = Eigen::MatrixXd::Zero(n + 1, n + 1);
@@ -1029,6 +1031,14 @@ void DFO_Model::compareHMatrices() {
 void DFO_Model::SetFunctionValue(int t, double value) {
   fvals[t - 1] = value;
 }
+
+void DFO_Model::SetFunctionValueAndDerivatives(int t, Eigen::VectorXd values) {
+  fvals[t - 1] = values[0];
+  for (int i = 1; i < values.rows(); ++i){
+    derivatives(i-1,t-1) = values(i);
+  }
+}
+
 void DFO_Model::SetTrustRegionRadiusForSubproblem(double radius) {
   subproblem.SetTrustRegionRadius(radius);
 }

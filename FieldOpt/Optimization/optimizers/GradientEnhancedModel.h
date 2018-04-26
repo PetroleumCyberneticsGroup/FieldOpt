@@ -32,7 +32,7 @@ class GradientEnhancedModel {
 
 
   SNOPTHandler initSNOPTHandler();
-  void GradientEnhancedModel::setOptionsForSNOPT(SNOPTHandler &snoptHandler);
+  void setOptionsForSNOPT(SNOPTHandler &snoptHandler);
   void solveLinearSystem(Eigen::MatrixXd D, Eigen::VectorXd v, Eigen::VectorXd funcVals, Eigen::VectorXd weights_least_square, Eigen::VectorXd &ans);
   int convert_h_ij_to_t_lsq(int i, int j);
   int convert_h_ij_to_t_vectorized(int i, int j);

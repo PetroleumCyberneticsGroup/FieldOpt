@@ -2,6 +2,7 @@
 // Created by joakim on 24.04.18.
 //
 
+#include <iostream>
 #include "GradientEnhancedModel.h"
 
 namespace Optimization {
@@ -109,15 +110,19 @@ GradientEnhancedModel::GradientEnhancedModel(int n,
   gradient_ = Eigen::VectorXd::Zero(n_);
   hessian_ = Eigen::MatrixXd::Zero(n_, n_);
   _hessian_old_ = Eigen::MatrixXd::Zero(n_, n_);
+  hessian_old_ = Eigen::MatrixXd::Zero(n_, n_);
   _points_ = Eigen::MatrixXd::Zero(n_, m_);
+  points_ = Eigen::MatrixXd::Zero(n_, m_);
   _v_ = Eigen::VectorXd::Zero(ng_*m_);
   _y0_ = Eigen::VectorXd::Zero(n_);
   _best_point_ = Eigen::VectorXd::Zero(n_);
   _weights_least_square_ = Eigen::VectorXd::Zero(m_);
 
   int t = 0;
-  for (int i = ng_; i >= 2; --i){
-    t += i;
+  int y = n_;
+  for (int i = 0; i < ng_; ++i) {
+    t += y;
+    y--;
   }
   h_old_ = Eigen::VectorXd::Zero(t);
   _D_ = Eigen::MatrixXd::Zero((ng_)*m_, t);
@@ -130,9 +135,16 @@ void GradientEnhancedModel::ComputeModel(Eigen::MatrixXd Y,
                                          Eigen::VectorXd y0,
                                          Eigen::VectorXd best_point,
                                          double radius, double scaling_factor_r) {
+  //funcVals[0] = 0.0818000000000001;
+  //funcVals[1] = 0.2797999999999998;
+  //funcVals[2] = 0.5977999999999994;
   // init the snopt handler
   // set up all constraints.
   //
+  points_ = Y;
+  //points_ <<
+  //        1.1, 2.1, 3.1,
+  //    1.2, 2.2, 3.2;
 
 
   _y0_ = y0;
@@ -140,35 +152,39 @@ void GradientEnhancedModel::ComputeModel(Eigen::MatrixXd Y,
 
 
   // Set the _D_ matrix and the _v_ vector
-  int base_col = 0;
-  for (int t = 0; t < m_; ++t) {
-    int c0 = ng_ - 1; // The starting column of each new d_i
-    int r0 = 0;      // The starting row of each new d_i
-    int cc = 0;     // col-counter
-    int rc = 0;     // row-counter
-    for (int i = ng_; i >= 3; --i) { // For each d_i that has an inverse diagonal
-      for (int j = 0; j <= i; ++j) { // for the numbers of elements along the inverse diagonal
-        _D_(r0 + rc, base_col+c0 + cc) = Y(i - 1, t);
-        cc--;
-        rc++;
+  int base_row = 0;
+  for (int t = 0; t < m_; ++t) { // for each sample point
+    int y = n_;
+    int c0 = 0;
+    for (int i = 0; i < ng_; ++i) { // for each row
+      for (int k = 0; k < y; ++k) { // for each elem in row
+        _D_(base_row + i, c0 + k) = points_(k, t);
       }
-      c0 = c0 + (c0 - 1);
-      r0++;
-      cc = 0;
-      rc = 0;
+      c0 += y;
+      y--;
     }
-    cc = 0;
-    for (int i = 0; i < ng_; i++) {
-      _D_(i, base_col+ 0 + cc) = Y(0, t);
-      _D_(i, base_col+ 1 + cc) = Y(1, t);
-      cc += (ng_ - i);
+    y = n_ - 1;
+    c0 = 0;
+    for (int k = 0; k < (ng_ - 1); ++k) { // for each row that begins an inverse diagonal
+      int ii = 1;
+      int jj = 1;
+      for (int i = k; i < (ng_ - 1); ++i) {//for each element in that inverse diagonal
+        _D_(base_row + k + ii, c0 + y - jj) = points_(y, t);
+        ii++;
+        jj++;
+      }
+      c0 += (y + 1);
+      y--;
     }
-    base_col += (ng_);
+    base_row += ng_;
 
-  for (int i = 0; i < ng_; ++i){
-    _v_(t+i) = derivatives(i, t) - gradient_of_model(i+(n_-ng_));
+
+    for (int i = 0; i < ng_; ++i){
+      _v_(t+i) = derivatives((ng_ - i - 1), t) - gradient_of_model(n_ - i - 1);
+    }
   }
-  }
+
+
 
   // Set up _weights_least_square_
   for (int t = 0; t < m_; ++t){
@@ -218,12 +234,22 @@ void GradientEnhancedModel::solveLinearSystem(Eigen::MatrixXd D,
                                               Eigen::VectorXd funcVals,
                                               Eigen::VectorXd weights_least_square,
                                               Eigen::VectorXd &ans) {
+  //funcVals[0] = 0.0818000000000001;
+  //funcVals[1] = 0.2797999999999998;
+  //funcVals[2] = 0.5977999999999994;
+
+
 
   // dL/dhij, (n² + n)/2
   // ans = [h11, h21, h31, h41, ... hn1, h22, h32, h42, h52, ... hn1,  ......, g1,g2,g3,...,gn, c, lambda1,lambda2,...,lambdam]
+  std::cout << "D\n" << D << std::endl;
+  std::cout << "v\n" << v << std::endl;
+  std::cout << "funcVals\n" << funcVals << std::endl;
   int colsD = 0;
-  for (int i = ng_; i >= 2; --i) {
-    colsD += i;
+  int y = n_;
+  for (int i = 0; i < ng_; ++i) {
+    colsD += y;
+    y--;
   }
   Eigen::MatrixXd A = Eigen::MatrixXd::Zero((int) (1 + n_ + m_ + (n_*n_ + n_)*0.5) ,(int) (1 + n_ + m_ + (n_*n_ + n_)*0.5));
   Eigen::VectorXd b = Eigen::VectorXd::Zero((int) (1 + n_ + m_ + (n_*n_ + n_)*0.5));
@@ -234,28 +260,47 @@ void GradientEnhancedModel::solveLinearSystem(Eigen::MatrixXd D,
   int start_lambda_i = start_c + 1;
   int row = 0;
 
+
+
+
   // dL/dhij,
   for (int i = 1; i <= n_; ++i){
-    for (int j = 1; j <= i; ++j){
+    for (int j = 1; j <= i; ++j){ // the derivative with respect to (i,j)
+
       //b(convert_h_ij_to_t_vectorized(i,j)-1) += hessian_old_(i-1,j-1)*alpha;
-      b(row) += hessian_old_(i-1,j-1)*alpha_;
+      b(row) += hessian_old_(i-1,j-1)*alpha_; //right hand side
+      A(row, convert_h_ij_to_t_vectorized(i,j)-1) = alpha_;
+
+      for (int t = 1; t <= m_; ++t){
+        A(row, start_lambda_i+ t-1) += -0.5*points_(i-1,t-1)*points_(j-1,t-1);
+      }
+
+      /*
       if (i > (n_-ng_)){
         for (int p = 1; p <= ng_*m_; p++) {
+          int t = convert_h_ij_to_t_lsq(i,j); // taking derivative w.r.t. h_t
+          b(row) += (1 - alpha_) * v(p - 1) * D(p-1, t-1); // right hand side
+
           //b(convert_h_ij_to_t_vectorized(i, j) - 1) += (1 - alpha) * v(p - 1) * D(convert_h_ij_to_t_lsq(i, j) - 1, p - 1);
-          b(row) += (1 - alpha_) * v(p - 1) * D(convert_h_ij_to_t_lsq(i, j) - 1, p - 1);
           for (int k = 1; k <= colsD; ++k) {
             int ii = 0;
             int jj = 0;
-            convert_t_to_ij_lsq(k, ii, jj);
-            A(row, convert_h_ij_to_t_vectorized(ii, jj) - 1) += D(k - 1, p - 1)*D(convert_h_ij_to_t_lsq(ii,jj)-1,p-1);
+
+            //convert_t_to_ij_lsq(k, ii, jj);
+            //A(row, convert_h_ij_to_t_vectorized(ii, jj) - 1) += D(k - 1, p - 1)*D(convert_h_ij_to_t_lsq(ii,jj)-1,p-1);
+
+            A(row, convert_h_ij_to_t_vectorized(ii, jj) - 1) += (1 - alpha_) * D(p-1,k-1) * D(p-1, t-1);
           }
         }
+
       }
+      */
       row++;
     }
   }
-
-    // dL/dgi,
+  //std::cout << "A, dL/dhij\n" << A << std::endl;
+  //A.setZero();
+  // dL/dgi,
   for (int i = 1; i <= n_; ++i){
     for (int t = 1; t <= m_; ++t){
       A(row, start_lambda_i + t -1) += points_(i-1,t-1);
@@ -263,12 +308,16 @@ void GradientEnhancedModel::solveLinearSystem(Eigen::MatrixXd D,
     row++;
   }
 
+  //std::cout << "A, dL/dgi\n" << A << std::endl;
+  //A.setZero();
   // dL/dc
   for (int t = 1; t <= m_; ++t){
     A(row, start_lambda_i + t -1) = 1;
   }
   row++;
 
+  //std::cout << "A, dL/dc \n" << A << std::endl;
+  //A.setZero();
   //interpolation conditions
   for (int k = 1; k <= m_; ++k){
     b(row) = funcVals(k-1);
@@ -277,25 +326,32 @@ void GradientEnhancedModel::solveLinearSystem(Eigen::MatrixXd D,
     for (int t = 1; t <= n_; ++t){
       A(row, start_g_i + t -1) = points_(t-1,k-1);
     }
-
+    int t1 = convert_h_ij_to_t_vectorized(1,1); // 1
+    int t2 = convert_h_ij_to_t_vectorized(2,1); // 2
+    int t3 = convert_h_ij_to_t_vectorized(2,2); // 3
+    std::cout << "t1 = " << t1 << "\t t2 = " << t2 << "\t t3 = " << t3 << "\n\n";
     for (int i = 1; i <= n_; ++i) {
       for (int j = 1; j <= i; ++j) {
         if (i == j){
           A(row,start_h_ij+convert_h_ij_to_t_vectorized(i,j)-1) = 0.5*points_(i-1,k-1)*points_(i-1,k-1);
         }
         else{
-          A(row,start_h_ij+convert_h_ij_to_t_vectorized(i,j)-1) = points_(i-1,k-1)*points_(j-1,k-1);
+          A(row,start_h_ij+convert_h_ij_to_t_vectorized(i,j)-1) =     points_(i-1,k-1)*points_(j-1,k-1);
         }
       }
     }
 
     row++;
   }
+  //std::cout << "A, interpolation cond\n" << A << std::endl;
 
+  std::cout << "A\n" << A << std::endl;
+  std::cout << "b\n" << b << std::endl;
+  //Eigen::MatrixXd Asub = Eigen::MatrixXd::Zero();
 
   // Ax = b; -> solve
   ans = A.colPivHouseholderQr().solve(b);
-
+  std::cout << "ans\n" << ans << std::endl;
 
 }
 
@@ -313,8 +369,10 @@ int GradientEnhancedModel::convert_h_ij_to_t_lsq(int i, int j) {
 
 int GradientEnhancedModel::convert_h_ij_to_t_vectorized(int i, int j) {
   int t = 0;
-  for (int p = n_; p < j; --p){
-    t += p;
+  int y = n_;
+  for (int k = 1; k < j; ++k){
+    t += y;
+    y--;
   }
   t += (i-j+1);
   return t;
