@@ -80,11 +80,14 @@ inline bool DirectoryExists(const std::string &directory_path, const bool &verbo
  * \param folder_path Path a folder to check.
  * \return True if the directory is empty, otherwise false.
  */
-inline bool DirectoryIsEmpty(QString folder_path)
-{
+inline bool DirectoryIsEmpty(const QString &folder_path) {
     if (!DirectoryExists(folder_path)) return false;
     QDir directory = QDir(folder_path);
     return directory.entryInfoList(QDir::NoDotAndDotDot | QDir::AllEntries).count() == 0;
+}
+
+inline bool DirectoryIsEmpty(const std::string &folder_path) {
+    return DirectoryIsEmpty(QString::fromStdString(folder_path));
 }
 
 /*!
@@ -271,10 +274,13 @@ inline QString GetCurrentDirectoryPath()
  *
  * \param file (relative) path to file
  */
-inline QString GetAbsoluteFilePath(QString file)
-{
+inline QString GetAbsoluteFilePath(const QString &file) {
     QFileInfo fileInfo(file);
     return fileInfo.absoluteFilePath();
+}
+
+inline std::string GetAbsoluteFilePath(const std::string &file) {
+    return GetAbsoluteFilePath(QString::fromStdString(file)).toStdString();
 }
 
 /*!
