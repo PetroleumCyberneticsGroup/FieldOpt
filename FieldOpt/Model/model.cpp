@@ -114,11 +114,26 @@ void Model::InsertDrillingTStep() {
   // Add control entry defining drill time
   for (Wells::Well *w : *wells()) {
 
-    auto test = settings_->getWell(w->name()).controls[1];
-
     // -----------------------------------------------------
     if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
       cout << "[mod]Looping through wells.-- " << endl;
+
+    Settings::Model::Well::ControlEntry c_entry;
+    c_entry.time_step = 0.0;
+    c_entry.bhp = 100.0;
+    c_entry.name = "TEST";
+    c_entry.control_mode = Settings::Model::BHPControl;
+    c_entry.injection_type = Settings::Model::GasInjection;
+    c_entry.is_variable = false;
+    c_entry.state = Settings::Model::WellOpen;
+
+    cout << "[mod:Control.cpp]------------ "
+         << "time_step: " << c_entry.time_step;
+
+    auto entry = settings_->getWell(w->name()).controls[0];
+
+    cout << "[mod:Control.cpp]------------ "
+         << "time_step: " << entry.time_step;
 
     // -----------------------------------------------------
     // Make new control
@@ -127,10 +142,13 @@ void Model::InsertDrillingTStep() {
 //                       settings_->getWell(w->name()),
 //                       variable_container_);
 
+
+
     // -------------------------------------------------------
     if (settings_->verb_vector()[5] > 4) // idx:5 -> mod
       cout << "[mod:Model.cpp]-------------- "
-           << Settings::Model::ControlStr(test).toStdString();
+           << Settings::Model::ControlStr(entry).toStdString();
+
 
     Wells::Control *d_control_tstep =
         new Wells::Control(settings_->getWell(w->name()).controls[0],
