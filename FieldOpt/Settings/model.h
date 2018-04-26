@@ -303,6 +303,7 @@ class Model
     QList<ControlEntry> controls;
 
     // -------------------------------------------------------
+    vector<int> verb_vector() const { return verb_vector_; }
     vector<int> verb_vector_ = vector<int>(11,0);
   };
 
