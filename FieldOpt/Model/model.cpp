@@ -24,7 +24,13 @@ namespace Model {
 
 Model::Model(Settings::Settings settings, Logger *logger)
 {
-    grid_ = new Reservoir::Grid::ECLGrid(settings.paths().GetPath(Paths::GRID_FILE));
+    if (!settings.paths().IsSet(Paths::ENSEMBLE_FILE)) {
+        grid_ = new Reservoir::Grid::ECLGrid(settings.paths().GetPath(Paths::GRID_FILE));
+    }
+    else {
+        grid_ = 0;
+    }
+
     variable_container_ = new Properties::VariablePropertyContainer();
 
     wells_ = new QList<Wells::Well *>();
@@ -131,6 +137,12 @@ map<string, vector<double>> Model::GetValues() {
         valmap["Var#"+var->name().toStdString()] = vector<double>{var->value()};
     }
     return valmap;
+}
+void Model::set_grid_path(const std::string &grid_path) {
+    if (grid_ != 0) {
+        delete grid_;
+    }
+    grid_ = new Reservoir::Grid::ECLGrid(grid_path);
 }
 
 Loggable::LogTarget Model::Summary::GetLogTarget() {

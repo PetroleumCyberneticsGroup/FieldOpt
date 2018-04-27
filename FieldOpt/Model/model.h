@@ -56,6 +56,8 @@ class Model : public Loggable
    */
   Reservoir::Grid::Grid *grid() const { return grid_; }
 
+  void set_grid_path(const std::string &grid_path);
+
   /*!
    * \brief variables Get the set of variable properties of all types.
    */
