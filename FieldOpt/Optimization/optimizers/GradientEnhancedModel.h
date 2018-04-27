@@ -8,6 +8,11 @@
 #include <Eigen/Dense>
 #include "FieldOpt-3rdPartySolvers/handlers/SNOPTHandler.h"
 #include "FieldOpt-3rdPartySolvers/handlers/SNOPTLoader.h"
+#include <QList>
+#include <QString>
+#include <QStringList>
+#include <QJsonObject>
+#include <Qt>
 
 namespace Optimization {
 namespace Optimizers {
@@ -41,7 +46,8 @@ class GradientEnhancedModel {
 
 
  public:
-  GradientEnhancedModel(int n, int m, int number_of_variables_with_gradient, Eigen::VectorXd weights_derivatives, double weight_objective_minimum_change);
+  GradientEnhancedModel(int n, int m, int number_of_variables_with_gradient, QList<double> weights_derivatives, double weight_objective_minimum_change);
+  GradientEnhancedModel(){};
   void GetConstant(double &c);
   void GetGradient(Eigen::VectorXd &g);
   void GetHessian(Eigen::MatrixXd &H);

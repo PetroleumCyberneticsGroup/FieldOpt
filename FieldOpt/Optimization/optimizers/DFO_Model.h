@@ -10,6 +10,7 @@
 #include <Subproblem.h>
 #include "Subproblem.h"
 #include "EigenUtil.h"
+#include "GradientEnhancedModel.h"
 /* References
 This implementation is based upon the following papers and book, and I would recommend anyone who
 is trying to understand the code to actively use those references.
@@ -33,6 +34,7 @@ class DFO_Model {
 
   Settings::Optimizer *settings_;
   Subproblem subproblem;
+  GradientEnhancedModel enhancedModel;
   unsigned int m; // Number of interpolation points used to create the model. Does not change.
   unsigned int n; // Number of decision variables in your model.
   double rho; // Trust-region radius.
@@ -206,6 +208,8 @@ class DFO_Model {
             Eigen::VectorXd y0,
             double rhoBeg,
             double lambda,
+            double weight_objective_minimum_change,
+            QList<double> weights_derivatives,
             Settings::Optimizer *settings);
 
   DFO_Model() {};

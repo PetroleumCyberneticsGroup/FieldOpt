@@ -93,6 +93,8 @@ DFO::DFO(Settings::Optimizer *settings,
                  base_case->GetRealVarVector(),
                  settings->parameters().initial_trust_region_radius,
                  settings->parameters().required_poisedness,
+                 settings->parameters().weight_model_determination_minimum_change_hessian,
+                 settings->parameters().weights_distance_from_optimum_lsq,
                  settings) {
   // Set parameters and stuff here
   if (settings->parameters().initial_trust_region_radius > 0.0)
@@ -277,6 +279,13 @@ void DFO::handleEvaluatedCase(Optimization::Case *c) {
 }
 
 void DFO::iterate() {
+
+  MatrixXd aa(2,2);
+  aa << 1.1, 2.1, 1.2, 2.2;
+  std::cout << "aa\n" << aa << "\n";
+  aa.col(0).swap(aa.col(1));
+  std::cout << "aa\n" << aa << "\n";
+
   int ng = settings_->parameters().number_of_variables_with_gradients;
   int alpha = settings_->parameters().weight_model_determination_minimum_change_hessian;
 
@@ -329,7 +338,7 @@ void DFO::iterate() {
   bool isTrialPointNewOptimum = false;
 
   //Eigen::MatrixXd derivatives = Eigen::MatrixXd::Zero(2, number_of_interpolation_points_);
-  GradientEnhancedModel enhancedModel(number_of_variables_,number_of_interpolation_points_, ng, weights_distance_from_optimum_lsq_, alpha);
+  //GradientEnhancedModel enhancedModel(number_of_variables_,number_of_interpolation_points_, ng, weights_distance_from_optimum_lsq_, alpha);
 
 
   while (notConverged) {
@@ -395,11 +404,11 @@ void DFO::iterate() {
       Eigen::VectorXd funccopy = (*refFuncVals).tail(3);
       Eigen::VectorXd gradCp = (*refDerivatives).col(0).tail(ng);
       int index_of_center_point = 0;
-      enhancedModel.ComputeModel( (*refY), (*refDerivatives), gradCp /*DFO_model_.GetGradient()*/, (*refFuncVals),DFO_model_.getCenterPoint(), DFO_model_.GetBestPoint(),
-                                 DFO_model_.GetTrustRegionRadius(), r, index_of_center_point);
+      //enhancedModel.ComputeModel( (*refY), (*refDerivatives), gradCp /*DFO_model_.GetGradient()*/, (*refFuncVals),DFO_model_.getCenterPoint(), DFO_model_.GetBestPoint(),
+      //                           DFO_model_.GetTrustRegionRadius(), r, index_of_center_point);
       //enhancedModel.ComputeModel( ycop,dercopy, gradCp, funccopy,DFO_model_.getCenterPoint(), DFO_model_.GetBestPoint(),
       //DFO_model_.GetTrustRegionRadius(), r, index_of_center_point);
-      enhancedModel.GetModel(constant, grad,hess);
+      //enhancedModel.GetModel(constant, grad,hess);
       std::cout << "------------Enhanced model? ---------" << std::endl;
       std::cout << "c = " << constant << std::endl;
       std::cout << "gradient = " << std::endl << grad << std::endl;

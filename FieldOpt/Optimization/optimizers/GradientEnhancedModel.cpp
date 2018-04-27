@@ -96,8 +96,9 @@ void GradientEnhancedModel::GetModel(double &c, Eigen::VectorXd &g, Eigen::Matri
 GradientEnhancedModel::GradientEnhancedModel(int n,
                                              int m,
                                              int number_of_variables_with_gradient,
-                                             Eigen::VectorXd weights_derivatives,
+                                             QList<double> weights_derivatives,
                                              double weight_objective_minimum_change) {
+
   _n_ = n;
   n_ = n;
   _m_ = m;
@@ -106,7 +107,12 @@ GradientEnhancedModel::GradientEnhancedModel(int n,
   ng_ = number_of_variables_with_gradient;
   _alpha_ = weight_objective_minimum_change;
   alpha_ = weight_objective_minimum_change;
-  weights_derivatives_ = weights_derivatives;
+  weights_derivatives_ = Eigen::VectorXd::Zero(weights_derivatives.size());
+  int j = 0;
+  for (auto i = weights_derivatives.begin(); i != weights_derivatives.end(); ++i){
+    weights_derivatives_[j] = *i;
+    j++;
+  }
   constant_ = 0;
   gradient_ = Eigen::VectorXd::Zero(n_);
   hessian_ = Eigen::MatrixXd::Zero(n_, n_);

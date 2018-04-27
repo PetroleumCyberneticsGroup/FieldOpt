@@ -318,8 +318,10 @@ DFO_Model::DFO_Model(unsigned int m,
                      Eigen::VectorXd y0,
                      double rhoBeg,
                      double lambda,
+                     double weight_objective_minimum_change,
+                     QList<double> weights_derivatives,
                      Settings::Optimizer *settings)
-    : subproblem(settings) {
+    : subproblem(settings), enhancedModel(n,m,ng,weights_derivatives,weight_objective_minimum_change) {
   this->m = m;
   this->n = n;
   //this->y0 = y0;
