@@ -65,9 +65,9 @@ class Ensemble {
    *
    * @param ens_path
    */
-  Ensemble(std::string ens_path);
+  Ensemble(const std::string &ens_path);
 
-  Ensemble() = default;
+  Ensemble();
 
 
   struct Realization {
@@ -88,7 +88,7 @@ class Ensemble {
   std::vector<std::string> GetAliases() const;
 
  private:
-  const std::string ensemble_parent_dir_;
+  std::string ensemble_parent_dir_;
   std::map<std::string, Realization> realizations_;
 
 

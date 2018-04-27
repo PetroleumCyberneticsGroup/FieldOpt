@@ -25,9 +25,11 @@ namespace Settings {
 
 using namespace Utilities::FileHandling;
 
-Settings::Ensemble::Ensemble(std::string ens_path)
-    : ensemble_parent_dir_(GetParentDirectoryPath(ens_path))
+Ensemble::Ensemble() {}
+
+Ensemble::Ensemble(const std::string &ens_path)
 {
+    ensemble_parent_dir_ = GetParentDirectoryPath(ens_path);
     assert(FileExists(ens_path, true));
     assert(DirectoryExists(Ensemble::ensemble_parent_dir_, true));
 

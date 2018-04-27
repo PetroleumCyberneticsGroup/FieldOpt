@@ -25,6 +25,7 @@
 #include "Settings/settings.h"
 #include "Settings/simulator.h"
 #include "Simulation/execution_scripts/execution_scripts.h"
+#include "Settings/ensemble.h"
 
 namespace Simulation {
 namespace SimulatorInterfaces {
@@ -62,6 +63,19 @@ class Simulator {
    * @return True if the simuation completes before the set timeout, otherwise false.
    */
   virtual bool Evaluate(int timeout, int threads=1) = 0;
+
+  /*!
+   * Evaluate one realization from an ensemble.
+   *
+   * Updates file paths from the realization and calls Evaluate(timeout, threads).
+   * @param realization The realization to be optimized.
+   * @param timeout Number of seconds before the simulation should be terminated.
+   * @param threads Number of threads to be used by the simulator. Only works for AD-GPRS.
+   * @return True if the simuation completes before the set timeout, otherwise false.
+   */
+  virtual bool Evaluate(const Settings::Ensemble::Realization &realization, int timeout, int threads=1) = 0;
+
+
 
   /*!
    * @brief Only write driver files; don't execute simulation.

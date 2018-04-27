@@ -29,11 +29,12 @@ class FlowSimulator : public Simulator {
  public:
   FlowSimulator(Settings::Settings *settings, Model::Model *model);
 
-  virtual void Evaluate() override;
-  virtual bool Evaluate(int timeout, int threads=1) override;
+  void Evaluate() override;
+  bool Evaluate(int timeout, int threads=1) override;
+  bool Evaluate(const Settings::Ensemble::Realization &realization, int timeout, int threads=1) override;
   void WriteDriverFilesOnly() override;
-  virtual void CleanUp() override;
-  virtual void UpdateFilePaths() override;
+  void CleanUp() override;
+  void UpdateFilePaths() override;
 
  private:
   DriverFileWriters::FlowDriverFileWriter *driver_file_writer_;

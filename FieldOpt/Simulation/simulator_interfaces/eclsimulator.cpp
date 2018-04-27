@@ -33,12 +33,14 @@ ECLSimulator::ECLSimulator(Settings::Settings *settings, Model::Model *model)
 {
     model_ = model;
     settings_ = settings;
-    deck_name_ = driver_file_name_.split(".DATA").first();
+    if (!paths_.IsSet(Paths::ENSEMBLE_FILE)) {
+        deck_name_ = driver_file_name_.split(".DATA").first();
+    }
+    else {
+        deck_name_ = "";
+    }
 
     results_ = new Results::ECLResults();
-//    try {
-//        results()->ReadResults(output_driver_file_path_);
-//    } catch (...) {} // At this stage we don't really care if the results can be read, we just want to set the path.
 }
 
 void ECLSimulator::Evaluate()
@@ -77,6 +79,15 @@ bool ECLSimulator::Evaluate(int timeout, int threads) {
     }
     updateResultsInModel();
     return success;
+}
+
+bool ECLSimulator::Evaluate(const Settings::Ensemble::Realization &realization, int timeout, int threads) {
+    driver_file_name_ = QString::fromStdString(FileName(realization.data()));
+    driver_parent_dir_name_ = QString::fromStdString(ParentDirectoryName(realization.data()));
+    paths_.SetPath(Paths::SIM_DRIVER_FILE, realization.data());
+    paths_.SetPath(Paths::SIM_DRIVER_DIR , GetParentDirectoryPath(realization.data()));
+    paths_.SetPath(Paths::SIM_SCH_FILE   , realization.schedule());
+    return Evaluate(timeout, threads);
 }
 
 void ECLSimulator::CleanUp()

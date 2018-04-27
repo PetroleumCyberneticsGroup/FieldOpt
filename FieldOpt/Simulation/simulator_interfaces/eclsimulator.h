@@ -53,6 +53,8 @@ class ECLSimulator : public Simulator
    */
   void Evaluate() override;
   bool Evaluate(int timeout, int threads=1) override;
+  bool Evaluate(const Settings::Ensemble::Realization &realization, int timeout, int threads=1) override;
+
   void WriteDriverFilesOnly() override;
   /*!
    * \brief CleanUp Deletes files created during the simulation.

@@ -28,8 +28,14 @@ Simulator::Simulator(Settings::Settings *settings) {
     settings_ = settings;
     paths_ = settings_->paths();
 
-    driver_file_name_ =  QString::fromStdString(FileName(paths_.GetPath(Paths::SIM_DRIVER_FILE)));
-    driver_parent_dir_name_ = QString::fromStdString(ParentDirectoryName(paths_.GetPath(Paths::SIM_DRIVER_FILE)));
+    if (!paths_.IsSet(Paths::ENSEMBLE_FILE)) { // single realization
+        driver_file_name_ = QString::fromStdString(FileName(paths_.GetPath(Paths::SIM_DRIVER_FILE)));
+        driver_parent_dir_name_ = QString::fromStdString(ParentDirectoryName(paths_.GetPath(Paths::SIM_DRIVER_FILE)));
+    }
+    else { // multiple realizations
+        driver_file_name_ = "";
+        driver_parent_dir_name_ = "";
+    }
 
     // Use custom execution script if provided in runtime settings, else use the one from json driver file
     if (!paths_.IsSet(Paths::SIM_EXEC_SCRIPT_FILE)) {

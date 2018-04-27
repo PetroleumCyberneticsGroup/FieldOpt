@@ -108,5 +108,8 @@ void FlowSimulator::WriteDriverFilesOnly() {
     copyDriverFiles();
     driver_file_writer_->WriteDriverFile(QString::fromStdString(paths_.GetPath(Paths::SIM_WORK_DIR )));
 }
+bool FlowSimulator::Evaluate(const Settings::Ensemble::Realization &realization, int timeout, int threads) {
+    throw std::runtime_error("Ensemble optimization not yet implemented for the FLOW reservoir simulator.");
+}
 }
 }
