@@ -65,24 +65,8 @@ void AbstractRunner::InitializeSettings(QString output_subdirectory)
         output_directory.append(QString("/%1/").arg(output_subdirectory));
     Utilities::FileHandling::CreateDirectory(output_directory);
 
-    settings_ = new Settings::Settings(
-        QString::fromStdString(runtime_settings_->paths().GetPath(Paths::DRIVER_FILE)),
-        QString::fromStdString(runtime_settings_->paths().GetPath(Paths::OUTPUT_DIR)));
+    settings_ = new Settings::Settings(runtime_settings_->paths());
     settings_->set_verbosity(runtime_settings_->verbosity_level());
-
-    // Override simulator driver file if it has been passed as command line arguments
-    /// \todo Move this into settings when passing Paths object as constructor to it.
-    if (runtime_settings_->paths().IsSet(Paths::SIM_DRIVER_FILE))
-        settings_->simulator()->set_driver_file_path(QString::fromStdString(runtime_settings_->paths().GetPath(Paths::SIM_DRIVER_FILE)));
-    // Override grid file if it has been passed as command line arguments
-    if (runtime_settings_->paths().IsSet(Paths::GRID_FILE))
-        settings_->model()->set_reservoir_grid_path(QString::fromStdString(runtime_settings_->paths().GetPath(Paths::GRID_FILE)));
-    // Override simulator executable path if it has been passed as command line arguments
-    if (runtime_settings_->paths().IsSet(Paths::SIM_EXEC_SCRIPT_FILE))
-        settings_->simulator()->set_execution_script_path(QString::fromStdString(runtime_settings_->paths().GetPath(Paths::SIM_EXEC_SCRIPT_FILE)));
-    // Override FieldOpt build directory path if it has been passed as command line arguments
-    if (runtime_settings_->paths().IsSet(Paths::BUILD_DIR))
-        settings_->set_build_path(QString::fromStdString(runtime_settings_->paths().GetPath(Paths::BUILD_DIR)));
 }
 
 void AbstractRunner::InitializeModel()
@@ -90,7 +74,7 @@ void AbstractRunner::InitializeModel()
     if (settings_ == 0)
         throw std::runtime_error("The Settings must be initialized before the Model.");
 
-    model_ = new Model::Model(*settings_->model(), logger_);
+    model_ = new Model::Model(*settings_, logger_);
 }
 
 void AbstractRunner::InitializeSimulator()

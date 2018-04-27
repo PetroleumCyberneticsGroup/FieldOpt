@@ -19,6 +19,8 @@
 
 #include "paths.h"
 
+Paths::Paths() { }
+
 void Paths::SetPath(Paths::Path path, std::string path_string) {
     if (path >= 0 && !FileExists(path_string)) {
         throw std::runtime_error(Paths::GetPathDescription(path) + " not found at " + path_string);
@@ -35,9 +37,14 @@ bool Paths::IsSet(Paths::Path path) {
 }
 std::string Paths::GetPath(Paths::Path path) {
     if (!IsSet(path)) {
+        std::cerr << "WARNING: Getting unset variable (" <<  GetPathDescription(path) << ")" << std::endl;
         return "UNSET";
     }
     else {
         return paths_[path];
     }
+}
+
+const std::string &Paths::GetPathDescription(Paths::Path path) const {
+    return path_descriptions.at(path);
 }

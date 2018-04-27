@@ -21,6 +21,7 @@
 #define SETTINGS_SIMULATOR_H
 
 #include "settings.h"
+#include "Settings/paths.h"
 
 #include <QStringList>
 
@@ -36,7 +37,7 @@ class Simulator
   friend class Settings;
 
  public:
-  Simulator(QJsonObject json_simulator);
+  Simulator(QJsonObject json_simulator, Paths &paths);
   enum SimulatorType { ECLIPSE, ADGPRS, Flow };
   enum SimulatorFluidModel { BlackOil, DeadOil };
 
@@ -58,46 +59,6 @@ class Simulator
   QString script_name() const { return script_name_; }
 
   /*!
-   * Get the path to the driver file.
-   */
-  QString driver_file_path() const { return driver_file_path_; }
-
-  /*!
-   * Get the path of the parent directory of the driver file.
-   */
-  QString driver_parent_directory() const { return driver_directory_; }
-
-  /*!
-   * Get the path to the file containing the schedule section
-   (or the part of it that is to be manipulated).
-   */
-  QString schedule_file_path() const {return schedule_file_path_; }
-
-  /*!
-   * Set the driver file path. Used when the path is passed by command line argument.
-   */
-  void set_driver_file_path(const QString path);
-
-  /*!
-   * Set the execution script path.
-   */
-  void set_execution_script_path (const QString path) { custom_exec_script_path_ = path; }
-
-  /*!
-   * Set a custom path for the simulator execution script.
-   */
-
-  /*!
-   * Get the path to the simulator execution script.
-   */
-  QString custom_simulator_execution_script_path() const { return custom_exec_script_path_; }
-
-  /*!
-   * Get the output directory path.
-   */
-  QString output_directory() const { return output_directory_; }
-
-  /*!
    * Get the fluid model.
    */
   SimulatorFluidModel fluid_model() const { return fluid_model_; }
@@ -114,12 +75,6 @@ class Simulator
   SimulatorFluidModel fluid_model_;
   QStringList *commands_;
   QString script_name_;
-  QString driver_file_path_;
-  QString driver_directory_;
-  QString schedule_file_path_;
-  QString custom_exec_script_path_;
-
-  QString output_directory_;
   int max_minutes_;
 };
 

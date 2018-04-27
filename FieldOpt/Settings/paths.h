@@ -26,24 +26,37 @@ using namespace Utilities::FileHandling;
 
 class Paths {
  public:
+  Paths();
+
   /*!
    * Path enum. Directory paths should have values < 0; files >= 0.
    */
   enum Path : int {DRIVER_FILE=0, SIM_DRIVER_FILE=1, GRID_FILE=2, SIM_EXEC_SCRIPT_FILE=3,
-    BUILD_DIR=-1,  OUTPUT_DIR=-2};
-  const std::string &GetPathDescription(Path path) const { return path_descriptions.at(path); }
+    SIM_SCH_FILE=4, SIM_OUT_DRIVER_FILE=5, SIM_OUT_SCH_FILE=6, SIM_HDF5_FILE=7,
+    BUILD_DIR=-1,  OUTPUT_DIR=-2, SIM_DRIVER_DIR=-3, SIM_WORK_DIR=-4};
+
+  const std::string &GetPathDescription(Path path) const;
+
   void SetPath(Path path, std::string path_string);
+
   bool IsSet(Path path);
+
   std::string GetPath(Path path);
 
  private:
-  const std::map<Path, std::string> path_descriptions = {
+  std::map<Path, std::string> path_descriptions = {
       std::pair<Path, std::string> {DRIVER_FILE, "Driver file"},
       std::pair<Path, std::string> {SIM_DRIVER_FILE, "Simulator driver file"},
       std::pair<Path, std::string> {GRID_FILE, "Grid file"},
       std::pair<Path, std::string> {SIM_EXEC_SCRIPT_FILE, "Simulator execution script"},
+      std::pair<Path, std::string> {SIM_SCH_FILE, "Simulator schedule section file"},
+      std::pair<Path, std::string> {SIM_OUT_DRIVER_FILE, "Simulation output driver file"},
+      std::pair<Path, std::string> {SIM_OUT_SCH_FILE, "Simulation output schedule file"},
+      std::pair<Path, std::string> {SIM_HDF5_FILE, "HDF5 Summary file"},
       std::pair<Path, std::string> {BUILD_DIR, "Build directory"},
       std::pair<Path, std::string> {OUTPUT_DIR, "Output directory"},
+      std::pair<Path, std::string> {SIM_DRIVER_DIR, "Simulation driver parent directory"},
+      std::pair<Path, std::string> {SIM_WORK_DIR, "Simulation work directory"},
   };
 
   std::map<Path, std::string> paths_;

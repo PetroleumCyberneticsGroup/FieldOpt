@@ -26,46 +26,22 @@ using namespace Utilities::FileHandling;
 
 Simulator::Simulator(Settings::Settings *settings) {
     settings_ = settings;
+    paths_ = settings_->paths();
 
-    // Set initial paths ===================================================
-    initial_driver_file_path_ = settings->simulator()->driver_file_path();
-    initial_driver_file_name_ = initial_driver_file_path_.split("/").last();
-    initial_driver_file_parent_dir_path_ = settings->simulator()->driver_parent_directory();
-    initial_driver_file_parent_dir_name_ = initial_driver_file_parent_dir_path_.split("/").last();
-    initial_schedule_path_ = settings->simulator()->schedule_file_path();
-    output_directory_ = settings->output_directory();
-
-    if (settings->build_path().length() > 0) {
-        build_dir_ = settings->build_path() + "/";
-        assert(DirectoryExists(build_dir_));
-    }
+    driver_file_name_ =  QString::fromStdString(FileName(paths_.GetPath(Paths::SIM_DRIVER_FILE)));
+    driver_parent_dir_name_ = QString::fromStdString(ParentDirectoryName(paths_.GetPath(Paths::SIM_DRIVER_FILE)));
 
     // Use custom execution script if provided in runtime settings, else use the one from json driver file
-    if (settings->simulator()->custom_simulator_execution_script_path().length() > 0)
-        script_path_ = settings->simulator()->custom_simulator_execution_script_path();
-    else
-        script_path_ = build_dir_ + ExecutionScripts::GetScriptPath(settings->simulator()->script_name());
-    script_args_ = (QStringList() << output_directory_
-                                  << output_directory_+"/"+initial_driver_file_name_
+    if (!paths_.IsSet(Paths::SIM_EXEC_SCRIPT_FILE)) {
+        std::string exec_script_path = paths_.GetPath(Paths::BUILD_DIR)
+                                       + ExecutionScripts::GetScriptPath(settings->simulator()->script_name()).toStdString();
+        paths_.SetPath(Paths::SIM_EXEC_SCRIPT_FILE, exec_script_path);
+    }
+    script_args_ = (QStringList() << QString::fromStdString(paths_.GetPath(Paths::OUTPUT_DIR))
+                                  << QString::fromStdString(paths_.GetPath(Paths::OUTPUT_DIR)) + "/" + driver_file_name_
                                   << QString::number(1));
 
     control_times_ = settings->model()->control_times();
-
-    assert(settings->driver_path().length() > 0);
-    assert(DirectoryExists(initial_driver_file_parent_dir_path_, true));
-    assert(DirectoryExists(output_directory_, true));
-    assert(FileExists(initial_driver_file_path_, true));
-    assert(FileExists(initial_schedule_path_, true) || initial_schedule_path_.length() == 0);
-    assert(FileExists(script_path_, true));
-}
-
-void Simulator::SetOutputDirectory(QString output_directory)
-{
-    if (Utilities::FileHandling::DirectoryExists(output_directory)) {
-        output_directory_ = output_directory;
-        UpdateFilePaths();
-    }
-    else throw OutputDirectoryDoesNotExistException(output_directory);
 }
 
 ::Simulation::Results::Results *Simulator::results()

@@ -34,17 +34,20 @@ protected:
 };
 
 TEST_F(SettingsTest, ConstructorAndTestFileValidity) {
-    EXPECT_NO_THROW(auto settings = ::Settings::Settings(
-                        TestResources::ExampleFilePaths::driver_example_,
-                        TestResources::ExampleFilePaths::directory_output_));
+    Paths paths;
+    paths.SetPath(Paths::DRIVER_FILE, TestResources::ExampleFilePaths::driver_example_.toStdString());
+    paths.SetPath(Paths::OUTPUT_DIR, TestResources::ExampleFilePaths::directory_output_.toStdString());
+    EXPECT_NO_THROW(auto settings = ::Settings::Settings(paths));
 }
 
 TEST_F(SettingsTest, GlobalSettings) {
-    auto settings = ::Settings::Settings(TestResources::ExampleFilePaths::driver_example_,
-                                         TestResources::ExampleFilePaths::directory_output_);
+    Paths paths;
+    paths.SetPath(Paths::DRIVER_FILE, TestResources::ExampleFilePaths::driver_example_.toStdString());
+    paths.SetPath(Paths::OUTPUT_DIR, TestResources::ExampleFilePaths::directory_output_.toStdString());
+    auto settings = ::Settings::Settings(paths);
     EXPECT_STREQ("TestRun", settings.name().toLatin1().constData());
     EXPECT_STREQ(TestResources::ExampleFilePaths::driver_example_.toLatin1().constData(),
-                 settings.driver_path().toLatin1().constData());
+                 settings.paths().GetPath(Paths::DRIVER_FILE).c_str());
 //    EXPECT_EQ(true, settings.verbosity()>0);
 }
 

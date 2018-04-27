@@ -28,9 +28,9 @@ namespace TestResources {
 class TestResourceSettings {
  protected:
   TestResourceSettings() {
-      settings_full_ = new Settings::Settings(
-          ExampleFilePaths::driver_example_,
-          ExampleFilePaths::directory_output_);
+      paths_.SetPath(Paths::DRIVER_FILE, ExampleFilePaths::driver_example_.toStdString());
+      paths_.SetPath(Paths::OUTPUT_DIR, ExampleFilePaths::directory_output_.toStdString());
+      settings_full_ = new Settings::Settings(paths_);
       settings_optimizer_ = settings_full_->optimizer();
       settings_simulator_ = settings_full_->simulator();
       settings_model_ = settings_full_->model();
@@ -46,6 +46,7 @@ class TestResourceSettings {
   Settings::Optimizer *settings_optimizer_;
   Settings::Simulator *settings_simulator_;
   Settings::Model *settings_model_;
+  Paths paths_;
 //        Settings::Settings *settings_flow_5spot_;
 };
 

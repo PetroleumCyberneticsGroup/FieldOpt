@@ -50,9 +50,9 @@ class AdgprsSimulator : public Simulator
 
   // Simulator interface
  public:
-  void Evaluate();
-  void CleanUp();
-  virtual bool Evaluate(int timeout, int threads=1) override;
+  void Evaluate() override;
+  void CleanUp() override;
+  bool Evaluate(int timeout, int threads=1) override;
 
  private:
   QString output_h5_summary_file_path_;

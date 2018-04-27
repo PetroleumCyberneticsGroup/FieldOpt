@@ -76,7 +76,7 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
 
     if (vm.count("fieldopt-build-dir")) {
         paths_.SetPath(Paths::BUILD_DIR, vm["fieldopt-build-dir"].as<std::string>());
-    }
+    } else paths_.SetPath(Paths::BUILD_DIR, GetAbsoluteFilePath(QString("./")).toStdString());
 
     if (vm.count("grid-path")) {
         paths_.SetPath(Paths::GRID_FILE, vm["grid-path"].as<std::string>());

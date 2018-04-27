@@ -25,30 +25,17 @@ using namespace Utilities::FileHandling;
 
 namespace Settings {
 
-Simulator::Simulator(QJsonObject json_simulator)
+Simulator::Simulator(QJsonObject json_simulator, Paths &paths)
 {
     // Driver path
-    if (json_simulator.contains("DriverPath")) {
-        driver_file_path_ = json_simulator["DriverPath"].toString();
-        if (!FileExists(driver_file_path_)) {
-            throw std::runtime_error("No file found at DriverPath: " + driver_file_path_.toStdString());
-        }
-        auto tmp = driver_file_path_.split("/");
-        tmp.removeLast();
-        driver_directory_ = tmp.join("/");
+    if (!paths.IsSet(Paths::SIM_DRIVER_FILE) && json_simulator.contains("DriverPath")) {
+        paths.SetPath(Paths::SIM_DRIVER_FILE, json_simulator["DriverPath"].toString().toStdString());
     }
-    else {
-        driver_file_path_ = "";
-    }
+    paths.SetPath(Paths::SIM_DRIVER_DIR, GetParentDirectoryPath(paths.GetPath(Paths::SIM_DRIVER_FILE)));
 
-    if (json_simulator.contains("ScheduleFile")) {
-        auto schedule_path = driver_directory_ + "/" + json_simulator["ScheduleFile"].toString();
-         if (!FileExists(schedule_path))
-             throw std::runtime_error("No file found at ScheduleFile: " + schedule_path.toStdString());
-        schedule_file_path_ = schedule_path;
-    }
-    else {
-        schedule_file_path_ = "";
+    if (!paths.IsSet(Paths::SIM_SCH_FILE) && json_simulator.contains("ScheduleFile")) {
+        auto schedule_path = paths.GetPath(Paths::SIM_DRIVER_DIR) + "/" + json_simulator["ScheduleFile"].toString().toStdString();
+        paths.SetPath(Paths::SIM_SCH_FILE, schedule_path);
     }
 
     // Simulator type
@@ -92,25 +79,6 @@ Simulator::Simulator(QJsonObject json_simulator)
             fluid_model_ = SimulatorFluidModel::BlackOil;
     }
     else fluid_model_ = SimulatorFluidModel::BlackOil;
-}
-
-void Simulator::set_driver_file_path(const QString path) {
-    driver_file_path_ = path;
-
-    if (!FileExists(driver_file_path_)) {
-        throw std::runtime_error("No file found at DriverPath: " + driver_file_path_.toStdString());
-    }
-
-    auto old_driver_directory = driver_directory_;
-    auto tmp = driver_file_path_.split("/");
-    tmp.removeLast();
-    driver_directory_ = tmp.join("/");
-
-    if (schedule_file_path_.length() > 0) {
-        schedule_file_path_.replace(old_driver_directory, driver_directory_);
-        if (!FileExists(schedule_file_path_))
-            throw std::runtime_error("No file found at ScheduleFile: " + schedule_file_path_.toStdString());
-    }
 }
 
 }

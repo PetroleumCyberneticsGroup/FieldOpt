@@ -12,15 +12,18 @@ namespace {
 class ECLSimulatorTest : public testing::Test, TestResourceModel {
 protected:
     ECLSimulatorTest() {
-        settings_norne_full_ = new Settings::Settings(ExampleFilePaths::norne_driver_example_,
-                                                      ExampleFilePaths::norne_test_output_);
+        Paths paths;
+        paths.SetPath(Paths::DRIVER_FILE, ExampleFilePaths::norne_driver_example_.toStdString());
+        paths.SetPath(Paths::OUTPUT_DIR, ExampleFilePaths::norne_test_output_.toStdString());
+        paths.SetPath(Paths::GRID_FILE, ExampleFilePaths::norne_grid_.toStdString());
+        paths.SetPath(Paths::BUILD_DIR, "./");
+        settings_norne_full_ = new Settings::Settings(paths);
         settings_norne_optimizer_ = settings_norne_full_->optimizer();
         settings_norne_simulator_ = settings_norne_full_->simulator();
         settings_norne_model_ = settings_norne_full_->model();
+        norne_model_ = new Model::Model(*settings_norne_full_, logger_norne_);
         simulator_ = new ECLSimulator(settings_norne_full_, norne_model_);
 
-        settings_norne_model_->set_reservoir_grid_path(ExampleFilePaths::norne_grid_);
-        norne_model_ = new Model::Model(*settings_norne_model_, logger_norne_);
     }
     Simulator *simulator_;
   Settings::Settings *settings_norne_full_;
@@ -36,13 +39,13 @@ protected:
  * in the OPM library. The deck parser is executed every time the ECLSimulatorTest
  * constructor is called, which is every time a test in this class is executed.
  */
-TEST_F(ECLSimulatorTest, Constructor) {
-    EXPECT_TRUE(true);
-}
-
-//TEST_F(ECLSimulatorTest, Evaluate) {
-//    simulator_->Evaluate();
+//TEST_F(ECLSimulatorTest, Constructor) {
+//    EXPECT_TRUE(true);
 //}
+
+TEST_F(ECLSimulatorTest, Evaluate) {
+    simulator_->Evaluate();
+}
 //
 //TEST_F(ECLSimulatorTest, CleanUp) {
 //    //simulator_->CleanUp();

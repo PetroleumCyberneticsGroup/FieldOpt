@@ -22,14 +22,14 @@
 
 namespace Model {
 
-Model::Model(Settings::Model settings, Logger *logger)
+Model::Model(Settings::Settings settings, Logger *logger)
 {
-    grid_ = new Reservoir::Grid::ECLGrid(settings.reservoir().path.toStdString());
+    grid_ = new Reservoir::Grid::ECLGrid(settings.paths().GetPath(Paths::GRID_FILE));
     variable_container_ = new Properties::VariablePropertyContainer();
 
     wells_ = new QList<Wells::Well *>();
-    for (int well_nr = 0; well_nr < settings.wells().size(); ++well_nr) {
-        wells_->append(new Wells::Well(settings, well_nr, variable_container_, grid_));
+    for (int well_nr = 0; well_nr < settings.model()->wells().size(); ++well_nr) {
+        wells_->append(new Wells::Well(*settings.model(), well_nr, variable_container_, grid_));
     }
 
     variable_container_->CheckVariableNameUniqueness();

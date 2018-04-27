@@ -29,6 +29,8 @@ class ScheduleImportSettingsTest : public ::testing::Test {
  protected:
   ScheduleImportSettingsTest() {
       auto partial_deck = TestResources::TestResourceSettings::imported_model_settings;
+      paths_.SetPath(Paths::SIM_DRIVER_FILE, "../examples/ECLIPSE/norne-simplified/NORNE_SIMPLIFIED.DATA");
+      paths_.SetPath(Paths::SIM_SCH_FILE, "../examples/ECLIPSE/norne-simplified/INCLUDE/BC0407_HIST01122006.SCH");
       sim_json_ = partial_deck["Simulator"].toObject();
       mod_json_ = partial_deck["Model"].toObject();
   }
@@ -39,11 +41,12 @@ class ScheduleImportSettingsTest : public ::testing::Test {
 
   QJsonObject sim_json_;
   QJsonObject mod_json_;
+  Paths paths_;
 };
 
 TEST_F(ScheduleImportSettingsTest, Constructors) {
-    auto sim_settings = Settings::Simulator(sim_json_);
-    auto mod_settings = Settings::Model(mod_json_, sim_settings.driver_file_path());
+    auto sim_settings = Settings::Simulator(sim_json_, paths_);
+    auto mod_settings = Settings::Model(mod_json_, paths_);
     EXPECT_TRUE(true);
 }
 

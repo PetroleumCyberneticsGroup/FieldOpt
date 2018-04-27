@@ -34,12 +34,12 @@
 
 namespace Settings {
 
-Model::Model(QJsonObject json_model, QString schedule_path)
+Model::Model(QJsonObject json_model, Paths &paths)
 {
     // Reservoir
     try {
         QJsonObject json_reservoir = json_model["Reservoir"].toObject();
-        readReservoir(json_reservoir);
+        readReservoir(json_reservoir, paths);
     }
     catch (std::exception const &ex) {
         throw UnableToParseReservoirModelSectionException("Unable to parse reservoir model section: " + std::string(ex.what()));
@@ -56,11 +56,11 @@ Model::Model(QJsonObject json_model, QString schedule_path)
     // Wells
     wells_ = QList<Well>();
     if (json_model.contains("Import")) {
-        if (schedule_path == 0) {
+        if (!paths.IsSet(Paths::SIM_DRIVER_FILE)) {
             throw std::runtime_error("SchedulePath must be specified (relative to DriverPath) to use the Import feature.");
         }
         std::cout << "Parsing schedule ..." << std::endl;
-        deck_parser_ = new DeckParser(schedule_path.toStdString());
+        deck_parser_ = new DeckParser(paths.GetPath(Paths::SIM_DRIVER_FILE));
 
         if (!json_model["Import"].toObject()["Keywords"].toArray().contains(QJsonValue("AllWells"))) {
             throw std::runtime_error("Unable to import simulator schedule. Import Keywords array does not contain"
@@ -87,7 +87,7 @@ Model::Model(QJsonObject json_model, QString schedule_path)
     }
 }
 
-void Model::readReservoir(QJsonObject json_reservoir)
+void Model::readReservoir(QJsonObject json_reservoir, Paths &paths)
 {
     // Reservoir grid source type
     QString type = json_reservoir["Type"].toString();
@@ -96,11 +96,9 @@ void Model::readReservoir(QJsonObject json_reservoir)
     else throw UnableToParseReservoirModelSectionException("Grid source type " + type.toStdString() +  "not recognized.");
 
     // Reservoir grid path
-    if (json_reservoir.contains("Path") && json_reservoir["Path"].toString().length() > 0) {
-        reservoir_.path = json_reservoir["Path"].toString();
-        if (!::Utilities::FileHandling::FileExists(reservoir_.path))
-            throw FileNotFoundException(reservoir_.path.toStdString());
-    } else reservoir_.path = "";
+    if (!paths.IsSet(Paths::GRID_FILE) && json_reservoir.contains("Path")) {
+        paths.SetPath(Paths::GRID_FILE, json_reservoir["Path"].toString().toStdString());
+    }
 }
 
 Model::Well Model::readSingleWell(QJsonObject json_well)

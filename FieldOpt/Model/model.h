@@ -44,7 +44,7 @@ class Model : public Loggable
 {
   friend class ModelSynchronizationObject;
  public:
-  Model(::Settings::Model settings, Logger *logger);
+  Model(::Settings::Settings settings, Logger *logger);
 
   LogTarget GetLogTarget() override;
   map<string, string> GetState() override;

@@ -45,11 +45,6 @@ namespace SimulatorInterfaces {
 class Simulator {
  public:
   /*!
-   * \brief SetOutputDirectory Set the directory in which to execute the simulation.
-   */
-  void SetOutputDirectory(QString output_directory);
-
-  /*!
    * \brief results Get the simulation results.
    */
   ::Simulation::Results::Results *results();
@@ -94,20 +89,14 @@ class Simulator {
 
   void updateResultsInModel();
 
-  QString initial_driver_file_path_; //!< Path to the driver file to be used as a base for the generated driver files.
-  QString output_directory_; //!< The directory in which to write new driver files and execute simulations.
-  QString initial_driver_file_name_; //!< The name of the driver main file.
-  QString initial_driver_file_parent_dir_path_; //!< Path to the directory containing the main driver file.
-  QString initial_driver_file_parent_dir_name_; //!< The name of the directory containing the initial main driver file.
-  QString initial_schedule_path_; //!< Path to the schedule file. This file will be overwritten by FieldOpt when optimizing.
+  Paths paths_;
 
-  QString current_output_deck_parent_dir_path_; //!< Path that should be used when writing new deck parts and executing simulations. Should be inside output dir.
+  QString driver_file_name_; //!< The name of the driver main file.
+  QString driver_parent_dir_name_; //!< The name of the directory containing the initial main driver file.
 
   ::Simulation::Results::Results *results_;
   Settings::Settings *settings_;
   Model::Model *model_;
-  QString build_dir_;
-  QString script_path_;
   QStringList script_args_;
   QList<int> control_times_;
   virtual void UpdateFilePaths() = 0;

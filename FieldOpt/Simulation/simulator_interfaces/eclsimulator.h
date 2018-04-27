@@ -51,26 +51,23 @@ class ECLSimulator : public Simulator
   /*!
    * \brief Evaluate Executes the simulation of the current model. The evaluation is blocking.
    */
-  void Evaluate();
-  virtual bool Evaluate(int timeout, int threads=1) override;
+  void Evaluate() override;
+  bool Evaluate(int timeout, int threads=1) override;
   void WriteDriverFilesOnly() override;
   /*!
    * \brief CleanUp Deletes files created during the simulation.
    * All files except the .DATA, .UNSMRY, .SMSPEC  and .LOG are deleted.
    */
-  void CleanUp();
+  void CleanUp() override;
 
  private:
-  QString output_driver_file_path_;
-  QString output_schedule_file_path_;
   QString deck_name_; //!< Driver file name without the final .DATA
-  QStringList script_args_;
   Settings::Settings *settings_;
   void copyDriverFiles();
 
   // Simulator interface
  protected:
-  void UpdateFilePaths();
+  void UpdateFilePaths() override;
 };
 
 }

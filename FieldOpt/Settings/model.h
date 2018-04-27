@@ -27,6 +27,7 @@
 #define SETTINGS_MODEL_H
 
 #include "settings.h"
+#include "paths.h"
 
 #include <QString>
 #include <QList>
@@ -49,7 +50,7 @@ class Model
   friend class Settings;
 
  public:
-  Model(QJsonObject json_model, QString schedule_path); // This should only be accessed externally for testing purposes.
+  Model(QJsonObject json_model, Paths &paths); // This should only be accessed externally for testing purposes.
   enum ReservoirGridSourceType : int { ECLIPSE=1 };
   enum WellType : int { Injector=11, Producer=12, UNKNOWN_TYPE=19 };
   enum ControlMode : int { BHPControl=21, RateControl=22, UNKNOWN_CONTROL=29 };
@@ -62,7 +63,6 @@ class Model
 
   struct Reservoir {
     ReservoirGridSourceType type; //!< The source of the grid file (which reservoir simulator produced it).
-    QString path; //!< Path to the reservoir grid file, e.g. a .EGRID or .GRID file produced by ECLIPSE.
   };
 
   struct Well {
@@ -120,7 +120,6 @@ class Model
   };
 
   Reservoir reservoir() const { return reservoir_; } //!< Get the struct containing reservoir settings.
-  void set_reservoir_grid_path(const QString path) { reservoir_.path = path; } //!< Set the reservoir grid path. Used when the path is passed by command line argument.
   QList<Well> wells() const { return wells_; } //!< Get the struct containing settings for the well(s) in the model.
   QList<int> control_times() const { return control_times_; } //!< Get the control times for the schedule
 
@@ -130,7 +129,7 @@ class Model
   QList<int> control_times_;
   DeckParser *deck_parser_;
 
-  void readReservoir(QJsonObject json_reservoir);
+  void readReservoir(QJsonObject json_reservoir, Paths &paths);
   Well readSingleWell(QJsonObject json_well);
   void setImportedWellDefaults(QJsonObject json_model);
   void parseImportedWellOverrides(QJsonArray json_wells);
