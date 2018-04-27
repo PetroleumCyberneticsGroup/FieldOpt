@@ -22,7 +22,7 @@ namespace FileHandling {
  * \param verbose Whether the path being checked should be printed.
  * \return True if a file exists at the specified path, otherwise false.
  */
-inline bool FileExists(QString file_path)
+inline bool FileExists(QString file_path, bool verbose=false)
 {
     QFileInfo file(file_path);
     QFileInfo file_relative(file.absoluteFilePath());

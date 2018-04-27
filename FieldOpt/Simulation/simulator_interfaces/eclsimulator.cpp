@@ -30,19 +30,20 @@
 namespace Simulation {
 namespace SimulatorInterfaces {
 
-// -----------------------------------------------------------------
+using namespace Utilities::FileHandling;
+
+// =========================================================
 ECLSimulator::ECLSimulator(Settings::Settings *settings,
                            Model::Model *model)
-    : Simulator(settings) {
-
-  // ---------------------------------------------------------------
-  model_ = model;
+    : Simulator(settings)
+{
+    model_ = model;
     settings_ = settings;
     UpdateFilePaths();
     deck_name_ = initial_driver_file_name_.split(".DATA").first();
 
-  results_ = new Results::ECLResults();
-  try {
+    results_ = new Results::ECLResults();
+    try {
     results()->ReadResults(output_driver_file_path_,
                            settings_->verb_vector());
   } catch (...) {}
@@ -50,7 +51,7 @@ ECLSimulator::ECLSimulator(Settings::Settings *settings,
   // can be read, we just want to set the path.
 }
 
-// -----------------------------------------------------------------
+// =========================================================
 void ECLSimulator::Evaluate() {
 
     UpdateFilePaths();
@@ -73,10 +74,10 @@ void ECLSimulator::Evaluate() {
                                      settings_->verb_vector());
   results_->ReadResults(current_output_deck_parent_dir_path_ + "/" +initial_driver_file_name_,
                         settings_->verb_vector());
-  updateResultsInModel();
+    updateResultsInModel();
 }
 
-// -----------------------------------------------------------------
+// =========================================================
 bool ECLSimulator::Evaluate(int timeout, int threads) {
     UpdateFilePaths();
     copyDriverFiles();
@@ -96,18 +97,18 @@ bool ECLSimulator::Evaluate(int timeout, int threads) {
     return success;
 }
 
-// -----------------------------------------------------------------
+// =========================================================
 void ECLSimulator::CleanUp() {
-  QStringList file_endings_to_delete{"DBG", "ECLEND", "ECLRUN", "EGRID", "GRID",
-                                     "h5", "INIT","INSPEC", "MSG", "PRT",
-                                     "RSSPEC", "UNRST"};
-   QString base_file_path = output_driver_file_path_.split(".DATA").first();
-  for (QString ending : file_endings_to_delete) {
-    DeleteFile(base_file_path + "." + ending);
-  }
+    QStringList file_endings_to_delete{"DBG", "ECLEND", "ECLRUN", "EGRID", "GRID",
+                                       "h5", "INIT","INSPEC", "MSG", "PRT",
+                                       "RSSPEC", "UNRST"};
+    QString base_file_path = output_driver_file_path_.split(".DATA").first();
+    for (QString ending : file_endings_to_delete) {
+        DeleteFile(base_file_path + "." + ending);
+    }
 }
 
-// -----------------------------------------------------------------
+// =========================================================
 void ECLSimulator::UpdateFilePaths() {
     current_output_deck_parent_dir_path_ = output_directory_ + "/" + initial_driver_file_parent_dir_name_;
     output_driver_file_path_ = current_output_deck_parent_dir_path_ + "/" + initial_driver_file_name_;
@@ -115,11 +116,29 @@ void ECLSimulator::UpdateFilePaths() {
     output_schedule_file_path_.replace(initial_driver_file_parent_dir_path_,current_output_deck_parent_dir_path_);
 }
 
-
+// =========================================================
 void ECLSimulator::WriteDriverFilesOnly() {
     UpdateFilePaths();
     auto driver_file_writer = DriverFileWriters::EclDriverFileWriter(settings_, model_);
     driver_file_writer.WriteDriverFile(output_schedule_file_path_);
+}
+
+// =========================================================
+void ECLSimulator::copyDriverFiles() {
+    if (!DirectoryExists(output_directory_)) {
+        std::cout << "Output parent directory does not exist; creating it: " << output_directory_.toStdString() << std::endl;
+        CreateDirectory(output_directory_);
+    }
+    if (!DirectoryExists(current_output_deck_parent_dir_path_)) {
+        std::cout << "Output deck directory not found; copying input deck: "
+                  << "\t" << initial_driver_file_parent_dir_path_.toStdString() << " -> "
+                  << "\t" << current_output_deck_parent_dir_path_.toStdString() << std::endl;
+        CreateDirectory(current_output_deck_parent_dir_path_);
+        CopyDirectory(initial_driver_file_parent_dir_path_, current_output_deck_parent_dir_path_, true);
+    }
+    assert(DirectoryExists(current_output_deck_parent_dir_path_, true));
+    assert(FileExists(output_driver_file_path_, true));
+    assert(FileExists(output_schedule_file_path_, true));
 }
 
 }

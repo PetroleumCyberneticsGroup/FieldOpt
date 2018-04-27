@@ -37,27 +37,13 @@ namespace Simulation {
 namespace SimulatorInterfaces {
 namespace DriverFileWriters {
 
-EclDriverFileWriter::EclDriverFileWriter(Settings::Settings *settings,
-                                         Model::Model *model)
+using namespace DriverParts::ECLDriverParts;
+using namespace Utilities::FileHandling;
+
+EclDriverFileWriter::EclDriverFileWriter(Settings::Settings *settings, Model::Model *model)
 {
     model_ = model;
     settings_ = settings;
-
-    if (settings_->verb_vector()[8] > 1) // idx:8 -> sim (Simulation)
-        std::cout << "[sim]Reading ECL drv file.--- " << std::endl;
-
-    original_driver_file_contents_ = ::Utilities::FileHandling::ReadFileToStringList(settings_->simulator()->driver_file_path());
-    output_driver_file_name_ = settings->output_directory() + "/" + settings->name().toUpper() + ".DATA";
-
-    if (settings_->verb_vector()[8] >= 1) // idx:8 -> sim (Simulation)
-        std::cout << "[sim]DriverFileName:--------- "
-                  << output_driver_file_name_.toStdString() << std::endl;
-}
-
-void EclDriverFileWriter::WriteDriverFile()
-{
-    DriverParts::ECLDriverParts::Runspec runspec = DriverParts::ECLDriverParts::Runspec(original_driver_file_contents_, model_->wells());
-    DriverParts::ECLDriverParts::Grid grid = DriverParts::ECLDriverParts::Grid(original_driver_file_contents_);
 }
 
 void EclDriverFileWriter::WriteDriverFile(QString schedule_file_path)

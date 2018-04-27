@@ -1,31 +1,37 @@
-/******************************************************************************
-   Created by einar on 4/11/18.
-   Copyright (C) 2017 Einar J.M. Baumann <einar.baumann@gmail.com>
+/***********************************************************
+ Created by einar on 4/11/18.
 
-   This file is part of the FieldOpt project.
+ Copyright (C) 2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
 
-   FieldOpt is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+ This file is part of the FieldOpt project.
 
-   FieldOpt is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+ FieldOpt is free software: you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation, either version
+ 3 of the License, or (at your option) any later version.
 
-   You should have received a copy of the GNU General Public License
-   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
-******************************************************************************/
+ FieldOpt is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty
+ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
+
+ You should have received a copy of the GNU
+ General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
+
+// ---------------------------------------------------------
 #include "deck_parser.h"
 #include <numeric>
 #include <boost/lexical_cast.hpp>
 #include "Utilities/time.hpp"
 #include <opm/parser/eclipse/Units/Units.hpp>
 
+// ---------------------------------------------------------
 namespace Settings {
 
-
+// =========================================================
 DeckParser::DeckParser(std::string deck_file) {
 
     Opm::ParseContext opm_parse_context;
@@ -57,6 +63,7 @@ DeckParser::DeckParser(std::string deck_file) {
     initializeTimeVectors();
 }
 
+// =========================================================
 void DeckParser::initializeTimeVectors() {
     time_days_ = std::vector<int>(num_timesteps_);
     time_dates_ = std::vector<std::string>(num_timesteps_);
@@ -70,6 +77,7 @@ void DeckParser::initializeTimeVectors() {
     }
 }
 
+// =========================================================
 QList<Model::Well> DeckParser::GetWellData() {
     auto well_structs = QList<Model::Well>();
     for (int i = 0; i < num_wells_; ++i) {
@@ -82,6 +90,7 @@ QList<Model::Well> DeckParser::GetWellData() {
     return well_structs;
 }
 
+// =========================================================
 Model::Well DeckParser::opmWellToWellStruct(const Opm::Well *opm_well) {
     Model::Well well_struct;
     well_struct.name = QString::fromStdString(opm_well->name());
@@ -95,6 +104,7 @@ Model::Well DeckParser::opmWellToWellStruct(const Opm::Well *opm_well) {
     return well_struct;
 }
 
+// =========================================================
 Model::WellType DeckParser::determineWellType(const Opm::Well *opm_well) {
     bool is_injector = false;
     bool is_producer = false;
@@ -122,7 +132,7 @@ Model::WellType DeckParser::determineWellType(const Opm::Well *opm_well) {
         if (!is_producer && opm_well->isProducer(t)) {
             if (is_injector) {
                 std::cerr << "WARNING: Well " << opm_well->name()
-                          << " is detected as an alternating prodcuer/injector well."
+                          << " is detected as an alternating producer/injector well."
                               " This is not currently supported."
                               " Using last defined state (producer) "
                           << time_dates_[t]
@@ -160,6 +170,7 @@ Model::WellType DeckParser::determineWellType(const Opm::Well *opm_well) {
     }
 }
 
+// =========================================================
 Model::PreferredPhase DeckParser::determinePreferredPhase(const Opm::Well *opm_well) {
     Opm::Phase opm_phase = opm_well->getPreferredPhase();
     switch (opm_phase)
@@ -173,7 +184,7 @@ Model::PreferredPhase DeckParser::determinePreferredPhase(const Opm::Well *opm_w
         default:
             std::cerr << "WARNING: Deck parser was unable to determine the preferred phase"
                 "for well " << opm_well->name() << std::endl;
-            return Model::PreferredPhase::UNKNOWN_PHASE;
+        return Model::PreferredPhase::UNKNOWN_PHASE;
     }
 }
 

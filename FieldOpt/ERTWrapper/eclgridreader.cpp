@@ -1,46 +1,56 @@
-/******************************************************************************
-   Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
-   Modified by Alin G. Chitu (2016-2017) <alin.chitu@tno.nl, chitu_alin@yahoo.com>
-   Modified by M.Bellout (2017) <mathias.bellout@ntnu.no, chakibbb@gmail.com>
+/**********************************************************
+ Copyright (C) 2015-2016
+ Einar J.M. Baumann <einar.baumann@gmail.com>
 
-   This file is part of the FieldOpt project.
+ Modified by Alin G. Chitu (2016-2017)
+ <alin.chitu@tno.nl, chitu_alin@yahoo.com>
 
-   FieldOpt is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+ Modified by M.Bellout (2017)
+ <mathias.bellout@ntnu.no, chakibbb@gmail.com>
 
-   FieldOpt is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+ This file is part of the FieldOpt project.
 
-   You should have received a copy of the GNU General Public License
-   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
-******************************************************************************/
+ FieldOpt is free software: you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation, either version
+ 3 of the License, or (at your option) any later version.
 
-// -----------------------------------------------------------------
+ FieldOpt is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty
+ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
+
+ You should have received a copy of the GNU
+ General Public Licens along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
+
+// ---------------------------------------------------------
 // STD
 #include <iostream>
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 // Boost
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/lexical_cast.hpp>
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 // FieldOpt
 #include "eclgridreader.h"
 #include "ertwrapper_exceptions.h"
 
+// ---------------------------------------------------------
 namespace ERTWrapper {
 namespace ECLGrid {
 
+// ---------------------------------------------------------
 using std::vector;
 
+// =========================================================
 Eigen::Vector3d ECLGridReader::GetCellDxDyDz(int global_index) {
 
+  // -------------------------------------------------------
   double dx, dy, dz;
   dx = ecl_grid_get_cell_dx1(ecl_grid_, global_index);
   dy = ecl_grid_get_cell_dy1(ecl_grid_, global_index);
@@ -49,6 +59,7 @@ Eigen::Vector3d ECLGridReader::GetCellDxDyDz(int global_index) {
   return Eigen::Vector3d(dx, dy, dz);
 }
 
+// =========================================================
 Eigen::Vector3d ECLGridReader::GetCellCenter(int global_index) {
 
   double cx, cy, cz;
@@ -56,6 +67,7 @@ Eigen::Vector3d ECLGridReader::GetCellCenter(int global_index) {
   return Eigen::Vector3d(cx, cy, cz);
 }
 
+// =========================================================
 vector<Eigen::Vector3d> ECLGridReader::GetCellCorners(int global_index) {
 
   vector<Eigen::Vector3d> corners;
@@ -67,8 +79,9 @@ vector<Eigen::Vector3d> ECLGridReader::GetCellCorners(int global_index) {
   return corners;
 }
 
-MatrixXd ECLGridReader::GetCellCornersM(int global_index) {
-  MatrixXd corners(8,3);
+// =========================================================
+Eigen::MatrixXd ECLGridReader::GetCellCornersM(int global_index) {
+  Eigen::MatrixXd corners(8,3);
   for (int i = 0; i < 8; ++i) {
     double x, y, z;
     ecl_grid_get_cell_corner_xyz1(ecl_grid_, global_index, i, &x, &y, &z);
@@ -77,11 +90,13 @@ MatrixXd ECLGridReader::GetCellCornersM(int global_index) {
   return corners;
 }
 
+// =========================================================
 double ECLGridReader::GetCellVolume(int global_index) {
   return ecl_grid_get_cell_volume1(ecl_grid_,
                                    global_index);
 }
 
+// =========================================================
 ECLGridReader::ECLGridReader() {
   ecl_grid_ = 0;
   ecl_file_grid_ = 0;
@@ -96,6 +111,7 @@ ECLGridReader::ECLGridReader() {
   zcorn_kw_ = 0;
 }
 
+// =========================================================
 ECLGridReader::~ECLGridReader() {
   if (ecl_grid_ != 0)
     ecl_grid_free(ecl_grid_);
@@ -105,6 +121,7 @@ ECLGridReader::~ECLGridReader() {
     ecl_file_close(ecl_file_init_);
 }
 
+// =========================================================
 void ECLGridReader::ReadEclGrid(std::string file_name) {
 
   file_name_ = file_name;
@@ -176,23 +193,27 @@ void ECLGridReader::ReadEclGrid(std::string file_name) {
   }
 }
 
+// =========================================================
 void ECLGridReader::GetGridSummary() {
   // Provide summary information about grid
   ecl_grid_summarize(ecl_grid_);
 }
 
+// =========================================================
 int ECLGridReader::ConvertIJKToGlobalIndex(ECLGridReader::IJKIndex ijk) {
   if (ecl_grid_ == 0) throw GridNotReadException(
         "Grid must be read before IJK to global index.");
   return ecl_grid_get_global_index3(ecl_grid_, ijk.i, ijk.j, ijk.k);
 }
 
+// =========================================================
 int ECLGridReader::ConvertIJKToGlobalIndex(int i, int j, int k) {
   if (ecl_grid_ == 0) throw GridNotReadException(
         "Grid must be read before IJK to global index.");
   return ecl_grid_get_global_index3(ecl_grid_, i, j, k);
 }
 
+// =========================================================
 ECLGridReader::IJKIndex ECLGridReader::ConvertGlobalIndexToIJK(int global_index) {
   if (ecl_grid_ == 0) throw GridNotReadException(
         "Grid must be read before converting global indices to IJK.");
@@ -203,13 +224,14 @@ ECLGridReader::IJKIndex ECLGridReader::ConvertGlobalIndexToIJK(int global_index)
   return ijk;
 }
 
-int ECLGridReader::ConvertMatrixActiveIndexToGlobalIndex(int index)
-{
+// =========================================================
+int ECLGridReader::ConvertMatrixActiveIndexToGlobalIndex(int index) {
   if (ecl_grid_ == 0) throw GridNotReadException(
         "Grid must be read before converting indices.");
   else return ecl_grid_get_global_index1A(ecl_grid_, index);
 }
 
+// =========================================================
 ECLGridReader::Dims ECLGridReader::Dimensions() {
   ECLGridReader::Dims dims;
   if (ecl_grid_ == 0) throw GridNotReadException(
@@ -220,6 +242,7 @@ ECLGridReader::Dims ECLGridReader::Dimensions() {
   return dims;
 }
 
+// =========================================================
 void ECLGridReader::GetCOORDZCORNData() {
 
   // COORD
@@ -249,7 +272,9 @@ void ECLGridReader::GetCOORDZCORNData() {
 
 }
 
+// =========================================================
 void ECLGridReader::GetGridIndices() {
+
   ECLGridReader::Gidx gidx;
   if (ecl_grid_ == 0) throw GridNotReadException(
         "Grid must be read before getting grid indices.");
@@ -282,24 +307,27 @@ void ECLGridReader::GetGridIndices() {
   gidx_ = gidx;
 }
 
-int ECLGridReader::NumActiveMatrixCells()
-{
+
+// =========================================================
+int ECLGridReader::NumActiveMatrixCells() {
   if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting the number of active cells.");
   else return ecl_grid_get_nactive(ecl_grid_);
 }
 
-int ECLGridReader::NumActiveFractureCells()
-{
+// =========================================================
+int ECLGridReader::NumActiveFractureCells() {
   if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting the number of active cells.");
   else return ecl_grid_get_nactive_fracture(ecl_grid_);
 }
 
+// =========================================================
 bool ECLGridReader::IsCellActive(int global_index)
 {
   if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting the active status of cells.");
   else return (IsCellMatrixActive(global_index) || IsCellFractureActive(global_index));
 }
 
+// =========================================================
 bool ECLGridReader::IsCellMatrixActive(int global_index)
 {
   if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting the active status of cells.");
@@ -311,6 +339,7 @@ bool ECLGridReader::IsCellMatrixActive(int global_index)
   }
 }
 
+// =========================================================
 bool ECLGridReader::IsCellFractureActive(int global_index)
 {
   if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting the active status of cells.");
@@ -322,6 +351,7 @@ bool ECLGridReader::IsCellFractureActive(int global_index)
   }
 }
 
+// =========================================================
 ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index) {
   if (!GlobalIndexIsInsideGrid(global_index)) {
     throw InvalidIndexException(
@@ -367,6 +397,7 @@ ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index) {
   return cell;
 }
 
+// =========================================================
 int ECLGridReader::GlobalIndexOfCellEnvelopingPoint(double x, double y, double z,
                                                     int initial_guess) {
   if (ecl_grid_ == 0) throw GridNotReadException(
@@ -374,11 +405,13 @@ int ECLGridReader::GlobalIndexOfCellEnvelopingPoint(double x, double y, double z
   return ecl_grid_get_global_index_from_xyz(ecl_grid_, x, y, z, initial_guess);
 }
 
+// =========================================================
 bool ECLGridReader::GlobalIndexIsInsideGrid(int global_index) {
   Dims dims = Dimensions();
   return global_index < dims.nx * dims.ny * dims.nz;
 }
 
+// =========================================================
 ECLGridReader::Cell ECLGridReader::FindSmallestCell() {
   auto dims = Dimensions();
   int max_index = dims.nx * dims.ny * dims.nz;

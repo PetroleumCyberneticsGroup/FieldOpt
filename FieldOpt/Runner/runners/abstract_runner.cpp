@@ -315,17 +315,20 @@ void AbstractRunner::InitializeOptimizer() {
           logger_);
       break;
 
-        case Settings::Optimizer::OptimizerType::EGO:
-            if (runtime_settings_->verbosity_level()) std::cout << "Using EGO optimization algorithm." << std::endl;
-            optimizer_ = new Optimization::Optimizers::BayesianOptimization::EGO(settings_->optimizer(),
-                                                              base_case_,
-                                                              model_->variables(),
-                                                              model_->grid(),
-                                                              logger_
-            );
-            optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
-            break;      
-      
+    case Settings::Optimizer::OptimizerType::EGO:
+      if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
+        std::cout << "Using EGO optimization algorithm." << std::endl;
+
+      optimizer_ = new Optimization::Optimizers::BayesianOptimization::EGO(
+          settings_->optimizer(),
+          base_case_,
+          model_->variables(),
+          model_->grid(),
+          logger_
+      );
+
+      break;
+
       // ---------------------------------------------------
     case Settings::Optimizer::OptimizerType::ExhaustiveSearch2DVert:
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)

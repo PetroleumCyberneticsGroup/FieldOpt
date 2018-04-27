@@ -59,7 +59,8 @@ if (BUILD_TESTING)
     set_target_properties(test_reservoir
             PROPERTIES COMPILE_FLAGS "-fPIC")
 
-    add_test(NAME test_reservoir COMMAND $<TARGET_FILE:test_reservoir>)
+    add_test(NAME test_reservoir
+        COMMAND $<TARGET_FILE:test_reservoir>)
 endif()
 
 # Install targets ======================================================

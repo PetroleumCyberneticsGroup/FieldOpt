@@ -111,7 +111,7 @@ void EGO::iterate() {
     start = QDateTime::currentDateTime();
     rprop.maximize(gp_, 50, 0);
     end = QDateTime::currentDateTime();
-    time_fitting_ += time_span_seconds(start, end);
+    time_fitting_ += time_span_secs(start, end);
 
     start = QDateTime::currentDateTime();
     VectorXd new_position = af_opt_.Optimize(
@@ -119,7 +119,7 @@ void EGO::iterate() {
         normalizer_ofv_.normalize(GetTentativeBestCase()->objective_function_value())
     );
     end = QDateTime::currentDateTime();
-    time_af_opt_ += time_span_seconds(start, end);
+    time_af_opt_ += time_span_secs(start, end);
 
     for (int i = 0; i < new_position.size(); ++i) {
         if (new_position(i) < lb_(i)) {

@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
 project(FieldOpt)
 
+# ╔═╗╔╦╗╔═╗╦╔═╔═╗
+# ║  ║║║╠═╣╠╩╗║╣
+# ╚═╝╩ ╩╩ ╩╩ ╩╚═╝
+
 # General config =======================================================
 # CMAKE_MODULE_PATH: Commands like include() and find_package() search
 # for files in directories listed by this variable before checking the
@@ -17,22 +21,17 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_COLOR_MAKEFILE ON)
 # set(CMAKE_VERBOSE_MAKEFILE ON)
 
-# Custom ERT include dir (ResInsight) ==================================
-option(ERT_STANDARD "Use standard Ert library" ON)
-set(RIERTWIC FieldOpt-WellIndexCalculator/resinsight/Ert)
-
-if (NOT ERT_STANDARD)
-  # Placed early on so it overrides standard include dir (at /usr/include)
-  set(ERT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/${RIERTWIC}/lib/include)
-  include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR})
-  message("*************************************************")
-  message("**** Set ERT_INCLUDE_DIR: ${ERT_INCLUDE_DIR} ****")
-  message("*************************************************")
-  # ==> lib_ecl.so set in ERTWrapper/CMakeLists.txt
-endif ()
+# Build dirs ===========================================================
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Include dirs =========================================================
 include_directories(${PROJECT_SOURCE_DIR})
+
+# ╦═╗╔═╗╔═╗╦╔╗╔╔═╗╦╔═╗╦ ╦╔╦╗
+# ╠╦╝║╣ ╚═╗║║║║╚═╗║║ ╦╠═╣ ║
+# ╩╚═╚═╝╚═╝╩╝╚╝╚═╝╩╚═╝╩ ╩ ╩
 
 # ResInsight ===========================================================
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -47,10 +46,74 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNO_DEBUG")
 endif()
 
-# Build dirs ===========================================================
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+# ╔═╗╦═╗╔╦╗   ╔═╗╔═╗╦
+# ║╣ ╠╦╝ ║    ║╣ ║  ║
+# ╚═╝╩╚═ ╩────╚═╝╚═╝╩═╝
+
+# Custom ERT include dir (ResInsight) ==================================
+option(USE_ECL_SYSTEM "Use system ERT library" OFF)
+option(USE_ECL_RI "Use RI ERT library" ON)
+option(USE_ECL_LOCAL "Use local ERT library" OFF)
+
+if (USE_ECL_SYSTEM)
+
+  # Lib
+  find_library(ert_ecl
+      NAMES ecl
+      REQUIRED)
+  set(ERTLIB ${ert_ecl})
+
+  find_library(ert_util
+      NAMES ert_util
+      REQUIRED)
+
+  # Include
+  set(ERT_INCLUDE_DIR /usr/local/include/ert/ecl)
+  include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR})
+
+elseif (USE_ECL_RI)
+
+  # Lib
+  set(RIERTWIC FieldOpt-WellIndexCalculator/resinxx/rixx_ert_ecl)
+  set(ERT_LIB_DIR ${PROJECT_SOURCE_DIR}/${RIERTWIC}/cmake-build-debug/lib)
+  set(ERTLIB ${ERT_LIB_DIR}/libecl.so)
+
+  find_library(ert_util
+      NAMES ert_util
+      REQUIRED)
+
+  # Include
+  set(ERT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/${RIERTWIC}/lib/include)
+  include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR})
+
+elseif(USE_ECL_LOCAL)
+
+  # Lib
+  find_package(ert_ecl
+      NAMES ecl
+      PATHS
+      ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib
+      ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/share/cmake/ecl
+      NO_DEFAULT_PATH
+      REQUIRED)
+  set(ERTLIB ${ert_ecl})
+  # Find INCLUDE DIR by its own script
+
+  find_library(ert_util
+      NAMES ert_util
+      REQUIRED)
+
+endif()
+
+message("\n*************************************************************")
+message("**** Set ERT_INCLUDE_DIR: ${ERT_INCLUDE_DIR}")
+message("**** Set ert_util: ${ert_util}")
+message("**** Set ERTLIB: ${ERTLIB}")
+message("*************************************************************\n")
+
+# ╦  ╔═╗╔═╗╔═╗╦    ╦  ╦╔╗ ╔═╗
+# ║  ║ ║║  ╠═╣║    ║  ║╠╩╗╚═╗
+# ╩═╝╚═╝╚═╝╩ ╩╩═╝  ╩═╝╩╚═╝╚═╝
 
 # Set bundled dependencies first in package search path
 set(CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib/cmake)
@@ -58,6 +121,10 @@ message(STATUS "CMAKE_PREFIX_PATH:" ${CMAKE_PREFIX_PATH})
 
 # Add local third party include dirs
 include_directories(${CMAKE_SOURCE_DIR}/ThirdParty/libraries/include)
+
+# ╦ ╦╔╗╔╦╔╦╗  ╔╦╗╔═╗╔═╗╔╦╗
+# ║ ║║║║║ ║    ║ ║╣ ╚═╗ ║
+# ╚═╝╝╚╝╩ ╩    ╩ ╚═╝╚═╝ ╩
 
 # Enable unit tests + example dir ======================================
 option(BUILD_TESTING "Build unit tests"                 OFF)
@@ -68,6 +135,10 @@ if (BUILD_TESTING AND NOT COPY_EXAMPLES)
     tests. Several of the tests use files in the examples directory.")
 endif()
 
+# ╔═╗╔╦╗╔═╗╔═╗╦═╗╔═╗  ╦  ╦╔╗
+# ╠═╣ ║║║ ╦╠═╝╠╦╝╚═╗  ║  ║╠╩╗
+# ╩ ╩═╩╝╚═╝╩  ╩╚═╚═╝  ╩═╝╩╚═╝
+
 # Enable compilation of WIC as standalone executable and/or lib ========
 # NOTE: only one of the following two options should be ON at same time
 # [1] Build standalone well index calculator executable
@@ -75,19 +146,22 @@ option(BUILD_WIC_ONLY "Build well index calculator exe" OFF)
 # [2] Build OS-dependent well index calculator (shared) library:
 option(BUILD_WIC_ADGPRS "Build WIC as SHARED lib"       OFF)
 
+# ╔╦╗╔═╗╦ ╦╦═╗
+# ║║║╠═╣║ ║╠╦╝
+# ╩ ╩╩ ╩╚═╝╩╚═
+
 # Build executable for WI benchmarktests ===============================
 option(BUILD_BENCHMARK "Build exec for wic RMS benchmark" OFF)
 
-# Include Eigen + RpolyPlusPlus ========================================
+# ╔═╗╦╔═╗╔═╗╔╗╔
+# ║╣ ║║ ╦║╣ ║║║
+# ╚═╝╩╚═╝╚═╝╝╚╝
+
+# Include Eigen: Options ===============================================
 if(NOT COMPILATION_AT_MAUR)
   find_package(Eigen3 REQUIRED)
   include_directories(${EIGEN3_INCLUDE_DIR})
   message(STATUS "EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR}")
-
-  find_library(RpolyPlusPlus
-      NAMES rpoly_plus_plus
-      HINTS ${CMAKE_BINARY_DIR}/libraries/lib
-      REQUIRED)
 endif()
 
 if(NOT EIGEN3_FOUND)
@@ -95,40 +169,123 @@ if(NOT EIGEN3_FOUND)
   set(EIGEN3_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/ThirdParty/Eigen3)
 endif()
 
+# ╔═╗╔╦╗
+# ║═╬╗║
+# ╚═╝╚╩
+# ╔═╗╔═╗
+# ║ ╦╠═╝
+# ╚═╝╩
+# ╦ ╦╔╦╗╔═╗
+# ╠═╣ ║║╠╣
+# ╩ ╩═╩╝╚
+
+
 # Build WIC executable  and/or WIC ADGPRS lib ==========================
 # Include HDF5 + Qt5 + GP + ECL ========================================
 message("=============================================================")
 if (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS)
-    message(STATUS "Building BUILD_WIC_ONLY: ${BUILD_WIC_ONLY}")
-    message(STATUS "Building BUILD_WIC_ADGPRS: ${BUILD_WIC_ADGPRS}")
-    message(STATUS "Skipping: Qt5Core and HDF5")
+  message(STATUS "Building BUILD_WIC_ONLY: ${BUILD_WIC_ONLY}")
+  message(STATUS "Building BUILD_WIC_ADGPRS: ${BUILD_WIC_ADGPRS}")
+  message(STATUS "Skipping: Qt5Core and HDF5")
 else()
-    message(STATUS "Building FIELDOPT. Loading: Qt5Core and HDF5")
-    set(CMAKE_AUTOMOC ON)
-    set(CMAKE_INCLUDE_CURRENT_DIR ON)
-    find_package(HDF5 REQUIRED COMPONENTS CXX)
-    add_definitions(${HDF5_DEFINITIONS})
-    include_directories(${HDF5_INCLUDE_DIRS})
-    find_package(Threads REQUIRED)
+  message(STATUS "Building FIELDOPT. Loading: Qt5Core and HDF5")
+  set(CMAKE_AUTOMOC ON)
+  set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-    message(STATUS "Loading potentially local libraries:")
-    find_package(Qt5Core REQUIRED)
-    message(STATUS "Qt5Core_QTMAIN_LIBRARIES: ${Qt5Core_QTMAIN_LIBRARIES}")
-    message(STATUS "Qt5Core_INCLUDE_DIRS: ${Qt5Core_INCLUDE_DIRS}")
-    include_directories(${Qt5Core_INCLUDE_DIRS})
+  find_package(HDF5 REQUIRED COMPONENTS CXX)
+  add_definitions(${HDF5_DEFINITIONS})
+  include_directories(${HDF5_INCLUDE_DIRS})
+  find_package(Threads REQUIRED)
 
-    find_library(gp NAMES gp
-        HINTS
-        ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib
-        ${CMAKE_SOURCE_DIR}/ThirdParty/cmake-build-debug REQUIRED)
+  message(".............................................................")
+  message(STATUS "Loading potentially local libraries:")
+  find_package(Qt5Core
+      HINTS ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib
+      REQUIRED)
 
-    find_package(ecl REQUIRED)
-    find_package(opm-common REQUIRED)
-    message(STATUS "ecl: ${ecl_LIBRARIES}")
-    message(STATUS "gp: ${gp}")
-    message(STATUS "opm-common: ${opm-common_LIBRARIES}")
+  message(STATUS "Qt5Core_QTMAIN_LIBRARIES: ${Qt5Core_QTMAIN_LIBRARIES}")
+  message(STATUS "Qt5Core_INCLUDE_DIRS: ${Qt5Core_INCLUDE_DIRS}")
+  include_directories(${Qt5Core_INCLUDE_DIRS})
+
+  find_library(gp NAMES gp
+      HINTS ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib
+      REQUIRED)
+
+  find_package(opm-common
+      PATHS
+      ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib
+      ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/share/cmake/opm-common
+      NO_DEFAULT_PATH
+      REQUIRED)
+
+  message(STATUS "ecl_LIBRARIES: ${ecl_LIBRARIES}")
+  message(STATUS "ecl_LIBRARY: ${ecl_LIBRARY}")
+  message(STATUS "ecl_FOUND: ${ecl_FOUND}")
+  message(STATUS "gp: ${gp}")
+  message(STATUS "opm-common: ${opm-common_LIBRARIES}")
 
 endif()
+
+# ╦═╗╔═╗╔═╗╦ ╦ ╦╔═╗╔═╗╦ ╦ ╦
+# ╠╦╝╠═╝║ ║║ ╚╦╝╠═╝║ ║║ ╚╦╝
+# ╩╚═╩  ╚═╝╩═╝╩ ╩  ╚═╝╩═╝╩
+
+# Include RpolyPlusPlus: Options =======================================
+message(".............................................................")
+
+option(USE_RPOLY_SYSTEM "" OFF)
+option(USE_RPOLY_LOCAL "" ON)
+
+if(USE_RPOLY_SYSTEM)
+
+  #  find_library(RpolyPlusPlus
+  #      NAMES rpoly_plus_plus
+  #      NO_CMAKE_PATH
+  #      REQUIRED)
+
+  #  set(RpolyPlusPlus /usr/lib/librpoly_plus_plus.so)
+  #  set(RpolyPlusPlus_LIBRARY "${RpolyPlusPlus}")
+  #  set(RpolyPlusPlus_LIBRARIES "${RpolyPlusPlus}")
+
+  #  set(RpolyPlusPlus_INCLUDE_DIR /usr/include/RpolyPlusPlus)
+  #  include_directories(${CMAKE_SOURCE_DIR} ${RpolyPlusPlus_INCLUDE_DIR})
+
+elseif(USE_RPOLY_LOCAL)
+
+  # NOT WORKING:
+  #  find_library(RpolyPlusPlus
+  #      NAMES rpoly_plus_plus
+  #      NO_DEFAULT_PATH
+  #      REQUIRED)
+
+  # Lib
+  find_library(RpolyPlusPlus_LIBRARY
+      NAMES rpoly_plus_plus
+      PATHS ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib
+      NO_DEFAULT_PATH
+      REQUIRED)
+
+  # Include
+  find_path(RpolyPlusPlus_INCLUDE_DIR
+      NAMES polynomial.h find_polynomial_roots_jenkins_traub.h
+      PATHS ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/include/RpolyPlusPlus
+      NO_DEFAULT_PATH
+      REQUIRED)
+
+  set(RpolyPlusPlus_LIBRARIES ${RpolyPlusPlus_LIBRARY})
+
+endif()
+
+message("\n*************************************************************")
+message(STATUS "RpolyPlusPlus: ${RpolyPlusPlus}")
+message(STATUS "RpolyPlusPlus_LIBRARY: ${RpolyPlusPlus_LIBRARY}")
+message(STATUS "RpolyPlusPlus_LIBRARIES: ${RpolyPlusPlus_LIBRARIES}")
+message(STATUS "RpolyPlusPlus_INCLUDE_DIR: ${RpolyPlusPlus_INCLUDE_DIR}")
+message("*************************************************************\n")
+
+# ╔╗ ╔═╗╔═╗╔═╗╔╦╗
+# ╠╩╗║ ║║ ║╚═╗ ║
+# ╚═╝╚═╝╚═╝╚═╝ ╩
 
 # Boost libraries: default-settings ====================================
 message(".............................................................")
@@ -168,9 +325,13 @@ elseif(BUILD_WIC_ONLY)  # Building WIC executable with dependencies only
       REQUIRED program_options system filesystem)
 
 else() # Building all FieldOpt sources
-    find_package(Boost COMPONENTS
-            REQUIRED regex program_options serialization mpi system filesystem random)
+  find_package(Boost COMPONENTS
+      REQUIRED regex program_options serialization mpi system filesystem random)
 endif()
+
+# ╔╦╗╔╗ ╔═╗
+#  ║║╠╩╗║ ╦
+# ═╩╝╚═╝╚═╝
 
 # Pring debug info: include dirs + source dirs =========================
 include(DebugMsg.cmake)
@@ -178,19 +339,27 @@ include(DebugMsg.cmake)
 ## ADDED
 ## Set this directory as the root dir
 include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR})
-#
+
+# ╔═╗╔╗╔╔═╗╔═╗╔╦╗
+# ╚═╗║║║║ ║╠═╝ ║
+# ╚═╝╝╚╝╚═╝╩   ╩
+
 ## SNOPT ================================================================
 include_directories(${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/include/snopt)
 include_directories(${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/handlers)
+
+# ╦ ╦╔╗╔╦╔╦╗  ╔╦╗╔═╗╔═╗╔╦╗╔═╗
+# ║ ║║║║║ ║    ║ ║╣ ╚═╗ ║ ╚═╗
+# ╚═╝╝╚╝╩ ╩    ╩ ╚═╝╚═╝ ╩ ╚═╝
 
 # Enable testing =======================================================
 if (BUILD_TESTING)
   include(CTest)
   enable_testing()
-    find_library(gtest NAMES gtest HINTS ${PROJECT_SOURCE_DIR}/ThirdParty/libraries/lib REQUIRED)
-    find_library(gtest_main NAMES gtest_main HINTS ${PROJECT_SOURCE_DIR}/ThirdParty/libraries/lib REQUIRED)
-    message(STATUS "gtest:      ${gtest}")
-    message(STATUS "gtest_main: ${gtest_main}")
+  find_library(gtest NAMES gtest HINTS ${PROJECT_SOURCE_DIR}/ThirdParty/libraries/lib REQUIRED)
+  find_library(gtest_main NAMES gtest_main HINTS ${PROJECT_SOURCE_DIR}/ThirdParty/libraries/lib REQUIRED)
+  message(STATUS "gtest:      ${gtest}")
+  message(STATUS "gtest_main: ${gtest_main}")
 endif()
 
 message(STATUS "END MAIN PROJECT (${PROJECT_NAME}) ==> STARTING SUBDIRS")

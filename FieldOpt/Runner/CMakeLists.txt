@@ -41,6 +41,7 @@ add_library(runner
     logger.cpp
     bookkeeper.cpp
     )
+
 add_library(fieldopt::runner ALIAS runner)
 
 # Target link libraries ================================================
@@ -94,15 +95,18 @@ if (BUILD_TESTING)
   # Unit tests
   find_package(GTest REQUIRED)
   include_directories(${GTEST_INCLUDE_DIRS})
+
   add_executable(test_runner
       tests/test_bookkeeper.cpp
       tests/test_runtime_settings.cpp)
+
   target_link_libraries(test_runner
       fieldopt::runner
       ${GTEST_BOTH_LIBRARIES}
       ${CMAKE_THREAD_LIBS_INIT})
 
-  add_test(NAME test_runner COMMAND $<TARGET_FILE:test_runner>)
+  add_test(NAME test_runner
+      COMMAND $<TARGET_FILE:test_runner>)
 endif()
 
 # Install targets ======================================================
