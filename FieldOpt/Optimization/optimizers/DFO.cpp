@@ -37,6 +37,14 @@ Eigen::VectorXd matyasFunctionWithGradients(Eigen::VectorXd x) {
   return ret;
 }
 
+Eigen::VectorXd matyasFunctionWithGradients1(Eigen::VectorXd x) {
+  double val = 0.26 * (x(0) * x(0) + x(1) * x(1)) - 0.46 * x(0) * x(1);
+  Eigen::VectorXd ret(1+1);
+  ret[0] = val;
+  ret[1] = 0.52*x(0) - 0.46 * x(1);
+  return ret;
+}
+
 Eigen::VectorXd test(Eigen::VectorXd x){
   Eigen::VectorXd ret(1+4);
   ret.setOnes();
@@ -246,7 +254,7 @@ void DFO::handleEvaluatedCase(Optimization::Case *c) {
 }
 
 void DFO::iterate() {
-  int ng = 2;
+  int ng = 1;
   std::string color_from = "31";
   std::string color_to = "33";
 
@@ -362,8 +370,8 @@ void DFO::iterate() {
       Eigen::MatrixXd ycop = (*refY).block(0,1,2,3);
       Eigen::MatrixXd dercopy = (*refDerivatives).block(0,1,2,3);
       Eigen::VectorXd funccopy = (*refFuncVals).tail(3);
-
-      enhancedModel.ComputeModel( (*refY), (*refDerivatives), DFO_model_.GetGradient(), (*refFuncVals),DFO_model_.getCenterPoint(), DFO_model_.GetBestPoint(),
+      Eigen::VectorXd gradCp = (*refDerivatives).col(0);
+      enhancedModel.ComputeModel( (*refY), (*refDerivatives), gradCp /*DFO_model_.GetGradient()*/, (*refFuncVals),DFO_model_.getCenterPoint(), DFO_model_.GetBestPoint(),
                                  DFO_model_.GetTrustRegionRadius(), r);
       //enhancedModel.ComputeModel( ycop,dercopy, DFO_model_.GetGradient(), funccopy,DFO_model_.getCenterPoint(), DFO_model_.GetBestPoint(),
       //DFO_model_.GetTrustRegionRadius(), r);
@@ -668,7 +676,7 @@ void DFO::iterate() {
       /// Get the function evaluations for the first set of interpolation points.
       for (int i = 0; i < new_points.cols(); ++i) {
         //function_evaluations[i] = sphere(new_points.col(i) + DFO_model_.getCenterPoint());
-        functionValsAndGrad.col(i) = matyasFunctionWithGradients(new_points.col(i) + DFO_model_.getCenterPoint());
+        functionValsAndGrad.col(i) = matyasFunctionWithGradients1(new_points.col(i) + DFO_model_.getCenterPoint());
       }
     } else {
       if (index_of_new_point < 0) {
@@ -684,7 +692,7 @@ void DFO::iterate() {
       }
       /// Get one new point.
       //function_evaluation = sphere(new_point + DFO_model_.getCenterPoint());
-      functionValAndGrad = matyasFunctionWithGradients(new_point + DFO_model_.getCenterPoint());
+      functionValAndGrad = matyasFunctionWithGradients1(new_point + DFO_model_.getCenterPoint());
       if (last_action_ == TRIAL_POINT_FOUND) {
         if (function_evaluation < DFO_model_.GetBestFunctionValueAllTime()) {
           cout << "\033[1;36;mThe new function evaluation is: \033[0m" << function_evaluation << endl << endl;

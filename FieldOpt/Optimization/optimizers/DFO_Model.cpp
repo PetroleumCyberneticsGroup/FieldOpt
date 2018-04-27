@@ -322,9 +322,10 @@ DFO_Model::DFO_Model(unsigned int m,
     : subproblem(settings) {
   this->m = m;
   this->n = n;
-  this->y0 = y0;
+  //this->y0 = y0;
   this->y0 = Eigen::VectorXd::Zero(n);
-  //this->y0 << 0, 0;
+  this->y0 << 1,2;
+  //std::cout << "y0\n" << y0 << "\ny0this\n" << this->y0 << "\n";
   //this->y0.setZero();
   this->rho = rhoBeg;
   this->lambda = lambda;
