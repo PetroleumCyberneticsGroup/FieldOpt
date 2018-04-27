@@ -40,7 +40,7 @@ class Ensemble {
    * be a CSV file in the format
    *
    * \verbatim
-   * Alias , RelativeDataPath , RelativeSchedulePath
+   * Alias , RelativeDataPath , RelativeSchedulePath, RelativeGridPath
    * \endverbatim
    *
    * Lines starting with '#' will be interpreted as comment
@@ -61,6 +61,9 @@ class Ensemble {
    * the variable wells, and _not_ containing the SHEDULE
    * keyword itself).
    *
+   * The fourth entry should be the path to the .EGRID file
+   * for the specific realization.
+   *
    *
    *
    * @param ens_path
@@ -72,16 +75,19 @@ class Ensemble {
 
   struct Realization {
     Realization() = delete;
-    Realization(std::string alias, std::string data_rel_path, std::string schedule_rel_path);
+    Realization(std::string alias, std::string data_rel_path,
+                std::string schedule_rel_path, std::string grid_rel_path);
 
     std::string alias() const;
     std::string data() const;
     std::string schedule() const;
+    std::string grid() const;
 
    private:
     const std::string alias_;
     const std::string data_rel_path_;
     const std::string schedule_rel_path_;
+    const std::string grid_rel_path_;
   };
 
   const Realization &GetRealization(const std::string &alias) const;

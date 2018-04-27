@@ -29,7 +29,7 @@ Ensemble::Ensemble() {}
 
 Ensemble::Ensemble(const std::string &ens_path)
 {
-    ensemble_parent_dir_ = GetParentDirectoryPath(ens_path);
+    ensemble_parent_dir_ = GetAbsoluteFilePath(GetParentDirectoryPath(ens_path));
     assert(FileExists(ens_path, true));
     assert(DirectoryExists(Ensemble::ensemble_parent_dir_, true));
 
@@ -41,17 +41,19 @@ Ensemble::Ensemble(const std::string &ens_path)
         }
         std::vector<std::string> entries;
         boost::split(entries,line,boost::is_any_of("\t"));
-        assert(entries.size() == 3);
+        assert(entries.size() == 4);
 
         std::string alias = entries[0];
-        std::string data = entries[1];
-        std::string schedule = entries[2];
+        std::string data     = ensemble_parent_dir_         + "/" + entries[1];
+        std::string schedule = GetParentDirectoryPath(data) + "/" + entries[2];
+        std::string grid     = GetParentDirectoryPath(data) + "/" + entries[3];
 
         assert(realizations_.count(entries[0]) == 0); // Check that the alias has not already been used.
-        assert(FileExists(ensemble_parent_dir_ + "/" + data, true));
-        assert(FileExists(ensemble_parent_dir_ + "/" + GetParentDirectoryPath(data) + "/" + schedule, true));
+        assert(FileExists(data, true));
+        assert(FileExists(schedule, true));
+        assert(FileExists(grid, true));
         realizations_.insert(
-            std::pair<std::string, Realization>( alias, Realization(alias, data, data) )
+            std::pair<std::string, Realization>( alias, Realization(alias, data, data, grid) )
         );
     }
 }
@@ -68,10 +70,12 @@ std::vector<std::string> Ensemble::GetAliases() const {
 
 Settings::Ensemble::Realization::Realization(std::string alias,
                                              std::string data_rel_path,
-                                             std::string schedule_rel_path)
+                                             std::string schedule_rel_path,
+                                             std::string grid_rel_path)
     : alias_(alias),
       data_rel_path_(data_rel_path),
-      schedule_rel_path_(schedule_rel_path)
+      schedule_rel_path_(schedule_rel_path),
+      grid_rel_path_(grid_rel_path)
 {
 }
 
@@ -85,6 +89,9 @@ std::string Ensemble::Realization::data() const {
 
 std::string Ensemble::Realization::schedule() const {
     return schedule_rel_path_;
+}
+std::string Ensemble::Realization::grid() const {
+    return grid_rel_path_;
 }
 
 }
