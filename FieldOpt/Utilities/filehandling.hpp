@@ -12,6 +12,8 @@
 #include <iostream>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/operations.hpp>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
 #include <vector>
 
 namespace Utilities {
@@ -208,6 +210,33 @@ inline void CreateDirectory(QString path)
     QDir().mkdir(path);
 }
 
+inline void CreateDirectory(std::string path) {
+    CreateDirectory(QString::fromStdString(path));
+}
+
+/*!
+ * Get the name of a file from a path (i.e. delete everyting up to
+ * and including the final /).
+ * @param file_path Path to a file
+ * @return Name of a file, including extension.
+ */
+inline std::string FileName(const std::string file_path) {
+    std::vector<std::string> parts;
+    boost::split(parts, file_path, boost::is_any_of("/"), boost::token_compress_on);
+    return parts.back();
+}
+
+/*!
+ * Get the name of a file's parent directory.
+ * @param file_path Path to a file.
+ * @return Name of a directory.
+ */
+inline std::string ParentDirectoryName(const std::string file_path) {
+    std::vector<std::string> parts;
+    boost::split(parts, file_path, boost::is_any_of("/"), boost::token_compress_on);
+    return parts[parts.size() - 2];
+}
+
 /*!
  * \brief CopyFile Copy a file.
  * \param origin The path to the original file.
@@ -256,6 +285,10 @@ inline void CopyDirectory(QString origin, QString destination, bool verbose=fals
             CopyDirectory(entry.absoluteFilePath(), destination + "/" + entry.fileName(), verbose);
         }
     }
+}
+
+inline void CopyDirectory(std::string origin, std::string destination, bool verbose=false) {
+    CopyDirectory(QString::fromStdString(origin), QString::fromStdString(destination), verbose);
 }
 
 /*!
