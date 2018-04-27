@@ -59,6 +59,23 @@ double sphere(Eigen::VectorXd x) {
   }
   return val;
 }
+
+Eigen::VectorXd sphereGradients(Eigen::VectorXd x, int ng) {
+  Eigen::VectorXd ret(1+ng);
+  double val = 0;
+  for (int i = 0; i < x.rows(); i++) {
+    val += x(i) * x(i);
+  }
+  ret[0] = val;
+  int n = x.rows();
+  int j = 1;
+  for (int i = (n-ng); i < n; ++i){
+    ret[j] = 2*x(i);
+    j++;
+  }
+  return ret;
+}
+
 /// Test functions - end
 
 namespace Optimization {
@@ -312,9 +329,7 @@ void DFO::iterate() {
   bool isTrialPointNewOptimum = false;
 
   //Eigen::MatrixXd derivatives = Eigen::MatrixXd::Zero(2, number_of_interpolation_points_);
-  Eigen::VectorXd weights(3);
-  weights << 1,0.8,0.3;
-  GradientEnhancedModel enhancedModel(number_of_variables_,number_of_interpolation_points_, ng, weights, alpha);
+  GradientEnhancedModel enhancedModel(number_of_variables_,number_of_interpolation_points_, ng, weights_distance_from_optimum_lsq_, alpha);
 
 
   while (notConverged) {
@@ -685,7 +700,7 @@ void DFO::iterate() {
       /// Get the function evaluations for the first set of interpolation points.
       for (int i = 0; i < new_points.cols(); ++i) {
         //function_evaluations[i] = sphere(new_points.col(i) + DFO_model_.getCenterPoint());
-        functionValsAndGrad.col(i) = matyasFunctionWithGradients1(new_points.col(i) + DFO_model_.getCenterPoint());
+        functionValsAndGrad.col(i) = sphereGradients(new_points.col(i) + DFO_model_.getCenterPoint(), ng);
       }
     } else {
       if (index_of_new_point < 0) {
@@ -701,7 +716,7 @@ void DFO::iterate() {
       }
       /// Get one new point.
       //function_evaluation = sphere(new_point + DFO_model_.getCenterPoint());
-      functionValAndGrad = matyasFunctionWithGradients1(new_point + DFO_model_.getCenterPoint());
+      functionValAndGrad = sphereGradients(new_point + DFO_model_.getCenterPoint(), ng);
       if (last_action_ == TRIAL_POINT_FOUND) {
         if (function_evaluation < DFO_model_.GetBestFunctionValueAllTime()) {
           cout << "\033[1;36;mThe new function evaluation is: \033[0m" << function_evaluation << endl << endl;

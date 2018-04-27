@@ -153,43 +153,6 @@ void GradientEnhancedModel::ComputeModel(Eigen::MatrixXd Y,
   _y0_ = y0;
   _best_point_ = best_point;
 
-
-  // Set the _D_ matrix and the _v_ vector
-  int base_row = 0;
-  for (int t = 0; t < m_; ++t) { // for each sample point
-    int y = n_;
-    int c0 = 0;
-    for (int i = 0; i < ng_; ++i) { // for each row
-      for (int k = 0; k < y; ++k) { // for each elem in row
-        _D_(base_row + i, c0 + k) = points_(k, t);
-      }
-      c0 += y;
-      y--;
-    }
-    y = n_ - 1;
-    c0 = 0;
-    for (int k = 0; k < (ng_ - 1); ++k) { // for each row that begins an inverse diagonal
-      int ii = 1;
-      int jj = 1;
-      for (int i = k; i < (ng_ - 1); ++i) {//for each element in that inverse diagonal
-        _D_(base_row + k + ii, c0 + y - jj) = points_(y, t);
-        ii++;
-        jj++;
-      }
-      c0 += (y + 1);
-      y--;
-    }
-    base_row += ng_;
-
-
-    for (int i = 0; i < ng_; ++i){
-      _v_(t*ng_ +i) = derivatives((ng_ - i - 1), t) - derivatives_at_y0(ng_ - i - 1);
-    }
-  }
-
-  std::cout << "v\n" << _v_ << std::endl;
-
-
   // Set up _weights_least_square_
   for (int t = 0; t < m_; ++t){
     double norm = (Y.col(t) - best_point).norm();
@@ -203,6 +166,45 @@ void GradientEnhancedModel::ComputeModel(Eigen::MatrixXd Y,
       _weights_least_square_[t] = weights_derivatives_[2];
     }
   }
+
+  // Set the _D_ matrix and the _v_ vector
+  int base_row = 0;
+  for (int t = 0; t < m_; ++t) { // for each sample point
+
+    int y = n_;
+    int c0 = 0;
+    for (int i = 0; i < ng_; ++i) { // for each row
+      for (int k = 0; k < y; ++k) { // for each elem in row
+        _D_(base_row + i, c0 + k) = points_(k, t)*_weights_least_square_[t];
+      }
+      c0 += y;
+      y--;
+    }
+    y = n_ - 1;
+    c0 = 0;
+    for (int k = 0; k < (ng_ - 1); ++k) { // for each row that begins an inverse diagonal
+      int ii = 1;
+      int jj = 1;
+      for (int i = k; i < (ng_ - 1); ++i) {//for each element in that inverse diagonal
+        _D_(base_row + k + ii, c0 + y - jj) = points_(y, t)*_weights_least_square_[t];
+        ii++;
+        jj++;
+      }
+      c0 += (y + 1);
+      y--;
+    }
+    base_row += ng_;
+
+
+    for (int i = 0; i < ng_; ++i){
+      _v_(t*ng_ +i) = (derivatives((ng_ - i - 1), t) - derivatives_at_y0(ng_ - i - 1))*_weights_least_square_[t];
+    }
+  }
+
+  //std::cout << "v\n" << _v_ << std::endl;
+
+
+
 
   // set the constraints
   Eigen::VectorXd ans;
@@ -287,7 +289,6 @@ void GradientEnhancedModel::solveLinearSystem(Eigen::MatrixXd D,
   for (int i = 1; i <= n_; ++i){
     for (int j = 1; j <= i; ++j){ // the derivative with respect to (i,j)
 
-      //b(convert_h_ij_to_t_vectorized(i,j)-1) += hessian_old_(i-1,j-1)*alpha;
       b(row) += hessian_old_(i-1,j-1)*alpha_; //right hand side
       A(row, convert_h_ij_to_t_vectorized(i,j)-1) = alpha_;
 
@@ -295,10 +296,10 @@ void GradientEnhancedModel::solveLinearSystem(Eigen::MatrixXd D,
         A(row, start_lambda_i+ t-1) += -0.5*points_(i-1,t-1)*points_(j-1,t-1);
       }
 
-
       if (i > (n_-ng_)){
         for (int p = 1; p <= ng_*m_; p++) {
           int t = convert_h_ij_to_t_lsq(i,j); // taking derivative w.r.t. h_t
+
           b(row) += (1 - alpha_) * v(p - 1) * D(p-1, t-1); // right hand side
 
           //b(convert_h_ij_to_t_vectorized(i, j) - 1) += (1 - alpha) * v(p - 1) * D(convert_h_ij_to_t_lsq(i, j) - 1, p - 1);
@@ -307,8 +308,6 @@ void GradientEnhancedModel::solveLinearSystem(Eigen::MatrixXd D,
             int jj = 0;
 
             convert_t_to_ij_lsq(k, ii, jj);
-            //A(row, convert_h_ij_to_t_vectorized(ii, jj) - 1) += D(k - 1, p - 1)*D(convert_h_ij_to_t_lsq(ii,jj)-1,p-1);
-
             A(row, convert_h_ij_to_t_vectorized(ii, jj) - 1) += (1 - alpha_) * D(p-1,k-1) * D(p-1, t-1);
           }
         }
@@ -362,13 +361,13 @@ void GradientEnhancedModel::solveLinearSystem(Eigen::MatrixXd D,
   }
   //std::cout << "A, interpolation cond\n" << A << std::endl;
 
-  std::cout << "A\n" << A << std::endl;
-  std::cout << "b\n" << b << std::endl;
+  //std::cout << "A\n" << A << std::endl;
+  //std::cout << "b\n" << b << std::endl;
   //Eigen::MatrixXd Asub = Eigen::MatrixXd::Zero();
 
   // Ax = b; -> solve
   ans = A.colPivHouseholderQr().solve(b);
-  std::cout << "ans\n" << ans << std::endl;
+  //std::cout << "ans\n" << ans << std::endl;
 
 }
 
