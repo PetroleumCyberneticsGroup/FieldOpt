@@ -142,6 +142,7 @@ void GradientEnhancedModel::ComputeModel(Eigen::MatrixXd Y,
   // set up all constraints.
   //
   points_ = Y;
+  gradient_of_model.setZero();
   //points_ <<
   //        1.1, 2.1, 3.1,
   //    1.2, 2.2, 3.2;
@@ -180,10 +181,11 @@ void GradientEnhancedModel::ComputeModel(Eigen::MatrixXd Y,
 
 
     for (int i = 0; i < ng_; ++i){
-      _v_(t+i) = derivatives((ng_ - i - 1), t) - gradient_of_model(n_ - i - 1);
+      _v_(t*ng_ +i) = derivatives((ng_ - i - 1), t) - gradient_of_model(n_ - i - 1);
     }
   }
 
+  std::cout << "v\n" << _v_ << std::endl;
 
 
   // Set up _weights_least_square_
@@ -258,7 +260,6 @@ void GradientEnhancedModel::solveLinearSystem(Eigen::MatrixXd D,
   // dL/dhij, (n² + n)/2
   // ans = [h11, h21, h31, h41, ... hn1, h22, h32, h42, h52, ... hn1,  ......, g1,g2,g3,...,gn, c, lambda1,lambda2,...,lambdam]
   //std::cout << "D\n" << D << std::endl;
-  //std::cout << "v\n" << v << std::endl;
   //std::cout << "funcVals\n" << funcVals << std::endl;
   int colsD = 0;
   int y = n_;
@@ -290,7 +291,7 @@ void GradientEnhancedModel::solveLinearSystem(Eigen::MatrixXd D,
         A(row, start_lambda_i+ t-1) += -0.5*points_(i-1,t-1)*points_(j-1,t-1);
       }
 
-      /*
+
       if (i > (n_-ng_)){
         for (int p = 1; p <= ng_*m_; p++) {
           int t = convert_h_ij_to_t_lsq(i,j); // taking derivative w.r.t. h_t
@@ -301,7 +302,7 @@ void GradientEnhancedModel::solveLinearSystem(Eigen::MatrixXd D,
             int ii = 0;
             int jj = 0;
 
-            //convert_t_to_ij_lsq(k, ii, jj);
+            convert_t_to_ij_lsq(k, ii, jj);
             //A(row, convert_h_ij_to_t_vectorized(ii, jj) - 1) += D(k - 1, p - 1)*D(convert_h_ij_to_t_lsq(ii,jj)-1,p-1);
 
             A(row, convert_h_ij_to_t_vectorized(ii, jj) - 1) += (1 - alpha_) * D(p-1,k-1) * D(p-1, t-1);
@@ -309,7 +310,7 @@ void GradientEnhancedModel::solveLinearSystem(Eigen::MatrixXd D,
         }
 
       }
-      */
+
       row++;
     }
   }

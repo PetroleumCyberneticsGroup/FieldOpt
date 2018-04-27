@@ -298,7 +298,7 @@ void DFO::iterate() {
   //Eigen::MatrixXd derivatives = Eigen::MatrixXd::Zero(2, number_of_interpolation_points_);
   Eigen::VectorXd weights(3);
   weights << 1,0.8,0.3;
-  GradientEnhancedModel enhancedModel(number_of_variables_,number_of_interpolation_points_, ng, weights, 1);
+  GradientEnhancedModel enhancedModel(number_of_variables_,number_of_interpolation_points_, ng, weights, 0.1);
 
 
   while (notConverged) {
@@ -359,12 +359,12 @@ void DFO::iterate() {
       Eigen::MatrixXd hess(number_of_variables_, number_of_variables_);
       Eigen::VectorXd grad(number_of_variables_);
       double constant;
-      //Eigen::MatrixXd ycop = (*refY).block(0,1,2,3);
-      //Eigen::MatrixXd dercopy = (*refDerivatives).block(0,1,2,3);
-      //Eigen::VectorXd funccopy = (*refFuncVals).tail(3);
+      Eigen::MatrixXd ycop = (*refY).block(0,1,2,3);
+      Eigen::MatrixXd dercopy = (*refDerivatives).block(0,1,2,3);
+      Eigen::VectorXd funccopy = (*refFuncVals).tail(3);
 
       enhancedModel.ComputeModel( (*refY), (*refDerivatives), DFO_model_.GetGradient(), (*refFuncVals),DFO_model_.getCenterPoint(), DFO_model_.GetBestPoint(),
-                                  DFO_model_.GetTrustRegionRadius(), r);
+                                 DFO_model_.GetTrustRegionRadius(), r);
       //enhancedModel.ComputeModel( ycop,dercopy, DFO_model_.GetGradient(), funccopy,DFO_model_.getCenterPoint(), DFO_model_.GetBestPoint(),
       //DFO_model_.GetTrustRegionRadius(), r);
       enhancedModel.GetModel(constant, grad,hess);
