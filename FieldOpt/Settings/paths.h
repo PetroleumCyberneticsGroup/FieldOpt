@@ -33,6 +33,7 @@ class Paths {
    */
   enum Path : int {DRIVER_FILE=0, SIM_DRIVER_FILE=1, GRID_FILE=2, SIM_EXEC_SCRIPT_FILE=3,
     SIM_SCH_FILE=4, SIM_OUT_DRIVER_FILE=5, SIM_OUT_SCH_FILE=6, SIM_HDF5_FILE=7,
+    ENSEMBLE_FILE=8,
     BUILD_DIR=-1,  OUTPUT_DIR=-2, SIM_DRIVER_DIR=-3, SIM_WORK_DIR=-4};
 
   const std::string &GetPathDescription(Path path) const;
@@ -53,6 +54,7 @@ class Paths {
       std::pair<Path, std::string> {SIM_OUT_DRIVER_FILE, "Simulation output driver file"},
       std::pair<Path, std::string> {SIM_OUT_SCH_FILE, "Simulation output schedule file"},
       std::pair<Path, std::string> {SIM_HDF5_FILE, "HDF5 Summary file"},
+      std::pair<Path, std::string> {ENSEMBLE_FILE, "Ensemble description file"},
       std::pair<Path, std::string> {BUILD_DIR, "Build directory"},
       std::pair<Path, std::string> {OUTPUT_DIR, "Output directory"},
       std::pair<Path, std::string> {SIM_DRIVER_DIR, "Simulation driver parent directory"},

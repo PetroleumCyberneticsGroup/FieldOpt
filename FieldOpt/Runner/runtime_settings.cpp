@@ -70,6 +70,10 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
         paths_.SetPath(Paths::SIM_DRIVER_FILE, GetAbsoluteFilePath(vm["sim-drv-path"].as<std::string>()));
     }
 
+    if (vm.count("ensemble-path")) {
+        paths_.SetPath(Paths::ENSEMBLE_FILE, GetAbsoluteFilePath(vm["ensemble-path"].as<std::string>()));
+    }
+
     if (vm.count("sim-exec-path")) {
         paths_.SetPath(Paths::SIM_EXEC_SCRIPT_FILE, GetAbsoluteFilePath(vm["sim-exec-path"].as<std::string>()));
     }
@@ -113,6 +117,7 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
         std::cout << "Output dir:--------" << paths_.GetPath(Paths::OUTPUT_DIR) << std::endl;
         std::cout << "Sim driver file:---" << paths_.GetPath(Paths::SIM_DRIVER_FILE) << std::endl;
         std::cout << "Grid file path:----" << paths_.GetPath(Paths::GRID_FILE) << std::endl;
+        std::cout << "Ensemble file:-----" << paths_.GetPath(Paths::ENSEMBLE_FILE) << std::endl;
         std::cout << "Exec file path:----" << paths_.GetPath(Paths::SIM_EXEC_SCRIPT_FILE) << std::endl;
         std::cout << "Build dir:---------" << paths_.GetPath(Paths::BUILD_DIR) << std::endl;
         if (vm.count("well-prod-points"))
@@ -163,6 +168,8 @@ po::variables_map RuntimeSettings::createVariablesMap(int argc, const char **arg
          "path to script that executes the reservoir simulation")
         ("fieldopt-build-dir,b", po::value<std::string>(),
          "path to FieldOpt build directory")
+        ("ensemble-path", po::value<std::string>(),
+         "Path to ensemble description file")
         ("sim-drv-path,s", po::value<std::string>(),
          "path to simulator driver file (e.g. *.DATA)")
         ("simulation-timeout,t", po::value<int>(&simulation_timeout)->default_value(0),
@@ -219,6 +226,7 @@ map<string, string> RuntimeSettings::GetState() {
     statemap["path Simulator base driver"] = paths_.GetPath(Paths::SIM_DRIVER_FILE);
     statemap["path Grid file"] = paths_.GetPath(Paths::GRID_FILE);
     statemap["path Simulator execution script"] = paths_.GetPath(Paths::SIM_EXEC_SCRIPT_FILE);
+    statemap["path Ensemble description file"] = paths_.GetPath(Paths::ENSEMBLE_FILE);
     statemap["path FieldOpt build directory"] = paths_.GetPath(Paths::BUILD_DIR);
     return statemap;
 }
