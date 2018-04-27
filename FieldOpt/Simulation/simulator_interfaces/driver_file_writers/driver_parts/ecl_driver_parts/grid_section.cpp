@@ -36,7 +36,7 @@ Grid::Grid(QStringList *driver_file_contents)
     grid_ = getSectionContent(driver_file_contents, "GRID", QStringList{"EDIT", "PROPS"});
 }
 
-QString Grid::GetPartString()
+QString Grid::GetPartString() const
 {
     return grid_;
 }

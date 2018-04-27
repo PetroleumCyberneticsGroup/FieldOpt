@@ -99,6 +99,8 @@ class Trajectory
 
   void calculateDirectionOfPenetration(); // Calculate direction of penetration for all well blocks
 
+  bool is_2d_; //!< Indicates if the well should only be able to vary in the x-y plane (z variables will not be created).
+
 };
 
 }

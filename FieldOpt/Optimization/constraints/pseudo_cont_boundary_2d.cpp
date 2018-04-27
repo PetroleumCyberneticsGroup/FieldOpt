@@ -31,8 +31,8 @@ PseudoContBoundary2D::PseudoContBoundary2D(const Settings::Optimizer::Constraint
     assert(settings.well.size() > 0);
     assert(settings.box_imin < settings.box_imax);
     assert(settings.box_jmin < settings.box_jmax);
-    assert(settings.box_imin <= 0);
-    assert(settings.box_jmin <= 0);
+    assert(settings.box_imin >= 0);
+    assert(settings.box_jmin >= 0);
     assert(settings.box_imax < grid->Dimensions().nx);
     assert(settings.box_jmax < grid->Dimensions().ny);
 

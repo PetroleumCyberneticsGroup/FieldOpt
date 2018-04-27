@@ -47,10 +47,21 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNO_DEBUG")
 endif()
 
+
+
 # Build dirs ===========================================================
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+# Set bundled dependencies first in package search path
+set(CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib/cmake)
+message(STATUS "CMAKE_PREFIX_PATH:" ${CMAKE_PREFIX_PATH})
+
+# Add local third party include dirs
+include_directories(${CMAKE_SOURCE_DIR}/ThirdParty/libraries/include)
+
+
 
 # Enable unit tests + example dir ======================================
 option(BUILD_TESTING "Build unit tests"                 OFF)
@@ -83,27 +94,41 @@ if(NOT COMPILATION_AT_MAUR)
       REQUIRED)
 endif()
 
+if(NOT EIGEN3_FOUND)
+  message(STATUS "Using local Eigen3")
+  set(EIGEN3_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/ThirdParty/Eigen3)
+endif()
+
 # Build WIC executable  and/or WIC ADGPRS lib ==========================
-# Include HDF5 + Qt5 ===================================================
-message(".............................................................")
-#if (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS)
+# Include HDF5 + Qt5 + GP + ECL ========================================
+message("=============================================================")
+if (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS)
 #    message(STATUS "Building BUILD_WIC_ONLY: ${BUILD_WIC_ONLY}")
 #    message(STATUS "Building BUILD_WIC_ADGPRS: ${BUILD_WIC_ADGPRS}")
 #    message(STATUS "Skipping: Qt5Core and HDF5")
 #else()
-message(STATUS "Building FIELDOPT. Loading: Qt5Core and HDF5")
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-find_package(HDF5 REQUIRED COMPONENTS CXX)
-add_definitions(${HDF5_DEFINITIONS})
-include_directories(${HDF5_INCLUDE_DIRS})
-find_package(Threads REQUIRED)
+    message(STATUS "Building FIELDOPT. Loading: Qt5Core and HDF5")
+    set(CMAKE_AUTOMOC ON)
+    set(CMAKE_INCLUDE_CURRENT_DIR ON)
+    find_package(HDF5 REQUIRED COMPONENTS CXX)
+    add_definitions(${HDF5_DEFINITIONS})
+    include_directories(${HDF5_INCLUDE_DIRS})
+    find_package(Threads REQUIRED)
 
-find_package(Qt5Core REQUIRED)
-message(STATUS "Qt5Core_QTMAIN_LIBRARIES: ${Qt5Core_QTMAIN_LIBRARIES}")
-message(STATUS "Qt5Core_INCLUDE_DIRS: ${Qt5Core_INCLUDE_DIRS}")
-include_directories(${Qt5Core_INCLUDE_DIRS})
-#endif()
+    message(STATUS "Loading potentially local libraries:")
+    find_package(Qt5Core REQUIRED)
+    message(STATUS "Qt5Core_QTMAIN_LIBRARIES: ${Qt5Core_QTMAIN_LIBRARIES}")
+    message(STATUS "Qt5Core_INCLUDE_DIRS: ${Qt5Core_INCLUDE_DIRS}")
+    include_directories(${Qt5Core_INCLUDE_DIRS})
+
+    find_library(gp NAMES gp HINTS ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib REQUIRED)
+    find_package(ecl REQUIRED)
+    find_package(opm-common REQUIRED)
+    message(STATUS "ecl: ${ecl_LIBRARIES}")
+    message(STATUS "gp: ${gp}")
+    message(STATUS "opm-common: ${opm-common_LIBRARIES}")
+
+endif()
 
 # Boost libraries: default-settings ====================================
 message(".............................................................")
@@ -143,8 +168,8 @@ elseif(BUILD_WIC_ONLY)  # Building WIC executable with dependencies only
       REQUIRED program_options system filesystem)
 
 else() # Building all FieldOpt sources
-  find_package(Boost COMPONENTS
-      REQUIRED program_options serialization mpi system filesystem random)
+    find_package(Boost COMPONENTS
+            REQUIRED regex program_options serialization mpi system filesystem random)
 endif()
 
 # Pring debug info: include dirs + source dirs =========================
@@ -152,6 +177,7 @@ include(DebugMsg.cmake)
 
 
 
+<<<<<<< HEAD
 ## ADDED
 ## Set this directory as the root dir
 include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR})
@@ -164,6 +190,10 @@ include_directories(${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/handlers)
 if (BUILD_TESTING)
   include(CTest)
   enable_testing()
+    find_library(gtest NAMES gtest HINTS ${PROJECT_SOURCE_DIR}/ThirdParty/libraries/lib REQUIRED)
+    find_library(gtest_main NAMES gtest_main HINTS ${PROJECT_SOURCE_DIR}/ThirdParty/libraries/lib REQUIRED)
+    message(STATUS "gtest:      ${gtest}")
+    message(STATUS "gtest_main: ${gtest_main}")
 endif()
 
 message(STATUS "END MAIN PROJECT (${PROJECT_NAME}) ==> STARTING SUBDIRS")

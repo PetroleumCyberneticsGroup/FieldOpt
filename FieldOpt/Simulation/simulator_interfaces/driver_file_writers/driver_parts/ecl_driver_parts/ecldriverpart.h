@@ -63,6 +63,8 @@ protected:
      */
     void initializeBaseEntryLine(int n);
 
+    QStringList GetBaseEntryLine(const int n) const;
+
     QList<QStringList> entries_; //!< List containing the actual entries
     QString head_; //!< Anything that should be printed before the content, e.g. the keyword ('WELSPECS' etc.).
     QString foot_; //!< Anything that should be printed after the content, e.g. a terminator ('/')

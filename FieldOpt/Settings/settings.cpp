@@ -1,7 +1,6 @@
 
 // -----------------------------------------------------------------
 #include "settings.h"
-#include "Runner/runtime_settings.h"
 #include "settings_exceptions.h"
 #include "Utilities/filehandling.hpp"
 

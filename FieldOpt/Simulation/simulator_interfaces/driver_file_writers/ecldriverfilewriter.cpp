@@ -58,23 +58,14 @@ void EclDriverFileWriter::WriteDriverFile()
 {
     DriverParts::ECLDriverParts::Runspec runspec = DriverParts::ECLDriverParts::Runspec(original_driver_file_contents_, model_->wells());
     DriverParts::ECLDriverParts::Grid grid = DriverParts::ECLDriverParts::Grid(original_driver_file_contents_);
-    DriverParts::ECLDriverParts::Props props = DriverParts::ECLDriverParts::Props(original_driver_file_contents_);
-    DriverParts::ECLDriverParts::Solution solution = DriverParts::ECLDriverParts::Solution(original_driver_file_contents_);
-    DriverParts::ECLDriverParts::Summary summary = DriverParts::ECLDriverParts::Summary(original_driver_file_contents_);
-    DriverParts::ECLDriverParts::Schedule schedule = DriverParts::ECLDriverParts::Schedule(model_->wells(),
-                                                                                           settings_->model()->control_times());
+}
 
+void EclDriverFileWriter::WriteDriverFile(QString schedule_file_path)
+{
+    assert(FileExists(schedule_file_path));
+    Schedule schedule = DriverParts::ECLDriverParts::Schedule(model_->wells(), settings_->model()->control_times());
     model_->SetCompdatString(DriverParts::ECLDriverParts::Compdat(model_->wells()).GetPartString());
-
-    QString complete_string = runspec.GetPartString() + grid.GetPartString()
-            + props.GetPartString() + solution.GetPartString()
-            + summary.GetPartString() + schedule.GetPartString();
-
-    if (!Utilities::FileHandling::DirectoryExists(settings_->output_directory())
-            || !Utilities::FileHandling::ParentDirectoryExists(output_driver_file_name_))
-        throw UnableToWriteDriverFileException("Cannot write driver file, specified output directory does not exist.");
-
-    Utilities::FileHandling::WriteStringToFile(complete_string, output_driver_file_name_);
+    Utilities::FileHandling::WriteStringToFile(schedule.GetPartString(), schedule_file_path);
 }
 
 }

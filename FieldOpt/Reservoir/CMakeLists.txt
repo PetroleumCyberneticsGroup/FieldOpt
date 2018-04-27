@@ -42,7 +42,6 @@ endif()
 # Unit tests ===========================================================
 if (BUILD_TESTING)
     # Unit tests
-    find_package(GTest REQUIRED)
     include_directories(${GTEST_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR} tests)
     add_executable(test_reservoir
             tests/test_resource_grids.h

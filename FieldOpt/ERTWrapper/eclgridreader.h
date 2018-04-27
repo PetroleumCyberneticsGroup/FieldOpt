@@ -36,9 +36,6 @@
 // STD
 #include <vector>
 
-using namespace std;
-using namespace Eigen;
-
 namespace ERTWrapper {
 namespace ECLGrid {
 

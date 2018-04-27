@@ -36,7 +36,7 @@ Props::Props(QStringList *driver_file_contents)
     props_ = getSectionContent(driver_file_contents, "PROPS", QStringList{"REGIONS", "SOLUTION"});
 }
 
-QString Props::GetPartString()
+QString Props::GetPartString() const
 {
     return props_;
 }

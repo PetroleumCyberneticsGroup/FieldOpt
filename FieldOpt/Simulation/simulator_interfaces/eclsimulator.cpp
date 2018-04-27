@@ -37,17 +37,13 @@ ECLSimulator::ECLSimulator(Settings::Settings *settings,
 
   // ---------------------------------------------------------------
   model_ = model;
-  driver_file_writer_ = new DriverFileWriters::EclDriverFileWriter(settings, model_);
-  script_args_ = (QStringList() << output_directory_
-                                << driver_file_writer_->output_driver_file_name_);
-
-  if (settings_->verb_vector()[8] > 1) // idx:8 -> sim (Simulation)
-    cout << "[sim]script arg[0]:---------- " << script_args_[0].toStdString() << endl
-         << "[sim]script arg[1]:---------- " << script_args_[1].toStdString() << endl;
+    settings_ = settings;
+    UpdateFilePaths();
+    deck_name_ = initial_driver_file_name_.split(".DATA").first();
 
   results_ = new Results::ECLResults();
   try {
-    results()->ReadResults(driver_file_writer_->output_driver_file_name_,
+    results()->ReadResults(output_driver_file_path_,
                            settings_->verb_vector());
   } catch (...) {}
   // At this stage we don't really care if the results
@@ -57,13 +53,47 @@ ECLSimulator::ECLSimulator(Settings::Settings *settings,
 // -----------------------------------------------------------------
 void ECLSimulator::Evaluate() {
 
-  driver_file_writer_->WriteDriverFile();
+    UpdateFilePaths();
+    copyDriverFiles();
+
+    script_args_ = (QStringList() << current_output_deck_parent_dir_path_ << deck_name_);
+    auto driver_file_writer = DriverFileWriters::EclDriverFileWriter(settings_, model_);
+  if (settings_->verb_vector()[8] > 1) // idx:8 -> sim (Simulation)
+    cout << "[sim]script arg[0]:---------- " << script_args_[0].toStdString() << endl
+         << "[sim]script arg[1]:---------- " << script_args_[1].toStdString() << endl;
+         
+    
+    driver_file_writer.WriteDriverFile(output_schedule_file_path_);
+    for (auto well : *model_->wells()) {
+        std::cout << well->name().toStdString() << ": " << (well->IsInjector() ? "yes" : "no") << std::endl;
+    }
+    
   ::Utilities::Unix::ExecShellScript(script_path_,
                                      script_args_,
                                      settings_->verb_vector());
-  results_->ReadResults(driver_file_writer_->output_driver_file_name_,
+  results_->ReadResults(current_output_deck_parent_dir_path_ + "/" +initial_driver_file_name_,
                         settings_->verb_vector());
   updateResultsInModel();
+}
+
+// -----------------------------------------------------------------
+bool ECLSimulator::Evaluate(int timeout, int threads) {
+    UpdateFilePaths();
+    copyDriverFiles();
+    script_args_ = (QStringList() << current_output_deck_parent_dir_path_ << deck_name_ << QString::number(threads));
+    auto driver_file_writer = DriverFileWriters::EclDriverFileWriter(settings_, model_);
+    driver_file_writer.WriteDriverFile(output_schedule_file_path_);
+    int t = timeout;
+    if (timeout < 10)
+        t = 10; // Always let simulations run for at least 10 seconds
+
+    std::cout << "Starting monitored simulation with timeout " << timeout << std::endl;
+    bool success = ::Utilities::Unix::ExecShellScriptTimeout(script_path_, script_args_, t);
+    std::cout << "Monitored simulation done." << std::endl;
+    if (success)
+        results_->ReadResults(current_output_deck_parent_dir_path_ + "/" +initial_driver_file_name_);
+    updateResultsInModel();
+    return success;
 }
 
 // -----------------------------------------------------------------
@@ -71,32 +101,25 @@ void ECLSimulator::CleanUp() {
   QStringList file_endings_to_delete{"DBG", "ECLEND", "ECLRUN", "EGRID", "GRID",
                                      "h5", "INIT","INSPEC", "MSG", "PRT",
                                      "RSSPEC", "UNRST"};
-  QString base_file_path = driver_file_writer_->output_driver_file_name_.split(".DATA").first();
+   QString base_file_path = output_driver_file_path_.split(".DATA").first();
   for (QString ending : file_endings_to_delete) {
-    Utilities::FileHandling::DeleteFile(base_file_path + "." + ending);
+    DeleteFile(base_file_path + "." + ending);
   }
 }
 
 // -----------------------------------------------------------------
 void ECLSimulator::UpdateFilePaths() {
-  return;
+    current_output_deck_parent_dir_path_ = output_directory_ + "/" + initial_driver_file_parent_dir_name_;
+    output_driver_file_path_ = current_output_deck_parent_dir_path_ + "/" + initial_driver_file_name_;
+    output_schedule_file_path_ = initial_schedule_path_;
+    output_schedule_file_path_.replace(initial_driver_file_parent_dir_path_,current_output_deck_parent_dir_path_);
 }
 
-bool ECLSimulator::Evaluate(int timeout, int threads) {
-  int t = timeout;
-  if (timeout < 10) t = 10; // Always let simulations run for at least 10 seconds
-  script_args_[2] = QString::number(threads);
 
-  driver_file_writer_->WriteDriverFile();
-  std::cout << "Starting monitored simulation with timeout " << timeout << std::endl;
-  bool success = ::Utilities::Unix::ExecShellScriptTimeout(script_path_, script_args_, t);
-  std::cout << "Monitored simulation done." << std::endl;
-  if (success) results_->ReadResults(driver_file_writer_->output_driver_file_name_);
-  updateResultsInModel();
-  return success;
-}
 void ECLSimulator::WriteDriverFilesOnly() {
-  driver_file_writer_->WriteDriverFile();
+    UpdateFilePaths();
+    auto driver_file_writer = DriverFileWriters::EclDriverFileWriter(settings_, model_);
+    driver_file_writer.WriteDriverFile(output_schedule_file_path_);
 }
 
 }

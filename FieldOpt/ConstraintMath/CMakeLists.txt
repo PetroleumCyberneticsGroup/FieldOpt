@@ -23,7 +23,7 @@ add_library(fieldopt::constraintmath ALIAS ${PROJECT_NAME})
 # Target link libraries ================================================
 target_link_libraries(constraintmath
         PUBLIC Qt5::Core
-        PUBLIC ${RpolyPlusPlus}
+        PUBLIC ${RpolyPlusPlus_LIBRARIES}
         PUBLIC fieldopt::ertwrapper
         PUBLIC fieldopt::reservoir)
 
@@ -36,15 +36,15 @@ add_compile_options(-std=c++11)
 # Unit tests ===========================================================
 if (BUILD_TESTING)
     # Unit tests
-    find_package(GTest REQUIRED)
-    include_directories(${GTEST_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR})
+    include_directories(${EIGEN3_INCLUDE_DIR})
     add_executable(test_constraintmath
             tests/well_constraint_projections_tests.cpp
             tests/test_domain_boundary.cpp
             )
     target_link_libraries(test_constraintmath
             fieldopt::constraintmath
-            ${GTEST_BOTH_LIBRARIES}
+            ${gtest}
+            ${gtest_main}
             ${CMAKE_THREAD_LIBS_INIT})
 
     add_test(NAME test_constraintmath COMMAND $<TARGET_FILE:test_constraintmath>)

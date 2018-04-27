@@ -37,6 +37,7 @@ class TestResourceSettings {
       settings_simulator_ = settings_full_->simulator();
       settings_model_ = settings_full_->model();
 
+
 //      settings_flow_5spot_ = new Settings::Settings(ExampleFilePaths::driver_5spot_flow_,
 //                                                    "/home/einar/.CLion2016.2/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug/fieldopt_output/");
 //      settings_flow_5spot_->simulator()->set_driver_file_path(TestResources::ExampleFilePaths::flow_drv_5spot_);

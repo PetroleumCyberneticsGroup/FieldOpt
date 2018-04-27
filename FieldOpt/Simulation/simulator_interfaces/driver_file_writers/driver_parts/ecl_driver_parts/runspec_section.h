@@ -44,7 +44,7 @@ class Runspec : public ECLDriverPart
 {
 public:
     Runspec(QStringList *driver_file_contents, QList<Model::Wells::Well *> *wells);
-    QString GetPartString();
+    QString GetPartString() const;
 
 private:
     QString runspec_;

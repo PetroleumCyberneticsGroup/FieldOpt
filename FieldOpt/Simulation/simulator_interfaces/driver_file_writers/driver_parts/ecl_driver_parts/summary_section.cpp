@@ -36,7 +36,7 @@ Summary::Summary(QStringList *driver_file_contents)
     summary_ = getSectionContent(driver_file_contents, "SUMMARY", "SCHEDULE");
 }
 
-QString Summary::GetPartString()
+QString Summary::GetPartString() const
 {
     return summary_;
 }

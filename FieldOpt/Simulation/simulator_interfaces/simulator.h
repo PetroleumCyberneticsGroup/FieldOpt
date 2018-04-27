@@ -97,8 +97,12 @@ class Simulator {
   QString initial_driver_file_path_opt_;
   QString initial_driver_file_path_; //!< Path to the driver file to be used as a base for the generated driver files.
   QString output_directory_; //!< The directory in which to write new driver files and execute simulations.
-  QString include_directory_; //!< Simulator include directory
-  QString initial_driver_file_name_;
+  QString initial_driver_file_name_; //!< The name of the driver main file.
+  QString initial_driver_file_parent_dir_path_; //!< Path to the directory containing the main driver file.
+  QString initial_driver_file_parent_dir_name_; //!< The name of the directory containing the initial main driver file.
+  QString initial_schedule_path_; //!< Path to the schedule file. This file will be overwritten by FieldOpt when optimizing.
+
+  QString current_output_deck_parent_dir_path_; //!< Path that should be used when writing new deck parts and executing simulations. Should be inside output dir.
 
   ::Simulation::Results::Results *results_;
   Settings::Settings *settings_;

@@ -44,12 +44,29 @@ class Schedule : public ECLDriverPart
  public:
   Schedule(QList<Model::Wells::Well *> *wells,
            QList<int> control_times);
-  QString GetPartString();
+  QString GetPartString() const;
 
  private:
-  Welspecs *welspecs_;
-  Compdat *compdat_;
-  WellControls *wellcontrols_;
+  struct ScheduleTimeEntry {
+    ScheduleTimeEntry(ECLDriverParts::Welspecs welspecs,
+                      ECLDriverParts::Compdat compdat,
+                      ECLDriverParts::WellControls well_controls);
+    Welspecs welspecs;
+    Compdat compdat;
+    WellControls well_controls;
+  };
+  // Old temp
+  // Welspecs welspecs;
+  // Compdat compdat;
+  // WellControls well_controls;
+
+   /*!
+   * WELSPECS, COMPDAT and control entries for each timestep.
+   */
+  QList<ScheduleTimeEntry> schedule_time_entries_;
+
+  QString schedule_;
+  
 };
 
 }

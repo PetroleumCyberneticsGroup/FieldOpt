@@ -22,29 +22,23 @@
 namespace Simulation {
 namespace SimulatorInterfaces {
 
+using namespace Utilities::FileHandling;
+
 Simulator::Simulator(Settings::Settings *settings) {
     settings_ = settings;
 
-    if (settings->driver_path().length() == 0)
-        throw DriverFileInvalidException(
-            "A path to a valid simulator driver file must be specified "
-                "in the FieldOpt driver file or as a command line parameter.");
-
-    if (!Utilities::FileHandling::FileExists(settings->simulator()->driver_file_path()))
-        DriverFileDoesNotExistException(settings->simulator()->driver_file_path());
-
+    // Set initial paths ===================================================
     initial_driver_file_path_ = settings->simulator()->driver_file_path();
-    control_times_ = settings->model()->control_times();
-
-    QStringList tmp = initial_driver_file_path_.split("/");
-    initial_driver_file_name_ = tmp.last();
-
-    if (!Utilities::FileHandling::DirectoryExists(settings->output_directory()))
-        OutputDirectoryDoesNotExistException(settings->output_directory());
+    initial_driver_file_name_ = initial_driver_file_path_.split("/").last();
+    initial_driver_file_parent_dir_path_ = settings->simulator()->driver_parent_directory();
+    initial_driver_file_parent_dir_name_ = initial_driver_file_parent_dir_path_.split("/").last();
+    initial_schedule_path_ = settings->simulator()->schedule_file_path();
     output_directory_ = settings->output_directory();
 
-    if (settings->build_path().length() > 0)
+    if (settings->build_path().length() > 0) {
         build_dir_ = settings->build_path() + "/";
+        assert(DirectoryExists(build_dir_));
+    }
 
     // Use custom execution script if provided in runtime settings, else use the one from json driver file
     if (settings->simulator()->custom_simulator_execution_script_path().length() > 0)
@@ -54,6 +48,15 @@ Simulator::Simulator(Settings::Settings *settings) {
     script_args_ = (QStringList() << output_directory_
                                   << output_directory_ + "/" + initial_driver_file_name_
                                   << QString::number(1));
+
+    control_times_ = settings->model()->control_times();
+
+    assert(settings->driver_path().length() > 0);
+    assert(DirectoryExists(initial_driver_file_parent_dir_path_, true));
+    assert(DirectoryExists(output_directory_, true));
+    assert(FileExists(initial_driver_file_path_, true));
+    assert(FileExists(initial_schedule_path_, true) || initial_schedule_path_.length() == 0);
+    assert(FileExists(script_path_, true));
 
     if (settings_->verb_vector()[8] > 1) { // idx:8 -> sim (Simulation)
         std::cout << "[sim]Simulator set up w/:---- " << std::endl

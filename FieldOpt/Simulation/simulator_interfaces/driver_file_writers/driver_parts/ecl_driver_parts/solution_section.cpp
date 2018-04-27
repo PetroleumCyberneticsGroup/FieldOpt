@@ -37,7 +37,7 @@ Solution::Solution(QStringList *driver_file_contents)
 
 }
 
-QString Solution::GetPartString()
+QString Solution::GetPartString() const
 {
     return solution_;
 }
