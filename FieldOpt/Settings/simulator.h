@@ -22,6 +22,7 @@
 
 #include "settings.h"
 #include "Settings/paths.h"
+#include "Settings/ensemble.h"
 
 #include <QStringList>
 
@@ -58,6 +59,8 @@ class Simulator
    */
   QString script_name() const { return script_name_; }
 
+  bool is_ensemble() const { return is_ensemble_; }
+
   /*!
    * Get the fluid model.
    */
@@ -75,7 +78,17 @@ class Simulator
   SimulatorFluidModel fluid_model_;
   QStringList *commands_;
   QString script_name_;
+  bool is_ensemble_;
   int max_minutes_;
+  Ensemble ensemble_;
+
+
+  void setPaths(QJsonObject json_simulator, Paths &paths);
+  void setType(QJsonObject json_simulator);
+  void setParams(QJsonObject json_simulator);
+  void setCommands(QJsonObject json_simulator);
+  void setFluidModel(QJsonObject json_simulator);
+
 };
 
 }

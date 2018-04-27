@@ -37,12 +37,15 @@ namespace Settings {
 Model::Model(QJsonObject json_model, Paths &paths)
 {
     // Reservoir
-    try {
-        QJsonObject json_reservoir = json_model["Reservoir"].toObject();
-        readReservoir(json_reservoir, paths);
-    }
-    catch (std::exception const &ex) {
-        throw UnableToParseReservoirModelSectionException("Unable to parse reservoir model section: " + std::string(ex.what()));
+    if (!paths.IsSet(Paths::ENSEMBLE_FILE)) {
+        try {
+            QJsonObject json_reservoir = json_model["Reservoir"].toObject();
+            readReservoir(json_reservoir, paths);
+        }
+        catch (std::exception const &ex) {
+            throw UnableToParseReservoirModelSectionException(
+                "Unable to parse reservoir model section: " + std::string(ex.what()));
+        }
     }
 
     // Control times
