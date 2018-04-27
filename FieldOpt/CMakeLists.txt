@@ -47,8 +47,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNO_DEBUG")
 endif()
 
-
-
 # Build dirs ===========================================================
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -60,8 +58,6 @@ message(STATUS "CMAKE_PREFIX_PATH:" ${CMAKE_PREFIX_PATH})
 
 # Add local third party include dirs
 include_directories(${CMAKE_SOURCE_DIR}/ThirdParty/libraries/include)
-
-
 
 # Enable unit tests + example dir ======================================
 option(BUILD_TESTING "Build unit tests"                 OFF)
@@ -103,10 +99,10 @@ endif()
 # Include HDF5 + Qt5 + GP + ECL ========================================
 message("=============================================================")
 if (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS)
-#    message(STATUS "Building BUILD_WIC_ONLY: ${BUILD_WIC_ONLY}")
-#    message(STATUS "Building BUILD_WIC_ADGPRS: ${BUILD_WIC_ADGPRS}")
-#    message(STATUS "Skipping: Qt5Core and HDF5")
-#else()
+    message(STATUS "Building BUILD_WIC_ONLY: ${BUILD_WIC_ONLY}")
+    message(STATUS "Building BUILD_WIC_ADGPRS: ${BUILD_WIC_ADGPRS}")
+    message(STATUS "Skipping: Qt5Core and HDF5")
+else()
     message(STATUS "Building FIELDOPT. Loading: Qt5Core and HDF5")
     set(CMAKE_AUTOMOC ON)
     set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -121,7 +117,11 @@ if (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS)
     message(STATUS "Qt5Core_INCLUDE_DIRS: ${Qt5Core_INCLUDE_DIRS}")
     include_directories(${Qt5Core_INCLUDE_DIRS})
 
-    find_library(gp NAMES gp HINTS ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib REQUIRED)
+    find_library(gp NAMES gp
+        HINTS
+        ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib
+        ${CMAKE_SOURCE_DIR}/ThirdParty/cmake-build-debug REQUIRED)
+
     find_package(ecl REQUIRED)
     find_package(opm-common REQUIRED)
     message(STATUS "ecl: ${ecl_LIBRARIES}")
@@ -175,9 +175,6 @@ endif()
 # Pring debug info: include dirs + source dirs =========================
 include(DebugMsg.cmake)
 
-
-
-<<<<<<< HEAD
 ## ADDED
 ## Set this directory as the root dir
 include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR})

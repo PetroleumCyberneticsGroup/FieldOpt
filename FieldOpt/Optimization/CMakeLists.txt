@@ -62,11 +62,11 @@ add_library(optimization
     objective/objective.cpp
     objective/weightedsum.cpp
     normalizer.cpp
-    		optimizers/bayesian_optimization/AcquisitionFunction.cpp
-		optimizers/bayesian_optimization/af_optimizers/AFPSO.cpp
-		optimizers/bayesian_optimization/af_optimizers/AFOptimizer.cpp
-        optimizers/bayesian_optimization/EGO.cpp
-        optimizers/bayesian_optimization/af_optimizers/AFCompassSearch.cpp
+    optimizers/bayesian_optimization/AcquisitionFunction.cpp
+    optimizers/bayesian_optimization/af_optimizers/AFPSO.cpp
+    optimizers/bayesian_optimization/af_optimizers/AFOptimizer.cpp
+    optimizers/bayesian_optimization/EGO.cpp
+    optimizers/bayesian_optimization/af_optimizers/AFCompassSearch.cpp
     # AUX
     optimization_exceptions.h
     # SNOPT
