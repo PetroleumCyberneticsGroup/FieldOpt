@@ -42,6 +42,7 @@ class DFO : public Optimizer {
   Optimization::Case *base_case_;
   int last_action_;
   std::string getActionName(int a);
+  Eigen::VectorXd weights_distance_from_optimum_lsq_;
 
 
   /*

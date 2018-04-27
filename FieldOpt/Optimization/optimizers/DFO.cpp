@@ -41,7 +41,7 @@ Eigen::VectorXd matyasFunctionWithGradients1(Eigen::VectorXd x) {
   double val = 0.26 * (x(0) * x(0) + x(1) * x(1)) - 0.46 * x(0) * x(1);
   Eigen::VectorXd ret(1+1);
   ret[0] = val;
-  ret[1] = 0.52*x(0) - 0.46 * x(1);
+  ret[1] = 0.52*x(1) - 0.46 * x(0);
   return ret;
 }
 
@@ -72,7 +72,7 @@ DFO::DFO(Settings::Optimizer *settings,
     : Optimizer(settings, base_case, variables, grid, logger),
       DFO_model_(settings->parameters().number_of_interpolation_points,
                  settings->parameters().number_of_variables,
-                 2,
+                 settings->parameters().number_of_variables_with_gradients,
                  base_case->GetRealVarVector(),
                  settings->parameters().initial_trust_region_radius,
                  settings->parameters().required_poisedness,
@@ -105,6 +105,12 @@ DFO::DFO(Settings::Optimizer *settings,
   base_case_ = new Case(base_case);
   last_action_ = -1;
 
+  weights_distance_from_optimum_lsq_ = Eigen::VectorXd::Zero(settings->parameters().weights_distance_from_optimum_lsq.size());
+  int j = 0;
+  for (auto i = settings->parameters().weights_distance_from_optimum_lsq.begin(); i != settings->parameters().weights_distance_from_optimum_lsq.end(); ++i){
+    weights_distance_from_optimum_lsq_[j] = *i;
+    j++;
+  }
 
   // Set up the DFO model.
   Eigen::VectorXd initialStartPoint = base_case->GetRealVarVector();
@@ -254,7 +260,9 @@ void DFO::handleEvaluatedCase(Optimization::Case *c) {
 }
 
 void DFO::iterate() {
-  int ng = 1;
+  int ng = settings_->parameters().number_of_variables_with_gradients;
+  int alpha = settings_->parameters().weight_model_determination_minimum_change_hessian;
+
   std::string color_from = "31";
   std::string color_to = "33";
 
@@ -306,7 +314,7 @@ void DFO::iterate() {
   //Eigen::MatrixXd derivatives = Eigen::MatrixXd::Zero(2, number_of_interpolation_points_);
   Eigen::VectorXd weights(3);
   weights << 1,0.8,0.3;
-  GradientEnhancedModel enhancedModel(number_of_variables_,number_of_interpolation_points_, ng, weights, 0.1);
+  GradientEnhancedModel enhancedModel(number_of_variables_,number_of_interpolation_points_, ng, weights, alpha);
 
 
   while (notConverged) {
@@ -367,14 +375,15 @@ void DFO::iterate() {
       Eigen::MatrixXd hess(number_of_variables_, number_of_variables_);
       Eigen::VectorXd grad(number_of_variables_);
       double constant;
-      Eigen::MatrixXd ycop = (*refY).block(0,1,2,3);
-      Eigen::MatrixXd dercopy = (*refDerivatives).block(0,1,2,3);
+      Eigen::MatrixXd ycop = (*refY).block(0,1,2,number_of_interpolation_points_ - 1);
+      Eigen::MatrixXd dercopy = (*refDerivatives).block(0,1,ng,number_of_interpolation_points_ - 1);
       Eigen::VectorXd funccopy = (*refFuncVals).tail(3);
-      Eigen::VectorXd gradCp = (*refDerivatives).col(0);
+      Eigen::VectorXd gradCp = (*refDerivatives).col(0).tail(ng);
+      int index_of_center_point = 0;
       enhancedModel.ComputeModel( (*refY), (*refDerivatives), gradCp /*DFO_model_.GetGradient()*/, (*refFuncVals),DFO_model_.getCenterPoint(), DFO_model_.GetBestPoint(),
-                                 DFO_model_.GetTrustRegionRadius(), r);
-      //enhancedModel.ComputeModel( ycop,dercopy, DFO_model_.GetGradient(), funccopy,DFO_model_.getCenterPoint(), DFO_model_.GetBestPoint(),
-      //DFO_model_.GetTrustRegionRadius(), r);
+                                 DFO_model_.GetTrustRegionRadius(), r, index_of_center_point);
+      //enhancedModel.ComputeModel( ycop,dercopy, gradCp, funccopy,DFO_model_.getCenterPoint(), DFO_model_.GetBestPoint(),
+      //DFO_model_.GetTrustRegionRadius(), r, index_of_center_point);
       enhancedModel.GetModel(constant, grad,hess);
       std::cout << "------------Enhanced model? ---------" << std::endl;
       std::cout << "c = " << constant << std::endl;

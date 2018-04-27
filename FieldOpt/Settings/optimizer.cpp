@@ -160,7 +160,7 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
       else parameters_.number_of_interpolation_points = 21;
 
       if (json_parameters.contains("NumberOfVariables"))
-        parameters_.number_of_variables = json_parameters["NumberOfVariables"].toDouble();
+        parameters_.number_of_variables = json_parameters["NumberOfVariables"].toInt();
       else parameters_.number_of_variables = 10;
       if (json_parameters.contains("RequiredPoisedness"))
         parameters_.required_poisedness = json_parameters["RequiredPoisedness"].toDouble();
@@ -195,6 +195,20 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
       if (json_parameters.contains("MaxTrustRegionRadius"))
         parameters_.max_trust_region_radius = json_parameters["MaxTrustRegionRadius"].toDouble();
       else parameters_.max_trust_region_radius = 20;
+      if (json_parameters.contains("WeightModelDeterminationMinimumChangeHessian"))
+        parameters_.weight_model_determination_minimum_change_hessian = json_parameters["WeightModelDeterminationMinimumChangeHessian"].toDouble();
+      else parameters_.weight_model_determination_minimum_change_hessian = 0.1;
+
+      if (json_parameters.contains("WeightsDistanceFromOptimumLSQ")) {
+        parameters_.weights_distance_from_optimum_lsq = QList<double>();
+        for (int i = 0; i < json_parameters["WeightsDistanceFromOptimumLSQ"].toArray().size(); ++i) {
+          parameters_.weights_distance_from_optimum_lsq.append(json_parameters["WeightsDistanceFromOptimumLSQ"].toArray().at(i).toDouble());
+        }
+      }
+
+      if (json_parameters.contains("NumberOfVariablesWithGradients"))
+        parameters_.number_of_variables_with_gradients = json_parameters["NumberOfVariablesWithGradients"].toInt();
+      else parameters_.number_of_variables_with_gradients = 0;
 
     }
     catch (std::exception const &ex) {

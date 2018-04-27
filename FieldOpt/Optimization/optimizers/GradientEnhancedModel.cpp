@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "GradientEnhancedModel.h"
+#include "EigenUtil.h"
 
 namespace Optimization {
 namespace Optimizers {
@@ -130,11 +131,12 @@ GradientEnhancedModel::GradientEnhancedModel(int n,
 
 void GradientEnhancedModel::ComputeModel(Eigen::MatrixXd Y,
                                          Eigen::MatrixXd derivatives,
-                                         Eigen::VectorXd gradient_of_model,
+                                         Eigen::VectorXd derivatives_at_y0,
                                          Eigen::VectorXd funcVals,
                                          Eigen::VectorXd y0,
                                          Eigen::VectorXd best_point,
-                                         double radius, double scaling_factor_r) {
+                                         double radius, double scaling_factor_r,
+                                         int index_of_center_point) {
   //funcVals[0] = 0.0818000000000001;
   //funcVals[1] = 0.2797999999999998;
   //funcVals[2] = 0.5977999999999994;
@@ -142,7 +144,7 @@ void GradientEnhancedModel::ComputeModel(Eigen::MatrixXd Y,
   // set up all constraints.
   //
   points_ = Y;
-  gradient_of_model.setZero();
+  //derivatives_at_y0.setZero();
   //points_ <<
   //        1.1, 2.1, 3.1,
   //    1.2, 2.2, 3.2;
@@ -181,7 +183,7 @@ void GradientEnhancedModel::ComputeModel(Eigen::MatrixXd Y,
 
 
     for (int i = 0; i < ng_; ++i){
-      _v_(t*ng_ +i) = derivatives((ng_ - i - 1), t) - gradient_of_model(n_ - i - 1);
+      _v_(t*ng_ +i) = derivatives((ng_ - i - 1), t) - derivatives_at_y0(ng_ - i - 1);
     }
   }
 
@@ -204,19 +206,20 @@ void GradientEnhancedModel::ComputeModel(Eigen::MatrixXd Y,
 
   // set the constraints
   Eigen::VectorXd ans;
-  solveLinearSystem(_D_, _v_, funcVals, _weights_least_square_, ans);
+  solveLinearSystem(_D_, _v_, funcVals, derivatives_at_y0, _weights_least_square_, ans);
 
   // calculate start indices;
   int start_h_ij = 0;
   int start_g_i = (int) ((n_*n_ + n_)*0.5);
-  int start_c = start_g_i + n_;
+  int start_c = start_g_i + (n_-ng_);
   int start_lambda_i = start_c + 1;
 
   //extract the results
   constant_ = ans(start_c);
-  for (int i = 0; i < n_; ++i){
+  for (int i = 0; i < n_-ng_; ++i){
     gradient_[i] = ans(start_g_i+i);
   }
+  eigen_tail(gradient_, derivatives_at_y0,ng_);
   for (int i = 1; i <= (int) ((n_*n_ + n_)*0.5); ++i){
     int ii = 0;
     int jj = 0;
@@ -234,6 +237,7 @@ void GradientEnhancedModel::ComputeModel(Eigen::MatrixXd Y,
 void GradientEnhancedModel::solveLinearSystem(Eigen::MatrixXd D,
                                               Eigen::VectorXd v,
                                               Eigen::VectorXd funcVals,
+                                              Eigen::VectorXd derivatives_at_y0,
                                               Eigen::VectorXd weights_least_square,
                                               Eigen::VectorXd &ans) {
 
@@ -267,12 +271,12 @@ void GradientEnhancedModel::solveLinearSystem(Eigen::MatrixXd D,
     colsD += y;
     y--;
   }
-  Eigen::MatrixXd A = Eigen::MatrixXd::Zero((int) (1 + n_ + m_ + (n_*n_ + n_)*0.5) ,(int) (1 + n_ + m_ + (n_*n_ + n_)*0.5));
-  Eigen::VectorXd b = Eigen::VectorXd::Zero((int) (1 + n_ + m_ + (n_*n_ + n_)*0.5));
+  Eigen::MatrixXd A = Eigen::MatrixXd::Zero((int) (1 + (n_-ng_) + m_ + (n_*n_ + n_)*0.5) ,(int) (1 + (n_-ng_) + m_ + (n_*n_ + n_)*0.5));
+  Eigen::VectorXd b = Eigen::VectorXd::Zero((int) (1 + (n_-ng_) + m_ + (n_*n_ + n_)*0.5));
   // calculate start indices;
   int start_h_ij = 0;
   int start_g_i = (int) ((n_*n_ + n_)*0.5);
-  int start_c = start_g_i + n_;
+  int start_c = start_g_i + (n_-ng_);
   int start_lambda_i = start_c + 1;
   int row = 0;
 
@@ -317,7 +321,7 @@ void GradientEnhancedModel::solveLinearSystem(Eigen::MatrixXd D,
   //std::cout << "A, dL/dhij\n" << A << std::endl;
   //A.setZero();
   // dL/dgi,
-  for (int i = 1; i <= n_; ++i){
+  for (int i = 1; i <= (n_-ng_); ++i){
     for (int t = 1; t <= m_; ++t){
       A(row, start_lambda_i + t -1) += points_(i-1,t-1);
     }
@@ -336,10 +340,10 @@ void GradientEnhancedModel::solveLinearSystem(Eigen::MatrixXd D,
   //A.setZero();
   //interpolation conditions
   for (int k = 1; k <= m_; ++k){
-    b(row) = funcVals(k-1);
+    b(row) = funcVals(k-1) - derivatives_at_y0.dot((points_.col(k-1)).tail(ng_));
     A(row, start_c) = 1;
 
-    for (int t = 1; t <= n_; ++t){
+    for (int t = 1; t <= (n_-ng_); ++t){
       A(row, start_g_i + t -1) = points_(t-1,k-1);
     }
 

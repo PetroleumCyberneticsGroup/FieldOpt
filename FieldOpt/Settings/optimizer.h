@@ -87,6 +87,7 @@ class Optimizer
     double max_trust_region_radius;
     int number_of_interpolation_points;
     int number_of_variables;
+    int number_of_variables_with_gradients;
     double required_poisedness;
     double r;
     double w;
@@ -97,6 +98,10 @@ class Optimizer
     double eta1;
     double gamma;
     double gamma_inc;
+    QList<double > weights_distance_from_optimum_lsq;
+    double weight_model_determination_minimum_change_hessian;
+
+
   };
 
   struct Objective {
