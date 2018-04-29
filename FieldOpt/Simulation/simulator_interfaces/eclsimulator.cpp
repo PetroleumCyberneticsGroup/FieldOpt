@@ -37,13 +37,13 @@ ECLSimulator::ECLSimulator(Settings::Settings *settings,
                            Model::Model *model)
     : Simulator(settings)
 {
-    model_ = model;
-    settings_ = settings;
-    UpdateFilePaths();
-    deck_name_ = initial_driver_file_name_.split(".DATA").first();
+  model_ = model;
+  settings_ = settings;
+  UpdateFilePaths();
+  deck_name_ = initial_driver_file_name_.split(".DATA").first();
 
-    results_ = new Results::ECLResults();
-    try {
+  results_ = new Results::ECLResults();
+  try {
     results()->ReadResults(output_driver_file_path_,
                            settings_->verb_vector());
   } catch (...) {}
@@ -54,91 +54,106 @@ ECLSimulator::ECLSimulator(Settings::Settings *settings,
 // =========================================================
 void ECLSimulator::Evaluate() {
 
-    UpdateFilePaths();
-    copyDriverFiles();
+  UpdateFilePaths();
+  copyDriverFiles();
 
-    script_args_ = (QStringList() << current_output_deck_parent_dir_path_ << deck_name_);
-    auto driver_file_writer = DriverFileWriters::EclDriverFileWriter(settings_, model_);
+  script_args_ = (QStringList() << current_output_deck_parent_dir_path_ << deck_name_);
+  auto driver_file_writer = DriverFileWriters::EclDriverFileWriter(settings_, model_);
   if (settings_->verb_vector()[8] > 1) // idx:8 -> sim (Simulation)
     cout << "[sim]script arg[0]:---------- " << script_args_[0].toStdString() << endl
          << "[sim]script arg[1]:---------- " << script_args_[1].toStdString() << endl;
-         
-    
-    driver_file_writer.WriteDriverFile(output_schedule_file_path_);
-    for (auto well : *model_->wells()) {
-        std::cout << well->name().toStdString() << ": " << (well->IsInjector() ? "yes" : "no") << std::endl;
-    }
-    
+
+
+  driver_file_writer.WriteDriverFile(output_schedule_file_path_);
+  for (auto well : *model_->wells()) {
+    std::cout << well->name().toStdString() << ": " << (well->IsInjector() ? "yes" : "no") << std::endl;
+  }
+
   ::Utilities::Unix::ExecShellScript(script_path_,
                                      script_args_,
                                      settings_->verb_vector());
   results_->ReadResults(current_output_deck_parent_dir_path_ + "/" +initial_driver_file_name_,
                         settings_->verb_vector());
-    updateResultsInModel();
+  updateResultsInModel();
 }
 
 // =========================================================
 bool ECLSimulator::Evaluate(int timeout, int threads) {
-    UpdateFilePaths();
-    copyDriverFiles();
-    script_args_ = (QStringList() << current_output_deck_parent_dir_path_ << deck_name_ << QString::number(threads));
-    auto driver_file_writer = DriverFileWriters::EclDriverFileWriter(settings_, model_);
-    driver_file_writer.WriteDriverFile(output_schedule_file_path_);
-    int t = timeout;
-    if (timeout < 10)
-        t = 10; // Always let simulations run for at least 10 seconds
+  UpdateFilePaths();
+  copyDriverFiles();
+  script_args_ = (QStringList() << current_output_deck_parent_dir_path_ << deck_name_ << QString::number(threads));
+  auto driver_file_writer = DriverFileWriters::EclDriverFileWriter(settings_, model_);
+  driver_file_writer.WriteDriverFile(output_schedule_file_path_);
+  int t = timeout;
+  if (timeout < 10)
+    t = 10; // Always let simulations run for at least 10 seconds
 
-    std::cout << "Starting monitored simulation with timeout " << timeout << std::endl;
-    bool success = ::Utilities::Unix::ExecShellScriptTimeout(script_path_, script_args_, t);
-    std::cout << "Monitored simulation done." << std::endl;
-    if (success)
-        results_->ReadResults(current_output_deck_parent_dir_path_ + "/" +initial_driver_file_name_);
-    updateResultsInModel();
-    return success;
+  std::cout << "Starting monitored simulation with timeout " << timeout << std::endl;
+  bool success = ::Utilities::Unix::ExecShellScriptTimeout(script_path_, script_args_, t);
+  std::cout << "Monitored simulation done." << std::endl;
+  if (success)
+    results_->ReadResults(current_output_deck_parent_dir_path_ + "/" +initial_driver_file_name_);
+  updateResultsInModel();
+  return success;
 }
 
 // =========================================================
 void ECLSimulator::CleanUp() {
-    QStringList file_endings_to_delete{"DBG", "ECLEND", "ECLRUN", "EGRID", "GRID",
-                                       "h5", "INIT","INSPEC", "MSG", "PRT",
-                                       "RSSPEC", "UNRST"};
-    QString base_file_path = output_driver_file_path_.split(".DATA").first();
-    for (QString ending : file_endings_to_delete) {
-        DeleteFile(base_file_path + "." + ending);
-    }
+  QStringList file_endings_to_delete{"DBG", "ECLEND", "ECLRUN", "EGRID", "GRID",
+                                     "h5", "INIT","INSPEC", "MSG", "PRT",
+                                     "RSSPEC", "UNRST"};
+  QString base_file_path = output_driver_file_path_.split(".DATA").first();
+  for (QString ending : file_endings_to_delete) {
+    DeleteFile(base_file_path + "." + ending);
+  }
 }
 
 // =========================================================
 void ECLSimulator::UpdateFilePaths() {
-    current_output_deck_parent_dir_path_ = output_directory_ + "/" + initial_driver_file_parent_dir_name_;
-    output_driver_file_path_ = current_output_deck_parent_dir_path_ + "/" + initial_driver_file_name_;
-    output_schedule_file_path_ = initial_schedule_path_;
-    output_schedule_file_path_.replace(initial_driver_file_parent_dir_path_,current_output_deck_parent_dir_path_);
+  current_output_deck_parent_dir_path_ = output_directory_ + "/" + initial_driver_file_parent_dir_name_;
+  cout << "output_directory_:" << output_directory_.toStdString() << endl;
+  cout << "initial_driver_file_parent_dir_name_:" << initial_driver_file_parent_dir_name_.toStdString() << endl;
+  cout << "current_output_deck_parent_dir_path_:" << current_output_deck_parent_dir_path_.toStdString() << endl;
+
+  output_driver_file_path_ = current_output_deck_parent_dir_path_ + "/" + initial_driver_file_name_;
+  cout << "current_output_deck_parent_dir_path_:" << current_output_deck_parent_dir_path_.toStdString() << endl;
+
+  cout << "initial_driver_file_name_:" << initial_driver_file_name_.toStdString() << endl;
+  cout << "output_driver_file_path_:" << output_driver_file_path_.toStdString() << endl << endl;
+
+//  output_schedule_file_path_ = current_output_deck_parent_dir_path_ + "/" + initial_schedule_path_;
+  output_schedule_file_path_ = initial_schedule_path_;
+  cout << "output_schedule_file_path_[1]:" << output_schedule_file_path_.toStdString() << endl << endl;
+
+  output_schedule_file_path_.replace(initial_driver_file_parent_dir_path_,
+                                     current_output_deck_parent_dir_path_);
+  cout << "output_schedule_file_path_[2]:" << output_schedule_file_path_.toStdString() << endl;
+
 }
 
 // =========================================================
 void ECLSimulator::WriteDriverFilesOnly() {
-    UpdateFilePaths();
-    auto driver_file_writer = DriverFileWriters::EclDriverFileWriter(settings_, model_);
-    driver_file_writer.WriteDriverFile(output_schedule_file_path_);
+  UpdateFilePaths();
+  auto driver_file_writer = DriverFileWriters::EclDriverFileWriter(settings_, model_);
+  driver_file_writer.WriteDriverFile(output_schedule_file_path_);
 }
 
 // =========================================================
 void ECLSimulator::copyDriverFiles() {
-    if (!DirectoryExists(output_directory_)) {
-        std::cout << "Output parent directory does not exist; creating it: " << output_directory_.toStdString() << std::endl;
-        CreateDirectory(output_directory_);
-    }
-    if (!DirectoryExists(current_output_deck_parent_dir_path_)) {
-        std::cout << "Output deck directory not found; copying input deck: "
-                  << "\t" << initial_driver_file_parent_dir_path_.toStdString() << " -> "
-                  << "\t" << current_output_deck_parent_dir_path_.toStdString() << std::endl;
-        CreateDirectory(current_output_deck_parent_dir_path_);
-        CopyDirectory(initial_driver_file_parent_dir_path_, current_output_deck_parent_dir_path_, true);
-    }
-    assert(DirectoryExists(current_output_deck_parent_dir_path_, true));
-    assert(FileExists(output_driver_file_path_, true));
-    assert(FileExists(output_schedule_file_path_, true));
+  if (!DirectoryExists(output_directory_)) {
+    std::cout << "Output parent directory does not exist; creating it: " << output_directory_.toStdString() << std::endl;
+    CreateDirectory(output_directory_);
+  }
+  if (!DirectoryExists(current_output_deck_parent_dir_path_)) {
+    std::cout << "Output deck directory not found; copying input deck: "
+              << "\n" << initial_driver_file_parent_dir_path_.toStdString() << " -> "
+              << "\n" << current_output_deck_parent_dir_path_.toStdString() << std::endl;
+    CreateDirectory(current_output_deck_parent_dir_path_);
+    CopyDirectory(initial_driver_file_parent_dir_path_, current_output_deck_parent_dir_path_, false);
+  }
+  assert(DirectoryExists(current_output_deck_parent_dir_path_, true));
+  assert(FileExists(output_driver_file_path_, true));
+  assert(FileExists(output_schedule_file_path_, true));
 }
 
 }

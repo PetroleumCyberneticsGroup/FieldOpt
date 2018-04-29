@@ -29,6 +29,7 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
 {
   auto vm = createVariablesMap(argc, argv);
 
+  // -------------------------------------------------------
   if (vm.count("input-file")) {
     driver_file_ = QString::fromStdString(vm["input-file"].as<std::string>());
     if (!Utilities::FileHandling::FileExists(driver_file_))
@@ -36,6 +37,7 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
                                    + driver_file_.toStdString());
   } else throw std::runtime_error("An input file must be specified.");
 
+  // -------------------------------------------------------
   if (vm.count("output-dir")) {
     output_dir_ = Utilities::FileHandling::GetAbsoluteFilePath(
         QString::fromStdString(vm["output-dir"].as<std::string>()));
@@ -44,9 +46,11 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
                                    + output_dir_.toStdString());
   } else throw std::runtime_error("An output directory must be specified.");
 
+  // -------------------------------------------------------
   if (vm.count("verbose")) verbosity_level_ = vm["verbose"].as<int>();
   else verbosity_level_ = 0;
 
+  // -------------------------------------------------------
   if (vm.count("verbosity-vector")) {
     verb_vector_str_ = vm["verbosity-vector"].as<std::string>();
     for (int i=0; i < verb_vector_str_.length(); i++ ) {
@@ -55,23 +59,28 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
   }
   else verb_vector_ = std::vector<int>(8,1);
 
+  // -------------------------------------------------------
   overwrite_existing_ = vm.count("force") != 0;
   if (!overwrite_existing_ && !Utilities::FileHandling::DirectoryIsEmpty(output_dir_))
     throw std::runtime_error("Output directory is not empty. Use the --force flag to "
                                  "overwrite existing content in: " + output_dir_.toStdString());
 
+  // -------------------------------------------------------
   if (vm.count("max-parallel-simulations")) {
     max_parallel_sims_ = vm["max-parallel-simulations"].as<int>();
   } else max_parallel_sims_ = 0;
 
+  // -------------------------------------------------------
   if (vm.count("threads-per-simulation")) {
     threads_per_sim_ = vm["threads-per-simulation"].as<int>();
   } else threads_per_sim_ = 1;
 
+  // -------------------------------------------------------
   if (vm.count("simulation-timeout")) {
     simulation_timeout_ = vm["simulation-timeout"].as<int>();
   } else simulation_timeout_ = 0;
 
+  // -------------------------------------------------------
   if (vm.count("runner-type")) {
     QString runner_str = QString::fromStdString(vm["runner-type"].as<std::string>());
     if (QString::compare(runner_str, "serial") == 0)
@@ -82,6 +91,7 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
       runner_type_ = RunnerType::MPISYNC;
   } else runner_type_ = RunnerType::SERIAL;
 
+  // -------------------------------------------------------
   if (vm.count("sim-drv-path")) {
     QString sim_drv_path = QString::fromStdString(vm["sim-drv-path"].as<std::string>());
     if (!Utilities::FileHandling::FileExists(sim_drv_path))
@@ -91,6 +101,19 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
     }
   } else simulator_driver_path_ = "";
 
+  // -------------------------------------------------------
+  if (vm.count("sch-file-path")) {
+    QString sch_file_path = QString::fromStdString(vm["sch-file-path"].as<std::string>());
+    if (!Utilities::FileHandling::FileExists(sch_file_path))
+      throw std::runtime_error(
+          "Simulation driver file specified as argument does not exist: "
+              + sch_file_path.toStdString());
+    else {
+      schedule_file_path_ = Utilities::FileHandling::GetAbsoluteFilePath(sch_file_path);
+    }
+  } else schedule_file_path_ = "";
+
+  // -------------------------------------------------------
   if (vm.count("sim-exec-path")) {
     QString sim_exec_path = QString::fromStdString(vm["sim-exec-path"].as<std::string>());
     if (!Utilities::FileHandling::FileExists(sim_exec_path))
@@ -100,6 +123,7 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
     }
   } else simulator_exec_script_path_ = "";
 
+  // -------------------------------------------------------
   if (vm.count("fieldopt-build-dir")) {
     QString fieldopt_build_dir = QString::fromStdString(vm["fieldopt-build-dir"].as<std::string>());
     if (!Utilities::FileHandling::DirectoryExists(fieldopt_build_dir))
@@ -107,6 +131,7 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
     else fieldopt_build_dir_ = fieldopt_build_dir;
   } else fieldopt_build_dir_ = "";
 
+  // -------------------------------------------------------
   if (vm.count("grid-path")) {
     QString grid_path = QString::fromStdString(vm["grid-path"].as<std::string>());
     if (!Utilities::FileHandling::FileExists(grid_path))
@@ -114,6 +139,7 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
     else grid_file_path_ = grid_path;
   } else grid_file_path_ = "";
 
+  // -------------------------------------------------------
   if (vm.count("well-prod-points")) {
     if (vm["well-prod-points"].as<std::vector<double>>().size() != 6)
       throw std::runtime_error("Exactly six coordinates must be provided for the production well position.");
@@ -121,6 +147,8 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
     prod_coords_.first = QVector<double>() << coords[0] << coords[1] << coords[2];
     prod_coords_.second = QVector<double>() << coords[3] << coords[4] << coords[5];
   }
+
+  // -------------------------------------------------------
   if (vm.count("well-inj-points")) {
     if (vm["well-inj-points"].as<std::vector<double>>().size() != 6)
       throw std::runtime_error("Exactly six coordinates must be provided for the injection well position.");
@@ -129,6 +157,7 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
     inje_coords_.second = QVector<double>() << coords[3] << coords[4] << coords[5];
   }
 
+  // -------------------------------------------------------
   // idx:0 -> run (Runner)
   if (verbosity_level_ > 0 ||
       find (verb_vector_.begin(), verb_vector_.end(), 1) != verb_vector_.end() ||
@@ -215,6 +244,8 @@ po::variables_map RuntimeSettings::createVariablesMap(int argc, const char **arg
        "path to FieldOpt build directory")
       ("sim-drv-path,s", po::value<std::string>(),
        "path to simulator driver file (e.g. *.DATA)")
+      ("sch-file-path,s", po::value<std::string>(),
+       "path to schedule file (e.g. *SCH.INC)")
       ("simulation-timeout,t", po::value<int>(&simulation_timeout)->default_value(0),
        "Simulations will be terminated after running for t*(lowest_recorded_time)")
       ("well-prod-points,p", po::value<std::vector<double>>()->multitoken(),
@@ -238,7 +269,9 @@ po::variables_map RuntimeSettings::createVariablesMap(int argc, const char **arg
   po::notify(vm);
 
   // If called with --help or -h flag:
-  if (vm.count("help") || !vm.count("input-file") || !vm.count("output-dir")) { // Print help if --help present or input file/output dir not present
+  if (vm.count("help")
+      || !vm.count("input-file")
+      || !vm.count("output-dir")) { // Print help if --help present or input file/output dir not present
     cout << "Usage: ./FieldOpt input-file output-dir [options]" << endl;
     cout << desc << endl;
     exit(EXIT_SUCCESS);
@@ -270,6 +303,7 @@ map<string, string> RuntimeSettings::GetState() {
   statemap["path FieldOpt driver"] = driver_file_.toStdString();
   statemap["path Output Directory"] = output_dir_.toStdString();
   statemap["path Simulator base driver"] = simulator_driver_path_.toStdString();
+  statemap["path Schedule file"] = schedule_file_path_.toStdString();
   statemap["path Grid file"] = grid_file_path_.toStdString();
   statemap["path Simulator execution script"] = simulator_exec_script_path_.toStdString();
   statemap["path FieldOpt build directory"] = fieldopt_build_dir_.toStdString();

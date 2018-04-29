@@ -105,12 +105,6 @@ elseif(USE_ECL_LOCAL)
 
 endif()
 
-message("\n*************************************************************")
-message("**** Set ERT_INCLUDE_DIR: ${ERT_INCLUDE_DIR}")
-message("**** Set ert_util: ${ert_util}")
-message("**** Set ERTLIB: ${ERTLIB}")
-message("*************************************************************\n")
-
 # ╦  ╔═╗╔═╗╔═╗╦    ╦  ╦╔╗ ╔═╗
 # ║  ║ ║║  ╠═╣║    ║  ║╠╩╗╚═╗
 # ╩═╝╚═╝╚═╝╩ ╩╩═╝  ╩═╝╩╚═╝╚═╝
@@ -276,13 +270,6 @@ elseif(USE_RPOLY_LOCAL)
 
 endif()
 
-message("\n*************************************************************")
-message(STATUS "RpolyPlusPlus: ${RpolyPlusPlus}")
-message(STATUS "RpolyPlusPlus_LIBRARY: ${RpolyPlusPlus_LIBRARY}")
-message(STATUS "RpolyPlusPlus_LIBRARIES: ${RpolyPlusPlus_LIBRARIES}")
-message(STATUS "RpolyPlusPlus_INCLUDE_DIR: ${RpolyPlusPlus_INCLUDE_DIR}")
-message("*************************************************************\n")
-
 # ╔╗ ╔═╗╔═╗╔═╗╔╦╗
 # ╠╩╗║ ║║ ║╚═╗ ║
 # ╚═╝╚═╝╚═╝╚═╝ ╩
@@ -415,3 +402,15 @@ if (COPY_EXAMPLES)
 endif()
 
 
+message("\n*************************************************************")
+message("**** Set ERT_INCLUDE_DIR: ${ERT_INCLUDE_DIR}")
+message("**** Set ert_util: ${ert_util}")
+message("**** Set ERTLIB: ${ERTLIB}")
+message("*************************************************************\n")
+
+message("\n*************************************************************")
+message(STATUS "RpolyPlusPlus: ${RpolyPlusPlus}")
+message(STATUS "RpolyPlusPlus_LIBRARY: ${RpolyPlusPlus_LIBRARY}")
+message(STATUS "RpolyPlusPlus_LIBRARIES: ${RpolyPlusPlus_LIBRARIES}")
+message(STATUS "RpolyPlusPlus_INCLUDE_DIR: ${RpolyPlusPlus_INCLUDE_DIR}")
+message("*************************************************************\n")

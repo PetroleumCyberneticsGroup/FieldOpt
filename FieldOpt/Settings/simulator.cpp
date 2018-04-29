@@ -94,11 +94,18 @@ Simulator::Simulator(QJsonObject json_simulator)
     else fluid_model_ = SimulatorFluidModel::BlackOil;
 }
 
+void Simulator::set_schedule_file_path(const QString path) {
+  schedule_file_path_ = path;
+  std::cout << "schedule_file_path_:"
+            << schedule_file_path_.toStdString() << std::endl;
+}
+
 void Simulator::set_driver_file_path(const QString path) {
     driver_file_path_ = path;
 
     if (!FileExists(driver_file_path_)) {
-        throw std::runtime_error("No file found at DriverPath: " + driver_file_path_.toStdString());
+        throw std::runtime_error("No file found at DriverPath: "
+                                     + driver_file_path_.toStdString());
     }
 
     auto old_driver_directory = driver_directory_;
@@ -106,10 +113,14 @@ void Simulator::set_driver_file_path(const QString path) {
     tmp.removeLast();
     driver_directory_ = tmp.join("/");
 
+  std::cout << "schedule_file_path_:"
+            << schedule_file_path_.toStdString() << std::endl;
+
     if (schedule_file_path_.length() > 0) {
-        schedule_file_path_.replace(old_driver_directory, driver_directory_);
+         schedule_file_path_.replace(old_driver_directory, driver_directory_);
         if (!FileExists(schedule_file_path_))
-            throw std::runtime_error("No file found at ScheduleFile: " + schedule_file_path_.toStdString());
+            throw std::runtime_error("No file found at ScheduleFile: "
+                                         + schedule_file_path_.toStdString());
     }
 }
 

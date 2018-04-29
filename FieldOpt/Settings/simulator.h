@@ -78,6 +78,8 @@ class Simulator
    */
   void set_driver_file_path(const QString path);
 
+  void set_schedule_file_path(const QString path);
+
   /*!
    * Set the execution script path.
    */
@@ -111,7 +113,7 @@ class Simulator
   // Should really be inhereited by Friend Class: Settings.
   void set_verbosity_vector(const std::vector<int> verb_vector) { verb_vector_ = verb_vector; }
   std::vector<int> verb_vector() const { return verb_vector_; }
-  
+
  private:
   SimulatorType type_;
   SimulatorFluidModel fluid_model_;

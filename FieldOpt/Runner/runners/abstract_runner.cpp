@@ -91,6 +91,12 @@ AbstractRunner::InitializeSettings(QString output_subdirectory) {
                                      runtime_settings_->verb_vector());
 
   // -------------------------------------------------------
+  // Override schedule driver file if it has been passed as command line arguments
+  if (runtime_settings_->schedule_file_path().length() > 0)
+    settings_->simulator()->set_schedule_file_path(
+        runtime_settings_->schedule_file_path());
+
+  // -------------------------------------------------------
   // Override simulator driver file if it has been passed as command line arguments
   if (runtime_settings_->simulator_driver_path().length() > 0)
     settings_->simulator()->set_driver_file_path(
