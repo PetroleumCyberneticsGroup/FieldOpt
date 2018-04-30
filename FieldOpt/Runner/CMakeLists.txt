@@ -17,7 +17,7 @@ add_executable(FieldOpt
         runners/worker.cpp
 		logger.cpp
 		bookkeeper.cpp
-		)
+        runners/ensemble_helper.cpp)
 
 add_library(runner
 		runtime_settings.cpp
