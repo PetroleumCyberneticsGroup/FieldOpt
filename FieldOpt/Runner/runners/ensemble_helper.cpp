@@ -26,6 +26,12 @@
 
 namespace Runner {
 
+EnsembleHelper::EnsembleHelper() {
+    current_case_ = 0;
+    rzn_queue_ = std::vector<std::string>();
+    rzn_busy_ = std::vector<std::string>();
+}
+
 EnsembleHelper::EnsembleHelper(const Settings::Ensemble &ensemble) {
     ensemble_ = ensemble;
     current_case_ = 0;
@@ -49,7 +55,7 @@ bool EnsembleHelper::IsCaseDone() const {
     return rzn_queue_.empty() && rzn_busy_.empty();
 }
 bool EnsembleHelper::IsCaseAvailableForEval() const {
-    return rzn_queue_.empty();
+    return !rzn_queue_.empty();
 }
 Optimization::Case *EnsembleHelper::GetCaseForEval() {
     if (!IsCaseAvailableForEval()) {
@@ -91,5 +97,8 @@ void EnsembleHelper::selectRealizations() {
     for (auto idx : indices) {
         rzn_queue_.push_back(all_aliases[idx]);
     }
+}
+Settings::Ensemble::Realization EnsembleHelper::GetRealization(const std::string &alias) const {
+    return ensemble_.GetRealization(alias);
 }
 }

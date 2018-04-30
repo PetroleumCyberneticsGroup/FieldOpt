@@ -36,6 +36,7 @@ namespace Runner {
 class EnsembleHelper {
 
  public:
+  EnsembleHelper();
   EnsembleHelper(const Settings::Ensemble &ensemble);
 
   /*!
@@ -76,6 +77,11 @@ class EnsembleHelper {
    * @return
    */
   Optimization::Case *GetEvaluatedCase();
+
+  /*!
+   * Get the realization object refereincing the alias string.
+   */
+  Settings::Ensemble::Realization GetRealization(const std::string &alias) const;
 
  private:
 
