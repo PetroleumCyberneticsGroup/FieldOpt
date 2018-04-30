@@ -1,7 +1,4 @@
 /******************************************************************************
- *
- *
- *
  * Created: 16.12.2015 2015 by einar
  *
  * This file is part of the FieldOpt project.
@@ -70,6 +67,15 @@ void AbstractRunner::InitializeSettings(QString output_subdirectory)
     runtime_settings_->paths().SetPath(Paths::OUTPUT_DIR, output_directory.toStdString());
     settings_ = new Settings::Settings(runtime_settings_->paths());
     settings_->set_verbosity(runtime_settings_->verbosity_level());
+
+    if (settings_->simulator()->is_ensemble()) {
+        is_ensemble_run_ = true;
+        ensemble_helper_ = EnsembleHelper(settings_->simulator()->get_ensemble());
+    }
+    else {
+        is_ensemble_run_ = false;
+    }
+
 }
 
 void AbstractRunner::InitializeModel()
