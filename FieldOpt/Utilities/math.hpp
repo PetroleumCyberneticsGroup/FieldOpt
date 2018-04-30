@@ -145,7 +145,7 @@ inline std::vector<int> unique_random_integers(boost::random::mt19937 &gen,
     int i = 0;
     while (i < n) {
         int rand = rng();
-        if(!rands.empty() && std::find(rands.begin(), rands.end(), rand) != v.end()) {
+        if(!rands.empty() && std::find(rands.begin(), rands.end(), rand) != rands.end()) {
             continue;
         }
         else {
