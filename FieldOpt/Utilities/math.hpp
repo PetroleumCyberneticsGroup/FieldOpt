@@ -128,6 +128,35 @@ inline std::vector<int> random_integers(boost::random::mt19937 &gen,
 }
 
 /*!
+ * @brief Generate a vector of _unique_ random integers in the range [lower .. upper].
+ * @param gen Random number generator. You can get one by calling get_random_generator().
+ * @param lower The lowest possible int to generate.
+ * @param upper The highest possible int to generate.
+ * @param n Number of integers to generate.
+ * @return A vector containing n random integers.
+ */
+inline std::vector<int> unique_random_integers(boost::random::mt19937 &gen,
+                                        const int lower, const int upper,
+                                        const int n) {
+    boost::random::uniform_int_distribution<> dist(lower, upper);
+    boost::variate_generator<boost::mt19937&, boost::random::uniform_int_distribution<> > rng(gen, dist);
+
+    std::vector<int> rands = std::vector<int>(n);
+    int i = 0;
+    while (i < n) {
+        int rand = rng();
+        if(!rands.empty() && std::find(rands.begin(), rands.end(), rand) != v.end()) {
+            continue;
+        }
+        else {
+            rands[i] = rand;
+            ++i;
+        }
+    }
+    return rands;
+}
+
+/*!
  * @brief Generate a vector of n random floats in the range [0, 1)
  * @param gen Random number generator. You can get one by calling get_random_generator().
  * @param n Number numbers to generate.
