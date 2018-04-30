@@ -61,11 +61,13 @@ double AbstractRunner::sentinelValue() const
 void AbstractRunner::InitializeSettings(QString output_subdirectory)
 {
     QString output_directory = QString::fromStdString(runtime_settings_->paths().GetPath(Paths::OUTPUT_DIR));
-    if (output_subdirectory.length() > 0)
+    if (output_subdirectory.length() > 0) {
         output_directory.append(QString("/%1/").arg(output_subdirectory));
-    Utilities::FileHandling::CreateDirectory(output_directory);
+    }
+    if (!DirectoryExists(output_directory)) {
+        CreateDirectory(output_directory);
+    }
     runtime_settings_->paths().SetPath(Paths::OUTPUT_DIR, output_directory.toStdString());
-
     settings_ = new Settings::Settings(runtime_settings_->paths());
     settings_->set_verbosity(runtime_settings_->verbosity_level());
 }
