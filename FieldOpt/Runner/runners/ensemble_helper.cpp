@@ -81,6 +81,7 @@ Optimization::Case *EnsembleHelper::GetEvaluatedCase() {
     }
     rzn_queue_ = std::vector<std::string>();
     rzn_busy_ = std::vector<std::string>();
+    current_case_->set_objective_function_value(current_case_->GetEnsembleAverageOfv());
     return current_case_;
 }
 void EnsembleHelper::selectRealizations() {

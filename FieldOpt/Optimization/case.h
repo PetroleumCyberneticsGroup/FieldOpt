@@ -115,7 +115,7 @@ class Case : public Loggable
   void set_real_variables(const QHash<QUuid, double> &real_variables) { real_variables_ = real_variables; }
 
   double objective_function_value() const; //!< Get the objective function value. Throws an exception if the value has not been defined.
-  void set_objective_function_value(double objective_function_value) { objective_function_value_ = objective_function_value; }
+  void set_objective_function_value(double objective_function_value);
 
   void set_integer_variable_value(const QUuid id, const int val); //!< Set the value of an integer variable in the case.
   void set_binary_variable_value(const QUuid id, const bool val); //!< Set the value of a boolean variable in the case.

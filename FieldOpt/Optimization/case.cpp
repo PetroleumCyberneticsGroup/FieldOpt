@@ -294,4 +294,8 @@ double Case::GetEnsembleAverageOfv() const {
     return sum / ensemble_ofvs_.size();
 }
 
+void Case::set_objective_function_value(double objective_function_value) {
+    objective_function_value_ = objective_function_value;
+}
+
 }
