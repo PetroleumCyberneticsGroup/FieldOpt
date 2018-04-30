@@ -64,7 +64,7 @@ Case::Case(const Case *c)
     integer_id_index_map_ = c->integer_variables_.keys();
     sim_time_sec_ = -1;
     ensemble_realization_ = "";
-    ensemble_ofvs_ = QHash<QString, double>();
+    ensemble_ofvs_ = c->ensemble_ofvs_;
 }
 
 bool Case::Equals(const Case *other, double tolerance) const
