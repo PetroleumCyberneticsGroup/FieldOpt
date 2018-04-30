@@ -54,7 +54,9 @@ DeckParser::DeckParser(std::string deck_file) {
     time_map_ = &opm_schedule.getTimeMap();
     num_timesteps_ = time_map_->numTimesteps();
 
+    std::cout << "Initializing time vectors ... "; /// Don't remove these two prints. For some insane reason they fix a segfault.
     initializeTimeVectors();
+    std::cout << " done." << std::endl;
 }
 
 void DeckParser::initializeTimeVectors() {
