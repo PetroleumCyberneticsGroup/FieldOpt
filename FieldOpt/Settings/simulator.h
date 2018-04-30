@@ -61,6 +61,8 @@ class Simulator
 
   bool is_ensemble() const { return is_ensemble_; }
 
+  Ensemble get_ensemble() const { return ensemble_; }
+
   /*!
    * Get the fluid model.
    */
