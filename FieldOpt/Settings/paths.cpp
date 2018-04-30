@@ -23,9 +23,13 @@ Paths::Paths() { }
 
 void Paths::SetPath(Paths::Path path, std::string path_string) {
     if (path >= 0 && !FileExists(path_string)) {
+        std::cerr << "ERROR: Cannot set " << GetPathDescription(path)
+                  << " path to non-existing file (" <<  path_string  << ")" << std::endl;
         throw std::runtime_error(Paths::GetPathDescription(path) + " not found at " + path_string);
     }
     else if (path < 0 && !DirectoryExists(path_string)) {
+        std::cerr << "ERROR: Cannot set " << GetPathDescription(path)
+                  << " path to non-existing directory (" <<  path_string  << ")" << std::endl;
         throw std::runtime_error(Paths::GetPathDescription(path) + " not found at " + path_string);
     }
     else {
