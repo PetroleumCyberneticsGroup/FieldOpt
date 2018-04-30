@@ -21,6 +21,7 @@
 #include <QtCore/QUuid>
 #include <Utilities/time.hpp>
 #include <boost/lexical_cast.hpp>
+#include <iostream>
 #include "case.h"
 
 namespace Optimization {
@@ -32,6 +33,8 @@ Case::Case() {
     real_variables_ = QHash<QUuid, double>();
     objective_function_value_ = std::numeric_limits<double>::max();
     sim_time_sec_ = -1;
+    ensemble_realization_ = "";
+    ensemble_ofvs_ = QHash<QString, double>();
 }
 
 Case::Case(const QHash<QUuid, bool> &binary_variables, const QHash<QUuid, int> &integer_variables, const QHash<QUuid, double> &real_variables)
@@ -45,6 +48,8 @@ Case::Case(const QHash<QUuid, bool> &binary_variables, const QHash<QUuid, int> &
     real_id_index_map_ = real_variables_.keys();
     integer_id_index_map_ = integer_variables_.keys();
     sim_time_sec_ = -1;
+    ensemble_realization_ = "";
+    ensemble_ofvs_ = QHash<QString, double>();
 }
 
 Case::Case(const Case *c)
@@ -58,6 +63,8 @@ Case::Case(const Case *c)
     real_id_index_map_ = c->real_id_index_map_;
     integer_id_index_map_ = c->integer_variables_.keys();
     sim_time_sec_ = -1;
+    ensemble_realization_ = "";
+    ensemble_ofvs_ = QHash<QString, double>();
 }
 
 bool Case::Equals(const Case *other, double tolerance) const
@@ -258,4 +265,33 @@ string Case::StringRepresentation(Model::Properties::VariablePropertyContainer *
 //    string str = entry.str();
 //    Utilities::FileHandling::WriteLineToFile(QString::fromStdString(str), cas_log_path_);
 }
+
+void Case::SetRealizationOfv(const QString &alias, const double &ofv) {
+    ensemble_ofvs_[alias] = ofv;
+}
+
+double Case::GetRealizationOfv(const QString &alias) {
+    if (HasRealizationOfv(alias)) {
+        return ensemble_ofvs_[alias];
+    }
+    else {
+        std::cerr << "WARNING: In Case - Attempting to get unrecorded OFV for alias " << alias.toStdString()
+                  << "Returning sentinel value (-1.0)" << std::endl;
+        return -1.0;
+    }
+
+}
+
+bool Case::HasRealizationOfv(const QString &alias) {
+    return ensemble_ofvs_.count(alias) > 0;
+}
+
+double Case::GetEnsembleAverageOfv() const {
+    double sum = 0;
+    for (double value : ensemble_ofvs_.values()) {
+        sum += value;
+    }
+    return sum / ensemble_ofvs_.size();
+}
+
 }

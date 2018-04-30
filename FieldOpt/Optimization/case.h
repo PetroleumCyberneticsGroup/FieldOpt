@@ -228,6 +228,14 @@ class Case : public Loggable
    */
   int GetWICTime() const { return wic_time_sec_; }
 
+  // Multiple realizations-support
+  void SetEnsembleRealization(const QString &alias) { ensemble_realization_ = alias; }
+  QString GetEnsembleRealization() const { return ensemble_realization_; }
+  void SetRealizationOfv(const QString &alias, const double &ofv);
+  bool HasRealizationOfv(const QString &alias);
+  double GetRealizationOfv(const QString &alias);
+  double GetEnsembleAverageOfv() const;
+
  private:
   QUuid id_; //!< Unique ID for the case.
   int sim_time_sec_;
@@ -244,6 +252,10 @@ class Case : public Loggable
   Case* parent_; //!< The parent of this trial point. Needed by the APPS algorithm.
   int direction_index_; //!< The direction index used to generate this trial point.
   double step_length_; //!< The step length used to generate this trial point.
+
+  // Multiple realizations-support
+  QString ensemble_realization_; //!< The realization to evaluate next. Used by workers when in parallel mode.
+  QHash<QString, double> ensemble_ofvs_; //!< Map of objective function values from realization alias - value.
 };
 
 }
