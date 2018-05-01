@@ -33,6 +33,7 @@ class TestResourceModel : public TestResourceSettings,
   TestResourceModel() {
       settings_model_->set_reservoir_grid_path(ExampleFilePaths::grid_5spot_);
       model_ = new Model::Model(*settings_model_, logger_);
+
   }
 
   Model::Model *model_;

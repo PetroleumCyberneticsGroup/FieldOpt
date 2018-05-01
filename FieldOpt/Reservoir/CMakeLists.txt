@@ -42,7 +42,6 @@ endif()
 # Unit tests ===========================================================
 if (BUILD_TESTING)
     # Unit tests
-    find_package(GTest REQUIRED)
     include_directories(${GTEST_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR} tests)
     add_executable(test_reservoir
             tests/test_resource_grids.h
@@ -60,7 +59,8 @@ if (BUILD_TESTING)
     set_target_properties(test_reservoir
             PROPERTIES COMPILE_FLAGS "-fPIC")
 
-    add_test(NAME test_reservoir COMMAND $<TARGET_FILE:test_reservoir>)
+    add_test(NAME test_reservoir
+        COMMAND $<TARGET_FILE:test_reservoir>)
 endif()
 
 # Install targets ======================================================

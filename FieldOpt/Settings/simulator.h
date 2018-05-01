@@ -36,36 +36,109 @@ class Simulator
   friend class Settings;
 
  public:
+  Simulator(QJsonObject json_simulator);
   enum SimulatorType { ECLIPSE, ADGPRS, Flow };
   enum SimulatorFluidModel { BlackOil, DeadOil };
 
-  SimulatorType type() const { return type_; } //!< Get the simulator type (e.g. ECLIPSE).
-  QStringList *commands() const { return commands_; } //!< Get the simulator commands (commands used to execute a simulation). Each list element is executed in sequence.
-  QString script_name() const { return script_name_; } //!< Get the name of the script to be used to execute simulations.
-  QString driver_file_path() const { return driver_file_path_; } //!< Get the path to the driver file.
-  void set_driver_file_path(const QString path) { driver_file_path_ = path; } //!< Set the driver file path. Used when the path is passed by command line argument.
-  void set_execution_script_path (const QString path) { custom_exec_script_path_ = path; } //!< Set a custom path for the simulator execution script.
-  QString custom_simulator_execution_script_path() const { return custom_exec_script_path_; } //!< Get the path to the simulator execution script.
 
-  QString include_directory() const { return include_directory_; } //!< Get the output directory path.
-  QString output_directory() const { return output_directory_; } //!< Get the output directory path.
-  SimulatorFluidModel fluid_model() const { return fluid_model_; } //!< Get the fluid model
-  int max_minutes() { return max_minutes_; } //!< Get the maximum number of minutes simulations are allowed to run if no timeout value can be calculated. Returns -1 if field is not set.
+  /*!
+   * Get the simulator type (e.g. ECLIPSE).
+   */
+  SimulatorType type()
+  const { return type_; }
+
+  /*!
+   * Get the simulator commands (commands used to execute a simulation).
+   * Each list element is executed in sequence.
+   */
+  QStringList *commands()
+  const { return commands_; }
+
+  /*!
+   * Get the name of the script to be used to execute simulations.
+   */
+  QString script_name()
+  const { return script_name_; }
+
+  /*!
+   * Get the path to the driver file.
+   */
+  QString driver_file_path()
+  const { return driver_file_path_; }
+
+  /*!
+   * Get the path of the parent directory of the driver file.
+   */
+  QString driver_parent_directory()
+  const { return driver_directory_; }
+
+  /*!
+   * Get the path to the file containing the schedule section
+   (or the part of it that is to be manipulated).
+   */
+  QString schedule_file_path()
+  const {return schedule_file_path_; }
+
+  QString sim_incl_dir_path()
+  const {return sim_incl_dir_path_; }
+
+  /*!
+   * Set the driver file path. Used when the path is passed by command line argument.
+   */
+  void set_driver_file_path(const QString path);
+
+  void set_sim_incl_dir_path(const QString path);
+
+  void set_schedule_file_path(const QString path);
+
+  /*!
+   * Set the execution script path.
+   */
+  void set_execution_script_path (const QString path)
+  { custom_exec_script_path_ = path; }
+
+  /*!
+   * Set a custom path for the simulator execution script.
+   */
+
+  /*!
+   * Get the path to the simulator execution script.
+   */
+  QString custom_simulator_execution_script_path() const { return custom_exec_script_path_; }
+
+  /*!
+   * Get the output directory path.
+   */
+  QString output_directory() const { return output_directory_; }
+
+  /*!
+   * Get the fluid model.
+   */
+  SimulatorFluidModel fluid_model() const { return fluid_model_; }
+
+  /*!
+   * Get the maximum number of minutes simulations are allowed to run
+   if no timeout value can be calculated. Returns -1 if field is not set.
+   */
+  int max_minutes() { return max_minutes_; }
 
   // Should really be inhereited by Friend Class: Settings.
   void set_verbosity_vector(const std::vector<int> verb_vector) { verb_vector_ = verb_vector; }
   std::vector<int> verb_vector() const { return verb_vector_; }
 
  private:
-  Simulator(QJsonObject json_simulator);
   SimulatorType type_;
   SimulatorFluidModel fluid_model_;
   QStringList *commands_;
+
   QString script_name_;
   QString driver_file_path_;
-  QString output_directory_;
-  QString include_directory_;
+  QString driver_directory_;
+  QString sim_incl_dir_path_;
+  QString schedule_file_path_;
   QString custom_exec_script_path_;
+
+  QString output_directory_;
   int max_minutes_;
 
   std::vector<int> verb_vector_ = std::vector<int>(11,0); //!<

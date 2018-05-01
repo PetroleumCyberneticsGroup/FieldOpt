@@ -16,4 +16,4 @@ fi
 cd $1
 
 # Execute eclipse with the file path as parameter
-exec /usr/bin/adgprs $2 $threads
+exec /usr/bin/adgprs $2 $threads &>/dev/null

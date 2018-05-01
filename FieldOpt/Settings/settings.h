@@ -61,6 +61,7 @@ class Settings
 
   QString name() const { return name_; } //!< The name to be used for the run. Output file and folder names are derived from this.
   QString output_directory() const { return output_directory_; } //!< Path to a directory in which output files are to be placed.
+  QString sim_incl_dir_path() const { return sim_include_dir_path_; }
 
   void set_verbosity_vector(const vector<int> verb_vector) { verb_vector_ = verb_vector; }
   vector<int> verb_vector() const { return verb_vector_; }
@@ -85,6 +86,8 @@ class Settings
   double bookkeeper_tolerance_;
   QString runner_type_;
   QString output_directory_;
+  QString sim_include_dir_path_;
+
   Model *model_;
   Optimizer *optimizer_;
   Simulator *simulator_;

@@ -19,26 +19,47 @@ namespace FileHandling {
 /*!
  * \brief FileExists Checks whether or not a file exists at the specified path.
  * \param file_path Path to a file that may or may not exist.
+ * \param verbose Whether the path being checked should be printed.
  * \return True if a file exists at the specified path, otherwise false.
  */
-inline bool FileExists(QString file_path)
+inline bool FileExists(QString file_path, bool verbose=false)
 {
     QFileInfo file(file_path);
     QFileInfo file_relative(file.absoluteFilePath());
-    if (file.exists() && file.isFile())
+    if (file.exists() && file.isFile()) {
+        if (verbose) std::cout << "File exists at path: " << file_path.toStdString() << std::endl;
         return true;
-    else return file_relative.exists() && file_relative.isFile();
+    }
+    else if (file_relative.exists() && file_relative.isFile()) {
+        if (verbose) std::cout << "File exists at relative path: " << file_path.toStdString() << std::endl;
+        return true;
+    }
+    else {
+        if (verbose) std::cout << "File does not exists: " << file_path.toStdString() << std::endl;
+        return false;
+    }
 }
 
 /*!
  * \brief DirectoryExists Checks whether or not a folder exists at the specified path.
  * \param folder_path Path to a folder that may or may not exist.
+ * \param verbose Whether the path being checked should be printed.
  * \return True if a folder exists at the specified path, otherwise false.
  */
-inline bool DirectoryExists(QString directory_path)
+inline bool DirectoryExists(QString directory_path, bool verbose=false)
 {
     QFileInfo folder(directory_path);
-    return folder.exists() && folder.isDir();
+    if (folder.exists() && folder.isDir()) {
+        if (verbose) std::cout
+            << "\n*************************"
+            << "Directory exists at path: "
+            << directory_path.toStdString() << std::endl;
+        return true;
+    }
+    else {
+        if (verbose) std::cout << "Directory does not exists at path: " << directory_path.toStdString() << std::endl;
+        return false;
+    }
 }
 
 
@@ -154,9 +175,11 @@ inline void DeleteFile(QString path)
  */
 inline void CreateDirectory(QString path)
 {
-    if (DirectoryExists(path))
-        return; // Do nothing if the directory already exists.
-    QDir().mkdir(path);
+    if (DirectoryExists(path)) {
+      return; // Do nothing if the directory already exists.
+    }
+  QDir().mkpath(path);
+  // QDir().mkdir(path);
 }
 
 /*!
@@ -187,26 +210,42 @@ inline void CopyFile(QString origin, QString destination, bool overwrite)
  * \param origin Path to the original directory to be copied.
  * \param destination Path to the _parent directory_ for the copy.
  */
-inline void CopyDirectory(QString origin, QString destination)
-{
+inline void CopyDirectory(QString origin,
+                          QString destination,
+                          bool verbose=false) {
+
     if (!DirectoryExists(origin))
-        throw std::runtime_error("Can't find parent directory for copying: " + origin.toStdString());
+        throw std::runtime_error(
+            "Can't find parent directory for copying: "
+                + origin.toStdString());
+
     if (!DirectoryExists(destination))
-        throw std::runtime_error("Can't find destination (parent) directory for copying: " + destination.toStdString());
+        throw std::runtime_error(
+            "Can't find destination directory for copying: "
+                + destination.toStdString());
+
+  std::cout << "***************** ORIGIN: " << origin.toStdString() << std::endl;
+
     QDir original(origin);
     QFileInfoList entries = original.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot, QDir::DirsLast);
 
     for (auto entry : entries) {
-        if (entry.isFile() && !entry.isDir())
-            CopyFile(entry.absoluteFilePath(), destination+"/"+entry.fileName(), true); //std::cout << "FILE: " << QString().toStdString() << std::endl;
-        else if (entry.isDir())
-            CreateDirectory(destination+"/"+entry.fileName()); // std::cout << "FOLDER: " << QString().toStdString() << std::endl;
+      std::cout << "***************** ENTRY: " << entry.baseName().toStdString() << std::endl;
+
+        if (entry.isFile() && !entry.isDir()) {
+            CopyFile(entry.absoluteFilePath(), destination + "/" + entry.fileName(), true);
+            if (verbose) std::cout << "Copying FILE: " << entry.fileName().toStdString() << std::endl;
+        }
+        else if (entry.isDir()) {
+            CreateDirectory(destination + "/" + entry.fileName());
+            if(verbose) std::cout << "Copying FOLDER: " << entry.fileName().toStdString() << std::endl;
+            CopyDirectory(entry.absoluteFilePath(), destination + "/" + entry.fileName(), verbose);
+        }
     }
 }
 
 /*!
- * \brief GetCurrentDirectoryPath Gets the absolute
- * path to the current directory.
+ * \brief GetCurrentDirectoryPath Gets the absolute path to the current directory.
  *
  * \todo Improve this.
  */

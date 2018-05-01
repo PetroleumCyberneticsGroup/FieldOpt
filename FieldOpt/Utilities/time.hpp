@@ -104,4 +104,17 @@ inline std::string timespan_string(int seconds) {
   return timestr.str();
 }
 
+/*!
+ * @brief Convert UNIX time (seconds since Thursday, 1 January 1970)
+ * to a date string in the format YYYY.MM.DD.
+ * @param t UNIX Time
+ * @return Date string
+ */
+inline std::string unix_time_to_datestring(const time_t &t) {
+    std::tm * ptm = std::localtime(&t);
+    char buffer[11];
+    std::strftime(buffer, 11, "%Y.%m.%d", ptm);
+    return std::string(buffer);
+}
+
 #endif // TIME_FUNCTIONS_H

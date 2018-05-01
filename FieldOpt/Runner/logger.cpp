@@ -1,45 +1,63 @@
-/******************************************************************************
-   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
+/***********************************************************
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
 
-   This file is part of the FieldOpt project.
+ This file is part of the FieldOpt project.
 
-   FieldOpt is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+ FieldOpt is free software: you can redistribute it
+ and/or modify it under the terms of the GNU General
+ Public License as published by the Free Software
+ Foundation, either version 3 of the License, or (at
+ your option) any later version.
 
-   FieldOpt is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+ FieldOpt is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the
+ implied warranty of MERCHANTABILITY or FITNESS FOR
+ A PARTICULAR PURPOSE.  See the GNU General Public
+ License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
-******************************************************************************/
+ You should have received a copy of the GNU
+ General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
 
+// ---------------------------------------------------------
 #include <iomanip>
 #include <QtCore/QJsonDocument>
-#include "logger.h"
-#include "Utilities/time.hpp"
 #include <boost/algorithm/string.hpp>
 
+// ---------------------------------------------------------
+#include "logger.h"
+#include "Utilities/time.hpp"
+
+// ---------------------------------------------------------
+using std::cout;
+using std::endl;
+
+// =========================================================
 Logger::Logger(Runner::RuntimeSettings *rts,
                QString output_subdir,
-               bool write_logs)
-{
+               bool write_logs) {
+
+  // -------------------------------------------------------
   write_logs_ = write_logs;
   is_worker_ = output_subdir.length() > 0;
   output_dir_ = rts->output_dir();
 
-  verbose_ = rts->verbosity_level();
+  // -------------------------------------------------------
+  verbose_ = (bool)rts->verb_vector()[0]; // DELETE
+
   verb_vector_ = rts->verb_vector();
   if (verb_vector_[0] >= 1) // idx:0 -> run (Runner)
-    std::cout << "[run]Initialized Logger.-----" << std::endl;
+    cout << fstr("[run]Initialized Logger") << endl;
 
+  // -------------------------------------------------------
   if (output_subdir.length() > 0) {
     output_dir_ = output_dir_ + "/" + output_subdir + "/";
     Utilities::FileHandling::CreateDirectory(output_dir_);
   }
+
+  // -------------------------------------------------------
   opt_log_path_ = output_dir_ + "/log_optimization.csv";
   cas_log_path_ = output_dir_ + "/log_cases.csv";
   ext_log_path_ = output_dir_ + "/log_extended.json";
@@ -49,6 +67,7 @@ Logger::Logger(Runner::RuntimeSettings *rts,
   QStringList log_paths = (QStringList() << cas_log_path_ << opt_log_path_ << ext_log_path_ << run_state_path_
                                          << summary_prerun_path_ << summary_postrun_path_);
 
+  // -------------------------------------------------------
   // Delete existing logs if --force flag is on
   if (rts->overwrite_existing()) {
     for (auto path : log_paths) {
@@ -61,6 +80,7 @@ Logger::Logger(Runner::RuntimeSettings *rts,
     }
   }
 
+  // -------------------------------------------------------
   if (write_logs_) {
     // Write CSV headers
     if (!is_worker_) {
@@ -68,6 +88,7 @@ Logger::Logger(Runner::RuntimeSettings *rts,
       Utilities::FileHandling::WriteLineToFile(opt_log_header_, opt_log_path_);
     }
 
+    // -----------------------------------------------------
     // Create base JSON document
     QJsonObject json_base;
     json_base.insert("Cases", QJsonArray());
@@ -79,11 +100,14 @@ Logger::Logger(Runner::RuntimeSettings *rts,
   }
 }
 
+// =========================================================
 void Logger::AddEntry(Loggable *obj) {
 
+  // -------------------------------------------------------
   if (verb_vector_[0] >= 3) // idx:0 -> run (Runner)
     std::cout << "[run]Addding log entry.------" << std::endl;
 
+  // -------------------------------------------------------
   switch (obj->GetLogTarget()) {
     case Loggable::LogTarget::LOG_CASE: logCase(obj); break;
     case Loggable::LogTarget::LOG_OPTIMIZER: logOptimizer(obj); break;
@@ -92,24 +116,38 @@ void Logger::AddEntry(Loggable *obj) {
     case Loggable::LogTarget::STATE_RUNNER: logRunnerState(obj); break;
   }
 
+  // -------------------------------------------------------
   if (verb_vector_[0] >= 3) // idx:0 -> run (Runner)
     std::cout << "[run]Addding log entry (end)." << std::endl;
 }
 
+// =========================================================
 void Logger::logRunnerState(Loggable *obj) {
+
+  // -------------------------------------------------------
   if (!write_logs_ || !is_worker_) // Only workers should do this
     return;
+
+  // -------------------------------------------------------
   stringstream st;
   st << obj->GetState()["case-desc"] << "\n\n";
   st << "Model update done?  " << obj->GetState()["mod-update-done"] << "\n";
   st << "Simulation done?    " << obj->GetState()["sim-done"] << "\n\n";
   st << "Last update: " << obj->GetState()["last-update"];
-  Utilities::FileHandling::WriteStringToFile(QString::fromStdString(st.str()), run_state_path_);
+
+  // -------------------------------------------------------
+  Utilities::FileHandling::WriteStringToFile(
+      QString::fromStdString(st.str()), run_state_path_);
 }
 
+// =========================================================
 void Logger::logCase(Loggable *obj) {
+
+  // -------------------------------------------------------
   if (!write_logs_ || is_worker_)
     return;
+
+  // -------------------------------------------------------
   stringstream entry;
   entry << setw(cas_log_col_widths_["TimeSt"]) << timestamp_string() << " ,";
   entry << setw(cas_log_col_widths_["EvalSt"]) << obj->GetState()["EvalSt"] << " ,";
@@ -121,15 +159,23 @@ void Logger::logCase(Loggable *obj) {
   entry << setw(cas_log_col_widths_["OFnVal"]) << scientific << obj->GetValues()["OFnVal"][0] << " ,";
   entry << setw(cas_log_col_widths_["CaseId"]) << obj->GetId().toString().toStdString();
   string str = entry.str();
+
+  // -------------------------------------------------------
   Utilities::FileHandling::WriteLineToFile(QString::fromStdString(str), cas_log_path_);
 
+  // -------------------------------------------------------
   if (verb_vector_[0] >= 3) // idx:0 -> run (Runner)
     std::cout << "[run]Writing to log:--------- " << str << std::endl;
   return;
 }
 
+// =========================================================
 void Logger::logOptimizer(Loggable *obj) {
+
+  // -------------------------------------------------------
   if (!write_logs_ || is_worker_) return;
+
+  // -------------------------------------------------------
   stringstream entry;
   entry << setw(opt_log_col_widths_["TimeSt"]) << timestamp_string() << " ,";
   entry << setw(opt_log_col_widths_["TimeEl"]) << timespan_string(obj->GetState()["TimeEl"][0]) << " , ";
@@ -147,23 +193,34 @@ void Logger::logOptimizer(Loggable *obj) {
   entry.precision(0);
   entry << obj->GetId().toString().toStdString();
   string str = entry.str();
-  Utilities::FileHandling::WriteLineToFile(QString::fromStdString(str), opt_log_path_);
 
+  // -------------------------------------------------------
+  Utilities::FileHandling::WriteLineToFile(
+      QString::fromStdString(str), opt_log_path_);
+
+  // -------------------------------------------------------
   if (verb_vector_[0] >= 3) // idx:0 -> run (Runner)
     std::cout << "[run]Writing to log (optz):-- " << str << std::endl;
   return;
 }
 
+// =========================================================
 void Logger::logExtended(Loggable *obj) {
+
+  // -------------------------------------------------------
   if (!write_logs_) return;
   QJsonObject new_entry;
 
+  // -------------------------------------------------------
   // UUID
   new_entry.insert("UUID", obj->GetId().toString());
 
+  // -------------------------------------------------------
   // Compdat string
-  new_entry.insert("COMPDAT", QString::fromStdString(obj->GetState()["COMPDAT"]));
+  new_entry.insert("COMPDAT",
+                   QString::fromStdString(obj->GetState()["COMPDAT"]));
 
+  // -------------------------------------------------------
   // Variable values
   QJsonArray vars;
   for (auto const a : obj->GetValues()) {
@@ -175,6 +232,7 @@ void Logger::logExtended(Loggable *obj) {
   }
   new_entry.insert("Variables", vars);
 
+  // -------------------------------------------------------
   // Production data
   QJsonArray prod;
   for (auto const a : obj->GetValues()) {
@@ -190,40 +248,51 @@ void Logger::logExtended(Loggable *obj) {
   }
   new_entry.insert("ProductionData", prod);
 
+  // -------------------------------------------------------
   // Open existing document
   QFile json_file(ext_log_path_);
 
+  // -------------------------------------------------------
   // First validating existing structure
   json_file.open(QFile::ReadWrite);
   QByteArray json_data = json_file.readAll();
   QJsonObject json_obj = QJsonDocument::fromJson(json_data).object();
+
+  // -------------------------------------------------------
   if (!json_obj.contains("Cases") || !json_obj["Cases"].isArray()) {
     cout << "Invalid JSON log. Aborting." << endl;
     exit(1);
   }
   json_file.close();
 
+  // -------------------------------------------------------
   // Deleting file contents in preparation to rewrite
   json_file.open(QFile::ReadWrite | QIODevice::Truncate);
 
+  // -------------------------------------------------------
   // Add new case to JSON document
   QJsonArray case_array = json_obj["Cases"].toArray();
   case_array.append(new_entry);
   json_obj["Cases"] = case_array;
 
+  // -------------------------------------------------------
   // Write the updated log
   QJsonDocument json_doc = QJsonDocument(json_obj);
   json_file.write(json_doc.toJson(QJsonDocument::Indented));
   json_file.close();
+
   return;
 }
 
+// =========================================================
 void Logger::collectExtendedLogs() {
   if (!write_logs_ || is_worker_) return;
 
+  // -------------------------------------------------------
   QList<QJsonObject> worker_parts_;
   int rank = 1;
 
+  // -------------------------------------------------------
   // Read all the parts
   while (true) {
     QString subpath = output_dir_ + "/rank" +
@@ -241,51 +310,64 @@ void Logger::collectExtendedLogs() {
       rank++;
     }
   }
+  // -------------------------------------------------------
   if (worker_parts_.size() == 0) // Return if there were no workers (we're running in serial)
     return;
 
+  // -------------------------------------------------------
   // Gather all cases in one array
   QJsonArray all_cases;
   for (QJsonObject part : worker_parts_) {
     all_cases.append(part["Cases"].toArray());
   }
 
+  // -------------------------------------------------------
   QFile json_file(ext_log_path_);
   // Deleting file contents in preparation to rewrite
   json_file.open(QFile::ReadWrite | QIODevice::Truncate);
 
+  // -------------------------------------------------------
   // Add all cases to JSON document
   QJsonObject json_obj;
   json_obj["Cases"] = all_cases;
 
+  // -------------------------------------------------------
   // Write the updated log
   QJsonDocument json_doc = QJsonDocument(json_obj);
   json_file.write(json_doc.toJson(QJsonDocument::Indented));
   json_file.close();
+
   return;
 }
 
+// =========================================================
 void Logger::logSummary(Loggable *obj) {
+
+  // -------------------------------------------------------
   if (obj->GetWellDescriptions().size() > 0) {
     sum_wellmap_ = obj->GetWellDescriptions();
     sum_mod_statemap_ = obj->GetState();
     sum_mod_valmap_ = obj->GetValues();
-  }
-  else if (obj->GetState().count("verbosity") > 0) {
+
+  } else if (obj->GetState().count("verbosity") > 0) {
     sum_rts_statemap_ = obj->GetState();
     sum_rts_valmap_ = obj->GetValues();
-  }
-  else {
+
+  } else {
     sum_opt_statemap_ = obj->GetState();
     sum_opt_valmap_ = obj->GetValues();
   }
 }
 
+// =========================================================
 void Logger::FinalizePrerunSummary() {
+
+  // -------------------------------------------------------
   if (!write_logs_ || is_worker_) return;
 
   stringstream sum;
 
+  // -------------------------------------------------------
   // ==> Header and TOC <==
   sum << "# FieldOpt run: " << timestamp_string() << "\n\n";
   sum << "* [Run-time settings](#run-time-settings)" << "\n";
@@ -293,6 +375,7 @@ void Logger::FinalizePrerunSummary() {
   sum << "* [Base Case](#base-case)" << "\n";
   sum << "\n";
 
+  // -------------------------------------------------------
   // ==> Run-time settings <==
   sum << "## Run-time settings" << "\n\n";
   sum << "| Setting                        | Value                |\n";
@@ -304,6 +387,7 @@ void Logger::FinalizePrerunSummary() {
   }
   sum << "\n";
 
+  // -------------------------------------------------------
   // ==> Paths <==
   sum << "### Paths" << "\n\n";
   sum << "| Path                       | Value                          |\n";
@@ -326,6 +410,7 @@ void Logger::FinalizePrerunSummary() {
   }
   sum << "\n";
 
+  // -------------------------------------------------------
   // ==> Optimizer <==
   sum << "## Optimizer" << "\n\n";
   sum << "| Setting                   | Value                          |\n";
@@ -336,20 +421,24 @@ void Logger::FinalizePrerunSummary() {
   }
   sum << "\n";
 
+  // -------------------------------------------------------
   // ==> Base Case <==
   // --> Well TOC <--
   sum << "## Base Case" << "\n\n";
   appendWellToc(sum_wellmap_, sum);
 
+  // -------------------------------------------------------
   // --> Loop over wells <--
   for (auto w : sum_wellmap_) {
     appendWellDescription(w, sum);
   }
 
+  // -------------------------------------------------------
   string str = sum.str();
   Utilities::FileHandling::WriteStringToFile(QString::fromStdString(str),
                                              summary_prerun_path_);
 
+  // -------------------------------------------------------
   sum_mod_valmap_.clear();
   sum_opt_valmap_.clear();
   sum_rts_valmap_.clear();
@@ -359,7 +448,10 @@ void Logger::FinalizePrerunSummary() {
   sum_wellmap_.clear();
 }
 
+// =========================================================
 void Logger::FinalizePostrunSummary() {
+
+  // -------------------------------------------------------
   if (!write_logs_ || is_worker_) return;
 
   collectExtendedLogs(); // Collect all the extended json logs into one
@@ -368,12 +460,14 @@ void Logger::FinalizePostrunSummary() {
 
   sum << "# FieldOpt summary\n\n";
 
+  // -------------------------------------------------------
   // ==> TOC <==
   sum << "* [Optimizer](#optimizer)\n";
   sum << "* [Evaluation](#evaluation)\n";
   sum << "* [Best Case](#best-case)\n";
   sum << "\n";
 
+  // -------------------------------------------------------
   // ==> Breif summary table <==
   sum << "| Key                  | Value                          |\n";
   sum << "| -------------------- | ------------------------------ |\n";
@@ -385,6 +479,7 @@ void Logger::FinalizePostrunSummary() {
   }
   sum << "\n";
 
+  // -------------------------------------------------------
   // ==> Evaluation summary <==
   sum << "## Evaluation\n\n";
   sum << "| Cases                | Number     |\n";
@@ -395,6 +490,7 @@ void Logger::FinalizePostrunSummary() {
   }
   sum << "\n";
 
+  // -------------------------------------------------------
   // ==> Best Case <==
   sum << "## Best Case\n\n";
   sum << "| Property | Value |\n";
@@ -411,6 +507,7 @@ void Logger::FinalizePostrunSummary() {
 
   appendWellToc(sum_wellmap_, sum);
 
+  // -------------------------------------------------------
   // --> Loop over wells <--
   for (auto w : sum_wellmap_) {
     appendWellDescription(w, sum);
@@ -421,14 +518,18 @@ void Logger::FinalizePostrunSummary() {
   sum << sum_mod_statemap_["compdat"] << "\n";
   sum << "```\n";
 
+  // -------------------------------------------------------
   string str = sum.str();
-  Utilities::FileHandling::WriteStringToFile(QString::fromStdString(str),
-                                             summary_postrun_path_);
+  Utilities::FileHandling::WriteStringToFile(
+      QString::fromStdString(str),
+      summary_postrun_path_);
 }
 
+// =========================================================
 void Logger::appendWellToc(map<string, Loggable::WellDescription> wellmap,
                            stringstream &sum) {
 
+  // -------------------------------------------------------
   sum << "| Name                      | Group      | Type       |\n";
   sum << "| ------------------------- | ---------- | ---------- |\n";
   for (auto w : wellmap) {
@@ -440,9 +541,11 @@ void Logger::appendWellToc(map<string, Loggable::WellDescription> wellmap,
 
 }
 
+// =========================================================
 void Logger::appendWellDescription(pair<string, Loggable::WellDescription> w,
                                    stringstream &sum) {
 
+  // -------------------------------------------------------
   sum << "### " << w.first << "\n\n";
   sum << "#### General settings" << "\n\n";
   sum << "| Setting              | Value           |\n";

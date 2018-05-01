@@ -174,6 +174,20 @@ inline std::vector<double> random_doubles(boost::random::mt19937 &gen,
 }
 
 /*!
+ * @brief Generate a random double in the range [min, max)
+ * @param gen Random number generator. You can get one by calling get_random_generator().
+ * @param min Min limit for generated number.
+ * @param max Max limit for generated number.
+ * @return A random double.
+ */
+inline double random_double(boost::random::mt19937 &gen, const double min, const double max) {
+    boost::uniform_real<> dist(min, max);
+    boost::variate_generator<boost::mt19937&, boost::uniform_real<> > rng(gen, dist);
+    double rand = rng();
+    return rand;
+}
+
+/*!
  * @brief Generate an Eigen vector of n random floats in the range [min, max)
  * @param gen Random number generator. You can get one by calling get_random_generator().
  * @param min Min limit for generated numbers.

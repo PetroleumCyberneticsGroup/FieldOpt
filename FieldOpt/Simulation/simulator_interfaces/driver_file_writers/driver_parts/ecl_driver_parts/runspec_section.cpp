@@ -51,7 +51,7 @@ Runspec::Runspec(QStringList *driver_file_contents, QList<Model::Wells::Well *> 
     runspec_.insert(start, welldims);
 }
 
-QString Runspec::GetPartString()
+QString Runspec::GetPartString() const
 {
     return runspec_;
 }

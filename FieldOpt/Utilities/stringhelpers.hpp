@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <boost/lexical_cast.hpp>
+#include <Eigen/Core>
 
 using namespace std;
 
@@ -17,6 +18,14 @@ inline string vec_to_str(vector<T> vec) {
         for (int i = 1; i < vec.size(); ++i) {
             str = str + ", " + boost::lexical_cast<string>(vec[i]);
         }
+    }
+    return str;
+}
+
+inline string eigenvec_to_str(Eigen::VectorXd vec) {
+    string str = boost::lexical_cast<string>(vec(0));
+    for (int i = 1; i < vec.size(); ++i) {
+        str = str + ", " + boost::lexical_cast<string>(vec(i));
     }
     return str;
 }

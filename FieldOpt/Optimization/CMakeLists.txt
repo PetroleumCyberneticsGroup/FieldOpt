@@ -62,6 +62,11 @@ add_library(optimization
     objective/objective.cpp
     objective/weightedsum.cpp
     normalizer.cpp
+    optimizers/bayesian_optimization/AcquisitionFunction.cpp
+    optimizers/bayesian_optimization/af_optimizers/AFPSO.cpp
+    optimizers/bayesian_optimization/af_optimizers/AFOptimizer.cpp
+    optimizers/bayesian_optimization/EGO.cpp
+    optimizers/bayesian_optimization/af_optimizers/AFCompassSearch.cpp
     # AUX
     optimization_exceptions.h
     # SNOPT
@@ -78,6 +83,7 @@ target_link_libraries(optimization
     PUBLIC fieldopt::constraintmath
     PUBLIC fieldopt::reservoir
     PUBLIC fieldopt::runner
+    PUBLIC ${gp}
     PUBLIC Qt5::Core
     PUBLIC fieldopt::3rdpartysolvers
     ${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/lib/libsnopt-7.2.12.2.so
@@ -115,6 +121,7 @@ if (BUILD_TESTING)
       tests/test_normalizer.cpp
       tests/constraints/test_interwell_distance.cpp
       tests/constraints/test_spline_well_length.cpp
+      tests/optimizers/test_ego.cpp
       tests/constraints/test_pseudo_cont_boundary_2d.cpp
       )
 

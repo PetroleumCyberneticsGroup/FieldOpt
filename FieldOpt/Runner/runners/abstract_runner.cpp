@@ -1,27 +1,27 @@
-/******************************************************************************
- *
- *
- *
- * Created: 16.12.2015 2015 by einar
- *
- * This file is part of the FieldOpt project.
- *
- * Copyright (C) 2015-2015 Einar J.M. Baumann <einar.baumann@ntnu.no>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
- *****************************************************************************/
+/***********************************************************
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
+
+ Created: 16.12.2015 2015 by einar
+
+ This file is part of the FieldOpt project.
+
+ FieldOpt is free software: you can redistribute it
+ and/or modify it under the terms of the GNU General
+ Public License as published by the Free Software
+ Foundation, either version 3 of the License, or (at
+ your option) any later version.
+
+ FieldOpt is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the
+ implied warranty of MERCHANTABILITY or FITNESS FOR
+ A PARTICULAR PURPOSE.  See the GNU General Public
+ License for more details.
+
+ You should have received a copy of the GNU
+ General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
 
 // ---------------------------------------------------------
 #include "abstract_runner.h"
@@ -31,6 +31,7 @@
 #include <Optimization/optimizers/APPS.h>
 #include <Optimization/optimizers/GeneticAlgorithm.h>
 #include <Optimization/optimizers/RGARDD.h>
+#include <Optimization/optimizers/bayesian_optimization/EGO.h>
 #include <Optimization/optimizers/DFO.h>
 #include <Optimization/optimizers/SNOPTSolver.h>
 #include "Optimization/objective/weightedsum.h"
@@ -51,7 +52,7 @@ using std::endl;
 // ---------------------------------------------------------
 namespace Runner {
 
-// ---------------------------------------------------------
+// =========================================================
 AbstractRunner::AbstractRunner(RuntimeSettings *runtime_settings)
 {
   runtime_settings_ = runtime_settings;
@@ -78,8 +79,9 @@ double AbstractRunner::sentinelValue() const {
 void
 AbstractRunner::InitializeSettings(QString output_subdirectory) {
 
-  QString output_directory = runtime_settings_->output_dir();
   // -------------------------------------------------------
+  QString output_directory = runtime_settings_->output_dir();
+
   if (output_subdirectory.length() > 0)
     output_directory.append(QString("/%1/").arg(output_subdirectory));
   Utilities::FileHandling::CreateDirectory(output_directory);
@@ -90,27 +92,39 @@ AbstractRunner::InitializeSettings(QString output_subdirectory) {
                                      runtime_settings_->verb_vector());
 
   // -------------------------------------------------------
-  // Override simulator driver file if it has been passed as command line arguments
+  // Override FIELDOPT BUILD DIR PATH with command line argument
+  if (runtime_settings_->fieldopt_build_dir().length() > 0)
+    settings_->set_build_path(runtime_settings_->fieldopt_build_dir());
+
+  // -------------------------------------------------------
+  // Override SIMULATOR DRIVER FILE with command line argument
   if (runtime_settings_->simulator_driver_path().length() > 0)
     settings_->simulator()->set_driver_file_path(
         runtime_settings_->simulator_driver_path());
 
   // -------------------------------------------------------
-  // Override grid file if it has been passed as command line arguments
+  // Override SIMULATOR INCLUDE DIR PATH with command line argument
+  if (runtime_settings_->sim_incl_dir_path().length() > 0)
+    settings_->simulator()->set_sim_incl_dir_path(
+        runtime_settings_->sim_incl_dir_path());
+
+  // -------------------------------------------------------
+  // Override SCHEDULE DRIVER FILE with command line argument
+  if (runtime_settings_->schedule_file_path().length() > 0)
+    settings_->simulator()->set_schedule_file_path(
+        runtime_settings_->schedule_file_path());
+
+  // -------------------------------------------------------
+  // Override GRID FILE PATH with command line argument
   if (runtime_settings_->grid_file_path().length() > 0)
     settings_->model()->set_reservoir_grid_path(
         runtime_settings_->grid_file_path());
 
   // -------------------------------------------------------
-  // Override simulator executable path if it has been passed as command line arguments
+  // Override SIMULATOR EXEC PATH with command line argument
   if (runtime_settings_->simulator_exec_script_path().length() > 0)
     settings_->simulator()->set_execution_script_path(
         runtime_settings_->simulator_exec_script_path());
-
-  // -------------------------------------------------------
-  // Override FieldOpt build dir path if it has been passed as command line arguments
-  if (runtime_settings_->fieldopt_build_dir().length() > 0)
-    settings_->set_build_path(runtime_settings_->fieldopt_build_dir());
 
   // -------------------------------------------------------
   if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
@@ -171,7 +185,7 @@ void AbstractRunner::InitializeSimulator() {
   }
 
   // -------------------------------------------------------
-  simulator_->SetVerbosityLevel(runtime_settings_->verbosity_level());
+  simulator_->set_verbosity_vector(runtime_settings_->verb_vector());
 }
 
 // ---------------------------------------------------------
@@ -221,7 +235,8 @@ void AbstractRunner::InitializeObjectiveFunction() {
   }
 
   // -------------------------------------------------------
-  objective_function_->SetVerbosityLevel(runtime_settings_->verbosity_level());
+  objective_function_->
+      set_verbosity_vector(runtime_settings_->verb_vector());
 }
 
 // ---------------------------------------------------------
@@ -312,6 +327,20 @@ void AbstractRunner::InitializeOptimizer() {
           model_->variables(),
           model_->grid(),
           logger_);
+      break;
+
+    case Settings::Optimizer::OptimizerType::EGO:
+      if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
+        std::cout << "Using EGO optimization algorithm." << std::endl;
+
+      optimizer_ = new Optimization::Optimizers::BayesianOptimization::EGO(
+          settings_->optimizer(),
+          base_case_,
+          model_->variables(),
+          model_->grid(),
+          logger_
+      );
+
       break;
 
       // ---------------------------------------------------

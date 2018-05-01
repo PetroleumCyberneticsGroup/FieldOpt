@@ -18,31 +18,19 @@ message(STATUS "CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
 # Model linked into Simulation
 # Runner linking ERTWrapper, Model, Simulation, Settings,
 # Optimization, hdf5summaryreader, constraintmath
-if (ERT_STANDARD)
-    find_library(ert_ecl
-            NAMES ecl
-            HINTS ${CMAKE_BINARY_DIR}/libraries/lib
-            REQUIRED)
-    set(RIERTLIB ${ert_ecl})
-else()
-    set(RIERTLIB ${RIERTWIC}/cmake-build-debug/lib/libecl.so)
-endif ()
 
 message("\n*************************************************")
-message("--------> Set RIERTLIB: ${RIERTLIB} <--------")
+message("--------> Set ERTLIB: ${ERTLIB} <--------")
 message("*************************************************")
-
-find_library(ert_util
-        NAMES ert_util
-        HINTS ${CMAKE_BINARY_DIR}/libraries/lib
-        REQUIRED)
 
 # Add library ==========================================================
 add_library(ertwrapper
-        ertwrapper_exceptions.h
-        eclgridreader.cpp
-        eclsummaryreader.cpp)
-add_library(fieldopt::ertwrapper ALIAS ${PROJECT_NAME})
+    ertwrapper_exceptions.h
+    eclgridreader.cpp
+    eclsummaryreader.cpp)
+
+add_library(fieldopt::ertwrapper
+    ALIAS ${PROJECT_NAME})
 
 # Include dirs =========================================================
 #include_directories(
@@ -50,22 +38,23 @@ add_library(fieldopt::ertwrapper ALIAS ${PROJECT_NAME})
 #        ${ERT_INCLUDE_DIR})
 
 # Target link libraries ================================================
-if (ERT_STANDARD)
-    target_link_libraries(ertwrapper
-            PUBLIC ${ert_ecl}
-            PUBLIC ${ert_util}
-            )
-
-else()
-    target_link_libraries(ertwrapper
-            PUBLIC ${CMAKE_SOURCE_DIR}/${RIERTLIB}
-            PUBLIC ${ert_util}
-            )
-endif ()
+#if (ERT_STANDARD)
+#  target_link_libraries(ertwrapper
+#      PUBLIC ${ERTLIB}
+#      PUBLIC ${ert_util}
+#      )
+#
+#else()
+  target_link_libraries(ertwrapper
+      # PUBLIC ${CMAKE_SOURCE_DIR}/${ERTLIB}
+      PUBLIC ${ERTLIB}
+      PUBLIC ${ert_util}
+      )
+#endif ()
 
 # Target include directories ===========================================
 target_include_directories(ertwrapper PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 
 # Compile options ======================================================
 add_compile_options(-std=c++11)
@@ -74,32 +63,33 @@ add_compile_options(-std=c++11)
 # shared library libwellindexcalculator.so may be linked with
 # static reservoir and ertwrapper libraries
 if (BUILD_WIC_ADGPRS)
-    set_target_properties(ertwrapper
-            PROPERTIES COMPILE_FLAGS "-fPIC")
+  set_target_properties(ertwrapper
+      PROPERTIES COMPILE_FLAGS "-fPIC")
 endif()
 
 # Unit tests ===========================================================
 if (BUILD_TESTING)
-    find_package(GTest REQUIRED)
-    include_directories(${GTEST_INCLUDE_DIRS})
-    add_executable(test_ertwrapper
-            tests/test_eclgridreader.cpp
-            tests/test_eclsummaryreader.cpp
-            )
-    target_link_libraries(test_ertwrapper
-            fieldopt::ertwrapper
-            ${GTEST_BOTH_LIBRARIES}
-            ${CMAKE_THREAD_LIBS_INIT})
+  find_package(GTest REQUIRED)
+  include_directories(${GTEST_INCLUDE_DIRS})
+  add_executable(test_ertwrapper
+      tests/test_eclgridreader.cpp
+      tests/test_eclsummaryreader.cpp
+      )
+  target_link_libraries(test_ertwrapper
+      fieldopt::ertwrapper
+      ${GTEST_BOTH_LIBRARIES}
+      ${CMAKE_THREAD_LIBS_INIT})
 
-    add_test(NAME test_ertwrapper COMMAND $<TARGET_FILE:test_ertwrapper>)
+  add_test(NAME test_ertwrapper
+      COMMAND $<TARGET_FILE:test_ertwrapper>)
 endif()
 
 # Install targets ======================================================
 install(TARGETS ertwrapper
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib/static
-        )
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib/static
+    )
 
 # Debug: include dirs ==================================================
 include(../InclDirDbg.cmake)

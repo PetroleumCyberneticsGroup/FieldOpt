@@ -50,7 +50,7 @@ class Optimizer
   // -------------------------------------------------------
   enum OptimizerType {
     Compass, APPS, ExhaustiveSearch2DVert,
-    GeneticAlgorithm, SNOPTSolver, DFO };
+    GeneticAlgorithm, EGO, SNOPTSolver, DFO };
 
   // -------------------------------------------------------
   enum OptimizerMode { Maximize, Minimize };

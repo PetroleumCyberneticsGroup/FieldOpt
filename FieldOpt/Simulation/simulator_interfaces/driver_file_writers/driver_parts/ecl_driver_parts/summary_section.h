@@ -40,7 +40,7 @@ class Summary : public ECLDriverPart
 {
 public:
     Summary(QStringList *driver_file_contents);
-    QString GetPartString();
+    QString GetPartString() const;
 
 private:
     QString summary_;

@@ -36,12 +36,14 @@
 // STD
 #include <vector>
 
-using namespace std;
-using namespace Eigen;
-
+// -----------------------------------------------------------------
 namespace ERTWrapper {
 namespace ECLGrid {
 
+// -----------------------------------------------------------------
+using std::string;
+
+// =================================================================
 /*!
  * \brief The ECLGridReader class reads ECLIPSE grid files (.GRID and .EGRID).
  *
@@ -72,7 +74,7 @@ class ECLGridReader
     /*! vector (sz=n_total) containing sorted indices of all cells
      * in grid, i.e., list of global index
      * */
-    VectorXi idx_total;
+    Eigen::VectorXi idx_total;
 
     /*! vector (sz=n_total) containing active cells indices based on
      * actnum data, i.e., only those vector components that correspond
@@ -80,13 +82,13 @@ class ECLGridReader
      * indices), all other components corresponding to inactive cells
      * are equal to zero
      */
-    VectorXd idx_actnum;
+    Eigen::VectorXd idx_actnum;
 
     /*! vector (sz=n_total) containing actual actnum data */
-    VectorXd dat_actnum;
+    Eigen::VectorXd dat_actnum;
 
     /*! vector (sz=n_active) containing global indices of each active cell */
-    VectorXi idx_active;
+    Eigen::VectorXi idx_active;
   };
 
   /*!
@@ -141,16 +143,16 @@ class ECLGridReader
   };
 
   struct GridData {
-    VectorXd coord, coord_rxryrz;
-    Matrix<double, Dynamic, 3, RowMajor> coord_xyz, coord_rxryrz_xyz;
-    VectorXd zcorn, zcorn_rxryrz;
+    Eigen::VectorXd coord, coord_rxryrz;
+    Eigen::Matrix<double, Eigen::Dynamic, 3, Eigen::RowMajor> coord_xyz, coord_rxryrz_xyz;
+    Eigen::VectorXd zcorn, zcorn_rxryrz;
   };
 
   Gidx gidx_;
   GridData gridData_;
 
  private:
-string file_name_;
+  string file_name_;
   string init_file_name_;
   string egrid_file_name_;
 
@@ -287,7 +289,7 @@ string file_name_;
    * \param global_index Global index for a cell.
    * \return xyz corners
    */
-  MatrixXd GetCellCornersM(int global_index);
+  Eigen::MatrixXd GetCellCornersM(int global_index);
 
   /*!
 

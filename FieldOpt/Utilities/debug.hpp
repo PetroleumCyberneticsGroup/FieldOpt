@@ -9,6 +9,7 @@
 // ---------------------------------------------------------------
 // STD
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <map>
 #include <vector>
@@ -47,6 +48,71 @@ using std::setfill;
 using std::string;
 using std::left;
 using namespace Reservoir::WellIndexCalculation;
+
+// ---------------------------------------------------------------
+/*!
+ * \brief Get time stamp
+ */
+inline static string fstr(string ostr,
+                          int idx=-1,
+                          int wdth=29) {
+  ostr = ostr + ":";
+  stringstream ss;
+
+  if (idx < 0) {
+
+  } else if (idx == 0) {
+    // idx:0 -> run (Runner)
+    ss << FYELLOW;
+
+  } else if (idx == 1) {
+    // idx:1 -> ert (ERTWrapper)
+    ss << FBLUE;
+
+  } else if (idx == 2) {
+    // idx:2 -> hd5 (Hdf5SummaryReader)
+    ss << FMAGENTA;
+
+  } else if (idx == 3) {
+    // idx:3 -> wic (FieldOpt-wic)
+    ss << FCYAN;
+
+  } else if (idx == 4) {
+    // idx:4 -> con (ConstraintMath)
+    ss << FLGRAY;
+
+  } else if (idx == 5) {
+    // idx:5 -> mod (Model)
+    ss << FLRED;
+
+  } else if (idx == 6) {
+    // idx:6 -> opt (Optimization)
+    ss << FLGREEN;
+
+  } else if (idx == 7) {
+    // idx:7 -> res (Reservoir)
+    ss << FLYELLOW;
+
+  } else if (idx == 8) {
+    // idx:8 -> sim (Simulation)
+    ss << FLBLUE;
+
+  } else if (idx == 9) {
+    // idx:9 -> set (Settings)
+    ss << FLMAGENTA;
+
+  } else if (idx == 10) {
+    // idx:10 -> uti (Utilities)
+    ss << FLCYAN;
+  }
+
+  ss << setw(wdth) << setfill('-') << left << ostr << " ";
+
+  if (idx > 0) {
+    ss << AEND;
+  }
+  return ss.str();
+}
 
 // ---------------------------------------------------------------
 /*!
@@ -406,7 +472,7 @@ void inline print_dbg_msg_wic_ri(string fstr, // function str
                                  int cl = 1, // current level for dbg msg to print
                                  int tl = 2 ) {// threshhold level for dbg msg to print
 
- if (cl > tl) {
+  if (cl > tl) {
 
     stringstream ss0, ss1;
     if (el) {

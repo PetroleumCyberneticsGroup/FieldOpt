@@ -181,9 +181,12 @@ Cell ECLGrid::GetCell(int global_index) {
 Cell ECLGrid::GetCell(int i, int j, int k) {
   // Check if IJK cell is inside overall (i.e., active+inactive) grid
   if (!IndexIsInsideGrid(i, j, k)) {
-    throw runtime_error("ECLGrid::GetCell(int i, int j, int k): Error "
-                            "getting grid cell. Index (i, j, k) is outside "
-                            "grid.");
+        string errstring = "ECLGrid::GetCell(int i, int j, int k): Error "
+            "getting grid cell. Index ( "
+            + boost::lexical_cast<string>(j) + ", "
+            + boost::lexical_cast<string>(j) + ", "
+            + boost::lexical_cast<string>(k) + ") is outside grid.";
+        throw runtime_error(errstring);
   }
 
   if (type_ == GridSourceType::ECLIPSE) {

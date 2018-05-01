@@ -48,8 +48,6 @@ add_compile_options(-std=c++11)
 # Unit tests ===========================================================
 if (BUILD_TESTING)
     # Unit tests
-    find_package(GTest REQUIRED)
-    include_directories(${GTEST_INCLUDE_DIRS})
     add_executable(test_simulation
             tests/results/test_adgprsresults.cpp
             tests/results/test_eclresults.cpp
@@ -69,7 +67,8 @@ if (BUILD_TESTING)
             tests/simulator_interfaces/driver_file_writers/flow_driver_file_writer.cpp)
     target_link_libraries(test_simulation
             fieldopt::simulation
-            ${GTEST_BOTH_LIBRARIES}
+            ${gtest}
+            ${gtest_main}
             ${CMAKE_THREAD_LIBS_INIT})
 
     add_test(NAME test_simulation COMMAND $<TARGET_FILE:test_simulation>)

@@ -1,3 +1,22 @@
+/******************************************************************************
+   Copyright (C) 2015-2018 Einar J.M. Baumann <einar.baumann@gmail.com>
+
+   This file is part of the FieldOpt project.
+
+   FieldOpt is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   FieldOpt is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
+
 #include "welspecs.h"
 #include <iostream>
 
@@ -18,8 +37,23 @@ Welspecs::Welspecs(QList<Model::Wells::Well *> *wells)
     }
 }
 
-QString Welspecs::GetPartString()
-{
+Welspecs::Welspecs(QList<Model::Wells::Well *> *wells, int timestep) {
+    initializeBaseEntryLine(10);
+    head_ = "RPTRST\n'BASIC=3'\n/\n\nWELSPECS";
+    foot_ = "/\n\n";
+    for (auto well : *wells) {
+        if (well->controls()->first()->time_step() == timestep) {
+            entries_.append(createWellEntry(well));
+        }
+    }
+}
+
+QString Welspecs::GetPartString() const {
+    // Return an empty string if there are no entries (at the timestep)
+    if (entries_.size() == 0){
+        return "";
+    }
+
     QString entries = head_ + "\n";
     for (QStringList entry : entries_) {
         entries.append("    " + entry.join(" ") + " /\n");
