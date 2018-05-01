@@ -178,7 +178,7 @@ void AbstractRunner::InitializeSimulator() {
   }
 
   // -------------------------------------------------------
-  simulator_->SetVerbosityLevel(runtime_settings_->verbosity_level());
+  simulator_->set_verbosity_vector(runtime_settings_->verb_vector());
 }
 
 // ---------------------------------------------------------
@@ -228,7 +228,8 @@ void AbstractRunner::InitializeObjectiveFunction() {
   }
 
   // -------------------------------------------------------
-  objective_function_->SetVerbosityLevel(runtime_settings_->verbosity_level());
+  objective_function_->
+      set_verbosity_vector(runtime_settings_->verb_vector());
 }
 
 // ---------------------------------------------------------

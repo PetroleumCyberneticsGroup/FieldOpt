@@ -55,7 +55,9 @@ target_link_libraries(FieldOpt
     PUBLIC fieldopt::constraintmath
     PUBLIC ${CMAKE_THREAD_LIBS_INIT}
     PUBLIC ${Boost_LIBRARIES}
-    PUBLIC ${MPI_LIBRARIES})
+    PUBLIC ${MPI_LIBRARIES}
+    PUBLIC ${ERTLIB}
+    )
 
 target_link_libraries(runner
     PUBLIC fieldopt::model
@@ -66,7 +68,9 @@ target_link_libraries(runner
     PUBLIC fieldopt::hdf5summaryreader
     PUBLIC fieldopt::constraintmath
     PUBLIC ${CMAKE_THREAD_LIBS_INIT}
-    PUBLIC ${Boost_LIBRARIES})
+    PUBLIC ${Boost_LIBRARIES}
+    PUBLIC ${ERTLIB}
+    )
 
 # Compile options ======================================================
 add_compile_options(-std=c++11)

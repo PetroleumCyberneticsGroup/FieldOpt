@@ -63,6 +63,7 @@ class Model : public Loggable
   // -------------------------------------------------------
   LogTarget GetLogTarget() override;
   map<string, string> GetState() override;
+
   QUuid GetId() override;
   map<string, vector<double>> GetValues() override;
 
@@ -105,10 +106,12 @@ class Model : public Loggable
    * @brief Get the UUId of last case applied to the Model.
    * @return
    */
-  QUuid GetCurrentCaseId() const { return current_case_id_; }
+  QUuid GetCurrentCaseId() const
+  { return current_case_id_; }
 
   // -------------------------------------------------------
-  void SetCompdatString(const QString compdat) { compdat_ = compdat; };
+  void SetCompdatString(const QString compdat)
+  { compdat_ = compdat; };
 
   void SetResult(const std::string key, std::vector<double> vec);
 
@@ -162,14 +165,18 @@ class Model : public Loggable
 
   // -------------------------------------------------------
   class Summary : public Loggable {
+
    public:
+    // -----------------------------------------------------
     Summary(Model *model) { model_  = model; }
     LogTarget GetLogTarget() override;
     map<string, string> GetState() override;
     map<string, WellDescription> GetWellDescriptions() override;
     QUuid GetId() override;
     map<string, vector<double>> GetValues() override;
+
    private:
+    // -----------------------------------------------------
     Model *model_;
   };
 };

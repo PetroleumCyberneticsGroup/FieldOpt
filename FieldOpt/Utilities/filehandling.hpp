@@ -50,7 +50,10 @@ inline bool DirectoryExists(QString directory_path, bool verbose=false)
 {
     QFileInfo folder(directory_path);
     if (folder.exists() && folder.isDir()) {
-        if (verbose) std::cout << "Directory exists at path: " << directory_path.toStdString() << std::endl;
+        if (verbose) std::cout
+            << "\n*************************"
+            << "Directory exists at path: "
+            << directory_path.toStdString() << std::endl;
         return true;
     }
     else {
@@ -172,9 +175,11 @@ inline void DeleteFile(QString path)
  */
 inline void CreateDirectory(QString path)
 {
-    if (DirectoryExists(path))
-        return; // Do nothing if the directory already exists.
-    QDir().mkdir(path);
+    if (DirectoryExists(path)) {
+      return; // Do nothing if the directory already exists.
+    }
+  QDir().mkpath(path);
+  // QDir().mkdir(path);
 }
 
 /*!
@@ -205,16 +210,28 @@ inline void CopyFile(QString origin, QString destination, bool overwrite)
  * \param origin Path to the original directory to be copied.
  * \param destination Path to the _parent directory_ for the copy.
  */
-inline void CopyDirectory(QString origin, QString destination, bool verbose=false)
-{
+inline void CopyDirectory(QString origin,
+                          QString destination,
+                          bool verbose=false) {
+
     if (!DirectoryExists(origin))
-        throw std::runtime_error("Can't find parent directory for copying: " + origin.toStdString());
+        throw std::runtime_error(
+            "Can't find parent directory for copying: "
+                + origin.toStdString());
+
     if (!DirectoryExists(destination))
-        throw std::runtime_error("Can't find destination (parent) directory for copying: " + destination.toStdString());
+        throw std::runtime_error(
+            "Can't find destination directory for copying: "
+                + destination.toStdString());
+
+  std::cout << "***************** ORIGIN: " << origin.toStdString() << std::endl;
+
     QDir original(origin);
     QFileInfoList entries = original.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot, QDir::DirsLast);
 
     for (auto entry : entries) {
+      std::cout << "***************** ENTRY: " << entry.baseName().toStdString() << std::endl;
+
         if (entry.isFile() && !entry.isDir()) {
             CopyFile(entry.absoluteFilePath(), destination + "/" + entry.fileName(), true);
             if (verbose) std::cout << "Copying FILE: " << entry.fileName().toStdString() << std::endl;

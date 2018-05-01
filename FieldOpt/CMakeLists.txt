@@ -86,6 +86,9 @@ elseif (USE_ECL_RI)
   set(ERT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/${RIERTWIC}/lib/include)
   include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR})
 
+  set(ERT_INCLUDE_DIR_B ${PROJECT_SOURCE_DIR}/${RIERTWIC}/lib/include/ert/ecl)
+  include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR_B})
+
 elseif(USE_ECL_LOCAL)
 
   # Lib

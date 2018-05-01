@@ -9,6 +9,7 @@
 // ---------------------------------------------------------------
 // STD
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <map>
 #include <vector>
@@ -47,6 +48,16 @@ using std::setfill;
 using std::string;
 using std::left;
 using namespace Reservoir::WellIndexCalculation;
+
+// ---------------------------------------------------------------
+/*!
+ * \brief Get time stamp
+ */
+inline static string fstr(string ostr) {
+  stringstream ss;
+  ss << setw(29) << ostr << ":" << setfill('-') << " ";
+  return ss.str();
+}
 
 // ---------------------------------------------------------------
 /*!

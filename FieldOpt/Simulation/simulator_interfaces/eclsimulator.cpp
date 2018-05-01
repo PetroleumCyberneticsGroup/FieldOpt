@@ -1,32 +1,36 @@
-/******************************************************************************
-   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
+/***********************************************************
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
 
-   This file is part of the FieldOpt project.
+ This file is part of the FieldOpt project.
 
-   FieldOpt is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+ FieldOpt is free software: you can redistribute it
+ and/or modify it under the terms of the GNU General
+ Public License as published by the Free Software
+ Foundation, either version 3 of the License, or (at
+ your option) any later version.
 
-   FieldOpt is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+ FieldOpt is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the
+ implied warranty of MERCHANTABILITY or FITNESS FOR
+ A PARTICULAR PURPOSE.  See the GNU General Public
+ License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
-******************************************************************************/
+ You should have received a copy of the GNU
+ General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 #include <iostream>
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 #include "eclsimulator.h"
 #include "Utilities/execution.hpp"
 #include "simulator_exceptions.h"
 #include "Simulation/results/eclresults.h"
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 namespace Simulation {
 namespace SimulatorInterfaces {
 
@@ -141,15 +145,27 @@ void ECLSimulator::WriteDriverFilesOnly() {
 // =========================================================
 void ECLSimulator::copyDriverFiles() {
   if (!DirectoryExists(output_directory_)) {
-    std::cout << "Output parent directory does not exist; creating it: " << output_directory_.toStdString() << std::endl;
+    std::cout << "Output parent directory does not exist; creating it: "
+              << output_directory_.toStdString() << std::endl;
     CreateDirectory(output_directory_);
   }
   if (!DirectoryExists(current_output_deck_parent_dir_path_)) {
+
+    auto input_dir = initial_driver_file_parent_dir_path_ + "/INPUT";
+    auto output_dir = current_output_deck_parent_dir_path_ + "/INPUT";
+
     std::cout << "Output deck directory not found; copying input deck: "
-              << "\n" << initial_driver_file_parent_dir_path_.toStdString() << " -> "
-              << "\n" << current_output_deck_parent_dir_path_.toStdString() << std::endl;
-    CreateDirectory(current_output_deck_parent_dir_path_);
-    CopyDirectory(initial_driver_file_parent_dir_path_, current_output_deck_parent_dir_path_, false);
+              << "\n" << input_dir.toStdString() << " -> "
+              << "\n" << output_dir.toStdString() << std::endl;
+
+    CreateDirectory(output_dir);
+    CopyDirectory(input_dir,
+                  output_dir,
+                  false);
+
+    CopyFile(initial_driver_file_parent_dir_path_ + "/" + initial_driver_file_name_,
+             output_driver_file_path_, false);
+
   }
   assert(DirectoryExists(current_output_deck_parent_dir_path_, true));
   assert(FileExists(output_driver_file_path_, true));
