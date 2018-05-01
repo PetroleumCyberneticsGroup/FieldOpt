@@ -1,21 +1,25 @@
-/******************************************************************************
-   Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+/***********************************************************
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
 
-   This file is part of the FieldOpt project.
+ Created: 23.09.2015 2015 by einar
 
-   FieldOpt is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+ This file is part of the FieldOpt project.
 
-   FieldOpt is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+ FieldOpt is free software: you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation, either version
+ 3 of the License, or (at your option) any later version.
 
-   You should have received a copy of the GNU General Public License
-   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
-******************************************************************************/
+ FieldOpt is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty
+ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
+
+ You should have received a copy of the GNU
+ General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
 
 // ---------------------------------------------------------
 #ifndef WELLSPLINE_H
@@ -61,6 +65,12 @@ class WellSpline
   int GetTimeSpentInWIC() const
   { return time_cwb_wic_pcg_; }
 
+  // -------------------------------------------------------
+  double GetSplineDx() { return toe_x_->value() - heel_x_->value(); };
+  double GetSplineDy() { return toe_y_->value() - heel_y_->value(); };
+  double GetSplineDz() { return toe_z_->value() - heel_z_->value(); };
+  double GetSplineZe() { return toe_z_->value(); };
+
  private:
   // -------------------------------------------------------
   Reservoir::Grid::Grid *grid_;
@@ -75,8 +85,8 @@ class WellSpline
   // -------------------------------------------------------
   //!< # of seconds spent in the ComputeWellBlocks() method.
   int time_cwb_wic_pcg_;
-  int time_cwb_wic_rins_;
-  int time_cwb_wic_rinx_;
+  // int time_cwb_wic_rins_;
+  // int time_cwb_wic_rinx_;
   int time_cwb_wic_rixx_;
 
   // -------------------------------------------------------

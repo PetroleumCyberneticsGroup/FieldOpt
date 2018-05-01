@@ -22,13 +22,14 @@
 ***********************************************************/
 
 // ---------------------------------------------------------
-#include <iomanip>
-#include <QtCore/QJsonDocument>
-#include <boost/algorithm/string.hpp>
-
-// ---------------------------------------------------------
 #include "logger.h"
 #include "Utilities/time.hpp"
+
+// ---------------------------------------------------------
+// STD / BOOST / QT
+#include <boost/algorithm/string.hpp>
+#include <iomanip>
+#include <QtCore/QJsonDocument>
 
 // ---------------------------------------------------------
 using std::cout;
@@ -48,6 +49,8 @@ Logger::Logger(Runner::RuntimeSettings *rts,
   verbose_ = (bool)rts->verb_vector()[0]; // DELETE
 
   verb_vector_ = rts->verb_vector();
+
+  // -------------------------------------------------------
   if (verb_vector_[0] >= 1) // idx:0 -> run (Runner)
     cout << fstr("[run]Initialized Logger") << endl;
 
@@ -62,6 +65,8 @@ Logger::Logger(Runner::RuntimeSettings *rts,
   cas_log_path_ = output_dir_ + "/log_cases.csv";
   ext_log_path_ = output_dir_ + "/log_extended.json";
   run_state_path_ = output_dir_ + "/state_runner.txt";
+
+  // -------------------------------------------------------
   summary_prerun_path_ = output_dir_ + output_subdir + "/summary_prerun.md";
   summary_postrun_path_ = output_dir_ + output_subdir + "/summary_postrun.md";
   QStringList log_paths = (QStringList() << cas_log_path_ << opt_log_path_ << ext_log_path_ << run_state_path_
@@ -105,7 +110,7 @@ void Logger::AddEntry(Loggable *obj) {
 
   // -------------------------------------------------------
   if (verb_vector_[0] >= 3) // idx:0 -> run (Runner)
-    std::cout << "[run]Addding log entry.------" << std::endl;
+    cout << "[run]Addding log entry.------" << endl;
 
   // -------------------------------------------------------
   switch (obj->GetLogTarget()) {
@@ -118,7 +123,7 @@ void Logger::AddEntry(Loggable *obj) {
 
   // -------------------------------------------------------
   if (verb_vector_[0] >= 3) // idx:0 -> run (Runner)
-    std::cout << "[run]Addding log entry (end)." << std::endl;
+    cout << "[run]Addding log entry (end)." << endl;
 }
 
 // =========================================================
@@ -165,7 +170,7 @@ void Logger::logCase(Loggable *obj) {
 
   // -------------------------------------------------------
   if (verb_vector_[0] >= 3) // idx:0 -> run (Runner)
-    std::cout << "[run]Writing to log:--------- " << str << std::endl;
+    cout << "[run]Writing to log:--------- " << str << endl;
   return;
 }
 
@@ -181,6 +186,8 @@ void Logger::logOptimizer(Loggable *obj) {
   entry << setw(opt_log_col_widths_["TimeEl"]) << timespan_string(obj->GetState()["TimeEl"][0]) << " , ";
   entry << setw(opt_log_col_widths_["TimeIt"]) << timespan_string(obj->GetState()["TimeIt"][0]) << " , ";
   entry.precision(0);
+
+  // -------------------------------------------------------
   entry << fixed << setfill('0') << setw(opt_log_col_widths_["IterNr"]) << obj->GetValues()["IterNr"][0] << " , ";
   entry << fixed << setfill('0') << setw(opt_log_col_widths_["TotlNr"]) << obj->GetValues()["TotlNr"][0] << " , ";
   entry << fixed << setfill('0') << setw(opt_log_col_widths_["EvalNr"]) << obj->GetValues()["EvalNr"][0] << " , ";
@@ -189,7 +196,9 @@ void Logger::logOptimizer(Loggable *obj) {
   entry << fixed << setfill('0') << setw(opt_log_col_widths_["FailNr"]) << obj->GetValues()["FailNr"][0] << " , ";
   entry << fixed << setfill('0') << setw(opt_log_col_widths_["InvlNr"]) << obj->GetValues()["InvlNr"][0] << " , ";
   entry.precision(6);
-  entry << setw(opt_log_col_widths_["CBOFnV"]) << scientific << obj->GetValues()["CBOFnV"][0] << " , ";
+  entry << setw(opt_log_col_widths_["CBOFnV"])
+        << scientific << obj->GetValues()["CBOFnV"][0] << " , ";
+
   entry.precision(0);
   entry << obj->GetId().toString().toStdString();
   string str = entry.str();
@@ -200,7 +209,7 @@ void Logger::logOptimizer(Loggable *obj) {
 
   // -------------------------------------------------------
   if (verb_vector_[0] >= 3) // idx:0 -> run (Runner)
-    std::cout << "[run]Writing to log (optz):-- " << str << std::endl;
+    cout << "[run]Writing to log (optz):-- " << str << endl;
   return;
 }
 
@@ -350,10 +359,12 @@ void Logger::logSummary(Loggable *obj) {
     sum_mod_valmap_ = obj->GetValues();
 
   } else if (obj->GetState().count("verbosity") > 0) {
+
     sum_rts_statemap_ = obj->GetState();
     sum_rts_valmap_ = obj->GetValues();
 
   } else {
+
     sum_opt_statemap_ = obj->GetState();
     sum_opt_valmap_ = obj->GetValues();
   }
@@ -380,6 +391,7 @@ void Logger::FinalizePrerunSummary() {
   sum << "## Run-time settings" << "\n\n";
   sum << "| Setting                        | Value                |\n";
   sum << "| ------------------------------ | -------------------- |\n";
+
   for (auto entry : sum_rts_statemap_) {
     if (entry.first.compare(0, 4, "path") != 0)
       sum << "| " << entry.first << setw(33-entry.first.size()) << right
@@ -454,6 +466,7 @@ void Logger::FinalizePostrunSummary() {
   // -------------------------------------------------------
   if (!write_logs_ || is_worker_) return;
 
+  // -------------------------------------------------------
   collectExtendedLogs(); // Collect all the extended json logs into one
 
   stringstream sum;
@@ -468,7 +481,7 @@ void Logger::FinalizePostrunSummary() {
   sum << "\n";
 
   // -------------------------------------------------------
-  // ==> Breif summary table <==
+  // ==> Brief summary table <==
   sum << "| Key                  | Value                          |\n";
   sum << "| -------------------- | ------------------------------ |\n";
   for (auto item : sum_opt_statemap_) {
@@ -495,6 +508,7 @@ void Logger::FinalizePostrunSummary() {
   sum << "## Best Case\n\n";
   sum << "| Property | Value |\n";
   sum << "| ------------------------------ | ---------------------------------------- |\n";
+
   for (auto item : sum_opt_statemap_) {
     if (item.first.compare(0, 2, "bc") == 0) { // Taking best case entries
       string key = item.first;
@@ -513,6 +527,7 @@ void Logger::FinalizePostrunSummary() {
     appendWellDescription(w, sum);
   }
 
+  // -------------------------------------------------------
   sum << "### Compdat\n\n";
   sum << "```\n";
   sum << sum_mod_statemap_["compdat"] << "\n";

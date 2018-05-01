@@ -1,29 +1,33 @@
-/******************************************************************************
-   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
+/***********************************************************
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
 
-   This file is part of the FieldOpt project.
+ This file is part of the FieldOpt project.
 
-   FieldOpt is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+ FieldOpt is free software: you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation, either version
+ 3 of the License, or (at your option) any later version.
 
-   FieldOpt is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+ FieldOpt is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty
+ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
-******************************************************************************/
+ You should have received a copy of the
+ GNU General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
 
 // ---------------------------------------------------------
 #ifndef MODEL_H
 #define MODEL_H
 
 // ---------------------------------------------------------
+// QT / STD
 #include <QString>
 #include <QList>
+#include <iomanip>
 
 // ---------------------------------------------------------
 #include "Reservoir/grid/eclgrid.h"
@@ -34,12 +38,24 @@
 #include "Model/wells/wellbore/wellblock.h"
 #include "Runner/loggable.hpp"
 #include "Runner/logger.h"
+#include "Utilities/colors.hpp"
+
+#include "wells/drilling_sequence.h"
+#include "wells/control.h"
+ #include "wells/well_group.h"
 
 // ---------------------------------------------------------
 #include "FieldOpt-WellIndexCalculator/resinxx/well_path.h"
 
 // ---------------------------------------------------------
 class Logger;
+
+// ---------------------------------------------------------
+//namespace Model {
+//namespace WellGroups {
+//class WellGroup;
+//}
+//}
 
 // ---------------------------------------------------------
 namespace Model {
@@ -55,6 +71,7 @@ class Model : public Loggable
 {
   // -------------------------------------------------------
   friend class ModelSynchronizationObject;
+
  public:
   // -------------------------------------------------------
   Model(::Settings::Model *settings,
@@ -87,19 +104,28 @@ class Model : public Loggable
   { return variable_container_; }
 
   // -------------------------------------------------------
-  /*!
-   * \brief wells Get a list of all the wells in the model.
-   */
-  QList<Wells::Well *> *wells() const { return wells_; }
+  // QList<Wells::Well *> *wells_in_group(int gnr) const
+  // { return well_groups_->at(gnr)->wells_; }
+
+  QList<WellGroups::WellGroup *> *well_groups() const
+  { return well_groups_; }
 
   // -------------------------------------------------------
   /*!
-   * \brief ApplyCase Applies the variable values from a
-   * case to the variables in the model.
+   * \brief wells Get a list of all the wells in the model.
+   */
+  QList<Wells::Well *> *wells() const {
+    return wells_;
+  }
+
+  // -------------------------------------------------------
+  /*!
+   * \brief ApplyCase Applies the variable values
+   * from a case to the variables in the model.
    * \param c Case to apply the variable values of.
    */
-  void ApplyCase(Optimization::Case *c);
-  void ApplyCase(Optimization::Case *c, int rank);
+  void ApplyCase(Optimization::Case *c,
+                 int rank=0);
 
   // -------------------------------------------------------
   /*!
@@ -113,7 +139,9 @@ class Model : public Loggable
   void SetCompdatString(const QString compdat)
   { compdat_ = compdat; };
 
-  void SetResult(const std::string key, std::vector<double> vec);
+  // -------------------------------------------------------
+  void SetResult(const std::string key,
+                 std::vector<double> vec);
 
   // -------------------------------------------------------
   /*!
@@ -122,16 +150,33 @@ class Model : public Loggable
    */
   void Finalize();
 
+  // -------------------------------------------------------
+  /*!
+   * @brief
+   */
+  void SetDrillingSeq();
+  void GetDrillingStr();
+
+  void UpdateNamevsTimeMap();
+  void SetDrillTimeVec();
+  void InsertDrillingTStep();
+
  private:
   // -------------------------------------------------------
   Reservoir::Grid::Grid *grid_;
   Properties::VariablePropertyContainer *variable_container_;
+
   QList<Wells::Well *> *wells_;
+  QList<WellGroups::WellGroup *> *well_groups_;
+
 
   // -------------------------------------------------------
   RICaseData* ricasedata_;
   // RIReaderECL rireaderecl_;
   // RIGrid* rigrid_;
+
+  // Drilling *drillseq_;
+  DrillingSequence *drilling_seq_;
 
   // -------------------------------------------------------
   /*!
@@ -145,8 +190,8 @@ class Model : public Loggable
 
   // -------------------------------------------------------
   Logger *logger_;
-  Settings::Model *settings_;
   QUuid current_case_id_;
+  Settings::Model* settings_;
 
   // -------------------------------------------------------
   /*!
@@ -162,6 +207,11 @@ class Model : public Loggable
    * the one performed with the current case).
    */
   std::map<std::string, std::vector<double>> results_;
+
+  // -------------------------------------------------------
+//  void CreateWells();
+  void CreateWellGroups();
+
 
   // -------------------------------------------------------
   class Summary : public Loggable {

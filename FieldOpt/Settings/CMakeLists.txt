@@ -26,7 +26,7 @@ target_link_libraries(settings
 
 # Target include directories ===========================================
 target_include_directories(settings PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 
 # Compile options ======================================================
 add_compile_options(-std=c++11)
@@ -53,10 +53,10 @@ endif()
 
 # Install targets ======================================================
 install( TARGETS settings
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib/static
-        )
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib/static
+    )
 
 # Debug: include dirs ==================================================
 include(../InclDirDbg.cmake)

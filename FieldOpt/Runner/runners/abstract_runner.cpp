@@ -152,7 +152,8 @@ void AbstractRunner::InitializeSimulator() {
 
   // -------------------------------------------------------
   if (model_ == 0)
-    throw std::runtime_error("The Model must be initialized before the simulator.");
+    throw std::runtime_error(
+        "The Model must be initialized before the simulator.");
 
   // -------------------------------------------------------
   switch (settings_->simulator()->type()) {
@@ -181,7 +182,8 @@ void AbstractRunner::InitializeSimulator() {
       // ---------------------------------------------------
     default:
       throw std::runtime_error(
-          "Unable to initialize runner: simulator set in driver file not recognized.");
+          "Unable to initialize runner: simulator "
+              "set in driver file not recognized.");
   }
 
   // -------------------------------------------------------

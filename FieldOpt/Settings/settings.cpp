@@ -61,6 +61,7 @@ Settings::Settings(QString driver_path,
   driver_path_ = driver_path;
   readDriverFile();
 
+  // -------------------------------------------------------
   output_directory_ = output_directory;
   simulator_->output_directory_ = output_directory;
   optimizer_->output_dir_ = output_directory;
@@ -71,10 +72,14 @@ QString Settings::GetLogCsvString() const {
 
   QStringList header  = QStringList();
   QStringList content = QStringList();
+
+  // -------------------------------------------------------
   header  << "name"
           << "maxevals"
           << "initstep"
           << "minstep";
+
+  // -------------------------------------------------------
   content << name_
           << QString::number(optimizer_->parameters().max_evaluations)
           << QString::number(optimizer_->parameters().initial_step_length)
@@ -86,26 +91,34 @@ QString Settings::GetLogCsvString() const {
 // =========================================================
 void Settings::readDriverFile() {
 
+  // -------------------------------------------------------
   QFile *file = new QFile(driver_path_);
   if (!file->open(QIODevice::ReadOnly))
-    throw DriverFileReadException("Unable to open the driver file");
+    throw DriverFileReadException(
+        "Unable to open the driver file");
 
+  // -------------------------------------------------------
   QByteArray data = file->readAll();
 
+  // -------------------------------------------------------
   QJsonDocument json = QJsonDocument::fromJson(data);
   if (json.isNull())
     throw DriverFileJsonParsingException(
         "Unable to parse the input file to JSON.");
 
+  // -------------------------------------------------------
   if (!json.isObject())
     throw DriverFileFormatException(
         "Driver file format incorrect. Must be a JSON object.");
 
+  // -------------------------------------------------------
   json_driver_ = new QJsonObject(json.object());
 
   readGlobalSection();
   readSimulatorSection();
   readModelSection();
+
+  readOptimizationSection();
   readOptimizerSection();
 
   file->close();
@@ -116,117 +129,279 @@ void Settings::readGlobalSection() {
 
   try {
 
-    QJsonObject global = json_driver_->value("Global").toObject();
+    // -----------------------------------------------------
+    QJsonObject global =
+        json_driver_->value("Global").toObject();
+
     name_ = global["Name"].toString();
+
     bookkeeper_tolerance_ = global["BookkeeperTolerance"].toDouble();
 
+    // -----------------------------------------------------
     if (bookkeeper_tolerance_ < 0.0) {
       throw UnableToParseGlobalSectionException(
           "The bookkeeper tolerance must be a positive number.");
     }
 
+    // -----------------------------------------------------
   } catch (std::exception const &ex) {
     throw UnableToParseGlobalSectionException(
-        "Unable to parse driver file global section: " + string(ex.what()));
+        "Unable to parse driver file global section: "
+            + string(ex.what()));
+  }
+
+  if (verb_vector_[9] > 0){
+      string str_out = "[set]Global settings---";
+      cout << "\n" << BLDON << str_out << AEND << "\n"
+           << std::string(str_out.length(), '=') << endl;
+    // -----------------------------------------------------
+      cout << "Name:------------------ "
+           << name_.toStdString() << endl;
+
+
+    // -----------------------------------------------------
+      cout << "BookkeeperTolerance:--- "
+           << bookkeeper_tolerance() << endl;
   }
 }
 
 // =========================================================
 void Settings::readSimulatorSection() {
 
+  // -------------------------------------------------------
   // Simulator root
+  QJsonObject json_simulator;
+
   try {
-    QJsonObject json_simulator = json_driver_->value("Simulator").toObject();
+
+    // -----------------------------------------------------
+    json_simulator =
+        json_driver_->value("Simulator").toObject();
     simulator_ = new Simulator(json_simulator);
-  }
-  catch (std::exception const &ex) {
+
+    // -----------------------------------------------------
+  } catch (std::exception const &ex) {
     throw UnableToParseSimulatorSectionException(
-        "Unable to parse driver file simulator section: " + string(ex.what()));
+        "Unable to parse driver file "
+            "simulator section: " + string(ex.what()));
   }
 
   // -------------------------------------------------------
   simulator_->set_verbosity_vector(verb_vector());
   if (simulator_->verb_vector_[9] > 0) { // idx:9 -> set (Settings)
+
+    // -----------------------------------------------------
     string str_out = "[set]Simulator settings";
     cout << "\n" << BLDON << str_out << AEND << "\n"
          << std::string(str_out.length(), '=') << endl;
+
+    // -----------------------------------------------------
+    cout << "VerbosityVector:------- ";
+    for (int i=0; i < simulator_->verb_vector_.size(); i++) {
+      cout << simulator_->verb_vector_[i] << " ";
+    }
+    cout << endl;
+
+    // -----------------------------------------------------
+    cout << "SimulatorType:--------- "
+         << json_simulator["Type"].toString().toUtf8().constData() << endl;
+
+    // -----------------------------------------------------
+    cout << "FluidModel:------------ "
+         << json_simulator["FluidModel"].toString().toUtf8().constData() << endl;
+
+
+    // -----------------------------------------------------
+    cout << "MaxMinutes:------------ "
+         << simulator_->max_minutes_ << endl;
   }
 }
 
 // =========================================================
-void Settings::readOptimizerSection() {
+void Settings::readOptimizationSection() {
+
+  // -------------------------------------------------------
   try {
-    QJsonObject optimizer = json_driver_->value("Optimizer").toObject();
+    QJsonObject optimization =
+        json_driver_->value("Optimization").toObject();
+    optimization_ = new Optimization(optimization);
+  }
+  catch (std::exception const &ex) {
+    throw UnableToParseOptimizerSectionException(
+        "Unable to parse driver file Optimizaton section: "
+            + string(ex.what()));
+  }
+
+  // Fields:
+  // -Optimizers
+  // -Optimization structure:
+  // -Variable assignment, i.e., which optimizers that
+  // should deal with which variable types (no overlap
+  // possible); types refers to either intrinsic or
+  // extrinsic variable types, e.g., distinction by
+  // continuous, discrete and/or categorical; and
+  // well placement, well controls, completions, etc.
+
+
+}
+
+// =========================================================
+void Settings::readOptimizerSection() {
+
+  // -------------------------------------------------------
+  try {
+    QJsonObject optimizer =
+        json_driver_->value("Optimizer").toObject();
     optimizer_ = new Optimizer(optimizer);
   }
   catch (std::exception const &ex) {
     throw UnableToParseOptimizerSectionException(
-        "Unable to parse driver file optimizer section: " + string(ex.what()));
+        "Unable to parse driver file optimizer section: "
+            + string(ex.what()));
   }
 
+  // -------------------------------------------------------
   optimizer_->set_verbosity_vector(verb_vector());
-  if (optimizer_->verb_vector_[9] > 0) { // idx:9 -> set (Settings)
+  if (optimizer_->verb_vector_[9] > 0) { // idx:9 -> set
+
+    // -----------------------------------------------------
     string str_out = "[set]Optimizer settings";
     cout << "\n" << BLDON << str_out << AEND << "\n"
          << std::string(str_out.length(), '=') << endl;
+
+    // -----------------------------------------------------
     if (optimizer_->type() == Optimizer::OptimizerType::Compass ||
         optimizer_->type() == Optimizer::OptimizerType::APPS) {
+
+      // ---------------------------------------------------
       cout << fixed << setprecision(1);
-      cout << "MaxEvaluations:-------- " << optimizer_->parameters_.max_evaluations << endl;
-      cout << "InitialStepLength:----- " << optimizer_->parameters_.initial_step_length << endl;
+      cout << "MaxEvaluations:-------- "
+           << optimizer_->parameters_.max_evaluations << endl;
+      cout << "InitialStepLength:----- "
+           << optimizer_->parameters_.initial_step_length << endl;
+
+      // ---------------------------------------------------
       cout << "InitialStepLengthXYZ:-- ";
-      for( int i=0; i<optimizer_->parameters_.initial_step_length_xyz.count(); ++i ) {
+      for(int i=0; i<optimizer_->
+          parameters_.initial_step_length_xyz.count(); ++i ) {
         cout << optimizer_->parameters_.initial_step_length_xyz[i] << " ";
       }
       cout << endl;
-      cout << "MinimumStepLength:----- " << optimizer_->parameters_.minimum_step_length << endl;
+
+      // ---------------------------------------------------
+      cout << "MinimumStepLength:----- "
+           << optimizer_->parameters_.minimum_step_length << endl;
       cout << "MinimumStepLengthXYZ:-- ";
-      for( int i=0; i<optimizer_->parameters_.minimum_step_length_xyz.count(); ++i ) {
+      for(int i=0; i<optimizer_->
+          parameters_.minimum_step_length_xyz.count(); ++i ) {
         cout << optimizer_->parameters_.minimum_step_length_xyz[i] << " ";
       }
       cout << endl;
+
+      // ---------------------------------------------------
       cout << fixed << setprecision(8);
-      cout << "ContractionFactor:----- " << optimizer_->parameters_.contraction_factor << endl;
-      cout << "ExpansionFactor:------- " << optimizer_->parameters_.expansion_factor << endl;
+      cout << "ContractionFactor:----- "
+           << optimizer_->parameters_.contraction_factor << endl;
+      cout << "ExpansionFactor:------- "
+           << optimizer_->parameters_.expansion_factor << endl;
+
+      // ---------------------------------------------------
       cout << fixed << setprecision(1);
-      cout << "MaxQueueSize:---------- " << optimizer_->parameters_.max_queue_size << endl;
-      cout << "Pattern:--------------- " << optimizer_->parameters_.pattern.toStdString() << endl;
+      cout << "MaxQueueSize:---------- "
+           << optimizer_->parameters_.max_queue_size << endl;
+      cout << "Pattern:--------------- "
+           << optimizer_->parameters_.pattern.toStdString() << endl;
+
     } else if (optimizer_->type() == Optimizer::OptimizerType::SNOPTSolver) {
+
+      // ---------------------------------------------------------
       cout << fixed << setprecision(1);
-      cout << "Option file:----------- " << optimizer_->parameters_.thrdps_optn_file.toStdString() << endl;
-      cout << "Summary file:---------- " << optimizer_->parameters_.thrdps_smry_file.toStdString() << endl;
-      cout << "Print file:------------ " << optimizer_->parameters_.thrdps_prnt_file.toStdString() << endl;
-    } else if (optimizer_->type() == Optimizer::OptimizerType::GeneticAlgorithm) {
-    } else if (optimizer_->type() == Optimizer::OptimizerType::DFO){
-      cout << "InitialTrustRegionRadius" << optimizer_->parameters_.initial_trust_region_radius << endl;
+      cout << "Option file:----------- "
+           << optimizer_->parameters_.thrdps_optn_file.toStdString() << endl;
+      cout << "Summary file:---------- "
+           << optimizer_->parameters_.thrdps_smry_file.toStdString() << endl;
+      cout << "Print file:------------ "
+           << optimizer_->parameters_.thrdps_prnt_file.toStdString() << endl;
+
+    } else if (optimizer_->type() ==
+        Optimizer::OptimizerType::GeneticAlgorithm) {
+
+      cout << fixed << setprecision(1);
+      cout << "DecayRate:------------- "
+           << optimizer_->parameters_.decay_rate << endl;
+      // ---------------------------------------------------------
+      cout << "MutationStrength:------ "
+           << optimizer_->parameters_.mutation_strength << endl;
+      // ---------------------------------------------------------
+      cout << "MaxGenerations:-------- "
+           << optimizer_->parameters_.max_generations << endl;
+      // ---------------------------------------------------------
+      cout << "PopulationSize:-------- "
+           << optimizer_->parameters_.population_size << endl;
+      // ---------------------------------------------------------
+      cout << "PopulationCrossover:--- "
+           << optimizer_->parameters_.p_crossover << endl;
+
+
+
+
+    } else if (optimizer_->type() ==
+        Optimizer::OptimizerType::DFO){
+
+      // ---------------------------------------------------------
+      cout << "InitialTrustRegionRadius"
+           << optimizer_->parameters_.initial_trust_region_radius << endl;
     }
 
   }
 }
 
-// =========================================================
+// ===============================================================
 void Settings::readModelSection() {
 
+  // -------------------------------------------------------------
   try {
     QJsonObject model = json_driver_->value("Model").toObject();
-    model_ = new Model(model, simulator_->driver_file_path_);
+    model_ = new Model(model,
+    simulator_->driver_file_path_,
+    verb_vector());
   }
   catch (std::exception const &ex) {
     throw UnableToParseModelSectionException(
         "Unable to parse model section: " + string(ex.what()));
   }
 
-  model_->set_verbosity_vector(verb_vector());
+  // -------------------------------------------------------------
   if (model_->verb_vector_[9] > 0) { // idx:9 -> set (Settings)
-    string str_out = "[set]model_ settings---";
+    string str_out = "[set]model settings----";
     cout << "\n" << BLDON << str_out << AEND << "\n"
          << std::string(str_out.length(), '=') << endl;
+
+    // ---------------------------------------------------------
+    // Reservoir type
+    cout << fixed << setprecision(1);
+    cout << "Reservoir type:-------- "
+         << model_->ResTypeStr(
+             model_->reservoir_.type).toStdString() << endl;
+
+    // ---------------------------------------------------------
+    // Drilling type
+    cout << "Drilling mode:--------- "
+         << model_->DrillingStr(
+             model_->drillingMode_).toStdString() << endl;
+
+    // ---------------------------------------------------------
+    // Drilling sequence
+    // cout << "Drilling sequence:----- " << endl;
+    // model_->GetDrillingStr(model_->drillseq_);
+
   }
 }
 
-// =========================================================
+// ===============================================================
 void Settings::set_build_path(const QString &build_path) {
 
+  // -------------------------------------------------------------
   if (!Utilities::FileHandling::DirectoryExists(build_path))
     throw std::runtime_error(
         "Attempted to set the build path to a non-existent directory.");

@@ -45,8 +45,10 @@
 
 // ---------------------------------------------------------
 using namespace std;
+using std::cout;
+using std::endl;
 
-// ---------------------------------------------------------
+// =========================================================
 /*!
  * \brief The Logger class is responsible for writing CSV and
  * JSON logs to the disk.

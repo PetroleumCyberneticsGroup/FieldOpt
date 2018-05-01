@@ -36,7 +36,7 @@ Note that
 
 * All sub-objects (`Global`, `Model`, etc.) are inside an outer object.
 * All the sub-objects must be present.
-* The order of the sub-objects does not matter.
+* The name_vs_order of the sub-objects does not matter.
 
 In the following sections we describe which and how fields must be defined in the sub-objects. An example driver file is found [here](../../GTest/Utilities/driver/driver.json).
 
@@ -223,7 +223,7 @@ Note that the simulator driver path may be omitted from the driver file. If it i
 
 * `Type` denotes the simulator to be used. Currently, the only supported simulatorsare `ECLIPSE` and `ADGPRS`.
 * `MaxMinutes` is the maximum number of minutes a simulation is allowed to run if a "normal" timeout value cannot be calculated.
-* `Commands` is an array of (BASH) commands that should be executed in order to start the simulator.
+* `Commands` is an array of (BASH) commands that should be executed in name_vs_order to start the simulator.
 * `ExecutionScript` is the name of a script found in the `FieldOpt/execution_scripts` folder that should be used to execute simulations. The name should be given without the suffix (e.g. `"ExecutionScript": "csh_eclrun"`). If defined, this will override any commands given.
 * `DriverPath` is the path to a complete driver file for the model (e.g. the one run to generate the grid files). Fluid functions, rock properties etc. is taken from this file. This may be omitted.
 * `FluidModel` defines the fluid model to be used by the simulator. This setting must correspond to what is used in the initial simulator driver file. Alternatives are `DeadOil` and `BlackOil`; the setting defaults to `BlackOil`.

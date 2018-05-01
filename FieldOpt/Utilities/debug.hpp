@@ -472,7 +472,7 @@ void inline print_dbg_msg_wic_ri(string fstr, // function str
                                  int cl = 1, // current level for dbg msg to print
                                  int tl = 2 ) {// threshhold level for dbg msg to print
 
-  if (cl > tl) {
+ if (cl > tl) {
 
     stringstream ss0, ss1;
     if (el) {

@@ -1,8 +1,8 @@
 /***********************************************************
- Created: 12.11.2015 2015 by einar
+ Copyright (C) 2018-
+ Mathias C. Bellout <mathias.bellout@ntnu.com>
 
- Copyright (C) 2015-2017
- Einar J.M. Baumann <einar.baumann@gmail.com>
+ Created by bellout on 4/23/18.
 
  This file is part of the FieldOpt project.
 
@@ -22,35 +22,47 @@
 ***********************************************************/
 
 // ---------------------------------------------------------
-#include "ecldriverpart.h"
+#ifndef FIELDOPT_OPTIMIZATION_H
+#define FIELDOPT_OPTIMIZATION_H
 
 // ---------------------------------------------------------
-namespace Simulation {
-namespace SimulatorInterfaces {
-namespace DriverFileWriters {
-namespace DriverParts {
-namespace ECLDriverParts {
+#include "settings.h"
+
+// ---------------------------------------------------------
+// QT / STD
+#include <QString>
+#include <QList>
+#include <QJsonArray>
+#include <assert.h>
+#include <string>
+#include <map>
+#include <vector>
+
+// ---------------------------------------------------------
+namespace Settings {
 
 // =========================================================
-void ECLDriverPart::initializeBaseEntryLine(int n) {
+class Optimization {
+  // ---------------------------------------------------------
+  friend class Settings;
 
-  // -------------------------------------------------------
-  base_entry_line_ = QStringList();
-  while (base_entry_line_.size() < n) {
-    base_entry_line_.append("1*");
-  }
+ public:
+  // ---------------------------------------------------------
+  Optimization(QJsonObject json_model);
+
+  struct Optimizers {
+    QString name;
+  };
+
+  struct VariableTypes {
+    QString name;
+  };
+
+//  QJsonArray json_optimizers;
+//  QJsonArray json_var_assignment;
+
+};
+
 }
 
-QStringList ECLDriverPart::GetBaseEntryLine(const int n) const {
-    auto base_entry_line = QStringList();
-    while (base_entry_line.size() < n) {
-        base_entry_line.append("1*");
-    }
-    return base_entry_line;
-}
-
-}
-}
-}
-}
-}
+#endif //FIELDOPT_OPTIMIZATION_H

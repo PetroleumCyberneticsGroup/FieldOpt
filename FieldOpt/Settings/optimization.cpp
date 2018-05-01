@@ -1,8 +1,8 @@
 /***********************************************************
- Created: 12.11.2015 2015 by einar
+ Copyright (C) 2018-
+ Mathias C. Bellout <mathias.bellout@ntnu.com>
 
- Copyright (C) 2015-2017
- Einar J.M. Baumann <einar.baumann@gmail.com>
+ Created by bellout on 4/23/18.
 
  This file is part of the FieldOpt project.
 
@@ -22,35 +22,32 @@
 ***********************************************************/
 
 // ---------------------------------------------------------
-#include "ecldriverpart.h"
+#include <iostream>
 
 // ---------------------------------------------------------
-namespace Simulation {
-namespace SimulatorInterfaces {
-namespace DriverFileWriters {
-namespace DriverParts {
-namespace ECLDriverParts {
+#include "optimization.h"
+
+// ---------------------------------------------------------
+using std::cout;
+using std::endl;
+
+// ---------------------------------------------------------
+namespace Settings {
 
 // =========================================================
-void ECLDriverPart::initializeBaseEntryLine(int n) {
+Optimization::Optimization(QJsonObject json_optimization) {
 
-  // -------------------------------------------------------
-  base_entry_line_ = QStringList();
-  while (base_entry_line_.size() < n) {
-    base_entry_line_.append("1*");
-  }
-}
+  QJsonArray json_optimizers =
+      json_optimization["Optimizers"].toArray();
 
-QStringList ECLDriverPart::GetBaseEntryLine(const int n) const {
-    auto base_entry_line = QStringList();
-    while (base_entry_line.size() < n) {
-        base_entry_line.append("1*");
-    }
-    return base_entry_line;
-}
+  QJsonArray json_var_assignment =
+      json_optimization["VariableAssignment"].toArray();
+
+  QJsonArray json_opt_structure =
+      json_optimization["OptStructure"].toArray();
+
+  // optimizers_ = QList<Constraint>();
 
 }
-}
-}
-}
+
 }

@@ -1,21 +1,23 @@
-/******************************************************************************
-   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
+/***********************************************************
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
 
-   This file is part of the FieldOpt project.
+ This file is part of the FieldOpt project.
 
-   FieldOpt is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+ FieldOpt is free software: you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation, either version
+ 3 of the License, or (at your option) any later version.
 
-   FieldOpt is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+ FieldOpt is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty
+ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
-******************************************************************************/
+ You should have received a copy of the GNU
+ General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
 
 // ---------------------------------------------------------
 #ifndef CASE_H
@@ -146,12 +148,18 @@ class Case : public Loggable
 
   // -------------------------------------------------------
   // Differentiate vars by intrinsic type
-  QHash<QUuid, bool> binary_variables() const { return binary_variables_; }
-  QHash<QUuid, int> integer_variables() const { return integer_variables_; }
-  QHash<QUuid, double> real_variables() const { return real_variables_; }
+  QHash<QUuid, bool> binary_variables() const
+  { return binary_variables_; }
+
+  QHash<QUuid, int> integer_variables() const
+  { return integer_variables_; }
+
+  QHash<QUuid, double> real_variables() const
+  { return real_variables_; }
 
   // Differentiate vars by extrinsic type
-  QHash<QUuid, double> real_wspline_vars() const { return real_wspline_vars_; }
+  QHash<QUuid, double> real_wspline_vars() const
+  { return real_wspline_vars_; }
 
   // -------------------------------------------------------
   void set_binary_variables(const QHash<QUuid, bool> &binary_variables)
@@ -168,8 +176,8 @@ class Case : public Loggable
 
   // -------------------------------------------------------
   /*!
-   * \brief Get objective function value. Throws an exception
-   * if the value has not been defined.
+   * \brief Get objective function value. Throws an
+   * exception if the value has not been defined.
    */
   double objective_function_value() const;
 
@@ -272,13 +280,14 @@ class Case : public Loggable
   /*!
    * Get the integer variables of this case as a Vector.
    *
-   * @note This function will not work with Case objects created from
-   * CaseTransferObject. This implies that, when running in parallel,
-   * it will only work on the main process.
+   * @note This function will not work with Case objects
+   * created from CaseTransferObject. This implies that,
+   * when running in parallel, it will only work on the
+   * main process.
    *
-   * This creates an ordering of the variables so that for future
-   * use the i'th index in the vector will always correspond to the
-   * same variable.
+   * This creates an ordering of the variables so that
+   * for future use the i'th index in the vector will
+   * always correspond to the same variable.
    *
    * @return Values of the integer variables in a vector
    */

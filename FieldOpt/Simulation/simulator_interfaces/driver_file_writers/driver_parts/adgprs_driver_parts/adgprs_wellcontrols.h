@@ -14,7 +14,8 @@ namespace AdgprsDriverParts {
 class WellControls : public ECLDriverParts::WellControls
 {
 public:
-    WellControls(QList<Model::Wells::Well *> *wells, QList<int> control_times);
+    WellControls(QList<Model::Wells::Well *> *wells,
+                 QList<double> control_times);
 
 
     // DriverPart interface

@@ -24,7 +24,7 @@ CompassSearch::CompassSearch(Settings::Optimizer *settings,
 
   // -------------------------------------------------------
   directions_ = GSSPatterns::Compass(num_vars_);
-  GSS::print_dbg_msg("[opt]Init. CompassSearch.----- ", 1);
+  GSS::print_dbg_msg_d("[opt]Init. CompassSearch.---- ", 1);
 
   // -------------------------------------------------------
   set_step_lengths();
@@ -88,20 +88,35 @@ QString CompassSearch::GetStatusString() const {
   if(settings_->parameters().initial_step_length_xyz.length() > 0) {
 
     vector<double> stepx, stepy, stepz;
+
+    // -----------------------------------------------------
     for (int i = 0; i < realvar_uuid_.length(); ++i) {
+
       auto prop = varcont_->GetContinousVariable(realvar_uuid_[i]);
-      if (prop->propertyInfo().spline_end == Model::Properties::Property::SplineEnd::Heel ||
-          prop->propertyInfo().spline_end == Model::Properties::Property::SplineEnd::Toe) {
+
+      // ---------------------------------------------------
+      if (prop->propertyInfo().spline_end ==
+          Model::Properties::Property::SplineEnd::Heel ||
+          prop->propertyInfo().spline_end ==
+              Model::Properties::Property::SplineEnd::Toe) {
+
+        // -------------------------------------------------
         switch (prop->propertyInfo().coord) {
+
+          // -----------------------------------------------
           case Model::Properties::Property::Coordinate::x:
             stepx.push_back(step_lengths_[i]);
-            break;// x
+            break; // x
+
+            // ---------------------------------------------
           case Model::Properties::Property::Coordinate::y:
             stepy.push_back(step_lengths_[i]);
-            break;// y
+            break; // y
+
+            // ---------------------------------------------
           case Model::Properties::Property::Coordinate::z:
             stepz.push_back(step_lengths_[i]);
-            break;// z
+            break; // z
         }
       }
     }
