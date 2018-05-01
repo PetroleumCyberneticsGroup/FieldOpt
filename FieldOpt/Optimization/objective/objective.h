@@ -44,8 +44,9 @@ using std::vector;
 
 // =========================================================
 /*!
- * \brief The Objective class defines an interface for objective functions.
- * It cannot be instantiated on its own.
+ * \brief The Objective class defines an interface for
+ * objective functions. It cannot be instantiated on
+ * its own.
  */
 class Objective
 {

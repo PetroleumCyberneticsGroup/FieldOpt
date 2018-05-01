@@ -154,11 +154,11 @@ class Simulator
 
   // Path to the directory containing
   // the main driver file.
-  QString initial_driver_file_parent_dir_path_;
+  QString init_driver_file_parent_dir_path_;
 
   // The name of the directory containing
   // the initial main driver file.
-  QString initial_driver_file_parent_dir_name_;
+  QString init_driver_file_parent_dir_name_;
 
   // -------------------------------------------------------
   // The directory in which to write new
@@ -167,7 +167,11 @@ class Simulator
 
   QString initial_driver_file_path_opt_;
 
-  QString initial_sim_include_dir_path_;
+  // -------------------------------------------------------
+  // SIM INCLUDE DIR VARIANTS (PATH + NAME)
+  QString init_sim_incl_dir_path_;
+
+  QString init_sim_incl_dir_name_;
 
   // -------------------------------------------------------
   // Path to the schedule file. This file will

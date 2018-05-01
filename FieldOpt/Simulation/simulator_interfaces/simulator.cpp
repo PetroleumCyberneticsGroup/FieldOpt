@@ -31,6 +31,8 @@ namespace SimulatorInterfaces {
 
 // ---------------------------------------------------------
 using namespace Utilities::FileHandling;
+using std::cout;
+using std::endl;
 
 // =========================================================
 Simulator::Simulator(Settings::Settings *settings) {
@@ -48,11 +50,19 @@ Simulator::Simulator(Settings::Settings *settings) {
 
   // -------------------------------------------------------
   // PARENT DRIVER FILE VARIANTS (PATH + NAME)
-  initial_driver_file_parent_dir_path_ =
+  init_driver_file_parent_dir_path_ =
       settings->simulator()->driver_parent_directory();
 
-  initial_driver_file_parent_dir_name_ =
-      initial_driver_file_parent_dir_path_.split("/").last();
+  init_driver_file_parent_dir_name_ =
+      init_driver_file_parent_dir_path_.split("/").last();
+
+  // -------------------------------------------------------
+  // SIM INCLUDE DIR VARIANTS (PATH + NAME)
+  init_sim_incl_dir_path_ =
+      settings->simulator()->sim_incl_dir_path();
+
+  init_sim_incl_dir_name_ =
+      init_sim_incl_dir_path_.split("/").last();
 
   // -------------------------------------------------------
   initial_schedule_path_ =
@@ -61,40 +71,67 @@ Simulator::Simulator(Settings::Settings *settings) {
   // -------------------------------------------------------
   output_directory_ = settings->output_directory();
 
-  initial_sim_include_dir_path_ = settings();
-
+  // -------------------------------------------------------
   if (settings->build_path().length() > 0) {
     build_dir_ = settings->build_path() + "/";
     assert(DirectoryExists(build_dir_));
   }
 
-  // Use custom execution script if provided in runtime settings, else use the one from json driver file
-  if (settings->simulator()->custom_simulator_execution_script_path().length() > 0)
-    script_path_ = settings->simulator()->custom_simulator_execution_script_path();
-  else
-    script_path_ = build_dir_ + ExecutionScripts::GetScriptPath(settings->simulator()->script_name());
+  // -------------------------------------------------------
+  // Use custom execution script if provided in runtime
+  // settings, else use the one from json driver file
+  if (settings->simulator()->
+      custom_simulator_execution_script_path().length() > 0) {
+
+    script_path_ =
+        settings->simulator()->custom_simulator_execution_script_path();
+
+  } else {
+    script_path_ = build_dir_ +
+        ExecutionScripts::GetScriptPath(settings->simulator()->script_name());
+  }
+
+  // -------------------------------------------------------
   script_args_ = (QStringList() << output_directory_
                                 << output_directory_ + "/" + initial_driver_file_name_
                                 << QString::number(1));
 
   control_times_ = settings->model()->control_times();
 
+  // -------------------------------------------------------
   assert(settings->driver_path().length() > 0);
-  assert(DirectoryExists(initial_driver_file_parent_dir_path_, true));
+  assert(DirectoryExists(init_driver_file_parent_dir_path_, true));
   assert(DirectoryExists(output_directory_, true));
   assert(FileExists(initial_driver_file_path_, true));
-  assert(FileExists(initial_schedule_path_, true) || initial_schedule_path_.length() == 0);
+  assert(FileExists(initial_schedule_path_, true)
+             || initial_schedule_path_.length() == 0);
   assert(FileExists(script_path_, true));
 
+  // -------------------------------------------------------
   if (settings_->verb_vector()[8] > 1) { // idx:8 -> sim (Simulation)
-    std::cout << "[sim]Simulator set up w/:---- " << std::endl
-              << "[sim]init_drvr_file_path_:--- " << initial_driver_file_path_.toStdString() << std::endl
-              << "[sim]init_drvr_file_name_:--- " << initial_driver_file_name_.toStdString() << std::endl
-              << "[sim]script_path_:----------- " << script_path_.toStdString() << std::endl
-              << "[sim]script_args_[0]:-------- " << script_args_.at(0).toStdString() << std::endl
-              << "[sim]script_args_[1]:-------- " << script_args_.at(1).toStdString() << std::endl
-              << "[sim]script_args_[2]:-------- " << script_args_.at(2).toStdString() << std::endl
-              << std::endl;
+    cout << "[sim]Simulator set up w/:---- " << endl
+         // SIM DRIVER FILE NAME
+         << fstr("[sim]init_drvr_file_path_")
+         << initial_driver_file_path_.toStdString() << endl
+         // SIM DRIVER FILE PATH
+         << fstr("[sim]init_drvr_file_name_")
+         << initial_driver_file_name_.toStdString() << endl
+
+         << fstr("[sim]init_sim_incl_dir_name_")
+         << init_sim_incl_dir_name_.toStdString() << endl
+
+         << fstr("[sim]script_path_")
+         << script_path_.toStdString() << endl
+
+         << fstr("[sim]script_args_[0]")
+         << script_args_.at(0).toStdString() << endl
+
+         << fstr("[sim]script_args_[1]")
+         << script_args_.at(1).toStdString() << endl
+
+         << fstr("[sim]script_args_[2]")
+         << script_args_.at(2).toStdString() << endl
+         << endl;
   }
 }
 

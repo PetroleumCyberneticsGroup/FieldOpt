@@ -1,37 +1,63 @@
+/***********************************************************
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
 
-// -----------------------------------------------------------------
+ This file is part of the FieldOpt project.
+
+ FieldOpt is free software: you can redistribute it
+ and/or modify it under the terms of the GNU General
+ Public License as published by the Free Software
+ Foundation, either version 3 of the License, or (at
+ your option) any later version.
+
+ FieldOpt is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the
+ implied warranty of MERCHANTABILITY or FITNESS FOR
+ A PARTICULAR PURPOSE.  See the GNU General Public
+ License for more details.
+
+ You should have received a copy of the GNU
+ General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
+
+// ---------------------------------------------------------
 #include "settings.h"
 #include "settings_exceptions.h"
 #include "Utilities/filehandling.hpp"
 
-// -----------------------------------------------------------------
-// Qt
+// ---------------------------------------------------------
+// QT
 #include <QJsonDocument>
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 // STD
 #include <iostream>
 #include <iomanip>
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 using std::string;
 using std::cout;
 using std::endl;
 using std::fixed;
 using std::setprecision;
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 namespace Settings {
 
+// =========================================================
 Settings::Settings(QString driver_path,
                    QString output_directory,
                    std::vector<int> verb_vector) {
 
+  // -------------------------------------------------------
   set_verbosity_vector(verb_vector);
 
+  // -------------------------------------------------------
   if (!::Utilities::FileHandling::FileExists(driver_path))
     throw FileNotFoundException(driver_path.toStdString());
 
+  // -------------------------------------------------------
   driver_path_ = driver_path;
   readDriverFile();
 
@@ -40,7 +66,7 @@ Settings::Settings(QString driver_path,
   optimizer_->output_dir_ = output_directory;
 }
 
-// -----------------------------------------------------------------
+// =========================================================
 QString Settings::GetLogCsvString() const {
 
   QStringList header  = QStringList();
@@ -57,7 +83,7 @@ QString Settings::GetLogCsvString() const {
   return QString("%1\n%2").arg(header.join(",")).arg(content.join(","));
 }
 
-// -----------------------------------------------------------------
+// =========================================================
 void Settings::readDriverFile() {
 
   QFile *file = new QFile(driver_path_);
@@ -85,24 +111,27 @@ void Settings::readDriverFile() {
   file->close();
 }
 
-// -----------------------------------------------------------------
+// =========================================================
 void Settings::readGlobalSection() {
+
   try {
+
     QJsonObject global = json_driver_->value("Global").toObject();
     name_ = global["Name"].toString();
     bookkeeper_tolerance_ = global["BookkeeperTolerance"].toDouble();
+
     if (bookkeeper_tolerance_ < 0.0) {
       throw UnableToParseGlobalSectionException(
           "The bookkeeper tolerance must be a positive number.");
     }
-  }
-  catch (std::exception const &ex) {
+
+  } catch (std::exception const &ex) {
     throw UnableToParseGlobalSectionException(
         "Unable to parse driver file global section: " + string(ex.what()));
   }
 }
 
-// -----------------------------------------------------------------
+// =========================================================
 void Settings::readSimulatorSection() {
 
   // Simulator root
@@ -115,6 +144,7 @@ void Settings::readSimulatorSection() {
         "Unable to parse driver file simulator section: " + string(ex.what()));
   }
 
+  // -------------------------------------------------------
   simulator_->set_verbosity_vector(verb_vector());
   if (simulator_->verb_vector_[9] > 0) { // idx:9 -> set (Settings)
     string str_out = "[set]Simulator settings";
@@ -123,7 +153,7 @@ void Settings::readSimulatorSection() {
   }
 }
 
-// -----------------------------------------------------------------
+// =========================================================
 void Settings::readOptimizerSection() {
   try {
     QJsonObject optimizer = json_driver_->value("Optimizer").toObject();
@@ -174,7 +204,7 @@ void Settings::readOptimizerSection() {
   }
 }
 
-// -----------------------------------------------------------------
+// =========================================================
 void Settings::readModelSection() {
 
   try {
@@ -194,7 +224,7 @@ void Settings::readModelSection() {
   }
 }
 
-// -----------------------------------------------------------------
+// =========================================================
 void Settings::set_build_path(const QString &build_path) {
 
   if (!Utilities::FileHandling::DirectoryExists(build_path))
