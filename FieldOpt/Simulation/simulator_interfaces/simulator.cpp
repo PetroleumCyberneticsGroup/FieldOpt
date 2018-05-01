@@ -39,16 +39,29 @@ Simulator::Simulator(Settings::Settings *settings) {
   settings_ = settings;
 
   // -------------------------------------------------------
-  // Set initial paths
-  initial_driver_file_path_ = settings->simulator()->driver_file_path();
-  initial_driver_file_name_ = initial_driver_file_path_.split("/").last();
+  // DRIVER FILE VARIANTS (PATH + NAME)
+  initial_driver_file_path_ =
+      settings->simulator()->driver_file_path();
+
+  initial_driver_file_name_ =
+      initial_driver_file_path_.split("/").last();
 
   // -------------------------------------------------------
-  initial_driver_file_parent_dir_path_ = settings->simulator()->driver_parent_directory();
-  initial_driver_file_parent_dir_name_ = initial_driver_file_parent_dir_path_.split("/").last();
+  // PARENT DRIVER FILE VARIANTS (PATH + NAME)
+  initial_driver_file_parent_dir_path_ =
+      settings->simulator()->driver_parent_directory();
 
-  initial_schedule_path_ = settings->simulator()->schedule_file_path();
+  initial_driver_file_parent_dir_name_ =
+      initial_driver_file_parent_dir_path_.split("/").last();
+
+  // -------------------------------------------------------
+  initial_schedule_path_ =
+      settings->simulator()->schedule_file_path();
+
+  // -------------------------------------------------------
   output_directory_ = settings->output_directory();
+
+  initial_sim_include_dir_path_ = settings();
 
   if (settings->build_path().length() > 0) {
     build_dir_ = settings->build_path() + "/";

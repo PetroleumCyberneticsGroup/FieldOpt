@@ -28,11 +28,13 @@
 // ---------------------------------------------------------
 #include <QString>
 
+// -------------------------------------------------------
 #include "Model/model.h"
 #include "Simulation/results/results.h"
 #include "Settings/settings.h"
 #include "Settings/simulator.h"
 #include "Simulation/execution_scripts/execution_scripts.h"
+#include "Utilities/debug.hpp"
 
 // ---------------------------------------------------------
 namespace Simulation {
@@ -138,7 +140,7 @@ class Simulator
   QString build_dir_;
 
   // -------------------------------------------------------
-  // DRIVER FILE VARIANTS (PATH + NAME_
+  // DRIVER FILE VARIANTS (PATH + NAME)
 
   // Path to the driver file to be used as
   // a base for the generated driver files.
@@ -148,7 +150,7 @@ class Simulator
   QString initial_driver_file_name_;
 
   // -------------------------------------------------------
-  // PARENT DRIVER FILE VARIANTS (PATH + NAME_
+  // PARENT DRIVER FILE VARIANTS (PATH + NAME)
 
   // Path to the directory containing
   // the main driver file.
