@@ -191,9 +191,8 @@ class Simulator
   ::Simulation::Results::Results *results_;
   Settings::Settings *settings_;
   Model::Model *model_;
-  QString build_dir_;
-  QString script_path_;
-  QStringList script_args_;
+
+  // -------------------------------------------------------
   QList<double> control_times_;
   virtual void UpdateFilePaths() = 0;
 

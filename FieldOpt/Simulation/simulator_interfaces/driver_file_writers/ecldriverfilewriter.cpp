@@ -37,6 +37,9 @@ namespace Simulation {
 namespace SimulatorInterfaces {
 namespace DriverFileWriters {
 
+using namespace DriverParts::ECLDriverParts;
+using namespace Utilities::FileHandling;
+
 // =========================================================
 EclDriverFileWriter::EclDriverFileWriter(
     Settings::Settings *settings,
@@ -45,99 +48,121 @@ EclDriverFileWriter::EclDriverFileWriter(
   // -------------------------------------------------------
   model_ = model;
   settings_ = settings;
-
-  // -------------------------------------------------------
-  if (settings_->verb_vector()[8] > 1) // idx:8 -> sim
-    std::cout << "[sim]Reading ECL drv file.--- " << std::endl;
-
-  // -------------------------------------------------------
-  original_driver_file_contents_ =
-      ::Utilities::FileHandling::ReadFileToStringList(
-          settings_->simulator()->driver_file_path());
-
-  // -------------------------------------------------------
-  output_driver_file_name_ =
-      settings->output_directory()
-          + "/" + settings->name().toUpper() + ".DATA";
-
-  // -------------------------------------------------------
-  if (settings_->verb_vector()[8] >= 1) // idx:8 -> sim
-    std::cout << "[sim]DriverFileName:--------- "
-              << output_driver_file_name_.toStdString()
-              << std::endl;
 }
 
 // =========================================================
-void EclDriverFileWriter::WriteDriverFile() {
+void EclDriverFileWriter::WriteDriverFile(
+    QString schedule_file_path) {
 
-  // -------------------------------------------------------
-  // RUNSPEC
-  DriverParts::ECLDriverParts::Runspec runspec =
-      DriverParts::ECLDriverParts::Runspec(
-      original_driver_file_contents_,
-      model_->wells());
-
-  // -------------------------------------------------------
-  // GRID
-  DriverParts::ECLDriverParts::Grid grid =
-      DriverParts::ECLDriverParts::Grid(
-          original_driver_file_contents_);
-
-  // -------------------------------------------------------
-  // PROPS
-  DriverParts::ECLDriverParts::Props props =
-      DriverParts::ECLDriverParts::Props(
-          original_driver_file_contents_);
-
-  // -------------------------------------------------------
-  // SOLUTION
-  DriverParts::ECLDriverParts::Solution solution =
-      DriverParts::ECLDriverParts::Solution(
-          original_driver_file_contents_);
-
-  // -------------------------------------------------------
-  // SUMMARY
-  DriverParts::ECLDriverParts::Summary summary =
-      DriverParts::ECLDriverParts::Summary(
-          original_driver_file_contents_);
-
-  // -------------------------------------------------------
-  // SCHEDULE
-  DriverParts::ECLDriverParts::Schedule schedule =
-      DriverParts::ECLDriverParts::Schedule(
-          model_->wells(),
-          settings_->model()->control_times());
-
-  // -------------------------------------------------------
-  // COMPDAT
-  model_->SetCompdatString(
-      DriverParts::ECLDriverParts::
-      Compdat(model_->wells()).GetPartString());
-
-  // -------------------------------------------------------
-  // COMPLETE STRING
-  QString complete_string =
-      runspec.GetPartString() + grid.GetPartString()
-      + props.GetPartString() + solution.GetPartString()
-      + summary.GetPartString() + schedule.GetPartString();
-
-  // -------------------------------------------------------
-  // CHECK
-  if (!Utilities::FileHandling::DirectoryExists(
-      settings_->output_directory())
-      || !Utilities::FileHandling::ParentDirectoryExists(
-          output_driver_file_name_)) {
-    throw UnableToWriteDriverFileException(
-        "Cannot write driver file, specified "
-            "output directory does not exist.");
-  }
-
-  // -------------------------------------------------------
-  // WRITE TO FILE
-  Utilities::FileHandling::WriteStringToFile(
-      complete_string, output_driver_file_name_);
+  assert(FileExists(schedule_file_path));
+  Schedule schedule = DriverParts::ECLDriverParts::Schedule(model_->wells(), settings_->model()->control_times());
+  model_->SetCompdatString(DriverParts::ECLDriverParts::Compdat(model_->wells()).GetPartString());
+  Utilities::FileHandling::WriteStringToFile(schedule.GetPartString(), schedule_file_path);
 }
 
 }
 }
 }
+
+//// =========================================================
+//EclDriverFileWriter::EclDriverFileWriter(
+//    Settings::Settings *settings,
+//    Model::Model *model) {
+//
+
+//
+//  // -------------------------------------------------------
+//  if (settings_->verb_vector()[8] > 1) // idx:8 -> sim
+//    std::cout << "[sim]Reading ECL drv file.--- " << std::endl;
+//
+//  // -------------------------------------------------------
+//  original_driver_file_contents_ =
+//      ::Utilities::FileHandling::ReadFileToStringList(
+//          settings_->simulator()->driver_file_path());
+//
+//  // -------------------------------------------------------
+//  output_driver_file_name_ =
+//      settings->output_directory()
+//          + "/" + settings->name().toUpper() + ".DATA";
+//
+//  // -------------------------------------------------------
+//  if (settings_->verb_vector()[8] >= 1) // idx:8 -> sim
+//    std::cout << "[sim]DriverFileName:--------- "
+//              << output_driver_file_name_.toStdString()
+//              << std::endl;
+//}
+//
+//// =========================================================
+//void EclDriverFileWriter::WriteDriverFile() {
+//
+//  // -------------------------------------------------------
+//  // RUNSPEC
+//  DriverParts::ECLDriverParts::Runspec runspec =
+//      DriverParts::ECLDriverParts::Runspec(
+//      original_driver_file_contents_,
+//      model_->wells());
+//
+//  // -------------------------------------------------------
+//  // GRID
+//  DriverParts::ECLDriverParts::Grid grid =
+//      DriverParts::ECLDriverParts::Grid(
+//          original_driver_file_contents_);
+//
+//  // -------------------------------------------------------
+//  // PROPS
+//  DriverParts::ECLDriverParts::Props props =
+//      DriverParts::ECLDriverParts::Props(
+//          original_driver_file_contents_);
+//
+//  // -------------------------------------------------------
+//  // SOLUTION
+//  DriverParts::ECLDriverParts::Solution solution =
+//      DriverParts::ECLDriverParts::Solution(
+//          original_driver_file_contents_);
+//
+//  // -------------------------------------------------------
+//  // SUMMARY
+//  DriverParts::ECLDriverParts::Summary summary =
+//      DriverParts::ECLDriverParts::Summary(
+//          original_driver_file_contents_);
+//
+//  // -------------------------------------------------------
+//  // SCHEDULE
+//  DriverParts::ECLDriverParts::Schedule schedule =
+//      DriverParts::ECLDriverParts::Schedule(
+//          model_->wells(),
+//          settings_->model()->control_times());
+//
+//  // -------------------------------------------------------
+//  // COMPDAT
+//  model_->SetCompdatString(
+//      DriverParts::ECLDriverParts::
+//      Compdat(model_->wells()).GetPartString());
+//
+//  // -------------------------------------------------------
+//  // COMPLETE STRING
+//  QString complete_string =
+//      runspec.GetPartString() + grid.GetPartString()
+//      + props.GetPartString() + solution.GetPartString()
+//      + summary.GetPartString() + schedule.GetPartString();
+//
+//  // -------------------------------------------------------
+//  // CHECK
+//  if (!Utilities::FileHandling::DirectoryExists(
+//      settings_->output_directory())
+//      || !Utilities::FileHandling::ParentDirectoryExists(
+//          output_driver_file_name_)) {
+//    throw UnableToWriteDriverFileException(
+//        "Cannot write driver file, specified "
+//            "output directory does not exist.");
+//  }
+//
+//  // -------------------------------------------------------
+//  // WRITE TO FILE
+//  Utilities::FileHandling::WriteStringToFile(
+//      complete_string, output_driver_file_name_);
+//}
+//
+//}
+//}
+//}

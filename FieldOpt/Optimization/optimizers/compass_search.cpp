@@ -40,7 +40,7 @@ CompassSearch::CompassSearch(Settings::Optimizer *settings,
 void CompassSearch::iterate() {
 
   // -------------------------------------------------------
-  GSS::print_dbg_msg("[opt]Launching opt.iteration. ", 1);
+  GSS::print_dbg_msg_d("[opt]Launching opt.iteration. ", 1);
   if (!is_successful_iteration() && iteration_ != 0) {
     contract();
   }

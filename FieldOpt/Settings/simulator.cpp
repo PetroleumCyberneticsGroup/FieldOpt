@@ -28,6 +28,7 @@
 #include "Utilities/debug.hpp"
 
 // ---------------------------------------------------------
+using namespace Utilities::FileHandling;
 
 // ---------------------------------------------------------
 namespace Settings {
@@ -104,14 +105,14 @@ Simulator::Simulator(QJsonObject json_simulator) {
 // =========================================================
 void Simulator::set_schedule_file_path(const QString path) {
   schedule_file_path_ = path;
-  cout << fstr("Override DRV with RTS",9)
+  cout << fstr("[set]RTS overrides DRV (sch)",9)
        << schedule_file_path_.toStdString() << endl;
 }
 
 // =========================================================
 void Simulator::set_sim_incl_dir_path(const QString path) {
   sim_incl_dir_path_ = path;
-  cout << fstr("Override DRV with RTS",9)
+  cout << fstr("[set]RTS overrides DRV (inc)",9)
        << sim_incl_dir_path_.toStdString() << endl;
 }
 
@@ -120,7 +121,7 @@ void Simulator::set_driver_file_path(const QString path) {
 
   // -------------------------------------------------------
   driver_file_path_ = path;
-  cout << fstr("Override DRV with RTS",9)
+  cout << fstr("[set]RTS overrides DRV (drv)",9)
        << driver_file_path_.toStdString() << endl;
 
   // -------------------------------------------------------

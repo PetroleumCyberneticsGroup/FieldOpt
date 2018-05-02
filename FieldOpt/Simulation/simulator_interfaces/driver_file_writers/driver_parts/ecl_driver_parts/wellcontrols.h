@@ -4,18 +4,20 @@
 
  This file is part of the FieldOpt project.
 
- FieldOpt is free software: you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation, either version
- 3 of the License, or (at your option) any later version.
+ FieldOpt is free software: you can redistribute it
+ and/or modify it under the terms of the GNU General
+ Public License as published by the Free Software
+ Foundation, either version 3 of the License, or (at
+ your option) any later version.
 
- FieldOpt is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty
- of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- See the GNU General Public License for more details.
+ FieldOpt is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the
+ implied warranty of MERCHANTABILITY or FITNESS FOR
+ A PARTICULAR PURPOSE.  See the GNU General Public
+ License for more details.
 
- You should have received a copy of the
- GNU General Public License along with FieldOpt.
+ You should have received a copy of the GNU
+ General Public License along with FieldOpt.
  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************/
 
@@ -56,11 +58,17 @@ class WellControls : public ECLDriverPart
 {
  public:
   // ------------------------------------------------------
-  WellControls(QList<Model::Wells::Well *> *wells,
-               QList<double> control_times);
+  WellControls(const QList<Model::Wells::Well *> *wells,
+               const QList<double> &control_times);
+
+  WellControls(const QList<Model::Wells::Well *> *wells,
+               const QList<double> &control_times,
+               const double &timestep);
+
+  WellControls(){}
 
   // ------------------------------------------------------
-  virtual QString GetPartString();
+  virtual QString GetPartString() const;
 
  protected:
    /*!
@@ -81,9 +89,10 @@ class WellControls : public ECLDriverPart
    * Find the next timestep after the one provided as an argument. Returns -1 if the one
    * provided is the last timestep.
    */
-  int nextTimestep(const int &timestep, const QList<int> &control_times) const;
+  int nextTimestep(const int &timestep,
+                   const QList<double> &control_times) const;
 
-  
+
   // ------------------------------------------------------
   /*!
    * \brief The WellSetting struct is a convenience
@@ -91,8 +100,10 @@ class WellControls : public ECLDriverPart
    * a particular time.
    */
   struct WellSetting {
-  WellSetting(const QString &well_name, const bool &is_injector, const Model::Wells::Control &control);
-  
+  WellSetting(const QString &well_name,
+              const bool &is_injector,
+              const Model::Wells::Control &control);
+
     // Name of the well this setting belongs to.
     QString well_name;
 
@@ -101,7 +112,7 @@ class WellControls : public ECLDriverPart
     bool is_injector;
 
     // The control entry for this setting.
-    Model::Wells::Control *control;
+    Model::Wells::Control control;
   };
 
   // ------------------------------------------------------
@@ -120,12 +131,16 @@ class WellControls : public ECLDriverPart
   // ------------------------------------------------------
   QMap<double, TimeEntry> time_entries_;
 
-  void initializeTimeEntries(QList<Model::Wells::Well *> *wells,
-                             QList<double> control_times);
+  // ------------------------------------------------------
+  void initializeTimeEntries(const QList<Model::Wells::Well *> *wells,
+                             const QList<double> &control_times);
 
-  void initializeTimeEntries(const QList<Model::Wells::Well *> *wells, const QList<int> &control_times, const int &timestep);
+  // ------------------------------------------------------
+  void initializeTimeEntries(const QList<Model::Wells::Well *> *wells,
+                             const QList<double> &control_times,
+                             const int &timestep);
 
-                             
+
   // ------------------------------------------------------
   /*!
    * \brief createTimeEntry Creates a string on the form

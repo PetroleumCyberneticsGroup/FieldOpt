@@ -1,24 +1,24 @@
 /***********************************************************
-
  Copyright (C) 2015-2017
  Einar J.M. Baumann <einar.baumann@gmail.com>
 
  This file is part of the FieldOpt project.
 
- FieldOpt is free software: you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation, either version
- 3 of the License, or (at your option) any later version.
+ FieldOpt is free software: you can redistribute it
+ and/or modify it under the terms of the GNU General
+ Public License as published by the Free Software
+ Foundation, either version 3 of the License, or (at
+ your option) any later version.
 
- FieldOpt is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty
- of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- See the GNU General Public License for more details.
+ FieldOpt is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the
+ implied warranty of MERCHANTABILITY or FITNESS FOR
+ A PARTICULAR PURPOSE.  See the GNU General Public
+ License for more details.
 
  You should have received a copy of the GNU
  General Public License along with FieldOpt.
  If not, see <http://www.gnu.org/licenses/>.
-
 ***********************************************************/
 
 // ---------------------------------------------------------
@@ -326,7 +326,8 @@ void Model::CreateWellGroups() {
                                   gnr,
                                   *drilling_seq_,
                                   variable_container_,
-                                  grid_));
+                                  grid_,
+                                  ricasedata_));
   }
 }
 
@@ -378,15 +379,6 @@ void Model::ApplyCase(Optimization::Case *c, int rank) {
   verify();
 
   // -------------------------------------------------------
-  if (results_.size() > 0){
-    logger_->AddEntry(this);
-  }
-
-  // -------------------------------------------------------
-  current_case_id_ = c->id();
-  results_.clear();
-}
-
   // Notify the logger, and after that clear the results.
   // First check that we have results (if not, this is the
   // first evaluation, and we have nothing to notify the
@@ -400,10 +392,7 @@ void Model::ApplyCase(Optimization::Case *c, int rank) {
   results_.clear();
 }
 
-// ---------------------------------------------------------
-=======
 // =========================================================
->>>>>>> origin/feature/Olympus-debug
 void Model::verify() {
   verifyWells();
 }

@@ -42,7 +42,8 @@ WellGroup::WellGroup(
     int group_nr,
     ::Model::DrillingSequence drilling,
     ::Model::Properties::VariablePropertyContainer *variable_container,
-    ::Reservoir::Grid::Grid *grid) {
+    ::Reservoir::Grid::Grid *grid,
+    RICaseData *ricasedata) {
 
   // -------------------------------------------------------
   // Select wells from that group; these wells are sorted
@@ -89,7 +90,8 @@ WellGroup::WellGroup(
     auto well = new Wells::Well(well_settings,
                                 orig_wnum,
                                 variable_container,
-                                grid);
+                                grid,
+                                ricasedata);
     group_wells_->append(well);
 
   }

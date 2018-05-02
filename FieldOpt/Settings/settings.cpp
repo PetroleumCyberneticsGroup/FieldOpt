@@ -210,7 +210,6 @@ void Settings::readSimulatorSection() {
     cout << "FluidModel:------------ "
          << json_simulator["FluidModel"].toString().toUtf8().constData() << endl;
 
-
     // -----------------------------------------------------
     cout << "MaxMinutes:------------ "
          << simulator_->max_minutes_ << endl;
@@ -228,7 +227,7 @@ void Settings::readOptimizationSection() {
   }
   catch (std::exception const &ex) {
     throw UnableToParseOptimizerSectionException(
-        "Unable to parse driver file Optimizaton section: "
+        "Unable to parse driver file Optimization section: "
             + string(ex.what()));
   }
 
@@ -342,9 +341,6 @@ void Settings::readOptimizerSection() {
       cout << "PopulationCrossover:--- "
            << optimizer_->parameters_.p_crossover << endl;
 
-
-
-
     } else if (optimizer_->type() ==
         Optimizer::OptimizerType::DFO){
 
@@ -356,7 +352,7 @@ void Settings::readOptimizerSection() {
   }
 }
 
-// ===============================================================
+// ========================================================
 void Settings::readModelSection() {
 
   // -------------------------------------------------------------

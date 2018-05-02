@@ -41,6 +41,7 @@
 #include "Simulation/simulator_interfaces/adgprssimulator.h"
 
 #include "Utilities/math.hpp"
+#include "Utilities/debug.hpp"
 
 // ---------------------------------------------------------
 #include <iomanip>
@@ -128,7 +129,7 @@ AbstractRunner::InitializeSettings(QString output_subdirectory) {
 
   // -------------------------------------------------------
   if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
-    std::cout << "[run]Initialized Settings.---" << std::endl;
+    cout << fstr("[run]Initialized Settings.") << endl;
 }
 
 // ---------------------------------------------------------
@@ -161,22 +162,28 @@ void AbstractRunner::InitializeSimulator() {
     // -----------------------------------------------------
     case ::Settings::Simulator::SimulatorType::ECLIPSE:
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
-        std::cout << "[run]Reservoir simulator:---- ECL100" << std::endl;
-      simulator_ = new Simulation::SimulatorInterfaces::ECLSimulator(settings_, model_);
+        cout << fstr("[run]Reservoir simulator:") << "ECL100" << endl;
+      simulator_ =
+          new Simulation::SimulatorInterfaces::ECLSimulator(settings_,
+                                                            model_);
       break;
 
       // ---------------------------------------------------
     case ::Settings::Simulator::SimulatorType::ADGPRS:
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
-        std::cout << "[run]Reservoir simulator:---- ADGPRS" << std::endl;
-      simulator_ = new Simulation::SimulatorInterfaces::AdgprsSimulator(settings_, model_);
+        cout << fstr("[run]Reservoir simulator:") << "ADGPRS" << endl;
+      simulator_ =
+          new Simulation::SimulatorInterfaces::AdgprsSimulator(settings_,
+                                                               model_);
       break;
 
       // ---------------------------------------------------
     case ::Settings::Simulator::SimulatorType::Flow:
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
-        std::cout << "[run]Reservoir simulator:---- Flow" << std::endl;
-      simulator_ = new Simulation::SimulatorInterfaces::FlowSimulator(settings_, model_);
+        cout << fstr("[run]Reservoir simulator:") << "Flow" << endl;
+      simulator_ =
+          new Simulation::SimulatorInterfaces::FlowSimulator(settings_,
+                                                             model_);
       break;
 
       // ---------------------------------------------------
@@ -200,14 +207,14 @@ void AbstractRunner::EvaluateBaseModel() {
 
   // -------------------------------------------------------
   if (!simulator_->results()->isAvailable()) {
-    if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
-      std::cout << "[run]Simulating base case.---" << std::endl;
+    if (settings_->verb_vector()[0] >= 1) // idx:0 -> run
+      cout << fstr("[run]Simulating base case.") << endl;
     simulator_->Evaluate();
   }
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
-    std::cout << "[run]Evaluated BaseModel.----" << std::endl;
+  if (settings_->verb_vector()[0] >= 1) // idx:0 -> run
+    cout << fstr("[run]Evaluated BaseModel.") << endl;
 }
 
 // ---------------------------------------------------------

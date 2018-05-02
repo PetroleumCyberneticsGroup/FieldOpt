@@ -64,7 +64,8 @@ class WellGroup {
       int group_nr,
       ::Model::DrillingSequence drilling,
       ::Model::Properties::VariablePropertyContainer *variable_container,
-      ::Reservoir::Grid::Grid *grid);
+      ::Reservoir::Grid::Grid *grid,
+      RICaseData *ricasedata);
 
   // -------------------------------------------------------
   QList<Wells::Well *> *group_wells_;
