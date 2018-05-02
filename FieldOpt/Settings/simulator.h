@@ -56,51 +56,51 @@ class Simulator
   /*!
    * Get the simulator type (e.g. ECLIPSE).
    */
-  SimulatorType type()
-  const { return type_; }
+  SimulatorType type() const
+  { return type_; }
 
   // -------------------------------------------------------
   /*!
    * Get the simulator commands (commands used to execute a
    * simulation). Each list element is executed in sequence.
    */
-  QStringList *commands()
-  const { return commands_; }
+  QStringList *commands() const
+  { return commands_; }
 
   // -------------------------------------------------------
   /*!
    * Get the name of the script to
    * be used to execute simulations.
    */
-  QString script_name()
-  const { return script_name_; }
+  QString script_name() const
+  { return script_name_; }
 
   // -------------------------------------------------------
   /*!
    * Get the path to the driver file.
    */
-  QString driver_file_path()
-  const { return driver_file_path_; }
+  QString driver_file_path() const
+  { return driver_file_path_; }
 
   // -------------------------------------------------------
   /*!
    * Get the path of the parent
    * directory of the driver file.
    */
-  QString driver_parent_directory()
-  const { return driver_directory_; }
+  QString driver_parent_directory() const
+  { return driver_directory_; }
 
   // -------------------------------------------------------
   /*!
    * Get the path to the file containing the schedule
    * section (or the part of it that is to be manipulated).
    */
-  QString schedule_file_path()
-  const {return schedule_file_path_; }
+  QString schedule_file_path() const
+  {return schedule_file_path_; }
 
   // -------------------------------------------------------
-  QString sim_incl_dir_path()
-  const {return sim_incl_dir_path_; }
+  QString sim_incl_dir_path() const
+  {return sim_incl_dir_path_; }
 
   // -------------------------------------------------------
   /*!
@@ -161,7 +161,8 @@ class Simulator
   void set_verbosity_vector(const std::vector<int> verb_vector)
   { verb_vector_ = verb_vector; }
 
-  std::vector<int> verb_vector() const { return verb_vector_; }
+  std::vector<int> verb_vector() const
+  { return verb_vector_; }
 
  private:
   // -------------------------------------------------------

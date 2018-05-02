@@ -84,17 +84,20 @@ Simulator::Simulator(Settings::Settings *settings) {
       custom_simulator_execution_script_path().length() > 0) {
 
     script_path_ =
-        settings->simulator()->custom_simulator_execution_script_path();
+        settings->simulator()->
+            custom_simulator_execution_script_path();
 
   } else {
 
     script_path_ = build_dir_ +
-        ExecutionScripts::GetScriptPath(settings->simulator()->script_name());
+        ExecutionScripts::GetScriptPath(
+            settings->simulator()->script_name());
   }
 
   // -------------------------------------------------------
   script_args_ = (QStringList() << output_directory_
-                                << output_directory_ + "/" + initial_driver_file_name_
+                                << output_directory_
+                                    + "/" + initial_driver_file_name_
                                 << QString::number(1));
 
   control_times_ = settings->model()->control_times();
@@ -138,24 +141,29 @@ Simulator::Simulator(Settings::Settings *settings) {
   assert(settings->driver_path().length() > 0);
 
   assert(DirectoryExists(
-      init_driver_file_parent_dir_path_, true, v));
+      init_driver_file_parent_dir_path_, v));
 
-  assert(DirectoryExists(output_directory_, true, v));
+  assert(DirectoryExists(output_directory_, v));
 
-  assert(FileExists(initial_driver_file_path_, true, v));
+  assert(FileExists(initial_driver_file_path_, v));
 
-  assert(FileExists(initial_schedule_path_, true, v)
+  assert(FileExists(initial_schedule_path_, v)
              || initial_schedule_path_.length() == 0);
 
-  assert(FileExists(script_path_, true, v));
+  assert(FileExists(script_path_, v));
 }
 
 // =========================================================
 void Simulator::SetOutputDirectory(QString output_directory) {
+
+  // -------------------------------------------------------
   if (Utilities::FileHandling::DirectoryExists(output_directory)) {
     output_directory_ = output_directory;
     UpdateFilePaths();
-  } else throw OutputDirectoryDoesNotExistException(output_directory);
+
+  } else {
+    throw OutputDirectoryDoesNotExistException(output_directory);
+  }
 }
 
 // =========================================================
@@ -165,11 +173,26 @@ void Simulator::SetOutputDirectory(QString output_directory) {
 
 // =========================================================
 void Simulator::updateResultsInModel() {
-  model_->SetResult("Time", results_->GetValueVector(Results::Results::Property::Time));
-  model_->SetResult("Time", results_->GetValueVector(Results::Results::Property::CumulativeGasProduction));
-  model_->SetResult("Time", results_->GetValueVector(Results::Results::Property::CumulativeOilProduction));
-  model_->SetResult("Time", results_->GetValueVector(Results::Results::Property::CumulativeWaterProduction));
-  model_->SetResult("Time", results_->GetValueVector(Results::Results::Property::CumulativeWaterInjection));
+  model_->
+      SetResult("Time",
+                results_->GetValueVector(
+                    Results::Results::Property::Time));
+  model_->
+      SetResult("Time",
+                results_->GetValueVector(
+                    Results::Results::Property::CumulativeGasProduction));
+  model_->
+      SetResult("Time",
+                results_->GetValueVector(
+                    Results::Results::Property::CumulativeOilProduction));
+  model_->
+      SetResult("Time",
+                results_->GetValueVector(
+                    Results::Results::Property::CumulativeWaterProduction));
+  model_->
+      SetResult("Time",
+                results_->GetValueVector(
+                    Results::Results::Property::CumulativeWaterInjection));
 }
 
 }

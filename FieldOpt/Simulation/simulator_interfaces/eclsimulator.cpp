@@ -80,20 +80,20 @@ void ECLSimulator::Evaluate() {
       DriverFileWriters::EclDriverFileWriter(settings_, model_);
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[8] > 1) // idx:8 -> sim
-    cout << "[sim]script arg[0]:---------- "
+  if (settings_->verb_vector()[8] > 2) // idx:8 -> sim
+    cout << fstr("[sim]script arg[0]:",8)
          << script_args_[0].toStdString() << endl
-         << "[sim]script arg[1]:---------- "
+         << fstr("[sim]script arg[1]:",8)
          << script_args_[1].toStdString() << endl;
 
   // -------------------------------------------------------
   driver_file_writer.WriteDriverFile(output_schedule_file_path_);
 
   // -------------------------------------------------------
-  for (auto well : *model_->wells()) {
-    cout << well->name().toStdString() << ": "
-         << (well->IsInjector() ? "yes" : "no") << std::endl;
-  }
+  // for (auto well : *model_->wells()) {
+  //  cout << well->name().toStdString() << ": "
+  //       << (well->IsInjector() ? "yes" : "no") << std::endl;
+  // }
 
   // -------------------------------------------------------
   ::Utilities::Unix::ExecShellScript(script_path_,
@@ -137,7 +137,7 @@ bool ECLSimulator::Evaluate(int timeout,
     t = 10; // Always let simulations run for at least 10 seconds
 
   // -------------------------------------------------------
-  cout << "Starting monitored simulation with timeout "
+  cout << fstr("[sim]Start monitored sim. Timeout:",8)
        << timeout << endl;
 
   // -------------------------------------------------------
@@ -145,7 +145,7 @@ bool ECLSimulator::Evaluate(int timeout,
       ::Utilities::Unix::ExecShellScriptTimeout(script_path_,
                                                 script_args_,
                                                 t);
-  cout << "Monitored simulation done." << endl;
+  cout << fstr("[sim]Monitored sim. Done.",8) << endl;
 
   // -------------------------------------------------------
   if (success)
@@ -294,9 +294,7 @@ void ECLSimulator::copyDriverFiles() {
 
   // -------------------------------------------------------
   auto v = settings_->verb_vector();
-  if (v[8] > 3 && !DirectoryExists(output_directory_,
-                                   false,
-                                   v)) {
+  if (v[8] > 3 && !DirectoryExists(output_directory_, v)) {
 
     cout << fstr("Output parent dir does not exist; creating it",8)
          << output_directory_.toStdString() << endl;
@@ -306,7 +304,7 @@ void ECLSimulator::copyDriverFiles() {
 
   // -------------------------------------------------------
   if (!DirectoryExists(
-      current_output_deck_parent_dir_path_, false, v)) {
+      current_output_deck_parent_dir_path_, v)) {
 
     // -----------------------------------------------------
     auto input_dir =
@@ -340,9 +338,7 @@ void ECLSimulator::copyDriverFiles() {
     CreateDirectory(output_dir);
 
     // -----------------------------------------------------
-    CopyDirectory(input_dir,
-                  output_dir,
-                  false);
+    CopyDirectory(input_dir, output_dir, v);
 
     // -----------------------------------------------------
     auto input_file = init_driver_file_parent_dir_path_
@@ -360,16 +356,14 @@ void ECLSimulator::copyDriverFiles() {
     // -------->  /xruns/xruns___EEE/output-runs/rank0/xruns___EEE/MODEL_DOT.DATA
 
     // -----------------------------------------------------
-    CopyFile(input_file,
-             output_file,
-             false);
+    CopyFile(input_file, output_file, false);
 
   }
 
   // -------------------------------------------------------
-  assert(DirectoryExists(current_output_deck_parent_dir_path_, true));
-  assert(FileExists(output_driver_file_path_, true));
-  assert(FileExists(output_schedule_file_path_, true));
+  assert(DirectoryExists(current_output_deck_parent_dir_path_, v));
+  assert(FileExists(output_driver_file_path_, v));
+  assert(FileExists(output_schedule_file_path_, v));
 }
 
 }

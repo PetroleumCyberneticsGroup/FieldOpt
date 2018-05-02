@@ -74,7 +74,6 @@ using std::runtime_error;
  * specified path, otherwise false.
  */
 inline bool FileExists(QString file_path,
-                       bool verbose=false,
                        vector<int> verbv = vector<int>(11,0)) {
 
   // -------------------------------------------------------
@@ -123,7 +122,6 @@ inline bool FileExists(QString file_path,
  * the specified path, otherwise false.
  */
 inline bool DirectoryExists(QString directory_path,
-                            bool verbose=false,
                             vector<int> verbv = vector<int>(11,0)) {
 
   // -------------------------------------------------------
@@ -247,6 +245,7 @@ inline QStringList *ReadFileToStringList(QString file_path) {
 inline void WriteStringToFile(QString string,
                               QString file_path) {
 
+  // -------------------------------------------------------
   if (!ParentDirectoryExists(file_path))
     throw runtime_error(
         "File's parent directory not found: "
@@ -255,6 +254,7 @@ inline void WriteStringToFile(QString string,
   if (!string.endsWith("\n"))
     string.append("\n");
 
+  // -------------------------------------------------------
   QFile file(file_path);
   file.open(QIODevice::WriteOnly | QIODevice::Truncate);
   QTextStream fout(&file);
@@ -274,16 +274,19 @@ inline void WriteStringToFile(QString string,
  * \param file_path The file to write the string/line to.
  */
 inline void WriteLineToFile(QString string,
-                            QString file_path)
-{
+                            QString file_path) {
+
+  // -------------------------------------------------------
   if (!ParentDirectoryExists(file_path))
     throw runtime_error(
         "File's parent directory not found: "
             + file_path.toStdString());
 
+  // -------------------------------------------------------
   if (!string.endsWith("\n"))
     string.append("\n");
 
+  // -------------------------------------------------------
   QFile file(file_path);
   file.open(QIODevice::Append);
   QTextStream fout(&file);
@@ -297,13 +300,16 @@ inline void WriteLineToFile(QString string,
  *
  * \param path Path to file to be deleted.
  */
-inline void DeleteFile(QString path)
-{
+inline void DeleteFile(QString path) {
+
+  // -------------------------------------------------------
   if (FileExists(path)) {
     QFile file(path);
     file.remove();
+
+  } else {
+    throw runtime_error("File not found: " + path.toStdString());
   }
-  else throw runtime_error("File not found: " + path.toStdString());
 }
 
 // =========================================================
@@ -315,10 +321,12 @@ inline void DeleteFile(QString path)
  */
 inline void CreateDirectory(QString path) {
 
+  // -------------------------------------------------------
   if (DirectoryExists(path)) {
     return; // Do nothing if the directory already exists.
   }
 
+  // -------------------------------------------------------
   QDir().mkpath(path);
   // QDir().mkdir(path);
 }
@@ -332,74 +340,111 @@ inline void CreateDirectory(QString path) {
  */
 inline void CopyFile(QString origin,
                      QString destination,
-                     bool overwrite)
-{
-  if (!FileExists(origin))
+                     bool overwrite) {
+
+  // -------------------------------------------------------
+  if (!FileExists(origin)) {
     throw runtime_error(
         "Error copying. Original file not found: "
             + origin.toStdString());
+  }
 
-  if (overwrite)
+  // -------------------------------------------------------
+  if (overwrite) {
+
+    boost::filesystem::copy_file(
+        origin.toStdString(),
+        destination.toStdString(),
+        boost::filesystem::copy_option::overwrite_if_exists);
+
+  } else {
+
     boost::filesystem::copy_file(origin.toStdString(),
-                                 destination.toStdString(),
-                                 boost::filesystem::copy_option::overwrite_if_exists);
-  else
-    boost::filesystem::copy_file(origin.toStdString(), destination.toStdString());
+                                 destination.toStdString());
+  }
 }
 
 // =========================================================
 /*!
- * \brief CopyDirectory Copy a directory and it's contents to a new destination.
+ * \brief CopyDirectory Copy a directory
+ * and it's contents to a new destination.
  *
- * Note that this is not a recursive function: It will copy files in the root of the
- * directory, and _create_ any subdirectories found, but it will not copy the contents
- * of subdirectories.
+ * Note that this is not a recursive function: It will
+ * copy files in the root of the directory, and _create_
+ * any subdirectories found, but it will not copy the
+ * contents of subdirectories.
+ *
  * \param origin Path to the original directory to be copied.
  * \param destination Path to the _parent directory_ for the copy.
  */
 inline void CopyDirectory(QString origin,
                           QString destination,
-                          bool verbose=false) {
+                          vector<int> verbv = vector<int>(11,0)) {
 
-  if (!DirectoryExists(origin))
+  // -------------------------------------------------------
+  if (!DirectoryExists(origin)) {
     throw runtime_error(
         "Can't find parent directory for copying: "
             + origin.toStdString());
+  }
 
-  if (!DirectoryExists(destination))
+  // -------------------------------------------------------
+  if (!DirectoryExists(destination)) {
     throw runtime_error(
         "Can't find destination directory for copying: "
             + destination.toStdString());
+  }
 
-  cout << "***************** ORIGIN: " << origin.toStdString() << std::endl;
-
+  // -------------------------------------------------------
   QDir original(origin);
-  QFileInfoList entries = original.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot, QDir::DirsLast);
+  QFileInfoList entries =
+      original.entryInfoList(QDir::AllEntries
+                                 | QDir::NoDotAndDotDot,
+                             QDir::DirsLast);
 
   for (auto entry : entries) {
-    std::cout << "***************** ENTRY: " << entry.baseName().toStdString() << std::endl;
 
+    // -----------------------------------------------------
     if (entry.isFile() && !entry.isDir()) {
-      CopyFile(entry.absoluteFilePath(), destination + "/" + entry.fileName(), true);
-      if (verbose) std::cout << "Copying FILE: " << entry.fileName().toStdString() << std::endl;
-    }
-    else if (entry.isDir()) {
+
+      // ---------------------------------------------------
+      CopyFile(entry.absoluteFilePath(),
+               destination + "/" + entry.fileName(), true);
+
+      // ---------------------------------------------------
+      if (verbv[10] > 3) // idx:10 -> uti
+        cout << fstr("[uti]Copying FILE::",10)
+             << entry.fileName().toStdString() << endl;
+
+    } else if (entry.isDir()) {
+
+      // ---------------------------------------------------
       CreateDirectory(destination + "/" + entry.fileName());
-      if(verbose) std::cout << "Copying FOLDER: " << entry.fileName().toStdString() << std::endl;
-      CopyDirectory(entry.absoluteFilePath(), destination + "/" + entry.fileName(), verbose);
+
+      // ---------------------------------------------------
+      if (verbv[10] > 3) // idx:10 -> uti
+        cout << fstr("[uti]Copying FOLDER::",10)
+             << entry.fileName().toStdString() << endl;
+
+      // ---------------------------------------------------
+      CopyDirectory(entry.absoluteFilePath(),
+                    destination + "/" + entry.fileName(),
+                    verbv);
     }
   }
 }
 
 // =========================================================
 /*!
- * \brief GetCurrentDirectoryPath Gets the absolute path to the current directory.
+ * \brief GetCurrentDirectoryPath Gets the
+ * absolute path to the current directory.
  *
  * \todo Improve this.
  */
-inline QString GetCurrentDirectoryPath()
-{
-  QDir path = QDir::currentPath(); // Get current directory
+inline QString GetCurrentDirectoryPath() {
+
+  // Get current directory
+  QDir path = QDir::currentPath();
   return path.absolutePath();
 }
 
@@ -409,8 +454,8 @@ inline QString GetCurrentDirectoryPath()
  *
  * \param file (relative) path to file
  */
-inline QString GetAbsoluteFilePath(QString file)
-{
+inline QString GetAbsoluteFilePath(QString file) {
+
   QFileInfo fileInfo(file);
   return fileInfo.absoluteFilePath();
 }
@@ -421,8 +466,8 @@ inline QString GetAbsoluteFilePath(QString file)
  *
  * \param
  */
-inline void ThrowRuntimeError(std::string error_msg)
-{
+inline void ThrowRuntimeError(std::string error_msg) {
+
   std::cout << "RUNTIME ERROR: " << error_msg << std::endl;
   throw runtime_error(error_msg);
 }
