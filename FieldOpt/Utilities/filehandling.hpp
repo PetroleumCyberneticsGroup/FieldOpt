@@ -52,119 +52,197 @@
 namespace Utilities {
 namespace FileHandling {
 
-// ========================================================
+using std::cout;
+using std::endl;
+using std::runtime_error;
+
+// =========================================================
 /*!
- * \brief FileExists Checks whether or not a file exists at the specified path.
- * \param file_path Path to a file that may or may not exist.
- * \param verbose Whether the path being checked should be printed.
- * \return True if a file exists at the specified path, otherwise false.
+ * \brief FileExists Checks whether or not
+ * a file exists at the specified path.
+ *
+ * \param file_path Path to a file that
+ * may or may not exist.
+ *
+ * \param verbose Whether the path being
+ * checked should be printed.
+ *
+ * \return True if a file exists at the
+ * specified path, otherwise false.
  */
-inline bool FileExists(QString file_path, bool verbose=false)
-{
+inline bool FileExists(QString file_path,
+                       bool verbose=false) {
+
+  // -------------------------------------------------------
   QFileInfo file(file_path);
   QFileInfo file_relative(file.absoluteFilePath());
+
+  // -------------------------------------------------------
   if (file.exists() && file.isFile()) {
-    if (verbose) std::cout << "File exists at path: " << file_path.toStdString() << std::endl;
+
+    // -----------------------------------------------------
+    if (settings_->verb_vector()[10] > 3) // idx:10 -> uti
+      cout << fstr("[uti]File exists at path:",10)
+           << file_path.toStdString() << endl;
     return true;
-  }
-  else if (file_relative.exists() && file_relative.isFile()) {
-    if (verbose) std::cout << "File exists at relative path: " << file_path.toStdString() << std::endl;
+
+  } else if (file_relative.exists() && file_relative.isFile()) {
+
+    // -----------------------------------------------------
+    if (settings_->verb_vector()[10] > 3) // idx:10 -> uti
+      cout << fstr("[uti]File exists at relative path:",10)
+           << file_path.toStdString() << endl;
     return true;
-  }
-  else {
-    if (verbose) std::cout << "File does not exists: " << file_path.toStdString() << std::endl;
+
+  } else {
+
+    // -----------------------------------------------------
+    if (settings_->verb_vector()[10] > 3) // idx:10 -> uti
+      cout << fstr("[uti]File does not exists:",10)
+           << file_path.toStdString() << endl;
     return false;
   }
 }
 
-// ========================================================
+// =========================================================
 /*!
- * \brief DirectoryExists Checks whether or not a folder exists at the specified path.
- * \param folder_path Path to a folder that may or may not exist.
- * \param verbose Whether the path being checked should be printed.
- * \return True if a folder exists at the specified path, otherwise false.
+ * \brief DirectoryExists Checks whether or
+ * not a folder exists at the specified path.
+ *
+ * \param folder_path Path to a folder
+ * that may or may not exist.
+ *
+ * \param verbose Whether the path being
+ * checked should be printed.
+ *
+ * \return True if a folder exists at
+ * the specified path, otherwise false.
  */
 inline bool DirectoryExists(QString directory_path,
-                            bool verbose=false)
-{
+                            bool verbose=false) {
+
+  // -------------------------------------------------------
   QFileInfo folder(directory_path);
   if (folder.exists() && folder.isDir()) {
-    if (verbose) std::cout
-          << "\n*************************"
-          << "Directory exists at path: "
-          << directory_path.toStdString() << std::endl;
+
+    // -----------------------------------------------------
+    if (settings_->verb_vector()[10] > 3) // idx:10 -> uti
+      cout << fstr("[uti]Directory exists at path:",10)
+           << directory_path.toStdString() << endl;
     return true;
-  }
-  else {
-    if (verbose) std::cout << "Directory does not exists at path: " << directory_path.toStdString() << std::endl;
+
+  } else {
+
+    // -----------------------------------------------------
+    if (settings_->verb_vector()[10] > 3) // idx:10 -> uti
+      cout << fstr("[uti]Directory does not exists at path:",10)
+           << directory_path.toStdString() << endl;
     return false;
   }
 }
 
-// ========================================================
+// =========================================================
 /*!
- * \brief DirectoryIsEmpty Check whether or not a directory is empty.
+ * \brief DirectoryIsEmpty Check whether
+ * or not a directory is empty.
+ *
  * \param folder_path Path a folder to check.
- * \return True if the directory is empty, otherwise false.
+ *
+ * \return True if the directory is empty,
+ * otherwise false.
  */
-inline bool DirectoryIsEmpty(QString folder_path)
-{
-  if (!DirectoryExists(folder_path)) return false;
+inline bool DirectoryIsEmpty(QString folder_path) {
+
+  // -------------------------------------------------------
+  if (!DirectoryExists(folder_path)) {
+    return false;
+  }
+
+  // -------------------------------------------------------
   QDir directory = QDir(folder_path);
-  return directory.entryInfoList(QDir::NoDotAndDotDot | QDir::AllEntries).count() == 0;
+  auto dir = directory.entryInfoList(
+      QDir::NoDotAndDotDot | QDir::AllEntries).count() == 0;
+
+  return dir;
 }
 
-// ========================================================
+// =========================================================
 /*!
- * \brief ParentDirectoryExists Checks whether a specified file's parent directory exists.
- * \param file_path Path a file (the file itself does not have to exist).
- * \return True if the parent directory exists, otherwise false.
+ * \brief ParentDirectoryExists Checks whether
+ * a specified file's parent directory exists.
+ *
+ * \param file_path Path a file (the file itself
+ * does not have to exist).
+ *
+ * \return True if the parent directory exists,
+ * otherwise false.
  */
-inline bool ParentDirectoryExists(QString file_path)
-{
+inline bool ParentDirectoryExists(QString file_path) {
+
+  // -------------------------------------------------------
   QFileInfo file(file_path);
   QDir parent_directory = file.dir();
   return parent_directory.exists();
 }
 
-// ========================================================
+// =========================================================
 /*!
- * \brief ReadFileToStringList Reads the contents of a file and stores it as
- * a string list where each element is a line in the file.
+ * \brief ReadFileToStringList Reads the contents of
+ * a file and stores it as a string list where each
+ * element is a line in the file.
+ *
  * \param file_path The file to create a list from.
+ *
  * \return List where each element is a line in the file.
  */
-inline QStringList *ReadFileToStringList(QString file_path)
-{
+inline QStringList *ReadFileToStringList(QString file_path) {
+
+  // -------------------------------------------------------
   QStringList *string_list = new QStringList();
   QFile file(file_path);
-  if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    throw std::runtime_error("File not found: " + file_path.toStdString());
 
-  QTextStream text_stream(&file);
-  while (true) {
-    QString line = text_stream.readLine();
-    if (line.isNull())
-      break;
-    else
-      string_list->append(line);
+  // -------------------------------------------------------
+  if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    throw runtime_error(
+        "File not found: " + file_path.toStdString());
   }
+
+  // -------------------------------------------------------
+  QTextStream text_stream(&file);
+
+  // -------------------------------------------------------
+  while (true) {
+
+    QString line = text_stream.readLine();
+    if (line.isNull()) {
+      break;
+    } else {
+      string_list->append(line);
+    }
+  }
+
+  // -------------------------------------------------------
   file.close();
   return string_list;
 }
 
-// ========================================================
+// =========================================================
 /*!
- * \brief WriteStringToFile Write a string to a file. Removes existing file contents.
+ * \brief WriteStringToFile Write a string to a
+ * file. Removes existing file contents.
  *
- * If the string does not end with a newline, it will be added.
+ * If the string does not end with a newline,
+ * it will be added.
+ *
  * \param string The string to be written.
- * \param file_path Path to the file to write the string into.
+ *
+ * \param file_path Path to the file
+ * to write the string into.
  */
 inline void WriteStringToFile(QString string, QString file_path)
 {
   if (!ParentDirectoryExists(file_path))
-    throw std::runtime_error("File's parent directory not found: " + file_path.toStdString());
+    throw runtime_error("File's parent directory not found: " + file_path.toStdString());
 
   if (!string.endsWith("\n"))
     string.append("\n");
@@ -176,7 +254,7 @@ inline void WriteStringToFile(QString string, QString file_path)
   file.close();
 }
 
-// ========================================================
+// =========================================================
 /*!
  * \brief WriteLineToFile Append a string to a file.
  *
@@ -187,7 +265,7 @@ inline void WriteStringToFile(QString string, QString file_path)
 inline void WriteLineToFile(QString string, QString file_path)
 {
   if (!ParentDirectoryExists(file_path))
-    throw std::runtime_error("File's parent directory not found: " + file_path.toStdString());
+    throw runtime_error("File's parent directory not found: " + file_path.toStdString());
 
   if (!string.endsWith("\n"))
     string.append("\n");
@@ -199,7 +277,7 @@ inline void WriteLineToFile(QString string, QString file_path)
   file.close();
 }
 
-// ========================================================
+// =========================================================
 /*!
  * \brief DeleteFile Deletes the file at the given path.
  * \param path Path to file to be deleted.
@@ -210,34 +288,37 @@ inline void DeleteFile(QString path)
     QFile file(path);
     file.remove();
   }
-  else throw std::runtime_error("File not found: " + path.toStdString());
+  else throw runtime_error("File not found: " + path.toStdString());
 }
 
-// ========================================================
+// =========================================================
 /*!
  * \brief CreateDirectory Create a new drectory with the specified path.
  * \param path Path to new directory.
  */
-inline void CreateDirectory(QString path)
-{
+inline void CreateDirectory(QString path) {
+
   if (DirectoryExists(path)) {
     return; // Do nothing if the directory already exists.
   }
+
   QDir().mkpath(path);
   // QDir().mkdir(path);
 }
 
-// ========================================================
+// =========================================================
 /*!
  * \brief CopyFile Copy a file.
  * \param origin The path to the original file.
  * \param destination Path to the copy of the file.
  * \param overwrite Overwrite existing file.
  */
-inline void CopyFile(QString origin, QString destination, bool overwrite)
+inline void CopyFile(QString origin,
+                     QString destination,
+                     bool overwrite)
 {
   if (!FileExists(origin))
-    throw std::runtime_error("Error copying. Original file not found: " + origin.toStdString());
+    throw runtime_error("Error copying. Original file not found: " + origin.toStdString());
 
   if (overwrite)
     boost::filesystem::copy_file(origin.toStdString(),
@@ -247,7 +328,7 @@ inline void CopyFile(QString origin, QString destination, bool overwrite)
     boost::filesystem::copy_file(origin.toStdString(), destination.toStdString());
 }
 
-// ========================================================
+// =========================================================
 /*!
  * \brief CopyDirectory Copy a directory and it's contents to a new destination.
  *
@@ -262,16 +343,16 @@ inline void CopyDirectory(QString origin,
                           bool verbose=false) {
 
   if (!DirectoryExists(origin))
-    throw std::runtime_error(
+    throw runtime_error(
         "Can't find parent directory for copying: "
             + origin.toStdString());
 
   if (!DirectoryExists(destination))
-    throw std::runtime_error(
+    throw runtime_error(
         "Can't find destination directory for copying: "
             + destination.toStdString());
 
-  std::cout << "***************** ORIGIN: " << origin.toStdString() << std::endl;
+  cout << "***************** ORIGIN: " << origin.toStdString() << std::endl;
 
   QDir original(origin);
   QFileInfoList entries = original.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot, QDir::DirsLast);
@@ -291,7 +372,7 @@ inline void CopyDirectory(QString origin,
   }
 }
 
-// ========================================================
+// =========================================================
 /*!
  * \brief GetCurrentDirectoryPath Gets the absolute path to the current directory.
  *
@@ -303,7 +384,7 @@ inline QString GetCurrentDirectoryPath()
   return path.absolutePath();
 }
 
-// ========================================================
+// =========================================================
 /*!
  * \brief GetAbsoluteFilePath Gets absolute path of file.
  *
@@ -315,7 +396,7 @@ inline QString GetAbsoluteFilePath(QString file)
   return fileInfo.absoluteFilePath();
 }
 
-// ========================================================
+// =========================================================
 /*!
  * \brief
  *
@@ -324,7 +405,7 @@ inline QString GetAbsoluteFilePath(QString file)
 inline void ThrowRuntimeError(std::string error_msg)
 {
   std::cout << "RUNTIME ERROR: " << error_msg << std::endl;
-  throw std::runtime_error(error_msg);
+  throw runtime_error(error_msg);
 }
 
 }
