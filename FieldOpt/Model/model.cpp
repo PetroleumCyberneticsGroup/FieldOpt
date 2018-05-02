@@ -43,7 +43,7 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   if (settings_->verb_vector()[5] > 1) { // idx:5 -> mod
     cout << BRED
          << "[mod]Building Model.---------" << AEND << endl;
-    cout << "[mod]Init ECLGrid_.---------- " << endl;
+    cout << fstr("[mod]Init ECLGrid_.",5) << endl;
   }
 
   // -------------------------------------------------------
@@ -61,8 +61,6 @@ Model::Model(Settings::Model* settings, Logger *logger) {
 
   ricasedata_->mainGrid()->calculateFaults(
       ricasedata_->activeCellInfo(MATRIX_MODEL));
-
-
 
   // -------------------------------------------------------------
   std::vector<cvf::Vec3d> ccv, ccc;
@@ -149,29 +147,43 @@ Model::Model(Settings::Model* settings, Logger *logger) {
 
   // -------------------------------------------------------
   if (settings->verb_vector()[5] > 1) // idx:5 -> mod (Model)
-    cout << "[mod]Init RIGrid_.----------- RICell& cell" << endl;
+    cout << fstr("[mod]Init RIGrid_.",5) << "RICell& cell" << endl;
+
 
   size_t cellcount = ricasedata_->mainGrid()->cellCount();
   const RICell& cell = ricasedata_->mainGrid()->globalCellArray()[cellcount];
 
   cout << "volume:" << cell.volume() << " count:" << cellcount<< endl;
 
-  auto startp = ricasedata_->grid(0)->cell(0).center();
-  auto endp = ricasedata_->grid(0)->cell(cellcount-1).center();
+  cvf::Vec3d startp = ricasedata_->grid(0)->cell(0).center();
+  cvf::Vec3d endp = ricasedata_->grid(0)->cell(cellcount-1).center();
 
   cout << "x:" << startp.x() << " y:" << startp.y() << " z:" << startp.z() << endl;
   cout << "x:" << endp.x() << " y:" << endp.y() << " z:" << endp.z() << endl;
 
+  // -------------------------------------------------------
+  cvf::BoundingBox bb;
+  bb.add(startp);
+  bb.add(endp);
 
+  cout << fstr("[mod]bb.debugString()",5)
+       << bb.debugString().toStdString() << endl;
+  cout << fstr("bb.extent():")
+       << show_Ved3d("", bb.extent()) << endl;
 
+  cvf::BoundingBox bbg = ricasedata_->mainGrid()->boundingBox();
 
+  cout << fstr("[mod]bbg.debugString()",5)
+       << bbg.debugString().toStdString() << endl;
 
-
+  cout << fstr("bbg.extent():")
+       << show_Ved3d("", bbg.extent()) << endl;
 
 
   // -------------------------------------------------------
   if (settings_->verb_vector()[5] > 1) // idx:5 -> mod
-    cout << "[mod]Init var container.-----" << endl;
+    cout << fstr("[mod]Init var container.",5) << endl;
+
   variable_container_ =
       new Properties::VariablePropertyContainer();
 
@@ -179,14 +191,14 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   drilling_seq_ = new DrillingSequence();
   // drilling_seq_ = new Model::Drilling;
   SetDrillingSeq(); // Establishes all fields in drilling_seq_
-  GetDrillingStr(); // Dbg
+  // GetDrillingStr(); // Dbg
 
   // -------------------------------------------------------
   CreateWellGroups();
 
   // -------------------------------------------------------
    if (settings_->verb_vector()[5] > 1) // idx:5 -> mod
-    cout << "[mod]Setting up well_ QList.- " << endl;
+     cout << fstr("[mod]Setting up well_ QList.",5) << endl;
 
   // Set up regular well QList for subsequent calculations
   // that are group-independent -> this carries over the
@@ -231,7 +243,7 @@ void Model::InsertDrillingTStep() {
 
   // -------------------------------------------------------
   if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
-    cout << BGREEN << "[mod]InsertDrillingTStep().-- " << AEND << endl;
+    cout << fstr("[mod]InsertDrillingTStep().",5) << endl;
 
   // -------------------------------------------------------
   // Add control entry defining drill time
@@ -239,7 +251,7 @@ void Model::InsertDrillingTStep() {
 
     // -----------------------------------------------------
     if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
-      cout << "[mod]Looping through wells.-- " << endl;
+      cout << fstr("[mod]Looping through wells.",5) << endl;
 
     // -----------------------------------------------------
     // Associate drilling time with new control
@@ -249,7 +261,7 @@ void Model::InsertDrillingTStep() {
 
     // -----------------------------------------------------
     if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
-      cout << BGREEN << "[mod]Make new control entry.- " << AEND << endl;
+      cout << fstr("[mod]Make new control entry.",5) << endl;
 
     // -----------------------------------------------------
     // Careful with uninitialized variables in Settings::Model
@@ -264,7 +276,7 @@ void Model::InsertDrillingTStep() {
 
     // -----------------------------------------------------
     if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
-      cout << BGREEN << "[mod]Make new control step.-- " << AEND << endl;
+      cout << fstr("[mod]Make new control step.",5) << endl;
 
     // -----------------------------------------------------
     // Make Well::Control
@@ -273,10 +285,9 @@ void Model::InsertDrillingTStep() {
                            well_entry,
                            variable_container_);
 
-
     // -----------------------------------------------------
     if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
-      cout << BGREEN << "[mod]Append to control list.- " << AEND << endl;
+      cout << fstr("[mod]Append to control list.",5) << endl;
 
     // -----------------------------------------------------
     // Append control to list of well controls
@@ -301,8 +312,9 @@ void Model::InsertDrillingTStep() {
   settings_->sort_control_steps();
 
   // -------------------------------------------------------
-  // if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
-    cout << BGREEN << "[mod]InsertDrillingTStep().-- DONE" << AEND << endl;
+  if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
+  cout << fstr("[mod]InsertDrillingTStep():",5)
+       << "Done." << endl;
 
 }
 

@@ -1,7 +1,28 @@
-//
-// Created by bellout on 2/10/18.
-//
+/***********************************************************
+ Copyright (C) 2017
+ Mathias C. Bellout <mathias.bellout@ntnu.no>
+ Oleg Volkov <ovolkov@stanford.edu>
 
+ Created by bellout 10/2/18.
+
+ This file is part of the FieldOpt project.
+
+ FieldOpt is free software: you can redistribute it
+ and/or modify it under the terms of the GNU General
+ Public License as published by the Free Software
+ Foundation, either version 3 of the License, or (at
+ your option) any later version.
+
+ FieldOpt is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the
+ implied warranty of MERCHANTABILITY or FITNESS FOR
+ A PARTICULAR PURPOSE.  See the GNU General Public
+ License for more details.
+
+ You should have received a copy of the GNU
+ General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
 // -----------------------------------------------------------------
 #include <iostream>
 #include <iomanip>
@@ -27,8 +48,9 @@ SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
                          RICaseData *ricasedata) {
 
   // ---------------------------------------------------------------
-  if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
-    cout << "[opt]Init. SNOPTSolver.------ Constraint-handling." << endl;
+  if (settings->verb_vector()[6] >= 1) // idx:6 -> opt
+    cout << fstr("[opt]Init. SNOPTSolver.",6)
+         << "Constraint-handling" << endl;
 
   // ---------------------------------------------------------------
   ricasedata_ = ricasedata;
