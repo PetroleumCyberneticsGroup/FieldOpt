@@ -38,6 +38,7 @@
 // STD
 #include <stdexcept>
 #include <iostream>
+#include <vector>
 
 // ---------------------------------------------------------
 // BOOST
@@ -47,13 +48,15 @@
 // ---------------------------------------------------------
 // FIELDOPT
 #include "colors.hpp"
+#include "debug.hpp"
 
 // ---------------------------------------------------------
 namespace Utilities {
 namespace FileHandling {
 
 using std::cout;
-using std::endl;
+using std::vector;
+// using std::endl;
 using std::runtime_error;
 
 // =========================================================
@@ -71,7 +74,8 @@ using std::runtime_error;
  * specified path, otherwise false.
  */
 inline bool FileExists(QString file_path,
-                       bool verbose=false) {
+                       bool verbose=false,
+                       vector<int> verbv = vector<int>(11,0)) {
 
   // -------------------------------------------------------
   QFileInfo file(file_path);
@@ -81,7 +85,7 @@ inline bool FileExists(QString file_path,
   if (file.exists() && file.isFile()) {
 
     // -----------------------------------------------------
-    if (settings_->verb_vector()[10] > 3) // idx:10 -> uti
+    if (verbv[10] > 3) // idx:10 -> uti
       cout << fstr("[uti]File exists at path:",10)
            << file_path.toStdString() << endl;
     return true;
@@ -89,7 +93,7 @@ inline bool FileExists(QString file_path,
   } else if (file_relative.exists() && file_relative.isFile()) {
 
     // -----------------------------------------------------
-    if (settings_->verb_vector()[10] > 3) // idx:10 -> uti
+    if (verbv[10] > 3) // idx:10 -> uti
       cout << fstr("[uti]File exists at relative path:",10)
            << file_path.toStdString() << endl;
     return true;
@@ -97,7 +101,7 @@ inline bool FileExists(QString file_path,
   } else {
 
     // -----------------------------------------------------
-    if (settings_->verb_vector()[10] > 3) // idx:10 -> uti
+    if (verbv[10] > 3) // idx:10 -> uti
       cout << fstr("[uti]File does not exists:",10)
            << file_path.toStdString() << endl;
     return false;
@@ -119,14 +123,15 @@ inline bool FileExists(QString file_path,
  * the specified path, otherwise false.
  */
 inline bool DirectoryExists(QString directory_path,
-                            bool verbose=false) {
+                            bool verbose=false,
+                            vector<int> verbv = vector<int>(11,0)) {
 
   // -------------------------------------------------------
   QFileInfo folder(directory_path);
   if (folder.exists() && folder.isDir()) {
 
     // -----------------------------------------------------
-    if (settings_->verb_vector()[10] > 3) // idx:10 -> uti
+    if (verbv[10] > 3) // idx:10 -> uti
       cout << fstr("[uti]Directory exists at path:",10)
            << directory_path.toStdString() << endl;
     return true;
@@ -134,7 +139,7 @@ inline bool DirectoryExists(QString directory_path,
   } else {
 
     // -----------------------------------------------------
-    if (settings_->verb_vector()[10] > 3) // idx:10 -> uti
+    if (verbv[10] > 3) // idx:10 -> uti
       cout << fstr("[uti]Directory does not exists at path:",10)
            << directory_path.toStdString() << endl;
     return false;
@@ -239,18 +244,21 @@ inline QStringList *ReadFileToStringList(QString file_path) {
  * \param file_path Path to the file
  * to write the string into.
  */
-inline void WriteStringToFile(QString string, QString file_path)
-{
+inline void WriteStringToFile(QString string,
+                              QString file_path) {
+
   if (!ParentDirectoryExists(file_path))
-    throw runtime_error("File's parent directory not found: " + file_path.toStdString());
+    throw runtime_error(
+        "File's parent directory not found: "
+            + file_path.toStdString());
 
   if (!string.endsWith("\n"))
     string.append("\n");
 
   QFile file(file_path);
   file.open(QIODevice::WriteOnly | QIODevice::Truncate);
-  QTextStream out(&file);
-  out << string.toUtf8() << endl;
+  QTextStream fout(&file);
+  fout << string.toUtf8() << endl;
   file.close();
 }
 
@@ -258,28 +266,35 @@ inline void WriteStringToFile(QString string, QString file_path)
 /*!
  * \brief WriteLineToFile Append a string to a file.
  *
- * If the string does not end with a newline, it will be added.
+ * If the string does not end with a newline,
+ * it will be added.
+ *
  * \param string The string/line to be written.
+ *
  * \param file_path The file to write the string/line to.
  */
-inline void WriteLineToFile(QString string, QString file_path)
+inline void WriteLineToFile(QString string,
+                            QString file_path)
 {
   if (!ParentDirectoryExists(file_path))
-    throw runtime_error("File's parent directory not found: " + file_path.toStdString());
+    throw runtime_error(
+        "File's parent directory not found: "
+            + file_path.toStdString());
 
   if (!string.endsWith("\n"))
     string.append("\n");
 
   QFile file(file_path);
   file.open(QIODevice::Append);
-  QTextStream out(&file);
-  out << string.toUtf8();
+  QTextStream fout(&file);
+  fout << string.toUtf8();
   file.close();
 }
 
 // =========================================================
 /*!
  * \brief DeleteFile Deletes the file at the given path.
+ *
  * \param path Path to file to be deleted.
  */
 inline void DeleteFile(QString path)
@@ -293,7 +308,9 @@ inline void DeleteFile(QString path)
 
 // =========================================================
 /*!
- * \brief CreateDirectory Create a new drectory with the specified path.
+ * \brief CreateDirectory Create a new
+ * drectory with the specified path.
+ *
  * \param path Path to new directory.
  */
 inline void CreateDirectory(QString path) {
@@ -318,7 +335,9 @@ inline void CopyFile(QString origin,
                      bool overwrite)
 {
   if (!FileExists(origin))
-    throw runtime_error("Error copying. Original file not found: " + origin.toStdString());
+    throw runtime_error(
+        "Error copying. Original file not found: "
+            + origin.toStdString());
 
   if (overwrite)
     boost::filesystem::copy_file(origin.toStdString(),

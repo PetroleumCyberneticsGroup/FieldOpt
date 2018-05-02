@@ -110,7 +110,8 @@ void ECLSimulator::Evaluate() {
 }
 
 // =========================================================
-bool ECLSimulator::Evaluate(int timeout, int threads) {
+bool ECLSimulator::Evaluate(int timeout,
+                            int threads) {
 
   // -------------------------------------------------------
   UpdateFilePaths();
@@ -180,11 +181,13 @@ void ECLSimulator::CleanUp() {
 void ECLSimulator::UpdateFilePaths() {
 
   // -------------------------------------------------------
+  auto v = settings_->verb_vector();
+
   current_output_deck_parent_dir_path_ =
       output_directory_ + "/" + init_driver_file_parent_dir_name_;
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[8] > 3) { // idx:8 -> sim
+  if (v[8] > 1) { // idx:8 -> sim
 
     cout << fstr("[sim]Updating file paths",8) << endl;
     // OUTPUT DIRECTORY
@@ -228,7 +231,7 @@ void ECLSimulator::UpdateFilePaths() {
   output_schedule_file_path_ = initial_schedule_path_;
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[8] > 3) { // idx:8 -> sim
+  if (v[8] > 1) { // idx:8 -> sim
 
     // INITIAL DRIVER FILE NAME
     cout << fstr("init_drvr_fl_nm_",8)
@@ -258,7 +261,7 @@ void ECLSimulator::UpdateFilePaths() {
                                      current_output_deck_parent_dir_path_);
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[8] > 3) { // idx:8 -> sim
+  if (v[8] > 1) { // idx:8 -> sim
 
     // OUTPUT SCHEDULE FILE PATH [1]
     cout << fstr("outp_schdl_fl_pth_[1]",8)
@@ -290,8 +293,10 @@ void ECLSimulator::WriteDriverFilesOnly() {
 void ECLSimulator::copyDriverFiles() {
 
   // -------------------------------------------------------
-  if (!DirectoryExists(output_directory_)
-      && settings_->verb_vector()[8] > 3) {
+  auto v = settings_->verb_vector();
+  if (v[8] > 3 && !DirectoryExists(output_directory_,
+                                   false,
+                                   v)) {
 
     cout << fstr("Output parent dir does not exist; creating it",8)
          << output_directory_.toStdString() << endl;
@@ -300,7 +305,8 @@ void ECLSimulator::copyDriverFiles() {
   }
 
   // -------------------------------------------------------
-  if (!DirectoryExists(current_output_deck_parent_dir_path_)) {
+  if (!DirectoryExists(
+      current_output_deck_parent_dir_path_, false, v)) {
 
     // -----------------------------------------------------
     auto input_dir =
@@ -313,7 +319,7 @@ void ECLSimulator::copyDriverFiles() {
             + "/" + output_sim_incl_dir_name_;
 
     // -----------------------------------------------------
-    if (settings_->verb_vector()[8] > 3) { // idx:8 -> sim
+    if (v[8] > 3) { // idx:8 -> sim
 
       cout << fstr("Output deck dir not found; copying input deck",8)
            << output_schedule_file_path_.toStdString() << endl;

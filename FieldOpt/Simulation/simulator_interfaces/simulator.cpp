@@ -87,6 +87,7 @@ Simulator::Simulator(Settings::Settings *settings) {
         settings->simulator()->custom_simulator_execution_script_path();
 
   } else {
+    
     script_path_ = build_dir_ +
         ExecutionScripts::GetScriptPath(settings->simulator()->script_name());
   }
@@ -99,16 +100,23 @@ Simulator::Simulator(Settings::Settings *settings) {
   control_times_ = settings->model()->control_times();
 
   // -------------------------------------------------------
+  auto v = settings_->verb_vector();
   assert(settings->driver_path().length() > 0);
-  assert(DirectoryExists(init_driver_file_parent_dir_path_, true));
-  assert(DirectoryExists(output_directory_, true));
-  assert(FileExists(initial_driver_file_path_, true));
-  assert(FileExists(initial_schedule_path_, true)
+
+  assert(DirectoryExists(
+      init_driver_file_parent_dir_path_, true, v));
+
+  assert(DirectoryExists(output_directory_, true, v));
+
+  assert(FileExists(initial_driver_file_path_, true, v));
+
+  assert(FileExists(initial_schedule_path_, true, v)
              || initial_schedule_path_.length() == 0);
-  assert(FileExists(script_path_, true));
+
+  assert(FileExists(script_path_, true, v));
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[8] > 1) { // idx:8 -> sim (Simulation)
+  if (v[8] > 1) { // idx:8 -> sim
     cout << "[sim]Simulator set up w/:---- " << endl
          // SIM DRIVER FILE NAME
          << fstr("[sim]init_drvr_file_path_")
@@ -116,19 +124,19 @@ Simulator::Simulator(Settings::Settings *settings) {
          // SIM DRIVER FILE PATH
          << fstr("[sim]init_drvr_file_name_")
          << initial_driver_file_name_.toStdString() << endl
-
+         // SIM INCLUDE DIR NAME
          << fstr("[sim]init_sim_incl_dir_name_")
          << init_sim_incl_dir_name_.toStdString() << endl
-
+         // SIM EXEC FILE PATH
          << fstr("[sim]script_path_")
          << script_path_.toStdString() << endl
-
+         // SIM EXEC ARG [0]
          << fstr("[sim]script_args_[0]")
          << script_args_.at(0).toStdString() << endl
-
+         // SIM EXEC ARG [1]
          << fstr("[sim]script_args_[1]")
          << script_args_.at(1).toStdString() << endl
-
+         // SIM EXEC ARG [2]
          << fstr("[sim]script_args_[2]")
          << script_args_.at(2).toStdString() << endl
          << endl;
