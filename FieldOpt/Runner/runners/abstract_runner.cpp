@@ -195,6 +195,10 @@ void AbstractRunner::InitializeSimulator() {
 
   // -------------------------------------------------------
   simulator_->set_verbosity_vector(runtime_settings_->verb_vector());
+
+  // -------------------------------------------------------
+  if (settings_->verb_vector()[0] >= 1) // idx:0 -> run
+    cout << fstr("[run]Initiated Simulator.") << endl;
 }
 
 // ---------------------------------------------------------
@@ -240,7 +244,8 @@ void AbstractRunner::InitializeObjectiveFunction() {
       // ---------------------------------------------------
     default:
       throw std::runtime_error(
-          "Unable to initialize runner: objective function type not recognized.");
+          "Unable to initialize runner: "
+              "objective function type not recognized.");
   }
 
   // -------------------------------------------------------

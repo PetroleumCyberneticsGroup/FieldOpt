@@ -104,6 +104,12 @@ Simulator::Simulator(Settings::Settings *settings) {
 
   if (v[8] > 1) { // idx:8 -> sim
     cout << "[sim]Simulator set up w/:---- " << endl
+         // SIM DRIVER FILE PARENT DIR PATH
+         << fstr("[sim]init_drvr_fl_prnt_dir_pth_")
+         << init_driver_file_parent_dir_path_.toStdString() << endl
+         // SIM DRIVER FILE PARENT DIR NAME
+         << fstr("[sim]init_drvr_fl_prnt_dir_nm_")
+         << init_driver_file_parent_dir_name_.toStdString() << endl
          // SIM DRIVER FILE NAME
          << fstr("[sim]init_drvr_file_path_")
          << initial_driver_file_path_.toStdString() << endl

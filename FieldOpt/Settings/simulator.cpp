@@ -33,14 +33,53 @@ using namespace Utilities::FileHandling;
 // ---------------------------------------------------------
 namespace Settings {
 
+// ---------------------------------------------------------
+using std::cout;
+using std::endl;
+
 // =========================================================
 Simulator::Simulator(QJsonObject json_simulator) {
 
   // -------------------------------------------------------
   // Driver path
-  if (json_simulator.contains("DriverPath"))
+  if (json_simulator.contains("DriverPath")) {
     driver_file_path_ = json_simulator["DriverPath"].toString();
-  else driver_file_path_ = "";
+
+    // -----------------------------------------------------
+    if (!FileExists(driver_file_path_)) {
+      throw std::runtime_error(
+          "No file found at DriverPath: "
+              + driver_file_path_.toStdString());
+    }
+
+    // -----------------------------------------------------
+    auto tmp = driver_file_path_.split("/");
+    tmp.removeLast();
+    driver_directory_ = tmp.join("/");
+
+  } else {
+    driver_file_path_ = "";
+  }
+
+  // -------------------------------------------------------
+  if (json_simulator.contains("ScheduleFile")) {
+
+    auto schedule_path = driver_directory_
+        + "/" + json_simulator["ScheduleFile"].toString();
+
+    // -----------------------------------------------------
+    if (!FileExists(schedule_path)) {
+      throw std::runtime_error(
+          "No file found at ScheduleFile: "
+              + schedule_path.toStdString());
+    }
+
+    // -----------------------------------------------------
+    schedule_file_path_ = schedule_path;
+
+  } else {
+    schedule_file_path_ = "";
+  }
 
   // -------------------------------------------------------
   // Simulator type

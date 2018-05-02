@@ -45,16 +45,16 @@ ECLSimulator::ECLSimulator(Settings::Settings *settings,
                            Model::Model *model)
     : Simulator(settings) {
 
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   model_ = model;
   settings_ = settings;
   UpdateFilePaths();
   deck_name_ = initial_driver_file_name_.split(".DATA").first();
 
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   results_ = new Results::ECLResults();
 
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   try {
     results()->ReadResults(output_driver_file_path_,
                            settings_->verb_vector());
@@ -80,7 +80,7 @@ void ECLSimulator::Evaluate() {
       DriverFileWriters::EclDriverFileWriter(settings_, model_);
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[8] > 1) // idx:8 -> sim (Simulation)
+  if (settings_->verb_vector()[8] > 1) // idx:8 -> sim
     cout << "[sim]script arg[0]:---------- "
          << script_args_[0].toStdString() << endl
          << "[sim]script arg[1]:---------- "
