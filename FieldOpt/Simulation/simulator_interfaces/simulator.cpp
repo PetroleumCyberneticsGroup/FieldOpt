@@ -87,7 +87,7 @@ Simulator::Simulator(Settings::Settings *settings) {
         settings->simulator()->custom_simulator_execution_script_path();
 
   } else {
-    
+
     script_path_ = build_dir_ +
         ExecutionScripts::GetScriptPath(settings->simulator()->script_name());
   }
@@ -101,21 +101,7 @@ Simulator::Simulator(Settings::Settings *settings) {
 
   // -------------------------------------------------------
   auto v = settings_->verb_vector();
-  assert(settings->driver_path().length() > 0);
 
-  assert(DirectoryExists(
-      init_driver_file_parent_dir_path_, true, v));
-
-  assert(DirectoryExists(output_directory_, true, v));
-
-  assert(FileExists(initial_driver_file_path_, true, v));
-
-  assert(FileExists(initial_schedule_path_, true, v)
-             || initial_schedule_path_.length() == 0);
-
-  assert(FileExists(script_path_, true, v));
-
-  // -------------------------------------------------------
   if (v[8] > 1) { // idx:8 -> sim
     cout << "[sim]Simulator set up w/:---- " << endl
          // SIM DRIVER FILE NAME
@@ -141,6 +127,21 @@ Simulator::Simulator(Settings::Settings *settings) {
          << script_args_.at(2).toStdString() << endl
          << endl;
   }
+
+  // -------------------------------------------------------
+  assert(settings->driver_path().length() > 0);
+
+  assert(DirectoryExists(
+      init_driver_file_parent_dir_path_, true, v));
+
+  assert(DirectoryExists(output_directory_, true, v));
+
+  assert(FileExists(initial_driver_file_path_, true, v));
+
+  assert(FileExists(initial_schedule_path_, true, v)
+             || initial_schedule_path_.length() == 0);
+
+  assert(FileExists(script_path_, true, v));
 }
 
 // =========================================================
