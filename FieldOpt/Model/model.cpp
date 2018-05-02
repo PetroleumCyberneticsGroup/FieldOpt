@@ -59,7 +59,8 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   ricasedata_->computeActiveCellBoundingBoxes();
   ricasedata_->mainGrid()->computeCachedData();
 
-  ricasedata_->mainGrid()->calculateFaults(ricasedata_->activeCellInfo(MATRIX_MODEL));
+  ricasedata_->mainGrid()->calculateFaults(
+      ricasedata_->activeCellInfo(MATRIX_MODEL));
 
 
 
@@ -165,9 +166,9 @@ Model::Model(Settings::Model* settings, Logger *logger) {
 
 
 
-  
 
-      
+
+
   // -------------------------------------------------------
   if (settings_->verb_vector()[5] > 1) // idx:5 -> mod
     cout << "[mod]Init var container.-----" << endl;

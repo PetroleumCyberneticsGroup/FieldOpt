@@ -73,10 +73,12 @@ class Model
  public:
   // -------------------------------------------------------
   // This should only be accessed externally for testing purposes.
-  Model(QJsonObject json_model,
-        vector<int> verb_vector);
+  // Model(QJsonObject json_model,
+  //      vector<int> verb_vector);
 
-  Model(QJsonObject json_model, QString schedule_path);
+  Model(QJsonObject json_model,
+        QString schedule_path,
+        vector<int> verb_vector);
 
   // -------------------------------------------------------
   enum ReservoirGridSourceType : int { ECLIPSE=1 };
@@ -250,8 +252,8 @@ class Model
       QString name = "NONE";
 
       bool isDifferent(ControlEntry other);
-      
-      std::string toString();      
+
+      std::string toString();
 
     };
 
@@ -389,7 +391,7 @@ class Model
   /*!
    * Get the control time that is closest to the time imported from the deck.
    */
-  int getClosestControlTime(int deck_time);  
+  int getClosestControlTime(int deck_time);
 };
 
 }

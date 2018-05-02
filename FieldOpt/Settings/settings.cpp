@@ -362,9 +362,11 @@ void Settings::readModelSection() {
   // -------------------------------------------------------------
   try {
     QJsonObject model = json_driver_->value("Model").toObject();
+
     model_ = new Model(model,
-    simulator_->driver_file_path_,
-    verb_vector());
+                       simulator_->driver_file_path_,
+                       verb_vector());
+
   }
   catch (std::exception const &ex) {
     throw UnableToParseModelSectionException(

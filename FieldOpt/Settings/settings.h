@@ -87,14 +87,12 @@ class Settings
   QString name() const { return name_; }
 
   // -------------------------------------------------------
-  // The name to be used for the run. Output file
-  // and folder names are derived from this.
-  QString output_directory() const
+  // Simulation include directory
   QString sim_incl_dir_path() const { return sim_include_dir_path_; }
 
   // -------------------------------------------------------
   // Path to directory in which output files are to be placed.
-  { return output_directory_; }
+  QString output_directory() const { return output_directory_; }
 
   // -------------------------------------------------------
   void set_verbosity_vector(const vector<int> verb_vector)
@@ -142,7 +140,7 @@ class Settings
   QString output_directory_;
   QString sim_include_dir_path_;
   QString build_path_;
-  
+
   // -------------------------------------------------------
   Model *model_;
   Simulator *simulator_;

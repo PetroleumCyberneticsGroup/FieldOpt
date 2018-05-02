@@ -36,13 +36,14 @@
 #include "Settings/model.h"
 #include "Optimization/case.h"
 #include "Model/wells/wellbore/wellblock.h"
+
 #include "Runner/loggable.hpp"
 #include "Runner/logger.h"
 #include "Utilities/colors.hpp"
 
 #include "wells/drilling_sequence.h"
 #include "wells/control.h"
- #include "wells/well_group.h"
+#include "wells/well_group.h"
 
 // ---------------------------------------------------------
 #include "FieldOpt-WellIndexCalculator/resinxx/well_path.h"
