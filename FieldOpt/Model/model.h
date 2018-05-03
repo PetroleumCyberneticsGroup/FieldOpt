@@ -92,7 +92,7 @@ class Model : public Loggable
   Reservoir::Grid::Grid *grid() const { return grid_; }
   RICaseData *ricasedata() const { return ricasedata_; }
   // RIReaderECL *rireaderecl() const { return rireaderecl_; }
-  // RIGrid *rigrid() const { return rigrid_; }
+  RIGrid *rigrid() const { return rigrid_; }
 
   RimIntersection* rimintersection_;
 
@@ -174,7 +174,7 @@ class Model : public Loggable
   // -------------------------------------------------------
   RICaseData* ricasedata_;
   // RIReaderECL rireaderecl_;
-  // RIGrid* rigrid_;
+  RIGrid* rigrid_;
 
   // Drilling *drillseq_;
   DrillingSequence *drilling_seq_;

@@ -57,10 +57,16 @@ Model::Model(Settings::Model* settings, Logger *logger) {
 
   // -------------------------------------------------------
   ricasedata_->computeActiveCellBoundingBoxes();
-  ricasedata_->mainGrid()->computeCachedData();
 
-  ricasedata_->mainGrid()->calculateFaults(
+  rigrid_ = ricasedata_->mainGrid();
+
+  rigrid_->computeCachedData();
+  // ricasedata_->mainGrid()->computeCachedData();
+
+  rigrid_->calculateFaults(
       ricasedata_->activeCellInfo(MATRIX_MODEL));
+  // ricasedata_->mainGrid()->calculateFaults(
+  //    ricasedata_->activeCellInfo(MATRIX_MODEL));
 
   // -------------------------------------------------------------
   std::vector<cvf::Vec3d> ccv, ccc;
@@ -69,27 +75,31 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   for (idx = 0; idx < 4; idx++) {
 
     size_t i, j, k;
-    ricasedata_->mainGrid()->ijkFromCellIndex(idx, &i, &j, &k);
+    rigrid_->ijkFromCellIndex(idx, &i, &j, &k);
+    // ricasedata_->mainGrid()->ijkFromCellIndex(idx, &i, &j, &k);
     cout << "i:" << i << " j:" << j << " k:" << k << endl;
     //cout << ricasedata_->mainGrid()->cellCentroid(idx).x();
 
     std::array<cvf::Vec3d, 8> hc;
-    ricasedata_->mainGrid()->cellCornerVertices(idx, hc.data());
+    rigrid_->cellCornerVertices(idx, hc.data());
+    // ricasedata_->mainGrid()->cellCornerVertices(idx, hc.data());
     cout << "hc_x:" << hc[0].x() << " hc_y:" << hc[0].y() << " hc_z:" << hc[0].z() << endl;
     ccc.push_back(hc[0]);
 
-    cvf::Vec3d cc = ricasedata_->mainGrid()->cell(idx).center();
+    cvf::Vec3d cc = rigrid_->cell(idx).center();
+    // cvf::Vec3d cc = ricasedata_->mainGrid()->cell(idx).center();
     cout << "cc_x:" << cc.x() << " cc_y:" << cc.y() << " cc_z:" << cc.z() << endl;
     ccv.push_back(cc);
 
   }
 
   std::array<cvf::Vec3d, 8> hc;
-  ricasedata_->mainGrid()->cellCornerVertices(0, hc.data());
+  rigrid_->cellCornerVertices(0, hc.data());
+  // ricasedata_->mainGrid()->cellCornerVertices(0, hc.data());
   ccc.push_back(hc[0]);
 
   // -------------------------------------------------------
-  rimintersection_ = new RimIntersection(ricasedata_->mainGrid(),
+  rimintersection_ = new RimIntersection(rigrid_,
                                          ricasedata_,
                                          settings);
 
@@ -124,9 +134,11 @@ Model::Model(Settings::Model* settings, Logger *logger) {
 //    rimintersection_->appendPointToPolyLine(ccc[ii]);
 //  }
 
-  RivIntersectionPartMgr* imgr = rimintersection_->intersectionPartMgr();
+  RivIntersectionPartMgr* imgr =
+      rimintersection_->intersectionPartMgr();
 
-  RivIntersectionGeometryGenerator* icsec = imgr->getCrossSectionGenerator();
+  RivIntersectionGeometryGenerator*
+      icsec = imgr->getCrossSectionGenerator();
 
   size_t vx_count = icsec->m_cellBorderLineVxes.p()->size();
 
@@ -149,19 +161,24 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   if (settings->verb_vector()[5] > 1) // idx:5 -> mod (Model)
     cout << fstr("[mod]Init RIGrid_.",5) << "RICell& cell" << endl;
 
-
-  size_t cellcount = ricasedata_->mainGrid()->cellCount();
-  const RICell& cell = ricasedata_->mainGrid()->globalCellArray()[cellcount];
+  size_t cellcount = rigrid_->cellCount();
+  const RICell& cell = rigrid_->globalCellArray()[cellcount];
+  // size_t cellcount = ricasedata_->mainGrid()->cellCount();
+  // const RICell& cell = ricasedata_->mainGrid()->globalCellArray()[cellcount];
 
   cout << "volume:" << cell.volume() << " count:" << cellcount<< endl;
 
-  cvf::Vec3d startp = ricasedata_->grid(0)->cell(0).center();
-  cvf::Vec3d endp = ricasedata_->grid(0)->cell(cellcount-1).center();
+  cvf::Vec3d startp = rigrid_->cell(0).center();
+  cvf::Vec3d endp = rigrid_->cell(cellcount-1).center();
+  // cvf::Vec3d startp = ricasedata_->grid(0)->cell(0).center();
+  // cvf::Vec3d endp = ricasedata_->grid(0)->cell(cellcount-1).center();
 
   cout << "x:" << startp.x() << " y:" << startp.y() << " z:" << startp.z() << endl;
   cout << "x:" << endp.x() << " y:" << endp.y() << " z:" << endp.z() << endl;
 
   // -------------------------------------------------------
+  // BOUNDING BOX EXPERIMENTS
+
   cvf::BoundingBox bb;
   bb.add(startp);
   bb.add(endp);
@@ -171,13 +188,40 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   cout << fstr("bb.extent():")
        << show_Ved3d("", bb.extent()) << endl;
 
-  cvf::BoundingBox bbg = ricasedata_->mainGrid()->boundingBox();
+  // cvf::BoundingBox bbg = ricasedata_->mainGrid()->boundingBox();
+  cvf::BoundingBox bbg = rigrid_->boundingBox();
 
   cout << fstr("[mod]bbg.debugString()",5)
        << bbg.debugString().toStdString() << endl;
 
   cout << fstr("bbg.extent():")
        << show_Ved3d("", bbg.extent()) << endl;
+
+  // FIND TIGHT GRID BB
+  // Find grid extremities
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   // -------------------------------------------------------
@@ -189,7 +233,6 @@ Model::Model(Settings::Model* settings, Logger *logger) {
 
   // -------------------------------------------------------
   drilling_seq_ = new DrillingSequence();
-  // drilling_seq_ = new Model::Drilling;
   SetDrillingSeq(); // Establishes all fields in drilling_seq_
   // GetDrillingStr(); // Dbg
 
