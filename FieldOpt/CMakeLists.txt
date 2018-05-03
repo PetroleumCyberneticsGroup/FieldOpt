@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 2.8)
 project(FieldOpt)
 
+# ----------------------------------------------------------------------
 # ╔═╗╔╦╗╔═╗╦╔═╔═╗
 # ║  ║║║╠═╣╠╩╗║╣
 # ╚═╝╩ ╩╩ ╩╩ ╩╚═╝
+# ----------------------------------------------------------------------
 
 # General config =======================================================
 # CMAKE_MODULE_PATH: Commands like include() and find_package() search
@@ -29,9 +31,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # Include dirs =========================================================
 include_directories(${PROJECT_SOURCE_DIR})
 
+# ----------------------------------------------------------------------
 # ╦═╗╔═╗╔═╗╦╔╗╔╔═╗╦╔═╗╦ ╦╔╦╗
 # ╠╦╝║╣ ╚═╗║║║║╚═╗║║ ╦╠═╣ ║
 # ╩╚═╚═╝╚═╝╩╝╚╝╚═╝╩╚═╝╩ ╩ ╩
+# ----------------------------------------------------------------------
 
 # ResInsight ===========================================================
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -46,9 +50,11 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNO_DEBUG")
 endif()
 
+# ----------------------------------------------------------------------
 # ╔═╗╦═╗╔╦╗   ╔═╗╔═╗╦
 # ║╣ ╠╦╝ ║    ║╣ ║  ║
 # ╚═╝╩╚═ ╩────╚═╝╚═╝╩═╝
+# ----------------------------------------------------------------------
 
 # Custom ERT include dir (ResInsight) ==================================
 option(USE_ECL_SYSTEM "Use system ERT library" OFF)
@@ -101,6 +107,7 @@ elseif(USE_ECL_LOCAL)
       REQUIRED)
   set(ERTLIB ${ert_ecl})
   # Find INCLUDE DIR by its own script
+  # set(CMAKE_IGNORE_PATH "/usr/local/lib/x86_64-linux-gnu")
 
   find_library(ert_util
       NAMES ert_util
@@ -108,9 +115,11 @@ elseif(USE_ECL_LOCAL)
 
 endif()
 
+# ----------------------------------------------------------------------
 # ╦  ╔═╗╔═╗╔═╗╦    ╦  ╦╔╗ ╔═╗
 # ║  ║ ║║  ╠═╣║    ║  ║╠╩╗╚═╗
 # ╩═╝╚═╝╚═╝╩ ╩╩═╝  ╩═╝╩╚═╝╚═╝
+# ----------------------------------------------------------------------
 
 # Set bundled dependencies first in package search path
 set(CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib/cmake)
@@ -119,9 +128,11 @@ message(STATUS "CMAKE_PREFIX_PATH:" ${CMAKE_PREFIX_PATH})
 # Add local third party include dirs
 include_directories(${CMAKE_SOURCE_DIR}/ThirdParty/libraries/include)
 
+# ----------------------------------------------------------------------
 # ╦ ╦╔╗╔╦╔╦╗  ╔╦╗╔═╗╔═╗╔╦╗
 # ║ ║║║║║ ║    ║ ║╣ ╚═╗ ║
 # ╚═╝╝╚╝╩ ╩    ╩ ╚═╝╚═╝ ╩
+# ----------------------------------------------------------------------
 
 # Enable unit tests + example dir ======================================
 option(BUILD_TESTING "Build unit tests"                 OFF)
@@ -132,10 +143,11 @@ if (BUILD_TESTING AND NOT COPY_EXAMPLES)
     tests. Several of the tests use files in the examples directory.")
 endif()
 
+# ----------------------------------------------------------------------
 # ╔═╗╔╦╗╔═╗╔═╗╦═╗╔═╗  ╦  ╦╔╗
 # ╠═╣ ║║║ ╦╠═╝╠╦╝╚═╗  ║  ║╠╩╗
 # ╩ ╩═╩╝╚═╝╩  ╩╚═╚═╝  ╩═╝╩╚═╝
-
+# ----------------------------------------------------------------------
 # Enable compilation of WIC as standalone executable and/or lib ========
 # NOTE: only one of the following two options should be ON at same time
 # [1] Build standalone well index calculator executable
@@ -143,9 +155,11 @@ option(BUILD_WIC_ONLY "Build well index calculator exe" OFF)
 # [2] Build OS-dependent well index calculator (shared) library:
 option(BUILD_WIC_ADGPRS "Build WIC as SHARED lib"       OFF)
 
+# ----------------------------------------------------------------------
 # ╔╦╗╔═╗╦ ╦╦═╗
 # ║║║╠═╣║ ║╠╦╝
 # ╩ ╩╩ ╩╚═╝╩╚═
+# ----------------------------------------------------------------------
 
 # Build executable for WI benchmarktests ===============================
 option(BUILD_BENCHMARK "Build exec for wic RMS benchmark" OFF)
@@ -166,6 +180,7 @@ if(NOT EIGEN3_FOUND)
   set(EIGEN3_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/ThirdParty/Eigen3)
 endif()
 
+# ----------------------------------------------------------------------
 # ╔═╗╔╦╗
 # ║═╬╗║
 # ╚═╝╚╩
@@ -175,7 +190,7 @@ endif()
 # ╦ ╦╔╦╗╔═╗
 # ╠═╣ ║║╠╣
 # ╩ ╩═╩╝╚
-
+# ----------------------------------------------------------------------
 
 # Build WIC executable  and/or WIC ADGPRS lib ==========================
 # Include HDF5 + Qt5 + GP + ECL ========================================
@@ -223,9 +238,11 @@ else()
 
 endif()
 
+# ----------------------------------------------------------------------
 # ╦═╗╔═╗╔═╗╦ ╦ ╦╔═╗╔═╗╦ ╦ ╦
 # ╠╦╝╠═╝║ ║║ ╚╦╝╠═╝║ ║║ ╚╦╝
 # ╩╚═╩  ╚═╝╩═╝╩ ╩  ╚═╝╩═╝╩
+# ----------------------------------------------------------------------
 
 # Include RpolyPlusPlus: Options =======================================
 message(".............................................................")
@@ -273,9 +290,11 @@ elseif(USE_RPOLY_LOCAL)
 
 endif()
 
+# ----------------------------------------------------------------------
 # ╔╗ ╔═╗╔═╗╔═╗╔╦╗
 # ╠╩╗║ ║║ ║╚═╗ ║
 # ╚═╝╚═╝╚═╝╚═╝ ╩
+# ----------------------------------------------------------------------
 
 # Boost libraries: default-settings ====================================
 message(".............................................................")
@@ -319,9 +338,11 @@ else() # Building all FieldOpt sources
       REQUIRED regex program_options serialization mpi system filesystem random)
 endif()
 
+# ----------------------------------------------------------------------
 # ╔╦╗╔╗ ╔═╗
 #  ║║╠╩╗║ ╦
 # ═╩╝╚═╝╚═╝
+# ----------------------------------------------------------------------
 
 # Pring debug info: include dirs + source dirs =========================
 include(DebugMsg.cmake)
@@ -330,17 +351,21 @@ include(DebugMsg.cmake)
 ## Set this directory as the root dir
 include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR})
 
+# ----------------------------------------------------------------------
 # ╔═╗╔╗╔╔═╗╔═╗╔╦╗
 # ╚═╗║║║║ ║╠═╝ ║
 # ╚═╝╝╚╝╚═╝╩   ╩
+# ----------------------------------------------------------------------
 
 ## SNOPT ================================================================
 include_directories(${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/include/snopt)
 include_directories(${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/handlers)
 
+# ----------------------------------------------------------------------
 # ╦ ╦╔╗╔╦╔╦╗  ╔╦╗╔═╗╔═╗╔╦╗╔═╗
 # ║ ║║║║║ ║    ║ ║╣ ╚═╗ ║ ╚═╗
 # ╚═╝╝╚╝╩ ╩    ╩ ╚═╝╚═╝ ╩ ╚═╝
+# ----------------------------------------------------------------------
 
 # Enable testing =======================================================
 if (BUILD_TESTING)
@@ -404,6 +429,7 @@ if (COPY_EXAMPLES)
       DESTINATION ${CMAKE_BINARY_DIR}/)
 endif()
 
+# ----------------------------------------------------------------------
 
 message("\n*************************************************************")
 message("**** Set ERT_INCLUDE_DIR: ${ERT_INCLUDE_DIR}")
@@ -417,3 +443,5 @@ message(STATUS "RpolyPlusPlus_LIBRARY: ${RpolyPlusPlus_LIBRARY}")
 message(STATUS "RpolyPlusPlus_LIBRARIES: ${RpolyPlusPlus_LIBRARIES}")
 message(STATUS "RpolyPlusPlus_INCLUDE_DIR: ${RpolyPlusPlus_INCLUDE_DIR}")
 message("*************************************************************\n")
+
+# ----------------------------------------------------------------------
