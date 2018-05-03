@@ -58,7 +58,7 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   // -------------------------------------------------------
   ricasedata_->computeActiveCellBoundingBoxes();
 
-  rigridbase_ = ricasedata_->grid(0);
+  rigridbase_ = ricasedata_->grid(0); // Same outer bb as mainGrid
 
   rigrid_ = ricasedata_->mainGrid();
 
@@ -224,14 +224,69 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   }
 
 
+  cvf::Vec3d cornerVerts[8];
+  cvf::Vec3d tightboxmin, tightboxmax;
+
+  rigrid_->cellCornerVertices(cellcount-1, cornerVerts);
+  tightboxmax = cornerVerts[0];
+  tightboxmin = cornerVerts[0];
+
+  // Loop through each cell
+  for (size_t i = 0; i < cellcount; i++) {
+    rigrid_->cellCornerVertices(i, cornerVerts);
+
+    // Loop through each vertex
+    for (size_t j = 0; j < 8; j++) {
+
+      // X-axis
+      if (cornerVerts[j].x() < tightboxmin.x()) {
+        tightboxmin.x() = cornerVerts[j].x();
+      }
+
+      if (cornerVerts[j].x() > tightboxmax.x()) {
+        tightboxmax.x() = cornerVerts[j].x();
+      }
+
+      // Y-axis
+      if (cornerVerts[j].y() < tightboxmin.y()) {
+        tightboxmin.y() = cornerVerts[j].y();
+
+      }
+
+      if (cornerVerts[j].x() > tightboxmax.x()) {
+        tightboxmax.y() = cornerVerts[j].y();
+      }
+
+      // Z-axis
+      if (cornerVerts[j].z() < tightboxmin.z()) {
+        tightboxmin.z() = cornerVerts[j].z();
+
+      }
+
+      if (cornerVerts[j].x() > tightboxmax.x()) {
+        tightboxmax.z() = cornerVerts[j].z();
+      }
+
+    }
+  }
 
 
+  cvf::BoundingBox bbtight;
+  bbtight.add(tightboxmin);
+  bbtight.add(tightboxmax);
 
+  cout << fstr("[mod]bbtight.debugString()",5)
+       << bbtight.debugString().toStdString() << endl;
+  cout << fstr("bbminmax.extent():")
+       << show_Ved3d("", bbtight.extent()) << endl;
 
-
-
-
-
+  stringstream istr;
+  bbtight.cornerVertices(cornerVerts);
+  for (int j=0; j < cornerVerts->length(); j++) {
+    istr << "bbtight.cornerVertices[" << j << "]:";
+    cout << fstr(istr.str())
+         << show_Ved3d("", bbtight.extent()) << endl;
+  }
 
 
 
