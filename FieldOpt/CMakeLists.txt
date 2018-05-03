@@ -101,6 +101,7 @@ elseif(USE_ECL_LOCAL)
       REQUIRED)
   set(ERTLIB ${ert_ecl})
   # Find INCLUDE DIR by its own script
+  # set(CMAKE_IGNORE_PATH "/usr/local/lib/x86_64-linux-gnu")
 
   find_library(ert_util
       NAMES ert_util
