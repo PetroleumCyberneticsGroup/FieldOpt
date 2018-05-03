@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 2.8)
 project(optimization)
 
-# Dbg ==================================================================
-message("\n============================================================")
+# Dbg ======================================================
+message("\n================================================")
 message(STATUS "PROJECT_NAME => ${PROJECT_NAME}")
 message(STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
 message(STATUS "CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
 
-# Options ==============================================================
+# Options ==================================================
 set(EXPERIMENTAL_CONSTRAINTS_DIR
     ${CMAKE_CURRENT_SOURCE_DIR}/experimental_constraints)
 set(EXPERIMENTAL_CONSTRAINTS_SRC "")
@@ -26,7 +26,7 @@ else()
   add_definitions(-DWITHOUT_EXPERIMENTAL_CONSTRAINTS)
 endif()
 
-# Add library ==========================================================
+# Add library ==============================================
 add_library(optimization
     # CASE
     case.cpp
@@ -76,7 +76,7 @@ add_library(optimization
     )
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
-# Target link libraries ================================================
+# Target link libraries ====================================
 target_link_libraries(optimization
     PUBLIC fieldopt::model
     PUBLIC fieldopt::simulation
@@ -89,16 +89,16 @@ target_link_libraries(optimization
     ${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/lib/libsnopt-7.2.12.2.so
     PUBLIC ${Boost_LIBRARIES})
 
-# Target include directories ===========================================
+# Target include directories ===============================
 target_include_directories(optimization PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/constraints>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/objective>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/optimizers>)
 
-# Compile options ======================================================
+# Compile options ==========================================
 add_compile_options(-std=c++11)
 
-# Unit tests ===========================================================
+# Unit tests ===============================================
 if (BUILD_TESTING)
   # Unit tests
   find_package(GTest REQUIRED)
@@ -139,12 +139,12 @@ if (BUILD_TESTING)
   add_test(NAME test_optimization COMMAND $<TARGET_FILE:test_optimization>)
 endif()
 
-# Install targets ======================================================
+# Install targets ==========================================
 install(TARGETS optimization
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib/static
     )
 
-# Debug: include dirs ==================================================
+# Debug: include dirs ======================================
 include(../InclDirDbg.cmake)

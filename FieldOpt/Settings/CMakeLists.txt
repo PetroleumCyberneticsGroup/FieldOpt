@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 2.8)
 project(settings)
 
-# Dbg ==================================================================
+# Dbg ======================================================
 message("\n============================================================")
 message(STATUS "PROJECT_NAME => ${PROJECT_NAME}")
 message(STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
 message(STATUS "CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
 
-# Add library ==========================================================
+# Add library ==============================================
 add_library(settings
     settings_exceptions.h
     optimizer.cpp
@@ -20,21 +20,21 @@ add_library(settings
 add_library(fieldopt::settings
     ALIAS ${PROJECT_NAME})
 
-# Target link libraries ================================================
+# Target link libraries ====================================
 target_link_libraries(settings
     PUBLIC ${ecl_LIBRARIES}
     PUBLIC ${opm-common_LIBRARIES}
     PUBLIC ${Boost_LIBRARIES}
     PUBLIC Qt5::Core)
 
-# Target include directories ===========================================
+# Target include directories ===============================
 target_include_directories(settings PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 
-# Compile options ======================================================
+# Compile options ==========================================
 add_compile_options(-std=c++11)
 
-# Unit tests ===========================================================
+# Unit tests ===============================================
 if (BUILD_TESTING)
 
   # Unit tests
@@ -56,12 +56,12 @@ if (BUILD_TESTING)
   add_test(NAME test_settings COMMAND $<TARGET_FILE:test_settings>)
 endif()
 
-# Install targets ======================================================
+# Install targets ==========================================
 install( TARGETS settings
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib/static
     )
 
-# Debug: include dirs ==================================================
+# Debug: include dirs ======================================
 include(../InclDirDbg.cmake)

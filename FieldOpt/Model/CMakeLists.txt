@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 2.8)
 project(model)
 
-# Dbg ==================================================================
-message("\n============================================================")
+# Dbg ======================================================
+message("\n================================================")
 message(STATUS "PROJECT_NAME => ${PROJECT_NAME}")
 message(STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
 message(STATUS "CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
 
-# Add library ==========================================================
+# Add library ==============================================
 add_library(model
     model.cpp
     wells/well.cpp
@@ -30,7 +30,7 @@ add_library(model
     wells/well_group.cpp wells/drilling_sequence.cpp wells/drilling_sequence.h)
 add_library(fieldopt::model ALIAS ${PROJECT_NAME})
 
-# Target link libraries ================================================
+# Target link libraries ====================================
 target_link_libraries (model
     PUBLIC fieldopt::reservoir
     PUBLIC fieldopt::wellindexcalculator
@@ -40,17 +40,17 @@ target_link_libraries (model
     PUBLIC Qt5::Core
     PUBLIC ${Boost_LIBRARIES})
 
-# Target include directories ===========================================
+# Target include directories ===============================
 target_include_directories(model PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/properties>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/wells>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/wells/wellbore>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/wells/wellbore/completions>)
 
-# Compile options ======================================================
+# Compile options ==========================================
 add_compile_options(-std=c++11)
 
-# Unit tests ===========================================================
+# Unit tests ===============================================
 if (BUILD_TESTING)
   # Unit tests
   find_package(GTest REQUIRED)
@@ -78,12 +78,12 @@ if (BUILD_TESTING)
   add_test(NAME test_model COMMAND $<TARGET_FILE:test_model>)
 endif()
 
-# Install targets ======================================================
+# Install targets ==========================================
 install(TARGETS model
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib/static
     )
 
-# Debug: include dirs ==================================================
+# Debug: include dirs ======================================
 include(../InclDirDbg.cmake)
