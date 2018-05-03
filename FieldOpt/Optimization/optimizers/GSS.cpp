@@ -1,22 +1,27 @@
-/******************************************************************************
-   Created by einar on 11/3/16.
-   Copyright (C) 2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+/***********************************************************
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
 
-   This file is part of the FieldOpt project.
+ Created by einar on 11/3/16.
 
-   FieldOpt is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+ This file is part of the FieldOpt project.
 
-   FieldOpt is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+ FieldOpt is free software: you can redistribute it
+ and/or modify it under the terms of the GNU General
+ Public License as published by the Free Software
+ Foundation, either version 3 of the License, or (at
+ your option) any later version.
 
-   You should have received a copy of the GNU General Public License
-   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
-******************************************************************************/
+ FieldOpt is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the
+ implied warranty of MERCHANTABILITY or FITNESS FOR
+ A PARTICULAR PURPOSE.  See the GNU General Public
+ License for more details.
+
+ You should have received a copy of the GNU
+ General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
 
 // ---------------------------------------------------------
 #include <iostream>
@@ -32,7 +37,7 @@ using std::endl;
 namespace Optimization {
 namespace Optimizers {
 
-// ---------------------------------------------------------
+// =========================================================
 GSS::GSS(Settings::Optimizer *settings,
          Case *base_case,
          Model::Properties::VariablePropertyContainer *variables,
@@ -62,7 +67,7 @@ GSS::GSS(Settings::Optimizer *settings,
   set_expansion_factor();
 }
 
-// ---------------------------------------------------------
+// =========================================================
 Optimizer::TerminationCondition GSS::IsFinished() {
 
   TerminationCondition tc = NOT_FINISHED;
@@ -80,7 +85,7 @@ Optimizer::TerminationCondition GSS::IsFinished() {
   return tc;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void GSS::expand(vector<int> dirs) {
   print_dbg_msg_d("[opt]GGS: expanding.--------- ", 2);
 
@@ -94,7 +99,7 @@ void GSS::expand(vector<int> dirs) {
   }
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void GSS::contract(vector<int> dirs) {
   print_dbg_msg_d("[opt]GGS: contracting.------- ", 2);
 
@@ -108,7 +113,7 @@ void GSS::contract(vector<int> dirs) {
   }
 }
 
-// ---------------------------------------------------------
+// =========================================================
 QList<Case *> GSS::generate_trial_points(vector<int> dirs) {
 
   // -------------------------------------------------------
@@ -168,7 +173,7 @@ QList<Case *> GSS::generate_trial_points(vector<int> dirs) {
   return trial_points;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 template<typename T> Matrix<T, Dynamic, 1>
 GSS::perturb(Matrix<T, Dynamic, 1> base, int dir) {
 
@@ -183,7 +188,7 @@ GSS::perturb(Matrix<T, Dynamic, 1> base, int dir) {
   return perturbation;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 bool GSS::is_converged() {
 
   // -------------------------------------------------------
@@ -195,7 +200,7 @@ bool GSS::is_converged() {
   return true;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void GSS::set_num_vars(Case* base_case) {
 
   int numRvars = (int)base_case->GetRealVarVector().size();
@@ -207,7 +212,7 @@ void GSS::set_num_vars(Case* base_case) {
         "continuous and discrete variables at the same time\n");
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void GSS::set_contraction_factor(){
 
   contr_fac_ = settings_->parameters().contraction_factor;
@@ -217,7 +222,7 @@ void GSS::set_contraction_factor(){
   print_dbg_msg_d("[opt]Contraction factor:----- ", 1, vec);
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void GSS::set_expansion_factor(){
 
   expan_fac_ = settings_->parameters().expansion_factor;
@@ -227,28 +232,33 @@ void GSS::set_expansion_factor(){
   print_dbg_msg_d("[opt]Expansion factor:------- ", 1, vec);
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void GSS::set_step_lengths(double len) {
   step_lengths_.fill(len);
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void GSS::set_step_lengths() {
   step_lengths_ = Eigen::VectorXd(directions_.size());
-  GSS::set_step_vector(settings_->parameters().initial_step_length,
-                       settings_->parameters().initial_step_length_xyz,
-                       step_lengths_);
+
+  GSS::set_step_vector(
+      settings_->parameters().initial_step_length,
+      settings_->parameters().initial_step_length_xyz,
+      step_lengths_);
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void GSS::set_step_tolerances() {
+
   step_tol_ = Eigen::VectorXd(directions_.size());
-  GSS::set_step_vector(settings_->parameters().minimum_step_length,
-                       settings_->parameters().minimum_step_length_xyz,
-                       step_tol_);
+
+  GSS::set_step_vector(
+      settings_->parameters().minimum_step_length,
+      settings_->parameters().minimum_step_length_xyz,
+      step_tol_);
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void GSS::set_step_vector(double isval,
                           QList<double> vecxyz,
                           Eigen::VectorXd& st_vec) {
@@ -308,10 +318,11 @@ void GSS::set_step_vector(double isval,
   print_dbg_msg_d("[opt]Step length/tol vector:- ", 2, st_vec);
 }
 
-// ---------------------------------------------------------
+// =========================================================
 Case * GSS::dequeue_case_with_worst_origin() {
 
   auto queued_cases = case_handler_->QueuedCases();
+
   std::sort(queued_cases.begin(), queued_cases.end(),
             [this](const Case *c1, const Case *c2) -> bool {
               return isBetter(c1, c2);
@@ -320,15 +331,17 @@ Case * GSS::dequeue_case_with_worst_origin() {
   return queued_cases.last();
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void
-GSS::print_dbg_msg_i(string dbg_str, int vlevel, VectorXi eigvec) {
+GSS::print_dbg_msg_i(string dbg_str,
+                     int vlevel,
+                     VectorXi eigvec) {
 
   print_dbg_msg_d(dbg_str, vlevel, eigvec.cast<double> ());
 
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void
 GSS::print_dbg_msg_d(string dbg_str, int vlevel, VectorXd eigvec) {
 

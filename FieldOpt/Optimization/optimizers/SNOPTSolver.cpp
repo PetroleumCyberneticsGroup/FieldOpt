@@ -94,7 +94,7 @@ SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
 
   // ---------------------------------------------------------------
   if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
-    cout << "[opt]Init. SNOPTSolver.-------" << endl;
+    cout << fstr("[opt]Init. SNOPTSolver.",6) << endl;
   settings_ = settings;
 
   // ---------------------------------------------------------------

@@ -1,13 +1,35 @@
+/***********************************************************
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
 
-// -----------------------------------------------------------------
+ This file is part of the FieldOpt project.
+
+ FieldOpt is free software: you can redistribute it
+ and/or modify it under the terms of the GNU General
+ Public License as published by the Free Software
+ Foundation, either version 3 of the License, or (at
+ your option) any later version.
+
+ FieldOpt is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the
+ implied warranty of MERCHANTABILITY or FITNESS FOR
+ A PARTICULAR PURPOSE.  See the GNU General Public
+ License for more details.
+
+ You should have received a copy of the GNU
+ General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
+
+// ---------------------------------------------------------
 #include "constraint_handler.h"
 #include <iostream>
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 namespace Optimization {
 namespace Constraints {
 
-// -----------------------------------------------------------------
+// =========================================================
 ConstraintHandler::ConstraintHandler(
     QList<Settings::Optimizer::Constraint> constraints,
     Model::Properties::VariablePropertyContainer *variables,
@@ -19,13 +41,13 @@ ConstraintHandler::ConstraintHandler(
     cout << "RICaseData is null" << endl;
   }
 
-  // ---------------------------------------------------------------
+  // -------------------------------------------------------
   for (Settings::Optimizer::Constraint constraint : constraints) {
 
-    // -------------------------------------------------------------
+    // -----------------------------------------------------
     switch (constraint.type) {
 
-      // -----------------------------------------------------------
+      // ---------------------------------------------------
       // IWD W/ SNOPT
       case Settings::Optimizer::ConstraintType::IWD:
         constraints_.append(new IWDConstraint(settings,
@@ -34,19 +56,19 @@ ConstraintHandler::ConstraintHandler(
                                               ricasedata));
         break;
 
-        // ---------------------------------------------------------
+        // -------------------------------------------------
         // BHP
       case Settings::Optimizer::ConstraintType::BHP:
         constraints_.append(new BhpConstraint(constraint, variables));
         break;
 
-        // ---------------------------------------------------------
+        // -------------------------------------------------
         // RATE
       case Settings::Optimizer::ConstraintType::Rate:
         constraints_.append(new RateConstraint(constraint, variables));
         break;
 
-        // ---------------------------------------------------------
+        // -------------------------------------------------
         // WELL SPLINE LENGTH
       case Settings::Optimizer::ConstraintType::WellSplineLength:
 
@@ -57,13 +79,13 @@ ConstraintHandler::ConstraintHandler(
         }
         break;
 
-        // -----------------------------------------------------------
+        // -------------------------------------------------
         // WELL SPLINE INTERWELL DISTANCE
       case Settings::Optimizer::ConstraintType::WellSplineInterwellDistance:
         constraints_.append(new InterwellDistance(constraint, variables));
         break;
 
-        // -----------------------------------------------------------
+        // -------------------------------------------------
         // COMBINED WELL SPLINE LENGTH INTERWELL DISTANCE
       case Settings::Optimizer::ConstraintType::
         CombinedWellSplineLengthInterwellDistance:
@@ -72,7 +94,7 @@ ConstraintHandler::ConstraintHandler(
             new CombinedSplineLengthInterwellDistance(constraint, variables));
         break;
 
-        // -----------------------------------------------------------
+        // -------------------------------------------------
         // COMBINED WELL SPLINE LENGTH INTERWELL DISTANCE RES.BOUNDARY
       case Settings::Optimizer::ConstraintType::
         CombinedWellSplineLengthInterwellDistanceReservoirBoundary:
@@ -82,7 +104,7 @@ ConstraintHandler::ConstraintHandler(
                 constraint, variables, grid));
         break;
 
-        // -----------------------------------------------------------
+        // -------------------------------------------------
         // RESERVOIR BOUNDARY
       case Settings::Optimizer::ConstraintType::ReservoirBoundary:
 
@@ -93,7 +115,7 @@ ConstraintHandler::ConstraintHandler(
         }
         break;
 
-        // -----------------------------------------------------------
+        // -------------------------------------------------
         // PSEUDO CONTINUOUS BOUNDARY 2D
       case Settings::Optimizer::ConstraintType::PseudoContBoundary2D:
 
@@ -113,7 +135,7 @@ ConstraintHandler::ConstraintHandler(
     }
   }
 
-// ---------------------------------------------------------------
+// ---------------------------------------------------------
 #ifdef WITH_EXPERIMENTAL_CONSTRAINTS
   std::cout << "Using experimental constraints" << std::endl;
 #else
@@ -121,10 +143,10 @@ ConstraintHandler::ConstraintHandler(
 #endif
 }
 
-// ---------------------------------------------------------------
+// =========================================================
 bool ConstraintHandler::CaseSatisfiesConstraints(Case *c) {
 
-  // -------------------------------------------------------------
+  // -------------------------------------------------------
   // Check status wrt constraint, set to infeasible if true
   for (Constraint *constraint : constraints_) {
     if (!constraint->CaseSatisfiesConstraint(c)) {
@@ -133,13 +155,13 @@ bool ConstraintHandler::CaseSatisfiesConstraints(Case *c) {
     }
   }
 
-  // -------------------------------------------------------------
+  // -------------------------------------------------------
   // Set status to feasible if not infeasible
   c->state.cons = Case::CaseState::ConsStatus::C_FEASIBLE;
   return true;
 }
 
-// ---------------------------------------------------------------
+// =========================================================
 void ConstraintHandler::SnapCaseToConstraints(Case *c) {
 
   // -------------------------------------------------------------

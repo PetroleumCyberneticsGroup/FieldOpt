@@ -587,13 +587,26 @@ inline void print_ri_hck(
 
 // ---------------------------------------------------------------
 inline string show_Ved3d(string msg_in = "",
-                         cvf::Vec3d dbg_vec = cvf::Vec3d::ZERO) {
+                         cvf::Vec3d dbg_vec = cvf::Vec3d::ZERO,
+                         bool format = true) {
 
   string msg_out;
-  msg_out = msg_in
-      + "[ x = " + std::to_string(dbg_vec.x())
-      + ", y = " + std::to_string(dbg_vec.y())
-      + ", z = " + std::to_string(dbg_vec.z()) + " ]";
+  if (format) {
+
+    msg_out = msg_in
+        + "[ x = " + std::to_string(dbg_vec.x())
+        + ", y = " + std::to_string(dbg_vec.y())
+        + ", z = " + std::to_string(dbg_vec.z()) + " ]";
+
+  } else {
+
+    msg_out =
+        std::to_string(dbg_vec.x())
+        + std::to_string(dbg_vec.y())
+        + std::to_string(dbg_vec.z());
+
+  }
+
 
   return msg_out;
 

@@ -24,7 +24,7 @@
 // ---------------------------------------------------------
 #include "model.h"
 #include <boost/lexical_cast.hpp>
-#include <FieldOpt-WellIndexCalculator/resinxx/rixx_prj_viz/RivIntersectionGeometryGenerator.h>
+
 
 // ---------------------------------------------------------
 using std::cout;
@@ -50,290 +50,28 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   grid_ = new Reservoir::Grid::ECLGrid(
       settings_->reservoir().path.toStdString());
 
-// -------------------------------------------------------
+  // -------------------------------------------------------
   RIReaderECL *rireaderecl = new RIReaderECL();
   ricasedata_ = new RICaseData(grid_->GetFilePath());
+
+  // -------------------------------------------------------
   rireaderecl->open(grid_->GetFilePathQString(), ricasedata_);
+  ricasedata_->set_verbosity_vector(settings_->verb_vector());
 
   // -------------------------------------------------------
-  ricasedata_->computeActiveCellBoundingBoxes();
+  // Moved to iwd_constraint.cpp
+  //
+  // Force compute geometric bb
+  // ricasedata_->computeActiveCellBoundingBoxes();
 
-  rigridbase_ = ricasedata_->grid(0); // Same outer bb as mainGrid
-
-  rigrid_ = ricasedata_->mainGrid();
-
-  rigrid_->computeCachedData();
-  // ricasedata_->mainGrid()->computeCachedData();
-
-  rigrid_->calculateFaults(
-      ricasedata_->activeCellInfo(MATRIX_MODEL));
-  // ricasedata_->mainGrid()->calculateFaults(
+  // -------------------------------------------------------
+  // Moved to iwd_constraint.cpp
+  //
+  // Use RIGrid from now on
+  // rigrid_ = ricasedata_->mainGrid();
+  // rigrid_->computeCachedData();
+  // rigrid_->calculateFaults(
   //    ricasedata_->activeCellInfo(MATRIX_MODEL));
-
-  // -------------------------------------------------------------
-  std::vector<cvf::Vec3d> ccv, ccc;
-  size_t idx;
-//  for (idx = 0; idx < ricasedata_->mainGrid()->cellCount(); idx++) {
-  for (idx = 0; idx < 4; idx++) {
-
-    size_t i, j, k;
-    rigrid_->ijkFromCellIndex(idx, &i, &j, &k);
-    // ricasedata_->mainGrid()->ijkFromCellIndex(idx, &i, &j, &k);
-    cout << "i:" << i << " j:" << j << " k:" << k << endl;
-    //cout << ricasedata_->mainGrid()->cellCentroid(idx).x();
-
-    std::array<cvf::Vec3d, 8> hc;
-    rigrid_->cellCornerVertices(idx, hc.data());
-    // ricasedata_->mainGrid()->cellCornerVertices(idx, hc.data());
-    cout << "hc_x:" << hc[0].x() << " hc_y:" << hc[0].y() << " hc_z:" << hc[0].z() << endl;
-    ccc.push_back(hc[0]);
-
-    cvf::Vec3d cc = rigrid_->cell(idx).center();
-    // cvf::Vec3d cc = ricasedata_->mainGrid()->cell(idx).center();
-    cout << "cc_x:" << cc.x() << " cc_y:" << cc.y() << " cc_z:" << cc.z() << endl;
-    ccv.push_back(cc);
-
-  }
-
-  std::array<cvf::Vec3d, 8> hc;
-  rigrid_->cellCornerVertices(0, hc.data());
-  // ricasedata_->mainGrid()->cellCornerVertices(0, hc.data());
-  ccc.push_back(hc[0]);
-
-  // -------------------------------------------------------
-  rimintersection_ = new RimIntersection(rigrid_,
-                                         ricasedata_,
-                                         settings);
-
-//   95 25 -2005
-//   5 55 -2005
-//  cvf::Vec3d p1 = cvf::Vec3d(95, 25, -2005);
-//  cvf::Vec3d p2 = cvf::Vec3d(5, 55, -2005);
-//  rimintersection_->appendPointToPolyLine(p1);
-//  rimintersection_->appendPointToPolyLine(p2);
-
-//  95 35 -2005
-//  35 5 -2005
-//  5 35 -2005
-//  35 95 -2005
-//  95 35 -2005
-
-  cvf::Vec3d p1 = cvf::Vec3d(95, 35, -2005);
-  cvf::Vec3d p2 = cvf::Vec3d(35, 5, -2005);
-  cvf::Vec3d p3 = cvf::Vec3d(5, 35, -2005);
-  cvf::Vec3d p4 = cvf::Vec3d(35, 95, -2005);
-  cvf::Vec3d p5 = cvf::Vec3d(95, 35, -2005);
-  rimintersection_->appendPointToPolyLine(p1);
-  rimintersection_->appendPointToPolyLine(p2);
-  rimintersection_->appendPointToPolyLine(p3);
-  rimintersection_->appendPointToPolyLine(p4);
-  rimintersection_->appendPointToPolyLine(p5);
-
-//  for (int ii=0; ii < 2; ++ii) {
-//    cout << "Polypoint " << ii <<  ": ";
-//    cout << ccc[ii].x() << " " << ccc[ii].y() << " " << ccc[ii].z() << endl;
-//    // cout << "appendPointToPolyLine(ccc[" << ii << "])" << endl;
-//    rimintersection_->appendPointToPolyLine(ccc[ii]);
-//  }
-
-  RivIntersectionPartMgr* imgr =
-      rimintersection_->intersectionPartMgr();
-
-  RivIntersectionGeometryGenerator*
-      icsec = imgr->getCrossSectionGenerator();
-
-  size_t vx_count = icsec->m_cellBorderLineVxes.p()->size();
-
-  for (size_t ivx = 0; ivx < vx_count; ivx++) {
-    auto vx_x = icsec->m_cellBorderLineVxes.p()->val(ivx).x();
-    auto vx_y = icsec->m_cellBorderLineVxes.p()->val(ivx).y();
-    auto vx_z = icsec->m_cellBorderLineVxes.p()->val(ivx).z();
-    cout << "vx_x: " << vx_x << " "
-         << "vx_y: " << vx_y << " "
-         << "vx_z: " << vx_z << endl;
-  }
-
-  print_ri_hck_vec3f("", "", "", cvf::Vec3f::ZERO, true, false);
-  for (size_t ivx = 0; ivx < vx_count; ivx++) {
-    print_ri_hck_vec3f("", "", "",
-                       icsec->m_cellBorderLineVxes.p()->val(ivx));
-  }
-
-  // -------------------------------------------------------
-  if (settings->verb_vector()[5] > 1) // idx:5 -> mod (Model)
-    cout << fstr("[mod]Init RIGrid_.",5) << "RICell& cell" << endl;
-
-  size_t cellcount = rigrid_->cellCount();
-  const RICell& cell = rigrid_->globalCellArray()[cellcount];
-  // size_t cellcount = ricasedata_->mainGrid()->cellCount();
-  // const RICell& cell = ricasedata_->mainGrid()->globalCellArray()[cellcount];
-
-  cout << "volume:" << cell.volume() << " count:" << cellcount<< endl;
-
-  cvf::Vec3d startp = rigrid_->cell(0).center();
-  cvf::Vec3d endp = rigrid_->cell(cellcount-1).center();
-  // cvf::Vec3d startp = ricasedata_->grid(0)->cell(0).center();
-  // cvf::Vec3d endp = ricasedata_->grid(0)->cell(cellcount-1).center();
-
-  cout << "x:" << startp.x() << " y:" << startp.y() << " z:" << startp.z() << endl;
-  cout << "x:" << endp.x() << " y:" << endp.y() << " z:" << endp.z() << endl;
-
-  // -------------------------------------------------------
-  // BOUNDING BOX EXPERIMENTS
-
-  // ....................................................
-  cvf::BoundingBox bb;
-  bb.add(startp);
-  bb.add(endp);
-
-  cout << endl << fstr("[mod]bb.debugString()",5)
-       << bb.debugString().toStdString() << endl;
-  cout << fstr("bb.extent():")
-       << show_Ved3d("", bb.extent()) << endl;
-
-  // cvf::BoundingBox bbg = ricasedata_->mainGrid()->boundingBox();
-  cvf::BoundingBox bbg = rigrid_->boundingBox();
-
-  cout << fstr("[mod]bbg.debugString()",5)
-       << bbg.debugString().toStdString() << endl;
-
-  cout << fstr("bbg.extent():")
-       << show_Ved3d("", bbg.extent()) << endl;
-
-  // ....................................................
-  // FIND TIGHT GRID BB
-  // Find grid extremities
-  auto gmincoord = rigrid_->minCoordinate();
-  auto gmaxcoord = rigrid_->maxCoordinate();
-
-  cvf::BoundingBox bbminmax = rigridbase_->boundingBox();
-//  bbminmax.add(gmincoord);
-//  bbminmax.add(gmaxcoord);
-
-//  cout << fstr("[mod]rigrid_->maxCoordinate()",5)
-//       << show_Ved3d("", gmaxcoord) << endl;
-//
-//  cout << fstr("[mod]rigrid_->minCoordinate()",5)
-//       << show_Ved3d("", gmincoord) << endl;
-
-  cout << endl << fstr("[mod]bbminmax.debugString()",5)
-       << bbminmax.debugString().toStdString() << endl;
-  cout << fstr("bbminmax.extent():")
-       << show_Ved3d("", bbminmax.extent()) << endl;
-
-//  for (size_t ii=0; ii < cellcount; ++ii) {
-//
-//  }
-
-  // ....................................................
-  cvf::Vec3d cornerVerts[8];
-  cvf::Vec3d tightboxmin, tightboxmax;
-
-  rigrid_->cellCornerVertices((size_t)cellcount/2, cornerVerts);
-  tightboxmax = cornerVerts[0];
-  tightboxmin = cornerVerts[0];
-
-  // Loop through each cell
-  for (size_t i = 0; i < cellcount; i++) {
-
-    if(!rigrid_->cell(i).isInvalid()) {
-
-      rigrid_->cellCornerVertices(i, cornerVerts);
-
-      // Loop through each vertex
-      for (size_t j = 0; j < 8; j++) {
-
-        // X-axis
-        if (cornerVerts[j].x() < tightboxmin.x()) {
-          tightboxmin.x() = cornerVerts[j].x();
-        }
-
-        if (cornerVerts[j].x() > tightboxmax.x()) {
-          tightboxmax.x() = cornerVerts[j].x();
-        }
-
-        // Y-axis
-        if (cornerVerts[j].y() < tightboxmin.y()) {
-          tightboxmin.y() = cornerVerts[j].y();
-
-        }
-
-        if (cornerVerts[j].y() > tightboxmax.y()) {
-          tightboxmax.y() = cornerVerts[j].y();
-        }
-
-        // Z-axis
-        if (cornerVerts[j].z() < tightboxmin.z()) {
-          tightboxmin.z() = cornerVerts[j].z();
-
-        }
-
-        if (cornerVerts[j].z() > tightboxmax.z()) {
-          tightboxmax.z() = cornerVerts[j].z();
-        }
-
-      }
-
-    }
-  }
-
-  cvf::BoundingBox bbtight;
-  bbtight.add(tightboxmin);
-  bbtight.add(tightboxmax);
-
-  cout << endl << fstr("[mod]bbtight.debugString()",5)
-       << bbtight.debugString().toStdString() << endl;
-  cout << fstr("bbminmax.extent():")
-       << show_Ved3d("", bbtight.extent()) << endl;
-
-  stringstream istr;
-  bbtight.cornerVertices(cornerVerts);
-
-  for (int j=0; j < 8; j++) {
-    istr << "bbtight.cornerVertices[" << j << "]:";
-    cout << fstr(istr.str(),5)
-         << show_Ved3d("", cornerVerts[j]) << endl;
-    istr.str("");
-  }
-
-  // ....................................................
-
-  cout << fstr("TEST:")
-       << ricasedata_->activeCellInfo(MATRIX_MODEL)->isActive(0)
-      << endl;
-
-//  actinfo_ = ricasedata_->activeCellInfo(MATRIX_MODEL).;
-//  cvf::BoundingBox abb = actinfo_->geometryBoundingBox();
-//
-  cvf::BoundingBox abb =
-      ricasedata_->activeCellInfo(MATRIX_MODEL)->geometryBoundingBox();
-//
-  cout << endl << fstr("[mod]abb.debugString()",5)
-       << abb.debugString().toStdString() << endl;
-  cout << fstr("abb.extent():")
-       << show_Ved3d("", abb.extent()) << endl;
-
-  abb.expand(.1);
-
-  cvf::Vec3d abb_cornerVerts[8];
-  abb.cornerVertices(abb_cornerVerts);
-
-  for (int j=0; j < 8; j++) {
-    istr << "abb.cornerVertices[" << j << "]:";
-    cout << fstr(istr.str(),5)
-         << show_Ved3d("", abb_cornerVerts[j]) << endl;
-    istr.str("");
-  }
-
-
-
-
-
-
-  throw std::runtime_error("STOP EXP");
-
-
-
 
   // -------------------------------------------------------
   if (settings_->verb_vector()[5] > 1) // idx:5 -> mod

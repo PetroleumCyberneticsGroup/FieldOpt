@@ -70,6 +70,16 @@ class IWDConstraint : public Constraint {
   Model::Properties::VariablePropertyContainer *variables_;
   Case *current_case_;
 
+  // -------------------------------------------------------
+
+  RIGrid* rigrid_;
+
+  RICaseData* ricasedata_;
+
+  cvf::BoundingBox bbgrid;
+
+  RimIntersection* rimintersection_;
+
 //  Reservoir::Grid::Grid *grid_;
 //  Logger* logger_;
 

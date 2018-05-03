@@ -1,3 +1,25 @@
+/***********************************************************
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
+
+ This file is part of the FieldOpt project.
+
+ FieldOpt is free software: you can redistribute it
+ and/or modify it under the terms of the GNU General
+ Public License as published by the Free Software
+ Foundation, either version 3 of the License, or (at
+ your option) any later version.
+
+ FieldOpt is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the
+ implied warranty of MERCHANTABILITY or FITNESS FOR
+ A PARTICULAR PURPOSE.  See the GNU General Public
+ License for more details.
+
+ You should have received a copy of the GNU
+ General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
 
 // ---------------------------------------------------------
 #include <iostream>
@@ -13,13 +35,14 @@ using std::endl;
 namespace Optimization {
 namespace Optimizers {
 
-// ---------------------------------------------------------
-CompassSearch::CompassSearch(Settings::Optimizer *settings,
-                             Case *base_case,
-                             Model::Properties::VariablePropertyContainer *variables,
-                             Reservoir::Grid::Grid *grid,
-                             Logger *logger,
-                             RICaseData *ricasedata)
+// =========================================================
+CompassSearch::CompassSearch(
+    Settings::Optimizer *settings,
+    Case *base_case,
+    Model::Properties::VariablePropertyContainer *variables,
+    Reservoir::Grid::Grid *grid,
+    Logger *logger,
+    RICaseData *ricasedata)
     : GSS(settings, base_case, variables, grid, logger, ricasedata) {
 
   // -------------------------------------------------------
@@ -36,7 +59,7 @@ CompassSearch::CompassSearch(Settings::Optimizer *settings,
 
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void CompassSearch::iterate() {
 
   // -------------------------------------------------------
@@ -51,7 +74,7 @@ void CompassSearch::iterate() {
   iteration_++;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 QString CompassSearch::GetStatusStringHeader() const {
 
   if(settings_->parameters().initial_step_length_xyz.length() > 0) {
@@ -81,7 +104,7 @@ QString CompassSearch::GetStatusStringHeader() const {
   }
 }
 
-// ---------------------------------------------------------
+// =========================================================
 QString CompassSearch::GetStatusString() const {
 
   // -------------------------------------------------------
@@ -145,13 +168,13 @@ QString CompassSearch::GetStatusString() const {
   }
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void CompassSearch::handleEvaluatedCase(Case *c) {
   if (isImprovement(c))
     updateTentativeBestCase(c);
 }
 
-// ---------------------------------------------------------
+// =========================================================
 bool CompassSearch::is_successful_iteration() {
   return case_handler_->
       RecentlyEvaluatedCases().contains(GetTentativeBestCase());
