@@ -58,6 +58,8 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   // -------------------------------------------------------
   ricasedata_->computeActiveCellBoundingBoxes();
 
+  rigridbase_ = ricasedata_->grid(0);
+
   rigrid_ = ricasedata_->mainGrid();
 
   rigrid_->computeCachedData();
@@ -199,6 +201,27 @@ Model::Model(Settings::Model* settings, Logger *logger) {
 
   // FIND TIGHT GRID BB
   // Find grid extremities
+  auto gmincoord = rigrid_->minCoordinate();
+  auto gmaxcoord = rigrid_->maxCoordinate();
+
+  cvf::BoundingBox bbminmax = rigridbase_->boundingBox();
+//  bbminmax.add(gmincoord);
+//  bbminmax.add(gmaxcoord);
+
+  cout << fstr("[mod]rigrid_->maxCoordinate()",5)
+       << show_Ved3d("", gmaxcoord) << endl;
+
+  cout << fstr("[mod]rigrid_->minCoordinate()",5)
+       << show_Ved3d("", gmincoord) << endl;
+
+  cout << fstr("[mod]bbminmax.debugString()",5)
+       << bbminmax.debugString().toStdString() << endl;
+  cout << fstr("bbminmax.extent():")
+       << show_Ved3d("", bbminmax.extent()) << endl;
+
+  for (size_t ii=0; ii < cellcount; ++ii) {
+
+  }
 
 
 
@@ -217,9 +240,7 @@ Model::Model(Settings::Model* settings, Logger *logger) {
 
 
 
-
-
-
+  throw std::runtime_error("STOP EXP");
 
 
 
@@ -240,8 +261,8 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   CreateWellGroups();
 
   // -------------------------------------------------------
-   if (settings_->verb_vector()[5] > 1) // idx:5 -> mod
-     cout << fstr("[mod]Setting up well_ QList.",5) << endl;
+  if (settings_->verb_vector()[5] > 1) // idx:5 -> mod
+    cout << fstr("[mod]Setting up well_ QList.",5) << endl;
 
   // Set up regular well QList for subsequent calculations
   // that are group-independent -> this carries over the
@@ -356,8 +377,8 @@ void Model::InsertDrillingTStep() {
 
   // -------------------------------------------------------
   if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
-  cout << fstr("[mod]InsertDrillingTStep():",5)
-       << "Done." << endl;
+    cout << fstr("[mod]InsertDrillingTStep():",5)
+         << "Done." << endl;
 
 }
 
