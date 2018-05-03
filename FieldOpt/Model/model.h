@@ -176,6 +176,7 @@ class Model : public Loggable
   // RIReaderECL rireaderecl_;
   RIGrid* rigrid_;
   RIGridBase* rigridbase_;
+  RIActiveCellInfo* actinfo_;
 
   // Drilling *drillseq_;
   DrillingSequence *drilling_seq_;

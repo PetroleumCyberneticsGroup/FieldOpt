@@ -181,11 +181,12 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   // -------------------------------------------------------
   // BOUNDING BOX EXPERIMENTS
 
+  // ....................................................
   cvf::BoundingBox bb;
   bb.add(startp);
   bb.add(endp);
 
-  cout << fstr("[mod]bb.debugString()",5)
+  cout << endl << fstr("[mod]bb.debugString()",5)
        << bb.debugString().toStdString() << endl;
   cout << fstr("bb.extent():")
        << show_Ved3d("", bb.extent()) << endl;
@@ -199,6 +200,7 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   cout << fstr("bbg.extent():")
        << show_Ved3d("", bbg.extent()) << endl;
 
+  // ....................................................
   // FIND TIGHT GRID BB
   // Find grid extremities
   auto gmincoord = rigrid_->minCoordinate();
@@ -208,87 +210,120 @@ Model::Model(Settings::Model* settings, Logger *logger) {
 //  bbminmax.add(gmincoord);
 //  bbminmax.add(gmaxcoord);
 
-  cout << fstr("[mod]rigrid_->maxCoordinate()",5)
-       << show_Ved3d("", gmaxcoord) << endl;
+//  cout << fstr("[mod]rigrid_->maxCoordinate()",5)
+//       << show_Ved3d("", gmaxcoord) << endl;
+//
+//  cout << fstr("[mod]rigrid_->minCoordinate()",5)
+//       << show_Ved3d("", gmincoord) << endl;
 
-  cout << fstr("[mod]rigrid_->minCoordinate()",5)
-       << show_Ved3d("", gmincoord) << endl;
-
-  cout << fstr("[mod]bbminmax.debugString()",5)
+  cout << endl << fstr("[mod]bbminmax.debugString()",5)
        << bbminmax.debugString().toStdString() << endl;
   cout << fstr("bbminmax.extent():")
        << show_Ved3d("", bbminmax.extent()) << endl;
 
-  for (size_t ii=0; ii < cellcount; ++ii) {
+//  for (size_t ii=0; ii < cellcount; ++ii) {
+//
+//  }
 
-  }
-
-
+  // ....................................................
   cvf::Vec3d cornerVerts[8];
   cvf::Vec3d tightboxmin, tightboxmax;
 
-  rigrid_->cellCornerVertices(cellcount-1, cornerVerts);
+  rigrid_->cellCornerVertices((size_t)cellcount/2, cornerVerts);
   tightboxmax = cornerVerts[0];
   tightboxmin = cornerVerts[0];
 
   // Loop through each cell
   for (size_t i = 0; i < cellcount; i++) {
-    rigrid_->cellCornerVertices(i, cornerVerts);
 
-    // Loop through each vertex
-    for (size_t j = 0; j < 8; j++) {
+    if(!rigrid_->cell(i).isInvalid()) {
 
-      // X-axis
-      if (cornerVerts[j].x() < tightboxmin.x()) {
-        tightboxmin.x() = cornerVerts[j].x();
-      }
+      rigrid_->cellCornerVertices(i, cornerVerts);
 
-      if (cornerVerts[j].x() > tightboxmax.x()) {
-        tightboxmax.x() = cornerVerts[j].x();
-      }
+      // Loop through each vertex
+      for (size_t j = 0; j < 8; j++) {
 
-      // Y-axis
-      if (cornerVerts[j].y() < tightboxmin.y()) {
-        tightboxmin.y() = cornerVerts[j].y();
+        // X-axis
+        if (cornerVerts[j].x() < tightboxmin.x()) {
+          tightboxmin.x() = cornerVerts[j].x();
+        }
 
-      }
+        if (cornerVerts[j].x() > tightboxmax.x()) {
+          tightboxmax.x() = cornerVerts[j].x();
+        }
 
-      if (cornerVerts[j].x() > tightboxmax.x()) {
-        tightboxmax.y() = cornerVerts[j].y();
-      }
+        // Y-axis
+        if (cornerVerts[j].y() < tightboxmin.y()) {
+          tightboxmin.y() = cornerVerts[j].y();
 
-      // Z-axis
-      if (cornerVerts[j].z() < tightboxmin.z()) {
-        tightboxmin.z() = cornerVerts[j].z();
+        }
 
-      }
+        if (cornerVerts[j].y() > tightboxmax.y()) {
+          tightboxmax.y() = cornerVerts[j].y();
+        }
 
-      if (cornerVerts[j].x() > tightboxmax.x()) {
-        tightboxmax.z() = cornerVerts[j].z();
+        // Z-axis
+        if (cornerVerts[j].z() < tightboxmin.z()) {
+          tightboxmin.z() = cornerVerts[j].z();
+
+        }
+
+        if (cornerVerts[j].z() > tightboxmax.z()) {
+          tightboxmax.z() = cornerVerts[j].z();
+        }
+
       }
 
     }
   }
 
-
   cvf::BoundingBox bbtight;
   bbtight.add(tightboxmin);
   bbtight.add(tightboxmax);
 
-  cout << fstr("[mod]bbtight.debugString()",5)
+  cout << endl << fstr("[mod]bbtight.debugString()",5)
        << bbtight.debugString().toStdString() << endl;
   cout << fstr("bbminmax.extent():")
        << show_Ved3d("", bbtight.extent()) << endl;
 
   stringstream istr;
   bbtight.cornerVertices(cornerVerts);
-  for (int j=0; j < cornerVerts->length(); j++) {
+
+  for (int j=0; j < 8; j++) {
     istr << "bbtight.cornerVertices[" << j << "]:";
-    cout << fstr(istr.str())
-         << show_Ved3d("", bbtight.extent()) << endl;
+    cout << fstr(istr.str(),5)
+         << show_Ved3d("", cornerVerts[j]) << endl;
+    istr.str("");
   }
 
+  // ....................................................
 
+  cout << fstr("TEST:")
+       << ricasedata_->activeCellInfo(MATRIX_MODEL)->isActive(0)
+      << endl;
+
+//  actinfo_ = ricasedata_->activeCellInfo(MATRIX_MODEL).;
+//  cvf::BoundingBox abb = actinfo_->geometryBoundingBox();
+//
+  cvf::BoundingBox abb =
+      ricasedata_->activeCellInfo(MATRIX_MODEL)->geometryBoundingBox();
+//
+  cout << endl << fstr("[mod]abb.debugString()",5)
+       << abb.debugString().toStdString() << endl;
+  cout << fstr("abb.extent():")
+       << show_Ved3d("", abb.extent()) << endl;
+
+  abb.expand(.1);
+
+  cvf::Vec3d abb_cornerVerts[8];
+  abb.cornerVertices(abb_cornerVerts);
+
+  for (int j=0; j < 8; j++) {
+    istr << "abb.cornerVertices[" << j << "]:";
+    cout << fstr(istr.str(),5)
+         << show_Ved3d("", abb_cornerVerts[j]) << endl;
+    istr.str("");
+  }
 
 
 
