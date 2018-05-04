@@ -1,3 +1,25 @@
+/***********************************************************
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
+
+ This file is part of the FieldOpt project.
+
+ FieldOpt is free software: you can redistribute it
+ and/or modify it under the terms of the GNU General
+ Public License as published by the Free Software
+ Foundation, either version 3 of the License, or (at
+ your option) any later version.
+
+ FieldOpt is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the
+ implied warranty of MERCHANTABILITY or FITNESS FOR
+ A PARTICULAR PURPOSE.  See the GNU General Public
+ License for more details.
+
+ You should have received a copy of the GNU
+ General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
 
 // ---------------------------------------------------------
 #include "combined_spline_length_interwell_distance.h"
@@ -8,6 +30,10 @@ namespace Optimization {
 namespace Constraints {
 
 // ---------------------------------------------------------
+using std::cout;
+using std::endl;
+
+// =========================================================
 CombinedSplineLengthInterwellDistance::
 CombinedSplineLengthInterwellDistance(
     Settings::Optimizer::Constraint settings,
@@ -25,7 +51,7 @@ CombinedSplineLengthInterwellDistance(
                                                variables);
 
   // -------------------------------------------------------
-  if (verbosity_level_>2){
+  if (settings.verb_vector_[6] > 1) { // idx:6 -> opt
     std::cout << "... ... initialized distance constraint for wells: ";
     for (QString wname : settings.wells) {
       std::cout << wname.toStdString() << ", ";

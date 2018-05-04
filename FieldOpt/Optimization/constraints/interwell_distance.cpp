@@ -1,21 +1,25 @@
-/******************************************************************************
-   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
+/***********************************************************
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
 
-   This file is part of the FieldOpt project.
+ This file is part of the FieldOpt project.
 
-   FieldOpt is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+ FieldOpt is free software: you can redistribute it
+ and/or modify it under the terms of the GNU General
+ Public License as published by the Free Software
+ Foundation, either version 3 of the License, or (at
+ your option) any later version.
 
-   FieldOpt is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+ FieldOpt is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the
+ implied warranty of MERCHANTABILITY or FITNESS FOR
+ A PARTICULAR PURPOSE.  See the GNU General Public
+ License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
-******************************************************************************/
+ You should have received a copy of the GNU
+ General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
 
 // ---------------------------------------------------------
 #include "interwell_distance.h"
@@ -27,7 +31,7 @@
 namespace Optimization {
 namespace Constraints {
 
-// ---------------------------------------------------------
+// =========================================================
 InterwellDistance::InterwellDistance(
     Settings::Optimizer::Constraint settings,
     Model::Properties::VariablePropertyContainer *variables) {
@@ -62,7 +66,7 @@ InterwellDistance::InterwellDistance(
   }
 }
 
-// ---------------------------------------------------------
+// =========================================================
 bool InterwellDistance::CaseSatisfiesConstraint(Case *c) {
 
   QList<Eigen::Vector3d> points;
@@ -109,7 +113,7 @@ bool InterwellDistance::CaseSatisfiesConstraint(Case *c) {
   return true;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void InterwellDistance::SnapCaseToConstraints(Case *c) {
 
   QList<Eigen::Vector3d> points;
@@ -154,8 +158,9 @@ void InterwellDistance::SnapCaseToConstraints(Case *c) {
   }
 }
 
-// ---------------------------------------------------------
-void InterwellDistance::InitializeNormalizer(QList<Case *> cases) {
+// =========================================================
+void
+InterwellDistance::InitializeNormalizer(QList<Case *> cases) {
 
   long double minimum_distance = 1e20;
 
@@ -176,7 +181,7 @@ void InterwellDistance::InitializeNormalizer(QList<Case *> cases) {
   normalizer_.set_midpoint(minimum_distance/2.0L);
 }
 
-// ---------------------------------------------------------
+// =========================================================
 double InterwellDistance::Penalty(Case *c) {
 
   // -------------------------------------------------------
@@ -192,12 +197,12 @@ double InterwellDistance::Penalty(Case *c) {
   return violation;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 vector<double> InterwellDistance::endpointDistances(Case *c) {
 
   vector<double> endpoint_distances;
 
-  // ---------------------------------------------------------
+  // -------------------------------------------------------
   for (int i = 0; i < affected_wells_.size(); i += 2) { // Even numbers
 
     if (i >= affected_wells_.size()) break;
@@ -219,7 +224,7 @@ vector<double> InterwellDistance::endpointDistances(Case *c) {
   return endpoint_distances;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 long double InterwellDistance::PenaltyNormalized(Case *c) {
   return normalizer_.normalize(Penalty(c));
 }

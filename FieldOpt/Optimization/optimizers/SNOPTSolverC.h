@@ -39,7 +39,7 @@
 namespace Optimization {
 namespace Optimizers {
 
-// ---------------------------------------------------------
+// =========================================================
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -60,26 +60,26 @@ int SNOPTusrFG_( integer    *Status, integer *n,    doublereal x[],
 }
 #endif
 
-// ---------------------------------------------------------
-class SNOPTSolver : public Optimizer
+// =========================================================
+class SNOPTSolverC : public Optimizer
 {
  public:
 
   // -------------------------------------------------------
-  SNOPTSolver(Settings::Optimizer *settings,
+  SNOPTSolverC(Settings::Optimizer *settings,
               Case *base_case,
               ::Reservoir::Grid::Grid *grid,
               RICaseData *ricasedata);
 
   // -------------------------------------------------------
-  SNOPTSolver(Settings::Optimizer *settings,
+  SNOPTSolverC(Settings::Optimizer *settings,
               Case *base_case,
               Model::Properties::VariablePropertyContainer *variables,
               Reservoir::Grid::Grid *grid,
               Logger *logger);
 
   // -------------------------------------------------------
-//  ~SNOPTSolver();
+//  ~SNOPTSolverC();
 
   // -------------------------------------------------------
   TerminationCondition IsFinished();
@@ -88,8 +88,8 @@ class SNOPTSolver : public Optimizer
    void handleEvaluatedCase(Case *c){};
 
   // -------------------------------------------------------
-//  QString GetStatusStringHeader() const {};
-//  QString GetStatusString() const {};
+  // QString GetStatusStringHeader() const {};
+  // QString GetStatusString() const {};
 
   // -------------------------------------------------------
  private:
@@ -149,17 +149,33 @@ class SNOPTSolver : public Optimizer
 
   // -------------------------------------------------------
   SNOPTHandler *SNOPTHandler_;
-  Settings::Optimizer *settings_;
-  Case *wcpl_ch_case_;
+
   string opt_prob_;
+
+  Settings::Optimizer *settings_opt_;
+  Settings::Optimizer::Constraint settings_con_;
 
   // -------------------------------------------------------
   RICaseData* ricasedata_;
   Reservoir::Grid::Grid *grid_;
+  RIGrid* rigrid_;
+
+  // Set in settings
+  cvf::BoundingBox bbgrid_;
+
+  void dbg_bbgrid();
+
+  // static Eigen::VectorXd xinit_;
+  Eigen::VectorXd xinit_;
 
   // -------------------------------------------------------
   void iterate() {};
   bool is_successful_iteration(){};
+
+ public:
+  // -------------------------------------------------------
+  Case *wplccase_;
+  // Eigen::VectorXd static get_xinit(){ return xinit_; }
 
  protected:
 

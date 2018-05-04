@@ -146,7 +146,7 @@ testOne::testOne(Settings::Optimizer *settings) {
 
 
   if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
-    cout << "[opt]Init. SNOPTSolver.-------" << endl;
+    cout << "[opt]Init. SNOPTSolverC.-------" << endl;
 
 
   //mystruct.mySNOPTusrFG_();
@@ -460,7 +460,7 @@ void testOne::callSNOPT() {
   // Sets the usrfun that supplies G and F.
   snoptHandler_.setUserFun(mySNOPTusrFG_);
 
-  snoptHandler_.setProbName( "SNOPTSolver" );
+  snoptHandler_.setProbName( "SNOPTSolverC" );
 
   // -----------------------------------------------------------------
   if (!snoptHandler_.has_snopt_option_file)

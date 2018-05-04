@@ -59,19 +59,19 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   ricasedata_->set_verbosity_vector(settings_->verb_vector());
 
   // -------------------------------------------------------
-  // Moved to iwd_constraint.cpp
+  // Force computation of geometric bb
   //
   // Force compute geometric bb
-  // ricasedata_->computeActiveCellBoundingBoxes();
+  ricasedata_->computeActiveCellBoundingBoxes();
 
   // -------------------------------------------------------
-  // Moved to iwd_constraint.cpp
+  // Use RIGrid from now on
   //
   // Use RIGrid from now on
-  // rigrid_ = ricasedata_->mainGrid();
-  // rigrid_->computeCachedData();
-  // rigrid_->calculateFaults(
-  //    ricasedata_->activeCellInfo(MATRIX_MODEL));
+  rigrid_ = ricasedata_->mainGrid();
+  rigrid_->computeCachedData();
+  rigrid_->calculateFaults(
+      ricasedata_->activeCellInfo(MATRIX_MODEL));
 
   // -------------------------------------------------------
   if (settings_->verb_vector()[5] > 1) // idx:5 -> mod

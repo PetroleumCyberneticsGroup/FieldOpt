@@ -31,7 +31,7 @@
 // FIELDOPT: SNOPT
 namespace Optimization {
 namespace Optimizers {
-class SNOPTSolver;
+class SNOPTSolverC;
 }
 }
 
@@ -65,7 +65,7 @@ class IWDConstraint : public Constraint {
   string name() override { return "IWDConstraint"; }
 
   // -------------------------------------------------------
-  // Input var to SNOPTSolver
+  // Input var to SNOPTSolverC
   Settings::Optimizer *settings_;
   Model::Properties::VariablePropertyContainer *variables_;
   Case *current_case_;
@@ -76,14 +76,14 @@ class IWDConstraint : public Constraint {
 
   RICaseData* ricasedata_;
 
-  cvf::BoundingBox bbgrid_;
+  // cvf::BoundingBox bbgrid_;
 
   RimIntersection* rimintersection_;
 
-//  Reservoir::Grid::Grid *grid_;
+  Reservoir::Grid::Grid* grid_;
 //  Logger* logger_;
 
-  Optimization::Optimizers::SNOPTSolver *SNOPTSolver_;
+  Optimization::Optimizers::SNOPTSolverC *SNOPTSolverC_;
 
   // -------------------------------------------------------
   // Constraint interface

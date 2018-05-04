@@ -31,6 +31,7 @@
 #include <QList>
 #include <QString>
 #include <QStringList>
+#include <FieldOpt-WellIndexCalculator/resinxx/rixx_core_geom/cvfBoundingBox.h>
 
 // ---------------------------------------------------------
 namespace Settings {
@@ -160,14 +161,24 @@ class Optimizer
 
   // -------------------------------------------------------
   struct Objective {
-    // The objective definition type (e.g. WeightedSum)
+    // The objective definition type (e.g., WeightedSum)
     ObjectiveType type;
 
-    bool use_penalty_function; //!< Whether or not to use penalty function (default: false).
+    // Whether or not to use penalty function (def: false).
+    bool use_penalty_function;
+
     struct WeightedSumComponent {
-      double coefficient; QString property; int time_step;
-      bool is_well_prop; QString well; }; //!< A component of a weighted sum formulatied objective function
-    QList<WeightedSumComponent> weighted_sum; //!< The expression for the Objective function formulated as a weighted sum
+
+      double coefficient; QString property;
+      int time_step;
+
+      // A component of a weighted sum
+      // formulatied objective function
+      bool is_well_prop; QString well; };
+
+    // The expression for the Objective
+    // function formulated as a weighted sum
+    QList<WeightedSumComponent> weighted_sum;
   };
 
 
@@ -192,16 +203,19 @@ class Optimizer
     // Used to express (x,y,z) coordinates.
     struct RealCoordinate { double x; double y; double z; };
 
-    // Used to define a box-shaped 3D area. Max and min each define a corner.
-    struct RealMaxMinLimit { RealCoordinate max; RealCoordinate min; };
+    // Used to define a box-shaped 3D area.
+    // Max and min each define a corner.
+    struct RealMaxMinLimit
+    { RealCoordinate max; RealCoordinate min; };
 
-    // The constraint type (e.g. BHP or SplinePoints positions).
+    // Constraint type (e.g., BHP or SplinePoints positions).
     ConstraintType type;
 
-    // The name of the well this Constraint applies to.
+    // Name of well this Constraint applies to.
     QString well;
 
-    // List of well names if the constraint applies to more than one.
+    // List of well names if constraint
+    // applies to more than one.
     QStringList wells;
 
     // Max limit when using constraints like BHP.
@@ -210,23 +224,28 @@ class Optimizer
     // Min limit when using constraints like BHP.
     double min;
 
-    // Min max limits for geometrix box constraints.
-    double box_imin, box_imax, box_jmin,
-        box_jmax, box_kmin, box_kmax;
+    // Min max limits for geometric box constraints.
+    double
+        box_imin, box_jmin, box_kmin,
+        box_imax, box_jmax, box_kmax;
 
     double max_length;
     double min_length;
     double min_distance;
 
-    // The weight to be used when considering the constraint in a penalty function. (default: 0.0)
+    // Weight to be used when considering the
+    // constraint in a penalty function. (def: 0.0)
     long double penalty_weight;
 
     int max_iterations;
 
-    // How the SplinePoints constraint is given when SplinePoints constraint type is selected.
+    // How the SplinePoints constraint is given
+    // when SplinePoints constraint type is selected.
     ConstraintWellSplinePointsType spline_points_type;
 
-    // Box limits a spline point needs to be within to be valid when SplinePoints constraint type is selected.
+    // Box limits a spline point needs to be within
+    // to be valid when SplinePoints constraint type
+    // is selected.
     QList<RealMaxMinLimit> spline_points_limits;
 
     // 3rd party solver parameters
@@ -238,6 +257,10 @@ class Optimizer
     std::vector<WplcRBBConstraint> rbb_constraints;
     std::vector<WplcIWDConstraint> iwd_constraints;
 
+    // cvf::BoundingBox bbgrid_ = nullptr;
+
+    // -------------------------------------------------------
+    std::vector<int> verb_vector_ = std::vector<int>(11,0);
 
   };
 

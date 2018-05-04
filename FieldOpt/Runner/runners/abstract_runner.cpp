@@ -33,7 +33,7 @@
 #include <Optimization/optimizers/RGARDD.h>
 #include <Optimization/optimizers/bayesian_optimization/EGO.h>
 #include <Optimization/optimizers/DFO.h>
-#include <Optimization/optimizers/SNOPTSolver.h>
+#include <Optimization/optimizers/SNOPTSolverC.h>
 #include "Optimization/objective/weightedsum.h"
 
 #include <Simulation/simulator_interfaces/flowsimulator.h>
@@ -373,9 +373,9 @@ void AbstractRunner::InitializeOptimizer() {
       // ---------------------------------------------------
     case Settings::Optimizer::OptimizerType::SNOPTSolver:
       if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
-        std::cout << "[run]Optimization algo.:----- SNOPTSolver" << std::endl;
+        std::cout << "[run]Optimization algo.:----- SNOPTSolverC" << std::endl;
 
-      optimizer_ = new Optimization::Optimizers::SNOPTSolver(
+      optimizer_ = new Optimization::Optimizers::SNOPTSolverC(
           settings_->optimizer(),
           base_case_,
           model_->variables(),

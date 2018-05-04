@@ -23,12 +23,12 @@
  General Public License along with FieldOpt.
  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************/
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 #include <iostream>
 #include <iomanip>
 
-// -----------------------------------------------------------------
-#include "SNOPTSolver.h"
+// ---------------------------------------------------------
+#include "SNOPTSolverC.h"
 //#include "Subproblem.cpp"
 //#include "testOne.h"
 
@@ -37,92 +37,120 @@
 //  FRACTURE_MODEL
 //};
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 namespace Optimization {
 namespace Optimizers {
 
-// -----------------------------------------------------------------
-SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
-                         Case *wcpl_ch_case,
-                         ::Reservoir::Grid::Grid *grid,
-                         RICaseData *ricasedata) {
+// =========================================================
+SNOPTSolverC::SNOPTSolverC(Settings::Optimizer *settings,
+                           Case *base_case,
+                           Model::Properties::VariablePropertyContainer *variables,
+                           Reservoir::Grid::Grid *grid,
+                           Logger *logger) {
 
-  // ---------------------------------------------------------------
+  // -------------------------------------------------------
+  if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
+    cout << fstr("[opt]Init. SNOPTSolverC.",6) << endl;
+  // settings_ = settings;
+
+  // -------------------------------------------------------
+  Eigen::VectorXd vars = base_case->GetRealVarVector();
+
+  // -------------------------------------------------------
+  Optimization::Case *newCase = new Case(base_case);
+  newCase->SetRealVarValues(vars);
+  newCase->set_objective_function_value(std::numeric_limits<double>::max());
+  //  case_handler_->AddNewCase(newCase);
+
+}
+
+// -------------------------------------------------------
+//SNOPTSolverC::~SNOPTSolverC(){}
+
+// =========================================================
+SNOPTSolverC::SNOPTSolverC(Settings::Optimizer *settings,
+                           Case *wplccase,
+                           ::Reservoir::Grid::Grid *grid,
+                           RICaseData *ricasedata) {
+
+  // -------------------------------------------------------
   if (settings->verb_vector()[6] >= 1) // idx:6 -> opt
-    cout << fstr("[opt]Init. SNOPTSolver.",6)
+    cout << fstr("[opt]Init. SNOPTSolverC.",6)
          << "Constraint-handling" << endl;
 
-  // ---------------------------------------------------------------
+  // -------------------------------------------------------
+  if(ricasedata == nullptr) {
+    cout << "[iwd]RICaseData is null!.---- " << endl;
+  }
+
+  wplccase_ = wplccase;
+
+  // -------------------------------------------------------
+  // Force computation of geometric bb
   ricasedata_ = ricasedata;
-  grid_ = grid;
+  // Defined in Model.cpp:
+  // ricasedata_->computeActiveCellBoundingBoxes();
 
-  size_t cellcount = ricasedata_->mainGrid()->cellCount();
-
-//  auto startp = ricasedata_->mainGrid()->gridPointCoordinate(1,1,1);
-//  auto endp = ricasedata_->mainGrid()->gridPointCoordinate(1,1,1);
-
-  auto startp = ricasedata_->mainGrid()->cellCentroid(1);
-  auto endp = ricasedata_->mainGrid()->cellCentroid(cellcount);
-  cout << "x:" << startp.x() << " y:" << startp.y() << " z:" << startp.z() << endl;
-  cout << "x:" << endp.x() << " y:" << endp.y() << " z:" << endp.z() << endl;
-
-//  cout << "RICaseData_->gridCount()" << RICaseData_->gridCount() << endl;
-
-//  auto gbb = ricasedata_
-//      ->activeCellInfo(ricasedata_->PorosityModelTypeMATRIX_)
-//      ->geometryBoundingBox();
-//  cout << gbb.debugString().toStdString();
+  // -------------------------------------------------------
+  // Use RIGrid from now on
+  rigrid_ = ricasedata_->mainGrid();
+  // Defined in Model.cpp:
+  // rigrid_->computeCachedData();
+  // rigrid_->calculateFaults(
+  //    ricasedata_->activeCellInfo(MATRIX_MODEL));
 
   // ---------------------------------------------------------------
-  settings_ = settings;
-  wcpl_ch_case_ = wcpl_ch_case;
+  settings_opt_ = settings;
+  settings_con_ = settings_opt_->constraints()[0];
+
+  // -------------------------------------------------------
+  // Get explicit data for outer grid bb -> for bounds
+  bbgrid_ = ricasedata_->activeCellInfo(
+      MATRIX_MODEL)->geometryBoundingBox();
+
+  SNOPTSolverC::dbg_bbgrid();
+
+  settings_con_.box_imin = bbgrid_.min().x();
+  settings_con_.box_jmin = bbgrid_.min().y();
+  settings_con_.box_kmin = bbgrid_.min().z();
+
+  settings_con_.box_imax = bbgrid_.max().x();
+  settings_con_.box_jmax = bbgrid_.max().y();
+  settings_con_.box_kmax = bbgrid_.max().z();
+
+//  wcpl_ch_case_ = wcpl_ch_case;
   opt_prob_ = "Rosenbrock";
   // opt_prob_ = "Wplc_WL";
 
-  // ---------------------------------------------------------------
+  // -------------------------------------------------------
+  // Get case variables
+  // Later: Loop trough all wells, and order each 6-var
+  // well vector into a matrix such that each well vector
+  // is a column in that matrix
+  xinit_ = wplccase_->GetRealWSplineVarVector();
+
+
+  // -------------------------------------------------------
   loadSNOPT();
   initSNOPTHandler();
   callSNOPT();
 }
 
-// -----------------------------------------------------------------
-SNOPTSolver::SNOPTSolver(Settings::Optimizer *settings,
-                         Case *base_case,
-                         Model::Properties::VariablePropertyContainer *variables,
-                         Reservoir::Grid::Grid *grid,
-                         Logger *logger) {
 
-  // ---------------------------------------------------------------
-  if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
-    cout << fstr("[opt]Init. SNOPTSolver.",6) << endl;
-  settings_ = settings;
-
-  // ---------------------------------------------------------------
-  Eigen::VectorXd vars = base_case->GetRealVarVector();
-
-  // ---------------------------------------------------------------
-  Optimization::Case *newCase = new Case(base_case);
-  newCase->SetRealVarValues(vars);
-  newCase->set_objective_function_value(std::numeric_limits<double>::max());
-//  case_handler_->AddNewCase(newCase);
-
-}
-
-// -----------------------------------------------------------------
-//SNOPTSolver::~SNOPTSolver(){}
 
 // ---------------------------------------------------------
-Optimizer::TerminationCondition SNOPTSolver::IsFinished() {
+Optimizer::TerminationCondition SNOPTSolverC::IsFinished() {
   Optimizer::TerminationCondition tc = NOT_FINISHED;
 }
 
-// -----------------------------------------------------------------
-void SNOPTSolver::initSNOPTHandler() {
+// =========================================================
+void SNOPTSolverC::initSNOPTHandler() {
 
-  // ---------------------------------------------------------------
+  // -------------------------------------------------------
   string prnt_file, smry_file, optn_file;
 
   string cdir = settings_->output_dir_.toStdString() + "/";
+
   optn_file = cdir + settings_->constraints()[0].thrdps_optn_file.toStdString() + ".opt.optn";
   smry_file = cdir + settings_->constraints()[0].thrdps_smry_file.toStdString() + ".opt.summ";
   prnt_file = cdir + settings_->constraints()[0].thrdps_prnt_file.toStdString() + ".opt.prnt";
@@ -131,167 +159,33 @@ void SNOPTSolver::initSNOPTHandler() {
   cout << "smry_file: " << smry_file << endl;
   cout << "prnt_file: " << prnt_file << endl;
 
-  // ---------------------------------------------------------------
+  // -------------------------------------------------------
   SNOPTHandler_ = new SNOPTHandler(prnt_file.c_str(),
                                    smry_file.c_str(),
                                    optn_file.c_str());
 
-  // ---------------------------------------------------------------
-  if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
+  // -------------------------------------------------------
+  if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt
     cout << "[opt]Init. SNOPTHandler.--------" << endl;
 
 }
 
-// -------------------------------------------------------------------
-int Rosenbrock_( integer    *Status, integer *n,    double x[],
-                 integer    *needF,  integer *neF,  double F[],
-                 integer    *needG,  integer *neG,  double G[],
-                 char       *cu,     integer *lencu,
-                 integer    iu[],    integer *leniu,
-                 double     ru[],    integer *lenru ) {
-  // -----------------------------------------------------------------
-  // Rosenbrock testproblem
-  F[0] = (1.0 - x[0]) * (1.0 - x[0]) + 100.0 * (x[1] - x[0] * x[0]) * (x[1] - x[0] * x[0]);
-  F[1] = x[0] * x[0] + x[1] * x[1]; // nonlinear constraint: unit disk
 
-  // dF/dx0, dF/dx1
-  G[0] = -2.0 * (1.0 - x[0]) - 400.0 * x[0] * (x[1] - x[0] * x[0]);
-  G[1] = 200.0 * (x[1] - x[0] * x[0]);
+// =========================================================
+void SNOPTSolverC::callSNOPT() {
 
-  // dC/dx0, dC/dx1
-  G[2] = 2.0 * x[0];
-  G[3] = 2.0 * x[1];
-
-  // -----------------------------------------------------------------
-  if(0) {
-    cout << "[opt]Rosenbrock_.-------------" << endl;
-
-    for (int i = 0; i < *n; i++) {
-      cout << "x[" << i << "]:" << x[i] << " ";
-    }
-    cout << endl;
-
-    cout << "F[0]: " << F[0] << endl;
-    cout << "F[1]: " << F[1] << endl;
-    cout << "G[0]: " << G[0] << endl;
-    cout << "G[1]: " << G[1] << endl;
-    cout << "G[2]: " << G[2] << endl;
-    cout << "G[3]: " << G[3] << endl;
-  }
-
-  // -----------------------------------------------------------------
-  // SOLUTION
-  //  x[0]:  0.78641516  <- x0*
-  //  x[1]:  0.61769831  <- x1*
-  //  F[0]:  0.04567481  <- f*
-  //  F[1]:  1.00000000  <- on constraint boundary
-  //  G[0]: -0.19109155
-  //  G[1]: -0.15009765
-  //  G[2]:  1.57283031
-  //  G[3]:  1.23539662
-}
-
-// -------------------------------------------------------------------
-int SNOPTusrFG_( integer    *Status, integer *n,    double x[],
-                 integer    *needF,  integer *neF,  double F[],
-                 integer    *needG,  integer *neG,  double G[],
-                 char       *cu,     integer *lencu,
-                 integer    iu[],    integer *leniu,
-                 double     ru[],    integer *lenru ) {
-
-  int nf = *neF;
-
-  // =================================================================
-  // Computes the nonlinear objective and constraint terms for the
-  // problem featured of interest. The problem is considered to be
-  // written as:
-  //
-  //       Minimize     Fobj(x)
-  //          x
-  //
-  //    subject to:
-  //
-  //        bounds      l_x <=   x  <= u_x
-  //   constraints      l_F <= F(x) <= u_F
-  //
-  // The triples (g(k),iGfun(k),jGvar(k)), k = 1:neG, define
-  // the sparsity pattern and values of the nonlinear elements
-  // of the Jacobian.
-  // =================================================================
-
-  // ADGPRS LEGACY (keep for ref.)
-  //  OptimizationData& optdata =  OptimizationData::reference();
-  //
-  //  if (( optdata.numberOfSimulations >= optdata.maxNumberOfSimulations ) &&
-  //      ( optdata.maxNumberOfSimulations != 0 ))
-  //  {
-  //    *Status = -2;
-  //    return 0;
-  //  }
-
-  // -----------------------------------------------------------------
-  // # of constraints; neF is the total number of constraints + obj.
-  //  int m = *neF - 1 - optdata.numberOfLinearConstraints;
-  int m = (int)*neF - 1;
-
-  // -----------------------------------------------------------------
-  // Function call from SNOPT for objective/gradient computation
-  if (*needF > 0) {
-
-    // ADGPRS LEGACY (keep for ref.)
-    // The value of the objective goes to the first entry of F
-    //    if (FAILED ==
-    //        optdata.pOptimizationProblem->eval_f(*n, x, true, F[0])) {
-    //      *Status = -1;
-    //      return 0;
-    //    }
-
-    // the values of the constraints follow that of the objective
-    if (m) {
-
-      // ADGPRS LEGACY (keep for ref.)
-      // optdata.pOptimizationProblem->eval_g(*n, x, false, m, &F[1]);
-    }
-  }
-
-  // -----------------------------------------------------------------
-  // If the values for the constraints are desired
-  if (*needG > 0) {
-
-    // ADGPRS LEGACY (keep for ref.)
-    // We have as many derivatives as the number of the controls, n
-    //    optdata.pOptimizationProblem->eval_grad_f(*n, x, false, G);
-
-    // Derivatives of constraints:
-    if (m) {
-
-      // ADGPRS LEGACY (keep for ref.)
-      // G[1] = 100*4*x1*x1*x1;//-4*(x2-0.7);
-      // optdata.pOptimizationProblem->eval_jac_g(*n, x, false, m,
-      //                                          *neG, 0, 0, &G[*n]);
-
-    }
-
-  }
-
-  return 0;
-}
-
-// -----------------------------------------------------------------
-void SNOPTSolver::callSNOPT() {
-
-  // ---------------------------------------------------------------
+  // -------------------------------------------------------
   // Set problem dimensions
   if(opt_prob_ == "Rosenbrock") {
     n_ = 2;
     m_ = 1;        // # of nonlinear constraints
 
   } else if(opt_prob_ == "Wplc_WL") {
-    n_ = (int)wcpl_ch_case_->GetRealWSplineVarVector().rows();
+    n_ = (int)wplccase_->GetRealWSplineVarVector().rows();
     m_ = 1;        // # of nonlinear constraints
   }
 
-  // ---------------------------------------------------------------
+  // -------------------------------------------------------
   // Set problem dimensions
   neF_ = m_ + 1; // # of elements in F vector
   lenA_ = 0;     // # of linear constraints
@@ -329,11 +223,11 @@ void SNOPTSolver::callSNOPT() {
   Fnames_ = new char[nxnames_ * 8];
 
 
-  // ---------------------------------------------------------------
+  // -------------------------------------------------------
   // Set F bounds (objective + nonlinear constraint)
   if(opt_prob_.compare("Rosenbrock")) {
 
-    // -------------------------------------------------------------
+    // -----------------------------------------------------
     // Objective bounds Rosenbrock test case
     Flow_[0] = -infinity_;
     Fupp_[0] = infinity_;
@@ -354,7 +248,7 @@ void SNOPTSolver::callSNOPT() {
 
   } else if(opt_prob_.compare("Wplc_WL")) {
 
-    // -------------------------------------------------------------
+    // -----------------------------------------------------
     // Later: Set F bounds according to uuid
     Flow_[0] = -infinity_;
     Fupp_[0] = infinity_;
@@ -368,30 +262,49 @@ void SNOPTSolver::callSNOPT() {
 //    Fupp_[2] = infinity_;
 
     // Later: Set bounds for x according to spline var ordering
-    for (int i = 0; i < n_; i++) {
-      xlow_[i] = -infinity_;
-      xupp_[i] = infinity_;
-    }
+    // for (int i = 0; i < n_; i++) {
+    //  xlow_[i] = -infinity_;
+    //  xupp_[i] = infinity_;
+    //}
+
+    xlow_[0] = settings_con_.box_imin;
+    xlow_[1] = settings_con_.box_jmin;
+    xlow_[2] = settings_con_.box_kmin;
+
+    xupp_[0] = settings_con_.box_imax;
+    xupp_[1] = settings_con_.box_jmax;
+    xupp_[2] = settings_con_.box_kmax;
+
+    xlow_[3] = settings_con_.box_imin;
+    xlow_[4] = settings_con_.box_jmin;
+    xlow_[5] = settings_con_.box_kmin;
+
+    xupp_[3] = settings_con_.box_imax;
+    xupp_[4] = settings_con_.box_jmax;
+    xupp_[5] = settings_con_.box_kmax;
 
     // Initial point
-    for (int i = 0; i < n_; i++)
-      x_[i] = 0.0e1;
+    //for (int i = 0; i < n_; i++)
+    //  x_[i] = 0.0e1;
+    for (int i = 0; i < xinit_.rows(); i++)
+      x_[i] = xinit_(i);
 
-    SNOPTHandler_->setParameter((char*)"Minimize");
   }
 
-  // ---------------------------------------------------------------
+  SNOPTHandler_->setParameter((char*)"Minimize");
+
+  // -----------------------------------------------------
   // If we provide an initial guess then the states should be zero
   for (int i = 0; i < n_; i++)
     xstate_[i] = 0;
 
-  // ---------------------------------------------------------------
+  // -----------------------------------------------------
   // Initial guess for the controls
   bool desire_values_for_x      = true;
   bool desire_values_for_dual   = false;
   bool desire_values_for_lambda = false;
 
-  // ---------------------------------------------------------------
+  // -----------------------------------------------------
   // Fmul is the vector with the estimation of the Lagrange
   // Multipliers. It will be always zero except in very rare cases of
   // benchmarking performance with them set to some initial guess.
@@ -399,12 +312,12 @@ void SNOPTSolver::callSNOPT() {
     Fmul_[i] = 0;
   }
 
-  // ---------------------------------------------------------------
+  // -----------------------------------------------------
   // The nonzero structure of the Jacobian
   neG_ = lenG_;
   neA_ = lenA_;
 
-  // ---------------------------------------------------------------
+  // -----------------------------------------------------
   // Fill in first the objective
   for (int i = 0; i < n_; i++)
   {
@@ -424,7 +337,7 @@ void SNOPTSolver::callSNOPT() {
     }
   }
 
-  // ---------------------------------------------------------------
+  // -----------------------------------------------------
   if (m_ != 0)
   {
     // Then fill in the constraints
@@ -438,7 +351,7 @@ void SNOPTSolver::callSNOPT() {
     }
   }
 
-  // ---------------------------------------------------------------
+  // -----------------------------------------------------
   // dbg
   Matrix<integer, 1, Dynamic> XiAfun_, XiAvar_;
   XiAvar_.fill((integer)jAvar_);
@@ -455,7 +368,7 @@ void SNOPTSolver::callSNOPT() {
   cout << "XiGfun_.rows(): " << XiGfun_.rows() << endl;
   cout << "XiGvar_.rows(): " << XiGvar_.rows() << endl;
 
-  // ---------------------------------------------------------------
+  // -----------------------------------------------------
   // Set SNOPT dims
   SNOPTHandler_->setProblemSize( n_, neF_ );
   SNOPTHandler_->setObjective  ( objRow_ );
@@ -468,7 +381,7 @@ void SNOPTSolver::callSNOPT() {
   SNOPTHandler_->setNeA        ( neA_ );
   SNOPTHandler_->setNeG        ( neG_ );
 
-  // ---------------------------------------------------------------
+  // -----------------------------------------------------
   // Sets the usrfun that supplies G and F.
   if(opt_prob_ == "Rosenbrock") {
 
@@ -489,14 +402,14 @@ void SNOPTSolver::callSNOPT() {
   if (!SNOPTHandler_->has_snopt_option_file)
     setOptionsForSNOPT();
 
-  // ---------------------------------------------------------------
+  // -----------------------------------------------------
   integer Cold = 0, Basis = 1, Warm = 2;
 
   vector<double> xsol;
   vector<double> fsol;
   SNOPTHandler_->solve( Cold, xsol, fsol);
 
-  // ---------------------------------------------------------------
+  // -----------------------------------------------------
   delete[] iGfun_;
   delete[] jGvar_;
 
@@ -519,7 +432,7 @@ void SNOPTSolver::callSNOPT() {
 
 
 // -----------------------------------------------------------------
-//void SNOPTSolver::callSNOPT() {
+//void SNOPTSolverC::callSNOPT() {
 //
 ////  SNOPTHandler snoptHandler = initSNOPTHandler();
 ////  setOptionsForSNOPT(snoptHandler);
@@ -779,7 +692,7 @@ void SNOPTSolver::callSNOPT() {
 //  // Sets the usrfun that supplies G and F.
 //  SNOPTHandler_->setUserFun( SNOPTusrFG_ );
 //
-//  SNOPTHandler_->setProbName( "SNOPTSolver" );
+//  SNOPTHandler_->setProbName( "SNOPTSolverC" );
 //
 //  if (!SNOPTHandler_->has_snopt_option_file)
 //    setOptionsForSNOPT(snoptHandler);
@@ -839,7 +752,7 @@ void SNOPTSolver::callSNOPT() {
 
 
 // -----------------------------------------------------------------
-void SNOPTSolver::setOptionsForSNOPT() {
+void SNOPTSolverC::setOptionsForSNOPT() {
 
   if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
     cout << "[opt]Set options for SNOPT.---" << endl;
@@ -936,16 +849,200 @@ void SNOPTSolver::setOptionsForSNOPT() {
 
 }
 
+// =========================================================
+int WplcWL_(integer  *Status, integer *n,    double x[],
+            integer  *needF,  integer *neF,  double F[],
+            integer  *needG,  integer *neG,  double G[],
+            char     *cu,     integer *lencu,
+            integer  iu[],    integer *leniu,
+            double   ru[],    integer *lenru ) {
+
+  // Map<VectorXd> xe(x);
+  // Map<Matrix<double,(int)*n,1>> xe(x);
+
+//  std::vector<double> v = settings->parameters().
+//      initial_step_length_vector.toVector().toStdVector();
+//  Map<Matrix<double, Dynamic, Dynamic>> step_lengths_test_(v.data(),v.size(),1);
+
+  int ne = (int)*n;
+  // VectorXd xe;
+  // xe.setZero(ne);
+
+  // Map<Matrix<double, ne, 1>> xet(x);
 
 
-// ------------------------------------------------------------------------------
-/*****************************************************
+  // std::vector<double> v(4, 100.0);
+  // double* ptr = &v[0];
+
+  Eigen::Map<Eigen::VectorXd> xe(x, ne);
+
+
+
+  // F[0] = (xe - SNOPTSolverC::get_xinit()).norm();
+  F[0] = xe.norm();
+  F[1] = (xe.block(0,0,3,3) - xe.block(3,3,3,3)).norm();
+
+  G[0] = .1;
+  G[1] = .1;
+  G[2] = .1;
+  G[3] = .1;
+  G[4] = .1;
+  G[5] = .1;
+  G[6] = .1;
+  G[7] = .1;
+  G[8] = .1;
+  G[9] = .1;
+  G[10] = .1;
+  G[11] = .1;
+
+}
+
+
+// =========================================================
+int Rosenbrock_(integer  *Status, integer *n,    double x[],
+                integer  *needF,  integer *neF,  double F[],
+                integer  *needG,  integer *neG,  double G[],
+                char     *cu,     integer *lencu,
+                integer  iu[],    integer *leniu,
+                double   ru[],    integer *lenru ) {
+
+  // -------------------------------------------------------
+  // Rosenbrock testproblem
+  F[0] = (1.0 - x[0]) * (1.0 - x[0])
+      + 100.0 * (x[1] - x[0] * x[0]) * (x[1] - x[0] * x[0]);
+  F[1] = x[0] * x[0] + x[1] * x[1]; // nonlinear constraint: unit disk
+
+  // dF/dx0, dF/dx1
+  G[0] = -2.0 * (1.0 - x[0]) - 400.0 * x[0] * (x[1] - x[0] * x[0]);
+  G[1] = 200.0 * (x[1] - x[0] * x[0]);
+
+  // dC/dx0, dC/dx1
+  G[2] = 2.0 * x[0];
+  G[3] = 2.0 * x[1];
+
+  // -------------------------------------------------------
+  if(0) {
+    cout << "[opt]Rosenbrock_.-------------" << endl;
+
+    for (int i = 0; i < *n; i++) {
+      cout << "x[" << i << "]:" << x[i] << " ";
+    }
+    cout << endl;
+
+    cout << "F[0]: " << F[0] << endl;
+    cout << "F[1]: " << F[1] << endl;
+    cout << "G[0]: " << G[0] << endl;
+    cout << "G[1]: " << G[1] << endl;
+    cout << "G[2]: " << G[2] << endl;
+    cout << "G[3]: " << G[3] << endl;
+  }
+
+  // -------------------------------------------------------
+  // SOLUTION
+  //  x[0]:  0.78641516  <- x0*
+  //  x[1]:  0.61769831  <- x1*
+  //  F[0]:  0.04567481  <- f*
+  //  F[1]:  1.00000000  <- on constraint boundary
+  //  G[0]: -0.19109155
+  //  G[1]: -0.15009765
+  //  G[2]:  1.57283031
+  //  G[3]:  1.23539662
+}
+
+// =========================================================
+// SNOPT USER FUNCTION TEMPLATE
+int SNOPTusrFG_(integer  *Status, integer *n,    double x[],
+                integer  *needF,  integer *neF,  double F[],
+                integer  *needG,  integer *neG,  double G[],
+                char     *cu,     integer *lencu,
+                integer  iu[],    integer *leniu,
+                double   ru[],    integer *lenru ) {
+
+  int nf = *neF;
+
+  // =================================================================
+  // Computes the nonlinear objective and constraint terms for the
+  // problem featured of interest. The problem is considered to be
+  // written as:
+  //
+  //       Minimize     Fobj(x)
+  //          x
+  //
+  //    subject to:
+  //
+  //        bounds      l_x <=   x  <= u_x
+  //   constraints      l_F <= F(x) <= u_F
+  //
+  // The triples (g(k),iGfun(k),jGvar(k)), k = 1:neG, define
+  // the sparsity pattern and values of the nonlinear elements
+  // of the Jacobian.
+  // =================================================================
+
+  // ADGPRS LEGACY (keep for ref.)
+  //  OptimizationData& optdata =  OptimizationData::reference();
+  //
+  //  if (( optdata.numberOfSimulations >= optdata.maxNumberOfSimulations ) &&
+  //      ( optdata.maxNumberOfSimulations != 0 ))
+  //  {
+  //    *Status = -2;
+  //    return 0;
+  //  }
+
+  // -----------------------------------------------------------------
+  // # of constraints; neF is the total number of constraints + obj.
+  //  int m = *neF - 1 - optdata.numberOfLinearConstraints;
+  int m = (int)*neF - 1;
+
+  // -----------------------------------------------------------------
+  // Function call from SNOPT for objective/gradient computation
+  if (*needF > 0) {
+
+    // ADGPRS LEGACY (keep for ref.)
+    // The value of the objective goes to the first entry of F
+    //    if (FAILED ==
+    //        optdata.pOptimizationProblem->eval_f(*n, x, true, F[0])) {
+    //      *Status = -1;
+    //      return 0;
+    //    }
+
+    // the values of the constraints follow that of the objective
+    if (m) {
+
+      // ADGPRS LEGACY (keep for ref.)
+      // optdata.pOptimizationProblem->eval_g(*n, x, false, m, &F[1]);
+    }
+  }
+
+  // -----------------------------------------------------------------
+  // If the values for the constraints are desired
+  if (*needG > 0) {
+
+    // ADGPRS LEGACY (keep for ref.)
+    // We have as many derivatives as the number of the controls, n
+    //    optdata.pOptimizationProblem->eval_grad_f(*n, x, false, G);
+
+    // Derivatives of constraints:
+    if (m) {
+
+      // ADGPRS LEGACY (keep for ref.)
+      // G[1] = 100*4*x1*x1*x1;//-4*(x2-0.7);
+      // optdata.pOptimizationProblem->eval_jac_g(*n, x, false, m,
+      //                                          *neG, 0, 0, &G[*n]);
+
+    }
+
+  }
+
+  return 0;
+}
+
+/***********************************************************
 ADGPRS, version 1.0, Copyright (c) 2010-2015 SUPRI-B
 Author(s): Oleg Volkov          (ovolkov@stanford.edu)
            Vladislav Bukshtynov (bukshtu@stanford.edu)
-******************************************************/
-
-bool SNOPTSolver::loadSNOPT(const string libname)
+***********************************************************/
+// =========================================================
+bool SNOPTSolverC::loadSNOPT(const string libname)
 {
 
 //#ifdef NDEBUG
@@ -976,6 +1073,39 @@ bool SNOPTSolver::loadSNOPT(const string libname)
 
   return true;
 }
+
+// =========================================================
+void SNOPTSolverC::dbg_bbgrid() {
+
+  // -------------------------------------------------------
+  // Dbg
+  if (settings_->verb_vector()[5] > 3) { // idx:5 -> mod
+
+    // -----------------------------------------------------
+    cout << endl << fstr("[mod]bbgrid_.debugString()",5)
+         << bbgrid_.debugString().toStdString() << endl;
+    cout << fstr("abb.extent():")
+         << show_Ved3d("", bbgrid_.extent()) << endl;
+
+    // -----------------------------------------------------
+    stringstream istr;
+    cvf::Vec3d bbgrid_cornerVerts[8];
+    bbgrid_.cornerVertices(bbgrid_cornerVerts);
+
+    // -----------------------------------------------------
+    if (settings_->verb_vector()[5] > 4) { // idx:5 -> mod
+      for (int j = 0; j < 8; j++) {
+        istr << "bbgrid_.cornerVertices[" << j << "]:";
+        cout << fstr(istr.str(), 5)
+             << show_Ved3d("", bbgrid_cornerVerts[j], false)
+             << endl;
+        istr.str("");
+      }
+    }
+  }
+
+}
+
 
 }
 }

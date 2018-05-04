@@ -59,30 +59,37 @@ ConstraintHandler::ConstraintHandler(
         // -------------------------------------------------
         // BHP
       case Settings::Optimizer::ConstraintType::BHP:
-        constraints_.append(new BhpConstraint(constraint, variables));
+        constraints_.append(new BhpConstraint(constraint,
+                                              variables));
         break;
 
         // -------------------------------------------------
         // RATE
       case Settings::Optimizer::ConstraintType::Rate:
-        constraints_.append(new RateConstraint(constraint, variables));
+        constraints_.append(new RateConstraint(constraint,
+                                               variables));
         break;
 
         // -------------------------------------------------
         // WELL SPLINE LENGTH
-      case Settings::Optimizer::ConstraintType::WellSplineLength:
+      case Settings::Optimizer::ConstraintType::
+        WellSplineLength:
 
         for (auto wname : constraint.wells) {
           auto cons = Settings::Optimizer::Constraint(constraint);
           cons.well = wname;
-          constraints_.append(new WellSplineLength(cons, variables));
+          constraints_.append(new WellSplineLength(cons,
+                                                   variables));
         }
         break;
 
         // -------------------------------------------------
         // WELL SPLINE INTERWELL DISTANCE
-      case Settings::Optimizer::ConstraintType::WellSplineInterwellDistance:
-        constraints_.append(new InterwellDistance(constraint, variables));
+      case Settings::Optimizer::ConstraintType::
+        WellSplineInterwellDistance:
+
+        constraints_.append(new InterwellDistance(constraint,
+                                                  variables));
         break;
 
         // -------------------------------------------------
@@ -91,7 +98,8 @@ ConstraintHandler::ConstraintHandler(
         CombinedWellSplineLengthInterwellDistance:
 
         constraints_.append(
-            new CombinedSplineLengthInterwellDistance(constraint, variables));
+            new CombinedSplineLengthInterwellDistance(constraint,
+                                                      variables));
         break;
 
         // -------------------------------------------------
@@ -101,28 +109,38 @@ ConstraintHandler::ConstraintHandler(
 
         constraints_.append(
             new CombinedSplineLengthInterwellDistanceReservoirBoundary(
-                constraint, variables, grid));
+                constraint,
+                variables,
+                grid));
         break;
 
         // -------------------------------------------------
         // RESERVOIR BOUNDARY
-      case Settings::Optimizer::ConstraintType::ReservoirBoundary:
+      case Settings::Optimizer::ConstraintType::
+        ReservoirBoundary:
 
         for (auto wname : constraint.wells) {
           auto cons = Settings::Optimizer::Constraint(constraint);
           cons.well = wname;
-          constraints_.append(new ReservoirBoundary(cons, variables, grid));
+          constraints_.append(
+              new ReservoirBoundary(cons,
+                                    variables,
+                                    grid));
         }
         break;
 
         // -------------------------------------------------
         // PSEUDO CONTINUOUS BOUNDARY 2D
-      case Settings::Optimizer::ConstraintType::PseudoContBoundary2D:
+      case Settings::Optimizer::ConstraintType::
+        PseudoContBoundary2D:
 
         for (auto wname : constraint.wells) {
           auto cons = Settings::Optimizer::Constraint(constraint);
           cons.well = wname;
-          constraints_.append(new PseudoContBoundary2D(cons, variables, grid));
+          constraints_.append(
+              new PseudoContBoundary2D(cons,
+                                       variables,
+                                       grid));
         }
         break;
 

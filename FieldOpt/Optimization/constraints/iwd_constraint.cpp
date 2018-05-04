@@ -25,7 +25,7 @@
 
 // ---------------------------------------------------------
 #include "iwd_constraint.h"
-#include "../optimizers/SNOPTSolver.h"
+#include "optimizers/SNOPTSolverC.h"
 
 #include <FieldOpt-WellIndexCalculator/resinxx/rixx_prj_viz/RivIntersectionGeometryGenerator.h>
 
@@ -42,62 +42,15 @@ IWDConstraint::IWDConstraint(
 
   // -------------------------------------------------------
   settings_ = settings;
-  variables_ = variables;
-
-  // -------------------------------------------------------
-  if(ricasedata == nullptr) {
-    cout << "[iwd]RICaseData is null!.---- " << endl;
-  }
-
-  // -------------------------------------------------------
-  // Force compute geometric bb
+  // variables_ = variables;
+  grid_ = grid;
   ricasedata_ = ricasedata;
-  ricasedata_->computeActiveCellBoundingBoxes();
 
-  // -------------------------------------------------------
-  // Use RIGrid from now on
-  rigrid_ = ricasedata_->mainGrid();
-  rigrid_->computeCachedData();
-  rigrid_->calculateFaults(
-      ricasedata_->activeCellInfo(MATRIX_MODEL));
 
-  // -------------------------------------------------------
-  bbgrid_ = ricasedata_->activeCellInfo(
-      MATRIX_MODEL)->geometryBoundingBox();
 
-  // -------------------------------------------------------
-  // Dbg
-  if (settings_->verb_vector()[5] > 3) { // idx:5 -> mod
 
-    // -----------------------------------------------------
-    cout << endl << fstr("[mod]bbgrid_.debugString()",5)
-         << bbgrid_.debugString().toStdString() << endl;
-    cout << fstr("abb.extent():")
-         << show_Ved3d("", bbgrid_.extent()) << endl;
 
-    // -----------------------------------------------------
-    stringstream istr;
-    cvf::Vec3d bbgrid_cornerVerts[8];
-    bbgrid_.cornerVertices(bbgrid_cornerVerts);
 
-    // -----------------------------------------------------
-    if (settings_->verb_vector()[5] > 4) { // idx:5 -> mod
-      for (int j = 0; j < 8; j++) {
-        istr << "bbgrid_.cornerVertices[" << j << "]:";
-        cout << fstr(istr.str(), 5)
-             << show_Ved3d("", bbgrid_cornerVerts[j], false)
-             << endl;
-        istr.str("");
-      }
-    }
-  }
-
-  // -------------------------------------------------------
-  SNOPTSolver_ =
-      new Optimization::Optimizers::SNOPTSolver(settings_,
-                                                current_case_,
-                                                grid,
-                                                ricasedata);
 
 
   if(0) {
@@ -301,7 +254,8 @@ bool IWDConstraint::CaseSatisfiesConstraint(Case *current_case) {
 //      return false;
 //  }
 //
-  return true;
+  // return true;
+  return false;
 }
 
 // ---------------------------------------------------------
@@ -323,6 +277,13 @@ void IWDConstraint::SnapCaseToConstraints(Case *current_case) {
   // ---------------------------------------------------
   // Apply interwell distance constraint
 //      distance_constraint_->SnapCaseToConstraints(c);
+
+  // -------------------------------------------------------
+  SNOPTSolverC_ =
+      new Optimization::Optimizers::SNOPTSolverC(settings_,
+                                                current_case,
+                                                grid_,
+                                                ricasedata_);
 
   // ---------------------------------------------------
   // Apply well length constraint to each well sequentially

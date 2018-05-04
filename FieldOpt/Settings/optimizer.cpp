@@ -52,7 +52,7 @@ Optimizer::Optimizer(QJsonObject json_optimizer) {
   else if (QString::compare(type, "ExhaustiveSearch2DVert") == 0)
     type_ = OptimizerType::ExhaustiveSearch2DVert;
 
-  else if (QString::compare(type, "SNOPTSolver") == 0)
+  else if (QString::compare(type, "SNOPTSolverC") == 0)
     type_ = OptimizerType::SNOPTSolver;
 
   else if (QString::compare(type, "DFO") == 0)
@@ -345,7 +345,8 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
 
   } else {
     throw std::runtime_error(
-        "A constraint must always specify either the Well or the Wells property.");
+        "A constraint must always specify either "
+            "the Well or the Wells property.");
   }
 
   // ---------------------------------------------------------------
@@ -407,8 +408,11 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
     // -------------------------------------------------------------
     if (QString::compare(optimizer_constraints_spline_points_type, "Function") == 0) {
 
-      optimizer_constraint.spline_points_type = ConstraintWellSplinePointsType::Function;
+      optimizer_constraint.spline_points_type =
+          ConstraintWellSplinePointsType::Function;
+
       json_constraint["Function"].toString();
+
     } else if (QString::compare(optimizer_constraints_spline_points_type, "MaxMin") == 0) {
 
       optimizer_constraint.spline_points_type = ConstraintWellSplinePointsType::MaxMin;
@@ -459,7 +463,8 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
     }
     else
       throw std::runtime_error(
-          "The MinLength field must be specified for well spline length constraints.");
+          "MinLength must be specified for "
+              "well spline length constraints.");
 
     // ---------------------------------------------------------------
     if (json_constraint.contains("Max")) {
@@ -472,7 +477,8 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
     }
     else
       throw std::runtime_error(
-          "The MaxLength field must be specified for well length constraints.");
+          "MaxLength must be specified for "
+              "well length constraints.");
 
     // ---------------------------------------------------------------
     // Constraint type WellSplineInterwellDistance

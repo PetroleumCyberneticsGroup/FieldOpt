@@ -95,7 +95,7 @@ void Subproblem::Solve(vector<double> &xsol,
   // ---------------------------------------------------------------
   // The snoptHandler must be setup and loaded
   SNOPTHandler snoptHandler = initSNOPTHandler();
-  snoptHandler.setProbName("SNOPTSolver");
+  snoptHandler.setProbName("SNOPTSolverC");
   snoptHandler.setParameter(optimizationType);
 
   setOptionsForSNOPT(snoptHandler);

@@ -41,7 +41,7 @@ add_library(optimization
     optimizers/GeneticAlgorithm.cpp
     optimizers/RGARDD.cpp
     optimizers/DFO.cpp
-    optimizers/SNOPTSolver.cpp
+    optimizers/SNOPTSolverC.cpp
     optimizers/OptimizationProblem.cpp
     optimizers/Subproblem.cpp
     # CONSTRAINTS
