@@ -76,7 +76,7 @@ class IWDConstraint : public Constraint {
 
   RICaseData* ricasedata_;
 
-  cvf::BoundingBox bbgrid;
+  cvf::BoundingBox bbgrid_;
 
   RimIntersection* rimintersection_;
 

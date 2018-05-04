@@ -1,21 +1,25 @@
-/******************************************************************************
-   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
+/***********************************************************
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
 
-   This file is part of the FieldOpt project.
+ This file is part of the FieldOpt project.
 
-   FieldOpt is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+ FieldOpt is free software: you can redistribute it
+ and/or modify it under the terms of the GNU General
+ Public License as published by the Free Software
+ Foundation, either version 3 of the License, or (at
+ your option) any later version.
 
-   FieldOpt is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+ FieldOpt is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the
+ implied warranty of MERCHANTABILITY or FITNESS FOR
+ A PARTICULAR PURPOSE.  See the GNU General Public
+ License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
-******************************************************************************/
+ You should have received a copy of the GNU
+ General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
 
 // ---------------------------------------------------------
 #ifndef SETTINGS_OPTIMIZER_H
@@ -31,11 +35,12 @@
 // ---------------------------------------------------------
 namespace Settings {
 
-// ---------------------------------------------------------
+// =========================================================
 /*!
- * \brief The Optimizer class contains optimizer-specific settings.
- * Optimizer settings objects may _only_ be created by the Settings
- * class. They are created when reading a JSON-formatted "driver file".
+ * \brief The Optimizer class contains optimizer-specific
+ * settings. Optimizer settings objects may _only_ be
+ * created by the Settings class. They are created when
+ * reading a JSON-formatted "driver file".
  *
  */
 class Optimizer
@@ -57,8 +62,8 @@ class Optimizer
 
   // -------------------------------------------------------
   enum ConstraintType {
-    IWD, BHP, Rate, SplinePoints,
-    WellSplineLength, WellSplineInterwellDistance, WellSplineDomain,
+    IWD, BHP, Rate, SplinePoints, WellSplineLength,
+    WellSplineInterwellDistance, WellSplineDomain,
     CombinedWellSplineLengthInterwellDistance,
     CombinedWellSplineLengthInterwellDistanceReservoirBoundary,
     ReservoirBoundary, PseudoContBoundary2D
@@ -78,36 +83,79 @@ class Optimizer
   // -------------------------------------------------------
   struct Parameters {
 
-    // GSS parameters
-    int max_evaluations; //!< Max # of evaluations allowed before terminating optimization.
-    double contraction_factor; //!< The contraction factor for GSS algorithms.
-    double expansion_factor; //!< The expansion factor for GSS algorithms.
-    double max_queue_size; //!< Maximum size of evaluation queue.
-    QString pattern; //!< The pattern to be used for GSS algorithms.
-    double initial_step_length; //!< Initial step length in the algorithm when applicable.
-    QList<double > initial_step_length_xyz; //!< XYZ scaled initial step length
-    double minimum_step_length; //!< The minimum step length in the algorithm when applicable.
-    QList<double > minimum_step_length_xyz; //!< XYZ scaled minimum step length
+    // [GSS parameters]
 
-    // 3rd party solver parameters
+    // Max # of evals allowed b/e terminating optimization.
+    int max_evaluations; 
+    
+    // contraction factor for GSS algorithms.
+    double contraction_factor; 
+    
+    // Expansion factor for GSS algorithms.
+    double expansion_factor; 
+    
+    // Maximum size of evaluation queue.
+    double max_queue_size; 
+    
+    // Pattern to be used for GSS algorithms.
+    QString pattern; 
+    
+    // Initial step length in the algorithm when applicable.
+    double initial_step_length; 
+    
+    // XYZ scaled initial step length
+    QList<double > initial_step_length_xyz; 
+    
+    // Min step length in the algorithm when applicable.
+    double minimum_step_length; 
+    
+    // XYZ scaled minimum step length
+    QList<double > minimum_step_length_xyz; 
+
+    // -------------------------------------------------------
+    // [GA parameters]
+
+    // Max iterations. Default: 50
+    int max_generations;      
+
+    // Optional. Can be determined automatically.
+    // Def: min(10*nvars, 100).
+    int population_size;      
+
+    // Fraction to be discarded during selection.
+    // Def: 1/population.
+    double discard_parameter; 
+
+    // Crossover probability. Def: 0.1.
+    double p_crossover;       
+
+    // Decay rate. Default: 4.0.
+    double decay_rate;        
+
+    // Mutation strength. Def: 0.25.
+    double mutation_strength; 
+
+    // Stagnation limit. Def: 1e-10.
+    double stagnation_limit;  
+
+    // Simple lower bound. Applied to _all_ variables.
+    // Def: -10.0.
+    double lower_bound;       
+
+    // Simple upper bound. Applied to _all_ variables.
+    // Def: +10.0.
+    double upper_bound;
+
+    // -------------------------------------------------------
+    // DFO parameters
+    double initial_trust_region_radius;
+
+    // -------------------------------------------------------
+    // SNOPT solver parameters
     QString thrdps_optn_file;
     QString thrdps_smry_file;
     QString thrdps_prnt_file;
 
-    // GA parameters
-    int max_generations;      //!< Max iterations. Default: 50
-    int population_size;      //!< Optional. Can be determined automatically. Default: min(10*nvars, 100).
-    double discard_parameter; //!< Fraction to be discarded during selection. Defaults: 1/population.
-    double p_crossover;       //!< Crossover probability. Default: 0.1.
-    double decay_rate;        //!< Decay rate. Default: 4.0.
-    double mutation_strength; //!< Mutation strength. Default: 0.25.
-    double stagnation_limit;  //!< Stagnation limit. Default: 1e-10.
-    double lower_bound;       //!< Simple lower bound. This is applied to _all_ variables. Default: -10.0.
-    double upper_bound;       //!< Simple upper bound. This is applied to _all_ variables. Default: +10.0.
-
-
-    // DFO parameters
-    double initial_trust_region_radius;
   };
 
   // -------------------------------------------------------
@@ -152,10 +200,12 @@ class Optimizer
   QList<Constraint> constraints() const { return constraints_; } //!< Get the optimizer constraints.
 
   // -------------------------------------------------------
-  // Should really be inherited by Friend Class: Settings.
-  void set_verbosity_vector(const std::vector<int> verb_vector) { verb_vector_ = verb_vector; }
+  void set_verbosity_vector(const std::vector<int> verb_vector)
+  { verb_vector_ = verb_vector; }
+
   std::vector<int> verb_vector() const { return verb_vector_; }
 
+  // -------------------------------------------------------
   QString output_dir_;
 
  private:

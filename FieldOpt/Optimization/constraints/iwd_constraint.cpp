@@ -61,46 +61,85 @@ IWDConstraint::IWDConstraint(
   rigrid_->calculateFaults(
       ricasedata_->activeCellInfo(MATRIX_MODEL));
 
-
-
-  // -------------------------------------------------------------
-  std::vector<cvf::Vec3d> ccv, ccc;
-  size_t idx;
-//  for (idx = 0; idx < ricasedata_->mainGrid()->cellCount(); idx++) {
-  for (idx = 0; idx < 4; idx++) {
-
-    size_t i, j, k;
-    rigrid_->ijkFromCellIndex(idx, &i, &j, &k);
-    // ricasedata_->mainGrid()->ijkFromCellIndex(idx, &i, &j, &k);
-    cout << "i:" << i << " j:" << j << " k:" << k << endl;
-    //cout << ricasedata_->mainGrid()->cellCentroid(idx).x();
-
-    std::array<cvf::Vec3d, 8> hc;
-    rigrid_->cellCornerVertices(idx, hc.data());
-    // ricasedata_->mainGrid()->cellCornerVertices(idx, hc.data());
-    cout << "hc_x:" << hc[0].x() << " hc_y:" << hc[0].y() << " hc_z:" << hc[0].z() << endl;
-    ccc.push_back(hc[0]);
-
-    cvf::Vec3d cc = rigrid_->cell(idx).center();
-    // cvf::Vec3d cc = ricasedata_->mainGrid()->cell(idx).center();
-    cout << "cc_x:" << cc.x() << " cc_y:" << cc.y() << " cc_z:" << cc.z() << endl;
-    ccv.push_back(cc);
-
-  }
-
-  std::array<cvf::Vec3d, 8> hc;
-  rigrid_->cellCornerVertices(0, hc.data());
-  // ricasedata_->mainGrid()->cellCornerVertices(0, hc.data());
-  ccc.push_back(hc[0]);
-
-
-
-
+  // -------------------------------------------------------
+  bbgrid_ = ricasedata_->activeCellInfo(
+      MATRIX_MODEL)->geometryBoundingBox();
 
   // -------------------------------------------------------
-  rimintersection_ = new RimIntersection(rigrid_,
-                                         ricasedata_,
-                                         settings);
+  // Dbg
+  if (settings_->verb_vector()[5] > 3) { // idx:5 -> mod
+
+    // -----------------------------------------------------
+    cout << endl << fstr("[mod]bbgrid_.debugString()",5)
+         << bbgrid_.debugString().toStdString() << endl;
+    cout << fstr("abb.extent():")
+         << show_Ved3d("", bbgrid_.extent()) << endl;
+
+    // -----------------------------------------------------
+    stringstream istr;
+    cvf::Vec3d bbgrid_cornerVerts[8];
+    bbgrid_.cornerVertices(bbgrid_cornerVerts);
+
+    // -----------------------------------------------------
+    if (settings_->verb_vector()[5] > 4) { // idx:5 -> mod
+      for (int j = 0; j < 8; j++) {
+        istr << "bbgrid_.cornerVertices[" << j << "]:";
+        cout << fstr(istr.str(), 5)
+             << show_Ved3d("", bbgrid_cornerVerts[j], false)
+             << endl;
+        istr.str("");
+      }
+    }
+  }
+
+  // -------------------------------------------------------
+  SNOPTSolver_ =
+      new Optimization::Optimizers::SNOPTSolver(settings_,
+                                                current_case_,
+                                                grid,
+                                                ricasedata);
+
+
+  if(0) {
+
+    // -------------------------------------------------------------
+    std::vector<cvf::Vec3d> ccv, ccc;
+    size_t idx;
+//  for (idx = 0; idx < ricasedata_->mainGrid()->cellCount(); idx++) {
+    for (idx = 0; idx < 4; idx++) {
+
+      size_t i, j, k;
+      rigrid_->ijkFromCellIndex(idx, &i, &j, &k);
+      // ricasedata_->mainGrid()->ijkFromCellIndex(idx, &i, &j, &k);
+      cout << "i:" << i << " j:" << j << " k:" << k << endl;
+      //cout << ricasedata_->mainGrid()->cellCentroid(idx).x();
+
+      std::array<cvf::Vec3d, 8> hc;
+      rigrid_->cellCornerVertices(idx, hc.data());
+      // ricasedata_->mainGrid()->cellCornerVertices(idx, hc.data());
+      cout << "hc_x:" << hc[0].x() << " hc_y:" << hc[0].y() << " hc_z:" << hc[0].z() << endl;
+      ccc.push_back(hc[0]);
+
+      cvf::Vec3d cc = rigrid_->cell(idx).center();
+      // cvf::Vec3d cc = ricasedata_->mainGrid()->cell(idx).center();
+      cout << "cc_x:" << cc.x() << " cc_y:" << cc.y() << " cc_z:" << cc.z() << endl;
+      ccv.push_back(cc);
+
+    }
+
+    std::array<cvf::Vec3d, 8> hc;
+    rigrid_->cellCornerVertices(0, hc.data());
+    // ricasedata_->mainGrid()->cellCornerVertices(0, hc.data());
+    ccc.push_back(hc[0]);
+
+
+
+
+
+    // -------------------------------------------------------
+    rimintersection_ = new RimIntersection(rigrid_,
+                                           ricasedata_,
+                                           settings);
 
 //   95 25 -2005
 //   5 55 -2005
@@ -115,16 +154,16 @@ IWDConstraint::IWDConstraint(
 //  35 95 -2005
 //  95 35 -2005
 
-  cvf::Vec3d p1 = cvf::Vec3d(95, 35, -2005);
-  cvf::Vec3d p2 = cvf::Vec3d(35, 5, -2005);
-  cvf::Vec3d p3 = cvf::Vec3d(5, 35, -2005);
-  cvf::Vec3d p4 = cvf::Vec3d(35, 95, -2005);
-  cvf::Vec3d p5 = cvf::Vec3d(95, 35, -2005);
-  rimintersection_->appendPointToPolyLine(p1);
-  rimintersection_->appendPointToPolyLine(p2);
-  rimintersection_->appendPointToPolyLine(p3);
-  rimintersection_->appendPointToPolyLine(p4);
-  rimintersection_->appendPointToPolyLine(p5);
+    cvf::Vec3d p1 = cvf::Vec3d(95, 35, -2005);
+    cvf::Vec3d p2 = cvf::Vec3d(35, 5, -2005);
+    cvf::Vec3d p3 = cvf::Vec3d(5, 35, -2005);
+    cvf::Vec3d p4 = cvf::Vec3d(35, 95, -2005);
+    cvf::Vec3d p5 = cvf::Vec3d(95, 35, -2005);
+    rimintersection_->appendPointToPolyLine(p1);
+    rimintersection_->appendPointToPolyLine(p2);
+    rimintersection_->appendPointToPolyLine(p3);
+    rimintersection_->appendPointToPolyLine(p4);
+    rimintersection_->appendPointToPolyLine(p5);
 
 //  for (int ii=0; ii < 2; ++ii) {
 //    cout << "Polypoint " << ii <<  ": ";
@@ -133,63 +172,38 @@ IWDConstraint::IWDConstraint(
 //    rimintersection_->appendPointToPolyLine(ccc[ii]);
 //  }
 
-  RivIntersectionPartMgr* imgr =
-      rimintersection_->intersectionPartMgr();
+    RivIntersectionPartMgr *imgr =
+        rimintersection_->intersectionPartMgr();
 
-  RivIntersectionGeometryGenerator*
-      icsec = imgr->getCrossSectionGenerator();
+    RivIntersectionGeometryGenerator *
+        icsec = imgr->getCrossSectionGenerator();
 
-  size_t vx_count = icsec->m_cellBorderLineVxes.p()->size();
+    size_t vx_count = icsec->m_cellBorderLineVxes.p()->size();
 
-  for (size_t ivx = 0; ivx < vx_count; ivx++) {
-    auto vx_x = icsec->m_cellBorderLineVxes.p()->val(ivx).x();
-    auto vx_y = icsec->m_cellBorderLineVxes.p()->val(ivx).y();
-    auto vx_z = icsec->m_cellBorderLineVxes.p()->val(ivx).z();
-    cout << "vx_x: " << vx_x << " "
-         << "vx_y: " << vx_y << " "
-         << "vx_z: " << vx_z << endl;
-  }
-
-  print_ri_hck_vec3f("", "", "", cvf::Vec3f::ZERO, true, false);
-  for (size_t ivx = 0; ivx < vx_count; ivx++) {
-    print_ri_hck_vec3f("", "", "",
-                       icsec->m_cellBorderLineVxes.p()->val(ivx));
-  }
-
-
-  // -------------------------------------------------------
-  if (settings->verb_vector()[5] > 1) // idx:5 -> mod (Model)
-    cout << fstr("[mod]Init RIGrid_.",5) << "RICell& cell" << endl;
-
-  // size_t cellcount = rigrid_->cellCount();
-
-  bbgrid = ricasedata_->activeCellInfo(
-          MATRIX_MODEL)->geometryBoundingBox();
-
-
-  // -------------------------------------------------------
-  // Dbg
-  if (settings_->verb_vector()[5] > 3) { // idx:5 -> mod
-    cout << fstr("[mod]Init var container.", 5) << endl;
-
-    cout << endl << fstr("[mod]abb.debugString()",5)
-         << bbgrid.debugString().toStdString() << endl;
-    cout << fstr("abb.extent():")
-         << show_Ved3d("", bbgrid.extent()) << endl;
-
-    stringstream istr;
-    cvf::Vec3d bbgrid_cornerVerts[8];
-    bbgrid.cornerVertices(bbgrid_cornerVerts);
-
-    for (int j = 0; j < 8; j++) {
-      istr << "abb.cornerVertices[" << j << "]:";
-      cout << fstr(istr.str(), 5)
-           << show_Ved3d("", bbgrid_cornerVerts[j], false) << endl;
-      istr.str("");
+    for (size_t ivx = 0; ivx < vx_count; ivx++) {
+      auto vx_x = icsec->m_cellBorderLineVxes.p()->val(ivx).x();
+      auto vx_y = icsec->m_cellBorderLineVxes.p()->val(ivx).y();
+      auto vx_z = icsec->m_cellBorderLineVxes.p()->val(ivx).z();
+      cout << "vx_x: " << vx_x << " "
+           << "vx_y: " << vx_y << " "
+           << "vx_z: " << vx_z << endl;
     }
 
-  }
+    print_ri_hck_vec3f("", "", "", cvf::Vec3f::ZERO, true, false);
+    for (size_t ivx = 0; ivx < vx_count; ivx++) {
+      print_ri_hck_vec3f("", "", "",
+                         icsec->m_cellBorderLineVxes.p()->val(ivx));
+    }
 
+
+    // -------------------------------------------------------
+    if (settings->verb_vector()[5] > 1) // idx:5 -> mod (Model)
+      cout << fstr("[mod]Init RIGrid_.", 5) << "RICell& cell" << endl;
+
+    // size_t cellcount = rigrid_->cellCount();
+
+
+  }
 
 
 
@@ -269,12 +283,7 @@ IWDConstraint::IWDConstraint(
 
 
 
-  // -------------------------------------------------------
-  SNOPTSolver_ =
-      new Optimization::Optimizers::SNOPTSolver(settings_,
-                                                current_case_,
-                                                grid,
-                                                ricasedata);
+
 
 }
 
@@ -312,11 +321,11 @@ void IWDConstraint::SnapCaseToConstraints(Case *current_case) {
 
 
   // ---------------------------------------------------
-      // Apply interwell distance constraint
+  // Apply interwell distance constraint
 //      distance_constraint_->SnapCaseToConstraints(c);
 
-      // ---------------------------------------------------
-      // Apply well length constraint to each well sequentially
+  // ---------------------------------------------------
+  // Apply well length constraint to each well sequentially
 //      for (WellSplineLength *wsl : length_constraints_) {
 //        wsl->SnapCaseToConstraints(c);
 //      }
