@@ -86,61 +86,61 @@ class Optimizer
     // [GSS parameters]
 
     // Max # of evals allowed b/e terminating optimization.
-    int max_evaluations; 
-    
+    int max_evaluations;
+
     // contraction factor for GSS algorithms.
-    double contraction_factor; 
-    
+    double contraction_factor;
+
     // Expansion factor for GSS algorithms.
-    double expansion_factor; 
-    
+    double expansion_factor;
+
     // Maximum size of evaluation queue.
-    double max_queue_size; 
-    
+    double max_queue_size;
+
     // Pattern to be used for GSS algorithms.
-    QString pattern; 
-    
-    // Initial step length in the algorithm when applicable.
-    double initial_step_length; 
-    
+    QString pattern;
+
+    // Initial step length when applicable.
+    double initial_step_length;
+
     // XYZ scaled initial step length
-    QList<double > initial_step_length_xyz; 
-    
-    // Min step length in the algorithm when applicable.
-    double minimum_step_length; 
-    
+    QList<double > initial_step_length_xyz;
+
+    // Min step length when applicable.
+    double minimum_step_length;
+
     // XYZ scaled minimum step length
-    QList<double > minimum_step_length_xyz; 
+    QList<double > minimum_step_length_xyz;
 
     // -------------------------------------------------------
     // [GA parameters]
 
     // Max iterations. Default: 50
-    int max_generations;      
+    int max_generations;
 
     // Optional. Can be determined automatically.
     // Def: min(10*nvars, 100).
-    int population_size;      
+    int population_size;
 
     // Fraction to be discarded during selection.
     // Def: 1/population.
-    double discard_parameter; 
+    double discard_parameter;
 
     // Crossover probability. Def: 0.1.
-    double p_crossover;       
+    double p_crossover;
 
     // Decay rate. Default: 4.0.
-    double decay_rate;        
+    double decay_rate;
 
     // Mutation strength. Def: 0.25.
-    double mutation_strength; 
+    double mutation_strength;
 
     // Stagnation limit. Def: 1e-10.
-    double stagnation_limit;  
+    double stagnation_limit;
 
     // Simple lower bound. Applied to _all_ variables.
     // Def: -10.0.
-    double lower_bound;       
+    double lower_bound;
 
     // Simple upper bound. Applied to _all_ variables.
     // Def: +10.0.
@@ -160,7 +160,9 @@ class Optimizer
 
   // -------------------------------------------------------
   struct Objective {
-    ObjectiveType type; //!< The objective definition type (e.g. WeightedSum)
+    // The objective definition type (e.g. WeightedSum)
+    ObjectiveType type;
+
     bool use_penalty_function; //!< Whether or not to use penalty function (default: false).
     struct WeightedSumComponent {
       double coefficient; QString property; int time_step;
@@ -168,36 +170,92 @@ class Optimizer
     QList<WeightedSumComponent> weighted_sum; //!< The expression for the Objective function formulated as a weighted sum
   };
 
+
+  // -------------------------------------------------------
+  struct WplcRBBConstraint {
+
+  };
+
+  // -------------------------------------------------------
+  struct WplcRRGConstraint {
+
+  };
+
+  // -------------------------------------------------------
+  struct WplcIWDConstraint {
+
+  };
+
   // -------------------------------------------------------
   struct Constraint {
-    struct RealCoordinate { double x; double y; double z; }; //!< Used to express (x,y,z) coordinates.
-    struct RealMaxMinLimit { RealCoordinate max; RealCoordinate min; }; //!< Used to define a box-shaped 3D area. Max and min each define a corner.
-    ConstraintType type; //!< The constraint type (e.g. BHP or SplinePoints positions).
-    QString well; //!< The name of the well this Constraint applies to.
-    QStringList wells; //!< List of well names if the constraint applies to more than one.
-    double max; //!< Max limit when using constraints like BHP.
-    double min; //!< Min limit when using constraints like BHP.
-    double box_imin, box_imax, box_jmin, box_jmax, box_kmin, box_kmax; //!< Min max limits for geometrix box constraints.
+
+    // Used to express (x,y,z) coordinates.
+    struct RealCoordinate { double x; double y; double z; };
+
+    // Used to define a box-shaped 3D area. Max and min each define a corner.
+    struct RealMaxMinLimit { RealCoordinate max; RealCoordinate min; };
+
+    // The constraint type (e.g. BHP or SplinePoints positions).
+    ConstraintType type;
+
+    // The name of the well this Constraint applies to.
+    QString well;
+
+    // List of well names if the constraint applies to more than one.
+    QStringList wells;
+
+    // Max limit when using constraints like BHP.
+    double max;
+
+    // Min limit when using constraints like BHP.
+    double min;
+
+    // Min max limits for geometrix box constraints.
+    double box_imin, box_imax, box_jmin,
+        box_jmax, box_kmin, box_kmax;
+
     double max_length;
     double min_length;
     double min_distance;
-    long double penalty_weight; //!< The weight to be used when considering the constraint in a penalty function. (default: 0.0)
+
+    // The weight to be used when considering the constraint in a penalty function. (default: 0.0)
+    long double penalty_weight;
+
     int max_iterations;
-    ConstraintWellSplinePointsType spline_points_type; //!< How the SplinePoints constraint is given when SplinePoints constraint type is selected.
-    QList<RealMaxMinLimit> spline_points_limits; //!< Box limits a spline point needs to be within to be valid when SplinePoints constraint type is selected.
+
+    // How the SplinePoints constraint is given when SplinePoints constraint type is selected.
+    ConstraintWellSplinePointsType spline_points_type;
+
+    // Box limits a spline point needs to be within to be valid when SplinePoints constraint type is selected.
+    QList<RealMaxMinLimit> spline_points_limits;
 
     // 3rd party solver parameters
     QString thrdps_optn_file;
     QString thrdps_smry_file;
     QString thrdps_prnt_file;
+
+    std::vector<WplcRRGConstraint> rrg_constraints;
+    std::vector<WplcRBBConstraint> rbb_constraints;
+    std::vector<WplcIWDConstraint> iwd_constraints;
+
+
   };
 
   // -------------------------------------------------------
-  OptimizerType type() const { return type_; } //!< Get the Optimizer type (e.g. Compass).
-  OptimizerMode mode() const { return mode_; } //!< Get the optimizer mode (maximize/minimize).
-  Parameters parameters() const { return parameters_; } //!< Get the optimizer parameters.
-  Objective objective() const { return objective_; } //!< Get the optimizer objective function.
-  QList<Constraint> constraints() const { return constraints_; } //!< Get the optimizer constraints.
+  // Get the Optimizer type (e.g. Compass).
+  OptimizerType type() const { return type_; }
+
+  // Get the optimizer mode (maximize/minimize).
+  OptimizerMode mode() const { return mode_; }
+
+  // Get the optimizer parameters.
+  Parameters parameters() const { return parameters_; }
+
+  // Get the optimizer objective function.
+  Objective objective() const { return objective_; }
+
+  // Get the optimizer constraints.
+  QList<Constraint> constraints() const { return constraints_; }
 
   // -------------------------------------------------------
   void set_verbosity_vector(const std::vector<int> verb_vector)
@@ -215,9 +273,10 @@ class Optimizer
   Parameters parameters_;
   Objective objective_;
   OptimizerMode mode_;
+
   Constraint parseSingleConstraint(QJsonObject json_constraint);
 
-  std::vector<int> verb_vector_ = std::vector<int>(11,0); //!<
+  std::vector<int> verb_vector_ = std::vector<int>(11,0);
 };
 
 }

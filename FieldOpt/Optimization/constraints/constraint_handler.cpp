@@ -170,7 +170,7 @@ void ConstraintHandler::SnapCaseToConstraints(Case *c) {
   // to the whole (!) real vector -> this is ok, since each constraint
   // type (i.e., the member.function SnapCaseToConstraints of each
   // constraint) operates on a different part of the real vector, e.g.,
-  // BHP cosntraints and well placement constraints
+  // BHP constraints and well placement constraints
 
   // This is an apparent sequentiality, though the real sequentiality
   // occurs at the level of each independent constraint type
