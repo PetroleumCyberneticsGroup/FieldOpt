@@ -243,7 +243,8 @@ inline QStringList *ReadFileToStringList(QString file_path) {
  * to write the string into.
  */
 inline void WriteStringToFile(QString string,
-                              QString file_path) {
+                              QString file_path,
+                              bool newline=true) {
 
   // -------------------------------------------------------
   if (!ParentDirectoryExists(file_path))
@@ -251,14 +252,25 @@ inline void WriteStringToFile(QString string,
         "File's parent directory not found: "
             + file_path.toStdString());
 
-  if (!string.endsWith("\n"))
+  if (!string.endsWith("\n") && newline) {
     string.append("\n");
+  }
 
   // -------------------------------------------------------
   QFile file(file_path);
   file.open(QIODevice::WriteOnly | QIODevice::Truncate);
   QTextStream fout(&file);
   fout << string.toUtf8() << endl;
+  file.close();
+}
+
+// =========================================================
+inline void EstablishFile(QString file_path) {
+
+  // -------------------------------------------------------
+  QFile file(file_path);
+  file.open(QIODevice::WriteOnly | QIODevice::Truncate);
+  QTextStream fout(&file);
   file.close();
 }
 

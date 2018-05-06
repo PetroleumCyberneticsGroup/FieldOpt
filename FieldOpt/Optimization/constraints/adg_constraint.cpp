@@ -36,6 +36,7 @@ namespace Constraints {
 using ::Utilities::FileHandling::FileExists;
 using ::Utilities::FileHandling::WriteStringToFile;
 using ::Utilities::FileHandling::WriteLineToFile;
+using ::Utilities::FileHandling::EstablishFile;
 
 //==========================================================
 ADGConstraint::ADGConstraint(
@@ -63,7 +64,9 @@ void ADGConstraint::SnapCaseToConstraints(Case *current_case) {
   // -------------------------------------------------------
   auto cdir = settings_->sim_dirs_.driver_directory_;
 
-  WriteStringToFile("", "x.in");
+  QString xin = "x_" + QString::fromStdString(current_case->id_stdstr()) + ".in";
+  QString schedout = "sched_" + QString::fromStdString(current_case->id_stdstr()) + ".out";
+  EstablishFile(xin);
 
   // -------------------------------------------------------
   // Print out x.in based on current_case
@@ -71,8 +74,8 @@ void ADGConstraint::SnapCaseToConstraints(Case *current_case) {
 
   for (auto var=var_map.begin(); var != var_map.end(); ++var) {
 
-    WriteLineToFile(QString::fromStdString(var->first), "x.in");
-    WriteLineToFile(QString::number(var->second), "x.in");
+    // WriteLineToFile(QString::fromStdString(var->first), xin);
+    WriteLineToFile(QString::number(var->second), xin);
 
   }
 
@@ -80,7 +83,7 @@ void ADGConstraint::SnapCaseToConstraints(Case *current_case) {
   // target_dir = "5spot-cntrlopt";
   optz = "/home/bellout/git/ADGPRS/20161124-ad-gprs-optimizer-ov-src/Optimization20161120/cmake-build-debug/bin/optimize-cmake";
   opt_file = cdir.toStdString() + "/OPT.txt";
-  nthreads = " 1 0 -p x.in sched.out ";
+  nthreads = " 1 0 -p " + xin.toStdString() + " " + schedout.toStdString();
 
   // -------------------------------------------------------
   if (FileExists(QString::fromStdString(optz))) {
@@ -92,7 +95,7 @@ void ADGConstraint::SnapCaseToConstraints(Case *current_case) {
     // -----------------------------------------------------
     // optimize OPT.txt 1 0 -p x.in sched.out
     string cmd_in = optz + " " + opt_file + nthreads;
-    printf ("Executing: %s.\n", cmd_in.c_str());
+    printf ("Executing: %s\n", cmd_in.c_str());
 
 
     // -----------------------------------------------------
