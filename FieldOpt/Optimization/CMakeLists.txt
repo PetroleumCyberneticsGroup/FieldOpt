@@ -57,6 +57,7 @@ add_library(optimization
     constraints/combined_spline_length_interwell_distance_reservoir_boundary.cpp
     constraints/pseudo_cont_boundary_2d.cpp
     constraints/iwd_constraint.cpp
+    constraints/adg_constraint.cpp
     ${EXPERIMENTAL_CONSTRAINTS_SRC}
     # OBJECTIVES
     objective/objective.cpp
@@ -74,6 +75,7 @@ add_library(optimization
     ../FieldOpt-3rdPartySolvers/handlers/LibraryHandler.c
     ../FieldOpt-3rdPartySolvers/handlers/SNOPTLoader.c
     )
+
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
 # Target link libraries ====================================
@@ -103,6 +105,7 @@ if (BUILD_TESTING)
   # Unit tests
   find_package(GTest REQUIRED)
   include_directories(${GTEST_INCLUDE_DIRS} tests)
+
   add_executable(test_optimization
       tests/test_case.cpp
       tests/test_case_handler.cpp

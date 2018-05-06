@@ -50,7 +50,7 @@ class SNOPTSolverC;
 namespace Optimization {
 namespace Constraints {
 
-// ---------------------------------------------------------
+//==========================================================
 class IWDConstraint : public Constraint {
  public:
 

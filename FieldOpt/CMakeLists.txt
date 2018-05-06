@@ -183,9 +183,6 @@ if(NOT EIGEN3_FOUND)
 endif()
 
 # ----------------------------------------------------------
-# ╔═╗╔╦╗
-# ║═╬╗║
-# ╚═╝╚╩
 # ╔═╗╔═╗
 # ║ ╦╠═╝
 # ╚═╝╩
@@ -200,9 +197,9 @@ message("==================================================")
 if (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS)
   message(STATUS "Building BUILD_WIC_ONLY: ${BUILD_WIC_ONLY}")
   message(STATUS "Building BUILD_WIC_ADGPRS: ${BUILD_WIC_ADGPRS}")
-  message(STATUS "Skipping: Qt5Core and HDF5")
+  message(STATUS "Skipping: HDF5")
 else()
-  message(STATUS "Building FIELDOPT. Loading: Qt5Core and HDF5")
+  message(STATUS "Building FIELDOPT. Loading: HDF5")
   set(CMAKE_AUTOMOC ON)
   set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -212,14 +209,7 @@ else()
   find_package(Threads REQUIRED)
 
   message(".............................................................")
-  message(STATUS "Loading potentially local libraries:")
-  find_package(Qt5Core
-      HINTS ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib
-      REQUIRED)
-
-  message(STATUS "Qt5Core_QTMAIN_LIBRARIES: ${Qt5Core_QTMAIN_LIBRARIES}")
-  message(STATUS "Qt5Core_INCLUDE_DIRS: ${Qt5Core_INCLUDE_DIRS}")
-  include_directories(${Qt5Core_INCLUDE_DIRS})
+  message(STATUS "Loading potentially local libraries: gp + opm-common")
 
   find_library(gp NAMES gp
       HINTS ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib
@@ -239,6 +229,21 @@ else()
   message(STATUS "opm-common: ${opm-common_LIBRARIES}")
 
 endif()
+
+# ----------------------------------------------------------
+# ╔═╗╔╦╗
+# ║═╬╗║
+# ╚═╝╚╩
+# ----------------------------------------------------------
+message(".............................................................")
+message(STATUS "Loading potentially local libraries: Qt")
+find_package(Qt5Core
+    HINTS ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib
+    REQUIRED)
+
+message(STATUS "Qt5Core_QTMAIN_LIBRARIES: ${Qt5Core_QTMAIN_LIBRARIES}")
+message(STATUS "Qt5Core_INCLUDE_DIRS: ${Qt5Core_INCLUDE_DIRS}")
+include_directories(${Qt5Core_INCLUDE_DIRS})
 
 # ----------------------------------------------------------
 # ╦═╗╔═╗╔═╗╦ ╦ ╦╔═╗╔═╗╦ ╦ ╦
