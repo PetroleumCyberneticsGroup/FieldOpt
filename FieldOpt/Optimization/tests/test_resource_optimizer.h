@@ -32,7 +32,7 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
   TestResourceOptimizer() {
       base_case_ = new Optimization::Case(model_->variables()->GetBinaryVariableValues(),
                                           model_->variables()->GetDiscreteVariableValues(),
-                                          model_->variables()->GetContinousVariableValues());
+                                          model_->variables()->GetContinuousVariableValues());
       base_case_->set_objective_function_value(1000.0);
 
       settings_compass_search_min_unconstr_ = new Settings::Optimizer(get_json_settings_compass_search_minimize_);

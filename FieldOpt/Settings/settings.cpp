@@ -65,6 +65,8 @@ Settings::Settings(QString driver_path,
   output_directory_ = output_directory;
   simulator_->output_directory_ = output_directory;
   optimizer_->output_dir_ = output_directory;
+
+
 }
 
 // =========================================================
@@ -204,11 +206,13 @@ void Settings::readSimulatorSection() {
 
     // -----------------------------------------------------
     cout << "SimulatorType:--------- "
-         << json_simulator["Type"].toString().toUtf8().constData() << endl;
+         << json_simulator["Type"].
+             toString().toUtf8().constData() << endl;
 
     // -----------------------------------------------------
     cout << "FluidModel:------------ "
-         << json_simulator["FluidModel"].toString().toUtf8().constData() << endl;
+         << json_simulator["FluidModel"].
+             toString().toUtf8().constData() << endl;
 
     // -----------------------------------------------------
     cout << "MaxMinutes:------------ "

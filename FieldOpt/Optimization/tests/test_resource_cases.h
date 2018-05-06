@@ -25,10 +25,10 @@ class TestResourceCases : public TestResources::TestResourceVariablePropertyCont
 
       test_case_two_well_splines_ = new Optimization::Case(varcont_two_spline_wells_->GetBinaryVariableValues(),
                                                            varcont_two_spline_wells_->GetDiscreteVariableValues(),
-                                                           varcont_two_spline_wells_->GetContinousVariableValues());
+                                                           varcont_two_spline_wells_->GetContinuousVariableValues());
       test_case_spline_ = new Optimization::Case(varcont_prod_spline_->GetBinaryVariableValues(),
                                                  varcont_prod_spline_->GetDiscreteVariableValues(),
-                                                 varcont_prod_spline_->GetContinousVariableValues());
+                                                 varcont_prod_spline_->GetContinuousVariableValues());
 
       test_case_2r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), real_variables_2d_);
 
@@ -49,7 +49,8 @@ class TestResourceCases : public TestResources::TestResourceVariablePropertyCont
           varcont_6r_->AddVariable(prop);
           real_variables_sph_rand_6d_.insert(QUuid::createUuid(), rand_reals_6[i]);
       }
-      test_case_ga_spherical_6r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), varcont_6r_->GetContinousVariableValues());
+      test_case_ga_spherical_6r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(),
+                                                          varcont_6r_->GetContinuousVariableValues());
   }
 
   QList<Optimization::Case *> trivial_cases_;

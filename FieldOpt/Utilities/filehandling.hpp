@@ -231,8 +231,8 @@ inline QStringList *ReadFileToStringList(QString file_path) {
 
 // =========================================================
 /*!
- * \brief WriteStringToFile Write a string to a
- * file. Removes existing file contents.
+ * \brief WriteStringToFile Write a string to
+ *  a file. Removes existing file contents.
  *
  * If the string does not end with a newline,
  * it will be added.

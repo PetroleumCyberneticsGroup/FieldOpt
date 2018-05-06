@@ -48,7 +48,16 @@ ConstraintHandler::ConstraintHandler(
     switch (constraint.type) {
 
       // ---------------------------------------------------
-      // IWD W/ SNOPT
+      // CONSTRAINT-HANDLING BY ADGPRS OPTIMIZER
+      case Settings::Optimizer::ConstraintType::ADG:
+        constraints_.append(new ADGConstraint(settings,
+                                              variables,
+                                              grid,
+                                              ricasedata));
+        break;
+
+        // -------------------------------------------------
+        // IWD W/ SNOPT
       case Settings::Optimizer::ConstraintType::IWD:
         constraints_.append(new IWDConstraint(settings,
                                               variables,

@@ -30,7 +30,7 @@
 namespace Model {
 namespace Properties {
 
-// ---------------------------------------------------------
+// =========================================================
 VariablePropertyContainer::VariablePropertyContainer() {
 
   binary_variables_ = new QHash<QUuid, BinaryProperty *>();
@@ -38,7 +38,7 @@ VariablePropertyContainer::VariablePropertyContainer() {
   continous_variables_ = new QHash<QUuid, ContinousProperty *>();
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void VariablePropertyContainer::
 AddVariable(BinaryProperty *var) {
 
@@ -46,7 +46,7 @@ AddVariable(BinaryProperty *var) {
   binary_variables_->insert(var->id(), var);
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void VariablePropertyContainer::
 AddVariable(DiscreteProperty *var) {
 
@@ -54,7 +54,7 @@ AddVariable(DiscreteProperty *var) {
   discrete_variables_->insert(var->id(), var);
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void VariablePropertyContainer::
 AddVariable(ContinousProperty *var) {
 
@@ -62,7 +62,7 @@ AddVariable(ContinousProperty *var) {
   continous_variables_->insert(var->id(), var);
 }
 
-// ---------------------------------------------------------
+// =========================================================
 BinaryProperty *VariablePropertyContainer::
 GetBinaryVariable(QUuid id) const {
 
@@ -72,7 +72,7 @@ GetBinaryVariable(QUuid id) const {
   } return binary_variables_->value(id);
 }
 
-// ---------------------------------------------------------
+// =========================================================
 DiscreteProperty *VariablePropertyContainer::
 GetDiscreteVariable(QUuid id) const {
 
@@ -82,7 +82,7 @@ GetDiscreteVariable(QUuid id) const {
   } return discrete_variables_->value(id);
 }
 
-// ---------------------------------------------------------
+// =========================================================
 ContinousProperty *VariablePropertyContainer::
 GetContinousVariable(QUuid id) const {
 
@@ -92,7 +92,7 @@ GetContinousVariable(QUuid id) const {
   } return continous_variables_->value(id);
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void VariablePropertyContainer::
 SetBinaryVariableValue(QUuid id, bool val) {
 
@@ -102,7 +102,7 @@ SetBinaryVariableValue(QUuid id, bool val) {
   } else binary_variables_->value(id)->setValue(val);
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void VariablePropertyContainer::
 SetDiscreteVariableValue(QUuid id, int val) {
 
@@ -123,7 +123,7 @@ SetContinousVariableValue(QUuid id,
   } else continous_variables_->value(id)->setValue(val);
 }
 
-// ---------------------------------------------------------
+// =========================================================
 QHash<QUuid, bool>
 VariablePropertyContainer::GetBinaryVariableValues() const {
 
@@ -133,7 +133,7 @@ VariablePropertyContainer::GetBinaryVariableValues() const {
   return binary_values;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 QHash<QUuid, int>
 VariablePropertyContainer::GetDiscreteVariableValues() const {
 
@@ -144,9 +144,9 @@ VariablePropertyContainer::GetDiscreteVariableValues() const {
   return discrete_values;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 QHash<QUuid, double>
-VariablePropertyContainer::GetContinousVariableValues() const {
+VariablePropertyContainer::GetContinuousVariableValues() const {
 
   QHash<QUuid, double> continous_values = QHash<QUuid, double>();
   for (QUuid key : continous_variables_->keys()) {
@@ -155,7 +155,19 @@ VariablePropertyContainer::GetContinousVariableValues() const {
   return continous_values;
 }
 
-// ---------------------------------------------------------
+// =========================================================
+QHash<QUuid, string>
+VariablePropertyContainer::GetContinuousVariableNames() const {
+
+  QHash<QUuid, string> continuous_names = QHash<QUuid, string>();
+  for (QUuid key : continous_variables_->keys()) {
+    continuous_names[key] =
+        continous_variables_->value(key)->name().toStdString();
+  }
+  return continuous_names;
+}
+
+// =========================================================
 void VariablePropertyContainer::CheckVariableNameUniqueness() {
 
   QList<QString> names = QList<QString>();
@@ -196,12 +208,13 @@ void VariablePropertyContainer::CheckVariableNameUniqueness() {
   }
 }
 
-// ---------------------------------------------------------
+// =========================================================
 QList<ContinousProperty *>
 VariablePropertyContainer::GetWellSplineVariables(
     const QString well_name) const {
 
   QList<ContinousProperty *> spline_vars;
+
   // -------------------------------------------------------
   for (auto var : continous_variables_->values()) {
     if (var->propertyInfo().prop_type == Property::PropertyType::SplinePoint &&
@@ -212,11 +225,12 @@ VariablePropertyContainer::GetWellSplineVariables(
   return spline_vars;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 QHash<QUuid, double>
-VariablePropertyContainer::GetWellSplineVariables() const {
+VariablePropertyContainer::GetWellSplineVariableValues() const {
 
   QHash<QUuid, double> spline_vars = QHash<QUuid, double>();
+
   // -------------------------------------------------------
   for (QUuid key : continous_variables_->keys()) {
     if (continous_variables_->value(key)->propertyInfo().prop_type
@@ -228,7 +242,25 @@ VariablePropertyContainer::GetWellSplineVariables() const {
   return spline_vars;
 }
 
-// ---------------------------------------------------------
+// =========================================================
+QHash<QUuid, string>
+VariablePropertyContainer::GetWellSplineVariableNames() const {
+
+  QHash<QUuid, string> spline_vars = QHash<QUuid, string>();
+
+  // -------------------------------------------------------
+  for (QUuid key : continous_variables_->keys()) {
+    if (continous_variables_->value(key)->propertyInfo().prop_type
+        == Property::PropertyType::SplinePoint) {
+      spline_vars[key] =
+          continous_variables_->value(key)->name().toStdString();
+    }
+  }
+
+  return spline_vars;
+}
+
+// =========================================================
 QList<ContinousProperty *>
 VariablePropertyContainer::GetPseudoContVertVariables(
     const QString well_name) const {
@@ -257,7 +289,7 @@ VariablePropertyContainer::GetPseudoContVertVariables(
   return pcv_vars;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 QList<ContinousProperty *>
 VariablePropertyContainer::GetWellControlVariables() const {
 
@@ -280,7 +312,7 @@ VariablePropertyContainer::GetWellControlVariables() const {
   return well_controls;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 QList<ContinousProperty *>
 VariablePropertyContainer::GetWellControlVariables(
     const QString well_name) const {
@@ -294,7 +326,7 @@ VariablePropertyContainer::GetWellControlVariables(
   return well_controls;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 QList<ContinousProperty *>
 VariablePropertyContainer::GetWellBHPVariables() const {
 
@@ -306,7 +338,7 @@ VariablePropertyContainer::GetWellBHPVariables() const {
   return bhp_variables;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 QList<ContinousProperty *>
 VariablePropertyContainer::GetWellRateVariables() const {
 
@@ -318,7 +350,7 @@ VariablePropertyContainer::GetWellRateVariables() const {
   return rate_variables;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 QList<ContinousProperty *>
 VariablePropertyContainer::GetWellBHPVariables(QString well_name) const {
 
@@ -331,7 +363,7 @@ VariablePropertyContainer::GetWellBHPVariables(QString well_name) const {
   return well_bhp_variables;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 QList<ContinousProperty *>
 VariablePropertyContainer::GetWellRateVariables(QString well_name) const {
 
@@ -344,7 +376,7 @@ VariablePropertyContainer::GetWellRateVariables(QString well_name) const {
   return well_rate_variables;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 QList<DiscreteProperty *>
 VariablePropertyContainer::GetWellBlockVariables() const {
 
@@ -356,7 +388,7 @@ VariablePropertyContainer::GetWellBlockVariables() const {
   return wb_vars;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 QList<DiscreteProperty *>
 VariablePropertyContainer::GetWellBlockVariables(
     const QString well_name) const {
@@ -369,7 +401,7 @@ VariablePropertyContainer::GetWellBlockVariables(
   return wb_vars;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 QList<ContinousProperty *>
 VariablePropertyContainer::GetTransmissibilityVariables() const {
   QList<ContinousProperty *> trans_vars;
@@ -380,7 +412,7 @@ VariablePropertyContainer::GetTransmissibilityVariables() const {
   return trans_vars;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 QList<ContinousProperty *>
 VariablePropertyContainer::GetTransmissibilityVariables(
     const QString well_name) const {
@@ -393,9 +425,10 @@ VariablePropertyContainer::GetTransmissibilityVariables(
   return trans_vars;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 BinaryProperty
-*VariablePropertyContainer::GetBinaryVariable(QString name) const {
+*VariablePropertyContainer::
+GetBinaryVariable(QString name) const {
 
   for (auto var : binary_variables_->values()) {
     if (QString::compare(var->name(), name) == 0)
@@ -405,33 +438,40 @@ BinaryProperty
                                + name.toStdString());
 }
 
-// ---------------------------------------------------------
+// =========================================================
 DiscreteProperty
-*VariablePropertyContainer::GetDiscreteVariable(QString name) const {
+*VariablePropertyContainer::
+GetDiscreteVariable(QString name) const {
 
   for (auto var : discrete_variables_->values()) {
     if (QString::compare(var->name(), name) == 0)
       return var;
   }
-  throw std::runtime_error("Unable to find discrete variable with name "
-                               + name.toStdString());
+
+  throw std::runtime_error(
+      "Unable to find discrete variable with name "
+          + name.toStdString());
 }
 
-// ---------------------------------------------------------
+// =========================================================
 ContinousProperty
-*VariablePropertyContainer::GetContinousVariable(QString name) const {
+*VariablePropertyContainer::
+GetContinousVariable(QString name) const {
 
   for (auto var : continous_variables_->values()) {
     if (QString::compare(var->name(), name) == 0)
       return var;
   }
-  throw std::runtime_error("Unable to find continous variable with name "
-                               + name.toStdString());
+
+  throw std::runtime_error(
+      "Unable to find continuous variable with name "
+          + name.toStdString());
 }
 
-// ---------------------------------------------------------
+// =========================================================
 QList<ContinousProperty *>
-VariablePropertyContainer::GetContinuousProperties(QList<QUuid> ids) const {
+VariablePropertyContainer::
+GetContinuousProperties(QList<QUuid> ids) const {
 
   QList<ContinousProperty *> props;
   for (int i = 0; i < ids.size(); ++i) {

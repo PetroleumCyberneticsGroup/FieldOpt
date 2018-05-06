@@ -28,6 +28,20 @@
 #define FIELDOPT_ADG_CONSTRAINT_H
 
 // ---------------------------------------------------------
+#include <Reservoir/grid/grid.h>
+#include "constraint.h"
+
+#include <Utilities/filehandling.hpp>
+#include <Utilities/debug.hpp>
+
+// ---------------------------------------------------------
+#include "FieldOpt-WellIndexCalculator/resinxx/well_path.h"
+
+#include <stdlib.h>         /* system, NULL, EXIT_FAILURE */
+
+// ---------------------------------------------------------
+namespace Optimization {
+namespace Constraints {
 
 //==========================================================
 class ADGConstraint : public Constraint {
@@ -35,10 +49,10 @@ class ADGConstraint : public Constraint {
 
   // -------------------------------------------------------
   // Constructor
-  ADGConstraint(Settings::Optimizer* settings,
-  Model::Properties::VariablePropertyContainer *variables,
-      ::Reservoir::Grid::Grid *grid,
-  RICaseData *ricasedata);
+  ADGConstraint(Settings::Optimizer *settings,
+                Model::Properties::VariablePropertyContainer *variables,
+                ::Reservoir::Grid::Grid *grid,
+                RICaseData *ricasedata);
 
   // -------------------------------------------------------
   string name() override { return "ADGConstraint"; }
@@ -49,6 +63,26 @@ class ADGConstraint : public Constraint {
   Model::Properties::VariablePropertyContainer *variables_;
   Case *current_case_;
 
+  // -------------------------------------------------------
+  RICaseData* ricasedata_;
+  Reservoir::Grid::Grid* grid_;
+
+  // -------------------------------------------------------
+  // Constraint interface
+ public:
+  bool CaseSatisfiesConstraint(Case *c) override;
+  void SnapCaseToConstraints(Case *c) override;
+
+
+ private:
+  // -------------------------------------------------------
+  int max_iterations_;
+//  QList<WellSplineLength *> length_constraints_;
+//  InterwellDistance *distance_constraint_;
+
 };
+
+}
+}
 
 #endif //FIELDOPT_ADG_CONSTRAINT_H

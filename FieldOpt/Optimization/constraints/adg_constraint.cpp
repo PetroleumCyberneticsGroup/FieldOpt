@@ -26,23 +26,115 @@
 // ---------------------------------------------------------
 #include "adg_constraint.h"
 
+//#include "optimizers/SNOPTSolverC.h"
+//#include <FieldOpt-WellIndexCalculator/resinxx/rixx_prj_viz/RivIntersectionGeometryGenerator.h>
+
+// ---------------------------------------------------------
+namespace Optimization {
+namespace Constraints {
+
+using ::Utilities::FileHandling::FileExists;
+using ::Utilities::FileHandling::WriteStringToFile;
+using ::Utilities::FileHandling::WriteLineToFile;
 
 //==========================================================
 ADGConstraint::ADGConstraint(
-    Settings::Optimizer* settings,
+    Settings::Optimizer *settings,
     Model::Properties::VariablePropertyContainer *variables,
     ::Reservoir::Grid::Grid *grid,
-    RICaseData *ricasedata){
+    RICaseData *ricasedata) {
 
+  // -------------------------------------------------------
+  settings_ = settings;
+  // variables_ = variables;
+  grid_ = grid;
+  ricasedata_ = ricasedata;
+
+}
+
+//==========================================================
+void ADGConstraint::SnapCaseToConstraints(Case *current_case) {
+
+  string target_dir;
+  string optz;
+  string opt_file;
+  string nthreads;
+
+  // -------------------------------------------------------
+  auto cdir = settings_->sim_dirs_.driver_directory_;
+
+  WriteStringToFile("", "x.in");
+
+  // -------------------------------------------------------
+  // Print out x.in based on current_case
+  auto var_map = current_case->GetUUIDSplineVarNameMap();
+
+  for (auto var=var_map.begin(); var != var_map.end(); ++var) {
+
+    WriteLineToFile(QString::fromStdString(var->first), "x.in");
+    WriteLineToFile(QString::number(var->second), "x.in");
+
+  }
+
+  // -------------------------------------------------------
+  // target_dir = "5spot-cntrlopt";
+  optz = "/home/bellout/git/ADGPRS/20161124-ad-gprs-optimizer-ov-src/Optimization20161120/cmake-build-debug/bin/optimize-cmake";
+  opt_file = cdir.toStdString() + "/OPT.txt";
+  nthreads = " 1 0 -p x.in sched.out ";
+
+  // -------------------------------------------------------
+  if (FileExists(QString::fromStdString(optz))) {
+
+    // -----------------------------------------------------
+    chdir(target_dir.c_str());
+    system("echo PWD=${PWD}");
+
+    // -----------------------------------------------------
+    // optimize OPT.txt 1 0 -p x.in sched.out
+    string cmd_in = optz + " " + opt_file + nthreads;
+    printf ("Executing: %s.\n", cmd_in.c_str());
+
+
+    // -----------------------------------------------------
+    // System cal.
+    int i = system(cmd_in.c_str());
+
+    // -----------------------------------------------------
+    printf ("The value returned was: %d.\n", i);
+
+  } else {
+
+    printf ("Execution failed.");
+  }
+
+  // -------------------------------------------------------
+  // Get ADGPRS to print out feasible x x.out
+
+  // -------------------------------------------------------
+  // Read x.out and replace values in current case
 
 }
 
 
-
 //==========================================================
+bool ADGConstraint::CaseSatisfiesConstraint(Case *current_case) {
+
+//  // -------------------------------------------------------
+//  if (!distance_constraint_->CaseSatisfiesConstraint(c)){
+//    return false;
+//  }
+//
+//  // -------------------------------------------------------
+//  for (WellSplineLength *wsl : length_constraints_) {
+//    if (!wsl->CaseSatisfiesConstraint(c))
+//      return false;
+//  }
+//
+  // return true;
+  return false;
+
+}
 
 
-
-
-
-//==========================================================
+}
+}

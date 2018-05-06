@@ -4,15 +4,17 @@
 
  This file is part of the FieldOpt project.
 
- FieldOpt is free software: you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation, either version
- 3 of the License, or (at your option) any later version.
+ FieldOpt is free software: you can redistribute it
+ and/or modify it under the terms of the GNU General
+ Public License as published by the Free Software
+ Foundation, either version 3 of the License, or (at
+ your option) any later version.
 
- FieldOpt is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty
- of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- See the GNU General Public License for more details.
+ FieldOpt is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the
+ implied warranty of MERCHANTABILITY or FITNESS FOR
+ A PARTICULAR PURPOSE.  See the GNU General Public
+ License for more details.
 
  You should have received a copy of the GNU
  General Public License along with FieldOpt.
@@ -93,7 +95,8 @@ class Case : public Loggable
     };
 
     enum ErrorMessage : int {
-      ERR_SIM=-4, ERR_WIC=-3, ERR_CONS=-2, ERR_UNKNOWN=-1,
+      ERR_SIM=-4, ERR_WIC=-3,
+      ERR_CONS=-2, ERR_UNKNOWN=-1,
       ERR_OK=0
     };
 
@@ -114,16 +117,16 @@ class Case : public Loggable
   CaseState state; //!< State of Case, directly modifiable.
 
   /*!
-   * \brief Equals Checks whether this case is equal to
-   * another case within some tolerance.
+   * \brief Equals Checks whether this case is
+   * equal to another case within some tolerance.
    *
    * \param other Case to compare with.
    *
-   * \param tolerance The allowed deviation between two
-   * cases.
+   * \param tolerance The allowed deviation
+   * between two cases.
    *
-   * \return True if cases are equal within given tolerance,
-   * otherwise false.
+   * \return True if cases are equal within
+   * given tolerance, otherwise false.
    */
   bool Equals(const Case *other, double tolerance=0.0) const;
 
@@ -135,11 +138,11 @@ class Case : public Loggable
 
   // -------------------------------------------------------
   /*!
-   * @brief Get a string representation of this case, suitable
-   * for console printing.
+   * @brief Get a string representation of this
+   * case, suitable for console printing.
    *
-   * @param varcont Pointer to the variable container. This is
-   * needed to get variable names.
+   * @param varcont Pointer to the variable container.
+   * This is needed to get variable names.
    *
    * @return An std string describing the case.
    */
@@ -157,9 +160,15 @@ class Case : public Loggable
   QHash<QUuid, double> real_variables() const
   { return real_variables_; }
 
+  QHash<QUuid, string> real_vars_names() const
+  { return real_vars_names_; }
+
   // Differentiate vars by extrinsic type
   QHash<QUuid, double> real_wspline_vars() const
   { return real_wspline_vars_; }
+
+  QHash<QUuid, string> real_wspline_names() const
+  { return real_wspline_names_; }
 
   // -------------------------------------------------------
   void set_binary_variables(const QHash<QUuid, bool> &binary_variables)
@@ -233,9 +242,8 @@ class Case : public Loggable
    * in the same order they appear in the vector from
    * GetRealWellPlcVarVector.
    */
-  QList<QUuid> GetRealWSplineVarIdVector() {
-    return real_wspline_id_index_map_;
-  }
+  QList<QUuid> GetRealWSplineVarIdVector()
+  { return real_wspline_id_index_map_; }
 
   // -------------------------------------------------------
   /*!
@@ -271,10 +279,12 @@ class Case : public Loggable
 
   // -------------------------------------------------------
   /*!
-   * @brief Get a vector containing the variable UUIDs in the same
-   * order they appear in the vector from GetRealVarVector.
+   * @brief Get a vector containing the variable UUIDs
+   * in the same order they appear in the vector from
+   * GetRealVarVector.
    */
-  QList<QUuid> GetRealVarIdVector() { return real_id_index_map_; }
+  QList<QUuid> GetRealVarIdVector()
+  { return real_id_index_map_; }
 
   // -------------------------------------------------------
   /*!
@@ -343,7 +353,8 @@ class Case : public Loggable
 
   // -------------------------------------------------------
   /*!
-   * @brief Set the time spent computing the well blocs for this case.
+   * @brief Set the time spent computing t
+   * he well blocs for this case.
    * @param secs The number of seconds it took.
    */
   void SetWICTime(const int secs) { wic_time_sec_ = secs; }
@@ -354,6 +365,10 @@ class Case : public Loggable
    * for this case.
    */
   int GetWICTime() const { return wic_time_sec_; }
+
+  map<string, double> GetUUIDRealVarNameMap();
+
+  map<string, double> GetUUIDSplineVarNameMap();
 
  private:
   // -------------------------------------------------------
@@ -368,13 +383,20 @@ class Case : public Loggable
   double objective_function_value_;
   QHash<QUuid, bool> binary_variables_;
   QHash<QUuid, int> integer_variables_;
+
   QHash<QUuid, double> real_variables_;
+  QHash<QUuid, string> real_vars_names_;
+
   QHash<QUuid, double> real_wspline_vars_;
+  QHash<QUuid, string> real_wspline_names_;
 
   // -------------------------------------------------------
   QList<QUuid> real_id_index_map_;
   QList<QUuid> integer_id_index_map_;
   QList<QUuid> real_wspline_id_index_map_;
+
+  map<string, double> uuid_real_name_map;
+  map<string, double> uuid_spline_name_map;
 
   // -------------------------------------------------------
   //!< The parent of this trial point. Needed by the APPS algorithm.

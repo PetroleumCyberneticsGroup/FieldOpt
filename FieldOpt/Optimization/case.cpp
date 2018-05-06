@@ -32,7 +32,7 @@
 // ---------------------------------------------------------
 namespace Optimization {
 
-// ---------------------------------------------------------
+// =========================================================
 Case::Case(const Model::Properties::VariablePropertyContainer* v) {
 
   // -------------------------------------------------------
@@ -44,7 +44,8 @@ Case::Case(const Model::Properties::VariablePropertyContainer* v) {
   // Differentiate vars by intrinsic type
   binary_variables_ = v->GetBinaryVariableValues();
   integer_variables_ = v->GetDiscreteVariableValues();
-  real_variables_ = v->GetContinousVariableValues();
+  real_variables_ = v->GetContinuousVariableValues();
+  real_vars_names_ = v->GetContinuousVariableNames();
 
   // Store keys
   integer_id_index_map_ = integer_variables_.keys();
@@ -52,10 +53,13 @@ Case::Case(const Model::Properties::VariablePropertyContainer* v) {
 
   // -------------------------------------------------------
   // Differentiate vars by extrinsic type
-  real_wspline_vars_ = v->GetWellSplineVariables(); // <- new
+  real_wspline_vars_ = v->GetWellSplineVariableValues(); // <- new
+  real_wspline_names_ = v->GetWellSplineVariableNames();
 
   // Store keys
   real_wspline_id_index_map_ = real_wspline_vars_.keys(); // <- new
+
+  // -------------------------------------------------------
 }
 
 // ---------------------------------------------------------
@@ -71,10 +75,13 @@ Case::Case() {
   binary_variables_ = QHash<QUuid, bool>();
   integer_variables_ = QHash<QUuid, int>();
   real_variables_ = QHash<QUuid, double>();
+  real_vars_names_ = QHash<QUuid, string>();
 
   // -------------------------------------------------------
   // Differentiate vars by extrinsic type
   // Nullptr by default?
+  real_wspline_vars_ = QHash<QUuid, double>();
+  real_wspline_names_ = QHash<QUuid, string>();
 }
 
 // ---------------------------------------------------------
@@ -114,27 +121,30 @@ Case::Case(const Case *c) {
   binary_variables_ = QHash<QUuid, bool>(c->binary_variables());
   integer_variables_ = QHash<QUuid, int> (c->integer_variables());
   real_variables_ = QHash<QUuid, double> (c->real_variables());
+  real_vars_names_ = QHash<QUuid, string> (c->real_vars_names());
 
   // Store keys
   real_id_index_map_ = c->real_id_index_map_;
-  integer_id_index_map_ = c->integer_variables_.keys();
+  integer_id_index_map_ = c->integer_id_index_map_;
   sim_time_sec_ = -1;
 
   // -------------------------------------------------------
   // Differentiate vars by extrinsic type, i.e., parameter is
   // used to reprensent, i.e., well spline, control, etc.
   real_wspline_vars_ = QHash<QUuid, double> (c->real_wspline_vars());
+  real_wspline_names_ = QHash<QUuid, string> (c->real_wspline_names());
 
   // Store keys
-  real_wspline_id_index_map_ = c->real_wspline_vars_.keys();
+  real_wspline_id_index_map_ = c->real_wspline_id_index_map_;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 bool Case::Equals(const Case *other,
                   double tolerance) const {
 
   // Check if number of variables are equal
-  if (this->binary_variables().size() != other->binary_variables().size()
+  if (this->binary_variables().size() !=
+      other->binary_variables().size()
       || this->integer_variables().size() != other->integer_variables().size()
       || this->real_variables().size() != other->real_variables().size())
     return false;
@@ -157,7 +167,7 @@ bool Case::Equals(const Case *other,
   return true; // All variable values are equal if we reach this point.
 }
 
-// ---------------------------------------------------------
+// =========================================================
 double Case::objective_function_value() const {
 
   if (objective_function_value_ == std::numeric_limits<double>::max())
@@ -167,7 +177,7 @@ double Case::objective_function_value() const {
     return objective_function_value_;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void Case::set_integer_variable_value(const QUuid id,
                                       const int val) {
 
@@ -177,7 +187,7 @@ void Case::set_integer_variable_value(const QUuid id,
   integer_variables_[id] = val;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void Case::set_binary_variable_value(const QUuid id,
                                      const bool val) {
 
@@ -187,7 +197,7 @@ void Case::set_binary_variable_value(const QUuid id,
   binary_variables_[id] = val;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void Case::set_real_variable_value(const QUuid id,
                                    const double val) {
 
@@ -197,7 +207,7 @@ void Case::set_real_variable_value(const QUuid id,
   real_variables_[id] = val;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 QList<Case *> Case::Perturb(QUuid variable_id,
                             Case::SIGN sign,
                             double magnitude) {
@@ -210,14 +220,18 @@ QList<Case *> Case::Perturb(QUuid variable_id,
     if (sign == PLUS || sign == PLUSMINUS) {
       Case *new_case_p = new Case(this);
       new_case_p->integer_variables_[variable_id] += magnitude;
-      new_case_p->objective_function_value_ = std::numeric_limits<double>::max();
+
+      new_case_p->objective_function_value_ =
+          std::numeric_limits<double>::max();
       new_cases.append(new_case_p);
     }
 
     if (sign == MINUS || sign == PLUSMINUS) {
       Case *new_case_m = new Case(this);
       new_case_m->integer_variables_[variable_id] -= magnitude;
-      new_case_m->objective_function_value_ = std::numeric_limits<double>::max();
+
+      new_case_m->objective_function_value_ =
+          std::numeric_limits<double>::max();
       new_cases.append(new_case_m);
     }
 
@@ -227,14 +241,18 @@ QList<Case *> Case::Perturb(QUuid variable_id,
     if (sign == PLUS || sign == PLUSMINUS) {
       Case *new_case_p = new Case(this);
       new_case_p->real_variables_[variable_id] += magnitude;
-      new_case_p->objective_function_value_ = std::numeric_limits<double>::max();
+
+      new_case_p->objective_function_value_ =
+          std::numeric_limits<double>::max();
       new_cases.append(new_case_p);
     }
 
     if (sign == MINUS || sign == PLUSMINUS) {
       Case *new_case_m = new Case(this);
       new_case_m->real_variables_[variable_id] -= magnitude;
-      new_case_m->objective_function_value_ = std::numeric_limits<double>::max();
+
+      new_case_m->objective_function_value_ =
+          std::numeric_limits<double>::max();
       new_cases.append(new_case_m);
     }
 
@@ -242,7 +260,7 @@ QList<Case *> Case::Perturb(QUuid variable_id,
   return new_cases;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 Eigen::VectorXd Case::GetRealWSplineVarVector() {
 
   Eigen::VectorXd vec(real_wspline_id_index_map_.length());
@@ -252,7 +270,7 @@ Eigen::VectorXd Case::GetRealWSplineVarVector() {
   return vec;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 Eigen::VectorXd Case::GetRealVarVector() {
 
   Eigen::VectorXd vec(real_id_index_map_.length());
@@ -262,7 +280,7 @@ Eigen::VectorXd Case::GetRealVarVector() {
   return vec;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void Case::SetRealVarValues(Eigen::VectorXd vec) {
 
   for (int i = 0; i < vec.size(); ++i) {
@@ -270,7 +288,7 @@ void Case::SetRealVarValues(Eigen::VectorXd vec) {
   }
 }
 
-// ---------------------------------------------------------
+// =========================================================
 Eigen::VectorXi Case::GetIntegerVarVector() {
 
   Eigen::VectorXi vec(integer_id_index_map_.length());
@@ -280,7 +298,33 @@ Eigen::VectorXi Case::GetIntegerVarVector() {
   return vec;
 }
 
-// ---------------------------------------------------------
+// =========================================================
+map<string, double> Case::GetUUIDRealVarNameMap() {
+
+  for (int i = 0; i < real_id_index_map_.length(); ++i) {
+
+    auto uuid = real_id_index_map_[i];
+    uuid_real_name_map[real_vars_names_[uuid]] =
+        real_variables_[uuid];
+
+  }
+  return uuid_real_name_map;
+}
+
+// =========================================================
+map<string, double> Case::GetUUIDSplineVarNameMap() {
+
+  for (int i = 0; i < real_wspline_id_index_map_.length(); ++i) {
+
+    auto uuid = real_wspline_id_index_map_[i];
+    uuid_spline_name_map[real_wspline_names_[uuid]] =
+        real_wspline_vars_[uuid];
+
+  }
+  return uuid_spline_name_map;
+}
+
+// =========================================================
 void Case::SetIntegerVarValues(Eigen::VectorXi vec) {
 
   for (int i = 0; i < vec.size(); ++i) {
@@ -288,7 +332,7 @@ void Case::SetIntegerVarValues(Eigen::VectorXi vec) {
   }
 }
 
-// ---------------------------------------------------------
+// =========================================================
 void Case::set_origin_data(Case *parent,
                            int direction_index,
                            double step_length) {
@@ -298,12 +342,12 @@ void Case::set_origin_data(Case *parent,
   step_length_ = step_length;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 Loggable::LogTarget Case::GetLogTarget() {
   return Loggable::LogTarget::LOG_CASE;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 map <string, string> Case::GetState() {
 
   map<string, string> statemap;
@@ -336,12 +380,12 @@ map <string, string> Case::GetState() {
   return statemap;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 QUuid Case::GetId() {
   return id();
 }
 
-// ---------------------------------------------------------
+// =========================================================
 map <string, vector<double>> Case::GetValues() {
 
   map<string, vector<double>> valmap;
@@ -351,7 +395,7 @@ map <string, vector<double>> Case::GetValues() {
   return valmap;
 }
 
-// ---------------------------------------------------------
+// =========================================================
 string Case::StringRepresentation(
     Model::Properties::VariablePropertyContainer *varcont) {
 

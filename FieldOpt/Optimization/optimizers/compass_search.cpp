@@ -77,8 +77,11 @@ void CompassSearch::iterate() {
 // =========================================================
 QString CompassSearch::GetStatusStringHeader() const {
 
-  if(settings_->parameters().initial_step_length_xyz.length() > 0) {
+  // -------------------------------------------------------
+  if(settings_->parameters().
+      initial_step_length_xyz.length() > 0) {
 
+    // -----------------------------------------------------
     return QString("%1,%2,%3,%4,%5,%6,%7,%8,%9")
         .arg("Iteration")
         .arg("EvaluatedCases")
@@ -92,6 +95,7 @@ QString CompassSearch::GetStatusStringHeader() const {
 
   } else {
 
+    // -----------------------------------------------------
     return QString("%1,%2,%3,%4,%5,%6,%7")
         .arg("Iteration")
         .arg("EvaluatedCases")
@@ -144,6 +148,7 @@ QString CompassSearch::GetStatusString() const {
       }
     }
 
+    // -----------------------------------------------------
     return QString("%1,%2,%3,%4,%5,%6,%7,%8,%9")
         .arg(iteration_)
         .arg(nr_evaluated_cases())
@@ -157,6 +162,7 @@ QString CompassSearch::GetStatusString() const {
 
   } else {
 
+    // -----------------------------------------------------
     return QString("%1,%2,%3,%4,%5,%6,%7")
         .arg(iteration_)
         .arg(nr_evaluated_cases())

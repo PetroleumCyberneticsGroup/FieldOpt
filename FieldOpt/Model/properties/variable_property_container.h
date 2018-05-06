@@ -26,6 +26,9 @@
 #define VARIABLE_PROPERTY_CONTAINER_H
 
 // ---------------------------------------------------------
+#include <string>
+
+// ---------------------------------------------------------
 #include <QHash>
 #include <QPair>
 #include <QString>
@@ -44,6 +47,9 @@ class ModelSynchronizationObject;
 // ---------------------------------------------------------
 namespace Model {
 namespace Properties {
+
+// ---------------------------------------------------------
+using std::string;
 
 // =========================================================
 /*!
@@ -134,44 +140,89 @@ class VariablePropertyContainer
   { return continous_variables_; }
 
   // ---------------------------------------------------------
-  QHash<QUuid, bool> GetBinaryVariableValues() const; //!< Get a hashmap containing all binary variable values. The key represents each variable's ID.
-  QHash<QUuid, int> GetDiscreteVariableValues() const; //!< Get a hashmap containing all discrete variable values. The key represents each variable's ID.
+  // Get a hashmap containing all binary variable
+  // values. The key represents each variable's ID.
+  QHash<QUuid, bool> GetBinaryVariableValues() const;
 
-  QHash<QUuid, double> GetContinousVariableValues() const; //!< Get a hashmap containing all discrete varaible values. The key represents each variable's ID.
+  // Get a hashmap containing all discrete variable
+  // values. The key represents each variable's ID.
+  QHash<QUuid, int> GetDiscreteVariableValues() const;
 
-  QList<ContinousProperty *> GetWellControlVariables() const; //!< Get all control (rate/bhp) variables.
-  QList<ContinousProperty *> GetWellBHPVariables() const; //!< Get all BHP variables.
-  QList<ContinousProperty *> GetWellRateVariables() const ; //!< Get all BHP variables.
-  QList<ContinousProperty *> GetWellControlVariables(const QString well_name) const; //!< Get all control variables for a specific well
-  QList<ContinousProperty *> GetWellBHPVariables(const QString well_name) const; //!< Get all BHP variables for a specific well.
-  QList<ContinousProperty *> GetWellRateVariables(const QString well_name) const; //!< Get all BHP variables for a specific well.
+  // Get a hashmap containing all discrete varaible
+  // values. The key represents each variable's ID.
+  QHash<QUuid, double> GetContinuousVariableValues() const;
+
+  QHash<QUuid, string> GetContinuousVariableNames() const;
+
+  // Get all spline variables from continuous variable set.
+  QHash<QUuid, double> GetWellSplineVariableValues() const;
+
+  QHash<QUuid, string> GetWellSplineVariableNames() const;
+
+  // ---------------------------------------------------------
+  // WELL CONTROL FUNCTIONS
+
+  // Get all control (rate/bhp) variables.
+  QList<ContinousProperty *> GetWellControlVariables() const;
+
+  // Get all BHP variables.
+  QList<ContinousProperty *> GetWellBHPVariables() const;
+
+  // Get all Rate variables.
+  QList<ContinousProperty *> GetWellRateVariables() const;
+
+  // Get all control variables for a specific well
+  QList<ContinousProperty *>
+  GetWellControlVariables(const QString well_name) const;
+
+  // Get all BHP variables for a specific well.
+  QList<ContinousProperty *>
+  GetWellBHPVariables(const QString well_name) const;
+
+  // Get all Rate variables for a specific well.
+  QList<ContinousProperty *>
+  GetWellRateVariables(const QString well_name) const;
+
+  // ---------------------------------------------------------
+  // WELL SPLINE / BLOCK FUNCTIONS
 
   // Get all variables for the spline defining a well.
   QList<ContinousProperty *>
   GetWellSplineVariables(const QString well_name) const;
 
-  // Get all spline variables from continuous variable set.
-  QHash<QUuid, double> GetWellSplineVariables() const;
+  // Get well block position variables.
+  QList<DiscreteProperty *> GetWellBlockVariables() const;
 
-  QList<DiscreteProperty *> GetWellBlockVariables() const; //!< Get well block position variables.
-  QList<DiscreteProperty *> GetWellBlockVariables(const QString well_name) const; //!< Get well block position variables for a well.
-  QList<ContinousProperty *> GetPseudoContVertVariables(const QString well_name) const; //!< Get x and y pseudo-continuous vertical well variables for a well. First element is x; second is y.
-  QList<ContinousProperty *> GetTransmissibilityVariables() const; //!< Get all transmissibility variables.
-  QList<ContinousProperty *> GetTransmissibilityVariables(const QString well_name) const; //!< Get all transmissibility variables for a well.
+  // Get well block position variables for a well.
+  QList<DiscreteProperty *>
+  GetWellBlockVariables(const QString well_name) const;
+
+  // Get x and y pseudo-continuous vertical well variables
+  // for a well. First element is x; second is y.
+  QList<ContinousProperty *>
+  GetPseudoContVertVariables(const QString well_name) const;
+
+  // Get all transmissibility variables.
+  QList<ContinousProperty *> GetTransmissibilityVariables() const;
+
+  // Get all transmissibility variables for a well.
+  QList<ContinousProperty *>
+  GetTransmissibilityVariables(const QString well_name) const;
 
   // ---------------------------------------------------------
   /*!
-   * @brief Get a list of properties in the same order
-   * as they occur in the input ID vector.
+   * @brief Get a list of properties in the same
+   * order as they occur in the input ID vector.
    *
    * @param ids IDs for properties to get.
    * @return A vector of properties.
    */
-  QList<ContinousProperty *> GetContinuousProperties(QList<QUuid> ids) const;
+  QList<ContinousProperty *>
+  GetContinuousProperties(QList<QUuid> ids) const;
 
   // ---------------------------------------------------------
-  // Check that all variable names are unique. If they are not,
-  // throw an error.
+  // Check that all variable names are unique.
+  // If they are not, throw an error.
   void CheckVariableNameUniqueness();
 
  private:

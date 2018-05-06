@@ -27,7 +27,9 @@
 
 // ---------------------------------------------------------
 #include "settings.h"
+#include "simulator.h"
 
+// ---------------------------------------------------------
 #include <QList>
 #include <QString>
 #include <QStringList>
@@ -63,7 +65,7 @@ class Optimizer
 
   // -------------------------------------------------------
   enum ConstraintType {
-    IWD, BHP, Rate, SplinePoints, WellSplineLength,
+    IWD, ADG, BHP, Rate, SplinePoints, WellSplineLength,
     WellSplineInterwellDistance, WellSplineDomain,
     CombinedWellSplineLengthInterwellDistance,
     CombinedWellSplineLengthInterwellDistanceReservoirBoundary,
@@ -79,6 +81,30 @@ class Optimizer
   // -------------------------------------------------------
 //  struct Runtime {
 //    QString output_dir_;
+//  };
+
+  // -------------------------------------------------------
+  struct SimDirs {
+
+    QString driver_file_path_;
+    QString driver_directory_;
+    QString output_directory_;
+
+    QString sim_incl_dir_path_;
+    QString schedule_file_path_;
+    QString custom_exec_script_path_;
+
+  };
+
+  SimDirs sim_dirs_;
+
+  SimDirs GetSimDirs() { return sim_dirs_; }
+
+//  void UpdateSimDirs(Simulator *settings){
+//
+//    sim_dirs_.driver_file_path_ = settings->driver_file_path();
+//    sim_dirs_.driver_directory_ = settings->driver_parent_directory();
+//
 //  };
 
   // -------------------------------------------------------
@@ -248,6 +274,7 @@ class Optimizer
     // is selected.
     QList<RealMaxMinLimit> spline_points_limits;
 
+    // -----------------------------------------------------
     // 3rd party solver parameters
     QString thrdps_optn_file;
     QString thrdps_smry_file;
@@ -259,7 +286,11 @@ class Optimizer
 
     // cvf::BoundingBox bbgrid_ = nullptr;
 
-    // -------------------------------------------------------
+    // -----------------------------------------------------
+    std::string exec_adg_const_name_;
+    std::string exec_adg_const_path_;
+
+    // -----------------------------------------------------
     std::vector<int> verb_vector_ = std::vector<int>(11,0);
 
   };

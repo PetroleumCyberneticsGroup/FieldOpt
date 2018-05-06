@@ -240,7 +240,7 @@ IWDConstraint::IWDConstraint(
 
 }
 
-// ---------------------------------------------------------
+//==========================================================
 bool IWDConstraint::CaseSatisfiesConstraint(Case *current_case) {
 
 //  // -------------------------------------------------------
@@ -258,7 +258,7 @@ bool IWDConstraint::CaseSatisfiesConstraint(Case *current_case) {
   return false;
 }
 
-// ---------------------------------------------------------
+//==========================================================
 void IWDConstraint::SnapCaseToConstraints(Case *current_case) {
 
   // -------------------------------------------------------

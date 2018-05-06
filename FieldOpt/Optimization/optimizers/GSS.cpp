@@ -271,8 +271,8 @@ void GSS::set_step_vector(double isval,
   print_dbg_msg_d("[opt]Sz step_length/step_tol: ", 2, vec);
 
   // -------------------------------------------------------
-  // Differentiate positioning of xyz components in var vector
-  // based on current base case variable information
+  // Differentiate positioning of xyz components in var
+  // vector based on current base case variable information
   if(vecxyz.length() > 0) {
     int nvar = realvar_uuid_.length();
 

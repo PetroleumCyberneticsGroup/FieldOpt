@@ -128,6 +128,16 @@ AbstractRunner::InitializeSettings(QString output_subdirectory) {
         runtime_settings_->simulator_exec_script_path());
 
   // -------------------------------------------------------
+//  settings_->optimizer()->
+//      UpdateSimDirs(settings_->simulator());
+
+  settings_->optimizer()->sim_dirs_.driver_file_path_ =
+      settings_->simulator()->driver_file_path();
+
+  settings_->optimizer()->sim_dirs_.driver_directory_=
+      settings_->simulator()->driver_parent_directory();
+
+  // -------------------------------------------------------
   if (settings_->verb_vector()[0] >= 1) // idx:0 -> run (Runner)
     cout << fstr("[run]Initialized Settings.") << endl;
 }
@@ -195,6 +205,7 @@ void AbstractRunner::InitializeSimulator() {
 
   // -------------------------------------------------------
   simulator_->set_verbosity_vector(runtime_settings_->verb_vector());
+
 
   // -------------------------------------------------------
   if (settings_->verb_vector()[0] >= 1) // idx:0 -> run
@@ -266,7 +277,7 @@ void AbstractRunner::InitializeBaseCase() {
   // Removed since all variables are passed to Case above
   // base_case_ = new Optimization::Case(model_->variables()->GetBinaryVariableValues(),
   //                                    model_->variables()->GetDiscreteVariableValues(),
-  //                                    model_->variables()->GetContinousVariableValues());
+  //                                    model_->variables()->GetContinuousVariableValues());
 
 
   // -------------------------------------------------------

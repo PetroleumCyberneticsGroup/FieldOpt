@@ -57,10 +57,12 @@ Optimizer::Optimizer(Settings::Optimizer *settings,
 
   // -------------------------------------------------------------
   if(ricasedata == nullptr) {
+
     constraint_handler_ = new Constraints::ConstraintHandler(
         settings_->constraints(), variables, grid, settings);
 
   } else {
+
     constraint_handler_ = new Constraints::ConstraintHandler(
         settings_->constraints(), variables, grid, settings,
         ricasedata);

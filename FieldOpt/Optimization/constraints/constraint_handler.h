@@ -1,27 +1,31 @@
-/******************************************************************************
-   Copyright (C) 2015-2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+/***********************************************************
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
 
-   This file is part of the FieldOpt project.
+ This file is part of the FieldOpt project.
 
-   FieldOpt is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+ FieldOpt is free software: you can redistribute it
+ and/or modify it under the terms of the GNU General
+ Public License as published by the Free Software
+ Foundation, either version 3 of the License, or (at
+ your option) any later version.
 
-   FieldOpt is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+ FieldOpt is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the
+ implied warranty of MERCHANTABILITY or FITNESS FOR
+ A PARTICULAR PURPOSE.  See the GNU General Public
+ License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
-******************************************************************************/
+ You should have received a copy of the GNU
+ General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 #ifndef CONSTRAINTHANDLER_H
 #define CONSTRAINTHANDLER_H
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 // FIELDOPT::CONSTRAINTS
 #include "constraint.h"
 #include "bhp_constraint.h"
@@ -33,8 +37,9 @@
 #include "pseudo_cont_boundary_2d.h"
 #include "rate_constraint.h"
 #include "iwd_constraint.h"
+#include "adg_constraint.h"
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 // FIELDOPT::OPTIMIZATION/MODEL/SETTINGS/RESERVOIR
 #include "Optimization/case.h"
 #include "Model/properties/variable_property_container.h"
@@ -44,7 +49,7 @@
 
 #include "FieldOpt-WellIndexCalculator/resinxx/well_path.h"
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 // Qt
 #include <QList>
 
@@ -52,11 +57,11 @@
 // Includes for constraints in the experimental_constraints dir go here.
 #endif
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 namespace Optimization {
 namespace Constraints {
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 /*!
  * \brief The ConstraintHandler class facilitates the
  * initialization and usage of multiple constraints.
@@ -65,7 +70,7 @@ class ConstraintHandler
 {
  public:
 
-  // -----------------------------------------------------------------
+  // -------------------------------------------------------
   ConstraintHandler(
       QList<Settings::Optimizer::Constraint> constraints,
       Model::Properties::VariablePropertyContainer *variables,
@@ -73,31 +78,33 @@ class ConstraintHandler
       Settings::Optimizer *settings,
       RICaseData *ricasedata = nullptr);
 
-  // -----------------------------------------------------------------
+  // -------------------------------------------------------
   // Check if a Case satisfies _all_ constraints.
   bool CaseSatisfiesConstraints(Case *c);
 
-  // -----------------------------------------------------------------
+  // -------------------------------------------------------
   // Snap all variables to _all_ constraints.
   void SnapCaseToConstraints(Case *c);
 
-  // -----------------------------------------------------------------
-  QList<Constraint *> constraints() const { return constraints_; }
+  // -------------------------------------------------------
+  QList<Constraint *> constraints() const
+  { return constraints_; }
 
-  // -----------------------------------------------------------------
+  // -------------------------------------------------------
   /*!
-   * @brief Check whether any of the constraints within are boundary constraints.
+   * @brief Check whether any of the constraints
+   * within are boundary constraints.
    */
   bool HasBoundaryConstraints() const;
 
-  // -----------------------------------------------------------------
+  // -------------------------------------------------------
   /*!
    * @brief Initialize the normalizers for all constraints.
    * @param cases Cases to be used for determining parameters.
    */
   void InitializeNormalizers(QList<Case *> cases);
 
-  // -----------------------------------------------------------------
+  // -------------------------------------------------------
   /*!
    * @brief Get the sum of all normalized penalties multiplied by their respective weights.
    * @param c The case to get the penalties for.
@@ -105,11 +112,15 @@ class ConstraintHandler
    */
   long double GetWeightedNormalizedPenalties(Case *c);
 
-  // -----------------------------------------------------------------
-  Eigen::VectorXd GetLowerBounds(QList<QUuid> id_vector) const;
-  Eigen::VectorXd GetUpperBounds(QList<QUuid> id_vector) const;
+  // -------------------------------------------------------
+  Eigen::VectorXd
+  GetLowerBounds(QList<QUuid> id_vector) const;
+
+  Eigen::VectorXd
+  GetUpperBounds(QList<QUuid> id_vector) const;
 
  private:
+  // -------------------------------------------------------
   QList<Constraint *> constraints_;
 
 };
