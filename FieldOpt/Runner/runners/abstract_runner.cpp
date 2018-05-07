@@ -75,7 +75,6 @@ void AbstractRunner::InitializeSettings(QString output_subdirectory)
     else {
         is_ensemble_run_ = false;
     }
-
 }
 
 void AbstractRunner::InitializeModel()
@@ -114,7 +113,11 @@ void AbstractRunner::EvaluateBaseModel()
 {
     if (simulator_ == 0)
         throw std::runtime_error("The simulator must be initialized before evaluating the base model.");
-    if (!simulator_->results()->isAvailable()) {
+    if (is_ensemble_run_) {
+        if (runtime_settings_->verbosity_level()) std::cout << "Simulating ensemble base case." << std::endl;
+        simulator_->Evaluate(ensemble_helper_.GetBaseRealization(), 10000, 4);
+    }
+    else if (!simulator_->results()->isAvailable()) {
         if (runtime_settings_->verbosity_level()) std::cout << "Simulating base case." << std::endl;
         simulator_->Evaluate();
     }
