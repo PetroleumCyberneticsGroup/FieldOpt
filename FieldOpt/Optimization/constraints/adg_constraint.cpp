@@ -59,11 +59,14 @@ void ADGConstraint::SnapCaseToConstraints(Case *current_case) {
   // -----------------------------------------------------
   if (settings_->verb_vector()[4] > 2) {
     string str_out = "[con]Launching ADGPRS Constraint Handling";
-    cout << BLDON
-         << std::string(100, '=')
-         << std::string(100, '=')
-         << endl << str_out << AEND << endl << endl;
+    cout << endl << endl << BLDON << BRED
+         << std::string(120, '=') << endl
+         << std::string(120, '=')
+         << endl << str_out << "("
+         << current_case->get_case_num() << ")" << endl
+         << current_case->id_stdstr() << AEND << endl << endl;
   }
+
 
   string target_dir;
   string optz;
@@ -92,7 +95,8 @@ void ADGConstraint::SnapCaseToConstraints(Case *current_case) {
   // target_dir = "5spot-cntrlopt";
   optz = "/home/bellout/git/ADGPRS/20161124-ad-gprs-optimizer-ov-src/Optimization20161120/cmake-build-debug/bin/optimize-cmake";
   opt_file = cdir.toStdString() + "/OPT.txt";
-  nthreads = " 1 0 -p " + xin.toStdString() + " " + schedout.toStdString();
+  // nthreads = " 1 0 -p " + xin.toStdString() + " " + schedout.toStdString();
+  nthreads = " 1 0 -p " + xin.toStdString();
 
   // -------------------------------------------------------
   if (FileExists(QString::fromStdString(optz))) {
@@ -128,10 +132,11 @@ void ADGConstraint::SnapCaseToConstraints(Case *current_case) {
   // -----------------------------------------------------
   if (settings_->verb_vector()[4] > 2) {
     string str_out = "[con]Ending ADGPRS Constraint Handling";
-    cout << BLDON
-         << std::string(100, '=')
-         << std::string(100, '=')
-         << endl << str_out << AEND << endl << endl;
+    cout << BLDON << BRED
+         << std::string(120, '=') << endl
+         << std::string(120, '=') << endl
+         << str_out << "(" << current_case->get_case_num()
+         << ")"<< AEND << endl << endl << endl ;
   }
 
 }

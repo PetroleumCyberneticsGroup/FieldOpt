@@ -370,9 +370,13 @@ class Case : public Loggable
 
   map<string, double> GetUUIDSplineVarNameMap();
 
+  void set_case_num(int nc) { num_ = nc; };
+  int get_case_num() { return num_; };
+
  private:
   // -------------------------------------------------------
   QUuid id_; //!< Unique ID for the case.
+  int num_ = 0;
   int sim_time_sec_;
 
   // -------------------------------------------------------

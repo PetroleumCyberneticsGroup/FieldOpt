@@ -73,7 +73,6 @@ class ADGConstraint : public Constraint {
   bool CaseSatisfiesConstraint(Case *c) override;
   void SnapCaseToConstraints(Case *c) override;
 
-
  private:
   // -------------------------------------------------------
   int max_iterations_;
