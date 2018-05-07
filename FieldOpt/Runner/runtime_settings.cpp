@@ -78,6 +78,10 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
         paths_.SetPath(Paths::SIM_EXEC_SCRIPT_FILE, GetAbsoluteFilePath(vm["sim-exec-path"].as<std::string>()));
     }
 
+    if (vm.count("sim-aux")) {
+        paths_.SetPath(Paths::SIM_AUX_DIR, GetAbsoluteFilePath(vm["sim-aux"].as<std::string>()));
+    }
+
     if (vm.count("fieldopt-build-dir")) {
         paths_.SetPath(Paths::BUILD_DIR, vm["fieldopt-build-dir"].as<std::string>());
     } else paths_.SetPath(Paths::BUILD_DIR, GetAbsoluteFilePath(QString("./")).toStdString());
@@ -119,6 +123,7 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
         std::cout << "Grid file path:----" << paths_.GetPath(Paths::GRID_FILE) << std::endl;
         std::cout << "Ensemble file:-----" << paths_.GetPath(Paths::ENSEMBLE_FILE) << std::endl;
         std::cout << "Exec file path:----" << paths_.GetPath(Paths::SIM_EXEC_SCRIPT_FILE) << std::endl;
+        std::cout << "Sim. aux. files:---" << paths_.GetPath(Paths::SIM_AUX_DIR) << std::endl;
         std::cout << "Build dir:---------" << paths_.GetPath(Paths::BUILD_DIR) << std::endl;
         if (vm.count("well-prod-points"))
             std::cout << "Producer coordinates:   " << wellSplineCoordinateString(prod_coords_).toStdString() << std::endl;
@@ -166,6 +171,8 @@ po::variables_map RuntimeSettings::createVariablesMap(int argc, const char **arg
          "path to model grid file (e.g. *.GRID)")
         ("sim-exec-path,e", po::value<std::string>(),
          "path to script that executes the reservoir simulation")
+        ("sim-aux", po::value<std::string>(),
+         "path to directory with additional auxilary simulation files")
         ("fieldopt-build-dir,b", po::value<std::string>(),
          "path to FieldOpt build directory")
         ("ensemble-path", po::value<std::string>(),
@@ -228,6 +235,7 @@ map<string, string> RuntimeSettings::GetState() {
     statemap["path Simulator execution script"] = paths_.GetPath(Paths::SIM_EXEC_SCRIPT_FILE);
     statemap["path Ensemble description file"] = paths_.GetPath(Paths::ENSEMBLE_FILE);
     statemap["path FieldOpt build directory"] = paths_.GetPath(Paths::BUILD_DIR);
+    statemap["path Simulation auxilary directory"] = paths_.GetPath(Paths::SIM_AUX_DIR);
     return statemap;
 }
 QUuid RuntimeSettings::GetId() {
