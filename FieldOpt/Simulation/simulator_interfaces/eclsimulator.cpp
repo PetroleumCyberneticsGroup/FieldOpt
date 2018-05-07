@@ -75,6 +75,7 @@ bool ECLSimulator::Evaluate(int timeout, int threads) {
         script_args_, t);
     std::cout << "Monitored simulation done." << std::endl;
     if (success) {
+        results_->DumpResults();
         results_->ReadResults(QString::fromStdString(paths_.GetPath(Paths::SIM_OUT_DRIVER_FILE)));
     }
     updateResultsInModel();
@@ -84,6 +85,7 @@ bool ECLSimulator::Evaluate(int timeout, int threads) {
 bool ECLSimulator::Evaluate(const Settings::Ensemble::Realization &realization, int timeout, int threads) {
     driver_file_name_ = QString::fromStdString(FileName(realization.data()));
     driver_parent_dir_name_ = QString::fromStdString(ParentDirectoryName(realization.data()));
+    deck_name_ = driver_file_name_.split(".").first();
     paths_.SetPath(Paths::SIM_DRIVER_FILE, realization.data());
     paths_.SetPath(Paths::SIM_DRIVER_DIR , GetParentDirectoryPath(realization.data()));
     paths_.SetPath(Paths::SIM_SCH_FILE   , realization.schedule());
@@ -128,6 +130,16 @@ void ECLSimulator::copyDriverFiles() {
                   << "\t" << workdir << std::endl;
         CreateDirectory(workdir);
         CopyDirectory(paths_.GetPath(Paths::SIM_DRIVER_DIR), workdir, true);
+        if (paths_.IsSet(Paths::SIM_AUX_DIR)) {
+            std::string auxdir = paths_.GetPath(Paths::OUTPUT_DIR) + "/" + FileName(paths_.GetPath(Paths::SIM_AUX_DIR));
+            if (!DirectoryExists(auxdir)) {
+                std::cout << "Copying simulation aux. directory: "
+                          << "\t" << paths_.GetPath(Paths::SIM_AUX_DIR) << " -> "
+                          << "\t" << auxdir << std::endl;
+            CreateDirectory(auxdir);
+            CopyDirectory(paths_.GetPath(Paths::SIM_AUX_DIR), auxdir, true);
+            }
+        }
     }
     paths_.SetPath(Paths::SIM_WORK_DIR, workdir);
 }
