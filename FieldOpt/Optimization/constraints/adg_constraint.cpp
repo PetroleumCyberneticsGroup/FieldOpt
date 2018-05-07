@@ -56,6 +56,15 @@ ADGConstraint::ADGConstraint(
 //==========================================================
 void ADGConstraint::SnapCaseToConstraints(Case *current_case) {
 
+  // -----------------------------------------------------
+  if (settings_->verb_vector()[4] > 2) {
+    string str_out = "[con]Launching ADGPRS Constraint Handling";
+    cout << BLDON
+         << std::string(100, '=')
+         << std::string(100, '=')
+         << endl << str_out << AEND << endl << endl;
+  }
+
   string target_dir;
   string optz;
   string opt_file;
@@ -100,7 +109,7 @@ void ADGConstraint::SnapCaseToConstraints(Case *current_case) {
 
     // -----------------------------------------------------
     // System cal.
-    int i = system(cmd_in.c_str());
+    int i = system( cmd_in.c_str() );
 
     // -----------------------------------------------------
     printf ("The value returned was: %d.\n", i);
@@ -115,6 +124,15 @@ void ADGConstraint::SnapCaseToConstraints(Case *current_case) {
 
   // -------------------------------------------------------
   // Read x.out and replace values in current case
+
+  // -----------------------------------------------------
+  if (settings_->verb_vector()[4] > 2) {
+    string str_out = "[con]Ending ADGPRS Constraint Handling";
+    cout << BLDON
+         << std::string(100, '=')
+         << std::string(100, '=')
+         << endl << str_out << AEND << endl << endl;
+  }
 
 }
 

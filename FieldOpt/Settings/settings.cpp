@@ -87,7 +87,8 @@ QString Settings::GetLogCsvString() const {
           << QString::number(optimizer_->parameters().initial_step_length)
           << QString::number(optimizer_->parameters().minimum_step_length);
 
-  return QString("%1\n%2").arg(header.join(",")).arg(content.join(","));
+  return QString("%1\n%2").
+      arg(header.join(",")).arg(content.join(","));
 }
 
 // =========================================================

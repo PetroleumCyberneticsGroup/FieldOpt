@@ -330,7 +330,7 @@ QString WellControls::createTimeEntry(const double &time,
   double delta_time = time - prev_time;
 
   tstep.sprintf(
-      "===> T=%4.3f <===\nTSTEP\n%4.3f /\n\n",
+      "---> T=%4.3f <---\nTSTEP\n%4.3f /\n\n",
       time,
       delta_time);
   return tstep;
