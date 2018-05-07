@@ -81,12 +81,20 @@ class DeckParser {
   size_t num_groups_;
   size_t num_timesteps_;
 
-  std::vector< const Opm::Well * > wells_;
+  std::vector< std::shared_ptr< const Opm::Well > > wells_;
   const Opm::Tuning *tuning_;
   const Opm::Events *events_;
   const Opm::TimeMap *time_map_;
   std::vector<int> time_days_;
   std::vector<std::string> time_dates_;
+
+  /*!
+   * These hold properties for the well currently being parsed.
+   * It needs to be this way because attempting to get them twice causes a segfault.
+   */
+  Opm::CompletionSet current_comp_set_;
+  std::string current_well_name_;
+  int current_well_first_time_step_;
 
   void initializeTimeVectors();
 
