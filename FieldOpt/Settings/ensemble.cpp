@@ -19,6 +19,7 @@
 
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/trim.hpp>
 #include "ensemble.h"
 #include "Utilities/filehandling.hpp"
 namespace Settings {
@@ -30,18 +31,23 @@ Ensemble::Ensemble() {}
 Ensemble::Ensemble(const std::string &ens_path)
 {
     ensemble_parent_dir_ = GetAbsoluteFilePath(GetParentDirectoryPath(ens_path));
-    assert(FileExists(ens_path, true));
-    assert(DirectoryExists(Ensemble::ensemble_parent_dir_, true));
+    assert(FileExists(ens_path, false));
+    assert(DirectoryExists(Ensemble::ensemble_parent_dir_, false));
 
     std::vector<std::string> file_contents = ReadFileToStdStringList(ens_path);
     for (auto line : file_contents) {
         if (line[0] == '#') {
-            std::cout << "Skipped comment" << std::endl;
-            continue;
+            continue; // Skipping comment
         }
         std::vector<std::string> entries;
-        boost::split(entries,line,boost::is_any_of("\t"));
+        boost::split(entries,line,boost::is_any_of(","));
         assert(entries.size() == 4);
+
+        // Trim the whitespace
+        boost::algorithm::trim(entries[0]);
+        boost::algorithm::trim(entries[1]);
+        boost::algorithm::trim(entries[2]);
+        boost::algorithm::trim(entries[3]);
 
         std::string alias = entries[0];
         std::string data     = ensemble_parent_dir_         + "/" + entries[1];
@@ -49,11 +55,11 @@ Ensemble::Ensemble(const std::string &ens_path)
         std::string grid     = GetParentDirectoryPath(data) + "/" + entries[3];
 
         assert(realizations_.count(entries[0]) == 0); // Check that the alias has not already been used.
-        assert(FileExists(data, true));
-        assert(FileExists(schedule, true));
-        assert(FileExists(grid, true));
+        assert(FileExists(data, false));
+        assert(FileExists(schedule, false));
+        assert(FileExists(grid, false));
         realizations_.insert(
-            std::pair<std::string, Realization>( alias, Realization(alias, data, data, grid) )
+            std::pair<std::string, Realization>( alias, Realization(alias, data, schedule, grid) )
         );
     }
 }
