@@ -101,4 +101,8 @@ void EnsembleHelper::selectRealizations() {
 Settings::Ensemble::Realization EnsembleHelper::GetRealization(const std::string &alias) const {
     return ensemble_.GetRealization(alias);
 }
+Settings::Ensemble::Realization EnsembleHelper::GetBaseRealization() const {
+    auto base_alias = ensemble_.GetAliases()[0];
+    return ensemble_.GetRealization(base_alias);
+}
 }

@@ -83,6 +83,13 @@ class EnsembleHelper {
    */
   Settings::Ensemble::Realization GetRealization(const std::string &alias) const;
 
+  /*!
+   * Get the base realization, to be used for evaluating the base model for initialization.
+   * @param alias
+   * @return
+   */
+  Settings::Ensemble::Realization GetBaseRealization() const;
+
  private:
 
   /*!
