@@ -10,4 +10,4 @@ echo "Data file path: " $2
 cd $1
 
 # Execute eclipse with the file path as parameter
-/ecl/2013.2/bin/linux_x86_64/eclipse.exe $2
+/ecl/2013.2/bin/linux_x86_64/eclipse.exe $2 > /dev/null 2>&1
