@@ -38,7 +38,10 @@ namespace ERTWrapper {
 
         ECLSummaryReader::~ECLSummaryReader()
         {
-            ecl_sum_free(ecl_sum_);
+            if (ecl_sum_ != NULL) {
+                ecl_sum_free(ecl_sum_);
+                ecl_sum_ = NULL;
+            }
         }
 
         double ECLSummaryReader::GetMiscVar(string var_name, int time_index)
