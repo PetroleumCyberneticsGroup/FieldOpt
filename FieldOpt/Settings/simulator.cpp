@@ -52,6 +52,8 @@ void Simulator::setPaths(QJsonObject json_simulator, Paths &paths) {
     else { // This is an ensemble run
         is_ensemble_ = true;
         ensemble_ = Ensemble(paths.GetPath(Paths::ENSEMBLE_FILE));
+        // Set the data file path to the first realization so that the deck parser can find it
+        paths.SetPath(Paths::SIM_DRIVER_FILE, ensemble_.GetRealization(ensemble_.GetAliases()[0]).data());
     }
 }
 
