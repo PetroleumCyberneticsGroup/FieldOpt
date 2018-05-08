@@ -124,8 +124,8 @@ Case::Case(const Case *c) {
   real_vars_names_ = QHash<QUuid, string> (c->real_vars_names());
 
   // Store keys
-  real_id_index_map_ = c->real_id_index_map_;
-  integer_id_index_map_ = c->integer_id_index_map_;
+  real_id_index_map_ = real_variables_.keys();
+  integer_id_index_map_ = integer_variables_.keys();
   sim_time_sec_ = -1;
 
   // -------------------------------------------------------
@@ -135,30 +135,49 @@ Case::Case(const Case *c) {
   real_wspline_names_ = QHash<QUuid, string> (c->real_wspline_names());
 
   // Store keys
-  real_wspline_id_index_map_ = c->real_wspline_id_index_map_;
+  real_wspline_id_index_map_ = real_wspline_vars_.keys();
+}
+
+// =========================================================
+void Case::UpdateWSplineVarValues() {
+
+  QHash<QUuid, double> spline_vars = QHash<QUuid, double>();
+
+  // -------------------------------------------------------
+  for (QUuid key : real_wspline_id_index_map_) {
+      spline_vars[key] = real_variables_.value(key);
+  }
+
+  real_wspline_vars_ = spline_vars;
 }
 
 // =========================================================
 bool Case::Equals(const Case *other,
                   double tolerance) const {
 
+  // -------------------------------------------------------
   // Check if number of variables are equal
-  if (this->binary_variables().size() !=
-      other->binary_variables().size()
-      || this->integer_variables().size() != other->integer_variables().size()
-      || this->real_variables().size() != other->real_variables().size())
+  if (this->binary_variables().size()
+      != other->binary_variables().size()
+      || this->integer_variables().size()
+          != other->integer_variables().size()
+      || this->real_variables().size()
+          != other->real_variables().size())
     return false;
 
+  // -------------------------------------------------------
   for (QUuid key : this->binary_variables().keys()) {
     if (std::abs(this->binary_variables()[key] - other->binary_variables()[key]) > tolerance)
       return false;
   }
 
+  // -------------------------------------------------------
   for (QUuid key : this->integer_variables().keys()) {
     if (std::abs(this->integer_variables()[key] - other->integer_variables()[key]) > tolerance)
       return false;
   }
 
+  // -------------------------------------------------------
   for (QUuid key : this->real_variables().keys()) {
     if (std::abs(this->real_variables()[key] - other->real_variables()[key]) > tolerance)
       return false;
@@ -170,7 +189,8 @@ bool Case::Equals(const Case *other,
 // =========================================================
 double Case::objective_function_value() const {
 
-  if (objective_function_value_ == std::numeric_limits<double>::max())
+  if (objective_function_value_ ==
+      std::numeric_limits<double>::max())
     throw ObjectiveFunctionException(
         "The objective function value has not been set in this Case.");
   else

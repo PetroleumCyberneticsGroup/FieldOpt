@@ -305,15 +305,18 @@ class Case : public Loggable
 
   // -------------------------------------------------------
   /*!
-   * Sets the integer variable values of this case from a given vector.
+   * Sets the integer variable values
+   * of this case from a given vector.
    *
-   * @note This function will not work with Case objects created from
-   * CaseTransferObject. This implies that, when running in parallel,
-   * it will only work on the main process.
+   * @note This function will not work with Case objects
+   * created from CaseTransferObject. This implies that,
+   * when running in parallel, it will only work on the
+   * main process.
    *
-   * The order of the variables as they appear in vector this case is
-   * preserved given that they were taken from this same case from the
-   * function GetIntegerVarVector()
+   * The order of the variables as they appear in vector
+   * this case is preserved given that they were taken
+   * from this same case from the function
+   * GetIntegerVarVector()
    *
    * @param vec
    */
@@ -321,14 +324,19 @@ class Case : public Loggable
 
   // -------------------------------------------------------
   /*!
-   * @brief Set the origin info of this Case/trial point, i.e. which
-   * point it was generated from, in which direction it was perturbed,
-   * and with what magnitude. This method is needed by some optimization
-   * algorithms.
+   * @brief Set the origin info of this Case/trial point,
+   * i.e. which point it was generated from, in which
+   * direction it was perturbed, and with what magnitude.
+   * This method is needed by some optimization algorithms.
    *
-   * @param parent The Case/trial point this was generated from.
-   * @param direction_index The direction index of the perturbation.
-   * @param step_length The magnitude of the perturbation.
+   * @param parent The Case/trial
+   * point this was generated from.
+   *
+   * @param direction_index The direction
+   * index of the perturbation.
+   *
+   * @param step_length The magnitude
+   * of the perturbation.
    */
   void set_origin_data(Case* parent,
                        int direction_index,
@@ -361,8 +369,8 @@ class Case : public Loggable
 
   // -------------------------------------------------------
   /*!
-   * @brief Get the number of seconds spent computing the well blocks
-   * for this case.
+   * @brief Get the number of seconds spent
+   * computing the well blocks for this case.
    */
   int GetWICTime() const { return wic_time_sec_; }
 
@@ -373,6 +381,8 @@ class Case : public Loggable
   void set_case_num(int nc) { num_ = nc; };
   int get_case_num() { return num_; };
 
+  void UpdateWSplineVarValues();
+
  private:
   // -------------------------------------------------------
   QUuid id_; //!< Unique ID for the case.
@@ -380,7 +390,8 @@ class Case : public Loggable
   int sim_time_sec_;
 
   // -------------------------------------------------------
-  //!< # of seconds spent computing the well index for this case.
+  //!< # of seconds spent computing
+  //!< the well index for this case.
   int wic_time_sec_;
 
   // -------------------------------------------------------
@@ -403,15 +414,18 @@ class Case : public Loggable
   map<string, double> uuid_spline_name_map;
 
   // -------------------------------------------------------
-  //!< The parent of this trial point. Needed by the APPS algorithm.
+  //!< The parent of this trial point.
+  //!< Needed by the APPS algorithm.
   Case* parent_;
 
   // -------------------------------------------------------
-  //!< The direction index used to generate this trial point.
+  //!< The direction index used to
+  //!< generate this trial point.
   int direction_index_;
 
   // -------------------------------------------------------
-  //!< The step length used to generate this trial point.
+  //!< The step length used to
+  //!< generate this trial point.
   double step_length_;
 };
 

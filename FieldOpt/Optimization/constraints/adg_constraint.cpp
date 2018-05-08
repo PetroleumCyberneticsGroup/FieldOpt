@@ -34,6 +34,7 @@ namespace Optimization {
 namespace Constraints {
 
 using ::Utilities::FileHandling::FileExists;
+using ::Utilities::FileHandling::CopyFile;
 using ::Utilities::FileHandling::WriteStringToFile;
 using ::Utilities::FileHandling::WriteLineToFile;
 using ::Utilities::FileHandling::EstablishFile;
@@ -77,7 +78,10 @@ void ADGConstraint::SnapCaseToConstraints(Case *current_case) {
   auto cdir = settings_->sim_dirs_.driver_directory_;
 
   QString xin = "x_" + QString::fromStdString(current_case->id_stdstr()) + ".in";
-  QString schedout = "sched_" + QString::fromStdString(current_case->id_stdstr()) + ".out";
+  QString xout = "x_" + QString::fromStdString(current_case->id_stdstr()) + ".out";
+  QString snout = "snopt_" + QString::fromStdString(current_case->id_stdstr()) + ".out";
+  QString snlog = "snlog_" + QString::fromStdString(current_case->id_stdstr()) + ".out";
+
   EstablishFile(xin);
 
   // -------------------------------------------------------
@@ -86,7 +90,11 @@ void ADGConstraint::SnapCaseToConstraints(Case *current_case) {
 
   for (auto var=var_map.begin(); var != var_map.end(); ++var) {
 
-    // WriteLineToFile(QString::fromStdString(var->first), xin);
+    if(current_case->get_case_num() == 1) {
+      WriteLineToFile(QString::fromStdString(var->first),
+                      "var_order.in");
+    }
+    cout << var->second << endl;
     WriteLineToFile(QString::number(var->second), xin);
 
   }
@@ -96,7 +104,8 @@ void ADGConstraint::SnapCaseToConstraints(Case *current_case) {
   optz = "/home/bellout/git/ADGPRS/20161124-ad-gprs-optimizer-ov-src/Optimization20161120/cmake-build-debug/bin/optimize-cmake";
   opt_file = cdir.toStdString() + "/OPT.txt";
   // nthreads = " 1 0 -p " + xin.toStdString() + " " + schedout.toStdString();
-  nthreads = " 1 0 -p " + xin.toStdString();
+  // nthreads = " 1 0 -p " + xin.toStdString();
+  nthreads = " 1 0 --uof-projection " + xin.toStdString();
 
   // -------------------------------------------------------
   if (FileExists(QString::fromStdString(optz))) {
@@ -128,6 +137,15 @@ void ADGConstraint::SnapCaseToConstraints(Case *current_case) {
 
   // -------------------------------------------------------
   // Read x.out and replace values in current case
+
+  // -------------------------------------------------------
+  // Save xout file for debug
+  CopyFile(QString::fromStdString("x.out"), xout, true);
+  CopyFile(QString::fromStdString("input_errors.log"), snout, true);
+
+  if (FileExists(QString::fromStdString("snopt_errors.log"))) {
+    CopyFile(QString::fromStdString("snopt_errors.log"), snlog, true);
+  }
 
   // -----------------------------------------------------
   if (settings_->verb_vector()[4] > 2) {

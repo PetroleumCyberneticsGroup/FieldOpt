@@ -158,6 +158,7 @@ QList<Case *> GSS::generate_trial_points(vector<int> dirs) {
     // -----------------------------------------------------
     trial_point->set_origin_data(GetTentativeBestCase(),
                                  dir, step_lengths_(dir));
+    trial_point->UpdateWSplineVarValues();
 
     // -----------------------------------------------------
     // Append to trial points
