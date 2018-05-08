@@ -171,7 +171,8 @@ QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
   wicalc_rixx.ComputeWellBlocks(well_block_data_rixx, welldefs, rank);
 
   // cout << "[mod]wicalc_rixx-11.---------- " << endl;
-  auto block_data_rixx = well_block_data_rixx[well_settings_.name.toStdString()];
+  auto block_data_rixx =
+      well_block_data_rixx[well_settings_.name.toStdString()];
 
   // ---------------------------------------------------------------
   // Dbg file

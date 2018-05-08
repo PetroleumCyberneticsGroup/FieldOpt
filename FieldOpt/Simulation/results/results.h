@@ -53,7 +53,8 @@ class Results
    * \param file_path The path to the summary file without suffixes.
    */
   virtual void ReadResults(QString file_path) = 0;
-  virtual void ReadResults(QString file_path, std::vector<int> verb_vector) = 0;
+  virtual void ReadResults(QString file_path,
+                           std::vector<int> verb_vector) = 0;
 
   /*!
    * \brief DumpResults Dump the results that have been read. Should be called when the results are no longer valid.
