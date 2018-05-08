@@ -50,6 +50,7 @@ void EnsembleHelper::SetActiveCase(Optimization::Case *c) {
 
     current_case_ = c;
     selectRealizations();
+    eval_start_time_ = std::chrono::high_resolution_clock::now();
 }
 bool EnsembleHelper::IsCaseDone() const {
     return rzn_queue_.empty() && rzn_busy_.empty();
@@ -77,7 +78,15 @@ void EnsembleHelper::SubmitEvaluatedRealization(Optimization::Case *c) {
         throw std::runtime_error("Error in EnsembleHelper.");
     }
 
-    current_case_->SetRealizationOfv(c->GetEnsembleRealization(), c->objective_function_value());
+    if (c->state.eval == Optimization::Case::CaseState::E_DONE) {
+        current_case_->SetRealizationOfv(c->GetEnsembleRealization(), c->objective_function_value());
+    }
+    else {
+        std::cout << "WARNING: Ensemble realization case "
+                  << c->GetEnsembleRealization().toStdString()
+                  << " was not successfully evaluated. It will not be further considered."
+                  << std::endl;
+    }
     rzn_busy_.erase(rzn_busy_.begin() + alias_pos);
 }
 Optimization::Case *EnsembleHelper::GetEvaluatedCase() {
@@ -88,11 +97,14 @@ Optimization::Case *EnsembleHelper::GetEvaluatedCase() {
     rzn_queue_ = std::vector<std::string>();
     rzn_busy_ = std::vector<std::string>();
     current_case_->set_objective_function_value(current_case_->GetEnsembleAverageOfv());
+    auto eval_end_time = std::chrono::high_resolution_clock::now();
+    auto time_diff = std::chrono::duration_cast<std::chrono::milliseconds>(eval_end_time - eval_start_time_);
+    current_case_->SetSimTime(time_diff.count() / 1000);
     return current_case_;
 }
 void EnsembleHelper::selectRealizations() {
     auto all_aliases = ensemble_.GetAliases();
-    auto indices = unique_random_integers(rng_, 0, all_aliases.size(), n_select_);
+    auto indices = unique_random_integers(rng_, 0, all_aliases.size() - 1, n_select_);
 
     for (auto idx : indices) {
         rzn_queue_.push_back(all_aliases[idx]);

@@ -26,6 +26,7 @@
 #include <boost/random.hpp>
 #include "Settings/ensemble.h"
 #include "Optimization/case.h"
+#include <chrono>
 
 namespace Runner {
 
@@ -129,6 +130,10 @@ class EnsembleHelper {
    */
   boost::random::mt19937 rng_;
 
+  /*!
+   * Time at which the currently active case was first added to the handler.
+   */
+  std::chrono::high_resolution_clock::time_point eval_start_time_;
 
 };
 
