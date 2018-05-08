@@ -101,7 +101,7 @@ void ADGConstraint::SnapCaseToConstraints(Case *current_case) {
 
   // -------------------------------------------------------
   // target_dir = "5spot-cntrlopt";
-  optz = "/home/bellout/git/ADGPRS/20161124-ad-gprs-optimizer-ov-src/Optimization20161120/cmake-build-debug/bin/optimize-cmake";
+  optz = "/home/bellout/git/ADGPRS/20161124-ad-gprs-optimizer-ov-src/Optimization20161120/cmake-build-debug/bin/optimize-cmake-mb";
   opt_file = cdir.toStdString() + "/OPT.txt";
   // nthreads = " 1 0 -p " + xin.toStdString() + " " + schedout.toStdString();
   // nthreads = " 1 0 -p " + xin.toStdString();

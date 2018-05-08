@@ -44,7 +44,7 @@ namespace Optimization {
 class CaseHandler;
 class CaseTransferObject;
 
-// ---------------------------------------------------------
+// =========================================================
 /*!
  * \brief The Case class represents a specific case for the
  * optimizer, i.e. a specific set of variable values and the
