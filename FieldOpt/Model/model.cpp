@@ -60,17 +60,29 @@ void Model::ApplyCase(Optimization::Case *c)
         variable_container_->SetContinousVariableValue(key, c->real_variables()[key]);
     }
     int cumulative_wic_time = 0;
+    bool wic_used = false;
     for (Wells::Well *w : *wells_) {
         w->Update();
-        cumulative_wic_time += w->GetTimeSpentInWIC();
+        if (w->trajectory()->GetDefinitionType() == Settings::Model::WellDefinitionType::WellSpline) {
+            cumulative_wic_time += w->GetTimeSpentInWIC();
+            wic_used = true;
+        }
     }
-    c->SetWICTime(cumulative_wic_time);
+    if (wic_used) {
+        c->SetWICTime(cumulative_wic_time);
+    }
+    else {
+        c->SetWICTime(0);
+    }
     verify();
 
     // Notify the logger, and after that clear the results.
     // First check that we have results (if not, this is the first evaluation,
     // and we have nothing to notify the logger about).
-    if (results_.size() > 0){
+    if (results_.size() > 0 && c->GetEnsembleRealization().length() == 0){
+        if (c->GetRealizationOFVMap().count() > 0) {
+            realization_ofv_map_ = c->GetRealizationOFVMap();
+        }
         logger_->AddEntry(this);
     }
     current_case_id_ = c->id();
@@ -135,6 +147,9 @@ map<string, vector<double>> Model::GetValues() {
     }
     for (auto const var : variable_container_->GetBinaryVariables()->values()) {
         valmap["Var#"+var->name().toStdString()] = vector<double>{var->value()};
+    }
+    for (auto const key : realization_ofv_map_.keys()) {
+        valmap["Rea#"+key.toStdString()] = vector<double>{realization_ofv_map_[key]};
     }
     return valmap;
 }

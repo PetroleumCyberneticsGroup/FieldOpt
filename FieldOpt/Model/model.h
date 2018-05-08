@@ -105,6 +105,8 @@ class Model : public Loggable
   QString compdat_; //!< The compdat generated from the list of well blocks corresponding to the current case. This is set by the simulator library.
   std::map<std::string, std::vector<double>> results_; //!< The results of the last simulation (i.e. the one performed with the current case).
 
+  QHash<QString, double> realization_ofv_map_;
+
   class Summary : public Loggable {
    public:
     Summary(Model *model) { model_  = model; }

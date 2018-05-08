@@ -287,6 +287,12 @@ bool Case::HasRealizationOfv(const QString &alias) {
 }
 
 double Case::GetEnsembleAverageOfv() const {
+    if (ensemble_ofvs_.size() == 1) {
+        std::cerr << "WARNING: Only one realization case was successfully evaluated. "
+                  << "You should consider tweaking well/reservoir parameters "
+                  << "or increasing the number of realizations considered for each case."
+                  << std::endl;
+    }
     double sum = 0;
     for (double value : ensemble_ofvs_.values()) {
         sum += value;

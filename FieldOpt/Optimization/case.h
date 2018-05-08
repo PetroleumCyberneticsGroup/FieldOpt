@@ -235,6 +235,7 @@ class Case : public Loggable
   bool HasRealizationOfv(const QString &alias);
   double GetRealizationOfv(const QString &alias);
   double GetEnsembleAverageOfv() const;
+  QHash<QString, double> GetRealizationOFVMap() const { return ensemble_ofvs_; }
 
  private:
   QUuid id_; //!< Unique ID for the case.
