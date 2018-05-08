@@ -32,6 +32,7 @@ Trajectory::Trajectory(Settings::Model::Well well_settings,
     well_blocks_ = new QList<WellBlock *>();
     well_spline_ = 0;
     pseudo_cont_vert_ = 0;
+    definition_type_ = well_settings.definition_type;
     if (well_settings.definition_type == Settings::Model::WellDefinitionType::WellBlocks) {
         initializeWellBlocks(well_settings, variable_container);
         calculateDirectionOfPenetration();
@@ -140,6 +141,9 @@ void Trajectory::calculateDirectionOfPenetration()
         well_blocks_->last()->setDirectionOfPenetration(WellBlock::DirectionOfPenetration::Z);
     else
         well_blocks_->last()->setDirectionOfPenetration(WellBlock::DirectionOfPenetration::W);
+}
+Settings::Model::WellDefinitionType Trajectory::GetDefinitionType() {
+    return definition_type_;
 }
 
 }
