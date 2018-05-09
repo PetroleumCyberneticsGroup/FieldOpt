@@ -44,7 +44,6 @@ SynchronousMPIRunner::SynchronousMPIRunner(RuntimeSettings *rts) : MPIRunner(rts
         InitializeModel();
         InitializeSimulator();
         InitializeObjectiveFunction();
-        InitializeLogger("rank" + QString::number(rank()));
         worker_ = new MPI::Worker(this);
         FinalizeInitialization(false);
     }
@@ -57,6 +56,7 @@ void SynchronousMPIRunner::Execute() {
       if (ensemble_helper_.IsCaseAvailableForEval()) {
           printMessage("Getting new case from ensemble helper.", 2);
           new_case = ensemble_helper_.GetCaseForEval();
+          model_->set_grid_path(ensemble_helper_.GetRealization(new_case->GetEnsembleRealization().toStdString()).grid());
       }
       else {
           printMessage("Getting new case from optimizer.", 2);
@@ -82,15 +82,19 @@ void SynchronousMPIRunner::Execute() {
       auto evaluated_case = overseer_->RecvEvaluatedCase(); // TODO: This is a duplicate case that wont get deleted, i.e. a MEMORY LEAK.
       printMessage("Evaluated case received.", 2);
       if (overseer_->last_case_tag == MPIRunner::MsgTag::CASE_EVAL_SUCCESS) {
+          printMessage("Setting state for evaluated case.", 2);
           evaluated_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
-          if (optimizer_->GetSimulationDuration(evaluated_case) > 0){
+          printMessage("Setting timings for evaluated case.", 2);
+          if (!is_ensemble_run_ && optimizer_->GetSimulationDuration(evaluated_case) > 0){
+              printMessage("Setting timings for evaluated case.", 2);
               simulation_times_.push_back(optimizer_->GetSimulationDuration(evaluated_case));
           }
       }
       if (is_ensemble_run_) {
+          printMessage("Submitting evaluated realization to ensemble helper.", 2);
           ensemble_helper_.SubmitEvaluatedRealization(evaluated_case);
-          printMessage("Evaluated case submitted to ensemble helper.", 2);
           if (ensemble_helper_.IsCaseDone()) {
+              printMessage("All selected realizations evaluated. Getting composite case.", 2);
               auto evaluated_case = ensemble_helper_.GetEvaluatedCase();
               evaluated_case->set_objective_function_value(evaluated_case->GetEnsembleAverageOfv());
               optimizer_->SubmitEvaluatedCase(evaluated_case);
@@ -108,7 +112,25 @@ void SynchronousMPIRunner::Execute() {
         initialDistribution();
         printMessage("Initial distribution done.", 2);
         while (optimizer_->IsFinished() == false) {
-            if (optimizer_->nr_queued_cases() > 0 || ensemble_helper_.IsCaseAvailableForEval()) { // Queued cases in optimizer
+            if (is_ensemble_run_) {
+                printMessage(ensemble_helper_.GetStateString(), 2);
+            }
+            if (is_ensemble_run_ && ensemble_helper_.IsCaseAvailableForEval()) {
+                printMessage("Queued realization cases available.", 2);
+                if (overseer_->NumberOfFreeWorkers() > 0) { // Free workers available
+                    printMessage("Free workers available. Handling next case.", 2);
+                    handle_new_case();
+                }
+                else { // No workers available
+                    printMessage("No free workers available. Waiting for an evaluated case.", 2);
+                    wait_for_evaluated_case();
+                }
+            }
+            else if (is_ensemble_run_ && !ensemble_helper_.IsCaseDone()) {
+                printMessage("Not all ensemble realizations have been evaluated.", 2);
+                wait_for_evaluated_case();
+            }
+            else if (optimizer_->nr_queued_cases() > 0) { // Queued cases in optimizer
                 printMessage("Queued cases available.", 2);
                 if (overseer_->NumberOfFreeWorkers() > 0) { // Free workers available
                     printMessage("Free workers available. Handling next case.", 2);
@@ -150,6 +172,10 @@ void SynchronousMPIRunner::Execute() {
                 simulation_done_ = false;
                 logger_->AddEntry(this);
                 bool simulation_success = true;
+                if (is_ensemble_run_) {
+                    printMessage("Updating grid path.", 2);
+                    model_->set_grid_path(ensemble_helper_.GetRealization(worker_->GetCurrentCase()->GetEnsembleRealization().toStdString()).grid());
+                }
                 printMessage("Applying case to model.", 2);
                 model_->ApplyCase(worker_->GetCurrentCase());
                 model_update_done_ = true; logger_->AddEntry(this);
@@ -160,10 +186,12 @@ void SynchronousMPIRunner::Execute() {
                 }
                 else if (simulation_times_.size() == 0 && settings_->simulator()->max_minutes() > 0) {
                     if (!is_ensemble_run_) {
+                        printMessage("Starting model evaluation with timeout.", 2);
                         simulation_success = simulator_->Evaluate(settings_->simulator()->max_minutes() * 60,
                                                                   runtime_settings_->threads_per_sim());
                     }
                     else {
+                        printMessage("Starting ensemble model evaluation with timeout.", 2);
                         simulation_success = simulator_->Evaluate(ensemble_helper_.GetRealization(worker_->GetCurrentCase()->GetEnsembleRealization().toStdString()),
                                                                   settings_->simulator()->max_minutes() * 60,
                                                                   runtime_settings_->threads_per_sim());
@@ -228,22 +256,19 @@ void SynchronousMPIRunner::Execute() {
 }
 
 void SynchronousMPIRunner::initialDistribution() {
-    while (optimizer_->nr_queued_cases() > 0 && overseer_->NumberOfFreeWorkers() > 1) { // Leave one free worker
-        if (!is_ensemble_run_) {
+
+    if (!is_ensemble_run_) { // Single-realization run
+        while (optimizer_->nr_queued_cases() > 0 && overseer_->NumberOfFreeWorkers() > 1) { // Leave one free worker
             overseer_->AssignCase(optimizer_->GetCaseForEvaluation());
         }
-        else {
-            auto next_case = optimizer_->GetCaseForEvaluation();
-            if (ensemble_helper_.IsCaseDone()) { // no case added yet
-                ensemble_helper_.SetActiveCase(next_case);
-            }
-            if (ensemble_helper_.IsCaseAvailableForEval()) {
-                overseer_->AssignCase(ensemble_helper_.GetCaseForEval());
-            }
-            else { // No more realization cases available; initialization done.
-                break;
-            }
+    }
+    else { // Ensemble run
+        auto next_case = optimizer_->GetCaseForEvaluation();
+        ensemble_helper_.SetActiveCase(next_case);
+        while (ensemble_helper_.IsCaseAvailableForEval() && overseer_->NumberOfFreeWorkers() > 1) {
+            overseer_->AssignCase(ensemble_helper_.GetCaseForEval());
         }
+
     }
 }
 Loggable::LogTarget SynchronousMPIRunner::GetLogTarget() {
