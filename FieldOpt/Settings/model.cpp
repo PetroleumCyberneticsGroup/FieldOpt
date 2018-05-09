@@ -311,18 +311,28 @@ bool Model::Well::ControlEntry::isDifferent(ControlEntry other) {
 }
 
 void Model::setImportedWellDefaults(QJsonObject json_import) {
-    if (!json_import.contains("InjectorDefaultRate") || !json_import.contains("ProducerDefaultBHP")) {
-        throw std::runtime_error("When importing from schedule, you must provide both the"
-                                     "InjectorDefaultRate and ProducerDefaultBHP properties in the "
-                                     "Import object.");
+    if (
+        !json_import.contains("ProducerDefaultBHP") ||
+        (!json_import.contains("InjectorDefaultRate") &&
+        !json_import.contains("InjectorDefaultBHP"))
+        ) {
+        throw std::runtime_error("When importing from schedule, you must provide both the "
+                                     "InjectorDefaultRate or InjectorDefaultBHP and "
+                                     "ProducerDefaultBHP properties in the Import object.");
     }
 
     for (int i = 0; i < wells_.size(); ++i) {
         wells_[i].controls = QList<Well::ControlEntry>{wells_[i].controls[0]}; // Remove all but first control
         wells_[i].controls[0].time_step = getClosestControlTime(wells_[i].controls[0].time_step);
         if (wells_[i].type == Injector) {
-            wells_[i].controls[0].control_mode = RateControl;
-            wells_[i].controls[0].rate = json_import["InjectorDefaultRate"].toDouble();
+            if (json_import.contains("InjectorDefaultRate")) {
+                wells_[i].controls[0].control_mode = RateControl;
+                wells_[i].controls[0].rate = json_import["InjectorDefaultRate"].toDouble();
+            }
+            else if (json_import.contains("InjectorDefaultBHP")) {
+                wells_[i].controls[0].control_mode = BHPControl;
+                wells_[i].controls[0].bhp = json_import["InjectorDefaultBHP"].toDouble();
+            }
         }
         else { // Producer
             wells_[i].controls[0].control_mode = BHPControl;
