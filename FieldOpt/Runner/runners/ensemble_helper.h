@@ -60,6 +60,21 @@ class EnsembleHelper {
   bool IsCaseAvailableForEval() const;
 
   /*!
+   * Get the number of busy cases.
+   */
+  int NBusyCases() const;
+
+  /*!
+   * Get the number of queued cases.
+   */
+  int NQueuedCases() const;
+
+  /*!
+   * Get a string describing the state of the EnsembleHelper.
+   */
+  std::string GetStateString() const;
+
+  /*!
    * Get a copy of the currently active case, with the realization
    * tag properly set.
    */

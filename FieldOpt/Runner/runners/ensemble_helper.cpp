@@ -37,14 +37,14 @@ EnsembleHelper::EnsembleHelper(const Settings::Ensemble &ensemble) {
     current_case_ = 0;
     rzn_queue_ = std::vector<std::string>();
     rzn_busy_ = std::vector<std::string>();
-    n_select_ = 5;
+    n_select_ = 4;
     rng_ = get_random_generator();
 
     assert(n_select_ < ensemble.GetAliases().size());
 }
 void EnsembleHelper::SetActiveCase(Optimization::Case *c) {
     if (!IsCaseDone()) {
-        std::cerr << "ERROR: Unable to set new active case before the next case is done." << std::endl;
+        std::cerr << "ERROR: Unable to set new active case before the previous case is done." << std::endl;
         throw std::runtime_error("Error in EnsembleHelper.");
     }
 
@@ -67,7 +67,7 @@ Optimization::Case *EnsembleHelper::GetCaseForEval() {
     std::string next_alias = rzn_queue_.back();
     rzn_queue_.pop_back();
     rzn_busy_.push_back(next_alias);
-    case_copy->SetEnsembleRealization(QString::fromStdString(next_alias));
+    case_copy->SetEnsembleRealization(QString::fromStdString(next_alias));// TODO: This is a duplicate case that wont get deleted, i.e. a MEMORY LEAK.
     return case_copy;
 }
 void EnsembleHelper::SubmitEvaluatedRealization(Optimization::Case *c) {
@@ -100,6 +100,7 @@ Optimization::Case *EnsembleHelper::GetEvaluatedCase() {
     auto eval_end_time = std::chrono::high_resolution_clock::now();
     auto time_diff = std::chrono::duration_cast<std::chrono::milliseconds>(eval_end_time - eval_start_time_);
     current_case_->SetSimTime(time_diff.count() / 1000);
+    current_case_->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
     return current_case_;
 }
 void EnsembleHelper::selectRealizations() {
@@ -116,5 +117,24 @@ Settings::Ensemble::Realization EnsembleHelper::GetRealization(const std::string
 Settings::Ensemble::Realization EnsembleHelper::GetBaseRealization() const {
     auto base_alias = ensemble_.GetAliases()[0];
     return ensemble_.GetRealization(base_alias);
+}
+int EnsembleHelper::NBusyCases() const {
+    return rzn_busy_.size();
+}
+int EnsembleHelper::NQueuedCases() const {
+    return rzn_queue_.size();
+}
+std::string EnsembleHelper::GetStateString() const {
+    std::stringstream str;
+    str << "EnsembleHelper: ";
+    if (current_case_ == 0) {
+        str << "Case not set.";
+    }
+    else {
+        str << "Current case done: " << (IsCaseDone() ? "Yes" : "No") << std::endl;
+        str << "                N. Queued Cases: " << NQueuedCases();
+        str << "                N. Busy Cases:   " << NBusyCases();
+    }
+    return str.str();
 }
 }
