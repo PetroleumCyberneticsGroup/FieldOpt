@@ -43,11 +43,12 @@ namespace Optimization {
 namespace Optimizers {
 
 // =========================================================
-SNOPTSolverC::SNOPTSolverC(Settings::Optimizer *settings,
-                           Case *base_case,
-                           Model::Properties::VariablePropertyContainer *variables,
-                           Reservoir::Grid::Grid *grid,
-                           Logger *logger) {
+SNOPTSolverC::SNOPTSolverC(
+    Settings::Optimizer *settings,
+    Case *base_case,
+    Model::Properties::VariablePropertyContainer *variables,
+    Reservoir::Grid::Grid *grid,
+    Logger *logger) {
 
   // -------------------------------------------------------
   if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
@@ -119,6 +120,7 @@ SNOPTSolverC::SNOPTSolverC(Settings::Optimizer *settings,
   settings_con_.box_jmax = bbgrid_.max().y();
   settings_con_.box_kmax = bbgrid_.max().z();
 
+  // -------------------------------------------------------
 //  wcpl_ch_case_ = wcpl_ch_case;
   opt_prob_ = "Rosenbrock";
   // opt_prob_ = "Wplc_WL";

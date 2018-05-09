@@ -33,6 +33,10 @@
 namespace Optimization {
 namespace Constraints {
 
+// ---------------------------------------------------------
+using std::cout;
+using std::endl;
+
 // =========================================================
 IWDConstraint::IWDConstraint(
     Settings::Optimizer* settings,
@@ -46,48 +50,150 @@ IWDConstraint::IWDConstraint(
   grid_ = grid;
   ricasedata_ = ricasedata;
 
+  // -------------------------------------------------------
+  // print vertices for perimeter and top and bottom layer
+  std::vector<cvf::Vec3d> ccp;
+
+  // -------------------------------------------------------
+  ofstream fperimeter("OLYMPUS.PERIMETER");
+  fperimeter.precision(16);
+
+  rimintersection_ = new RimIntersection(ricasedata_->mainGrid(),
+                                         ricasedata_,
+                                         settings);
+
+  // Displayoffset
+  // 518177.6950000525   6178154.390136719   -2278.239990234375
+
+  // PERIMETER
+  cvf::Vec3d p0 = cvf::Vec3d(527744, 6.17962e+06, -2088);
+  cvf::Vec3d p1 = cvf::Vec3d(527744, 6.17962e+06, -2029);
+
+  cvf::Vec3d p2 = cvf::Vec3d(527726, 6.18154e+06, -2029);
+  cvf::Vec3d p3 = cvf::Vec3d(527726, 6.18154e+06, -2088);
+
+  cvf::Vec3d p4 = cvf::Vec3d(522874, 6.18154e+06, -2029);
+  cvf::Vec3d p5 = cvf::Vec3d(522874, 6.18154e+06, -2088);
+
+  cvf::Vec3d p6 = cvf::Vec3d(522874, 6.17936e+06, -2029);
+  cvf::Vec3d p7 = cvf::Vec3d(522874, 6.17936e+06, -2088);
+
+  cvf::Vec3d p8 = cvf::Vec3d(527744, 6.17962e+06, -2029);
+  cvf::Vec3d p9 = cvf::Vec3d(527744, 6.17962e+06, -2088);
+
+  ccp.push_back(p0);
+  ccp.push_back(p1);
+  ccp.push_back(p2);
+  ccp.push_back(p3);
+  ccp.push_back(p4);
+  ccp.push_back(p5);
+  ccp.push_back(p6);
+  ccp.push_back(p7);
+  ccp.push_back(p8);
+  ccp.push_back(p9);
+
+  rimintersection_->appendPointToPolyLine(p0);
+  rimintersection_->appendPointToPolyLine(p1);
+  rimintersection_->appendPointToPolyLine(p2);
+  rimintersection_->appendPointToPolyLine(p3);
+  rimintersection_->appendPointToPolyLine(p4);
+  rimintersection_->appendPointToPolyLine(p5);
+  rimintersection_->appendPointToPolyLine(p6);
+  rimintersection_->appendPointToPolyLine(p7);
+  rimintersection_->appendPointToPolyLine(p8);
+  rimintersection_->appendPointToPolyLine(p9);
+
+  RivIntersectionPartMgr *imgr =
+      rimintersection_->intersectionPartMgr();
+
+  RivIntersectionGeometryGenerator *
+      icsec = imgr->getCrossSectionGenerator();
+
+  size_t vx_count = icsec->m_cellBorderLineVxes.p()->size();
+
+//  fperimeter << icsec->m_flattenedPolylineStartPoint.x() << "   "
+//             << icsec->m_flattenedPolylineStartPoint.z() << "   "
+//             << icsec->m_flattenedPolylineStartPoint.x() << endl;
+
+  cvf::Vec3d doff = ricasedata_->mainGrid()->displayModelOffset();
+//  fperimeter << doff.x() << "   "
+//             << doff.y() << "   "
+//             << doff.z() << endl;
+
+  for (size_t ivx = 0; ivx < vx_count; ivx++) {
+
+    auto cblvx = icsec->m_cellBorderLineVxes.p();
+
+    auto vx_x = cblvx->val(ivx).x() + doff.x();
+    auto vx_y = cblvx->val(ivx).y() + doff.y();
+    auto vx_z = cblvx->val(ivx).z() + doff.z();
+
+    fperimeter << vx_x << "   " << vx_y << "   " << vx_z << endl;
+  }
+
+  fperimeter.close();
 
 
+  // -------------------------------------------------------
+  ofstream ftopbottom("OLYMPUS.TOPBOTTOM");
+  ftopbottom.precision(16);
 
+  size_t idx;
+
+  // Loop through all cells
+  for (idx = 0; idx < ricasedata_->mainGrid()->cellCount(); idx++) {
+
+    // -----------------------------------------------------
+    // get ijk index for idx cell
+    size_t i, j, k;
+    // rigrid_->ijkFromCellIndex(idx, &i, &j, &k);
+    ricasedata_->mainGrid()->ijkFromCellIndex(idx, &i, &j, &k);
+    // cout << "i:" << i << " j:" << j << " k:" << k << endl;
+
+    // -----------------------------------------------------
+    // centroid for idx cell
+    //cout << ricasedata_->mainGrid()->cellCentroid(idx).x();
+
+    // -----------------------------------------------------
+    // get corners for idx cell
+
+    //
+    //     7---------6
+    //    /|        /|     |k
+    //   / |       / |     | /j
+    //  4---------5  |     |/
+    //  |  3------|--2     *---i
+    //  | /       | /
+    //  |/        |/
+    //  0---------1
+
+    std::array<cvf::Vec3d, 8> hc;
+    ricasedata_->mainGrid()->cellCornerVertices(idx, hc.data());
+
+    if (k == 1) {
+
+      ftopbottom << hc[4].x() << "   " << hc[4].y() << "   " << hc[4].z() << endl;
+      ftopbottom << hc[5].x() << "   " << hc[5].y() << "   " << hc[5].z() << endl;
+      ftopbottom << hc[6].x() << "   " << hc[6].y() << "   " << hc[6].z() << endl;
+      ftopbottom << hc[7].x() << "   " << hc[7].y() << "   " << hc[7].z() << endl;
+
+    } else if ( k == 16) {
+
+      ftopbottom << hc[1].x() << "   " << hc[1].y() << "   " << hc[1].z() << endl;
+      ftopbottom << hc[2].x() << "   " << hc[2].y() << "   " << hc[2].z() << endl;
+      ftopbottom << hc[3].x() << "   " << hc[3].y() << "   " << hc[3].z() << endl;
+      ftopbottom << hc[4].x() << "   " << hc[4].y() << "   " << hc[4].z() << endl;
+
+    }
+
+  }
+
+  ftopbottom.close();
 
 
 
 
   if(0) {
-
-    // -------------------------------------------------------------
-    std::vector<cvf::Vec3d> ccv, ccc;
-    size_t idx;
-//  for (idx = 0; idx < ricasedata_->mainGrid()->cellCount(); idx++) {
-    for (idx = 0; idx < 4; idx++) {
-
-      size_t i, j, k;
-      rigrid_->ijkFromCellIndex(idx, &i, &j, &k);
-      // ricasedata_->mainGrid()->ijkFromCellIndex(idx, &i, &j, &k);
-      cout << "i:" << i << " j:" << j << " k:" << k << endl;
-      //cout << ricasedata_->mainGrid()->cellCentroid(idx).x();
-
-      std::array<cvf::Vec3d, 8> hc;
-      rigrid_->cellCornerVertices(idx, hc.data());
-      // ricasedata_->mainGrid()->cellCornerVertices(idx, hc.data());
-      cout << "hc_x:" << hc[0].x() << " hc_y:" << hc[0].y() << " hc_z:" << hc[0].z() << endl;
-      ccc.push_back(hc[0]);
-
-      cvf::Vec3d cc = rigrid_->cell(idx).center();
-      // cvf::Vec3d cc = ricasedata_->mainGrid()->cell(idx).center();
-      cout << "cc_x:" << cc.x() << " cc_y:" << cc.y() << " cc_z:" << cc.z() << endl;
-      ccv.push_back(cc);
-
-    }
-
-    std::array<cvf::Vec3d, 8> hc;
-    rigrid_->cellCornerVertices(0, hc.data());
-    // ricasedata_->mainGrid()->cellCornerVertices(0, hc.data());
-    ccc.push_back(hc[0]);
-
-
-
-
 
     // -------------------------------------------------------
     rimintersection_ = new RimIntersection(rigrid_,
@@ -223,20 +329,7 @@ IWDConstraint::IWDConstraint(
 //
 ////  for (size_t ii=0; ii < cellcount; ++ii) {
 ////
-////  }
-
-
-
-
-
-
-
-
-
-
-
-
-
+////
 
 }
 
@@ -281,9 +374,9 @@ void IWDConstraint::SnapCaseToConstraints(Case *current_case) {
   // -------------------------------------------------------
   SNOPTSolverC_ =
       new Optimization::Optimizers::SNOPTSolverC(settings_,
-                                                current_case,
-                                                grid_,
-                                                ricasedata_);
+                                                 current_case,
+                                                 grid_,
+                                                 ricasedata_);
 
   // ---------------------------------------------------
   // Apply well length constraint to each well sequentially

@@ -60,13 +60,9 @@ Model::Model(Settings::Model* settings, Logger *logger) {
 
   // -------------------------------------------------------
   // Force computation of geometric bb
-  //
-  // Force compute geometric bb
   ricasedata_->computeActiveCellBoundingBoxes();
 
   // -------------------------------------------------------
-  // Use RIGrid from now on
-  //
   // Use RIGrid from now on
   rigrid_ = ricasedata_->mainGrid();
   rigrid_->computeCachedData();
