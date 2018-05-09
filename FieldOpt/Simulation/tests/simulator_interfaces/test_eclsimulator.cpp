@@ -39,12 +39,12 @@ protected:
  * in the OPM library. The deck parser is executed every time the ECLSimulatorTest
  * constructor is called, which is every time a test in this class is executed.
  */
-//TEST_F(ECLSimulatorTest, Constructor) {
-//    EXPECT_TRUE(true);
-//}
+TEST_F(ECLSimulatorTest, Constructor) {
+    EXPECT_TRUE(true);
+}
 
 TEST_F(ECLSimulatorTest, Evaluate) {
-    simulator_->Evaluate();
+//    simulator_->Evaluate();
 }
 //
 //TEST_F(ECLSimulatorTest, CleanUp) {
