@@ -129,7 +129,7 @@ void ECLSimulator::copyDriverFiles() {
                   << "\t" << paths_.GetPath(Paths::SIM_DRIVER_DIR) << " -> "
                   << "\t" << workdir << std::endl;
         CreateDirectory(workdir);
-        CopyDirectory(paths_.GetPath(Paths::SIM_DRIVER_DIR), workdir, true);
+        CopyDirectory(paths_.GetPath(Paths::SIM_DRIVER_DIR), workdir, false);
         if (paths_.IsSet(Paths::SIM_AUX_DIR)) {
             std::string auxdir = paths_.GetPath(Paths::OUTPUT_DIR) + "/" + FileName(paths_.GetPath(Paths::SIM_AUX_DIR));
             if (!DirectoryExists(auxdir)) {
@@ -137,7 +137,7 @@ void ECLSimulator::copyDriverFiles() {
                           << "\t" << paths_.GetPath(Paths::SIM_AUX_DIR) << " -> "
                           << "\t" << auxdir << std::endl;
             CreateDirectory(auxdir);
-            CopyDirectory(paths_.GetPath(Paths::SIM_AUX_DIR), auxdir, true);
+            CopyDirectory(paths_.GetPath(Paths::SIM_AUX_DIR), auxdir, false);
             }
         }
     }
