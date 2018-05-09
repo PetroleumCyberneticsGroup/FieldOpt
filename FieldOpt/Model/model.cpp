@@ -86,7 +86,7 @@ void Model::ApplyCase(Optimization::Case *c)
         logger_->AddEntry(this);
     }
     current_case_id_ = c->id();
-    results_.clear();
+//    results_.clear();
 }
 
 void Model::verify()
