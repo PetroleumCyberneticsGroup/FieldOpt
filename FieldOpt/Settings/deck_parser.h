@@ -68,6 +68,7 @@ namespace Settings {
  */
 class DeckParser {
  public:
+  ~DeckParser();
   DeckParser(std::string deck_file);
 
   QList<Model::Well> GetWellData();
@@ -81,9 +82,8 @@ class DeckParser {
   size_t num_groups_;
   size_t num_timesteps_;
 
-  std::vector< std::shared_ptr< const Opm::Well > > wells_;
+  std::vector< std::shared_ptr< const Opm::Well > > *wells_;
   const Opm::Tuning *tuning_;
-  const Opm::Events *events_;
   const Opm::TimeMap *time_map_;
   std::vector<int> time_days_;
   std::vector<std::string> time_dates_;

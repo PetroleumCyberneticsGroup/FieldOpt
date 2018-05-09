@@ -48,11 +48,11 @@ DeckParser::DeckParser(std::string deck_file) {
     num_wells_ = opm_schedule.numWells();
     num_groups_ = opm_schedule.numGroups();
     auto wells = opm_schedule.getWells();
+    wells_ = new std::vector < std::shared_ptr< const Opm::Well > >();
     for (auto well : wells ) {
-        wells_.push_back(std::shared_ptr<const Opm::Well>(well));
+        wells_->push_back(std::shared_ptr<const Opm::Well>(well));
     }
-    tuning_ = &opm_schedule.getTuning();
-    events_ = &opm_schedule.getEvents();
+//    tuning_ = &opm_schedule.getTuning();
     time_map_ = &opm_schedule.getTimeMap();
     num_timesteps_ = time_map_->numTimesteps();
 
@@ -78,11 +78,11 @@ QList<Model::Well> DeckParser::GetWellData() {
     auto well_structs = QList<Model::Well>();
     for (int i = 0; i < num_wells_; ++i) {
         std::cout << "Importing well ";
-        current_comp_set_ = wells_[i]->getCompletions();
-        current_well_name_ = wells_[i]->name();
-        current_well_first_time_step_ = wells_[i]->firstTimeStep();
+        current_comp_set_ = wells_->at(i)->getCompletions();
+        current_well_name_ = wells_->at(i)->name();
+        current_well_first_time_step_ = wells_->at(i)->firstTimeStep();
         std::cout << current_well_name_ << "\t...";
-        well_structs.append(opmWellToWellStruct(wells_[i].get()));
+        well_structs.append(opmWellToWellStruct(wells_->at(i).get()));
         std::cout << " done"
                   << "\t" << (well_structs.last().type == Model::WellType::Injector ? "injector" : "producer")
                   << "\t start time: " << well_structs.last().controls.first().time_step << " days"
@@ -118,11 +118,11 @@ Model::WellType DeckParser::determineWellType(const Opm::Well *opm_well) {
                 std::cerr << "WARNING: Well " << current_well_name_
                           << " is detected as an alternating prodcuer/injector well."
                               " This is not currently supported."
-                              " Using last defined state (injector) "
+                              " Using first defined state (producer) "
                           << time_dates_[t]
                           << std::endl;
-                is_producer = false;
-                is_injector = true;
+                is_producer = true;
+                is_injector = false;
                 break;
             }
             else {
@@ -134,11 +134,11 @@ Model::WellType DeckParser::determineWellType(const Opm::Well *opm_well) {
                 std::cerr << "WARNING: Well " << current_well_name_
                           << " is detected as an alternating prodcuer/injector well."
                               " This is not currently supported."
-                              " Using last defined state (producer) "
+                              " Using first defined state (injector) "
                           << time_dates_[t]
                           << std::endl;
-                is_producer = true;
-                is_injector = false;
+                is_producer = false;
+                is_injector = true;
                 break;
             }
             is_producer = true;
@@ -392,7 +392,6 @@ const std::vector<std::string> DeckParser::GetTimeDates() {
     return time_dates_;
 }
 
-const Opm::Events * DeckParser::GetEvents() {
-    return events_;
+DeckParser::~DeckParser() {
 }
 }
