@@ -60,6 +60,10 @@ Case::Case(const Model::Properties::VariablePropertyContainer* v) {
   real_wspline_id_index_map_ = real_wspline_vars_.keys(); // <- new
 
   // -------------------------------------------------------
+  // Store NFBCK variable vectors
+  real_variables_nfbck_ = real_variables_;
+  real_wspline_vars_nfbck_ = real_wspline_vars_;
+
 }
 
 // ---------------------------------------------------------
@@ -82,6 +86,12 @@ Case::Case() {
   // Nullptr by default?
   real_wspline_vars_ = QHash<QUuid, double>();
   real_wspline_names_ = QHash<QUuid, string>();
+
+  // -------------------------------------------------------
+  // Set up NFBCK variable vectors
+  real_variables_nfbck_ = real_variables_;
+  real_wspline_vars_nfbck_ = real_wspline_vars_;
+
 }
 
 // ---------------------------------------------------------
@@ -136,19 +146,28 @@ Case::Case(const Case *c) {
 
   // Store keys
   real_wspline_id_index_map_ = real_wspline_vars_.keys();
+
+  // -------------------------------------------------------
+  // Store NFBCK variable vectors
+  real_variables_nfbck_ = real_variables_;
+  real_wspline_vars_nfbck_ = real_wspline_vars_;
+
 }
 
 // =========================================================
 void Case::UpdateWSplineVarValues() {
 
   QHash<QUuid, double> spline_vars = QHash<QUuid, double>();
+  QHash<QUuid, double> spline_vars_nfbck = QHash<QUuid, double>();
 
   // -------------------------------------------------------
   for (QUuid key : real_wspline_id_index_map_) {
-      spline_vars[key] = real_variables_.value(key);
+    spline_vars[key] = real_variables_.value(key);
+    spline_vars_nfbck[key] = real_variables_nfbck_.value(key);
   }
 
   real_wspline_vars_ = spline_vars;
+  real_wspline_vars_nfbck_ = spline_vars_nfbck;
 }
 
 // =========================================================
@@ -228,6 +247,16 @@ void Case::set_real_variable_value(const QUuid id,
 }
 
 // =========================================================
+void Case::set_real_variable_value_nfbck(const QUuid id,
+                                         const double val) {
+
+  if (!real_variables_nfbck_.contains(id))
+    throw VariableException(
+        "Unable to set value of variable " + id.toString());
+  real_variables_nfbck_[id] = val;
+}
+
+// =========================================================
 QList<Case *> Case::Perturb(QUuid variable_id,
                             Case::SIGN sign,
                             double magnitude) {
@@ -258,19 +287,23 @@ QList<Case *> Case::Perturb(QUuid variable_id,
     // -----------------------------------------------------
   } else if (real_variables_.contains(variable_id)) {
 
+    // -----------------------------------------------------
     if (sign == PLUS || sign == PLUSMINUS) {
       Case *new_case_p = new Case(this);
       new_case_p->real_variables_[variable_id] += magnitude;
 
+      // ---------------------------------------------------
       new_case_p->objective_function_value_ =
           std::numeric_limits<double>::max();
       new_cases.append(new_case_p);
     }
 
+    // -----------------------------------------------------
     if (sign == MINUS || sign == PLUSMINUS) {
       Case *new_case_m = new Case(this);
       new_case_m->real_variables_[variable_id] -= magnitude;
 
+      // ---------------------------------------------------
       new_case_m->objective_function_value_ =
           std::numeric_limits<double>::max();
       new_cases.append(new_case_m);
@@ -283,6 +316,7 @@ QList<Case *> Case::Perturb(QUuid variable_id,
 // =========================================================
 Eigen::VectorXd Case::GetRealWSplineVarVector() {
 
+  // -------------------------------------------------------
   Eigen::VectorXd vec(real_wspline_id_index_map_.length());
   for (int i = 0; i < real_wspline_id_index_map_.length(); ++i) {
     vec[i] = real_variables_.value(real_wspline_id_index_map_[i]);
@@ -293,9 +327,21 @@ Eigen::VectorXd Case::GetRealWSplineVarVector() {
 // =========================================================
 Eigen::VectorXd Case::GetRealVarVector() {
 
+  // -------------------------------------------------------
   Eigen::VectorXd vec(real_id_index_map_.length());
   for (int i = 0; i < real_id_index_map_.length(); ++i) {
     vec[i] = real_variables_.value(real_id_index_map_[i]);
+  }
+  return vec;
+}
+
+// =========================================================
+Eigen::VectorXd Case::GetRealVarVectorNfbck() {
+
+  // -------------------------------------------------------
+  Eigen::VectorXd vec(real_id_index_map_.length());
+  for (int i = 0; i < real_id_index_map_.length(); ++i) {
+    vec[i] = real_variables_nfbck_.value(real_id_index_map_[i]);
   }
   return vec;
 }
@@ -309,8 +355,17 @@ void Case::SetRealVarValues(Eigen::VectorXd vec) {
 }
 
 // =========================================================
+void Case::SetRealVarValuesNfbck(Eigen::VectorXd vec) {
+
+  for (int i = 0; i < vec.size(); ++i) {
+    set_real_variable_value_nfbck(real_id_index_map_[i], vec[i]);
+  }
+}
+
+// =========================================================
 Eigen::VectorXi Case::GetIntegerVarVector() {
 
+  // -------------------------------------------------------
   Eigen::VectorXi vec(integer_id_index_map_.length());
   for (int i = 0; i < integer_id_index_map_.length(); ++i) {
     vec[i] = integer_variables_.value(integer_id_index_map_[i]);
@@ -319,34 +374,56 @@ Eigen::VectorXi Case::GetIntegerVarVector() {
 }
 
 // =========================================================
-map<string, double> Case::GetUUIDRealVarNameMap() {
+map<string, QUuid> Case::GetUUIDNameMap() {
 
+  // -------------------------------------------------------
   for (int i = 0; i < real_id_index_map_.length(); ++i) {
 
     auto uuid = real_id_index_map_[i];
-    uuid_real_name_map[real_vars_names_[uuid]] =
-        real_variables_[uuid];
+    uuid_name_map[real_vars_names_[uuid]] = uuid;
 
   }
-  return uuid_real_name_map;
+  return uuid_name_map;
 }
 
 // =========================================================
-map<string, double> Case::GetUUIDSplineVarNameMap() {
+QHash<QUuid, string> Case::GetRealVarNames() {
+  return real_vars_names_;
 
+};
+
+// =========================================================
+map<string, double> Case::GetRealVarNameMap() {
+
+  // -------------------------------------------------------
+  for (int i = 0; i < real_id_index_map_.length(); ++i) {
+
+    auto uuid = real_id_index_map_[i];
+    real_name_map[real_vars_names_[uuid]] =
+        real_variables_[uuid];
+
+  }
+  return real_name_map;
+}
+
+// =========================================================
+map<string, double> Case::GetSplineVarNameMap() {
+
+  // -------------------------------------------------------
   for (int i = 0; i < real_wspline_id_index_map_.length(); ++i) {
 
     auto uuid = real_wspline_id_index_map_[i];
-    uuid_spline_name_map[real_wspline_names_[uuid]] =
+    spline_name_map[real_wspline_names_[uuid]] =
         real_wspline_vars_[uuid];
 
   }
-  return uuid_spline_name_map;
+  return spline_name_map;
 }
 
 // =========================================================
 void Case::SetIntegerVarValues(Eigen::VectorXi vec) {
 
+  // -------------------------------------------------------
   for (int i = 0; i < vec.size(); ++i) {
     set_integer_variable_value(integer_id_index_map_[i], vec[i]);
   }

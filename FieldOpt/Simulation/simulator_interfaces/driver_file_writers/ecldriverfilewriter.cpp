@@ -55,8 +55,16 @@ void EclDriverFileWriter::WriteDriverFile(
     QString schedule_file_path) {
 
   assert(FileExists(schedule_file_path));
-  Schedule schedule = DriverParts::ECLDriverParts::Schedule(model_->wells(), settings_->model()->control_times());
-  model_->SetCompdatString(DriverParts::ECLDriverParts::Compdat(model_->wells()).GetPartString());
+
+  Schedule schedule =
+      DriverParts::ECLDriverParts::Schedule(
+          model_->wells(),
+          settings_->model()->control_times());
+
+  model_->SetCompdatString(
+      DriverParts::ECLDriverParts::Compdat(
+          model_->wells()).GetPartString());
+
   Utilities::FileHandling::WriteStringToFile(schedule.GetPartString(), schedule_file_path);
 }
 

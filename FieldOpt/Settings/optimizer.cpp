@@ -497,7 +497,7 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
     }
 
     // -----------------------------------------------------
-    // Constraint type WellSplineLength
+    // Constraint type: WellSplineLength
   } else if (QString::compare(
       constraint_type, "WellSplineLength") == 0) {
 
@@ -551,7 +551,7 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
               "well length constraints.");
 
     // -----------------------------------------------------
-    // Constraint type WellSplineInterwellDistance
+    // Constraint type: WellSplineInterwellDistance
   } else if (QString::compare(
       constraint_type, "WellSplineInterwellDistance") == 0) {
 
@@ -587,7 +587,7 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
     }
 
     // -----------------------------------------------------
-    // Constraint type
+    // Constraint type: ReservoirBoundary
   } else if (QString::compare(
       constraint_type, "ReservoirBoundary") == 0) {
 
@@ -613,7 +613,7 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
         json_constraint["BoxKmax"].toInt();
 
     // -----------------------------------------------------
-    // Constraint type
+    // Constraint type: CombinedWellSplineLengthInterwellDistance
   } else if (QString::compare(
       constraint_type, "CombinedWellSplineLengthInterwellDistance") == 0) {
 
@@ -641,7 +641,7 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
               " needs a Wells array with exactly two well names specified.");
 
     // -----------------------------------------------------
-    // Constraint type
+    // Constraint type: CombinedWellSplineLengthInterwellDistanceReservoirBoundary
   } else if (QString::compare(
       constraint_type, "CombinedWellSplineLengthInterwellDistanceReservoirBoundary") == 0 ) {
 
@@ -687,7 +687,7 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
               "needs a Wells array with exactly two well names specified.");
 
     // -----------------------------------------------------
-    // Constraint type
+    // Constraint type: IWD
   } else if (QString::compare(constraint_type, "IWD") == 0) {
     optimizer_constraint.type = ConstraintType::IWD;
 
@@ -723,6 +723,35 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
     optimizer_constraint.box_kmax =
         json_constraint["BoxKmax"].toInt();
 
+
+
+    // -----------------------------------------------------
+    // Constraint type: ADG
+  } else if (QString::compare(constraint_type, "ADG") == 0) {
+    optimizer_constraint.type = ConstraintType::ADG;
+
+    // -----------------------------------------------------
+    optimizer_constraint.min_length =
+        json_constraint["MinLength"].toDouble();
+
+    optimizer_constraint.max_length =
+        json_constraint["MaxLength"].toDouble();
+
+    optimizer_constraint.min_distance =
+        json_constraint["MinDistance"].toDouble();
+
+  } else {
+
+    // -----------------------------------------------------
+    throw UnableToParseOptimizerConstraintsSectionException(
+        "Constraint type " +
+            constraint_type.toStdString() + " not recognized.");
+  }
+
+  // -------------------------------------------------------
+  if (optimizer_constraint.type == ConstraintType::ADG
+      || optimizer_constraint.type == ConstraintType::IWD) {
+
     // -----------------------------------------------------
     // Snopt IO files
     if (json_constraint.contains("OptionFile")) {
@@ -740,30 +769,6 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
           json_constraint["PrintFile"].toString();
     }
 
-    // -----------------------------------------------------
-    // Constraint type
-  } else if (QString::compare(constraint_type, "ADG") == 0) {
-    optimizer_constraint.type = ConstraintType::ADG;
-
-    // -----------------------------------------------------
-    optimizer_constraint.min_length =
-        json_constraint["MinLength"].toDouble();
-
-    optimizer_constraint.max_length =
-        json_constraint["MaxLength"].toDouble();
-
-    optimizer_constraint.min_distance =
-        json_constraint["MinDistance"].toDouble();
-
-    // -----------------------------------------------------
-
-
-  } else {
-
-    // -----------------------------------------------------
-    throw UnableToParseOptimizerConstraintsSectionException(
-        "Constraint type " +
-            constraint_type.toStdString() + " not recognized.");
   }
 
   return optimizer_constraint;

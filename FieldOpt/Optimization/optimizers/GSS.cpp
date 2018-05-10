@@ -130,6 +130,8 @@ QList<Case *> GSS::generate_trial_points(vector<int> dirs) {
   VectorXd rea_base = GetTentativeBestCase()->GetRealVarVector();
   print_dbg_msg_d("[opt]GetRealVarVector:------- ", 1, rea_base);
 
+  VectorXd rea_base_nfbck = GetTentativeBestCase()->GetRealVarVectorNfbck();
+
   // Get base vectors (int)
   VectorXi int_base = GetTentativeBestCase()->GetIntegerVarVector();
   print_dbg_msg_i("[opt]GetIntVarVector:-------- ", 1, int_base);
@@ -152,12 +154,17 @@ QList<Case *> GSS::generate_trial_points(vector<int> dirs) {
       // trial_point->SetIntegerVarValues(perturb(int_base, dir));
 //
 //    } else if (rea_base.size() > 0) {
-      trial_point->SetRealVarValues(perturb(rea_base, dir));
+    auto var_base = rea_base;
+    // auto var_base = rea_base_nfbck;
+      trial_point->SetRealVarValues(perturb(var_base, dir));
+      trial_point->SetRealVarValuesNfbck(perturb(var_base, dir));
 //    }
 
     // -----------------------------------------------------
     trial_point->set_origin_data(GetTentativeBestCase(),
                                  dir, step_lengths_(dir));
+
+    // Updates real_wpline_nfbck variables with real_nfbck vector
     trial_point->UpdateWSplineVarValues();
 
     // -----------------------------------------------------
@@ -171,7 +178,12 @@ QList<Case *> GSS::generate_trial_points(vector<int> dirs) {
   int nc = 1;
   for (Case *c : trial_points) {
     c->set_case_num(nc);
-    constraint_handler_->SnapCaseToConstraints(c);
+
+    // Uses only set_real_variable_value, so real_vars_nfbck
+    // variables remain untouched by constraint handling (these
+    // can then be used to create further iterates in opt process)
+//    constraint_handler_->SnapCaseToConstraints(c);
+
     nc++;
   }
 

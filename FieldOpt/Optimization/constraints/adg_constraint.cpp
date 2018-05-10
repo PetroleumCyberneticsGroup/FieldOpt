@@ -58,104 +58,164 @@ ADGConstraint::ADGConstraint(
 void ADGConstraint::SnapCaseToConstraints(Case *current_case) {
 
   // -----------------------------------------------------
+  // Dbg
   if (settings_->verb_vector()[4] > 2) {
     string str_out = "[con]Launching ADGPRS Constraint Handling";
-    cout << endl << endl << BLDON << BRED
-         << std::string(120, '=') << endl
-         << std::string(120, '=')
-         << endl << str_out << "("
-         << current_case->get_case_num() << ")" << endl
-         << current_case->id_stdstr() << AEND << endl << endl;
+    cout << endl << endl;
+    cout << BLDON << BRED << std::string(120, '=') << AEND << endl;
+    cout << BLDON << BRED << std::string(120, '=') << AEND << endl;
+    cout << BLDON << BRED
+         << str_out << "(" << current_case->get_case_num() << ")"
+         << AEND << endl << endl;
   }
 
-
-  string target_dir;
-  string optz;
-  string opt_file;
-  string nthreads;
-
   // -------------------------------------------------------
-  auto cdir = settings_->sim_dirs_.driver_directory_;
+  // Set input/output file names
+  auto id_str = QString::fromStdString(current_case->id_stdstr());
 
-  QString xin = "x_" + QString::fromStdString(current_case->id_stdstr()) + ".in";
-  QString xout = "x_" + QString::fromStdString(current_case->id_stdstr()) + ".out";
-  QString snout = "snopt_" + QString::fromStdString(current_case->id_stdstr()) + ".out";
-  QString snlog = "snlog_" + QString::fromStdString(current_case->id_stdstr()) + ".out";
-
-  EstablishFile(xin);
+  QString xin = "x_" + id_str + ".in";
+  QString xout = "x_" + id_str + ".out";
+  QString snout = "snopt_" + id_str + ".out";
+  QString snlog = "snlog_" + id_str + ".out";
 
   // -------------------------------------------------------
   // Print out x.in based on current_case
-  auto var_map = current_case->GetUUIDSplineVarNameMap();
+  EstablishFile(xin);
+  vector<double> invec, outvec;
+  map<string, double> var_map = current_case->GetSplineVarNameMap();
 
-  for (auto var=var_map.begin(); var != var_map.end(); ++var) {
+  // -------------------------------------------------------
+  for (auto var = var_map.begin(); var != var_map.end(); ++var) {
 
+    // -----------------------------------------------------
+    // Print well order (dbg)
     if(current_case->get_case_num() == 1) {
       WriteLineToFile(QString::fromStdString(var->first),
                       "var_order.in");
     }
-    cout << var->second << endl;
-    WriteLineToFile(QString::number(var->second), xin);
+
+    // -----------------------------------------------------
+    // Print actual values
+    // cout << var->second << endl; // dbg
+    invec.push_back(var->second);
+    WriteLineToFile(QString::number(var->second, 'E', 16), xin);
 
   }
 
   // -------------------------------------------------------
-  // target_dir = "5spot-cntrlopt";
-  optz = "/home/bellout/git/ADGPRS/20161124-ad-gprs-optimizer-ov-src"
-      "/Optimization20161120/cmake-build-debug/bin/optimize-cmake-mb";
-  opt_file = cdir.toStdString() + "/OPT.txt";
-  // nthreads = " 1 0 -p " + xin.toStdString() + " " + schedout.toStdString();
-  // nthreads = " 1 0 -p " + xin.toStdString();
-  nthreads = " 1 0 --uof-projection " + xin.toStdString();
+//  string target_dir;
+//  string optz;
+//  string opt_file;
+//  string nthreads;
 
   // -------------------------------------------------------
-  if (FileExists(QString::fromStdString(optz))) {
+  // target_dir = "5spot-cntrlopt";
+
+//  optz_name = "/home/bellout/git/ADGPRS/20161124-ad-gprs-optimizer-ov-src"
+//      "/Optimization20161120/cmake-build-debug/bin/optimize-cmake-mb";
+  // nthreads = " 1 0 -p " + xin.toStdString() + " " + schedout.toStdString();
+  // nthreads = " 1 0 -p " + xin.toStdString();
+
+  // -------------------------------------------------------
+  auto cdir = settings_->sim_dirs_.driver_directory_;
+  string optz_name = "optimize-cmake-mb";
+  string optz_file = cdir.toStdString() + "/OPT.txt";
+  string nthreads = "1 0 --uof-projection " + xin.toStdString();
+
+  // -------------------------------------------------------
+  // Get ADGPRS to print out feasible x x.out
+  if ( FileExists(QString::fromStdString(optz_name))
+      || FileExists(QString::fromStdString(optz_file)) ) {
 
     // -----------------------------------------------------
-    chdir(target_dir.c_str());
+    // chdir(target_dir.c_str());
     system("echo PWD=${PWD}");
 
     // -----------------------------------------------------
     // optimize OPT.txt 1 0 -p x.in sched.out
-    string cmd_in = optz + " " + opt_file + nthreads;
-    printf ("Executing: %s\n", cmd_in.c_str());
-
+    string cmd_in = optz_name + " " + optz_file + " " + nthreads;
+    printf("Executing: %s%s%s\n", FRED, cmd_in.c_str(), AEND);
 
     // -----------------------------------------------------
-    // System cal.
+    // System call
     int i = system( cmd_in.c_str() );
 
     // -----------------------------------------------------
     printf ("The value returned was: %d.\n", i);
+    // sleep(2);
 
   } else {
 
-    printf ("Execution failed.");
+    printf ("Files not found.");
   }
 
   // -------------------------------------------------------
-  // Get ADGPRS to print out feasible x x.out
+  // Read x.out
+  std::ifstream rxout;
+  rxout.open("x.out", std::ios_base::in);
+  rxout.scientific;
+
+  double coord;
+  while (rxout >> coord) {
+    outvec.push_back(coord);
+  }
+
+  rxout.close();
 
   // -------------------------------------------------------
-  // Read x.out and replace values in current case
+  // Introduce x.out values to current case
+  auto it = 0;
+  map<string, QUuid> name_map = current_case->GetUUIDNameMap();
+  QHash<QUuid, string> var_names = current_case->GetRealVarNames();
+
+  // -------------------------------------------------------
+  for (auto var=var_map.begin(); var != var_map.end(); ++var) {
+
+    assert(var_names[name_map[var->first]] == var->first); // dbg
+    current_case->set_real_variable_value(name_map[var->first],
+                                          outvec[it]);
+
+    // Updates real_wpline_nfbck variables with real_nfbck
+    // vector (not updated by set_real_variable_value)
+    current_case->UpdateWSplineVarValues();
+    it++;
+
+  }
 
   // -------------------------------------------------------
   // Save xout file for debug
   CopyFile(QString::fromStdString("x.out"), xout, true);
-  CopyFile(QString::fromStdString("input_errors.log"), snout, true);
+
+  if (FileExists(QString::fromStdString("input_errors.log"))) {
+    CopyFile(QString::fromStdString("input_errors.log"), snout, true);
+  }
 
   if (FileExists(QString::fromStdString("snopt_errors.log"))) {
     CopyFile(QString::fromStdString("snopt_errors.log"), snlog, true);
   }
 
+  // -------------------------------------------------------
+  // Dbg: Print diff b/t input and output vectors
+  assert(outvec.size() == invec.size());
+  int i = 0;
+  cout << std::setprecision(16) << std::scientific << endl;
+
+  for (auto var = var_map.begin(); var != var_map.end(); ++var) {
+    cout << FCYAN << var->first << ":\t" << AEND
+         << invec[i] - outvec[i] << endl;
+    i++;
+  }
+
   // -----------------------------------------------------
+  // Dbg
   if (settings_->verb_vector()[4] > 2) {
     string str_out = "[con]Ending ADGPRS Constraint Handling";
+    cout << endl << endl;
+    cout << BLDON << BRED << std::string(120, '=') << AEND << endl;
+    cout << BLDON << BRED << std::string(120, '=') << AEND << endl;
     cout << BLDON << BRED
-         << std::string(120, '=') << endl
-         << std::string(120, '=') << endl
-         << str_out << "(" << current_case->get_case_num()
-         << ")"<< AEND << endl << endl << endl ;
+         << str_out << "(" << current_case->get_case_num() << ")"
+         << AEND << endl << endl << endl;
   }
 
 }

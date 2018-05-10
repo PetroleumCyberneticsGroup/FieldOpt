@@ -179,9 +179,9 @@ class Optimizer
 
     // -------------------------------------------------------
     // SNOPT solver parameters
-    QString thrdps_optn_file;
-    QString thrdps_smry_file;
-    QString thrdps_prnt_file;
+    QString thrdps_optn_file = "snopt_optn";
+    QString thrdps_smry_file = "snopt_smry";
+    QString thrdps_prnt_file = "snopt_prnt";
 
   };
 

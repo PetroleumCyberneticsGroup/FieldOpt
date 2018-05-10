@@ -128,7 +128,8 @@ class Case : public Loggable
    * \return True if cases are equal within
    * given tolerance, otherwise false.
    */
-  bool Equals(const Case *other, double tolerance=0.0) const;
+  bool Equals(const Case *other,
+              double tolerance=0.0) const;
 
   QUuid id() const { return id_; }
 
@@ -171,16 +172,20 @@ class Case : public Loggable
   { return real_wspline_names_; }
 
   // -------------------------------------------------------
-  void set_binary_variables(const QHash<QUuid, bool> &binary_variables)
+  void set_binary_variables(
+      const QHash<QUuid, bool> &binary_variables)
   { binary_variables_ = binary_variables; }
 
-  void set_integer_variables(const QHash<QUuid, int> &integer_variables)
+  void set_integer_variables(
+      const QHash<QUuid, int> &integer_variables)
   { integer_variables_ = integer_variables; }
 
-  void set_real_variables(const QHash<QUuid, double> &real_variables)
+  void set_real_variables(
+      const QHash<QUuid, double> &real_variables)
   { real_variables_ = real_variables; }
 
-  void set_real_wspline_vars(const QHash<QUuid, double> &real_wspline_vars)
+  void set_real_wspline_vars(
+      const QHash<QUuid, double> &real_wspline_vars)
   { real_wspline_vars_ = real_wspline_vars; }
 
   // -------------------------------------------------------
@@ -205,6 +210,9 @@ class Case : public Loggable
   //!< Set the value of a real variable in the case.
   void set_real_variable_value(const QUuid id,
                                const double val);
+
+  void set_real_variable_value_nfbck(const QUuid id,
+                                     const double val);
 
   enum SIGN { PLUS, MINUS, PLUSMINUS};
 
@@ -261,6 +269,8 @@ class Case : public Loggable
    */
   Eigen::VectorXd GetRealVarVector();
 
+  Eigen::VectorXd GetRealVarVectorNfbck();
+
   // -------------------------------------------------------
   /*!
    * Sets the real variable values of this case from a given vector.
@@ -276,6 +286,7 @@ class Case : public Loggable
    * @param vec
    */
   void SetRealVarValues(Eigen::VectorXd vec);
+  void SetRealVarValuesNfbck(Eigen::VectorXd vec);
 
   // -------------------------------------------------------
   /*!
@@ -374,14 +385,17 @@ class Case : public Loggable
    */
   int GetWICTime() const { return wic_time_sec_; }
 
-  map<string, double> GetUUIDRealVarNameMap();
+  map<string, double> GetRealVarNameMap();
 
-  map<string, double> GetUUIDSplineVarNameMap();
+  map<string, double> GetSplineVarNameMap();
+
+  map<string, QUuid> GetUUIDNameMap();
 
   void set_case_num(int nc) { num_ = nc; };
   int get_case_num() { return num_; };
 
   void UpdateWSplineVarValues();
+  QHash<QUuid, string> GetRealVarNames();
 
  private:
   // -------------------------------------------------------
@@ -406,12 +420,19 @@ class Case : public Loggable
   QHash<QUuid, string> real_wspline_names_;
 
   // -------------------------------------------------------
+  // No feedback variable cases
+  QHash<QUuid, double> real_variables_nfbck_;
+  QHash<QUuid, double> real_wspline_vars_nfbck_;
+
+  // -------------------------------------------------------
   QList<QUuid> real_id_index_map_;
   QList<QUuid> integer_id_index_map_;
   QList<QUuid> real_wspline_id_index_map_;
 
-  map<string, double> uuid_real_name_map;
-  map<string, double> uuid_spline_name_map;
+  // -------------------------------------------------------
+  map<string, double> real_name_map;
+  map<string, double> spline_name_map;
+  map<string, QUuid> uuid_name_map;
 
   // -------------------------------------------------------
   //!< The parent of this trial point.
