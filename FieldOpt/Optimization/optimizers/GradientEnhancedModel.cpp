@@ -105,7 +105,7 @@ GradientEnhancedModel::GradientEnhancedModel(int n,
   m_ = m;
   _ng_ = number_of_variables_with_gradient;
   ng_ = number_of_variables_with_gradient;
-  _alpha_ = weight_objective_minimum_change;
+  //_alpha_ = weight_objective_minimum_change;
   alpha_ = weight_objective_minimum_change;
   weights_derivatives_ = Eigen::VectorXd::Zero(weights_derivatives.size());
   int j = 0;
@@ -116,14 +116,18 @@ GradientEnhancedModel::GradientEnhancedModel(int n,
   constant_ = 0;
   gradient_ = Eigen::VectorXd::Zero(n_);
   hessian_ = Eigen::MatrixXd::Zero(n_, n_);
-  _hessian_old_ = Eigen::MatrixXd::Zero(n_, n_);
+  //_hessian_old_ = Eigen::MatrixXd::Zero(n_, n_);
   hessian_old_ = Eigen::MatrixXd::Zero(n_, n_);
-  _points_ = Eigen::MatrixXd::Zero(n_, m_);
+  //_points_ = Eigen::MatrixXd::Zero(n_, m_);
   points_ = Eigen::MatrixXd::Zero(n_, m_);
-  _v_ = Eigen::VectorXd::Zero(ng_*m_);
-  _y0_ = Eigen::VectorXd::Zero(n_);
-  _best_point_ = Eigen::VectorXd::Zero(n_);
-  _weights_least_square_ = Eigen::VectorXd::Zero(m_);
+  //_v_ = Eigen::VectorXd::Zero(ng_*m_);
+  v_ = Eigen::VectorXd::Zero(ng_*m_);
+  //_y0_ = Eigen::VectorXd::Zero(n_);
+  y0_ = Eigen::VectorXd::Zero(n_);
+  //_best_point_ = Eigen::VectorXd::Zero(n_);
+  best_point_ = Eigen::VectorXd::Zero(n_);
+  //_weights_least_square_ = Eigen::VectorXd::Zero(m_);
+  weights_least_square_ = Eigen::VectorXd::Zero(m_);
 
   int t = 0;
   int y = n_;
@@ -132,7 +136,9 @@ GradientEnhancedModel::GradientEnhancedModel(int n,
     y--;
   }
   h_old_ = Eigen::VectorXd::Zero(t);
-  _D_ = Eigen::MatrixXd::Zero((ng_)*m_, t);
+  //_D_ = Eigen::MatrixXd::Zero((ng_)*m_, t);
+  D_ = Eigen::MatrixXd::Zero((ng_)*m_, t);
+
 }
 
 void GradientEnhancedModel::ComputeModel(Eigen::MatrixXd Y,
@@ -156,20 +162,21 @@ void GradientEnhancedModel::ComputeModel(Eigen::MatrixXd Y,
   //    1.2, 2.2, 3.2;
 
 
-  _y0_ = y0;
-  _best_point_ = best_point;
+  //_y0_ = y0;
+  y0_ = y0;
+  best_point_ = best_point;
 
   // Set up _weights_least_square_
   for (int t = 0; t < m_; ++t){
     double norm = (Y.col(t) - best_point).norm();
     if (norm <= radius ){
-      _weights_least_square_[t] = weights_derivatives_[0];
+      weights_least_square_[t] = weights_derivatives_[0];
     }
     else if (norm <= scaling_factor_r * radius ){
-      _weights_least_square_[t] = weights_derivatives_[1];
+      weights_least_square_[t] = weights_derivatives_[1];
     }
     else{
-      _weights_least_square_[t] = weights_derivatives_[2];
+      weights_least_square_[t] = weights_derivatives_[2];
     }
   }
 
@@ -181,7 +188,8 @@ void GradientEnhancedModel::ComputeModel(Eigen::MatrixXd Y,
     int c0 = 0;
     for (int i = 0; i < ng_; ++i) { // for each row
       for (int k = 0; k < y; ++k) { // for each elem in row
-        _D_(base_row + i, c0 + k) = points_(k, t)*_weights_least_square_[t];
+        //_D_(base_row + i, c0 + k) = points_(k, t)*_weights_least_square_[t];
+        D_(base_row + i, c0 + k) = points_(k, t)*weights_least_square_[t];
       }
       c0 += y;
       y--;
@@ -192,7 +200,8 @@ void GradientEnhancedModel::ComputeModel(Eigen::MatrixXd Y,
       int ii = 1;
       int jj = 1;
       for (int i = k; i < (ng_ - 1); ++i) {//for each element in that inverse diagonal
-        _D_(base_row + k + ii, c0 + y - jj) = points_(y, t)*_weights_least_square_[t];
+        //_D_(base_row + k + ii, c0 + y - jj) = points_(y, t)*_weights_least_square_[t];
+        D_(base_row + k + ii, c0 + y - jj) = points_(y, t)*weights_least_square_[t];
         ii++;
         jj++;
       }
@@ -203,7 +212,8 @@ void GradientEnhancedModel::ComputeModel(Eigen::MatrixXd Y,
 
 
     for (int i = 0; i < ng_; ++i){
-      _v_(t*ng_ +i) = (derivatives((ng_ - i - 1), t) - derivatives_at_y0(ng_ - i - 1))*_weights_least_square_[t];
+      //_v_(t*ng_ +i) = (derivatives((ng_ - i - 1), t) - derivatives_at_y0(ng_ - i - 1))*_weights_least_square_[t];
+      v_(t*ng_ +i) = (derivatives((ng_ - i - 1), t) - derivatives_at_y0(ng_ - i - 1))*weights_least_square_[t];
     }
   }
 
@@ -214,7 +224,8 @@ void GradientEnhancedModel::ComputeModel(Eigen::MatrixXd Y,
 
   // set the constraints
   Eigen::VectorXd ans;
-  solveLinearSystem(_D_, _v_, funcVals, derivatives_at_y0, _weights_least_square_, ans);
+  //solveLinearSystem(_D_, _v_, funcVals, derivatives_at_y0, _weights_least_square_, ans);
+  solveLinearSystem(funcVals, derivatives_at_y0, ans);
 
   // calculate start indices;
   int start_h_ij = 0;
@@ -242,11 +253,8 @@ void GradientEnhancedModel::ComputeModel(Eigen::MatrixXd Y,
   hessian_old_ = hessian_;
   }
 
-void GradientEnhancedModel::solveLinearSystem(Eigen::MatrixXd D,
-                                              Eigen::VectorXd v,
-                                              Eigen::VectorXd funcVals,
+void GradientEnhancedModel::solveLinearSystem(Eigen::VectorXd funcVals,
                                               Eigen::VectorXd derivatives_at_y0,
-                                              Eigen::VectorXd weights_least_square,
                                               Eigen::VectorXd &ans) {
 
   /// Test for the convert functions. The answer is on the right. Case: ng_=4 and n_=5;
@@ -306,7 +314,7 @@ void GradientEnhancedModel::solveLinearSystem(Eigen::MatrixXd D,
         for (int p = 1; p <= ng_*m_; p++) {
           int t = convert_h_ij_to_t_lsq(i,j); // taking derivative w.r.t. h_t
 
-          b(row) += (1 - alpha_) * v(p - 1) * D(p-1, t-1); // right hand side
+          b(row) += (1 - alpha_) * v_(p - 1) * D_(p-1, t-1); // right hand side
 
           //b(convert_h_ij_to_t_vectorized(i, j) - 1) += (1 - alpha) * v(p - 1) * D(convert_h_ij_to_t_lsq(i, j) - 1, p - 1);
           for (int k = 1; k <= colsD; ++k) {
@@ -314,7 +322,7 @@ void GradientEnhancedModel::solveLinearSystem(Eigen::MatrixXd D,
             int jj = 0;
 
             convert_t_to_ij_lsq(k, ii, jj);
-            A(row, convert_h_ij_to_t_vectorized(ii, jj) - 1) += (1 - alpha_) * D(p-1,k-1) * D(p-1, t-1);
+            A(row, convert_h_ij_to_t_vectorized(ii, jj) - 1) += (1 - alpha_) * D_(p-1,k-1) * D_(p-1, t-1);
           }
         }
 
@@ -375,6 +383,153 @@ void GradientEnhancedModel::solveLinearSystem(Eigen::MatrixXd D,
   ans = A.colPivHouseholderQr().solve(b);
   //std::cout << "ans\n" << ans << std::endl;
 
+}
+
+void GradientEnhancedModel::ComputeModel2(Eigen::MatrixXd Y,
+                                         Eigen::MatrixXd derivatives,
+                                         Eigen::VectorXd derivatives_at_y0,
+                                         Eigen::VectorXd funcVals,
+                                         Eigen::VectorXd y0,
+                                         Eigen::VectorXd best_point,
+                                         double radius, double scaling_factor_r,
+                                         int index_of_center_point) {
+
+  m_ = 3;
+  constant_ = 0;
+  gradient_.setZero();
+  hessian_.setZero();
+  hessian_old_.setZero();
+  points_.resize(n_, m_);
+  points_.setZero();
+  v_.resize(ng_*m_,1);
+  v_.setZero();
+  y0_ = Eigen::VectorXd::Zero(n_);
+  best_point_ = Eigen::VectorXd::Zero(n_);
+  weights_least_square_ = Eigen::VectorXd::Zero(m_);
+
+  int t = 0;
+  int y = n_;
+  for (int i = 0; i < ng_; ++i) {
+    t += y;
+    y--;
+  }
+  h_old_ = Eigen::VectorXd::Zero(t);
+  //_D_ = Eigen::MatrixXd::Zero((ng_)*m_, t);
+  D_.resize((ng_)*m_, t);
+  D_.setZero();
+  h_old_.setZero();
+
+
+
+
+
+
+
+
+  //funcVals[0] = 0.0818000000000001;
+  //funcVals[1] = 0.2797999999999998;
+  //funcVals[2] = 0.5977999999999994;
+  // init the snopt handler
+  // set up all constraints.
+  //
+
+  points_ = Y.block(0,0,2,m_);
+  Eigen::MatrixXd derivatives2 = derivatives.block(0,0,1,m_);
+  //derivatives_at_y0.setZero();
+  //points_ <<
+  //        1.1, 2.1, 3.1,
+  //    1.2, 2.2, 3.2;
+
+
+  //_y0_ = y0;
+  y0_ = y0;
+  best_point_ = best_point;
+
+  // Set up _weights_least_square_
+  for (int t = 0; t < m_; ++t){
+    double norm = (Y.col(t) - best_point).norm();
+    if (norm <= radius ){
+      weights_least_square_[t] = weights_derivatives_[0];
+    }
+    else if (norm <= scaling_factor_r * radius ){
+      weights_least_square_[t] = weights_derivatives_[1];
+    }
+    else{
+      weights_least_square_[t] = weights_derivatives_[2];
+    }
+  }
+
+  // Set the _D_ matrix and the _v_ vector
+  int base_row = 0;
+  for (int t = 0; t < m_; ++t) { // for each sample point
+
+    int y = n_;
+    int c0 = 0;
+    for (int i = 0; i < ng_; ++i) { // for each row
+      for (int k = 0; k < y; ++k) { // for each elem in row
+        //_D_(base_row + i, c0 + k) = points_(k, t)*_weights_least_square_[t];
+        D_(base_row + i, c0 + k) = points_(k, t)*weights_least_square_[t];
+      }
+      c0 += y;
+      y--;
+    }
+    y = n_ - 1;
+    c0 = 0;
+    for (int k = 0; k < (ng_ - 1); ++k) { // for each row that begins an inverse diagonal
+      int ii = 1;
+      int jj = 1;
+      for (int i = k; i < (ng_ - 1); ++i) {//for each element in that inverse diagonal
+        //_D_(base_row + k + ii, c0 + y - jj) = points_(y, t)*_weights_least_square_[t];
+        D_(base_row + k + ii, c0 + y - jj) = points_(y, t)*weights_least_square_[t];
+        ii++;
+        jj++;
+      }
+      c0 += (y + 1);
+      y--;
+    }
+    base_row += ng_;
+
+
+    for (int i = 0; i < ng_; ++i){
+      //_v_(t*ng_ +i) = (derivatives((ng_ - i - 1), t) - derivatives_at_y0(ng_ - i - 1))*_weights_least_square_[t];
+      v_(t*ng_ +i) = (derivatives2((ng_ - i - 1), t) - derivatives_at_y0(ng_ - i - 1))*weights_least_square_[t];
+    }
+  }
+
+  //std::cout << "v\n" << _v_ << std::endl;
+
+
+
+
+  // set the constraints
+  Eigen::VectorXd ans;
+  //solveLinearSystem(_D_, _v_, funcVals, derivatives_at_y0, _weights_least_square_, ans);
+  solveLinearSystem(funcVals, derivatives_at_y0, ans);
+
+  // calculate start indices;
+  int start_h_ij = 0;
+  int start_g_i = (int) ((n_*n_ + n_)*0.5);
+  int start_c = start_g_i + (n_-ng_);
+  int start_lambda_i = start_c + 1;
+
+  //extract the results
+  constant_ = ans(start_c);
+  for (int i = 0; i < n_-ng_; ++i){
+    gradient_[i] = ans(start_g_i+i);
+  }
+  eigen_tail(gradient_, derivatives_at_y0,ng_);
+  for (int i = 1; i <= (int) ((n_*n_ + n_)*0.5); ++i){
+    int ii = 0;
+    int jj = 0;
+    convert_t_to_ij_vectorized(i, ii,jj);
+
+    hessian_(ii-1,jj-1) = ans(start_h_ij + i-1);
+    if (ii != jj){
+      hessian_(jj-1,ii-1) = hessian_(ii-1,jj-1);
+    }
+  }
+
+  hessian_old_ = hessian_;
 }
 
 int GradientEnhancedModel::convert_h_ij_to_t_lsq(int i, int j) {
@@ -531,6 +686,31 @@ void GradientEnhancedModel::setOptionsForSNOPT(SNOPTHandler &snoptHandler) {
 //  if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
 //    cout << "[opt]Set options for SNOPT.---" << endl;
 
+}
+
+void GradientEnhancedModel::PrintParametersMatlabFriendly() {
+
+  std::cout << "_______________________________" << std::endl;
+  std::cout << "_____Matlab friendly print_____" << std::endl;
+  std::cout << "_______________________________" << std::endl;
+
+  std::cout << "H = [ " << std::endl;
+  for (int i = 0; i < n_; ++i) {
+    std::cout << hessian_old_.row(i);
+    if (i != n_ - 1) {
+      std::cout << "; \n";
+    }
+  }
+  std::cout << " \n ];" << std::endl;
+
+  std::cout << "g = [" << std::endl;
+  std::cout << gradient_ << std::endl;
+  std::cout << "]';" << std::endl;
+  std::cout << "c = " << constant_ << ";" << std::endl;
+  std::cout << "y0 = [" << std::endl;
+  std::cout << y0_ << std::endl;
+  std::cout << "]';" << std::endl;
+  //std::cout << "rho = " < << ";" << std::endl;
 }
 
 }

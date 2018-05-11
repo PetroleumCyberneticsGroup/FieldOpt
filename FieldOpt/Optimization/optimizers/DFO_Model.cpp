@@ -327,8 +327,8 @@ DFO_Model::DFO_Model(unsigned int m,
   //this->y0 = y0;
   this->y0 = Eigen::VectorXd::Zero(n);
   //this->y0 << 1,2;
-  this->y0[0] = 0;
-  this->y0[1] = 0;
+  //this->y0[0] = 0;
+  //this->y0[1] = 0;
   //std::cout << "y0\n" << y0 << "\ny0this\n" << this->y0 << "\n";
   //this->y0.setZero();
   this->rho = rhoBeg;
@@ -785,6 +785,7 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
   } else {
     indexOfWorstPoint = -1; // Indicates that the required poisedness is already achieved
   }
+  std::cout << "Required poisedness: " << lambda << "\nPoisedness: " << worstPoisedness << "\n";
 }
 
 void DFO_Model::findPointToImprovePoisedness(Eigen::VectorXd &dNew, int &yk) {
@@ -1328,6 +1329,13 @@ bool DFO_Model::FindPointToIncreasePoisedness(Eigen::VectorXd &dNew, int &t) {
 */
   }
   return false;
+}
+void DFO_Model::printParametersMatlabFriendlyGradientEnhanced() {
+  std::cout << "y0 in dfo model \n" << y0 << "\n";
+  enhancedModel.ComputeModel(Y, derivatives, derivatives.col(0), fvals, y0, bestPoint, rho, r,0);
+  enhancedModel.PrintParametersMatlabFriendly();
+  enhancedModel.ComputeModel2(Y, derivatives, derivatives.col(0), fvals, y0, bestPoint, rho, r,0);
+  enhancedModel.PrintParametersMatlabFriendly();
 }
 
 }

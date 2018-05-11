@@ -38,10 +38,10 @@ Eigen::VectorXd matyasFunctionWithGradients(Eigen::VectorXd x) {
 }
 
 Eigen::VectorXd matyasFunctionWithGradients1(Eigen::VectorXd x) {
-  double val = 0.26 * (x(0) * x(0) + x(1) * x(1)) - 0.46 * x(0) * x(1);
+  double val = 0.26 * (x(0) * x(0) + 0.5*x(1) * x(1)) - 0.46 * x(0) * x(1) + 2*x(1) + 5.5 - 3.2*x(0);
   Eigen::VectorXd ret(1+1);
   ret[0] = val;
-  ret[1] = 0.52*x(1) - 0.46 * x(0);
+  ret[1] = 0.52*x(1) - 0.46 * x(0) + 2;
   return ret;
 }
 
@@ -78,8 +78,45 @@ Eigen::VectorXd sphereGradients(Eigen::VectorXd x, int ng) {
 
 /// Test functions - end
 
+
+
 namespace Optimization {
 namespace Optimizers {
+double matyasFunction2D(Eigen::VectorXd x);
+double rosenbrockFunction2D(Eigen::VectorXd x);
+double polynomial3(Eigen::VectorXd x);
+double polynomial32(Eigen::VectorXd x);
+double polynomial5(Eigen::VectorXd x);
+double polynomial6(Eigen::VectorXd x);
+double evaluateFunction(Eigen::VectorXd x, Eigen::VectorXd y0, int select);
+double evaluateFunction(Eigen::VectorXd x, Eigen::VectorXd y0, int select) {
+  Eigen::VectorXd y = x + y0;
+  switch (select)
+  {
+    case 0:
+      return matyasFunction2D(y);
+      break;
+    case 1:
+      return rosenbrockFunction2D(y);
+      break;
+    case 2:
+      return polynomial6(y);
+      break;
+    case 3:
+      return polynomial5(y);
+      break;
+    case 4:
+      return polynomial3(y);
+      break;
+    case 5:
+      return polynomial32(y);
+      break;
+    default:
+      std::cout << "Invalid function selection" << std::endl;
+      break;
+  }
+
+}
 
 DFO::DFO(Settings::Optimizer *settings,
          Optimization::Case *base_case,
@@ -147,11 +184,75 @@ DFO::DFO(Settings::Optimizer *settings,
   //DFO_model_ = DFO_Model(number_of_interpolation_points_, number_of_variables_, initialStartPoint, initial_trust_region_radius_, required_poisedness_,settings_);
   //Eigen::VectorXd tt(number_of_variables_);
   //tt = DFO_model_.FindLocalOptimum();
+/*
+  DFO_model_.findFirstSetOfInterpolationPoints();
 
+  Eigen::VectorXd* refFvals = DFO_model_.getFvalsReference(); // a temporarily (and bad coding practice) solution
+  Eigen::MatrixXd* Yref = DFO_model_.getYReference(); // a temporarily (and bad coding practice) solution
+  int v = 0;
+  std::cout << (*refFvals).rows() << " " << (*refFvals).cols() << "\n ";
+  for (int i = 0; i < 2*number_of_variables_+1; i++) {
+    ++v;
+    (*refFvals)[i] = evaluateFunction((*Yref).col(i), DFO_model_.getCenterPoint(), 0); // Fill up the function evaluations.
+  }
 
+  if (number_of_interpolation_points_ >= 2 * number_of_variables_ + 1) {
+    DFO_model_.findLastSetOfInterpolationPoints();
+    for (int i = 2 * number_of_variables_ + 1; i < number_of_interpolation_points_; i++) {
+      ++v;
+      (*refFvals)[i] = evaluateFunction((*Yref).col(i), DFO_model_.getCenterPoint(), 0);
+    }
+  }
+  DFO_model_.initializeModel();
+*/
+// Shift the center point of the model if the best point is not the center point.
+  //int bestPointIndex = DFO_model_.getBestPointIndex();
+  //Eigen::VectorXd bestPoint(number_of_variables_);
+  //bestPoint = (*Yref).col(bestPointIndex - 1);
 
+  //if (bestPointIndex != 1) {
+  //  DFO_model_.shiftCenterPointOfQuadraticModel(bestPoint);
+  //}
 
+  // Model Improvement algorithm
+ /*
+  double upperBound = 0;
+  double lowerBound = 0;
+  int k = 0;
+  while (1) {
+    int yk = 0;
+    Eigen::VectorXd d(number_of_variables_);
+    d.setZero();
+    DFO_model_.findWorstPointInInterpolationSet(d, yk);
 
+    if (yk == -1) {
+      std::cout << "breaking. The required poisedness is acheived. k = " << k << std::endl;
+      break;
+    }
+    else {
+      ++v;
+      double funcVal = evaluateFunction(d, DFO_model_.getCenterPoint(), 0);
+      DFO_model_.update(d, funcVal, yk, DFO_Model::IMPROVE_POISEDNESS);
+
+      //myModel.printParametersMatlabFriendly();
+      k++;
+
+      if (k == 2000) {
+        std::cout << "breaking because of too many iterations., k = " << k << std::endl;
+        break;
+      }
+    }
+  }
+
+  std::cout << *(Yref) << std::endl << std::endl;
+  DFO_model_.printParametersMatlabFriendly();
+  std::cout << "%Number of function evaluation is: v = " << v << std::endl;
+
+  //GradientEnhancedModel  enhancedModel(n,m,ng,weights_derivatives,weight_objective_minimum_change);
+  GradientEnhancedModel  enhancedModel(number_of_variables_,number_of_interpolation_points_,settings->parameters().number_of_variables_with_gradients,settings->parameters().weights_distance_from_optimum_lsq,settings->parameters().weight_model_determination_minimum_change_hessian);
+
+  std::cin.get(); // To avoid exiting terminal.
+*/
 
   //Subproblem mySub(settings);
 /*
@@ -266,6 +367,10 @@ DFO::DFO(Settings::Optimizer *settings,
 
   case_handler_->AddNewCase(newCase);
 */
+
+
+  /// Model improvement algorithm - to make matlab plots
+
 
 }
 /*
@@ -387,6 +492,7 @@ void DFO::iterate() {
 
 
       DFO_model_.initializeModel();
+
 
       UpdateLastAction(INITIALIZED_MODEL);
 
@@ -705,11 +811,16 @@ void DFO::iterate() {
 
     */
 
+    if (DFO_model_.isModelInitialized()){
+      DFO_model_.printParametersMatlabFriendly();
+      DFO_model_.printParametersMatlabFriendlyGradientEnhanced();
+    }
+
     if (iterations_ == 0 || (iterations_ == 1 && DFO_model_.isModelInitialized() == false)) {
       /// Get the function evaluations for the first set of interpolation points.
       for (int i = 0; i < new_points.cols(); ++i) {
         //function_evaluations[i] = sphere(new_points.col(i) + DFO_model_.getCenterPoint());
-        functionValsAndGrad.col(i) = sphereGradients(new_points.col(i) + DFO_model_.getCenterPoint(), ng);
+        functionValsAndGrad.col(i) = matyasFunctionWithGradients1(new_points.col(i) + DFO_model_.getCenterPoint());
       }
     } else {
       if (index_of_new_point < 0) {
@@ -725,7 +836,7 @@ void DFO::iterate() {
       }
       /// Get one new point.
       //function_evaluation = sphere(new_point + DFO_model_.getCenterPoint());
-      functionValAndGrad = sphereGradients(new_point + DFO_model_.getCenterPoint(), ng);
+      functionValAndGrad = matyasFunctionWithGradients1(new_point + DFO_model_.getCenterPoint());
       if (last_action_ == TRIAL_POINT_FOUND) {
         if (function_evaluation < DFO_model_.GetBestFunctionValueAllTime()) {
           cout << "\033[1;36;mThe new function evaluation is: \033[0m" << function_evaluation << endl << endl;
@@ -785,6 +896,88 @@ QList<Case *> DFO::ConvertPointsToCases(Eigen::MatrixXd points) {
 */
 
 
+
+
+
+
+
+
+double matyasFunction2D(Eigen::VectorXd x) {
+  double squaredx1 = std::pow(x(0), 2);
+  double squaredx2 = std::pow(x(1), 2);
+  return 0.26*(squaredx1 + squaredx2) - 0.48*x(0)*x(1);
+}
+double rosenbrockFunction2D(Eigen::VectorXd x) {
+  double a = std::pow(x(0), 2);
+  double b = std::pow(x(1) - a, 2);
+  double c = std::pow(1 - x(0), 2);
+  return 100 * b + c;
+}
+double polynomial6(Eigen::VectorXd y){
+  Eigen::VectorXd grad = Eigen::VectorXd::Zero(y.rows());
+  Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(y.rows(), y.rows());
+  double c = 140;
+
+  grad << 1, 2, 3, 4, 5, 6;
+  hess <<
+       3, 0, 0, 5, 0, 0,
+      0, 4, 0, 0, 4, 88,
+      0, 0, 1, 77, 0, 0,
+      5, 0, 77, 2, 0, 6,
+      0, 4, 0, 0, 7, 0,
+      0, 88, 0, 6, 0, 9;
+
+
+  return c + grad.transpose()*y + 0.5 * y.transpose()*hess*y;
+
+}
+double polynomial5(Eigen::VectorXd y) {
+  Eigen::VectorXd grad = Eigen::VectorXd::Zero(y.rows());
+  Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(y.rows(), y.rows());
+  double c = 140;
+
+  grad << 1, 2, 3, 4, 5;
+  hess <<
+       3, 0, 0, 5, 0,
+      0, 4, 0, 0, 4,
+      0, 0, 1, 77, 0,
+      5, 0, 77, 2, 0,
+      0, 4, 0, 0, 7;
+
+
+  return c + grad.transpose()*y + 0.5 * y.transpose()*hess*y;
+
+}
+double polynomial3(Eigen::VectorXd y) {
+  Eigen::VectorXd grad = Eigen::VectorXd::Zero(y.rows());
+  Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(y.rows(), y.rows());
+  double c = 0;
+
+  grad << 5, 1, 92;
+  hess <<
+       3, -1, 10,
+      -1, 4, 7,
+      10, 7, 1;
+
+
+  return c + grad.transpose()*y + 0.5 * y.transpose()*hess*y;
+
+}
+double polynomial32(Eigen::VectorXd y) {
+  Eigen::VectorXd grad = Eigen::VectorXd::Zero(y.rows());
+  Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(y.rows(), y.rows());
+  double c = 0;
+
+  grad << 5, 1, 92;
+  hess <<
+       3, -1, 10,
+      -1, 4, 7,
+      10, 7, 1;
+
+
+  return c + grad.transpose()*y + 0.5 * y.transpose()*hess*y + y(1)*y(2)*y(0) + y(0)*y(0)*y(1)*y(1)+ y(2)*y(2)*y(2)*y(2)*y(2) + y(1)*y(1)*y(1)*y(1);
+
+}
 }
 }
 

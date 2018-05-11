@@ -27,10 +27,12 @@ class GradientEnhancedModel {
   Eigen::MatrixXd points_;
   Eigen::MatrixXd v_;
   Eigen::VectorXd y0_;
+  Eigen::MatrixXd D_;
 
-  double alpha_;
+      double alpha_;
   Eigen::VectorXd weights_derivatives_;
-
+  Eigen::VectorXd weights_least_square_;
+  Eigen::VectorXd best_point_ ;
   int n_;
   int m_;
   int ng_; // number_of_variables_with_gradient
@@ -38,7 +40,7 @@ class GradientEnhancedModel {
 
   SNOPTHandler initSNOPTHandler();
   void setOptionsForSNOPT(SNOPTHandler &snoptHandler);
-  void solveLinearSystem(Eigen::MatrixXd D, Eigen::VectorXd v, Eigen::VectorXd funcVals, Eigen::VectorXd derivatives_at_y0, Eigen::VectorXd weights_least_square, Eigen::VectorXd &ans);
+  void solveLinearSystem(Eigen::VectorXd funcVals, Eigen::VectorXd derivatives_at_y0, Eigen::VectorXd &ans);
   int convert_h_ij_to_t_lsq(int i, int j);
   int convert_h_ij_to_t_vectorized(int i, int j);
   void convert_t_to_ij_lsq(int t, int &i, int &j);
@@ -55,6 +57,10 @@ class GradientEnhancedModel {
   void ComputeModel(Eigen::MatrixXd Y, Eigen::MatrixXd derivatives,
                     Eigen::VectorXd derivatives_at_y0, Eigen::VectorXd funcVals ,Eigen::VectorXd y0, Eigen::VectorXd best_point, double radius,
                     double scaling_factor_r, int index_of_center_point);
+  void ComputeModel2(Eigen::MatrixXd Y, Eigen::MatrixXd derivatives,
+                    Eigen::VectorXd derivatives_at_y0, Eigen::VectorXd funcVals ,Eigen::VectorXd y0, Eigen::VectorXd best_point, double radius,
+                    double scaling_factor_r, int index_of_center_point);
+  void PrintParametersMatlabFriendly();
 
 
 

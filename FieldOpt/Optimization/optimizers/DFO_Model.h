@@ -367,6 +367,8 @@ class DFO_Model {
   */
   void printParametersMatlabFriendly();
 
+  void printParametersMatlabFriendlyGradientEnhanced();
+
   /**
   Prints the quadratic model.
 
