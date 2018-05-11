@@ -520,7 +520,7 @@ void DFO::iterate() {
       std::cout << "gradient = " << std::endl << grad << std::endl;
       std::cout << "hessian = " << std::endl << hess << std::endl;
     }
-/*
+
     if (last_action_ == MODEL_IMPROVEMENT_POINT_FOUND) {
       DFO_model_.update(new_point, function_evaluation, index_of_new_point, DFO_Model::INCLUDE_NEW_POINT);
       UpdateLastAction(MODEL_IMPROVEMENT_POINT_ADDED);
@@ -554,8 +554,8 @@ void DFO::iterate() {
               DFO_model_.FindPointToReplaceWithPointOutsideScaledTrustRegion(index_far_away_point, new_point);
         }
 
-*/
-        /*
+
+
         else{
           DFO_model_.findWorstPointInInterpolationSet(new_point, index_of_new_point); //Check if it is lambda-poised.
           if (index_of_new_point == -1){
@@ -565,8 +565,8 @@ void DFO::iterate() {
             UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND);
           }
         }
-        */
-    /*
+
+
         if (cheapImprovementPossible) {
           std::cout << *refY << std::endl;
           std::cout << "Cheap improvement is possible" << std::endl;
@@ -804,7 +804,7 @@ void DFO::iterate() {
 
 
 
-*/
+
     /*
 
               Get the function evaluation(s)
