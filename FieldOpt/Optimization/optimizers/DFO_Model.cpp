@@ -119,7 +119,7 @@ void DFO_Model::initializeInverseKKTMatrix() {
   }
 }
 
-void DFO_Model::updateInverseKKTMatrix(Eigen::VectorXd yNew, double fvalNew, unsigned int t) {
+void DFO_Model::updateInverseKKTMatrix(Eigen::VectorXd yNew, unsigned int t) {
   //std::cout << "Start update" << std::endl;
   //std::cout << S.diagonal() << std::endl;
   //std::cout << "t = " << t << ", Z \n" << Z << std::endl;
@@ -477,7 +477,7 @@ void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, Upd
 
   //std::cout << "Old point: \n" << Y.col(t-1) << "\nNew point: \n" << yNew << std::endl;
 
-  updateInverseKKTMatrix(yNew, fvalNew, t);
+  updateInverseKKTMatrix(yNew, t);
   updateQuadraticModel(yNew, fvalNew, t);
 
   //Y.col(t - 1) = yNew;
@@ -786,6 +786,140 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
     indexOfWorstPoint = -1; // Indicates that the required poisedness is already achieved
   }
   std::cout << "Required poisedness: " << lambda << "\nPoisedness: " << worstPoisedness << "\n";
+
+
+
+}
+
+void DFO_Model::findWorstPointInInterpolationSetByLU(Eigen::VectorXd &dNew, int &indexOfWorstPoint) {
+  /// Trying LU pivoting instead.
+  Eigen::MatrixXd copyY = Y;
+  Eigen::MatrixXd A(m, m);
+  Eigen::VectorXi id(m);
+  Eigen::MatrixXd changes = Eigen::MatrixXd::Zero(m, m);
+  Eigen::VectorXd y0_PU = copyY.col(bestPointIndex - 1);
+
+  eigen_col(changes, Y.col(m - 1), m - 1);
+
+  double scaling = 0;
+  for (int i = 1; i <= m; ++i) {
+    eigen_col(copyY, copyY.col(i - 1) - y0_PU, i - 1);
+    id(i - 1) = i;
+    if (copyY.norm() > scaling) {
+      scaling = copyY.norm();
+    }
+
+  }
+  for (int i = 1; i <= m; ++i) {
+    eigen_col(copyY, copyY.col(i - 1) / scaling, i - 1);
+  }
+
+  calculateAMatrix(A, copyY);
+  // Swap such that best point is at first row.
+  A.row(0).swap(A.row(bestPointIndex - 1));
+  changes.row(0).swap(changes.row(bestPointIndex - 1));
+
+  int tmp = id(0);
+  id(0) = bestPointIndex;
+  id(bestPointIndex - 1) = tmp;
+
+  for (int i = 1; i <= m; ++i) {
+    int indexOfHighestPivot = 0;
+    A.col(i - 1).maxCoeff(&indexOfHighestPivot);
+    indexOfHighestPivot += 1;
+    if (indexOfHighestPivot != i && i != 1) {
+      A.row(i - 1).swap(A.row(indexOfHighestPivot - 1));
+      changes.row(i - 1).swap(changes.row(indexOfHighestPivot - 1));
+      int tmp = id(i - 1);
+      id(i - 1) = indexOfHighestPivot;
+      id(indexOfHighestPivot - 1) = tmp;
+    }
+    for (int j = i + 1; j <= m; ++j) {
+      int scale = A(i - 1, j - 1) / A(i - 1, i - 1);
+      eigen_block(A, A.col(j - 1) - scale * A.col(i - 1), 0, j - 1);
+      if (j == m) {
+        eigen_col(changes, -scale * A.col(i - 1), i - 1);
+      }
+
+    }
+
+  }
+  if (A(m - 1, m - 1) >= 0.1) {
+    indexOfWorstPoint = -1; // Done
+  } else {
+    Subproblem_LU mySubLu(settings_);
+
+    vector<double> xsolMax;
+    vector<double> fsolMax;
+    vector<double> xsolMin;
+    vector<double> fsolMin;
+    mySubLu.Solve(xsolMax, fsolMax, (char *) "Maximize", Eigen::VectorXd::Zero(n), Eigen::VectorXd::Zero(n));
+    mySubLu.Solve(xsolMin, fsolMin, (char *) "Minimize", Eigen::VectorXd::Zero(n), Eigen::VectorXd::Zero(n));
+
+    Eigen::VectorXd optimum(n);
+
+    for (int i = 0; i < xsolMax.size(); ++i) {
+      if (abs(fsolMax[0]) >= abs(fsolMin[0])) {
+        optimum[i] = xsolMax[i];
+      } else {
+        optimum[i] = xsolMin[i];
+      }
+    }
+    indexOfWorstPoint = changes(m - 1);
+    dNew = optimum * scaling + y0_PU;
+  }
+
+}
+
+void DFO_Model::calculateAMatrix(Eigen::MatrixXd &A, Eigen::MatrixXd &Ycopy) {
+  int elem = 0;
+  /// Constant
+  for (int i = 1; i <= m; ++i) {
+    A(i - 1, 0) = 1;
+  }
+  elem++;
+  /// Linear
+  for (int i = 1; i <= n; ++i) {
+    if (elem < m) {
+      for (int j = 1; j <= m; ++j) {
+        A(j - 1, elem) = Ycopy(i - 1, j - 1);
+      }
+      elem++;
+    } else {
+      break;
+    }
+  }
+  /// Squared
+  for (int i = 1; i <= n; ++i) {
+    if (elem < m) {
+      for (int j = 1; j <= m; ++j) {
+        A(j - 1, elem) = Ycopy(i - 1, j - 1) * Ycopy(i - 1, j - 1);
+      }
+      elem++;
+    } else {
+      break;
+    }
+  }
+  /// Cross terms
+  int rows = n;
+  int it = 1;
+  int col = 1;
+  int t = 2;
+  for (int k = 1; k <= n - 1; ++k) {
+    for (int i = t; i <= n - 1; ++i) {
+      for (int j = 1; j <= m; ++j) {
+        if (elem < m) {
+          double x1 = Ycopy(k - 1, j - 1);
+          double x2 = Ycopy(i - 1, j - 1);
+          A(j - 1, elem) = x1 * x2;
+        } else {
+          break;
+        }
+      }
+      elem++;
+    }
+    t++;
+  }
 }
 
 void DFO_Model::findPointToImprovePoisedness(Eigen::VectorXd &dNew, int &yk) {

@@ -61,7 +61,7 @@ add_library(optimization
 		optimizers/Subproblem.cpp
 		normalizer.cpp
 		constraints/pseudo_cont_boundary_2d.cpp
-		${EXPERIMENTAL_CONSTRAINTS_SRC} optimizers/EigenUtil.h optimizers/GradientEnhancedModel.cpp optimizers/GradientEnhancedModel.h)
+		${EXPERIMENTAL_CONSTRAINTS_SRC} optimizers/EigenUtil.h optimizers/GradientEnhancedModel.cpp optimizers/GradientEnhancedModel.h optimizers/Subproblem_LU.cpp optimizers/Subproblem_LU.h)
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
 # Target link libraries ================================================

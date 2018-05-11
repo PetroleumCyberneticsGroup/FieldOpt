@@ -11,6 +11,7 @@
 #include "Subproblem.h"
 #include "EigenUtil.h"
 #include "GradientEnhancedModel.h"
+#include "Subproblem_LU.h"
 /* References
 This implementation is based upon the following papers and book, and I would recommend anyone who
 is trying to understand the code to actively use those references.
@@ -135,10 +136,10 @@ class DFO_Model {
   Updates the H matrix with one new point.
 
   @param[in] yNew is the  is the displacement of the new point from the current center point(y0).
-  @param[in] fvalNew is the function evaluation corresponding to yNew.
+  ###@param[in] fvalNew is the function evaluation corresponding to yNew.
   @param[in] t-1 is the index of the point that is going to be replaced by yNew in Y.
   */
-  void updateInverseKKTMatrix(Eigen::VectorXd yNew, double fvalNew, unsigned int t);
+  void updateInverseKKTMatrix(Eigen::VectorXd yNew, unsigned int t);
 
   /**
   Updates the model with a new point.
@@ -327,16 +328,20 @@ class DFO_Model {
   */
   void findPointToImprovePoisedness(Eigen::VectorXd &dNew, int &yk);
 
-  void findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &yk);
+  void findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &indexOfWorstPoint);
+  void findWorstPointInInterpolationSetByLU(Eigen::VectorXd &dNew, int &indexOfWorstPoint);
 
-  /**
-  Finds a vector that gives a high value of the
-  absolute value of the i-th Lagrange polynomial.
+  void calculateAMatrix(Eigen::MatrixXd& A, Eigen::MatrixXd& Ycopy);
 
-  The search is currently based upon a random uniform search strategy.
 
-  @return the value that gives the highest found value.
-  */
+    /**
+    Finds a vector that gives a high value of the
+    absolute value of the i-th Lagrange polynomial.
+
+    The search is currently based upon a random uniform search strategy.
+
+    @return the value that gives the highest found value.
+    */
   Eigen::VectorXd findHighValueOfAbsoluteLagrangePolynomial(int i);
 
   Eigen::VectorXd FindLocalOptimumOfAbsoluteLagrangePolynomial(int t);
