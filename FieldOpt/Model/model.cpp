@@ -186,7 +186,7 @@ void Model::InsertDrillingTStep() {
     // to drilling step
     for (Wells::Control *c : *w->controls()) {
       if(c->time_step() < d_control_tstep->time_step()) {
-        c->setOpen(false);
+//        c->setOpen(false);
       }
     }
 
