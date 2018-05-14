@@ -82,7 +82,7 @@ class Property
    * \brief For SplinePoint type properties, this is used to indicate whether the property
    * is for the heel or the toe of the well.
    */
-  enum SplineEnd : int {Heel=3001, Toe=3002};
+  enum SplineEnd : int {Heel=3001, Toe=3002, Middle=3003};
 
   /*!
    * \brief For SplinePoint and WellBlock type variables, this indicates which coordinate

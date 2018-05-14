@@ -47,6 +47,8 @@ Property::SplineEnd Model::Properties::Property::get_spline_end(const QString pr
         return SplineEnd::Heel;
     else if (QString::compare("toe", endstr) == 0)
         return SplineEnd::Toe;
+    else if (QString::compare("P", endstr.at(0)) == 0)
+        return SplineEnd::Middle;
     else throw std::runtime_error("Invalid SplinePoint name format " + prop_name.toStdString()
                                       + ", unable to extract heel/toe info.");
 }

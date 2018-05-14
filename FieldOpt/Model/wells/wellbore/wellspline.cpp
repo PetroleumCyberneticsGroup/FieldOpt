@@ -36,47 +36,41 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
     grid_ = grid;
     well_settings_ = well_settings;
 
-    heel_x_ = new Model::Properties::ContinousProperty(well_settings.spline_heel.x);
-    heel_y_ = new Model::Properties::ContinousProperty(well_settings.spline_heel.y);
-    heel_z_ = new Model::Properties::ContinousProperty(well_settings.spline_heel.z);
-    toe_x_ = new Model::Properties::ContinousProperty(well_settings.spline_toe.x);
-    toe_y_ = new Model::Properties::ContinousProperty(well_settings.spline_toe.y);
-    toe_z_ = new Model::Properties::ContinousProperty(well_settings.spline_toe.z);
+    for (auto point : well_settings.spline_points) {
+        SplinePoint *pt = new SplinePoint();
+        pt->x = new ContinousProperty(point.x);
+        pt->y = new ContinousProperty(point.y);
+        pt->z = new ContinousProperty(point.z);
+        pt->x->setName(point.name + "#x");
+        pt->y->setName(point.name + "#y");
+        pt->z->setName(point.name + "#z");
+        if (point.is_variable) {
+            variable_container->AddVariable(pt->x);
+            variable_container->AddVariable(pt->y);
+            variable_container->AddVariable(pt->z);
+        }
+        spline_points_.push_back(pt);
+    }
     seconds_spent_in_compute_wellblocks_ = 0;
-
-    if (well_settings.spline_heel.is_variable) {
-        heel_x_->setName(well_settings.spline_heel.name + "#x");
-        heel_y_->setName(well_settings.spline_heel.name + "#y");
-        heel_z_->setName(well_settings.spline_heel.name + "#z");
-        variable_container->AddVariable(heel_x_);
-        variable_container->AddVariable(heel_y_);
-        variable_container->AddVariable(heel_z_);
-    }
-    if (well_settings.spline_toe.is_variable) {
-        toe_x_->setName(well_settings.spline_toe.name + "#x");
-        toe_y_->setName(well_settings.spline_toe.name + "#y");
-        toe_z_->setName(well_settings.spline_toe.name + "#z");
-        variable_container->AddVariable(toe_x_);
-        variable_container->AddVariable(toe_y_);
-        variable_container->AddVariable(toe_z_);
-    }
 }
 
 QList<WellBlock *> *WellSpline::GetWellBlocks()
 {
-    auto heel = Eigen::Vector3d(heel_x_->value(), heel_y_->value(), heel_z_->value());
-    auto toe = Eigen::Vector3d(toe_x_->value(), toe_y_->value(), toe_z_->value());
-
-    auto wic = WellIndexCalculator(grid_);
+    assert(spline_points_.size() >= 2);
 
     vector<WellDefinition> welldefs;
     welldefs.push_back(WellDefinition());
     welldefs[0].wellname = well_settings_.name.toStdString();
-    welldefs[0].radii.push_back(well_settings_.wellbore_radius);
-    welldefs[0].skins.push_back(0.0);
-    welldefs[0].heels.push_back(heel);
-    welldefs[0].toes.push_back(toe);
-    welldefs[0].skins.push_back(0.0);
+
+    for (int w = 0; w < spline_points_.size() - 1; ++w) {
+        welldefs[0].radii.push_back(well_settings_.wellbore_radius);
+        welldefs[0].skins.push_back(0.0);
+        welldefs[0].skins.push_back(0.0);
+        welldefs[0].heels.push_back(spline_points_[w]->ToEigenVector());
+        welldefs[0].toes.push_back(spline_points_[w+1]->ToEigenVector());
+    }
+
+    auto wic = WellIndexCalculator(grid_);
 
     auto start = QDateTime::currentDateTime();
     auto block_data = wic.ComputeWellBlocks(welldefs)[well_settings_.name.toStdString()];
@@ -102,6 +96,9 @@ WellBlock *WellSpline::getWellBlock(Reservoir::WellIndexCalculation::Intersected
     return wb;
 }
 
+Eigen::Vector3d WellSpline::SplinePoint::ToEigenVector() const {
+    return Eigen::Vector3d(this->x->value(), this->y->value(), this->z->value());
+}
 }
 }
 }

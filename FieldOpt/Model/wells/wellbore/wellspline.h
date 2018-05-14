@@ -30,6 +30,8 @@ namespace Model {
 namespace Wells {
 namespace Wellbore {
 
+using namespace Model::Properties;
+
 /*!
  * \brief The WellSpline class Generates the well blocks making up the trajectory from a set of spline points.
  * It uses the WellIndexCalculation library to do this.
@@ -48,18 +50,19 @@ class WellSpline
   QList<WellBlock *> *GetWellBlocks();
   int GetTimeSpentInWIC() const { return seconds_spent_in_compute_wellblocks_; }
 
+  struct SplinePoint {
+    ContinousProperty *x;
+    ContinousProperty *y;
+    ContinousProperty *z;
+    Eigen::Vector3d ToEigenVector() const;
+  };
+
  private:
   Reservoir::Grid::Grid *grid_;
   Settings::Model::Well well_settings_;
   int seconds_spent_in_compute_wellblocks_; //!< Number of seconds spent in the ComputeWellBlocks() method.
 
-
-  Model::Properties::ContinousProperty *heel_x_;
-  Model::Properties::ContinousProperty *heel_y_;
-  Model::Properties::ContinousProperty *heel_z_;
-  Model::Properties::ContinousProperty *toe_x_;
-  Model::Properties::ContinousProperty *toe_y_;
-  Model::Properties::ContinousProperty *toe_z_;
+  QList<SplinePoint *> spline_points_;
 
   /*!
    * \brief getWellBlock Convert the BlockData returned by the WIC to a WellBlock with a Perforation.
