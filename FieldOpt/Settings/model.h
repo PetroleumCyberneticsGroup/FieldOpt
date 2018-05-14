@@ -114,6 +114,8 @@ class Model
     QList<WellBlock> well_blocks; //!< Well blocks when the well path is defined by WellBlocks.
     SplinePoint spline_heel; //!< Heel (start) point to be used when calculating the well path from a spline.
     SplinePoint spline_toe; //!< Toe (end) point to be used when calculating the well path from a spline.
+    QList<SplinePoint> spline_points; //!< List of spline points, including heel (first) and toe (last).
+    bool is_variable_spline; //!< Whether the whole spline should be variable.
     PseudoContPosition pseudo_cont_position; //!< Initial position when using pseudo-continous positioning variables.
     QList<ControlEntry> controls; //!< List of well controls
     std::string toString();

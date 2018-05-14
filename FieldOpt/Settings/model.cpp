@@ -179,8 +179,29 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
         if (json_toe.contains("IsVariable") && json_toe["IsVariable"].toBool())
             well.spline_toe.is_variable = true;
         else well.spline_toe.is_variable = false;
+        if ((well.spline_heel.is_variable && well.spline_toe.is_variable)
+            || (json_points.contains("IsVariable") && json_points["IsVariable"].toBool() == true)) {
+            well.is_variable_spline = true;
+        }
         well.spline_heel.name = "SplinePoint#" + well.name + "#heel";
         well.spline_toe.name = "SplinePoint#" + well.name + "#toe";
+
+        well.spline_points.push_back(well.spline_heel);
+        if (json_points.contains("AdditionalPoints")) {
+            int interp_points = json_points["AdditionalPoints"].toInt();
+            for (int p = 0; p < interp_points; ++p) {
+                Well::SplinePoint point;
+                point.x = well.spline_heel.x + (p+1) * (well.spline_toe.x - well.spline_heel.x) / (interp_points+1);
+                point.y = well.spline_heel.y + (p+1) * (well.spline_toe.y - well.spline_heel.y) / (interp_points+1);
+                point.z = well.spline_heel.z + (p+1) * (well.spline_toe.z - well.spline_heel.z) / (interp_points+1);
+                point.name = "SplinePoint#" + well.name + "#P" + QString::number(p+1);
+                if (well.is_variable_spline) {
+                    point.is_variable = true;
+                }
+                well.spline_points.push_back(point);
+            }
+        }
+        well.spline_points.push_back(well.spline_toe);
     }
     else if (QString::compare(definition_type, "PseudoContVertical2D") == 0) {
         QJsonObject json_position = json_well["Position"].toObject();
