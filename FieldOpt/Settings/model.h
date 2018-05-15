@@ -93,36 +93,38 @@ class Model
       bool is_variable = false;
     };
     struct ControlEntry {
-      int time_step; //!< The time step this control is to be applied at.
-      WellState state; //!< Whether the well is open or shut.
-      ControlMode control_mode; //!< Control mode.
-      double bhp; //!< Bhp target when well is on bhp control.
-      double rate; //!< Rate target when well is on rate control.
+      int time_step;                                 //!< The time step this control is to be applied at.
+      WellState state;                               //!< Whether the well is open or shut.
+      ControlMode control_mode;                      //!< Control mode.
+      double bhp;                                    //!< Bhp target when well is on bhp control.
+      double rate;                                   //!< Rate target when well is on rate control.
       InjectionType injection_type = WaterInjection; //!< Injector type (water/gas). Defaults to water.
       bool is_variable = false;
       QString name;
       bool isDifferent(ControlEntry other);
       std::string toString();
     };
-    PreferredPhase preferred_phase; //!< The preferred phase for the well
-    QString name; //!< The name to be used for the well.
-    WellType type; //!< The well type, i.e. producer or injector.
-    QString group; //!< The group of the well.
-    double wellbore_radius; //!< The wellbore radius
-    Direction direction; //!< Direction of penetration
-    WellDefinitionType definition_type; //!< How the well path is defined.
-    QList<WellBlock> well_blocks; //!< Well blocks when the well path is defined by WellBlocks.
-    SplinePoint spline_heel; //!< Heel (start) point to be used when calculating the well path from a spline.
-    SplinePoint spline_toe; //!< Toe (end) point to be used when calculating the well path from a spline.
-    QList<SplinePoint> spline_points; //!< List of spline points, including heel (first) and toe (last).
-    bool is_variable_spline; //!< Whether the whole spline should be variable.
-    PseudoContPosition pseudo_cont_position; //!< Initial position when using pseudo-continous positioning variables.
-    QList<ControlEntry> controls; //!< List of well controls
+    PreferredPhase preferred_phase;             //!< The preferred phase for the well
+    QString name;                               //!< The name to be used for the well.
+    WellType type;                              //!< The well type, i.e. producer or injector.
+    QString group;                              //!< The group of the well.
+    double wellbore_radius;                     //!< The wellbore radius
+    Direction direction;                        //!< Direction of penetration
+    WellDefinitionType definition_type;         //!< How the well path is defined.
+    QList<WellBlock> well_blocks;               //!< Well blocks when the well path is defined by WellBlocks.
+    SplinePoint spline_heel;                    //!< Heel (start) point to be used when calculating the well path from a spline.
+    SplinePoint spline_toe;                     //!< Toe (end) point to be used when calculating the well path from a spline.
+    QList<SplinePoint> spline_points;           //!< List of spline points, including heel (first) and toe (last).
+    int n_spline_points = 0;                    //!< Number of points the spline is defined by. Used for conversion from list of well blocks.
+    bool convert_well_blocks_to_spline = false; //!< Whether or not the list of well blocks should be converted to a spline. This will be done in the Model initialization step.
+    bool is_variable_spline;                    //!< Whether the whole spline should be variable.
+    PseudoContPosition pseudo_cont_position;    //!< Initial position when using pseudo-continous positioning variables.
+    QList<ControlEntry> controls;               //!< List of well controls
     std::string toString();
   };
 
-  Reservoir reservoir() const { return reservoir_; } //!< Get the struct containing reservoir settings.
-  QList<Well> wells() const { return wells_; } //!< Get the struct containing settings for the well(s) in the model.
+  Reservoir reservoir() const { return reservoir_; }          //!< Get the struct containing reservoir settings.
+  QList<Well> wells() const { return wells_; }                //!< Get the struct containing settings for the well(s) in the model.
   QList<int> control_times() const { return control_times_; } //!< Get the control times for the schedule
 
  private:
@@ -135,6 +137,7 @@ class Model
   Well readSingleWell(QJsonObject json_well);
   void setImportedWellDefaults(QJsonObject json_model);
   void parseImportedWellOverrides(QJsonArray json_wells);
+
 
   bool controlTimeIsDeclared(int time) const;
 

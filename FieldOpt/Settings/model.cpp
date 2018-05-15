@@ -59,21 +59,52 @@ Model::Model(QJsonObject json_model, Paths &paths)
     // Wells
     wells_ = QList<Well>();
     if (json_model.contains("Import")) {
+        auto json_import = json_model["Import"].toObject();
         if (!paths.IsSet(Paths::SIM_DRIVER_FILE)) {
             throw std::runtime_error("SchedulePath must be specified (relative to DriverPath) to use the Import feature.");
         }
         std::cout << "Parsing schedule ..." << std::endl;
         deck_parser_ = new DeckParser(paths.GetPath(Paths::SIM_DRIVER_FILE));
 
-        if (!json_model["Import"].toObject()["Keywords"].toArray().contains(QJsonValue("AllWells"))) {
+        if (!json_import["Keywords"].toArray().contains(QJsonValue("AllWells"))) {
             throw std::runtime_error("Unable to import simulator schedule. Import Keywords array does not contain"
                                          "any recognized keywords.");
         }
         std::cout << "Importing wells ..." << std::endl;
         wells_.append(deck_parser_->GetWellData());
         std::cout << "Done importing wells." << std::endl;
-        setImportedWellDefaults(json_model["Import"].toObject());
+        setImportedWellDefaults(json_import);
         parseImportedWellOverrides(json_model["Wells"].toArray());
+        if (json_import.contains("SplineConversion")) {
+            auto json_sconv = json_import["SplineConversion"].toObject();
+            if (!json_sconv.contains("Wells")) {
+                throw std::runtime_error("A list of wells must be specified when the SplineConversion is used.");
+            }
+            for (auto jwell : json_sconv["Wells"].toArray()) {
+                QString wname = jwell.toString();
+                int widx = -1;
+                for (int i = 0; i < wells_.size(); ++i) {
+                    if (QString::compare(wells_[i].name, wname) == 0) {
+                        widx = i;
+                        break;
+                    }
+                }
+                if (widx == -1) {
+                    throw std::runtime_error("Well " + wname.toStdString() +
+                        " defined in SplineConversion well list not found.");
+                }
+                wells_[widx].convert_well_blocks_to_spline = true;
+                wells_[widx].definition_type = WellDefinitionType::WellSpline;
+                if (json_sconv.contains("SplinePoints") && json_sconv["SplinePoints"].toInt() >= 2) {
+                    wells_[widx].n_spline_points = json_sconv["SplinePoints"].toInt();
+                    std::cout << "Setting number of spline points for " << wname.toStdString()
+                              << " to " << wells_[widx].n_spline_points << " for conversion." << std::endl;
+                }
+                else {
+                    std::cout << "Defaulting number of spline points for conversion to 2." << std::endl;
+                }
+            }
+        }
     }
     else {
         try {
