@@ -326,7 +326,7 @@ DFO_Model::DFO_Model(unsigned int m,
   this->n = n;
   //this->y0 = y0;
   this->y0 = Eigen::VectorXd::Zero(n);
-  //this->y0 << 1,2;
+  this->y0 << 1,2;
   //this->y0[0] = 0;
   //this->y0[1] = 0;
   //std::cout << "y0\n" << y0 << "\ny0this\n" << this->y0 << "\n";
@@ -793,20 +793,21 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
 
 void DFO_Model::findWorstPointInInterpolationSetByLU(Eigen::VectorXd &dNew, int &indexOfWorstPoint) {
   /// Trying LU pivoting instead.
+  std::cout << "\n\n\n\n\nNEW ITERATION\n";
   Eigen::MatrixXd copyY = Y;
   Eigen::MatrixXd A(m, m);
+  A.setZero();
   Eigen::VectorXi id(m);
   Eigen::MatrixXd changes = Eigen::MatrixXd::Zero(m, m);
-  Eigen::VectorXd y0_PU = copyY.col(bestPointIndex - 1);
+  Eigen::VectorXd y0_PU = copyY.col(0);
 
-  eigen_col(changes, Y.col(m - 1), m - 1);
-
+  // scaling and shifting the interpolation set to be within a ball of radius 1 centered at the origin.
   double scaling = 0;
   for (int i = 1; i <= m; ++i) {
     eigen_col(copyY, copyY.col(i - 1) - y0_PU, i - 1);
     id(i - 1) = i;
-    if (copyY.norm() > scaling) {
-      scaling = copyY.norm();
+    if (copyY.col(i-1).norm() > scaling) {
+      scaling = copyY.col(i-1).norm();
     }
 
   }
@@ -815,39 +816,44 @@ void DFO_Model::findWorstPointInInterpolationSetByLU(Eigen::VectorXd &dNew, int 
   }
 
   calculateAMatrix(A, copyY);
-  // Swap such that best point is at first row.
-  A.row(0).swap(A.row(bestPointIndex - 1));
-  changes.row(0).swap(changes.row(bestPointIndex - 1));
+  eigen_col(changes, A.col(m - 1), m - 1);
+  Eigen::VectorXd row1(m);
+  Eigen::VectorXd row2(m);
+  std::cout << "bestPointIndex = " << bestPointIndex << std::endl;
+  std::cout << "Y \n" << Y << std::endl;
+  std::cout << "fvals \n" << fvals.transpose() << "\n";
+  swapRows(A,changes,id,bestPointIndex,1);
+  // Used to store row and column
+  int r = -1;
+  int c = -1;
 
-  int tmp = id(0);
-  id(0) = bestPointIndex;
-  id(bestPointIndex - 1) = tmp;
+  pivotingLU(A, changes, id, r, c);
 
-  for (int i = 1; i <= m; ++i) {
-    int indexOfHighestPivot = 0;
-    A.col(i - 1).maxCoeff(&indexOfHighestPivot);
-    indexOfHighestPivot += 1;
-    if (indexOfHighestPivot != i && i != 1) {
-      A.row(i - 1).swap(A.row(indexOfHighestPivot - 1));
-      changes.row(i - 1).swap(changes.row(indexOfHighestPivot - 1));
-      int tmp = id(i - 1);
-      id(i - 1) = indexOfHighestPivot;
-      id(indexOfHighestPivot - 1) = tmp;
+
+  //std::cout << "A after\n" << A << "\n";
+  //std::cout << "changes\n" << changes << "\n";
+
+  if ( r == -1 && c == -1){
+    r = m;
+    c = m;
+  } else{
+    std::cout << "A bad pivot occured during the pivoting. Will redo to get the correct changes.\n";
+    calculateAMatrix(A, copyY);
+    changes.setZero();
+    eigen_col(changes, A.col(c - 1), c - 1);
+    for (int i = 1; i <= m; ++i) {
+      id(i - 1) = i;
     }
-    for (int j = i + 1; j <= m; ++j) {
-      int scale = A(i - 1, j - 1) / A(i - 1, i - 1);
-      eigen_block(A, A.col(j - 1) - scale * A.col(i - 1), 0, j - 1);
-      if (j == m) {
-        eigen_col(changes, -scale * A.col(i - 1), i - 1);
-      }
-
-    }
-
+    // Swap such that best point is at first row.
+    swapRows(A,changes,id,1, bestPointIndex);
+    pivotingLU(A,changes, id, r, c);
   }
-  if (A(m - 1, m - 1) >= 0.1) {
-    indexOfWorstPoint = -1; // Done
+
+  if (std::abs(A(r - 1, c - 1)) >= 0.01) {
+    indexOfWorstPoint = -1; // Done. The interpolation set is well-poised
   } else {
     Subproblem_LU mySubLu(settings_);
+    mySubLu.SetCoefficients(changes);
 
     vector<double> xsolMax;
     vector<double> fsolMax;
@@ -865,10 +871,93 @@ void DFO_Model::findWorstPointInInterpolationSetByLU(Eigen::VectorXd &dNew, int 
         optimum[i] = xsolMin[i];
       }
     }
-    indexOfWorstPoint = changes(m - 1);
+
+    indexOfWorstPoint = id(c - 1);
     dNew = optimum * scaling + y0_PU;
   }
 
+  std::cout << "\nDONE\n\n\n\n\n";
+
+}
+
+void DFO_Model::pivotingLU(Eigen::MatrixXd &A, Eigen::MatrixXd &changes, Eigen::VectorXi &id, int &r, int &c){
+  Eigen::VectorXd row1 = A.row(0);
+  Eigen::VectorXd row2 = A.row(bestPointIndex - 1);
+  //std::cout << "A at the begining\n" << A << "\n";
+
+  int colToStore = m;
+
+  if (c != -1){
+    colToStore = c;
+  }
+
+  for (int i = 1; i <= m; ++i) {
+    int indexOfHighestPivot = 0;
+    int indexOfLowestPivot = 0;
+    //Eigen // copy vector..
+    //std::cout << "A matrix, iteration: " << i << "\n" << A <<"\n";
+    A.col(i - 1).maxCoeff(&indexOfHighestPivot);
+    A.col(i - 1).minCoeff(&indexOfLowestPivot);
+    int index = indexOfLowestPivot +1;
+    if (std::abs(A(indexOfHighestPivot,i-1)) >= std::abs(A(indexOfLowestPivot,i-1))){
+      index = indexOfHighestPivot +1;
+    }
+
+    // don't swap  first row, if pivot is too small.
+    if (i != 1){ // && std::abs(A(index-1,i-1)) > 0.1) {
+      swapRows(A,changes,id,index,i);
+      //std::cout << "A\n" << A << "\n";
+    }
+    if (std::abs(A(i-1,i-1)) > 0.01) {
+      for (int j = i + 1; j <= m; ++j) {
+        double scale = A(i - 1, j - 1) / A(i - 1, i - 1);
+        eigen_block(A, A.col(j - 1) - scale * A.col(i - 1), 0, j - 1);
+        if (j == colToStore) {
+          eigen_col(changes, -scale * A.col(i - 1), i - 1);
+        }
+      }
+      //std::cout << "Should have zeros on (incl.) row: "<< i << "\t ";
+      //std::cout << "A\n" << A << "\n";
+
+    }
+    else{
+      if (i != m){
+        r = i; /// hvilke verdier skal det være her? alltid på diagonalen?
+        c = i;
+        //std::cout << "Magnitude of pivot is too small during pivoting. Need to find new point.\n";
+        //std::cout << "r = " << r << "\tc = " << c << "\n";
+      }
+
+      //std::cout << "A after\n" << A << "\n";
+      break;
+    }
+  }
+  //std::cout << "A after pivoting, (r,c) = " << r << ", " << c << "\n" << A << "\n";
+
+}
+
+void DFO_Model::swapRows(Eigen::MatrixXd &A, Eigen::MatrixXd &changes, Eigen::VectorXi &id, int r1, int r2) {
+  if (r1 != r2){
+    //std::cout << "swapping rows: " << r1 << " and " << r2 << std::endl;
+    Eigen::VectorXd row1(m);
+    Eigen::VectorXd row2(m);
+    // Swap such that best point is at first row.
+    row1 = A.row(r1-1);
+    row2 = A.row(r2 - 1);
+    eigen_row(A,row1,r2 - 1);
+    eigen_row(A,row2, r1-1);
+
+    row1 = changes.row(r1-1);
+    row2 = changes.row(r2 - 1);
+    eigen_row(changes,row1,r2 - 1);
+    eigen_row(changes,row2, r1-1);
+
+    changes.row(r1-1).swap(changes.row(r2 - 1));
+
+    int tmp = id(r1-1);
+    id(r1-1) = r2;
+    id(r2 - 1) = tmp;
+  }
 }
 
 void DFO_Model::calculateAMatrix(Eigen::MatrixXd &A, Eigen::MatrixXd &Ycopy) {
@@ -1018,20 +1107,43 @@ int DFO_Model::findPointToReplaceWithNewOptimum(Eigen::VectorXd yNew) {
 
   int indexToBeReplaced = 1;
   double currentMax = -1;
-
+  std::cout << "Selecting point to be replaced by new optimum " << std::endl;
+  std::cout << "New optimum \n" << yNew << "\n";
+  std::cout << "BestPoint Index " << bestPointIndex << "\n";
+  std::cout << "Y\n" << Y << "\n";
   for (int i = 1; i <= m; ++i) {
     if (i == bestPointIndex) {
       continue;
     }
     double distance = (bestPoint - Y.col(i - 1)).norm();
     double distanceWeight = std::pow(distance, 2);
+    if (distance > 2*rho ){
+      distanceWeight += 100000000*distanceWeight;
+      /*
+      if (distanceWeight < 1){
+        distanceWeight += 10*distanceWeight;
+      }
+      else{
+        distanceWeight = std::pow(distance, 4);
+      }
+       */
+    }
     double lagval = std::abs((Hw)(i - 1));
     double value = distanceWeight * lagval;
+    std::cout << "distance: " << distance << "\t distanceweight: " << distanceWeight << "\t lagval: " << lagval <<"\t " << "value: " << value << "\n";
     if (value >= currentMax) {
       indexToBeReplaced = i;
       currentMax = value;
     }
   }
+
+  std::cout << "Point selected: "<< indexToBeReplaced << "\n";
+  /*
+  for (int i = 0; i < m; i++){
+    std::cout << "Lagrange polynomial : "<< i << "\n";
+    ComputeLagrangePolynomial(i+1, yNew);
+  }
+  */
   return indexToBeReplaced;
 }
 
@@ -1248,8 +1360,13 @@ double DFO_Model::ComputeLagrangePolynomial(int t, Eigen::VectorXd point) {
     double tmp = Z.row(k - 1) * S * (Z.row(t - 1)).transpose();
     hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
   }
-
-  double val = c + grad.transpose() * point + point.transpose() * hess * point;
+  /*
+  std::cout << "c = " << c << std::endl;
+  std::cout << "gradient = " << std::endl << grad << std::endl;
+  std::cout << "hessian = " << std::endl << hess << std::endl;
+  std::cout << "value is: " << c + grad.transpose() * point + point.transpose() * hess * point << "\n";
+  */
+   double val = c + grad.transpose() * point + point.transpose() * hess * point;
 
   return val;
 }
@@ -1294,7 +1411,7 @@ Eigen::VectorXd DFO_Model::GetInterpolationPointsSortedByDistanceFromBestPoint()
   for (int i = 0; i < m; ++i) {
     Eigen::VectorXd t(n + 1);
     for (int j = 0; j < n; ++j) {
-      t(j) = Y(j, i);
+      t(j) = Y(j, i)-Y(j,bestPointIndex-1);
     }
     t(n) = i + 1;
     tmp.push_back(t);
@@ -1471,6 +1588,7 @@ void DFO_Model::printParametersMatlabFriendlyGradientEnhanced() {
   enhancedModel.ComputeModel2(Y, derivatives, derivatives.col(0), fvals, y0, bestPoint, rho, r,0);
   enhancedModel.PrintParametersMatlabFriendly();
 }
+
 
 }
 }

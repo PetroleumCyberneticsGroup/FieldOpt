@@ -21,13 +21,13 @@ int SNOPTusrFG2_(integer *Status, integer *n, doublereal x[],
 //static double *gradient;
 //static double *hessian;
 //static double constant;
-static Eigen::VectorXd yb_rel;
-static Eigen::VectorXd y0;
+static Eigen::VectorXd yb_rel_LU;
+static Eigen::VectorXd y0_LU;
 static int normType;
 
-static Eigen::MatrixXd hessian;
-static Eigen::VectorXd gradient;
-static double constant;
+static Eigen::MatrixXd hessian_LU;
+static Eigen::VectorXd gradient_LU;
+static double constant_LU;
 
 //Subproblem_LU::Subproblem_LU(SNOPTHandler snoptHandler) {
 Subproblem_LU::Subproblem_LU(Settings::Optimizer *settings) {
@@ -88,9 +88,9 @@ void Subproblem_LU::setAndInitializeSNOPTParameters() {
 
 void Subproblem_LU::Solve(vector<double> &xsol, vector<double> &fsol, char *optimizationType, Eigen::VectorXd centerPoint, Eigen::VectorXd bestPointDisplacement) {
   y0_ = centerPoint;
-  y0 = y0_;
+  y0_LU = y0_;
   bestPointDisplacement_ = bestPointDisplacement;
-  yb_rel = bestPointDisplacement_;
+  yb_rel_LU = bestPointDisplacement_;
   // Set norm specific constraints
   if (normType_ == INFINITY_NORM){
     for (int i = 0; i < n_; ++i){
@@ -478,11 +478,12 @@ int SNOPTusrFG2_(integer *Status, integer *n, double x[],
   // If the values for the objective and/or the constraints are desired
   if (*needF > 0) {
     /// The objective function
-    F[0] = constant + gradient.transpose() * xvec + 0.5* xvec.transpose() * hessian * xvec;
+    //std::cout << "constant\n" << constant_LU << "\nGradient\n" << gradient_LU << "\nHessian\n" << hessian_LU << "\n";
+    F[0] = constant_LU + gradient_LU.transpose() * xvec + 0.5* xvec.transpose() * hessian_LU * xvec;
     if (m) {
       /// The constraints
       if (normType == Subproblem_LU::L2_NORM) {
-        F[1] = (xvec - yb_rel).norm();
+        F[1] = (xvec - yb_rel_LU).norm();
       }
     }
   }
@@ -491,7 +492,7 @@ int SNOPTusrFG2_(integer *Status, integer *n, double x[],
   if (*needG > 0) {
     /// The Derivatives of the objective function
     Eigen::VectorXd grad(*n);
-    grad = gradient + hessian*xvec;
+    grad = gradient_LU + hessian_LU*xvec;
     for (int i = 0; i < *n; ++i){
       G[i] = grad(i);
     }
@@ -500,7 +501,7 @@ int SNOPTusrFG2_(integer *Status, integer *n, double x[],
     if (m) {
       Eigen::VectorXd gradConstraint(*n);
       if (normType == Subproblem_LU::L2_NORM) {
-        gradConstraint = (xvec - yb_rel) / ((xvec - yb_rel).norm() + 0.000000000000001);
+        gradConstraint = (xvec - yb_rel_LU) / ((xvec - yb_rel_LU).norm() + 0.000000000000001);
         for (int i = 0; i < *n; ++i) {
           G[i + *n] = gradConstraint(i);
         }
@@ -528,23 +529,26 @@ int SNOPTusrFG2_(integer *Status, integer *n, double x[],
 
 
 void Subproblem_LU::setQuadraticModel(double c, Eigen::VectorXd g, Eigen::MatrixXd H) {
-  constant = c;
-  gradient = g;
-  hessian = H;
+  constant_LU = c;
+  gradient_LU = g;
+  hessian_LU = H;
 }
 
 void Subproblem_LU::setGradient(Eigen::VectorXd g) {
-  gradient = g;
+  gradient_LU = g;
 }
 
 void Subproblem_LU::setHessian(Eigen::MatrixXd H) {
-  hessian = H;
+  hessian_LU = H;
 }
 
 void Subproblem_LU::SetCoefficients(Eigen::MatrixXd changes){
-  constant = 0;
-  hessian.setZero();
-  gradient.setZero();
+  int m = changes.rows();
+  constant_LU = 0;
+  hessian_LU = Eigen::MatrixXd::Zero(n_,n_);
+  gradient_LU = Eigen::VectorXd::Zero(n_);
+  //hessian.setZero();
+  //gradient_LU.setZero();
   SetCenterPoint(Eigen::VectorXd::Zero(n_));
   normType_ = Subproblem_LU::INFINITY_NORM;
   normType = normType_;
@@ -556,8 +560,8 @@ void Subproblem_LU::SetCoefficients(Eigen::MatrixXd changes){
 
   /// Linear
   for (int i = 1; i <= n_; ++i) {
-    if (elem < m_) {
-      gradient(i - 1) = changes(m_ - 1, i);
+    if (elem < m) {
+      gradient_LU(i - 1) = changes(m - 1, i);
       elem++;
     } else {
       break;
@@ -565,8 +569,8 @@ void Subproblem_LU::SetCoefficients(Eigen::MatrixXd changes){
   }
   /// Squared
   for (int i = 1; i <= n_; ++i) {
-    if (elem < m_) {
-      hessian(i-1,i-1) = changes(m_ - 1, n_+i-1);
+    if (elem < m) {
+      hessian_LU(i-1,i-1) = changes(m - 1, n_+i-1);
       elem++;
     } else {
       break;
@@ -579,9 +583,9 @@ void Subproblem_LU::SetCoefficients(Eigen::MatrixXd changes){
   int t = 2;
   for (int k = 1; k <= n_ - 1; ++k) {
     for (int i = t; i <= n_ - 1; ++i) {
-        if (elem < m_) {
-          hessian(k-1,i-1) = changes(m_-1, elem);
-          hessian(i-1,k-1) = hessian(k-1,i-1); // transposed
+        if (elem < m) {
+          hessian_LU(k-1,i-1) = changes(m-1, elem);
+          hessian_LU(i-1,k-1) = hessian_LU(k-1,i-1); // transposed
         } else {
           break;
         }
@@ -593,31 +597,31 @@ void Subproblem_LU::SetCoefficients(Eigen::MatrixXd changes){
 
 
 void Subproblem_LU::setConstant(double c) {
-  constant = c;
+  constant_LU = c;
 }
 void Subproblem_LU::setNormType(int type) {
   normType = type;
   normType_ = type;
 }
 void Subproblem_LU::setCenterPointOfModel(Eigen::VectorXd cp) {
-  y0 = cp;
+  y0_LU = cp;
 }
 void Subproblem_LU::setCurrentBestPointDisplacement(Eigen::VectorXd db) {
   bestPointDisplacement_ = db;
-  yb_rel = bestPointDisplacement_;
+  yb_rel_LU = bestPointDisplacement_;
 }
 void Subproblem_LU::SetCenterPoint(Eigen::VectorXd cp) {
   y0_ = cp;
-  y0 = y0_;
+  y0_LU = y0_;
 }
 void Subproblem_LU::SetBestPointRelativeToCenterPoint(Eigen::VectorXd bp) {
 
 }
 void Subproblem_LU::printModel() {
   std::cout << "The model of the subproblem \n";
-  std::cout << "constant = \n" << constant << std::endl;
-  std::cout << "gradient = \n" << gradient << std::endl;
-  std::cout << "hessian = \n" << hessian << std::endl;
+  std::cout << "constant = \n" << constant_LU << std::endl;
+  std::cout << "gradient = \n" << gradient_LU << std::endl;
+  std::cout << "hessian = \n" << hessian_LU << std::endl;
   std::cout << "trust region radius = " << trustRegionRadius_ << std::endl;
 
 }

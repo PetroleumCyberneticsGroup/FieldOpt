@@ -36,8 +36,8 @@ Subproblem::Subproblem(Settings::Optimizer *settings) {
   xlowCopy_ = Eigen::VectorXd::Zero(n_); /// OBS should be set by the driver file....
   xuppCopy_ = Eigen::VectorXd::Zero(n_);
   loadSNOPT();
-  normType_ = Subproblem::L2_NORM;
-  normType = Subproblem::L2_NORM;
+  normType_ = Subproblem::INFINITY_NORM;
+  normType = Subproblem::INFINITY_NORM;
   setConstraintsAndDimensions(); // This one should set the iGfun/jGvar and so on.
   setAndInitializeSNOPTParameters();
 
@@ -92,8 +92,8 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
   // Set norm specific constraints
   if (normType_ == INFINITY_NORM){
     for (int i = 0; i < n_; ++i){
-      xlow_[i] = std::max(bestPointDisplacement[i] - trustRegionRadius_, xlowCopy_[i]);
-      xupp_[i] = std::min(bestPointDisplacement[i] + trustRegionRadius_, xuppCopy_[i]);
+      xlow_[i] = std::max(bestPointDisplacement_[i] - trustRegionRadius_, xlowCopy_[i] - y0_[i]);
+      xupp_[i] = std::min(bestPointDisplacement_[i] + trustRegionRadius_, xuppCopy_[i] - y0_[i]);
     }
   }
   else if (normType_ == L2_NORM){
@@ -112,6 +112,9 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
   setOptionsForSNOPT(snoptHandler);
 
   ResetSubproblem();
+  for (int i = 0; i < n_; i++) {
+    x_[i] = bestPointDisplacement_[i];
+  }
   passParametersToSNOPTHandler(snoptHandler);
   integer Cold = 0, Basis = 1, Warm = 2;
 

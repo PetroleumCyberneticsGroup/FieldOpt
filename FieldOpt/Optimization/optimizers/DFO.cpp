@@ -452,6 +452,7 @@ void DFO::iterate() {
     }
     std::cout << "\033[1;34;m " << " ---------- New iterate " << iterations_ << " ---------- " << "\033[0m"
               << std::endl;
+    std::cout << "\033[1;34;m " << "Fvals = \n" << "\033[0m" << *refFuncVals << "\n";
     std::cout << "\033[1;34;m " << "Y = \n" << "\033[0m" << *refY << "\n";
     if (iterations_ != 0 && iterations_ != 1 && iterations_ != 2) {
       std::cout << "\033[1;34;m " << "Ybest = \n" << "\033[0m" << DFO_model_.GetBestPoint() << "\n";
@@ -469,23 +470,23 @@ void DFO::iterate() {
     } else if (DFO_model_.isInitialInterpolationPointsFound() == false) {
       //std::cout << "function evaluations from _simulator_ \n" << function_evaluations << "\n";
       for (int i = 0; i < number_of_new_interpolation_points; ++i) {
-        //DFO_model_.SetFunctionValue(i + 1, function_evaluations[i]);
-        DFO_model_.SetFunctionValueAndDerivatives(i + 1, functionValsAndGrad.col(i));
+        DFO_model_.SetFunctionValue(i + 1, function_evaluations[i]);
+        //DFO_model_.SetFunctionValueAndDerivatives(i + 1, functionValsAndGrad.col(i));
       }
       //std::cout << "function values \n" << *refFuncVals << "\nend" << std::endl;
       new_points = DFO_model_.findLastSetOfInterpolationPoints();
     } else if (DFO_model_.isModelInitialized() == false) {
       if (iterations_ == 1) {
         for (int i = 0; i < number_of_new_interpolation_points; ++i) {
-          //DFO_model_.SetFunctionValue(i + 1, function_evaluations[i]);
-          DFO_model_.SetFunctionValueAndDerivatives(i + 1, functionValsAndGrad.col(i));
+          DFO_model_.SetFunctionValue(i + 1, function_evaluations[i]);
+          //DFO_model_.SetFunctionValueAndDerivatives(i + 1, functionValsAndGrad.col(i));
         }
       }
 
       if (number_of_new_interpolation_points != number_of_interpolation_points_) {
         for (int i = number_of_new_interpolation_points; i < number_of_interpolation_points_; ++i) {
-          //DFO_model_.SetFunctionValue(i + 1, function_evaluations[i - number_of_new_interpolation_points]);
-          DFO_model_.SetFunctionValueAndDerivatives(i+1, functionValsAndGrad.col(i - number_of_new_interpolation_points));
+          DFO_model_.SetFunctionValue(i + 1, function_evaluations[i - number_of_new_interpolation_points]);
+          //DFO_model_.SetFunctionValueAndDerivatives(i+1, functionValsAndGrad.col(i - number_of_new_interpolation_points));
         }
       }
       //std::cout << "function values \n" << *refFuncVals << "\nend" << std::endl;
@@ -523,7 +524,10 @@ void DFO::iterate() {
 
     if (last_action_ == MODEL_IMPROVEMENT_POINT_FOUND) {
       DFO_model_.update(new_point, function_evaluation, index_of_new_point, DFO_Model::INCLUDE_NEW_POINT);
+
       UpdateLastAction(MODEL_IMPROVEMENT_POINT_ADDED);
+      std::cout << "\033[1;34;m " << "Fvals = \n" << "\033[0m" << *refFuncVals << "\n";
+      std::cout << "\033[1;34;m " << "Y = \n" << "\033[0m" << *refY << "\n";
     }
 
     step1:
@@ -574,12 +578,11 @@ void DFO::iterate() {
           UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND);
         } else {
           DFO_model_.SetTrustRegionRadiusForSubproblem(r * DFO_model_.GetTrustRegionRadius());
-          //DFO_model_.findWorstPointInInterpolationSet(new_point, index_of_new_point); //Check if it is lambda-poised.
-          bool isPoisedExceptBestPoint =  DFO_model_.FindPointToIncreasePoisedness(new_point, index_of_new_point);
-          if (isPoisedExceptBestPoint){
-            UpdateLastAction(CRITICALITY_STEP_FINISHED);
-          }
-          else if (index_of_new_point != -1 || trust_region_radius_inc > u * gradient.norm()) {
+          DFO_model_.findWorstPointInInterpolationSet(new_point, index_of_new_point); //Check if it is lambda-poised.
+          //bool isPoisedExceptBestPoint =  DFO_model_.FindPointToIncreasePoisedness(new_point, index_of_new_point);
+          //DFO_model_.findWorstPointInInterpolationSetByLU(new_point, index_of_new_point);
+
+          if (index_of_new_point != -1 || trust_region_radius_inc > u * gradient.norm()) {
             criticality_step_iteration = 0;
 
             //DFO_model_.findWorstPointInInterpolationSet(new_point,index_of_new_point);
@@ -625,12 +628,10 @@ void DFO::iterate() {
       } else {
         DFO_model_.SetTrustRegionRadiusForSubproblem(r * DFO_model_.GetTrustRegionRadius());
         //DFO_model_.FindPointToIncreasePoisedness(new_point, index_of_new_point);
-        bool isPoisedExceptBestPoint =  DFO_model_.FindPointToIncreasePoisedness(new_point, index_of_new_point);
-        if (isPoisedExceptBestPoint){
-          UpdateLastAction(CRITICALITY_STEP_FINISHED);
-        }
-        //DFO_model_.findWorstPointInInterpolationSet(new_point, index_of_new_point); //Check if it is lambda-poised.
-        else if (index_of_new_point == -1) {
+        //bool isPoisedExceptBestPoint =  DFO_model_.FindPointToIncreasePoisedness(new_point, index_of_new_point);
+        //DFO_model_.findWorstPointInInterpolationSetByLU(new_point, index_of_new_point);
+        DFO_model_.findWorstPointInInterpolationSet(new_point, index_of_new_point); //Check if it is lambda-poised.
+        if (index_of_new_point == -1) {
           UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_FINISHED);
         } else {
           UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND);
@@ -673,6 +674,7 @@ void DFO::iterate() {
           DFO_model_.SetTrustRegionRadiusForSubproblem(r * trust_region_radius_tilde);
           //DFO_model_.findWorstPointInInterpolationSet(new_point, index_of_new_point);
           DFO_model_.FindPointToIncreasePoisedness(new_point, index_of_new_point);
+          //DFO_model_.findWorstPointInInterpolationSetByLU(new_point, index_of_new_point);
         } while ((index_of_new_point == -1) && (trust_region_radius_tilde > u * (norm_of_gradient)));
 
         if (index_of_new_point != -1) {
@@ -746,25 +748,32 @@ void DFO::iterate() {
         eigen_col(Ydelete, sd, j);
       }
       //std::cout << "Points sorted by distance \n" << Ydelete << std::endl;
+      std::cout << "fvals\n" << *refFuncVals << "\n";
+      std::cout << "Y\n" <<  *refY << "\n";
+      std::cout << "new point is:\n" << new_point << "\n";
 
       for (int i = 0; i < number_of_interpolation_points_; ++i) {
         int t = pointsSortedByDistanceFromOptimum[i];
         DFO_model_.SetTrustRegionRadiusForSubproblem(DFO_model_.GetTrustRegionRadius());
         new_point = DFO_model_.FindLocalOptimumOfAbsoluteLagrangePolynomial(t);
+        double poisedness = abs(DFO_model_.ComputeLagrangePolynomial(t, new_point));
+        std::cout << "poisedness for this point was: " << poisedness << "\n";
         if (
-            ((DFO_model_.GetPoint(t) - DFO_model_.GetBestPoint()).norm() > r * DFO_model_.GetTrustRegionRadius()) ||
-                (abs(DFO_model_.ComputeLagrangePolynomial(t, new_point)) > required_poisedness_)
+            ((DFO_model_.GetPoint(t) - DFO_model_.GetBestPoint()).norm() > r * DFO_model_.GetTrustRegionRadius())
+                || ( poisedness > required_poisedness_)
             ) {
 
           index_of_new_point = t;
           /// Get the function evaluation. The point should be replaced. OBS OBS
+
+          std::cout << "replacing: " << t << "\n";
           UpdateLastAction(MODEL_IMPROVEMENT_POINT_FOUND);
           rho = 0;
           break;
         }
       }
       if (rho != 0) {
-        std::cin.get();
+        //std::cin.get();
       }
     }
 
@@ -793,7 +802,7 @@ void DFO::iterate() {
           /// OBS OBS
           /// OBS OBS Find out why the radius doesn't decrease without this 0.9.
           /// Probably something wrong with the criticality stuff. Check. and check again.
-          trust_region_radius_inc =  0.9*DFO_model_.GetTrustRegionRadius();
+          trust_region_radius_inc =  1*DFO_model_.GetTrustRegionRadius();
         }
       }
       if (last_action_ == TRIAL_POINT_IS_NOT_NEW_OPTIMUM || last_action_ == NEW_POINT_INCLUDED) {
@@ -813,14 +822,14 @@ void DFO::iterate() {
 
     if (DFO_model_.isModelInitialized()){
       DFO_model_.printParametersMatlabFriendly();
-      DFO_model_.printParametersMatlabFriendlyGradientEnhanced();
+      //DFO_model_.printParametersMatlabFriendlyGradientEnhanced();
     }
 
     if (iterations_ == 0 || (iterations_ == 1 && DFO_model_.isModelInitialized() == false)) {
       /// Get the function evaluations for the first set of interpolation points.
       for (int i = 0; i < new_points.cols(); ++i) {
-        //function_evaluations[i] = sphere(new_points.col(i) + DFO_model_.getCenterPoint());
-        functionValsAndGrad.col(i) = matyasFunctionWithGradients1(new_points.col(i) + DFO_model_.getCenterPoint());
+        function_evaluations[i] = sphere(new_points.col(i) + DFO_model_.getCenterPoint());
+        //functionValsAndGrad.col(i) = matyasFunctionWithGradients1(new_points.col(i) + DFO_model_.getCenterPoint());
       }
     } else {
       if (index_of_new_point < 0) {
@@ -835,8 +844,8 @@ void DFO::iterate() {
         }
       }
       /// Get one new point.
-      //function_evaluation = sphere(new_point + DFO_model_.getCenterPoint());
-      functionValAndGrad = matyasFunctionWithGradients1(new_point + DFO_model_.getCenterPoint());
+      function_evaluation = sphere(new_point + DFO_model_.getCenterPoint());
+      //functionValAndGrad = matyasFunctionWithGradients1(new_point + DFO_model_.getCenterPoint());
       if (last_action_ == TRIAL_POINT_FOUND) {
         if (function_evaluation < DFO_model_.GetBestFunctionValueAllTime()) {
           cout << "\033[1;36;mThe new function evaluation is: \033[0m" << function_evaluation << endl << endl;

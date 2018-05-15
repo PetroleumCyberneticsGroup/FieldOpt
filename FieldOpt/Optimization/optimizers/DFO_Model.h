@@ -405,6 +405,10 @@ class DFO_Model {
 
   void SetTrustRegionRadiusForSubproblem(double radius);
 
+  void pivotingLU(Eigen::MatrixXd &A, Eigen::MatrixXd &changes, Eigen::VectorXi& id, int &r, int &c);
+
+  void swapRows(Eigen::MatrixXd &A, Eigen::MatrixXd &changes, Eigen::VectorXi& id, int r1, int r2);
+
   double GetFunctionValue(int t){
     return fvals[t-1];
   }
@@ -456,7 +460,9 @@ class DFO_Model {
   Eigen::VectorXd GetInterpolationPointsSortedByDistanceFromBestPoint();
 
   bool FindPointToReplaceWithPointOutsideScaledTrustRegion(int t,Eigen::VectorXd &dNew);
-
+  void wtf(Eigen::VectorXd &da){
+    return;
+  }
   bool FindPointToIncreasePoisedness(Eigen::VectorXd &dNew, int &t);
 
 };
