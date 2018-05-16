@@ -56,7 +56,7 @@ class Model
   enum ControlMode : int { BHPControl=21, RateControl=22, UNKNOWN_CONTROL=29 };
   enum InjectionType : int { WaterInjection=31, GasInjection=32 };
   enum WellDefinitionType : int { WellBlocks=41, WellSpline=42, PseudoContVertical2D=43 };
-  enum WellCompletionType : int { Perforation=61 };
+  enum WellCompletionType : int { Perforation=61, ICV=62, Packer=63, Tubing=64, Annulus=65 };
   enum WellState : int { WellOpen=71, WellShut=72 };
   enum PreferredPhase : int { Oil=81, Water=82, Gas=83, Liquid=84, UNKNOWN_PHASE=89 };
   enum Direction : int { X=91, Y=92, Z=93 };
@@ -69,8 +69,11 @@ class Model
     Well(){}
     struct Completion {
       Completion(){}
-      WellCompletionType type; //!< Which type of completion this is (Perforation/ICD)
-      double transmissibility_factor; //!< The transmissibility factor for this completion (used for perforations)
+      WellCompletionType type;              //!< Which type of completion this is (Perforation/ICD)
+      double transmissibility_factor = 0.0; //!< The transmissibility factor for this completion (used for perforations)
+      double valve_size;                    //!< Valve size for nozzle ICDs.
+      double diameter;                      //!< Diameter (for any completion in the segmented model)
+      double roughness;                     //!< Roughness (for any completion in the segmented model)
       bool is_variable = false;
       QString name;
     };
@@ -120,6 +123,12 @@ class Model
     bool is_variable_spline;                    //!< Whether the whole spline should be variable.
     PseudoContPosition pseudo_cont_position;    //!< Initial position when using pseudo-continous positioning variables.
     QList<ControlEntry> controls;               //!< List of well controls
+    bool use_segmented_model = false;           //!< Whether the segmented well model should be used.
+    Completion seg_tubing;                      //!< Tubing settings when the segmented well model is used.
+    Completion seg_annulus;                     //!< Annulus settings when the segmented well model is used.
+    Completion seg_auto_icd_params;             //!< Parameters to be used for automatically generated ICDs.
+    int seg_n_auto_icds = 0;                    //!< Number of ICDs to be automatically generated using seg_auto_icd_params.
+    int seg_n_auto_packers = 0;                 //!< Number of packers to be automatically generated using seg_auto_packer_params.
     std::string toString();
   };
 
@@ -137,6 +146,12 @@ class Model
   Well readSingleWell(QJsonObject json_well);
   void setImportedWellDefaults(QJsonObject json_model);
   void parseImportedWellOverrides(QJsonArray json_wells);
+
+  void parseSegmentation(QJsonObject json_seg, Well &well);
+  void parseSegmentTubing(const QJsonObject &json_seg, Well &well) const;
+  void parseSegmentAnnulus(const QJsonObject &json_seg, Well &well) const;
+  void parseSegmentPackers(const QJsonObject &json_seg, Well &well) const;
+  void parseSegmentICDs(const QJsonObject &json_seg, Well &well) const;
 
 
   bool controlTimeIsDeclared(int time) const;

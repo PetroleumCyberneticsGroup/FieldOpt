@@ -316,6 +316,11 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
     else if (QString::compare("Liquid", json_well["PreferredPhase"].toString()) == 0)
         well.preferred_phase = PreferredPhase::Liquid;
 
+    // Segmentation
+    if (json_well.contains("Segmentation")) {
+        parseSegmentation(json_well["Segmentation"].toObject(), well);
+    }
+
     return well;
 }
 
@@ -441,7 +446,80 @@ int Model::getClosestControlTime(int deck_time) {
     return control_times_[idx_of_min_element];
 }
 
+void Model::parseSegmentation(QJsonObject json_seg, Well &well) {
+    well.use_segmented_model = true;
+    parseSegmentTubing(json_seg, well);
+    parseSegmentAnnulus(json_seg, well);
+    parseSegmentPackers(json_seg, well);
+    parseSegmentICDs(json_seg, well);
+}
+void Model::parseSegmentTubing(const QJsonObject &json_seg, Model::Well &well) const {
+    if (json_seg.contains("Tubing")) {
+        try {
+            well.seg_tubing.diameter = json_seg["Tubing"].toObject()["Diameter"].toDouble();
+            well.seg_tubing.roughness = json_seg["Tubing"].toObject()["Roughness"].toDouble();
+        }
+        catch ( ... ) {
+            throw std::runtime_error("For Tubing, both Diameter and Roughness must be defined.");
+        }
+    }
+    else {
+        std::cout << "Tubing keyword not found in Segmentation. "
+            "Defaulting Diameter to 0.1 and Roughness to 1.52E-5" << std::endl;
+        well.seg_tubing.diameter = 0.1;
+        well.seg_tubing.roughness = 1.52E-5;
+    }
+}
 
+void Model::parseSegmentAnnulus(const QJsonObject &json_seg, Model::Well &well) const {
+    if (json_seg.contains("Annulus")) {
+        try {
+            well.seg_annulus.diameter = json_seg["Annulus"].toObject()["Diameter"].toDouble();
+            well.seg_annulus.roughness = json_seg["Annulus"].toObject()["Roughness"].toDouble();
+        }
+        catch ( ... ) {
+            throw std::runtime_error("For Annulus, both Diameter and Roughness must be defined.");
+        }
+    }
+    else {
+        std::cout << "Annulus keyword not found in Segmentation. "
+            "Defaulting Diameter to 0.04 and Roughness to 1.52E-5" << std::endl;
+        well.seg_annulus.diameter = 0.04;
+        well.seg_annulus.roughness = 1.52E-5;
+    }
+}
+
+void Model::parseSegmentPackers(const QJsonObject &json_seg, Model::Well &well) const {
+    if (json_seg.contains("AutoPackers")) {
+        try {
+            well.seg_n_auto_packers = json_seg["AutoPackers"].toObject()["Count"].toInt();
+        }
+        catch ( ... ) {
+            throw std::runtime_error("For AutoPackers, Count must be defined.");
+        }
+    }
+}
+
+void Model::parseSegmentICDs(const QJsonObject &json_seg, Model::Well &well) const {
+    if (json_seg.contains("AutoICDs")) {
+        try {
+            well.seg_n_auto_icds = json_seg["AutoICDs"].toObject()["Count"].toInt();
+            well.seg_auto_icd_params.diameter = json_seg["AutoICDs"].toObject()["Diameter"].toDouble();
+            well.seg_auto_icd_params.valve_size = json_seg["AutoICDs"].toObject()["ValveSize"].toDouble();
+            if (QString::compare(json_seg["AutoICDs"].toObject()["Type"].toString(), "Valve") == 0) {
+                well.seg_auto_icd_params.type = WellCompletionType::ICV;
+            }
+            else {
+                std::cout << "ICD type not recognized. Defaulting to Valve (ICV)" << std::endl;
+                well.seg_auto_icd_params.type = WellCompletionType::ICV;
+            }
+
+        }
+        catch ( ... ) {
+            throw std::runtime_error("For AutoICDs, Diameter, ValveSize, Type and Count must be defined.");
+        }
+    }
+}
 
 }
 
