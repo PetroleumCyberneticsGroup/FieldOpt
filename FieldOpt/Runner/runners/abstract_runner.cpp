@@ -82,6 +82,10 @@ void AbstractRunner::InitializeModel()
     if (settings_ == 0)
         throw std::runtime_error("The Settings must be initialized before the Model.");
 
+    if (is_ensemble_run_) {
+        settings_->paths().SetPath(Paths::GRID_FILE, ensemble_helper_.GetBaseRealization().grid());
+    }
+
     model_ = new Model::Model(*settings_, logger_);
 }
 

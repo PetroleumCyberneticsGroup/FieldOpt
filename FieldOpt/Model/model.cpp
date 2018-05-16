@@ -24,7 +24,7 @@ namespace Model {
 
 Model::Model(Settings::Settings settings, Logger *logger)
 {
-    if (!settings.paths().IsSet(Paths::ENSEMBLE_FILE)) {
+    if (settings.paths().IsSet(Paths::GRID_FILE)) {
         grid_ = new Reservoir::Grid::ECLGrid(settings.paths().GetPath(Paths::GRID_FILE));
     }
     else {
