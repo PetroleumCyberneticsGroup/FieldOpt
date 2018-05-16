@@ -19,6 +19,8 @@
 
 #include "trajectory.h"
 #include "Model/wells/well_exceptions.h"
+#include <cmath>
+#include <algorithm>
 #include <iostream>
 
 namespace Model {
@@ -38,7 +40,12 @@ Trajectory::Trajectory(Settings::Model::Well well_settings,
         calculateDirectionOfPenetration();
     }
     else if (well_settings.definition_type == Settings::Model::WellDefinitionType::WellSpline) {
+        if (well_settings.convert_well_blocks_to_spline) {
+            convertWellBlocksToWellSpline(well_settings, grid);
+        }
+        std::cout << "initializing spline " << std::endl;
         well_spline_ = new WellSpline(well_settings, variable_container, grid);
+        std::cout << "initializing blocks " << std::endl;
         well_blocks_ = well_spline_->GetWellBlocks();
         calculateDirectionOfPenetration();
     }
@@ -144,6 +151,38 @@ void Trajectory::calculateDirectionOfPenetration()
 }
 Settings::Model::WellDefinitionType Trajectory::GetDefinitionType() {
     return definition_type_;
+}
+void Trajectory::convertWellBlocksToWellSpline(Settings::Model::Well &well_settings, Reservoir::Grid::Grid *grid) {
+    std::cout << "Converting well " << well_settings.name.toStdString() << " to spline." << std::endl;
+    QList<Settings::Model::Well::SplinePoint> points;
+    for (int p = 0; p < well_settings.n_spline_points; ++p) {
+        int srndg_block_idx = std::min(
+            well_settings.well_blocks.size() - 1,
+            int(p * std::ceil(well_settings.well_blocks.size() / (well_settings.n_spline_points-1)))
+        );
+        Settings::Model::Well::WellBlock srndg_block = well_settings.well_blocks[srndg_block_idx];
+        Reservoir::Grid::Cell srndg_cell = grid->GetCell(srndg_block.i, srndg_block.j, srndg_block.k);
+
+        Settings::Model::Well::SplinePoint new_point;
+        new_point.name = "SplinePoint#" + well_settings.name + "#P" + QString::number(p+1);
+        new_point.x = srndg_cell.center().x();
+        new_point.y = srndg_cell.center().y();
+        new_point.z = srndg_cell.center().z();
+
+        if (well_settings.is_variable_spline) {
+            new_point.is_variable = true;
+        }
+        else {
+            new_point.is_variable = false;
+        }
+
+        points.push_back(new_point);
+    }
+
+    points.first().name = "SplinePoint#" + well_settings.name + "#heel";
+    points.last().name = "SplinePoint#" + well_settings.name + "#toe";
+    well_settings.spline_points = points;
+    std::cout << "Done Converting well " << well_settings.name.toStdString() << " to spline." << std::endl;
 }
 
 }

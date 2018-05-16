@@ -72,6 +72,17 @@ class Trajectory
 
   void calculateDirectionOfPenetration(); // Calculate direction of penetration for all well blocks
 
+  /*!
+   * Convert the list of well blocks in the well settings object to a well spline, with the
+   * number of spline points specified in the settings object (defaulting to 2).
+   *
+   * The spline points will be selected naively. E.g. for three spline points:
+   * the heel point will be the center of the first well block in the list;
+   * the center point will be the center of the middle well block in the list ( list[size/2] )
+   * and the toe point the center of the last well block;
+   */
+  void convertWellBlocksToWellSpline(Settings::Model::Well &well_settings, Reservoir::Grid::Grid *grid);
+
   bool is_2d_; //!< Indicates if the well should only be able to vary in the x-y plane (z variables will not be created).
 
 };
