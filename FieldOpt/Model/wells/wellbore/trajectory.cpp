@@ -43,9 +43,7 @@ Trajectory::Trajectory(Settings::Model::Well well_settings,
         if (well_settings.convert_well_blocks_to_spline) {
             convertWellBlocksToWellSpline(well_settings, grid);
         }
-        std::cout << "initializing spline " << std::endl;
         well_spline_ = new WellSpline(well_settings, variable_container, grid);
-        std::cout << "initializing blocks " << std::endl;
         well_blocks_ = well_spline_->GetWellBlocks();
         calculateDirectionOfPenetration();
     }
@@ -81,7 +79,9 @@ void Trajectory::UpdateWellBlocks()
 {
     // \todo This is the source of a memory leak: old well blocks are not deleted. Fix it.
     if (well_spline_ != 0) {
-        well_blocks_ = well_spline_->GetWellBlocks();
+        if (well_spline_->HasGridChanged() || well_spline_->HasSplineChanged()) {
+            well_blocks_ = well_spline_->GetWellBlocks();
+        }
     }
     else if (pseudo_cont_vert_ != 0) {
         well_blocks_ = new QList<WellBlock *>();
