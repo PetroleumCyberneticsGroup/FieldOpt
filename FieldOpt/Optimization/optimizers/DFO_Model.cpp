@@ -3,7 +3,8 @@ namespace Optimization {
 namespace Optimizers {
 
 bool DFO_Model::cmp(Eigen::VectorXd a, Eigen::VectorXd b) {
-  return ((a.topRows(a.rows() - 1)).norm() > (b.topRows(b.rows() - 1)).norm());
+  return (norm(a.topRows(a.rows() - 1))) > (norm(b.topRows(b.rows() - 1)));
+  //return ((a.topRows(a.rows() - 1)).norm() > (b.topRows(b.rows() - 1)).norm());
 }
 
 bool DFO_Model::isApproxZero(double value, double zeroLimit) {
@@ -322,6 +323,7 @@ DFO_Model::DFO_Model(unsigned int m,
                      QList<double> weights_derivatives,
                      Settings::Optimizer *settings)
     : subproblem(settings), enhancedModel(n,m,ng,weights_derivatives,weight_objective_minimum_change) {
+  //this->normType = 0;
   this->m = m;
   this->n = n;
   //this->y0 = y0;
@@ -464,6 +466,27 @@ void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, Upd
     if (fvalNew < bestPointAllTimeFunctionValue) {
       bestPointAllTimeFunctionValue = fvalNew;
       bestPointAllTime = yNew;
+      printf("\x1b[33mNEW BEST POINT IS FOUND! (ALL TIME): \x1b[0m");
+      std::cout << fvalNew << "\n";
+      //std::cout << "NEW BEST POINT IS FOUND! (ALL TIME)" << std::endl;
+    }
+  }
+
+  if (updateReason == IMPROVE_POISEDNESS) {
+    if (fvalNew < bestPointAllTimeFunctionValue) {
+      bestPointAllTimeFunctionValue = fvalNew;
+      bestPointAllTime = yNew;
+      std::cout << "\033[1;36;mOBS OBS OBS, improving poisedness: \033[0m" << std::endl;
+      printf("\x1b[33mNEW BEST POINT IS FOUND! (ALL TIME): \x1b[0m");
+      std::cout << fvalNew << "\n";
+      //std::cout << "NEW BEST POINT IS FOUND! (ALL TIME)" << std::endl;
+    }
+  }
+  if (updateReason == INCLUDE_NEW_POINT) {
+    if (fvalNew < bestPointAllTimeFunctionValue) {
+      bestPointAllTimeFunctionValue = fvalNew;
+      bestPointAllTime = yNew;
+      std::cout << "\033[1;36;mOBS OBS OBS, include new point: \033[0m" << std::endl;
       printf("\x1b[33mNEW BEST POINT IS FOUND! (ALL TIME): \x1b[0m");
       std::cout << fvalNew << "\n";
       //std::cout << "NEW BEST POINT IS FOUND! (ALL TIME)" << std::endl;
@@ -769,7 +792,8 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
     vector<double> fsolMax;
     vector<double> xsolMin;
     vector<double> fsolMin;
-    //subproblem.SetTrustRegionRadius(GetTrustRegionRadius());
+
+    subproblem.SetTrustRegionRadius(GetTrustRegionRadius());
     subproblem.Solve(xsolMax, fsolMax, (char *) "Maximize", y0, bestPoint);
     subproblem.Solve(xsolMin, fsolMin, (char *) "Minimize", y0, bestPoint);
 
@@ -1329,7 +1353,8 @@ int DFO_Model::findPointFarthestAwayFromOptimum() {
   int t = -1;
   double maxDistance = -1;
   for (int i = 0; i < m; ++i) {
-    double dist = (Y.col(i) - bestPoint).norm();
+    //double dist = (Y.col(i) - bestPoint).norm();
+    double dist = norm(Y.col(i) - bestPoint);
     if (dist > maxDistance) {
       t = i + 1;
       maxDistance = dist;
@@ -1342,7 +1367,9 @@ double DFO_Model::findLargestDistanceBetweenPointsAndOptimum() {
   int t = -1;
   double maxDistance = -1;
   for (int i = 0; i < m; ++i) {
-    double dist = (Y.col(i) - bestPoint).norm();
+    //double dist = (Y.col(i) - bestPoint).norm();
+    double dist = norm(Y.col(i) - bestPoint);
+
     if (dist > maxDistance) {
       t = i + 1;
       maxDistance = dist;
@@ -1427,7 +1454,7 @@ Eigen::VectorXd DFO_Model::GetInterpolationPointsSortedByDistanceFromBestPoint()
 bool DFO_Model::FindPointToReplaceWithPointOutsideScaledTrustRegion(int t, Eigen::VectorXd &dNew) {
   subproblem.SetTrustRegionRadius(rho);
   dNew = FindLocalOptimumOfAbsoluteLagrangePolynomial(t);
-  if (ComputeLagrangePolynomial(t, dNew) > lambda) {
+  if (std::abs(ComputeLagrangePolynomial(t, dNew)) > lambda) {
     return true;
   }
   return false;
@@ -1588,7 +1615,63 @@ void DFO_Model::printParametersMatlabFriendlyGradientEnhanced() {
   enhancedModel.ComputeModel2(Y, derivatives, derivatives.col(0), fvals, y0, bestPoint, rho, r,0);
   enhancedModel.PrintParametersMatlabFriendly();
 }
+int DFO_Model::isPointAcceptable(Eigen::VectorXd point) {
+  // Create the w vector
+  Eigen::VectorXd w(n + m + 1);
+  for (int i = 1; i <= m; ++i) {
+    w(i - 1) = 0.5 * std::pow((Y.col(i - 1)).transpose() * (point), 2);
+  }
+  //w.tail(n) = yNew;
+  eigen_tail(w, point, n);
+  w(m) = 1;
 
+  Eigen::VectorXd Hw = Eigen::VectorXd::Zero(m + n + 1);
+
+  //Hw.head(m) = Z * S * (Z.transpose()) * (w.head(m)) + Xi.transpose() * (w.tail(n + 1));
+  eigen_head(Hw, Z * S * (Z.transpose()) * (w.head(m)) + Xi.transpose() * (w.tail(n + 1)), m);
+  //Hw.tail(n + 1) = Xi * w.head(m) + Upsilon * w.tail(n + 1);
+  eigen_tail(Hw, Xi * w.head(m) + Upsilon * w.tail(n + 1), n + 1);
+
+
+  int indexToBeReplaced = -1;
+  double currentMax = -1;
+  for (int j = 1; j <= m; ++j){
+    if (j == bestPointIndex) {
+      continue;
+    }
+    double lagval = std::abs((Hw)(j - 1));
+    if (lagval > 1 || norm(point-bestPoint) > 2*rho){
+      // do the maximization thing.
+      double distance = (bestPoint - Y.col(j - 1)).norm();
+      double distanceWeight = std::pow(distance, 2);
+      if (distance > 2*rho ){
+        distanceWeight += 100000000*distanceWeight;
+      }
+        double value = distanceWeight * lagval;
+        //std::cout << "distance: " << distance << "\t distanceweight: " << distanceWeight << "\t lagval: " << lagval <<"\t " << "value: " << value << "\n";
+        if (value >= currentMax) {
+          indexToBeReplaced = j;
+          currentMax = value;
+        }
+      }
+    }
+  return indexToBeReplaced;
+}
+
+double DFO_Model::DistanceFromOptimum(Eigen::VectorXd point){
+
+
+}
+double DFO_Model::norm(Eigen::VectorXd a) {
+  // infinity = 0;
+  // l2 = 2
+  if (normType == 0){
+    return (a).lpNorm<Infinity>();
+  }
+  else if (normType == 2){
+    return (a).norm();
+  }
+}
 
 }
 }

@@ -31,6 +31,7 @@ class DFO_Model {
  private:
 
 
+  static int const normType = 0;
 
 
   Settings::Optimizer *settings_;
@@ -437,6 +438,17 @@ class DFO_Model {
   Eigen::VectorXd GetGradient(){
     return gradient;
   }
+  Eigen::VectorXd GetGradientAtPoint(Eigen::VectorXd point){
+    Eigen::MatrixXd Hessian(n, n);
+    Hessian = Gamma;
+    for (int i = 1; i <= m; ++i) {
+      Hessian += gammas(i - 1) * Y.col(i - 1) * (Y.col(i - 1)).transpose();
+    }
+    Eigen::VectorXd grad(n);
+    grad = gradient;
+    grad += Hessian*point;
+    return grad;
+  }
   Eigen::VectorXd GetPoint(int t){
     return Y.col(t-1);
   }
@@ -464,6 +476,12 @@ class DFO_Model {
     return;
   }
   bool FindPointToIncreasePoisedness(Eigen::VectorXd &dNew, int &t);
+
+  int isPointAcceptable(Eigen::VectorXd point);
+
+  double DistanceFromOptimum(Eigen::VectorXd point);
+
+  static double norm(Eigen::VectorXd a);
 
 };
 }
