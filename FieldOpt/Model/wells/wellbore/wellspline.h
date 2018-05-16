@@ -57,12 +57,19 @@ class WellSpline
     Eigen::Vector3d ToEigenVector() const;
   };
 
+  bool HasGridChanged() const;
+  bool HasSplineChanged() const;
+
  private:
   Reservoir::Grid::Grid *grid_;
   Settings::Model::Well well_settings_;
   int seconds_spent_in_compute_wellblocks_; //!< Number of seconds spent in the ComputeWellBlocks() method.
+  bool is_variable_;
 
   QList<SplinePoint *> spline_points_;
+
+  std::string last_computed_grid_; //!< Contains the path to the last grid used by WIC.
+  std::vector<Eigen::Vector3d> last_computed_spline_; //!< Contains the last spline points used by WIC. Used to determine if the spline has changed.
 
   /*!
    * \brief getWellBlock Convert the BlockData returned by the WIC to a WellBlock with a Perforation.
@@ -72,6 +79,9 @@ class WellSpline
    * \return
    */
   WellBlock *getWellBlock(Reservoir::WellIndexCalculation::IntersectedCell block_data);
+
+  std::vector<Eigen::Vector3d> create_spline_point_vector() const;
+
 };
 
 }

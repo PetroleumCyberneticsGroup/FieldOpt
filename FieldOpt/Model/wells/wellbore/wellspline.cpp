@@ -23,6 +23,7 @@
 #include <wells/well_exceptions.h>
 #include <QtCore/QDateTime>
 #include <Utilities/time.hpp>
+#include <boost/algorithm/string.hpp>
 
 namespace Model {
 namespace Wells {
@@ -35,6 +36,7 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
 {
     grid_ = grid;
     well_settings_ = well_settings;
+    is_variable_ = false;
 
     for (auto point : well_settings.spline_points) {
         SplinePoint *pt = new SplinePoint();
@@ -45,6 +47,7 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
         pt->y->setName(point.name + "#y");
         pt->z->setName(point.name + "#z");
         if (point.is_variable) {
+            is_variable_ = true;
             variable_container->AddVariable(pt->x);
             variable_container->AddVariable(pt->y);
             variable_container->AddVariable(pt->z);
@@ -52,11 +55,18 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
         spline_points_.push_back(pt);
     }
     seconds_spent_in_compute_wellblocks_ = 0;
+
+    last_computed_grid_ = "";
+    last_computed_spline_ = std::vector<Eigen::Vector3d>();
 }
 
 QList<WellBlock *> *WellSpline::GetWellBlocks()
 {
     assert(spline_points_.size() >= 2);
+    assert(grid_ != 0);
+
+    last_computed_grid_ = grid_->GetGridFilePath();
+    last_computed_spline_ = create_spline_point_vector();
 
     vector<WellDefinition> welldefs;
     welldefs.push_back(WellDefinition());
@@ -79,11 +89,14 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
 
     QList<WellBlock *> *blocks = new QList<WellBlock *>();
     for (int i = 0; i < block_data.size(); ++i) {
-        blocks->append(getWellBlock(block_data[i]));
+        if (block_data[i].cell_well_index_matrix() > 0.01) { // Ignoring well blocks with very low well index.
+            blocks->append(getWellBlock(block_data[i]));
+        }
     }
     if (blocks->size() == 0) {
         throw WellBlocksNotDefined("WIC could not compute.");
     }
+    std::cout << "Done computing WIs after " << seconds_spent_in_compute_wellblocks_ << " seconds." << std::endl;
     return blocks;
 }
 
@@ -94,6 +107,33 @@ WellBlock *WellSpline::getWellBlock(Reservoir::WellIndexCalculation::Intersected
     comp->setTransmissibility_factor(block_data.cell_well_index_matrix());
     wb->AddCompletion(comp);
     return wb;
+}
+std::vector<Eigen::Vector3d> WellSpline::create_spline_point_vector() const {
+    std::vector<Eigen::Vector3d> spline_points;
+    for (auto point : spline_points_) {
+        spline_points.push_back(point->ToEigenVector());
+    }
+    return spline_points;
+}
+bool WellSpline::HasGridChanged() const {
+    return last_computed_grid_.size() == 0 || !boost::equals(last_computed_grid_, grid_->GetGridFilePath());
+}
+bool WellSpline::HasSplineChanged() const {
+    if (last_computed_spline_.size() == 0) {
+        return true;
+    }
+
+    std::vector<Eigen::Vector3d> new_spline_points;
+    for (auto point : spline_points_) {
+        new_spline_points.push_back(point->ToEigenVector());
+    }
+    assert(new_spline_points.size() == last_computed_spline_.size());
+
+    double point_difference_sum = 0;
+    for (int i = 0; i < last_computed_spline_.size(); ++i) {
+        point_difference_sum += std::abs((last_computed_spline_[i] - new_spline_points[i]).norm());
+    }
+    return point_difference_sum < 1e-7;
 }
 
 Eigen::Vector3d WellSpline::SplinePoint::ToEigenVector() const {
