@@ -131,6 +131,8 @@ class Grid
    */
   virtual Cell GetSmallestCell() = 0;
 
+  std::string GetGridFilePath() const;
+
  protected:
   GridSourceType type_;
   std::string file_path_;
