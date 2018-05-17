@@ -328,9 +328,9 @@ DFO_Model::DFO_Model(unsigned int m,
   this->n = n;
   //this->y0 = y0;
   this->y0 = Eigen::VectorXd::Zero(n);
-  this->y0 << 1,2;
-  //this->y0[0] = 0;
-  //this->y0[1] = 0;
+  //this->y0 << 1,2;
+  this->y0[0] = 1;
+  this->y0[1] = 2;
   //std::cout << "y0\n" << y0 << "\ny0this\n" << this->y0 << "\n";
   //this->y0.setZero();
   this->rho = rhoBeg;
@@ -1451,6 +1451,7 @@ Eigen::VectorXd DFO_Model::GetInterpolationPointsSortedByDistanceFromBestPoint()
   }
   return indicesSortedByDescendingNorm;
 }
+
 bool DFO_Model::FindPointToReplaceWithPointOutsideScaledTrustRegion(int t, Eigen::VectorXd &dNew) {
   subproblem.SetTrustRegionRadius(rho);
   dNew = FindLocalOptimumOfAbsoluteLagrangePolynomial(t);
@@ -1608,6 +1609,7 @@ bool DFO_Model::FindPointToIncreasePoisedness(Eigen::VectorXd &dNew, int &t) {
   }
   return false;
 }
+
 void DFO_Model::printParametersMatlabFriendlyGradientEnhanced() {
   std::cout << "y0 in dfo model \n" << y0 << "\n";
   enhancedModel.ComputeModel(Y, derivatives, derivatives.col(0), fvals, y0, bestPoint, rho, r,0);
@@ -1671,6 +1673,80 @@ double DFO_Model::norm(Eigen::VectorXd a) {
   else if (normType == 2){
     return (a).norm();
   }
+}
+bool DFO_Model::FindReplacementForPointsOutsideRadius(double radius, Eigen::MatrixXd &newPoints, Eigen::VectorXi& newIndices) {
+  Eigen::DiagonalMatrix<double, Eigen::Dynamic> copyS = S;
+  Eigen::MatrixXd copyZ = Z;
+  Eigen::MatrixXd copyUpsilon = Upsilon;
+  Eigen::MatrixXd copyXi = Xi;
+  Eigen::MatrixXd copyY = Y;
+
+
+  /// Find points outside r*radius
+  Eigen::VectorXd sortedPoints = GetInterpolationPointsSortedByDistanceFromBestPoint();
+  for (int j = 0; j < sortedPoints.rows(); ++j){
+    if (norm(Y.col(sortedPoints[j]-1) - bestPoint) < radius){
+      sortedPoints.conservativeResize(j);
+      break;
+    }
+  }
+  if (sortedPoints.rows() <= 0){
+    return false;
+  }
+  //newIndices = Eigen::VectorXi(sortedPoints.rows());
+  newIndices.resize(sortedPoints.rows());
+  for (int i = 0; i < sortedPoints.rows(); ++i){
+    newIndices[i] = -1;
+  }
+  newPoints.resize(n, sortedPoints.rows());
+  newPoints.setZero();
+  subproblem.SetTrustRegionRadius(radius*0.5);
+  Eigen::VectorXd dNew(n);
+  /// Find replacement points
+  int addedPoints = 0;
+  int j = 0;
+  while(j < sortedPoints.rows()){
+    dNew = FindLocalOptimumOfAbsoluteLagrangePolynomial(sortedPoints[j]);
+    if (std::abs(ComputeLagrangePolynomial(sortedPoints[j], dNew)) > 1) {
+      newIndices[addedPoints] = sortedPoints[j];
+      newPoints.col(addedPoints) = dNew;
+      //do the update
+      updateInverseKKTMatrix(dNew,sortedPoints[j]);
+      eigen_col(Y, dNew, sortedPoints[j] - 1);
+      addedPoints++;
+      j++;
+    }
+    else{
+      //Swap order of 2 points and hope for the best...
+      if (addedPoints < sortedPoints.rows()){
+        int tmp = sortedPoints[addedPoints+1];
+        sortedPoints[addedPoints+1] = sortedPoints[addedPoints];
+        sortedPoints[addedPoints] = tmp;
+      } else{
+        std::cout << "not enough points for swapping.\n";
+        std::cin.get();
+      }
+    }
+  }
+
+
+  /// reset!!
+  Y = copyY;
+  Xi = copyXi;
+  Upsilon = copyUpsilon;
+  S = copyS;
+  Z = copyZ;
+  return true;
+}
+int DFO_Model::GetNumberOfPointsOutsideRadius(double radius) {
+  /// Number of points outside radius
+  int number = 0;
+  for (int j = 1; j <= m; ++j){
+    if (norm(Y.col(j-1) - bestPoint) > radius){
+      number++;
+    }
+  }
+  return number;
 }
 
 }

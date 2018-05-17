@@ -410,6 +410,8 @@ class DFO_Model {
 
   void swapRows(Eigen::MatrixXd &A, Eigen::MatrixXd &changes, Eigen::VectorXi& id, int r1, int r2);
 
+  bool FindReplacementForPointsOutsideRadius(double radius, Eigen::MatrixXd &newPoints, Eigen::VectorXi& newIndices);
+
   double GetFunctionValue(int t){
     return fvals[t-1];
   }
@@ -480,6 +482,8 @@ class DFO_Model {
   int isPointAcceptable(Eigen::VectorXd point);
 
   double DistanceFromOptimum(Eigen::VectorXd point);
+
+  int GetNumberOfPointsOutsideRadius(double radius);
 
   static double norm(Eigen::VectorXd a);
 
