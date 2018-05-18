@@ -69,12 +69,16 @@ class Model
     Well(){}
     struct Completion {
       Completion(){}
-      WellCompletionType type;              //!< Which type of completion this is (Perforation/ICD)
-      double transmissibility_factor = 0.0; //!< The transmissibility factor for this completion (used for perforations)
-      double valve_size;                    //!< Valve size for nozzle ICDs.
-      double diameter;                      //!< Diameter (for any completion in the segmented model)
-      double roughness;                     //!< Roughness (for any completion in the segmented model)
-      bool is_variable = false;
+      WellCompletionType type;               //!< Which type of completion this is (Perforation/ICD)
+      double transmissibility_factor =  0.0; //!< The transmissibility factor for this completion (used for perforations)
+      double valve_size              = -1.0; //!< Valve size for nozzle ICDs.
+      double diameter                = -1.0; //!< Diameter (for any completion in the segmented model)
+      double roughness               = -1.0; //!< Roughness (for any completion in the segmented model)
+      double measured_depth          = -1.0; //!< Measured depth for the location of the completion.
+      double true_vertical_depth     = -1.0; //!< True vertical depth for the location of the completion.
+      bool is_variable               = false; //!< True if all viable properties are variable. Otherwise false.
+      bool variable_placement        = false; //!< Whether the placement of a comp. along the trajectory should be variable.
+      bool variable_strength         = false; //!< Whether the strength of a comp. (e.g. ICD/perforation) should be variable.
       QString name;
     };
     struct WellBlock {
@@ -127,6 +131,7 @@ class Model
     Completion seg_tubing;                      //!< Tubing settings when the segmented well model is used.
     Completion seg_annulus;                     //!< Annulus settings when the segmented well model is used.
     Completion seg_auto_icd_params;             //!< Parameters to be used for automatically generated ICDs.
+    Completion seg_auto_packer_params;          //!< Parameters to be used for automatically generated packers.
     int seg_n_auto_icds = 0;                    //!< Number of ICDs to be automatically generated using seg_auto_icd_params.
     int seg_n_auto_packers = 0;                 //!< Number of packers to be automatically generated using seg_auto_packer_params.
     std::string toString();

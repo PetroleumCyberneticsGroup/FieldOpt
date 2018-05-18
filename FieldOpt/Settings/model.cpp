@@ -491,32 +491,59 @@ void Model::parseSegmentAnnulus(const QJsonObject &json_seg, Model::Well &well) 
 
 void Model::parseSegmentPackers(const QJsonObject &json_seg, Model::Well &well) const {
     if (json_seg.contains("AutoPackers")) {
+        auto json_packer = json_seg["AutoPackers"].toObject();
         try {
-            well.seg_n_auto_packers = json_seg["AutoPackers"].toObject()["Count"].toInt();
+            well.seg_n_auto_packers = json_packer["Count"].toInt();
         }
         catch ( ... ) {
             throw std::runtime_error("For AutoPackers, Count must be defined.");
+        }
+        if ( (json_packer.contains("VariablePlacement") && json_packer["VariablePlacement"].toBool() == true) ||
+             (json_packer.contains("IsVariable") || json_packer["IsVariable"].toBool() == true) )
+        {
+            well.seg_auto_packer_params.variable_placement = true;
+            well.seg_auto_packer_params.is_variable = true;
         }
     }
 }
 
 void Model::parseSegmentICDs(const QJsonObject &json_seg, Model::Well &well) const {
     if (json_seg.contains("AutoICDs")) {
+        auto json_icd = json_seg["AutoICDs"].toObject();
         try {
-            well.seg_n_auto_icds = json_seg["AutoICDs"].toObject()["Count"].toInt();
-            well.seg_auto_icd_params.diameter = json_seg["AutoICDs"].toObject()["Diameter"].toDouble();
-            well.seg_auto_icd_params.valve_size = json_seg["AutoICDs"].toObject()["ValveSize"].toDouble();
-            if (QString::compare(json_seg["AutoICDs"].toObject()["Type"].toString(), "Valve") == 0) {
+            well.seg_n_auto_icds = json_icd["Count"].toInt();
+            well.seg_auto_icd_params.diameter = json_icd["Diameter"].toDouble();
+            well.seg_auto_icd_params.valve_size = json_icd["ValveSize"].toDouble();
+            if (QString::compare(json_icd["Type"].toString(), "Valve") == 0) {
                 well.seg_auto_icd_params.type = WellCompletionType::ICV;
             }
             else {
                 std::cout << "ICD type not recognized. Defaulting to Valve (ICV)" << std::endl;
                 well.seg_auto_icd_params.type = WellCompletionType::ICV;
             }
-
+            if (json_icd.contains("Roughness")) {
+                well.seg_auto_icd_params.roughness = json_icd["Roughness"].toDouble();
+            }
+            else {
+                std::cout << "Roughness keyword not found in AutoICDs. " "Defaulting Roughness  1.52E-5" << std::endl;
+                well.seg_annulus.roughness = 1.52E-5;
+            }
         }
         catch ( ... ) {
             throw std::runtime_error("For AutoICDs, Diameter, ValveSize, Type and Count must be defined.");
+        }
+        if (json_icd.contains("IsVariable")) {
+            throw std::runtime_error("The IsVariable keyword does not work for ICDs. "
+                                         "Use VariablePlacment and/or VariableStrength instead.")
+        }
+        if (json_icd.contains("VariablePlacement") && json_icd["VariablePlacement"].toBool() == true) {
+            well.seg_auto_icd_params.variable_placement = true;
+        }
+        if (json_icd.contains("VariableStrength") && json_icd["VariableStrength"].toBool() == true) {
+            well.seg_auto_icd_params.variable_strength = true;
+        }
+        if (well.seg_auto_icd_params.variable_strength && well.seg_auto_icd_params.variable_placement) {
+            well.seg_auto_icd_params.is_variable = true;
         }
     }
 }
