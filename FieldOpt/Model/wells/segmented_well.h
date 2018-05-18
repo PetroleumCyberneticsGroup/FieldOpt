@@ -1,7 +1,7 @@
 /******************************************************************************
  * This file is part of the FieldOpt project.
  *
- * Copyright (C) 2015-2018 Einar J.M. Baumann <einar.baumann@ntnu.no>
+ * Copyright (C) 2015-2015 Einar J.M. Baumann <einar.baumann@ntnu.no>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,40 +18,32 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef COMPLETION_H
-#define COMPLETION_H
+#ifndef FIELDOPT_SEGMENTED_WELL_H
+#define FIELDOPT_SEGMENTED_WELL_H
 
-#include "Settings/model.h"
+#include "well.h"
 
 namespace Model {
 namespace Wells {
-namespace Wellbore {
-namespace Completions {
 
 /*!
- * \brief The Completion class is the superclass for all completions, e.g. perforations and ICDs.
- *
- * This class specifies members common to all completions, e.g. a unique numerical ID for the completion.
- * Completion objects add themselves to their parent well block.
+ * The SegmentedWell class is an extension of the Well class, used
+ * to represent wells that are to be simulated using the segmented
+ * well model. The primary methods contained within this class are
+ * ones used to ease the generation and validation of valid
+ * segmentations for wells.
  */
-class Completion
-{
-public:
+class SegmentedWell : public Well {
+ public:
+  SegmentedWell(const Settings::Model &settings,
+                int well_number,
+                Properties::VariablePropertyContainer *variable_container,
+                Reservoir::Grid::Grid *grid);
 
-    enum CompletionType : int { Perforation=1001, ICV=1002, Packer=1003, Tubing=1004, Annulus=1005 };
-    CompletionType type() const { return type_; } //!< Get the type of completion, e.g. Perforation.
 
-protected:
-    Completion(::Settings::Model::Well::Completion completion_settings);
-    Completion(CompletionType type);
-
-private:
-    CompletionType type_;
 };
 
 }
 }
-}
-}
 
-#endif // COMPLETION_H
+#endif //FIELDOPT_SEGMENTED_WELL_H

@@ -19,7 +19,13 @@ add_library(model
 		properties/discrete_property.cpp
         properties/property.cpp
         model_synchronization_object.cpp
-		wells/wellbore/pseudo_cont_vert.cpp)
+		wells/wellbore/pseudo_cont_vert.cpp
+		wells/wellbore/completions/segmented_completion.cpp
+		wells/wellbore/completions/packer.cpp
+		wells/wellbore/completions/icd.cpp
+		wells/wellbore/completions/tubing.cpp
+		wells/wellbore/completions/annulus.cpp
+		wells/segmented_well.cpp)
 add_library(fieldopt::model ALIAS ${PROJECT_NAME})
 
 target_link_libraries (model
