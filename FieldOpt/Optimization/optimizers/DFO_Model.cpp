@@ -282,6 +282,12 @@ void DFO_Model::updateInverseKKTMatrix(Eigen::VectorXd yNew, unsigned int t) {
 
 void DFO_Model::updateQuadraticModel(Eigen::VectorXd yNew, double fvalNew, unsigned int t) {
   double modelValueYNew = evaluateQuadraticModel(yNew);
+  modelValueYNew = 0;
+
+  constant = 0;
+  gradient.setZero();
+  Gamma.setZero();
+  gammas.setZero();
 
   constant += (fvalNew - modelValueYNew) * Xi(0, t - 1);
   gradient += (fvalNew - modelValueYNew) * (Xi.col(t - 1).tail(n));
@@ -462,6 +468,8 @@ void DFO_Model::initializeModel() {
 }
 
 void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, UpdateReason updateReason) {
+  int oldBestPointIndex = bestPointIndex;
+  int oldBestFval = fvals[bestPointIndex - 1];
   if (updateReason == INCLUDE_NEW_OPTIMUM) {
     if (fvalNew < bestPointAllTimeFunctionValue) {
       bestPointAllTimeFunctionValue = fvalNew;
@@ -493,7 +501,7 @@ void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, Upd
     }
   }
 
-  if (fvalNew < fvals[bestPointIndex - 1]) {
+  if (fvalNew < fvals[bestPointIndex - 1] ) {
     bestPoint = yNew;
     bestPointIndex = t;
   }
@@ -507,8 +515,8 @@ void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, Upd
   eigen_col(Y, yNew, t - 1);
   fvals(t - 1) = fvalNew;
 
-  if (updateReason == IMPROVE_POISEDNESS || updateReason == INCLUDE_NEW_POINT) {
-    if (t == bestPointIndex && fvalNew > fvals[bestPointIndex - 1]) { // removing optimum :(
+  if ((updateReason == IMPROVE_POISEDNESS || updateReason == INCLUDE_NEW_POINT))  {
+    if (t == oldBestPointIndex && fvalNew > oldBestFval) { // removing optimum :(
       bestPointIndex = 1;
       for (int j = 2; j <= m; ++j) {
         if (fvals[j - 1] < fvals[bestPointIndex - 1]) {
@@ -1693,18 +1701,102 @@ bool DFO_Model::FindReplacementForPointsOutsideRadius(double radius, Eigen::Matr
   if (sortedPoints.rows() <= 0){
     return false;
   }
+
+
   //newIndices = Eigen::VectorXi(sortedPoints.rows());
   newIndices.resize(sortedPoints.rows());
   for (int i = 0; i < sortedPoints.rows(); ++i){
     newIndices[i] = -1;
   }
+
   newPoints.resize(n, sortedPoints.rows());
   newPoints.setZero();
   subproblem.SetTrustRegionRadius(radius*0.5);
   Eigen::VectorXd dNew(n);
+  int addedPoints = 0;
+  int j = 0;
+  for (int i = 0; i < sortedPoints.rows(); ++i){
+    dNew = FindLocalOptimumOfAbsoluteLagrangePolynomial(sortedPoints[i]);
+    std::cout << "Lagval = " << ComputeLagrangePolynomial(sortedPoints[i], dNew) << "\n";
+    if (std::abs(ComputeLagrangePolynomial(sortedPoints[i], dNew)) > 0.0001) {
+      newIndices[addedPoints] = sortedPoints[i];
+      newPoints.col(addedPoints) = dNew;
+      //do the update
+      updateInverseKKTMatrix(dNew,sortedPoints[i]);
+      eigen_col(Y, dNew, sortedPoints[i] - 1);
+      addedPoints++;
+      j++;
+    }
+  }
+  /*
   /// Find replacement points
   int addedPoints = 0;
   int j = 0;
+
+  for (int i = 0; i < sortedPoints.rows(); ++i){
+    dNew = FindLocalOptimumOfAbsoluteLagrangePolynomial(sortedPoints[i]);
+    std::cout << "Lagval = " << ComputeLagrangePolynomial(sortedPoints[i], dNew) << "\n";
+    if (std::abs(ComputeLagrangePolynomial(sortedPoints[i], dNew)) > 1) {
+      newIndices[addedPoints] = sortedPoints[i];
+      newPoints.col(addedPoints) = dNew;
+      //do the update
+      updateInverseKKTMatrix(dNew,sortedPoints[i]);
+      eigen_col(Y, dNew, sortedPoints[i] - 1);
+      addedPoints++;
+      j++;
+    }
+  }
+  //subproblem.SetTrustRegionRadius(radius);
+  //std::cout << "Best point index = " << bestPointIndex << "\n";
+   */
+  /*
+  for (int i = 1; i <= m; ++i){
+    dNew = FindLocalOptimumOfAbsoluteLagrangePolynomial(i);
+    std::cout << "Lagval = " << ComputeLagrangePolynomial(i, dNew) << "\n";
+
+  }
+   */
+/*
+  if (j == 0){
+    std::cout << "No points has |l(x)| > 1 :O :O :O\n";
+    int t = sortedPoints[0];
+    int absmax = 0;
+
+    // infinity norm...
+    for (int i = 1; i <= n; ++i){
+      if (std::abs(Y(i-1,t-1)) > absmax){
+        absmax = std::abs(Y(i-1,t-1));
+      }
+    }
+    if (absmax > radius*0.5){
+      dNew = dNew*(radius*0.5/absmax);
+      newIndices[0] = t;
+      newPoints.col(0) = dNew;
+      //do the update
+      updateInverseKKTMatrix(dNew,t);
+    }
+    if (sortedPoints.rows() > 1 ) {
+      t = sortedPoints[1];
+      absmax = 0;
+
+      // infinity norm...
+      for (int i = 1; i <= n; ++i) {
+        if (std::abs(Y(i - 1, t - 1)) > absmax) {
+          absmax = std::abs(Y(i - 1, t - 1));
+        }
+      }
+      if (absmax > radius * 0.5) {
+        dNew = dNew * (radius * 0.5 / absmax);
+        newIndices[1] = t;
+        newPoints.col(1) = dNew;
+        //do the update
+        updateInverseKKTMatrix(dNew, t);
+      }
+      //std::cin.get();
+    }
+  }
+  */
+  /*
   while(j < sortedPoints.rows()){
     dNew = FindLocalOptimumOfAbsoluteLagrangePolynomial(sortedPoints[j]);
     if (std::abs(ComputeLagrangePolynomial(sortedPoints[j], dNew)) > 1) {
@@ -1728,6 +1820,7 @@ bool DFO_Model::FindReplacementForPointsOutsideRadius(double radius, Eigen::Matr
       }
     }
   }
+   */
 
 
   /// reset!!
@@ -1741,7 +1834,9 @@ bool DFO_Model::FindReplacementForPointsOutsideRadius(double radius, Eigen::Matr
 int DFO_Model::GetNumberOfPointsOutsideRadius(double radius) {
   /// Number of points outside radius
   int number = 0;
+  std::cout << "radius " << radius << "\n";
   for (int j = 1; j <= m; ++j){
+    std::cout << "Point minus bestpoint: \n" << Y.col(j-1) - bestPoint<< "\nNorm: \t " << norm(Y.col(j-1) - bestPoint) << std::endl;
     if (norm(Y.col(j-1) - bestPoint) > radius){
       number++;
     }

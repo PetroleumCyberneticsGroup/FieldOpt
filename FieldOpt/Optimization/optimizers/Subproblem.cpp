@@ -95,6 +95,8 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
       xlow_[i] = std::max(bestPointDisplacement_[i] - trustRegionRadius_, xlowCopy_[i] - y0_[i]);
       xupp_[i] = std::min(bestPointDisplacement_[i] + trustRegionRadius_, xuppCopy_[i] - y0_[i]);
     }
+    //xlow_[1] = xlow_[1];
+    //xupp_[1] = xupp_[1];
   }
   else if (normType_ == L2_NORM){
     for (int i = 0; i < n_; ++i){
@@ -120,12 +122,12 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
 
   snoptHandler.solve(Cold, xsol, fsol);
   integer exitCode = snoptHandler.getExitCode();
-  /*
+
   if (exitCode == 32){
     cout << "The major iteration limit was reached, trying to increase it to improve on the result" << endl;
     ResetSubproblem();
     snoptHandler.setIntParameter("Major Iterations Limit", 10000);
-    snoptHandler.setRealParameter("Major step limit", 1);
+    snoptHandler.setRealParameter("Major step limit", 0.2);
     snoptHandler.solve(Cold, xsol, fsol);
   }
   exitCode = snoptHandler.getExitCode();
@@ -133,11 +135,11 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
     cout << "The major iteration limit or the iteration limit was reached, trying to increase it to improve on the result" << endl;
     ResetSubproblem();
     snoptHandler.setIntParameter("Major Iterations Limit", 12000);
-    snoptHandler.setRealParameter("Major step limit", 0.8);
+    snoptHandler.setRealParameter("Major step limit", 0.01);
     snoptHandler.setIntParameter("Iterations limit", 20000);
     snoptHandler.solve(Cold, xsol, fsol);
   }
-   */
+
 
 }
 
@@ -368,10 +370,10 @@ void Subproblem::setOptionsForSNOPT(SNOPTHandler &snoptHandler) {
   snoptHandler.setIntParameter("Major Iterations Limit", 1000);
 
   //target complementarity gap
-  //snoptHandler.setRealParameter("Major optimality tolerance", 0.0001);
+  //snoptHandler.setRealParameter("Major optimality tolerance", 0.000000000001);
 
   snoptHandler.setParameter("Major Print level  00000"); //  000001"
-  snoptHandler.setRealParameter("Major step limit", 0.2);
+  snoptHandler.setRealParameter("Major step limit", 0.2); //was 0.2
   //snoptHandler.setIntParameter("Minor iterations limit", 200); // 200
 
   //for satisfying the QP bounds
