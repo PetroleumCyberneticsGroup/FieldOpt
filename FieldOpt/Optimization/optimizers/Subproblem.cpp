@@ -134,14 +134,84 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
   if (exitCode == 32 || exitCode == 31){
     cout << "The major iteration limit or the iteration limit was reached, trying to increase it to improve on the result" << endl;
     ResetSubproblem();
+    for (int i = 0; i < n_; i++) {
+      x_[i] = xsol[i];
+    }
+    passParametersToSNOPTHandler(snoptHandler);
     snoptHandler.setIntParameter("Major Iterations Limit", 12000);
     snoptHandler.setRealParameter("Major step limit", 0.01);
     snoptHandler.setIntParameter("Iterations limit", 20000);
     snoptHandler.solve(Cold, xsol, fsol);
   }
 
+  if (exitCode != 1 && exitCode != 31&& exitCode != 32&& exitCode != 0&& exitCode != 3){
+    std::vector<double> copyX = xsol;
+    std::vector<double> copyFsol = fsol;
+
+    ResetSubproblem();
+    for (int i = 0; i < n_; i++) {
+      x_[i] = bestPointDisplacement_[i];
+    }
+    passParametersToSNOPTHandler(snoptHandler);
+    snoptHandler.solve(Cold, xsol, fsol);
+    if (optimizationType == (char *) "Maximize"){
+      if (fsol[0] < copyFsol[0]){
+        xsol=copyX;
+        fsol=copyFsol;
+      }
+    }else if(optimizationType == (char *) "Minimize"){
+      if (fsol[0] > copyFsol[0]){
+        xsol=copyX;
+        fsol=copyFsol;
+      }
+    }
+
+
+  }
 
 }
+
+
+void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimizationType, Eigen::VectorXd centerPoint, Eigen::VectorXd bestPointDisplacement, Eigen::VectorXd startingPoint){
+  y0_ = centerPoint;
+  y0 = y0_;
+  bestPointDisplacement_ = bestPointDisplacement;
+  yb_rel = bestPointDisplacement_;
+  // Set norm specific constraints
+  if (normType_ == INFINITY_NORM){
+    for (int i = 0; i < n_; ++i){
+      xlow_[i] = std::max(bestPointDisplacement_[i] - trustRegionRadius_, xlowCopy_[i] - y0_[i]);
+      xupp_[i] = std::min(bestPointDisplacement_[i] + trustRegionRadius_, xuppCopy_[i] - y0_[i]);
+    }
+    //xlow_[1] = xlow_[1];
+    //xupp_[1] = xupp_[1];
+  }
+  else if (normType_ == L2_NORM){
+    for (int i = 0; i < n_; ++i){
+      xlow_[i] = xlowCopy_[i];
+      xupp_[i] = xuppCopy_[i];
+    }
+  }
+
+
+  // The snoptHandler must be setup and loaded
+  SNOPTHandler snoptHandler = initSNOPTHandler();
+  snoptHandler.setProbName("SNOPTSolver");
+  snoptHandler.setParameter(optimizationType);
+
+  setOptionsForSNOPT(snoptHandler);
+
+  ResetSubproblem();
+  for (int i = 0; i < n_; i++) {
+    x_[i] = startingPoint[i];//bestPointDisplacement_[i];
+  }
+  passParametersToSNOPTHandler(snoptHandler);
+  integer Cold = 0, Basis = 1, Warm = 2;
+
+  snoptHandler.solve(Cold, xsol, fsol);
+  integer exitCode = snoptHandler.getExitCode();
+}
+
 
 void Subproblem::ResetSubproblem() {
   for (int i = 0; i < n_; i++) {
@@ -372,7 +442,7 @@ void Subproblem::setOptionsForSNOPT(SNOPTHandler &snoptHandler) {
   //target complementarity gap
   //snoptHandler.setRealParameter("Major optimality tolerance", 0.000000000001);
 
-  snoptHandler.setParameter("Major Print level  00000"); //  000001"
+  snoptHandler.setParameter("Major Print level  00000"); //  00001"
   snoptHandler.setRealParameter("Major step limit", 0.2); //was 0.2
   //snoptHandler.setIntParameter("Minor iterations limit", 200); // 200
 

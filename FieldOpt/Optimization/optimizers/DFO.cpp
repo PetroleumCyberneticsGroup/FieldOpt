@@ -26,8 +26,11 @@
 #define INTERPOLATION_SET_IS_ALREADY_POISED 16
 #define MODEL_IMPROVEMENT_ALGORITHM_MULTIPLE_POINTS_FOUND 17
 #define MODEL_IMPROVEMENT_ALGORITHM_MULTIPLE_POINTS_ADDED 18
-
-
+#define MODEL_IMPROVEMENT_FORCED_POINT_START 19
+#define MODEL_IMPROVEMENT_FORCED_POINT_FOUND 20
+#define MODEL_IMPROVEMENT_FORCED_POINTS_FOUND 21
+#define MODEL_IMPROVEMENT_FORCED_POINT_ADDED 22
+#define MODEL_IMPROVEMENT_FORCED_POINTS_ADDED 22
 
 /// Test functions - start
 double matyasFunction(Eigen::VectorXd x) {
@@ -37,23 +40,23 @@ double matyasFunction(Eigen::VectorXd x) {
 
 Eigen::VectorXd matyasFunctionWithGradients(Eigen::VectorXd x) {
   double val = 0.26 * (x(0) * x(0) + x(1) * x(1)) - 0.46 * x(0) * x(1);
-  Eigen::VectorXd ret(1+2);
+  Eigen::VectorXd ret(1 + 2);
   ret[0] = val;
-  ret[1] = 0.52*x(0) - 0.46 * x(1);
-  ret[2] = 0.52*x(1) - 0.46 * x(0);
+  ret[1] = 0.52 * x(0) - 0.46 * x(1);
+  ret[2] = 0.52 * x(1) - 0.46 * x(0);
   return ret;
 }
 
 Eigen::VectorXd matyasFunctionWithGradients1(Eigen::VectorXd x) {
-  double val = 0.26 * (x(0) * x(0) + 0.5*x(1) * x(1)) - 0.46 * x(0) * x(1) + 2*x(1) + 5.5 - 3.2*x(0);
-  Eigen::VectorXd ret(1+1);
+  double val = 0.26 * (x(0) * x(0) + 0.5 * x(1) * x(1)) - 0.46 * x(0) * x(1) + 2 * x(1) + 5.5 - 3.2 * x(0);
+  Eigen::VectorXd ret(1 + 1);
   ret[0] = val;
-  ret[1] = 0.52*x(1) - 0.46 * x(0) + 2;
+  ret[1] = 0.52 * x(1) - 0.46 * x(0) + 2;
   return ret;
 }
 
-Eigen::VectorXd test(Eigen::VectorXd x){
-  Eigen::VectorXd ret(1+4);
+Eigen::VectorXd test(Eigen::VectorXd x) {
+  Eigen::VectorXd ret(1 + 4);
   ret.setOnes();
   ret[0] = x.norm();
   return ret;
@@ -63,13 +66,13 @@ double sphere(Eigen::VectorXd x) {
   double val = 0;
   for (int i = 0; i < x.rows(); i++) {
 //    val += (x(i) - (x.rows()-i+1)*1000 )* (x(i) - (x.rows()-i+1)*1000);
-    val += (x(i) - (1)*1000 )* (x(i) - (1)*1000);
+    val += (x(i) - (1) * 1000) * (x(i) - (1) * 1000);
   }
   return val;
 }
 
 Eigen::VectorXd sphereGradients(Eigen::VectorXd x, int ng) {
-  Eigen::VectorXd ret(1+ng);
+  Eigen::VectorXd ret(1 + ng);
   double val = 0;
   for (int i = 0; i < x.rows(); i++) {
     val += x(i) * x(i);
@@ -77,8 +80,8 @@ Eigen::VectorXd sphereGradients(Eigen::VectorXd x, int ng) {
   ret[0] = val;
   int n = x.rows();
   int j = 1;
-  for (int i = (n-ng); i < n; ++i){
-    ret[j] = 2*x(i);
+  for (int i = (n - ng); i < n; ++i) {
+    ret[j] = 2 * x(i);
     j++;
   }
   return ret;
@@ -99,28 +102,20 @@ double polynomial6(Eigen::VectorXd x);
 double evaluateFunction(Eigen::VectorXd x, Eigen::VectorXd y0, int select);
 double evaluateFunction(Eigen::VectorXd x, Eigen::VectorXd y0, int select) {
   Eigen::VectorXd y = x + y0;
-  switch (select)
-  {
-    case 0:
-      return matyasFunction2D(y);
+  switch (select) {
+    case 0:return matyasFunction2D(y);
       break;
-    case 1:
-      return rosenbrockFunction2D(y);
+    case 1:return rosenbrockFunction2D(y);
       break;
-    case 2:
-      return polynomial6(y);
+    case 2:return polynomial6(y);
       break;
-    case 3:
-      return polynomial5(y);
+    case 3:return polynomial5(y);
       break;
-    case 4:
-      return polynomial3(y);
+    case 4:return polynomial3(y);
       break;
-    case 5:
-      return polynomial32(y);
+    case 5:return polynomial32(y);
       break;
-    default:
-      std::cout << "Invalid function selection" << std::endl;
+    default:std::cout << "Invalid function selection" << std::endl;
       break;
   }
 
@@ -169,12 +164,14 @@ DFO::DFO(Settings::Optimizer *settings,
   base_case_ = new Case(base_case);
   last_action_ = -1;
 
-  weights_distance_from_optimum_lsq_ = Eigen::VectorXd::Zero(settings->parameters().weights_distance_from_optimum_lsq.size());
+  weights_distance_from_optimum_lsq_ =
+      Eigen::VectorXd::Zero(settings->parameters().weights_distance_from_optimum_lsq.size());
   int j = 0;
-  for (auto i = settings->parameters().weights_distance_from_optimum_lsq.begin(); i != settings->parameters().weights_distance_from_optimum_lsq.end(); ++i){
+  for (auto i = settings->parameters().weights_distance_from_optimum_lsq.begin();
+       i != settings->parameters().weights_distance_from_optimum_lsq.end(); ++i) {
     weights_distance_from_optimum_lsq_[j] = *i;
     j++;
-    if (j >= 3){
+    if (j >= 3) {
       break;
     }
   }
@@ -226,44 +223,44 @@ DFO::DFO(Settings::Optimizer *settings,
   //}
 
   // Model Improvement algorithm
- /*
-  double upperBound = 0;
-  double lowerBound = 0;
-  int k = 0;
-  while (1) {
-    int yk = 0;
-    Eigen::VectorXd d(number_of_variables_);
-    d.setZero();
-    DFO_model_.findWorstPointInInterpolationSet(d, yk);
+  /*
+   double upperBound = 0;
+   double lowerBound = 0;
+   int k = 0;
+   while (1) {
+     int yk = 0;
+     Eigen::VectorXd d(number_of_variables_);
+     d.setZero();
+     DFO_model_.findWorstPointInInterpolationSet(d, yk);
 
-    if (yk == -1) {
-      std::cout << "breaking. The required poisedness is acheived. k = " << k << std::endl;
-      break;
-    }
-    else {
-      ++v;
-      double funcVal = evaluateFunction(d, DFO_model_.getCenterPoint(), 0);
-      DFO_model_.update(d, funcVal, yk, DFO_Model::IMPROVE_POISEDNESS);
+     if (yk == -1) {
+       std::cout << "breaking. The required poisedness is acheived. k = " << k << std::endl;
+       break;
+     }
+     else {
+       ++v;
+       double funcVal = evaluateFunction(d, DFO_model_.getCenterPoint(), 0);
+       DFO_model_.update(d, funcVal, yk, DFO_Model::IMPROVE_POISEDNESS);
 
-      //myModel.printParametersMatlabFriendly();
-      k++;
+       //myModel.printParametersMatlabFriendly();
+       k++;
 
-      if (k == 2000) {
-        std::cout << "breaking because of too many iterations., k = " << k << std::endl;
-        break;
-      }
-    }
-  }
+       if (k == 2000) {
+         std::cout << "breaking because of too many iterations., k = " << k << std::endl;
+         break;
+       }
+     }
+   }
 
-  std::cout << *(Yref) << std::endl << std::endl;
-  DFO_model_.printParametersMatlabFriendly();
-  std::cout << "%Number of function evaluation is: v = " << v << std::endl;
+   std::cout << *(Yref) << std::endl << std::endl;
+   DFO_model_.printParametersMatlabFriendly();
+   std::cout << "%Number of function evaluation is: v = " << v << std::endl;
 
-  //GradientEnhancedModel  enhancedModel(n,m,ng,weights_derivatives,weight_objective_minimum_change);
-  GradientEnhancedModel  enhancedModel(number_of_variables_,number_of_interpolation_points_,settings->parameters().number_of_variables_with_gradients,settings->parameters().weights_distance_from_optimum_lsq,settings->parameters().weight_model_determination_minimum_change_hessian);
+   //GradientEnhancedModel  enhancedModel(n,m,ng,weights_derivatives,weight_objective_minimum_change);
+   GradientEnhancedModel  enhancedModel(number_of_variables_,number_of_interpolation_points_,settings->parameters().number_of_variables_with_gradients,settings->parameters().weights_distance_from_optimum_lsq,settings->parameters().weight_model_determination_minimum_change_hessian);
 
-  std::cin.get(); // To avoid exiting terminal.
-*/
+   std::cin.get(); // To avoid exiting terminal.
+ */
 
   //Subproblem mySub(settings);
 /*
@@ -396,7 +393,9 @@ void DFO::handleEvaluatedCase(Optimization::Case *c) {
 
 void DFO::iterate() {
 
-  MatrixXd aa(2,2);
+  int number_of_crit_step_finished_with_bad_poisedness = 0;
+
+  MatrixXd aa(2, 2);
   aa << 1.1, 2.1, 1.2, 2.2;
   std::cout << "aa\n" << aa << "\n";
   aa.col(0).swap(aa.col(1));
@@ -435,10 +434,10 @@ void DFO::iterate() {
   double trust_region_radius_tilde = 0;
 
   Eigen::VectorXd function_evaluations(number_of_interpolation_points_);
-  Eigen::MatrixXd functionValsAndGrad(1+ng,number_of_interpolation_points_);
+  Eigen::MatrixXd functionValsAndGrad(1 + ng, number_of_interpolation_points_);
   functionValsAndGrad.setZero();
   function_evaluations.setZero();
-  Eigen::VectorXd functionValAndGrad(1+ng);
+  Eigen::VectorXd functionValAndGrad(1 + ng);
   double function_evaluation;
 
   // These are the ones that are used the most. Used in all other places than "Step 4 - Model Improvement".
@@ -460,7 +459,7 @@ void DFO::iterate() {
   Eigen::VectorXi new_indicies_criticality;
   std::cout << std::setprecision(15);
   while (notConverged) {
-    if (iterations_ > 1000){
+    if (iterations_ > 1000) {
       DFO_model_.printQuadraticModel();
     }
     std::cout << "\033[1;34;m " << " ---------- New iterate " << iterations_ << " ---------- " << "\033[0m"
@@ -471,14 +470,12 @@ void DFO::iterate() {
       std::cout << "\033[1;34;m " << "Best point index = \n" << "\033[0m" << DFO_model_.getBestPointIndex() << "\n";
 
     }
-    std::cout << "\033[1;34;m " << "y0 = \n" << "\033[0m" <<DFO_model_.getCenterPoint() << "\n";
+    std::cout << "\033[1;34;m " << "y0 = \n" << "\033[0m" << DFO_model_.getCenterPoint() << "\n";
     std::cout << "\033[1;34;m " << "Trust region radius is: " << "\033[0m" << DFO_model_.GetTrustRegionRadius()
               << std::endl;
     //DFO_model_.SetTrustRegionRadius(5);
     // DFO_model_.printQuadraticModel();
     Eigen::MatrixXd new_points;
-
-
 
     if (iterations_ == 0) {
       new_points = DFO_model_.findFirstSetOfInterpolationPoints();
@@ -510,7 +507,6 @@ void DFO::iterate() {
 
       DFO_model_.initializeModel();
 
-
       UpdateLastAction(INITIALIZED_MODEL);
 
       DFO_model_.printQuadraticModel();
@@ -522,8 +518,8 @@ void DFO::iterate() {
       Eigen::MatrixXd hess(number_of_variables_, number_of_variables_);
       Eigen::VectorXd grad(number_of_variables_);
       double constant;
-      Eigen::MatrixXd ycop = (*refY).block(0,1,2,number_of_interpolation_points_ - 1);
-      Eigen::MatrixXd dercopy = (*refDerivatives).block(0,1,ng,number_of_interpolation_points_ - 1);
+      Eigen::MatrixXd ycop = (*refY).block(0, 1, 2, number_of_interpolation_points_ - 1);
+      Eigen::MatrixXd dercopy = (*refDerivatives).block(0, 1, ng, number_of_interpolation_points_ - 1);
       Eigen::VectorXd funccopy = (*refFuncVals).tail(3);
       Eigen::VectorXd gradCp = (*refDerivatives).col(0).tail(ng);
       int index_of_center_point = 0;
@@ -542,7 +538,7 @@ void DFO::iterate() {
       DFO_model_.update(new_point, function_evaluation, index_of_new_point, DFO_Model::INCLUDE_NEW_POINT);
 
       UpdateLastAction(MODEL_IMPROVEMENT_POINT_ADDED);
-      if (index_of_new_point == DFO_model_.getBestPointIndex()){
+      if (index_of_new_point == DFO_model_.getBestPointIndex()) {
         DFO_model_.shiftCenterPointOfQuadraticModel(DFO_model_.GetBestPoint());
       }
       std::cout << "\033[1;34;m " << "Fvals = \n" << "\033[0m" << *refFuncVals << "\n";
@@ -556,8 +552,19 @@ void DFO::iterate() {
         DFO_model_.SetTrustRegionRadius(trust_region_radius_inc);
       }
       Eigen::VectorXd gradient = DFO_model_.GetGradientAtPoint(DFO_model_.GetBestPoint());
-      std::cout <<"norm of the gradient of the model: \n"<<gradient.norm()<<"\n\n";
+      std::cout << "norm of the gradient of the model: \n" << gradient.norm() << "\n\n";
       if (gradient.norm() > epsilon_c) {
+
+        Eigen::VectorXd dummyVec(number_of_variables_);
+        dummyVec.setZero();
+        int dummyInt = 0;
+        DFO_model_.SetTrustRegionRadiusForSubproblem(r * DFO_model_.GetTrustRegionRadius());
+        DFO_model_.findWorstPointInInterpolationSet(dummyVec, dummyInt); //Check if it is lambda-poised.
+        if (dummyInt != -1) {
+          number_of_crit_step_finished_with_bad_poisedness++;
+        } else {
+          number_of_crit_step_finished_with_bad_poisedness = 0;
+        }
         UpdateLastAction(CRITICALITY_STEP_FINISHED);
       } else {
 
@@ -570,23 +577,20 @@ void DFO::iterate() {
 
         //See if possible to do a cheap replacement (i.e., no need to optimize all lagrange polynomials twice).
         int index_far_away_point = DFO_model_.findPointFarthestAwayFromOptimum();
-        double distance = (DFO_model_.GetPoint(index_far_away_point) - DFO_model_.GetBestPoint()).norm();
+        double distance = DFO_model_.norm((DFO_model_.GetPoint(index_far_away_point) - DFO_model_.GetBestPoint()));
         bool cheapImprovementPossible = false;
         if (distance > r * DFO_model_.GetTrustRegionRadius()) {
           cheapImprovementPossible =
               DFO_model_.FindPointToReplaceWithPointOutsideScaledTrustRegion(index_far_away_point, new_point);
-        }
-        else{
-          DFO_model_.SetTrustRegionRadiusForSubproblem(r*DFO_model_.GetTrustRegionRadius());
+        } else {
+          DFO_model_.SetTrustRegionRadiusForSubproblem(r * DFO_model_.GetTrustRegionRadius());
           DFO_model_.findWorstPointInInterpolationSet(new_point, index_of_new_point); //Check if it is lambda-poised.
-          if (index_of_new_point == -1){
+          if (index_of_new_point == -1) {
             UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_FINISHED);
-          }
-          else{
+          } else {
             UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND);
           }
         }
-
 
         if (cheapImprovementPossible) {
           std::cout << *refY << std::endl;
@@ -599,7 +603,8 @@ void DFO::iterate() {
           //bool isPoisedExceptBestPoint =  DFO_model_.FindPointToIncreasePoisedness(new_point, index_of_new_point);
           //DFO_model_.findWorstPointInInterpolationSetByLU(new_point, index_of_new_point);
 
-          if (( (gradient.norm() <= epsilon_c) && (index_of_new_point != -1)) || ((gradient.norm() <= epsilon_c) && (trust_region_radius_inc > u * gradient.norm()))) {
+          if (((gradient.norm() <= epsilon_c) && (index_of_new_point != -1))
+              || ((gradient.norm() <= epsilon_c) && (trust_region_radius_inc > u * gradient.norm()))) {
             criticality_step_iteration = 0;
 
             //DFO_model_.findWorstPointInInterpolationSet(new_point,index_of_new_point);
@@ -609,6 +614,16 @@ void DFO::iterate() {
               UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_FINISHED);
             }
           } else {
+            Eigen::VectorXd dummyVec(number_of_variables_);
+            dummyVec.setZero();
+            int dummyInt = 0;
+            DFO_model_.SetTrustRegionRadiusForSubproblem(r * DFO_model_.GetTrustRegionRadius());
+            DFO_model_.findWorstPointInInterpolationSet(dummyVec, dummyInt); //Check if it is lambda-poised.
+            if (dummyInt != -1) {
+              number_of_crit_step_finished_with_bad_poisedness++;
+            } else {
+              number_of_crit_step_finished_with_bad_poisedness = 0;
+            }
             UpdateLastAction(CRITICALITY_STEP_FINISHED);
             //DFO_model_.SetTrustRegionRadius(trust_region_radius_inc);
           }
@@ -626,7 +641,7 @@ void DFO::iterate() {
                         function_evaluation,
                         index_of_new_point,
                         DFO_Model::IMPROVE_POISEDNESS); //add the point
-      if (index_of_new_point == DFO_model_.getBestPointIndex()){
+      if (index_of_new_point == DFO_model_.getBestPointIndex()) {
         DFO_model_.shiftCenterPointOfQuadraticModel(DFO_model_.GetBestPoint());
       }
 
@@ -634,7 +649,7 @@ void DFO::iterate() {
 
       //See if possible to do a cheap replacement (i.e., no need to optimize all lagrange polynomials twice).
       int index_far_away_point = DFO_model_.findPointFarthestAwayFromOptimum();
-      double distance = (DFO_model_.GetPoint(index_far_away_point) - DFO_model_.GetBestPoint()).norm();
+      double distance = DFO_model_.norm((DFO_model_.GetPoint(index_far_away_point) - DFO_model_.GetBestPoint()));
       bool cheapImprovementPossible = false;
       if (distance > r * DFO_model_.GetTrustRegionRadius()) {
         cheapImprovementPossible =
@@ -667,17 +682,19 @@ void DFO::iterate() {
 
       //}
 
-    }
-    else if (last_action_ == MODEL_IMPROVEMENT_ALGORITHM_MULTIPLE_POINTS_FOUND){
+    } else if (last_action_ == MODEL_IMPROVEMENT_ALGORITHM_MULTIPLE_POINTS_FOUND) {
       for (int i = 0; i < new_points_criticality.cols(); ++i) {
-        if (new_indicies_criticality[i] != -1){
-          DFO_model_.update(new_points_criticality.col(i),function_evaluations[i],new_indicies_criticality[i],DFO_Model::IMPROVE_POISEDNESS);
+        if (new_indicies_criticality[i] != -1) {
+          DFO_model_.update(new_points_criticality.col(i),
+                            function_evaluations[i],
+                            new_indicies_criticality[i],
+                            DFO_Model::IMPROVE_POISEDNESS);
           //functionValsAndGrad.col(i) = matyasFunctionWithGradients1(new_points.col(i) + DFO_model_.getCenterPoint());
-        }
-        else{
+        } else {
           break;
         }
       }
+      std::cout << "\033[1;34;m " << "Y AFTER PUTTING POINTS INSIDE TRUST REGION RADIUS...." << "\033[0m" << "\n";
       std::cout << "\033[1;34;m " << "Fvals = \n" << "\033[0m" << *refFuncVals << "\n";
       std::cout << "\033[1;34;m " << "Y = \n" << "\033[0m" << *refY << "\n";
       if (iterations_ != 0 && iterations_ != 1 && iterations_ != 2) {
@@ -690,7 +707,7 @@ void DFO::iterate() {
 
       //See if possible to do a cheap replacement (i.e., no need to optimize all lagrange polynomials twice).
       int index_far_away_point = DFO_model_.findPointFarthestAwayFromOptimum();
-      double distance = (DFO_model_.GetPoint(index_far_away_point) - DFO_model_.GetBestPoint()).norm();
+      double distance = DFO_model_.norm(DFO_model_.GetPoint(index_far_away_point) - DFO_model_.GetBestPoint());
       bool cheapImprovementPossible = false;
       if (distance > r * DFO_model_.GetTrustRegionRadius()) {
         cheapImprovementPossible =
@@ -730,9 +747,18 @@ void DFO::iterate() {
         DFO_model_.SetTrustRegionRadius(new_trust_region_radius);
         //if (norm_of_gradient <= epsilon_c){
         //}
+        Eigen::VectorXd dummyVec(number_of_variables_);
+        dummyVec.setZero();
+        int dummyInt = 0;
+        DFO_model_.SetTrustRegionRadiusForSubproblem(r * DFO_model_.GetTrustRegionRadius());
+        DFO_model_.findWorstPointInInterpolationSet(dummyVec, dummyInt); //Check if it is lambda-poised.
+        if (dummyInt != -1) {
+          number_of_crit_step_finished_with_bad_poisedness++;
+        } else {
+          number_of_crit_step_finished_with_bad_poisedness = 0;
+        }
         UpdateLastAction(CRITICALITY_STEP_FINISHED);
-      }
-      else { // Reduce the radius and run the model improvement algorithm.
+      } else { // Reduce the radius and run the model improvement algorithm.
         // Maybe the set is already "well poised" in the new radius???
         double maxDistance = DFO_model_.findLargestDistanceBetweenPointsAndOptimum();
         std::cout << "decreasing the radius:" << std::endl;
@@ -750,13 +776,21 @@ void DFO::iterate() {
           /// check trust_region_radius_tilde > u * (norm_of_gradient) and proceed accordingly...
 
           //if (trust_region_radius_tilde < DFO_model_.GetTrustRegionRadius()*0.5){
-            int number_of_points_outside_trust_region = DFO_model_.GetNumberOfPointsOutsideRadius(r*trust_region_radius_tilde);
-            if (number_of_points_outside_trust_region >= 1){
-              DFO_model_.FindReplacementForPointsOutsideRadius(r*trust_region_radius_tilde, new_points_criticality,new_indicies_criticality);
-              UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_MULTIPLE_POINTS_FOUND);
-              //DFO_model_.SetTrustRegionRadius(pow(w, criticality_step_iteration-1) * trust_region_radius_inc);
-              break;
+          int number_of_points_outside_trust_region =
+              DFO_model_.GetNumberOfPointsOutsideRadius(r * trust_region_radius_tilde);
+          if (number_of_points_outside_trust_region >= 1) {
+            bool possible =  DFO_model_.FindReplacementForPointsOutsideRadius(r * trust_region_radius_tilde,
+                                                             new_points_criticality,
+                                                             new_indicies_criticality);
+
+            if (possible == false){
+              std::cout << "waiting for u to press a button\n";
+              std::cin.get();
             }
+            UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_MULTIPLE_POINTS_FOUND);
+            //DFO_model_.SetTrustRegionRadius(pow(w, criticality_step_iteration-1) * trust_region_radius_inc);
+            break;
+          }
           //}
 
           /// add to the while loop check; if one or more points outside; exit...
@@ -765,18 +799,26 @@ void DFO::iterate() {
           /// MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND or MODEL_IMPROVEMENT_ALGORITHM_MULTIPLE_POINTS_FOUND
         } while ((index_of_new_point == -1) && (trust_region_radius_tilde > u * (norm_of_gradient)));
 
-        if (last_action_ == MODEL_IMPROVEMENT_ALGORITHM_MULTIPLE_POINTS_FOUND){
+        if (last_action_ == MODEL_IMPROVEMENT_ALGORITHM_MULTIPLE_POINTS_FOUND) {
           //nothing?
           DFO_model_.SetTrustRegionRadius(pow(w, criticality_step_iteration) * trust_region_radius_inc);
-        }
-        else if (index_of_new_point != -1) {
+        } else if (index_of_new_point != -1) {
           UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND);
           DFO_model_.SetTrustRegionRadius(pow(w, criticality_step_iteration) * trust_region_radius_inc);
-        }
-        else if (trust_region_radius_tilde <= u * (norm_of_gradient)) {
+        } else if (trust_region_radius_tilde <= u * (norm_of_gradient)) {
           double temp = max(trust_region_radius_tilde, beta * gradient.norm());
           double new_trust_region_radius = min(temp, trust_region_radius_inc);
           DFO_model_.SetTrustRegionRadius(new_trust_region_radius);
+          Eigen::VectorXd dummyVec(number_of_variables_);
+          dummyVec.setZero();
+          int dummyInt = 0;
+          DFO_model_.SetTrustRegionRadiusForSubproblem(r * DFO_model_.GetTrustRegionRadius());
+          DFO_model_.findWorstPointInInterpolationSet(dummyVec, dummyInt); //Check if it is lambda-poised.
+          if (dummyInt != -1) {
+            number_of_crit_step_finished_with_bad_poisedness++;
+          } else {
+            number_of_crit_step_finished_with_bad_poisedness = 0;
+          }
           UpdateLastAction(CRITICALITY_STEP_FINISHED);
         } else {
           std::cout << "whhaaaaat" << std::endl;
@@ -788,89 +830,101 @@ void DFO::iterate() {
     }
 
     if (last_action_ == CRITICALITY_STEP_FINISHED) {
+      if (number_of_crit_step_finished_with_bad_poisedness >= 10 &&false) {
+        UpdateLastAction(MODEL_IMPROVEMENT_FORCED_POINT_START);
+        number_of_crit_step_finished_with_bad_poisedness = 0;
+      } else {
 
-      Eigen::VectorXd dummyVec(number_of_variables_);
-      dummyVec.setZero();
-      int dummyInt = 0;
-      DFO_model_.SetTrustRegionRadiusForSubproblem(r*DFO_model_.GetTrustRegionRadius());
-      DFO_model_.findWorstPointInInterpolationSet(dummyVec, dummyInt); //Check if it is lambda-poised.
-      Eigen::VectorXd gradient = DFO_model_.GetGradientAtPoint(DFO_model_.GetBestPoint());
-      bool isGradientSufficientLarge = (gradient.norm() > epsilon_c);
+        Eigen::VectorXd dummyVec(number_of_variables_);
+        dummyVec.setZero();
+        int dummyInt = 0;
+        DFO_model_.SetTrustRegionRadiusForSubproblem(r * DFO_model_.GetTrustRegionRadius());
+        DFO_model_.findWorstPointInInterpolationSet(dummyVec, dummyInt); //Check if it is lambda-poised.
+        Eigen::VectorXd gradient = DFO_model_.GetGradientAtPoint(DFO_model_.GetBestPoint());
+        bool isGradientSufficientLarge = (gradient.norm() > epsilon_c);
+        std::cout << "\033[1;34;m " << "Norm of gradient at best point = " << "\033[0m" << gradient.norm() << "\n";
+        if (DFO_model_.GetTrustRegionRadius() <= 0.00000000000001 && gradient.norm() <= 0.00000001) {
+          Eigen::MatrixXd Yabs(number_of_variables_, number_of_interpolation_points_);
+          for (int j = 0; j < number_of_interpolation_points_; ++j) {
+            Eigen::VectorXd sd = (*refY).col(j) + DFO_model_.getCenterPoint();
+            eigen_col(Yabs, sd, j);
+          }
 
-      if (DFO_model_.GetTrustRegionRadius() <= 0.00000000000001 && gradient.norm() <= 0.00000001){
-        Eigen::MatrixXd Yabs(number_of_variables_, number_of_interpolation_points_);
-        for (int j = 0; j < number_of_interpolation_points_; ++j) {
-          Eigen::VectorXd sd = (*refY).col(j) + DFO_model_.getCenterPoint() ;
-          eigen_col(Yabs, sd, j);
+          std::cout << "\033[1;36;mDFO terminated. Trust region radius too small.\033[0m" << std::endl;
+          std::cout << "\033[1;36;mDFO terminated. Trust region radius too small.\033[0m" << std::endl;
+          std::cout << "\033[1;36;mDFO terminated. Trust region radius too small.\033[0m" << std::endl;
+          std::cout << "\033[1;36;mDFO terminated. Trust region radius too small.\033[0m" << std::endl;
+          std::cout << "\033[1;36;mDFO terminated. Trust region radius too small.\033[0m" << std::endl;
+          std::cout << "\033[1;36;mDFO terminated. Trust region radius too small.\033[0m" << std::endl;
+          std::cout << "\033[1;36;mDFO terminated. Trust region radius too small.\033[0m" << std::endl;
+
+          std::cout << "\033[1;34;m " << "Norm of gradient at best point = " << "\033[0m" << gradient.norm() << "\n";
+          std::cout << "\033[1;34;m " << "Best point index = " << "\033[0m" << DFO_model_.getBestPointIndex() << "\n";
+          std::cout << "\033[1;34;m " << "Fvals = \n" << "\033[0m" << *refFuncVals << "\n";
+          std::cout << "\033[1;34;m " << "Y = \n" << "\033[0m" << *refY << "\n";
+          std::cout << "\033[1;34;m " << "Y absolute = \n" << "\033[0m" << Yabs << "\n";
+          std::cout << "\033[1;34;m " << "Ybest = \n" << "\033[0m" << DFO_model_.GetBestPoint() << "\n";
+          std::cout << "\033[1;34;m " << "Trust region radius is: " << "\033[0m" << DFO_model_.GetTrustRegionRadius()
+                    << std::endl;
+          DFO_model_.printParametersMatlabFriendly();
+          Eigen::VectorXd cp(2);
+          cp[0] = 1000;
+          cp[1] = 1000;
+          cp = cp - DFO_model_.getCenterPoint();
+          DFO_model_.shiftCenterPointOfQuadraticModel(cp);
+          DFO_model_.printParametersMatlabFriendly();
+
+          //std::cout << "EXPLICITLY, error?\n";
+          //DFO_model_.calculatePolynomialModelDirectlyFromWinverse();
+
+          std::cin.get();
         }
 
 
-        std::cout << "\033[1;36;mDFO terminated. Trust region radius too small.\033[0m" << std::endl;
-        std::cout << "\033[1;36;mDFO terminated. Trust region radius too small.\033[0m" << std::endl;
-        std::cout << "\033[1;36;mDFO terminated. Trust region radius too small.\033[0m" << std::endl;
-        std::cout << "\033[1;36;mDFO terminated. Trust region radius too small.\033[0m" << std::endl;
-        std::cout << "\033[1;36;mDFO terminated. Trust region radius too small.\033[0m" << std::endl;
-        std::cout << "\033[1;36;mDFO terminated. Trust region radius too small.\033[0m" << std::endl;
-        std::cout << "\033[1;36;mDFO terminated. Trust region radius too small.\033[0m" << std::endl;
+        //Now at step2.
+        DFO_model_.SetTrustRegionRadiusForSubproblem(DFO_model_.GetTrustRegionRadius());
+        new_point = DFO_model_.FindLocalOptimum();
+        std::cout << "Y\n" << *refY << std::endl;
+        std::cout << "New (local) optimum found is:\n" << new_point << "\nThe distance from bestpoint is: "
+                  << DFO_model_.norm(new_point - DFO_model_.GetBestPoint()) <<
+                  "\nThe radius is: " << DFO_model_.GetTrustRegionRadius() << "\t and 2*radius = "
+                  << 2 * DFO_model_.GetTrustRegionRadius() << "\n";
 
-        std::cout << "\033[1;34;m " << "Norm of gradient at best point = " << "\033[0m" << gradient.norm() << "\n";
-        std::cout << "\033[1;34;m " << "Best point index = " << "\033[0m" << DFO_model_.getBestPointIndex() << "\n";
-        std::cout << "\033[1;34;m " << "Fvals = \n" << "\033[0m" << *refFuncVals << "\n";
-        std::cout << "\033[1;34;m " << "Y = \n" << "\033[0m" << *refY << "\n";
-        std::cout << "\033[1;34;m " << "Y absolute = \n" << "\033[0m" << Yabs << "\n";
-        std::cout << "\033[1;34;m " << "Ybest = \n" << "\033[0m" << DFO_model_.GetBestPoint() << "\n";
-        std::cout << "\033[1;34;m " << "Trust region radius is: " << "\033[0m" << DFO_model_.GetTrustRegionRadius()
-                  << std::endl;
-        DFO_model_.printParametersMatlabFriendly();
+        UpdateLastAction(TRIAL_POINT_FOUND);
 
-        std::cin.get();
-      }
+        double maxDistance = DFO_model_.findLargestDistanceBetweenPointsAndOptimum();
+        //if ((new_point - DFO_model_.GetBestPoint()).norm() < tau * maxDistance) {
+        if (DFO_model_.norm((new_point - DFO_model_.GetBestPoint())) < tau * maxDistance) {
+          std::cout << "TOO CLOSE\n";
 
-
-      //Now at step2.
-      DFO_model_.SetTrustRegionRadiusForSubproblem(DFO_model_.GetTrustRegionRadius());
-      new_point = DFO_model_.FindLocalOptimum();
-      std::cout << "Y\n" << *refY << std::endl;
-      std::cout << "New (local) optimum found is:\n" << new_point << "\nThe distance from bestpoint is: " << DFO_model_.norm(new_point-DFO_model_.GetBestPoint()) <<
-                "\nThe radius is: " << DFO_model_.GetTrustRegionRadius() << "\t and 2*radius = " << 2*DFO_model_.GetTrustRegionRadius() << "\n";
-
-      UpdateLastAction(TRIAL_POINT_FOUND);
-
-      double maxDistance = DFO_model_.findLargestDistanceBetweenPointsAndOptimum();
-      //if ((new_point - DFO_model_.GetBestPoint()).norm() < tau * maxDistance) {
-      if (DFO_model_.norm((new_point - DFO_model_.GetBestPoint())) < tau * maxDistance) {
-
-
-        //Check if some other criterias are satisfied, if so; get the objective function value.
-        //int pointToReplace = DFO_model_.isPointAcceptable(new_point);
-        //if (pointToReplace != -1){
-        //  index_of_new_point = pointToReplace;
-        //  UpdateLastAction(BAD_TRIAL_POINT_FOUND);
-        //}
-        //else{
+          //Check if some other criterias are satisfied, if so; get the objective function value.
+          int pointToReplace = DFO_model_.isPointAcceptable(new_point);
+          if (pointToReplace != -1){
+            index_of_new_point = pointToReplace;
+            UpdateLastAction(BAD_TRIAL_POINT_FOUND);
+          }
+          else{
           UpdateLastAction(TRIAL_POINT_IS_NOT_NEW_OPTIMUM);
-        //}
+          }
 
+        }
       }
-    }
-    else if (last_action_ == BAD_TRIAL_POINT_FOUND){
+    } else if (last_action_ == BAD_TRIAL_POINT_FOUND) {
       if (function_evaluation < DFO_model_.GetBestFunctionValueAllTime()) {
         DFO_model_.update(new_point, function_evaluation, index_of_new_point, DFO_Model::INCLUDE_NEW_POINT);
         UpdateLastAction(NEW_POINT_INCLUDED);
         DFO_model_.shiftCenterPointOfQuadraticModel(DFO_model_.GetBestPoint());
 //        if (index_of_new_point == DFO_model_.getBestPointIndex()){
 //        }
-      }
-      else{
+      } else {
         UpdateLastAction(TRIAL_POINT_IS_NOT_NEW_OPTIMUM);
       }
       double maxDistance = DFO_model_.findLargestDistanceBetweenPointsAndOptimum();
-      if (maxDistance/DFO_model_.GetTrustRegionRadius() <= 0.8){
+      if (maxDistance / DFO_model_.GetTrustRegionRadius() <= 0.8) {
         //DFO_model_.SetTrustRegionRadius(DFO_model_.GetTrustRegionRadius()*0.99);
         //DFO_model_.SetTrustRegionRadius(maxDistance + (DFO_model_.GetTrustRegionRadius()-maxDistance)*0.5);
       }
-    }
-    else if (last_action_ == TRIAL_POINT_FOUND) {
+    } else if (last_action_ == TRIAL_POINT_FOUND) {
       DFO_model_.SetTrustRegionRadiusForSubproblem(r * DFO_model_.GetTrustRegionRadius());
       int t = DFO_model_.findPointToReplaceWithNewOptimum(new_point);
       rho = (DFO_model_.GetFunctionValue(DFO_model_.getBestPointIndex()) - function_evaluation)
@@ -880,7 +934,7 @@ void DFO::iterate() {
       dummyVec.setZero();
       int dummyInt = 0;
       std::cout << "eta1 = " << eta1 << "\trho = " << rho << "\n";
-      DFO_model_.SetTrustRegionRadiusForSubproblem(r*DFO_model_.GetTrustRegionRadius());
+      DFO_model_.SetTrustRegionRadiusForSubproblem(r * DFO_model_.GetTrustRegionRadius());
       DFO_model_.findWorstPointInInterpolationSet(dummyVec, dummyInt); //Check if it is lambda-poised.
       if ((rho >= eta1) || (dummyInt == -1 && rho > 0)) {
         isTrialPointNewOptimum = true;
@@ -888,7 +942,7 @@ void DFO::iterate() {
         DFO_model_.shiftCenterPointOfQuadraticModel(DFO_model_.GetBestPoint());
 
         double maxDistance = DFO_model_.findLargestDistanceBetweenPointsAndOptimum();
-        if (maxDistance/DFO_model_.GetTrustRegionRadius() <= 0.8){
+        if (maxDistance / DFO_model_.GetTrustRegionRadius() <= 0.8) {
           //DFO_model_.SetTrustRegionRadius(DFO_model_.GetTrustRegionRadius()*0.99);
           //DFO_model_.SetTrustRegionRadius(maxDistance + (DFO_model_.GetTrustRegionRadius()-maxDistance)*0.5);
         }
@@ -896,29 +950,77 @@ void DFO::iterate() {
         UpdateLastAction(NEW_POINT_INCLUDED);
 
         //DFO_model_.printQuadraticModel();
-      } else if ( (dummyInt == -1) && (function_evaluation <  DFO_model_.GetFunctionValue(DFO_model_.getBestPointIndex())) ) {
+      } else if ((dummyInt == -1)
+          && (function_evaluation < DFO_model_.GetFunctionValue(DFO_model_.getBestPointIndex()))) {
         isTrialPointNewOptimum = true;
         DFO_model_.update(new_point, function_evaluation, t, DFO_Model::INCLUDE_NEW_OPTIMUM);
         DFO_model_.shiftCenterPointOfQuadraticModel(DFO_model_.GetBestPoint());
         UpdateLastAction(NEW_POINT_INCLUDED);
-      }
-      else{
+      } else {
 
         isTrialPointNewOptimum = false;
         UpdateLastAction(TRIAL_POINT_IS_NOT_NEW_OPTIMUM);
         //int t = DFO_model_.findPointFarthestAwayFromOptimum();
-        if ((DFO_model_.GetPoint(t) - DFO_model_.GetBestPoint()).norm() > r * DFO_model_.GetTrustRegionRadius() ||
+        if ( DFO_model_.norm(( DFO_model_.GetPoint(t) - DFO_model_.GetBestPoint())) > r * DFO_model_.GetTrustRegionRadius() ||
             abs(DFO_model_.ComputeLagrangePolynomial(t, new_point)) > 1) {
           DFO_model_.update(new_point, function_evaluation, t, DFO_Model::INCLUDE_NEW_POINT);
-          if (index_of_new_point == DFO_model_.getBestPointIndex()){
+          if (index_of_new_point == DFO_model_.getBestPointIndex()) {
             DFO_model_.shiftCenterPointOfQuadraticModel(DFO_model_.GetBestPoint());
           }
           //last_action_ = NEW_POINT_INCLUDED; //Doing this destroys the AND functionality!
         }
       }
     }
-    // Ta hensyn til at Y kan ta inn new point OG I TILLEGG, kjøre "do the model improvement step"
-    //
+
+    if (last_action_ == MODEL_IMPROVEMENT_FORCED_POINT_FOUND) {
+      DFO_model_.update(new_point, function_evaluation, index_of_new_point,
+                        DFO_Model::FORCED_IMPROVE_MODEL); //add the point
+      UpdateLastAction(MODEL_IMPROVEMENT_FORCED_POINT_START);
+    } else if (last_action_ == MODEL_IMPROVEMENT_FORCED_POINTS_FOUND) {
+      for (int i = 0; i < new_points_criticality.cols(); ++i) {
+        if (new_indicies_criticality[i] != -1) {
+          DFO_model_.update(new_points_criticality.col(i),
+                            function_evaluations[i],
+                            new_indicies_criticality[i],
+                            DFO_Model::FORCED_IMPROVE_MODEL);
+          //functionValsAndGrad.col(i) = matyasFunctionWithGradients1(new_points.col(i) + DFO_model_.getCenterPoint());
+        } else {
+          break;
+        }
+      }
+
+      UpdateLastAction(MODEL_IMPROVEMENT_FORCED_POINT_START);
+    }
+
+    if (last_action_ == MODEL_IMPROVEMENT_FORCED_POINT_START) {
+      DFO_model_.SetTrustRegionRadiusForSubproblem(r * DFO_model_.GetTrustRegionRadius());
+      DFO_model_.findWorstPointInInterpolationSet(new_point, index_of_new_point); //Check if it is lambda-poised.
+      //Check if all points are inside radius;
+      int numberOutside = DFO_model_.GetNumberOfPointsOutsideRadius(r * DFO_model_.GetTrustRegionRadius());
+      if (numberOutside > 0) {
+        //Put all of them inside.
+        bool valid = DFO_model_.FindReplacementForPointsOutsideRadius(r * DFO_model_.GetTrustRegionRadius(),
+                                                         new_points_criticality,
+                                                         new_indicies_criticality);
+
+        if (valid == false && new_indicies_criticality.rows() == 0){
+          UpdateLastAction(CRITICALITY_STEP_FINISHED);
+        }
+        else{
+          UpdateLastAction(MODEL_IMPROVEMENT_FORCED_POINTS_FOUND);
+        }
+      } else if (index_of_new_point != -1) {
+        //Replace that one point...
+        UpdateLastAction(MODEL_IMPROVEMENT_FORCED_POINT_FOUND);
+      } else {
+        //All points are inside the trust region. The required poisedness is reached.
+        DFO_model_.printParametersMatlabFriendly();
+        UpdateLastAction(CRITICALITY_STEP_FINISHED);
+      }
+
+      // Ta hensyn til at Y kan ta inn new point OG I TILLEGG, kjøre "do the model improvement step"
+      //
+    }
     if (last_action_ == TRIAL_POINT_IS_NOT_NEW_OPTIMUM) {
       /// Do the model improvement step.
 
@@ -926,15 +1028,22 @@ void DFO::iterate() {
       Eigen::VectorXd dummyVec(number_of_variables_);
       dummyVec.setZero();
       int dummyInt = 0;
-      DFO_model_.SetTrustRegionRadiusForSubproblem(r*DFO_model_.GetTrustRegionRadius());
+      DFO_model_.SetTrustRegionRadiusForSubproblem(r * DFO_model_.GetTrustRegionRadius());
       DFO_model_.findWorstPointInInterpolationSet(dummyVec, dummyInt); //Check if it is lambda-poised.
-      //if (dummyInt == -1){
-      //  rho = 0;
-      //  UpdateLastAction(INTERPOLATION_SET_IS_ALREADY_POISED);
-      //}
-      //else{
+      if (dummyInt == -1) {
+        rho = 0;
+        Eigen::VectorXi
+            pointsSortedByDistanceFromOptimum = DFO_model_.GetInterpolationPointsSortedByDistanceFromBestPoint();
+        for (int i = 0; i < number_of_interpolation_points_; ++i){
+          double distance = DFO_model_.norm(DFO_model_.GetPoint(pointsSortedByDistanceFromOptimum[i]) - DFO_model_.GetBestPoint());
+          std::cout << distance << "\t" << (distance < 2*DFO_model_.GetTrustRegionRadius()) <<"\n";
+        }
+        //UpdateLastAction(INTERPOLATION_SET_IS_ALREADY_POISED);
+        //DFO_model_.SetTrustRegionRadius(DFO_model_.GetTrustRegionRadius()*gamma);
+      }
+      else{
 
-      Eigen::VectorXd
+      Eigen::VectorXi
           pointsSortedByDistanceFromOptimum = DFO_model_.GetInterpolationPointsSortedByDistanceFromBestPoint();
       DFO_model_.SetTrustRegionRadiusForSubproblem(DFO_model_.GetTrustRegionRadius());
       index_of_new_point = -1;
@@ -946,18 +1055,19 @@ void DFO::iterate() {
       }*/
       //std::cout << "Points sorted by distance \n" << Ydelete << std::endl;
       std::cout << "fvals\n" << *refFuncVals << "\n";
-      std::cout << "Y\n" <<  *refY << "\n";
-
+      std::cout << "Y\n" << *refY << "\n";
 
       for (int i = 0; i < number_of_interpolation_points_; ++i) {
         int t = pointsSortedByDistanceFromOptimum[i];
-        DFO_model_.SetTrustRegionRadiusForSubproblem(r*DFO_model_.GetTrustRegionRadius());
-        new_point = DFO_model_.FindLocalOptimumOfAbsoluteLagrangePolynomial(t);
-        double poisedness = abs(DFO_model_.ComputeLagrangePolynomial(t, new_point));
+        DFO_model_.SetTrustRegionRadiusForSubproblem(r * DFO_model_.GetTrustRegionRadius());
+        //new_point = DFO_model_.FindLocalOptimumOfAbsoluteLagrangePolynomial(t);
+        new_point = DFO_model_.findHighValueOfAbsoluteLagrangePolynomial(t);
+        double poisedness = std::abs(DFO_model_.ComputeLagrangePolynomial(t, new_point));
         std::cout << "poisedness for this point was: " << poisedness << "\n";
         if (
-            ((DFO_model_.GetPoint(t) - DFO_model_.GetBestPoint()).norm() > r * DFO_model_.GetTrustRegionRadius())
-                || ( poisedness > required_poisedness_)
+            (DFO_model_.norm((DFO_model_.GetPoint(t) - DFO_model_.GetBestPoint()))
+                > r * DFO_model_.GetTrustRegionRadius())
+                || (poisedness > required_poisedness_)
             ) {
           /*
           if (poisedness > required_poisedness_){
@@ -966,19 +1076,48 @@ void DFO::iterate() {
             poisedness = abs(DFO_model_.ComputeLagrangePolynomial(t, new_point));
           }
            */
+
           index_of_new_point = t;
           /// Get the function evaluation. The point should be replaced. OBS OBS
-          std::cout << "L2       distance between new point and optimum: " << (new_point - DFO_model_.GetBestPoint()).norm() << " and 2*radius = " << r * DFO_model_.GetTrustRegionRadius() <<"\n";
-          std::cout << "INFINITY distance between new point and optimum: " << (new_point - DFO_model_.GetBestPoint()).lpNorm<Infinity>() << " and 2*radius = " << r * DFO_model_.GetTrustRegionRadius() <<"\n";
+          std::cout << "L2       distance between new point and optimum: "
+                    << (new_point - DFO_model_.GetBestPoint()).norm() << " and 2*radius = "
+                    << r * DFO_model_.GetTrustRegionRadius() << "\n";
+          std::cout << "INFINITY distance between new point and optimum: "
+                    << (new_point - DFO_model_.GetBestPoint()).lpNorm<Infinity>() << " and 2*radius = "
+                    << r * DFO_model_.GetTrustRegionRadius() << "\n";
+          std::cout << "         distance between optimum and y0: "
+                    << (DFO_model_.GetBestPoint()).lpNorm<Infinity>() << "\n";
+          std::cout << "         norm of new point:          " << DFO_model_.norm(new_point) << std::endl;
+          std::cout << "         norm of new point-bestpoint:" << DFO_model_.norm(new_point - DFO_model_.GetBestPoint())
+                    << std::endl;
+          std::cout << "         trust-region radius:  " << DFO_model_.GetTrustRegionRadius() << std::endl;
           std::cout << "new point is:\n" << new_point << "\n";
           std::cout << "old point is:\n" << DFO_model_.GetPoint(t) << "\n";
           std::cout << "replacing: " << t << "\n";
+          std::cout << "The lagrange polynomial belonging to that point is:\n";
+          DFO_model_.PrintLagrangePolynomial(t);
+          Eigen::VectorXi sortedPoints = DFO_model_.GetInterpolationPointsSortedByDistanceFromBestPoint();
+          int compareIdx = sortedPoints[number_of_variables_ - 2];
+          double val = std::abs(DFO_model_.ComputeLagrangePolynomial(t, new_point));
+
+/*
+          if (DFO_model_.norm(new_point - DFO_model_.GetBestPoint())/DFO_model_.GetTrustRegionRadius() <  0.001*
+              DFO_model_.norm(DFO_model_.GetPoint(compareIdx) - DFO_model_.GetBestPoint())/DFO_model_.GetTrustRegionRadius() || val < 0.000000001) {
+            //Try different starting points for the SNOPT.
+            //DFO_model_.SetTrustRegionRadiusForSubproblem(DFO_model_.GetTrustRegionRadius());
+            //DFO_model_.FindReplacementPoint(t, new_point, compareIdx);
+          }
+*/
           UpdateLastAction(MODEL_IMPROVEMENT_POINT_FOUND);
+          if (iterations_ == 122) {
+            std::cout << "stop here\n";
+          }
           rho = 0;
           break;
         }
-      }
-      if (last_action_ != MODEL_IMPROVEMENT_POINT_FOUND){
+      }//end for loop
+    }
+      if (last_action_ != MODEL_IMPROVEMENT_POINT_FOUND) {
         rho = 0;
       }
       if (rho != 0) {
@@ -1001,7 +1140,7 @@ void DFO::iterate() {
         DFO_model_.findWorstPointInInterpolationSet(tmp, tmp2); //Check if it is lambda-poised. (CFL)
         if (tmp2 == -1) {
           // model is CFL -> reduce radius
-          trust_region_radius_inc = gamma * DFO_model_.GetTrustRegionRadius();
+          trust_region_radius_inc = gamma * DFO_model_.GetTrustRegionRadius(); /// cAREFUL TODO OBS OBS KJØRER FOR OFTE
         } else {
           // model is not fully linear -> keep radius
           /// OBS OBS
@@ -1012,10 +1151,10 @@ void DFO::iterate() {
           /// OBS OBS
           /// OBS OBS Find out why the radius doesn't decrease without this 0.9.
           /// Probably something wrong with the criticality stuff. Check. and check again.
-          trust_region_radius_inc =  1*DFO_model_.GetTrustRegionRadius();
+          trust_region_radius_inc = 1 * DFO_model_.GetTrustRegionRadius();
         }
       }
-      if (last_action_ == INTERPOLATION_SET_IS_ALREADY_POISED){
+      if (last_action_ == INTERPOLATION_SET_IS_ALREADY_POISED) {
         trust_region_radius_inc = gamma * DFO_model_.GetTrustRegionRadius();
         UpdateLastAction(TRUST_REGION_RADIUS_UPDATE_STEP);
         goto step1; // To avoid having fieldopt cancel the optimization because the queue (of new cases) is empty.
@@ -1024,6 +1163,10 @@ void DFO::iterate() {
         UpdateLastAction(TRUST_REGION_RADIUS_UPDATE_STEP);
         goto step1; // To avoid having fieldopt cancel the optimization because the queue (of new cases) is empty.
       }
+    }
+
+    if (last_action_ == CRITICALITY_STEP_FINISHED){
+      goto step1;
     }
 
 
@@ -1035,7 +1178,7 @@ void DFO::iterate() {
 
     */
 
-    if (DFO_model_.isModelInitialized()){
+    if (DFO_model_.isModelInitialized()) {
       DFO_model_.printParametersMatlabFriendly();
       //DFO_model_.printParametersMatlabFriendlyGradientEnhanced();
     }
@@ -1047,19 +1190,18 @@ void DFO::iterate() {
         //functionValsAndGrad.col(i) = matyasFunctionWithGradients1(new_points.col(i) + DFO_model_.getCenterPoint());
       }
     } else {
-      if (last_action_ == MODEL_IMPROVEMENT_ALGORITHM_MULTIPLE_POINTS_FOUND){
+      if (last_action_ == MODEL_IMPROVEMENT_ALGORITHM_MULTIPLE_POINTS_FOUND
+          || last_action_ == MODEL_IMPROVEMENT_FORCED_POINTS_FOUND) {
         for (int i = 0; i < new_points_criticality.cols(); ++i) {
-          if (new_indicies_criticality[i] != -1){
+          if (new_indicies_criticality[i] != -1) {
             function_evaluations[i] = sphere(new_points_criticality.col(i) + DFO_model_.getCenterPoint());
             //functionValsAndGrad.col(i) = matyasFunctionWithGradients1(new_points.col(i) + DFO_model_.getCenterPoint());
-          }
-          else{
+          } else {
             break;
           }
 
         }
-      }
-      else if (index_of_new_point < 0) {
+      } else if (index_of_new_point < 0) {
         if ((last_action_ == TRIAL_POINT_IS_NOT_NEW_OPTIMUM || last_action_ == TRIAL_POINT_FOUND)) {
 
         } else {
@@ -1071,15 +1213,15 @@ void DFO::iterate() {
         }
       }
 
-      if (last_action_ != MODEL_IMPROVEMENT_ALGORITHM_MULTIPLE_POINTS_FOUND){
-      /// Get one new point.
-      function_evaluation = sphere(new_point + DFO_model_.getCenterPoint());
-      //functionValAndGrad = matyasFunctionWithGradients1(new_point + DFO_model_.getCenterPoint());
-      if (last_action_ == TRIAL_POINT_FOUND) {
-        if (function_evaluation < DFO_model_.GetBestFunctionValueAllTime()) {
-          cout << "\033[1;36;mThe new function evaluation is: \033[0m" << function_evaluation << endl << endl;
+      if (last_action_ != MODEL_IMPROVEMENT_ALGORITHM_MULTIPLE_POINTS_FOUND && last_action_ !=MODEL_IMPROVEMENT_FORCED_POINTS_FOUND) {
+        /// Get one new point.
+        function_evaluation = sphere(new_point + DFO_model_.getCenterPoint());
+        //functionValAndGrad = matyasFunctionWithGradients1(new_point + DFO_model_.getCenterPoint());
+        if (last_action_ == TRIAL_POINT_FOUND) {
+          if (function_evaluation < DFO_model_.GetBestFunctionValueAllTime()) {
+            cout << "\033[1;36;mThe new function evaluation is: \033[0m" << function_evaluation << endl << endl;
+          }
         }
-      }
       }
     }
 
@@ -1111,9 +1253,15 @@ std::string DFO::getActionName(int a) {
     case 16: return "INTERPOLATION_SET_IS_ALREADY_POISED    ";
     case 17: return "MODEL_IMPR_ALG_MULTIPLE_POINTS_FOUND   ";
     case 18: return "MODEL_IMPR_ALG_MULTIPLE_POINTS_ADDED   ";
-    default:return  "Not a valid state                      ";
+    case 19: return "MODEL_IMPROVEMENT_FORCED_POINT_START   ";
+    case 20: return "MODEL_IMPROVEMENT_FORCED_POINT_FOUND   ";
+    case 21: return "MODEL_IMPROVEMENT_FORCED_POINTS_FOUND  ";
+    case 22: return "MODEL_IMPROVEMENT_FORCED_POINT_ADDED   ";
+    case 23: return "MODEL_IMPROVEMENT_FORCED_POINTS_ADDED  ";
+    default:return "Not a valid state                      ";
   }
 }
+
 void DFO::UpdateLastAction(int a) {
   std::cout << "From " << "\033[1;" + color_from + "m " << getActionName(last_action_) << "\033[0m";
   last_action_ = a;
@@ -1148,7 +1296,7 @@ QList<Case *> DFO::ConvertPointsToCases(Eigen::MatrixXd points) {
 double matyasFunction2D(Eigen::VectorXd x) {
   double squaredx1 = std::pow(x(0), 2);
   double squaredx2 = std::pow(x(1), 2);
-  return 0.26*(squaredx1 + squaredx2) - 0.48*x(0)*x(1);
+  return 0.26 * (squaredx1 + squaredx2) - 0.48 * x(0) * x(1);
 }
 double rosenbrockFunction2D(Eigen::VectorXd x) {
   double a = std::pow(x(0), 2);
@@ -1156,7 +1304,7 @@ double rosenbrockFunction2D(Eigen::VectorXd x) {
   double c = std::pow(1 - x(0), 2);
   return 100 * b + c;
 }
-double polynomial6(Eigen::VectorXd y){
+double polynomial6(Eigen::VectorXd y) {
   Eigen::VectorXd grad = Eigen::VectorXd::Zero(y.rows());
   Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(y.rows(), y.rows());
   double c = 140;
@@ -1170,8 +1318,7 @@ double polynomial6(Eigen::VectorXd y){
       0, 4, 0, 0, 7, 0,
       0, 88, 0, 6, 0, 9;
 
-
-  return c + grad.transpose()*y + 0.5 * y.transpose()*hess*y;
+  return c + grad.transpose() * y + 0.5 * y.transpose() * hess * y;
 
 }
 double polynomial5(Eigen::VectorXd y) {
@@ -1187,8 +1334,7 @@ double polynomial5(Eigen::VectorXd y) {
       5, 0, 77, 2, 0,
       0, 4, 0, 0, 7;
 
-
-  return c + grad.transpose()*y + 0.5 * y.transpose()*hess*y;
+  return c + grad.transpose() * y + 0.5 * y.transpose() * hess * y;
 
 }
 double polynomial3(Eigen::VectorXd y) {
@@ -1202,8 +1348,7 @@ double polynomial3(Eigen::VectorXd y) {
       -1, 4, 7,
       10, 7, 1;
 
-
-  return c + grad.transpose()*y + 0.5 * y.transpose()*hess*y;
+  return c + grad.transpose() * y + 0.5 * y.transpose() * hess * y;
 
 }
 double polynomial32(Eigen::VectorXd y) {
@@ -1217,8 +1362,8 @@ double polynomial32(Eigen::VectorXd y) {
       -1, 4, 7,
       10, 7, 1;
 
-
-  return c + grad.transpose()*y + 0.5 * y.transpose()*hess*y + y(1)*y(2)*y(0) + y(0)*y(0)*y(1)*y(1)+ y(2)*y(2)*y(2)*y(2)*y(2) + y(1)*y(1)*y(1)*y(1);
+  return c + grad.transpose() * y + 0.5 * y.transpose() * hess * y + y(1) * y(2) * y(0) + y(0) * y(0) * y(1) * y(1)
+      + y(2) * y(2) * y(2) * y(2) * y(2) + y(1) * y(1) * y(1) * y(1);
 
 }
 }

@@ -233,6 +233,12 @@ class Subproblem {
     Flow_[1] = 0;
     Fupp_[1] = trustRegionRadius_;
   }
+  void Solve(vector<double> &xsol,
+             vector<double> &fsol,
+             char *optimizationType,
+             VectorXd centerPoint,
+             VectorXd bestPointDisplacement,
+             VectorXd startingPoint);
 };
 
 }

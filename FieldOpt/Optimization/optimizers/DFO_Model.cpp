@@ -282,12 +282,13 @@ void DFO_Model::updateInverseKKTMatrix(Eigen::VectorXd yNew, unsigned int t) {
 
 void DFO_Model::updateQuadraticModel(Eigen::VectorXd yNew, double fvalNew, unsigned int t) {
   double modelValueYNew = evaluateQuadraticModel(yNew);
-  modelValueYNew = 0;
 
-  constant = 0;
-  gradient.setZero();
-  Gamma.setZero();
-  gammas.setZero();
+  //modelValueYNew = 0;
+
+  //constant = 0;
+  //gradient.setZero();
+  //Gamma.setZero();
+  //gammas.setZero();
 
   constant += (fvalNew - modelValueYNew) * Xi(0, t - 1);
   gradient += (fvalNew - modelValueYNew) * (Xi.col(t - 1).tail(n));
@@ -470,6 +471,9 @@ void DFO_Model::initializeModel() {
 void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, UpdateReason updateReason) {
   int oldBestPointIndex = bestPointIndex;
   int oldBestFval = fvals[bestPointIndex - 1];
+
+
+
   if (updateReason == INCLUDE_NEW_OPTIMUM) {
     if (fvalNew < bestPointAllTimeFunctionValue) {
       bestPointAllTimeFunctionValue = fvalNew;
@@ -501,9 +505,14 @@ void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, Upd
     }
   }
 
+  if (updateReason == FORCED_IMPROVE_MODEL){
+
+  }
+  else{
   if (fvalNew < fvals[bestPointIndex - 1] ) {
     bestPoint = yNew;
     bestPointIndex = t;
+  }
   }
 
   //std::cout << "Old point: \n" << Y.col(t-1) << "\nNew point: \n" << yNew << std::endl;
@@ -1097,7 +1106,7 @@ Eigen::VectorXd DFO_Model::findHighValueOfAbsoluteLagrangePolynomial(int t) {
   int k = 0;
 
   for (int i = 0; i < n; ++i) {
-    yTry(i) = dis(gen);
+    yTry(i) = dis(gen)+bestPoint[i];
   }
   Eigen::VectorXd yBest = yTry;
 
@@ -1107,7 +1116,7 @@ Eigen::VectorXd DFO_Model::findHighValueOfAbsoluteLagrangePolynomial(int t) {
 
   while (k < 5000) {
     for (int i = 0; i < n; ++i) {
-      yTry(i) = dis(gen);
+      yTry(i) = dis(gen)+bestPoint[i];
     }
     value = c + grad.transpose() * yTry + 0.5 * yTry.transpose() * hess * yTry;
     if (std::abs(value) > maxValue) {
@@ -1405,6 +1414,23 @@ double DFO_Model::ComputeLagrangePolynomial(int t, Eigen::VectorXd point) {
 
   return val;
 }
+
+double DFO_Model::PrintLagrangePolynomial(int t) {
+  Eigen::VectorXd grad;
+  Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(n, n);
+  // Creating the Lagrange polynomial.
+  double c = Xi(0, t - 1);
+  grad = (Xi.col(t - 1)).tail(n);
+  for (int k = 1; k <= m; ++k) {
+    double tmp = Z.row(k - 1) * S * (Z.row(t - 1)).transpose();
+    hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
+  }
+
+  std::cout << "c = " << c << std::endl;
+  std::cout << "gradient = " << std::endl << grad << std::endl;
+  std::cout << "hessian = " << std::endl << hess << std::endl;
+}
+
 Eigen::VectorXd DFO_Model::FindLocalOptimumOfAbsoluteLagrangePolynomial(int t) {
   Eigen::VectorXd grad;
   Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(n, n);
@@ -1429,18 +1455,30 @@ Eigen::VectorXd DFO_Model::FindLocalOptimumOfAbsoluteLagrangePolynomial(int t) {
   subproblem.Solve(xsolMin, fsolMin, (char *) "Minimize", y0, bestPoint);
 
   Eigen::VectorXd optimum(n);
-
+double maxVal = 0;
   for (int i = 0; i < xsolMax.size(); ++i) {
     if (abs(fsolMax[0]) >= abs(fsolMin[0])) {
       optimum[i] = xsolMax[i];
+      maxVal = abs(fsolMax[0]);
     } else {
+      optimum[i] = xsolMin[i];
+      maxVal = abs(fsolMin[0]);
+    }
+  }
+  Eigen::VectorXd startingPoint = Eigen::VectorXd::Zero(n);
+  subproblem.Solve(xsolMax, fsolMax, (char *) "Maximize", y0, bestPoint, startingPoint);
+  subproblem.Solve(xsolMin, fsolMin, (char *) "Minimize", y0, bestPoint, startingPoint);
+  for (int i = 0; i < xsolMax.size(); ++i) {
+    if (abs(fsolMax[0]) >= abs(fsolMin[0]) && abs(fsolMax[0]) > maxVal) {
+      optimum[i] = xsolMax[i];
+    } else if (abs(fsolMin[0]) >= abs(fsolMax[0]) && abs(fsolMin[0]) > maxVal){
       optimum[i] = xsolMin[i];
     }
   }
   return optimum;
 }
 
-Eigen::VectorXd DFO_Model::GetInterpolationPointsSortedByDistanceFromBestPoint() {
+Eigen::VectorXi DFO_Model::GetInterpolationPointsSortedByDistanceFromBestPoint() {
 
   std::vector<Eigen::VectorXd> tmp;
   for (int i = 0; i < m; ++i) {
@@ -1453,7 +1491,7 @@ Eigen::VectorXd DFO_Model::GetInterpolationPointsSortedByDistanceFromBestPoint()
   }
   std::sort(tmp.begin(), tmp.end(), cmp);
 
-  Eigen::VectorXd indicesSortedByDescendingNorm(m);
+  Eigen::VectorXi indicesSortedByDescendingNorm(m);
   for (int i = 0; i < m; ++i) {
     indicesSortedByDescendingNorm[i] = tmp[i][n];
   }
@@ -1688,12 +1726,13 @@ bool DFO_Model::FindReplacementForPointsOutsideRadius(double radius, Eigen::Matr
   Eigen::MatrixXd copyUpsilon = Upsilon;
   Eigen::MatrixXd copyXi = Xi;
   Eigen::MatrixXd copyY = Y;
+  bool retVal = true;
 
 
   /// Find points outside r*radius
-  Eigen::VectorXd sortedPoints = GetInterpolationPointsSortedByDistanceFromBestPoint();
+  Eigen::VectorXi sortedPoints = GetInterpolationPointsSortedByDistanceFromBestPoint();
   for (int j = 0; j < sortedPoints.rows(); ++j){
-    if (norm(Y.col(sortedPoints[j]-1) - bestPoint) < radius){
+    if (norm(Y.col(sortedPoints[j]-1) - bestPoint) <= radius){
       sortedPoints.conservativeResize(j);
       break;
     }
@@ -1716,17 +1755,32 @@ bool DFO_Model::FindReplacementForPointsOutsideRadius(double radius, Eigen::Matr
   int addedPoints = 0;
   int j = 0;
   for (int i = 0; i < sortedPoints.rows(); ++i){
-    dNew = FindLocalOptimumOfAbsoluteLagrangePolynomial(sortedPoints[i]);
+    //dNew = FindLocalOptimumOfAbsoluteLagrangePolynomial(sortedPoints[i]);
+    dNew = findHighValueOfAbsoluteLagrangePolynomial(sortedPoints[i]);
     std::cout << "Lagval = " << ComputeLagrangePolynomial(sortedPoints[i], dNew) << "\n";
-    if (std::abs(ComputeLagrangePolynomial(sortedPoints[i], dNew)) > 0.0001) {
+    if (std::abs(ComputeLagrangePolynomial(sortedPoints[i], dNew)) > 0.0000001) {
       newIndices[addedPoints] = sortedPoints[i];
-      newPoints.col(addedPoints) = dNew;
+      //newPoints.col(addedPoints) = dNew;
+      eigen_col(newPoints, dNew, addedPoints);
       //do the update
-      updateInverseKKTMatrix(dNew,sortedPoints[i]);
-      eigen_col(Y, dNew, sortedPoints[i] - 1);
+      //updateInverseKKTMatrix(dNew,sortedPoints[i]);
+      //eigen_col(Y, dNew, sortedPoints[i] - 1);
       addedPoints++;
       j++;
+      break;
     }
+    else{
+      newIndices.conservativeResize(addedPoints);
+      newPoints.conservativeResize(n, addedPoints);
+      if (newIndices.rows() == 0 || newIndices.rows() == addedPoints ){
+        break;
+      }
+      //break;
+      }
+    }
+
+  if (addedPoints == 0){
+    retVal = false;
   }
   /*
   /// Find replacement points
@@ -1829,20 +1883,278 @@ bool DFO_Model::FindReplacementForPointsOutsideRadius(double radius, Eigen::Matr
   Upsilon = copyUpsilon;
   S = copyS;
   Z = copyZ;
-  return true;
+  return retVal;
 }
 int DFO_Model::GetNumberOfPointsOutsideRadius(double radius) {
   /// Number of points outside radius
   int number = 0;
-  std::cout << "radius " << radius << "\n";
+  //std::cout << "radius " << radius << "\n";
   for (int j = 1; j <= m; ++j){
-    std::cout << "Point minus bestpoint: \n" << Y.col(j-1) - bestPoint<< "\nNorm: \t " << norm(Y.col(j-1) - bestPoint) << std::endl;
+    //std::cout << "Point minus bestpoint: \n" << Y.col(j-1) - bestPoint<< "\nNorm: \t " << norm(Y.col(j-1) - bestPoint) << std::endl;
     if (norm(Y.col(j-1) - bestPoint) > radius){
       number++;
     }
   }
   return number;
 }
+
+
+void DFO_Model::calculatePolynomialModelDirectlyFromWinverse() {
+  Eigen::MatrixXd Winv(m + n + 1, m + n + 1);
+  Winv = calculateWExplicitly();
+
+  Eigen::VectorXd rhs = Eigen::VectorXd::Zero(m + n + 1);
+  //rhs.head(m) = fvals;
+  eigen_head(rhs,fvals,m);
+
+  Eigen::VectorXd ans(m + n + 1);
+
+  ans = Winv*rhs;
+
+  Eigen::VectorXd grad(n);
+  Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(n, n);
+  double c;
+
+  grad = ans.tail(n);
+  c = ans(m);
+
+  for (int i = 1; i <= m; ++i) {
+    hess += ans(i - 1)*(Y.col(i - 1) * (Y.col(i - 1)).transpose());
+  }
+
+  std::cout << "---------------- Calculated from Winv ----" << std::endl;
+  std::cout << "c = " << c << std::endl;
+  std::cout << "gradient = " << std::endl << grad << std::endl;
+  std::cout << "hessian = " << std::endl << hess << std::endl;
+
+}
+
+// This is slow and should only be used for testing and debugging.
+Eigen::MatrixXd DFO_Model::calculateWExplicitly() {
+  double precision = 0.00001;
+  //[2] page 9
+  Eigen::MatrixXd W = Eigen::MatrixXd::Zero(m + n + 1, m + n + 1);
+  Eigen::MatrixXd A = Eigen::MatrixXd::Zero(m, m);
+  //A.setZero();
+  Eigen::MatrixXd X = Eigen::MatrixXd::Zero(n + 1, m);
+  //std::cout << "Y: " << std::endl << Y <<std::endl;
+  for (int i = 1; i <= m; ++i) {
+    for (int j = 1; j <= m; ++j) {
+      //A(i - 1, j - 1) = 0.5*std::pow(Y.col(i - 1).dot(Y.col(j - 1)), 2);
+      A(i - 1, j - 1) = 0.5*std::pow(Y.col(i-1).transpose()*Y.col(j-1), 2);
+    }
+  }
+
+  //X.row(0).setOnes();
+  //eigen_row(X,Eigen::VectorXd::Ones(1,m),0);
+
+  for (int i = 1; i <= m; ++i){
+    X(0,i-1) = 1;
+  }
+
+  for (int i = 1; i <= m; ++i) {
+    //(X.col(i - 1)).tail(n) = Y.col(i - 1);
+    Eigen::VectorXd tmp = X.col(i - 1);
+    eigen_tail(tmp,Y.col(i-1),n);
+    eigen_col(X, tmp, i-1);
+  }
+
+  //std::cout << "" << std::endl <<  <<std::endl;
+  //std::cout << "A: " << std::endl << A <<std::endl;
+  //std::cout << "X: " << std::endl << X << std::endl;
+  //std::cout << "A: " << std::endl << W.topLeftCorner(m, m) << std::endl;
+  //std::cout << "W: " << std::endl << W <<std::endl;
+  W.topLeftCorner(m, m) = A;
+  W.bottomLeftCorner(n + 1, m) = X;
+  W.topRightCorner(m, n + 1) = X.transpose();
+  //std::cout << "W: " << std::endl << W <<std::endl;
+
+
+  //std::cout << "W: " << std::endl << W << std::endl;
+
+  Eigen::MatrixXd Winv(m + n + 1, m + n + 1);
+  Winv = W.inverse();
+  Eigen::FullPivLU<Eigen::MatrixXd> lu_decompW(W);;
+  Eigen::MatrixXd WLUinv(m + n + 1, m + n + 1);
+  WLUinv = lu_decompW.inverse();
+  //std::cout << "Winv: " << std::endl << Winv <<std::endl;
+
+  //std::cout << "Winv lu: " << std::endl << WLUinv <<std::endl;
+  //std::cout << "done: " << std::endl;
+
+
+
+
+  //std::cout << "Omega from inverse of W: " << std::endl << Winv.topLeftCorner(m, m) << std::endl;
+
+/*
+  Eigen::MatrixXd Omega(m, m);
+  Omega = Z*S*Z.transpose();
+*/
+  //std::cout << "Omega" << std::endl << Omega << std::endl;
+  //std::cout << "Xi" << std::endl << Xi << std::endl;
+  //std::cout << "Upsilon" << std::endl << Upsilon << std::endl;
+/*
+  Eigen::MatrixXd H(m + n + 1, m + n + 1);
+  H.topLeftCorner(m, m) = Omega;
+  H.bottomLeftCorner(n + 1, m) = Xi;
+  H.topRightCorner(m, n + 1) = Xi.transpose();
+  H.bottomRightCorner(n + 1, n + 1) = Upsilon;
+*/
+/*
+  std::cout << "H " << std::endl << H << std::endl;
+  std::cout << " is Omega - invWOmega == 0 ?  " << std::endl << Omega.isApprox(Winv.topLeftCorner(m,m), precision) << std::endl;
+  std::cout << " is Xi - invWXi == 0 ?  " << std::endl <<          Xi.isApprox(Winv.bottomLeftCorner(n+1,m), precision) << std::endl;
+  std::cout << " is Upsilon - invWUpsilon == 0 ?  " << std::endl << Upsilon.isApprox(Winv.bottomRightCorner(n+1,n+1), precision) << std::endl;
+  std::cout << " is H - invW == 0 ?  " << std::endl << H.isApprox(Winv, precision) << std::endl;
+
+  std::cout << "invWUpsilon" << std::endl << Winv.bottomRightCorner(n + 1, n + 1) << std::endl;
+  std::cout << "Upsilon" << std::endl << Upsilon << std::endl;
+  std::cout << "invWOmega" << std::endl << Winv.topLeftCorner(m,m) << std::endl;
+  std::cout << "Omega" << std::endl << Omega << std::endl;
+  std::cout << "invWXi" << std::endl << Winv.bottomLeftCorner(n+1,m) << std::endl;
+  std::cout << "Xi" << std::endl << Xi << std::endl;
+
+  Eigen::MatrixXd Hinv(m + n + 1, m + n + 1);
+  Hinv = H.inverse();
+
+  std::cout << "Winverse:" << std::endl << Winv << std::endl << std::endl;
+
+  std::cout << "H:" << std::endl << H << std::endl << std::endl;
+*/
+  /*
+  std::cout << "W:" << std::endl << W << std::endl << std::endl;
+  std::cout << "Hinverse:" << std::endl << Hinv << std::endl << std::endl;
+  */
+
+/*
+  std::cout << "H * W (should be identity):" << std::endl << H * W << std::endl << std::endl;
+*/
+  //std::cout << "W * H (should be identity):" << std::endl << W * H << std::endl << std::endl;
+/*
+  std::cout << " Xi*A + Upsilon*X (should be zero):" << std::endl << Xi*A + Upsilon*X << std::endl << std::endl;
+
+  Eigen::FullPivLU<Eigen::MatrixXd> lu_decompH(H);
+  Eigen::FullPivLU<Eigen::MatrixXd> lu_decompWinv(Winv);
+
+  std::cout << "rank(H) = " << lu_decompH.rank() << "\t rank(Winv) = " << lu_decompWinv.rank() << std::endl << std::endl;
+*/
+  return WLUinv;
+}
+
+
+bool DFO_Model::FindReplacementPoint(int t, Eigen::VectorXd &dNew, int compareIdx) {
+  Eigen::VectorXd grad;
+  Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(n, n);
+  // Creating the lagrange polynomial.
+  hess.setZero();
+  double c = Xi(0, t - 1);
+  grad = (Xi.col(t - 1)).tail(n);
+  for (int k = 1; k <= m; ++k) {
+    double tmp = Z.row(k - 1) * S * (Z.row(t - 1)).transpose();
+    hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
+  }
+  double val = 0; //c + dNew.transpose()*grad + dNew.transpose()*hess*dNew;
+
+  // Find min and max of l_t(x)
+  subproblem.setConstant(c);
+  subproblem.setGradient(grad);
+  subproblem.setHessian(hess);
+
+  vector<double> xsolMax;
+  vector<double> fsolMax;
+  vector<double> xsolMin;
+  vector<double> fsolMin;
+
+  Eigen::VectorXd startingPoint = Eigen::VectorXd::Zero(n);
+  int j = 1;
+  int sub = 0;
+  double incBest = 0;
+  for (int i = 1; i <= 2 * n; ++i) {
+    startingPoint[i - 1 - sub] = rho * j + bestPoint[i - 1 - sub];
+    subproblem.Solve(xsolMax, fsolMax, (char *) "Maximize", y0, bestPoint, startingPoint);
+    subproblem.Solve(xsolMin, fsolMin, (char *) "Minimize", y0, bestPoint, startingPoint);
+
+    Eigen::VectorXd optimum(n);
+
+    if (abs(fsolMax[0]) >= abs(fsolMin[0])) {
+      val = abs(fsolMax[0]);
+    } else {
+      val = abs(fsolMin[0]);
+    }
+
+    if (val > incBest) {
+      incBest = val;
+      for (int i = 0; i < xsolMax.size(); ++i) {
+        if (abs(fsolMax[0]) >= abs(fsolMin[0])) {
+          dNew[i] = xsolMax[i];
+        } else {
+          dNew[i] = xsolMin[i];
+        }
+      }
+    }
+
+    //if (norm(dNew - bestPoint)/rho >  0.001* norm( Y.col(compareIdx-1) - bestPoint)/rho){
+
+    //  break;
+    //}
+    startingPoint[i - 1 - sub] = 0;
+    if (i == n) {
+      j = -1;
+      sub += n;
+    }
+  }
+  //std::cout << "abs lagrange value: " << incBest << std::endl;
+  //std::cout << "New suggested point is: \n" << dNew << "\n";
+
+  //if (incBest < 0.000000001){
+    Eigen::VectorXd yTry(n); //Displacement from current center point
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    static std::uniform_real_distribution<> dis(-rho, rho);
+    int k = 0;
+
+    for (int k = 0; k <= 2*n; ++k){
+      for (int t = 0; t < n; ++t) {
+        startingPoint(t) = dis(gen) + bestPoint[t];
+      }
+
+      subproblem.Solve(xsolMax, fsolMax, (char *) "Maximize", y0, bestPoint, startingPoint);
+      subproblem.Solve(xsolMin, fsolMin, (char *) "Minimize", y0, bestPoint, startingPoint);
+      double val2 = c + startingPoint.transpose()*startingPoint + startingPoint.transpose()*hess*startingPoint;
+
+      Eigen::VectorXd optimum(n);
+
+      if (abs(fsolMax[0]) >= abs(fsolMin[0])) {
+        val = abs(fsolMax[0]);
+      } else {
+        val = abs(fsolMin[0]);
+      }
+
+      if (val > incBest) {
+        incBest = val;
+        for (int i = 0; i < xsolMax.size(); ++i) {
+          if (abs(fsolMax[0]) >= abs(fsolMin[0])) {
+            dNew[i] = xsolMax[i];
+          } else {
+            dNew[i] = xsolMin[i];
+          }
+        }
+      }
+      if (val2 > incBest){
+        incBest = val2;
+        dNew = startingPoint;
+      }
+
+
+    }
+    std::cout << "abs lagrange value: " << incBest << std::endl;
+    std::cout << "New suggested point is: \n" << dNew << "\n";
+  //}
+
+
+} //abs lagrange value: 0.00000000056247488472
+
 
 }
 }

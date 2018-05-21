@@ -179,7 +179,8 @@ class DFO_Model {
   enum UpdateReason {
     IMPROVE_POISEDNESS = -1,
     INCLUDE_NEW_OPTIMUM = -2,
-    INCLUDE_NEW_POINT = -3
+    INCLUDE_NEW_POINT = -3,
+    FORCED_IMPROVE_MODEL = -4
   };
 
   bool isInitialInterpolationPointsFound() {
@@ -471,7 +472,9 @@ class DFO_Model {
 
   double ComputeLagrangePolynomial(int t, Eigen::VectorXd point);
 
-  Eigen::VectorXd GetInterpolationPointsSortedByDistanceFromBestPoint();
+  double PrintLagrangePolynomial(int t);
+
+  Eigen::VectorXi GetInterpolationPointsSortedByDistanceFromBestPoint();
 
   bool FindPointToReplaceWithPointOutsideScaledTrustRegion(int t,Eigen::VectorXd &dNew);
   void wtf(Eigen::VectorXd &da){
@@ -487,6 +490,12 @@ class DFO_Model {
 
   static double norm(Eigen::VectorXd a);
 
+
+  void calculatePolynomialModelDirectlyFromWinverse();
+
+  Eigen::MatrixXd calculateWExplicitly();
+
+  bool FindReplacementPoint(int t, Eigen::VectorXd &dNew, int compareIdx);
 };
 }
 }
