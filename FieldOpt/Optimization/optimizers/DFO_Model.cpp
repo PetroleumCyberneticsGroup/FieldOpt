@@ -842,7 +842,7 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
 
   //std::cout << "-----------\nPoisedness for each sample point (in radius): \n" << poisedness << "\n";
 
-
+  std::cout << "Required poisedness: " << lambda << "\nPoisedness: " << worstPoisedness << "\n";
 
 }
 
@@ -1699,17 +1699,16 @@ int DFO_Model::isPointAcceptable(Eigen::VectorXd point) {
   //Hw.tail(n + 1) = Xi * w.head(m) + Upsilon * w.tail(n + 1);
   eigen_tail(Hw, Xi * w.head(m) + Upsilon * w.tail(n + 1), n + 1);
 
-
   int indexToBeReplaced = -1;
   double currentMax = -1;
   for (int j = 1; j <= m; ++j){
     if (j == bestPointIndex) {
-      //continue;
+      continue;
     }
     double lagval = std::abs((Hw)(j - 1));
-    if (lagval > 1 || norm(point-bestPoint) > 2*rho){
+    if ( (lagval > 1) || (norm(Y.col(j - 1)-bestPoint) > 2*rho)){
       // do the maximization thing.
-      double distance = (bestPoint - Y.col(j - 1)).norm();
+      double distance = norm((bestPoint - Y.col(j - 1)));
       double distanceWeight = std::pow(distance, 2);
       if (distance > 2*rho ){
         distanceWeight += 100000000*distanceWeight;
@@ -1784,11 +1783,11 @@ bool DFO_Model::FindReplacementForPointsOutsideRadius(double radius, Eigen::Matr
       newPoints.col(addedPoints) = dNew;
       eigen_col(newPoints, dNew, addedPoints);
       //do the update
-      //updateInverseKKTMatrix(dNew,sortedPoints[i]);
-      //eigen_col(Y, dNew, sortedPoints[i] - 1);
+      updateInverseKKTMatrix(dNew,sortedPoints[i]);
+      eigen_col(Y, dNew, sortedPoints[i] - 1);
       addedPoints++;
       j++;
-      break;
+      //break;
     }
     else{
       std::cout << "best point (init point): \n" << bestPoint << "\n";

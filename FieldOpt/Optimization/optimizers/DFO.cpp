@@ -775,6 +775,7 @@ void DFO::iterate() {
           break;
         }
       }
+      UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_MULTIPLE_POINTS_ADDED);
       std::cout << "\033[1;34;m " << "Y AFTER PUTTING POINTS INSIDE TRUST REGION RADIUS...." << "\033[0m" << "\n";
       std::cout << "\033[1;34;m " << "Fvals = \n" << "\033[0m" << *refFuncVals << "\n";
       std::cout << "\033[1;34;m " << "Y = \n" << "\033[0m" << *refY << "\n";
@@ -800,9 +801,9 @@ void DFO::iterate() {
         UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND);
 
       } else {
-        //DFO_model_.FindPointToIncreasePoisedness(new_point, index_of_new_point);
-        //bool isPoisedExceptBestPoint =  DFO_model_.FindPointToIncreasePoisedness(new_point, index_of_new_point);
-        //DFO_model_.findWorstPointInInterpolationSetByLU(new_point, index_of_new_point);
+        if (iterations_ == 105){
+          std::cout << "stopping \n";
+        }
         DFO_model_.SetTrustRegionRadiusForSubproblem(r * DFO_model_.GetTrustRegionRadius());
         DFO_model_.findWorstPointInInterpolationSet(new_point, index_of_new_point); //Check if it is lambda-poised.
         if (index_of_new_point == -1) {
@@ -814,6 +815,9 @@ void DFO::iterate() {
       }
     }
     if (last_action_ == MODEL_IMPROVEMENT_ALGORITHM_FINISHED) {
+
+
+
       //We are back to the criticality step.
       trust_region_radius_tilde = pow(w, criticality_step_iteration) * trust_region_radius_inc;
 
@@ -860,6 +864,7 @@ void DFO::iterate() {
           int number_of_points_outside_trust_region =
               DFO_model_.GetNumberOfPointsOutsideRadius(r * trust_region_radius_tilde);
           if (number_of_points_outside_trust_region >= 1) {
+
             bool possible =  DFO_model_.FindReplacementForPointsOutsideRadius(r * trust_region_radius_tilde,
                                                              new_points_criticality,
                                                              new_indicies_criticality);
@@ -880,6 +885,7 @@ void DFO::iterate() {
               }
               std::cout << "Number of points outside trust-region radius: " << number_of_points_outside_trust_region <<
                          "\nNumber of points to be replaced:              " << a <<"\n";
+
               /*
               DFO_model_.PrintLagrangePolynomial(new_indicies_criticality[0]);
               for (int i = 1; i <= number_of_interpolation_points_; ++i){
@@ -887,6 +893,7 @@ void DFO::iterate() {
               }
               */
             UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_MULTIPLE_POINTS_FOUND);
+
             DFO_model_.SetTrustRegionRadius(pow(w, criticality_step_iteration-1) * trust_region_radius_inc);
             break;
             }
@@ -900,10 +907,12 @@ void DFO::iterate() {
         if (last_action_ == MODEL_IMPROVEMENT_ALGORITHM_MULTIPLE_POINTS_FOUND) {
           //nothing?
           DFO_model_.SetTrustRegionRadius(pow(w, criticality_step_iteration) * trust_region_radius_inc);
-        } else if (index_of_new_point != -1) {
+        }
+        else if (index_of_new_point != -1) {
           UpdateLastAction(MODEL_IMPROVEMENT_ALGORITHM_POINT_FOUND);
           DFO_model_.SetTrustRegionRadius(pow(w, criticality_step_iteration) * trust_region_radius_inc);
-        } else if (trust_region_radius_tilde <= u * (norm_of_gradient)) {
+        }
+        else if (trust_region_radius_tilde <= u * (norm_of_gradient)) {
           double temp = max(trust_region_radius_tilde, beta * gradient.norm());
           double new_trust_region_radius = min(temp, trust_region_radius_inc);
           DFO_model_.SetTrustRegionRadius(new_trust_region_radius);
@@ -928,7 +937,7 @@ void DFO::iterate() {
     }
 
     if (last_action_ == CRITICALITY_STEP_FINISHED) {
-      if (number_of_crit_step_finished_with_bad_poisedness >= 10 && false) {
+      if (number_of_crit_step_finished_with_bad_poisedness >= 10 ) {
         UpdateLastAction(MODEL_IMPROVEMENT_FORCED_POINT_START);
         DFO_model_.UpdateOptimum();
         DFO_model_.shiftCenterPointOfQuadraticModel(DFO_model_.GetBestPoint());
@@ -1000,6 +1009,7 @@ void DFO::iterate() {
 
           //Check if some other criterias are satisfied, if so; get the objective function value.
           int pointToReplace = DFO_model_.isPointAcceptable(new_point);
+          pointToReplace = -1;
           if (pointToReplace != -1){
             index_of_new_point = pointToReplace;
             UpdateLastAction(BAD_TRIAL_POINT_FOUND);
@@ -1065,6 +1075,7 @@ void DFO::iterate() {
         //int t = DFO_model_.findPointFarthestAwayFromOptimum();
         if ( DFO_model_.norm(( DFO_model_.GetPoint(t) - DFO_model_.GetBestPoint())) > r * DFO_model_.GetTrustRegionRadius() ||
             abs(DFO_model_.ComputeLagrangePolynomial(t, new_point)) > 1) {
+          if (abs(DFO_model_.ComputeLagrangePolynomial(t, new_point)) > 1){
           std::cout << "BEFORE ---------------- BEFORE \n";
           DFO_model_.findWorstPointInInterpolationSet(dummyVec, dummyInt);
           DFO_model_.update(new_point, function_evaluation, t, DFO_Model::INCLUDE_NEW_POINT);
@@ -1076,6 +1087,7 @@ void DFO::iterate() {
             DFO_model_.shiftCenterPointOfQuadraticModel(DFO_model_.GetBestPoint());
           }
           //last_action_ = NEW_POINT_INCLUDED; //Doing this destroys the AND functionality!
+        }
         }
       }
     }
@@ -1135,6 +1147,8 @@ void DFO::iterate() {
       /// Do the model improvement step.
 
       /// If the interpolation set is already well-poised, let's just reduce the radius.
+      /// IT IS NOT WELL POISED IF THERE ARE POINTS OUTSIDE!
+      int number_of_points_outside = DFO_model_.GetNumberOfPointsOutsideRadius(r*DFO_model_.GetTrustRegionRadius());
       Eigen::VectorXd dummyVec(number_of_variables_);
       dummyVec.setZero();
       int dummyInt = 0;
