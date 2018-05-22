@@ -496,6 +496,7 @@ class DFO_Model {
   Eigen::MatrixXd calculateWExplicitly();
 
   bool FindReplacementPoint(int t, Eigen::VectorXd &dNew, int compareIdx);
+  void UpdateOptimum();
 };
 }
 }

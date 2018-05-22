@@ -112,6 +112,16 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
   snoptHandler.setParameter(optimizationType);
 
   setOptionsForSNOPT(snoptHandler);
+  snoptHandler.setRealParameter("Major step limit", trustRegionRadius_); //was 0.2
+  //target nonlinear constraint violation
+  snoptHandler.setRealParameter("Major feasibility tolerance", 0.00000000001); //1.0e-6
+  //target complementarity gap
+  double val = constant + gradient.transpose() * bestPointDisplacement + 0.5 * bestPointDisplacement.transpose() * hessian * bestPointDisplacement;
+  snoptHandler.setRealParameter("Major optimality tolerance", 0.000000000000000001*trustRegionRadius_);
+  if (val > 10){
+    snoptHandler.setRealParameter("Major optimality tolerance", 0.000000000000000001*val);
+  }
+
 
   ResetSubproblem();
   for (int i = 0; i < n_; i++) {
@@ -122,7 +132,7 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
 
   snoptHandler.solve(Cold, xsol, fsol);
   integer exitCode = snoptHandler.getExitCode();
-
+/*
   if (exitCode == 32){
     cout << "The major iteration limit was reached, trying to increase it to improve on the result" << endl;
     ResetSubproblem();
@@ -168,7 +178,7 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
 
 
   }
-
+*/
 }
 
 
@@ -200,10 +210,23 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
   snoptHandler.setParameter(optimizationType);
 
   setOptionsForSNOPT(snoptHandler);
+  snoptHandler.setRealParameter("Major step limit", trustRegionRadius_); //was 0.2
+  //target nonlinear constraint violation
+  snoptHandler.setRealParameter("Major feasibility tolerance", 0.00000000001); //1.0e-6
+
+  double val = constant + gradient.transpose() * bestPointDisplacement + 0.5 * bestPointDisplacement.transpose() * hessian * bestPointDisplacement;
+  snoptHandler.setRealParameter("Major optimality tolerance", 0.000000000000000001*trustRegionRadius_);
+  snoptHandler.setRealParameter("Major optimality tolerance", 0.00000000000000000000001*trustRegionRadius_);
+
+  if (val > 10){
+    snoptHandler.setRealParameter("Major optimality tolerance", 0.000000000000000001*val);
+  }
+  //snoptHandler.setRealParameter("Major optimality tolerance", 0.00000001);
 
   ResetSubproblem();
   for (int i = 0; i < n_; i++) {
-    x_[i] = startingPoint[i];//bestPointDisplacement_[i];
+    //x_[i] = startingPoint[i];//bestPointDisplacement_[i];
+    x_[i] = 0.0;//bestPointDisplacement_[i];
   }
   passParametersToSNOPTHandler(snoptHandler);
   integer Cold = 0, Basis = 1, Warm = 2;
@@ -474,8 +497,8 @@ void Subproblem::setOptionsForSNOPT(SNOPTHandler &snoptHandler) {
   //snoptHandler.setParameter("Suppress parameters");
   //snoptHandler.setParameter((char*)"System information  No");
   //snoptHandler.setParameter("Timing level                    3");
-  //snoptHandler.setRealParameter("Unbounded objective value   1.0e+15");
-  //snoptHandler.setParameter("Unbounded step size             1.0e+18");
+  snoptHandler.setRealParameter("Unbounded objective value", 1.0e+18); // infinity_ = 1e20; "Unbounded objective value   1.0e+15"
+  snoptHandler.setRealParameter("Unbounded step size",       1.0e+19); //"Unbounded step size             1.0e+18"
   //snoptHandler.setIntParameter("Verify level", -1); //-1
   //snoptHandler.setRealParameter("Violation limit", 1e-8); //1e-8
 
