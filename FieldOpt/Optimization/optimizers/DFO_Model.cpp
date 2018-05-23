@@ -336,8 +336,9 @@ DFO_Model::DFO_Model(unsigned int m,
   //this->y0 = y0;
   this->y0 = Eigen::VectorXd::Zero(n);
   //this->y0 << 1,2;
-  this->y0[0] = 5;
-  this->y0[1] = 3;
+  this->y0[0] = 10 + 3;
+  this->y0[1] = 10 + 2;
+  this->y0[2] = 10 - 4;
   //std::cout << "y0\n" << y0 << "\ny0this\n" << this->y0 << "\n";
   //this->y0.setZero();
   this->rho = rhoBeg;
@@ -1168,12 +1169,13 @@ int DFO_Model::findPointToReplaceWithNewOptimum(Eigen::VectorXd yNew) {
   std::cout << "Y\n" << Y << "\n";
   for (int i = 1; i <= m; ++i) {
     if (i == bestPointIndex) {
-      continue;
+      //continue;
     }
-    double distance = (bestPoint - Y.col(i - 1)).norm();
-    double distanceWeight = std::pow(distance, 2);
-    if (distance > 2*rho ){
-      distanceWeight += 100000000*distanceWeight;
+    double distance = norm((bestPoint - Y.col(i - 1)));
+    //double distanceWeight = std::pow(distance, 2);
+    double distanceWeight = distance;
+    //if (distance > 2*rho ){
+    //  distanceWeight += 100000000*distanceWeight;
       /*
       if (distanceWeight < 1){
         distanceWeight += 10*distanceWeight;
@@ -1182,7 +1184,8 @@ int DFO_Model::findPointToReplaceWithNewOptimum(Eigen::VectorXd yNew) {
         distanceWeight = std::pow(distance, 4);
       }
        */
-    }
+    //}
+
     double lagval = std::abs((Hw)(i - 1));
     double value = distanceWeight * lagval;
     std::cout << "distance: " << distance << "\t distanceweight: " << distanceWeight << "\t lagval: " << lagval <<"\t " << "value: " << value << "\n";
@@ -1767,7 +1770,7 @@ bool DFO_Model::FindReplacementForPointsOutsideRadius(double radius, Eigen::Matr
     newIndices[i] = -1;
   }
 
-  subproblem.SetTrustRegionRadius(radius/2.0);
+  subproblem.SetTrustRegionRadius(radius/r);
   newPoints.resize(n, number_of_points_outside);
   newPoints.setZero();
   Eigen::VectorXd dNew(n);
@@ -1778,7 +1781,7 @@ bool DFO_Model::FindReplacementForPointsOutsideRadius(double radius, Eigen::Matr
     //dNew = findHighValueOfAbsoluteLagrangePolynomial(sortedPoints[i]);
     double lagabsval = std::abs(ComputeLagrangePolynomial(sortedPoints[i], dNew));
     std::cout << "lagabsval = " << lagabsval << "\n";
-    if (lagabsval > 0.0000001) {
+    if (lagabsval > 0.001) {
       newIndices[addedPoints] = sortedPoints[i];
       newPoints.col(addedPoints) = dNew;
       eigen_col(newPoints, dNew, addedPoints);
@@ -2196,6 +2199,62 @@ void DFO_Model::UpdateOptimum(){
   if (i != bestPointIndex){
     bestPointIndex = i;
     bestPoint = Y.col(i-1);
+  }
+}
+
+
+void DFO_Model::isPoised(Eigen::VectorXd &dNew, int &indexOfPointToBeReplaced, double radius){
+  indexOfPointToBeReplaced = -1;
+  int numberOfPointsOutsideRadius = GetNumberOfPointsOutsideRadius(radius);
+  if (numberOfPointsOutsideRadius >= 1){
+    /// Find points outside r*radius
+    Eigen::VectorXi sortedPoints = GetInterpolationPointsSortedByDistanceFromBestPoint();
+    sortedPoints.conservativeResize(numberOfPointsOutsideRadius);
+
+    subproblem.SetTrustRegionRadius(radius/r);
+    for (int i = 0; i < numberOfPointsOutsideRadius; ++i){
+      dNew = FindLocalOptimumOfAbsoluteLagrangePolynomial(sortedPoints[i]);
+      double lagabsval = std::abs(ComputeLagrangePolynomial(sortedPoints[i], dNew));
+      std::cout << "lagabsval = " << lagabsval << "\n";
+      if (lagabsval > 0.001) {
+        indexOfPointToBeReplaced = sortedPoints[i];
+        break;
+      }
+      else{
+        std::cout << "best point (init point): \n" << bestPoint << "\n";
+        std::cout << "point found: \n" << dNew <<"\n";
+        std::cout << "Lag pol that cannot be maximized\n";
+        PrintLagrangePolynomial(sortedPoints[i]);
+        }
+        //break;
+      }
+    }
+
+  else{
+    subproblem.SetTrustRegionRadius(radius);
+    findWorstPointInInterpolationSet(dNew,indexOfPointToBeReplaced);
+  }
+}
+
+void DFO_Model::modelImprovementStep(Eigen::VectorXd &dNew, int &indexOfPointToBeReplaced){
+  indexOfPointToBeReplaced = -1;
+  Eigen::VectorXi sortedPoints = GetInterpolationPointsSortedByDistanceFromBestPoint();
+  for (int i = 0; i < m; ++i){
+    int t = sortedPoints[i];
+    subproblem.SetTrustRegionRadius(rho);
+    dNew = FindLocalOptimumOfAbsoluteLagrangePolynomial(t);
+    double lagabsval = std::abs(ComputeLagrangePolynomial(t, dNew));
+    if (lagabsval > lambda || norm((Y.col(t-1) - bestPoint))
+        > r * rho) {
+
+      if (lagabsval > 0.001){
+        std::cout << "lagabsval = " << lagabsval << "\n";
+        std::cout << "Distance from optimum:   " << norm(Y.col(t-1) - bestPoint) << "\n";
+        std::cout << "r*radius:                " << r*rho << "\n";
+        indexOfPointToBeReplaced = t;
+        break;
+      }
+    }
   }
 }
 

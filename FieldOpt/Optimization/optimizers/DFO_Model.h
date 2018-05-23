@@ -43,6 +43,7 @@ class DFO_Model {
   double lambda; // The required poisedness of the set of interpolation points.
   double r = 2;
 
+
   Eigen::VectorXd y0; // The point which the model is ceneterd around.
 
   Eigen::MatrixXd
@@ -497,6 +498,8 @@ class DFO_Model {
 
   bool FindReplacementPoint(int t, Eigen::VectorXd &dNew, int compareIdx);
   void UpdateOptimum();
+  void isPoised(VectorXd &dNew, int &indexOfPointToBeReplaced, double radius);
+  void modelImprovementStep(VectorXd &dNew, int &indexOfPointToBeReplaced);
 };
 }
 }
