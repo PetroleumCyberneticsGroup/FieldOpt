@@ -763,7 +763,6 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
     for (int k = 1; k <= m; ++k) {
       double tmp = Z.row(k - 1) * S * (Z.row(t - 1)).transpose();
       hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
-      //hess += Z.row(k - 1) * S * (Z.row(t - 1)).transpose() * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
     }
 
     // Find min and max of l_t(x)
@@ -774,7 +773,6 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
     vector<double> fsolMax;
     vector<double> xsolMin;
     vector<double> fsolMin;
-    //subproblem.SetTrustRegionRadius(GetTrustRegionRadius());
     subproblem.Solve(xsolMax, fsolMax, (char *) "Maximize", y0, bestPoint,bestPoint);
     subproblem.Solve(xsolMin, fsolMin, (char *) "Minimize", y0, bestPoint,bestPoint);
     poisedness(t-1) = std::max(abs(fsolMax[0]),abs(fsolMin[0]));
@@ -803,6 +801,20 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
     }
   }
   if (worstPoisedness > lambda) {
+    if (index == bestPointIndex){
+      int k = -1;
+      double tmp = -1;
+      for (int j = 1; j <= m; j ++){
+        if (poisedness[j-1] > lambda && poisedness[j-1] > tmp && j != bestPointIndex){
+          k = j;
+          tmp = poisedness[j-1];
+        }
+      }
+      if (k != -1){
+        indexOfWorstPoint = k;
+        std::cout << "Avoided removing best point" << std::endl;
+      }
+    }
     indexOfWorstPoint = index;
 
     hess.setZero();
@@ -811,7 +823,6 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
     for (int k = 1; k <= m; ++k) {
       double tmp = Z.row(k - 1) * S * (Z.row(indexOfWorstPoint - 1)).transpose();
       hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
-      //hess += Z.row(k - 1) * S * (Z.row(t - 1)).transpose() * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
     }
     subproblem.setConstant(c);
     subproblem.setGradient(grad);
@@ -1169,7 +1180,7 @@ int DFO_Model::findPointToReplaceWithNewOptimum(Eigen::VectorXd yNew) {
   std::cout << "Y\n" << Y << "\n";
   for (int i = 1; i <= m; ++i) {
     if (i == bestPointIndex) {
-      //continue;
+      continue;
     }
     double distance = norm((bestPoint - Y.col(i - 1)));
     //double distanceWeight = std::pow(distance, 2);
@@ -2228,8 +2239,7 @@ void DFO_Model::isPoised(Eigen::VectorXd &dNew, int &indexOfPointToBeReplaced, d
         }
         //break;
       }
-    }
-
+  }
   else{
     subproblem.SetTrustRegionRadius(radius);
     findWorstPointInInterpolationSet(dNew,indexOfPointToBeReplaced);
