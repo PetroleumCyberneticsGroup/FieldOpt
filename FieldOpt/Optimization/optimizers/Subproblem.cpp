@@ -226,13 +226,24 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
   ResetSubproblem();
   for (int i = 0; i < n_; i++) {
     //x_[i] = startingPoint[i];//bestPointDisplacement_[i];
-    x_[i] = 0.0;//bestPointDisplacement_[i];
+    //x_[i] = 0.0;//bestPointDisplacement_[i];
+    x_[i] = bestPointDisplacement_[i];
   }
   passParametersToSNOPTHandler(snoptHandler);
   integer Cold = 0, Basis = 1, Warm = 2;
 
   snoptHandler.solve(Cold, xsol, fsol);
   integer exitCode = snoptHandler.getExitCode();
+  std::cout << "snopt exitcode:  " << exitCode << "\n";
+  if (exitCode == 40 || exitCode == 41){
+    std::cout << "snopt failed me. current point cannot be improved because of numerical difficulties \n";
+
+    //std::cin.get();
+  }
+  if (exitCode != 40 && exitCode != 41 && exitCode != 1){
+    std::cout << "ExitCode is: " << exitCode << "\n";
+    std::cin.get();
+  }
 }
 
 

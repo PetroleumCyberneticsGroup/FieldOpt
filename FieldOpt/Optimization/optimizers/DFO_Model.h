@@ -41,7 +41,7 @@ class DFO_Model {
   unsigned int n; // Number of decision variables in your model.
   double rho; // Trust-region radius.
   double lambda; // The required poisedness of the set of interpolation points.
-  double r = 2;
+  double r = 2.0;
 
 
   Eigen::VectorXd y0; // The point which the model is ceneterd around.

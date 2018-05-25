@@ -63,6 +63,18 @@ Eigen::VectorXd test(Eigen::VectorXd x) {
 }
 
 double sphere(Eigen::VectorXd x) {
+  Eigen::VectorXd scaledX = x*10;
+  double val = 0;
+  for (int i = 0; i < x.rows(); i++) {
+    val += (x(i) - 10) * (x(i) - 10);
+//    val += (x(i)  - 23 ) * (x(i) - 4);
+  }
+  double val2 = 0.26 * (x(0) * x(0) + x(1) * x(1)) - 0.46 * x(0) * x(1);
+  return val2;
+  //return val;
+}
+double sphereorg(Eigen::VectorXd x) {
+  Eigen::VectorXd scaledX = x*10;
   double val = 0;
   for (int i = 0; i < x.rows(); i++) {
     val += (x(i) - 10) * (x(i) - 10);
@@ -70,7 +82,6 @@ double sphere(Eigen::VectorXd x) {
   }
   return val;
 }
-
 Eigen::VectorXd sphereGradients(Eigen::VectorXd x, int ng) {
   Eigen::VectorXd ret(1 + ng);
   double val = 0;
@@ -471,7 +482,7 @@ void DFO::handleEvaluatedCase(Optimization::Case *c) {
 }
 
 void DFO::iterate() {
-
+  GradientEnhancedModel  enhancedModel(number_of_variables_,number_of_interpolation_points_,settings_->parameters().number_of_variables_with_gradients,settings_->parameters().weights_distance_from_optimum_lsq,settings_->parameters().weight_model_determination_minimum_change_hessian);
   int number_of_crit_step_finished_with_bad_poisedness = 0;
 
   MatrixXd aa(2, 2);
@@ -596,6 +607,7 @@ void DFO::iterate() {
       UpdateLastAction(INITIALIZED_MODEL);
 
       DFO_model_.printParametersMatlabFriendly();
+      //DFO_model_.printParametersMatlabFriendlyGradientEnhanced();
       //DFO_model_.shiftCenterPointOfQuadraticModel(-DFO_model_.getCenterPoint());
       //DFO_model_.printQuadraticModel();
       std::cout << "------------Gradients ---------" << std::endl;
@@ -609,11 +621,11 @@ void DFO::iterate() {
       Eigen::VectorXd funccopy = (*refFuncVals).tail(3);
       Eigen::VectorXd gradCp = (*refDerivatives).col(0).tail(ng);
       int index_of_center_point = 0;
-      //enhancedModel.ComputeModel( (*refY), (*refDerivatives), gradCp /*DFO_model_.GetGradient()*/, (*refFuncVals),DFO_model_.getCenterPoint(), DFO_model_.GetBestPoint(),
-      //                           DFO_model_.GetTrustRegionRadius(), r, index_of_center_point);
+      enhancedModel.ComputeModel( (*refY), (*refDerivatives), gradCp /*DFO_model_.GetGradient()*/, (*refFuncVals),DFO_model_.getCenterPoint(), DFO_model_.GetBestPoint(),
+                                 DFO_model_.GetTrustRegionRadius(), r, index_of_center_point);
       //enhancedModel.ComputeModel( ycop,dercopy, gradCp, funccopy,DFO_model_.getCenterPoint(), DFO_model_.GetBestPoint(),
       //DFO_model_.GetTrustRegionRadius(), r, index_of_center_point);
-      //enhancedModel.GetModel(constant, grad,hess);
+      enhancedModel.GetModel(constant, grad,hess);
       std::cout << "------------Enhanced model? ---------" << std::endl;
       std::cout << "c = " << constant << std::endl;
       std::cout << "gradient = " << std::endl << grad << std::endl;
@@ -624,7 +636,7 @@ void DFO::iterate() {
       DFO_model_.update(new_point, function_evaluation, index_of_new_point, DFO_Model::INCLUDE_NEW_POINT);
 
       UpdateLastAction(MODEL_IMPROVEMENT_POINT_ADDED);
-      //if (index_of_new_point == DFO_model_.getBestPointIndex()) {
+      //if (index_of_new_point == DF  O_model_.getBestPointIndex()) {
       //  DFO_model_.shiftCenterPointOfQuadraticModel(DFO_model_.GetBestPoint());
       //}
       std::cout << "\033[1;34;m " << "Fvals = \n" << "\033[0m" << *refFuncVals << "\n";
@@ -961,7 +973,7 @@ void DFO::iterate() {
                                                  //0.00000000000018709117
                                                //0.00000000000108749612
                                                //0.00000000000108322515
-        if (DFO_model_.GetTrustRegionRadius() <= 0.00000001 && gradient.norm() <= 0.1) {
+        if (DFO_model_.GetTrustRegionRadius() <= 0.00000001  && gradient.norm() <= 0.0001) {
           Eigen::MatrixXd Yabs(number_of_variables_, number_of_interpolation_points_);
           for (int j = 0; j < number_of_interpolation_points_; ++j) {
             Eigen::VectorXd sd = (*refY).col(j) + DFO_model_.getCenterPoint();
@@ -985,6 +997,7 @@ void DFO::iterate() {
           std::cout << "\033[1;34;m " << "Trust region radius is: " << "\033[0m" << DFO_model_.GetTrustRegionRadius()
                     << std::endl;
           DFO_model_.printParametersMatlabFriendly();
+          //DFO_model_.printParametersMatlabFriendlyGradientEnhanced();
           Eigen::VectorXd cp(3);
           cp[0] = 10;
           cp[1] = 10;
@@ -992,6 +1005,7 @@ void DFO::iterate() {
           cp = cp - DFO_model_.getCenterPoint();
           DFO_model_.shiftCenterPointOfQuadraticModel(cp);
           DFO_model_.printParametersMatlabFriendly();
+          //DFO_model_.printParametersMatlabFriendlyGradientEnhanced();
           std::cout << "Best point (absolute):\n" << DFO_model_.getCenterPoint() + DFO_model_.GetBestPoint()
                     << "\nWith value: " << DFO_model_.GetFunctionValue(DFO_model_.getBestPointIndex()) << "\n";
 
@@ -1122,7 +1136,7 @@ void DFO::iterate() {
       DFO_model_.update(new_point, function_evaluation, index_of_new_point,
                         DFO_Model::FORCED_IMPROVE_MODEL); //add the point
       std::cout << "\033[1;" + color_from + "m " << "Added the point." << "\033[0m";
-
+      UpdateLastAction(MODEL_IMPROVEMENT_FORCED_POINT_ADDED);
       UpdateLastAction(MODEL_IMPROVEMENT_FORCED_POINT_START);
     } else if (last_action_ == MODEL_IMPROVEMENT_FORCED_POINTS_FOUND) {
       for (int i = 0; i < new_points_criticality.cols(); ++i) {
@@ -1136,7 +1150,7 @@ void DFO::iterate() {
           break;
         }
       }
-
+      UpdateLastAction(MODEL_IMPROVEMENT_FORCED_POINTS_ADDED);
       UpdateLastAction(MODEL_IMPROVEMENT_FORCED_POINT_START);
     }
 
@@ -1150,8 +1164,19 @@ void DFO::iterate() {
         bool valid = DFO_model_.FindReplacementForPointsOutsideRadius(r * DFO_model_.GetTrustRegionRadius(),
                                                          new_points_criticality,
                                                          new_indicies_criticality);
+        int kk = 0;
+        for (int i = 0; i < new_indicies_criticality.rows(); ++i){
+          if (new_indicies_criticality(i) != -1){
+            kk++;
+          }
+        }
+        std::cout << " , and is: " << kk << "\n";
+        ///TODO if valid == false, cant do this
+        double distance = DFO_model_.norm(new_points_criticality.col(0)-DFO_model_.GetBestPoint());
+        std::cout << "Distance between new point and best point : \n" << distance
+                  <<"\ndistance <= r*radius  " << (distance <= r*DFO_model_.GetTrustRegionRadius()) << "\n";
 
-        if (valid == false && new_indicies_criticality.rows() == 0){
+         if (valid == false && new_indicies_criticality.rows() == 0){
           UpdateLastAction(CRITICALITY_STEP_FINISHED);
         }
         else{
@@ -1163,6 +1188,7 @@ void DFO::iterate() {
       } else {
         //All points are inside the trust region. The required poisedness is reached.
         DFO_model_.printParametersMatlabFriendly();
+        //DFO_model_.printParametersMatlabFriendlyGradientEnhanced();
         UpdateLastAction(CRITICALITY_STEP_FINISHED);
       }
 

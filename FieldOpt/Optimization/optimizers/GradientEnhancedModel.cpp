@@ -219,11 +219,9 @@ void GradientEnhancedModel::ComputeModel(Eigen::MatrixXd Y,
 
   //std::cout << "v\n" << _v_ << std::endl;
 
-
-
-
   // set the constraints
   Eigen::VectorXd ans;
+  //hessian_old_.setZero();
   //solveLinearSystem(_D_, _v_, funcVals, derivatives_at_y0, _weights_least_square_, ans);
   solveLinearSystem(funcVals, derivatives_at_y0, ans);
 

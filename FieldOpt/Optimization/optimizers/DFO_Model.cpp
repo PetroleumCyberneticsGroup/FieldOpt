@@ -336,9 +336,9 @@ DFO_Model::DFO_Model(unsigned int m,
   //this->y0 = y0;
   this->y0 = Eigen::VectorXd::Zero(n);
   //this->y0 << 1,2;
-  this->y0[0] = 10 + 3;
-  this->y0[1] = 10 + 2;
-  this->y0[2] = 10 - 4;
+  this->y0[0] = 10 + 4;
+  this->y0[1] = 10 + 1;
+  //this->y0[2] = 10 - 3;
   //std::cout << "y0\n" << y0 << "\ny0this\n" << this->y0 << "\n";
   //this->y0.setZero();
   this->rho = rhoBeg;
@@ -391,7 +391,7 @@ Eigen::MatrixXd DFO_Model::findFirstSetOfInterpolationPoints() {
       //Y.col(i + n)[i - 1] -= rho;
       Y(i - 1, i + n) -= rho;
     }
-    numberOfPointsFound = 2 * n;
+    numberOfPointsFound = 2 * n+1;
   } else if (m >= n + 2 && m <= 2 * n) {
     for (int i = 1; i <= n; ++i) {
       //Y.col(i)[i - 1] += rho;
@@ -409,7 +409,9 @@ Eigen::MatrixXd DFO_Model::findFirstSetOfInterpolationPoints() {
     std::cin.get();
     std::exit(1);
   }
-
+  //for (int i = 1; i <= numberOfPointsFound; ++i){
+  //  eigen_col(Y,Y.col(i-1)/10,i-1);
+  //}
   return Y.block(0, 0, n, numberOfPointsFound);
 }
 
@@ -459,7 +461,11 @@ Eigen::MatrixXd DFO_Model::findLastSetOfInterpolationPoints() {
     std::cout << "findLastSetOfInterpilationPoints() was called when m <= 2*n + 1" << std::endl;
   }
   initialInterpolationPointsFound = true;
-  return Y.block(0, 2 * n, n, m - 2 * n);
+  //for (int i = 2 * n; i <= numberOfPointsFound; ++i){
+  //  eigen_col(Y,Y.col(i-1)/10,i-1);
+  //}
+  std::cout << Y.block(0, 2 * n + 1, n, m - 2 * n -1) << "\n";
+  return Y.block(0, 2 * n+1, n, m - (2 * n+1));
 }
 
 void DFO_Model::initializeModel() {
@@ -801,6 +807,7 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
     }
   }
   if (worstPoisedness > lambda) {
+
     if (index == bestPointIndex){
       int k = -1;
       double tmp = -1;
@@ -815,6 +822,7 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
         std::cout << "Avoided removing best point" << std::endl;
       }
     }
+
     indexOfWorstPoint = index;
 
     hess.setZero();
@@ -1364,6 +1372,7 @@ void DFO_Model::SetFunctionValueAndDerivatives(int t, Eigen::VectorXd values) {
 void DFO_Model::SetTrustRegionRadiusForSubproblem(double radius) {
   subproblem.SetTrustRegionRadius(radius);
 }
+
 Eigen::VectorXd DFO_Model::FindLocalOptimum() {
   Eigen::MatrixXd Hessian(n, n);
   Hessian = Gamma;
@@ -1391,6 +1400,25 @@ Eigen::VectorXd DFO_Model::FindLocalOptimum() {
   //std::cout << "best point " << bestPoint[0] + y0(0) << "\t" << bestPoint[1] + y0(1) <<"\n";
 
   //subproblem.printModel();
+/*
+  /// The enhanced model;
+  Eigen::MatrixXd der(0,0);
+  Eigen::VectorXd der0(0);
+  enhancedModel.ComputeModel(Y, der, der0, fvals, y0, bestPoint, rho, r,0);
+  double e_c = 0;
+  Eigen::VectorXd e_g(n);
+  Eigen::MatrixXd e_h(n,n);
+  enhancedModel.GetModel(e_c,e_g,e_h);
+  subproblem.setHessian(e_h);
+  subproblem.setGradient(e_g);
+  subproblem.setConstant(e_c);
+
+  subproblem.Solve(xsol, fsol, (char *) "Minimize", y0, bestPoint);
+  for (int i = 0; i < n; i++) {
+    localOptimum[i] = xsol[i];
+  }
+*/
+
   return localOptimum;
 }
 
@@ -1690,10 +1718,10 @@ bool DFO_Model::FindPointToIncreasePoisedness(Eigen::VectorXd &dNew, int &t) {
 }
 
 void DFO_Model::printParametersMatlabFriendlyGradientEnhanced() {
-  std::cout << "y0 in dfo model \n" << y0 << "\n";
-  enhancedModel.ComputeModel(Y, derivatives, derivatives.col(0), fvals, y0, bestPoint, rho, r,0);
-  enhancedModel.PrintParametersMatlabFriendly();
-  enhancedModel.ComputeModel2(Y, derivatives, derivatives.col(0), fvals, y0, bestPoint, rho, r,0);
+  //std::cout << "y0 in dfo model \n" << y0 << "\n";
+  //enhancedModel.ComputeModel(Y, derivatives, derivatives.col(0), fvals, y0, bestPoint, rho, r,0);
+  //enhancedModel.PrintParametersMatlabFriendly();
+  //enhancedModel.ComputeModel2(Y, derivatives, derivatives.col(0), fvals, y0, bestPoint, rho, r,0);
   enhancedModel.PrintParametersMatlabFriendly();
 }
 int DFO_Model::isPointAcceptable(Eigen::VectorXd point) {
@@ -1778,36 +1806,36 @@ bool DFO_Model::FindReplacementForPointsOutsideRadius(double radius, Eigen::Matr
   //newIndices = Eigen::VectorXi(sortedPoints.rows());
   newIndices.resize(number_of_points_outside);
   for (int i = 0; i < number_of_points_outside; ++i){
-    newIndices[i] = -1;
+    newIndices(i) = -1;
   }
 
-  subproblem.SetTrustRegionRadius(radius/r);
+  subproblem.SetTrustRegionRadius((radius/r)*0.7);
   newPoints.resize(n, number_of_points_outside);
   newPoints.setZero();
   Eigen::VectorXd dNew(n);
   int addedPoints = 0;
   int j = 0;
   for (int i = 0; i < number_of_points_outside; ++i){
-    dNew = FindLocalOptimumOfAbsoluteLagrangePolynomial(sortedPoints[i]);
+    dNew = FindLocalOptimumOfAbsoluteLagrangePolynomial(sortedPoints(i));
     //dNew = findHighValueOfAbsoluteLagrangePolynomial(sortedPoints[i]);
-    double lagabsval = std::abs(ComputeLagrangePolynomial(sortedPoints[i], dNew));
+    double lagabsval = std::abs(ComputeLagrangePolynomial(sortedPoints(i), dNew));
     std::cout << "lagabsval = " << lagabsval << "\n";
     if (lagabsval > 0.001) {
-      newIndices[addedPoints] = sortedPoints[i];
+      newIndices(addedPoints) = sortedPoints(i);
       newPoints.col(addedPoints) = dNew;
       eigen_col(newPoints, dNew, addedPoints);
       //do the update
-      updateInverseKKTMatrix(dNew,sortedPoints[i]);
-      eigen_col(Y, dNew, sortedPoints[i] - 1);
+      //updateInverseKKTMatrix(dNew,sortedPoints(i));
+      //eigen_col(Y, dNew, sortedPoints(i) - 1);
       addedPoints++;
       j++;
-      //break;
+      break;
     }
     else{
       std::cout << "best point (init point): \n" << bestPoint << "\n";
       std::cout << "point found: \n" << dNew <<"\n";
       std::cout << "Lag pol that cannot be maximized\n";
-      PrintLagrangePolynomial(sortedPoints[i]);
+      PrintLagrangePolynomial(sortedPoints(i));
       //newIndices.conservativeResize(addedPoints);
       //newPoints.conservativeResize(n, addedPoints);
       if (newIndices.rows() == 0 || newIndices.rows() == addedPoints ){
@@ -1917,7 +1945,7 @@ bool DFO_Model::FindReplacementForPointsOutsideRadius(double radius, Eigen::Matr
     }
   }
    */
-
+  cout << "\nAdded points are: " << addedPoints << " ";
 
   /// reset!!
   Y = copyY;
