@@ -36,8 +36,10 @@ Subproblem::Subproblem(Settings::Optimizer *settings) {
   xlowCopy_ = Eigen::VectorXd::Zero(n_); /// OBS should be set by the driver file....
   xuppCopy_ = Eigen::VectorXd::Zero(n_);
   loadSNOPT();
-  normType_ = Subproblem::INFINITY_NORM;
-  normType = Subproblem::INFINITY_NORM;
+  //normType_ = Subproblem::INFINITY_NORM;
+  //normType = Subproblem::INFINITY_NORM;
+  normType_ = Subproblem::L2_NORM;
+  normType = Subproblem::L2_NORM;
   setConstraintsAndDimensions(); // This one should set the iGfun/jGvar and so on.
   setAndInitializeSNOPTParameters();
 
@@ -210,6 +212,8 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
   snoptHandler.setParameter(optimizationType);
 
   setOptionsForSNOPT(snoptHandler);
+  snoptHandler.setIntParameter("Major Iterations Limit", 20000);
+  snoptHandler.setIntParameter("Iterations limit", 20000);
   snoptHandler.setRealParameter("Major step limit", trustRegionRadius_); //was 0.2
   //target nonlinear constraint violation
   snoptHandler.setRealParameter("Major feasibility tolerance", 0.00000000001); //1.0e-6
@@ -218,7 +222,7 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
   snoptHandler.setRealParameter("Major optimality tolerance", 0.000000000000000001*trustRegionRadius_);
   snoptHandler.setRealParameter("Major optimality tolerance", 0.00000000000000000000001*trustRegionRadius_);
 
-  if (val > 10){
+  if (std::abs(val) > 10){
     snoptHandler.setRealParameter("Major optimality tolerance", 0.000000000000000001*val);
   }
   //snoptHandler.setRealParameter("Major optimality tolerance", 0.00000001);
@@ -240,7 +244,7 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
 
     //std::cin.get();
   }
-  if (exitCode != 40 && exitCode != 41 && exitCode != 1){
+  if (exitCode != 40 && exitCode != 41 && exitCode != 1 && exitCode != 31 && exitCode != 3){
     std::cout << "ExitCode is: " << exitCode << "\n";
     std::cin.get();
   }

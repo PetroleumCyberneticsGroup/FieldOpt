@@ -516,7 +516,7 @@ void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, Upd
 
   }
   else{
-  if (fvalNew < fvals[bestPointIndex - 1] ) {
+  if (fvalNew < fvals[bestPointIndex - 1] && updateReason == INCLUDE_NEW_OPTIMUM) {
     bestPoint = yNew;
     bestPointIndex = t;
   }

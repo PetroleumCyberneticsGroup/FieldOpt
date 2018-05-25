@@ -892,9 +892,9 @@ void DFO::iterate() {
                                                              new_indicies_criticality);
 
             if (possible == false){
-              std::cout << "waiting for u to press a button\n";
+              //std::cout << "waiting for u to press a button\n";
 
-              std::cin.get();
+              //std::cin.get();
             }
             else{
               int a = 0;
@@ -954,7 +954,7 @@ void DFO::iterate() {
     }
 
     if (last_action_ == CRITICALITY_STEP_FINISHED) {
-      if (number_of_crit_step_finished_with_bad_poisedness >= 10) {
+      if (number_of_crit_step_finished_with_bad_poisedness && false) {
         UpdateLastAction(MODEL_IMPROVEMENT_FORCED_POINT_START);
         DFO_model_.UpdateOptimum();
         DFO_model_.shiftCenterPointOfQuadraticModel(DFO_model_.GetBestPoint());
@@ -973,7 +973,8 @@ void DFO::iterate() {
                                                  //0.00000000000018709117
                                                //0.00000000000108749612
                                                //0.00000000000108322515
-        if (DFO_model_.GetTrustRegionRadius() <= 0.00000001  && gradient.norm() <= 0.0001) {
+        //if (DFO_model_.GetTrustRegionRadius() <= 0.0000000001  && gradient.norm() <= 0.001 || DFO_model_.GetTrustRegionRadius() <= 0.0001) {
+        if (DFO_model_.GetTrustRegionRadius() <= 0.0000000001  && gradient.norm() <= 0.001 || DFO_model_.GetTrustRegionRadius() <= 0.00001) {
           Eigen::MatrixXd Yabs(number_of_variables_, number_of_interpolation_points_);
           for (int j = 0; j < number_of_interpolation_points_; ++j) {
             Eigen::VectorXd sd = (*refY).col(j) + DFO_model_.getCenterPoint();
@@ -993,15 +994,15 @@ void DFO::iterate() {
           std::cout << "\033[1;34;m " << "Fvals = \n" << "\033[0m" << *refFuncVals << "\n";
           std::cout << "\033[1;34;m " << "Y = \n" << "\033[0m" << *refY << "\n";
           std::cout << "\033[1;34;m " << "Y absolute = \n" << "\033[0m" << Yabs << "\n";
-          std::cout << "\033[1;34;m " << "Ybest = \n" << "\033[0m" << DFO_model_.GetBestPoint() << "\n";
+          std::cout << "\033[1;34;m " << "Ybest (abs) = \n" << "\033[0m" << DFO_model_.GetBestPoint() + DFO_model_.getCenterPoint() << "\n";
           std::cout << "\033[1;34;m " << "Trust region radius is: " << "\033[0m" << DFO_model_.GetTrustRegionRadius()
                     << std::endl;
           DFO_model_.printParametersMatlabFriendly();
           //DFO_model_.printParametersMatlabFriendlyGradientEnhanced();
-          Eigen::VectorXd cp(3);
-          cp[0] = 10;
-          cp[1] = 10;
-          cp[2] = 10;
+          Eigen::VectorXd cp(2);
+          cp[0] = 0;
+          cp[1] = 0;
+          //cp[2] = 10;
           cp = cp - DFO_model_.getCenterPoint();
           DFO_model_.shiftCenterPointOfQuadraticModel(cp);
           DFO_model_.printParametersMatlabFriendly();
@@ -1013,6 +1014,7 @@ void DFO::iterate() {
           //DFO_model_.calculatePolynomialModelDirectlyFromWinverse();
 
 
+          std::cout << "\033[1;36;mIterations: \033[0m" << iterations_ << std::endl;
 
           std::cin.get();
         }
@@ -1171,10 +1173,11 @@ void DFO::iterate() {
           }
         }
         std::cout << " , and is: " << kk << "\n";
-        ///TODO if valid == false, cant do this
-        double distance = DFO_model_.norm(new_points_criticality.col(0)-DFO_model_.GetBestPoint());
-        std::cout << "Distance between new point and best point : \n" << distance
-                  <<"\ndistance <= r*radius  " << (distance <= r*DFO_model_.GetTrustRegionRadius()) << "\n";
+        if (valid){
+          double distance = DFO_model_.norm(new_points_criticality.col(0)-DFO_model_.GetBestPoint());
+          std::cout << "Distance between new point and best point : \n" << distance
+              <<"\ndistance <= r*radius  " << (distance <= r*DFO_model_.GetTrustRegionRadius()) << "\n";
+        }
 
          if (valid == false && new_indicies_criticality.rows() == 0){
           UpdateLastAction(CRITICALITY_STEP_FINISHED);

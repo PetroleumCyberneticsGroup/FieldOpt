@@ -31,7 +31,7 @@ class DFO_Model {
  private:
 
 
-  static int const normType = 0;
+  static int const normType = 2;
 
 
   Settings::Optimizer *settings_;
