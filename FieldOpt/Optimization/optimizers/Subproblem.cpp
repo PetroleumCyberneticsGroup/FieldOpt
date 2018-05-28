@@ -26,6 +26,7 @@ static int normType;
 static Eigen::MatrixXd hessian;
 static Eigen::VectorXd gradient;
 static double constant;
+static double scale;
 
 //Subproblem::Subproblem(SNOPTHandler snoptHandler) {
 Subproblem::Subproblem(Settings::Optimizer *settings) {
@@ -36,10 +37,10 @@ Subproblem::Subproblem(Settings::Optimizer *settings) {
   xlowCopy_ = Eigen::VectorXd::Zero(n_); /// OBS should be set by the driver file....
   xuppCopy_ = Eigen::VectorXd::Zero(n_);
   loadSNOPT();
-  //normType_ = Subproblem::INFINITY_NORM;
-  //normType = Subproblem::INFINITY_NORM;
-  normType_ = Subproblem::L2_NORM;
-  normType = Subproblem::L2_NORM;
+  normType_ = Subproblem::INFINITY_NORM;
+  normType = Subproblem::INFINITY_NORM;
+  //normType_ = Subproblem::L2_NORM;
+  //normType = Subproblem::L2_NORM;
   setConstraintsAndDimensions(); // This one should set the iGfun/jGvar and so on.
   setAndInitializeSNOPTParameters();
 
@@ -124,6 +125,11 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
     snoptHandler.setRealParameter("Major optimality tolerance", 0.000000000000000001*val);
   }
 
+  scale = constant + gradient.transpose() * bestPointDisplacement + 0.5* bestPointDisplacement.transpose() * hessian * bestPointDisplacement;
+  scale = abs(scale);
+  if (abs(scale) <= 0.0000000001){
+    scale = 1;
+  }
 
   ResetSubproblem();
   for (int i = 0; i < n_; i++) {
@@ -133,6 +139,7 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
   integer Cold = 0, Basis = 1, Warm = 2;
 
   snoptHandler.solve(Cold, xsol, fsol);
+  fsol[0] = fsol[0]*scale;
   integer exitCode = snoptHandler.getExitCode();
 /*
   if (exitCode == 32){
@@ -205,6 +212,11 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
     }
   }
 
+  scale = constant + gradient.transpose() * bestPointDisplacement + 0.5* bestPointDisplacement.transpose() * hessian * bestPointDisplacement;
+  scale = abs(scale);
+  if (abs(scale) <= 0.0000000001){
+    scale = 1;
+  }
 
   // The snoptHandler must be setup and loaded
   SNOPTHandler snoptHandler = initSNOPTHandler();
@@ -237,10 +249,11 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
   integer Cold = 0, Basis = 1, Warm = 2;
 
   snoptHandler.solve(Cold, xsol, fsol);
+  fsol[0] = fsol[0]*scale;
   integer exitCode = snoptHandler.getExitCode();
-  std::cout << "snopt exitcode:  " << exitCode << "\n";
+  //std::cout << "snopt exitcode:  " << exitCode << "\n";
   if (exitCode == 40 || exitCode == 41){
-    std::cout << "snopt failed me. current point cannot be improved because of numerical difficulties \n";
+    //std::cout << "snopt failed me. current point cannot be improved because of numerical difficulties \n";
 
     //std::cin.get();
   }
@@ -498,7 +511,7 @@ void Subproblem::setOptionsForSNOPT(SNOPTHandler &snoptHandler) {
   //snoptHandler.setParameter("QPSolver Cholesky");
   //snoptHandler.setParameter("Reduced Hessian dimension");
   //snoptHandler.setParameter("Save frequency                 100");
-  snoptHandler.setIntParameter("Scale option", 1);
+  snoptHandler.setIntParameter("Scale option", 0);
   //snoptHandler.setParameter("Scale tolerance                0.9");
   snoptHandler.setParameter((char *) "Scale Print");
   snoptHandler.setParameter((char *) "Solution  Yes");
@@ -589,7 +602,7 @@ int SNOPTusrFG3_(integer *Status, integer *n, double x[],
   // If the values for the objective and/or the constraints are desired
   if (*needF > 0) {
     /// The objective function
-    F[0] = constant + gradient.transpose() * xvec + 0.5* xvec.transpose() * hessian * xvec;
+    F[0] = (constant + gradient.transpose() * xvec + 0.5* xvec.transpose() * hessian * xvec)/scale;
     if (m) {
       /// The constraints
       if (normType == Subproblem::L2_NORM) {

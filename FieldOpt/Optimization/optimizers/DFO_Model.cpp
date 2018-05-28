@@ -336,8 +336,8 @@ DFO_Model::DFO_Model(unsigned int m,
   //this->y0 = y0;
   this->y0 = Eigen::VectorXd::Zero(n);
   //this->y0 << 1,2;
-  this->y0[0] = 10 + 4;
-  this->y0[1] = 10 + 1;
+  this->y0[0] = -0.1;
+  this->y0[1] = 0.4;
   //this->y0[2] = 10 - 3;
   //std::cout << "y0\n" << y0 << "\ny0this\n" << this->y0 << "\n";
   //this->y0.setZero();
@@ -817,13 +817,18 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
           tmp = poisedness[j-1];
         }
       }
-      if (k != -1){
+      if (k != -1 && false){
         indexOfWorstPoint = k;
         std::cout << "Avoided removing best point" << std::endl;
       }
+      else{
+        indexOfWorstPoint = index;
+      }
+    } else{
+      indexOfWorstPoint = index;
     }
 
-    indexOfWorstPoint = index;
+
 
     hess.setZero();
     double c = Xi(0, indexOfWorstPoint - 1);
@@ -840,7 +845,7 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
     vector<double> xsolMin;
     vector<double> fsolMin;
 
-    subproblem.SetTrustRegionRadius(GetTrustRegionRadius());
+    subproblem.SetTrustRegionRadius(GetTrustRegionRadius()*0.7);
     subproblem.Solve(xsolMax, fsolMax, (char *) "Maximize", y0, bestPoint,bestPoint);
     subproblem.Solve(xsolMin, fsolMin, (char *) "Minimize", y0, bestPoint,bestPoint);
 
@@ -862,13 +867,28 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
 
   //std::cout << "-----------\nPoisedness for each sample point (in radius): \n" << poisedness << "\n";
 
+
+  if (indexOfWorstPoint == bestPointIndex){
+    //int tmp;
+    //Eigen::VectorXd tmp2(n);
+    //findWorstPointInInterpolationSetByLU(tmp2, tmp);
+    //double lagabsval = std::abs(ComputeLagrangePolynomial(tmp, tmp2));
+    //if (lagabsval > 0.001){
+    //  std::cout << "Used LU-decomp to select bad point instead of removing optimum\n";
+    //  indexOfWorstPoint = tmp;
+    //  dNew = tmp2;
+      //std::cin.get();
+    //indexOfWorstPoint = -1;
+  }
+
+
   std::cout << "Required poisedness: " << lambda << "\nPoisedness: " << worstPoisedness << "\n";
 
 }
 
 void DFO_Model::findWorstPointInInterpolationSetByLU(Eigen::VectorXd &dNew, int &indexOfWorstPoint) {
   /// Trying LU pivoting instead.
-  std::cout << "\n\n\n\n\nNEW ITERATION\n";
+  double thresholdPoised = 0.00001;
   Eigen::MatrixXd copyY = Y;
   Eigen::MatrixXd A(m, m);
   A.setZero();
@@ -924,7 +944,7 @@ void DFO_Model::findWorstPointInInterpolationSetByLU(Eigen::VectorXd &dNew, int 
     pivotingLU(A,changes, id, r, c);
   }
 
-  if (std::abs(A(r - 1, c - 1)) >= 0.01) {
+  if (std::abs(A(r - 1, c - 1)) >= thresholdPoised) {
     indexOfWorstPoint = -1; // Done. The interpolation set is well-poised
   } else {
     Subproblem_LU mySubLu(settings_);
@@ -934,8 +954,8 @@ void DFO_Model::findWorstPointInInterpolationSetByLU(Eigen::VectorXd &dNew, int 
     vector<double> fsolMax;
     vector<double> xsolMin;
     vector<double> fsolMin;
-    mySubLu.Solve(xsolMax, fsolMax, (char *) "Maximize", Eigen::VectorXd::Zero(n), Eigen::VectorXd::Zero(n));
-    mySubLu.Solve(xsolMin, fsolMin, (char *) "Minimize", Eigen::VectorXd::Zero(n), Eigen::VectorXd::Zero(n));
+    mySubLu.Solve(xsolMax, fsolMax, (char *) "Maximize", Eigen::VectorXd::Zero(n), Eigen::VectorXd::Zero(n),Eigen::VectorXd::Zero(n));
+    mySubLu.Solve(xsolMin, fsolMin, (char *) "Minimize", Eigen::VectorXd::Zero(n), Eigen::VectorXd::Zero(n),Eigen::VectorXd::Zero(n));
 
     Eigen::VectorXd optimum(n);
 
@@ -956,6 +976,7 @@ void DFO_Model::findWorstPointInInterpolationSetByLU(Eigen::VectorXd &dNew, int 
 }
 
 void DFO_Model::pivotingLU(Eigen::MatrixXd &A, Eigen::MatrixXd &changes, Eigen::VectorXi &id, int &r, int &c){
+  double thresholdPoised = 0.00001;
   Eigen::VectorXd row1 = A.row(0);
   Eigen::VectorXd row2 = A.row(bestPointIndex - 1);
   //std::cout << "A at the begining\n" << A << "\n";
@@ -983,7 +1004,7 @@ void DFO_Model::pivotingLU(Eigen::MatrixXd &A, Eigen::MatrixXd &changes, Eigen::
       swapRows(A,changes,id,index,i);
       //std::cout << "A\n" << A << "\n";
     }
-    if (std::abs(A(i-1,i-1)) > 0.01) {
+    if (std::abs(A(i-1,i-1)) > thresholdPoised) {
       for (int j = i + 1; j <= m; ++j) {
         double scale = A(i - 1, j - 1) / A(i - 1, i - 1);
         eigen_block(A, A.col(j - 1) - scale * A.col(i - 1), 0, j - 1);
@@ -1820,16 +1841,16 @@ bool DFO_Model::FindReplacementForPointsOutsideRadius(double radius, Eigen::Matr
     //dNew = findHighValueOfAbsoluteLagrangePolynomial(sortedPoints[i]);
     double lagabsval = std::abs(ComputeLagrangePolynomial(sortedPoints(i), dNew));
     std::cout << "lagabsval = " << lagabsval << "\n";
-    if (lagabsval > 0.001) {
+    if (lagabsval > lagabsvalMin) {
       newIndices(addedPoints) = sortedPoints(i);
       newPoints.col(addedPoints) = dNew;
       eigen_col(newPoints, dNew, addedPoints);
       //do the update
-      //updateInverseKKTMatrix(dNew,sortedPoints(i));
-      //eigen_col(Y, dNew, sortedPoints(i) - 1);
+      updateInverseKKTMatrix(dNew,sortedPoints(i));
+      eigen_col(Y, dNew, sortedPoints(i) - 1);
       addedPoints++;
       j++;
-      break;
+      //break;
     }
     else{
       std::cout << "best point (init point): \n" << bestPoint << "\n";
@@ -2255,7 +2276,7 @@ void DFO_Model::isPoised(Eigen::VectorXd &dNew, int &indexOfPointToBeReplaced, d
       dNew = FindLocalOptimumOfAbsoluteLagrangePolynomial(sortedPoints[i]);
       double lagabsval = std::abs(ComputeLagrangePolynomial(sortedPoints[i], dNew));
       std::cout << "lagabsval = " << lagabsval << "\n";
-      if (lagabsval > 0.001) {
+      if (lagabsval > lagabsvalMin) {
         indexOfPointToBeReplaced = sortedPoints[i];
         break;
       }
@@ -2285,7 +2306,7 @@ void DFO_Model::modelImprovementStep(Eigen::VectorXd &dNew, int &indexOfPointToB
     if (lagabsval > lambda || norm((Y.col(t-1) - bestPoint))
         > r * rho) {
 
-      if (lagabsval > 0.001){
+      if (lagabsval > lagabsvalMin){
         std::cout << "lagabsval = " << lagabsval << "\n";
         std::cout << "Distance from optimum:   " << norm(Y.col(t-1) - bestPoint) << "\n";
         std::cout << "r*radius:                " << r*rho << "\n";

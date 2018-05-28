@@ -32,7 +32,7 @@ class DFO_Model {
 
 
   static int const normType = 2;
-
+  double lagabsvalMin = 0.00001; // works ok: 0.001
 
   Settings::Optimizer *settings_;
   Subproblem subproblem;
@@ -465,6 +465,9 @@ class DFO_Model {
     return bestPointAllTimeFunctionValue;
   }
 
+  Eigen::VectorXd GetBestPointAllTime(){
+    return bestPointAllTime;
+  }
   Eigen::VectorXd FindLocalOptimum();
 
   int findPointFarthestAwayFromOptimum();
