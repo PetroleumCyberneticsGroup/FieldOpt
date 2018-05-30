@@ -155,6 +155,14 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
         parameters_.initial_trust_region_radius = json_parameters["InitialTrustRegionRadius"].toDouble();
       else parameters_.initial_trust_region_radius = 600;
 
+      if (json_parameters.contains("EndTrustRegionRadius"))
+        parameters_.end_trust_region_radius = json_parameters["EndTrustRegionRadius"].toDouble();
+      else parameters_.end_trust_region_radius = 0.1;
+
+      if (json_parameters.contains("MinLagrangeAbsVal"))
+        parameters_.min_lagrange_abs_val = json_parameters["MinLagrangeAbsVal"].toDouble();
+      else parameters_.min_lagrange_abs_val = 0.01;
+
       if (json_parameters.contains("NumberOfInterpolationPoints"))
         parameters_.number_of_interpolation_points = json_parameters["NumberOfInterpolationPoints"].toInt();
       else parameters_.number_of_interpolation_points = 21;
@@ -203,6 +211,13 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
         parameters_.weights_distance_from_optimum_lsq = QList<double>();
         for (int i = 0; i < json_parameters["WeightsDistanceFromOptimumLSQ"].toArray().size(); ++i) {
           parameters_.weights_distance_from_optimum_lsq.append(json_parameters["WeightsDistanceFromOptimumLSQ"].toArray().at(i).toDouble());
+        }
+      }
+
+      if (json_parameters.contains("StartingPoint")) {
+        parameters_.starting_point = QList<double>();
+        for (int i = 0; i < json_parameters["StartingPoint"].toArray().size(); ++i) {
+          parameters_.starting_point.append(json_parameters["StartingPoint"].toArray().at(i).toDouble());
         }
       }
 

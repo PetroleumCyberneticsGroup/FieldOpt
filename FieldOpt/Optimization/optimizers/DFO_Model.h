@@ -32,11 +32,11 @@ class DFO_Model {
 
 
   static int const normType = 2;
-  double lagabsvalMin = 0.00001; // works ok: 0.001
+  double lagabsvalMin = 0.5; // works ok: 0.001
 
   Settings::Optimizer *settings_;
-  Subproblem subproblem;
   GradientEnhancedModel enhancedModel;
+  Subproblem subproblem;
   unsigned int m; // Number of interpolation points used to create the model. Does not change.
   unsigned int n; // Number of decision variables in your model.
   double rho; // Trust-region radius.
@@ -443,6 +443,7 @@ class DFO_Model {
     return gradient;
   }
   Eigen::VectorXd GetGradientAtPoint(Eigen::VectorXd point){
+/*
     Eigen::MatrixXd Hessian(n, n);
     Hessian = Gamma;
     for (int i = 1; i <= m; ++i) {
@@ -451,7 +452,42 @@ class DFO_Model {
     Eigen::VectorXd grad(n);
     grad = gradient;
     grad += Hessian*point;
-    return grad;
+    return grad + Hessian*point;
+    */
+    enhancedModel.ComputeModel(Y, derivatives, derivatives.col(0), fvals, y0, bestPoint, rho, r,0);
+    double e_c = 0;
+    Eigen::VectorXd e_g(n);
+    Eigen::MatrixXd e_h(n,n);
+    enhancedModel.GetModel(e_c,e_g,e_h);
+    return e_g + e_h*point;
+
+    /*
+    Eigen::MatrixXd Hessian(n, n);
+    Eigen::VectorXd Grad(n);
+    Hessian.setZero();
+    Grad.setZero();
+
+    double C = 0;
+
+    Eigen::VectorXd grad;
+    Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(n, n);
+    hess.setZero();
+    // Creating the Lagrange polynomial.
+    for (int t=1; t<=m;++t){
+      double c = Xi(0, t - 1);
+      grad = (Xi.col(t - 1)).tail(n);
+      for (int k = 1; k <= m; ++k) {
+        double tmp = Z.row(k - 1) * S * (Z.row(t - 1)).transpose();
+        hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
+      }
+      C += c*fvals[t-1];
+      Grad += grad*fvals[t-1];
+      Hessian += hess*fvals[t-1];
+    }
+
+
+    return Grad + Hessian*point;
+     */
   }
   Eigen::VectorXd GetPoint(int t){
     return Y.col(t-1);
@@ -503,6 +539,12 @@ class DFO_Model {
   void UpdateOptimum();
   void isPoised(VectorXd &dNew, int &indexOfPointToBeReplaced, double radius);
   void modelImprovementStep(VectorXd &dNew, int &indexOfPointToBeReplaced);
+  void printParametersMatlabFriendlyFromLagrangePolynomials();
+  void slowShiftCenterPointOfQuadraticModel(Eigen::VectorXd s);
+  void isInterpolating();
+  void isInterpolatingLagrange();
+  void isInterpolatingEnhanced();
+  void Converged(int iterations, int number_of_tiny_improvements, int number_of_function_calls);
 };
 }
 }

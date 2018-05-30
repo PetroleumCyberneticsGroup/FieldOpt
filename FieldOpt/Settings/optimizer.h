@@ -85,6 +85,8 @@ class Optimizer
     // DFO parameters
     double initial_trust_region_radius;
     double max_trust_region_radius;
+    double end_trust_region_radius;
+    double min_lagrange_abs_val;
     int number_of_interpolation_points;
     int number_of_variables;
     int number_of_variables_with_gradients;
@@ -99,6 +101,7 @@ class Optimizer
     double gamma;
     double gamma_inc;
     QList<double > weights_distance_from_optimum_lsq;
+    QList<double > starting_point;
     double weight_model_determination_minimum_change_hessian;
 
 

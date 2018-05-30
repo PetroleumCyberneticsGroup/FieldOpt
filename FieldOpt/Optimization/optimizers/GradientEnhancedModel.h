@@ -25,6 +25,7 @@ class GradientEnhancedModel {
   Eigen::MatrixXd hessian_;
   Eigen::MatrixXd hessian_old_;
   Eigen::MatrixXd points_;
+  Eigen::VectorXd funcVals_;
   Eigen::MatrixXd v_;
   Eigen::VectorXd y0_;
   Eigen::MatrixXd D_;
@@ -62,8 +63,7 @@ class GradientEnhancedModel {
                     double scaling_factor_r, int index_of_center_point);
   void PrintParametersMatlabFriendly();
 
-
-
+  void isInterpolating();
 };
 }
 }

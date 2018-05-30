@@ -212,11 +212,27 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
     }
   }
 
-  scale = constant + gradient.transpose() * bestPointDisplacement + 0.5* bestPointDisplacement.transpose() * hessian * bestPointDisplacement;
+  double s1 = abs(constant + gradient.transpose() * bestPointDisplacement + 0.5* bestPointDisplacement.transpose() * hessian * bestPointDisplacement);
+  Eigen::VectorXd d(2);
+  d << xlow_[0], xlow_[1];
+  s1 +=  abs(constant + gradient.transpose() * d + 0.5* d.transpose() * hessian * d);
+  d << xlow_[0], xupp_[1];
+  s1 +=  abs(constant + gradient.transpose() * d + 0.5* d.transpose() * hessian * d);
+  d << xupp_[0], xupp_[1];
+  s1 +=  abs(constant + gradient.transpose() * d + 0.5* d.transpose() * hessian * d);
+  d << xupp_[0], xlow_[1];
+  s1 +=  abs(constant + gradient.transpose() * d + 0.5* d.transpose() * hessian * d);
+  scale = s1/5.0;
+  //scale = 1;
+
+  //scale = constant + gradient.transpose() * bestPointDisplacement + 0.5* bestPointDisplacement.transpose() * hessian * bestPointDisplacement;
+
+  /*
   scale = abs(scale);
-  if (abs(scale) <= 0.0000000001){
+  if (abs(scale) <= 0.0000000000000001){
     scale = 1;
   }
+  */
 
   // The snoptHandler must be setup and loaded
   SNOPTHandler snoptHandler = initSNOPTHandler();
@@ -225,18 +241,19 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
 
   setOptionsForSNOPT(snoptHandler);
   snoptHandler.setIntParameter("Major Iterations Limit", 20000);
-  snoptHandler.setIntParameter("Iterations limit", 20000);
+  //snoptHandler.setIntParameter("Iterations limit", 20000);
   snoptHandler.setRealParameter("Major step limit", trustRegionRadius_); //was 0.2
   //target nonlinear constraint violation
-  snoptHandler.setRealParameter("Major feasibility tolerance", 0.00000000001); //1.0e-6
+  //snoptHandler.setRealParameter("Major feasibility tolerance", 0.00000000001); //1.0e-6
+  //snoptHandler.setRealParameter("Major feasibility tolerance", 1.0e-6); //1.0e-6
 
-  double val = constant + gradient.transpose() * bestPointDisplacement + 0.5 * bestPointDisplacement.transpose() * hessian * bestPointDisplacement;
-  snoptHandler.setRealParameter("Major optimality tolerance", 0.000000000000000001*trustRegionRadius_);
-  snoptHandler.setRealParameter("Major optimality tolerance", 0.00000000000000000000001*trustRegionRadius_);
+  //double val = constant + gradient.transpose() * bestPointDisplacement + 0.5 * bestPointDisplacement.transpose() * hessian * bestPointDisplacement;
+  //snoptHandler.setRealParameter("Major optimality tolerance", 0.000000000000000001*trustRegionRadius_);
+  //snoptHandler.setRealParameter("Major optimality tolerance", 0.00000000000000000000001*trustRegionRadius_);
 
-  if (std::abs(val) > 10){
-    snoptHandler.setRealParameter("Major optimality tolerance", 0.000000000000000001*val);
-  }
+  //if (std::abs(val) > 10){
+    //snoptHandler.setRealParameter("Major optimality tolerance", 0.000000000000000001*val);
+  //}
   //snoptHandler.setRealParameter("Major optimality tolerance", 0.00000001);
 
   ResetSubproblem();

@@ -120,6 +120,7 @@ GradientEnhancedModel::GradientEnhancedModel(int n,
   hessian_old_ = Eigen::MatrixXd::Zero(n_, n_);
   //_points_ = Eigen::MatrixXd::Zero(n_, m_);
   points_ = Eigen::MatrixXd::Zero(n_, m_);
+  funcVals_ = Eigen::VectorXd::Zero(n_);
   //_v_ = Eigen::VectorXd::Zero(ng_*m_);
   v_ = Eigen::VectorXd::Zero(ng_*m_);
   //_y0_ = Eigen::VectorXd::Zero(n_);
@@ -155,6 +156,7 @@ void GradientEnhancedModel::ComputeModel(Eigen::MatrixXd Y,
   // init the snopt handler
   // set up all constraints.
   //
+  funcVals_ = funcVals;
   points_ = Y;
   //derivatives_at_y0.setZero();
   //points_ <<
@@ -690,7 +692,7 @@ void GradientEnhancedModel::PrintParametersMatlabFriendly() {
 
   std::cout << "_______________________________" << std::endl;
   std::cout << "_____Matlab friendly print_____" << std::endl;
-  std::cout << "_______________________________" << std::endl;
+  std::cout << "_________Enhanced model________" << std::endl;
 
   std::cout << "H = [ " << std::endl;
   for (int i = 0; i < n_; ++i) {
@@ -709,6 +711,14 @@ void GradientEnhancedModel::PrintParametersMatlabFriendly() {
   std::cout << y0_ << std::endl;
   std::cout << "]';" << std::endl;
   //std::cout << "rho = " < << ";" << std::endl;
+}
+
+void GradientEnhancedModel::isInterpolating(){
+  std::cout << "Checking if the gradient enhanced model actually interpolates the points\n";
+  for (int i = 1; i<=m_; ++i){
+    double val = constant_ + gradient_.transpose() *points_.col(i-1)+ 0.5*(points_.col(i-1)).transpose()*hessian_old_*points_.col(i-1);
+    std::cout << funcVals_[i-1] << " == " << val <<"\t"<< (std::abs(val-funcVals_[i-1]) <= 0.000000001) << "\n";
+  }
 }
 
 }

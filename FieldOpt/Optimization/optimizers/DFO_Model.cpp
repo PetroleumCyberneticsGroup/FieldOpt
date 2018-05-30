@@ -68,7 +68,7 @@ void DFO_Model::initializeQuadraticModel() {
 
   //Find the current best point
   int indexBest = 1;
-  for (int i = 2; i < m; ++i) {
+  for (int i = 2; i <= m; ++i) {
     if (fvals(i - 1) < fvals(indexBest - 1)) {
       indexBest = i;
     }
@@ -294,13 +294,22 @@ void DFO_Model::updateQuadraticModel(Eigen::VectorXd yNew, double fvalNew, unsig
   gradient += (fvalNew - modelValueYNew) * (Xi.col(t - 1).tail(n));
 
   Eigen::VectorXd colOmega = Z * S * (Z.row(t - 1)).transpose();
-
+  Eigen::MatrixXd Omega = Z * S * Z.transpose();
   Gamma += gammas(t - 1) * Y.col(t - 1) * Y.col(t - 1).transpose();
+  /*
   gammas(t - 1) = (fvalNew - modelValueYNew) * colOmega(t - 1);
 
   for (int i = 1; i <= m; ++i) {
     if (i != t) {
       gammas(i - 1) += (fvalNew - modelValueYNew) * colOmega(i - 1);
+    }
+  }
+  */
+  gammas(t - 1) = (fvalNew - modelValueYNew) * Omega(t-1, t - 1);
+
+  for (int i = 1; i <= m; ++i) {
+    if (i != t) {
+      gammas(i - 1) += (fvalNew - modelValueYNew) * Omega(i - 1, t-1);
     }
   }
 
@@ -336,8 +345,15 @@ DFO_Model::DFO_Model(unsigned int m,
   //this->y0 = y0;
   this->y0 = Eigen::VectorXd::Zero(n);
   //this->y0 << 1,2;
-  this->y0[0] = -0.1;
-  this->y0[1] = 0.4;
+  //this->y0[0] = 2;
+  //this->y0[1] = -3.0;
+
+  int j = 0;
+  for (auto i = settings->parameters().starting_point.begin(); i != settings->parameters().starting_point.end(); ++i){
+    this->y0[j] = *i;
+    j++;
+  }
+  lagabsvalMin = settings->parameters().min_lagrange_abs_val;
   //this->y0[2] = 10 - 3;
   //std::cout << "y0\n" << y0 << "\ny0this\n" << this->y0 << "\n";
   //this->y0.setZero();
@@ -565,6 +581,8 @@ double DFO_Model::evaluateQuadraticModel(Eigen::VectorXd point) {
 }
 
 void DFO_Model::shiftCenterPointOfQuadraticModel(Eigen::VectorXd s) {
+  //slowShiftCenterPointOfQuadraticModel(s);
+  return;
   Eigen::VectorXd r(n);
   Eigen::MatrixXd P(n, m);
 
@@ -662,6 +680,114 @@ void DFO_Model::shiftCenterPointOfQuadraticModel(Eigen::VectorXd s) {
   bestPointAllTime -= s;
   y0 += s;
 }
+
+
+void DFO_Model::slowShiftCenterPointOfQuadraticModel(Eigen::VectorXd s) {
+  //std::cout << "Y  " << std::endl << Y << std::endl << std::endl;
+  Eigen::VectorXd r(n);
+  Eigen::MatrixXd P = Eigen::MatrixXd::Zero(n, m);
+  //std::cout << "P: \n" << P << std::endl;
+  /*
+  std::cout << "---------- before shifting ------------" << std::endl;
+  std::cout << "Z" << std::endl << Z << std::endl;
+  std::cout << "Xi" << std::endl << Xi << std::endl;
+  std::cout << "Upsilon" << std::endl << Upsilon << std::endl;
+  */
+
+  double squaredNorm = s.squaredNorm();
+  for (int k = 1; k <= m; ++k) {
+    r = Y.col(k - 1) - 0.5*s;
+    Eigen::VectorXd tmp = 0.25* squaredNorm*s;
+    double tmp3 = s.transpose()*r;
+    Eigen::VectorXd tmp2 = tmp3*r;
+    Eigen::VectorXd d11 = tmp2  + tmp ;
+    eigen_col(P, d11, k-1);
+    //P.col(k - 1) = (s.transpose()*r)*r + 0.25* squaredNorm*s;
+  }
+
+
+  Eigen::MatrixXd Omega(m, m);
+  Omega = Z*S*Z.transpose();
+  Eigen::MatrixXd H(m + n + 1, m + n + 1);
+  Eigen::MatrixXd Hint(m + n + 1, m + n + 1);
+  Eigen::MatrixXd Hint2(m + n + 1, m + n + 1);
+  H.topLeftCorner(m, m) = Omega;
+  H.bottomLeftCorner(n + 1, m) = Xi;
+  H.topRightCorner(m, n + 1) = Xi.transpose();
+  H.bottomRightCorner(n + 1, n + 1) = Upsilon;
+
+
+
+  Eigen::MatrixXd invOmegaXtranspose = Eigen::MatrixXd::Zero(m + n + 1, m + n + 1);
+  Eigen::MatrixXd invOmegaATranspose = Eigen::MatrixXd::Zero(m + n + 1, m + n + 1);
+  invOmegaXtranspose.setIdentity();
+  invOmegaATranspose.setIdentity();
+
+  //(invOmegaXtranspose.row(m)).tail(n) = 0.5*s.transpose();
+  eigen_block(invOmegaXtranspose,0.5*s.transpose(),m,invOmegaXtranspose.cols()-n);
+
+  //std::cout << "invOmegaXtranspose \n" << invOmegaXtranspose << std::endl;
+
+
+  //std::cout << "P: \n" << P << std::endl;
+
+
+  invOmegaATranspose.bottomLeftCorner(n, m) = P;
+
+  Hint = invOmegaATranspose * invOmegaXtranspose * H *invOmegaXtranspose.transpose() * invOmegaATranspose.transpose();
+  Hint2 = invOmegaATranspose *invOmegaXtranspose * H*invOmegaXtranspose.transpose();// *invOmegaXtranspose.transpose();
+
+  H = invOmegaXtranspose * invOmegaATranspose * invOmegaXtranspose * H *invOmegaXtranspose.transpose() * invOmegaATranspose.transpose() * invOmegaXtranspose.transpose();
+
+  Xi = H.bottomLeftCorner(n+1,m);
+  Upsilon = H.bottomRightCorner(n+1,n+1);
+
+
+
+  //std::cout << "Hstart; calculated by matrix multiplications \n" << H << std::endl;
+  //std::cout << " Z \n "  << Z << std::endl;
+  //std::cout << "Hint2 missing outer matrices; calculated by matrix multiplications \n" << Hint << std::endl;
+  //std::cout << "Hint2 missing outer matrices+1; calculated by matrix multiplications \n" << Hint2 << std::endl;
+  //std::cout << "Hint2 missing outer matrices+1; calculated by matrix multiplications \n" << Hint2 << std::endl;
+  //std::cout << "H after shift; calculated by matrix multiplications \n" << H << std::endl;
+  //std::cout << "Hinv after update; calculated by matrix multiplications \n" << H.inverse() << std::endl;
+
+  //Update the stored constant
+  constant += gradient.transpose()*s;
+  constant += 0.5*(s).transpose() * (Gamma*(s));
+  for (int i = 1; i <= m; ++i) {
+    double tmp1 = (Y.col(i - 1)).transpose()*(s);
+    double tmp2 = gammas(i - 1)*tmp1;
+      constant += 0.5*tmp2*s.dot(Y.col(i - 1));
+  }
+  //Update the stored gradient
+  gradient += Gamma*s;
+  for (int i = 1; i <= m; ++i) {
+      gradient += ((gammas(i - 1)*(s.dot(Y.col(i - 1)))*Y.col(i - 1)));
+  }
+  //Update the stored Gamma
+  Eigen::VectorXd v = Eigen::VectorXd::Zero(n);
+  for (int i = 1; i <= m; ++i) {
+      v += gammas(i - 1)*(Y.col(i - 1) - 0.5*s);
+  }
+  Gamma += v*s.transpose() + s*v.transpose();
+  //std::cout << "Y  " << std::endl << Y << std::endl << std::endl;
+  // Update Y because it should be the vectors of displacements of the interpolation points from the centerpoint (origo of the model)
+  for (int i = 0; i < m; ++i) {
+      //Y.col(i) -= s;
+    eigen_col(Y,Y.col(i) - s, i);
+  }
+  //std::cout << "Y  " << std::endl << Y << std::endl << std::endl;
+  //std::cout << "y0  " << std::endl << y0 << std::endl << std::endl;
+  y0 += s;
+  bestPoint -= s;
+  bestPointAllTime -= s;
+  //std::cout << "y0  " << std::endl << y0 << std::endl << std::endl;
+
+
+}
+
+
 
 void DFO_Model::findLowerAndUpperBoundOnAbsoluteLagrangePolynomial(int i, double &lowerBound, double &upperBound) {
   double maxCoeffVal = 0;
@@ -1281,6 +1407,60 @@ void DFO_Model::printParametersMatlabFriendly() {
   std::cout << "rho = " << rho << ";" << std::endl;
 }
 
+void DFO_Model::printParametersMatlabFriendlyFromLagrangePolynomials() {
+  Eigen::MatrixXd Hessian(n, n);
+  Eigen::VectorXd Grad(n);
+  Hessian.setZero();
+  Grad.setZero();
+
+  double C = 0;
+
+  Eigen::VectorXd grad;
+  Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(n, n);
+  Eigen::MatrixXd Omega = Z * S * Z.transpose();
+  hess.setZero();
+  // Creating the Lagrange polynomial.
+  for (int t=1; t<=m;++t){
+    double c = Xi(0, t - 1);
+    grad = (Xi.col(t - 1)).tail(n);
+    for (int k = 1; k <= m; ++k) {
+      double tmp = Z.row(k - 1) * S * (Z.row(t - 1)).transpose();
+      tmp = Omega(k-1, t-1);
+      hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
+    }
+    //std::cout << "Hessian belonging to: " << t << "\tvalue is: " <<fvals[t-1] <<"\n" << hess << "\n";
+    C += c*fvals[t-1];
+    Grad += grad*fvals[t-1];
+    Hessian += hess*fvals[t-1];
+  }
+
+
+
+  std::cout << "_______________________________" << std::endl;
+  std::cout << "_____Matlab friendly print_____" << std::endl;
+  std::cout << "_________Lagr. polynom_________" << std::endl;
+
+  std::cout << "H = [ " << std::endl;
+  for (int i = 0; i < n; ++i) {
+    std::cout << Hessian.row(i);
+    if (i != n - 1) {
+      std::cout << "; \n";
+    }
+  }
+  std::cout << " \n ];" << std::endl;
+
+  std::cout << "g = [" << std::endl;
+  std::cout << Grad << std::endl;
+  std::cout << "]';" << std::endl;
+  std::cout << "c = " << C << ";" << std::endl;
+  std::cout << "y0 = [" << std::endl;
+  std::cout << y0 << std::endl;
+  std::cout << "]';" << std::endl;
+  std::cout << "rho = " << rho << ";" << std::endl;
+
+  compareHMatrices();
+}
+
 void DFO_Model::printQuadraticModel() {
 
   Eigen::MatrixXd hess(n, n);
@@ -1336,7 +1516,7 @@ void DFO_Model::printSlowShiftCenterPointOfQuadraticModel(Eigen::VectorXd s) {
 }
 
 void DFO_Model::compareHMatrices() {
-  double precision = 0.00001;
+  double precision = 0.0001;
   Eigen::MatrixXd W = Eigen::MatrixXd::Zero(m + n + 1, m + n + 1);
   Eigen::MatrixXd A = Eigen::MatrixXd::Zero(m, m);
   Eigen::MatrixXd X = Eigen::MatrixXd::Zero(n + 1, m);
@@ -1367,7 +1547,7 @@ void DFO_Model::compareHMatrices() {
   H.topRightCorner(m, n + 1) = Xi.transpose();
   H.bottomRightCorner(n + 1, n + 1) = Upsilon;
 
-  std::cout << "H " << std::endl << H << std::endl;
+  //std::cout << "H " << std::endl << H << std::endl;
   std::cout << " is Omega - invWOmega == 0 ?  " << std::endl << Omega.isApprox(Winv.topLeftCorner(m, m), precision)
             << std::endl;
   std::cout << " is Xi - invWXi == 0 ?  " << std::endl << Xi.isApprox(Winv.bottomLeftCorner(n + 1, m), precision)
@@ -1376,8 +1556,8 @@ void DFO_Model::compareHMatrices() {
             << Upsilon.isApprox(Winv.bottomRightCorner(n + 1, n + 1), precision) << std::endl;
   std::cout << " is H - invW == 0 ?  " << std::endl << H.isApprox(Winv, precision) << std::endl;
 
-  std::cout << "Winverse:" << std::endl << Winv << std::endl << std::endl;
-  std::cout << "H:" << std::endl << H << std::endl << std::endl;
+  //std::cout << "Winverse:" << std::endl << Winv << std::endl << std::endl;
+  //std::cout << "H:" << std::endl << H << std::endl << std::endl;
 }
 void DFO_Model::SetFunctionValue(int t, double value) {
   fvals[t - 1] = value;
@@ -1395,14 +1575,45 @@ void DFO_Model::SetTrustRegionRadiusForSubproblem(double radius) {
 }
 
 Eigen::VectorXd DFO_Model::FindLocalOptimum() {
+
+/*
   Eigen::MatrixXd Hessian(n, n);
   Hessian = Gamma;
   for (int i = 1; i <= m; ++i) {
     Hessian += gammas(i - 1) * Y.col(i - 1) * (Y.col(i - 1)).transpose();
   }
+
   subproblem.setHessian(Hessian);
   subproblem.setGradient(gradient);
   subproblem.setConstant(constant);
+*/
+/*
+  Eigen::MatrixXd Hessian(n, n);
+  Eigen::VectorXd Grad(n);
+  Hessian.setZero();
+  Grad.setZero();
+
+  double C = 0;
+
+  Eigen::VectorXd grad;
+  Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(n, n);
+  hess.setZero();
+  // Creating the Lagrange polynomial.
+  for (int t=1; t<=m;++t){
+    double c = Xi(0, t - 1);
+    grad = (Xi.col(t - 1)).tail(n);
+    for (int k = 1; k <= m; ++k) {
+      double tmp = Z.row(k - 1) * S * (Z.row(t - 1)).transpose();
+      hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
+    }
+    C += c*fvals[t-1];
+    Grad += grad*fvals[t-1];
+    Hessian += hess*fvals[t-1];
+  }
+  subproblem.setHessian(Hessian);
+  subproblem.setGradient(Grad);
+  subproblem.setConstant(C);
+*/
 
   Eigen::VectorXd localOptimum(n);
   vector<double> xsol;
@@ -1410,18 +1621,19 @@ Eigen::VectorXd DFO_Model::FindLocalOptimum() {
   //printf("\x1b[33mLooking for new optimum: \n\x1b[0m");
   //streambuf *old = cout.rdbuf(0);
   //cout << "Hidden text!\n";
-
-  subproblem.Solve(xsol, fsol, (char *) "Minimize", y0, bestPoint);
+/*
+  subproblem.Solve(xsol, fsol, (char *) "Minimize", y0, bestPoint,bestPoint);
   for (int i = 0; i < n; i++) {
     localOptimum[i] = xsol[i];
   }
+  */
   //cout.rdbuf(old);
   //std::cout << fsol[0]<<"\n";
   //std::cout << "new point " <<xsol[0] + y0(0) << "\t" << xsol[1]+ y0(1) <<"\n";
   //std::cout << "best point " << bestPoint[0] + y0(0) << "\t" << bestPoint[1] + y0(1) <<"\n";
 
   //subproblem.printModel();
-/*
+
   /// The enhanced model;
   Eigen::MatrixXd der(0,0);
   Eigen::VectorXd der0(0);
@@ -1434,11 +1646,11 @@ Eigen::VectorXd DFO_Model::FindLocalOptimum() {
   subproblem.setGradient(e_g);
   subproblem.setConstant(e_c);
 
-  subproblem.Solve(xsol, fsol, (char *) "Minimize", y0, bestPoint);
+  subproblem.Solve(xsol, fsol, (char *) "Minimize", y0, bestPoint,bestPoint);
   for (int i = 0; i < n; i++) {
     localOptimum[i] = xsol[i];
   }
-*/
+
 
   return localOptimum;
 }
@@ -1740,9 +1952,7 @@ bool DFO_Model::FindPointToIncreasePoisedness(Eigen::VectorXd &dNew, int &t) {
 
 void DFO_Model::printParametersMatlabFriendlyGradientEnhanced() {
   //std::cout << "y0 in dfo model \n" << y0 << "\n";
-  //enhancedModel.ComputeModel(Y, derivatives, derivatives.col(0), fvals, y0, bestPoint, rho, r,0);
-  //enhancedModel.PrintParametersMatlabFriendly();
-  //enhancedModel.ComputeModel2(Y, derivatives, derivatives.col(0), fvals, y0, bestPoint, rho, r,0);
+  enhancedModel.ComputeModel(Y, derivatives, derivatives.col(0), fvals, y0, bestPoint, rho, r,0);
   enhancedModel.PrintParametersMatlabFriendly();
 }
 int DFO_Model::isPointAcceptable(Eigen::VectorXd point) {
@@ -2315,6 +2525,119 @@ void DFO_Model::modelImprovementStep(Eigen::VectorXd &dNew, int &indexOfPointToB
       }
     }
   }
+}
+
+
+void DFO_Model::isInterpolating(){
+  Eigen::MatrixXd Hessian(n, n);
+  Hessian = Gamma;
+  for (int i = 1; i <= m; ++i) {
+    Hessian += gammas(i - 1) * Y.col(i - 1) * (Y.col(i - 1)).transpose();
+  }
+  std::cout << "Checking if the model actually interpolates the points\n";
+  for (int i = 1; i<=m; ++i){
+    double val = constant + gradient.transpose()* Y.col(i-1)+ 0.5*(Y.col(i-1)).transpose()*Hessian*Y.col(i-1);
+    std::cout << fvals[i-1] << " == " << val <<"\t"<< (std::abs(val-fvals[i-1]) <= 0.000000001) << "\n";
+  }
+}
+
+void DFO_Model::isInterpolatingLagrange(){
+  Eigen::MatrixXd Hessian(n, n);
+  Eigen::VectorXd Grad(n);
+  Hessian.setZero();
+  Grad.setZero();
+
+  double C = 0;
+
+  Eigen::VectorXd grad;
+  Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(n, n);
+  Eigen::MatrixXd Omega = Z * S * Z.transpose();
+  hess.setZero();
+  // Creating the Lagrange polynomial.
+  for (int t=1; t<=m;++t){
+    double c = Xi(0, t - 1);
+    grad = (Xi.col(t - 1)).tail(n);
+    for (int k = 1; k <= m; ++k) {
+      double tmp = Z.row(k - 1) * S * (Z.row(t - 1)).transpose();
+      tmp = Omega(k-1, t-1);
+      hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
+    }
+    C += c*fvals[t-1];
+    Grad += grad*fvals[t-1];
+    Hessian += hess*fvals[t-1];
+  }
+
+
+  std::cout << "Checking if the Lagrange model actually interpolates the points\n";
+  for (int i = 1; i<=m; ++i){
+    double val = C + Grad.transpose() *Y.col(i-1)+ 0.5*(Y.col(i-1)).transpose()*Hessian*Y.col(i-1);
+    std::cout << fvals[i-1] << " == " << val <<"\t"<< (std::abs(val-fvals[i-1]) <= 0.000000001) << "\n";
+  }
+}
+void DFO_Model::isInterpolatingEnhanced(){
+  enhancedModel.ComputeModel(Y, derivatives, derivatives.col(0), fvals, y0, bestPoint, rho, r,0);
+  enhancedModel.isInterpolating();
+}
+
+
+
+void DFO_Model::Converged(int iterations, int number_of_tiny_improvements, int number_of_function_calls){
+  {
+    Eigen::VectorXd gradient =GetGradientAtPoint(GetBestPoint());
+    Eigen::MatrixXd Yabs(n, m);
+    for (int j = 0; j < m; ++j) {
+      Eigen::VectorXd sd = (Y).col(j) + getCenterPoint();
+      eigen_col(Yabs, sd, j);
+    }
+    std::cout.clear();
+    std::cout << "\033[1;36;mDFO terminated. Trust region radius too small.\033[0m" << std::endl;
+    std::cout << "\033[1;36;mDFO terminated. Trust region radius too small.\033[0m" << std::endl;
+    std::cout << "\033[1;36;mDFO terminated. Trust region radius too small.\033[0m" << std::endl;
+    std::cout << "\033[1;36;mDFO terminated. Trust region radius too small.\033[0m" << std::endl;
+    std::cout << "\033[1;36;mDFO terminated. Trust region radius too small.\033[0m" << std::endl;
+    std::cout << "\033[1;36;mDFO terminated. Trust region radius too small.\033[0m" << std::endl;
+    std::cout << "\033[1;36;mDFO terminated. Trust region radius too small.\033[0m" << std::endl;
+
+    std::cout << "\033[1;34;m " << "Norm of gradient at best point = " << "\033[0m" << gradient.norm() << "\n";
+    std::cout << "\033[1;34;m " << "Best point index = " << "\033[0m" << bestPointIndex << "\n";
+    std::cout << "\033[1;34;m " << "Fvals = \n" << "\033[0m" << fvals << "\n";
+    std::cout << "\033[1;34;m " << "Y = \n" << "\033[0m" << Y << "\n";
+    std::cout << "\033[1;34;m " << "Y absolute = \n" << "\033[0m" << Yabs << "\n";
+    std::cout << "\033[1;34;m " << "Ybest (abs) = \n" << "\033[0m" << bestPoint + y0 << "\n";
+    std::cout << "\033[1;34;m " << "Trust region radius is: " << "\033[0m" << rho<< std::endl;;
+    std::cout << "\033[1;34;m " << "Best found, all time, value: " << "\033[0m" << bestPointAllTimeFunctionValue<< "\n";
+    std::cout << "\033[1;34;m " << "Best found, all time, point: \n" << "\033[0m" << bestPointAllTime+ y0;
+
+    printParametersMatlabFriendly();
+    //DFO_model_.printParametersMatlabFriendlyGradientEnhanced();
+    Eigen::VectorXd cp(2);
+    cp[0] = 0;
+    cp[1] = 0;
+    //cp[2] = 10;
+    cp = cp - y0;
+    shiftCenterPointOfQuadraticModel(cp);
+    UpdateOptimum();
+    //shiftCenterPointOfQuadraticModel(bestPoint);
+    printParametersMatlabFriendly();
+    printParametersMatlabFriendlyFromLagrangePolynomials();
+    printParametersMatlabFriendlyGradientEnhanced();
+    //DFO_model_.printParametersMatlabFriendlyGradientEnhanced();
+    std::cout << "Best point (absolute):\n" << getCenterPoint() + GetBestPoint()
+              << "\nWith value: " << GetFunctionValue(getBestPointIndex()) << "\n";
+
+    //std::cout << "EXPLICITLY, error?\n";
+    //DFO_model_.calculatePolynomialModelDirectlyFromWinverse();
+
+
+    isInterpolating();
+    isInterpolatingLagrange();
+    isInterpolatingEnhanced();
+
+    std::cout << "\033[1;36;mIterations: \033[0m" << iterations << std::endl;
+    std::cout << "\033[1;36;mTiny decreases: \033[0m" << number_of_tiny_improvements << "\n";
+    std::cout << "\033[1;36;mFunction Calls \033[0m" << number_of_function_calls << "\n";
+
+    std::cin.get();}
 }
 
 }
