@@ -41,6 +41,14 @@ class SegmentedWell : public Well {
                 Reservoir::Grid::Grid *grid);
 
 
+ private:
+  double tub_diam_;            //!< Tubing (inner) diameter.
+  double ann_diam_;            //!< Annular diameter.
+  double tub_cross_sect_area_; //!< Tubing cross section area.
+  double ann_cross_sect_area_; //!< Annular cross section area.
+  double tub_roughness_;       //!< Roughness for tubing segments.
+  double ann_roughness_;       //!< Roughness for annulus segments.
+
 };
 
 }

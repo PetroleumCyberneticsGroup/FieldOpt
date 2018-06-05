@@ -29,8 +29,22 @@ SegmentedWell::SegmentedWell(const Settings::Model &settings,
                              Reservoir::Grid::Grid *grid)
     : Well(settings, well_number, variable_container, grid)
 {
-    throw std::runtime_error("SegmentedWell not yet implemented.");
+    auto well_settings = settings.wells()[well_number];
 
+    assert(trajectory_->GetDefinitionType() == Settings::Model::WellDefinitionType::WellSpline);
+
+    tub_diam_ = well_settings.seg_tubing.diameter;
+    tub_cross_sect_area_ = well_settings.seg_tubing.cross_sect_area;
+    tub_roughness_ = well_settings.seg_tubing.roughness;
+    ann_diam_ = well_settings.seg_annulus.diameter;
+    ann_cross_sect_area_ = well_settings.seg_annulus.cross_sect_area;
+    ann_roughness_ = well_settings.seg_annulus.roughness;
+
+
+    // Set ICD names before constucting
+    // Set packer names before constucting
+
+    throw std::runtime_error("SegmentedWell not yet implemented.");
 }
 
 }
