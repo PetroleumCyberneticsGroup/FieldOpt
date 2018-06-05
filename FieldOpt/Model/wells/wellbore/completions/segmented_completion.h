@@ -48,7 +48,7 @@ class SegmentedCompletion : public Completion {
   void setMd(const double &md);
   void setTvd(const double &tvd);
 
- private:
+ protected:
   /*!
    * Measured depth. For ICDs and packers, this is the discrete location
    * of the component along the well trajectory. For tubing and annulus,

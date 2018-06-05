@@ -71,7 +71,7 @@ class Well
   void Update();
   int GetTimeSpentInWIC() const { return trajectory_->GetTimeSpentInWic(); }
 
- private:
+ protected:
   QString name_;
   ::Settings::Model::WellType type_;
   QString group_;
