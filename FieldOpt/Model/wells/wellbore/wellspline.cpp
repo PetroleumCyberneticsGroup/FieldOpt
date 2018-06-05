@@ -1,5 +1,5 @@
 /******************************************************************************
-   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
+   Copyright (C) 2015-2018 Einar J.M. Baumann <einar.baumann@gmail.com>
 
    This file is part of the FieldOpt project.
 
@@ -99,6 +99,8 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
     for (int i = 0; i < block_data.size(); ++i) {
         if (block_data[i].cell_well_index_matrix() > 0.01) { // Ignoring well blocks with very low well index.
             blocks->append(getWellBlock(block_data[i]));
+            blocks->last()->setEntryPoint(block_data[i].get_segment_entry_point(0));
+            blocks->last()->setExitPoint(block_data[i].get_segment_exit_point(0));
         }
     }
     if (blocks->size() == 0) {
