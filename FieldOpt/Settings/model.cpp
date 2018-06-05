@@ -469,6 +469,7 @@ void Model::parseSegmentTubing(const QJsonObject &json_seg, Model::Well &well) c
         well.seg_tubing.diameter = 0.1;
         well.seg_tubing.roughness = 1.52E-5;
     }
+    well.seg_tubing.cross_sect_area = M_PI / 4.0 * well.seg_tubing.diameter * well.seg_tubing.diameter;
 }
 
 void Model::parseSegmentAnnulus(const QJsonObject &json_seg, Model::Well &well) const {
@@ -484,9 +485,10 @@ void Model::parseSegmentAnnulus(const QJsonObject &json_seg, Model::Well &well) 
     }
     else {
         std::cout << "Annulus keyword not found in Segmentation. "
-            "Defaulting Diameter to 0.04 and Roughness to 1.52E-5" << std::endl;
+            "Defaulting Diameter to 0.04, Ac to 8.17E-3 and Roughness to 1.52E-5" << std::endl;
         well.seg_annulus.diameter = 0.04;
         well.seg_annulus.roughness = 1.52E-5;
+        well.seg_annulus.cross_sect_area = 8.17E-3;
     }
 }
 
@@ -527,7 +529,7 @@ void Model::parseSegmentICDs(const QJsonObject &json_seg, Model::Well &well) con
             }
             else {
                 std::cout << "Roughness keyword not found in AutoICDs. " "Defaulting Roughness  1.52E-5" << std::endl;
-                well.seg_annulus.roughness = 1.52E-5;
+                well.seg_auto_icd_params.roughness = 1.52E-5;
             }
         }
         catch ( ... ) {
