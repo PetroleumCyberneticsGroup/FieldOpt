@@ -43,16 +43,10 @@ class SegmentedCompletion : public Completion {
   double tvd() const;
   double roughness() const;
   double diam() const;
-  int segIdx() const;
-  int segOutletIdx() const;
-  int segBranchIdx() const;
 
   // Setters
   void setMd(const double &md);
   void setTvd(const double &tvd);
-  void setSegIdx(const int &seg_idx);
-  void setSegOutletIdx(const int &seg_outlet_idx);
-  void setSegBranchIdx(const int &seg_branch_idx);
 
  private:
   /*!
@@ -83,11 +77,6 @@ class SegmentedCompletion : public Completion {
    * used by the component.
    */
   double diameter_;
-
-  int seg_idx_;         //!< Index for parent segment of this completion.
-  int seg_outlet_idx_;  //!< Outlet index for parent segment of this completion.
-  int seg_branch_idx_;  //!< Branch index for parent segment of this completion.
-
 };
 
 }

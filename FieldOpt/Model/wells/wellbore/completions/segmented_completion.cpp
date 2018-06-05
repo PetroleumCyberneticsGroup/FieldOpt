@@ -38,10 +38,6 @@ SegmentedCompletion::SegmentedCompletion(Settings::Model::Well::Completion compl
     if (completion_settings.variable_placement == true) {
         variable_container->AddVariable(md_);
     }
-
-    seg_branch_ = -1;
-    seg_index_ = -1;
-    seg_outlet_ = -1;
 }
 
 double SegmentedCompletion::md() const {
@@ -67,21 +63,6 @@ double SegmentedCompletion::diam() const {
         throw std::runtime_error("Attemting to get unset diameter from segmented completion.");
     return diameter_;
 }
-int SegmentedCompletion::segIdx() const {
-    if (seg_idx_ < 0)
-        throw std::runtime_error("Attempting to get unset segment index from segmented completion.");
-    return seg_idx_;
-}
-int SegmentedCompletion::segOutletIdx() const {
-    if (seg_outlet_idx_ < 0)
-        throw std::runtime_error("Attempting to get unset segment outlet index from segmented completion.");
-    return seg_outlet_idx_;
-}
-int SegmentedCompletion::segBranchIdx() const {
-    if (seg_branch__idx_ < 0)
-        throw std::runtime_error("Attempting to get unset segment branch index from segmented completion.");
-    return seg_branch__idx_;
-}
 void SegmentedCompletion::setMd(const double &md) {
     if (md < 0)
         throw std::runtime_error("Attemting to set invalid MD for segmented completion.");
@@ -94,25 +75,6 @@ void SegmentedCompletion::setTvd(const double &tvd) {
     tvd_ = tvd;
 
 }
-void SegmentedCompletion::setSegIdx(const int &seg_idx) {
-    if (seg_idx < 0)
-        throw std::runtime_error("Attemting to set invalid segment index for segmented completion.");
-    seg_idx_ = seg_idx;
-
-}
-void SegmentedCompletion::setSegOutletIdx(const int &seg_outlet_idx) {
-    if (seg_outlet_idx < 0)
-        throw std::runtime_error("Attemting to set invalid segment outlet index for segmented completion.");
-    seg_outlet_idx_ = seg_outlet_idx;
-
-}
-void SegmentedCompletion::setSegBranchIdx(const int &seg_branch_idx) {
-    if (seg_branch_idx < 0)
-        throw std::runtime_error("Attemting to set invalid segment branch index for segmented completion.");
-    seg_branch_idx_ = seg_branch_idx;
-
-}
-
 }
 }
 }
