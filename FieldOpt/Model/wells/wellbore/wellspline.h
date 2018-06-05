@@ -60,6 +60,8 @@ class WellSpline
   bool HasGridChanged() const;
   bool HasSplineChanged() const;
 
+  double GetLength() const; //!< Get the length of the spline (summed distance between defining points).
+
  private:
   Reservoir::Grid::Grid *grid_;
   Settings::Model::Well well_settings_;

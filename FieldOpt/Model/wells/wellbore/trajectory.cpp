@@ -90,6 +90,15 @@ void Trajectory::UpdateWellBlocks()
     calculateDirectionOfPenetration();
 }
 
+double Trajectory::GetLength() const {
+    if (definition_type_ == Settings::Model::WellDefinitionType::WellSpline) {
+        return well_spline_->GetLength();
+    }
+    else { // Block-defined
+        throw std::runtime_error("Lenth of block-defined wells not yet implemented.");
+    }
+}
+
 void Trajectory::initializeWellBlocks(Settings::Model::Well well,
                                       Properties::VariablePropertyContainer *variable_container)
 {

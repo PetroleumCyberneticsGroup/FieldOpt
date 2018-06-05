@@ -60,6 +60,14 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
     last_computed_spline_ = std::vector<Eigen::Vector3d>();
 }
 
+double WellSpline::GetLength() const {
+    double length = 0;
+    for (int i = 1; i < spline_points_.size(); ++i) {
+        length += (spline_points_[i]->ToEigenVector() - spline_points_[i-1]->ToEigenVector()).norm();
+    }
+    return length;
+}
+
 QList<WellBlock *> *WellSpline::GetWellBlocks()
 {
     assert(spline_points_.size() >= 2);

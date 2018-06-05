@@ -59,6 +59,7 @@ class Trajectory
   void UpdateWellBlocks(); //!< Update the well blocks, in particular the ones defined by a spline.
   int GetTimeSpentInWic() const;
   Settings::Model::WellDefinitionType GetDefinitionType();
+  double GetLength() const; //!< Get the length of the wellbore (measured depth from the heel to the toe)
 
  private:
   Settings::Model::WellDefinitionType definition_type_;
