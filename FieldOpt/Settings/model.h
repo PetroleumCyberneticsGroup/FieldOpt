@@ -73,7 +73,7 @@ class Model
       double transmissibility_factor =  0.0; //!< The transmissibility factor for this completion (used for perforations)
       double valve_size              = -1.0; //!< Valve size for nozzle ICDs.
       double diameter                = -1.0; //!< Diameter (for any completion in the segmented model)
-      double cross_sect_area         = -1.0; //!< Cross sectional area (in particular for annulus)
+      double cross_sect_area         = -1.0; //!< Cross sectional flow area
       double roughness               = -1.0; //!< Roughness (for any completion in the segmented model)
       double measured_depth          = -1.0; //!< Measured depth for the location of the completion.
       double true_vertical_depth     = -1.0; //!< True vertical depth for the location of the completion.
@@ -131,10 +131,8 @@ class Model
     bool use_segmented_model = false;           //!< Whether the segmented well model should be used.
     Completion seg_tubing;                      //!< Tubing settings when the segmented well model is used.
     Completion seg_annulus;                     //!< Annulus settings when the segmented well model is used.
-    Completion seg_auto_icd_params;             //!< Parameters to be used for automatically generated ICDs.
-    Completion seg_auto_packer_params;          //!< Parameters to be used for automatically generated packers.
-    int seg_n_auto_icds = 0;                    //!< Number of ICDs to be automatically generated using seg_auto_icd_params.
-    int seg_n_auto_packers = 0;                 //!< Number of packers to be automatically generated using seg_auto_packer_params.
+    Completion seg_compartment_params;          //!< Parameters to be used for automatically generated ICDs.
+    int seg_n_compartments = 0;                 //!< Number of packer-delimited compartments with ICDs to use.
     std::string toString();
   };
 
@@ -156,8 +154,7 @@ class Model
   void parseSegmentation(QJsonObject json_seg, Well &well);
   void parseSegmentTubing(const QJsonObject &json_seg, Well &well) const;
   void parseSegmentAnnulus(const QJsonObject &json_seg, Well &well) const;
-  void parseSegmentPackers(const QJsonObject &json_seg, Well &well) const;
-  void parseSegmentICDs(const QJsonObject &json_seg, Well &well) const;
+  void parseSegmentCompartments(const QJsonObject &json_seg, Well &well) const;
 
 
   bool controlTimeIsDeclared(int time) const;

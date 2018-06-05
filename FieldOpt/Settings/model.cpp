@@ -450,8 +450,7 @@ void Model::parseSegmentation(QJsonObject json_seg, Well &well) {
     well.use_segmented_model = true;
     parseSegmentTubing(json_seg, well);
     parseSegmentAnnulus(json_seg, well);
-    parseSegmentPackers(json_seg, well);
-    parseSegmentICDs(json_seg, well);
+    parseSegmentCompartments(json_seg, well);
 }
 void Model::parseSegmentTubing(const QJsonObject &json_seg, Model::Well &well) const {
     if (json_seg.contains("Tubing")) {
@@ -492,64 +491,37 @@ void Model::parseSegmentAnnulus(const QJsonObject &json_seg, Model::Well &well) 
     }
 }
 
-void Model::parseSegmentPackers(const QJsonObject &json_seg, Model::Well &well) const {
-    if (json_seg.contains("AutoPackers")) {
-        auto json_packer = json_seg["AutoPackers"].toObject();
+void Model::parseSegmentCompartments(const QJsonObject &json_seg, Model::Well &well) const {
+    if (json_seg.contains("Compartments")) {
+        auto json_compts = json_seg["Compartments"].toObject();
         try {
-            well.seg_n_auto_packers = json_packer["Count"].toInt();
+            well.seg_n_compartments = json_compts["Count"].toInt();
+
+            if (json_compts.contains("VariablePackers") && json_compts["VariablePackers"].toBool() == true) {
+                well.seg_compartment_params.variable_placement = true;
+            }
+            if (json_compts.contains("VariableICDs") && json_compts["VariableICDs"].toBool() == true) {
+                well.seg_compartment_params.variable_strength = true;
+            }
+            if (json_compts.contains("ICDType")) {
+                well.seg_compartment_params.type = WellCompletionType::ICV;
+            }
+            if (json_compts.contains("ICDValveSize")) {
+                well.seg_compartment_params.valve_size = json_compts["ICDValveSize"].toDouble();
+            }
+            else {
+                std::cout << "Defaulting ICDValveSize to 7.85E-5." << std::endl;
+            }
         }
-        catch ( ... ) {
-            throw std::runtime_error("For AutoPackers, Count must be defined.");
+        catch (...) {
+            throw std::runtime_error("Something went wrong while parsing the Compartments section.");
         }
-        if ( (json_packer.contains("VariablePlacement") && json_packer["VariablePlacement"].toBool() == true) ||
-             (json_packer.contains("IsVariable") || json_packer["IsVariable"].toBool() == true) )
-        {
-            well.seg_auto_packer_params.variable_placement = true;
-            well.seg_auto_packer_params.is_variable = true;
-        }
+    }
+    else {
+        throw std::runtime_error("The Compartments keyword must be specified when using the Segmentation keyword.");
     }
 }
 
-void Model::parseSegmentICDs(const QJsonObject &json_seg, Model::Well &well) const {
-    if (json_seg.contains("AutoICDs")) {
-        auto json_icd = json_seg["AutoICDs"].toObject();
-        try {
-            well.seg_n_auto_icds = json_icd["Count"].toInt();
-            well.seg_auto_icd_params.diameter = json_icd["Diameter"].toDouble();
-            well.seg_auto_icd_params.valve_size = json_icd["ValveSize"].toDouble();
-            if (QString::compare(json_icd["Type"].toString(), "Valve") == 0) {
-                well.seg_auto_icd_params.type = WellCompletionType::ICV;
-            }
-            else {
-                std::cout << "ICD type not recognized. Defaulting to Valve (ICV)" << std::endl;
-                well.seg_auto_icd_params.type = WellCompletionType::ICV;
-            }
-            if (json_icd.contains("Roughness")) {
-                well.seg_auto_icd_params.roughness = json_icd["Roughness"].toDouble();
-            }
-            else {
-                std::cout << "Roughness keyword not found in AutoICDs. " "Defaulting Roughness  1.52E-5" << std::endl;
-                well.seg_auto_icd_params.roughness = 1.52E-5;
-            }
-        }
-        catch ( ... ) {
-            throw std::runtime_error("For AutoICDs, Diameter, ValveSize, Type and Count must be defined.");
-        }
-        if (json_icd.contains("IsVariable")) {
-            throw std::runtime_error("The IsVariable keyword does not work for ICDs. "
-                                         "Use VariablePlacment and/or VariableStrength instead.")
-        }
-        if (json_icd.contains("VariablePlacement") && json_icd["VariablePlacement"].toBool() == true) {
-            well.seg_auto_icd_params.variable_placement = true;
-        }
-        if (json_icd.contains("VariableStrength") && json_icd["VariableStrength"].toBool() == true) {
-            well.seg_auto_icd_params.variable_strength = true;
-        }
-        if (well.seg_auto_icd_params.variable_strength && well.seg_auto_icd_params.variable_placement) {
-            well.seg_auto_icd_params.is_variable = true;
-        }
-    }
-}
 
 }
 
