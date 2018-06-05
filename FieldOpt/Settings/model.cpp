@@ -476,9 +476,10 @@ void Model::parseSegmentAnnulus(const QJsonObject &json_seg, Model::Well &well) 
         try {
             well.seg_annulus.diameter = json_seg["Annulus"].toObject()["Diameter"].toDouble();
             well.seg_annulus.roughness = json_seg["Annulus"].toObject()["Roughness"].toDouble();
+            well.seg_annulus.cross_sect_area = json_seg["Annulus"].toObject()["CrossSeactionArea"].toDouble();
         }
         catch ( ... ) {
-            throw std::runtime_error("For Annulus, both Diameter and Roughness must be defined.");
+            throw std::runtime_error("For Annulus, both Diameter, CrossSectionArea and Roughness must be defined.");
         }
     }
     else {

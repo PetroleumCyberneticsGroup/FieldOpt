@@ -73,6 +73,7 @@ class Model
       double transmissibility_factor =  0.0; //!< The transmissibility factor for this completion (used for perforations)
       double valve_size              = -1.0; //!< Valve size for nozzle ICDs.
       double diameter                = -1.0; //!< Diameter (for any completion in the segmented model)
+      double cross_sect_area         = -1.0; //!< Cross sectional area (in particular for annulus)
       double roughness               = -1.0; //!< Roughness (for any completion in the segmented model)
       double measured_depth          = -1.0; //!< Measured depth for the location of the completion.
       double true_vertical_depth     = -1.0; //!< True vertical depth for the location of the completion.
