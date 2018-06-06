@@ -105,6 +105,21 @@ Model::Model(QJsonObject json_model, Paths &paths)
                 }
             }
         }
+        // Segmentation
+        if (json_model.contains("Wells") && json_model["Wells"].isArray()) {
+            for (auto jwell : json_model["Wells"].toArray()) { // Go through list of wells in json file
+                if (jwell.toObject().contains("Segmentation")) { // Check if the well has the Segmentation keyword
+                    for (int j = 0; j < wells_.size(); ++j) { // Loop through parsed wells
+                        if (QString::compare(wells_[j].name, jwell.toObject()["Name"].toString()) == 0) { // Check if well names match
+                            wells_[j].use_segmented_model = true;
+                            parseSegmentation(jwell.toObject()["Segmentation"].toObject(), wells_[j]);
+                            break;
+                        }
+                    }
+                }
+            }
+
+        }
     }
     else {
         try {
@@ -318,6 +333,7 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
 
     // Segmentation
     if (json_well.contains("Segmentation")) {
+        well.use_segmented_model = true;
         parseSegmentation(json_well["Segmentation"].toObject(), well);
     }
 
@@ -447,7 +463,6 @@ int Model::getClosestControlTime(int deck_time) {
 }
 
 void Model::parseSegmentation(QJsonObject json_seg, Well &well) {
-    well.use_segmented_model = true;
     parseSegmentTubing(json_seg, well);
     parseSegmentAnnulus(json_seg, well);
     parseSegmentCompartments(json_seg, well);
@@ -476,7 +491,7 @@ void Model::parseSegmentAnnulus(const QJsonObject &json_seg, Model::Well &well) 
         try {
             well.seg_annulus.diameter = json_seg["Annulus"].toObject()["Diameter"].toDouble();
             well.seg_annulus.roughness = json_seg["Annulus"].toObject()["Roughness"].toDouble();
-            well.seg_annulus.cross_sect_area = json_seg["Annulus"].toObject()["CrossSeactionArea"].toDouble();
+            well.seg_annulus.cross_sect_area = json_seg["Annulus"].toObject()["CrossSectionArea"].toDouble();
         }
         catch ( ... ) {
             throw std::runtime_error("For Annulus, both Diameter, CrossSectionArea and Roughness must be defined.");
