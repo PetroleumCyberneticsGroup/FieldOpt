@@ -67,6 +67,10 @@ Property::PropertyType Property::get_prop_type_name(const QString prop_name) con
         return Transmissibility;
     else if (QString::compare("PseudoContVert", propstr) == 0)
         return PseudoContVert;
+    else if (QString::compare("Packer", propstr) == 0)
+        return Packer;
+    else if (QString::compare("ICD", propstr) == 0)
+        return ICD;
     else throw std::runtime_error("Unable to recognize property type " + propstr.toStdString());
 }
 

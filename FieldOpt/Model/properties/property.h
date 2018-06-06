@@ -75,7 +75,7 @@ class Property
    * Info datastructure is set.
    */
   enum PropertyType : int {BHP=2001, Rate=2002, SplinePoint=2003, WellBlock=2004,
-    Transmissibility=2005, PseudoContVert=2006
+    Transmissibility=2005, PseudoContVert=2006, Packer=2007, ICD=2008
   };
 
   /*!
