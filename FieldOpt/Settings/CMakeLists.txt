@@ -31,7 +31,8 @@ if (BUILD_TESTING)
             tests/test_settings_optimizer.cpp
             tests/test_settings_simulator.cpp
             tests/test_deck_parser.cpp
-            tests/test_schedule_import.cpp)
+            tests/test_schedule_import.cpp
+            tests/test_multisegment_compartmentalization.cpp)
     target_link_libraries(test_settings
             fieldopt::settings
             ${Boost_LIBRARIES}
