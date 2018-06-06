@@ -68,6 +68,8 @@ class WellBlock
   void setDirectionOfPenetration(const DirectionOfPenetration dop) { direction_of_penetration_ = dop; }
   void setEntryPoint(const Eigen::Vector3d entry_point) { entry_point_ = entry_point; }
   void setExitPoint(const Eigen::Vector3d exit_point) { exit_point_ = exit_point; }
+  Eigen::Vector3d getEntryPoint() const { return entry_point_; }
+  Eigen::Vector3d getExitPoint() const { return exit_point_; }
  private:
   Model::Properties::DiscreteProperty *i_;
   Model::Properties::DiscreteProperty *j_;
