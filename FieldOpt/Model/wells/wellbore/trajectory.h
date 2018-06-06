@@ -60,6 +60,9 @@ class Trajectory
   int GetTimeSpentInWic() const;
   Settings::Model::WellDefinitionType GetDefinitionType();
   double GetLength() const; //!< Get the length of the wellbore (measured depth from the heel to the toe)
+  WellBlock *GetWellBlockByMd(double md) const; //!< Get the wellblock surrounding the given MD.
+  double GetEntryMd(const WellBlock *wb) const; //!< Get the measured depth for the entry point to the block.
+  double GetExitMd(const WellBlock *wb) const; //!< Get the measured depth for the exit point from the block.
 
  private:
   Settings::Model::WellDefinitionType definition_type_;
