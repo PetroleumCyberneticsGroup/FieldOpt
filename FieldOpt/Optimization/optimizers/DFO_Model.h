@@ -43,6 +43,8 @@ class DFO_Model {
   double lambda; // The required poisedness of the set of interpolation points.
   double r = 2.0;
 
+  Eigen::MatrixXd Winv;
+  Eigen::MatrixXd W;
 
   Eigen::VectorXd y0; // The point which the model is ceneterd around.
 
@@ -546,7 +548,13 @@ class DFO_Model {
   void isInterpolatingEnhanced();
   void Converged(int iterations, int number_of_tiny_improvements, int number_of_function_calls);
   void isLagrangePoly();
-};
+  void createLagrangePolynomial(int t, double &c, VectorXd &grad, MatrixXd &hess);
+  void updateQuadraticModelNew(Eigen::VectorXd yNew, double fvalNew, unsigned int t);
+  void shiftCenterPointOfQuadraticModelNew(Eigen::VectorXd s);
+  void createW();
+
+  void ModelImprovementAlgorithm(double radius, Eigen::MatrixXd &newPoints, Eigen::VectorXi& newIndices);
+  };
 }
 }
 

@@ -324,6 +324,18 @@ void DFO_Model::updateQuadraticModel(Eigen::VectorXd yNew, double fvalNew, unsig
 
 }
 
+void DFO_Model::updateQuadraticModelNew(Eigen::VectorXd yNew, double fvalNew, unsigned int t){
+  double valModelOld = evaluateQuadraticModel(yNew);
+  double diff = fvalNew - valModelOld;
+  double c; Eigen::VectorXd grad(n); Eigen::MatrixXd hess(n,n);createLagrangePolynomial(t,c,grad,hess);
+
+  constant += diff*c;
+  gradient += diff*grad;
+  hessian += diff*hess;
+
+
+}
+
 double DFO_Model::evaluateLowerBoundQuadraticPolynomial(double radius, double b, int type) {
   switch (type) {
     case 0: return b;
@@ -351,6 +363,8 @@ DFO_Model::DFO_Model(unsigned int m,
   //this->normType = 0;
   this->m = m;
   this->n = n;
+  this->Winv = Eigen::MatrixXd::Zero(m + n + 1, m + n + 1);
+  this->W = Eigen::MatrixXd::Zero(m + n + 1, m + n + 1);
   //this->y0 = y0;
   this->y0 = Eigen::VectorXd::Zero(n);
   //this->y0 << 1,2;
@@ -494,11 +508,15 @@ Eigen::MatrixXd DFO_Model::findLastSetOfInterpolationPoints() {
 }
 
 void DFO_Model::initializeModel() {
+  Winv = calculateWExplicitly();
+  createW();
+  std::cout << "Winv = \n" << Winv << "\n";
   initializeQuadraticModel();
   initializeInverseKKTMatrix();
   modelInitialized = true;
 
 }
+
 
 void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, UpdateReason updateReason) {
   int oldBestPointIndex = bestPointIndex;
@@ -549,12 +567,12 @@ void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, Upd
 
   //std::cout << "Old point: \n" << Y.col(t-1) << "\nNew point: \n" << yNew << std::endl;
 
-  updateInverseKKTMatrix(yNew, t);
-  updateQuadraticModel(yNew, fvalNew, t);
-
+  //updateInverseKKTMatrix(yNew, t);
+  //updateQuadraticModel(yNew, fvalNew, t);
   //Y.col(t - 1) = yNew;
   eigen_col(Y, yNew, t - 1);
   fvals(t - 1) = fvalNew;
+  updateQuadraticModelNew(yNew, fvalNew, t);
 
   if ((updateReason == IMPROVE_POISEDNESS || updateReason == INCLUDE_NEW_POINT))  {
     if (t == oldBestPointIndex && fvalNew > oldBestFval) { // removing optimum :(
@@ -574,8 +592,13 @@ void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, Upd
       }
     }
   }
+  Winv = calculateWExplicitly();
+  createW();
+  std::cout << "Winv = \n" << Winv << "\n";
 
 }
+
+
 
 double DFO_Model::evaluateQuadraticModel(Eigen::VectorXd point) {
   /*
@@ -594,7 +617,7 @@ double DFO_Model::evaluateQuadraticModel(Eigen::VectorXd point) {
   Eigen::VectorXd e_g(n);
   Eigen::MatrixXd e_h(n,n);
   enhancedModel.GetModel(e_c,e_g,e_h);
-  double val = e_c + point.transpose()*e_g + point.transpose()*e_h*point;
+  double val = e_c + point.transpose()*e_g +0.5* point.transpose()*e_h*point;
   return val;
 }
 
@@ -687,6 +710,23 @@ void DFO_Model::shiftCenterPointOfQuadraticModel(Eigen::VectorXd s) {
     v += gammas(i - 1) * (Y.col(i - 1) - 0.5 * s);
   }
   Gamma += v * s.transpose() + s * v.transpose();
+
+  // Update Y because it should be the vectors of displacements of the
+  //     interpolation points from the center point.
+  for (int i = 1; i <= m; ++i) {
+    //Y.col(i - 1) -= s;
+    eigen_col(Y, Y.col(i - 1) - s, i - 1);
+  }
+  bestPoint -= s;
+  bestPointAllTime -= s;
+  y0 += s;
+}
+
+void DFO_Model::shiftCenterPointOfQuadraticModelNew(Eigen::VectorXd s){
+  double tmp1 = gradient.transpose()*s;
+  double tmp2 = (0.5*(s.transpose()*hessian)*s);
+  constant += tmp1 + tmp2;
+  gradient += hessian*s;
 
   // Update Y because it should be the vectors of displacements of the
   //     interpolation points from the center point.
@@ -809,6 +849,7 @@ void DFO_Model::slowShiftCenterPointOfQuadraticModel(Eigen::VectorXd s) {
 
 void DFO_Model::findLowerAndUpperBoundOnAbsoluteLagrangePolynomial(int i, double &lowerBound, double &upperBound) {
   double maxCoeffVal = 0;
+  /*
   Eigen::VectorXd grad;
   Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(n, n);
   // Creating the Lagrange polynomial.
@@ -818,7 +859,8 @@ void DFO_Model::findLowerAndUpperBoundOnAbsoluteLagrangePolynomial(int i, double
     double tmp = Z.row(k - 1) * S * (Z.row(i - 1)).transpose();
     hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
   }
-
+*/
+  double c; Eigen::VectorXd grad(n); Eigen::MatrixXd hess(n,n);createLagrangePolynomial(i,c,grad,hess);
   int type = 0;
   maxCoeffVal = c;
 
@@ -902,18 +944,20 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
   Eigen::VectorXd poisedness(m);
  // Eigen::VectorXd poisedness2(m);
   int index = -1;
-
-  Eigen::VectorXd grad;
-  Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(n, n);
+  double c; Eigen::VectorXd grad(n); Eigen::MatrixXd hess(n,n);
+  //Eigen::VectorXd grad;
+  //Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(n, n);
   // Creating the lagrange polynomial.
   for (int t = 1; t <= m; ++t) {
+    /*
     hess.setZero();
     double c = Xi(0, t - 1);
     grad = (Xi.col(t - 1)).tail(n);
     for (int k = 1; k <= m; ++k) {
       double tmp = Z.row(k - 1) * S * (Z.row(t - 1)).transpose();
       hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
-    }
+    }*/
+    createLagrangePolynomial(t,c,grad,hess);
 
     // Find min and max of l_t(x)
     subproblem.setConstant(c);
@@ -923,6 +967,7 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
     vector<double> fsolMax;
     vector<double> xsolMin;
     vector<double> fsolMin;
+    //PrintLagrangePolynomial(t);
     subproblem.Solve(xsolMax, fsolMax, (char *) "Maximize", y0, bestPoint,bestPoint);
     subproblem.Solve(xsolMin, fsolMin, (char *) "Minimize", y0, bestPoint,bestPoint);
     poisedness(t-1) = std::max(abs(fsolMax[0]),abs(fsolMin[0]));
@@ -968,19 +1013,21 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
       else{
         indexOfWorstPoint = index;
       }
+
     } else{
       indexOfWorstPoint = index;
     }
 
 
-
+    /*
     hess.setZero();
     double c = Xi(0, indexOfWorstPoint - 1);
     grad = (Xi.col(indexOfWorstPoint - 1)).tail(n);
     for (int k = 1; k <= m; ++k) {
       double tmp = Z.row(k - 1) * S * (Z.row(indexOfWorstPoint - 1)).transpose();
       hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
-    }
+    }*/
+    createLagrangePolynomial(indexOfWorstPoint,c,grad,hess);
     subproblem.setConstant(c);
     subproblem.setGradient(grad);
     subproblem.setHessian(hess);
@@ -1266,6 +1313,7 @@ void DFO_Model::findPointToImprovePoisedness(Eigen::VectorXd &dNew, int &yk) {
   highestPoisednessUpperBound = poisednessBounds.col(1).maxCoeff(&rowIndex, &colIndex);
   highestPoisednessLowerBound = poisednessBounds(rowIndex, 0);
 
+  /*
   Eigen::VectorXd grad;
   Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(n, n);
   // Creating the lagrange polynomial.
@@ -1275,6 +1323,8 @@ void DFO_Model::findPointToImprovePoisedness(Eigen::VectorXd &dNew, int &yk) {
     double tmp = Z.row(k - 1) * S * (Z.row(rowIndex + 1 - 1)).transpose();
     hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
   }
+  */
+  double c; Eigen::VectorXd grad(n); Eigen::MatrixXd hess(n,n);createLagrangePolynomial(rowIndex,c,grad,hess);
 
   if (highestPoisednessUpperBound > lambda) {
     dNew = findHighValueOfAbsoluteLagrangePolynomial(rowIndex + 1);
@@ -1288,6 +1338,7 @@ void DFO_Model::findPointToImprovePoisedness(Eigen::VectorXd &dNew, int &yk) {
 }
 
 Eigen::VectorXd DFO_Model::findHighValueOfAbsoluteLagrangePolynomial(int t) {
+  /*
   Eigen::VectorXd grad;
   Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(n, n);
   // Creating the lagrange polynomial.
@@ -1297,11 +1348,12 @@ Eigen::VectorXd DFO_Model::findHighValueOfAbsoluteLagrangePolynomial(int t) {
     double tmp = Z.row(k - 1) * S * (Z.row(t - 1)).transpose();
     hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
   }
-
+  */
+  double c; Eigen::VectorXd grad(n); Eigen::MatrixXd hess(n,n);createLagrangePolynomial(t,c,grad,hess);
   Eigen::VectorXd yTry(n); //Displacement from current center point
   static std::random_device rd;
   static std::mt19937 gen(rd());
-  static std::uniform_real_distribution<> dis(-rho, rho);
+  std::uniform_real_distribution<> dis(-rho, rho);
   int k = 0;
 
   for (int i = 0; i < n; ++i) {
@@ -1339,11 +1391,13 @@ int DFO_Model::findPointToReplaceWithNewOptimum(Eigen::VectorXd yNew) {
   w(m) = 1;
 
   Eigen::VectorXd Hw = Eigen::VectorXd::Zero(m + n + 1);
-
+  Hw = Winv*w;
+  /*
   //Hw.head(m) = Z * S * (Z.transpose()) * (w.head(m)) + Xi.transpose() * (w.tail(n + 1));
   eigen_head(Hw, Z * S * (Z.transpose()) * (w.head(m)) + Xi.transpose() * (w.tail(n + 1)), m);
   //Hw.tail(n + 1) = Xi * w.head(m) + Upsilon * w.tail(n + 1);
   eigen_tail(Hw, Xi * w.head(m) + Upsilon * w.tail(n + 1), n + 1);
+  */
 
   int indexToBeReplaced = 1;
   double currentMax = -1;
@@ -1408,7 +1462,7 @@ void DFO_Model::printParametersMatlabFriendly() {
 
   std::cout << "H = [ " << std::endl;
   for (int i = 0; i < n; ++i) {
-    std::cout << Hessian.row(i);
+    std::cout << hessian.row(i);
     if (i != n - 1) {
       std::cout << "; \n";
     }
@@ -1439,17 +1493,22 @@ void DFO_Model::printParametersMatlabFriendlyFromLagrangePolynomials() {
   hess.setZero();
   // Creating the Lagrange polynomial.
   for (int t=1; t<=m;++t){
-    double c = Xi(0, t - 1);
+    /*double c = Xi(0, t - 1);
     grad = (Xi.col(t - 1)).tail(n);
     for (int k = 1; k <= m; ++k) {
       double tmp = Z.row(k - 1) * S * (Z.row(t - 1)).transpose();
       tmp = Omega(k-1, t-1);
       hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
     }
+    */
+    double c;
+    createLagrangePolynomial(t,c,grad,hess);
     //std::cout << "Hessian belonging to: " << t << "\tvalue is: " <<fvals[t-1] <<"\n" << hess << "\n";
     C += c*fvals[t-1];
     Grad += grad*fvals[t-1];
     Hessian += hess*fvals[t-1];
+
+    std::cout << "hessian of poly nr.: " << t << "\n" << hess <<"\n";
   }
 
 
@@ -1663,6 +1722,7 @@ Eigen::VectorXd DFO_Model::FindLocalOptimum() {
   subproblem.setHessian(e_h);
   subproblem.setGradient(e_g);
   subproblem.setConstant(e_c);
+  enhancedModel.PrintParametersMatlabFriendly();
 
   subproblem.Solve(xsol, fsol, (char *) "Minimize", y0, bestPoint,bestPoint);
   for (int i = 0; i < n; i++) {
@@ -1702,6 +1762,7 @@ double DFO_Model::findLargestDistanceBetweenPointsAndOptimum() {
   return maxDistance;
 }
 double DFO_Model::ComputeLagrangePolynomial(int t, Eigen::VectorXd point) {
+  /*
   Eigen::VectorXd grad;
   Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(n, n);
   hess.setZero();
@@ -1712,7 +1773,8 @@ double DFO_Model::ComputeLagrangePolynomial(int t, Eigen::VectorXd point) {
     double tmp = Z.row(k - 1) * S * (Z.row(t - 1)).transpose();
     hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
   }
-
+  */
+  double c; Eigen::VectorXd grad(n); Eigen::MatrixXd hess(n,n);createLagrangePolynomial(t,c,grad,hess);
   /*
   std::cout << "c = " << c << std::endl;
   std::cout << "gradient = " << std::endl << grad << std::endl;
@@ -1725,6 +1787,7 @@ double DFO_Model::ComputeLagrangePolynomial(int t, Eigen::VectorXd point) {
 }
 
 double DFO_Model::PrintLagrangePolynomial(int t) {
+  /*
   Eigen::VectorXd grad;
   Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(n, n);
   // Creating the Lagrange polynomial.
@@ -1734,6 +1797,8 @@ double DFO_Model::PrintLagrangePolynomial(int t) {
     double tmp = Z.row(k - 1) * S * (Z.row(t - 1)).transpose();
     hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
   }
+   */
+  double c; Eigen::VectorXd grad(n); Eigen::MatrixXd hess(n,n);createLagrangePolynomial(t,c,grad,hess);
   std::cout << "Lagrange polynomial ----------------------- " << t << "\n";
   std::cout << "c = " << c << std::endl;
   std::cout << "gradient = " << std::endl << grad << std::endl;
@@ -1741,6 +1806,7 @@ double DFO_Model::PrintLagrangePolynomial(int t) {
 }
 
 Eigen::VectorXd DFO_Model::FindLocalOptimumOfAbsoluteLagrangePolynomial(int t) {
+  /*
   Eigen::VectorXd grad;
   Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(n, n);
   // Creating the lagrange polynomial.
@@ -1751,6 +1817,9 @@ Eigen::VectorXd DFO_Model::FindLocalOptimumOfAbsoluteLagrangePolynomial(int t) {
     double tmp = Z.row(k - 1) * S * (Z.row(t - 1)).transpose();
     hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
   }
+  */
+
+  double c; Eigen::VectorXd grad(n); Eigen::MatrixXd hess(n,n);createLagrangePolynomial(t,c,grad,hess);
 
   // Find min and max of l_t(x)
   subproblem.setConstant(c);
@@ -1984,12 +2053,13 @@ int DFO_Model::isPointAcceptable(Eigen::VectorXd point) {
   w(m) = 1;
 
   Eigen::VectorXd Hw = Eigen::VectorXd::Zero(m + n + 1);
-
+  Hw = Winv*w;
+  /*
   //Hw.head(m) = Z * S * (Z.transpose()) * (w.head(m)) + Xi.transpose() * (w.tail(n + 1));
   eigen_head(Hw, Z * S * (Z.transpose()) * (w.head(m)) + Xi.transpose() * (w.tail(n + 1)), m);
   //Hw.tail(n + 1) = Xi * w.head(m) + Upsilon * w.tail(n + 1);
   eigen_tail(Hw, Xi * w.head(m) + Upsilon * w.tail(n + 1), n + 1);
-
+*/
   int indexToBeReplaced = -1;
   double currentMax = -1;
   for (int j = 1; j <= m; ++j){
@@ -2039,6 +2109,7 @@ bool DFO_Model::FindReplacementForPointsOutsideRadius(double radius, Eigen::Matr
   Eigen::MatrixXd copyUpsilon = Upsilon;
   Eigen::MatrixXd copyXi = Xi;
   Eigen::MatrixXd copyY = Y;
+  Eigen::MatrixXd copyWinv = Winv;
   bool retVal = true;
 
 
@@ -2058,7 +2129,7 @@ bool DFO_Model::FindReplacementForPointsOutsideRadius(double radius, Eigen::Matr
     newIndices(i) = -1;
   }
 
-  subproblem.SetTrustRegionRadius((radius/r)*0.7);
+  subproblem.SetTrustRegionRadius((radius/r)*0.9);
   newPoints.resize(n, number_of_points_outside);
   newPoints.setZero();
   Eigen::VectorXd dNew(n);
@@ -2074,8 +2145,12 @@ bool DFO_Model::FindReplacementForPointsOutsideRadius(double radius, Eigen::Matr
       newPoints.col(addedPoints) = dNew;
       eigen_col(newPoints, dNew, addedPoints);
       //do the update
-      updateInverseKKTMatrix(dNew,sortedPoints(i));
+      //updateInverseKKTMatrix(dNew,sortedPoints(i));
+      //Y.col(t - 1) = yNew;
+
       eigen_col(Y, dNew, sortedPoints(i) - 1);
+      Winv = calculateWExplicitly();
+      createW();
       addedPoints++;
       j++;
       //break;
@@ -2202,6 +2277,8 @@ bool DFO_Model::FindReplacementForPointsOutsideRadius(double radius, Eigen::Matr
   Upsilon = copyUpsilon;
   S = copyS;
   Z = copyZ;
+  Winv = copyWinv;
+  createW();
   return retVal;
 }
 int DFO_Model::GetNumberOfPointsOutsideRadius(double radius) {
@@ -2246,6 +2323,33 @@ void DFO_Model::calculatePolynomialModelDirectlyFromWinverse() {
   std::cout << "gradient = " << std::endl << grad << std::endl;
   std::cout << "hessian = " << std::endl << hess << std::endl;
 
+}
+
+
+void DFO_Model::createW(){
+  W = Eigen::MatrixXd::Zero(m + n + 1, m + n + 1);
+  Eigen::MatrixXd A = Eigen::MatrixXd::Zero(m, m);
+  Eigen::MatrixXd X = Eigen::MatrixXd::Zero(n + 1, m);
+  for (int i = 1; i <= m; ++i) {
+    for (int j = 1; j <= m; ++j) {
+      A(i - 1, j - 1) = 0.5*std::pow(Y.col(i-1).transpose()*Y.col(j-1), 2);
+    }
+  }
+
+
+  for (int i = 1; i <= m; ++i){
+    X(0,i-1) = 1;
+  }
+
+  for (int i = 1; i <= m; ++i) {
+    Eigen::VectorXd tmp = X.col(i - 1);
+    eigen_tail(tmp,Y.col(i-1),n);
+    eigen_col(X, tmp, i-1);
+  }
+
+  W.topLeftCorner(m, m) = A;
+  W.bottomLeftCorner(n + 1, m) = X;
+  W.topRightCorner(m, n + 1) = X.transpose();
 }
 
 // This is slow and should only be used for testing and debugging.
@@ -2363,6 +2467,8 @@ Eigen::MatrixXd DFO_Model::calculateWExplicitly() {
 
 
 bool DFO_Model::FindReplacementPoint(int t, Eigen::VectorXd &dNew, int compareIdx) {
+  double c; Eigen::VectorXd grad(n); Eigen::MatrixXd hess(n,n);createLagrangePolynomial(t,c,grad,hess);
+  /*
   Eigen::VectorXd grad;
   Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(n, n);
   // Creating the lagrange polynomial.
@@ -2373,6 +2479,7 @@ bool DFO_Model::FindReplacementPoint(int t, Eigen::VectorXd &dNew, int compareId
     double tmp = Z.row(k - 1) * S * (Z.row(t - 1)).transpose();
     hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
   }
+*/
   double val = 0; //c + dNew.transpose()*grad + dNew.transpose()*hess*dNew;
 
   // Find min and max of l_t(x)
@@ -2549,14 +2656,16 @@ void DFO_Model::modelImprovementStep(Eigen::VectorXd &dNew, int &indexOfPointToB
 
 
 void DFO_Model::isInterpolating(){
+  /*
   Eigen::MatrixXd Hessian(n, n);
   Hessian = Gamma;
   for (int i = 1; i <= m; ++i) {
     Hessian += gammas(i - 1) * Y.col(i - 1) * (Y.col(i - 1)).transpose();
   }
+  */
   std::cout << "Checking if the model actually interpolates the points\n";
   for (int i = 1; i<=m; ++i){
-    double val = constant + gradient.transpose()* Y.col(i-1)+ 0.5*(Y.col(i-1)).transpose()*Hessian*Y.col(i-1);
+    double val = constant + gradient.transpose()* Y.col(i-1)+ 0.5*(Y.col(i-1)).transpose()*hessian*Y.col(i-1);
     std::cout << fvals[i-1] << " == " << val <<"\t"<< (std::abs(val-fvals[i-1]) <= 0.000000001) << "\n";
   }
 }
@@ -2569,12 +2678,16 @@ void DFO_Model::isInterpolatingLagrange(){
 
   double C = 0;
 
-  Eigen::VectorXd grad;
-  Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(n, n);
-  Eigen::MatrixXd Omega = Z * S * Z.transpose();
-  hess.setZero();
+  //Eigen::VectorXd grad;
+  //Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(n, n);
+  //Eigen::MatrixXd Omega = Z * S * Z.transpose();
+  //hess.setZero();
+  double c; Eigen::VectorXd grad(n); Eigen::MatrixXd hess(n,n);
   // Creating the Lagrange polynomial.
   for (int t=1; t<=m;++t){
+    createLagrangePolynomial(t,c,grad,hess);
+
+    /*
     double c = Xi(0, t - 1);
     grad = (Xi.col(t - 1)).tail(n);
     for (int k = 1; k <= m; ++k) {
@@ -2582,6 +2695,7 @@ void DFO_Model::isInterpolatingLagrange(){
       tmp = Omega(k-1, t-1);
       hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
     }
+    */
     C += c*fvals[t-1];
     Grad += grad*fvals[t-1];
     Hessian += hess*fvals[t-1];
@@ -2598,6 +2712,7 @@ void DFO_Model::isInterpolatingLagrange(){
 
 
 void DFO_Model::isLagrangePoly(){
+  /*
   Eigen::MatrixXd Hessian(n, n);
   Eigen::VectorXd Grad(n);
   Hessian.setZero();
@@ -2617,37 +2732,45 @@ void DFO_Model::isLagrangePoly(){
       double tmp = Z.row(k - 1) * S * (Z.row(t - 1)).transpose();
       tmp = Omega(k-1, t-1);
       hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
+
+      for (int j = 1; j  <= m; j ++){
+        double val = c + grad.transpose() *Y.col(j-1)+ 0.5*(Y.col(j-1)).transpose()*hess*Y.col(j-1);
+        if (j == t){
+          if(  (std::abs(val) < (1 - 0.1e-8) )|| (std::abs(val) > (1 - 0.1e-8))){
+            std::cout << "value should be 1, but is: " << val <<"\n";
+          }
+        }
+        else{
+          if((val > (0.1e-8)) || (val < (-0.1e-8))){
+            std::cout << "value should be 0, but is: " << val <<"\n";
+          }
+        }
+      }
+
     }
 
-    for (int j = 1; j  <= m; j ++){
-      double val = c + grad.transpose() *Y.col(j-1)+ 0.5*(Y.col(j-1)).transpose()*hess*Y.col(j-1);
-      if (j == t){
-        if(  (std::abs(val) < (1 - 0.1e-8) )|| (std::abs(val) > (1 - 0.1e-8))){
-          std::cout << "value should be 1, but is: " << val <<"\n";
-        }
-      }
-      else{
-        if((val > (0.1e-8)) || (val < (-0.1e-8))){
-          std::cout << "value should be 0, but is: " << val <<"\n";
-        }
-      }
     }
-  }
+*/
+
   std::cout << "_____________________________________\n------------------------\nNow using Winv direct" <<"\n";
 
+  /*
   grad.setZero();
   hess.setZero();
   double c = 0;
   Eigen::MatrixXd Winv(m + n + 1, m + n + 1);
   Winv = calculateWExplicitly();
-
+*/
   for (int t = 1; t<=m; ++t) {
+    /*
     hess.setZero();
     c = Winv(m, t - 1);
     grad = Winv.col(t - 1).tail(n);
     for (int k = 1; k <= m; ++k) {
       hess += Winv(k - 1, t - 1) * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
     }
+    */
+    double c; Eigen::VectorXd grad(n); Eigen::MatrixXd hess(n,n);createLagrangePolynomial(t,c,grad,hess);
 
     for (int j = 1; j <= m; j++) {
       double val = c + grad.transpose() * Y.col(j - 1) + 0.5 * (Y.col(j - 1)).transpose() * hess * Y.col(j - 1);
@@ -2696,10 +2819,10 @@ void DFO_Model::Converged(int iterations, int number_of_tiny_improvements, int n
 
     printParametersMatlabFriendly();
     //DFO_model_.printParametersMatlabFriendlyGradientEnhanced();
-    Eigen::VectorXd cp(3);
+    Eigen::VectorXd cp(n);
     cp[0] = 0;
     cp[1] = 0;
-    cp[2] = 0;
+    //cp[2] = 0;
     cp = cp - y0;
     shiftCenterPointOfQuadraticModel(cp);
     UpdateOptimum();
@@ -2724,6 +2847,95 @@ void DFO_Model::Converged(int iterations, int number_of_tiny_improvements, int n
     std::cout << "\033[1;36;mFunction Calls \033[0m" << number_of_function_calls << "\n";
 
     std::cin.get();}
+}
+
+void DFO_Model::createLagrangePolynomial(int t, double &c, Eigen::VectorXd &grad, Eigen::MatrixXd &hess) {
+  grad.setZero();
+  hess.setZero();
+  c = 0;
+  createW();
+  Eigen::VectorXd ans(n+m+1);
+  Eigen::VectorXd rhs = Eigen::VectorXd::Zero(n+m+1);
+  rhs(t-1) = 1;
+  ans = W.colPivHouseholderQr().solve(rhs);
+
+  c = ans(m);
+  grad = ans.tail(n);
+  for (int k = 1; k <= m; ++k) {
+    hess += ans(k - 1) * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
+  }
+
+
+  /*
+  c = Winv(m, t - 1);
+  grad = Winv.col(t - 1).tail(n);
+
+std::cout << "scales...\n";
+  for (int k = 1; k <= m; ++k) {
+    std::cout << Winv(k - 1, t - 1) << "\n";
+    hess += Winv(k - 1, t - 1) * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
+  }
+   */
+/*
+    for (int j = 1; j <= m; j++) {
+      double val = c + grad.transpose() * Y.col(j - 1) + 0.5 * (Y.col(j - 1)).transpose() * hess * Y.col(j - 1);
+      if (j == t) {
+        std::cout << "value should be 1, but is: " << val << "\n";
+      } else {
+        std::cout << "value should be 0, but is: " << val << "\n";
+      }
+    }
+    */
+}
+
+void DFO_Model::ModelImprovementAlgorithm(double radius, Eigen::MatrixXd &newPoints, Eigen::VectorXi& newIndices){
+
+  /// Get all points inside the trust-region
+  Eigen::MatrixXd tmpNewPoints;
+  Eigen::VectorXd tmpNewIndices;
+  FindReplacementForPointsOutsideRadius(radius,tmpNewPoints,tmpNewIndices);
+  Eigen::MatrixXd copyY = Y;
+  Eigen::VectorXi changed(n);
+  changed.setZero();
+  for (int i = 0; i < tmpNewPoints.cols(); ++i) {
+    eigen_col(Y, tmpNewPoints.col(i), newIndices(i) - 1);
+    changed(newIndices(i) - 1) = 1;
+  }
+
+
+  /// Improve poisedness until required poisedness is achieved.
+  Eigen::VectorXd dNew(n);
+  int index = -1;
+  while (1){
+    findWorstPointInInterpolationSet(dNew,index);
+    if (index == -1){
+      break;
+    }
+    else{
+      eigen_col(Y, dNew, index-1);
+      changed(index-1) = 1;
+    }
+  }
+
+
+  int number_of_new_points = 0;
+  for (int i = 0; i <m; i++){
+    if (changed(i) == 1){
+      number_of_new_points++;
+    }
+  }
+  newPoints.resize(n,number_of_new_points);
+  newIndices.resize(number_of_new_points);
+
+  int i = 0;
+  for (int j = 1; j <= m; ++j){
+    if (changed(j-1) == 1){
+      newPoints(i) = Y.col(j-1);
+      newIndices(i) = j;
+      i++;
+    }
+  }
+  Y = copyY;
 }
 
 }

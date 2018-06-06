@@ -74,7 +74,7 @@ double sphere(Eigen::VectorXd x) {
   double valSixHump = (4-2.1*x(0)*x(0) + 1.0/3.0*x(0)*x(0)*x(0)*x(0))*x(0)*x(0) + x(0)*x(1) + 4*(x(1)*x(1)-1)*x(1)*x(1);
   double valXinSheYangs = (std::abs(x(0))+std::abs(x(1)))*std::exp(-std::sin(x(0)*x(0)) - std::sin(x(1)*x(1)));
   //double valAbs = std::abs(x(0)) + std::abs(x(1));
-  double valAbs = std::abs(x(0)) + std::abs(x(1))+ std::abs(x(2));
+  double valAbs = std::abs(x(0)) + std::abs(x(1));
   return valAbs;
 
   //return val;
@@ -1036,7 +1036,7 @@ void DFO::iterate() {
           index_of_new_point = DFO_model_.getBestPointIndex();
           DFO_model_.update(new_point, function_evaluation, index_of_new_point, DFO_Model::INCLUDE_NEW_POINT);
           UpdateLastAction(NEW_POINT_INCLUDED);
-          DFO_model_.shiftCenterPointOfQuadraticModel(DFO_model_.GetBestPoint());
+          DFO_model_.shiftCenterPointOfQuadraticModelNew(DFO_model_.GetBestPoint());
 
         }
         else{
@@ -1074,7 +1074,7 @@ void DFO::iterate() {
 
         if (function_evaluation < DFO_model_.GetFunctionValue(DFO_model_.getBestPointIndex())){
         DFO_model_.update(new_point, function_evaluation, t, DFO_Model::INCLUDE_NEW_OPTIMUM);
-        DFO_model_.shiftCenterPointOfQuadraticModel(DFO_model_.GetBestPoint());
+        DFO_model_.shiftCenterPointOfQuadraticModelNew(DFO_model_.GetBestPoint());
           if ( (1 - function_evaluation/DFO_model_.GetFunctionValue(DFO_model_.getBestPointIndex())) < 0.000001){
             number_of_tiny_improvements++;
           }
@@ -1095,7 +1095,7 @@ void DFO::iterate() {
             number_of_tiny_improvements++;
           }
           DFO_model_.update(new_point, function_evaluation, t, DFO_Model::INCLUDE_NEW_OPTIMUM);
-          DFO_model_.shiftCenterPointOfQuadraticModel(DFO_model_.GetBestPoint());
+          DFO_model_.shiftCenterPointOfQuadraticModelNew(DFO_model_.GetBestPoint());
         }
         else{
           //isCFL = true; rho = 0;
@@ -1117,7 +1117,7 @@ void DFO::iterate() {
           DFO_model_.findWorstPointInInterpolationSet(dummyVec, dummyInt);
           std::cout << "AFTER ---------------- AFTER \n";
           if (index_of_new_point == DFO_model_.getBestPointIndex()) {
-            DFO_model_.shiftCenterPointOfQuadraticModel(DFO_model_.GetBestPoint());
+            DFO_model_.shiftCenterPointOfQuadraticModelNew(DFO_model_.GetBestPoint());
           }
           //last_action_ = NEW_POINT_INCLUDED; //Doing this destroys the AND functionality!
         }

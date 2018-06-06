@@ -213,15 +213,19 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
   }
 
   double s1 = abs(constant + gradient.transpose() * bestPointDisplacement + 0.5* bestPointDisplacement.transpose() * hessian * bestPointDisplacement);
-  Eigen::VectorXd d(3);
+  Eigen::VectorXd d(n_);
   d.setZero();
-  d << xlow_[0], xlow_[1], xlow_[2];
+  //d << xlow_[0], xlow_[1], xlow_[2];
+  d << xlow_[0], xlow_[1];
   s1 +=  abs(constant + gradient.transpose() * d + 0.5* d.transpose() * hessian * d);
-  d << xlow_[0], xupp_[1], xlow_[2];
+  //d << xlow_[0], xupp_[1], xlow_[2];
+  d << xlow_[0], xupp_[1];
   s1 +=  abs(constant + gradient.transpose() * d + 0.5* d.transpose() * hessian * d);
-  d << xupp_[0], xupp_[1], xupp_[2];
+  //d << xupp_[0], xupp_[1], xupp_[2];
+  d << xupp_[0], xupp_[1];
   s1 +=  abs(constant + gradient.transpose() * d + 0.5* d.transpose() * hessian * d);
-  d << xupp_[0], xlow_[1], xupp_[2];
+  //d << xupp_[0], xlow_[1], xupp_[2];
+  d << xupp_[0], xlow_[1];
   s1 +=  abs(constant + gradient.transpose() * d + 0.5* d.transpose() * hessian * d);
   scale = s1/5.0;
   //scale = 1;
