@@ -22,9 +22,13 @@
 #define FIELDOPT_SEGMENTED_WELL_H
 
 #include "well.h"
+#include "Model/wells/wellbore/completions/packer.h"
+#include "Model/wells/wellbore/completions/icd.h"
 
 namespace Model {
 namespace Wells {
+
+using namespace Wellbore::Completions;
 
 /*!
  * The SegmentedWell class is an extension of the Well class, used
@@ -40,14 +44,33 @@ class SegmentedWell : public Well {
                 Properties::VariablePropertyContainer *variable_container,
                 Reservoir::Grid::Grid *grid);
 
+  /*!
+   * The Compartment struct models a compartment made up of two packers and an ICD.
+   * The ICD is placed at the beginning of the compartment (i.e. closest to the
+   * heel of the well).
+   */
+  struct Compartment {
+    Compartment(const double start_md, const double end_md,
+                const double start_tvd, const double end_tvd,
+                const Settings::Model::Well &well_settings,
+                Properties::VariablePropertyContainer *variable_container,
+                std::vector<Compartment> &compartments_);
+    Packer *start_packer;
+    Packer *end_packer;
+    ICD *icd;
+  };
+
 
  private:
+  Settings::Model::Well well_settings_;
   double tub_diam_;            //!< Tubing (inner) diameter.
   double ann_diam_;            //!< Annular diameter.
   double tub_cross_sect_area_; //!< Tubing cross section area.
   double ann_cross_sect_area_; //!< Annular cross section area.
   double tub_roughness_;       //!< Roughness for tubing segments.
   double ann_roughness_;       //!< Roughness for annulus segments.
+
+  std::vector<Compartment> compartments_;
 
 };
 
