@@ -73,7 +73,10 @@ double sphere(Eigen::VectorXd x) {
   double valros = (x(0)-1)*(x(0)-1) + 100*(x(1)  - x(0)*x(0))*(x(1)  - x(0)*x(0));
   double valSixHump = (4-2.1*x(0)*x(0) + 1.0/3.0*x(0)*x(0)*x(0)*x(0))*x(0)*x(0) + x(0)*x(1) + 4*(x(1)*x(1)-1)*x(1)*x(1);
   double valXinSheYangs = (std::abs(x(0))+std::abs(x(1)))*std::exp(-std::sin(x(0)*x(0)) - std::sin(x(1)*x(1)));
-  return val2;
+  //double valAbs = std::abs(x(0)) + std::abs(x(1));
+  double valAbs = std::abs(x(0)) + std::abs(x(1))+ std::abs(x(2));
+  return valAbs;
+
   //return val;
 }
 double sphereorg(Eigen::VectorXd x) {
@@ -553,7 +556,7 @@ void DFO::iterate() {
   Eigen::MatrixXd new_points_criticality;
   Eigen::VectorXi new_indicies_criticality;
   std::cout << std::setprecision(20);
-  std::cout << std::scientific;
+  ///std::cout << std::scientific;
   //std::cout.setstate(std::ios_base::failbit);
   bool isCFL = false;
   while (notConverged) {
@@ -1077,6 +1080,7 @@ void DFO::iterate() {
           }
         }
         else{
+          DFO_model_.update(new_point, function_evaluation, t, DFO_Model::INCLUDE_NEW_OPTIMUM);
           isCFL = true; rho = 0;
           number_of_tiny_improvements = 0;
         }
@@ -1206,6 +1210,7 @@ void DFO::iterate() {
         isCFL = true;
       }
       else{
+        //std::cout << "New point found is: \n" << new_point << "\n"<< "Index is: " << index_of_new_point <<"\n";
         UpdateLastAction(MODEL_IMPROVEMENT_POINT_FOUND);
         rho = 0;
       }
@@ -1268,17 +1273,21 @@ void DFO::iterate() {
     */
 
     if (DFO_model_.isModelInitialized()) {
-      std::cout << "___________________________________________________Interpolating?________________\n";
+      std::cout << "___________________________________________________Interpolating?______________________________________________\n";
       DFO_model_.isInterpolating();
       std::cout << "__________________________________\n";
       DFO_model_.isInterpolatingLagrange();
       std::cout << "__________________________________\n";
       DFO_model_.isInterpolatingEnhanced();
-      std::cout << "___________________________________________________Interpolating?________________\n";
+      std::cout << "___________________________________________________Interpolating?______________________________________________\n";
       DFO_model_.printParametersMatlabFriendly();
       //DFO_model_.printParametersMatlabFriendlyFromLagrangePolynomials();
 
       //DFO_model_.printParametersMatlabFriendlyGradientEnhanced();
+
+      std::cout << "___________________________________________________Lagrange?______________________________________________\n";
+      DFO_model_.isLagrangePoly();
+      std::cout << "___________________________________________________Lagrange?______________________________________________\n";
     }
 
     if (iterations_ == 0 || (iterations_ == 1 && DFO_model_.isModelInitialized() == false)) {

@@ -192,13 +192,22 @@ void DFO_Model::updateInverseKKTMatrix(Eigen::VectorXd yNew, unsigned int t) {
   double tau = Hw[t - 1];
   double sigma = alpha * beta + std::pow(tau, 2);
 
-  /*
-  std::cout << "l(x+) = " << Hw(t - 1) << "\t this should be nonzero \n \n \n";
-  std::cout << "alpha = " << alpha << ". >= 0 ??" << std::endl;
-  std::cout << "beta = " << beta << ". >= 0 ??" << std::endl;
+
+  //std::cout << "l(x+) = " << Hw(t - 1) << "\t this should be nonzero \n \n \n";
+  //std::cout << "alpha = " << alpha << ". >= 0 ??" << std::endl;
+  //std::cout << "beta = " << beta << ". >= 0 ??" << std::endl;
   std::cout << "tau = " << tau << ". " << std::endl;
-  std::cout << "sigma = " << sigma << ". 1/sigma is in the updating formula --> abs(sigma) shouldn't be too small" << std::endl << std::endl;
-*/
+  if (std::abs(tau) <= 0.001){
+    std::cin.get();
+  }
+  /*
+  if ((0.5 * std::pow(yNew.squaredNorm(), 2) - w.transpose() * Hw) < 0){
+    std::cout << "beta = " << (0.5 * std::pow(yNew.squaredNorm(), 2) - w.transpose() * Hw) << " " << std::endl;
+    std::cin.get();
+  }
+   */
+  //std::cout << "sigma = " << sigma << ". 1/sigma is in the updating formula --> abs(sigma) shouldn't be too small" << std::endl << std::endl;
+
 
   // Need to store some rows and columns such that we don't use a partly updated matrix instead of the original one.
   Eigen::VectorXd rowOmega = Z.row(t - 1) * S * Z.transpose();
@@ -569,6 +578,7 @@ void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, Upd
 }
 
 double DFO_Model::evaluateQuadraticModel(Eigen::VectorXd point) {
+  /*
   double value = 0;
   value += constant;
   value += gradient.transpose() * (point);
@@ -578,10 +588,18 @@ double DFO_Model::evaluateQuadraticModel(Eigen::VectorXd point) {
     value += 0.5 * (point).transpose() * (tmp * Y.col(i - 1));
   }
   return value;
+  */
+  enhancedModel.ComputeModel(Y, derivatives, derivatives.col(0), fvals, y0, bestPoint, rho, r,0);
+  double e_c = 0;
+  Eigen::VectorXd e_g(n);
+  Eigen::MatrixXd e_h(n,n);
+  enhancedModel.GetModel(e_c,e_g,e_h);
+  double val = e_c + point.transpose()*e_g + point.transpose()*e_h*point;
+  return val;
 }
 
 void DFO_Model::shiftCenterPointOfQuadraticModel(Eigen::VectorXd s) {
-  //slowShiftCenterPointOfQuadraticModel(s);
+  slowShiftCenterPointOfQuadraticModel(s);
   return;
   Eigen::VectorXd r(n);
   Eigen::MatrixXd P(n, m);
@@ -2517,9 +2535,11 @@ void DFO_Model::modelImprovementStep(Eigen::VectorXd &dNew, int &indexOfPointToB
         > r * rho) {
 
       if (lagabsval > lagabsvalMin){
+        std::cout << "Model improvement step\nIndex of point: " << t << "\n";
         std::cout << "lagabsval = " << lagabsval << "\n";
-        std::cout << "Distance from optimum:   " << norm(Y.col(t-1) - bestPoint) << "\n";
-        std::cout << "r*radius:                " << r*rho << "\n";
+        std::cout << "Distance from optimum (old point):   " << norm(Y.col(t-1) - bestPoint) << "\n";
+        std::cout << "Distance from optimum (new point):   " << norm(dNew - bestPoint) << "\n";
+        std::cout << "r*radius:                            " << r*rho << "\n";
         indexOfPointToBeReplaced = t;
         break;
       }
@@ -2574,6 +2594,72 @@ void DFO_Model::isInterpolatingLagrange(){
     std::cout << fvals[i-1] << " == " << val <<"\t"<< (std::abs(val-fvals[i-1]) <= 0.000000001) << "\n";
   }
 }
+
+
+
+void DFO_Model::isLagrangePoly(){
+  Eigen::MatrixXd Hessian(n, n);
+  Eigen::VectorXd Grad(n);
+  Hessian.setZero();
+  Grad.setZero();
+
+  double C = 0;
+
+  Eigen::VectorXd grad;
+  Eigen::MatrixXd hess = Eigen::MatrixXd::Zero(n, n);
+  Eigen::MatrixXd Omega = Z * S * Z.transpose();
+  hess.setZero();
+  // Creating the Lagrange polynomial.
+  for (int t=1; t<=m;++t){
+    double c = Xi(0, t - 1);
+    grad = (Xi.col(t - 1)).tail(n);
+    for (int k = 1; k <= m; ++k) {
+      double tmp = Z.row(k - 1) * S * (Z.row(t - 1)).transpose();
+      tmp = Omega(k-1, t-1);
+      hess += tmp * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
+    }
+
+    for (int j = 1; j  <= m; j ++){
+      double val = c + grad.transpose() *Y.col(j-1)+ 0.5*(Y.col(j-1)).transpose()*hess*Y.col(j-1);
+      if (j == t){
+        if(  (std::abs(val) < (1 - 0.1e-8) )|| (std::abs(val) > (1 - 0.1e-8))){
+          std::cout << "value should be 1, but is: " << val <<"\n";
+        }
+      }
+      else{
+        if((val > (0.1e-8)) || (val < (-0.1e-8))){
+          std::cout << "value should be 0, but is: " << val <<"\n";
+        }
+      }
+    }
+  }
+  std::cout << "_____________________________________\n------------------------\nNow using Winv direct" <<"\n";
+
+  grad.setZero();
+  hess.setZero();
+  double c = 0;
+  Eigen::MatrixXd Winv(m + n + 1, m + n + 1);
+  Winv = calculateWExplicitly();
+
+  for (int t = 1; t<=m; ++t) {
+    hess.setZero();
+    c = Winv(m, t - 1);
+    grad = Winv.col(t - 1).tail(n);
+    for (int k = 1; k <= m; ++k) {
+      hess += Winv(k - 1, t - 1) * (Y.col(k - 1)) * (Y.col(k - 1)).transpose();
+    }
+
+    for (int j = 1; j <= m; j++) {
+      double val = c + grad.transpose() * Y.col(j - 1) + 0.5 * (Y.col(j - 1)).transpose() * hess * Y.col(j - 1);
+      if (j == t) {
+          std::cout << "value should be 1, but is: " << val << "\n";
+      } else {
+          std::cout << "value should be 0, but is: " << val << "\n";
+        }
+    }
+  }
+}
+
 void DFO_Model::isInterpolatingEnhanced(){
   enhancedModel.ComputeModel(Y, derivatives, derivatives.col(0), fvals, y0, bestPoint, rho, r,0);
   enhancedModel.isInterpolating();
@@ -2610,10 +2696,10 @@ void DFO_Model::Converged(int iterations, int number_of_tiny_improvements, int n
 
     printParametersMatlabFriendly();
     //DFO_model_.printParametersMatlabFriendlyGradientEnhanced();
-    Eigen::VectorXd cp(2);
+    Eigen::VectorXd cp(3);
     cp[0] = 0;
     cp[1] = 0;
-    //cp[2] = 10;
+    cp[2] = 0;
     cp = cp - y0;
     shiftCenterPointOfQuadraticModel(cp);
     UpdateOptimum();

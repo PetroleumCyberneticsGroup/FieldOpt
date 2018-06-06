@@ -31,7 +31,7 @@ class DFO_Model {
  private:
 
 
-  static int const normType = 2;
+  static int const normType = 0;
   double lagabsvalMin = 0.5; // works ok: 0.001
 
   Settings::Optimizer *settings_;
@@ -545,6 +545,7 @@ class DFO_Model {
   void isInterpolatingLagrange();
   void isInterpolatingEnhanced();
   void Converged(int iterations, int number_of_tiny_improvements, int number_of_function_calls);
+  void isLagrangePoly();
 };
 }
 }

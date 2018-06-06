@@ -213,14 +213,15 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
   }
 
   double s1 = abs(constant + gradient.transpose() * bestPointDisplacement + 0.5* bestPointDisplacement.transpose() * hessian * bestPointDisplacement);
-  Eigen::VectorXd d(2);
-  d << xlow_[0], xlow_[1];
+  Eigen::VectorXd d(3);
+  d.setZero();
+  d << xlow_[0], xlow_[1], xlow_[2];
   s1 +=  abs(constant + gradient.transpose() * d + 0.5* d.transpose() * hessian * d);
-  d << xlow_[0], xupp_[1];
+  d << xlow_[0], xupp_[1], xlow_[2];
   s1 +=  abs(constant + gradient.transpose() * d + 0.5* d.transpose() * hessian * d);
-  d << xupp_[0], xupp_[1];
+  d << xupp_[0], xupp_[1], xupp_[2];
   s1 +=  abs(constant + gradient.transpose() * d + 0.5* d.transpose() * hessian * d);
-  d << xupp_[0], xlow_[1];
+  d << xupp_[0], xlow_[1], xupp_[2];
   s1 +=  abs(constant + gradient.transpose() * d + 0.5* d.transpose() * hessian * d);
   scale = s1/5.0;
   //scale = 1;
@@ -278,6 +279,62 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
     std::cout << "ExitCode is: " << exitCode << "\n";
     std::cin.get();
   }
+
+  Eigen::VectorXd xvec(n_);
+  for (int i = 1; i <= n_; ++i){
+    xvec(i-1) = xsol[i-1];
+  }
+  if ((xvec-bestPointDisplacement_).norm() <= 0.00000000000000000000001) {
+    double snopt_suggested_val = constant + gradient.transpose() * xvec + 0.5 * xvec.transpose() * hessian * xvec;
+    std::cout << "ExitCode was: " << exitCode << "\n";
+
+    std::cout << "Diff is: " << (xvec - bestPointDisplacement_).norm() << "\n";
+    //Point found by SNOPT is the same. Let's do some horrible brute-force searching.
+    Eigen::VectorXd yTry(n_); //Displacement from current center point
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dis(-trustRegionRadius_, trustRegionRadius_);
+    std::cout << "DIS_info\nMin: " << dis.min() << "\nMax: " << dis.max() << "\n";
+    int k = 0;
+
+    Eigen::VectorXd yBest = xvec;
+
+    double bestValue = constant + gradient.transpose() * xvec + 0.5 * xvec.transpose() * hessian * xvec;
+    double value = 0;
+
+    std::cout << "trustRegionRadius_ = " << trustRegionRadius_ << "\n";
+    int ll = 0;
+
+
+    while (k < 5000) {
+      for (int i = 0; i < n_; ++i) {
+        yTry(i) = dis(gen) + bestPointDisplacement_[i];
+      }
+      value = constant + gradient.transpose() * yTry + 0.5 * yTry.transpose() * hessian * yTry;
+      if (std::string(optimizationType) == "Maximize" ) {
+        if (value > bestValue) {
+          bestValue = value;
+          yBest = yTry;
+        }
+      }
+      if (std::string(optimizationType) == "Minimize") {
+        if (value < bestValue) {
+          bestValue = value;
+          yBest = yTry;
+        }
+      }
+
+      ++k;
+    }
+
+    for (int i = 1; i <= n_; ++i) {
+      xsol[i - 1] = yBest[i - 1];
+      fsol[0] = constant + gradient.transpose() * yBest + 0.5 * yBest.transpose() * hessian * yBest;
+    }
+    std::cout << "Diff is: " << (yBest-bestPointDisplacement_).lpNorm<Infinity>() << "\n";
+    std::cout << "Radius is: " << trustRegionRadius_ << "\n";
+  }
+
 }
 
 
