@@ -19,6 +19,7 @@
 
 #include "model.h"
 #include <boost/lexical_cast.hpp>
+#include "Model/wells/segmented_well.h"
 
 namespace Model {
 
@@ -35,7 +36,12 @@ Model::Model(Settings::Settings settings, Logger *logger)
 
     wells_ = new QList<Wells::Well *>();
     for (int well_nr = 0; well_nr < settings.model()->wells().size(); ++well_nr) {
-        wells_->append(new Wells::Well(*settings.model(), well_nr, variable_container_, grid_));
+        if (settings.model()->wells()[well_nr].use_segmented_model) {
+            wells_->append(new Wells::SegmentedWell(*settings.model(), well_nr, variable_container_, grid_));
+        }
+        else {
+            wells_->append(new Wells::Well(*settings.model(), well_nr, variable_container_, grid_));
+        }
     }
 
     variable_container_->CheckVariableNameUniqueness();
