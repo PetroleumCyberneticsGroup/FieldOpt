@@ -231,6 +231,15 @@ double Trajectory::GetExitMd(const WellBlock *wb) const {
     }
     throw std::runtime_error("Error computing entry md for well block.");
 }
+void Trajectory::printWellBlocks() {
+    std::cout << "I,\tJ,\tK\t,INX,\tINY,\tINZ,\tOUTX,\tOUTY,\tOUTZ" << std::endl;
+    for (auto wb : *well_blocks_) {
+        std::cout << wb->i() << ",\t" << wb->j() << ",\t" << wb->k() << ",\t"
+                  << wb->getEntryPoint().x() << ",\t" << wb->getEntryPoint().y() << ",\t" << wb->getEntryPoint().z()
+                  << wb->getExitPoint().x() << ",\t" << wb->getExitPoint().y() << ",\t" << wb->getExitPoint().z()
+                  << std::endl;
+    }
+}
 
 }
 }
