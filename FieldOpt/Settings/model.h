@@ -28,6 +28,7 @@
 
 #include "settings.h"
 #include "paths.h"
+#include "trajectory_importer.h"
 
 #include <QString>
 #include <QList>
@@ -133,6 +134,7 @@ class Model
     Completion seg_annulus;                     //!< Annulus settings when the segmented well model is used.
     Completion seg_compartment_params;          //!< Parameters to be used for automatically generated ICDs.
     int seg_n_compartments = 0;                 //!< Number of packer-delimited compartments with ICDs to use.
+    std::vector<TrajectoryImporter::ImportedWellBlock> imported_wellblocks_; //!< List of imported well blocks.
     std::string toString();
   };
 

@@ -27,10 +27,7 @@ QJsonObject multisegment_model_settings {
             {"Keywords", QJsonArray {
                 "AllWells"
             }},
-            {"SplineConversion", QJsonObject {
-                {"Wells", QJsonArray {"D-2H"}},
-                {"SplinePoints", 4}
-            }},
+            {"ImportTrajectories", QJsonArray { "D-2H" }},
             {"InjectorDefaultRate", 2000},
             {"ProducerDefaultBHP", 150}
         }},

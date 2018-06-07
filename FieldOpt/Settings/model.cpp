@@ -31,6 +31,7 @@
 #include "settings_exceptions.h"
 #include "Utilities/filehandling.hpp"
 #include "deck_parser.h"
+#include "trajectory_importer.h"
 
 namespace Settings {
 
@@ -75,6 +76,8 @@ Model::Model(QJsonObject json_model, Paths &paths)
         std::cout << "Done importing wells." << std::endl;
         setImportedWellDefaults(json_import);
         parseImportedWellOverrides(json_model["Wells"].toArray());
+
+        // Spline conversion
         if (json_import.contains("SplineConversion")) {
             auto json_sconv = json_import["SplineConversion"].toObject();
             if (!json_sconv.contains("Wells")) {
@@ -105,6 +108,29 @@ Model::Model(QJsonObject json_model, Paths &paths)
                 }
             }
         }
+
+        // Trajectory import
+        if (json_import.contains("ImportTrajectories")) {
+            auto json_import_well_names = json_import["ImportTrajectories"].toArray();
+            std::vector<std::string> import_well_names;
+            for (auto jwn : json_import_well_names) {
+                import_well_names.push_back(jwn.toString().toStdString());
+            }
+            std::string trajectories_path = paths.GetPath(Paths::SIM_DRIVER_DIR) + "/trajectories";
+            auto traj_importer = TrajectoryImporter(trajectories_path, import_well_names);
+
+            // set list in well objects
+            for (auto wname : import_well_names) {
+                for (int i = 0; i < wells_.size(); ++i) {
+                    if (QString::compare(wells_[i].name, QString::fromStdString(wname)) == 0) {
+                        wells_[i].imported_wellblocks_ = traj_importer.GetImportedTrajectory(wname);
+                        wells_[i].definition_type = WellDefinitionType::WellSpline;
+                        wells_[i].convert_well_blocks_to_spline = false;
+                    }
+                }
+            }
+        }
+
         // Segmentation
         if (json_model.contains("Wells") && json_model["Wells"].isArray()) {
             for (auto jwell : json_model["Wells"].toArray()) { // Go through list of wells in json file
