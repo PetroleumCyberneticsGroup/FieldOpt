@@ -39,6 +39,7 @@ class DFO_Model {
   Subproblem subproblem;
   unsigned int m; // Number of interpolation points used to create the model. Does not change.
   unsigned int n; // Number of decision variables in your model.
+  unsigned int ng; // Number of decision variables WITH gradients.
   double rho; // Trust-region radius.
   double lambda; // The required poisedness of the set of interpolation points.
   double r = 2.0;
@@ -90,6 +91,8 @@ class DFO_Model {
 
   bool modelInitialized;
   bool initialInterpolationPointsFound;
+
+  int isModelCFL = -1; // -1: Don't know.     0: No.    1: Yes.
 
   /**
   Checks if a value is almost zero.
@@ -259,7 +262,9 @@ class DFO_Model {
   @param[in] t-1 is the index of the point that is going to be replaced by yNew in Y.
   @param[in] updateReason is either IMPROVE_POISEDNESS or INCLUDE_NEW_OPTIMUM.
   */
-  void update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, UpdateReason updateReason);
+  void update(Eigen::VectorXd yNew, double fvalNew, Eigen::VectorXd gradient, unsigned int t, UpdateReason updateReason);
+
+  void update(Eigen::MatrixXd yNews, Eigen::VectorXd fvalNews, Eigen::MatrixXd gradients, Eigen::VectorXi indicies, int numberOfPoints ,UpdateReason updateReason);
 
   /**
   Evaluates the current quadratic model at point.
@@ -406,7 +411,7 @@ class DFO_Model {
 
   void SetFunctionValue(int t, double value);
 
-  void SetFunctionValueAndDerivatives(int t, Eigen::VectorXd values);
+  void SetFunctionValueAndDerivatives(int t, double value, Eigen::VectorXd grad);
 
   void SetTrustRegionRadiusForSubproblem(double radius);
 
@@ -539,21 +544,24 @@ class DFO_Model {
 
   bool FindReplacementPoint(int t, Eigen::VectorXd &dNew, int compareIdx);
   void UpdateOptimum();
-  void isPoised(VectorXd &dNew, int &indexOfPointToBeReplaced, double radius);
+  bool isPoised(VectorXd &dNew, int &indexOfPointToBeReplaced, double radius);
   void modelImprovementStep(VectorXd &dNew, int &indexOfPointToBeReplaced);
   void printParametersMatlabFriendlyFromLagrangePolynomials();
   void slowShiftCenterPointOfQuadraticModel(Eigen::VectorXd s);
   void isInterpolating();
   void isInterpolatingLagrange();
   void isInterpolatingEnhanced();
-  void Converged(int iterations, int number_of_tiny_improvements, int number_of_function_calls);
+  void Converged(int iterations, int number_of_tiny_improvements, int number_of_function_calls, int number_of_parallell_function_calls);
   void isLagrangePoly();
   void createLagrangePolynomial(int t, double &c, VectorXd &grad, MatrixXd &hess);
   void updateQuadraticModelNew(Eigen::VectorXd yNew, double fvalNew, unsigned int t);
   void shiftCenterPointOfQuadraticModelNew(Eigen::VectorXd s);
   void createW();
+  int IsModelCFL(){
+    return isModelCFL;
+  }
 
-  void ModelImprovementAlgorithm(double radius, Eigen::MatrixXd &newPoints, Eigen::VectorXi& newIndices);
+  bool ModelImprovementAlgorithm(double radius, Eigen::MatrixXd &newPoints, Eigen::VectorXi& newIndices);
   };
 }
 }

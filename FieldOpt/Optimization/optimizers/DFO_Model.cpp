@@ -363,6 +363,7 @@ DFO_Model::DFO_Model(unsigned int m,
   //this->normType = 0;
   this->m = m;
   this->n = n;
+  this->ng = ng;
   this->Winv = Eigen::MatrixXd::Zero(m + n + 1, m + n + 1);
   this->W = Eigen::MatrixXd::Zero(m + n + 1, m + n + 1);
   //this->y0 = y0;
@@ -410,6 +411,7 @@ DFO_Model::DFO_Model(unsigned int m,
   this->initialInterpolationPointsFound = false;
   this->modelInitialized = false;
   this->settings_ = settings;
+  this->isModelCFL = -1;
 
   //subproblem.SetNormType(Subproblem::L2_NORM);
 
@@ -510,15 +512,23 @@ Eigen::MatrixXd DFO_Model::findLastSetOfInterpolationPoints() {
 void DFO_Model::initializeModel() {
   Winv = calculateWExplicitly();
   createW();
-  std::cout << "Winv = \n" << Winv << "\n";
+  //std::cout << "Winv = \n" << Winv << "\n";
   initializeQuadraticModel();
   initializeInverseKKTMatrix();
   modelInitialized = true;
+  UpdateOptimum();
+
+
 
 }
 
+void DFO_Model::update(Eigen::MatrixXd yNews, Eigen::VectorXd fvalNews, Eigen::MatrixXd gradients, Eigen::VectorXi indicies, int numberOfPoints ,UpdateReason updateReason){
+  for (int i = 0; i < numberOfPoints; ++i){
+    update(yNews.col(i), fvalNews(i), gradients.col(i),indicies(i), updateReason);
+  }
+}
 
-void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, UpdateReason updateReason) {
+void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, Eigen::VectorXd grad, unsigned int t, UpdateReason updateReason) {
   int oldBestPointIndex = bestPointIndex;
   int oldBestFval = fvals[bestPointIndex - 1];
 
@@ -572,6 +582,9 @@ void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, Upd
   //Y.col(t - 1) = yNew;
   eigen_col(Y, yNew, t - 1);
   fvals(t - 1) = fvalNew;
+  if (ng > 0){
+    eigen_col(derivatives, grad, t-1);
+  }
   updateQuadraticModelNew(yNew, fvalNew, t);
 
   if ((updateReason == IMPROVE_POISEDNESS || updateReason == INCLUDE_NEW_POINT))  {
@@ -594,7 +607,10 @@ void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, unsigned int t, Upd
   }
   Winv = calculateWExplicitly();
   createW();
-  std::cout << "Winv = \n" << Winv << "\n";
+  //std::cout << "Winv = \n" << Winv << "\n";
+
+  isModelCFL = -1;
+
 
 }
 
@@ -1640,10 +1656,10 @@ void DFO_Model::SetFunctionValue(int t, double value) {
   fvals[t - 1] = value;
 }
 
-void DFO_Model::SetFunctionValueAndDerivatives(int t, Eigen::VectorXd values) {
-  fvals[t - 1] = values[0];
-  for (int i = 1; i < values.rows(); ++i){
-    derivatives(i-1,t-1) = values(i);
+void DFO_Model::SetFunctionValueAndDerivatives(int t, double value, Eigen::VectorXd grad) {
+  fvals[t - 1] = value;
+  for (int i = 0; i < ng; ++i){
+    derivatives(i,t-1) = grad(i);
   }
 }
 
@@ -1723,13 +1739,15 @@ Eigen::VectorXd DFO_Model::FindLocalOptimum() {
   subproblem.setGradient(e_g);
   subproblem.setConstant(e_c);
   enhancedModel.PrintParametersMatlabFriendly();
-
+  subproblem.SetTrustRegionRadius(r*rho);
   subproblem.Solve(xsol, fsol, (char *) "Minimize", y0, bestPoint,bestPoint);
   for (int i = 0; i < n; i++) {
     localOptimum[i] = xsol[i];
   }
 
-
+  std::cout << "best point: \n" << bestPoint<<"\n";
+  std::cout << "new point is: \n" << localOptimum << "\n";
+  std::cout << "Trust region radius is: " << r*rho << "\n";
   return localOptimum;
 }
 
@@ -2067,7 +2085,7 @@ int DFO_Model::isPointAcceptable(Eigen::VectorXd point) {
       continue;
     }
     double lagval = std::abs((Hw)(j - 1));
-    if ( (lagval > 1) || (norm(Y.col(j - 1)-bestPoint) > 2*rho)){
+    if ( (lagval > 1) || (norm(Y.col(j - 1)-bestPoint) > r*rho)){
       // do the maximization thing.
       double distance = norm((bestPoint - Y.col(j - 1)));
       double distanceWeight = std::pow(distance, 2);
@@ -2269,7 +2287,7 @@ bool DFO_Model::FindReplacementForPointsOutsideRadius(double radius, Eigen::Matr
     }
   }
    */
-  cout << "\nAdded points are: " << addedPoints << " ";
+  cout << "\nAdded points are: " << addedPoints << " \n";
 
   /// reset!!
   Y = copyY;
@@ -2598,7 +2616,8 @@ void DFO_Model::UpdateOptimum(){
 }
 
 
-void DFO_Model::isPoised(Eigen::VectorXd &dNew, int &indexOfPointToBeReplaced, double radius){
+bool DFO_Model::isPoised(Eigen::VectorXd &dNew, int &indexOfPointToBeReplaced, double radius){
+  bool ispoised = false;
   indexOfPointToBeReplaced = -1;
   int numberOfPointsOutsideRadius = GetNumberOfPointsOutsideRadius(radius);
   if (numberOfPointsOutsideRadius >= 1){
@@ -2628,6 +2647,14 @@ void DFO_Model::isPoised(Eigen::VectorXd &dNew, int &indexOfPointToBeReplaced, d
     subproblem.SetTrustRegionRadius(radius);
     findWorstPointInInterpolationSet(dNew,indexOfPointToBeReplaced);
   }
+
+  if (indexOfPointToBeReplaced == -1){
+    isModelCFL = 1;
+    ispoised = true;
+  }
+  else{
+    isModelCFL = 0;
+  }
 }
 
 void DFO_Model::modelImprovementStep(Eigen::VectorXd &dNew, int &indexOfPointToBeReplaced){
@@ -2651,6 +2678,13 @@ void DFO_Model::modelImprovementStep(Eigen::VectorXd &dNew, int &indexOfPointToB
         break;
       }
     }
+  }
+
+  if (indexOfPointToBeReplaced == -1){
+    isModelCFL = 1;
+  }
+  else{
+    isModelCFL = -1;
   }
 }
 
@@ -2790,7 +2824,7 @@ void DFO_Model::isInterpolatingEnhanced(){
 
 
 
-void DFO_Model::Converged(int iterations, int number_of_tiny_improvements, int number_of_function_calls){
+void DFO_Model::Converged(int iterations, int number_of_tiny_improvements, int number_of_function_calls, int number_of_parallell_function_calls){
   {
     Eigen::VectorXd gradient =GetGradientAtPoint(GetBestPoint());
     Eigen::MatrixXd Yabs(n, m);
@@ -2845,6 +2879,14 @@ void DFO_Model::Converged(int iterations, int number_of_tiny_improvements, int n
     std::cout << "\033[1;36;mIterations: \033[0m" << iterations << std::endl;
     std::cout << "\033[1;36;mTiny decreases: \033[0m" << number_of_tiny_improvements << "\n";
     std::cout << "\033[1;36;mFunction Calls \033[0m" << number_of_function_calls << "\n";
+    std::cout << "\033[1;36;mParallell Function Calls \033[0m" << number_of_parallell_function_calls << "\n";
+
+
+    rho = 2;
+    Eigen::VectorXd test = FindLocalOptimum();
+    std::cout << "test: \n" << test + getCenterPoint() << std::endl;
+
+
 
     std::cin.get();}
 }
@@ -2888,18 +2930,26 @@ std::cout << "scales...\n";
     */
 }
 
-void DFO_Model::ModelImprovementAlgorithm(double radius, Eigen::MatrixXd &newPoints, Eigen::VectorXi& newIndices){
 
-  /// Get all points inside the trust-region
+// return true when no new points are found. is_poised = true
+bool DFO_Model::ModelImprovementAlgorithm(double radius, Eigen::MatrixXd &newPoints, Eigen::VectorXi& newIndices){
+
+  /// Get all points inside of the trust-region
   Eigen::MatrixXd tmpNewPoints;
-  Eigen::VectorXd tmpNewIndices;
+  Eigen::VectorXi tmpNewIndices;
   FindReplacementForPointsOutsideRadius(radius,tmpNewPoints,tmpNewIndices);
   Eigen::MatrixXd copyY = Y;
-  Eigen::VectorXi changed(n);
+  Eigen::VectorXi changed(m);
   changed.setZero();
   for (int i = 0; i < tmpNewPoints.cols(); ++i) {
-    eigen_col(Y, tmpNewPoints.col(i), newIndices(i) - 1);
-    changed(newIndices(i) - 1) = 1;
+    if (tmpNewIndices(i) != -1){
+      eigen_col(Y, tmpNewPoints.col(i), tmpNewIndices(i) - 1);
+      //std::cout << "tmpNewIndices(i) - 1 = " << tmpNewIndices(i) - 1 << "\n";
+      changed(tmpNewIndices(i) - 1) = 1;
+    }
+    else{
+      break;
+    }
   }
 
 
@@ -2930,13 +2980,22 @@ void DFO_Model::ModelImprovementAlgorithm(double radius, Eigen::MatrixXd &newPoi
   int i = 0;
   for (int j = 1; j <= m; ++j){
     if (changed(j-1) == 1){
-      newPoints(i) = Y.col(j-1);
+      eigen_col(newPoints, Y.col(j-1), i);
+      //newPoints(i) = Y.col(j-1);
       newIndices(i) = j;
       i++;
     }
   }
-  Y = copyY;
-}
+  Y = copyY; /// reset.
 
+  if (number_of_new_points == 0){
+    isModelCFL = 1;
+  }
+  else{
+    isModelCFL = 0;
+  }
+
+  return (number_of_new_points ==  0);
+}
 }
 }

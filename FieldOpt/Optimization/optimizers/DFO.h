@@ -30,6 +30,8 @@ class DFO : public Optimizer {
   QList<Case *> ConvertPointsToCases(Eigen::MatrixXd points);
 
   void UpdateLastAction(int a);
+  void set_next_step(int a);
+
 
  private:
   std::string color_from= "31";
@@ -41,7 +43,9 @@ class DFO : public Optimizer {
   int number_of_variables_;
   Optimization::Case *base_case_;
   int last_action_;
+  int next_step_;
   std::string getActionName(int a);
+  std::string get_action_name(int a);
   Eigen::VectorXd weights_distance_from_optimum_lsq_;
 
 

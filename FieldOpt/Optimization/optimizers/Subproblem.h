@@ -239,6 +239,8 @@ class Subproblem {
              VectorXd centerPoint,
              VectorXd bestPointDisplacement,
              VectorXd startingPoint);
+
+  double computeScale();
 };
 
 }
