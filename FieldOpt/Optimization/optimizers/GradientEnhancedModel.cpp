@@ -183,6 +183,7 @@ void GradientEnhancedModel::ComputeModel(Eigen::MatrixXd Y,
   }
 
   // Set the _D_ matrix and the _v_ vector
+  if (ng_ > 0){
   int base_row = 0;
   for (int t = 0; t < m_; ++t) { // for each sample point
 
@@ -190,7 +191,6 @@ void GradientEnhancedModel::ComputeModel(Eigen::MatrixXd Y,
     int c0 = 0;
     for (int i = 0; i < ng_; ++i) { // for each row
       for (int k = 0; k < y; ++k) { // for each elem in row
-        //_D_(base_row + i, c0 + k) = points_(k, t)*_weights_least_square_[t];
         D_(base_row + i, c0 + k) = points_(k, t)*weights_least_square_[t];
       }
       c0 += y;
@@ -215,8 +215,9 @@ void GradientEnhancedModel::ComputeModel(Eigen::MatrixXd Y,
 
     for (int i = 0; i < ng_; ++i){
       //_v_(t*ng_ +i) = (derivatives((ng_ - i - 1), t) - derivatives_at_y0(ng_ - i - 1))*_weights_least_square_[t];
-      v_(t*ng_ +i) = (derivatives((ng_ - i - 1), t) - derivatives_at_y0(ng_ - i - 1))*weights_least_square_[t];
+         v_(t*ng_ +i) = (derivatives((ng_ - i - 1), t) - derivatives_at_y0(ng_ - i - 1))*weights_least_square_[t];
     }
+  }
   }
 
   //std::cout << "v\n" << _v_ << std::endl;

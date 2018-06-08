@@ -246,7 +246,7 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
   snoptHandler.setParameter(optimizationType);
 
   setOptionsForSNOPT(snoptHandler);
-  snoptHandler.setIntParameter("Major Iterations Limit", 20000);
+  //snoptHandler.setIntParameter("Major Iterations Limit", 20000);
   //snoptHandler.setIntParameter("Iterations limit", 20000);
   snoptHandler.setRealParameter("Major step limit", trustRegionRadius_); //was 0.2
   //target nonlinear constraint violation
@@ -280,7 +280,7 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
 
     //std::cin.get();
   }
-  if (exitCode != 40 && exitCode != 41 && exitCode != 1 && exitCode != 31 && exitCode != 3){
+  if (exitCode != 40 && exitCode != 41 && exitCode != 1 && exitCode != 31 && exitCode != 3 && exitCode != 32){
     std::cout << "ExitCode is: " << exitCode << "\n";
     std::cin.get();
   }

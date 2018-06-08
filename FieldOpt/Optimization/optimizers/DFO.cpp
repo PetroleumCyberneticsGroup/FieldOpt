@@ -67,8 +67,40 @@ Eigen::VectorXd  sphere(Eigen::VectorXd x, int ng) {
   double valXinSheYangs = (std::abs(x(0))+std::abs(x(1)))*std::exp(-std::sin(x(0)*x(0)) - std::sin(x(1)*x(1)));
   //double valAbs = std::abs(x(0)) + std::abs(x(1));
   double valAbs = std::abs(x(0)) + std::abs(x(1));
-  result(0) = valAbs;
+  double funky = std::abs(x(0)) + x(1)*x(1)*10;
+  result(0) = val2;
+  if (ng > 0){
+    //for (int i = ng; i >= 1; ++i){
+    //  result(i) = 2*x(i-1);
+    //}
+    /*
+    if (ng >= 1)
+      result(1) = 2*x(4);
+    if (ng >= 2)
+      result(2) = 2*x(3);
+    if (ng >= 3)
+      result(3) = 2*x(2);
+    if (ng >= 4)
+      result(4) = 2*x(1);
+    if (ng >= 5)
+      result(5) = 2*x(0);
+    */
+
+    result(1) = 0.26*2*x(1) - 0.46*x(0);
+    if (ng >= 2){
+      result(2) = 0.26*2*x(0) - 0.46*x(1);
+    }
+    //if (ng == 2)
+      //result(1) = 2*x(1)*10 ;
+
+    //if (ng == 2)
+    //  result(2) = 2*x(0);
+  }
   return result;
+
+
+  /// OBS: result(1) <- derivert med hensyn på siste variabel.
+  /// OBS: result(2) <- derivert med hensyn på nest siste variabel.
 }
 
 double sphereorg(Eigen::VectorXd x) {
@@ -482,8 +514,8 @@ void DFO::handleEvaluatedCase(Optimization::Case *c) {
 void DFO::iterate() {
 
   std::cout << std::setprecision(20);
-  std::cout << std::fixed;
-  GradientEnhancedModel  enhancedModel(number_of_variables_,number_of_interpolation_points_,settings_->parameters().number_of_variables_with_gradients,settings_->parameters().weights_distance_from_optimum_lsq,settings_->parameters().weight_model_determination_minimum_change_hessian);
+  std::cout << std::scientific;
+  //GradientEnhancedModel  enhancedModel(number_of_variables_,number_of_interpolation_points_,settings_->parameters().number_of_variables_with_gradients,settings_->parameters().weights_distance_from_optimum_lsq,settings_->parameters().weight_model_determination_minimum_change_hessian);
   int number_of_crit_step_finished_with_bad_poisedness = 0;
   int number_of_crit_step_finished_without_checking_poisedness = 0;
   MatrixXd aa(2, 2);
@@ -493,7 +525,7 @@ void DFO::iterate() {
   std::cout << "aa\n" << aa << "\n";
 
   int ng = settings_->parameters().number_of_variables_with_gradients;
-  int alpha = settings_->parameters().weight_model_determination_minimum_change_hessian;
+  double alpha = settings_->parameters().weight_model_determination_minimum_change_hessian;
 
   std::string color_from = "31";
   std::string color_to = "33";
@@ -522,7 +554,9 @@ void DFO::iterate() {
 
   bool notConverged = true;
 
-
+  int crit_steps = 0;
+  int accept_steps = 0;
+  int model_impr_steps = 0;
 
   // These are the ones that are used the most. Used in all other places than "Step 4 - Model Improvement".
 
@@ -568,6 +602,7 @@ void DFO::iterate() {
   double trust_region_radius_icb = settings_->parameters().initial_trust_region_radius;;
   double rho = 0;
   double multiple_new_points = false;
+  int number_of_points_first_set = 0;
 
 
   while (notConverged) {
@@ -593,6 +628,7 @@ top:
     if (next_step_ == FIND_POINTS1){
       new_points = DFO_model_.findFirstSetOfInterpolationPoints();
       new_points_indicies.resize(new_points.cols());
+      number_of_points_first_set = new_points.cols();
 
       multiple_new_points = true;
       set_next_step(FIND_POINTS2);
@@ -611,6 +647,7 @@ top:
       // find the remaining points.
       if (number_of_interpolation_points_ == number_of_function_calls){
         // All points are found.
+        number_of_new_points = 0;
         goto top;
       }
       else{
@@ -626,9 +663,9 @@ top:
     else if (next_step_== INITIALIZE_MODEL){
       if (number_of_new_points != 0){
         // Add the points
-        for (int i = number_of_new_points; i < number_of_interpolation_points_; ++i) {
+        for (int i = 0; i < number_of_new_points; ++i) {
           //DFO_model_.SetFunctionValue(i + 1, function_evaluations[i - number_of_new_points]);
-          DFO_model_.SetFunctionValueAndDerivatives(i + 1, function_evaluations(i-number_of_new_points), new_gradients.col(i-number_of_new_points));
+          DFO_model_.SetFunctionValueAndDerivatives(number_of_points_first_set + i + 1, function_evaluations(i), new_gradients.col(i));
         }
       }
 
@@ -680,7 +717,8 @@ top:
       is_poised = DFO_model_.ModelImprovementAlgorithm(r*trust_region_radius_tilde, new_points, new_points_indicies);
       std::cout << "is_poised2 = " << is_poised << "\n";
       set_next_step(CRITICALITY_STEP_CHECK_CONVERGENCE);
-      goto top;
+      crit_steps++;
+      goto print;
     }
 
 
@@ -699,7 +737,7 @@ top:
         DFO_model_.SetTrustRegionRadius(new_trust_region_radius);
         set_next_step(FIND_TRIAL_POINT);
         std::cout << "Criticality step iterations = " << criticality_step_iteration <<"\n";
-        goto top;
+        goto print;
       }
       else{
 
@@ -708,6 +746,7 @@ top:
           criticality_step_iteration++;
           trust_region_radius_tilde = pow(w, (criticality_step_iteration-1))  * trust_region_radius_icb;
           if (trust_region_radius_tilde <= trust_region_radius_end){
+            std::cout << "crit_steps: " << crit_steps << "\nmodel_impr: " << model_impr_steps << "\nacceptance: " << accept_steps <<"\n";
             DFO_model_.Converged(iterations_, 0, number_of_function_calls,number_of_parallell_function_calls);
           }
           is_poised = DFO_model_.ModelImprovementAlgorithm(r*trust_region_radius_tilde, new_points, new_points_indicies);
@@ -729,11 +768,13 @@ top:
       DFO_model_.UpdateOptimum();
 
       if (DFO_model_.GetTrustRegionRadius() <= trust_region_radius_end){
+        std::cout << "crit_steps: " << crit_steps << "\nmodel_impr: " << model_impr_steps << "\nacceptance: " << accept_steps <<"\n";
         DFO_model_.Converged(iterations_, 0, number_of_function_calls,number_of_parallell_function_calls);
       }
       new_point = DFO_model_.FindLocalOptimum();
       if ((new_point - last_trial_point).norm() <= 0.0000000000001){
         force_criticality_step = true;
+        trust_region_radius_icb = gamma*DFO_model_.GetTrustRegionRadius();
         set_next_step(CRITICALITY_STEP_START);
         goto top;
       }
@@ -764,6 +805,7 @@ top:
     }
 
     else if (next_step_== ACCEPTANCE_OF_TRIAL_POINT){
+      accept_steps++;
       DFO_model_.SetTrustRegionRadiusForSubproblem(DFO_model_.GetTrustRegionRadius());
       int t = DFO_model_.findPointToReplaceWithNewOptimum(new_point);
       rho = (DFO_model_.GetFunctionValue(DFO_model_.getBestPointIndex()) - function_evaluation)
@@ -781,7 +823,7 @@ top:
       if ((rho >= eta1) || (is_model_CFL && rho > 0)) {
         DFO_model_.update(new_point, function_evaluation, new_gradient, t, DFO_Model::INCLUDE_NEW_OPTIMUM);
         set_next_step(TRUST_REGION_RADIUS_UPDATE_STEP);
-        goto top;
+        goto print;
       }
       else{
         int index = DFO_model_.isPointAcceptable(new_point);
@@ -798,6 +840,7 @@ top:
       DFO_model_.modelImprovementStep(new_point,new_point_index);
       if (new_point_index == -1){
         rho = 0; std::cout << "The model improvement step was performed, BUT the model is CFL. No change done.\n";
+        force_criticality_step = true;
         is_model_CFL = true;
         set_next_step(TRUST_REGION_RADIUS_UPDATE_STEP);
         goto top;
@@ -809,8 +852,9 @@ top:
 
     else if (next_step_== MODEL_IMPROVEMENT_STEP_END){
       DFO_model_.update(new_point, function_evaluation, new_gradient, new_point_index, DFO_Model::INCLUDE_NEW_POINT);
+      model_impr_steps++;
       set_next_step(TRUST_REGION_RADIUS_UPDATE_STEP);
-      goto top;
+      goto print;
     }
 
 

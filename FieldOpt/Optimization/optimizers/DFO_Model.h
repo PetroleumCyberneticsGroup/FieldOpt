@@ -42,7 +42,7 @@ class DFO_Model {
   unsigned int ng; // Number of decision variables WITH gradients.
   double rho; // Trust-region radius.
   double lambda; // The required poisedness of the set of interpolation points.
-  double r = 2.0;
+  double r;
 
   Eigen::MatrixXd Winv;
   Eigen::MatrixXd W;
@@ -54,6 +54,7 @@ class DFO_Model {
   // yi = y0 + Y.col(i); i.e. Y contains the displacements away from y0.
 
   Eigen::MatrixXd derivatives;
+  Eigen::VectorXd derivativeAtCenterpoint;
 
   Eigen::VectorXd fvals; // Holds the function evaluations for the interpolation points.
 
@@ -315,7 +316,7 @@ class DFO_Model {
 
   @param[in] s is the displacement from the current center point (y0)
   */
-  void shiftCenterPointOfQuadraticModel(Eigen::VectorXd s);
+  void shiftCenterPointOfQuadraticModel(Eigen::VectorXd s, Eigen::VectorXd derivativeS);
 
   /**
   Finds an upper and a lower bound on the absolute value of the i-th
@@ -461,7 +462,7 @@ class DFO_Model {
     grad += Hessian*point;
     return grad + Hessian*point;
     */
-    enhancedModel.ComputeModel(Y, derivatives, derivatives.col(0), fvals, y0, bestPoint, rho, r,0);
+    enhancedModel.ComputeModel(Y, derivatives, derivativeAtCenterpoint, fvals, y0, bestPoint, rho, r,ng);
     double e_c = 0;
     Eigen::VectorXd e_g(n);
     Eigen::MatrixXd e_h(n,n);

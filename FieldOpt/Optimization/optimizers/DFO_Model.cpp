@@ -371,11 +371,14 @@ DFO_Model::DFO_Model(unsigned int m,
   //this->y0 << 1,2;
   //this->y0[0] = 2;
   //this->y0[1] = -3.0;
-
+this->r = settings->parameters().r;
   int j = 0;
   for (auto i = settings->parameters().starting_point.begin(); i != settings->parameters().starting_point.end(); ++i){
     this->y0[j] = *i;
     j++;
+    if (j >= n){
+      break;
+    }
   }
   lagabsvalMin = settings->parameters().min_lagrange_abs_val;
   //this->y0[2] = 10 - 3;
@@ -389,6 +392,7 @@ DFO_Model::DFO_Model(unsigned int m,
   this->bestPointAllTimeFunctionValue = std::numeric_limits<double>::max();
   this->Y = Eigen::MatrixXd::Zero(n, m);
   this->derivatives = Eigen::MatrixXd(ng, m);
+  this->derivativeAtCenterpoint = Eigen::VectorXd(ng);
   this->fvals = Eigen::VectorXd(m);
   this->Xi = Eigen::MatrixXd::Zero(n + 1, m);
   this->Upsilon = Eigen::MatrixXd::Zero(n + 1, n + 1);
@@ -510,6 +514,7 @@ Eigen::MatrixXd DFO_Model::findLastSetOfInterpolationPoints() {
 }
 
 void DFO_Model::initializeModel() {
+  derivativeAtCenterpoint = derivatives.col(0);
   Winv = calculateWExplicitly();
   createW();
   //std::cout << "Winv = \n" << Winv << "\n";
@@ -628,7 +633,9 @@ double DFO_Model::evaluateQuadraticModel(Eigen::VectorXd point) {
   }
   return value;
   */
-  enhancedModel.ComputeModel(Y, derivatives, derivatives.col(0), fvals, y0, bestPoint, rho, r,0);
+  //enhancedModel.ComputeModel(Y, derivatives, derivatives.col(0), fvals, y0, bestPoint, rho, r,0);
+  enhancedModel.ComputeModel(Y, derivatives, derivativeAtCenterpoint, fvals, y0, bestPoint, rho, r,ng);
+
   double e_c = 0;
   Eigen::VectorXd e_g(n);
   Eigen::MatrixXd e_h(n,n);
@@ -637,7 +644,8 @@ double DFO_Model::evaluateQuadraticModel(Eigen::VectorXd point) {
   return val;
 }
 
-void DFO_Model::shiftCenterPointOfQuadraticModel(Eigen::VectorXd s) {
+void DFO_Model::shiftCenterPointOfQuadraticModel(Eigen::VectorXd s, Eigen::VectorXd derivativeS) {
+  derivativeAtCenterpoint = derivativeS;
   slowShiftCenterPointOfQuadraticModel(s);
   return;
   Eigen::VectorXd r(n);
@@ -1013,6 +1021,8 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
   }
   if (worstPoisedness > lambda) {
 
+
+
     if (index == bestPointIndex){
       int k = -1;
       double tmp = -1;
@@ -1022,12 +1032,46 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
           tmp = poisedness[j-1];
         }
       }
-      if (k != -1 && false){
+      if (k != -1){
         indexOfWorstPoint = k;
         std::cout << "Avoided removing best point" << std::endl;
+        indexOfWorstPoint = -1;
+        std::cout << "Pretending to be poised. Avoided removing best point" << std::endl;
+        return;
       }
       else{
-        indexOfWorstPoint = index;
+        indexOfWorstPoint = -1;
+        std::cout << "Pretending to be poised. Avoided removing best point" << std::endl;
+        return;
+/*
+        int pointToReplace = findPointFarthestAwayFromOptimum();
+        createLagrangePolynomial(pointToReplace,c,grad,hess);
+
+        // Find min and max of l_t(x)
+        subproblem.setConstant(c);
+        subproblem.setGradient(grad);
+        subproblem.setHessian(hess);
+        vector<double> xsolMax;
+        vector<double> fsolMax;
+        vector<double> xsolMin;
+        vector<double> fsolMin;
+        //PrintLagrangePolynomial(t);
+        subproblem.Solve(xsolMax, fsolMax, (char *) "Maximize", y0, bestPoint,bestPoint);
+        subproblem.Solve(xsolMin, fsolMin, (char *) "Minimize", y0, bestPoint,bestPoint);
+
+        if ((abs(fsolMax[0]) >= abs(fsolMin[0]))) {
+          for (int i = 0; i < xsolMax.size(); ++i) {
+            dNew[i] = xsolMax[i];
+          }
+        }
+        else{
+          for (int i = 0; i < xsolMin.size(); ++i) {
+            dNew[i] = xsolMin[i];
+          }
+        }
+        indexOfWorstPoint = pointToReplace;
+        std::cout << "Last resort - Avoided removing best point" << std::endl;
+*/
       }
 
     } else{
@@ -1418,9 +1462,9 @@ int DFO_Model::findPointToReplaceWithNewOptimum(Eigen::VectorXd yNew) {
   int indexToBeReplaced = 1;
   double currentMax = -1;
   std::cout << "Selecting point to be replaced by new optimum " << std::endl;
-  std::cout << "New optimum \n" << yNew << "\n";
-  std::cout << "BestPoint Index " << bestPointIndex << "\n";
-  std::cout << "Y\n" << Y << "\n";
+  //std::cout << "New optimum \n" << yNew << "\n";
+  //std::cout << "BestPoint Index " << bestPointIndex << "\n";
+  //std::cout << "Y\n" << Y << "\n";
   for (int i = 1; i <= m; ++i) {
     if (i == bestPointIndex) {
       continue;
@@ -1442,7 +1486,7 @@ int DFO_Model::findPointToReplaceWithNewOptimum(Eigen::VectorXd yNew) {
 
     double lagval = std::abs((Hw)(i - 1));
     double value = distanceWeight * lagval;
-    std::cout << "distance: " << distance << "\t distanceweight: " << distanceWeight << "\t lagval: " << lagval <<"\t " << "value: " << value << "\n";
+    //std::cout << "distance: " << distance << "\t distanceweight: " << distanceWeight << "\t lagval: " << lagval <<"\t " << "value: " << value << "\n";
     if (value >= currentMax) {
       indexToBeReplaced = i;
       currentMax = value;
@@ -1657,7 +1701,7 @@ void DFO_Model::SetFunctionValue(int t, double value) {
 }
 
 void DFO_Model::SetFunctionValueAndDerivatives(int t, double value, Eigen::VectorXd grad) {
-  fvals[t - 1] = value;
+  fvals(t - 1) = value;
   for (int i = 0; i < ng; ++i){
     derivatives(i,t-1) = grad(i);
   }
@@ -1730,7 +1774,7 @@ Eigen::VectorXd DFO_Model::FindLocalOptimum() {
   /// The enhanced model;
   Eigen::MatrixXd der(0,0);
   Eigen::VectorXd der0(0);
-  enhancedModel.ComputeModel(Y, der, der0, fvals, y0, bestPoint, rho, r,0);
+  enhancedModel.ComputeModel(Y, derivatives, derivativeAtCenterpoint, fvals, y0, bestPoint, rho, r,ng);
   double e_c = 0;
   Eigen::VectorXd e_g(n);
   Eigen::MatrixXd e_h(n,n);
@@ -2057,7 +2101,8 @@ bool DFO_Model::FindPointToIncreasePoisedness(Eigen::VectorXd &dNew, int &t) {
 
 void DFO_Model::printParametersMatlabFriendlyGradientEnhanced() {
   //std::cout << "y0 in dfo model \n" << y0 << "\n";
-  enhancedModel.ComputeModel(Y, derivatives, derivatives.col(0), fvals, y0, bestPoint, rho, r,0);
+  enhancedModel.ComputeModel(Y, derivatives, derivativeAtCenterpoint, fvals, y0, bestPoint, rho, r,ng);
+  //enhancedModel.ComputeModel(Y, derivatives, derivatives.col(0), fvals, y0, bestPoint, rho, r,0);
   enhancedModel.PrintParametersMatlabFriendly();
 }
 int DFO_Model::isPointAcceptable(Eigen::VectorXd point) {
@@ -2818,7 +2863,8 @@ void DFO_Model::isLagrangePoly(){
 }
 
 void DFO_Model::isInterpolatingEnhanced(){
-  enhancedModel.ComputeModel(Y, derivatives, derivatives.col(0), fvals, y0, bestPoint, rho, r,0);
+  enhancedModel.ComputeModel(Y, derivatives, derivativeAtCenterpoint, fvals, y0, bestPoint, rho, r,ng);
+  //enhancedModel.ComputeModel(Y, derivatives, derivatives.col(0), fvals, y0, bestPoint, rho, r,0);
   enhancedModel.isInterpolating();
 }
 
@@ -2858,7 +2904,7 @@ void DFO_Model::Converged(int iterations, int number_of_tiny_improvements, int n
     cp[1] = 0;
     //cp[2] = 0;
     cp = cp - y0;
-    shiftCenterPointOfQuadraticModel(cp);
+    //shiftCenterPointOfQuadraticModel(cp);
     UpdateOptimum();
     //shiftCenterPointOfQuadraticModel(bestPoint);
     printParametersMatlabFriendly();
