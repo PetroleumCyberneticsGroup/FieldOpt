@@ -31,6 +31,9 @@ class ICD : public SegmentedCompletion {
   ICD(const Settings::Model::Well::Completion &completion_settings,
       Properties::VariablePropertyContainer *variable_container);
 
+  double valveSize() const { return valve_size_->value(); }
+  void setValveSize(const double size) { valve_size_->setValue(size); }
+
  private:
   Properties::ContinousProperty *valve_size_;
 
