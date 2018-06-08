@@ -57,6 +57,7 @@ if (BUILD_TESTING)
             tests/test_resource_variable_property_container.h
             tests/test_resource_model.h
 			tests/wells/test_pseudo_cont_vert.cpp
+			tests/wells/test_block_to_spline_conversion.cpp
 			tests/wells/test_segmented_well.cpp)
     target_link_libraries(test_model
             fieldopt::model

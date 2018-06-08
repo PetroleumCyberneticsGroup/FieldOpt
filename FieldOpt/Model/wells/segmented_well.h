@@ -60,6 +60,10 @@ class SegmentedWell : public Well {
     ICD *icd;
   };
 
+  std::vector<Compartment> GetCompartments() const;
+  std::vector<Packer *> GetPackers() const;
+  std::vector<ICD *> GetICDs() const;
+
 
  private:
   Settings::Model::Well well_settings_;

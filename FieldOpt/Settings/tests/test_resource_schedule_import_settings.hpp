@@ -28,7 +28,7 @@ QJsonObject imported_model_settings {
                 "AllWells"
             }},
             {"SplineConversion", QJsonObject {
-                {"Wells", QJsonArray {"C-1H"}},
+                {"Wells", QJsonArray {"D-2H"}},
                 {"SplinePoints", 4}
             }},
             {"InjectorDefaultRate", 2000},

@@ -48,7 +48,7 @@ SegmentedWell::SegmentedWell(const Settings::Model &settings,
         compartment_delimiters.push_back(i * compartment_length);
     }
     compartment_delimiters.push_back(trajectory_->GetLength());
-    assert(compartment_delimiters.size() == well_settings_.seg_n_compartments);
+    assert(compartment_delimiters.size() == well_settings_.seg_n_compartments + 1);
 
     for (int i = 0; i < well_settings_.seg_n_compartments; ++i) {
         auto first_block = trajectory_->GetWellBlockByMd(compartment_delimiters[i]);
@@ -72,8 +72,24 @@ SegmentedWell::SegmentedWell(const Settings::Model &settings,
                                                 well_settings_, variable_container, compartments_));
         }
     }
-
-    throw std::runtime_error("SegmentedWell not yet implemented.");
+}
+std::vector<Packer *> SegmentedWell::GetPackers() const {
+    std::vector<Packer *> packers;
+    packers.push_back(compartments_[0].start_packer);
+    for (auto comp : compartments_) {
+        packers.push_back(comp.end_packer);
+    }
+    return packers;
+}
+std::vector<ICD *> SegmentedWell::GetICDs() const {
+    std::vector<ICD *> icds;
+    for (auto comp : compartments_) {
+        icds.push_back(comp.icd);
+    }
+    return icds;
+}
+std::vector<SegmentedWell::Compartment> SegmentedWell::GetCompartments() const {
+    return compartments_;
 }
 
 SegmentedWell::Compartment::Compartment(const double start_md, const double end_md,
@@ -87,6 +103,7 @@ SegmentedWell::Compartment::Compartment(const double start_md, const double end_
         comp_settings.name = "Packer#" + well_settings.name + "#0";
         comp_settings.measured_depth = start_md;
         comp_settings.true_vertical_depth = start_tvd;
+        comp_settings.type = Settings::Model::WellCompletionType::Packer;
         start_packer = new Wellbore::Completions::Packer(comp_settings, variable_container);
     }
     else {
@@ -96,12 +113,14 @@ SegmentedWell::Compartment::Compartment(const double start_md, const double end_
     comp_settings.name = "Packer#" + well_settings.name + "#" + QString::number(compartments_.size() + 1);
     comp_settings.measured_depth = end_md;
     comp_settings.true_vertical_depth = end_tvd;
+    comp_settings.type = Settings::Model::WellCompletionType::Packer;
     end_packer = new Wellbore::Completions::Packer(comp_settings, variable_container);
 
     comp_settings.name = "ICD#" + well_settings.name + "#" + QString::number(compartments_.size());
     comp_settings.measured_depth = start_md;
     comp_settings.true_vertical_depth = start_tvd;
     comp_settings.valve_size = well_settings.seg_compartment_params.valve_size;
+    comp_settings.type = Settings::Model::WellCompletionType::ICV;
     icd = new Wellbore::Completions::ICD(comp_settings, variable_container);
 }
 }
