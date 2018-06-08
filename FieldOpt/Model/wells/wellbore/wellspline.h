@@ -60,7 +60,6 @@ class WellSpline
   bool HasGridChanged() const;
   bool HasSplineChanged() const;
 
-  double GetLength() const; //!< Get the length of the spline (summed distance between defining points).
 
  private:
   Reservoir::Grid::Grid *grid_;
@@ -84,6 +83,28 @@ class WellSpline
 
   std::vector<Eigen::Vector3d> create_spline_point_vector() const;
 
+  void spline_points_from_import(Settings::Model::Well &well_settings);
+
+
+  /*!
+   * List containing imported well blocks. This will be used if
+   *    1. A trajectory has been imported for the well, _and_
+   *    2. The well trajectory is not variable.
+   *
+   * This list will converted to a list of IntersectedCell objects
+   * to be passed to the well index calculator, which
+   * will _only_ calculate the well indices. This saves the time
+   * consuming step of re-computing the intersection point, which
+   * is a particularly big problem when working with multiple
+   * realizations.
+   *
+   * Note that the conversion to IntersectedCell objects will only
+   * happen when GetWellBlocks is called. This is to account for the
+   * fact that the grid_ object may change throughout the run.
+   */
+  std::vector<Settings::TrajectoryImporter::ImportedWellBlock> imported_wellblocks_;
+
+  std::vector<Reservoir::WellIndexCalculation::IntersectedCell> convertImportedWellblocksToIntersectedCells();
 };
 
 }

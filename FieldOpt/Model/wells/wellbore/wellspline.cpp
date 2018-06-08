@@ -20,10 +20,12 @@
 #include "wellspline.h"
 #include <iostream>
 #include <time.h>
+#include <cmath>
 #include <wells/well_exceptions.h>
 #include <QtCore/QDateTime>
 #include <Utilities/time.hpp>
 #include <boost/algorithm/string.hpp>
+#include <QList>
 
 namespace Model {
 namespace Wells {
@@ -37,6 +39,11 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
     grid_ = grid;
     well_settings_ = well_settings;
     is_variable_ = false;
+
+    if (!well_settings.imported_wellblocks_.empty()) { // Imported blocks present
+        spline_points_from_import(well_settings);
+        imported_wellblocks_ = well_settings.imported_wellblocks_;
+    }
 
     for (auto point : well_settings.spline_points) {
         SplinePoint *pt = new SplinePoint();
@@ -59,13 +66,26 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
     last_computed_grid_ = "";
     last_computed_spline_ = std::vector<Eigen::Vector3d>();
 }
-
-double WellSpline::GetLength() const {
-    double length = 0;
-    for (int i = 1; i < spline_points_.size(); ++i) {
-        length += (spline_points_[i]->ToEigenVector() - spline_points_[i-1]->ToEigenVector()).norm();
-    }
-    return length;
+void WellSpline::spline_points_from_import(Settings::Model::Well &well_settings) {
+    well_settings_.spline_points = QList<Settings::Model::Well::SplinePoint> ();
+    auto first_spline_point = Settings::Model::Well::SplinePoint();
+    first_spline_point.x = well_settings.imported_wellblocks_[0].in().x();
+    first_spline_point.y = well_settings.imported_wellblocks_[0].in().y();
+    first_spline_point.z = well_settings.imported_wellblocks_[0].in().z();
+    if (well_settings.is_variable_spline) {
+            first_spline_point.is_variable = true;
+        }
+    well_settings.spline_points.push_back(first_spline_point);
+    for (auto block : well_settings.imported_wellblocks_) {
+            auto spline_point = Settings::Model::Well::SplinePoint();
+            spline_point.x = block.out().x();
+            spline_point.y = block.out().y();
+            spline_point.z = block.out().z();
+            if (well_settings.is_variable_spline) {
+                spline_point.is_variable = true;
+            }
+            well_settings.spline_points.push_back(spline_point);
+        }
 }
 
 QList<WellBlock *> *WellSpline::GetWellBlocks()
@@ -90,8 +110,19 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
 
     auto wic = WellIndexCalculator(grid_);
 
+    std::cout << "Starting well index calculation ... " << std::endl;
     auto start = QDateTime::currentDateTime();
-    auto block_data = wic.ComputeWellBlocks(welldefs)[well_settings_.name.toStdString()];
+    vector<Reservoir::WellIndexCalculation::IntersectedCell> block_data;
+    if (imported_wellblocks_.empty() || is_variable_) {
+        block_data = wic.ComputeWellBlocks(welldefs)[well_settings_.name.toStdString()];
+    }
+    else {
+        std::cout << "Computing well indices for imported well blocks ... " << std::endl;
+        block_data = convertImportedWellblocksToIntersectedCells();
+        for (int i = 0; i < block_data.size(); ++i) {
+            wic.compute_well_index(block_data, i);
+        }
+    }
     auto end = QDateTime::currentDateTime();
     seconds_spent_in_compute_wellblocks_ = time_span_seconds(start, end);
 
@@ -144,6 +175,16 @@ bool WellSpline::HasSplineChanged() const {
         point_difference_sum += std::abs((last_computed_spline_[i] - new_spline_points[i]).norm());
     }
     return point_difference_sum < 1e-7;
+}
+std::vector<Reservoir::WellIndexCalculation::IntersectedCell> WellSpline::convertImportedWellblocksToIntersectedCells() {
+    auto intersected_cells = vector<IntersectedCell>();
+    for (auto iwb : imported_wellblocks_) {
+        auto cell = grid_->GetCell(iwb.ijk().x()-1, iwb.ijk().y()-1, iwb.ijk().z()-1);
+        auto ic = Reservoir::WellIndexCalculation::IntersectedCell(cell);
+        ic.add_new_segment(iwb.in(), iwb.out(), well_settings_.wellbore_radius, 0.0);
+        intersected_cells.push_back(ic);
+    }
+    return intersected_cells;
 }
 
 Eigen::Vector3d WellSpline::SplinePoint::ToEigenVector() const {
