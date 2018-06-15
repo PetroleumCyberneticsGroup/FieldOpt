@@ -229,6 +229,12 @@ class Subproblem_LU {
   //void Solve(vector<double> *xsol, vector<double> *fsol, char *optimizationType);
 
   void Solve(vector<double> &xsol, vector<double> &fsol, char *optimizationType,   Eigen::VectorXd y0, Eigen::VectorXd bestPointDisplacement);
+  void Solve(vector<double> &xsol,
+             vector<double> &fsol,
+             char *optimizationType,
+             VectorXd centerPoint,
+             VectorXd bestPointDisplacement,
+             VectorXd startingPoint);
 
   void SetTrustRegionRadius(double radius){
     trustRegionRadius_ = radius;

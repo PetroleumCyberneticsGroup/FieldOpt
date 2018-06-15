@@ -526,7 +526,66 @@ int SNOPTusrFG2_(integer *Status, integer *n, double x[],
   return 0;
 }
 
+void Subproblem_LU::Solve(vector<double> &xsol, vector<double> &fsol, char *optimizationType, Eigen::VectorXd centerPoint, Eigen::VectorXd bestPointDisplacement, Eigen::VectorXd startingPoint){
+  y0_ = centerPoint;
+  bestPointDisplacement_ = bestPointDisplacement;
+  // Set norm specific constraints
+  if (normType_ == INFINITY_NORM){
+    for (int i = 0; i < n_; ++i){
+      xlow_[i] = std::max(bestPointDisplacement_[i] - trustRegionRadius_, xlowCopy_[i] - y0_[i]);
+      xupp_[i] = std::min(bestPointDisplacement_[i] + trustRegionRadius_, xuppCopy_[i] - y0_[i]);
+    }
+    //xlow_[1] = xlow_[1];
+    //xupp_[1] = xupp_[1];
+  }
+  else if (normType_ == L2_NORM){
+    for (int i = 0; i < n_; ++i){
+      xlow_[i] = xlowCopy_[i];
+      xupp_[i] = xuppCopy_[i];
+    }
+  }
 
+
+  // The snoptHandler must be setup and loaded
+  SNOPTHandler snoptHandler = initSNOPTHandler();
+  snoptHandler.setProbName("SNOPTSolver");
+  snoptHandler.setParameter(optimizationType);
+
+  setOptionsForSNOPT(snoptHandler);
+  snoptHandler.setIntParameter("Major Iterations Limit", 20000);
+  snoptHandler.setIntParameter("Iterations limit", 20000);
+  snoptHandler.setRealParameter("Major step limit", trustRegionRadius_); //was 0.2
+  //target nonlinear constraint violation
+  snoptHandler.setRealParameter("Major feasibility tolerance", 0.00000000001); //1.0e-6
+
+  snoptHandler.setRealParameter("Major optimality tolerance", 0.000000000000000001*trustRegionRadius_);
+  snoptHandler.setRealParameter("Major optimality tolerance", 0.00000000000000000000001*trustRegionRadius_);
+
+  //snoptHandler.setRealParameter("Major optimality tolerance", 0.00000001);
+
+  ResetSubproblem_LU();
+
+  for (int i = 0; i < n_; i++) {
+    //x_[i] = startingPoint[i];//bestPointDisplacement_[i];
+    //x_[i] = 0.0;//bestPointDisplacement_[i];
+    x_[i] = bestPointDisplacement_[i];
+  }
+  passParametersToSNOPTHandler(snoptHandler);
+  integer Cold = 0, Basis = 1, Warm = 2;
+
+  snoptHandler.solve(Cold, xsol, fsol);
+  integer exitCode = snoptHandler.getExitCode();
+  std::cout << "snopt exitcode:  " << exitCode << "\n";
+  if (exitCode == 40 || exitCode == 41){
+    std::cout << "snopt failed me. current point cannot be improved because of numerical difficulties \n";
+
+    //std::cin.get();
+  }
+  if (exitCode != 40 && exitCode != 41 && exitCode != 1 && exitCode != 31 && exitCode != 3){
+    std::cout << "ExitCode is: " << exitCode << "\n";
+    std::cin.get();
+  }
+}
 
 void Subproblem_LU::setQuadraticModel(double c, Eigen::VectorXd g, Eigen::MatrixXd H) {
   constant_LU = c;
