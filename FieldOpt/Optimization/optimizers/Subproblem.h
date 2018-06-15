@@ -10,6 +10,7 @@
 #include "FieldOpt-3rdPartySolvers/handlers/SNOPTHandler.h"
 #include "FieldOpt-3rdPartySolvers/handlers/SNOPTLoader.h"
 #include "Optimization/optimizer.h"
+#include "VirtualSimulator.h"
 namespace Optimization {
 namespace Optimizers {
 class Subproblem {
@@ -114,7 +115,8 @@ class Subproblem {
 
 
  private:
-
+  Eigen::VectorXd lastLagrangeMultipliers;
+  VirtualSimulator virtualSimulator_;
   int normType_;
   Eigen::VectorXd y0_;
   Eigen::VectorXd bestPointDisplacement_;
@@ -170,6 +172,8 @@ class Subproblem {
 
   void setConstraintsAndDimensions();
 
+
+
   void setOptionsForSNOPT(SNOPTHandler &snoptHandler);
 
   bool loadSNOPT(string libname = "libsnopt-7.2.12.2.so");
@@ -184,6 +188,7 @@ class Subproblem {
 
  public:
 
+  Eigen::VectorXd GetInitialPoint();
 
  //EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
@@ -220,6 +225,10 @@ class Subproblem {
   Subproblem(Settings::Optimizer *settings);
   Subproblem(){};
 
+  Eigen::VectorXd getLagrangeMultipliers(){
+    return lastLagrangeMultipliers;
+  }
+
   void ResetSubproblem();
 
   //void Solve(std::vector<double> xsol, std::vector<double> fsol, char *optimizationType);
@@ -230,8 +239,8 @@ class Subproblem {
 
   void SetTrustRegionRadius(double radius){
     trustRegionRadius_ = radius;
-    Flow_[1] = 0;
-    Fupp_[1] = trustRegionRadius_;
+    //Flow_[1] = 0;
+    //Fupp_[1] = trustRegionRadius_;
   }
   void Solve(vector<double> &xsol,
              vector<double> &fsol,
@@ -241,6 +250,13 @@ class Subproblem {
              VectorXd startingPoint);
 
   double computeScale();
+
+  Eigen::MatrixXd getGradientConstraints(Eigen::VectorXd point);
+  int getNumberOfConstraints();
+  void SolveVirtualSimulator();
+  Eigen::VectorXd FindFeasiblePoint();
+
+  void evaluateConstraints(Eigen::VectorXd point);
 };
 
 }

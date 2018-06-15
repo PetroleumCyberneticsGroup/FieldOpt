@@ -4,9 +4,10 @@
 
 #include "DFO.h"
 #include "GradientEnhancedModel.h"
+#include "VirtualSimulator.h"
 #include <iostream>
 #include <iomanip>
-
+#include <casadi/casadi.hpp>
 
 
 
@@ -22,6 +23,7 @@
 #define TRUST_REGION_RADIUS_UPDATE_STEP 9
 #define CRITICALITY_STEP_ADD_POINTS 10
 
+VirtualSimulator vs;
 
 /// Test functions - start
 double matyasFunction(Eigen::VectorXd x) {
@@ -53,8 +55,26 @@ Eigen::VectorXd test(Eigen::VectorXd x) {
   return ret;
 }
 
+Eigen::VectorXd evaluateFunctionVS(Eigen::VectorXd x, int ng){
+  Eigen::VectorXd result(1+ng);
+  result(0) = vs.evaluateFunction(x);
+  std::cout << "input is:\n" << x << "\noutput is: " << result(0) << "\noutput should have been: " << (1-x[0])*(1-x[0]) + 100*(x[1]-x[0]*x[0]) + 9*x[1] << "\n";
+
+  Eigen::VectorXd gradients1 = vs.evaluateFunctionGradients(x);
+  Eigen::VectorXd grads = gradients1.tail(ng);
+  for (int i = 0; i < grads.rows(); ++i){
+    //result(i+1) = grads(grads.rows()-1-i);
+    result(i+1) = grads(i);
+  }
+  //result(1) = -1;
+  //result(2) = -1;
+
+  return result;
+}
+
 Eigen::VectorXd  sphere(Eigen::VectorXd x, int ng) {
   Eigen::VectorXd result(1+ng);
+  x(0) = x(0)/100;
   Eigen::VectorXd scaledX = x*10;
   double val = 0;
   for (int i = 0; i < x.rows(); i++) {
@@ -88,7 +108,7 @@ Eigen::VectorXd  sphere(Eigen::VectorXd x, int ng) {
 
     result(1) = 0.26*2*x(1) - 0.46*x(0);
     if (ng >= 2){
-      result(2) = 0.26*2*x(0) - 0.46*x(1);
+      result(2) = 0.26*2*x(0)- 0.46*x(1);
     }
     //if (ng == 2)
       //result(1) = 2*x(1)*10 ;
@@ -219,6 +239,18 @@ DFO::DFO(Settings::Optimizer *settings,
 
   // Set up the DFO model.
   Eigen::VectorXd initialStartPoint = base_case->GetRealVarVector();
+  auto as =base_case->GetRealVarIdVector(); //QList<QUuid>
+  auto aa = base_case->real_variables(); // QHash<QUuid, double>
+
+
+
+  for (int i = 0; i < 6; i++){
+    std::cout << aa[as.at(i)] << "\n";
+    as.at(i);
+  }
+  std::cout  << "\n";
+
+
   /// Testing snopt solver
 /*
   std::cout << std::scientific;
@@ -513,6 +545,125 @@ void DFO::handleEvaluatedCase(Optimization::Case *c) {
 
 void DFO::iterate() {
 
+  //std::string problem =  "/home/joakim/git/casadi/docs/examples/nl_files/hs107.nl";
+  std::string problem =  "/home/joakim/git/casadi/docs/examples/nl_files/nlTestSet/qptest1.nl";
+
+  // Parse an NL-file
+  casadi::NlpBuilder nl;
+  nl.import_nl(problem);
+
+  //std::vector<casadi::MX> xcasted = nl.x;
+
+  std::vector<casadi::MX> f1 = {nl.f};
+  std::vector<casadi::MX> f2 = {casadi::MX::vertcat(nl.x)};
+  casadi::Function f = casadi::Function("obj", f2, f1);
+  //std::pair<int,int> mypair = {1,int(nl.x.size())};
+  //auto in = casadi::DM::ones(mypair); //
+  //std::vector<casadi::DM> a = {1,1,1,1,1,1,1,1,1};
+  std::vector<casadi::DM> a = {casadi::DM(nl.x_init)};
+  //Convert eigen::vector into DM:
+  Eigen::VectorXd d;// = Eigen::VectorXd(a);
+  auto out = f(a);
+  std::cout << "obj = " << (out[0]) << std::endl;
+
+
+  auto rows = a[0].size1();
+
+  /*
+  d.resize(rows);
+  d.setZero();
+  d << -1,-1;
+  std::cout<< "\n" << d << std::endl;
+  auto dense_a = casadi::DM::densify(a[0]);
+
+  std::memcpy(d.data(), dense_a.ptr(), sizeof(double)*rows);
+  std::cout<< "\n"  << d << std::endl;
+*/
+  casadi::Function fj = f.factory("jacf", {f.name_in()},{"jac:o0:i0","o0"});
+  auto out_fj = fj(a);
+  std::cout << "out_fj =\n " << (out_fj[0]) << std::endl;
+
+
+  //constraints
+  auto gcat = {casadi::MX::vertcat(nl.g)};
+  casadi::Function g = casadi::Function("obj", f2, gcat);
+  auto out_g = g(a);
+  std::cout << "constraints\n" <<out_g[0] <<"\n";
+
+  casadi::Function gj = g.factory("jacg", {f.name_in()},{"jac:o0:i0","o0"});
+  auto out_gj = gj(a);
+  auto dd = out_gj[0];
+  auto dd_dens = casadi::DM::densify(dd);
+  //std::cout << "size1 (rows) =  " << dd_dens.size1() << ",\t size2 (cols) = " << dd_dens.size2() <<"\n";
+  std::cout << "dd_dens \n" << dd_dens << "\n"; //<<" " << out_fj[1] << std::endl;
+  //std::cout << "d_dens(0) \n" << casadi::DM::densify(dd_dens(0)) << "\n"; //<<" " << out_fj[1] << std::endl;
+  //std::cout << "d_dens(5) \n" << casadi::DM::densify(dd_dens(5)) << "\n"; //<<" " << out_fj[1] << std::endl;Schøyens gate 10 C, 7030 Trondheim
+  //std::cout << "d_dens(2,1) \n" << casadi::DM::densify(dd_dens(2,1)) << "\n"; //<<" " << out_fj[1] << std::endl;,,
+
+
+  /// Testing VirtualSimulator
+
+  vs = VirtualSimulator(settings_->parameters().test_problem_file);
+  vs.Solve();
+  //Eigen::VectorXd asda(2);
+  //asda  << 2,5;
+  //std::cout <<"constraints \n" << vs.evaluateConstraints(asda) << "\n";
+  DFO_model_.initLagrangeMultipliers(vs.GetNumberOfConstraints());
+
+
+  // d_dens (ci,vi) <- constraint_i derivert mhp variabel_i
+
+  //std::cout << "out_g[0] \n" << (out_g[0]) << "\n"; //<<" " << out_fj[1] << std::endl;
+  //std::cout << "out_g[1]  \n" << (out_g[1]) << "\n"; //<<" " << out_fj[1] << std::endl;
+  //std::cout << "(out_g[1,1])  " << (out_g[1,1]) << "\n"; //<<" " << out_fj[1] << std::endl;
+  //std::cout << "(out_g[1,2])  " << (out_g[1,2]) << "\n"; //<<" " << out_fj[1] << std::endl;
+
+
+/*
+  size_t rows = casadi_matrix.size1();
+  size_t cols = casadi_matrix.size2();
+
+  eigen_matrix.resize(rows,cols);
+  eigen_matrix.setZero(rows,cols);
+
+  std::memcpy(eigen_matrix.data(), casadi_matrix.ptr(), sizeof(double)*rows*cols);
+*/
+
+
+
+  // Need:
+  // function evaluation. gradients of obj.fun.
+  //       constraints,         gradients of contraints(?)
+
+
+
+  /*
+  casadi::Dict opts;
+  opts["expand"] = true;
+  casadi::Function solver = nlpsol("nlpsol", "ipopt", nl, opts);
+  std::map<std::string, casadi::DM> arg, res;
+
+  // Solve NLP
+  arg["lbx"] = nl.x_lb;
+  arg["ubx"] = nl.x_ub;
+  arg["lbg"] = nl.g_lb;
+  arg["ubg"] = nl.g_ub;
+  arg["x0"] = nl.x_init;
+  res = solver(arg);
+  res = solver(arg);
+  for (auto&& s : res) {
+    std::cout << std::setw(10) << s.first << ": " << std::vector<double>(s.second) << std::endl;
+  }
+  */
+  /*
+  Eigen::VectorXd input = Eigen::VectorXd::Zero(2);
+  std::cout << "from virtual simulator: \n";
+  std::cout << "obj = " << vs.evaluateFunction(input) << "\n";
+  std::cout << "obj gradients \n" << vs.evaluateFunctionGradients(input) << "\n";
+  std::cout << "constraints\n" <<     vs.evaluateConstraints(input) << "\n";
+  std::cout << "constraints gradients \n" << vs.evaluateConstraintGradients(input) << "\n";
+*/
+
   std::cout << std::setprecision(20);
   std::cout << std::scientific;
   //GradientEnhancedModel  enhancedModel(number_of_variables_,number_of_interpolation_points_,settings_->parameters().number_of_variables_with_gradients,settings_->parameters().weights_distance_from_optimum_lsq,settings_->parameters().weight_model_determination_minimum_change_hessian);
@@ -675,7 +826,8 @@ top:
     }
 
     else if (next_step_== CRITICALITY_STEP_START){
-      Eigen::VectorXd gradient = DFO_model_.GetGradientAtPoint(DFO_model_.GetBestPoint());
+      //Eigen::VectorXd gradient = DFO_model_.GetGradientAtPoint(DFO_model_.GetBestPoint());
+      Eigen::VectorXd gradient = DFO_model_.GetLagrangianGradient(DFO_model_.GetBestPoint());
       if ((gradient.norm() > epsilon_c && force_criticality_step==false
           && number_of_crit_step_finished_without_checking_poisedness <= 4) ){
         DFO_model_.SetTrustRegionRadius(trust_region_radius_icb);
@@ -685,23 +837,30 @@ top:
       }
       else{
         number_of_crit_step_finished_without_checking_poisedness = 0;
-        force_criticality_step = false;
         bool is_poised = DFO_model_.ModelImprovementAlgorithm(r*trust_region_radius_icb, new_points, new_points_indicies);
         if ( (!is_poised) || (trust_region_radius_icb > u*gradient.norm()) ) {
           criticality_step_iteration = 0;
           if (is_poised){
+            force_criticality_step = false;
             set_next_step(CRITICALITY_STEP_CHECK_CONVERGENCE);
             goto top;
           }
           else{
+            force_criticality_step = false;
             set_next_step(CRITICALITY_STEP_ADD_POINTS);
             multiple_new_points = true;
             goto evaluate;
           }
         }
         else{
-          DFO_model_.SetTrustRegionRadius(trust_region_radius_icb);
-          set_next_step(FIND_TRIAL_POINT);
+          if (force_criticality_step){
+            trust_region_radius_icb = trust_region_radius_icb*gamma;
+            set_next_step(CRITICALITY_STEP_START);
+          }
+          else{
+            DFO_model_.SetTrustRegionRadius(trust_region_radius_icb);
+            set_next_step(FIND_TRIAL_POINT);
+          }
           goto top;
         }
       }
@@ -723,7 +882,9 @@ top:
 
 
     else if (next_step_== CRITICALITY_STEP_CHECK_CONVERGENCE){
-      Eigen::VectorXd gradient = DFO_model_.GetGradientAtPoint(DFO_model_.GetBestPoint());
+      //Eigen::VectorXd gradient = DFO_model_.GetGradientAtPoint(DFO_model_.GetBestPoint());
+      Eigen::VectorXd gradient = DFO_model_.GetLagrangianGradient(DFO_model_.GetBestPoint());
+
       bool is_poised = DFO_model_.ModelImprovementAlgorithm(r*trust_region_radius_tilde, new_points, new_points_indicies);
 
       if (trust_region_radius_tilde <= u*gradient.norm() && is_poised){
@@ -762,10 +923,12 @@ top:
     }
 
 
-    else if (next_step_== FIND_TRIAL_POINT){
+      else if (next_step_== FIND_TRIAL_POINT){
+
+
 
       /// Can add a test to see if currently best found point is "bestpoint"
-      DFO_model_.UpdateOptimum();
+      //DFO_model_.UpdateOptimum();
 
       if (DFO_model_.GetTrustRegionRadius() <= trust_region_radius_end){
         std::cout << "crit_steps: " << crit_steps << "\nmodel_impr: " << model_impr_steps << "\nacceptance: " << accept_steps <<"\n";
@@ -822,6 +985,7 @@ top:
 
       if ((rho >= eta1) || (is_model_CFL && rho > 0)) {
         DFO_model_.update(new_point, function_evaluation, new_gradient, t, DFO_Model::INCLUDE_NEW_OPTIMUM);
+        std::cout <<"The gradient of the lagrangian is:\n" << DFO_model_.GetLagrangianGradient(new_point+DFO_model_.getCenterPoint()) << "\n";
         set_next_step(TRUST_REGION_RADIUS_UPDATE_STEP);
         goto print;
       }
@@ -860,10 +1024,16 @@ top:
 
     else if (next_step_== TRUST_REGION_RADIUS_UPDATE_STEP){
       if (rho >= eta1){
-        double tmp = std::min(gamma_inc * DFO_model_.GetTrustRegionRadius(), trust_region_radius_max);
-        double weight = 0;
-        trust_region_radius_icb = weight * DFO_model_.GetTrustRegionRadius() + (1-weight) * tmp;
-        rho = 0;
+        /// if point is not better, but rho is high. lower radius!!!
+        if (function_evaluation > DFO_model_.GetFunctionValue(DFO_model_.getBestPointIndex())){
+          trust_region_radius_icb = gamma * DFO_model_.GetTrustRegionRadius();
+        }
+        else{
+          double tmp = std::min(gamma_inc * DFO_model_.GetTrustRegionRadius(), trust_region_radius_max);
+          double weight = 0;
+          trust_region_radius_icb = weight * DFO_model_.GetTrustRegionRadius() + (1-weight) * tmp;
+          rho = 0;
+        }
       }else{
         if (!is_model_CFL){
           Eigen::VectorXd dummyVec(number_of_variables_);
@@ -927,15 +1097,20 @@ top:
       function_evaluations.resize(number_of_new_points);
       for (int i = 0; i < number_of_new_points; ++i){
         number_of_function_calls++;
-        tmp_eval = sphere(new_points.col(i) + DFO_model_.getCenterPoint(), ng);
+        Eigen::VectorXd tmppp = new_points.col(i) + DFO_model_.getCenterPoint();
+        Eigen::VectorXd tmpp = ScaleVariablesFromAlgorithmToApplication(tmppp);
+        //tmp_eval = sphere(tmpp, ng);
+        tmp_eval = evaluateFunctionVS(tmpp, ng);
         eigen_col(new_gradients, tmp_eval.tail(ng), i);
         function_evaluations(i) = tmp_eval(0);
       }
       number_of_parallell_function_calls++;
     }
     else{
+      Eigen::VectorXd tmpp = ScaleVariablesFromAlgorithmToApplication(new_point + DFO_model_.getCenterPoint());
 
-      tmp_eval = sphere(new_point + DFO_model_.getCenterPoint(), ng);
+      //tmp_eval = sphere(tmpp, ng);
+      tmp_eval = evaluateFunctionVS(tmpp, ng);
       function_evaluation = tmp_eval(0);
       new_gradient = tmp_eval.tail(ng);
       number_of_function_calls++;
@@ -976,10 +1151,20 @@ void DFO::set_next_step(int a) {
   std::cout << "\tTo " << "\033[1;" + color_to + ";m " << get_action_name(next_step_) << "\033[0m" << std::endl;
 }
 
-
-
-
-
+Eigen::VectorXd DFO::ScaleVariablesFromAlgorithmToApplication(Eigen::VectorXd point) {
+  Eigen::VectorXd ret(point.rows());
+  ret(0) = point(0);
+  ret(1) = point(1);
+  //ret(2) = point(2)*100;
+  return ret;
+}
+Eigen::VectorXd DFO::ScaleVariablesFromApplicationToAlgorithm(Eigen::VectorXd point) {
+  Eigen::VectorXd ret(point.rows());
+  ret(0) = point(0);
+  ret(1) = point(1);
+  return ret;
+  //ret(2) = point(2)*10;
+}
 
 double matyasFunction2D(Eigen::VectorXd x) {
   double squaredx1 = std::pow(x(0), 2);

@@ -83,6 +83,7 @@ class Optimizer
 
 
     // DFO parameters
+    std::string test_problem_file;
     double initial_trust_region_radius;
     double max_trust_region_radius;
     double end_trust_region_radius;
@@ -90,6 +91,7 @@ class Optimizer
     int number_of_interpolation_points;
     int number_of_variables;
     int number_of_variables_with_gradients;
+    int norm_type;
     double required_poisedness;
     double r;
     double w;

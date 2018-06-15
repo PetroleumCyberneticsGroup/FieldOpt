@@ -32,6 +32,9 @@ class DFO : public Optimizer {
   void UpdateLastAction(int a);
   void set_next_step(int a);
 
+  Eigen::VectorXd ScaleVariablesFromAlgorithmToApplication(Eigen::VectorXd point);
+  Eigen::VectorXd ScaleVariablesFromApplicationToAlgorithm(Eigen::VectorXd point);
+
 
  private:
   std::string color_from= "31";

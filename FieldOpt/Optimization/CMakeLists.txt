@@ -25,7 +25,7 @@ else()
 	message("Experimental constraints not found")
 	add_definitions(-DWITHOUT_EXPERIMENTAL_CONSTRAINTS)
 endif()
-
+find_package(casadi)
 # Add library ==========================================================
 add_library(optimization
 		optimization_exceptions.h
@@ -61,7 +61,7 @@ add_library(optimization
 		optimizers/Subproblem.cpp
 		normalizer.cpp
 		constraints/pseudo_cont_boundary_2d.cpp
-		${EXPERIMENTAL_CONSTRAINTS_SRC} optimizers/EigenUtil.h optimizers/GradientEnhancedModel.cpp optimizers/GradientEnhancedModel.h optimizers/Subproblem_LU.cpp optimizers/Subproblem_LU.h)
+		${EXPERIMENTAL_CONSTRAINTS_SRC} optimizers/EigenUtil.h optimizers/GradientEnhancedModel.cpp optimizers/GradientEnhancedModel.h optimizers/Subproblem_LU.cpp optimizers/Subproblem_LU.h optimizers/VirtualSimulator.cpp optimizers/VirtualSimulator.h)
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
 # Target link libraries ================================================
@@ -75,6 +75,7 @@ target_link_libraries(optimization
         PUBLIC fieldopt::3rdpartysolvers
         ${CMAKE_SOURCE_DIR}/FieldOpt-3rdPartySolvers/lib/libsnopt-7.2.12.2.so
 		PUBLIC ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} casadi)
 
 # Target include directories ===========================================
 target_include_directories(optimization PUBLIC
@@ -84,6 +85,8 @@ target_include_directories(optimization PUBLIC
 
 # Compile options ======================================================
 add_compile_options(-std=c++11)
+
+
 
 # Unit tests ===========================================================
 if (BUILD_TESTING)
@@ -109,7 +112,6 @@ if (BUILD_TESTING)
 			tests/constraints/test_interwell_distance.cpp
 			tests/constraints/test_spline_well_length.cpp
 			tests/constraints/test_pseudo_cont_boundary_2d.cpp)
-
 	target_link_libraries(test_optimization
 			fieldopt::optimization
 			${GTEST_BOTH_LIBRARIES}

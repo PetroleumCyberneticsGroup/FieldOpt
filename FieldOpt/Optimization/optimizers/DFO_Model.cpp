@@ -7,6 +7,26 @@ bool DFO_Model::cmp(Eigen::VectorXd a, Eigen::VectorXd b) {
   //return ((a.topRows(a.rows() - 1)).norm() > (b.topRows(b.rows() - 1)).norm());
 }
 
+static int NormType = 0;
+
+double norm2(Eigen::VectorXd a) {
+  // infinity = 0;
+  // l2 = 2
+  if (NormType == 0){
+    return (a).lpNorm<Infinity>();
+  }
+  else if (NormType == 2){
+    return (a).norm();
+  }
+}
+
+bool cmp2(Eigen::VectorXd a, Eigen::VectorXd b) {
+  return (norm2(a.topRows(a.rows() - 1))) > (norm2(b.topRows(b.rows() - 1)));
+  //return ((a.topRows(a.rows() - 1)).norm() > (b.topRows(b.rows() - 1)).norm());
+}
+
+
+
 bool DFO_Model::isApproxZero(double value, double zeroLimit) {
   if (std::abs(value) <= zeroLimit)
     return true;
@@ -359,8 +379,9 @@ DFO_Model::DFO_Model(unsigned int m,
                      double weight_objective_minimum_change,
                      QList<double> weights_derivatives,
                      Settings::Optimizer *settings)
-    : subproblem(settings), enhancedModel(n,m,ng,weights_derivatives,weight_objective_minimum_change) {
+    : subproblem(settings), enhancedModel(n,m,ng,weights_derivatives,weight_objective_minimum_change), normType(settings->parameters().norm_type) {
   //this->normType = 0;
+  NormType = settings->parameters().norm_type;
   this->m = m;
   this->n = n;
   this->ng = ng;
@@ -373,6 +394,8 @@ DFO_Model::DFO_Model(unsigned int m,
   //this->y0[1] = -3.0;
 this->r = settings->parameters().r;
   int j = 0;
+
+
   for (auto i = settings->parameters().starting_point.begin(); i != settings->parameters().starting_point.end(); ++i){
     this->y0[j] = *i;
     j++;
@@ -380,6 +403,14 @@ this->r = settings->parameters().r;
       break;
     }
   }
+
+  this->y0 = subproblem.GetInitialPoint();
+  std::cout << "initial point (set by problem.nl) is: \n" << this->y0 << "\n";
+
+  this->y0 = subproblem.FindFeasiblePoint();
+
+  std::cout << "initial point (found as a feasible one) is: \n" << this->y0 << "\n";
+
   lagabsvalMin = settings->parameters().min_lagrange_abs_val;
   //this->y0[2] = 10 - 3;
   //std::cout << "y0\n" << y0 << "\ny0this\n" << this->y0 << "\n";
@@ -533,6 +564,7 @@ void DFO_Model::update(Eigen::MatrixXd yNews, Eigen::VectorXd fvalNews, Eigen::M
   }
 }
 
+
 void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, Eigen::VectorXd grad, unsigned int t, UpdateReason updateReason) {
   int oldBestPointIndex = bestPointIndex;
   int oldBestFval = fvals[bestPointIndex - 1];
@@ -540,6 +572,9 @@ void DFO_Model::update(Eigen::VectorXd yNew, double fvalNew, Eigen::VectorXd gra
 
 
   if (updateReason == INCLUDE_NEW_OPTIMUM) {
+    // Storing the lagrange multipliers...
+    lagrangeMultipliers = subproblem.getLagrangeMultipliers();
+
     if (fvalNew < bestPointAllTimeFunctionValue) {
       bestPointAllTimeFunctionValue = fvalNew;
       bestPointAllTime = yNew;
@@ -992,8 +1027,8 @@ void DFO_Model::findWorstPointInInterpolationSet(Eigen::VectorXd &dNew, int &ind
     vector<double> xsolMin;
     vector<double> fsolMin;
     //PrintLagrangePolynomial(t);
-    subproblem.Solve(xsolMax, fsolMax, (char *) "Maximize", y0, bestPoint,bestPoint);
-    subproblem.Solve(xsolMin, fsolMin, (char *) "Minimize", y0, bestPoint,bestPoint);
+    subproblem.Solve(xsolMax, fsolMax, (char *) "Maximize", y0, bestPoint,Y.col(t-1));
+    subproblem.Solve(xsolMin, fsolMin, (char *) "Minimize", y0, bestPoint,Y.col(t-1));
     poisedness(t-1) = std::max(abs(fsolMax[0]),abs(fsolMin[0]));
 
     Eigen::VectorXd d1(n);
@@ -1772,8 +1807,6 @@ Eigen::VectorXd DFO_Model::FindLocalOptimum() {
   //subproblem.printModel();
 
   /// The enhanced model;
-  Eigen::MatrixXd der(0,0);
-  Eigen::VectorXd der0(0);
   enhancedModel.ComputeModel(Y, derivatives, derivativeAtCenterpoint, fvals, y0, bestPoint, rho, r,ng);
   double e_c = 0;
   Eigen::VectorXd e_g(n);
@@ -1891,8 +1924,8 @@ Eigen::VectorXd DFO_Model::FindLocalOptimumOfAbsoluteLagrangePolynomial(int t) {
   vector<double> fsolMax;
   vector<double> xsolMin;
   vector<double> fsolMin;
-  subproblem.Solve(xsolMax, fsolMax, (char *) "Maximize", y0, bestPoint, bestPoint);
-  subproblem.Solve(xsolMin, fsolMin, (char *) "Minimize", y0, bestPoint, bestPoint);
+  subproblem.Solve(xsolMax, fsolMax, (char *) "Maximize", y0, bestPoint, Y.col(t-1));
+  subproblem.Solve(xsolMin, fsolMin, (char *) "Minimize", y0, bestPoint, Y.col(t-1));
 
 
   Eigen::VectorXd optimum(n);
@@ -1932,7 +1965,7 @@ Eigen::VectorXi DFO_Model::GetInterpolationPointsSortedByDistanceFromBestPoint()
     t(n) = i + 1;
     tmp.push_back(t);
   }
-  std::sort(tmp.begin(), tmp.end(), cmp);
+  std::sort(tmp.begin(), tmp.end(), cmp2);
 
   Eigen::VectorXi indicesSortedByDescendingNorm(m);
   for (int i = 0; i < m; ++i) {
@@ -2187,9 +2220,17 @@ bool DFO_Model::FindReplacementForPointsOutsideRadius(double radius, Eigen::Matr
 
 
   //newIndices = Eigen::VectorXi(sortedPoints.rows());
+  std::cout << "number of points outside: " << number_of_points_outside <<"\n";
   newIndices.resize(number_of_points_outside);
+  std::cout << "size of newIndices: " << newIndices.rows() <<"\n";
+
   for (int i = 0; i < number_of_points_outside; ++i){
     newIndices(i) = -1;
+  }
+
+  std::cout << "newindices\n";
+  for (int i = 0; i < number_of_points_outside; ++i){
+    std::cout << newIndices(i) << "\n ";
   }
 
   subproblem.SetTrustRegionRadius((radius/r)*0.9);
@@ -2872,7 +2913,8 @@ void DFO_Model::isInterpolatingEnhanced(){
 
 void DFO_Model::Converged(int iterations, int number_of_tiny_improvements, int number_of_function_calls, int number_of_parallell_function_calls){
   {
-    Eigen::VectorXd gradient =GetGradientAtPoint(GetBestPoint());
+    //Eigen::VectorXd gradient =GetGradientAtPoint(GetBestPoint());
+    Eigen::VectorXd gradient =GetLagrangianGradient (GetBestPoint());
     Eigen::MatrixXd Yabs(n, m);
     for (int j = 0; j < m; ++j) {
       Eigen::VectorXd sd = (Y).col(j) + getCenterPoint();
@@ -2911,6 +2953,7 @@ void DFO_Model::Converged(int iterations, int number_of_tiny_improvements, int n
     printParametersMatlabFriendlyFromLagrangePolynomials();
     printParametersMatlabFriendlyGradientEnhanced();
     //DFO_model_.printParametersMatlabFriendlyGradientEnhanced();
+    subproblem.SolveVirtualSimulator();
     std::cout << "Best point (absolute):\n" << getCenterPoint() + GetBestPoint()
               << "\nWith value: " << GetFunctionValue(getBestPointIndex()) << "\n";
 
@@ -2933,7 +2976,7 @@ void DFO_Model::Converged(int iterations, int number_of_tiny_improvements, int n
     std::cout << "test: \n" << test + getCenterPoint() << std::endl;
 
 
-
+    subproblem.evaluateConstraints(getCenterPoint() + GetBestPoint());
     std::cin.get();}
 }
 
@@ -3043,5 +3086,18 @@ bool DFO_Model::ModelImprovementAlgorithm(double radius, Eigen::MatrixXd &newPoi
 
   return (number_of_new_points ==  0);
 }
+
+// Will only be valid for bestpoint, because the lagrange multipliers are found for that point.
+Eigen::VectorXd DFO_Model::GetLagrangianGradient(Eigen::VectorXd point) {
+  Eigen::VectorXd lagGrad(n);
+  lagGrad = GetGradientAtPoint(point);
+  Eigen::MatrixXd conGrad = subproblem.getGradientConstraints(point + y0);
+  for (int i = 0; i < subproblem.getNumberOfConstraints(); i++){
+    lagGrad -= lagrangeMultipliers[i]* ((conGrad.row(i)).transpose());
+  }
+  return lagGrad;
+}
+
+
 }
 }

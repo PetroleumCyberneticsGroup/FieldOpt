@@ -30,8 +30,8 @@ class DFO_Model {
 
  private:
 
-
-  static int const normType = 0;
+  Eigen::VectorXd lagrangeMultipliers;
+  const int normType;
   double lagabsvalMin = 0.5; // works ok: 0.001
 
   Settings::Optimizer *settings_;
@@ -178,7 +178,7 @@ class DFO_Model {
   double evaluateLowerBoundQuadraticPolynomial(double radius, double b, int type);
 
 
-  static bool cmp(Eigen::VectorXd a,Eigen::VectorXd b);
+  bool cmp(Eigen::VectorXd a,Eigen::VectorXd b);
 
  public:
   //EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -222,7 +222,7 @@ class DFO_Model {
             QList<double> weights_derivatives,
             Settings::Optimizer *settings);
 
-  DFO_Model() {};
+  DFO_Model() : normType(0) {};
 
   /**
   Finds the first set of interpolation points.
@@ -536,7 +536,7 @@ class DFO_Model {
 
   int GetNumberOfPointsOutsideRadius(double radius);
 
-  static double norm(Eigen::VectorXd a);
+  double norm(Eigen::VectorXd a);
 
 
   void calculatePolynomialModelDirectlyFromWinverse();
@@ -560,6 +560,11 @@ class DFO_Model {
   void createW();
   int IsModelCFL(){
     return isModelCFL;
+  }
+  Eigen::VectorXd GetLagrangianGradient(Eigen::VectorXd point);
+
+  void initLagrangeMultipliers(int a){
+    lagrangeMultipliers = Eigen::VectorXd::Zero(a);
   }
 
   bool ModelImprovementAlgorithm(double radius, Eigen::MatrixXd &newPoints, Eigen::VectorXi& newIndices);

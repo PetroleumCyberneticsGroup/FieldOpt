@@ -203,6 +203,11 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
       if (json_parameters.contains("MaxTrustRegionRadius"))
         parameters_.max_trust_region_radius = json_parameters["MaxTrustRegionRadius"].toDouble();
       else parameters_.max_trust_region_radius = 20;
+
+      if (json_parameters.contains("NormType"))
+        parameters_.norm_type = json_parameters["NormType"].toInt();
+      else parameters_.norm_type = 0;
+
       if (json_parameters.contains("WeightModelDeterminationMinimumChangeHessian"))
         parameters_.weight_model_determination_minimum_change_hessian = json_parameters["WeightModelDeterminationMinimumChangeHessian"].toDouble();
       else parameters_.weight_model_determination_minimum_change_hessian = 0.1;
@@ -213,6 +218,10 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
           parameters_.weights_distance_from_optimum_lsq.append(json_parameters["WeightsDistanceFromOptimumLSQ"].toArray().at(i).toDouble());
         }
       }
+
+      if (json_parameters.contains("TestProblemFile"))
+        parameters_.test_problem_file = (json_parameters["TestProblemFile"].toString()).toStdString();
+      else parameters_.test_problem_file = "/home/joakim/git/casadi/docs/examples/nl_files/nlTestSet/qptest1.nl";
 
       if (json_parameters.contains("StartingPoint")) {
         parameters_.starting_point = QList<double>();
