@@ -183,18 +183,18 @@ QList<WellBlock *> *WellSpline::GetWellBlocks(int rank) {
 
 
   // PCG WIC ---------------------------------------------------------
-  // start = QDateTime::currentDateTime();
-  // auto wic = WellIndexCalculator(grid_);
+   start = QDateTime::currentDateTime();
+   auto wic = WellIndexCalculator(grid_);
 
-  // map<string, vector<IntersectedCell>> well_block_data_pcg;
-  // wic.ComputeWellBlocks(well_block_data_pcg, welldefs, rank);
-  // auto block_data_pcg = well_block_data_pcg[well_settings_.name.toStdString()];
+   map<string, vector<IntersectedCell>> well_block_data_pcg;
+   wic.ComputeWellBlocks(well_block_data_pcg, welldefs, rank);
+   auto block_data_pcg = well_block_data_pcg[well_settings_.name.toStdString()];
 
-  // Dbg file
-  // time_cwb_wic_pcg_ = time_span_secs(start, QDateTime::currentDateTime());
-  // print_dbg_msg_wellspline(__func__, "cwb-pcg", time_cwb_wic_pcg_, lvl, 1);
-  // print_dbg_msg_wellspline_wic_coords(__func__, "wicalc_pcg.dbg", well_settings_,
-  //                                    block_data_pcg, lvl, 1);
+   // Dbg file
+   time_cwb_wic_pcg_ = time_span_secs(start, QDateTime::currentDateTime());
+   print_dbg_msg_wellspline(__func__, "cwb-pcg", time_cwb_wic_pcg_, lvl, 1);
+   print_dbg_msg_wellspline_wic_coords(__func__, "wicalc_pcg.dbg", well_settings_,
+                                      block_data_pcg, lvl, 1);
 
   // Collect: select b/e pcg or rixx data --------------------------
   // auto block_data = block_data_pcg;

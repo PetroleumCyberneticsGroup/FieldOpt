@@ -148,14 +148,19 @@ void inline print_dbg_msg_wellspline_wic_coords(
   ofstream wicalc_file;
   wicalc_file.open (fn, ios::app); // ios::ate, ios::out
   IOFormat CleanFmt(3, 0, " ", "  ", "", "", "[", "] ");
-  string GIDXh, IJKh, WIh, DXDYDZh, ENTRYPTh, EXITPTh;
+  string GIDXh, IJKh, WIh, WIXYZh, ENTRYPTh, EXITPTh,
+      PERMXYZh, CELLDXDYDZh, PROJXYZLENGTH;
 
   GIDXh = " GIDX ";
   IJKh = "=== IJK ===   ";
-  WIh = "= WI =  ";
-  DXDYDZh = "== DXDYDZ ==  ";
-  ENTRYPTh = "============ XYZ ENTRY POINT ========   ";
-  EXITPTh = "============ XYZ EXIT POINT =========  ";
+  WIh = "= WI = ";
+  WIXYZh = "======== WIXYZ ========  ";
+  ENTRYPTh = "=========== XYZ ENTRY POINT ========  ";
+  EXITPTh =  "============ XYZ EXIT POINT ========  ";
+
+  PERMXYZh =  "============== PERMXYZ ===============  ";
+  CELLDXDYDZh =  "==== CELLDXDYDZ ====  ";
+    PROJXYZLENGTH = "==== PROJXYZLENGTH ====  ";
 
   int wi_p = 3;
   int dx_p = 1;
@@ -168,7 +173,11 @@ void inline print_dbg_msg_wellspline_wic_coords(
   if (block_data.size() > 0) {
 
     // Print header
-    wicalc_file << GIDXh << IJKh << WIh << ENTRYPTh << EXITPTh << DXDYDZh << endl;
+    wicalc_file << GIDXh << IJKh << WIh << WIXYZh
+                << ENTRYPTh << EXITPTh
+                << PERMXYZh << CELLDXDYDZh
+                << PROJXYZLENGTH
+                << endl;
 
     // Print well name
     wicalc_file << well_settings.name.toStdString() << endl;
@@ -190,6 +199,13 @@ void inline print_dbg_msg_wellspline_wic_coords(
     // WI
     wicalc_file << fixed << setw(9) << setprecision(wi_p) << right;
     wicalc_file << block_data[0].cell_well_index_matrix();
+
+    // WIX / WIY / WIZ
+    wicalc_file << setw(3) << " [";
+    wicalc_file << fixed << setprecision(tx_p) << right;
+    wicalc_file << setw(6) << right << block_data[0].get_calculation_data()["wx_m"].at(0) << " "
+                << setw(6) << right << block_data[0].get_calculation_data()["wy_m"].at(0) << " "
+                << setw(6) << right << block_data[0].get_calculation_data()["wz_m"].at(0) << "] ";
 
     // ENTRY / EXIT POINTS
     wicalc_file << setw(2) << " ["
@@ -217,13 +233,6 @@ void inline print_dbg_msg_wellspline_wic_coords(
                 << setw(5) << right << block_data[0].get_calculation_data()["dy"].at(0) << " "
                 << setw(5) << right << block_data[0].get_calculation_data()["dz"].at(0) << "] ";
 
-    // TX / TY / TZ
-    wicalc_file << setw(3) << "T=[";
-    wicalc_file << fixed << setprecision(tx_p) << right;
-    wicalc_file << setw(6) << right << block_data[0].get_calculation_data()["wx_m"].at(0) << " "
-                << setw(6) << right << block_data[0].get_calculation_data()["wy_m"].at(0) << " "
-                << setw(6) << right << block_data[0].get_calculation_data()["wz_m"].at(0) << "] ";
-
     // LX / LY / LZ
     wicalc_file << "L=[";
     wicalc_file << fixed << setprecision(lx_p) << right;
@@ -232,7 +241,7 @@ void inline print_dbg_msg_wellspline_wic_coords(
                 << setw(5) << right << block_data[0].get_calculation_data()["Lz"].at(0) << "] ";
 
     // XV / YV / ZV
-    if (fn == "wicalc_pcg.dbg") {
+    if (fn == "wicalc_pcg.dbg" && false) {
       auto xvec = block_data[0].get_calculation_data_3d()["xvec"].at(0);
       auto yvec = block_data[0].get_calculation_data_3d()["yvec"].at(0);
       auto zvec = block_data[0].get_calculation_data_3d()["zvec"].at(0);
@@ -305,6 +314,13 @@ void inline print_dbg_msg_wellspline_wic_coords(
       wicalc_file << fixed << setw(9) << setprecision(wi_p) << right;
       wicalc_file << block_data[i].cell_well_index_matrix();
 
+      // WIX / WIY / WIZ
+      wicalc_file << setw(3) << " [";
+      wicalc_file << fixed << setprecision(tx_p) << right;
+      wicalc_file << setw(6) << right << block_data[i].get_calculation_data()["wx_m"].at(0) << " "
+                  << setw(6) << right << block_data[i].get_calculation_data()["wy_m"].at(0) << " "
+                  << setw(6) << right << block_data[i].get_calculation_data()["wz_m"].at(0) << "] ";
+
       wicalc_file << setw(2) << " ["
                   << setprecision(3) << fixed << right
                   << setw(10) << entry_pt(0) << " "
@@ -330,13 +346,6 @@ void inline print_dbg_msg_wellspline_wic_coords(
                   << setw(5) << right << block_data[i].get_calculation_data()["dy"].at(0) << " "
                   << setw(5) << right << block_data[i].get_calculation_data()["dz"].at(0) << "] ";
 
-      // TX / TY / TZ
-      wicalc_file << setw(3) << "T=[";
-      wicalc_file << fixed << setprecision(tx_p) << right;
-      wicalc_file << setw(6) << right << block_data[i].get_calculation_data()["wx_m"].at(0) << " "
-                  << setw(6) << right << block_data[i].get_calculation_data()["wy_m"].at(0) << " "
-                  << setw(6) << right << block_data[i].get_calculation_data()["wz_m"].at(0) << "] ";
-
       // LX / LY / LZ
       wicalc_file << "L=[";
       wicalc_file << fixed << setprecision(lx_p) << right;
@@ -345,28 +354,31 @@ void inline print_dbg_msg_wellspline_wic_coords(
                   << setw(5) << right << block_data[i].get_calculation_data()["Lz"].at(0) << "] ";
 
       // XV / YV / ZV
-      if (fn == "wicalc_pcg.dbg") {
+      if (fn == "wicalc_pcg.dbg" && false) {
         auto xvec = block_data[i].get_calculation_data_3d()["xvec"].at(0);
         auto yvec = block_data[i].get_calculation_data_3d()["yvec"].at(0);
         auto zvec = block_data[i].get_calculation_data_3d()["zvec"].at(0);
         auto cvec = block_data[i].get_calculation_data_3d()["cvec"].at(0);
-        wicalc_file << "V=[";
+        wicalc_file << "VX=[";
         wicalc_file << fixed << setprecision(vx_p) << right
                     << setw(7) << right << xvec(0) << " "
                     << setw(7) << right << xvec(1) << " "
-                    << setw(7) << right << xvec(2) << "] ["
+                    << setw(7) << right << xvec(2) << "] "
                     //
+                    << "VY=["
                     << setw(7) << right << yvec(0) << " "
                     << setw(7) << right << yvec(1) << " "
-                    << setw(7) << right << yvec(2) << "] ["
+                    << setw(7) << right << yvec(2) << "] "
                     //
+                    << "VZ=["
                     << setw(7) << right << zvec(0) << " "
                     << setw(7) << right << zvec(1) << " "
-                    << setw(7) << right << zvec(2) << "] ["
+                    << setw(7) << right << zvec(2) << "] "
                     //
+                    << "VC=["
                     << setw(7) << right << cvec(0) << " "
                     << setw(7) << right << cvec(1) << " "
-                    << setw(7) << right << cvec(2) << "] ";
+            << setw(7) << right << cvec(2) << "] ";
 
         // (*** WRONG ***) CURRENT_VECTOR(cv) -- PROJECTED ONTO -- XVEC(xv) / YVEC(yv) / ZVEC(zv) CELL_SIDES
         wicalc_file << "L_CV_XV=[";
@@ -382,7 +394,7 @@ void inline print_dbg_msg_wellspline_wic_coords(
                     << setw(11) << right << block_data[i].get_calculation_data()["current_Ly__yv_onto_cv"].at(0) << " "
                     << setw(8)  << right << block_data[i].get_calculation_data()["current_Lz__zv_onto_cv"].at(0) << "] ";
 
-        wicalc_file << "C=[";
+        wicalc_file << "CRNRS=[";
         for (int j=0; j < block_data[i].corners().size(); j++){
           wicalc_file << setprecision(cx_p) << "("
                       << setw(10) << right << block_data[i].corners()[j].x() << " "
