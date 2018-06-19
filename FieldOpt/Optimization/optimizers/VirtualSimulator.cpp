@@ -16,7 +16,8 @@ VirtualSimulator::VirtualSimulator(std::string problemFile) {
   g = casadi::Function("obj", f2, gcat);
   gj = g.factory("jacg", {f.name_in()},{"jac:o0:i0","o0"});
   input = {casadi::DM(nl.x_init)}; // set the correct size of input.
-  
+
+  m_ = GetNumberOfConstraints();
 }
 VirtualSimulator::VirtualSimulator() {
 

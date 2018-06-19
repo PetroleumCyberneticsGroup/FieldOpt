@@ -568,7 +568,12 @@ class DFO_Model {
   }
 
   bool ModelImprovementAlgorithm(double radius, Eigen::MatrixXd &newPoints, Eigen::VectorXi& newIndices);
-  };
+
+  void calculateLagrangeMultipliers();
+
+  void replaceSinglePoint(Eigen::VectorXd &dNew, double radius);
+
+};
 }
 }
 

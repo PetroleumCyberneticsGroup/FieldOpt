@@ -9,8 +9,6 @@
 #include <iomanip>
 #include <casadi/casadi.hpp>
 
-
-
 #define FIND_POINTS1 0
 #define FIND_POINTS2 1
 #define INITIALIZE_MODEL 2
@@ -55,16 +53,17 @@ Eigen::VectorXd test(Eigen::VectorXd x) {
   return ret;
 }
 
-Eigen::VectorXd evaluateFunctionVS(Eigen::VectorXd x, int ng){
-  Eigen::VectorXd result(1+ng);
+Eigen::VectorXd evaluateFunctionVS(Eigen::VectorXd x, int ng) {
+  Eigen::VectorXd result(1 + ng);
   result(0) = vs.evaluateFunction(x);
-  std::cout << "input is:\n" << x << "\noutput is: " << result(0) << "\noutput should have been: " << (1-x[0])*(1-x[0]) + 100*(x[1]-x[0]*x[0]) + 9*x[1] << "\n";
+  std::cout << "input is:\n" << x << "\noutput is: " << result(0) << "\noutput should have been: "
+            << (1 - x[0]) * (1 - x[0]) + 100 * (x[1] - x[0] * x[0]) + 9 * x[1] << "\n";
 
   Eigen::VectorXd gradients1 = vs.evaluateFunctionGradients(x);
   Eigen::VectorXd grads = gradients1.tail(ng);
-  for (int i = 0; i < grads.rows(); ++i){
+  for (int i = 0; i < grads.rows(); ++i) {
     //result(i+1) = grads(grads.rows()-1-i);
-    result(i+1) = grads(i);
+    result(i + 1) = grads(i);
   }
   //result(1) = -1;
   //result(2) = -1;
@@ -72,24 +71,25 @@ Eigen::VectorXd evaluateFunctionVS(Eigen::VectorXd x, int ng){
   return result;
 }
 
-Eigen::VectorXd  sphere(Eigen::VectorXd x, int ng) {
-  Eigen::VectorXd result(1+ng);
-  x(0) = x(0)/100;
-  Eigen::VectorXd scaledX = x*10;
+Eigen::VectorXd sphere(Eigen::VectorXd x, int ng) {
+  Eigen::VectorXd result(1 + ng);
+  x(0) = x(0) / 100;
+  Eigen::VectorXd scaledX = x * 10;
   double val = 0;
   for (int i = 0; i < x.rows(); i++) {
-    val += (x(i) ) * (x(i) );
+    val += (x(i)) * (x(i));
 //    val += (x(i)  - 23 ) * (x(i) - 4);
   }
   double val2 = 0.26 * (x(0) * x(0) + x(1) * x(1)) - 0.46 * x(0) * x(1);
-  double valros = (x(0)-1)*(x(0)-1) + 100*(x(1)  - x(0)*x(0))*(x(1)  - x(0)*x(0));
-  double valSixHump = (4-2.1*x(0)*x(0) + 1.0/3.0*x(0)*x(0)*x(0)*x(0))*x(0)*x(0) + x(0)*x(1) + 4*(x(1)*x(1)-1)*x(1)*x(1);
-  double valXinSheYangs = (std::abs(x(0))+std::abs(x(1)))*std::exp(-std::sin(x(0)*x(0)) - std::sin(x(1)*x(1)));
+  double valros = (x(0) - 1) * (x(0) - 1) + 100 * (x(1) - x(0) * x(0)) * (x(1) - x(0) * x(0));
+  double valSixHump = (4 - 2.1 * x(0) * x(0) + 1.0 / 3.0 * x(0) * x(0) * x(0) * x(0)) * x(0) * x(0) + x(0) * x(1)
+      + 4 * (x(1) * x(1) - 1) * x(1) * x(1);
+  double valXinSheYangs = (std::abs(x(0)) + std::abs(x(1))) * std::exp(-std::sin(x(0) * x(0)) - std::sin(x(1) * x(1)));
   //double valAbs = std::abs(x(0)) + std::abs(x(1));
   double valAbs = std::abs(x(0)) + std::abs(x(1));
-  double funky = std::abs(x(0)) + x(1)*x(1)*10;
+  double funky = std::abs(x(0)) + x(1) * x(1) * 10;
   result(0) = val2;
-  if (ng > 0){
+  if (ng > 0) {
     //for (int i = ng; i >= 1; ++i){
     //  result(i) = 2*x(i-1);
     //}
@@ -106,12 +106,12 @@ Eigen::VectorXd  sphere(Eigen::VectorXd x, int ng) {
       result(5) = 2*x(0);
     */
 
-    result(1) = 0.26*2*x(1) - 0.46*x(0);
-    if (ng >= 2){
-      result(2) = 0.26*2*x(0)- 0.46*x(1);
+    result(1) = 0.26 * 2 * x(1) - 0.46 * x(0);
+    if (ng >= 2) {
+      result(2) = 0.26 * 2 * x(0) - 0.46 * x(1);
     }
     //if (ng == 2)
-      //result(1) = 2*x(1)*10 ;
+    //result(1) = 2*x(1)*10 ;
 
     //if (ng == 2)
     //  result(2) = 2*x(0);
@@ -124,7 +124,7 @@ Eigen::VectorXd  sphere(Eigen::VectorXd x, int ng) {
 }
 
 double sphereorg(Eigen::VectorXd x) {
-  Eigen::VectorXd scaledX = x*10;
+  Eigen::VectorXd scaledX = x * 10;
   double val = 0;
   for (int i = 0; i < x.rows(); i++) {
     val += (x(i) - 10) * (x(i) - 10);
@@ -239,16 +239,16 @@ DFO::DFO(Settings::Optimizer *settings,
 
   // Set up the DFO model.
   Eigen::VectorXd initialStartPoint = base_case->GetRealVarVector();
-  auto as =base_case->GetRealVarIdVector(); //QList<QUuid>
+  auto as = base_case->GetRealVarIdVector(); //QList<QUuid>
   auto aa = base_case->real_variables(); // QHash<QUuid, double>
 
 
 
-  for (int i = 0; i < 6; i++){
+  for (int i = 0; i < 6; i++) {
     std::cout << aa[as.at(i)] << "\n";
     as.at(i);
   }
-  std::cout  << "\n";
+  std::cout << "\n";
 
 
   /// Testing snopt solver
@@ -529,8 +529,8 @@ DFO::DFO(Settings::Optimizer *settings,
 
 
 
- //std::cout << "Reached the end of DFO constructor\n";
- //std::cin.get();
+  //std::cout << "Reached the end of DFO constructor\n";
+  //std::cin.get();
 
 }
 /*
@@ -546,7 +546,7 @@ void DFO::handleEvaluatedCase(Optimization::Case *c) {
 void DFO::iterate() {
 
   //std::string problem =  "/home/joakim/git/casadi/docs/examples/nl_files/hs107.nl";
-  std::string problem =  "/home/joakim/git/casadi/docs/examples/nl_files/nlTestSet/qptest1.nl";
+  std::string problem = "/home/joakim/git/casadi/docs/examples/nl_files/nlTestSet/qptest1.nl";
 
   // Parse an NL-file
   casadi::NlpBuilder nl;
@@ -566,7 +566,6 @@ void DFO::iterate() {
   auto out = f(a);
   std::cout << "obj = " << (out[0]) << std::endl;
 
-
   auto rows = a[0].size1();
 
   /*
@@ -579,7 +578,7 @@ void DFO::iterate() {
   std::memcpy(d.data(), dense_a.ptr(), sizeof(double)*rows);
   std::cout<< "\n"  << d << std::endl;
 */
-  casadi::Function fj = f.factory("jacf", {f.name_in()},{"jac:o0:i0","o0"});
+  casadi::Function fj = f.factory("jacf", {f.name_in()}, {"jac:o0:i0", "o0"});
   auto out_fj = fj(a);
   std::cout << "out_fj =\n " << (out_fj[0]) << std::endl;
 
@@ -588,9 +587,9 @@ void DFO::iterate() {
   auto gcat = {casadi::MX::vertcat(nl.g)};
   casadi::Function g = casadi::Function("obj", f2, gcat);
   auto out_g = g(a);
-  std::cout << "constraints\n" <<out_g[0] <<"\n";
+  std::cout << "constraints\n" << out_g[0] << "\n";
 
-  casadi::Function gj = g.factory("jacg", {f.name_in()},{"jac:o0:i0","o0"});
+  casadi::Function gj = g.factory("jacg", {f.name_in()}, {"jac:o0:i0", "o0"});
   auto out_gj = gj(a);
   auto dd = out_gj[0];
   auto dd_dens = casadi::DM::densify(dd);
@@ -686,7 +685,7 @@ void DFO::iterate() {
   /*
   Need the fval... the rest is already known.
   */
-  int number_of_tiny_improvements  = 0;
+  int number_of_tiny_improvements = 0;
   // This loop is used for testing. Instead of running simulations, a simple analytical function is used.
   // Most of the content in this loop should be in "iterate()", when the testing is done.
   double r =
@@ -717,10 +716,9 @@ void DFO::iterate() {
   Eigen::MatrixXd *refY = DFO_model_.getYReference();
   Eigen::MatrixXd *refDerivatives = DFO_model_.getDerivativeReference();
 
-  for (int i = 0; i<number_of_interpolation_points_; ++i){
+  for (int i = 0; i < number_of_interpolation_points_; ++i) {
     (*refFuncVals)(i) = -1;
   }
-
 
   int number_of_new_points = 0;
   int number_of_function_calls = 0;
@@ -740,11 +738,11 @@ void DFO::iterate() {
   bool force_criticality_step = false;
   {
     Eigen::VectorXd tmp = DFO_model_.getCenterPoint();
-  for (int i = 0; i < number_of_variables_; ++i){
-    last_trial_point (i) = tmp(i) + DFO_model_.GetTrustRegionRadius()*(2*r)*10;
+    for (int i = 0; i < number_of_variables_; ++i) {
+      last_trial_point(i) = tmp(i) + DFO_model_.GetTrustRegionRadius() * (2 * r) * 10;
+    }
   }
-  }
-  Eigen::VectorXd tmp_eval(1+ng);
+  Eigen::VectorXd tmp_eval(1 + ng);
 
   next_step_ = FIND_POINTS1;
   bool is_model_CFL = false; //false means we don't know.
@@ -755,9 +753,8 @@ void DFO::iterate() {
   double multiple_new_points = false;
   int number_of_points_first_set = 0;
 
-
   while (notConverged) {
-print:
+    print:
     std::cout << "\033[1;34;m " << " ---------- New iterate " << iterations_ << " ---------- " << "\033[0m"
               << std::endl;
     std::cout << "\033[1;34;m " << "Fvals = \n" << "\033[0m" << *refFuncVals << "\n";
@@ -775,8 +772,8 @@ print:
 
     /// --------------------------------------------------------------------------------------------------------------------------------
 
-top:
-    if (next_step_ == FIND_POINTS1){
+    top:
+    if (next_step_ == FIND_POINTS1) {
       new_points = DFO_model_.findFirstSetOfInterpolationPoints();
       new_points_indicies.resize(new_points.cols());
       number_of_points_first_set = new_points.cols();
@@ -784,10 +781,7 @@ top:
       multiple_new_points = true;
       set_next_step(FIND_POINTS2);
       goto evaluate;
-    }
-
-
-    else if (next_step_== FIND_POINTS2){
+    } else if (next_step_ == FIND_POINTS2) {
       // add the points.
       for (int i = 0; i < number_of_new_points; ++i) {
         //DFO_model_.SetFunctionValue(i + 1, function_evaluations[i]);
@@ -796,12 +790,11 @@ top:
 
       set_next_step(INITIALIZE_MODEL);
       // find the remaining points.
-      if (number_of_interpolation_points_ == number_of_function_calls){
+      if (number_of_interpolation_points_ == number_of_function_calls) {
         // All points are found.
         number_of_new_points = 0;
         goto top;
-      }
-      else{
+      } else {
         number_of_new_points = number_of_interpolation_points_ - number_of_function_calls;
         new_points_indicies.resize(number_of_new_points);
         new_points.resize(number_of_variables_, number_of_new_points);
@@ -809,165 +802,153 @@ top:
         multiple_new_points = true;
         goto evaluate;
       }
-    }
-
-    else if (next_step_== INITIALIZE_MODEL){
-      if (number_of_new_points != 0){
+    } else if (next_step_ == INITIALIZE_MODEL) {
+      if (number_of_new_points != 0) {
         // Add the points
         for (int i = 0; i < number_of_new_points; ++i) {
           //DFO_model_.SetFunctionValue(i + 1, function_evaluations[i - number_of_new_points]);
-          DFO_model_.SetFunctionValueAndDerivatives(number_of_points_first_set + i + 1, function_evaluations(i), new_gradients.col(i));
+          DFO_model_.SetFunctionValueAndDerivatives(number_of_points_first_set + i + 1,
+                                                    function_evaluations(i),
+                                                    new_gradients.col(i));
         }
       }
 
       DFO_model_.initializeModel();
       set_next_step(CRITICALITY_STEP_START);
       goto print;
-    }
-
-    else if (next_step_== CRITICALITY_STEP_START){
+    } else if (next_step_ == CRITICALITY_STEP_START) {
       //Eigen::VectorXd gradient = DFO_model_.GetGradientAtPoint(DFO_model_.GetBestPoint());
       Eigen::VectorXd gradient = DFO_model_.GetLagrangianGradient(DFO_model_.GetBestPoint());
-      if ((gradient.norm() > epsilon_c && force_criticality_step==false
-          && number_of_crit_step_finished_without_checking_poisedness <= 4) ){
+      if ((gradient.norm() > epsilon_c && force_criticality_step == false
+          && number_of_crit_step_finished_without_checking_poisedness <= 4)) {
         DFO_model_.SetTrustRegionRadius(trust_region_radius_icb);
         set_next_step(FIND_TRIAL_POINT);
         number_of_crit_step_finished_without_checking_poisedness++;
         goto top;
-      }
-      else{
+      } else {
         number_of_crit_step_finished_without_checking_poisedness = 0;
-        bool is_poised = DFO_model_.ModelImprovementAlgorithm(r*trust_region_radius_icb, new_points, new_points_indicies);
-        if ( (!is_poised) || (trust_region_radius_icb > u*gradient.norm()) ) {
+        bool is_poised =
+            DFO_model_.ModelImprovementAlgorithm(r * trust_region_radius_icb, new_points, new_points_indicies);
+        if ((!is_poised) || (trust_region_radius_icb > u * gradient.norm())) {
           criticality_step_iteration = 0;
-          if (is_poised){
+          if (is_poised) {
             force_criticality_step = false;
             set_next_step(CRITICALITY_STEP_CHECK_CONVERGENCE);
             goto top;
-          }
-          else{
+          } else {
             force_criticality_step = false;
             set_next_step(CRITICALITY_STEP_ADD_POINTS);
             multiple_new_points = true;
             goto evaluate;
           }
-        }
-        else{
-          if (force_criticality_step){
-            trust_region_radius_icb = trust_region_radius_icb*gamma;
+        } else {
+          if (force_criticality_step) {
+            trust_region_radius_icb = trust_region_radius_icb * gamma;
+            force_criticality_step = false;
             set_next_step(CRITICALITY_STEP_START);
-          }
-          else{
+          } else {
             DFO_model_.SetTrustRegionRadius(trust_region_radius_icb);
             set_next_step(FIND_TRIAL_POINT);
           }
           goto top;
         }
       }
-    }
-
-    else if (next_step_== CRITICALITY_STEP_ADD_POINTS){
+    } else if (next_step_ == CRITICALITY_STEP_ADD_POINTS) {
       // add the points
       Eigen::VectorXi dummyI;
       Eigen::MatrixXd dummyP;
-      bool is_poised = DFO_model_.ModelImprovementAlgorithm(r*trust_region_radius_tilde, dummyP, dummyI);
+      bool is_poised = DFO_model_.ModelImprovementAlgorithm(r * trust_region_radius_tilde, dummyP, dummyI);
       std::cout << "is_poised1 = " << is_poised << "\n";
-      DFO_model_.update(new_points, function_evaluations, new_gradients, new_points_indicies, number_of_new_points, DFO_Model::IMPROVE_POISEDNESS);
-      is_poised = DFO_model_.ModelImprovementAlgorithm(r*trust_region_radius_tilde, new_points, new_points_indicies);
+      DFO_model_.update(new_points,
+                        function_evaluations,
+                        new_gradients,
+                        new_points_indicies,
+                        number_of_new_points,
+                        DFO_Model::IMPROVE_POISEDNESS);
+      is_poised = DFO_model_.ModelImprovementAlgorithm(r * trust_region_radius_tilde, new_points, new_points_indicies);
       std::cout << "is_poised2 = " << is_poised << "\n";
       set_next_step(CRITICALITY_STEP_CHECK_CONVERGENCE);
       crit_steps++;
       goto print;
-    }
-
-
-    else if (next_step_== CRITICALITY_STEP_CHECK_CONVERGENCE){
+    } else if (next_step_ == CRITICALITY_STEP_CHECK_CONVERGENCE) {
       //Eigen::VectorXd gradient = DFO_model_.GetGradientAtPoint(DFO_model_.GetBestPoint());
       Eigen::VectorXd gradient = DFO_model_.GetLagrangianGradient(DFO_model_.GetBestPoint());
 
-      bool is_poised = DFO_model_.ModelImprovementAlgorithm(r*trust_region_radius_tilde, new_points, new_points_indicies);
+      bool is_poised =
+          DFO_model_.ModelImprovementAlgorithm(r * trust_region_radius_tilde, new_points, new_points_indicies);
 
-      if (trust_region_radius_tilde <= u*gradient.norm() && is_poised){
+      if (trust_region_radius_tilde <= u * gradient.norm() && is_poised) {
         // The radius have been reduced, and the gradient is now sufficient large. Proceed to find trial point.
         is_model_CFL = true;
-        if (iterations_ >= 62 ){
+        if (iterations_ >= 62) {
           std::cout << "iteration 62++\n";
         }
         double temp = max(trust_region_radius_tilde, beta * gradient.norm());
         double new_trust_region_radius = min(temp, trust_region_radius_icb);
         DFO_model_.SetTrustRegionRadius(new_trust_region_radius);
         set_next_step(FIND_TRIAL_POINT);
-        std::cout << "Criticality step iterations = " << criticality_step_iteration <<"\n";
+        std::cout << "Criticality step iterations = " << criticality_step_iteration << "\n";
         goto print;
-      }
-      else{
-
+      } else {
         do {
           //decrease radius. check poisedness.
           criticality_step_iteration++;
-          trust_region_radius_tilde = pow(w, (criticality_step_iteration-1))  * trust_region_radius_icb;
-          if (trust_region_radius_tilde <= trust_region_radius_end){
-            std::cout << "crit_steps: " << crit_steps << "\nmodel_impr: " << model_impr_steps << "\nacceptance: " << accept_steps <<"\n";
-            DFO_model_.Converged(iterations_, 0, number_of_function_calls,number_of_parallell_function_calls);
+          trust_region_radius_tilde = pow(w, (criticality_step_iteration - 1)) * trust_region_radius_icb;
+          if (trust_region_radius_tilde <= trust_region_radius_end) {
+            //std::cout << "crit_steps: " << crit_steps << "\nmodel_impr: " << model_impr_steps << "\nacceptance: " << accept_steps <<"\n";
+            //DFO_model_.Converged(iterations_, 0, number_of_function_calls,number_of_parallell_function_calls);
           }
-          is_poised = DFO_model_.ModelImprovementAlgorithm(r*trust_region_radius_tilde, new_points, new_points_indicies);
-        }
-        while(is_poised);
+          is_poised =
+              DFO_model_.ModelImprovementAlgorithm(r * trust_region_radius_tilde, new_points, new_points_indicies);
+        } while (is_poised);
+
         set_next_step(CRITICALITY_STEP_ADD_POINTS);
         number_of_new_points = new_points_indicies.rows();
         multiple_new_points = true;
         goto evaluate;
       }
+    } else if (next_step_ == FIND_TRIAL_POINT) {
 
-
-    }
-
-
-      else if (next_step_== FIND_TRIAL_POINT){
-
+      Eigen::VectorXd gradient = DFO_model_.GetLagrangianGradient(DFO_model_.GetBestPoint());
 
 
       /// Can add a test to see if currently best found point is "bestpoint"
       //DFO_model_.UpdateOptimum();
 
-      if (DFO_model_.GetTrustRegionRadius() <= trust_region_radius_end){
-        std::cout << "crit_steps: " << crit_steps << "\nmodel_impr: " << model_impr_steps << "\nacceptance: " << accept_steps <<"\n";
-        DFO_model_.Converged(iterations_, 0, number_of_function_calls,number_of_parallell_function_calls);
+      if (DFO_model_.GetTrustRegionRadius() <= trust_region_radius_end && gradient.norm() <= 0.01) {
+        std::cout << "crit_steps: " << crit_steps << "\nmodel_impr: " << model_impr_steps << "\nacceptance: "
+                  << accept_steps << "\n";
+        DFO_model_.Converged(iterations_, 0, number_of_function_calls, number_of_parallell_function_calls);
       }
       new_point = DFO_model_.FindLocalOptimum();
-      if ((new_point - last_trial_point).norm() <= 0.0000000000001){
+      if ((new_point - last_trial_point).norm() <= 0.0001*DFO_model_.GetTrustRegionRadius()) {
         force_criticality_step = true;
-        trust_region_radius_icb = gamma*DFO_model_.GetTrustRegionRadius();
+        trust_region_radius_icb = gamma * DFO_model_.GetTrustRegionRadius();
         set_next_step(CRITICALITY_STEP_START);
         goto top;
-      }
-      else{
+      } else {
         last_trial_point = new_point;
-      double maxDistance = DFO_model_.findLargestDistanceBetweenPointsAndOptimum();
-      if (DFO_model_.norm((new_point - DFO_model_.GetBestPoint())) < tau * maxDistance) {
-        // Too close.
-        if (!is_model_CFL){
-          is_model_CFL = DFO_model_.isPoised(new_point, new_point_index, DFO_model_.GetTrustRegionRadius());
-        }
-        if (is_model_CFL){
-          set_next_step(TRUST_REGION_RADIUS_UPDATE_STEP);
-          goto top;
-        }
-        else{
-          set_next_step(MODEL_IMPROVEMENT_STEP_START);
-          goto top;
+        double maxDistance = DFO_model_.findLargestDistanceBetweenPointsAndOptimum();
+        if (DFO_model_.norm((new_point - DFO_model_.GetBestPoint())) < tau * maxDistance) {
+          // Too close.
+          if (!is_model_CFL) {
+            is_model_CFL = DFO_model_.isPoised(new_point, new_point_index, DFO_model_.GetTrustRegionRadius());
+          }
+          if (is_model_CFL) {
+            set_next_step(TRUST_REGION_RADIUS_UPDATE_STEP);
+            goto top;
+          } else {
+            set_next_step(MODEL_IMPROVEMENT_STEP_START);
+            goto top;
+          }
+        } else {
+          set_next_step(ACCEPTANCE_OF_TRIAL_POINT);
+          number_of_new_points = 0;
+          multiple_new_points = false;
+          goto evaluate;
         }
       }
-      else{
-        set_next_step(ACCEPTANCE_OF_TRIAL_POINT);
-        number_of_new_points = 0;
-        multiple_new_points = false;
-        goto evaluate;
-      }
-      }
-    }
-
-    else if (next_step_== ACCEPTANCE_OF_TRIAL_POINT){
+    } else if (next_step_ == ACCEPTANCE_OF_TRIAL_POINT) {
       accept_steps++;
       DFO_model_.SetTrustRegionRadiusForSubproblem(DFO_model_.GetTrustRegionRadius());
       int t = DFO_model_.findPointToReplaceWithNewOptimum(new_point);
@@ -976,7 +957,7 @@ top:
               - DFO_model_.evaluateQuadraticModel(new_point));
       std::cout << "eta1 = " << eta1 << "\trho = " << rho << "\n";
 
-      if (!is_model_CFL){
+      if (!is_model_CFL) {
         Eigen::VectorXd dummyVec(number_of_variables_);
         dummyVec.setZero();
         int dummyInt = 0;
@@ -985,11 +966,11 @@ top:
 
       if ((rho >= eta1) || (is_model_CFL && rho > 0)) {
         DFO_model_.update(new_point, function_evaluation, new_gradient, t, DFO_Model::INCLUDE_NEW_OPTIMUM);
-        std::cout <<"The gradient of the lagrangian is:\n" << DFO_model_.GetLagrangianGradient(new_point+DFO_model_.getCenterPoint()) << "\n";
+        std::cout << "The gradient of the lagrangian is:\n"
+                  << DFO_model_.GetLagrangianGradient(new_point + DFO_model_.getCenterPoint()) << "\n";
         set_next_step(TRUST_REGION_RADIUS_UPDATE_STEP);
         goto print;
-      }
-      else{
+      } else {
         int index = DFO_model_.isPointAcceptable(new_point);
         if (index != -1) {
           DFO_model_.update(new_point, function_evaluation, new_gradient, index, DFO_Model::INCLUDE_NEW_POINT);
@@ -997,62 +978,51 @@ top:
         set_next_step(MODEL_IMPROVEMENT_STEP_START);
         goto top;
       }
-    }
-
-
-    else if (next_step_== MODEL_IMPROVEMENT_STEP_START){
-      DFO_model_.modelImprovementStep(new_point,new_point_index);
-      if (new_point_index == -1){
-        rho = 0; std::cout << "The model improvement step was performed, BUT the model is CFL. No change done.\n";
+    } else if (next_step_ == MODEL_IMPROVEMENT_STEP_START) {
+      DFO_model_.modelImprovementStep(new_point, new_point_index);
+      if (new_point_index == -1) {
+        rho = 0;
+        std::cout << "The model improvement step was performed, BUT the model is CFL. No change done.\n";
         force_criticality_step = true;
         is_model_CFL = true;
         set_next_step(TRUST_REGION_RADIUS_UPDATE_STEP);
         goto top;
-      }
-      else{
+      } else {
         set_next_step(MODEL_IMPROVEMENT_STEP_END);
       }
-    }
-
-    else if (next_step_== MODEL_IMPROVEMENT_STEP_END){
+    } else if (next_step_ == MODEL_IMPROVEMENT_STEP_END) {
       DFO_model_.update(new_point, function_evaluation, new_gradient, new_point_index, DFO_Model::INCLUDE_NEW_POINT);
       model_impr_steps++;
       set_next_step(TRUST_REGION_RADIUS_UPDATE_STEP);
       goto print;
-    }
-
-
-    else if (next_step_== TRUST_REGION_RADIUS_UPDATE_STEP){
-      if (rho >= eta1){
+    } else if (next_step_ == TRUST_REGION_RADIUS_UPDATE_STEP) {
+      if (rho >= eta1) {
         /// if point is not better, but rho is high. lower radius!!!
-        if (function_evaluation > DFO_model_.GetFunctionValue(DFO_model_.getBestPointIndex())){
+        if (function_evaluation > DFO_model_.GetFunctionValue(DFO_model_.getBestPointIndex())) {
           trust_region_radius_icb = gamma * DFO_model_.GetTrustRegionRadius();
-        }
-        else{
+        } else {
           double tmp = std::min(gamma_inc * DFO_model_.GetTrustRegionRadius(), trust_region_radius_max);
           double weight = 0;
-          trust_region_radius_icb = weight * DFO_model_.GetTrustRegionRadius() + (1-weight) * tmp;
+          trust_region_radius_icb = weight * DFO_model_.GetTrustRegionRadius() + (1 - weight) * tmp;
           rho = 0;
         }
-      }else{
-        if (!is_model_CFL){
+      } else {
+        if (!is_model_CFL) {
           Eigen::VectorXd dummyVec(number_of_variables_);
           dummyVec.setZero();
           int dummyInt = 0;
           is_model_CFL = DFO_model_.isPoised(dummyVec, dummyInt, DFO_model_.GetTrustRegionRadius());
         }
-        if (is_model_CFL){
+        if (is_model_CFL) {
           trust_region_radius_icb = gamma * DFO_model_.GetTrustRegionRadius();
-        }
-        else {
+        } else {
           trust_region_radius_icb = DFO_model_.GetTrustRegionRadius();
         }
       }
       set_next_step(CRITICALITY_STEP_START);
       goto top;
 
-    }
-    else{
+    } else {
       cout << "This should never be ran. \n";
       cin.get();
     }
@@ -1068,21 +1038,25 @@ top:
 
 
     if (DFO_model_.isModelInitialized()) {
-      std::cout << "___________________________________________________Interpolating?______________________________________________\n";
+      std::cout
+          << "___________________________________________________Interpolating?______________________________________________\n";
       DFO_model_.isInterpolating();
       std::cout << "__________________________________\n";
       DFO_model_.isInterpolatingLagrange();
       std::cout << "__________________________________\n";
       DFO_model_.isInterpolatingEnhanced();
-      std::cout << "___________________________________________________Interpolating?______________________________________________\n";
+      std::cout
+          << "___________________________________________________Interpolating?______________________________________________\n";
       DFO_model_.printParametersMatlabFriendly();
       //DFO_model_.printParametersMatlabFriendlyFromLagrangePolynomials();
 
       //DFO_model_.printParametersMatlabFriendlyGradientEnhanced();
 
-      std::cout << "___________________________________________________Lagrange?______________________________________________\n";
+      std::cout
+          << "___________________________________________________Lagrange?______________________________________________\n";
       DFO_model_.isLagrangePoly();
-      std::cout << "___________________________________________________Lagrange?______________________________________________\n";
+      std::cout
+          << "___________________________________________________Lagrange?______________________________________________\n";
     }
 
     /*
@@ -1091,11 +1065,11 @@ top:
 
     evaluate:
 
-    if (multiple_new_points){
+    if (multiple_new_points) {
       number_of_new_points = new_points_indicies.rows();
       new_gradients.resize(ng, number_of_new_points);
       function_evaluations.resize(number_of_new_points);
-      for (int i = 0; i < number_of_new_points; ++i){
+      for (int i = 0; i < number_of_new_points; ++i) {
         number_of_function_calls++;
         Eigen::VectorXd tmppp = new_points.col(i) + DFO_model_.getCenterPoint();
         Eigen::VectorXd tmpp = ScaleVariablesFromAlgorithmToApplication(tmppp);
@@ -1105,8 +1079,7 @@ top:
         function_evaluations(i) = tmp_eval(0);
       }
       number_of_parallell_function_calls++;
-    }
-    else{
+    } else {
       Eigen::VectorXd tmpp = ScaleVariablesFromAlgorithmToApplication(new_point + DFO_model_.getCenterPoint());
 
       //tmp_eval = sphere(tmpp, ng);
@@ -1139,11 +1112,10 @@ std::string DFO::get_action_name(int a) {
     case 7: return "MODEL_IMPROVEMENT_STEP_START 			";
     case 8: return "MODEL_IMPROVEMENT_STEP_END 		    	";
     case 9: return "TRUST_REGION_RADIUS_UPDATE_STEP 		";
-    case 10: return"CRITICALITY_STEP_ADD_POINTS 			";
+    case 10: return "CRITICALITY_STEP_ADD_POINTS 			";
     default:return "Not a valid state                       ";
   }
 }
-
 
 void DFO::set_next_step(int a) {
   std::cout << "From " << "\033[1;" + color_from + "m " << get_action_name(next_step_) << "\033[0m";

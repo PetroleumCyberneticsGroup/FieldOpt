@@ -854,8 +854,8 @@ int SNOPTusrFG3_(integer *Status, integer *n, double x[],
       if (normType == Subproblem::L2_NORM) {
         gradConstraint = (xvec - yb_rel) / ((xvec - yb_rel).norm() + 0.000000000000001);
         for (int i = 0; i < *n; ++i) {
-          G[startI + i + *n] = gradConstraint(i);
-          restrictNumberValueToMatchSNOPT(G[startI + i + *n]);
+          G[startI + i] = gradConstraint(i);
+          restrictNumberValueToMatchSNOPT(G[startI + i]);
         }
         startI+=*n;
       }
@@ -950,6 +950,7 @@ Eigen::VectorXd Subproblem::FindFeasiblePoint() {
   hessian = Eigen::MatrixXd::Zero(n_,n_);
   gradient = Eigen::VectorXd::Zero(n_);
   constant = 1;
+  yb_rel = Eigen::VectorXd::Zero(n_);
   // The snoptHandler must be setup and loaded
   SNOPTHandler snoptHandler = initSNOPTHandler();
   snoptHandler.setProbName("SNOPTSolver");
@@ -1023,11 +1024,131 @@ Eigen::VectorXd Subproblem::FindFeasiblePoint() {
   return xvec;
 }
 void Subproblem::evaluateConstraints(Eigen::VectorXd point) {
+  if (virtualSimulator.GetNumberOfConstraints() > 0){
   auto d = virtualSimulator.evaluateConstraints(point+y0);
   std::cout << "Upper limits: \n" << virtualSimulator.GetUpperBoundsForConstraints() <<"\n___\n" <<
                "Lower limits: \n" << virtualSimulator.GetLowerBoundsForConstraints() <<"\n___\n" <<
                "Values: \n" << d << "\n" << "\n";
+
+  }
 }
 
+void Subproblem::calculateLagrangeMultipliers(char *optimizationType,
+                                  VectorXd centerPoint,
+                                  VectorXd bestPointDisplacement,
+                                  VectorXd startingPoint) {
+
+  y0_ = centerPoint;
+  y0 = y0_;
+  bestPointDisplacement_ = bestPointDisplacement;
+  yb_rel = bestPointDisplacement_;
+  // Set norm specific constraints
+  std::cout << "lower bounds\n" << xlowCopy_ << "\n";
+  std::cout << "upper bounds\n" << xuppCopy_ << "\n";
+  if (normType_ == INFINITY_NORM){
+    for (int i = 0; i < n_; ++i){
+      xlow_[i] = std::max(bestPointDisplacement_[i] - trustRegionRadius_, xlowCopy_[i] - y0_[i]);
+      xupp_[i] = std::min(bestPointDisplacement_[i] + trustRegionRadius_, xuppCopy_[i] - y0_[i]);
+    }
+  }
+  else if (normType_ == L2_NORM){
+    for (int i = 0; i < n_; ++i){
+      xlow_[i] = xlowCopy_[i];
+      xupp_[i] = xuppCopy_[i];
+    }
+  }
+
+  scale = 1; //computeScale();
+
+
+  // The snoptHandler must be setup and loaded
+  SNOPTHandler snoptHandler = initSNOPTHandler();
+  snoptHandler.setProbName("SNOPTSolver");
+  snoptHandler.setParameter(optimizationType);
+  snoptHandler.initializeLagrangeVector(neF_-1);
+
+  setOptionsForSNOPT(snoptHandler);
+  snoptHandler.setIntParameter("Major Iterations Limit", 2);
+  snoptHandler.setIntParameter("Iterations limit", 2);
+  snoptHandler.setRealParameter("Major step limit", trustRegionRadius_*0.0001); //was 0.2
+  //target nonlinear constraint violation
+  snoptHandler.setRealParameter("Major feasibility tolerance", 1.0e-9); //1.0e-6
+  //snoptHandler.setRealParameter("Major feasibility tolerance", 1.0e-6); //1.0e-6
+
+  //double val = constant + gradient.transpose() * bestPointDisplacement + 0.5 * bestPointDisplacement.transpose() * hessian * bestPointDisplacement;
+  snoptHandler.setRealParameter("Major optimality tolerance", 0.00001);
+  snoptHandler.setIntParameter("Minor iterations limit", 1); // 200
+
+  //snoptHandler.setRealParameter("Major optimality tolerance", 0.00000000000000000000001*trustRegionRadius_);
+
+  //if (std::abs(val) > 10){
+  //snoptHandler.setRealParameter("Major optimality tolerance", 0.000000000000000001*val);
+  //}
+  //snoptHandler.setRealParameter("Major optimality tolerance", 0.00000001);
+
+  ResetSubproblem();
+  for (int i = 0; i < n_; i++) {
+    //x_[i] = startingPoint[i];//bestPointDisplacement_[i];
+    x_[i] = bestPointDisplacement_[i];
+    //x_[i] = startingPoint[i];
+  }
+  if (normType_ == Subproblem::L2_NORM) {
+    Flow_[1] = 0;
+    Fupp_[1] = trustRegionRadius_;
+  }
+  passParametersToSNOPTHandler(snoptHandler);
+  integer Cold = 0, Basis = 1, Warm = 2;
+
+  /// Print all the constraint such that I can (try) to see why it becomes infeasible.
+
+  std::cout << "Flow\t Fupp\n";
+  for (int i = 0; i < neF_; i++){
+    std::cout << Flow_[i] << "\t" << Fupp_[i] << "\n";
+  }
+  std::cout << "\nxlow\t xupp\n";
+  for (int i = 0; i < n_; i++){
+    std::cout << xlow_[i] << "\t" << xupp_[i] << "\n";
+  }
+
+
+  vector<double> xsol;
+  vector<double> fsol;
+  snoptHandler.solve(Cold, xsol, fsol);
+  lastLagrangeMultipliers = snoptHandler.getLagrangeMultipliers();
+
+  fsol[0] = fsol[0]*scale;
+  integer exitCode = snoptHandler.getExitCode();
+  //std::cout << "snopt exitcode:  " << exitCode << "\n";
+  if (exitCode == 40 || exitCode == 41){
+    //std::cout << "snopt failed me. current point cannot be improved because of numerical difficulties \n";
+
+    //std::cin.get();
+  }
+  if (exitCode != 40 && exitCode != 41 && exitCode != 1 && exitCode != 31 && exitCode != 3 && exitCode != 32){
+    std::cout << "ExitCode is: " << exitCode << "\n";
+    std::cin.get();
+  }
+
+
+  Eigen::VectorXd xvec(n_);
+  for (int i = 1; i <= n_; ++i){
+    xvec(i-1) = xsol[i-1];
+  }
+  if ( virtualSimulator.IsFeasiblePoint(xvec + y0) == false){
+    std::cout << "output from snopt is infeasible. ExitCode was: " <<  exitCode << "\n";
+    auto d = virtualSimulator.evaluateConstraints(xvec + y0);
+    std::cout << d <<"\n";
+  }
+
+
+  if ( virtualSimulator.IsFeasiblePoint(xvec + y0) == false){
+    std::cout << "Failed to find feasible points...\n";
+  }
+
+
+}
+bool Subproblem::isPointFeasible(Eigen::VectorXd point) {
+  return virtualSimulator.IsFeasiblePoint(point + y0);
+}
 }
 }

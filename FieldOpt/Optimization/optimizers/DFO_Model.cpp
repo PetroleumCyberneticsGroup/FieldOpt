@@ -407,9 +407,9 @@ this->r = settings->parameters().r;
   this->y0 = subproblem.GetInitialPoint();
   std::cout << "initial point (set by problem.nl) is: \n" << this->y0 << "\n";
 
-  this->y0 = subproblem.FindFeasiblePoint();
+  //this->y0 = subproblem.FindFeasiblePoint();
 
-  std::cout << "initial point (found as a feasible one) is: \n" << this->y0 << "\n";
+  //std::cout << "initial point (found as a feasible one) is: \n" << this->y0 << "\n";
 
   lagabsvalMin = settings->parameters().min_lagrange_abs_val;
   //this->y0[2] = 10 - 3;
@@ -425,12 +425,13 @@ this->r = settings->parameters().r;
   this->derivatives = Eigen::MatrixXd(ng, m);
   this->derivativeAtCenterpoint = Eigen::VectorXd(ng);
   this->fvals = Eigen::VectorXd(m);
+  if (m >=  n+2){
   this->Xi = Eigen::MatrixXd::Zero(n + 1, m);
   this->Upsilon = Eigen::MatrixXd::Zero(n + 1, n + 1);
   this->Z = Eigen::MatrixXd::Zero(m, m - n - 1);
   this->S = Eigen::DiagonalMatrix<double, Eigen::Dynamic>(m - n - 1);
   this->S.diagonal().setOnes();
-
+  }
   if (m > 2 * n + 1) {
     this->sigmas = Eigen::VectorXi(n);
     this->ps = Eigen::VectorXi(m - 2 * n - 1);
@@ -460,7 +461,22 @@ this->r = settings->parameters().r;
 
 Eigen::MatrixXd DFO_Model::findFirstSetOfInterpolationPoints() {
   int numberOfPointsFound = 0;
-  if (m >= 2 * n + 1 && m <= (n + 1) * (n + 2) * 0.5) {
+  if (m < n + 2){
+    for (int i = 1; i <= n; ++i) {
+      if ( i <= (m-1)){
+        Y(i - 1, i) += rho;
+      }
+    }
+    if (m >= n){
+    for (int i = 1; i < m - n; ++i) {
+      //Y.col(i + n)[i - 1] -= rho;
+        Y(i - 1, i + n) -= rho;
+    }
+    }
+    numberOfPointsFound = m;
+    initialInterpolationPointsFound = true;
+  }
+  else if (m >= 2 * n + 1 && m <= (n + 1) * (n + 2) * 0.5) {
     for (int i = 1; i <= n; ++i) {
       //Y.col(i)[i - 1] += rho;
       Y(i - 1, i) += rho;
@@ -550,7 +566,9 @@ void DFO_Model::initializeModel() {
   createW();
   //std::cout << "Winv = \n" << Winv << "\n";
   initializeQuadraticModel();
-  initializeInverseKKTMatrix();
+  if (m >= n+2){
+    initializeInverseKKTMatrix();
+  }
   modelInitialized = true;
   UpdateOptimum();
 
@@ -1630,7 +1648,7 @@ void DFO_Model::printParametersMatlabFriendlyFromLagrangePolynomials() {
   std::cout << "]';" << std::endl;
   std::cout << "rho = " << rho << ";" << std::endl;
 
-  compareHMatrices();
+  //compareHMatrices();
 }
 
 void DFO_Model::printQuadraticModel() {
@@ -3041,6 +3059,19 @@ bool DFO_Model::ModelImprovementAlgorithm(double radius, Eigen::MatrixXd &newPoi
     }
   }
 
+  if (m == 1){
+    Y = copyY; /// reset.
+    if (changed(0) == 1){
+      newPoints.resize(n,1);
+      newIndices.resize(1);
+      eigen_col(newPoints, tmpNewPoints.col(0), 0);
+      newIndices(0) = tmpNewIndices(0);
+      return false;
+    }
+    else{
+      return true;
+    }
+  }
 
   /// Improve poisedness until required poisedness is achieved.
   Eigen::VectorXd dNew(n);
@@ -3089,6 +3120,7 @@ bool DFO_Model::ModelImprovementAlgorithm(double radius, Eigen::MatrixXd &newPoi
 
 // Will only be valid for bestpoint, because the lagrange multipliers are found for that point.
 Eigen::VectorXd DFO_Model::GetLagrangianGradient(Eigen::VectorXd point) {
+  calculateLagrangeMultipliers();
   Eigen::VectorXd lagGrad(n);
   lagGrad = GetGradientAtPoint(point);
   Eigen::MatrixXd conGrad = subproblem.getGradientConstraints(point + y0);
@@ -3097,7 +3129,76 @@ Eigen::VectorXd DFO_Model::GetLagrangianGradient(Eigen::VectorXd point) {
   }
   return lagGrad;
 }
+void DFO_Model::calculateLagrangeMultipliers() {
+
+  subproblem.calculateLagrangeMultipliers((char*)"Minimize",y0,bestPoint,bestPoint);
+  lagrangeMultipliers = subproblem.getLagrangeMultipliers();
 
 
+}
+void DFO_Model::replaceSinglePoint(Eigen::VectorXd &dNew, double radius) {
+  double c;
+  Eigen::VectorXd grad(n);
+  Eigen::MatrixXd hess(n, n);
+  createLagrangePolynomial(1, c, grad, hess);
+  subproblem.setConstant(c);
+  subproblem.setGradient(grad);
+  subproblem.setHessian(hess);
+  vector<double> xsolMax;
+  vector<double> fsolMax;
+  vector<double> xsolMin;
+  vector<double> fsolMin;
+
+  subproblem.SetTrustRegionRadius(radius* 0.7);
+  subproblem.Solve(xsolMax, fsolMax, (char *) "Maximize", y0, bestPoint, bestPoint);
+  subproblem.Solve(xsolMin, fsolMin, (char *) "Minimize", y0, bestPoint, bestPoint);
+
+  if ((abs(fsolMax[0]) >= abs(fsolMin[0]))) {
+    for (int i = 0; i < xsolMax.size(); ++i) {
+      dNew[i] = xsolMax[i];
+    }
+  } else {
+    for (int i = 0; i < xsolMin.size(); ++i) {
+      dNew[i] = xsolMin[i];
+    }
+  }
+
+  if ((dNew - Y.col(0)).norm() <= 0.00001*radius) {
+
+    Eigen::VectorXd yTry(n); //Displacement from current center point
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dis(-radius, radius);
+    int k = 0;
+
+    for (int i = 0; i < n; ++i) {
+      yTry(i) = dis(gen)+bestPoint[i];
+    }
+    Eigen::VectorXd yBest = yTry;
+
+    double maxValue = c + grad.transpose() * yTry + 0.5 * yTry.transpose() * hess * yTry;
+    maxValue = std::abs(maxValue);
+    double value = 0;
+
+    while (k < 5000) {
+      for (int i = 0; i < n; ++i) {
+        yTry(i) = dis(gen)+bestPoint[i];
+      }
+      if (!subproblem.isPointFeasible(yTry)){
+        continue;
+      }
+      else{
+        break;
+      }
+      value = c + grad.transpose() * yTry + 0.5 * yTry.transpose() * hess * yTry;
+      if (std::abs(value) > maxValue) {
+        maxValue = std::abs(value);
+        yBest = yTry;
+      }
+      ++k;
+    }
+    dNew = yTry;
+  }
+}
 }
 }

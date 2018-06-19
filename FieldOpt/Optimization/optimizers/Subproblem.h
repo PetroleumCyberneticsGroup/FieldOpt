@@ -257,7 +257,16 @@ class Subproblem {
   Eigen::VectorXd FindFeasiblePoint();
 
   void evaluateConstraints(Eigen::VectorXd point);
+
+
+  void calculateLagrangeMultipliers(char *optimizationType,
+                                    VectorXd centerPoint,
+                                    VectorXd bestPointDisplacement,
+                                    VectorXd startingPoint);
+
+  bool isPointFeasible(Eigen::VectorXd point);
 };
+
 
 }
 }
