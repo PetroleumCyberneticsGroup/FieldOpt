@@ -1,6 +1,8 @@
 /***********************************************************
- Copyright (C) 2015-2017
- Einar J.M. Baumann <einar.baumann@gmail.com>
+ Copyright (C) 2017
+ Mathias C. Bellout <mathias.bellout@ntnu.no>
+
+ Created by bellout on 20180621.
 
  This file is part of the FieldOpt project.
 
@@ -22,8 +24,9 @@
 ***********************************************************/
 
 // ---------------------------------------------------------
-#ifndef WELLSPLINELENGTH_H
-#define WELLSPLINELENGTH_H
+#ifndef FIELDOPT_RES_XYZ_REGION_H
+#define FIELDOPT_RES_XYZ_REGION_H
+
 
 // ---------------------------------------------------------
 #include "constraint.h"
@@ -34,38 +37,29 @@ namespace Optimization {
 namespace Constraints {
 
 // =========================================================
-/*!
- * \brief The WellSplineLength class defines a constraint
- * on the maximum and minimum length of a well defined by
- * a WellSpline. It uses the WellIndexCalculation library.
- */
-class WellSplineLength : public Constraint, WellSplineConstraint
+class ResXYZRegion : public Constraint, WellSplineConstraint
 {
  public:
   // -------------------------------------------------------
-  WellSplineLength(
+  ResXYZRegion(
       ::Settings::Optimizer::Constraint settings,
       ::Model::Properties::VariablePropertyContainer *variables);
-  string name() override { return "WellSplineLength"; };
+  string name() override { return "res_xyz_region"; };
 
- public:
   // -------------------------------------------------------
   // Constraint interface
   bool CaseSatisfiesConstraint(Case *c);
   void SnapCaseToConstraints(Case *c);
-  void InitializeNormalizer(QList<Case *> cases) override;
-  double Penalty(Case *c) override;
-  long double PenaltyNormalized(Case *c) override;
 
-  // -------------------------------------------------------
  private:
-  double min_length_;
-  double max_length_;
-  Well affected_well_;
+  // -------------------------------------------------------
+  double distance_;
+  QList<Well> affected_wells_;
 
 };
 
+
 }
 }
 
-#endif // WELLSPLINELENGTH_H
+#endif //FIELDOPT_RES_XYZ_REGION_H

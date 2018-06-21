@@ -67,6 +67,8 @@ bool WellSplineLength::CaseSatisfiesConstraint(Case *c) {
   // -------------------------------------------------------
   Eigen::Vector3d heel_vals;
   Eigen::Vector3d toe_vals;
+
+  // -------------------------------------------------------
   heel_vals << heel_x_val, heel_y_val, heel_z_val;
   toe_vals << toe_x_val, toe_y_val, toe_z_val;
 
@@ -96,6 +98,8 @@ void WellSplineLength::SnapCaseToConstraints(Case *c) {
   // -------------------------------------------------------
   Eigen::Vector3d heel_vals;
   Eigen::Vector3d toe_vals;
+
+  // -------------------------------------------------------
   heel_vals << heel_x_val, heel_y_val, heel_z_val;
   toe_vals << toe_x_val, toe_y_val, toe_z_val;
 

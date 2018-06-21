@@ -51,13 +51,13 @@ add_library(optimization
     constraints/res_ijk_box.cpp
     constraints/wspln_lngth.cpp
     constraints/wspln_interw_dist_anl.cpp
-    constraints/constraint_wellspln.cpp
+    constraints/constraint_wspln.cpp
     constraints/c-wspln_lngth-interw_dist.cpp
     constraints/wcntrl_rate.cpp
     constraints/c-wspln_lngth-interw_dist-res_ijk_box.cpp
     constraints/wvert_pseudo_cont_2d_ijk_box.cpp
     constraints/wspln_interw_dist_opt.cpp
-    constraints/constraint_adgprs_solver.cpp
+    constraints/constraint_adgprs_optimizer.cpp
     ${EXPERIMENTAL_CONSTRAINTS_SRC}
     # OBJECTIVES
     objective/objective.cpp
@@ -74,7 +74,7 @@ add_library(optimization
     ../FieldOpt-3rdPartySolvers/handlers/SNOPTHandler.cpp
     ../FieldOpt-3rdPartySolvers/handlers/LibraryHandler.c
     ../FieldOpt-3rdPartySolvers/handlers/SNOPTLoader.c
-    )
+    constraints/res_xyz_region.cpp constraints/res_xyz_region.h)
 
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 

@@ -21,7 +21,7 @@
 #define FIELDOPT_RESERVOIRBOUNDARY_H
 
 #include "constraint.h"
-#include "constraint_wellspln.h"
+#include "constraint_wspln.h"
 #include "Reservoir/grid/grid.h"
 
 namespace Optimization {

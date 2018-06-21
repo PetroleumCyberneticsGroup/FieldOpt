@@ -80,6 +80,8 @@ class WellSplineConstraint
   Well initializeWell(
       QList<Model::Properties::ContinousProperty *> vars);
 
+  // CreateWellVector
+
   // ---------------------------------------------------------
   /*!
    * @brief Get the vectors containing the endpoint

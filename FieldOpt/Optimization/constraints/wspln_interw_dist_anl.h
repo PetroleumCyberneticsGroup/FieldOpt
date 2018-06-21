@@ -23,7 +23,7 @@
 
 // ---------------------------------------------------------
 #include "constraint.h"
-#include "constraint_wellspln.h"
+#include "constraint_wspln.h"
 #include <Eigen/Core>
 
 // ---------------------------------------------------------
@@ -35,8 +35,9 @@ class InterwellDistance : public Constraint, WellSplineConstraint
 {
  public:
   // -------------------------------------------------------
-  InterwellDistance(Settings::Optimizer::Constraint settings,
-                    Model::Properties::VariablePropertyContainer *variables);
+  InterwellDistance(
+      Settings::Optimizer::Constraint settings,
+      Model::Properties::VariablePropertyContainer *variables);
 
   string name() override { return "InterwellDistance"; }
 
@@ -51,9 +52,16 @@ class InterwellDistance : public Constraint, WellSplineConstraint
    * @brief Set the normalizer parameters.
    *
    * - The max value (L) is set to 1.0.
-   * - The steepness (k) is set to 1.0 divided by the smallest distance found between two endpoints.
-   * - The midpoint (x_0) is set to the smallest distance found between two endpoints divided by 2.0.
-   * @param cases Cases to be used to determine parameter values.
+   *
+   * - The steepness (k) is set to 1.0 divided by
+   * the smallest distance found between two endpoints.
+   *
+   * - The midpoint (x_0) is set to the smallest distance
+   * found between two endpoints divided by 2.0.
+   *
+   * @param cases Cases to be used to determine parameter
+   * values.
+   *
    */
   void InitializeNormalizer(QList<Case *> cases) override;
   double Penalty(Case *c) override;
@@ -65,7 +73,7 @@ class InterwellDistance : public Constraint, WellSplineConstraint
   QList<Well> affected_wells_;
 
   // -------------------------------------------------------
-  //! Calculate the distances between the endpoints for two wells
+  // Calculate the distances between the endpoints for two wells
   vector<double> endpointDistances(Case *c);
 
 };

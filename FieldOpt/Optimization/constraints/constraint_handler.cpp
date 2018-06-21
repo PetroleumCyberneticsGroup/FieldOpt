@@ -48,63 +48,10 @@ ConstraintHandler::ConstraintHandler(
     switch (constraint.type) {
 
       // ---------------------------------------------------
-      // CONSTRAINT-HANDLING BY ADGPRS OPTIMIZER
-      case Settings::Optimizer::ConstraintType::ADG:
-        constraints_.append(new ADGConstraint(settings,
-                                              variables,
-                                              grid,
-                                              ricasedata));
-        break;
-
-        // -------------------------------------------------
-        // IWD W/ SNOPT
-      case Settings::Optimizer::ConstraintType::IWD:
-        constraints_.append(new IWDConstraint(settings,
-                                              variables,
-                                              grid,
-                                              ricasedata));
-        break;
-
-        // -------------------------------------------------
-        // BHP
-      case Settings::Optimizer::ConstraintType::BHP:
-        constraints_.append(new BhpConstraint(constraint,
-                                              variables));
-        break;
-
-        // -------------------------------------------------
-        // RATE
-      case Settings::Optimizer::ConstraintType::Rate:
-        constraints_.append(new RateConstraint(constraint,
-                                               variables));
-        break;
-
-        // -------------------------------------------------
-        // WELL SPLINE LENGTH
-      case Settings::Optimizer::ConstraintType::
-        WellSplineLength:
-
-        for (auto wname : constraint.wells) {
-          auto cons = Settings::Optimizer::Constraint(constraint);
-          cons.well = wname;
-          constraints_.append(new WellSplineLength(cons,
-                                                   variables));
-        }
-        break;
-
-        // -------------------------------------------------
-        // WELL SPLINE INTERWELL DISTANCE
-      case Settings::Optimizer::ConstraintType::
-        WellSplineInterwellDistance:
-
-        constraints_.append(new InterwellDistance(constraint,
-                                                  variables));
-        break;
-
-        // -------------------------------------------------
-        // COMBINED WELL SPLINE LENGTH INTERWELL DISTANCE
+      // WSPLINE_LENGTH + INTERW_DIST
       case Settings::Optimizer::ConstraintType::
         CombinedWellSplineLengthInterwellDistance:
+        // c_wspln_lnght-interw-dist
 
         constraints_.append(
             new CombinedSplineLengthInterwellDistance(constraint,
@@ -112,9 +59,10 @@ ConstraintHandler::ConstraintHandler(
         break;
 
         // -------------------------------------------------
-        // COMBINED WELL SPLINE LENGTH INTERWELL DISTANCE RES.BOUNDARY
+        // WSPLINE_LENGTH + INTERW_DIST + IJK_RES_BOX
       case Settings::Optimizer::ConstraintType::
         CombinedWellSplineLengthInterwellDistanceReservoirBoundary:
+        // c_wspln_lnght-interw-dist_res_ijk_box
 
         constraints_.append(
             new CombinedSplineLengthInterwellDistanceReservoirBoundary(
@@ -124,9 +72,21 @@ ConstraintHandler::ConstraintHandler(
         break;
 
         // -------------------------------------------------
-        // RESERVOIR BOUNDARY
+        // STANDALONE CONSTRAINT-HANDLING BY ADGPRS OPTIMIZER
+      case Settings::Optimizer::ConstraintType::ADG:
+        // adgprs_optimizer
+
+        constraints_.append(new ADGConstraint(settings,
+                                              variables,
+                                              grid,
+                                              ricasedata));
+        break;
+
+        // -------------------------------------------------
+        // RES_IJK_BOX
       case Settings::Optimizer::ConstraintType::
         ReservoirBoundary:
+        // res_ijk_box
 
         for (auto wname : constraint.wells) {
           auto cons = Settings::Optimizer::Constraint(constraint);
@@ -139,9 +99,63 @@ ConstraintHandler::ConstraintHandler(
         break;
 
         // -------------------------------------------------
-        // PSEUDO CONTINUOUS BOUNDARY 2D
+        // WCNTRL_BHP
+      case Settings::Optimizer::ConstraintType::BHP:
+        // wcntrl_bhp
+
+        constraints_.append(new BhpConstraint(constraint,
+                                              variables));
+        break;
+
+        // -------------------------------------------------
+        // WCNTRL_RATE
+      case Settings::Optimizer::ConstraintType::Rate:
+        // wcntrl_rate
+
+        constraints_.append(new RateConstraint(constraint,
+                                               variables));
+        break;
+
+        // -------------------------------------------------
+        // WSPLINE_INTERW_DIST_ANL
+      case Settings::Optimizer::ConstraintType::
+        WellSplineInterwellDistance:
+        // wspln_interw_dist_anl
+
+        constraints_.append(new InterwellDistance(constraint,
+                                                  variables));
+        break;
+
+        // -------------------------------------------------
+        // WSPLINE_INTERW_DIST_OPT (SNOPT)
+      case Settings::Optimizer::ConstraintType::IWD:
+        // wspln_interw_dist_opt
+
+        constraints_.append(new IWDConstraint(settings,
+                                              variables,
+                                              grid,
+                                              ricasedata));
+        break;
+
+        // -------------------------------------------------
+        // WSPLINE_LENGTH
+      case Settings::Optimizer::ConstraintType::
+        WellSplineLength:
+        // wspln_lngth
+
+        for (auto wname : constraint.wells) {
+          auto cons = Settings::Optimizer::Constraint(constraint);
+          cons.well = wname;
+          constraints_.append(new WellSplineLength(cons,
+                                                   variables));
+        }
+        break;
+
+        // -------------------------------------------------
+        // WVERT_PSEUDO_CONT_2D_IJK_BOX
       case Settings::Optimizer::ConstraintType::
         PseudoContBoundary2D:
+        // wvert_pseudo_cont_2d_ijk_box
 
         for (auto wname : constraint.wells) {
           auto cons = Settings::Optimizer::Constraint(constraint);

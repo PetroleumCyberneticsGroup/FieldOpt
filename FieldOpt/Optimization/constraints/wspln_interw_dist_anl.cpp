@@ -13,7 +13,7 @@
  FieldOpt is distributed in the hope that it will be
  useful, but WITHOUT ANY WARRANTY; without even the
  implied warranty of MERCHANTABILITY or FITNESS FOR
- A PARTICULAR PURPOSE.  See the GNU General Public
+ A PARTICULAR PURPOSE. See the GNU General Public
  License for more details.
 
  You should have received a copy of the GNU
@@ -24,6 +24,8 @@
 // ---------------------------------------------------------
 #include "wspln_interw_dist_anl.h"
 #include "ConstraintMath/well_constraint_projections/well_constraint_projections.h"
+
+// ---------------------------------------------------------
 #include <boost/lexical_cast.hpp>
 #include <cmath>
 
@@ -49,11 +51,6 @@ InterwellDistance::InterwellDistance(
         initializeWell(variables->GetWellSplineVariables(name))
     );
 
-    // Dbg -------------------------------------------------
-    if (verbosity_level_>2) {
-      std::cout << "... ... initialized interwell distance constraint for well: "
-                << name.toStdString() << std::endl;
-    }
   }
 
   // -------------------------------------------------------
@@ -74,20 +71,25 @@ bool InterwellDistance::CaseSatisfiesConstraint(Case *c) {
   // -------------------------------------------------------
   for (Well well : affected_wells_) {
 
+    // -----------------------------------------------------
     double heel_x_val = c->real_variables()[well.heel.x];
     double heel_y_val = c->real_variables()[well.heel.y];
     double heel_z_val = c->real_variables()[well.heel.z];
 
+    // -----------------------------------------------------
     double toe_x_val = c->real_variables()[well.toe.x];
     double toe_y_val = c->real_variables()[well.toe.y];
     double toe_z_val = c->real_variables()[well.toe.z];
 
+    // -----------------------------------------------------
     Eigen::Vector3d heel_vals;
     Eigen::Vector3d toe_vals;
 
+    // -----------------------------------------------------
     heel_vals << heel_x_val, heel_y_val, heel_z_val;
     toe_vals << toe_x_val, toe_y_val, toe_z_val;
 
+    // -----------------------------------------------------
     points.append(heel_vals);
     points.append(toe_vals);
 
@@ -103,7 +105,8 @@ bool InterwellDistance::CaseSatisfiesConstraint(Case *c) {
   if (projection.length() == 0) return false; // No solution was found
 
   // -------------------------------------------------------
-  // Check if the projection is (approximately) equal to the input case
+  // Check if the projection is (approximately)
+  // equal to the input case
   for (int i = 0; i < projection.length(); ++i) {
     if (!points[i].isApprox(projection[i], 0.01))
       return false;
@@ -119,25 +122,34 @@ void InterwellDistance::SnapCaseToConstraints(Case *c) {
   QList<Eigen::Vector3d> points;
 
   // -------------------------------------------------------
+  // Convert from well structure to vector
   for (Well well : affected_wells_) {
+
+    // -----------------------------------------------------
     double heel_x_val = c->real_variables()[well.heel.x];
     double heel_y_val = c->real_variables()[well.heel.y];
     double heel_z_val = c->real_variables()[well.heel.z];
 
+    // -----------------------------------------------------
     double toe_x_val = c->real_variables()[well.toe.x];
     double toe_y_val = c->real_variables()[well.toe.y];
     double toe_z_val = c->real_variables()[well.toe.z];
 
+    // -----------------------------------------------------
     Eigen::Vector3d heel_vals;
     Eigen::Vector3d toe_vals;
+
+    // -----------------------------------------------------
     heel_vals << heel_x_val, heel_y_val, heel_z_val;
     toe_vals << toe_x_val, toe_y_val, toe_z_val;
+
+    // -----------------------------------------------------
     points.append(heel_vals);
     points.append(toe_vals);
   }
 
   // -------------------------------------------------------
-  // Get the projection
+  // Apply projection to vector of well coords
   QList<Eigen::Vector3d> projection =
       WellConstraintProjections::interwell_constraint_projection(
       points, distance_);
@@ -146,15 +158,28 @@ void InterwellDistance::SnapCaseToConstraints(Case *c) {
   if (projection.length() == 0) return; // No solution was found
 
   // -------------------------------------------------------
+  // Update projected values in well structure
   for (int i = 0; i < affected_wells_.length(); ++i) {
 
-    c->set_real_variable_value(affected_wells_[i].heel.x, projection[i*2](0));
-    c->set_real_variable_value(affected_wells_[i].heel.y, projection[i*2](1));
-    c->set_real_variable_value(affected_wells_[i].heel.z, projection[i*2](2));
+    // -----------------------------------------------------
+    c->set_real_variable_value(
+        affected_wells_[i].heel.x, projection[i*2](0));
 
-    c->set_real_variable_value(affected_wells_[i].toe.x, projection[i*2+1](0));
-    c->set_real_variable_value(affected_wells_[i].toe.y, projection[i*2+1](1));
-    c->set_real_variable_value(affected_wells_[i].toe.z, projection[i*2+1](2));
+    c->set_real_variable_value(
+        affected_wells_[i].heel.y, projection[i*2](1));
+
+    c->set_real_variable_value(
+        affected_wells_[i].heel.z, projection[i*2](2));
+
+    // -----------------------------------------------------
+    c->set_real_variable_value(
+        affected_wells_[i].toe.x, projection[i*2+1](0));
+
+    c->set_real_variable_value(
+        affected_wells_[i].toe.y, projection[i*2+1](1));
+
+    c->set_real_variable_value(
+        affected_wells_[i].toe.z, projection[i*2+1](2));
   }
 }
 

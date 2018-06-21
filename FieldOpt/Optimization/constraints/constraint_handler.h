@@ -37,7 +37,7 @@
 #include "wvert_pseudo_cont_2d_ijk_box.h"
 #include "wcntrl_rate.h"
 #include "wspln_interw_dist_opt.h"
-#include "constraint_adgprs_solver.h"
+#include "constraint_adgprs_optimizer.h"
 
 // ---------------------------------------------------------
 // FIELDOPT::OPTIMIZATION/MODEL/SETTINGS/RESERVOIR
