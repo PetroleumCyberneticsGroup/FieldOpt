@@ -191,7 +191,7 @@ bool ConstraintHandler::CaseSatisfiesConstraints(Case *c) {
 // =========================================================
 void ConstraintHandler::SnapCaseToConstraints(Case *c) {
 
-  // -------------------------------------------------------------
+  // -------------------------------------------------------
   // For all constraint-types (associated with different subsets
   // of wells -- really?) apply each of the constraints sequentially
   // to the whole (!) real vector -> this is ok, since each constraint
@@ -206,20 +206,20 @@ void ConstraintHandler::SnapCaseToConstraints(Case *c) {
     constraint->SnapCaseToConstraints(c);
   }
 
-  // -------------------------------------------------------------
+  // -------------------------------------------------------
   if (vec_before != c->GetRealVarVector()) {
     c->state.cons = Case::CaseState::ConsStatus::C_PROJECTED;
-  }
-  else {
+
+  } else {
     c->state.cons = Case::CaseState::ConsStatus::C_FEASIBLE;
   }
 
 }
 
-// ---------------------------------------------------------------
+// =========================================================
 bool ConstraintHandler::HasBoundaryConstraints() const {
 
-  // -------------------------------------------------------------
+  // -------------------------------------------------------
   for (auto con : constraints_) {
     if (con->IsBoundConstraint())
       return true;
@@ -227,13 +227,15 @@ bool ConstraintHandler::HasBoundaryConstraints() const {
   return false;
 }
 
-// ---------------------------------------------------------------
+// =========================================================
 Eigen::VectorXd
 ConstraintHandler::GetLowerBounds(QList<QUuid> id_vector) const {
 
   // -------------------------------------------------------------
   Eigen::VectorXd lbounds(id_vector.size());
   lbounds.fill(0);
+
+  // -------------------------------------------------------
   for (auto con : constraints_) {
     if (con->IsBoundConstraint()) {
       lbounds = lbounds + con->GetLowerBounds(id_vector);
@@ -242,13 +244,15 @@ ConstraintHandler::GetLowerBounds(QList<QUuid> id_vector) const {
   return lbounds;
 }
 
-// ---------------------------------------------------------------
+// =========================================================
 Eigen::VectorXd
 ConstraintHandler::GetUpperBounds(QList<QUuid> id_vector) const {
 
-  // -------------------------------------------------------------
+  // -------------------------------------------------------
   Eigen::VectorXd ubounds(id_vector.size());
   ubounds.fill(0);
+
+  // -------------------------------------------------------
   for (auto con : constraints_) {
     if (con->IsBoundConstraint()) {
       ubounds = ubounds + con->GetUpperBounds(id_vector);
@@ -257,18 +261,21 @@ ConstraintHandler::GetUpperBounds(QList<QUuid> id_vector) const {
   return ubounds;
 }
 
-// ---------------------------------------------------------------
+// =========================================================
 void ConstraintHandler::InitializeNormalizers(QList<Case *> cases) {
+
+  // -------------------------------------------------------
   cout << "ConstraintHandler Initializing constraint normalizers" << endl;
   for (auto con : constraints_) {
     con->InitializeNormalizer(cases);
   }
 }
 
-// ---------------------------------------------------------------
+// =========================================================
 long double
 ConstraintHandler::GetWeightedNormalizedPenalties(Case *c) {
 
+  // -------------------------------------------------------
   long double wnp = 0.0L;
   for (auto con : constraints_) {
     long double pen = con->PenaltyNormalized(c);

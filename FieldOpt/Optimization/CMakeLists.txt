@@ -48,16 +48,16 @@ add_library(optimization
     constraints/constraint_handler.cpp
     constraints/constraint.cpp
     constraints/bhp_constraint.cpp
-    constraints/reservoir_boundary.cpp
-    constraints/well_spline_length.cpp
-    constraints/interwell_distance.cpp
-    constraints/well_spline_constraint.cpp
-    constraints/combined_spline_length_interwell_distance.cpp
+    constraints/res_ijk_box.cpp
+    constraints/wellspln_lngth.cpp
+    constraints/interwll_dist_anl.cpp
+    constraints/constraint_wellspln.cpp
+    constraints/c-spln_lngth-interw_dist.cpp
     constraints/rate_constraint.cpp
-    constraints/combined_spline_length_interwell_distance_reservoir_boundary.cpp
+    constraints/c-spln_lngth-interw_dist-res_ijk_box.cpp
     constraints/pseudo_cont_boundary_2d.cpp
-    constraints/iwd_constraint.cpp
-    constraints/adg_constraint.cpp
+    constraints/interwll_dist_opt.cpp
+    constraints/constraint_adgprs_solver.cpp
     ${EXPERIMENTAL_CONSTRAINTS_SRC}
     # OBJECTIVES
     objective/objective.cpp

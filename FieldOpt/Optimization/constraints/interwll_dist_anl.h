@@ -23,7 +23,7 @@
 
 // ---------------------------------------------------------
 #include "constraint.h"
-#include "well_spline_constraint.h"
+#include "constraint_wellspln.h"
 #include <Eigen/Core>
 
 // ---------------------------------------------------------

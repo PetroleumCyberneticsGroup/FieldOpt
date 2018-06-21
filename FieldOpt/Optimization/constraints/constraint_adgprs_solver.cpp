@@ -24,7 +24,7 @@
 ***********************************************************/
 
 // ---------------------------------------------------------
-#include "adg_constraint.h"
+#include "constraint_adgprs_solver.h"
 
 //#include "optimizers/SNOPTSolverC.h"
 //#include <FieldOpt-WellIndexCalculator/resinxx/rixx_prj_viz/RivIntersectionGeometryGenerator.h>

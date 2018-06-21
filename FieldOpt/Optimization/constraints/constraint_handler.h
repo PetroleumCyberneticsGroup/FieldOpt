@@ -29,15 +29,15 @@
 // FIELDOPT::CONSTRAINTS
 #include "constraint.h"
 #include "bhp_constraint.h"
-#include "well_spline_length.h"
-#include "interwell_distance.h"
-#include "combined_spline_length_interwell_distance.h"
-#include "combined_spline_length_interwell_distance_reservoir_boundary.h"
-#include "reservoir_boundary.h"
+#include "wellspln_lngth.h"
+#include "interwll_dist_anl.h"
+#include "c-spln_lngth-interw_dist.h"
+#include "c-spln_lngth-interw_dist-res_ijk_box.h"
+#include "res_ijk_box.h"
 #include "pseudo_cont_boundary_2d.h"
 #include "rate_constraint.h"
-#include "iwd_constraint.h"
-#include "adg_constraint.h"
+#include "interwll_dist_opt.h"
+#include "constraint_adgprs_solver.h"
 
 // ---------------------------------------------------------
 // FIELDOPT::OPTIMIZATION/MODEL/SETTINGS/RESERVOIR
@@ -53,8 +53,10 @@
 // Qt
 #include <QList>
 
+// ---------------------------------------------------------
 #ifdef WITH_EXPERIMENTAL_CONSTRIANTS
-// Includes for constraints in the experimental_constraints dir go here.
+// Includes for constraints in the experimental_constraints
+// dir go here.
 #endif
 
 // ---------------------------------------------------------
@@ -106,7 +108,8 @@ class ConstraintHandler
 
   // -------------------------------------------------------
   /*!
-   * @brief Get the sum of all normalized penalties multiplied by their respective weights.
+   * @brief Get the sum of all normalized penalties
+   * multiplied by their respective weights.
    * @param c The case to get the penalties for.
    * @return Weighted sum of all normalized penalties
    */

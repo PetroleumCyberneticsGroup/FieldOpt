@@ -5,8 +5,8 @@
 
 // ---------------------------------------------------------
 #include "constraint.h"
-#include "well_spline_length.h"
-#include "interwell_distance.h"
+#include "wellspln_lngth.h"
+#include "interwll_dist_anl.h"
 
 // ---------------------------------------------------------
 namespace Optimization {

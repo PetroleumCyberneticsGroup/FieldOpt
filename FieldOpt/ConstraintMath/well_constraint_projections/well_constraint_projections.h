@@ -1,11 +1,31 @@
+/***********************************************************
+ Copyright (C) 2015-2017
+
+ This file is part of the FieldOpt project.
+
+ FieldOpt is free software: you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation, either version
+ 3 of the License, or (at your option) any later version.
+
+ FieldOpt is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty
+ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
+
+ You should have received a copy of the GNU
+ General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
+
 #ifndef WELL_CONSTRAINT_PROJECTIONS_H
 #define WELL_CONSTRAINT_PROJECTIONS_H
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 #include <RpolyPlusPlus/polynomial.h>
 #include <RpolyPlusPlus/find_polynomial_roots_jenkins_traub.h>
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 #include "Reservoir/grid/cell.h"
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
@@ -15,7 +35,7 @@
 #include <QPair>
 #include <iostream>
 
-// -----------------------------------------------------------------
+// ---------------------------------------------------------
 /*!
  * \brief WellConstraintProjections is a collection of functions
  * for dealing with the projection of well onto feasible space.

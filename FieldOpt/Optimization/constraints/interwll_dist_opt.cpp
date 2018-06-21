@@ -24,7 +24,7 @@
 ***********************************************************/
 
 // ---------------------------------------------------------
-#include "iwd_constraint.h"
+#include "interwll_dist_opt.h"
 #include "optimizers/SNOPTSolverC.h"
 
 #include <FieldOpt-WellIndexCalculator/resinxx/rixx_prj_viz/RivIntersectionGeometryGenerator.h>

@@ -3,9 +3,9 @@
 
 // ---------------------------------------------------------
 #include "constraint.h"
-#include "well_spline_length.h"
-#include "interwell_distance.h"
-#include "reservoir_boundary.h"
+#include "wellspln_lngth.h"
+#include "interwll_dist_anl.h"
+#include "res_ijk_box.h"
 
 // ---------------------------------------------------------
 namespace Optimization {

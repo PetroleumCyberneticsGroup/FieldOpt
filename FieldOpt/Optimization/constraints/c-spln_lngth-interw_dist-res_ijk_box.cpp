@@ -1,6 +1,6 @@
 
 // ---------------------------------------------------------------
-#include "combined_spline_length_interwell_distance_reservoir_boundary.h"
+#include "c-spln_lngth-interw_dist-res_ijk_box.h"
 
 // ---------------------------------------------------------------
 // STD
