@@ -5,8 +5,8 @@
 
 // ---------------------------------------------------------
 #include "constraint.h"
-#include "wellspln_lngth.h"
-#include "interwll_dist_anl.h"
+#include "wspln_lngth.h"
+#include "wspln_interw_dist_anl.h"
 
 // ---------------------------------------------------------
 namespace Optimization {

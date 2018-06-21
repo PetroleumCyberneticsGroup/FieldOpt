@@ -47,16 +47,16 @@ add_library(optimization
     # CONSTRAINTS
     constraints/constraint_handler.cpp
     constraints/constraint.cpp
-    constraints/bhp_constraint.cpp
+    constraints/wcntrl_bhp.cpp
     constraints/res_ijk_box.cpp
-    constraints/wellspln_lngth.cpp
-    constraints/interwll_dist_anl.cpp
+    constraints/wspln_lngth.cpp
+    constraints/wspln_interw_dist_anl.cpp
     constraints/constraint_wellspln.cpp
-    constraints/c-spln_lngth-interw_dist.cpp
-    constraints/rate_constraint.cpp
-    constraints/c-spln_lngth-interw_dist-res_ijk_box.cpp
-    constraints/pseudo_cont_boundary_2d.cpp
-    constraints/interwll_dist_opt.cpp
+    constraints/c-wspln_lngth-interw_dist.cpp
+    constraints/wcntrl_rate.cpp
+    constraints/c-wspln_lngth-interw_dist-res_ijk_box.cpp
+    constraints/wvert_pseudo_cont_2d_ijk_box.cpp
+    constraints/wspln_interw_dist_opt.cpp
     constraints/constraint_adgprs_solver.cpp
     ${EXPERIMENTAL_CONSTRAINTS_SRC}
     # OBJECTIVES

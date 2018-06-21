@@ -22,7 +22,7 @@
 ***********************************************************/
 
 // ---------------------------------------------------------
-#include "interwll_dist_anl.h"
+#include "wspln_interw_dist_anl.h"
 #include "ConstraintMath/well_constraint_projections/well_constraint_projections.h"
 #include <boost/lexical_cast.hpp>
 #include <cmath>

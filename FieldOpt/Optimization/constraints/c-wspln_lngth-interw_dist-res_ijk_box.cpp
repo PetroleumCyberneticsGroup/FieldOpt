@@ -1,6 +1,6 @@
 
 // ---------------------------------------------------------------
-#include "c-spln_lngth-interw_dist-res_ijk_box.h"
+#include "c-wspln_lngth-interw_dist-res_ijk_box.h"
 
 // ---------------------------------------------------------------
 // STD

@@ -24,7 +24,7 @@
 ***********************************************************/
 
 // ---------------------------------------------------------
-#include "interwll_dist_opt.h"
+#include "wspln_interw_dist_opt.h"
 #include "optimizers/SNOPTSolverC.h"
 
 #include <FieldOpt-WellIndexCalculator/resinxx/rixx_prj_viz/RivIntersectionGeometryGenerator.h>

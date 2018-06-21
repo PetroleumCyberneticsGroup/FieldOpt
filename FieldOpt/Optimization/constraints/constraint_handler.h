@@ -28,15 +28,15 @@
 // ---------------------------------------------------------
 // FIELDOPT::CONSTRAINTS
 #include "constraint.h"
-#include "bhp_constraint.h"
-#include "wellspln_lngth.h"
-#include "interwll_dist_anl.h"
-#include "c-spln_lngth-interw_dist.h"
-#include "c-spln_lngth-interw_dist-res_ijk_box.h"
+#include "wcntrl_bhp.h"
+#include "wspln_lngth.h"
+#include "wspln_interw_dist_anl.h"
+#include "c-wspln_lngth-interw_dist.h"
+#include "c-wspln_lngth-interw_dist-res_ijk_box.h"
 #include "res_ijk_box.h"
-#include "pseudo_cont_boundary_2d.h"
-#include "rate_constraint.h"
-#include "interwll_dist_opt.h"
+#include "wvert_pseudo_cont_2d_ijk_box.h"
+#include "wcntrl_rate.h"
+#include "wspln_interw_dist_opt.h"
 #include "constraint_adgprs_solver.h"
 
 // ---------------------------------------------------------

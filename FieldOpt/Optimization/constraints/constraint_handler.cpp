@@ -192,15 +192,33 @@ bool ConstraintHandler::CaseSatisfiesConstraints(Case *c) {
 void ConstraintHandler::SnapCaseToConstraints(Case *c) {
 
   // -------------------------------------------------------
-  // For all constraint-types (associated with different subsets
-  // of wells -- really?) apply each of the constraints sequentially
-  // to the whole (!) real vector -> this is ok, since each constraint
-  // type (i.e., the member.function SnapCaseToConstraints of each
-  // constraint) operates on a different part of the real vector, e.g.,
-  // BHP constraints and well placement constraints
+  // The following applies the different constraint types
+  // from the constraint set onto the variable vector in
+  // a sequential manner.
 
-  // This is an apparent sequentiality, though the real sequentiality
-  // occurs at the level of each independent constraint type
+  // OK to apply the constraints to different parts of
+  // the variable vector as long as the same constraint
+  // tyoe applies to different groups of wells, e.g.,
+  // two interwell distance constraints apply to different
+  // sets of wells, or across all wells as long as using
+  // different constraint types. For example:
+  //
+  // (i)   wbhp constraint on all wells
+  // (ii)  interw_dist constraint a on a subset of wells
+  // (iii) interw_dist constraint b on a another subset of wells
+  //
+  // Note: is interw_dist constraints a and b overlap on some
+  // wells, then they may hinder each other and case convergence
+  // issues
+  // (\todo create a check that ensures that the entire constraint
+  // \todo set defined is consistent, in the sense that no two
+  // \todo constraints function on the same components of the
+  // \todo variable vector.)
+
+  // Each constraint type enforces alternating sequentiality
+  // according to its type.
+
+  // -------------------------------------------------------
   auto vec_before = c->GetRealVarVector();
   for (Constraint *constraint : constraints_) {
     constraint->SnapCaseToConstraints(c);

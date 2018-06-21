@@ -23,7 +23,7 @@
 
 // ---------------------------------------------------------
 #include "Utilities/math.hpp"
-#include "wellspln_lngth.h"
+#include "wspln_lngth.h"
 #include "ConstraintMath/well_constraint_projections/well_constraint_projections.h"
 
 // ---------------------------------------------------------

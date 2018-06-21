@@ -18,7 +18,7 @@
 ******************************************************************************/
 
 #include "gtest/gtest.h"
-#include "Optimization/constraints/bhp_constraint.h"
+#include "Optimization/constraints/wcntrl_bhp.h"
 #include "Settings/tests/test_resource_settings.hpp"
 #include "Optimization/tests/test_resource_optimizer.h"
 
