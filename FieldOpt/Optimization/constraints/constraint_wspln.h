@@ -28,9 +28,10 @@
 // ---------------------------------------------------------
 #include "Settings/optimizer.h"
 #include "Model/properties/variable_property_container.h"
+#include "Optimization/case.h"
+
 #include <QPair>
 #include <Eigen/Core>
-#include "Optimization/case.h"
 
 // ---------------------------------------------------------
 namespace Optimization {
@@ -80,7 +81,15 @@ class WellSplineConstraint
   Well initializeWell(
       QList<Model::Properties::ContinousProperty *> vars);
 
-  // CreateWellVector
+  // ---------------------------------------------------------
+  /*!
+   * \brief
+   *
+   * \param
+   */
+  void vectorizeWells(Case *c,
+                      QList<Well> affected_wells,
+                      QList<Eigen::Vector3d> &points);
 
   // ---------------------------------------------------------
   /*!

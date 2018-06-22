@@ -29,11 +29,14 @@
 #include "settings.h"
 #include "simulator.h"
 
+#include <FieldOpt-WellIndexCalculator/resinxx/rixx_core_geom/cvfBoundingBox.h>
+
 // ---------------------------------------------------------
 #include <QList>
 #include <QString>
 #include <QStringList>
-#include <FieldOpt-WellIndexCalculator/resinxx/rixx_core_geom/cvfBoundingBox.h>
+
+#include <Eigen/Core>
 
 // ---------------------------------------------------------
 namespace Settings {
@@ -69,7 +72,19 @@ class Optimizer
     WellSplineInterwellDistance, WellSplineDomain,
     CombinedWellSplineLengthInterwellDistance,
     CombinedWellSplineLengthInterwellDistanceReservoirBoundary,
-    ReservoirBoundary, PseudoContBoundary2D
+    ReservoirBoundary, PseudoContBoundary2D,
+    //
+    c_wspln_lnght_interw_dist,
+    c_wspln_lnght_interw_dist_res_ijk_box,
+    ADGPRS_Optimizer,
+    res_ijk_box,
+    res_xyz_region,
+    wcntrl_bhp,
+    wcntrl_rate,
+    wspln_interw_dist_anl,
+    wspln_interw_dist_opt,
+    wspln_lngth,
+    wvert_pseudo_cont_2d_ijk_box
   };
 
   // -------------------------------------------------------
@@ -234,16 +249,21 @@ class Optimizer
     struct RealMaxMinLimit
     { RealCoordinate max; RealCoordinate min; };
 
+    // -----------------------------------------------------
     // Constraint type (e.g., BHP or SplinePoints positions).
     ConstraintType type;
 
     // Name of well this Constraint applies to.
     QString well;
 
+    // -----------------------------------------------------
     // List of well names if constraint
     // applies to more than one.
     QStringList wells;
 
+    // -----------------------------------------------------
+
+    // -----------------------------------------------------
     // Max limit when using constraints like BHP.
     double max;
 
@@ -255,10 +275,14 @@ class Optimizer
         box_imin, box_jmin, box_kmin,
         box_imax, box_jmax, box_kmax;
 
+    // -----------------------------------------------------
     double max_length;
     double min_length;
     double min_distance;
 
+    QList<Eigen::Vector3d> poly_points;
+
+    // -----------------------------------------------------
     // Weight to be used when considering the
     // constraint in a penalty function. (def: 0.0)
     long double penalty_weight;

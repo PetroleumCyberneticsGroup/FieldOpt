@@ -45,9 +45,40 @@ ResXYZRegion::ResXYZRegion(
 
   }
 
+  // [1]
+  // Introduce region points into
+  // ::Settings::Optimizer::Constraint settings
+
+  // [2]
+  // Convert region points into poly-boundary
+
+  // [3]
+  // Print poly-boundary vertices to file
+
+  // [4]
+  // Use poly-boundary vertices in constriant-handling
+
 };
 
 // =========================================================
+bool ResXYZRegion::CaseSatisfiesConstraint(Case *c) {
+
+  // -------------------------------------------------------
+  QList<Eigen::Vector3d> points;
+  vectorizeWells(c, affected_wells_, points);
+
+}
+
+// =========================================================
+void ResXYZRegion::SnapCaseToConstraints(Case *c) {
+
+  // -------------------------------------------------------
+  QList<Eigen::Vector3d> points;
+  vectorizeWells(c, affected_wells_, points);
+
+}
+
+
 
 
 }

@@ -54,6 +54,7 @@ class ResXYZRegion : public Constraint, WellSplineConstraint
  private:
   // -------------------------------------------------------
   double distance_;
+  Well affected_well_;
   QList<Well> affected_wells_;
 
 };

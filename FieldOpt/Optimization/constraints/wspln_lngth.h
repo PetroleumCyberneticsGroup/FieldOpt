@@ -53,6 +53,8 @@ class WellSplineLength : public Constraint, WellSplineConstraint
   // Constraint interface
   bool CaseSatisfiesConstraint(Case *c);
   void SnapCaseToConstraints(Case *c);
+
+  // -------------------------------------------------------
   void InitializeNormalizer(QList<Case *> cases) override;
   double Penalty(Case *c) override;
   long double PenaltyNormalized(Case *c) override;

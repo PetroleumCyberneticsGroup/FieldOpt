@@ -119,34 +119,9 @@ bool InterwellDistance::CaseSatisfiesConstraint(Case *c) {
 // =========================================================
 void InterwellDistance::SnapCaseToConstraints(Case *c) {
 
-  QList<Eigen::Vector3d> points;
-
   // -------------------------------------------------------
-  // Convert from well structure to vector
-  for (Well well : affected_wells_) {
-
-    // -----------------------------------------------------
-    double heel_x_val = c->real_variables()[well.heel.x];
-    double heel_y_val = c->real_variables()[well.heel.y];
-    double heel_z_val = c->real_variables()[well.heel.z];
-
-    // -----------------------------------------------------
-    double toe_x_val = c->real_variables()[well.toe.x];
-    double toe_y_val = c->real_variables()[well.toe.y];
-    double toe_z_val = c->real_variables()[well.toe.z];
-
-    // -----------------------------------------------------
-    Eigen::Vector3d heel_vals;
-    Eigen::Vector3d toe_vals;
-
-    // -----------------------------------------------------
-    heel_vals << heel_x_val, heel_y_val, heel_z_val;
-    toe_vals << toe_x_val, toe_y_val, toe_z_val;
-
-    // -----------------------------------------------------
-    points.append(heel_vals);
-    points.append(toe_vals);
-  }
+  QList<Eigen::Vector3d> points;
+  vectorizeWells(c, affected_wells_, points);
 
   // -------------------------------------------------------
   // Apply projection to vector of well coords
