@@ -33,6 +33,9 @@
 #include "constraint_wspln.h"
 
 // ---------------------------------------------------------
+#include "FieldOpt-WellIndexCalculator/resinxx/well_path.h"
+
+// ---------------------------------------------------------
 namespace Optimization {
 namespace Constraints {
 
@@ -43,7 +46,9 @@ class ResXYZRegion : public Constraint, WellSplineConstraint
   // -------------------------------------------------------
   ResXYZRegion(
       ::Settings::Optimizer::Constraint settings,
-      ::Model::Properties::VariablePropertyContainer *variables);
+      ::Model::Properties::VariablePropertyContainer *variables,
+      ::Reservoir::Grid::Grid *grid,
+      RICaseData *ricasedata);
   string name() override { return "res_xyz_region"; };
 
   // -------------------------------------------------------
@@ -52,10 +57,21 @@ class ResXYZRegion : public Constraint, WellSplineConstraint
   void SnapCaseToConstraints(Case *c);
 
  private:
+
+  // -------------------------------------------------------
+  Settings::Optimizer::Constraint settings_;
+  Model::Properties::VariablePropertyContainer *variables_;
+  Reservoir::Grid::Grid* grid_;
+
+  RIGrid* rigrid_;
+  RICaseData* ricasedata_;
+
   // -------------------------------------------------------
   double distance_;
   Well affected_well_;
   QList<Well> affected_wells_;
+
+  std::vector<cvf::Vec3d> polypoints_;
 
 };
 

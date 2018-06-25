@@ -23,6 +23,7 @@
  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************/
 
+// ---------------------------------------------------------
 #include "res_xyz_region.h"
 
 // ---------------------------------------------------------
@@ -32,7 +33,15 @@ namespace Constraints {
 // =========================================================
 ResXYZRegion::ResXYZRegion(
     ::Settings::Optimizer::Constraint settings,
-    ::Model::Properties::VariablePropertyContainer *variables){
+    ::Model::Properties::VariablePropertyContainer *variables,
+    ::Reservoir::Grid::Grid *grid,
+    RICaseData *ricasedata){
+
+  // -------------------------------------------------------
+  settings_ = settings;
+  variables_ = variables;
+  grid_ = grid;
+  ricasedata_ = ricasedata;
 
   // -------------------------------------------------------
   for (QString name : settings.wells) {
@@ -45,7 +54,14 @@ ResXYZRegion::ResXYZRegion(
 
   }
 
-  // [1]
+
+//  for (int i = 0; i < settings.poly_points.size(); i++) {
+//
+//    polypoints_.push_back(settings.poly_points.);
+//  }
+
+
+  // [1] --> OK
   // Introduce region points into
   // ::Settings::Optimizer::Constraint settings
 
@@ -59,6 +75,12 @@ ResXYZRegion::ResXYZRegion(
   // Use poly-boundary vertices in constriant-handling
 
 };
+
+// =========================================================
+//bool ResXYZRegion::AssemblePolygon(){
+//
+//}
+
 
 // =========================================================
 bool ResXYZRegion::CaseSatisfiesConstraint(Case *c) {

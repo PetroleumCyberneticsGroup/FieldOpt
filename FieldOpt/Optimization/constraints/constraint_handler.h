@@ -28,16 +28,17 @@
 // ---------------------------------------------------------
 // FIELDOPT::CONSTRAINTS
 #include "constraint.h"
-#include "wcntrl_bhp.h"
-#include "wspln_lngth.h"
-#include "wspln_interw_dist_anl.h"
 #include "c-wspln_lngth-interw_dist.h"
 #include "c-wspln_lngth-interw_dist-res_ijk_box.h"
+#include "ext_adgprs_optimizer.h"
 #include "res_ijk_box.h"
-#include "wvert_pseudo_cont_2d_ijk_box.h"
+#include "res_xyz_region.h"
+#include "wcntrl_bhp.h"
 #include "wcntrl_rate.h"
+#include "wspln_interw_dist_anl.h"
 #include "wspln_interw_dist_opt.h"
-#include "constraint_adgprs_optimizer.h"
+#include "wspln_lngth.h"
+#include "wvert_pseudo_cont_2d_ijk_box.h"
 
 // ---------------------------------------------------------
 // FIELDOPT::OPTIMIZATION/MODEL/SETTINGS/RESERVOIR

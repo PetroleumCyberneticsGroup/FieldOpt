@@ -57,7 +57,7 @@ add_library(optimization
     constraints/c-wspln_lngth-interw_dist-res_ijk_box.cpp
     constraints/wvert_pseudo_cont_2d_ijk_box.cpp
     constraints/wspln_interw_dist_opt.cpp
-    constraints/constraint_adgprs_optimizer.cpp
+    constraints/ext_adgprs_optimizer.cpp
     ${EXPERIMENTAL_CONSTRAINTS_SRC}
     # OBJECTIVES
     objective/objective.cpp

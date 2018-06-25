@@ -36,6 +36,7 @@
 #include <QString>
 #include <QStringList>
 
+// ---------------------------------------------------------
 #include <Eigen/Core>
 
 // ---------------------------------------------------------
@@ -281,6 +282,7 @@ class Optimizer
     double min_distance;
 
     QList<Eigen::Vector3d> poly_points;
+    std::vector<cvf::Vec3d> poly_points2;
 
     // -----------------------------------------------------
     // Weight to be used when considering the

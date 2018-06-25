@@ -48,7 +48,7 @@ ConstraintHandler::ConstraintHandler(
     switch (constraint.type) {
 
       // ---------------------------------------------------
-      // WSPLINE_LENGTH + INTERW_DIST
+      // COMBINED WSPLINE_LENGTH + INTERW_DIST
       case Settings::Optimizer::ConstraintType::
         CombinedWellSplineLengthInterwellDistance:
       case Settings::Optimizer::ConstraintType::
@@ -60,7 +60,7 @@ ConstraintHandler::ConstraintHandler(
         break;
 
         // -------------------------------------------------
-        // WSPLINE_LENGTH + INTERW_DIST + IJK_RES_BOX
+        // COMBINED WSPLINE_LENGTH + INTERW_DIST + IJK_RES_BOX
       case Settings::Optimizer::ConstraintType::
         CombinedWellSplineLengthInterwellDistanceReservoirBoundary:
       case Settings::Optimizer::ConstraintType::
@@ -74,7 +74,7 @@ ConstraintHandler::ConstraintHandler(
         break;
 
         // -------------------------------------------------
-        // STANDALONE CONSTRAINT-HANDLING BY ADGPRS OPTIMIZER
+        // EXTERNAL CONSTRAINT-HANDLING BY ADGPRS OPTIMIZER
       case Settings::Optimizer::ConstraintType::ADG:
       case Settings::Optimizer::ConstraintType::ADGPRS_Optimizer:
 
@@ -96,6 +96,21 @@ ConstraintHandler::ConstraintHandler(
               new ReservoirBoundary(cons,
                                     variables,
                                     grid));
+        }
+        break;
+
+        // -------------------------------------------------
+        // RES_XYZ_REGION
+      case Settings::Optimizer::ConstraintType::res_xyz_region:
+
+        for (auto wname : constraint.wells) {
+          auto cons = Settings::Optimizer::Constraint(constraint);
+          cons.well = wname;
+          constraints_.append(
+              new ResXYZRegion(cons,
+                               variables,
+                               grid,
+                               ricasedata));
         }
         break;
 
