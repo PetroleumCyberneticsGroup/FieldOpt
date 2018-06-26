@@ -56,17 +56,20 @@ class IWDConstraint : public Constraint {
 
   // -------------------------------------------------------
   // Constructor
-  IWDConstraint(Settings::Optimizer* settings,
-  Model::Properties::VariablePropertyContainer *variables,
-                ::Reservoir::Grid::Grid *grid,
-                RICaseData *ricasedata);
+  IWDConstraint(
+      Settings::Optimizer *settings_opt,
+      Settings::Optimizer::Constraint &settings_con,
+      Model::Properties::VariablePropertyContainer *variables,
+      ::Reservoir::Grid::Grid *grid,
+      RICaseData *ricasedata);
 
   // -------------------------------------------------------
   string name() override { return "IWDConstraint"; }
 
   // -------------------------------------------------------
   // Input var to SNOPTSolverC
-  Settings::Optimizer *settings_;
+  Settings::Optimizer *settings_opt_;
+  Settings::Optimizer::Constraint settings_con_;
   Model::Properties::VariablePropertyContainer *variables_;
   Case *current_case_;
 

@@ -66,7 +66,7 @@ class SNOPTSolverC : public Optimizer
  public:
 
   // -------------------------------------------------------
-  SNOPTSolverC(Settings::Optimizer *settings,
+  SNOPTSolverC(Settings::Optimizer::Constraint &settings,
               Case *base_case,
               ::Reservoir::Grid::Grid *grid,
               RICaseData *ricasedata);

@@ -39,13 +39,15 @@ using std::endl;
 
 // =========================================================
 IWDConstraint::IWDConstraint(
-    Settings::Optimizer* settings,
+    Settings::Optimizer *settings_opt,
+    Settings::Optimizer::Constraint &settings_con,
     Model::Properties::VariablePropertyContainer *variables,
     ::Reservoir::Grid::Grid *grid,
     RICaseData *ricasedata) {
 
   // -------------------------------------------------------
-  settings_ = settings;
+  settings_opt_ = settings_opt;
+  settings_con_ = settings_con;
   // variables_ = variables;
   grid_ = grid;
   ricasedata_ = ricasedata;
@@ -60,7 +62,7 @@ IWDConstraint::IWDConstraint(
 
   rimintersection_ = new RimIntersection(ricasedata_->mainGrid(),
                                          ricasedata_,
-                                         settings);
+                                         settings_con_);
 
   // Displayoffset
   // 518177.6950000525   6178154.390136719   -2278.239990234375
@@ -198,7 +200,7 @@ IWDConstraint::IWDConstraint(
     // -------------------------------------------------------
     rimintersection_ = new RimIntersection(rigrid_,
                                            ricasedata_,
-                                           settings);
+                                           settings_con);
 
 //   95 25 -2005
 //   5 55 -2005
@@ -256,7 +258,7 @@ IWDConstraint::IWDConstraint(
 
 
     // -------------------------------------------------------
-    if (settings->verb_vector()[5] > 1) // idx:5 -> mod (Model)
+    if (settings_con_.verb_vector_[5] > 1) // idx:5 -> mod (Model)
       cout << fstr("[mod]Init RIGrid_.", 5) << "RICell& cell" << endl;
 
     // size_t cellcount = rigrid_->cellCount();
@@ -373,7 +375,7 @@ void IWDConstraint::SnapCaseToConstraints(Case *current_case) {
 
   // -------------------------------------------------------
   SNOPTSolverC_ =
-      new Optimization::Optimizers::SNOPTSolverC(settings_,
+      new Optimization::Optimizers::SNOPTSolverC(settings_con_,
                                                  current_case,
                                                  grid_,
                                                  ricasedata_);

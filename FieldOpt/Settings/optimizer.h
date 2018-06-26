@@ -281,8 +281,7 @@ class Optimizer
     double min_length;
     double min_distance;
 
-    QList<Eigen::Vector3d> poly_points;
-    std::vector<cvf::Vec3d> poly_points2;
+    std::vector<cvf::Vec3d> poly_points;
 
     // -----------------------------------------------------
     // Weight to be used when considering the
@@ -318,6 +317,11 @@ class Optimizer
 
     // -----------------------------------------------------
     std::vector<int> verb_vector_ = std::vector<int>(11,0);
+
+    void set_verbosity_vector(const std::vector<int> verb_vector)
+    { verb_vector_ = verb_vector; }
+
+    QString output_dir_;
 
   };
 

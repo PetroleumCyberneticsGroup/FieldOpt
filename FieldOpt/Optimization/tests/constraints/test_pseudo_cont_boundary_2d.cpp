@@ -50,7 +50,8 @@ TEST_F(PseudoContBoundary2DTest, Initialization) {
     bound_settings_.box_imax = 29;
     bound_settings_.box_jmin = 0;
     bound_settings_.box_jmax = 29;
-    pseudocont_constraint_ = new Optimization::Constraints::PseudoContBoundary2D(
+    pseudocont_constraint_ =
+        new Optimization::Constraints::PseudoContBoundary2D(
         bound_settings_, varcont_pseudocont_, grid_5spot_);
 }
 

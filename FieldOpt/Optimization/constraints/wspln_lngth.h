@@ -44,7 +44,7 @@ class WellSplineLength : public Constraint, WellSplineConstraint
  public:
   // -------------------------------------------------------
   WellSplineLength(
-      ::Settings::Optimizer::Constraint settings,
+      ::Settings::Optimizer::Constraint &settings,
       ::Model::Properties::VariablePropertyContainer *variables);
   string name() override { return "WellSplineLength"; };
 

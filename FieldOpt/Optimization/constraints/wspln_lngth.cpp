@@ -32,7 +32,7 @@ namespace Constraints {
 
 // =========================================================
 WellSplineLength::WellSplineLength(
-    Settings::Optimizer::Constraint settings,
+    Settings::Optimizer::Constraint &settings,
     Model::Properties::VariablePropertyContainer *variables) {
 
   // -------------------------------------------------------

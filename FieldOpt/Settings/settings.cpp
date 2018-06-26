@@ -64,8 +64,6 @@ Settings::Settings(QString driver_path,
   // -------------------------------------------------------
   output_directory_ = output_directory;
   simulator_->output_directory_ = output_directory;
-  optimizer_->output_dir_ = output_directory;
-
 
 }
 
@@ -154,17 +152,17 @@ void Settings::readGlobalSection() {
   }
 
   if (verb_vector_[9] > 0){
-      string str_out = "[set]Global settings---";
-      cout << "\n" << BLDON << str_out << AEND << "\n"
-           << std::string(str_out.length(), '=') << endl;
+    string str_out = "[set]Global settings---";
+    cout << "\n" << BLDON << str_out << AEND << "\n"
+         << std::string(str_out.length(), '=') << endl;
     // -----------------------------------------------------
-      cout << "Name:------------------ "
-           << name_.toStdString() << endl;
+    cout << "Name:------------------ "
+         << name_.toStdString() << endl;
 
 
     // -----------------------------------------------------
-      cout << "BookkeeperTolerance:--- "
-           << bookkeeper_tolerance() << endl;
+    cout << "BookkeeperTolerance:--- "
+         << bookkeeper_tolerance() << endl;
   }
 }
 
@@ -265,7 +263,14 @@ void Settings::readOptimizerSection() {
   }
 
   // -------------------------------------------------------
+  optimizer_->output_dir_ = output_directory_;
   optimizer_->set_verbosity_vector(verb_vector());
+      foreach (auto constraint, optimizer_->constraints()){
+      constraint.set_verbosity_vector(verb_vector());
+      constraint.output_dir_ = output_directory_;
+    }
+
+  // -------------------------------------------------------
   if (optimizer_->verb_vector_[9] > 0) { // idx:9 -> set
 
     // -----------------------------------------------------

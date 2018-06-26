@@ -45,7 +45,7 @@ class ResXYZRegion : public Constraint, WellSplineConstraint
  public:
   // -------------------------------------------------------
   ResXYZRegion(
-      ::Settings::Optimizer::Constraint settings,
+      ::Settings::Optimizer::Constraint &settings,
       ::Model::Properties::VariablePropertyContainer *variables,
       ::Reservoir::Grid::Grid *grid,
       RICaseData *ricasedata);
@@ -55,6 +55,9 @@ class ResXYZRegion : public Constraint, WellSplineConstraint
   // Constraint interface
   bool CaseSatisfiesConstraint(Case *c);
   void SnapCaseToConstraints(Case *c);
+
+  bool AssembleRegion();
+  bool PrintRegionVertices();
 
  private:
 
@@ -72,6 +75,10 @@ class ResXYZRegion : public Constraint, WellSplineConstraint
   QList<Well> affected_wells_;
 
   std::vector<cvf::Vec3d> polypoints_;
+  RimIntersection* rimintersection_;
+  cvf::ref<cvf::Vec3fArray> regionvertices_;
+  size_t vx_count_;
+  cvf::Vec3d mod_offset_;
 
 };
 

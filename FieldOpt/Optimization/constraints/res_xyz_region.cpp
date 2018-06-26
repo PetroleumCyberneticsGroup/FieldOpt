@@ -24,6 +24,7 @@
 ***********************************************************/
 
 // ---------------------------------------------------------
+#include <FieldOpt-WellIndexCalculator/resinxx/rixx_prj_viz/RivIntersectionGeometryGenerator.h>
 #include "res_xyz_region.h"
 
 // ---------------------------------------------------------
@@ -32,16 +33,21 @@ namespace Constraints {
 
 // =========================================================
 ResXYZRegion::ResXYZRegion(
-    ::Settings::Optimizer::Constraint settings,
+    ::Settings::Optimizer::Constraint &settings,
     ::Model::Properties::VariablePropertyContainer *variables,
     ::Reservoir::Grid::Grid *grid,
     RICaseData *ricasedata){
+
+  // -------------------------------------------------------
+  if (settings.verb_vector_[6] >= 1) // idx:6 -> opt
+    cout << fstr("[opt]ResXYZRegion constraint.",6) << endl;
 
   // -------------------------------------------------------
   settings_ = settings;
   variables_ = variables;
   grid_ = grid;
   ricasedata_ = ricasedata;
+  mod_offset_ = ricasedata_->mainGrid()->displayModelOffset();
 
   // -------------------------------------------------------
   for (QString name : settings.wells) {
@@ -54,22 +60,18 @@ ResXYZRegion::ResXYZRegion(
 
   }
 
-
-//  for (int i = 0; i < settings.poly_points.size(); i++) {
-//
-//    polypoints_.push_back(settings.poly_points.);
-//  }
-
-
   // [1] --> OK
   // Introduce region points into
   // ::Settings::Optimizer::Constraint settings
+  polypoints_ = settings.poly_points;
 
   // [2]
   // Convert region points into poly-boundary
+  AssembleRegion();
 
   // [3]
   // Print poly-boundary vertices to file
+  PrintRegionVertices();
 
   // [4]
   // Use poly-boundary vertices in constriant-handling
@@ -77,10 +79,75 @@ ResXYZRegion::ResXYZRegion(
 };
 
 // =========================================================
-//bool ResXYZRegion::AssemblePolygon(){
-//
-//}
+bool ResXYZRegion::AssembleRegion(){
 
+  // -----------------------------------------------------
+  rimintersection_ = new RimIntersection(ricasedata_->mainGrid(),
+                                         ricasedata_,
+                                         settings_);
+
+  // -------------------------------------------------------
+  if (settings_.verb_vector_[6] >= 1) // idx:6 -> opt
+    cout << fstr("[opt]AssembleRegion().",6) << endl;
+
+  // -----------------------------------------------------
+  // Insert polypoints to rim intersection
+  for (int i=0; i < polypoints_.size(); i++) {
+    rimintersection_->appendPointToPolyLine(polypoints_[i]);
+  }
+
+  // -----------------------------------------------------
+  // Run intersection part manager and geometry generator
+  RivIntersectionPartMgr *imgr =
+      rimintersection_->intersectionPartMgr();
+
+  RivIntersectionGeometryGenerator
+      *icsec = imgr->getCrossSectionGenerator();
+
+  // -----------------------------------------------------
+  // Extract vertices from geometry obj + vertex count
+  regionvertices_ = icsec->m_cellBorderLineVxes;
+  vx_count_ = regionvertices_.p()->size();
+
+  for (size_t ivx = 0; ivx < vx_count_; ivx++) {
+
+    cvf::Vec3f
+        vx((float)(regionvertices_.p()->val(ivx).x() + mod_offset_.x()),
+           (float)(regionvertices_.p()->val(ivx).y() + mod_offset_.y()),
+           (float)(regionvertices_.p()->val(ivx).z() + mod_offset_.z()));
+
+    regionvertices_.p()->set(ivx,vx);
+
+  }
+
+}
+
+// =========================================================
+bool ResXYZRegion::PrintRegionVertices(){
+
+  // -------------------------------------------------------
+  if (settings_.verb_vector_[6] >= 1) // idx:6 -> opt
+    cout << fstr("[opt]PrintRegionVertices().",6) << endl;
+
+  // -----------------------------------------------------
+  // Print vertices to file
+  string filename = settings_.output_dir_.toStdString() + "/REG_" +
+      settings_.wells.join("_").toStdString() + ".PERIMETER";
+
+  ofstream fperimeter(filename);
+  fperimeter.precision(16);
+
+  // -----------------------------------------------------
+  for (size_t ivx = 0; ivx < vx_count_; ivx++) {
+    fperimeter << regionvertices_.p()->val(ivx).x() << " "
+               << regionvertices_.p()->val(ivx).y() << " "
+               << regionvertices_.p()->val(ivx).z() << " "
+               << endl;
+  }
+
+  fperimeter.close();
+
+}
 
 // =========================================================
 bool ResXYZRegion::CaseSatisfiesConstraint(Case *c) {

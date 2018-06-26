@@ -18,6 +18,7 @@
  GNU General Public License along with FieldOpt.
  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************/
+
 // ---------------------------------------------------------
 #include "optimizer.h"
 #include "settings_exceptions.h"
@@ -541,12 +542,10 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
 
     optimizer_constraint.type = ConstraintType::res_xyz_region;
 
-
-
     // -----------------------------------------------------
     if (json_constraint.contains("PolyPoints")){
-      optimizer_constraint.poly_points = QList<Eigen::Vector3d>();
-      optimizer_constraint.poly_points2 = std::vector<cvf::Vec3d>();
+
+      optimizer_constraint.poly_points = std::vector<cvf::Vec3d>();
 
       // -------------------------------------------------
       for (int i = 0;
@@ -556,44 +555,28 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
         auto jarray = json_constraint["PolyPoints"].toArray().at(i).toArray();
 
         // -----------------------------------------------
-        optimizer_constraint.poly_points2.push_back(
+        optimizer_constraint.poly_points.push_back(
             cvf::Vec3d(jarray.at(0).toDouble(),
                        jarray.at(1).toDouble(),
                        jarray.at(2).toDouble()));
 
-        // -----------------------------------------------
-        // old
-        Eigen::Vector3d ppoint;
-        ppoint << jarray.at(0).toDouble(),
-            jarray.at(1).toDouble(),
-            jarray.at(2).toDouble();
+      }
 
-        optimizer_constraint.poly_points.append(ppoint);
+      // -------------------------------------------------
+      cout << "PolyPoints" << endl;
+      for (int i = 0;
+           i < optimizer_constraint.poly_points.size();
+           ++i) {
+
+        cout << "[i:" << i << "] ("
+             << optimizer_constraint.poly_points[i].x() << ", "
+             << optimizer_constraint.poly_points[i].y() << ", "
+             << optimizer_constraint.poly_points[i].z() << ")"
+             << endl;
+
       }
 
     }
-
-    // -------------------------------------------------
-    cout << "PolyPoints" << endl;
-    for (int i = 0;
-         i < optimizer_constraint.poly_points2.size();
-         ++i) {
-
-      cout << "[i:" << i << "] ("
-           << optimizer_constraint.poly_points2[i].x() << ", "
-           << optimizer_constraint.poly_points2[i].y() << ", "
-           << optimizer_constraint.poly_points2[i].z() << ")"
-           << endl;
-
-
-      // old
-      // cout << "[i:" << i << "] "
-      //     << optimizer_constraint.poly_points.at(i).transpose()
-      //     << endl;
-
-    }
-
-
     // *****************************************************
 
 

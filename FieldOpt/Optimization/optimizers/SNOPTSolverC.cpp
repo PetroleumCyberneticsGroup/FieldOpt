@@ -70,13 +70,13 @@ SNOPTSolverC::SNOPTSolverC(
 //SNOPTSolverC::~SNOPTSolverC(){}
 
 // =========================================================
-SNOPTSolverC::SNOPTSolverC(Settings::Optimizer *settings,
+SNOPTSolverC::SNOPTSolverC(Settings::Optimizer::Constraint &settings,
                            Case *wplccase,
                            ::Reservoir::Grid::Grid *grid,
                            RICaseData *ricasedata) {
 
   // -------------------------------------------------------
-  if (settings->verb_vector()[6] >= 1) // idx:6 -> opt
+  if (settings.verb_vector_[6] >= 1) // idx:6 -> opt
     cout << fstr("[opt]Init. SNOPTSolverC.",6)
          << "Constraint-handling" << endl;
 
@@ -85,6 +85,7 @@ SNOPTSolverC::SNOPTSolverC(Settings::Optimizer *settings,
     cout << "[iwd]RICaseData is null!.---- " << endl;
   }
 
+  settings_con_ = settings;
   wplccase_ = wplccase;
 
   // -------------------------------------------------------
@@ -102,8 +103,8 @@ SNOPTSolverC::SNOPTSolverC(Settings::Optimizer *settings,
   //    ricasedata_->activeCellInfo(MATRIX_MODEL));
 
   // ---------------------------------------------------------------
-  settings_opt_ = settings;
-  settings_con_ = settings_opt_->constraints()[0];
+//  settings_opt_ = settings;
+//  settings_con_ = settings_opt_->constraints()[0];
 
   // -------------------------------------------------------
   // Get explicit data for outer grid bb -> for bounds
@@ -152,11 +153,11 @@ void SNOPTSolverC::initSNOPTHandler() {
   // -------------------------------------------------------
   string prnt_file, smry_file, optn_file;
 
-  string cdir = settings_->output_dir_.toStdString() + "/";
+  string cdir = settings_con_.output_dir_.toStdString() + "/";
 
-  optn_file = cdir + settings_->constraints()[0].thrdps_optn_file.toStdString() + ".opt.optn";
-  smry_file = cdir + settings_->constraints()[0].thrdps_smry_file.toStdString() + ".opt.summ";
-  prnt_file = cdir + settings_->constraints()[0].thrdps_prnt_file.toStdString() + ".opt.prnt";
+  optn_file = cdir + settings_con_.thrdps_optn_file.toStdString() + ".opt.optn";
+  smry_file = cdir + settings_con_.thrdps_smry_file.toStdString() + ".opt.summ";
+  prnt_file = cdir + settings_con_.thrdps_prnt_file.toStdString() + ".opt.prnt";
 
   cout << "optn_file: " << optn_file << endl;
   cout << "smry_file: " << smry_file << endl;
