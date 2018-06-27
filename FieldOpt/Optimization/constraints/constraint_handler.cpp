@@ -107,51 +107,59 @@ ConstraintHandler::ConstraintHandler(
       case Settings::Optimizer::ConstraintType::ReservoirBoundary:
       case Settings::Optimizer::ConstraintType::ResIJKBox: {
 
-        // -----------------------------------------------------
-        if (settings->verb_vector()[6] >= 1) // idx:6 -> opt
-          cout << fstr("ResIJKBox",6) << endl;
-
         for (auto wname : constraint.wells) {
 
+          // -----------------------------------------------
+          if (settings->verb_vector()[6] >= 1) // idx:6 -> opt
+            cout << fstr("ResIJKBox - " + wname.toStdString(),6)
+                 << endl;
+
+          // -----------------------------------------------
           auto cons = Settings::Optimizer::Constraint(constraint);
           cons.well = wname;
-          constraints_.append(
-              new ReservoirBoundary(cons,
-                                    variables,
-                                    grid));
+
+          // -----------------------------------------------
+          constraints_.append(new ReservoirBoundary(cons,
+                                                    variables,
+                                                    grid));
         }
       }
         break;
 
         // -------------------------------------------------
         // RES_XYZ_REGION
-      case Settings::Optimizer::ConstraintType::ResXYZRegion: {
-
-        // -----------------------------------------------------
-        if (settings->verb_vector()[6] >= 1) // idx:6 -> opt
-          cout << fstr("ResXYZRegion",6) << endl;
+      case Settings::Optimizer::ConstraintType::ResXYZRegion:
 
         for (auto wname : constraint.wells) {
 
+          // -----------------------------------------------
           auto cons = Settings::Optimizer::Constraint(constraint);
           cons.well = wname;
+          // cons.set_verbosity_vector(settings->verb_vector());
+          // cons.output_directory_ = settings->output_directory_;
 
+          // -----------------------------------------------
+//          if (cons.verb_vector_[6] >= 1) // idx:6 -> opt
+            cout << fstr("ResXYZRegion - " + wname.toStdString(),6)
+                 << endl;
+
+          // -----------------------------------------------
           constraints_.append(new ResXYZRegion(cons,
                                                variables,
                                                grid,
                                                ricasedata));
         }
-      }
+
         break;
 
         // -------------------------------------------------
         // WCNTRL_BHP
       case Settings::Optimizer::ConstraintType::BHP:
-      case Settings::Optimizer::ConstraintType::WcntrlBHP: {
+      case Settings::Optimizer::ConstraintType::WcntrlBHP:
 
         constraints_.append(new BhpConstraint(constraint,
                                               variables));
-      }
+
         break;
 
         // -------------------------------------------------

@@ -1,29 +1,34 @@
-/******************************************************************************
-   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
+/***********************************************************
+ Copyright (C) 2015-2017
+ Einar J.M. Baumann <einar.baumann@gmail.com>
 
-   This file is part of the FieldOpt project.
+ This file is part of the FieldOpt project.
 
-   FieldOpt is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+ FieldOpt is free software: you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation, either version
+ 3 of the License, or (at your option) any later version.
 
-   FieldOpt is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+ FieldOpt is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty
+ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
-******************************************************************************/
+ You should have received a copy of the GNU
+ General Public License along with FieldOpt.
+ If not, see <http://www.gnu.org/licenses/>.
+***********************************************************/
 
+// ---------------------------------------------------------
 #ifndef FIELDOPT_RESERVOIRBOUNDARY_H
 #define FIELDOPT_RESERVOIRBOUNDARY_H
 
+// ---------------------------------------------------------
 #include "constraint.h"
 #include "constraint_wspln.h"
 #include "Reservoir/grid/grid.h"
 
+//==========================================================
 namespace Optimization {
 namespace Constraints {
 
@@ -45,9 +50,9 @@ namespace Constraints {
  *  constraint (call it Box) (TASK C)
  *
  *  Steps for (A):
- *  1. find the edge cells of the box [x] + unit test [],
+ *  1. find edge cells of the box [x] + unit test [],
  *
- *  2. get the corner points for each of the cells [] + unit test [],
+ *  2. get corner points for each of the cells [] + unit test [],
  *
  *  3. find the corner points of the entire box (assuming the box is a
  *  parallelogram, which may not be true for the top and bottom planes

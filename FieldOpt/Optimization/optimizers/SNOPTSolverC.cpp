@@ -153,7 +153,7 @@ void SNOPTSolverC::initSNOPTHandler() {
   // -------------------------------------------------------
   string prnt_file, smry_file, optn_file;
 
-  string cdir = settings_con_.output_dir_.toStdString() + "/";
+  string cdir = settings_con_.output_directory_.toStdString() + "/";
 
   optn_file = cdir + settings_con_.thrdps_optn_file.toStdString() + ".opt.optn";
   smry_file = cdir + settings_con_.thrdps_smry_file.toStdString() + ".opt.summ";

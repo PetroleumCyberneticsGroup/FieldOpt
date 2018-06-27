@@ -30,6 +30,7 @@
 #include "Optimization/case.h"
 #include "Settings/optimizer.h"
 #include "Model/properties/variable_property_container.h"
+#include <Utilities/debug.hpp>
 
 // ---------------------------------------------------------
 namespace Optimization {
@@ -184,7 +185,6 @@ class Constraint
 
   // -------------------------------------------------------
   bool logging_enabled_;
-  int verbosity_level_=1;
 
   // -------------------------------------------------------
   // Normalizer for constraint violation value;
@@ -196,6 +196,7 @@ class Constraint
   // constraint in a penalty function. (default: 0.0)
   long double penalty_weight_;
 
+  // -------------------------------------------------------
   Settings::Optimizer *settings_;
 
  private:

@@ -58,11 +58,11 @@ Settings::Settings(QString driver_path,
     throw FileNotFoundException(driver_path.toStdString());
 
   // -------------------------------------------------------
+  output_directory_ = output_directory;
   driver_path_ = driver_path;
   readDriverFile();
 
   // -------------------------------------------------------
-  output_directory_ = output_directory;
   simulator_->output_directory_ = output_directory;
 
 }
@@ -136,7 +136,8 @@ void Settings::readGlobalSection() {
 
     name_ = global["Name"].toString();
 
-    bookkeeper_tolerance_ = global["BookkeeperTolerance"].toDouble();
+    bookkeeper_tolerance_ =
+        global["BookkeeperTolerance"].toDouble();
 
     // -----------------------------------------------------
     if (bookkeeper_tolerance_ < 0.0) {
@@ -197,11 +198,7 @@ void Settings::readSimulatorSection() {
          << std::string(str_out.length(), '=') << endl;
 
     // -----------------------------------------------------
-    cout << "VerbosityVector:------- ";
-    for (int i=0; i < simulator_->verb_vector_.size(); i++) {
-      cout << simulator_->verb_vector_[i] << " ";
-    }
-    cout << endl;
+    // vstr(&simulator_->verb_vector_); // dbg
 
     // -----------------------------------------------------
     cout << "SimulatorType:--------- "
@@ -263,11 +260,15 @@ void Settings::readOptimizerSection() {
   }
 
   // -------------------------------------------------------
-  optimizer_->output_dir_ = output_directory_;
+  optimizer_->output_directory_ = output_directory_;
   optimizer_->set_verbosity_vector(verb_vector());
-      foreach (auto constraint, optimizer_->constraints()){
+
+      foreach (auto constraint, optimizer_->constraints()) {
+
       constraint.set_verbosity_vector(verb_vector());
-      constraint.output_dir_ = output_directory_;
+//      vstr(constraint.verb_vector_); // dbg
+      constraint.output_directory_ = output_directory_;
+
     }
 
   // -------------------------------------------------------
@@ -277,6 +278,9 @@ void Settings::readOptimizerSection() {
     string str_out = "[set]Optimizer settings";
     cout << "\n" << BLDON << str_out << AEND << "\n"
          << std::string(str_out.length(), '=') << endl;
+
+    // -----------------------------------------------------
+    // vstr(&optimizer_->verb_vector_); // dbg
 
     // -----------------------------------------------------
     if (optimizer_->type() == Optimizer::OptimizerType::Compass ||

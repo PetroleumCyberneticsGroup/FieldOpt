@@ -54,10 +54,8 @@ ReservoirBoundary::ReservoirBoundary(
   index_list_edge_ = getIndicesOfEdgeCells();
 
   // -------------------------------------------------------
-  if (verbosity_level_>2) {
-    std::cout << "... ... initialized boundary.ijk constraint for well: "
-              << settings.well.toStdString() << std::endl;
-  }
+  if (settings.verb_vector_[6] >= 1) // idx:6 -> opt
+    cout << fstr("[opt]ResIJKBox constraint.",6) << endl;
 
 }
 

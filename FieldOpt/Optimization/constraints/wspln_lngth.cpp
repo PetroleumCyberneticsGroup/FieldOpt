@@ -45,10 +45,10 @@ WellSplineLength::WellSplineLength(
       initializeWell(variables->GetWellSplineVariables(settings.well));
 
   // -------------------------------------------------------
-  if (verbosity_level_>2) {
-    std::cout << "... ... initialized length constraint for well: "
-              << settings.well.toStdString() << std::endl;
-  }
+  if (settings.verb_vector_[6] >= 1) // idx:6 -> opt
+    cout << fstr("[opt]WsplnLngth -." +
+        settings.well.toStdString(),6) << endl;
+
 }
 
 // =========================================================

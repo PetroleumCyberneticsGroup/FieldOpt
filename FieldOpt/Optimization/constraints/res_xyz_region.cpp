@@ -45,9 +45,12 @@ ResXYZRegion::ResXYZRegion(
   ricasedata_ = ricasedata;
   mod_offset_ = ricasedata_->mainGrid()->displayModelOffset();
 
+  // -----------------------------------------------------
+  // vstr(&settings_.verb_vector_); // dbg
+
   // -------------------------------------------------------
-  if (settings_.verb_vector_[6] >= 1) // idx:6 -> opt
-    cout << fstr("[opt]ResXYZRegion constraint.",6) << endl;
+  //if (settings_.verb_vector_[6] >= 0) // idx:6 -> opt
+    cout << fstr("[opt]ResXYZRegion constr.",6) << endl;
 
   // -------------------------------------------------------
   for (QString name : settings.wells) {
@@ -87,7 +90,7 @@ void ResXYZRegion::AssembleRegion(){
                                          settings_);
 
   // -------------------------------------------------------
-  if (settings_.verb_vector_[6] >= 1) // idx:6 -> opt
+  //if (settings_.verb_vector_[6] >= 0) // idx:6 -> opt
     cout << fstr("[opt]AssembleRegion().",6) << endl;
 
   // -----------------------------------------------------
@@ -126,13 +129,15 @@ void ResXYZRegion::AssembleRegion(){
 void ResXYZRegion::PrintRegionVertices(){
 
   // -------------------------------------------------------
-  if (settings_.verb_vector_[6] >= 1) // idx:6 -> opt
+  //if (settings_.verb_vector_[6] >= 0) // idx:6 -> opt
     cout << fstr("[opt]PrintRegionVertices().",6) << endl;
 
   // -----------------------------------------------------
   // Print vertices to file
-  string filename = settings_.output_dir_.toStdString() + "/REG_" +
+  string filename = settings_.output_directory_.toStdString() + "/REG_" +
       settings_.wells.join("_").toStdString() + ".PERIMETER";
+
+  cout << filename << endl;
 
   ofstream fperimeter(filename);
   fperimeter.precision(16);

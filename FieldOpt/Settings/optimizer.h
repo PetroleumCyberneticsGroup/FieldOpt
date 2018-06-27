@@ -203,6 +203,7 @@ class Optimizer
 
   // -------------------------------------------------------
   struct Objective {
+
     // The objective definition type (e.g., WeightedSum)
     ObjectiveType type;
 
@@ -316,12 +317,12 @@ class Optimizer
     std::string exec_adg_const_path_;
 
     // -----------------------------------------------------
-    std::vector<int> verb_vector_ = std::vector<int>(11,0);
+    std::vector<int> verb_vector_; // = std::vector<int>(11,0);
 
-    void set_verbosity_vector(const std::vector<int> verb_vector)
+    void set_verbosity_vector(const std::vector<int> &verb_vector)
     { verb_vector_ = verb_vector; }
 
-    QString output_dir_;
+    QString output_directory_;
 
   };
 
@@ -348,7 +349,7 @@ class Optimizer
   std::vector<int> verb_vector() const { return verb_vector_; }
 
   // -------------------------------------------------------
-  QString output_dir_;
+  QString output_directory_;
 
  private:
   // -------------------------------------------------------

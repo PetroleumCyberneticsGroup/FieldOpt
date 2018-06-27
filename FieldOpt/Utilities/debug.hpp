@@ -49,9 +49,24 @@ using std::string;
 using std::left;
 using namespace Reservoir::WellIndexCalculation;
 
-// ---------------------------------------------------------------
+//==========================================================
 /*!
- * \brief Get time stamp
+ * \brief
+ */
+inline static string vstr(std::vector<int> *vvec,
+                          int idx=-1,
+                          int wdth=29) {
+
+  cout << "VerbosityVector:------- ";
+  for (int i=0; i < vvec->size(); i++) {
+//    cout << vvec[i] << " ";
+  }
+  cout << endl;
+}
+
+//==========================================================
+/*!
+ * \brief
  */
 inline static string fstr(string ostr,
                           int idx=-1,
