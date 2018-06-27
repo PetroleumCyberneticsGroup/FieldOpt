@@ -75,17 +75,17 @@ class Optimizer
     CombinedWellSplineLengthInterwellDistanceReservoirBoundary,
     ReservoirBoundary, PseudoContBoundary2D,
     //
-    c_wspln_lnght_interw_dist,
-    c_wspln_lnght_interw_dist_res_ijk_box,
-    ADGPRS_Optimizer,
-    res_ijk_box,
-    res_xyz_region,
-    wcntrl_bhp,
-    wcntrl_rate,
-    wspln_interw_dist_anl,
-    wspln_interw_dist_opt,
-    wspln_lngth,
-    wvert_pseudo_cont_2d_ijk_box
+    CWsplnLnghtInterwDist,
+    CWsplnLnghtInterwDistResIJKBox,
+    ADGPRSOptimizer,
+    ResIJKBox,
+    ResXYZRegion,
+    WcntrlBHP,
+    WcntrlRATE,
+    WsplnInterwDistAnl,
+    WsplnInterwDistOpt,
+    WsplnLngth,
+    WvertPseudoCont2dIJKBox
   };
 
   // -------------------------------------------------------

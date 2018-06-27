@@ -8,23 +8,23 @@ message(STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
 message(STATUS "CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
 
 # Options ==================================================
-set(EXPERIMENTAL_CONSTRAINTS_DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}/experimental_constraints)
-set(EXPERIMENTAL_CONSTRAINTS_SRC "")
-set(EXPERIMENTAL_CONSTRAINTS_TESTS "")
+#set(EXPERIMENTAL_CONSTRAINTS_DIR
+#    ${CMAKE_CURRENT_SOURCE_DIR}/experimental_constraints)
+#set(EXPERIMENTAL_CONSTRAINTS_SRC "")
+#set(EXPERIMENTAL_CONSTRAINTS_TESTS "")
 
-if(EXISTS ${EXPERIMENTAL_CONSTRAINTS_DIR}
-    AND IS_DIRECTORY ${EXPERIMENTAL_CONSTRAINTS_DIR})
-  message("Including experimental constraints")
-  add_definitions(-DWITH_EXPERIMENTAL_CONSTRIANTS)
-  set(EXPERIMENTAL_CONSTRAINTS_SRC
-      ${EXPERIMENTAL_CONSTRAINTS_DIR}/)
-  set(EXPERIMENTAL_CONSTRAINTS_TESTS
-      ${EXPERIMENTAL_CONSTRAINTS_DIR}/tests/)
-else()
-  message("Experimental constraints not found")
-  add_definitions(-DWITHOUT_EXPERIMENTAL_CONSTRAINTS)
-endif()
+#if(EXISTS ${EXPERIMENTAL_CONSTRAINTS_DIR}
+#    AND IS_DIRECTORY ${EXPERIMENTAL_CONSTRAINTS_DIR})
+#  message("Including experimental constraints")
+#  add_definitions(-DWITH_EXPERIMENTAL_CONSTRIANTS)
+#  set(EXPERIMENTAL_CONSTRAINTS_SRC
+#      ${EXPERIMENTAL_CONSTRAINTS_DIR}/)
+#  set(EXPERIMENTAL_CONSTRAINTS_TESTS
+#      ${EXPERIMENTAL_CONSTRAINTS_DIR}/tests/)
+#else()
+#  message("Experimental constraints not found")
+#  # add_definitions(-DWITHOUT_EXPERIMENTAL_CONSTRAINTS)
+#endif()
 
 # Add library ==============================================
 add_library(optimization
@@ -45,20 +45,21 @@ add_library(optimization
     optimizers/OptimizationProblem.cpp
     optimizers/Subproblem.cpp
     # CONSTRAINTS
-    constraints/constraint_handler.cpp
-    constraints/constraint.cpp
-    constraints/wcntrl_bhp.cpp
-    constraints/res_ijk_box.cpp
-    constraints/wspln_lngth.cpp
-    constraints/wspln_interw_dist_anl.cpp
-    constraints/constraint_wspln.cpp
     constraints/c-wspln_lngth-interw_dist.cpp
-    constraints/wcntrl_rate.cpp
     constraints/c-wspln_lngth-interw_dist-res_ijk_box.cpp
-    constraints/wvert_pseudo_cont_2d_ijk_box.cpp
-    constraints/wspln_interw_dist_opt.cpp
+    constraints/constraint.cpp
+    constraints/constraint_handler.cpp
+    constraints/constraint_wspln.cpp
     constraints/ext_adgprs_optimizer.cpp
-    ${EXPERIMENTAL_CONSTRAINTS_SRC}
+    constraints/res_ijk_box.cpp
+    constraints/res_xyz_region.cpp
+    constraints/wcntrl_bhp.cpp
+    constraints/wcntrl_rate.cpp
+    constraints/wspln_interw_dist_anl.cpp
+    constraints/wspln_interw_dist_opt.cpp
+    constraints/wspln_lngth.cpp
+    constraints/wvert_pseudo_cont_2d_ijk_box.cpp
+    # ${EXPERIMENTAL_CONSTRAINTS_SRC}
     # OBJECTIVES
     objective/objective.cpp
     objective/weightedsum.cpp
@@ -74,7 +75,7 @@ add_library(optimization
     ../FieldOpt-3rdPartySolvers/handlers/SNOPTHandler.cpp
     ../FieldOpt-3rdPartySolvers/handlers/LibraryHandler.c
     ../FieldOpt-3rdPartySolvers/handlers/SNOPTLoader.c
-    constraints/res_xyz_region.cpp constraints/res_xyz_region.h)
+    )
 
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
@@ -116,7 +117,7 @@ if (BUILD_TESTING)
       tests/optimizers/test_compass_search.cpp
       tests/test_resource_cases.h
       tests/test_resource_optimizer.h
-      ${EXPERIMENTAL_CONSTRAINTS_TESTS}
+      # ${EXPERIMENTAL_CONSTRAINTS_TESTS}
       tests/constraints/test_rate_constraint.cpp
       tests/test_case_transfer_object.cpp
       tests/optimizers/test_apps.cpp

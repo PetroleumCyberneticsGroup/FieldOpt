@@ -2,7 +2,7 @@
  Copyright (C) 2017
  Mathias C. Bellout <mathias.bellout@ntnu.no>
 
- Created by bellout on ${myDate}.
+ Created by bellout on 20180620.
 
  This file is part of the FieldOpt project.
 
@@ -36,11 +36,7 @@ ResXYZRegion::ResXYZRegion(
     ::Settings::Optimizer::Constraint &settings,
     ::Model::Properties::VariablePropertyContainer *variables,
     ::Reservoir::Grid::Grid *grid,
-    RICaseData *ricasedata){
-
-  // -------------------------------------------------------
-  if (settings.verb_vector_[6] >= 1) // idx:6 -> opt
-    cout << fstr("[opt]ResXYZRegion constraint.",6) << endl;
+    RICaseData *ricasedata) {
 
   // -------------------------------------------------------
   settings_ = settings;
@@ -48,6 +44,10 @@ ResXYZRegion::ResXYZRegion(
   grid_ = grid;
   ricasedata_ = ricasedata;
   mod_offset_ = ricasedata_->mainGrid()->displayModelOffset();
+
+  // -------------------------------------------------------
+  if (settings_.verb_vector_[6] >= 1) // idx:6 -> opt
+    cout << fstr("[opt]ResXYZRegion constraint.",6) << endl;
 
   // -------------------------------------------------------
   for (QString name : settings.wells) {
@@ -76,10 +76,10 @@ ResXYZRegion::ResXYZRegion(
   // [4]
   // Use poly-boundary vertices in constriant-handling
 
-};
+}
 
 // =========================================================
-bool ResXYZRegion::AssembleRegion(){
+void ResXYZRegion::AssembleRegion(){
 
   // -----------------------------------------------------
   rimintersection_ = new RimIntersection(ricasedata_->mainGrid(),
@@ -123,7 +123,7 @@ bool ResXYZRegion::AssembleRegion(){
 }
 
 // =========================================================
-bool ResXYZRegion::PrintRegionVertices(){
+void ResXYZRegion::PrintRegionVertices(){
 
   // -------------------------------------------------------
   if (settings_.verb_vector_[6] >= 1) // idx:6 -> opt

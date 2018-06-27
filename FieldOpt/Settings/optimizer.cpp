@@ -405,11 +405,11 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
   // *****************************************************
   // CONSTRAINT -> COMBINED WELL LENGTH + INTERWELL DISTANCE
   if (QString::compare(
-      constraint_type, "c_wspln_lnght_interw_dist") == 0) {
+      constraint_type, "CWsplnLnghtInterwDist") == 0) {
 
     // -----------------------------------------------------
     optimizer_constraint.type =
-        ConstraintType::c_wspln_lnght_interw_dist;
+        ConstraintType::CWsplnLnghtInterwDist;
 
     // -----------------------------------------------------
     optimizer_constraint.min_length =
@@ -438,10 +438,10 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
     // *****************************************************
     // CONSTRAINT -> WSPLINE WLENGTH + INTERWELL DIST + IJK BOX
   } else if (QString::compare(
-      constraint_type, "c_wspln_lnght_interw_dist_res_ijk_box") == 0 ) {
+      constraint_type, "CWsplnLnghtInterwDistResIJKBox") == 0 ) {
 
     optimizer_constraint.type =
-        ConstraintType::c_wspln_lnght_interw_dist_res_ijk_box;
+        ConstraintType::CWsplnLnghtInterwDistResIJKBox;
 
     // -----------------------------------------------------
     optimizer_constraint.min_length =
@@ -488,7 +488,7 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
     // *****************************************************
     // CONSTRAINT -> ADGPRS OPTIMIZER
   } else if (QString::compare(constraint_type, "ADG") == 0) {
-    optimizer_constraint.type = ConstraintType::ADGPRS_Optimizer;
+    optimizer_constraint.type = ConstraintType::ADGPRSOptimizer;
 
     // -----------------------------------------------------
     optimizer_constraint.min_length =
@@ -507,10 +507,10 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
     // *****************************************************
     // CONSTRAINT -> RESERVOIR IJK BOX
   } else if (QString::compare(
-      constraint_type, "res_ijk_box") == 0) {
+      constraint_type, "ResIJKBox") == 0) {
 
     // optimizer_constraint.type = ConstraintType::ReservoirBoundary;
-    optimizer_constraint.type = ConstraintType::res_ijk_box;
+    optimizer_constraint.type = ConstraintType::ResIJKBox;
 
     // -----------------------------------------------------
     optimizer_constraint.box_imin =
@@ -538,9 +538,9 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
     // *****************************************************
     // CONSTRAINT -> RESERVOIR XYZ REGION
   } else if (QString::compare(
-      constraint_type, "res_xyz_region") == 0) {
+      constraint_type, "ResXYZRegion") == 0) {
 
-    optimizer_constraint.type = ConstraintType::res_xyz_region;
+    optimizer_constraint.type = ConstraintType::ResXYZRegion;
 
     // -----------------------------------------------------
     if (json_constraint.contains("PolyPoints")){
@@ -585,8 +585,7 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
     // *****************************************************
     // CONSTRAINT -> WELL BHP
   } else if (QString::compare(constraint_type, "BHP") == 0) {
-    // optimizer_constraint.type = ConstraintType::BHP;
-    optimizer_constraint.type = ConstraintType::wcntrl_bhp;
+    optimizer_constraint.type = ConstraintType::WcntrlBHP;
 
     if (json_constraint.contains("Max"))
       optimizer_constraint.max = json_constraint["Max"].toDouble();
@@ -601,8 +600,7 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
     // *****************************************************
     // CONSTRAINT -> WELL RATE
   } else if (QString::compare(constraint_type, "Rate") == 0) {
-    // optimizer_constraint.type = ConstraintType::Rate;
-    optimizer_constraint.type = ConstraintType::wcntrl_rate;
+    optimizer_constraint.type = ConstraintType::WcntrlRATE;
 
     if (json_constraint.contains("Max"))
       optimizer_constraint.max = json_constraint["Max"].toDouble();
@@ -617,12 +615,10 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
     // *****************************************************
     // CONSTRAINT -> INTERWELL DISTANCE (ANALYTICAL)
   } else if (QString::compare(
-      constraint_type, "wspln_interw_dist_anl") == 0) {
+      constraint_type, "WsplnInterwDistAnl") == 0) {
 
-    // optimizer_constraint.type =
-    //    ConstraintType::WellSplineInterwellDistance;
     optimizer_constraint.type =
-        ConstraintType::wspln_interw_dist_anl;
+        ConstraintType::WsplnInterwDistAnl;
 
     // -----------------------------------------------------
     if (json_constraint.contains("Min")) {
@@ -659,10 +655,10 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
     // *****************************************************
     // CONSTRAINT -> INTERWELL DISTANCE (OPT.SUBPROBLEM)
   } else if (QString::compare(
-      constraint_type, "wspln_interw_dist_opt") == 0) {
+      constraint_type, "WsplnInterwDistOpt") == 0) {
 
     optimizer_constraint.type =
-        ConstraintType::wspln_interw_dist_opt;
+        ConstraintType::WsplnInterwDistOpt;
 
     // -----------------------------------------------------
     if (json_constraint.contains("MaxIterations"))
@@ -713,7 +709,7 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
 
     // optimizer_constraint.type =
     //    ConstraintType::WellSplineLength;
-    optimizer_constraint.type = ConstraintType::wspln_lngth;
+    optimizer_constraint.type = ConstraintType::WsplnLngth;
 
     // -----------------------------------------------------
     if (json_constraint.contains("Min")) {
@@ -770,7 +766,7 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
   } else if (QString::compare(constraint_type, "Boundary2D") == 0) {
 
     // optimizer_constraint.type = ConstraintType::PseudoContBoundary2D;
-    optimizer_constraint.type = ConstraintType::wvert_pseudo_cont_2d_ijk_box;
+    optimizer_constraint.type = ConstraintType::WvertPseudoCont2dIJKBox;
 
     optimizer_constraint.box_imin = json_constraint["Imin"].toDouble();
     optimizer_constraint.box_imax = json_constraint["Imax"].toDouble();
@@ -870,8 +866,8 @@ Optimizer::parseSingleConstraint(QJsonObject json_constraint) {
 
 
   // *****************************************************
-  if (optimizer_constraint.type == ConstraintType::ADGPRS_Optimizer
-      || optimizer_constraint.type == ConstraintType::wspln_interw_dist_opt) {
+  if (optimizer_constraint.type == ConstraintType::ADGPRSOptimizer
+      || optimizer_constraint.type == ConstraintType::WsplnInterwDistOpt) {
 
     // -----------------------------------------------------
     // Snopt IO files
