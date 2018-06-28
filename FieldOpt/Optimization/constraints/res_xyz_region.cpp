@@ -33,27 +33,27 @@ namespace Constraints {
 
 // =========================================================
 ResXYZRegion::ResXYZRegion(
-    ::Settings::Optimizer::Constraint &settings,
+    ::Settings::Optimizer::Constraint &settings_con,
     ::Model::Properties::VariablePropertyContainer *variables,
     ::Reservoir::Grid::Grid *grid,
     RICaseData *ricasedata) {
 
   // -------------------------------------------------------
-  settings_ = settings;
+  settings_con_ = settings_con;
   variables_ = variables;
   grid_ = grid;
   ricasedata_ = ricasedata;
   mod_offset_ = ricasedata_->mainGrid()->displayModelOffset();
 
   // -----------------------------------------------------
-  // vstr(&settings_.verb_vector_); // dbg
+  // verbstr(&settings_.verb_vector_); // dbg
 
   // -------------------------------------------------------
   //if (settings_.verb_vector_[6] >= 0) // idx:6 -> opt
     cout << fstr("[opt]ResXYZRegion constr.",6) << endl;
 
   // -------------------------------------------------------
-  for (QString name : settings.wells) {
+  for (QString name : settings_con_.wells) {
 
     // -----------------------------------------------------
     // Build affected well QList
@@ -66,7 +66,7 @@ ResXYZRegion::ResXYZRegion(
   // [1] --> OK
   // Introduce region points into
   // ::Settings::Optimizer::Constraint settings
-  polypoints_ = settings.poly_points;
+  polypoints_ = settings_con_.poly_points;
 
   // [2]
   // Convert region points into poly-boundary
@@ -87,7 +87,7 @@ void ResXYZRegion::AssembleRegion(){
   // -----------------------------------------------------
   rimintersection_ = new RimIntersection(ricasedata_->mainGrid(),
                                          ricasedata_,
-                                         settings_);
+                                         settings_con_);
 
   // -------------------------------------------------------
   //if (settings_.verb_vector_[6] >= 0) // idx:6 -> opt
@@ -134,8 +134,8 @@ void ResXYZRegion::PrintRegionVertices(){
 
   // -----------------------------------------------------
   // Print vertices to file
-  string filename = settings_.output_directory_.toStdString() + "/REG_" +
-      settings_.wells.join("_").toStdString() + ".PERIMETER";
+  string filename = settings_con_.output_directory_.toStdString() + "/REG_" +
+      settings_con_.wells.join("_").toStdString() + ".PERIMETER";
 
   cout << filename << endl;
 

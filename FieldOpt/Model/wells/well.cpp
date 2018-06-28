@@ -39,10 +39,10 @@ Well::Well(Settings::Model settings,
   // -------------------------------------------------------
   Settings::Model::Well
       well_settings = settings.wells().at(well_number);
-  well_settings.verb_vector_ = settings.verb_vector();
+  well_settings.verb_vector_ = settings.verb_vector_;
 
   // -------------------------------------------------------
-  verb_vector_ = settings.verb_vector();
+  verb_vector_ = settings.verb_vector_;
   if (verb_vector_[5] > 1) // idx:5 -> mod (Model)
     std::cout << FCYAN << "[mod]Reading well settings.-- "
               << AEND << std::endl;

@@ -166,7 +166,7 @@ Model::Well Model::readSingleWell(QJsonObject json_well) {
   // -------------------------------------------------------
   // Well name
   well.name = json_well["Name"].toString();
-  well.verb_vector_ = verb_vector();
+  well.verb_vector_ = verb_vector_;
 
   // -------------------------------------------------------
   // Well Type
@@ -595,6 +595,7 @@ void Model::parseImportedWellOverrides(QJsonArray json_wells) {
   }
 }
 
+// =========================================================
 int Model::getClosestControlTime(int deck_time) {
   auto diff = std::vector<int>(control_times_.size());
   for (int i = 0; i < control_times_.size(); ++i) { // Compute control times

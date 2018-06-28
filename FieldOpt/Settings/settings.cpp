@@ -37,6 +37,7 @@
 
 // ---------------------------------------------------------
 using std::string;
+using std::vector;
 using std::cout;
 using std::endl;
 using std::fixed;
@@ -48,45 +49,21 @@ namespace Settings {
 // =========================================================
 Settings::Settings(QString driver_path,
                    QString output_directory,
-                   std::vector<int> verb_vector) {
-
-  // -------------------------------------------------------
-  set_verbosity_vector(verb_vector);
+                   vector<int> verb_vector) {
 
   // -------------------------------------------------------
   if (!::Utilities::FileHandling::FileExists(driver_path))
     throw FileNotFoundException(driver_path.toStdString());
 
   // -------------------------------------------------------
+  verb_vector_ = verb_vector;
   output_directory_ = output_directory;
   driver_path_ = driver_path;
+//  verbstr(verb_vector_); // dbg
+
+  // -------------------------------------------------------
   readDriverFile();
 
-  // -------------------------------------------------------
-  simulator_->output_directory_ = output_directory;
-
-}
-
-// =========================================================
-QString Settings::GetLogCsvString() const {
-
-  QStringList header  = QStringList();
-  QStringList content = QStringList();
-
-  // -------------------------------------------------------
-  header  << "name"
-          << "maxevals"
-          << "initstep"
-          << "minstep";
-
-  // -------------------------------------------------------
-  content << name_
-          << QString::number(optimizer_->parameters().max_evaluations)
-          << QString::number(optimizer_->parameters().initial_step_length)
-          << QString::number(optimizer_->parameters().minimum_step_length);
-
-  return QString("%1\n%2").
-      arg(header.join(",")).arg(content.join(","));
 }
 
 // =========================================================
@@ -115,6 +92,7 @@ void Settings::readDriverFile() {
   // -------------------------------------------------------
   json_driver_ = new QJsonObject(json.object());
 
+//  verbstr(verb_vector_); // dbg
   readGlobalSection();
   readSimulatorSection();
   readModelSection();
@@ -152,26 +130,27 @@ void Settings::readGlobalSection() {
             + string(ex.what()));
   }
 
-  if (verb_vector_[9] > 0){
+  // -----------------------------------------------------
+//  verbstr(verb_vector_); // dbg
+  if (verb_vector_[9] > 1) { // idx:9 -> set
     string str_out = "[set]Global settings---";
+
     cout << "\n" << BLDON << str_out << AEND << "\n"
          << std::string(str_out.length(), '=') << endl;
-    // -----------------------------------------------------
+
     cout << "Name:------------------ "
          << name_.toStdString() << endl;
 
-
-    // -----------------------------------------------------
     cout << "BookkeeperTolerance:--- "
          << bookkeeper_tolerance() << endl;
   }
+//  verbstr(verb_vector_); // dbg
 }
 
 // =========================================================
 void Settings::readSimulatorSection() {
 
   // -------------------------------------------------------
-  // Simulator root
   QJsonObject json_simulator;
 
   try {
@@ -189,59 +168,77 @@ void Settings::readSimulatorSection() {
   }
 
   // -------------------------------------------------------
-  simulator_->set_verbosity_vector(verb_vector());
-  if (simulator_->verb_vector_[9] > 0) { // idx:9 -> set (Settings)
+  simulator_->verb_vector_ = verb_vector_;
+  simulator_->output_directory_ = output_directory_;
+
+  if (simulator_->verb_vector_[9] > 1) { // idx:9 -> set
 
     // -----------------------------------------------------
     string str_out = "[set]Simulator settings";
     cout << "\n" << BLDON << str_out << AEND << "\n"
          << std::string(str_out.length(), '=') << endl;
 
-    // -----------------------------------------------------
-    // vstr(&simulator_->verb_vector_); // dbg
+    // verbstr(&simulator_->verb_vector_); // dbg
 
-    // -----------------------------------------------------
     cout << "SimulatorType:--------- "
          << json_simulator["Type"].
              toString().toUtf8().constData() << endl;
 
-    // -----------------------------------------------------
     cout << "FluidModel:------------ "
          << json_simulator["FluidModel"].
              toString().toUtf8().constData() << endl;
 
-    // -----------------------------------------------------
     cout << "MaxMinutes:------------ "
          << simulator_->max_minutes_ << endl;
   }
 }
 
-// =========================================================
-void Settings::readOptimizationSection() {
+// ========================================================
+void Settings::readModelSection() {
 
-  // -------------------------------------------------------
+  // -------------------------------------------------------------
   try {
-    QJsonObject optimization =
-        json_driver_->value("Optimization").toObject();
-    optimization_ = new Optimization(optimization);
+    QJsonObject model = json_driver_->value("Model").toObject();
+
+    model_ = new Model(model,
+                       simulator_->driver_file_path_,
+                       verb_vector_);
+
   }
   catch (std::exception const &ex) {
-    throw UnableToParseOptimizerSectionException(
-        "Unable to parse driver file Optimization section: "
-            + string(ex.what()));
+    throw UnableToParseModelSectionException(
+        "Unable to parse model section: " + string(ex.what()));
   }
 
-  // Fields:
-  // -Optimizers
-  // -Optimization structure:
-  // -Variable assignment, i.e., which optimizers that
-  // should deal with which variable types (no overlap
-  // possible); types refers to either intrinsic or
-  // extrinsic variable types, e.g., distinction by
-  // continuous, discrete and/or categorical; and
-  // well placement, well controls, completions, etc.
+  // -------------------------------------------------------
+  model_->verb_vector_ = verb_vector_;
+  model_->output_directory_ = output_directory_;
 
+  // -------------------------------------------------------------
+  if (model_->verb_vector_[9] > 0) { // idx:9 -> set (Settings)
+    string str_out = "[set]model settings----";
+    cout << "\n" << BLDON << str_out << AEND << "\n"
+         << string(str_out.length(), '=') << endl;
 
+    // ---------------------------------------------------------
+    // Reservoir type
+    cout << fixed << setprecision(1);
+    cout << "Reservoir type:-------- "
+         << model_->ResTypeStr(
+             model_->reservoir_.type).toStdString() << endl;
+
+    // ---------------------------------------------------------
+    // Drilling type
+    cout << "Drilling mode:--------- "
+         << model_->DrillingStr(
+             model_->drillingMode_).toStdString() << endl;
+
+    // ---------------------------------------------------------
+    // Drilling sequence
+    // cout << "Drilling sequence:----- " << endl;
+    // model_->GetDrillingStr(model_->drillseq_);
+
+  }
 }
 
 // =========================================================
@@ -260,27 +257,31 @@ void Settings::readOptimizerSection() {
   }
 
   // -------------------------------------------------------
+  verbstr(verb_vector_); // dbg
+  optimizer_->verb_vector_ = verb_vector_;
   optimizer_->output_directory_ = output_directory_;
-  optimizer_->set_verbosity_vector(verb_vector());
+  cout << "constraints" << endl;
+  cout << fstr(output_directory_.toStdString()) << endl;
 
-      foreach (auto constraint, optimizer_->constraints()) {
+  for (auto constraint : optimizer_->constraints()) {
 
-      constraint.set_verbosity_vector(verb_vector());
-//      vstr(constraint.verb_vector_); // dbg
-      constraint.output_directory_ = output_directory_;
+    constraint.verb_vector_ = verb_vector_;
+    constraint.output_directory_ = output_directory_;
+    verbstr(constraint.verb_vector_); // dbg
+    cout << fstr(constraint.output_directory_.toStdString()) << endl;
 
-    }
+  }
 
   // -------------------------------------------------------
-  if (optimizer_->verb_vector_[9] > 0) { // idx:9 -> set
+  if (optimizer_->verb_vector_[9] > 1) { // idx:9 -> set
 
     // -----------------------------------------------------
     string str_out = "[set]Optimizer settings";
     cout << "\n" << BLDON << str_out << AEND << "\n"
-         << std::string(str_out.length(), '=') << endl;
+         << string(str_out.length(), '=') << endl;
 
     // -----------------------------------------------------
-    // vstr(&optimizer_->verb_vector_); // dbg
+//    verbstr(optimizer_->verb_vector_); // dbg
 
     // -----------------------------------------------------
     if (optimizer_->type() == Optimizer::OptimizerType::Compass ||
@@ -366,48 +367,41 @@ void Settings::readOptimizerSection() {
   }
 }
 
-// ========================================================
-void Settings::readModelSection() {
 
-  // -------------------------------------------------------------
+// =========================================================
+void Settings::readOptimizationSection() {
+
+  // -------------------------------------------------------
   try {
-    QJsonObject model = json_driver_->value("Model").toObject();
-
-    model_ = new Model(model,
-                       simulator_->driver_file_path_,
-                       verb_vector());
-
+    QJsonObject optimization =
+        json_driver_->value("Optimization").toObject();
+    optimization_ = new Optimization(optimization);
   }
   catch (std::exception const &ex) {
-    throw UnableToParseModelSectionException(
-        "Unable to parse model section: " + string(ex.what()));
+    throw UnableToParseOptimizerSectionException(
+        "Unable to parse driver file Optimization section: "
+            + string(ex.what()));
   }
 
-  // -------------------------------------------------------------
-  if (model_->verb_vector_[9] > 0) { // idx:9 -> set (Settings)
-    string str_out = "[set]model settings----";
-    cout << "\n" << BLDON << str_out << AEND << "\n"
-         << std::string(str_out.length(), '=') << endl;
+  // -------------------------------------------------------
+  // Fields:
+  // -Optimizers
+  // -Optimization structure:
+  // -Variable assignment, i.e., which optimizers that
+  // should deal with which variable types (no overlap
+  // possible); types refers to either intrinsic or
+  // extrinsic variable types, e.g., distinction by
+  // continuous, discrete and/or categorical; and
+  // well placement, well controls, completions, etc.
 
-    // ---------------------------------------------------------
-    // Reservoir type
-    cout << fixed << setprecision(1);
-    cout << "Reservoir type:-------- "
-         << model_->ResTypeStr(
-             model_->reservoir_.type).toStdString() << endl;
+  // -------------------------------------------------------
+  optimization_->verb_vector_ = verb_vector_;
+  optimization_->output_directory_ = output_directory_;
 
-    // ---------------------------------------------------------
-    // Drilling type
-    cout << "Drilling mode:--------- "
-         << model_->DrillingStr(
-             model_->drillingMode_).toStdString() << endl;
-
-    // ---------------------------------------------------------
-    // Drilling sequence
-    // cout << "Drilling sequence:----- " << endl;
-    // model_->GetDrillingStr(model_->drillseq_);
+  if (optimization_->verb_vector_[9] > 1) { // idx:9 -> set
 
   }
+
 }
 
 // ===============================================================
@@ -420,5 +414,28 @@ void Settings::set_build_path(const QString &build_path) {
   build_path_ = build_path;
 }
 
+// =========================================================
+QString Settings::GetLogCsvString() const {
+
+  QStringList header  = QStringList();
+  QStringList content = QStringList();
+
+  // -------------------------------------------------------
+  header  << "name"
+          << "maxevals"
+          << "initstep"
+          << "minstep";
+
+  // -------------------------------------------------------
+  content << name_
+          << QString::number(optimizer_->parameters().max_evaluations)
+          << QString::number(optimizer_->parameters().initial_step_length)
+          << QString::number(optimizer_->parameters().minimum_step_length);
+
+  return QString("%1\n%2").
+      arg(header.join(",")).arg(content.join(","));
 }
+
+}
+
 

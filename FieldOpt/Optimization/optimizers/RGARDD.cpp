@@ -49,7 +49,7 @@ void RGARDD::iterate() {
   population_ = sortPopulation(population_);
 
   if (is_stagnant()) {
-    if (settings_->verb_vector()[6] >= 1) { // idx:6 -> opt (Optimization)
+    if (settings_->verb_vector_[6] >= 1) { // idx:6 -> opt (Optimization)
       cout << "The population has stagnated in generation "
            << iteration_ << ". Repopulating." << endl;
     }
@@ -93,7 +93,7 @@ void RGARDD::handleEvaluatedCase(Case *c) {
     population_[index] = mating_pool_[index];
     if (isImprovement(c)) {
       updateTentativeBestCase(c);
-      if (settings_->verb_vector()[6] >= 1) { // idx:6 -> opt (Optimization)
+      if (settings_->verb_vector_[6] >= 1) { // idx:6 -> opt (Optimization)
         cout << "New best in generation " << iteration_ << ": "
              << GetTentativeBestCase()->objective_function_value() << endl;
       }

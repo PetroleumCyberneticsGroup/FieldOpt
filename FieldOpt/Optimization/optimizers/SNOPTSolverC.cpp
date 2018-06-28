@@ -51,7 +51,7 @@ SNOPTSolverC::SNOPTSolverC(
     Logger *logger) {
 
   // -------------------------------------------------------
-  if (settings->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
+  if (settings->verb_vector_[6] >= 1) // idx:6 -> opt (Optimization)
     cout << fstr("[opt]Init. SNOPTSolverC.",6) << endl;
   // settings_ = settings;
 
@@ -169,7 +169,7 @@ void SNOPTSolverC::initSNOPTHandler() {
                                    optn_file.c_str());
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt
+  if (settings_->verb_vector_[6] >= 1) // idx:6 -> opt
     cout << "[opt]Init. SNOPTHandler.--------" << endl;
 
 }
@@ -758,7 +758,7 @@ void SNOPTSolverC::callSNOPT() {
 // -----------------------------------------------------------------
 void SNOPTSolverC::setOptionsForSNOPT() {
 
-  if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
+  if (settings_->verb_vector_[6] >= 1) // idx:6 -> opt (Optimization)
     cout << "[opt]Set options for SNOPT.---" << endl;
 
   //SNOPTHandler_->setParameter("Backup basis file              0");
@@ -1083,7 +1083,7 @@ void SNOPTSolverC::dbg_bbgrid() {
 
   // -------------------------------------------------------
   // Dbg
-  if (settings_->verb_vector()[5] > 3) { // idx:5 -> mod
+  if (settings_->verb_vector_[5] > 3) { // idx:5 -> mod
 
     // -----------------------------------------------------
     cout << endl << fstr("[mod]bbgrid_.debugString()",5)
@@ -1097,7 +1097,7 @@ void SNOPTSolverC::dbg_bbgrid() {
     bbgrid_.cornerVertices(bbgrid_cornerVerts);
 
     // -----------------------------------------------------
-    if (settings_->verb_vector()[5] > 4) { // idx:5 -> mod
+    if (settings_->verb_vector_[5] > 4) { // idx:5 -> mod
       for (int j = 0; j < 8; j++) {
         istr << "bbgrid_.cornerVertices[" << j << "]:";
         cout << fstr(istr.str(), 5)

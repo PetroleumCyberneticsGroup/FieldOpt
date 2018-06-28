@@ -95,12 +95,6 @@ class Settings
   QString output_directory() const { return output_directory_; }
 
   // -------------------------------------------------------
-  void set_verbosity_vector(const vector<int> verb_vector)
-  { verb_vector_ = verb_vector; }
-
-  vector<int> verb_vector() const { return verb_vector_; }
-
-  // -------------------------------------------------------
   // Get the value for the bookkeeper tolerance.
   // Used by the Bookkeeper in the Runner library.
   double bookkeeper_tolerance() const
@@ -130,6 +124,12 @@ class Settings
   // Set path of FieldOpt build directory.
   void set_build_path(const QString &build_path);
 
+ public:
+
+  // -------------------------------------------------------
+  QString output_directory_;
+  vector<int> verb_vector_; // = vector<int>(11,0);
+
  private:
   // -------------------------------------------------------
   QString driver_path_;
@@ -137,18 +137,15 @@ class Settings
   QString name_;
   double bookkeeper_tolerance_;
   QString runner_type_;
-  QString output_directory_;
   QString sim_include_dir_path_;
   QString build_path_;
+
 
   // -------------------------------------------------------
   Model *model_;
   Simulator *simulator_;
   Optimizer *optimizer_;
   Optimization *optimization_;
-
-  // -------------------------------------------------------
-  vector<int> verb_vector_ = vector<int>(11,0);
 
   // -------------------------------------------------------
   void readDriverFile();

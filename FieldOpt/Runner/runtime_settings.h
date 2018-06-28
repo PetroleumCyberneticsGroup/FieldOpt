@@ -132,6 +132,12 @@ class RuntimeSettings : public Loggable
   QUuid GetId() override;
   map<string, vector<double>> GetValues() override;
 
+  // -------------------------------------------------------
+  // Verbose vector: specifies verbose
+  // output for each code section
+  vector<int> verb_vector_;
+  string verb_vector_str_;
+
  private:
   // -------------------------------------------------------
   // Directory in which FieldOpt is built.
@@ -162,17 +168,6 @@ class RuntimeSettings : public Loggable
 
   // Path to script that launches the simulator.
   QString sim_exec_script_path_;
-
-  // -------------------------------------------------------
-  // Verbose mode (i.e. whether or not to print debug,
-  // diagnostic info to the console while running).
-  //
-  int verbosity_level_; // DELETE
-
-  // Verbose vector: specifies verbose
-  // output for each code section
-  std::vector<int> verb_vector_;
-  string verb_vector_str_;
 
   // -------------------------------------------------------
   // Whether or not files in the specified output directory

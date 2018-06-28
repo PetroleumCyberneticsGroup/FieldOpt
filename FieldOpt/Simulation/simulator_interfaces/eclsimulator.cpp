@@ -57,7 +57,7 @@ ECLSimulator::ECLSimulator(Settings::Settings *settings,
   // -------------------------------------------------------
   try {
     results()->ReadResults(output_driver_file_path_,
-                           settings_->verb_vector());
+                           settings_->verb_vector_);
   } catch (...) {}
   // At this stage we don't really care if the results
   // can be read, we just want to set the path.
@@ -80,7 +80,7 @@ void ECLSimulator::Evaluate() {
       DriverFileWriters::EclDriverFileWriter(settings_, model_);
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[8] > 2) // idx:8 -> sim
+  if (settings_->verb_vector_[8] > 2) // idx:8 -> sim
     cout << fstr("[sim]script arg[0]:",8)
          << script_args_[0].toStdString() << endl
          << fstr("[sim]script arg[1]:",8)
@@ -98,12 +98,12 @@ void ECLSimulator::Evaluate() {
   // -------------------------------------------------------
   ::Utilities::Unix::ExecShellScript(script_path_,
                                      script_args_,
-                                     settings_->verb_vector());
+                                     settings_->verb_vector_);
 
   // -------------------------------------------------------
   results_->ReadResults(current_output_deck_parent_dir_path_
                             + "/" +initial_driver_file_name_,
-                        settings_->verb_vector());
+                        settings_->verb_vector_);
 
   // -------------------------------------------------------
   updateResultsInModel();
@@ -181,7 +181,7 @@ void ECLSimulator::CleanUp() {
 void ECLSimulator::UpdateFilePaths() {
 
   // -------------------------------------------------------
-  auto v = settings_->verb_vector();
+  auto v = settings_->verb_vector_;
 
   current_output_deck_parent_dir_path_ =
       output_directory_ + "/" + init_driver_file_parent_dir_name_;
@@ -293,7 +293,7 @@ void ECLSimulator::WriteDriverFilesOnly() {
 void ECLSimulator::copyDriverFiles() {
 
   // -------------------------------------------------------
-  auto v = settings_->verb_vector();
+  auto v = settings_->verb_vector_;
   if (v[8] > 3 && !DirectoryExists(output_directory_, v)) {
 
     cout << fstr("Output parent dir does not exist; creating it",8)

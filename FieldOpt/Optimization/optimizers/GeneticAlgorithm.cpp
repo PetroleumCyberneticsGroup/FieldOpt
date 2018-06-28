@@ -54,7 +54,7 @@ GeneticAlgorithm::GeneticAlgorithm(Settings::Optimizer *settings,
   if (constraint_handler_->HasBoundaryConstraints()) {
     lower_bound_ = constraint_handler_->GetLowerBounds(base_case->GetRealVarIdVector());
     upper_bound_ = constraint_handler_->GetUpperBounds(base_case->GetRealVarIdVector());
-    if (settings_->verb_vector()[6] >= 1) { // idx:6 -> opt (Optimization)
+    if (settings_->verb_vector_[6] >= 1) { // idx:6 -> opt (Optimization)
       cout << "Using bounds from constraints: " << endl;
       cout << vec_to_str(vector<double>(lower_bound_.data(), lower_bound_.data() + lower_bound_.size()));
       cout << endl;
@@ -74,7 +74,7 @@ GeneticAlgorithm::GeneticAlgorithm(Settings::Optimizer *settings,
     population_.push_back(Chromosome(new_case));
     case_handler_->AddNewCase(new_case);
   }
-  if (settings_->verb_vector()[6] >= 1) { // idx:6 -> opt (Optimization)
+  if (settings_->verb_vector_[6] >= 1) { // idx:6 -> opt (Optimization)
     cout << "Initial ";
     printPopulation();
   }

@@ -59,7 +59,7 @@ void ADGConstraint::SnapCaseToConstraints(Case *current_case) {
 
   // -----------------------------------------------------
   // Dbg
-  if (settings_->verb_vector()[4] > 2) {
+  if (settings_->verb_vector_[4] > 2) {
     string str_out = "[con]Launching ADGPRS Constraint Handling";
     cout << endl << endl;
     cout << BLDON << BRED << std::string(120, '=') << AEND << endl;
@@ -208,7 +208,7 @@ void ADGConstraint::SnapCaseToConstraints(Case *current_case) {
 
   // -----------------------------------------------------
   // Dbg
-  if (settings_->verb_vector()[4] > 2) {
+  if (settings_->verb_vector_[4] > 2) {
     string str_out = "[con]Ending ADGPRS Constraint Handling";
     cout << endl << endl;
     cout << BLDON << BRED << std::string(120, '=') << AEND << endl;

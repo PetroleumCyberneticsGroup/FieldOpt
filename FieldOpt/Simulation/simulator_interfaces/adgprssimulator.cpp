@@ -72,7 +72,7 @@ void AdgprsSimulator::Evaluate() {
   driver_file_writer_->WriteDriverFile(output_directory_);
   ::Utilities::Unix::ExecShellScript(script_path_,
                                      script_args_,
-                                     settings_->verb_vector());
+                                     settings_->verb_vector_);
   results_->ReadResults(output_h5_summary_file_path_);
   updateResultsInModel();
 }
@@ -93,7 +93,7 @@ void AdgprsSimulator::copyDriverFiles() {
                                     true);
 
   // Dbg -----------------------------------------------------------
-  if (settings_->verb_vector()[8] > 1) { // idx:8 -> sim (Simulation)
+  if (settings_->verb_vector_[8] > 1) { // idx:8 -> sim (Simulation)
     cout << "[sim]init_drvr_file_path:---- "
          << init_file_path.toStdString() << endl;
     cout << "[sim]run_drvr_file:---------- "
@@ -108,7 +108,7 @@ void AdgprsSimulator::copyDriverFiles() {
                                     true);
 
   // Dbg -----------------------------------------------------------
-  if (settings_->verb_vector()[8] > 1) { // idx:8 -> sim (Simulation)
+  if (settings_->verb_vector_[8] > 1) { // idx:8 -> sim (Simulation)
     cout << "[sim]init_drvr_file_path_opt: "
          << init_file_path_opt.toStdString() << endl;
     cout << "[sim]run_drvr_file_opt:------ "
@@ -162,7 +162,7 @@ bool AdgprsSimulator::Evaluate(int timeout, int threads) {
   // ---------------------------------------------------------------
   driver_file_writer_->WriteDriverFile(output_directory_);
 
-  if (settings_->verb_vector()[8] > 1) { // idx:8 -> sim (Simulation)
+  if (settings_->verb_vector_[8] > 1) { // idx:8 -> sim (Simulation)
     cout << "[sim]Start.sim w/ timeout:--- " << timeout << endl;
     cout << "[sim]script arg[0]:---------- " << script_args_[0].toStdString() << endl
          << "[sim]script arg[1]:---------- " << script_args_[1].toStdString() << endl;

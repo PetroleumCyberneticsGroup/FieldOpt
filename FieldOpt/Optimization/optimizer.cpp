@@ -82,7 +82,7 @@ Optimizer::Optimizer(Settings::Optimizer *settings,
 Case *Optimizer::GetCaseForEvaluation() {
 
   // -------------------------------------------------------------
-  if (settings_->verb_vector()[6] >= 1) { // idx:6 -> opt (Optimization)
+  if (settings_->verb_vector_[6] >= 1) { // idx:6 -> opt (Optimization)
     cout << "[opt]Get next case for eval.- " << endl;
     cout << "[opt]Size of QueuedCases:---- "
          << case_handler_->QueuedCases().size() << endl;
@@ -94,7 +94,7 @@ Case *Optimizer::GetCaseForEvaluation() {
     time_t start, end;
     time(&start);
 
-    if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
+    if (settings_->verb_vector_[6] >= 1) // idx:6 -> opt (Optimization)
       cout << "[opt]Starting iteration.----- " << endl;
     iterate();
     time(&end);

@@ -26,18 +26,21 @@
 #define SETTINGS_OPTIMIZER_H
 
 // ---------------------------------------------------------
+// FIELDOPT
 #include "settings.h"
 #include "simulator.h"
 
 #include <FieldOpt-WellIndexCalculator/resinxx/rixx_core_geom/cvfBoundingBox.h>
 
 // ---------------------------------------------------------
+// QT / EIGEN
 #include <QList>
 #include <QString>
 #include <QStringList>
+#include <Eigen/Core>
 
 // ---------------------------------------------------------
-#include <Eigen/Core>
+using std::vector;
 
 // ---------------------------------------------------------
 namespace Settings {
@@ -317,13 +320,8 @@ class Optimizer
     std::string exec_adg_const_path_;
 
     // -----------------------------------------------------
-    std::vector<int> verb_vector_; // = std::vector<int>(11,0);
-
-    void set_verbosity_vector(const std::vector<int> &verb_vector)
-    { verb_vector_ = verb_vector; }
-
     QString output_directory_;
-
+    vector<int> verb_vector_;
   };
 
   // -------------------------------------------------------
@@ -343,13 +341,8 @@ class Optimizer
   QList<Constraint> constraints() const { return constraints_; }
 
   // -------------------------------------------------------
-  void set_verbosity_vector(const std::vector<int> verb_vector)
-  { verb_vector_ = verb_vector; }
-
-  std::vector<int> verb_vector() const { return verb_vector_; }
-
-  // -------------------------------------------------------
   QString output_directory_;
+  vector<int> verb_vector_;
 
  private:
   // -------------------------------------------------------
@@ -361,7 +354,6 @@ class Optimizer
 
   Constraint parseSingleConstraint(QJsonObject json_constraint);
 
-  std::vector<int> verb_vector_ = std::vector<int>(11,0);
 };
 
 }

@@ -313,7 +313,6 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[]) {
     // -----------------------------------------------------
     str_out = "[run]FieldOpt runtime settings";
     cout << "\n" << BLDON << str_out << AEND << "\n" << string(str_out.length(),'=') << endl;
-    cout << "Verbosity level:------- " << verbosity_level_ << endl;
     cout << "Verbosity vector:------ ";
     cout << "run=" << verb_vector_[0]; // (Runner)
     cout << ", ert=" << verb_vector_[1]; // (ERTWrapper)
@@ -560,7 +559,6 @@ map<string, string> RuntimeSettings::GetState() {
   map<string, string> statemap;
 
   // -------------------------------------------------------
-  statemap["Verbosity"] = boost::lexical_cast<string>(verbosity_level_);
   statemap["Verbosity vector"] = verb_vector_str_;
   statemap["Max. parallel sims"] = boost::lexical_cast<string>(max_parallel_sims_);
   statemap["Threads pr. sim"] = boost::lexical_cast<string>(threads_per_sim_);

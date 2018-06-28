@@ -59,7 +59,7 @@ void APPS::iterate() {
     set_active(inactive());
   }
   iteration_++;
-  if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
+  if (settings_->verb_vector_[6] >= 1) // idx:6 -> opt (Optimization)
     print_state("ITERATION START");
 }
 
@@ -76,7 +76,7 @@ void APPS::successful_iteration(Case *c) {
   expand();
   reset_active();
   prune_queue();
-  if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
+  if (settings_->verb_vector_[6] >= 1) // idx:6 -> opt (Optimization)
     print_state("SUCCESSFUL ITERATION");
   iterate();
 }
@@ -88,7 +88,7 @@ void APPS::unsuccessful_iteration(Case *c) {
     set_inactive(unsuccessful_direction);
     contract(unsuccessful_direction);
   }
-  if (settings_->verb_vector()[6] >= 1) // idx:6 -> opt (Optimization)
+  if (settings_->verb_vector_[6] >= 1) // idx:6 -> opt (Optimization)
     print_state("UNSUCCESSFUL ITERATION");
   if (!is_converged()) iterate();
 }

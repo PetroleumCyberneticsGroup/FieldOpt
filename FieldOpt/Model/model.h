@@ -32,6 +32,7 @@
 #include <iomanip>
 
 // ---------------------------------------------------------
+// FIELDOPT
 #include "Reservoir/grid/eclgrid.h"
 #include "properties/variable_property_container.h"
 #include "wells/well.h"

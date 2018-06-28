@@ -39,6 +39,9 @@
 #include <vector>
 
 // ---------------------------------------------------------
+using std::vector;
+
+// ---------------------------------------------------------
 namespace Settings {
 
 // =========================================================
@@ -60,6 +63,10 @@ class Optimization {
 
 //  QJsonArray json_optimizers;
 //  QJsonArray json_var_assignment;
+
+  // -------------------------------------------------------
+  QString output_directory_;
+  vector<int> verb_vector_ = vector<int>(11,0);
 
 };
 

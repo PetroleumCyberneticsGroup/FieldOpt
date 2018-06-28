@@ -45,7 +45,7 @@ class ResXYZRegion : public Constraint, WellSplineConstraint
  public:
   // -------------------------------------------------------
   ResXYZRegion(
-      ::Settings::Optimizer::Constraint &settings,
+      ::Settings::Optimizer::Constraint &settings_con,
       ::Model::Properties::VariablePropertyContainer *variables,
       ::Reservoir::Grid::Grid *grid,
       RICaseData *ricasedata);
@@ -64,7 +64,7 @@ class ResXYZRegion : public Constraint, WellSplineConstraint
  private:
 
   // -------------------------------------------------------
-  Settings::Optimizer::Constraint settings_;
+  Settings::Optimizer::Constraint settings_con_;
   Model::Properties::VariablePropertyContainer *variables_;
   Reservoir::Grid::Grid* grid_;
 

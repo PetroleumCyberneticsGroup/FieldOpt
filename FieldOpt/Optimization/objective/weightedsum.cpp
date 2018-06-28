@@ -65,7 +65,7 @@ double WeightedSum::value() const
   for (int i = 0; i < components_->size(); ++i) {
     value += components_->at(i)->resolveValue(results_);
 
-    if (settings_->verb_vector()[5] > 1) { // idx:6 -> mod (Model)
+    if (settings_->verb_vector_[5] > 1) { // idx:6 -> mod (Model)
       QString prop_name = components_->at(i)->property_name;
       double prop_coeff = components_->at(i)->coefficient;
       cout << scientific << setprecision(8);

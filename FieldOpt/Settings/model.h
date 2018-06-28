@@ -318,8 +318,10 @@ class Model
     std::string toString();
 
     // -------------------------------------------------------
-    vector<int> verb_vector() const { return verb_vector_; }
+    vector<int> verb_vector() const { return verb_vector_; } // DELETE
+    QString output_directory_;
     vector<int> verb_vector_ = vector<int>(11,0);
+
   };
 
   // -------------------------------------------------------
@@ -362,14 +364,14 @@ class Model
   }
 
   // -------------------------------------------------------
-  void set_verbosity_vector(const vector<int> verb_vector)
-  { verb_vector_ = verb_vector; }
-  vector<int> verb_vector() const { return verb_vector_; }
-
-  // -------------------------------------------------------
   Model::Well getWell(QString well_name);
 
   DrillingMode drillingMode_;
+
+  // -------------------------------------------------------
+ public:
+  QString output_directory_;
+  vector<int> verb_vector_ = vector<int>(11,0);
 
  private:
   // -------------------------------------------------------
@@ -388,16 +390,13 @@ class Model
   // -------------------------------------------------------
   bool controlTimeIsDeclared(double time) const;
 
-  // -------------------------------------------------------
-  vector<int> verb_vector_ = vector<int>(11,0);
-
   /*!
-   * Get the control time that is closest to the time imported from the deck.
+   * Get the control time that is closest
+   * to the time imported from the deck.
    */
   int getClosestControlTime(int deck_time);
 };
 
 }
-
 
 #endif // SETTINGS_MODEL_H

@@ -82,7 +82,7 @@ WellGroup::WellGroup(
     int orig_wnum = drilling.name_vs_num[wn];
 
     // -----------------------------------------------------
-    if (well_settings.verb_vector()[5] >= 1) // idx:5 -> mod
+    if (well_settings.verb_vector_[5] >= 1) // idx:5 -> mod
       cout << BCYAN << FBLUE << "Well=" << wn
            << "-------------------- " << AEND << endl;
 

@@ -40,7 +40,7 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   settings_ = settings;
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[5] > 1) { // idx:5 -> mod
+  if (settings_->verb_vector_[5] > 1) { // idx:5 -> mod
     cout << BRED
          << "[mod]Building Model.---------" << AEND << endl;
     cout << fstr("[mod]Init ECLGrid_.",5) << endl;
@@ -56,7 +56,7 @@ Model::Model(Settings::Model* settings, Logger *logger) {
 
   // -------------------------------------------------------
   rireaderecl->open(grid_->GetFilePathQString(), ricasedata_);
-  ricasedata_->set_verbosity_vector(settings_->verb_vector());
+  ricasedata_->set_verbosity_vector(settings_->verb_vector_);
 
   // -------------------------------------------------------
   // Force computation of geometric bb
@@ -70,7 +70,7 @@ Model::Model(Settings::Model* settings, Logger *logger) {
       ricasedata_->activeCellInfo(MATRIX_MODEL));
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[5] > 1) // idx:5 -> mod
+  if (settings_->verb_vector_[5] > 1) // idx:5 -> mod
     cout << fstr("[mod]Init var container.",5) << endl;
 
   variable_container_ =
@@ -85,7 +85,7 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   CreateWellGroups();
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[5] > 1) // idx:5 -> mod
+  if (settings_->verb_vector_[5] > 1) // idx:5 -> mod
     cout << fstr("[mod]Setting up well_ QList.",5) << endl;
 
   // Set up regular well QList for subsequent calculations
@@ -120,7 +120,7 @@ Model::Model(Settings::Model* settings, Logger *logger) {
   logger_->AddEntry(new Summary(this));
 
 // -------------------------------------------------------
-  if (settings_->verb_vector()[5] > 1) // idx:5 -> mod
+  if (settings_->verb_vector_[5] > 1) // idx:5 -> mod
     cout << BRED
          << "[mod]Finished building Model." << AEND << endl;
 
@@ -130,7 +130,7 @@ Model::Model(Settings::Model* settings, Logger *logger) {
 void Model::InsertDrillingTStep() {
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
+  if (settings_->verb_vector_[5] > 3) // idx:5 -> mod
     cout << fstr("[mod]InsertDrillingTStep().",5) << endl;
 
   // -------------------------------------------------------
@@ -138,7 +138,7 @@ void Model::InsertDrillingTStep() {
   for (Wells::Well *w : *wells()) {
 
     // -----------------------------------------------------
-    if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
+    if (settings_->verb_vector_[5] > 3) // idx:5 -> mod
       cout << fstr("[mod]Looping through wells.",5) << endl;
 
     // -----------------------------------------------------
@@ -148,7 +148,7 @@ void Model::InsertDrillingTStep() {
             wseq_grpd_sorted_vs_tstep[w->name().toStdString()];
 
     // -----------------------------------------------------
-    if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
+    if (settings_->verb_vector_[5] > 3) // idx:5 -> mod
       cout << fstr("[mod]Make new control entry.",5) << endl;
 
     // -----------------------------------------------------
@@ -156,14 +156,14 @@ void Model::InsertDrillingTStep() {
     // Adjust Setting::Control
     ::Settings::Model::Well well_entry;
     well_entry = settings_->getWell(w->name());
-    well_entry.verb_vector_ = settings_->verb_vector();
+    well_entry.verb_vector_ = settings_->verb_vector_;
 
     ::Settings::Model::Well::ControlEntry
         control_entry = well_entry.controls[0];
     control_entry.time_step = d_time_step;
 
     // -----------------------------------------------------
-    if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
+    if (settings_->verb_vector_[5] > 3) // idx:5 -> mod
       cout << fstr("[mod]Make new control step.",5) << endl;
 
     // -----------------------------------------------------
@@ -174,7 +174,7 @@ void Model::InsertDrillingTStep() {
                            variable_container_);
 
     // -----------------------------------------------------
-    if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
+    if (settings_->verb_vector_[5] > 3) // idx:5 -> mod
       cout << fstr("[mod]Append to control list.",5) << endl;
 
     // -----------------------------------------------------
@@ -200,7 +200,7 @@ void Model::InsertDrillingTStep() {
   settings_->sort_control_steps();
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
+  if (settings_->verb_vector_[5] > 3) // idx:5 -> mod
     cout << fstr("[mod]InsertDrillingTStep():",5)
          << "Done." << endl;
 
@@ -215,7 +215,7 @@ void Model::CreateWellGroups() {
   for (int gnr = 0; gnr < drilling_seq_->drill_groups_.size(); ++gnr) {
 
     // -----------------------------------------------------
-    if (settings_->verb_vector()[5] >= 1) { // idx:5 -> mod
+    if (settings_->verb_vector_[5] >= 1) { // idx:5 -> mod
       cout << endl << BCYAN << FRED << "Group=" << gnr
            << "----------------------" << AEND << endl;
     }
@@ -243,7 +243,7 @@ void Model::Finalize() {
 void Model::ApplyCase(Optimization::Case *c, int rank) {
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[5] > 1) // idx:5 -> mod (Model)
+  if (settings_->verb_vector_[5] > 1) // idx:5 -> mod (Model)
     cout << FCYAN << "[mod]Applying case.---------- " << AEND << endl;
 
   // -------------------------------------------------------
@@ -265,7 +265,7 @@ void Model::ApplyCase(Optimization::Case *c, int rank) {
   }
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[5] > 1) // idx:5 -> mod (Model)
+  if (settings_->verb_vector_[5] > 1) // idx:5 -> mod (Model)
     cout << FCYAN << "[mod]Updating wells.--------- " << AEND << endl;
 
   int cumulative_wic_time = 0;
@@ -572,13 +572,13 @@ void Model::GetDrillingStr() {
 void Model::SetDrillingSeq() {
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[5] >= 2) // idx:5 -> mod
+  if (settings_->verb_vector_[5] >= 2) // idx:5 -> mod
     cout << "[mod]Computing drilling seq.- " << endl;
   drilling_seq_->mode = settings_->drillingMode_;
 
   // -------------------------------------------------------
   // Main drilling name_vs_order maps (pairs)
-  if (settings_->verb_vector()[5] >= 4) // idx:5 -> mod
+  if (settings_->verb_vector_[5] >= 4) // idx:5 -> mod
     cout << "[mod]DrillSeq: set up maps.-- " << endl;
 
   // -------------------------------------------------------
@@ -604,7 +604,7 @@ void Model::SetDrillingSeq() {
   // -------------------------------------------------------
   // Use multimap to group well pairs (<int, pair<int, string>>)
   // into groups
-  if (settings_->verb_vector()[5] >= 4) // idx:5 -> mod
+  if (settings_->verb_vector_[5] >= 4) // idx:5 -> mod
     cout << "[mod]DrillSeq: multimap.----- " << endl;
 
   // -------------------------------------------------------
@@ -635,7 +635,7 @@ void Model::SetDrillingSeq() {
 
   // -----------------------------------------------------
   // Find equal ranges in multimap
-  if (settings_->verb_vector()[5] >= 4) // idx:5 -> mod
+  if (settings_->verb_vector_[5] >= 4) // idx:5 -> mod
     cout << "[mod]DrillSeq: find ranges.-- " << endl;
 
   // -------------------------------------------------------
@@ -665,7 +665,7 @@ void Model::SetDrillingSeq() {
   }
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[5] >= 4) // idx:5 -> mod
+  if (settings_->verb_vector_[5] >= 4) // idx:5 -> mod
     cout << "[mod]DrillSeq: set timevec.-- " << endl;
 
   SetDrillTimeVec();
@@ -676,7 +676,7 @@ void Model::SetDrillingSeq() {
 void Model::SetDrillTimeVec() {
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
+  if (settings_->verb_vector_[5] > 3) // idx:5 -> mod
     cout << "[mod]SetDrillTimeVec().------ " << endl;
 
   drilling_seq_->wseq_grpd_sorted_vs_time.clear();
@@ -710,7 +710,7 @@ void Model::SetDrillTimeVec() {
 void Model::UpdateNamevsTimeMap() {
 
   // -------------------------------------------------------
-  if (settings_->verb_vector()[5] > 3) // idx:5 -> mod
+  if (settings_->verb_vector_[5] > 3) // idx:5 -> mod
     cout << "[mod]UpdateNamevsTimeMap().-- " << endl;
 
   drilling_seq_->name_vs_time.clear();

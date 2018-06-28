@@ -103,7 +103,7 @@ Simulator::Simulator(Settings::Settings *settings) {
   control_times_ = settings->model()->control_times();
 
   // -------------------------------------------------------
-  auto v = settings_->verb_vector();
+  auto v = settings_->verb_vector_;
 
   if (v[8] > 1) { // idx:8 -> sim
     cout << "[sim]Simulator set up w/:---- " << endl

@@ -32,6 +32,9 @@
 #include <QStringList>
 
 // ---------------------------------------------------------
+using std::vector;
+
+// ---------------------------------------------------------
 namespace Settings {
 
 // =========================================================
@@ -156,13 +159,11 @@ class Simulator
    */
   int max_minutes() { return max_minutes_; }
 
-  // -------------------------------------------------------
-  // Should really be inherited by Friend Class: Settings.
-  void set_verbosity_vector(const std::vector<int> verb_vector)
-  { verb_vector_ = verb_vector; }
+ public:
 
-  std::vector<int> verb_vector() const
-  { return verb_vector_; }
+  // -------------------------------------------------------
+  QString output_directory_;
+  vector<int> verb_vector_; // = vector<int>(11,0);
 
  private:
   // -------------------------------------------------------
@@ -175,7 +176,6 @@ class Simulator
 
   QString driver_file_path_;
   QString driver_directory_;
-  QString output_directory_;
 
   QString sim_incl_dir_path_;
   QString schedule_file_path_;
@@ -183,7 +183,6 @@ class Simulator
 
   // -------------------------------------------------------
   int max_minutes_;
-  std::vector<int> verb_vector_ = std::vector<int>(11,0);
 };
 
 }

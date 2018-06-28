@@ -53,21 +53,6 @@ using namespace Reservoir::WellIndexCalculation;
 /*!
  * \brief
  */
-inline static string vstr(std::vector<int> *vvec,
-                          int idx=-1,
-                          int wdth=29) {
-
-  cout << "VerbosityVector:------- ";
-  for (int i=0; i < vvec->size(); i++) {
-//    cout << vvec[i] << " ";
-  }
-  cout << endl;
-}
-
-//==========================================================
-/*!
- * \brief
- */
 inline static string fstr(string ostr,
                           int idx=-1,
                           int wdth=29) {
@@ -127,6 +112,22 @@ inline static string fstr(string ostr,
     ss << AEND;
   }
   return ss.str();
+}
+
+
+//==========================================================
+/*!
+ * \brief
+ */
+inline string verbstr(const vector<int> vvec,
+                      int idx = -1,
+                      int wdth = 29) {
+
+  cout << fstr("verb_vector");
+  for (int i=0; i < vvec.size(); i++) {
+    cout << vvec[i] << " ";
+  }
+  cout << endl;
 }
 
 // ---------------------------------------------------------------

@@ -362,7 +362,7 @@ GSS::print_dbg_msg_i(string dbg_str,
 void
 GSS::print_dbg_msg_d(string dbg_str, int vlevel, VectorXd eigvec) {
 
-  if (settings_->verb_vector()[6] >= vlevel) { // idx:6 -> opt
+  if (settings_->verb_vector_[6] >= vlevel) { // idx:6 -> opt
 
     // -----------------------------------------------------
     if (   dbg_str == "[opt]Init. Abs.Class GSS.---- "

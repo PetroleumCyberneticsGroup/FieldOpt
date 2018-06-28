@@ -34,11 +34,11 @@ ConstraintHandler::ConstraintHandler(
     QList<Settings::Optimizer::Constraint> constraints,
     Model::Properties::VariablePropertyContainer *variables,
     Reservoir::Grid::Grid *grid,
-    Settings::Optimizer *settings,
+    Settings::Optimizer *settings_opt,
     RICaseData *ricasedata) {
 
   // -------------------------------------------------------
-  if (settings->verb_vector()[6] >= 1) // idx:6 -> opt
+  if (settings_opt->verb_vector_[6] >= 1) // idx:6 -> opt
     cout << fstr("[opt]Constraint handler..",6) << endl;
 
   if(ricasedata == nullptr) {
@@ -53,12 +53,10 @@ ConstraintHandler::ConstraintHandler(
       // ---------------------------------------------------
       // COMBINED WSPLINE_LENGTH + INTERW_DIST
       case Settings::Optimizer::ConstraintType::
-        CombinedWellSplineLengthInterwellDistance:
-      case Settings::Optimizer::ConstraintType::
         CWsplnLnghtInterwDist: {
 
         // -----------------------------------------------------
-        if (settings->verb_vector()[6] >= 1) // idx:6 -> opt
+        if (settings_opt->verb_vector_[6] >= 1) // idx:6 -> opt
           cout << fstr("CWsplnLnghtInterwDist",6) << endl;
 
         constraints_.append(
@@ -70,12 +68,10 @@ ConstraintHandler::ConstraintHandler(
         // -------------------------------------------------
         // COMBINED WSPLINE_LENGTH + INTERW_DIST + IJK_RES_BOX
       case Settings::Optimizer::ConstraintType::
-        CombinedWellSplineLengthInterwellDistanceReservoirBoundary:
-      case Settings::Optimizer::ConstraintType::
         CWsplnLnghtInterwDistResIJKBox: {
 
         // -----------------------------------------------------
-        if (settings->verb_vector()[6] >= 1) // idx:6 -> opt
+        if (settings_opt->verb_vector_[6] >= 1) // idx:6 -> opt
           cout << fstr("CWsplnLnghtInterwDistResIJKBox",6) << endl;
 
         constraints_.append(
@@ -88,29 +84,27 @@ ConstraintHandler::ConstraintHandler(
 
         // -------------------------------------------------
         // EXTERNAL CONSTRAINT-HANDLING BY ADGPRS OPTIMIZER
-      case Settings::Optimizer::ConstraintType::ADG:
-      case Settings::Optimizer::ConstraintType::ADGPRSOptimizer: {
+      case Settings::Optimizer::ConstraintType::ADGPRSOptimizer:
 
         // -----------------------------------------------------
-        if (settings->verb_vector()[6] >= 1) // idx:6 -> opt
+        if (settings_opt->verb_vector_[6] >= 1) // idx:6 -> opt
           cout << fstr("ADGPRSOptimizer",6) << endl;
 
-        constraints_.append(new ADGConstraint(settings,
+        constraints_.append(new ADGConstraint(settings_opt,
                                               variables,
                                               grid,
                                               ricasedata));
-      }
+
         break;
 
         // -------------------------------------------------
         // RES_IJK_BOX
-      case Settings::Optimizer::ConstraintType::ReservoirBoundary:
-      case Settings::Optimizer::ConstraintType::ResIJKBox: {
+      case Settings::Optimizer::ConstraintType::ResIJKBox:
 
         for (auto wname : constraint.wells) {
 
           // -----------------------------------------------
-          if (settings->verb_vector()[6] >= 1) // idx:6 -> opt
+          if (settings_opt->verb_vector_[6] >= 1) // idx:6 -> opt
             cout << fstr("ResIJKBox - " + wname.toStdString(),6)
                  << endl;
 
@@ -123,7 +117,7 @@ ConstraintHandler::ConstraintHandler(
                                                     variables,
                                                     grid));
         }
-      }
+
         break;
 
         // -------------------------------------------------
@@ -135,13 +129,13 @@ ConstraintHandler::ConstraintHandler(
           // -----------------------------------------------
           auto cons = Settings::Optimizer::Constraint(constraint);
           cons.well = wname;
-          // cons.set_verbosity_vector(settings->verb_vector());
-          // cons.output_directory_ = settings->output_directory_;
+          // cons.set_verbosity_vector(settings_opt->verb_vector());
+          // cons.output_directory_ = settings_opt->output_directory_;
 
           // -----------------------------------------------
 //          if (cons.verb_vector_[6] >= 1) // idx:6 -> opt
-            cout << fstr("ResXYZRegion - " + wname.toStdString(),6)
-                 << endl;
+          cout << fstr("ResXYZRegion - " + wname.toStdString(),6)
+               << endl;
 
           // -----------------------------------------------
           constraints_.append(new ResXYZRegion(cons,
@@ -154,7 +148,6 @@ ConstraintHandler::ConstraintHandler(
 
         // -------------------------------------------------
         // WCNTRL_BHP
-      case Settings::Optimizer::ConstraintType::BHP:
       case Settings::Optimizer::ConstraintType::WcntrlBHP:
 
         constraints_.append(new BhpConstraint(constraint,
@@ -164,33 +157,28 @@ ConstraintHandler::ConstraintHandler(
 
         // -------------------------------------------------
         // WCNTRL_RATE
-      case Settings::Optimizer::ConstraintType::Rate:
-      case Settings::Optimizer::ConstraintType::WcntrlRATE: {
+      case Settings::Optimizer::ConstraintType::WcntrlRATE:
 
         constraints_.append(new RateConstraint(constraint,
                                                variables));
-      }
+
         break;
 
         // -------------------------------------------------
         // WSPLINE_INTERW_DIST_ANL
-      case Settings::Optimizer::ConstraintType::
-        WellSplineInterwellDistance:
-      case Settings::Optimizer::ConstraintType::
-        WsplnInterwDistAnl: {
+      case Settings::Optimizer::ConstraintType::WsplnInterwDistAnl:
 
         constraints_.append(new InterwellDistance(constraint,
                                                   variables));
-      }
+
         break;
 
         // -------------------------------------------------
         // WSPLINE_INTERW_DIST_OPT (SNOPT)
-      case Settings::Optimizer::ConstraintType::IWD:
       case Settings::Optimizer::ConstraintType::WsplnInterwDistOpt: {
 
         auto cons = Settings::Optimizer::Constraint(constraint);
-        constraints_.append(new IWDConstraint(settings,
+        constraints_.append(new IWDConstraint(settings_opt,
                                               cons,
                                               variables,
                                               grid,
@@ -200,8 +188,7 @@ ConstraintHandler::ConstraintHandler(
 
         // -------------------------------------------------
         // WSPLINE_LENGTH
-      case Settings::Optimizer::ConstraintType::WellSplineLength:
-      case Settings::Optimizer::ConstraintType::WsplnLngth: {
+      case Settings::Optimizer::ConstraintType::WsplnLngth:
 
         for (auto wname : constraint.wells) {
 
@@ -210,19 +197,14 @@ ConstraintHandler::ConstraintHandler(
           constraints_.append(new WellSplineLength(cons,
                                                    variables));
         }
-
-
-      }
         break;
 
         // -------------------------------------------------
         // WVERT_PSEUDO_CONT_2D_IJK_BOX
-      case Settings::Optimizer::ConstraintType::
-        PseudoContBoundary2D:
-      case Settings::Optimizer::ConstraintType::
-        WvertPseudoCont2dIJKBox: {
+      case Settings::Optimizer::ConstraintType::WvertPseudoCont2dIJKBox:
 
         for (auto wname : constraint.wells) {
+
           auto cons = Settings::Optimizer::Constraint(constraint);
           cons.well = wname;
           constraints_.append(
@@ -230,7 +212,6 @@ ConstraintHandler::ConstraintHandler(
                                        variables,
                                        grid));
         }
-      }
         break;
 
 //#ifdef WITH_EXPERIMENTAL_CONSTRAINTS
