@@ -55,14 +55,55 @@ class SegmentedWell : public Well {
                 const Settings::Model::Well &well_settings,
                 Properties::VariablePropertyContainer *variable_container,
                 std::vector<Compartment> &compartments_);
+    double GetLength() const;
+    double GetTVDDifference() const;
     Packer *start_packer;
     Packer *end_packer;
     ICD *icd;
   };
 
+  /*!
+   * The Segment struct contains the data needed by the simulator interface
+   * to build the WELSEGS, WSEGVALV and COMPSEGS keywords.
+   *
+   * Annulus segments should only pass through _one_ well block.
+   */
+  struct Segment {
+    enum SegType { TUBING_SEGMENT, ANNULUS_SEGMENT, ICD_SEGMENT };
+    Segment();
+    Segment(SegType type, int index, int branch, int outlet,
+            double length, double tvd, double diameter, double roughness);
+    void AddInlet(int index);
+    std::vector<int> GetInlets() const;
+    void AddParentBlock(Wellbore::WellBlock *parent_block);
+    void AddParentICD(Wellbore::Completions::ICD *parent_icd);
+    bool HasParentBlock() const; //!< Check whether this segment has a parent well block.
+    bool HasParentICD() const;   //!< Check whether this segment has a parent ICD decvice.
+    int Index() const { return index_; }
+    int Branch() const { return branch_; }
+    int Outlet() const { return outlet_; }
+    SegType Type() const { return type_; }
+    std::string ToString();
+
+   private:
+    int index_;                            //!< Segment index
+    int branch_;                           //!< Branch index
+    int outlet_;                           //!< Index of outlet segment.
+    double length_, diameter_, roughness_; //!< Physical segment properties
+    double tvd_;                           //!< TVD _change_ along the segment (i.e. zero when perfectly horizontal)
+    SegType type_;                         //!< Segment type (tubing, annulus or ICD)
+    std::vector<int> inlets_;              //!< List of segment (indices) with this segment as their outlet.
+    Wellbore::WellBlock *parent_block_ = 0;      //!< Parent well block for annulus segments.
+    Wellbore::Completions::ICD *parent_icd_ = 0; //!< Parent ICD for ICD segments.
+  };
+
   std::vector<Compartment> GetCompartments() const;
   std::vector<Packer *> GetPackers() const;
   std::vector<ICD *> GetICDs() const;
+  std::vector<Segment> GetSegments();
+  std::vector<Segment> GetTubingSegments();
+  std::vector<Segment> GetICDSegments();
+  std::vector<Segment> GetAnnulusSegments();
 
 
  private:
@@ -76,6 +117,9 @@ class SegmentedWell : public Well {
 
   std::vector<Compartment> compartments_;
 
+  std::vector<int> createTubingSegments(std::vector<Segment> &segments) const;
+  std::vector<int> createICDSegments(std::vector<Segment> &segments, std::vector<int> &tubing_indexes) const;
+  void createAnnulusSegments(std::vector<Segment> &segments, const std::vector<int> &icd_indexes);
 };
 
 }
