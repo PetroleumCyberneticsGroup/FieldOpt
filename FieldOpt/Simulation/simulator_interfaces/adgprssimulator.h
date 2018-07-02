@@ -25,7 +25,6 @@
 #include "driver_file_writers/adgprsdriverfilewriter.h"
 
 namespace Simulation {
-namespace SimulatorInterfaces {
 
 /*!
  * \brief The AdgprsSimulator class implements simulation of models using the AD-GPRS reservoir simulator.
@@ -57,7 +56,7 @@ class AdgprsSimulator : public Simulator
 
  private:
   QString output_h5_summary_file_path_;
-  Simulation::SimulatorInterfaces::DriverFileWriters::AdgprsDriverFileWriter *driver_file_writer_;
+  Simulation::AdgprsDriverFileWriter *driver_file_writer_;
   void copyDriverFiles(); //!< Copy the original driver files.
   void verifyOriginalDriverFileDirectory(); //!< Ensure that all necessary files are present in the original dir.
 
@@ -70,7 +69,6 @@ class AdgprsSimulator : public Simulator
   QString GetCompdatString();
 };
 
-}
 }
 
 #endif // ADGPRSSIMULATOR_H

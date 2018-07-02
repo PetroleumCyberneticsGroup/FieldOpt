@@ -28,7 +28,6 @@
 #include "Settings/ensemble.h"
 
 namespace Simulation {
-namespace SimulatorInterfaces {
 
 /*!
  * \brief The Simulator class acts as an interface for all reservoir simulators.
@@ -117,7 +116,6 @@ class Simulator {
   int verbosity_level_; //!< Verbosity level for runtime console logging.
 };
 
-}
 }
 
 #endif // SIMULATOR

@@ -29,10 +29,8 @@
 #include "Utilities/filehandling.hpp"
 
 namespace Simulation {
-namespace SimulatorInterfaces {
-namespace DriverFileWriters {
 
-using namespace DriverParts::ECLDriverParts;
+using namespace ECLDriverParts;
 using namespace Utilities::FileHandling;
 
 EclDriverFileWriter::EclDriverFileWriter(Settings::Settings *settings, Model::Model *model)
@@ -47,11 +45,9 @@ void EclDriverFileWriter::WriteDriverFile(QString schedule_file_path)
         std::cout << "Writing driver file to " << schedule_file_path.toStdString() << std::endl;
     }
     assert(FileExists(schedule_file_path));
-    Schedule schedule = DriverParts::ECLDriverParts::Schedule(model_->wells(), settings_->model()->control_times());
-    model_->SetCompdatString(DriverParts::ECLDriverParts::Compdat(model_->wells()).GetPartString());
+    Schedule schedule = ECLDriverParts::Schedule(model_->wells(), settings_->model()->control_times());
+    model_->SetCompdatString(ECLDriverParts::Compdat(model_->wells()).GetPartString());
     Utilities::FileHandling::WriteStringToFile(schedule.GetPartString(), schedule_file_path);
 }
 
-}
-}
 }

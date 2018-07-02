@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include "Simulation/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/schedule_section.h"
 
-using namespace ::Simulation::SimulatorInterfaces::DriverFileWriters::DriverParts::ECLDriverParts;
+using namespace ::Simulation::ECLDriverParts;
 
 namespace {
 

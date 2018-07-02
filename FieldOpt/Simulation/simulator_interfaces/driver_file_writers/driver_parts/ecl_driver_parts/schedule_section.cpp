@@ -27,9 +27,6 @@
 
 
 namespace Simulation {
-namespace SimulatorInterfaces {
-namespace DriverFileWriters {
-namespace DriverParts {
 namespace ECLDriverParts {
 
 Schedule::Schedule(QList<Model::Wells::Well *> *wells, QList<int> control_times)
@@ -63,8 +60,5 @@ Schedule::ScheduleTimeEntry::ScheduleTimeEntry(ECLDriverParts::Welspecs welspecs
     this->well_controls = well_controls;
 }
 
-}
-}
-}
 }
 }

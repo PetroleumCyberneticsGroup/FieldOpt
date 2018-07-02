@@ -20,7 +20,6 @@
 #include "simulator_exceptions.h"
 
 namespace Simulation {
-namespace SimulatorInterfaces {
 
 using namespace Utilities::FileHandling;
 
@@ -66,5 +65,4 @@ void Simulator::updateResultsInModel() {
     model_->SetResult("Time", results_->GetValueVector(Results::Results::Property::CumulativeWaterProduction));
 }
 
-}
 }

@@ -31,16 +31,13 @@
 #include "../driverpart.h"
 
 namespace Simulation {
-namespace SimulatorInterfaces {
-namespace DriverFileWriters {
-namespace DriverParts {
 namespace ECLDriverParts {
 /*!
  * \brief The ECLDriverPart class Is the parent class for any part of an ECL100 driver file,
  * e.g. the WELSPECS section. Because the driver files are so similar, this class is also used
  * by ADGPRS driver parts.
  */
-class ECLDriverPart : public Simulation::SimulatorInterfaces::DriverFileWriters::DriverParts::DriverPart
+class ECLDriverPart : public Simulation::DriverPart
 {
 public:
 
@@ -70,9 +67,6 @@ protected:
     QString foot_; //!< Anything that should be printed after the content, e.g. a terminator ('/')
 };
 
-}
-}
-}
 }
 }
 

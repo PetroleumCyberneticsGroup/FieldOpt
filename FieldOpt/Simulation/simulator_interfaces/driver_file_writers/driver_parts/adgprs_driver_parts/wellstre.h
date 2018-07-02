@@ -8,9 +8,6 @@
 
 
 namespace Simulation {
-namespace SimulatorInterfaces {
-namespace DriverFileWriters {
-namespace DriverParts {
 namespace AdgprsDriverParts {
 
 class Wellstre : public ECLDriverParts::ECLDriverPart
@@ -29,6 +26,6 @@ private:
     Settings::Simulator::SimulatorFluidModel fluid_model_;
 };
 
-}}}}}
+}}
 
 #endif // WELLSTRE_H

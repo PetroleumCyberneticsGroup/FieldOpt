@@ -30,13 +30,11 @@
 #include "Settings/simulator.h"
 #include "Model/model.h"
 
-namespace Simulation { namespace SimulatorInterfaces {
+namespace Simulation {
     class ECLSimulator;
-}}
+}
 
 namespace Simulation {
-namespace SimulatorInterfaces {
-namespace DriverFileWriters {
 
 /*!
  * \brief The EclDriverFileWriter class writes driver files that can be executed
@@ -46,7 +44,7 @@ namespace DriverFileWriters {
 class EclDriverFileWriter
 {
 private:
-    friend class ::Simulation::SimulatorInterfaces::ECLSimulator;
+    friend class ::Simulation::ECLSimulator;
     EclDriverFileWriter(::Settings::Settings *settings, Model::Model *model);
     void WriteDriverFile(QString schedule_file_path);
 
@@ -54,8 +52,6 @@ private:
     ::Settings::Settings *settings_;
 };
 
-}
-}
 }
 
 

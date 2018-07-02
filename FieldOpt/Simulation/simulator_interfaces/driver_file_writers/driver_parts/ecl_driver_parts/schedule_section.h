@@ -34,9 +34,6 @@
 #include <QStringList>
 
 namespace Simulation {
-namespace SimulatorInterfaces {
-namespace DriverFileWriters {
-namespace DriverParts {
 namespace ECLDriverParts {
 
 class Schedule : public ECLDriverPart
@@ -64,9 +61,6 @@ private:
   QString schedule_;
 };
 
-}
-}
-}
 }
 }
 

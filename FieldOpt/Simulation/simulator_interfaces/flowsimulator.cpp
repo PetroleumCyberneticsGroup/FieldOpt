@@ -23,13 +23,12 @@
 #include "simulator_exceptions.h"
 
 namespace Simulation {
-namespace SimulatorInterfaces {
 
 FlowSimulator::FlowSimulator(Settings::Settings *settings, Model::Model *model)
     : Simulator(settings)
 {
     model_ = model;
-    driver_file_writer_ = new DriverFileWriters::FlowDriverFileWriter(settings_, model_);
+    driver_file_writer_ = new FlowDriverFileWriter(settings_, model_);
 
 
     verifyOriginalDriverFileDirectory();
@@ -110,6 +109,5 @@ void FlowSimulator::WriteDriverFilesOnly() {
 }
 bool FlowSimulator::Evaluate(const Settings::Ensemble::Realization &realization, int timeout, int threads) {
     throw std::runtime_error("Ensemble optimization not yet implemented for the FLOW reservoir simulator.");
-}
 }
 }

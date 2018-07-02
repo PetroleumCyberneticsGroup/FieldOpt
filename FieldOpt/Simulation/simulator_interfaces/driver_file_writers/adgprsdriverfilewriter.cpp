@@ -6,7 +6,7 @@
 #include <iostream>
 #include "Utilities/filehandling.hpp"
 
-namespace Simulation { namespace SimulatorInterfaces { namespace DriverFileWriters {
+namespace Simulation {
 
 AdgprsDriverFileWriter::AdgprsDriverFileWriter(Settings::Settings *settings, Model::Model *model)
 {
@@ -16,11 +16,11 @@ AdgprsDriverFileWriter::AdgprsDriverFileWriter(Settings::Settings *settings, Mod
 
 void AdgprsDriverFileWriter::WriteDriverFile(QString output_dir)
 {
-    auto welspecs = DriverParts::ECLDriverParts::Welspecs(model_->wells());
-    auto compdat = DriverParts::ECLDriverParts::Compdat(model_->wells());
+    auto welspecs = ECLDriverParts::Welspecs(model_->wells());
+    auto compdat = ECLDriverParts::Compdat(model_->wells());
     model_->SetCompdatString(compdat.GetPartString());
-    auto wellstre = DriverParts::AdgprsDriverParts::Wellstre(model_->wells(), settings_->simulator()->fluid_model());
-    auto wellcontrols = DriverParts::AdgprsDriverParts::WellControls(model_->wells(), settings_->model()->control_times());
+    auto wellstre = AdgprsDriverParts::Wellstre(model_->wells(), settings_->simulator()->fluid_model());
+    auto wellcontrols = AdgprsDriverParts::WellControls(model_->wells(), settings_->model()->control_times());
 
     if (!Utilities::FileHandling::FileExists(output_dir+"/include/wells.in"))
         throw std::runtime_error("Unable to find include/wells.in file to write to.");
@@ -37,4 +37,4 @@ void AdgprsDriverFileWriter::WriteDriverFile(QString output_dir)
 
 }
 
-}}}
+}

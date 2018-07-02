@@ -1,9 +1,6 @@
 #include "wellstre.h"
 
 namespace Simulation {
-namespace SimulatorInterfaces {
-namespace DriverFileWriters {
-namespace DriverParts {
 namespace AdgprsDriverParts {
 
 Wellstre::Wellstre(QList<Model::Wells::Well *> *wells, Settings::Simulator::SimulatorFluidModel fluid_model)
@@ -79,4 +76,4 @@ QString Wellstre::createWellEntry(Model::Wells::Well *well) const
     }
 }
 
-}}}}}
+}}
