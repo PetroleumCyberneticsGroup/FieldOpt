@@ -3,10 +3,13 @@
 //
 
 #include <gtest/gtest.h>
+#include <algorithm>
 #include <wells/segmented_well.h>
 #include "Settings/settings.h"
 #include "Settings/tests/test_resource_schedule_segmentation_settings.hpp"
 #include "Settings/paths.h"
+
+using namespace Model::Wells;
 
 namespace {
 
@@ -78,6 +81,47 @@ TEST_F(SegmentedWellTest, Compartments ) {
     EXPECT_NEAR(0.0,          d_2h_->GetCompartments()[0].icd->md(), 30);
     EXPECT_NEAR(length/3.0,   d_2h_->GetCompartments()[1].icd->md(), 30);
     EXPECT_NEAR(2*length/3.0, d_2h_->GetCompartments()[2].icd->md(), 30);
+}
+
+TEST_F(SegmentedWellTest, SegmentTypes) {
+    d_2h_ = new Model::Wells::SegmentedWell(*mod_settings_, d_2h_idx_, varcont_, grid_);
+    auto segs = d_2h_->GetSegments();
+    EXPECT_EQ(SegmentedWell::Segment::SegType::TUBING_SEGMENT, segs[0].Type()); // Root segment
+    for (int i = 1; i < 4; ++i) {
+        EXPECT_EQ(SegmentedWell::Segment::SegType::TUBING_SEGMENT, segs[i].Type());
+    }
+    for (int i = 4; i < 7; ++i) {
+        EXPECT_EQ(SegmentedWell::Segment::SegType::ICD_SEGMENT, segs[i].Type());
+    }
+    for (int i = 7; i < segs.size(); ++i) {
+        EXPECT_EQ(SegmentedWell::Segment::SegType::ANNULUS_SEGMENT, segs[i].Type());
+    }
+}
+
+TEST_F(SegmentedWellTest, SegmentConnections) {
+    d_2h_ = new Model::Wells::SegmentedWell(*mod_settings_, d_2h_idx_, varcont_, grid_);
+    auto segs = d_2h_->GetSegments();
+    auto tub_segs = d_2h_->GetTubingSegments();
+    auto icd_segs = d_2h_->GetICDSegments();
+    auto ann_segs = d_2h_->GetAnnulusSegments();
+    EXPECT_EQ(4, tub_segs.size()); // Includes root segment
+    EXPECT_EQ(3, icd_segs.size());
+    EXPECT_EQ(segs.size() - 7, ann_segs.size());
+
+    for (int i = 1; i < tub_segs.size(); ++i) {
+        EXPECT_EQ(tub_segs[i].Outlet(), tub_segs[i-1].Index());
+
+        // Check that the next tub index is in the list of inlets for the prev one.
+        EXPECT_TRUE(std::find(tub_segs[i-1].GetInlets().begin(),
+                              tub_segs[i-1].GetInlets().end(),
+                              tub_segs[i].Index()) != tub_segs[i-1].GetInlets().end());
+    }
+    for (int i = 0; i < icd_segs.size(); ++i) {
+        EXPECT_EQ(icd_segs[i].Outlet(), tub_segs[i].Index());
+    }
+    for (auto seg : segs) {
+        std::cout << seg.ToString();
+    }
 }
 
 }
