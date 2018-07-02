@@ -61,6 +61,7 @@ class Trajectory
   Settings::Model::WellDefinitionType GetDefinitionType();
   double GetLength() const; //!< Get the length of the wellbore (measured depth from the heel to the toe)
   WellBlock *GetWellBlockByMd(double md) const; //!< Get the wellblock surrounding the given MD.
+  std::vector<WellBlock *> GetWellBlocksByMdRange(double start_md, double end_md) const;
   double GetEntryMd(const WellBlock *wb) const; //!< Get the measured depth for the entry point to the block.
   double GetExitMd(const WellBlock *wb) const; //!< Get the measured depth for the exit point from the block.
   double GetSplineLength() const; //!< Get the length of the well trajectory (summed distance between defining points).
