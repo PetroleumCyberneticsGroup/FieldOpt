@@ -96,7 +96,7 @@ std::vector<SegmentedWell::Segment> SegmentedWell::GetSegments() {
     std::vector<Segment> segments;
     auto root_segment = Segment(Segment::SegType::TUBING_SEGMENT, 1, 1, -1, -1.0,
                                 compartments_.front().start_packer->tvd(),
-                                -1.0, -1.0
+                                -1.0, -1.0, 0.0
     );
     segments.push_back(root_segment);
 
@@ -113,14 +113,17 @@ void SegmentedWell::createAnnulusSegments(vector<SegmentedWell::Segment> &segmen
                                                                 compartments_[i].end_packer->md()
         );
         for (int j = 0; j < comp_blocks.size(); ++j) {
+            double outlet_md;
             int index = 2*compartments_.size() + annulus_indexes.size() + 2;
             int outlet_index;
             if (j == 0) { // Outlet to ICD
                 outlet_index = icd_indexes[i];
+                outlet_md = segments[icd_indexes[i]].OutletMD();
                 segments[compartments_.size() + i + 1].AddInlet(index); // Add to ICD inlet list
             }
             else { // Outlet to previous annulus segment
                 outlet_index = annulus_indexes.back();
+                outlet_md = segments.back().OutletMD();
                 segments.back().AddInlet(index);
             }
             auto ann_seg = Segment(
@@ -130,7 +133,7 @@ void SegmentedWell::createAnnulusSegments(vector<SegmentedWell::Segment> &segmen
                 outlet_index,                  // outlet
                 (comp_blocks[j]->getExitPoint() - comp_blocks[j]->getEntryPoint()).norm(), // length
                 comp_blocks[j]->getExitPoint().z() - comp_blocks[j]->getEntryPoint().z(),  // tvd delta
-                ann_diam_, ann_roughness_
+                ann_diam_, ann_roughness_, outlet_md
             );
             ann_seg.AddParentBlock(comp_blocks[j]);
             annulus_indexes.push_back(index);
@@ -149,7 +152,8 @@ vector<int> SegmentedWell::createICDSegments(vector<SegmentedWell::Segment> &seg
             i + 1, // oulet
             0.1,   // length
             0.0,   // tvd delta
-            tub_diam_, tub_roughness_
+            tub_diam_, tub_roughness_,
+            segments[tubing_indexes[i]].OutletMD() // outlet md
         );
         icd_segment.AddParentICD(compartments_[i].icd);
         icd_indexes.push_back(index);
@@ -169,7 +173,8 @@ vector<int> SegmentedWell::createTubingSegments(vector<SegmentedWell::Segment> &
             index - 1,                            // outlet
             compartments_[i].GetLength(),         // length
             compartments_[i].GetTVDDifference(),  // tvd delta
-            tub_diam_, tub_roughness_
+            tub_diam_, tub_roughness_,
+            segments.back().OutletMD()
         );
         segments.push_back(tubing_segment);
         tubing_indexes.push_back(index);
@@ -181,7 +186,7 @@ vector<SegmentedWell::Segment> SegmentedWell::GetTubingSegments() {
     std::vector<Segment> segments;
     auto root_segment = Segment(Segment::SegType::TUBING_SEGMENT, 1, 1, -1, -1.0,
                                 compartments_.front().start_packer->tvd(),
-                                -1.0, -1.0
+                                -1.0, -1.0, 0.0
     );
     segments.push_back(root_segment);
     vector<int> tubing_indexes = createTubingSegments(segments);
@@ -191,7 +196,7 @@ vector<SegmentedWell::Segment> SegmentedWell::GetICDSegments() {
     std::vector<Segment> segments;
     auto root_segment = Segment(Segment::SegType::TUBING_SEGMENT, 1, 1, -1, -1.0,
                                 compartments_.front().start_packer->tvd(),
-                                -1.0, -1.0
+                                -1.0, -1.0, 0.0
     );
     segments.push_back(root_segment);
 
@@ -209,7 +214,7 @@ vector<SegmentedWell::Segment> SegmentedWell::GetAnnulusSegments() {
     std::vector<Segment> segments;
     auto root_segment = Segment(Segment::SegType::TUBING_SEGMENT, 1, 1, -1, -1.0,
                                 compartments_.front().start_packer->tvd(),
-                                -1.0, -1.0
+                                -1.0, -1.0, 0.0
     );
     segments.push_back(root_segment);
 
@@ -266,7 +271,7 @@ SegmentedWell::Segment::Segment() { }
 SegmentedWell::Segment::Segment(const SegmentedWell::Segment::SegType type,
                                 const int index, const int branch, const int outlet,
                                 const double length, const double tvd, const double diameter,
-                                const double roughness) {
+                                const double roughness, const double outlet_md) {
     type_ = type;
     index_ = index;
     branch_ = branch;
@@ -275,6 +280,7 @@ SegmentedWell::Segment::Segment(const SegmentedWell::Segment::SegType type,
     tvd_change_ = tvd;
     diameter_ = diameter;
     roughness_ = roughness;
+    md_ = outlet_md + length;
 }
 void SegmentedWell::Segment::AddInlet(int index) {
     inlets_.push_back(index);
