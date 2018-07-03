@@ -272,7 +272,7 @@ SegmentedWell::Segment::Segment(const SegmentedWell::Segment::SegType type,
     branch_ = branch;
     outlet_ = outlet;
     length_ = length;
-    tvd_ = tvd;
+    tvd_change_ = tvd;
     diameter_ = diameter;
     roughness_ = roughness;
 }
@@ -304,7 +304,7 @@ std::string SegmentedWell::Segment::ToString() {
     s << "   outlet: " << outlet_ << "\n";
     s << "   inlet:  " << vec_to_str(inlets_) << "\n";
     s << "   length: " << length_ << "\n";
-    s << "   tvd:    " << tvd_ << "\n";
+    s << "   tvd:    " << tvd_change_ << "\n";
     s << "   diam:   " << diameter_ << "  ;  " << "roughness: " << roughness_ << "\n";
     if (type_ == ANNULUS_SEGMENT) {
         s << "   block i, j, k: " << parent_block_->i() << ", " << parent_block_->j() << ", " << parent_block_->k() << "\n";
