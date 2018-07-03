@@ -53,13 +53,13 @@ QString Welsegs::createHeelEntry(SegmentedWell *well) {
     auto rseg = well->GetSegments()[0];
     auto record = GetBaseEntryLine(10);
     record[0] = well->name();
-    record[1] = QString::number(rseg.TVD());
+    record[1] = QString::number(rseg.TVDChange());
     record[4] = "INC";
     record[5] = "HF-";
     record[6] = "DF";
     record[7] = well->trajectory()->GetWellBlocks()->at(0)->getEntryPoint().x();
     record[8] = well->trajectory()->GetWellBlocks()->at(0)->getEntryPoint().y();
-    return record.join("  ");
+    return "\t" + record.join("  ") + "  /\n";
 }
 QString Welsegs::createSegmentEntry(SegmentedWell::Segment segment) {
  /*
@@ -82,7 +82,7 @@ QString Welsegs::createSegmentEntry(SegmentedWell::Segment segment) {
     record[5] = segment.TVDChange();
     record[6] = segment.Diameter();
     record[7] = segment.Roughness();
-    return record.join("  ");
+    return "\t" + record.join("  ") + "  /\n";
 }
 }
 }
