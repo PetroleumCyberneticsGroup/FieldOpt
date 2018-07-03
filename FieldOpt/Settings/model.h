@@ -73,6 +73,7 @@ class Model
       WellCompletionType type;               //!< Which type of completion this is (Perforation/ICD)
       double transmissibility_factor =  0.0; //!< The transmissibility factor for this completion (used for perforations)
       double valve_size              = -1.0; //!< Valve size for nozzle ICDs.
+      double valve_flow_coeff        = -1.0; //!< Dimensionless flow coefficient for valve.
       double diameter                = -1.0; //!< Diameter (for any completion in the segmented model)
       double cross_sect_area         = -1.0; //!< Cross sectional flow area
       double roughness               = -1.0; //!< Roughness (for any completion in the segmented model)

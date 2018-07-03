@@ -32,10 +32,12 @@ class ICD : public SegmentedCompletion {
       Properties::VariablePropertyContainer *variable_container);
 
   double valveSize() const { return valve_size_->value(); }
+  double flowCoefficient() const { return flow_coefficient_; }
   void setValveSize(const double size) { valve_size_->setValue(size); }
 
  private:
   Properties::ContinousProperty *valve_size_;
+  double flow_coefficient_;
 
 };
 

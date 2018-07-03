@@ -552,6 +552,14 @@ void Model::parseSegmentCompartments(const QJsonObject &json_seg, Model::Well &w
             }
             else {
                 std::cout << "Defaulting ICDValveSize to 7.85E-5." << std::endl;
+                well.seg_compartment_params.valve_size = 7.85E-5;
+            }
+            if (json_compts.contains("ICDValveFlowCoeff")) {
+                well.seg_compartment_params.valve_flow_coeff = json_compts["ICDValveFlowCoeff"].toDouble();
+            }
+            else {
+                std::cout << "Defaulting ICDValveFlowCoeff to 0.66." << std::endl;
+                well.seg_compartment_params.valve_flow_coeff = 0.66;
             }
         }
         catch (...) {
