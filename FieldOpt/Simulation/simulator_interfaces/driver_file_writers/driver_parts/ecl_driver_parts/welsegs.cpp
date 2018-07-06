@@ -91,16 +91,21 @@ QString Welsegs::createSegmentEntry(Segment segment) {
 Welsegs::Welsegs(QList<Model::Wells::Well *> *wells, int ts) {
     for (Well *well : *wells) {
         if (well->IsSegmented() && well->controls()->first()->time_step() == ts) {
-            // TODO: Implement this
-            throw std::runtime_error("Not yet implemented.");
+            WelsegsKeyword kw;
+            kw.heel_entry = createHeelEntry(well);
+            auto segs = well->GetSegments();
+            for (int i = 1; i < segs.size(); ++i) {
+                kw.seg_entries.push_back(createSegmentEntry(segs[i]));
+            }
+            keywords_.push_back(kw);
         }
     }
 
 }
 QString Welsegs::WelsegsKeyword::buildKeyword() const {
     QString kw = "WELSEGS\n";
-    kw += heel_entry;
-    kw += seg_entries.join("\n");
+    kw += this->heel_entry;
+    kw += this->seg_entries.join("\n");
     kw += "\n/";
     return kw;
 }

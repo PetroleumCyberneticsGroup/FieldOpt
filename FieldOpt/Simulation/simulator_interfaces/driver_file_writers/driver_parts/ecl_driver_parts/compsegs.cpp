@@ -26,18 +26,35 @@ Compsegs::Compsegs(Well *well) {
     head_ = "COMPSEGS\n";
     foot_ = "/\n\n";
     auto asegs = well->GetAnnulusSegments();
-    wname_ = well->name();
+    CompsegsKeyword kw;
+    kw.wname = well->name();
     for (int i = 0; i < asegs.size(); ++i) {
-        entries_.push_back(generateEntry(asegs[i]));
+        kw.entries.push_back(generateEntry(asegs[i]));
+    }
+    keywords_.push_back(kw);
+}
+Compsegs::Compsegs(QList<Model::Wells::Well *> *wells, int ts) {
+    for (Well *well : *wells) {
+        if (well->IsSegmented() && well->controls()->first()->time_step() == ts) {
+            CompsegsKeyword kw;
+            kw.wname = well->name();
+            auto asegs = well->GetAnnulusSegments();
+            for (int i = 1; i < asegs.size(); ++i) {
+                kw.entries.push_back(generateEntry(asegs[i]));
+            }
+            keywords_.push_back(kw);
+        }
     }
 }
-
 QString Simulation::ECLDriverParts::Compsegs::GetPartString() const {
-    QString keyword = head_ + "\n";
-    keyword += "\t" + wname_ + "  /\n";
-    keyword += entries_.join("\n") + "\n";
-    keyword += foot_;
-    return keyword;
+    if (keywords_.size() == 0)
+        return "";
+
+    QString all_keywords = "";
+    for (auto kw : keywords_) {
+        all_keywords += kw.buildKeyword();
+    }
+    return all_keywords;
 }
 QString Compsegs::generateEntry(Segment seg) {
 /*
@@ -59,7 +76,14 @@ QString Compsegs::generateEntry(Segment seg) {
     entry[3] = seg.Branch();
     entry[4] = seg.OutletMD();
     entry[5] = seg.OutletMD() + seg.Length();
-    return "\t" + entry.join("  ") + "  /\n";
+    return "\t" + entry.join("  ") + "  /";
+}
+QString Compsegs::CompsegsKeyword::buildKeyword() const {
+    QString kw = "COMPSEGS\n";
+    kw += "\t" + this->wname + "  /\n";
+    kw += this->entries.join("\n");
+    kw += "\n/";
+    return kw;
 }
 }
 }

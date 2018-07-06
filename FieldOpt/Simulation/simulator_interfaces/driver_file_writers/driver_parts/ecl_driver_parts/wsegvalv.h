@@ -39,13 +39,13 @@ using namespace Model::Wells;
 class Wsegvalv : public ECLDriverPart {
  public:
   Wsegvalv(Well *well);
+  Wsegvalv(QList<Model::Wells::Well *> *wells, int ts);
   Wsegvalv() {}
   QString GetPartString() const override;
 
  private:
-  QString generateEntry(Segment seg);
+  QString generateEntry(Segment seg, QString wname);
 
-  QString wname_;
   QStringList entries_;
 };
 

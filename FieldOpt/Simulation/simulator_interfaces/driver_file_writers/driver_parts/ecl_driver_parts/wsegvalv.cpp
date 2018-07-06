@@ -26,20 +26,33 @@ Wsegvalv::Wsegvalv(Well *well) {
     head_ = "WSEGVALV\n";
     foot_ = "/\n\n";
     auto isegs = well->GetICDSegments();
-    wname_ = well->name();
     for (int i = 0; i < isegs.size(); ++i) {
-        entries_.push_back(generateEntry(isegs[i]));
+        entries_.push_back(generateEntry(isegs[i], well->name()));
     }
 
 }
 
+Wsegvalv::Wsegvalv(QList<Model::Wells::Well *> *wells, int ts) {
+    for (Well *well : *wells) {
+        if (well->IsSegmented() && well->controls()->first()->time_step() == ts) {
+            auto isegs = well->GetICDSegments();
+            for (int i = 1; i < isegs.size(); ++i) {
+                entries_.push_back(generateEntry(isegs[i], well->name()));
+            }
+        }
+    }
+}
+
+
 QString Wsegvalv::GetPartString() const {
+    if (entries_.size() == 0)
+        return "";
     QString keyword = head_ + "\n";
     keyword += "\t" + entries_.join("\t") + "\n";
     keyword += foot_;
 }
 
-QString Wsegvalv::generateEntry(Segment seg) {
+QString Wsegvalv::generateEntry(Segment seg, QString wname) {
 /*!
  * 0. Well name.
  * 1. Segment number.
@@ -47,12 +60,11 @@ QString Wsegvalv::generateEntry(Segment seg) {
  * 3. Cross-section area for flow in the constriction (\$ A_c \$).
  */
     auto entry = GetBaseEntryLine(4);
-    entry[0] = wname_;
+    entry[0] = wname;
     entry[1] = seg.Index();
     entry[2] = seg.ParentICD()->flowCoefficient();
     entry[3] = seg.ParentICD()->valveSize();
     return "\t" + entry.join("  ") + "/";
 }
-
 }
 }

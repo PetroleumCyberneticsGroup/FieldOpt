@@ -50,13 +50,18 @@ namespace ECLDriverParts {
 class Compsegs  : public ECLDriverPart {
  public:
   Compsegs(Well *well);
+  Compsegs(QList<Model::Wells::Well *> *wells, int ts);
   Compsegs() {}
   QString GetPartString() const override;
 
  private:
+  struct CompsegsKeyword {
+    QString wname;
+    QStringList entries;
+    QString buildKeyword() const;
+  };
   QString generateEntry(Segment seg);
-  QString wname_;
-  QStringList entries_;
+  QList<CompsegsKeyword> keywords_;
 };
 
 }
