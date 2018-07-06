@@ -31,7 +31,6 @@ SegmentedWell::SegmentedWell(const Settings::Model &settings,
     : Well(settings, well_number, variable_container, grid)
 {
     well_settings_ = settings.wells()[well_number];
-
     assert(well_settings_.seg_n_compartments > 0);
     assert(trajectory_->GetDefinitionType() == Settings::Model::WellDefinitionType::WellSpline);
 
@@ -89,10 +88,10 @@ std::vector<ICD *> SegmentedWell::GetICDs() const {
     }
     return icds;
 }
-std::vector<SegmentedWell::Compartment> SegmentedWell::GetCompartments() const {
+std::vector<Compartment> SegmentedWell::GetCompartments() const {
     return compartments_;
 }
-std::vector<SegmentedWell::Segment> SegmentedWell::GetSegments() {
+std::vector<Segment> SegmentedWell::GetSegments() {
     std::vector<Segment> segments;
     auto root_segment = Segment(Segment::SegType::TUBING_SEGMENT, 1, 1, -1, -1.0,
                                 compartments_.front().start_packer->tvd(),
@@ -106,7 +105,7 @@ std::vector<SegmentedWell::Segment> SegmentedWell::GetSegments() {
 
     return segments;
 }
-void SegmentedWell::createAnnulusSegments(vector<SegmentedWell::Segment> &segments, const vector<int> &icd_indexes) {
+void SegmentedWell::createAnnulusSegments(vector<Segment> &segments, const vector<int> &icd_indexes) {
     vector<int> annulus_indexes;
     for (int i = 0; i < compartments_.size(); ++i) {
         auto comp_blocks = trajectory()->GetWellBlocksByMdRange(compartments_[i].start_packer->md(),
@@ -141,7 +140,7 @@ void SegmentedWell::createAnnulusSegments(vector<SegmentedWell::Segment> &segmen
         }
     }
 }
-vector<int> SegmentedWell::createICDSegments(vector<SegmentedWell::Segment> &segments, vector<int> &tubing_indexes) const {
+vector<int> SegmentedWell::createICDSegments(vector<Segment> &segments, vector<int> &tubing_indexes) const {
     vector<int> icd_indexes;
     for (int i = 0; i < compartments_.size(); ++i) {
         int index = tubing_indexes.back() + 1 + i;
@@ -162,7 +161,7 @@ vector<int> SegmentedWell::createICDSegments(vector<SegmentedWell::Segment> &seg
     }
     return icd_indexes;
 }
-vector<int> SegmentedWell::createTubingSegments(vector<SegmentedWell::Segment> &segments) const {
+vector<int> SegmentedWell::createTubingSegments(vector<Segment> &segments) const {
     vector<int> tubing_indexes;
     for (int i = 0; i < compartments_.size(); ++i) {
         int index = i + 2;
@@ -182,7 +181,7 @@ vector<int> SegmentedWell::createTubingSegments(vector<SegmentedWell::Segment> &
     }
     return tubing_indexes;
 }
-vector<SegmentedWell::Segment> SegmentedWell::GetTubingSegments() {
+vector<Segment> SegmentedWell::GetTubingSegments() {
     std::vector<Segment> segments;
     auto root_segment = Segment(Segment::SegType::TUBING_SEGMENT, 1, 1, -1, -1.0,
                                 compartments_.front().start_packer->tvd(),
@@ -192,7 +191,7 @@ vector<SegmentedWell::Segment> SegmentedWell::GetTubingSegments() {
     vector<int> tubing_indexes = createTubingSegments(segments);
     return segments;
 }
-vector<SegmentedWell::Segment> SegmentedWell::GetICDSegments() {
+vector<Segment> SegmentedWell::GetICDSegments() {
     std::vector<Segment> segments;
     auto root_segment = Segment(Segment::SegType::TUBING_SEGMENT, 1, 1, -1, -1.0,
                                 compartments_.front().start_packer->tvd(),
@@ -210,7 +209,7 @@ vector<SegmentedWell::Segment> SegmentedWell::GetICDSegments() {
     }
     return icd_segments;
 }
-vector<SegmentedWell::Segment> SegmentedWell::GetAnnulusSegments() {
+vector<Segment> SegmentedWell::GetAnnulusSegments() {
     std::vector<Segment> segments;
     auto root_segment = Segment(Segment::SegType::TUBING_SEGMENT, 1, 1, -1, -1.0,
                                 compartments_.front().start_packer->tvd(),
@@ -230,92 +229,5 @@ vector<SegmentedWell::Segment> SegmentedWell::GetAnnulusSegments() {
     return ann_segments;
 }
 
-SegmentedWell::Compartment::Compartment(const double start_md, const double end_md,
-                                        const double start_tvd, const double end_tvd,
-                                        const Settings::Model::Well &well_settings,
-                                        Properties::VariablePropertyContainer *variable_container,
-                                        std::vector<Compartment> &compartments_) {
-    Settings::Model::Well::Completion comp_settings;
-    if (compartments_.size() == 0) {
-        assert(start_md == 0.0);
-        comp_settings.name = "Packer#" + well_settings.name + "#0";
-        comp_settings.measured_depth = start_md;
-        comp_settings.true_vertical_depth = start_tvd;
-        comp_settings.type = Settings::Model::WellCompletionType::Packer;
-        start_packer = new Wellbore::Completions::Packer(comp_settings, variable_container);
-    }
-    else {
-        start_packer = compartments_[compartments_.size() - 1].end_packer;
-    }
-
-    comp_settings.name = "Packer#" + well_settings.name + "#" + QString::number(compartments_.size() + 1);
-    comp_settings.measured_depth = end_md;
-    comp_settings.true_vertical_depth = end_tvd;
-    comp_settings.type = Settings::Model::WellCompletionType::Packer;
-    end_packer = new Wellbore::Completions::Packer(comp_settings, variable_container);
-
-    comp_settings.name = "ICD#" + well_settings.name + "#" + QString::number(compartments_.size());
-    comp_settings.measured_depth = start_md;
-    comp_settings.true_vertical_depth = start_tvd;
-    comp_settings.valve_size = well_settings.seg_compartment_params.valve_size;
-    comp_settings.type = Settings::Model::WellCompletionType::ICV;
-    icd = new Wellbore::Completions::ICD(comp_settings, variable_container);
-}
-double SegmentedWell::Compartment::GetLength() const {
-    return end_packer->md() - start_packer->md();
-}
-double SegmentedWell::Compartment::GetTVDDifference() const {
-    return end_packer->tvd() - start_packer->tvd();
-}
-SegmentedWell::Segment::Segment() { }
-SegmentedWell::Segment::Segment(const SegmentedWell::Segment::SegType type,
-                                const int index, const int branch, const int outlet,
-                                const double length, const double tvd, const double diameter,
-                                const double roughness, const double outlet_md) {
-    type_ = type;
-    index_ = index;
-    branch_ = branch;
-    outlet_ = outlet;
-    length_ = length;
-    tvd_change_ = tvd;
-    diameter_ = diameter;
-    roughness_ = roughness;
-    md_ = outlet_md + length;
-}
-void SegmentedWell::Segment::AddInlet(int index) {
-    inlets_.push_back(index);
-}
-std::vector<int> SegmentedWell::Segment::GetInlets() const {
-    return inlets_;
-}
-void SegmentedWell::Segment::AddParentBlock(Wellbore::WellBlock *parent_block) {
-    parent_block_ = parent_block;
-}
-void SegmentedWell::Segment::AddParentICD(Wellbore::Completions::ICD *parent_icd) {
-    parent_icd_ = parent_icd;
-}
-bool SegmentedWell::Segment::HasParentBlock() const {
-    return !parent_block_ == 0;
-}
-bool SegmentedWell::Segment::HasParentICD() const {
-    return !parent_icd_ == 0;
-}
-std::string SegmentedWell::Segment::ToString() {
-    std::stringstream s;
-    s << "-- Segment " << index_ << " (";
-    if (type_ == TUBING_SEGMENT)  s << "tubing) --\n";
-    if (type_ == ICD_SEGMENT)     s << "ICD) --\n";
-    if (type_ == ANNULUS_SEGMENT) s << "annulus) --\n";
-    s << "   branch: " << branch_ << "\n";
-    s << "   outlet: " << outlet_ << "\n";
-    s << "   inlet:  " << vec_to_str(inlets_) << "\n";
-    s << "   length: " << length_ << "\n";
-    s << "   tvd:    " << tvd_change_ << "\n";
-    s << "   diam:   " << diameter_ << "  ;  " << "roughness: " << roughness_ << "\n";
-    if (type_ == ANNULUS_SEGMENT) {
-        s << "   block i, j, k: " << parent_block_->i() << ", " << parent_block_->j() << ", " << parent_block_->k() << "\n";
-    }
-    return s.str();
-}
 }
 }

@@ -23,7 +23,7 @@ add_library(model
 		wells/wellbore/completions/segmented_completion.cpp
 		wells/wellbore/completions/packer.cpp
 		wells/wellbore/completions/icd.cpp
-		wells/segmented_well.cpp)
+		wells/segmented_well.cpp wells/compartment.cpp wells/compartment.h wells/segment.cpp wells/segment.h)
 add_library(fieldopt::model ALIAS ${PROJECT_NAME})
 
 target_link_libraries (model
