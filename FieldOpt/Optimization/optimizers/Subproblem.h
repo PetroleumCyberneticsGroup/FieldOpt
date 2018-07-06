@@ -116,7 +116,7 @@ class Subproblem {
 
  private:
   Eigen::VectorXd lastLagrangeMultipliers;
-  VirtualSimulator virtualSimulator_;
+  //VirtualSimulator virtualSimulator_;
   int normType_;
   Eigen::VectorXd y0_;
   Eigen::VectorXd bestPointDisplacement_;

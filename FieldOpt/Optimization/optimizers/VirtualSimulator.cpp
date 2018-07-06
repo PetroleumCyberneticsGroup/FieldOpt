@@ -33,7 +33,7 @@ Eigen::VectorXd VirtualSimulator::evaluateConstraints(Eigen::VectorXd point) {
 
   }
   else{
-    output = Eigen::MatrixXd::Zero(0,0);
+    output = Eigen::VectorXd::Zero(0);
   }
   return output;
 }

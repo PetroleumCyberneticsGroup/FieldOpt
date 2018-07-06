@@ -573,6 +573,9 @@ class DFO_Model {
 
   void replaceSinglePoint(Eigen::VectorXd &dNew, double radius);
 
+  void makeExample();
+  double  examplefindpoisedness(Eigen::VectorXd &dNew, int &indexOfWorstPoint);
+
 };
 }
 }

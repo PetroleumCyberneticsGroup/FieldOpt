@@ -18,6 +18,7 @@ int SNOPTusrFG3_(integer *Status, integer *n, doublereal x[],
 
 
 void smallTightning(double &value, bool lower){
+  /*
   if (lower && value < 0){
     value = value*0.999;
   }
@@ -30,6 +31,7 @@ void smallTightning(double &value, bool lower){
   else if((!lower) && value < 0){
     value = value*1.001;
   }
+   */
 }
 
 //static double *gradient;
@@ -46,7 +48,7 @@ static double scale;
 static VirtualSimulator virtualSimulator;
 
 //Subproblem::Subproblem(SNOPTHandler snoptHandler) {
-Subproblem::Subproblem(Settings::Optimizer *settings) : virtualSimulator_(settings->parameters().test_problem_file) {
+Subproblem::Subproblem(Settings::Optimizer *settings) {
   settings_ = settings;
   n_ = settings->parameters().number_of_variables;
   y0_ = Eigen::VectorXd::Zero(n_);
@@ -251,8 +253,8 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
   bestPointDisplacement_ = bestPointDisplacement;
   yb_rel = bestPointDisplacement_;
   // Set norm specific constraints
-  std::cout << "lower bounds\n" << xlowCopy_ << "\n";
-  std::cout << "upper bounds\n" << xuppCopy_ << "\n";
+  //std::cout << "lower bounds\n" << xlowCopy_ << "\n";
+  //std::cout << "upper bounds\n" << xuppCopy_ << "\n";
   if (normType_ == INFINITY_NORM){
     for (int i = 0; i < n_; ++i){
       xlow_[i] = std::max(bestPointDisplacement_[i] - trustRegionRadius_, xlowCopy_[i] - y0_[i]);
@@ -323,10 +325,10 @@ void Subproblem::Solve(vector<double> &xsol, vector<double> &fsol, char *optimiz
 
   /// Print all the constraint such that I can (try) to see why it becomes infeasible.
 
-  std::cout << "Flow\t Fupp\n";
-  for (int i = 0; i < neF_; i++){
-    std::cout << Flow_[i] << "\t" << Fupp_[i] << "\n";
-  }
+  //std::cout << "Flow\t Fupp\n";
+  //for (int i = 0; i < neF_; i++){
+  //  std::cout << Flow_[i] << "\t" << Fupp_[i] << "\n";
+  //}
   std::cout << "\nxlow\t xupp\n";
   for (int i = 0; i < n_; i++){
     std::cout << xlow_[i] << "\t" << xupp_[i] << "\n";
@@ -523,7 +525,21 @@ void Subproblem::setConstraintsAndDimensions() {
     Fupp_[1] = trustRegionRadius_;
   }
   Eigen::VectorXd x_lb = virtualSimulator.GetLowerBoundsForVariables();
+  if (x_lb.rows() < n_){
+    int tmp1 = x_lb.rows();
+    x_lb.conservativeResize(n_);
+    for (int i = tmp1; i < n_;++i){
+      x_lb[i] = -infinity_;
+    }
+  }
   Eigen::VectorXd x_ub = virtualSimulator.GetUpperBoundsForVariables();
+  if (x_ub.rows() < n_){
+    int tmp2 = x_ub.rows();
+    x_ub.conservativeResize(n_);
+    for (int i = tmp2; i < n_;++i){
+      x_ub[i] = infinity_;
+    }
+  }
   //std::cout << "x_lb \n" << x_lb <<"\nx_ub\n"<<x_ub << "\n";
   for(int i = 0; i < n_; ++i){
     //std::cout << "std::isinf(x_lb[i]) = " << std::isinf(x_lb[i]) << "\n";
@@ -854,8 +870,8 @@ int SNOPTusrFG3_(integer *Status, integer *n, double x[],
       if (normType == Subproblem::L2_NORM) {
         gradConstraint = (xvec - yb_rel) / ((xvec - yb_rel).norm() + 0.000000000000001);
         for (int i = 0; i < *n; ++i) {
-          G[startI + i] = gradConstraint(i);
-          restrictNumberValueToMatchSNOPT(G[startI + i]);
+          //G[startI + i] = gradConstraint(i);
+          //restrictNumberValueToMatchSNOPT(G[startI + i]);
         }
         startI+=*n;
       }

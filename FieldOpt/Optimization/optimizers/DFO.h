@@ -9,6 +9,8 @@
 #include "Subproblem.h"
 #include "DFO_Model.h"
 #include <ncurses.h>
+#include <fstream>
+#include <iostream>
 
 namespace Optimization {
 namespace Optimizers {
@@ -34,9 +36,16 @@ class DFO : public Optimizer {
 
   Eigen::VectorXd ScaleVariablesFromAlgorithmToApplication(Eigen::VectorXd point);
   Eigen::VectorXd ScaleVariablesFromApplicationToAlgorithm(Eigen::VectorXd point);
+  void WritePointToFile(Eigen::VectorXd point, int t);
+  void WritePointTypeToFile(int t);
+  void CreateFiles();
 
 
  private:
+  std::string filenamePoint;
+  std::string filenameType;
+  std::string filenameTrr;
+
   std::string color_from= "31";
   std::string color_to = "33";
   Model::Properties::VariablePropertyContainer *varcont_;

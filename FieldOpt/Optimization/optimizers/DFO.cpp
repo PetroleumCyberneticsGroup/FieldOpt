@@ -56,8 +56,7 @@ Eigen::VectorXd test(Eigen::VectorXd x) {
 Eigen::VectorXd evaluateFunctionVS(Eigen::VectorXd x, int ng) {
   Eigen::VectorXd result(1 + ng);
   result(0) = vs.evaluateFunction(x);
-  std::cout << "input is:\n" << x << "\noutput is: " << result(0) << "\noutput should have been: "
-            << (1 - x[0]) * (1 - x[0]) + 100 * (x[1] - x[0] * x[0]) + 9 * x[1] << "\n";
+  std::cout << "input is:\n" << x << "\noutput is: " << result(0) << "\n";
 
   Eigen::VectorXd gradients1 = vs.evaluateFunctionGradients(x);
   Eigen::VectorXd grads = gradients1.tail(ng);
@@ -224,7 +223,7 @@ DFO::DFO(Settings::Optimizer *settings,
   previous_iterate_type_ = 0;
   base_case_ = new Case(base_case);
   last_action_ = -1;
-
+  CreateFiles();
   weights_distance_from_optimum_lsq_ =
       Eigen::VectorXd::Zero(settings->parameters().weights_distance_from_optimum_lsq.size());
   int j = 0;
@@ -251,6 +250,11 @@ DFO::DFO(Settings::Optimizer *settings,
   std::cout << "\n";
 
 
+
+  /// Making example of model improvement algorithm. for report.
+
+  //DFO_model_.makeExample();
+  //std::cout << "too far" << std::endl;
   /// Testing snopt solver
 /*
   std::cout << std::scientific;
@@ -604,6 +608,38 @@ void DFO::iterate() {
 
   vs = VirtualSimulator(settings_->parameters().test_problem_file);
   vs.Solve();
+/*
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+  int n = number_of_variables_;
+  Eigen::VectorXd yTry(n); //Displacement from current center point
+  static std::random_device rd;
+  static std::mt19937 gen(rd());
+  std::uniform_real_distribution<> dis(-100, 100);
+  int k = 0;
+
+  for (int i = 0; i < n; ++i) {
+    yTry(i) = dis(gen);
+  }
+  Eigen::VectorXd yBest = yTry;
+
+  double minValue = vs.evaluateFunction(yBest);
+  double value = 0;
+
+  while (k < 5000000 && false) {
+    for (int i = 0; i < n; ++i) {
+      yTry(i) = dis(gen);
+    }
+    value = vs.evaluateFunction(yTry);
+    if (value < minValue) {
+      minValue = value;
+      yBest = yTry;
+    }
+    ++k;
+  }
+  std::cout << "The smallest value ffound is: "  << minValue <<"\nWith the x= \n" << yBest << "\n\n";
+  */
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
   //Eigen::VectorXd asda(2);
   //asda  << 2,5;
   //std::cout <<"constraints \n" << vs.evaluateConstraints(asda) << "\n";
@@ -775,6 +811,8 @@ void DFO::iterate() {
     top:
     if (next_step_ == FIND_POINTS1) {
       new_points = DFO_model_.findFirstSetOfInterpolationPoints();
+      std::cout << "Y new points:\n" << new_points <<"\n";
+      std::cout << "Y:\n" << *refY << "\n";
       new_points_indicies.resize(new_points.cols());
       number_of_points_first_set = new_points.cols();
 
@@ -793,7 +831,7 @@ void DFO::iterate() {
       if (number_of_interpolation_points_ == number_of_function_calls) {
         // All points are found.
         number_of_new_points = 0;
-        goto top;
+        goto print;
       } else {
         number_of_new_points = number_of_interpolation_points_ - number_of_function_calls;
         new_points_indicies.resize(number_of_new_points);
@@ -902,6 +940,12 @@ void DFO::iterate() {
               DFO_model_.ModelImprovementAlgorithm(r * trust_region_radius_tilde, new_points, new_points_indicies);
         } while (is_poised);
 
+        if (trust_region_radius_tilde <= trust_region_radius_end*0.9){
+          std::cout << "crit_steps: " << crit_steps << "\nmodel_impr: " << model_impr_steps << "\nacceptance: "
+                    << accept_steps << "\n";
+          DFO_model_.Converged(iterations_, 0, number_of_function_calls, number_of_parallell_function_calls);
+        }
+
         set_next_step(CRITICALITY_STEP_ADD_POINTS);
         number_of_new_points = new_points_indicies.rows();
         multiple_new_points = true;
@@ -915,7 +959,7 @@ void DFO::iterate() {
       /// Can add a test to see if currently best found point is "bestpoint"
       //DFO_model_.UpdateOptimum();
 
-      if (DFO_model_.GetTrustRegionRadius() <= trust_region_radius_end && gradient.norm() <= 0.01) {
+      if (DFO_model_.GetTrustRegionRadius() <= trust_region_radius_end) {
         std::cout << "crit_steps: " << crit_steps << "\nmodel_impr: " << model_impr_steps << "\nacceptance: "
                   << accept_steps << "\n";
         DFO_model_.Converged(iterations_, 0, number_of_function_calls, number_of_parallell_function_calls);
@@ -1077,6 +1121,9 @@ void DFO::iterate() {
         tmp_eval = evaluateFunctionVS(tmpp, ng);
         eigen_col(new_gradients, tmp_eval.tail(ng), i);
         function_evaluations(i) = tmp_eval(0);
+
+        WritePointToFile(tmpp, 1);
+
       }
       number_of_parallell_function_calls++;
     } else {
@@ -1088,6 +1135,14 @@ void DFO::iterate() {
       new_gradient = tmp_eval.tail(ng);
       number_of_function_calls++;
       number_of_parallell_function_calls++;
+
+
+      if (next_step_ == ACCEPTANCE_OF_TRIAL_POINT){
+        WritePointToFile(tmpp, 0);
+      }
+      else{
+        WritePointToFile(tmpp, 1);
+      }
     }
     iterations_++;
 
@@ -1125,17 +1180,65 @@ void DFO::set_next_step(int a) {
 
 Eigen::VectorXd DFO::ScaleVariablesFromAlgorithmToApplication(Eigen::VectorXd point) {
   Eigen::VectorXd ret(point.rows());
-  ret(0) = point(0);
-  ret(1) = point(1);
+  //ret(0) = point(0);
+  //ret(1) = point(1);
   //ret(2) = point(2)*100;
-  return ret;
+  return point;
 }
 Eigen::VectorXd DFO::ScaleVariablesFromApplicationToAlgorithm(Eigen::VectorXd point) {
   Eigen::VectorXd ret(point.rows());
-  ret(0) = point(0);
-  ret(1) = point(1);
-  return ret;
+  //ret(0) = point(0);
+  //ret(1) = point(1);
+  return point;
   //ret(2) = point(2)*10;
+}
+
+void DFO::CreateFiles(){
+  std::string filename = settings_->parameters().test_problem_file;
+  std::size_t botDirPos = filename.find_last_of("/");
+  std::string name2 = filename.substr(botDirPos, filename.length());
+  std::size_t pos2 = name2.find_last_of(".");
+  std::string name = name2.substr(0, pos2);
+
+
+  filenamePoint = "/home/joakim/dat_and_mod/testcases/results" + name  + "points" + "m"+ std::to_string(settings_->parameters().number_of_interpolation_points);
+  filenameType = "/home/joakim/dat_and_mod/testcases/results" + name + "types"+ "m" + std::to_string(settings_->parameters().number_of_interpolation_points);
+  filenameTrr = "/home/joakim/dat_and_mod/testcases/results" + name + "trr"+ "m" + std::to_string(settings_->parameters().number_of_interpolation_points);
+  std::ofstream o(filenameType);
+  std::ofstream o2(filenamePoint);
+  std::ofstream o3(filenameTrr);
+
+}
+
+void DFO::WritePointToFile(Eigen::VectorXd point, int t) {
+  std::fstream fs;
+  fs.open(filenamePoint,std::fstream::in |std::fstream::out | std::fstream::app );
+
+  for (int i = 0; i < settings_->parameters().number_of_variables; ++i){
+    fs << point[i] << " ";
+  }
+  fs << std::endl;
+  fs.close();
+
+  std::fstream fs2;
+  fs2.open(filenameType,std::fstream::in |std::fstream::out | std::fstream::app );
+
+  fs2  << t << std::endl;
+  fs2.close();
+
+  std::fstream fs3;
+  fs3.open(filenameTrr,std::fstream::in |std::fstream::out | std::fstream::app );
+
+  fs3  << DFO_model_.GetTrustRegionRadius()*settings_->parameters().r << std::endl;
+  fs3.close();
+
+}
+void DFO::WritePointTypeToFile(int t) {
+  std::fstream fs;
+  fs.open("aa.txt",std::fstream::in |std::fstream::out | std::fstream::app );
+
+  fs  << t << "\n";
+  fs.close();
 }
 
 double matyasFunction2D(Eigen::VectorXd x) {
