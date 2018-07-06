@@ -35,7 +35,11 @@ Schedule::Schedule(QList<Model::Wells::Well *> *wells, QList<int> control_times)
     for (int ts : control_times) {
         ScheduleTimeEntry time_entry = ScheduleTimeEntry(Welspecs(wells, ts),
                                                          Compdat(wells, ts),
-                                                         WellControls(wells, control_times, ts));
+                                                         WellControls(wells, control_times, ts),
+                                                         Welsegs(wells, ts),
+                                                         Compsegs(wells->first()),
+                                                         Wsegvalv(wells->first()) // TODO: Update signatures
+        );
         schedule_time_entries_.append(time_entry);
     }
     for (auto time_entry : schedule_time_entries_) {
@@ -51,13 +55,20 @@ QString Schedule::GetPartString() const
     return schedule_;
 }
 
-Schedule::ScheduleTimeEntry::ScheduleTimeEntry(ECLDriverParts::Welspecs welspecs,
-                                               ECLDriverParts::Compdat compdat,
-                                               ECLDriverParts::WellControls well_controls)
+Schedule::ScheduleTimeEntry::ScheduleTimeEntry(Welspecs welspecs,
+                                               Compdat compdat,
+                                               WellControls well_controls,
+                                               Welsegs welsegs,
+                                               Compsegs compsegs,
+                                               Wsegvalv wsegvalv
+)
 {
     this->welspecs = welspecs;
     this->compdat = compdat;
     this->well_controls = well_controls;
+    this->welsegs = welsegs;
+    this->compsegs = compsegs;
+    this->wsegvalv = wsegvalv;
 }
 
 }

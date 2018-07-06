@@ -21,7 +21,7 @@
 #define FIELDOPT_WSEGVALV_H
 
 #include "ecldriverpart.h"
-#include "Model/wells/segmented_well.h"
+#include "Model/wells/well.h"
 
 namespace Simulation {
 namespace ECLDriverParts {
@@ -38,12 +38,12 @@ using namespace Model::Wells;
  */
 class Wsegvalv : public ECLDriverPart {
  public:
-  Wsegvalv(SegmentedWell *well);
+  Wsegvalv(Well *well);
   Wsegvalv() {}
   QString GetPartString() const override;
 
  private:
-  QString generateEntry(SegmentedWell::Segment seg);
+  QString generateEntry(Segment seg);
 
   QString wname_;
   QStringList entries_;

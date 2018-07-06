@@ -21,24 +21,28 @@
 
 namespace Simulation {
 namespace ECLDriverParts {
-Welsegs::Welsegs(SegmentedWell *well) {
+Welsegs::Welsegs(Well *well) {
     head_ = "WELSEGS\n";
     foot_ = "/\n\n";
-    heel_entry_ = createHeelEntry(well);
+    WelsegsKeyword kw;
+    kw.heel_entry = createHeelEntry(well);
     auto segs = well->GetSegments();
     for (int i = 1; i < segs.size(); ++i) {
-        seg_entries_.push_back(createSegmentEntry(segs[i]));
+        kw.seg_entries.push_back(createSegmentEntry(segs[i]));
     }
+    keywords_.push_back(kw);
 }
-Welsegs::Welsegs() { }
 QString Welsegs::GetPartString() const {
-    QString keyword = head_;
-    keyword.append(heel_entry_ + "\n");
-    keyword.append(seg_entries_.join("\n") + "\n");
-    keyword.append(foot_);
-    return keyword;
+    if (keywords_.size() == 0)
+        return "";
+
+    QString all_keywords = "";
+    for (auto kw : keywords_) {
+        all_keywords += kw.buildKeyword();
+    }
+    return all_keywords;
 }
-QString Welsegs::createHeelEntry(SegmentedWell *well) {
+QString Welsegs::createHeelEntry(Well *well) {
  /*
   * 0.   Name of well
   * 1.   TVD of top segment.
@@ -61,7 +65,7 @@ QString Welsegs::createHeelEntry(SegmentedWell *well) {
     record[8] = well->trajectory()->GetWellBlocks()->at(0)->getEntryPoint().y();
     return "\t" + record.join("  ") + "  /\n";
 }
-QString Welsegs::createSegmentEntry(SegmentedWell::Segment segment) {
+QString Welsegs::createSegmentEntry(Segment segment) {
  /*
   * 0. Segment number (first in range).
   * 1. Segment number (last in range).
@@ -82,7 +86,23 @@ QString Welsegs::createSegmentEntry(SegmentedWell::Segment segment) {
     record[5] = segment.TVDChange();
     record[6] = segment.Diameter();
     record[7] = segment.Roughness();
-    return "\t" + record.join("  ") + "  /\n";
+    return "\t" + record.join("  ") + "  /";
+}
+Welsegs::Welsegs(QList<Model::Wells::Well *> *wells, int ts) {
+    for (Well *well : *wells) {
+        if (well->IsSegmented() && well->controls()->first()->time_step() == ts) {
+            // TODO: Implement this
+            throw std::runtime_error("Not yet implemented.");
+        }
+    }
+
+}
+QString Welsegs::WelsegsKeyword::buildKeyword() const {
+    QString kw = "WELSEGS\n";
+    kw += heel_entry;
+    kw += seg_entries.join("\n");
+    kw += "\n/";
+    return kw;
 }
 }
 }

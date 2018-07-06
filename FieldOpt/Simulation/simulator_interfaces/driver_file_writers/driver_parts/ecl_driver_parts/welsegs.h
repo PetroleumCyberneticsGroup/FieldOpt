@@ -20,7 +20,7 @@
 #ifndef FIELDOPT_WELSEGS_H
 #define FIELDOPT_WELSEGS_H
 
-#include <Model/wells/segmented_well.h>
+#include <Model/wells/well.h>
 #include "ecldriverpart.h"
 
 using namespace Model::Wells;
@@ -61,19 +61,35 @@ namespace ECLDriverParts {
  *  12. Length of segment projected onto Y-axis.
  */
 class Welsegs : public ECLDriverPart {
+ public:
+  Welsegs() {};
 
-  Welsegs(SegmentedWell *well);
-  Welsegs();
+  Welsegs(Well *well);
+
+  /*!
+   * Loop through wells. For all segmented wells, check if start time eqials ts. If yes, generate entries.
+   * @param wells Wells to loop through
+   * @param ts Timestep to write entries for.
+   */
+  Welsegs(QList<Model::Wells::Well *> *wells, int ts);
 
   QString GetPartString() const override;
 
  private:
-  QString createHeelEntry(SegmentedWell *root_segment);
-  QString createSegmentEntry(SegmentedWell::Segment segment);
+  /*!
+   * Holds strings for _one_ welsegs keyword. This is necessary
+   * because one needs one keyword pr. well, unlike most other
+   * keywords where you can specify multiple wells in one keyword.
+   */
+  struct WelsegsKeyword {
+    QString heel_entry;
+    QStringList seg_entries;
+    QString buildKeyword() const;
+  };
+  QString createHeelEntry(Well *well);
+  QString createSegmentEntry(Segment segment);
 
-  QString heel_entry_;
-  QStringList seg_entries_;
-
+  QList<WelsegsKeyword> keywords_;
 };
 
 }

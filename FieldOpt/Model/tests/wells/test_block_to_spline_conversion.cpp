@@ -3,7 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include <wells/segmented_well.h>
+#include <wells/well.h>
 #include "Settings/settings.h"
 #include "Settings/tests/test_resource_schedule_import_settings.hpp"
 #include "Settings/paths.h"

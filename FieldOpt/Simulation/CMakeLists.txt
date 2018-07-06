@@ -25,8 +25,7 @@ add_library(simulation
         simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/welsegs.cpp
         simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/compsegs.cpp
         simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/wsegvalv.cpp
-        simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/wsegvalv.h
-        )
+)
 add_library(fieldopt::simulation ALIAS ${PROJECT_NAME})
 
 target_link_libraries(simulation

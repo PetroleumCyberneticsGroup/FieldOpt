@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 #include <algorithm>
-#include <wells/segmented_well.h>
+#include <wells/well.h>
 #include "Settings/settings.h"
 #include "Settings/tests/test_resource_schedule_segmentation_settings.hpp"
 #include "Settings/paths.h"
@@ -42,7 +42,7 @@ class SegmentedWellTest : public ::testing::Test {
   Reservoir::Grid::Grid *grid_;
   Paths paths_;
   int d_2h_idx_;
-  ::Model::Wells::SegmentedWell *d_2h_;
+  ::Model::Wells::Well *d_2h_;
 };
 
 TEST_F(SegmentedWellTest, Constructor ) {
@@ -51,12 +51,12 @@ TEST_F(SegmentedWellTest, Constructor ) {
     EXPECT_EQ(3, mod_settings_->wells()[d_2h_idx_].seg_n_compartments);
 
     // Construct well
-    d_2h_ = new Model::Wells::SegmentedWell(*mod_settings_, d_2h_idx_, varcont_, grid_);
+    d_2h_ = new Model::Wells::Well(*mod_settings_, d_2h_idx_, varcont_, grid_);
     double length = d_2h_->trajectory()->GetLength();
 }
 
 TEST_F(SegmentedWellTest, Compartments ) {
-    d_2h_ = new Model::Wells::SegmentedWell(*mod_settings_, d_2h_idx_, varcont_, grid_);
+    d_2h_ = new Model::Wells::Well(*mod_settings_, d_2h_idx_, varcont_, grid_);
     double length = d_2h_->trajectory()->GetLength();
 
     EXPECT_EQ(3, d_2h_->GetCompartments().size());
@@ -84,22 +84,22 @@ TEST_F(SegmentedWellTest, Compartments ) {
 }
 
 TEST_F(SegmentedWellTest, SegmentTypes) {
-    d_2h_ = new Model::Wells::SegmentedWell(*mod_settings_, d_2h_idx_, varcont_, grid_);
+    d_2h_ = new Model::Wells::Well(*mod_settings_, d_2h_idx_, varcont_, grid_);
     auto segs = d_2h_->GetSegments();
-    EXPECT_EQ(SegmentedWell::Segment::SegType::TUBING_SEGMENT, segs[0].Type()); // Root segment
+    EXPECT_EQ(Segment::SegType::TUBING_SEGMENT, segs[0].Type()); // Root segment
     for (int i = 1; i < 4; ++i) {
-        EXPECT_EQ(SegmentedWell::Segment::SegType::TUBING_SEGMENT, segs[i].Type());
+        EXPECT_EQ(Segment::SegType::TUBING_SEGMENT, segs[i].Type());
     }
     for (int i = 4; i < 7; ++i) {
-        EXPECT_EQ(SegmentedWell::Segment::SegType::ICD_SEGMENT, segs[i].Type());
+        EXPECT_EQ(Segment::SegType::ICD_SEGMENT, segs[i].Type());
     }
     for (int i = 7; i < segs.size(); ++i) {
-        EXPECT_EQ(SegmentedWell::Segment::SegType::ANNULUS_SEGMENT, segs[i].Type());
+        EXPECT_EQ(Segment::SegType::ANNULUS_SEGMENT, segs[i].Type());
     }
 }
 
 TEST_F(SegmentedWellTest, SegmentConnections) {
-    d_2h_ = new Model::Wells::SegmentedWell(*mod_settings_, d_2h_idx_, varcont_, grid_);
+    d_2h_ = new Model::Wells::Well(*mod_settings_, d_2h_idx_, varcont_, grid_);
     auto segs = d_2h_->GetSegments();
     auto tub_segs = d_2h_->GetTubingSegments();
     auto icd_segs = d_2h_->GetICDSegments();

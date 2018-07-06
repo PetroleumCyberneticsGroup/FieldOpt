@@ -22,7 +22,7 @@
 namespace Simulation {
 namespace ECLDriverParts {
 
-Wsegvalv::Wsegvalv(SegmentedWell *well) {
+Wsegvalv::Wsegvalv(Well *well) {
     head_ = "WSEGVALV\n";
     foot_ = "/\n\n";
     auto isegs = well->GetICDSegments();
@@ -39,7 +39,7 @@ QString Wsegvalv::GetPartString() const {
     keyword += foot_;
 }
 
-QString Wsegvalv::generateEntry(SegmentedWell::Segment seg) {
+QString Wsegvalv::generateEntry(Segment seg) {
 /*!
  * 0. Well name.
  * 1. Segment number.

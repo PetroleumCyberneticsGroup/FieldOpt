@@ -20,7 +20,7 @@
 #ifndef FIELDOPT_COMPSEGS_H
 #define FIELDOPT_COMPSEGS_H
 
-#include "Model/wells/segmented_well.h"
+#include "Model/wells/well.h"
 #include "ecldriverpart.h"
 
 using namespace Model::Wells;
@@ -49,12 +49,12 @@ namespace ECLDriverParts {
  */
 class Compsegs  : public ECLDriverPart {
  public:
-  Compsegs(SegmentedWell *well);
+  Compsegs(Well *well);
   Compsegs() {}
   QString GetPartString() const override;
 
  private:
-  QString generateEntry(SegmentedWell::Segment seg);
+  QString generateEntry(Segment seg);
   QString wname_;
   QStringList entries_;
 };

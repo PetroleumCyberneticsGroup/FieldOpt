@@ -22,7 +22,7 @@
 namespace Simulation {
 namespace ECLDriverParts {
 
-Compsegs::Compsegs(SegmentedWell *well) {
+Compsegs::Compsegs(Well *well) {
     head_ = "COMPSEGS\n";
     foot_ = "/\n\n";
     auto asegs = well->GetAnnulusSegments();
@@ -39,7 +39,7 @@ QString Simulation::ECLDriverParts::Compsegs::GetPartString() const {
     keyword += foot_;
     return keyword;
 }
-QString Compsegs::generateEntry(SegmentedWell::Segment seg) {
+QString Compsegs::generateEntry(Segment seg) {
 /*
  * Record 1:
  *  1. Name of well.
