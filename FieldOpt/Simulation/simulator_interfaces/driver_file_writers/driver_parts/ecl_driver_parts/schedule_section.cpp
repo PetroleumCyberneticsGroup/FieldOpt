@@ -37,8 +37,8 @@ Schedule::Schedule(QList<Model::Wells::Well *> *wells, QList<int> control_times)
                                                          Compdat(wells, ts),
                                                          WellControls(wells, control_times, ts),
                                                          Welsegs(wells, ts),
-                                                         Compsegs(wells->first()),
-                                                         Wsegvalv(wells->first()) // TODO: Update signatures
+                                                         Compsegs(wells, ts),
+                                                         Wsegvalv(wells, ts)
         );
         schedule_time_entries_.append(time_entry);
     }
