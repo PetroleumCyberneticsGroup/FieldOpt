@@ -7,8 +7,8 @@
         "Type": "APPS",
         "Mode": "Maximize",
         "Parameters": {
-            "MaxEvaluations": 300,
-            "InitialStepLength": 1.0E-5,
+            "MaxEvaluations": 500,
+            "InitialStepLength": 1.0E-4,
             "MinimumStepLength": 1.0E-6,
             "ContractionFactor": 0.7,
             "ExpansionFactor": 1.1,
