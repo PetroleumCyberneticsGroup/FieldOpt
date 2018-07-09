@@ -54,6 +54,8 @@ Compartment::Compartment(const double start_md,
     comp_settings.measured_depth = start_md;
     comp_settings.true_vertical_depth = start_tvd;
     comp_settings.valve_size = well_settings.seg_compartment_params.valve_size;
+    comp_settings.valve_flow_coeff = well_settings.seg_compartment_params.valve_flow_coeff;
+    comp_settings.variable_strength = well_settings.seg_compartment_params.variable_strength;
     comp_settings.type = Settings::Model::WellCompletionType::ICV;
     icd = new Wellbore::Completions::ICD(comp_settings, variable_container);
 }
