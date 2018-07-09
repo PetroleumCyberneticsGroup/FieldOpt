@@ -61,8 +61,8 @@ QString Welsegs::createHeelEntry(Well *well) {
     record[4] = "INC";
     record[5] = "HF-";
     record[6] = "DF";
-    record[7] = well->trajectory()->GetWellBlocks()->at(0)->getEntryPoint().x();
-    record[8] = well->trajectory()->GetWellBlocks()->at(0)->getEntryPoint().y();
+    record[7] = QString::number(well->trajectory()->GetWellBlocks()->at(0)->getEntryPoint().x());
+    record[8] = QString::number(well->trajectory()->GetWellBlocks()->at(0)->getEntryPoint().y());
     return "\t" + record.join("  ") + "  /\n";
 }
 QString Welsegs::createSegmentEntry(Segment segment) {
@@ -78,14 +78,14 @@ QString Welsegs::createSegmentEntry(Segment segment) {
   * 8. * Cross sectional area for fluid flow.
   */
     auto record = GetBaseEntryLine(9);
-    record[0] = segment.Index();
-    record[1] = segment.Index();
-    record[2] = segment.Branch();
-    record[3] = segment.Outlet();
-    record[4] = segment.Length();
-    record[5] = segment.TVDChange();
-    record[6] = segment.Diameter();
-    record[7] = segment.Roughness();
+    record[0] = QString::number(segment.Index());
+    record[1] = QString::number(segment.Index());
+    record[2] = QString::number(segment.Branch());
+    record[3] = QString::number(segment.Outlet());
+    record[4] = QString::number(segment.Length());
+    record[5] = QString::number(segment.TVDChange());
+    record[6] = QString::number(segment.Diameter());
+    record[7] = QString::number(segment.Roughness());
     return "\t" + record.join("  ") + "  /";
 }
 Welsegs::Welsegs(QList<Model::Wells::Well *> *wells, int ts) {
@@ -106,7 +106,7 @@ QString Welsegs::WelsegsKeyword::buildKeyword() const {
     QString kw = "WELSEGS\n";
     kw += this->heel_entry;
     kw += this->seg_entries.join("\n");
-    kw += "\n/";
+    kw += "\n/\n\n";
     return kw;
 }
 }

@@ -33,10 +33,12 @@ Wsegvalv::Wsegvalv(Well *well) {
 }
 
 Wsegvalv::Wsegvalv(QList<Model::Wells::Well *> *wells, int ts) {
+    head_ = "WSEGVALV\n";
+    foot_ = "/\n\n";
     for (Well *well : *wells) {
         if (well->IsSegmented() && well->controls()->first()->time_step() == ts) {
             auto isegs = well->GetICDSegments();
-            for (int i = 1; i < isegs.size(); ++i) {
+            for (int i = 0; i < isegs.size(); ++i) {
                 entries_.push_back(generateEntry(isegs[i], well->name()));
             }
         }
@@ -47,9 +49,10 @@ Wsegvalv::Wsegvalv(QList<Model::Wells::Well *> *wells, int ts) {
 QString Wsegvalv::GetPartString() const {
     if (entries_.size() == 0)
         return "";
-    QString keyword = head_ + "\n";
-    keyword += "\t" + entries_.join("\t") + "\n";
+    QString keyword = head_;
+    keyword += entries_.join("\n") + "\n";
     keyword += foot_;
+    return keyword;
 }
 
 QString Wsegvalv::generateEntry(Segment seg, QString wname) {
@@ -61,10 +64,10 @@ QString Wsegvalv::generateEntry(Segment seg, QString wname) {
  */
     auto entry = GetBaseEntryLine(4);
     entry[0] = wname;
-    entry[1] = seg.Index();
-    entry[2] = seg.ParentICD()->flowCoefficient();
-    entry[3] = seg.ParentICD()->valveSize();
-    return "\t" + entry.join("  ") + "/";
+    entry[1] = QString::number(seg.Index());
+    entry[2] = QString::number(seg.ParentICD()->flowCoefficient());
+    entry[3] = QString::number(seg.ParentICD()->valveSize());
+    return "\t" + entry.join("  ") + "  /";
 }
 }
 }

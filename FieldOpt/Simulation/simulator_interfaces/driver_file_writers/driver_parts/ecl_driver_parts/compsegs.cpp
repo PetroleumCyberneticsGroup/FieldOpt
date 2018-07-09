@@ -39,7 +39,7 @@ Compsegs::Compsegs(QList<Model::Wells::Well *> *wells, int ts) {
             CompsegsKeyword kw;
             kw.wname = well->name();
             auto asegs = well->GetAnnulusSegments();
-            for (int i = 1; i < asegs.size(); ++i) {
+            for (int i = 0; i < asegs.size(); ++i) {
                 kw.entries.push_back(generateEntry(asegs[i]));
             }
             keywords_.push_back(kw);
@@ -70,19 +70,19 @@ QString Compsegs::generateEntry(Segment seg) {
  *  5. MD from root to _end_ of connection in this block.
  */
     auto entry = GetBaseEntryLine(6);
-    entry[0] = seg.ParentBlock()->i();
-    entry[1] = seg.ParentBlock()->j();
-    entry[2] = seg.ParentBlock()->k();
-    entry[3] = seg.Branch();
-    entry[4] = seg.OutletMD();
-    entry[5] = seg.OutletMD() + seg.Length();
+    entry[0] = QString::number(seg.ParentBlock()->i());
+    entry[1] = QString::number(seg.ParentBlock()->j());
+    entry[2] = QString::number(seg.ParentBlock()->k());
+    entry[3] = QString::number(seg.Branch());
+    entry[4] = QString::number(seg.OutletMD());
+    entry[5] = QString::number(seg.OutletMD() + seg.Length());
     return "\t" + entry.join("  ") + "  /";
 }
 QString Compsegs::CompsegsKeyword::buildKeyword() const {
     QString kw = "COMPSEGS\n";
     kw += "\t" + this->wname + "  /\n";
     kw += this->entries.join("\n");
-    kw += "\n/";
+    kw += "\n/\n\n";
     return kw;
 }
 }
