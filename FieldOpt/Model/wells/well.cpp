@@ -179,7 +179,7 @@ void Well::createAnnulusSegments(std::vector<Segment> &segments, const std::vect
             auto ann_seg = Segment(
                 Segment::ANNULUS_SEGMENT,
                 index,                         // index
-                compartments_.size() + 1 + i,  // branch
+                compartments_.size() + 2 + i,  // branch
                 outlet_index,                  // outlet
                 (comp_blocks[j]->getExitPoint() - comp_blocks[j]->getEntryPoint()).norm(), // length
                 comp_blocks[j]->getExitPoint().z() - comp_blocks[j]->getEntryPoint().z(),  // tvd delta
