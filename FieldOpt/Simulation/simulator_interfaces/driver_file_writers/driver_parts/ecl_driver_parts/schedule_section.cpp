@@ -45,6 +45,9 @@ Schedule::Schedule(QList<Model::Wells::Well *> *wells, QList<int> control_times)
     for (auto time_entry : schedule_time_entries_) {
         schedule_.append(time_entry.welspecs.GetPartString());
         schedule_.append(time_entry.compdat.GetPartString());
+        schedule_.append(time_entry.welsegs.GetPartString());
+        schedule_.append(time_entry.compsegs.GetPartString());
+        schedule_.append(time_entry.wsegvalv.GetPartString());
         schedule_.append(time_entry.well_controls.GetPartString());
     }
     schedule_.append("\n\n");
