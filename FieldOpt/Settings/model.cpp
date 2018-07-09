@@ -116,7 +116,14 @@ Model::Model(QJsonObject json_model, Paths &paths)
             for (auto jwn : json_import_well_names) {
                 import_well_names.push_back(jwn.toString().toStdString());
             }
-            std::string trajectories_path = paths.GetPath(Paths::SIM_DRIVER_DIR) + "/trajectories";
+            std::string trajectories_path;
+            if (!paths.IsSet(Paths::TRAJ_DIR)) {
+                trajectories_path = paths.GetPath(Paths::SIM_DRIVER_DIR) + "/trajectories";
+                assert(DirectoryExists(trajectories_path));
+            }
+            else {
+                trajectories_path = paths.GetPath(Paths::TRAJ_DIR);
+            }
             auto traj_importer = TrajectoryImporter(trajectories_path, import_well_names);
 
             // set list in well objects

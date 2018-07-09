@@ -35,7 +35,7 @@ class Paths {
     SIM_SCH_FILE=4, SIM_OUT_DRIVER_FILE=5, SIM_OUT_SCH_FILE=6, SIM_HDF5_FILE=7,
     ENSEMBLE_FILE=8,
     BUILD_DIR=-1,  OUTPUT_DIR=-2, SIM_DRIVER_DIR=-3, SIM_WORK_DIR=-4,
-    SIM_AUX_DIR=-5
+    SIM_AUX_DIR=-5, TRAJ_DIR=-6
   };
 
   const std::string &GetPathDescription(Path path) const;
@@ -62,6 +62,7 @@ class Paths {
       std::pair<Path, std::string> {SIM_DRIVER_DIR, "Simulation driver parent directory"},
       std::pair<Path, std::string> {SIM_WORK_DIR, "Simulation work directory"},
       std::pair<Path, std::string> {SIM_AUX_DIR, "Auxilary files for simulation directory"},
+      std::pair<Path, std::string> {TRAJ_DIR, "Directory contaning trajectory files for import"}
   };
 
   std::map<Path, std::string> paths_;
