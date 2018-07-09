@@ -85,14 +85,14 @@ TEST_F(DeckParserTest, NumberOfConnections) {
     DeckParser dp = DeckParser("../examples/ECLIPSE/norne-simplified/NORNE_SIMPLIFIED.DATA");
     auto wells = dp.GetWellData();
     std::vector<int> n_conns = { 7,  // C-4H
-                                 8,  // B-2H
-                                 9,  // D-2H
-                                20,  // B-4H
-                                26,  // D-4H
-                                21,  // C-1H
+                                 7,  // B-2H
+                                 8,  // D-2H
+                                19,  // B-4H
+                                25,  // D-4H
+                                20,  // C-1H
                                 21,  // E-3H
-                                 3,  // C-2H
-                                14,  // B-1H
+                                 2,  // C-2H
+                                13,  // B-1H
                                 21,  // C-3H
                                 17   // F-1H
     };
