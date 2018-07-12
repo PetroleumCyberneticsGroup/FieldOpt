@@ -52,7 +52,6 @@ Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
 Case *Optimizer::GetCaseForEvaluation()
 {
     if (case_handler_->QueuedCases().size() == 0) {
-        logger_->AddEntry(this);
         time_t start, end;
         time(&start);
         iterate();

@@ -99,6 +99,7 @@ void EGO::handleEvaluatedCase(Case *c) {
     }
 }
 void EGO::iterate() {
+    logger_->AddEntry(this);
     if (!normalizer_ofv_.is_ready())
         initializeNormalizers();
 
