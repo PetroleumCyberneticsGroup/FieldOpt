@@ -1,18 +1,17 @@
 {
     "Global": {
-        "Name": "5spot-icd-apps",
+        "Name": "5spot-icd-cs",
         "BookkeeperTolerance": 0.0
     },
     "Optimizer": {
-        "Type": "APPS",
+        "Type": "Compass",
         "Mode": "Maximize",
         "Parameters": {
-            "MaxEvaluations": 500,
+            "MaxEvaluations": 1000,
             "InitialStepLength": 1.0E-4,
             "MinimumStepLength": 1.0E-6,
             "ContractionFactor": 0.7,
             "ExpansionFactor": 1.1,
-            "MaxQueueSize": 1.5,
             "Pattern": "Compass"
         },
         "Objective": {

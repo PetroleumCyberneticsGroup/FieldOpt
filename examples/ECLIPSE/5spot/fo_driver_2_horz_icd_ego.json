@@ -1,19 +1,15 @@
 {
     "Global": {
-        "Name": "5spot-icd-apps",
+        "Name": "5spot-icd-ego",
         "BookkeeperTolerance": 0.0
     },
     "Optimizer": {
-        "Type": "APPS",
+        "Type": "EGO",
         "Mode": "Maximize",
         "Parameters": {
-            "MaxEvaluations": 500,
-            "InitialStepLength": 1.0E-4,
-            "MinimumStepLength": 1.0E-6,
-            "ContractionFactor": 0.7,
-            "ExpansionFactor": 1.1,
-            "MaxQueueSize": 1.5,
-            "Pattern": "Compass"
+            "MaxEvaluations": 200,
+            "LowerBound": 1E-8,
+            "UpperBound": 9E-4
         },
         "Objective": {
             "Type": "WeightedSum",
