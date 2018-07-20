@@ -11,6 +11,7 @@
 #   2 - fo_driver_2_horz_icd_cs
 #   3 - fo_driver_2_horz_icd_ga
 #   4 - fo_driver_2_horz_icd_ego
+#   5 - fo_driver_2_horz_apps
 #
 # Assumes that the following shell variables are set:
 #   FIELDOPT_BUILD - Path to the FieldOpt build (bin) directory.
@@ -22,25 +23,27 @@ declare -a CASES=(
     "fo_driver_2_horz_icd_cs"
     "fo_driver_2_horz_icd_ga"
     "fo_driver_2_horz_icd_ego"
+    "fo_driver_2_horz_apps"
 )
 
 # Set case and path variables
 CASE=${CASES[$2-1]}
 CURRENT_DIR=$(pwd)
 DRIVER_PATH=${CURRENT_DIR}/${CASE}.json
-OUTPUT_DIR=${FIELDOPT_OUT}/${CASE}
+OUTPUT_DIR=${FIELDOPT_OUT}/5spot/${CASE}
 DECK_PATH=${CURRENT_DIR}/ECL_5SPOT.DATA
 GRID_PATH=${CURRENT_DIR}/ECL_5SPOT.EGRID
 SCR_PATH=${FIELDOPT_BUILD}/execution_scripts/bash_ecl.sh
 
 # Delete and re-create ouput subdirectory
 rm -r ${OUTPUT_DIR}
-mkdir ${OUTPUT_DIR}
+mkdir -p ${OUTPUT_DIR}
 
 echo "Output: " ${OUTPUT_DIR}
 echo "Driver: " ${DRIVER_PATH}
 echo "Deck: " ${DECK_PATH}
 echo "Grid: " ${GRID_PATH}
 
-${FIELDOPT_BIN} ${DRIVER_PATH} ${OUTPUT_DIR} -r serial -v3 --force -g ${GRID_PATH} -s ${DECK_PATH} -e ${SCR_PATH}
+#${FIELDOPT_BIN} ${DRIVER_PATH} ${OUTPUT_DIR} -r serial -v3 --force -g ${GRID_PATH} -s ${DECK_PATH} -e ${SCR_PATH}
+mpirun -n 5 ${FIELDOPT_BIN} ${DRIVER_PATH} ${OUTPUT_DIR} -r mpisync -v3 -m4 --force -g ${GRID_PATH} -s ${DECK_PATH} -e ${SCR_PATH}
 
