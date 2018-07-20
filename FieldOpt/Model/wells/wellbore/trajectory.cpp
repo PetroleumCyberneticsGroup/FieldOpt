@@ -84,6 +84,9 @@ void Trajectory::UpdateWellBlocks()
         if (well_spline_->HasGridChanged() || well_spline_->HasSplineChanged()) {
             well_blocks_ = well_spline_->GetWellBlocks();
         }
+        else {
+            std::cout << "The well spline has not changed; well indices will not be recomputed." << std::endl;
+        }
     }
     else if (pseudo_cont_vert_ != 0) {
         well_blocks_ = new QList<WellBlock *>();

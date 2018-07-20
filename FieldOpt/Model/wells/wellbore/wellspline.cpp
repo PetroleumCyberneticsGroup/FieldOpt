@@ -174,7 +174,7 @@ bool WellSpline::HasSplineChanged() const {
     for (int i = 0; i < last_computed_spline_.size(); ++i) {
         point_difference_sum += std::abs((last_computed_spline_[i] - new_spline_points[i]).norm());
     }
-    return point_difference_sum < 1e-7;
+    return point_difference_sum > 1e-7;
 }
 std::vector<Reservoir::WellIndexCalculation::IntersectedCell> WellSpline::convertImportedWellblocksToIntersectedCells() {
     auto intersected_cells = vector<IntersectedCell>();
