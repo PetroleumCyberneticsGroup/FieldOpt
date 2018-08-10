@@ -99,7 +99,7 @@ class Property
     bool is_set_ = false; //!< Indicates whether the info has been set or not.
     PropertyType prop_type; //!< The type of property this is (part) of.
     QString parent_well_name; //!< The name of the well this property belongs to.
-    int index; //!< The number of the well block this property belongs to, or the time step of a control.
+    int index; //!< The number of the well block this property belongs to, the time step of a control, spline point index, or packer number
     SplineEnd spline_end;
     Coordinate coord;
   };
@@ -121,6 +121,7 @@ class Property
   PropertyType get_prop_type_name(const QString prop_name) const;
   QString get_well_name(const QString prop_name) const;
   SplineEnd get_spline_end(const QString prop_name) const;
+  int get_spline_index(const QString prop_name) const;
   int get_prop_index(const QString prop_name) const;
   Coordinate get_prop_coord(const QString prop_name) const;
 };

@@ -1,3 +1,21 @@
+/******************************************************************************
+   Copyright (C) 2015-2018 Einar J.M. Baumann <einar.baumann@gmail.com>
+
+   This file is part of the FieldOpt project.
+
+   FieldOpt is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   FieldOpt is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
 #include "property.h"
 #include <QStringList>
 
@@ -22,11 +40,14 @@ void Property::set_property_info() {
     info_.prop_type = get_prop_type_name(name_);
     info_.parent_well_name = get_well_name(name_);
 
-    if (info_.prop_type == PropertyType::SplinePoint)
+    if (info_.prop_type == PropertyType::SplinePoint) {
         info_.spline_end = get_spline_end(name_);
+        info_.index = get_spline_index(name_);
+    }
 
     if (info_.prop_type == WellBlock
         || info_.prop_type == Transmissibility
+        || info_.prop_type == Packer
         || info_.prop_type == BHP
         || info_.prop_type == Rate)
         info_.index = get_prop_index(name_);
@@ -101,7 +122,24 @@ Property::Coordinate Property::get_prop_coord(const QString prop_name) const {
 void Property::UpdateId(QUuid new_id) {
     id_ = new_id;
 }
-
+int Property::get_spline_index(const QString prop_name) const {
+    QString endstr = prop_name.split("#")[2];
+    if (QString::compare("heel", endstr) == 0)
+        return 0;
+    else if (QString::compare("toe", endstr) == 0)
+        return -1;
+    else if (QString::compare("P", endstr.at(0)) == 0) {
+        endstr.remove(0, 1); // Remove the P
+        bool cast_ok;
+        int index = endstr.toInt(&cast_ok);
+        if (cast_ok) {
+            return index;
+        }
+        else {
+            throw std::runtime_error("Unable to extract index from property name " + prop_name.toStdString());
+        }
+    }
+}
 
 }
 }
