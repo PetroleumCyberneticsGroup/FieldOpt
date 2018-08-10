@@ -46,7 +46,8 @@ class Optimizer
     WellSplineLength, WellSplineInterwellDistance, WellSplineDomain,
     CombinedWellSplineLengthInterwellDistance,
     CombinedWellSplineLengthInterwellDistanceReservoirBoundary,
-    ReservoirBoundary, PseudoContBoundary2D
+    ReservoirBoundary, PseudoContBoundary2D,
+    PackerConstraint, ICVConstraint
   };
   enum ConstraintWellSplinePointsType { MaxMin, Function};
   enum ObjectiveType { WeightedSum };
@@ -91,9 +92,9 @@ class Optimizer
     double max; //!< Max limit when using constraints like BHP.
     double min; //!< Min limit when using constraints like BHP.
     double box_imin, box_imax, box_jmin, box_jmax, box_kmin, box_kmax; //!< Min max limits for geometrix box constraints.
-    double max_length;
-    double min_length;
+    double min_length, max_length;
     double min_distance;
+    double min_md, max_md;
     long double penalty_weight; //!< The weight to be used when considering the constraint in a penalty function. (default: 0.0)
     int max_iterations;
     ConstraintWellSplinePointsType spline_points_type; //!< How the SplinePoints constraint is given when SplinePoints constraint type is selected.
