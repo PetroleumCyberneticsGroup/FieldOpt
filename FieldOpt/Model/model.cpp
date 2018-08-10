@@ -98,6 +98,9 @@ void Model::verifyWells()
 {
     for (Wells::Well *well : *wells_) {
         verifyWellTrajectory(well);
+        if (well->IsSegmented()) {
+            verifyWellCompartments(well);
+        }
     }
 }
 
@@ -158,6 +161,36 @@ void Model::set_grid_path(const std::string &grid_path) {
         delete grid_;
     }
     grid_ = new Reservoir::Grid::ECLGrid(grid_path);
+}
+void Model::verifyWellCompartments(Wells::Well *w) {
+    for (int i = 0; i < w->GetCompartments().size() - 1; ++i) {
+        if (w->GetCompartments()[i].icd->md() != w->GetCompartments()[i].start_packer->md()) {
+            throw std::runtime_error("The ICD MD for compartment "
+                + boost::lexical_cast<std::string>(i)
+                + "is different from the start-packer MD.");
+        }
+        if (w->GetCompartments()[i].start_packer->md() > w->GetCompartments()[i+1].end_packer->md()) {
+            throw std::runtime_error("The start-packer MD is greater than the end-packer md in compartment "
+                + boost::lexical_cast<string>(i));
+        }
+    }
+    if (w->GetCompartments()[0].start_packer->md() < 0) {
+        throw std::runtime_error("The start-packer MD for the first compartment is negative.");
+    }
+
+    double length;
+    for (int i = 0; i < w->trajectory()->GetWellSpline()->GetSplinePoints().size() - 1; ++i) {
+        length += (w->trajectory()->GetWellSpline()->GetSplinePoints()[i+1]->ToEigenVector()
+                    - w->trajectory()->GetWellSpline()->GetSplinePoints()[i]->ToEigenVector()).norm();
+    }
+    if (w->GetCompartments().back().end_packer->md() > length) {
+        throw std::runtime_error("The end-packer MD for the final compartment is past the end of the well spline. (length: "
+                                 + boost::lexical_cast<string>(w->trajectory()->GetLength())
+                                 + ", position: "
+                                 + boost::lexical_cast<string>(w->GetCompartments().back().end_packer->md())
+                                 + ")"
+        );
+    }
 }
 
 Loggable::LogTarget Model::Summary::GetLogTarget() {
