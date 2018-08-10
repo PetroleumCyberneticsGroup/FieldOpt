@@ -29,15 +29,10 @@ SegmentedCompletion::SegmentedCompletion(Settings::Model::Well::Completion compl
     : Completion(completion_settings)
 {
     md_ = new Properties::ContinousProperty(completion_settings.measured_depth);
-    md_->setName(completion_settings.name);
 
     tvd_ = completion_settings.true_vertical_depth;
     roughness_ = completion_settings.roughness;
     diameter_ = completion_settings.diameter;
-
-    if (completion_settings.variable_placement == true) {
-        variable_container->AddVariable(md_);
-    }
 }
 
 double SegmentedCompletion::md() const {
