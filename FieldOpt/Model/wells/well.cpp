@@ -73,6 +73,12 @@ void Well::Update() {
     heel_.i = trajectory_->GetWellBlocks()->first()->i();
     heel_.j = trajectory_->GetWellBlocks()->first()->j();
     heel_.k = trajectory_->GetWellBlocks()->first()->k();
+
+    if (is_segmented_) {
+        for (auto compartment : compartments_) {
+            compartment.Update();
+        }
+    }
 }
 void Well::initializeSegmentedWell(Properties::VariablePropertyContainer *variable_container) {
     assert(well_settings_.seg_n_compartments > 0);
