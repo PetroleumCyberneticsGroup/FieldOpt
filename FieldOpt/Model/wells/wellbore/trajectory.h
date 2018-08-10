@@ -65,6 +65,7 @@ class Trajectory
   double GetEntryMd(const WellBlock *wb) const; //!< Get the measured depth for the entry point to the block.
   double GetExitMd(const WellBlock *wb) const; //!< Get the measured depth for the exit point from the block.
   double GetSplineLength() const; //!< Get the length of the well trajectory (summed distance between defining points).
+  WellSpline *GetWellSpline() const { return well_spline_; }
 
 
  private:
