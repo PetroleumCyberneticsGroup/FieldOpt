@@ -44,6 +44,12 @@ class Compartment {
               std::vector<Compartment> &compartments_);
   double GetLength() const;
   double GetTVDDifference() const;
+
+  /*!
+   * Update the the ICD MD to fit new start packer MDs
+   */
+  void Update();
+
   Packer *start_packer;
   Packer *end_packer;
   ICD *icd;
