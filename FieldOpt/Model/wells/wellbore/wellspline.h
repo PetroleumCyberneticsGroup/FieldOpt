@@ -59,6 +59,11 @@ class WellSpline
 
   bool HasGridChanged() const;
   bool HasSplineChanged() const;
+  
+  /*!
+   * Get spline points (for debugging purposes).
+   */
+  QList<SplinePoint *> GetSplinePoints() const { return spline_points_; }
 
 
  private:
