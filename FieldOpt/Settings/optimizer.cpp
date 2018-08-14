@@ -360,8 +360,9 @@ QList<Optimizer::HybridComponent> Optimizer::parseHybridComponents(QJsonObject &
     for (auto json_comp : json_optimizer["HybridComponents"].toArray()) {
         HybridComponent comp;
         QString type = json_comp.toObject()["Type"].toString();
+        QJsonObject json_params = json_comp.toObject()["Parameters"].toObject();
         comp.type = parseType(type);
-        comp.parameters = parseParameters(json_comp.toObject()["Parameters"].toObject());
+        comp.parameters = parseParameters(json_params);
         comps.push_back(comp);
     }
     return comps;
