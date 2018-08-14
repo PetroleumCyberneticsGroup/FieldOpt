@@ -177,6 +177,8 @@ if (NOT (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS))
             DESTINATION ${CMAKE_BINARY_DIR}/examples)
     file(COPY ${CMAKE_SOURCE_DIR}/Settings/tests/driver/driver_sane.json
             DESTINATION ${CMAKE_BINARY_DIR}/examples)
+    file(COPY ${CMAKE_SOURCE_DIR}/Settings/tests/driver/driver_hybridopt.json
+            DESTINATION ${CMAKE_BINARY_DIR}/examples)
 
     if(BUILD_BENCHMARK)
         ## Copy wic benchmark wells into the build dir
