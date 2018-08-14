@@ -59,9 +59,7 @@ Compartment::Compartment(const double start_md,
     comp_settings.valve_flow_coeff = well_settings.seg_compartment_params.valve_flow_coeff;
     comp_settings.variable_strength = well_settings.seg_compartment_params.variable_strength;
     comp_settings.type = Settings::Model::WellCompletionType::ICV;
-    std::cout << "Adding ICD " << comp_settings.name.toStdString() << " ..." << std::endl;
     icd = new Wellbore::Completions::ICD(comp_settings, variable_container);
-    std::cout << "Added ICD " << comp_settings.name.toStdString() << std::endl;
 }
 double Compartment::GetLength() const {
     return end_packer->md() - start_packer->md();
