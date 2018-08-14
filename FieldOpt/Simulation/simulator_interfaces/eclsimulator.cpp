@@ -17,6 +17,7 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 #include <iostream>
+#include <boost/algorithm/string.hpp>
 #include "eclsimulator.h"
 #include "Utilities/execution.hpp"
 #include "simulator_exceptions.h"
@@ -25,59 +26,122 @@
 namespace Simulation {
 namespace SimulatorInterfaces {
 
+using namespace Utilities::FileHandling;
+
 ECLSimulator::ECLSimulator(Settings::Settings *settings, Model::Model *model)
     : Simulator(settings)
 {
     model_ = model;
-    driver_file_writer_ = new DriverFileWriters::EclDriverFileWriter(settings, model_);
-
-    script_args_ = (QStringList() << output_directory_ << driver_file_writer_->output_driver_file_name_);
+    settings_ = settings;
+    if (!paths_.IsSet(Paths::ENSEMBLE_FILE)) {
+        deck_name_ = driver_file_name_.split(".DATA").first();
+    }
+    else {
+        deck_name_ = "";
+    }
 
     results_ = new Results::ECLResults();
-    try {
-        results()->ReadResults(driver_file_writer_->output_driver_file_name_);
-    } catch (...) {} // At this stage we don't really care if the results can be read, we just want to set the path.
 }
 
 void ECLSimulator::Evaluate()
 {
-    driver_file_writer_->WriteDriverFile();
-    ::Utilities::Unix::ExecShellScript(script_path_, script_args_);
-    results_->ReadResults(driver_file_writer_->output_driver_file_name_);
+    copyDriverFiles();
+    UpdateFilePaths();
+    script_args_ = (QStringList() << QString::fromStdString(paths_.GetPath(Paths::SIM_WORK_DIR)) << deck_name_);
+    auto driver_file_writer = DriverFileWriters::EclDriverFileWriter(settings_, model_);
+    driver_file_writer.WriteDriverFile(QString::fromStdString(paths_.GetPath(Paths::SIM_OUT_SCH_FILE)));
+    Utilities::Unix::ExecShellScript(
+        QString::fromStdString(paths_.GetPath(Paths::SIM_EXEC_SCRIPT_FILE)),
+        script_args_
+    );
+    results_->ReadResults(QString::fromStdString(paths_.GetPath(Paths::SIM_OUT_DRIVER_FILE)));
     updateResultsInModel();
+}
+
+bool ECLSimulator::Evaluate(int timeout, int threads) {
+    copyDriverFiles();
+    UpdateFilePaths();
+    script_args_ = (QStringList() << QString::fromStdString(paths_.GetPath(Paths::SIM_WORK_DIR)) << deck_name_ << QString::number(threads));
+    auto driver_file_writer = DriverFileWriters::EclDriverFileWriter(settings_, model_);
+    driver_file_writer.WriteDriverFile(QString::fromStdString(paths_.GetPath(Paths::SIM_OUT_SCH_FILE)));
+    int t = timeout;
+    if (timeout < 10) {
+        t = 10; // Always let simulations run for at least 10 seconds
+    }
+
+    std::cout << "Starting monitored simulation with timeout " << timeout << std::endl;
+    bool success = ::Utilities::Unix::ExecShellScriptTimeout(
+        QString::fromStdString(paths_.GetPath(Paths::SIM_EXEC_SCRIPT_FILE)),
+        script_args_, t);
+    std::cout << "Monitored simulation done." << std::endl;
+    if (success) {
+        results_->DumpResults();
+        results_->ReadResults(QString::fromStdString(paths_.GetPath(Paths::SIM_OUT_DRIVER_FILE)));
+    }
+    updateResultsInModel();
+    return success;
+}
+
+bool ECLSimulator::Evaluate(const Settings::Ensemble::Realization &realization, int timeout, int threads) {
+    driver_file_name_ = QString::fromStdString(FileName(realization.data()));
+    driver_parent_dir_name_ = QString::fromStdString(ParentDirectoryName(realization.data()));
+    deck_name_ = driver_file_name_.split(".").first();
+    paths_.SetPath(Paths::SIM_DRIVER_FILE, realization.data());
+    paths_.SetPath(Paths::SIM_DRIVER_DIR , GetParentDirectoryPath(realization.data()));
+    paths_.SetPath(Paths::SIM_SCH_FILE   , realization.schedule());
+    return Evaluate(timeout, threads);
 }
 
 void ECLSimulator::CleanUp()
 {
+    UpdateFilePaths();
     QStringList file_endings_to_delete{"DBG", "ECLEND", "ECLRUN", "EGRID", "GRID",
                                        "h5", "INIT","INSPEC", "MSG", "PRT",
                                        "RSSPEC", "UNRST"};
-    QString base_file_path = driver_file_writer_->output_driver_file_name_.split(".DATA").first();
+    QString base_file_path = QString::fromStdString(paths_.GetPath(Paths::SIM_OUT_DRIVER_FILE)).split(".DATA").first();
+
     for (QString ending : file_endings_to_delete) {
-        Utilities::FileHandling::DeleteFile(base_file_path + "." + ending);
+        DeleteFile(base_file_path + "." + ending);
     }
 }
 
 void ECLSimulator::UpdateFilePaths()
 {
-    return;
+    paths_.SetPath(Paths::SIM_WORK_DIR,        paths_.GetPath(Paths::OUTPUT_DIR) + "/" + driver_parent_dir_name_.toStdString());
+    paths_.SetPath(Paths::SIM_OUT_DRIVER_FILE, paths_.GetPath(Paths::SIM_WORK_DIR) + "/" + driver_file_name_.toStdString());
+
+    std::string tmp = paths_.GetPath(Paths::SIM_SCH_FILE);
+    boost::algorithm::replace_first(tmp, paths_.GetPath(Paths::SIM_DRIVER_DIR), paths_.GetPath(Paths::SIM_WORK_DIR));
+    paths_.SetPath(Paths::SIM_OUT_SCH_FILE, tmp);
 }
 
-bool ECLSimulator::Evaluate(int timeout, int threads) {
-    int t = timeout;
-    if (timeout < 10) t = 10; // Always let simulations run for at least 10 seconds
-    script_args_[2] = QString::number(threads);
-
-    driver_file_writer_->WriteDriverFile();
-    std::cout << "Starting monitored simulation with timeout " << timeout << std::endl;
-    bool success = ::Utilities::Unix::ExecShellScriptTimeout(script_path_, script_args_, t);
-    std::cout << "Monitored simulation done." << std::endl;
-    if (success) results_->ReadResults(driver_file_writer_->output_driver_file_name_);
-    updateResultsInModel();
-    return success;
-}
 void ECLSimulator::WriteDriverFilesOnly() {
-    driver_file_writer_->WriteDriverFile();
+    UpdateFilePaths();
+    auto driver_file_writer = DriverFileWriters::EclDriverFileWriter(settings_, model_);
+    driver_file_writer.WriteDriverFile(QString::fromStdString(paths_.GetPath(Paths::SIM_OUT_SCH_FILE)));
+}
+
+void ECLSimulator::copyDriverFiles() {
+    std::string workdir = paths_.GetPath(Paths::OUTPUT_DIR) + "/" + driver_parent_dir_name_.toStdString();
+
+    if (!DirectoryExists(workdir)) {
+        std::cout << "Output deck directory not found; copying input deck: "
+                  << "\t" << paths_.GetPath(Paths::SIM_DRIVER_DIR) << " -> "
+                  << "\t" << workdir << std::endl;
+        CreateDirectory(workdir);
+        CopyDirectory(paths_.GetPath(Paths::SIM_DRIVER_DIR), workdir, false);
+        if (paths_.IsSet(Paths::SIM_AUX_DIR)) {
+            std::string auxdir = paths_.GetPath(Paths::OUTPUT_DIR) + "/" + FileName(paths_.GetPath(Paths::SIM_AUX_DIR));
+            if (!DirectoryExists(auxdir)) {
+                std::cout << "Copying simulation aux. directory: "
+                          << "\t" << paths_.GetPath(Paths::SIM_AUX_DIR) << " -> "
+                          << "\t" << auxdir << std::endl;
+            CreateDirectory(auxdir);
+            CopyDirectory(paths_.GetPath(Paths::SIM_AUX_DIR), auxdir, false);
+            }
+        }
+    }
+    paths_.SetPath(Paths::SIM_WORK_DIR, workdir);
 }
 
 }

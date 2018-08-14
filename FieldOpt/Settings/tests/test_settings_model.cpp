@@ -20,7 +20,7 @@ namespace {
 
     TEST_F(ModelSettingsTest, Reservoir) {
         EXPECT_EQ(settings_model_->reservoir().type, Model::ReservoirGridSourceType::ECLIPSE);
-        EXPECT_STREQ("../examples/ADGPRS/5spot/ECL_5SPOT.EGRID", settings_model_->reservoir().path.toLatin1().constData());
+        EXPECT_STREQ("../examples/ADGPRS/5spot/ECL_5SPOT.EGRID", settings_full_->paths().GetPath(Paths::GRID_FILE).c_str());
     }
 
     TEST_F(ModelSettingsTest, ControlTimes) {

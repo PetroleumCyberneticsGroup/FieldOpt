@@ -43,7 +43,7 @@ class Props : public ECLDriverPart
 {
 public:
     Props(QStringList *driver_file_contents);
-    QString GetPartString();
+    QString GetPartString() const;
 
 private:
     QString props_;

@@ -22,14 +22,20 @@
 
 namespace Model {
 
-Model::Model(Settings::Model settings, Logger *logger)
+Model::Model(Settings::Settings settings, Logger *logger)
 {
-    grid_ = new Reservoir::Grid::ECLGrid(settings.reservoir().path.toStdString());
+    if (!settings.paths().IsSet(Paths::ENSEMBLE_FILE)) {
+        grid_ = new Reservoir::Grid::ECLGrid(settings.paths().GetPath(Paths::GRID_FILE));
+    }
+    else {
+        grid_ = 0;
+    }
+
     variable_container_ = new Properties::VariablePropertyContainer();
 
     wells_ = new QList<Wells::Well *>();
-    for (int well_nr = 0; well_nr < settings.wells().size(); ++well_nr) {
-        wells_->append(new Wells::Well(settings, well_nr, variable_container_, grid_));
+    for (int well_nr = 0; well_nr < settings.model()->wells().size(); ++well_nr) {
+        wells_->append(new Wells::Well(*settings.model(), well_nr, variable_container_, grid_));
     }
 
     variable_container_->CheckVariableNameUniqueness();
@@ -54,21 +60,33 @@ void Model::ApplyCase(Optimization::Case *c)
         variable_container_->SetContinousVariableValue(key, c->real_variables()[key]);
     }
     int cumulative_wic_time = 0;
+    bool wic_used = false;
     for (Wells::Well *w : *wells_) {
         w->Update();
-        cumulative_wic_time += w->GetTimeSpentInWIC();
+        if (w->trajectory()->GetDefinitionType() == Settings::Model::WellDefinitionType::WellSpline) {
+            cumulative_wic_time += w->GetTimeSpentInWIC();
+            wic_used = true;
+        }
     }
-    c->SetWICTime(cumulative_wic_time);
+    if (wic_used) {
+        c->SetWICTime(cumulative_wic_time);
+    }
+    else {
+        c->SetWICTime(0);
+    }
     verify();
 
     // Notify the logger, and after that clear the results.
     // First check that we have results (if not, this is the first evaluation,
     // and we have nothing to notify the logger about).
-    if (results_.size() > 0){
+    if (results_.size() > 0 && c->GetEnsembleRealization().length() == 0){
+        if (c->GetRealizationOFVMap().count() > 0) {
+            realization_ofv_map_ = c->GetRealizationOFVMap();
+        }
         logger_->AddEntry(this);
     }
     current_case_id_ = c->id();
-    results_.clear();
+//    results_.clear();
 }
 
 void Model::verify()
@@ -130,7 +148,16 @@ map<string, vector<double>> Model::GetValues() {
     for (auto const var : variable_container_->GetBinaryVariables()->values()) {
         valmap["Var#"+var->name().toStdString()] = vector<double>{var->value()};
     }
+    for (auto const key : realization_ofv_map_.keys()) {
+        valmap["Rea#"+key.toStdString()] = vector<double>{realization_ofv_map_[key]};
+    }
     return valmap;
+}
+void Model::set_grid_path(const std::string &grid_path) {
+    if (grid_ != 0) {
+        delete grid_;
+    }
+    grid_ = new Reservoir::Grid::ECLGrid(grid_path);
 }
 
 Loggable::LogTarget Model::Summary::GetLogTarget() {

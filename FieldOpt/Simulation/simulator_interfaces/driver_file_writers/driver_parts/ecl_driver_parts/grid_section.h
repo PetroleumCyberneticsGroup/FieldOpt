@@ -43,7 +43,7 @@ class Grid : public ECLDriverPart
 {
 public:
     Grid(QStringList *driver_file_contents);
-    QString GetPartString();
+    QString GetPartString() const;
 
 private:
     QString grid_;

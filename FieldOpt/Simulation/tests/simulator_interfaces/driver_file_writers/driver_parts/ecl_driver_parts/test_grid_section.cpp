@@ -10,7 +10,9 @@ namespace {
 class DriverPartGridTest : public ::testing::Test, public TestResources::TestResourceModel {
 protected:
     DriverPartGridTest(){
-        QStringList *driver_file_contents = Utilities::FileHandling::ReadFileToStringList(settings_simulator_->driver_file_path());
+        QStringList *driver_file_contents = Utilities::FileHandling::ReadFileToStringList(
+            QString::fromStdString(settings_full_->paths().GetPath(Paths::SIM_DRIVER_FILE))
+        );
         grid_ = new Grid(driver_file_contents);
     }
     virtual ~DriverPartGridTest(){}

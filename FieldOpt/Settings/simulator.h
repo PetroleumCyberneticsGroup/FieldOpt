@@ -21,6 +21,8 @@
 #define SETTINGS_SIMULATOR_H
 
 #include "settings.h"
+#include "Settings/paths.h"
+#include "Settings/ensemble.h"
 
 #include <QStringList>
 
@@ -36,30 +38,59 @@ class Simulator
   friend class Settings;
 
  public:
+  Simulator(QJsonObject json_simulator, Paths &paths);
   enum SimulatorType { ECLIPSE, ADGPRS, Flow };
   enum SimulatorFluidModel { BlackOil, DeadOil };
 
-  SimulatorType type() const { return type_; } //!< Get the simulator type (e.g. ECLIPSE).
-  QStringList *commands() const { return commands_; } //!< Get the simulator commands (commands used to execute a simulation). Each list element is executed in sequence.
-  QString script_name() const { return script_name_; } //!< Get the name of the script to be used to execute simulations.
-  QString driver_file_path() const { return driver_file_path_; } //!< Get the path to the driver file.
-  void set_driver_file_path(const QString path) { driver_file_path_ = path; } //!< Set the driver file path. Used when the path is passed by command line argument.
-  void set_execution_script_path (const QString path) { custom_exec_script_path_ = path; } //!< Set a custom path for the simulator execution script.
-  QString custom_simulator_execution_script_path() const { return custom_exec_script_path_; } //!< Get the path to the simulator execution script.
-  QString output_directory() const { return output_directory_; } //!< Get the output directory path.
-  SimulatorFluidModel fluid_model() const { return fluid_model_; } //!< Get the fluid model
-  int max_minutes() { return max_minutes_; } //!< Get the maximum number of minutes simulations are allowed to run if no timeout value can be calculated. Returns -1 if field is not set.
+
+  /*!
+   * Get the simulator type (e.g. ECLIPSE).
+   */
+  SimulatorType type() const { return type_; }
+
+  /*!
+   * Get the simulator commands (commands used to execute a simulation).
+   * Each list element is executed in sequence.
+   */
+  QStringList *commands() const { return commands_; }
+
+  /*!
+   * Get the name of the script to be used to execute simulations.
+   */
+  QString script_name() const { return script_name_; }
+
+  bool is_ensemble() const { return is_ensemble_; }
+
+  Ensemble get_ensemble() const { return ensemble_; }
+
+  /*!
+   * Get the fluid model.
+   */
+  SimulatorFluidModel fluid_model() const { return fluid_model_; }
+
+
+  /*!
+   * Get the maximum number of minutes simulations are allowed to run
+   if no timeout value can be calculated. Returns -1 if field is not set.
+   */
+  int max_minutes() { return max_minutes_; }
 
  private:
-  Simulator(QJsonObject json_simulator);
   SimulatorType type_;
   SimulatorFluidModel fluid_model_;
   QStringList *commands_;
   QString script_name_;
-  QString driver_file_path_;
-  QString output_directory_;
-  QString custom_exec_script_path_;
+  bool is_ensemble_;
   int max_minutes_;
+  Ensemble ensemble_;
+
+
+  void setPaths(QJsonObject json_simulator, Paths &paths);
+  void setType(QJsonObject json_simulator);
+  void setParams(QJsonObject json_simulator);
+  void setCommands(QJsonObject json_simulator);
+  void setFluidModel(QJsonObject json_simulator);
+
 };
 
 }

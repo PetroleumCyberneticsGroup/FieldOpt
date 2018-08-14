@@ -50,12 +50,12 @@ class AdgprsSimulator : public Simulator
 
   // Simulator interface
  public:
-  void Evaluate();
-  void CleanUp();
-  virtual bool Evaluate(int timeout, int threads=1) override;
+  void Evaluate() override;
+  void CleanUp() override;
+  bool Evaluate(int timeout, int threads=1) override;
+  bool Evaluate(const Settings::Ensemble::Realization &realization, int timeout, int threads=1) override;
 
  private:
-  QString initial_driver_file_parent_dir_path_;
   QString output_h5_summary_file_path_;
   Simulation::SimulatorInterfaces::DriverFileWriters::AdgprsDriverFileWriter *driver_file_writer_;
   void copyDriverFiles(); //!< Copy the original driver files.

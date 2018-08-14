@@ -49,6 +49,7 @@ class CaseTransferObject {
       ar & binary_variables_;
       ar & integer_variables_;
       ar & real_variables_;
+      ar & ensemble_realization_;
       ar & wic_time_secs_;
       ar & sim_time_secs_;
       ar & status_eval_;
@@ -84,6 +85,9 @@ class CaseTransferObject {
   int wic_time_secs() { return wic_time_secs_; }
   int sim_time_secs() { return sim_time_secs_; }
 
+  QString ensemble_realization() const { return QString::fromStdString(ensemble_realization_); }
+  string  ensemble_realization_stdstr() const { return ensemble_realization_; }
+
  private:
   uuid id_;
   double objective_function_value_;
@@ -92,6 +96,8 @@ class CaseTransferObject {
   map<uuid, bool> binary_variables_;
   map<uuid, int> integer_variables_;
   map<uuid, double> real_variables_;
+
+  string ensemble_realization_;
 
   int status_eval_;
   int status_cons_;

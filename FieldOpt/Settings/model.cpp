@@ -24,47 +24,73 @@
  *****************************************************************************/
 
 #include <iostream>
+#include <sstream>
+#include <cmath>
+#include <boost/lexical_cast.hpp>
 #include "model.h"
 #include "settings_exceptions.h"
 #include "Utilities/filehandling.hpp"
+#include "deck_parser.h"
 
 namespace Settings {
 
-Model::Model(QJsonObject json_model)
+Model::Model(QJsonObject json_model, Paths &paths)
 {
     // Reservoir
-    try {
-        QJsonObject json_reservoir = json_model["Reservoir"].toObject();
-        readReservoir(json_reservoir);
-    }
-    catch (std::exception const &ex) {
-        throw UnableToParseReservoirModelSectionException("Unable to parse reservoir model section: " + std::string(ex.what()));
+    if (!paths.IsSet(Paths::ENSEMBLE_FILE)) {
+        try {
+            QJsonObject json_reservoir = json_model["Reservoir"].toObject();
+            readReservoir(json_reservoir, paths);
+        }
+        catch (std::exception const &ex) {
+            throw UnableToParseReservoirModelSectionException(
+                "Unable to parse reservoir model section: " + std::string(ex.what()));
+        }
     }
 
     // Control times
     if (!json_model.contains("ControlTimes") || !json_model["ControlTimes"].isArray())
-        throw UnableToParseModelSectionException("The ControlTimes array must be defined with at leas one time for the model.");
+        throw UnableToParseModelSectionException("The ControlTimes array must be defined with at least one time for the model.");
     control_times_ = QList<int>();
     for (int i = 0; i < json_model["ControlTimes"].toArray().size(); ++i) {
         control_times_.append(json_model["ControlTimes"].toArray().at(i).toInt());
     }
 
     // Wells
-    try {
-        QJsonArray json_wells = json_model["Wells"].toArray();
-        wells_ = QList<Well>();
-        for (int i = 0; i < json_wells.size(); ++i) {
-            QJsonObject json_well = json_wells[i].toObject();
-            wells_.append(readSingleWell(json_well));
+    wells_ = QList<Well>();
+    if (json_model.contains("Import")) {
+        if (!paths.IsSet(Paths::SIM_DRIVER_FILE)) {
+            throw std::runtime_error("SchedulePath must be specified (relative to DriverPath) to use the Import feature.");
         }
-    }
+        std::cout << "Parsing schedule ..." << std::endl;
+        deck_parser_ = new DeckParser(paths.GetPath(Paths::SIM_DRIVER_FILE));
 
-    catch (std::exception const &ex) {
-        throw UnableToParseWellsModelSectionException("Unable to parse wells model section: " + std::string(ex.what()));
+        if (!json_model["Import"].toObject()["Keywords"].toArray().contains(QJsonValue("AllWells"))) {
+            throw std::runtime_error("Unable to import simulator schedule. Import Keywords array does not contain"
+                                         "any recognized keywords.");
+        }
+        std::cout << "Importing wells ..." << std::endl;
+        wells_.append(deck_parser_->GetWellData());
+        std::cout << "Done importing wells." << std::endl;
+        setImportedWellDefaults(json_model["Import"].toObject());
+        parseImportedWellOverrides(json_model["Wells"].toArray());
+    }
+    else {
+        try {
+            QJsonArray json_wells = json_model["Wells"].toArray();
+            for (int i = 0; i < json_wells.size(); ++i) {
+                QJsonObject json_well = json_wells[i].toObject();
+                wells_.append(readSingleWell(json_well));
+            }
+        }
+        catch (std::exception const &ex) {
+            throw UnableToParseWellsModelSectionException(
+                "Unable to parse wells model section: " + std::string(ex.what()));
+        }
     }
 }
 
-void Model::readReservoir(QJsonObject json_reservoir)
+void Model::readReservoir(QJsonObject json_reservoir, Paths &paths)
 {
     // Reservoir grid source type
     QString type = json_reservoir["Type"].toString();
@@ -73,11 +99,9 @@ void Model::readReservoir(QJsonObject json_reservoir)
     else throw UnableToParseReservoirModelSectionException("Grid source type " + type.toStdString() +  "not recognized.");
 
     // Reservoir grid path
-    if (json_reservoir.contains("Path") && json_reservoir["Path"].toString().length() > 0) {
-        reservoir_.path = json_reservoir["Path"].toString();
-        if (!::Utilities::FileHandling::FileExists(reservoir_.path))
-            throw FileNotFoundException(reservoir_.path.toStdString());
-    } else reservoir_.path = "";
+    if (!paths.IsSet(Paths::GRID_FILE) && json_reservoir.contains("Path")) {
+        paths.SetPath(Paths::GRID_FILE, json_reservoir["Path"].toString().toStdString());
+    }
 }
 
 Model::Well Model::readSingleWell(QJsonObject json_well)
@@ -246,6 +270,123 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
 bool Model::controlTimeIsDeclared(int time) const
 {
     return control_times_.contains(time);
+}
+
+std::string Model::Well::ControlEntry::toString() {
+    std::stringstream ce;
+    ce << "ControlEntry - Timestep:  " << time_step << "\n";
+    ce << "               State:     " << (state == WellState::WellOpen ? "Open" : "Shut") << "\n";
+    ce << "               Mode:      " << (control_mode == ControlMode::RateControl ? "Rate" : "BHP") << "\n";
+    ce << "               BHP:       " << boost::lexical_cast<std::string>(bhp) << "\n";
+    ce << "               Rate:      " << boost::lexical_cast<std::string>(rate) << "\n";
+    ce << "               Inj. type: " << (injection_type == InjectionType::WaterInjection ? "Water" : "Gas/UNKWN") << "\n";
+    ce << "               Variable:  " << (is_variable ? "Yes" : "No") << "\n";
+    return ce.str();
+}
+
+std::string Model::Well::toString() {
+    std::stringstream ce;
+    ce << "Well - Name:           " << name.toStdString() << "\n";
+    ce << "       Type:           " << (type == WellType::Injector ? "Injector" : "Producer") << "\n";
+    ce << "       Group:          " << group.toStdString() << "\n";
+    ce << "       Radius:         " << wellbore_radius << "\n";
+    ce << "       Direction:      " << direction << "\n";
+    ce << "       Pref. phase:    " << preferred_phase << "\n";
+    ce << "       Def. type:      " << definition_type << "\n";
+    ce << "       N. well blocks: " << well_blocks.size() << "\n";
+    ce << "       N. controls:    " << controls.size() << "\n";
+    return ce.str();
+}
+
+bool Model::Well::ControlEntry::isDifferent(ControlEntry other) {
+    if (state != other.state)
+        return true;
+    if (rate != other.rate)
+        return true;
+    if (bhp != other.bhp)
+        return true;
+    if (control_mode != other.control_mode)
+        return true;
+    return false; // Assume they're equal if none of the above hits.
+}
+
+void Model::setImportedWellDefaults(QJsonObject json_import) {
+    if (
+        !json_import.contains("ProducerDefaultBHP") ||
+        (!json_import.contains("InjectorDefaultRate") &&
+        !json_import.contains("InjectorDefaultBHP"))
+        ) {
+        throw std::runtime_error("When importing from schedule, you must provide both the "
+                                     "InjectorDefaultRate or InjectorDefaultBHP and "
+                                     "ProducerDefaultBHP properties in the Import object.");
+    }
+
+    for (int i = 0; i < wells_.size(); ++i) {
+        wells_[i].controls = QList<Well::ControlEntry>{wells_[i].controls[0]}; // Remove all but first control
+        wells_[i].controls[0].time_step = getClosestControlTime(wells_[i].controls[0].time_step);
+        if (wells_[i].type == Injector) {
+            if (json_import.contains("InjectorDefaultRate")) {
+                wells_[i].controls[0].control_mode = RateControl;
+                wells_[i].controls[0].rate = json_import["InjectorDefaultRate"].toDouble();
+            }
+            else if (json_import.contains("InjectorDefaultBHP")) {
+                wells_[i].controls[0].control_mode = BHPControl;
+                wells_[i].controls[0].bhp = json_import["InjectorDefaultBHP"].toDouble();
+            }
+        }
+        else { // Producer
+            wells_[i].controls[0].control_mode = BHPControl;
+            wells_[i].controls[0].bhp = json_import["ProducerDefaultBHP"].toDouble();
+        }
+    }
+}
+
+void Model::parseImportedWellOverrides(QJsonArray json_wells) {
+    for (auto w : json_wells) {
+
+        auto well = w.toObject();
+        auto json_control = well["ControlOverrides"].toObject();
+        if (json_control.contains("IsVariable") && json_control["IsVariable"].toBool() == true) {
+            for (int i = 0; i < wells_.size(); ++i) { // Find the correct well
+                if (QString::compare(wells_[i].name, well["Name"].toString()) ==0){
+                    auto control = wells_[i].controls[0];
+                    control.is_variable = true;
+                    auto name_root_lst = control.name.split("#");
+                    name_root_lst.removeLast();
+                    auto name_root = name_root_lst.join("#") + "#";
+                    auto new_control_set = QList<Well::ControlEntry>();
+                    for (auto time : json_control["VariableTimeSteps"].toArray()) {
+                        int t = time.toInt();
+                        if (!control_times_.contains(t)) {
+                            throw std::runtime_error("All entries in VariableTimeSteps must match the overall"
+                                                         "ControlTimes vector. " + std::to_string(t) + " does not match");
+                        }
+                        auto control_copy = control;
+                        control_copy.time_step = t;
+                        control_copy.name = name_root + QString::number(t);
+                        new_control_set.append(control_copy);
+                    }
+                    wells_[i].controls = new_control_set;
+                    break;
+                }
+                else {
+                    if (i == wells_.size() - 1) { // Passed the final well without finding a match.
+                        throw std::runtime_error("Unable to find matching well for ControlOverrides");
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+int Model::getClosestControlTime(int deck_time) {
+    auto diff = std::vector<int>(control_times_.size());
+    for (int i = 0; i < control_times_.size(); ++i) { // Compute control times
+        diff[i] = std::abs(deck_time - control_times_[i]);
+    }
+    auto idx_of_min_element = std::distance(diff.begin(), std::min_element(diff.begin(), diff.end()));
+    return control_times_[idx_of_min_element];
 }
 
 

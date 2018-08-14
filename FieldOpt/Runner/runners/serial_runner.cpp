@@ -39,9 +39,19 @@ SerialRunner::SerialRunner(Runner::RuntimeSettings *runtime_settings)
 void SerialRunner::Execute()
 {
     while (optimizer_->IsFinished() == Optimization::Optimizer::TerminationCondition::NOT_FINISHED) {
-        auto new_case = optimizer_->GetCaseForEvaluation();
+        Optimization::Case *new_case;
+        if (is_ensemble_run_) {
+            if (ensemble_helper_.IsCaseDone()) {
+                ensemble_helper_.SetActiveCase(optimizer_->GetCaseForEvaluation());
+            }
+            new_case = ensemble_helper_.GetCaseForEval();
+            model_->set_grid_path(ensemble_helper_.GetRealization(new_case->GetEnsembleRealization().toStdString()).grid());
+        }
+        else {
+            new_case = optimizer_->GetCaseForEvaluation();
+        }
 
-        if (bookkeeper_->IsEvaluated(new_case, true)) {
+        if (!is_ensemble_run_ && bookkeeper_->IsEvaluated(new_case, true)) {
             new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_BOOKKEEPED;
         }
         else {
@@ -50,14 +60,24 @@ void SerialRunner::Execute()
                 new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_CURRENT;
                 model_->ApplyCase(new_case);
                 auto start = QDateTime::currentDateTime();
-                if (simulation_times_.size() == 0 || runtime_settings_->simulation_timeout() == 0) {
+                if (!is_ensemble_run_ && (simulation_times_.size() == 0 || runtime_settings_->simulation_timeout() == 0)) {
                     simulator_->Evaluate();
                 }
                 else {
-                    simulation_success = simulator_->Evaluate(
-                        timeoutValue(),
-                        runtime_settings_->threads_per_sim()
-                    );
+                    if (is_ensemble_run_) {
+                        std::cout << "Calling ensemble simulation method." << std::endl;
+                        simulation_success = simulator_->Evaluate(
+                            ensemble_helper_.GetRealization(new_case->GetEnsembleRealization().toStdString()),
+                            timeoutValue(),
+                            runtime_settings_->threads_per_sim()
+                        );
+                    }
+                    else {
+                        simulation_success = simulator_->Evaluate(
+                            timeoutValue(),
+                            runtime_settings_->threads_per_sim()
+                        );
+                    }
                 }
                 auto end = QDateTime::currentDateTime();
                 int sim_time = time_span_seconds(start, end);
@@ -82,7 +102,15 @@ void SerialRunner::Execute()
                 new_case->state.err_msg = Optimization::Case::CaseState::ErrorMessage::ERR_WIC;
             }
         }
-        optimizer_->SubmitEvaluatedCase(new_case);
+        if (is_ensemble_run_) {
+            ensemble_helper_.SubmitEvaluatedRealization(new_case);
+            if  (ensemble_helper_.IsCaseDone()) {
+                optimizer_->SubmitEvaluatedCase(ensemble_helper_.GetEvaluatedCase());
+            }
+        }
+        else {
+            optimizer_->SubmitEvaluatedCase(new_case);
+        }
     }
     FinalizeRun(true);
 }

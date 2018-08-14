@@ -58,8 +58,10 @@ class Trajectory
   QList<WellBlock *> *GetWellBlocks(); //!< Get a list containing all well blocks.
   void UpdateWellBlocks(); //!< Update the well blocks, in particular the ones defined by a spline.
   int GetTimeSpentInWic() const;
+  Settings::Model::WellDefinitionType GetDefinitionType();
 
  private:
+  Settings::Model::WellDefinitionType definition_type_;
   QList<WellBlock *> *well_blocks_;
 
   WellSpline *well_spline_; //!< Used to defined trajectories with a spline. When used, this generates the well blocks.

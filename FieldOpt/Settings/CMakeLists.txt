@@ -7,10 +7,15 @@ add_library(settings
         simulator.cpp
         model.cpp
         settings.cpp
-        )
+        deck_parser.cpp
+        ensemble.cpp
+        paths.cpp)
 add_library(fieldopt::settings ALIAS ${PROJECT_NAME})
 
 target_link_libraries(settings
+        PUBLIC ${ecl_LIBRARIES}
+        PUBLIC ${opm-common_LIBRARIES}
+        PUBLIC ${Boost_LIBRARIES}
         PUBLIC Qt5::Core)
 
 target_include_directories(settings PUBLIC
@@ -25,7 +30,8 @@ if (BUILD_TESTING)
             tests/test_settings_model.cpp
             tests/test_settings_optimizer.cpp
             tests/test_settings_simulator.cpp
-            )
+            tests/test_deck_parser.cpp
+            tests/test_schedule_import.cpp)
     target_link_libraries(test_settings
             fieldopt::settings
             ${Boost_LIBRARIES}

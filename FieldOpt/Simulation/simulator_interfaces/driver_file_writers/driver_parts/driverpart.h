@@ -19,7 +19,7 @@ public:
      * \brief GetPartString Get a string containing the section of the driver file.
      * \return
      */
-    virtual QString GetPartString() = 0;
+    virtual QString GetPartString() const = 0;
 
 protected:
     DriverPart() {}

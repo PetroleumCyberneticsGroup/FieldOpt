@@ -115,7 +115,7 @@ class Case : public Loggable
   void set_real_variables(const QHash<QUuid, double> &real_variables) { real_variables_ = real_variables; }
 
   double objective_function_value() const; //!< Get the objective function value. Throws an exception if the value has not been defined.
-  void set_objective_function_value(double objective_function_value) { objective_function_value_ = objective_function_value; }
+  void set_objective_function_value(double objective_function_value);
 
   void set_integer_variable_value(const QUuid id, const int val); //!< Set the value of an integer variable in the case.
   void set_binary_variable_value(const QUuid id, const bool val); //!< Set the value of a boolean variable in the case.
@@ -228,6 +228,15 @@ class Case : public Loggable
    */
   int GetWICTime() const { return wic_time_sec_; }
 
+  // Multiple realizations-support
+  void SetEnsembleRealization(const QString &alias) { ensemble_realization_ = alias; }
+  QString GetEnsembleRealization() const { return ensemble_realization_; }
+  void SetRealizationOfv(const QString &alias, const double &ofv);
+  bool HasRealizationOfv(const QString &alias);
+  double GetRealizationOfv(const QString &alias);
+  double GetEnsembleAverageOfv() const;
+  QHash<QString, double> GetRealizationOFVMap() const { return ensemble_ofvs_; }
+
  private:
   QUuid id_; //!< Unique ID for the case.
   int sim_time_sec_;
@@ -244,6 +253,10 @@ class Case : public Loggable
   Case* parent_; //!< The parent of this trial point. Needed by the APPS algorithm.
   int direction_index_; //!< The direction index used to generate this trial point.
   double step_length_; //!< The step length used to generate this trial point.
+
+  // Multiple realizations-support
+  QString ensemble_realization_; //!< The realization to evaluate next. Used by workers when in parallel mode.
+  QHash<QString, double> ensemble_ofvs_; //!< Map of objective function values from realization alias - value.
 };
 
 }

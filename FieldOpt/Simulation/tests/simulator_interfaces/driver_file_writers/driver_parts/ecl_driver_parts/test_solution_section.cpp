@@ -10,7 +10,9 @@ namespace {
 class DriverPartSolutionTest : public ::testing::Test, public TestResources::TestResourceModel {
 protected:
     DriverPartSolutionTest(){
-        QStringList *driver_file_contents = Utilities::FileHandling::ReadFileToStringList(settings_simulator_->driver_file_path());
+        QStringList *driver_file_contents = Utilities::FileHandling::ReadFileToStringList(
+            QString::fromStdString(settings_full_->paths().GetPath(Paths::SIM_DRIVER_FILE))
+        );
         solution_ = new Solution(driver_file_contents);
     }
     virtual ~DriverPartSolutionTest(){}

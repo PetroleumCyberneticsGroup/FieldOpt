@@ -12,7 +12,6 @@ namespace Simulation {
             {
                 model_ = model;
                 settings_ = settings;
-                output_driver_file_name_ = settings->output_directory() + "/" + settings->name().toUpper() + ".DATA";
             }
 
             void FlowDriverFileWriter::WriteDriverFile(QString output_dir) {

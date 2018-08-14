@@ -27,13 +27,17 @@
 #define SETTINGS_MODEL_H
 
 #include "settings.h"
+#include "paths.h"
 
 #include <QString>
 #include <QList>
 #include <QJsonArray>
 #include <assert.h>
 
+
 namespace Settings {
+
+class DeckParser;
 
 /*!
  * \brief The Model class contains model-specific settings. Model settings objects may _only_ be
@@ -46,20 +50,19 @@ class Model
   friend class Settings;
 
  public:
-  Model(QJsonObject json_model); // This should only be accessed externally for testing purposes.
+  Model(QJsonObject json_model, Paths &paths); // This should only be accessed externally for testing purposes.
   enum ReservoirGridSourceType : int { ECLIPSE=1 };
-  enum WellType : int { Injector=011, Producer=12 };
-  enum ControlMode : int { BHPControl=21, RateControl=22 };
+  enum WellType : int { Injector=11, Producer=12, UNKNOWN_TYPE=19 };
+  enum ControlMode : int { BHPControl=21, RateControl=22, UNKNOWN_CONTROL=29 };
   enum InjectionType : int { WaterInjection=31, GasInjection=32 };
   enum WellDefinitionType : int { WellBlocks=41, WellSpline=42, PseudoContVertical2D=43 };
   enum WellCompletionType : int { Perforation=61 };
   enum WellState : int { WellOpen=71, WellShut=72 };
-  enum PreferredPhase : int { Oil=81, Water=82, Gas=83, Liquid=84 };
+  enum PreferredPhase : int { Oil=81, Water=82, Gas=83, Liquid=84, UNKNOWN_PHASE=89 };
   enum Direction : int { X=91, Y=92, Z=93 };
 
   struct Reservoir {
     ReservoirGridSourceType type; //!< The source of the grid file (which reservoir simulator produced it).
-    QString path; //!< Path to the reservoir grid file, e.g. a .EGRID or .GRID file produced by ECLIPSE.
   };
 
   struct Well {
@@ -68,7 +71,7 @@ class Model
       Completion(){}
       WellCompletionType type; //!< Which type of completion this is (Perforation/ICD)
       double transmissibility_factor; //!< The transmissibility factor for this completion (used for perforations)
-      bool is_variable;
+      bool is_variable = false;
       QString name;
     };
     struct WellBlock {
@@ -83,11 +86,11 @@ class Model
       SplinePoint(){}
       QString name;
       double x, y, z;
-      bool is_variable;
+      bool is_variable = false;
     };
     struct PseudoContPosition {
       int i, j;
-      bool is_variable;
+      bool is_variable = false;
     };
     struct ControlEntry {
       int time_step; //!< The time step this control is to be applied at.
@@ -95,9 +98,11 @@ class Model
       ControlMode control_mode; //!< Control mode.
       double bhp; //!< Bhp target when well is on bhp control.
       double rate; //!< Rate target when well is on rate control.
-      InjectionType injection_type; //!< Injector type (water/gas)
-      bool is_variable;
+      InjectionType injection_type = WaterInjection; //!< Injector type (water/gas). Defaults to water.
+      bool is_variable = false;
       QString name;
+      bool isDifferent(ControlEntry other);
+      std::string toString();
     };
     PreferredPhase preferred_phase; //!< The preferred phase for the well
     QString name; //!< The name to be used for the well.
@@ -111,10 +116,10 @@ class Model
     SplinePoint spline_toe; //!< Toe (end) point to be used when calculating the well path from a spline.
     PseudoContPosition pseudo_cont_position; //!< Initial position when using pseudo-continous positioning variables.
     QList<ControlEntry> controls; //!< List of well controls
+    std::string toString();
   };
 
   Reservoir reservoir() const { return reservoir_; } //!< Get the struct containing reservoir settings.
-  void set_reservoir_grid_path(const QString path) { reservoir_.path = path; } //!< Set the reservoir grid path. Used when the path is passed by command line argument.
   QList<Well> wells() const { return wells_; } //!< Get the struct containing settings for the well(s) in the model.
   QList<int> control_times() const { return control_times_; } //!< Get the control times for the schedule
 
@@ -122,11 +127,19 @@ class Model
   Reservoir reservoir_;
   QList<Well> wells_;
   QList<int> control_times_;
+  DeckParser *deck_parser_;
 
-  void readReservoir(QJsonObject json_reservoir);
+  void readReservoir(QJsonObject json_reservoir, Paths &paths);
   Well readSingleWell(QJsonObject json_well);
+  void setImportedWellDefaults(QJsonObject json_model);
+  void parseImportedWellOverrides(QJsonArray json_wells);
 
   bool controlTimeIsDeclared(int time) const;
+
+  /*!
+   * Get the control time that is closest to the time imported from the deck.
+   */
+  int getClosestControlTime(int deck_time);
 };
 
 }
