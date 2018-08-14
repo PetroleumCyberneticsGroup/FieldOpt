@@ -33,12 +33,16 @@ class Logger;
 
 namespace Optimization {
 
+class HybridOptimizer;
+
 /*!
  * \brief The Optimizer class is the abstract parent class for all optimizers. It is primarily
  * designed to support direct search optimization algorithms.
  */
 class Optimizer : public Loggable
 {
+  friend class HybridOptimizer;
+
  public:
   Optimizer() = delete;
 
@@ -114,12 +118,17 @@ class Optimizer : public Loggable
    * \param base_case The base case for optimizer. Must already have been evaluated (i.e. have an objective function value).
    * \param variables The variable property container from the Model (needed for initialization of constriants).
    * \param grid The grid to be used (needed for initializtion of some constraints).
+   * \param logger Logger object passed from runner.
+   * \param case_handler CaseHandler object. This is passed from the HybridOptimizer; defaults to 0, in which case a new one will be created.
+   * \param constraint_handler ConstraintHandler object. This is passed from the HybridOptimizer; defaults to 0, in which case a new one will be created.
    */
   Optimizer(::Settings::Optimizer *settings,
             Case *base_case,
             Model::Properties::VariablePropertyContainer *variables,
             Reservoir::Grid::Grid *grid,
-            Logger *logger
+            Logger *logger,
+            CaseHandler *case_handler=0,
+            Constraints::ConstraintHandler *constraint_handler=0
   );
 
   /*!

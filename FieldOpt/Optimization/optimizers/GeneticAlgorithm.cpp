@@ -29,9 +29,11 @@ GeneticAlgorithm::GeneticAlgorithm(Settings::Optimizer *settings,
                                    Case *base_case,
                                    Model::Properties::VariablePropertyContainer *variables,
                                    Reservoir::Grid::Grid *grid,
-                                   Logger *logger
+                                   Logger *logger,
+                                   CaseHandler *case_handler,
+                                   Constraints::ConstraintHandler *constraint_handler
 )
-    : Optimizer(settings, base_case, variables, grid, logger) {
+    : Optimizer(settings, base_case, variables, grid, logger, case_handler, constraint_handler) {
     n_vars_ = variables->ContinousVariableSize();
     gen_ = get_random_generator();
     max_generations_ = settings->parameters().max_generations;

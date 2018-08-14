@@ -45,7 +45,10 @@ class EGO : public Optimizer {
       Case *base_case,
       Model::Properties::VariablePropertyContainer *variables,
       Reservoir::Grid::Grid *grid,
-      Logger *logger);
+      Logger *logger,
+      CaseHandler *case_handler=0,
+      Constraints::ConstraintHandler *constraint_handler=0
+  );
 
  protected:
   void handleEvaluatedCase(Case *c) override;

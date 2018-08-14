@@ -27,11 +27,10 @@ RGARDD::RGARDD(Settings::Optimizer *settings,
                Optimization::Case *base_case,
                Model::Properties::VariablePropertyContainer *variables,
                Reservoir::Grid::Grid *grid,
-               Logger *logger) : GeneticAlgorithm(settings,
-                                                  base_case,
-                                                  variables,
-                                                  grid,
-                                                  logger) {
+               Logger *logger,
+               CaseHandler *case_handler,
+               Constraints::ConstraintHandler *constraint_handler
+) : GeneticAlgorithm(settings, base_case, variables, grid, logger, case_handler, constraint_handler) {
     assert(population_size_ % 2 == 0); // Need an even number of chromosomes
     if (settings->parameters().discard_parameter < 0)
         discard_parameter_ = 1.0/population_size_;

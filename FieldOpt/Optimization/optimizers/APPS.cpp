@@ -30,9 +30,11 @@ namespace Optimization {
                    Case *base_case,
                    Model::Properties::VariablePropertyContainer *variables,
                    Reservoir::Grid::Grid *grid,
-                   Logger *logger
+                   Logger *logger,
+                   CaseHandler *case_handler,
+                   Constraints::ConstraintHandler *constraint_handler
         )
-                : GSS(settings, base_case, variables, grid, logger) {
+                : GSS(settings, base_case, variables, grid, logger, case_handler, constraint_handler) {
             directions_ = GSSPatterns::Compass(num_vars_);
             step_lengths_ = Eigen::VectorXd(directions_.size());
             step_lengths_.fill(settings->parameters().initial_step_length);

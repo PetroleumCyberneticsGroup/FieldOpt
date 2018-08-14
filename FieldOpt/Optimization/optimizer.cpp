@@ -26,7 +26,9 @@ namespace Optimization {
 Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
                      Model::Properties::VariablePropertyContainer *variables,
                      Reservoir::Grid::Grid *grid,
-                     Logger *logger
+                     Logger *logger,
+                     CaseHandler *case_handler,
+                     Constraints::ConstraintHandler *constraint_handler
 )
 {
     // Verify that the base case has been evaluated.
@@ -38,8 +40,18 @@ Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
 
     max_evaluations_ = settings->parameters().max_evaluations;
     tentative_best_case_ = base_case;
-    case_handler_ = new CaseHandler(tentative_best_case_);
-    constraint_handler_ = new Constraints::ConstraintHandler(settings->constraints(), variables, grid);
+    if (case_handler == 0) {
+        case_handler_ = new CaseHandler(tentative_best_case_);
+    }
+    else {
+        case_handler_ = case_handler;
+    }
+    if (constraint_handler == 0) {
+        constraint_handler_ = new Constraints::ConstraintHandler(settings->constraints(), variables, grid);
+    }
+    else {
+        constraint_handler_ = constraint_handler;
+    }
     iteration_ = 0;
     mode_ = settings->mode();
     is_async_ = false;

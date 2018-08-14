@@ -28,9 +28,11 @@ namespace Optimization {
                  Case *base_case,
                  Model::Properties::VariablePropertyContainer *variables,
                  Reservoir::Grid::Grid *grid,
-                 Logger *logger
+                 Logger *logger,
+                 CaseHandler *case_handler,
+                 Constraints::ConstraintHandler *constraint_handler
         )
-                : Optimizer(settings, base_case, variables, grid, logger) {
+                : Optimizer(settings, base_case, variables, grid, logger, case_handler, constraint_handler) {
 
             int numRvars = base_case->GetRealVarVector().size();
             int numIvars = base_case->GetIntegerVarVector().size();
