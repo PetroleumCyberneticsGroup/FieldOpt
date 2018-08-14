@@ -23,51 +23,55 @@
 #include "Simulation/results/adgprsresults.h"
 
 namespace Simulation {
-namespace SimulatorInterfaces {
 
 AdgprsSimulator::AdgprsSimulator(Settings::Settings *settings, Model::Model *model)
     : Simulator(settings)
 {
-    QStringList tmp = initial_driver_file_path_.split("/");
-    tmp.removeLast();
-    initial_driver_file_parent_dir_path_ = tmp.join("/");
     verifyOriginalDriverFileDirectory();
-    output_h5_summary_file_path_ = output_directory_ + "/" + initial_driver_file_name_.split(".").first() + ".vars.h5";
 
     model_ = model;
     results_ = new Simulation::Results::AdgprsResults();
-    driver_file_writer_ = new DriverFileWriters::AdgprsDriverFileWriter(settings_, model_);
+    driver_file_writer_ = new AdgprsDriverFileWriter(settings_, model_);
 }
 
 void AdgprsSimulator::Evaluate()
 {
     if (results_->isAvailable()) results()->DumpResults();
     copyDriverFiles();
-    driver_file_writer_->WriteDriverFile(output_directory_);
-    ::Utilities::Unix::ExecShellScript(script_path_, script_args_);
-    results_->ReadResults(output_h5_summary_file_path_);
+    driver_file_writer_->WriteDriverFile(QString::fromStdString(paths_.GetPath(Paths::SIM_WORK_DIR)));
+    ::Utilities::Unix::ExecShellScript(QString::fromStdString(paths_.GetPath(Paths::SIM_EXEC_SCRIPT_FILE)), script_args_);
+    paths_.SetPath(Paths::SIM_HDF5_FILE,
+        paths_.GetPath(Paths::SIM_WORK_DIR) + "/"
+        + driver_file_name_.split(".").first().toStdString() + ".vars.h5"
+    );
+    results_->ReadResults(QString::fromStdString(paths_.GetPath(Paths::SIM_HDF5_FILE)));
     updateResultsInModel();
 }
 
 void AdgprsSimulator::CleanUp()
 {
-    Utilities::FileHandling::DeleteFile(output_h5_summary_file_path_);
+    DeleteFile(QString::fromStdString(paths_.GetPath(Paths::SIM_HDF5_FILE)));
 }
 
 void AdgprsSimulator::copyDriverFiles()
 {
-    Utilities::FileHandling::CopyFile(initial_driver_file_path_, output_directory_+"/"+initial_driver_file_name_, true);
-    Utilities::FileHandling::CreateDirectory(output_directory_+"/include");
-    Utilities::FileHandling::CopyDirectory(initial_driver_file_parent_dir_path_+"/include", output_directory_+"/include");
+    auto workdir = paths_.GetPath(Paths::OUTPUT_DIR) + driver_parent_dir_name_.toStdString();
+    if (!DirectoryExists(workdir)) {
+        std::cout << "Output deck directory not found; copying input deck: "
+                  << "\t" << paths_.GetPath(Paths::SIM_DRIVER_DIR) << " -> "
+                  << "\t" << workdir << std::endl;
+        CreateDirectory(workdir);
+        CopyDirectory(paths_.GetPath(Paths::SIM_DRIVER_DIR), workdir, true);
+    }
+    paths_.SetPath(Paths::SIM_WORK_DIR, workdir);
 }
 
 void AdgprsSimulator::verifyOriginalDriverFileDirectory()
 {
-    QStringList critical_files = {initial_driver_file_path_,
-                                  initial_driver_file_parent_dir_path_ + "/include/compdat.in",
-                                  initial_driver_file_parent_dir_path_ + "/include/controls.in",
-                                  initial_driver_file_parent_dir_path_ + "/include/wells.in",
-                                  initial_driver_file_parent_dir_path_ + "/include/welspecs.in"};
+    QStringList critical_files = {QString::fromStdString(paths_.GetPath(Paths::SIM_DRIVER_DIR)) + "/include/compdat.in",
+                                  QString::fromStdString(paths_.GetPath(Paths::SIM_DRIVER_DIR)) + "/include/controls.in",
+                                  QString::fromStdString(paths_.GetPath(Paths::SIM_DRIVER_DIR)) + "/include/wells.in",
+                                  QString::fromStdString(paths_.GetPath(Paths::SIM_DRIVER_DIR)) + "/include/welspecs.in"};
     for (auto file : critical_files) {
         if (!Utilities::FileHandling::FileExists(file))
             throw DriverFileDoesNotExistException(file);
@@ -76,8 +80,9 @@ void AdgprsSimulator::verifyOriginalDriverFileDirectory()
 
 void AdgprsSimulator::UpdateFilePaths()
 {
-    output_h5_summary_file_path_ = output_directory_ + "/" + initial_driver_file_name_.split(".").first() + ".vars.h5";
-    script_args_ = (QStringList() << output_directory_ << output_directory_+"/"+initial_driver_file_name_);
+    script_args_ = (QStringList() << QString::fromStdString(paths_.GetPath(Paths::SIM_WORK_DIR ))
+                                  << QString::fromStdString(paths_.GetPath(Paths::SIM_WORK_DIR ))
+                                      + "/" + driver_file_name_);
 }
 
 bool AdgprsSimulator::Evaluate(int timeout, int threads) {
@@ -86,10 +91,16 @@ bool AdgprsSimulator::Evaluate(int timeout, int threads) {
     if (timeout < 10) t = 10; // Always let simulations run for at least 10 seconds
     if (results_->isAvailable()) results()->DumpResults();
     copyDriverFiles();
-    driver_file_writer_->WriteDriverFile(output_directory_);
+    driver_file_writer_->WriteDriverFile(QString::fromStdString(paths_.GetPath(Paths::SIM_WORK_DIR )));
     std::cout << "Starting monitored simulation with timeout " << timeout << std::endl;
-    bool success = ::Utilities::Unix::ExecShellScriptTimeout(script_path_, script_args_, t);
+    bool success = ::Utilities::Unix::ExecShellScriptTimeout(
+        QString::fromStdString(paths_.GetPath(Paths::SIM_EXEC_SCRIPT_FILE)),
+        script_args_, t);
     if (success) {
+        paths_.SetPath(Paths::SIM_HDF5_FILE,
+                       paths_.GetPath(Paths::SIM_WORK_DIR) + "/"
+                           + driver_file_name_.split(".").first().toStdString() + ".vars.h5"
+        );
         results_->ReadResults(output_h5_summary_file_path_);
     }
     updateResultsInModel();
@@ -97,8 +108,10 @@ bool AdgprsSimulator::Evaluate(int timeout, int threads) {
 }
 void AdgprsSimulator::WriteDriverFilesOnly() {
     copyDriverFiles();
-    driver_file_writer_->WriteDriverFile(output_directory_);
+    driver_file_writer_->WriteDriverFile(QString::fromStdString(paths_.GetPath(Paths::SIM_WORK_DIR )));
+}
+bool AdgprsSimulator::Evaluate(const Settings::Ensemble::Realization &realization, int timeout, int threads) {
+    throw std::runtime_error("Ensemble optimization not yet implemented for the AD-GPRS reservoir simulator.");
 }
 
-}
 }

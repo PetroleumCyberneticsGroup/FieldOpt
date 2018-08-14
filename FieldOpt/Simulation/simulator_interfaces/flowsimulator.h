@@ -24,27 +24,24 @@
 #include "Model/model.h"
 
 namespace Simulation {
-namespace SimulatorInterfaces {
 class FlowSimulator : public Simulator {
  public:
   FlowSimulator(Settings::Settings *settings, Model::Model *model);
 
-  virtual void Evaluate() override;
-  virtual bool Evaluate(int timeout, int threads=1) override;
+  void Evaluate() override;
+  bool Evaluate(int timeout, int threads=1) override;
+  bool Evaluate(const Settings::Ensemble::Realization &realization, int timeout, int threads=1) override;
   void WriteDriverFilesOnly() override;
-  virtual void CleanUp() override;
-  virtual void UpdateFilePaths() override;
+  void CleanUp() override;
+  void UpdateFilePaths() override;
 
  private:
-  DriverFileWriters::FlowDriverFileWriter *driver_file_writer_;
-  QString script_path_;
+  FlowDriverFileWriter *driver_file_writer_;
   QStringList script_args_;
-  QString initial_driver_file_parent_dir_path_;
 
   void verifyOriginalDriverFileDirectory();
   void copyDriverFiles();
 };
-}
 }
 
 

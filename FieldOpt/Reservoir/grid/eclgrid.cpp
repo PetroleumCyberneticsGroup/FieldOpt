@@ -157,7 +157,7 @@ Cell ECLGrid::GetCell(int i, int j, int k) {
     if (!IndexIsInsideGrid(i, j, k)) {
         string errstring = "ECLGrid::GetCell(int i, int j, int k): Error "
             "getting grid cell. Index ( "
-            + boost::lexical_cast<string>(j) + ", "
+            + boost::lexical_cast<string>(i) + ", "
             + boost::lexical_cast<string>(j) + ", "
             + boost::lexical_cast<string>(k) + ") is outside grid.";
         throw runtime_error(errstring);

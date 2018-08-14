@@ -44,7 +44,7 @@ class Model : public Loggable
 {
   friend class ModelSynchronizationObject;
  public:
-  Model(::Settings::Model settings, Logger *logger);
+  Model(::Settings::Settings settings, Logger *logger);
 
   LogTarget GetLogTarget() override;
   map<string, string> GetState() override;
@@ -55,6 +55,8 @@ class Model : public Loggable
    * \brief reservoir Get the reservoir (i.e. grid).
    */
   Reservoir::Grid::Grid *grid() const { return grid_; }
+
+  void set_grid_path(const std::string &grid_path);
 
   /*!
    * \brief variables Get the set of variable properties of all types.
@@ -97,11 +99,14 @@ class Model : public Loggable
   void verifyWells();
   void verifyWellTrajectory(Wells::Well *w);
   void verifyWellBlock(Wells::Wellbore::WellBlock *wb);
+  void verifyWellCompartments(Wells::Well *w);
 
   Logger *logger_;
   QUuid current_case_id_;
   QString compdat_; //!< The compdat generated from the list of well blocks corresponding to the current case. This is set by the simulator library.
   std::map<std::string, std::vector<double>> results_; //!< The results of the last simulation (i.e. the one performed with the current case).
+
+  QHash<QString, double> realization_ofv_map_;
 
   class Summary : public Loggable {
    public:

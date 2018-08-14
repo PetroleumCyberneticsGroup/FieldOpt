@@ -24,6 +24,7 @@
 #include "Model/properties/variable_property_container.h"
 #include <QPair>
 #include <Eigen/Core>
+#include <vector>
 #include "Optimization/case.h"
 
 namespace Optimization {
@@ -57,6 +58,7 @@ class WellSplineConstraint
   struct Well {
     Coord heel;
     Coord toe;
+    std::vector<Coord> additional_points;
   };
 
   /*!
@@ -73,6 +75,16 @@ class WellSplineConstraint
    * @return A pair (heel, toe) of Eigen vectors: [(hx, hy, hz), (tz, ty, tz)]
    */
   QPair<Eigen::Vector3d, Eigen::Vector3d> GetEndpointValueVectors(Case *c, Well well);
+
+  /*!
+   * @brief Get the vectors containing _all__ coordinate values for a case.
+   * @param c The case to get the values from.
+   * @param well The well to get the values for.
+   * @return A pair (heel, toe) of Eigen vectors: [(hx, hy, hz), (tz, ty, tz)]
+   */
+  std::vector<Eigen::Vector3d> GetPointValueVectors(Case *c, Well well);
+
+  double GetWellLength(Case *c, WellSplineConstraint::Well well);
 
 };
 

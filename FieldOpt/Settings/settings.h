@@ -32,6 +32,7 @@
 #include "simulator.h"
 #include "optimizer.h"
 #include "model.h"
+#include "Settings/paths.h"
 
 namespace Settings {
 
@@ -52,12 +53,9 @@ class Settings
 {
  public:
   Settings(){}
-  Settings(QString driver_path, QString output_directory);
-
-  QString driver_path() const { return driver_path_; }
+  Settings(Paths &paths);
 
   QString name() const { return name_; } //!< The name to be used for the run. Output file and folder names are derived from this.
-  QString output_directory() const { return output_directory_; } //!< Path to a directory in which output files are to be placed.
 
   // To be removed:
   bool verbose() const { return verbose_; } //!< Verbose mode (with or without debug printing).
@@ -72,20 +70,17 @@ class Settings
 
   QString GetLogCsvString() const; //!< Get a string containing the CSV header and contents for the log.
 
-  const QString &build_path() const { return build_path_; } //!< Get the to the FieldOpt build directory.
-  void set_build_path(const QString &build_path); //!< Set the path to the FieldOpt build directory.
+  Paths &paths() { return paths_; }
 
  private:
-  QString driver_path_;
+  Paths paths_;
   QJsonObject *json_driver_;
   QString name_;
   double bookkeeper_tolerance_;
-  QString output_directory_;
   bool verbose_ = false;
   Model *model_;
   Optimizer *optimizer_;
   Simulator *simulator_;
-  QString build_path_;
 
   void readDriverFile();
   void readGlobalSection();

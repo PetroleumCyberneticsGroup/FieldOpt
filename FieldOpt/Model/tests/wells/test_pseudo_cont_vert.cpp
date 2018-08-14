@@ -35,7 +35,8 @@ class PseudoContVertTest : public ::testing::Test, public TestResources::TestRes
 };
 
 TEST_F(PseudoContVertTest, ConstructorAndGetter) {
-    auto settings = Settings::Model(TestResources::TestResourceModelSettingSnippets::model_pseudocont_2_prods_var_pos_and_bhp());
+    Paths paths;
+    auto settings = Settings::Model(TestResources::TestResourceModelSettingSnippets::model_pseudocont_2_prods_var_pos_and_bhp(), paths);
     auto wsettings = settings.wells()[0];
     auto varcont = new Model::Properties::VariablePropertyContainer();
     auto well = Model::Wells::Wellbore::PseudoContVert(wsettings, varcont, TestResources::TestResourceGrids::grid_5spot_);

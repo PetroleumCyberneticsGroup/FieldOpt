@@ -24,50 +24,30 @@
  *****************************************************************************/
 
 #include "ecldriverfilewriter.h"
-#include "driver_parts/ecl_driver_parts/runspec_section.h"
-#include "driver_parts/ecl_driver_parts/grid_section.h"
-#include "driver_parts/ecl_driver_parts/props_section.h"
-#include "driver_parts/ecl_driver_parts/solution_section.h"
-#include "driver_parts/ecl_driver_parts/summary_section.h"
 #include "driver_parts/ecl_driver_parts/schedule_section.h"
 #include "Simulation/simulator_interfaces/simulator_exceptions.h"
 #include "Utilities/filehandling.hpp"
 
 namespace Simulation {
-namespace SimulatorInterfaces {
-namespace DriverFileWriters {
+
+using namespace ECLDriverParts;
+using namespace Utilities::FileHandling;
 
 EclDriverFileWriter::EclDriverFileWriter(Settings::Settings *settings, Model::Model *model)
 {
     model_ = model;
     settings_ = settings;
-    original_driver_file_contents_ = ::Utilities::FileHandling::ReadFileToStringList(settings_->simulator()->driver_file_path());
-    output_driver_file_name_ = settings->output_directory() + "/" + settings->name().toUpper() + ".DATA";
 }
 
-void EclDriverFileWriter::WriteDriverFile()
+void EclDriverFileWriter::WriteDriverFile(QString schedule_file_path)
 {
-    DriverParts::ECLDriverParts::Runspec runspec = DriverParts::ECLDriverParts::Runspec(original_driver_file_contents_, model_->wells());
-    DriverParts::ECLDriverParts::Grid grid = DriverParts::ECLDriverParts::Grid(original_driver_file_contents_);
-    DriverParts::ECLDriverParts::Props props = DriverParts::ECLDriverParts::Props(original_driver_file_contents_);
-    DriverParts::ECLDriverParts::Solution solution = DriverParts::ECLDriverParts::Solution(original_driver_file_contents_);
-    DriverParts::ECLDriverParts::Summary summary = DriverParts::ECLDriverParts::Summary(original_driver_file_contents_);
-    DriverParts::ECLDriverParts::Schedule schedule = DriverParts::ECLDriverParts::Schedule(model_->wells(),
-                                                                                           settings_->model()->control_times());
-
-    model_->SetCompdatString(DriverParts::ECLDriverParts::Compdat(model_->wells()).GetPartString());
-
-    QString complete_string = runspec.GetPartString() + grid.GetPartString()
-            + props.GetPartString() + solution.GetPartString()
-            + summary.GetPartString() + schedule.GetPartString();
-
-    if (!Utilities::FileHandling::DirectoryExists(settings_->output_directory())
-            || !Utilities::FileHandling::ParentDirectoryExists(output_driver_file_name_))
-        throw UnableToWriteDriverFileException("Cannot write driver file, specified output directory does not exist.");
-
-    Utilities::FileHandling::WriteStringToFile(complete_string, output_driver_file_name_);
+    if (settings_->verbose()) {
+        std::cout << "Writing driver file to " << schedule_file_path.toStdString() << std::endl;
+    }
+    assert(FileExists(schedule_file_path));
+    Schedule schedule = ECLDriverParts::Schedule(model_->wells(), settings_->model()->control_times());
+    model_->SetCompdatString(ECLDriverParts::Compdat(model_->wells()).GetPartString());
+    Utilities::FileHandling::WriteStringToFile(schedule.GetPartString(), schedule_file_path);
 }
 
-}
-}
 }

@@ -14,7 +14,7 @@ namespace {
         }
         virtual ~FlowDriverFileWriterTest() {}
         virtual void SetUp() {}
-        Simulation::SimulatorInterfaces::FlowSimulator *simulator_;
+        Simulation::FlowSimulator *simulator_;
     };
 
     TEST_F(FlowDriverFileWriterTest, Initialization) {

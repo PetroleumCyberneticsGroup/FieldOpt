@@ -8,9 +8,6 @@
 
 
 namespace Simulation {
-namespace SimulatorInterfaces {
-namespace DriverFileWriters {
-namespace DriverParts {
 namespace AdgprsDriverParts {
 
 class Wellstre : public ECLDriverParts::ECLDriverPart
@@ -20,15 +17,15 @@ public:
 
     // DriverPart interface
 public:
-    QString GetPartString();
+    QString GetPartString() const;
 
 private:
-    QString createKeyword();
-    QString createWellEntry(Model::Wells::Well *well);
+    QString createKeyword() const;
+    QString createWellEntry(Model::Wells::Well *well) const;
     QList<Model::Wells::Well *> *wells_;
     Settings::Simulator::SimulatorFluidModel fluid_model_;
 };
 
-}}}}}
+}}
 
 #endif // WELLSTRE_H

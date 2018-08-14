@@ -190,6 +190,18 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
         if (json_constraint.contains("Min"))
             optimizer_constraint.min = json_constraint["Min"].toDouble();
     }
+    // Packer- and ICV Constraints
+    else if (QString::compare(constraint_type, "ICVConstraint") == 0) {
+        optimizer_constraint.type = ConstraintType::ICVConstraint;
+        optimizer_constraint.max = json_constraint["Max"].toDouble();
+        optimizer_constraint.min = json_constraint["Min"].toDouble();
+    }
+    else if (QString::compare(constraint_type, "PackerConstraint") == 0) {
+        optimizer_constraint.type = ConstraintType::PackerConstraint;
+        optimizer_constraint.max_md = json_constraint["MaxMd"].toDouble();
+        optimizer_constraint.min_md = json_constraint["MinMd"].toDouble();
+    }
+
     else if (QString::compare(constraint_type, "Rate") == 0) {
         optimizer_constraint.type = ConstraintType::Rate;
         if (json_constraint.contains("Max"))

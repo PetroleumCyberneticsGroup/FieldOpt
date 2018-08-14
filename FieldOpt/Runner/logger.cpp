@@ -31,7 +31,7 @@ Logger::Logger(Runner::RuntimeSettings *rts,
     write_logs_ = write_logs;
     is_worker_ = output_subdir.length() > 0;
     verbose_ = rts->verbosity_level();
-    output_dir_ = rts->output_dir();
+    output_dir_ = QString::fromStdString(rts->paths().GetPath(Paths::OUTPUT_DIR));
     if (output_subdir.length() > 0) {
         output_dir_ = output_dir_ + "/" + output_subdir + "/";
         Utilities::FileHandling::CreateDirectory(output_dir_);
@@ -137,8 +137,17 @@ void Logger::logExtended(Loggable *obj) {
     // UUID
     new_entry.insert("UUID", obj->GetId().toString());
 
-    // Compdat string
-    new_entry.insert("COMPDAT", QString::fromStdString(obj->GetState()["COMPDAT"]));
+    QJsonArray realizations;
+    for (auto const a : obj->GetValues()) {
+        if (a.first.compare(0, 4, "Rea#") == 0) {
+            QJsonObject rea;
+            rea.insert(QString::fromStdString(a.first), a.second[0]);
+            realizations.append(rea);
+        }
+    }
+    if (realizations.count() > 0) {
+        new_entry.insert("Realizations", realizations);
+    }
 
     // Variable values
     QJsonArray vars;
@@ -165,6 +174,10 @@ void Logger::logExtended(Loggable *obj) {
         }
     }
     new_entry.insert("ProductionData", prod);
+
+    // Compdat string
+    new_entry.insert("COMPDAT", QString::fromStdString(obj->GetState()["COMPDAT"]));
+
 
     // Open existing document
     QFile json_file(ext_log_path_);

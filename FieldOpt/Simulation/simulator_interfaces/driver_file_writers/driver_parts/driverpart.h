@@ -5,9 +5,6 @@
 #include <QStringList>
 
 namespace Simulation {
-namespace SimulatorInterfaces {
-namespace DriverFileWriters {
-namespace DriverParts {
 
 /*!
  * \brief The DriverPart class Is the parent class for any part of a driver file.
@@ -19,7 +16,7 @@ public:
      * \brief GetPartString Get a string containing the section of the driver file.
      * \return
      */
-    virtual QString GetPartString() = 0;
+    virtual QString GetPartString() const = 0;
 
 protected:
     DriverPart() {}
@@ -65,9 +62,6 @@ private:
     int getLineIndex(QStringList *driver_file_content, QString keyword);
 };
 
-}
-}
-}
 }
 
 #endif // DRIVERPART_H

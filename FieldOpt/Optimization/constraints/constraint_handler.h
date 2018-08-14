@@ -27,6 +27,8 @@
 #include "combined_spline_length_interwell_distance_reservoir_boundary.h"
 #include "reservoir_boundary.h"
 #include "pseudo_cont_boundary_2d.h"
+#include "icv_constraint.h"
+#include "packer_constraint.h"
 #include "rate_constraint.h"
 #include "Optimization/case.h"
 #include "Model/properties/variable_property_container.h"

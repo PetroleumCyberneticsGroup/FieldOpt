@@ -13,7 +13,7 @@ include_directories(
 	${ERT_INCLUDE_DIR})
 
 target_link_libraries(ertwrapper
-        PUBLIC ${ert_ecl})
+        PUBLIC ${ecl_LIBRARIES})
 
 target_include_directories(ertwrapper PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)

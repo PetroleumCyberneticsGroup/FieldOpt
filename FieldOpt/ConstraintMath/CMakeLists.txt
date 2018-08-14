@@ -11,7 +11,7 @@ add_library(fieldopt::constraintmath ALIAS ${PROJECT_NAME})
 include_directories(${EIGEN3_INCLUDE_DIR})
 target_link_libraries(constraintmath
         PUBLIC Qt5::Core
-        PUBLIC ${RpolyPlusPlus}
+        PUBLIC ${RpolyPlusPlus_LIBRARIES}
         PUBLIC fieldopt::ertwrapper
         PUBLIC fieldopt::reservoir)
 

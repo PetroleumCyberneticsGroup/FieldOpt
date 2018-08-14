@@ -31,29 +31,48 @@
 #include "welspecs.h"
 #include "compdat.h"
 #include "wellcontrols.h"
+#include "welsegs.h"
+#include "compsegs.h"
+#include "wsegvalv.h"
 #include <QStringList>
 
 namespace Simulation {
-namespace SimulatorInterfaces {
-namespace DriverFileWriters {
-namespace DriverParts {
 namespace ECLDriverParts {
 
 class Schedule : public ECLDriverPart
 {
 public:
     Schedule(QList<Model::Wells::Well *> *wells, QList<int> control_times);
-    QString GetPartString();
+    QString GetPartString() const;
 
 private:
-    Welspecs *welspecs_;
-    Compdat *compdat_;
-    WellControls *wellcontrols_;
+
+  struct ScheduleTimeEntry {
+    ScheduleTimeEntry(Welspecs welspecs,
+                      Compdat compdat,
+                      WellControls well_controls,
+                      Welsegs welsegs,
+                      Compsegs compsegs,
+                      Wsegvalv wsegvalv
+    );
+    Welspecs welspecs;
+    Compdat compdat;
+    WellControls well_controls;
+
+    // Exclusively for segmented wells
+    Welsegs welsegs;
+    Compsegs compsegs;
+    Wsegvalv wsegvalv;
+  };
+
+  /*!
+   * WELSPECS, COMPDAT and control entries for each timestep.
+   */
+  QList<ScheduleTimeEntry> schedule_time_entries_;
+
+  QString schedule_;
 };
 
-}
-}
-}
 }
 }
 

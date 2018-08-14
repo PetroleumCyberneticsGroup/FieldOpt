@@ -6,9 +6,6 @@
 #include <QList>
 
 namespace Simulation {
-namespace SimulatorInterfaces {
-namespace DriverFileWriters {
-namespace DriverParts {
 namespace AdgprsDriverParts {
 
 class WellControls : public ECLDriverParts::WellControls
@@ -29,6 +26,6 @@ private:
     QString createTimeEntry(int time, int prev_time);
 };
 
-}}}}}
+}}
 
 #endif // ADGPRS_WELLCONTROLS_H

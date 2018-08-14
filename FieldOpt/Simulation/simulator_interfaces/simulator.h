@@ -25,9 +25,9 @@
 #include "Settings/settings.h"
 #include "Settings/simulator.h"
 #include "Simulation/execution_scripts/execution_scripts.h"
+#include "Settings/ensemble.h"
 
 namespace Simulation {
-namespace SimulatorInterfaces {
 
 /*!
  * \brief The Simulator class acts as an interface for all reservoir simulators.
@@ -44,11 +44,6 @@ namespace SimulatorInterfaces {
  */
 class Simulator {
  public:
-  /*!
-   * \brief SetOutputDirectory Set the directory in which to execute the simulation.
-   */
-  void SetOutputDirectory(QString output_directory);
-
   /*!
    * \brief results Get the simulation results.
    */
@@ -67,6 +62,19 @@ class Simulator {
    * @return True if the simuation completes before the set timeout, otherwise false.
    */
   virtual bool Evaluate(int timeout, int threads=1) = 0;
+
+  /*!
+   * Evaluate one realization from an ensemble.
+   *
+   * Updates file paths from the realization and calls Evaluate(timeout, threads).
+   * @param realization The realization to be optimized.
+   * @param timeout Number of seconds before the simulation should be terminated.
+   * @param threads Number of threads to be used by the simulator. Only works for AD-GPRS.
+   * @return True if the simuation completes before the set timeout, otherwise false.
+   */
+  virtual bool Evaluate(const Settings::Ensemble::Realization &realization, int timeout, int threads=1) = 0;
+
+
 
   /*!
    * @brief Only write driver files; don't execute simulation.
@@ -94,22 +102,20 @@ class Simulator {
 
   void updateResultsInModel();
 
-  QString initial_driver_file_path_; //!< Path to the driver file to be used as a base for the generated driver files.
-  QString output_directory_; //!< The directory in which to write new driver files and execute simulations.
-  QString initial_driver_file_name_;
+  Paths paths_;
+
+  QString driver_file_name_; //!< The name of the driver main file.
+  QString driver_parent_dir_name_; //!< The name of the directory containing the initial main driver file.
 
   ::Simulation::Results::Results *results_;
   Settings::Settings *settings_;
   Model::Model *model_;
-  QString build_dir_;
-  QString script_path_;
   QStringList script_args_;
   QList<int> control_times_;
   virtual void UpdateFilePaths() = 0;
   int verbosity_level_; //!< Verbosity level for runtime console logging.
 };
 
-}
 }
 
 #endif // SIMULATOR

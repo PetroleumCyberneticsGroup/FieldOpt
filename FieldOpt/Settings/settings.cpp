@@ -1,3 +1,22 @@
+/******************************************************************************
+   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
+
+   This file is part of the FieldOpt project.
+
+   FieldOpt is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   FieldOpt is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
+
 #include "settings.h"
 #include "settings_exceptions.h"
 #include "Utilities/filehandling.hpp"
@@ -8,14 +27,10 @@
 
 namespace Settings {
 
-    Settings::Settings(QString driver_path, QString output_directory)
+    Settings::Settings(Paths &paths)
     {
-        if (!::Utilities::FileHandling::FileExists(driver_path))
-            throw FileNotFoundException(driver_path.toStdString());
-        driver_path_ = driver_path;
+        paths_ = paths;
         readDriverFile();
-        output_directory_ = output_directory;
-        simulator_->output_directory_ = output_directory;
     }
 
     QString Settings::GetLogCsvString() const
@@ -36,7 +51,7 @@ namespace Settings {
 
     void Settings::readDriverFile()
     {
-        QFile *file = new QFile(driver_path_);
+        QFile *file = new QFile(QString::fromStdString(paths_.GetPath(Paths::DRIVER_FILE)));
         if (!file->open(QIODevice::ReadOnly))
             throw DriverFileReadException("Unable to open the driver file");
 
@@ -77,7 +92,7 @@ namespace Settings {
         // Simulator root
         try {
             QJsonObject json_simulator = json_driver_->value("Simulator").toObject();
-            simulator_ = new Simulator(json_simulator);
+            simulator_ = new Simulator(json_simulator, paths_);
         }
         catch (std::exception const &ex) {
             throw UnableToParseSimulatorSectionException("Unable to parse driver file simulator section: " + std::string(ex.what()));
@@ -99,18 +114,11 @@ namespace Settings {
     {
         try {
             QJsonObject model = json_driver_->value("Model").toObject();
-            model_ = new Model(model);
+            model_ = new Model(model, paths_);
         }
         catch (std::exception const &ex) {
             throw UnableToParseModelSectionException("Unable to parse model section: " + std::string(ex.what()));
         }
-    }
-
-    void Settings::set_build_path(const QString &build_path)
-    {
-        if (!Utilities::FileHandling::DirectoryExists(build_path))
-            throw std::runtime_error("Attempted to set the build path to a non-existent directory.");
-        build_path_ = build_path;
     }
 
 }

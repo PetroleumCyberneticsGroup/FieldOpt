@@ -3,6 +3,10 @@
 namespace Optimization {
     namespace Constraints {
         RateConstraint::RateConstraint(Settings::Optimizer::Constraint settings, Model::Properties::VariablePropertyContainer *variables) {
+
+            assert(settings.wells.size() > 0);
+            assert(settings.min < settings.max);
+
             affected_well_names_ = settings.wells;
             min_ = settings.min;
             max_ = settings.max;
@@ -29,6 +33,25 @@ namespace Optimization {
                     c->set_real_variable_value(var->id(), min_);
             }
         }
+    Eigen::VectorXd RateConstraint::GetLowerBounds(QList<QUuid> id_vector) const {
+        Eigen::VectorXd lbounds(id_vector.size());
+        lbounds.fill(0);
+        for (auto var : affected_real_variables_) {
+            lbounds[id_vector.indexOf(var->id())] = min_;
+        }
+        return lbounds;
+    }
+    Eigen::VectorXd RateConstraint::GetUpperBounds(QList<QUuid> id_vector) const {
+        Eigen::VectorXd ubounds(id_vector.size());
+        ubounds.fill(0);
+        for (auto var : affected_real_variables_) {
+            ubounds[id_vector.indexOf(var->id())] = max_;
+        }
+        return ubounds;
+    }
+    bool RateConstraint::IsBoundConstraint() const {
+        return true;
+    }
 
     }
 }

@@ -23,33 +23,54 @@
 namespace Optimization {
 namespace Constraints {
 
+using namespace Model::Properties;
+
 WellSplineConstraint::Well WellSplineConstraint::initializeWell(QList<Model::Properties::ContinousProperty *> vars) {
-    if (vars.length() != 6)
+    Well well;
+    if (vars.length() >= 6 && (vars.length() % 3) == 0) {
+        std::cout << "Using heel-toe parameterization for well spline constraint." << std::endl;
+        for (auto var : vars) {
+            if (var->propertyInfo().spline_end == Property::SplineEnd::Heel) {
+                if (var->propertyInfo().coord == Property::Coordinate::x)
+                    well.heel.x = var->id();
+                else if (var->propertyInfo().coord == Property::Coordinate::y)
+                    well.heel.y = var->id();
+                else if (var->propertyInfo().coord == Property::Coordinate::z)
+                    well.heel.z = var->id();
+                else throw std::runtime_error("Unable to parse variable " + var->name().toStdString());
+            } else if (var->propertyInfo().spline_end == Property::SplineEnd::Toe) {
+                if (var->propertyInfo().coord == Property::Coordinate::x)
+                    well.toe.x = var->id();
+                else if (var->propertyInfo().coord == Property::Coordinate::y)
+                    well.toe.y = var->id();
+                else if (var->propertyInfo().coord == Property::Coordinate::z)
+                    well.toe.z = var->id();
+                else throw std::runtime_error("Unable to parse variable " + var->name().toStdString());
+            } else throw std::runtime_error("Unable to parse variable " + var->name().toStdString());
+        }
+        if (vars.length() > 6) { // Adding additional points
+            std::cout << "Using multi-point parameterization for well spline constraint." << std::endl;
+            std::map<int, Coord> addtl_points;
+            for (auto var : vars) {
+                // use hash/map when creating the ponts (it will autosort them alphabeticaly, which is what we want)
+                if (var->propertyInfo().spline_end == Property::SplineEnd::Middle) {
+                    if (var->propertyInfo().coord == Property::Coordinate::x)
+                        addtl_points[var->propertyInfo().index].x = var->id();
+                    else if (var->propertyInfo().coord == Property::Coordinate::y)
+                        addtl_points[var->propertyInfo().index].y = var->id();
+                    else if (var->propertyInfo().coord == Property::Coordinate::z)
+                        addtl_points[var->propertyInfo().index].z = var->id();
+                }
+            }
+            for (int i = 0; i < addtl_points.size(); ++i) {
+                well.additional_points.push_back(addtl_points[i+1]);
+            }
+
+        }
+    }
+    else {
         throw std::runtime_error("Incorrect number of variables (" + boost::lexical_cast<std::string>(vars.length())
                                      + ")passed to the initialize well method.");
-
-    Well well;
-    for (auto var : vars) {
-        QStringList nmcomps = var->name().split("#"); // Should be {SplinePoint, WELLNAME, heel/toe, x/y/z}
-        if (QString::compare("heel", nmcomps[2]) == 0) {
-            if (QString::compare("x", nmcomps[3]) == 0)
-                well.heel.x = var->id();
-            else if (QString::compare("y", nmcomps[3]) == 0)
-                well.heel.y = var->id();
-            else if (QString::compare("z", nmcomps[3]) == 0)
-                well.heel.z = var->id();
-            else throw std::runtime_error("Unable to parse variable " + var->name().toStdString());
-        }
-        else if (QString::compare("toe", nmcomps[2]) == 0) {
-            if (QString::compare("x", nmcomps[3]) == 0)
-                well.toe.x = var->id();
-            else if (QString::compare("y", nmcomps[3]) == 0)
-                well.toe.y = var->id();
-            else if (QString::compare("z", nmcomps[3]) == 0)
-                well.toe.z = var->id();
-            else throw std::runtime_error("Unable to parse variable " + var->name().toStdString());
-        }
-        else throw std::runtime_error("Unable to parse variable " + var->name().toStdString());
     }
     return well;
 }
@@ -65,7 +86,30 @@ QPair<Eigen::Vector3d, Eigen::Vector3d> WellSplineConstraint::GetEndpointValueVe
     Eigen::Vector3d toe(tx, ty, tz);
     return qMakePair(heel, toe);
 }
+std::vector<Eigen::Vector3d> WellSplineConstraint::GetPointValueVectors(Case *c, WellSplineConstraint::Well well) {
+    std::vector<Eigen::Vector3d> points;
+    auto endpoints = GetEndpointValueVectors(c, well);
+    points.push_back(endpoints.first);
 
+    for (auto p : well.additional_points) {
+        double x = c->real_variables()[p.x];
+        double y = c->real_variables()[p.y];
+        double z = c->real_variables()[p.z];
+        Eigen::Vector3d ep = Eigen::Vector3d(x, y, z);
+        points.push_back(ep);
+    }
+
+    points.push_back(endpoints.second);
+    return points;
+}
+double WellSplineConstraint::GetWellLength(Case *c, WellSplineConstraint::Well well) {
+    double length = 0.0;
+    auto points = GetPointValueVectors(c, well);
+    for (int i = 0; i < points.size() - 1; ++i) {
+        length += (points[i+1] - points[i]).norm();
+    }
+    return length;
+}
 
 }
 }

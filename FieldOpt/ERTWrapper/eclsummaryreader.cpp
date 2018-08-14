@@ -38,7 +38,10 @@ namespace ERTWrapper {
 
         ECLSummaryReader::~ECLSummaryReader()
         {
-            ecl_sum_free(ecl_sum_);
+            if (ecl_sum_ != NULL) {
+                ecl_sum_free(ecl_sum_);
+                ecl_sum_ = NULL;
+            }
         }
 
         double ECLSummaryReader::GetMiscVar(string var_name, int time_index)
@@ -125,11 +128,6 @@ namespace ERTWrapper {
             stringlist_free(wells);
             stringlist_free(field_keys);
             stringlist_free(well_keys);
-
-            cout << "Found wells: " << boost::algorithm::join(wells_, ", ") << endl;
-            cout << "Found keys: " << boost::algorithm::join(keys_, ", ") << endl;
-            cout << "Found field keys: " << boost::algorithm::join(field_keys_, ", ") << endl;
-            cout << "Found well keys: " << boost::algorithm::join(well_keys_, ", ") << endl;
         }
 
         void ECLSummaryReader::initializeVectors() {
@@ -198,7 +196,7 @@ namespace ERTWrapper {
                     for (int i = 0; i < time_.size(); ++i) {
                         wwir_[wname][i] = double_vector_safe_iget(data, i);
                     }
-                    wgpr_[wname][0] = GetWellVar(wname, "WGPR", 0);
+                    wwir_[wname][0] = GetWellVar(wname, "WWIR", 0);
                     double_vector_free(data);
                 }
 
@@ -275,7 +273,7 @@ namespace ERTWrapper {
                     for (int i = 0; i < time_.size(); ++i) {
                         wgit_[wname][i] = double_vector_safe_iget(wgit, i);
                     }
-                    wwit_[wname][0] = 0.0;
+                    wgit_[wname][0] = 0.0;
                     double_vector_free(wgit);
                 }
             }

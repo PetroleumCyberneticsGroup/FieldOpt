@@ -35,6 +35,7 @@
 #include "Settings/settings.h"
 #include "bookkeeper.h"
 #include "Runner/logger.h"
+#include "ensemble_helper.h"
 #include <vector>
 
 namespace Runner {
@@ -72,9 +73,11 @@ class AbstractRunner
   Optimization::Case *base_case_;
   Optimization::Optimizer *optimizer_;
   Optimization::Objective::Objective *objective_function_;
-  Simulation::SimulatorInterfaces::Simulator *simulator_;
+  Simulation::Simulator *simulator_;
   Logger *logger_;
   std::vector<int> simulation_times_;
+  bool is_ensemble_run_;
+  EnsembleHelper ensemble_helper_;
 
   void PrintCompletionMessage() const;
 

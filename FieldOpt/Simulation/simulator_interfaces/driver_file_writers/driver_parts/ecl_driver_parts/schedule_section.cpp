@@ -27,28 +27,52 @@
 
 
 namespace Simulation {
-namespace SimulatorInterfaces {
-namespace DriverFileWriters {
-namespace DriverParts {
 namespace ECLDriverParts {
 
 Schedule::Schedule(QList<Model::Wells::Well *> *wells, QList<int> control_times)
 {
-    welspecs_ = new Welspecs(wells);
-    compdat_ = new Compdat(wells);
-    wellcontrols_ = new WellControls(wells, control_times);
+    schedule_time_entries_ = QList<ScheduleTimeEntry>();
+    for (int ts : control_times) {
+        ScheduleTimeEntry time_entry = ScheduleTimeEntry(Welspecs(wells, ts),
+                                                         Compdat(wells, ts),
+                                                         WellControls(wells, control_times, ts),
+                                                         Welsegs(wells, ts),
+                                                         Compsegs(wells, ts),
+                                                         Wsegvalv(wells, ts)
+        );
+        schedule_time_entries_.append(time_entry);
+    }
+    for (auto time_entry : schedule_time_entries_) {
+        schedule_.append(time_entry.welspecs.GetPartString());
+        schedule_.append(time_entry.compdat.GetPartString());
+        schedule_.append(time_entry.welsegs.GetPartString());
+        schedule_.append(time_entry.compsegs.GetPartString());
+        schedule_.append(time_entry.wsegvalv.GetPartString());
+        schedule_.append(time_entry.well_controls.GetPartString());
+    }
+    schedule_.append("\n\n");
 }
 
-QString Schedule::GetPartString()
+QString Schedule::GetPartString() const
 {
-    return QString("SCHEDULE\n\n%1%2%3\n\nEND")
-            .arg(welspecs_->GetPartString())
-            .arg(compdat_->GetPartString())
-            .arg(wellcontrols_->GetPartString());
+    return schedule_;
 }
 
+Schedule::ScheduleTimeEntry::ScheduleTimeEntry(Welspecs welspecs,
+                                               Compdat compdat,
+                                               WellControls well_controls,
+                                               Welsegs welsegs,
+                                               Compsegs compsegs,
+                                               Wsegvalv wsegvalv
+)
+{
+    this->welspecs = welspecs;
+    this->compdat = compdat;
+    this->well_controls = well_controls;
+    this->welsegs = welsegs;
+    this->compsegs = compsegs;
+    this->wsegvalv = wsegvalv;
 }
-}
-}
+
 }
 }
