@@ -105,6 +105,7 @@ class Optimizer
     OptimizerType type;
     Parameters parameters;
   };
+  Optimizer(HybridComponent hc); //!< Create a basic Optimizer Settings object from a HybridComponent object.
 
   OptimizerType type() const { return type_; } //!< Get the Optimizer type (e.g. Compass).
   OptimizerMode mode() const { return mode_; } //!< Get the optimizer mode (maximize/minimize).

@@ -24,6 +24,7 @@
 #include <Optimization/optimizers/APPS.h>
 #include <Optimization/optimizers/GeneticAlgorithm.h>
 #include <Optimization/optimizers/RGARDD.h>
+#include <Optimization/hybrid_optimizer.h>
 #include <Optimization/optimizers/bayesian_optimization/EGO.h>
 #include "abstract_runner.h"
 #include "Optimization/optimizers/compass_search.h"
@@ -212,6 +213,16 @@ void AbstractRunner::InitializeOptimizer()
                                                                               model_->variables(),
                                                                               model_->grid(),
                                                                               logger_
+            );
+            optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
+            break;
+        case Settings::Optimizer::OptimizerType::Hybrid:
+            if (runtime_settings_->verbosity_level()) std::cout << "Using Hybrid optimization algorithm." << std::endl;
+            optimizer_ = new Optimization::HybridOptimizer(settings_->optimizer(),
+                                                           base_case_,
+                                                           model_->variables(),
+                                                           model_->grid(),
+                                                           logger_
             );
             optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
             break;

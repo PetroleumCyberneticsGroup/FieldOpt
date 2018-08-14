@@ -367,5 +367,9 @@ QList<Optimizer::HybridComponent> Optimizer::parseHybridComponents(QJsonObject &
     }
     return comps;
 }
+Optimizer::Optimizer(Optimizer::HybridComponent hc) {
+    type_ = hc.type;
+    parameters_ = hc.parameters;
+}
 
 }
