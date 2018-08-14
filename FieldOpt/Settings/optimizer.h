@@ -127,6 +127,7 @@ class Optimizer
   OptimizerMode parseMode(QJsonObject &json_optimizer);
   Parameters parseParameters(QJsonObject &json_parameters);
   Objective parseObjective(QJsonObject &json_objective);
+  QList<HybridComponent> parseHybridComponents(QJsonObject &json_optimizer);
 };
 
 }

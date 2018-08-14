@@ -34,7 +34,12 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
 
     if (type_ != ExhaustiveSearch2DVert) {
         mode_ = parseMode(json_optimizer);
-        parameters_ = parseParameters(json_parameters);
+        if (type_ == Hybrid) {
+            hybrid_components_ = parseHybridComponents(json_optimizer);
+        }
+        else {
+            parameters_ = parseParameters(json_parameters);
+        }
     }
     objective_ = parseObjective(json_objective);
 
@@ -349,6 +354,17 @@ Optimizer::OptimizerType Optimizer::parseType(QString &type) {
         opt_type = OptimizerType::Hybrid;
     else throw OptimizerTypeNotRecognizedException("The optimizer type " + type.toStdString() + " was not recognized.");
     return opt_type;
+}
+QList<Optimizer::HybridComponent> Optimizer::parseHybridComponents(QJsonObject &json_optimizer) {
+    QList<HybridComponent> comps;
+    for (auto json_comp : json_optimizer["HybridComponents"].toArray()) {
+        HybridComponent comp;
+        QString type = json_comp.toObject()["Type"].toString();
+        comp.type = parseType(type);
+        comp.parameters = parseParameters(json_comp.toObject()["Parameters"].toObject());
+        comps.push_back(comp);
+    }
+    return comps;
 }
 
 }
