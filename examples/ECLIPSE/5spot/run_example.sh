@@ -12,6 +12,9 @@
 #   3 - fo_driver_2_horz_icd_ga
 #   4 - fo_driver_2_horz_icd_ego
 #   5 - fo_driver_2_horz_apps
+#   6 - fo_driver_2_horz_icds_packers_ego
+#   7 - fo_driver_2_horz_icds_packers_ga
+#   8 - fo_driver_2_horz_icds_controls_ego
 #
 # Assumes that the following shell variables are set:
 #   FIELDOPT_BUILD - Path to the FieldOpt build (bin) directory.
@@ -24,6 +27,9 @@ declare -a CASES=(
     "fo_driver_2_horz_icd_ga"
     "fo_driver_2_horz_icd_ego"
     "fo_driver_2_horz_apps"
+    "fo_driver_2_horz_icds_packers_ego"
+    "fo_driver_2_horz_icds_packers_ga"
+    "fo_driver_2_horz_icds_controls_ego"
 )
 
 # Set case and path variables
@@ -44,6 +50,6 @@ echo "Driver: " ${DRIVER_PATH}
 echo "Deck: " ${DECK_PATH}
 echo "Grid: " ${GRID_PATH}
 
-#${FIELDOPT_BIN} ${DRIVER_PATH} ${OUTPUT_DIR} -r serial -v3 --force -g ${GRID_PATH} -s ${DECK_PATH} -e ${SCR_PATH}
-mpirun -n 5 ${FIELDOPT_BIN} ${DRIVER_PATH} ${OUTPUT_DIR} -r mpisync -v3 -m4 --force -g ${GRID_PATH} -s ${DECK_PATH} -e ${SCR_PATH}
+${FIELDOPT_BIN} ${DRIVER_PATH} ${OUTPUT_DIR} -r serial -v3 --force -g ${GRID_PATH} -s ${DECK_PATH} -e ${SCR_PATH}
+#mpirun -n 5 ${FIELDOPT_BIN} ${DRIVER_PATH} ${OUTPUT_DIR} -r mpisync -v3 -m4 --force -g ${GRID_PATH} -s ${DECK_PATH} -e ${SCR_PATH}
 
