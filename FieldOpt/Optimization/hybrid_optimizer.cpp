@@ -46,76 +46,92 @@ HybridOptimizer::HybridOptimizer(Settings::Optimizer *settings,
 }
 
 Optimizer::TerminationCondition HybridOptimizer::IsFinished() {
-    if (primary_->IsFinished() && secondary_->IsFinished()) {
-        return secondary_->IsFinished();
+    if (primary_->IsFinished()) {
+        if (active_component_ == 1 && secondary_->IsFinished()) {
+            return secondary_->IsFinished();
+        }
+        else {
+            return TerminationCondition::NOT_FINISHED;
+        }
     }
     else {
         return TerminationCondition::NOT_FINISHED;
     }
 }
 void HybridOptimizer::handleEvaluatedCase(Case *c) {
-    if (!primary_->IsFinished()) {
+    if (active_component_ == 0) {
         primary_->handleEvaluatedCase(c);
+        tentative_best_case_ = primary_->tentative_best_case_;
     }
     else {
         secondary_->handleEvaluatedCase(c);
+        tentative_best_case_ = secondary_->tentative_best_case_;
     }
 
 }
 void HybridOptimizer::iterate() {
-    if (!primary_->IsFinished()) {
+    if (active_component_ == 0 && !primary_->IsFinished()) {
         primary_->iterate();
     }
         // TODO: Initailize secondary if necessary.
     else {
-        if (active_component_ = 0) {
+        if (active_component_ == 0) {
+            std::cout << "Primary component converged. Switching to secondary." << std::endl;
             initializeComponent(1);
             active_component_ = 1;
         }
-        secondary_->iterate();
+        if (case_handler_->QueuedCases().size() == 0) {
+            secondary_->iterate();
+        }
     }
 }
 void HybridOptimizer::initializeComponent(int component=0) {
     assert(component == 0 || component == 1);
+
     Settings::Optimizer *opt_settings;
-    if (component == 0)
+    std::string compstr = "";
+    if (component == 0) {
         opt_settings = primary_settings_;
-    else
+        compstr = "primary";
+    }
+    else {
         opt_settings = secondary_settings_;
+        compstr = "secondary";
+    }
 
     Optimizer *opt;
 
     switch (opt_settings->type()) {
         case Settings::Optimizer::OptimizerType::Compass:
-            std::cout << "Using Compass Search as primary component in hybrid algorithm." << std::endl;
+            std::cout << "Using Compass Search as " + compstr + " component in hybrid algorithm." << std::endl;
             opt = new Optimizers::CompassSearch(
                 opt_settings, tentative_best_case_, variables_, grid_, logger_,
                 case_handler_, constraint_handler_
             );
             break;
         case Settings::Optimizer::OptimizerType::APPS:
-            std::cout << "Using APPS as primary component in hybrid algorithm." << std::endl;
+            std::cout << "Using APPS as " + compstr + " component in hybrid algorithm." << std::endl;
             opt = new Optimizers::APPS(
                 opt_settings, tentative_best_case_, variables_, grid_, logger_,
                 case_handler_, constraint_handler_
             );
             break;
         case Settings::Optimizer::OptimizerType::GeneticAlgorithm:
-            std::cout << "Using Genetic Algorithm as primary component in hybrid algorithm." << std::endl;
+            std::cout << "Using Genetic Algorithm as " + compstr + " component in hybrid algorithm." << std::endl;
             opt = new Optimizers::RGARDD(
                 opt_settings, tentative_best_case_, variables_, grid_, logger_,
                 case_handler_, constraint_handler_
             );
             break;
         case Settings::Optimizer::OptimizerType::EGO:
-            std::cout << "Using EGO as primary component in hybrid algorithm." << std::endl;
+            std::cout << "Using EGO as " + compstr + " component in hybrid algorithm." << std::endl;
             opt = new Optimizers::BayesianOptimization::EGO(
                 opt_settings, tentative_best_case_, variables_, grid_, logger_,
                 case_handler_, constraint_handler_
             );
             break;
         default:
-            throw std::runtime_error("Unable to initialize hybrid optimizer: optimization algorithm set in driver file not recognized.");
+            throw std::runtime_error("Unable to initialize hybrid optimizer: algorithm not recognized.");
     }
     if (component == 0)
         primary_ = opt;
