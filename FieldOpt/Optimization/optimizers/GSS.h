@@ -79,7 +79,7 @@ namespace Optimization {
 
         protected:
             int num_vars_; //!< The number of variables in the problem. This is used in initialization.
-            double step_tol_; //!< Step length convergence tolerance.
+            VectorXd step_tol_; //!< Step length convergence tolerance.
             double contr_fac_; //!< Step length contraction factor.
             double expan_fac_; //!< Step length expansion factor.
             VectorXd step_lengths_; //!< Vector of step lengths.

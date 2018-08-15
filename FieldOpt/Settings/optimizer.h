@@ -60,6 +60,9 @@ class Optimizer
     double contraction_factor; //!< The contraction factor for GSS algorithms.
     double expansion_factor; //!< The expansion factor for GSS algorithms.
     double max_queue_size; //!< Maximum size of evaluation queue.
+    bool auto_step_lengths = false; //!< Automatically determine appropriate step lengths from bound constraints.
+    double auto_step_init_scale = 0.25; //!< Scaling factor for auto-determined initial step lengths (e.g. 0.25*(upper-lower)
+    double auto_step_conv_scale = 0.01; //!< Scaling factor for auto-determined convergence step lengths (e.g. 0.01*(upper-lower)
     QString pattern; //!< The pattern to be used for GSS algorithms.
 
     // GA parameters

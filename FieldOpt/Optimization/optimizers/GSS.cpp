@@ -20,6 +20,7 @@
 #include <iostream>
 #include "GSS.h"
 #include "Utilities/math.hpp"
+#include "gss_patterns.hpp"
 
 namespace Optimization {
     namespace Optimizers {
@@ -46,8 +47,30 @@ namespace Optimization {
             expan_fac_ = settings->parameters().expansion_factor;
             assert(expan_fac_ >= 1.0);
 
-            step_tol_ = settings->parameters().minimum_step_length;
-            assert(step_lengths_.size() == directions_.size());
+            directions_ = GSSPatterns::Compass(num_vars_);
+
+            if (!settings->parameters().auto_step_lengths) {
+                step_lengths_ = Eigen::VectorXd(directions_.size());
+                step_lengths_.fill(settings->parameters().initial_step_length);
+                step_tol_ = Eigen::VectorXd(directions_.size());
+                step_tol_.fill(settings->parameters().minimum_step_length);
+            }
+            else {
+                assert(constraint_handler->HasBoundaryConstraints());
+                auto lower_bound = constraint_handler_->GetLowerBounds(base_case->GetRealVarIdVector());
+                auto upper_bound = constraint_handler_->GetUpperBounds(base_case->GetRealVarIdVector());
+                auto difference = upper_bound - lower_bound;
+                Eigen::VectorXd base = Eigen::VectorXd(directions_.size());
+                for (int i = 0; i < 2; ++i) {
+                    for (int j = 0; j < difference.size(); ++j) {
+                        base(i*num_vars_+j) = difference(j);
+                    }
+                }
+                step_lengths_ = base * settings->parameters().auto_step_init_scale;
+                step_tol_ = base * settings->parameters().auto_step_conv_scale;
+                assert(step_lengths_.size() == directions_.size());
+                assert(step_lengths_.size() == step_tol_.size());
+            }
         }
 
         Optimizer::TerminationCondition GSS::IsFinished()
@@ -125,7 +148,7 @@ namespace Optimization {
 
         bool GSS::is_converged() {
             for (int i = 0; i < step_lengths_.size(); ++i) {
-                if (step_lengths_(i) >= step_tol_)
+                if (step_lengths_(i) >= step_tol_(i))
                     return false;
             }
             return true;

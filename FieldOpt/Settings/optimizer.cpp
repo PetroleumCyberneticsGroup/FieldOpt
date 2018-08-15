@@ -250,6 +250,12 @@ Optimizer::Parameters Optimizer::parseParameters(QJsonObject &json_parameters) {
         // GSS parameters
         if (json_parameters.contains("MaxEvaluations"))
             params.max_evaluations = json_parameters["MaxEvaluations"].toInt();
+        if (json_parameters.contains("AutoStepLengths"))
+            params.auto_step_lengths = json_parameters["AutoStepLengths"].toBool();
+        if (json_parameters.contains("AutoStepInitScale"))
+            params.auto_step_init_scale = json_parameters["AutoStepInitScale"].toDouble();
+        if (json_parameters.contains("AutoStepConvScale"))
+            params.auto_step_conv_scale = json_parameters["AutoStepConvScale"].toDouble();
         if (json_parameters.contains("InitialStepLength"))
             params.initial_step_length = json_parameters["InitialStepLength"].toDouble();
         if (json_parameters.contains("MinimumStepLength"))
