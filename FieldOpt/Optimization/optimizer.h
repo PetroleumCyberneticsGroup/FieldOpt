@@ -170,6 +170,8 @@ class Optimizer : public Loggable
   ::Settings::Optimizer::OptimizerMode mode_; //!< The optimization mode, i.e. whether the objective function should be maximized or minimized.
   bool is_async_; //!< Inidcates whether or not the optimizer is asynchronous. Defaults to false.
   Logger *logger_;
+  bool enable_logging_; //!< Whether logging should be performed. This should be set to false when the optimizer is a component in HybridOptimizer.
+  void DisableLogging(); //!< Disable logging for this optimizer. This is called by HybridOptimizer.
   bool penalize_; //!< Switch for whether or not to use penalty function to account for constraints.
 
   Normalizer normalizer_ofv_; //!< Normalizer for objective function values.

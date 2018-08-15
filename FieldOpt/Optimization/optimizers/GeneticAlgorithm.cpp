@@ -85,8 +85,10 @@ Optimizer::TerminationCondition GeneticAlgorithm::IsFinished() {
 
     if (tc != NOT_FINISHED) {
         population_ = sortPopulation(population_);
-        logger_->AddEntry(this);
-        logger_->AddEntry(new Summary(this, tc));
+        if (enable_logging_) {
+            logger_->AddEntry(this);
+            logger_->AddEntry(new Summary(this, tc));
+        }
     }
     return tc;
 }

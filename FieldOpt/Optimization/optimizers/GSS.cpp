@@ -61,8 +61,10 @@ namespace Optimization {
                 tc = MINIMUM_STEP_LENGTH_REACHED;
 
             if (tc != NOT_FINISHED) {
-                logger_->AddEntry(this);
-                logger_->AddEntry(new Summary(this, tc));
+                if (enable_logging_) {
+                    logger_->AddEntry(this);
+                    logger_->AddEntry(new Summary(this, tc));
+                }
             }
             return tc;
         }

@@ -37,10 +37,14 @@ RGARDD::RGARDD(Settings::Optimizer *settings,
     else discard_parameter_ = settings->parameters().discard_parameter;
     stagnation_limit_ = settings->parameters().stagnation_limit;
     mating_pool_ = population_;
-    logger_->AddEntry(new ConfigurationSummary(this));
+    if (enable_logging_) {
+        logger_->AddEntry(new ConfigurationSummary(this));
+    }
 }
 void RGARDD::iterate() {
-    logger_->AddEntry(this);
+    if (enable_logging_) {
+        logger_->AddEntry(this);
+    }
     if (iteration_ == 0 && penalize_) { // If we're done evaluating the initial population ...
         penalizeInitialGeneration();
     }

@@ -58,6 +58,7 @@ Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
     is_async_ = false;
     start_time_ = QDateTime::currentDateTime();
     logger_ = logger;
+    enable_logging_ = true;
     verbosity_level_ = 0;
     penalize_ = settings->objective().use_penalty_function;
 }
@@ -84,7 +85,9 @@ void Optimizer::SubmitEvaluatedCase(Case *c)
     case_handler_->SetCaseState(c->id(), c->state, c->GetWICTime(), c->GetSimTime());
     case_handler_->SetCaseEvaluated(c->id());
     handleEvaluatedCase(case_handler_->GetCase(c->id()));
-    logger_->AddEntry(case_handler_->GetCase(c->id()));
+    if (enable_logging_) {
+        logger_->AddEntry(case_handler_->GetCase(c->id()));
+    }
     evaluated_cases_++;
 }
 
@@ -245,6 +248,10 @@ double Optimizer::PenalizedOFV(Case *c) {
     else {
         return normalizer_ofv_.denormalize(norm_pen_ovf);
     }
+}
+
+void Optimizer::DisableLogging() {
+    enable_logging_ = false;
 }
 }
 
