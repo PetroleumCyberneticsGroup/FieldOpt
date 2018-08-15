@@ -80,7 +80,7 @@ Optimization::Optimizer::TerminationCondition EGO::IsFinished() {
     TerminationCondition tc = NOT_FINISHED;
     if (case_handler_->CasesBeingEvaluated().size() > 0)
         return tc;
-    if (case_handler_->NumberSimulated() > max_evaluations_)
+    if (evaluated_cases_ > max_evaluations_)
         tc = MAX_EVALS_REACHED;
     if (tc != NOT_FINISHED) {
         map<string, string> ext_state;

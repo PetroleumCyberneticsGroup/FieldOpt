@@ -55,7 +55,7 @@ namespace Optimization {
             TerminationCondition tc = NOT_FINISHED;
             if (case_handler_->CasesBeingEvaluated().size() > 0)
                 return tc;
-            if (case_handler_->EvaluatedCases().size() >= max_evaluations_)
+            if (evaluated_cases_ >= max_evaluations_)
                 tc = MAX_EVALS_REACHED;
             else if (is_converged())
                 tc = MINIMUM_STEP_LENGTH_REACHED;

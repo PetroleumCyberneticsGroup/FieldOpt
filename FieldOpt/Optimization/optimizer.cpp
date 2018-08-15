@@ -53,6 +53,7 @@ Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
         constraint_handler_ = constraint_handler;
     }
     iteration_ = 0;
+    evaluated_cases_ = 0;
     mode_ = settings->mode();
     is_async_ = false;
     start_time_ = QDateTime::currentDateTime();
@@ -84,6 +85,7 @@ void Optimizer::SubmitEvaluatedCase(Case *c)
     case_handler_->SetCaseEvaluated(c->id());
     handleEvaluatedCase(case_handler_->GetCase(c->id()));
     logger_->AddEntry(case_handler_->GetCase(c->id()));
+    evaluated_cases_++;
 }
 
 Case *Optimizer::GetTentativeBestCase() const {

@@ -80,11 +80,10 @@ Optimizer::TerminationCondition GeneticAlgorithm::IsFinished() {
         return tc;
     if (iteration_ >= max_generations_)
         tc = MAX_ITERATIONS_REACHED;
-    else if (case_handler_->NumberSimulated() > max_evaluations_)
+    else if (evaluated_cases_ > max_evaluations_)
         tc = MAX_EVALS_REACHED;
 
     if (tc != NOT_FINISHED) {
-        cout << "Generations at termination: " << iteration_ << endl;
         population_ = sortPopulation(population_);
         logger_->AddEntry(this);
         logger_->AddEntry(new Summary(this, tc));
