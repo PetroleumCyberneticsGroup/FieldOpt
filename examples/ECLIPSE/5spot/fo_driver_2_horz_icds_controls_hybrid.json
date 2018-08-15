@@ -12,7 +12,7 @@
                 "Parameters": {
                     "MaxEvaluations": 2000,
                     "PopulationSize": 40,
-                    "MaxGenerations": 10,
+                    "MaxGenerations": 1,
                     "CrossoverProbability": 0.1,
                     "DecayRate": 4.0,
                     "MutationStrength": 0.25
@@ -22,8 +22,9 @@
                 "Type": "APPS",
                 "Parameters": {
                     "MaxEvaluations": 500,
-                    "InitialStepLength": 32.0,
-                    "MinimumStepLength": 1.0
+                    "AutoStepLengths": true,
+                    "AutoStepInitScale": 0.1,
+                    "AutoStepConvScale": 0.01
                 }
             }
         ],
