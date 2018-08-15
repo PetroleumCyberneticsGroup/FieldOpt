@@ -58,6 +58,7 @@ namespace Optimization {
         }
 
         void APPS::handleEvaluatedCase(Case *c) {
+            evaluated_cases_++;
             if (isImprovement(c)) successful_iteration(c);
             else unsuccessful_iteration(c);
         }

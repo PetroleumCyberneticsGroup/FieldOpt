@@ -77,6 +77,7 @@ Case *Optimizer::GetCaseForEvaluation()
 
 void Optimizer::SubmitEvaluatedCase(Case *c)
 {
+    evaluated_cases_++;
     if (penalize_ && iteration_ > 0) {
         double penalized_ofv = PenalizedOFV(c);
         c->set_objective_function_value(penalized_ofv);
@@ -88,7 +89,6 @@ void Optimizer::SubmitEvaluatedCase(Case *c)
     if (enable_logging_) {
         logger_->AddEntry(case_handler_->GetCase(c->id()));
     }
-    evaluated_cases_++;
 }
 
 Case *Optimizer::GetTentativeBestCase() const {
