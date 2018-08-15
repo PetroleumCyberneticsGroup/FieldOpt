@@ -21,9 +21,6 @@
 #include <iostream>
 
 namespace Simulation {
-namespace SimulatorInterfaces {
-namespace DriverFileWriters {
-namespace DriverParts {
 namespace ECLDriverParts {
 
 Compdat::Compdat(QList<Model::Wells::Well *> *wells)
@@ -116,8 +113,5 @@ QStringList Compdat::createBlockEntry(QString well_name,
     return block_entry;
 }
 
-}
-}
-}
 }
 }

@@ -30,6 +30,8 @@ namespace Model {
 namespace Wells {
 namespace Wellbore {
 
+using namespace Model::Properties;
+
 /*!
  * \brief The WellSpline class Generates the well blocks making up the trajectory from a set of spline points.
  * It uses the WellIndexCalculation library to do this.
@@ -48,18 +50,32 @@ class WellSpline
   QList<WellBlock *> *GetWellBlocks();
   int GetTimeSpentInWIC() const { return seconds_spent_in_compute_wellblocks_; }
 
+  struct SplinePoint {
+    ContinousProperty *x;
+    ContinousProperty *y;
+    ContinousProperty *z;
+    Eigen::Vector3d ToEigenVector() const;
+  };
+
+  bool HasGridChanged() const;
+  bool HasSplineChanged() const;
+  
+  /*!
+   * Get spline points (for debugging purposes).
+   */
+  QList<SplinePoint *> GetSplinePoints() const { return spline_points_; }
+
+
  private:
   Reservoir::Grid::Grid *grid_;
   Settings::Model::Well well_settings_;
   int seconds_spent_in_compute_wellblocks_; //!< Number of seconds spent in the ComputeWellBlocks() method.
+  bool is_variable_;
 
+  QList<SplinePoint *> spline_points_;
 
-  Model::Properties::ContinousProperty *heel_x_;
-  Model::Properties::ContinousProperty *heel_y_;
-  Model::Properties::ContinousProperty *heel_z_;
-  Model::Properties::ContinousProperty *toe_x_;
-  Model::Properties::ContinousProperty *toe_y_;
-  Model::Properties::ContinousProperty *toe_z_;
+  std::string last_computed_grid_; //!< Contains the path to the last grid used by WIC.
+  std::vector<Eigen::Vector3d> last_computed_spline_; //!< Contains the last spline points used by WIC. Used to determine if the spline has changed.
 
   /*!
    * \brief getWellBlock Convert the BlockData returned by the WIC to a WellBlock with a Perforation.
@@ -69,6 +85,31 @@ class WellSpline
    * \return
    */
   WellBlock *getWellBlock(Reservoir::WellIndexCalculation::IntersectedCell block_data);
+
+  std::vector<Eigen::Vector3d> create_spline_point_vector() const;
+
+  void spline_points_from_import(Settings::Model::Well &well_settings);
+
+
+  /*!
+   * List containing imported well blocks. This will be used if
+   *    1. A trajectory has been imported for the well, _and_
+   *    2. The well trajectory is not variable.
+   *
+   * This list will converted to a list of IntersectedCell objects
+   * to be passed to the well index calculator, which
+   * will _only_ calculate the well indices. This saves the time
+   * consuming step of re-computing the intersection point, which
+   * is a particularly big problem when working with multiple
+   * realizations.
+   *
+   * Note that the conversion to IntersectedCell objects will only
+   * happen when GetWellBlocks is called. This is to account for the
+   * fact that the grid_ object may change throughout the run.
+   */
+  std::vector<Settings::TrajectoryImporter::ImportedWellBlock> imported_wellblocks_;
+
+  std::vector<Reservoir::WellIndexCalculation::IntersectedCell> convertImportedWellblocksToIntersectedCells();
 };
 
 }

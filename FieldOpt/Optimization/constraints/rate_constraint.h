@@ -28,6 +28,9 @@ class RateConstraint : public Constraint {
  public:
   RateConstraint(Settings::Optimizer::Constraint settings,
                  Model::Properties::VariablePropertyContainer *variables);
+  bool IsBoundConstraint() const override;
+  Eigen::VectorXd GetLowerBounds(QList<QUuid> id_vector) const override;
+  Eigen::VectorXd GetUpperBounds(QList<QUuid> id_vector) const override;
 
   string name() override { return "RateConstraint"; }
 

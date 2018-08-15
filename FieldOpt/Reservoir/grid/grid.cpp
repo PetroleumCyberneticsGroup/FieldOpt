@@ -31,6 +31,9 @@ Grid::Grid(Grid::GridSourceType type, std::string file_path)
 Grid::~Grid()
 {
 }
+std::string Grid::GetGridFilePath() const {
+    return file_path_;
+}
 
 }
 }

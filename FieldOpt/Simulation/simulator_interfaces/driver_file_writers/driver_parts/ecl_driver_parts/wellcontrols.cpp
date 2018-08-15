@@ -21,9 +21,6 @@
 #include "wellcontrols.h"
 
 namespace Simulation {
-namespace SimulatorInterfaces {
-namespace DriverFileWriters {
-namespace DriverParts {
 namespace ECLDriverParts {
 
 WellControls::WellControls(const QList<Model::Wells::Well *> *wells,
@@ -243,8 +240,5 @@ QString WellControls::createInjectorEntry(const WellControls::WellSetting &setti
 
 
 
-}
-}
-}
 }
 }

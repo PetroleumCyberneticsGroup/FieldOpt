@@ -48,6 +48,8 @@ add_library(optimization
         optimizers/bayesian_optimization/EGO.cpp
         optimizers/bayesian_optimization/af_optimizers/AFCompassSearch.cpp
 		constraints/pseudo_cont_boundary_2d.cpp
+		constraints/icv_constraint.cpp
+        constraints/packer_constraint.cpp
 		${EXPERIMENTAL_CONSTRAINTS_SRC})
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 

@@ -9,7 +9,8 @@ add_library(settings
         settings.cpp
         deck_parser.cpp
         ensemble.cpp
-        paths.cpp)
+        paths.cpp
+        trajectory_importer.cpp)
 add_library(fieldopt::settings ALIAS ${PROJECT_NAME})
 
 target_link_libraries(settings
@@ -31,7 +32,9 @@ if (BUILD_TESTING)
             tests/test_settings_optimizer.cpp
             tests/test_settings_simulator.cpp
             tests/test_deck_parser.cpp
-            tests/test_schedule_import.cpp)
+            tests/test_schedule_import.cpp
+            tests/test_multisegment_compartmentalization.cpp
+            tests/test_trajectory_importer.cpp)
     target_link_libraries(test_settings
             fieldopt::settings
             ${Boost_LIBRARIES}

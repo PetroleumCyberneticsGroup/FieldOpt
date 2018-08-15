@@ -73,7 +73,7 @@ class AbstractRunner
   Optimization::Case *base_case_;
   Optimization::Optimizer *optimizer_;
   Optimization::Objective::Objective *objective_function_;
-  Simulation::SimulatorInterfaces::Simulator *simulator_;
+  Simulation::Simulator *simulator_;
   Logger *logger_;
   std::vector<int> simulation_times_;
   bool is_ensemble_run_;

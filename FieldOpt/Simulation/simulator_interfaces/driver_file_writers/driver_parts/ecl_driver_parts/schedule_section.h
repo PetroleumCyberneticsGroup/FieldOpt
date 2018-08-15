@@ -31,12 +31,12 @@
 #include "welspecs.h"
 #include "compdat.h"
 #include "wellcontrols.h"
+#include "welsegs.h"
+#include "compsegs.h"
+#include "wsegvalv.h"
 #include <QStringList>
 
 namespace Simulation {
-namespace SimulatorInterfaces {
-namespace DriverFileWriters {
-namespace DriverParts {
 namespace ECLDriverParts {
 
 class Schedule : public ECLDriverPart
@@ -48,12 +48,21 @@ public:
 private:
 
   struct ScheduleTimeEntry {
-    ScheduleTimeEntry(ECLDriverParts::Welspecs welspecs,
-                      ECLDriverParts::Compdat compdat,
-                      ECLDriverParts::WellControls well_controls);
+    ScheduleTimeEntry(Welspecs welspecs,
+                      Compdat compdat,
+                      WellControls well_controls,
+                      Welsegs welsegs,
+                      Compsegs compsegs,
+                      Wsegvalv wsegvalv
+    );
     Welspecs welspecs;
     Compdat compdat;
     WellControls well_controls;
+
+    // Exclusively for segmented wells
+    Welsegs welsegs;
+    Compsegs compsegs;
+    Wsegvalv wsegvalv;
   };
 
   /*!
@@ -64,9 +73,6 @@ private:
   QString schedule_;
 };
 
-}
-}
-}
 }
 }
 

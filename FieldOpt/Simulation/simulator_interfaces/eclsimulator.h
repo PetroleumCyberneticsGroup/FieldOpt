@@ -25,7 +25,6 @@
 #include <QStringList>
 
 namespace Simulation {
-namespace SimulatorInterfaces {
 
 
 /*!
@@ -72,6 +71,5 @@ class ECLSimulator : public Simulator
   void UpdateFilePaths() override;
 };
 
-}
 }
 #endif // ECLSIMULATOR_H

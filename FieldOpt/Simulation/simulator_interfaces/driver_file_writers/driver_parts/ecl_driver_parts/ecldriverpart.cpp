@@ -26,9 +26,6 @@
 #include "ecldriverpart.h"
 
 namespace Simulation {
-namespace SimulatorInterfaces {
-namespace DriverFileWriters {
-namespace DriverParts {
 namespace ECLDriverParts {
 
 void ECLDriverPart::initializeBaseEntryLine(int n)
@@ -47,8 +44,5 @@ QStringList ECLDriverPart::GetBaseEntryLine(const int n) const {
     return base_entry_line;
 }
 
-}
-}
-}
 }
 }

@@ -31,6 +31,8 @@
 #include "Reservoir/grid/eclgrid.h"
 
 #include <QList>
+#include "compartment.h"
+#include "segment.h"
 
 namespace Model {
 namespace Wells {
@@ -71,7 +73,18 @@ class Well
   void Update();
   int GetTimeSpentInWIC() const { return trajectory_->GetTimeSpentInWic(); }
 
- private:
+  // Methods for segmented wells
+  virtual bool IsSegmented() const { return is_segmented_; }
+  std::vector<Compartment> GetCompartments() const;
+  std::vector<Packer *> GetPackers() const;
+  std::vector<ICD *> GetICDs() const;
+  std::vector<Segment> GetSegments();
+  std::vector<Segment> GetTubingSegments();
+  std::vector<Segment> GetICDSegments();
+  std::vector<Segment> GetAnnulusSegments();
+
+ protected:
+  Settings::Model::Well well_settings_;
   QString name_;
   ::Settings::Model::WellType type_;
   QString group_;
@@ -81,6 +94,22 @@ class Well
 
   Heel heel_;
   QList<Control *> *controls_;
+
+  // Fields for segmented wells
+  bool is_segmented_;
+  void initializeSegmentedWell(Properties::VariablePropertyContainer *variable_container);
+  double tub_diam_;            //!< Tubing (inner) diameter.
+  double ann_diam_;            //!< Annular diameter.
+  double tub_cross_sect_area_; //!< Tubing cross section area.
+  double ann_cross_sect_area_; //!< Annular cross section area.
+  double tub_roughness_;       //!< Roughness for tubing segments.
+  double ann_roughness_;       //!< Roughness for annulus segments.
+  std::vector<Compartment> compartments_;
+
+  // Methods for segmented wells
+  std::vector<int> createTubingSegments(std::vector<Segment> &segments) const;
+  std::vector<int> createICDSegments(std::vector<Segment> &segments, std::vector<int> &tubing_indexes) const;
+  void createAnnulusSegments(std::vector<Segment> &segments, const std::vector<int> &icd_indexes);
 };
 
 }

@@ -24,9 +24,6 @@
 #include "Model/wells/well.h"
 
 namespace Simulation {
-namespace SimulatorInterfaces {
-namespace DriverFileWriters {
-namespace DriverParts {
 namespace ECLDriverParts {
 
 /*!
@@ -60,9 +57,6 @@ class Compdat : public ECLDriverPart
   QStringList createBlockEntry(QString well_name, double wellbore_radius, Model::Wells::Wellbore::WellBlock *well_block);
 };
 
-}
-}
-}
 }
 }
 #endif // COMPDAT_H

@@ -44,6 +44,7 @@ namespace Optimization {
         }
 
         void APPS::iterate() {
+            logger_->AddEntry(this);
             if (inactive().size() > 0) {
                 case_handler_->AddNewCases(generate_trial_points(inactive()));
                 set_active(inactive());

@@ -24,7 +24,6 @@
 #include "Model/model.h"
 
 namespace Simulation {
-namespace SimulatorInterfaces {
 class FlowSimulator : public Simulator {
  public:
   FlowSimulator(Settings::Settings *settings, Model::Model *model);
@@ -37,13 +36,12 @@ class FlowSimulator : public Simulator {
   void UpdateFilePaths() override;
 
  private:
-  DriverFileWriters::FlowDriverFileWriter *driver_file_writer_;
+  FlowDriverFileWriter *driver_file_writer_;
   QStringList script_args_;
 
   void verifyOriginalDriverFileDirectory();
   void copyDriverFiles();
 };
-}
 }
 
 

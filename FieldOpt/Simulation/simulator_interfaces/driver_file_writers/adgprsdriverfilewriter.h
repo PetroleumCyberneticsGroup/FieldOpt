@@ -5,11 +5,11 @@
 #include "Settings/simulator.h"
 #include "Model/model.h"
 
-namespace Simulation { namespace SimulatorInterfaces {
+namespace Simulation {
     class AdgprsSimulator;
-}}
+}
 
-namespace Simulation { namespace SimulatorInterfaces { namespace DriverFileWriters {
+namespace Simulation {
 
 /*!
  * \brief The AdgprsDriverFileWriter class is responsible for writing AD-GPRS driver files representing
@@ -19,7 +19,7 @@ namespace Simulation { namespace SimulatorInterfaces { namespace DriverFileWrite
 class AdgprsDriverFileWriter
 {
 private:
-    friend class ::Simulation::SimulatorInterfaces::AdgprsSimulator;
+    friend class ::Simulation::AdgprsSimulator;
     AdgprsDriverFileWriter(::Settings::Settings *settings, Model::Model *model);
     void WriteDriverFile(QString output_dir);
 
@@ -27,6 +27,6 @@ private:
     Settings::Settings *settings_;
 };
 
-}}}
+}
 
 #endif // ADGPRSDRIVERFILEWRITER_H

@@ -12,11 +12,6 @@ add_library(simulation
         simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/ecldriverpart.cpp
         simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/compdat.cpp
         simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/wellcontrols.cpp
-        simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/grid_section.cpp
-        simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/runspec_section.cpp
-        simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/props_section.cpp
-        simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/solution_section.cpp
-        simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/summary_section.cpp
         simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/schedule_section.cpp
         results/results.h
         results/results_exceptions.h
@@ -26,7 +21,11 @@ add_library(simulation
         simulator_interfaces/driver_file_writers/driver_parts/adgprs_driver_parts/wellstre.cpp
         simulator_interfaces/driver_file_writers/driver_parts/adgprs_driver_parts/adgprs_wellcontrols.cpp
         simulator_interfaces/driver_file_writers/flowdriverfilewriter.cpp
-        simulator_interfaces/flowsimulator.cpp)
+        simulator_interfaces/flowsimulator.cpp
+        simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/welsegs.cpp
+        simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/compsegs.cpp
+        simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/wsegvalv.cpp
+)
 add_library(fieldopt::simulation ALIAS ${PROJECT_NAME})
 
 target_link_libraries(simulation
@@ -45,12 +44,7 @@ if (BUILD_TESTING)
             tests/simulator_interfaces/test_eclsimulator.cpp
             tests/simulator_interfaces/driver_file_writers/adgprs_driver_file_writer.cpp
             tests/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_compdat.cpp
-            tests/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_grid_section.cpp
-            tests/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_props_section.cpp
-            tests/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_runspec_section.cpp
             tests/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_schedule_section.cpp
-            tests/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_solution_section.cpp
-            tests/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_summary_section.cpp
             tests/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_wellcontrols.cpp
             tests/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_welspecs.cpp
             tests/test_resource_results.h

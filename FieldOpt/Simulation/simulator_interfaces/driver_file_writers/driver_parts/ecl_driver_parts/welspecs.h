@@ -24,9 +24,6 @@
 #include <QList>
 
 namespace Simulation {
-namespace SimulatorInterfaces {
-namespace DriverFileWriters {
-namespace DriverParts {
 namespace ECLDriverParts {
 
 /*!
@@ -62,9 +59,6 @@ class Welspecs : public ECLDriverPart
   QStringList createWellEntry(::Model::Wells::Well *well);
 };
 
-}
-}
-}
 }
 }
 

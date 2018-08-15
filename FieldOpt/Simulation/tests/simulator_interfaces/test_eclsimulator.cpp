@@ -5,7 +5,7 @@
 #include "Utilities/stringhelpers.hpp"
 
 
-using namespace Simulation::SimulatorInterfaces;
+using namespace Simulation;
 using namespace TestResources;
 namespace {
 

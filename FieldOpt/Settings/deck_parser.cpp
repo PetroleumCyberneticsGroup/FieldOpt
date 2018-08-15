@@ -209,7 +209,7 @@ QList<Model::Well::WellBlock> DeckParser::opmToWellBlocks(const Opm::Well *opm_w
             comp.transmissibility_factor = Opm::unit::convert::to(trans, Opm::Metric::Transmissibility);
         }
         else {
-            comp.transmissibility_factor = -1;
+            continue; // Skip block if transmissibility factor not present
         }
         Model::Well::WellBlock wb;
         comp.name = "Transmissibility#" + QString::fromStdString(current_well_name_) + "#" + QString::number(i);
@@ -224,18 +224,10 @@ QList<Model::Well::WellBlock> DeckParser::opmToWellBlocks(const Opm::Well *opm_w
     }
 
 
-    if (well_blocks[0].i <= 0 || abs(well_blocks[0].i) > 10000) { // This tends to happen for some weird reason. Default to well head position.
-        if (abs(headI) < 10000 && headI > 0)
-            well_blocks[0].i = std::max(headI + 1, 1);
-        else well_blocks[0].i = std::max(well_blocks[1].i - 1, 1);
-    }
-    if (well_blocks[0].j <= 0 || abs(well_blocks[0].j) > 10000) {
-        if (abs(headJ) < 10000 && headJ > 0)
-            well_blocks[0].j = std::max(headJ + 1, 1);
-        else well_blocks[0].j = std::max(well_blocks[1].j - 1, 1);
-    }
-    if (well_blocks[0].k <= 0 || abs(well_blocks[0].k) > 10000) {
-        well_blocks[0].k = std::max(well_blocks[1].k - 1, 1);
+    if (well_blocks[0].i <= 0 || abs(well_blocks[0].i) > 10000) { // This tends to happen for some weird reason. Default to same as next block
+        std::cout << "WARNING: Invalid i, j or k index detected for first well block for well. Deleting it. ("
+                  << well_blocks[0].i << ", " << well_blocks[0].j << ", " << well_blocks[0].k << ")" << std::endl;
+        well_blocks.erase(well_blocks.begin());
     }
 
     return well_blocks;

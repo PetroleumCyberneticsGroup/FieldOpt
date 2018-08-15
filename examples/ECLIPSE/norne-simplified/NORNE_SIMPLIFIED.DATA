@@ -54,6 +54,9 @@ TRACERS
 WELLDIMS
  130  36  15  84 /
 
+WSEGDIMS
+    50  400  50  5 /
+
 TABDIMS
 --ntsfun ntpvt nssfun nppvt ntfip nrpvt ntendp
    2     2     33     60   16    60 /

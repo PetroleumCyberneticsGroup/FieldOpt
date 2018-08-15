@@ -31,6 +31,7 @@
 #include "settings_exceptions.h"
 #include "Utilities/filehandling.hpp"
 #include "deck_parser.h"
+#include "trajectory_importer.h"
 
 namespace Settings {
 
@@ -59,21 +60,99 @@ Model::Model(QJsonObject json_model, Paths &paths)
     // Wells
     wells_ = QList<Well>();
     if (json_model.contains("Import")) {
+        auto json_import = json_model["Import"].toObject();
         if (!paths.IsSet(Paths::SIM_DRIVER_FILE)) {
             throw std::runtime_error("SchedulePath must be specified (relative to DriverPath) to use the Import feature.");
         }
         std::cout << "Parsing schedule ..." << std::endl;
         deck_parser_ = new DeckParser(paths.GetPath(Paths::SIM_DRIVER_FILE));
 
-        if (!json_model["Import"].toObject()["Keywords"].toArray().contains(QJsonValue("AllWells"))) {
+        if (!json_import["Keywords"].toArray().contains(QJsonValue("AllWells"))) {
             throw std::runtime_error("Unable to import simulator schedule. Import Keywords array does not contain"
                                          "any recognized keywords.");
         }
         std::cout << "Importing wells ..." << std::endl;
         wells_.append(deck_parser_->GetWellData());
         std::cout << "Done importing wells." << std::endl;
-        setImportedWellDefaults(json_model["Import"].toObject());
+        setImportedWellDefaults(json_import);
         parseImportedWellOverrides(json_model["Wells"].toArray());
+
+        // Spline conversion
+        if (json_import.contains("SplineConversion")) {
+            auto json_sconv = json_import["SplineConversion"].toObject();
+            if (!json_sconv.contains("Wells")) {
+                throw std::runtime_error("A list of wells must be specified when the SplineConversion is used.");
+            }
+            for (auto jwell : json_sconv["Wells"].toArray()) {
+                QString wname = jwell.toString();
+                int widx = -1;
+                for (int i = 0; i < wells_.size(); ++i) {
+                    if (QString::compare(wells_[i].name, wname) == 0) {
+                        widx = i;
+                        break;
+                    }
+                }
+                if (widx == -1) {
+                    throw std::runtime_error("Well " + wname.toStdString() +
+                        " defined in SplineConversion well list not found.");
+                }
+                wells_[widx].convert_well_blocks_to_spline = true;
+                wells_[widx].definition_type = WellDefinitionType::WellSpline;
+                if (json_sconv.contains("SplinePoints") && json_sconv["SplinePoints"].toInt() >= 2) {
+                    wells_[widx].n_spline_points = json_sconv["SplinePoints"].toInt();
+                    std::cout << "Setting number of spline points for " << wname.toStdString()
+                              << " to " << wells_[widx].n_spline_points << " for conversion." << std::endl;
+                }
+                else {
+                    std::cout << "Defaulting number of spline points for conversion to 2." << std::endl;
+                }
+            }
+        }
+
+        // Trajectory import
+        if (json_import.contains("ImportTrajectories")) {
+            auto json_import_well_names = json_import["ImportTrajectories"].toArray();
+            std::vector<std::string> import_well_names;
+            for (auto jwn : json_import_well_names) {
+                import_well_names.push_back(jwn.toString().toStdString());
+            }
+            std::string trajectories_path;
+            if (!paths.IsSet(Paths::TRAJ_DIR)) {
+                trajectories_path = paths.GetPath(Paths::SIM_DRIVER_DIR) + "/trajectories";
+                assert(DirectoryExists(trajectories_path));
+            }
+            else {
+                trajectories_path = paths.GetPath(Paths::TRAJ_DIR);
+            }
+            auto traj_importer = TrajectoryImporter(trajectories_path, import_well_names);
+
+            // set list in well objects
+            for (auto wname : import_well_names) {
+                for (int i = 0; i < wells_.size(); ++i) {
+                    if (QString::compare(wells_[i].name, QString::fromStdString(wname)) == 0) {
+                        wells_[i].imported_wellblocks_ = traj_importer.GetImportedTrajectory(wname);
+                        wells_[i].definition_type = WellDefinitionType::WellSpline;
+                        wells_[i].convert_well_blocks_to_spline = false;
+                    }
+                }
+            }
+        }
+
+        // Segmentation
+        if (json_model.contains("Wells") && json_model["Wells"].isArray()) {
+            for (auto jwell : json_model["Wells"].toArray()) { // Go through list of wells in json file
+                if (jwell.toObject().contains("Segmentation")) { // Check if the well has the Segmentation keyword
+                    for (int j = 0; j < wells_.size(); ++j) { // Loop through parsed wells
+                        if (QString::compare(wells_[j].name, jwell.toObject()["Name"].toString()) == 0) { // Check if well names match
+                            wells_[j].use_segmented_model = true;
+                            parseSegmentation(jwell.toObject()["Segmentation"].toObject(), wells_[j]);
+                            break;
+                        }
+                    }
+                }
+            }
+
+        }
     }
     else {
         try {
@@ -179,8 +258,29 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
         if (json_toe.contains("IsVariable") && json_toe["IsVariable"].toBool())
             well.spline_toe.is_variable = true;
         else well.spline_toe.is_variable = false;
+        if ((well.spline_heel.is_variable && well.spline_toe.is_variable)
+            || (json_points.contains("IsVariable") && json_points["IsVariable"].toBool() == true)) {
+            well.is_variable_spline = true;
+        }
         well.spline_heel.name = "SplinePoint#" + well.name + "#heel";
         well.spline_toe.name = "SplinePoint#" + well.name + "#toe";
+
+        well.spline_points.push_back(well.spline_heel);
+        if (json_points.contains("AdditionalPoints")) {
+            int interp_points = json_points["AdditionalPoints"].toInt();
+            for (int p = 0; p < interp_points; ++p) {
+                Well::SplinePoint point;
+                point.x = well.spline_heel.x + (p+1) * (well.spline_toe.x - well.spline_heel.x) / (interp_points+1);
+                point.y = well.spline_heel.y + (p+1) * (well.spline_toe.y - well.spline_heel.y) / (interp_points+1);
+                point.z = well.spline_heel.z + (p+1) * (well.spline_toe.z - well.spline_heel.z) / (interp_points+1);
+                point.name = "SplinePoint#" + well.name + "#P" + QString::number(p+1);
+                if (well.is_variable_spline) {
+                    point.is_variable = true;
+                }
+                well.spline_points.push_back(point);
+            }
+        }
+        well.spline_points.push_back(well.spline_toe);
     }
     else if (QString::compare(definition_type, "PseudoContVertical2D") == 0) {
         QJsonObject json_position = json_well["Position"].toObject();
@@ -263,6 +363,12 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
         well.preferred_phase = PreferredPhase::Gas;
     else if (QString::compare("Liquid", json_well["PreferredPhase"].toString()) == 0)
         well.preferred_phase = PreferredPhase::Liquid;
+
+    // Segmentation
+    if (json_well.contains("Segmentation")) {
+        well.use_segmented_model = true;
+        parseSegmentation(json_well["Segmentation"].toObject(), well);
+    }
 
     return well;
 }
@@ -389,6 +495,88 @@ int Model::getClosestControlTime(int deck_time) {
     return control_times_[idx_of_min_element];
 }
 
+void Model::parseSegmentation(QJsonObject json_seg, Well &well) {
+    parseSegmentTubing(json_seg, well);
+    parseSegmentAnnulus(json_seg, well);
+    parseSegmentCompartments(json_seg, well);
+}
+void Model::parseSegmentTubing(const QJsonObject &json_seg, Model::Well &well) const {
+    if (json_seg.contains("Tubing")) {
+        try {
+            well.seg_tubing.diameter = json_seg["Tubing"].toObject()["Diameter"].toDouble();
+            well.seg_tubing.roughness = json_seg["Tubing"].toObject()["Roughness"].toDouble();
+        }
+        catch ( ... ) {
+            throw std::runtime_error("For Tubing, both Diameter and Roughness must be defined.");
+        }
+    }
+    else {
+        std::cout << "Tubing keyword not found in Segmentation. "
+            "Defaulting Diameter to 0.1 and Roughness to 1.52E-5" << std::endl;
+        well.seg_tubing.diameter = 0.1;
+        well.seg_tubing.roughness = 1.52E-5;
+    }
+    well.seg_tubing.cross_sect_area = M_PI / 4.0 * well.seg_tubing.diameter * well.seg_tubing.diameter;
+}
+
+void Model::parseSegmentAnnulus(const QJsonObject &json_seg, Model::Well &well) const {
+    if (json_seg.contains("Annulus")) {
+        try {
+            well.seg_annulus.diameter = json_seg["Annulus"].toObject()["Diameter"].toDouble();
+            well.seg_annulus.roughness = json_seg["Annulus"].toObject()["Roughness"].toDouble();
+            well.seg_annulus.cross_sect_area = json_seg["Annulus"].toObject()["CrossSectionArea"].toDouble();
+        }
+        catch ( ... ) {
+            throw std::runtime_error("For Annulus, both Diameter, CrossSectionArea and Roughness must be defined.");
+        }
+    }
+    else {
+        std::cout << "Annulus keyword not found in Segmentation. "
+            "Defaulting Diameter to 0.04, Ac to 8.17E-3 and Roughness to 1.52E-5" << std::endl;
+        well.seg_annulus.diameter = 0.04;
+        well.seg_annulus.roughness = 1.52E-5;
+        well.seg_annulus.cross_sect_area = 8.17E-3;
+    }
+}
+
+void Model::parseSegmentCompartments(const QJsonObject &json_seg, Model::Well &well) const {
+    if (json_seg.contains("Compartments")) {
+        auto json_compts = json_seg["Compartments"].toObject();
+        try {
+            well.seg_n_compartments = json_compts["Count"].toInt();
+
+            if (json_compts.contains("VariablePackers") && json_compts["VariablePackers"].toBool() == true) {
+                well.seg_compartment_params.variable_placement = true;
+            }
+            if (json_compts.contains("VariableICDs") && json_compts["VariableICDs"].toBool() == true) {
+                well.seg_compartment_params.variable_strength = true;
+            }
+            if (json_compts.contains("ICDType")) {
+                well.seg_compartment_params.type = WellCompletionType::ICV;
+            }
+            if (json_compts.contains("ICDValveSize")) {
+                well.seg_compartment_params.valve_size = json_compts["ICDValveSize"].toDouble();
+            }
+            else {
+                std::cout << "Defaulting ICDValveSize to 7.85E-5." << std::endl;
+                well.seg_compartment_params.valve_size = 7.85E-5;
+            }
+            if (json_compts.contains("ICDValveFlowCoeff")) {
+                well.seg_compartment_params.valve_flow_coeff = json_compts["ICDValveFlowCoeff"].toDouble();
+            }
+            else {
+                std::cout << "Defaulting ICDValveFlowCoeff to 0.66." << std::endl;
+                well.seg_compartment_params.valve_flow_coeff = 0.66;
+            }
+        }
+        catch (...) {
+            throw std::runtime_error("Something went wrong while parsing the Compartments section.");
+        }
+    }
+    else {
+        throw std::runtime_error("The Compartments keyword must be specified when using the Segmentation keyword.");
+    }
+}
 
 
 }

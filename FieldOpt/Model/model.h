@@ -99,6 +99,7 @@ class Model : public Loggable
   void verifyWells();
   void verifyWellTrajectory(Wells::Well *w);
   void verifyWellBlock(Wells::Wellbore::WellBlock *wb);
+  void verifyWellCompartments(Wells::Well *w);
 
   Logger *logger_;
   QUuid current_case_id_;

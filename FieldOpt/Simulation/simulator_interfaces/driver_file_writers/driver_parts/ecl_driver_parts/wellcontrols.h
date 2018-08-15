@@ -26,9 +26,6 @@
 #include "Model/wells/well.h"
 
 namespace Simulation {
-namespace SimulatorInterfaces {
-namespace DriverFileWriters {
-namespace DriverParts {
 namespace ECLDriverParts {
 
 /*!
@@ -136,9 +133,6 @@ class WellControls : public ECLDriverPart
   QString createInjectorEntry(const WellSetting &setting) const;
 };
 
-}
-}
-}
 }
 }
 

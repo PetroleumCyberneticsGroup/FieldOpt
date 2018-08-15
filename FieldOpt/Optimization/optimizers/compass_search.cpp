@@ -20,6 +20,7 @@ namespace Optimization {
 
         void CompassSearch::iterate()
         {
+            logger_->AddEntry(this);
             if (!is_successful_iteration() && iteration_ != 0)
                 contract();
             case_handler_->AddNewCases(generate_trial_points());

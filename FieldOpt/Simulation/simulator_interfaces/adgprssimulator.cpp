@@ -23,7 +23,6 @@
 #include "Simulation/results/adgprsresults.h"
 
 namespace Simulation {
-namespace SimulatorInterfaces {
 
 AdgprsSimulator::AdgprsSimulator(Settings::Settings *settings, Model::Model *model)
     : Simulator(settings)
@@ -32,7 +31,7 @@ AdgprsSimulator::AdgprsSimulator(Settings::Settings *settings, Model::Model *mod
 
     model_ = model;
     results_ = new Simulation::Results::AdgprsResults();
-    driver_file_writer_ = new DriverFileWriters::AdgprsDriverFileWriter(settings_, model_);
+    driver_file_writer_ = new AdgprsDriverFileWriter(settings_, model_);
 }
 
 void AdgprsSimulator::Evaluate()
@@ -115,5 +114,4 @@ bool AdgprsSimulator::Evaluate(const Settings::Ensemble::Realization &realizatio
     throw std::runtime_error("Ensemble optimization not yet implemented for the AD-GPRS reservoir simulator.");
 }
 
-}
 }

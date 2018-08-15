@@ -19,7 +19,10 @@
 
 #include "trajectory.h"
 #include "Model/wells/well_exceptions.h"
+#include <cmath>
+#include <algorithm>
 #include <iostream>
+#include <iomanip>
 
 namespace Model {
 namespace Wells {
@@ -38,9 +41,13 @@ Trajectory::Trajectory(Settings::Model::Well well_settings,
         calculateDirectionOfPenetration();
     }
     else if (well_settings.definition_type == Settings::Model::WellDefinitionType::WellSpline) {
+        if (well_settings.convert_well_blocks_to_spline) {
+            convertWellBlocksToWellSpline(well_settings, grid);
+        }
         well_spline_ = new WellSpline(well_settings, variable_container, grid);
         well_blocks_ = well_spline_->GetWellBlocks();
         calculateDirectionOfPenetration();
+//        printWellBlocks();
     }
     else if (well_settings.definition_type == Settings::Model::WellDefinitionType::PseudoContVertical2D) {
         pseudo_cont_vert_ = new PseudoContVert(well_settings, variable_container, grid);
@@ -74,13 +81,27 @@ void Trajectory::UpdateWellBlocks()
 {
     // \todo This is the source of a memory leak: old well blocks are not deleted. Fix it.
     if (well_spline_ != 0) {
-        well_blocks_ = well_spline_->GetWellBlocks();
+        if (well_spline_->HasGridChanged() || well_spline_->HasSplineChanged()) {
+            well_blocks_ = well_spline_->GetWellBlocks();
+        }
+        else {
+            std::cout << "The well spline has not changed; well indices will not be recomputed." << std::endl;
+        }
     }
     else if (pseudo_cont_vert_ != 0) {
         well_blocks_ = new QList<WellBlock *>();
         well_blocks_->append(pseudo_cont_vert_->GetWellBlock());
     }
     calculateDirectionOfPenetration();
+}
+
+double Trajectory::GetLength() const {
+    if (definition_type_ == Settings::Model::WellDefinitionType::WellSpline) {
+        return GetSplineLength();
+    }
+    else { // Block-defined
+        throw std::runtime_error("Lenth of block-defined wells not yet implemented.");
+    }
 }
 
 void Trajectory::initializeWellBlocks(Settings::Model::Well well,
@@ -144,6 +165,126 @@ void Trajectory::calculateDirectionOfPenetration()
 }
 Settings::Model::WellDefinitionType Trajectory::GetDefinitionType() {
     return definition_type_;
+}
+void Trajectory::convertWellBlocksToWellSpline(Settings::Model::Well &well_settings, Reservoir::Grid::Grid *grid) {
+    std::cout << "Converting well " << well_settings.name.toStdString() << " to spline." << std::endl;
+    std::cout << "Input blocks:" << std::endl;
+    for (auto imported_block : well_settings.well_blocks) {
+        std::cout << imported_block.i << ",\t" << imported_block.j << ",\t" << imported_block.k << std::endl;
+    }
+    QList<Settings::Model::Well::SplinePoint> points;
+    for (int p = 0; p < well_settings.n_spline_points; ++p) {
+        int srndg_block_idx = std::min(
+            well_settings.well_blocks.size() - 1,
+            int(p * std::ceil(well_settings.well_blocks.size() / (well_settings.n_spline_points-1)))
+        );
+        Reservoir::Grid::Cell srndg_cell;
+        try {
+            std::cout << "Selected for spline conversion block nr " << srndg_block_idx << std::endl;
+            Settings::Model::Well::WellBlock srndg_block = well_settings.well_blocks[srndg_block_idx];
+            srndg_cell = grid->GetCell(srndg_block.i-1, srndg_block.j-1, srndg_block.k-1);
+        }
+        catch (std::runtime_error e) {
+            std::cout << "WARNING: Unable to get grid cell needed for spline conversion: " << e.what()
+                      << " Trying adjacent block." << std::endl;
+            std::cout << "Selected for spline conversion block nr " << srndg_block_idx - 2 << std::endl;
+            Settings::Model::Well::WellBlock srndg_block = well_settings.well_blocks[srndg_block_idx - 2];
+            srndg_cell = grid->GetCell(srndg_block.i-1, srndg_block.j-1, srndg_block.k-1);
+        }
+        std::cout << "Corresponding block: " << srndg_cell.ijk_index().i() + 1
+                                             << ", " << srndg_cell.ijk_index().j() + 1
+                                             << ", " << srndg_cell.ijk_index().k() + 1
+                  << " with center at "      <<  srndg_cell.center().x()
+                                             << ", " << srndg_cell.center().y()
+                                             << ", " << srndg_cell.center().z() << std::endl;
+
+        Settings::Model::Well::SplinePoint new_point;
+        new_point.name = "SplinePoint#" + well_settings.name + "#P" + QString::number(p+1);
+        new_point.x = srndg_cell.center().x();
+        new_point.y = srndg_cell.center().y();
+        new_point.z = srndg_cell.center().z();
+
+        if (well_settings.is_variable_spline) {
+            new_point.is_variable = true;
+        }
+        else {
+            new_point.is_variable = false;
+        }
+
+        points.push_back(new_point);
+    }
+
+    points.first().name = "SplinePoint#" + well_settings.name + "#heel";
+    points.last().name = "SplinePoint#" + well_settings.name + "#toe";
+    well_settings.spline_points = points;
+    std::cout << "Done Converting well " << well_settings.name.toStdString() << " to spline." << std::endl;
+}
+WellBlock *Trajectory::GetWellBlockByMd(double md) const {
+    assert(well_blocks_->size() > 0);
+    if (md > GetLength()) {
+        throw std::runtime_error("Attempting to get well block at MD grater than well length.");
+    }
+    double current_md = 0;
+    for (int i = 0; i < well_blocks_->size(); ++i) {
+        current_md += abs((well_blocks_->at(i)->getExitPoint() - well_blocks_->at(i)->getEntryPoint()).norm());
+        if (current_md >= md) {
+            return well_blocks_->at(i);
+        }
+    }
+    throw std::runtime_error("Unable to get well block by MD.");
+}
+double Trajectory::GetEntryMd(const WellBlock *wb) const {
+    double md = 0.0;
+    for (int i = 0; i < well_blocks_->size(); ++i) {
+        auto cur_wb = well_blocks_->at(i);
+        if (cur_wb->i() == wb->i() && cur_wb->j() == wb->j() && cur_wb->k() == wb->k()) {
+            return md;
+        }
+        else {
+            md += (cur_wb->getExitPoint() - cur_wb->getEntryPoint()).norm();
+        }
+    }
+    throw std::runtime_error("Error computing entry md for well block.");
+}
+double Trajectory::GetExitMd(const WellBlock *wb) const {
+    double md = 0.0;
+    for (int i = 0; i < well_blocks_->size(); ++i) {
+        auto cur_wb = well_blocks_->at(i);
+        md += (cur_wb->getExitPoint() - cur_wb->getEntryPoint()).norm();
+        if (cur_wb->i() == wb->i() && cur_wb->j() == wb->j() && cur_wb->k() == wb->k()) {
+            return md;
+        }
+    }
+    throw std::runtime_error("Error computing entry md for well block.");
+}
+void Trajectory::printWellBlocks() {
+    std::cout << "I,\tJ,\tK,\tINX,\tINY,\tINZ,\tOUTX,\tOUTY,\tOUTZ" << std::endl;
+    for (auto wb : *well_blocks_) {
+        std::stringstream entry;
+        entry << wb->i() << ",\t" << wb->j() << ",\t" << wb->k() << ",\t";
+        entry.precision(12);
+        entry << std::scientific;
+        entry << wb->getEntryPoint().x() << ",\t" << wb->getEntryPoint().y() << ",\t" << wb->getEntryPoint().z() << ",\t"
+              << wb->getExitPoint().x() << ",\t" << wb->getExitPoint().y() << ",\t" << wb->getExitPoint().z()
+              << std::endl;
+        std::cout << entry.str();
+    }
+}
+double Trajectory::GetSplineLength() const {
+    double length = 0;
+    for (auto wb : *well_blocks_) {
+        length += abs((wb->getExitPoint() - wb->getEntryPoint()).norm());
+    }
+    return length;
+}
+std::vector<WellBlock *> Trajectory::GetWellBlocksByMdRange(double start_md, double end_md) const {
+    std::vector<WellBlock *> affected_blocks;
+    for (auto wb : *well_blocks_) {
+        if (GetEntryMd(wb) >= start_md && GetExitMd(wb) <= end_md) {
+            affected_blocks.push_back(wb);
+        }
+    }
+    return affected_blocks;
 }
 
 }

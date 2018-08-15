@@ -24,7 +24,6 @@
 #include "Simulation/results/eclresults.h"
 
 namespace Simulation {
-namespace SimulatorInterfaces {
 
 using namespace Utilities::FileHandling;
 
@@ -48,7 +47,7 @@ void ECLSimulator::Evaluate()
     copyDriverFiles();
     UpdateFilePaths();
     script_args_ = (QStringList() << QString::fromStdString(paths_.GetPath(Paths::SIM_WORK_DIR)) << deck_name_);
-    auto driver_file_writer = DriverFileWriters::EclDriverFileWriter(settings_, model_);
+    auto driver_file_writer = EclDriverFileWriter(settings_, model_);
     driver_file_writer.WriteDriverFile(QString::fromStdString(paths_.GetPath(Paths::SIM_OUT_SCH_FILE)));
     Utilities::Unix::ExecShellScript(
         QString::fromStdString(paths_.GetPath(Paths::SIM_EXEC_SCRIPT_FILE)),
@@ -62,7 +61,7 @@ bool ECLSimulator::Evaluate(int timeout, int threads) {
     copyDriverFiles();
     UpdateFilePaths();
     script_args_ = (QStringList() << QString::fromStdString(paths_.GetPath(Paths::SIM_WORK_DIR)) << deck_name_ << QString::number(threads));
-    auto driver_file_writer = DriverFileWriters::EclDriverFileWriter(settings_, model_);
+    auto driver_file_writer = EclDriverFileWriter(settings_, model_);
     driver_file_writer.WriteDriverFile(QString::fromStdString(paths_.GetPath(Paths::SIM_OUT_SCH_FILE)));
     int t = timeout;
     if (timeout < 10) {
@@ -117,7 +116,7 @@ void ECLSimulator::UpdateFilePaths()
 
 void ECLSimulator::WriteDriverFilesOnly() {
     UpdateFilePaths();
-    auto driver_file_writer = DriverFileWriters::EclDriverFileWriter(settings_, model_);
+    auto driver_file_writer = EclDriverFileWriter(settings_, model_);
     driver_file_writer.WriteDriverFile(QString::fromStdString(paths_.GetPath(Paths::SIM_OUT_SCH_FILE)));
 }
 
@@ -144,5 +143,4 @@ void ECLSimulator::copyDriverFiles() {
     paths_.SetPath(Paths::SIM_WORK_DIR, workdir);
 }
 
-}
 }
