@@ -43,6 +43,7 @@ HybridOptimizer::HybridOptimizer(Settings::Optimizer *settings,
     // TODO: Instantiate primary (needs a new constructor that takes existing Case- and ConstraintHandler objects)
     initializeComponent(0);
     active_component_ = 0;
+    iteration_ = active_component_;
 }
 
 Optimizer::TerminationCondition HybridOptimizer::IsFinished() {
@@ -59,6 +60,9 @@ Optimizer::TerminationCondition HybridOptimizer::IsFinished() {
     }
 }
 void HybridOptimizer::handleEvaluatedCase(Case *c) {
+    if (enable_logging_) {
+        logger_->AddEntry(this);
+    }
     if (active_component_ == 0) {
         primary_->handleEvaluatedCase(c);
         tentative_best_case_ = primary_->tentative_best_case_;
@@ -79,6 +83,7 @@ void HybridOptimizer::iterate() {
             std::cout << "Primary component converged. Switching to secondary." << std::endl;
             initializeComponent(1);
             active_component_ = 1;
+            iteration_ = active_component_;
         }
         if (case_handler_->QueuedCases().size() == 0) {
             secondary_->iterate();
@@ -133,6 +138,7 @@ void HybridOptimizer::initializeComponent(int component=0) {
         default:
             throw std::runtime_error("Unable to initialize hybrid optimizer: algorithm not recognized.");
     }
+    opt->DisableLogging();
     if (component == 0)
         primary_ = opt;
     else
