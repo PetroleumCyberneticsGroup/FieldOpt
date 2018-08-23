@@ -11,6 +11,7 @@ if (BUILD_TESTING)
             tests/test_filehandling.cpp
             tests/test_execution.cpp
             tests/test_time.cpp
+            tests/test_printer.cpp
             tests/test_math.cpp)
     target_link_libraries(test_utilities
             Qt5::Core
