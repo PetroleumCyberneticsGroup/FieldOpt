@@ -10,6 +10,7 @@
 namespace TestResources {
 namespace ExampleFilePaths {
 static QString driver_example_ = "../examples/driver.json";
+static QString hybridopt_driver_example_ = "../examples/driver_hybridopt.json";
 static QString directory_output_ = "../fieldopt-output";
 
 static QString deck_horzwel_ = "../examples/ECLIPSE/HORZWELL/HORZWELL.DATA";

@@ -32,7 +32,10 @@ EGO::EGO(Settings::Optimizer *settings,
          Case *base_case,
          Model::Properties::VariablePropertyContainer *variables,
          Reservoir::Grid::Grid *grid,
-         Logger *logger) : Optimizer(settings, base_case, variables, grid, logger) {
+         Logger *logger,
+         CaseHandler *case_handler,
+         Constraints::ConstraintHandler *constraint_handler
+) : Optimizer(settings, base_case, variables, grid, logger, case_handler, constraint_handler) {
     if (constraint_handler_->HasBoundaryConstraints()) {
         lb_ = constraint_handler_->GetLowerBounds(base_case->GetRealVarIdVector());
         ub_ = constraint_handler_->GetUpperBounds(base_case->GetRealVarIdVector());
@@ -71,20 +74,24 @@ EGO::EGO(Settings::Optimizer *settings,
     time_fitting_ = 0;
     time_af_opt_ = 0;
 
-    logger_->AddEntry(new ConfigurationSummary(this));
+    if (enable_logging_) {
+        logger_->AddEntry(new ConfigurationSummary(this));
+    }
 }
 Optimization::Optimizer::TerminationCondition EGO::IsFinished() {
     TerminationCondition tc = NOT_FINISHED;
     if (case_handler_->CasesBeingEvaluated().size() > 0)
         return tc;
-    if (case_handler_->NumberSimulated() > max_evaluations_)
+    if (evaluated_cases_ > max_evaluations_)
         tc = MAX_EVALS_REACHED;
     if (tc != NOT_FINISHED) {
         map<string, string> ext_state;
         ext_state["Time in AF opt"] = boost::lexical_cast<string>(time_af_opt_);
         ext_state["Time in GP opt"] = boost::lexical_cast<string>(time_fitting_);
-        logger_->AddEntry(this);
-        logger_->AddEntry(new Summary(this, tc, ext_state));
+        if (enable_logging_) {
+            logger_->AddEntry(this);
+            logger_->AddEntry(new Summary(this, tc, ext_state));
+        }
     }
     return tc;
 }
@@ -99,7 +106,9 @@ void EGO::handleEvaluatedCase(Case *c) {
     }
 }
 void EGO::iterate() {
-    logger_->AddEntry(this);
+    if (enable_logging_) {
+        logger_->AddEntry(this);
+    }
     if (!normalizer_ofv_.is_ready())
         initializeNormalizers();
 

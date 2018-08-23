@@ -30,117 +30,19 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
     QJsonArray json_constraints = json_optimizer["Constraints"].toArray();
     QString type = json_optimizer["Type"].toString();
 
-    // Optimizer type
-    if (QString::compare(type, "Compass") == 0)
-        type_ = OptimizerType::Compass;
-    else if (QString::compare(type, "APPS") == 0)
-        type_ = OptimizerType::APPS;
-    else if (QString::compare(type, "GeneticAlgorithm") == 0)
-        type_ = OptimizerType::GeneticAlgorithm;
-    else if (QString::compare(type, "EGO") == 0)
-        type_ = OptimizerType::EGO;
-    else if (QString::compare(type, "ExhaustiveSearch2DVert") == 0)
-        type_ = OptimizerType::ExhaustiveSearch2DVert;
-    else throw OptimizerTypeNotRecognizedException("The optimizer type " + type.toStdString() + " was not recognized.");
+    type_ = parseType(type);
 
-    // Optimizer mode
     if (type_ != ExhaustiveSearch2DVert) {
-        if (json_optimizer.contains("Mode")) {
-            QString mode = json_optimizer["Mode"].toString();
-            if (QString::compare(mode, "Minimize", Qt::CaseInsensitive) == 0)
-                mode_ = OptimizerMode::Minimize;
-            else if (QString::compare(mode, "Maximize", Qt::CaseInsensitive) == 0)
-                mode_ = OptimizerMode::Maximize;
-            else throw UnableToParseOptimizerSectionException("Did not recognize optimizer Mode setting.");
-        } else throw UnableToParseOptimizerSectionException("Optimizer Mode keyword must be specified.");
-
-        // Optimizer parameters
-        try {
-            // GSS parameters
-            if (json_parameters.contains("MaxEvaluations"))
-                parameters_.max_evaluations = json_parameters["MaxEvaluations"].toInt();
-            if (json_parameters.contains("InitialStepLength"))
-                parameters_.initial_step_length = json_parameters["InitialStepLength"].toDouble();
-            if (json_parameters.contains("MinimumStepLength"))
-                parameters_.minimum_step_length = json_parameters["MinimumStepLength"].toDouble();
-            if (json_parameters.contains("ContractionFactor"))
-                parameters_.contraction_factor = json_parameters["ContractionFactor"].toDouble();
-            else parameters_.contraction_factor = 0.5;
-            if (json_parameters.contains("ExpansionFactor"))
-                parameters_.expansion_factor = json_parameters["ExpansionFactor"].toDouble();
-            else parameters_.expansion_factor = 1.0;
-            if (json_parameters.contains("MaxQueueSize"))
-                parameters_.max_queue_size = json_parameters["MaxQueueSize"].toDouble();
-            else parameters_.max_queue_size = 2;
-            if (json_parameters.contains("Pattern"))
-                parameters_.pattern = json_parameters["Pattern"].toString();
-            else parameters_.pattern = "Compass";
-
-            // GA parameters
-            if (json_parameters.contains("MaxGenerations"))
-                parameters_.max_generations = json_parameters["MaxGenerations"].toInt();
-            else parameters_.max_generations = 50;
-            if (json_parameters.contains("PopulationSize"))
-                parameters_.population_size = json_parameters["PopulationSize"].toInt();
-            else parameters_.population_size = -1; // Will be properly set in optimizer.
-            if (json_parameters.contains("CrossoverProbability"))
-                parameters_.p_crossover = json_parameters["CrossoverProbability"].toDouble();
-            else parameters_.p_crossover = 0.1;
-            if (json_parameters.contains("DiscardParameter"))
-                parameters_.discard_parameter = json_parameters["DiscardParameter"].toDouble();
-            else parameters_.discard_parameter = -1; // Will be properly set in optimizer
-            if (json_parameters.contains("DecayRate"))
-                parameters_.decay_rate = json_parameters["DecayRate"].toDouble();
-            else parameters_.decay_rate = 4.0;
-            if (json_parameters.contains("MutationStrength"))
-                parameters_.mutation_strength = json_parameters["MutationStrength"].toDouble();
-            else parameters_.mutation_strength = 0.25;
-            if (json_parameters.contains("StagnationLimit"))
-                parameters_.stagnation_limit = json_parameters["StagnationLimit"].toDouble();
-            else parameters_.stagnation_limit = 1e-10;
-            if (json_parameters.contains("LowerBound"))
-                parameters_.lower_bound = json_parameters["LowerBound"].toDouble();
-            else parameters_.lower_bound = -10;
-            if (json_parameters.contains("UpperBound"))
-                parameters_.upper_bound = json_parameters["UpperBound"].toDouble();
-            else parameters_.upper_bound = 10;
-        }
-        catch (std::exception const &ex) {
-            throw UnableToParseOptimizerParametersSectionException("Unable to parse optimizer parameters: " + std::string(ex.what()));
-        }
-    }
-
-    // Optimizer objective
-    try {
-        QString objective_type = json_objective["Type"].toString();
-        if (QString::compare(objective_type, "WeightedSum") == 0) {
-            objective_.type = ObjectiveType::WeightedSum;
-            objective_.weighted_sum = QList<Objective::WeightedSumComponent>();
-            QJsonArray json_components = json_objective["WeightedSumComponents"].toArray();
-            for (int i = 0; i < json_components.size(); ++i) {
-                Objective::WeightedSumComponent component;
-                component.coefficient = json_components.at(i).toObject()["Coefficient"].toDouble();
-                component.property = json_components.at(i).toObject()["Property"].toString();
-                if (json_components.at(i).toObject()["IsWellProp"].toBool()) {
-                    component.is_well_prop = true;
-                    component.well = json_components.at(i).toObject()["Well"].toString();
-                }
-                else component.is_well_prop = false;
-                component.time_step = json_components.at(i).toObject()["TimeStep"].toInt();
-                objective_.weighted_sum.append(component);
-            }
-        }
-        else throw UnableToParseOptimizerObjectiveSectionException("Objective type " + objective_type.toStdString() + " not recognized");
-        if (json_objective.contains("UsePenaltyFunction")) {
-            objective_.use_penalty_function = json_objective["UsePenaltyFunction"].toBool();
+        mode_ = parseMode(json_optimizer);
+        if (type_ == Hybrid) {
+            hybrid_components_ = parseHybridComponents(json_optimizer);
         }
         else {
-            objective_.use_penalty_function = false;
+            parameters_ = parseParameters(json_parameters);
         }
     }
-    catch (std::exception const &ex) {
-        throw UnableToParseOptimizerObjectiveSectionException("Unable to parse optimizer objective: " + std::string(ex.what()));
-    }
+    objective_ = parseObjective(json_objective);
+
 
     // Optimizer constraints
     try {
@@ -326,6 +228,154 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
     }
     else throw UnableToParseOptimizerConstraintsSectionException("Constraint type " + constraint_type.toStdString() + " not recognized.");
     return optimizer_constraint;
+}
+Optimizer::OptimizerMode Optimizer::parseMode(QJsonObject &json_optimizer) {
+    OptimizerMode opt_mode;
+    if (json_optimizer.contains("Mode")) {
+        QString mode = json_optimizer["Mode"].toString();
+        if (QString::compare(mode, "Minimize", Qt::CaseInsensitive) == 0)
+            opt_mode = OptimizerMode::Minimize;
+        else if (QString::compare(mode, "Maximize", Qt::CaseInsensitive) == 0)
+            opt_mode = OptimizerMode::Maximize;
+        else
+            throw UnableToParseOptimizerSectionException("Did not recognize optimizer Mode setting.");
+    }
+    else throw UnableToParseOptimizerSectionException("Optimizer Mode keyword must be specified.");
+    return opt_mode;
+}
+Optimizer::Parameters Optimizer::parseParameters(QJsonObject &json_parameters) {
+    Parameters params;
+
+    try {
+        // GSS parameters
+        if (json_parameters.contains("MaxEvaluations"))
+            params.max_evaluations = json_parameters["MaxEvaluations"].toInt();
+        if (json_parameters.contains("AutoStepLengths"))
+            params.auto_step_lengths = json_parameters["AutoStepLengths"].toBool();
+        if (json_parameters.contains("AutoStepInitScale"))
+            params.auto_step_init_scale = json_parameters["AutoStepInitScale"].toDouble();
+        if (json_parameters.contains("AutoStepConvScale"))
+            params.auto_step_conv_scale = json_parameters["AutoStepConvScale"].toDouble();
+        if (json_parameters.contains("InitialStepLength"))
+            params.initial_step_length = json_parameters["InitialStepLength"].toDouble();
+        if (json_parameters.contains("MinimumStepLength"))
+            params.minimum_step_length = json_parameters["MinimumStepLength"].toDouble();
+        if (json_parameters.contains("ContractionFactor"))
+            params.contraction_factor = json_parameters["ContractionFactor"].toDouble();
+        else params.contraction_factor = 0.5;
+        if (json_parameters.contains("ExpansionFactor"))
+            params.expansion_factor = json_parameters["ExpansionFactor"].toDouble();
+        else params.expansion_factor = 1.0;
+        if (json_parameters.contains("MaxQueueSize"))
+            params.max_queue_size = json_parameters["MaxQueueSize"].toDouble();
+        else params.max_queue_size = 2;
+        if (json_parameters.contains("Pattern"))
+            params.pattern = json_parameters["Pattern"].toString();
+        else params.pattern = "Compass";
+
+        // GA parameters
+        if (json_parameters.contains("MaxGenerations"))
+            params.max_generations = json_parameters["MaxGenerations"].toInt();
+        else params.max_generations = 50;
+        if (json_parameters.contains("PopulationSize"))
+            params.population_size = json_parameters["PopulationSize"].toInt();
+        else params.population_size = -1; // Will be properly set in optimizer.
+        if (json_parameters.contains("CrossoverProbability"))
+            params.p_crossover = json_parameters["CrossoverProbability"].toDouble();
+        else params.p_crossover = 0.1;
+        if (json_parameters.contains("DiscardParameter"))
+            params.discard_parameter = json_parameters["DiscardParameter"].toDouble();
+        else params.discard_parameter = -1; // Will be properly set in optimizer
+        if (json_parameters.contains("DecayRate"))
+            params.decay_rate = json_parameters["DecayRate"].toDouble();
+        else params.decay_rate = 4.0;
+        if (json_parameters.contains("MutationStrength"))
+            params.mutation_strength = json_parameters["MutationStrength"].toDouble();
+        else params.mutation_strength = 0.25;
+        if (json_parameters.contains("StagnationLimit"))
+            params.stagnation_limit = json_parameters["StagnationLimit"].toDouble();
+        else params.stagnation_limit = 1e-10;
+        if (json_parameters.contains("LowerBound"))
+            params.lower_bound = json_parameters["LowerBound"].toDouble();
+        else params.lower_bound = -10;
+        if (json_parameters.contains("UpperBound"))
+            params.upper_bound = json_parameters["UpperBound"].toDouble();
+        else params.upper_bound = 10;
+    }
+    catch (std::exception const &ex) {
+        throw UnableToParseOptimizerParametersSectionException("Unable to parse optimizer parameters: " + std::string(ex.what()));
+    }
+
+    return params;
+}
+Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
+    Objective obj;
+
+    try {
+        QString objective_type = json_objective["Type"].toString();
+        if (QString::compare(objective_type, "WeightedSum") == 0) {
+            obj.type = ObjectiveType::WeightedSum;
+            obj.weighted_sum = QList<Objective::WeightedSumComponent>();
+            QJsonArray json_components = json_objective["WeightedSumComponents"].toArray();
+            for (int i = 0; i < json_components.size(); ++i) {
+                Objective::WeightedSumComponent component;
+                component.coefficient = json_components.at(i).toObject()["Coefficient"].toDouble();
+                component.property = json_components.at(i).toObject()["Property"].toString();
+                if (json_components.at(i).toObject()["IsWellProp"].toBool()) {
+                    component.is_well_prop = true;
+                    component.well = json_components.at(i).toObject()["Well"].toString();
+                }
+                else component.is_well_prop = false;
+                component.time_step = json_components.at(i).toObject()["TimeStep"].toInt();
+                obj.weighted_sum.append(component);
+            }
+        }
+        else throw UnableToParseOptimizerObjectiveSectionException("Objective type " + objective_type.toStdString() + " not recognized");
+        if (json_objective.contains("UsePenaltyFunction")) {
+            obj.use_penalty_function = json_objective["UsePenaltyFunction"].toBool();
+        }
+        else {
+            obj.use_penalty_function = false;
+        }
+    }
+    catch (std::exception const &ex) {
+        throw UnableToParseOptimizerObjectiveSectionException("Unable to parse optimizer objective: " + std::string(ex.what()));
+    }
+
+    return obj;
+}
+Optimizer::OptimizerType Optimizer::parseType(QString &type) {
+    OptimizerType opt_type;
+    if (QString::compare(type, "Compass") == 0)
+        opt_type = OptimizerType::Compass;
+    else if (QString::compare(type, "APPS") == 0)
+        opt_type = OptimizerType::APPS;
+    else if (QString::compare(type, "GeneticAlgorithm") == 0)
+        opt_type = OptimizerType::GeneticAlgorithm;
+    else if (QString::compare(type, "EGO") == 0)
+        opt_type = OptimizerType::EGO;
+    else if (QString::compare(type, "ExhaustiveSearch2DVert") == 0)
+        opt_type = OptimizerType::ExhaustiveSearch2DVert;
+    else if (QString::compare(type, "Hybrid") == 0)
+        opt_type = OptimizerType::Hybrid;
+    else throw OptimizerTypeNotRecognizedException("The optimizer type " + type.toStdString() + " was not recognized.");
+    return opt_type;
+}
+QList<Optimizer::HybridComponent> Optimizer::parseHybridComponents(QJsonObject &json_optimizer) {
+    QList<HybridComponent> comps;
+    for (auto json_comp : json_optimizer["HybridComponents"].toArray()) {
+        HybridComponent comp;
+        QString type = json_comp.toObject()["Type"].toString();
+        QJsonObject json_params = json_comp.toObject()["Parameters"].toObject();
+        comp.type = parseType(type);
+        comp.parameters = parseParameters(json_params);
+        comps.push_back(comp);
+    }
+    return comps;
+}
+Optimizer::Optimizer(Optimizer::HybridComponent hc) {
+    type_ = hc.type;
+    parameters_ = hc.parameters;
 }
 
 }

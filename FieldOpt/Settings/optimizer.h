@@ -40,7 +40,7 @@ class Optimizer
  public:
   Optimizer(){}
   Optimizer(QJsonObject json_optimizer);
-  enum OptimizerType { Compass, APPS, ExhaustiveSearch2DVert, GeneticAlgorithm, EGO };
+  enum OptimizerType { Compass, APPS, ExhaustiveSearch2DVert, GeneticAlgorithm, EGO, Hybrid };
   enum OptimizerMode { Maximize, Minimize };
   enum ConstraintType { BHP, Rate, SplinePoints,
     WellSplineLength, WellSplineInterwellDistance, WellSplineDomain,
@@ -60,6 +60,9 @@ class Optimizer
     double contraction_factor; //!< The contraction factor for GSS algorithms.
     double expansion_factor; //!< The expansion factor for GSS algorithms.
     double max_queue_size; //!< Maximum size of evaluation queue.
+    bool auto_step_lengths = false; //!< Automatically determine appropriate step lengths from bound constraints.
+    double auto_step_init_scale = 0.25; //!< Scaling factor for auto-determined initial step lengths (e.g. 0.25*(upper-lower)
+    double auto_step_conv_scale = 0.01; //!< Scaling factor for auto-determined convergence step lengths (e.g. 0.01*(upper-lower)
     QString pattern; //!< The pattern to be used for GSS algorithms.
 
     // GA parameters
@@ -101,11 +104,19 @@ class Optimizer
     QList<RealMaxMinLimit> spline_points_limits; //!< Box limits a spline point needs to be within to be valid when SplinePoints constraint type is selected.
   };
 
+  struct HybridComponent {
+    OptimizerType type;
+    Parameters parameters;
+  };
+  Optimizer(HybridComponent hc); //!< Create a basic Optimizer Settings object from a HybridComponent object.
+
   OptimizerType type() const { return type_; } //!< Get the Optimizer type (e.g. Compass).
   OptimizerMode mode() const { return mode_; } //!< Get the optimizer mode (maximize/minimize).
   Parameters parameters() const { return parameters_; } //!< Get the optimizer parameters.
   Objective objective() const { return objective_; } //!< Get the optimizer objective function.
   QList<Constraint> constraints() const { return constraints_; } //!< Get the optimizer constraints.
+  QList<HybridComponent> HybridComponents() { return hybrid_components_; } // Get the list of hybrid-optimizer components when using the HYBRID type.
+
 
  private:
   QList<Constraint> constraints_;
@@ -113,7 +124,14 @@ class Optimizer
   Parameters parameters_;
   Objective objective_;
   OptimizerMode mode_;
+  QList<HybridComponent> hybrid_components_;
+
+  OptimizerType parseType(QString &type);
   Constraint parseSingleConstraint(QJsonObject json_constraint);
+  OptimizerMode parseMode(QJsonObject &json_optimizer);
+  Parameters parseParameters(QJsonObject &json_parameters);
+  Objective parseObjective(QJsonObject &json_objective);
+  QList<HybridComponent> parseHybridComponents(QJsonObject &json_optimizer);
 };
 
 }

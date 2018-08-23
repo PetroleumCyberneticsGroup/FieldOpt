@@ -9,9 +9,11 @@ namespace Optimization {
                                      Case *base_case,
                                      Model::Properties::VariablePropertyContainer *variables,
                                      Reservoir::Grid::Grid *grid,
-                                     Logger *logger
+                                     Logger *logger,
+                                     CaseHandler *case_handler,
+                                     Constraints::ConstraintHandler *constraint_handler
         )
-                : GSS(settings, base_case, variables, grid, logger)
+                : GSS(settings, base_case, variables, grid, logger, case_handler, constraint_handler)
         {
             directions_ = GSSPatterns::Compass(num_vars_);
             step_lengths_ = Eigen::VectorXd(directions_.size());
@@ -20,7 +22,9 @@ namespace Optimization {
 
         void CompassSearch::iterate()
         {
-            logger_->AddEntry(this);
+            if (enable_logging_) {
+                logger_->AddEntry(this);
+            }
             if (!is_successful_iteration() && iteration_ != 0)
                 contract();
             case_handler_->AddNewCases(generate_trial_points());
@@ -53,6 +57,7 @@ namespace Optimization {
         }
 
         void CompassSearch::handleEvaluatedCase(Case *c) {
+            evaluated_cases_++;
             if (isImprovement(c))
                 updateTentativeBestCase(c);
         }

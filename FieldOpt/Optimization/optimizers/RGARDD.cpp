@@ -27,21 +27,24 @@ RGARDD::RGARDD(Settings::Optimizer *settings,
                Optimization::Case *base_case,
                Model::Properties::VariablePropertyContainer *variables,
                Reservoir::Grid::Grid *grid,
-               Logger *logger) : GeneticAlgorithm(settings,
-                                                  base_case,
-                                                  variables,
-                                                  grid,
-                                                  logger) {
+               Logger *logger,
+               CaseHandler *case_handler,
+               Constraints::ConstraintHandler *constraint_handler
+) : GeneticAlgorithm(settings, base_case, variables, grid, logger, case_handler, constraint_handler) {
     assert(population_size_ % 2 == 0); // Need an even number of chromosomes
     if (settings->parameters().discard_parameter < 0)
         discard_parameter_ = 1.0/population_size_;
     else discard_parameter_ = settings->parameters().discard_parameter;
     stagnation_limit_ = settings->parameters().stagnation_limit;
     mating_pool_ = population_;
-    logger_->AddEntry(new ConfigurationSummary(this));
+    if (enable_logging_) {
+        logger_->AddEntry(new ConfigurationSummary(this));
+    }
 }
 void RGARDD::iterate() {
-    logger_->AddEntry(this);
+    if (enable_logging_) {
+        logger_->AddEntry(this);
+    }
     if (iteration_ == 0 && penalize_) { // If we're done evaluating the initial population ...
         penalizeInitialGeneration();
     }
@@ -80,6 +83,7 @@ void RGARDD::iterate() {
     iteration_++;
 }
 void RGARDD::handleEvaluatedCase(Case *c) {
+    evaluated_cases_++;
     int index = -1;
     for (int i = 0; i < mating_pool_.size(); ++i) {
         if (mating_pool_[i].case_pointer == c) {

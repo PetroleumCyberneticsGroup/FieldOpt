@@ -29,9 +29,11 @@ GeneticAlgorithm::GeneticAlgorithm(Settings::Optimizer *settings,
                                    Case *base_case,
                                    Model::Properties::VariablePropertyContainer *variables,
                                    Reservoir::Grid::Grid *grid,
-                                   Logger *logger
+                                   Logger *logger,
+                                   CaseHandler *case_handler,
+                                   Constraints::ConstraintHandler *constraint_handler
 )
-    : Optimizer(settings, base_case, variables, grid, logger) {
+    : Optimizer(settings, base_case, variables, grid, logger, case_handler, constraint_handler) {
     n_vars_ = variables->ContinousVariableSize();
     gen_ = get_random_generator();
     max_generations_ = settings->parameters().max_generations;
@@ -78,14 +80,15 @@ Optimizer::TerminationCondition GeneticAlgorithm::IsFinished() {
         return tc;
     if (iteration_ >= max_generations_)
         tc = MAX_ITERATIONS_REACHED;
-    else if (case_handler_->NumberSimulated() > max_evaluations_)
+    else if (evaluated_cases_ > max_evaluations_)
         tc = MAX_EVALS_REACHED;
 
     if (tc != NOT_FINISHED) {
-        cout << "Generations at termination: " << iteration_ << endl;
         population_ = sortPopulation(population_);
-        logger_->AddEntry(this);
-        logger_->AddEntry(new Summary(this, tc));
+        if (enable_logging_) {
+            logger_->AddEntry(this);
+            logger_->AddEntry(new Summary(this, tc));
+        }
     }
     return tc;
 }

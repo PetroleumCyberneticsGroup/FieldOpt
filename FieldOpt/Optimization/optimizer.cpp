@@ -26,7 +26,9 @@ namespace Optimization {
 Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
                      Model::Properties::VariablePropertyContainer *variables,
                      Reservoir::Grid::Grid *grid,
-                     Logger *logger
+                     Logger *logger,
+                     CaseHandler *case_handler,
+                     Constraints::ConstraintHandler *constraint_handler
 )
 {
     // Verify that the base case has been evaluated.
@@ -38,13 +40,25 @@ Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
 
     max_evaluations_ = settings->parameters().max_evaluations;
     tentative_best_case_ = base_case;
-    case_handler_ = new CaseHandler(tentative_best_case_);
-    constraint_handler_ = new Constraints::ConstraintHandler(settings->constraints(), variables, grid);
+    if (case_handler == 0) {
+        case_handler_ = new CaseHandler(tentative_best_case_);
+    }
+    else {
+        case_handler_ = case_handler;
+    }
+    if (constraint_handler == 0) {
+        constraint_handler_ = new Constraints::ConstraintHandler(settings->constraints(), variables, grid);
+    }
+    else {
+        constraint_handler_ = constraint_handler;
+    }
     iteration_ = 0;
+    evaluated_cases_ = 0;
     mode_ = settings->mode();
     is_async_ = false;
     start_time_ = QDateTime::currentDateTime();
     logger_ = logger;
+    enable_logging_ = true;
     verbosity_level_ = 0;
     penalize_ = settings->objective().use_penalty_function;
 }
@@ -63,6 +77,7 @@ Case *Optimizer::GetCaseForEvaluation()
 
 void Optimizer::SubmitEvaluatedCase(Case *c)
 {
+    evaluated_cases_++;
     if (penalize_ && iteration_ > 0) {
         double penalized_ofv = PenalizedOFV(c);
         c->set_objective_function_value(penalized_ofv);
@@ -71,7 +86,9 @@ void Optimizer::SubmitEvaluatedCase(Case *c)
     case_handler_->SetCaseState(c->id(), c->state, c->GetWICTime(), c->GetSimTime());
     case_handler_->SetCaseEvaluated(c->id());
     handleEvaluatedCase(case_handler_->GetCase(c->id()));
-    logger_->AddEntry(case_handler_->GetCase(c->id()));
+    if (enable_logging_) {
+        logger_->AddEntry(case_handler_->GetCase(c->id()));
+    }
 }
 
 Case *Optimizer::GetTentativeBestCase() const {
@@ -231,6 +248,10 @@ double Optimizer::PenalizedOFV(Case *c) {
     else {
         return normalizer_ofv_.denormalize(norm_pen_ovf);
     }
+}
+
+void Optimizer::DisableLogging() {
+    enable_logging_ = false;
 }
 }
 

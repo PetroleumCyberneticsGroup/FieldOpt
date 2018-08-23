@@ -130,4 +130,22 @@ TEST_F(OptimizerSettingsTest, CombinedSplineLengthInterwellDistanceConstraintRes
     EXPECT_FLOAT_EQ(1200, constr.max_length);
     EXPECT_EQ(50, constr.max_iterations);
 }
+
+TEST_F(OptimizerSettingsTest, HybridOptimizerSettings) {
+    EXPECT_EQ(Optimizer::OptimizerType::Hybrid, settings_hybridopt_optimizer_->type());
+    EXPECT_EQ(2, settings_hybridopt_optimizer_->HybridComponents().size());
+
+    // First component (GA)
+    auto comp_ga = settings_hybridopt_optimizer_->HybridComponents()[0];
+    EXPECT_EQ(Optimizer::OptimizerType::GeneticAlgorithm, comp_ga.type);
+    EXPECT_EQ(2000, comp_ga.parameters.max_evaluations);
+    EXPECT_FLOAT_EQ(4.0, comp_ga.parameters.decay_rate);
+
+    // Second component (CS)
+    auto comp_cs = settings_hybridopt_optimizer_->HybridComponents()[1];
+    EXPECT_EQ(100, comp_cs.parameters.max_evaluations);
+    EXPECT_FLOAT_EQ(25.0, comp_cs.parameters.initial_step_length);
+    EXPECT_FLOAT_EQ(1.0, comp_cs.parameters.minimum_step_length);
+}
+
 }

@@ -35,6 +35,13 @@ class TestResourceSettings {
       settings_simulator_ = settings_full_->simulator();
       settings_model_ = settings_full_->model();
 
+      paths_hybridopt_.SetPath(Paths::DRIVER_FILE, ExampleFilePaths::hybridopt_driver_example_.toStdString());
+      paths_hybridopt_.SetPath(Paths::OUTPUT_DIR, ExampleFilePaths::directory_output_.toStdString());
+      settings_hybridopt_full_ = new Settings::Settings(paths_hybridopt_);
+      settings_hybridopt_optimizer_ = settings_hybridopt_full_->optimizer();
+      settings_hybridopt_simulator_ = settings_hybridopt_full_->simulator();
+      settings_hybridopt_model_ = settings_hybridopt_full_->model();
+
 
 //      settings_flow_5spot_ = new Settings::Settings(ExampleFilePaths::driver_5spot_flow_,
 //                                                    "/home/einar/.CLion2016.2/system/cmake/generated/FieldOpt-c9373114/c9373114/Debug/fieldopt_output/");
@@ -47,6 +54,12 @@ class TestResourceSettings {
   Settings::Simulator *settings_simulator_;
   Settings::Model *settings_model_;
   Paths paths_;
+
+  Settings::Settings *settings_hybridopt_full_;
+  Settings::Optimizer *settings_hybridopt_optimizer_;
+  Settings::Simulator *settings_hybridopt_simulator_;
+  Settings::Model *settings_hybridopt_model_;
+  Paths paths_hybridopt_;
 //        Settings::Settings *settings_flow_5spot_;
 };
 
