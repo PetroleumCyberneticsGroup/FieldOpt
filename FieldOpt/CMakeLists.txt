@@ -154,7 +154,7 @@ endif()
 # Compile FieldOpt sources =============================================
 add_subdirectory(ERTWrapper)
 add_subdirectory(Reservoir)
-add_subdirectory(FieldOpt-WellIndexCalculator)
+add_subdirectory(WellIndexCalculation)
 
 if (NOT (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS))
     add_subdirectory(Utilities)
