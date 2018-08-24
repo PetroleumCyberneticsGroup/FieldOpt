@@ -56,67 +56,8 @@ endif()
 # ╚═╝╩╚═ ╩────╚═╝╚═╝╩═╝
 # ----------------------------------------------------------
 
-# Add the ERT included with ResInsight as a submodule.
 add_subdirectory(WellIndexCalculation/resinxx/rixx_ert_ecl)
 
-find_library(ert_util
-        NAMES ert_util
-        REQUIRED)
-
-## Custom ERT include dir (ResInsight) ======================
-#option(USE_ECL_SYSTEM "Use system ERT library" OFF)
-#option(USE_ECL_RI "Use RI ERT library" ON)
-#option(USE_ECL_LOCAL "Use local ERT library" OFF)
-#
-#if (USE_ECL_SYSTEM)
-#
-#  # Lib
-#  find_library(ert_ecl
-#      NAMES ecl
-#      REQUIRED)
-#  set(ERTLIB ${ert_ecl})
-#
-#  find_library(ert_util
-#      NAMES ert_util
-#      REQUIRED)
-#
-#  # Include
-#  set(ERT_INCLUDE_DIR /usr/local/include/ert/ecl)
-#  include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR})
-#
-#elseif (USE_ECL_RI)
-#
-#  # Lib
-#  set(RIERTWIC WellIndexCalculation/resinxx/rixx_ert_ecl)
-#  set(ERT_LIB_DIR ${PROJECT_SOURCE_DIR}/${RIERTWIC}/cmake-build-debug/lib)
-#  set(ERTLIB ${ERT_LIB_DIR}/libecl.so)
-#
-#
-#  # Include
-#  set(ERT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/${RIERTWIC}/lib/include)
-#  include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR})
-#
-#  set(ERT_INCLUDE_DIR_B ${PROJECT_SOURCE_DIR}/${RIERTWIC}/lib/include/ert/ecl)
-#  include_directories(${CMAKE_SOURCE_DIR} ${ERT_INCLUDE_DIR_B})
-#
-#elseif(USE_ECL_LOCAL)
-#
-#  # Lib
-#  find_package(ert_ecl
-#      NAMES ecl
-#      PATHS
-#      ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib
-#      ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/share/cmake/ecl
-#      NO_DEFAULT_PATH
-#      REQUIRED)
-#  set(ERTLIB ${ert_ecl})
-#  # Find INCLUDE DIR by its own script
-#
-#  find_library(ert_util
-#      NAMES ert_util
-#      REQUIRED)
-#
-#endif()
 
 # ----------------------------------------------------------
 # ╦  ╔═╗╔═╗╔═╗╦    ╦  ╦╔╗ ╔═╗

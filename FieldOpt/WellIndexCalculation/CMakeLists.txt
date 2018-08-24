@@ -86,18 +86,10 @@ set_target_properties(${WIC_LIB_TARGET}
     PROPERTIES COMPILE_FLAGS "-fPIC")
 
 target_link_libraries(${WIC_LIB_TARGET}
-#    PUBLIC fieldopt::${WIC_LIB_TARGET}
     PUBLIC fieldopt::reservoir
     PUBLIC ${Boost_LIBRARIES}
     PUBLIC Qt5::Core
-    #
-#    PUBLIC ${ERTLIB}
     PUBLIC ri:ert_ecl
-    PUBLIC ${ert_util}
-    # PUBLIC ${ert_eclxx}
-    # PUBLIC ${ert_utilxx}
-    # PUBLIC ${ert_well}
-    # PUBLIC ${ert_geometry}
     )
 
 install(TARGETS wellindexcalculator
