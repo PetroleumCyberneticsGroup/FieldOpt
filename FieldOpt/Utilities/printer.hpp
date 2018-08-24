@@ -9,6 +9,8 @@
 #include <iomanip>
 #include <iostream>
 #include <boost/algorithm/string.hpp>
+#include <Utilities/colors.hpp>
+#include <sstream>
 
 namespace Printer {
 
@@ -51,14 +53,15 @@ inline std::vector<std::string> split_line(const std::string text, const int &wi
 
 
 /*! @brief Print a compact infobox.
- 
+
  Example:
  ┌─────────────────────────────────────────────────────────────────────┐
  │ This is a compact info box                                         │
- └─────────────────────────────────────────────────────────────────────┘ 
+ └─────────────────────────────────────────────────────────────────────┘
  */
 inline void info(const std::string &text) {
     std::stringstream ss;
+    ss << FLGREEN;
     std::string content = text;
     truncate_text(content);
     pad_text(content);
@@ -73,10 +76,10 @@ inline void info(const std::string &text) {
 Example:
  ┌───────┬──────────────────────┬──────────────────────────────────────┐
  │ INFO │ Module: Optimization │ Class: Optimizer                     │
- ├───────┴──────────────────────┴──────────────────────────────────────┤ 
+ ├───────┴──────────────────────┴──────────────────────────────────────┤
  │ This box can contain more information and a significantly larger    │
  │ amount of details.                                                  │
- └─────────────────────────────────────────────────────────────────────┘ 
+ └─────────────────────────────────────────────────────────────────────┘
  */
 inline void ext_info(const std::string &text,
                      const std::string &modulen="",
@@ -89,6 +92,7 @@ inline void ext_info(const std::string &text,
     pad_text(class_name, 29);
     auto lines = split_line(text);
     std::stringstream ss;
+    ss << FLGREEN;
     ss << "┌───────┬──────────────────────┬──────────────────────────────────────┐" << "\n";
     ss << "│ INFO │ Module: " << module_name << " │ Class: " << class_name << " │" << "\n";
     ss << "├───────┴──────────────────────┴──────────────────────────────────────┤" << "\n";
@@ -102,12 +106,12 @@ inline void ext_info(const std::string &text,
 
 /* Extended warning box.
 Example:
- ┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓   
+ ┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
  ┃ WARNING  ┃ Module: Optimization ┃ Class: GeneticAlgorit...         ┃
  ┣━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
  ┃ This is a warning box.                                              ┃
  ┃ This is a warning box.                                              ┃
- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛ 
+ ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
  */
 inline void ext_warn(const std::string &text,
                      const std::string &modulen="",
@@ -120,6 +124,7 @@ inline void ext_warn(const std::string &text,
     pad_text(class_name, 25);
     auto lines = split_line(text);
     std::stringstream ss;
+    ss << FLYELLOW;
     ss << "┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓" << "\n";
     ss << "┃ WARNING  ┃ Module: " << module_name << " ┃ Class: " << class_name << " ┃" << "\n";
     ss << "┣━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫" << "\n";
@@ -132,12 +137,13 @@ inline void ext_warn(const std::string &text,
 }
 /* Error box.
 Example:
- ╔═════════════════════════════════════════════════════════════════════╗ 
+ ╔═════════════════════════════════════════════════════════════════════╗
  ║ ERROR: This is an error message.                                   ║
- ╚═════════════════════════════════════════════════════════════════════╝ 
+ ╚═════════════════════════════════════════════════════════════════════╝
  */
 inline void error(const std::string &text) {
     std::stringstream ss;
+    ss << FLRED;
     std::string content = text;
     truncate_text(content, 59);
     pad_text(content, 59);
