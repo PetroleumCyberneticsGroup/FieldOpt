@@ -44,22 +44,22 @@ TEST_F(TrajectoryImporterTest, ImportedWell) {
     auto importer = Settings::TrajectoryImporter(trajectory_path_, well_names_);
     EXPECT_TRUE(importer.ContainsTrajectory("D-2H"));
     auto d_2h_traj = importer.GetImportedTrajectory("D-2H");
-    EXPECT_EQ(35, d_2h_traj.size());
+    EXPECT_EQ(13, d_2h_traj.size());
 
-    EXPECT_EQ(13, d_2h_traj[0].ijk().x());
-    EXPECT_EQ(11, d_2h_traj[0].ijk().y());
-    EXPECT_EQ(21, d_2h_traj[0].ijk().z());
-    EXPECT_FLOAT_EQ(455680.928, d_2h_traj[0].in().x());
-    EXPECT_FLOAT_EQ(7320521.27, d_2h_traj[0].in().y());
-    EXPECT_FLOAT_EQ(2766.89665, d_2h_traj[0].in().z());
-    EXPECT_FLOAT_EQ(455680.907, d_2h_traj[0].out().x());
-    EXPECT_FLOAT_EQ(7320521.26, d_2h_traj[0].out().y());
-    EXPECT_FLOAT_EQ(2766.89985, d_2h_traj[0].out().z());
+    EXPECT_EQ(14, d_2h_traj[0].ijk().x());
+    EXPECT_EQ(25, d_2h_traj[0].ijk().y());
+    EXPECT_EQ(9, d_2h_traj[0].ijk().z());
+    EXPECT_NEAR(456687, d_2h_traj[0].in().x(), 1);
+    EXPECT_NEAR(7321412, d_2h_traj[0].in().y(), 1);
+    EXPECT_NEAR(2614, d_2h_traj[0].in().z(), 1);
+    EXPECT_NEAR(456657, d_2h_traj[0].out().x(), 1);
+    EXPECT_NEAR(7321379, d_2h_traj[0].out().y(), 1);
+    EXPECT_NEAR(2615, d_2h_traj[0].out().z(), 1);
 
 
-    EXPECT_EQ(15, d_2h_traj[d_2h_traj.size()-1].ijk().x());
+    EXPECT_EQ(14, d_2h_traj[d_2h_traj.size()-1].ijk().x());
     EXPECT_EQ(14, d_2h_traj[d_2h_traj.size()-1].ijk().y());
-    EXPECT_EQ(10, d_2h_traj[d_2h_traj.size()-1].ijk().z());
+    EXPECT_EQ(9, d_2h_traj[d_2h_traj.size()-1].ijk().z());
 }
 
 }
