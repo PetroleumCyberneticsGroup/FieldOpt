@@ -107,10 +107,20 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
         welldefs[0].skins.push_back(0.0);
         welldefs[0].heels.push_back(spline_points_[w]->ToEigenVector());
         welldefs[0].toes.push_back(spline_points_[w+1]->ToEigenVector());
+        if (welldefs[0].heel_md.size() == 0) {
+            welldefs[0].heel_md.push_back(0.0);
+        }
+        else {
+            double prev_toe = welldefs[0].toe_md.back();
+            welldefs[0].heel_md.push_back(prev_toe);
+        }
+        welldefs[0].toe_md.push_back(
+            welldefs[0].heel_md + (welldefs[0].toes.back() - welldefs[0].heels.back()).norm();
+        );
     }
 
 //    auto wic = WellIndexCalculator(grid_);
-    auto wicalc_rixx = Reservoir::WellIndexCalculation::wicalc_rixx(well_settings_, grid_);
+    auto wicalc_rixx = Reservoir::WellIndexCalculation::wicalc_rixx(grid_);
 
     std::cout << "Starting well index calculation ... " << std::endl;
     auto start = QDateTime::currentDateTime();
