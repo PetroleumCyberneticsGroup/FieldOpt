@@ -27,6 +27,8 @@
 
 // ---------------------------------------------------------
 #include "ricasedata.h"
+#include "Utilities/verbosity.h"
+#include "Utilities/printer.hpp"
 
 // =========================================================
 // ╦═╗  ╦  ╔═╗  ╔═╗  ╔═╗  ╔═╗  ╔╦╗  ╔═╗  ╔╦╗  ╔═╗
@@ -96,40 +98,35 @@ RICaseData::~RICaseData() {
   if (m_activeCellInfo != NULL) {
 
     // -----------------------------------------------------
-    printf("%s%s%s", FRED, "m_activeCellInfo != nullptr ", AEND);
+    if (VERB_WIC >= 3) { Printer::ext_info("m_activeCellInfo != nullptr", "WellIndexCalculation", "RICaseData"); }
     delete m_activeCellInfo;
-    printf("%s%s%s\n", FRED, "TRUE (~RICaseData)", AEND);
+    if (VERB_WIC >= 3) { Printer::ext_info("deleted m_activeCellInfo", "WellIndexCalculation", "RICaseData"); }
 
   } else {
-
-    // -----------------------------------------------------
-    printf("%s%s%s\n", FRED,
-           "m_activeCellInfo != nullptr FALSE (~RICaseData)", AEND);
-
+    if (VERB_WIC >= 3) { Printer::ext_info("m_activeCellInfo == nullptr", "WellIndexCalculation", "RICaseData"); }
   }
 
   // -------------------------------------------------------
-  if (m_fractureActiveCellInfo != NULL) {
-
-    // -----------------------------------------------------
-    // printf("%s%s%s", FRED, "m_fractureActiveCellInfo != nullptr ", AEND);
-
-    // delete m_fractureActiveCellInfo; // <-- crash with seg.fault or
-    // corrupted memory after about one GPS iteration --> why?
-
-    // m_fractureActiveCellInfo->release(); // <- assertion failed
-    // printf("%s%s%s\n", FRED, "TRUE (~RICaseData)", AEND);
-
-  } else {
-
-    // -----------------------------------------------------
-    printf("%s%s%s\n", FRED,
-           "m_fractureActiveCellInfo != nullptr FALSE (~RICaseData)", AEND);
-
-  }
-
-  // -------------------------------------------------------
-  printf("%s%s%s\n", FRED, "FIELDOPT_BUILD (~RICaseData)", AEND);
+//  if (m_fractureActiveCellInfo != NULL) {
+//
+//    // -----------------------------------------------------
+//    // printf("%s%s%s", FRED, "m_fractureActiveCellInfo != nullptr ", AEND);
+//
+//    // delete m_fractureActiveCellInfo; // <-- crash with seg.fault or
+//    // corrupted memory after about one GPS iteration --> why?
+//
+//    // m_fractureActiveCellInfo->release(); // <- assertion failed
+//    // printf("%s%s%s\n", FRED, "TRUE (~RICaseData)", AEND);
+//
+//  } else {
+//
+//    printf("%s%s%s\n", FRED,
+//           "m_fractureActiveCellInfo != nullptr FALSE (~RICaseData)", AEND);
+//
+//  }
+//
+//  // -------------------------------------------------------
+//  printf("%s%s%s\n", FRED, "FIELDOPT_BUILD (~RICaseData)", AEND);
 
 #elif ADGPRS_LIB_BUILD
 
@@ -138,7 +135,9 @@ RICaseData::~RICaseData() {
 #endif
 
   // -------------------------------------------------------
-  cout << "[wic-rixx]deleting vars.----- RICaseData" << endl;
+  if(VERB_WIC >= 3) {
+    Printer::ext_info("Deleting variables.", "WellIndexCalculation", "RICaseData");
+  }
 
 }
 
@@ -226,9 +225,9 @@ void RICaseData::computeActiveCellIJKBBox() {
 //      && m_fractureActiveCellInfo != 0) {
 
   // -------------------------------------------------------
-  cout << FLGREEN
-       << "[wic-rixx]compActCellIJKBBox- (ricasedata.cpp)"
-       << AEND << endl;
+  if(VERB_WIC >= 3) {
+    Printer::ext_info("compActCellIJKBBox.", "WellIndexCalculation", "RICaseData");
+  }
 
   // -------------------------------------------------------
   CellRangeBB matrixModelActiveBB;
@@ -325,9 +324,9 @@ RICaseData::setActiveCellInfo(
 void RICaseData::computeActiveCellsGeometryBoundingBox() {
 
   // -------------------------------------------------------
-  if (verb_vector()[3] > 3) // idx:3 -> wic
-    cout << fstr("[wic-rixx]compActCellsGeoBBox.",3)
-         << "[ricasedata.cpp]" << endl;
+  if(VERB_WIC >= 3) {
+    Printer::ext_info("compActCellsGeoBBox", "WellIndexCalculation", "RICaseData");
+  }
 
   // -------------------------------------------------------
   // MB
@@ -392,9 +391,9 @@ void RICaseData::computeActiveCellsGeometryBoundingBox() {
         }
       }
       // ---------------------------------------------------
-      if (verb_vector()[3] > 3) // idx:3 -> wic
-        cout << fstr("[wic-rixx]computeActiveCellsGeomBB.",3)
-             << bb.debugString().toStdString() << endl;
+      if(VERB_WIC >= 3) {
+        Printer::ext_info("computeActiveCellsGeomBB", "WellIndexCalculation", "RICaseData");
+      }
     }
 
     // -----------------------------------------------------
@@ -672,9 +671,9 @@ bool RIReaderECL::transferGeometry(const ecl_grid_type* mainEclGrid,
   CVF_ASSERT(eclipseCase);
 
   // ---------------------------------------------------------------
-  cout << FLGREEN
-       << "[wic-rixx]Reading geometry--- (ricasedata.cpp)"
-       << AEND << endl;
+  if(VERB_WIC >= 3) {
+    Printer::ext_info("Reading geometry.", "WellIndexCalculation", "RICaseData");
+  }
 
   // ---------------------------------------------------------------
   if (!mainEclGrid) {
@@ -827,16 +826,22 @@ bool RIReaderECL::open(const QString& fileName,
   CVF_ASSERT(eclipseCase);
 
   // ---------------------------------------------------------------
-  cout << FLGREEN << "[wic-rixx]Reading Grid------- (ricasedata.cpp)" << AEND;
+  if(VERB_WIC >= 3) {
+    Printer::ext_info("Reading grid.", "WellIndexCalculation", "RICaseData");
+  }
   QStringList fileSet;
 
   // ---------------------------------------------------------------
   if (!RIECLFileTools::
   findSiblingFilesWithSameBaseName(fileName, &fileSet)) {
-    cout << FLGREEN << "findSiblingFilesWithSameBaseName FAILED!" << AEND << endl;
+    if(VERB_WIC >= 0) {
+      Printer::ext_warn("findSiblingFilesWithSameBaseName FAILED!", "WellIndexCalculation", "RICaseData");
+    }
     return false;
   } else {
-    cout << FLGREEN << " - " << fileName.toStdString() << AEND;
+    if(VERB_WIC >= 2) {
+      Printer::ext_info("Opening file " + fileName.toStdString(), "WellIndexCalculation", "RICaseData");
+    }
   }
   m_fileName = fileName;
   m_filesWithSameBaseName = fileSet;
@@ -844,11 +849,13 @@ bool RIReaderECL::open(const QString& fileName,
   // ---------------------------------------------------------------
   // Todo: Needs to check existence of file before calling ert, else it will abort
   ecl_grid_type * mainEclGrid = ecl_grid_alloc(fileName.toLatin1().data());
-  cout << FLGREEN << " - mem alloc " << AEND << endl;
+  if(VERB_WIC >= 3) {
+    Printer::ext_info("Allocating memory.", "WellIndexCalculation", "RICaseData");
+  }
 
   // ---------------------------------------------------------------
   if (!transferGeometry(mainEclGrid, eclipseCase)) {
-    cout << FLGREEN << "transferGeometry FAILED!" << AEND << endl;
+    Printer::ext_warn("transferGeometry FAILED!", "WellIndexCalculation", "RICaseData");
     return false;
   }
 
@@ -887,9 +894,9 @@ bool RIReaderECL::open(const QString& fileName,
   // readWellCells(mainEclGrid, true);
 
   // ---------------------------------------------------------------
-  cout << FLGREEN
-       << "[wic-rixx]Releasing memory--- (ricasedata.cpp)"
-       << AEND << endl;
+  if(VERB_WIC >= 3) {
+    Printer::ext_info("Releasing memory.", "WellIndexCalculation", "RICaseData");
+  }
   ecl_grid_free( mainEclGrid );
 
   return true;

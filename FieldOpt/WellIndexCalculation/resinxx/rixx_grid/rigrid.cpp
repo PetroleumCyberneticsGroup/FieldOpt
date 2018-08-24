@@ -28,6 +28,8 @@
 // ---------------------------------------------------------
 // STD
 #include <string>
+#include <Utilities/verbosity.h>
+#include <Utilities/printer.hpp>
 
 // ---------------------------------------------------------
 #include "rigrid.h"
@@ -618,9 +620,9 @@ void RIGrid::computeCachedData() {
   buildCellSearchTree();
 
   // -------------------------------------------------------
-  cout << FLGREEN
-       << "[wic-rixx]computeCachedData-- (ricasedata.cpp)"
-       << AEND << endl;
+  if(VERB_WIC >= 3) {
+    Printer::ext_info("computeCachedData done.", "WellIndexCalculation", "RIGrid");
+  }
 }
 
 // =========================================================
@@ -725,9 +727,9 @@ RIGrid::calculateFaults(const RIActiveCellInfo* activeCellInfo) {
   }
 
   // ---------------------------------------------------------------
-  cout << FLGREEN
-       << "[wic-rixx]RIFaultsPrCellAccm- (ricasedata.cpp)"
-       << AEND << endl;
+  if(VERB_WIC >= 3) {
+    Printer::ext_info("Calling RIFaultsprCellAccumulation.", "WellIndexCalculation", "RIGrid");
+  }
   m_faultsPrCellAcc = new RIFaultsPrCellAccumulator(m_cells.size());
 
   // ---------------------------------------------------------------
@@ -904,9 +906,9 @@ RIGrid::calculateFaults(const RIActiveCellInfo* activeCellInfo) {
 void RIGrid::distributeNNCsToFaults() {
 
   // ---------------------------------------------------------------
-  cout << FLGREEN
-       << "[wic-rixx]distribNNCsToFaults (rigrid.cpp)"
-       << AEND << endl;
+  if(VERB_WIC >= 3) {
+    Printer::ext_info("distributeNNCsToFaults.", "WellIndexCalculation", "RIGrid");
+  }
 
   // ---------------------------------------------------------------
   const std::vector<RIConnection>&
@@ -968,9 +970,9 @@ void RIGrid::distributeNNCsToFaults() {
 bool RIGrid::isFaceNormalsOutwards() const {
 
   // ---------------------------------------------------------------
-  cout << FLGREEN
-       << "[wic-rixx]isFaceNormalOutward (ricasedata.cpp)"
-       << AEND << endl;
+  if(VERB_WIC >= 3) {
+    Printer::ext_info("isFaceNormalsOutwards.", "WellIndexCalculation", "RIGrid");
+  }
 
   // ---------------------------------------------------------------
   for (int gcIdx = 0 ; gcIdx < static_cast<int>(m_cells.size()); ++gcIdx) {
@@ -1389,6 +1391,8 @@ RILocalGrid::RILocalGrid(RIGrid* mainGrid):
 }
 
 RILocalGrid::~RILocalGrid() {
-  cout << "[wic-rixx]deleting vars.----- RILocalGrid" << endl;
+  if(VERB_WIC >= 3) {
+    Printer::ext_info("deleting vars.", "WellIndexCalculation", "RIGrid");
+  }
 }
 
