@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 project(ertwrapper)
 
 
-add_library(ertwrapper
+add_library(ertwrapper STATIC
         ertwrapper_exceptions.h
         eclgridreader.cpp
         eclsummaryreader.cpp)
@@ -13,7 +13,9 @@ include_directories(
 	${ERT_INCLUDE_DIR})
 
 target_link_libraries(ertwrapper
-        PUBLIC ${ecl_LIBRARIES})
+#        PUBLIC ${ERTLIB}
+        PUBLIC ri:ert_ecl
+        PUBLIC ${ert_util})
 
 target_include_directories(ertwrapper PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)

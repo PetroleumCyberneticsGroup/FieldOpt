@@ -195,9 +195,9 @@ WellPath::calculateTransmissibility(const cvf::Vec3d& internalCellLengths,
   // -------------------------------------------------------------
   double dx, dy, dz, permx, permy, permz;
 
-  dx = icell.dxdydz()[0];
-  dy = icell.dxdydz()[1];
-  dz = icell.dxdydz()[2];
+  dx = icell.dx();
+  dy = icell.dy();
+  dz = icell.dz();
 
   permx = icell.permx()[0];
   permy = icell.permy()[0];

@@ -99,10 +99,6 @@ RimIntersection(RIGrid* grid,
   // -------------------------------------------------------
   m_crossSectionPartMgr = nullptr;
 
-  // -------------------------------------------------------
-  if (settings_con_.verb_vector_[5] > 1) // idx:5 -> mod (Model)
-    cout << "[mod]Init RimIntersection.--- " << endl;
-
 }
 
 // ===============================================================

@@ -21,9 +21,9 @@
 #define WELLSPLINE_H
 
 #include "trajectory.h"
+#include "WellIndexCalculation/intersected_cell.h"
 #include "Reservoir/grid/eclgrid.h"
 #include "Model/wells/wellbore/wellblock.h"
-#include "FieldOpt-WellIndexCalculator/wellindexcalculator.h"
 #include <QList>
 
 namespace Model {
@@ -59,7 +59,7 @@ class WellSpline
 
   bool HasGridChanged() const;
   bool HasSplineChanged() const;
-  
+
   /*!
    * Get spline points (for debugging purposes).
    */

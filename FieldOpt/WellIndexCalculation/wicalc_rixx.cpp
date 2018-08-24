@@ -57,7 +57,6 @@ wicalc_rixx::wicalc_rixx(::Settings::Model::Well well_settings,
   // cout << "[mod]wicalc_rixx-01.--------- " << endl;
   grid_ = grid;
   // ricasedata_ = ricasedata;
-  cl_ = well_settings.verb_vector_[3]; // current dbg.msg.level
 
   // Experimental
   // ricasedatap_ = ricasedata;
@@ -67,8 +66,8 @@ wicalc_rixx::wicalc_rixx(::Settings::Model::Well well_settings,
   // std::cout << "[mod]wicalc_rixx-01.--------- " << std::endl;
 
   RIReaderECL rireaderecl_;
-  ricasedata_ = new RICaseData(grid_->GetFilePath());
-  rireaderecl_.open(grid_->GetFilePathQString(), ricasedata_.p());
+  ricasedata_ = new RICaseData(grid_->GetGridFilePath());
+  rireaderecl_.open(QString::fromStdString(grid_->GetGridFilePath()), ricasedata_.p());
 
   ricasedata_->computeActiveCellBoundingBoxes();
   ricasedata_->mainGrid()->computeCachedData();
@@ -88,13 +87,11 @@ wicalc_rixx::wicalc_rixx(::Settings::Model::Well well_settings,
   // Dbg
   QDateTime tstart = QDateTime::currentDateTime();
   std::stringstream str; str << "Find cell from coords.";
-  print_dbg_msg_wic_ri(__func__, str.str(), 0.0, 0, true, cl_, 2);
 
   str.str(""); str << "grid_->gridCount(): " << grid_count
                    << " -- grid_->cellCount(): " << cell_count
                    << " -- grid_->globalCellArray().size(): "
                    << gcellarray_sz;
-  print_dbg_msg_wic_ri(__func__, str.str(), 0.0, 0, true, cl_, 2);
 
 }
 

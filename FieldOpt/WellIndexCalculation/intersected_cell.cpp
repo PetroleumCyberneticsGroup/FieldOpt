@@ -177,5 +177,10 @@ int IntersectedCell::GetIntersectedCellIndex(vector<IntersectedCell> &cells,
     return cells.size() - 1;
   }
 }
+
+Eigen::Vector3d IntersectedCell::dxdydz() const {
+  return Eigen::Vector3d(dx(), dy(), dz());
+}
+
 }
 }

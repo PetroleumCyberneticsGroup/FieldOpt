@@ -83,7 +83,8 @@ endif ()
 configure_file(build_config.h.in   include/ert/util/build_config.h)
 configure_file(ert_api_config.h.in include/ert/util/ert_api_config.h)
 
-add_library(ecl util/rng.c
+add_library(ecl STATIC
+                util/rng.c
                 util/lookup_table.c
                 util/statistics.c
                 util/mzran.c
@@ -178,6 +179,7 @@ add_library(ecl util/rng.c
                 geometry/geo_polygon.c
                 geometry/geo_polygon_collection.c
 )
+add_library(ri:ert_ecl ALIAS ecl)
 
 target_link_libraries(ecl PUBLIC ${m}
                                  ${dl}

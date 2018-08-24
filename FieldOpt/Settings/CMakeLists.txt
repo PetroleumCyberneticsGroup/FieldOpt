@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(settings)
 
-add_library(settings
+add_library(settings STATIC
         settings_exceptions.h
         optimizer.cpp
         simulator.cpp
@@ -14,7 +14,9 @@ add_library(settings
 add_library(fieldopt::settings ALIAS ${PROJECT_NAME})
 
 target_link_libraries(settings
-        PUBLIC ${ecl_LIBRARIES}
+#        PUBLIC ${ERTLIB}
+        PUBLIC ri:ert_ecl
+        PUBLIC ${ert_util}
         PUBLIC ${opm-common_LIBRARIES}
         PUBLIC ${Boost_LIBRARIES}
         PUBLIC Qt5::Core)

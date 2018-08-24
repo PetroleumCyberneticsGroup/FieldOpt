@@ -27,7 +27,7 @@
 #include <gtest/gtest.h>
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
-#include "FieldOpt-WellIndexCalculator/wellindexcalculator.h"
+#include "WellIndexCalculation/wellindexcalculator.h"
 
 using namespace Reservoir::Grid;
 using namespace Reservoir::WellIndexCalculation;

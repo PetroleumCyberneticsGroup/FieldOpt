@@ -1067,8 +1067,6 @@ void RIGrid::findIntersectingCells(
   CVF_ASSERT(m_cellSearchTree.notNull());
   m_cellSearchTree->findIntersections(inputBB, cellIndices);
 
-  // ---------------------------------------------------------------
-  print_dbg_msg_wic_ri(__func__, str, time_since_msecs(tstart), 2);
 }
 
 // =========================================================

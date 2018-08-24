@@ -65,39 +65,18 @@ add_definitions(-DFIELDOPT_BUILD)
 
 add_library(${WIC_LIB_TARGET}
     intersected_cell.cpp
-    wellindexcalculator.cpp
+#    wellindexcalculator.cpp
     #
     wicalc_rixx.cpp
     ${RIXX_ALL_CPP_FILES}
     #
-    tests/wic_debug.hpp
-    )
+        WellDefinition.h)
 
 add_library(fieldopt::${WIC_LIB_TARGET}
     ALIAS ${PROJECT_NAME})
 
 message(STATUS "Set WIC_LIB_TARGET: ${WIC_LIB_TARGET}")
 
-elseif(BUILD_WIC_ADGPRS)
-
-# controls ricasedata delete
-add_definitions(-DADGPRS_LIB_BUILD)
-
-add_library(${WIC_LIB_TARGET_ADG} SHARED
-    dllmain.cpp
-    intersected_cell.cpp
-    wellindexcalculator.cpp
-    #
-    wicalc_rixx.cpp
-    ${RIXX_ALL_CPP_FILES}
-    #
-    tests/wic_debug.hpp
-    )
-
-add_library(fieldopt::${WIC_LIB_TARGET_ADG}
-    ALIAS ${WIC_LIB_TARGET_ADG})
-
-message(STATUS "Set WIC_LIB_TARGET: ${WIC_LIB_TARGET_ADG}")
 
 endif()
 
@@ -107,12 +86,13 @@ set_target_properties(${WIC_LIB_TARGET}
     PROPERTIES COMPILE_FLAGS "-fPIC")
 
 target_link_libraries(${WIC_LIB_TARGET}
-    PUBLIC fieldopt::${WIC_LIB_TARGET}
+#    PUBLIC fieldopt::${WIC_LIB_TARGET}
     PUBLIC fieldopt::reservoir
     PUBLIC ${Boost_LIBRARIES}
     PUBLIC Qt5::Core
     #
-    PUBLIC ${ERTLIB}
+#    PUBLIC ${ERTLIB}
+    PUBLIC ri:ert_ecl
     PUBLIC ${ert_util}
     # PUBLIC ${ert_eclxx}
     # PUBLIC ${ert_utilxx}
@@ -126,85 +106,55 @@ install(TARGETS wellindexcalculator
     ARCHIVE DESTINATION lib/static
     )
 
-add_executable(wicalc
-    main.cpp
-    intersected_cell.cpp
-    wellindexcalculator.cpp
-    #
-    wicalc_rixx.cpp
-    ${RIXX_ALL_CPP_FILES}
-    )
-
-target_link_libraries(wicalc
-    PUBLIC fieldopt::${WIC_LIB_TARGET}
-    PUBLIC ${Boost_LIBRARIES}
-    PUBLIC Qt5::Core
-    #
-    PUBLIC ${ERTLIB}
-    PUBLIC ${ert_util}
-    )
-
-install(TARGETS wicalc wellindexcalculator
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib/static
-    )
-
-elseif(BUILD_WIC_ADGPRS)
-
-target_link_libraries (${WIC_LIB_TARGET_ADG}
-    PUBLIC fieldopt::reservoir
-    PUBLIC ${Boost_LIBRARIES}
-    PUBLIC Qt5::Core
-    #
-    PUBLIC ${ERTLIB}
-    PUBLIC ${ert_util}
-    # PUBLIC ${ert_eclxx}
-    # PUBLIC ${ert_utilxx}
-    # PUBLIC ${ert_well}
-    # PUBLIC ${ert_geometry}
-    )
-
-#    add_executable(wicalc-adgprs
-#        dllmain.cpp)
+#add_executable(wicalc
+#    main.cpp
+#    intersected_cell.cpp
+#    wellindexcalculator.cpp
+#    #
+#    wicalc_rixx.cpp
+#    ${RIXX_ALL_CPP_FILES}
+#    )
 #
-#    target_link_libraries(wicalc-adgprs
-#        PUBLIC fieldopt::${WIC_LIB_TARGET_ADG}
-#        PUBLIC ${Boost_LIBRARIES}
-#        PUBLIC Qt5::Core
-#        #
-#        PUBLIC ${ERTLIB}
-#        PUBLIC ${ert_util}
-#        # PUBLIC ${ert_eclxx}
-#        # PUBLIC ${ert_utilxx}
-#        # PUBLIC ${ert_well}
-#        # PUBLIC ${ert_geometry}
-#        )
+#target_link_libraries(wicalc
+#    PUBLIC fieldopt::${WIC_LIB_TARGET}
+#    PUBLIC ${Boost_LIBRARIES}
+#    PUBLIC Qt5::Core
+#    #
+#    PUBLIC ${ERTLIB}
+#    PUBLIC ${ert_util}
+#    )
+#
+#install(TARGETS wicalc wellindexcalculator
+#    RUNTIME DESTINATION bin
+#    LIBRARY DESTINATION lib
+#    ARCHIVE DESTINATION lib/static
+#    )
+
 endif()
 
 
 # Testing ==============================================================
-if (BUILD_TESTING AND NOT BUILD_WIC_ADGPRS)
-
-  # Unit tests
-  find_package(GTest REQUIRED)
-
-  include_directories(${GTEST_INCLUDE_DIRS}
-      ${EIGEN3_INCLUDE_DIR} tests)
-
-  add_executable(test_wellindexcalculator
-      tests/test_intersected_cells.cpp
-      tests/test_single_cell_wellindex.cpp
-      tests/test_standalone_wicalc.cpp)
-
-  target_link_libraries(test_wellindexcalculator
-      fieldopt::wellindexcalculator
-      ${GTEST_BOTH_LIBRARIES}
-      ${CMAKE_THREAD_LIBS_INIT})
-
-  add_test(NAME test_wellindexcalculator
-      COMMAND $<TARGET_FILE:test_wellindexcalculator>)
-endif()
+#if (BUILD_TESTING AND NOT BUILD_WIC_ADGPRS)
+#
+#  # Unit tests
+#  find_package(GTest REQUIRED)
+#
+#  include_directories(${GTEST_INCLUDE_DIRS}
+#      ${EIGEN3_INCLUDE_DIR} tests)
+#
+#  add_executable(test_wellindexcalculator
+#      tests/test_intersected_cells.cpp
+#      tests/test_single_cell_wellindex.cpp
+#      tests/test_standalone_wicalc.cpp)
+#
+#  target_link_libraries(test_wellindexcalculator
+#      fieldopt::wellindexcalculator
+#      ${GTEST_BOTH_LIBRARIES}
+#      ${CMAKE_THREAD_LIBS_INIT})
+#
+#  add_test(NAME test_wellindexcalculator
+#      COMMAND $<TARGET_FILE:test_wellindexcalculator>)
+#endif()
 
 
 # Debug: include dirs ==================================================

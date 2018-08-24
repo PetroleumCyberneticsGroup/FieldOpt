@@ -26,6 +26,7 @@
 #include <Utilities/time.hpp>
 #include <boost/algorithm/string.hpp>
 #include <QList>
+#include "WellIndexCalculation/wicalc_rixx.h"
 
 namespace Model {
 namespace Wells {
@@ -108,30 +109,32 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
         welldefs[0].toes.push_back(spline_points_[w+1]->ToEigenVector());
     }
 
-    auto wic = WellIndexCalculator(grid_);
+//    auto wic = WellIndexCalculator(grid_);
+    auto wicalc_rixx = Reservoir::WellIndexCalculation::wicalc_rixx(well_settings_, grid_);
 
     std::cout << "Starting well index calculation ... " << std::endl;
     auto start = QDateTime::currentDateTime();
-    vector<Reservoir::WellIndexCalculation::IntersectedCell> block_data;
+    map<string, vector<IntersectedCell>> block_data;
     if (imported_wellblocks_.empty() || is_variable_) {
-        block_data = wic.ComputeWellBlocks(welldefs)[well_settings_.name.toStdString()];
+        wicalc_rixx.ComputeWellBlocks(block_data, welldefs, 0);
+        //[well_settings_.name.toStdString()];
     }
     else {
         std::cout << "Computing well indices for imported well blocks ... " << std::endl;
-        block_data = convertImportedWellblocksToIntersectedCells();
+        block_data["0"] = convertImportedWellblocksToIntersectedCells();
         for (int i = 0; i < block_data.size(); ++i) {
-            wic.compute_well_index(block_data, i);
+            wicalc_rixx.ComputeWellBlocks(block_data, welldefs, i);
         }
     }
     auto end = QDateTime::currentDateTime();
     seconds_spent_in_compute_wellblocks_ = time_span_seconds(start, end);
 
     QList<WellBlock *> *blocks = new QList<WellBlock *>();
-    for (int i = 0; i < block_data.size(); ++i) {
-        if (block_data[i].cell_well_index_matrix() > 0.01) { // Ignoring well blocks with very low well index.
-            blocks->append(getWellBlock(block_data[i]));
-            blocks->last()->setEntryPoint(block_data[i].get_segment_entry_point(0));
-            blocks->last()->setExitPoint(block_data[i].get_segment_exit_point(0));
+    for (int i = 0; i < block_data["0"].size(); ++i) {
+        if (block_data["0"][i].cell_well_index_matrix() > 0.01) { // Ignoring well blocks with very low well index.
+            blocks->append(getWellBlock(block_data["0"][i]));
+            blocks->last()->setEntryPoint(block_data["0"][i].get_segment_entry_point(0));
+            blocks->last()->setExitPoint(block_data["0"][i].get_segment_exit_point(0));
         }
     }
     if (blocks->size() == 0) {

@@ -30,6 +30,7 @@
 // ---------------------------------------------------------
 // FieldOpt::RESINXX
 #include "resinxx/well_path.h"
+#include "WellDefinition.h"
 
 // ---------------------------------------------------------
 namespace Reservoir {
@@ -97,7 +98,6 @@ class wicalc_rixx
   // size_t grid_count_;
   // size_t cell_count_;
   // size_t gcellarray_sz_;
-  int cl_; // cl: current dbg.msg.level
 
 };
 

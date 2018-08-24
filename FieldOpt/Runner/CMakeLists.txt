@@ -19,7 +19,7 @@ add_executable(FieldOpt
 		bookkeeper.cpp
         runners/ensemble_helper.cpp)
 
-add_library(runner
+add_library(runner STATIC
 		runtime_settings.cpp
 		runners/main_runner.cpp
 		runners/abstract_runner.cpp
@@ -44,7 +44,10 @@ target_link_libraries(FieldOpt
 		PUBLIC fieldopt::constraintmath
 		PUBLIC ${CMAKE_THREAD_LIBS_INIT}
 		PUBLIC ${Boost_LIBRARIES}
-        PUBLIC ${MPI_LIBRARIES})
+        PUBLIC ${MPI_LIBRARIES}
+#		PUBLIC ${ERTLIB}
+		PUBLIC ri:ert_ecl
+		)
 
 target_link_libraries(runner
 		PUBLIC fieldopt::model
@@ -55,7 +58,10 @@ target_link_libraries(runner
 		PUBLIC fieldopt::hdf5summaryreader
 		PUBLIC fieldopt::constraintmath
 		PUBLIC ${CMAKE_THREAD_LIBS_INIT}
-		PUBLIC ${Boost_LIBRARIES})
+		PUBLIC ${Boost_LIBRARIES}
+#		PUBLIC ${ERTLIB}
+		PUBLIC ri:ert_ecl
+		)
 
 if(MPI_COMPILE_FLAGS)
 	set_target_properties(runner PROPERTIES

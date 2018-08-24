@@ -73,7 +73,7 @@ using std::vector;
 // ╠╦╝  ║  ║    ║╣   ║    ║
 // ╩╚═  ╩  ╚═╝  ╚═╝  ╩═╝  ╩═╝
 //==========================================================
-class RICell : public Reservoir::Grid::Cell
+class RICell : public Reservoir::WellIndexCalculation::IntersectedCell
 {
  public:
   // -------------------------------------------------------

@@ -50,9 +50,7 @@
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
 #include "Settings/model.h"
-#include "FieldOpt-WellIndexCalculator/intersected_cell.h"
-#include "FieldOpt-WellIndexCalculator/wellindexcalculator.h"
-#include "FieldOpt-WellIndexCalculator/tests/wic_debug.hpp"
+#include "WellIndexCalculation/intersected_cell.h"
 #include "Utilities/debug.hpp"
 #include "Utilities/time.hpp"
 

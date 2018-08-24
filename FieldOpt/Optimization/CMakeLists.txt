@@ -17,7 +17,7 @@ else()
 endif()
 
 
-add_library(optimization
+add_library(optimization STATIC
         optimization_exceptions.h
 		objective/objective.cpp
 		objective/weightedsum.cpp

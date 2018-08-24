@@ -61,6 +61,7 @@ class IntersectedCell : public Grid::Cell {
   double dx() const;
   double dy() const;
   double dz() const;
+  Eigen::Vector3d dxdydz() const;
 
   // Custom adding of cell size dx/dy/dz
   void set_dx(double dx) { dx_ = dx; };

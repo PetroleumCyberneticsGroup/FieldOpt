@@ -1,7 +1,7 @@
 cmake_minimum_required( VERSION 2.8 )
 project(simulation)
 
-add_library(simulation
+add_library(simulation STATIC
         simulator_interfaces/simulator_exceptions.h
         simulator_interfaces/simulator.cpp
         simulator_interfaces/driver_file_writers/ecldriverfilewriter.cpp
