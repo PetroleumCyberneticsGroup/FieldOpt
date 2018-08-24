@@ -115,7 +115,7 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
             welldefs[0].heel_md.push_back(prev_toe);
         }
         welldefs[0].toe_md.push_back(
-            welldefs[0].heel_md + (welldefs[0].toes.back() - welldefs[0].heels.back()).norm();
+            welldefs[0].heel_md.back() + (welldefs[0].toes.back() - welldefs[0].heels.back()).norm()
         );
     }
 
