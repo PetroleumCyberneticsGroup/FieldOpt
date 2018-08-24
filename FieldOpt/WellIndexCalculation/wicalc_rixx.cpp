@@ -49,8 +49,7 @@ namespace Reservoir {
 namespace WellIndexCalculation {
 
 // =========================================================
-wicalc_rixx::wicalc_rixx(::Settings::Model::Well well_settings,
-                         Grid::Grid *grid,
+wicalc_rixx::wicalc_rixx(Grid::Grid *grid,
                          RICaseData *ricasedata) {
 
   // -------------------------------------------------------
