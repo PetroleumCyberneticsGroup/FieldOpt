@@ -80,17 +80,15 @@ class wicalc_rixx
   void collectIntersectedCells(vector<IntersectedCell> &isc_cells,
                                vector<WellPathCellIntersectionInfo> isc_info,
                                WellDefinition well,
-                               WellPath& wellPath,
-                               int rank=0);
+                               WellPath& wellPath);
 
   // ---------------------------------------------------------------
   void calculateWellPathIntersections(const WellPath& wellPath,
                                       vector<double> &isc_values);
 
   // ---------------------------------------------------------------
-  void ComputeWellBlocks(map<string, vector<IntersectedCell>> &well_indices,
-                         vector<WellDefinition> &wells,
-                         int rank = 0);
+  void ComputeWellBlocks(vector<IntersectedCell> &well_indices,
+                         WellDefinition &well);
 
  protected:
   // ---------------------------------------------------------------

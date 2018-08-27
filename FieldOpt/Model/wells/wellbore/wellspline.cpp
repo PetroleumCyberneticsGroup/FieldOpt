@@ -26,6 +26,8 @@
 #include <Utilities/time.hpp>
 #include <boost/algorithm/string.hpp>
 #include <QList>
+#include <Utilities/verbosity.h>
+#include <Utilities/printer.hpp>
 #include "WellIndexCalculation/wicalc_rixx.h"
 
 namespace Model {
@@ -97,60 +99,65 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
     last_computed_grid_ = grid_->GetGridFilePath();
     last_computed_spline_ = create_spline_point_vector();
 
-    vector<WellDefinition> welldefs;
-    welldefs.push_back(WellDefinition());
-    welldefs[0].wellname = well_settings_.name.toStdString();
+    WellDefinition welldef;
+    welldef.wellname = well_settings_.name.toStdString();
 
     for (int w = 0; w < spline_points_.size() - 1; ++w) {
-        welldefs[0].radii.push_back(well_settings_.wellbore_radius);
-        welldefs[0].skins.push_back(0.0);
-        welldefs[0].skins.push_back(0.0);
-        welldefs[0].heels.push_back(spline_points_[w]->ToEigenVector());
-        welldefs[0].toes.push_back(spline_points_[w+1]->ToEigenVector());
-        if (welldefs[0].heel_md.size() == 0) {
-            welldefs[0].heel_md.push_back(0.0);
+        welldef.radii.push_back(well_settings_.wellbore_radius);
+        welldef.skins.push_back(0.0);
+        welldef.skins.push_back(0.0);
+        welldef.heels.push_back(spline_points_[w]->ToEigenVector());
+        welldef.toes.push_back(spline_points_[w+1]->ToEigenVector());
+        if (welldef.heel_md.size() == 0) {
+            welldef.heel_md.push_back(0.0);
         }
         else {
-            double prev_toe = welldefs[0].toe_md.back();
-            welldefs[0].heel_md.push_back(prev_toe);
+            double prev_toe = welldef.toe_md.back();
+            welldef.heel_md.push_back(prev_toe);
         }
-        welldefs[0].toe_md.push_back(
-            welldefs[0].heel_md.back() + (welldefs[0].toes.back() - welldefs[0].heels.back()).norm()
+        welldef.toe_md.push_back(
+            welldef.heel_md.back() + (welldef.toes.back() - welldef.heels.back()).norm()
         );
     }
 
 //    auto wic = WellIndexCalculator(grid_);
     auto wicalc_rixx = Reservoir::WellIndexCalculation::wicalc_rixx(grid_);
 
-    std::cout << "Starting well index calculation ... " << std::endl;
+    if (VERB_MOD >= 2) {
+        Printer::info("Starting well index calculation.");
+    }
     auto start = QDateTime::currentDateTime();
-    map<string, vector<IntersectedCell>> block_data;
+    vector<IntersectedCell> block_data;
     if (imported_wellblocks_.empty() || is_variable_) {
-        wicalc_rixx.ComputeWellBlocks(block_data, welldefs, 0);
-        //[well_settings_.name.toStdString()];
+        wicalc_rixx.ComputeWellBlocks(block_data, welldef);
     }
     else {
-        std::cout << "Computing well indices for imported well blocks ... " << std::endl;
-        block_data["0"] = convertImportedWellblocksToIntersectedCells();
+        if (VERB_MOD >= 1) {
+            Printer::ext_warn("Well index calculation for imported paths is not properly implemented at this time.",
+                              "Model", "WellSpline");
+        }
+        block_data = convertImportedWellblocksToIntersectedCells();
         for (int i = 0; i < block_data.size(); ++i) {
-            wicalc_rixx.ComputeWellBlocks(block_data, welldefs, i);
+            wicalc_rixx.ComputeWellBlocks(block_data, welldef);
         }
     }
     auto end = QDateTime::currentDateTime();
     seconds_spent_in_compute_wellblocks_ = time_span_seconds(start, end);
 
     QList<WellBlock *> *blocks = new QList<WellBlock *>();
-    for (int i = 0; i < block_data["0"].size(); ++i) {
-        if (block_data["0"][i].cell_well_index_matrix() > 0.01) { // Ignoring well blocks with very low well index.
-            blocks->append(getWellBlock(block_data["0"][i]));
-            blocks->last()->setEntryPoint(block_data["0"][i].get_segment_entry_point(0));
-            blocks->last()->setExitPoint(block_data["0"][i].get_segment_exit_point(0));
+    for (int i = 0; i < block_data.size(); ++i) {
+        if (block_data[i].cell_well_index_matrix() > 0.01) { // Ignoring well blocks with very low well index.
+            blocks->append(getWellBlock(block_data[i]));
+            blocks->last()->setEntryPoint(block_data[i].get_segment_entry_point(0));
+            blocks->last()->setExitPoint(block_data[i].get_segment_exit_point(0));
         }
     }
     if (blocks->size() == 0) {
         throw WellBlocksNotDefined("WIC could not compute.");
     }
-    std::cout << "Done computing WIs after " << seconds_spent_in_compute_wellblocks_ << " seconds." << std::endl;
+    if (VERB_MOD >= 2) {
+        Printer::info("Done computing WIs after " + boost::lexical_cast<std::string>(seconds_spent_in_compute_wellblocks_) + " seconds");
+    }
     return blocks;
 }
 

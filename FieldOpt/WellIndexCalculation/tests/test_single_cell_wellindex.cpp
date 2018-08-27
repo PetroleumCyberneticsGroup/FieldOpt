@@ -53,7 +53,7 @@ class SingleCellWellIndexTest : public ::testing::Test {
   std::string file_path_ = "../examples/ECLIPSE/cube_9x9/CUBE.EGRID";
 
 
-  std::vector<WellDefinition> init_well(Eigen::Vector3d start_point, Eigen::Vector3d end_point) {
+  WellDefinition init_well(Eigen::Vector3d start_point, Eigen::Vector3d end_point) {
       WellDefinition well;
       well.heels.push_back(start_point);
       well.toes.push_back(end_point);
@@ -62,9 +62,7 @@ class SingleCellWellIndexTest : public ::testing::Test {
       well.wellname = "testwell";
       well.heel_md.push_back(0.0);
       well.toe_md.push_back((end_point - start_point).norm());
-      std::vector<WellDefinition> wells;
-      wells.push_back(well);
-      return wells;
+      return well;
   }
 
 };
@@ -80,12 +78,12 @@ TEST_F(SingleCellWellIndexTest, WellIndexValueVertical) {
     Eigen::Vector3d start_point = Eigen::Vector3d(1.5, 1.5, 1700.00001);
     Eigen::Vector3d end_point   = Eigen::Vector3d(1.5, 1.5, 1702.99999);
 
-    auto wells = init_well(start_point, end_point);
+    auto well = init_well(start_point, end_point);
 
     auto wic = wicalc_rixx(grid_);
-    map<string, vector<IntersectedCell>> well_indices;
-    wic.ComputeWellBlocks(well_indices, wells);
-    auto wblocks = well_indices[wells.at(0).wellname];
+    vector<IntersectedCell> well_indices;
+    wic.ComputeWellBlocks(well_indices, well);
+    auto wblocks = well_indices;
 
     EXPECT_EQ(wblocks.size(), 3);
     EXPECT_EQ(wblocks[1].global_index(), 13);
@@ -110,12 +108,12 @@ TEST_F(SingleCellWellIndexTest, WellIndexValueHorzX) {
     Eigen::Vector3d start_point = Eigen::Vector3d(1, 1.5, 1701.5);
     Eigen::Vector3d end_point   = Eigen::Vector3d(2, 1.5, 1701.5);
 
-    auto wells = init_well(start_point, end_point);
+    auto well = init_well(start_point, end_point);
 
     auto wic = wicalc_rixx(grid_);
-    map<string, vector<IntersectedCell>> well_indices;
-    wic.ComputeWellBlocks(well_indices, wells);
-    auto wblocks = well_indices[wells.at(0).wellname];
+    vector<IntersectedCell> well_indices;
+    wic.ComputeWellBlocks(well_indices, well);
+    auto wblocks = well_indices;
 
     EXPECT_EQ(wblocks.size(), 1);
     EXPECT_EQ(wblocks[0].global_index(), 13);
@@ -143,19 +141,18 @@ TEST_F(SingleCellWellIndexTest, Well_index_grid_test) {
     // \todo The following lines need to be changed
     auto wic = wicalc_rixx(grid_);
 
-    vector<WellDefinition> wells;
-    wells.push_back(WellDefinition());
-    wells.at(0).heels.push_back(start_point);
-    wells.at(0).toes.push_back(end_point);
-    wells.at(0).radii.push_back(wellbore_radius);
-    wells.at(0).skins.push_back(0.0);
-    wells.at(0).wellname = "testwell";
-    wells.at(0).heel_md.push_back(0.0);
-    wells.at(0).toe_md.push_back((end_point - start_point).norm());
+    WellDefinition well;
+    well.heels.push_back(start_point);
+    well.toes.push_back(end_point);
+    well.radii.push_back(wellbore_radius);
+    well.skins.push_back(0.0);
+    well.wellname = "testwell";
+    well.heel_md.push_back(0.0);
+    well.toe_md.push_back((end_point - start_point).norm());
 
-    map<string, vector<IntersectedCell>> well_indices;
-    wic.ComputeWellBlocks(well_indices, wells);
-    auto wblocks = well_indices[wells.at(0).wellname];
+    vector<IntersectedCell> well_indices;
+    wic.ComputeWellBlocks(well_indices, well);
+    auto wblocks = well_indices;
 
     EXPECT_EQ(117, wblocks.size());
 }

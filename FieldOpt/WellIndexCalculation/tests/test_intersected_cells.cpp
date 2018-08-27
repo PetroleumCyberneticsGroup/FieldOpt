@@ -69,19 +69,18 @@ TEST_F(IntersectedCellsTest, find_point_test) {
     Eigen::Vector3d exit_point = Eigen::Vector3d(24,24,1712);
     // cout << "-define start_point, end_point, exit_point" << endl; // debug
 
-    vector<WellDefinition> wells;
+    WellDefinition well;
     // cout << "-define well" << endl; // debug
-    wells.push_back(WellDefinition());
-    wells.at(0).heels.push_back(start_point);
-    wells.at(0).toes.push_back(end_point);
-    wells.at(0).radii.push_back(0.190);
-    wells.at(0).skins.push_back(0.0);
-    wells.at(0).wellname = "testwell";
-    wells.at(0).heel_md.push_back(0.0);
-    wells.at(0).toe_md.push_back((end_point - start_point).norm());
+    well.heels.push_back(start_point);
+    well.toes.push_back(end_point);
+    well.radii.push_back(0.190);
+    well.skins.push_back(0.0);
+    well.wellname = "testwell";
+    well.heel_md.push_back(0.0);
+    well.toe_md.push_back((end_point - start_point).norm());
 
-    map<string, vector<IntersectedCell>> cells;
-    wic_->ComputeWellBlocks(cells, wells);
+    vector<IntersectedCell> cells;
+    wic_->ComputeWellBlocks(cells, well);
 
     vector<IntersectedCell> intersected_cell;
     int index_cell1 = IntersectedCell::GetIntersectedCellIndex(
@@ -127,32 +126,31 @@ TEST_F(IntersectedCellsTest, intersected_cell_test_cases) {
     Eigen::Vector3d start_point = Eigen::Vector3d(0,0,1702);
     Eigen::Vector3d end_point = Eigen::Vector3d(44,84,1720);
 
-    vector<WellDefinition> wells;
-    wells.push_back(WellDefinition());
-    wells.at(0).heels.push_back(start_point);
-    wells.at(0).toes.push_back(end_point);
-    wells.at(0).radii.push_back(0.190);
-    wells.at(0).skins.push_back(0.0);
-    wells.at(0).wellname = "testwell";
-    wells.at(0).heel_md.push_back(0.0);
-    wells.at(0).toe_md.push_back((end_point - start_point).norm());
+    WellDefinition well;
+    well.heels.push_back(start_point);
+    well.toes.push_back(end_point);
+    well.radii.push_back(0.190);
+    well.skins.push_back(0.0);
+    well.wellname = "testwell";
+    well.heel_md.push_back(0.0);
+    well.toe_md.push_back((end_point - start_point).norm());
 
-    map<string, vector<IntersectedCell>> cells;
-    wic_->ComputeWellBlocks(cells, wells);
+    vector<IntersectedCell> cells;
+    wic_->ComputeWellBlocks(cells, well);
 
     // obsolete?
     // wic_.collect_intersected_cells(cells, start_point, end_point, 0.0190, std::vector<int>());
 
     cout << "number of cells intersected = " << cells.size() << endl;
-    for( int ii = 0; ii< cells["testwell"].size(); ii++) {
+    for( int ii = 0; ii< cells.size(); ii++) {
         cout << "cell intersection number "
              << ii+1 << " with index number "
-             << cells["testwell"][ii].global_index() << endl;
+             << cells[ii].global_index() << endl;
 
         cout << "line enters in point "
-             << cells["testwell"][ii].get_segment_entry_point(0).x() << ","
-             << cells["testwell"][ii].get_segment_entry_point(0).y() << ","
-             << cells["testwell"][ii].get_segment_entry_point(0).z() << endl;
+             << cells[ii].get_segment_entry_point(0).x() << ","
+             << cells[ii].get_segment_entry_point(0).y() << ","
+             << cells[ii].get_segment_entry_point(0).z() << endl;
     }
 }
 
@@ -183,19 +181,18 @@ TEST_F(IntersectedCellsTest, ProblematicPathA) {
     Eigen::Vector3d start_point = Eigen::Vector3d(290.0859, 1168.6483, 1711.5059);
     Eigen::Vector3d end_point = Eigen::Vector3d(1113.9993,  107.1271, 1698.8978);
 
-    vector<WellDefinition> wells;
-    wells.push_back(WellDefinition());
-    wells.at(0).heels.push_back(start_point);
-    wells.at(0).toes.push_back(end_point);
-    wells.at(0).radii.push_back(0.190);
-    wells.at(0).skins.push_back(0.0);
-    wells.at(0).wellname = "testwell";
-    wells.at(0).heel_md.push_back(0.0);
-    wells.at(0).toe_md.push_back((end_point - start_point).norm());
+    WellDefinition well;
+    well.heels.push_back(start_point);
+    well.toes.push_back(end_point);
+    well.radii.push_back(0.190);
+    well.skins.push_back(0.0);
+    well.wellname = "testwell";
+    well.heel_md.push_back(0.0);
+    well.toe_md.push_back((end_point - start_point).norm());
 
-    map<string, vector<IntersectedCell>> cells;
-    wic_->ComputeWellBlocks(cells, wells);
-    EXPECT_GT(cells["testwell"].size(), 1);
+    vector<IntersectedCell> cells;
+    wic_->ComputeWellBlocks(cells, well);
+    EXPECT_GT(cells.size(), 1);
 }
 
 TEST_F(IntersectedCellsTest, ProblematicPathB) {
@@ -205,19 +202,18 @@ TEST_F(IntersectedCellsTest, ProblematicPathB) {
   Eigen::Vector3d start_point = Eigen::Vector3d(-290.0859, 1168.6483, 1711.5059);
   Eigen::Vector3d end_point = Eigen::Vector3d(1113.9993,  107.1271, 1698.8978);
 
-  vector<WellDefinition> wells;
-  wells.push_back(WellDefinition());
-  wells.at(0).heels.push_back(start_point);
-  wells.at(0).toes.push_back(end_point);
-  wells.at(0).radii.push_back(0.190);
-  wells.at(0).skins.push_back(0.0);
-  wells.at(0).wellname = "testwell";
-  wells.at(0).heel_md.push_back(0.0);
-  wells.at(0).toe_md.push_back((end_point - start_point).norm());
+  WellDefinition well;
+  well.heels.push_back(start_point);
+  well.toes.push_back(end_point);
+  well.radii.push_back(0.190);
+  well.skins.push_back(0.0);
+  well.wellname = "testwell";
+  well.heel_md.push_back(0.0);
+  well.toe_md.push_back((end_point - start_point).norm());
 
-    map<string, vector<IntersectedCell>> cells;
-    wic_->ComputeWellBlocks(cells, wells);
-  EXPECT_GT(cells["testwell"].size(), 1);
+    vector<IntersectedCell> cells;
+    wic_->ComputeWellBlocks(cells, well);
+  EXPECT_GT(cells.size(), 1);
 }
 
 //TEST_F(IntersectedCellsTest, ProblematicPathC) {

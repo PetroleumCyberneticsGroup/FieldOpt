@@ -530,8 +530,6 @@ RIGrid::~RIGrid() {
 
   }
 
-  printf("%s%s%s\n", FRED, "FIELDOPT_BUILD (~RIGrid)", AEND);
-
 //#elif ADGPRS_LIB_BUILD
 //
 //  printf("%s%s%s\n", FRED, "ADGPRS_BUILD (~RIGrid)", AEND);
@@ -539,7 +537,9 @@ RIGrid::~RIGrid() {
 //#endif
 
   // -------------------------------------------------------
-  cout << "[wic-rixx]deleting vars.----- RIGrid" << endl;
+  if (VERB_WIC >= 3) {
+    Printer::ext_info("Deleting variables.", "WellIndexCalculation", "RIGRID");
+  }
 
 }
 

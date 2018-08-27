@@ -38,6 +38,9 @@ using std::stringstream;
 
 // ---------------------------------------------------------
 #include <memory>
+#include <Utilities/verbosity.h>
+#include <Utilities/printer.hpp>
+#include <boost/lexical_cast.hpp>
 
 // ---------------------------------------------------------
 enum CompletionType {
@@ -132,8 +135,7 @@ void
 wicalc_rixx::collectIntersectedCells(vector<IntersectedCell> &isc_cells,
                                      vector<WellPathCellIntersectionInfo> isc_info,
                                      WellDefinition well,
-                                     WellPath& wellPath,
-                                     int rank) {
+                                     WellPath& wellPath) {
 
   vector<RICompData> completionData;
   Reservoir::Grid::Cell gcell;
@@ -221,19 +223,13 @@ wicalc_rixx::collectIntersectedCells(vector<IntersectedCell> &isc_cells,
 // =========================================================
 void
 wicalc_rixx::ComputeWellBlocks(
-    map<string, vector<IntersectedCell>> &well_indices,
-    vector<WellDefinition> &wells,
-    int rank) {
+    vector<IntersectedCell> &well_indices,
+    WellDefinition &well) {
 
   // -------------------------------------------------------
   stringstream str;
   cvf::ref<WellPath> wellPath = nullptr;
   cvf::ref<RIExtractor> extractor = nullptr;
-
-  // ---------------------------------------------------------------
-  // Perform well block search for each well
-  // for (int iWell = 0; iWell < wells.size(); ++iWell) {
-  int iWell = 0;
 
   // -------------------------------------------------------------
   // Intersected cells for well
@@ -251,18 +247,18 @@ wicalc_rixx::ComputeWellBlocks(
 
   // -----------------------------------------------------------
   // Load measuredepths onto wellPath (= current segment)
-  wellPath->m_measuredDepths.push_back(wells[iWell].heel_md[iSegment]);
-  wellPath->m_measuredDepths.push_back(wells[iWell].toe_md[iSegment]);
+  wellPath->m_measuredDepths.push_back(well.heel_md[iSegment]);
+  wellPath->m_measuredDepths.push_back(well.toe_md[iSegment]);
 
   // -----------------------------------------------------------
   // Load wellpathpoints onto wellPath (= current segment)
-  cvf::Vec3d cvf_xyzHeel(wells[iWell].heels[iSegment][0],
-                         wells[iWell].heels[iSegment][1],
-                         -wells[iWell].heels[iSegment][2]);
+  cvf::Vec3d cvf_xyzHeel(well.heels[iSegment][0],
+                         well.heels[iSegment][1],
+                         -well.heels[iSegment][2]);
 
-  cvf::Vec3d cvf_xyzToe(wells[iWell].toes[iSegment][0],
-                        wells[iWell].toes[iSegment][1],
-                        -wells[iWell].toes[iSegment][2]);
+  cvf::Vec3d cvf_xyzToe(well.toes[iSegment][0],
+                        well.toes[iSegment][1],
+                        -well.toes[iSegment][2]);
 
   // -----------------------------------------------------------
   wellPath->m_wellPathPoints.push_back(cvf_xyzHeel);
@@ -288,21 +284,35 @@ wicalc_rixx::ComputeWellBlocks(
   vector<WellPathCellIntersectionInfo>
       intersectedCellInfo = extractor->cellIntersectionInfosAlongWellPath();
   // cout << "[mod]wicalc_rixx-08.--------- intersectedCellInfo" << endl;
+    if (VERB_WIC >= 3) {
+        for (auto celli : intersectedCellInfo) {
+          auto gci = celli.globCellIndex;
+          auto emd = celli.endMD;
+          auto smd = celli.startMD;
+          auto spt = celli.startPoint;
+          auto ept = celli.endPoint;
+          std::stringstream ss;
+          ss << "Global cell index: " << gci << " | StartMD: " << smd << " | EndMD: " << emd;
+          ss << "Start point: " << spt.x() << ", " << spt.y() << ", " << spt.y();
+          ss << " | End point: "   << ept.x() << ", " << ept.y() << ", " << ept.y();
+          Printer::ext_info(ss.str(), "WellIndexCalculation", "wicalc_rixx");
+        }
+    }
 
   // -----------------------------------------------------------
   collectIntersectedCells(intersected_cells,
                           intersectedCellInfo,
-                          wells[iWell],
-                          *wellPath,
-                          rank);
-  // cout << "[mod]wicalc_rixx-09.--------- collectIntersectedCells" << endl;
-  //}
+                          well,
+                          *wellPath);
+
+  if (VERB_WIC >= 2) {
+    Printer::ext_info("Found " + boost::lexical_cast<std::string>(intersected_cells.size())
+                          + " intersected cells.", "WellIndexCalculation, wicalc_rixx");
+  }
+
 
   // Assign intersected cells to well
-  well_indices[wells[iWell].wellname] = intersected_cells;
-  // cout << "[mod]wicalc_rixx-10.--------- well_indices" << endl;
-
-  // } // # of wells
+  well_indices = intersected_cells;
 
 }
 // -----------------------------------------------------------------
