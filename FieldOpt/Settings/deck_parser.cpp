@@ -22,6 +22,8 @@
 #include <boost/lexical_cast.hpp>
 #include "Utilities/time.hpp"
 #include <opm/parser/eclipse/Units/Units.hpp>
+#include <Utilities/verbosity.h>
+#include <Utilities/printer.hpp>
 
 namespace Settings {
 
@@ -77,18 +79,22 @@ void DeckParser::initializeTimeVectors() {
 QList<Model::Well> DeckParser::GetWellData() {
     auto well_structs = QList<Model::Well>();
     for (int i = 0; i < num_wells_; ++i) {
-        std::cout << "Importing well ";
+        if (VERB_SET >= 2) {
+            Printer::ext_info("Importing well " + wells_->at(i)->name(), "Settings", "DeckParser");
+        }
         current_comp_set_ = wells_->at(i)->getCompletions();
         current_well_name_ = wells_->at(i)->name();
         current_well_first_time_step_ = wells_->at(i)->firstTimeStep();
-        std::cout << current_well_name_ << "\t...";
         well_structs.append(opmWellToWellStruct(wells_->at(i).get()));
-        std::cout << " done"
-                  << "\t" << (well_structs.last().type == Model::WellType::Injector ? "injector" : "producer")
-                  << "\t start time: " << well_structs.last().controls.first().time_step << " days"
-                  << "\t nr. connections: " << well_structs.last().well_blocks.size() << std::endl;
+        if (VERB_SET >= 2) {
+            std::stringstream ss;
+            ss << "Done importing " << current_well_name_
+               << "; " << (well_structs.last().type == Model::WellType::Injector ? "injector" : "producer")
+               << "; start time: " << well_structs.last().controls.first().time_step << " days"
+               << "; nr. connections: " << well_structs.last().well_blocks.size() << std::endl;
+            Printer::ext_info(ss.str(), "Settings", "DeckParser");
+        }
     }
-    std::cout << "done" << std::endl;
     return well_structs;
 }
 
@@ -115,12 +121,8 @@ Model::WellType DeckParser::determineWellType(const Opm::Well *opm_well) {
         }
         if (!is_injector && opm_well->isInjector(t)) {
             if (is_producer) {
-                std::cerr << "WARNING: Well " << current_well_name_
-                          << " is detected as an alternating prodcuer/injector well."
-                              " This is not currently supported."
-                              " Using first defined state (producer) "
-                          << time_dates_[t]
-                          << std::endl;
+                Printer::ext_warn("Well " + current_well_name_ + " detected as alternating producer/injector well. "
+                    "This is not currently supported. Using first defined state (Producer).", "Settings", "DeckParser");
                 is_producer = true;
                 is_injector = false;
                 break;
@@ -131,12 +133,8 @@ Model::WellType DeckParser::determineWellType(const Opm::Well *opm_well) {
         }
         if (!is_producer && opm_well->isProducer(t)) {
             if (is_injector) {
-                std::cerr << "WARNING: Well " << current_well_name_
-                          << " is detected as an alternating prodcuer/injector well."
-                              " This is not currently supported."
-                              " Using first defined state (injector) "
-                          << time_dates_[t]
-                          << std::endl;
+                Printer::ext_warn("Well " + current_well_name_ + " detected as alternating producer/injector well. "
+                    "This is not currently supported. Using first defined state (Injector).", "Settings", "DeckParser");
                 is_producer = false;
                 is_injector = true;
                 break;
@@ -225,8 +223,10 @@ QList<Model::Well::WellBlock> DeckParser::opmToWellBlocks(const Opm::Well *opm_w
 
 
     if (well_blocks[0].i <= 0 || abs(well_blocks[0].i) > 10000) { // This tends to happen for some weird reason. Default to same as next block
-        std::cout << "WARNING: Invalid i, j or k index detected for first well block for well. Deleting it. ("
-                  << well_blocks[0].i << ", " << well_blocks[0].j << ", " << well_blocks[0].k << ")" << std::endl;
+        std::stringstream ss;
+        ss << "(" << well_blocks[0].i << ", " << well_blocks[0].j << ", " << well_blocks[0].k << ")";
+        Printer::ext_warn("Invalid i, j or k index detected for the first well block. Deleting it. " + ss.str(),
+                          "Settings", "DeckParser");
         well_blocks.erase(well_blocks.begin());
     }
 
