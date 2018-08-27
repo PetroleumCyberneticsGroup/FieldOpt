@@ -25,31 +25,6 @@ set(CMAKE_CXX_STANDARD 11)
 add_compile_options(-std=c++11)
 
 
-# Find libraries =======================================================
-# Additional Ert libs (if necessary); ert_ecl and ert_util already
-# defined in ERTWrapper
-
-#    find_library(ert_eclxx
-#            NAMES ecl
-#            HINTS ${CMAKE_BINARY_DIR}/libraries/lib
-#            REQUIRED)
-#
-#    find_library(ert_utilxx
-#            NAMES ert_util
-#            HINTS ${CMAKE_BINARY_DIR}/libraries/lib
-#            REQUIRED)
-#
-#    find_library(ert_well
-#            NAMES ecl_well
-#            HINTS ${CMAKE_BINARY_DIR}/libraries/lib
-#            REQUIRED)
-#
-#    find_library(ert_geometry
-#            NAMES ert_geometry
-#            HINTS ${CMAKE_BINARY_DIR}/libraries/lib
-#            REQUIRED)
-
-# Include dirs =========================================================
 include_directories(
     resinxx/rixx_app_fwk
     resinxx/rixx_core_geom
@@ -98,55 +73,31 @@ install(TARGETS wellindexcalculator
     ARCHIVE DESTINATION lib/static
     )
 
-#add_executable(wicalc
-#    main.cpp
-#    intersected_cell.cpp
-#    wellindexcalculator.cpp
-#    #
-#    wicalc_rixx.cpp
-#    ${RIXX_ALL_CPP_FILES}
-#    )
-#
-#target_link_libraries(wicalc
-#    PUBLIC fieldopt::${WIC_LIB_TARGET}
-#    PUBLIC ${Boost_LIBRARIES}
-#    PUBLIC Qt5::Core
-#    #
-#    PUBLIC ${ERTLIB}
-#    PUBLIC ${ert_util}
-#    )
-#
-#install(TARGETS wicalc wellindexcalculator
-#    RUNTIME DESTINATION bin
-#    LIBRARY DESTINATION lib
-#    ARCHIVE DESTINATION lib/static
-#    )
 
 endif()
 
 
 # Testing ==============================================================
-#if (BUILD_TESTING AND NOT BUILD_WIC_ADGPRS)
-#
-#  # Unit tests
-#  find_package(GTest REQUIRED)
-#
-#  include_directories(${GTEST_INCLUDE_DIRS}
-#      ${EIGEN3_INCLUDE_DIR} tests)
-#
-#  add_executable(test_wellindexcalculator
-#      tests/test_intersected_cells.cpp
-#      tests/test_single_cell_wellindex.cpp
-#      tests/test_standalone_wicalc.cpp)
-#
-#  target_link_libraries(test_wellindexcalculator
-#      fieldopt::wellindexcalculator
-#      ${GTEST_BOTH_LIBRARIES}
-#      ${CMAKE_THREAD_LIBS_INIT})
-#
-#  add_test(NAME test_wellindexcalculator
-#      COMMAND $<TARGET_FILE:test_wellindexcalculator>)
-#endif()
+if (BUILD_TESTING AND NOT BUILD_WIC_ADGPRS)
+
+  # Unit tests
+  find_package(GTest REQUIRED)
+
+  include_directories(${GTEST_INCLUDE_DIRS}
+      ${EIGEN3_INCLUDE_DIR} tests)
+
+  add_executable(test_wellindexcalculator
+      tests/test_intersected_cells.cpp
+      tests/test_single_cell_wellindex.cpp)
+
+  target_link_libraries(test_wellindexcalculator
+      ${WIC_LIB_TARGET}
+      ${GTEST_BOTH_LIBRARIES}
+      ${CMAKE_THREAD_LIBS_INIT})
+
+  add_test(NAME test_wellindexcalculator
+      COMMAND $<TARGET_FILE:test_wellindexcalculator>)
+endif()
 
 
 # Debug: include dirs ==================================================
