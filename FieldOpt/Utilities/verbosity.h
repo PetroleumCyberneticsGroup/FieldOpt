@@ -20,12 +20,24 @@
 #ifndef FIELDOPT_VERBOSITY_H
 #define FIELDOPT_VERBOSITY_H
 
-#define VERB_MOD 1
-#define VERB_OPT 1
-#define VERB_WIC 3
-#define VERB_SIM 1
-#define VERB_RUN 1
-#define VERB_RES 1
-#define VERB_SET 1
+/*!
+ * @brief This file contains verbosity level settings for all modules in FieldOpt.
+ * FieldOpt has to be recompiled after changing these settings.
+ *
+ * Level descriptions (they are additive):
+ *     0 - Silent (only errors)
+ *     1 - Only warnings and rudimentary progression (once pr. iteration).
+ *     2 - More progression priting.
+ *     3 - Debug-level printing. It is not recommended to use this level on more than one module at a time.
+ */
+
+//                    Module
+#define VERB_MOD 1 // Model
+#define VERB_OPT 1 // Optimization
+#define VERB_WIC 1 // WellIndexCalculation
+#define VERB_SIM 1 // Simulation
+#define VERB_RUN 1 // Runner
+#define VERB_RES 1 // Reservoir
+#define VERB_SET 1 // Settings
 
 #endif //FIELDOPT_VERBOSITY_H
