@@ -161,7 +161,7 @@ bool ECLGridReader::IsCellActive(int global_index)
 bool ECLGridReader::IsCellMatrixActive(int global_index)
 {
     if (ecl_grid_ == 0) throw GridNotReadException("Grid must be read before getting the active status of cells.");
-    else 
+    else
     {
     	int active_matrix_index = ecl_grid_get_active_index1(ecl_grid_, global_index);
     	if (active_matrix_index < 0) return false;
@@ -180,6 +180,14 @@ bool ECLGridReader::IsCellFractureActive(int global_index)
     }
  }
 
+std::vector<double> ECLGridReader::GetCellDxDyDz(int global_index) {
+    std::vector<double> dxdydz(3);
+    dxdydz[0] = ecl_grid_get_cell_dx1(ecl_grid_, global_index);
+    dxdydz[1] = ecl_grid_get_cell_dy1(ecl_grid_, global_index);
+    dxdydz[2] = ecl_grid_get_cell_dz1(ecl_grid_, global_index);
+    return dxdydz;
+}
+
 ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index)
 {
     if (!GlobalIndexIsInsideGrid(global_index))
@@ -194,7 +202,11 @@ ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index)
     cell.center = GetCellCenter(global_index);
     cell.matrix_active = IsCellMatrixActive(global_index);
     cell.fracture_active = IsCellFractureActive(global_index);
-        
+    auto dxdydz = GetCellDxDyDz(global_index);
+    cell.dx = dxdydz[0];
+    cell.dy = dxdydz[1];
+    cell.dz = dxdydz[2];
+
     // Get properties from the INIT file - only possible if the cell is active
     // Matrix grid
 	int active_index = ecl_grid_get_active_index1(ecl_grid_, global_index);
@@ -205,7 +217,7 @@ ECLGridReader::Cell ECLGridReader::GetGridCell(int global_index)
 		cell.permy.push_back(ecl_kw_iget_as_double(permy_kw_, active_index));
 		cell.permz.push_back(ecl_kw_iget_as_double(permz_kw_, active_index));
 	}
-    
+
 	// Fracture grid
 	active_index = NumActiveMatrixCells() + ecl_grid_get_active_fracture_index1(ecl_grid_, global_index);
 	if (active_index >= NumActiveMatrixCells())

@@ -42,7 +42,7 @@ using namespace std;
 class IntersectedCell : public Grid::Cell {
  public:
   IntersectedCell() {}
-  IntersectedCell(const Grid::Cell &cell) : Grid::Cell(cell) {};
+  IntersectedCell(const Grid::Cell &cell);
 
   /*!
    * \brief The cell x axis
@@ -56,17 +56,6 @@ class IntersectedCell : public Grid::Cell {
    * \brief The cell z axis
    */
   Vector3d zvec() const;
-
-  // Cell size
-  double dx() const;
-  double dy() const;
-  double dz() const;
-  Eigen::Vector3d dxdydz() const;
-
-  // Custom adding of cell size dx/dy/dz
-  void set_dx(double dx) { dx_ = dx; };
-  void set_dy(double dy) { dy_ = dy; };
-  void set_dz(double dz) { dz_ = dz; };
 
   void add_new_segment(Vector3d entry_point, Vector3d exit_point,
                        double segment_radius, double segment_skin);
@@ -114,7 +103,6 @@ class IntersectedCell : public Grid::Cell {
   vector<double> segment_radius_;
   vector<double> segment_skin_;
 
-  double dx_, dy_, dz_;
   int i_, j_, k_;
 
   // per segment well index calculation data

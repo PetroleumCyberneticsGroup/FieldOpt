@@ -46,6 +46,7 @@ class Cell
        vector<double> permx, 
        vector<double> permy, 
        vector<double> permz,
+       double dx, double dy, double dz,
        Eigen::Vector3d center,
        vector<Eigen::Vector3d> corners,
        int faces_permutation_index,
@@ -154,6 +155,11 @@ class Cell
    *
    */
   vector<Eigen::Vector3d> corners() const { return corners_; }
+  
+  Eigen::Vector3d dxdydz() const;
+  double dx() const;
+  double dy() const;
+  double dz() const;
 
   /*!
    * \brief Equals Check if the global indices of the two cells being
@@ -283,6 +289,7 @@ class Cell
   int k_fracture_index_;
   double volume_;
   Eigen::Vector3d center_;
+  Eigen::Vector3d dxdydz_;
   vector<Eigen::Vector3d> corners_;
   vector<double> porosity_;
   vector<double> permx_;

@@ -30,6 +30,7 @@ using namespace std;
 Cell::Cell(int global_index, IJKCoordinate ijk_index,
            double volume, vector<double> poro_in,
            vector<double> permx_in, vector<double> permy_in, vector<double> permz_in,
+           double dx, double dy, double dz,
            Eigen::Vector3d center,
            vector<Eigen::Vector3d> corners,
            int faces_permutation_index,
@@ -44,11 +45,25 @@ Cell::Cell(int global_index, IJKCoordinate ijk_index,
     permy_ = permy_in;
     permz_ = permz_in;
     center_ = center;
+    dxdydz_ = Eigen::Vector3d(dx, dy, dz);
     corners_ = corners;
     is_active_matrix_ = active_matrix;
     is_active_fracture_ = active_fracture;
 
     initializeFaces(faces_permutation_index);
+}
+
+Eigen::Vector3d Cell::dxdydz() const {
+    return dxdydz_;
+}
+double Cell::dx() const {
+    return dxdydz_(0);
+}
+double Cell::dy() const {
+    return dxdydz_(1);
+}
+double Cell::dz() const {
+    return dxdydz_(2);
 }
 
 bool Cell::Equals(const Cell *other) const

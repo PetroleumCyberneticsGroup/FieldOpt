@@ -55,7 +55,7 @@ ECLGrid::ECLGrid(string file_path)
 
     // Find the first (active) cell index in the matrix.
     int idx = ecl_grid_reader_->ConvertMatrixActiveIndexToGlobalIndex(0);
-    
+
     // Set faces permutation to first permutation type
     faces_permutation_index_ = 0;
     // Get the first cell
@@ -137,11 +137,12 @@ Cell ECLGrid::GetCell(int global_index) {
         for (auto corner : ertCell.corners) {
             corners.push_back(corner);
         }
-        
+
         // Return cell info
         return Cell(global_index, ijk_index,
                     ertCell.volume, ertCell.porosity,
                     ertCell.permx, ertCell.permy, ertCell.permz,
+                    ertCell.dx, ertCell.dy, ertCell.dz,
                     center, corners, faces_permutation_index_,
                     ertCell.matrix_active, ertCell.fracture_active,
                     Dimensions().nz + ijk_index.k()

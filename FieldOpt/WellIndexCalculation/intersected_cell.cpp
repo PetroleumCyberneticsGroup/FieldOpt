@@ -32,6 +32,11 @@ using namespace std;
 namespace Reservoir {
 namespace WellIndexCalculation {
 
+
+IntersectedCell::IntersectedCell(const Grid::Cell &cell) : Grid::Cell(cell) {
+
+};
+
 Vector3d IntersectedCell::xvec() const {
   return corners()[5] - corners()[4];
 }
@@ -44,20 +49,6 @@ Vector3d IntersectedCell::zvec() const {
   return corners()[0] - corners()[4];
 }
 
-double IntersectedCell::dx() const {
-//  return xvec().norm();
-  return dx_;
-}
-
-double IntersectedCell::dy() const {
-//  return yvec().norm();
-  return dy_;
-}
-
-double IntersectedCell::dz() const {
-//  return zvec().norm();
-  return dz_;
-}
 
 Vector3d IntersectedCell::get_segment_entry_point(int segment_index) const {
   return entry_points_[segment_index];
@@ -178,9 +169,6 @@ int IntersectedCell::GetIntersectedCellIndex(vector<IntersectedCell> &cells,
   }
 }
 
-Eigen::Vector3d IntersectedCell::dxdydz() const {
-  return Eigen::Vector3d(dx(), dy(), dz());
-}
 
 }
 }

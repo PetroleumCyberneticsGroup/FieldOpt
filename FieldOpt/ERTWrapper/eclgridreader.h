@@ -84,6 +84,9 @@ class ECLGridReader
     bool matrix_active;
     bool fracture_active;
     double volume;
+    double dx;
+    double dy;
+    double dz;
     std::vector<double> porosity;
     std::vector<double> permx;
     std::vector<double> permy;
@@ -181,6 +184,12 @@ class ECLGridReader
    * is not active in the facture grid in the case of dual grid
    */
   bool IsCellFractureActive(int global_index);
+
+
+  /*!
+   * @brief Get a vector containing the dx, dy, dz dimensions for a cell/
+   */
+  std::vector<double> GetCellDxDyDz(int global_index);
 
   /*!
    * \brief GetGridCell get a Cell struct describing the cell with the specified global index.
