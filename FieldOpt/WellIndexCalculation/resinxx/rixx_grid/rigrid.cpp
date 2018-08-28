@@ -502,7 +502,7 @@ RIGrid::~RIGrid() {
     if (m_faults.at(i) != NULL) {
 
       printf("%s%s%s", FRED, "!m_faults.at(i) != nullptr ", AEND);
-      delete m_faults.at(i); // ?
+//      delete m_faults.at(i); // ?
       printf("%s%s%s\n", FRED, "TRUE (~RIGrid)", AEND);
 
     } else {
@@ -519,7 +519,7 @@ RIGrid::~RIGrid() {
     if (m_localGrids.at(i) != NULL) {
 
       printf("%s%s%s", FRED, "!m_localGrids.at(i) != nullptr ", AEND);
-      delete m_localGrids.at(i);
+//      delete m_localGrids.at(i);
       printf("%s%s%s\n", FRED, "TRUE (~RIGrid)", AEND);
 
     } else {

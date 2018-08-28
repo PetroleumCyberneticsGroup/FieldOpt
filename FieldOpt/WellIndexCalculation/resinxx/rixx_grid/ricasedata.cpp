@@ -99,7 +99,7 @@ RICaseData::~RICaseData() {
 
     // -----------------------------------------------------
     if (VERB_WIC >= 3) { Printer::ext_info("m_activeCellInfo != nullptr", "WellIndexCalculation", "RICaseData"); }
-    delete m_activeCellInfo;
+//    delete m_activeCellInfo;
     if (VERB_WIC >= 3) { Printer::ext_info("deleted m_activeCellInfo", "WellIndexCalculation", "RICaseData"); }
 
   } else {
