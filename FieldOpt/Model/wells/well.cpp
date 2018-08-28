@@ -17,6 +17,8 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+#include <Utilities/printer.hpp>
+#include <boost/lexical_cast.hpp>
 #include "well.h"
 
 namespace Model {
@@ -106,7 +108,8 @@ void Well::initializeSegmentedWell(Properties::VariablePropertyContainer *variab
         if (first_block->i() == last_block->i() &&
             first_block->j() == last_block->j() &&
             first_block->k() == last_block->k()) { // Compartment begins and ends in the same block
-            std::cout << "WARNING: Compartment " << i << " begins and ends in the same well block." << std::endl;
+            Printer::ext_warn("Compartment " + boost::lexical_cast<std::string>(i)
+                                  + " begins and ends in the same well block.", "Model", "Well");
             compartments_.push_back(Compartment(trajectory_->GetEntryMd(first_block), trajectory_->GetExitMd(last_block),
                                                 first_block->getEntryPoint().z(), last_block->getExitPoint().z(),
                                                 well_settings_, variable_container, compartments_));
