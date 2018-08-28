@@ -40,7 +40,7 @@ using std::stringstream;
 #include <memory>
 #include <Utilities/verbosity.h>
 #include <Utilities/printer.hpp>
-#include <boost/lexical_cast.hpp>
+#include <Utilities/stringhelpers.hpp>
 
 // ---------------------------------------------------------
 enum CompletionType {
@@ -112,10 +112,8 @@ void wicalc_rixx::calculateWellPathIntersections(const WellPath& wellPath,
                                             wellPath.m_wellPathPoints);
 
   std::stringstream str;
-  if (intersections.size() > 0) {
-    str << "Set values to WELL_PATH. -- # of intersections = " << intersections.size()
-        << " -- intersection[0].m_hexIndex = " << intersections[0].m_hexIndex;
-    print_dbg_msg_wic_ri(__func__, str.str(), 0.0, 0);
+  if (VERB_WIC >=2) {
+    Printer::info("Found " + Printer::num2str(intersections.size()) + " intersections.");
   }
 
   for (auto &intersection : intersections) {
@@ -125,7 +123,7 @@ void wicalc_rixx::calculateWellPathIntersections(const WellPath& wellPath,
         << intersection.m_hexIndex
         << " -- values[intersection.m_hexIndex] = "
         << isc_values[intersection.m_hexIndex];
-    // print_dbg_msg_wic_ri(__func__, str.str(), 0.0, 0);
+     print_dbg_msg_wic_ri(__func__, str.str(), 0.0, 0);
     isc_values[intersection.m_hexIndex] = CompletionType::WELL_PATH;
   }
 }
@@ -237,32 +235,42 @@ wicalc_rixx::ComputeWellBlocks(
 
   // -------------------------------------------------------------
   // Loop through well segments
-  // for (int iSegment = 0; iSegment < wells[iWell].radii.size(); ++iSegment) {
-  int iSegment = 0;
-
-  // -----------------------------------------------------------
-  // cvf::ref<WellPath> wellPath = new WellPath();
+  if (VERB_WIC >= 2) {
+    Printer::ext_info("Looping through " + Printer::num2str(well.radii.size()) + " segments.",
+                      "wicalc_rixx", "WellIndexCalculation");
+  }
   wellPath = new WellPath();
-  vector<WellPathCellIntersectionInfo> intersectionInfos;
+  for (int seg = 0; seg < well.radii.size(); ++seg) {
+    if (VERB_WIC >= 2) {
+      Printer::ext_info("Computing segment " + Printer::num2str(seg)
+                    + ". StartMD: " + Printer::num2str(well.heel_md[seg]) + "; EndMD: " + Printer::num2str(well.toe_md[seg])
+                    + "; StartPt: " + eigenvec_to_str(well.heels[seg]) + "; EndPt: " + eigenvec_to_str(well.toes[seg]),
+                        "wicalc_rixx", "WellIndexCalculation" );
+    }
+    // -----------------------------------------------------------
+    // cvf::ref<WellPath> wellPath = new WellPath();
+    vector<WellPathCellIntersectionInfo> intersectionInfos;
 
-  // -----------------------------------------------------------
-  // Load measuredepths onto wellPath (= current segment)
-  wellPath->m_measuredDepths.push_back(well.heel_md[iSegment]);
-  wellPath->m_measuredDepths.push_back(well.toe_md[iSegment]);
+    // -----------------------------------------------------------
+    // Load measuredepths onto wellPath (= current segment)
+    wellPath->m_measuredDepths.push_back(well.heel_md[seg]);
+    wellPath->m_measuredDepths.push_back(well.toe_md[seg]);
 
-  // -----------------------------------------------------------
-  // Load wellpathpoints onto wellPath (= current segment)
-  cvf::Vec3d cvf_xyzHeel(well.heels[iSegment][0],
-                         well.heels[iSegment][1],
-                         -well.heels[iSegment][2]);
+    // -----------------------------------------------------------
+    // Load wellpathpoints onto wellPath (= current segment)
+    cvf::Vec3d cvf_xyzHeel(well.heels[seg][0],
+                           well.heels[seg][1],
+                           -well.heels[seg][2]);
 
-  cvf::Vec3d cvf_xyzToe(well.toes[iSegment][0],
-                        well.toes[iSegment][1],
-                        -well.toes[iSegment][2]);
+    cvf::Vec3d cvf_xyzToe(well.toes[seg][0],
+                          well.toes[seg][1],
+                          -well.toes[seg][2]);
 
-  // -----------------------------------------------------------
-  wellPath->m_wellPathPoints.push_back(cvf_xyzHeel);
-  wellPath->m_wellPathPoints.push_back(cvf_xyzToe);
+    // -----------------------------------------------------------
+    wellPath->m_wellPathPoints.push_back(cvf_xyzHeel);
+    wellPath->m_wellPathPoints.push_back(cvf_xyzToe);
+
+  }
 
   // -----------------------------------------------------------
   // Calculate cells intersected by well path
@@ -284,20 +292,20 @@ wicalc_rixx::ComputeWellBlocks(
   vector<WellPathCellIntersectionInfo>
       intersectedCellInfo = extractor->cellIntersectionInfosAlongWellPath();
   // cout << "[mod]wicalc_rixx-08.--------- intersectedCellInfo" << endl;
-    if (VERB_WIC >= 3) {
-        for (auto celli : intersectedCellInfo) {
-          auto gci = celli.globCellIndex;
-          auto emd = celli.endMD;
-          auto smd = celli.startMD;
-          auto spt = celli.startPoint;
-          auto ept = celli.endPoint;
-          std::stringstream ss;
-          ss << "Global cell index: " << gci << " | StartMD: " << smd << " | EndMD: " << emd;
-          ss << "Start point: " << spt.x() << ", " << spt.y() << ", " << spt.y();
-          ss << " | End point: "   << ept.x() << ", " << ept.y() << ", " << ept.y();
-          Printer::ext_info(ss.str(), "WellIndexCalculation", "wicalc_rixx");
-        }
+  if (VERB_WIC >= 3) {
+    for (auto celli : intersectedCellInfo) {
+      auto gci = celli.globCellIndex;
+      auto emd = celli.endMD;
+      auto smd = celli.startMD;
+      auto spt = celli.startPoint;
+      auto ept = celli.endPoint;
+      std::stringstream ss;
+      ss << "Global cell index: " << gci << " | StartMD: " << smd << " | EndMD: " << emd;
+      ss << "Start point: " << spt.x() << ", " << spt.y() << ", " << spt.y();
+      ss << " | End point: "   << ept.x() << ", " << ept.y() << ", " << ept.y();
+      Printer::ext_info(ss.str(), "WellIndexCalculation", "wicalc_rixx");
     }
+  }
 
   // -----------------------------------------------------------
   collectIntersectedCells(intersected_cells,
@@ -306,8 +314,8 @@ wicalc_rixx::ComputeWellBlocks(
                           *wellPath);
 
   if (VERB_WIC >= 2) {
-    Printer::ext_info("Found " + boost::lexical_cast<std::string>(intersected_cells.size())
-                          + " intersected cells.", "WellIndexCalculation, wicalc_rixx");
+    Printer::ext_info("Found " + Printer::num2str(intersected_cells.size())
+                          + " intersected cells.", "WellIndexCalculation", "wicalc_rixx");
   }
 
 
