@@ -22,6 +22,7 @@
 
 #include "trajectory.h"
 #include "WellIndexCalculation/intersected_cell.h"
+#include "WellIndexCalculation/wicalc_rixx.h"
 #include "Reservoir/grid/eclgrid.h"
 #include "Model/wells/wellbore/wellblock.h"
 #include <QList>
@@ -41,7 +42,9 @@ class WellSpline
  public:
   WellSpline(::Settings::Model::Well well_settings,
              Properties::VariablePropertyContainer *variable_container,
-             Reservoir::Grid::Grid *grid);
+             Reservoir::Grid::Grid *grid,
+             Reservoir::WellIndexCalculation::wicalc_rixx *wic
+  );
 
   /*!
    * \brief GetWellBlocks Get the set of well blocks with proper WI's defined by the spline.
@@ -68,6 +71,7 @@ class WellSpline
 
  private:
   Reservoir::Grid::Grid *grid_;
+  Reservoir::WellIndexCalculation::wicalc_rixx *wic_;
   Settings::Model::Well well_settings_;
   int seconds_spent_in_compute_wellblocks_; //!< Number of seconds spent in the ComputeWellBlocks() method.
   bool is_variable_;

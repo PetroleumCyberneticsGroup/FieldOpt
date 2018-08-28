@@ -30,12 +30,13 @@ Model::Model(Settings::Settings settings, Logger *logger)
     else {
         grid_ = 0;
     }
+    wic_ = nullptr;
 
     variable_container_ = new Properties::VariablePropertyContainer();
 
     wells_ = new QList<Wells::Well *>();
     for (int well_nr = 0; well_nr < settings.model()->wells().size(); ++well_nr) {
-        wells_->append(new Wells::Well(*settings.model(), well_nr, variable_container_, grid_));
+        wells_->append(new Wells::Well(*settings.model(), well_nr, variable_container_, grid_, wic_));
     }
 
     variable_container_->CheckVariableNameUniqueness();
@@ -158,7 +159,7 @@ map<string, vector<double>> Model::GetValues() {
 }
 void Model::set_grid_path(const std::string &grid_path) {
     if (grid_ != 0) {
-        delete grid_;
+//        delete grid_; // This should not be deleted because wicalc_rixx keeps the object to avoid having to re-read it.
     }
     grid_ = new Reservoir::Grid::ECLGrid(grid_path);
 }

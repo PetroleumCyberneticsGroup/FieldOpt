@@ -98,7 +98,7 @@ TEST_F(TrajectoryTest, MultisplineWell) {
     auto settings = Settings::Model(TestResources::TestResourceModelSettingSnippets::model_adtl_pts(), paths);
     auto wsettings = settings.wells()[0];
     auto varcont = new Model::Properties::VariablePropertyContainer();
-    auto well = Model::Wells::Wellbore::WellSpline(wsettings, varcont, TestResources::TestResourceGrids::grid_5spot_);
+    auto well = Model::Wells::Wellbore::WellSpline(wsettings, varcont, TestResources::TestResourceGrids::grid_5spot_, nullptr);
     auto well_blocks = well.GetWellBlocks();
 
     EXPECT_EQ(well_blocks->size(), 26);

@@ -27,7 +27,9 @@ namespace Wells {
 Well::Well(Settings::Model settings,
            int well_number,
            Properties::VariablePropertyContainer *variable_container,
-           Reservoir::Grid::Grid *grid)
+           Reservoir::Grid::Grid *grid,
+           Reservoir::WellIndexCalculation::wicalc_rixx *wic
+)
 {
     well_settings_ = settings.wells()[well_number];
 
@@ -45,7 +47,7 @@ Well::Well(Settings::Model settings,
     for (int i = 0; i < well_settings_.controls.size(); ++i)
         controls_->append(new Control(well_settings_.controls[i], well_settings_, variable_container));
 
-    trajectory_ = new Wellbore::Trajectory(well_settings_, variable_container, grid);
+    trajectory_ = new Wellbore::Trajectory(well_settings_, variable_container, grid, wic);
 
     heel_.i = trajectory_->GetWellBlocks()->first()->i();
     heel_.j = trajectory_->GetWellBlocks()->first()->j();

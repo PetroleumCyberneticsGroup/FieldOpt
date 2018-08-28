@@ -25,6 +25,7 @@
 #include "Reservoir/grid/eclgrid.h"
 #include "properties/variable_property_container.h"
 #include "wells/well.h"
+#include "WellIndexCalculation/wicalc_rixx.h"
 #include "Settings/model.h"
 #include "Optimization/case.h"
 #include "Model/wells/wellbore/wellblock.h"
@@ -92,6 +93,7 @@ class Model : public Loggable
 
  private:
   Reservoir::Grid::Grid *grid_;
+  Reservoir::WellIndexCalculation::wicalc_rixx *wic_;
   Properties::VariablePropertyContainer *variable_container_;
   QList<Wells::Well *> *wells_;
   void verify(); //!< Verify the model. Throws an exception if it is not.

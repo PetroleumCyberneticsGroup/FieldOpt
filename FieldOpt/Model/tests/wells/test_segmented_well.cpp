@@ -51,12 +51,12 @@ TEST_F(SegmentedWellTest, Constructor ) {
     EXPECT_EQ(3, mod_settings_->wells()[d_2h_idx_].seg_n_compartments);
 
     // Construct well
-    d_2h_ = new Model::Wells::Well(*mod_settings_, d_2h_idx_, varcont_, grid_);
+    d_2h_ = new Model::Wells::Well(*mod_settings_, d_2h_idx_, varcont_, grid_, nullptr);
     double length = d_2h_->trajectory()->GetLength();
 }
 
 TEST_F(SegmentedWellTest, Compartments ) {
-    d_2h_ = new Model::Wells::Well(*mod_settings_, d_2h_idx_, varcont_, grid_);
+    d_2h_ = new Model::Wells::Well(*mod_settings_, d_2h_idx_, varcont_, grid_, nullptr);
     double length = d_2h_->trajectory()->GetLength();
 
     EXPECT_EQ(3, d_2h_->GetCompartments().size());
@@ -84,7 +84,7 @@ TEST_F(SegmentedWellTest, Compartments ) {
 }
 
 TEST_F(SegmentedWellTest, SegmentTypes) {
-    d_2h_ = new Model::Wells::Well(*mod_settings_, d_2h_idx_, varcont_, grid_);
+    d_2h_ = new Model::Wells::Well(*mod_settings_, d_2h_idx_, varcont_, grid_, nullptr);
     auto segs = d_2h_->GetSegments();
     EXPECT_EQ(Segment::SegType::TUBING_SEGMENT, segs[0].Type()); // Root segment
     for (int i = 1; i < 4; ++i) {
@@ -99,7 +99,7 @@ TEST_F(SegmentedWellTest, SegmentTypes) {
 }
 
 TEST_F(SegmentedWellTest, SegmentConnections) {
-    d_2h_ = new Model::Wells::Well(*mod_settings_, d_2h_idx_, varcont_, grid_);
+    d_2h_ = new Model::Wells::Well(*mod_settings_, d_2h_idx_, varcont_, grid_, nullptr);
     auto segs = d_2h_->GetSegments();
     auto tub_segs = d_2h_->GetTubingSegments();
     auto icd_segs = d_2h_->GetICDSegments();

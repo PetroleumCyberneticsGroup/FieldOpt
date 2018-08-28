@@ -37,11 +37,16 @@ using namespace Reservoir::WellIndexCalculation;
 
 WellSpline::WellSpline(Settings::Model::Well well_settings,
                        Properties::VariablePropertyContainer *variable_container,
-                       Reservoir::Grid::Grid *grid)
+                       Reservoir::Grid::Grid *grid,
+                       Reservoir::WellIndexCalculation::wicalc_rixx *wic
+)
 {
+    assert(grid_ != nullptr && grid_ != 0);
     grid_ = grid;
     well_settings_ = well_settings;
     is_variable_ = false;
+    wic_ = new Reservoir::WellIndexCalculation::wicalc_rixx(grid_);
+    wic = wic_;
 
     if (!well_settings.imported_wellblocks_.empty()) { // Imported blocks present
         spline_points_from_import(well_settings);
@@ -94,7 +99,13 @@ void WellSpline::spline_points_from_import(Settings::Model::Well &well_settings)
 QList<WellBlock *> *WellSpline::GetWellBlocks()
 {
     assert(spline_points_.size() >= 2);
-    assert(grid_ != 0);
+    assert(grid_ != nullptr && grid_ != 0);
+
+    if (!wic_->HasGrid(grid_->GetGridFilePath())) {
+        wic_->AddGrid(grid_);
+    }
+    wic_->SetGridActive(grid_);
+
 
     last_computed_grid_ = grid_->GetGridFilePath();
     last_computed_spline_ = create_spline_point_vector();
@@ -120,8 +131,6 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
         );
     }
 
-//    auto wic = WellIndexCalculator(grid_);
-    auto wicalc_rixx = Reservoir::WellIndexCalculation::wicalc_rixx(grid_);
 
     if (VERB_MOD >= 2) {
         Printer::info("Starting well index calculation.");
@@ -129,7 +138,7 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
     auto start = QDateTime::currentDateTime();
     vector<IntersectedCell> block_data;
     if (imported_wellblocks_.empty() || is_variable_) {
-        wicalc_rixx.ComputeWellBlocks(block_data, welldef);
+        wic_->ComputeWellBlocks(block_data, welldef);
     }
     else {
         if (VERB_MOD >= 1) {
@@ -138,7 +147,7 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
         }
         block_data = convertImportedWellblocksToIntersectedCells();
         for (int i = 0; i < block_data.size(); ++i) {
-            wicalc_rixx.ComputeWellBlocks(block_data, welldef);
+            wic_->ComputeWellBlocks(block_data, welldef);
         }
     }
     auto end = QDateTime::currentDateTime();

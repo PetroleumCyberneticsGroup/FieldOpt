@@ -44,7 +44,7 @@ class BlockToSplineConversionTest : public ::testing::Test {
 
 TEST_F(BlockToSplineConversionTest, Constructor ) {
     // Verifying settings
-    d_2h_ = new Model::Wells::Well(*mod_settings_, d_2h_idx_, varcont_, grid_);
+    d_2h_ = new Model::Wells::Well(*mod_settings_, d_2h_idx_, varcont_, grid_, nullptr);
 }
 
 }
