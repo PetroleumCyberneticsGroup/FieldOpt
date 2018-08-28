@@ -11,21 +11,49 @@
 #include <boost/algorithm/string.hpp>
 #include <Utilities/colors.hpp>
 #include <sstream>
+#include <boost/lexical_cast.hpp>
 
 namespace Printer {
 
+/*!
+ * @brief Convert a number to its string representation.
+ * @param num Number to convert.
+ * @return String representation of num.
+ */
+template<typename T>
+inline std::string num2str(const T num) {
+    return boost::lexical_cast<std::string>(num);
+}
 
+
+/*!
+ * @brief Truncate a string, adding an ellipsis to the end.
+ * @param text Text to truncate.
+ * @param width Width to to truncate to (including the added ellipsis).
+ */
 inline void truncate_text(std::string &text, const int &width=66) {
     if (text.size() > width) {
         text = text.substr(0, width - 3) + "...";
     }
 }
 
+/*!
+ * @brief Pad a string, adding spaces at the _end_ to make it the required length.
+ * @param text Text to pad.
+ * @param width Width to pad to.
+ */
 inline void pad_text(std::string &text, const int &width=66) {
     if (text.size() < width) {
         text.insert(text.size(), width - text.size(), ' ');
     }
 }
+
+/*!
+ * @brief Split a string into multiple lines of the required width, padding each with spaces at the end.
+ * @param text Text to split.
+ * @param width Width to split at (and pad to).
+ * @return
+ */
 inline std::vector<std::string> split_line(const std::string text, const int &width=67) {
     std::vector<std::string> strv;
     if (text.size() > width) {
@@ -34,7 +62,7 @@ inline std::vector<std::string> split_line(const std::string text, const int &wi
         int line_nr = 0;
         std::string remainder = text;
         while (remainder.size() > width) {
-            end_idx = remainder.find_last_of(" ", width);
+            end_idx = remainder.find_last_of(";, ", width);
             std::string line = remainder.substr(start_idx, end_idx);
             pad_text(line, width);
             strv.push_back(line);
