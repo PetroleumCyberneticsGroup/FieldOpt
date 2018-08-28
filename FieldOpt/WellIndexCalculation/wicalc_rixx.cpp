@@ -55,45 +55,14 @@ namespace WellIndexCalculation {
 wicalc_rixx::wicalc_rixx(Grid::Grid *grid,
                          RICaseData *ricasedata) {
 
-  // -------------------------------------------------------
-  // cout << "[mod]wicalc_rixx-01.--------- " << endl;
-  grid_ = grid;
-  // ricasedata_ = ricasedata;
-
-  // Experimental
-  // ricasedatap_ = ricasedata;
-  // ricasedatac_ = ricasedatap_;
-
-  // ---------------------------------------------------------------
-  // std::cout << "[mod]wicalc_rixx-01.--------- " << std::endl;
-
-  RIReaderECL rireaderecl_;
-  ricasedata_ = new RICaseData(grid_->GetGridFilePath());
-  rireaderecl_.open(QString::fromStdString(grid_->GetGridFilePath()), ricasedata_.p());
-
-  ricasedata_->computeActiveCellBoundingBoxes();
-  ricasedata_->mainGrid()->computeCachedData();
-
-  // ---------------------------------------------------------------
-  // cout << "[mod]wicalc_rixx-02.--------- " << endl;
-  auto grid_count = ricasedata_->mainGrid()->gridCount();
-  auto cell_count = ricasedata_->mainGrid()->cellCount();
-  auto gcellarray_sz = ricasedata_->mainGrid()->globalCellArray().size();
-
-  // ---------------------------------------------------------------
-  intersections_.resize(ricasedata_->mainGrid()->globalCellArray().size());
-  fill(intersections_.begin(), intersections_.end(), HUGE_VAL);
-  // cout << "[mod]wicalc_rixx-03.--------- " << endl;
-
-  // ---------------------------------------------------------------
-  // Dbg
-  QDateTime tstart = QDateTime::currentDateTime();
-  std::stringstream str; str << "Find cell from coords.";
-
-  str.str(""); str << "grid_->gridCount(): " << grid_count
-                   << " -- grid_->cellCount(): " << cell_count
-                   << " -- grid_->globalCellArray().size(): "
-                   << gcellarray_sz;
+  if (grid != nullptr) {
+    AddGrid(grid);
+    SetGridActive(grid);
+  }
+  else {
+    grid_ = nullptr;
+    ricasedata_ = nullptr;
+  }
 
 }
 
@@ -101,6 +70,44 @@ wicalc_rixx::wicalc_rixx(Grid::Grid *grid,
 wicalc_rixx::~wicalc_rixx() {
   // cout << "[wic-rixx]deleting vars.----- wicalc_rixx()" << endl;
   // delete ricasedata_;
+}
+
+bool wicalc_rixx::HasGrid(string path) {
+  if (dict_grids_.count(path) > 0) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+void wicalc_rixx::AddGrid(Grid::Grid *grid) {
+  if (dict_grids_.count(grid->GetGridFilePath()) == 0) {
+    dict_grids_.insert(pair<string, Grid::Grid*>(grid->GetGridFilePath(), grid));
+  }
+  if (dict_casedata_.count(grid->GetGridFilePath()) == 0) {
+    RIReaderECL rireaderecl;
+    cvf::ref<RICaseData> ricasedata = new RICaseData(grid->GetGridFilePath());
+    rireaderecl.open(QString::fromStdString(grid->GetGridFilePath()), ricasedata.p());
+
+    ricasedata->computeActiveCellBoundingBoxes();
+    ricasedata->mainGrid()->computeCachedData();
+
+    dict_casedata_.insert(pair<string, cvf::ref<RICaseData>>(grid->GetGridFilePath(), ricasedata));
+
+
+    vector<double> intersections;
+    intersections.resize(ricasedata->mainGrid()->globalCellArray().size());
+    fill(intersections.begin(), intersections.end(), HUGE_VAL);
+    dict_intersections_.insert(pair<string, vector<double>>(grid->GetGridFilePath(), intersections));
+  }
+}
+
+void wicalc_rixx::SetGridActive(Grid::Grid *grid) {
+  assert(HasGrid(grid->GetGridFilePath()));
+  ricasedata_ = dict_casedata_[grid->GetGridFilePath()];
+  grid_ = dict_grids_[grid->GetGridFilePath()];
+  intersections_ = dict_intersections_[grid->GetGridFilePath()];
 }
 
 // -----------------------------------------------------------------
@@ -112,7 +119,7 @@ void wicalc_rixx::calculateWellPathIntersections(const WellPath& wellPath,
                                             wellPath.m_wellPathPoints);
 
   std::stringstream str;
-  if (VERB_WIC >=2) {
+  if (VERB_WIC >=3) {
     Printer::info("Found " + Printer::num2str(intersections.size()) + " intersections.");
   }
 
@@ -235,13 +242,13 @@ wicalc_rixx::ComputeWellBlocks(
 
   // -------------------------------------------------------------
   // Loop through well segments
-  if (VERB_WIC >= 2) {
+  if (VERB_WIC >= 3) {
     Printer::ext_info("Looping through " + Printer::num2str(well.radii.size()) + " segments.",
                       "wicalc_rixx", "WellIndexCalculation");
   }
   wellPath = new WellPath();
   for (int seg = 0; seg < well.radii.size(); ++seg) {
-    if (VERB_WIC >= 2) {
+    if (VERB_WIC >= 3) {
       Printer::ext_info("Computing segment " + Printer::num2str(seg)
                     + ". StartMD: " + Printer::num2str(well.heel_md[seg]) + "; EndMD: " + Printer::num2str(well.toe_md[seg])
                     + "; StartPt: " + eigenvec_to_str(well.heels[seg]) + "; EndPt: " + eigenvec_to_str(well.toes[seg]),

@@ -47,7 +47,7 @@ class wicalc_rixx
 {
  public:
   // -------------------------------------------------------
-  wicalc_rixx(Grid::Grid *grid,
+  wicalc_rixx(Grid::Grid *grid = nullptr,
               RICaseData *ricasedata = nullptr);
 
   // -------------------------------------------------------
@@ -90,11 +90,33 @@ class wicalc_rixx
   void ComputeWellBlocks(vector<IntersectedCell> &well_indices,
                          WellDefinition &well);
 
+  /*!
+   * @brief Check if a grid has been read into an RICaseData object.
+   * @param path Grid path to check.
+   */
+  bool HasGrid(string path);
+
+  /*!
+   * @brief Create a new RICaseData object for a grid and save it in the grids_ member.
+   * @param grid Grid to add.
+   */
+  void AddGrid(Grid::Grid *grid);
+
+  /*!
+   * @brief Set a grid as the currently active one (i.e. set the ricasedata_ and grid_ variables)
+   */
+  void SetGridActive(Grid::Grid *grid);
+
  protected:
   // ---------------------------------------------------------------
   // size_t grid_count_;
   // size_t cell_count_;
   // size_t gcellarray_sz_;
+
+ private:
+  map<string, cvf::ref<RICaseData>> dict_casedata_;
+  map<string, Grid::Grid*> dict_grids_;
+  map<string, vector<double>> dict_intersections_;
 
 };
 
