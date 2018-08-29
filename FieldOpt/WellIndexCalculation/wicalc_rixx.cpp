@@ -143,7 +143,6 @@ wicalc_rixx::collectIntersectedCells(vector<IntersectedCell> &isc_cells,
                                      WellPath& wellPath) {
 
   vector<RICompData> completionData;
-  Reservoir::Grid::Cell gcell;
 
   for (auto& cell : isc_info) {
 
@@ -167,8 +166,7 @@ wicalc_rixx::collectIntersectedCells(vector<IntersectedCell> &isc_cells,
 
     // -------------------------------------------------------------
     // Make FO Cell object + fill values for trans.computation
-    gcell = grid_->GetCell(cell.globCellIndex);
-    IntersectedCell icell(gcell);
+    IntersectedCell icell = grid_->GetCell(cell.globCellIndex);
 
     // -------------------------------------------------------------
     // Calculate direction
@@ -205,11 +203,11 @@ wicalc_rixx::collectIntersectedCells(vector<IntersectedCell> &isc_cells,
     // transfer to FO object
     Vector3d start_pt(cell.startPoint.x(),
                       cell.startPoint.y(),
-                      cell.startPoint.z());
+                     -cell.startPoint.z());
 
     Vector3d exit_pt(cell.endPoint.x(),
                      cell.endPoint.y(),
-                     cell.endPoint.z());
+                    -cell.endPoint.z());
 
     Vector3d isc_lengths(cell.intersectionLengthsInCellCS.x(),
                          cell.intersectionLengthsInCellCS.y(),
