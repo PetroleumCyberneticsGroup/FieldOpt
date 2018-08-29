@@ -41,7 +41,7 @@ using namespace std;
  */
 class IntersectedCell : public Grid::Cell {
  public:
-  IntersectedCell() {}
+  IntersectedCell();
   IntersectedCell(const Grid::Cell &cell);
 
   /*!

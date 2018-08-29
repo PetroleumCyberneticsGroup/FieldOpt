@@ -34,8 +34,16 @@ namespace WellIndexCalculation {
 
 
 IntersectedCell::IntersectedCell(const Grid::Cell &cell) : Grid::Cell(cell) {
-
+  i_ = ijk_index().i();
+  j_ = ijk_index().j();
+  k_ = ijk_index().k();
 };
+
+IntersectedCell::IntersectedCell() {
+  i_ = ijk_index().i();
+  j_ = ijk_index().j();
+  k_ = ijk_index().k();
+}
 
 Vector3d IntersectedCell::xvec() const {
   return corners()[5] - corners()[4];
