@@ -78,7 +78,7 @@ endif()
 
 
 # Testing ==============================================================
-if (BUILD_TESTING AND NOT BUILD_WIC_ADGPRS)
+if (BUILD_TESTING AND NOT BUILD_WIC_ADGPRS AND NOT USE_SANITIZING)
 
   # Unit tests
   find_package(GTest REQUIRED)
@@ -93,7 +93,8 @@ if (BUILD_TESTING AND NOT BUILD_WIC_ADGPRS)
   target_link_libraries(test_wellindexcalculator
       ${WIC_LIB_TARGET}
       ${GTEST_BOTH_LIBRARIES}
-      ${CMAKE_THREAD_LIBS_INIT})
+      ${CMAKE_THREAD_LIBS_INIT}
+          )
 
   add_test(NAME test_wellindexcalculator
       COMMAND $<TARGET_FILE:test_wellindexcalculator>)

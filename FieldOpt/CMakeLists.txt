@@ -23,6 +23,26 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_COLOR_MAKEFILE ON)
 # set(CMAKE_VERBOSE_MAKEFILE ON)
 
+# Sanitizing ===============================================
+option(USE_SANITIZING "Build sanitizing features for debugging"  OFF)
+if (USE_SANITIZING)
+#  https://github.com/google/sanitizers
+#  Sanitizing is a feature built into more recent versions of GCC (>4.7).
+#  It add additional (better) error traces for memory-related problems.
+#  AddressSanitizer (detects addressability issues) and LeakSanitizer (detects memory leaks) [address] [leak]
+#  ThreadSanitizer (detects data races and deadlocks) for C++ and Go                         [thread]
+#  MemorySanitizer (detects use of uninitialized memory)                                     [memory]
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address  -fsanitize=leak -g")
+  set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address  -fsanitize=leak -g")
+  set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address  -fsanitize=leak -g")
+  set (CMAKE_MODULE_LINKER_FLAGS  "${CMAKE_MODULE_LINKER_FLAGS} -fsanitize=address  -fsanitize=leak -g")
+endif()
+
+#CMAKE_C_FLAGS:STRING=-fsanitize=address  -fsanitize=leak -g
+#CMAKE_EXE_LINKER_FLAGS:STRING=-fsanitize=address  -fsanitize=leak
+#CMAKE_MODULE_LINKER_FLAGS:STRING=-fsanitize=address  -fsanitize=leak
+
+
 # Build dirs ===============================================
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
