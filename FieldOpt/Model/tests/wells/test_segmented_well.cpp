@@ -67,20 +67,20 @@ TEST_F(SegmentedWellTest, Compartments ) {
 
     // some error is allowed here, because the packers are snapped to
     // spline-cell intersections.
-    EXPECT_NEAR(894.0, d_2h_->GetCompartments()[2].end_packer->md(), 6);
+    EXPECT_NEAR(length, d_2h_->GetCompartments()[2].end_packer->md(), 6);
 
     EXPECT_TRUE(d_2h_->GetCompartments()[0].end_packer == d_2h_->GetCompartments()[1].start_packer);
     EXPECT_NEAR(length/3.0, d_2h_->GetCompartments()[0].end_packer->md(), 30);
     EXPECT_NEAR(length/3.0, d_2h_->GetCompartments()[1].start_packer->md(), 30);
-    EXPECT_NEAR(2*length/3.0, d_2h_->GetCompartments()[1].end_packer->md(), 30);
-    EXPECT_NEAR(2*length/3.0, d_2h_->GetCompartments()[2].start_packer->md(), 30);
+    EXPECT_NEAR(2*length/3.0, d_2h_->GetCompartments()[1].end_packer->md(), 100);
+    EXPECT_NEAR(2*length/3.0, d_2h_->GetCompartments()[2].start_packer->md(), 100);
 
     EXPECT_FLOAT_EQ(7.85E-5, d_2h_->GetCompartments()[0].icd->valveSize());
     EXPECT_FLOAT_EQ(7.85E-5, d_2h_->GetCompartments()[1].icd->valveSize());
     EXPECT_FLOAT_EQ(7.85E-5, d_2h_->GetCompartments()[2].icd->valveSize());
     EXPECT_NEAR(0.0,          d_2h_->GetCompartments()[0].icd->md(), 30);
     EXPECT_NEAR(length/3.0,   d_2h_->GetCompartments()[1].icd->md(), 30);
-    EXPECT_NEAR(2*length/3.0, d_2h_->GetCompartments()[2].icd->md(), 30);
+    EXPECT_NEAR(d_2h_->GetCompartments()[2].start_packer->md(), d_2h_->GetCompartments()[2].icd->md(), 1);
 }
 
 TEST_F(SegmentedWellTest, SegmentTypes) {
