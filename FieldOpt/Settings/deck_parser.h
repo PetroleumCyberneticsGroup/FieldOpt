@@ -68,7 +68,7 @@ namespace Settings {
  */
 class DeckParser {
  public:
-  ~DeckParser();
+//  ~DeckParser();
   DeckParser(std::string deck_file);
 
   QList<Model::Well> GetWellData();
@@ -81,10 +81,8 @@ class DeckParser {
   size_t num_wells_;
   size_t num_groups_;
   size_t num_timesteps_;
+  QList<Model::Well> well_structs_;
 
-  std::vector< std::shared_ptr< const Opm::Well > > *wells_;
-  const Opm::Tuning *tuning_;
-  const Opm::TimeMap *time_map_;
   std::vector<int> time_days_;
   std::vector<std::string> time_dates_;
 
@@ -92,17 +90,15 @@ class DeckParser {
    * These hold properties for the well currently being parsed.
    * It needs to be this way because attempting to get them twice causes a segfault.
    */
-  Opm::CompletionSet current_comp_set_;
+//  Opm::CompletionSet current_comp_set_;
   std::string current_well_name_;
   int current_well_first_time_step_;
-
-  void initializeTimeVectors();
 
   /*!
    * @brief Convert a parsed OPM well strucure to a FieldOpt
    * Settings well struct.
    */
-  Model::Well opmWellToWellStruct(const Opm::Well *opm_well);
+  Model::Well opmWellToWellStruct(const Opm::Well* opm_well);
 
   /*!
    * @brief Determine whether a well is a producer or an injector.
@@ -112,12 +108,12 @@ class DeckParser {
    * is first set to be in the deck; if it switches later a warning
    * will be printed, but it will otherwise be ignored.
    */
-  Model::WellType determineWellType(const Opm::Well *opm_well);
+  Model::WellType determineWellType(const Opm::Well* opm_well);
 
   /*!
    * @brief Determine the preferred phase for a well (water/oil/gas/liquid)
    */
-  Model::PreferredPhase determinePreferredPhase(const Opm::Well *opm_well);
+  Model::PreferredPhase determinePreferredPhase(const Opm::Well* opm_well);
 
   /*!
    * @brief Determine the wellbore radius for the well.
@@ -127,13 +123,13 @@ class DeckParser {
    * FieldOpt does not currently support wells with variable
    * wellbore radius.
    */
-  double determineWellboreRadius(const Opm::Well *opm_well);
+  double determineWellboreRadius(const Opm::Well*);
 
   /*!
    * @brief Convert an OPM completion set to a list of FieldOpt settings
    * WellBlocks.
    */
-  QList<Model::Well::WellBlock> opmToWellBlocks(const Opm::Well *opm_well);
+  QList<Model::Well::WellBlock> opmToWellBlocks(const Opm::Well*);
 
   /*!
    * @brief Convert OPMs representation of well controls to a list of
@@ -141,31 +137,31 @@ class DeckParser {
    *
    * @note Flags with the AUTO status will instead be set to OPEN.
    */
-  QList<Model::Well::ControlEntry> opmToControlEntries(const Opm::Well *opm_well);
+  QList<Model::Well::ControlEntry> opmToControlEntries(const Opm::Well* opm_well);
 
   /*!
    * @brief Determine the control mode for a well at a certain timestep
    * using the WellProductionProperties for that well at that time from
    * the OPM parser.
    */
-  Model::ControlMode determineWellControlMode(const Opm::Well *opm_well, const int timestep);
+  Model::ControlMode determineWellControlMode(const Opm::Well* opm_well, const int timestep);
 
   /*!
    * @brief Determine the target/limit rate for a well at a timestep.
    * @note I'm really not sure if this is correctly implemented.
    */
-  double determineRate(const Opm::Well *opm_well, const int timestep);
+  double determineRate(const Opm::Well* opm_well, const int timestep);
 
   /*!
    * @brief Determine the target/limit bhp for a well at a timestep.
    * @note I'm really not sure if this is correctly implemented.
    */
-  double determineBhp(const Opm::Well *opm_well, const int timestep);
+  double determineBhp(const Opm::Well* opm_well, const int timestep);
 
   /*!
    * @brief Determine the injector type (gas/water).
    */
-  Model::InjectionType determineInjectorType(const Opm::Well *opm_well, const int timestep);
+  Model::InjectionType determineInjectorType(const Opm::Well* opm_well, const int timestep);
 };
 }
 
