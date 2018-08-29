@@ -52,12 +52,25 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
         spline_points_from_import(well_settings);
         imported_wellblocks_ = well_settings.imported_wellblocks_;
     }
+    if (VERB_MOD >= 2) {
+        Printer::ext_info("Initializing well spline for well " + well_settings.name.toStdString()
+            + ". N points: " + Printer::num2str(well_settings.spline_points.size()) + "; First spline point name: "
+            + well_settings.spline_points[0].name.toStdString(),
+            "Model", "WellSpline");
+    }
 
     for (auto point : well_settings.spline_points) {
+        if (VERB_MOD >= 2) {
+            Printer::ext_info("Adding new spline point for well " + well_settings.name.toStdString() + ": "
+                + Printer::num2str(point.x) + ", " + Printer::num2str(point.y) + ", " + Printer::num2str(point.z)
+                + " (" + point.name.toStdString() + ")",
+                "Model", "WellSpline");
+        }
         SplinePoint *pt = new SplinePoint();
         pt->x = new ContinousProperty(point.x);
         pt->y = new ContinousProperty(point.y);
         pt->z = new ContinousProperty(point.z);
+        assert(point.name.size() > 0);
         pt->x->setName(point.name + "#x");
         pt->y->setName(point.name + "#y");
         pt->z->setName(point.name + "#z");
