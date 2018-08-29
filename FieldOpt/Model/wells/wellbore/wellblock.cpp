@@ -14,9 +14,9 @@ namespace Model {
             }
 
             WellBlock::~WellBlock() {
-                delete i_;
-                delete j_;
-                delete k_;
+//                delete i_;
+//                delete j_;
+//                delete k_;
             }
 
             void WellBlock::AddCompletion(Model::Wells::Wellbore::Completions::Completion *completion)
