@@ -41,7 +41,7 @@ class SingleCellWellIndexTest : public ::testing::Test {
   }
 
   virtual ~SingleCellWellIndexTest() {
-      delete grid_;
+//      delete grid_;
   }
 
   virtual void SetUp() {

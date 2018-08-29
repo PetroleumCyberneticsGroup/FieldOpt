@@ -43,7 +43,7 @@ class IntersectedCellsTest : public ::testing::Test {
   }
 
   virtual ~IntersectedCellsTest() {
-      delete grid_;
+//      delete grid_;
   }
 
   virtual void SetUp() {
