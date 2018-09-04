@@ -332,7 +332,7 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
         else control.time_step = json_controls.at(i).toObject()["TimeStep"].toInt();
 
         // State (Open or shut)
-        if (QString::compare("Shut", json_controls.at(i).toObject()["State"].toString()) == 0)
+        if (json_controls[i].toObject().contains("State") && QString::compare("Shut", json_controls.at(i).toObject()["State"].toString()) == 0)
             control.state = WellState::WellShut;
         else
             control.state = WellState::WellOpen;
@@ -354,7 +354,7 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
         // Injection type
         if (well.type == WellType::Injector) {
             if (!json_controls.at(i).toObject().contains("Type"))
-                throw UnableToParseWellsModelSectionException("Type (water/gas) must be specified for injector wells.");
+                control.injection_type = InjectionType::WaterInjection;
             if (QString::compare("Water", json_controls.at(i).toObject()["Type"].toString()) == 0)
                 control.injection_type = InjectionType::WaterInjection;
             else if (QString::compare("Gas", json_controls.at(i).toObject()["Type"].toString()) == 0)
