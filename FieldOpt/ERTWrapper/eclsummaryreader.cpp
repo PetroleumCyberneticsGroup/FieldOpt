@@ -23,6 +23,8 @@
 #include <assert.h>
 #include <algorithm>
 #include <boost/algorithm/string/join.hpp>
+#include <Utilities/verbosity.h>
+#include <Utilities/printer.hpp>
 
 namespace ERTWrapper {
     namespace ECLSummary {
@@ -424,24 +426,24 @@ namespace ERTWrapper {
         }
 
         void ECLSummaryReader::warnPropertyZero(string wname, string propname) const {
-            std::cerr << "WARNING: Returning cumulative vector with final falue 0.0 for "
-                                 "property " + propname + " for well " + wname +
-                                 ". The vector may be uninitialized because "
-                                 "the property is not found for the well, or because the phase "
-                                 "does not exist in the system." << std::endl;
+            if (VERB_SIM >= 1) {
+                Printer::ext_warn("Returning cumulative vector with final value 0.0 for " + propname + " for well " + wname + ".",
+                    "Simulation", "ECLSummaryReader");
+            }
         }
 
         void ECLSummaryReader::warnPropertyNotFound(string propname) const {
-            std::cerr << "WARNING: The field property " + propname + " was not found in "
-                                 "the summary. Attempting to calculate it from corresponding well property." << std::endl;
+            if (VERB_SIM >= 1) {
+                Printer::ext_warn("The property " + propname + " was not found in the summary. Calculating from corresponding well properties.",
+                                  "Simulation", "ECLSummaryReader");
+            }
         }
 
         void ECLSummaryReader::warnPropertyZero(string propname) const {
-            std::cerr << "WARNING: Returning cumulative vector with final falue 0.0 for "
-                         "property " + propname +
-                         ". The vector may be uninitialized because "
-                         "the property is not found for the well, or because the phase "
-                         "does not exist in the system." << std::endl;
+            if (VERB_SIM >= 1) {
+                Printer::ext_warn("Returning cumulative vector with final value 0.0 for " + propname + ".",
+                                  "Simulation", "ECLSummaryReader");
+            }
         }
 
         const std::vector<double> &ECLSummaryReader::fopt() const {

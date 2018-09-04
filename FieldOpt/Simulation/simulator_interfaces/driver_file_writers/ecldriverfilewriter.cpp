@@ -23,10 +23,12 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
+#include <Utilities/printer.hpp>
 #include "ecldriverfilewriter.h"
 #include "driver_parts/ecl_driver_parts/schedule_section.h"
 #include "Simulation/simulator_interfaces/simulator_exceptions.h"
 #include "Utilities/filehandling.hpp"
+#include "Utilities/verbosity.h"
 
 namespace Simulation {
 
@@ -41,8 +43,8 @@ EclDriverFileWriter::EclDriverFileWriter(Settings::Settings *settings, Model::Mo
 
 void EclDriverFileWriter::WriteDriverFile(QString schedule_file_path)
 {
-    if (settings_->verbose()) {
-        std::cout << "Writing driver file to " << schedule_file_path.toStdString() << std::endl;
+    if (VERB_SIM >= 1) {
+        Printer::ext_info("Writing driver file to " + schedule_file_path.toStdString(), "Simulation", "EclDriverFileWriter");
     }
     assert(FileExists(schedule_file_path));
     Schedule schedule = ECLDriverParts::Schedule(model_->wells(), settings_->model()->control_times());

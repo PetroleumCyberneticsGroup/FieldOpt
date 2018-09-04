@@ -18,6 +18,8 @@
 ******************************************************************************/
 #include <iostream>
 #include <boost/algorithm/string.hpp>
+#include <Utilities/printer.hpp>
+#include <Utilities/verbosity.h>
 #include "eclsimulator.h"
 #include "Utilities/execution.hpp"
 #include "simulator_exceptions.h"
@@ -44,15 +46,21 @@ ECLSimulator::ECLSimulator(Settings::Settings *settings, Model::Model *model)
 
 void ECLSimulator::Evaluate()
 {
+    if (VERB_SIM >= 1) { Printer::ext_info("Starting unmonitored evaluation.", "Simulation", "ECLSimulator"); }
+    if (VERB_SIM >= 1) { Printer::info("Copying driver files."); }
     copyDriverFiles();
+    if (VERB_SIM >= 1) { Printer::info("Updating file paths."); }
     UpdateFilePaths();
     script_args_ = (QStringList() << QString::fromStdString(paths_.GetPath(Paths::SIM_WORK_DIR)) << deck_name_);
+    if (VERB_SIM >= 1) { Printer::info("Writing schedule."); }
     auto driver_file_writer = EclDriverFileWriter(settings_, model_);
     driver_file_writer.WriteDriverFile(QString::fromStdString(paths_.GetPath(Paths::SIM_OUT_SCH_FILE)));
+    if (VERB_SIM >= 1) { Printer::info("Starting unmonitored simulation."); }
     Utilities::Unix::ExecShellScript(
         QString::fromStdString(paths_.GetPath(Paths::SIM_EXEC_SCRIPT_FILE)),
         script_args_
     );
+    if (VERB_SIM >= 1) { Printer::info("Unmonitored simulation done. Reading results."); }
     results_->ReadResults(QString::fromStdString(paths_.GetPath(Paths::SIM_OUT_DRIVER_FILE)));
     updateResultsInModel();
 }
@@ -68,12 +76,19 @@ bool ECLSimulator::Evaluate(int timeout, int threads) {
         t = 10; // Always let simulations run for at least 10 seconds
     }
 
-    std::cout << "Starting monitored simulation with timeout " << timeout << std::endl;
+    if (VERB_SIM >= 1) {
+        Printer::info("Starting monitored simulation with timeout.");
+    }
     bool success = ::Utilities::Unix::ExecShellScriptTimeout(
         QString::fromStdString(paths_.GetPath(Paths::SIM_EXEC_SCRIPT_FILE)),
         script_args_, t);
-    std::cout << "Monitored simulation done." << std::endl;
+    if (VERB_SIM >= 1) {
+        Printer::info("Monitored simulation done.");
+    }
     if (success) {
+        if (VERB_SIM >= 1) {
+            Printer::info("Simulation successful. Reading results.");
+        }
         results_->DumpResults();
         results_->ReadResults(QString::fromStdString(paths_.GetPath(Paths::SIM_OUT_DRIVER_FILE)));
     }
@@ -124,23 +139,30 @@ void ECLSimulator::copyDriverFiles() {
     std::string workdir = paths_.GetPath(Paths::OUTPUT_DIR) + "/" + driver_parent_dir_name_.toStdString();
 
     if (!DirectoryExists(workdir)) {
-        std::cout << "Output deck directory not found; copying input deck: "
-                  << "\t" << paths_.GetPath(Paths::SIM_DRIVER_DIR) << " -> "
-                  << "\t" << workdir << std::endl;
+        if (VERB_SIM >= 1) {
+            Printer::ext_info("Output deck directory not found. Copying input deck:"
+            + paths_.GetPath(Paths::SIM_DRIVER_DIR) + " -> " + workdir, "Simulation", "ECLSimulator" );
+        }
         CreateDirectory(workdir);
         CopyDirectory(paths_.GetPath(Paths::SIM_DRIVER_DIR), workdir, false);
         if (paths_.IsSet(Paths::SIM_AUX_DIR)) {
             std::string auxdir = paths_.GetPath(Paths::OUTPUT_DIR) + "/" + FileName(paths_.GetPath(Paths::SIM_AUX_DIR));
             if (!DirectoryExists(auxdir)) {
-                std::cout << "Copying simulation aux. directory: "
-                          << "\t" << paths_.GetPath(Paths::SIM_AUX_DIR) << " -> "
-                          << "\t" << auxdir << std::endl;
-            CreateDirectory(auxdir);
-            CopyDirectory(paths_.GetPath(Paths::SIM_AUX_DIR), auxdir, false);
+                if (VERB_SIM >= 1) {
+                    Printer::ext_info("Copying simulation aux. directory:"
+                                          + paths_.GetPath(Paths::SIM_AUX_DIR) + " -> " + auxdir, "Simulation", "Simulator" );
+                }
+                CreateDirectory(auxdir);
+                CopyDirectory(paths_.GetPath(Paths::SIM_AUX_DIR), auxdir, false);
             }
         }
     }
     paths_.SetPath(Paths::SIM_WORK_DIR, workdir);
+    if (VERB_SIM >= 1) {
+        Printer::ext_info("Done copying directories. Set working directory to: " + workdir,
+                          "Simulation",
+                          "ECLSimulator");
+    }
 }
 
 }

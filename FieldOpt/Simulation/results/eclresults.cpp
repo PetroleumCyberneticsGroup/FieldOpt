@@ -2,6 +2,8 @@
 #include "ERTWrapper/ertwrapper_exceptions.h"
 #include <QVector>
 #include <boost/lexical_cast.hpp>
+#include <Utilities/verbosity.h>
+#include <Utilities/printer.hpp>
 
 namespace Simulation {
 namespace Results {
@@ -14,6 +16,9 @@ ECLResults::ECLResults()
 
 void ECLResults::ReadResults(QString file_path)
 {
+    if (VERB_SIM >= 1) {
+        Printer::ext_info("Attempting to read results from" + file_path.toStdString(), "Simulation", "ECLResults");
+    }
     file_path_ = file_path;
     if (summary_reader_ != 0) delete summary_reader_;
     try {

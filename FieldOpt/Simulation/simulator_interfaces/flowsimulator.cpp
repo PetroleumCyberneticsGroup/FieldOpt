@@ -19,6 +19,8 @@
 #include <results/eclresults.h>
 #include <Utilities/execution.hpp>
 #include <iostream>
+#include <Utilities/verbosity.h>
+#include <Utilities/printer.hpp>
 #include "flowsimulator.h"
 #include "simulator_exceptions.h"
 
@@ -71,9 +73,10 @@ void FlowSimulator::verifyOriginalDriverFileDirectory() {
 void FlowSimulator::copyDriverFiles() {
     auto workdir = paths_.GetPath(Paths::OUTPUT_DIR) + driver_parent_dir_name_.toStdString();
     if (!DirectoryExists(workdir)) {
-        std::cout << "Output deck directory not found; copying input deck: "
-                  << "\t" << paths_.GetPath(Paths::SIM_DRIVER_DIR) << " -> "
-                  << "\t" << workdir << std::endl;
+        if (VERB_SIM >= 1) {
+            Printer::ext_info("Output deck directory not found. Copying input deck:"
+                                  + paths_.GetPath(Paths::SIM_DRIVER_DIR) + " -> " + workdir, "Simulation", "FlowSimulator" );
+        }
         CreateDirectory(workdir);
         CopyDirectory(paths_.GetPath(Paths::SIM_DRIVER_DIR), workdir, true);
     }
