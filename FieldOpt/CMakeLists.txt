@@ -346,8 +346,11 @@ if (BUILD_TESTING)
   enable_testing()
   find_library(gtest NAMES gtest HINTS ${PROJECT_SOURCE_DIR}/ThirdParty/libraries/lib REQUIRED)
   find_library(gtest_main NAMES gtest_main HINTS ${PROJECT_SOURCE_DIR}/ThirdParty/libraries/lib REQUIRED)
+  set(GTEST_BOTH_LIBRARIES ${gtest} ${gtest_main})
   message(STATUS "gtest:      ${gtest}")
   message(STATUS "gtest_main: ${gtest_main}")
+  message(STATUS "GTEST_BOTH_LIBRARIES: ${GTEST_BOTH_LIBRARIES}")
+
 endif()
 
 message(STATUS "END MAIN PROJECT (${PROJECT_NAME}) ==> STARTING SUBDIRS")

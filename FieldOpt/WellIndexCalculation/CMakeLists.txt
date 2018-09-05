@@ -81,7 +81,7 @@ endif()
 if (BUILD_TESTING AND NOT BUILD_WIC_ADGPRS AND NOT USE_SANITIZING)
 
   # Unit tests
-  find_package(GTest REQUIRED)
+#  find_package(GTest REQUIRED)
 
   include_directories(${GTEST_INCLUDE_DIRS}
       ${EIGEN3_INCLUDE_DIR} tests)
