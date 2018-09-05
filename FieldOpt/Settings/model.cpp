@@ -245,8 +245,12 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
                 block.completion.name = "Transmissibility#" + well.name + "#" + QString::number(i);
                 block.has_completion = true;
             }
-            else
-                block.has_completion = false;
+            else {
+                block.has_completion = true;
+                block.completion.type = WellCompletionType::Perforation;
+                block.completion.transmissibility_factor = -1;
+                block.completion.is_variable = false;
+            }
             block.name = "WellBlock#" + well.name + "#" + QString::number(i);
             well.well_blocks.append(block);
         }
