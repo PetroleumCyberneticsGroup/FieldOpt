@@ -15,7 +15,7 @@ set(WIC_LIB_TARGET_ADG _wic-rixx)
 # ResInsight ===========================================================
 set(CVF_ENABLE_ASSERTS 1)
 set(CVF_ENABLE_TIGHT_ASSERTS 1)
-include(resinxx.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/resinxx.cmake)
 
 # Include: Qt ==========================================================
 include_directories(${Qt5Core_INCLUDE_DIRS})
@@ -26,10 +26,10 @@ add_compile_options(-std=c++11)
 
 
 include_directories(
-    resinxx/rixx_app_fwk
-    resinxx/rixx_core_geom
-    resinxx/rixx_res_mod
-    resinxx/rixx_grid
+    ${CMAKE_CURRENT_SOURCE_DIR}/resinxx/rixx_app_fwk
+    ${CMAKE_CURRENT_SOURCE_DIR}/resinxx/rixx_core_geom
+    ${CMAKE_CURRENT_SOURCE_DIR}/resinxx/rixx_res_mod
+    ${CMAKE_CURRENT_SOURCE_DIR}/resinxx/rixx_grid
 )
 
 message(".............................................................")
