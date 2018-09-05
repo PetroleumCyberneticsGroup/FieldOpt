@@ -145,6 +145,7 @@ endif()
 if(NOT EIGEN3_FOUND)
   message(STATUS "Using local Eigen3")
   set(EIGEN3_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/ThirdParty/Eigen3)
+  set(Eigen3_DIR ${CMAKE_SOURCE_DIR}/ThirdParty/Eigen3)
 endif()
 
 # ----------------------------------------------------------
