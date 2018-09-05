@@ -52,8 +52,8 @@ void ECLSimulator::Evaluate()
     if (VERB_SIM >= 1) { Printer::info("Updating file paths."); }
     UpdateFilePaths();
     script_args_ = (QStringList() << QString::fromStdString(paths_.GetPath(Paths::SIM_WORK_DIR)) << deck_name_);
-    if (VERB_SIM >= 1) { Printer::info("Writing schedule."); }
     auto driver_file_writer = EclDriverFileWriter(settings_, model_);
+    if (VERB_SIM >= 1) { Printer::info("Writing schedule."); }
     driver_file_writer.WriteDriverFile(QString::fromStdString(paths_.GetPath(Paths::SIM_OUT_SCH_FILE)));
     if (VERB_SIM >= 1) { Printer::info("Starting unmonitored simulation."); }
     Utilities::Unix::ExecShellScript(

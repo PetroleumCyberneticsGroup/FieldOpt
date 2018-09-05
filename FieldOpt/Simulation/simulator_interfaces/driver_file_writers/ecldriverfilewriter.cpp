@@ -44,7 +44,8 @@ EclDriverFileWriter::EclDriverFileWriter(Settings::Settings *settings, Model::Mo
 void EclDriverFileWriter::WriteDriverFile(QString schedule_file_path)
 {
     if (VERB_SIM >= 1) {
-        Printer::ext_info("Writing driver file to " + schedule_file_path.toStdString(), "Simulation", "EclDriverFileWriter");
+        auto fp = schedule_file_path.toStdString();
+        Printer::ext_info("Writing driver file to " + fp + ".", "Simulation", "EclDriverFileWriter");
     }
     assert(FileExists(schedule_file_path));
     Schedule schedule = ECLDriverParts::Schedule(model_->wells(), settings_->model()->control_times());
