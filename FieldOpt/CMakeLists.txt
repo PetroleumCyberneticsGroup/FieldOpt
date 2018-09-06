@@ -76,7 +76,7 @@ endif()
 # ╚═╝╩╚═ ╩────╚═╝╚═╝╩═╝
 # ----------------------------------------------------------
 
-add_subdirectory(WellIndexCalculation/resinxx/rixx_ert_ecl)
+add_subdirectory(ThirdParty/libecl)
 
 
 # ----------------------------------------------------------
