@@ -80,9 +80,6 @@ Optimizer::TerminationCondition GeneticAlgorithm::IsFinished() {
         return tc;
     if (iteration_ >= max_generations_)
         tc = MAX_ITERATIONS_REACHED;
-    else if (evaluated_cases_ > max_evaluations_)
-        tc = MAX_EVALS_REACHED;
-
     if (tc != NOT_FINISHED) {
         population_ = sortPopulation(population_);
         if (enable_logging_) {
