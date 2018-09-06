@@ -57,7 +57,6 @@ namespace Optimization {
         }
 
         void CompassSearch::handleEvaluatedCase(Case *c) {
-            evaluated_cases_++;
             if (isImprovement(c))
                 updateTentativeBestCase(c);
         }
