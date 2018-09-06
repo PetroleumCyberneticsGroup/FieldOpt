@@ -88,6 +88,7 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
     last_computed_spline_ = std::vector<Eigen::Vector3d>();
 }
 void WellSpline::spline_points_from_import(Settings::Model::Well &well_settings) {
+    QString name_base = "SplinePoint#" + well_settings.name + "#";
     well_settings_.spline_points = QList<Settings::Model::Well::SplinePoint> ();
     auto first_spline_point = Settings::Model::Well::SplinePoint();
     first_spline_point.x = well_settings.imported_wellblocks_[0].in().x();
@@ -95,8 +96,11 @@ void WellSpline::spline_points_from_import(Settings::Model::Well &well_settings)
     first_spline_point.z = well_settings.imported_wellblocks_[0].in().z();
     if (well_settings.is_variable_spline) {
             first_spline_point.is_variable = true;
-        }
+    }
+    first_spline_point.name =  name_base + "heel";
+
     well_settings.spline_points.push_back(first_spline_point);
+    int i = 1;
     for (auto block : well_settings.imported_wellblocks_) {
             auto spline_point = Settings::Model::Well::SplinePoint();
             spline_point.x = block.out().x();
@@ -105,8 +109,10 @@ void WellSpline::spline_points_from_import(Settings::Model::Well &well_settings)
             if (well_settings.is_variable_spline) {
                 spline_point.is_variable = true;
             }
+            spline_point.name = name_base + "P" + QString::number(i++);
             well_settings.spline_points.push_back(spline_point);
-        }
+    }
+    well_settings.spline_points.back().name = name_base + "heel";
 }
 
 QList<WellBlock *> *WellSpline::GetWellBlocks()
@@ -168,11 +174,9 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
 
     QList<WellBlock *> *blocks = new QList<WellBlock *>();
     for (int i = 0; i < block_data.size(); ++i) {
-        if (block_data[i].cell_well_index_matrix() > 0.01) { // Ignoring well blocks with very low well index.
-            blocks->append(getWellBlock(block_data[i]));
-            blocks->last()->setEntryPoint(block_data[i].get_segment_entry_point(0));
-            blocks->last()->setExitPoint(block_data[i].get_segment_exit_point(0));
-        }
+        blocks->append(getWellBlock(block_data[i]));
+        blocks->last()->setEntryPoint(block_data[i].get_segment_entry_point(0));
+        blocks->last()->setExitPoint(block_data[i].get_segment_exit_point(0));
     }
     if (blocks->size() == 0) {
         throw WellBlocksNotDefined("WIC could not compute.");
@@ -180,11 +184,19 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
     if (VERB_MOD >= 2) {
         Printer::info("Done computing WIs after " + boost::lexical_cast<std::string>(seconds_spent_in_compute_wellblocks_) + " seconds");
     }
+    if (VERB_MOD >=2) {
+        Printer::ext_info("Computed " + Printer::num2str(blocks->size()) + " well blocks from "
+                        + Printer::num2str(block_data.size()) + " intersected cells for well " + welldef.wellname,
+                        "Model", "WellSpline");
+    }
     return blocks;
 }
 
 WellBlock *WellSpline::getWellBlock(Reservoir::WellIndexCalculation::IntersectedCell block_data)
 {
+    if (VERB_MOD >= 3) {
+        Printer::info("Creating WellBlock for IC " + block_data.ijk_index().to_string() + " with WI " + Printer::num2str(block_data.cell_well_index_matrix()));
+    }
     auto wb = new WellBlock(block_data.ijk_index().i()+1, block_data.ijk_index().j()+1, block_data.ijk_index().k()+1);
     auto comp = new Completions::Perforation();
     comp->setTransmissibility_factor(block_data.cell_well_index_matrix());
