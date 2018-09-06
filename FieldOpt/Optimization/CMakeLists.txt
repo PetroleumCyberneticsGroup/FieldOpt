@@ -1,22 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(optimization)
 
-set(EXPERIMENTAL_CONSTRAINTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/experimental_constraints)
-set(EXPERIMENTAL_CONSTRAINTS_SRC "")
-set(EXPERIMENTAL_CONSTRAINTS_TESTS "")
-if(EXISTS ${EXPERIMENTAL_CONSTRAINTS_DIR} AND IS_DIRECTORY ${EXPERIMENTAL_CONSTRAINTS_DIR})
-	message("Including experimental constraints")
-	add_definitions(-DWITH_EXPERIMENTAL_CONSTRIANTS)
-	set(EXPERIMENTAL_CONSTRAINTS_SRC
-			${EXPERIMENTAL_CONSTRAINTS_DIR}/ )
-	set(EXPERIMENTAL_CONSTRAINTS_TESTS
-			${EXPERIMENTAL_CONSTRAINTS_DIR}/tests/)
-else()
-	message("Experimental constraints not found")
-	add_definitions(-DWITHOUT_EXPERIMENTAL_CONSTRAINTS)
-endif()
-
-
 add_library(optimization STATIC
         optimization_exceptions.h
 		objective/objective.cpp
@@ -51,7 +35,7 @@ add_library(optimization STATIC
 		constraints/icv_constraint.cpp
         constraints/packer_constraint.cpp
         hybrid_optimizer.cpp
-		${EXPERIMENTAL_CONSTRAINTS_SRC} )
+		)
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
 target_link_libraries(optimization
@@ -83,7 +67,6 @@ if (BUILD_TESTING)
 			tests/optimizers/test_compass_search.cpp
 			tests/test_resource_cases.h
 			tests/test_resource_optimizer.h
-			${EXPERIMENTAL_CONSTRAINTS_TESTS}
 			tests/constraints/test_rate_constraint.cpp
 			tests/test_case_transfer_object.cpp
             tests/optimizers/test_apps.cpp

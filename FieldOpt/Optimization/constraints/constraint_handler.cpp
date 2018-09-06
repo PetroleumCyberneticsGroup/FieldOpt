@@ -81,18 +81,10 @@ ConstraintHandler::ConstraintHandler(QList<Settings::Optimizer::Constraint> cons
                     constraints_.append(new PseudoContBoundary2D(cons, variables, grid));
                 }
                 break;
-#ifdef WITH_EXPERIMENTAL_CONSTRAINTS
-                // Cases for constraints in the experimental_constraints directory go here
-#endif
             default:
                 std::cout << "WARNING: Constraint type not recognized." << std::endl;
         }
     }
-#ifdef WITH_EXPERIMENTAL_CONSTRAINTS
-    std::cout << "Using experimental constraints" << std::endl;
-#else
-    std::cout << "Not using experimental constraints" << std::endl;
-#endif
 }
 
 bool ConstraintHandler::CaseSatisfiesConstraints(Case *c)

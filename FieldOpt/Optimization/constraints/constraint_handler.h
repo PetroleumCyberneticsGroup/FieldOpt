@@ -36,9 +36,6 @@
 #include "Reservoir/grid/grid.h"
 
 #include <QList>
-#ifdef WITH_EXPERIMENTAL_CONSTRIANTS
-// Includes for constraints in the experimental_constraints dir go here.
-#endif
 
 namespace Optimization {
 namespace Constraints {
