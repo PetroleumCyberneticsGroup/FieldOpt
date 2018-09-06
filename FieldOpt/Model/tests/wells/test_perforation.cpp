@@ -28,12 +28,12 @@ protected:
 };
 
 TEST_F(PerforationTest, Constructor) {
-    EXPECT_EQ(3, prod_perforations_.size());
+    EXPECT_EQ(4, prod_perforations_.size());
 }
 
 TEST_F(PerforationTest, Values) {
     EXPECT_FLOAT_EQ(1.0, prod_perforations_[0]->transmissibility_factor());
-    EXPECT_FLOAT_EQ(1.0, prod_perforations_[1]->transmissibility_factor());
+    EXPECT_FLOAT_EQ(-1.0, prod_perforations_[1]->transmissibility_factor()); // defaulted
 }
 
 }
