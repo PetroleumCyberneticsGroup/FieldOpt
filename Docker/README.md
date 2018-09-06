@@ -11,7 +11,9 @@ On Ubuntu, this can be done by executing
 sudo apt-get install docker.io
 ```
 
-To build the image, from this directory, execute
+To build the image, from this directory (or any other
+directory containing a copy of this Dockerfile),
+execute
 ```
 sudo docker build -t fieldopt .
 ```
