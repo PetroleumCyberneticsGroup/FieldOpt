@@ -58,11 +58,14 @@ class IntersectedCell : public Grid::Cell {
   Vector3d zvec() const;
 
   void add_new_segment(Vector3d entry_point, Vector3d exit_point,
+                       double entry_md, double exit_md,
                        double segment_radius, double segment_skin);
   int num_segments() const;
 
   Vector3d get_segment_entry_point(int segment_index) const;
   Vector3d get_segment_exit_point(int segment_index) const;
+  double get_segment_entry_md(int segment_index) const;
+  double get_segment_exit_md(int segment_index) const;
   double get_segment_radius(int segment_index) const;
   double get_segment_skin(int segment_index) const;
 
@@ -100,6 +103,8 @@ class IntersectedCell : public Grid::Cell {
   // intersecting well segment definition
   vector<Vector3d> entry_points_;
   vector<Vector3d> exit_points_;
+  vector<double> entry_mds_;
+  vector<double> exit_mds_;
   vector<double> segment_radius_;
   vector<double> segment_skin_;
 

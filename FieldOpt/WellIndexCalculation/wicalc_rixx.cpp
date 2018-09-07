@@ -215,7 +215,7 @@ wicalc_rixx::collectIntersectedCells(vector<IntersectedCell> &isc_cells,
 
     // -------------------------------------------------------------
     // Transfer segment data, incl. wccf, to FO intersected cell
-    icell.add_new_segment(start_pt, exit_pt, well.radii[0], well.skins[0]);
+    icell.add_new_segment(start_pt, exit_pt, cell.startMD, cell.endMD, well.radii[0], well.skins[0]);
     icell.set_cell_well_index_matrix(transmissibility);
 
     // Add to vector of intersected cells
