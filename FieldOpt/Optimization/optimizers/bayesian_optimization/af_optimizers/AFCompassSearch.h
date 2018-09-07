@@ -35,7 +35,7 @@ namespace AFOptimizers {
 class AFCompassSearch : public AFOptimizer {
  public:
   AFCompassSearch();
-  AFCompassSearch(const VectorXd &lb, const VectorXd &ub);
+  AFCompassSearch(const VectorXd &lb, const VectorXd &ub, int rng_seed=0);
   Eigen::VectorXd Optimize(libgp::GaussianProcess *gp, AcquisitionFunction &af, double target) override;
 
  private:

@@ -48,14 +48,14 @@ EGO::EGO(Settings::Optimizer *settings,
     }
     n_initial_guesses_ = variables->ContinousVariableSize() * 2;
     af_ = AcquisitionFunction(settings->parameters());
-    af_opt_ = AFOptimizers::AFPSO(lb_, ub_);
+    af_opt_ = AFOptimizers::AFPSO(lb_, ub_, settings->parameters().rng_seed);
     gp_ = new libgp::GaussianProcess(variables->ContinousVariableSize(), "CovMatern5iso");
 
     cout << "Lower bounds: " << eigenvec_to_str(lb_) << endl;
     cout << "Upper bounds: " << eigenvec_to_str(ub_) << endl;
 
     // Guess some random initial positions
-    auto rng = get_random_generator();
+    auto rng = get_random_generator(settings->parameters().rng_seed);
     for (int i = 0; i < n_initial_guesses_; ++i) {
         VectorXd pos = VectorXd::Zero(lb_.size());
         for (int i = 0; i < lb_.size(); ++i) {

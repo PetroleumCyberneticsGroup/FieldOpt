@@ -86,10 +86,16 @@ inline std::vector<T> range(T start, T end, T step) {
  * @brief Get a random generator (Mersenne Twister) for use with the random functions in this file.
  * @return A Mersenne Twister RNG.
  */
-inline boost::random::mt19937 get_random_generator() {
-    boost::random_device dev;
-    boost::random::mt19937 gen(dev);
-    return gen;
+inline boost::random::mt19937 get_random_generator(int seed = 0) {
+    if (seed == 0) {
+        boost::random_device dev;
+        boost::random::mt19937 gen(dev);
+        return gen;
+    }
+    else {
+        boost::random::mt19937 gen(seed);
+        return gen;
+    }
 }
 
 /*!

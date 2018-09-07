@@ -80,7 +80,7 @@ TEST_F(APPSTest, GetNewCases) {
 }
 
 TEST_F(APPSTest, TestFunctionSpherical) {
-    auto gen = get_random_generator();
+    auto gen = get_random_generator(10);
     test_case_2r_->set_objective_function_value(Sphere(test_case_2r_->GetRealVarVector()));
     Optimization::Optimizer *minimizer = new APPS(settings_apps_min_unconstr_,
                                                   test_case_2r_,
@@ -110,7 +110,7 @@ TEST_F(APPSTest, TestFunctionSpherical) {
 }
 
 TEST_F(APPSTest, TestFunctionRosenbrock) {
-    auto gen = get_random_generator();
+    auto gen = get_random_generator(10);
 
     // First test the Rosenbrock function itself
     Eigen::VectorXd optimum(2); optimum << 1.0, 1.0;

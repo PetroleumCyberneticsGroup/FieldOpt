@@ -61,8 +61,9 @@ class AFPSO : public AFOptimizer {
    * @brief Initialize the optimizer, setting the bounds for the variables.
    * @param lb Lower bounds.
    * @param ub Upper bounds.
+   * @rng_seed Seed to use for the random number generator.
    */
-  AFPSO(VectorXd lb, VectorXd ub);
+  AFPSO(VectorXd lb, VectorXd ub, int rng_seed=0);
 
  private:
   struct Particle {

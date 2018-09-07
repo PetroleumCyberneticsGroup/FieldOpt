@@ -75,6 +75,8 @@ class Optimizer
     double stagnation_limit;  //!< Stagnation limit. Default: 1e-10.
     double lower_bound;       //!< Simple lower bound. This is applied to _all_ variables. Default: -10.0.
     double upper_bound;       //!< Simple upper bound. This is applied to _all_ variables. Default: +10.0.
+
+    int rng_seed;             //!< Seed to be used for random number renerators in relevant algorithms.
   };
 
   struct Objective {

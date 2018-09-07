@@ -63,7 +63,7 @@ TEST_F(EGOTest, GaussianProcess) {
     params << 1, 1;
     gp.covf().set_loghyper(params);
 
-    auto gen = get_random_generator();
+    auto gen = get_random_generator(10);
 
     cout << "Log likelihood: " << gp.log_likelihood() << endl;
 
@@ -123,26 +123,26 @@ TEST_F(EGOTest, SingleIteration) {
     cout << next_case->objective_function_value() << endl;
 }
 
-//TEST_F(EGOTest, TestFunctionSpherical) {
-//    test_case_ga_spherical_6r_->set_objective_function_value(- abs(Sphere(test_case_ga_spherical_6r_->GetRealVarVector())));
-//    Optimization::Optimizer *ego = new BayesianOptimization::EGO(settings_ego_max_,
-//                                                                 test_case_ga_spherical_6r_,
-//                                                                 varcont_6r_,
-//                                                                 grid_5spot_,
-//                                                                 logger_
-//    );
-//
-//    while (ego->IsFinished() == Optimization::Optimizer::TerminationCondition::NOT_FINISHED) {
-//        auto next_case = ego->GetCaseForEvaluation();
-//        next_case->set_objective_function_value(- abs(Sphere(next_case->GetRealVarVector())));
-//        next_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
-//        ego->SubmitEvaluatedCase(next_case);
-//    }
-//    auto best_case = ego->GetTentativeBestCase();
-//    EXPECT_NEAR(0.0, best_case->objective_function_value(), 0.1);
-//    EXPECT_NEAR(0.0, best_case->GetRealVarVector()[0], 0.1);
-//    EXPECT_NEAR(0.0, best_case->GetRealVarVector()[1], 0.1);
-//}
+TEST_F(EGOTest, TestFunctionSpherical) {
+    test_case_ga_spherical_6r_->set_objective_function_value(- abs(Sphere(test_case_ga_spherical_6r_->GetRealVarVector())));
+    Optimization::Optimizer *ego = new BayesianOptimization::EGO(settings_ego_max_,
+                                                                 test_case_ga_spherical_6r_,
+                                                                 varcont_6r_,
+                                                                 grid_5spot_,
+                                                                 logger_
+    );
+
+    while (ego->IsFinished() == Optimization::Optimizer::TerminationCondition::NOT_FINISHED) {
+        auto next_case = ego->GetCaseForEvaluation();
+        next_case->set_objective_function_value(- abs(Sphere(next_case->GetRealVarVector())));
+        next_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
+        ego->SubmitEvaluatedCase(next_case);
+    }
+    auto best_case = ego->GetTentativeBestCase();
+    EXPECT_NEAR(0.0, best_case->objective_function_value(), 0.1);
+    EXPECT_NEAR(0.0, best_case->GetRealVarVector()[0], 0.2);
+    EXPECT_NEAR(0.0, best_case->GetRealVarVector()[1], 0.2);
+}
 
 
 }

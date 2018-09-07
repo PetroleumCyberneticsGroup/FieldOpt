@@ -301,6 +301,14 @@ Optimizer::Parameters Optimizer::parseParameters(QJsonObject &json_parameters) {
         if (json_parameters.contains("UpperBound"))
             params.upper_bound = json_parameters["UpperBound"].toDouble();
         else params.upper_bound = 10;
+
+        // RNG seed
+        if (json_parameters.contains("RNGSeed")) {
+            params.rng_seed = json_parameters["RNGSeed"].toInt();
+        }
+        else {
+            params.rng_seed = std::time(0);
+        }
     }
     catch (std::exception const &ex) {
         throw UnableToParseOptimizerParametersSectionException("Unable to parse optimizer parameters: " + std::string(ex.what()));
