@@ -27,6 +27,8 @@
 #include <sstream>
 #include <cmath>
 #include <boost/lexical_cast.hpp>
+#include <Utilities/verbosity.h>
+#include <Utilities/printer.hpp>
 #include "model.h"
 #include "settings_exceptions.h"
 #include "Utilities/filehandling.hpp"
@@ -64,16 +66,19 @@ Model::Model(QJsonObject json_model, Paths &paths)
         if (!paths.IsSet(Paths::SIM_DRIVER_FILE)) {
             throw std::runtime_error("SchedulePath must be specified (relative to DriverPath) to use the Import feature.");
         }
-        std::cout << "Parsing schedule ..." << std::endl;
+        if (VERB_SET >= 2) {
+            Printer::ext_info("Parsing schedule ...", "Settings", "Model");
+        }
         deck_parser_ = new DeckParser(paths.GetPath(Paths::SIM_DRIVER_FILE));
 
         if (!json_import["Keywords"].toArray().contains(QJsonValue("AllWells"))) {
             throw std::runtime_error("Unable to import simulator schedule. Import Keywords array does not contain"
                                          "any recognized keywords.");
         }
-        std::cout << "Importing wells ..." << std::endl;
+        if (VERB_SET >= 2) {
+            Printer::ext_info("Importing wells ...", "Settings", "Model");
+        }
         wells_.append(deck_parser_->GetWellData());
-        std::cout << "Done importing wells." << std::endl;
         setImportedWellDefaults(json_import);
         parseImportedWellOverrides(json_model["Wells"].toArray());
 
@@ -100,11 +105,19 @@ Model::Model(QJsonObject json_model, Paths &paths)
                 wells_[widx].definition_type = WellDefinitionType::WellSpline;
                 if (json_sconv.contains("SplinePoints") && json_sconv["SplinePoints"].toInt() >= 2) {
                     wells_[widx].n_spline_points = json_sconv["SplinePoints"].toInt();
-                    std::cout << "Setting number of spline points for " << wname.toStdString()
-                              << " to " << wells_[widx].n_spline_points << " for conversion." << std::endl;
+                    if (VERB_SET >= 2) {
+                        Printer::info("Setting number of spline points for "
+                                              + boost::lexical_cast<std::string>(wname.toStdString()) + " to "
+                                              + boost::lexical_cast<std::string>(wells_[widx].n_spline_points)
+                                              + " for conversion.");
+                    }
                 }
                 else {
-                    std::cout << "Defaulting number of spline points for conversion to 2." << std::endl;
+                    if (VERB_SET >= 2) {
+                        Printer::info("Defaulting number of spline points for "
+                                          + boost::lexical_cast<std::string>(wname.toStdString()) + " to 2 "
+                                          + " for conversion.");
+                    }
                 }
             }
         }
@@ -232,8 +245,12 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
                 block.completion.name = "Transmissibility#" + well.name + "#" + QString::number(i);
                 block.has_completion = true;
             }
-            else
-                block.has_completion = false;
+            else {
+                block.has_completion = true;
+                block.completion.type = WellCompletionType::Perforation;
+                block.completion.transmissibility_factor = -1;
+                block.completion.is_variable = false;
+            }
             block.name = "WellBlock#" + well.name + "#" + QString::number(i);
             well.well_blocks.append(block);
         }
@@ -319,7 +336,7 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
         else control.time_step = json_controls.at(i).toObject()["TimeStep"].toInt();
 
         // State (Open or shut)
-        if (QString::compare("Shut", json_controls.at(i).toObject()["State"].toString()) == 0)
+        if (json_controls[i].toObject().contains("State") && QString::compare("Shut", json_controls.at(i).toObject()["State"].toString()) == 0)
             control.state = WellState::WellShut;
         else
             control.state = WellState::WellOpen;
@@ -341,7 +358,7 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
         // Injection type
         if (well.type == WellType::Injector) {
             if (!json_controls.at(i).toObject().contains("Type"))
-                throw UnableToParseWellsModelSectionException("Type (water/gas) must be specified for injector wells.");
+                control.injection_type = InjectionType::WaterInjection;
             if (QString::compare("Water", json_controls.at(i).toObject()["Type"].toString()) == 0)
                 control.injection_type = InjectionType::WaterInjection;
             else if (QString::compare("Gas", json_controls.at(i).toObject()["Type"].toString()) == 0)
@@ -501,6 +518,9 @@ void Model::parseSegmentation(QJsonObject json_seg, Well &well) {
     parseSegmentCompartments(json_seg, well);
 }
 void Model::parseSegmentTubing(const QJsonObject &json_seg, Model::Well &well) const {
+    if (VERB_SET >= 2) {
+        Printer::ext_info("Parsing Tubing ...", "Settings", "Model");
+    }
     if (json_seg.contains("Tubing")) {
         try {
             well.seg_tubing.diameter = json_seg["Tubing"].toObject()["Diameter"].toDouble();
@@ -511,8 +531,10 @@ void Model::parseSegmentTubing(const QJsonObject &json_seg, Model::Well &well) c
         }
     }
     else {
-        std::cout << "Tubing keyword not found in Segmentation. "
-            "Defaulting Diameter to 0.1 and Roughness to 1.52E-5" << std::endl;
+        if (VERB_SET >= 1) {
+            Printer::ext_info("Tubing keyword not found in Segmentation. Defaulting Diameter to 0.1 and "
+                                  "Roughness to 1.52E-5.", "Settings", "Model");
+        }
         well.seg_tubing.diameter = 0.1;
         well.seg_tubing.roughness = 1.52E-5;
     }
@@ -520,6 +542,9 @@ void Model::parseSegmentTubing(const QJsonObject &json_seg, Model::Well &well) c
 }
 
 void Model::parseSegmentAnnulus(const QJsonObject &json_seg, Model::Well &well) const {
+    if (VERB_SET >= 2) {
+        Printer::ext_info("Parsing Annulus ...", "Settings", "Model");
+    }
     if (json_seg.contains("Annulus")) {
         try {
             well.seg_annulus.diameter = json_seg["Annulus"].toObject()["Diameter"].toDouble();
@@ -531,8 +556,10 @@ void Model::parseSegmentAnnulus(const QJsonObject &json_seg, Model::Well &well) 
         }
     }
     else {
-        std::cout << "Annulus keyword not found in Segmentation. "
-            "Defaulting Diameter to 0.04, Ac to 8.17E-3 and Roughness to 1.52E-5" << std::endl;
+        if (VERB_SET >= 1) {
+            Printer::ext_info("Annulus keyword not found in Segmentation. Defaulting Diameter to 0.04, "
+                                  "Ac to 8.17E-3 and Roughness to 1.52E-5.", "Settings", "Model");
+        }
         well.seg_annulus.diameter = 0.04;
         well.seg_annulus.roughness = 1.52E-5;
         well.seg_annulus.cross_sect_area = 8.17E-3;
@@ -540,6 +567,9 @@ void Model::parseSegmentAnnulus(const QJsonObject &json_seg, Model::Well &well) 
 }
 
 void Model::parseSegmentCompartments(const QJsonObject &json_seg, Model::Well &well) const {
+    if (VERB_SET >= 2) {
+        Printer::ext_info("Parsing Compartments ...", "Settings", "Model");
+    }
     if (json_seg.contains("Compartments")) {
         auto json_compts = json_seg["Compartments"].toObject();
         try {
@@ -558,14 +588,20 @@ void Model::parseSegmentCompartments(const QJsonObject &json_seg, Model::Well &w
                 well.seg_compartment_params.valve_size = json_compts["ICDValveSize"].toDouble();
             }
             else {
-                std::cout << "Defaulting ICDValveSize to 7.85E-5." << std::endl;
+                if (VERB_SET >= 1) {
+                    Printer::ext_info("ICDValveSize keyword not found in Compartments. Defaulting to 7.85E-5.",
+                                      "Settings", "Model");
+                }
                 well.seg_compartment_params.valve_size = 7.85E-5;
             }
             if (json_compts.contains("ICDValveFlowCoeff")) {
                 well.seg_compartment_params.valve_flow_coeff = json_compts["ICDValveFlowCoeff"].toDouble();
             }
             else {
-                std::cout << "Defaulting ICDValveFlowCoeff to 0.66." << std::endl;
+                if (VERB_SET >= 1) {
+                    Printer::ext_info("ICDValveFlowCoeff keyword not found in Compartments. Defaulting to 7.85E-5.",
+                                      "Settings", "Model");
+                }
                 well.seg_compartment_params.valve_flow_coeff = 0.66;
             }
         }

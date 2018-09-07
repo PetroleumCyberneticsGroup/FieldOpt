@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(model)
 
-add_library(model
+add_library(model STATIC
 		model.cpp
 		wells/well.cpp
 		wells/well_exceptions.h

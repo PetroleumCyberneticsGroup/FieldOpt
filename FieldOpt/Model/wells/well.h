@@ -29,6 +29,7 @@
 #include "Model/wells/control.h"
 #include "Model/wells/wellbore/trajectory.h"
 #include "Reservoir/grid/eclgrid.h"
+#include "WellIndexCalculation/wicalc_rixx.h"
 
 #include <QList>
 #include "compartment.h"
@@ -52,7 +53,9 @@ class Well
   Well(Settings::Model settings,
        int well_number,
        ::Model::Properties::VariablePropertyContainer *variable_container,
-       ::Reservoir::Grid::Grid *grid);
+       ::Reservoir::Grid::Grid *grid,
+       ::Reservoir::WellIndexCalculation::wicalc_rixx *wic
+  );
 
   struct Heel { int i; int j; int k; };
 

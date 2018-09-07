@@ -23,6 +23,8 @@
 
 #include <ert/ecl/ecl_grid.h>
 #include <ert/ecl/ecl_file.h>
+#include <ert/ecl/ecl_kw.h>
+#include <ert/ecl/ecl_kw_magic.h>
 #include <Eigen/Dense>
 #include <vector>
 
@@ -52,18 +54,18 @@ class ECLGridReader
    * The cell struct also contains all non-geometric properties
    * for a cell, i.e. permeabilities, porosities, and whether or
    * not the cell is active.
-   * 
+   *
    * In case of a dual grid the active status of matrix and fracture
-   * will be recorded and the properties for all grids is stored. 
-   * 
-   * The ecl_grid specifies the active status is encoded as: 
-   *                  0 - inactive, 
-   *                  1 - active in matrix, 
-   *                  2 - active in fracture 
+   * will be recorded and the properties for all grids is stored.
+   *
+   * The ecl_grid specifies the active status is encoded as:
+   *                  0 - inactive,
+   *                  1 - active in matrix,
+   *                  2 - active in fracture
    *                  3 - active in both.
    * Here we use two booleans to store the active status.
    * The properties are stored in a vector with one or two items depending
-   * on the active status. If the cell is active both in the matrix grid as 
+   * on the active status. If the cell is active both in the matrix grid as
    * well as in the fracture grid the matrix values will be stored first.
    *
    * The corners list contains all the corner points specifying the grid.
@@ -82,6 +84,9 @@ class ECLGridReader
     bool matrix_active;
     bool fracture_active;
     double volume;
+    double dx;
+    double dy;
+    double dz;
     std::vector<double> porosity;
     std::vector<double> permx;
     std::vector<double> permy;
@@ -130,13 +135,13 @@ class ECLGridReader
   int ConvertIJKToGlobalIndex(int i, int j, int k);
 
   /*!
-   * \brief ConvertMatrixActiveIndexToGlobalIndex Converts a zero-offset index in the set of cells active in the matrix grid 
+   * \brief ConvertMatrixActiveIndexToGlobalIndex Converts a zero-offset index in the set of cells active in the matrix grid
    * to the global index.
    * \param index Zero-offset index for a cell active in the matrix grid
    * \return global index
    */
   int ConvertMatrixActiveIndexToGlobalIndex(int index);
-  
+
   /*!
    * \brief ConvertGlobalIndexToIJK Converts a global index for a cell
    * to the corresponding zero-offset (i,j,k) coordinates.
@@ -163,23 +168,29 @@ class ECLGridReader
   int NumActiveFractureCells();
 
   /*!
-   * \brief IsCellActive returns false if the cell identified by its global index 
+   * \brief IsCellActive returns false if the cell identified by its global index
    * is not active in the matrix grid nor in the fracture
    */
   bool IsCellActive(int global_index);
-  
+
   /*!
-   * \brief IsCellMatrixActive returns false if the cell identified by its global index 
+   * \brief IsCellMatrixActive returns false if the cell identified by its global index
    * is not active in the matrix grid
    */
   bool IsCellMatrixActive(int global_index);
 
   /*!
-   * \brief IsCellFractureActive returns false if the cell identified by its global index 
+   * \brief IsCellFractureActive returns false if the cell identified by its global index
    * is not active in the facture grid in the case of dual grid
    */
   bool IsCellFractureActive(int global_index);
-  
+
+
+  /*!
+   * @brief Get a vector containing the dx, dy, dz dimensions for a cell/
+   */
+  std::vector<double> GetCellDxDyDz(int global_index);
+
   /*!
    * \brief GetGridCell get a Cell struct describing the cell with the specified global index.
    * \param global_index The global index of the cell to get.

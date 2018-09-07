@@ -5,7 +5,7 @@ find_package(HDF5 REQUIRED COMPONENTS CXX)
 add_definitions(${HDF5_DEFINITIONS})
 include_directories(${HDF5_INCLUDE_DIRS})
 
-add_library(hdf5summaryreader
+add_library(hdf5summaryreader STATIC
         hdf5_summary_reader.cpp)
 
 add_library(fieldopt::hdf5summaryreader ALIAS ${PROJECT_NAME})

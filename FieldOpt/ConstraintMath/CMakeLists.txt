@@ -3,7 +3,7 @@ project(constraintmath)
 
 include_directories(${CMAKE_BINARY_DIR}/libraries/include/)
 
-add_library(constraintmath
+add_library(constraintmath STATIC
         well_constraint_projections/well_constraint_projections.cpp
         )
 add_library(fieldopt::constraintmath ALIAS ${PROJECT_NAME})

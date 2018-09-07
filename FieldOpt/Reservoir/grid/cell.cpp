@@ -30,6 +30,7 @@ using namespace std;
 Cell::Cell(int global_index, IJKCoordinate ijk_index,
            double volume, vector<double> poro_in,
            vector<double> permx_in, vector<double> permy_in, vector<double> permz_in,
+           double dx, double dy, double dz,
            Eigen::Vector3d center,
            vector<Eigen::Vector3d> corners,
            int faces_permutation_index,
@@ -44,11 +45,25 @@ Cell::Cell(int global_index, IJKCoordinate ijk_index,
     permy_ = permy_in;
     permz_ = permz_in;
     center_ = center;
+    dxdydz_ = Eigen::Vector3d(dx, dy, dz);
     corners_ = corners;
     is_active_matrix_ = active_matrix;
     is_active_fracture_ = active_fracture;
 
     initializeFaces(faces_permutation_index);
+}
+
+Eigen::Vector3d Cell::dxdydz() const {
+    return dxdydz_;
+}
+double Cell::dx() const {
+    return dxdydz_(0);
+}
+double Cell::dy() const {
+    return dxdydz_(1);
+}
+double Cell::dz() const {
+    return dxdydz_(2);
 }
 
 bool Cell::Equals(const Cell *other) const
@@ -76,34 +91,6 @@ bool Cell::EnvelopsPoint(Eigen::Vector3d point)
 
     return point_inside;
 }
-
-vector<array<array<int,4>, 6>> Cell::MakeFacesPerturbation()
-{
-    vector<array<array<int,4>, 6>> v;
-    v.push_back(
-        array<array<int,4>,6>{{
-                                  {0, 2, 1, 3},
-                                  {4, 5, 6, 7},
-                                  {0, 4, 2, 6},
-                                  {1, 3, 5, 7},
-                                  {0, 1, 4, 5},
-                                  {2, 6, 3, 7}}
-        });
-
-    v.push_back(
-        array<array<int,4>,6>{{
-                                  {2, 0, 3, 1},
-                                  {6, 7, 4, 5},
-                                  {2, 6, 0, 4},
-                                  {3, 1, 7, 5},
-                                  {2, 3, 6, 7},  // actual diff from indexes above
-                                  {0, 4, 1, 5}}  // actual diff from indexes above
-        });
-
-    return v;
-}
-
-vector<array<array<int,4>, 6>> Cell::faces_indices_permutation = MakeFacesPerturbation();
 
 string Cell::to_string() const {
     std::stringstream str;
@@ -168,6 +155,29 @@ void Cell::initializeFaces(int faces_permutation_index)
 //    face_indices_points = faces_definition_sky_pointing_z_;
 //    std::cout << "^" << std::endl;
 //  }
+
+    vector<array<array<int,4>, 6>> faces_indices_permutation;
+    faces_indices_permutation.push_back(
+        array<array<int,4>,6>{{
+                                  {0, 2, 1, 3},
+                                  {4, 5, 6, 7},
+                                  {0, 4, 2, 6},
+                                  {1, 3, 5, 7},
+                                  {0, 1, 4, 5},
+                                  {2, 6, 3, 7}}
+        });
+
+    faces_indices_permutation.push_back(
+        array<array<int,4>,6>{{
+                                  {2, 0, 3, 1},
+                                  {6, 7, 4, 5},
+                                  {2, 6, 0, 4},
+                                  {3, 1, 7, 5},
+                                  {2, 3, 6, 7},  // actual diff from indexes above
+                                  {0, 4, 1, 5}}  // actual diff from indexes above
+        });
+
+
 
     for (int ii = 0; ii < 6; ii++) {
         Face face;

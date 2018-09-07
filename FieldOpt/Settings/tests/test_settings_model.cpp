@@ -50,7 +50,7 @@ TEST_F(ModelSettingsTest, ProducerCompletions) {
         EXPECT_STREQ(expected_name.toLatin1().constData(), producer.well_blocks[i].name.toLatin1().constData());
         if (i == 1) {
             EXPECT_FALSE(producer.well_blocks[i].is_variable);
-            EXPECT_FALSE(producer.well_blocks[i].has_completion);
+            EXPECT_TRUE(producer.well_blocks[i].has_completion);
         }
         else {
             EXPECT_TRUE(producer.well_blocks[i].is_variable);

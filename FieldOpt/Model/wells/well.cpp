@@ -17,6 +17,8 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+#include <Utilities/printer.hpp>
+#include <boost/lexical_cast.hpp>
 #include "well.h"
 
 namespace Model {
@@ -25,7 +27,9 @@ namespace Wells {
 Well::Well(Settings::Model settings,
            int well_number,
            Properties::VariablePropertyContainer *variable_container,
-           Reservoir::Grid::Grid *grid)
+           Reservoir::Grid::Grid *grid,
+           Reservoir::WellIndexCalculation::wicalc_rixx *wic
+)
 {
     well_settings_ = settings.wells()[well_number];
 
@@ -43,7 +47,7 @@ Well::Well(Settings::Model settings,
     for (int i = 0; i < well_settings_.controls.size(); ++i)
         controls_->append(new Control(well_settings_.controls[i], well_settings_, variable_container));
 
-    trajectory_ = new Wellbore::Trajectory(well_settings_, variable_container, grid);
+    trajectory_ = new Wellbore::Trajectory(well_settings_, variable_container, grid, wic);
 
     heel_.i = trajectory_->GetWellBlocks()->first()->i();
     heel_.j = trajectory_->GetWellBlocks()->first()->j();
@@ -106,7 +110,8 @@ void Well::initializeSegmentedWell(Properties::VariablePropertyContainer *variab
         if (first_block->i() == last_block->i() &&
             first_block->j() == last_block->j() &&
             first_block->k() == last_block->k()) { // Compartment begins and ends in the same block
-            std::cout << "WARNING: Compartment " << i << " begins and ends in the same well block." << std::endl;
+            Printer::ext_warn("Compartment " + boost::lexical_cast<std::string>(i)
+                                  + " begins and ends in the same well block.", "Model", "Well");
             compartments_.push_back(Compartment(trajectory_->GetEntryMd(first_block), trajectory_->GetExitMd(last_block),
                                                 first_block->getEntryPoint().z(), last_block->getExitPoint().z(),
                                                 well_settings_, variable_container, compartments_));

@@ -22,6 +22,8 @@
 #include <boost/lexical_cast.hpp>
 #include "Utilities/time.hpp"
 #include <opm/parser/eclipse/Units/Units.hpp>
+#include <Utilities/verbosity.h>
+#include <Utilities/printer.hpp>
 
 namespace Settings {
 
@@ -47,52 +49,48 @@ DeckParser::DeckParser(std::string deck_file) {
                                 opm_parse_context);
     num_wells_ = opm_schedule.numWells();
     num_groups_ = opm_schedule.numGroups();
-    auto wells = opm_schedule.getWells();
-    wells_ = new std::vector < std::shared_ptr< const Opm::Well > >();
-    for (auto well : wells ) {
-        wells_->push_back(std::shared_ptr<const Opm::Well>(well));
-    }
-//    tuning_ = &opm_schedule.getTuning();
-    time_map_ = &opm_schedule.getTimeMap();
-    num_timesteps_ = time_map_->numTimesteps();
+    num_timesteps_ = opm_schedule.getTimeMap().numTimesteps();
 
-    std::cout << "Initializing time vectors ... "; /// Don't remove these two prints. For some insane reason they fix a segfault.
-    initializeTimeVectors();
-    std::cout << " done." << std::endl;
-}
 
-void DeckParser::initializeTimeVectors() {
+    // _________________________________________________________________
+    // Initializing time vectors
     time_days_ = std::vector<int>(num_timesteps_);
     time_dates_ = std::vector<std::string>(num_timesteps_);
     time_days_[0] = 0;
-    time_dates_[0] = unix_time_to_datestring(time_map_->getStartTime(0));
+    time_dates_[0] = unix_time_to_datestring(opm_schedule.getTimeMap().getStartTime(0));
     for (int i = 1; i < num_timesteps_; ++i) {
-        int seconds_from_start = time_map_->getStartTime(i) - time_map_->getStartTime(0);
+        int seconds_from_start = opm_schedule.getTimeMap().getStartTime(i) - opm_schedule.getTimeMap().getStartTime(0);
         int days_from_start = seconds_from_start / 24 / 60 / 60;
         time_days_[i] = days_from_start;
-        time_dates_[i] = unix_time_to_datestring(time_map_->getStartTime(i));
+        time_dates_[i] = unix_time_to_datestring(opm_schedule.getTimeMap().getStartTime(i));
+    }
+
+    // _________________________________________________________________
+    // Loading well data
+    for (int i = 0; i < num_wells_; ++i) {
+        if (VERB_SET >= 2) {
+            Printer::ext_info("Importing well " + opm_schedule.getWells()[i]->name(), "Settings", "DeckParser");
+        }
+        current_well_name_ = opm_schedule.getWells()[i]->name();
+        current_well_first_time_step_ = opm_schedule.getWells()[i]->firstTimeStep();
+        well_structs_.append(opmWellToWellStruct(opm_schedule.getWells()[i]));
+        if (VERB_SET >= 2) {
+            std::stringstream ss;
+            ss << "Done importing " << current_well_name_
+               << "; " << (well_structs_.last().type == Model::WellType::Injector ? "injector" : "producer")
+               << "; start time: " << well_structs_.last().controls.first().time_step << " days"
+               << "; nr. connections: " << well_structs_.last().well_blocks.size() << std::endl;
+            Printer::ext_info(ss.str(), "Settings", "DeckParser");
+        }
     }
 }
+
 
 QList<Model::Well> DeckParser::GetWellData() {
-    auto well_structs = QList<Model::Well>();
-    for (int i = 0; i < num_wells_; ++i) {
-        std::cout << "Importing well ";
-        current_comp_set_ = wells_->at(i)->getCompletions();
-        current_well_name_ = wells_->at(i)->name();
-        current_well_first_time_step_ = wells_->at(i)->firstTimeStep();
-        std::cout << current_well_name_ << "\t...";
-        well_structs.append(opmWellToWellStruct(wells_->at(i).get()));
-        std::cout << " done"
-                  << "\t" << (well_structs.last().type == Model::WellType::Injector ? "injector" : "producer")
-                  << "\t start time: " << well_structs.last().controls.first().time_step << " days"
-                  << "\t nr. connections: " << well_structs.last().well_blocks.size() << std::endl;
-    }
-    std::cout << "done" << std::endl;
-    return well_structs;
+    return well_structs_;
 }
 
-Model::Well DeckParser::opmWellToWellStruct(const Opm::Well *opm_well) {
+Model::Well DeckParser::opmWellToWellStruct(const Opm::Well* opm_well) {
     Model::Well well_struct;
     well_struct.name = QString::fromStdString(current_well_name_);
     well_struct.type = determineWellType(opm_well);
@@ -105,7 +103,7 @@ Model::Well DeckParser::opmWellToWellStruct(const Opm::Well *opm_well) {
     return well_struct;
 }
 
-Model::WellType DeckParser::determineWellType(const Opm::Well *opm_well) {
+Model::WellType DeckParser::determineWellType(const Opm::Well* opm_well) {
     bool is_injector = false;
     bool is_producer = false;
 
@@ -115,12 +113,8 @@ Model::WellType DeckParser::determineWellType(const Opm::Well *opm_well) {
         }
         if (!is_injector && opm_well->isInjector(t)) {
             if (is_producer) {
-                std::cerr << "WARNING: Well " << current_well_name_
-                          << " is detected as an alternating prodcuer/injector well."
-                              " This is not currently supported."
-                              " Using first defined state (producer) "
-                          << time_dates_[t]
-                          << std::endl;
+                Printer::ext_warn("Well " + current_well_name_ + " detected as alternating producer/injector well. "
+                    "This is not currently supported. Using first defined state (Producer).", "Settings", "DeckParser");
                 is_producer = true;
                 is_injector = false;
                 break;
@@ -131,12 +125,8 @@ Model::WellType DeckParser::determineWellType(const Opm::Well *opm_well) {
         }
         if (!is_producer && opm_well->isProducer(t)) {
             if (is_injector) {
-                std::cerr << "WARNING: Well " << current_well_name_
-                          << " is detected as an alternating prodcuer/injector well."
-                              " This is not currently supported."
-                              " Using first defined state (injector) "
-                          << time_dates_[t]
-                          << std::endl;
+                Printer::ext_warn("Well " + current_well_name_ + " detected as alternating producer/injector well. "
+                    "This is not currently supported. Using first defined state (Injector).", "Settings", "DeckParser");
                 is_producer = false;
                 is_injector = true;
                 break;
@@ -146,14 +136,14 @@ Model::WellType DeckParser::determineWellType(const Opm::Well *opm_well) {
     }
 
     if (!is_injector && !is_producer) {
-        std::cerr << "WARNING: Deck parser was unable to determine well type for " << current_well_name_ << std::endl;
-        std::cerr << "         Defaulting to type at first control: ";
         if (opm_well->isInjector(opm_well->firstTimeStep())) {
-            std::cerr << "injector" << std::endl;
+            Printer::ext_warn("Unable to determine well type for " + current_well_name_
+            + ". Defaulting to type at first control (injector)", "Settings", "DeckParser");
             is_injector = true;
         }
         else {
-            std::cerr << "producer" << std::endl;
+            Printer::ext_warn("Unable to determine well type for "
+            + current_well_name_ + ". Defaulting to type at first control (producer)", "Settings", "DeckParser");
             is_producer = true;
         }
     }
@@ -165,12 +155,13 @@ Model::WellType DeckParser::determineWellType(const Opm::Well *opm_well) {
         return Model::WellType::Producer;
     }
     else {
-        std::cerr << "WARNING: Deck parser was unable to determine well type for " << current_well_name_ << std::endl;
+        Printer::ext_warn("Deck parser was unable to determine well type for " + current_well_name_,
+            "Settings", "DeckParser");
         return Model::WellType::UNKNOWN_TYPE;
     }
 }
 
-Model::PreferredPhase DeckParser::determinePreferredPhase(const Opm::Well *opm_well) {
+Model::PreferredPhase DeckParser::determinePreferredPhase(const Opm::Well* opm_well) {
     Opm::Phase opm_phase = opm_well->getPreferredPhase();
     switch (opm_phase)
     {
@@ -181,31 +172,31 @@ Model::PreferredPhase DeckParser::determinePreferredPhase(const Opm::Well *opm_w
         case Opm::Phase::GAS:
             return Model::PreferredPhase::Gas;
         default:
-            std::cerr << "WARNING: Deck parser was unable to determine the preferred phase"
-                "for well " << current_well_name_ << std::endl;
+            Printer::ext_warn("Deck parser was unable to determine the preferred phase for " + current_well_name_,
+                              "Settings", "DeckParser");
             return Model::PreferredPhase::UNKNOWN_PHASE;
     }
 }
 
-double DeckParser::determineWellboreRadius(const Opm::Well *opm_well) {
+double DeckParser::determineWellboreRadius(const Opm::Well* opm_well) {
 
     double radii_sum = 0;
-    for (auto comp : current_comp_set_) {
+    for (auto comp : opm_well->getCompletions()) {
         radii_sum += (comp.getDiameter() / 2.0);
     }
-    double avg_radius = radii_sum / (double)current_comp_set_.size();
+    double avg_radius = radii_sum / (double)opm_well->getCompletions().size();
     return avg_radius;
 }
 
-QList<Model::Well::WellBlock> DeckParser::opmToWellBlocks(const Opm::Well *opm_well) {
+QList<Model::Well::WellBlock> DeckParser::opmToWellBlocks(const Opm::Well* opm_well) {
     auto well_blocks =  QList<Model::Well::WellBlock>();
     auto headI = opm_well->getHeadI(opm_well->firstTimeStep());
     auto headJ = opm_well->getHeadJ(opm_well->firstTimeStep());
-    for (int i = 0; i < current_comp_set_.size(); ++i) {
+    for (int i = 0; i < opm_well->getCompletions().size(); ++i) {
         Model::Well::Completion comp;
         comp.type = Model::WellCompletionType::Perforation;
-        if (current_comp_set_.get(i).getConnectionTransmissibilityFactorAsValueObject().hasValue()) {
-            double trans = current_comp_set_.get(i).getConnectionTransmissibilityFactor();
+        if (opm_well->getCompletions().get(i).getConnectionTransmissibilityFactorAsValueObject().hasValue()) {
+            double trans = opm_well->getCompletions().get(i).getConnectionTransmissibilityFactor();
             comp.transmissibility_factor = Opm::unit::convert::to(trans, Opm::Metric::Transmissibility);
         }
         else {
@@ -215,9 +206,9 @@ QList<Model::Well::WellBlock> DeckParser::opmToWellBlocks(const Opm::Well *opm_w
         comp.name = "Transmissibility#" + QString::fromStdString(current_well_name_) + "#" + QString::number(i);
         wb.completion = comp;
         wb.has_completion = true;
-        wb.i = current_comp_set_.get(i).getI() + 1;
-        wb.j = current_comp_set_.get(i).getJ() + 1;
-        wb.k = current_comp_set_.get(i).getK() + 1;
+        wb.i = opm_well->getCompletions().get(i).getI() + 1;
+        wb.j = opm_well->getCompletions().get(i).getJ() + 1;
+        wb.k = opm_well->getCompletions().get(i).getK() + 1;
         wb.name = "WellBlock#" + QString::fromStdString(current_well_name_) + "#" + QString::number(i);
         wb.is_variable = false;
         well_blocks.push_back(wb);
@@ -225,15 +216,17 @@ QList<Model::Well::WellBlock> DeckParser::opmToWellBlocks(const Opm::Well *opm_w
 
 
     if (well_blocks[0].i <= 0 || abs(well_blocks[0].i) > 10000) { // This tends to happen for some weird reason. Default to same as next block
-        std::cout << "WARNING: Invalid i, j or k index detected for first well block for well. Deleting it. ("
-                  << well_blocks[0].i << ", " << well_blocks[0].j << ", " << well_blocks[0].k << ")" << std::endl;
+        std::stringstream ss;
+        ss << "(" << well_blocks[0].i << ", " << well_blocks[0].j << ", " << well_blocks[0].k << ")";
+        Printer::ext_warn("Invalid i, j or k index detected for the first well block. Deleting it. " + ss.str(),
+                          "Settings", "DeckParser");
         well_blocks.erase(well_blocks.begin());
     }
 
     return well_blocks;
 }
 
-QList<Model::Well::ControlEntry> DeckParser::opmToControlEntries(const Opm::Well *opm_well) {
+QList<Model::Well::ControlEntry> DeckParser::opmToControlEntries(const Opm::Well* opm_well) {
     auto control_entries = QList<Model::Well::ControlEntry>();
     for (int t = current_well_first_time_step_; t < num_timesteps_; ++t) {
 //        switch (opm_well->getStatus(t))
@@ -279,12 +272,13 @@ QList<Model::Well::ControlEntry> DeckParser::opmToControlEntries(const Opm::Well
         }
     }
     if (control_entries.size() == 0) {
-        std::cerr << "WARNING: Unable to create any valid controls for well " << current_well_name_ << std::endl;
+        Printer::ext_warn("Unable to create any valid controls for well " + current_well_name_,
+            "Settings", "DeckParser");
     }
     return control_entries;
 }
 
-Model::ControlMode DeckParser::determineWellControlMode( const Opm::Well *opm_well, const int timestep ) {
+Model::ControlMode DeckParser::determineWellControlMode( const Opm::Well* opm_well, const int timestep ) {
     if (opm_well->isProducer(timestep)) {
         auto opm_wpp = opm_well->getProductionProperties(timestep);
         switch (opm_wpp.controlMode) {
@@ -315,7 +309,7 @@ Model::ControlMode DeckParser::determineWellControlMode( const Opm::Well *opm_we
     }
 }
 
-double DeckParser::determineRate(const Opm::Well *opm_well, const int timestep) {
+double DeckParser::determineRate(const Opm::Well* opm_well, const int timestep) {
     double rate = 0;
     if (opm_well->isInjector(timestep)) {
         auto ips = opm_well->getInjectionProperties(timestep);
@@ -341,7 +335,7 @@ double DeckParser::determineRate(const Opm::Well *opm_well, const int timestep) 
     return rate;
 }
 
-double DeckParser::determineBhp(const Opm::Well *opm_well, const int timestep) {
+double DeckParser::determineBhp(const Opm::Well* opm_well, const int timestep) {
     double bhp = 0;
     if (opm_well->isInjector(timestep)) {
         auto ips = opm_well->getInjectionProperties(timestep);
@@ -364,14 +358,15 @@ double DeckParser::determineBhp(const Opm::Well *opm_well, const int timestep) {
     return bhp;
 }
 
-Model::InjectionType DeckParser::determineInjectorType(const Opm::Well *opm_well, const int timestep) {
+Model::InjectionType DeckParser::determineInjectorType(const Opm::Well* opm_well, const int timestep) {
     auto ips = opm_well->getInjectionProperties(timestep);
     if (ips.injectorType == Opm::WellInjector::TypeEnum::WATER)
         return Model::InjectionType::WaterInjection;
     else if (ips.injectorType == Opm::WellInjector::TypeEnum::GAS)
         return Model::InjectionType::GasInjection;
     else {
-        std::cerr << "WARNING: Unable to detect injection type. Defaulting to water." << std::endl;
+        Printer::ext_warn("Unable to detect injection type for " + current_well_name_,
+            "Settings", "DeckParser");
         return Model::InjectionType::WaterInjection;
     }
 }
@@ -384,6 +379,7 @@ const std::vector<std::string> DeckParser::GetTimeDates() {
     return time_dates_;
 }
 
-DeckParser::~DeckParser() {
-}
+//DeckParser::~DeckParser() {
+//    delete(opm_schedule_.get());
+//}
 }

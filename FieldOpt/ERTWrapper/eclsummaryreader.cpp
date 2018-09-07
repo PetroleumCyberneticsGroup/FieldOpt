@@ -23,6 +23,8 @@
 #include <assert.h>
 #include <algorithm>
 #include <boost/algorithm/string/join.hpp>
+#include <Utilities/verbosity.h>
+#include <Utilities/printer.hpp>
 
 namespace ERTWrapper {
     namespace ECLSummary {
@@ -284,14 +286,10 @@ namespace ERTWrapper {
 
             fopt_ = std::vector<double>(time_.size(), 0.0);
             if (hasFieldVar("FOPT")) {
-                int index = ecl_smspec_get_field_var_params_index(smspec, "FOPT");
-                auto data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
-                assert(double_vector_size(data) == time_.size());
                 for (int i = 0; i < time_.size(); ++i) {
-                    fopt_[i] = double_vector_safe_iget(data, i);
+                    fopt_[i] = ecl_sum_get_field_var_from_sim_days(ecl_sum_, time_[i], "FOPT");
                 }
                 fopt_[0] = 0.0;
-                double_vector_free(data);
             }
             else {
                 warnPropertyNotFound("FOPT");
@@ -304,14 +302,10 @@ namespace ERTWrapper {
 
             fwpt_ = std::vector<double>(time_.size(), 0.0);
             if (hasFieldVar("FWPT")) {
-                int index = ecl_smspec_get_field_var_params_index(smspec, "FWPT");
-                auto data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
-                assert(double_vector_size(data) == time_.size());
                 for (int i = 0; i < time_.size(); ++i) {
-                    fwpt_[i] = double_vector_safe_iget(data, i);
+                    fwpt_[i] = ecl_sum_get_field_var_from_sim_days(ecl_sum_, time_[i], "FWPT");
                 }
                 fwpt_[0] = 0.0;
-                double_vector_free(data);
             }
             else {
                 warnPropertyNotFound("FWPT");
@@ -324,14 +318,10 @@ namespace ERTWrapper {
 
             fgpt_ = std::vector<double>(time_.size(), 0.0);
             if (hasFieldVar("FGPT")) {
-                int index = ecl_smspec_get_field_var_params_index(smspec, "FGPT");
-                auto data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
-                assert(double_vector_size(data) == time_.size());
                 for (int i = 0; i < time_.size(); ++i) {
-                    fgpt_[i] = double_vector_safe_iget(data, i);
+                    fgpt_[i] = ecl_sum_get_field_var_from_sim_days(ecl_sum_, time_[i], "FGPT");
                 }
                 fgpt_[0] = 0.0;
-                double_vector_free(data);
             }
             else {
                 warnPropertyNotFound("FGPT");
@@ -344,14 +334,10 @@ namespace ERTWrapper {
 
             fwit_ = std::vector<double>(time_.size(), 0.0);
             if (hasFieldVar("FWIT")) {
-                int index = ecl_smspec_get_field_var_params_index(smspec, "FWIT");
-                auto data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
-                assert(double_vector_size(data) == time_.size());
                 for (int i = 0; i < time_.size(); ++i) {
-                    fwit_[i] = double_vector_safe_iget(data, i);
+                    fwit_[i] = ecl_sum_get_field_var_from_sim_days(ecl_sum_, time_[i], "FWIT");
                 }
                 fwit_[0] = 0.0;
-                double_vector_free(data);
             }
             else {
                 warnPropertyNotFound("FWIT");
@@ -364,14 +350,10 @@ namespace ERTWrapper {
 
             fgit_ = std::vector<double>(time_.size(), 0.0);
             if (hasFieldVar("FGIT")) {
-                int index = ecl_smspec_get_field_var_params_index(smspec, "FGIT");
-                auto data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
-                assert(double_vector_size(data) == time_.size());
                 for (int i = 0; i < time_.size(); ++i) {
-                    fgit_[i] = double_vector_safe_iget(data, i);
+                    fgit_[i] = ecl_sum_get_field_var_from_sim_days(ecl_sum_, time_[i], "FGIT");
                 }
                 fgit_[0] = 0.0;
-                double_vector_free(data);
             }
             else {
                 warnPropertyNotFound("FGIT");
@@ -424,24 +406,24 @@ namespace ERTWrapper {
         }
 
         void ECLSummaryReader::warnPropertyZero(string wname, string propname) const {
-            std::cerr << "WARNING: Returning cumulative vector with final falue 0.0 for "
-                                 "property " + propname + " for well " + wname +
-                                 ". The vector may be uninitialized because "
-                                 "the property is not found for the well, or because the phase "
-                                 "does not exist in the system." << std::endl;
+            if (VERB_SIM >= 1) {
+                Printer::ext_warn("Returning cumulative vector with final value 0.0 for " + propname + " for well " + wname + ".",
+                    "Simulation", "ECLSummaryReader");
+            }
         }
 
         void ECLSummaryReader::warnPropertyNotFound(string propname) const {
-            std::cerr << "WARNING: The field property " + propname + " was not found in "
-                                 "the summary. Attempting to calculate it from corresponding well property." << std::endl;
+            if (VERB_SIM >= 1) {
+                Printer::ext_warn("The property " + propname + " was not found in the summary. Calculating from corresponding well properties.",
+                                  "Simulation", "ECLSummaryReader");
+            }
         }
 
         void ECLSummaryReader::warnPropertyZero(string propname) const {
-            std::cerr << "WARNING: Returning cumulative vector with final falue 0.0 for "
-                         "property " + propname +
-                         ". The vector may be uninitialized because "
-                         "the property is not found for the well, or because the phase "
-                         "does not exist in the system." << std::endl;
+            if (VERB_SIM >= 1) {
+                Printer::ext_warn("Returning cumulative vector with final value 0.0 for " + propname + ".",
+                                  "Simulation", "ECLSummaryReader");
+            }
         }
 
         const std::vector<double> &ECLSummaryReader::fopt() const {

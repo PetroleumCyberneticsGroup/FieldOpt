@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(reservoir)
 
-add_library(reservoir
+add_library(reservoir STATIC
         grid/cell.cpp
         grid/grid.cpp
         grid/ijkcoordinate.cpp

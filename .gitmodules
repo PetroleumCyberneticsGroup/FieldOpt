@@ -1,12 +1,6 @@
-[submodule "FieldOpt/FieldOpt-WellIndexCalculator"]
-	path = FieldOpt/FieldOpt-WellIndexCalculator
-	url = https://github.com/PetroleumCyberneticsGroup/FieldOpt-WellIndexCalculator.git
 [submodule "FieldOpt/libgp"]
 	path = FieldOpt/ThirdParty/libgp
 	url = https://github.com/PetroleumCyberneticsGroup/libgp.git
-[submodule "FieldOpt/ThirdParty/libecl"]
-	path = FieldOpt/ThirdParty/libecl
-	url = https://github.com/PetroleumCyberneticsGroup/libecl.git
 [submodule "FieldOpt/ThirdParty/googletest"]
 	path = FieldOpt/ThirdParty/googletest
 	url = https://github.com/PetroleumCyberneticsGroup/googletest.git

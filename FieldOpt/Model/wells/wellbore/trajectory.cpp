@@ -30,7 +30,9 @@ namespace Wellbore {
 
 Trajectory::Trajectory(Settings::Model::Well well_settings,
                        Properties::VariablePropertyContainer *variable_container,
-                       ::Reservoir::Grid::Grid *grid)
+                       ::Reservoir::Grid::Grid *grid,
+                       Reservoir::WellIndexCalculation::wicalc_rixx *wic
+)
 {
     well_blocks_ = new QList<WellBlock *>();
     well_spline_ = 0;
@@ -44,7 +46,7 @@ Trajectory::Trajectory(Settings::Model::Well well_settings,
         if (well_settings.convert_well_blocks_to_spline) {
             convertWellBlocksToWellSpline(well_settings, grid);
         }
-        well_spline_ = new WellSpline(well_settings, variable_container, grid);
+        well_spline_ = new WellSpline(well_settings, variable_container, grid, wic);
         well_blocks_ = well_spline_->GetWellBlocks();
         calculateDirectionOfPenetration();
 //        printWellBlocks();

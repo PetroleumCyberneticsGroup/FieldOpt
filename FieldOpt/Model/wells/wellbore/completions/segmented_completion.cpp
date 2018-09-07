@@ -43,7 +43,7 @@ double SegmentedCompletion::md() const {
 
 double SegmentedCompletion::tvd() const {
     if (tvd_ < 0)
-        throw std::runtime_error("Attemting to get unset TVD from segmented completion.");
+        throw std::runtime_error("Attempting to get unset TVD from segmented completion.");
     return tvd_;
 }
 

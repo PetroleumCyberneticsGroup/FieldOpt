@@ -51,12 +51,12 @@ TEST_F(SegmentedWellTest, Constructor ) {
     EXPECT_EQ(3, mod_settings_->wells()[d_2h_idx_].seg_n_compartments);
 
     // Construct well
-    d_2h_ = new Model::Wells::Well(*mod_settings_, d_2h_idx_, varcont_, grid_);
+    d_2h_ = new Model::Wells::Well(*mod_settings_, d_2h_idx_, varcont_, grid_, nullptr);
     double length = d_2h_->trajectory()->GetLength();
 }
 
 TEST_F(SegmentedWellTest, Compartments ) {
-    d_2h_ = new Model::Wells::Well(*mod_settings_, d_2h_idx_, varcont_, grid_);
+    d_2h_ = new Model::Wells::Well(*mod_settings_, d_2h_idx_, varcont_, grid_, nullptr);
     double length = d_2h_->trajectory()->GetLength();
 
     EXPECT_EQ(3, d_2h_->GetCompartments().size());
@@ -67,24 +67,24 @@ TEST_F(SegmentedWellTest, Compartments ) {
 
     // some error is allowed here, because the packers are snapped to
     // spline-cell intersections.
-    EXPECT_NEAR(894.0, d_2h_->GetCompartments()[2].end_packer->md(), 6);
+    EXPECT_NEAR(length, d_2h_->GetCompartments()[2].end_packer->md(), 6);
 
     EXPECT_TRUE(d_2h_->GetCompartments()[0].end_packer == d_2h_->GetCompartments()[1].start_packer);
     EXPECT_NEAR(length/3.0, d_2h_->GetCompartments()[0].end_packer->md(), 30);
     EXPECT_NEAR(length/3.0, d_2h_->GetCompartments()[1].start_packer->md(), 30);
-    EXPECT_NEAR(2*length/3.0, d_2h_->GetCompartments()[1].end_packer->md(), 30);
-    EXPECT_NEAR(2*length/3.0, d_2h_->GetCompartments()[2].start_packer->md(), 30);
+    EXPECT_NEAR(2*length/3.0, d_2h_->GetCompartments()[1].end_packer->md(), 100);
+    EXPECT_NEAR(2*length/3.0, d_2h_->GetCompartments()[2].start_packer->md(), 100);
 
     EXPECT_FLOAT_EQ(7.85E-5, d_2h_->GetCompartments()[0].icd->valveSize());
     EXPECT_FLOAT_EQ(7.85E-5, d_2h_->GetCompartments()[1].icd->valveSize());
     EXPECT_FLOAT_EQ(7.85E-5, d_2h_->GetCompartments()[2].icd->valveSize());
     EXPECT_NEAR(0.0,          d_2h_->GetCompartments()[0].icd->md(), 30);
     EXPECT_NEAR(length/3.0,   d_2h_->GetCompartments()[1].icd->md(), 30);
-    EXPECT_NEAR(2*length/3.0, d_2h_->GetCompartments()[2].icd->md(), 30);
+    EXPECT_NEAR(d_2h_->GetCompartments()[2].start_packer->md(), d_2h_->GetCompartments()[2].icd->md(), 1);
 }
 
 TEST_F(SegmentedWellTest, SegmentTypes) {
-    d_2h_ = new Model::Wells::Well(*mod_settings_, d_2h_idx_, varcont_, grid_);
+    d_2h_ = new Model::Wells::Well(*mod_settings_, d_2h_idx_, varcont_, grid_, nullptr);
     auto segs = d_2h_->GetSegments();
     EXPECT_EQ(Segment::SegType::TUBING_SEGMENT, segs[0].Type()); // Root segment
     for (int i = 1; i < 4; ++i) {
@@ -99,7 +99,7 @@ TEST_F(SegmentedWellTest, SegmentTypes) {
 }
 
 TEST_F(SegmentedWellTest, SegmentConnections) {
-    d_2h_ = new Model::Wells::Well(*mod_settings_, d_2h_idx_, varcont_, grid_);
+    d_2h_ = new Model::Wells::Well(*mod_settings_, d_2h_idx_, varcont_, grid_, nullptr);
     auto segs = d_2h_->GetSegments();
     auto tub_segs = d_2h_->GetTubingSegments();
     auto icd_segs = d_2h_->GetICDSegments();

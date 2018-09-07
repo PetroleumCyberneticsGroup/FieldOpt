@@ -110,7 +110,7 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
   };
 
   QJsonObject get_json_settings_ga_maximize_ {
-      {"Type", "APPS"},
+      {"Type", "GeneticAlgorithm"},
       {"Mode", "Maximize"},
       {"Parameters", QJsonObject{
           {"MaxGenerations", 100},
@@ -131,7 +131,7 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
   };
 
   QJsonObject get_json_settings_ga_minimize_ {
-      {"Type", "APPS"},
+      {"Type", "GeneticAlgorithm"},
       {"Mode", "Minimize"},
       {"Parameters", QJsonObject{
           {"MaxGenerations",        700},
