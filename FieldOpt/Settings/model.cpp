@@ -257,47 +257,79 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
     }
     else if (QString::compare(definition_type, "WellSpline") == 0) {
         well.definition_type = WellDefinitionType::WellSpline;
-        QJsonObject json_points = json_well["SplinePoints"].toObject();
-        if (!json_points.contains("Heel") || !json_points.contains("Toe"))
-            throw UnableToParseWellsModelSectionException("Both Heel and Toe must be defined for spline-type wells.");
-
-        QJsonObject json_heel = json_points["Heel"].toObject();
-        QJsonObject json_toe = json_points["Toe"].toObject();
-        well.spline_heel.x = json_heel["x"].toDouble();
-        well.spline_heel.y = json_heel["y"].toDouble();
-        well.spline_heel.z = json_heel["z"].toDouble();
-        well.spline_toe.x = json_toe["x"].toDouble();
-        well.spline_toe.y = json_toe["y"].toDouble();
-        well.spline_toe.z = json_toe["z"].toDouble();
-        if (json_heel.contains("IsVariable") && json_heel["IsVariable"].toBool())
-            well.spline_heel.is_variable = true;
-        else well.spline_heel.is_variable = false;
-        if (json_toe.contains("IsVariable") && json_toe["IsVariable"].toBool())
-            well.spline_toe.is_variable = true;
-        else well.spline_toe.is_variable = false;
-        if ((well.spline_heel.is_variable && well.spline_toe.is_variable)
-            || (json_points.contains("IsVariable") && json_points["IsVariable"].toBool() == true)) {
-            well.is_variable_spline = true;
+        if (json_well.contains("UseBezierSpline") && json_well["UseBezierSpline"].toBool() == true) {
+            well.use_bezier_spline = true;
         }
-        well.spline_heel.name = "SplinePoint#" + well.name + "#heel";
-        well.spline_toe.name = "SplinePoint#" + well.name + "#toe";
-
-        well.spline_points.push_back(well.spline_heel);
-        if (json_points.contains("AdditionalPoints")) {
-            int interp_points = json_points["AdditionalPoints"].toInt();
-            for (int p = 0; p < interp_points; ++p) {
+        else {
+            well.use_bezier_spline = false;
+        }
+        if (json_well.contains("SplinePointArray")) {
+            auto json_sp_array = json_well["SplinePointArray"].toArray();
+            assert(json_sp_array.size() >=2);
+            for (int i = 0; i < json_sp_array.size(); ++i) {
+                auto json_point = json_sp_array[i].toObject();
                 Well::SplinePoint point;
-                point.x = well.spline_heel.x + (p+1) * (well.spline_toe.x - well.spline_heel.x) / (interp_points+1);
-                point.y = well.spline_heel.y + (p+1) * (well.spline_toe.y - well.spline_heel.y) / (interp_points+1);
-                point.z = well.spline_heel.z + (p+1) * (well.spline_toe.z - well.spline_heel.z) / (interp_points+1);
-                point.name = "SplinePoint#" + well.name + "#P" + QString::number(p+1);
-                if (well.is_variable_spline) {
-                    point.is_variable = true;
+                point.x = json_point["x"].toDouble();
+                point.y = json_point["y"].toDouble();
+                point.z = json_point["z"].toDouble();
+                point.is_variable = json_point["IsVariable"].toBool();
+                if (i == 0) {
+                    point.name = "SplinePoint#" + well.name + "#heel";
+                }
+                else if (i == json_sp_array.size() - 1) {
+                    point.name = "SplinePoint#" + well.name + "#toe";
+                }
+                else {
+                    point.name = "SplinePoint#" + well.name + "#P" + QString::number(i);
                 }
                 well.spline_points.push_back(point);
             }
+            well.spline_heel = well.spline_points.front();
+            well.spline_toe = well.spline_points.back();
         }
-        well.spline_points.push_back(well.spline_toe);
+        else {
+            QJsonObject json_points = json_well["SplinePoints"].toObject();
+            if (!json_points.contains("Heel") || !json_points.contains("Toe"))
+                throw UnableToParseWellsModelSectionException("Both Heel and Toe must be defined for spline-type wells.");
+
+            QJsonObject json_heel = json_points["Heel"].toObject();
+            QJsonObject json_toe = json_points["Toe"].toObject();
+            well.spline_heel.x = json_heel["x"].toDouble();
+            well.spline_heel.y = json_heel["y"].toDouble();
+            well.spline_heel.z = json_heel["z"].toDouble();
+            well.spline_toe.x = json_toe["x"].toDouble();
+            well.spline_toe.y = json_toe["y"].toDouble();
+            well.spline_toe.z = json_toe["z"].toDouble();
+            if (json_heel.contains("IsVariable") && json_heel["IsVariable"].toBool())
+                well.spline_heel.is_variable = true;
+            else well.spline_heel.is_variable = false;
+            if (json_toe.contains("IsVariable") && json_toe["IsVariable"].toBool())
+                well.spline_toe.is_variable = true;
+            else well.spline_toe.is_variable = false;
+            if ((well.spline_heel.is_variable && well.spline_toe.is_variable)
+                || (json_points.contains("IsVariable") && json_points["IsVariable"].toBool() == true)) {
+                well.is_variable_spline = true;
+            }
+            well.spline_heel.name = "SplinePoint#" + well.name + "#heel";
+            well.spline_toe.name = "SplinePoint#" + well.name + "#toe";
+
+            well.spline_points.push_back(well.spline_heel);
+            if (json_points.contains("AdditionalPoints")) {
+                int interp_points = json_points["AdditionalPoints"].toInt();
+                for (int p = 0; p < interp_points; ++p) {
+                    Well::SplinePoint point;
+                    point.x = well.spline_heel.x + (p+1) * (well.spline_toe.x - well.spline_heel.x) / (interp_points+1);
+                    point.y = well.spline_heel.y + (p+1) * (well.spline_toe.y - well.spline_heel.y) / (interp_points+1);
+                    point.z = well.spline_heel.z + (p+1) * (well.spline_toe.z - well.spline_heel.z) / (interp_points+1);
+                    point.name = "SplinePoint#" + well.name + "#P" + QString::number(p+1);
+                    if (well.is_variable_spline) {
+                        point.is_variable = true;
+                    }
+                    well.spline_points.push_back(point);
+                }
+            }
+            well.spline_points.push_back(well.spline_toe);
+        }
     }
     else if (QString::compare(definition_type, "PseudoContVertical2D") == 0) {
         QJsonObject json_position = json_well["Position"].toObject();

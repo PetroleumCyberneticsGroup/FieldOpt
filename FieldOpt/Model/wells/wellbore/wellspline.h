@@ -75,6 +75,20 @@ class WellSpline
   Settings::Model::Well well_settings_;
   int seconds_spent_in_compute_wellblocks_; //!< Number of seconds spent in the ComputeWellBlocks() method.
   bool is_variable_;
+  bool use_bezier_spline_;
+  
+  /*!
+   * @brief Get the vector of spline points to be used. Will return converted spline_points if not using 
+   * bezier method; else will call convertToBezierSpline().
+   * @return 
+   */
+  vector<Eigen::Vector3d> getPoints() const;
+  
+  /*!
+   * @brief Use the current set of spline_points_ to generate a set of points representing a
+   * bezier curve formed from the original points.
+   */
+  vector<Eigen::Vector3d> convertToBezierSpline() const;
 
   QList<SplinePoint *> spline_points_;
 

@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 2.8)
 project(model)
 
 add_library(model STATIC
+		cpp-spline/src/Vector.cpp
+		cpp-spline/src/Curve.cpp
+		cpp-spline/src/Bezier.cpp
+		cpp-spline/src/CatmullRom.cpp
+		cpp-spline/src/BSpline.cpp
 		model.cpp
 		wells/well.cpp
 		wells/well_exceptions.h
@@ -60,7 +65,7 @@ if (BUILD_TESTING)
             tests/test_resource_model.h
 			tests/wells/test_pseudo_cont_vert.cpp
 			tests/wells/test_block_to_spline_conversion.cpp
-			tests/wells/test_segmented_well.cpp)
+			tests/wells/test_segmented_well.cpp tests/wells/test_trajectory_curve.cpp)
     target_link_libraries(test_model
             fieldopt::model
             fieldopt::reservoir

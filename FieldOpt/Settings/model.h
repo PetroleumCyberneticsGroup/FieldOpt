@@ -126,6 +126,7 @@ class Model
     SplinePoint spline_toe;                     //!< Toe (end) point to be used when calculating the well path from a spline.
     QList<SplinePoint> spline_points;           //!< List of spline points, including heel (first) and toe (last).
     int n_spline_points = 0;                    //!< Number of points the spline is defined by. Used for conversion from list of well blocks.
+    bool use_bezier_spline = false;            //!< Create a Bezier spline from the spline points to represent the well (only relevant for multiple points)
     bool convert_well_blocks_to_spline = false; //!< Whether or not the list of well blocks should be converted to a spline. This will be done in the Model initialization step.
     bool is_variable_spline;                    //!< Whether the whole spline should be variable.
     PseudoContPosition pseudo_cont_position;    //!< Initial position when using pseudo-continous positioning variables.

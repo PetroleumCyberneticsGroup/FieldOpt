@@ -126,6 +126,41 @@ inline QJsonObject model_adtl_pts() {
 
     };
 }
+inline QJsonObject model_bezier_well() {
+    return QJsonObject {
+        {"ControlTimes", QJsonArray {
+            0, 50
+        }},
+        {"Reservoir", QJsonObject {
+            {"Type", "ECLIPSE"}
+        }},
+        {"Wells", QJsonArray {
+            QJsonObject {
+                {"Name", "PRODUCER"},
+                {"Group", "G1"},
+                {"Use2DModel", true},
+                {"Type", "Producer"},
+                {"DefinitionType", "WellSpline"},
+                {"UseBezierSpline", true},
+                {"PreferredPhase", "Oil"},
+                {"WellboreRadius", 0.1905},
+                {"Controls", QJsonArray { QJsonObject{
+                    {"TimeStep", 0},
+                    {"State", "Open"},
+                    {"Mode", "BHP"},
+                    {"BHP", 90.0} }
+                }},
+                {"SplinePointArray", QJsonArray {
+                    QJsonObject{ {"x", 300}, {"y", 900}, {"z", 1712}, {"IsVariable", true} },
+                    QJsonObject{ {"x", 450}, {"y", 400}, {"z", 1712}, {"IsVariable", true} },
+                    QJsonObject{ {"x", 600}, {"y", 1100}, {"z", 1712}, {"IsVariable", true} },
+                    QJsonObject{ {"x", 900}, {"y", 900}, {"z", 1712}, {"IsVariable", true} }
+                }}
+            }
+        }}
+
+    };
+}
 
 }
 }

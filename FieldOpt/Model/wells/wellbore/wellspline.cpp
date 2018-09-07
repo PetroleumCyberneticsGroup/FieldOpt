@@ -28,6 +28,7 @@
 #include <QList>
 #include <Utilities/verbosity.h>
 #include <Utilities/printer.hpp>
+#include "Model/cpp-spline/src/Bezier.h"
 #include "WellIndexCalculation/wicalc_rixx.h"
 
 namespace Model {
@@ -45,6 +46,7 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
     grid_ = grid;
     well_settings_ = well_settings;
     is_variable_ = false;
+    use_bezier_spline_ = well_settings.use_bezier_spline;
     wic_ = new Reservoir::WellIndexCalculation::wicalc_rixx(grid_);
     wic = wic_;
 
@@ -132,12 +134,13 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
     WellDefinition welldef;
     welldef.wellname = well_settings_.name.toStdString();
 
-    for (int w = 0; w < spline_points_.size() - 1; ++w) {
+    auto spline_points = getPoints();
+    for (int w = 0; w < spline_points.size() - 1; ++w) {
         welldef.radii.push_back(well_settings_.wellbore_radius);
         welldef.skins.push_back(0.0);
         welldef.skins.push_back(0.0);
-        welldef.heels.push_back(spline_points_[w]->ToEigenVector());
-        welldef.toes.push_back(spline_points_[w+1]->ToEigenVector());
+        welldef.heels.push_back(spline_points[w]);
+        welldef.toes.push_back(spline_points[w+1]);
         if (welldef.heel_md.size() == 0) {
             welldef.heel_md.push_back(0.0);
         }
@@ -249,6 +252,34 @@ std::vector<Reservoir::WellIndexCalculation::IntersectedCell> WellSpline::conver
 
 Eigen::Vector3d WellSpline::SplinePoint::ToEigenVector() const {
     return Eigen::Vector3d(this->x->value(), this->y->value(), this->z->value());
+}
+
+vector<Eigen::Vector3d> WellSpline::getPoints() const {
+    if (use_bezier_spline_) {
+        return convertToBezierSpline();
+    }
+    else {
+        vector<Eigen::Vector3d> points;
+        for (auto point : spline_points_) {
+            points.push_back(point->ToEigenVector());
+        }
+        return points;
+    }
+}
+
+vector<Eigen::Vector3d> WellSpline::convertToBezierSpline() const {
+    Curve *curve = new Bezier();
+    curve->set_steps(50);
+    for (auto point : spline_points_) {
+        curve->add_way_point(Vector(point->x->value(), point->y->value(), point->z->value()));
+    }
+    vector<Eigen::Vector3d> bezier_points;
+    for (int i = 0; i < curve->node_count(); ++i) {
+        bezier_points.push_back(Eigen::Vector3d(curve->node(i).x, curve->node(i).y, curve->node(i).z));
+    }
+    delete curve;
+    return bezier_points;
+    
 }
 }
 }
