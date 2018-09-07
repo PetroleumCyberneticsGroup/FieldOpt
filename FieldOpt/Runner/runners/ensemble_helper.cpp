@@ -32,13 +32,13 @@ EnsembleHelper::EnsembleHelper() {
     rzn_busy_ = std::vector<std::string>();
 }
 
-EnsembleHelper::EnsembleHelper(const Settings::Ensemble &ensemble) {
+EnsembleHelper::EnsembleHelper(const Settings::Ensemble &ensemble, int rng_seed) {
     ensemble_ = ensemble;
     current_case_ = 0;
     rzn_queue_ = std::vector<std::string>();
     rzn_busy_ = std::vector<std::string>();
     n_select_ = 4;
-    rng_ = get_random_generator();
+    rng_ = get_random_generator(rng_seed*3);
 
     assert(n_select_ < ensemble.GetAliases().size());
 }

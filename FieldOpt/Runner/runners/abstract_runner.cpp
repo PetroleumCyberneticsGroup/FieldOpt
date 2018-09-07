@@ -71,7 +71,7 @@ void AbstractRunner::InitializeSettings(QString output_subdirectory)
 
     if (settings_->simulator()->is_ensemble()) {
         is_ensemble_run_ = true;
-        ensemble_helper_ = EnsembleHelper(settings_->simulator()->get_ensemble());
+        ensemble_helper_ = EnsembleHelper(settings_->simulator()->get_ensemble(), settings_->optimizer()->parameters().rng_seed);
     }
     else {
         is_ensemble_run_ = false;

@@ -124,7 +124,8 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
           {"LowerBoundInt", 0.0},
           {"UpperBoundInt", 10.0},
           {"LowerBoundReal", 0.0},
-          {"UpperBoundReal", 100.0}
+          {"UpperBoundReal", 100.0},
+          {"RNGSeed", 5}
 
       }},
       {"Objective", obj_fun_}
@@ -141,7 +142,8 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
           {"MutationStrength",      0.25},
           {"StagnationLimit",       1e-10},
           {"LowerBound",            -10.0},
-          {"UpperBound",            10.0}
+          {"UpperBound",            10.0},
+          {"RNGSeed", 5}
 
       }},
       {"Objective", obj_fun_}
@@ -151,9 +153,10 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
       {"Type", "EGO"},
       {"Mode", "Maximize"},
       {"Parameters", QJsonObject{
-          {"LowerBound", -3},
-          {"UpperBound",  3},
-          {"MaxEvaluations", 50}
+          {"LowerBound", -1},
+          {"UpperBound",  1},
+          {"MaxEvaluations", 50},
+          {"RNGSeed", 25}
       }},
       {"Objective", obj_fun_},
 //      {"Constraints", QJsonArray{

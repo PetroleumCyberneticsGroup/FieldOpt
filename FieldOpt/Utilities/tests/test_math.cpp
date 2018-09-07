@@ -121,4 +121,20 @@ TEST_F(MathTest, RandomFloats) {
     }
 }
 
+TEST_F(MathTest, SeededRandoms) {
+    auto gen11 = get_random_generator(1);
+    auto gen12 = get_random_generator(2);
+    auto gen21 = get_random_generator(1);
+    auto gen22 = get_random_generator(2);
+
+    double rand11 = random_double(gen11);
+    double rand12 = random_double(gen12);
+    double rand21 = random_double(gen21);
+    double rand22 = random_double(gen22);
+    EXPECT_EQ(rand11, rand21);
+    EXPECT_EQ(rand12, rand22);
+    EXPECT_NE(rand11, rand12);
+    EXPECT_NE(rand21, rand22);
+}
+
 }

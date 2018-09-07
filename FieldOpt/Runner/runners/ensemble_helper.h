@@ -38,7 +38,7 @@ class EnsembleHelper {
 
  public:
   EnsembleHelper();
-  EnsembleHelper(const Settings::Ensemble &ensemble);
+  EnsembleHelper(const Settings::Ensemble &ensemble, int rng_seed=0);
 
   /*!
    * Set a new active case and populate the realization queue

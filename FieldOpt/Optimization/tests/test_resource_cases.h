@@ -32,7 +32,7 @@ class TestResourceCases : public TestResources::TestResourceVariablePropertyCont
 
       test_case_2r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), real_variables_2d_);
 
-      auto gen = get_random_generator();
+      auto gen = get_random_generator(10);
       std::vector<double> rand_reals_30 = random_doubles(gen, -5.12, 5.12, 30);
       for (double rand : rand_reals_30)
           real_variables_sph_rand_30d_.insert(QUuid::createUuid(), rand);

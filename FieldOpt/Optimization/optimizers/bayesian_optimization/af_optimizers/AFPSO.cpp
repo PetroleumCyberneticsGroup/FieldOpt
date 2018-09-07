@@ -32,11 +32,11 @@ AFPSO::AFPSO() {
     inertia_ = 1.2;
     n_particles_ = 200;
     n_neighbourhoods_ = 20;
-    gen_ = get_random_generator();
     n_iterations_ = 500;
     iteration_ = 0;
 }
-AFPSO::AFPSO(VectorXd lb, VectorXd ub) : AFPSO() {
+AFPSO::AFPSO(VectorXd lb, VectorXd ub, int rng_seed) : AFPSO() {
+    gen_ = get_random_generator(rng_seed*2);
     lb_ = lb;
     ub_ = ub;
     n_dims_ = lb.size();

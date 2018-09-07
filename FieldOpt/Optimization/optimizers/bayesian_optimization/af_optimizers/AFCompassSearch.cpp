@@ -25,8 +25,8 @@ namespace Optimizers {
 namespace BayesianOptimization {
 namespace AFOptimizers {
 Optimization::Optimizers::BayesianOptimization::AFOptimizers::AFCompassSearch::AFCompassSearch() {}
-AFCompassSearch::AFCompassSearch(const VectorXd &lb, const VectorXd &ub) : lb_(lb), ub_(ub) {
-    gen_ = get_random_generator();
+AFCompassSearch::AFCompassSearch(const VectorXd &lb, const VectorXd &ub, int rng_seed) : lb_(lb), ub_(ub) {
+    gen_ = get_random_generator(rng_seed*2);
     step_lengths_ = 0.25 * (ub - lb);
     min_step_lengths_ = step_lengths_ / 100.0;
     directions_ = ::Optimization::GSSPatterns::Compass(lb_.size());

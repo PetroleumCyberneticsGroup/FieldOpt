@@ -35,7 +35,7 @@ GeneticAlgorithm::GeneticAlgorithm(Settings::Optimizer *settings,
 )
     : Optimizer(settings, base_case, variables, grid, logger, case_handler, constraint_handler) {
     n_vars_ = variables->ContinousVariableSize();
-    gen_ = get_random_generator();
+    gen_ = get_random_generator(settings->parameters().rng_seed);
     max_generations_ = settings->parameters().max_generations;
     if (settings->parameters().population_size < 0)
         population_size_ = std::min(10*n_vars_, 100);
