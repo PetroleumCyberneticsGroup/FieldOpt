@@ -226,38 +226,18 @@ WellBlock *Trajectory::GetWellBlockByMd(double md) const {
     if (md > GetLength()) {
         throw std::runtime_error("Attempting to get well block at MD grater than well length.");
     }
-    double current_md = 0;
-    for (int i = 0; i < well_blocks_->size(); ++i) {
-        current_md += abs((well_blocks_->at(i)->getExitPoint() - well_blocks_->at(i)->getEntryPoint()).norm());
-        if (current_md >= md) {
-            return well_blocks_->at(i);
+    for (auto block : *well_blocks_) {
+        if (md <= block->getExitMd() && md >= block->getEntryMd()) {
+            return block;
         }
     }
     throw std::runtime_error("Unable to get well block by MD.");
 }
 double Trajectory::GetEntryMd(const WellBlock *wb) const {
-    double md = 0.0;
-    for (int i = 0; i < well_blocks_->size(); ++i) {
-        auto cur_wb = well_blocks_->at(i);
-        if (cur_wb->i() == wb->i() && cur_wb->j() == wb->j() && cur_wb->k() == wb->k()) {
-            return md;
-        }
-        else {
-            md += (cur_wb->getExitPoint() - cur_wb->getEntryPoint()).norm();
-        }
-    }
-    throw std::runtime_error("Error computing entry md for well block.");
+    return wb->getEntryMd();
 }
 double Trajectory::GetExitMd(const WellBlock *wb) const {
-    double md = 0.0;
-    for (int i = 0; i < well_blocks_->size(); ++i) {
-        auto cur_wb = well_blocks_->at(i);
-        md += (cur_wb->getExitPoint() - cur_wb->getEntryPoint()).norm();
-        if (cur_wb->i() == wb->i() && cur_wb->j() == wb->j() && cur_wb->k() == wb->k()) {
-            return md;
-        }
-    }
-    throw std::runtime_error("Error computing entry md for well block.");
+    return wb->getExitMd();
 }
 void Trajectory::printWellBlocks() {
     std::cout << "I,\tJ,\tK,\tINX,\tINY,\tINZ,\tOUTX,\tOUTY,\tOUTZ" << std::endl;
@@ -273,11 +253,7 @@ void Trajectory::printWellBlocks() {
     }
 }
 double Trajectory::GetSplineLength() const {
-    double length = 0;
-    for (auto wb : *well_blocks_) {
-        length += abs((wb->getExitPoint() - wb->getEntryPoint()).norm());
-    }
-    return length;
+    return well_blocks_->back()->getExitMd();
 }
 std::vector<WellBlock *> Trajectory::GetWellBlocksByMdRange(double start_md, double end_md) const {
     std::vector<WellBlock *> affected_blocks;

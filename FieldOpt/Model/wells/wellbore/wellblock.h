@@ -70,12 +70,18 @@ class WellBlock
   void setExitPoint(const Eigen::Vector3d exit_point) { exit_point_ = exit_point; }
   Eigen::Vector3d getEntryPoint() const { return entry_point_; }
   Eigen::Vector3d getExitPoint() const { return exit_point_; }
+  void setEntryMd(const double entry_md) { entry_md_ = entry_md; }
+  void setExitMd(const double exit_md) { exit_md_ = exit_md; }
+  double getEntryMd() const { return entry_md_; }
+  double getExitMd() const { return exit_md_; }
  private:
   Model::Properties::DiscreteProperty *i_;
   Model::Properties::DiscreteProperty *j_;
   Model::Properties::DiscreteProperty *k_;
   Eigen::Vector3d entry_point_; //!< Entry point for splines through this block.
   Eigen::Vector3d exit_point_;  //!< Exit point for splines through this block.
+  double entry_md_;
+  double exit_md_;
   Completions::Completion *completion_;
   DirectionOfPenetration direction_of_penetration_; //!< The well's direction of penetration through this block.
 };

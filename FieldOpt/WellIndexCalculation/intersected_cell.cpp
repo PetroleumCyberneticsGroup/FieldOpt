@@ -65,6 +65,12 @@ Vector3d IntersectedCell::get_segment_entry_point(int segment_index) const {
 Vector3d IntersectedCell::get_segment_exit_point(int segment_index) const {
   return exit_points_[segment_index];
 }
+double IntersectedCell::get_segment_entry_md(int segment_index) const {
+  return entry_mds_[segment_index];
+}
+double IntersectedCell::get_segment_exit_md(int segment_index) const {
+  return exit_mds_[segment_index];
+}
 
 double IntersectedCell::get_segment_radius(int segment_index) const {
   return segment_radius_[segment_index];
@@ -83,9 +89,12 @@ int IntersectedCell::num_segments() const{
 }
 
 void IntersectedCell::add_new_segment(Vector3d entry_point, Vector3d exit_point,
+                                      double entry_md, double exit_md,
                                       double radius, double skin_factor) {
   entry_points_.push_back(entry_point);
   exit_points_.push_back(exit_point);
+  entry_mds_.push_back(entry_md);
+  exit_mds_.push_back(exit_md);
   segment_radius_.push_back(radius);
   segment_skin_.push_back(skin_factor);
 }
