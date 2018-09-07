@@ -18,8 +18,6 @@ execute
 sudo docker build -t fieldopt .
 ```
 This will create a local docker image named `fieldopt`.
-If everything was successful, the output of
-`./FieldOpt --help` should be printed at the end.
 Call `sudo docker image ls` to list all your local
 images.
 
@@ -27,6 +25,8 @@ To run the image, call
 ```
 sudo docker run -it fieldopt
 ```
+If everything was successful, the output of
+`./FieldOpt --help` should be printed.
 
 ## Image Details
 
