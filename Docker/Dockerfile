@@ -10,6 +10,12 @@ MAINTAINER einar90 version: 0.1
 # Install dependencies from ubuntu repositories
 RUN apt-get update && apt-get install -y git build-essential cmake qt5-default libboost-all-dev libhdf5-dev libopenmpi-dev libeigen3-dev 
 
+# Install the Flow reservoir simulator
+RUN apt-get install -y software-properties-common
+RUN apt-add-repository -y ppa:opm/ppa && apt-get update
+RUN apt-get install -y mpi-default-bin
+RUN apt-get install -y libopm-simulators-bin
+
 
 # Clone the FieldOpt repo into the root /app directory
 WORKDIR /app
