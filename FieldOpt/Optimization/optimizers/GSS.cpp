@@ -21,6 +21,8 @@
 #include "GSS.h"
 #include "Utilities/math.hpp"
 #include "gss_patterns.hpp"
+#include "Utilities/stringhelpers.hpp"
+#include "Utilities/printer.hpp"
 
 namespace Optimization {
     namespace Optimizers {
@@ -56,7 +58,7 @@ namespace Optimization {
                 step_tol_.fill(settings->parameters().minimum_step_length);
             }
             else {
-                assert(constraint_handler->HasBoundaryConstraints());
+                assert(constraint_handler_->HasBoundaryConstraints());
                 auto lower_bound = constraint_handler_->GetLowerBounds(base_case->GetRealVarIdVector());
                 auto upper_bound = constraint_handler_->GetUpperBounds(base_case->GetRealVarIdVector());
                 auto difference = upper_bound - lower_bound;
@@ -68,6 +70,8 @@ namespace Optimization {
                 }
                 step_lengths_ = base * settings->parameters().auto_step_init_scale;
                 step_tol_ = base * settings->parameters().auto_step_conv_scale;
+                Printer::ext_info("Step lengths: " + eigenvec_to_str(step_lengths_));
+                Printer::ext_info("Step tols: " + eigenvec_to_str(step_tol_));
                 assert(step_lengths_.size() == directions_.size());
                 assert(step_lengths_.size() == step_tol_.size());
             }

@@ -164,18 +164,19 @@ void Model::set_grid_path(const std::string &grid_path) {
     grid_ = new Reservoir::Grid::ECLGrid(grid_path);
 }
 void Model::verifyWellCompartments(Wells::Well *w) {
+    double well_length = w->trajectory()->GetLength();
     for (int i = 0; i < w->GetCompartments().size() - 1; ++i) {
-        if (w->GetCompartments()[i].icd->md() != w->GetCompartments()[i].start_packer->md()) {
+        if (w->GetCompartments()[i].icd->md(well_length) != w->GetCompartments()[i].start_packer->md(well_length)) {
             throw std::runtime_error("The ICD MD for compartment "
                 + boost::lexical_cast<std::string>(i)
                 + "is different from the start-packer MD.");
         }
-        if (w->GetCompartments()[i].start_packer->md() > w->GetCompartments()[i+1].end_packer->md()) {
+        if (w->GetCompartments()[i].start_packer->md(well_length) > w->GetCompartments()[i+1].end_packer->md(well_length)) {
             throw std::runtime_error("The start-packer MD is greater than the end-packer md in compartment "
                 + boost::lexical_cast<string>(i));
         }
     }
-    if (w->GetCompartments()[0].start_packer->md() < 0) {
+    if (w->GetCompartments()[0].start_packer->md(well_length) < 0) {
         throw std::runtime_error("The start-packer MD for the first compartment is negative.");
     }
 
@@ -184,11 +185,11 @@ void Model::verifyWellCompartments(Wells::Well *w) {
         length += (w->trajectory()->GetWellSpline()->GetSplinePoints()[i+1]->ToEigenVector()
                     - w->trajectory()->GetWellSpline()->GetSplinePoints()[i]->ToEigenVector()).norm();
     }
-    if (w->GetCompartments().back().end_packer->md() > length) {
+    if (w->GetCompartments().back().end_packer->md(well_length) > length) {
         throw std::runtime_error("The end-packer MD for the final compartment is past the end of the well spline. (length: "
                                  + boost::lexical_cast<string>(w->trajectory()->GetLength())
                                  + ", position: "
-                                 + boost::lexical_cast<string>(w->GetCompartments().back().end_packer->md())
+                                 + boost::lexical_cast<string>(w->GetCompartments().back().end_packer->md(well_length))
                                  + ")"
         );
     }

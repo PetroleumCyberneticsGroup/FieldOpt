@@ -28,6 +28,7 @@ Compartment::Compartment(const double start_md,
                          const double end_md,
                          const double start_tvd,
                          const double end_tvd,
+                         const double well_length,
                          const Settings::Model::Well &well_settings,
                          Properties::VariablePropertyContainer *variable_container,
                          std::vector<Compartment> &compartments_) {
@@ -35,7 +36,7 @@ Compartment::Compartment(const double start_md,
     if (compartments_.size() == 0) {
         assert(start_md == 0.0);
         comp_settings.name = "Packer#" + well_settings.name + "#0";
-        comp_settings.measured_depth = start_md;
+        comp_settings.placement = start_md / well_length;
         comp_settings.true_vertical_depth = start_tvd;
         comp_settings.type = Settings::Model::WellCompletionType::Packer;
         comp_settings.variable_placement = well_settings.seg_compartment_params.variable_placement;
@@ -46,14 +47,14 @@ Compartment::Compartment(const double start_md,
     }
 
     comp_settings.name = "Packer#" + well_settings.name + "#" + QString::number(compartments_.size() + 1);
-    comp_settings.measured_depth = end_md;
+    comp_settings.placement = end_md / well_length;
     comp_settings.true_vertical_depth = end_tvd;
     comp_settings.type = Settings::Model::WellCompletionType::Packer;
     comp_settings.variable_placement = well_settings.seg_compartment_params.variable_placement;
     end_packer = new Wellbore::Completions::Packer(comp_settings, variable_container);
 
     comp_settings.name = "ICD#" + well_settings.name + "#" + QString::number(compartments_.size());
-    comp_settings.measured_depth = start_md;
+    comp_settings.placement = start_md / well_length;
     comp_settings.true_vertical_depth = start_tvd;
     comp_settings.valve_size = well_settings.seg_compartment_params.valve_size;
     comp_settings.valve_flow_coeff = well_settings.seg_compartment_params.valve_flow_coeff;
@@ -61,14 +62,14 @@ Compartment::Compartment(const double start_md,
     comp_settings.type = Settings::Model::WellCompletionType::ICV;
     icd = new Wellbore::Completions::ICD(comp_settings, variable_container);
 }
-double Compartment::GetLength() const {
-    return end_packer->md() - start_packer->md();
+double Compartment::GetLength(const double &well_length) const {
+    return end_packer->md(well_length) - start_packer->md(well_length);
 }
 double Compartment::GetTVDDifference() const {
     return end_packer->tvd() - start_packer->tvd();
 }
 void Compartment::Update() {
-    icd->setMd(start_packer->md());
+    icd->setPlacement(start_packer->placement());
     icd->setTvd(start_packer->tvd());
 }
 }

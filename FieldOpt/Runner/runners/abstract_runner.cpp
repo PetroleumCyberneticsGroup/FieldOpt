@@ -33,6 +33,8 @@
 #include "Simulation/simulator_interfaces/eclsimulator.h"
 #include "Simulation/simulator_interfaces/adgprssimulator.h"
 #include "Utilities/math.hpp"
+#include "Utilities/printer.hpp"
+#include "Utilities/verbosity.h"
 
 namespace Runner {
 
@@ -157,7 +159,7 @@ void AbstractRunner::InitializeBaseCase()
     }
     else
         base_case_->set_objective_function_value(objective_function_->value());
-    if (runtime_settings_->verbosity_level()) std::cout << "Base case objective function value set to: " << base_case_->objective_function_value() << std::endl;
+    if (VERB_RUN >= 1) Printer::ext_info("Base case objective function value set to " + Printer::num2str(base_case_->objective_function_value()), "Runner", "AbstractRunner");
 }
 
 void AbstractRunner::InitializeOptimizer()
@@ -167,7 +169,7 @@ void AbstractRunner::InitializeOptimizer()
 
     switch (settings_->optimizer()->type()) {
         case Settings::Optimizer::OptimizerType::Compass:
-            if (runtime_settings_->verbosity_level()) std::cout << "Using CompassSearch optimization algorithm." << std::endl;
+            if (VERB_RUN >= 1) Printer::ext_info("Using CompassSearch optimization algorithm.", "Runner", "AbstractRunner");
             optimizer_ = new Optimization::Optimizers::CompassSearch(settings_->optimizer(),
                                                                      base_case_,
                                                                      model_->variables(),
@@ -177,7 +179,7 @@ void AbstractRunner::InitializeOptimizer()
             optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
             break;
         case Settings::Optimizer::OptimizerType::APPS:
-            if (runtime_settings_->verbosity_level()) std::cout << "Using APPS optimization algorithm." << std::endl;
+            if (VERB_RUN >= 1) Printer::ext_info("Using APPS optimization algorithm.", "Runner", "AbstractRunner");
             optimizer_ = new Optimization::Optimizers::APPS(settings_->optimizer(),
                                                             base_case_,
                                                             model_->variables(),
@@ -187,7 +189,7 @@ void AbstractRunner::InitializeOptimizer()
             optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
             break;
         case Settings::Optimizer::OptimizerType::GeneticAlgorithm:
-            if (runtime_settings_->verbosity_level()) std::cout << "Using GeneticAlgorithm optimization algorithm." << std::endl;
+            if (VERB_RUN >= 1) Printer::ext_info("Using GeneticAlgorithm optimization algorithm.", "Runner", "AbstractRunner");
             optimizer_ = new Optimization::Optimizers::RGARDD(settings_->optimizer(),
                                                               base_case_,
                                                               model_->variables(),
@@ -197,7 +199,7 @@ void AbstractRunner::InitializeOptimizer()
             optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
             break;
         case Settings::Optimizer::OptimizerType::EGO:
-            if (runtime_settings_->verbosity_level()) std::cout << "Using EGO optimization algorithm." << std::endl;
+            if (VERB_RUN >= 1) Printer::ext_info("Using EGO optimization algorithm.", "Runner", "AbstractRunner");
             optimizer_ = new Optimization::Optimizers::BayesianOptimization::EGO(settings_->optimizer(),
                                                               base_case_,
                                                               model_->variables(),
@@ -207,7 +209,7 @@ void AbstractRunner::InitializeOptimizer()
             optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
             break;
         case Settings::Optimizer::OptimizerType::ExhaustiveSearch2DVert:
-            if (runtime_settings_->verbosity_level()) std::cout << "Using ExhaustiveSearch2DVert." << std::endl;
+            if (VERB_RUN >= 1) Printer::ext_info("Using ExhaustiveSearch2DVert optimization algorithm.", "Runner", "AbstractRunner");
             optimizer_ = new Optimization::Optimizers::ExhaustiveSearch2DVert(settings_->optimizer(),
                                                                               base_case_,
                                                                               model_->variables(),
@@ -217,7 +219,7 @@ void AbstractRunner::InitializeOptimizer()
             optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
             break;
         case Settings::Optimizer::OptimizerType::Hybrid:
-            if (runtime_settings_->verbosity_level()) std::cout << "Using Hybrid optimization algorithm." << std::endl;
+            if (VERB_RUN >= 1) Printer::ext_info("Using Hybrid optimization algorithm.", "Runner", "AbstractRunner");
             optimizer_ = new Optimization::HybridOptimizer(settings_->optimizer(),
                                                            base_case_,
                                                            model_->variables(),

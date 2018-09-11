@@ -77,7 +77,7 @@ class Model
       double diameter                = -1.0; //!< Diameter (for any completion in the segmented model)
       double cross_sect_area         = -1.0; //!< Cross sectional flow area
       double roughness               = -1.0; //!< Roughness (for any completion in the segmented model)
-      double measured_depth          = -1.0; //!< Measured depth for the location of the completion.
+      double placement               = -1.0; //!< Placement as a fraction of the well length.
       double true_vertical_depth     = -1.0; //!< True vertical depth for the location of the completion.
       bool is_variable               = false; //!< True if all viable properties are variable. Otherwise false.
       bool variable_placement        = false; //!< Whether the placement of a comp. along the trajectory should be variable.

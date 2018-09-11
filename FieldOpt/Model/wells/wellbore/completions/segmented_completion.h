@@ -39,22 +39,21 @@ class SegmentedCompletion : public Completion {
 
  public:
   // Getters
-  double md() const;
+  double placement() const;
+  double md(const double &well_length) const;
   double tvd() const;
   double roughness() const;
   double diam() const;
 
   // Setters
-  void setMd(const double &md);
+  void setPlacement(const double &placement);
   void setTvd(const double &tvd);
 
  protected:
   /*!
-   * Measured depth. For ICDs and packers, this is the discrete location
-   * of the component along the well trajectory. For tubing and annulus,
-   * this is the end-point for the segment.
+   * Placement of a packer of ICD as a fraction of well length.
    */
-  Properties::ContinousProperty *md_;
+  Properties::ContinousProperty *placement_;
 
   /*!
    * True vertical depth. For ICDs and packers, this is the vertical depth

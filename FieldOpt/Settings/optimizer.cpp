@@ -100,8 +100,6 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
     }
     else if (QString::compare(constraint_type, "PackerConstraint") == 0) {
         optimizer_constraint.type = ConstraintType::PackerConstraint;
-        optimizer_constraint.max_md = json_constraint["MaxMd"].toDouble();
-        optimizer_constraint.min_md = json_constraint["MinMd"].toDouble();
     }
 
     else if (QString::compare(constraint_type, "Rate") == 0) {

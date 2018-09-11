@@ -18,6 +18,7 @@
 ******************************************************************************/
 #include <Utilities/time.hpp>
 #include "serial_runner.h"
+#include "Utilities/printer.hpp"
 
 namespace Runner {
 
@@ -95,8 +96,7 @@ void SerialRunner::Execute()
                         new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_TIMEOUT;
                 }
             } catch (std::runtime_error e) {
-                std::cout << e.what() << std::endl;
-                std::cout << "Invalid well block coordinate encountered. Setting obj. val. to sentinel value." << std::endl;
+                Printer::ext_warn("Exception thrown while applying/simulating case: " + std::string(e.what()) + ". Setting obj. fun. value to sentinel value.", "Runner", "SerialRunner");
                 new_case->set_objective_function_value(sentinelValue());
                 new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_FAILED;
                 new_case->state.err_msg = Optimization::Case::CaseState::ErrorMessage::ERR_WIC;

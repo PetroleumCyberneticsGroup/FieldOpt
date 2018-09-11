@@ -19,6 +19,8 @@
 
 #include "constraint_handler.h"
 #include <iostream>
+#include <Utilities/printer.hpp>
+#include <Utilities/verbosity.h>
 
 namespace Optimization {
 namespace Constraints {
@@ -30,15 +32,18 @@ ConstraintHandler::ConstraintHandler(QList<Settings::Optimizer::Constraint> cons
     for (Settings::Optimizer::Constraint constraint : constraints) {
         switch (constraint.type) {
             case Settings::Optimizer::ConstraintType::BHP:
+                if (VERB_OPT >= 1) Printer::info("Adding BHP constraint for " + constraint.well.toStdString());
                 constraints_.append(new BhpConstraint(constraint, variables));
                 break;
             case Settings::Optimizer::ConstraintType::Rate:
+                if (VERB_OPT >= 1) Printer::info("Adding Rate constraint for " + constraint.well.toStdString());
                 constraints_.append(new RateConstraint(constraint, variables));
                 break;
             case Settings::Optimizer::ConstraintType::WellSplineLength:
                 for (auto wname : constraint.wells) {
                     auto cons = Settings::Optimizer::Constraint(constraint);
                     cons.well = wname;
+                    if (VERB_OPT >= 1) Printer::info("Adding WellSplineLength constraint for " + cons.well.toStdString());
                     constraints_.append(new WellSplineLength(cons, variables));
                 }
                 break;
@@ -46,6 +51,7 @@ ConstraintHandler::ConstraintHandler(QList<Settings::Optimizer::Constraint> cons
                 for (auto wname : constraint.wells) {
                     auto cons = Settings::Optimizer::Constraint(constraint);
                     cons.well = wname;
+                    if (VERB_OPT >= 1) Printer::info("Adding ICV constraint for " + cons.well.toStdString());
                     constraints_.append(new ICVConstraint(cons, variables));
                 }
                 break;
@@ -53,17 +59,21 @@ ConstraintHandler::ConstraintHandler(QList<Settings::Optimizer::Constraint> cons
                 for (auto wname : constraint.wells) {
                     auto cons = Settings::Optimizer::Constraint(constraint);
                     cons.well = wname;
+                    if (VERB_OPT >= 1) Printer::info("Adding Packer constraint for " + cons.well.toStdString());
                     constraints_.append(new PackerConstraint(cons, variables));
                 }
                 break;
             case Settings::Optimizer::ConstraintType::WellSplineInterwellDistance:
+                if (VERB_OPT >= 1) Printer::info("Adding WellSplineInterwellDistance constraint.");
                 constraints_.append(new InterwellDistance(constraint, variables));
                 break;
             case Settings::Optimizer::ConstraintType::CombinedWellSplineLengthInterwellDistance:
+                if (VERB_OPT >= 1) Printer::info("Adding CombinedWellSplineLengthInterwellDistance constraint.");
                 constraints_.append(new CombinedSplineLengthInterwellDistance(constraint, variables));
                 break;
             case Settings::Optimizer::ConstraintType::
                 CombinedWellSplineLengthInterwellDistanceReservoirBoundary:
+                if (VERB_OPT >= 1) Printer::info("Adding CombinedWellSplineLengthInterwellDistanceReservoirBoundary constraint.");
                 constraints_.append(new CombinedSplineLengthInterwellDistanceReservoirBoundary
                                         (constraint, variables, grid));
                 break;
@@ -71,6 +81,7 @@ ConstraintHandler::ConstraintHandler(QList<Settings::Optimizer::Constraint> cons
                 for (auto wname : constraint.wells) {
                     auto cons = Settings::Optimizer::Constraint(constraint);
                     cons.well = wname;
+                    if (VERB_OPT >= 1) Printer::info("Adding ReservoirBoundary constraint for " + cons.well.toStdString());
                     constraints_.append(new ReservoirBoundary(cons, variables, grid));
                 }
                 break;
@@ -78,11 +89,12 @@ ConstraintHandler::ConstraintHandler(QList<Settings::Optimizer::Constraint> cons
                 for (auto wname : constraint.wells) {
                     auto cons = Settings::Optimizer::Constraint(constraint);
                     cons.well = wname;
+                    if (VERB_OPT >= 1) Printer::info("Adding PseudoContBoundary2D constraint for " + cons.well.toStdString());
                     constraints_.append(new PseudoContBoundary2D(cons, variables, grid));
                 }
                 break;
             default:
-                std::cout << "WARNING: Constraint type not recognized." << std::endl;
+                Printer::ext_warn("Constraint type not recognized.", "Optimization", "ConstraintHandler");
         }
     }
 }
@@ -114,9 +126,10 @@ void ConstraintHandler::SnapCaseToConstraints(Case *c)
 
 }
 bool ConstraintHandler::HasBoundaryConstraints() const {
-    for (auto con : constraints_) {
-        if (con->IsBoundConstraint())
+    for (int i = 0; i < constraints_.size(); ++i) {
+        if (constraints_[i]->IsBoundConstraint()) {
             return true;
+        }
     }
     return false;
 }

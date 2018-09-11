@@ -39,10 +39,11 @@ class Compartment {
   Compartment();
   Compartment(const double start_md, const double end_md,
               const double start_tvd, const double end_tvd,
+              const double well_length,
               const Settings::Model::Well &well_settings,
               Properties::VariablePropertyContainer *variable_container,
               std::vector<Compartment> &compartments_);
-  double GetLength() const;
+  double GetLength(const double &well_length) const;
   double GetTVDDifference() const;
 
   /*!

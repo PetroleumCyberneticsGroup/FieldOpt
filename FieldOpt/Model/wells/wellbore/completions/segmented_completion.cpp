@@ -28,17 +28,26 @@ SegmentedCompletion::SegmentedCompletion(Settings::Model::Well::Completion compl
                                          Model::Properties::VariablePropertyContainer *variable_container)
     : Completion(completion_settings)
 {
-    md_ = new Properties::ContinousProperty(completion_settings.measured_depth);
+    placement_ = new Properties::ContinousProperty(completion_settings.placement);
 
     tvd_ = completion_settings.true_vertical_depth;
     roughness_ = completion_settings.roughness;
     diameter_ = completion_settings.diameter;
 }
 
-double SegmentedCompletion::md() const {
-    if (md_->value() < 0)
+double SegmentedCompletion::md(const double &well_length) const {
+    if (placement_->value() < 0) {
         throw std::runtime_error("Attemting to get unset MD from segmented completion.");
-    return md_->value();
+    }
+    else
+        return placement_->value() * well_length;
+}
+double SegmentedCompletion::placement() const {
+    if (placement_->value() < 0) {
+        throw std::runtime_error("Attemting to get unset MD from segmented completion.");
+    }
+    else
+        return placement_->value();
 }
 
 double SegmentedCompletion::tvd() const {
@@ -58,10 +67,10 @@ double SegmentedCompletion::diam() const {
         throw std::runtime_error("Attemting to get unset diameter from segmented completion.");
     return diameter_;
 }
-void SegmentedCompletion::setMd(const double &md) {
-    if (md < 0)
+void SegmentedCompletion::setPlacement(const double &placement) {
+    if (placement < 0)
         throw std::runtime_error("Attemting to set invalid MD for segmented completion.");
-    md_->setValue(md);
+    placement_->setValue(placement);
 
 }
 void SegmentedCompletion::setTvd(const double &tvd) {

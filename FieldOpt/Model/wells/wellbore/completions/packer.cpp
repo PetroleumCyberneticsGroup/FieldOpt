@@ -28,8 +28,8 @@ Packer::Packer(const Settings::Model::Well::Completion &completion_settings,
                Properties::VariablePropertyContainer *variable_container) : SegmentedCompletion(completion_settings,
                                                                                                 variable_container) {
     if (completion_settings.variable_placement == true) {
-        md_->setName(completion_settings.name);
-        variable_container->AddVariable(md_);
+        placement_->setName(completion_settings.name);
+        variable_container->AddVariable(placement_);
     }
 
 }

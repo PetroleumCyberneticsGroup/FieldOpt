@@ -23,6 +23,8 @@
 #include <algorithm>
 #include <iostream>
 #include <iomanip>
+#include "Utilities/verbosity.h"
+#include "Utilities/printer.hpp"
 
 namespace Model {
 namespace Wells {
@@ -49,7 +51,9 @@ Trajectory::Trajectory(Settings::Model::Well well_settings,
         well_spline_ = new WellSpline(well_settings, variable_container, grid, wic);
         well_blocks_ = well_spline_->GetWellBlocks();
         calculateDirectionOfPenetration();
-//        printWellBlocks();
+        if (VERB_MOD >= 3) {
+            printWellBlocks();
+        }
     }
     else if (well_settings.definition_type == Settings::Model::WellDefinitionType::PseudoContVertical2D) {
         pseudo_cont_vert_ = new PseudoContVert(well_settings, variable_container, grid);
@@ -87,7 +91,9 @@ void Trajectory::UpdateWellBlocks()
             well_blocks_ = well_spline_->GetWellBlocks();
         }
         else {
-            std::cout << "The well spline has not changed; well indices will not be recomputed." << std::endl;
+            if (VERB_MOD >= 3) {
+                Printer::info("The well spline has not changed; well indices will not be recomputed.");
+            }
         }
     }
     else if (pseudo_cont_vert_ != 0) {
@@ -169,11 +175,13 @@ Settings::Model::WellDefinitionType Trajectory::GetDefinitionType() {
     return definition_type_;
 }
 void Trajectory::convertWellBlocksToWellSpline(Settings::Model::Well &well_settings, Reservoir::Grid::Grid *grid) {
-    std::cout << "Converting well " << well_settings.name.toStdString() << " to spline." << std::endl;
-    std::cout << "Input blocks:" << std::endl;
-    for (auto imported_block : well_settings.well_blocks) {
-        std::cout << imported_block.i << ",\t" << imported_block.j << ",\t" << imported_block.k << std::endl;
+    if (VERB_MOD >= 2) {
+        Printer::ext_info("Convering well " + well_settings.name.toStdString() + " to spline.", "Model", "Trajectory");
     }
+//    std::cout << "Input blocks:" << std::endl;
+//    for (auto imported_block : well_settings.well_blocks) {
+//        std::cout << imported_block.i << ",\t" << imported_block.j << ",\t" << imported_block.k << std::endl;
+//    }
     QList<Settings::Model::Well::SplinePoint> points;
     for (int p = 0; p < well_settings.n_spline_points; ++p) {
         int srndg_block_idx = std::min(
@@ -182,24 +190,29 @@ void Trajectory::convertWellBlocksToWellSpline(Settings::Model::Well &well_setti
         );
         Reservoir::Grid::Cell srndg_cell;
         try {
-            std::cout << "Selected for spline conversion block nr " << srndg_block_idx << std::endl;
+            if (VERB_MOD >=3) {
+                std::cout << "Selected for spline conversion block nr " << srndg_block_idx << std::endl;
+            }
             Settings::Model::Well::WellBlock srndg_block = well_settings.well_blocks[srndg_block_idx];
             srndg_cell = grid->GetCell(srndg_block.i-1, srndg_block.j-1, srndg_block.k-1);
         }
         catch (std::runtime_error e) {
-            std::cout << "WARNING: Unable to get grid cell needed for spline conversion: " << e.what()
-                      << " Trying adjacent block." << std::endl;
-            std::cout << "Selected for spline conversion block nr " << srndg_block_idx - 2 << std::endl;
+            Printer::ext_warn("Unable to get grid cell needed for spline conversion. Trying adjacent block.", "Model", "Trajectory");
+//            std::cout << "WARNING: Unable to get grid cell needed for spline conversion: " << e.what()
+//                      << " Trying adjacent block." << std::endl;
+//            std::cout << "Selected for spline conversion block nr " << srndg_block_idx - 2 << std::endl;
             Settings::Model::Well::WellBlock srndg_block = well_settings.well_blocks[srndg_block_idx - 2];
             srndg_cell = grid->GetCell(srndg_block.i-1, srndg_block.j-1, srndg_block.k-1);
         }
-        std::cout << "Corresponding block: " << srndg_cell.ijk_index().i() + 1
-                                             << ", " << srndg_cell.ijk_index().j() + 1
-                                             << ", " << srndg_cell.ijk_index().k() + 1
-                  << " with center at "      <<  srndg_cell.center().x()
-                                             << ", " << srndg_cell.center().y()
-                                             << ", " << srndg_cell.center().z() << std::endl;
+        if (VERB_MOD >=3) {
+            std::cout << "Corresponding block: " << srndg_cell.ijk_index().i() + 1
+                      << ", " << srndg_cell.ijk_index().j() + 1
+                      << ", " << srndg_cell.ijk_index().k() + 1
+                      << " with center at " << srndg_cell.center().x()
+                      << ", " << srndg_cell.center().y()
+                      << ", " << srndg_cell.center().z() << std::endl;
 
+        }
         Settings::Model::Well::SplinePoint new_point;
         new_point.name = "SplinePoint#" + well_settings.name + "#P" + QString::number(p+1);
         new_point.x = srndg_cell.center().x();

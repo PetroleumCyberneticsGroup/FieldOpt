@@ -18,6 +18,9 @@
 ******************************************************************************/
 
 #include "packer_constraint.h"
+#include <algorithm>
+#include <Utilities/verbosity.h>
+#include <Utilities/printer.hpp>
 
 namespace Optimization {
 namespace Constraints {
@@ -26,14 +29,17 @@ using namespace Model::Properties;
 
 PackerConstraint::PackerConstraint(Settings::Optimizer::Constraint settings,
                                                               Model::Properties::VariablePropertyContainer *variables) {
-    min_ = settings.min_md;
-    max_ = settings.max_md;
     for (ContinousProperty *var : variables->GetContinousVariables()->values()) {
         if (var->propertyInfo().prop_type == Property::PropertyType::Packer
             && QString::compare(var->propertyInfo().parent_well_name, settings.well) == 0) {
             affected_variables_.push_back(var->id());
+            affected_var_props_[var->id()] = var->propertyInfo();
         }
     }
+    // Sort affected variables list by packer index
+    std::sort(affected_variables_.begin(), affected_variables_.end(), [&](const QUuid &lhs, const QUuid &rhs) {
+        return affected_var_props_[lhs].index < affected_var_props_[rhs].index;
+    });
 }
 string PackerConstraint::name() {
     return "PackerConstraint";
@@ -41,25 +47,33 @@ string PackerConstraint::name() {
 
 bool PackerConstraint::CaseSatisfiesConstraint(Optimization::Case *c) {
     for (auto id : affected_variables_) {
-        if (c->real_variables()[id] > max_ || c->real_variables()[id] < min_) {
+        if (c->real_variables()[id] > 1.0 || c->real_variables()[id] < 0.0) {
             return false;
         }
     }
     return true;
 }
 void PackerConstraint::SnapCaseToConstraints(Optimization::Case *c) {
+    // Snap to upper/lower bounds
     for (auto id : affected_variables_) {
-        if (c->real_variables()[id] > max_) {
-            c->set_real_variable_value(id, max_);
+        if (c->real_variables()[id] > 1.0) {
+            c->set_real_variable_value(id, 1.0);
             if (verbosity_level_ > 1) {
-                std::cout << "IN OPTIMIZER, PackerConstriant: Snapped value to upper bound." << std::endl;
+                if (VERB_OPT >= 1) Printer::ext_info("Snapped value to upper bound.", "Optimization", "PackerConstraint");
             }
         }
-        else if (c->real_variables()[id] < min_) {
-            c->set_real_variable_value(id, min_);
+        else if (c->real_variables()[id] < 0.0) {
+            c->set_real_variable_value(id, 0.0);
             if (verbosity_level_ > 1) {
-                std::cout << "IN OPTIMIZER, PackerConstriant: Snapped value to lower bound." << std::endl;
+                if (VERB_OPT >= 1) Printer::ext_info("Snapped value to lower bound.", "Optimization", "PackerConstraint");
             }
+        }
+    }
+    // Enforce packer-ordering
+    for (int i = 1; i < affected_variables_.size(); ++i) {
+        if (c->real_variables()[affected_variables_[i]] < c->real_variables()[affected_variables_[i-1]]) {
+            c->set_real_variable_value(affected_variables_[i], c->real_variables()[affected_variables_[i-1]]);
+            if (VERB_OPT >= 1) Printer::ext_info("Enforced packer-ordering.", "Optimization", "PackerConstraint");
         }
     }
 }
@@ -70,7 +84,7 @@ Eigen::VectorXd PackerConstraint::GetLowerBounds(QList<QUuid> id_vector) const {
     Eigen::VectorXd lbounds(id_vector.size());
     lbounds.fill(0);
     for (auto id : affected_variables_) {
-        lbounds[id_vector.indexOf(id)] = min_;
+        lbounds[id_vector.indexOf(id)] = 0.0;
     }
     return lbounds;
 }
@@ -78,7 +92,7 @@ Eigen::VectorXd PackerConstraint::GetUpperBounds(QList<QUuid> id_vector) const {
     Eigen::VectorXd ubounds(id_vector.size());
     ubounds.fill(0);
     for (auto id : affected_variables_) {
-        ubounds[id_vector.indexOf(id)] = max_;
+        ubounds[id_vector.indexOf(id)] = 1.0;
     }
     return ubounds;
 }

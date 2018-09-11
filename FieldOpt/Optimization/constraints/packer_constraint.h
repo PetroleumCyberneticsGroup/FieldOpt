@@ -21,6 +21,8 @@
 #define FIELDOPT_PACKER_CONSTRAINT_H
 
 #include "constraint.h"
+#include "map"
+#include "vector"
 
 namespace Optimization {
 namespace Constraints {
@@ -36,8 +38,8 @@ class PackerConstraint : public Constraint {
   Eigen::VectorXd GetUpperBounds(QList<QUuid> id_vector) const override;
 
  private:
-  double min_, max_; // Min/Max measured depth for packers (correspond to MD for the heel and toe of the well).
-  QList<QUuid> affected_variables_;
+  std::vector<QUuid> affected_variables_;
+  std::map<QUuid, Model::Properties::Property::PropertyInfo> affected_var_props_;
 
 };
 

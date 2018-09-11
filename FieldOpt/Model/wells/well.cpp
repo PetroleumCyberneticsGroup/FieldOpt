@@ -114,16 +114,19 @@ void Well::initializeSegmentedWell(Properties::VariablePropertyContainer *variab
                                   + " begins and ends in the same well block.", "Model", "Well");
             compartments_.push_back(Compartment(trajectory_->GetEntryMd(first_block), trajectory_->GetExitMd(last_block),
                                                 first_block->getEntryPoint().z(), last_block->getExitPoint().z(),
+                                                trajectory()->GetLength(),
                                                 well_settings_, variable_container, compartments_));
         }
         else if (i < well_settings_.seg_n_compartments - 1) { // Not last compartment
             compartments_.push_back(Compartment(trajectory_->GetEntryMd(first_block), trajectory_->GetEntryMd(last_block),
                                                 first_block->getEntryPoint().z(), last_block->getExitPoint().z(),
+                                                trajectory()->GetLength(),
                                                 well_settings_, variable_container, compartments_));
         }
         else { // Last compartment
             compartments_.push_back(Compartment(trajectory_->GetEntryMd(first_block), trajectory_->GetExitMd(last_block),
                                                 first_block->getEntryPoint().z(), last_block->getExitPoint().z(),
+                                                trajectory()->GetLength(),
                                                 well_settings_, variable_container, compartments_));
         }
     }
@@ -170,8 +173,8 @@ void Well::createAnnulusSegments(std::vector<Segment> &segments, const std::vect
     assert(is_segmented_);
     std::vector<int> annulus_indexes;
     for (int i = 0; i < compartments_.size(); ++i) {
-        auto comp_blocks = trajectory()->GetWellBlocksByMdRange(compartments_[i].start_packer->md(),
-                                                                compartments_[i].end_packer->md()
+        auto comp_blocks = trajectory()->GetWellBlocksByMdRange(compartments_[i].start_packer->md(trajectory()->GetLength()),
+                                                                compartments_[i].end_packer->md(trajectory()->GetLength())
         );
         for (int j = 0; j < comp_blocks.size(); ++j) {
             double outlet_md;
@@ -234,7 +237,7 @@ std::vector<int> Well::createTubingSegments(std::vector<Segment> &segments) cons
             index,                                // index
             1,                                    // branch
             index - 1,                            // outlet
-            compartments_[i].GetLength(),         // length
+            compartments_[i].GetLength(trajectory_->GetLength()),         // length
             compartments_[i].GetTVDDifference(),  // tvd delta
             tub_diam_, tub_roughness_,
             segments.back().OutletMD()
