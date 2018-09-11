@@ -32,8 +32,8 @@
             {
                 "Type": "PackerConstraint",
                 "Wells": ["PRODUCER"],
-                "Min": 1.0,
-                "Max": 599.0
+                "Min": 0.0,
+                "Max": 1.0
             }
         ]
     },

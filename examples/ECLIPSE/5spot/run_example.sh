@@ -16,6 +16,7 @@
 #   7 - fo_driver_2_horz_icds_packers_ga
 #   8 - fo_driver_2_horz_icds_controls_ego
 #   9 - fo_driver_2_horz_icds_controls_hybrid
+#  10 - fo_driver_2_horz_icds_packers_apps
 #
 # Assumes that the following shell variables are set:
 #   FIELDOPT_BUILD - Path to the FieldOpt build (bin) directory.
@@ -32,10 +33,13 @@ declare -a CASES=(
     "fo_driver_2_horz_icds_packers_ga"
     "fo_driver_2_horz_icds_controls_ego"
     "fo_driver_2_horz_icds_controls_hybrid"
+    "fo_driver_2_horz_icds_packers_apps"
 )
 
 # Set case and path variables
-CASE=${CASES[$2-1]}
+CASE_IDX=$(expr $1 - 1)
+echo $CASE_IDX
+CASE=${CASES[$CASE_IDX]}
 CURRENT_DIR=$(pwd)
 DRIVER_PATH=${CURRENT_DIR}/${CASE}.json
 OUTPUT_DIR=${FIELDOPT_OUT}/5spot/${CASE}

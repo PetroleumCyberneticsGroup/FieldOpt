@@ -4,16 +4,13 @@
         "BookkeeperTolerance": 0.0
     },
     "Optimizer": {
-        "Type": "EGO",
+        "Type": "APPS",
         "Mode": "Maximize",
         "Parameters": {
             "MaxEvaluations": 1000,
-            "PopulationSize": 40,
-            "MaxGenerations": 50,
-            "CrossoverProbability": 0.1,
-            "DecayRate": 4.0,
-            "MutationStrength": 0.25
-        },
+            "AutoStepLengths": true,
+            "AutoStepInitScale": 0.25,
+            "AutoStepConvScale": 0.01        },
         "Objective": {
             "Type": "WeightedSum",
             "WeightedSumComponents": [
@@ -36,9 +33,7 @@
             },
             {
                 "Type": "PackerConstraint",
-                "Wells": ["PRODUCER"],
-                "MinMd": 1.0,
-                "MaxMd": 599.0
+                "Wells": ["PRODUCER"]
             }
         ]
     },
