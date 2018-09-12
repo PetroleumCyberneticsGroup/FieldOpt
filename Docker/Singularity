@@ -1,0 +1,5 @@
+BootStrap: docker
+From: einar90/fieldopt:develop20180912
+
+%runscript
+    echo "Started Singularity FieldOpt container"
