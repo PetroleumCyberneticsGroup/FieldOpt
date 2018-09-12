@@ -268,10 +268,14 @@ vector<Eigen::Vector3d> WellSpline::getPoints() const {
 }
 
 vector<Eigen::Vector3d> WellSpline::convertToBezierSpline() const {
+    if (VERB_MOD >= 2) {
+        Printer::ext_info("Generating bezier spline for well " + well_settings_.name.toStdString() + ". N original points: " + Printer::num2str(spline_points_.size()), "Model", "WellSpline");
+    }
+    assert(spline_points_.size() >= 4);
     Curve *curve = new Bezier();
     curve->set_steps(50);
-    for (auto point : spline_points_) {
-        curve->add_way_point(Vector(point->x->value(), point->y->value(), point->z->value()));
+    for (int j = 0; j < spline_points_.size(); ++j) {
+        curve->add_way_point(Vector(spline_points_[j]->x->value(), spline_points_[j]->y->value(), spline_points_[j]->z->value()));
     }
     vector<Eigen::Vector3d> bezier_points;
     for (int i = 0; i < curve->node_count(); ++i) {
@@ -279,7 +283,7 @@ vector<Eigen::Vector3d> WellSpline::convertToBezierSpline() const {
     }
     delete curve;
     return bezier_points;
-    
+
 }
 }
 }
