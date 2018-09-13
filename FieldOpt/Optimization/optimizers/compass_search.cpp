@@ -1,7 +1,9 @@
 #include <iostream>
 #include "compass_search.h"
 #include "gss_patterns.hpp"
-
+#include "Utilities/verbosity.h"
+#include "Utilities/printer.hpp"
+#include "Utilities/stringhelpers.hpp"
 namespace Optimization {
     namespace Optimizers {
 
@@ -15,13 +17,14 @@ namespace Optimization {
         )
                 : GSS(settings, base_case, variables, grid, logger, case_handler, constraint_handler)
         {
-            directions_ = GSSPatterns::Compass(num_vars_);
-            step_lengths_ = Eigen::VectorXd(directions_.size());
-            step_lengths_.fill(settings->parameters().initial_step_length);
         }
 
         void CompassSearch::iterate()
         {
+            if (VERB_OPT >= 2) {
+                Printer::ext_info("Compass search iteration " + Printer::num2str(iteration_ + ".|")
+                    + "Step lengths: " + eigenvec_to_str(step_lengths_));
+            }
             if (enable_logging_) {
                 logger_->AddEntry(this);
             }

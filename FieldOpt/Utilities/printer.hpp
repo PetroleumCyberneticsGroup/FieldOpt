@@ -50,6 +50,7 @@ inline void pad_text(std::string &text, const int &width=66) {
 
 /*!
  * @brief Split a string into multiple lines of the required width, padding each with spaces at the end.
+ * Note that the | character in the input string will insert a linebreak.
  * @param text Text to split.
  * @param width Width to split at (and pad to).
  * @return
@@ -62,7 +63,7 @@ inline std::vector<std::string> split_line(const std::string text, const int &wi
         int line_nr = 0;
         std::string remainder = text;
         while (remainder.size() > width) {
-            end_idx = remainder.find_last_of(";, /", width);
+            end_idx = remainder.find_last_of("|;, /", width);
             std::string line = remainder.substr(start_idx, end_idx);
             pad_text(line, width);
             strv.push_back(line);
