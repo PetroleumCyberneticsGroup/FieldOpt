@@ -1,5 +1,12 @@
 BootStrap: docker
 From: einar90/fieldopt:develop20180912
 
+# These need to be changed to fit the paths you want to use.
+# The paths must exist in the environment on which you want
+# to launch the container.
+%post
+    mkdir -p /home/USER/fieldopt-output/sing-test
+    mkdir -p /home/USER/git/PCG/Models/ECLIPSE/Bruge
+
 %runscript
     echo "Started Singularity FieldOpt container"
