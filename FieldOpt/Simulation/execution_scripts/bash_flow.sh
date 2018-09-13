@@ -8,4 +8,4 @@
 cd $1
 
 # Execute eclipse with the file path as parameter
-exec /usr/local/bin/flow $2 >/dev/null 2>/dev/null
+exec /usr/bin/flow $2 >/dev/null 2>/dev/null

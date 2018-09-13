@@ -108,7 +108,8 @@ void AbstractRunner::InitializeSimulator()
             break;
         case ::Settings::Simulator::SimulatorType::Flow:
             if (runtime_settings_->verbosity_level()) std::cout << "Using Flow reservoir simulator." << std::endl;
-            simulator_ = new Simulation::FlowSimulator(settings_, model_);
+            simulator_ = new Simulation::ECLSimulator(settings_, model_);
+//            simulator_ = new Simulation::FlowSimulator(settings_, model_);
             break;
         default:
             throw std::runtime_error("Unable to initialize runner: simulator set in driver file not recognized.");
