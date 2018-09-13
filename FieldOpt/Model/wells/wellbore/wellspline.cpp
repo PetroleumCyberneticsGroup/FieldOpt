@@ -42,8 +42,8 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
                        Reservoir::WellIndexCalculation::wicalc_rixx *wic
 )
 {
-    assert(grid_ != nullptr && grid_ != 0);
     grid_ = grid;
+    assert(grid_ != nullptr);
     well_settings_ = well_settings;
     is_variable_ = false;
     use_bezier_spline_ = well_settings.use_bezier_spline;
