@@ -16,7 +16,7 @@ namespace Optimization {
         {
         public:
 /*!
- * \brief WeightedSum
+ * \brief NPV
  * \param settings The Settings object from which to create the objective.
  * \param results The Results object from which to get property values.
  */

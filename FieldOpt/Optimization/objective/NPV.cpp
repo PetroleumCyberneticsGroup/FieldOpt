@@ -114,7 +114,7 @@ namespace Optimization {
         }
 
         double NPV::Component::yearlyToMonthly(double discount_factor){
-            return pow((1+discount_factor),1/12)-1;
+            return pow((1+discount_factor),0.083333)-1;
 
             }
 
