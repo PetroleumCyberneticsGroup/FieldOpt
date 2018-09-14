@@ -26,6 +26,7 @@
 #include <iostream>
 #include <sstream>
 #include <cmath>
+#include <string>
 #include <boost/lexical_cast.hpp>
 #include <Utilities/verbosity.h>
 #include <Utilities/printer.hpp>
@@ -55,9 +56,32 @@ Model::Model(QJsonObject json_model, Paths &paths)
     if (!json_model.contains("ControlTimes") || !json_model["ControlTimes"].isArray())
         throw UnableToParseModelSectionException("The ControlTimes array must be defined with at least one time for the model.");
     control_times_ = QList<int>();
-    for (int i = 0; i < json_model["ControlTimes"].toArray().size(); ++i) {
-        control_times_.append(json_model["ControlTimes"].toArray().at(i).toInt());
+    if (json_model.contains("NPVInterval")) {
+        if(json_model["NPVInterval"].toString().compare("Yearly")==0) {
+            if (json_model.contains("NPVYears")) {
+                for (int i = 0; i < json_model["NPVYears"].toInt(); ++i) {
+                    control_times_.append(365 * i);
+                }
+            } else {
+                throw UnableToParseModelSectionException("Unable to parse NPVYears");
+            }
+
+        } else if (json_model["NPVInterval"].toString().compare("Monthly")==0) {
+                    if (json_model.contains("NPVMonths")){
+                    for (int i = 0; i < json_model["NPVMonths"].toInt(); ++i) {
+                        control_times_.append(30 * i);
+                    }
+                } else {
+                    throw UnableToParseModelSectionException("Unable to parse NPVMonths");
+                }
+        }
     }
+    for (int i = 0; i < json_model["ControlTimes"].toArray().size(); ++i) {
+        if (!control_times_.contains(json_model["ControlTimes"].toArray().at(i).toInt())) {
+            control_times_.append(json_model["ControlTimes"].toArray().at(i).toInt());
+        }
+    }
+    qSort(control_times_);
 
     // Wells
     wells_ = QList<Well>();

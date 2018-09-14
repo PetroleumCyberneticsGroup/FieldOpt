@@ -341,6 +341,30 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
                 obj.weighted_sum.append(component);
             }
         }
+        else if (QString::compare(objective_type, "NPV") == 0) {
+            // -------------------------------------------------
+            obj.type = ObjectiveType::NPV;
+            obj.NPV_sum = QList<Objective::NPVComponent>();
+            // ---------------------------------------------------
+            QJsonArray json_components =
+                    json_objective["NPVComponents"].toArray();
+            // ---------------------------------------------------
+            for (int i = 0; i < json_components.size(); ++i) {
+                // -------------------------------------------------
+                Objective::NPVComponent component;
+                component.coefficient =
+                        json_components.at(i).toObject()["Coefficient"].toDouble();
+                component.property =
+                        json_components.at(i).toObject()["Property"].toString();
+                component.discount =
+                        json_components.at(i).toObject()["DiscountFactor"].toDouble();
+                component.interval =
+                        json_components.at(i).toObject()["Interval"].toString();
+                component.usediscountfactor =
+                        json_components.at(i).toObject()["UseDiscountFactor"].toBool();
+                obj.NPV_sum.append(component);
+            }
+                    }
         else throw UnableToParseOptimizerObjectiveSectionException("Objective type " + objective_type.toStdString() + " not recognized");
         if (json_objective.contains("UsePenaltyFunction")) {
             obj.use_penalty_function = json_objective["UsePenaltyFunction"].toBool();

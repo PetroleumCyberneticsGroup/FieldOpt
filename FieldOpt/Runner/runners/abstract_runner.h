@@ -37,6 +37,7 @@
 #include "Runner/logger.h"
 #include "ensemble_helper.h"
 #include <vector>
+#include "Optimization/objective/NPV.h"
 
 namespace Runner {
 
