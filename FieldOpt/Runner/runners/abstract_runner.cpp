@@ -141,6 +141,11 @@ void AbstractRunner::InitializeObjectiveFunction()
             if (runtime_settings_->verbosity_level()) std::cout << "Using WeightedSum-type objective function." << std::endl;
             objective_function_ = new Optimization::Objective::WeightedSum(settings_->optimizer(), simulator_->results());
             break;
+        case Settings::Optimizer::ObjectiveType::NPV:
+            if (runtime_settings_->verbosity_level()) std::cout << "Using NPV-type objective function." << std::endl;
+            objective_function_ =
+                    new Optimization::Objective::NPV(settings_->optimizer(), simulator_->results());
+            break;
         default:
             throw std::runtime_error("Unable to initialize runner: objective function type not recognized.");
     }

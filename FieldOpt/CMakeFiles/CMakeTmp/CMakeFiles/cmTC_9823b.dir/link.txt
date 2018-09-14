@@ -1,0 +1,1 @@
+/usr/bin/cc  -std=gnu99 -Wall -Wno-unknown-pragmas      -rdynamic CMakeFiles/cmTC_9823b.dir/CheckIncludeFile.c.o  -o cmTC_9823b 

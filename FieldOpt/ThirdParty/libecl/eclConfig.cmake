@@ -43,15 +43,15 @@ add_library(ecl STATIC IMPORTED)
 
 set_target_properties(ecl PROPERTIES
   INTERFACE_COMPILE_OPTIONS "-pthread"
-  INTERFACE_INCLUDE_DIRECTORIES "/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/include;/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/include"
-  INTERFACE_LINK_LIBRARIES "m;dl;-pthread;/usr/lib/libblas.so;/usr/lib/liblapack.so;/usr/lib/libblas.so;/usr/lib/x86_64-linux-gnu/libz.so"
+  INTERFACE_INCLUDE_DIRECTORIES "/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/include;/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/include"
+  INTERFACE_LINK_LIBRARIES "m;dl;-pthread;/usr/lib/x86_64-linux-gnu/libz.so"
 )
 
 # Import target "ecl" for configuration "Release"
 set_property(TARGET ecl APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
 set_target_properties(ecl PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "C;CXX"
-  IMPORTED_LOCATION_RELEASE "/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/libecl.a"
+  IMPORTED_LOCATION_RELEASE "/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/libecl.a"
   )
 
 # This file does not depend on other imported targets which have

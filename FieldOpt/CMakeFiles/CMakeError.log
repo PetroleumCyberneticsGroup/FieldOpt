@@ -1,0 +1,279 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_e2f24/fast"
+/usr/bin/make -f CMakeFiles/cmTC_e2f24.dir/build.make CMakeFiles/cmTC_e2f24.dir/build
+make[1]: Entering directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_e2f24.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -std=gnu99 -Wall -Wno-unknown-pragmas   -fPIE   -o CMakeFiles/cmTC_e2f24.dir/CheckSymbolExists.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_e2f24
+/home/bragesk/Downloads/clion-2017.2.4/bin/cmake/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e2f24.dir/link.txt --verbose=1
+/usr/bin/cc  -std=gnu99 -Wall -Wno-unknown-pragmas      -rdynamic CMakeFiles/cmTC_e2f24.dir/CheckSymbolExists.c.o  -o cmTC_e2f24 
+CMakeFiles/cmTC_e2f24.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x1b): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_e2f24.dir/build.make:97: recipe for target 'cmTC_e2f24' failed
+make[1]: *** [cmTC_e2f24] Error 1
+make[1]: Leaving directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_e2f24/fast' failed
+make: *** [cmTC_e2f24/fast] Error 2
+
+File /home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function _chdir exists failed with the following output:
+Change Dir: /home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_d7450/fast"
+/usr/bin/make -f CMakeFiles/cmTC_d7450.dir/build.make CMakeFiles/cmTC_d7450.dir/build
+make[1]: Entering directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_d7450.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -std=gnu99 -Wall -Wno-unknown-pragmas  -DCHECK_FUNCTION_EXISTS=_chdir -fPIE   -o CMakeFiles/cmTC_d7450.dir/CheckFunctionExists.c.o   -c /home/bragesk/Downloads/clion-2017.2.4/bin/cmake/share/cmake-3.8/Modules/CheckFunctionExists.c
+Linking C executable cmTC_d7450
+/home/bragesk/Downloads/clion-2017.2.4/bin/cmake/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d7450.dir/link.txt --verbose=1
+/usr/bin/cc  -std=gnu99 -Wall -Wno-unknown-pragmas  -DCHECK_FUNCTION_EXISTS=_chdir    -rdynamic CMakeFiles/cmTC_d7450.dir/CheckFunctionExists.c.o  -o cmTC_d7450 
+CMakeFiles/cmTC_d7450.dir/CheckFunctionExists.c.o: In function `main':
+CheckFunctionExists.c:(.text+0x10): undefined reference to `_chdir'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_d7450.dir/build.make:97: recipe for target 'cmTC_d7450' failed
+make[1]: *** [cmTC_d7450] Error 1
+make[1]: Leaving directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_d7450/fast' failed
+make: *** [cmTC_d7450/fast] Error 2
+
+
+Determining if the function _getcwd exists failed with the following output:
+Change Dir: /home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_bc437/fast"
+/usr/bin/make -f CMakeFiles/cmTC_bc437.dir/build.make CMakeFiles/cmTC_bc437.dir/build
+make[1]: Entering directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_bc437.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -std=gnu99 -Wall -Wno-unknown-pragmas  -DCHECK_FUNCTION_EXISTS=_getcwd -fPIE   -o CMakeFiles/cmTC_bc437.dir/CheckFunctionExists.c.o   -c /home/bragesk/Downloads/clion-2017.2.4/bin/cmake/share/cmake-3.8/Modules/CheckFunctionExists.c
+Linking C executable cmTC_bc437
+/home/bragesk/Downloads/clion-2017.2.4/bin/cmake/bin/cmake -E cmake_link_script CMakeFiles/cmTC_bc437.dir/link.txt --verbose=1
+/usr/bin/cc  -std=gnu99 -Wall -Wno-unknown-pragmas  -DCHECK_FUNCTION_EXISTS=_getcwd    -rdynamic CMakeFiles/cmTC_bc437.dir/CheckFunctionExists.c.o  -o cmTC_bc437 
+CMakeFiles/cmTC_bc437.dir/CheckFunctionExists.c.o: In function `main':
+CheckFunctionExists.c:(.text+0x10): undefined reference to `_getcwd'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_bc437.dir/build.make:97: recipe for target 'cmTC_bc437' failed
+make[1]: *** [cmTC_bc437] Error 1
+make[1]: Leaving directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_bc437/fast' failed
+make: *** [cmTC_bc437/fast] Error 2
+
+
+Determining if the function GetTempPath exists failed with the following output:
+Change Dir: /home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_244e4/fast"
+/usr/bin/make -f CMakeFiles/cmTC_244e4.dir/build.make CMakeFiles/cmTC_244e4.dir/build
+make[1]: Entering directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_244e4.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -std=gnu99 -Wall -Wno-unknown-pragmas  -DCHECK_FUNCTION_EXISTS=GetTempPath -fPIE   -o CMakeFiles/cmTC_244e4.dir/CheckFunctionExists.c.o   -c /home/bragesk/Downloads/clion-2017.2.4/bin/cmake/share/cmake-3.8/Modules/CheckFunctionExists.c
+Linking C executable cmTC_244e4
+/home/bragesk/Downloads/clion-2017.2.4/bin/cmake/bin/cmake -E cmake_link_script CMakeFiles/cmTC_244e4.dir/link.txt --verbose=1
+/usr/bin/cc  -std=gnu99 -Wall -Wno-unknown-pragmas  -DCHECK_FUNCTION_EXISTS=GetTempPath    -rdynamic CMakeFiles/cmTC_244e4.dir/CheckFunctionExists.c.o  -o cmTC_244e4 
+CMakeFiles/cmTC_244e4.dir/CheckFunctionExists.c.o: In function `main':
+CheckFunctionExists.c:(.text+0x10): undefined reference to `GetTempPath'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_244e4.dir/build.make:97: recipe for target 'cmTC_244e4' failed
+make[1]: *** [cmTC_244e4] Error 1
+make[1]: Leaving directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_244e4/fast' failed
+make: *** [cmTC_244e4/fast] Error 2
+
+
+Determining if the function _mkdir exists failed with the following output:
+Change Dir: /home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_1f25d/fast"
+/usr/bin/make -f CMakeFiles/cmTC_1f25d.dir/build.make CMakeFiles/cmTC_1f25d.dir/build
+make[1]: Entering directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_1f25d.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -std=gnu99 -Wall -Wno-unknown-pragmas  -DCHECK_FUNCTION_EXISTS=_mkdir -fPIE   -o CMakeFiles/cmTC_1f25d.dir/CheckFunctionExists.c.o   -c /home/bragesk/Downloads/clion-2017.2.4/bin/cmake/share/cmake-3.8/Modules/CheckFunctionExists.c
+Linking C executable cmTC_1f25d
+/home/bragesk/Downloads/clion-2017.2.4/bin/cmake/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1f25d.dir/link.txt --verbose=1
+/usr/bin/cc  -std=gnu99 -Wall -Wno-unknown-pragmas  -DCHECK_FUNCTION_EXISTS=_mkdir    -rdynamic CMakeFiles/cmTC_1f25d.dir/CheckFunctionExists.c.o  -o cmTC_1f25d 
+CMakeFiles/cmTC_1f25d.dir/CheckFunctionExists.c.o: In function `main':
+CheckFunctionExists.c:(.text+0x10): undefined reference to `_mkdir'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_1f25d.dir/build.make:97: recipe for target 'cmTC_1f25d' failed
+make[1]: *** [cmTC_1f25d] Error 1
+make[1]: Leaving directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_1f25d/fast' failed
+make: *** [cmTC_1f25d/fast] Error 2
+
+
+Determining if the function pthread_timedjoin_np exists failed with the following output:
+Change Dir: /home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_82465/fast"
+/usr/bin/make -f CMakeFiles/cmTC_82465.dir/build.make CMakeFiles/cmTC_82465.dir/build
+make[1]: Entering directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_82465.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -std=gnu99 -Wall -Wno-unknown-pragmas  -DCHECK_FUNCTION_EXISTS=pthread_timedjoin_np -fPIE   -o CMakeFiles/cmTC_82465.dir/CheckFunctionExists.c.o   -c /home/bragesk/Downloads/clion-2017.2.4/bin/cmake/share/cmake-3.8/Modules/CheckFunctionExists.c
+Linking C executable cmTC_82465
+/home/bragesk/Downloads/clion-2017.2.4/bin/cmake/bin/cmake -E cmake_link_script CMakeFiles/cmTC_82465.dir/link.txt --verbose=1
+/usr/bin/cc  -std=gnu99 -Wall -Wno-unknown-pragmas  -DCHECK_FUNCTION_EXISTS=pthread_timedjoin_np    -rdynamic CMakeFiles/cmTC_82465.dir/CheckFunctionExists.c.o  -o cmTC_82465 
+CMakeFiles/cmTC_82465.dir/CheckFunctionExists.c.o: In function `main':
+CheckFunctionExists.c:(.text+0x10): undefined reference to `pthread_timedjoin_np'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_82465.dir/build.make:97: recipe for target 'cmTC_82465' failed
+make[1]: *** [cmTC_82465] Error 1
+make[1]: Leaving directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_82465/fast' failed
+make: *** [cmTC_82465/fast] Error 2
+
+
+Determining if the function pthread_yield exists failed with the following output:
+Change Dir: /home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_5ce03/fast"
+/usr/bin/make -f CMakeFiles/cmTC_5ce03.dir/build.make CMakeFiles/cmTC_5ce03.dir/build
+make[1]: Entering directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_5ce03.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -std=gnu99 -Wall -Wno-unknown-pragmas  -DCHECK_FUNCTION_EXISTS=pthread_yield -fPIE   -o CMakeFiles/cmTC_5ce03.dir/CheckFunctionExists.c.o   -c /home/bragesk/Downloads/clion-2017.2.4/bin/cmake/share/cmake-3.8/Modules/CheckFunctionExists.c
+Linking C executable cmTC_5ce03
+/home/bragesk/Downloads/clion-2017.2.4/bin/cmake/bin/cmake -E cmake_link_script CMakeFiles/cmTC_5ce03.dir/link.txt --verbose=1
+/usr/bin/cc  -std=gnu99 -Wall -Wno-unknown-pragmas  -DCHECK_FUNCTION_EXISTS=pthread_yield    -rdynamic CMakeFiles/cmTC_5ce03.dir/CheckFunctionExists.c.o  -o cmTC_5ce03 
+CMakeFiles/cmTC_5ce03.dir/CheckFunctionExists.c.o: In function `main':
+CheckFunctionExists.c:(.text+0x10): undefined reference to `pthread_yield'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_5ce03.dir/build.make:97: recipe for target 'cmTC_5ce03' failed
+make[1]: *** [cmTC_5ce03] Error 1
+make[1]: Leaving directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_5ce03/fast' failed
+make: *** [cmTC_5ce03/fast] Error 2
+
+
+Determining if the function pthread_yield_np exists failed with the following output:
+Change Dir: /home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_54df6/fast"
+/usr/bin/make -f CMakeFiles/cmTC_54df6.dir/build.make CMakeFiles/cmTC_54df6.dir/build
+make[1]: Entering directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_54df6.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -std=gnu99 -Wall -Wno-unknown-pragmas  -DCHECK_FUNCTION_EXISTS=pthread_yield_np -fPIE   -o CMakeFiles/cmTC_54df6.dir/CheckFunctionExists.c.o   -c /home/bragesk/Downloads/clion-2017.2.4/bin/cmake/share/cmake-3.8/Modules/CheckFunctionExists.c
+Linking C executable cmTC_54df6
+/home/bragesk/Downloads/clion-2017.2.4/bin/cmake/bin/cmake -E cmake_link_script CMakeFiles/cmTC_54df6.dir/link.txt --verbose=1
+/usr/bin/cc  -std=gnu99 -Wall -Wno-unknown-pragmas  -DCHECK_FUNCTION_EXISTS=pthread_yield_np    -rdynamic CMakeFiles/cmTC_54df6.dir/CheckFunctionExists.c.o  -o cmTC_54df6 
+CMakeFiles/cmTC_54df6.dir/CheckFunctionExists.c.o: In function `main':
+CheckFunctionExists.c:(.text+0x10): undefined reference to `pthread_yield_np'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_54df6.dir/build.make:97: recipe for target 'cmTC_54df6' failed
+make[1]: *** [cmTC_54df6] Error 1
+make[1]: Leaving directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_54df6/fast' failed
+make: *** [cmTC_54df6/fast] Error 2
+
+
+Determining if the function round exists failed with the following output:
+Change Dir: /home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_a2fa1/fast"
+/usr/bin/make -f CMakeFiles/cmTC_a2fa1.dir/build.make CMakeFiles/cmTC_a2fa1.dir/build
+make[1]: Entering directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_a2fa1.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -std=gnu99 -Wall -Wno-unknown-pragmas  -DCHECK_FUNCTION_EXISTS=round -fPIE   -o CMakeFiles/cmTC_a2fa1.dir/CheckFunctionExists.c.o   -c /home/bragesk/Downloads/clion-2017.2.4/bin/cmake/share/cmake-3.8/Modules/CheckFunctionExists.c
+<command-line>:0:23: warning: conflicting types for built-in function ‘round’
+/home/bragesk/Downloads/clion-2017.2.4/bin/cmake/share/cmake-3.8/Modules/CheckFunctionExists.c:7:3: note: in expansion of macro ‘CHECK_FUNCTION_EXISTS’
+   CHECK_FUNCTION_EXISTS(void);
+   ^
+Linking C executable cmTC_a2fa1
+/home/bragesk/Downloads/clion-2017.2.4/bin/cmake/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a2fa1.dir/link.txt --verbose=1
+/usr/bin/cc  -std=gnu99 -Wall -Wno-unknown-pragmas  -DCHECK_FUNCTION_EXISTS=round    -rdynamic CMakeFiles/cmTC_a2fa1.dir/CheckFunctionExists.c.o  -o cmTC_a2fa1 
+CMakeFiles/cmTC_a2fa1.dir/CheckFunctionExists.c.o: In function `main':
+CheckFunctionExists.c:(.text+0x10): undefined reference to `round'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_a2fa1.dir/build.make:97: recipe for target 'cmTC_a2fa1' failed
+make[1]: *** [cmTC_a2fa1] Error 1
+make[1]: Leaving directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_a2fa1/fast' failed
+make: *** [cmTC_a2fa1/fast] Error 2
+
+
+Determining if the function _unlink exists failed with the following output:
+Change Dir: /home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_11eb7/fast"
+/usr/bin/make -f CMakeFiles/cmTC_11eb7.dir/build.make CMakeFiles/cmTC_11eb7.dir/build
+make[1]: Entering directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_11eb7.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -std=gnu99 -Wall -Wno-unknown-pragmas  -DCHECK_FUNCTION_EXISTS=_unlink -fPIE   -o CMakeFiles/cmTC_11eb7.dir/CheckFunctionExists.c.o   -c /home/bragesk/Downloads/clion-2017.2.4/bin/cmake/share/cmake-3.8/Modules/CheckFunctionExists.c
+Linking C executable cmTC_11eb7
+/home/bragesk/Downloads/clion-2017.2.4/bin/cmake/bin/cmake -E cmake_link_script CMakeFiles/cmTC_11eb7.dir/link.txt --verbose=1
+/usr/bin/cc  -std=gnu99 -Wall -Wno-unknown-pragmas  -DCHECK_FUNCTION_EXISTS=_unlink    -rdynamic CMakeFiles/cmTC_11eb7.dir/CheckFunctionExists.c.o  -o cmTC_11eb7 
+CMakeFiles/cmTC_11eb7.dir/CheckFunctionExists.c.o: In function `main':
+CheckFunctionExists.c:(.text+0x10): undefined reference to `_unlink'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_11eb7.dir/build.make:97: recipe for target 'cmTC_11eb7' failed
+make[1]: *** [cmTC_11eb7] Error 1
+make[1]: Leaving directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_11eb7/fast' failed
+make: *** [cmTC_11eb7/fast] Error 2
+
+
+Determining if the _tzname exist failed with the following output:
+Change Dir: /home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_4dbdf/fast"
+/usr/bin/make -f CMakeFiles/cmTC_4dbdf.dir/build.make CMakeFiles/cmTC_4dbdf.dir/build
+make[1]: Entering directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_4dbdf.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -std=gnu99 -Wall -Wno-unknown-pragmas   -fPIE   -o CMakeFiles/cmTC_4dbdf.dir/CheckSymbolExists.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8:19: error: ‘_tzname’ undeclared (first use in this function)
+   return ((int*)(&_tzname))[argc];
+                   ^
+/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8:19: note: each undeclared identifier is reported only once for each function it appears in
+CMakeFiles/cmTC_4dbdf.dir/build.make:65: recipe for target 'CMakeFiles/cmTC_4dbdf.dir/CheckSymbolExists.c.o' failed
+make[1]: *** [CMakeFiles/cmTC_4dbdf.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_4dbdf/fast' failed
+make: *** [cmTC_4dbdf/fast] Error 2
+
+File /home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <time.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _tzname
+  return ((int*)(&_tzname))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the include file winsock2.h exists failed with the following output:
+Change Dir: /home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_7e10f/fast"
+/usr/bin/make -f CMakeFiles/cmTC_7e10f.dir/build.make CMakeFiles/cmTC_7e10f.dir/build
+make[1]: Entering directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_7e10f.dir/CheckIncludeFile.c.o
+/usr/bin/cc   -std=gnu99 -Wall -Wno-unknown-pragmas   -fPIE   -o CMakeFiles/cmTC_7e10f.dir/CheckIncludeFile.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:22: fatal error: winsock2.h: No such file or directory
+compilation terminated.
+CMakeFiles/cmTC_7e10f.dir/build.make:65: recipe for target 'CMakeFiles/cmTC_7e10f.dir/CheckIncludeFile.c.o' failed
+make[1]: *** [CMakeFiles/cmTC_7e10f.dir/CheckIncludeFile.c.o] Error 1
+make[1]: Leaving directory '/home/bragesk/git/PCG/FieldOpt/FieldOpt/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_7e10f/fast' failed
+make: *** [cmTC_7e10f/fast] Error 2
+
+

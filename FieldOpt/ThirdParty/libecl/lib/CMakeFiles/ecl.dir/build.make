@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty
+CMAKE_SOURCE_DIR = /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty
+CMAKE_BINARY_DIR = /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty
 
 # Include any dependencies generated for this target.
 include libecl/lib/CMakeFiles/ecl.dir/depend.make
@@ -59,16 +59,16 @@ include libecl/lib/CMakeFiles/ecl.dir/flags.make
 
 libecl/lib/CMakeFiles/ecl.dir/util/rng.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/rng.c.o: libecl/lib/util/rng.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/rng.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/rng.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/rng.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/rng.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/rng.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/rng.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/rng.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/rng.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/rng.c > CMakeFiles/ecl.dir/util/rng.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/rng.c > CMakeFiles/ecl.dir/util/rng.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/rng.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/rng.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/rng.c -o CMakeFiles/ecl.dir/util/rng.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/rng.c -o CMakeFiles/ecl.dir/util/rng.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/rng.c.o.requires:
 
@@ -83,16 +83,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/rng.c.o.provides.build: libecl/lib/CMakeFiles
 
 libecl/lib/CMakeFiles/ecl.dir/util/lookup_table.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/lookup_table.c.o: libecl/lib/util/lookup_table.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/lookup_table.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/lookup_table.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/lookup_table.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/lookup_table.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/lookup_table.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/lookup_table.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/lookup_table.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/lookup_table.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/lookup_table.c > CMakeFiles/ecl.dir/util/lookup_table.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/lookup_table.c > CMakeFiles/ecl.dir/util/lookup_table.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/lookup_table.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/lookup_table.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/lookup_table.c -o CMakeFiles/ecl.dir/util/lookup_table.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/lookup_table.c -o CMakeFiles/ecl.dir/util/lookup_table.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/lookup_table.c.o.requires:
 
@@ -107,16 +107,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/lookup_table.c.o.provides.build: libecl/lib/C
 
 libecl/lib/CMakeFiles/ecl.dir/util/statistics.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/statistics.c.o: libecl/lib/util/statistics.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/statistics.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/statistics.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/statistics.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/statistics.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/statistics.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/statistics.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/statistics.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/statistics.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/statistics.c > CMakeFiles/ecl.dir/util/statistics.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/statistics.c > CMakeFiles/ecl.dir/util/statistics.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/statistics.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/statistics.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/statistics.c -o CMakeFiles/ecl.dir/util/statistics.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/statistics.c -o CMakeFiles/ecl.dir/util/statistics.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/statistics.c.o.requires:
 
@@ -131,16 +131,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/statistics.c.o.provides.build: libecl/lib/CMa
 
 libecl/lib/CMakeFiles/ecl.dir/util/mzran.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/mzran.c.o: libecl/lib/util/mzran.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/mzran.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/mzran.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/mzran.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/mzran.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/mzran.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/mzran.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/mzran.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/mzran.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/mzran.c > CMakeFiles/ecl.dir/util/mzran.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/mzran.c > CMakeFiles/ecl.dir/util/mzran.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/mzran.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/mzran.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/mzran.c -o CMakeFiles/ecl.dir/util/mzran.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/mzran.c -o CMakeFiles/ecl.dir/util/mzran.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/mzran.c.o.requires:
 
@@ -155,16 +155,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/mzran.c.o.provides.build: libecl/lib/CMakeFil
 
 libecl/lib/CMakeFiles/ecl.dir/util/set.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/set.c.o: libecl/lib/util/set.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/set.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/set.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/set.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/set.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/set.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/set.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/set.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/set.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/set.c > CMakeFiles/ecl.dir/util/set.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/set.c > CMakeFiles/ecl.dir/util/set.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/set.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/set.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/set.c -o CMakeFiles/ecl.dir/util/set.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/set.c -o CMakeFiles/ecl.dir/util/set.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/set.c.o.requires:
 
@@ -179,16 +179,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/set.c.o.provides.build: libecl/lib/CMakeFiles
 
 libecl/lib/CMakeFiles/ecl.dir/util/hash_node.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/hash_node.c.o: libecl/lib/util/hash_node.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/hash_node.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/hash_node.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/hash_node.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/hash_node.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/hash_node.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/hash_node.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/hash_node.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/hash_node.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/hash_node.c > CMakeFiles/ecl.dir/util/hash_node.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/hash_node.c > CMakeFiles/ecl.dir/util/hash_node.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/hash_node.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/hash_node.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/hash_node.c -o CMakeFiles/ecl.dir/util/hash_node.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/hash_node.c -o CMakeFiles/ecl.dir/util/hash_node.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/hash_node.c.o.requires:
 
@@ -203,16 +203,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/hash_node.c.o.provides.build: libecl/lib/CMak
 
 libecl/lib/CMakeFiles/ecl.dir/util/hash_sll.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/hash_sll.c.o: libecl/lib/util/hash_sll.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/hash_sll.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/hash_sll.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/hash_sll.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/hash_sll.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/hash_sll.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/hash_sll.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/hash_sll.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/hash_sll.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/hash_sll.c > CMakeFiles/ecl.dir/util/hash_sll.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/hash_sll.c > CMakeFiles/ecl.dir/util/hash_sll.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/hash_sll.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/hash_sll.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/hash_sll.c -o CMakeFiles/ecl.dir/util/hash_sll.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/hash_sll.c -o CMakeFiles/ecl.dir/util/hash_sll.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/hash_sll.c.o.requires:
 
@@ -227,16 +227,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/hash_sll.c.o.provides.build: libecl/lib/CMake
 
 libecl/lib/CMakeFiles/ecl.dir/util/hash.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/hash.c.o: libecl/lib/util/hash.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/hash.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/hash.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/hash.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/hash.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/hash.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/hash.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/hash.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/hash.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/hash.c > CMakeFiles/ecl.dir/util/hash.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/hash.c > CMakeFiles/ecl.dir/util/hash.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/hash.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/hash.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/hash.c -o CMakeFiles/ecl.dir/util/hash.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/hash.c -o CMakeFiles/ecl.dir/util/hash.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/hash.c.o.requires:
 
@@ -251,16 +251,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/hash.c.o.provides.build: libecl/lib/CMakeFile
 
 libecl/lib/CMakeFiles/ecl.dir/util/node_data.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/node_data.c.o: libecl/lib/util/node_data.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/node_data.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/node_data.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/node_data.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/node_data.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/node_data.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/node_data.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/node_data.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/node_data.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/node_data.c > CMakeFiles/ecl.dir/util/node_data.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/node_data.c > CMakeFiles/ecl.dir/util/node_data.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/node_data.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/node_data.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/node_data.c -o CMakeFiles/ecl.dir/util/node_data.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/node_data.c -o CMakeFiles/ecl.dir/util/node_data.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/node_data.c.o.requires:
 
@@ -275,16 +275,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/node_data.c.o.provides.build: libecl/lib/CMak
 
 libecl/lib/CMakeFiles/ecl.dir/util/node_ctype.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/node_ctype.c.o: libecl/lib/util/node_ctype.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/node_ctype.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/node_ctype.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/node_ctype.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/node_ctype.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/node_ctype.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/node_ctype.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/node_ctype.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/node_ctype.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/node_ctype.c > CMakeFiles/ecl.dir/util/node_ctype.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/node_ctype.c > CMakeFiles/ecl.dir/util/node_ctype.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/node_ctype.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/node_ctype.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/node_ctype.c -o CMakeFiles/ecl.dir/util/node_ctype.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/node_ctype.c -o CMakeFiles/ecl.dir/util/node_ctype.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/node_ctype.c.o.requires:
 
@@ -299,16 +299,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/node_ctype.c.o.provides.build: libecl/lib/CMa
 
 libecl/lib/CMakeFiles/ecl.dir/util/util.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/util.c.o: libecl/lib/util/util.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/util.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/util.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/util.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/util.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/util.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/util.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util.c > CMakeFiles/ecl.dir/util/util.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util.c > CMakeFiles/ecl.dir/util/util.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/util.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/util.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util.c -o CMakeFiles/ecl.dir/util/util.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util.c -o CMakeFiles/ecl.dir/util/util.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/util.c.o.requires:
 
@@ -323,16 +323,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/util.c.o.provides.build: libecl/lib/CMakeFile
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_env.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/util_env.c.o: libecl/lib/util/util_env.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/util_env.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/util_env.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_env.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/util_env.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/util_env.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_env.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_env.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/util_env.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_env.c > CMakeFiles/ecl.dir/util/util_env.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_env.c > CMakeFiles/ecl.dir/util/util_env.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_env.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/util_env.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_env.c -o CMakeFiles/ecl.dir/util/util_env.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_env.c -o CMakeFiles/ecl.dir/util/util_env.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_env.c.o.requires:
 
@@ -347,16 +347,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/util_env.c.o.provides.build: libecl/lib/CMake
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_symlink.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/util_symlink.c.o: libecl/lib/util/util_symlink.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/util_symlink.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/util_symlink.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_symlink.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/util_symlink.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/util_symlink.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_symlink.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_symlink.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/util_symlink.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_symlink.c > CMakeFiles/ecl.dir/util/util_symlink.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_symlink.c > CMakeFiles/ecl.dir/util/util_symlink.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_symlink.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/util_symlink.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_symlink.c -o CMakeFiles/ecl.dir/util/util_symlink.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_symlink.c -o CMakeFiles/ecl.dir/util/util_symlink.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_symlink.c.o.requires:
 
@@ -371,16 +371,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/util_symlink.c.o.provides.build: libecl/lib/C
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_lfs.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/util_lfs.c.o: libecl/lib/util/util_lfs.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/util_lfs.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/util_lfs.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_lfs.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/util_lfs.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/util_lfs.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_lfs.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_lfs.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/util_lfs.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_lfs.c > CMakeFiles/ecl.dir/util/util_lfs.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_lfs.c > CMakeFiles/ecl.dir/util/util_lfs.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_lfs.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/util_lfs.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_lfs.c -o CMakeFiles/ecl.dir/util/util_lfs.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_lfs.c -o CMakeFiles/ecl.dir/util/util_lfs.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_lfs.c.o.requires:
 
@@ -395,16 +395,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/util_lfs.c.o.provides.build: libecl/lib/CMake
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_unlink.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/util_unlink.c.o: libecl/lib/util/util_unlink.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/util_unlink.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/util_unlink.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_unlink.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/util_unlink.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/util_unlink.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_unlink.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_unlink.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/util_unlink.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_unlink.c > CMakeFiles/ecl.dir/util/util_unlink.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_unlink.c > CMakeFiles/ecl.dir/util/util_unlink.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_unlink.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/util_unlink.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_unlink.c -o CMakeFiles/ecl.dir/util/util_unlink.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_unlink.c -o CMakeFiles/ecl.dir/util/util_unlink.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_unlink.c.o.requires:
 
@@ -419,16 +419,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/util_unlink.c.o.provides.build: libecl/lib/CM
 
 libecl/lib/CMakeFiles/ecl.dir/util/msg.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/msg.c.o: libecl/lib/util/msg.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/msg.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/msg.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/msg.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/msg.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/msg.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/msg.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/msg.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/msg.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/msg.c > CMakeFiles/ecl.dir/util/msg.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/msg.c > CMakeFiles/ecl.dir/util/msg.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/msg.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/msg.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/msg.c -o CMakeFiles/ecl.dir/util/msg.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/msg.c -o CMakeFiles/ecl.dir/util/msg.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/msg.c.o.requires:
 
@@ -443,16 +443,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/msg.c.o.provides.build: libecl/lib/CMakeFiles
 
 libecl/lib/CMakeFiles/ecl.dir/util/arg_pack.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/arg_pack.c.o: libecl/lib/util/arg_pack.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/arg_pack.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/arg_pack.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/arg_pack.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/arg_pack.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/arg_pack.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/arg_pack.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/arg_pack.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/arg_pack.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/arg_pack.c > CMakeFiles/ecl.dir/util/arg_pack.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/arg_pack.c > CMakeFiles/ecl.dir/util/arg_pack.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/arg_pack.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/arg_pack.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/arg_pack.c -o CMakeFiles/ecl.dir/util/arg_pack.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/arg_pack.c -o CMakeFiles/ecl.dir/util/arg_pack.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/arg_pack.c.o.requires:
 
@@ -467,16 +467,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/arg_pack.c.o.provides.build: libecl/lib/CMake
 
 libecl/lib/CMakeFiles/ecl.dir/util/path_fmt.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/path_fmt.c.o: libecl/lib/util/path_fmt.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/path_fmt.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/path_fmt.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/path_fmt.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/path_fmt.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/path_fmt.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/path_fmt.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/path_fmt.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/path_fmt.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/path_fmt.c > CMakeFiles/ecl.dir/util/path_fmt.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/path_fmt.c > CMakeFiles/ecl.dir/util/path_fmt.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/path_fmt.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/path_fmt.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/path_fmt.c -o CMakeFiles/ecl.dir/util/path_fmt.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/path_fmt.c -o CMakeFiles/ecl.dir/util/path_fmt.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/path_fmt.c.o.requires:
 
@@ -491,16 +491,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/path_fmt.c.o.provides.build: libecl/lib/CMake
 
 libecl/lib/CMakeFiles/ecl.dir/util/menu.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/menu.c.o: libecl/lib/util/menu.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/menu.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/menu.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/menu.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/menu.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/menu.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/menu.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/menu.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/menu.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/menu.c > CMakeFiles/ecl.dir/util/menu.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/menu.c > CMakeFiles/ecl.dir/util/menu.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/menu.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/menu.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/menu.c -o CMakeFiles/ecl.dir/util/menu.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/menu.c -o CMakeFiles/ecl.dir/util/menu.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/menu.c.o.requires:
 
@@ -515,16 +515,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/menu.c.o.provides.build: libecl/lib/CMakeFile
 
 libecl/lib/CMakeFiles/ecl.dir/util/subst_func.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/subst_func.c.o: libecl/lib/util/subst_func.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/subst_func.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/subst_func.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/subst_func.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/subst_func.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/subst_func.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/subst_func.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/subst_func.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/subst_func.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/subst_func.c > CMakeFiles/ecl.dir/util/subst_func.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/subst_func.c > CMakeFiles/ecl.dir/util/subst_func.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/subst_func.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/subst_func.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/subst_func.c -o CMakeFiles/ecl.dir/util/subst_func.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/subst_func.c -o CMakeFiles/ecl.dir/util/subst_func.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/subst_func.c.o.requires:
 
@@ -539,16 +539,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/subst_func.c.o.provides.build: libecl/lib/CMa
 
 libecl/lib/CMakeFiles/ecl.dir/util/vector.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/vector.c.o: libecl/lib/util/vector.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/vector.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/vector.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/vector.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/vector.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/vector.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/vector.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/vector.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/vector.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/vector.c > CMakeFiles/ecl.dir/util/vector.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/vector.c > CMakeFiles/ecl.dir/util/vector.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/vector.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/vector.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/vector.c -o CMakeFiles/ecl.dir/util/vector.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/vector.c -o CMakeFiles/ecl.dir/util/vector.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/vector.c.o.requires:
 
@@ -563,16 +563,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/vector.c.o.provides.build: libecl/lib/CMakeFi
 
 libecl/lib/CMakeFiles/ecl.dir/util/parser.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/parser.c.o: libecl/lib/util/parser.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/parser.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/parser.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/parser.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/parser.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/parser.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/parser.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/parser.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/parser.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/parser.c > CMakeFiles/ecl.dir/util/parser.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/parser.c > CMakeFiles/ecl.dir/util/parser.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/parser.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/parser.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/parser.c -o CMakeFiles/ecl.dir/util/parser.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/parser.c -o CMakeFiles/ecl.dir/util/parser.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/parser.c.o.requires:
 
@@ -587,16 +587,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/parser.c.o.provides.build: libecl/lib/CMakeFi
 
 libecl/lib/CMakeFiles/ecl.dir/util/stringlist.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/stringlist.c.o: libecl/lib/util/stringlist.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/stringlist.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/stringlist.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/stringlist.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/stringlist.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/stringlist.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/stringlist.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/stringlist.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/stringlist.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/stringlist.c > CMakeFiles/ecl.dir/util/stringlist.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/stringlist.c > CMakeFiles/ecl.dir/util/stringlist.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/stringlist.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/stringlist.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/stringlist.c -o CMakeFiles/ecl.dir/util/stringlist.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/stringlist.c -o CMakeFiles/ecl.dir/util/stringlist.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/stringlist.c.o.requires:
 
@@ -611,16 +611,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/stringlist.c.o.provides.build: libecl/lib/CMa
 
 libecl/lib/CMakeFiles/ecl.dir/util/matrix.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/matrix.c.o: libecl/lib/util/matrix.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/matrix.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/matrix.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/matrix.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/matrix.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/matrix.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/matrix.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/matrix.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/matrix.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/matrix.c > CMakeFiles/ecl.dir/util/matrix.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/matrix.c > CMakeFiles/ecl.dir/util/matrix.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/matrix.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/matrix.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/matrix.c -o CMakeFiles/ecl.dir/util/matrix.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/matrix.c -o CMakeFiles/ecl.dir/util/matrix.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/matrix.c.o.requires:
 
@@ -635,16 +635,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/matrix.c.o.provides.build: libecl/lib/CMakeFi
 
 libecl/lib/CMakeFiles/ecl.dir/util/buffer.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/buffer.c.o: libecl/lib/util/buffer.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/buffer.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/buffer.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/buffer.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/buffer.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/buffer.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/buffer.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/buffer.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/buffer.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/buffer.c > CMakeFiles/ecl.dir/util/buffer.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/buffer.c > CMakeFiles/ecl.dir/util/buffer.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/buffer.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/buffer.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/buffer.c -o CMakeFiles/ecl.dir/util/buffer.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/buffer.c -o CMakeFiles/ecl.dir/util/buffer.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/buffer.c.o.requires:
 
@@ -659,16 +659,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/buffer.c.o.provides.build: libecl/lib/CMakeFi
 
 libecl/lib/CMakeFiles/ecl.dir/util/log.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/log.c.o: libecl/lib/util/log.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/log.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/log.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/log.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/log.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/log.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/log.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/log.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/log.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/log.c > CMakeFiles/ecl.dir/util/log.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/log.c > CMakeFiles/ecl.dir/util/log.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/log.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/log.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/log.c -o CMakeFiles/ecl.dir/util/log.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/log.c -o CMakeFiles/ecl.dir/util/log.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/log.c.o.requires:
 
@@ -683,16 +683,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/log.c.o.provides.build: libecl/lib/CMakeFiles
 
 libecl/lib/CMakeFiles/ecl.dir/util/timer.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/timer.c.o: libecl/lib/util/timer.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/timer.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/timer.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/timer.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/timer.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/timer.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/timer.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/timer.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/timer.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/timer.c > CMakeFiles/ecl.dir/util/timer.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/timer.c > CMakeFiles/ecl.dir/util/timer.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/timer.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/timer.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/timer.c -o CMakeFiles/ecl.dir/util/timer.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/timer.c -o CMakeFiles/ecl.dir/util/timer.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/timer.c.o.requires:
 
@@ -707,16 +707,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/timer.c.o.provides.build: libecl/lib/CMakeFil
 
 libecl/lib/CMakeFiles/ecl.dir/util/time_interval.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/time_interval.c.o: libecl/lib/util/time_interval.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/time_interval.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/time_interval.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/time_interval.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/time_interval.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/time_interval.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/time_interval.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/time_interval.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/time_interval.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/time_interval.c > CMakeFiles/ecl.dir/util/time_interval.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/time_interval.c > CMakeFiles/ecl.dir/util/time_interval.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/time_interval.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/time_interval.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/time_interval.c -o CMakeFiles/ecl.dir/util/time_interval.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/time_interval.c -o CMakeFiles/ecl.dir/util/time_interval.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/time_interval.c.o.requires:
 
@@ -731,16 +731,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/time_interval.c.o.provides.build: libecl/lib/
 
 libecl/lib/CMakeFiles/ecl.dir/util/string_util.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/string_util.c.o: libecl/lib/util/string_util.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/string_util.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/string_util.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/string_util.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/string_util.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/string_util.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/string_util.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/string_util.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/string_util.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/string_util.c > CMakeFiles/ecl.dir/util/string_util.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/string_util.c > CMakeFiles/ecl.dir/util/string_util.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/string_util.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/string_util.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/string_util.c -o CMakeFiles/ecl.dir/util/string_util.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/string_util.c -o CMakeFiles/ecl.dir/util/string_util.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/string_util.c.o.requires:
 
@@ -755,16 +755,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/string_util.c.o.provides.build: libecl/lib/CM
 
 libecl/lib/CMakeFiles/ecl.dir/util/type_vector_functions.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/type_vector_functions.c.o: libecl/lib/util/type_vector_functions.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/type_vector_functions.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/type_vector_functions.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/type_vector_functions.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/type_vector_functions.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/type_vector_functions.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/type_vector_functions.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/type_vector_functions.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/type_vector_functions.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/type_vector_functions.c > CMakeFiles/ecl.dir/util/type_vector_functions.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/type_vector_functions.c > CMakeFiles/ecl.dir/util/type_vector_functions.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/type_vector_functions.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/type_vector_functions.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/type_vector_functions.c -o CMakeFiles/ecl.dir/util/type_vector_functions.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/type_vector_functions.c -o CMakeFiles/ecl.dir/util/type_vector_functions.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/type_vector_functions.c.o.requires:
 
@@ -779,16 +779,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/type_vector_functions.c.o.provides.build: lib
 
 libecl/lib/CMakeFiles/ecl.dir/util/ui_return.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/ui_return.c.o: libecl/lib/util/ui_return.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_31) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/ui_return.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/ui_return.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/ui_return.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_31) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/ui_return.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/ui_return.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/ui_return.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/ui_return.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/ui_return.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/ui_return.c > CMakeFiles/ecl.dir/util/ui_return.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/ui_return.c > CMakeFiles/ecl.dir/util/ui_return.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/ui_return.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/ui_return.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/ui_return.c -o CMakeFiles/ecl.dir/util/ui_return.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/ui_return.c -o CMakeFiles/ecl.dir/util/ui_return.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/ui_return.c.o.requires:
 
@@ -803,16 +803,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/ui_return.c.o.provides.build: libecl/lib/CMak
 
 libecl/lib/CMakeFiles/ecl.dir/util/ecl_version.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/ecl_version.c.o: libecl/lib/util/ecl_version.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_32) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/ecl_version.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/ecl_version.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/ecl_version.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_32) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/ecl_version.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/ecl_version.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/ecl_version.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/ecl_version.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/ecl_version.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/ecl_version.c > CMakeFiles/ecl.dir/util/ecl_version.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/ecl_version.c > CMakeFiles/ecl.dir/util/ecl_version.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/ecl_version.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/ecl_version.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/ecl_version.c -o CMakeFiles/ecl.dir/util/ecl_version.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/ecl_version.c -o CMakeFiles/ecl.dir/util/ecl_version.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/ecl_version.c.o.requires:
 
@@ -827,16 +827,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/ecl_version.c.o.provides.build: libecl/lib/CM
 
 libecl/lib/CMakeFiles/ecl.dir/util/struct_vector.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/struct_vector.c.o: libecl/lib/util/struct_vector.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_33) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/struct_vector.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/struct_vector.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/struct_vector.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_33) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/struct_vector.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/struct_vector.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/struct_vector.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/struct_vector.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/struct_vector.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/struct_vector.c > CMakeFiles/ecl.dir/util/struct_vector.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/struct_vector.c > CMakeFiles/ecl.dir/util/struct_vector.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/struct_vector.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/struct_vector.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/struct_vector.c -o CMakeFiles/ecl.dir/util/struct_vector.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/struct_vector.c -o CMakeFiles/ecl.dir/util/struct_vector.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/struct_vector.c.o.requires:
 
@@ -851,16 +851,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/struct_vector.c.o.provides.build: libecl/lib/
 
 libecl/lib/CMakeFiles/ecl.dir/util/perm_vector.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/perm_vector.c.o: libecl/lib/util/perm_vector.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_34) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/perm_vector.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/perm_vector.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/perm_vector.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_34) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/perm_vector.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/perm_vector.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/perm_vector.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/perm_vector.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/perm_vector.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/perm_vector.c > CMakeFiles/ecl.dir/util/perm_vector.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/perm_vector.c > CMakeFiles/ecl.dir/util/perm_vector.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/perm_vector.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/perm_vector.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/perm_vector.c -o CMakeFiles/ecl.dir/util/perm_vector.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/perm_vector.c -o CMakeFiles/ecl.dir/util/perm_vector.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/perm_vector.c.o.requires:
 
@@ -875,16 +875,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/perm_vector.c.o.provides.build: libecl/lib/CM
 
 libecl/lib/CMakeFiles/ecl.dir/util/test_util.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/test_util.c.o: libecl/lib/util/test_util.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_35) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/test_util.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/test_util.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/test_util.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_35) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/test_util.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/test_util.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/test_util.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/test_util.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/test_util.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/test_util.c > CMakeFiles/ecl.dir/util/test_util.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/test_util.c > CMakeFiles/ecl.dir/util/test_util.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/test_util.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/test_util.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/test_util.c -o CMakeFiles/ecl.dir/util/test_util.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/test_util.c -o CMakeFiles/ecl.dir/util/test_util.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/test_util.c.o.requires:
 
@@ -899,16 +899,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/test_util.c.o.provides.build: libecl/lib/CMak
 
 libecl/lib/CMakeFiles/ecl.dir/util/thread_pool.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/thread_pool.c.o: libecl/lib/util/thread_pool.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_36) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/thread_pool.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/thread_pool.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/thread_pool.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_36) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/thread_pool.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/thread_pool.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/thread_pool.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/thread_pool.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/thread_pool.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/thread_pool.c > CMakeFiles/ecl.dir/util/thread_pool.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/thread_pool.c > CMakeFiles/ecl.dir/util/thread_pool.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/thread_pool.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/thread_pool.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/thread_pool.c -o CMakeFiles/ecl.dir/util/thread_pool.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/thread_pool.c -o CMakeFiles/ecl.dir/util/thread_pool.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/thread_pool.c.o.requires:
 
@@ -921,162 +921,18 @@ libecl/lib/CMakeFiles/ecl.dir/util/thread_pool.c.o.provides: libecl/lib/CMakeFil
 libecl/lib/CMakeFiles/ecl.dir/util/thread_pool.c.o.provides.build: libecl/lib/CMakeFiles/ecl.dir/util/thread_pool.c.o
 
 
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o: libecl/lib/util/matrix_lapack.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_37) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/matrix_lapack.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/matrix_lapack.c
-
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/matrix_lapack.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/matrix_lapack.c > CMakeFiles/ecl.dir/util/matrix_lapack.c.i
-
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/matrix_lapack.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/matrix_lapack.c -o CMakeFiles/ecl.dir/util/matrix_lapack.c.s
-
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o.requires:
-
-.PHONY : libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o.requires
-
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o.provides: libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o.requires
-	$(MAKE) -f libecl/lib/CMakeFiles/ecl.dir/build.make libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o.provides.build
-.PHONY : libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o.provides
-
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o.provides.build: libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o
-
-
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o: libecl/lib/util/matrix_blas.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_38) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/matrix_blas.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/matrix_blas.c
-
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/matrix_blas.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/matrix_blas.c > CMakeFiles/ecl.dir/util/matrix_blas.c.i
-
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/matrix_blas.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/matrix_blas.c -o CMakeFiles/ecl.dir/util/matrix_blas.c.s
-
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o.requires:
-
-.PHONY : libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o.requires
-
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o.provides: libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o.requires
-	$(MAKE) -f libecl/lib/CMakeFiles/ecl.dir/build.make libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o.provides.build
-.PHONY : libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o.provides
-
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o.provides.build: libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o
-
-
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o: libecl/lib/util/matrix_stat.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_39) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/matrix_stat.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/matrix_stat.c
-
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/matrix_stat.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/matrix_stat.c > CMakeFiles/ecl.dir/util/matrix_stat.c.i
-
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/matrix_stat.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/matrix_stat.c -o CMakeFiles/ecl.dir/util/matrix_stat.c.s
-
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o.requires:
-
-.PHONY : libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o.requires
-
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o.provides: libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o.requires
-	$(MAKE) -f libecl/lib/CMakeFiles/ecl.dir/build.make libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o.provides.build
-.PHONY : libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o.provides
-
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o.provides.build: libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o
-
-
-libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
-libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o: libecl/lib/util/regression.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_40) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/regression.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/regression.c
-
-libecl/lib/CMakeFiles/ecl.dir/util/regression.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/regression.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/regression.c > CMakeFiles/ecl.dir/util/regression.c.i
-
-libecl/lib/CMakeFiles/ecl.dir/util/regression.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/regression.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/regression.c -o CMakeFiles/ecl.dir/util/regression.c.s
-
-libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o.requires:
-
-.PHONY : libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o.requires
-
-libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o.provides: libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o.requires
-	$(MAKE) -f libecl/lib/CMakeFiles/ecl.dir/build.make libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o.provides.build
-.PHONY : libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o.provides
-
-libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o.provides.build: libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o
-
-
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o: libecl/lib/util/lars.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_41) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/lars.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/lars.c
-
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/lars.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/lars.c > CMakeFiles/ecl.dir/util/lars.c.i
-
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/lars.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/lars.c -o CMakeFiles/ecl.dir/util/lars.c.s
-
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o.requires:
-
-.PHONY : libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o.requires
-
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o.provides: libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o.requires
-	$(MAKE) -f libecl/lib/CMakeFiles/ecl.dir/build.make libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o.provides.build
-.PHONY : libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o.provides
-
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o.provides.build: libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o
-
-
-libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
-libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o: libecl/lib/util/stepwise.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_42) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/stepwise.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/stepwise.c
-
-libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/stepwise.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/stepwise.c > CMakeFiles/ecl.dir/util/stepwise.c.i
-
-libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/stepwise.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/stepwise.c -o CMakeFiles/ecl.dir/util/stepwise.c.s
-
-libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o.requires:
-
-.PHONY : libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o.requires
-
-libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o.provides: libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o.requires
-	$(MAKE) -f libecl/lib/CMakeFiles/ecl.dir/build.make libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o.provides.build
-.PHONY : libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o.provides
-
-libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o.provides.build: libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o
-
-
 libecl/lib/CMakeFiles/ecl.dir/util/util_abort_gnu.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/util_abort_gnu.c.o: libecl/lib/util/util_abort_gnu.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_43) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/util_abort_gnu.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/util_abort_gnu.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_abort_gnu.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_37) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/util_abort_gnu.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/util_abort_gnu.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_abort_gnu.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_abort_gnu.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/util_abort_gnu.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_abort_gnu.c > CMakeFiles/ecl.dir/util/util_abort_gnu.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_abort_gnu.c > CMakeFiles/ecl.dir/util/util_abort_gnu.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_abort_gnu.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/util_abort_gnu.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_abort_gnu.c -o CMakeFiles/ecl.dir/util/util_abort_gnu.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_abort_gnu.c -o CMakeFiles/ecl.dir/util/util_abort_gnu.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_abort_gnu.c.o.requires:
 
@@ -1091,16 +947,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/util_abort_gnu.c.o.provides.build: libecl/lib
 
 libecl/lib/CMakeFiles/ecl.dir/util/test_work_area.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/test_work_area.c.o: libecl/lib/util/test_work_area.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_44) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/test_work_area.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/test_work_area.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/test_work_area.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_38) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/test_work_area.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/test_work_area.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/test_work_area.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/test_work_area.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/test_work_area.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/test_work_area.c > CMakeFiles/ecl.dir/util/test_work_area.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/test_work_area.c > CMakeFiles/ecl.dir/util/test_work_area.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/test_work_area.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/test_work_area.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/test_work_area.c -o CMakeFiles/ecl.dir/util/test_work_area.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/test_work_area.c -o CMakeFiles/ecl.dir/util/test_work_area.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/test_work_area.c.o.requires:
 
@@ -1115,16 +971,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/test_work_area.c.o.provides.build: libecl/lib
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_getuid.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/util_getuid.c.o: libecl/lib/util/util_getuid.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_45) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/util_getuid.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/util_getuid.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_getuid.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_39) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/util_getuid.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/util_getuid.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_getuid.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_getuid.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/util_getuid.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_getuid.c > CMakeFiles/ecl.dir/util/util_getuid.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_getuid.c > CMakeFiles/ecl.dir/util/util_getuid.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_getuid.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/util_getuid.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_getuid.c -o CMakeFiles/ecl.dir/util/util_getuid.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_getuid.c -o CMakeFiles/ecl.dir/util/util_getuid.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_getuid.c.o.requires:
 
@@ -1139,16 +995,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/util_getuid.c.o.provides.build: libecl/lib/CM
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_opendir.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/util_opendir.c.o: libecl/lib/util/util_opendir.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_46) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/util_opendir.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/util_opendir.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_opendir.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_40) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/util_opendir.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/util_opendir.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_opendir.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_opendir.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/util_opendir.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_opendir.c > CMakeFiles/ecl.dir/util/util_opendir.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_opendir.c > CMakeFiles/ecl.dir/util/util_opendir.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_opendir.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/util_opendir.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_opendir.c -o CMakeFiles/ecl.dir/util/util_opendir.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_opendir.c -o CMakeFiles/ecl.dir/util/util_opendir.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_opendir.c.o.requires:
 
@@ -1163,16 +1019,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/util_opendir.c.o.provides.build: libecl/lib/C
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_spawn.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/util_spawn.c.o: libecl/lib/util/util_spawn.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_47) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/util_spawn.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/util_spawn.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_spawn.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_41) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/util_spawn.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/util_spawn.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_spawn.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_spawn.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/util_spawn.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_spawn.c > CMakeFiles/ecl.dir/util/util_spawn.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_spawn.c > CMakeFiles/ecl.dir/util/util_spawn.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_spawn.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/util_spawn.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_spawn.c -o CMakeFiles/ecl.dir/util/util_spawn.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_spawn.c -o CMakeFiles/ecl.dir/util/util_spawn.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_spawn.c.o.requires:
 
@@ -1187,16 +1043,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/util_spawn.c.o.provides.build: libecl/lib/CMa
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_lockf.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/util_lockf.c.o: libecl/lib/util/util_lockf.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_48) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/util_lockf.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/util_lockf.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_lockf.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_42) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/util_lockf.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/util_lockf.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_lockf.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_lockf.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/util_lockf.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_lockf.c > CMakeFiles/ecl.dir/util/util_lockf.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_lockf.c > CMakeFiles/ecl.dir/util/util_lockf.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_lockf.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/util_lockf.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_lockf.c -o CMakeFiles/ecl.dir/util/util_lockf.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_lockf.c -o CMakeFiles/ecl.dir/util/util_lockf.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_lockf.c.o.requires:
 
@@ -1211,16 +1067,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/util_lockf.c.o.provides.build: libecl/lib/CMa
 
 libecl/lib/CMakeFiles/ecl.dir/util/path_stack.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/path_stack.c.o: libecl/lib/util/path_stack.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_49) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/path_stack.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/path_stack.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/path_stack.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_43) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/path_stack.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/path_stack.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/path_stack.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/path_stack.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/path_stack.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/path_stack.c > CMakeFiles/ecl.dir/util/path_stack.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/path_stack.c > CMakeFiles/ecl.dir/util/path_stack.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/path_stack.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/path_stack.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/path_stack.c -o CMakeFiles/ecl.dir/util/path_stack.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/path_stack.c -o CMakeFiles/ecl.dir/util/path_stack.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/path_stack.c.o.requires:
 
@@ -1235,16 +1091,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/path_stack.c.o.provides.build: libecl/lib/CMa
 
 libecl/lib/CMakeFiles/ecl.dir/int_vector.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/int_vector.c.o: libecl/lib/int_vector.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_50) "Building C object libecl/lib/CMakeFiles/ecl.dir/int_vector.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/int_vector.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/int_vector.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_44) "Building C object libecl/lib/CMakeFiles/ecl.dir/int_vector.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/int_vector.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/int_vector.c
 
 libecl/lib/CMakeFiles/ecl.dir/int_vector.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/int_vector.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/int_vector.c > CMakeFiles/ecl.dir/int_vector.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/int_vector.c > CMakeFiles/ecl.dir/int_vector.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/int_vector.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/int_vector.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/int_vector.c -o CMakeFiles/ecl.dir/int_vector.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/int_vector.c -o CMakeFiles/ecl.dir/int_vector.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/int_vector.c.o.requires:
 
@@ -1259,16 +1115,16 @@ libecl/lib/CMakeFiles/ecl.dir/int_vector.c.o.provides.build: libecl/lib/CMakeFil
 
 libecl/lib/CMakeFiles/ecl.dir/double_vector.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/double_vector.c.o: libecl/lib/double_vector.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_51) "Building C object libecl/lib/CMakeFiles/ecl.dir/double_vector.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/double_vector.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/double_vector.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_45) "Building C object libecl/lib/CMakeFiles/ecl.dir/double_vector.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/double_vector.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/double_vector.c
 
 libecl/lib/CMakeFiles/ecl.dir/double_vector.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/double_vector.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/double_vector.c > CMakeFiles/ecl.dir/double_vector.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/double_vector.c > CMakeFiles/ecl.dir/double_vector.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/double_vector.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/double_vector.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/double_vector.c -o CMakeFiles/ecl.dir/double_vector.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/double_vector.c -o CMakeFiles/ecl.dir/double_vector.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/double_vector.c.o.requires:
 
@@ -1283,16 +1139,16 @@ libecl/lib/CMakeFiles/ecl.dir/double_vector.c.o.provides.build: libecl/lib/CMake
 
 libecl/lib/CMakeFiles/ecl.dir/long_vector.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/long_vector.c.o: libecl/lib/long_vector.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_52) "Building C object libecl/lib/CMakeFiles/ecl.dir/long_vector.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/long_vector.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/long_vector.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_46) "Building C object libecl/lib/CMakeFiles/ecl.dir/long_vector.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/long_vector.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/long_vector.c
 
 libecl/lib/CMakeFiles/ecl.dir/long_vector.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/long_vector.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/long_vector.c > CMakeFiles/ecl.dir/long_vector.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/long_vector.c > CMakeFiles/ecl.dir/long_vector.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/long_vector.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/long_vector.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/long_vector.c -o CMakeFiles/ecl.dir/long_vector.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/long_vector.c -o CMakeFiles/ecl.dir/long_vector.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/long_vector.c.o.requires:
 
@@ -1307,16 +1163,16 @@ libecl/lib/CMakeFiles/ecl.dir/long_vector.c.o.provides.build: libecl/lib/CMakeFi
 
 libecl/lib/CMakeFiles/ecl.dir/time_t_vector.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/time_t_vector.c.o: libecl/lib/time_t_vector.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_53) "Building C object libecl/lib/CMakeFiles/ecl.dir/time_t_vector.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/time_t_vector.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/time_t_vector.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_47) "Building C object libecl/lib/CMakeFiles/ecl.dir/time_t_vector.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/time_t_vector.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/time_t_vector.c
 
 libecl/lib/CMakeFiles/ecl.dir/time_t_vector.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/time_t_vector.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/time_t_vector.c > CMakeFiles/ecl.dir/time_t_vector.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/time_t_vector.c > CMakeFiles/ecl.dir/time_t_vector.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/time_t_vector.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/time_t_vector.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/time_t_vector.c -o CMakeFiles/ecl.dir/time_t_vector.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/time_t_vector.c -o CMakeFiles/ecl.dir/time_t_vector.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/time_t_vector.c.o.requires:
 
@@ -1331,16 +1187,16 @@ libecl/lib/CMakeFiles/ecl.dir/time_t_vector.c.o.provides.build: libecl/lib/CMake
 
 libecl/lib/CMakeFiles/ecl.dir/float_vector.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/float_vector.c.o: libecl/lib/float_vector.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_54) "Building C object libecl/lib/CMakeFiles/ecl.dir/float_vector.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/float_vector.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/float_vector.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_48) "Building C object libecl/lib/CMakeFiles/ecl.dir/float_vector.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/float_vector.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/float_vector.c
 
 libecl/lib/CMakeFiles/ecl.dir/float_vector.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/float_vector.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/float_vector.c > CMakeFiles/ecl.dir/float_vector.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/float_vector.c > CMakeFiles/ecl.dir/float_vector.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/float_vector.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/float_vector.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/float_vector.c -o CMakeFiles/ecl.dir/float_vector.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/float_vector.c -o CMakeFiles/ecl.dir/float_vector.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/float_vector.c.o.requires:
 
@@ -1355,16 +1211,16 @@ libecl/lib/CMakeFiles/ecl.dir/float_vector.c.o.provides.build: libecl/lib/CMakeF
 
 libecl/lib/CMakeFiles/ecl.dir/bool_vector.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/bool_vector.c.o: libecl/lib/bool_vector.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_55) "Building C object libecl/lib/CMakeFiles/ecl.dir/bool_vector.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/bool_vector.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/bool_vector.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_49) "Building C object libecl/lib/CMakeFiles/ecl.dir/bool_vector.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/bool_vector.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/bool_vector.c
 
 libecl/lib/CMakeFiles/ecl.dir/bool_vector.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/bool_vector.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/bool_vector.c > CMakeFiles/ecl.dir/bool_vector.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/bool_vector.c > CMakeFiles/ecl.dir/bool_vector.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/bool_vector.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/bool_vector.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/bool_vector.c -o CMakeFiles/ecl.dir/bool_vector.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/bool_vector.c -o CMakeFiles/ecl.dir/bool_vector.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/bool_vector.c.o.requires:
 
@@ -1379,16 +1235,16 @@ libecl/lib/CMakeFiles/ecl.dir/bool_vector.c.o.provides.build: libecl/lib/CMakeFi
 
 libecl/lib/CMakeFiles/ecl.dir/size_t_vector.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/size_t_vector.c.o: libecl/lib/size_t_vector.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_56) "Building C object libecl/lib/CMakeFiles/ecl.dir/size_t_vector.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/size_t_vector.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/size_t_vector.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_50) "Building C object libecl/lib/CMakeFiles/ecl.dir/size_t_vector.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/size_t_vector.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/size_t_vector.c
 
 libecl/lib/CMakeFiles/ecl.dir/size_t_vector.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/size_t_vector.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/size_t_vector.c > CMakeFiles/ecl.dir/size_t_vector.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/size_t_vector.c > CMakeFiles/ecl.dir/size_t_vector.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/size_t_vector.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/size_t_vector.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/size_t_vector.c -o CMakeFiles/ecl.dir/size_t_vector.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/size_t_vector.c -o CMakeFiles/ecl.dir/size_t_vector.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/size_t_vector.c.o.requires:
 
@@ -1403,16 +1259,16 @@ libecl/lib/CMakeFiles/ecl.dir/size_t_vector.c.o.provides.build: libecl/lib/CMake
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_zlib.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/util_zlib.c.o: libecl/lib/util/util_zlib.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_57) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/util_zlib.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/util_zlib.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_zlib.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_51) "Building C object libecl/lib/CMakeFiles/ecl.dir/util/util_zlib.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/util/util_zlib.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_zlib.c
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_zlib.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/util/util_zlib.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_zlib.c > CMakeFiles/ecl.dir/util/util_zlib.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_zlib.c > CMakeFiles/ecl.dir/util/util_zlib.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_zlib.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/util/util_zlib.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_zlib.c -o CMakeFiles/ecl.dir/util/util_zlib.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/util_zlib.c -o CMakeFiles/ecl.dir/util/util_zlib.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/util_zlib.c.o.requires:
 
@@ -1427,16 +1283,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/util_zlib.c.o.provides.build: libecl/lib/CMak
 
 libecl/lib/CMakeFiles/ecl.dir/util/TestArea.cpp.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/util/TestArea.cpp.o: libecl/lib/util/TestArea.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_58) "Building CXX object libecl/lib/CMakeFiles/ecl.dir/util/TestArea.cpp.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ecl.dir/util/TestArea.cpp.o -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/TestArea.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_52) "Building CXX object libecl/lib/CMakeFiles/ecl.dir/util/TestArea.cpp.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ecl.dir/util/TestArea.cpp.o -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/TestArea.cpp
 
 libecl/lib/CMakeFiles/ecl.dir/util/TestArea.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ecl.dir/util/TestArea.cpp.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/TestArea.cpp > CMakeFiles/ecl.dir/util/TestArea.cpp.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/TestArea.cpp > CMakeFiles/ecl.dir/util/TestArea.cpp.i
 
 libecl/lib/CMakeFiles/ecl.dir/util/TestArea.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ecl.dir/util/TestArea.cpp.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/TestArea.cpp -o CMakeFiles/ecl.dir/util/TestArea.cpp.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/TestArea.cpp -o CMakeFiles/ecl.dir/util/TestArea.cpp.s
 
 libecl/lib/CMakeFiles/ecl.dir/util/TestArea.cpp.o.requires:
 
@@ -1451,16 +1307,16 @@ libecl/lib/CMakeFiles/ecl.dir/util/TestArea.cpp.o.provides.build: libecl/lib/CMa
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/FortIO.cpp.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/FortIO.cpp.o: libecl/lib/ecl/FortIO.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_59) "Building CXX object libecl/lib/CMakeFiles/ecl.dir/ecl/FortIO.cpp.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ecl.dir/ecl/FortIO.cpp.o -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/FortIO.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_53) "Building CXX object libecl/lib/CMakeFiles/ecl.dir/ecl/FortIO.cpp.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ecl.dir/ecl/FortIO.cpp.o -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/FortIO.cpp
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/FortIO.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ecl.dir/ecl/FortIO.cpp.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/FortIO.cpp > CMakeFiles/ecl.dir/ecl/FortIO.cpp.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/FortIO.cpp > CMakeFiles/ecl.dir/ecl/FortIO.cpp.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/FortIO.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ecl.dir/ecl/FortIO.cpp.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/FortIO.cpp -o CMakeFiles/ecl.dir/ecl/FortIO.cpp.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/FortIO.cpp -o CMakeFiles/ecl.dir/ecl/FortIO.cpp.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/FortIO.cpp.o.requires:
 
@@ -1475,16 +1331,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/FortIO.cpp.o.provides.build: libecl/lib/CMakeF
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/Smspec.cpp.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/Smspec.cpp.o: libecl/lib/ecl/Smspec.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_60) "Building CXX object libecl/lib/CMakeFiles/ecl.dir/ecl/Smspec.cpp.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ecl.dir/ecl/Smspec.cpp.o -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/Smspec.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_54) "Building CXX object libecl/lib/CMakeFiles/ecl.dir/ecl/Smspec.cpp.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ecl.dir/ecl/Smspec.cpp.o -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/Smspec.cpp
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/Smspec.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ecl.dir/ecl/Smspec.cpp.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/Smspec.cpp > CMakeFiles/ecl.dir/ecl/Smspec.cpp.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/Smspec.cpp > CMakeFiles/ecl.dir/ecl/Smspec.cpp.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/Smspec.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ecl.dir/ecl/Smspec.cpp.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/Smspec.cpp -o CMakeFiles/ecl.dir/ecl/Smspec.cpp.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/Smspec.cpp -o CMakeFiles/ecl.dir/ecl/Smspec.cpp.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/Smspec.cpp.o.requires:
 
@@ -1499,16 +1355,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/Smspec.cpp.o.provides.build: libecl/lib/CMakeF
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/EclFilename.cpp.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/EclFilename.cpp.o: libecl/lib/ecl/EclFilename.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_61) "Building CXX object libecl/lib/CMakeFiles/ecl.dir/ecl/EclFilename.cpp.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ecl.dir/ecl/EclFilename.cpp.o -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/EclFilename.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_55) "Building CXX object libecl/lib/CMakeFiles/ecl.dir/ecl/EclFilename.cpp.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ecl.dir/ecl/EclFilename.cpp.o -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/EclFilename.cpp
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/EclFilename.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ecl.dir/ecl/EclFilename.cpp.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/EclFilename.cpp > CMakeFiles/ecl.dir/ecl/EclFilename.cpp.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/EclFilename.cpp > CMakeFiles/ecl.dir/ecl/EclFilename.cpp.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/EclFilename.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ecl.dir/ecl/EclFilename.cpp.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/EclFilename.cpp -o CMakeFiles/ecl.dir/ecl/EclFilename.cpp.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/EclFilename.cpp -o CMakeFiles/ecl.dir/ecl/EclFilename.cpp.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/EclFilename.cpp.o.requires:
 
@@ -1523,16 +1379,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/EclFilename.cpp.o.provides.build: libecl/lib/C
 
 libecl/lib/CMakeFiles/ecl.dir/nexus/nexus_plot.cpp.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/nexus/nexus_plot.cpp.o: libecl/lib/nexus/nexus_plot.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_62) "Building CXX object libecl/lib/CMakeFiles/ecl.dir/nexus/nexus_plot.cpp.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ecl.dir/nexus/nexus_plot.cpp.o -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/nexus/nexus_plot.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_56) "Building CXX object libecl/lib/CMakeFiles/ecl.dir/nexus/nexus_plot.cpp.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ecl.dir/nexus/nexus_plot.cpp.o -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/nexus/nexus_plot.cpp
 
 libecl/lib/CMakeFiles/ecl.dir/nexus/nexus_plot.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ecl.dir/nexus/nexus_plot.cpp.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/nexus/nexus_plot.cpp > CMakeFiles/ecl.dir/nexus/nexus_plot.cpp.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/nexus/nexus_plot.cpp > CMakeFiles/ecl.dir/nexus/nexus_plot.cpp.i
 
 libecl/lib/CMakeFiles/ecl.dir/nexus/nexus_plot.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ecl.dir/nexus/nexus_plot.cpp.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/nexus/nexus_plot.cpp -o CMakeFiles/ecl.dir/nexus/nexus_plot.cpp.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/nexus/nexus_plot.cpp -o CMakeFiles/ecl.dir/nexus/nexus_plot.cpp.s
 
 libecl/lib/CMakeFiles/ecl.dir/nexus/nexus_plot.cpp.o.requires:
 
@@ -1547,16 +1403,16 @@ libecl/lib/CMakeFiles/ecl.dir/nexus/nexus_plot.cpp.o.provides.build: libecl/lib/
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rsthead.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rsthead.c.o: libecl/lib/ecl/ecl_rsthead.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_63) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rsthead.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_rsthead.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rsthead.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_57) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rsthead.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_rsthead.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rsthead.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rsthead.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_rsthead.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rsthead.c > CMakeFiles/ecl.dir/ecl/ecl_rsthead.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rsthead.c > CMakeFiles/ecl.dir/ecl/ecl_rsthead.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rsthead.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_rsthead.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rsthead.c -o CMakeFiles/ecl.dir/ecl/ecl_rsthead.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rsthead.c -o CMakeFiles/ecl.dir/ecl/ecl_rsthead.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rsthead.c.o.requires:
 
@@ -1571,16 +1427,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rsthead.c.o.provides.build: libecl/lib/CMa
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_tstep.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_tstep.c.o: libecl/lib/ecl/ecl_sum_tstep.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_64) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_tstep.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_sum_tstep.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum_tstep.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_58) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_tstep.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_sum_tstep.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum_tstep.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_tstep.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_sum_tstep.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum_tstep.c > CMakeFiles/ecl.dir/ecl/ecl_sum_tstep.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum_tstep.c > CMakeFiles/ecl.dir/ecl/ecl_sum_tstep.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_tstep.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_sum_tstep.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum_tstep.c -o CMakeFiles/ecl.dir/ecl/ecl_sum_tstep.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum_tstep.c -o CMakeFiles/ecl.dir/ecl/ecl_sum_tstep.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_tstep.c.o.requires:
 
@@ -1595,16 +1451,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_tstep.c.o.provides.build: libecl/lib/C
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rst_file.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rst_file.c.o: libecl/lib/ecl/ecl_rst_file.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_65) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rst_file.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_rst_file.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rst_file.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_59) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rst_file.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_rst_file.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rst_file.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rst_file.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_rst_file.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rst_file.c > CMakeFiles/ecl.dir/ecl/ecl_rst_file.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rst_file.c > CMakeFiles/ecl.dir/ecl/ecl_rst_file.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rst_file.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_rst_file.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rst_file.c -o CMakeFiles/ecl.dir/ecl/ecl_rst_file.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rst_file.c -o CMakeFiles/ecl.dir/ecl/ecl_rst_file.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rst_file.c.o.requires:
 
@@ -1619,16 +1475,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rst_file.c.o.provides.build: libecl/lib/CM
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_init_file.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_init_file.c.o: libecl/lib/ecl/ecl_init_file.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_66) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_init_file.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_init_file.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_init_file.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_60) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_init_file.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_init_file.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_init_file.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_init_file.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_init_file.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_init_file.c > CMakeFiles/ecl.dir/ecl/ecl_init_file.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_init_file.c > CMakeFiles/ecl.dir/ecl/ecl_init_file.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_init_file.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_init_file.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_init_file.c -o CMakeFiles/ecl.dir/ecl/ecl_init_file.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_init_file.c -o CMakeFiles/ecl.dir/ecl/ecl_init_file.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_init_file.c.o.requires:
 
@@ -1643,16 +1499,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_init_file.c.o.provides.build: libecl/lib/C
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid_cache.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid_cache.c.o: libecl/lib/ecl/ecl_grid_cache.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_67) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid_cache.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_grid_cache.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grid_cache.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_61) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid_cache.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_grid_cache.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grid_cache.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid_cache.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_grid_cache.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grid_cache.c > CMakeFiles/ecl.dir/ecl/ecl_grid_cache.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grid_cache.c > CMakeFiles/ecl.dir/ecl/ecl_grid_cache.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid_cache.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_grid_cache.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grid_cache.c -o CMakeFiles/ecl.dir/ecl/ecl_grid_cache.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grid_cache.c -o CMakeFiles/ecl.dir/ecl/ecl_grid_cache.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid_cache.c.o.requires:
 
@@ -1667,16 +1523,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid_cache.c.o.provides.build: libecl/lib/
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/smspec_node.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/smspec_node.c.o: libecl/lib/ecl/smspec_node.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_68) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/smspec_node.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/smspec_node.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/smspec_node.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_62) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/smspec_node.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/smspec_node.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/smspec_node.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/smspec_node.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/smspec_node.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/smspec_node.c > CMakeFiles/ecl.dir/ecl/smspec_node.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/smspec_node.c > CMakeFiles/ecl.dir/ecl/smspec_node.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/smspec_node.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/smspec_node.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/smspec_node.c -o CMakeFiles/ecl.dir/ecl/smspec_node.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/smspec_node.c -o CMakeFiles/ecl.dir/ecl/smspec_node.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/smspec_node.c.o.requires:
 
@@ -1691,16 +1547,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/smspec_node.c.o.provides.build: libecl/lib/CMa
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_kw_grdecl.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_kw_grdecl.c.o: libecl/lib/ecl/ecl_kw_grdecl.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_69) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_kw_grdecl.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_kw_grdecl.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_kw_grdecl.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_63) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_kw_grdecl.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_kw_grdecl.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_kw_grdecl.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_kw_grdecl.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_kw_grdecl.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_kw_grdecl.c > CMakeFiles/ecl.dir/ecl/ecl_kw_grdecl.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_kw_grdecl.c > CMakeFiles/ecl.dir/ecl/ecl_kw_grdecl.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_kw_grdecl.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_kw_grdecl.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_kw_grdecl.c -o CMakeFiles/ecl.dir/ecl/ecl_kw_grdecl.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_kw_grdecl.c -o CMakeFiles/ecl.dir/ecl/ecl_kw_grdecl.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_kw_grdecl.c.o.requires:
 
@@ -1715,16 +1571,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_kw_grdecl.c.o.provides.build: libecl/lib/C
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file_kw.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file_kw.c.o: libecl/lib/ecl/ecl_file_kw.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_70) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file_kw.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_file_kw.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_file_kw.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_64) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file_kw.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_file_kw.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_file_kw.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file_kw.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_file_kw.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_file_kw.c > CMakeFiles/ecl.dir/ecl/ecl_file_kw.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_file_kw.c > CMakeFiles/ecl.dir/ecl/ecl_file_kw.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file_kw.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_file_kw.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_file_kw.c -o CMakeFiles/ecl.dir/ecl/ecl_file_kw.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_file_kw.c -o CMakeFiles/ecl.dir/ecl/ecl_file_kw.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file_kw.c.o.requires:
 
@@ -1739,16 +1595,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file_kw.c.o.provides.build: libecl/lib/CMa
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file_view.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file_view.c.o: libecl/lib/ecl/ecl_file_view.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_71) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file_view.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_file_view.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_file_view.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_65) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file_view.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_file_view.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_file_view.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file_view.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_file_view.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_file_view.c > CMakeFiles/ecl.dir/ecl/ecl_file_view.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_file_view.c > CMakeFiles/ecl.dir/ecl/ecl_file_view.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file_view.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_file_view.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_file_view.c -o CMakeFiles/ecl.dir/ecl/ecl_file_view.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_file_view.c -o CMakeFiles/ecl.dir/ecl/ecl_file_view.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file_view.c.o.requires:
 
@@ -1763,16 +1619,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file_view.c.o.provides.build: libecl/lib/C
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav.c.o: libecl/lib/ecl/ecl_grav.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_72) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_grav.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grav.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_66) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_grav.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grav.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_grav.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grav.c > CMakeFiles/ecl.dir/ecl/ecl_grav.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grav.c > CMakeFiles/ecl.dir/ecl/ecl_grav.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_grav.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grav.c -o CMakeFiles/ecl.dir/ecl/ecl_grav.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grav.c -o CMakeFiles/ecl.dir/ecl/ecl_grav.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav.c.o.requires:
 
@@ -1787,16 +1643,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav.c.o.provides.build: libecl/lib/CMakeF
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav_calc.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav_calc.c.o: libecl/lib/ecl/ecl_grav_calc.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_73) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav_calc.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_grav_calc.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grav_calc.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_67) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav_calc.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_grav_calc.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grav_calc.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav_calc.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_grav_calc.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grav_calc.c > CMakeFiles/ecl.dir/ecl/ecl_grav_calc.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grav_calc.c > CMakeFiles/ecl.dir/ecl/ecl_grav_calc.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav_calc.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_grav_calc.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grav_calc.c -o CMakeFiles/ecl.dir/ecl/ecl_grav_calc.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grav_calc.c -o CMakeFiles/ecl.dir/ecl/ecl_grav_calc.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav_calc.c.o.requires:
 
@@ -1811,16 +1667,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav_calc.c.o.provides.build: libecl/lib/C
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_smspec.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_smspec.c.o: libecl/lib/ecl/ecl_smspec.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_74) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_smspec.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_smspec.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_smspec.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_68) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_smspec.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_smspec.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_smspec.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_smspec.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_smspec.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_smspec.c > CMakeFiles/ecl.dir/ecl/ecl_smspec.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_smspec.c > CMakeFiles/ecl.dir/ecl/ecl_smspec.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_smspec.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_smspec.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_smspec.c -o CMakeFiles/ecl.dir/ecl/ecl_smspec.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_smspec.c -o CMakeFiles/ecl.dir/ecl/ecl_smspec.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_smspec.c.o.requires:
 
@@ -1835,16 +1691,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_smspec.c.o.provides.build: libecl/lib/CMak
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_data.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_data.c.o: libecl/lib/ecl/ecl_sum_data.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_75) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_data.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_sum_data.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum_data.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_69) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_data.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_sum_data.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum_data.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_data.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_sum_data.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum_data.c > CMakeFiles/ecl.dir/ecl/ecl_sum_data.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum_data.c > CMakeFiles/ecl.dir/ecl/ecl_sum_data.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_data.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_sum_data.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum_data.c -o CMakeFiles/ecl.dir/ecl/ecl_sum_data.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum_data.c -o CMakeFiles/ecl.dir/ecl/ecl_sum_data.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_data.c.o.requires:
 
@@ -1859,16 +1715,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_data.c.o.provides.build: libecl/lib/CM
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_util.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_util.c.o: libecl/lib/ecl/ecl_util.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_76) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_util.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_util.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_util.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_70) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_util.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_util.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_util.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_util.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_util.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_util.c > CMakeFiles/ecl.dir/ecl/ecl_util.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_util.c > CMakeFiles/ecl.dir/ecl/ecl_util.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_util.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_util.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_util.c -o CMakeFiles/ecl.dir/ecl/ecl_util.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_util.c -o CMakeFiles/ecl.dir/ecl/ecl_util.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_util.c.o.requires:
 
@@ -1883,16 +1739,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_util.c.o.provides.build: libecl/lib/CMakeF
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_kw.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_kw.c.o: libecl/lib/ecl/ecl_kw.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_77) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_kw.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_kw.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_kw.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_71) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_kw.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_kw.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_kw.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_kw.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_kw.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_kw.c > CMakeFiles/ecl.dir/ecl/ecl_kw.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_kw.c > CMakeFiles/ecl.dir/ecl/ecl_kw.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_kw.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_kw.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_kw.c -o CMakeFiles/ecl.dir/ecl/ecl_kw.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_kw.c -o CMakeFiles/ecl.dir/ecl/ecl_kw.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_kw.c.o.requires:
 
@@ -1907,16 +1763,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_kw.c.o.provides.build: libecl/lib/CMakeFil
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum.c.o: libecl/lib/ecl/ecl_sum.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_78) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_sum.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_72) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_sum.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_sum.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum.c > CMakeFiles/ecl.dir/ecl/ecl_sum.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum.c > CMakeFiles/ecl.dir/ecl/ecl_sum.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_sum.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum.c -o CMakeFiles/ecl.dir/ecl/ecl_sum.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum.c -o CMakeFiles/ecl.dir/ecl/ecl_sum.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum.c.o.requires:
 
@@ -1931,16 +1787,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum.c.o.provides.build: libecl/lib/CMakeFi
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_vector.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_vector.c.o: libecl/lib/ecl/ecl_sum_vector.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_79) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_vector.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_sum_vector.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum_vector.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_73) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_vector.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_sum_vector.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum_vector.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_vector.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_sum_vector.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum_vector.c > CMakeFiles/ecl.dir/ecl/ecl_sum_vector.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum_vector.c > CMakeFiles/ecl.dir/ecl/ecl_sum_vector.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_vector.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_sum_vector.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum_vector.c -o CMakeFiles/ecl.dir/ecl/ecl_sum_vector.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_sum_vector.c -o CMakeFiles/ecl.dir/ecl/ecl_sum_vector.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_vector.c.o.requires:
 
@@ -1955,16 +1811,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_sum_vector.c.o.provides.build: libecl/lib/
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/fortio.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/fortio.c.o: libecl/lib/ecl/fortio.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_80) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/fortio.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/fortio.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/fortio.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_74) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/fortio.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/fortio.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/fortio.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/fortio.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/fortio.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/fortio.c > CMakeFiles/ecl.dir/ecl/fortio.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/fortio.c > CMakeFiles/ecl.dir/ecl/fortio.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/fortio.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/fortio.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/fortio.c -o CMakeFiles/ecl.dir/ecl/fortio.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/fortio.c -o CMakeFiles/ecl.dir/ecl/fortio.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/fortio.c.o.requires:
 
@@ -1979,16 +1835,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/fortio.c.o.provides.build: libecl/lib/CMakeFil
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_file.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_file.c.o: libecl/lib/ecl/ecl_rft_file.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_81) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_file.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_rft_file.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rft_file.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_75) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_file.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_rft_file.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rft_file.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_file.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_rft_file.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rft_file.c > CMakeFiles/ecl.dir/ecl/ecl_rft_file.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rft_file.c > CMakeFiles/ecl.dir/ecl/ecl_rft_file.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_file.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_rft_file.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rft_file.c -o CMakeFiles/ecl.dir/ecl/ecl_rft_file.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rft_file.c -o CMakeFiles/ecl.dir/ecl/ecl_rft_file.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_file.c.o.requires:
 
@@ -2003,16 +1859,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_file.c.o.provides.build: libecl/lib/CM
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_node.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_node.c.o: libecl/lib/ecl/ecl_rft_node.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_82) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_node.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_rft_node.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rft_node.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_76) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_node.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_rft_node.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rft_node.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_node.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_rft_node.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rft_node.c > CMakeFiles/ecl.dir/ecl/ecl_rft_node.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rft_node.c > CMakeFiles/ecl.dir/ecl/ecl_rft_node.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_node.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_rft_node.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rft_node.c -o CMakeFiles/ecl.dir/ecl/ecl_rft_node.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rft_node.c -o CMakeFiles/ecl.dir/ecl/ecl_rft_node.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_node.c.o.requires:
 
@@ -2027,16 +1883,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_node.c.o.provides.build: libecl/lib/CM
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_cell.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_cell.c.o: libecl/lib/ecl/ecl_rft_cell.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_83) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_cell.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_rft_cell.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rft_cell.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_77) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_cell.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_rft_cell.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rft_cell.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_cell.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_rft_cell.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rft_cell.c > CMakeFiles/ecl.dir/ecl/ecl_rft_cell.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rft_cell.c > CMakeFiles/ecl.dir/ecl/ecl_rft_cell.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_cell.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_rft_cell.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rft_cell.c -o CMakeFiles/ecl.dir/ecl/ecl_rft_cell.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_rft_cell.c -o CMakeFiles/ecl.dir/ecl/ecl_rft_cell.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_cell.c.o.requires:
 
@@ -2051,16 +1907,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_rft_cell.c.o.provides.build: libecl/lib/CM
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid.c.o: libecl/lib/ecl/ecl_grid.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_84) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_grid.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grid.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_78) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_grid.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grid.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_grid.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grid.c > CMakeFiles/ecl.dir/ecl/ecl_grid.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grid.c > CMakeFiles/ecl.dir/ecl/ecl_grid.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_grid.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grid.c -o CMakeFiles/ecl.dir/ecl/ecl_grid.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grid.c -o CMakeFiles/ecl.dir/ecl/ecl_grid.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid.c.o.requires:
 
@@ -2075,16 +1931,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid.c.o.provides.build: libecl/lib/CMakeF
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_coarse_cell.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_coarse_cell.c.o: libecl/lib/ecl/ecl_coarse_cell.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_85) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_coarse_cell.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_coarse_cell.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_coarse_cell.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_79) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_coarse_cell.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_coarse_cell.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_coarse_cell.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_coarse_cell.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_coarse_cell.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_coarse_cell.c > CMakeFiles/ecl.dir/ecl/ecl_coarse_cell.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_coarse_cell.c > CMakeFiles/ecl.dir/ecl/ecl_coarse_cell.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_coarse_cell.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_coarse_cell.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_coarse_cell.c -o CMakeFiles/ecl.dir/ecl/ecl_coarse_cell.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_coarse_cell.c -o CMakeFiles/ecl.dir/ecl/ecl_coarse_cell.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_coarse_cell.c.o.requires:
 
@@ -2099,16 +1955,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_coarse_cell.c.o.provides.build: libecl/lib
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_box.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_box.c.o: libecl/lib/ecl/ecl_box.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_86) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_box.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_box.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_box.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_80) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_box.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_box.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_box.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_box.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_box.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_box.c > CMakeFiles/ecl.dir/ecl/ecl_box.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_box.c > CMakeFiles/ecl.dir/ecl/ecl_box.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_box.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_box.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_box.c -o CMakeFiles/ecl.dir/ecl/ecl_box.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_box.c -o CMakeFiles/ecl.dir/ecl/ecl_box.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_box.c.o.requires:
 
@@ -2123,16 +1979,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_box.c.o.provides.build: libecl/lib/CMakeFi
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_io_config.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_io_config.c.o: libecl/lib/ecl/ecl_io_config.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_87) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_io_config.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_io_config.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_io_config.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_81) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_io_config.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_io_config.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_io_config.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_io_config.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_io_config.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_io_config.c > CMakeFiles/ecl.dir/ecl/ecl_io_config.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_io_config.c > CMakeFiles/ecl.dir/ecl/ecl_io_config.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_io_config.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_io_config.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_io_config.c -o CMakeFiles/ecl.dir/ecl/ecl_io_config.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_io_config.c -o CMakeFiles/ecl.dir/ecl/ecl_io_config.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_io_config.c.o.requires:
 
@@ -2147,16 +2003,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_io_config.c.o.provides.build: libecl/lib/C
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file.c.o: libecl/lib/ecl/ecl_file.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_88) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_file.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_file.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_82) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_file.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_file.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_file.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_file.c > CMakeFiles/ecl.dir/ecl/ecl_file.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_file.c > CMakeFiles/ecl.dir/ecl/ecl_file.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_file.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_file.c -o CMakeFiles/ecl.dir/ecl/ecl_file.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_file.c -o CMakeFiles/ecl.dir/ecl/ecl_file.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file.c.o.requires:
 
@@ -2171,16 +2027,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_file.c.o.provides.build: libecl/lib/CMakeF
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_region.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_region.c.o: libecl/lib/ecl/ecl_region.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_89) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_region.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_region.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_region.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_83) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_region.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_region.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_region.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_region.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_region.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_region.c > CMakeFiles/ecl.dir/ecl/ecl_region.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_region.c > CMakeFiles/ecl.dir/ecl/ecl_region.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_region.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_region.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_region.c -o CMakeFiles/ecl.dir/ecl/ecl_region.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_region.c -o CMakeFiles/ecl.dir/ecl/ecl_region.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_region.c.o.requires:
 
@@ -2195,16 +2051,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_region.c.o.provides.build: libecl/lib/CMak
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_subsidence.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_subsidence.c.o: libecl/lib/ecl/ecl_subsidence.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_90) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_subsidence.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_subsidence.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_subsidence.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_84) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_subsidence.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_subsidence.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_subsidence.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_subsidence.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_subsidence.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_subsidence.c > CMakeFiles/ecl.dir/ecl/ecl_subsidence.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_subsidence.c > CMakeFiles/ecl.dir/ecl/ecl_subsidence.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_subsidence.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_subsidence.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_subsidence.c -o CMakeFiles/ecl.dir/ecl/ecl_subsidence.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_subsidence.c -o CMakeFiles/ecl.dir/ecl/ecl_subsidence.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_subsidence.c.o.requires:
 
@@ -2219,16 +2075,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_subsidence.c.o.provides.build: libecl/lib/
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid_dims.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid_dims.c.o: libecl/lib/ecl/ecl_grid_dims.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_91) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid_dims.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_grid_dims.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grid_dims.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_85) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid_dims.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_grid_dims.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grid_dims.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid_dims.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_grid_dims.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grid_dims.c > CMakeFiles/ecl.dir/ecl/ecl_grid_dims.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grid_dims.c > CMakeFiles/ecl.dir/ecl/ecl_grid_dims.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid_dims.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_grid_dims.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grid_dims.c -o CMakeFiles/ecl.dir/ecl/ecl_grid_dims.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grid_dims.c -o CMakeFiles/ecl.dir/ecl/ecl_grid_dims.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid_dims.c.o.requires:
 
@@ -2243,16 +2099,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grid_dims.c.o.provides.build: libecl/lib/C
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/grid_dims.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/grid_dims.c.o: libecl/lib/ecl/grid_dims.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_92) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/grid_dims.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/grid_dims.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/grid_dims.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_86) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/grid_dims.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/grid_dims.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/grid_dims.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/grid_dims.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/grid_dims.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/grid_dims.c > CMakeFiles/ecl.dir/ecl/grid_dims.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/grid_dims.c > CMakeFiles/ecl.dir/ecl/grid_dims.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/grid_dims.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/grid_dims.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/grid_dims.c -o CMakeFiles/ecl.dir/ecl/grid_dims.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/grid_dims.c -o CMakeFiles/ecl.dir/ecl/grid_dims.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/grid_dims.c.o.requires:
 
@@ -2267,16 +2123,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/grid_dims.c.o.provides.build: libecl/lib/CMake
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/nnc_info.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/nnc_info.c.o: libecl/lib/ecl/nnc_info.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_93) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/nnc_info.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/nnc_info.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/nnc_info.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_87) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/nnc_info.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/nnc_info.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/nnc_info.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/nnc_info.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/nnc_info.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/nnc_info.c > CMakeFiles/ecl.dir/ecl/nnc_info.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/nnc_info.c > CMakeFiles/ecl.dir/ecl/nnc_info.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/nnc_info.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/nnc_info.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/nnc_info.c -o CMakeFiles/ecl.dir/ecl/nnc_info.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/nnc_info.c -o CMakeFiles/ecl.dir/ecl/nnc_info.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/nnc_info.c.o.requires:
 
@@ -2291,16 +2147,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/nnc_info.c.o.provides.build: libecl/lib/CMakeF
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav_common.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav_common.c.o: libecl/lib/ecl/ecl_grav_common.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_94) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav_common.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_grav_common.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grav_common.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_88) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav_common.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_grav_common.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grav_common.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav_common.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_grav_common.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grav_common.c > CMakeFiles/ecl.dir/ecl/ecl_grav_common.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grav_common.c > CMakeFiles/ecl.dir/ecl/ecl_grav_common.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav_common.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_grav_common.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grav_common.c -o CMakeFiles/ecl.dir/ecl/ecl_grav_common.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_grav_common.c -o CMakeFiles/ecl.dir/ecl/ecl_grav_common.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav_common.c.o.requires:
 
@@ -2315,16 +2171,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_grav_common.c.o.provides.build: libecl/lib
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/nnc_vector.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/nnc_vector.c.o: libecl/lib/ecl/nnc_vector.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_95) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/nnc_vector.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/nnc_vector.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/nnc_vector.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_89) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/nnc_vector.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/nnc_vector.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/nnc_vector.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/nnc_vector.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/nnc_vector.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/nnc_vector.c > CMakeFiles/ecl.dir/ecl/nnc_vector.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/nnc_vector.c > CMakeFiles/ecl.dir/ecl/nnc_vector.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/nnc_vector.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/nnc_vector.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/nnc_vector.c -o CMakeFiles/ecl.dir/ecl/nnc_vector.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/nnc_vector.c -o CMakeFiles/ecl.dir/ecl/nnc_vector.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/nnc_vector.c.o.requires:
 
@@ -2339,16 +2195,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/nnc_vector.c.o.provides.build: libecl/lib/CMak
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_export.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_export.c.o: libecl/lib/ecl/ecl_nnc_export.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_96) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_export.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_nnc_export.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_nnc_export.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_90) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_export.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_nnc_export.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_nnc_export.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_export.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_nnc_export.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_nnc_export.c > CMakeFiles/ecl.dir/ecl/ecl_nnc_export.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_nnc_export.c > CMakeFiles/ecl.dir/ecl/ecl_nnc_export.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_export.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_nnc_export.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_nnc_export.c -o CMakeFiles/ecl.dir/ecl/ecl_nnc_export.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_nnc_export.c -o CMakeFiles/ecl.dir/ecl/ecl_nnc_export.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_export.c.o.requires:
 
@@ -2363,16 +2219,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_export.c.o.provides.build: libecl/lib/
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_data.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_data.c.o: libecl/lib/ecl/ecl_nnc_data.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_97) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_data.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_nnc_data.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_nnc_data.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_91) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_data.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_nnc_data.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_nnc_data.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_data.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_nnc_data.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_nnc_data.c > CMakeFiles/ecl.dir/ecl/ecl_nnc_data.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_nnc_data.c > CMakeFiles/ecl.dir/ecl/ecl_nnc_data.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_data.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_nnc_data.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_nnc_data.c -o CMakeFiles/ecl.dir/ecl/ecl_nnc_data.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_nnc_data.c -o CMakeFiles/ecl.dir/ecl/ecl_nnc_data.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_data.c.o.requires:
 
@@ -2387,16 +2243,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_data.c.o.provides.build: libecl/lib/CM
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_geometry.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_geometry.c.o: libecl/lib/ecl/ecl_nnc_geometry.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_98) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_geometry.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_nnc_geometry.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_nnc_geometry.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_92) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_geometry.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_nnc_geometry.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_nnc_geometry.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_geometry.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_nnc_geometry.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_nnc_geometry.c > CMakeFiles/ecl.dir/ecl/ecl_nnc_geometry.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_nnc_geometry.c > CMakeFiles/ecl.dir/ecl/ecl_nnc_geometry.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_geometry.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_nnc_geometry.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_nnc_geometry.c -o CMakeFiles/ecl.dir/ecl/ecl_nnc_geometry.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_nnc_geometry.c -o CMakeFiles/ecl.dir/ecl/ecl_nnc_geometry.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_geometry.c.o.requires:
 
@@ -2411,16 +2267,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_nnc_geometry.c.o.provides.build: libecl/li
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/layer.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/layer.c.o: libecl/lib/ecl/layer.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_99) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/layer.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/layer.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/layer.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_93) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/layer.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/layer.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/layer.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/layer.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/layer.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/layer.c > CMakeFiles/ecl.dir/ecl/layer.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/layer.c > CMakeFiles/ecl.dir/ecl/layer.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/layer.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/layer.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/layer.c -o CMakeFiles/ecl.dir/ecl/layer.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/layer.c -o CMakeFiles/ecl.dir/ecl/layer.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/layer.c.o.requires:
 
@@ -2435,16 +2291,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/layer.c.o.provides.build: libecl/lib/CMakeFile
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/fault_block.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/fault_block.c.o: libecl/lib/ecl/fault_block.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_100) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/fault_block.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/fault_block.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/fault_block.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_94) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/fault_block.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/fault_block.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/fault_block.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/fault_block.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/fault_block.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/fault_block.c > CMakeFiles/ecl.dir/ecl/fault_block.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/fault_block.c > CMakeFiles/ecl.dir/ecl/fault_block.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/fault_block.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/fault_block.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/fault_block.c -o CMakeFiles/ecl.dir/ecl/fault_block.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/fault_block.c -o CMakeFiles/ecl.dir/ecl/fault_block.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/fault_block.c.o.requires:
 
@@ -2459,16 +2315,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/fault_block.c.o.provides.build: libecl/lib/CMa
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/fault_block_layer.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/fault_block_layer.c.o: libecl/lib/ecl/fault_block_layer.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_101) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/fault_block_layer.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/fault_block_layer.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/fault_block_layer.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_95) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/fault_block_layer.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/fault_block_layer.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/fault_block_layer.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/fault_block_layer.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/fault_block_layer.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/fault_block_layer.c > CMakeFiles/ecl.dir/ecl/fault_block_layer.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/fault_block_layer.c > CMakeFiles/ecl.dir/ecl/fault_block_layer.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/fault_block_layer.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/fault_block_layer.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/fault_block_layer.c -o CMakeFiles/ecl.dir/ecl/fault_block_layer.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/fault_block_layer.c -o CMakeFiles/ecl.dir/ecl/fault_block_layer.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/fault_block_layer.c.o.requires:
 
@@ -2483,16 +2339,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/fault_block_layer.c.o.provides.build: libecl/l
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_type.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_type.c.o: libecl/lib/ecl/ecl_type.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_102) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_type.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_type.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_type.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_96) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_type.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_type.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_type.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_type.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_type.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_type.c > CMakeFiles/ecl.dir/ecl/ecl_type.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_type.c > CMakeFiles/ecl.dir/ecl/ecl_type.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_type.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_type.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_type.c -o CMakeFiles/ecl.dir/ecl/ecl_type.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_type.c -o CMakeFiles/ecl.dir/ecl/ecl_type.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_type.c.o.requires:
 
@@ -2507,16 +2363,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_type.c.o.provides.build: libecl/lib/CMakeF
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_type_python.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_type_python.c.o: libecl/lib/ecl/ecl_type_python.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_103) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_type_python.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_type_python.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_type_python.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_97) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_type_python.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/ecl_type_python.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_type_python.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_type_python.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/ecl_type_python.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_type_python.c > CMakeFiles/ecl.dir/ecl/ecl_type_python.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_type_python.c > CMakeFiles/ecl.dir/ecl/ecl_type_python.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_type_python.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/ecl_type_python.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_type_python.c -o CMakeFiles/ecl.dir/ecl/ecl_type_python.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/ecl_type_python.c -o CMakeFiles/ecl.dir/ecl/ecl_type_python.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_type_python.c.o.requires:
 
@@ -2531,16 +2387,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/ecl_type_python.c.o.provides.build: libecl/lib
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_state.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_state.c.o: libecl/lib/ecl/well_state.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_104) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/well_state.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/well_state.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_state.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_98) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/well_state.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/well_state.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_state.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_state.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/well_state.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_state.c > CMakeFiles/ecl.dir/ecl/well_state.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_state.c > CMakeFiles/ecl.dir/ecl/well_state.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_state.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/well_state.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_state.c -o CMakeFiles/ecl.dir/ecl/well_state.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_state.c -o CMakeFiles/ecl.dir/ecl/well_state.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_state.c.o.requires:
 
@@ -2555,16 +2411,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/well_state.c.o.provides.build: libecl/lib/CMak
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_conn.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_conn.c.o: libecl/lib/ecl/well_conn.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_105) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/well_conn.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/well_conn.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_conn.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_99) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/well_conn.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/well_conn.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_conn.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_conn.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/well_conn.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_conn.c > CMakeFiles/ecl.dir/ecl/well_conn.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_conn.c > CMakeFiles/ecl.dir/ecl/well_conn.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_conn.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/well_conn.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_conn.c -o CMakeFiles/ecl.dir/ecl/well_conn.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_conn.c -o CMakeFiles/ecl.dir/ecl/well_conn.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_conn.c.o.requires:
 
@@ -2579,16 +2435,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/well_conn.c.o.provides.build: libecl/lib/CMake
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_info.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_info.c.o: libecl/lib/ecl/well_info.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_106) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/well_info.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/well_info.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_info.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_100) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/well_info.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/well_info.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_info.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_info.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/well_info.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_info.c > CMakeFiles/ecl.dir/ecl/well_info.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_info.c > CMakeFiles/ecl.dir/ecl/well_info.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_info.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/well_info.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_info.c -o CMakeFiles/ecl.dir/ecl/well_info.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_info.c -o CMakeFiles/ecl.dir/ecl/well_info.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_info.c.o.requires:
 
@@ -2603,16 +2459,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/well_info.c.o.provides.build: libecl/lib/CMake
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_ts.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_ts.c.o: libecl/lib/ecl/well_ts.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_107) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/well_ts.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/well_ts.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_ts.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_101) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/well_ts.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/well_ts.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_ts.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_ts.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/well_ts.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_ts.c > CMakeFiles/ecl.dir/ecl/well_ts.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_ts.c > CMakeFiles/ecl.dir/ecl/well_ts.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_ts.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/well_ts.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_ts.c -o CMakeFiles/ecl.dir/ecl/well_ts.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_ts.c -o CMakeFiles/ecl.dir/ecl/well_ts.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_ts.c.o.requires:
 
@@ -2627,16 +2483,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/well_ts.c.o.provides.build: libecl/lib/CMakeFi
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_conn_collection.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_conn_collection.c.o: libecl/lib/ecl/well_conn_collection.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_108) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/well_conn_collection.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/well_conn_collection.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_conn_collection.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_102) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/well_conn_collection.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/well_conn_collection.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_conn_collection.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_conn_collection.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/well_conn_collection.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_conn_collection.c > CMakeFiles/ecl.dir/ecl/well_conn_collection.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_conn_collection.c > CMakeFiles/ecl.dir/ecl/well_conn_collection.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_conn_collection.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/well_conn_collection.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_conn_collection.c -o CMakeFiles/ecl.dir/ecl/well_conn_collection.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_conn_collection.c -o CMakeFiles/ecl.dir/ecl/well_conn_collection.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_conn_collection.c.o.requires:
 
@@ -2651,16 +2507,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/well_conn_collection.c.o.provides.build: libec
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_segment.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_segment.c.o: libecl/lib/ecl/well_segment.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_109) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/well_segment.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/well_segment.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_segment.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_103) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/well_segment.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/well_segment.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_segment.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_segment.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/well_segment.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_segment.c > CMakeFiles/ecl.dir/ecl/well_segment.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_segment.c > CMakeFiles/ecl.dir/ecl/well_segment.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_segment.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/well_segment.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_segment.c -o CMakeFiles/ecl.dir/ecl/well_segment.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_segment.c -o CMakeFiles/ecl.dir/ecl/well_segment.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_segment.c.o.requires:
 
@@ -2675,16 +2531,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/well_segment.c.o.provides.build: libecl/lib/CM
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_segment_collection.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_segment_collection.c.o: libecl/lib/ecl/well_segment_collection.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_110) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/well_segment_collection.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/well_segment_collection.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_segment_collection.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_104) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/well_segment_collection.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/well_segment_collection.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_segment_collection.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_segment_collection.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/well_segment_collection.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_segment_collection.c > CMakeFiles/ecl.dir/ecl/well_segment_collection.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_segment_collection.c > CMakeFiles/ecl.dir/ecl/well_segment_collection.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_segment_collection.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/well_segment_collection.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_segment_collection.c -o CMakeFiles/ecl.dir/ecl/well_segment_collection.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_segment_collection.c -o CMakeFiles/ecl.dir/ecl/well_segment_collection.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_segment_collection.c.o.requires:
 
@@ -2699,16 +2555,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/well_segment_collection.c.o.provides.build: li
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_branch_collection.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_branch_collection.c.o: libecl/lib/ecl/well_branch_collection.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_111) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/well_branch_collection.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/well_branch_collection.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_branch_collection.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_105) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/well_branch_collection.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/well_branch_collection.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_branch_collection.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_branch_collection.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/well_branch_collection.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_branch_collection.c > CMakeFiles/ecl.dir/ecl/well_branch_collection.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_branch_collection.c > CMakeFiles/ecl.dir/ecl/well_branch_collection.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_branch_collection.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/well_branch_collection.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_branch_collection.c -o CMakeFiles/ecl.dir/ecl/well_branch_collection.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_branch_collection.c -o CMakeFiles/ecl.dir/ecl/well_branch_collection.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_branch_collection.c.o.requires:
 
@@ -2723,16 +2579,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/well_branch_collection.c.o.provides.build: lib
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_rseg_loader.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_rseg_loader.c.o: libecl/lib/ecl/well_rseg_loader.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_112) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/well_rseg_loader.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/well_rseg_loader.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_rseg_loader.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_106) "Building C object libecl/lib/CMakeFiles/ecl.dir/ecl/well_rseg_loader.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/ecl/well_rseg_loader.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_rseg_loader.c
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_rseg_loader.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/ecl/well_rseg_loader.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_rseg_loader.c > CMakeFiles/ecl.dir/ecl/well_rseg_loader.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_rseg_loader.c > CMakeFiles/ecl.dir/ecl/well_rseg_loader.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_rseg_loader.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/ecl/well_rseg_loader.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_rseg_loader.c -o CMakeFiles/ecl.dir/ecl/well_rseg_loader.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/well_rseg_loader.c -o CMakeFiles/ecl.dir/ecl/well_rseg_loader.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/ecl/well_rseg_loader.c.o.requires:
 
@@ -2747,16 +2603,16 @@ libecl/lib/CMakeFiles/ecl.dir/ecl/well_rseg_loader.c.o.provides.build: libecl/li
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_surface.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_surface.c.o: libecl/lib/geometry/geo_surface.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_113) "Building C object libecl/lib/CMakeFiles/ecl.dir/geometry/geo_surface.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/geometry/geo_surface.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_surface.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_107) "Building C object libecl/lib/CMakeFiles/ecl.dir/geometry/geo_surface.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/geometry/geo_surface.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_surface.c
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_surface.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/geometry/geo_surface.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_surface.c > CMakeFiles/ecl.dir/geometry/geo_surface.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_surface.c > CMakeFiles/ecl.dir/geometry/geo_surface.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_surface.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/geometry/geo_surface.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_surface.c -o CMakeFiles/ecl.dir/geometry/geo_surface.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_surface.c -o CMakeFiles/ecl.dir/geometry/geo_surface.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_surface.c.o.requires:
 
@@ -2771,16 +2627,16 @@ libecl/lib/CMakeFiles/ecl.dir/geometry/geo_surface.c.o.provides.build: libecl/li
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_util.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_util.c.o: libecl/lib/geometry/geo_util.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_114) "Building C object libecl/lib/CMakeFiles/ecl.dir/geometry/geo_util.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/geometry/geo_util.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_util.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_108) "Building C object libecl/lib/CMakeFiles/ecl.dir/geometry/geo_util.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/geometry/geo_util.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_util.c
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_util.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/geometry/geo_util.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_util.c > CMakeFiles/ecl.dir/geometry/geo_util.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_util.c > CMakeFiles/ecl.dir/geometry/geo_util.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_util.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/geometry/geo_util.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_util.c -o CMakeFiles/ecl.dir/geometry/geo_util.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_util.c -o CMakeFiles/ecl.dir/geometry/geo_util.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_util.c.o.requires:
 
@@ -2795,16 +2651,16 @@ libecl/lib/CMakeFiles/ecl.dir/geometry/geo_util.c.o.provides.build: libecl/lib/C
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_pointset.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_pointset.c.o: libecl/lib/geometry/geo_pointset.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_115) "Building C object libecl/lib/CMakeFiles/ecl.dir/geometry/geo_pointset.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/geometry/geo_pointset.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_pointset.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_109) "Building C object libecl/lib/CMakeFiles/ecl.dir/geometry/geo_pointset.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/geometry/geo_pointset.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_pointset.c
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_pointset.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/geometry/geo_pointset.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_pointset.c > CMakeFiles/ecl.dir/geometry/geo_pointset.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_pointset.c > CMakeFiles/ecl.dir/geometry/geo_pointset.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_pointset.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/geometry/geo_pointset.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_pointset.c -o CMakeFiles/ecl.dir/geometry/geo_pointset.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_pointset.c -o CMakeFiles/ecl.dir/geometry/geo_pointset.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_pointset.c.o.requires:
 
@@ -2819,16 +2675,16 @@ libecl/lib/CMakeFiles/ecl.dir/geometry/geo_pointset.c.o.provides.build: libecl/l
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_region.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_region.c.o: libecl/lib/geometry/geo_region.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_116) "Building C object libecl/lib/CMakeFiles/ecl.dir/geometry/geo_region.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/geometry/geo_region.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_region.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_110) "Building C object libecl/lib/CMakeFiles/ecl.dir/geometry/geo_region.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/geometry/geo_region.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_region.c
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_region.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/geometry/geo_region.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_region.c > CMakeFiles/ecl.dir/geometry/geo_region.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_region.c > CMakeFiles/ecl.dir/geometry/geo_region.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_region.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/geometry/geo_region.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_region.c -o CMakeFiles/ecl.dir/geometry/geo_region.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_region.c -o CMakeFiles/ecl.dir/geometry/geo_region.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_region.c.o.requires:
 
@@ -2843,16 +2699,16 @@ libecl/lib/CMakeFiles/ecl.dir/geometry/geo_region.c.o.provides.build: libecl/lib
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_polygon.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_polygon.c.o: libecl/lib/geometry/geo_polygon.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_117) "Building C object libecl/lib/CMakeFiles/ecl.dir/geometry/geo_polygon.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/geometry/geo_polygon.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_polygon.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_111) "Building C object libecl/lib/CMakeFiles/ecl.dir/geometry/geo_polygon.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/geometry/geo_polygon.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_polygon.c
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_polygon.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/geometry/geo_polygon.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_polygon.c > CMakeFiles/ecl.dir/geometry/geo_polygon.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_polygon.c > CMakeFiles/ecl.dir/geometry/geo_polygon.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_polygon.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/geometry/geo_polygon.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_polygon.c -o CMakeFiles/ecl.dir/geometry/geo_polygon.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_polygon.c -o CMakeFiles/ecl.dir/geometry/geo_polygon.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_polygon.c.o.requires:
 
@@ -2867,16 +2723,16 @@ libecl/lib/CMakeFiles/ecl.dir/geometry/geo_polygon.c.o.provides.build: libecl/li
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_polygon_collection.c.o: libecl/lib/CMakeFiles/ecl.dir/flags.make
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_polygon_collection.c.o: libecl/lib/geometry/geo_polygon_collection.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_118) "Building C object libecl/lib/CMakeFiles/ecl.dir/geometry/geo_polygon_collection.c.o"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/geometry/geo_polygon_collection.c.o   -c /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_polygon_collection.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_112) "Building C object libecl/lib/CMakeFiles/ecl.dir/geometry/geo_polygon_collection.c.o"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ecl.dir/geometry/geo_polygon_collection.c.o   -c /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_polygon_collection.c
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_polygon_collection.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ecl.dir/geometry/geo_polygon_collection.c.i"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_polygon_collection.c > CMakeFiles/ecl.dir/geometry/geo_polygon_collection.c.i
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_polygon_collection.c > CMakeFiles/ecl.dir/geometry/geo_polygon_collection.c.i
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_polygon_collection.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ecl.dir/geometry/geo_polygon_collection.c.s"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_polygon_collection.c -o CMakeFiles/ecl.dir/geometry/geo_polygon_collection.c.s
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && /usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/geometry/geo_polygon_collection.c -o CMakeFiles/ecl.dir/geometry/geo_polygon_collection.c.s
 
 libecl/lib/CMakeFiles/ecl.dir/geometry/geo_polygon_collection.c.o.requires:
 
@@ -2927,12 +2783,6 @@ ecl_OBJECTS = \
 "CMakeFiles/ecl.dir/util/perm_vector.c.o" \
 "CMakeFiles/ecl.dir/util/test_util.c.o" \
 "CMakeFiles/ecl.dir/util/thread_pool.c.o" \
-"CMakeFiles/ecl.dir/util/matrix_lapack.c.o" \
-"CMakeFiles/ecl.dir/util/matrix_blas.c.o" \
-"CMakeFiles/ecl.dir/util/matrix_stat.c.o" \
-"CMakeFiles/ecl.dir/util/regression.c.o" \
-"CMakeFiles/ecl.dir/util/lars.c.o" \
-"CMakeFiles/ecl.dir/util/stepwise.c.o" \
 "CMakeFiles/ecl.dir/util/util_abort_gnu.c.o" \
 "CMakeFiles/ecl.dir/util/test_work_area.c.o" \
 "CMakeFiles/ecl.dir/util/util_getuid.c.o" \
@@ -3049,12 +2899,6 @@ libecl/lib/libecl.a: libecl/lib/CMakeFiles/ecl.dir/util/struct_vector.c.o
 libecl/lib/libecl.a: libecl/lib/CMakeFiles/ecl.dir/util/perm_vector.c.o
 libecl/lib/libecl.a: libecl/lib/CMakeFiles/ecl.dir/util/test_util.c.o
 libecl/lib/libecl.a: libecl/lib/CMakeFiles/ecl.dir/util/thread_pool.c.o
-libecl/lib/libecl.a: libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o
-libecl/lib/libecl.a: libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o
-libecl/lib/libecl.a: libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o
-libecl/lib/libecl.a: libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o
-libecl/lib/libecl.a: libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o
-libecl/lib/libecl.a: libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o
 libecl/lib/libecl.a: libecl/lib/CMakeFiles/ecl.dir/util/util_abort_gnu.c.o
 libecl/lib/libecl.a: libecl/lib/CMakeFiles/ecl.dir/util/test_work_area.c.o
 libecl/lib/libecl.a: libecl/lib/CMakeFiles/ecl.dir/util/util_getuid.c.o
@@ -3133,9 +2977,9 @@ libecl/lib/libecl.a: libecl/lib/CMakeFiles/ecl.dir/geometry/geo_polygon.c.o
 libecl/lib/libecl.a: libecl/lib/CMakeFiles/ecl.dir/geometry/geo_polygon_collection.c.o
 libecl/lib/libecl.a: libecl/lib/CMakeFiles/ecl.dir/build.make
 libecl/lib/libecl.a: libecl/lib/CMakeFiles/ecl.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_119) "Linking CXX static library libecl.a"
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && $(CMAKE_COMMAND) -P CMakeFiles/ecl.dir/cmake_clean_target.cmake
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ecl.dir/link.txt --verbose=$(VERBOSE)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/CMakeFiles --progress-num=$(CMAKE_PROGRESS_113) "Linking CXX static library libecl.a"
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && $(CMAKE_COMMAND) -P CMakeFiles/ecl.dir/cmake_clean_target.cmake
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ecl.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 libecl/lib/CMakeFiles/ecl.dir/build: libecl/lib/libecl.a
@@ -3178,12 +3022,6 @@ libecl/lib/CMakeFiles/ecl.dir/requires: libecl/lib/CMakeFiles/ecl.dir/util/struc
 libecl/lib/CMakeFiles/ecl.dir/requires: libecl/lib/CMakeFiles/ecl.dir/util/perm_vector.c.o.requires
 libecl/lib/CMakeFiles/ecl.dir/requires: libecl/lib/CMakeFiles/ecl.dir/util/test_util.c.o.requires
 libecl/lib/CMakeFiles/ecl.dir/requires: libecl/lib/CMakeFiles/ecl.dir/util/thread_pool.c.o.requires
-libecl/lib/CMakeFiles/ecl.dir/requires: libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o.requires
-libecl/lib/CMakeFiles/ecl.dir/requires: libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o.requires
-libecl/lib/CMakeFiles/ecl.dir/requires: libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o.requires
-libecl/lib/CMakeFiles/ecl.dir/requires: libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o.requires
-libecl/lib/CMakeFiles/ecl.dir/requires: libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o.requires
-libecl/lib/CMakeFiles/ecl.dir/requires: libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o.requires
 libecl/lib/CMakeFiles/ecl.dir/requires: libecl/lib/CMakeFiles/ecl.dir/util/util_abort_gnu.c.o.requires
 libecl/lib/CMakeFiles/ecl.dir/requires: libecl/lib/CMakeFiles/ecl.dir/util/test_work_area.c.o.requires
 libecl/lib/CMakeFiles/ecl.dir/requires: libecl/lib/CMakeFiles/ecl.dir/util/util_getuid.c.o.requires
@@ -3264,10 +3102,10 @@ libecl/lib/CMakeFiles/ecl.dir/requires: libecl/lib/CMakeFiles/ecl.dir/geometry/g
 .PHONY : libecl/lib/CMakeFiles/ecl.dir/requires
 
 libecl/lib/CMakeFiles/ecl.dir/clean:
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && $(CMAKE_COMMAND) -P CMakeFiles/ecl.dir/cmake_clean.cmake
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib && $(CMAKE_COMMAND) -P CMakeFiles/ecl.dir/cmake_clean.cmake
 .PHONY : libecl/lib/CMakeFiles/ecl.dir/clean
 
 libecl/lib/CMakeFiles/ecl.dir/depend:
-	cd /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib /home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/CMakeFiles/ecl.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib /home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/CMakeFiles/ecl.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : libecl/lib/CMakeFiles/ecl.dir/depend
 

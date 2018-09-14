@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/EclFilename.cpp
+/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/EclFilename.cpp
 string
 -
 stdexcept
@@ -14,7 +14,7 @@ stdexcept
 ert/ecl/EclFilename.hpp
 -
 
-/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/FortIO.cpp
+/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/FortIO.cpp
 stdexcept
 -
 ert/ecl/fortio.h
@@ -24,13 +24,13 @@ ert/util/util.h
 ert/ecl/FortIO.hpp
 -
 
-/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/Smspec.cpp
+/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/ecl/Smspec.cpp
 ert/ecl/ecl_smspec.h
 -
 ert/ecl/Smspec.hpp
 -
 
-/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/nexus/nexus_plot.cpp
+/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/nexus/nexus_plot.cpp
 algorithm
 -
 array
@@ -54,7 +54,7 @@ ert/nexus/nexus_plot.hpp
 ert/ecl/ecl_sum.h
 -
 
-/home/einar/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/TestArea.cpp
+/home/bragesk/git/PCG/FieldOpt/FieldOpt/ThirdParty/libecl/lib/util/TestArea.cpp
 string
 -
 ert/util/util.h

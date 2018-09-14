@@ -1553,25 +1553,6 @@ libecl/lib/CMakeFiles/ecl.dir/util/hash_sll.c.o: libecl/lib/include/ert/util/nod
 libecl/lib/CMakeFiles/ecl.dir/util/hash_sll.c.o: libecl/lib/include/ert/util/util.h
 libecl/lib/CMakeFiles/ecl.dir/util/hash_sll.c.o: libecl/lib/include/ert/util/util_unlink.h
 
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o: libecl/lib/util/lars.c
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o: libecl/lib/include/ert/util/bool_vector.h
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o: libecl/lib/include/ert/util/buffer.h
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o: libecl/lib/include/ert/util/buffer_string.h
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o: libecl/lib/include/ert/util/ert_api_config.h
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o: libecl/lib/include/ert/util/int_vector.h
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o: libecl/lib/include/ert/util/lars.h
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o: libecl/lib/include/ert/util/matrix.h
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o: libecl/lib/include/ert/util/matrix_blas.h
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o: libecl/lib/include/ert/util/matrix_lapack.h
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o: libecl/lib/include/ert/util/perm_vector.h
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o: libecl/lib/include/ert/util/regression.h
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o: libecl/lib/include/ert/util/rng.h
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o: libecl/lib/include/ert/util/ssize_t.h
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o: libecl/lib/include/ert/util/thread_pool.h
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o: libecl/lib/include/ert/util/type_macros.h
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o: libecl/lib/include/ert/util/util.h
-libecl/lib/CMakeFiles/ecl.dir/util/lars.c.o: libecl/lib/include/ert/util/util_unlink.h
-
 libecl/lib/CMakeFiles/ecl.dir/util/log.c.o: libecl/lib/util/log.c
 libecl/lib/CMakeFiles/ecl.dir/util/log.c.o: libecl/lib/include/ert/util/build_config.h
 libecl/lib/CMakeFiles/ecl.dir/util/log.c.o: libecl/lib/include/ert/util/ert_api_config.h
@@ -1606,53 +1587,6 @@ libecl/lib/CMakeFiles/ecl.dir/util/matrix.c.o: libecl/lib/include/ert/util/threa
 libecl/lib/CMakeFiles/ecl.dir/util/matrix.c.o: libecl/lib/include/ert/util/type_macros.h
 libecl/lib/CMakeFiles/ecl.dir/util/matrix.c.o: libecl/lib/include/ert/util/util.h
 libecl/lib/CMakeFiles/ecl.dir/util/matrix.c.o: libecl/lib/include/ert/util/util_unlink.h
-
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o: libecl/lib/util/matrix_blas.c
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o: libecl/lib/include/ert/util/bool_vector.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o: libecl/lib/include/ert/util/buffer.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o: libecl/lib/include/ert/util/buffer_string.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o: libecl/lib/include/ert/util/ert_api_config.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o: libecl/lib/include/ert/util/matrix.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o: libecl/lib/include/ert/util/matrix_blas.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o: libecl/lib/include/ert/util/perm_vector.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o: libecl/lib/include/ert/util/rng.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o: libecl/lib/include/ert/util/ssize_t.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o: libecl/lib/include/ert/util/thread_pool.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o: libecl/lib/include/ert/util/type_macros.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o: libecl/lib/include/ert/util/util.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_blas.c.o: libecl/lib/include/ert/util/util_unlink.h
-
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o: libecl/lib/util/matrix_lapack.c
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o: libecl/lib/include/ert/util/bool_vector.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o: libecl/lib/include/ert/util/buffer.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o: libecl/lib/include/ert/util/buffer_string.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o: libecl/lib/include/ert/util/ert_api_config.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o: libecl/lib/include/ert/util/matrix.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o: libecl/lib/include/ert/util/matrix_lapack.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o: libecl/lib/include/ert/util/perm_vector.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o: libecl/lib/include/ert/util/rng.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o: libecl/lib/include/ert/util/ssize_t.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o: libecl/lib/include/ert/util/thread_pool.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o: libecl/lib/include/ert/util/type_macros.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o: libecl/lib/include/ert/util/util.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_lapack.c.o: libecl/lib/include/ert/util/util_unlink.h
-
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o: libecl/lib/util/matrix_stat.c
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o: libecl/lib/include/ert/util/bool_vector.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o: libecl/lib/include/ert/util/buffer.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o: libecl/lib/include/ert/util/buffer_string.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o: libecl/lib/include/ert/util/ert_api_config.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o: libecl/lib/include/ert/util/matrix.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o: libecl/lib/include/ert/util/matrix_blas.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o: libecl/lib/include/ert/util/matrix_lapack.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o: libecl/lib/include/ert/util/matrix_stat.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o: libecl/lib/include/ert/util/perm_vector.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o: libecl/lib/include/ert/util/rng.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o: libecl/lib/include/ert/util/ssize_t.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o: libecl/lib/include/ert/util/thread_pool.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o: libecl/lib/include/ert/util/type_macros.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o: libecl/lib/include/ert/util/util.h
-libecl/lib/CMakeFiles/ecl.dir/util/matrix_stat.c.o: libecl/lib/include/ert/util/util_unlink.h
 
 libecl/lib/CMakeFiles/ecl.dir/util/menu.c.o: libecl/lib/util/menu.c
 libecl/lib/CMakeFiles/ecl.dir/util/menu.c.o: libecl/lib/include/ert/util/buffer.h
@@ -1737,23 +1671,6 @@ libecl/lib/CMakeFiles/ecl.dir/util/perm_vector.c.o: libecl/lib/include/ert/util/
 libecl/lib/CMakeFiles/ecl.dir/util/perm_vector.c.o: libecl/lib/include/ert/util/util.h
 libecl/lib/CMakeFiles/ecl.dir/util/perm_vector.c.o: libecl/lib/include/ert/util/util_unlink.h
 
-libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o: libecl/lib/util/regression.c
-libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o: libecl/lib/include/ert/util/bool_vector.h
-libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o: libecl/lib/include/ert/util/buffer.h
-libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o: libecl/lib/include/ert/util/buffer_string.h
-libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o: libecl/lib/include/ert/util/ert_api_config.h
-libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o: libecl/lib/include/ert/util/matrix.h
-libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o: libecl/lib/include/ert/util/matrix_blas.h
-libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o: libecl/lib/include/ert/util/matrix_lapack.h
-libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o: libecl/lib/include/ert/util/perm_vector.h
-libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o: libecl/lib/include/ert/util/regression.h
-libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o: libecl/lib/include/ert/util/rng.h
-libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o: libecl/lib/include/ert/util/ssize_t.h
-libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o: libecl/lib/include/ert/util/thread_pool.h
-libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o: libecl/lib/include/ert/util/type_macros.h
-libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o: libecl/lib/include/ert/util/util.h
-libecl/lib/CMakeFiles/ecl.dir/util/regression.c.o: libecl/lib/include/ert/util/util_unlink.h
-
 libecl/lib/CMakeFiles/ecl.dir/util/rng.c.o: libecl/lib/util/rng.c
 libecl/lib/CMakeFiles/ecl.dir/util/rng.c.o: libecl/lib/include/ert/util/ert_api_config.h
 libecl/lib/CMakeFiles/ecl.dir/util/rng.c.o: libecl/lib/include/ert/util/mzran.h
@@ -1788,23 +1705,6 @@ libecl/lib/CMakeFiles/ecl.dir/util/statistics.c.o: libecl/lib/include/ert/util/s
 libecl/lib/CMakeFiles/ecl.dir/util/statistics.c.o: libecl/lib/include/ert/util/type_macros.h
 libecl/lib/CMakeFiles/ecl.dir/util/statistics.c.o: libecl/lib/include/ert/util/util.h
 libecl/lib/CMakeFiles/ecl.dir/util/statistics.c.o: libecl/lib/include/ert/util/util_unlink.h
-
-libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o: libecl/lib/util/stepwise.c
-libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o: libecl/lib/include/ert/util/bool_vector.h
-libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o: libecl/lib/include/ert/util/buffer.h
-libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o: libecl/lib/include/ert/util/buffer_string.h
-libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o: libecl/lib/include/ert/util/double_vector.h
-libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o: libecl/lib/include/ert/util/ert_api_config.h
-libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o: libecl/lib/include/ert/util/matrix.h
-libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o: libecl/lib/include/ert/util/perm_vector.h
-libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o: libecl/lib/include/ert/util/regression.h
-libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o: libecl/lib/include/ert/util/rng.h
-libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o: libecl/lib/include/ert/util/ssize_t.h
-libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o: libecl/lib/include/ert/util/stepwise.h
-libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o: libecl/lib/include/ert/util/thread_pool.h
-libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o: libecl/lib/include/ert/util/type_macros.h
-libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o: libecl/lib/include/ert/util/util.h
-libecl/lib/CMakeFiles/ecl.dir/util/stepwise.c.o: libecl/lib/include/ert/util/util_unlink.h
 
 libecl/lib/CMakeFiles/ecl.dir/util/string_util.c.o: libecl/lib/util/string_util.c
 libecl/lib/CMakeFiles/ecl.dir/util/string_util.c.o: libecl/lib/include/ert/util/bool_vector.h

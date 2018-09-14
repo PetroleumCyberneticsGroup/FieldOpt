@@ -50,7 +50,7 @@ class Optimizer
     PackerConstraint, ICVConstraint
   };
   enum ConstraintWellSplinePointsType { MaxMin, Function};
-  enum ObjectiveType { WeightedSum };
+  enum ObjectiveType { WeightedSum, NPV};
 
   struct Parameters {
     // GSS parameters
@@ -85,7 +85,11 @@ class Optimizer
     struct WeightedSumComponent {
       double coefficient; QString property; int time_step;
       bool is_well_prop; QString well; }; //!< A component of a weighted sum formulatied objective function
+    struct NPVComponent{
+      double coefficient; QString property; QString interval;
+      bool usediscountfactor; QString well; double discount; };
     QList<WeightedSumComponent> weighted_sum; //!< The expression for the Objective function formulated as a weighted sum
+    QList<NPVComponent> NPV_sum;
   };
 
   struct Constraint {

@@ -1,4 +1,4 @@
-#define ERT_HAVE_LAPACK
+/* #undef ERT_HAVE_LAPACK */
 #define ERT_HAVE_ZLIB
 #define ERT_HAVE_ISFINITE
 #define ERT_HAVE_GETOPT
