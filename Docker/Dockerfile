@@ -49,7 +49,7 @@ ENV NAME FieldOpt
 ENV FIELDOPT_BIN="/app/FieldOpt/FieldOpt/cmake-build-debug/bin/FieldOpt"
 ENV FIELDOPT_BUILD="/app/FieldOpt/FieldOpt/cmake-build-debug/bin/"
 ENV FIELDOPT_OUT="/app/fieldopt-output"
-ENV PATH="/app/FieldOpt/FieldOpt/cmake-build-debug/bin/"
+ENV PATH=$PATH:"/app/FieldOpt/FieldOpt/cmake-build-debug/bin/"
 
 # Execute FieldOpt with the help argument
 CMD ["FieldOpt"]
