@@ -367,6 +367,40 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
         else {
             obj.use_penalty_function = false;
         }
+
+        if(json_objective.contains("SeparateHorizontalAndVertical")){
+            obj.separatehorizontalandvertical=json_objective["SeparateHorizontalAndVertical"].toBool();
+        } else {
+            obj.separatehorizontalandvertical= false;
+        }
+        if (json_objective.contains("UseWellCost")){
+            obj.useWellCost = json_objective["UseWellCost"].toBool();
+            if (obj.separatehorizontalandvertical){
+                if(json_objective.contains("WellCostXY")){
+                    obj.wellCostXY = json_objective["WellCostXY"].toDouble();
+                    if(json_objective.contains("WellCostZ")){
+                        obj.wellCostZ = json_objective["WellCostZ"].toDouble();
+                    }
+                    else{
+                        throw UnableToParseOptimizerObjectiveSectionException("Unable to parse optimizer objective a WellCostZ was not defined, while SeparateHorizontalAndVertical was invoked");
+                    }
+                } else {
+                    throw UnableToParseOptimizerObjectiveSectionException("Unable to parse optimizer objective a WellCostXY was not defined, while SeparateHorizontalAndVertical was invoked");
+                }
+            } else {
+                if(json_objective.contains("WellCost")){
+                    obj.wellCost = json_objective["WellCost"].toDouble();
+                } else {
+                    obj.wellCostXY = 0;
+                }
+            }
+
+        } else {
+            obj.useWellCost = false;
+            obj.wellCost = 0;
+            obj.wellCostXY = 0;
+            obj.wellCostZ = 0;
+        }
     }
     catch (std::exception const &ex) {
         throw UnableToParseOptimizerObjectiveSectionException("Unable to parse optimizer objective: " + std::string(ex.what()));

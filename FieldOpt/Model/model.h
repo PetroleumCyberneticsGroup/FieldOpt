@@ -75,6 +75,8 @@ class Model : public Loggable
    */
   void ApplyCase(Optimization::Case *c);
 
+  double wellCost(Settings::Optimizer::Objective objective);
+
   /*!
    * @brief Get the UUId of last case applied to the Model.
    * @return

@@ -82,6 +82,11 @@ class Optimizer
   struct Objective {
     ObjectiveType type; //!< The objective definition type (e.g. WeightedSum)
     bool use_penalty_function; //!< Whether or not to use penalty function (default: false).
+    bool useWellCost; //!<Whether to include a well cost associated with the length
+    bool separatehorizontalandvertical;
+    double wellCostXY;
+    double wellCostZ;
+    double wellCost;
     struct WeightedSumComponent {
       double coefficient; QString property; int time_step;
       bool is_well_prop; QString well; }; //!< A component of a weighted sum formulatied objective function
@@ -90,6 +95,7 @@ class Optimizer
       bool usediscountfactor; QString well; double discount; };
     QList<WeightedSumComponent> weighted_sum; //!< The expression for the Objective function formulated as a weighted sum
     QList<NPVComponent> NPV_sum;
+
   };
 
   struct Constraint {

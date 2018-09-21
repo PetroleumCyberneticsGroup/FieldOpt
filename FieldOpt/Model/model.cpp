@@ -105,6 +105,34 @@ void Model::verifyWells()
     }
 }
 
+double Model::wellCost(Settings::Optimizer::Objective objective){
+    double length_xy = 0;
+    double length_z = 0;
+    double total_length = 0;
+    for (Wells::Well *well : *wells_){
+        auto variable = well->trajectory()->GetWellSpline()->GetSplinePoints();
+        auto well_spline_heel_x = variable[0]->x->value();
+        auto well_spline_heel_y = variable[0]->y->value();
+        auto well_spline_heel_z = variable[0]->z->value();
+        auto well_spline_toe_x = variable[1]->x->value();
+        auto well_spline_toe_y = variable[1]->y->value();
+        auto well_spline_toe_z = variable[1]->z->value();
+
+        length_xy += sqrt(pow((well_spline_heel_x-well_spline_toe_x),2)+pow((well_spline_heel_y-well_spline_toe_y),2));
+        length_z += abs(well_spline_heel_z - well_spline_toe_z);
+        total_length += sqrt(pow((well_spline_heel_x-well_spline_toe_x),2)+pow((well_spline_heel_y-well_spline_toe_y),2)+pow((well_spline_heel_z-well_spline_toe_z),2));
+    }
+
+        if(objective.separatehorizontalandvertical){
+            return length_z*objective.wellCostZ + length_xy*objective.wellCostXY;
+
+        } else {
+            return total_length*objective.wellCost;
+
+        }
+    }
+
+
 void Model::verifyWellTrajectory(Wells::Well *w)
 {
     for (Wells::Wellbore::WellBlock *wb : *w->trajectory()->GetWellBlocks()) {
