@@ -54,10 +54,11 @@ Model::Model(QJsonObject json_model, Paths &paths)
 
     // Control times
     if (!json_model.contains("ControlTimes") || !json_model["ControlTimes"].isArray())
-        throw UnableToParseModelSectionException("The ControlTimes array must be defined with at least one time for the model.");
+        throw UnableToParseModelSectionException(
+            "The ControlTimes array must be defined with at least one time for the model.");
     control_times_ = QList<int>();
     if (json_model.contains("NPVInterval")) {
-        if(json_model["NPVInterval"].toString().compare("Yearly")==0) {
+        if (json_model["NPVInterval"].toString().compare("Yearly") == 0) {
             if (json_model.contains("NPVYears")) {
                 for (int i = 0; i < json_model["NPVYears"].toInt(); ++i) {
                     control_times_.append(365 * i);
@@ -65,15 +66,14 @@ Model::Model(QJsonObject json_model, Paths &paths)
             } else {
                 throw UnableToParseModelSectionException("Unable to parse NPVYears");
             }
-
-        } else if (json_model["NPVInterval"].toString().compare("Monthly")==0) {
-                    if (json_model.contains("NPVMonths")){
-                    for (int i = 0; i < json_model["NPVMonths"].toInt(); ++i) {
-                        control_times_.append(30 * i);
-                    }
-                } else {
-                    throw UnableToParseModelSectionException("Unable to parse NPVMonths");
+        } else if (json_model["NPVInterval"].toString().compare("Monthly") == 0) {
+            if (json_model.contains("NPVMonths")) {
+                for (int i = 0; i < json_model["NPVMonths"].toInt(); ++i) {
+                    control_times_.append(30 * i);
                 }
+            } else {
+                throw UnableToParseModelSectionException("Unable to parse NPVMonths");
+            }
         }
     }
     for (int i = 0; i < json_model["ControlTimes"].toArray().size(); ++i) {
