@@ -335,46 +335,66 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
                 if (json_components.at(i).toObject()["IsWellProp"].toBool()) {
                     component.is_well_prop = true;
                     component.well = json_components.at(i).toObject()["Well"].toString();
-                }
-                else component.is_well_prop = false;
+                } else component.is_well_prop = false;
                 component.time_step = json_components.at(i).toObject()["TimeStep"].toInt();
                 obj.weighted_sum.append(component);
             }
-        }
-        else if (QString::compare(objective_type, "NPV") == 0) {
+        } else if (QString::compare(objective_type, "NPV") == 0) {
             // -------------------------------------------------
             obj.type = ObjectiveType::NPV;
             obj.NPV_sum = QList<Objective::NPVComponent>();
             // ---------------------------------------------------
             QJsonArray json_components =
-                    json_objective["NPVComponents"].toArray();
+                json_objective["NPVComponents"].toArray();
             // ---------------------------------------------------
             for (int i = 0; i < json_components.size(); ++i) {
                 // -------------------------------------------------
                 Objective::NPVComponent component;
-                component.coefficient =
+                if (json_components.at(i).toObject().contains("Coefficient")) {
+                    component.coefficient =
                         json_components.at(i).toObject()["Coefficient"].toDouble();
-                component.property =
+                } else {
+                    throw UnableToParseOptimizerObjectiveSectionException("Coefficient is not specified");
+                }
+                if (json_components.at(i).toObject().contains("Property")) {
+
+                    component.property =
                         json_components.at(i).toObject()["Property"].toString();
-                component.discount =
-                        json_components.at(i).toObject()["DiscountFactor"].toDouble();
-                component.interval =
+                } else {
+                    throw UnableToParseOptimizerObjectiveSectionException("Property is not specified");
+                }
+                if (json_components.at(i).toObject().contains("DiscountFactor")) {
+                    component.discount = json_components.at(i).toObject()["DiscountFactor"].toDouble();
+                } else {
+                    component.discount = 0;
+                }
+                if (json_components.at(i).toObject().contains("Interval")) {
+                    component.interval =
                         json_components.at(i).toObject()["Interval"].toString();
-                component.usediscountfactor =
+                } else {
+                    throw UnableToParseOptimizerObjectiveSectionException("Interval is not specified");
+                }
+
+                if (json_components.at(i).toObject().contains("UseDiscountFactor")) {
+                    component.usediscountfactor =
                         json_components.at(i).toObject()["UseDiscountFactor"].toBool();
+                } else {
+                    component.usediscountfactor = false;
+                }
                 obj.NPV_sum.append(component);
             }
-                    }
-        else throw UnableToParseOptimizerObjectiveSectionException("Objective type " + objective_type.toStdString() + " not recognized");
+        } else
+            throw UnableToParseOptimizerObjectiveSectionException(
+                "Objective type " + objective_type.toStdString() + " not recognized");
         if (json_objective.contains("UsePenaltyFunction")) {
             obj.use_penalty_function = json_objective["UsePenaltyFunction"].toBool();
-        }
-        else {
+        } else {
             obj.use_penalty_function = false;
         }
     }
     catch (std::exception const &ex) {
-        throw UnableToParseOptimizerObjectiveSectionException("Unable to parse optimizer objective: " + std::string(ex.what()));
+        throw UnableToParseOptimizerObjectiveSectionException(
+            "Unable to parse optimizer objective: " + std::string(ex.what()));
     }
 
     return obj;
