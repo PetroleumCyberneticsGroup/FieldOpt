@@ -26,6 +26,7 @@
 #include <Optimization/optimizers/RGARDD.h>
 #include <Optimization/hybrid_optimizer.h>
 #include <Optimization/optimizers/bayesian_optimization/EGO.h>
+#include <Simulation/simulator_interfaces/ix_simulator.h>
 #include "abstract_runner.h"
 #include "Optimization/optimizers/compass_search.h"
 #include "Optimization/optimizers/ExhaustiveSearch2DVert.h"
@@ -99,17 +100,19 @@ void AbstractRunner::InitializeSimulator()
 
     switch (settings_->simulator()->type()) {
         case ::Settings::Simulator::SimulatorType::ECLIPSE:
-            if (runtime_settings_->verbosity_level()) std::cout << "Using ECL100 reservoir simulator." << std::endl;
+            if (VERB_RUN >= 1) Printer::info("Using ECLIPSE reservoir simulator.");
             simulator_ = new Simulation::ECLSimulator(settings_, model_);
             break;
         case ::Settings::Simulator::SimulatorType::ADGPRS:
-            if (runtime_settings_->verbosity_level()) std::cout << "Using ADGPRS reservoir simulator." << std::endl;
+            if (VERB_RUN >= 1) Printer::info("Using AD-GPRS reservoir simulator.");
             simulator_ = new Simulation::AdgprsSimulator(settings_, model_);
             break;
         case ::Settings::Simulator::SimulatorType::Flow:
-            if (runtime_settings_->verbosity_level()) std::cout << "Using Flow reservoir simulator." << std::endl;
+            if (VERB_RUN >= 1) Printer::info("Using Flow reservoir simulator.");
             simulator_ = new Simulation::ECLSimulator(settings_, model_);
-//            simulator_ = new Simulation::FlowSimulator(settings_, model_);
+        case ::Settings::Simulator::SimulatorType::INTERSECT:
+            if (VERB_RUN >= 1) Printer::info("Using INTERSECT reservoir simulator.");
+            simulator_ = new Simulation::IXSimulator(settings_, model_);
             break;
         default:
             throw std::runtime_error("Unable to initialize runner: simulator set in driver file not recognized.");

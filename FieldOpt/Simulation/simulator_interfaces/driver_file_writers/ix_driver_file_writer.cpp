@@ -28,7 +28,7 @@ IXDriverFileWriter::IXDriverFileWriter(Model::Model *model) {
     model_ = model;
 }
 
-void IXDriverFileWriter::WriteDriverFile(QString fm_edits_path) {
+void IXDriverFileWriter::WriteDriverFile(std::string fm_edits_path) {
     std::string fm_edits = "";
     fm_edits += IXParts::FieldManagementStandardReport();
     fm_edits += IXParts::EclReports();
@@ -50,7 +50,7 @@ void IXDriverFileWriter::WriteDriverFile(QString fm_edits_path) {
     for (auto well : *model_->wells()) {
         fm_edits += IXParts::CreateControlEntries(well);
     }
-//    Utilities::FileHandling::WriteStringToFile(QString::fromStdString(fm_edits), fm_edits_path);
+//    Utilities::FileHandling::WriteStringToFile(QString::fromStdString(fm_edits), QString::fromStdString(fm_edits_path));
     std::cout << fm_edits << std::endl;
 }
 }

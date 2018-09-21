@@ -18,29 +18,31 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
-#ifndef FIELDOPT_IX_DRIVER_FILE_WRITER_H
-#define FIELDOPT_IX_DRIVER_FILE_WRITER_H
+#ifndef FIELDOPT_IX_SIMULATOR_H
+#define FIELDOPT_IX_SIMULATOR_H
 
-#include "Model/model.h"
-#include "Settings/settings.h"
+#include "Simulation/simulator_interfaces/simulator.h"
 
 namespace Simulation {
 
-/*!
- * \brief This class implements driver file writing for Schlumberger's
- * INTERSECT reservoir simulator. It writes to the [DECK_NAME]_fm_edits.ixf file.
- */
-class IXDriverFileWriter {
+class IXSimulator : public Simulator {
+
  public:
-
-  IXDriverFileWriter(Model::Model *model);
-  void WriteDriverFile(std::string fm_edits_path);
-
+  IXSimulator(Settings::Settings *settings, Model::Model *model);
+  void Evaluate() override;
+  bool Evaluate(int timeout, int threads) override;
+  bool Evaluate(const Settings::Ensemble::Realization &realization, int timeout, int threads) override;
+  void WriteDriverFilesOnly() override;
+  void CleanUp() override;
+ protected:
+  void UpdateFilePaths() override;
  private:
-  Model::Model *model_;
+  void copyDriverFiles();
+
+  QString deck_name_;
 
 };
 
 }
 
-#endif //FIELDOPT_IX_DRIVER_FILE_WRITER_H
+#endif //FIELDOPT_IX_SIMULATOR_H

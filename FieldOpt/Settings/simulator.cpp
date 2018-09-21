@@ -65,6 +65,8 @@ void Simulator::setType(QJsonObject json_simulator) {
         type_ = SimulatorType::ADGPRS;
     else if (QString::compare(type, "Flow", Qt::CaseInsensitive) == 0)
         type_ = SimulatorType::Flow;
+    else if (QString::compare(type, "IX", Qt::CaseInsensitive) == 0)
+        type_ = SimulatorType::INTERSECT;
     else throw SimulatorTypeNotRecognizedException(
             "The simulator type " + type.toStdString() + " was not recognized");
 }
