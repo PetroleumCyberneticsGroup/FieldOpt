@@ -298,6 +298,13 @@ std::vector<Segment> Well::GetAnnulusSegments() {
     }
     return ann_segments;
 }
+std::vector<int> Well::GetICDSegmentIndices() {
+    std::vector<int> indices;
+    for (auto seg : GetICDSegments()) {
+        indices.push_back(seg.Index());
+    }
+    return indices;
+}
 
 }
 }

@@ -85,6 +85,7 @@ class Well
   std::vector<Segment> GetTubingSegments();
   std::vector<Segment> GetICDSegments();
   std::vector<Segment> GetAnnulusSegments();
+  std::vector<int> GetICDSegmentIndices();
 
  protected:
   Settings::Model::Well well_settings_;
