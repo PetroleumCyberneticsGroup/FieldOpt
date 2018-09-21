@@ -47,7 +47,6 @@ NPV::NPV(Settings::Optimizer *settings,
     if (settings->objective().NPV_sum.at(i).usediscountfactor == true) {
       comp->interval = settings->objective().NPV_sum.at(i).interval;
       comp->discount = settings->objective().NPV_sum.at(i).discount;
-      cout << comp->discount << endl;
       comp->usediscountfactor = settings->objective().NPV_sum.at(i).usediscountfactor;
     } else {
       comp->interval = "None";
