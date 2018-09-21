@@ -363,19 +363,20 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
                 } else {
                     component.discount = 0;
                 }
-                if (json_components.at(i).toObject().contains("Interval")) {
-                    component.interval =
-                        json_components.at(i).toObject()["Interval"].toString();
-                } else {
-                    throw UnableToParseOptimizerObjectiveSectionException("Interval is not specified");
-                }
-
                 if (json_components.at(i).toObject().contains("UseDiscountFactor")) {
                     component.usediscountfactor =
                         json_components.at(i).toObject()["UseDiscountFactor"].toBool();
                 } else {
                     component.usediscountfactor = false;
                 }
+                if (json_components.at(i).toObject().contains("Interval")) {
+                    component.interval =
+                        json_components.at(i).toObject()["Interval"].toString();
+                } else {
+                    component.interval = nullptr;
+                }
+
+
                 obj.NPV_sum.append(component);
             }
         } else
