@@ -17,6 +17,7 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+#include <Utilities/printer.hpp>
 #include "optimizer.h"
 #include "settings_exceptions.h"
 
@@ -96,6 +97,10 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
     else if (QString::compare(constraint_type, "ICVConstraint") == 0) {
         optimizer_constraint.type = ConstraintType::ICVConstraint;
         optimizer_constraint.max = json_constraint["Max"].toDouble();
+        if (optimizer_constraint.max >= 7.8540E-03) {
+            Printer::ext_warn("Maximum valve size is too big. Setting it to 7.8539-3.", "Settings", "Optimizer");
+            optimizer_constraint.max = 7.8539-3;
+        }
         optimizer_constraint.min = json_constraint["Min"].toDouble();
     }
     else if (QString::compare(constraint_type, "PackerConstraint") == 0) {
