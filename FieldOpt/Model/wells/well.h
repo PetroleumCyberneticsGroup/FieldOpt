@@ -95,12 +95,13 @@ class Well
   ::Settings::Model::PreferredPhase preferred_phase_;
   Properties::ContinousProperty *wellbore_radius_;
   Wellbore::Trajectory *trajectory_;
+  bool trajectory_defined_ = true; //!< Whether the trajectory is defined. It does not need to be for, e.g., control optimization.
 
   Heel heel_;
   QList<Control *> *controls_;
 
   // Fields for segmented wells
-  bool is_segmented_;
+  bool is_segmented_ = false;
   void initializeSegmentedWell(Properties::VariablePropertyContainer *variable_container);
   double tub_diam_;            //!< Tubing (inner) diameter.
   double ann_diam_;            //!< Annular diameter.

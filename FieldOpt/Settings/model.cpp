@@ -184,12 +184,6 @@ Model::Model(QJsonObject json_model, Paths &paths)
 
 void Model::readReservoir(QJsonObject json_reservoir, Paths &paths)
 {
-    // Reservoir grid source type
-    QString type = json_reservoir["Type"].toString();
-    if (QString::compare(type, "ECLIPSE") == 0)
-        reservoir_.type = ReservoirGridSourceType::ECLIPSE;
-    else throw UnableToParseReservoirModelSectionException("Grid source type " + type.toStdString() +  "not recognized.");
-
     // Reservoir grid path
     if (!paths.IsSet(Paths::GRID_FILE) && json_reservoir.contains("Path")) {
         paths.SetPath(Paths::GRID_FILE, json_reservoir["Path"].toString().toStdString());
@@ -341,12 +335,19 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
         }
         else well.spline_heel.is_variable = false;
     }
-    else throw UnableToParseWellsModelSectionException("Well definition type " + definition_type.toStdString() + " not recognized for well " + well.name.toStdString());
+    else {
+        Printer::ext_warn("Well definition type not recognized. Proceeding without defining a well trajectory.",
+            "Settings", "Model");
+        well.definition_type = UNDEFINED;
+    }
 
     // Wellbore radius
-    if (!json_well.contains("WellboreRadius"))
-        throw UnableToParseWellsModelSectionException("The wellbore radius must be defined for all wells.");
-    well.wellbore_radius = json_well["WellboreRadius"].toDouble();
+    if (json_well.contains("WellboreRadius"))
+        well.wellbore_radius = json_well["WellboreRadius"].toDouble();
+    else {
+        Printer::ext_warn("WellBoreRadius not set. Defaulting to 0.01905");
+        well.wellbore_radius = 0.1905;
+    }
 
     // Direction of penetration
     if (json_well.contains("Direction")) { // Direction must be specified for horizontal wells

@@ -52,19 +52,14 @@ class Model
 
  public:
   Model(QJsonObject json_model, Paths &paths); // This should only be accessed externally for testing purposes.
-  enum ReservoirGridSourceType : int { ECLIPSE=1 };
   enum WellType : int { Injector=11, Producer=12, UNKNOWN_TYPE=19 };
   enum ControlMode : int { BHPControl=21, RateControl=22, UNKNOWN_CONTROL=29 };
   enum InjectionType : int { WaterInjection=31, GasInjection=32 };
-  enum WellDefinitionType : int { WellBlocks=41, WellSpline=42, PseudoContVertical2D=43 };
+  enum WellDefinitionType : int { WellBlocks=41, WellSpline=42, PseudoContVertical2D=43, UNDEFINED=44 };
   enum WellCompletionType : int { Perforation=61, ICV=62, Packer=63, Tubing=64, Annulus=65 };
   enum WellState : int { WellOpen=71, WellShut=72 };
   enum PreferredPhase : int { Oil=81, Water=82, Gas=83, Liquid=84, UNKNOWN_PHASE=89 };
   enum Direction : int { X=91, Y=92, Z=93 };
-
-  struct Reservoir {
-    ReservoirGridSourceType type; //!< The source of the grid file (which reservoir simulator produced it).
-  };
 
   struct Well {
     Well(){}
@@ -140,12 +135,10 @@ class Model
     std::string toString();
   };
 
-  Reservoir reservoir() const { return reservoir_; }          //!< Get the struct containing reservoir settings.
   QList<Well> wells() const { return wells_; }                //!< Get the struct containing settings for the well(s) in the model.
   QList<int> control_times() const { return control_times_; } //!< Get the control times for the schedule
 
  private:
-  Reservoir reservoir_;
   QList<Well> wells_;
   QList<int> control_times_;
   DeckParser *deck_parser_;

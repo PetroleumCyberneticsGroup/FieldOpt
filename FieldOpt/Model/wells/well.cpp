@@ -47,18 +47,20 @@ Well::Well(Settings::Model settings,
     for (int i = 0; i < well_settings_.controls.size(); ++i)
         controls_->append(new Control(well_settings_.controls[i], well_settings_, variable_container));
 
-    trajectory_ = new Wellbore::Trajectory(well_settings_, variable_container, grid, wic);
+    trajectory_defined_ = well_settings_.definition_type != Settings::Model::WellDefinitionType::UNDEFINED;
+    if (trajectory_defined_) {
+        trajectory_ = new Wellbore::Trajectory(well_settings_, variable_container, grid, wic);
 
-    heel_.i = trajectory_->GetWellBlocks()->first()->i();
-    heel_.j = trajectory_->GetWellBlocks()->first()->j();
-    heel_.k = trajectory_->GetWellBlocks()->first()->k();
+        heel_.i = trajectory_->GetWellBlocks()->first()->i();
+        heel_.j = trajectory_->GetWellBlocks()->first()->j();
+        heel_.k = trajectory_->GetWellBlocks()->first()->k();
 
-    if (well_settings_.use_segmented_model) {
-        is_segmented_ = true;
-        initializeSegmentedWell(variable_container);
-    }
-    else {
-        is_segmented_ = false;
+        if (well_settings_.use_segmented_model) {
+            is_segmented_ = true;
+            initializeSegmentedWell(variable_container);
+        } else {
+            is_segmented_ = false;
+        }
     }
 }
 
@@ -71,16 +73,17 @@ bool Well::IsInjector()
 {
     return type_ == ::Settings::Model::WellType::Injector;
 }
-
 void Well::Update() {
-    trajectory_->UpdateWellBlocks();
-    heel_.i = trajectory_->GetWellBlocks()->first()->i();
-    heel_.j = trajectory_->GetWellBlocks()->first()->j();
-    heel_.k = trajectory_->GetWellBlocks()->first()->k();
+    if (trajectory_defined_) {
+        trajectory_->UpdateWellBlocks();
+        heel_.i = trajectory_->GetWellBlocks()->first()->i();
+        heel_.j = trajectory_->GetWellBlocks()->first()->j();
+        heel_.k = trajectory_->GetWellBlocks()->first()->k();
 
-    if (is_segmented_) {
-        for (auto compartment : compartments_) {
-            compartment.Update();
+        if (is_segmented_) {
+            for (auto compartment : compartments_) {
+                compartment.Update();
+            }
         }
     }
 }
