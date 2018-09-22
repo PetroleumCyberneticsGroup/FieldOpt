@@ -31,7 +31,7 @@ inline std::string create_single_control(const QString &well_name, bool is_injec
     ss << "TIME " << control->time_step()                                                      << std::endl;
     ss << "Well \"" << well_name.toStdString() << "\" {"                                       << std::endl;
     ss << "    Status = " << status                                                            << std::endl;
-    ss << "    Constriants = ["                                                                << std::endl;
+    ss << "    Constraints = ["                                                                << std::endl;
     if (is_injector) {
         if (control->mode() == Settings::Model::ControlMode::BHPControl) {
             ss << "        Constraint(" << control->bhp() << " INJECTION_BOTTOM_HOLE_PRESSURE)" << std::endl;
