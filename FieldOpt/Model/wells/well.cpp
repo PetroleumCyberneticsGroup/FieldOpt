@@ -48,8 +48,8 @@ Well::Well(Settings::Model settings,
         controls_->append(new Control(well_settings_.controls[i], well_settings_, variable_container));
 
     trajectory_defined_ = well_settings_.definition_type != Settings::Model::WellDefinitionType::UNDEFINED;
+    trajectory_ = new Wellbore::Trajectory(well_settings_, variable_container, grid, wic);
     if (trajectory_defined_) {
-        trajectory_ = new Wellbore::Trajectory(well_settings_, variable_container, grid, wic);
 
         heel_.i = trajectory_->GetWellBlocks()->first()->i();
         heel_.j = trajectory_->GetWellBlocks()->first()->j();

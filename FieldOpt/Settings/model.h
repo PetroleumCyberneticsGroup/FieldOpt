@@ -115,7 +115,7 @@ class Model
     QString group;                              //!< The group of the well.
     double wellbore_radius;                     //!< The wellbore radius
     Direction direction;                        //!< Direction of penetration
-    WellDefinitionType definition_type;         //!< How the well path is defined.
+    WellDefinitionType definition_type=UNDEFINED; //!< How the well path is defined.
     QList<WellBlock> well_blocks;               //!< Well blocks when the well path is defined by WellBlocks.
     SplinePoint spline_heel;                    //!< Heel (start) point to be used when calculating the well path from a spline.
     SplinePoint spline_toe;                     //!< Toe (end) point to be used when calculating the well path from a spline.
