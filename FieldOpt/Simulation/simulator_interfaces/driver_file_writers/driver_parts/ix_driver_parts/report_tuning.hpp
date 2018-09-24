@@ -76,6 +76,12 @@ inline std::string XYPlotSummaryReport(bool use_segments=false, const std::vecto
     ss << "                      report_label=\"FOPR\" )"                                 << std::endl;
     ss << "        add_property( property_name=\"WATER_PRODUCTION_RATE\""                 << std::endl;
     ss << "                      report_label=\"FWPR\" )"                                 << std::endl;
+    ss << "        add_property( property_name=\"OIL_PRODUCTION_CUML\""                   << std::endl;
+    ss << "                      report_label=\"FOPT\" )"                                 << std::endl;
+    ss << "        add_property( property_name=\"WATER_PRODUCTION_CUML\""                 << std::endl;
+    ss << "                      report_label=\"FWPT\" )"                                 << std::endl;
+    ss << "        add_property( property_name=\"WATER_INJECTION_CUML\""                 << std::endl;
+    ss << "                      report_label=\"FWIT\" )"                                 << std::endl;
     ss << "    }"                                                                         << std::endl;
     if (use_segments) {
         ss << "    SegmentProperties \"Segments\" {"                                      << std::endl;
