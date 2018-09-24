@@ -632,10 +632,10 @@ void Model::parseSegmentCompartments(const QJsonObject &json_seg, Model::Well &w
             }
             else {
                 if (VERB_SET >= 1) {
-                    Printer::ext_info("ICDValveFlowCoeff keyword not found in Compartments. Defaulting to 7.85E-5.",
+                    Printer::ext_info("ICDValveFlowCoeff keyword not found in Compartments. Defaulting to 0.50.",
                                       "Settings", "Model");
                 }
-                well.seg_compartment_params.valve_flow_coeff = 0.66;
+                well.seg_compartment_params.valve_flow_coeff = 0.50;
             }
         }
         catch (...) {
