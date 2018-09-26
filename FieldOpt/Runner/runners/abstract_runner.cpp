@@ -110,6 +110,7 @@ void AbstractRunner::InitializeSimulator()
         case ::Settings::Simulator::SimulatorType::Flow:
             if (VERB_RUN >= 1) Printer::info("Using Flow reservoir simulator.");
             simulator_ = new Simulation::ECLSimulator(settings_, model_);
+            break;
         case ::Settings::Simulator::SimulatorType::INTERSECT:
             if (VERB_RUN >= 1) Printer::info("Using INTERSECT reservoir simulator.");
             simulator_ = new Simulation::IXSimulator(settings_, model_);
