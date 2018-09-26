@@ -211,6 +211,11 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
         well.type = WellType::Injector;
     else throw UnableToParseWellsModelSectionException("Well type " + type.toStdString() + " not recognized for well " + well.name.toStdString());
 
+    if (json_well.contains("ICVs")) {
+        auto json_icvs = json_well["ICVs"].toArray();
+        parseICVs(json_icvs, well);
+    }
+
     // Well definition type
     QString definition_type = json_well["DefinitionType"].toString();
     if (QString::compare(definition_type, "WellBlocks") == 0) {
@@ -646,7 +651,85 @@ void Model::parseSegmentCompartments(const QJsonObject &json_seg, Model::Well &w
         throw std::runtime_error("The Compartments keyword must be specified when using the Segmentation keyword.");
     }
 }
+void Model::parseICVs(QJsonArray &json_icvs, Model::Well &well) {
+    for (int i = 0; i < json_icvs.size(); ++i) {
+        Well::Completion comp;
+        comp.type = WellCompletionType::ICV;
+        auto json_icv = json_icvs[i].toObject();
+        if (json_icv.contains("DeviceName")) {
+            comp.device_name = json_icv["DeviceName"].toString().toStdString();
+            comp.device_names.push_back(comp.device_name);
+        }
+        else if (json_icv.contains("DeviceNames") && json_icv["DeviceNames"].isArray()) {
+            for (auto device_name : json_icv["DeviceNames"].toArray()) {
+                comp.device_names.push_back(device_name.toString().toStdString());
+            }
+        }
+        else {
+            throw std::runtime_error("DeviceName or DeviceNames must be defined for ICVs.");
+        }
+        if (json_icv.contains("ValveSize")) {
+            comp.valve_size = json_icv["ValveSize"].toDouble();
+        }
+        else {
+            throw std::runtime_error("ValveSize must be defined for ICVs.");
+        }
+        if (json_icv.contains("MinValveSize")) {
+            comp.min_valve_size = json_icv["MinValveSize"].toDouble();
+        }
+        else {
+            comp.min_valve_size = 0.0;
+            Printer::info("MinValveSize not found. Defaulting to 0.0");
+        }
+        if (json_icv.contains("MaxValveSize") && json_icv["MaxValveSize"].toDouble() <= 7.8540E-3) {
+            comp.max_valve_size = json_icv["MaxValveSize"].toDouble();
+        }
+        else {
+            comp.max_valve_size = 7.8540E-3;
+            Printer::info("MaxValveSize not found or too big. Defaulting to 7.8540E-3");
+        }
+        if (json_icv.contains("FlowCoefficient")) {
+            comp.valve_flow_coeff = json_icv["FlowCoefficient"].toDouble();
+        }
+        else {
+            comp.valve_flow_coeff = 0.5;
+            Printer::info("FlowCoefficient not found for ICV. Defaulted to 0.5");
+        }
+        if (json_icv.contains("Segment")) {
+            comp.segment_index = json_icv["Segment"].toInt();
+            comp.segment_indexes.push_back(comp.segment_index);
+        }
+        else if (json_icv.contains("Segments") && json_icv["Segments"].isArray()) {
+            for (auto seg : json_icv["Segments"].toArray()) {
+                comp.segment_indexes.push_back(seg.toInt());
+            }
+            assert(comp.segment_indexes.size() == comp.device_names.size());
+        }
+        else {
+            throw std::runtime_error("Segment (index) or Segments must be defined for ICVs.");
+        }
+        if (json_icv.contains("IsVariable") && json_icv["IsVariable"].toBool() == true) {
+            comp.is_variable = true;
+        }
+        if (json_icv.contains("TimeStep")) {
+            if (!controlTimeIsDeclared(json_icv["TimeStep"].toInt()))
+                throw std::runtime_error("All time steps must be declared in the ControlTimes array.");
+            comp.time_step = json_icv["TimeStep"].toInt();
+        }
+//        comp_settings.name = "ICD#" + well_settings.name + "#" + QString::number(compartments_.size());
+        comp.name = "ICD#" + well.name;
+        well.completions.push_back(comp);
+        Printer::ext_info("Added ICV " + comp.name.toStdString() + " to " + well.name.toStdString()
+                + " with valve size " + Printer::num2str(comp.valve_size)
+                + " and flow coefficient " + Printer::num2str(comp.valve_flow_coeff)
+                + " at segment idx. " + Printer::num2str(comp.segment_index), "Settings", "Model");
+        if (comp.is_variable) {
+            Printer::ext_info("ICV " + comp.name.toStdString() + " set as variable with name "
+                              + comp.name.toStdString(), "Settings", "Model");
+        }
+    }
 
+}
 
 }
 

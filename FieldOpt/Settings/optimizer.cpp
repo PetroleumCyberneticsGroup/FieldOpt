@@ -99,7 +99,7 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
         optimizer_constraint.max = json_constraint["Max"].toDouble();
         if (optimizer_constraint.max >= 7.8540E-03) {
             Printer::ext_warn("Maximum valve size is too big. Setting it to 7.8539-3.", "Settings", "Optimizer");
-            optimizer_constraint.max = 7.8539-3;
+            optimizer_constraint.max = 7.8539E-3;
         }
         optimizer_constraint.min = json_constraint["Min"].toDouble();
     }

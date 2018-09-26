@@ -17,7 +17,10 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+#include <Utilities/printer.hpp>
+#include <Utilities/verbosity.h>
 #include "icv_constraint.h"
+#include "Utilities/stringhelpers.hpp"
 
 namespace Optimization {
 namespace Constraints {
@@ -28,10 +31,14 @@ ICVConstraint::ICVConstraint(Settings::Optimizer::Constraint settings,
                              Model::Properties::VariablePropertyContainer *variables) {
     min_ = settings.min;
     max_ = settings.max;
+    Printer::ext_info("Adding ICV constraint with [min, max] = [" + Printer::num2str(min_)
+                       + ", " + Printer::num2str(max_) + "] for well " + settings.well.toStdString(),
+                       "Optimizer", "ICVConstraint");
     for (ContinousProperty *var : variables->GetContinousVariables()->values()) {
         if (var->propertyInfo().prop_type == Property::PropertyType::ICD
             && QString::compare(var->propertyInfo().parent_well_name, settings.well) == 0) {
             affected_variables_.push_back(var->id());
+            Printer::info("Added ICV constraint for variable " + var->name().toStdString());
         }
     }
 }
@@ -45,18 +52,20 @@ bool ICVConstraint::CaseSatisfiesConstraint(Optimization::Case *c) {
     return true;
 }
 void ICVConstraint::SnapCaseToConstraints(Optimization::Case *c) {
+    if (VERB_OPT >= 1) {
+        Printer::ext_info("Checking case with vars { " + eigenvec_to_str(c->GetRealVarVector()) + " } "
+            + "against constraint [" + Printer::num2str(min_) + ", " + Printer::num2str(max_) + "]",
+            "Optimization", "ICVConstraint"
+            );
+    }
     for (auto id : affected_variables_) {
         if (c->real_variables()[id] > max_) {
             c->set_real_variable_value(id, max_);
-            if (verbosity_level_ > 1) {
-                std::cout << "IN OPTIMIZER, ICVConstriant: Snapped value to upper bound." << std::endl;
-            }
+            if (VERB_OPT >= 1) { Printer::ext_info("Snapped value to upper bound.", "Optimization", "ICVConstraint"); }
         }
         else if (c->real_variables()[id] < min_) {
             c->set_real_variable_value(id, min_);
-            if (verbosity_level_ > 1) {
-                std::cout << "IN OPTIMIZER, ICVConstriant: Snapped value to lower bound." << std::endl;
-            }
+            if (VERB_OPT >= 1) { Printer::ext_info("Snapped value to lower bound.", "Optimization", "ICVConstraint"); }
         }
     }
 }

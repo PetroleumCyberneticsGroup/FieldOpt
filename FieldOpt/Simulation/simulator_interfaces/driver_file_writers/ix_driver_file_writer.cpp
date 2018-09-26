@@ -21,6 +21,7 @@
 #include "ix_driver_file_writer.h"
 #include "driver_parts/ix_driver_parts/report_tuning.hpp"
 #include "driver_parts/ix_driver_parts/ix_control.hpp"
+#include "driver_parts/ix_driver_parts/flow_control_device.hpp"
 
 namespace Simulation {
 
@@ -49,7 +50,11 @@ void IXDriverFileWriter::WriteDriverFile(std::string fm_edits_path) {
     fm_edits += IXParts::XYPlotSummaryReport(use_segments, icd_segments);
     for (auto well : *model_->wells()) {
         fm_edits += IXParts::CreateControlEntries(well);
+        if (well->HasSimpleICVs()) {
+            fm_edits += IXParts::AllWellDevices(well);
+        }
     }
+
     Utilities::FileHandling::WriteStringToFile(QString::fromStdString(fm_edits), QString::fromStdString(fm_edits_path));
 }
 }
