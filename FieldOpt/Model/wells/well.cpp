@@ -66,10 +66,11 @@ Well::Well(Settings::Model settings,
     else { // Completions for wells with no defined trajectory (they are specified by segment number)
         if (well_settings_.completions.size() > 0) {
             for (auto comp : well_settings_.completions) {
+                auto base_name = comp.name;
                 for (int i = 0; i < comp.device_names.size(); ++i) {
                     comp.device_name = comp.device_names[i];
                     comp.segment_index = comp.segment_indexes[i];
-                    comp.name = comp.name + "#" + QString::number(comp.segment_index);
+                    comp.name = base_name + "#" + QString::number(comp.segment_index);
                     icds_.push_back(Wellbore::Completions::ICD(comp, variable_container));
                     if (VERB_MOD >=2) {Printer::ext_info("Added an ICV.", "Well", "Model"); }
                 }
