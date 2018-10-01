@@ -2,3 +2,8 @@
 CMakeFiles/progress.marks
 eclConfig.cmake
 
+
+*.cmake
+
+applications/*
+CMakeFiles/*
