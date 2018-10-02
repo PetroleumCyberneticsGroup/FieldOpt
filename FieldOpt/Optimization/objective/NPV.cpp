@@ -38,7 +38,7 @@ NPV::NPV(Settings::Optimizer *settings,
   settings_ = settings;
   results_ = results;
   components_ = new QList<NPV::Component *>();
-  auto report_time = results->GetValueVector(results->Time);
+
   for (int i = 0; i < settings->objective().NPV_sum.size(); ++i) {
     auto *comp = new NPV::Component();
     comp->property_name = settings->objective().NPV_sum.at(i).property;
@@ -55,7 +55,6 @@ NPV::NPV(Settings::Optimizer *settings,
     }
     components_->append(comp);
   }
-
 }
 
 double NPV::value() const {
