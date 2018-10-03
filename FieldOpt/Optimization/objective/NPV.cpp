@@ -23,6 +23,7 @@ along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 #include "weightedsum.h"
 #include <stdlib.h>
 #include <cmath>
+#include <Utilities/printer.hpp>
 
 using std::cout;
 using std::endl;
@@ -58,54 +59,58 @@ NPV::NPV(Settings::Optimizer *settings,
 }
 
 double NPV::value() const {
-  double value = 0;
-
-  auto report_times = results_->GetValueVector(results_->Time);
-  auto NPV_times = new QList<double>;
-  auto discount_factor_list = new QList<double>;
-  for (int k = 0; k < components_->size(); ++k) {
-    if (components_->at(k)->interval == "Yearly") {
-      double discount_factor;
-      int j = 1;
-      for (int i = 0; i < report_times.size(); i++) {
-        if (std::fmod(report_times.at(i), 365) == 0) {
-          discount_factor = 1 / (1 * (pow(1 + components_->at(k)->discount, j - 1)));
-          discount_factor_list->append(discount_factor);
-          NPV_times->append(i);
-
-          j += 1;
+  try {
+    double value = 0;
+    auto report_times = results_->GetValueVector(results_->Time);
+    auto NPV_times = new QList<double>;
+    auto discount_factor_list = new QList<double>;
+    for (int k = 0; k < components_->size(); ++k) {
+      if (components_->at(k)->interval == "Yearly") {
+        double discount_factor;
+        int j = 1;
+        for (int i = 0; i < report_times.size(); i++) {
+          if (std::fmod(report_times.at(i), 365) == 0) {
+            discount_factor = 1 / (1 * (pow(1 + components_->at(k)->discount, j - 1)));
+            discount_factor_list->append(discount_factor);
+            NPV_times->append(i);
+            j += 1;
+          }
         }
-      }
-    } else if (components_->at(k)->interval == "Monthly") {
-      double discount_factor;
-      double discount_rate = components_->at(k)->discount;
-      double monthly_discount = components_->at(k)->yearlyToMonthly(discount_rate);
-      int j = 1;
-      for (int i = 0; i < report_times.size(); i++) {
-        if (std::fmod(report_times.at(i), 30) == 0) {
-          NPV_times->append(i);
-          discount_factor = 1 / (1 * (pow(1 + monthly_discount, j - 1)));
-          discount_factor_list->append(discount_factor);
-          j += 1;
+      } else if (components_->at(k)->interval == "Monthly") {
+        double discount_factor;
+        double discount_rate = components_->at(k)->discount;
+        double monthly_discount = components_->at(k)->yearlyToMonthly(discount_rate);
+        int j = 1;
+        for (int i = 0; i < report_times.size(); i++) {
+          if (std::fmod(report_times.at(i), 30) == 0) {
+            NPV_times->append(i);
+            discount_factor = 1 / (1 * (pow(1 + monthly_discount, j - 1)));
+            discount_factor_list->append(discount_factor);
+            j += 1;
+          }
         }
       }
     }
-  }
-  for (int i = 0; i < components_->size(); ++i) {
-    if (components_->at(i)->usediscountfactor == true) {
-      for (int j = 1; j < NPV_times->size(); ++j) {
-        auto prod_difference = components_->at(i)->resolveValueDiscount(results_, NPV_times->at(j))
-            - components_->at(i)->resolveValueDiscount(results_, NPV_times->at(j - 1));
-        value += prod_difference * components_->at(i)->coefficient * discount_factor_list->at(i);
+    for (int i = 0; i < components_->size(); ++i) {
+      if (components_->at(i)->usediscountfactor == true) {
+        for (int j = 1; j < NPV_times->size(); ++j) {
+          auto prod_difference = components_->at(i)->resolveValueDiscount(results_, NPV_times->at(j))
+              - components_->at(i)->resolveValueDiscount(results_, NPV_times->at(j - 1));
+          value += prod_difference * components_->at(i)->coefficient * discount_factor_list->at(i);
+        }
+      } else if (components_->at(i)->usediscountfactor == false) {
+        value += components_->at(i)->resolveValue(results_);
+        QString prop_name = components_->at(i)->property_name;
+        double prop_coeff = components_->at(i)->coefficient;
       }
-    } else if (components_->at(i)->usediscountfactor == false) {
-      value += components_->at(i)->resolveValue(results_);
-      QString prop_name = components_->at(i)->property_name;
-      double prop_coeff = components_->at(i)->coefficient;
     }
+    return value;
+  }
+  catch (...) {
+    Printer::error("Failed to compute NPV. Returning 0.0");
+    return 0.0;
   }
 
-  return value;
 }
 
 double NPV::Component::resolveValue(Simulation::Results::Results *results) {
