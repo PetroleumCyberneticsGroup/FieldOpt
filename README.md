@@ -1,6 +1,16 @@
 # FieldOpt
 Petroleum Field Development Optimization Framework.
 
+FieldOpt is a C++ programming framework implemented for rapid prototyping and testing of optimization procedures
+targeting petroleum field development problems such as well placement optimization, reservoir control optimization 
+and inflow-control device optimization. FieldOpt is an ongoing open-source research software designed to facilitate 
+collaboration projects.  
+
+FieldOpt contributes to research workflows by providing an extensible framework that facilitates both problem 
+parametrization and customized algorithm development. It serves as a practical interface between optimization 
+methodology and reservoir simulation enabling the hybridization of algorithms and the use of different reservoir 
+simulators. Its execution layer provides efficient cost function parallelization across multiple realizations.
+
 ## License
 The FieldOpt project as a whole, except for the
 [WellIndexCalculator](FieldOpt/WellIndexCalculator), is
