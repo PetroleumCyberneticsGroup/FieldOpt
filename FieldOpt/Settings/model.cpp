@@ -295,7 +295,12 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
                 point.x = json_point["x"].toDouble();
                 point.y = json_point["y"].toDouble();
                 point.z = json_point["z"].toDouble();
-                point.is_variable = json_point["IsVariable"].toBool();
+                if (json_point.contains("IsVariable") && json_point["IsVariable"].toBool() == true) {
+                    point.is_variable = true;
+                }
+                else {
+                    point.is_variable = false;
+                }
                 if (i == 0) {
                     point.name = "SplinePoint#" + well.name + "#heel";
                 }
@@ -409,11 +414,19 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
             control.control_mode = ControlMode::BHPControl;
             control.bhp = json_controls.at(i).toObject()["BHP"].toDouble();
             control.name = "BHP#" + well.name + "#" + QString::number(control.time_step);
+
+            if (json_controls[i].toObject().contains("Rate")) { // Limit for simulator
+                control.rate = json_controls[i].toObject()["Rate"].toDouble();
+            }
         }
         else if (QString::compare("Rate", json_controls.at(i).toObject()["Mode"].toString()) == 0) {
             control.control_mode = ControlMode::RateControl;
             control.rate = json_controls.at(i).toObject()["Rate"].toDouble();
             control.name = "Rate#" + well.name + "#" + QString::number(control.time_step);
+
+            if (json_controls[i].toObject().contains("BHP")) { // Limit for simulator
+                control.bhp = json_controls[i].toObject()["BHP"].toDouble();
+            }
         }
         else throw UnableToParseWellsModelSectionException("Well control type " + json_controls.at(i).toObject()["Mode"].toString().toStdString() + " not recognized for well " + well.name.toStdString());
 

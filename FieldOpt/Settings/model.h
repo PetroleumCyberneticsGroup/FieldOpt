@@ -108,8 +108,8 @@ class Model
       int time_step;                                 //!< The time step this control is to be applied at.
       WellState state;                               //!< Whether the well is open or shut.
       ControlMode control_mode;                      //!< Control mode.
-      double bhp;                                    //!< Bhp target when well is on bhp control.
-      double rate;                                   //!< Rate target when well is on rate control.
+      double bhp=-1;                                    //!< Bhp target when well is on bhp control.
+      double rate=-1;                                   //!< Rate target when well is on rate control.
       InjectionType injection_type = WaterInjection; //!< Injector type (water/gas). Defaults to water.
       bool is_variable = false;
       QString name;
