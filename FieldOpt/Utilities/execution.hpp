@@ -22,6 +22,8 @@
 #include <QString>
 #include <QStringList>
 #include "Utilities/filehandling.hpp"
+#include "Utilities/verbosity.h"
+#include "Utilities/printer.hpp"
 #include <iostream>
 #include <unistd.h>
 #include <sys/wait.h>
@@ -153,9 +155,14 @@ inline bool ExecShellScriptTimeout(QString script_path, QStringList args, int ti
         throw std::runtime_error("File not found: " + script_path.toStdString());
     assert(args.length() == 3);
 
-    std::cout << "Executing shell script " << script_path.toStdString() << std::endl
-              << "   with arguments " << args.join(" ; ").toStdString() << std::endl
-              << "   and timeout " << timeout << std::endl;
+    if (VERB_RUN >= 2) {
+        std::stringstream ss;
+        ss << "Executing shell script " << script_path.toStdString() << std::endl
+           << "   with arguments " << args.join(" ; ").toStdString() << std::endl
+           << "   and timeout " << timeout << std::endl;
+        Printer::ext_info(ss.str(), "Utilities", "Execution");
+    }
+
 
     pid_t pid;
     sigset_t mask;
