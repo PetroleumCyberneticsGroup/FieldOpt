@@ -63,12 +63,17 @@ inline std::vector<std::string> split_line(const std::string text, const int &wi
         int line_nr = 0;
         std::string remainder = text;
         while (remainder.size() > width) {
-            end_idx = remainder.find_last_of("|;, /", width);
+            if (remainder.find_first_of("|") < width) {
+                end_idx = remainder.find_first_of("|");
+            }
+            else {
+                end_idx = remainder.find_last_of(".,;/ ", width);
+            }
             std::string line = remainder.substr(start_idx, end_idx);
             pad_text(line, width);
             strv.push_back(line);
             remainder = remainder.substr(end_idx+1, remainder.size());
-            if (end_idx == width) {
+            if (end_idx >= width) {
                 truncate_text(remainder);
                 break;
             }
