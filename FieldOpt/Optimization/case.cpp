@@ -32,7 +32,8 @@ Case::Case() {
     integer_variables_ = QHash<QUuid, int>();
     real_variables_ = QHash<QUuid, double>();
     objective_function_value_ = std::numeric_limits<double>::max();
-    sim_time_sec_ = -1;
+    sim_time_sec_ = 0;
+    wic_time_sec_ = 0;
     ensemble_realization_ = "";
     ensemble_ofvs_ = QHash<QString, double>();
 }
@@ -47,7 +48,8 @@ Case::Case(const QHash<QUuid, bool> &binary_variables, const QHash<QUuid, int> &
 
     real_id_index_map_ = real_variables_.keys();
     integer_id_index_map_ = integer_variables_.keys();
-    sim_time_sec_ = -1;
+    sim_time_sec_ = 0;
+    wic_time_sec_ = 0;
     ensemble_realization_ = "";
     ensemble_ofvs_ = QHash<QString, double>();
 }
@@ -62,7 +64,8 @@ Case::Case(const Case *c)
 
     real_id_index_map_ = c->real_id_index_map_;
     integer_id_index_map_ = c->integer_variables_.keys();
-    sim_time_sec_ = -1;
+    sim_time_sec_ = 0;
+    wic_time_sec_ = 0;
     ensemble_realization_ = "";
     ensemble_ofvs_ = c->ensemble_ofvs_;
 }

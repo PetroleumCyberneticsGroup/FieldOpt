@@ -6,6 +6,8 @@
 #include <boost/mpi/status.hpp>
 #include <boost/lexical_cast.hpp>
 #include <iostream>
+#include "Utilities/verbosity.h"
+#include "Utilities/printer.hpp"
 
 BOOST_IS_MPI_DATATYPE(boost::uuids::uuid)
 
@@ -105,9 +107,12 @@ namespace Runner {
         }
 
         void MPIRunner::printMessage(std::string message, int min_verb) {
-            std::string time_stamp = QDateTime::currentDateTime().toString("hh:mm").toStdString();
-            if (runtime_settings_->verbosity_level() >= min_verb)
-                std::cout << "RANK" << world_.rank() << " " << time_stamp << ": " << message << std::endl;
+            if (VERB_RUN >= min_verb) {
+                std::string time_stamp = QDateTime::currentDateTime().toString("hh:mm").toStdString();
+                std::stringstream ss;
+                ss << "MPI Rank " << world_.rank() << "@" << time_stamp << ": " << message;
+                Printer::info(ss.str());
+            }
         }
     }
 }

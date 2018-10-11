@@ -1,12 +1,21 @@
 BootStrap: docker
-From: einar90/fieldopt:develop20180912
+From: einar90/fieldopt:latest
 
 # These need to be changed to fit the paths you want to use.
 # The paths must exist in the environment on which you want
 # to launch the container.
 %post
-    mkdir -p /home/USER/fieldopt-output/sing-test
-    mkdir -p /home/USER/git/PCG/Models/ECLIPSE/Bruge
+    mkdir -p /work/einarjba/fieldopt/singularity
+
+%post
+    # Setup a very minimal bashrc file
+    mkdir -p /opt
+    echo 'PS1="Singularity \w> "' > /opt/bashrc
 
 %runscript
-    echo "Started Singularity FieldOpt container"
+    echo "@ Welcome to the Singularity FieldOpt container"
+
+    # Disable annoying sudo message
+    touch ~/.sudo_as_admin_successful
+
+    exec /bin/bash --rcfile /opt/bashrc "$@"

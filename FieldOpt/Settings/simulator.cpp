@@ -17,6 +17,7 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+#include <Utilities/printer.hpp>
 #include "simulator.h"
 #include "settings_exceptions.h"
 #include "Utilities/filehandling.hpp"
@@ -65,6 +66,8 @@ void Simulator::setType(QJsonObject json_simulator) {
         type_ = SimulatorType::ADGPRS;
     else if (QString::compare(type, "Flow", Qt::CaseInsensitive) == 0)
         type_ = SimulatorType::Flow;
+    else if (QString::compare(type, "IX", Qt::CaseInsensitive) == 0)
+        type_ = SimulatorType::INTERSECT;
     else throw SimulatorTypeNotRecognizedException(
             "The simulator type " + type.toStdString() + " was not recognized");
 }
@@ -91,7 +94,8 @@ void Simulator::setCommands(QJsonObject json_simulator) {
         }
     }
     if (script_name_.length() == 0 && commands.size() == 0)
-        throw NoSimulatorCommandsGivenException("At least one simulator command or a simulator script must be given.");
+        Printer::ext_warn("No simulator commands or scripts given in driver file. "
+                          "Relying on script path being passed as runtime argument.", "Settings", "Simulator");
 }
 
 void Simulator::setFluidModel(QJsonObject json_simulator) {

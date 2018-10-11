@@ -33,6 +33,8 @@ Makefile*
 
 # Build folders
 build-*
+FieldOpt/CMakeFiles/*
+*/CMakeFiles/*
 
 # Compiled doxygen documentation
 doxygen/*
@@ -74,3 +76,4 @@ test-*
 *.eclrun_dbg
 FieldOpt/CMakeCache.txt
 FieldOpt/CMakeFiles/cmake.check_cache
+*.bin

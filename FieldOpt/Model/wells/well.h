@@ -1,5 +1,5 @@
 /******************************************************************************
-   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
+   Copyright (C) 2015-2018 Einar J.M. Baumann <einar.baumann@gmail.com>
 
    This file is part of the FieldOpt project.
 
@@ -28,6 +28,7 @@
 #include "Model/properties/discrete_property.h"
 #include "Model/wells/control.h"
 #include "Model/wells/wellbore/trajectory.h"
+#include "Model/wells/wellbore/completions/icd.h"
 #include "Reservoir/grid/eclgrid.h"
 #include "WellIndexCalculation/wicalc_rixx.h"
 
@@ -76,6 +77,9 @@ class Well
   void Update();
   int GetTimeSpentInWIC() const { return trajectory_->GetTimeSpentInWic(); }
 
+  bool HasSimpleICVs() const { return icds_.size() > 0; }
+  vector<Wellbore::Completions::ICD> GetSimpleICDs() const { return icds_; }
+
   // Methods for segmented wells
   virtual bool IsSegmented() const { return is_segmented_; }
   std::vector<Compartment> GetCompartments() const;
@@ -85,6 +89,7 @@ class Well
   std::vector<Segment> GetTubingSegments();
   std::vector<Segment> GetICDSegments();
   std::vector<Segment> GetAnnulusSegments();
+  std::vector<int> GetICDSegmentIndices();
 
  protected:
   Settings::Model::Well well_settings_;
@@ -94,12 +99,13 @@ class Well
   ::Settings::Model::PreferredPhase preferred_phase_;
   Properties::ContinousProperty *wellbore_radius_;
   Wellbore::Trajectory *trajectory_;
+  bool trajectory_defined_ = true; //!< Whether the trajectory is defined. It does not need to be for, e.g., control optimization.
 
   Heel heel_;
   QList<Control *> *controls_;
 
   // Fields for segmented wells
-  bool is_segmented_;
+  bool is_segmented_ = false;
   void initializeSegmentedWell(Properties::VariablePropertyContainer *variable_container);
   double tub_diam_;            //!< Tubing (inner) diameter.
   double ann_diam_;            //!< Annular diameter.
@@ -107,7 +113,8 @@ class Well
   double ann_cross_sect_area_; //!< Annular cross section area.
   double tub_roughness_;       //!< Roughness for tubing segments.
   double ann_roughness_;       //!< Roughness for annulus segments.
-  std::vector<Compartment> compartments_;
+  std::vector<Compartment> compartments_; //!< List of compartments.
+  std::vector<Wellbore::Completions::ICD> icds_; //!< List of icds for when we have neither a defined compartmentalization or a trajectory.
 
   // Methods for segmented wells
   std::vector<int> createTubingSegments(std::vector<Segment> &segments) const;
