@@ -22,7 +22,7 @@ void OneOffRunner::Execute()
     applyWellPositionFromArguments();
     EvaluateBaseModel();
     // Write objective function value to file
-    Utilities::FileHandling::WriteLineToFile(QString("%1").arg(objective_function_->value()),
+    Utilities::FileHandling::WriteLineToFile(QString("%1").arg(objective_function_->value(model_->wellCost(settings_->optimizer()->objective()))),
                                              QString::fromStdString(settings_->paths().GetPath(Paths::OUTPUT_DIR))
                                              + "/f.out");
 //    std::cout << objective_function_->value() << std::endl;

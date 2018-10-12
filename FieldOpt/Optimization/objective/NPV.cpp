@@ -23,6 +23,8 @@ along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 #include "weightedsum.h"
 #include <stdlib.h>
 #include <cmath>
+#include "Model/model.h"
+#include "Model/wells/well.h"
 
 using std::cout;
 using std::endl;
@@ -58,7 +60,7 @@ NPV::NPV(Settings::Optimizer *settings,
 
 }
 
-double NPV::value() const {
+double NPV::value(Model::Model::economy model_economics) const {
   double value = 0;
 
   auto report_times = results_->GetValueVector(results_->Time);
@@ -103,6 +105,16 @@ double NPV::value() const {
       value += components_->at(i)->resolveValue(results_);
       QString prop_name = components_->at(i)->property_name;
       double prop_coeff = components_->at(i)->coefficient;
+    }
+  }
+  if(model_economics.useWellCost){
+    for(Model::Wells::Well *well: model_economics.wells_){
+      if(model_economics.separate){
+        value -= model_economics.costXY*model_economics.well_xy[well->name().toStdString()];
+        value -= model_economics.costZ*model_economics.well_z[well->name().toStdString()];
+      }else{
+        value -= model_economics.cost*model_economics.well_lengths[well->name().toStdString()];
+      }
     }
   }
 

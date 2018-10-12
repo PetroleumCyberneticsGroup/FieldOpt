@@ -29,6 +29,7 @@
 #include <QPair>
 #include <QList>
 #include "Settings/model.h"
+#include "Model/model.h"
 
 namespace Optimization {
 namespace Objective {
@@ -43,7 +44,7 @@ public:
     /*!
      * \brief value Get the evaluated value of the objective function.
      */
-    virtual double value() const = 0;
+    virtual double value(Model::Model::economy model_economy) const = 0;
 
 protected:
     Objective();

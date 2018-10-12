@@ -37,7 +37,7 @@ class NPV : public Objective {
   NPV(Settings::Optimizer *settings,
       Simulation::Results::Results *results);
 
-  double value() const;
+  double value(Model::Model::economy) const;
 
  private:
 /*!

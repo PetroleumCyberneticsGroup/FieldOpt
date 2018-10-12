@@ -164,7 +164,7 @@ void AbstractRunner::InitializeBaseCase()
         base_case_->set_objective_function_value(sentinelValue());
     }
     else
-        base_case_->set_objective_function_value(objective_function_->value());
+        base_case_->set_objective_function_value(objective_function_->value(model_->wellCost(settings_->optimizer()->objective())));
     if (VERB_RUN >= 1) Printer::ext_info("Base case objective function value set to " + Printer::num2str(base_case_->objective_function_value()), "Runner", "AbstractRunner");
 }
 

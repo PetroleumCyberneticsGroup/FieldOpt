@@ -24,6 +24,7 @@
  *****************************************************************************/
 
 #include "weightedsum.h"
+#include "Model/model.h"
 
 namespace Optimization {
 namespace Objective {
@@ -46,7 +47,7 @@ WeightedSum::WeightedSum(Settings::Optimizer *settings, Simulation::Results::Res
     }
 }
 
-double WeightedSum::value() const
+double WeightedSum::value(Model::Model::economy model_economics) const
 {
     double value = 0;
     for (int i = 0; i < components_->size(); ++i) {
