@@ -51,6 +51,18 @@ class Model : public Loggable
   map<string, string> GetState() override;
   QUuid GetId() override;
   map<string, vector<double>> GetValues() override;
+  struct Economics{
+    map<string, double> well_xy;
+    map<string, double> well_z;
+    map<string, double> well_lengths;
+    double n_wells = 0;
+    double costXY = 0;
+    double costZ = 0;
+    double cost = 0;
+    bool separate = false;
+    bool useWellCost = false;
+    QList<Wells::Well *> wells_;
+  };
 
   /*!
    * \brief reservoir Get the reservoir (i.e. grid).
@@ -75,8 +87,19 @@ class Model : public Loggable
    */
   void ApplyCase(Optimization::Case *c);
 
+<<<<<<< Updated upstream
   double wellCost(Settings::Optimizer::Objective objective);
 
+=======
+<<<<<<< Updated upstream
+=======
+
+
+  static Economics wellCost(Settings::Optimizer::Objective);
+
+
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   /*!
    * @brief Get the UUId of last case applied to the Model.
    * @return
@@ -91,13 +114,15 @@ class Model : public Loggable
    * @brief Should be called at the end of the optimization run. Writes the last case
    * to the extended log.
    */
+
   void Finalize();
+
 
  private:
   Reservoir::Grid::Grid *grid_;
   Reservoir::WellIndexCalculation::wicalc_rixx *wic_;
   Properties::VariablePropertyContainer *variable_container_;
-  QList<Wells::Well *> *wells_;
+  static QList<Wells::Well *> *wells_;
   void verify(); //!< Verify the model. Throws an exception if it is not.
 
   void verifyWells();

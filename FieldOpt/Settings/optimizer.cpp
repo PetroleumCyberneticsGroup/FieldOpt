@@ -384,8 +384,52 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
                 "Objective type " + objective_type.toStdString() + " not recognized");
         if (json_objective.contains("UsePenaltyFunction")) {
             obj.use_penalty_function = json_objective["UsePenaltyFunction"].toBool();
+<<<<<<< Updated upstream
         } else {
+=======
+        }
+<<<<<<< Updated upstream
+        else {
+>>>>>>> Stashed changes
             obj.use_penalty_function = false;
+=======
+
+        if(json_objective.contains("SeparateHorizontalAndVertical")){
+            obj.separatehorizontalandvertical=json_objective["SeparateHorizontalAndVertical"].toBool();
+        } else {
+            obj.separatehorizontalandvertical= false;
+        }
+      if (json_objective.contains("UseWellCost")) {
+        obj.useWellCost = json_objective["UseWellCost"].toBool();
+        if (obj.separatehorizontalandvertical) {
+          if (json_objective.contains("WellCostXY")) {
+            obj.wellCostXY = json_objective["WellCostXY"].toDouble();
+            if (json_objective.contains("WellCostZ")) {
+              obj.wellCostZ = json_objective["WellCostZ"].toDouble();
+            } else {
+              throw UnableToParseOptimizerObjectiveSectionException(
+                  "Unable to parse optimizer objective a WellCostZ was not defined, while SeparateHorizontalAndVertical was invoked");
+            }
+          } else {
+            throw UnableToParseOptimizerObjectiveSectionException(
+                "Unable to parse optimizer objective a WellCostXY was not defined, while SeparateHorizontalAndVertical was invoked");
+          }
+        } else {
+          if (json_objective.contains("WellCost")) {
+            obj.wellCost = json_objective["WellCost"].toDouble();
+            obj.wellCostXY = 0;
+            obj.wellCostZ = 0;
+          } else {
+            obj.wellCostXY = 0;
+          }
+        }
+
+        } else {
+            obj.useWellCost = false;
+            obj.wellCost = 0;
+            obj.wellCostXY = 0;
+            obj.wellCostZ = 0;
+>>>>>>> Stashed changes
         }
 
         if(json_objective.contains("SeparateHorizontalAndVertical")){

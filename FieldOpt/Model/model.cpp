@@ -105,6 +105,7 @@ void Model::verifyWells()
     }
 }
 
+<<<<<<< Updated upstream
 double Model::wellCost(Settings::Optimizer::Objective objective){
     double length_xy = 0;
     double length_z = 0;
@@ -133,6 +134,44 @@ double Model::wellCost(Settings::Optimizer::Objective objective){
     }
 
 
+=======
+<<<<<<< Updated upstream
+=======
+Economics Model::wellCost(Settings::Optimizer::Objective objective){
+    Economics wellEconomy;
+    if (objective.useWellCost) {
+        wellEconomy.n_wells = wells_->size();
+        wellEconomy.cost = objective.wellCost;
+        wellEconomy.costXY = objective.wellCostXY;
+        wellEconomy.costZ = objective.wellCostZ;
+        wellEconomy.separate = objective.separatehorizontalandvertical;
+        for (Wells::Well *well : *wells_) {
+            auto variable = well->trajectory()->GetWellSpline()->GetSplinePoints();
+            auto well_spline_heel_x = variable[0]->x->value();
+            auto well_spline_heel_y = variable[0]->y->value();
+            auto well_spline_heel_z = variable[0]->z->value();
+            auto well_spline_toe_x = variable[1]->x->value();
+            auto well_spline_toe_y = variable[1]->y->value();
+            auto well_spline_toe_z = variable[1]->z->value();
+
+            wellEconomy.well_xy[well->name().toStdString()] = sqrt(
+                pow((well_spline_heel_x - well_spline_toe_x), 2) + pow((well_spline_heel_y - well_spline_toe_y), 2));
+            wellEconomy.well_z[well->name().toStdString()] = abs(well_spline_heel_z - well_spline_toe_z);
+            wellEconomy.well_lengths[well->name().toStdString()] = sqrt(
+                pow((well_spline_heel_x - well_spline_toe_x), 2) + pow((well_spline_heel_y - well_spline_toe_y), 2)
+                    + pow((well_spline_heel_z - well_spline_toe_z), 2));
+
+        }
+
+    }
+
+    return wellEconomy;
+
+}
+
+
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 void Model::verifyWellTrajectory(Wells::Well *w)
 {
     for (Wells::Wellbore::WellBlock *wb : *w->trajectory()->GetWellBlocks()) {

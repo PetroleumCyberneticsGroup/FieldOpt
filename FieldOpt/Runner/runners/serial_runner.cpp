@@ -19,6 +19,7 @@
 #include <Utilities/time.hpp>
 #include "serial_runner.h"
 #include "Utilities/printer.hpp"
+#include "Model/model.h"
 
 namespace Runner {
 
