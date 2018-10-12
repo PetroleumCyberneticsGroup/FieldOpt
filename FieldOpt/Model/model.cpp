@@ -205,6 +205,9 @@ void Model::verifyWellCompartments(Wells::Well *w) {
                 + boost::lexical_cast<std::string>(i)
                 + "is different from the start-packer MD.");
         }
+        if (w->GetCompartments()[i].icd->valveSize() > 7.8540E-3) {
+            throw std::runtime_error("A valve cross sectional area is larger than the simulator maximum (7.8540E-3).");
+        }
         if (w->GetCompartments()[i].start_packer->md(well_length) > w->GetCompartments()[i+1].end_packer->md(well_length)) {
             throw std::runtime_error("The start-packer MD is greater than the end-packer md in compartment "
                 + boost::lexical_cast<string>(i));

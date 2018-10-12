@@ -39,7 +39,7 @@ class Simulator
 
  public:
   Simulator(QJsonObject json_simulator, Paths &paths);
-  enum SimulatorType { ECLIPSE, ADGPRS, Flow };
+  enum SimulatorType { ECLIPSE, ADGPRS, Flow, INTERSECT };
   enum SimulatorFluidModel { BlackOil, DeadOil };
 
 

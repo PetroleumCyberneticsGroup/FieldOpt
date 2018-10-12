@@ -22,6 +22,8 @@
 #include "APPS.h"
 #include "gss_patterns.hpp"
 #include "Utilities/stringhelpers.hpp"
+#include "Utilities/printer.hpp"
+#include "Utilities/verbosity.h"
 
 namespace Optimization {
 namespace Optimizers {
@@ -52,7 +54,7 @@ void APPS::iterate() {
         set_active(inactive());
     }
     iteration_++;
-    if (verbosity_level_ >= 1) print_state("ITERATION START");
+    if (VERB_OPT >= 2) print_state("iteration start");
 }
 
 void APPS::handleEvaluatedCase(Case *c) {
@@ -66,7 +68,7 @@ void APPS::successful_iteration(Case *c) {
     expand();
     reset_active();
     prune_queue();
-    if (verbosity_level_ >= 1) print_state("SUCCESSFUL ITERATION");
+    if (VERB_OPT  >= 2) print_state("successful iteration");
     iterate();
 }
 
@@ -77,7 +79,7 @@ void APPS::unsuccessful_iteration(Case *c) {
         set_inactive(unsuccessful_direction);
         contract(unsuccessful_direction);
     }
-    if (verbosity_level_ >= 1) print_state("UNSUCCESSFUL ITERATION");
+    if (VERB_OPT >= 2) print_state("unsuccessful iteration");
     if (!is_converged()) iterate();
 }
 
@@ -119,15 +121,16 @@ void APPS::prune_queue() {
 }
 
 void APPS::print_state(string header) {
-    cout << "APPS state (" << header << ")" << "---------"<< endl;
-    cout << "step_lengths_  : " << vec_to_str(vector<double>(step_lengths_.data(), step_lengths_.data() + step_lengths_.size())) << endl;
-    cout << "active_        : " << vec_to_str(vector<int>(active_.begin(), active_.end())) << endl;
-    cout << "inactive()     : " << vec_to_str(inactive()) << endl;
-    cout << "queue size     : " << case_handler_->QueuedCases().size() << endl;
-
-    cout << "best case origin:" << endl;
-    cout << " direction idx : " << GetTentativeBestCase()->origin_direction_index() << endl;
-    cout << " step length   : " << GetTentativeBestCase()->origin_step_length() << endl;
+    std::stringstream ss;
+    ss << header << "|";
+    ss << "step_lengths_  : " << vec_to_str(vector<double>(step_lengths_.data(), step_lengths_.data() + step_lengths_.size())) << "|";
+    ss << "active_        : " << vec_to_str(vector<int>(active_.begin(), active_.end())) << "|";
+    ss << "inactive()     : " << vec_to_str(inactive()) << "|";
+    ss << "queue size     : " << case_handler_->QueuedCases().size() << "|";
+    ss << "best case origin:" << "|";
+    ss << " direction idx : " << GetTentativeBestCase()->origin_direction_index() << "|";
+    ss << " step length   : " << GetTentativeBestCase()->origin_step_length() << "|";
+    Printer::ext_info(ss.str(), "Optimization", "APPS");
 }
 }
 }

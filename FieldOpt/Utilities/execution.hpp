@@ -22,6 +22,8 @@
 #include <QString>
 #include <QStringList>
 #include "Utilities/filehandling.hpp"
+#include "Utilities/verbosity.h"
+#include "Utilities/printer.hpp"
 #include <iostream>
 #include <unistd.h>
 #include <sys/wait.h>
@@ -153,9 +155,14 @@ inline bool ExecShellScriptTimeout(QString script_path, QStringList args, int ti
         throw std::runtime_error("File not found: " + script_path.toStdString());
     assert(args.length() == 3);
 
-    std::cout << "Executing shell script " << script_path.toStdString() << std::endl
-              << "   with arguments " << args.join(" ; ").toStdString() << std::endl
-              << "   and timeout " << timeout << std::endl;
+    if (VERB_RUN >= 2) {
+        std::stringstream ss;
+        ss << "Executing shell script " << script_path.toStdString() << std::endl
+           << "   with arguments " << args.join(" ; ").toStdString() << std::endl
+           << "   and timeout " << timeout << std::endl;
+        Printer::ext_info(ss.str(), "Utilities", "Execution");
+    }
+
 
     pid_t pid;
     sigset_t mask;
@@ -173,47 +180,60 @@ inline bool ExecShellScriptTimeout(QString script_path, QStringList args, int ti
     to.tv_sec = timeout;
     to.tv_nsec = 0;
 
-    std::cout << "Monitoring child process with pid " << pid << ". Timeout set to " << to.tv_sec << std::endl;
+
+    if (VERB_SIM >= 2) {
+        std::stringstream ss;
+        ss << "Monitoring child process with pid " << pid << ". Timeout set to " << to.tv_sec << std::endl;
+        Printer::info(ss.str());
+    }
     do {
         if (!helpers::is_pid_running(pid)) // If the child no longer exists, return true
             return true;
         int ret = sigtimedwait(&mask, NULL, &to);
-        std::cout << "SIGTIMEDWAIT returned " << ret << " with errno " << errno << std::endl;
+        if (VERB_SIM >= 2) {
+            std::stringstream ss;
+            ss << "SIGTIMEDWAIT returned " << ret << " with errno " << errno << std::endl;
+            Printer::info(ss.str());
+        }
         if (ret < 0) {
             if (errno == EINTR) {
-                std::cout << "Interrupted by a signal other than sigchild." << std::endl;
+                Printer::ext_warn("Interrupted by a signal other than sigchild.", "Utilities", "Execution");
                 helpers::terminate_process(pid);
                 return false;
             }
             else if (errno == EAGAIN) {
-                std::cout << "Timeout, killing child " << pid << std::endl;
+                Printer::ext_warn("Timeout, killing child " + Printer::num2str(pid), "Utilities", "Execution");
                 if (helpers::is_pid_running(pid)) { // Ensure that child still exists
                     kill(pid, SIGKILL);
                     return false;
                 }
                 else {
-                    std::cout << "The process terminated successfully before the set timeout." << std::endl;
+                    if (VERB_SIM >= 2) {
+                        Printer::info("The process terminated successfully before the set timeout.");
+                    }
                     return true;
                 }
             }
             else if (errno == EINVAL) {
-                std::cout << "Got error EINVAL from process, terminating it." << std::endl;
+                Printer::ext_warn("Got error EINVAL from process, terminating it.", "Utilities", "Execution");
                 helpers::terminate_process(pid);
                 return false;
             }
             else {
-                std::cout << "Got error sigtimedwait from process, terminating it." << std::endl;
+                Printer::ext_warn("Got error sigtimedwait from process, terminating it.", "Utilities", "Execution");
                 helpers::terminate_process(pid);
                 return false;
             }
         }
         else { // sigtimedwait returned something >= 0
             if (helpers::is_pid_running(pid)) {
-                std::cout << "The process returned a non-error value, but it is still running - continue waiting ... " << std::endl;
+                Printer::ext_warn("Process returned a non-error value, but it is still running - waiting ....", "Utilities", "Execution");
                 continue;
             }
             else {
-                std::cout << "The process terminated successfully before the set timeout." << std::endl;
+                if (VERB_SIM >= 2) {
+                    Printer::info("The process terminated successfully before the set timeout.");
+                }
                 return true;
             }
         }

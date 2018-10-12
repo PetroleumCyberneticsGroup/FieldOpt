@@ -208,12 +208,6 @@ Model::Model(QJsonObject json_model, Paths &paths)
 
 void Model::readReservoir(QJsonObject json_reservoir, Paths &paths)
 {
-    // Reservoir grid source type
-    QString type = json_reservoir["Type"].toString();
-    if (QString::compare(type, "ECLIPSE") == 0)
-        reservoir_.type = ReservoirGridSourceType::ECLIPSE;
-    else throw UnableToParseReservoirModelSectionException("Grid source type " + type.toStdString() +  "not recognized.");
-
     // Reservoir grid path
     if (!paths.IsSet(Paths::GRID_FILE) && json_reservoir.contains("Path")) {
         paths.SetPath(Paths::GRID_FILE, json_reservoir["Path"].toString().toStdString());
@@ -240,6 +234,11 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
     else if (QString::compare(type, "Injector") == 0)
         well.type = WellType::Injector;
     else throw UnableToParseWellsModelSectionException("Well type " + type.toStdString() + " not recognized for well " + well.name.toStdString());
+
+    if (json_well.contains("ICVs")) {
+        auto json_icvs = json_well["ICVs"].toArray();
+        parseICVs(json_icvs, well);
+    }
 
     // Well definition type
     QString definition_type = json_well["DefinitionType"].toString();
@@ -296,7 +295,12 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
                 point.x = json_point["x"].toDouble();
                 point.y = json_point["y"].toDouble();
                 point.z = json_point["z"].toDouble();
-                point.is_variable = json_point["IsVariable"].toBool();
+                if (json_point.contains("IsVariable") && json_point["IsVariable"].toBool() == true) {
+                    point.is_variable = true;
+                }
+                else {
+                    point.is_variable = false;
+                }
                 if (i == 0) {
                     point.name = "SplinePoint#" + well.name + "#heel";
                 }
@@ -365,12 +369,19 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
         }
         else well.spline_heel.is_variable = false;
     }
-    else throw UnableToParseWellsModelSectionException("Well definition type " + definition_type.toStdString() + " not recognized for well " + well.name.toStdString());
+    else {
+        Printer::ext_warn("Well definition type not recognized. Proceeding without defining a well trajectory.",
+            "Settings", "Model");
+        well.definition_type = UNDEFINED;
+    }
 
     // Wellbore radius
-    if (!json_well.contains("WellboreRadius"))
-        throw UnableToParseWellsModelSectionException("The wellbore radius must be defined for all wells.");
-    well.wellbore_radius = json_well["WellboreRadius"].toDouble();
+    if (json_well.contains("WellboreRadius"))
+        well.wellbore_radius = json_well["WellboreRadius"].toDouble();
+    else {
+        Printer::ext_warn("WellBoreRadius not set. Defaulting to 0.01905");
+        well.wellbore_radius = 0.1905;
+    }
 
     // Direction of penetration
     if (json_well.contains("Direction")) { // Direction must be specified for horizontal wells
@@ -403,11 +414,19 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
             control.control_mode = ControlMode::BHPControl;
             control.bhp = json_controls.at(i).toObject()["BHP"].toDouble();
             control.name = "BHP#" + well.name + "#" + QString::number(control.time_step);
+
+            if (json_controls[i].toObject().contains("Rate")) { // Limit for simulator
+                control.rate = json_controls[i].toObject()["Rate"].toDouble();
+            }
         }
         else if (QString::compare("Rate", json_controls.at(i).toObject()["Mode"].toString()) == 0) {
             control.control_mode = ControlMode::RateControl;
             control.rate = json_controls.at(i).toObject()["Rate"].toDouble();
             control.name = "Rate#" + well.name + "#" + QString::number(control.time_step);
+
+            if (json_controls[i].toObject().contains("BHP")) { // Limit for simulator
+                control.bhp = json_controls[i].toObject()["BHP"].toDouble();
+            }
         }
         else throw UnableToParseWellsModelSectionException("Well control type " + json_controls.at(i).toObject()["Mode"].toString().toStdString() + " not recognized for well " + well.name.toStdString());
 
@@ -655,10 +674,10 @@ void Model::parseSegmentCompartments(const QJsonObject &json_seg, Model::Well &w
             }
             else {
                 if (VERB_SET >= 1) {
-                    Printer::ext_info("ICDValveFlowCoeff keyword not found in Compartments. Defaulting to 7.85E-5.",
+                    Printer::ext_info("ICDValveFlowCoeff keyword not found in Compartments. Defaulting to 0.50.",
                                       "Settings", "Model");
                 }
-                well.seg_compartment_params.valve_flow_coeff = 0.66;
+                well.seg_compartment_params.valve_flow_coeff = 0.50;
             }
         }
         catch (...) {
@@ -669,7 +688,85 @@ void Model::parseSegmentCompartments(const QJsonObject &json_seg, Model::Well &w
         throw std::runtime_error("The Compartments keyword must be specified when using the Segmentation keyword.");
     }
 }
+void Model::parseICVs(QJsonArray &json_icvs, Model::Well &well) {
+    for (int i = 0; i < json_icvs.size(); ++i) {
+        Well::Completion comp;
+        comp.type = WellCompletionType::ICV;
+        auto json_icv = json_icvs[i].toObject();
+        if (json_icv.contains("DeviceName")) {
+            comp.device_name = json_icv["DeviceName"].toString().toStdString();
+            comp.device_names.push_back(comp.device_name);
+        }
+        else if (json_icv.contains("DeviceNames") && json_icv["DeviceNames"].isArray()) {
+            for (auto device_name : json_icv["DeviceNames"].toArray()) {
+                comp.device_names.push_back(device_name.toString().toStdString());
+            }
+        }
+        else {
+            throw std::runtime_error("DeviceName or DeviceNames must be defined for ICVs.");
+        }
+        if (json_icv.contains("ValveSize")) {
+            comp.valve_size = json_icv["ValveSize"].toDouble();
+        }
+        else {
+            throw std::runtime_error("ValveSize must be defined for ICVs.");
+        }
+        if (json_icv.contains("MinValveSize")) {
+            comp.min_valve_size = json_icv["MinValveSize"].toDouble();
+        }
+        else {
+            comp.min_valve_size = 0.0;
+            Printer::info("MinValveSize not found. Defaulting to 0.0");
+        }
+        if (json_icv.contains("MaxValveSize") && json_icv["MaxValveSize"].toDouble() <= 7.8540E-3) {
+            comp.max_valve_size = json_icv["MaxValveSize"].toDouble();
+        }
+        else {
+            comp.max_valve_size = 7.8540E-3;
+            Printer::info("MaxValveSize not found or too big. Defaulting to 7.8540E-3");
+        }
+        if (json_icv.contains("FlowCoefficient")) {
+            comp.valve_flow_coeff = json_icv["FlowCoefficient"].toDouble();
+        }
+        else {
+            comp.valve_flow_coeff = 0.5;
+            Printer::info("FlowCoefficient not found for ICV. Defaulted to 0.5");
+        }
+        if (json_icv.contains("Segment")) {
+            comp.segment_index = json_icv["Segment"].toInt();
+            comp.segment_indexes.push_back(comp.segment_index);
+        }
+        else if (json_icv.contains("Segments") && json_icv["Segments"].isArray()) {
+            for (auto seg : json_icv["Segments"].toArray()) {
+                comp.segment_indexes.push_back(seg.toInt());
+            }
+            assert(comp.segment_indexes.size() == comp.device_names.size());
+        }
+        else {
+            throw std::runtime_error("Segment (index) or Segments must be defined for ICVs.");
+        }
+        if (json_icv.contains("IsVariable") && json_icv["IsVariable"].toBool() == true) {
+            comp.is_variable = true;
+        }
+        if (json_icv.contains("TimeStep")) {
+            if (!controlTimeIsDeclared(json_icv["TimeStep"].toInt()))
+                throw std::runtime_error("All time steps must be declared in the ControlTimes array.");
+            comp.time_step = json_icv["TimeStep"].toInt();
+        }
+//        comp_settings.name = "ICD#" + well_settings.name + "#" + QString::number(compartments_.size());
+        comp.name = "ICD#" + well.name;
+        well.completions.push_back(comp);
+        Printer::ext_info("Added ICV " + comp.name.toStdString() + " to " + well.name.toStdString()
+                + " with valve size " + Printer::num2str(comp.valve_size)
+                + " and flow coefficient " + Printer::num2str(comp.valve_flow_coeff)
+                + " at segment idx. " + Printer::num2str(comp.segment_index), "Settings", "Model");
+        if (comp.is_variable) {
+            Printer::ext_info("ICV " + comp.name.toStdString() + " set as variable with name "
+                              + comp.name.toStdString(), "Settings", "Model");
+        }
+    }
 
+}
 
 }
 

@@ -25,8 +25,9 @@ add_library(simulation STATIC
         simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/welsegs.cpp
         simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/compsegs.cpp
         simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/wsegvalv.cpp
-)
-add_library(fieldopt::simulation ALIAS ${PROJECT_NAME})
+        simulator_interfaces/driver_file_writers/driver_parts/ix_driver_parts/flow_control_device.hpp
+        simulator_interfaces/driver_file_writers/ix_driver_file_writer.cpp simulator_interfaces/ix_simulator.cpp simulator_interfaces/ix_simulator.h)
+add_library(fieldopt::simulation ALIAS ${PROJECT_NAME} )
 
 target_link_libraries(simulation
         PUBLIC fieldopt::model
@@ -48,7 +49,7 @@ if (BUILD_TESTING)
             tests/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_wellcontrols.cpp
             tests/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_welspecs.cpp
             tests/test_resource_results.h
-            tests/simulator_interfaces/driver_file_writers/flow_driver_file_writer.cpp)
+            tests/simulator_interfaces/driver_file_writers/flow_driver_file_writer.cpp tests/simulator_interfaces/test_ix_simulator.cpp)
     target_link_libraries(test_simulation
             fieldopt::simulation
             ${gtest}

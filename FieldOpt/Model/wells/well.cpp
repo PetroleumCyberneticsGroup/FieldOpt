@@ -19,6 +19,7 @@
 
 #include <Utilities/printer.hpp>
 #include <boost/lexical_cast.hpp>
+#include <Utilities/verbosity.h>
 #include "well.h"
 
 namespace Model {
@@ -47,18 +48,34 @@ Well::Well(Settings::Model settings,
     for (int i = 0; i < well_settings_.controls.size(); ++i)
         controls_->append(new Control(well_settings_.controls[i], well_settings_, variable_container));
 
+    trajectory_defined_ = well_settings_.definition_type != Settings::Model::WellDefinitionType::UNDEFINED;
     trajectory_ = new Wellbore::Trajectory(well_settings_, variable_container, grid, wic);
+    if (trajectory_defined_) {
 
-    heel_.i = trajectory_->GetWellBlocks()->first()->i();
-    heel_.j = trajectory_->GetWellBlocks()->first()->j();
-    heel_.k = trajectory_->GetWellBlocks()->first()->k();
+        heel_.i = trajectory_->GetWellBlocks()->first()->i();
+        heel_.j = trajectory_->GetWellBlocks()->first()->j();
+        heel_.k = trajectory_->GetWellBlocks()->first()->k();
 
-    if (well_settings_.use_segmented_model) {
-        is_segmented_ = true;
-        initializeSegmentedWell(variable_container);
+        if (well_settings_.use_segmented_model) {
+            is_segmented_ = true;
+            initializeSegmentedWell(variable_container);
+        } else {
+            is_segmented_ = false;
+        }
     }
-    else {
-        is_segmented_ = false;
+    else { // Completions for wells with no defined trajectory (they are specified by segment number)
+        if (well_settings_.completions.size() > 0) {
+            for (auto comp : well_settings_.completions) {
+                auto base_name = comp.name;
+                for (int i = 0; i < comp.device_names.size(); ++i) {
+                    comp.device_name = comp.device_names[i];
+                    comp.segment_index = comp.segment_indexes[i];
+                    comp.name = base_name + "#" + QString::number(comp.segment_index);
+                    icds_.push_back(Wellbore::Completions::ICD(comp, variable_container));
+                    if (VERB_MOD >=2) {Printer::ext_info("Added an ICV.", "Well", "Model"); }
+                }
+            }
+        }
     }
 }
 
@@ -71,16 +88,17 @@ bool Well::IsInjector()
 {
     return type_ == ::Settings::Model::WellType::Injector;
 }
-
 void Well::Update() {
-    trajectory_->UpdateWellBlocks();
-    heel_.i = trajectory_->GetWellBlocks()->first()->i();
-    heel_.j = trajectory_->GetWellBlocks()->first()->j();
-    heel_.k = trajectory_->GetWellBlocks()->first()->k();
+    if (trajectory_defined_) {
+        trajectory_->UpdateWellBlocks();
+        heel_.i = trajectory_->GetWellBlocks()->first()->i();
+        heel_.j = trajectory_->GetWellBlocks()->first()->j();
+        heel_.k = trajectory_->GetWellBlocks()->first()->k();
 
-    if (is_segmented_) {
-        for (auto compartment : compartments_) {
-            compartment.Update();
+        if (is_segmented_) {
+            for (auto compartment : compartments_) {
+                compartment.Update();
+            }
         }
     }
 }
@@ -297,6 +315,13 @@ std::vector<Segment> Well::GetAnnulusSegments() {
         }
     }
     return ann_segments;
+}
+std::vector<int> Well::GetICDSegmentIndices() {
+    std::vector<int> indices;
+    for (auto seg : GetICDSegments()) {
+        indices.push_back(seg.Index());
+    }
+    return indices;
 }
 
 }

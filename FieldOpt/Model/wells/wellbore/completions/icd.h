@@ -31,13 +31,29 @@ class ICD : public SegmentedCompletion {
   ICD(const Settings::Model::Well::Completion &completion_settings,
       Properties::VariablePropertyContainer *variable_container);
 
+  /*!
+   * @brief Get the setting for the valve.
+   *
+   * This is a multiplier [0.0, 1.0] that is applied to the base strength.
+   * It should applied using the INVERSE_SQUARE method.
+   * It is calculated from the current- and min- and max valve size.
+   */
+  double setting() const;
   double valveSize() const { return valve_size_->value(); }
   double flowCoefficient() const { return flow_coefficient_; }
+  int timeStep() const { return time_step_; }
+  int segmentIdx() const { return segment_idx_; }
+  std::string deviceName() const { return device_name_; }
+
   void setValveSize(const double size) { valve_size_->setValue(size); }
 
  private:
   Properties::ContinousProperty *valve_size_;
+  double min_valve_size_, max_valve_size_;
   double flow_coefficient_;
+  int time_step_;
+  int segment_idx_;
+  std::string device_name_;
 
 };
 
