@@ -114,6 +114,7 @@ Model::economy Model::wellCost(Settings::Optimizer::Objective objective) {
     wellEconomy.costZ = objective.wellCostZ;
     wellEconomy.separate = objective.separatehorizontalandvertical;
     wellEconomy.useWellCost = objective.useWellCost;
+    wellEconomy.wells_ = *wells_;
     for (Wells::Well *well : *wells_) {
       auto variable = well->trajectory()->GetWellSpline()->GetSplinePoints();
       auto well_spline_heel_x = variable[0]->x->value();
