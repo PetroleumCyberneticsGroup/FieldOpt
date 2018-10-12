@@ -414,7 +414,8 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
             obj.wellCostXY = 0;
             obj.wellCostZ = 0;
           } else {
-            obj.wellCostXY = 0;
+            throw UnableToParseOptimizerObjectiveSectionException(
+                "Unable to parse optimizer objective a WellCost was not defined, while UseWellCost was invoked");
           }
         }
 
@@ -424,7 +425,7 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
             obj.wellCostXY = 0;
             obj.wellCostZ = 0;
         }
-      
+
     }
     catch (std::exception const &ex) {
         throw UnableToParseOptimizerObjectiveSectionException(
