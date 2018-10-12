@@ -107,13 +107,13 @@ double NPV::value(Model::Model::economy model_economics) const {
       double prop_coeff = components_->at(i)->coefficient;
     }
   }
-  if(model_economics.useWellCost){
-    for(Model::Wells::Well *well: model_economics.wells_){
-      if(model_economics.separate){
-        value -= model_economics.costXY*model_economics.well_xy[well->name().toStdString()];
-        value -= model_economics.costZ*model_economics.well_z[well->name().toStdString()];
-      }else{
-        value -= model_economics.cost*model_economics.well_lengths[well->name().toStdString()];
+  if (model_economics.useWellCost) {
+    for (Model::Wells::Well *well: model_economics.wells_) {
+      if (model_economics.separate) {
+        value -= model_economics.costXY * model_economics.well_xy[well->name().toStdString()];
+        value -= model_economics.costZ * model_economics.well_z[well->name().toStdString()];
+      } else {
+        value -= model_economics.cost * model_economics.well_lengths[well->name().toStdString()];
       }
     }
   }
