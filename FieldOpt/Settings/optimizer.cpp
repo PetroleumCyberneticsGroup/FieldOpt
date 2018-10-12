@@ -384,16 +384,10 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
                 "Objective type " + objective_type.toStdString() + " not recognized");
         if (json_objective.contains("UsePenaltyFunction")) {
             obj.use_penalty_function = json_objective["UsePenaltyFunction"].toBool();
-<<<<<<< Updated upstream
-        } else {
-=======
         }
-<<<<<<< Updated upstream
         else {
->>>>>>> Stashed changes
             obj.use_penalty_function = false;
-=======
-
+        }
         if(json_objective.contains("SeparateHorizontalAndVertical")){
             obj.separatehorizontalandvertical=json_objective["SeparateHorizontalAndVertical"].toBool();
         } else {
@@ -429,7 +423,6 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
             obj.wellCost = 0;
             obj.wellCostXY = 0;
             obj.wellCostZ = 0;
->>>>>>> Stashed changes
         }
 
         if(json_objective.contains("SeparateHorizontalAndVertical")){

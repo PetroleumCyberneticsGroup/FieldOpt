@@ -87,19 +87,13 @@ class Model : public Loggable
    */
   void ApplyCase(Optimization::Case *c);
 
-<<<<<<< Updated upstream
+
   double wellCost(Settings::Optimizer::Objective objective);
 
-=======
-<<<<<<< Updated upstream
-=======
 
 
   static Economics wellCost(Settings::Optimizer::Objective);
-
-
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+  
   /*!
    * @brief Get the UUId of last case applied to the Model.
    * @return
