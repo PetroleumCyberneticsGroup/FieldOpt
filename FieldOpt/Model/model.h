@@ -41,7 +41,8 @@ class ModelSynchronizationObject;
  * \brief The Model class represents the reservoir model as a whole, including wells and
  * any related variables, and the reservoir grid.
  */
-class Model : public Loggable {
+class Model : public Loggable
+{
   friend class ModelSynchronizationObject;
  public:
   Model(::Settings::Settings settings, Logger *logger);
@@ -50,6 +51,7 @@ class Model : public Loggable {
   map<string, string> GetState() override;
   QUuid GetId() override;
   map<string, vector<double>> GetValues() override;
+
 
   /*!
    * \brief reservoir Get the reservoir (i.e. grid).
@@ -74,6 +76,7 @@ class Model : public Loggable {
    */
   void ApplyCase(Optimization::Case *c);
 
+
   /*!
    * @brief Get the UUId of last case applied to the Model.
    * @return
@@ -91,6 +94,7 @@ class Model : public Loggable {
 
   void Finalize();
 
+
  private:
   Reservoir::Grid::Grid *grid_;
   Reservoir::WellIndexCalculation::wicalc_rixx *wic_;
@@ -105,16 +109,14 @@ class Model : public Loggable {
 
   Logger *logger_;
   QUuid current_case_id_;
-  QString
-      compdat_; //!< The compdat generated from the list of well blocks corresponding to the current case. This is set by the simulator library.
-  std::map<std::string, std::vector<double>>
-      results_; //!< The results of the last simulation (i.e. the one performed with the current case).
+  QString compdat_; //!< The compdat generated from the list of well blocks corresponding to the current case. This is set by the simulator library.
+  std::map<std::string, std::vector<double>> results_; //!< The results of the last simulation (i.e. the one performed with the current case).
 
   QHash<QString, double> realization_ofv_map_;
 
   class Summary : public Loggable {
    public:
-    Summary(Model *model) { model_ = model; }
+    Summary(Model *model) { model_  = model; }
     LogTarget GetLogTarget() override;
     map<string, string> GetState() override;
     map<string, WellDescription> GetWellDescriptions() override;
@@ -124,7 +126,7 @@ class Model : public Loggable {
     Model *model_;
   };
  public:
-  class economy {
+  class economy{
    public:
     map<string, double> well_xy;
     map<string, double> well_z;
