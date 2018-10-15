@@ -17,6 +17,8 @@
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
+#include <Utilities/verbosity.h>
+#include "Utilities/printer.hpp"
 #include "Utilities/stringhelpers.hpp"
 #include "gp/rprop.h"
 #include "Utilities/math.hpp"
@@ -36,6 +38,13 @@ EGO::EGO(Settings::Optimizer *settings,
          CaseHandler *case_handler,
          Constraints::ConstraintHandler *constraint_handler
 ) : Optimizer(settings, base_case, variables, grid, logger, case_handler, constraint_handler) {
+
+    time_fitting_ = 0;
+    time_af_opt_ = 0;
+    settings_ = settings;
+
+    int n_cont_vars = variables->ContinousVariableSize();
+
     if (constraint_handler_->HasBoundaryConstraints()) {
         lb_ = constraint_handler_->GetLowerBounds(base_case->GetRealVarIdVector());
         ub_ = constraint_handler_->GetUpperBounds(base_case->GetRealVarIdVector());
@@ -46,15 +55,27 @@ EGO::EGO(Settings::Optimizer *settings,
         lb_.fill(settings->parameters().lower_bound);
         ub_.fill(settings->parameters().upper_bound);
     }
-    n_initial_guesses_ = variables->ContinousVariableSize() * 2;
+
+    if (enable_logging_) { // Log base case
+        logger_->AddEntry(this);
+    }
+
+
+    if (settings->parameters().ego_init_guesses == -1) {
+        n_initial_guesses_ = n_cont_vars * 2;
+    }
+    else {
+        n_initial_guesses_ = settings->parameters().ego_init_guesses;
+    }
     af_ = AcquisitionFunction(settings->parameters());
     af_opt_ = AFOptimizers::AFPSO(lb_, ub_, settings->parameters().rng_seed);
-    gp_ = new libgp::GaussianProcess(variables->ContinousVariableSize(), "CovMatern5iso");
-
-    cout << "Lower bounds: " << eigenvec_to_str(lb_) << endl;
-    cout << "Upper bounds: " << eigenvec_to_str(ub_) << endl;
+    gp_ = new libgp::GaussianProcess(n_cont_vars, settings->parameters().ego_kernel);
 
     // Guess some random initial positions
+    if (settings->parameters().ego_init_sampling_method != "Random") {
+        Printer::ext_warn("Only the Random sampling method is implemented.", "Optimization", "EGO");
+        throw std::runtime_error("Failed to initialize EGO optimizer.");
+    }
     auto rng = get_random_generator(settings->parameters().rng_seed);
     for (int i = 0; i < n_initial_guesses_; ++i) {
         VectorXd pos = VectorXd::Zero(lb_.size());
@@ -67,12 +88,22 @@ EGO::EGO(Settings::Optimizer *settings,
     }
 
     // Initialize GP hyperparameters
-    Eigen::VectorXd params(2);
-    params << -1, -1;
+    std::map<std::string, int> map_kernel_to_n_hyper = {
+        { "CovLinearard",          n_cont_vars   },
+        { "CovLinearone",          1             },
+        { "CovMatern3iso",         2             },
+        { "CovMatern5iso",         2             },
+        { "CovNoise",              1             },
+        { "CovRQiso",              3             },
+        { "CovSEard",              n_cont_vars+1 },
+        { "CovSEiso",              2             },
+        { "CovPeriodicMatern3iso", 3             },
+        { "CovPeriodic",           3             }
+    };
+    Eigen::VectorXd params(map_kernel_to_n_hyper[settings->parameters().ego_kernel]);
+    params.fill(-1);
     gp_->covf().set_loghyper(params);
 
-    time_fitting_ = 0;
-    time_af_opt_ = 0;
 
     if (enable_logging_) {
         logger_->AddEntry(new ConfigurationSummary(this));
@@ -106,20 +137,28 @@ void EGO::handleEvaluatedCase(Case *c) {
     }
 }
 void EGO::iterate() {
+    if (!normalizer_ofv_.is_ready()) {
+        initializeNormalizers();
+        // Add base case to GP
+        gp_->add_pattern(tentative_best_case_->GetRealVarVector().data(), normalizer_ofv_.normalize(tentative_best_case_->objective_function_value()));
+    }
+
     if (enable_logging_) {
         logger_->AddEntry(this);
     }
-    if (!normalizer_ofv_.is_ready())
-        initializeNormalizers();
 
     // Optimize GP hyperparameters
+    QDateTime start, end;
+    start = QDateTime::currentDateTime();
     libgp::RProp rprop;
     rprop.init();
-
-    QDateTime start, end;
-
-    start = QDateTime::currentDateTime();
-    rprop.maximize(gp_, 50, 0);
+    if (VERB_OPT >= 2) {
+        Printer::ext_info("Optimizing Gaussian Process kernel hyperparameters ... ", "Optimization", "EGO");
+        rprop.maximize(gp_, 100, 1);
+    }
+    else {
+        rprop.maximize(gp_, 100, 1);
+    }
     end = QDateTime::currentDateTime();
     time_fitting_ += time_span_seconds(start, end);
 
@@ -152,6 +191,8 @@ Loggable::LogTarget EGO::ConfigurationSummary::GetLogTarget() {
 map<string, string> EGO::ConfigurationSummary::GetState() {
     map<string, string> statemap;
     statemap["Name"] = "Efficient Global Optimization (EGO)";
+    statemap["Kernel"] = opt_->settings_->parameters().ego_kernel;
+    statemap["Acquisition function"] = opt_->settings_->parameters().ego_af;
     statemap["AF Optimizer"] = "PSO";
     statemap["Mode"] = opt_->mode_ == Settings::Optimizer::OptimizerMode::Maximize ? "Maximize" : "Minimize";
     statemap["Max Evaluations"] = boost::lexical_cast<string>(opt_->max_evaluations_);

@@ -53,17 +53,20 @@ class Optimizer
   enum ObjectiveType { WeightedSum, NPV};
 
   struct Parameters {
-    // GSS parameters
+    // Common parameters
     int max_evaluations; //!< Maximum number of evaluations allowed before terminating the optimization run.
+    int rng_seed;        //!< Seed to be used for random number renerators in relevant algorithms.
+
+    // GSS parameters
     double initial_step_length; //!< The initial step length in the algorithm when applicable.
     double minimum_step_length; //!< The minimum step length in the algorithm when applicable.
-    double contraction_factor; //!< The contraction factor for GSS algorithms.
-    double expansion_factor; //!< The expansion factor for GSS algorithms.
-    double max_queue_size; //!< Maximum size of evaluation queue.
-    bool auto_step_lengths = false; //!< Automatically determine appropriate step lengths from bound constraints.
+    double contraction_factor;  //!< The contraction factor for GSS algorithms.
+    double expansion_factor;    //!< The expansion factor for GSS algorithms.
+    double max_queue_size;      //!< Maximum size of evaluation queue.
+    bool auto_step_lengths = false;     //!< Automatically determine appropriate step lengths from bound constraints.
     double auto_step_init_scale = 0.25; //!< Scaling factor for auto-determined initial step lengths (e.g. 0.25*(upper-lower)
     double auto_step_conv_scale = 0.01; //!< Scaling factor for auto-determined convergence step lengths (e.g. 0.01*(upper-lower)
-    QString pattern; //!< The pattern to be used for GSS algorithms.
+    QString pattern;                     //!< The pattern to be used for GSS algorithms.
 
     // GA parameters
     int max_generations;      //!< Max iterations. Default: 50
@@ -76,7 +79,11 @@ class Optimizer
     double lower_bound;       //!< Simple lower bound. This is applied to _all_ variables. Default: -10.0.
     double upper_bound;       //!< Simple upper bound. This is applied to _all_ variables. Default: +10.0.
 
-    int rng_seed;             //!< Seed to be used for random number renerators in relevant algorithms.
+    // EGO Parameters
+    int ego_init_guesses = -1; //!< Number of initial guesses to be made (default is two times the number of variables).
+    std::string ego_init_sampling_method = "Random"; //!< Sampling method to be used for initial guesses (Random or Uniform)
+    std::string ego_kernel = "CovMatern5iso";        //!< Which kernel function to use for the gaussian process model.
+    std::string ego_af = "ExpectedImprovement";      //!< Which acquisiton function to use.
   };
 
   struct Objective {

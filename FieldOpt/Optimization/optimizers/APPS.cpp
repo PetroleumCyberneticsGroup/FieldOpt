@@ -42,7 +42,9 @@ APPS::APPS(Settings::Optimizer *settings,
     assert(settings->parameters().max_queue_size >= 1.0);
     max_queue_length_ = directions_.size() * settings->parameters().max_queue_size;
     is_async_ = true;
-//            iterate();
+    if (enable_logging_) {
+        logger_->AddEntry(this);
+    }
 }
 
 void APPS::iterate() {

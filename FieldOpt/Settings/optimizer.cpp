@@ -305,6 +305,44 @@ Optimizer::Parameters Optimizer::parseParameters(QJsonObject &json_parameters) {
             params.upper_bound = json_parameters["UpperBound"].toDouble();
         else params.upper_bound = 10;
 
+        // EGO Parameters
+        if (json_parameters.contains("EGO-InitGuesses")) {
+            params.ego_init_guesses = json_parameters["EGO-InitGuesses"].toInt();
+        }
+        if (json_parameters.contains("EGO-InitSamplingMethod")) {
+            QString method = json_parameters["EGO-InitSamplingMethod"].toString();
+            if (QString::compare(method, "Random") == 0 || QString::compare(method, "Uniform") == 0)
+                params.ego_init_sampling_method = json_parameters["EGO-InitSamplingMethod"].toString().toStdString();
+            else {
+                Printer::error("EGO-InitSamplingMethod " + method.toStdString() + " not recognized.");
+                throw std::runtime_error("Failed reading EGO settings.");
+            }
+        }
+        if (json_parameters.contains("EGO-Kernel")) {
+            QStringList available_kernels = { "CovLinearard", "CovLinearone", "CovMatern3iso",
+                                            "CovMatern5iso", "CovNoise", "CovRQiso", "CovSEard",
+                                            "CovSEiso", "CovPeriodicMatern3iso", "CovPeriodic"};
+            if (available_kernels.contains(json_parameters["EGO-Kernel"].toString())) {
+                params.ego_kernel = json_parameters["EGO-Kernel"].toString().toStdString();
+            }
+            else {
+                Printer::error("EGO-Kernel " + json_parameters["EGO-Kernel"].toString().toStdString() + " not recognized.");
+                Printer::info("Available kernels: " + available_kernels.join(", ").toStdString());
+                throw std::runtime_error("Failed reading EGO settings.");
+            }
+        }
+        if (json_parameters.contains("EGO-AF")) {
+            QStringList available_afs = { "ExpectedImprovement", "ProbabilityOfImprovement" };
+            if (available_afs.contains(json_parameters["EGO-AF"].toString())) {
+                params.ego_af = json_parameters["EGO-AF"].toString().toStdString();
+            }
+            else {
+                Printer::error("EGO-AF " + json_parameters["EGO-AF"].toString().toStdString() + " not recognized.");
+                Printer::info("Available acquisition functions: " + available_afs.join(", ").toStdString());
+                throw std::runtime_error("Failed reading EGO settings.");
+            }
+        }
+
         // RNG seed
         if (json_parameters.contains("RNGSeed")) {
             params.rng_seed = json_parameters["RNGSeed"].toInt();

@@ -17,6 +17,9 @@ namespace Optimization {
         )
                 : GSS(settings, base_case, variables, grid, logger, case_handler, constraint_handler)
         {
+            if (enable_logging_) {
+                logger_->AddEntry(this);
+            }
         }
 
         void CompassSearch::iterate()

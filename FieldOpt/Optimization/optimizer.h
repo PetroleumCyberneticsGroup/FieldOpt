@@ -173,6 +173,7 @@ class Optimizer : public Loggable
   bool enable_logging_; //!< Whether logging should be performed. This should be set to false when the optimizer is a component in HybridOptimizer.
   void DisableLogging(); //!< Disable logging for this optimizer. This is called by HybridOptimizer.
   bool penalize_; //!< Switch for whether or not to use penalty function to account for constraints.
+  Case *tentative_best_case_; //!< The best case encountered thus far.
 
   Normalizer normalizer_ofv_; //!< Normalizer for objective function values.
 
@@ -201,7 +202,6 @@ class Optimizer : public Loggable
 
  private:
   QDateTime start_time_;
-  Case *tentative_best_case_; //!< The best case encountered thus far.
   int seconds_spent_in_iterate_; //!< The number of seconds spent in the iterate() method.
   int tentative_best_case_iteration_; //!< The iteration in which the current tentative best case was found.
 

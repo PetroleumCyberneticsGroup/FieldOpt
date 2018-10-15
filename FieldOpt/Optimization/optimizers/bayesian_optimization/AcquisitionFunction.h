@@ -60,8 +60,10 @@ class AcquisitionFunction {
   double Evaluate(libgp::GaussianProcess *gp, Eigen::VectorXd x, double target=0);
 
  private:
-  double weight_ev_; //!< Expected value weight. (default: 0.5)
-  double weight_var_; //!< Variance weight. (default: 0.5)
+  enum AF { EXPECTED_IMPROVEMENT, PROBABILITY_OF_IMPROVEMENT };
+  AF af_;
+  double expectedImprovement(libgp::GaussianProcess *gp, Eigen::VectorXd x, double target=0);
+  double probabilityOfImprovement(libgp::GaussianProcess *gp, Eigen::VectorXd x, double target=0);
 };
 
 }

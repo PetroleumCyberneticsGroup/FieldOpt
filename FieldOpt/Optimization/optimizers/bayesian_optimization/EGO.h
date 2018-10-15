@@ -60,6 +60,7 @@ class EGO : public Optimizer {
   libgp::GaussianProcess *gp_; //!< The gaussian process to be used throughout the optimization run.
   BayesianOptimization::AcquisitionFunction af_; //!< Acquisition function to be used throughout the optimization run.
   BayesianOptimization::AFOptimizers::AFPSO af_opt_; //!< Aquisition function optimizer to be used throughout the optimization run.
+  Settings::Optimizer *settings_;
 
   long int time_af_opt_;
   long int time_fitting_;
