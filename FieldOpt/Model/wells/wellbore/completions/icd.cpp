@@ -49,8 +49,14 @@ ICD::ICD(const Settings::Model::Well::Completion &completion_settings,
 
 }
 double ICD::setting() const {
+    if (valveSize() < min_valve_size_ || valveSize() > max_valve_size_) {
+        Printer::ext_warn("Valve size " + Printer::num2str(valveSize()) + "outside bounds, throwing exception.",
+            "Model", "ICD");
+        throw std::runtime_error("Valve size outside bounds.");
+    }
+
     double setting = (valveSize() - min_valve_size_) / (max_valve_size_ - min_valve_size_);
-    
+
     if (VERB_MOD >= 1) {
         std::stringstream ss;
         ss << "Computed setting " << setting << " from valve size " << valveSize()
@@ -58,8 +64,6 @@ double ICD::setting() const {
         Printer::ext_info(ss.str(), "Model", "ICD");
     }
 
-    assert(valveSize() <= max_valve_size_);
-    assert(valveSize() >= min_valve_size_);
     return setting;
 }
 
