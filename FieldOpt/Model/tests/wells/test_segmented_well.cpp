@@ -70,16 +70,18 @@ TEST_F(SegmentedWellTest, Compartments ) {
     EXPECT_NEAR(length, d_2h_->GetCompartments()[2].end_packer->md(length), 6);
 
     EXPECT_TRUE(d_2h_->GetCompartments()[0].end_packer == d_2h_->GetCompartments()[1].start_packer);
-    EXPECT_NEAR(length/3.0, d_2h_->GetCompartments()[0].end_packer->md(length), 30);
-    EXPECT_NEAR(length/3.0, d_2h_->GetCompartments()[1].start_packer->md(length), 30);
-    EXPECT_NEAR(2*length/3.0, d_2h_->GetCompartments()[1].end_packer->md(length), 100);
-    EXPECT_NEAR(2*length/3.0, d_2h_->GetCompartments()[2].start_packer->md(length), 100);
+    EXPECT_TRUE(d_2h_->GetCompartments()[1].end_packer == d_2h_->GetCompartments()[2].start_packer);
+    EXPECT_TRUE(d_2h_->GetCompartments()[0].end_packer->md(length) > d_2h_->GetCompartments()[0].start_packer->md(length));
+    EXPECT_TRUE(d_2h_->GetCompartments()[1].end_packer->md(length) > d_2h_->GetCompartments()[1].start_packer->md(length));
+    EXPECT_TRUE(d_2h_->GetCompartments()[2].end_packer->md(length) > d_2h_->GetCompartments()[2].start_packer->md(length));
+
+    EXPECT_NEAR(0.0, d_2h_->GetCompartments()[0].start_packer->md(length), 1.0);
+    EXPECT_NEAR(length, d_2h_->GetCompartments()[2].end_packer->md(length), 1.0);
 
     EXPECT_FLOAT_EQ(7.85E-5, d_2h_->GetCompartments()[0].icd->valveSize());
     EXPECT_FLOAT_EQ(7.85E-5, d_2h_->GetCompartments()[1].icd->valveSize());
     EXPECT_FLOAT_EQ(7.85E-5, d_2h_->GetCompartments()[2].icd->valveSize());
     EXPECT_NEAR(0.0,          d_2h_->GetCompartments()[0].icd->md(length), 30);
-    EXPECT_NEAR(length/3.0,   d_2h_->GetCompartments()[1].icd->md(length), 30);
     EXPECT_NEAR(d_2h_->GetCompartments()[2].start_packer->md(length), d_2h_->GetCompartments()[2].icd->md(length), 1);
 }
 

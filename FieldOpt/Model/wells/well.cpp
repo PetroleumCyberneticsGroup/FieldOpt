@@ -115,34 +115,54 @@ void Well::initializeSegmentedWell(Properties::VariablePropertyContainer *variab
 
     double compartment_length = trajectory_->GetLength() / well_settings_.seg_n_compartments;
     std::vector<double> compartment_delimiters;
+
+    // Create approximate compartment delimiters
     compartment_delimiters.push_back(0.0);
     for (int i = 1; i < well_settings_.seg_n_compartments; ++i) {
         compartment_delimiters.push_back(i * compartment_length);
     }
     compartment_delimiters.push_back(trajectory_->GetLength());
+    // Snap compartment delimiters to wellblock-intersections
+    for (int l = 1; l < compartment_delimiters.size(); ++l) {
+        auto wb = trajectory_->GetWellBlockByMd(compartment_delimiters[l]);
+        compartment_delimiters[l] = wb->getExitMd() - 0.1;
+        assert(compartment_delimiters[l] != compartment_delimiters[l-1]);
+    }
+
     assert(compartment_delimiters.size() == well_settings_.seg_n_compartments + 1);
 
+    auto well_blocks = trajectory_->GetWellBlocks();
+    int first_idx = 0;
+    assert(compartment_delimiters.size() < trajectory_->GetWellBlocks()->size());
+
     for (int i = 0; i < well_settings_.seg_n_compartments; ++i) {
-        auto first_block = trajectory_->GetWellBlockByMd(compartment_delimiters[i]);
+        auto first_block = well_blocks->at(first_idx);
         auto last_block = trajectory_->GetWellBlockByMd(compartment_delimiters[i+1]);
         if (first_block->i() == last_block->i() &&
             first_block->j() == last_block->j() &&
             first_block->k() == last_block->k()) { // Compartment begins and ends in the same block
             Printer::ext_warn("Compartment " + boost::lexical_cast<std::string>(i)
                                   + " begins and ends in the same well block.", "Model", "Well");
-            compartments_.push_back(Compartment(trajectory_->GetEntryMd(first_block), trajectory_->GetExitMd(last_block),
-                                                first_block->getEntryPoint().z(), last_block->getExitPoint().z(),
+            auto block = first_block;
+            compartments_.push_back(Compartment(block->getEntryMd(), block->getExitMd(),
+                                                block->getEntryPoint().z(), block->getExitPoint().z(),
                                                 trajectory()->GetLength(),
                                                 well_settings_, variable_container, compartments_));
+            first_idx++;
         }
         else if (i < well_settings_.seg_n_compartments - 1) { // Not last compartment
-            compartments_.push_back(Compartment(trajectory_->GetEntryMd(first_block), trajectory_->GetEntryMd(last_block),
+            compartments_.push_back(Compartment(first_block->getEntryMd(), last_block->getExitMd(),
                                                 first_block->getEntryPoint().z(), last_block->getExitPoint().z(),
                                                 trajectory()->GetLength(),
                                                 well_settings_, variable_container, compartments_));
+            // Move to after last_block
+            while (! (well_blocks->at(first_idx)->i() == last_block->i() && well_blocks->at(first_idx)->j() == last_block->j() && well_blocks->at(first_idx)->k() == last_block->k())) {
+                first_idx++;
+            }
+            first_idx++;
         }
         else { // Last compartment
-            compartments_.push_back(Compartment(trajectory_->GetEntryMd(first_block), trajectory_->GetExitMd(last_block),
+            compartments_.push_back(Compartment(first_block->getEntryMd(), last_block->getExitMd(),
                                                 first_block->getEntryPoint().z(), last_block->getExitPoint().z(),
                                                 trajectory()->GetLength(),
                                                 well_settings_, variable_container, compartments_));
@@ -191,20 +211,26 @@ void Well::createAnnulusSegments(std::vector<Segment> &segments, const std::vect
     assert(is_segmented_);
     std::vector<int> annulus_indexes;
     for (int i = 0; i < compartments_.size(); ++i) {
-        auto comp_blocks = trajectory()->GetWellBlocksByMdRange(compartments_[i].start_packer->md(trajectory()->GetLength()),
-                                                                compartments_[i].end_packer->md(trajectory()->GetLength())
+        auto comp_blocks = trajectory()->GetWellBlocksByMdRange(compartments_[i].start_packer->md(trajectory()->GetLength()) + 0.1,
+                                                                compartments_[i].end_packer->md(trajectory()->GetLength() - 0.1)
         );
         for (int j = 0; j < comp_blocks.size(); ++j) {
-            double outlet_md;
+            double outlet_md = -1;
             int index = 2*compartments_.size() + annulus_indexes.size() + 2;
             int outlet_index;
             if (j == 0) { // Outlet to ICD
                 outlet_index = icd_indexes[i];
-                outlet_md = segments[icd_indexes[i]].OutletMD();
-                segments[compartments_.size() + i + 1].AddInlet(index); // Add to ICD inlet list
+                for (int k=0; k < segments.size(); ++k) {
+                    if (segments[k].Type() == Segment::ICD_SEGMENT && segments[k].Index() == icd_indexes[i]) {
+                        outlet_md = segments[k].OutletMD();
+                        segments[k].AddInlet(index);
+                        break;
+                    }
+                }
+                assert(outlet_md != -1); // Ensure that the outlet md has been set
             }
             else { // Outlet to previous annulus segment
-                outlet_index = annulus_indexes.back();
+                outlet_index = segments.back().Index();
                 outlet_md = segments.back().OutletMD();
                 segments.back().AddInlet(index);
             }
@@ -255,7 +281,7 @@ std::vector<int> Well::createTubingSegments(std::vector<Segment> &segments) cons
             index,                                // index
             1,                                    // branch
             index - 1,                            // outlet
-            compartments_[i].GetLength(trajectory_->GetLength()),         // length
+            compartments_[i].GetLength(trajectory_->GetLength()), // length
             compartments_[i].GetTVDDifference(),  // tvd delta
             tub_diam_, tub_roughness_,
             segments.back().OutletMD()

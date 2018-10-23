@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *****************************************************************************/
 
+#include <Utilities/verbosity.h>
+#include <Utilities/printer.hpp>
 #include "compartment.h"
 
 namespace Model {
@@ -61,6 +63,15 @@ Compartment::Compartment(const double start_md,
     comp_settings.variable_strength = well_settings.seg_compartment_params.variable_strength;
     comp_settings.type = Settings::Model::WellCompletionType::ICV;
     icd = new Wellbore::Completions::ICD(comp_settings, variable_container);
+
+    if (VERB_MOD >= 1) {
+        std::stringstream ss;
+        ss << "Created new compartment " << compartments_.size() << ".|";
+        ss << "Start Packer MD: " << start_packer->md(well_length) << ".|";
+        ss << "End Packer MD: " << end_packer->md(well_length) << ".|";
+        ss << "ICD MD: " << icd->md(well_length) << ".|";
+        Printer::ext_info(ss.str(), "Model", "Compartment");
+    }
 }
 double Compartment::GetLength(const double &well_length) const {
     return end_packer->md(well_length) - start_packer->md(well_length);

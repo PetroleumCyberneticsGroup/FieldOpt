@@ -271,7 +271,9 @@ double Trajectory::GetSplineLength() const {
 std::vector<WellBlock *> Trajectory::GetWellBlocksByMdRange(double start_md, double end_md) const {
     std::vector<WellBlock *> affected_blocks;
     for (auto wb : *well_blocks_) {
-        if (wb->getEntryMd() <= end_md && wb->getExitMd() >= start_md) {
+        if (( start_md >= wb->getEntryMd() && start_md <= wb->getExitMd() ) || // Start md inside block
+            (   end_md >= wb->getEntryMd() &&   end_md <= wb->getExitMd() ) || // End md inside block
+            ( start_md <= wb->getEntryMd() &&   end_md >= wb->getExitMd() )) { // Block between start and end blocks
             affected_blocks.push_back(wb);
         }
     }
