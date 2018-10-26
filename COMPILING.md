@@ -6,7 +6,7 @@ the FieldOpt files and execute the following commands:
 ```bash
 # Install packages from repositories
 sudo apt-get install git build-essential cmake \
-    qt5-default libbost-all-dev libhdf5-dev \
+    qt5-default libboost-all-dev libhdf5-dev \
     libopenmpi-dev
 
 # Clone FieldOpt and submodules
