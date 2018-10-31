@@ -6,7 +6,7 @@ the FieldOpt files and execute the following commands:
 ```bash
 # Install packages from repositories
 sudo apt-get install git build-essential cmake \
-    qt5-default libbost-all-dev libhdf5-dev \
+    qt5-default libboost-all-dev libhdf5-dev \
     libopenmpi-dev
 
 # Clone FieldOpt and submodules
@@ -87,7 +87,7 @@ Recommended libraries for workstations:
 ```bash
 # Install packages from repositories
 sudo apt-get install git build-essential cmake \
-    qt5-default libbost-all-dev libhdf5-dev \
+    qt5-default libboost-all-dev libhdf5-dev \
     libopenmpi-dev
 ```
 
@@ -96,7 +96,7 @@ All available libraries (not recommended):
 ```bash
 # Install packages from repositories
 sudo apt-get install git build-essential cmake \
-    qt5-default libbost-all-dev libhdf5-dev \
+    qt5-default libboost-all-dev libhdf5-dev \
     libopenmpi-dev libeigen3-dev libgtest-dev
 
 # Create a symlink so that CMake can find the Eigen libraries:
