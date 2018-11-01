@@ -85,7 +85,7 @@ void SerialRunner::Execute()
                 int sim_time = time_span_seconds(start, end);
                 if (simulation_success) {
                     auto economy = model_->wellCost(settings_->optimizer()->objective());
-                    new_case->set_objective_function_value(objective_function_->value(economy));
+                    new_case->set_objective_function_value(objective_function_->value());
                     new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
                     new_case->SetSimTime(sim_time);
                     simulation_times_.push_back((sim_time));

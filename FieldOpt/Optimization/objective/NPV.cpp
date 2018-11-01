@@ -37,9 +37,11 @@ namespace Optimization {
 namespace Objective {
 
 NPV::NPV(Settings::Optimizer *settings,
-         Simulation::Results::Results *results) {
+         Simulation::Results::Results *results,
+         Model::Model *model) {
   settings_ = settings;
   results_ = results;
+  model_ = model;
   components_ = new QList<NPV::Component *>();
 
   for (int i = 0; i < settings->objective().NPV_sum.size(); ++i) {
@@ -58,9 +60,12 @@ NPV::NPV(Settings::Optimizer *settings,
     }
     components_->append(comp);
   }
+
+  *well_economy_ = model_->wellCost(settings_->objective());
+
 }
 
-double NPV::value(Model::Model::economy model_economics) const {
+double NPV::value() const {
   try {
   double value = 0;
 
@@ -105,16 +110,15 @@ double NPV::value(Model::Model::economy model_economics) const {
       } else if (components_->at(i)->usediscountfactor == false) {
         value += components_->at(i)->resolveValue(results_);
         QString prop_name = components_->at(i)->property_name;
-        double prop_coeff = components_->at(i)->coefficient;
       }
     }
-    if (model_economics.useWellCost) {
-      for (Model::Wells::Well *well: model_economics.wells_) {
-        if (model_economics.separate) {
-          value -= model_economics.costXY * model_economics.well_xy[well->name().toStdString()];
-          value -= model_economics.costZ * model_economics.well_z[well->name().toStdString()];
+    if (well_economy_->use_well_cost) {
+      for (auto well: well_economy_->wells_) {
+        if (well_economy_->separate) {
+          value -= well_economy_->costXY * well_economy_->well_xy[well->name().toStdString()];
+          value -= well_economy_->costZ * well_economy_->well_z[well->name().toStdString()];
         } else {
-          value -= model_economics.cost * model_economics.well_lengths[well->name().toStdString()];
+          value -= well_economy_->cost * well_economy_->well_lengths[well->name().toStdString()];
         }
       }
     }

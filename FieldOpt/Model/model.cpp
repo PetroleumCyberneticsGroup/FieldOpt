@@ -105,16 +105,16 @@ void Model::verifyWells()
     }
 }
 
-Model::economy Model::wellCost(Settings::Optimizer::Objective objective) {
-  economy wellEconomy;
-  if (objective.useWellCost) {
-    wellEconomy.n_wells = wells_->size();
-    wellEconomy.cost = objective.wellCost;
-    wellEconomy.costXY = objective.wellCostXY;
-    wellEconomy.costZ = objective.wellCostZ;
-    wellEconomy.separate = objective.separatehorizontalandvertical;
-    wellEconomy.useWellCost = objective.useWellCost;
-    wellEconomy.wells_ = *wells_;
+Model::Economy Model::wellCost(Settings::Optimizer::Objective objective) {
+  Economy well_economy;
+  if (objective.use_well_cost) {
+    well_economy.n_wells = wells_->size();
+    well_economy.cost = objective.wellCost;
+    well_economy.costXY = objective.wellCostXY;
+    well_economy.costZ = objective.wellCostZ;
+    well_economy.separate = objective.separatehorizontalandvertical;
+    well_economy.use_well_cost = objective.use_well_cost;
+    well_economy.wells_ = *wells_;
     for (Wells::Well *well : *wells_) {
       auto variable = well->trajectory()->GetWellSpline()->GetSplinePoints();
       auto well_spline_heel_x = variable[0]->x->value();
@@ -123,20 +123,15 @@ Model::economy Model::wellCost(Settings::Optimizer::Objective objective) {
       auto well_spline_toe_x = variable[1]->x->value();
       auto well_spline_toe_y = variable[1]->y->value();
       auto well_spline_toe_z = variable[1]->z->value();
-
-      wellEconomy.well_xy[well->name().toStdString()] = sqrt(
+      well_economy.well_xy[well->name().toStdString()] = sqrt(
           pow((well_spline_heel_x - well_spline_toe_x), 2) + pow((well_spline_heel_y - well_spline_toe_y), 2));
-      wellEconomy.well_z[well->name().toStdString()] = abs(well_spline_heel_z - well_spline_toe_z);
-      wellEconomy.well_lengths[well->name().toStdString()] = sqrt(
+      well_economy.well_z[well->name().toStdString()] = abs(well_spline_heel_z - well_spline_toe_z);
+      well_economy.well_lengths[well->name().toStdString()] = sqrt(
           pow((well_spline_heel_x - well_spline_toe_x), 2) + pow((well_spline_heel_y - well_spline_toe_y), 2)
               + pow((well_spline_heel_z - well_spline_toe_z), 2));
-
     }
-
   }
-
-  return wellEconomy;
-
+return well_economy;
 }
 
 

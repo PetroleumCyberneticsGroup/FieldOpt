@@ -82,7 +82,7 @@ class Optimizer
   struct Objective {
     ObjectiveType type; //!< The objective definition type (e.g. WeightedSum)
     bool use_penalty_function; //!< Whether or not to use penalty function (default: false).
-    bool useWellCost; //!<Whether to include a well cost associated with the length
+    bool use_well_cost; //!<Whether to include a well cost associated with the length
     bool separatehorizontalandvertical;
     double wellCostXY;
     double wellCostZ;

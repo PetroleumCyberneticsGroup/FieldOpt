@@ -61,7 +61,7 @@ public:
      */
     WeightedSum(Settings::Optimizer *settings, Simulation::Results::Results *results);
 
-    double value(Model::Model::economy model_economy) const;
+    double value() const;
 
 private:
     /*!

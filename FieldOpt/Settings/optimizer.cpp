@@ -399,7 +399,7 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
             obj.separatehorizontalandvertical= false;
         }
       if (json_objective.contains("UseWellCost")) {
-        obj.useWellCost = json_objective["UseWellCost"].toBool();
+        obj.use_well_cost = json_objective["UseWellCost"].toBool();
         if (obj.separatehorizontalandvertical) {
           if (json_objective.contains("WellCostXY")) {
             obj.wellCostXY = json_objective["WellCostXY"].toDouble();
@@ -425,7 +425,7 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
         }
 
         } else {
-            obj.useWellCost = false;
+            obj.use_well_cost = false;
             obj.wellCost = 0;
             obj.wellCostXY = 0;
             obj.wellCostZ = 0;

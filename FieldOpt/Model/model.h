@@ -126,7 +126,7 @@ class Model : public Loggable
     Model *model_;
   };
  public:
-  class economy{
+  struct Economy{
    public:
     map<string, double> well_xy;
     map<string, double> well_z;
@@ -136,10 +136,10 @@ class Model : public Loggable
     double costZ = 0;
     double cost = 0;
     bool separate = false;
-    bool useWellCost = false;
+    bool use_well_cost = false;
     QList<Wells::Well *> wells_;
   };
-  economy wellCost(Settings::Optimizer::Objective);
+  Economy wellCost(Settings::Optimizer::Objective);
 
 };
 

@@ -147,7 +147,7 @@ void AbstractRunner::InitializeObjectiveFunction()
             break;
         case Settings::Optimizer::ObjectiveType::NPV:
             if (VERB_RUN >=1) Printer::ext_info("Using NPV-type objective function.", "Runner", "AbstractRunner");
-            objective_function_ = new Optimization::Objective::NPV(settings_->optimizer(), simulator_->results());
+            objective_function_ = new Optimization::Objective::NPV(settings_->optimizer(), simulator_->results(), model_);
             break;
         default:
             throw std::runtime_error("Unable to initialize runner: objective function type not recognized.");
@@ -167,7 +167,7 @@ void AbstractRunner::InitializeBaseCase()
         base_case_->set_objective_function_value(sentinelValue());
     }
     else
-        base_case_->set_objective_function_value(objective_function_->value(model_->wellCost(settings_->optimizer()->objective())));
+        base_case_->set_objective_function_value(objective_function_->value());
     if (VERB_RUN >= 1) Printer::ext_info("Base case objective function value set to " + Printer::num2str(base_case_->objective_function_value()), "Runner", "AbstractRunner");
 }
 
