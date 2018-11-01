@@ -60,9 +60,7 @@ NPV::NPV(Settings::Optimizer *settings,
     }
     components_->append(comp);
   }
-
   *well_economy_ = model_->wellCost(settings_->objective());
-
 }
 
 double NPV::value() const {
@@ -128,8 +126,6 @@ double NPV::value() const {
     Printer::error("Failed to compute NPV. Returning 0.0");
     return 0.0;
   }
-
-
 }
 
 double NPV::Component::resolveValue(Simulation::Results::Results *results) {

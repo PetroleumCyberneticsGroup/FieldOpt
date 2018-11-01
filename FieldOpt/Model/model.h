@@ -52,7 +52,6 @@ class Model : public Loggable
   QUuid GetId() override;
   map<string, vector<double>> GetValues() override;
 
-
   /*!
    * \brief reservoir Get the reservoir (i.e. grid).
    */
@@ -76,7 +75,6 @@ class Model : public Loggable
    */
   void ApplyCase(Optimization::Case *c);
 
-
   /*!
    * @brief Get the UUId of last case applied to the Model.
    * @return
@@ -91,9 +89,7 @@ class Model : public Loggable
    * @brief Should be called at the end of the optimization run. Writes the last case
    * to the extended log.
    */
-
   void Finalize();
-
 
  private:
   Reservoir::Grid::Grid *grid_;
