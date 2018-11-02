@@ -121,6 +121,9 @@ class Model : public Loggable
    private:
     Model *model_;
   };
+  /*! The Economy struct is intended for use in calculations for drilling costs.
+   *  The costs are represented in [$/m] if used in tandem with NPV
+   */
  public:
   struct Economy{
    public:

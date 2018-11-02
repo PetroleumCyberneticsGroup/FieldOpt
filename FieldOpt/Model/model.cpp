@@ -115,20 +115,16 @@ Model::Economy Model::wellCost(Settings::Optimizer::Objective objective) {
     well_economy.separate = objective.separatehorizontalandvertical;
     well_economy.use_well_cost = objective.use_well_cost;
     well_economy.wells_ = *wells_;
-    for (Wells::Well *well : *wells_) {
-      auto variable = well->trajectory()->GetWellSpline()->GetSplinePoints();
-      auto well_spline_heel_x = variable[0]->x->value();
-      auto well_spline_heel_y = variable[0]->y->value();
-      auto well_spline_heel_z = variable[0]->z->value();
-      auto well_spline_toe_x = variable[1]->x->value();
-      auto well_spline_toe_y = variable[1]->y->value();
-      auto well_spline_toe_z = variable[1]->z->value();
-      well_economy.well_xy[well->name().toStdString()] = sqrt(
-          pow((well_spline_heel_x - well_spline_toe_x), 2) + pow((well_spline_heel_y - well_spline_toe_y), 2));
-      well_economy.well_z[well->name().toStdString()] = abs(well_spline_heel_z - well_spline_toe_z);
-      well_economy.well_lengths[well->name().toStdString()] = sqrt(
-          pow((well_spline_heel_x - well_spline_toe_x), 2) + pow((well_spline_heel_y - well_spline_toe_y), 2)
-              + pow((well_spline_heel_z - well_spline_toe_z), 2));
+    for (auto well : *wells_) {
+        auto spline_points = well->trajectory()->GetWellSpline()->GetSplinePoints();
+        for(int j = 0; j < spline_points.length(); j++){
+            double well_length = (spline_points[j+1]->ToEigenVector() - spline_points[j]->ToEigenVector()).norm();
+            double well_spline_length_z = abs(spline_points[j+1]->z-spline_points[j]->z);
+            double well_spline_length_xy =  sqrt(pow((spline_points[j]->x - spline_points[j+1]->x), 2) + pow((spline_points[j]->y - spline_points[j+1]->y), 2));
+            well_economy.well_xy[well->name().toStdString()] += well_spline_length_xy;
+            well_economy.well_z[well->name().toStdString()] += well_spline_length_z;
+            well_economy.well_lengths[well->name().toStdString()] += well_length;
+        }
     }
   }
 return well_economy;

@@ -66,7 +66,6 @@ class NPV : public Objective {
   Simulation::Results::Results *results_;  //!< Object providing access to simulator results.
   Settings::Optimizer *settings_;
   Model::Model::Economy *well_economy_;
-  Model::Model *model_;
 };
 
 }

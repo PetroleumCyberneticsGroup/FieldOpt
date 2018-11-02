@@ -41,7 +41,6 @@ NPV::NPV(Settings::Optimizer *settings,
          Model::Model *model) {
   settings_ = settings;
   results_ = results;
-  model_ = model;
   components_ = new QList<NPV::Component *>();
 
   for (int i = 0; i < settings->objective().NPV_sum.size(); ++i) {
@@ -60,7 +59,7 @@ NPV::NPV(Settings::Optimizer *settings,
     }
     components_->append(comp);
   }
-  *well_economy_ = model_->wellCost(settings_->objective());
+  *well_economy_ = model->wellCost(settings_->objective());
 }
 
 double NPV::value() const {

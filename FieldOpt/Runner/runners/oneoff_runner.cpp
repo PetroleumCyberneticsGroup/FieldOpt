@@ -23,9 +23,9 @@ void OneOffRunner::Execute()
     EvaluateBaseModel();
     // Write objective function value to file
     model_->wellCost(settings_->optimizer()->objective());
-    Utilities::FileHandling::WriteLineToFile(QString("%1").arg(objective_function_->value()),
-                                             QString::fromStdString(settings_->paths().GetPath(Paths::OUTPUT_DIR))
-                                             + "/f.out");
+    //Utilities::FileHandling::WriteLineToFile(QString("%1").arg(objective_function_->value()),
+    //                                         QString::fromStdString(settings_->paths().GetPath(Paths::OUTPUT_DIR))
+    //                                         + "/f.out");
 //    std::cout << objective_function_->value() << std::endl;
 }
 
