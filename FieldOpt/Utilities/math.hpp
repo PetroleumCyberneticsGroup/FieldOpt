@@ -267,8 +267,4 @@ inline double calc_standard_deviation(std::vector<double> sums){
     double stdev = sqrt(sq_sum);
     return stdev;
 }
-
-
-
-
 #endif // MATH_FUNCTIONS_H
