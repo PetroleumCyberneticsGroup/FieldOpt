@@ -87,8 +87,13 @@ class Optimizer
   };
 
   struct Objective {
-    ObjectiveType type; //!< The objective definition type (e.g. WeightedSum)
+    ObjectiveType type; //!< The objective definition type (e.g. WeightedSum, NPV)
     bool use_penalty_function; //!< Whether or not to use penalty function (default: false).
+    bool use_well_cost; //!<Whether or not to use costs associated to wells in calculation of the objective.
+    bool separatehorizontalandvertical; //!<Whether or not to use different values in the horizontal or vertical direction
+    double wellCostXY; //!<Cost associated with drilling in the horizontal plane [$/m]
+    double wellCostZ; //!<Cost associated with drilling in the vertical plane [$/m]
+    double wellCost; //!<Cost associated with drilling the well, independent of direction [$/m]
     struct WeightedSumComponent {
       double coefficient; QString property; int time_step;
       bool is_well_prop; QString well; }; //!< A component of a weighted sum formulatied objective function
@@ -97,6 +102,7 @@ class Optimizer
       bool usediscountfactor; QString well; double discount; };
     QList<WeightedSumComponent> weighted_sum; //!< The expression for the Objective function formulated as a weighted sum
     QList<NPVComponent> NPV_sum;
+
   };
 
   struct Constraint {

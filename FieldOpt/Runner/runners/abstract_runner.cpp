@@ -147,7 +147,7 @@ void AbstractRunner::InitializeObjectiveFunction()
             break;
         case Settings::Optimizer::ObjectiveType::NPV:
             if (VERB_RUN >=1) Printer::ext_info("Using NPV-type objective function.", "Runner", "AbstractRunner");
-            objective_function_ = new Optimization::Objective::NPV(settings_->optimizer(), simulator_->results());
+            objective_function_ = new Optimization::Objective::NPV(settings_->optimizer(), simulator_->results(), model_);
             break;
         default:
             throw std::runtime_error("Unable to initialize runner: objective function type not recognized.");

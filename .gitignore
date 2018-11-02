@@ -10,6 +10,7 @@
 *.dll
 *.dylib
 
+
 # Qt-es
 
 /.qmake.cache
@@ -46,6 +47,9 @@ libs/*
 # Manually compiled program
 build/*
 FieldOpt/build
+FieldOpt/ThirdParty/*
+FieldOpt/ThirdParty/Eigen3/*
+
 
 # Test folders
 test-*

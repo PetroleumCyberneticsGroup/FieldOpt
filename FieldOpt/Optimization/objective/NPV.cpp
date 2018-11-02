@@ -23,6 +23,8 @@ along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 #include "weightedsum.h"
 #include <stdlib.h>
 #include <cmath>
+#include "Model/model.h"
+#include "Model/wells/well.h"
 #include <Utilities/printer.hpp>
 
 using std::cout;
@@ -35,7 +37,8 @@ namespace Optimization {
 namespace Objective {
 
 NPV::NPV(Settings::Optimizer *settings,
-         Simulation::Results::Results *results) {
+         Simulation::Results::Results *results,
+         Model::Model *model) {
   settings_ = settings;
   results_ = results;
   components_ = new QList<NPV::Component *>();
@@ -56,27 +59,30 @@ NPV::NPV(Settings::Optimizer *settings,
     }
     components_->append(comp);
   }
+  *well_economy_ = model->wellCost(settings_->objective());
 }
 
 double NPV::value() const {
   try {
-    double value = 0;
-    auto report_times = results_->GetValueVector(results_->Time);
-    auto NPV_times = new QList<double>;
-    auto discount_factor_list = new QList<double>;
-    for (int k = 0; k < components_->size(); ++k) {
-      if (components_->at(k)->interval == "Yearly") {
-        double discount_factor;
-        int j = 1;
-        for (int i = 0; i < report_times.size(); i++) {
-          if (std::fmod(report_times.at(i), 365) == 0) {
-            discount_factor = 1 / (1 * (pow(1 + components_->at(k)->discount, j - 1)));
-            discount_factor_list->append(discount_factor);
-            NPV_times->append(i);
-            j += 1;
-          }
+  double value = 0;
+
+  auto report_times = results_->GetValueVector(results_->Time);
+  auto NPV_times = new QList<double>;
+  auto discount_factor_list = new QList<double>;
+  for (int k = 0; k < components_->size(); ++k) {
+    if (components_->at(k)->interval == "Yearly") {
+      double discount_factor;
+      int j = 1;
+      for (int i = 0; i < report_times.size(); i++) {
+        if (std::fmod(report_times.at(i), 365) == 0) {
+          discount_factor = 1 / (1 * (pow(1 + components_->at(k)->discount, j - 1)));
+          discount_factor_list->append(discount_factor);
+          NPV_times->append(i);
+
+          j += 1;
         }
-      } else if (components_->at(k)->interval == "Monthly") {
+      }
+    }else if (components_->at(k)->interval == "Monthly") {
         double discount_factor;
         double discount_rate = components_->at(k)->discount;
         double monthly_discount = components_->at(k)->yearlyToMonthly(discount_rate);
@@ -101,7 +107,16 @@ double NPV::value() const {
       } else if (components_->at(i)->usediscountfactor == false) {
         value += components_->at(i)->resolveValue(results_);
         QString prop_name = components_->at(i)->property_name;
-        double prop_coeff = components_->at(i)->coefficient;
+      }
+    }
+    if (well_economy_->use_well_cost) {
+      for (auto well: well_economy_->wells_) {
+        if (well_economy_->separate) {
+          value -= well_economy_->costXY * well_economy_->well_xy[well->name().toStdString()];
+          value -= well_economy_->costZ * well_economy_->well_z[well->name().toStdString()];
+        } else {
+          value -= well_economy_->cost * well_economy_->well_lengths[well->name().toStdString()];
+        }
       }
     }
     return value;
@@ -110,7 +125,6 @@ double NPV::value() const {
     Printer::error("Failed to compute NPV. Returning 0.0");
     return 0.0;
   }
-
 }
 
 double NPV::Component::resolveValue(Simulation::Results::Results *results) {

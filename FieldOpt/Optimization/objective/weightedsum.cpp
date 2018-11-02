@@ -24,6 +24,7 @@
  *****************************************************************************/
 
 #include "weightedsum.h"
+#include "Model/model.h"
 
 namespace Optimization {
 namespace Objective {

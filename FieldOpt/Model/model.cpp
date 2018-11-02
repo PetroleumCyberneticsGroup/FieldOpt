@@ -105,6 +105,32 @@ void Model::verifyWells()
     }
 }
 
+Model::Economy Model::wellCost(Settings::Optimizer::Objective objective) {
+  Economy well_economy;
+  if (objective.use_well_cost) {
+    well_economy.n_wells = wells_->size();
+    well_economy.cost = objective.wellCost;
+    well_economy.costXY = objective.wellCostXY;
+    well_economy.costZ = objective.wellCostZ;
+    well_economy.separate = objective.separatehorizontalandvertical;
+    well_economy.use_well_cost = objective.use_well_cost;
+    well_economy.wells_ = *wells_;
+    for (auto well : *wells_) {
+        auto spline_points = well->trajectory()->GetWellSpline()->GetSplinePoints();
+        for(int j = 0; j < spline_points.length(); j++){
+            double well_length = (spline_points[j+1]->ToEigenVector() - spline_points[j]->ToEigenVector()).norm();
+            double well_spline_length_z = abs(spline_points[j+1]->z-spline_points[j]->z);
+            double well_spline_length_xy =  sqrt(pow((spline_points[j]->x - spline_points[j+1]->x), 2) + pow((spline_points[j]->y - spline_points[j+1]->y), 2));
+            well_economy.well_xy[well->name().toStdString()] += well_spline_length_xy;
+            well_economy.well_z[well->name().toStdString()] += well_spline_length_z;
+            well_economy.well_lengths[well->name().toStdString()] += well_length;
+        }
+    }
+  }
+return well_economy;
+}
+
+
 void Model::verifyWellTrajectory(Wells::Well *w)
 {
     for (Wells::Wellbore::WellBlock *wb : *w->trajectory()->GetWellBlocks()) {

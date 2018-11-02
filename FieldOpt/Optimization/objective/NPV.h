@@ -35,7 +35,8 @@ class NPV : public Objective {
  * \param results The Results object from which to get property values.
  */
   NPV(Settings::Optimizer *settings,
-      Simulation::Results::Results *results);
+      Simulation::Results::Results *results,
+      Model::Model *model);
 
   double value() const;
 
@@ -64,6 +65,7 @@ class NPV : public Objective {
   QList<Component *> *components_; //!< List of gamma, k pairs.
   Simulation::Results::Results *results_;  //!< Object providing access to simulator results.
   Settings::Optimizer *settings_;
+  Model::Model::Economy *well_economy_;
 };
 
 }

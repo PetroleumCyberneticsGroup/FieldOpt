@@ -121,6 +121,25 @@ class Model : public Loggable
    private:
     Model *model_;
   };
+  /*! The Economy struct is intended for use in calculations for drilling costs.
+   *  The costs are represented in [$/m] if used in tandem with NPV
+   */
+ public:
+  struct Economy{
+   public:
+    map<string, double> well_xy;
+    map<string, double> well_z;
+    map<string, double> well_lengths;
+    double n_wells = 0;
+    double costXY = 0;
+    double costZ = 0;
+    double cost = 0;
+    bool separate = false;
+    bool use_well_cost = false;
+    QList<Wells::Well *> wells_;
+  };
+  Economy wellCost(Settings::Optimizer::Objective);
+
 };
 
 }
