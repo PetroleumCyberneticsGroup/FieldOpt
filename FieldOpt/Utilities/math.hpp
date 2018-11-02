@@ -34,10 +34,15 @@
  * @param list
  * @return The average value of the elements in the list as a double.
  */
+
+template<typename T>
+inline double calc_sum(std::vector<T> sums){
+    return std::accumulate(sums.begin(), sums.end(), 0.0);
+}
 template<typename T>
 inline double calc_average(const std::vector<T> list) {
     assert(!list.empty());
-    return std::accumulate(list.begin(), list.end(), 0.0) / list.size();
+    return calc_sum(list) / list.size();
 }
 
 /*!
@@ -246,5 +251,24 @@ inline double random_double(boost::random::mt19937 &gen) {
     boost::variate_generator<boost::mt19937&, boost::uniform_real<> > rng(gen, dist);
     return rng();
 }
+
+inline double calc_variance(std::vector<double> sums){
+    std::vector<double> diff(sums.size());
+    transform(sums.begin(), sums.end(), diff.begin(),
+              bind2nd(std::minus<double>(), calc_average(sums))
+    );
+    double sq_sum = inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
+    return sq_sum/(sums.size()-1);
+
+}
+
+inline double calc_standard_deviation(std::vector<double> sums){
+    double sq_sum = calc_variance(sums);
+    double stdev = sqrt(sq_sum);
+    return stdev;
+}
+
+
+
 
 #endif // MATH_FUNCTIONS_H

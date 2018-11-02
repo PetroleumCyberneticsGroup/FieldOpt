@@ -22,6 +22,7 @@
 #include <Utilities/time.hpp>
 #include <boost/lexical_cast.hpp>
 #include <iostream>
+#include <Utilities/math.hpp>
 #include "case.h"
 
 namespace Optimization {
@@ -301,6 +302,21 @@ double Case::GetEnsembleAverageOfv() const {
         sum += value;
     }
     return sum / ensemble_ofvs_.size();
+}
+
+QPair<double, double> Case::GetEnsembleExpectedOfv() const {
+    if (ensemble_ofvs_.size() == 1) {
+        std::cerr << "WARNING: Only one realization case was successfully evaluated. "
+                  << "You should consider tweaking well/reservoir parameters "
+                  << "or increasing the number of realizations considered for each case."
+                  << std::endl;
+    }
+    vector<double> list_of_ofvs;
+    for (double value : ensemble_ofvs_.values()){
+        list_of_ofvs.push_back(value);
+    }
+    auto pair = QPair<double, double>(calc_average(list_of_ofvs),calc_standard_deviation(list_of_ofvs));
+    return pair;
 }
 
 void Case::set_objective_function_value(double objective_function_value) {
