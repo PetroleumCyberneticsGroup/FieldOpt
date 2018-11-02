@@ -168,9 +168,11 @@ https://www.jetbrains.com/clion/
 '
 
 ## Step (1) - Enabling Windows to run WSL and downloading Ubuntu 16.04
-### 1.1 Navigate to Control Panel -> Programs and Feature / Programs -> Activate or deactivate Windows-features. In the pop-up window; check "Windows-subsystem for Linux" and restart your computer.
+### 1.1 - Enabling WSL
+Navigate to Control Panel -> Programs and Feature / Programs -> Activate or deactivate Windows-features. In the pop-up window; check "Windows-subsystem for Linux" and restart your computer.
 
-### 1.2 Navigate to Microsoft Store, search for "Ubuntu 16.04 LTS", download and install. When this is completed a bash terminal from Ubuntu will appare. If this is not the case, Windows-key and search for Ubuntu; relaunch. You will be prompted to set a username and a password, remember these. It will later be refered to as LINUX-USERNAME and LINUX-PASSWORD.
+### 1.2 - Installing Ubuntu
+Navigate to Microsoft Store, search for "Ubuntu 16.04 LTS", download and install. When this is completed a bash terminal from Ubuntu will appare. If this is not the case, Windows-key and search for Ubuntu; relaunch. You will be prompted to set a username and a password, remember these. It will later be refered to as LINUX-USERNAME and LINUX-PASSWORD.
 
 
 ## Step (2) - Download and install SmartGit and CLion
