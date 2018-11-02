@@ -191,12 +191,12 @@ In this bash terminal from Ubuntu, navigate to your home folder. ("cd ~")
 
 ### 3.1 - Install packages from repositories and configuring SSH
 ```
-#Install packages from repositories
+# Install packages from repositories
 sudo apt-get install git build-essential cmake \
     qt5-default libboost-all-dev libhdf5-dev \
     libopenmpi-dev gcc clang gdb
 
-#Download and install ssh using CLion scripts
+# Download and install ssh using CLion scripts
 
 cd ~
 mkdir CLionScript
@@ -214,20 +214,20 @@ ssh username@localhost -p2222
 In Ubuntu terminal, navigate to:
 ```
 cd /mnt/DISKLETTER/Users/USERNAME/
-#DISKLETTER=c
-#USERNAME=username
+# DISKLETTER=c
+# USERNAME=username
 
-#If the bootdisk is not selected, you might just consider using it in a different partition dedicated to these specific tasks.
-#This would then be, although it has to be accessable from both Linux and Windows
+# If the bootdisk is not selected, you might just consider using it in a different partition dedicated to these specific tasks.
+# This would then be, although it has to be accessable from both Linux and Windows
 cd /mnt/DISKLETTER/
-#DISKLETTER=partition letter
+# DISKLETTER=partition letter
 
 ```
 
 ### 3.3 - Creating directory for FieldOpt
 
 ```
-#Create Directories and symlink directories
+# Create Directories and symlink directories
 cd /mnt/DISKLETTER/Users/USERNAME/ or cd /mnt/DISKLETTER/
 mkdir git
 cd ~
@@ -239,18 +239,18 @@ cd PCG
 ```
 ## Step (4) Cloning FieldOpt
 ```
-#Clone FieldOpt
+# Clone FieldOpt
 git clone https://github.com/PetroleumCyberneticsGroup/FieldOpt.git
 cd FieldOpt
 git submodule update --init --recursive
 
-#Install ThirdParty dependencies
+# Install ThirdParty dependencies
 cd FieldOpt/ThirdParty
 cmake .
 make
 make install
 
-#Problems might occur in eigen3
+# Problems might occur in eigen3
 cd eigen3
 mkdir builder
 cd builder
@@ -258,7 +258,7 @@ cmake ..
 make
 sudo make install
 
-#Install opm-common
+# Install opm-common
 cd ../../opm-common
 cmake .
 make
