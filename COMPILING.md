@@ -190,7 +190,7 @@ idea.case.sensitive.fs=true
 In this bash terminal from Ubuntu, navigate to your home folder. ("cd ~")
 
 ### 3.1 - Install packages from repositories and configuring SSH
-```
+```bash
 # Install packages from repositories
 sudo apt-get install git build-essential cmake \
     qt5-default libboost-all-dev libhdf5-dev \
@@ -212,7 +212,7 @@ ssh username@localhost -p2222
 
 ### 3.2 - Making a collaborative environment for CLion and Ubuntu
 In Ubuntu terminal, navigate to:
-```
+```bash
 cd /mnt/DISKLETTER/Users/USERNAME/
 # DISKLETTER=c
 # USERNAME=username
@@ -226,7 +226,7 @@ cd /mnt/DISKLETTER/
 
 ### 3.3 - Creating directory for FieldOpt
 
-```
+```bash
 # Create Directories and symlink directories
 cd /mnt/DISKLETTER/Users/USERNAME/ or cd /mnt/DISKLETTER/
 mkdir git
@@ -238,7 +238,7 @@ mkdir PCG
 cd PCG
 ```
 ## Step (4) Cloning FieldOpt
-```
+```bash
 # Clone FieldOpt
 git clone https://github.com/PetroleumCyberneticsGroup/FieldOpt.git
 cd FieldOpt
