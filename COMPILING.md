@@ -156,9 +156,9 @@ cmake .
 make
 ```
 
-#COMPILATION GUIDE WINDOWS/LINUX
+# COMPILATION GUIDE WINDOWS/LINUX
 
-##Prerequesits:
+## Prerequesits:
 (1) Proper installation of Windows 10, including Creators Update
 (2) Administrative privileges on said Windows 10 installation
 (3) An educational account at Clion; follow instructions at 
@@ -167,13 +167,13 @@ make
 https://www.jetbrains.com/clion/
 '
 
-##Step (1) - Enabling Windows to run WSL and downloading Ubuntu 16.04
-###1.1 Navigate to Control Panel -> Programs and Feature / Programs -> Activate or deactivate Windows-features. In the pop-up window; check "Windows-subsystem for Linux" and restart your computer.
+## Step (1) - Enabling Windows to run WSL and downloading Ubuntu 16.04
+### 1.1 Navigate to Control Panel -> Programs and Feature / Programs -> Activate or deactivate Windows-features. In the pop-up window; check "Windows-subsystem for Linux" and restart your computer.
 
-###1.2 Navigate to Microsoft Store, search for "Ubuntu 16.04 LTS", download and install. When this is completed a bash terminal from Ubuntu will appare. If this is not the case, Windows-key and search for Ubuntu; relaunch. You will be prompted to set a username and a password, remember these. It will later be refered to as LINUX-USERNAME and LINUX-PASSWORD.
+### 1.2 Navigate to Microsoft Store, search for "Ubuntu 16.04 LTS", download and install. When this is completed a bash terminal from Ubuntu will appare. If this is not the case, Windows-key and search for Ubuntu; relaunch. You will be prompted to set a username and a password, remember these. It will later be refered to as LINUX-USERNAME and LINUX-PASSWORD.
 
 
-##Step (2) - Download and install SmartGit and CLion
+## Step (2) - Download and install SmartGit and CLion
 Download and follow instructions from
 SmartGit - https://www.syntevo.com/smartgit/download/
 and
@@ -184,10 +184,10 @@ When CLion is activated or evaluation option is picked, navigate to Help -> Edit
 idea.case.sensitive.fs=true
 ```
 
-##Step (3) - Building dependencies and configuring Linux
+## Step (3) - Building dependencies and configuring Linux
 In this bash terminal from Ubuntu, navigate to your home folder. ("cd ~")
 
-###3.1 - Install packages from repositories and configuring SSH
+### 3.1 - Install packages from repositories and configuring SSH
 ```
 #Install packages from repositories
 sudo apt-get install git build-essential cmake \
@@ -208,7 +208,7 @@ ssh username@localhost -p2222
 
 
 
-###3.2 - Making a collaborative environment for CLion and Ubuntu
+### 3.2 - Making a collaborative environment for CLion and Ubuntu
 In Ubuntu terminal, navigate to:
 ```
 cd /mnt/DISKLETTER/Users/USERNAME/
@@ -222,7 +222,7 @@ cd /mnt/DISKLETTER/
 
 ```
 
-###3.3 - Creating directory for FieldOpt
+### 3.3 - Creating directory for FieldOpt
 
 ```
 #Create Directories and symlink directories
@@ -235,7 +235,7 @@ cd git
 mkdir PCG
 cd PCG
 ```
-##Step (4) Cloning FieldOpt
+## Step (4) Cloning FieldOpt
 ```
 #Clone FieldOpt
 git clone https://github.com/PetroleumCyberneticsGroup/FieldOpt.git
@@ -263,7 +263,7 @@ make
 make install
 ```
 
-##Step (5) - Configuring WSL Toolchain in CLion
+## Step (5) - Configuring WSL Toolchain in CLion
 Open CLion in Windows and navigate to File->Settings->Toolchains
 Find the + symbol, click it. Under "Environment:" click the dropdown menu and select "WSL"
 Under "Credentials:" click the folder on the right hand side, and write 
