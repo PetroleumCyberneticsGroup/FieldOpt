@@ -59,7 +59,7 @@ NPV::NPV(Settings::Optimizer *settings,
     }
     components_->append(comp);
   }
-  *well_economy_ = model->wellCost(settings_->objective());
+  well_economy_ = model->wellCostConstructor();
 }
 
 double NPV::value() const {
@@ -110,7 +110,7 @@ double NPV::value() const {
       }
     }
     if (well_economy_->use_well_cost) {
-      for (auto well: well_economy_->wells_) {
+      for (auto well: well_economy_->wells_pointer) {
         if (well_economy_->separate) {
           value -= well_economy_->costXY * well_economy_->well_xy[well->name().toStdString()];
           value -= well_economy_->costZ * well_economy_->well_z[well->name().toStdString()];

@@ -236,6 +236,11 @@ class Case : public Loggable
   bool HasRealizationOfv(const QString &alias);
   double GetRealizationOfv(const QString &alias);
   double GetEnsembleAverageOfv() const;
+  /*!
+   * Gets Ensemble Expected Objective Function Value (OFV). This includes the average
+   * and standard deviation for all the OFVs in the ensemble that was previously run.
+   */
+
   QPair<double, double> GetEnsembleExpectedOfv() const;
   QHash<QString, double> GetRealizationOFVMap() const { return ensemble_ofvs_; }
 

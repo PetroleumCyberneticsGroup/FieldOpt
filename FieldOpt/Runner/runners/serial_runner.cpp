@@ -84,7 +84,7 @@ void SerialRunner::Execute()
                 auto end = QDateTime::currentDateTime();
                 int sim_time = time_span_seconds(start, end);
                 if (simulation_success) {
-                    model_->wellCost(settings_->optimizer()->objective());
+                    model_->wellCost(settings_->optimizer());
                     new_case->set_objective_function_value(objective_function_->value());
                     new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
                     new_case->SetSimTime(sim_time);
