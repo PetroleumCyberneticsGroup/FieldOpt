@@ -60,31 +60,52 @@ EGO::EGO(Settings::Optimizer *settings,
         logger_->AddEntry(this);
     }
 
-
-    if (settings->parameters().ego_init_guesses == -1) {
-        n_initial_guesses_ = n_cont_vars * 2;
-    }
-    else {
-        n_initial_guesses_ = settings->parameters().ego_init_guesses;
-    }
     af_ = AcquisitionFunction(settings->parameters());
     af_opt_ = AFOptimizers::AFPSO(lb_, ub_, settings->parameters().rng_seed);
     gp_ = new libgp::GaussianProcess(n_cont_vars, settings->parameters().ego_kernel);
 
-    // Guess some random initial positions
-    if (settings->parameters().ego_init_sampling_method != "Random") {
-        Printer::ext_warn("Only the Random sampling method is implemented.", "Optimization", "EGO");
-        throw std::runtime_error("Failed to initialize EGO optimizer.");
-    }
-    auto rng = get_random_generator(settings->parameters().rng_seed);
-    for (int i = 0; i < n_initial_guesses_; ++i) {
-        VectorXd pos = VectorXd::Zero(lb_.size());
-        for (int i = 0; i < lb_.size(); ++i) {
-            pos(i) = random_double(rng, lb_(i), ub_(i));
+
+    if (settings->parameters().ego_init_sampling_method == "Random") {
+        if (settings->parameters().ego_init_guesses == -1) {
+            n_initial_guesses_ = n_cont_vars * 2;
         }
-        Case * init_case = new Case(base_case);
-        init_case->SetRealVarValues(pos);
-        case_handler_->AddNewCase(init_case);
+        else {
+            n_initial_guesses_ = settings->parameters().ego_init_guesses;
+        }
+        auto rng = get_random_generator(settings->parameters().rng_seed);
+        for (int i = 0; i < n_initial_guesses_; ++i) {
+            VectorXd pos = VectorXd::Zero(lb_.size());
+            for (int i = 0; i < lb_.size(); ++i) {
+                pos(i) = random_double(rng, lb_(i), ub_(i));
+            }
+            Case * init_case = new Case(base_case);
+            init_case->SetRealVarValues(pos);
+            case_handler_->AddNewCase(init_case);
+        }
+    }
+    else if (settings->parameters().ego_init_sampling_method == "Uniform") {
+        // Step half-way from initial guess to bounds on each axis
+        // and all the way to bounds.
+        auto init_values = base_case->GetRealVarVector();
+        for (int i = 0; i < init_values.size(); ++i) {
+            vector<double> values;
+            values.push_back(init_values[i] + abs(ub_[i] - init_values[i]) / 2.0);
+            values.push_back(init_values[i] - abs(init_values[i] - lb_[i]) / 2.0);
+            values.push_back(ub_[i]);
+            values.push_back(lb_[i]);
+
+            for (double value : values) {
+                Case * pert_case = new Case(base_case);
+                auto pert_vec = init_values;
+                pert_vec[i] = value;
+                pert_case->SetRealVarValues(pert_vec);
+                case_handler_->AddNewCase(pert_case);
+            }
+        }
+    }
+    else {
+        Printer::ext_warn("Only the Random and Uniform sampling methods are implemented.", "Optimization", "EGO");
+        throw std::runtime_error("Failed to initialize EGO optimizer.");
     }
 
     // Initialize GP hyperparameters
@@ -133,7 +154,7 @@ void EGO::handleEvaluatedCase(Case *c) {
     gp_->add_pattern(c->GetRealVarVector().data(), normalizer_ofv_.normalize(c->objective_function_value()));
     if (isImprovement(c)) {
         updateTentativeBestCase(c);
-        cout << "Found new tent. best: " << c->objective_function_value() << endl;
+        Printer::ext_info("Found new tentative best case: " + Printer::num2str(c->objective_function_value()), "Optimization", "EGO");
     }
 }
 void EGO::iterate() {
