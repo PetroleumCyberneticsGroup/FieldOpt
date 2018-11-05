@@ -21,6 +21,7 @@
 
 #include <QHash>
 #include <QUuid>
+#include <Utilities/math.hpp>
 #include <Eigen/Core>
 #include <QtCore/QDateTime>
 #include <Model/properties/variable_property_container.h>
@@ -235,6 +236,12 @@ class Case : public Loggable
   bool HasRealizationOfv(const QString &alias);
   double GetRealizationOfv(const QString &alias);
   double GetEnsembleAverageOfv() const;
+  /*!
+   * Gets Ensemble Expected Objective Function Value (OFV). This includes the average
+   * and standard deviation for all the OFVs in the ensemble that was previously run.
+   */
+
+  QPair<double, double> GetEnsembleExpectedOfv() const;
   QHash<QString, double> GetRealizationOFVMap() const { return ensemble_ofvs_; }
 
  private:

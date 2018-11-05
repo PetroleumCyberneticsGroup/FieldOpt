@@ -22,7 +22,9 @@
 #include <Utilities/time.hpp>
 #include <boost/lexical_cast.hpp>
 #include <iostream>
+#include <Utilities/math.hpp>
 #include "case.h"
+#include <Utilities/printer.hpp>
 
 namespace Optimization {
 
@@ -278,8 +280,8 @@ double Case::GetRealizationOfv(const QString &alias) {
         return ensemble_ofvs_[alias];
     }
     else {
-        std::cerr << "WARNING: In Case - Attempting to get unrecorded OFV for alias " << alias.toStdString()
-                  << "Returning sentinel value (-1.0)" << std::endl;
+        Printer::ext_warn("In Case - Attempting to get unrecorded OFV for alias "+alias.toStdString()
+                  +"Returning sentinel value (-1.0)", "Case", "Optimization");
         return -1.0;
     }
 
@@ -291,16 +293,31 @@ bool Case::HasRealizationOfv(const QString &alias) {
 
 double Case::GetEnsembleAverageOfv() const {
     if (ensemble_ofvs_.size() == 1) {
-        std::cerr << "WARNING: Only one realization case was successfully evaluated. "
-                  << "You should consider tweaking well/reservoir parameters "
-                  << "or increasing the number of realizations considered for each case."
-                  << std::endl;
+        Printer::ext_warn("Only one realization case was successfully "
+                          "evaluated. You should consider tweaking well/reservoir"
+                          " parameters or increasing the number of realizations"
+                          " considered for each case.", "Case", "Optimization");
     }
     double sum = 0;
     for (double value : ensemble_ofvs_.values()) {
         sum += value;
     }
     return sum / ensemble_ofvs_.size();
+}
+
+QPair<double, double> Case::GetEnsembleExpectedOfv() const {
+    if (ensemble_ofvs_.size() == 1) {
+        Printer::ext_warn("Only one realization case was successfully "
+                          "evaluated. You should consider tweaking well/reservoir"
+                          " parameters or increasing the number of realizations"
+                          " considered for each case.", "Case", "Optimization");
+    }
+    vector<double> list_of_ofvs;
+    for (double value : ensemble_ofvs_.values()){
+        list_of_ofvs.push_back(value);
+    }
+    auto pair = QPair<double, double>(calc_average(list_of_ofvs),calc_standard_deviation(list_of_ofvs));
+    return pair;
 }
 
 void Case::set_objective_function_value(double objective_function_value) {

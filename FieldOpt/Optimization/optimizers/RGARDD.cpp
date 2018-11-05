@@ -163,19 +163,11 @@ void RGARDD::snap_to_bounds(Chromosome &chrom) {
 }
 bool RGARDD::is_stagnant() {
     // Using the sums of the variable values in each chromosome
-    vector<double> sums;
+    vector<double> list_of_sums;
     for (auto chrom : population_) {
-        sums.push_back(chrom.rea_vars.sum());
+        list_of_sums.push_back(chrom.rea_vars.sum());
     }
-    double sum = std::accumulate(sums.begin(), sums.end(), 0.0);
-    double mean = sum / sums.size();
-    vector<double> diff(sums.size());
-    transform(sums.begin(), sums.end(), diff.begin(),
-              bind2nd(minus<double>(), mean)
-    );
-    double sq_sum = inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
-    double stdev = sqrt(sq_sum / sums.size());
-
+    double stdev = calc_standard_deviation(list_of_sums);
     return stdev <= stagnation_limit_;
 }
 void RGARDD::repopulate() {

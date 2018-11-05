@@ -51,8 +51,6 @@ class NPV : public Objective {
     double coefficient;
     Simulation::Results::Results::Property property;
     int time_step;
-    bool is_well_property;
-    int report_time;
     QString well;
     double resolveValue(Simulation::Results::Results *results);
     double resolveValueDiscount(Simulation::Results::Results *results, double time_step);
