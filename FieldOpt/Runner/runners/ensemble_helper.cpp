@@ -105,11 +105,14 @@ Optimization::Case *EnsembleHelper::GetEvaluatedCase() {
 }
 void EnsembleHelper::selectRealizations() {
     auto all_aliases = ensemble_.GetAliases();
-    auto indices = unique_random_integers(rng_, 0, all_aliases.size() - 1, n_select_);
-
-    for (auto idx : indices) {
-        rzn_queue_.push_back(all_aliases[idx]);
+    for (auto alias : all_aliases) {
+        rzn_queue_.push_back(alias);
     }
+//    auto indices = unique_random_integers(rng_, 0, all_aliases.size() - 1, n_select_);
+//
+//    for (auto idx : indices) {
+//        rzn_queue_.push_back(all_aliases[idx]);
+//    }
 }
 Settings::Ensemble::Realization EnsembleHelper::GetRealization(const std::string &alias) const {
     return ensemble_.GetRealization(alias);
