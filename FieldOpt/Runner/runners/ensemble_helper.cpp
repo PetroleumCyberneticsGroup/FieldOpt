@@ -37,7 +37,7 @@ EnsembleHelper::EnsembleHelper(const Settings::Ensemble &ensemble, int rng_seed)
     current_case_ = 0;
     rzn_queue_ = std::vector<std::string>();
     rzn_busy_ = std::vector<std::string>();
-    n_select_ = 4;
+    n_select_ = 10;
     rng_ = get_random_generator(rng_seed*3);
 
     assert(n_select_ < ensemble.GetAliases().size());
