@@ -103,7 +103,7 @@ class Logger
       {"OFnVal", 12},
       {"CaseId", 39}
   };
-  const QString cas_log_header_ = "             TimeSt , EvalSt , ConsSt , ErrMsg ,   SimDur ,   WicDur ,       OFnVal ,                                 CaseId";
+  QString cas_log_header_ = "             TimeSt , EvalSt , ConsSt , ErrMsg ,   SimDur ,   WicDur ,       OFnVal ,                                 CaseId";
   map<string, int> opt_log_col_widths_ {
       {"TimeSt", 19},
       {"TimeEl", 9},

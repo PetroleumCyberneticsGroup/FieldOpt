@@ -224,6 +224,9 @@ map <string, vector<double>> Case::GetValues() {
     valmap["OFnVal"] = vector<double>{objective_function_value_};
     valmap["SimDur"] = vector<double>{sim_time_sec_};
     valmap["WicDur"] = vector<double>{wic_time_sec_};
+    if (ensemble_ofvs_.size() > 1) {
+        valmap["OFvSTD"] = vector<double>{GetEnsembleExpectedOfv().second};
+    }
     return valmap;
 }
 string Case::StringRepresentation(Model::Properties::VariablePropertyContainer *varcont) {

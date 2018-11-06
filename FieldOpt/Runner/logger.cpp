@@ -58,6 +58,9 @@ Logger::Logger(Runner::RuntimeSettings *rts,
     if (write_logs_) {
         // Write CSV headers
         if (!is_worker_) {
+            if (rts->paths().IsSet(Paths::ENSEMBLE_FILE)) { // Append OFV std. dev. to case log header if ensemble file path is set
+                cas_log_header_.append(" ,       OFvSTD");
+            }
             Utilities::FileHandling::WriteLineToFile(cas_log_header_, cas_log_path_);
             Utilities::FileHandling::WriteLineToFile(opt_log_header_, opt_log_path_);
         }
@@ -104,6 +107,9 @@ void Logger::logCase(Loggable *obj) {
     entry.precision(6);
     entry << setw(cas_log_col_widths_["OFnVal"]) << scientific << obj->GetValues()["OFnVal"][0] << " ,";
     entry << setw(cas_log_col_widths_["CaseId"]) << obj->GetId().toString().toStdString();
+    if (obj->GetValues().count("OFvSTD") > 0) {
+        entry << " , " << setw(cas_log_col_widths_["OFnVal"]) << scientific << obj->GetValues()["OFvSTD"][0];
+    }
     string str = entry.str();
     Utilities::FileHandling::WriteLineToFile(QString::fromStdString(str), cas_log_path_);
     return;
