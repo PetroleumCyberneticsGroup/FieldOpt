@@ -31,6 +31,7 @@ Model::Model(Settings::Settings settings, Logger *logger)
         grid_ = 0;
     }
     wic_ = nullptr;
+    current_case_ = nullptr;
 
     variable_container_ = new Properties::VariablePropertyContainer();
 
@@ -51,6 +52,17 @@ void Model::Finalize() {
 
 void Model::ApplyCase(Optimization::Case *c)
 {
+
+    // Notify the logger to log previous case.
+    if (current_case_ != nullptr && current_case_->state.eval != Optimization::Case::CaseState::EvalStatus::E_PENDING) {
+        if (current_case_->GetRealizationOFVMap().size() > 0) {
+            realization_ofv_map_ = current_case_->GetRealizationOFVMap();
+            ensemble_avg_ofv_ = current_case_->GetEnsembleExpectedOfv().first;
+            ensemble_ofv_st_dev_ = current_case_->GetEnsembleExpectedOfv().second;
+        }
+        logger_->AddEntry(this);
+    }
+
     for (QUuid key : c->binary_variables().keys()) {
         variable_container_->SetBinaryVariableValue(key, c->binary_variables()[key]);
     }
@@ -77,16 +89,8 @@ void Model::ApplyCase(Optimization::Case *c)
     }
     verify();
 
-    // Notify the logger, and after that clear the results.
-    // First check that we have results (if not, this is the first evaluation,
-    // and we have nothing to notify the logger about).
-    if (results_.size() > 0 && c->GetEnsembleRealization().length() == 0){
-        if (c->GetRealizationOFVMap().count() > 0) {
-            realization_ofv_map_ = c->GetRealizationOFVMap();
-        }
-        logger_->AddEntry(this);
-    }
     current_case_id_ = c->id();
+    current_case_ = c;
 //    results_.clear();
 }
 
@@ -181,8 +185,12 @@ map<string, vector<double>> Model::GetValues() {
     for (auto const var : variable_container_->GetBinaryVariables()->values()) {
         valmap["Var#"+var->name().toStdString()] = vector<double>{var->value()};
     }
-    for (auto const key : realization_ofv_map_.keys()) {
-        valmap["Rea#"+key.toStdString()] = vector<double>{realization_ofv_map_[key]};
+    if (realization_ofv_map_.keys().size() > 0) {
+        for (auto const key : realization_ofv_map_.keys()) {
+            valmap["Rea#"+key.toStdString()] = vector<double>{realization_ofv_map_[key]};
+        }
+        valmap["Rea#OFVStDev"] = vector<double>{ensemble_ofv_st_dev_};
+        valmap["Rea#OFVAvg"] = vector<double>{ensemble_avg_ofv_};
     }
     return valmap;
 }
