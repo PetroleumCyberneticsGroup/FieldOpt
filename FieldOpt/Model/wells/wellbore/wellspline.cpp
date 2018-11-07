@@ -47,8 +47,13 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
     well_settings_ = well_settings;
     is_variable_ = false;
     use_bezier_spline_ = well_settings.use_bezier_spline;
-    wic_ = new Reservoir::WellIndexCalculation::wicalc_rixx(grid_);
-    wic = wic_;
+    if (wic == nullptr) { // Initialize WIC if this is the first spline well initialized.
+        wic = new Reservoir::WellIndexCalculation::wicalc_rixx(grid_);
+        wic_ = wic;
+    }
+    else { // If not, use existing WIC object.
+        wic_ = wic;
+    }
 
     if (!well_settings.imported_wellblocks_.empty()) { // Imported blocks present
         spline_points_from_import(well_settings);
