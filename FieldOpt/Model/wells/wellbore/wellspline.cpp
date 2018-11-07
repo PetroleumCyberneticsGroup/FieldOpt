@@ -140,11 +140,6 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
             "WellSpline", "Model");
     }
 
-    if (!wic_->HasGrid(grid_->GetGridFilePath())) {
-        wic_->AddGrid(grid_);
-    }
-    wic_->SetGridActive(grid_);
-
 
     last_computed_grid_ = grid_->GetGridFilePath();
     last_computed_spline_ = create_spline_point_vector();
