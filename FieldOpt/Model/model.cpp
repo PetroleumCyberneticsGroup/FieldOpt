@@ -19,6 +19,8 @@
 
 #include "model.h"
 #include <boost/lexical_cast.hpp>
+#include "Utilities/verbosity.h"
+#include "Utilities/printer.hpp"
 
 namespace Model {
 
@@ -196,10 +198,17 @@ map<string, vector<double>> Model::GetValues() {
     return valmap;
 }
 void Model::set_grid_path(const std::string &grid_path) {
-    if (grid_ != 0) {
-//        delete grid_; // This should not be deleted because wicalc_rixx keeps the object to avoid having to re-read it.
+    if (wic_->HasGrid(grid_path) == false) {
+        if (VERB_MOD >= 2) Printer::ext_info("Initializing new Grid: " + grid_path, "Model", "Model");
+        grid_ = new Reservoir::Grid::ECLGrid(grid_path);
+        wic_->AddGrid(grid_);
+        wic_->SetGridActive(grid_);
     }
-    grid_ = new Reservoir::Grid::ECLGrid(grid_path);
+    else {
+        if (VERB_MOD >= 2) Printer::ext_info("Getting existing grid object from WIC: " + grid_path, "Model", "Model");
+        grid_ = wic_->GetGrid(grid_path);
+        wic_->SetGridActive(grid_);
+    }
 }
 void Model::verifyWellCompartments(Wells::Well *w) {
     double well_length = w->trajectory()->GetLength();
