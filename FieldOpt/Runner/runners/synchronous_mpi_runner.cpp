@@ -56,7 +56,6 @@ void SynchronousMPIRunner::Execute() {
       if (ensemble_helper_.IsCaseAvailableForEval()) {
           printMessage("Getting new case from ensemble helper.", 2);
           new_case = ensemble_helper_.GetCaseForEval();
-          model_->set_grid_path(ensemble_helper_.GetRealization(new_case->GetEnsembleRealization().toStdString()).grid());
       }
       else {
           printMessage("Getting new case from optimizer.", 2);
@@ -72,7 +71,13 @@ void SynchronousMPIRunner::Execute() {
           optimizer_->SubmitEvaluatedCase(new_case);
       }
       else {
-          overseer_->AssignCase(new_case);
+          if (is_ensemble_run_) {
+              int worker_rank = ensemble_helper_.GetAssignedWorker(new_case->GetEnsembleRealization().toStdString(), overseer_->GetFreeWorkerRanks());
+              overseer_->AssignCase(new_case, worker_rank);
+          }
+          else {
+              overseer_->AssignCase(new_case);
+          }
           printMessage("New case assigned to worker.", 2);
       }
     };

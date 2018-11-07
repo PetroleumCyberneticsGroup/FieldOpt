@@ -106,6 +106,32 @@ class EnsembleHelper {
    */
   Settings::Ensemble::Realization GetBaseRealization() const;
 
+  /*!
+   * @brief Check if a realization has been assigned any workers.
+   * @param alias The alias of the realization to check.
+   * @return True if one or more worker has been assigned to the realization; otherwise false.
+   */
+  bool HasAssignedWorkers(const std::string &alias) const;
+
+  /*!
+   * @brief Get a worker that has been assigned to the realization and that is also currently free, if poosible.
+   * @param alias The alias of the realization to check.
+   * @param free_workers Vector of ranks for the workers that are currently not working.
+   * @return A vector containing the ranks of the workers that have been assigned to the case.
+   */
+  int GetAssignedWorker(const std::string &alias, std::vector<int> free_workers);
+
+  /*!
+   * @brief Assign a worker (or an additional worker) to a relization.
+   *
+   * The worker that has been assigned the smallest number of realizations
+   * will be added.
+   * @param alias The alias of the realization that should be assigned a new worker.
+   * @param free_workers Vector of ranks for the workers that are currently not working.
+   * @return The rank of the new worker assigned to the realization.
+   */
+  int AssignNewWorker(const std::string &alias, std::vector<int> free_workers);
+
  private:
 
   /*!
@@ -113,6 +139,27 @@ class EnsembleHelper {
    * them to the queue.
    */
   void selectRealizations();
+
+  /*!
+   * @brief Get the number of realizations that have been assigned to a worker.
+   * @param rank Rank of the worker to check.
+   * @return The number of realizations assigned to the rank.
+   */
+  int nRealizationsAssignedToWorker(const int &rank) const;
+
+  /*!
+   * @brief Check whether a specific worker has been assigned to a specific realization.
+   * @param alias Alias of the realization to check.
+   * @param rank Rank of the worker to check.
+   * @return True if the rank is in the vector for the alias in assigned_workers_.
+   */
+  bool isAssignedToWorker(const std::string &alias, const int rank) const;
+
+  /*!
+   * @brief Get a sorted vector of pairs <rank, assigned realizations>.
+   * @param free_workers Vector of ranks for the workers that are currently not working.
+   */
+  std::vector< pair<int, int> > workerLoads(std::vector<int> free_workers) const;
 
   /*!
    * Ensemble object containing paths for all realizations.
@@ -149,6 +196,11 @@ class EnsembleHelper {
    * Time at which the currently active case was first added to the handler.
    */
   std::chrono::high_resolution_clock::time_point eval_start_time_;
+
+  /*!
+   * Mapping of realizations to one or more worker ranks.
+   */
+  std::map<std::string, std::vector<int> > assigend_workers_;
 
 };
 
