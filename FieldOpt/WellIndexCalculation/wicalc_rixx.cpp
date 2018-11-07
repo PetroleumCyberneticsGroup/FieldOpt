@@ -82,6 +82,9 @@ bool wicalc_rixx::HasGrid(string path) {
 }
 
 void wicalc_rixx::AddGrid(Grid::Grid *grid) {
+  if (VERB_WIC >= 2) {
+    Printer::ext_info("Reading grid " + grid->GetGridFilePath(), "wicalc_rixx", "WellIndexCalculation");
+  }
   if (dict_grids_.count(grid->GetGridFilePath()) == 0) {
     dict_grids_.insert(pair<string, Grid::Grid*>(grid->GetGridFilePath(), grid));
   }
@@ -104,6 +107,9 @@ void wicalc_rixx::AddGrid(Grid::Grid *grid) {
 }
 
 void wicalc_rixx::SetGridActive(Grid::Grid *grid) {
+  if (VERB_WIC >= 2) {
+    Printer::ext_info("Setting grid active " + grid->GetGridFilePath(), "wicalc_rixx", "WellIndexCalculation");
+  }
   assert(HasGrid(grid->GetGridFilePath()));
   ricasedata_ = dict_casedata_[grid->GetGridFilePath()];
   grid_ = dict_grids_[grid->GetGridFilePath()];

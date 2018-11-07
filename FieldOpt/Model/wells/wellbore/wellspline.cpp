@@ -119,8 +119,21 @@ void WellSpline::spline_points_from_import(Settings::Model::Well &well_settings)
 
 QList<WellBlock *> *WellSpline::GetWellBlocks()
 {
+
     assert(spline_points_.size() >= 2);
     assert(grid_ != nullptr && grid_ != 0);
+
+    if (VERB_MOD >= 2) {
+        std::string points_str = "";
+        for (auto pt : spline_points_) {
+            auto point = pt->ToEigenVector();
+            std::stringstream point_str;
+            point_str << "(" << point.x() << ", " << point.y() << ", " << point.z() << "), ";
+            points_str += point_str.str();
+        }
+        Printer::ext_info("Starting well index calculation. Points: " + points_str + "Grid: " + grid_->GetGridFilePath(),
+            "WellSpline", "Model");
+    }
 
     if (!wic_->HasGrid(grid_->GetGridFilePath())) {
         wic_->AddGrid(grid_);
@@ -154,9 +167,6 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
     }
 
 
-    if (VERB_MOD >= 2) {
-        Printer::info("Starting well index calculation.");
-    }
     auto start = QDateTime::currentDateTime();
     vector<IntersectedCell> block_data;
     if (imported_wellblocks_.empty() || is_variable_) {
