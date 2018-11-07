@@ -81,6 +81,11 @@ bool wicalc_rixx::HasGrid(string path) {
   }
 }
 
+Grid::Grid * wicalc_rixx::GetGrid(string path) {
+  assert(HasGrid(path) == true);
+  return dict_grids_[path];
+}
+
 void wicalc_rixx::AddGrid(Grid::Grid *grid) {
   if (VERB_WIC >= 2) {
     Printer::ext_info("Reading grid " + grid->GetGridFilePath(), "wicalc_rixx", "WellIndexCalculation");
