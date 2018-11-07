@@ -1,5 +1,5 @@
 BootStrap: docker
-From: einar90/fieldopt:latest
+From: einar90/fieldopt:develop
 
 # These need to be changed to fit the paths you want to use.
 # The paths must exist in the environment on which you want
