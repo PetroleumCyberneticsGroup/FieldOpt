@@ -26,11 +26,12 @@ Model::Model(Settings::Settings settings, Logger *logger)
 {
     if (settings.paths().IsSet(Paths::GRID_FILE)) {
         grid_ = new Reservoir::Grid::ECLGrid(settings.paths().GetPath(Paths::GRID_FILE));
+        wic_ = new Reservoir::WellIndexCalculation::wicalc_rixx(grid_);
     }
     else {
         grid_ = 0;
+        wic_ = nullptr;
     }
-    wic_ = nullptr;
     current_case_ = nullptr;
 
     variable_container_ = new Properties::VariablePropertyContainer();
