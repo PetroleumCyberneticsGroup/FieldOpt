@@ -436,21 +436,21 @@ const std::vector<double> ECLSummaryReader::wgit(const string well_name) const {
 }
 
 void ECLSummaryReader::warnPropertyZero(string wname, string propname) const {
-    if (VERB_SIM >= 1) {
+    if (VERB_SIM >= 2) {
         Printer::ext_warn("Returning cumulative vector with final value 0.0 for " + propname + " for well " + wname + ".",
                           "Simulation", "ECLSummaryReader");
     }
 }
 
 void ECLSummaryReader::warnPropertyNotFound(string propname) const {
-    if (VERB_SIM >= 1) {
+    if (VERB_SIM >= 2) {
         Printer::ext_warn("The property " + propname + " was not found in the summary. Calculating from corresponding well properties.",
                           "Simulation", "ECLSummaryReader");
     }
 }
 
 void ECLSummaryReader::warnPropertyZero(string propname) const {
-    if (VERB_SIM >= 1) {
+    if (VERB_SIM >= 2) {
         Printer::ext_warn("Returning cumulative vector with final value 0.0 for " + propname + ".",
                           "Simulation", "ECLSummaryReader");
     }

@@ -37,8 +37,11 @@ EnsembleHelper::EnsembleHelper(const Settings::Ensemble &ensemble, int rng_seed)
     current_case_ = 0;
     rzn_queue_ = std::vector<std::string>();
     rzn_busy_ = std::vector<std::string>();
-    n_select_ = 4;
+    n_select_ = 10;
     rng_ = get_random_generator(rng_seed*3);
+    for (std::string alias : ensemble.GetAliases()) {
+        assigend_workers_[alias] = std::vector<int>();
+    }
 
     assert(n_select_ < ensemble.GetAliases().size());
 }
@@ -105,11 +108,14 @@ Optimization::Case *EnsembleHelper::GetEvaluatedCase() {
 }
 void EnsembleHelper::selectRealizations() {
     auto all_aliases = ensemble_.GetAliases();
-    auto indices = unique_random_integers(rng_, 0, all_aliases.size() - 1, n_select_);
-
-    for (auto idx : indices) {
-        rzn_queue_.push_back(all_aliases[idx]);
+    for (auto alias : all_aliases) {
+        rzn_queue_.push_back(alias);
     }
+//    auto indices = unique_random_integers(rng_, 0, all_aliases.size() - 1, n_select_);
+//
+//    for (auto idx : indices) {
+//        rzn_queue_.push_back(all_aliases[idx]);
+//    }
 }
 Settings::Ensemble::Realization EnsembleHelper::GetRealization(const std::string &alias) const {
     return ensemble_.GetRealization(alias);
@@ -137,4 +143,60 @@ std::string EnsembleHelper::GetStateString() const {
     }
     return str.str();
 }
+
+bool EnsembleHelper::HasAssignedWorkers(const std::string &alias) const {
+    return assigend_workers_.at(alias).size() > 0;
+}
+
+int EnsembleHelper::GetAssignedWorker(const std::string &alias, std::vector<int> free_workers) {
+    for (int rank : free_workers) {
+        if (isAssignedToWorker(alias, rank)) {// Check if the realization has been assigned to one of the free workers
+            return rank; // If it has, return that rank
+        }
+    }
+    // If not, assign one of the free workers to the realization
+    return AssignNewWorker(alias, free_workers);
+}
+
+int EnsembleHelper::AssignNewWorker(const std::string &alias, std::vector<int> free_workers) {
+    assert(free_workers.size() > 0);
+    auto loads = workerLoads(free_workers);
+    int least_loaded_worker = loads.front().first;
+    assigend_workers_[alias].push_back(least_loaded_worker);
+    return least_loaded_worker;
+}
+
+bool EnsembleHelper::isAssignedToWorker(const std::string &alias, const int rank) const {
+    auto workers = assigend_workers_.at(alias);
+    if (std::find(workers.begin(), workers.end(), rank) != workers.end()) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+int EnsembleHelper::nRealizationsAssignedToWorker(const int &rank) const {
+    int count = 0;
+    for (std::pair<std::string, std::vector<int> > assigments : assigend_workers_) {
+        if (isAssignedToWorker(assigments.first, rank)) {
+            count++;
+        }
+    }
+    return count;
+}
+
+std::vector< pair<int, int> > EnsembleHelper::workerLoads(std::vector<int> free_workers) const {
+    std::vector< pair<int, int> > loads;
+    for (int rank : free_workers) {
+        loads.push_back( std::pair<int, int>(rank, nRealizationsAssignedToWorker(rank)) );
+    }
+
+    std::sort(loads.begin(), loads.end(), []( pair<int, int> l1, pair<int, int> l2) {
+      return l1 < l2;
+    });
+
+    return loads;
+}
+
 }

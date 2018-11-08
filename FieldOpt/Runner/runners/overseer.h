@@ -36,8 +36,9 @@ class Overseer {
   /*!
    * @brief Assign a Case to a Worker. If no workers are free, the scheduler will wait untill one is.
    * @param c The case to be assigned to a Worker for evaluation.
+   * @param preferred_worker Prefer to assign the case to the worker with this rank (default: no preference)
    */
-  void AssignCase(Optimization::Case *c);
+  void AssignCase(Optimization::Case *c, int preferred_worker=-1);
 
   /*!
    * @brief Wait to receive an evaluated case.
@@ -65,6 +66,11 @@ class Overseer {
    * @brief Get the number of workers that are currently executing simulations.
    */
   int NumberOfBusyWorkers();
+
+  /*!
+   * @brief Get the ranks of all free workers.
+   */
+  std::vector<int> GetFreeWorkerRanks() const;
 
   /*!
    * @brief The WorkerStatus struct holds information about the current status of all workers in the network.

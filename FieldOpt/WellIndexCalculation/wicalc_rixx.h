@@ -103,6 +103,13 @@ class wicalc_rixx
   void AddGrid(Grid::Grid *grid);
 
   /*!
+   * @brief Get a grid that has been used previously.
+   * @param path Path of grid to get.
+   * @return Pointer to grid object.
+   */
+  Grid::Grid *GetGrid(string path);
+
+  /*!
    * @brief Set a grid as the currently active one (i.e. set the ricasedata_ and grid_ variables)
    */
   void SetGridActive(Grid::Grid *grid);

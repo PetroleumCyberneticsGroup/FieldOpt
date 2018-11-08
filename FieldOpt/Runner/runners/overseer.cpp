@@ -31,9 +31,16 @@ Overseer::Overseer(MPIRunner *runner) {
     runner_->printMessage("Initialized overseer.");
 }
 
-void Overseer::AssignCase(Optimization::Case *c) {
+void Overseer::AssignCase(Optimization::Case *c, int preferred_worker) {
     if (NumberOfFreeWorkers() == 0) throw std::runtime_error("Cannot assign Case. No free workers found.");
-    auto worker = getFreeWorker();
+    WorkerStatus *worker;
+    if (preferred_worker > 0) {
+        worker = workers_[preferred_worker];
+        assert(worker->working == false);
+    }
+    else {
+        worker = getFreeWorker();
+    }
     auto msg = MPIRunner::Message();
     msg.tag = MPIRunner::MsgTag ::CASE_UNEVAL;
     msg.destination = worker->rank;
@@ -107,6 +114,15 @@ void Overseer::EnsureWorkerTermination() {
 
 int Overseer::NumberOfBusyWorkers() {
     return workers_.count() - NumberOfFreeWorkers();
+}
+
+std::vector<int> Overseer::GetFreeWorkerRanks() const {
+    std::vector<int> free_workers;
+    for (int i = 1; i < runner_->world_.size(); ++i) {
+        if (workers_[i]->working == false)
+            free_workers.push_back(workers_[i]->rank);
+    }
+    return free_workers;
 }
 
 std::string Overseer::workerStatusSummary() {
