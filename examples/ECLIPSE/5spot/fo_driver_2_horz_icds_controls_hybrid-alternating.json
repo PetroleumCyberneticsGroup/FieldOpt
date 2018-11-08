@@ -1,18 +1,23 @@
 {
     "Global": {
-        "Name": "5spot-icd-ego",
-        "BookkeeperTolerance": 0.0
+        "Name": "5spot-icd-hybrid-alternating",
+        "BookkeeperTolerance": 5.0
     },
     "Optimizer": {
         "Type": "Hybrid",
         "Mode": "Maximize",
+        "Parameters": {
+            "HybridSwitchMode": "OnConvergence",
+            "HybridTerminationCondition": "NoImprovement",
+            "HybridMaxIterations": 4
+        },
         "HybridComponents": [
             {
                 "Type": "GeneticAlgorithm",
                 "Parameters": {
                     "MaxEvaluations": 2000,
-                    "PopulationSize": 40,
-                    "MaxGenerations": 1,
+                    "PopulationSize": 20,
+                    "MaxGenerations": 4,
                     "CrossoverProbability": 0.1,
                     "DecayRate": 4.0,
                     "MutationStrength": 0.25
@@ -21,10 +26,10 @@
             {
                 "Type": "APPS",
                 "Parameters": {
-                    "MaxEvaluations": 500,
+                    "MaxEvaluations": 120,
                     "AutoStepLengths": true,
-                    "AutoStepInitScale": 0.1,
-                    "AutoStepConvScale": 0.01
+                    "AutoStepInitScale": 0.25,
+                    "AutoStepConvScale": 0.05
                 }
             }
         ],
@@ -43,22 +48,10 @@
         },
         "Constraints": [
             {
-                "Type": "ICVConstraint",
-                "Wells": ["PRODUCER"],
-                "Min": 1e-9,
-                "Max": 1e-2
-            },
-            {
                 "Type": "Rate",
                 "Wells": ["INJECTOR"],
                 "Min": 1000,
                 "Max": 6000
-            },
-            {
-                "Type": "BHP",
-                "Wells": ["PRODUCER"],
-                "Min": 50.0,
-                "Max": 150.0
             }
         ]
     },
@@ -95,45 +88,27 @@
                         "IsVariable": false
                     }
                 },
-                "Segmentation": {
-                    "Tubing": {
-                        "Diameter": 0.1,
-                        "Roughness": 1.52E-5
-                    },
-                    "Annulus": {
-                        "Diameter": 0.04,
-                        "CrossSeactionArea": 0.00817,
-                        "Roughness": 1.52E-5
-                    },
-                    "Compartments": {
-                        "Count": 3,
-                        "VariablePackers": false,
-                        "VariableICDs": true,
-                        "ICDType": "Valve",
-                        "ICDValveSize": 7.85E-5
-                    }
-                },
                 "Controls": [
                     {
                         "TimeStep": 0,
                         "State": "Open",
                         "Mode": "BHP",
                         "BHP": 100.0,
-                        "IsVariable": true
+                        "IsVariable": false
                     },
                     {
                         "TimeStep": 100,
                         "State": "Open",
                         "Mode": "BHP",
                         "BHP": 100.0,
-                        "IsVariable": true
+                        "IsVariable": false
                     },
                     {
                         "TimeStep": 200,
                         "State": "Open",
                         "Mode": "BHP",
                         "BHP": 100.0,
-                        "IsVariable": true
+                        "IsVariable": false
                     }
                 ]
             },
