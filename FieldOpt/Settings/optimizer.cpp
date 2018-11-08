@@ -93,7 +93,7 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
         if (json_constraint.contains("Min"))
             optimizer_constraint.min = json_constraint["Min"].toDouble();
     }
-    // Packer- and ICV Constraints
+        // Packer- and ICV Constraints
     else if (QString::compare(constraint_type, "ICVConstraint") == 0) {
         optimizer_constraint.type = ConstraintType::ICVConstraint;
         optimizer_constraint.max = json_constraint["Max"].toDouble();
@@ -191,7 +191,7 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
         }
         if (optimizer_constraint.wells.length() != 2)
             throw UnableToParseOptimizerConstraintsSectionException("WellSplineInterwellDistance constraint"
-                                                                        " needs a Wells array with exactly two well names specified.");
+                                                                    " needs a Wells array with exactly two well names specified.");
     }
 
     else if (QString::compare(constraint_type, "ReservoirBoundary") == 0) {
@@ -211,7 +211,7 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
         optimizer_constraint.max_iterations = json_constraint["MaxIterations"].toInt();
         if (optimizer_constraint.wells.length() != 2)
             throw UnableToParseOptimizerConstraintsSectionException("WellSplineInterwellDistance constraint"
-                                                                        " needs a Wells array with exactly two well names specified.");
+                                                                    " needs a Wells array with exactly two well names specified.");
     }
     else if (QString::compare(constraint_type, "CombinedWellSplineLengthInterwellDistanceReservoirBoundary") == 0) {
         optimizer_constraint.type = ConstraintType::CombinedWellSplineLengthInterwellDistanceReservoirBoundary;
@@ -320,8 +320,8 @@ Optimizer::Parameters Optimizer::parseParameters(QJsonObject &json_parameters) {
         }
         if (json_parameters.contains("EGO-Kernel")) {
             QStringList available_kernels = { "CovLinearard", "CovLinearone", "CovMatern3iso",
-                                            "CovMatern5iso", "CovNoise", "CovRQiso", "CovSEard",
-                                            "CovSEiso", "CovPeriodicMatern3iso", "CovPeriodic"};
+                                              "CovMatern5iso", "CovNoise", "CovRQiso", "CovSEard",
+                                              "CovSEiso", "CovPeriodicMatern3iso", "CovPeriodic"};
             if (available_kernels.contains(json_parameters["EGO-Kernel"].toString())) {
                 params.ego_kernel = json_parameters["EGO-Kernel"].toString().toStdString();
             }
@@ -342,6 +342,37 @@ Optimizer::Parameters Optimizer::parseParameters(QJsonObject &json_parameters) {
                 throw std::runtime_error("Failed reading EGO settings.");
             }
         }
+
+        // Hybrid parameters
+        if (json_parameters.contains("HybridSwitchMode")) {
+            if (json_parameters["HybridSwitchMode"].toString() == "OnConvergence") {
+                params.hybrid_switch_mode = "OnConvergence";
+            }
+            else throw std::runtime_error("HybridSwitchMode setting not recognized.");
+        }
+        else {
+            Printer::ext_warn("HybridSwitchMode not set. Defaulting to OnConvergence", "Optimizer", "Settings");
+            params.hybrid_switch_mode = "OnConvergence";
+        }
+        if (json_parameters.contains("HybridTerminationCondition")) {
+            if (json_parameters["HybridTerminationCondition"].toString() == "NoImprovement") {
+                params.hybrid_termination_condition = "NoImprovement";
+            } else throw std::runtime_error("HybridTerminationCondition setting not recognized.");
+        }
+        else {
+            Printer::ext_warn("HybridTerminationCondition not set. Defaulting to NoImprovement", "Optimizer", "Settings");
+            params.hybrid_termination_condition = "NoImprovement";
+        }
+        if (json_parameters.contains("HybridMaxIterations")) {
+            if (json_parameters["HybridMaxIterations"].toInt() >= 1) {
+                params.hybrid_max_iterations = json_parameters["HybridMaxIterations"].toInt();
+            } else throw std::runtime_error("Invalid value for setting HybridMaxIterations");
+        }
+        else {
+            Printer::ext_warn("HybridMaxIterations not set. Defaulting to 2", "Optimizer", "Settings");
+            params.hybrid_max_iterations = 2;
+        }
+
 
         // RNG seed
         if (json_parameters.contains("RNGSeed")) {
@@ -436,31 +467,31 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
         } else {
             obj.separatehorizontalandvertical= false;
         }
-      if (json_objective.contains("UseWellCost")) {
-        obj.use_well_cost = json_objective["UseWellCost"].toBool();
-        if (obj.separatehorizontalandvertical) {
-          if (json_objective.contains("WellCostXY")) {
-            obj.wellCostXY = json_objective["WellCostXY"].toDouble();
-            if (json_objective.contains("WellCostZ")) {
-              obj.wellCostZ = json_objective["WellCostZ"].toDouble();
+        if (json_objective.contains("UseWellCost")) {
+            obj.use_well_cost = json_objective["UseWellCost"].toBool();
+            if (obj.separatehorizontalandvertical) {
+                if (json_objective.contains("WellCostXY")) {
+                    obj.wellCostXY = json_objective["WellCostXY"].toDouble();
+                    if (json_objective.contains("WellCostZ")) {
+                        obj.wellCostZ = json_objective["WellCostZ"].toDouble();
+                    } else {
+                        throw UnableToParseOptimizerObjectiveSectionException(
+                            "Unable to parse optimizer objective a WellCostZ was not defined, while SeparateHorizontalAndVertical was invoked");
+                    }
+                } else {
+                    throw UnableToParseOptimizerObjectiveSectionException(
+                        "Unable to parse optimizer objective a WellCostXY was not defined, while SeparateHorizontalAndVertical was invoked");
+                }
             } else {
-              throw UnableToParseOptimizerObjectiveSectionException(
-                  "Unable to parse optimizer objective a WellCostZ was not defined, while SeparateHorizontalAndVertical was invoked");
+                if (json_objective.contains("WellCost")) {
+                    obj.wellCost = json_objective["WellCost"].toDouble();
+                    obj.wellCostXY = 0;
+                    obj.wellCostZ = 0;
+                } else {
+                    throw UnableToParseOptimizerObjectiveSectionException(
+                        "Unable to parse optimizer objective a WellCost was not defined, while UseWellCost was invoked");
+                }
             }
-          } else {
-            throw UnableToParseOptimizerObjectiveSectionException(
-                "Unable to parse optimizer objective a WellCostXY was not defined, while SeparateHorizontalAndVertical was invoked");
-          }
-        } else {
-          if (json_objective.contains("WellCost")) {
-            obj.wellCost = json_objective["WellCost"].toDouble();
-            obj.wellCostXY = 0;
-            obj.wellCostZ = 0;
-          } else {
-            throw UnableToParseOptimizerObjectiveSectionException(
-                "Unable to parse optimizer objective a WellCost was not defined, while UseWellCost was invoked");
-          }
-        }
 
         } else {
             obj.use_well_cost = false;

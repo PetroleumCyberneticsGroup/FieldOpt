@@ -84,6 +84,39 @@ class Optimizer
     std::string ego_init_sampling_method = "Random"; //!< Sampling method to be used for initial guesses (Random or Uniform)
     std::string ego_kernel = "CovMatern5iso";        //!< Which kernel function to use for the gaussian process model.
     std::string ego_af = "ExpectedImprovement";      //!< Which acquisiton function to use.
+
+    // Hybrid parameters
+    /*!
+     * @brief How switching between component optimizers is handled.
+     *
+     * Default: OnFinished -- switch between components when IsFinished() == true
+     *
+     * Example: "Optimizer": { "Type": "Hybrid", "Parameters": { "HybridSwitchMode": "OnConvergence" } }
+     */
+    std::string hybrid_switch_mode = "OnConvergence";
+
+    /*!
+     * @brief Termination condition for hybrid optimizer.
+     *
+     * Default: NoImprovement -- terminate when a component has not managed to
+     *                           improve upon the result of the previous component.
+     *
+     * Example: "Optimizer": { "Type": "Hybrid", "Parameters": { "HybridTerminationCondition": "NoImprovement" } }
+     */
+    std::string hybrid_termination_condition = "NoImprovement";
+
+    /*!
+     * @brief Max iterations for the hybrid optimizer.
+     *
+     * One iteration implies running each component to completion once.
+     * If
+     *
+     * Default: 2 -- Each component will be executed twice (unleass the HybridTerminationCondition
+     *               is met first).
+     *
+     * Example: "Optimizer": { "Type": "Hybrid", "Parameters": { "HybridMaxIterations": 2 } }
+     */
+    int hybrid_max_iterations = 2;
   };
 
   struct Objective {
