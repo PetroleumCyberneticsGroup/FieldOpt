@@ -489,6 +489,8 @@ Optimizer::OptimizerType Optimizer::parseType(QString &type) {
         opt_type = OptimizerType::EGO;
     else if (QString::compare(type, "ExhaustiveSearch2DVert") == 0)
         opt_type = OptimizerType::ExhaustiveSearch2DVert;
+    else if (QString::compare(type, "PSO") == 0)
+      opt_type = OptimizerType::PSO;
     else if (QString::compare(type, "Hybrid") == 0)
         opt_type = OptimizerType::Hybrid;
     else throw OptimizerTypeNotRecognizedException("The optimizer type " + type.toStdString() + " was not recognized.");

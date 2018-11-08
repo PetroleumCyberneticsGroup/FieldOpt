@@ -36,6 +36,7 @@
 #include "Utilities/math.hpp"
 #include "Utilities/printer.hpp"
 #include "Utilities/verbosity.h"
+#include "Optimization/optimizers/PSO.h"
 
 namespace Runner {
 
@@ -236,6 +237,16 @@ void AbstractRunner::InitializeOptimizer()
                                                            model_->variables(),
                                                            model_->grid(),
                                                            logger_
+            );
+            optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
+            break;
+        case Settings::Optimizer::OptimizerType::PSO:
+            if (VERB_RUN >= 1) Printer::ext_info("Using PSO optimization algorithm.", "Runner", "AbstractRunner");
+            optimizer_ = new Optimization::Optimizers::PSO(settings_->optimizer(),
+                                                       base_case_,
+                                                       model_->variables(),
+                                                       model_->grid(),
+                                                       logger_
             );
             optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
             break;

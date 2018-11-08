@@ -86,7 +86,6 @@ inline std::vector<T> range(T start, T end, T step) {
     }
     return ran;
 }
-
 /*!
  * @brief Get a random generator (Mersenne Twister) for use with the random functions in this file.
  * @return A Mersenne Twister RNG.
@@ -103,6 +102,7 @@ inline boost::random::mt19937 get_random_generator(int seed = 0) {
     }
 }
 
+
 /*!
  * @brief Get a random integer in the range [lower .. upper]
  * @param gen Random number generator. You can get one by calling get_random_generator().
@@ -115,6 +115,17 @@ inline int random_integer(boost::random::mt19937 &gen,
     boost::random::uniform_int_distribution<> dist(lower, upper);
     boost::variate_generator<boost::mt19937&, boost::random::uniform_int_distribution<> > rng(gen, dist);
     return rng();
+}
+
+
+inline std::vector<double> random_reals(boost::random::mt19937 &gen, double lower, double upper, int n) {
+    boost::random::uniform_real_distribution<> dist(lower, upper);
+    boost::variate_generator<boost::mt19937&, boost::random::uniform_real_distribution<> > rng(gen, dist);
+    std::vector<double> rands = std::vector<double>(n);
+    for (int i = 0; i < n; ++i){
+        rands[i]=rng();
+    }
+    return rands;
 }
 
 /*!

@@ -40,7 +40,7 @@ class Optimizer
  public:
   Optimizer(){}
   Optimizer(QJsonObject json_optimizer);
-  enum OptimizerType { Compass, APPS, ExhaustiveSearch2DVert, GeneticAlgorithm, EGO, Hybrid };
+  enum OptimizerType { Compass, APPS, ExhaustiveSearch2DVert, GeneticAlgorithm, EGO, PSO, Hybrid };
   enum OptimizerMode { Maximize, Minimize };
   enum ConstraintType { BHP, Rate, SplinePoints,
     WellSplineLength, WellSplineInterwellDistance, WellSplineDomain,
@@ -62,7 +62,7 @@ class Optimizer
     double minimum_step_length; //!< The minimum step length in the algorithm when applicable.
     double contraction_factor;  //!< The contraction factor for GSS algorithms.
     double expansion_factor;    //!< The expansion factor for GSS algorithms.
-    double max_queue_size;      //!< Maximum size of evaluation queue.
+    int max_queue_size;      //!< Maximum size of evaluation queue.
     bool auto_step_lengths = false;     //!< Automatically determine appropriate step lengths from bound constraints.
     double auto_step_init_scale = 0.25; //!< Scaling factor for auto-determined initial step lengths (e.g. 0.25*(upper-lower)
     double auto_step_conv_scale = 0.01; //!< Scaling factor for auto-determined convergence step lengths (e.g. 0.01*(upper-lower)
