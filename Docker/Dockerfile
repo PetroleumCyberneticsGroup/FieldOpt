@@ -23,7 +23,7 @@ RUN git clone https://github.com/PetroleumCyberneticsGroup/FieldOpt.git
 
 # cd into FieldOpt and get the submodules
 WORKDIR /app/FieldOpt
-RUN git checkout feature/Ensemble_tweaks
+RUN git checkout feature/develop
 RUN git submodule update --init --recursive
 
 # Build the third party dependencies
