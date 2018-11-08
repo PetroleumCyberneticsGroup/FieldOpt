@@ -38,9 +38,7 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
         if (type_ == Hybrid) {
             hybrid_components_ = parseHybridComponents(json_optimizer);
         }
-        else {
-            parameters_ = parseParameters(json_parameters);
-        }
+        parameters_ = parseParameters(json_parameters);
     }
     objective_ = parseObjective(json_objective);
 
