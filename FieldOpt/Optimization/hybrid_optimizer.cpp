@@ -17,10 +17,12 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
-#include <optimizers/compass_search.h>
-#include <optimizers/APPS.h>
-#include <optimizers/RGARDD.h>
-#include <optimizers/bayesian_optimization/EGO.h>
+#include <Optimization/optimizers/compass_search.h>
+#include <Optimization/optimizers/APPS.h>
+#include <Optimization/optimizers/RGARDD.h>
+#include <Optimization/optimizers/bayesian_optimization/EGO.h>
+#include <Utilities/printer.hpp>
+#include <Utilities/verbosity.h>
 #include "hybrid_optimizer.h"
 
 namespace Optimization {
@@ -40,23 +42,44 @@ HybridOptimizer::HybridOptimizer(Settings::Optimizer *settings,
     primary_settings_ = new Settings::Optimizer(settings->HybridComponents()[0]);
     secondary_settings_ = new Settings::Optimizer(settings->HybridComponents()[1]);
 
-    // TODO: Instantiate primary (needs a new constructor that takes existing Case- and ConstraintHandler objects)
     initializeComponent(0);
     active_component_ = 0;
-    iteration_ = active_component_;
+    iteration_ = 0;
+
+    component_improvement_found_ = true;
+
+    max_hybrid_iterations_ = settings->parameters().hybrid_max_iterations;
+    if (settings->parameters().hybrid_switch_mode == "OnConvergence") {
+        switch_mode_ = HybridSwitchMode::ON_CONVERGENCE;
+    }
+    else {
+        throw std::runtime_error("Hybrid optimizer switch mode not recognized.");
+    }
+    if (settings->parameters().hybrid_termination_condition == "NoImprovement") {
+        hybrid_termination_condition_ = HybridTerminationCondition::NO_IMPROVEMENT;
+    }
+    else {
+        throw std::runtime_error("Hybrid optimizer termination condition not recognized.");
+    }
 }
 
 Optimizer::TerminationCondition HybridOptimizer::IsFinished() {
-    if (primary_->IsFinished()) {
-        if (active_component_ == 1 && secondary_->IsFinished()) {
-            return secondary_->IsFinished();
-        }
-        else {
-            return TerminationCondition::NOT_FINISHED;
-        }
+    if (hybrid_termination_condition_ == HybridTerminationCondition::NO_IMPROVEMENT && component_improvement_found_ == false) {
+        return TerminationCondition::MINIMUM_STEP_LENGTH_REACHED;
+    }
+    else if (case_handler_->CasesBeingEvaluated().size() > 0) {
+        return TerminationCondition::NOT_FINISHED;
+    }
+    else if (iteration_ < max_hybrid_iterations_) {
+        return TerminationCondition::NOT_FINISHED;
     }
     else {
-        return TerminationCondition::NOT_FINISHED;
+        if (active_component_ == 0) {
+            return TerminationCondition::NOT_FINISHED;
+        }
+        else {
+            return secondary_->IsFinished();
+        }
     }
 }
 void HybridOptimizer::handleEvaluatedCase(Case *c) {
@@ -74,19 +97,41 @@ void HybridOptimizer::handleEvaluatedCase(Case *c) {
 
 }
 void HybridOptimizer::iterate() {
-    if (active_component_ == 0 && !primary_->IsFinished()) {
-        primary_->iterate();
-    }
-        // TODO: Initailize secondary if necessary.
-    else {
-        if (active_component_ == 0) {
-            std::cout << "Primary component converged. Switching to secondary." << std::endl;
+    if (active_component_ == 0) { // Primary is active.
+        if (primary_->IsFinished() == TerminationCondition::NOT_FINISHED) { // Primary is not finished.
+            if (VERB_OPT >= 1) { Printer::ext_info("Iterating with primary.", "HybridOptimizer", "Optimization"); }
+            primary_->iterate();
+        }
+        else { // Primary is finished. Switch to secondary.
+            if (VERB_OPT >= 1) { Printer::ext_info("Primary component converged. Switching to secondary.", "HybridOptimizer", "Optimization"); }
+            primary_best_case_ = tentative_best_case_;
             initializeComponent(1);
             active_component_ = 1;
-            iteration_ = active_component_;
-        }
-        if (case_handler_->QueuedCases().size() == 0) {
             secondary_->iterate();
+            iteration_++;
+
+            if (iteration_ > 1 && isBetter(primary_best_case_, secondary_best_case_) == false) {
+                // If primary didn't find an improvement over previous secondary
+                component_improvement_found_ = false;
+            }
+        }
+    }
+    else { // Secondary is active
+        if (secondary_->IsFinished() == TerminationCondition::NOT_FINISHED) { // Secondary is not finished.
+            if (VERB_OPT >= 1) { Printer::ext_info("Iterating with secondary.", "HybridOptimizer", "Optimization"); }
+            secondary_->iterate();
+        }
+        else { // Secondary is finished. Switch back to primary.
+            if (VERB_OPT >= 1) { Printer::ext_info("Secondary component converged. Switching to primary.", "HybridOptimizer", "Optimization"); }
+            secondary_best_case_ = tentative_best_case_;
+            initializeComponent(0);
+            active_component_ = 0;
+            primary_->iterate();
+
+            if (isBetter(secondary_best_case_, primary_best_case_) == false) {
+                // If secondary didn't find an improvement over previous primary
+                component_improvement_found_ = false;
+            }
         }
     }
 }
