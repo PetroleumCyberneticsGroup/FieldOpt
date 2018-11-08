@@ -133,7 +133,9 @@ void ECLSummaryReader::populateKeyLists() {
     for (auto well : wells_) {
         for (auto key : well_keys_) ss << well << ":" << key << ", ";
     }
-    Printer::ext_info("Found summary keys: " + ss.str(), "ERTWrapper, ECLSummaryReader");
+    if (VERB_SIM >= 2) {
+        Printer::ext_info("Found summary keys: " + ss.str(), "ERTWrapper, ECLSummaryReader");
+    }
 
 
     stringlist_free(keys);
