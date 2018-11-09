@@ -28,6 +28,8 @@
 #include "Runner/loggable.hpp"
 #include "Runner/logger.h"
 #include "normalizer.h"
+#include "Utilities/verbosity.h"
+#include "Utilities/printer.hpp"
 
 class Logger;
 
