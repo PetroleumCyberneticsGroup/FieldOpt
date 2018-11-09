@@ -65,6 +65,10 @@ HybridOptimizer::HybridOptimizer(Settings::Optimizer *settings,
 
 Optimizer::TerminationCondition HybridOptimizer::IsFinished() {
     if (hybrid_termination_condition_ == HybridTerminationCondition::NO_IMPROVEMENT && component_improvement_found_ == false) {
+        Printer::ext_info("No improvement found in previous component run. Terminating.", "HybridOptimizer", "Optimization");
+        if (enable_logging_) {
+            logger_->AddEntry(this);
+        }
         return TerminationCondition::MINIMUM_STEP_LENGTH_REACHED;
     }
     else if (case_handler_->CasesBeingEvaluated().size() > 0) {
@@ -83,20 +87,31 @@ Optimizer::TerminationCondition HybridOptimizer::IsFinished() {
     }
 }
 void HybridOptimizer::handleEvaluatedCase(Case *c) {
-    if (enable_logging_) {
-        logger_->AddEntry(this);
-    }
     if (active_component_ == 0) {
+        if (isImprovement(c)) {
+            if (VERB_OPT >= 1) {
+                Printer::ext_info("Found better case. Passing to primary.", "HybridOptimizer", "Optimization");
+                updateTentativeBestCase(c);
+            }
+        }
         primary_->handleEvaluatedCase(c);
-        tentative_best_case_ = primary_->tentative_best_case_;
     }
     else {
+        if (isImprovement(c)) {
+            if (VERB_OPT >= 1) {
+                Printer::ext_info("Found better case. Passing to secondary.", "HybridOptimizer", "Optimization");
+                updateTentativeBestCase(c);
+            }
+        }
         secondary_->handleEvaluatedCase(c);
-        tentative_best_case_ = secondary_->tentative_best_case_;
     }
+    // 6.016680E+10
 
 }
 void HybridOptimizer::iterate() {
+    if (enable_logging_) {
+        logger_->AddEntry(this);
+    }
     if (active_component_ == 0) { // Primary is active.
         if (primary_->IsFinished() == TerminationCondition::NOT_FINISHED) { // Primary is not finished.
             if (VERB_OPT >= 1) { Printer::ext_info("Iterating with primary.", "HybridOptimizer", "Optimization"); }
