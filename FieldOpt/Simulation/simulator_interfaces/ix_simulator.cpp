@@ -124,7 +124,7 @@ void IXSimulator::copyDriverFiles() {
         }
     }
     paths_.SetPath(Paths::SIM_WORK_DIR, workdir);
-    if (VERB_SIM >= 1) {
+    if (VERB_SIM >= 2) {
         Printer::ext_info("Done copying directories. Set working directory to: " + workdir,
             "Simulation", "IXSimulator");
     }

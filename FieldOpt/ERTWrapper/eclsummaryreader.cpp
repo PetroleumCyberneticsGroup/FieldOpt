@@ -243,7 +243,7 @@ void ECLSummaryReader::initializeWellCumulatives() {
             double_vector_free(wopt);
         }
         else if (hasWellVar(wname, "WOPR")) {
-            Printer::ext_info("WOPT not found, computing from WOPR.", "ERTWrapper", "ECLSummaryReader");
+            if (VERB_SIM >= 2) Printer::ext_info("WOPT not found, computing from WOPR.", "ERTWrapper", "ECLSummaryReader");
             wopt_[wname] = computeCumulativeFromRate(wopr_[wname]);
         }
 
@@ -259,7 +259,7 @@ void ECLSummaryReader::initializeWellCumulatives() {
             double_vector_free(wwpt);
         }
         else if (hasWellVar(wname, "WWPR")) {
-            Printer::ext_info("WWPT not found, computing from WWPR.", "ERTWrapper", "ECLSummaryReader");
+            if (VERB_SIM >= 2) Printer::ext_info("WWPT not found, computing from WWPR.", "ERTWrapper", "ECLSummaryReader");
             wwpt_[wname] = computeCumulativeFromRate(wwpr_[wname]);
         }
 
@@ -275,7 +275,7 @@ void ECLSummaryReader::initializeWellCumulatives() {
             double_vector_free(wgpt);
         }
         else if (hasWellVar(wname, "WGPR")) {
-            Printer::ext_info("WGPT not found, computing from WGPR.", "ERTWrapper", "ECLSummaryReader");
+            if (VERB_SIM >= 2) Printer::ext_info("WGPT not found, computing from WGPR.", "ERTWrapper", "ECLSummaryReader");
             wgpt_[wname] = computeCumulativeFromRate(wgpr_[wname]);
         }
 
@@ -291,7 +291,7 @@ void ECLSummaryReader::initializeWellCumulatives() {
             double_vector_free(wwit);
         }
         else if (hasWellVar(wname, "WWIR")) {
-            Printer::ext_info("WWIT not found, computing from WWIR.", "ERTWrapper", "ECLSummaryReader");
+            if (VERB_SIM >= 2) Printer::ext_info("WWIT not found, computing from WWIR.", "ERTWrapper", "ECLSummaryReader");
             wwit_[wname] = computeCumulativeFromRate(wwir_[wname]);
         }
 
@@ -307,7 +307,7 @@ void ECLSummaryReader::initializeWellCumulatives() {
             double_vector_free(wgit);
         }
         else if (hasWellVar(wname, "WGIR")) {
-            Printer::ext_info("WGIT not found, computing from WGIR.", "ERTWrapper", "ECLSummaryReader");
+            if (VERB_SIM >= 2) Printer::ext_info("WGIT not found, computing from WGIR.", "ERTWrapper", "ECLSummaryReader");
             wgit_[wname] = computeCumulativeFromRate(wgir_[wname]);
         }
     }
