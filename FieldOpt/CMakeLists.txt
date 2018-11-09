@@ -238,7 +238,9 @@ endif()
 message(".............................................................")
 message(STATUS "Loading potentially local libraries: Qt")
 find_package(Qt5Core
-    HINTS ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib
+    HINTS
+    "${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib"
+    "/home/bellout/git/libraries/qt5.5.1/lib/cmake/Qt5Core/"
     REQUIRED)
 
 message(STATUS "Qt5Core_QTMAIN_LIBRARIES: ${Qt5Core_QTMAIN_LIBRARIES}")
