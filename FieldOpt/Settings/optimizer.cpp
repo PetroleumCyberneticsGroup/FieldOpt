@@ -346,29 +346,25 @@ Optimizer::Parameters Optimizer::parseParameters(QJsonObject &json_parameters) {
             if (json_parameters["HybridSwitchMode"].toString() == "OnConvergence") {
                 params.hybrid_switch_mode = "OnConvergence";
             }
-            else throw std::runtime_error("HybridSwitchMode setting not recognized.");
-        }
-        else {
-            Printer::ext_warn("HybridSwitchMode not set. Defaulting to OnConvergence", "Optimizer", "Settings");
-            params.hybrid_switch_mode = "OnConvergence";
+            else {
+                throw std::runtime_error("HybridSwitchMode setting not recognized.");
+            }
         }
         if (json_parameters.contains("HybridTerminationCondition")) {
             if (json_parameters["HybridTerminationCondition"].toString() == "NoImprovement") {
                 params.hybrid_termination_condition = "NoImprovement";
-            } else throw std::runtime_error("HybridTerminationCondition setting not recognized.");
-        }
-        else {
-            Printer::ext_warn("HybridTerminationCondition not set. Defaulting to NoImprovement", "Optimizer", "Settings");
-            params.hybrid_termination_condition = "NoImprovement";
+            }
+            else {
+                throw std::runtime_error("HybridTerminationCondition setting not recognized.");
+            }
         }
         if (json_parameters.contains("HybridMaxIterations")) {
             if (json_parameters["HybridMaxIterations"].toInt() >= 1) {
                 params.hybrid_max_iterations = json_parameters["HybridMaxIterations"].toInt();
-            } else throw std::runtime_error("Invalid value for setting HybridMaxIterations");
-        }
-        else {
-            Printer::ext_warn("HybridMaxIterations not set. Defaulting to 2", "Optimizer", "Settings");
-            params.hybrid_max_iterations = 2;
+            }
+            else {
+                throw std::runtime_error("Invalid value for setting HybridMaxIterations");
+            }
         }
 
 
