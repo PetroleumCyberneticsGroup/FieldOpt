@@ -38,25 +38,39 @@ class PSO : public Optimizer {
   void handleEvaluatedCase(Case *c) override;
   void iterate() override;
   virtual TerminationCondition IsFinished() override;
- private:
+ protected:
+    boost::random::mt19937 gen_; //!< Random number generator with the random functions in math.hpp
+ public:
   struct Particle{
     Eigen::VectorXd rea_vars;
     Case *case_pointer;
-    Particle(Case *c);
-    Particle() {}
+    Eigen::VectorXd rea_vars_velocity;
+    Particle(Optimization::Case *c, boost::random::mt19937 gen, double vMax_, int n_vars);
+    Particle(){}
+    void ParticleAdapt(Eigen::VectorXd rea_vars_velocity_swap, Eigen::VectorXd rea_vars);
     double ofv() { return case_pointer->objective_function_value(); }
-    void createNewCase();
   };
 
-  vector<double> getUniformDistribution(double lower_bound, double upper_bound, int number_of_particles_);
+  Case *generateRandomCase();
+  Particle get_global_best(vector<vector<Particle>> swarm, Particle current_best_particle_global);
+  vector<PSO::Particle> update_velocity(vector<Optimization::Optimizers::PSO::Particle>, Particle, vector<vector<Optimization::Optimizers::PSO::Particle>> swarm_memory);
+  vector<PSO::Particle> update_position(vector<Particle>);
+  void printSwarm(vector<Particle> swarm = vector<Particle>()) const;
+  void printParticle(Particle &partic) const;
+  Particle find_best_in_particle_memory(vector<vector<Optimization::Optimizers::PSO::Particle>> swarm_memory, int particle_num);
+  vector<vector<Particle>> swarm_memory_;
+
+  vector<Particle> improved_swarm_;
   int number_of_particles_ = 10; //!< The number of particles in the swarm
+  double learning_factor_1_ = 2; //!< Learning factor 1
+  double learning_factor_2_ = 2; //!< Learning factor 2
+  double vMax_ = 30; //!< Max velocity of the particle
+  vector<Particle> swarm_;
+  Particle current_best_particle_global_;
   Eigen::VectorXd lower_bound_; //!< Lower bounds for the variables (used for randomly generating populations and mutation)
   Eigen::VectorXd upper_bound_; //!< Upper bounds for the variables (used for randomly generating populations and mutation)
   int n_vars_; //!< Number of variables in the problem.
-  int max_queue_length_ = 2; //!< Maximum length of queue.
-  vector<double> uniform_x_;
-  vector<double> uniform_y_;
-  vector<double> uniform_z_;
+
 };
 }
 }
