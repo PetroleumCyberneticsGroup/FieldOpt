@@ -61,7 +61,7 @@ class PSO : public Optimizer {
   vector<vector<Particle>> swarm_memory_;
 
   vector<Particle> improved_swarm_;
-  int number_of_particles_ = 10; //!< The number of particles in the swarm
+  int number_of_particles_ = 3; //!< The number of particles in the swarm
   double learning_factor_1_ = 2; //!< Learning factor 1
   double learning_factor_2_ = 2; //!< Learning factor 2
   double vMax_ = 30; //!< Max velocity of the particle

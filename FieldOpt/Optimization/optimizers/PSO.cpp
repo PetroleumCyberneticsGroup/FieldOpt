@@ -188,8 +188,8 @@ vector<PSO::Particle> PSO::update_velocity(vector<Particle> swarm, PSO::Particle
         Particle best_in_particle_memory = find_best_in_particle_memory(swarm_memory, i);
         new_swarm.push_back(swarm[i]);
         for(int j = 0; j < n_vars_; j++){
-            double velocity_1 = learning_factor_1_ * random_double(gen_, 0, 1) * (best_in_particle_memory.rea_vars_velocity(j)-swarm[i].rea_vars_velocity(j));
-            double velocity_2 = learning_factor_2_ * random_double(gen_, 0, 1) * (current_best_particle_global.rea_vars_velocity(j)-swarm[i].rea_vars_velocity(j));
+            double velocity_1 = learning_factor_1_ * random_double(gen_, 0, 1) * (best_in_particle_memory.rea_vars(j)-swarm[i].rea_vars(j));
+            double velocity_2 = learning_factor_2_ * random_double(gen_, 0, 1) * (current_best_particle_global.rea_vars(j)-swarm[i].rea_vars(j));
             new_swarm[i].rea_vars_velocity(j) = swarm[i].rea_vars_velocity(j) + velocity_1 + velocity_2;
             cout << new_swarm[i].rea_vars_velocity (j) << endl;
             if (new_swarm[i].rea_vars_velocity(j) < -vMax_){
@@ -236,21 +236,22 @@ void PSO::iterate(){
         logger_->AddEntry(this);
     }
     swarm_memory_.push_back(swarm_);
-    cout << "Printing the rea_vars_vector, I think " << swarm_[0].rea_vars_velocity(0) << endl;
     current_best_particle_global_=get_global_best(swarm_memory_, current_best_particle_global_);
+    cout << "Current value of best particle: " << current_best_particle_global_.ofv() << endl;
     swarm_ = update_velocity(swarm_, current_best_particle_global_, swarm_memory_);
     swarm_ = update_position(swarm_);
-    cout << "Printing the rea_vars_vector, I think " << swarm_[0].rea_vars_velocity(0) << endl;
     vector<Particle> next_generation_swarm;
     for (int i = 0; i < number_of_particles_; ++i) {
         auto new_case = generateRandomCase();
         next_generation_swarm.push_back(Particle(new_case, gen_, vMax_, n_vars_));
         next_generation_swarm[i].ParticleAdapt(swarm_[i].rea_vars_velocity, swarm_[i].rea_vars);
     }
+    cout << "Before changing: "<< next_generation_swarm[0].rea_vars(0) << endl;
     for(int i = 0; i < number_of_particles_; i++){
         case_handler_->AddNewCase(next_generation_swarm[i].case_pointer);
     }
     swarm_ = next_generation_swarm;
+    cout << "After changing: "<< swarm_[0].rea_vars(0) << endl;
     iteration_++;
 }
 
