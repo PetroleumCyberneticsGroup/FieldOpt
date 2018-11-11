@@ -22,7 +22,6 @@
 #include <string.h>
 #include <stdint.h>
 #include <errno.h>
-
 #include <ert/util/hash.h>
 #include <ert/util/hash_sll.h>
 #include <ert/util/hash_node.h>
@@ -309,26 +308,30 @@ static char ** hash_alloc_keylist__(hash_type *hash , bool lock) {
   char **keylist;
   if (lock) __hash_rdlock( hash );
   {
-    if (hash->elements > 0) {
-      int i = 0;
-      hash_node_type *node = NULL;
-      keylist = (char**)calloc(hash->elements , sizeof *keylist);
-      {
-        uint32_t i = 0;
-        while (i < hash->size && hash_sll_empty(hash->table[i]))
-          i++;
+      if(hash !=NULL){
+        if (hash->elements > 0) {
+          int i = 0;
+          hash_node_type *node = NULL;
+          keylist = (char**)calloc(hash->elements , sizeof *keylist);
+          {
+            uint32_t i = 0;
+            while (i < hash->size && hash_sll_empty(hash->table[i]))
+              i++;
 
-        if (i < hash->size)
-          node = hash_sll_get_head(hash->table[i]);
-      }
+            if (i < hash->size)
+              node = hash_sll_get_head(hash->table[i]);
+          }
 
-      while (node != NULL) {
-        const char *key = hash_node_get_key(node);
-        keylist[i] = util_alloc_string_copy(key);
-        node = hash_internal_iter_next(hash , node);
-        i++;
-      }
-    } else keylist = NULL;
+          while (node != NULL) {
+            const char *key = hash_node_get_key(node);
+            keylist[i] = util_alloc_string_copy(key);
+            node = hash_internal_iter_next(hash , node);
+            i++;
+          }
+        } else keylist = NULL;
+    } else {
+      keylist = NULL;
+    }
   }
   if (lock) __hash_unlock( hash );
   return keylist;
@@ -641,7 +644,11 @@ bool hash_has_key(const hash_type *hash , const char *key) {
 
 
 int hash_get_size(const hash_type *hash) {
-  return hash->elements;
+  if (hash != NULL){
+    return hash->elements;
+  } else {
+    return 0;
+  }
 }
 
 
