@@ -177,7 +177,7 @@ class Optimizer
   OptimizerType type_;
   Parameters parameters_;
   Objective objective_;
-  OptimizerMode mode_;
+  OptimizerMode mode_ = OptimizerMode::Maximize; //!< Optimization mode (maximize or minimize). Default: Maximize
   QList<HybridComponent> hybrid_components_;
 
   OptimizerType parseType(QString &type);
