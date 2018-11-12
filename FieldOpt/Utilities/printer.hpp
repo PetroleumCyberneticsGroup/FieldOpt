@@ -74,7 +74,6 @@ inline std::vector<std::string> split_line(const std::string text, const int &wi
             strv.push_back(line);
             remainder = remainder.substr(end_idx+1, remainder.size());
             if (end_idx >= width) {
-                truncate_text(remainder);
                 break;
             }
         }
