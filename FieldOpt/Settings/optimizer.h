@@ -164,10 +164,12 @@ class Optimizer
 
   OptimizerType type() const { return type_; } //!< Get the Optimizer type (e.g. Compass).
   OptimizerMode mode() const { return mode_; } //!< Get the optimizer mode (maximize/minimize).
+  void set_mode(const OptimizerMode mode) { mode_ = mode; } //!< Set the optimizer mode (used by HybridOptimizer)
   Parameters parameters() const { return parameters_; } //!< Get the optimizer parameters.
   Objective objective() const { return objective_; } //!< Get the optimizer objective function.
   QList<Constraint> constraints() const { return constraints_; } //!< Get the optimizer constraints.
   QList<HybridComponent> HybridComponents() { return hybrid_components_; } // Get the list of hybrid-optimizer components when using the HYBRID type.
+  void SetRngSeed(const int seed) { parameters_.rng_seed = seed; } //!< Change the RNG seed (used by HybridOptimizer).
 
 
  private:
