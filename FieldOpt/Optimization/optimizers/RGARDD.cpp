@@ -42,6 +42,7 @@ RGARDD::RGARDD(Settings::Optimizer *settings,
     }
 }
 void RGARDD::iterate() {
+    if (VERB_OPT >= 2) print_state("Iterating with RGARDD");
     if (enable_logging_) {
         logger_->AddEntry(this);
     }
@@ -208,6 +209,15 @@ QUuid RGARDD::ConfigurationSummary::GetId() {
 map<string, vector<double>> RGARDD::ConfigurationSummary::GetValues() {
     map<string, vector<double>> valmap;
     return valmap;
+}
+
+void RGARDD::print_state(string header) {
+    std::stringstream ss;
+    ss << header << "|";
+    ss << "Iteration: " << iteration_ << "|";
+    ss << "Current best case: " << tentative_best_case_->id().toString().toStdString() << "|";
+    ss << "              OFV: " << tentative_best_case_->objective_function_value() << "|";
+    Printer::ext_info(ss.str(), "Optimization", "RGARDD");
 }
 }
 }
