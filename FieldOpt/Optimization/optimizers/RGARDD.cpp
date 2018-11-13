@@ -42,6 +42,10 @@ RGARDD::RGARDD(Settings::Optimizer *settings,
     }
 }
 void RGARDD::iterate() {
+    if (case_handler_->QueuedCases().size() > 0 || case_handler_->CasesBeingEvaluated().size() > 0) {
+        Printer::ext_warn("Iteration requested while evaluation queue is not empty. Skipping call.", "Optimization", "RGARDD");
+        return;
+    }
     if (VERB_OPT >= 2) print_state("Iterating with RGARDD");
     if (enable_logging_) {
         logger_->AddEntry(this);
@@ -91,6 +95,15 @@ void RGARDD::handleEvaluatedCase(Case *c) {
             index = i;
             break;
         }
+    }
+    if (index == -1) {
+        if (isImprovement(c)) {
+            Printer::ext_warn("Unable to handle case which would have been an improvement.", "Optimization", "RGARDD");
+        }
+        else {
+            Printer::ext_warn("Unable to handle case (would not have been an improvement).", "Optimization", "RGARDD");
+        }
+        return;
     }
     if (isBetter(c, population_[index].case_pointer)) {
         population_[index] = mating_pool_[index];
