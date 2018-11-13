@@ -130,7 +130,9 @@ void HybridOptimizer::iterate() {
             primary_best_case_ = tentative_best_case_;
             initializeComponent(1);
             active_component_ = 1;
-            secondary_->iterate();
+            if (case_handler_->QueuedCases().size() == 0) { // Iterate if the constructor does not generate cases
+                secondary_->iterate();
+            }
 
             if (iteration_ > 1 && isBetter(primary_best_case_, secondary_best_case_) == false) {
                 // If primary didn't find an improvement over previous secondary
@@ -149,7 +151,9 @@ void HybridOptimizer::iterate() {
             secondary_best_case_ = tentative_best_case_;
             initializeComponent(0);
             active_component_ = 0;
-            primary_->iterate();
+            if (case_handler_->QueuedCases().size() == 0) { // Iterate if the constructor does not generate cases
+                primary_->iterate();
+            }
 
             if (isBetter(secondary_best_case_, primary_best_case_) == false) {
                 // If secondary didn't find an improvement over previous primary
