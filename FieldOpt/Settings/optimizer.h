@@ -79,6 +79,12 @@ class Optimizer
     double lower_bound;       //!< Simple lower bound. This is applied to _all_ variables. Default: -10.0.
     double upper_bound;       //!< Simple upper bound. This is applied to _all_ variables. Default: +10.0.
 
+    // PSO parameters
+    double pso_learning_factor_1; //!< Learning factor (c1), from the swarms best known perturbation. Default: 2
+    double pso_learning_factor_2; //!< Learning factor (c2), from the individual particle's best known perturbation. Default: 2
+    double pso_swarm_size; //!< The number of particles in the swarm. Default: 50
+    double pso_velocity_scale; //!< Scaling factor for particle velocities. Default: 1.0
+
     // EGO Parameters
     int ego_init_guesses = -1; //!< Number of initial guesses to be made (default is two times the number of variables).
     std::string ego_init_sampling_method = "Random"; //!< Sampling method to be used for initial guesses (Random or Uniform)
