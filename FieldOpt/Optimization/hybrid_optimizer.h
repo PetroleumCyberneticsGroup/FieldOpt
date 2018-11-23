@@ -50,14 +50,26 @@ class HybridOptimizer : public Optimizer {
       Logger *logger);
 
   TerminationCondition IsFinished() override;
+
  protected:
   void handleEvaluatedCase(Case *c) override;
   void iterate() override;
 
  private:
+  enum HybridSwitchMode { ON_CONVERGENCE };
+  enum HybridTerminationCondition { NO_IMPROVEMENT };
+
+  int max_hybrid_iterations_; //!< Maximum number of times to run each of the components
+  HybridSwitchMode switch_mode_; //!< When to switch
+  HybridTerminationCondition hybrid_termination_condition_; //!< When to terminate (before max iterations)
+
   int active_component_; //!< Currently active component (0=primary; 1=secondary)
   Optimizer *primary_; //!< Primary optimizer (will be called first).
   Optimizer *secondary_; //!< Secondary optimizer (will be called after the termination of the first component is reached).
+
+  Case *primary_best_case_; //!< Best case found at the end of a primary run.
+  Case *secondary_best_case_; //!< Best case found at the end of a secondary run.
+  bool component_improvement_found_; //!< Whether a component run has found an improvement over the previous component.
 
   Settings::Optimizer *primary_settings_;
   Settings::Optimizer *secondary_settings_;

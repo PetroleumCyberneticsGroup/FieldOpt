@@ -49,6 +49,11 @@ Model::Model(Settings::Settings settings, Logger *logger)
 }
 
 void Model::Finalize() {
+    if (current_case_->GetRealizationOFVMap().size() > 0) {
+        realization_ofv_map_ = current_case_->GetRealizationOFVMap();
+        ensemble_avg_ofv_ = current_case_->GetEnsembleExpectedOfv().first;
+        ensemble_ofv_st_dev_ = current_case_->GetEnsembleExpectedOfv().second;
+    }
     logger_->AddEntry(this); // Removing this causes the last case to not be in the JSON file
     logger_->AddEntry(new Summary(this));
 }
@@ -128,6 +133,9 @@ void Model::wellCost(Settings::Optimizer *settings) {
     well_economy_.wells_pointer = *wells_;
     for (auto well : *wells_) {
         auto spline_points = well->trajectory()->GetWellSpline()->GetSplinePoints();
+        well_economy_.well_xy[well->name().toStdString()] = 0;
+        well_economy_.well_z[well->name().toStdString()] = 0;
+        well_economy_.well_lengths[well->name().toStdString()] = 0;
         for(int j = 0; j < spline_points.size()-1; j++){
             double well_length = (spline_points[j+1]->ToEigenVector() - spline_points[j]->ToEigenVector()).norm();
             double well_spline_length_z = abs(spline_points[j+1]->ToEigenVector()[2]-spline_points[j]->ToEigenVector()[2]);

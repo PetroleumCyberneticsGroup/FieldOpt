@@ -84,6 +84,39 @@ class Optimizer
     std::string ego_init_sampling_method = "Random"; //!< Sampling method to be used for initial guesses (Random or Uniform)
     std::string ego_kernel = "CovMatern5iso";        //!< Which kernel function to use for the gaussian process model.
     std::string ego_af = "ExpectedImprovement";      //!< Which acquisiton function to use.
+
+    // Hybrid parameters
+    /*!
+     * @brief How switching between component optimizers is handled.
+     *
+     * Default: OnFinished -- switch between components when IsFinished() == true
+     *
+     * Example: "Optimizer": { "Type": "Hybrid", "Parameters": { "HybridSwitchMode": "OnConvergence" } }
+     */
+    std::string hybrid_switch_mode = "OnConvergence";
+
+    /*!
+     * @brief Termination condition for hybrid optimizer.
+     *
+     * Default: NoImprovement -- terminate when a component has not managed to
+     *                           improve upon the result of the previous component.
+     *
+     * Example: "Optimizer": { "Type": "Hybrid", "Parameters": { "HybridTerminationCondition": "NoImprovement" } }
+     */
+    std::string hybrid_termination_condition = "NoImprovement";
+
+    /*!
+     * @brief Max iterations for the hybrid optimizer.
+     *
+     * One iteration implies running each component to completion once.
+     * If
+     *
+     * Default: 2 -- Each component will be executed twice (unleass the HybridTerminationCondition
+     *               is met first).
+     *
+     * Example: "Optimizer": { "Type": "Hybrid", "Parameters": { "HybridMaxIterations": 2 } }
+     */
+    int hybrid_max_iterations = 2;
   };
 
   struct Objective {
@@ -131,10 +164,12 @@ class Optimizer
 
   OptimizerType type() const { return type_; } //!< Get the Optimizer type (e.g. Compass).
   OptimizerMode mode() const { return mode_; } //!< Get the optimizer mode (maximize/minimize).
+  void set_mode(const OptimizerMode mode) { mode_ = mode; } //!< Set the optimizer mode (used by HybridOptimizer)
   Parameters parameters() const { return parameters_; } //!< Get the optimizer parameters.
   Objective objective() const { return objective_; } //!< Get the optimizer objective function.
   QList<Constraint> constraints() const { return constraints_; } //!< Get the optimizer constraints.
   QList<HybridComponent> HybridComponents() { return hybrid_components_; } // Get the list of hybrid-optimizer components when using the HYBRID type.
+  void SetRngSeed(const int seed) { parameters_.rng_seed = seed; } //!< Change the RNG seed (used by HybridOptimizer).
 
 
  private:
@@ -142,7 +177,7 @@ class Optimizer
   OptimizerType type_;
   Parameters parameters_;
   Objective objective_;
-  OptimizerMode mode_;
+  OptimizerMode mode_ = OptimizerMode::Maximize; //!< Optimization mode (maximize or minimize). Default: Maximize
   QList<HybridComponent> hybrid_components_;
 
   OptimizerType parseType(QString &type);

@@ -42,6 +42,11 @@ RGARDD::RGARDD(Settings::Optimizer *settings,
     }
 }
 void RGARDD::iterate() {
+    if (case_handler_->QueuedCases().size() > 0 || case_handler_->CasesBeingEvaluated().size() > 0) {
+        Printer::ext_warn("Iteration requested while evaluation queue is not empty. Skipping call.", "Optimization", "RGARDD");
+        return;
+    }
+    if (VERB_OPT >= 2) print_state("Iterating with RGARDD");
     if (enable_logging_) {
         logger_->AddEntry(this);
     }
@@ -51,9 +56,10 @@ void RGARDD::iterate() {
     population_ = sortPopulation(population_);
 
     if (is_stagnant()) {
-        if (verbosity_level_ > 1) {
-            cout << "The population has stagnated in generation "
-                 << iteration_ << ". Repopulating." << endl;
+        if (VERB_OPT >= 1) {
+            Printer::ext_info("The population has stagnated in generation" +
+                              Printer::num2str(iteration_) + ". Repopulating",
+                              "RGARDD", "Optimization");
         }
         repopulate();
         iteration_++;
@@ -90,13 +96,22 @@ void RGARDD::handleEvaluatedCase(Case *c) {
             break;
         }
     }
+    if (index == -1) {
+        if (isImprovement(c)) {
+            Printer::ext_warn("Unable to handle case which would have been an improvement.", "Optimization", "RGARDD");
+        }
+        else {
+            Printer::ext_warn("Unable to handle case (would not have been an improvement).", "Optimization", "RGARDD");
+        }
+        return;
+    }
     if (isBetter(c, population_[index].case_pointer)) {
         population_[index] = mating_pool_[index];
         if (isImprovement(c)) {
             updateTentativeBestCase(c);
-            if (verbosity_level_ > 1) {
-                cout << "New best in generation " << iteration_ << ": "
-                     << GetTentativeBestCase()->objective_function_value() << endl;
+            if (VERB_OPT >= 1) {
+                Printer::ext_info("New best in generation " + Printer::num2str(iteration_) + ": "
+                + Printer::num2str(GetTentativeBestCase()->objective_function_value()), "RGARDD", "Optimization");
             }
         }
     }
@@ -207,6 +222,15 @@ QUuid RGARDD::ConfigurationSummary::GetId() {
 map<string, vector<double>> RGARDD::ConfigurationSummary::GetValues() {
     map<string, vector<double>> valmap;
     return valmap;
+}
+
+void RGARDD::print_state(string header) {
+    std::stringstream ss;
+    ss << header << "|";
+    ss << "Iteration: " << iteration_ << "|";
+    ss << "Current best case: " << tentative_best_case_->id().toString().toStdString() << "|";
+    ss << "              OFV: " << tentative_best_case_->objective_function_value() << "|";
+    Printer::ext_info(ss.str(), "Optimization", "RGARDD");
 }
 }
 }

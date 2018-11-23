@@ -32,7 +32,7 @@ namespace Runner {
             }
             world_.send(message.destination, message.tag, s);
             printMessage("Sent a message to " + boost::lexical_cast<std::string>(message.destination)
-                         + " with tag " + boost::lexical_cast<std::string>(message.tag) + " (" + tag_to_string[message.tag] + ")");
+                         + " with tag " + boost::lexical_cast<std::string>(message.tag) + " (" + tag_to_string[message.tag] + ")", 2);
         }
 
         void MPIRunner::RecvMessage(Message &message) {
@@ -54,7 +54,7 @@ namespace Runner {
 
             if (message.tag == TERMINATE) {
                 message.c = nullptr;
-                printMessage("Received termination signal.");
+                printMessage("Received termination signal.", 2);
                 return;
             }
             else if (message.tag == MODEL_SYNC) {

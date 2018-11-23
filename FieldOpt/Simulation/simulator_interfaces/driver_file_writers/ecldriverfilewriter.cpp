@@ -43,7 +43,7 @@ EclDriverFileWriter::EclDriverFileWriter(Settings::Settings *settings, Model::Mo
 
 void EclDriverFileWriter::WriteDriverFile(QString schedule_file_path)
 {
-    if (VERB_SIM >= 1) {
+    if (VERB_SIM >= 2) {
         auto fp = schedule_file_path.toStdString();
         Printer::ext_info("Writing driver file to " + fp + ".", "Simulation", "EclDriverFileWriter");
     }

@@ -70,8 +70,8 @@ namespace Optimization {
                 }
                 step_lengths_ = base * settings->parameters().auto_step_init_scale;
                 step_tol_ = base * settings->parameters().auto_step_conv_scale;
-                Printer::ext_info("Step lengths: " + eigenvec_to_str(step_lengths_));
-                Printer::ext_info("Step tols: " + eigenvec_to_str(step_tol_));
+                Printer::ext_info("Step lengths: " + eigenvec_to_str(step_lengths_), "Optimization", "GSS");
+                Printer::ext_info("Step tols: " + eigenvec_to_str(step_tol_), "Optimization", "GSS");
                 assert(step_lengths_.size() == directions_.size());
                 assert(step_lengths_.size() == step_tol_.size());
             }

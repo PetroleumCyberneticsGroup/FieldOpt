@@ -56,7 +56,6 @@ void APPS::iterate() {
         set_active(inactive());
     }
     iteration_++;
-    if (VERB_OPT >= 2) print_state("iteration start");
 }
 
 void APPS::handleEvaluatedCase(Case *c) {
@@ -70,7 +69,7 @@ void APPS::successful_iteration(Case *c) {
     expand();
     reset_active();
     prune_queue();
-    if (VERB_OPT  >= 2) print_state("successful iteration");
+    if (VERB_OPT >= 2) print_state("Successful iteration");
     iterate();
 }
 
@@ -81,7 +80,6 @@ void APPS::unsuccessful_iteration(Case *c) {
         set_inactive(unsuccessful_direction);
         contract(unsuccessful_direction);
     }
-    if (VERB_OPT >= 2) print_state("unsuccessful iteration");
     if (!is_converged()) iterate();
 }
 
@@ -125,13 +123,10 @@ void APPS::prune_queue() {
 void APPS::print_state(string header) {
     std::stringstream ss;
     ss << header << "|";
-    ss << "step_lengths_  : " << vec_to_str(vector<double>(step_lengths_.data(), step_lengths_.data() + step_lengths_.size())) << "|";
-    ss << "active_        : " << vec_to_str(vector<int>(active_.begin(), active_.end())) << "|";
-    ss << "inactive()     : " << vec_to_str(inactive()) << "|";
-    ss << "queue size     : " << case_handler_->QueuedCases().size() << "|";
-    ss << "best case origin:" << "|";
-    ss << " direction idx : " << GetTentativeBestCase()->origin_direction_index() << "|";
-    ss << " step length   : " << GetTentativeBestCase()->origin_step_length() << "|";
+    ss << "Step lengths  : " << vec_to_str(vector<double>(step_lengths_.data(), step_lengths_.data() + step_lengths_.size())) << "|";
+    ss << "Iteration: " << iteration_ << "|";
+    ss << "Current best case: " << tentative_best_case_->id().toString().toStdString() << "|";
+    ss << "              OFV: " << tentative_best_case_->objective_function_value();
     Printer::ext_info(ss.str(), "Optimization", "APPS");
 }
 }
