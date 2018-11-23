@@ -64,15 +64,16 @@ HybridOptimizer::HybridOptimizer(Settings::Optimizer *settings,
 }
 
 Optimizer::TerminationCondition HybridOptimizer::IsFinished() {
-    if (case_handler_->CasesBeingEvaluated().size() > 0) {
-        return TerminationCondition::NOT_FINISHED;
-    }
-    else if (hybrid_termination_condition_ == HybridTerminationCondition::NO_IMPROVEMENT && component_improvement_found_ == false) {
+    if (hybrid_termination_condition_ == HybridTerminationCondition::NO_IMPROVEMENT
+             && component_improvement_found_ == false && iteration_ > 1) {
         Printer::ext_info("No improvement found in previous component run. Terminating.", "Optimization", "HybridOptimizer");
         if (enable_logging_) {
             logger_->AddEntry(this);
         }
         return TerminationCondition::MINIMUM_STEP_LENGTH_REACHED;
+    }
+    else if (case_handler_->CasesBeingEvaluated().size() > 0) {
+        return TerminationCondition::NOT_FINISHED;
     }
     else if (iteration_ < max_hybrid_iterations_) {
         return TerminationCondition::NOT_FINISHED;
@@ -82,6 +83,11 @@ Optimizer::TerminationCondition HybridOptimizer::IsFinished() {
             return TerminationCondition::NOT_FINISHED;
         }
         else {
+            if (secondary_->IsFinished() != NOT_FINISHED) {
+                if (enable_logging_) {
+                    logger_->AddEntry(this);
+                }
+            }
             return secondary_->IsFinished();
         }
     }
@@ -95,8 +101,8 @@ void HybridOptimizer::handleEvaluatedCase(Case *c) {
                 ss << " ID: " << c->id().toString().toStdString() << "|";
                 ss << "OFV: " << c->objective_function_value();
                 Printer::ext_info(ss.str(), "Optimization", "HybridOptimizer");
-                updateTentativeBestCase(c);
             }
+            updateTentativeBestCase(c);
         }
         primary_->handleEvaluatedCase(c);
     }
@@ -108,8 +114,8 @@ void HybridOptimizer::handleEvaluatedCase(Case *c) {
                 ss << " ID: " << c->id().toString().toStdString() << "|";
                 ss << "OFV: " << c->objective_function_value();
                 Printer::ext_info(ss.str(), "Optimization", "HybridOptimizer");
-                updateTentativeBestCase(c);
             }
+            updateTentativeBestCase(c);
         }
         secondary_->handleEvaluatedCase(c);
     }
