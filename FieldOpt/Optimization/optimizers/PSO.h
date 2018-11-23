@@ -42,31 +42,75 @@ class PSO : public Optimizer {
     boost::random::mt19937 gen_; //!< Random number generator with the random functions in math.hpp
  public:
   struct Particle{
-    Eigen::VectorXd rea_vars;
-    Case *case_pointer;
-    Eigen::VectorXd rea_vars_velocity;
-    Particle(Optimization::Case *c, boost::random::mt19937 gen, double vMax_, int n_vars);
+    Eigen::VectorXd rea_vars; //!< Real variables
+    Case *case_pointer; //!< Pointer to the case
+    Eigen::VectorXd rea_vars_velocity; //!< The velocity of the real variables
+    Particle(Optimization::Case *c, boost::random::mt19937 gen, Eigen::VectorXd v_max, int n_vars);
     Particle(){}
     void ParticleAdapt(Eigen::VectorXd rea_vars_velocity_swap, Eigen::VectorXd rea_vars);
     double ofv() { return case_pointer->objective_function_value(); }
   };
 
+  /*!
+   * @brief
+   * Generates a random set of cases within their given upper and lower bounds. The function also generates an initial
+   * velocity based on the vMax parameter given through the .json file.
+   * @return
+   */
   Case *generateRandomCase();
-  Particle get_global_best(vector<vector<Particle>> swarm, Particle current_best_particle_global);
-  vector<PSO::Particle> update_velocity(vector<Optimization::Optimizers::PSO::Particle>, Particle, vector<vector<Optimization::Optimizers::PSO::Particle>> swarm_memory);
-  vector<PSO::Particle> update_position(vector<Particle>);
-  void printSwarm(vector<Particle> swarm = vector<Particle>()) const;
-  void printParticle(Particle &partic) const;
-  Particle find_best_in_particle_memory(vector<vector<Optimization::Optimizers::PSO::Particle>> swarm_memory, int particle_num);
-  vector<vector<Particle>> swarm_memory_;
+  /*!
+   * @brief Looks through the memory of the swarm in order to find the best evaluated perturbation.
+   * @param swarm
+   * @param current_best_particle_global
+   * @return
+   */
+  Particle get_global_best();
 
-  vector<Particle> improved_swarm_;
-  int number_of_particles_ = 3; //!< The number of particles in the swarm
-  double learning_factor_1_ = 2; //!< Learning factor 1
-  double learning_factor_2_ = 2; //!< Learning factor 2
-  double vMax_ = 30; //!< Max velocity of the particle
-  vector<Particle> swarm_;
-  Particle current_best_particle_global_;
+  /*!
+   * @brief Updates the velocity based on learning_factor_1_ (c1), learning_factor_2_ (c2), the best evaluated
+   * perturbation of the swarm and the best evaluated perturbation of that particle.
+   * @param swarm_memory
+   * @return
+   */
+  vector<PSO::Particle> update_velocity();
+  /*!
+   * @brief Updates the position based on the updated velocities of the particles in the swarm.
+   * @return
+   */
+  vector<PSO::Particle> update_position();
+  /*!
+   * @brief Prints the swarm and its current values in a readable format, calls print particle
+   * @param swarm
+   */
+  void printSwarm(vector<Particle> swarm = vector<Particle>()) const;
+  /*!
+   * @brief Prints the individual particle in a readable format
+   * @param partic
+   */
+  void printParticle(Particle &partic) const;
+  /*!
+   * @brief Finds the best perturbation in the individual particle's memory
+   * @param swarm_memory
+   * @param particle_num
+   * @return
+   */
+  Particle find_best_in_particle_memory(int particle_num);
+  /*!
+   * @brief Performs a check on the swarm, to figure out whether it is stuck with particles that are too close to one
+   * another.
+   * @return
+   */
+  bool is_stagnant();
+
+  double stagnation_limit_; //!< The stagnation criterion, standard deviation of all particle positions.
+  vector<vector<Particle>> swarm_memory_; //!< The memory of the swarm at previous timesteps.
+  int number_of_particles_; //!< The number of particles in the swarm
+  double learning_factor_1_; //!< Learning factor 1 (c1)
+  double learning_factor_2_; //!< Learning factor 2 (c2)
+  Eigen::VectorXd v_max_; //!< Max velocity of the particle
+  int max_iterations_; //!< Max iterations
+  vector<Particle> swarm_; //!< Current swarm of particles
+  Particle current_best_particle_global_; //!< global best particle position
   Eigen::VectorXd lower_bound_; //!< Lower bounds for the variables (used for randomly generating populations and mutation)
   Eigen::VectorXd upper_bound_; //!< Upper bounds for the variables (used for randomly generating populations and mutation)
   int n_vars_; //!< Number of variables in the problem.
