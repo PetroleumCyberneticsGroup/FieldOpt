@@ -42,6 +42,7 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
       settings_ga_min_ = new Settings::Optimizer(get_json_settings_ga_minimize_);
       settings_ga_max_ = new Settings::Optimizer(get_json_settings_ga_maximize_);
       settings_ego_max_ = new Settings::Optimizer(get_json_settings_ego_maximize_);
+      settings_pso_min_ = new Settings::Optimizer(get_json_settings_pso_minimize_);
   }
 
   Optimization::Case *base_case_;
@@ -51,6 +52,7 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
   Settings::Optimizer *settings_apps_max_unconstr_;
   Settings::Optimizer *settings_ga_min_;
   Settings::Optimizer *settings_ga_max_;
+  Settings::Optimizer *settings_pso_min_;
   Settings::Optimizer *settings_ego_max_;
 
  private:
@@ -141,6 +143,23 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
           {"DecayRate",             4.0},
           {"MutationStrength",      0.25},
           {"StagnationLimit",       1e-10},
+          {"LowerBound",            -10.0},
+          {"UpperBound",            10.0},
+          {"RNGSeed", 5}
+
+      }},
+      {"Objective", obj_fun_}
+  };
+
+  QJsonObject get_json_settings_pso_minimize_ {
+      {"Type", "PSO"},
+      {"Mode", "Minimize"},
+      {"Parameters", QJsonObject{
+          {"MaxGenerations",        700},
+          {"PSO-SwarmSize",          60},
+          {"PSO-LearningFactor1",     2},
+          {"PSO-LearningFactor2",     2},
+          {"PSO-VelocityScale",      0.05},
           {"LowerBound",            -10.0},
           {"UpperBound",            10.0},
           {"RNGSeed", 5}

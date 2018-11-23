@@ -75,7 +75,7 @@ if (BUILD_TESTING)
             tests/constraints/test_interwell_distance.cpp
             tests/constraints/test_spline_well_length.cpp
 			tests/optimizers/test_ego.cpp
-            tests/constraints/test_pseudo_cont_boundary_2d.cpp)
+            tests/constraints/test_pseudo_cont_boundary_2d.cpp tests/optimizers/test_pso.cpp)
 
 
 	target_link_libraries(test_optimization
