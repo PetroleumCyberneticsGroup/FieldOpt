@@ -46,21 +46,21 @@ ECLSimulator::ECLSimulator(Settings::Settings *settings, Model::Model *model)
 
 void ECLSimulator::Evaluate()
 {
-    if (VERB_SIM >= 1) { Printer::ext_info("Starting unmonitored evaluation.", "Simulation", "ECLSimulator"); }
-    if (VERB_SIM >= 1) { Printer::info("Copying driver files."); }
+    if (VERB_SIM >= 2) { Printer::ext_info("Starting unmonitored evaluation.", "Simulation", "ECLSimulator"); }
+    if (VERB_SIM >= 2) { Printer::info("Copying driver files."); }
     copyDriverFiles();
-    if (VERB_SIM >= 1) { Printer::info("Updating file paths."); }
+    if (VERB_SIM >= 2) { Printer::info("Updating file paths."); }
     UpdateFilePaths();
     script_args_ = (QStringList() << QString::fromStdString(paths_.GetPath(Paths::SIM_WORK_DIR)) << deck_name_);
     auto driver_file_writer = EclDriverFileWriter(settings_, model_);
-    if (VERB_SIM >= 1) { Printer::info("Writing schedule."); }
+    if (VERB_SIM >= 2) { Printer::info("Writing schedule."); }
     driver_file_writer.WriteDriverFile(QString::fromStdString(paths_.GetPath(Paths::SIM_OUT_SCH_FILE)));
-    if (VERB_SIM >= 1) { Printer::info("Starting unmonitored simulation."); }
+    if (VERB_SIM >= 2) { Printer::info("Starting unmonitored simulation."); }
     Utilities::Unix::ExecShellScript(
         QString::fromStdString(paths_.GetPath(Paths::SIM_EXEC_SCRIPT_FILE)),
         script_args_
     );
-    if (VERB_SIM >= 1) { Printer::info("Unmonitored simulation done. Reading results."); }
+    if (VERB_SIM >= 2) { Printer::info("Unmonitored simulation done. Reading results."); }
     results_->ReadResults(QString::fromStdString(paths_.GetPath(Paths::SIM_OUT_DRIVER_FILE)));
     updateResultsInModel();
 }
@@ -76,17 +76,17 @@ bool ECLSimulator::Evaluate(int timeout, int threads) {
         t = 10; // Always let simulations run for at least 10 seconds
     }
 
-    if (VERB_SIM >= 1) {
+    if (VERB_SIM >= 2) {
         Printer::info("Starting monitored simulation with timeout.");
     }
     bool success = ::Utilities::Unix::ExecShellScriptTimeout(
         QString::fromStdString(paths_.GetPath(Paths::SIM_EXEC_SCRIPT_FILE)),
         script_args_, t);
-    if (VERB_SIM >= 1) {
+    if (VERB_SIM >= 2) {
         Printer::info("Monitored simulation done.");
     }
     if (success) {
-        if (VERB_SIM >= 1) {
+        if (VERB_SIM >= 2) {
             Printer::info("Simulation successful. Reading results.");
         }
         results_->DumpResults();
@@ -158,7 +158,7 @@ void ECLSimulator::copyDriverFiles() {
         }
     }
     paths_.SetPath(Paths::SIM_WORK_DIR, workdir);
-    if (VERB_SIM >= 1) {
+    if (VERB_SIM >= 2) {
         Printer::ext_info("Done copying directories. Set working directory to: " + workdir,
                           "Simulation",
                           "ECLSimulator");

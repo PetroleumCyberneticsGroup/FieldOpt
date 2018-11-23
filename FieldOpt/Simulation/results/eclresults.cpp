@@ -16,7 +16,7 @@ ECLResults::ECLResults()
 
 void ECLResults::ReadResults(QString file_path)
 {
-    if (VERB_SIM >= 1) {
+    if (VERB_SIM >= 2) {
         Printer::ext_info("Attempting to read results from" + file_path.toStdString(), "Simulation", "ECLResults");
     }
     file_path_ = file_path;

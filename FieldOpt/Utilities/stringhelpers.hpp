@@ -6,20 +6,23 @@
 #include <vector>
 #include <boost/lexical_cast.hpp>
 #include <Eigen/Core>
+#include <iomanip>
 
 using namespace std;
 
 template <typename T>
 inline string vec_to_str(vector<T> vec) {
-    string str = "";
-    if (vec.size() == 0) return str;
-    str = boost::lexical_cast<string>(vec[0]);
+    stringstream str;
+    str << std::fixed << scientific << std::setprecision(3);
+    if (vec.size() == 0)
+        return "";
+    str << vec[0];
     if (vec.size() > 1) {
         for (int i = 1; i < vec.size(); ++i) {
-            str = str + ", " + boost::lexical_cast<string>(vec[i]);
+            str << ", " << vec[i];
         }
     }
-    return str;
+    return str.str();
 }
 
 inline string eigenvec_to_str(Eigen::VectorXd vec) {

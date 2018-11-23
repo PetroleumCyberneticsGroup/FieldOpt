@@ -44,12 +44,14 @@ Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
         case_handler_ = new CaseHandler(tentative_best_case_);
     }
     else {
+        Printer::ext_info("Using shared CaseHandler.", "Optimizer", "Optimization");
         case_handler_ = case_handler;
     }
     if (constraint_handler == 0) {
         constraint_handler_ = new Constraints::ConstraintHandler(settings->constraints(), variables, grid);
     }
     else {
+        Printer::ext_info("Using shared ConstraintHandler.", "Optimizer", "Optimization");
         constraint_handler_ = constraint_handler;
     }
     iteration_ = 0;

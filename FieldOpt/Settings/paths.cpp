@@ -18,13 +18,16 @@
 ******************************************************************************/
 
 #include "paths.h"
+#include "Utilities/printer.hpp"
 
 Paths::Paths() { }
 
 void Paths::SetPath(Paths::Path path, std::string path_string) {
     if (path >= 0 && !FileExists(path_string)) {
-        std::cerr << "ERROR: Cannot set " << GetPathDescription(path)
-                  << " path to non-existing file (" <<  path_string  << ")" << std::endl;
+        std::stringstream ss;
+        ss << "ERROR: Cannot set " << GetPathDescription(path)
+           << " path to non-existing file (" <<  path_string  << ")";
+        Printer::error(ss.str());
         throw std::runtime_error(Paths::GetPathDescription(path) + " not found at " + path_string);
     }
     else if (path < 0 && !DirectoryExists(path_string)) {
@@ -41,7 +44,7 @@ bool Paths::IsSet(Paths::Path path) {
 }
 std::string Paths::GetPath(Paths::Path path) {
     if (!IsSet(path)) {
-        std::cerr << "WARNING: Getting unset variable (" <<  GetPathDescription(path) << ")" << std::endl;
+        Printer::ext_warn("Getting unset variable (" + GetPathDescription(path) + ")", "Settings", "Paths");
         return "UNSET";
     }
     else {

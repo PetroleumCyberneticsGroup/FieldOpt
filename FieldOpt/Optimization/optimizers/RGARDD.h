@@ -130,6 +130,12 @@ class RGARDD : public GeneticAlgorithm {
    */
   void snap_to_bounds(Chromosome &chrom);
 
+  /*!
+   * @brief Print the current state of the optimizer.
+   * @param header Header for print
+   */
+  void print_state(std::string header);
+
   class ConfigurationSummary : public Loggable {
    public:
     ConfigurationSummary(RGARDD *opt) { opt_ = opt; }
