@@ -27,12 +27,12 @@ namespace Optimization {
 namespace Optimizers {
 
 
-    /*!
-     * @brief This class implements the particle swarm optimization (PSO) algorithm.
-     *
-     * The implementation is based on the description found at:
-     * http://www.cleveralgorithms.com/nature-inspired/swarm/pso.html
-     */
+/*!
+ * @brief This class implements the particle swarm optimization (PSO) algorithm.
+ *
+ * The implementation is based on the description found at:
+ * http://www.cleveralgorithms.com/nature-inspired/swarm/pso.html
+ */
 class PSO : public Optimizer {
  public:
   PSO(Settings::Optimizer *settings,
