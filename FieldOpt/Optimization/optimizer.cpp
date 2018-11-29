@@ -61,7 +61,7 @@ Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
     start_time_ = QDateTime::currentDateTime();
     logger_ = logger;
     enable_logging_ = true;
-    verbosity_level_ = 2;
+    verbosity_level_ = 0;
     penalize_ = settings->objective().use_penalty_function;
 }
 
