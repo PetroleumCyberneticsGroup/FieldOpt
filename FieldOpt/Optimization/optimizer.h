@@ -46,7 +46,7 @@ class Optimizer : public Loggable
   friend class HybridOptimizer;
 
  public:
-  Optimizer() = default;
+  Optimizer() = delete;
 
   /*!
    * \brief GetCaseForEvaluation Get a new, unevaluated case for evaluation.
