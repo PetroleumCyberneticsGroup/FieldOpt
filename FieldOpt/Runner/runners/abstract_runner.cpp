@@ -26,6 +26,7 @@
 #include <Optimization/optimizers/RGARDD.h>
 #include <Optimization/hybrid_optimizer.h>
 #include <Optimization/optimizers/bayesian_optimization/EGO.h>
+#include "Optimization/optimizers/PSO.h"
 #include <Simulation/simulator_interfaces/ix_simulator.h>
 #include "abstract_runner.h"
 #include "Optimization/optimizers/compass_search.h"
@@ -36,7 +37,6 @@
 #include "Utilities/math.hpp"
 #include "Utilities/printer.hpp"
 #include "Utilities/verbosity.h"
-#include "Optimization/optimizers/PSO.h"
 
 namespace Runner {
 
