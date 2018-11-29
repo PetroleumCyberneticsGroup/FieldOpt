@@ -173,12 +173,12 @@ void EGO::iterate() {
     start = QDateTime::currentDateTime();
     libgp::RProp rprop;
     rprop.init();
-    if (VERB_OPT >= 2) {
+    if (VERB_OPT >= 3) {
         Printer::ext_info("Optimizing Gaussian Process kernel hyperparameters ... ", "Optimization", "EGO");
         rprop.maximize(gp_, 100, 1);
     }
     else {
-        rprop.maximize(gp_, 100, 1);
+        rprop.maximize(gp_, 100, 0);
     }
     end = QDateTime::currentDateTime();
     time_fitting_ += time_span_seconds(start, end);
