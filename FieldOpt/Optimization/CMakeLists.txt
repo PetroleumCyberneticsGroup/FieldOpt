@@ -35,7 +35,8 @@ add_library(optimization STATIC
 		constraints/icv_constraint.cpp
         constraints/packer_constraint.cpp
         hybrid_optimizer.cpp
-        objective/NPV.cpp objective/NPV.h)
+        objective/NPV.cpp
+        optimizers/PSO.cpp)
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
 target_link_libraries(optimization
@@ -75,7 +76,8 @@ if (BUILD_TESTING)
             tests/constraints/test_interwell_distance.cpp
             tests/constraints/test_spline_well_length.cpp
 			tests/optimizers/test_ego.cpp
-            tests/constraints/test_pseudo_cont_boundary_2d.cpp)
+            tests/constraints/test_pseudo_cont_boundary_2d.cpp
+            tests/optimizers/test_pso.cpp)
 
 
 	target_link_libraries(test_optimization

@@ -303,6 +303,20 @@ Optimizer::Parameters Optimizer::parseParameters(QJsonObject &json_parameters) {
             params.upper_bound = json_parameters["UpperBound"].toDouble();
         else params.upper_bound = 10;
 
+        // PSO parameters
+        if(json_parameters.contains("PSO-LearningFactor1")){
+            params.pso_learning_factor_1 = json_parameters["PSO-LearningFactor1"].toDouble();
+        }else params.pso_learning_factor_1 = 2;
+        if(json_parameters.contains("PSO-LearningFactor2")){
+            params.pso_learning_factor_2 = json_parameters["PSO-LearningFactor2"].toDouble();
+        }else params.pso_learning_factor_2 = 2;
+        if(json_parameters.contains("PSO-SwarmSize")){
+            params.pso_swarm_size = json_parameters["PSO-SwarmSize"].toDouble();
+        }else params.pso_swarm_size = 50;
+        if(json_parameters.contains("PSO-VelocityScale")){
+            params.pso_velocity_scale = json_parameters["PSO-VelocityScale"].toDouble();
+        }else params.pso_velocity_scale = 1.0;
+
         // EGO Parameters
         if (json_parameters.contains("EGO-InitGuesses")) {
             params.ego_init_guesses = json_parameters["EGO-InitGuesses"].toInt();
@@ -514,6 +528,8 @@ Optimizer::OptimizerType Optimizer::parseType(QString &type) {
         opt_type = OptimizerType::EGO;
     else if (QString::compare(type, "ExhaustiveSearch2DVert") == 0)
         opt_type = OptimizerType::ExhaustiveSearch2DVert;
+    else if (QString::compare(type, "PSO") == 0)
+      opt_type = OptimizerType::PSO;
     else if (QString::compare(type, "Hybrid") == 0)
         opt_type = OptimizerType::Hybrid;
     else throw OptimizerTypeNotRecognizedException("The optimizer type " + type.toStdString() + " was not recognized.");
