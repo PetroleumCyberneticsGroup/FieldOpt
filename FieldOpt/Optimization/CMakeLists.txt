@@ -35,8 +35,8 @@ add_library(optimization STATIC
 		constraints/icv_constraint.cpp
         constraints/packer_constraint.cpp
         hybrid_optimizer.cpp
-        objective/NPV.cpp objective/NPV.h
-        optimizers/PSO.h)
+        objective/NPV.cpp
+        optimizers/PSO.cpp)
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
 target_link_libraries(optimization
