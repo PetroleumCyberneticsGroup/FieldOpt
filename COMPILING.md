@@ -1,9 +1,9 @@
-- [Quick Start](#Quick%20Start)
-- [Compiling FieldOpt: Detailed](#Compiling%20FieldOpt:%20Detailed)
-- [Compiling on Windows with WSL](#Compiling%20on%20Windows%20with%20WSL)
-- [Building a Docker or Singularity Container](#Building%20a%20Docker%20or%20Singularity Container)
+- [Quick Start](#Quickstart)
+- [Compiling FieldOpt: Detailed](#Detailed)
+- [Compiling on Windows with WSL](#Windows)
+- [Building a Docker or Singularity Container](#Containers)
 
-# Quick Start
+# Quickstart
 If you're on a Ubuntu 16.04 system with access to the package manager, the
 following should get you up and running. Navigate to wherever you want to place
 the FieldOpt files and execute the following commands:
@@ -41,7 +41,7 @@ make
 A more detailed description is given in the following section.
 
 
-# Compiling FieldOpt: Detailed
+# Detailed
 
 Before compiling FieldOpt, ensure that it is properly cloned:
 ```
@@ -189,7 +189,7 @@ cmake .
 make
 ```
 
-# Compiling on Windows with WSL
+# Windows
 
 ## Prerequesits:
 
@@ -325,6 +325,6 @@ DISKLETTER:\Users\USERNAME\git\PCG\FieldOpt\FieldOpt or DISKLETTER:\git\PCG\Fiel
 
 Compile FieldOpt after indexing.
 
-# Building a Docker or Singularity Container
+# Containers
 
-See separate [readme](Docker/README.md).
+See separate [readme](Docker/README.md) on how to build Docker and Singularity containers.
