@@ -47,7 +47,7 @@ message("Starting dependency builds ...")
 message("*************************************************************")
 
 if(USE_LOCAL_EIGEN3)
-    set(EIGEN3_ROOT "${PROJECT_SOURCE_DIR}/Eigen3")
+    set(EIGEN3_ROOT "${PROJECT_SOURCE_DIR}/eigen-git-mirror")
     message(STATUS "EIGEN3_ROOT: ${EIGEN3_ROOT}")
 endif()
 
