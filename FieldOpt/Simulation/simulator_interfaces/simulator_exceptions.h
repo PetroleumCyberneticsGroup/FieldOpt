@@ -33,7 +33,6 @@
 using std::string;
 
 namespace Simulation {
-namespace SimulatorInterfaces {
 
 class OutputDirectoryDoesNotExistException : public std::runtime_error {
 public:
@@ -65,7 +64,6 @@ public:
         : std::runtime_error("Unable to find keyword in driver file: " + keyword.toStdString()) {}
 };
 
-}
 }
 
 #endif // SIMULATOR_EXCEPTIONS

@@ -1,6 +1,18 @@
-[submodule "FieldOpt/WellIndexCalculator"]
-	path = FieldOpt/WellIndexCalculator
-	url = git@github.com:PetroleumCyberneticsGroup/WellIndexCalculator.git
-[submodule "FieldOpt/AdgprsSummaryConverter"]
-	path = FieldOpt/AdgprsSummaryConverter
-	url = git@github.com:PetroleumCyberneticsGroup/AdgprsSummaryConverter.git
+[submodule "FieldOpt/libgp"]
+	path = FieldOpt/ThirdParty/libgp
+	url = https://github.com/PetroleumCyberneticsGroup/libgp.git
+[submodule "FieldOpt/ThirdParty/googletest"]
+	path = FieldOpt/ThirdParty/googletest
+	url = https://github.com/PetroleumCyberneticsGroup/googletest.git
+[submodule "FieldOpt/ThirdParty/RpolyPlusPlus"]
+	path = FieldOpt/ThirdParty/RpolyPlusPlus
+	url = https://github.com/PetroleumCyberneticsGroup/RpolyPlusPlus.git
+[submodule "FieldOpt/ThirdParty/Eigen3"]
+	path = FieldOpt/ThirdParty/Eigen3
+	url = https://github.com/PetroleumCyberneticsGroup/eigen-git-mirror.git
+[submodule "FieldOpt/ThirdParty/qtbase"]
+	path = FieldOpt/ThirdParty/qtbase
+	url = https://github.com/PetroleumCyberneticsGroup/qtbase.git
+[submodule "FieldOpt/ThirdParty/opm-common"]
+	path = FieldOpt/ThirdParty/opm-common
+	url = https://github.com/PetroleumCyberneticsGroup/opm-common.git

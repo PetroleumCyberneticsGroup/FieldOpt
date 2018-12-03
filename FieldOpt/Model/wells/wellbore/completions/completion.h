@@ -1,12 +1,7 @@
 /******************************************************************************
- *
- * completion.h
- *
- * Created: 24.09.2015 2015 by einar
- *
  * This file is part of the FieldOpt project.
  *
- * Copyright (C) 2015-2015 Einar J.M. Baumann <einar.baumann@ntnu.no>
+ * Copyright (C) 2015-2018 Einar J.M. Baumann <einar.baumann@ntnu.no>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +21,7 @@
 #ifndef COMPLETION_H
 #define COMPLETION_H
 
-#include "Utilities/settings/model.h"
+#include "Settings/model.h"
 
 namespace Model {
 namespace Wells {
@@ -43,13 +38,12 @@ class Completion
 {
 public:
 
-    enum CompletionType : int { Perforation=1001 };
-    int id() const { return id_; } //!< Get the unique ID for this completion.
+    enum CompletionType : int { Perforation=1001, ICV=1002, Packer=1003, Tubing=1004, Annulus=1005 };
     CompletionType type() const { return type_; } //!< Get the type of completion, e.g. Perforation.
 
 protected:
-    Completion(::Utilities::Settings::Model::Completion completion_settings);
-    int id_; //!< A unique identifier for this completion. The number is generated when reading the model settings.
+    Completion(::Settings::Model::Well::Completion completion_settings);
+    Completion(CompletionType type);
 
 private:
     CompletionType type_;

@@ -175,9 +175,9 @@ INIT
 
 RPTGRID
   -- Report Levels for Grid Section Data
-  -- 
-  'ALLNNC' 
- / 
+  --
+  'ALLNNC'
+ /
 
 PROPS
 
@@ -264,9 +264,9 @@ SWFN
 
 RPTPROPS
    -- PROPS Reporting Options
-   -- 
-   'PVTO' 'PVDO' 'PVTW' 'PVTG' 'PVDG' 'DENSITY' 'GRAVITY' 'SDENSITY' 'MLANG' 
-   'MLANGSLV' 'TRACER' 
+   --
+   'PVTO' 'PVDO' 'PVTW' 'PVTG' 'PVDG' 'DENSITY' 'GRAVITY' 'SDENSITY' 'MLANG'
+   'MLANGSLV' 'TRACER'
 /
 
 SOLUTION
@@ -284,17 +284,23 @@ DATUM
 
 RPTSOL
   -- Initialisation Print Output
-  -- 
+  --
 'SWAT' 'SGAS' 'RESTART=2' 'FIP=1' /
 
 SUMMARY
 
+FOPT
+FGPT
 FOPR
 FWCT
 FGOR
+FWPT
+FGPT
 
 FOPT
 
+WGPT
+  prod /
 WOPR
    prod /
 WOPT
@@ -384,7 +390,7 @@ WCONPROD
 /
 
 RPTSCHED
-   'RESTART=2' 'FIP=1' 'WELLS=1' 'SUMMARY=1' 'CPU=2' 'WELSPECS' 'NEWTON=1' 
+   'RESTART=2' 'FIP=1' 'WELLS=1' 'SUMMARY=1' 'CPU=2' 'WELSPECS' 'NEWTON=1'
 /
 
 TSTEP

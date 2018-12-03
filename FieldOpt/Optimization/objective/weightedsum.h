@@ -27,7 +27,7 @@
 #define WEIGHTEDSUM_H
 
 #include "objective.h"
-#include "Utilities/settings/model.h"
+#include "Settings/model.h"
 #include "Simulation/results/results.h"
 
 namespace Optimization {
@@ -59,7 +59,7 @@ public:
      * \param settings The Settings object from which to create the objective.
      * \param results The Results object from which to get property values.
      */
-    WeightedSum(Utilities::Settings::Optimizer *settings, Simulation::Results::Results *results);
+    WeightedSum(Settings::Optimizer *settings, Simulation::Results::Results *results);
 
     double value() const;
 

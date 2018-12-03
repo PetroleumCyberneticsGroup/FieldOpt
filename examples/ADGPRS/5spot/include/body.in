@@ -15,8 +15,7 @@ WELL_RATES_AT
 /
 
 INCLUDE
-    ./include/depth.in
-/
+    ./include/depth.in /
 
 DX
     3600*32 /
@@ -37,25 +36,17 @@ INCLUDE
     ./include/permz.in /
 
 INCLUDE
-    ./include/props.in
-/
+    ./include/poro.in /
 
 INCLUDE
-    ./include/props_mod.in
-/
-
-INCLUDE
-    ./include/poro.in
-/
-
-INCLUDE
-    ./include/init.in
-/
+    ./include/init.in /
 
 SGAS
     0
 /
 
 INCLUDE
-    ./include/tuning.in
-/
+    ./include/props.in /
+
+INCLUDE
+    ./include/tuning.in /

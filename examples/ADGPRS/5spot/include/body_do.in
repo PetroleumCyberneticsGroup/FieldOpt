@@ -1,0 +1,50 @@
+VERBOSE
+ ALL SILENT
+--    ALL BRIEF
+/
+
+MODEL
+     NATURAL DEADOIL
+/
+
+DIMENS
+    60 60 1
+/
+
+WELL_RATES_AT
+    STC
+/
+
+INCLUDE
+    ./include/depth.in /
+
+DX
+    3600*24 /
+
+DY
+    3600*24 /
+
+DZ
+    3600*24 /
+
+INCLUDE
+    ./include/permx.in /
+
+INCLUDE
+    ./include/permy.in /
+
+INCLUDE
+    ./include/permz.in /
+
+INCLUDE
+    ./include/poro.in /
+
+INCLUDE
+    ./include/init_do.in /
+
+INCLUDE
+     ./include/props_do.in /
+--    ./include/props_do_spe10.in /
+
+INCLUDE
+    ./include/tuning.in /

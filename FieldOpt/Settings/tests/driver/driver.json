@@ -1,0 +1,223 @@
+{
+    "Global": {
+        "Name": "TestRun",
+        "BookkeeperTolerance": 0.0
+    },
+    "Optimizer": {
+        "Type": "Compass",
+        "Mode": "Maximize",
+        "Parameters": {
+            "MaxEvaluations": 10,
+            "InitialStepLength": 50.0,
+            "MinimumStepLength": 1.0
+        },
+        "Objective": {
+            "Type": "WeightedSum",
+            "WeightedSumComponents": [
+                {
+                    "Coefficient": 1.0, "Property": "CumulativeOilProduction", "TimeStep": -1,
+                    "IsWellProp": false
+                },
+                {
+                    "Coefficient": -0.2, "Property": "CumulativeWellWaterProduction", "TimeStep": 10,
+                    "IsWellProp": true, "Well": "PROD"
+                }
+            ]
+        },
+        "Constraints": [
+            {
+                "Type": "BHP",
+                "Well": "PROD",
+                "Max": 300.0,
+                "Min": 90.0
+            },
+            {
+                "Well": "INJ",
+                "Type": "WellSplineLength",
+                "MinLength": 400,
+                "MaxLength": 1200
+            },
+            {
+                "Type": "Rate",
+                "Well": "INJ",
+                "Max": 1400,
+                "Min": 1200
+            },
+            {
+                "Wells": ["INJ", "TESTW"],
+                "Type": "WellSplineInterwellDistance",
+                "Min": 100
+            },
+            {
+                "Wells": ["INJ", "TESTW"],
+                "Type": "CombinedWellSplineLengthInterwellDistance",
+                "MinLength": 400,
+                "MaxLength": 1200,
+                "MinDistance": 100,
+                "MaxIterations": 50
+            },
+            {
+                "Wells": ["INJ", "TESTW"],
+                "Type": "CombinedWellSplineLengthInterwellDistanceReservoirBoundary",
+                "MinLength": 300,
+                "MaxLength": 800,
+                "MinDistance": 300,
+                "MaxIterations": 100,
+                "BoxImin": 0,
+                "BoxImax": 9,
+                "BoxJmin": 0,
+                "BoxJmax": 9,
+                "BoxKmin": 0,
+                "BoxKmax": 0                
+            }
+        ]
+    },
+    "Simulator": {
+        "Type": "ECLIPSE",
+        "ExecutionScript": "csh_eclrun",
+        "Commands": ["tcsh -c \"eval source ~/.cshrc; eclrun eclipse\""],
+        "DriverPath": "../examples/ECLIPSE/HORZWELL/HORZWELL.DATA"
+    },
+    "Model": {
+        "ControlTimes": [0, 50, 100, 365],
+        "Reservoir": {
+            "Type": "ECLIPSE",
+            "Path": "../examples/ADGPRS/5spot/ECL_5SPOT.EGRID"
+        },
+        "Wells": [
+            {
+                "Name": "PROD",
+                "Type": "Producer",
+                "DefinitionType": "WellBlocks",
+                "PreferredPhase": "Oil",
+                "WellboreRadius": 0.75,
+                "Direction": "X",
+                "WellBlocks":  [
+                    {
+                        "i": 1,
+                        "j": 4,
+                        "k": 1,
+                        "IsVariable": true,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": 1.0,
+                            "IsVariable": true
+                        }
+                    },
+                    {
+                        "i": 2,
+                        "j": 4,
+                        "k": 1,
+                        "IsVariable": false
+                    },
+                    {
+                        "i": 3,
+                        "j": 4,
+                        "k": 1,
+                        "IsVariable": true,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": 1.0,
+                            "IsVariable": true
+                        }
+                    },
+                    {
+                        "i": 4,
+                        "j": 4,
+                        "k": 1,
+                        "IsVariable": true,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": 1.0,
+                            "IsVariable": true
+                        }
+                    }
+                ],
+                "Controls": [
+                    {
+                        "TimeStep": 0,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 100.0,
+                        "IsVariable": true
+                    },
+                    {
+                        "TimeStep": 50,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 100.0,
+                        "IsVariable": true
+                    },
+                    {
+                        "TimeStep": 365,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 100.0,
+                        "IsVariable": true
+                    }
+                ]
+            },
+            {
+                "Name": "INJ",
+                "Type": "Injector",
+                "DefinitionType": "WellSpline",
+                "PreferredPhase": "Water",
+                "WellboreRadius": 0.75,
+                "SplinePoints": {
+                    "Heel": {
+                        "x": 12.0,
+                        "y": 12.0,
+                        "z": 1712.0,
+                        "IsVariable": true
+                    },
+                    "Toe": {
+                        "x": 36.0,
+                        "y": 12.0,
+                        "z": 1712.0,
+                        "IsVariable": true
+                    }
+                },
+                "Controls": [
+                    {
+                        "TimeStep": 0,
+                        "Type": "Water",
+                        "State": "Open",
+                        "Mode": "Rate",
+                        "Rate": 1200.0,
+                        "IsVariable": false
+                    }
+                ]
+            },
+            {
+                "Name": "TESTW",
+                "Type": "Producer",
+                "DefinitionType": "WellSpline",
+                "PreferredPhase": "Oil",
+                "WellboreRadius": 0.75,
+                "SplinePoints": {
+                    "Heel": {
+                        "x": 100.0,
+                        "y": 100.0,
+                        "z": 1712.0,
+                        "IsVariable": true
+                    },
+                    "Toe": {
+                        "x": 500.0,
+                        "y": 500.0,
+                        "z": 1712.0,
+                        "IsVariable": true
+                    }
+                },
+                "Controls": [
+                    {
+                        "TimeStep": 0,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 100.0,
+                        "IsVariable": true
+                    }
+                ]
+            }
+        ]
+    }
+}

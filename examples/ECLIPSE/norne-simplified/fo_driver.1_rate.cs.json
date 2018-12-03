@@ -1,0 +1,63 @@
+{
+    "Global": {
+        "Name": "Norne-Injector-Rate-Optimization",
+        "BookkeeperTolerance": 5.0
+    },
+    "Optimizer": {
+        "Type": "Compass",
+        "Mode": "Maximize",
+        "Parameters": {
+            "MaxEvaluations": 10,
+            "InitialStepLength": 64.0,
+            "MinimumStepLength": 4.0
+        },
+        "Objective": {
+            "Type": "WeightedSum",
+            "WeightedSumComponents": [
+                {
+                    "Coefficient": 1.0, "Property": "CumulativeOilProduction", "TimeStep": -1,
+                    "IsWellProp": false
+                },
+                {
+                    "Coefficient": -0.2, "Property": "CumulativeWaterProduction", "TimeStep": -1,
+                    "IsWellProp": false
+                }
+            ]
+        },
+        "Constraints": [
+            {
+                "Wells": ["C-1H"],
+                "Type": "Rate",
+                "Min": 500,
+                "Max": 3000                
+            }
+        ]
+    },
+    "Simulator": {
+        "Type": "ECLIPSE",
+        "FluidModel": "BlackOil",
+        "DriverPath": "../examples/ECLIPSE/norne-simplified/NORNE_SIMPLIFIED.DATA",
+        "ExecutionScript": "bash_ecl",
+        "ScheduleFile": "INCLUDE/BC0407_HIST01122006.SCH"
+    },
+    "Model": {
+        "ControlTimes": [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300],
+        "Reservoir": {
+            "Type": "ECLIPSE"
+        },
+        "Import": {
+            "Keywords": ["AllWells"],
+            "InjectorDefaultRate": 2000,
+            "ProducerDefaultBHP": 260
+        },
+        "Wells": [
+            {
+                "Name": "C-1H",
+                "ControlOverrides": {
+                    "IsVariable": true,
+                    "VariableTimeSteps": [0, 300, 600]
+                }
+            }
+        ]
+    }
+}

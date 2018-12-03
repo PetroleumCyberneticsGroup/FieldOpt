@@ -1,0 +1,6 @@
+*.DEBUG
+*.RFT
+output/*
+*.param
+walltime.txt
+ECL.CFE

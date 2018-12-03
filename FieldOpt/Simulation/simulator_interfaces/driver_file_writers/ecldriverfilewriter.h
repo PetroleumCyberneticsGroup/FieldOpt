@@ -26,17 +26,15 @@
 #ifndef ECLDRIVERFILEWRITER_H
 #define ECLDRIVERFILEWRITER_H
 
-#include "Utilities/settings/settings.h"
-#include "Utilities/settings/simulator.h"
+#include "Settings/settings.h"
+#include "Settings/simulator.h"
 #include "Model/model.h"
 
-namespace Simulation { namespace SimulatorInterfaces {
+namespace Simulation {
     class ECLSimulator;
-}}
+}
 
 namespace Simulation {
-namespace SimulatorInterfaces {
-namespace DriverFileWriters {
 
 /*!
  * \brief The EclDriverFileWriter class writes driver files that can be executed
@@ -46,18 +44,14 @@ namespace DriverFileWriters {
 class EclDriverFileWriter
 {
 private:
-    friend class ::Simulation::SimulatorInterfaces::ECLSimulator;
-    EclDriverFileWriter(::Utilities::Settings::Settings *settings, Model::Model *model);
-    void WriteDriverFile();
+    friend class ::Simulation::ECLSimulator;
+    EclDriverFileWriter(::Settings::Settings *settings, Model::Model *model);
+    void WriteDriverFile(QString schedule_file_path);
 
     Model::Model *model_;
-    ::Utilities::Settings::Settings *settings_;
-    QStringList *original_driver_file_contents_; //!< The content of the original (input) driver file.
-    QString output_driver_file_name_; //!< Path to the driver file to be written.
+    ::Settings::Settings *settings_;
 };
 
-}
-}
 }
 
 

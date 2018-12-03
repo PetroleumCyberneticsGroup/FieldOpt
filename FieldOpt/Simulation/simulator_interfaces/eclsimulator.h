@@ -1,28 +1,21 @@
 /******************************************************************************
- *
- *
- *
- * Created: 16.10.2015 2015 by einar
- *
- * This file is part of the FieldOpt project.
- *
- * Copyright (C) 2015-2015 Einar J.M. Baumann <einar.baumann@ntnu.no>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
- *****************************************************************************/
+   Copyright (C) 2015-2017 Einar J.M. Baumann <einar.baumann@gmail.com>
 
+   This file is part of the FieldOpt project.
+
+   FieldOpt is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   FieldOpt is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
+******************************************************************************/
 #ifndef ECLSIMULATOR_H
 #define ECLSIMULATOR_H
 
@@ -32,7 +25,6 @@
 #include <QStringList>
 
 namespace Simulation {
-namespace SimulatorInterfaces {
 
 
 /*!
@@ -52,26 +44,32 @@ namespace SimulatorInterfaces {
  */
 class ECLSimulator : public Simulator
 {
-public:
-    ECLSimulator(Utilities::Settings::Settings *settings, Model::Model *model);
+ public:
+  ECLSimulator(Settings::Settings *settings, Model::Model *model);
 
-    /*!
-     * \brief Evaluate Executes the simulation of the current model. The evaluation is blocking.
-     */
-    void Evaluate();
+  /*!
+   * \brief Evaluate Executes the simulation of the current model. The evaluation is blocking.
+   */
+  void Evaluate() override;
+  bool Evaluate(int timeout, int threads=1) override;
+  bool Evaluate(const Settings::Ensemble::Realization &realization, int timeout, int threads=1) override;
 
-    /*!
-     * \brief CleanUp Deletes files created during the simulation.
-     * All files except the .DATA, .UNSMRY, .SMSPEC  and .LOG are deleted.
-     */
-    void CleanUp();
+  void WriteDriverFilesOnly() override;
+  /*!
+   * \brief CleanUp Deletes files created during the simulation.
+   * All files except the .DATA, .UNSMRY, .SMSPEC  and .LOG are deleted.
+   */
+  void CleanUp() override;
 
-private:
-    DriverFileWriters::EclDriverFileWriter *driver_file_writer_;
-    QString script_path_;
-    QStringList script_args_;
+ private:
+  QString deck_name_; //!< Driver file name without the final .DATA
+  Settings::Settings *settings_;
+  void copyDriverFiles();
+
+  // Simulator interface
+ protected:
+  void UpdateFilePaths() override;
 };
 
-}
 }
 #endif // ECLSIMULATOR_H

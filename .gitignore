@@ -10,6 +10,7 @@
 *.dll
 *.dylib
 
+
 # Qt-es
 
 /.qmake.cache
@@ -33,6 +34,8 @@ Makefile*
 
 # Build folders
 build-*
+FieldOpt/CMakeFiles/*
+*/CMakeFiles/*
 
 # Compiled doxygen documentation
 doxygen/*
@@ -43,6 +46,18 @@ libs/*
 
 # Manually compiled program
 build/*
+FieldOpt/build
+FieldOpt/ThirdParty/*
+FieldOpt/ThirdParty/Eigen3/*
+
+
+# Test folders
+test-*
+
+# Ignore ADGPRS output files
+*.SIM.H5
+*.res_partition.bin
+*.log.txt
 
 # Ignore ECLIPSE output files
 *.DBG
@@ -52,8 +67,17 @@ build/*
 *.INIT
 *.INSPEC
 *.MSG
+*.RSM
+*.LOG
+*.ECLRUN
+*.h5
 *.PRT
 *.RSSPEC
 *.SMSPEC
 *.UNRST
 *.UNSMRY
+*.xml
+*.eclrun_dbg
+FieldOpt/CMakeCache.txt
+FieldOpt/CMakeFiles/cmake.check_cache
+*.bin

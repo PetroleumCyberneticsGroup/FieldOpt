@@ -1,0 +1,165 @@
+{
+    "Global": {
+        "Name": "5spot-icd-hybrid-alternating",
+        "BookkeeperTolerance": 5.0
+    },
+    "Optimizer": {
+        "Type": "Hybrid",
+        "Mode": "Maximize",
+        "Parameters": {
+            "HybridSwitchMode": "OnConvergence",
+            "HybridTerminationCondition": "NoImprovement",
+            "HybridMaxIterations": 4
+        },
+        "HybridComponents": [
+            {
+                "Type": "GeneticAlgorithm",
+                "Parameters": {
+                    "MaxEvaluations": 2000,
+                    "PopulationSize": 20,
+                    "MaxGenerations": 4,
+                    "CrossoverProbability": 0.1,
+                    "DecayRate": 4.0,
+                    "MutationStrength": 0.25
+                }
+            },
+            {
+                "Type": "APPS",
+                "Parameters": {
+                    "MaxEvaluations": 120,
+                    "AutoStepLengths": true,
+                    "AutoStepInitScale": 0.25,
+                    "AutoStepConvScale": 0.05
+                }
+            }
+        ],
+        "Objective": {
+            "Type": "WeightedSum",
+            "WeightedSumComponents": [
+                {
+                    "Coefficient": 1.0, "Property": "CumulativeOilProduction", "TimeStep": -1,
+                    "IsWellProp": false
+                },
+                {
+                    "Coefficient": -0.2, "Property": "CumulativeWaterProduction", "TimeStep": -1,
+                    "IsWellProp": false
+                }
+            ]
+        },
+        "Constraints": [
+            {
+                "Type": "Rate",
+                "Wells": ["INJECTOR"],
+                "Min": 1000,
+                "Max": 6000
+            }
+        ]
+    },
+    "Simulator": {
+        "Type": "ECLIPSE",
+        "FluidModel": "DeadOil",        
+        "ExecutionScript": "bash_ecl",
+        "ScheduleFile": "include/ECL_5SPOT_SCH.INC" 
+    },
+    "Model": {
+        "ControlTimes": [0, 50, 100, 200, 300],
+        "Reservoir": {
+            "Type": "ECLIPSE"
+        },
+        "Wells": [
+            {
+                "Name": "PRODUCER",
+                "Group": "G1",
+                "Type": "Producer",
+                "DefinitionType": "WellSpline",
+                "PreferredPhase": "Oil",
+                "WellboreRadius": 0.1905,
+                "SplinePoints": {
+                    "Heel": {
+                        "x": 300.0,
+                        "y": 900.0,
+                        "z": 1712.0,
+                        "IsVariable": false
+                    },
+                    "Toe": {
+                        "x": 900.0,
+                        "y": 900.0,
+                        "z": 1712.0,
+                        "IsVariable": false
+                    }
+                },
+                "Controls": [
+                    {
+                        "TimeStep": 0,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 100.0,
+                        "IsVariable": false
+                    },
+                    {
+                        "TimeStep": 100,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 100.0,
+                        "IsVariable": false
+                    },
+                    {
+                        "TimeStep": 200,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 100.0,
+                        "IsVariable": false
+                    }
+                ]
+            },
+            {
+                "Name": "INJECTOR",
+                "Group": "G1",
+                "Type": "Injector",
+                "DefinitionType": "WellSpline",
+                "PreferredPhase": "Water",
+                "WellboreRadius": 0.1905,
+                "SplinePoints": {
+                    "Heel": {
+                        "x": 300.0,
+                        "y": 500.0,
+                        "z": 1712.0,
+                        "IsVariable": false
+                    },
+                    "Toe": {
+                        "x": 772.0,
+                        "y": 500.0,
+                        "z": 1712.0,
+                        "IsVariable": false
+                    }
+                },
+                "Controls": [
+                    {
+                        "TimeStep": 0,
+                        "Type": "Water",
+                        "State": "Open",
+                        "Mode": "Rate",
+                        "Rate": 5000.0,
+                        "IsVariable": true
+                    },
+                    {
+                        "TimeStep": 100,
+                        "Type": "Water",
+                        "State": "Open",
+                        "Mode": "Rate",
+                        "Rate": 5000.0,
+                        "IsVariable": true
+                    },
+                    {
+                        "TimeStep": 200,
+                        "Type": "Water",
+                        "State": "Open",
+                        "Mode": "Rate",
+                        "Rate": 5000.0,
+                        "IsVariable": true
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -1,9 +1,4 @@
 /******************************************************************************
- *
- * completion.cpp
- *
- * Created: 24.09.2015 2015 by einar
- *
  * This file is part of the FieldOpt project.
  *
  * Copyright (C) 2015-2015 Einar J.M. Baumann <einar.baumann@ntnu.no>
@@ -30,12 +25,27 @@ namespace Wells {
 namespace Wellbore {
 namespace Completions {
 
-Completion::Completion(Utilities::Settings::Model::Completion completion_settings)
+Completion::Completion(Settings::Model::Well::Completion completion_settings)
 {
-    id_ = completion_settings.id;
+    switch (completion_settings.type) {
+        case Settings::Model::WellCompletionType::Perforation:
+            type_ = CompletionType::Perforation; break;
+        case Settings::Model::WellCompletionType::ICV:
+            type_ = CompletionType::ICV; break;
+        case Settings::Model::WellCompletionType::Packer:
+            type_ = CompletionType::Packer; break;
+        case Settings::Model::WellCompletionType::Annulus:
+            type_ = CompletionType::Annulus; break;
+        case Settings::Model::WellCompletionType::Tubing:
+            type_ = CompletionType::Tubing; break;
+        default:
+            throw std::runtime_error("Completion type not recognized.");
+    }
+}
 
-    if (completion_settings.type == ::Utilities::Settings::Model::WellCompletionType::Perforation)
-        type_ = CompletionType::Perforation;
+Completion::Completion(Completion::CompletionType type )
+{
+    type_ = type;
 }
 
 
