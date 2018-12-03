@@ -1,3 +1,8 @@
+- [FieldOpt](#FieldOpt)
+- [License](#License)
+- [Setup](#Setup)
+- [Documentation](#Documentation)
+
 # FieldOpt
 Petroleum Field Development Optimization Framework.
 
@@ -37,3 +42,11 @@ along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 
 See the [compilation guide](COMPILING.md) for instructions on how
 to compile FieldOpt.
+
+## Documentation
+
+Some documentation can be found in markdown formatted readme files
+in the appropriate directories (modules). However, most of the
+documentation is in form of Doxydoc comments. To compile this,
+run `doxygen Doxyfile` in the root of this repository. This will
+generate a set of HTML files that can be opened in a browser.
