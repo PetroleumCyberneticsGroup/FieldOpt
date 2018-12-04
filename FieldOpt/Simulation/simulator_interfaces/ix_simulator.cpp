@@ -50,7 +50,7 @@ void IXSimulator::Evaluate() {
         script_args_
     );
     if (VERB_SIM >= 1) { Printer::info("Unmonitored simulation done. Reading results."); }
-    results_->ReadResults(QString::fromStdString(paths_.GetPath(Paths::SIM_WORK_DIR)) + "/SUMMARYVECS");
+    results_->ReadResults(QString::fromStdString(paths_.GetPath(Paths::SIM_WORK_DIR)) + "/SUMMARYVECS.SMSPEC");
     updateResultsInModel();
 }
 bool IXSimulator::Evaluate(int timeout, int threads) {
