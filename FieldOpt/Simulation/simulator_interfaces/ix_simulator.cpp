@@ -71,7 +71,7 @@ bool IXSimulator::Evaluate(int timeout, int threads) {
     if (success) {
         if (VERB_SIM >= 1) { Printer::info("Simulation successful. Reading results."); }
         results_->DumpResults();
-        results_->ReadResults(QString::fromStdString(paths_.GetPath(Paths::SIM_WORK_DIR)) + "/SUMMARYVECS");
+        results_->ReadResults(QString::fromStdString(paths_.GetPath(Paths::SIM_WORK_DIR)) + "/SUMMARYVECS.SMSPEC");
     }
     else {
         if (VERB_SIM >= 1) { Printer::info("Simulation failed."); }
