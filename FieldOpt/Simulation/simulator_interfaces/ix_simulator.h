@@ -38,8 +38,10 @@ class IXSimulator : public Simulator {
   void UpdateFilePaths() override;
  private:
   void copyDriverFiles();
+  void setResultPath();
 
   QString deck_name_;
+  QString result_path_;
 
 };
 

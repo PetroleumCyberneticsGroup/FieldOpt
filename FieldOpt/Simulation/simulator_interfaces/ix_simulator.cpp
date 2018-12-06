@@ -37,6 +37,7 @@ IXSimulator::IXSimulator(Settings::Settings *settings, Model::Model *model)
     }
     deck_name_ = driver_file_name_.split(".afi").first();
     results_ = new Results::ECLResults();
+    result_path_ = "";
 }
 void IXSimulator::Evaluate() {
     copyDriverFiles();
@@ -50,7 +51,7 @@ void IXSimulator::Evaluate() {
         script_args_
     );
     if (VERB_SIM >= 1) { Printer::info("Unmonitored simulation done. Reading results."); }
-    results_->ReadResults(QString::fromStdString(paths_.GetPath(Paths::SIM_WORK_DIR)) + "/SUMMARYVECS.SMSPEC");
+    results_->ReadResults(QString::fromStdString(paths_.GetPath(Paths::SIM_WORK_DIR)) + "/SECTOR_ICV_OPTIMIZATION_20181205_SUMMARYVECS.SMSPEC");
     updateResultsInModel();
 }
 bool IXSimulator::Evaluate(int timeout, int threads) {
@@ -69,9 +70,12 @@ bool IXSimulator::Evaluate(int timeout, int threads) {
         QString::fromStdString(paths_.GetPath(Paths::SIM_EXEC_SCRIPT_FILE)),
         script_args_, t);
     if (success) {
-        if (VERB_SIM >= 1) { Printer::info("Simulation successful. Reading results."); }
         results_->DumpResults();
-        results_->ReadResults(QString::fromStdString(paths_.GetPath(Paths::SIM_WORK_DIR)) + "/SUMMARYVECS.SMSPEC");
+        if (result_path_.size() == 0) {
+            setResultPath();
+        }
+        if (VERB_SIM >= 1) { Printer::info("Simulation successful. Reading results from " + result_path_.toStdString()); }
+        results_->ReadResults(result_path_);
     }
     else {
         if (VERB_SIM >= 1) { Printer::info("Simulation failed."); }
@@ -128,6 +132,21 @@ void IXSimulator::copyDriverFiles() {
         Printer::ext_info("Done copying directories. Set working directory to: " + workdir,
             "Simulation", "IXSimulator");
     }
+}
+void IXSimulator::setResultPath() {
+    QString result_dir = QString::fromStdString(paths_.GetPath(Paths::SIM_WORK_DIR));
+    QString result_name;
+    if (FileExists(result_dir + "/SUMMARYVECS.SMSPEC")) {
+        result_name = "/SUMMARYVECS.SMSPEC";
+    }
+    else if ( FileExists(result_dir + "/" + deck_name_ + "_SUMMARYVECS.SMSPEC")) {
+        result_name = "/" + deck_name_ + "_SUMMARYVECS.SMSPEC";
+    }
+    else {
+        Printer::error("Unable to find summary file. Aborting.");
+        exit(1);
+    }
+    result_path_ = result_dir + result_name;
 }
 
 }
