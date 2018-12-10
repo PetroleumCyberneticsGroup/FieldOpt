@@ -50,8 +50,12 @@ void IXSimulator::Evaluate() {
         QString::fromStdString(paths_.GetPath(Paths::SIM_EXEC_SCRIPT_FILE)),
         script_args_
     );
-    if (VERB_SIM >= 1) { Printer::info("Unmonitored simulation done. Reading results."); }
-    results_->ReadResults(QString::fromStdString(paths_.GetPath(Paths::SIM_WORK_DIR)) + "/SECTOR_ICV_OPTIMIZATION_20181205_SUMMARYVECS.SMSPEC");
+    results_->DumpResults();
+    if (result_path_.size() == 0) {
+        setResultPath();
+    }
+    if (VERB_SIM >= 1) { Printer::info("Unmonitored simulation done. Reading results from " + result_path_.toStdString()); }
+    results_->ReadResults(result_path_);
     updateResultsInModel();
 }
 bool IXSimulator::Evaluate(int timeout, int threads) {
@@ -136,10 +140,11 @@ void IXSimulator::copyDriverFiles() {
 void IXSimulator::setResultPath() {
     QString result_dir = QString::fromStdString(paths_.GetPath(Paths::SIM_WORK_DIR));
     QString result_name;
+    if (VERB_SIM >= 2) Printer::ext_info("Setting simulator result path.", "Simulation", "IXSimulator");
     if (FileExists(result_dir + "/SUMMARYVECS.SMSPEC")) {
         result_name = "/SUMMARYVECS.SMSPEC";
     }
-    else if ( FileExists(result_dir + "/" + deck_name_ + "_SUMMARYVECS.SMSPEC")) {
+    else if (FileExists(result_dir + "/" + deck_name_ + "_SUMMARYVECS.SMSPEC")) {
         result_name = "/" + deck_name_ + "_SUMMARYVECS.SMSPEC";
     }
     else {
@@ -147,6 +152,7 @@ void IXSimulator::setResultPath() {
         exit(1);
     }
     result_path_ = result_dir + result_name;
+    if (VERB_SIM >= 2) Printer::ext_info("Set simulator result path to " + result_path_.toStdString(), "Simulation", "IXSimulator");
 }
 
 }
