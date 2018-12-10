@@ -182,7 +182,6 @@ inline void error(const std::string &text) {
     std::stringstream ss;
     ss << FLRED;
     std::string content = text;
-    truncate_text(content, 59);
     pad_text(content, 59);
     ss << "╔═════════════════════════════════════════════════════════════════════╗" << "\n";
     ss << "║ ERROR: " << content <<                                                  " ║" << "\n";

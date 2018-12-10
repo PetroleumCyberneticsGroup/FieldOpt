@@ -158,7 +158,7 @@ void ECLSummaryReader::initializeTimeVector() {
     for (int i = 0; i < double_vector_size(time); ++i) {
         time_[i] = (double_vector_safe_iget(time, i));
     }
-    time_[0] = 0; // For some reason this is often not 0, but something > 1e8. Probably the time since epoch.
+    time_[0] = GetFirstReportStep();
     double_vector_free(time);
 }
 
@@ -318,8 +318,11 @@ void ECLSummaryReader::initializeFieldCumulatives() {
 
     fopt_ = std::vector<double>(time_.size(), 0.0);
     if (hasFieldVar("FOPT")) {
+        int fopt_index = ecl_smspec_get_field_var_params_index(smspec, "FOPT");
+        double_vector_type * fopt = ecl_sum_alloc_data_vector(ecl_sum_, fopt_index, true);
+        assert(double_vector_size(fopt) == time_.size());
         for (int i = 0; i < time_.size(); ++i) {
-            fopt_[i] = ecl_sum_get_field_var_from_sim_days(ecl_sum_, time_[i], "FOPT");
+            fopt_[i] = double_vector_safe_iget(fopt, i);
         }
         fopt_[0] = 0.0;
     }
@@ -334,8 +337,11 @@ void ECLSummaryReader::initializeFieldCumulatives() {
 
     fwpt_ = std::vector<double>(time_.size(), 0.0);
     if (hasFieldVar("FWPT")) {
+        int fwpt_index = ecl_smspec_get_field_var_params_index(smspec, "FWPT");
+        double_vector_type * fwpt = ecl_sum_alloc_data_vector(ecl_sum_, fwpt_index, true);
+        assert(double_vector_size(fwpt) == time_.size());
         for (int i = 0; i < time_.size(); ++i) {
-            fwpt_[i] = ecl_sum_get_field_var_from_sim_days(ecl_sum_, time_[i], "FWPT");
+            fwpt_[i] = double_vector_safe_iget(fwpt, i);
         }
         fwpt_[0] = 0.0;
     }
@@ -350,8 +356,11 @@ void ECLSummaryReader::initializeFieldCumulatives() {
 
     fgpt_ = std::vector<double>(time_.size(), 0.0);
     if (hasFieldVar("FGPT")) {
+        int fgpt_index = ecl_smspec_get_field_var_params_index(smspec, "FGPT");
+        double_vector_type * fgpt = ecl_sum_alloc_data_vector(ecl_sum_, fgpt_index, true);
+        assert(double_vector_size(fgpt) == time_.size());
         for (int i = 0; i < time_.size(); ++i) {
-            fgpt_[i] = ecl_sum_get_field_var_from_sim_days(ecl_sum_, time_[i], "FGPT");
+            fgpt_[i] = double_vector_safe_iget(fgpt, i);
         }
         fgpt_[0] = 0.0;
     }
@@ -366,8 +375,11 @@ void ECLSummaryReader::initializeFieldCumulatives() {
 
     fwit_ = std::vector<double>(time_.size(), 0.0);
     if (hasFieldVar("FWIT")) {
+        int fwit_index = ecl_smspec_get_field_var_params_index(smspec, "FWIT");
+        double_vector_type * fwit = ecl_sum_alloc_data_vector(ecl_sum_, fwit_index, true);
+        assert(double_vector_size(fwit) == time_.size());
         for (int i = 0; i < time_.size(); ++i) {
-            fwit_[i] = ecl_sum_get_field_var_from_sim_days(ecl_sum_, time_[i], "FWIT");
+            fwit_[i] = double_vector_safe_iget(fwit, i);
         }
         fwit_[0] = 0.0;
     }
@@ -382,8 +394,11 @@ void ECLSummaryReader::initializeFieldCumulatives() {
 
     fgit_ = std::vector<double>(time_.size(), 0.0);
     if (hasFieldVar("FGIT")) {
+        int fgit_index = ecl_smspec_get_field_var_params_index(smspec, "FGIT");
+        double_vector_type * fgit = ecl_sum_alloc_data_vector(ecl_sum_, fgit_index, true);
+        assert(double_vector_size(fgit) == time_.size());
         for (int i = 0; i < time_.size(); ++i) {
-            fgit_[i] = ecl_sum_get_field_var_from_sim_days(ecl_sum_, time_[i], "FGIT");
+            fgit_[i] = double_vector_safe_iget(fgit, i);
         }
         fgit_[0] = 0.0;
     }

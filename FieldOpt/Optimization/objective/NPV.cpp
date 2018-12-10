@@ -74,6 +74,13 @@ double NPV::value() const {
       double discount_factor;
       int j = 1;
       for (int i = 0; i < report_times.size(); i++) {
+        if (i < report_times.size() - 1 &&  (report_times[i+1] - report_times[i]) > 365) {
+            std::stringstream ss;
+            ss << "Skipping assumed pre-simulation time step " << report_times[i]
+               << ". Next time step: " << report_times[i+1] << ". Ignore if this is time 0 in a restart case.";
+            Printer::ext_warn(ss.str(), "Optimization", "NPV");
+            continue;
+        }
         if (std::fmod(report_times.at(i), 365) == 0) {
           discount_factor = 1 / (1 * (pow(1 + components_->at(k)->discount, j - 1)));
           discount_factor_list->append(discount_factor);
