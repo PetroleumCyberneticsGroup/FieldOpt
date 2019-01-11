@@ -40,7 +40,7 @@ class Optimizer
  public:
   Optimizer(){}
   Optimizer(QJsonObject json_optimizer);
-  enum OptimizerType { Compass, APPS, ExhaustiveSearch2DVert, GeneticAlgorithm, EGO, PSO, Hybrid };
+  enum OptimizerType { Compass, APPS, ExhaustiveSearch2DVert, GeneticAlgorithm, EGO, PSO, VFSA, Hybrid };
   enum OptimizerMode { Maximize, Minimize };
   enum ConstraintType { BHP, Rate, SplinePoints,
     WellSplineLength, WellSplineInterwellDistance, WellSplineDomain,
@@ -90,6 +90,13 @@ class Optimizer
     std::string ego_init_sampling_method = "Random"; //!< Sampling method to be used for initial guesses (Random or Uniform)
     std::string ego_kernel = "CovMatern5iso";        //!< Which kernel function to use for the gaussian process model.
     std::string ego_af = "ExpectedImprovement";      //!< Which acquisiton function to use.
+
+    // VFSA Parameters
+    int vfsa_evals_pr_iteration = 1; //!< Number of evaluations to be performed pr. iteration (temperature). Default: 1.
+    int vfsa_max_iterations = 50;    //!< Maximum number of iterations to be performed. Default: 50.
+    bool vfsa_parallel = false;      //!< Run generate evals_pr_iteration cases immedeately in each generation? Default: false.
+    double vfsa_init_temp = 1.0;     //!< Initial temperature (same used for all dimensions). Default: 1.0.
+    double vfsa_temp_scale = 1.0;    //!< Constant used in scaling temperature. Default: 1.0.
 
     // Hybrid parameters
     /*!
