@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 project(wellindexcalculator)
 
+include(Sources.cmake)
+
 # Dbg ==================================================================
 message("\n============================================================")
 message(STATUS "PROJECT_NAME => ${PROJECT_NAME}")
@@ -38,14 +40,8 @@ if (NOT BUILD_WIC_ADGPRS)
 # controls ricasedata delete
 add_definitions(-DFIELDOPT_BUILD)
 
-add_library(${WIC_LIB_TARGET}
-    intersected_cell.cpp
-#    wellindexcalculator.cpp
-    #
-    wicalc_rixx.cpp
-    ${RIXX_ALL_CPP_FILES}
-    #
-        WellDefinition.h)
+add_library(${WIC_LIB_TARGET} ${WELLINDEXCALCULATION_HEADERS} ${WELLINDEXCALCULATION_SOURCES}
+    ${RIXX_ALL_CPP_FILES})
 
 add_library(fieldopt::${WIC_LIB_TARGET}
     ALIAS ${PROJECT_NAME})
@@ -81,15 +77,10 @@ endif()
 if (BUILD_TESTING AND NOT BUILD_WIC_ADGPRS AND NOT USE_SANITIZING)
 
   # Unit tests
-#  find_package(GTest REQUIRED)
-
   include_directories(${GTEST_INCLUDE_DIRS}
       ${EIGEN3_INCLUDE_DIR} tests)
 
-  add_executable(test_wellindexcalculator
-      tests/test_intersected_cells.cpp
-      tests/test_single_cell_wellindex.cpp)
-
+  add_executable(test_wellindexcalculator ${WELLINDEXCALCULATION_TESTS})
   target_link_libraries(test_wellindexcalculator
       ${WIC_LIB_TARGET}
       ${GTEST_BOTH_LIBRARIES}

@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 2.8)
 project(constraintmath)
 
+include(Sources.cmake)
+
 include_directories(${CMAKE_BINARY_DIR}/libraries/include/)
 
-add_library(constraintmath STATIC
-        well_constraint_projections/well_constraint_projections.cpp
-        )
+add_library(constraintmath STATIC ${CONSTRAINTMATH_HEADERS} ${CONSTRAINTMATH_SOURCES})
 add_library(fieldopt::constraintmath ALIAS ${PROJECT_NAME})
 
 include_directories(${EIGEN3_INCLUDE_DIR})
@@ -23,10 +23,7 @@ add_compile_options(-std=c++11)
 if (BUILD_TESTING)
     # Unit tests
     include_directories(${EIGEN3_INCLUDE_DIR})
-    add_executable(test_constraintmath
-            tests/well_constraint_projections_tests.cpp
-            tests/test_domain_boundary.cpp
-            )
+	add_executable(test_constraintmath ${CONSTRAINTMATH_TESTS})
     target_link_libraries(test_constraintmath
             fieldopt::constraintmath
             ${gtest}

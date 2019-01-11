@@ -1,12 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 project(reservoir)
 
-add_library(reservoir STATIC
-        grid/cell.cpp
-        grid/grid.cpp
-        grid/ijkcoordinate.cpp
-        grid/eclgrid.cpp)
+include(Sources.cmake)
 
+add_library(reservoir STATIC ${RESERVOIR_HEADERS} ${RESERVOIR_SOURCES})
 add_library(fieldopt::reservoir ALIAS ${PROJECT_NAME})
 
 include_directories(${EIGEN3_INCLUDE_DIR})
@@ -28,12 +25,7 @@ endif()
 if (BUILD_TESTING)
     # Unit tests
     include_directories(${GTEST_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR} tests)
-    add_executable(test_reservoir
-        tests/test_resource_grids.h
-        tests/grid/test_cell.cpp
-        tests/grid/test_grid.cpp
-        tests/grid/test_ijkcoordinate.cpp
-        )
+	add_executable(test_reservoir ${RESERVOIR_TESTS})
 target_link_libraries(test_reservoir
         fieldopt::reservoir
         fieldopt::ertwrapper
