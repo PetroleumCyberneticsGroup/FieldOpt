@@ -43,6 +43,8 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
       settings_ga_max_ = new Settings::Optimizer(get_json_settings_ga_maximize_);
       settings_ego_max_ = new Settings::Optimizer(get_json_settings_ego_maximize_);
       settings_pso_min_ = new Settings::Optimizer(get_json_settings_pso_minimize_);
+      settings_vfsa_min_ = new Settings::Optimizer(get_json_settings_vfsa_minimize_);
+      settings_vfsa_max_ = new Settings::Optimizer(get_json_settings_vfsa_maximize_);
   }
 
   Optimization::Case *base_case_;
@@ -52,6 +54,8 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
   Settings::Optimizer *settings_apps_max_unconstr_;
   Settings::Optimizer *settings_ga_min_;
   Settings::Optimizer *settings_ga_max_;
+  Settings::Optimizer *settings_vfsa_min_;
+  Settings::Optimizer *settings_vfsa_max_;
   Settings::Optimizer *settings_pso_min_;
   Settings::Optimizer *settings_ego_max_;
 
@@ -146,6 +150,41 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
           {"LowerBound",            -10.0},
           {"UpperBound",            10.0},
           {"RNGSeed", 5}
+
+      }},
+      {"Objective", obj_fun_}
+  };
+
+  QJsonObject get_json_settings_vfsa_minimize_ {
+      {"Type", "VFSA"},
+      {"Mode", "Minimize"},
+      {"Parameters", QJsonObject{
+          {"VFSA-MaxIterations",    1000},
+          {"VFSA-EvalsPrIteration",   10},
+          {"VFSA-Parallel",       false},
+          {"VFSA-InitTemp",        1E-7},
+          {"VFSA-TempScale",        1.0},
+          {"LowerBoundReal",       -5.0},
+          {"UpperBoundReal",        5.0},
+          {"RNGSeed",                 5}
+
+      }},
+      {"Objective", obj_fun_}
+  };
+
+
+  QJsonObject get_json_settings_vfsa_maximize_ {
+      {"Type", "VFSA"},
+      {"Mode", "Maximize"},
+      {"Parameters", QJsonObject{
+          {"VFSA-MaxIterations",        6000},
+          {"VFSA-EvalsPrIteration",       10},
+          {"VFSA-Parallel",            true},
+          {"VFSA-InitTemp",             1E-6},
+          {"VFSA-TempScale",             1.0},
+          {"LowerBoundReal",            -5.0},
+          {"UpperBoundReal",             5.0},
+          {"RNGSeed",                      5}
 
       }},
       {"Objective", obj_fun_}

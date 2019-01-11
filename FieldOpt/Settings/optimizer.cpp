@@ -17,7 +17,7 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
-#include <Utilities/printer.hpp>
+#include "Utilities/printer.hpp"
 #include "optimizer.h"
 #include "settings_exceptions.h"
 
@@ -355,6 +355,23 @@ Optimizer::Parameters Optimizer::parseParameters(QJsonObject &json_parameters) {
             }
         }
 
+        // VFSA Parameters
+        if (json_parameters.contains("VFSA-EvalsPrIteration")) {
+            params.vfsa_evals_pr_iteration = json_parameters["VFSA-EvalsPrIteration"].toInt();
+        }
+        if (json_parameters.contains("VFSA-MaxIterations")) {
+            params.vfsa_max_iterations = json_parameters["VFSA-MaxIterations"].toInt();
+        }
+        if (json_parameters.contains("VFSA-Parallel")) {
+            params.vfsa_parallel = json_parameters["VFSA-Parallel"].toBool();
+        }
+        if (json_parameters.contains("VFSA-InitTemp")) {
+            params.vfsa_init_temp = json_parameters["VFSA-InitTemp"].toDouble();
+        }
+        if (json_parameters.contains("VFSA-TempScale")) {
+            params.vfsa_temp_scale = json_parameters["VFSA-InitTemp"].toDouble();
+        }
+
         // Hybrid parameters
         if (json_parameters.contains("HybridSwitchMode")) {
             if (json_parameters["HybridSwitchMode"].toString() == "OnConvergence") {
@@ -529,7 +546,9 @@ Optimizer::OptimizerType Optimizer::parseType(QString &type) {
     else if (QString::compare(type, "ExhaustiveSearch2DVert") == 0)
         opt_type = OptimizerType::ExhaustiveSearch2DVert;
     else if (QString::compare(type, "PSO") == 0)
-      opt_type = OptimizerType::PSO;
+        opt_type = OptimizerType::PSO;
+    else if (QString::compare(type, "VFSA") == 0)
+        opt_type = OptimizerType::VFSA;
     else if (QString::compare(type, "Hybrid") == 0)
         opt_type = OptimizerType::Hybrid;
     else throw OptimizerTypeNotRecognizedException("The optimizer type " + type.toStdString() + " was not recognized.");
