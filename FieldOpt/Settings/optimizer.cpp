@@ -372,6 +372,30 @@ Optimizer::Parameters Optimizer::parseParameters(QJsonObject &json_parameters) {
             params.vfsa_temp_scale = json_parameters["VFSA-InitTemp"].toDouble();
         }
 
+        // SPSA Parameters
+        if (json_parameters.contains("SPSA-MaxIterations")) {
+          params.spsa_max_iterations = json_parameters["SPSA-MaxIterations"].toInt();
+        }
+        if (json_parameters.contains("SPSA-gamma")) {
+          params.spsa_gamma = json_parameters["SPSA-gamma"].toDouble();
+        }
+        if (json_parameters.contains("SPSA-alpha")) {
+          params.spsa_alpha = json_parameters["SPSA-alpha"].toDouble();
+        }
+        if (json_parameters.contains("SPSA-c")) {
+          params.spsa_c = json_parameters["SPSA-c"].toDouble();
+        }
+        if (json_parameters.contains("SPSA-A")) {
+          params.spsa_A = json_parameters["SPSA-A"].toDouble();
+        } else params.spsa_A = 0.1 * params.spsa_max_iterations;
+        if (json_parameters.contains("SPSA_a")) {
+          params.spsa_a = json_parameters["SPSA_a"].toDouble();
+        }
+        if (json_parameters.contains("SPSA-InitStepMagnitude")) {
+          params.spsa_init_step_magnitude = json_parameters["SPSA-InitStepMagnitude"].toDouble();
+        }
+
+
         // Hybrid parameters
         if (json_parameters.contains("HybridSwitchMode")) {
             if (json_parameters["HybridSwitchMode"].toString() == "OnConvergence") {
@@ -549,6 +573,8 @@ Optimizer::OptimizerType Optimizer::parseType(QString &type) {
         opt_type = OptimizerType::PSO;
     else if (QString::compare(type, "VFSA") == 0)
         opt_type = OptimizerType::VFSA;
+    else if (QString::compare(type, "SPSA") == 0)
+        opt_type = OptimizerType::SPSA;
     else if (QString::compare(type, "Hybrid") == 0)
         opt_type = OptimizerType::Hybrid;
     else throw OptimizerTypeNotRecognizedException("The optimizer type " + type.toStdString() + " was not recognized.");

@@ -121,6 +121,15 @@ TEST_F(MathTest, RandomFloats) {
     }
 }
 
+TEST_F(MathTest, SymmetricBernoulli) {
+	auto gen = get_random_generator(1);
+	auto numbers = random_symmetric_bernoulli(gen, 15);
+	EXPECT_EQ(15, numbers.size());
+	for (int number : numbers) {
+		EXPECT_TRUE(number == 1 || number == -1);
+	}
+}
+
 TEST_F(MathTest, SeededRandoms) {
     auto gen11 = get_random_generator(1);
     auto gen12 = get_random_generator(2);
