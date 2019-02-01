@@ -21,8 +21,9 @@
 #define FIELDOPT_ENSEMBLE_H
 
 #include <map>
-#include "string"
 #include <vector>
+#include "string"
+
 
 namespace Settings {
 
