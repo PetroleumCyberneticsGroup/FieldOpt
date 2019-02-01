@@ -24,7 +24,6 @@
 #include <vector>
 #include "string"
 
-
 namespace Settings {
 
 /*!
