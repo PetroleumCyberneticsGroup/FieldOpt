@@ -1,11 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
 project(ertwrapper)
 
+include(Sources.cmake)
 
-add_library(ertwrapper STATIC
-        ertwrapper_exceptions.h
-        eclgridreader.cpp
-        eclsummaryreader.cpp)
+
+add_library(ertwrapper STATIC ${ERTWRAPPER_HEADERS} ${ERTWRAPPER_SOURCES})
 add_library(fieldopt::ertwrapper ALIAS ${PROJECT_NAME})
 
 include_directories(
@@ -31,10 +30,7 @@ endif()
 
 # Unit tests
 if (BUILD_TESTING)
-    add_executable(test_ertwrapper
-            tests/test_eclgridreader.cpp
-            tests/test_eclsummaryreader.cpp
-            )
+	add_executable(test_ertwrapper ${ERTWRAPPER_TESTS})
     target_link_libraries(test_ertwrapper
             fieldopt::ertwrapper
             ${gtest}

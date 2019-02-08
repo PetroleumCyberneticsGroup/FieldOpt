@@ -45,6 +45,8 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
       settings_pso_min_ = new Settings::Optimizer(get_json_settings_pso_minimize_);
       settings_vfsa_min_ = new Settings::Optimizer(get_json_settings_vfsa_minimize_);
       settings_vfsa_max_ = new Settings::Optimizer(get_json_settings_vfsa_maximize_);
+      settings_spsa_min_ = new Settings::Optimizer(get_json_settings_spsa_minimize_);
+      settings_spsa_max_ = new Settings::Optimizer(get_json_settings_spsa_maximize_);
   }
 
   Optimization::Case *base_case_;
@@ -56,6 +58,8 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
   Settings::Optimizer *settings_ga_max_;
   Settings::Optimizer *settings_vfsa_min_;
   Settings::Optimizer *settings_vfsa_max_;
+  Settings::Optimizer *settings_spsa_min_;
+  Settings::Optimizer *settings_spsa_max_;
   Settings::Optimizer *settings_pso_min_;
   Settings::Optimizer *settings_ego_max_;
 
@@ -186,6 +190,39 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
           {"UpperBoundReal",             5.0},
           {"RNGSeed",                      5}
 
+      }},
+      {"Objective", obj_fun_}
+  };
+
+
+  QJsonObject get_json_settings_spsa_minimize_ {
+      {"Type", "SPSA"},
+      {"Mode", "Minimize"},
+      {"Parameters", QJsonObject{
+          {"SPSA-MaxIterations",         400},
+          //{"SPSA-alpha",                  0.602},
+          //{"SPSA-gamma",                  0.101},
+          {"SPSA-c",                    0.05},
+          //{"SPSA-A",                     10},
+          //{"SPSA_a",                      1.0},
+          {"SPSA-InitStepMagnitude",     0.1},
+          {"RNGSeed",                      5}
+      }},
+      {"Objective", obj_fun_}
+  };
+
+  QJsonObject get_json_settings_spsa_maximize_ {
+      {"Type", "SPSA"},
+      {"Mode", "Maximize"},
+      {"Parameters", QJsonObject{
+          {"SPSA-MaxIterations",         400},
+          //{"SPSA-alpha",                  0.602},
+          //{"SPSA-gamma",                  0.101},
+          {"SPSA-c",                    0.05},
+          //{"SPSA-A",                     10},
+          //{"SPSA_a",                      1.0},
+          {"SPSA-InitStepMagnitude",     0.1},
+          {"RNGSeed",                      5}
       }},
       {"Objective", obj_fun_}
   };

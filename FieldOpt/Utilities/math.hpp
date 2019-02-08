@@ -22,7 +22,6 @@
 #ifndef MATH_FUNCTIONS_H
 #define MATH_FUNCTIONS_H
 
-#include <QList>
 #include <vector>
 #include <boost/random.hpp>
 #include <boost/random/random_device.hpp>
@@ -194,6 +193,37 @@ inline std::vector<float> random_floats(boost::random::mt19937 &gen,
         rands[i] = rng();
     }
     return rands;
+}
+
+/*!
+ * @brief Generate an n-element vector where each element is +1 or -1 with equivalent
+ * probability (i.e. a symmetric Bernoulli distribution).
+ * @param gen Random number generator.
+ * @param n Number of elements to generate.
+ */
+inline std::vector<int> random_symmetric_bernoulli(boost::random::mt19937 &gen, const int n) {
+	std::vector<int> numbers(n);
+	boost::bernoulli_distribution<> dist;
+	boost::variate_generator<boost::mt19937&, boost::bernoulli_distribution<> > rng(gen, dist);
+	for (int i = 0; i < n; i++) {
+		auto rn = rng();
+		numbers[i] = 2 * rn - 1;
+	}
+	return numbers;
+}
+
+/*!
+ * @brief Calls random_symmetric_bernoulli to generate a vector and converts it to an Eigen vector.
+ * @param gen Random number generator.
+ * @param n Number of elements to generate.
+ */
+inline Eigen::VectorXd random_symmetric_bernoulli_eigen(boost::random::mt19937 &gen, const int n) {
+	auto numbers = random_symmetric_bernoulli(gen, n);
+	auto numbers_eigen = Eigen::VectorXd(n);
+	for (int i = 0; i < n; i++) {
+		numbers_eigen[i] = numbers[i];
+	}
+	return numbers_eigen;
 }
 
 /*!

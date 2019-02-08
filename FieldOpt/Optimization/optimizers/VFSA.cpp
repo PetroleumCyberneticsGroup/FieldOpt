@@ -33,14 +33,6 @@ VFSA::VFSA(Settings::Optimizer *settings,
            Optimization::Constraints::ConstraintHandler *constraint_handler)
     : Optimizer(settings, base_case, variables, grid, logger, case_handler, constraint_handler)
 {
-    /*
-     * TODO: Settings parameters
-     * - evals_pr_iteration
-     * - initial_temperature
-     * - max_iterations
-     * - parallel
-     */
-
     D_ = base_case->GetRealVarIdVector().size();
     T_.resize(D_);
     c_.resize(D_);
@@ -102,7 +94,7 @@ void VFSA::iterate() {
         if (VERB_OPT >= 3) Printer::ext_info("Starting iteration " + Printer::num2str(iteration_), "Optimization", "VFSA");
         evals_in_iteration_ = 0;
     }
-    if (parallel_ = false) { // Serial mode
+    if (parallel_ == false) { // Serial mode
         case_handler_->AddNewCase(createPerturbation());
         return;
     }

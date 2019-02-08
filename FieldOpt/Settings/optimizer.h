@@ -40,7 +40,7 @@ class Optimizer
  public:
   Optimizer(){}
   Optimizer(QJsonObject json_optimizer);
-  enum OptimizerType { Compass, APPS, ExhaustiveSearch2DVert, GeneticAlgorithm, EGO, PSO, VFSA, Hybrid };
+  enum OptimizerType { Compass, APPS, ExhaustiveSearch2DVert, GeneticAlgorithm, EGO, PSO, VFSA, SPSA, Hybrid };
   enum OptimizerMode { Maximize, Minimize };
   enum ConstraintType { BHP, Rate, SplinePoints,
     WellSplineLength, WellSplineInterwellDistance, WellSplineDomain,
@@ -97,6 +97,15 @@ class Optimizer
     bool vfsa_parallel = false;      //!< Run generate evals_pr_iteration cases immedeately in each generation? Default: false.
     double vfsa_init_temp = 1.0;     //!< Initial temperature (same used for all dimensions). Default: 1.0.
     double vfsa_temp_scale = 1.0;    //!< Constant used in scaling temperature. Default: 1.0.
+
+    // SPSA Parameters
+    int spsa_max_iterations = 50; //!< Maximum number of iterations to be performed. Default: 50.
+    double spsa_alpha = 0.602;    //!< Affects step length. Recommended 0.602 <= alpha <= 1.0. Default: 0.602.
+    double spsa_gamma = 0.101;    //!< Affects step length. Recommended 0.101 <= gamma <= 1/6. Default: 0.101.
+    double spsa_c = 1.0;          //!< Used to account for noise. Default: 1.0.
+    double spsa_A = 5;            //!< Affects step length in early iterations. Default: 10% of max iterations.
+    double spsa_a = 0.0;          //!< Affects step lengths. Default and recommended: automatically compute from spsa_init_step_magnitude.
+    double spsa_init_step_magnitude = 0.0; //!< Smallest desired step magnitude in early iterations.
 
     // Hybrid parameters
     /*!
