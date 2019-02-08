@@ -28,6 +28,7 @@
 #include <Optimization/optimizers/bayesian_optimization/EGO.h>
 #include "Optimization/optimizers/PSO.h"
 #include "Optimization/optimizers/VFSA.h"
+#include "Optimization/optimizers/SPSA.h"
 #include "Simulation/simulator_interfaces/ix_simulator.h"
 #include "abstract_runner.h"
 #include "Optimization/optimizers/compass_search.h"
@@ -254,6 +255,16 @@ void AbstractRunner::InitializeOptimizer()
         case Settings::Optimizer::OptimizerType::VFSA:
             if (VERB_RUN >= 1) Printer::ext_info("Using VFSA optimization algorithm.", "Runner", "AbstractRunner");
             optimizer_ = new Optimization::Optimizers::VFSA(settings_->optimizer(),
+                                                           base_case_,
+                                                           model_->variables(),
+                                                           model_->grid(),
+                                                           logger_
+            );
+            optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
+            break;
+        case Settings::Optimizer::OptimizerType::SPSA:
+            if (VERB_RUN >= 1) Printer::ext_info("Using SPSA optimization algorithm.", "Runner", "AbstractRunner");
+            optimizer_ = new Optimization::Optimizers::SPSA(settings_->optimizer(),
                                                            base_case_,
                                                            model_->variables(),
                                                            model_->grid(),

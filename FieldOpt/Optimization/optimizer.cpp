@@ -40,6 +40,7 @@ Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
 
     max_evaluations_ = settings->parameters().max_evaluations;
     tentative_best_case_ = base_case;
+    tentative_best_case_iteration_ = 0;
     if (case_handler == 0) {
         case_handler_ = new CaseHandler(tentative_best_case_);
     }

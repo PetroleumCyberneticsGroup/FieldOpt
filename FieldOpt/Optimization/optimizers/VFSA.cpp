@@ -33,14 +33,6 @@ VFSA::VFSA(Settings::Optimizer *settings,
            Optimization::Constraints::ConstraintHandler *constraint_handler)
     : Optimizer(settings, base_case, variables, grid, logger, case_handler, constraint_handler)
 {
-    /*
-     * TODO: Settings parameters
-     * - evals_pr_iteration
-     * - initial_temperature
-     * - max_iterations
-     * - parallel
-     */
-
     D_ = base_case->GetRealVarIdVector().size();
     T_.resize(D_);
     c_.resize(D_);
