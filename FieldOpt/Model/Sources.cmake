@@ -74,6 +74,7 @@ SET(MODEL_TESTS
 	tests/wells/test_trajectory_curve.cpp
 	tests/wells/test_well.cpp
 	tests/wells/test_wellblock.cpp
+	tests/wells/test_polar_spline.cpp
 )
 
 

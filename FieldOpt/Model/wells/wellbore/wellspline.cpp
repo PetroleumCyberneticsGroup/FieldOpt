@@ -94,6 +94,10 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
     last_computed_grid_ = "";
     last_computed_spline_ = std::vector<Eigen::Vector3d>();
 }
+WellSpline::WellSpline() {
+    last_computed_grid_ = "";
+    last_computed_spline_ = std::vector<Eigen::Vector3d>();
+}
 void WellSpline::spline_points_from_import(Settings::Model::Well &well_settings) {
     QString name_base = "SplinePoint#" + well_settings.name + "#";
     well_settings_.spline_points = QList<Settings::Model::Well::SplinePoint> ();

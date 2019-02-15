@@ -45,6 +45,7 @@ class WellSpline
              Reservoir::Grid::Grid *grid,
              Reservoir::WellIndexCalculation::wicalc_rixx *wic
   );
+  WellSpline();
 
   /*!
    * \brief GetWellBlocks Get the set of well blocks with proper WI's defined by the spline.
