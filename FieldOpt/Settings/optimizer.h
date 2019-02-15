@@ -47,7 +47,7 @@ class Optimizer
     CombinedWellSplineLengthInterwellDistance,
     CombinedWellSplineLengthInterwellDistanceReservoirBoundary,
     ReservoirBoundary, PseudoContBoundary2D,
-    PackerConstraint, ICVConstraint
+    PackerConstraint, ICVConstraint, PolarWellLength
   };
   enum ConstraintWellSplinePointsType { MaxMin, Function};
   enum ObjectiveType { WeightedSum, NPV};

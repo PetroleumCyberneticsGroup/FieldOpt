@@ -15,6 +15,7 @@ SET(OPTIMIZATION_HEADERS
 	constraints/reservoir_boundary.h
 	constraints/well_spline_constraint.h
 	constraints/well_spline_length.h
+	constraints/polar_well_length.h
 	hybrid_optimizer.h
 	normalizer.h
 	objective/NPV.h
@@ -56,6 +57,7 @@ SET(OPTIMIZATION_SOURCES
 	constraints/reservoir_boundary.cpp
 	constraints/well_spline_constraint.cpp
 	constraints/well_spline_length.cpp
+	constraints/polar_well_length.cpp
 	hybrid_optimizer.cpp
 	normalizer.cpp
 	objective/NPV.cpp

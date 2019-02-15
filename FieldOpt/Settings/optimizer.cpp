@@ -155,8 +155,12 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
         }
         else throw UnableToParseOptimizerConstraintsSectionException("Well spline constraint type not recognized.");
     }
-    else if (QString::compare(constraint_type, "WellSplineLength") == 0) {
-        optimizer_constraint.type = ConstraintType::WellSplineLength;
+    else if (QString::compare(constraint_type, "WellSplineLength") == 0 || QString::compare(constraint_type, "PolarWellLength") == 0 ) {
+        if (constraint_type == "WellSplineLength"){
+            optimizer_constraint.type = ConstraintType::WellSplineLength;
+        } else {
+            optimizer_constraint.type = ConstraintType::PolarWellLength;
+        }
         if (json_constraint.contains("Min")) {
             optimizer_constraint.min = json_constraint["Min"].toDouble();
             optimizer_constraint.min_length = json_constraint["Min"].toDouble();
