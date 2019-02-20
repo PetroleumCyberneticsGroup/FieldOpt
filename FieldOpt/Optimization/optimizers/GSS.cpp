@@ -1,6 +1,8 @@
 /******************************************************************************
    Created by einar on 11/3/16.
-   Copyright (C) 2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+   Copyright (C) 2019 Einar J.M. Baumann <einar.baumann@gmail.com>
+
+   Modified by Einar J. M. Baumann <einar.baumann@gmail.com> 02/19/19.
 
    This file is part of the FieldOpt project.
 
@@ -158,8 +160,8 @@ namespace Optimization {
             return true;
         }
 
-        void GSS::set_step_lengths(double len) {
-            step_lengths_.fill(len);
+        void GSS::set_step_lengths(int dir_idx, double len) {
+            step_lengths_[dir_idx] = len;
         }
 
         Case * GSS::dequeue_case_with_worst_origin() {

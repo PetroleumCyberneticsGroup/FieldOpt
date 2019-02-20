@@ -1,6 +1,8 @@
 /******************************************************************************
    Created by einar on 11/21/16.
-   Copyright (C) 2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+   Copyright (C) 2019 Einar J.M. Baumann <einar.baumann@gmail.com>
+
+   Modified by Einar J. M. Baumann <einar.baumann@gmail.com> 02/19/19.
 
    This file is part of the FieldOpt project.
 
@@ -65,7 +67,7 @@ void APPS::handleEvaluatedCase(Case *c) {
 
 void APPS::successful_iteration(Case *c) {
     updateTentativeBestCase(c);
-    set_step_lengths(c->origin_step_length());
+    set_step_lengths(c->origin_direction_index(), c->origin_step_length());
     expand();
     reset_active();
     prune_queue();

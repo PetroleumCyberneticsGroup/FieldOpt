@@ -1,6 +1,8 @@
 /******************************************************************************
    Created by einar on 11/3/16.
-   Copyright (C) 2016 Einar J.M. Baumann <einar.baumann@gmail.com>
+   Copyright (C) 2019 Einar J.M. Baumann <einar.baumann@gmail.com>
+
+   Modified by Einar J. M. Baumann <einar.baumann@gmail.com> 02/19/19.
 
    This file is part of the FieldOpt project.
 
@@ -105,7 +107,7 @@ namespace Optimization {
              * @brief Set _all_ step lengts to the specified length.
              * @param len The value all step lengths should be set to.
              */
-            void set_step_lengths(double len);
+            void set_step_lengths(int dir_idx, double len);
 
             /*!
              * @brief Generate a set of trial points.
