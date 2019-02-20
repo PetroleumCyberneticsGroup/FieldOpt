@@ -59,6 +59,7 @@ class WellSplineConstraint
     Coord heel;
     Coord toe;
     std::vector<Coord> additional_points;
+    Coord midpoint;
   };
 
   /*!

@@ -47,6 +47,38 @@ ConstraintHandler::ConstraintHandler(QList<Settings::Optimizer::Constraint> cons
                     constraints_.append(new WellSplineLength(cons, variables));
                 }
                 break;
+            case Settings::Optimizer::ConstraintType::PolarAzimuth:
+                for (auto wname : constraint.wells) {
+                    auto cons = Settings::Optimizer::Constraint(constraint);
+                    cons.well = wname;
+                    if (VERB_OPT >= 1) Printer::info("Adding PolarAzimuth constraint for " + cons.well.toStdString());
+                    constraints_.append(new PolarAzimuth(cons, variables));
+                }
+                break;
+            case Settings::Optimizer::ConstraintType::PolarElevation:
+              for (auto wname : constraint.wells) {
+                auto cons = Settings::Optimizer::Constraint(constraint);
+                cons.well = wname;
+                if (VERB_OPT >= 1) Printer::info("Adding PolarElevation constraint for " + cons.well.toStdString());
+                constraints_.append(new PolarElevation(cons, variables));
+              }
+              break;
+            case Settings::Optimizer::ConstraintType::PolarWellLength:
+              for (auto wname : constraint.wells) {
+                auto cons = Settings::Optimizer::Constraint(constraint);
+                cons.well = wname;
+                if (VERB_OPT >= 1) Printer::info("Adding PolarWellLength constraint for " + cons.well.toStdString());
+                constraints_.append(new PolarWellLength(cons, variables));
+              }
+              break;
+            case Settings::Optimizer::ConstraintType::PolarSplineBoundary:
+              for (auto wname : constraint.wells) {
+                auto cons = Settings::Optimizer::Constraint(constraint);
+                cons.well = wname;
+                if (VERB_OPT >= 1) Printer::info("Adding PolarSplineBoundary constraint for " + cons.well.toStdString());
+                constraints_.append(new PolarSplineBoundary(cons, variables, grid));
+              }
+              break;
             case Settings::Optimizer::ConstraintType::ICVConstraint:
                 for (auto wname : constraint.wells) {
                     auto cons = Settings::Optimizer::Constraint(constraint);

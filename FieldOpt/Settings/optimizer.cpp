@@ -195,9 +195,25 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
             throw UnableToParseOptimizerConstraintsSectionException("WellSplineInterwellDistance constraint"
                                                                     " needs a Wells array with exactly two well names specified.");
     }
+    else if (QString::compare(constraint_type, "PolarAzimuth") == 0 || QString::compare(constraint_type, "PolarElevation") == 0){
+        if (constraint_type == "PolarAzimuth") {
+            optimizer_constraint.type = ConstraintType::PolarAzimuth;
+        } else {
+            optimizer_constraint.type = ConstraintType::PolarElevation;
+        }
+        if (json_constraint.contains("Max")){
+            optimizer_constraint.max = json_constraint["Max"].toDouble();
+        }
+        if (json_constraint.contains("Min")){
+            optimizer_constraint.min = json_constraint["Min"].toDouble();
+        }
+    }
 
-    else if (QString::compare(constraint_type, "ReservoirBoundary") == 0) {
-        optimizer_constraint.type = ConstraintType::ReservoirBoundary;
+    else if (QString::compare(constraint_type, "ReservoirBoundary") == 0 || QString::compare(constraint_type, "PolarSplineBoundary") == 0) {
+        if (QString::compare(constraint_type, "ReservoirBoundary") == 0){
+            optimizer_constraint.type = ConstraintType::ReservoirBoundary;
+        }
+        else { optimizer_constraint.type = ConstraintType::PolarSplineBoundary;}
         optimizer_constraint.box_imin = json_constraint["BoxImin"].toInt();
         optimizer_constraint.box_imax = json_constraint["BoxImax"].toInt();
         optimizer_constraint.box_jmin = json_constraint["BoxJmin"].toInt();

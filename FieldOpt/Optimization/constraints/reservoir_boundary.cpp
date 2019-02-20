@@ -39,7 +39,10 @@ ReservoirBoundary::ReservoirBoundary(
     penalty_weight_ = settings.penalty_weight;
 
     index_list_ = getListOfCellIndices();
-    affected_well_ = initializeWell(variables->GetWellSplineVariables(settings.well));
+    if (variables->GetWellSplineVariables(settings.well).size() > 0)
+        affected_well_ = initializeWell(variables->GetWellSplineVariables(settings.well));
+    else
+        affected_well_ = initializeWell(variables->GetPolarSplineVariables(settings.well));
 
     // QList with indices of box edge cells
     index_list_edge_ = getIndicesOfEdgeCells();
