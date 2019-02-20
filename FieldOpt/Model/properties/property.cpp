@@ -118,10 +118,14 @@ int Property::get_prop_index(const QString prop_name) const {
 }
 Property::PolarProp Property::get_polar_prop(const QString prop_name) const {
     QString propstr = prop_name.split("#")[2];
-    if (QString::compare(propstr, "Azimuth") == 0) return Azimuth;
-    else if (QString::compare(propstr, "Elevation") == 0) return Elevation;
-    else if (QString::compare(propstr, "Length") == 0) return Length;
-    else if (QString::compare(propstr, "Midpoint") == 0) return Midpoint;
+    if (QString::compare(propstr, "Azimuth") == 0)
+        return Azimuth;
+    else if (QString::compare(propstr, "Elevation") == 0)
+        return Elevation;
+    else if (QString::compare(propstr, "Length") == 0)
+        return Length;
+    else if (QString::compare(propstr, "Midpoint") == 0)
+        return Midpoint;
     else throw std::runtime_error("Unable to extract PolarSpline data from property name.");
 }
 Property::Coordinate Property::get_prop_coord(const QString prop_name) const {
