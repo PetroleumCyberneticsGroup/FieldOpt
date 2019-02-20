@@ -55,8 +55,8 @@ PolarSpline::PolarSpline(::Settings::Model::Well well_settings,
     midpoint_->z = new Properties::ContinousProperty(well_settings.polar_spline.midpoint.z);
 
     length_ = new Properties::ContinousProperty(well_settings.polar_spline.length);
-    azimuth_ = new Properties::ContinousProperty(well_settings.polar_spline.azimuth*M_PI/180.0);
-    elevation_ = new Properties::ContinousProperty(well_settings.polar_spline.elevation*M_PI/180.0);
+    azimuth_ = new Properties::ContinousProperty(well_settings.polar_spline.azimuth);
+    elevation_ = new Properties::ContinousProperty(well_settings.polar_spline.elevation);
 
     QString base_name = "PolarSpline#" + well_settings.name + "#";
     if (variable) {
@@ -88,13 +88,13 @@ void PolarSpline::computePoints() {
     auto p0 = midpoint_->ToEigenVector();
     Eigen::Vector3d p1, p2;
 
-    p1[0] = r * sin(elevation_->value()) * cos(azimuth_->value());
-    p1[1] = r * sin(elevation_->value()) * sin(azimuth_->value());
-    p1[2] = r * cos(elevation_->value());
+    p1[0] = r * sin(elevation_->value()*M_PI/180.0) * cos(azimuth_->value()*M_PI/180.0);
+    p1[1] = r * sin(elevation_->value()*M_PI/180.0) * sin(azimuth_->value()*M_PI/180.0);
+    p1[2] = r * cos(elevation_->value()*M_PI/180.0);
 
-    p2[0] = -1.0 * r * sin(elevation_->value()) * cos(azimuth_->value());
-    p2[1] = -1.0 * r * sin(elevation_->value()) * sin(azimuth_->value());
-    p2[2] = -1.0 * r * cos(elevation_->value());
+    p2[0] = -1.0 * r * sin(elevation_->value()*M_PI/180.0) * cos(azimuth_->value()*M_PI/180.0);
+    p2[1] = -1.0 * r * sin(elevation_->value()*M_PI/180.0) * sin(azimuth_->value()*M_PI/180.0);
+    p2[2] = -1.0 * r * cos(elevation_->value()*M_PI/180.0);
 
     p1 = p1 + midpoint_->ToEigenVector();
     p2 = p2 + midpoint_->ToEigenVector();
