@@ -102,11 +102,11 @@ class Model
     };
     struct PolarSpline{
         SplinePoint midpoint;
-        double azimuth;
-        double length;
-        double elevation;
-        QString name;
-        bool is_variable;
+        double azimuth=0;
+        double length=0;
+        double elevation=90;
+        QString name="";
+        bool is_variable=false;
     };
     struct PseudoContPosition {
       int i, j;
