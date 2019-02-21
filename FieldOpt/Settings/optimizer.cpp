@@ -369,7 +369,7 @@ Optimizer::Parameters Optimizer::parseParameters(QJsonObject &json_parameters) {
             params.vfsa_init_temp = json_parameters["VFSA-InitTemp"].toDouble();
         }
         if (json_parameters.contains("VFSA-TempScale")) {
-            params.vfsa_temp_scale = json_parameters["VFSA-InitTemp"].toDouble();
+            params.vfsa_temp_scale = json_parameters["VFSA-TempScale"].toDouble();
         }
 
         // SPSA Parameters

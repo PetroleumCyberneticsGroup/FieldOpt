@@ -1,6 +1,16 @@
 FROM ubuntu:16.04
-MAINTAINER einar90 version: 0.1
+MAINTAINER einar90 version: base
 
+# Build using:
+#   sudo docker build --no-cache -t einar90/fieldopt:base ~/path/to/FieldOpt/Docker/Base
+#   sudo docker push einar90/fieldopt:base
+#
+# This container contains the base for FieldOpt, i.e. all
+# depndencies, pre-compiled.
+# The FieldOpt source-code is in this container, but not built.
+# A different image should be created based on this to create
+# functional FieldOpt images.
+#
 # This is still a work in progress. In order to work fully,
 # the container still needs a simulator.
 # Flow will be added as a default (other simulators may
@@ -28,29 +38,10 @@ RUN git submodule update --init --recursive
 
 # Build the third party dependencies
 WORKDIR /app/FieldOpt/FieldOpt/ThirdParty
-RUN cmake . && make && make install
+RUN cmake -DCMAKE_BUILD_TYPE=Release . && make && make install
 
 # Build the opm-common dependency
 WORKDIR /app/FieldOpt/FieldOpt/ThirdParty/opm-common
 RUN git checkout release/2018.04
-RUN cmake . && make && make install
-
-# Build FieldOpt
-RUN mkdir /app/FieldOpt/FieldOpt/cmake-build-debug
-WORKDIR /app/FieldOpt/FieldOpt/cmake-build-debug
-RUN cmake ..  && make
-WORKDIR /app/FieldOpt/FieldOpt/cmake-build-debug/bin
-
-# Create output directory
-RUN mkdir /app/fieldopt-output
-
-# Define environment variables needed by example runscripts
-ENV NAME FieldOpt
-ENV FIELDOPT_BIN="/app/FieldOpt/FieldOpt/cmake-build-debug/bin/FieldOpt"
-ENV FIELDOPT_BUILD="/app/FieldOpt/FieldOpt/cmake-build-debug/bin/"
-ENV FIELDOPT_OUT="/app/fieldopt-output"
-ENV PATH=$PATH:"/app/FieldOpt/FieldOpt/cmake-build-debug/bin/"
-
-# Execute FieldOpt with the help argument
-CMD ["FieldOpt"]
+RUN cmake -DCMAKE_BUILD_TYPE=Release . && make && make install
 
