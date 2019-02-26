@@ -28,6 +28,7 @@
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
 #include "WellIndexCalculation/wicalc_rixx.h"
+#include "Settings/tests/test_resource_example_file_paths.hpp"
 
 using namespace Reservoir::Grid;
 using namespace Reservoir::WellIndexCalculation;
@@ -50,7 +51,7 @@ class SingleCellWellIndexTest : public ::testing::Test {
   virtual void TearDown() { }
 
   Grid *grid_;
-  std::string file_path_ = "../examples/ECLIPSE/cube_9x9/CUBE.EGRID";
+  std::string file_path_ = TestResources::ExampleFilePaths::cube_grid_;
 
 
   WellDefinition init_well(Eigen::Vector3d start_point, Eigen::Vector3d end_point) {
@@ -130,7 +131,7 @@ TEST_F(SingleCellWellIndexTest, WellIndexValueHorzX) {
 
 
 TEST_F(SingleCellWellIndexTest, Well_index_grid_test) {
-    file_path_ = "../examples/ADGPRS/5spot/ECL_5SPOT.EGRID";
+    file_path_ = TestResources::ExampleFilePaths::grid_5spot_;
     grid_ = new ECLGrid(file_path_);
     double wellbore_radius = 0.191/2;
 

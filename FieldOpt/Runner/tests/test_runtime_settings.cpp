@@ -1,15 +1,16 @@
 #include <gtest/gtest.h>
 #include "Runner/runtime_settings.h"
+#include "Settings/tests/test_resource_example_file_paths.hpp"
 
 namespace {
 
     class RuntimeSettingsTest : public testing::Test {
         int argc = 16;
         const char *argv[16] = {"FieldOpt",
-                        "../examples/ADGPRS/5spot/fo_driver_5vert_wells.json",
-                        "../fieldopt-output",
-                        "-g", "../examples/Flow/5spot/5SPOT.EGRID",
-                        "-s", "../examples/examples/Flow/5spot/5SPOT.DATA",
+                        TestResources::ExampleFilePaths::driver_5spot_.c_str(),
+                        TestResources::ExampleFilePaths::directory_output_.c_str(),
+                        "-g", TestResources::ExampleFilePaths::grid_flow_5spot_.c_str(),
+                        "-s", TestResources::ExampleFilePaths::deck_flow_5spot_.c_str(),
                         "-b", ".",
                         "-r", "mpisync",
                         "-f",

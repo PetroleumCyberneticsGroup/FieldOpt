@@ -4,6 +4,7 @@
 #include "Reservoir/grid/eclgrid.h"
 #include "ConstraintMath/well_constraint_projections/well_constraint_projections.h"
 #include "Utilities/filehandling.hpp"
+#include "Settings/tests/test_resource_example_file_paths.hpp"
 
 using namespace Reservoir::Grid;
 
@@ -26,7 +27,7 @@ protected:
 
 
     Grid *grid_;
-    std::string file_path_ = "../examples/ADGPRS/5spot/ECL_5SPOT.EGRID";
+  string file_path_ = TestResources::ExampleFilePaths::grid_5spot_;
 };
 
 TEST_F(DomainBoundaryTest, cell_boundary_constraint_test){

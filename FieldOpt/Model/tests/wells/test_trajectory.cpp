@@ -78,7 +78,7 @@ TEST_F(TrajectoryTest, VariableContainerConsistencyAfterCreation) {
 
 TEST_F(TrajectoryTest, MultisplineWell) {
     Paths paths;
-    paths.SetPath(Paths::GRID_FILE, TestResources::ExampleFilePaths::grid_5spot_.toStdString());
+    paths.SetPath(Paths::GRID_FILE, TestResources::ExampleFilePaths::grid_5spot_);
     auto settings = Settings::Model(TestResources::TestResourceModelSettingSnippets::model_adtl_pts(), paths);
     auto wsettings = settings.wells()[0];
     auto varcont = new Model::Properties::VariablePropertyContainer();

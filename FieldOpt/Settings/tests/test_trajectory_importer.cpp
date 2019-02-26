@@ -20,6 +20,7 @@
 
 #include <gtest/gtest.h>
 #include "Settings/trajectory_importer.h"
+#include "Settings/tests/test_resource_example_file_paths.hpp"
 
 namespace {
 
@@ -32,7 +33,7 @@ class TrajectoryImporterTest : public ::testing::Test {
   virtual void SetUp() {}
   virtual void TearDown() {}
 
-  std::string trajectory_path_ = "../examples/ECLIPSE/norne-simplified/trajectories";
+  std::string trajectory_path_ = TestResources::ExampleFilePaths::trajectories_;
   std::vector<std::string> well_names_ = {"D-2H"};
 };
 

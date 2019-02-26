@@ -29,10 +29,10 @@ class RunnerResources {
  private:
   const int argc = 16;
   const char *argv[16] = {"FieldOpt",
-                          "../examples/ADGPRS/5spot/fo_driver_5vert_wells.json",
-                          "../fieldopt-output",
-                          "-g", "../examples/Flow/5spot/5SPOT.EGRID",
-                          "-s", "../examples/Flow/5spot/5SPOT.DATA",
+                          TestResources::ExampleFilePaths::driver_5spot_.c_str(),
+                          TestResources::ExampleFilePaths::directory_output_.c_str(),
+                          "-g", TestResources::ExampleFilePaths::grid_flow_5spot_.c_str(),
+                          "-s", TestResources::ExampleFilePaths::deck_flow_5spot_.c_str(),
                           "-b", ".",
                           "-r", "mpisync",
                           "-f",
@@ -41,8 +41,8 @@ class RunnerResources {
   };
  protected:
   Runner::RuntimeSettings *rts_ = new Runner::RuntimeSettings(argc, argv);
-  Logger *logger_ = new Logger(rts_, TestResources::ExampleFilePaths::directory_output_, false);
-  Logger *logger_norne_ = new Logger(rts_, TestResources::ExampleFilePaths::norne_test_output_, false);
+  Logger *logger_ = new Logger(rts_, QString::fromStdString(TestResources::ExampleFilePaths::directory_output_), false);
+  Logger *logger_norne_ = new Logger(rts_,  QString::fromStdString(TestResources::ExampleFilePaths::norne_test_output_), false);
 };
 
 }

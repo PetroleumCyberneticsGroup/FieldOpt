@@ -31,7 +31,7 @@ class TestResourceModel : public TestResourceSettings,
 {
  protected:
   TestResourceModel() {
-      settings_full_->paths().SetPath(Paths::GRID_FILE, ExampleFilePaths::grid_5spot_.toStdString());
+      settings_full_->paths().SetPath(Paths::GRID_FILE, ExampleFilePaths::grid_5spot_);
       model_ = new Model::Model(*settings_full_, logger_);
 
   }

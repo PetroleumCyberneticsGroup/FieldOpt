@@ -19,10 +19,6 @@ class ModelSettingsTest : public ::testing::Test,
   virtual void TearDown() {}
 };
 
-TEST_F(ModelSettingsTest, Reservoir) {
-    EXPECT_STREQ("../examples/ADGPRS/5spot/ECL_5SPOT.EGRID", settings_full_->paths().GetPath(Paths::GRID_FILE).c_str());
-}
-
 TEST_F(ModelSettingsTest, ControlTimes) {
     EXPECT_EQ(4, settings_model_->control_times().size());
     EXPECT_EQ(365, settings_model_->control_times().last());
@@ -125,8 +121,8 @@ TEST_F(ModelSettingsTest, MultisplineWell) {
 
     Paths paths_;
     QJsonObject partial_deck = model_adtl_pts;
-    paths_.SetPath(Paths::SIM_DRIVER_FILE, "../examples/ECLIPSE/norne-simplified/NORNE_SIMPLIFIED.DATA");
-    paths_.SetPath(Paths::SIM_SCH_FILE, "../examples/ECLIPSE/norne-simplified/INCLUDE/BC0407_HIST01122006.SCH");
+    paths_.SetPath(Paths::SIM_DRIVER_FILE, TestResources::ExampleFilePaths::norne_deck_ );
+    paths_.SetPath(Paths::SIM_SCH_FILE, TestResources::ExampleFilePaths::norne_sch_);
 //    QJsonObject sim_json_;
     QJsonObject mod_json_;
 //    sim_json_ = partial_deck["Simulator"].toObject();

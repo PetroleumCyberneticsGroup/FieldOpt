@@ -1,5 +1,6 @@
 #include "../hdf5_summary_reader.h"
 #include <gtest/gtest.h>
+#include "Settings/tests/test_resource_example_file_paths.hpp"
 
 namespace {
     class Hdf5SummaryReaderTest : public ::testing::Test {
@@ -10,8 +11,8 @@ namespace {
     protected:
         virtual void SetUp() {}
         virtual void TearDown() {}
-        std::string file_path = "../examples/ADGPRS/5spot/5SPOT.vars.h5";
-        std::string file_path_gpt = "../examples/ADGPRS/5spot/5SPOT-gpt.vars.h5";
+        std::string file_path = TestResources::ExampleFilePaths::gprs_smry_hdf5_5spot_;
+        std::string file_path_gpt = TestResources::ExampleFilePaths::gprs_smry_gpt_hdf5_5spot_;
     };
 
     TEST_F(Hdf5SummaryReaderTest, Constructor) {
