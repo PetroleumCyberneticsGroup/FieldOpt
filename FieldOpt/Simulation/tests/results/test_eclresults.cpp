@@ -27,12 +27,12 @@ namespace {
 
     TEST_F(ECLResultsTest, ReadSummary) {
         EXPECT_THROW(results_->ReadResults("a"), ResultFileNotFoundException);
-        EXPECT_NO_THROW(results_->ReadResults(TestResources::ExampleFilePaths::ecl_base_horzwell));
+        EXPECT_NO_THROW(results_->ReadResults(QString::fromStdString(TestResources::ExampleFilePaths::ecl_base_horzwell)));
     }
 
     TEST_F(ECLResultsTest, DumpingAndAvailability) {
         // Make results available
-        results_->ReadResults(TestResources::ExampleFilePaths::ecl_base_horzwell);
+        results_->ReadResults(QString::fromStdString(TestResources::ExampleFilePaths::ecl_base_horzwell));
         EXPECT_TRUE(results_->isAvailable());
         EXPECT_NO_THROW(results_->GetValue(ECLResults::Property::Time));
 
@@ -42,13 +42,13 @@ namespace {
         EXPECT_THROW(results_->GetValue(ECLResults::Property::Time), ResultsNotAvailableException);
 
         // Make results available again
-        results_->ReadResults(TestResources::ExampleFilePaths::ecl_base_horzwell);
+        results_->ReadResults(QString::fromStdString(TestResources::ExampleFilePaths::ecl_base_horzwell));
         EXPECT_TRUE(results_->isAvailable());
         EXPECT_NO_THROW(results_->GetValue(ECLResults::Property::Time));
     }
 
     TEST_F(ECLResultsTest, FieldVariables) {
-        results_->ReadResults(TestResources::ExampleFilePaths::ecl_base_horzwell);
+        results_->ReadResults(QString::fromStdString(TestResources::ExampleFilePaths::ecl_base_horzwell));
         EXPECT_FLOAT_EQ(187866.44, results_->GetValue(ECLResults::Property::CumulativeOilProduction));
         EXPECT_FLOAT_EQ(115870.73, results_->GetValue(ECLResults::Property::CumulativeOilProduction, 10));
         EXPECT_THROW(results_->GetValue(ECLResults::Property::CumulativeOilProduction, 30), std::runtime_error);
@@ -60,7 +60,7 @@ namespace {
     }
 
     TEST_F(ECLResultsTest, MiscVariables) {
-        results_->ReadResults(TestResources::ExampleFilePaths::ecl_base_horzwell);
+        results_->ReadResults(QString::fromStdString(TestResources::ExampleFilePaths::ecl_base_horzwell));
         EXPECT_FLOAT_EQ(200, results_->GetValue(ECLResults::Property::Time));
         EXPECT_FLOAT_EQ(100, results_->GetValue(ECLResults::Property::Time, 10));
         EXPECT_THROW(results_->GetValue(ECLResults::Property::Time, 30), std::runtime_error);
@@ -72,7 +72,7 @@ namespace {
     }
 
     TEST_F(ECLResultsTest, WellVariables) {
-        results_->ReadResults(TestResources::ExampleFilePaths::ecl_base_horzwell);
+        results_->ReadResults(QString::fromStdString(TestResources::ExampleFilePaths::ecl_base_horzwell));
         EXPECT_FLOAT_EQ(1116.8876, results_->GetValue(ECLResults::Property::CumulativeWellWaterProduction, "PROD"));
         EXPECT_FLOAT_EQ(524.5061, results_->GetValue(ECLResults::Property::CumulativeWellWaterProduction, "PROD", 10));
     }

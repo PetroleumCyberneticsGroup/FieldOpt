@@ -19,6 +19,7 @@
 #include "runtime_settings.h"
 #include <boost/lexical_cast.hpp>
 #include <QtCore/QUuid>
+#include "Utilities/system.hpp"
 
 namespace Runner {
 
@@ -88,7 +89,11 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
 
     if (vm.count("fieldopt-build-dir")) {
         paths_.SetPath(Paths::BUILD_DIR, vm["fieldopt-build-dir"].as<std::string>());
-    } else paths_.SetPath(Paths::BUILD_DIR, GetAbsoluteFilePath(QString("./")).toStdString());
+    } else if (is_env_var_set("FIELDOPT_BUILD_ROOT")) {
+        paths_.SetPath(Paths::BUILD_DIR, get_env_var_value("FIELDOPT_BUILD_ROOT"));
+    } else {
+        paths_.SetPath(Paths::BUILD_DIR, GetAbsoluteFilePath(QString("./")).toStdString());
+    }
 
     if (vm.count("grid-path")) {
         paths_.SetPath(Paths::GRID_FILE, vm["grid-path"].as<std::string>());

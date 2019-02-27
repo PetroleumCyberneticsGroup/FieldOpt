@@ -39,28 +39,14 @@ class DeckParserTest : public ::testing::Test {
 };
 
 TEST_F(DeckParserTest, Initialization) {
-    DeckParser dp = DeckParser("../examples/ECLIPSE/norne-simplified/NORNE_SIMPLIFIED.DATA");
-//    DeckParser dp = DeckParser("/home/einar/Documents/GitHub/PCG/Models/ECLIPSE/olympus_ensemble/OLYMPUS_1/OLYMPUS_1.DATA");
-//    DeckParser dp = DeckParser(TestResources::ExampleFilePaths::deck_horzwel_.toStdString());
-//    auto wells = dp.GetWellData();
-//
-//    for (int i = 0; i < dp.GetTimeDays().size(); ++i) {
-//        std::cout << i << "\t" << dp.GetTimeDays()[i] << "\t" << dp.GetTimeDates()[i] << std::endl;
-//    }
-//
-//    for (auto well : wells) {
-//        std::cout << well.toString();
-//        for (int i=0; i < 3 && i < well.controls.size(); ++i) {
-//            std::cout << well.controls[i].toString() << std::endl;
-//        }
-//    }
+    DeckParser dp = DeckParser(TestResources::ExampleFilePaths::norne_deck_);
 }
 
 TEST_F(DeckParserTest, NumberOfWells) {
     // 1: C-4H i // 2: B-2H // 3: D-2H
     // 4: B-4H   // 5: D-4H // 6: C-1H i // 7: E-3H
     // 8: C-2H i // 9: B-1H //10: C-3H i //11: F-1H i
-    DeckParser dp = DeckParser("../examples/ECLIPSE/norne-simplified/NORNE_SIMPLIFIED.DATA");
+    DeckParser dp = DeckParser(TestResources::ExampleFilePaths::norne_deck_);
     auto wells = dp.GetWellData();
     EXPECT_EQ(wells.size(), 11);
 
@@ -82,7 +68,7 @@ TEST_F(DeckParserTest, NumberOfWells) {
 }
 
 TEST_F(DeckParserTest, NumberOfConnections) {
-    DeckParser dp = DeckParser("../examples/ECLIPSE/norne-simplified/NORNE_SIMPLIFIED.DATA");
+    DeckParser dp = DeckParser(TestResources::ExampleFilePaths::norne_deck_);
     auto wells = dp.GetWellData();
     std::vector<int> n_conns = { 6,  // C-4H
                                  7,  // B-2H

@@ -22,6 +22,7 @@
 #include "Settings/model.h"
 #include "Settings/simulator.h"
 #include "Settings/tests/test_resource_schedule_import_settings.hpp"
+#include "Settings/tests/test_resource_example_file_paths.hpp"
 
 namespace {
 
@@ -29,8 +30,8 @@ class ScheduleImportSettingsTest : public ::testing::Test {
  protected:
   ScheduleImportSettingsTest() {
       auto partial_deck = TestResources::TestResourceSettings::imported_model_settings;
-      paths_.SetPath(Paths::SIM_DRIVER_FILE, "../examples/ECLIPSE/norne-simplified/NORNE_SIMPLIFIED.DATA");
-      paths_.SetPath(Paths::SIM_SCH_FILE, "../examples/ECLIPSE/norne-simplified/INCLUDE/BC0407_HIST01122006.SCH");
+      paths_.SetPath(Paths::SIM_DRIVER_FILE, TestResources::ExampleFilePaths::norne_deck_ );
+      paths_.SetPath(Paths::SIM_SCH_FILE, TestResources::ExampleFilePaths::norne_sch_);
       sim_json_ = partial_deck["Simulator"].toObject();
       mod_json_ = partial_deck["Model"].toObject();
   }

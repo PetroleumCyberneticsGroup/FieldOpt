@@ -9,7 +9,7 @@ namespace {
         AdgprsResultsTest()
         {
             results_ = new Simulation::Results::AdgprsResults();
-            results_->ReadResults(TestResources::ExampleFilePaths::gprs_base_5spot_);
+            results_->ReadResults(QString::fromStdString(TestResources::ExampleFilePaths::gprs_base_5spot_));
         }
         virtual ~AdgprsResultsTest() {}
         virtual void SetUp() {}

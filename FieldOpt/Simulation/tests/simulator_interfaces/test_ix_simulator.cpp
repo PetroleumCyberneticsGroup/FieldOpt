@@ -14,10 +14,11 @@ class IXSimulatorTest : public testing::Test, TestResourceModel {
 protected:
     IXSimulatorTest() {
         Paths paths;
-        paths.SetPath(Paths::DRIVER_FILE, ExampleFilePaths::norne_driver_example_.toStdString());
-        paths.SetPath(Paths::OUTPUT_DIR, ExampleFilePaths::norne_test_output_.toStdString());
-        paths.SetPath(Paths::GRID_FILE, ExampleFilePaths::norne_grid_.toStdString());
-        paths.SetPath(Paths::BUILD_DIR, "./");
+        paths.SetPath(Paths::DRIVER_FILE, ExampleFilePaths::norne_driver_example_);
+        paths.SetPath(Paths::OUTPUT_DIR, ExampleFilePaths::norne_test_output_);
+        paths.SetPath(Paths::GRID_FILE, ExampleFilePaths::norne_grid_);
+        paths.SetPath(Paths::BUILD_DIR, ExampleFilePaths::bin_dir_);
+        paths.SetPath(Paths::SIM_DRIVER_FILE, ExampleFilePaths::norne_deck_);
         settings_norne_full_ = new Settings::Settings(paths);
         settings_norne_optimizer_ = settings_norne_full_->optimizer();
         settings_norne_simulator_ = settings_norne_full_->simulator();

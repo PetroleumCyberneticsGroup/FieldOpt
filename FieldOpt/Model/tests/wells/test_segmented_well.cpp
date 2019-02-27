@@ -8,6 +8,7 @@
 #include "Settings/settings.h"
 #include "Settings/tests/test_resource_schedule_segmentation_settings.hpp"
 #include "Settings/paths.h"
+#include "Settings/tests/test_resource_example_file_paths.hpp"
 
 using namespace Model::Wells;
 
@@ -17,9 +18,9 @@ class SegmentedWellTest : public ::testing::Test {
  protected:
   SegmentedWellTest() {
       auto partial_deck = TestResources::TestResourceSettings::multisegment_model_settings;
-      paths_.SetPath(Paths::SIM_DRIVER_FILE, "../examples/ECLIPSE/norne-simplified/NORNE_SIMPLIFIED.DATA");
-      paths_.SetPath(Paths::GRID_FILE, "../examples/ECLIPSE/norne-simplified/NORNE_SIMPLIFIED.EGRID");
-      paths_.SetPath(Paths::SIM_SCH_FILE, "../examples/ECLIPSE/norne-simplified/INCLUDE/BC0407_HIST01122006.SCH");
+      paths_.SetPath(Paths::SIM_DRIVER_FILE, TestResources::ExampleFilePaths::norne_deck_);
+      paths_.SetPath(Paths::GRID_FILE, TestResources::ExampleFilePaths::norne_grid_);
+      paths_.SetPath(Paths::SIM_SCH_FILE, TestResources::ExampleFilePaths::norne_sch_);
       sim_json_ = partial_deck["Simulator"].toObject();
       mod_json_ = partial_deck["Model"].toObject();
       sim_settings_ = new Settings::Simulator(sim_json_, paths_);

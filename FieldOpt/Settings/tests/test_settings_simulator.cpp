@@ -46,8 +46,6 @@ protected:
 TEST_F(SimulatorSettingsTest, Fields) {
     EXPECT_EQ(settings_simulator_->type(), Simulator::SimulatorType::ECLIPSE);
     EXPECT_EQ(settings_simulator_->commands()->size(), 1);
-    EXPECT_STREQ("../examples/ECLIPSE/HORZWELL/HORZWELL.DATA",
-                 settings_full_->paths().GetPath(Paths::SIM_DRIVER_FILE).c_str());
 }
 
 }

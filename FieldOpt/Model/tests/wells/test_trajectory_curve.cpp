@@ -56,7 +56,7 @@ TEST_F(TrajectoryCurveTest, SimpleBezier) {
 }
 TEST_F(TrajectoryCurveTest, WellApplication) {
   Paths paths;
-  paths.SetPath(Paths::GRID_FILE, TestResources::ExampleFilePaths::grid_5spot_.toStdString());
+  paths.SetPath(Paths::GRID_FILE, TestResources::ExampleFilePaths::grid_5spot_);
   auto settings = Settings::Model(TestResources::TestResourceModelSettingSnippets::model_bezier_well(), paths);
   auto wsettings = settings.wells()[0];
   wsettings.use_bezier_spline = true;
