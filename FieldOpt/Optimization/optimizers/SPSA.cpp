@@ -15,7 +15,7 @@ SPSA::SPSA(Settings::Optimizer *settings,
     : Optimizer(settings, base_case, variables, grid, logger, case_handler, constraint_handler)
 {
   D_ = base_case->GetRealVarVector().size();
-  gen_ = get_random_generator();
+  gen_ = get_random_generator(settings->parameters().rng_seed);
 
   auto params = settings->parameters();
   max_iterations_ = params.spsa_max_iterations;
@@ -51,8 +51,8 @@ void SPSA::handleEvaluatedCase(Case *c)
   if (isImprovement(c)) {
     updateTentativeBestCase(c);
     if (VERB_OPT >= 2) {
-      Printer::ext_info("Found new tentative best case in iteration " + Printer::num2str(iteration_) 
-          + ": " + Printer::num2str(tentative_best_case_->objective_function_value()), 
+      Printer::ext_info("Found new tentative best case in iteration " + Printer::num2str(iteration_)
+          + ": " + Printer::num2str(tentative_best_case_->objective_function_value()),
             "Optimization", "SPSA");
     }
   }
@@ -95,8 +95,8 @@ void SPSA::iterate()
       attempt++;
     }
     if (perturbations_valid_ == false) {
-      Printer::ext_warn("Failed to generate a valid pair of perturbations after " 
-          + Printer::num2str(max_attempts) + "attempts. Skipping iteration.", 
+      Printer::ext_warn("Failed to generate a valid pair of perturbations after "
+          + Printer::num2str(max_attempts) + "attempts. Skipping iteration.",
           "Optimization", "SPSA");
       iterate();
     }
@@ -141,7 +141,7 @@ std::pair<Case *, Case *> SPSA::createPerturbations()
   Case *second = new Case(estimate_);
   first->SetRealVarValues( estimate_->GetRealVarVector() + c_k_ * delta_k_ );
   second->SetRealVarValues(estimate_->GetRealVarVector() - c_k_ * delta_k_ );
-  if (!constraint_handler_->CaseSatisfiesConstraints(first) 
+  if (!constraint_handler_->CaseSatisfiesConstraints(first)
       || !constraint_handler_->CaseSatisfiesConstraints(second)) {
     perturbations_valid_ = false;
   }
