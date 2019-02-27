@@ -94,6 +94,10 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
     last_computed_grid_ = "";
     last_computed_spline_ = std::vector<Eigen::Vector3d>();
 }
+WellSpline::WellSpline() {
+    last_computed_grid_ = "";
+    last_computed_spline_ = std::vector<Eigen::Vector3d>();
+}
 void WellSpline::spline_points_from_import(Settings::Model::Well &well_settings) {
     QString name_base = "SplinePoint#" + well_settings.name + "#";
     well_settings_.spline_points = QList<Settings::Model::Well::SplinePoint> ();
@@ -122,9 +126,7 @@ void WellSpline::spline_points_from_import(Settings::Model::Well &well_settings)
     well_settings.spline_points.back().name = name_base + "heel";
 }
 
-QList<WellBlock *> *WellSpline::GetWellBlocks()
-{
-
+QList<WellBlock *> *WellSpline::computeWellBlocks() {
     assert(spline_points_.size() >= 2);
     assert(grid_ != nullptr && grid_ != 0);
 
@@ -137,7 +139,7 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
             points_str += point_str.str();
         }
         Printer::ext_info("Starting well index calculation. Points: " + points_str + "Grid: " + grid_->GetGridFilePath(),
-            "WellSpline", "Model");
+                          "WellSpline", "Model");
     }
 
 
@@ -201,10 +203,16 @@ QList<WellBlock *> *WellSpline::GetWellBlocks()
     }
     if (VERB_MOD >=2) {
         Printer::ext_info("Computed " + Printer::num2str(blocks->size()) + " well blocks from "
-                        + Printer::num2str(block_data.size()) + " intersected cells for well " + welldef.wellname,
-                        "Model", "WellSpline");
+                              + Printer::num2str(block_data.size()) + " intersected cells for well " + welldef.wellname,
+                          "Model", "WellSpline");
     }
     return blocks;
+
+}
+
+QList<WellBlock *> *WellSpline::GetWellBlocks()
+{
+    return computeWellBlocks();
 }
 
 WellBlock *WellSpline::getWellBlock(Reservoir::WellIndexCalculation::IntersectedCell block_data)
@@ -262,6 +270,12 @@ std::vector<Reservoir::WellIndexCalculation::IntersectedCell> WellSpline::conver
 
 Eigen::Vector3d WellSpline::SplinePoint::ToEigenVector() const {
     return Eigen::Vector3d(this->x->value(), this->y->value(), this->z->value());
+}
+
+void WellSpline::SplinePoint::FromEigenVector(const Eigen::Vector3d vec) {
+    this->x->setValue(vec.x());
+    this->y->setValue(vec.y());
+    this->z->setValue(vec.z());
 }
 
 vector<Eigen::Vector3d> WellSpline::getPoints() const {

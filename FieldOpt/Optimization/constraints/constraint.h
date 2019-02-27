@@ -51,8 +51,8 @@ class Constraint
    */
   virtual void SnapCaseToConstraints(Case *c) = 0;
 
-  void EnableLogging(QString output_directory_path);
-  void SetVerbosityLevel(int level);
+  virtual void EnableLogging(QString output_directory_path);
+  virtual void SetVerbosityLevel(int level);
 
   /*!
    * @brief Indicates whether the constaint is a bound constraint.

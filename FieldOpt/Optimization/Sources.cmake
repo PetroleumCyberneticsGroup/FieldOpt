@@ -15,6 +15,10 @@ SET(OPTIMIZATION_HEADERS
 	constraints/reservoir_boundary.h
 	constraints/well_spline_constraint.h
 	constraints/well_spline_length.h
+	constraints/polar_well_length.h
+	constraints/polar_azimuth.h
+	constraints/polar_elevation.h
+	constraints/polar_spline_boundary.h
 	hybrid_optimizer.h
 	normalizer.h
 	objective/NPV.h
@@ -56,6 +60,10 @@ SET(OPTIMIZATION_SOURCES
 	constraints/reservoir_boundary.cpp
 	constraints/well_spline_constraint.cpp
 	constraints/well_spline_length.cpp
+	constraints/polar_well_length.cpp
+	constraints/polar_azimuth.cpp
+	constraints/polar_elevation.cpp
+	constraints/polar_spline_boundary.cpp
 	hybrid_optimizer.cpp
 	normalizer.cpp
 	objective/NPV.cpp

@@ -152,7 +152,16 @@ QList<ContinousProperty *> VariablePropertyContainer::GetWellSplineVariables(con
     }
     return spline_vars;
 }
-
+QList<ContinousProperty *> VariablePropertyContainer::GetPolarSplineVariables(const QString well_name) const {
+    QList<ContinousProperty *> polar_vars;
+    for (auto var : continous_variables_->values()) {
+        if (var->propertyInfo().prop_type == Property::PropertyType::PolarSpline &&
+        well_name == var->propertyInfo().parent_well_name) {
+            polar_vars.append(var);
+        }
+    }
+    return polar_vars;
+}
 QList<ContinousProperty *> VariablePropertyContainer::GetPseudoContVertVariables(const QString well_name) const {
     QList<ContinousProperty *> pcv_vars;
     for (auto var : continous_variables_->values()) {

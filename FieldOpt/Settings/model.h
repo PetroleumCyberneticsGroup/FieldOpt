@@ -55,7 +55,7 @@ class Model
   enum WellType : int { Injector=11, Producer=12, UNKNOWN_TYPE=19 };
   enum ControlMode : int { BHPControl=21, RateControl=22, UNKNOWN_CONTROL=29 };
   enum InjectionType : int { WaterInjection=31, GasInjection=32 };
-  enum WellDefinitionType : int { WellBlocks=41, WellSpline=42, PseudoContVertical2D=43, UNDEFINED=44 };
+  enum WellDefinitionType : int { WellBlocks=41, WellSpline=42, PseudoContVertical2D=43, PolarSpline=45, UNDEFINED=44 };
   enum WellCompletionType : int { Perforation=61, ICV=62, Packer=63, Tubing=64, Annulus=65 };
   enum WellState : int { WellOpen=71, WellShut=72 };
   enum PreferredPhase : int { Oil=81, Water=82, Gas=83, Liquid=84, UNKNOWN_PHASE=89 };
@@ -100,6 +100,14 @@ class Model
       double x, y, z;
       bool is_variable = false;
     };
+    struct PolarSpline{
+        SplinePoint midpoint;
+        double azimuth=0;
+        double length=0;
+        double elevation=90;
+        QString name="";
+        bool is_variable=false;
+    };
     struct PseudoContPosition {
       int i, j;
       bool is_variable = false;
@@ -126,6 +134,7 @@ class Model
     QList<WellBlock> well_blocks;               //!< Well blocks when the well path is defined by WellBlocks.
     SplinePoint spline_heel;                    //!< Heel (start) point to be used when calculating the well path from a spline.
     SplinePoint spline_toe;                     //!< Toe (end) point to be used when calculating the well path from a spline.
+    PolarSpline polar_spline;                   //!< PolarSpline contains azimuth, elevation, length and a spline point that together defines a well path
     QList<SplinePoint> spline_points;           //!< List of spline points, including heel (first) and toe (last).
     int n_spline_points = 0;                    //!< Number of points the spline is defined by. Used for conversion from list of well blocks.
     bool use_bezier_spline = false;            //!< Create a Bezier spline from the spline points to represent the well (only relevant for multiple points)

@@ -45,12 +45,13 @@ class WellSpline
              Reservoir::Grid::Grid *grid,
              Reservoir::WellIndexCalculation::wicalc_rixx *wic
   );
+  WellSpline();
 
   /*!
    * \brief GetWellBlocks Get the set of well blocks with proper WI's defined by the spline.
    * \return
    */
-  QList<WellBlock *> *GetWellBlocks();
+  virtual QList<WellBlock *> *GetWellBlocks();
   int GetTimeSpentInWIC() const { return seconds_spent_in_compute_wellblocks_; }
 
   struct SplinePoint {
@@ -58,6 +59,7 @@ class WellSpline
     ContinousProperty *y;
     ContinousProperty *z;
     Eigen::Vector3d ToEigenVector() const;
+    void FromEigenVector(const Eigen::Vector3d vec);
   };
 
   bool HasGridChanged() const;
@@ -69,14 +71,20 @@ class WellSpline
   QList<SplinePoint *> GetSplinePoints() const { return spline_points_; }
 
 
- private:
+ protected:
   Reservoir::Grid::Grid *grid_;
   Reservoir::WellIndexCalculation::wicalc_rixx *wic_;
   Settings::Model::Well well_settings_;
   int seconds_spent_in_compute_wellblocks_; //!< Number of seconds spent in the ComputeWellBlocks() method.
   bool is_variable_;
   bool use_bezier_spline_;
-  
+
+  /*!
+   * @brief Get compute the well blocks to be returned by GetWellBlocks.
+   * @return
+   */
+  QList<WellBlock *> *computeWellBlocks();
+
   /*!
    * @brief Get the vector of spline points to be used. Will return converted spline_points if not using 
    * bezier method; else will call convertToBezierSpline().

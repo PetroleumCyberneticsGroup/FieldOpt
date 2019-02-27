@@ -18,6 +18,8 @@
 ******************************************************************************/
 
 #include "well_spline_constraint.h"
+#include "Utilities/verbosity.h"
+#include "Utilities/printer.hpp"
 #include <boost/lexical_cast.hpp>
 
 namespace Optimization {
@@ -27,8 +29,8 @@ using namespace Model::Properties;
 
 WellSplineConstraint::Well WellSplineConstraint::initializeWell(QList<Model::Properties::ContinousProperty *> vars) {
     Well well;
-    if (vars.length() >= 6 && (vars.length() % 3) == 0) {
-        std::cout << "Using heel-toe parameterization for well spline constraint." << std::endl;
+    if (vars.length() >= 6 && (vars.length() % 3) == 0 && vars[0]->propertyInfo().prop_type == Property::PropertyType::SplinePoint) {
+        if (VERB_OPT >= 2) Printer::ext_info("Using heel-toe parameterization for well spline constraint", "Optimization", "WellSplineConstraint");
         for (auto var : vars) {
             if (var->propertyInfo().spline_end == Property::SplineEnd::Heel) {
                 if (var->propertyInfo().coord == Property::Coordinate::x)
@@ -48,8 +50,8 @@ WellSplineConstraint::Well WellSplineConstraint::initializeWell(QList<Model::Pro
                 else throw std::runtime_error("Unable to parse variable " + var->name().toStdString());
             } else throw std::runtime_error("Unable to parse variable " + var->name().toStdString());
         }
-        if (vars.length() > 6) { // Adding additional points
-            std::cout << "Using multi-point parameterization for well spline constraint." << std::endl;
+        if (vars.length() > 6 && vars[0]->propertyInfo().prop_type == Property::PropertyType::SplinePoint) { // Adding additional points
+            if (VERB_OPT >= 2) Printer::ext_info("Using multi-point parameterization for well spline constraint", "Optimization", "WellSplineConstraint");
             std::map<int, Coord> addtl_points;
             for (auto var : vars) {
                 // use hash/map when creating the ponts (it will autosort them alphabeticaly, which is what we want)
@@ -65,7 +67,19 @@ WellSplineConstraint::Well WellSplineConstraint::initializeWell(QList<Model::Pro
             for (int i = 0; i < addtl_points.size(); ++i) {
                 well.additional_points.push_back(addtl_points[i+1]);
             }
-
+        }
+    }
+    else if (vars.length() > 0 && vars[0]->propertyInfo().prop_type == Property::PropertyType::PolarSpline) {
+        if (VERB_OPT >= 2) Printer::ext_info("Using PolarSpline parameterization for well spline constraint", "Optimization", "WellSplineConstraint");
+        for (auto var : vars) {
+            if (var->propertyInfo().polar_prop == Property::PolarProp::Midpoint) {
+                if (var->propertyInfo().coord == Property::Coordinate::x)
+                    well.midpoint.x = var->id();
+                else if (var->propertyInfo().coord == Property::Coordinate::y)
+                    well.midpoint.y = var->id();
+                else if (var->propertyInfo().coord == Property::Coordinate::z)
+                    well.midpoint.z = var->id();
+            }
         }
     }
     else {

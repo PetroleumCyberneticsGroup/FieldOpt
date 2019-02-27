@@ -278,6 +278,31 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
             well.well_blocks.append(block);
         }
     }
+    else if (QString::compare(definition_type, "PolarSpline") == 0) {
+        well.definition_type = WellDefinitionType::PolarSpline;
+        if (json_well.contains("UseBezierSpline") && json_well["UseBezierSpline"].toBool() == true) {
+            well.use_bezier_spline = true;
+        }
+        else {
+            well.use_bezier_spline = false;
+        }
+        QJsonObject json_pspline = json_well["PolarSpline"].toObject();
+        if (!json_pspline.contains("Midpoint"))
+            throw UnableToParseWellsModelSectionException("No midpoint was defined for this spline-type");
+
+        QJsonObject json_midpoint = json_pspline["Midpoint"].toObject();
+        Well::PolarSpline polar_spline;
+        polar_spline.elevation = json_pspline["Elevation"].toDouble();
+        polar_spline.azimuth = json_pspline["Azimuth"].toDouble();
+        polar_spline.length = json_pspline["Length"].toDouble();
+        polar_spline.midpoint.x = json_midpoint["x"].toDouble();
+        polar_spline.midpoint.y = json_midpoint["y"].toDouble();
+        polar_spline.midpoint.z = json_midpoint["z"].toDouble();
+        if (json_pspline.contains("IsVariable") && json_pspline["IsVariable"].toBool() == true){
+            polar_spline.is_variable = true;
+        }
+        well.polar_spline = polar_spline;
+    }
     else if (QString::compare(definition_type, "WellSpline") == 0) {
         well.definition_type = WellDefinitionType::WellSpline;
         if (json_well.contains("UseBezierSpline") && json_well["UseBezierSpline"].toBool() == true) {
@@ -461,7 +486,6 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
         well.use_segmented_model = true;
         parseSegmentation(json_well["Segmentation"].toObject(), well);
     }
-
     return well;
 }
 

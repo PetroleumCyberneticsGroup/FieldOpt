@@ -52,6 +52,13 @@ void Property::set_property_info() {
         || info_.prop_type == Rate)
         info_.index = get_prop_index(name_);
 
+    if (info_.prop_type == PolarSpline) {
+        info_.polar_prop = get_polar_prop(name_);
+        if (info_.polar_prop == Midpoint){
+            info_.coord = get_prop_coord(name_);
+        }
+    }
+
     if (info_.prop_type == SplinePoint || info_.prop_type == WellBlock || info_.prop_type == PseudoContVert)
         info_.coord = get_prop_coord(name_);
 
@@ -92,6 +99,8 @@ Property::PropertyType Property::get_prop_type_name(const QString prop_name) con
         return Packer;
     else if (QString::compare("ICD", propstr) == 0)
         return ICD;
+    else if (QString::compare("PolarSpline", propstr) == 0)
+        return PolarSpline;
     else throw std::runtime_error("Unable to recognize property type " + propstr.toStdString());
 }
 
@@ -107,7 +116,18 @@ int Property::get_prop_index(const QString prop_name) const {
         return index;
     else throw std::runtime_error("Unable to extract index from property name " + prop_name.toStdString());
 }
-
+Property::PolarProp Property::get_polar_prop(const QString prop_name) const {
+    QString propstr = prop_name.split("#")[2];
+    if (QString::compare(propstr, "Azimuth") == 0)
+        return Azimuth;
+    else if (QString::compare(propstr, "Elevation") == 0)
+        return Elevation;
+    else if (QString::compare(propstr, "Length") == 0)
+        return Length;
+    else if (QString::compare(propstr, "Midpoint") == 0)
+        return Midpoint;
+    else throw std::runtime_error("Unable to extract PolarSpline data from property name.");
+}
 Property::Coordinate Property::get_prop_coord(const QString prop_name) const {
     QString cstr = prop_name.split("#").last();
     if (QString::compare("x", cstr) == 0) return x;

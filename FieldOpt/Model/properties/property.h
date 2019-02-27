@@ -75,7 +75,7 @@ class Property
    * Info datastructure is set.
    */
   enum PropertyType : int {BHP=2001, Rate=2002, SplinePoint=2003, WellBlock=2004,
-    Transmissibility=2005, PseudoContVert=2006, Packer=2007, ICD=2008
+    Transmissibility=2005, PseudoContVert=2006, Packer=2007, ICD=2008, PolarSpline=2009
   };
 
   /*!
@@ -83,6 +83,11 @@ class Property
    * is for the heel or the toe of the well.
    */
   enum SplineEnd : int {Heel=3001, Toe=3002, Middle=3003};
+
+  /*!
+   * \brief For PolarSpline type properties.
+   */
+  enum PolarProp : int {Azimuth=5001, Length=5002, Elevation=5003, Midpoint=5004};
 
   /*!
    * \brief For SplinePoint and WellBlock type variables, this indicates which coordinate
@@ -100,8 +105,9 @@ class Property
     PropertyType prop_type; //!< The type of property this is (part) of.
     QString parent_well_name; //!< The name of the well this property belongs to.
     int index; //!< The number of the well block this property belongs to, the time step of a control, spline point index, or packer number
-    SplineEnd spline_end;
-    Coordinate coord;
+    SplineEnd spline_end; //!< Which end of a spline is held.
+    Coordinate coord; //!< Which coordinate (x/y/z/i/j/k) is held.
+    PolarProp polar_prop; //!< PolarSpline properties
   };
 
   PropertyInfo propertyInfo() const; //!< Get an Info struc containing information about the variable. This is only set if the property is variable.
@@ -124,6 +130,7 @@ class Property
   int get_spline_index(const QString prop_name) const;
   int get_prop_index(const QString prop_name) const;
   Coordinate get_prop_coord(const QString prop_name) const;
+  PolarProp get_polar_prop(const QString prop_name) const;
 };
 
 }

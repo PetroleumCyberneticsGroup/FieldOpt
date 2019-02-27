@@ -69,8 +69,7 @@ class ReservoirBoundary : public Constraint, WellSplineConstraint
                     Model::Properties::VariablePropertyContainer *variables,
                     Reservoir::Grid::Grid *grid);
   string name() override { return "ReservoirBoundary"; }
-
-  // Constraint interface
+    // Constraint interface
  public:
   bool CaseSatisfiesConstraint(Case *c);
   void SnapCaseToConstraints(Case *c);
@@ -127,7 +126,7 @@ class ReservoirBoundary : public Constraint, WellSplineConstraint
   void findCornerCells();
 //            QList<int> index_corner_cells_;
 
- private:
+ protected:
   int imin_, imax_, jmin_, jmax_, kmin_, kmax_;
   QList<int> index_list_;
   Reservoir::Grid::Grid *grid_;
