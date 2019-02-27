@@ -40,7 +40,7 @@ namespace {
 
     TEST_F(PolarSplineTest, Constructor) {
         Paths paths;
-        paths.SetPath(Paths::GRID_FILE, TestResources::ExampleFilePaths::grid_5spot_.toStdString());
+        paths.SetPath(Paths::GRID_FILE, TestResources::ExampleFilePaths::grid_5spot_);
         auto settings = Settings::Model(TestResources::TestResourceModelSettingSnippets::model_polar_well(), paths);
         auto wsettings = settings.wells()[0];
 
@@ -63,7 +63,7 @@ namespace {
 
     TEST_F(PolarSplineTest, Endblocks) {
         Paths paths;
-        paths.SetPath(Paths::GRID_FILE, TestResources::ExampleFilePaths::grid_5spot_.toStdString());
+        paths.SetPath(Paths::GRID_FILE, TestResources::ExampleFilePaths::grid_5spot_);
         auto settings = Settings::Model(TestResources::TestResourceModelSettingSnippets::model_polar_well(), paths);
         auto wsettings = settings.wells()[0];
 
@@ -100,7 +100,7 @@ namespace {
 
     TEST_F(PolarSplineTest, Tilting) {
         Paths paths;
-        paths.SetPath(Paths::GRID_FILE, TestResources::ExampleFilePaths::grid_5spot_.toStdString());
+        paths.SetPath(Paths::GRID_FILE, TestResources::ExampleFilePaths::grid_5spot_);
         auto settings = Settings::Model(TestResources::TestResourceModelSettingSnippets::model_polar_well(), paths);
         auto wsettings = settings.wells()[0];
 
@@ -128,7 +128,7 @@ namespace {
     }
     TEST_F(PolarSplineTest, Screwing) {
         Paths paths;
-        paths.SetPath(Paths::GRID_FILE, TestResources::ExampleFilePaths::grid_5spot_.toStdString());
+        paths.SetPath(Paths::GRID_FILE, TestResources::ExampleFilePaths::grid_5spot_);
         auto settings = Settings::Model(TestResources::TestResourceModelSettingSnippets::model_polar_well(), paths);
         auto wsettings = settings.wells()[0];
 
