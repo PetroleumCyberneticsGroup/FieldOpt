@@ -53,7 +53,7 @@ class PSO : public Optimizer {
     Eigen::VectorXd rea_vars; //!< Real variables
     Case *case_pointer; //!< Pointer to the case
     Eigen::VectorXd rea_vars_velocity; //!< The velocity of the real variables
-    Particle(Optimization::Case *c, boost::random::mt19937 gen, Eigen::VectorXd v_max, int n_vars);
+    Particle(Optimization::Case *c, boost::random::mt19937 &gen, Eigen::VectorXd v_max, int n_vars);
     Particle(){}
     void ParticleAdapt(Eigen::VectorXd rea_vars_velocity_swap, Eigen::VectorXd rea_vars);
     double ofv() { return case_pointer->objective_function_value(); }
