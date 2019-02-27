@@ -19,6 +19,7 @@
 ******************************************************************************/
 #include "AFPSO.h"
 #include "Utilities/math.hpp"
+#include "Utilities/random.hpp"
 #include <algorithm>
 
 namespace Optimization {

@@ -7,6 +7,8 @@ SET(UTILITIES_HEADERS
 	printer.hpp
 	stringhelpers.hpp
 	time.hpp
+	random.hpp
+	system.hpp
 	verbosity.h
 )
 
@@ -19,4 +21,5 @@ SET(UTILITIES_TESTS
 	tests/test_math.cpp
 	tests/test_printer.cpp
 	tests/test_time.cpp
+	tests/test_random.cpp
 )

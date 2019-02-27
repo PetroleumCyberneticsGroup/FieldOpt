@@ -19,6 +19,7 @@
 ******************************************************************************/
 #include "GeneticAlgorithm.h"
 #include "Utilities/math.hpp"
+#include "Utilities/random.hpp"
 #include "Utilities/stringhelpers.hpp"
 #include <math.h>
 

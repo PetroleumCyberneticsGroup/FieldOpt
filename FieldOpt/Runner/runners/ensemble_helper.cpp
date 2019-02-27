@@ -22,7 +22,7 @@
 
 #include <iostream>
 #include "ensemble_helper.h"
-#include "Utilities/math.hpp"
+#include "Utilities/random.hpp"
 
 namespace Runner {
 

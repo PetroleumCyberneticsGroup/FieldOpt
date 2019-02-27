@@ -18,6 +18,7 @@
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 #include "Utilities/math.hpp"
+#include "Utilities/random.hpp"
 #include "RGARDD.h"
 
 namespace Optimization {
