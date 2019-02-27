@@ -22,18 +22,15 @@
 
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
+#include "Settings/tests/test_resource_example_file_paths.hpp"
 
 namespace TestResources {
 class TestResourceGrids {
  protected:
   TestResourceGrids() {
-      grid_horzwel_ = new Reservoir::Grid::ECLGrid(
-          "../examples/ECLIPSE/HORZWELL/HORZWELL.EGRID");
-      grid_5spot_ = new Reservoir::Grid::ECLGrid(
-          "../examples/ADGPRS/5spot/ECL_5SPOT.EGRID");
-      grid_norne_ = new Reservoir::Grid::ECLGrid(
-          "../examples/Flow/norne/NORNE_ATW2013.EGRID"
-      );
+      grid_horzwel_ = new Reservoir::Grid::ECLGrid(TestResources::ExampleFilePaths::grid_horzwel_);
+      grid_5spot_ = new Reservoir::Grid::ECLGrid(TestResources::ExampleFilePaths::grid_5spot_);
+      grid_norne_ = new Reservoir::Grid::ECLGrid(TestResources::ExampleFilePaths::norne_atw_grid_);
   }
 
   Reservoir::Grid::Grid *grid_5spot_;

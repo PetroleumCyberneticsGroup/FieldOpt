@@ -389,6 +389,7 @@ if (NOT (BUILD_WIC_ONLY OR BUILD_WIC_ADGPRS))
 
   ## Create an empty directory for test output
   file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fieldopt-output)
+  file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fieldopt-output/norne_test)
 endif()
 
 # Compile options ==========================================

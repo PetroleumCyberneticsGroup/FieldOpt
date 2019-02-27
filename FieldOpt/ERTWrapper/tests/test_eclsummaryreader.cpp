@@ -20,6 +20,7 @@
 #include <gtest/gtest.h>
 #include "ERTWrapper/eclsummaryreader.h"
 #include "ERTWrapper/ertwrapper_exceptions.h"
+#include "Settings/tests/test_resource_example_file_paths.hpp"
 
 using namespace ERTWrapper::ECLSummary;
 
@@ -39,7 +40,7 @@ class ECLSummaryReaderTest : public ::testing::Test {
   virtual void TearDown() { }
 
   ECLSummaryReader *ecl_summary_reader_;
-  std::string file_name_ = "../examples/ECLIPSE/HORZWELL/HORZWELL";
+  std::string file_name_ = TestResources::ExampleFilePaths::grid_horzwel_;
 };
 
 TEST_F(ECLSummaryReaderTest, ReportSteps) {

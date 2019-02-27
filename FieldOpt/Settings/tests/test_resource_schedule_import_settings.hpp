@@ -5,6 +5,8 @@
 #ifndef FIELDOPT_TEST_RESOURCE_SCHEDULE_IMPORT_SETTINGS_H
 #define FIELDOPT_TEST_RESOURCE_SCHEDULE_IMPORT_SETTINGS_H
 
+#include "Settings/tests/test_resource_example_file_paths.hpp"
+
 namespace TestResources {
 namespace TestResourceSettings {
 
@@ -13,7 +15,7 @@ QJsonObject imported_model_settings {
         {"Type", "ECLIPSE"},
         {"FluidModel", "BlackOil"},
         {"ExecutionScript", "csh_eclrun.sh"},
-        {"DriverPath", "../examples/ECLIPSE/norne-simplified/NORNE_SIMPLIFIED.DATA"},
+        {"DriverPath", QString::fromStdString(TestResources::ExampleFilePaths::norne_deck_)},
         {"SchedulePath", "INCLUDE/BC0407_HIST01122006.SCH"}
     }},
     {"Model", QJsonObject {

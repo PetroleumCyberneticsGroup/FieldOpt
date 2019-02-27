@@ -28,6 +28,7 @@
 #include "Reservoir/grid/grid.h"
 #include "Reservoir/grid/eclgrid.h"
 #include "WellIndexCalculation/wicalc_rixx.h"
+#include "Settings/tests/test_resource_example_file_paths.hpp"
 
 using namespace Reservoir::Grid;
 using namespace Reservoir::WellIndexCalculation;
@@ -52,7 +53,7 @@ class IntersectedCellsTest : public ::testing::Test {
   virtual void TearDown() { }
 
   Grid *grid_;
-  string file_path_ = "../examples/ADGPRS/5spot/ECL_5SPOT.EGRID";
+  string file_path_ = TestResources::ExampleFilePaths::grid_5spot_;
   wicalc_rixx *wic_;
 };
 

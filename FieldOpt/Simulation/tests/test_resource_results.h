@@ -11,25 +11,20 @@ namespace TestResources {
     protected:
         TestResourceResults() {
             results_ecl_horzwell_ = new Simulation::Results::ECLResults();
-            results_ecl_horzwell_->ReadResults(ExampleFilePaths::ecl_base_horzwell);
+            results_ecl_horzwell_->ReadResults(QString::fromStdString(ExampleFilePaths::ecl_base_horzwell));
 
             results_adgprs_5spot_ = new Simulation::Results::AdgprsResults();
-            results_adgprs_5spot_->ReadResults(ExampleFilePaths::gprs_smry_hdf5_5spot_);
-
-//            results_flow_5spot_ = new Simulation::Results::ECLResults();
-//            results_flow_5spot_->ReadResults(ExampleFilePaths::flow_base_5spot_);
+            results_adgprs_5spot_->ReadResults(QString::fromStdString(ExampleFilePaths::gprs_smry_hdf5_5spot_));
         }
 
         virtual ~TestResourceResults() {
             results_ecl_horzwell_->DumpResults();
             results_adgprs_5spot_->DumpResults();
-//            results_flow_5spot_->DumpResults();
         }
 
     protected:
         Simulation::Results::ECLResults *results_ecl_horzwell_;
         Simulation::Results::AdgprsResults *results_adgprs_5spot_;
-//        Simulation::Results::ECLResults *results_flow_5spot_;
     };
 }
 

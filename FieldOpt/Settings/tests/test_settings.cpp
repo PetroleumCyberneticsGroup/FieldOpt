@@ -35,20 +35,19 @@ protected:
 
 TEST_F(SettingsTest, ConstructorAndTestFileValidity) {
     Paths paths;
-    paths.SetPath(Paths::DRIVER_FILE, TestResources::ExampleFilePaths::driver_example_.toStdString());
-    paths.SetPath(Paths::OUTPUT_DIR, TestResources::ExampleFilePaths::directory_output_.toStdString());
+    paths.SetPath(Paths::DRIVER_FILE, TestResources::ExampleFilePaths::driver_example_);
+    paths.SetPath(Paths::OUTPUT_DIR, TestResources::ExampleFilePaths::directory_output_);
+    paths.SetPath(Paths::SIM_DRIVER_FILE, TestResources::ExampleFilePaths::deck_horzwel_);
     EXPECT_NO_THROW(auto settings = ::Settings::Settings(paths));
 }
 
 TEST_F(SettingsTest, GlobalSettings) {
     Paths paths;
-    paths.SetPath(Paths::DRIVER_FILE, TestResources::ExampleFilePaths::driver_example_.toStdString());
-    paths.SetPath(Paths::OUTPUT_DIR, TestResources::ExampleFilePaths::directory_output_.toStdString());
+    paths.SetPath(Paths::DRIVER_FILE, TestResources::ExampleFilePaths::driver_example_);
+    paths.SetPath(Paths::OUTPUT_DIR, TestResources::ExampleFilePaths::directory_output_);
+    paths.SetPath(Paths::SIM_DRIVER_FILE, TestResources::ExampleFilePaths::deck_horzwel_);
     auto settings = ::Settings::Settings(paths);
     EXPECT_STREQ("TestRun", settings.name().toLatin1().constData());
-    EXPECT_STREQ(TestResources::ExampleFilePaths::driver_example_.toLatin1().constData(),
-                 settings.paths().GetPath(Paths::DRIVER_FILE).c_str());
-//    EXPECT_EQ(true, settings.verbosity()>0);
 }
 
 }
