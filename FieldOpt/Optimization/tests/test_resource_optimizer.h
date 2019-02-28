@@ -134,9 +134,7 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
           {"LowerBoundInt", 0.0},
           {"UpperBoundInt", 10.0},
           {"LowerBoundReal", 0.0},
-          {"UpperBoundReal", 100.0},
-          {"RNGSeed", 5}
-
+          {"UpperBoundReal", 100.0}
       }},
       {"Objective", obj_fun_}
   };
@@ -152,9 +150,7 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
           {"MutationStrength",      0.25},
           {"StagnationLimit",       1e-10},
           {"LowerBound",            -10.0},
-          {"UpperBound",            10.0},
-          {"RNGSeed", 5}
-
+          {"UpperBound",            10.0}
       }},
       {"Objective", obj_fun_}
   };
@@ -169,9 +165,7 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
           {"VFSA-InitTemp",        1E-7},
           {"VFSA-TempScale",        1.0},
           {"LowerBoundReal",       -5.0},
-          {"UpperBoundReal",        5.0},
-          {"RNGSeed",                 5}
-
+          {"UpperBoundReal",        5.0}
       }},
       {"Objective", obj_fun_}
   };
@@ -187,9 +181,7 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
           {"VFSA-InitTemp",             1E-6},
           {"VFSA-TempScale",             1.0},
           {"LowerBoundReal",            -5.0},
-          {"UpperBoundReal",             5.0},
-          {"RNGSeed",                      5}
-
+          {"UpperBoundReal",             5.0}
       }},
       {"Objective", obj_fun_}
   };
@@ -205,8 +197,7 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
           {"SPSA-c",                    0.05},
           //{"SPSA-A",                     10},
           //{"SPSA_a",                      1.0},
-          {"SPSA-InitStepMagnitude",     0.1},
-          {"RNGSeed",                      5}
+          {"SPSA-InitStepMagnitude",     0.1}
       }},
       {"Objective", obj_fun_}
   };
@@ -221,8 +212,7 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
           {"SPSA-c",                    0.05},
           //{"SPSA-A",                     10},
           //{"SPSA_a",                      1.0},
-          {"SPSA-InitStepMagnitude",     0.1},
-          {"RNGSeed",                      5}
+          {"SPSA-InitStepMagnitude",     0.1}
       }},
       {"Objective", obj_fun_}
   };
@@ -233,13 +223,11 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
       {"Parameters", QJsonObject{
           {"MaxGenerations",        700},
           {"PSO-SwarmSize",          10},
-          {"PSO-LearningFactor1",     2.2},
-          {"PSO-LearningFactor2",     1.8},
+          {"PSO-LearningFactor1",    2.2},
+          {"PSO-LearningFactor2",    1.8},
           {"PSO-VelocityScale",      0.025},
-          {"LowerBound",            -10.0},
-          {"UpperBound",            10.0},
-          {"RNGSeed", 5}
-
+          {"LowerBound",            -5.0},
+          {"UpperBound",             5.0}
       }},
       {"Objective", obj_fun_}
   };
@@ -250,8 +238,7 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
       {"Parameters", QJsonObject{
           {"LowerBound", -1},
           {"UpperBound",  1},
-          {"MaxEvaluations", 50},
-          {"RNGSeed", 25}
+          {"MaxEvaluations", 50}
       }},
       {"Objective", obj_fun_},
 //      {"Constraints", QJsonArray{
