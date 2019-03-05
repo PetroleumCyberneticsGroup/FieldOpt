@@ -17,7 +17,8 @@
    You should have received a copy of the GNU General Public License
    along with FieldOpt.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
-#include <Utilities/math.hpp>
+#include "Utilities/math.hpp"
+#include "Utilities/random.hpp"
 #include "optimizers/gss_patterns.hpp"
 #include "AFCompassSearch.h"
 namespace Optimization {

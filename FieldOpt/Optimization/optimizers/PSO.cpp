@@ -20,6 +20,7 @@
 
 #include "PSO.h"
 #include "Utilities/math.hpp"
+#include "Utilities/random.hpp"
 #include "Utilities/stringhelpers.hpp"
 #include <math.h>
 
@@ -119,11 +120,11 @@ Case *PSO::generateRandomCase() {
     Eigen::VectorXd erands(n_vars_);
     for (int i = 0; i < n_vars_; ++i) {
         erands(i) = random_doubles(gen_, lower_bound_(i), upper_bound_(i), 1)[0];
-    }
+}
     new_case->SetRealVarValues(erands);
     return  new_case;
 }
-PSO::Particle::Particle(Optimization::Case *c, boost::random::mt19937 gen, VectorXd v_max, int n_vars) {
+PSO::Particle::Particle(Optimization::Case *c, boost::random::mt19937 &gen, VectorXd v_max, int n_vars) {
     case_pointer = c;
     rea_vars=c->GetRealVarVector();
     Eigen::VectorXd temp(n_vars);

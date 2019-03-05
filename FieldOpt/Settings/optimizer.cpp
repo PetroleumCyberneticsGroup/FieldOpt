@@ -394,25 +394,25 @@ Optimizer::Parameters Optimizer::parseParameters(QJsonObject &json_parameters) {
 
         // SPSA Parameters
         if (json_parameters.contains("SPSA-MaxIterations")) {
-          params.spsa_max_iterations = json_parameters["SPSA-MaxIterations"].toInt();
+            params.spsa_max_iterations = json_parameters["SPSA-MaxIterations"].toInt();
         }
         if (json_parameters.contains("SPSA-gamma")) {
-          params.spsa_gamma = json_parameters["SPSA-gamma"].toDouble();
+            params.spsa_gamma = json_parameters["SPSA-gamma"].toDouble();
         }
         if (json_parameters.contains("SPSA-alpha")) {
-          params.spsa_alpha = json_parameters["SPSA-alpha"].toDouble();
+            params.spsa_alpha = json_parameters["SPSA-alpha"].toDouble();
         }
         if (json_parameters.contains("SPSA-c")) {
-          params.spsa_c = json_parameters["SPSA-c"].toDouble();
+            params.spsa_c = json_parameters["SPSA-c"].toDouble();
         }
         if (json_parameters.contains("SPSA-A")) {
-          params.spsa_A = json_parameters["SPSA-A"].toDouble();
+            params.spsa_A = json_parameters["SPSA-A"].toDouble();
         } else params.spsa_A = 0.1 * params.spsa_max_iterations;
         if (json_parameters.contains("SPSA_a")) {
-          params.spsa_a = json_parameters["SPSA_a"].toDouble();
+            params.spsa_a = json_parameters["SPSA_a"].toDouble();
         }
         if (json_parameters.contains("SPSA-InitStepMagnitude")) {
-          params.spsa_init_step_magnitude = json_parameters["SPSA-InitStepMagnitude"].toDouble();
+            params.spsa_init_step_magnitude = json_parameters["SPSA-InitStepMagnitude"].toDouble();
         }
 
 
@@ -445,10 +445,14 @@ Optimizer::Parameters Optimizer::parseParameters(QJsonObject &json_parameters) {
 
         // RNG seed
         if (json_parameters.contains("RNGSeed")) {
-            params.rng_seed = json_parameters["RNGSeed"].toInt();
+            Printer::error("Passing RNGSeed is no longer supported.");
+            Printer::ext_warn("Passing RNGSeed in settings is no longer supporte. In fact, it never really worked: this"
+                              "is why it has now been removed. Remove the RNGSeed line from your driver file and try again.",
+                              "Settings", "Optimization");
+            throw std::runtime_error("Error in driver file");
         }
         else {
-            params.rng_seed = std::time(0);
+            params.rng_seed = 0;
         }
     }
     catch (std::exception const &ex) {

@@ -22,6 +22,7 @@
 
 #include "Optimization/optimizer.h"
 #include "Utilities/math.hpp"
+#include "Utilities/random.hpp"
 #include <Eigen/Core>
 
 namespace Optimization {

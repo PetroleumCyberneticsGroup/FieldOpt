@@ -23,6 +23,7 @@
 
 #include "Optimization/optimizer.h"
 #include "Utilities/math.hpp"
+#include "Utilities/random.hpp"
 #include <Eigen/Core>
 #include <utility>
 
@@ -34,7 +35,7 @@ namespace Optimizers {
  * algorithm.
  *
  * The implementation is based on the description in
- * [1] "An overview of the simultaneous perturbation method for efficient optimization", 
+ * [1] "An overview of the simultaneous perturbation method for efficient optimization",
  *	James C. Spall, Johns Hopkins Techical Digest, vol. 19 no. 4 (1998).
  *
  * The default parameter values are based on the recommendations described in
@@ -118,8 +119,8 @@ class SPSA : public Optimizer {
   /*!
    * @brief Update g_k_ by using the two cases in perturbations_.
    * The gradient is updated according to:
-   * \$ g_k (\theta_k) = \frac{y(\theta_k + c_k \Delta_k) 
-   *                     - y(\theta_k - c_k \Delta_k}{2c_k} 
+   * \$ g_k (\theta_k) = \frac{y(\theta_k + c_k \Delta_k)
+   *                     - y(\theta_k - c_k \Delta_k}{2c_k}
    *                     * [\Delta^{-1}_{k1}, \Delta^{-1}_{k2}, ... , \Delta^{-1}_{kD} ]^T \$
    */
   void updateGradient();

@@ -5,6 +5,7 @@
 #include "Model/properties/continous_property.h"
 #include "Model/tests/test_resource_variable_property_container.h"
 #include "Utilities/math.hpp"
+#include "Utilities/random.hpp"
 #include <QHash>
 #include <QUuid>
 #include <QList>

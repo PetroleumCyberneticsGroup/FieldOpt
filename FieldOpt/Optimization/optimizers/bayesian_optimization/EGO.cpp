@@ -22,6 +22,7 @@
 #include "Utilities/stringhelpers.hpp"
 #include "gp/rprop.h"
 #include "Utilities/math.hpp"
+#include "Utilities/random.hpp"
 #include "Utilities/time.hpp"
 #include "optimizers/bayesian_optimization/af_optimizers/AFPSO.h"
 #include "EGO.h"
