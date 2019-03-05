@@ -25,6 +25,11 @@ QJsonObject model_adtl_pts {
                 {"DefinitionType", "WellSpline"},
                 {"PreferredPhase", "Oil"},
                 {"WellboreRadius", 0.1905},
+                {"Segmentation", QJsonObject{
+                    {"Compartments", QJsonObject {
+                        {"Count", 3},
+                    }}
+                }},
                 {"Controls", QJsonArray { QJsonObject{
                     {"TimeStep", 0},
                     {"State", "Open"},
