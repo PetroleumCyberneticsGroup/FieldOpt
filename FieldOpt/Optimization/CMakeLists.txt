@@ -28,6 +28,11 @@ if (BUILD_TESTING)
 	add_executable(test_optimization ${OPTIMIZATION_TESTS})
 
 	target_link_libraries(test_optimization
+			PUBLIC fieldopt::model
+			PUBLIC fieldopt::simulation
+			PUBLIC fieldopt::constraintmath
+			PUBLIC fieldopt::reservoir
+			PUBLIC fieldopt::runner
 			fieldopt::optimization
 			${gtest}
 			${gtest_main}

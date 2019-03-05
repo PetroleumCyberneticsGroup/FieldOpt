@@ -209,11 +209,11 @@ vector<PSO::Particle> PSO::update_position() {
         for(int j = 0; j < n_vars_; j++){
             swarm_[i].rea_vars(j)=swarm_[i].rea_vars_velocity(j)+swarm_[i].rea_vars(j);
             if (swarm_[i].rea_vars(j) > upper_bound_[j]){
-                swarm_[i].rea_vars(j) = upper_bound_[j]-abs(swarm_[i].rea_vars(j)-upper_bound_[j]);
-                swarm_[i].rea_vars_velocity(j) = swarm_[i].rea_vars_velocity(j)*-1.0;
+                swarm_[i].rea_vars(j) = upper_bound_[j]-abs(swarm_[i].rea_vars(j)-upper_bound_[j])*0.5;
+                swarm_[i].rea_vars_velocity(j) = swarm_[i].rea_vars_velocity(j)*-0.5;
             } else if (swarm_[i].rea_vars(j) < lower_bound_[j]){
-                swarm_[i].rea_vars(j) = lower_bound_[j]-abs(swarm_[i].rea_vars(j)-lower_bound_[j]);
-                swarm_[i].rea_vars_velocity(j) = swarm_[i].rea_vars_velocity(j)*-1.0;
+                swarm_[i].rea_vars(j) = lower_bound_[j]+abs(swarm_[i].rea_vars(j)-lower_bound_[j])*0.5;
+                swarm_[i].rea_vars_velocity(j) = swarm_[i].rea_vars_velocity(j)*-0.5;
             }
         }
     }
