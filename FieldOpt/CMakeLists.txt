@@ -181,13 +181,6 @@ else()
       HINTS ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib
       REQUIRED)
 
-  find_package(opm-common
-      PATHS
-      ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib
-      ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/share/cmake/opm-common
-      NO_DEFAULT_PATH
-      REQUIRED)
-
   message(STATUS "ecl_LIBRARIES: ${ecl_LIBRARIES}")
   message(STATUS "ecl_LIBRARY: ${ecl_LIBRARY}")
   message(STATUS "ecl_FOUND: ${ecl_FOUND}")
