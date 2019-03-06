@@ -192,21 +192,38 @@ QString WellControls::createProducerEntry(const WellControls::WellSetting &setti
     switch (setting.control.mode()) {
         case ::Settings::Model::ControlMode::BHPControl:
             producer_entry_line[2] = "BHP";
-            producer_entry_line[8] = QString::number(setting.control.bhp());
-            if (setting.control.rate() > 0) { // Simulator-enforced upper bound
-                producer_entry_line[6] = QString::number(setting.control.rate());
-            }
+            if (setting.control.bhp() < 0) throw std::runtime_error("Invalid BHP control value.");
             break;
         case ::Settings::Model::ControlMode::LRATControl:
             producer_entry_line[2] = "LRAT";
-            producer_entry_line[6] = QString::number(setting.control.rate());
-            if (setting.control.bhp() > 0) { // Simulator-enforced lower bound
-                producer_entry_line[8] = QString::number(setting.control.bhp());
-            }
+            if (setting.control.liquidRate() < 0) throw std::runtime_error("Invalid LRAT control value.");
+            break;
+        case ::Settings::Model::ControlMode::ORATControl:
+            if (setting.control.oilRate() < 0) throw std::runtime_error("Invalid ORAT control value.");
+            producer_entry_line[2] = "ORAT";
+            break;
+        case ::Settings::Model::ControlMode::GRATControl:
+            if (setting.control.gasRate() < 0) throw std::runtime_error("Invalid GRAT control value.");
+            producer_entry_line[2] = "GRAT";
+            break;
+        case ::Settings::Model::ControlMode::WRATControl:
+            if (setting.control.waterRate() < 0) throw std::runtime_error("Invalid WRAT control value.");
+            producer_entry_line[2] = "WRAT";
+            break;
+        case ::Settings::Model::ControlMode::RESVControl:
+            if (setting.control.reservoirRate() < 0) throw std::runtime_error("Invalid RESV control value.");
+            producer_entry_line[2] = "RESV";
             break;
         default:
             throw std::runtime_error("Producer control mode not recognized.");
     }
+    if (setting.control.oilRate()       > 0) producer_entry_line[3] = QString::number(setting.control.oilRate());
+    if (setting.control.waterRate()     > 0) producer_entry_line[4] = QString::number(setting.control.waterRate());
+    if (setting.control.gasRate()       > 0) producer_entry_line[5] = QString::number(setting.control.gasRate());
+    if (setting.control.liquidRate()    > 0) producer_entry_line[6] = QString::number(setting.control.liquidRate());
+    if (setting.control.reservoirRate() > 0) producer_entry_line[7] = QString::number(setting.control.reservoirRate());
+    if (setting.control.bhp()           > 0) producer_entry_line[8] = QString::number(setting.control.bhp());
+
     return "WCONPROD\n   " + producer_entry_line.join(" ") + "/\n/\n\n";
 }
 
