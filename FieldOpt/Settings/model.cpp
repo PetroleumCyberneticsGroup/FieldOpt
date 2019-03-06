@@ -388,6 +388,22 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
             control.control_mode = ControlMode::LRATControl;
             control.name = "Rate#" + well.name + "#" + QString::number(control.time_step);
         }
+        else if (ctrl_mode == "ORAT" ) {
+            control.control_mode = ControlMode::ORATControl;
+            control.name = "Rate#" + well.name + "#" + QString::number(control.time_step);
+        }
+        else if (ctrl_mode == "GRAT" ) {
+            control.control_mode = ControlMode::ORATControl;
+            control.name = "Rate#" + well.name + "#" + QString::number(control.time_step);
+        }
+        else if (ctrl_mode == "WRAT" ) {
+            control.control_mode = ControlMode::WRATControl;
+            control.name = "Rate#" + well.name + "#" + QString::number(control.time_step);
+        }
+        else if (ctrl_mode == "RESV" ) {
+            control.control_mode = ControlMode::RESVControl;
+            control.name = "Rate#" + well.name + "#" + QString::number(control.time_step);
+        }
         else throw UnableToParseWellsModelSectionException("Well control type " + json_controls.at(i).toObject()["Mode"].toString().toStdString() + " not recognized for well " + well.name.toStdString());
 
         // Control targets/limits
@@ -396,6 +412,18 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
         }
         if (json_controls[i].toObject().contains("LRAT")) {
             control.liq_rate = json_controls[i].toObject()["LRAT"].toDouble();
+        }
+        if (json_controls[i].toObject().contains("ORAT")) { // Limit for simulator
+            control.oil_rate = json_controls[i].toObject()["ORAT"].toDouble();
+        }
+        if (json_controls[i].toObject().contains("GRAT")) { // Limit for simulator
+            control.gas_rate = json_controls[i].toObject()["GRAT"].toDouble();
+        }
+        if (json_controls[i].toObject().contains("WRAT")) { // Limit for simulator
+            control.wat_rate = json_controls[i].toObject()["WRAT"].toDouble();
+        }
+        if (json_controls[i].toObject().contains("RESV")) { // Limit for simulator
+            control.res_rate = json_controls[i].toObject()["RESV"].toDouble();
         }
         if (json_controls[i].toObject().contains("BHP")) { // Limit for simulator
             control.bhp = json_controls[i].toObject()["BHP"].toDouble();
@@ -447,6 +475,10 @@ std::string Model::Well::ControlEntry::toString() {
     ce << "               Mode:      " << (control_mode == ControlMode::LRATControl ? "Rate" : "BHP") << "\n";
     ce << "               BHP:       " << boost::lexical_cast<std::string>(bhp) << "\n";
     ce << "               Liq. Rate: " << boost::lexical_cast<std::string>(liq_rate) << "\n";
+    ce << "               Oil Rate:  " << boost::lexical_cast<std::string>(oil_rate) << "\n";
+    ce << "               Gas Rate:  " << boost::lexical_cast<std::string>(gas_rate) << "\n";
+    ce << "               Wat. Rate: " << boost::lexical_cast<std::string>(wat_rate) << "\n";
+    ce << "               Res. Rate: " << boost::lexical_cast<std::string>(res_rate) << "\n";
     ce << "               Inj. type: " << (injection_type == InjectionType::WaterInjection ? "Water" : "Gas/UNKWN") << "\n";
     ce << "               Variable:  " << (is_variable ? "Yes" : "No") << "\n";
     return ce.str();

@@ -53,7 +53,7 @@ class Model
  public:
   Model(QJsonObject json_model, Paths &paths); // This should only be accessed externally for testing purposes.
   enum WellType : int { Injector=11, Producer=12, UNKNOWN_TYPE=19 };
-  enum ControlMode : int { BHPControl=21, LRATControl=22, UNKNOWN_CONTROL=29 };
+  enum ControlMode : int { BHPControl=21, LRATControl=22, ORATControl=23, WRATControl=24, RESVControl=25, GRATControl=26, UNKNOWN_CONTROL=29 };
   enum InjectionType : int { WaterInjection=31, GasInjection=32 };
   enum WellDefinitionType : int { WellBlocks=41, WellSpline=42, PseudoContVertical2D=43, PolarSpline=45, UNDEFINED=44 };
   enum WellCompletionType : int { Perforation=61, ICV=62, Packer=63, Tubing=64, Annulus=65 };
@@ -117,7 +117,11 @@ class Model
       WellState state;                               //!< Whether the well is open or shut.
       ControlMode control_mode;                      //!< Control mode.
       double bhp=-1;                                 //!< Bhp target/limit.
-      double liq_rate=-1;                            //!< Liquid Rate target/limit.
+      double liq_rate=-1;                            //!< Liquid Rate target/limit (LRAT).
+      double oil_rate=-1;                            //!< Oil Rate target/limit (ORAT).
+      double gas_rate=-1;                            //!< Gas Rate target/limit (GRAT).
+      double wat_rate=-1;                            //!< Water Rate target/limit (WRAT).
+      double res_rate=-1;                            //!< Reservoir fluid volume rate target (RESV).
       InjectionType injection_type = WaterInjection; //!< Injector type (water/gas). Defaults to water.
       bool is_variable = false;
       QString name;
