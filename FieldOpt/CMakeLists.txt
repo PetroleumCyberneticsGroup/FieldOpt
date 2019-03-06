@@ -11,7 +11,7 @@ project(FieldOpt)
 # CMAKE_MODULE_PATH: Commands like include() and find_package() search
 # for files in directories listed by this variable before checking the
 # default modules that come with CMake.
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
 include(GetSysInfo.cmake)
 include(MaurConfig.cmake)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-narrowing -Wno-sign-compare")

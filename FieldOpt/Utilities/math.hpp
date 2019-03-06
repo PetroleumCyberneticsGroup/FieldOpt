@@ -25,6 +25,7 @@
 #include <vector>
 #include <time.h>
 #include <Eigen/Core>
+#include <numeric>
 
 /*!
  * @brief Calculate the average value of the items in the list. The returned value will always be a double.
@@ -75,7 +76,7 @@ inline T calc_median(std::vector<T> list) {
  */
 template <typename T>
 inline std::vector<T> range(T start, T end, T step) {
-    int length = abs((end - start) / step);
+    int length = std::abs((end - start) / step);
     auto ran = std::vector<T>(length);
     ran[0] = start;
     for (int i = 1; i < length; ++i) {

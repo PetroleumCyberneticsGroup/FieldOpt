@@ -109,7 +109,7 @@ execute_process(COMMAND ${QT5_C_COMMAND}
 message("Done configuring Qt5:" ${QT_C_RESULT})
 
 message("Compiling Qt5 ...")
-set(QT5_M_COMMAND "make")
+set(QT5_M_COMMAND "gmake")
 execute_process(COMMAND ${QT5_M_COMMAND}
                 WORKING_DIRECTORY ${QT5_DIRECTORY}
                 RESULT_VARIABLE QT_M_RESULT
@@ -117,7 +117,7 @@ execute_process(COMMAND ${QT5_M_COMMAND}
 message("Done compiling Qt5:" ${QT_M_RESULT})
 
 message("Installing Qt5 ...")
-set(QT5_I_COMMAND "make")
+set(QT5_I_COMMAND "gmake")
 set(QT5_I_ARG "install")
 execute_process(COMMAND ${QT5_I_COMMAND} ${QT5_I_ARG}
                 WORKING_DIRECTORY ${QT5_DIRECTORY}
@@ -131,6 +131,4 @@ message("\n*************************************************************")
 message("Configuring done. If no errors occured, perform next steps:")
 message("  1. make            to compile.")
 message("  2. make install    to copy compiled files into libraries directory.")
-message("  3. Enter the opm-common library and run cmake, make and make install")
-message("     manually.")
 message("*************************************************************")
