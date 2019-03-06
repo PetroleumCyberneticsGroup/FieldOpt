@@ -66,7 +66,7 @@ TEST_F(ControlTest, InjectorControl) {
     EXPECT_EQ(0, inj_entry_.time_step);
     EXPECT_EQ(0, all_controls_.last()->time_step());
     EXPECT_TRUE(all_controls_.last()->open());
-    EXPECT_EQ(::Settings::Model::ControlMode::RateControl, all_controls_.last()->mode());
+    EXPECT_EQ(::Settings::Model::ControlMode::LRATControl, all_controls_.last()->mode());
     EXPECT_FLOAT_EQ(1200, all_controls_.last()->rate());
 }
 

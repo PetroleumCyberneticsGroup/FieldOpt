@@ -197,7 +197,7 @@ QString WellControls::createProducerEntry(const WellControls::WellSetting &setti
                 producer_entry_line[6] = QString::number(setting.control.rate());
             }
             break;
-        case ::Settings::Model::ControlMode::RateControl:
+        case ::Settings::Model::ControlMode::LRATControl:
             producer_entry_line[2] = "LRAT";
             producer_entry_line[6] = QString::number(setting.control.rate());
             if (setting.control.bhp() > 0) { // Simulator-enforced lower bound
@@ -237,7 +237,7 @@ QString WellControls::createInjectorEntry(const WellControls::WellSetting &setti
                 injector_entry_line[4] = QString::number(setting.control.rate());
             }
             break;
-        case ::Settings::Model::ControlMode::RateControl:
+        case ::Settings::Model::ControlMode::LRATControl:
             injector_entry_line[3] = "RATE";
             injector_entry_line[4] = QString::number(setting.control.rate());
             if (setting.control.bhp() > 0) { // Simulator-enforced upper bound

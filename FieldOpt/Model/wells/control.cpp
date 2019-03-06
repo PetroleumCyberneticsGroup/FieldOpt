@@ -45,11 +45,11 @@ Control::Control(::Settings::Model::Well::ControlEntry entry,
                 bhp_->setName(entry.name);
                 variables->AddVariable(bhp_);
             }
-            rate_ = new Properties::ContinousProperty(entry.rate); // Potential simulator limit (-1 if not set)
+            rate_ = new Properties::ContinousProperty(entry.liq_rate); // Potential simulator limit (-1 if not set)
             break;
-        case ::Settings::Model::ControlMode::RateControl:
+        case ::Settings::Model::ControlMode::LRATControl:
             mode_ = entry.control_mode;
-            rate_ = new Properties::ContinousProperty(entry.rate);
+            rate_ = new Properties::ContinousProperty(entry.liq_rate);
             if (entry.is_variable) {
                 rate_->setName(entry.name);
                 variables->AddVariable(rate_);

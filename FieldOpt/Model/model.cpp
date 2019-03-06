@@ -312,7 +312,7 @@ map<string, Loggable::WellDescription> Model::Summary::GetWellDescriptions() {
         // Controls
         for (Wells::Control *cont : *well->controls()) {
             Loggable::ControlDescription cd;
-            if (cont->mode() == Settings::Model::ControlMode::RateControl) {
+            if (cont->mode() == Settings::Model::ControlMode::LRATControl) {
                 cd.control = "Rate";
                 cd.value = cont->rate();
             }

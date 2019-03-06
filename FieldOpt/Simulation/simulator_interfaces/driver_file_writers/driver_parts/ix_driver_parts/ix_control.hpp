@@ -36,7 +36,7 @@ inline std::string create_single_control(const QString &well_name, bool is_injec
         if (control->mode() == Settings::Model::ControlMode::BHPControl) {
             ss << "        Constraint(" << control->bhp() << " INJECTION_BOTTOM_HOLE_PRESSURE)" << std::endl;
         }
-        else if (control->mode() == Settings::Model::ControlMode::RateControl) {
+        else if (control->mode() == Settings::Model::ControlMode::LRATControl) {
             ss << "        Constraint(" << control->rate() << " WATER_INJECTION_RATE)"          << std::endl;
         }
     }
@@ -44,7 +44,7 @@ inline std::string create_single_control(const QString &well_name, bool is_injec
         if (control->mode() == Settings::Model::ControlMode::BHPControl) {
             ss << "        Constraint(" << control->bhp() << " BOTTOM_HOLE_PRESSURE)"           << std::endl;
         }
-        else if (control->mode() == Settings::Model::ControlMode::RateControl) {
+        else if (control->mode() == Settings::Model::ControlMode::LRATControl) {
             ss << "        Constraint(" << control->rate() << " LIQUID_PRODCTION_RATE)"         << std::endl;
         }
     }

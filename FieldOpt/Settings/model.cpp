@@ -379,25 +379,27 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
 
 
         // Control mode
-        if (QString::compare("BHP", json_controls.at(i).toObject()["Mode"].toString()) == 0) {
+        QString ctrl_mode = json_controls.at(i).toObject()["Mode"].toString();
+        if (ctrl_mode == "BHP") {
             control.control_mode = ControlMode::BHPControl;
-            control.bhp = json_controls.at(i).toObject()["BHP"].toDouble();
             control.name = "BHP#" + well.name + "#" + QString::number(control.time_step);
-
-            if (json_controls[i].toObject().contains("Rate")) { // Limit for simulator
-                control.rate = json_controls[i].toObject()["Rate"].toDouble();
-            }
         }
-        else if (QString::compare("Rate", json_controls.at(i).toObject()["Mode"].toString()) == 0) {
-            control.control_mode = ControlMode::RateControl;
-            control.rate = json_controls.at(i).toObject()["Rate"].toDouble();
+        else if (ctrl_mode == "Rate" || ctrl_mode == "LRAT" ) {
+            control.control_mode = ControlMode::LRATControl;
             control.name = "Rate#" + well.name + "#" + QString::number(control.time_step);
-
-            if (json_controls[i].toObject().contains("BHP")) { // Limit for simulator
-                control.bhp = json_controls[i].toObject()["BHP"].toDouble();
-            }
         }
         else throw UnableToParseWellsModelSectionException("Well control type " + json_controls.at(i).toObject()["Mode"].toString().toStdString() + " not recognized for well " + well.name.toStdString());
+
+        // Control targets/limits
+        if (json_controls[i].toObject().contains("Rate")) { // Limit for simulator
+            control.liq_rate = json_controls[i].toObject()["Rate"].toDouble();
+        }
+        if (json_controls[i].toObject().contains("LRAT")) {
+            control.liq_rate = json_controls[i].toObject()["LRAT"].toDouble();
+        }
+        if (json_controls[i].toObject().contains("BHP")) { // Limit for simulator
+            control.bhp = json_controls[i].toObject()["BHP"].toDouble();
+        }
 
         // Injection type
         if (well.type == WellType::Injector) {
@@ -442,9 +444,9 @@ std::string Model::Well::ControlEntry::toString() {
     std::stringstream ce;
     ce << "ControlEntry - Timestep:  " << time_step << "\n";
     ce << "               State:     " << (state == WellState::WellOpen ? "Open" : "Shut") << "\n";
-    ce << "               Mode:      " << (control_mode == ControlMode::RateControl ? "Rate" : "BHP") << "\n";
+    ce << "               Mode:      " << (control_mode == ControlMode::LRATControl ? "Rate" : "BHP") << "\n";
     ce << "               BHP:       " << boost::lexical_cast<std::string>(bhp) << "\n";
-    ce << "               Rate:      " << boost::lexical_cast<std::string>(rate) << "\n";
+    ce << "               Liq. Rate: " << boost::lexical_cast<std::string>(liq_rate) << "\n";
     ce << "               Inj. type: " << (injection_type == InjectionType::WaterInjection ? "Water" : "Gas/UNKWN") << "\n";
     ce << "               Variable:  " << (is_variable ? "Yes" : "No") << "\n";
     return ce.str();
@@ -467,7 +469,7 @@ std::string Model::Well::toString() {
 bool Model::Well::ControlEntry::isDifferent(ControlEntry other) {
     if (state != other.state)
         return true;
-    if (rate != other.rate)
+    if (liq_rate != other.liq_rate)
         return true;
     if (bhp != other.bhp)
         return true;
