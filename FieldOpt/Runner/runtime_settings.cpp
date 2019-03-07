@@ -87,6 +87,10 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
         paths_.SetPath(Paths::SIM_AUX_DIR, GetAbsoluteFilePath(vm["sim-aux"].as<std::string>()));
     }
 
+    if (vm.count("sim-inset")) {
+        paths_.SetPath(Paths::SIM_SCH_INSET_FILE, GetAbsoluteFilePath(vm["sim-inset"].as<std::string>()));
+    }
+
     if (vm.count("fieldopt-build-dir")) {
         paths_.SetPath(Paths::BUILD_DIR, vm["fieldopt-build-dir"].as<std::string>());
     } else if (is_env_var_set("FIELDOPT_BUILD_ROOT")) {
@@ -183,6 +187,8 @@ po::variables_map RuntimeSettings::createVariablesMap(int argc, const char **arg
          "path to script that executes the reservoir simulation")
         ("sim-aux", po::value<std::string>(),
          "path to directory with additional auxilary simulation files")
+        ("sim-inset", po::value<std::string>(),
+          "path to simulator schedule inset file")
         ("fieldopt-build-dir,b", po::value<std::string>(),
          "path to FieldOpt build directory")
         ("ensemble-path", po::value<std::string>(),
