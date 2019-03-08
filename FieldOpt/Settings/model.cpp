@@ -33,7 +33,6 @@
 #include "model.h"
 #include "settings_exceptions.h"
 #include "Utilities/filehandling.hpp"
-#include "deck_parser.h"
 #include "trajectory_importer.h"
 
 namespace Settings {
@@ -89,61 +88,6 @@ Model::Model(QJsonObject json_model, Paths &paths)
         auto json_import = json_model["Import"].toObject();
         if (!paths.IsSet(Paths::SIM_DRIVER_FILE)) {
             throw std::runtime_error("SchedulePath must be specified (relative to DriverPath) to use the Import feature.");
-        }
-        if (VERB_SET >= 2) {
-            Printer::ext_info("Parsing schedule ...", "Settings", "Model");
-        }
-        deck_parser_ = new DeckParser(paths.GetPath(Paths::SIM_DRIVER_FILE));
-
-        if (!json_import["Keywords"].toArray().contains(QJsonValue("AllWells"))) {
-            throw std::runtime_error("Unable to import simulator schedule. Import Keywords array does not contain"
-                                         "any recognized keywords.");
-        }
-        if (VERB_SET >= 2) {
-            Printer::ext_info("Importing wells ...", "Settings", "Model");
-        }
-        wells_.append(deck_parser_->GetWellData());
-        setImportedWellDefaults(json_import);
-        parseImportedWellOverrides(json_model["Wells"].toArray());
-
-        // Spline conversion
-        if (json_import.contains("SplineConversion")) {
-            auto json_sconv = json_import["SplineConversion"].toObject();
-            if (!json_sconv.contains("Wells")) {
-                throw std::runtime_error("A list of wells must be specified when the SplineConversion is used.");
-            }
-            for (auto jwell : json_sconv["Wells"].toArray()) {
-                QString wname = jwell.toString();
-                int widx = -1;
-                for (int i = 0; i < wells_.size(); ++i) {
-                    if (QString::compare(wells_[i].name, wname) == 0) {
-                        widx = i;
-                        break;
-                    }
-                }
-                if (widx == -1) {
-                    throw std::runtime_error("Well " + wname.toStdString() +
-                        " defined in SplineConversion well list not found.");
-                }
-                wells_[widx].convert_well_blocks_to_spline = true;
-                wells_[widx].definition_type = WellDefinitionType::WellSpline;
-                if (json_sconv.contains("SplinePoints") && json_sconv["SplinePoints"].toInt() >= 2) {
-                    wells_[widx].n_spline_points = json_sconv["SplinePoints"].toInt();
-                    if (VERB_SET >= 2) {
-                        Printer::info("Setting number of spline points for "
-                                              + boost::lexical_cast<std::string>(wname.toStdString()) + " to "
-                                              + boost::lexical_cast<std::string>(wells_[widx].n_spline_points)
-                                              + " for conversion.");
-                    }
-                }
-                else {
-                    if (VERB_SET >= 2) {
-                        Printer::info("Defaulting number of spline points for "
-                                          + boost::lexical_cast<std::string>(wname.toStdString()) + " to 2 "
-                                          + " for conversion.");
-                    }
-                }
-            }
         }
 
         // Trajectory import
@@ -532,84 +476,6 @@ bool Model::Well::ControlEntry::isDifferent(ControlEntry other) {
     return false; // Assume they're equal if none of the above hits.
 }
 
-void Model::setImportedWellDefaults(QJsonObject json_import) {
-    if (
-        !json_import.contains("ProducerDefaultBHP") ||
-        (!json_import.contains("InjectorDefaultRate") &&
-        !json_import.contains("InjectorDefaultBHP"))
-        ) {
-        throw std::runtime_error("When importing from schedule, you must provide both the "
-                                     "InjectorDefaultRate or InjectorDefaultBHP and "
-                                     "ProducerDefaultBHP properties in the Import object.");
-    }
-
-    for (int i = 0; i < wells_.size(); ++i) {
-        wells_[i].controls = QList<Well::ControlEntry>{wells_[i].controls[0]}; // Remove all but first control
-        wells_[i].controls[0].time_step = getClosestControlTime(wells_[i].controls[0].time_step);
-        if (wells_[i].type == Injector) {
-            if (json_import.contains("InjectorDefaultRate")) {
-                wells_[i].controls[0].control_mode = RateControl;
-                wells_[i].controls[0].rate = json_import["InjectorDefaultRate"].toDouble();
-            }
-            else if (json_import.contains("InjectorDefaultBHP")) {
-                wells_[i].controls[0].control_mode = BHPControl;
-                wells_[i].controls[0].bhp = json_import["InjectorDefaultBHP"].toDouble();
-            }
-        }
-        else { // Producer
-            wells_[i].controls[0].control_mode = BHPControl;
-            wells_[i].controls[0].bhp = json_import["ProducerDefaultBHP"].toDouble();
-        }
-    }
-}
-
-void Model::parseImportedWellOverrides(QJsonArray json_wells) {
-    for (auto w : json_wells) {
-
-        auto well = w.toObject();
-        auto json_control = well["ControlOverrides"].toObject();
-        if (json_control.contains("IsVariable") && json_control["IsVariable"].toBool() == true) {
-            for (int i = 0; i < wells_.size(); ++i) { // Find the correct well
-                if (QString::compare(wells_[i].name, well["Name"].toString()) ==0){
-                    auto control = wells_[i].controls[0];
-                    control.is_variable = true;
-                    auto name_root_lst = control.name.split("#");
-                    name_root_lst.removeLast();
-                    auto name_root = name_root_lst.join("#") + "#";
-                    auto new_control_set = QList<Well::ControlEntry>();
-                    for (auto time : json_control["VariableTimeSteps"].toArray()) {
-                        int t = time.toInt();
-                        if (!control_times_.contains(t)) {
-                            throw std::runtime_error("All entries in VariableTimeSteps must match the overall"
-                                                         "ControlTimes vector. " + std::to_string(t) + " does not match");
-                        }
-                        auto control_copy = control;
-                        control_copy.time_step = t;
-                        control_copy.name = name_root + QString::number(t);
-                        new_control_set.append(control_copy);
-                    }
-                    wells_[i].controls = new_control_set;
-                    break;
-                }
-                else {
-                    if (i == wells_.size() - 1) { // Passed the final well without finding a match.
-                        throw std::runtime_error("Unable to find matching well for ControlOverrides");
-                    }
-                }
-            }
-        }
-    }
-
-}
-
-int Model::getClosestControlTime(int deck_time) {
-    auto diff = std::vector<int>(control_times_.size());
-    for (int i = 0; i < control_times_.size(); ++i) { // Compute control times
-        diff[i] = std::abs(deck_time - control_times_[i]);
-    }
-    auto idx_of_min_element = std::distance(diff.begin(), std::min_element(diff.begin(), diff.end()));
-    return control_times_[idx_of_min_element];
-}
 
 void Model::parseSegmentation(QJsonObject json_seg, Well &well) {
     parseSegmentTubing(json_seg, well);

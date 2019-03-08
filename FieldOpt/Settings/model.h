@@ -158,7 +158,6 @@ class Model
  private:
   QList<Well> wells_;
   QList<int> control_times_;
-  DeckParser *deck_parser_;
 
   void readReservoir(QJsonObject json_reservoir, Paths &paths);
   Well readSingleWell(QJsonObject json_well);
@@ -174,10 +173,6 @@ class Model
 
   bool controlTimeIsDeclared(int time) const;
 
-  /*!
-   * Get the control time that is closest to the time imported from the deck.
-   */
-  int getClosestControlTime(int deck_time);
 };
 
 }

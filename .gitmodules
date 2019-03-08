@@ -13,6 +13,3 @@
 [submodule "FieldOpt/ThirdParty/qtbase"]
 	path = FieldOpt/ThirdParty/qtbase
 	url = https://github.com/PetroleumCyberneticsGroup/qtbase.git
-[submodule "FieldOpt/ThirdParty/opm-common"]
-	path = FieldOpt/ThirdParty/opm-common
-	url = https://github.com/PetroleumCyberneticsGroup/opm-common.git

@@ -65,7 +65,6 @@ SET(MODEL_TESTS
 	tests/test_model.cpp
 	tests/variables/test_properties.cpp
 	tests/variables/test_variable_property_container.cpp
-	tests/wells/test_block_to_spline_conversion.cpp
 	tests/wells/test_control.cpp
 	tests/wells/test_perforation.cpp
 	tests/wells/test_pseudo_cont_vert.cpp
