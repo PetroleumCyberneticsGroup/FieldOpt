@@ -1,0 +1,12 @@
+INSET=-1
+-- Inserted by FieldOpt before the first WELSPECS
+RPTRST
+  BASIC=0 /
+END_INSET
+
+INSET=0
+-- Inserted by FieldOpt after WELSPECS at Day 0
+GCONPROD
+  FIELD  ORAT 10000.0 /
+/
+END_INSET

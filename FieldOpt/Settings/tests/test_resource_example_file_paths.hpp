@@ -45,6 +45,7 @@ static std::string gprs_base_5spot_          = base_path() + "/examples/ADGPRS/5
 static std::string gprs_smry_gpt_hdf5_5spot_ = base_path() + "/examples/ADGPRS/5spot/5SPOT-gpt.vars.h5";
 static std::string trajectories_             = base_path() + "/examples/ECLIPSE/norne-simplified/trajectories";
 static std::string cube_grid_                = base_path() + "/examples/ECLIPSE/cube_9x9/CUBE.EGRID";
+static std::string schedule_inset_           = base_path() + "/examples/ECLIPSE/schedule_inset.txt";
 
 }
 }

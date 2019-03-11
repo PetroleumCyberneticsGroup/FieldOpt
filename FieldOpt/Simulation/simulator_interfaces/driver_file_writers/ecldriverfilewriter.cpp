@@ -39,6 +39,10 @@ EclDriverFileWriter::EclDriverFileWriter(Settings::Settings *settings, Model::Mo
 {
     model_ = model;
     settings_ = settings;
+
+    if (settings->paths().IsSet(Paths::SIM_SCH_INSET_FILE)) {
+        insets_ = ECLDriverParts::ScheduleInsets(settings->paths().GetPath(Paths::SIM_SCH_INSET_FILE));
+    }
 }
 
 void EclDriverFileWriter::WriteDriverFile(QString schedule_file_path)
@@ -48,7 +52,7 @@ void EclDriverFileWriter::WriteDriverFile(QString schedule_file_path)
         Printer::ext_info("Writing driver file to " + fp + ".", "Simulation", "EclDriverFileWriter");
     }
     assert(FileExists(schedule_file_path));
-    Schedule schedule = ECLDriverParts::Schedule(model_->wells(), settings_->model()->control_times());
+    Schedule schedule = ECLDriverParts::Schedule(model_->wells(), settings_->model()->control_times(), insets_);
     model_->SetCompdatString(ECLDriverParts::Compdat(model_->wells()).GetPartString());
     Utilities::FileHandling::WriteStringToFile(schedule.GetPartString(), schedule_file_path);
 }

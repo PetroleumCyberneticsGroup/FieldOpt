@@ -111,8 +111,8 @@ TEST_F(ModelSettingsTest, InjectorControls) {
     EXPECT_EQ(0, injector.controls[0].time_step);
     EXPECT_EQ(Model::InjectionType::WaterInjection, injector.controls[0].injection_type);
     EXPECT_EQ(Model::WellState::WellOpen, injector.controls[0].state);
-    EXPECT_EQ(Model::ControlMode::RateControl, injector.controls[0].control_mode);
-    EXPECT_FLOAT_EQ(1200, injector.controls[0].rate);
+    EXPECT_EQ(Model::ControlMode::LRATControl, injector.controls[0].control_mode);
+    EXPECT_FLOAT_EQ(1200, injector.controls[0].liq_rate);
     EXPECT_FALSE(injector.controls[0].is_variable);
     EXPECT_STREQ("Rate#INJ#0", injector.controls[0].name.toLatin1().constData());
 }

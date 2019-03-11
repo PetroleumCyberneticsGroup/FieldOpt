@@ -18,6 +18,7 @@ SET(SIMULATION_HEADERS
 	simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/welsegs.h
 	simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/welspecs.h
 	simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/wsegvalv.h
+	simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/schedule_insets.h
 	simulator_interfaces/driver_file_writers/driver_parts/ix_driver_parts/flow_control_device.hpp
 	simulator_interfaces/driver_file_writers/driver_parts/ix_driver_parts/ix_control.hpp
 	simulator_interfaces/driver_file_writers/driver_parts/ix_driver_parts/report_tuning.hpp
@@ -47,6 +48,7 @@ SET(SIMULATION_SOURCES
 	simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/welsegs.cpp
 	simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/welspecs.cpp
 	simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/wsegvalv.cpp
+	simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/schedule_insets.cpp
 	simulator_interfaces/driver_file_writers/ecldriverfilewriter.cpp
 	simulator_interfaces/driver_file_writers/flowdriverfilewriter.cpp
 	simulator_interfaces/driver_file_writers/ix_driver_file_writer.cpp
@@ -65,6 +67,7 @@ SET(SIMULATION_TESTS
 	tests/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_schedule_section.cpp
 	tests/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_wellcontrols.cpp
 	tests/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_welspecs.cpp
+	tests/simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/test_schedule_inset.cpp
 	tests/simulator_interfaces/driver_file_writers/flow_driver_file_writer.cpp
 	tests/simulator_interfaces/test_adgprssimulator.cpp
 	tests/simulator_interfaces/test_eclsimulator.cpp

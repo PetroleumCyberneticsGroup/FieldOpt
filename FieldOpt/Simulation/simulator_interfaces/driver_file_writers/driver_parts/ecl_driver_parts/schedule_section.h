@@ -1,12 +1,7 @@
 /******************************************************************************
- *
- *
- *
- * Created: 18.11.2015 2015 by einar
- *
  * This file is part of the FieldOpt project.
  *
- * Copyright (C) 2015-2015 Einar J.M. Baumann <einar.baumann@ntnu.no>
+ * Copyright (C) 2015-2019 Einar J.M. Baumann <einar.baumann@ntnu.no>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +29,7 @@
 #include "welsegs.h"
 #include "compsegs.h"
 #include "wsegvalv.h"
+#include "schedule_insets.h"
 #include <QStringList>
 
 namespace Simulation {
@@ -41,20 +37,29 @@ namespace ECLDriverParts {
 
 class Schedule : public ECLDriverPart
 {
-public:
-    Schedule(QList<Model::Wells::Well *> *wells, QList<int> control_times);
-    QString GetPartString() const;
+ public:
+  /*!
+   * @brief Constructor. Generate the time entries and build the complete schedule string.
+   * @param wells List of wells from the model.
+   * @param control_times List of control times.
+   * @param insets Text snippets to be inserted at specific time steps in the schedule.
+   */
+  Schedule(QList<Model::Wells::Well *> *wells, QList<int> control_times, ScheduleInsets &insets);
+  QString GetPartString() const;
 
-private:
+ private:
 
   struct ScheduleTimeEntry {
-    ScheduleTimeEntry(Welspecs welspecs,
+    ScheduleTimeEntry(int control_time,
+                      Welspecs welspecs,
                       Compdat compdat,
                       WellControls well_controls,
                       Welsegs welsegs,
                       Compsegs compsegs,
                       Wsegvalv wsegvalv
     );
+    int control_time;
+
     Welspecs welspecs;
     Compdat compdat;
     WellControls well_controls;

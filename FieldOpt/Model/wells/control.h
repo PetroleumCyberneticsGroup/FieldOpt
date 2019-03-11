@@ -67,8 +67,15 @@ class Control
   double bhp() const { return bhp_->value(); }
   void setBhp(double bhp) { bhp_->setValue(bhp); }
 
-  double rate() const { return rate_->value(); }
-  void setRate(double rate) { rate_->setValue(rate); }
+  double rate()          const { return liq_rate_->value(); }
+  double liquidRate()    const { return liq_rate_->value(); }
+  double oilRate()       const { return oil_rate_->value(); }
+  double gasRate()       const { return gas_rate_->value(); }
+  double waterRate()     const { return wat_rate_->value(); }
+  double reservoirRate() const { return res_rate_->value(); }
+
+  void setRate(double rate)       { liq_rate_->setValue(rate); }
+  void setLiquidRate(double rate) { liq_rate_->setValue(rate); }
 
   ::Settings::Model::ControlMode mode() const { return mode_; }
   ::Settings::Model::InjectionType injection_fluid() const { return injection_fluid_; }
@@ -77,7 +84,11 @@ class Control
   Properties::DiscreteProperty *time_step_;
   Properties::BinaryProperty *open_;
   Properties::ContinousProperty *bhp_;
-  Properties::ContinousProperty *rate_;
+  Properties::ContinousProperty *liq_rate_;
+  Properties::ContinousProperty *oil_rate_;
+  Properties::ContinousProperty *gas_rate_;
+  Properties::ContinousProperty *wat_rate_;
+  Properties::ContinousProperty *res_rate_;
   ::Settings::Model::ControlMode mode_;
   ::Settings::Model::InjectionType injection_fluid_;
 };

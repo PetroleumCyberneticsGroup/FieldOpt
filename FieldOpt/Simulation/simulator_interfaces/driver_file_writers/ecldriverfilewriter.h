@@ -29,6 +29,7 @@
 #include "Settings/settings.h"
 #include "Settings/simulator.h"
 #include "Model/model.h"
+#include "driver_parts/ecl_driver_parts/schedule_insets.h"
 
 namespace Simulation {
     class ECLSimulator;
@@ -50,6 +51,7 @@ private:
 
     Model::Model *model_;
     ::Settings::Settings *settings_;
+    ECLDriverParts::ScheduleInsets insets_;
 };
 
 }
