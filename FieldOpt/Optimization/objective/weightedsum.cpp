@@ -62,7 +62,7 @@ double WeightedSum::value() const
             } else {
                 value -= well_economy_->cost * well_economy_->well_lengths[well->name().toStdString()];
             }
-        }
+	}
     }
     return value;
 }
