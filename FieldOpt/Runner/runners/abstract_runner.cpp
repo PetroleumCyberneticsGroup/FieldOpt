@@ -146,7 +146,7 @@ void AbstractRunner::InitializeObjectiveFunction()
     switch (settings_->optimizer()->objective().type) {
         case Settings::Optimizer::ObjectiveType::WeightedSum:
             if (VERB_RUN >=1) Printer::ext_info("Using WeightedSum-type objective function.", "Runner", "AbstractRunner");
-            objective_function_ = new Optimization::Objective::WeightedSum(settings_->optimizer(), simulator_->results());
+            objective_function_ = new Optimization::Objective::WeightedSum(settings_->optimizer(), simulator_->results(), model_);
             break;
         case Settings::Optimizer::ObjectiveType::NPV:
             if (VERB_RUN >=1) Printer::ext_info("Using NPV-type objective function.", "Runner", "AbstractRunner");
