@@ -3,15 +3,11 @@ project(hdf5summaryreader)
 
 include(Sources.cmake)
 
-find_package(HDF5 REQUIRED COMPONENTS CXX)
-add_definitions(${HDF5_DEFINITIONS})
-include_directories(${HDF5_INCLUDE_DIRS})
-
 add_library(hdf5summaryreader STATIC ${HDF5SUMMARYREADER_HEADERS} ${HDF5SUMMARYREADER_SOURCES})
 add_library(fieldopt::hdf5summaryreader ALIAS ${PROJECT_NAME})
 
 target_link_libraries(hdf5summaryreader
-        PUBLIC ${HDF5_LIBRARIES})
+        PUBLIC ${HDF5} ${HDF5_CPP})
 
 add_compile_options(-std=c++11)
 
@@ -22,7 +18,7 @@ if (BUILD_TESTING)
 
     target_link_libraries(test_hdf5summaryreader
             fieldopt::hdf5summaryreader
-            ${HDF5_LIBRARIES}
+            ${HDF5}
             ${gtest}
             ${gtest_main}
             ${CMAKE_THREAD_LIBS_INIT})
