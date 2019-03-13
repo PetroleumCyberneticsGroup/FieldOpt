@@ -32,6 +32,7 @@ RUN mkdir /app/fieldopt-output
 ENV NAME FieldOpt
 ENV FIELDOPT_BIN="/app/FieldOpt/FieldOpt/cmake-build-debug/bin/FieldOpt"
 ENV FIELDOPT_BUILD="/app/FieldOpt/FieldOpt/cmake-build-debug/bin/"
+ENV FIELDOPT_BUILD_ROOT="/app/FieldOpt/FieldOpt/cmake-build-debug/"
 ENV FIELDOPT_OUT="/app/fieldopt-output"
 ENV PATH=$PATH:"/app/FieldOpt/FieldOpt/cmake-build-debug/bin/"
 
