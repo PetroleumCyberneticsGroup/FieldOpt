@@ -29,7 +29,7 @@
 namespace Optimization {
 namespace Objective {
 
-WeightedSum::WeightedSum(Settings::Optimizer *settings, Simulation::Results::Results *results)
+WeightedSum::WeightedSum(Settings::Optimizer *settings, Simulation::Results::Results *results, Model::Model *model)
 {
     results_ = results;
     components_ = new QList<WeightedSum::Component *>();
@@ -45,6 +45,7 @@ WeightedSum::WeightedSum(Settings::Optimizer *settings, Simulation::Results::Res
         else comp->is_well_property = false;
         components_->append(comp);
     }
+    well_economy_ = model->wellCostConstructor();
 }
 
 double WeightedSum::value() const
@@ -52,6 +53,16 @@ double WeightedSum::value() const
     double value = 0;
     for (int i = 0; i < components_->size(); ++i) {
         value += components_->at(i)->resolveValue(results_);
+    }
+    if (well_economy_->use_well_cost) {
+        for (auto well: well_economy_->wells_pointer) {
+            if (well_economy_->separate) {
+                value -= well_economy_->costXY * well_economy_->well_xy[well->name().toStdString()];
+                value -= well_economy_->costZ * well_economy_->well_z[well->name().toStdString()];
+            } else {
+                value -= well_economy_->cost * well_economy_->well_lengths[well->name().toStdString()];
+            }
+	}
     }
     return value;
 }
