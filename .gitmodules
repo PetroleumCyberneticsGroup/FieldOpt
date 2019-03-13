@@ -13,3 +13,6 @@
 [submodule "FieldOpt/ThirdParty/qtbase"]
 	path = FieldOpt/ThirdParty/qtbase
 	url = https://github.com/PetroleumCyberneticsGroup/qtbase.git
+[submodule "FieldOpt/ThirdParty/hdf5-1.8.16"]
+	path = FieldOpt/ThirdParty/hdf5-1.8.16
+	url = git@github.com:PetroleumCyberneticsGroup/hdf5-1.8.16.git
