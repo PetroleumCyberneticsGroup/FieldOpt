@@ -24,6 +24,24 @@ project(FieldOptThirdPartyDependencies)
 #   - Google Test framework
 ########################################################################
 
+if ("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
+    MESSAGE(FATAL_ERROR "\nERROR! ${PROJECT_NAME} DOES NOT SUPPORT IN SOURCE BUILDS!\n"
+      "CMAKE_CURRENT_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}"
+      " == CMAKE_CURRENT_BINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}\n"
+      "NEXT STEPS:\n"
+      "(1) Delete the CMakeCache.txt file and the CMakeFiles/ directory\n"
+      "     under the source directory for ${PROJECT_NAME}, otherwise you\n"
+      "     will not be able to configure ${PROJECT_NAME} correctly!\n"
+      "      * For example, on linux machines do:\n"
+      "        $ rm -r CMakeCache.txt CMakeFiles/\n"
+      "(2) Create a different directory and configure ${PROJECT_NAME} in that directory.\n"
+      "      * For example, on linux machines do:\n"
+      "        $ mkdir MY_BUILD\n"
+      "        $ cd MY_BUILD\n"
+      "        $ cmake [OPTIONS] ..\n"
+      )
+endif ()
+
 SET(CMAKE_BUILD_TYPE Release)
 set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/libraries)
 message("CMake install prefix: ${CMAKE_INSTALL_PREFIX}")
@@ -56,6 +74,9 @@ endif()
 if (BUILD_HDF5)
     message("=============================================================")
     message("Configuring libhdf5 ...")
+    set(HDF5_EXTERNALLY_CONFIGURED 1)
+    #set(HDF5_EXPORTED_TARGETS "")
+    #set(HDF5_EXTERNAL_LIB_PREFIX "tp")
     add_subdirectory(hdf5-1.8.16)
     message("Done configuring libhdf5")
     message("=============================================================")
