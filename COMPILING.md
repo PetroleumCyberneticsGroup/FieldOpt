@@ -21,12 +21,9 @@ git submodule update --init --recursive
 
 # Compile third party dependencies
 cd FieldOpt/ThirdParty
-cmake .
-make
-make install
-cd opm-common
-git checkout release/2018.04
-cmake .
+mkdir build
+cd build
+cmake ..
 make
 make install
 
@@ -129,30 +126,17 @@ editing `CMakeLists.txt` directly; by passing flags to CMake; or by using
 `ccmake`). After that, in the `ThirdParty` directory, execute
 
 ```
-cmake .
-make
-make install
-```
-
-The, to compile the `opm-common` library,
-
-```
-cd opm-common
-git checkout release/2018.04
-cmake .
+mkdir build
+cd build
+cmake ..
 make
 make install
 ```
 
 *Note:* that if you chose to compile Qt, you need the `libxcb1-dev` package. And
-`cmake .` operation will likely take.
+`cmake .` operation will likely take a long time.
 
 ## Compiling on a Cluster (Maur)
-
-**Note:** Compiling does not currently work on Maur due problems in compiling
-the opm-common library. We recommend you run using a locally built
-Singularity image instead.
-
 
 On Maur (and most other clusters), you do not have access to a package manager.
 As such, you should compile all libraries in `ThirdParty`. Before doing this,
@@ -169,13 +153,9 @@ module load cmake
 After loading these modules, navigate to the `ThirdParty` directory. Edit
 `CMakeLists.txt` to enable compiling _all_ the modules, then build them:
 ```
-cmake .
-make
-make install
-
-cd opm-common
-git checkout release/2018.04
-cmake .
+mkdir build
+cd build
+cmake ..
 make
 make install
 ```
@@ -185,7 +165,7 @@ Now, compiling FieldOpt should work as usual:
 cd FieldOpt/FieldOpt
 mkdir build
 cd build
-cmake .
+cmake ..
 make
 ```
 
