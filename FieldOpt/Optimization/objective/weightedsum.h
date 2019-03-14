@@ -59,7 +59,7 @@ public:
      * \param settings The Settings object from which to create the objective.
      * \param results The Results object from which to get property values.
      */
-    WeightedSum(Settings::Optimizer *settings, Simulation::Results::Results *results);
+    WeightedSum(Settings::Optimizer *settings, Simulation::Results::Results *results, Model::Model *model);
 
     double value() const;
 
