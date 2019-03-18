@@ -30,18 +30,14 @@
         },
         "Constraints": [
             {
-                "Wells": ["PRODUCER", "INJECTOR"],
-                "Type": "CombinedWellSplineLengthInterwellDistanceReservoirBoundary",
+                "Wells": ["PRODUCER"],
+                "Type": "ReservoirBoundary",
                 "BoxImin": 0,
                 "BoxImax": 59,
                 "BoxJmin": 0,
                 "BoxJmax": 59,
                 "BoxKmin": 0,
-                "BoxKmax": 0,           
-                "MinLength": 50,
-                "MaxLength": 900,
-                "MinDistance": 50,
-                "MaxIterations": 100
+                "BoxKmax": 0
             }
         ]
     },
@@ -101,13 +97,13 @@
                         "x": 300.0,
                         "y": 100.0,
                         "z": 1712.0,
-                        "IsVariable": true
+                        "IsVariable": false
                     },
                     "Toe": {
                         "x": 900.0,
                         "y": 100.0,
                         "z": 1712.0,
-                        "IsVariable": true
+                        "IsVariable": false
                     }
                 },
                 "Controls": [
