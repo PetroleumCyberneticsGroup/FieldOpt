@@ -24,6 +24,24 @@ project(FieldOptThirdPartyDependencies)
 #   - Google Test framework
 ########################################################################
 
+if ("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
+    MESSAGE(FATAL_ERROR "\nERROR! ${PROJECT_NAME} DOES NOT SUPPORT IN SOURCE BUILDS!\n"
+      "CMAKE_CURRENT_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}"
+      " == CMAKE_CURRENT_BINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}\n"
+      "NEXT STEPS:\n"
+      "(1) Delete the CMakeCache.txt file and the CMakeFiles/ directory\n"
+      "     under the source directory for ${PROJECT_NAME}, otherwise you\n"
+      "     will not be able to configure ${PROJECT_NAME} correctly!\n"
+      "      * For example, on linux machines do:\n"
+      "        $ rm -r CMakeCache.txt CMakeFiles/\n"
+      "(2) Create a different directory and configure ${PROJECT_NAME} in that directory.\n"
+      "      * For example, on linux machines do:\n"
+      "        $ mkdir MY_BUILD\n"
+      "        $ cd MY_BUILD\n"
+      "        $ cmake [OPTIONS] ..\n"
+      )
+endif ()
+
 SET(CMAKE_BUILD_TYPE Release)
 set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/libraries)
 message("CMake install prefix: ${CMAKE_INSTALL_PREFIX}")
@@ -32,6 +50,7 @@ option(BUILD_GP         "Build Gaussian Process library (gp)" ON )
 option(BUILD_GTEST      "Build Google test framework"         ON )
 option(BUILD_RPPP       "Build RpolyPlusPlus library"         ON )
 option(BUILD_ECL        "Build ecl library from ERT"          ON )
+option(BUILD_HDF5       "Build HDF5 libraries"                ON )
 option(BUILD_QT5        "Build Qt5 base libraries"            OFF)
 option(USE_LOCAL_EIGEN3 "Use the local Eigen3 package"        ON )
 
@@ -39,6 +58,7 @@ message(STATUS "BUILD_GP:         ${BUILD_GP}" )
 message(STATUS "BUILD_GTEST:      ${BUILD_GTEST}")
 message(STATUS "BUILD_RPPP:       ${BUILD_RPPP}" )
 message(STATUS "BUILD_ECL:        ${BUILD_ECL}")
+message(STATUS "BUILD_HDF5:       ${BUILD_HDF5}")
 message(STATUS "USE_LOCAL_EIGEN3: ${USE_LOCAL_EIGEN3}")
 message(STATUS "BUILD_QT5: ${BUILD_QT5}")
 
@@ -50,6 +70,18 @@ if(USE_LOCAL_EIGEN3)
     set(EIGEN3_ROOT "${PROJECT_SOURCE_DIR}/Eigen3")
     message(STATUS "EIGEN3_ROOT: ${EIGEN3_ROOT}")
 endif()
+
+if (BUILD_HDF5)
+    message("=============================================================")
+    message("Configuring libhdf5 ...")
+    set(HDF5_EXTERNALLY_CONFIGURED 1)
+    #set(HDF5_EXPORTED_TARGETS "")
+    #set(HDF5_EXTERNAL_LIB_PREFIX "tp")
+    add_subdirectory(hdf5-1.8.16)
+    message("Done configuring libhdf5")
+    message("=============================================================")
+endif()
+
 
 if(BUILD_GP)
 message("=============================================================")

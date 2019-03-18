@@ -169,13 +169,15 @@ else()
   set(CMAKE_AUTOMOC ON)
   set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-  find_package(HDF5 REQUIRED COMPONENTS CXX)
-  add_definitions(${HDF5_DEFINITIONS})
-  include_directories(${HDF5_INCLUDE_DIRS})
+  find_library(HDF5_CPP NAMES hdf5_cpp
+      HINTS ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib NO_DEFAULT_PATH REQUIRED)
+  find_library(HDF5 NAMES hdf5
+          HINTS ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib NO_DEFAULT_PATH REQUIRED)
+  include_directories(${CMAKE_SOURCE_DIR}/ThirdParty/libraries/include)
   find_package(Threads REQUIRED)
 
   message(".............................................................")
-  message(STATUS "Loading potentially local libraries: gp + opm-common")
+  message(STATUS "Loading potentially local libraries: gp")
 
   find_library(gp NAMES gp
       HINTS ${CMAKE_SOURCE_DIR}/ThirdParty/libraries/lib
@@ -185,7 +187,7 @@ else()
   message(STATUS "ecl_LIBRARY: ${ecl_LIBRARY}")
   message(STATUS "ecl_FOUND: ${ecl_FOUND}")
   message(STATUS "gp: ${gp}")
-  message(STATUS "opm-common: ${opm-common_LIBRARIES}")
+  message(STATUS "HDF5: ${HDF5}")
 
 endif()
 
