@@ -21,6 +21,7 @@
 
 #include "mpi_runner.h"
 #include "Utilities/time.hpp"
+#include <chrono>
 
 namespace Runner {
 namespace MPI {
@@ -30,7 +31,6 @@ namespace MPI {
  */
 class Overseer {
  public:
-
   Overseer(MPIRunner *runner);
 
   /*!
@@ -119,6 +119,8 @@ class Overseer {
    * @brief Get a string summarizing the status for all workers.
    */
   std::string workerStatusSummary();
+
+  std::chrono::system_clock::time_point last_sim_start_; //!< Time stamp for the start of the previous simulation.
 };
 }
 }

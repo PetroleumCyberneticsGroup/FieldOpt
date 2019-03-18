@@ -55,6 +55,7 @@ class RuntimeSettings : public Loggable
   int max_parallel_sims() const { return max_parallel_sims_; }
   int threads_per_sim() const { return threads_per_sim_; }
   int simulation_timeout() const { return simulation_timeout_; }
+  int simulation_delay() const { return simulation_delay_; }
   RunnerType runner_type() const { return runner_type_; }
   QPair<QVector<double>, QVector<double>> prod_coords() const { return prod_coords_; }
   QPair<QVector<double>, QVector<double>> inje_coords() const { return inje_coords_; }
@@ -68,6 +69,7 @@ class RuntimeSettings : public Loggable
   std::string str_out; //!< Temporary variable for verbosity function
   int verbosity_level_; //!< Verbose mode (i.e. whether or not to print detailed/debug/diagnostic info to the console while running).
   bool overwrite_existing_; //!< Whether or not files in the specified output directory should be overwritten (only relevant if the directory is not empty).
+  int simulation_delay_; //!< Minimum delay between start of each simulation (in seconds).
   int max_parallel_sims_; //!< Maximum number of parallel simulations to start. This is important to define if you for example have a limited number of simulator licenses.
   int threads_per_sim_; //!< Number of threads to be used pr. simulation. Only works for ADGPRS.
   int simulation_timeout_; //!< Simulations will be terminated after running for simulation_timeout_ times the lowest recorded simulation time up to that point.
