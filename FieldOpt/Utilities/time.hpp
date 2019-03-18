@@ -4,8 +4,10 @@
 
 #include <QDateTime>
 #include <sstream>
+#include <iostream>
 #include <iomanip>
 #include <ctime>
+#include <chrono>
 
 /*!
  * @brief Get the number of seconds from t1 to t2.
@@ -19,11 +21,29 @@ inline int time_span_seconds(const QDateTime t1, const QDateTime t2) {
 }
 
 /*!
+ * @brief Get the current time (std lib method)
+ */
+inline std::chrono::system_clock::time_point current_time() {
+    return std::chrono::system_clock::now();
+}
+
+
+/*!
  * @brief Get the number of seconds that have passed from t1 until now.
  * @param t The time to get the number of seconds from.
  */
 inline int time_since_seconds(const QDateTime t) {
     return time_span_seconds(t, QDateTime::currentDateTime());
+}
+
+/*!
+ * @brief Get the time since t in seconds using std lib methods.
+ * @param t Time to get the number of seconds since.
+ * @return Seconds since t.
+ */
+inline double time_since_seconds(const std::chrono::system_clock::time_point t) {
+    std::chrono::seconds time = std::chrono::duration_cast<std::chrono::seconds>(current_time() - t);
+    return time.count();
 }
 
 /*!
