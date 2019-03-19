@@ -40,6 +40,9 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
     if (vm.count("verbose")) verbosity_level_ = vm["verbose"].as<int>();
     else verbosity_level_ = 0;
 
+    if (vm.count("sim-delay")) simulation_delay_ = vm["sim-delay"].as<int>();
+    else simulation_delay_ = 0;
+
     overwrite_existing_ = vm.count("force") != 0;
     if (!overwrite_existing_ && !DirectoryIsEmpty(paths_.GetPath(Paths::OUTPUT_DIR)))
         throw std::runtime_error("Output directory is not empty. Use the --force flag to "
@@ -126,6 +129,7 @@ RuntimeSettings::RuntimeSettings(int argc, const char *argv[])
         std::cout << "Runner type:      " << runnerTypeString().toStdString() << std::endl;
         std::cout << "Overwr. old out files: " << overwrite_existing_ << std::endl;
         std::cout << "Max parallel sims:   " << (max_parallel_sims_ > 0 ? boost::lexical_cast<std::string>(max_parallel_sims_) : "default") << std::endl;
+        std::cout << "Simulation delay:    " << simulation_delay_ << " seconds" << std::endl;
         std::cout << "Threads pr sim:      " << boost::lexical_cast<std::string>(threads_per_sim_) << std::endl;
         str_out = "Current/specified paths:";
         std::cout << "\n" << str_out << "\n" << std::string(str_out.length(),'-') << std::endl;
@@ -173,6 +177,8 @@ po::variables_map RuntimeSettings::createVariablesMap(int argc, const char **arg
         ("help,h", "print help message")
         ("verbose,v", po::value<int>(&verbosity_level)->default_value(0),
          "verbosity level for runtime console logging")
+        ("sim-delay", po::value<int>(&simulation_delay_)->default_value(0),
+         "Minimum delay between each simulation during initialization.")
         ("force,f", po::value<int>()->implicit_value(0),
          "overwrite existing output files")
         ("max-parallel-simulations,m", po::value<int>(&max_par_sims)->default_value(0),

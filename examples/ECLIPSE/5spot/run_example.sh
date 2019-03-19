@@ -59,5 +59,5 @@ echo "Deck: " ${DECK_PATH}
 echo "Grid: " ${GRID_PATH}
 
 #${FIELDOPT_BIN} ${DRIVER_PATH} ${OUTPUT_DIR} -r serial -v3 -g ${GRID_PATH} -s ${DECK_PATH} -e ${SCR_PATH}
-mpirun -n 5 ${FIELDOPT_BIN} ${DRIVER_PATH} ${OUTPUT_DIR} -r mpisync -v3 -m4 --force -g ${GRID_PATH} -s ${DECK_PATH} -e ${SCR_PATH}
+mpirun -n 5 ${FIELDOPT_BIN} ${DRIVER_PATH} ${OUTPUT_DIR} -r mpisync -v3 -m4 --force -g ${GRID_PATH} -s ${DECK_PATH} -e ${SCR_PATH} --sim-delay 2
 

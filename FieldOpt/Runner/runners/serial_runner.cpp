@@ -46,28 +46,34 @@ void SerialRunner::Execute()
             if (ensemble_helper_.IsCaseDone()) {
                 ensemble_helper_.SetActiveCase(optimizer_->GetCaseForEvaluation());
             }
+            if (VERB_RUN >= 3) Printer::ext_info("Getting ensemble case.", "Runner", "Serial Runner");
             new_case = ensemble_helper_.GetCaseForEval();
             model_->set_grid_path(ensemble_helper_.GetRealization(new_case->GetEnsembleRealization().toStdString()).grid());
         }
         else {
+            if (VERB_RUN >= 3) Printer::ext_info("Getting case from Optimizer.", "Runner", "Serial Runner");
             new_case = optimizer_->GetCaseForEvaluation();
+            if (VERB_RUN >= 3) Printer::ext_info("Got case from Optimizer.", "Runner", "Serial Runner");
         }
 
         if (!is_ensemble_run_ && bookkeeper_->IsEvaluated(new_case, true)) {
+            if (VERB_RUN >= 3) Printer::ext_info("Bookkeeped case.", "Runner", "Serial Runner");
             new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_BOOKKEEPED;
         }
         else {
             try {
                 bool simulation_success = true;
                 new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_CURRENT;
+                if (VERB_RUN >= 3) Printer::ext_info("Applying case to model.", "Runner", "Serial Runner");
                 model_->ApplyCase(new_case);
                 auto start = QDateTime::currentDateTime();
                 if (!is_ensemble_run_ && (simulation_times_.size() == 0 || runtime_settings_->simulation_timeout() == 0)) {
+                    if (VERB_RUN >= 3) Printer::ext_info("Simulating case.", "Runner", "Serial Runner");
                     simulator_->Evaluate();
                 }
                 else {
                     if (is_ensemble_run_) {
-                        std::cout << "Calling ensemble simulation method." << std::endl;
+                        if (VERB_RUN >= 3) Printer::ext_info("Simulating ensemble case.", "Runner", "Serial Runner");
                         simulation_success = simulator_->Evaluate(
                             ensemble_helper_.GetRealization(new_case->GetEnsembleRealization().toStdString()),
                             timeoutValue(),
@@ -75,12 +81,14 @@ void SerialRunner::Execute()
                         );
                     }
                     else {
+                        if (VERB_RUN >= 3) Printer::ext_info("Simulating case.", "Runner", "Serial Runner");
                         simulation_success = simulator_->Evaluate(
                             timeoutValue(),
                             runtime_settings_->threads_per_sim()
                         );
                     }
                 }
+                if (VERB_RUN >= 3) Printer::ext_info("Done simulating case.", "Runner", "Serial Runner");
                 auto end = QDateTime::currentDateTime();
                 int sim_time = time_span_seconds(start, end);
                 if (simulation_success) {
@@ -111,6 +119,7 @@ void SerialRunner::Execute()
             }
         }
         else {
+            if (VERB_RUN >= 3) Printer::ext_info("Submitting evaluated case to Optimizer.", "Runner", "Serial Runner");
             optimizer_->SubmitEvaluatedCase(new_case);
         }
     }

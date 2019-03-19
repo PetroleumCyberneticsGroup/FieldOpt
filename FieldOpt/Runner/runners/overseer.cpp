@@ -18,6 +18,8 @@
 ******************************************************************************/
 #include "overseer.h"
 #include <boost/lexical_cast.hpp>
+#include <chrono>
+#include <thread>
 
 namespace Runner {
 namespace MPI {
@@ -29,6 +31,7 @@ Overseer::Overseer(MPIRunner *runner) {
         workers_.insert(i, new WorkerStatus(i));
     }
     runner_->printMessage("Initialized overseer.");
+    last_sim_start_ = current_time();
 }
 
 void Overseer::AssignCase(Optimization::Case *c, int preferred_worker) {
@@ -41,12 +44,17 @@ void Overseer::AssignCase(Optimization::Case *c, int preferred_worker) {
     else {
         worker = getFreeWorker();
     }
+    if (time_since_seconds(last_sim_start_) < runner_->SimulatorDelay()) {
+        runner_->printMessage("Waiting for simulator delay ...", 2);
+        std::this_thread::sleep_until(last_sim_start_ + chrono::seconds(runner_->SimulatorDelay()));
+    }
     auto msg = MPIRunner::Message();
     msg.tag = MPIRunner::MsgTag ::CASE_UNEVAL;
     msg.destination = worker->rank;
     msg.c = c;
     runner_->SendMessage(msg);
     worker->start();
+    last_sim_start_ = current_time();
     c->state.eval = Optimization::Case::CaseState::EvalStatus::E_CURRENT;
     runner_->printMessage("Assigned case to worker " + boost::lexical_cast<std::string>(worker->rank), 2);
     runner_->printMessage("Current status for workers:\n" + workerStatusSummary(), 2);
