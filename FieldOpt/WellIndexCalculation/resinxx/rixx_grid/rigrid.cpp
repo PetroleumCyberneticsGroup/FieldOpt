@@ -474,8 +474,7 @@ RIGridBase::addCoarseningBox(size_t i1, size_t i2, size_t j1,
 // ╠╦╝  ║  ║ ╦  ╠╦╝  ║   ║║
 // ╩╚═  ╩  ╚═╝  ╩╚═  ╩  ═╩╝
 // =================================================================
-RIGrid::RIGrid(string file_path)
-    : RIGridBase(this), ECLGrid(file_path) {
+RIGrid::RIGrid(string file_path) : RIGridBase(this) {
   m_displayModelOffset = cvf::Vec3d::ZERO;
   m_gridIndex = 0;
   m_gridId = 0;

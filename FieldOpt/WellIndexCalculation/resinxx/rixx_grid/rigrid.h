@@ -238,7 +238,7 @@ class RIGridBase : public cvf::StructGridInterface
 // ╠╦╝  ║  ║ ╦  ╠╦╝  ║   ║║
 // ╩╚═  ╩  ╚═╝  ╩╚═  ╩  ═╩╝
 // =================================================================
-class RIGrid : public RIGridBase, Reservoir::Grid::ECLGrid
+class RIGrid : public RIGridBase
 {
  public:
   RIGrid(string file_path);
