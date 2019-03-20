@@ -30,7 +30,7 @@ ScheduleInsets::ScheduleInsets() {
 }
 
 ScheduleInsets::ScheduleInsets(const std::string &inset_file_path) {
-    assert(Utilities::FileHandling::FileExists(inset_file_path, true));
+    assert(Utilities::FileHandling::FileExists(inset_file_path));
     std::vector<std::string> all_lines = Utilities::FileHandling::ReadFileToStdStringList(inset_file_path);
     std::deque<std::string> lines = trimEmptyLines(all_lines);
 
