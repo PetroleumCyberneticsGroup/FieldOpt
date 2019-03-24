@@ -41,6 +41,7 @@ PSO::PSO(Settings::Optimizer *settings,
     learning_factor_1_ = settings->parameters().pso_learning_factor_1;
     learning_factor_2_ = settings->parameters().pso_learning_factor_2;
     number_of_particles_ = settings->parameters().pso_swarm_size;
+    base_case_ = base_case;
     if (constraint_handler_->HasBoundaryConstraints()) {
         lower_bound_ = constraint_handler_->GetLowerBounds(base_case->GetRealVarIdVector());
         upper_bound_ = constraint_handler_->GetUpperBounds(base_case->GetRealVarIdVector());
@@ -161,6 +162,8 @@ bool PSO::is_stagnant() {
 }
 void PSO::printParticle(Particle &partic) const {
 }
+
+
 PSO::Particle PSO::get_global_best(){
     Particle best_particle;
     if(swarm_memory_.size() == 1){
@@ -168,12 +171,16 @@ PSO::Particle PSO::get_global_best(){
     } else {
         best_particle = current_best_particle_global_;
     }
+
     for(int i = 0; i < swarm_memory_.size(); i++){
         for(int j = 0; j < swarm_memory_[i].size();j++){
             if (isBetter(swarm_memory_[i][j].case_pointer, best_particle.case_pointer)) {
                 best_particle=swarm_memory_[i][j];
             }
         }
+    }
+    if(isBetter(base_case_, best_particle.case_pointer)){
+        best_particle.rea_vars = base_case_->GetRealVarVector();
     }
     return best_particle;
 }

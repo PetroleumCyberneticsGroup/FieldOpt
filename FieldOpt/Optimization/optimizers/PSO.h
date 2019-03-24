@@ -122,6 +122,7 @@ class PSO : public Optimizer {
   Eigen::VectorXd lower_bound_; //!< Lower bounds for the variables (used for randomly generating populations and mutation)
   Eigen::VectorXd upper_bound_; //!< Upper bounds for the variables (used for randomly generating populations and mutation)
   int n_vars_; //!< Number of variables in the problem.
+  Case *base_case_;
 
 };
 }
