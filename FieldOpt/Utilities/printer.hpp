@@ -106,6 +106,7 @@ inline void info(const std::string &text) {
     ss << "│ " << content <<                                                  " │" << "\n";
     ss << "└─────────────────────────────────────────────────────────────────────┘" << "\n";
     ss << "\n";
+    ss << AEND;
     std::cout << ss.str();
 }
 
@@ -138,6 +139,7 @@ inline void ext_info(const std::string &text,
     }
     ss << "└─────────────────────────────────────────────────────────────────────┘" << "\n";
     ss << "\n";
+    ss << AEND;
     std::cout << ss.str();
 }
 
@@ -170,6 +172,7 @@ inline void ext_warn(const std::string &text,
     }
     ss << "┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛" << "\n";
     ss << "\n";
+    ss << AEND;
     std::cout << ss.str();
 }
 /* Error box.
@@ -187,6 +190,7 @@ inline void error(const std::string &text) {
     ss << "║ ERROR: " << content <<                                                  " ║" << "\n";
     ss << "╚═════════════════════════════════════════════════════════════════════╝" << "\n";
     ss << "\n";
+    ss << AEND;
     std::cout << ss.str();
 }
 
