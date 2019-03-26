@@ -42,8 +42,9 @@ Optimization::Optimizer::TerminationCondition SPSA::IsFinished()
   if (case_handler_->CasesBeingEvaluated().size() > 0 || case_handler_->QueuedCases().size() > 0) {
     return NOT_FINISHED;
   }
-  if (iteration_ > max_iterations_) {
+  if (iteration_ >= max_iterations_) {
     Printer::ext_info("Max iterations reached. Terminating", "Optimization", "SPSA");
+    logger_->AddEntry(this);
     return MAX_ITERATIONS_REACHED;
   }
   else {
@@ -91,56 +92,58 @@ void SPSA::handleEvaluatedCase(Case *c)
 
 void SPSA::iterate()
 {
-  if (iteration_ > max_iterations_) {
+  logger_->AddEntry(this);
+
+  if (iteration_ >= max_iterations_) {
     Printer::ext_info("Reached max iterations.", "Optimization", "SPSA");
     return;
   }
-  logger_->AddEntry(this);
-  if (iteration_ == 0 || perturbations_evaluated_ == true) {
-    iteration_++;
-    if (VERB_OPT >= 3) { Printer::ext_info("Starting iteration " + Printer::num2str(iteration_), "Optimization", "SPSA"); }
 
-    update_c_k();
-
-    int max_attempts = 1*D_;
-    int attempt = 1;
-    perturbations_valid_ = false;
-
-    if (VERB_OPT >= 4) Printer::ext_info("Estimate: " + eigenvec_to_str(estimate_->GetRealVarVector()), "Optimization", "SPSA");
-    while (perturbations_valid_ == false && attempt <= max_attempts) {
-      updateSPVector();
-      perturbations_ = createPerturbations();
-      attempt++;
-    }
-    if (perturbations_valid_ == false) {
-      Printer::ext_warn("Failed to generate a valid pair of perturbations after "
-          + Printer::num2str(max_attempts) + " attempts. Skipping iteration.",
-          "Optimization", "SPSA");
-      if ((iteration_ - tentative_best_case_iteration_) > 0.1*max_iterations_) {
-        Printer::ext_warn("No new best case found in the last (0.2*max_iterations) iterations. "
-            "setting estimate to tentative best case.", "Optimization", "SPSA");
-        estimate_->SetRealVarValues(tentative_best_case_->GetRealVarVector());
-        tentative_best_case_iteration_ = iteration_;
-        iterate();
-      }
-    }
-    else {
-      case_handler_->AddNewCase(perturbations_.first);
-      case_handler_->AddNewCase(perturbations_.second);
-      perturbations_evaluated_ = false;
-      return;
-    }
-  }
-  else {
+  if ( ! perturbations_evaluated_ && iteration_ != 0) {
     Printer::ext_warn("Iterate called before perturbations were evaluated.", "Optimization", "SPSA");
     return;
+  }
+
+  iteration_++;
+  if (VERB_OPT >= 3) {
+    Printer::ext_info("Starting iteration " + Printer::num2str(iteration_), "Optimization", "SPSA");
+  }
+
+  update_c_k();
+
+  int max_attempts = 1*D_;
+  int attempt = 1;
+  perturbations_valid_ = false;
+  auto first = new Case(estimate_);
+  auto second = new Case(estimate_);
+  while (perturbations_valid_ == false && attempt <= max_attempts) {
+    updateSPVector();
+    createPerturbations(first, second);
+    attempt++;
+  }
+  perturbations_ = std::pair<Case *, Case *>(first, second);
+
+  if (perturbations_valid_ == false) {
+    Printer::ext_warn("Unable to generate valid pair of perturbations after " + Printer::num2str(max_attempts) + " attempts.", "Optimization", "SPSA");
+    if ((iteration_ - tentative_best_case_iteration_) > 0.1*max_iterations_) {
+      Printer::ext_warn("No new best case found in the last (0.1*max_iterations) iterations. Setting estimate to tentative best case.", "Optimization", "SPSA");
+      estimate_->SetRealVarValues(tentative_best_case_->GetRealVarVector());
+      tentative_best_case_iteration_ = iteration_;
+    }
+    Printer::ext_warn("Skipping iteration." + Printer::num2str(iteration_), "Optimization", "SPSA");
+    iterate();
+  }
+  else {
+    case_handler_->AddNewCase(perturbations_.first);
+    case_handler_->AddNewCase(perturbations_.second);
+    perturbations_evaluated_ = false;
   }
 }
 
 void SPSA::update_a_k()
 {
   a_k_ = a_ / pow((A_ + iteration_), alpha_);
-  if (VERB_OPT >= 1) {
+  if (VERB_OPT >= 3) {
     Printer::ext_info("Updated gain sequence a_k: " + Printer::num2str(a_k_), "Optimization", "SPSA");
   }
 }
@@ -159,10 +162,8 @@ void SPSA::updateSPVector()
   delta_k_ = random_symmetric_bernoulli_eigen(gen_, D_);
 }
 
-std::pair<Case *, Case *> SPSA::createPerturbations()
+void SPSA::createPerturbations(Case *first, Case *second)
 {
-  Case *first = new Case(estimate_);
-  Case *second = new Case(estimate_);
   if (VERB_OPT >= 5) Printer::ext_info("Perturbation: +- " + eigenvec_to_str(c_k_ * delta_k_), "Optimization", "SPSA");
   first->SetRealVarValues( estimate_->GetRealVarVector() + c_k_ * delta_k_ );
   second->SetRealVarValues(estimate_->GetRealVarVector() - c_k_ * delta_k_ );
@@ -174,33 +175,35 @@ std::pair<Case *, Case *> SPSA::createPerturbations()
     perturbations_valid_ = true;
   }
   else if ( !first_ok && second_ok ) {
+    if (VERB_OPT >= 1) Printer::ext_info("Positive perturbation violates constraints.", "Optimization", "SPSA");
     first->SetRealVarValues( estimate_->GetRealVarVector() );
     second->SetRealVarValues(estimate_->GetRealVarVector() - 2.0*(c_k_ * delta_k_));
     second_ok = constraint_handler_->CaseSatisfiesConstraints(second);
     if (second_ok) {
-      if (VERB_OPT >= 1) Printer::ext_info("Positive perturbation violates constraints. Using estimate.", "Optimization", "SPSA");
+      if (VERB_OPT >= 1) Printer::ext_info("Using estimate.", "Optimization", "SPSA");
       perturbations_valid_ = true;
     }
     else {
-      if (VERB_OPT >= 1) Printer::ext_info("Positive perturbation violates constraints. Unable to correct.", "Optimization", "SPSA");
+      if (VERB_OPT >= 1) Printer::ext_info("Unable to correct.", "Optimization", "SPSA");
       perturbations_valid_ = false;
     }
   }
   else if ( first_ok && !second_ok ) {
+    if (VERB_OPT >= 1) Printer::ext_info("Negative perturbation violates constraints.", "Optimization", "SPSA");
     second->SetRealVarValues( estimate_->GetRealVarVector() );
     first->SetRealVarValues( estimate_->GetRealVarVector() + 2.0*(c_k_ * delta_k_) );
     first_ok = constraint_handler_->CaseSatisfiesConstraints(first);
     if (first_ok) {
-      if (VERB_OPT >= 1) Printer::ext_info("Negative perturbation violates constraints. Using estimate.", "Optimization", "SPSA");
+      if (VERB_OPT >= 1) Printer::ext_info("Using estimate.", "Optimization", "SPSA");
       perturbations_valid_ = true;
     }
     else {
-      if (VERB_OPT >= 1) Printer::ext_info("Negative perturbation violates constraints. Unable to correct.", "Optimization", "SPSA");
+      if (VERB_OPT >= 1) Printer::ext_info("Unable to correct.", "Optimization", "SPSA");
       perturbations_valid_ = false;
     }
   }
   else {
-    if (VERB_OPT >= 1) Printer::ext_info("Both perturbations violate constraints. Attempting to correct.", "Optimization", "SPSA");
+    if (VERB_OPT >= 1) Printer::ext_info("Both perturbations violate constraints.", "Optimization", "SPSA");
     for (int i=0; i < D_; ++i) {
       double first_val = first->GetRealVarVector()[i];
       if (first_val > ub_[i] || first_val < lb_[i]) {
@@ -208,9 +211,9 @@ std::pair<Case *, Case *> SPSA::createPerturbations()
       }
     }
     first->SetRealVarValues( estimate_->GetRealVarVector() + 2.0*(c_k_ * delta_k_) );
-    first_ok = constraint_handler_->CaseSatisfiesConstraints(first);
-
     second->SetRealVarValues( estimate_->GetRealVarVector() );
+
+    first_ok = constraint_handler_->CaseSatisfiesConstraints(first);
     second_ok = constraint_handler_->CaseSatisfiesConstraints(second);
 
     if (first_ok && second_ok) {
@@ -223,7 +226,6 @@ std::pair<Case *, Case *> SPSA::createPerturbations()
     }
 
   }
-  return std::pair<Case *, Case *>(first, second);
 }
 
 void SPSA::updateGradient()
@@ -239,7 +241,7 @@ void SPSA::updateGradient()
   for (int i = 0; i < D_; ++i) {
     g_k_[i] = (yplus - yminus) / (2 * c_k_ * delta_k_[i]);
   }
-  if (VERB_OPT >= 3) Printer::ext_info("Updated gradient vector: " + eigenvec_to_str(g_k_), "Optimization", "SPSA");
+  if (VERB_OPT >= 4) Printer::ext_info("Updated gradient vector: " + eigenvec_to_str(g_k_), "Optimization", "SPSA");
 }
 
 void SPSA::updateEstimate() {

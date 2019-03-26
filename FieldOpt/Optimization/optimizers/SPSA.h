@@ -121,8 +121,11 @@ class SPSA : public Optimizer {
    * the estimate will be used as the other point when computing the gradient.
    * \$ \theta_k + c_k \Delta_k \$ and \$ \theta_k - c_k \Delta_k \$ where
    * \$ \theta_k \$ is the tentative best case.
+   *
+   * @param first New case. Variable values will be changed.
+   * @param second New case. Variable values will be changed.
    */
-  std::pair<Case *, Case *> createPerturbations();
+  void createPerturbations(Case *first, Case *second);
 
   /*!
    * @brief Update g_k_ by using the two cases in perturbations_.
