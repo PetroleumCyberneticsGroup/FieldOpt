@@ -71,6 +71,7 @@ class SPSA : public Optimizer {
 
   // Run-time variables
   bool perturbations_evaluated_; //!< Indicates whether the perturbations used for grad. est. have been evaluated.
+  bool perturbation_evaluation_failed_; //!< Indicates whether at least one perturbation evaluation failed.
   int D_;        //!< Dimensionality of problem.
   boost::random::mt19937 gen_; //!< Random number generator.
   double a_k_;             //!< Gain sequence a at iteration k: \$ a_k = a/(A+k)^{\alpha} \$.
@@ -80,6 +81,10 @@ class SPSA : public Optimizer {
 
   std::pair<Case *, Case *> perturbations_; //!< Perturbations currently used for gradient computation.
   Case *estimate_; //!< The estimated best case. This is never actually evaluated.
+
+  Eigen::VectorXd ub_; //!< Upper bounds
+  Eigen::VectorXd lb_; //!< Lower bounds
+  Case *base_case_;
 
   /*!
    * Indicates whether the perturbations generated are valid.
@@ -111,6 +116,9 @@ class SPSA : public Optimizer {
 
   /*!
    * @brief Generate two perturbations to be used for gradient calculation:
+   *
+   * In the case where one of the perturbations violate constraints,
+   * the estimate will be used as the other point when computing the gradient.
    * \$ \theta_k + c_k \Delta_k \$ and \$ \theta_k - c_k \Delta_k \$ where
    * \$ \theta_k \$ is the tentative best case.
    */
