@@ -11,7 +11,7 @@
 #   2 - fo_driver_2_horz_icd_cs
 #   3 - fo_driver_2_horz_icd_ga
 #   4 - fo_driver_2_horz_icd_ego
-#   5 - fo_driver_2_horz_apps
+#   5 - fo_driver_1_horz_apps
 #   6 - fo_driver_2_horz_icds_packers_ego
 #   7 - fo_driver_2_horz_icds_packers_ga
 #   8 - fo_driver_2_horz_icds_controls_ego
@@ -30,7 +30,7 @@ declare -a CASES=(
     "fo_driver_2_horz_icd_cs"
     "fo_driver_2_horz_icd_ga"
     "fo_driver_2_horz_icd_ego"
-    "fo_driver_2_horz_apps"
+    "fo_driver_1_horz_apps"
     "fo_driver_2_horz_icds_packers_ego"
     "fo_driver_2_horz_icds_packers_ga"
     "fo_driver_2_horz_icds_controls_ego"
@@ -48,7 +48,8 @@ DRIVER_PATH=${CURRENT_DIR}/${CASE}.json
 OUTPUT_DIR=${FIELDOPT_OUT}/5spot/${CASE}
 DECK_PATH=${CURRENT_DIR}/ECL_5SPOT.DATA
 GRID_PATH=${CURRENT_DIR}/ECL_5SPOT.EGRID
-SCR_PATH=${FIELDOPT_BUILD}/execution_scripts/bash_ecl.sh
+#SCR_PATH=${FIELDOPT_BUILD}/execution_scripts/bash_ecl.sh
+SCR_PATH=${FIELDOPT_BUILD}/execution_scripts/bash_flow.sh
 
 # Delete and re-create ouput subdirectory
 mkdir -p ${OUTPUT_DIR}
@@ -58,6 +59,6 @@ echo "Driver: " ${DRIVER_PATH}
 echo "Deck: " ${DECK_PATH}
 echo "Grid: " ${GRID_PATH}
 
-#${FIELDOPT_BIN} ${DRIVER_PATH} ${OUTPUT_DIR} -r serial -v3 -g ${GRID_PATH} -s ${DECK_PATH} -e ${SCR_PATH}
-mpirun -n 5 ${FIELDOPT_BIN} ${DRIVER_PATH} ${OUTPUT_DIR} -r mpisync -v3 -m4 --force -g ${GRID_PATH} -s ${DECK_PATH} -e ${SCR_PATH} --sim-delay 2
+${FIELDOPT_BIN} ${DRIVER_PATH} ${OUTPUT_DIR} -r serial -v3 -g ${GRID_PATH} -s ${DECK_PATH} -e ${SCR_PATH}
+#mpirun -n 5 ${FIELDOPT_BIN} ${DRIVER_PATH} ${OUTPUT_DIR} -r mpisync -v3 -m4 --force -g ${GRID_PATH} -s ${DECK_PATH} -e ${SCR_PATH} --sim-delay 2
 
