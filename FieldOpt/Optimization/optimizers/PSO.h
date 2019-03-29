@@ -62,6 +62,7 @@ class PSO : public Optimizer {
 
   };
   struct modifyvariable {
+      bool empty = true;
       int ix;
       int iy;
       int iz;
@@ -137,10 +138,12 @@ class PSO : public Optimizer {
   double x_, y_, z_; //! experimental variables
   QHash<QUuid, Model::Properties::ContinousProperty*> *continous_variables_;
   QList<QUuid> QUUID_of_variables_;
-  cvf::BoundingBox bounding_box_;
+  vector<cvf::BoundingBox> CellSearchBox_;
   Reservoir::Grid::Grid *grid_;
   Reservoir::WellIndexCalculation::wicalc_rixx *wic_;
   vector<Model::Properties::Property::PropertyInfo> vector_of_property_info;
+  bool experimental_initialization_;
+
 };
 }
 }

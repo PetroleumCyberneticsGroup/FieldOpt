@@ -336,6 +336,9 @@ Optimizer::Parameters Optimizer::parseParameters(QJsonObject &json_parameters) {
         if(json_parameters.contains("PSO-VelocityScale")){
             params.pso_velocity_scale = json_parameters["PSO-VelocityScale"].toDouble();
         }else params.pso_velocity_scale = 1.0;
+        if(json_parameters.contains("PSO-ExperimentalInitialization")){
+            params.pso_experimental_initialization = json_parameters["PSO-ExperimentalInitialization"].toBool();
+        }else params.pso_experimental_initialization = false;
 
         // EGO Parameters
         if (json_parameters.contains("EGO-InitGuesses")) {
