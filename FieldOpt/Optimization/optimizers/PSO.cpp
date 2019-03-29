@@ -32,8 +32,10 @@ PSO::PSO(Settings::Optimizer *settings,
          Reservoir::Grid::Grid *grid,
          Logger *logger,
          CaseHandler *case_handler,
-         Constraints::ConstraintHandler *constraint_handler
-) : Optimizer(settings, base_case, variables, grid, logger, case_handler, constraint_handler) {
+         Constraints::ConstraintHandler *constraint_handler,
+         Reservoir::WellIndexCalculation::wicalc_rixx *wic
+
+) : Optimizer(settings, base_case, variables, grid, logger, case_handler, constraint_handler, wic) {
     n_vars_ = variables->ContinousVariableSize();
     gen_ = get_random_generator(settings->parameters().rng_seed);
     max_iterations_ = settings->parameters().max_generations;
@@ -42,6 +44,9 @@ PSO::PSO(Settings::Optimizer *settings,
     learning_factor_2_ = settings->parameters().pso_learning_factor_2;
     number_of_particles_ = settings->parameters().pso_swarm_size;
     base_case_ = base_case;
+    grid_ = grid;
+    wic_ = wic;
+
     if (constraint_handler_->HasBoundaryConstraints()) {
         lower_bound_ = constraint_handler_->GetLowerBounds(base_case->GetRealVarIdVector());
         upper_bound_ = constraint_handler_->GetUpperBounds(base_case->GetRealVarIdVector());
@@ -52,7 +57,16 @@ PSO::PSO(Settings::Optimizer *settings,
         lower_bound_.fill(settings->parameters().lower_bound);
         upper_bound_.fill(settings->parameters().upper_bound);
     }
+    cout << lower_bound_(1) << " Here is upper bound: " << upper_bound_(1) << endl;
+    auto real_variables = base_case_->real_variables();
+    QUUID_of_variables_ = base_case->GetRealVarIdVector();
+    auto real_variable_vector = base_case->GetRealVarVector();
+    continous_variables_ = variables->GetContinousVariables();
+    bounding_box_ = wic->ricasedata_->mainGrid()->boundingBox();
+
+
     auto difference = upper_bound_ - lower_bound_;
+
     v_max_ = difference * settings->parameters().pso_velocity_scale;
     if (VERB_OPT > 2) {
         stringstream ss;
@@ -62,6 +76,14 @@ PSO::PSO(Settings::Optimizer *settings,
         ss << vec_to_str(vector<double>(upper_bound_.data(), upper_bound_.data() + upper_bound_.size()));
         Printer::ext_info(ss.str(), "Optimization","PSO");
     }
+
+    QList<QUuid>::iterator k;
+    for( k = QUUID_of_variables_.begin(); k != QUUID_of_variables_.end(); ++k) {
+        auto continous_variable = continous_variables_->take(k.i->t());
+        auto property_info = continous_variable->propertyInfo();
+        vector_of_property_info.push_back(property_info);
+    }
+
     for (int i = 0; i < number_of_particles_; ++i) {
         auto new_case = generateRandomCase();
         swarm_.push_back(Particle(new_case ,gen_, v_max_, n_vars_));
@@ -90,6 +112,7 @@ void PSO::iterate(){
     for(int i = 0; i < number_of_particles_; i++){
         case_handler_->AddNewCase(next_generation_swarm[i].case_pointer);
     }
+    IsFinished();
     swarm_ = next_generation_swarm;
     iteration_++;
 }
@@ -117,7 +140,104 @@ Optimizer::TerminationCondition PSO::IsFinished() {
 Case *PSO::generateRandomCase() {
     Case *new_case;
     new_case = new Case(GetTentativeBestCase());
+    int i = 0;
+    vector<modifyvariable> vector_of_modified_variables;
+    for (int k = 0; k < vector_of_property_info.size(); k++ ) {
+        bool name_already_appared = false;
+        if (vector_of_modified_variables.size() == 0) {
+            modifyvariable temp_variable_for_well;
+            vector_of_modified_variables.push_back(temp_variable_for_well);
+        }
+        int j = 0;
+        int index_of_name;
+        while((j < vector_of_modified_variables.size()) && (name_already_appared == false)){
+            if (vector_of_property_info[k].parent_well_name.toStdString() == vector_of_modified_variables[j].name) {
+                name_already_appared = true;
+                index_of_name = j;
+            } else {
+                name_already_appared = false;
+            }
+            j++;
+        }
 
+        if (vector_of_property_info[k].prop_type == Model::Properties::ContinousProperty::PolarSpline && name_already_appared) {
+            if (vector_of_property_info[k].polar_prop == Model::Properties::ContinousProperty::Midpoint) {
+                if (vector_of_property_info[k].coord == Model::Properties::ContinousProperty::x) {
+                    vector_of_modified_variables[index_of_name].x = random_doubles(gen_, lower_bound_(i), upper_bound_(i),
+                                                                       1)[0];
+                    vector_of_modified_variables[index_of_name].ix = i;
+                }
+                if (vector_of_property_info[k].coord == Model::Properties::ContinousProperty::y) {
+                    vector_of_modified_variables[index_of_name].y = random_doubles(gen_, lower_bound_(i), upper_bound_(i),
+                                                                       1)[0];
+                    vector_of_modified_variables[index_of_name].iy = i;
+                }
+                if (vector_of_property_info[k].coord == Model::Properties::ContinousProperty::z) {
+                    vector_of_modified_variables[index_of_name].z = random_doubles(gen_, lower_bound_(i), upper_bound_(i),
+                                                                       1)[0];
+                    vector_of_modified_variables[index_of_name].iz = i;
+
+                }
+            }
+        }
+             else {
+                modifyvariable temp_variable_for_well;
+                if (vector_of_property_info[k].prop_type == Model::Properties::ContinousProperty::PolarSpline) {
+                    if (vector_of_property_info[k].polar_prop == Model::Properties::ContinousProperty::Midpoint) {
+                        temp_variable_for_well.name = vector_of_property_info[k].parent_well_name.toStdString();
+                        if (vector_of_property_info[k].coord == Model::Properties::ContinousProperty::x) {
+                            temp_variable_for_well.x = random_doubles(gen_, lower_bound_(i), upper_bound_(i),
+                                                                               1)[0];
+                            temp_variable_for_well.ix = i;
+                        }
+                        if (vector_of_property_info[k].coord == Model::Properties::ContinousProperty::y) {
+                            temp_variable_for_well.y = random_doubles(gen_, lower_bound_(i), upper_bound_(i),
+                                                                               1)[0];
+                            temp_variable_for_well.iy = i;
+                        }
+                        if (vector_of_property_info[k].coord == Model::Properties::ContinousProperty::z) {
+                            temp_variable_for_well.z = random_doubles(gen_, lower_bound_(i), upper_bound_(i),
+                                                                               1)[0];
+                            temp_variable_for_well.iz = i;
+                        }
+                        vector_of_modified_variables[0] = temp_variable_for_well;
+                    }
+                }
+            }
+        i++;
+        }
+
+        for( int i = 0; i < vector_of_modified_variables.size(); i++){
+            int inside = 0;
+            int outside = 0;
+            for(int j = 0; j < 100; j++){
+                vector_of_modified_variables[i].x = random_doubles(gen_, lower_bound_(vector_of_modified_variables[i].ix), upper_bound_(vector_of_modified_variables[i].ix), 1)[0];
+                vector_of_modified_variables[i].y = random_doubles(gen_, lower_bound_(vector_of_modified_variables[i].iy), upper_bound_(vector_of_modified_variables[i].iy), 1)[0];
+                vector_of_modified_variables[i].z = random_doubles(gen_, lower_bound_(vector_of_modified_variables[i].iz), upper_bound_(vector_of_modified_variables[i].iz), 1)[0];
+                auto check = cvf::Vec3d(vector_of_modified_variables[i].x, vector_of_modified_variables[i].y, -vector_of_modified_variables[i].z);
+                //auto grid_cell = grid_->GetCellEnvelopingPoint(vector_of_modified_variables[i].x, vector_of_modified_variables[i].y, vector_of_modified_variables[i].z);
+                //cout << "CHECK IF INSIDE :" << wic_->ricasedata_->mainGrid()->cellIJKFromCoordinate(check, ) << endl;
+                //auto activeCellBoundingBoxes = wic_->ricasedata_->computeActiveCellBoundingBoxes();
+                auto CellSearchBox = wic_->ricasedata_->mainGrid()->m_boundingBoxes_;
+                bool isInside;
+                //cout << CellSearchBox.size() << endl;
+                for (int z = 0; z < CellSearchBox.size(); z++) {
+                    if (CellSearchBox[z].contains(check)){
+                        isInside = true;
+                        break;
+                    } else {
+                        isInside = false;
+                    }
+                }
+                if(isInside){
+                    inside++;
+                }else{
+                    outside++;
+                }
+                cout << "INSIDE!!!" << inside << "   OUTSIDE: " << outside << endl;
+
+            }
+        }
     Eigen::VectorXd erands(n_vars_);
     for (int i = 0; i < n_vars_; ++i) {
         erands(i) = random_doubles(gen_, lower_bound_(i), upper_bound_(i), 1)[0];

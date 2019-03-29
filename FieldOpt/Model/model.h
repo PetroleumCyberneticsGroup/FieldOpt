@@ -59,6 +59,8 @@ class Model : public Loggable
 
   void set_grid_path(const std::string &grid_path);
 
+  Reservoir::WellIndexCalculation::wicalc_rixx *wic() const { return wic_; }
+
   /*!
    * \brief variables Get the set of variable properties of all types.
    */

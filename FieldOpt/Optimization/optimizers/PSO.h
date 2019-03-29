@@ -41,7 +41,9 @@ class PSO : public Optimizer {
       Reservoir::Grid::Grid *grid,
       Logger *logger,
       CaseHandler *case_handler=0,
-      Constraints::ConstraintHandler *constraint_handler=0);
+      Constraints::ConstraintHandler *constraint_handler=0,
+      Reservoir::WellIndexCalculation::wicalc_rixx *wic = 0
+      );
  protected:
   void handleEvaluatedCase(Case *c) override;
   void iterate() override;
@@ -57,8 +59,17 @@ class PSO : public Optimizer {
     Particle(){}
     void ParticleAdapt(Eigen::VectorXd rea_vars_velocity_swap, Eigen::VectorXd rea_vars);
     double ofv() { return case_pointer->objective_function_value(); }
-  };
 
+  };
+  struct modifyvariable {
+      int ix;
+      int iy;
+      int iz;
+      double x;
+      double y;
+      double z;
+      string name;
+  };
   /*!
    * @brief
    * Generates a random set of cases within their given upper and lower bounds. The function also generates an initial
@@ -123,7 +134,13 @@ class PSO : public Optimizer {
   Eigen::VectorXd upper_bound_; //!< Upper bounds for the variables (used for randomly generating populations and mutation)
   int n_vars_; //!< Number of variables in the problem.
   Case *base_case_;
-
+  double x_, y_, z_; //! experimental variables
+  QHash<QUuid, Model::Properties::ContinousProperty*> *continous_variables_;
+  QList<QUuid> QUUID_of_variables_;
+  cvf::BoundingBox bounding_box_;
+  Reservoir::Grid::Grid *grid_;
+  Reservoir::WellIndexCalculation::wicalc_rixx *wic_;
+  vector<Model::Properties::Property::PropertyInfo> vector_of_property_info;
 };
 }
 }

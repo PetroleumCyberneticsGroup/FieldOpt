@@ -248,7 +248,8 @@ void AbstractRunner::InitializeOptimizer()
                                                        base_case_,
                                                        model_->variables(),
                                                        model_->grid(),
-                                                       logger_
+                                                       logger_, nullptr, nullptr,
+                                                       model_->wic()
             );
             optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
             break;

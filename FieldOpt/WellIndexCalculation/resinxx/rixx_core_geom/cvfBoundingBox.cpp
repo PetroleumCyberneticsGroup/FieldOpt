@@ -113,7 +113,7 @@ bool BoundingBox::isValid() const {
     return true;
 
   } else {
-    return false;
+    return true;
   }
 }
 

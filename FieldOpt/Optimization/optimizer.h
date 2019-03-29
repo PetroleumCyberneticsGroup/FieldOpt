@@ -30,6 +30,7 @@
 #include "normalizer.h"
 #include "Utilities/verbosity.h"
 #include "Utilities/printer.hpp"
+#include "WellIndexCalculation/wicalc_rixx.h"
 
 class Logger;
 
@@ -130,7 +131,8 @@ class Optimizer : public Loggable
             Reservoir::Grid::Grid *grid,
             Logger *logger,
             CaseHandler *case_handler=0,
-            Constraints::ConstraintHandler *constraint_handler=0
+            Constraints::ConstraintHandler *constraint_handler=0,
+            Reservoir::WellIndexCalculation::wicalc_rixx *wic=0
   );
 
   /*!

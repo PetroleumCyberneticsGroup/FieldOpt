@@ -1117,6 +1117,7 @@ void RIGrid::buildCellSearchTree() {
     m_cellSearchTree = new cvf::BoundingBoxTree;
     m_cellSearchTree->buildTreeFromBoundingBoxes(cellBoundingBoxes,
                                                  nullptr);
+    m_boundingBoxes_ = cellBoundingBoxes;
 
     // print_dbg_msg_wic_ri(__func__, ss.str(), time_since_msecs(tstart), 2);
   }

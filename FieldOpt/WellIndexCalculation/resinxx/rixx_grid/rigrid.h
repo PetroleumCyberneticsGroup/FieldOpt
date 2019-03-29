@@ -311,11 +311,13 @@ class RIGrid : public RIGridBase, Reservoir::Grid::ECLGrid
 
   QString undefinedGridFaultWithInactiveName()
   { return "Undefined Grid Faults With Inactive"; };
-
+    void buildCellSearchTree();
+    cvf::ref<cvf::BoundingBoxTree> m_cellSearchTree;
+    vector<cvf::BoundingBox> m_boundingBoxes_;
   // VARIABLES -----------------------------------------------------
  private:
   void initAllSubCellsMainGridCellIndex();
-  void buildCellSearchTree();
+  //void buildCellSearchTree();
   bool hasFaultWithName(const QString& name) const;
 
   // ---------------------------------------------------------------
@@ -347,7 +349,7 @@ class RIGrid : public RIGridBase, Reservoir::Grid::ECLGrid
 
   // ---------------------------------------------------------------
   cvf::Vec3d m_displayModelOffset;
-  cvf::ref<cvf::BoundingBoxTree> m_cellSearchTree;
+  //cvf::ref<cvf::BoundingBoxTree> m_cellSearchTree;
   mutable cvf::BoundingBox m_boundingBox;
 
   bool m_flipXAxis;

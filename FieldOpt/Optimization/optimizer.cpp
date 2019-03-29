@@ -28,7 +28,8 @@ Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
                      Reservoir::Grid::Grid *grid,
                      Logger *logger,
                      CaseHandler *case_handler,
-                     Constraints::ConstraintHandler *constraint_handler
+                     Constraints::ConstraintHandler *constraint_handler,
+                     Reservoir::WellIndexCalculation::wicalc_rixx *wic
 )
 {
     // Verify that the base case has been evaluated.
