@@ -62,7 +62,7 @@ class AbstractRunner
    * \brief Execute starts the actual optimization run and should not return until the optimization is done.
    */
   virtual void Execute() = 0;
-  const double sentinel_value_ = 0.0001; //!< Value to be used as a sentinel value for the objective function of cases that cannot be evaluated.
+  const double sentinel_value_ = -10000000000; //!< Value to be used as a sentinel value for the objective function of cases that cannot be evaluated.
 
  protected:
   AbstractRunner(RuntimeSettings *runtime_settings);

@@ -58,6 +58,7 @@ namespace Optimization{
                 lower_bound_.fill(settings->parameters().lower_bound);
                 upper_bound_.fill(settings->parameters().upper_bound);
             }
+            
             auto real_variables = base_case_->real_variables();
             QUUID_of_variables_ = base_case->GetRealVarIdVector();
             auto real_variable_vector = base_case->GetRealVarVector();
@@ -140,7 +141,7 @@ namespace Optimization{
             Case *new_case;
             new_case = new Case(GetTentativeBestCase());
             vector<modifyvariable> vector_of_modified_variables;
-            if(experimental_initialization_){
+            if(experimental_initialization_ && iteration_ < 2){
                 int i = 0;
                 for (int k = 0; k < vector_of_property_info.size(); k++ ) {
                     bool name_already_appared = false;
@@ -235,7 +236,7 @@ namespace Optimization{
             for (int i = 0; i < n_vars_; ++i) {
                 erands(i) = random_doubles(gen_, lower_bound_(i), upper_bound_(i), 1)[0];
             }
-            if(experimental_initialization_){
+            if(experimental_initialization_ && iteration_ < 2){
                 for (int i = 0; i < vector_of_modified_variables.size(); i++){
                     erands(vector_of_modified_variables[i].ix) = vector_of_modified_variables[i].x;
                     erands(vector_of_modified_variables[i].iy) = vector_of_modified_variables[i].y;

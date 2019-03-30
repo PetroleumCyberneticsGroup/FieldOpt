@@ -85,7 +85,7 @@ class Optimizer
     double pso_learning_factor_2; //!< Learning factor (c2), from the individual particle's best known perturbation. Default: 2
     double pso_swarm_size; //!< The number of particles in the swarm. Default: 50
     double pso_velocity_scale; //!< Scaling factor for particle velocities. Default: 1.0
-    double pso_experimental_initialization;
+    bool pso_experimental_initialization;
 
     // EGO Parameters
     int ego_init_guesses = -1; //!< Number of initial guesses to be made (default is two times the number of variables).
