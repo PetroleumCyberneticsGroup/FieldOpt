@@ -209,17 +209,36 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
         }
     }
 
-    else if (QString::compare(constraint_type, "ReservoirBoundary") == 0 || QString::compare(constraint_type, "PolarSplineBoundary") == 0) {
+    else if (QString::compare(constraint_type, "ReservoirBoundary") == 0 || QString::compare(constraint_type, "PolarSplineBoundary") == 0 ||
+    QString::compare(constraint_type, "ReservoirBoundaryToe") == 0) {
         if (QString::compare(constraint_type, "ReservoirBoundary") == 0){
             optimizer_constraint.type = ConstraintType::ReservoirBoundary;
         }
-        else { optimizer_constraint.type = ConstraintType::PolarSplineBoundary;}
+        else if (QString::compare(constraint_type, "PolarSplineBoundary") == 0){
+            optimizer_constraint.type = ConstraintType::PolarSplineBoundary;
+        }
+        else if (QString::compare(constraint_type, "ReservoirBoundaryToe") == 0){
+            optimizer_constraint.type = ConstraintType::ReservoirBoundaryToe;
+        }
         optimizer_constraint.box_imin = json_constraint["BoxImin"].toInt();
         optimizer_constraint.box_imax = json_constraint["BoxImax"].toInt();
         optimizer_constraint.box_jmin = json_constraint["BoxJmin"].toInt();
         optimizer_constraint.box_jmax = json_constraint["BoxJmax"].toInt();
         optimizer_constraint.box_kmin = json_constraint["BoxKmin"].toInt();
         optimizer_constraint.box_kmax = json_constraint["BoxKmax"].toInt();
+    }
+    else if (QString::compare(constraint_type, "PolarXYZBoundary") == 0 || QString::compare(constraint_type, "ReservoirXYZBoundary") == 0){
+        if(QString::compare(constraint_type, "PolarXYZBoundary") == 0){
+            optimizer_constraint.type = ConstraintType::PolarXYZBoundary;
+        }else{
+            optimizer_constraint.type = ConstraintType::ReservoirXYZBoundary;
+        }
+        optimizer_constraint.box_xyz_xmin = json_constraint["xMin"].toDouble();
+        optimizer_constraint.box_xyz_ymin = json_constraint["yMin"].toDouble();
+        optimizer_constraint.box_xyz_zmin = json_constraint["zMin"].toDouble();
+        optimizer_constraint.box_xyz_xmax = json_constraint["xMax"].toDouble();
+        optimizer_constraint.box_xyz_ymax = json_constraint["yMax"].toDouble();
+        optimizer_constraint.box_xyz_zmax = json_constraint["zMax"].toDouble();
     }
     else if (QString::compare(constraint_type, "CombinedWellSplineLengthInterwellDistance") == 0) {
         optimizer_constraint.type = ConstraintType::CombinedWellSplineLengthInterwellDistance;

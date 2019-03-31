@@ -19,6 +19,8 @@ SET(OPTIMIZATION_HEADERS
 	constraints/polar_azimuth.h
 	constraints/polar_elevation.h
 	constraints/polar_spline_boundary.h
+	constraints/polar_xyz_boundary.h
+	constraints/reservoir_boundary_toe.h
 	hybrid_optimizer.h
 	normalizer.h
 	objective/NPV.h
@@ -64,6 +66,8 @@ SET(OPTIMIZATION_SOURCES
 	constraints/polar_azimuth.cpp
 	constraints/polar_elevation.cpp
 	constraints/polar_spline_boundary.cpp
+	constraints/polar_xyz_boundary.cpp
+	constraints/reservoir_boundary_toe.cpp
 	hybrid_optimizer.cpp
 	normalizer.cpp
 	objective/NPV.cpp
