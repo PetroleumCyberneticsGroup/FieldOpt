@@ -125,6 +125,14 @@ ConstraintHandler::ConstraintHandler(QList<Settings::Optimizer::Constraint> cons
                     constraints_.append(new PolarXYZBoundary(cons, variables, grid));
                 }
                 break;
+            case Settings::Optimizer::ConstraintType::ReservoirXYZBoundary:
+                for (auto wname : constraint.wells) {
+                    auto cons = Settings::Optimizer::Constraint(constraint);
+                    cons.well = wname;
+                    if (VERB_OPT >= 1) Printer::info("Adding ReservoirXYZBoundary constraint for " + cons.well.toStdString());
+                    constraints_.append(new ReservoirXYZBoundary(cons, variables, grid));
+                }
+            break;
             case Settings::Optimizer::ConstraintType::ReservoirBoundaryToe:
                 for (auto wname : constraint.wells) {
                     auto cons = Settings::Optimizer::Constraint(constraint);
