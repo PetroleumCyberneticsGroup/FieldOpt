@@ -61,9 +61,6 @@ PSO::PSO(Settings::Optimizer *settings,
         ss << vec_to_str(vector<double>(upper_bound_.data(), upper_bound_.data() + upper_bound_.size()));
         Printer::ext_info(ss.str(), "Optimization","PSO");
     }
-    for (int k = 0; k < n_vars_; k++){
-        cout << "Lower Bound: " << lower_bound_(k) << " Upper Bound: " << upper_bound_(k) << endl;
-    }
     for (int i = 0; i < number_of_particles_; ++i) {
         auto new_case = generateRandomCase();
         swarm_.push_back(Particle(new_case ,gen_, v_max_, n_vars_));
@@ -78,7 +75,6 @@ void PSO::iterate(){
     if(enable_logging_){
         logger_->AddEntry(this);
     }
-
     swarm_memory_.push_back(swarm_);
     current_best_particle_global_=get_global_best();
     swarm_ = update_velocity();
