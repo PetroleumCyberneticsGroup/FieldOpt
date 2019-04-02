@@ -158,7 +158,7 @@ class Optimizer
       double coefficient; QString property; QString interval;
       bool usediscountfactor; QString well; double discount; };
     QList<WeightedSumComponent> weighted_sum; //!< The expression for the Objective function formulated as a weighted sum
-    QList<NPVComponent> NPV_sum;
+    QList<NPVComponent> NPV_sum;  //!< The expression for the Objective function formulated as an NPV
 
   };
 
@@ -170,8 +170,8 @@ class Optimizer
     QStringList wells; //!< List of well names if the constraint applies to more than one.
     double max; //!< Max limit when using constraints like BHP.
     double min; //!< Min limit when using constraints like BHP.
-    double box_imin, box_imax, box_jmin, box_jmax, box_kmin, box_kmax; //!< Min max limits for geometrix box constraints.
-    double box_xyz_xmin, box_xyz_ymin, box_xyz_zmin, box_xyz_xmax, box_xyz_ymax, box_xyz_zmax;
+    double box_imin, box_imax, box_jmin, box_jmax, box_kmin, box_kmax; //!< Min max limits for geometric box constraints.
+    double box_xyz_xmin, box_xyz_ymin, box_xyz_zmin, box_xyz_xmax, box_xyz_ymax, box_xyz_zmax; //!< Min max limits for geometric xyz constraints.
     double min_length, max_length;
     double min_distance;
     double min_md, max_md;
