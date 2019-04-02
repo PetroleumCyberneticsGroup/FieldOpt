@@ -27,6 +27,15 @@
 #define FIELDOPT_RESERVOIR_XYZ_BOUNDARY_H
 namespace Optimization {
 namespace Constraints {
+
+/*!
+ * @brief This class implements the box-constraint with the WellSpline well definition.
+ * The purpose is to contain all points of the well within the specified box.
+ *
+ * Note: Works well with the 3d box intersection generator found in ResInsight
+ * @ ResInsight.org
+ */
+
 class ReservoirXYZBoundary : public Constraint, WellSplineConstraint {
  public:
   ReservoirXYZBoundary(const Settings::Optimizer::Constraint &settings,
@@ -43,10 +52,10 @@ class ReservoirXYZBoundary : public Constraint, WellSplineConstraint {
 
 
  protected:
-  double xmin_, xmax_, ymin_, ymax_, zmin_, zmax_;
-  QList<int> index_list_;
-  Reservoir::Grid::Grid *grid_;
-  Well affected_well_;
+  double xmin_, xmax_, ymin_, ymax_, zmin_, zmax_; //!< Constraint limits for the box
+  QList<int> index_list_; //!< Index list for the cells in the reservoir that are within the box
+  Reservoir::Grid::Grid *grid_; //!< Grid, as defined in Reservoir/grid.h
+  Well affected_well_; //!< The affected well
 
 };
 }

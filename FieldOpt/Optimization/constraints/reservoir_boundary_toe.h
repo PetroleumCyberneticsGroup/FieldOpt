@@ -26,8 +26,14 @@
 #include "ConstraintMath/well_constraint_projections/well_constraint_projections.h"
 
 namespace Optimization {
-    namespace Constraints {
-        class ReservoirBoundaryToe  : public ReservoirBoundary{
+namespace Constraints {
+
+    /*!
+ * @brief This class extends the reservoir boundary constraint with the WellSpline well definition.
+ * The purpose is to allow the toe of the well to vary with a fixed heel.
+ */
+
+    class ReservoirBoundaryToe  : public ReservoirBoundary{
         public:
             ReservoirBoundaryToe(const Settings::Optimizer::Constraint &settings,
                                 Model::Properties::VariablePropertyContainer *variables,
