@@ -27,9 +27,8 @@
 namespace Optimization {
 namespace Constraints {
 PolarXYZBoundary::PolarXYZBoundary(const Settings::Optimizer::Constraint &settings,
-                                       Model::Properties::VariablePropertyContainer *variables,
-                                       Reservoir::Grid::Grid *grid)
-{
+                                   Model::Properties::VariablePropertyContainer *variables,
+                                   Reservoir::Grid::Grid *grid) {
     xmin_ = settings.box_xyz_xmin;
     xmax_ = settings.box_xyz_xmax;
     ymin_ = settings.box_xyz_ymin;
@@ -44,7 +43,6 @@ PolarXYZBoundary::PolarXYZBoundary(const Settings::Optimizer::Constraint &settin
     else
         affected_well_ = initializeWell(variables->GetPolarSplineVariables(settings.well));
 
-
 }
 
 bool PolarXYZBoundary::CaseSatisfiesConstraint(Case *c) {
@@ -55,9 +53,9 @@ bool PolarXYZBoundary::CaseSatisfiesConstraint(Case *c) {
 
     bool midpoint_feasible = false;
 
-    for (int ii=0; ii<index_list_.length(); ii++){
+    for (int ii = 0; ii < index_list_.length(); ii++) {
         if (grid_->GetCell(index_list_[ii]).EnvelopsPoint(
-                Eigen::Vector3d(midpoint_x_val, midpoint_y_val, midpoint_z_val))) {
+            Eigen::Vector3d(midpoint_x_val, midpoint_y_val, midpoint_z_val))) {
             midpoint_feasible = true;
         }
     }
@@ -66,20 +64,20 @@ bool PolarXYZBoundary::CaseSatisfiesConstraint(Case *c) {
 }
 
 void PolarXYZBoundary::SnapCaseToConstraints(Case *c) {
-double midpoint_x_val = c->real_variables()[affected_well_.midpoint.x];
-double midpoint_y_val = c->real_variables()[affected_well_.midpoint.y];
-double midpoint_z_val = c->real_variables()[affected_well_.midpoint.z];
+    double midpoint_x_val = c->real_variables()[affected_well_.midpoint.x];
+    double midpoint_y_val = c->real_variables()[affected_well_.midpoint.y];
+    double midpoint_z_val = c->real_variables()[affected_well_.midpoint.z];
 
-Eigen::Vector3d projected_midpoint =
+    Eigen::Vector3d projected_midpoint =
         WellConstraintProjections::well_domain_constraint_indices(
-                Eigen::Vector3d(midpoint_x_val, midpoint_y_val, midpoint_z_val),
-                grid_,
-                index_list_
+            Eigen::Vector3d(midpoint_x_val, midpoint_y_val, midpoint_z_val),
+            grid_,
+            index_list_
         );
 
-c->set_real_variable_value(affected_well_.midpoint.x, projected_midpoint(0));
-c->set_real_variable_value(affected_well_.midpoint.y, projected_midpoint(1));
-c->set_real_variable_value(affected_well_.midpoint.z, projected_midpoint(2));
+    c->set_real_variable_value(affected_well_.midpoint.x, projected_midpoint(0));
+    c->set_real_variable_value(affected_well_.midpoint.y, projected_midpoint(1));
+    c->set_real_variable_value(affected_well_.midpoint.z, projected_midpoint(2));
 
 }
 

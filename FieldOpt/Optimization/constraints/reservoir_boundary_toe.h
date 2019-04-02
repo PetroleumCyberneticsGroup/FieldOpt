@@ -21,31 +21,30 @@
 #ifndef FIELDOPT_RESERVOIR_BOUNDARY_TOE_H
 #define FIELDOPT_RESERVOIR_BOUNDARY_TOE_H
 
-
 #include "reservoir_boundary.h"
 #include "ConstraintMath/well_constraint_projections/well_constraint_projections.h"
 
 namespace Optimization {
 namespace Constraints {
 
-    /*!
- * @brief This class extends the reservoir boundary constraint with the WellSpline well definition.
- * The purpose is to allow the toe of the well to vary with a fixed heel.
- */
+/*!
+* @brief This class extends the reservoir boundary constraint with the WellSpline well definition.
+* The purpose is to allow the toe of the well to vary with a fixed heel.
+*/
 
-    class ReservoirBoundaryToe  : public ReservoirBoundary{
-        public:
-            ReservoirBoundaryToe(const Settings::Optimizer::Constraint &settings,
-                                Model::Properties::VariablePropertyContainer *variables,
-                                Reservoir::Grid::Grid *grid);
-            string name() override { return "ReservoirBoundaryToe"; }
-            bool CaseSatisfiesConstraint(Case *c) override;
-            void SnapCaseToConstraints(Case *c) override;
-            Eigen::VectorXd GetLowerBounds(QList<QUuid> id_vector) const override;
-            Eigen::VectorXd GetUpperBounds(QList<QUuid> id_vector) const override;
+class ReservoirBoundaryToe : public ReservoirBoundary {
+ public:
+  ReservoirBoundaryToe(const Settings::Optimizer::Constraint &settings,
+                       Model::Properties::VariablePropertyContainer *variables,
+                       Reservoir::Grid::Grid *grid);
+  string name() override { return "ReservoirBoundaryToe"; }
+  bool CaseSatisfiesConstraint(Case *c) override;
+  void SnapCaseToConstraints(Case *c) override;
+  Eigen::VectorXd GetLowerBounds(QList<QUuid> id_vector) const override;
+  Eigen::VectorXd GetUpperBounds(QList<QUuid> id_vector) const override;
 
-        };
-    }
+};
+}
 }
 
 #endif //FIELDOPT_RESERVOIR_BOUNDARY_TOE_H

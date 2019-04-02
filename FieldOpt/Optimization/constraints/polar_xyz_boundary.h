@@ -37,25 +37,24 @@ namespace Constraints {
  */
 
 class PolarXYZBoundary : public Constraint, WellSplineConstraint {
-public:
-    PolarXYZBoundary(const Settings::Optimizer::Constraint &settings,
-                      Model::Properties::VariablePropertyContainer *variables,
-                      Reservoir::Grid::Grid *grid);
-    string name() override { return "PolarXYZBoundary"; }
-    // Constraint interface
-public:
-    bool CaseSatisfiesConstraint(Case *c);
-    void SnapCaseToConstraints(Case *c);
-    bool IsBoundConstraint() const override { return true; }
-    Eigen::VectorXd GetLowerBounds(QList<QUuid> id_vector) const override;
-    Eigen::VectorXd GetUpperBounds(QList<QUuid> id_vector) const override;
+ public:
+  PolarXYZBoundary(const Settings::Optimizer::Constraint &settings,
+                   Model::Properties::VariablePropertyContainer *variables,
+                   Reservoir::Grid::Grid *grid);
+  string name() override { return "PolarXYZBoundary"; }
+  // Constraint interface
+ public:
+  bool CaseSatisfiesConstraint(Case *c);
+  void SnapCaseToConstraints(Case *c);
+  bool IsBoundConstraint() const override { return true; }
+  Eigen::VectorXd GetLowerBounds(QList<QUuid> id_vector) const override;
+  Eigen::VectorXd GetUpperBounds(QList<QUuid> id_vector) const override;
 
-
-protected:
-    double xmin_, xmax_, ymin_, ymax_, zmin_, zmax_; //!< Constraint limits for the box
-    QList<int> index_list_; //!< Index list for the cells in the reservoir that are within the box
-    Reservoir::Grid::Grid *grid_; //!< Grid, as defined in Reservoir/grid.h
-    Well affected_well_; //!< The affected well
+ protected:
+  double xmin_, xmax_, ymin_, ymax_, zmin_, zmax_; //!< Constraint limits for the box
+  QList<int> index_list_; //!< Index list for the cells in the reservoir that are within the box
+  Reservoir::Grid::Grid *grid_; //!< Grid, as defined in Reservoir/grid.h
+  Well affected_well_; //!< The affected well
 
 };
 }

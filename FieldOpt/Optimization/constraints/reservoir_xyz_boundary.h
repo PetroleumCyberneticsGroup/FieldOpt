@@ -39,8 +39,8 @@ namespace Constraints {
 class ReservoirXYZBoundary : public Constraint, WellSplineConstraint {
  public:
   ReservoirXYZBoundary(const Settings::Optimizer::Constraint &settings,
-                   Model::Properties::VariablePropertyContainer *variables,
-                   Reservoir::Grid::Grid *grid);
+                       Model::Properties::VariablePropertyContainer *variables,
+                       Reservoir::Grid::Grid *grid);
   string name() override { return "ReservoirXYZBoundary"; }
   // Constraint interface
  public:
@@ -49,7 +49,6 @@ class ReservoirXYZBoundary : public Constraint, WellSplineConstraint {
   bool IsBoundConstraint() const override { return true; }
   Eigen::VectorXd GetLowerBounds(QList<QUuid> id_vector) const override;
   Eigen::VectorXd GetUpperBounds(QList<QUuid> id_vector) const override;
-
 
  protected:
   double xmin_, xmax_, ymin_, ymax_, zmin_, zmax_; //!< Constraint limits for the box

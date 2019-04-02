@@ -25,23 +25,22 @@
 namespace Optimization {
 namespace Constraints {
 ReservoirXYZBoundary::ReservoirXYZBoundary(const Settings::Optimizer::Constraint &settings,
-                                   Model::Properties::VariablePropertyContainer *variables,
-                                   Reservoir::Grid::Grid *grid)
-{
+                                           Model::Properties::VariablePropertyContainer *variables,
+                                           Reservoir::Grid::Grid *grid) {
 
-xmin_ = settings.box_xyz_xmin;
-xmax_ = settings.box_xyz_xmax;
-ymin_ = settings.box_xyz_ymin;
-ymax_ = settings.box_xyz_ymax;
-zmin_ = settings.box_xyz_zmin;
-zmax_ = settings.box_xyz_zmax;
-grid_ = grid;
-penalty_weight_ = settings.penalty_weight;
+  xmin_ = settings.box_xyz_xmin;
+  xmax_ = settings.box_xyz_xmax;
+  ymin_ = settings.box_xyz_ymin;
+  ymax_ = settings.box_xyz_ymax;
+  zmin_ = settings.box_xyz_zmin;
+  zmax_ = settings.box_xyz_zmax;
+  grid_ = grid;
+  penalty_weight_ = settings.penalty_weight;
 
-if (!variables->GetWellSplineVariables(settings.well).empty())
-  affected_well_ = initializeWell(variables->GetPolarSplineVariables(settings.well));
-else
-  affected_well_ = initializeWell(variables->GetPolarSplineVariables(settings.well));
+  if (!variables->GetWellSplineVariables(settings.well).empty())
+    affected_well_ = initializeWell(variables->GetPolarSplineVariables(settings.well));
+  else
+    affected_well_ = initializeWell(variables->GetPolarSplineVariables(settings.well));
 }
 
 bool ReservoirXYZBoundary::CaseSatisfiesConstraint(Case *c) {
@@ -57,7 +56,7 @@ bool ReservoirXYZBoundary::CaseSatisfiesConstraint(Case *c) {
   bool heel_feasible = false;
   bool toe_feasible = false;
 
-  for (int ii=0; ii<index_list_.length(); ii++){
+  for (int ii = 0; ii < index_list_.length(); ii++) {
     if (grid_->GetCell(index_list_[ii]).EnvelopsPoint(
         Eigen::Vector3d(heel_x_val, heel_y_val, heel_z_val))) {
       heel_feasible = true;
