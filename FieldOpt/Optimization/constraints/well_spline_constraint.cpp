@@ -68,7 +68,17 @@ WellSplineConstraint::Well WellSplineConstraint::initializeWell(QList<Model::Pro
                 well.additional_points.push_back(addtl_points[i+1]);
             }
         }
-    }
+    } else if (vars.length() == 3 && vars[0]->propertyInfo().prop_type == Property::PropertyType::SplinePoint) {
+          for (auto var : vars) {
+              if (var->propertyInfo().coord == Property::Coordinate::x)
+                  well.toe.x = var->id();
+              else if (var->propertyInfo().coord == Property::Coordinate::y)
+                  well.toe.y = var->id();
+              else if (var->propertyInfo().coord == Property::Coordinate::z)
+                  well.toe.z = var->id();
+              else throw std::runtime_error("Unable to parse variable " + var->name().toStdString());
+          }
+      }
     else if (vars.length() > 0 && vars[0]->propertyInfo().prop_type == Property::PropertyType::PolarSpline) {
         if (VERB_OPT >= 2) Printer::ext_info("Using PolarSpline parameterization for well spline constraint", "Optimization", "WellSplineConstraint");
         for (auto var : vars) {

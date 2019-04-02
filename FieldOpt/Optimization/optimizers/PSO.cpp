@@ -75,7 +75,6 @@ void PSO::iterate(){
     if(enable_logging_){
         logger_->AddEntry(this);
     }
-
     swarm_memory_.push_back(swarm_);
     current_best_particle_global_=get_global_best();
     swarm_ = update_velocity();
