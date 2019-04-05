@@ -65,6 +65,8 @@ private:
   Cell GetCellEnvelopingPoint(Eigen::Vector3d xyz,
                               vector<int> search_set);
 
+  Cell GetCellEnvelopingPointInLayer(double x, double y, int k) override;
+
  private:
   ERTWrapper::ECLGrid::ECLGridReader* ecl_grid_reader_ = 0;
 

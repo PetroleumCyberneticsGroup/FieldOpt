@@ -21,6 +21,7 @@
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/lexical_cast.hpp>
 #include <iostream>
+#include <Utilities/printer.hpp>
 
 namespace Reservoir {
 namespace Grid {
@@ -293,6 +294,22 @@ Cell ECLGrid::GetCellEnvelopingPoint(Eigen::Vector3d xyz,
 }
 Cell ECLGrid::GetSmallestCell() {
     return GetCell(ecl_grid_reader_->FindSmallestCell().global_index);
+}
+Cell ECLGrid::GetCellEnvelopingPointInLayer(double x, double y, int k) {
+    Cell c = GetCell(0,0,k);
+
+    for (int i = 0; i < Dimensions().nx - 1; ++i) {
+        for (int j = 0; j < Dimensions().ny; ++j) {
+            c = GetCell(i, j, k);
+            if (c.EnvelopsPoint(Eigen::Vector3d(x, y, c.center().z()))) {
+                return c;
+            }
+        }
+    }
+    std::stringstream ss;
+    ss << "Unable to find xy point (" << x << ", " << y << ") in layer k " << k;
+    Printer::error(ss.str());
+    throw std::runtime_error("Unable to find cell enveloping point in layer.");
 }
 }
 }

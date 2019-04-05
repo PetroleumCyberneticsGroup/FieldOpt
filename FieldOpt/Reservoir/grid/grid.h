@@ -126,6 +126,11 @@ class Grid
                                       std::vector<int> search_set) = 0;
 
   /*!
+   * @brief Get the cell in layer k enveloping the point defined by the x, y coordinates.
+   */
+  virtual Cell GetCellEnvelopingPointInLayer(double x, double y, int k) = 0;
+
+  /*!
    * @brief Get the smallest cell in the reservoir.
    * @return The cell in the reservoir that has the smallest volume.
    */

@@ -159,4 +159,18 @@ TEST_F(GridTest, FindSmallestCell) {
     EXPECT_LT(smallest_horzwell.volume(), grid_->GetCell(1,1,1).volume());
 }
 
+TEST_F(GridTest, CellEnvelopingPointInLayer) {
+    // Should exist:
+    // Cell : [17, 30, 3]
+    // Global Cell Index : 11654
+    // Intersection point : [E: 457118.17, N: 7321497.73, Depth: 2577.17]
+    double x = 457118;
+    double y = 7321497;
+    int k = 2; // or 3 in 1-indexed
+    auto c = grid_nor_->GetCellEnvelopingPointInLayer(x, y ,k);
+    EXPECT_EQ(11654, c.global_index());
+
+    EXPECT_THROW(grid_nor_->GetCellEnvelopingPointInLayer(x, y , 25), std::runtime_error);
+}
+
 }
