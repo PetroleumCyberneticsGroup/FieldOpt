@@ -38,9 +38,9 @@ ReservoirXYZBoundary::ReservoirXYZBoundary(const Settings::Optimizer::Constraint
   penalty_weight_ = settings.penalty_weight;
 
   if (!variables->GetWellSplineVariables(settings.well).empty())
-    affected_well_ = initializeWell(variables->GetPolarSplineVariables(settings.well));
+    affected_well_ = initializeWell(variables->GetWellSplineVariables(settings.well));
   else
-    affected_well_ = initializeWell(variables->GetPolarSplineVariables(settings.well));
+    affected_well_ = initializeWell(variables->GetWellSplineVariables(settings.well));
 }
 
 bool ReservoirXYZBoundary::CaseSatisfiesConstraint(Case *c) {
