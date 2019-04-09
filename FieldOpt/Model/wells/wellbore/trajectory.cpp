@@ -26,6 +26,7 @@
 #include "Utilities/verbosity.h"
 #include "Utilities/printer.hpp"
 #include "polar_spline.h"
+#include "k_locked_polar_spline.h"
 
 namespace Model {
 namespace Wells {
@@ -58,6 +59,14 @@ Trajectory::Trajectory(Settings::Model::Well well_settings,
     }
     else if (well_settings.definition_type == Settings::Model::WellDefinitionType::PolarSpline) {
         well_spline_ = new PolarSpline(well_settings, variable_container, grid, wic);
+        well_blocks_ = well_spline_->GetWellBlocks();
+        calculateDirectionOfPenetration();
+        if (VERB_MOD >= 3) {
+            printWellBlocks();
+        }
+    }
+    else if (well_settings.definition_type == Settings::Model::WellDefinitionType::KLockedPolarSpline) {
+        well_spline_ = new KLockedPolarSpline(well_settings, variable_container, grid, wic);
         well_blocks_ = well_spline_->GetWellBlocks();
         calculateDirectionOfPenetration();
         if (VERB_MOD >= 3) {

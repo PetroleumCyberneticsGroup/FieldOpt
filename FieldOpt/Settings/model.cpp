@@ -247,6 +247,21 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
         }
         well.polar_spline = polar_spline;
     }
+    else if (QString::compare(definition_type, "KLockedPolarSpline") == 0) {
+        well.definition_type = WellDefinitionType::KLockedPolarSpline;
+        well.use_bezier_spline = false;
+        QJsonObject json_pspline = json_well["PolarSpline"].toObject();
+        Well::PolarSpline polar_spline;
+        polar_spline.azimuth = json_pspline["Azimuth"].toDouble();
+        polar_spline.length = json_pspline["Length"].toDouble();
+        well.spline_heel.x = json_pspline["Heel"].toObject()["x"].toDouble();
+        well.spline_heel.y = json_pspline["Heel"].toObject()["y"].toDouble();
+        well.spline_heel.z = json_pspline["Heel"].toObject()["z"].toDouble();
+        if (json_pspline.contains("IsVariable") && json_pspline["IsVariable"].toBool() == true){
+            polar_spline.is_variable = true;
+        }
+        well.polar_spline = polar_spline;
+    }
     else if (QString::compare(definition_type, "WellSpline") == 0) {
         well.definition_type = WellDefinitionType::WellSpline;
         if (json_well.contains("UseBezierSpline") && json_well["UseBezierSpline"].toBool() == true) {

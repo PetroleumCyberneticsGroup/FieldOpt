@@ -162,43 +162,80 @@ inline QJsonObject model_bezier_well() {
     };
 }
 
-    inline QJsonObject model_polar_well() {
-        return QJsonObject {
-                {"ControlTimes", QJsonArray {
-                        0, 50
+inline QJsonObject model_polar_well() {
+    return QJsonObject {
+        {"ControlTimes", QJsonArray {
+            0, 50
+        }},
+        {"Reservoir", QJsonObject {
+            {"Type", "ECLIPSE"}
+        }},
+        {"Wells", QJsonArray {
+            QJsonObject {
+                {"Name", "PRODUCER"},
+                {"Group", "G1"},
+                {"Use2DModel", true},
+                {"Type", "Producer"},
+                {"DefinitionType", "PolarSpline"},
+                {"UseBezierSpline", false},
+                {"PreferredPhase", "Oil"},
+                {"WellboreRadius", 0.1905},
+                {"Controls", QJsonArray { QJsonObject{
+                    {"TimeStep", 0},
+                    {"State", "Open"},
+                    {"Mode", "BHP"},
+                    {"BHP", 90.0} }
                 }},
-                {"Reservoir", QJsonObject {
-                        {"Type", "ECLIPSE"}
-                }},
-                {"Wells", QJsonArray {
-                        QJsonObject {
-                                {"Name", "PRODUCER"},
-                                {"Group", "G1"},
-                                {"Use2DModel", true},
-                                {"Type", "Producer"},
-                                {"DefinitionType", "PolarSpline"},
-                                {"UseBezierSpline", false},
-                                {"PreferredPhase", "Oil"},
-                                {"WellboreRadius", 0.1905},
-                                {"Controls", QJsonArray { QJsonObject{
-                                        {"TimeStep", 0},
-                                        {"State", "Open"},
-                                        {"Mode", "BHP"},
-                                        {"BHP", 90.0} }
-                                }},
-                                {"PolarSpline", QJsonObject {
-                                    {"IsVariable", true},
-                                    {"Midpoint", QJsonObject{ {"x", 300}, {"y", 900}, {"z", 1712}}},
-                                     {"Azimuth", 45},
-                                     {"Length", 45},
-                                     {"Elevation", 45}
-                                    }
-                                }
-                        }
-                }}
+                {"PolarSpline", QJsonObject {
+                    {"IsVariable", true},
+                    {"Midpoint", QJsonObject{ {"x", 300}, {"y", 900}, {"z", 1712}}},
+                    {"Azimuth", 45},
+                    {"Length", 45},
+                    {"Elevation", 45}
+                }
+                }
+            }
+        }}
 
-        };
-    }
+    };
+}
+
+inline QJsonObject model_k_locked_polar_well() {
+    return QJsonObject {
+        {"ControlTimes", QJsonArray {
+            0, 50
+        }},
+        {"Reservoir", QJsonObject {
+            {"Type", "ECLIPSE"}
+        }},
+        {"Wells", QJsonArray {
+            QJsonObject {
+                {"Name", "PRODUCER"},
+                {"Group", "G1"},
+                {"Use2DModel", true},
+                {"Type", "Producer"},
+                {"DefinitionType", "KLockedPolarSpline"},
+                {"UseBezierSpline", false},
+                {"PreferredPhase", "Oil"},
+                {"WellboreRadius", 0.1905},
+                {"Controls", QJsonArray { QJsonObject{
+                    {"TimeStep", 0},
+                    {"State", "Open"},
+                    {"Mode", "BHP"},
+                    {"BHP", 90.0} }
+                }},
+                {"PolarSpline", QJsonObject {
+                    {"IsVariable", true},
+                    {"Heel", QJsonObject{ {"x", 12}, {"y", 12}, {"z", 1712}}},
+                    {"Azimuth", 0},
+                    {"Length", 1400},
+                }
+                }
+            }
+        }}
+
+    };
+}
 }
 }
 #endif //FIELDOPT_TEST_RESOURCE_MODEL_SETTING_SNIPPETS_H

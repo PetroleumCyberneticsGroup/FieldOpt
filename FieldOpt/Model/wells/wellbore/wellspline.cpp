@@ -127,6 +127,7 @@ void WellSpline::spline_points_from_import(Settings::Model::Well &well_settings)
 }
 
 QList<WellBlock *> *WellSpline::computeWellBlocks() {
+    cout << "Spline ponts: " << spline_points_.size() << endl;
     assert(spline_points_.size() >= 2);
     assert(grid_ != nullptr && grid_ != 0);
 

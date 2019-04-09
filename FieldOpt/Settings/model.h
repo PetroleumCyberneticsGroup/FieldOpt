@@ -55,7 +55,7 @@ class Model
   enum WellType : int { Injector=11, Producer=12, UNKNOWN_TYPE=19 };
   enum ControlMode : int { BHPControl=21, LRATControl=22, ORATControl=23, WRATControl=24, RESVControl=25, GRATControl=26, UNKNOWN_CONTROL=29 };
   enum InjectionType : int { WaterInjection=31, GasInjection=32 };
-  enum WellDefinitionType : int { WellBlocks=41, WellSpline=42, PseudoContVertical2D=43, PolarSpline=45, UNDEFINED=44 };
+  enum WellDefinitionType : int { WellBlocks=41, WellSpline=42, PseudoContVertical2D=43, PolarSpline=45, KLockedPolarSpline=46, UNDEFINED=44 };
   enum WellCompletionType : int { Perforation=61, ICV=62, Packer=63, Tubing=64, Annulus=65 };
   enum WellState : int { WellOpen=71, WellShut=72 };
   enum PreferredPhase : int { Oil=81, Water=82, Gas=83, Liquid=84, UNKNOWN_PHASE=89 };

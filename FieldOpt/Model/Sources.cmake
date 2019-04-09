@@ -27,6 +27,7 @@ SET(MODEL_HEADERS
 	wells/wellbore/wellblock.h
 	wells/wellbore/wellspline.h
     wells/wellbore/polar_spline.h
+	wells/wellbore/k_locked_polar_spline.h
 )
 
 SET(MODEL_SOURCES
@@ -56,6 +57,7 @@ SET(MODEL_SOURCES
 	wells/wellbore/wellblock.cpp
 	wells/wellbore/wellspline.cpp
 	wells/wellbore/polar_spline.cpp
+	wells/wellbore/k_locked_polar_spline.cpp
 )
 
 SET(MODEL_TESTS
@@ -74,6 +76,7 @@ SET(MODEL_TESTS
 	tests/wells/test_well.cpp
 	tests/wells/test_wellblock.cpp
 	tests/wells/test_polar_spline.cpp
+	tests/wells/test_k_locked_polar_spline.cpp
 )
 
 

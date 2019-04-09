@@ -85,13 +85,13 @@ class WellSpline
    */
   QList<WellBlock *> *computeWellBlocks();
 
-  /*!
-   * @brief Get the vector of spline points to be used. Will return converted spline_points if not using 
+  virtual /*!
+   * @brief Get the vector of spline points to be used. Will return converted spline_points if not using
    * bezier method; else will call convertToBezierSpline().
-   * @return 
+   * @return
    */
   vector<Eigen::Vector3d> getPoints() const;
-  
+
   /*!
    * @brief Use the current set of spline_points_ to generate a set of points representing a
    * bezier curve formed from the original points.
