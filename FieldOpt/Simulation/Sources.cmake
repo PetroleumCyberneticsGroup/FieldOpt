@@ -19,6 +19,7 @@ SET(SIMULATION_HEADERS
 	simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/welspecs.h
 	simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/wsegvalv.h
 	simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/schedule_insets.h
+	simulator_interfaces/driver_file_writers/driver_parts/ecl_driver_parts/actionx.hpp
 	simulator_interfaces/driver_file_writers/driver_parts/ix_driver_parts/flow_control_device.hpp
 	simulator_interfaces/driver_file_writers/driver_parts/ix_driver_parts/ix_control.hpp
 	simulator_interfaces/driver_file_writers/driver_parts/ix_driver_parts/report_tuning.hpp
