@@ -25,11 +25,19 @@ namespace ECLDriverParts {
 Wsegvalv::Wsegvalv(Well *well) {
     head_ = "WSEGVALV\n";
     foot_ = "/\n\n";
-    auto isegs = well->GetICDSegments();
-    for (int i = 0; i < isegs.size(); ++i) {
-        entries_.push_back(generateEntry(isegs[i], well->name()));
-    }
 
+    if (well->HasSimpleICVs()) {
+        auto icvs = well->GetSimpleICDs();
+        for (auto icv : icvs) {
+            entries_.push_back(generateEntry(icv, well->name()));
+        }
+    }
+    else {
+        auto isegs = well->GetICDSegments();
+        for (int i = 0; i < isegs.size(); ++i) {
+            entries_.push_back(generateEntry(isegs[i], well->name()));
+        }
+    }
 }
 
 Wsegvalv::Wsegvalv(QList<Model::Wells::Well *> *wells, int ts) {
@@ -68,6 +76,21 @@ QString Wsegvalv::generateEntry(Segment seg, QString wname) {
     entry[2] = QString::number(seg.ParentICD()->flowCoefficient());
     entry[3] = QString::number(seg.ParentICD()->valveSize());
     return "\t" + entry.join("  ") + "  /";
+}
+QString Wsegvalv::generateEntry(Wellbore::Completions::ICD icd, QString wname) {
+/*!
+ * 0. Well name.
+ * 1. Segment number.
+ * 2. Dimensionless flow coefficient (\$ C_v \$).
+ * 3. Cross-section area for flow in the constriction (\$ A_c \$).
+ */
+    auto entry = GetBaseEntryLine(4);
+    entry[0] = wname;
+    entry[1] = QString::number(icd.segmentIdx());
+    entry[2] = QString::number(icd.flowCoefficient());
+    entry[3] = QString::number(icd.valveSize());
+    return "\t" + entry.join("  ") + "  /";
+
 }
 }
 }

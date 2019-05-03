@@ -627,7 +627,7 @@ void Model::parseICVs(QJsonArray &json_icvs, Model::Well &well) {
             }
         }
         else {
-            Printer::ext_warn("DeviceName/DeviceNames fields not found. ECL will be only supported simulator.");
+            throw std::runtime_error("DeviceName or DeviceNames must be defined for ICVs.");
         }
         if (json_icv.contains("ValveSize")) {
             comp.valve_size = json_icv["ValveSize"].toDouble();

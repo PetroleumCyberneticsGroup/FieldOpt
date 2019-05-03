@@ -48,10 +48,12 @@ private:
     friend class ::Simulation::ECLSimulator;
     EclDriverFileWriter(::Settings::Settings *settings, Model::Model *model);
     void WriteDriverFile(QString schedule_file_path);
+    std::string buildActionStrings();
 
     Model::Model *model_;
     ::Settings::Settings *settings_;
     ECLDriverParts::ScheduleInsets insets_;
+    bool use_actionx_;
 };
 
 }

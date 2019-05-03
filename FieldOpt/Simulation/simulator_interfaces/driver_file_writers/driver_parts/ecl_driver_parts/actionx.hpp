@@ -52,12 +52,12 @@ namespace ActionX {
  * ENDACTIO
  */
 
-static enum ACTX_LHQuantity { Day, Year };
-static enum ACTX_Operator { EQ, GT, LT, GE, LE };
+enum ACTX_LHQuantity { Day, Year };
+enum ACTX_Operator { EQ, GT, LT, GE, LE };
 
 std::map<ACTX_LHQuantity, std::string> LHQuantityString = {
     std::pair<ACTX_LHQuantity, std::string> {Day, "DAY"},
-    std::pair<ACTX_LHQuantity, std::string> {Year, "Year"}
+    std::pair<ACTX_LHQuantity, std::string> {Year, "YEAR"}
 };
 std::map<ACTX_Operator, std::string> OperatorString = {
     std::pair<ACTX_Operator, std::string> {EQ, "="},

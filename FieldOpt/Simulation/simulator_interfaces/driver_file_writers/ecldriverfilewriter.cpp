@@ -26,6 +26,7 @@
 #include <Utilities/printer.hpp>
 #include "ecldriverfilewriter.h"
 #include "driver_parts/ecl_driver_parts/schedule_section.h"
+#include "driver_parts/ecl_driver_parts/actionx.hpp"
 #include "Simulation/simulator_interfaces/simulator_exceptions.h"
 #include "Utilities/filehandling.hpp"
 #include "Utilities/verbosity.h"
@@ -39,6 +40,7 @@ EclDriverFileWriter::EclDriverFileWriter(Settings::Settings *settings, Model::Mo
 {
     model_ = model;
     settings_ = settings;
+    use_actionx_ = settings->simulator()->use_actionx();
 
     if (settings->paths().IsSet(Paths::SIM_SCH_INSET_FILE)) {
         insets_ = ECLDriverParts::ScheduleInsets(settings->paths().GetPath(Paths::SIM_SCH_INSET_FILE));
@@ -52,9 +54,35 @@ void EclDriverFileWriter::WriteDriverFile(QString schedule_file_path)
         Printer::ext_info("Writing driver file to " + fp + ".", "Simulation", "EclDriverFileWriter");
     }
     assert(FileExists(schedule_file_path));
-    Schedule schedule = ECLDriverParts::Schedule(model_->wells(), settings_->model()->control_times(), insets_);
-    model_->SetCompdatString(ECLDriverParts::Compdat(model_->wells()).GetPartString());
-    Utilities::FileHandling::WriteStringToFile(schedule.GetPartString(), schedule_file_path);
+
+    if (use_actionx_ == false) {
+        Schedule schedule = ECLDriverParts::Schedule(model_->wells(), settings_->model()->control_times(), insets_);
+        model_->SetCompdatString(schedule.GetPartString());
+        Utilities::FileHandling::WriteStringToFile(schedule.GetPartString(), schedule_file_path);
+    }
+    else {
+        Utilities::FileHandling::WriteStringToFile(QString::fromStdString(buildActionStrings()), schedule_file_path);
+    }
+    if (VERB_SIM >= 2) {
+        Printer::ext_info("Wrote driver string to" + schedule_file_path.toStdString(), "Simulation", "EclDriverFileWriter");
+    }
+}
+std::string EclDriverFileWriter::buildActionStrings() {
+    if (VERB_SIM >= 2) {
+        Printer::ext_info("Generating action strings", "Simulation", "EclDriverFileWriter");
+    }
+    std::string actions = "";
+
+    std::string icv_actions = "";
+    for (auto well : *model_->wells()) {
+        if (well->HasSimpleICVs()) {
+            auto wsegv = ECLDriverParts::Wsegvalv(well);
+            icv_actions += wsegv.GetPartString().toStdString() + "\n";
+        }
+    }
+    actions += ActionX::ACTIONX("ICVS_T0", ECLDriverParts::ActionX::ACTX_LHQuantity::Day,
+        ECLDriverParts::ActionX::ACTX_Operator::GE, 0, icv_actions);
+    return actions;
 }
 
 }

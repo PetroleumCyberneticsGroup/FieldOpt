@@ -79,6 +79,12 @@ void Simulator::setParams(QJsonObject json_simulator) {
     else {
         max_minutes_ = -1;
     }
+    if (json_simulator.contains("UseACTIONX") && json_simulator["UseACTIONX"].toBool() == true) {
+        ecl_use_actionx_ = true;
+    }
+    else {
+        ecl_use_actionx_ = false;
+    }
 }
 
 void Simulator::setCommands(QJsonObject json_simulator) {
