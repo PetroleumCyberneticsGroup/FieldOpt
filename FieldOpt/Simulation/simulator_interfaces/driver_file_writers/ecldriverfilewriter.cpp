@@ -57,8 +57,7 @@ void EclDriverFileWriter::WriteDriverFile(QString schedule_file_path)
 
     if (use_actionx_ == false) {
         Schedule schedule = ECLDriverParts::Schedule(model_->wells(), settings_->model()->control_times(), insets_);
-        //model_->SetCompdatString(schedule.GetPartString());
-        model_->SetCompdatString("");
+        model_->SetCompdatString(schedule.GetPartString());
         Utilities::FileHandling::WriteStringToFile(schedule.GetPartString(), schedule_file_path);
     }
     else {
