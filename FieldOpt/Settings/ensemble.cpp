@@ -62,6 +62,7 @@ Ensemble::Ensemble(const std::string &ens_path)
             std::pair<std::string, Realization>( alias, Realization(alias, data, schedule, grid) )
         );
     }
+    n_select_ = realizations_.size();
 }
 Ensemble::Realization const &Ensemble::GetRealization(const std::string &alias) const {
     return realizations_.at(alias);
@@ -98,6 +99,12 @@ std::string Ensemble::Realization::schedule() const {
 }
 std::string Ensemble::Realization::grid() const {
     return grid_rel_path_;
+}
+int Ensemble::NSelect() const {
+    return n_select_;
+}
+void Ensemble::SetNSelect(const int n) {
+    n_select_ = n;
 }
 
 }
