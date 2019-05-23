@@ -173,6 +173,22 @@ class Model
   void parseSegmentAnnulus(const QJsonObject &json_seg, Well &well) const;
   void parseSegmentCompartments(const QJsonObject &json_seg, Well &well) const;
 
+  /*!
+   * @brief Set a required double property. Will throw an exception if the property is not found.
+   * @param prop The property that should have its value set.
+   * @param container The JSON object that should contain the property.
+   * @param prop_name The name of the property to find in the container.
+   */
+  void set_req_prop_double(double &prop, const QJsonObject &container, const QString &prop_name); 
+
+  /*!
+   * @brief Set an optional double property. Will return true if property is found, otherwise false.
+   * @param prop The property that should have its value set.
+   * @param container The JSON object that should contain the property.
+   * @param prop_name The name of the property to find in the container.
+   */
+  bool set_opt_prop_double(double &prop, const QJsonObject &container, const QString &prop_name); 
+
   void parseICVs(QJsonArray &json_icvs, Well &well);
 
   bool controlTimeIsDeclared(int time) const;

@@ -407,27 +407,13 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
         else throw UnableToParseWellsModelSectionException("Well control type " + json_controls.at(i).toObject()["Mode"].toString().toStdString() + " not recognized for well " + well.name.toStdString());
 
         // Control targets/limits
-        if (json_controls[i].toObject().contains("Rate")) { // Limit for simulator
-            control.liq_rate = json_controls[i].toObject()["Rate"].toDouble();
-        }
-        if (json_controls[i].toObject().contains("LRAT")) {
-            control.liq_rate = json_controls[i].toObject()["LRAT"].toDouble();
-        }
-        if (json_controls[i].toObject().contains("ORAT")) { // Limit for simulator
-            control.oil_rate = json_controls[i].toObject()["ORAT"].toDouble();
-        }
-        if (json_controls[i].toObject().contains("GRAT")) { // Limit for simulator
-            control.gas_rate = json_controls[i].toObject()["GRAT"].toDouble();
-        }
-        if (json_controls[i].toObject().contains("WRAT")) { // Limit for simulator
-            control.wat_rate = json_controls[i].toObject()["WRAT"].toDouble();
-        }
-        if (json_controls[i].toObject().contains("RESV")) { // Limit for simulator
-            control.res_rate = json_controls[i].toObject()["RESV"].toDouble();
-        }
-        if (json_controls[i].toObject().contains("BHP")) { // Limit for simulator
-            control.bhp = json_controls[i].toObject()["BHP"].toDouble();
-        }
+        set_opt_prop_double(control.liq_rate, json_controls[i].toObject(), "Rate");
+        set_opt_prop_double(control.liq_rate, json_controls[i].toObject(), "LRAT");
+        set_opt_prop_double(control.oil_rate, json_controls[i].toObject(), "ORAT");
+        set_opt_prop_double(control.gas_rate, json_controls[i].toObject(), "GRAT");
+        set_opt_prop_double(control.wat_rate, json_controls[i].toObject(), "WRAT");
+        set_opt_prop_double(control.res_rate, json_controls[i].toObject(), "RESV");
+        set_opt_prop_double(control.bhp, json_controls[i].toObject(), "BHP");
 
         // Injection type
         if (well.type == WellType::Injector) {
@@ -690,6 +676,25 @@ void Model::parseICVs(QJsonArray &json_icvs, Model::Well &well) {
         }
     }
 
+}
+
+void Model::set_req_prop_double(double &prop, const QJsonObject &container, const QString &prop_name) {
+    if (container.contains(prop_name) && container[prop_name].isDouble()) {
+        prop = container[prop_name].toDouble();
+    }
+    else {
+        throw std::runtime_error("Required property " + prop_name.toStdString() + " not found.");
+    }
+}
+
+bool Model::set_opt_prop_double(double &prop, const QJsonObject &container, const QString &prop_name) {
+    if (container.contains(prop_name) && container[prop_name].isDouble()) {
+        prop = container[prop_name].toDouble();
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 }
