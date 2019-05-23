@@ -23,6 +23,8 @@
 #include <iostream>
 #include "ensemble_helper.h"
 #include "Utilities/random.hpp"
+#include "Utilities/verbosity.h"
+#include "Utilities/printer.hpp"
 
 namespace Runner {
 
@@ -108,12 +110,19 @@ Optimization::Case *EnsembleHelper::GetEvaluatedCase() {
 }
 void EnsembleHelper::selectRealizations() {
     auto all_aliases = ensemble_.GetAliases();
-    //for (auto alias : all_aliases) {
-        //rzn_queue_.push_back(alias);
-    //}
-    auto indices = unique_random_integers(rng_, 0, all_aliases.size() - 1, n_select_);
-    for (auto idx : indices) {
-        rzn_queue_.push_back(all_aliases[idx]);
+
+    if (n_select_ == all_aliases.size()) {
+        if (VERB_RUN >=2) Printer::ext_info("Selecting all realizations", "Runner", "EnsembleHelper");
+        for (auto alias : all_aliases) {
+            rzn_queue_.push_back(alias);
+        }
+    }
+    else {
+        if (VERB_RUN >=2) Printer::ext_info("Selecting subset of realizations", "Runner", "EnsembleHelper");
+        auto indices = unique_random_integers(rng_, 0, all_aliases.size() - 1, n_select_);
+        for (auto idx : indices) {
+            rzn_queue_.push_back(all_aliases[idx]);
+        }
     }
 }
 Settings::Ensemble::Realization EnsembleHelper::GetRealization(const std::string &alias) const {
