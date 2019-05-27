@@ -159,10 +159,10 @@ void SynchronousMPIRunner::Execute() {
                 }
             }
         }
+        FinalizeRun(true);
         overseer_->TerminateWorkers();
         printMessage("Terminating workers.", 2);
         overseer_->EnsureWorkerTermination();
-        FinalizeRun(true);
         env_.~environment();
         return;
     }
