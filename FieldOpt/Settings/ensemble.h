@@ -92,10 +92,13 @@ class Ensemble {
     const std::string grid_rel_path_;
   };
 
+  int NSelect() const;
+  void SetNSelect(const int n);
   const Realization &GetRealization(const std::string &alias) const;
   std::vector<std::string> GetAliases() const;
 
  private:
+  int n_select_; //!< Number of realizations to be selected for each evaluation. Will be set to all if not specified in driver.
   std::string ensemble_parent_dir_;
   std::map<std::string, Realization> realizations_;
 

@@ -103,7 +103,8 @@ void SynchronousMPIRunner::Execute() {
               auto evaluated_case = ensemble_helper_.GetEvaluatedCase();
               evaluated_case->set_objective_function_value(evaluated_case->GetEnsembleAverageOfv());
               optimizer_->SubmitEvaluatedCase(evaluated_case);
-              printMessage("Submitted evaluated case to optimizer.", 2);
+              model_->ApplyCase(evaluated_case);
+              printMessage("Submitted evaluated case to optimizer and model.", 2);
           }
       }
       else {

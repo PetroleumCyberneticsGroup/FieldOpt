@@ -75,12 +75,19 @@ class Simulator
    */
   int max_minutes() { return max_minutes_; }
 
+  /*!
+   * @brief Check whether actionx keywords should be used when writing the driver file.
+   * Note that this will disable some functionality.
+   */
+  bool use_actionx() const { return ecl_use_actionx_; }
+
  private:
   SimulatorType type_;
   SimulatorFluidModel fluid_model_;
   QStringList *commands_;
   QString script_name_;
   bool is_ensemble_;
+  bool ecl_use_actionx_;
   int max_minutes_;
   Ensemble ensemble_;
 
