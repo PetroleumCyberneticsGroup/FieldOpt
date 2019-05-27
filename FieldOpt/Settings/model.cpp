@@ -182,6 +182,15 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
     if (json_well.contains("ICVs")) {
         auto json_icvs = json_well["ICVs"].toArray();
         parseICVs(json_icvs, well);
+        if (json_well.contains("ICVCompartmentalization")) {
+            if (!json_well["ICVCompartmentalization"].isArray()) {
+                Printer::ext_info("Well.ICVCompartmentalization must be an array of objects with the fields: CompName, ICVs.",
+                        "Settings", "Model");
+                throw std::runtime_error("Unable to parse ICVs.");
+            }
+            auto json_icv_compartmentalization = json_well["ICVCompartmentalization"].toArray();
+            parseICVCompartmentalization(json_icv_compartmentalization, well);
+        }
     }
 
     // Well definition type
@@ -632,15 +641,6 @@ void Model::parseICVs(QJsonArray &json_icvs, Model::Well &well) {
             comp.time_step = json_icv["TimeStep"].toInt();
         }
 
-        if (json_icv.contains("ICVCompartmentalization")) {
-            if (!json_icv["ICVCompartmentalization"].isArray()) {
-                Printer::ext_info("ICVs. ICVCompartmentalization must be an array of objects with the fields: CompName, ICVs.",
-                        "Settings", "Model");
-                throw std::runtime_error("Unable to parse ICVs.");
-            }
-            
-        }
-
         comp.name = "ICD#" + well.name;
         well.completions.push_back(comp);
         Printer::ext_info("Added ICV " + comp.name.toStdString() + " to " + well.name.toStdString()
@@ -653,6 +653,64 @@ void Model::parseICVs(QJsonArray &json_icvs, Model::Well &well) {
         }
     }
 
+}
+
+void Model::parseICVCompartmentalization(QJsonArray &icv_compartmentalization, Well& well) {
+    assert(well.completions.size() == 1);
+    auto device_names = well.completions[0].device_names;
+
+    for (auto comp : icv_compartmentalization) {
+        Well::ICVGroup grp;
+        grp.type = WellCompletionType::ICV;
+        if (well.completions[0].is_variable) {
+            grp.is_variable = true;
+        }
+        set_req_prop_string(grp.icv_group_name, comp.toObject(), "CompName");
+        set_req_prop_string_array(grp.icvs, comp.toObject(), "ICVs");
+        grp.name = "ICD#" + well.name + "#" + QString::fromStdString(grp.icv_group_name);
+        grp.valve_size = well.completions[0].valve_size;
+        grp.min_valve_size = well.completions[0].min_valve_size;
+        grp.max_valve_size = well.completions[0].max_valve_size;
+        grp.valve_flow_coeff = well.completions[0].valve_flow_coeff;
+
+        // Check that all device names listed for compartmentalization has been listed as ICD device names.
+        for (auto name : grp.icvs) {
+            for (int i = 0; i < device_names.size(); i++) {
+                if (device_names[i] == name) {
+                    grp.segment_indexes.push_back(well.completions[0].segment_indexes[i]);
+                    Printer::ext_info("Added segment nr. " + Printer::num2str(grp.segment_indexes.back())
+                                + " for ICV " + name + " in group " + grp.icv_group_name, "Settings", "Model");
+                }
+            }
+            if (std::find(std::begin(device_names), std::end(device_names), name) != std::end(device_names)) {
+                continue; // Device was found
+            }
+            else {
+                throw std::runtime_error("Unable to find compartment-device " + name + " in ICV name list");
+            }
+            // Check that that none of the devices in the new compartment exist in another compartment
+            for (auto other_grp : well.icv_compartments) {
+                if (std::find(std::begin(other_grp.icvs), std::end(other_grp.icvs), name) != std::end(other_grp.icvs)) {
+                    throw std::runtime_error("ICV " + name + " has already been added to another compartment.");
+                }
+            }
+        }
+        assert(grp.segment_indexes.size() == grp.icvs.size());
+        well.icv_compartments.push_back(grp);
+    }
+    // Check that all devices are assigned to a compartment
+    for (auto icv : device_names) {
+        bool icv_found = false;
+        for (auto grp : well.icv_compartments) {
+            if (std::find(std::begin(grp.icvs), std::end(grp.icvs), icv) != std::end(grp.icvs)) {
+                icv_found = true;
+                break;
+            }
+        }
+        if (!icv_found) {
+            throw std::runtime_error("ICV " + icv + " has not been assigned to a compartment.");
+        }
+    }
 }
 
 bool Model::is_prop_variable(const QJsonObject &container) {

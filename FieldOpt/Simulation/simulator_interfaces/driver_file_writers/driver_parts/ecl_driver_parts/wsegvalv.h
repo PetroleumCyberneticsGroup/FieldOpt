@@ -46,6 +46,7 @@ class Wsegvalv : public ECLDriverPart {
  private:
   QString generateEntry(Segment seg, QString wname);
   QString generateEntry(Wellbore::Completions::ICD icd, QString wname);
+  QString generateEntry(QString wname, int seg_idx, double flow_coeff, double valve_size);
 
   QStringList entries_;
 };

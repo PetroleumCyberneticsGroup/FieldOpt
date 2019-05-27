@@ -21,14 +21,25 @@
 #define FIELDOPT_ICD_H
 
 #include "segmented_completion.h"
+
 namespace Model {
 namespace Wells {
 namespace Wellbore {
 namespace Completions {
 
+/*!
+ *@brief This class describes a nozzle ICD.
+ *
+ * If multiple device names are given for an ICD this will result
+ * in all the listed ICDs having the same valve size in the simulation.
+ * This is a representation of compartmentalization.
+ */
 class ICD : public SegmentedCompletion {
  public:
   ICD(const Settings::Model::Well::Completion &completion_settings,
+      Properties::VariablePropertyContainer *variable_container);
+
+  ICD(const Settings::Model::Well::ICVGroup &icv_group_settings,
       Properties::VariablePropertyContainer *variable_container);
 
   /*!
@@ -47,6 +58,10 @@ class ICD : public SegmentedCompletion {
 
   void setValveSize(const double size) { valve_size_->setValue(size); }
 
+  bool representsCompartment() const { return device_names_.size() > 0; }
+  std::vector<std::string> deviceNames() const { return device_names_; }
+  std::vector<int> segmentIdxs() const { return segment_idxs_; }
+
  private:
   Properties::ContinousProperty *valve_size_;
   double min_valve_size_, max_valve_size_;
@@ -54,6 +69,8 @@ class ICD : public SegmentedCompletion {
   int time_step_;
   int segment_idx_;
   std::string device_name_;
+  std::vector<std::string> device_names_; //!< Used if this ICD objects represents multiple ICVs in the simulation.
+  std::vector<int> segment_idxs_; //!< Used if this ICD objects represents multiple ICVs in the simulation.
 
 };
 

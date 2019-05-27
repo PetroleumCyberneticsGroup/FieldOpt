@@ -18,6 +18,8 @@
 ******************************************************************************/
 
 #include "wsegvalv.h"
+#include "Utilities/verbosity.h"
+#include "Utilities/printer.hpp"
 
 namespace Simulation {
 namespace ECLDriverParts {
@@ -28,8 +30,24 @@ Wsegvalv::Wsegvalv(Well *well) {
 
     if (well->HasSimpleICVs()) {
         auto icvs = well->GetSimpleICDs();
-        for (auto icv : icvs) {
-            entries_.push_back(generateEntry(icv, well->name()));
+
+        if (icvs[0].representsCompartment()) {
+            for (auto icv : icvs) {
+                for (int seg_idx : icv.segmentIdxs()) {
+                    entries_.push_back(generateEntry(well->name(), seg_idx,
+                                icv.flowCoefficient(), icv.valveSize()));
+                }
+                if (VERB_SIM >= 2) {
+                    Printer::ext_info("Generated " + Printer::num2str(icv.segmentIdxs().size())
+                            + " WSEGVALV entries for " + icv.deviceName());
+                }
+            }
+            // Generate multiple entries pr. icd object
+        }
+        else {
+            for (auto icv : icvs) {
+                entries_.push_back(generateEntry(icv, well->name()));
+            }
         }
     }
     else {
@@ -89,6 +107,15 @@ QString Wsegvalv::generateEntry(Wellbore::Completions::ICD icd, QString wname) {
     entry[1] = QString::number(icd.segmentIdx());
     entry[2] = QString::number(icd.flowCoefficient());
     entry[3] = QString::number(icd.valveSize());
+    return "\t" + entry.join("  ") + "  /";
+
+}
+QString Wsegvalv::generateEntry(QString wname, int seg_idx, double flow_coeff, double valve_size) {
+    auto entry = GetBaseEntryLine(4);
+    entry[0] = wname;
+    entry[1] = QString::number(seg_idx);
+    entry[2] = QString::number(flow_coeff);
+    entry[3] = QString::number(valve_size);
     return "\t" + entry.join("  ") + "  /";
 
 }

@@ -86,6 +86,13 @@ class Model
       bool variable_strength         = false; //!< Whether the strength of a comp. (e.g. ICD/perforation) should be variable.
       QString name;
     };
+    /*!
+     * @brief A grouping of ICVs that make up a compartment
+     */
+    struct ICVGroup : Completion {
+        std::string icv_group_name;
+        std::vector<std::string> icvs;
+    };
     struct WellBlock {
       WellBlock(){}
       bool is_variable;
@@ -154,6 +161,7 @@ class Model
     int seg_n_compartments = 0;                 //!< Number of packer-delimited compartments with ICDs to use.
     std::vector<TrajectoryImporter::ImportedWellBlock> imported_wellblocks_; //!< List of imported well blocks.
     std::string toString();
+    std::vector<ICVGroup> icv_compartments; //!< Grouping of ICVs into named comparments.
   };
 
   QList<Well> wells() const { return wells_; }                //!< Get the struct containing settings for the well(s) in the model.
@@ -234,6 +242,7 @@ class Model
   bool is_prop_variable(const QJsonObject &container);
 
   void parseICVs(QJsonArray &json_icvs, Well &well);
+  void parseICVCompartmentalization(QJsonArray &icv_compartmentalization, Well &well);
 
   bool controlTimeIsDeclared(int time) const;
 
