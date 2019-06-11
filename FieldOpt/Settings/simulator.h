@@ -81,6 +81,13 @@ class Simulator
    */
   bool use_actionx() const { return ecl_use_actionx_; }
 
+  /*!
+   * @brief Check whether or not to call a script named FO_POSTSIM.sh
+   * in the same directory as the simulator DATA file after simulation,
+   * if the script is found.
+   */
+  bool use_post_sim_script() const { return use_post_sim_script_; }
+
  private:
   SimulatorType type_;
   SimulatorFluidModel fluid_model_;
@@ -88,6 +95,7 @@ class Simulator
   QString script_name_;
   bool is_ensemble_;
   bool ecl_use_actionx_;
+  bool use_post_sim_script_;
   int max_minutes_;
   Ensemble ensemble_;
 

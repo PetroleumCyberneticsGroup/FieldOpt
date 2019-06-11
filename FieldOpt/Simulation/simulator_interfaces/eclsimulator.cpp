@@ -61,6 +61,7 @@ void ECLSimulator::Evaluate()
         script_args_
     );
     if (VERB_SIM >= 2) { Printer::info("Unmonitored simulation done. Reading results."); }
+    PostSimWork();
     results_->ReadResults(QString::fromStdString(paths_.GetPath(Paths::SIM_OUT_DRIVER_FILE)));
     updateResultsInModel();
 }
@@ -82,13 +83,10 @@ bool ECLSimulator::Evaluate(int timeout, int threads) {
     bool success = ::Utilities::Unix::ExecShellScriptTimeout(
         QString::fromStdString(paths_.GetPath(Paths::SIM_EXEC_SCRIPT_FILE)),
         script_args_, t);
-    if (VERB_SIM >= 2) {
-        Printer::info("Monitored simulation done.");
-    }
+    if (VERB_SIM >= 2) Printer::info("Monitored simulation done.");
     if (success) {
-        if (VERB_SIM >= 2) {
-            Printer::info("Simulation successful. Reading results.");
-        }
+        if (VERB_SIM >= 2) Printer::info("Simulation successful. Reading results.");
+        PostSimWork();
         results_->DumpResults();
         results_->ReadResults(QString::fromStdString(paths_.GetPath(Paths::SIM_OUT_DRIVER_FILE)));
     }

@@ -18,6 +18,7 @@
 ******************************************************************************/
 #include "simulator.h"
 #include "simulator_exceptions.h"
+#include "Utilities/execution.hpp"
 
 namespace Simulation {
 
@@ -52,6 +53,21 @@ Simulator::Simulator(Settings::Settings *settings) {
 ::Simulation::Results::Results *Simulator::results()
 {
     return results_;
+}
+
+void Simulator::PostSimWork() {
+    if (settings_->simulator()->use_post_sim_script()) {
+        std::string expected_scr_path = paths_.GetPath(Paths::SIM_WORK_DIR) + "/FO_POSTSIM.sh";
+        if (VERB_SIM >= 2) Printer::ext_info("Looking for PostSimWork script at " + expected_scr_path, "Simulation", "Simulator");
+        if (Utilities::FileHandling::FileExists(expected_scr_path)) {
+            if (VERB_SIM >= 2) Printer::ext_info("PostSimWork script found. Executing... ", "Simulation", "Simulator");
+            Utilities::Unix::ExecShellScript(QString::fromStdString(expected_scr_path), QStringList());
+            if (VERB_SIM >= 2) Printer::ext_info("Done executing PostSimWork script.", "Simulation", "Simulator");
+        }
+        else {
+            Printer::ext_warn("PostSimWork script not found.");
+        }
+    }
 }
 
 void Simulator::SetVerbosityLevel(int level) {

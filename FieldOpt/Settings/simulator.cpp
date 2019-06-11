@@ -88,6 +88,12 @@ void Simulator::setParams(QJsonObject json_simulator) {
     else {
         ecl_use_actionx_ = false;
     }
+    if (json_simulator.contains("UsePostSimScript") && json_simulator["UsePostSimScript"] == true) {
+        use_post_sim_script_ = true;
+    }
+    else {
+        use_post_sim_script_ = false;
+    }
 }
 
 void Simulator::setCommands(QJsonObject json_simulator) {
