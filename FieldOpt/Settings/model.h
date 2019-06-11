@@ -181,66 +181,6 @@ class Model
   void parseSegmentAnnulus(const QJsonObject &json_seg, Well &well) const;
   void parseSegmentCompartments(const QJsonObject &json_seg, Well &well) const;
 
-  /*!
-   * @brief Set a required double property. Will throw an exception if the property is not found.
-   * @param prop The property that should have its value set.
-   * @param container The JSON object that should contain the property.
-   * @param prop_name The name of the property to find in the container.
-   */
-  void set_req_prop_double(double &prop, const QJsonObject &container, const QString &prop_name); 
-
-  /*!
-   * @brief Set an optional double property. Will return true if property is found, otherwise false.
-   * @param prop The property that should have its value set.
-   * @param container The JSON object that should contain the property.
-   * @param prop_name The name of the property to find in the container.
-   */
-  bool set_opt_prop_double(double &prop, const QJsonObject &container, const QString &prop_name); 
-
-  /*!
-   * @brief Set an optional integer property. Will return true if property is found, otherwise false.
-   * @param prop The property that should have its value set.
-   * @param container The JSON object that should contain the property.
-   * @param prop_name The name of the property to find in the container.
-   */
-  bool set_opt_prop_int(int &prop, const QJsonObject &container, const QString &prop_name); 
-  void set_req_prop_int(int &prop, const QJsonObject &container, const QString &prop_name); 
-
-  /*!
-   * @brief Set an optional string property. Will return true if property is found, otherwise false.
-   * @param prop The property that should have its value set.
-   * @param container The JSON object that should contain the property.
-   * @param prop_name The name of the property to find in the container.
-   */
-  bool set_opt_prop_string(std::string &prop, const QJsonObject &container, const QString &prop_name);
-  void set_req_prop_string(std::string &prop, const QJsonObject &container, const QString &prop_name);
-
-  /*!
-   * @brief Set an optional string array property. Will return true if property is found, otherwise false.
-   * @param prop The property that should have its value set.
-   * @param container The JSON object that should contain the property.
-   * @param prop_name The name of the property to find in the container.
-   */
-  bool set_opt_prop_string_array(std::vector<std::string> &prop, const QJsonObject &container, const QString &prop_name);
-  void set_req_prop_string_array(std::vector<std::string> &prop, const QJsonObject &container, const QString &prop_name);
-
-  /*!
-   * @brief Set an optional int array property. Will return true if property is found, otherwise false.
-   * @param prop The property that should have its value set.
-   * @param container The JSON object that should contain the property.
-   * @param prop_name The name of the property to find in the container.
-   */
-  bool set_opt_prop_int_array(std::vector<int> &prop, const QJsonObject &container, const QString &prop_name);
-  void set_req_prop_int_array(std::vector<int> &prop, const QJsonObject &container, const QString &prop_name);
-
-  /*!
-   * @brief Check if the property defined by a container is to be variable.
-   *
-   * This is done by checking for the precence of an "IsVariable" field,
-   * and checking whether the value is true.
-   */
-  bool is_prop_variable(const QJsonObject &container);
-
   void parseICVs(QJsonArray &json_icvs, Well &well);
   void parseICVCompartmentalization(QJsonArray &icv_compartmentalization, Well &well);
 

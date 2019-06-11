@@ -7,6 +7,7 @@ SET(SETTINGS_HEADERS
 	settings_exceptions.h
 	simulator.h
 	trajectory_importer.h
+    helpers.hpp
 )
 
 SET(SETTINGS_SOURCES
