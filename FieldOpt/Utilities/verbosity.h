@@ -36,7 +36,7 @@
 #define VERB_OPT 1 // Optimization
 #define VERB_WIC 1 // WellIndexCalculation
 #define VERB_SIM 1 // Simulation
-#define VERB_RUN 2 // Runner
+#define VERB_RUN 1 // Runner
 #define VERB_RES 1 // Reservoir
 #define VERB_SET 1 // Settings
 

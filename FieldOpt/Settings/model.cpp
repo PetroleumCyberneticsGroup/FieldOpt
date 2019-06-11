@@ -182,6 +182,15 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
     if (json_well.contains("ICVs")) {
         auto json_icvs = json_well["ICVs"].toArray();
         parseICVs(json_icvs, well);
+        if (json_well.contains("ICVCompartmentalization")) {
+            if (!json_well["ICVCompartmentalization"].isArray()) {
+                Printer::ext_info("Well.ICVCompartmentalization must be an array of objects with the fields: CompName, ICVs.",
+                        "Settings", "Model");
+                throw std::runtime_error("Unable to parse ICVs.");
+            }
+            auto json_icv_compartmentalization = json_well["ICVCompartmentalization"].toArray();
+            parseICVCompartmentalization(json_icv_compartmentalization, well);
+        }
     }
 
     // Well definition type
@@ -407,27 +416,13 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
         else throw UnableToParseWellsModelSectionException("Well control type " + json_controls.at(i).toObject()["Mode"].toString().toStdString() + " not recognized for well " + well.name.toStdString());
 
         // Control targets/limits
-        if (json_controls[i].toObject().contains("Rate")) { // Limit for simulator
-            control.liq_rate = json_controls[i].toObject()["Rate"].toDouble();
-        }
-        if (json_controls[i].toObject().contains("LRAT")) {
-            control.liq_rate = json_controls[i].toObject()["LRAT"].toDouble();
-        }
-        if (json_controls[i].toObject().contains("ORAT")) { // Limit for simulator
-            control.oil_rate = json_controls[i].toObject()["ORAT"].toDouble();
-        }
-        if (json_controls[i].toObject().contains("GRAT")) { // Limit for simulator
-            control.gas_rate = json_controls[i].toObject()["GRAT"].toDouble();
-        }
-        if (json_controls[i].toObject().contains("WRAT")) { // Limit for simulator
-            control.wat_rate = json_controls[i].toObject()["WRAT"].toDouble();
-        }
-        if (json_controls[i].toObject().contains("RESV")) { // Limit for simulator
-            control.res_rate = json_controls[i].toObject()["RESV"].toDouble();
-        }
-        if (json_controls[i].toObject().contains("BHP")) { // Limit for simulator
-            control.bhp = json_controls[i].toObject()["BHP"].toDouble();
-        }
+        set_opt_prop_double(control.liq_rate, json_controls[i].toObject(), "Rate");
+        set_opt_prop_double(control.liq_rate, json_controls[i].toObject(), "LRAT");
+        set_opt_prop_double(control.oil_rate, json_controls[i].toObject(), "ORAT");
+        set_opt_prop_double(control.gas_rate, json_controls[i].toObject(), "GRAT");
+        set_opt_prop_double(control.wat_rate, json_controls[i].toObject(), "WRAT");
+        set_opt_prop_double(control.res_rate, json_controls[i].toObject(), "RESV");
+        set_opt_prop_double(control.bhp, json_controls[i].toObject(), "BHP");
 
         // Injection type
         if (well.type == WellType::Injector) {
@@ -616,68 +611,36 @@ void Model::parseICVs(QJsonArray &json_icvs, Model::Well &well) {
     for (int i = 0; i < json_icvs.size(); ++i) {
         Well::Completion comp;
         comp.type = WellCompletionType::ICV;
-        auto json_icv = json_icvs[i].toObject();
-        if (json_icv.contains("DeviceName")) {
-            comp.device_name = json_icv["DeviceName"].toString().toStdString();
+        QJsonObject json_icv = json_icvs[i].toObject();
+        comp.is_variable = is_prop_variable(json_icv);
+
+        //bool name_set = set_opt_prop_string(comp.device_name, json_icv, "DeviceName");
+        if (set_opt_prop_string(comp.device_name, json_icv, "DeviceName")) {
             comp.device_names.push_back(comp.device_name);
         }
-        else if (json_icv.contains("DeviceNames") && json_icv["DeviceNames"].isArray()) {
-            for (auto device_name : json_icv["DeviceNames"].toArray()) {
-                comp.device_names.push_back(device_name.toString().toStdString());
-            }
-        }
         else {
-            throw std::runtime_error("DeviceName or DeviceNames must be defined for ICVs.");
+            set_req_prop_string_array(comp.device_names, json_icv, "DeviceNames");
         }
-        if (json_icv.contains("ValveSize")) {
-            comp.valve_size = json_icv["ValveSize"].toDouble();
-        }
-        else {
-            throw std::runtime_error("ValveSize must be defined for ICVs.");
-        }
-        if (json_icv.contains("MinValveSize")) {
-            comp.min_valve_size = json_icv["MinValveSize"].toDouble();
-        }
-        else {
-            comp.min_valve_size = 0.0;
-            Printer::info("MinValveSize not found. Defaulting to 0.0");
-        }
-        if (json_icv.contains("MaxValveSize") && json_icv["MaxValveSize"].toDouble() <= 7.8540E-3) {
-            comp.max_valve_size = json_icv["MaxValveSize"].toDouble();
-        }
-        else {
-            comp.max_valve_size = 7.8540E-3;
-            Printer::info("MaxValveSize not found or too big. Defaulting to 7.8540E-3");
-        }
-        if (json_icv.contains("FlowCoefficient")) {
-            comp.valve_flow_coeff = json_icv["FlowCoefficient"].toDouble();
-        }
-        else {
-            comp.valve_flow_coeff = 0.5;
-            Printer::info("FlowCoefficient not found for ICV. Defaulted to 0.5");
-        }
-        if (json_icv.contains("Segment")) {
-            comp.segment_index = json_icv["Segment"].toInt();
+
+        set_req_prop_double(comp.valve_size, json_icv, "ValveSize");
+        set_opt_prop_double(comp.min_valve_size, json_icv, "MinValveSize");
+        set_opt_prop_double(comp.max_valve_size, json_icv, "MaxValveSize");
+        set_opt_prop_double(comp.valve_flow_coeff, json_icv, "FlowCoefficient");
+
+        if (set_opt_prop_int(comp.segment_index, json_icv, "Segment")) {
             comp.segment_indexes.push_back(comp.segment_index);
         }
-        else if (json_icv.contains("Segments") && json_icv["Segments"].isArray()) {
-            for (auto seg : json_icv["Segments"].toArray()) {
-                comp.segment_indexes.push_back(seg.toInt());
-            }
+        else {
+            set_req_prop_int_array(comp.segment_indexes, json_icv, "Segments");
             assert(comp.segment_indexes.size() == comp.device_names.size());
         }
-        else {
-            throw std::runtime_error("Segment (index) or Segments must be defined for ICVs.");
-        }
-        if (json_icv.contains("IsVariable") && json_icv["IsVariable"].toBool() == true) {
-            comp.is_variable = true;
-        }
+
         if (json_icv.contains("TimeStep")) {
             if (!controlTimeIsDeclared(json_icv["TimeStep"].toInt()))
                 throw std::runtime_error("All time steps must be declared in the ControlTimes array.");
             comp.time_step = json_icv["TimeStep"].toInt();
         }
-//        comp_settings.name = "ICD#" + well_settings.name + "#" + QString::number(compartments_.size());
+
         comp.name = "ICD#" + well.name;
         well.completions.push_back(comp);
         Printer::ext_info("Added ICV " + comp.name.toStdString() + " to " + well.name.toStdString()
@@ -691,6 +654,161 @@ void Model::parseICVs(QJsonArray &json_icvs, Model::Well &well) {
     }
 
 }
+
+void Model::parseICVCompartmentalization(QJsonArray &icv_compartmentalization, Well& well) {
+    assert(well.completions.size() == 1);
+    auto device_names = well.completions[0].device_names;
+
+    for (auto comp : icv_compartmentalization) {
+        Well::ICVGroup grp;
+        grp.type = WellCompletionType::ICV;
+        if (well.completions[0].is_variable) {
+            grp.is_variable = true;
+        }
+        set_req_prop_string(grp.icv_group_name, comp.toObject(), "CompName");
+        set_req_prop_string_array(grp.icvs, comp.toObject(), "ICVs");
+        grp.name = "ICD#" + well.name + "#" + QString::fromStdString(grp.icv_group_name);
+        grp.valve_size = well.completions[0].valve_size;
+        grp.min_valve_size = well.completions[0].min_valve_size;
+        grp.max_valve_size = well.completions[0].max_valve_size;
+        grp.valve_flow_coeff = well.completions[0].valve_flow_coeff;
+
+        // Check that all device names listed for compartmentalization has been listed as ICD device names.
+        for (auto name : grp.icvs) {
+            for (int i = 0; i < device_names.size(); i++) {
+                if (device_names[i] == name) {
+                    grp.segment_indexes.push_back(well.completions[0].segment_indexes[i]);
+                    Printer::ext_info("Added segment nr. " + Printer::num2str(grp.segment_indexes.back())
+                                + " for ICV " + name + " in group " + grp.icv_group_name, "Settings", "Model");
+                }
+            }
+            if (std::find(std::begin(device_names), std::end(device_names), name) != std::end(device_names)) {
+                continue; // Device was found
+            }
+            else {
+                throw std::runtime_error("Unable to find compartment-device " + name + " in ICV name list");
+            }
+            // Check that that none of the devices in the new compartment exist in another compartment
+            for (auto other_grp : well.icv_compartments) {
+                if (std::find(std::begin(other_grp.icvs), std::end(other_grp.icvs), name) != std::end(other_grp.icvs)) {
+                    throw std::runtime_error("ICV " + name + " has already been added to another compartment.");
+                }
+            }
+        }
+        assert(grp.segment_indexes.size() == grp.icvs.size());
+        well.icv_compartments.push_back(grp);
+    }
+    // Check that all devices are assigned to a compartment
+    for (auto icv : device_names) {
+        bool icv_found = false;
+        for (auto grp : well.icv_compartments) {
+            if (std::find(std::begin(grp.icvs), std::end(grp.icvs), icv) != std::end(grp.icvs)) {
+                icv_found = true;
+                break;
+            }
+        }
+        if (!icv_found) {
+            throw std::runtime_error("ICV " + icv + " has not been assigned to a compartment.");
+        }
+    }
+}
+
+bool Model::is_prop_variable(const QJsonObject &container) {
+    if (container.contains("IsVariable") && container["IsVariable"].isBool() && container["IsVariable"].toBool() == true) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+bool Model::set_opt_prop_string_array(std::vector<std::string> &prop, const QJsonObject &container, const QString &prop_name) {
+        if (container.contains(prop_name) && container[prop_name].isArray() && container[prop_name].toArray()[0].isString()) {
+            for (auto elem : container[prop_name].toArray()) {
+                prop.push_back(elem.toString().toStdString());
+            }
+            return true;
+        }
+        else {
+            return false;
+        }
+}
+
+void Model::set_req_prop_string_array(std::vector<std::string> &prop, const QJsonObject &container, const QString &prop_name) {
+    if (!set_opt_prop_string_array(prop, container, prop_name)) {
+        throw std::runtime_error("Required property " + prop_name.toStdString() + " not found.");
+    }
+}
+
+bool Model::set_opt_prop_string(std::string &prop, const QJsonObject &container, const QString &prop_name) {
+    if (container.contains(prop_name) && container[prop_name].isString()) {
+        prop = container[prop_name].toString().toStdString();
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+void Model::set_req_prop_string(std::string &prop, const QJsonObject &container, const QString &prop_name) {
+    if (!set_opt_prop_string(prop, container, prop_name)) {
+        throw std::runtime_error("Required property " + prop_name.toStdString() + " not found.");
+    }
+}
+
+bool Model::set_opt_prop_double(double &prop, const QJsonObject &container, const QString &prop_name) {
+    if (container.contains(prop_name) && (container[prop_name].isDouble())) {
+        prop = container[prop_name].toDouble();
+        return true;
+    }
+    else {
+        Printer::ext_info("Property " + prop_name.toStdString() + " not found. Using default ("
+                        + Printer::num2str(prop) + ").", "Settings", "Model");
+        return false;
+    }
+}
+void Model::set_req_prop_double(double &prop, const QJsonObject &container, const QString &prop_name) {
+    if (!set_opt_prop_double(prop, container, prop_name)) {
+        throw std::runtime_error("Required property " + prop_name.toStdString() + " not found.");
+    }
+}
+
+bool Model::set_opt_prop_int(int &prop, const QJsonObject &container, const QString &prop_name) {
+    if (container.contains(prop_name) && (container[prop_name].isDouble())) {
+        prop = container[prop_name].toInt();
+        return true;
+    }
+    else {
+        Printer::ext_info("Property " + prop_name.toStdString() + " not found. Using default ("
+                        + Printer::num2str(prop) + ").", "Settings", "Model");
+        return false;
+    }
+}
+void Model::set_req_prop_int(int &prop, const QJsonObject &container, const QString &prop_name) {
+    if (!set_opt_prop_int(prop, container, prop_name)) {
+        throw std::runtime_error("Required property " + prop_name.toStdString() + " not found.");
+    }
+}
+
+bool Model::set_opt_prop_int_array(std::vector<int> &prop, const QJsonObject &container, const QString &prop_name) {
+        if (container.contains(prop_name) && container[prop_name].isArray() && container[prop_name].toArray()[0].isDouble()) {
+            for (auto elem : container[prop_name].toArray()) {
+                prop.push_back(elem.toInt());
+            }
+            return true;
+        }
+        else {
+            return false;
+        }
+}
+
+void Model::set_req_prop_int_array(std::vector<int> &prop, const QJsonObject &container, const QString &prop_name) {
+    if (!set_opt_prop_int_array(prop, container, prop_name)) {
+        throw std::runtime_error("Required property " + prop_name.toStdString() + " not found.");
+    }
+}
+
+
 
 }
 

@@ -68,7 +68,7 @@ class Model
       WellCompletionType type;               //!< Which type of completion this is (Perforation/ICD)
       double transmissibility_factor =  0.0; //!< The transmissibility factor for this completion (used for perforations)
       double valve_size              = -1.0; //!< Valve size for nozzle ICDs.
-      double valve_flow_coeff        = -1.0; //!< Dimensionless flow coefficient for valve.
+      double valve_flow_coeff        =  0.5; //!< Dimensionless flow coefficient for valve.
       double diameter                = -1.0; //!< Diameter (for any completion in the segmented model)
       double cross_sect_area         = -1.0; //!< Cross sectional flow area
       double roughness               = -1.0; //!< Roughness (for any completion in the segmented model)
@@ -85,6 +85,13 @@ class Model
       bool variable_placement        = false; //!< Whether the placement of a comp. along the trajectory should be variable.
       bool variable_strength         = false; //!< Whether the strength of a comp. (e.g. ICD/perforation) should be variable.
       QString name;
+    };
+    /*!
+     * @brief A grouping of ICVs that make up a compartment
+     */
+    struct ICVGroup : Completion {
+        std::string icv_group_name;
+        std::vector<std::string> icvs;
     };
     struct WellBlock {
       WellBlock(){}
@@ -154,6 +161,7 @@ class Model
     int seg_n_compartments = 0;                 //!< Number of packer-delimited compartments with ICDs to use.
     std::vector<TrajectoryImporter::ImportedWellBlock> imported_wellblocks_; //!< List of imported well blocks.
     std::string toString();
+    std::vector<ICVGroup> icv_compartments; //!< Grouping of ICVs into named comparments.
   };
 
   QList<Well> wells() const { return wells_; }                //!< Get the struct containing settings for the well(s) in the model.
@@ -173,7 +181,68 @@ class Model
   void parseSegmentAnnulus(const QJsonObject &json_seg, Well &well) const;
   void parseSegmentCompartments(const QJsonObject &json_seg, Well &well) const;
 
+  /*!
+   * @brief Set a required double property. Will throw an exception if the property is not found.
+   * @param prop The property that should have its value set.
+   * @param container The JSON object that should contain the property.
+   * @param prop_name The name of the property to find in the container.
+   */
+  void set_req_prop_double(double &prop, const QJsonObject &container, const QString &prop_name); 
+
+  /*!
+   * @brief Set an optional double property. Will return true if property is found, otherwise false.
+   * @param prop The property that should have its value set.
+   * @param container The JSON object that should contain the property.
+   * @param prop_name The name of the property to find in the container.
+   */
+  bool set_opt_prop_double(double &prop, const QJsonObject &container, const QString &prop_name); 
+
+  /*!
+   * @brief Set an optional integer property. Will return true if property is found, otherwise false.
+   * @param prop The property that should have its value set.
+   * @param container The JSON object that should contain the property.
+   * @param prop_name The name of the property to find in the container.
+   */
+  bool set_opt_prop_int(int &prop, const QJsonObject &container, const QString &prop_name); 
+  void set_req_prop_int(int &prop, const QJsonObject &container, const QString &prop_name); 
+
+  /*!
+   * @brief Set an optional string property. Will return true if property is found, otherwise false.
+   * @param prop The property that should have its value set.
+   * @param container The JSON object that should contain the property.
+   * @param prop_name The name of the property to find in the container.
+   */
+  bool set_opt_prop_string(std::string &prop, const QJsonObject &container, const QString &prop_name);
+  void set_req_prop_string(std::string &prop, const QJsonObject &container, const QString &prop_name);
+
+  /*!
+   * @brief Set an optional string array property. Will return true if property is found, otherwise false.
+   * @param prop The property that should have its value set.
+   * @param container The JSON object that should contain the property.
+   * @param prop_name The name of the property to find in the container.
+   */
+  bool set_opt_prop_string_array(std::vector<std::string> &prop, const QJsonObject &container, const QString &prop_name);
+  void set_req_prop_string_array(std::vector<std::string> &prop, const QJsonObject &container, const QString &prop_name);
+
+  /*!
+   * @brief Set an optional int array property. Will return true if property is found, otherwise false.
+   * @param prop The property that should have its value set.
+   * @param container The JSON object that should contain the property.
+   * @param prop_name The name of the property to find in the container.
+   */
+  bool set_opt_prop_int_array(std::vector<int> &prop, const QJsonObject &container, const QString &prop_name);
+  void set_req_prop_int_array(std::vector<int> &prop, const QJsonObject &container, const QString &prop_name);
+
+  /*!
+   * @brief Check if the property defined by a container is to be variable.
+   *
+   * This is done by checking for the precence of an "IsVariable" field,
+   * and checking whether the value is true.
+   */
+  bool is_prop_variable(const QJsonObject &container);
+
   void parseICVs(QJsonArray &json_icvs, Well &well);
+  void parseICVCompartmentalization(QJsonArray &icv_compartmentalization, Well &well);
 
   bool controlTimeIsDeclared(int time) const;
 

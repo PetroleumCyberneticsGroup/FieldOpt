@@ -48,6 +48,28 @@ ICD::ICD(const Settings::Model::Well::Completion &completion_settings,
     }
 
 }
+ICD::ICD(const Settings::Model::Well::ICVGroup &icv_group_settings,
+        Properties::VariablePropertyContainer *variable_container) : SegmentedCompletion(icv_group_settings,
+                                                                                          variable_container) {
+    flow_coefficient_ = icv_group_settings.valve_flow_coeff;
+    valve_size_ = new Properties::ContinousProperty(icv_group_settings.valve_size);
+    valve_size_->setName(icv_group_settings.name);
+    device_name_ = icv_group_settings.icv_group_name;
+
+    min_valve_size_ = icv_group_settings.min_valve_size;
+    max_valve_size_ = icv_group_settings.max_valve_size;
+    assert(min_valve_size_ < max_valve_size_);
+    assert(min_valve_size_ >= 0.0);
+
+    time_step_ = icv_group_settings.time_step;
+    segment_idxs_ = icv_group_settings.segment_indexes;
+    device_names_ = icv_group_settings.icvs;
+
+
+    if (icv_group_settings.is_variable == true) {
+        variable_container->AddVariable(valve_size_);
+    }
+}
 double ICD::setting() const {
     if (valveSize() < min_valve_size_ || valveSize() > max_valve_size_) {
         Printer::ext_warn("Valve size " + Printer::num2str(valveSize()) + "outside bounds, throwing exception.",

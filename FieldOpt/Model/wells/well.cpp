@@ -19,7 +19,7 @@
 
 #include <Utilities/printer.hpp>
 #include <boost/lexical_cast.hpp>
-#include <Utilities/verbosity.h>
+#include "Utilities/verbosity.h"
 #include "well.h"
 
 namespace Model {
@@ -64,7 +64,7 @@ Well::Well(Settings::Model settings,
         }
     }
     else { // Completions for wells with no defined trajectory (they are specified by segment number)
-        if (well_settings_.completions.size() > 0) {
+        if (well_settings_.completions.size() > 0 && well_settings_.icv_compartments.size() == 0) {
             for (auto comp : well_settings_.completions) {
                 auto base_name = comp.name;
                 for (int i = 0; i < comp.device_names.size(); ++i) {
@@ -74,6 +74,13 @@ Well::Well(Settings::Model settings,
                     icds_.push_back(Wellbore::Completions::ICD(comp, variable_container));
                     if (VERB_MOD >=2) {Printer::ext_info("Added an ICV.", "Well", "Model"); }
                 }
+            }
+        }
+        else if (well_settings_.icv_compartments.size() > 0) {
+            if (VERB_MOD >= 2) Printer::ext_info("Adding ICV compartments", "Model", "Well");
+            for (auto comp : well_settings_.icv_compartments) {
+                icds_.push_back(Wellbore::Completions::ICD(comp, variable_container));
+                if (VERB_MOD >=2) {Printer::ext_info("Added an ICV compartment.", "Well", "Model"); }
             }
         }
     }
