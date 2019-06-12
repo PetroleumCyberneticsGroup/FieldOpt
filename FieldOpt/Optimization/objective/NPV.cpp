@@ -45,8 +45,17 @@ NPV::NPV(Settings::Optimizer *settings,
 
   for (int i = 0; i < settings->objective().NPV_sum.size(); ++i) {
     auto *comp = new NPV::Component();
-    comp->property_name = settings->objective().NPV_sum.at(i).property;
-    comp->property = results_->GetPropertyKeyFromString(comp->property_name);
+    if (settings->objective().NPV_sum[i].property.compare(0, 4, "EXT-") == 0 ) {
+        comp->is_json_component = true;
+        Printer::ext_info("Adding external NPV component.", "Optimization", "NPV");
+        comp->property_name = settings->objective().NPV_sum[i].property.substr(4, std::string::npos);
+        comp->interval = settings->objective().NPV_sum[i].interval;
+    }
+    else {
+        comp->is_json_component = false;
+        comp->property_name = settings->objective().NPV_sum.at(i).property;
+        comp->property = results_->GetPropertyKeyFromString(QString::fromStdString(comp->property_name));
+    }
     comp->coefficient = settings->objective().NPV_sum.at(i).coefficient;
     if (settings->objective().NPV_sum.at(i).usediscountfactor == true) {
       comp->interval = settings->objective().NPV_sum.at(i).interval;
@@ -70,6 +79,9 @@ double NPV::value() const {
   auto NPV_times = new QList<double>;
   auto discount_factor_list = new QList<double>;
   for (int k = 0; k < components_->size(); ++k) {
+    if (components_->at(k)->is_json_component == true) {
+        continue;
+    }
     if (components_->at(k)->interval == "Yearly") {
       double discount_factor;
       int j = 1;
@@ -105,6 +117,9 @@ double NPV::value() const {
       }
     }
     for (int i = 0; i < components_->size(); ++i) {
+      if (components_->at(i)->is_json_component == true) {
+          continue;
+      }
       if (components_->at(i)->usediscountfactor == true) {
         for (int j = 1; j < NPV_times->size(); ++j) {
           auto prod_difference = components_->at(i)->resolveValueDiscount(results_, NPV_times->at(j))
@@ -113,7 +128,7 @@ double NPV::value() const {
         }
       } else if (components_->at(i)->usediscountfactor == false) {
         value += components_->at(i)->resolveValue(results_);
-        QString prop_name = components_->at(i)->property_name;
+        std::string prop_name = components_->at(i)->property_name;
       }
     }
     if (well_economy_->use_well_cost) {
@@ -124,6 +139,19 @@ double NPV::value() const {
         } else {
           value -= well_economy_->cost * well_economy_->well_lengths[well->name().toStdString()];
         }
+      }
+    }
+    for (int j = 0; j < components_->size(); ++j) {
+      if (components_->at(j)->is_json_component == true) {
+          if (components_->at(j)->interval == "Single" || components_->at(j)->interval == "None") {
+              double extval = components_->at(j)->coefficient
+                  * results_->GetJsonResults().GetSingleValue(components_->at(j)->property_name);
+              value += extval;
+          
+          } 
+          else {
+            Printer::ext_warn("Unable to parse external component.", "Optimization", "NPV");
+          }
       }
     }
     return value;

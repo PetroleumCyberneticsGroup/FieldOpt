@@ -19,6 +19,7 @@
 #include "simulator.h"
 #include "simulator_exceptions.h"
 #include "Utilities/execution.hpp"
+#include "Simulation/results/json_results.h"
 
 namespace Simulation {
 
@@ -67,6 +68,12 @@ void Simulator::PostSimWork() {
         else {
             Printer::ext_warn("PostSimWork script not found.");
         }
+    }
+    if (settings_->simulator()->read_external_json_results()) {
+        std::string expected_res_path = paths_.GetPath(Paths::SIM_WORK_DIR) + "/FO_EXT_RESULTS.json";
+        if (VERB_SIM >= 2) Printer::ext_info("Reading external JSON results at " + expected_res_path, "Simulation", "Simulator");
+        auto json_results = Simulation::Results::JsonResults(expected_res_path);
+        results_->SetJsonResults(json_results);
     }
 }
 

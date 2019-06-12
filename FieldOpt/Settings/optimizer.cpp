@@ -20,6 +20,7 @@
 #include "Utilities/printer.hpp"
 #include "optimizer.h"
 #include "settings_exceptions.h"
+#include "Settings/helpers.hpp"
 
 namespace Settings {
 
@@ -500,49 +501,22 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
                 component.time_step = json_components.at(i).toObject()["TimeStep"].toInt();
                 obj.weighted_sum.append(component);
             }
-        } else if (QString::compare(objective_type, "NPV") == 0) {
+        }
+        else if (QString::compare(objective_type, "NPV") == 0) {
             // -------------------------------------------------
             obj.type = ObjectiveType::NPV;
             obj.NPV_sum = QList<Objective::NPVComponent>();
             // ---------------------------------------------------
-            QJsonArray json_components =
-                json_objective["NPVComponents"].toArray();
+            QJsonArray json_components = json_objective["NPVComponents"].toArray();
             // ---------------------------------------------------
             for (int i = 0; i < json_components.size(); ++i) {
                 // -------------------------------------------------
                 Objective::NPVComponent component;
-                if (json_components.at(i).toObject().contains("Coefficient")) {
-                    component.coefficient =
-                        json_components.at(i).toObject()["Coefficient"].toDouble();
-                } else {
-                    throw UnableToParseOptimizerObjectiveSectionException("Coefficient is not specified");
-                }
-                if (json_components.at(i).toObject().contains("Property")) {
-
-                    component.property =
-                        json_components.at(i).toObject()["Property"].toString();
-                } else {
-                    throw UnableToParseOptimizerObjectiveSectionException("Property is not specified");
-                }
-                if (json_components.at(i).toObject().contains("DiscountFactor")) {
-                    component.discount = json_components.at(i).toObject()["DiscountFactor"].toDouble();
-                } else {
-                    component.discount = 0;
-                }
-                if (json_components.at(i).toObject().contains("UseDiscountFactor")) {
-                    component.usediscountfactor =
-                        json_components.at(i).toObject()["UseDiscountFactor"].toBool();
-                } else {
-                    component.usediscountfactor = false;
-                }
-                if (json_components.at(i).toObject().contains("Interval")) {
-                    component.interval =
-                        json_components.at(i).toObject()["Interval"].toString();
-                } else {
-                    component.interval = nullptr;
-                }
-
-
+                set_req_prop_double(component.coefficient, json_components[i].toObject(), "Coefficient");
+                set_req_prop_string(component.property, json_components[i].toObject(), "Property");
+                set_opt_prop_double(component.discount, json_components[i].toObject(), "DiscountFactor");
+                set_req_prop_string(component.interval, json_components[i].toObject(), "Interval");
+                set_opt_prop_bool(component.usediscountfactor, json_components[i].toObject(), "UseDiscountFactor");
                 obj.NPV_sum.append(component);
             }
         } else

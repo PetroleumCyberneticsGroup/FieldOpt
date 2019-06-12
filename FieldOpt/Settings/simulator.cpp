@@ -21,6 +21,7 @@
 #include "simulator.h"
 #include "settings_exceptions.h"
 #include "Utilities/filehandling.hpp"
+#include "Settings/helpers.hpp"
 
 using namespace Utilities::FileHandling;
 
@@ -76,24 +77,10 @@ void Simulator::setType(QJsonObject json_simulator) {
 }
 
 void Simulator::setParams(QJsonObject json_simulator) {
-    if (json_simulator.contains("MaxMinutes") && json_simulator["MaxMinutes"].toInt() > 0) {
-        max_minutes_ = json_simulator["MaxMinutes"].toInt();
-    }
-    else {
-        max_minutes_ = -1;
-    }
-    if (json_simulator.contains("UseACTIONX") && json_simulator["UseACTIONX"].toBool() == true) {
-        ecl_use_actionx_ = true;
-    }
-    else {
-        ecl_use_actionx_ = false;
-    }
-    if (json_simulator.contains("UsePostSimScript") && json_simulator["UsePostSimScript"] == true) {
-        use_post_sim_script_ = true;
-    }
-    else {
-        use_post_sim_script_ = false;
-    }
+    set_opt_prop_int(max_minutes_, json_simulator, "MaxMinutes");
+    set_opt_prop_bool(ecl_use_actionx_, json_simulator, "UseACTIONX");
+    set_opt_prop_bool(use_post_sim_script_, json_simulator, "UsePostSimScript");
+    set_opt_prop_bool(read_external_json_results_, json_simulator, "ReadExternalJsonResults");
 }
 
 void Simulator::setCommands(QJsonObject json_simulator) {

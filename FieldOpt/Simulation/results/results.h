@@ -4,6 +4,7 @@
 #include <QString>
 #include "results_exceptions.h"
 #include <vector>
+#include "Simulation/results/json_results.h"
 
 namespace Simulation {
     namespace Results {
@@ -106,6 +107,9 @@ namespace Simulation {
              */
             bool isAvailable() const { return available_; }
 
+            JsonResults GetJsonResults() { return json_results_; }
+            void SetJsonResults(JsonResults results) { json_results_ = results; }
+
         protected:
             /*!
              * \brief Results Default constructor. A Results object is not useful on its own; One of the
@@ -128,6 +132,7 @@ namespace Simulation {
 
         private:
             bool available_;
+            JsonResults json_results_;
         };
 
     }}
