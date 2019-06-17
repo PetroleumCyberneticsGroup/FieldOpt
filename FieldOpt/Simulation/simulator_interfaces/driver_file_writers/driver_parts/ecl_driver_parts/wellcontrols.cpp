@@ -178,7 +178,7 @@ QString WellControls::createTimeEntry(const double &time, const double &prev_tim
         return QString(""); // A Time entry should not be created for the initial step
     }
     double delta_time = time - prev_time; // The amount of time to advance
-    return QString("TSTEP\n 2*%1 /\n\n").arg(delta_time/2.0);
+    return QString("TSTEP\n %1 /\n\n").arg(delta_time);
 }
 
 QString WellControls::createProducerEntry(const WellControls::WellSetting &setting) const
