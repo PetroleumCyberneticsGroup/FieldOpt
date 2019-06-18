@@ -47,17 +47,18 @@ class NPV : public Objective {
  */
   struct Component {
    public:
-    QString property_name;
+    std::string property_name;
     double coefficient;
     Simulation::Results::Results::Property property;
     int time_step;
-    QString well;
+    std::string well;
     double resolveValue(Simulation::Results::Results *results);
     double resolveValueDiscount(Simulation::Results::Results *results, double time_step);
     double yearlyToMonthly(double discount_factor);
-    QString interval;
+    std::string interval;
     double discount;
     bool usediscountfactor;
+    bool is_json_component;
   };
 
   QList<Component *> *components_; //!< List of gamma, k pairs.

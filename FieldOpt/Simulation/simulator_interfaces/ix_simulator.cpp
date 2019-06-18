@@ -54,6 +54,7 @@ void IXSimulator::Evaluate() {
     if (result_path_.size() == 0) {
         setResultPath();
     }
+    PostSimWork();
     if (VERB_SIM >= 1) { Printer::info("Unmonitored simulation done. Reading results from " + result_path_.toStdString()); }
     results_->ReadResults(result_path_);
     updateResultsInModel();
@@ -78,6 +79,7 @@ bool IXSimulator::Evaluate(int timeout, int threads) {
         if (result_path_.size() == 0) {
             setResultPath();
         }
+        PostSimWork();
         if (VERB_SIM >= 1) { Printer::info("Simulation successful. Reading results from " + result_path_.toStdString()); }
         results_->ReadResults(result_path_);
     }

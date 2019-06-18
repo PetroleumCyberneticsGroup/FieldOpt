@@ -102,6 +102,15 @@ class Simulator {
 
   void updateResultsInModel();
 
+  /*!
+   * @brief Perform post-simulation work (if any).
+   *
+   * This if UsePostSimScript is set to true in the driver file, this
+   * will execute a script named FO_POSTSIM.sh in the directory containing
+   * the .DATA file (if the script is found).
+   */
+  void PostSimWork();
+
   Paths paths_;
 
   QString driver_file_name_; //!< The name of the driver main file.

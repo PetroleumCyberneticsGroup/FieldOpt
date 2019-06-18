@@ -152,11 +152,20 @@ class Optimizer
     double wellCostZ; //!<Cost associated with drilling in the vertical plane [$/m]
     double wellCost; //!<Cost associated with drilling the well, independent of direction [$/m]
     struct WeightedSumComponent {
-      double coefficient; QString property; int time_step;
-      bool is_well_prop; QString well; }; //!< A component of a weighted sum formulatied objective function
+      double coefficient; 
+      QString property; 
+      int time_step;
+      bool is_well_prop; 
+      QString well; 
+    }; //!< A component of a weighted sum objective function
     struct NPVComponent{
-      double coefficient; QString property; QString interval;
-      bool usediscountfactor; QString well; double discount; };
+      double coefficient;
+      std::string property;
+      std::string interval = "";
+      bool usediscountfactor = false;
+      std::string well;
+      double discount = 0.0;
+    };
     QList<WeightedSumComponent> weighted_sum; //!< The expression for the Objective function formulated as a weighted sum
     QList<NPVComponent> NPV_sum;  //!< The expression for the Objective function formulated as an NPV
 

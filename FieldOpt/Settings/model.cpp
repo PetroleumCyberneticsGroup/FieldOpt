@@ -34,6 +34,7 @@
 #include "settings_exceptions.h"
 #include "Utilities/filehandling.hpp"
 #include "trajectory_importer.h"
+#include "Settings/helpers.hpp"
 
 namespace Settings {
 
@@ -712,103 +713,6 @@ void Model::parseICVCompartmentalization(QJsonArray &icv_compartmentalization, W
         }
     }
 }
-
-bool Model::is_prop_variable(const QJsonObject &container) {
-    if (container.contains("IsVariable") && container["IsVariable"].isBool() && container["IsVariable"].toBool() == true) {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-
-bool Model::set_opt_prop_string_array(std::vector<std::string> &prop, const QJsonObject &container, const QString &prop_name) {
-        if (container.contains(prop_name) && container[prop_name].isArray() && container[prop_name].toArray()[0].isString()) {
-            for (auto elem : container[prop_name].toArray()) {
-                prop.push_back(elem.toString().toStdString());
-            }
-            return true;
-        }
-        else {
-            return false;
-        }
-}
-
-void Model::set_req_prop_string_array(std::vector<std::string> &prop, const QJsonObject &container, const QString &prop_name) {
-    if (!set_opt_prop_string_array(prop, container, prop_name)) {
-        throw std::runtime_error("Required property " + prop_name.toStdString() + " not found.");
-    }
-}
-
-bool Model::set_opt_prop_string(std::string &prop, const QJsonObject &container, const QString &prop_name) {
-    if (container.contains(prop_name) && container[prop_name].isString()) {
-        prop = container[prop_name].toString().toStdString();
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-
-void Model::set_req_prop_string(std::string &prop, const QJsonObject &container, const QString &prop_name) {
-    if (!set_opt_prop_string(prop, container, prop_name)) {
-        throw std::runtime_error("Required property " + prop_name.toStdString() + " not found.");
-    }
-}
-
-bool Model::set_opt_prop_double(double &prop, const QJsonObject &container, const QString &prop_name) {
-    if (container.contains(prop_name) && (container[prop_name].isDouble())) {
-        prop = container[prop_name].toDouble();
-        return true;
-    }
-    else {
-        Printer::ext_info("Property " + prop_name.toStdString() + " not found. Using default ("
-                        + Printer::num2str(prop) + ").", "Settings", "Model");
-        return false;
-    }
-}
-void Model::set_req_prop_double(double &prop, const QJsonObject &container, const QString &prop_name) {
-    if (!set_opt_prop_double(prop, container, prop_name)) {
-        throw std::runtime_error("Required property " + prop_name.toStdString() + " not found.");
-    }
-}
-
-bool Model::set_opt_prop_int(int &prop, const QJsonObject &container, const QString &prop_name) {
-    if (container.contains(prop_name) && (container[prop_name].isDouble())) {
-        prop = container[prop_name].toInt();
-        return true;
-    }
-    else {
-        Printer::ext_info("Property " + prop_name.toStdString() + " not found. Using default ("
-                        + Printer::num2str(prop) + ").", "Settings", "Model");
-        return false;
-    }
-}
-void Model::set_req_prop_int(int &prop, const QJsonObject &container, const QString &prop_name) {
-    if (!set_opt_prop_int(prop, container, prop_name)) {
-        throw std::runtime_error("Required property " + prop_name.toStdString() + " not found.");
-    }
-}
-
-bool Model::set_opt_prop_int_array(std::vector<int> &prop, const QJsonObject &container, const QString &prop_name) {
-        if (container.contains(prop_name) && container[prop_name].isArray() && container[prop_name].toArray()[0].isDouble()) {
-            for (auto elem : container[prop_name].toArray()) {
-                prop.push_back(elem.toInt());
-            }
-            return true;
-        }
-        else {
-            return false;
-        }
-}
-
-void Model::set_req_prop_int_array(std::vector<int> &prop, const QJsonObject &container, const QString &prop_name) {
-    if (!set_opt_prop_int_array(prop, container, prop_name)) {
-        throw std::runtime_error("Required property " + prop_name.toStdString() + " not found.");
-    }
-}
-
-
 
 }
 

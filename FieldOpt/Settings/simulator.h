@@ -81,14 +81,30 @@ class Simulator
    */
   bool use_actionx() const { return ecl_use_actionx_; }
 
+  /*!
+   * @brief Check whether or not to call a script named FO_POSTSIM.sh
+   * in the same directory as the simulator DATA file after simulation,
+   * if the script is found.
+   */
+  bool use_post_sim_script() const { return use_post_sim_script_; }
+
+  /*!
+   * @brief Check whether or not to read external results component from
+   * a file named FO_EXT_RESULTS.json in the same directory as the simulator
+   * DATA file after simulation (and potential call of PostSimScript).
+   */
+  bool read_external_json_results() const { return read_external_json_results_; }
+
  private:
   SimulatorType type_;
   SimulatorFluidModel fluid_model_;
   QStringList *commands_;
   QString script_name_;
-  bool is_ensemble_;
-  bool ecl_use_actionx_;
-  int max_minutes_;
+  bool is_ensemble_ = false;
+  bool ecl_use_actionx_ = false;
+  bool use_post_sim_script_ = false;
+  bool read_external_json_results_ = false;
+  int max_minutes_ = -1;
   Ensemble ensemble_;
 
 

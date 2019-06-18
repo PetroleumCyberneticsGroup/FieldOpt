@@ -18,6 +18,8 @@
 ******************************************************************************/
 #include "simulator.h"
 #include "simulator_exceptions.h"
+#include "Utilities/execution.hpp"
+#include "Simulation/results/json_results.h"
 
 namespace Simulation {
 
@@ -52,6 +54,27 @@ Simulator::Simulator(Settings::Settings *settings) {
 ::Simulation::Results::Results *Simulator::results()
 {
     return results_;
+}
+
+void Simulator::PostSimWork() {
+    if (settings_->simulator()->use_post_sim_script()) {
+        std::string expected_scr_path = paths_.GetPath(Paths::SIM_WORK_DIR) + "/FO_POSTSIM.sh";
+        if (VERB_SIM >= 2) Printer::ext_info("Looking for PostSimWork script at " + expected_scr_path, "Simulation", "Simulator");
+        if (Utilities::FileHandling::FileExists(expected_scr_path)) {
+            if (VERB_SIM >= 2) Printer::ext_info("PostSimWork script found. Executing... ", "Simulation", "Simulator");
+            Utilities::Unix::ExecShellScript(QString::fromStdString(expected_scr_path), QStringList());
+            if (VERB_SIM >= 2) Printer::ext_info("Done executing PostSimWork script.", "Simulation", "Simulator");
+        }
+        else {
+            Printer::ext_warn("PostSimWork script not found.");
+        }
+    }
+    if (settings_->simulator()->read_external_json_results()) {
+        std::string expected_res_path = paths_.GetPath(Paths::SIM_WORK_DIR) + "/FO_EXT_RESULTS.json";
+        if (VERB_SIM >= 2) Printer::ext_info("Reading external JSON results at " + expected_res_path, "Simulation", "Simulator");
+        auto json_results = Simulation::Results::JsonResults(expected_res_path);
+        results_->SetJsonResults(json_results);
+    }
 }
 
 void Simulator::SetVerbosityLevel(int level) {
