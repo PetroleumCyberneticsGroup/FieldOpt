@@ -28,12 +28,12 @@ namespace BayesianOptimization {
 namespace AFOptimizers {
 
 AFPSO::AFPSO() {
-    c1_ = 2.8;
-    c2_ = 1.2;
+    c1_ = 2;
+    c2_ = 2;
     inertia_ = 1.2;
-    n_particles_ = 200;
+    n_particles_ = 1000;
     n_neighbourhoods_ = 20;
-    n_iterations_ = 500;
+    n_iterations_ = 1000;
     iteration_ = 0;
 }
 AFPSO::AFPSO(VectorXd lb, VectorXd ub, int rng_seed) : AFPSO() {

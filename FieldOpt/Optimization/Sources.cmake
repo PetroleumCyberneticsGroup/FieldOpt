@@ -39,6 +39,7 @@ SET(OPTIMIZATION_HEADERS
     optimizers/SPSA.h
 	optimizers/bayesian_optimization/AcquisitionFunction.h
 	optimizers/bayesian_optimization/EGO.h
+	optimizers/bayesian_optimization/BO_PSO.h
 	optimizers/bayesian_optimization/af_optimizers/AFCompassSearch.h
 	optimizers/bayesian_optimization/af_optimizers/AFOptimizer.h
 	optimizers/bayesian_optimization/af_optimizers/AFPSO.h
@@ -86,6 +87,7 @@ SET(OPTIMIZATION_SOURCES
     optimizers/SPSA.cpp
 	optimizers/bayesian_optimization/AcquisitionFunction.cpp
 	optimizers/bayesian_optimization/EGO.cpp
+	optimizers/bayesian_optimization/BO_PSO.cpp
 	optimizers/bayesian_optimization/af_optimizers/AFCompassSearch.cpp
 	optimizers/bayesian_optimization/af_optimizers/AFOptimizer.cpp
 	optimizers/bayesian_optimization/af_optimizers/AFPSO.cpp
@@ -111,6 +113,7 @@ SET(OPTIMIZATION_TESTS
 	tests/optimizers/test_pso.cpp
 	tests/optimizers/test_vfsa.cpp
 	tests/optimizers/test_spsa.cpp
+	tests/optimizers/test_bo_pso.cpp
 	tests/test_case.cpp
 	tests/test_case_handler.cpp
 	tests/test_case_transfer_object.cpp

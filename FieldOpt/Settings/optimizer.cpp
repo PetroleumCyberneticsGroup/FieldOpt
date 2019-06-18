@@ -620,6 +620,8 @@ Optimizer::OptimizerType Optimizer::parseType(QString &type) {
         opt_type = OptimizerType::SPSA;
     else if (QString::compare(type, "Hybrid") == 0)
         opt_type = OptimizerType::Hybrid;
+    else if (QString::compare(type, "BOPSO") == 0)
+        opt_type = OptimizerType::BO_PSO;
     else throw OptimizerTypeNotRecognizedException("The optimizer type " + type.toStdString() + " was not recognized.");
     return opt_type;
 }

@@ -51,6 +51,9 @@ PSO::PSO(Settings::Optimizer *settings,
         lower_bound_.fill(settings->parameters().lower_bound);
         upper_bound_.fill(settings->parameters().upper_bound);
     }
+    if (enable_logging_) { // Log base case
+        logger_->AddEntry(this);
+    }
     auto difference = upper_bound_ - lower_bound_;
     v_max_ = difference * settings->parameters().pso_velocity_scale;
     if (VERB_OPT > 2) {
@@ -89,13 +92,14 @@ void PSO::iterate(){
         case_handler_->AddNewCase(next_generation_swarm[i].case_pointer);
     }
     swarm_ = next_generation_swarm;
+    cout << "Generation: " << iteration_ << endl;
     iteration_++;
 }
 
 void PSO::handleEvaluatedCase(Case *c) {
     if(isImprovement(c)){
         updateTentativeBestCase(c);
-        if (VERB_OPT > 1) {
+        if (VERB_OPT > 0) {
             stringstream ss;
             ss.precision(6);
             ss << scientific;
@@ -173,6 +177,9 @@ PSO::Particle PSO::get_global_best(){
                 best_particle=swarm_memory_[i][j];
             }
         }
+    if(!isImprovement(best_particle.case_pointer)){
+        best_particle.rea_vars = tentative_best_case_->GetRealVarVector();
+    }
     }
     return best_particle;
 }

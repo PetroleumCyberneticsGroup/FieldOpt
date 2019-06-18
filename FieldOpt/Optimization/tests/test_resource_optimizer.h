@@ -42,6 +42,8 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
       settings_ga_min_ = new Settings::Optimizer(get_json_settings_ga_minimize_);
       settings_ga_max_ = new Settings::Optimizer(get_json_settings_ga_maximize_);
       settings_ego_max_ = new Settings::Optimizer(get_json_settings_ego_maximize_);
+      settings_bo_ego_max_ = new Settings::Optimizer(get_json_settings_bo_ego_maximize_);
+      settings_bo_ego_min_ = new Settings::Optimizer(get_json_settings_bo_ego_minimize_);
       settings_pso_min_ = new Settings::Optimizer(get_json_settings_pso_minimize_);
       settings_vfsa_min_ = new Settings::Optimizer(get_json_settings_vfsa_minimize_);
       settings_vfsa_max_ = new Settings::Optimizer(get_json_settings_vfsa_maximize_);
@@ -62,6 +64,9 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
   Settings::Optimizer *settings_spsa_max_;
   Settings::Optimizer *settings_pso_min_;
   Settings::Optimizer *settings_ego_max_;
+  Settings::Optimizer *settings_ego_min_;
+  Settings::Optimizer *settings_bo_ego_max_;
+  Settings::Optimizer *settings_bo_ego_min_;
 
  private:
   QJsonObject obj_fun_ {
@@ -221,11 +226,11 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
       {"Type", "PSO"},
       {"Mode", "Minimize"},
       {"Parameters", QJsonObject{
-          {"MaxGenerations",        700},
-          {"PSO-SwarmSize",          10},
-          {"PSO-LearningFactor1",    2.2},
-          {"PSO-LearningFactor2",    1.8},
-          {"PSO-VelocityScale",      0.025},
+          {"MaxGenerations",        20000},
+          {"PSO-SwarmSize",          50},
+          {"PSO-LearningFactor1",    2},
+          {"PSO-LearningFactor2",    2},
+          {"PSO-VelocityScale",      0.01},
           {"LowerBound",            -5.0},
           {"UpperBound",             5.0}
       }},
@@ -255,6 +260,69 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
 //          }
 //      }}
   };
+    QJsonObject get_json_settings_bo_ego_maximize_ {
+            {"Type", "EGO"},
+            {"Mode", "Maximize"},
+            {"Parameters", QJsonObject{
+                    {"LowerBound", -1},
+                    {"UpperBound",  1},
+                    {"EGO-InitGuesses", 0},
+                    {"EGO-InitSamplingMethod", "Random"},
+                    {"EGO-Kernel", "CovMatern5iso"},
+                    {"EGO-AF", "ExpectedImprovement"},
+                    {"MaxGenerations", 5},
+                    {"PSO-SwarmSize", 10},
+                    {"PSO-LearningFactor1", 2},
+                    {"PSO-LearningFactor2", 2},
+                    {"PSO-VelocityScale", 0.025}
+            }},
+            {"Objective", obj_fun_},
+//      {"Constraints", QJsonArray{
+//          QJsonObject{
+//              {"Type", "ReservoirBoundary"},
+//              {"Wells", QJsonArray{"INJECTOR", "PRODUCER"}},
+//              {"PenaltyWeight", 0.01},
+//              {"BoxImin", 8},
+//              {"BoxImax", 26},
+//              {"BoxJmin", 11},
+//              {"BoxJmax", 50},
+//              {"BoxKmin", 6},
+//              {"BoxKmax", 7}
+//          }
+//      }}
+    };
+    QJsonObject get_json_settings_bo_ego_minimize_ {
+            {"Type", "EGO"},
+            {"Mode", "Minimize"},
+            {"Parameters", QJsonObject{
+                    {"LowerBound", -5},
+                    {"UpperBound",  5},
+                    {"MaxEvaluations", 7000},
+                    {"EGO-InitGuesses", 20},
+                    {"EGO-InitSamplingMethod", "Uniform"},
+                    {"EGO-Kernel", "CovLinearard"},
+                    {"EGO-AF", "ExpectedImprovement"},
+                    {"MaxGenerations", 500},
+                    {"PSO-SwarmSize", 2},
+                    {"PSO-LearningFactor1", 2},
+                    {"PSO-LearningFactor2", 2},
+                    {"PSO-VelocityScale", 0.025}
+            }},
+            {"Objective", obj_fun_},
+//      {"Constraints", QJsonArray{
+//          QJsonObject{
+//              {"Type", "ReservoirBoundary"},
+//              {"Wells", QJsonArray{"INJECTOR", "PRODUCER"}},
+//              {"PenaltyWeight", 0.01},
+//              {"BoxImin", 8},
+//              {"BoxImax", 26},
+//              {"BoxJmin", 11},
+//              {"BoxJmax", 50},
+//              {"BoxKmin", 6},
+//              {"BoxKmax", 7}
+//          }
+//      }}
+    };
 
 };
 }

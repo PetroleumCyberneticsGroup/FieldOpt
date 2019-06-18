@@ -57,30 +57,37 @@ TEST_F(PSOTest, TestFunctionSpherical) {
                                                     grid_5spot_,
                                                     logger_
     );
-
-    while (!minimizer->IsFinished()) {
+    bool is_finished = false;
+    while (!minimizer->IsFinished()&& !is_finished) {
         auto next_case = minimizer->GetCaseForEvaluation();
         next_case->set_objective_function_value(abs(Sphere(next_case->GetRealVarVector())));
         minimizer->SubmitEvaluatedCase(next_case);
+        if (abs(next_case->objective_function_value()) < 0.11)
+            is_finished = true;
+
     }
     auto best_case = minimizer->GetTentativeBestCase();
     EXPECT_NEAR(0.0, best_case->objective_function_value(), 0.12);
-    EXPECT_NEAR(0.0, best_case->GetRealVarVector()[0], 0.12);
-    EXPECT_NEAR(0.0, best_case->GetRealVarVector()[1], 0.12);
+    EXPECT_NEAR(0.0, best_case->GetRealVarVector()[0], 0.17);
+    EXPECT_NEAR(0.0, best_case->GetRealVarVector()[1], 0.17);
 }
 
 TEST_F(PSOTest, TestFunctionRosenbrock) {
     test_case_ga_spherical_6r_->set_objective_function_value(abs(Rosenbrock(test_case_ga_spherical_6r_->GetRealVarVector())));
     settings_pso_min_->SetRngSeed(5);
     Optimization::Optimizer *minimizer = new PSO(settings_pso_min_, test_case_ga_spherical_6r_, varcont_6r_, grid_5spot_, logger_ );
-
-    while (!minimizer->IsFinished()) {
+    double i = 1;
+    bool is_finished = false;
+    while (!minimizer->IsFinished() && !is_finished) {
         auto next_case = minimizer->GetCaseForEvaluation();
         next_case->set_objective_function_value(Rosenbrock(next_case->GetRealVarVector()));
+        if (next_case->objective_function_value() < 1)
+            is_finished = true;
         minimizer->SubmitEvaluatedCase(next_case);
+        i += 1;
     }
     auto best_case = minimizer->GetTentativeBestCase();
-
+    cout << "This many generations were spent: " << i << endl;
     EXPECT_NEAR(0.0, best_case->objective_function_value(), 1);
     EXPECT_NEAR(1.0, best_case->GetRealVarVector()[0], 0.5);
     EXPECT_NEAR(1.0, best_case->GetRealVarVector()[1], 0.5);
