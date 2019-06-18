@@ -47,6 +47,7 @@ APPS::APPS(Settings::Optimizer *settings,
     if (enable_logging_) {
         logger_->AddEntry(this);
     }
+    if (!normalizer_ofv_.is_ready()) initializeNormalizers();
 }
 
 void APPS::iterate() {
