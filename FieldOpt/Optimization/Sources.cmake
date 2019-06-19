@@ -34,6 +34,7 @@ SET(OPTIMIZATION_HEADERS
 	optimizers/GSS.h
 	optimizers/GeneticAlgorithm.h
 	optimizers/PSO.h
+	optimizers/CMA_ES.h
 	optimizers/RGARDD.h
 	optimizers/VFSA.h
     optimizers/SPSA.h
@@ -81,6 +82,7 @@ SET(OPTIMIZATION_SOURCES
 	optimizers/GSS.cpp
 	optimizers/GeneticAlgorithm.cpp
 	optimizers/PSO.cpp
+	optimizers/CMA_ES.cpp
 	optimizers/RGARDD.cpp
 	optimizers/VFSA.cpp
     optimizers/SPSA.cpp
@@ -111,6 +113,7 @@ SET(OPTIMIZATION_TESTS
 	tests/optimizers/test_pso.cpp
 	tests/optimizers/test_vfsa.cpp
 	tests/optimizers/test_spsa.cpp
+	tests/optimizers/test_cma_es.cpp
 	tests/test_case.cpp
 	tests/test_case_handler.cpp
 	tests/test_case_transfer_object.cpp

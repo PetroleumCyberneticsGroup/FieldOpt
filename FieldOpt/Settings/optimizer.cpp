@@ -614,6 +614,8 @@ Optimizer::OptimizerType Optimizer::parseType(QString &type) {
         opt_type = OptimizerType::ExhaustiveSearch2DVert;
     else if (QString::compare(type, "PSO") == 0)
         opt_type = OptimizerType::PSO;
+    else if (QString::compare(type, "CMA_ES") == 0)
+        opt_type = OptimizerType::CMA_ES;
     else if (QString::compare(type, "VFSA") == 0)
         opt_type = OptimizerType::VFSA;
     else if (QString::compare(type, "SPSA") == 0)
