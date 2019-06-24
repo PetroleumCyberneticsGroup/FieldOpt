@@ -47,6 +47,7 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
       settings_vfsa_max_ = new Settings::Optimizer(get_json_settings_vfsa_maximize_);
       settings_spsa_min_ = new Settings::Optimizer(get_json_settings_spsa_minimize_);
       settings_spsa_max_ = new Settings::Optimizer(get_json_settings_spsa_maximize_);
+      settings_moving_ego_min_ = new Settings::Optimizer(get_json_settings_moving_ego_minimize_);
   }
 
   Optimization::Case *base_case_;
@@ -56,6 +57,7 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
   Settings::Optimizer *settings_apps_max_unconstr_;
   Settings::Optimizer *settings_ga_min_;
   Settings::Optimizer *settings_ga_max_;
+  Settings::Optimizer *settings_moving_ego_min_;
   Settings::Optimizer *settings_vfsa_min_;
   Settings::Optimizer *settings_vfsa_max_;
   Settings::Optimizer *settings_spsa_min_;
@@ -255,6 +257,29 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
 //          }
 //      }}
   };
+    QJsonObject get_json_settings_moving_ego_minimize_ {
+            {"Type", "MOVING_EGO"},
+            {"Mode", "Maximize"},
+            {"Parameters", QJsonObject{
+                    {"LowerBound", -1},
+                    {"UpperBound",  1},
+                    {"MaxEvaluations", 50}
+            }},
+            {"Objective", obj_fun_},
+//      {"Constraints", QJsonArray{
+//          QJsonObject{
+//              {"Type", "ReservoirBoundary"},
+//              {"Wells", QJsonArray{"INJECTOR", "PRODUCER"}},
+//              {"PenaltyWeight", 0.01},
+//              {"BoxImin", 8},
+//              {"BoxImax", 26},
+//              {"BoxJmin", 11},
+//              {"BoxJmax", 50},
+//              {"BoxKmin", 6},
+//              {"BoxKmax", 7}
+//          }
+//      }}
+    };
 
 };
 }

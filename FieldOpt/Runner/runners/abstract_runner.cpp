@@ -26,6 +26,7 @@
 #include <Optimization/optimizers/RGARDD.h>
 #include <Optimization/hybrid_optimizer.h>
 #include <Optimization/optimizers/bayesian_optimization/EGO.h>
+#include "Optimization/optimizers/bayesian_optimization/MOVING_EGO.h"
 #include "Optimization/optimizers/PSO.h"
 #include "Optimization/optimizers/VFSA.h"
 #include "Optimization/optimizers/SPSA.h"
@@ -39,6 +40,7 @@
 #include "Utilities/math.hpp"
 #include "Utilities/printer.hpp"
 #include "Utilities/verbosity.h"
+
 
 namespace Runner {
 
@@ -219,6 +221,16 @@ void AbstractRunner::InitializeOptimizer()
                                                               model_->variables(),
                                                               model_->grid(),
                                                               logger_
+            );
+            optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
+            break;
+        case Settings::Optimizer::OptimizerType::MOVING_EGO:
+            if (VERB_RUN >= 1) Printer::ext_info("Using MOVING_EGO optimization algorithm.", "Runner", "AbstractRunner");
+            optimizer_ = new Optimization::Optimizers::BayesianOptimization::MOVING_EGO(settings_->optimizer(),
+                                                                                 base_case_,
+                                                                                 model_->variables(),
+                                                                                 model_->grid(),
+                                                                                 logger_
             );
             optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
             break;

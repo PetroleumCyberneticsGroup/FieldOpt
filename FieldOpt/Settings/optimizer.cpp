@@ -584,6 +584,8 @@ Optimizer::OptimizerType Optimizer::parseType(QString &type) {
         opt_type = OptimizerType::GeneticAlgorithm;
     else if (QString::compare(type, "EGO") == 0)
         opt_type = OptimizerType::EGO;
+    else if (QString::compare(type, "MOVING_EGO") == 0)
+        opt_type = OptimizerType::MOVING_EGO;
     else if (QString::compare(type, "ExhaustiveSearch2DVert") == 0)
         opt_type = OptimizerType::ExhaustiveSearch2DVert;
     else if (QString::compare(type, "PSO") == 0)

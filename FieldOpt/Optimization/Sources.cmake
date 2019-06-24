@@ -42,6 +42,7 @@ SET(OPTIMIZATION_HEADERS
 	optimizers/bayesian_optimization/af_optimizers/AFCompassSearch.h
 	optimizers/bayesian_optimization/af_optimizers/AFOptimizer.h
 	optimizers/bayesian_optimization/af_optimizers/AFPSO.h
+	optimizers/bayesian_optimization/MOVING_EGO.h
 	optimizers/compass_search.h
 	optimizers/gss_patterns.hpp
 )
@@ -89,6 +90,7 @@ SET(OPTIMIZATION_SOURCES
 	optimizers/bayesian_optimization/af_optimizers/AFCompassSearch.cpp
 	optimizers/bayesian_optimization/af_optimizers/AFOptimizer.cpp
 	optimizers/bayesian_optimization/af_optimizers/AFPSO.cpp
+	optimizers/bayesian_optimization/MOVING_EGO.cpp
 	optimizers/compass_search.cpp
 )
 
@@ -111,6 +113,7 @@ SET(OPTIMIZATION_TESTS
 	tests/optimizers/test_pso.cpp
 	tests/optimizers/test_vfsa.cpp
 	tests/optimizers/test_spsa.cpp
+	tests/optimizers/test_moving_ego.cpp
 	tests/test_case.cpp
 	tests/test_case_handler.cpp
 	tests/test_case_transfer_object.cpp
