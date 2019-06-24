@@ -100,6 +100,9 @@ class Optimizer
     double vfsa_init_temp = 1.0;     //!< Initial temperature (same used for all dimensions). Default: 1.0.
     double vfsa_temp_scale = 1.0;    //!< Constant used in scaling temperature. Default: 1.0.
 
+    // CMA-ES Parameters
+    bool improve_base_case = false;
+
     // SPSA Parameters
     int spsa_max_iterations = 50; //!< Maximum number of iterations to be performed. Default: 50.
     double spsa_alpha = 0.602;    //!< Affects step length. Recommended 0.602 <= alpha <= 1.0. Default: 0.602.

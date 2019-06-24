@@ -29,20 +29,29 @@ namespace Optimizers {
 
 
 /*!
-* @brief This class implements the particle swarm optimization (PSO) algorithm.
+* @brief This class implements the "Covariance Matrix Adaption Evolutionary Strategy" (CMA-ES) algorithm.
 *
+* It samples the space using a multivariate normal distribution in each real-valued dimension. For each step the
+* variables in the population is perturbed to achieve a zero mean, based on the covariance matrix. For each step
+* the coverance matrix is based on the new distribution around the new mean.
+*
+* It approximates the
 * The implementation is based on the description found at:
 * http://delivery.acm.org/10.1145/3080000/3075986/p183-sakamoto.pdf?ip=129.241.230.160&id=3075986&acc=ACTIVE%20SERVICE&key=CDADA77FFDD8BE08%2E5386D6A7D247483C%2E4D4702B0C3E38B35%2E4D4702B0C3E38B35&__acm__=1560861322_554a2416a12a88617c76b0a945b1687c
+*
+*
+*
+*
 */
 class CMA_ES : public Optimizer {
 public:
     CMA_ES(Settings::Optimizer *settings,
-        Case *base_case,
-        Model::Properties::VariablePropertyContainer *variables,
-        Reservoir::Grid::Grid *grid,
-        Logger *logger,
-        CaseHandler *case_handler=0,
-        Constraints::ConstraintHandler *constraint_handler=0);
+           Case *base_case,
+           Model::Properties::VariablePropertyContainer *variables,
+           Reservoir::Grid::Grid *grid,
+           Logger *logger,
+           CaseHandler *case_handler=0,
+           Constraints::ConstraintHandler *constraint_handler=0);
 protected:
     void handleEvaluatedCase(Case *c) override;
     void iterate() override;
@@ -55,32 +64,32 @@ public:
         Eigen::VectorXd rea_vars_; //!< Real variables
         Case *case_pointer_; //!< Pointer to the case
         Eigen::VectorXd erands_norm_; //!< Normalized real variables
-        double penalty_dist_;
+        double penalty_dist_; //!< Sum of normalized distance outside of the "distance"
         int index_; //!< index
         Individual(Optimization::Case *c, boost::random::mt19937 &gen, int index, Eigen::VectorXd erands_norm, double penalty_dist);
         Individual(){}
         double ofv() { return case_pointer_->objective_function_value(); }
     };
-    /*!
-     * @brief
-     * Generates a random set of cases within their given upper and lower bounds. The function also generates an initial
-     * velocity based on the vMax parameter given through the .json file.
-     * @return
-     */
+
     Settings::Optimizer *settings_;
     std::random_device rd{};
     std::normal_distribution<> d;
-    Case *generateRandomCase();
+    /*!
+     * @brief
+     * Generates a set of cases within their given upper and lower bounds, based on the mean (or base case, if utilizied).
+     * @return
+     */
     Case *generateCase(Eigen::VectorXd xmean, int index, bool first_iteration);
-    void updateEvolutionPath();
-    void adaptCovarianceMatrix();
-    void decompositionOfC();
+
+    void updateEvolutionPath(); //!< Updated the Evolution Path
+    void adaptCovarianceMatrix(); //!< The adaption of Covariance Matrix (the CMA of CMA-ES)
+    void decompositionOfC(); //!< Utilizing the Covariance matrix to update the next meanx.
     vector<Individual> sortPopulation(vector<Individual> population);
-    vector<Individual> population_;
-    vector<Individual> temp_population_;
-    bool improve_base_case_ = true;
+    vector<Individual> population_; //!< The storage vector of the population
+    vector<Individual> temp_population_; //!< Temporary storage for the new generation that will be merged.
+    bool improve_base_case_ = false;
     double stagnation_limit_; //!< The stagnation criterion, standard deviation of all particle positions.
-    int population_size_; //!< The number of people in the population
+    int population_size_ = -1; //!< The number of people in the population
     double penalty_;
     int max_iterations_; //!< Max iterations
     double sigma_; //!< coordinate wise standard deviation (step size)
@@ -95,18 +104,18 @@ public:
     vector<double> weights_; //!< muXone array for weighted recombination
     double chiN_; //!< expectation of ||N(0,I)|| == norm(randn(N,1))
     bool hsig_;
-    Eigen::VectorXd xmean_;
+    Eigen::VectorXd xmean_; //!< The mean of which the normal distribution is generated around
     Eigen::VectorXd xold_;
     Eigen::VectorXd pc_;
     Eigen::VectorXd ps_; //!< evolution paths for C and sigma
     Eigen::VectorXd D_; //!< D defines the scaling
     Eigen::MatrixXd B_; //!< B defines the coordinate system
     Eigen::MatrixXd C_; //!< Co-variance matrix
-    Eigen::MatrixXd invsqrtC_; //!< Co-variance matrix
+    Eigen::MatrixXd invsqrtC_; //!< The inverse of the co-variance matrix
     double eigeneval_;
-    EigenSolver<MatrixXd> es_;
-    Eigen::VectorXd lower_bound_; //!< Lower bounds for the variables (used for randomly generating populations and mutation)
-    Eigen::VectorXd upper_bound_; //!< Upper bounds for the variables (used for randomly generating populations and mutation)
+    EigenSolver<MatrixXd> es_; //!< The EigenValueSolver from Eigen, which allows us to calculated the eigenvalues and eigenvector.
+    Eigen::VectorXd lower_bound_; //!< Lower bounds for the variables (used for generating populations, and maintaining the search space)
+    Eigen::VectorXd upper_bound_; //!< Upper bounds for the variables (used for generating populations, and maintaining the search space)
     int n_vars_; //!< Number of variables in the problem.
 
 };

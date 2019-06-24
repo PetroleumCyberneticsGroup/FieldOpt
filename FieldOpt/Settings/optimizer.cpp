@@ -394,6 +394,11 @@ Optimizer::Parameters Optimizer::parseParameters(QJsonObject &json_parameters) {
             }
         }
 
+        // CMA-ES Parameters
+        if (json_parameters.contains("ImproveBaseCase")) {
+            params.improve_base_case = json_parameters["ImproveBaseCase"].toBool();
+        }
+
         // VFSA Parameters
         if (json_parameters.contains("VFSA-EvalsPrIteration")) {
             params.vfsa_evals_pr_iteration = json_parameters["VFSA-EvalsPrIteration"].toInt();
