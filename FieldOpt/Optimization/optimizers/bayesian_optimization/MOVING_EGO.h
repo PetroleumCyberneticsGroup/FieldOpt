@@ -112,6 +112,7 @@ namespace BayesianOptimization {
         vector<double> weights_; //!< muXone array for weighted recombination
         double chiN_; //!< expectation of ||N(0,I)|| == norm(randn(N,1))
         bool hsig_;
+        vector<Individual> population_cache_;
         Eigen::VectorXd xmean_;
         Eigen::VectorXd xold_;
         Eigen::VectorXd pc_;
@@ -120,6 +121,7 @@ namespace BayesianOptimization {
         Eigen::MatrixXd B_; //!< B defines the coordinate system
         Eigen::MatrixXd C_; //!< Co-variance matrix
         Eigen::MatrixXd invsqrtC_; //!< Co-variance matrix
+        double radius_;
 
 
 
