@@ -149,9 +149,6 @@ Optimization::Optimizer::TerminationCondition EGO::IsFinished() {
     return tc;
 }
 void EGO::handleEvaluatedCase(Case *c) {
-    if (!normalizer_ofv_.is_ready())
-        initializeNormalizers();
-
     gp_->add_pattern(c->GetRealVarVector().data(), normalizer_ofv_.normalize(c->objective_function_value()));
     if (isImprovement(c)) {
         updateTentativeBestCase(c);
@@ -159,12 +156,6 @@ void EGO::handleEvaluatedCase(Case *c) {
     }
 }
 void EGO::iterate() {
-    if (!normalizer_ofv_.is_ready()) {
-        initializeNormalizers();
-        // Add base case to GP
-        gp_->add_pattern(tentative_best_case_->GetRealVarVector().data(), normalizer_ofv_.normalize(tentative_best_case_->objective_function_value()));
-    }
-
     if (enable_logging_) {
         logger_->AddEntry(this);
     }

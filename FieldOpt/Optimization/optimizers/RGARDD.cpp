@@ -51,9 +51,6 @@ void RGARDD::iterate() {
     if (enable_logging_) {
         logger_->AddEntry(this);
     }
-    if (iteration_ == 0 && penalize_) { // If we're done evaluating the initial population ...
-        penalizeInitialGeneration();
-    }
     population_ = sortPopulation(population_);
 
     if (is_stagnant()) {

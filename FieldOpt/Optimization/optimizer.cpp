@@ -64,6 +64,25 @@ Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
     enable_logging_ = true;
     verbosity_level_ = 0;
     penalize_ = settings->objective().use_penalty_function;
+
+    if (penalize_) {
+        if (!normalizer_ofv_.is_ready()) {
+            if (VERB_OPT >=1) {
+                Printer::ext_info("Initializing normalizers", "Optimization", "Optimizer");
+            }
+            initializeNormalizers();
+            
+            // penalize the base case
+            double org_ofv = tentative_best_case_->objective_function_value();
+            double pen_ofv = PenalizedOFV(tentative_best_case_);
+            tentative_best_case_->set_objective_function_value(pen_ofv);
+            if (VERB_OPT >=1) {
+                Printer::ext_info("Penalized base case. " 
+                        "Original value: " + Printer::num2str(org_ofv) + "; "
+                        + "Penalized value: " + Printer::num2str(pen_ofv), "Optimization", "Optimizer");
+            }
+        }
+    }
 }
 
 Case *Optimizer::GetCaseForEvaluation()
@@ -81,7 +100,7 @@ Case *Optimizer::GetCaseForEvaluation()
 void Optimizer::SubmitEvaluatedCase(Case *c)
 {
     evaluated_cases_++;
-    if (penalize_ && iteration_ > 0) {
+    if (penalize_) {
         double penalized_ofv = PenalizedOFV(c);
         c->set_objective_function_value(penalized_ofv);
     }
