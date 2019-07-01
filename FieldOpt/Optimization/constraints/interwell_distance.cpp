@@ -21,6 +21,8 @@
 #include "ConstraintMath/well_constraint_projections/well_constraint_projections.h"
 #include <boost/lexical_cast.hpp>
 #include <cmath>
+#include "Utilities/verbosity.h"
+#include "Utilities/printer.hpp"
 
 namespace Optimization {
 namespace Constraints {
@@ -111,9 +113,9 @@ void InterwellDistance::InitializeNormalizer(QList<Case *> cases) {
     long double minimum_distance = 1e20;
     for (auto c : cases) {
         vector<double> endp_dist = endpointDistances(c);
-        double min_dist = *min_element(endp_dist.begin(), endp_dist.end());
-        if (min_dist < minimum_distance){
-            minimum_distance = min_dist;
+        for (double dist : endp_dist) {
+            if (abs(dist) < minimum_distance)
+                minimum_distance = abs(dist);
         }
     }
     normalizer_.set_max(1.0L);
@@ -125,9 +127,13 @@ double InterwellDistance::Penalty(Case *c) {
     double violation = 0.0;
     for (auto distance : endpoint_distances) {
         if (distance < distance_) {
+            if (VERB_OPT >= 2) Printer::ext_info("Interwell distance penalty for case " + c->id().toString().toStdString()
+                    + ": " + Printer::num2str(distance - distance_) + " m too close");
             violation += abs(distance - distance_);
         }
     }
+    if (VERB_OPT >= 2) Printer::ext_info("Interwell distance total violation for case "
+            + c->id().toString().toStdString() + ": " + Printer::num2str(violation));
     return violation;
 }
 
@@ -148,7 +154,11 @@ vector<double> InterwellDistance::endpointDistances(Case *c) {
     return endpoint_distances;
 }
 long double InterwellDistance::PenaltyNormalized(Case *c) {
-    return normalizer_.normalize(Penalty(c));
+    double penalty = Penalty(c);
+    if (penalty > 0.0)
+        return normalizer_.normalize(penalty);
+    else
+        return 0.0;
 }
 
 }
