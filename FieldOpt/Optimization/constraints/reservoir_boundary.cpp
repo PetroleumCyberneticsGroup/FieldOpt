@@ -20,6 +20,8 @@
 #include "ConstraintMath/well_constraint_projections/well_constraint_projections.h"
 #include <iomanip>
 #include "Utilities/math.hpp"
+#include "Utilities/verbosity.h"
+#include "Utilities/printer.hpp"
 
 namespace Optimization {
 namespace Constraints {
@@ -455,14 +457,20 @@ void ReservoirBoundary::InitializeNormalizer(QList<Case *> cases) {
 double ReservoirBoundary::Penalty(Case *c) {
     if (CaseSatisfiesConstraint(c))
         return 0.0;
-    else
+    else {
+        if (VERB_OPT >= 2) Printer::ext_info("Reservoir boundary penalty (infty) for case " + c->id().toString().toStdString(),
+                "Optimization", "ReservoirBoundary");
         return INFINITY;
+    }
 }
 long double ReservoirBoundary::PenaltyNormalized(Case *c) {
     if (CaseSatisfiesConstraint(c))
         return 0.0L;
-    else
+    else {
+        if (VERB_OPT >= 2) Printer::ext_info("Reservoir boundary penalty (infty) for case " + c->id().toString().toStdString(),
+                "Optimization", "ReservoirBoundary");
         return 1.0L;
+    }
 }
 
 }

@@ -219,7 +219,15 @@ long double ConstraintHandler::GetWeightedNormalizedPenalties(Case *c) {
     long double wnp = 0.0L;
     for (auto con : constraints_) {
         long double pen = con->PenaltyNormalized(c);
+        if (VERB_OPT >= 3 && pen > 0) {
+            Printer::ext_info("Penalty from constraint " + con->name()
+                    + ": " + Printer::num2str(pen), "Optimization", "ConstraintHandler");
+        }
         wnp += pen * con->GetPenaltyWeight();
+    }
+    if (VERB_OPT >= 2) {
+        Printer::ext_info("Weighted, normalized penalty for case " + c->id().toString().toStdString()
+                + ": " + Printer::num2str(wnp), "Optimization", "ConstraintHandler");
     }
     return wnp;
 }

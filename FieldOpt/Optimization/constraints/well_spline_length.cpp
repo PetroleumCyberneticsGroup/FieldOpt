@@ -18,6 +18,8 @@
 ******************************************************************************/
 
 #include "Utilities/math.hpp"
+#include "Utilities/verbosity.h"
+#include "Utilities/printer.hpp"
 #include "well_spline_length.h"
 #include "ConstraintMath/well_constraint_projections/well_constraint_projections.h"
 
@@ -103,10 +105,16 @@ void WellSplineLength::InitializeNormalizer(QList<Case *> cases) {
 double WellSplineLength::Penalty(Case *c) {
     auto endpts = GetEndpointValueVectors(c, affected_well_);
     double well_length =  (endpts.first - endpts.second).norm();
-    if (well_length > max_length_)
+    if (well_length > max_length_) {
+        if (VERB_OPT >= 2) Printer::ext_info("Well length penalty for case " + c->id().toString().toStdString()
+                + ": " + Printer::num2str(well_length - max_length_) + " m too long", "Optimization", "WellSplineLength");
         return well_length - max_length_;
-    else if (well_length < min_length_)
+    }
+    else if (well_length < min_length_) {
+        if (VERB_OPT >= 2) Printer::ext_info("Well length penalty for case " + c->id().toString().toStdString()
+                + ":" + Printer::num2str(min_length_ - well_length) + " m too short", "Optimization", "WellSplineLength");
         return min_length_ - well_length;
+    }
     else
         return 0.0;
 }
