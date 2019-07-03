@@ -39,6 +39,7 @@ RGARDD::RGARDD(Settings::Optimizer *settings,
     stagnation_limit_ = settings->parameters().stagnation_limit;
     mating_pool_ = population_;
     if (enable_logging_) {
+        logger_->AddEntry(this);
         logger_->AddEntry(new ConfigurationSummary(this));
     }
 }
