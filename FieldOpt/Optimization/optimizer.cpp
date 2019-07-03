@@ -262,13 +262,23 @@ double Optimizer::PenalizedOFV(Case *c) {
     long double norm_ofv = normalizer_ofv_.normalize(c->objective_function_value());
     long double penalty = constraint_handler_->GetWeightedNormalizedPenalties(c);
     long double norm_pen_ovf = norm_ofv - penalty;
+    double denormalized_ofv = normalizer_ofv_.denormalize(norm_pen_ovf);
+
+    if (VERB_OPT >= 2) {
+        Printer::ext_info("Penalized case "     + c->id().toString().toStdString()                + ". "
+                "Initial OFV: "                 + Printer::num2str(c->objective_function_value()) + "; "
+                "Normalized OFV :"              + Printer::num2str(norm_ofv)                      + "; "
+                "Normalized penalty: "          + Printer::num2str(penalty)                       + "; "
+                "Penalized, normalized OFV: "   + Printer::num2str(norm_pen_ovf)                  + "; "
+                "Denormalized, penalized OFV: " + Printer::num2str(denormalized_ofv), "Optimization", "Optimizer");
+    }
 
     if (norm_pen_ovf <= 0.0L) {
         cout << "RETURNING ZERO OFV" << endl;
         return 0.0;
     }
     else {
-        return normalizer_ofv_.denormalize(norm_pen_ovf);
+        return denormalized_ofv;
     }
 }
 
