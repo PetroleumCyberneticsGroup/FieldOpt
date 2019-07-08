@@ -108,6 +108,9 @@ void RGARDD::handleEvaluatedCase(Case *c) {
         population_[index] = mating_pool_[index];
         if (isImprovement(c)) {
             updateTentativeBestCase(c);
+            if (enable_logging_) {
+                logger_->AddEntry(this);
+            }
             if (VERB_OPT >= 1) {
                 Printer::ext_info("New best in generation " + Printer::num2str(iteration_) + ": "
                 + Printer::num2str(GetTentativeBestCase()->objective_function_value()), "RGARDD", "Optimization");
