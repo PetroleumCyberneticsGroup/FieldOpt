@@ -47,6 +47,7 @@ Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
     else {
         Printer::ext_info("Using shared CaseHandler.", "Optimizer", "Optimization");
         case_handler_ = case_handler;
+        is_hybrid_component_ = true;
     }
     if (constraint_handler == 0) {
         constraint_handler_ = new Constraints::ConstraintHandler(settings->constraints(), variables, grid);
