@@ -39,16 +39,11 @@ CMA_ES::CMA_ES(Settings::Optimizer *settings,
     settings_ = settings;
     // User defined parameters (need to be edited)
     n_vars_ = variables->ContinousVariableSize();
-    std::random_device rd{};
-    std::normal_distribution<> d(0.0, 1.0);
-    std::mt19937 gen{rd()};
-
     improve_base_case_ = settings->parameters().improve_base_case;
 
-    penalty_ = 1.1;
+    penalty_ = 0.01;
     gen_ = get_random_generator(settings->parameters().rng_seed);
     max_iterations_ = settings->parameters().max_generations;
-
     population_size_ = settings->parameters().population_size;
     sigma_ = 0.3;
     xmean_ = Eigen::VectorXd::Zero(n_vars_);
@@ -302,7 +297,7 @@ Case *CMA_ES::generateCase(Eigen::VectorXd xmean, int index, bool first_iteratio
     Eigen::VectorXd erands(n_vars_);
     double penalty_dist = 0;
     for (int i = 0; i < n_vars_; ++i) {
-        xmeanNormal(i) = d(gen);
+        xmeanNormal(i) = random_normal_distribution(gen_, 0, 1, 1);
     }
     const IOFormat fmt(1, DontAlignCols, "\t", " ", "", "", "", "");
     for (int i = 0; i < n_vars_; ++i) {
@@ -315,13 +310,15 @@ Case *CMA_ES::generateCase(Eigen::VectorXd xmean, int index, bool first_iteratio
             penalty_dist += 0;
         }
         erands(i) = lower_bound_(i) + erands_norm(i) * (upper_bound_(i) - lower_bound_(i));
-        if (erands(i) < lower_bound_(i)) {
-            erands(i) = lower_bound_(i);
-        } else if (erands(i) > upper_bound_(i)) {
-            erands(i) = upper_bound_(i);
-        }
+        //if (erands(i) < lower_bound_(i)) {
+        //    erands(i) = lower_bound_(i);
+        //} else if (erands(i) > upper_bound_(i)) {
+        //    erands(i) = upper_bound_(i);
+        //}
     }
     new_case->SetRealVarValues(erands);
+    constraint_handler_->CaseSatisfiesConstraints(new_case);
+
     if (first_iteration) {
         population_.push_back(Individual(new_case, gen_, index, erands_norm, penalty_dist));
     } else {

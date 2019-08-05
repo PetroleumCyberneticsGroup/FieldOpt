@@ -37,9 +37,8 @@ namespace Optimizers {
 *
 * It approximates the
 * The implementation is based on the description found at:
-* http://delivery.acm.org/10.1145/3080000/3075986/p183-sakamoto.pdf?ip=129.241.230.160&id=3075986&acc=ACTIVE%20SERVICE&key=CDADA77FFDD8BE08%2E5386D6A7D247483C%2E4D4702B0C3E38B35%2E4D4702B0C3E38B35&__acm__=1560861322_554a2416a12a88617c76b0a945b1687c
-*
-*
+* Hansen, N. (2006), "The CMA evolution strategy: a comparing review", Towards a new evolutionary computation.
+* Advances on estimation of distribution algorithms, Springer, pp. 1769–1776
 *
 *
 */
@@ -56,9 +55,7 @@ protected:
     void handleEvaluatedCase(Case *c) override;
     void iterate() override;
     virtual TerminationCondition IsFinished() override;
-protected:
     boost::random::mt19937 gen_; //!< Random number generator with the random functions in math.hpp
-    std::mt19937 gen;
 public:
     struct Individual{
         Eigen::VectorXd rea_vars_; //!< Real variables
@@ -71,9 +68,8 @@ public:
         double ofv() { return case_pointer_->objective_function_value(); }
     };
 
+private:
     Settings::Optimizer *settings_;
-    std::random_device rd{};
-    std::normal_distribution<> d;
     /*!
      * @brief
      * Generates a set of cases within their given upper and lower bounds, based on the mean (or base case, if utilizied).

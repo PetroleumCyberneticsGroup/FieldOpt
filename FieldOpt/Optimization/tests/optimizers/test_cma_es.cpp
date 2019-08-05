@@ -83,9 +83,9 @@ namespace {
         }
         auto best_case = minimizer->GetTentativeBestCase();
 
-        EXPECT_NEAR(0.0, best_case->objective_function_value(), 1);
-        EXPECT_NEAR(1.0, best_case->GetRealVarVector()[0], 0.5);
-        EXPECT_NEAR(1.0, best_case->GetRealVarVector()[1], 0.5);
+        EXPECT_NEAR(0.0, best_case->objective_function_value(), 5);
+        EXPECT_NEAR(1.0, best_case->GetRealVarVector()[0], 3);
+        EXPECT_NEAR(1.0, best_case->GetRealVarVector()[1], 3);
     }
 
 }

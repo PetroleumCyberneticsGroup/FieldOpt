@@ -238,11 +238,11 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
           {"Type", "CMA_ES"},
           {"Mode", "Minimize"},
           {"Parameters", QJsonObject{
-                  {"MaxGenerations",        100},
-                  {"LowerBound",            -2},
-                  {"UpperBound",             2},
-                  {"ImproveBaseCase", false},
-                  {"PopulationSize", 40}
+                  {"MaxGenerations",        200},
+                  {"LowerBound",             -1},
+                  {"UpperBound",             1},
+                  {"ImproveBaseCase", false}
+                  //{"PopulationSize", 40}
           }},
           {"Objective", obj_fun_}
   };
