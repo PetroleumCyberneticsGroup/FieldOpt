@@ -47,6 +47,7 @@ Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
     else {
         Printer::ext_info("Using shared CaseHandler.", "Optimizer", "Optimization");
         case_handler_ = case_handler;
+        is_hybrid_component_ = true;
     }
     if (constraint_handler == 0) {
         constraint_handler_ = new Constraints::ConstraintHandler(settings->constraints(), variables, grid);
@@ -64,6 +65,25 @@ Optimizer::Optimizer(Settings::Optimizer *settings, Case *base_case,
     enable_logging_ = true;
     verbosity_level_ = 0;
     penalize_ = settings->objective().use_penalty_function;
+
+    if (penalize_) {
+        if (!normalizer_ofv_.is_ready()) {
+            if (VERB_OPT >=1) {
+                Printer::ext_info("Initializing normalizers", "Optimization", "Optimizer");
+            }
+            initializeNormalizers();
+            
+            // penalize the base case
+            double org_ofv = tentative_best_case_->objective_function_value();
+            double pen_ofv = PenalizedOFV(tentative_best_case_);
+            tentative_best_case_->set_objective_function_value(pen_ofv);
+            if (VERB_OPT >=1) {
+                Printer::ext_info("Penalized base case. " 
+                        "Original value: " + Printer::num2str(org_ofv) + "; "
+                        + "Penalized value: " + Printer::num2str(pen_ofv), "Optimization", "Optimizer");
+            }
+        }
+    }
 }
 
 Case *Optimizer::GetCaseForEvaluation()
@@ -81,7 +101,7 @@ Case *Optimizer::GetCaseForEvaluation()
 void Optimizer::SubmitEvaluatedCase(Case *c)
 {
     evaluated_cases_++;
-    if (penalize_ && iteration_ > 0) {
+    if (penalize_) {
         double penalized_ofv = PenalizedOFV(c);
         c->set_objective_function_value(penalized_ofv);
     }
@@ -243,13 +263,23 @@ double Optimizer::PenalizedOFV(Case *c) {
     long double norm_ofv = normalizer_ofv_.normalize(c->objective_function_value());
     long double penalty = constraint_handler_->GetWeightedNormalizedPenalties(c);
     long double norm_pen_ovf = norm_ofv - penalty;
+    double denormalized_ofv = normalizer_ofv_.denormalize(norm_pen_ovf);
+
+    if (VERB_OPT >= 2) {
+        Printer::ext_info("Penalized case "     + c->id().toString().toStdString()                + ". "
+                "Initial OFV: "                 + Printer::num2str(c->objective_function_value()) + "; "
+                "Normalized OFV :"              + Printer::num2str(norm_ofv)                      + "; "
+                "Normalized penalty: "          + Printer::num2str(penalty)                       + "; "
+                "Penalized, normalized OFV: "   + Printer::num2str(norm_pen_ovf)                  + "; "
+                "Denormalized, penalized OFV: " + Printer::num2str(denormalized_ofv), "Optimization", "Optimizer");
+    }
 
     if (norm_pen_ovf <= 0.0L) {
         cout << "RETURNING ZERO OFV" << endl;
         return 0.0;
     }
     else {
-        return normalizer_ofv_.denormalize(norm_pen_ovf);
+        return denormalized_ofv;
     }
 }
 

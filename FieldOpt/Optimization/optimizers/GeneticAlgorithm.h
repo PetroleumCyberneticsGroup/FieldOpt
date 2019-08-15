@@ -120,11 +120,6 @@ class GeneticAlgorithm : public Optimizer {
    */
   Case *generateRandomCase();
 
-  /*!
-   * @brief Initialize normalizers and penalize the initial generation after
-   * the fact (should be start of the first iteration).
-   */
-  void penalizeInitialGeneration();
 };
 
 }

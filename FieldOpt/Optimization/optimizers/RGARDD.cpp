@@ -39,6 +39,7 @@ RGARDD::RGARDD(Settings::Optimizer *settings,
     stagnation_limit_ = settings->parameters().stagnation_limit;
     mating_pool_ = population_;
     if (enable_logging_) {
+        logger_->AddEntry(this);
         logger_->AddEntry(new ConfigurationSummary(this));
     }
 }
@@ -50,9 +51,6 @@ void RGARDD::iterate() {
     if (VERB_OPT >= 2) print_state("Iterating with RGARDD");
     if (enable_logging_) {
         logger_->AddEntry(this);
-    }
-    if (iteration_ == 0 && penalize_) { // If we're done evaluating the initial population ...
-        penalizeInitialGeneration();
     }
     population_ = sortPopulation(population_);
 
@@ -110,6 +108,9 @@ void RGARDD::handleEvaluatedCase(Case *c) {
         population_[index] = mating_pool_[index];
         if (isImprovement(c)) {
             updateTentativeBestCase(c);
+            if (enable_logging_) {
+                logger_->AddEntry(this);
+            }
             if (VERB_OPT >= 1) {
                 Printer::ext_info("New best in generation " + Printer::num2str(iteration_) + ": "
                 + Printer::num2str(GetTentativeBestCase()->objective_function_value()), "RGARDD", "Optimization");
