@@ -453,7 +453,7 @@ const std::vector<double> ECLSummaryReader::wgit(const string well_name) const {
 }
 
 void ECLSummaryReader::warnPropertyZero(string wname, string propname) const {
-    if (VERB_SIM >= 2) {
+    if (VERB_SIM >= 3) {
         Printer::ext_warn("Returning cumulative vector with final value 0.0 for " + propname + " for well " + wname + ".",
                           "Simulation", "ECLSummaryReader");
     }
@@ -467,7 +467,7 @@ void ECLSummaryReader::warnPropertyNotFound(string propname) const {
 }
 
 void ECLSummaryReader::warnPropertyZero(string propname) const {
-    if (VERB_SIM >= 2) {
+    if (VERB_SIM >= 3) {
         Printer::ext_warn("Returning cumulative vector with final value 0.0 for " + propname + ".",
                           "Simulation", "ECLSummaryReader");
     }
