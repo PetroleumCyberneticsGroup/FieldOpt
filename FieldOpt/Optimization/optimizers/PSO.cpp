@@ -119,7 +119,7 @@ Case *PSO::generateRandomCase() {
     Eigen::VectorXd erands(n_vars_);
     for (int i = 0; i < n_vars_; ++i) {
         erands(i) = random_doubles(gen_, lower_bound_(i), upper_bound_(i), 1)[0];
-}
+    }
     new_case->SetRealVarValues(erands);
     return  new_case;
 }

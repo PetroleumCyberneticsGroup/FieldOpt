@@ -235,5 +235,21 @@ inline double random_double(boost::random::mt19937 &gen) {
     return rng();
 }
 
+/*!
+ * @brief Generate a number with a normal distribution in the range [0.0 .. 1.0)
+ * @param gen
+ * @param mean of the normal distribution generated numbers.
+ * @param std Standard Devation in the normal distribution.
+ * @param n Number numbers to generate.
+ * @return One random float.
+ */
+inline double random_normal_distribution(boost::random::mt19937 &gen, const double mean, const double std,
+                                        const int n) {
+    boost::normal_distribution<> dist(mean, std);
+    boost::variate_generator<boost::mt19937&, boost::normal_distribution<> > rng(gen, dist);
+
+    return rng();
+}
+
 
 #endif //FIELDOPT_RANDOM_H

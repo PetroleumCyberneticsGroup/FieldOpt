@@ -40,7 +40,7 @@ class Optimizer
  public:
   Optimizer(){}
   Optimizer(QJsonObject json_optimizer);
-  enum OptimizerType { Compass, APPS, ExhaustiveSearch2DVert, GeneticAlgorithm, EGO, PSO, VFSA, SPSA, Hybrid };
+  enum OptimizerType { Compass, APPS, ExhaustiveSearch2DVert, GeneticAlgorithm, EGO, PSO, VFSA, SPSA, Hybrid, CMA_ES };
   enum OptimizerMode { Maximize, Minimize };
   enum ConstraintType { BHP, Rate, SplinePoints,
     WellSplineLength, WellSplineInterwellDistance, WellSplineDomain,
@@ -99,6 +99,9 @@ class Optimizer
     bool vfsa_parallel = false;      //!< Run generate evals_pr_iteration cases immedeately in each generation? Default: false.
     double vfsa_init_temp = 1.0;     //!< Initial temperature (same used for all dimensions). Default: 1.0.
     double vfsa_temp_scale = 1.0;    //!< Constant used in scaling temperature. Default: 1.0.
+
+    // CMA-ES Parameters
+    bool improve_base_case = false;
 
     // SPSA Parameters
     int spsa_max_iterations = 50; //!< Maximum number of iterations to be performed. Default: 50.

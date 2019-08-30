@@ -39,6 +39,7 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
       settings_compass_search_max_unconstr_ = new Settings::Optimizer(get_json_settings_compass_search_maximize_);
       settings_apps_min_unconstr_ = new Settings::Optimizer(get_json_settings_apps_minimize_);
       settings_apps_max_unconstr_ = new Settings::Optimizer(get_json_settings_apps_maximize_);
+      settings_cma_es_min_ = new Settings::Optimizer(get_json_settings_cma_es_minimize_);
       settings_ga_min_ = new Settings::Optimizer(get_json_settings_ga_minimize_);
       settings_ga_max_ = new Settings::Optimizer(get_json_settings_ga_maximize_);
       settings_ego_max_ = new Settings::Optimizer(get_json_settings_ego_maximize_);
@@ -62,6 +63,7 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
   Settings::Optimizer *settings_spsa_max_;
   Settings::Optimizer *settings_pso_min_;
   Settings::Optimizer *settings_ego_max_;
+  Settings::Optimizer *settings_cma_es_min_;
 
  private:
   QJsonObject obj_fun_ {
@@ -230,6 +232,19 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
           {"UpperBound",             5.0}
       }},
       {"Objective", obj_fun_}
+  };
+
+  QJsonObject get_json_settings_cma_es_minimize_ {
+          {"Type", "CMA_ES"},
+          {"Mode", "Minimize"},
+          {"Parameters", QJsonObject{
+                  {"MaxGenerations",        200},
+                  {"LowerBound",             -1},
+                  {"UpperBound",             1},
+                  {"ImproveBaseCase", false}
+                  //{"PopulationSize", 40}
+          }},
+          {"Objective", obj_fun_}
   };
 
   QJsonObject get_json_settings_ego_maximize_ {

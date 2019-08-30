@@ -395,6 +395,11 @@ Optimizer::Parameters Optimizer::parseParameters(QJsonObject &json_parameters) {
             }
         }
 
+        // CMA-ES Parameters
+        if (json_parameters.contains("ImproveBaseCase")) {
+            params.improve_base_case = json_parameters["ImproveBaseCase"].toBool();
+        }
+
         // VFSA Parameters
         if (json_parameters.contains("VFSA-EvalsPrIteration")) {
             params.vfsa_evals_pr_iteration = json_parameters["VFSA-EvalsPrIteration"].toInt();
@@ -588,6 +593,8 @@ Optimizer::OptimizerType Optimizer::parseType(QString &type) {
         opt_type = OptimizerType::ExhaustiveSearch2DVert;
     else if (QString::compare(type, "PSO") == 0)
         opt_type = OptimizerType::PSO;
+    else if (QString::compare(type, "CMA_ES") == 0)
+        opt_type = OptimizerType::CMA_ES;
     else if (QString::compare(type, "VFSA") == 0)
         opt_type = OptimizerType::VFSA;
     else if (QString::compare(type, "SPSA") == 0)
