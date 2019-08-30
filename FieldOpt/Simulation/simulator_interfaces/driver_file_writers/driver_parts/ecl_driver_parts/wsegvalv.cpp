@@ -39,7 +39,7 @@ Wsegvalv::Wsegvalv(Well *well) {
                 }
                 if (VERB_SIM >= 2) {
                     Printer::ext_info("Generated " + Printer::num2str(icv.segmentIdxs().size())
-                            + " WSEGVALV entries for " + icv.deviceName());
+                            + " WSEGVALV entries for " + icv.deviceName(), "Simulation", "Wsegvalv");
                 }
             }
             // Generate multiple entries pr. icd object
