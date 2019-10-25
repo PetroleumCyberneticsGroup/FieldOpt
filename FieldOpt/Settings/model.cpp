@@ -668,8 +668,10 @@ void Model::parseICVCompartmentalization(QJsonArray &icv_compartmentalization, W
         }
         set_req_prop_string(grp.icv_group_name, comp.toObject(), "CompName");
         set_req_prop_string_array(grp.icvs, comp.toObject(), "ICVs");
+		if (!set_opt_prop_double(grp.valve_size, comp.toObject(), "ValveSize")) {
+			grp.valve_size = well.completions[0].valve_size;
+		}
         grp.name = "ICD#" + well.name + "#" + QString::fromStdString(grp.icv_group_name);
-        grp.valve_size = well.completions[0].valve_size;
         grp.min_valve_size = well.completions[0].min_valve_size;
         grp.max_valve_size = well.completions[0].max_valve_size;
         grp.valve_flow_coeff = well.completions[0].valve_flow_coeff;
