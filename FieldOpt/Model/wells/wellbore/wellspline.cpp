@@ -28,8 +28,15 @@
 #include <QList>
 #include <Utilities/verbosity.h>
 #include <Utilities/printer.hpp>
+#include <Utilities/random.hpp>
 #include "Model/cpp-spline/src/Bezier.h"
 #include "WellIndexCalculation/wicalc_rixx.h"
+#include "Utilities/filehandling.hpp"
+#include "Settings/settings_exceptions.h"
+#include <cstring>
+
+
+#include <QJsonDocument>
 
 namespace Model {
 namespace Wells {
@@ -46,6 +53,7 @@ WellSpline::WellSpline(Settings::Model::Well well_settings,
     assert(grid_ != nullptr);
     well_settings_ = well_settings;
     is_variable_ = false;
+
     use_bezier_spline_ = well_settings.use_bezier_spline;
     if (wic == nullptr) { // Initialize WIC if this is the first spline well initialized.
         wic = new Reservoir::WellIndexCalculation::wicalc_rixx(grid_);
@@ -280,7 +288,7 @@ void WellSpline::SplinePoint::FromEigenVector(const Eigen::Vector3d vec) {
 
 vector<Eigen::Vector3d> WellSpline::getPoints() const {
     if (use_bezier_spline_) {
-        return convertToBezierSpline();
+        return convertExternalPointsToBezierSpline();
     }
     else {
         vector<Eigen::Vector3d> points;
@@ -309,6 +317,79 @@ vector<Eigen::Vector3d> WellSpline::convertToBezierSpline() const {
     return bezier_points;
 
 }
+
+vector<Eigen::Vector3d> WellSpline::convertExternalPointsToBezierSpline() const {
+    if (VERB_MOD >= 2) {
+        Printer::ext_info("Generating bezier spline for well " + well_settings_.name.toStdString() + ". N original points: " + Printer::num2str(spline_points_.size()), "Model", "WellSpline");
+    }
+    assert(spline_points_.size() == 2);
+    QVariantMap map;
+    map.insert("heel_x", spline_points_.value(0)->x->value());
+    map.insert("heel_y", spline_points_.value(0)->y->value());
+    map.insert("heel_z", spline_points_.value(0)->z->value());
+    map.insert("toe_x", spline_points_.value(1)->x->value());
+    map.insert("toe_y", spline_points_.value(1)->y->value());
+    map.insert("toe_z", spline_points_.value(1)->z->value());
+
+    auto gen = get_random_generator();
+    int rand_int = random_integer(gen, 0, 2147483647);
+    QJsonObject object = QJsonObject::fromVariantMap(map);
+    QJsonDocument document;
+    document.setObject(object);
+    SaveJson(document, QString::fromStdString("src_python/from_fieldopt_to_python_"+to_string(rand_int)+".json"));
+    string string_syscall = "python src_python/ResDisp_apply.py "+to_string(rand_int);
+    cout << string_syscall << endl;
+    system(string_syscall.c_str());
+    auto d = LoadJson(QString::fromStdString("src_python/current_well_for_fieldopt_"+to_string(rand_int)+".json"));
+    auto custom_trajectory = new QJsonObject(d.object());
+    auto custom_spline_points = QList<CustomSplinePoint *>();
+    try {
+        auto json_comp = custom_trajectory->value("trajectory_xyz").toObject();
+        for (int i = 0; i < json_comp.size(); i++){
+            auto custom_point = new CustomSplinePoint();
+            auto raw_call = "point_number" + to_string(i);
+            auto querry = QString::fromStdString(raw_call);
+            auto from_point_array = json_comp[querry].toArray();
+            custom_point->x = from_point_array.at(0).toDouble();
+            custom_point->y = from_point_array.at(1).toDouble();
+            custom_point->z = from_point_array.at(2).toDouble();
+            custom_spline_points.push_back(custom_point);
+        }
+    }
+    catch (std::exception const &ex) {
+        //throw UnableToParseOptimizerSectionException("Unable to parse driver file optimizer section: " + std::string(ex.what()));
+    }
+
+
+    Curve *curve = new Bezier();
+    curve->set_steps(50);
+    for (int j = 0; j < custom_spline_points.size(); ++j) {
+        curve->add_way_point(Vector(custom_spline_points[j]->x, custom_spline_points[j]->y, custom_spline_points[j]->z));
+    }
+    vector<Eigen::Vector3d> bezier_points;
+    for (int i = 0; i < curve->node_count(); ++i) {
+        bezier_points.push_back(Eigen::Vector3d(curve->node(i).x, curve->node(i).y, curve->node(i).z));
+    }
+    delete curve;
+    return bezier_points;
+
+}
+
+QJsonDocument WellSpline::LoadJson(QString fileName) const {
+    QFile jsonFile(fileName);
+    jsonFile.open(QFile::ReadOnly);
+    QJsonDocument document = QJsonDocument().fromJson(jsonFile.readAll());
+    jsonFile.close();
+    return document;
+}
+
+void WellSpline::SaveJson(QJsonDocument document, QString fileName) const {
+    QFile jsonFile(fileName);
+    jsonFile.open(QFile::WriteOnly);
+    jsonFile.write(document.toJson());
+}
+
+
 }
 }
 }
