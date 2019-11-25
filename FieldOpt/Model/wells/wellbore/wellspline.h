@@ -26,6 +26,9 @@
 #include "Reservoir/grid/eclgrid.h"
 #include "Model/wells/wellbore/wellblock.h"
 #include <QList>
+#include "Settings/settings_exceptions.h"
+#include <boost/random.hpp>
+#include <boost/random/random_device.hpp>
 
 namespace Model {
 namespace Wells {
@@ -54,6 +57,8 @@ class WellSpline
   virtual QList<WellBlock *> *GetWellBlocks();
   int GetTimeSpentInWIC() const { return seconds_spent_in_compute_wellblocks_; }
 
+  boost::random::mt19937 gen_; //!< Random number generator with the random functions in math.hpp
+
   struct SplinePoint {
     ContinousProperty *x;
     ContinousProperty *y;
@@ -62,6 +67,16 @@ class WellSpline
     void FromEigenVector(const Eigen::Vector3d vec);
   };
 
+  struct CustomSplinePoint{
+      double x;
+      double y;
+      double z;
+      Eigen::Vector3d ToEigenVector() const;
+      void FromEigenVector(const Eigen::Vector3d vec);
+  };
+
+
+
   bool HasGridChanged() const;
   bool HasSplineChanged() const;
 
@@ -69,7 +84,8 @@ class WellSpline
    * Get spline points (for debugging purposes).
    */
   QList<SplinePoint *> GetSplinePoints() const { return spline_points_; }
-
+  QJsonDocument LoadJson(QString filename) const;
+  void SaveJson(QJsonDocument document, QString fileName) const;
 
  protected:
   Reservoir::Grid::Grid *grid_;
@@ -97,6 +113,8 @@ class WellSpline
    * bezier curve formed from the original points.
    */
   vector<Eigen::Vector3d> convertToBezierSpline() const;
+
+  vector<Eigen::Vector3d> convertExternalPointsToBezierSpline() const;
 
   QList<SplinePoint *> spline_points_;
 
@@ -136,6 +154,8 @@ class WellSpline
   std::vector<Settings::TrajectoryImporter::ImportedWellBlock> imported_wellblocks_;
 
   std::vector<Reservoir::WellIndexCalculation::IntersectedCell> convertImportedWellblocksToIntersectedCells();
+//private:
+    //static QJsonObject *custom_trajectory_;
 };
 
 }
