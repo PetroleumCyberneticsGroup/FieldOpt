@@ -52,7 +52,7 @@ class Optimizer
     PolarAzimuth, PolarElevation, PolarSplineBoundary
   };
   enum ConstraintWellSplinePointsType { MaxMin, Function};
-  enum ObjectiveType { WeightedSum, NPV};
+  enum ObjectiveType { WeightedSum, NPV, carbondioxidenpv };
 
   struct Parameters {
     // Common parameters
@@ -169,8 +169,13 @@ class Optimizer
       std::string well;
       double discount = 0.0;
     };
+    struct NPVCarbonComponent{
+        double coefficient;
+        double capacity;
+    };
     QList<WeightedSumComponent> weighted_sum; //!< The expression for the Objective function formulated as a weighted sum
     QList<NPVComponent> NPV_sum;  //!< The expression for the Objective function formulated as an NPV
+    QList<NPVCarbonComponent> NPVCarbonComponents; //!< The expression for the CarbonComponent
 
   };
 

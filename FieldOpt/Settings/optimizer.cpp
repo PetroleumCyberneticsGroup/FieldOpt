@@ -507,9 +507,14 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
                 obj.weighted_sum.append(component);
             }
         }
-        else if (QString::compare(objective_type, "NPV") == 0) {
+        else if (QString::compare(objective_type, "NPV") == 0 || QString::compare(objective_type, "carbondioxidenpv")) {
             // -------------------------------------------------
-            obj.type = ObjectiveType::NPV;
+            if (QString::compare(objective_type, "NPV") == 0){
+                obj.type = ObjectiveType::NPV;
+            } else if (QString::compare(objective_type, "carbondioxidenpv") == 0){
+                obj.type = ObjectiveType::carbondioxidenpv;
+            }
+
             obj.NPV_sum = QList<Objective::NPVComponent>();
             // ---------------------------------------------------
             QJsonArray json_components = json_objective["NPVComponents"].toArray();
@@ -523,6 +528,16 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
                 set_req_prop_string(component.interval, json_components[i].toObject(), "Interval");
                 set_opt_prop_bool(component.usediscountfactor, json_components[i].toObject(), "UseDiscountFactor");
                 obj.NPV_sum.append(component);
+            }
+
+            if (QString::compare(objective_type, "carbondioxidenpv") == 0){
+                QJsonArray json_carbon_components = json_objective["NPVCarbonComponents"].toArray();
+                Objective::NPVCarbonComponent carbonComponent;
+                for (int i = 0; i < json_carbon_components.size(); ++i) {
+                    set_req_prop_double(carbonComponent.coefficient, json_carbon_components[i].toObject(), "Coefficient");
+                    set_req_prop_double(carbonComponent.coefficient, json_carbon_components[i].toObject(), "Capacity");
+                    obj.NPVCarbonComponents.append(carbonComponent);
+                }
             }
         } else
             throw UnableToParseOptimizerObjectiveSectionException(

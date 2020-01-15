@@ -25,6 +25,7 @@ SET(OPTIMIZATION_HEADERS
 	hybrid_optimizer.h
 	normalizer.h
 	objective/NPV.h
+	objective/carbondioxidenpv.h
 	objective/objective.h
 	objective/weightedsum.h
 	optimization_exceptions.h
@@ -74,6 +75,7 @@ SET(OPTIMIZATION_SOURCES
 	hybrid_optimizer.cpp
 	normalizer.cpp
 	objective/NPV.cpp
+	objective/carbondioxidenpv.cpp
 	objective/objective.cpp
 	objective/weightedsum.cpp
 	optimizer.cpp
