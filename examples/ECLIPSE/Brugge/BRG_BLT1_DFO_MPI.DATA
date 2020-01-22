@@ -1,0 +1,101 @@
+--################# MODEL #################
+RUNSPEC
+TITLE
+GPRS___AAA
+
+NOECHO
+
+DIMENS
+139   48    9 /
+
+OIL
+GAS
+DISGAS
+WATER
+
+START
+1 'SEP' 2017  /
+
+EQLDIMS
+1  1000   10    1   20 /
+
+TABDIMS
+1    1   40   40 /
+
+WELLDIMS
+30    80    2    20 /
+
+UNIFOUT
+
+GRID
+NOECHO
+
+INIT
+GRIDFILE
+2 1 /
+
+INCLUDE
+'../../model-ecl___AAA/include/BRUGGE_COORD_ZCORN_RXRYRZ.INC' /
+
+INCLUDE
+'../../model-ecl___AAA/include/BRUGGE_PORO_PERMXYZ.INC' /
+
+INCLUDE
+'../../model-ecl___AAA/include/BRUGGE_NTG.INC' /
+
+INCLUDE
+'../../model-ecl___AAA/include/BRUGGE_CSTM_ACTNUM.INC' /
+
+PROPS
+NOECHO
+
+INCLUDE
+'../../model-ecl___AAA/include/BRUGGE_PROPS.INC' /
+
+RPTPROPS
+NOTHING
+/
+
+SOLUTION
+NOECHO
+
+EQUIL      -- DATA FOR INITIALISING FLUIDS TO POTENTIAL EQUILIBRIUM
+--    DATUM  DATUM   OWC    OWC    GOC    GOC    RSVD   RVVD   SOLN
+--    DEPTH  PRESS  DEPTH   PCOW  DEPTH   PCOG  TABLE  TABLE   METH
+       1518    140   1610      0   1518      0      0      0      0       
+/
+
+SUMMARY
+NOECHO
+
+INCLUDE
+'../../model-ecl___AAA/include/BRUGGE_SUMMARY.INC' /
+
+SCHEDULE
+NOECHO
+
+RPTRST
+'BASIC=3'
+/
+
+TUNING
+0.1 30  /
+5*  0.1	/
+2*  100 /
+
+INCLUDE
+'../../model-ecl___AAA/include/welspecs.in'
+/
+
+INCLUDE
+'../../model-ecl___AAA/include/compdat.in'
+/
+
+INCLUDE
+'../../model-ecl___AAA/include/controls.in'
+/
+
+TSTEP
+1*2 /
+
+END

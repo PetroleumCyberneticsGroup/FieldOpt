@@ -1,0 +1,17 @@
+WCONINJE
+  I01       WATER  OPEN  BHP   2*   170  /
+--I02       WATER  OPEN  BHP   2*   170  /
+  I03       WATER  OPEN  BHP   2*   170  /
+--I04       WATER  OPEN  BHP   2*   170  /
+--I05       WATER  OPEN  BHP   2*   170  /
+--I06       WATER  OPEN  BHP   2*   170  /
+--I07       WATER  OPEN  BHP   2*   170  /
+--I08       WATER  OPEN  BHP   2*   170  /
+--I09       WATER  OPEN  BHP   2*   170  /
+--I10       WATER  OPEN  BHP   2*   170  /
+/
+
+WCONPROD
+  P01       OPEN  BHP   5*   70 /
+  P02       OPEN  BHP   5*   70 /  
+/

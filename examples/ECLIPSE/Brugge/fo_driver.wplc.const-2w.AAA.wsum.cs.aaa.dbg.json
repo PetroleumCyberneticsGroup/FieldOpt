@@ -1,0 +1,399 @@
+{
+    "Global": {
+        "Name": "wplc-const-2w-AAA-wsum-cs",
+        "BookkeeperTolerance": 1e-12
+    },
+    "Optimizer": {
+        "Type": "Compass",
+        "Mode": "Maximize",
+        "Parameters": {
+            "MaxEvaluations": 1,
+            "InitialStepLength": 96.0,
+            "MinimumStepLength": 96.0,
+            "InitialStepLengthVector": [
+                192.0, 192.0, 192.0, 192.0, 192.0, 192.0,
+                192.0, 192.0, 192.0, 192.0, 192.0, 192.0
+            ],
+            "MinimumStepLengthVector": [
+                4.0, 4.0, 4.0, 4.0, 4.0, 4.0,
+                4.0, 4.0, 4.0, 4.0, 4.0, 4.0
+            ],
+            "ContractionFactor": 0.5,
+            "ExpansionFactor": 2.0
+        },
+        "Objective": {
+            "Type": "WeightedSum",
+            "WeightedSumComponents": [
+                {
+                    "Coefficient": 299.9611e-7,
+                    "Property": "CumulativeOilProduction",
+                    "TimeStep": -1,
+                    "IsWellProp": false
+                },
+                {
+                    "Coefficient": -0.15032e-7,
+                    "Property": "CumulativeGasProduction",
+                    "TimeStep": -1,
+                    "IsWellProp": false
+                },
+                {
+                    "Coefficient": -4.9690e-7,
+                    "Property": "CumulativeWaterProduction",
+                    "TimeStep": -1,
+                    "IsWellProp": false
+                }
+            ]
+        },
+        "Constraints": [
+        ]
+    },
+    "Simulator": {
+        "Type": "ECLIPSE",
+        "FluidModel": "BlackOil",
+        "ExecutionScript": "csh_eclrun.sh",
+        "ScheduleFile": "include/schedule.inc"
+    },
+    "Model": {
+        "ControlTimes": [
+            0, 1, 2 ],
+        "Reservoir": {
+            "Type": "ECLIPSE"
+        },
+        "Wells": [
+            {
+                "Name": "P01",
+                "Group": "G1",
+                "Type": "Producer",
+                "DefinitionType": "WellSpline",
+                "PreferredPhase": "Oil",
+                "UseBezierSpline": false,
+                "WellModel": "Projection",
+                "WellboreRadius": 0.1905,
+                "SplinePoints": {
+                  "Heel": {
+                      "x": 7.8642123236239986e+03,
+                      "y": 1.4229137798468815e+04,
+                      "z": 1.5334939270019531e+03,
+                      "IsVariable": true
+                  },
+                  "Toe": {
+                      "x": 8.0008868689699020e+03,
+                      "y": 1.4236445931830762e+04,
+                      "z": 1.5419891052246094e+03,
+                      "IsVariable": false
+                  }
+                },
+                "Controls": [
+                    {
+                        "TimeStep":    0,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 70.0
+                    },
+                    {
+                        "TimeStep":   1,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 70.0
+                    },
+                    {
+                        "TimeStep":  2,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 70.0
+                    }
+                ]
+            },
+            {
+                "Name": "P02",
+                "Group": "G1",
+                "Type": "Producer",
+                "DefinitionType": "WellSpline",
+                "PreferredPhase": "Oil",
+                "UseBezierSpline": false,
+                "WellModel": "Projection",
+                "WellboreRadius": 0.1905,
+                "SplinePoints": {
+                  "Heel": {
+                      "x": 6.7142643083460989e+03,
+                      "y": 1.3995174370701869e+04,
+                      "z": 1.5391975860595703e+03,
+                      "IsVariable": false
+                  },
+                  "Toe": {
+                      "x": 6.8449517118781223e+03,
+                      "y": 1.3984560720547524e+04,
+                      "z": 1.5454182891845703e+03,
+                      "IsVariable": false
+                  }
+                },
+                "Controls": [
+                    {
+                        "TimeStep":    0,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 70.0
+                    },
+                    {
+                        "TimeStep":   1,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 70.0
+                    },
+                    {
+                        "TimeStep":  2,
+                        "State": "Open",
+                        "Mode": "BHP",
+                        "BHP": 70.0
+                    }
+                ]
+            },
+            {
+                "Name": "I01",
+                "Group": "G1",
+                "Type": "Injector",
+                "DefinitionType": "WellBlocks",
+                "PreferredPhase": "Water",
+                "WellModel": "Projection",
+                "WellboreRadius": 0.1905,
+                "Direction": "Z",
+                "WellBlocks":  [
+                    {
+                        "i": 19,
+                        "j": 43,
+                        "k": 3,
+                        "IsVariable": false,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": -1.0,
+                            "IsVariable": false
+                        }
+                    },
+                    {
+                        "i": 19,
+                        "j": 43,
+                        "k": 4,
+                        "IsVariable": false,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": -1.0,
+                            "IsVariable": false
+                        }
+                    },
+                    {
+                        "i": 19,
+                        "j": 43,
+                        "k": 5,
+                        "IsVariable": false,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": -1.0,
+                            "IsVariable": false
+                        }
+                    },
+                    {
+                        "i": 19,
+                        "j": 43,
+                        "k": 6,
+                        "IsVariable": false,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": -1.0,
+                            "IsVariable": false
+                        }
+                    },
+                    {
+                        "i": 19,
+                        "j": 43,
+                        "k": 7,
+                        "IsVariable": false,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": -1.0,
+                            "IsVariable": false
+                        }
+                    },
+                    {
+                        "i": 19,
+                        "j": 43,
+                        "k": 8,
+                        "IsVariable": false,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": -1.0,
+                            "IsVariable": false
+                        }
+                    },
+                    {
+                        "i": 19,
+                        "j": 43,
+                        "k": 9,
+                        "IsVariable": false,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": -1.0,
+                            "IsVariable": false
+                        }
+                    }
+                ],
+                "Controls": [
+                    {
+                        "TimeStep":    0,
+                        "State": "Open",
+                        "Type": "Water",
+                        "Mode": "BHP",
+                        "BHP": 170.0
+                    },
+                    {
+                        "TimeStep":   1,
+                        "State": "Open",
+                        "Type": "Water",
+                        "Mode": "BHP",
+                        "BHP": 170.0
+                    },
+                    {
+                        "TimeStep":  2,
+                        "State": "Open",
+                        "Type": "Water",
+                        "Mode": "BHP",
+                        "BHP": 170.0
+                    }
+                ]
+            },
+            {
+                "Name": "I03",
+                "Group": "G1",
+                "Type": "Injector",
+                "DefinitionType": "WellBlocks",
+                "PreferredPhase": "Water",
+                "WellModel": "Projection",
+                "WellboreRadius": 0.1905,
+                "Direction": "Z",
+                "WellBlocks":  [
+                    {
+                        "i": 42,
+                        "j": 20,
+                        "k": 1,
+                        "IsVariable": false,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": -1.0,
+                            "IsVariable": false
+                        }
+                    },
+                    {
+                        "i": 42,
+                        "j": 20,
+                        "k": 2,
+                        "IsVariable": false,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": -1.0,
+                            "IsVariable": false
+                        }
+                    },
+                    {
+                        "i": 42,
+                        "j": 20,
+                        "k": 3,
+                        "IsVariable": false,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": -1.0,
+                            "IsVariable": false
+                        }
+                    },
+                    {
+                        "i": 42,
+                        "j": 20,
+                        "k": 4,
+                        "IsVariable": false,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": -1.0,
+                            "IsVariable": false
+                        }
+                    },
+                    {
+                        "i": 42,
+                        "j": 20,
+                        "k": 5,
+                        "IsVariable": false,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": -1.0,
+                            "IsVariable": false
+                        }
+                    },
+                    {
+                        "i": 42,
+                        "j": 20,
+                        "k": 6,
+                        "IsVariable": false,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": -1.0,
+                            "IsVariable": false
+                        }
+                    },
+                    {
+                        "i": 42,
+                        "j": 20,
+                        "k": 7,
+                        "IsVariable": false,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": -1.0,
+                            "IsVariable": false
+                        }
+                    },
+                    {
+                        "i": 42,
+                        "j": 20,
+                        "k": 8,
+                        "IsVariable": false,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": -1.0,
+                            "IsVariable": false
+                        }
+                    },
+                    {
+                        "i": 42,
+                        "j": 20,
+                        "k": 9,
+                        "IsVariable": false,
+                        "Completion": {
+                            "Type": "Perforation",
+                            "TransmissibilityFactor": -1.0,
+                            "IsVariable": false
+                        }
+                    }
+                ],
+                "Controls": [
+                    {
+                        "TimeStep":    0,
+                        "State": "Open",
+                        "Type": "Water",
+                        "Mode": "BHP",
+                        "BHP": 170.0
+                    },
+                    {
+                        "TimeStep":   1,
+                        "State": "Open",
+                        "Type": "Water",
+                        "Mode": "BHP",
+                        "BHP": 170.0
+                    },
+                    {
+                        "TimeStep":  2,
+                        "State": "Open",
+                        "Type": "Water",
+                        "Mode": "BHP",
+                        "BHP": 170.0
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,102 @@
+--################# MODEL #################
+RUNSPEC
+TITLE
+GPRS___AAA
+
+NOECHO
+
+MESSAGES
+-- Printing and stop limits
+  0 0 0 0 100 100 1000000 1000000 1000000 1000 10 1 /
+
+DIMENS
+139   48    9 /
+
+OIL
+GAS
+DISGAS
+WATER
+
+START
+1 'SEP' 2017  /
+
+EQLDIMS
+1  1000   10    1   20 /
+
+TABDIMS
+1    1   40   40 /
+
+WELLDIMS
+30    80    2    20 /
+
+WSEGDIMS
+    50  400  50  5 /
+
+UNIFOUT
+
+GRID
+NOECHO
+
+INIT
+--Prints out *.GRID file
+--GRIDFILE
+--2 1 /
+
+INCLUDE
+'include/BRUGGE_COORD_ZCORN_RXRYRZ.INC' /
+
+INCLUDE
+'include/BRUGGE_PORO_PERMXYZ.INC' /
+
+INCLUDE
+'include/BRUGGE_NTG.INC' /
+
+INCLUDE
+'include/BRUGGE_CSTM_ACTNUM.INC' /
+
+PROPS
+NOECHO
+
+INCLUDE
+'include/BRUGGE_PROPS.INC' /
+
+RPTPROPS
+NOTHING
+/
+
+SOLUTION
+NOECHO
+
+EQUIL      -- DATA FOR INITIALISING FLUIDS TO POTENTIAL EQUILIBRIUM
+--    DATUM  DATUM   OWC    OWC    GOC    GOC    RSVD   RVVD   SOLN
+--    DEPTH  PRESS  DEPTH   PCOW  DEPTH   PCOG  TABLE  TABLE   METH
+       1518    140   1610      0   1518      0      0      0      0       
+/
+
+SUMMARY
+NOECHO
+
+INCLUDE
+'include/BRUGGE_SUMMARY.INC' /
+
+SCHEDULE
+NOECHO
+
+--3: every (nth) report time (FREQ=n)
+--4: 1st report step each (nth) year (FREQ=n)
+--5: 1st report step each (nth) month (FREQ=n)
+RPTRST
+'BASIC=5' 'FREQ=1'
+/
+
+TUNING
+0.1 30  /
+5*  0.1	/
+2*  100 /
+
+INCLUDE
+'include/schedule.inc'
+/
+
+
+END

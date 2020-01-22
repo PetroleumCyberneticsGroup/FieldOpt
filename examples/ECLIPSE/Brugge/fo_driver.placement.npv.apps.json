@@ -1,0 +1,164 @@
+{
+    "Global": {
+        "Name": "Brugge-Controls-Rates-APPS",
+        "BookkeeperTolerance": 5
+    },
+    "Optimizer": {
+        "Type": "APPS",
+        "Mode": "Maximize",
+        "Parameters": {
+            "MaxEvaluations": 6000,
+            "ExpansionFactor": 1.1,
+            "ContractionFactor": 0.7,
+            "InitialStepLength": 5000,
+            "MaxQueueSize": 3.0,
+            "MinimumStepLength": 10
+        },
+        "Objective": {
+            "Type": "NPV",
+            "NPVComponents": [
+                {
+                    "COMMENT": "Coefficient: 40 $/barrel * 6.2898 barrel/sm3 = 251",
+                    "Coefficient": 251,
+                    "Property": "CumulativeOilProduction",
+                    "UseDiscountFactor": true,
+                    "DiscountFactor": 0.08,
+                    "Interval": "Yearly"
+                },
+                {
+                    "COMMENT": "Coefficient: -4 $/barrel * 6.2898 barrel/sm3 = -25",
+                    "Coefficient": -25,
+                    "Property": "CumulativeWaterProduction",
+                    "UseDiscountFactor": true,
+                    "DiscountFactor": 0.08,
+                    "Interval": "Yearly"
+                },
+                {
+                    "COMMENT": "Coefficient: 3 $/barrel * 6.2898 barrel/sm3 = 18.9",
+                    "Coefficient": 18.9,
+                    "Property": "CumulativeGasProduction",
+                    "UseDiscountFactor": true,
+                    "DiscountFactor": 0.08,
+                    "Interval": "Yearly"
+                },
+                {
+                    "COMMENT": "Coefficient: -2 $/barrel * 6.2898 barrel/sm3 = 12.5",
+                    "Coefficient": -12.5,
+                    "Property": "CumulativeWaterInjection",
+                    "UseDiscountFactor": true,
+                    "DiscountFactor": 0.08,
+                    "Interval": "Yearly"
+                }
+            ]
+        },
+        "Constraints": [
+            {
+                "Wells": ["P01"],
+                "Type": "ReservoirBoundary",
+                "BoxImin":  8, "BoxImax": 34,
+                "BoxJmin": 83, "BoxJmax": 48,
+                "BoxKmin":  2, "BoxKmax":  7                
+            },
+            {
+                "Type": "WellSplineLength",
+                "Well": "P01",
+                "MinLength": 300,
+                "MaxLength": 1200
+            }
+        ]
+    },
+    "Simulator": {
+        "Type": "ECLIPSE",
+        "ScheduleFile": "include/schedule.inc"
+    },
+    "Model": {
+        "NPVInterval": "NPVYears",
+        "ControlTimes": [    0,  365,  730, 1095, 1460, 1825, 
+                              2190, 2555, 2920, 3285, 3650,
+                              4015, 4380, 4745, 5110, 5475],
+        "Reservoir": {
+            "Type": "ECLIPSE"
+        },
+        "Wells": [
+            {
+                "Name": "I01",
+                "Type": "Injector",
+                "Group": "Injectors",
+                "PreferredPhase": "Water",
+                "WellboreRadius": 0.1095,
+                "DefinitionType": "WellSpline",
+                "UseBezierSpline": true,
+                "SplinePointArray": [
+                    { "x": 2636, "y": 16038, "z": 1717 },
+                    { "x": 2640, "y": 15692, "z": 1696 },
+                    { "x": 2745, "y": 15242, "z": 1678 },
+                    { "x": 2746, "y": 14797, "z": 1677 },
+                    { "x": 2815, "y": 14308, "z": 1688 }
+                ],
+                "Controls": [
+                    { "TimeStep":    0, "Mode": "Rate", "Rate": 25000, "BHP": 180 },
+                    { "TimeStep": 2190, "Mode": "Rate", "Rate": 25000, "BHP": 180 },
+                    { "TimeStep": 4015, "Mode": "Rate", "Rate": 25000, "BHP": 180 }
+                ]
+            },
+            {
+                "Name": "I02",
+                "Type": "Injector",
+                "Group": "Injectors",
+                "PreferredPhase": "Water",
+                "WellboreRadius": 0.1095,
+                "DefinitionType": "WellSpline",
+                "UseBezierSpline": true,
+                "SplinePointArray": [
+                    { "x": 3613, "y": 12205, "z": 1739 },
+                    { "x": 3900, "y": 12200, "z": 1730 },
+                    { "x": 4255, "y": 11993, "z": 1729 },
+                    { "x": 4866, "y": 11794, "z": 1693 }
+                ],
+                "Controls": [ 
+                    { "TimeStep":    0, "Mode": "Rate", "Rate": 25000, "BHP": 180 },
+                    { "TimeStep": 2190, "Mode": "Rate", "Rate": 25000, "BHP": 180 },
+                    { "TimeStep": 4015, "Mode": "Rate", "Rate": 25000, "BHP": 180 }
+                ]
+            },
+            {
+                "Name": "I03",
+                "Type": "Injector",
+                "Group": "Injectors",
+                "PreferredPhase": "Water",
+                "WellboreRadius": 0.1095,
+                "DefinitionType": "WellSpline",
+                "UseBezierSpline": true,
+                "SplinePointArray": [
+                    { "x": 7383, "y": 12360, "z": 1634 },
+                    { "x": 6690, "y": 12004, "z": 1645 },
+                    { "x": 6300, "y": 11900, "z": 1644 },
+                    { "x": 6080, "y": 11816, "z": 1644 }
+                ],
+                "Controls": [ 
+                    { "TimeStep":    0, "Mode": "Rate", "Rate": 25000, "BHP": 180 },
+                    { "TimeStep": 2190, "Mode": "Rate", "Rate": 25000, "BHP": 180 },
+                    { "TimeStep": 4015, "Mode": "Rate", "Rate": 25000, "BHP": 180 }
+                ]
+            },
+            {
+                "Name": "P01",
+                "Type": "Producer",
+                "Group": "Producers",
+                "PreferredPhase": "Oil",
+                "WellboreRadius": 0.1095,
+                "DefinitionType": "WellSpline",
+                "UseBezierSpline": false,
+                "SplinePointArray": [
+                    { "x": 6726, "y": 13968, "z": 1545, "IsVariable": true },
+                    { "x": 8055, "y": 14249, "z": 1548, "IsVariable": true }
+                ],
+                "Controls": [ 
+                    { "TimeStep":    0, "Mode": "Rate", "Rate": 7500, "BHP": 50 },
+                    { "TimeStep": 2190, "Mode": "Rate", "Rate": 7500, "BHP": 50 },
+                    { "TimeStep": 4015, "Mode": "Rate", "Rate": 7500, "BHP": 50 }
+                ]
+            }
+        ]
+    }
+}
