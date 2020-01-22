@@ -73,6 +73,24 @@ QString WellControls::getTimestepPartString() const {
     return part;
 }
 
+QStringList WellControls::GetWellEntryList() const {
+    QStringList parts;
+
+    // Add control entries
+    if (time_entries_.first().has_well_setting) {
+        for (auto well_setting : time_entries_.first().well_settings) {
+            if (well_setting.is_injector) {
+                QString injector_entry = createInjectorEntry(well_setting);
+                parts.append(injector_entry);
+            }
+            else {
+                parts.append(createProducerEntry(well_setting));
+            }
+        }
+    }
+    return parts;
+}
+
 void WellControls::initializeTimeEntries(const QList<Model::Wells::Well *> *wells,
                                          const QList<int> &control_times,
                                          const int &timestep) {

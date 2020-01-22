@@ -47,8 +47,6 @@ class Schedule : public ECLDriverPart
   Schedule(QList<Model::Wells::Well *> *wells, QList<int> control_times, ScheduleInsets &insets);
   QString GetPartString() const;
 
- private:
-
   struct ScheduleTimeEntry {
     ScheduleTimeEntry(int control_time,
                       Welspecs welspecs,
@@ -70,12 +68,16 @@ class Schedule : public ECLDriverPart
     Wsegvalv wsegvalv;
   };
 
+ private:
   /*!
    * WELSPECS, COMPDAT and control entries for each timestep.
    */
   QList<ScheduleTimeEntry> schedule_time_entries_;
 
   QString schedule_;
+
+ public:
+  QList<ScheduleTimeEntry> GetScheduleTimeEntries() { return schedule_time_entries_; }
 };
 
 }

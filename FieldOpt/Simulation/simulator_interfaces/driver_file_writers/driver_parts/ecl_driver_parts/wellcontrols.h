@@ -21,6 +21,7 @@
 #define WELLCONTROLS_H
 
 #include <QMap>
+#include <QStringList>
 
 #include "ecldriverpart.h"
 #include "Model/wells/well.h"
@@ -56,6 +57,13 @@ class WellControls : public ECLDriverPart
   WellControls(){}
 
   virtual QString GetPartString() const;
+
+  /*!
+   * Get list of well entries for this specific time step.
+   * This is used with ACTIONX.
+   */
+  QStringList GetWellEntryList() const;
+
 
  protected:
 
