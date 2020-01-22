@@ -1,5 +1,5 @@
 /******************************************************************************
-Copyright (C) 2015-2017 Brage S. Kristoffersen <brage_sk@hotmail.com>
+Copyright (C) 2015-2020 Brage S. Kristoffersen <brage_sk@hotmail.com>
 
 This file is part of the FieldOpt project.
 
@@ -66,15 +66,187 @@ carbondioxidenpv::carbondioxidenpv(Settings::Optimizer *settings,
       comp->discount = 0;
       comp->usediscountfactor = false;
     }
+    if (settings->objective().NPVCarbonComponents.at(i).is_well_prop){
+        comp->is_well_property = true;
+        comp->well = settings->objective().NPVCarbonComponents.at(i).well;
+    }
+    else comp->is_well_property = false;
     components_->append(comp);
   }
   well_economy_ = model->wellCostConstructor();
+
+  rho_wi_ = 1000;
+  g_ = 9.81;
+  reservoir_depth_ = 2500;
+  npump_wi_ = 60;
+  psuc_ = 1.01325;
+  eff_mechanical_ = 0.95;
+  max_pow_per_pump_ = 0.75;
+  cost_per_pump_ = 1.5;
+  enrg_const_wt_ = 0.5;
+  unit_cost_wt_ = 2;
+  cost_per_turbine_ = 70;
+  pow_supply_per_turbine_ = 70;
+  co2_em_per_enrg_unit_ = 0.75;
+  co2_tax_rate_ = 500;
+
 }
 
-double carbondioxidenpv::resolveCarbonDioxideCost() const {
-    
-    return 0;
+
+
+QList<double> carbondioxidenpv::calcPM(QList<double> WBHP) const {
+    QList<double> pm;
+    for( int i = 0; i < WBHP.size(); i++ ) {
+        pm.append(WBHP.value(i) - rho_wi_ * g_ * reservoir_depth_ / pow(10.0, 5.0));
+    }
+    return pm;
 }
+
+double carbondioxidenpv::calcPdis(QList<double> pm) const {
+    double pdis = 0;
+    for (int i = 0; i < pm.size(); i++) {
+        if (pm.at(i) > pdis) {
+            pdis = pm.value(i);
+        }
+    }
+    return pdis;
+}
+
+double carbondioxidenpv::calcEffHydraulic(double qwi_per_pump) const {
+    double eff_hydraulic = (-3.98607*pow(10.0, -12.0)*pow(qwi_per_pump, 4.0)
+                           + 2.62704*pow(10.0, -8.0)*pow(qwi_per_pump, 3.0)
+                           - 7.18777*pow(10.0, -5.0)*pow(qwi_per_pump, 2.0)
+                           + 1.08323*pow(10.0, -1.0)*qwi_per_pump
+                           - 9.43801*pow(10.0, -1))/100;
+    return eff_hydraulic;
+
+}
+
+double carbondioxidenpv::calcPowPerPump(double pdis, double qwi_per_pump, double eff_hydraulic) const {
+        double pow_per_pump = (((pdis-psuc_)*pow(10.0,5.0)*qwi_per_pump/86400)/(eff_hydraulic*eff_mechanical_))/pow(10.0, 6.0);
+        return pow_per_pump;
+}
+
+QList<double> carbondioxidenpv::calcPowWt(QList<double> FWPR) const {
+    QList<double> pow_wt;
+    for (int i = 0; i < FWPR.size(); i++){
+        pow_wt.append(enrg_const_wt_*FWPR.value(i)/(24*1000));
+    }
+    return pow_wt;
+}
+
+double carbondioxidenpv::calcNTurbine(double pow_demand) const {
+   auto Nturbine = ceil(pow_demand/pow_supply_per_turbine_);
+   return Nturbine;
+}
+
+double carbondioxidenpv::calcCO2EmRate(double pow_generated) const {
+   double co2_em_rate = co2_em_per_enrg_unit_*pow_generated*24;
+   return co2_em_rate;
+}
+
+QList<double> carbondioxidenpv::calcCum(QList<double> time, QList<double> rate) const {
+    QList<double> cum;
+    cum.append(0);
+    for (int i = 1; i < time.size(); i++){
+        cum[i] = cum.value(i-1) + (rate.value(i)+rate.value(i-1))/2 * (time.value(i)-time.value(i))*365; // days
+}
+return cum;
+}
+
+double carbondioxidenpv::resolveCarbonDioxideCost(QList<double> NPVTimes) const {
+
+    QList<double> FWIR;
+    QList<double> FWPR;
+    QList<double> FWPT;
+    auto well_bhps = new QList<QList<double>>;
+    for (int j = 0; j < components_->size(); ++j) {
+        if (components_->value(j)->is_well_property) {
+            well_bhps->push_back(components_->at(j)->resolveValueVector(results_, NPVTimes));
+        } else if (components_->at(j)->property_name == "CumulativeWaterProduction") {
+            auto FWPT = components_->at(j)->resolveValueVector(results_, NPVTimes);
+        } else if (components_->at(j)->property_name == "CumulativeWaterInjection") {
+            auto FWIR = components_->at(j)->resolveValueVector(results_, NPVTimes);
+        } else if (components_->at(j)->property_name == "WaterProductionRate") {
+            auto FWPT = components_->at(j)->resolveValueVector(results_, NPVTimes);
+        }
+    }
+
+    QList<QList<double>> pm_list;
+    for (int i = 0; i < well_bhps->size(); i++){
+        pm_list.append(calcPM(well_bhps->at(i)));
+    }
+
+    QList<double> pdis;
+    for (int i = 0; i < pm_list.size(); i++){
+        pdis.append(calcPdis(pm_list.at(i)));
+    }
+
+    QList<double> qwi_per_pump;
+    QList<double> eff_hydraulic;
+    for (int i = 0; i < NPVTimes.size(); i++){
+        qwi_per_pump.append(FWIR.value(i)/npump_wi_);
+        eff_hydraulic.append(calcEffHydraulic(qwi_per_pump.value(i)));
+        if (eff_hydraulic.value(i) <= 0){
+            cout << "error" << endl;
+        }
+    }
+
+    QList<double> pow_per_pump;
+    for (int i = 0; i < NPVTimes.size(); i++){
+        pow_per_pump.append(calcPowPerPump(pdis.value(i), qwi_per_pump.value(i), eff_hydraulic.value(i)));
+        if (pow_per_pump.value(i) > max_pow_per_pump_){
+            cout << "error" << endl;
+        }
+    }
+
+    QList<double> pow_inj_system;
+    for (int i= 0; i < pow_per_pump.size(); i++){
+        pow_inj_system.append(npump_wi_*pow_per_pump.value(i));
+    }
+
+    double cost_inj_system = npump_wi_*cost_per_pump_;
+
+    QList<double> pow_wt;
+    for (int i = 0; i < NPVTimes.size(); i++){
+        pow_wt.append(calcPowWt(FWPR));
+    }
+
+    double cost_op_wt = (FWPT.value(FWPT.size()-1) - FWPT.value(0)) * unit_cost_wt_ / pow(10.0, 6.0);
+    QList<double> pow_demand;
+    QList<double> Nturbine;
+    QList<double> pow_generated;
+    for (int i = 0; i < NPVTimes.size(); i++){
+        pow_demand.append(pow_inj_system.value(i) + pow_wt.value(i));
+        Nturbine.append(calcNTurbine(pow_demand.value(i)));
+        pow_generated.append(Nturbine.at(i)*pow_supply_per_turbine_);
+    }
+
+    double max_Nturbine = 0;
+    for(int i = 0; i < Nturbine.size(); i++){
+        if (max_Nturbine < Nturbine.value(i)){
+            max_Nturbine = Nturbine.value(i);
+        }
+    }
+
+    double cost_turbine = max_Nturbine * cost_per_turbine_;
+
+    QList<double> co2_em_rate;
+    for (int i = 0; i < Nturbine.size(); i++){
+        co2_em_rate.append(calcCO2EmRate(pow_generated.value(i)));
+    }
+
+    QList<double> co2_em_cum;
+    co2_em_cum = calcCum(NPVTimes, co2_em_rate);
+    for (int i = 0; i < co2_em_cum.size(); i++){
+         co2_em_cum[i] = co2_em_cum[i] / pow(10.0, 6.0);
+    }
+
+    auto co2_tax = co2_tax_rate_*co2_em_cum.value(co2_em_cum.size()-1);
+    return co2_tax+cost_turbine+cost_inj_system+cost_op_wt;
+
+}
+
 
 double carbondioxidenpv::value() const {
   try {
@@ -159,7 +331,11 @@ double carbondioxidenpv::value() const {
           }
       }
     }
-    double carbonCost = resolveCarbonDioxideCost();
+    QList<double> NPVTimes;
+    for (int i = 0; i < NPV_times->size(); i++){
+        NPVTimes.append(NPV_times->value(i));
+    }
+    double carbonCost = resolveCarbonDioxideCost(NPVTimes);
     return value+carbonCost;
   }
   catch (...) {
@@ -168,10 +344,21 @@ double carbondioxidenpv::value() const {
   }
 }
 
-double carbondioxidenpv::Component::resolveValue(Simulation::Results::Results *results) {
-  return coefficient * results->GetValue(property);
-
+double carbondioxidenpv::Component::resolveValue(Simulation::Results::Results *results)
+{
+    if (is_well_property) {
+        if (time_step < 0) { // Final time step well property
+            return coefficient * results->GetValue(property, well);
+        }
+        else { // Non-final time step well property
+            return coefficient * results->GetValue(property, well, time_step);
+        }
+    }
+    else {
+            return coefficient * results->GetValue(property);
+    }
 }
+
 double carbondioxidenpv::Component::resolveValueDiscount(Simulation::Results::Results *results, double time_step) {
   int time_step_int = (int) time_step;
   return results->GetValue(property, time_step_int);
@@ -182,6 +369,24 @@ double carbondioxidenpv::Component::yearlyToMonthly(double discount_factor) {
 
 }
 
+QList<double> carbondioxidenpv::Component::resolveValueVector(Simulation::Results::Results *results, QList<double> NPVTimes){
+    QList<double> property_value_vector;
+    if (is_well_property == true){
+        for (int i = 0; i < NPVTimes.size(); ++i) {
+            int time_step_int = (int) NPVTimes.at(i);
+            auto property_value_at_time = results->GetValue(property, well, time_step_int);
+            property_value_vector.append(property_value_at_time);
+        }
+    } else {
+        for (int i = 0; i < NPVTimes.size(); ++i) {
+            int time_step_int = (int) NPVTimes.at(i);
+            auto property_value_at_time = results->GetValue(property, time_step_int);
+            property_value_vector.append(property_value_at_time);
+        }
+    }
+    return property_value_vector;
+
+}
 }
 
 }

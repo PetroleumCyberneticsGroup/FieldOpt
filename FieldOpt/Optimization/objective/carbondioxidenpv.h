@@ -40,9 +40,35 @@ namespace Optimization {
 
             double value() const;
 
-            double resolveCarbonDioxideCost() const;
+            QList<double> calcPM(QList<double> WBHP) const;
+            double calcPdis(QList<double> pm) const;
+            double calcEffHydraulic(double qwi_per_pump) const;
+            double calcPowPerPump(double pdis, double qwi_per_pump, double eff_hydraulic) const;
+            QList<double> calcPowWt(QList<double> FWPR) const;
+            double calcNTurbine(double pow_demand) const;
+            double calcCO2EmRate(double pow_generated) const;
+            QList<double> calcCum(QList<double> time, QList<double> rate) const;
+
+
+
+
+            double resolveCarbonDioxideCost(QList<double> NPVTimes) const;
 
         private:
+            double rho_wi_;
+            double g_;
+            double reservoir_depth_;
+            double npump_wi_;
+            double psuc_;
+            double eff_mechanical_;
+            double max_pow_per_pump_;
+            double cost_per_pump_;
+            double enrg_const_wt_;
+            double cost_per_turbine_;
+            double unit_cost_wt_;
+            double pow_supply_per_turbine_;
+            double co2_em_per_enrg_unit_;
+            double co2_tax_rate_;
 /*!
  * \brief The Component class is used for internal representation of the components of
  * NPV.
@@ -53,14 +79,16 @@ namespace Optimization {
                 double coefficient;
                 Simulation::Results::Results::Property property;
                 int time_step;
-                std::string well;
                 double resolveValue(Simulation::Results::Results *results);
                 double resolveValueDiscount(Simulation::Results::Results *results, double time_step);
                 double yearlyToMonthly(double discount_factor);
+                QList<double> resolveValueVector(Simulation::Results::Results *results, QList<double> NPVTimes);
                 std::string interval;
                 double discount;
                 bool usediscountfactor;
                 bool is_json_component;
+                bool is_well_property;
+                QString well;
             };
 
             QList<Component *> *components_; //!< List of gamma, k pairs.
