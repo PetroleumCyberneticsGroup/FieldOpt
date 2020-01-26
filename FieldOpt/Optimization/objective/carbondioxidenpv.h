@@ -47,12 +47,12 @@ namespace Optimization {
             QList<double> calcPowWt(QList<double> FWPR) const;
             double calcNTurbine(double pow_demand) const;
             double calcCO2EmRate(double pow_generated) const;
-            QList<double> calcCum(QList<double> time, QList<double> rate) const;
+            QList<double> calcCum(vector<double, allocator<double>> time, QList<double> rate) const;
 
 
 
 
-            double resolveCarbonDioxideCost(QList<double> NPVTimes) const;
+            double resolveCarbonDioxideCost(vector<double, allocator<double>>) const;
 
         private:
             double rho_wi_;
@@ -82,7 +82,7 @@ namespace Optimization {
                 double resolveValue(Simulation::Results::Results *results);
                 double resolveValueDiscount(Simulation::Results::Results *results, double time_step);
                 double yearlyToMonthly(double discount_factor);
-                QList<double> resolveValueVector(Simulation::Results::Results *results, QList<double> NPVTimes);
+                QList<double> resolveValueVector(Simulation::Results::Results *results, vector<double, allocator<double>> report_times);
                 std::string interval;
                 double discount;
                 bool usediscountfactor;

@@ -34,6 +34,8 @@ namespace Simulation {
                 CumulativeWellWaterProduction,
                 CumulativeWellWaterInjection,
                 CumulativeWellGasInjection,
+                WaterProductionRate,
+                WellBottomHolePressure,
                 Time
             };
 
@@ -45,6 +47,8 @@ namespace Simulation {
                 else if (prop == "CumulativeWellOilProduction") return CumulativeWellOilProduction;
                 else if (prop == "CumulativeWellGasProduction") return CumulativeWellGasProduction;
                 else if (prop == "CumulativeWellWaterProduction") return CumulativeWellWaterProduction;
+                else if (prop == "WaterProductionRate") return WaterProductionRate;
+                else if (prop == "WellBottomHolePressure") return WellBottomHolePressure;
                 else if (prop == "Time") return Time;
                 else throw ResultPropertyKeyDoesNotExistException("");
             }

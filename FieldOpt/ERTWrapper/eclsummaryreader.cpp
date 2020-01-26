@@ -444,6 +444,14 @@ const std::vector<double> ECLSummaryReader::wwit(const string well_name) const {
     return wwit_.at(well_name);
 }
 
+const std::vector<double> ECLSummaryReader::wbhp(const string well_name) const {
+    if (wells_.find(well_name) == wells_.end())
+        throw SummaryVariableDoesNotExistException("The well " + well_name + " was not found in the summary.");
+    if (wwit_.at(well_name).back() == 0.0)
+        warnPropertyZero(well_name, "WWIT");
+    return wbhp_.at(well_name);
+}
+
 const std::vector<double> ECLSummaryReader::wgit(const string well_name) const {
     if (wells_.find(well_name) == wells_.end())
         throw SummaryVariableDoesNotExistException("The well " + well_name + " was not found in the summary.");
@@ -501,6 +509,12 @@ const std::vector<double> &ECLSummaryReader::fgit() const {
     if (fgit_.back() == 0.0)
         warnPropertyZero("FGIT");
     return fgit_;
+}
+
+const std::vector<double> &ECLSummaryReader::fwpr() const {
+    if (fwpr_.back() == 0.0)
+        warnPropertyZero("FWPR");
+    return fwpr_;
 }
 
 const std::vector<double> ECLSummaryReader::wopr(const string well_name) const {

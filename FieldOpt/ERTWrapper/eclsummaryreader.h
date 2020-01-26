@@ -86,6 +86,7 @@ class ECLSummaryReader
   const vector<double> &fgpt() const;
   const vector<double> &fwit() const;
   const vector<double> &fgit() const;
+  const vector<double> &fwpr() const;
 
   const vector<double> wopt(const string well_name) const;
   const vector<double> wwpt(const string well_name) const;
@@ -98,6 +99,7 @@ class ECLSummaryReader
   const vector<double> wgpr(const string well_name) const;
   const vector<double> wwir(const string well_name) const;
   const vector<double> wgir(const string well_name) const;
+  const vector<double> wbhp(const string well_name) const;
 
  private:
   string file_name_;
@@ -116,6 +118,7 @@ class ECLSummaryReader
   vector<double> fgpt_;
   vector<double> fwit_;
   vector<double> fgit_;
+  vector<double> fwpr_;
   map<string, vector<double> > wopt_;
   map<string, vector<double> > wwpt_;
   map<string, vector<double> > wgpt_;
@@ -126,6 +129,7 @@ class ECLSummaryReader
   map<string, vector<double> > wgpr_;
   map<string, vector<double> > wwir_;
   map<string, vector<double> > wgir_;
+  map<string, vector<double> > wbhp_;
 
   void initializeVectors();
   void initializeTimeVector();

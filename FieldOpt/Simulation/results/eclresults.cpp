@@ -80,6 +80,7 @@ std::vector<double> ECLResults::GetValueVector(Results::Property prop)
         case CumulativeWaterProduction: return summary_reader_->fwpt();
         case CumulativeWaterInjection:  return summary_reader_->fwit();
         case CumulativeGasInjection:    return summary_reader_->fgit();
+        case WaterProductionRate:       return summary_reader_->fwpr();
         case Time:                      return summary_reader_->time();
         default: throw std::runtime_error("In ECLResults: The requested property is not a field or misc property.");
     }
@@ -93,6 +94,7 @@ std::vector<double> ECLResults::GetValueVector(Results::Property prop, QString w
         case CumulativeWellWaterProduction: return summary_reader_->wwpt(well_name.toStdString());
         case CumulativeWellWaterInjection:  return summary_reader_->wwit(well_name.toStdString());
         case CumulativeWellGasInjection:    return summary_reader_->wgit(well_name.toStdString());
+        case WellBottomHolePressure:        return summary_reader_->wbhp(well_name.toStdString());
         default: throw std::runtime_error("In ECLResults: The requested property is not a well property.");
     }
 }
