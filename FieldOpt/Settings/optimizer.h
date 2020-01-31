@@ -170,8 +170,9 @@ class Optimizer
       double discount = 0.0;
     };
     struct NPVCarbonComponent{
-        double coefficient;
-        double capacity;
+        //double coefficient;
+        //double capacity;
+        QString property;
         bool is_well_prop;
         QString well;
     };

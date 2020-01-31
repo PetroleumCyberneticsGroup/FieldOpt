@@ -42,37 +42,44 @@ carbondioxidenpv::carbondioxidenpv(Settings::Optimizer *settings,
   settings_ = settings;
   results_ = results;
   components_ = new QList<carbondioxidenpv::Component *>();
+  carboncomponents_ = new QList<carbondioxidenpv::Component *>();
 
   for (int i = 0; i < settings->objective().NPV_sum.size(); ++i) {
-    auto *comp = new carbondioxidenpv::Component();
-    if (settings->objective().NPV_sum[i].property.compare(0, 4, "EXT-") == 0 ) {
-        comp->is_json_component = true;
-        Printer::ext_info("Adding external NPV component.", "Optimization", "carbondioxidenpv");
-        comp->property_name = settings->objective().NPV_sum[i].property.substr(4, std::string::npos);
-        comp->interval = settings->objective().NPV_sum[i].interval;
-    }
-    else {
-        comp->is_json_component = false;
-        comp->property_name = settings->objective().NPV_sum.at(i).property;
-        comp->property = results_->GetPropertyKeyFromString(QString::fromStdString(comp->property_name));
-    }
-    comp->coefficient = settings->objective().NPV_sum.at(i).coefficient;
-    if (settings->objective().NPV_sum.at(i).usediscountfactor == true) {
-      comp->interval = settings->objective().NPV_sum.at(i).interval;
-      comp->discount = settings->objective().NPV_sum.at(i).discount;
-      comp->usediscountfactor = settings->objective().NPV_sum.at(i).usediscountfactor;
-    } else {
-      comp->interval = "None";
-      comp->discount = 0;
-      comp->usediscountfactor = false;
-    }
-    if (settings->objective().NPVCarbonComponents.at(i).is_well_prop){
-        comp->is_well_property = true;
-        comp->well = settings->objective().NPVCarbonComponents.at(i).well;
-    }
-    else comp->is_well_property = false;
-    components_->append(comp);
+      auto *comp = new carbondioxidenpv::Component();
+      if (settings->objective().NPV_sum[i].property.compare(0, 4, "EXT-") == 0) {
+          comp->is_json_component = true;
+          Printer::ext_info("Adding external NPV component.", "Optimization", "carbondioxidenpv");
+          comp->property_name = settings->objective().NPV_sum[i].property.substr(4, std::string::npos);
+          comp->interval = settings->objective().NPV_sum[i].interval;
+      } else {
+          comp->is_json_component = false;
+          comp->property_name = settings->objective().NPV_sum.at(i).property;
+          comp->property = results_->GetPropertyKeyFromString(QString::fromStdString(comp->property_name));
+      }
+      comp->coefficient = settings->objective().NPV_sum.at(i).coefficient;
+      if (settings->objective().NPV_sum.at(i).usediscountfactor == true) {
+          comp->interval = settings->objective().NPV_sum.at(i).interval;
+          comp->discount = settings->objective().NPV_sum.at(i).discount;
+          comp->usediscountfactor = settings->objective().NPV_sum.at(i).usediscountfactor;
+      } else {
+          comp->interval = "None";
+          comp->discount = 0;
+          comp->usediscountfactor = false;
+      }
+      components_->append(comp);
   }
+
+  for (int i = 0; i < settings->objective().NPVCarbonComponents.size(); ++i){
+      auto *carboncomp = new carbondioxidenpv::Component();
+      carboncomp->property_name = settings->objective().NPVCarbonComponents.at(i).property.toStdString();
+      carboncomp->property = results_->GetPropertyKeyFromString(QString::fromStdString(carboncomp->property_name));
+      carboncomp->is_well_property = settings->objective().NPVCarbonComponents.at(i).is_well_prop;
+      if (carboncomp->is_well_property == true){
+          carboncomp->well = settings->objective().NPVCarbonComponents.at(i).well;
+      }
+      carboncomponents_->append(carboncomp);
+  }
+
   well_economy_ = model->wellCostConstructor();
 
   rho_wi_ = 1000;
@@ -102,11 +109,11 @@ QList<double> carbondioxidenpv::calcPM(QList<double> WBHP) const {
     return pm;
 }
 
-double carbondioxidenpv::calcPdis(QList<double> pm) const {
+double carbondioxidenpv::calcPdis(QList<double> pm_per_report_time) const {
     double pdis = 0;
-    for (int i = 0; i < pm.size(); i++) {
-        if (pm.at(i) > pdis) {
-            pdis = pm.value(i);
+    for (int i = 0; i < pm_per_report_time.size(); i++) {
+        if (pm_per_report_time.at(i) > pdis) {
+            pdis = pm_per_report_time.value(i);
         }
     }
     return pdis;
@@ -149,7 +156,8 @@ QList<double> carbondioxidenpv::calcCum(vector<double, allocator<double>> time, 
     QList<double> cum;
     cum.append(0);
     for (int i = 1; i < time.size(); i++){
-        cum[i] = cum.value(i-1) + (rate.value(i)+rate.value(i-1))/2 * (time.at(i)-time.at(i-1))*365; // days
+        cum.append(cum.value(i-1) + (rate.value(i)+rate.value(i-1))/2 * (time.at(i)-time.at(i-1)));
+        //cum[i] = cum.value(i-1) + (rate.value(i)+rate.value(i-1))/2 * (time.at(i)-time.at(i-1))*365; // days
 }
 return cum;
 }
@@ -160,26 +168,36 @@ double carbondioxidenpv::resolveCarbonDioxideCost(vector<double, allocator<doubl
     QList<double> FWPR;
     QList<double> FWPT;
     auto well_bhps = new QList<QList<double>>;
-    for (int j = 0; j < components_->size(); ++j) {
-        if (components_->value(j)->is_well_property) {
-            well_bhps->push_back(components_->at(j)->resolveValueVector(results_, report_times));
-        } else if (components_->at(j)->property_name == "CumulativeWaterProduction") {
-            auto FWPT = components_->at(j)->resolveValueVector(results_, report_times);
-        } else if (components_->at(j)->property_name == "CumulativeWaterInjection") {
-            auto FWIR = components_->at(j)->resolveValueVector(results_, report_times);
-        } else if (components_->at(j)->property_name == "WaterProductionRate") {
-            auto FWPT = components_->at(j)->resolveValueVector(results_, report_times);
+    for (int j = 0; j < carboncomponents_->size(); ++j) {
+        if (carboncomponents_->value(j)->is_well_property == true) {
+            well_bhps->push_back(carboncomponents_->at(j)->resolveValueVector(results_, report_times));
+        } else if (carboncomponents_->at(j)->property_name == "CumulativeWaterProduction") {
+            FWPT = carboncomponents_->at(j)->resolveValueVector(results_, report_times);
+        } else if (carboncomponents_->at(j)->property_name == "CumulativeWaterInjection") {
+            FWIR = carboncomponents_->at(j)->resolveValueVector(results_, report_times);
+        } else if (carboncomponents_->at(j)->property_name == "WaterProductionRate") {
+            FWPR = carboncomponents_->at(j)->resolveValueVector(results_, report_times);
         }
     }
 
-    QList<QList<double>> pm_list;
+    QList<QList<double>> pm;
     for (int i = 0; i < well_bhps->size(); i++){
-        pm_list.append(calcPM(well_bhps->at(i)));
+        pm.append(calcPM(well_bhps->at(i)));
+    }
+
+    QList<QList<double>> pm_transpose;
+    for (int j = 0; j< report_times.size();j++){
+        QList<double> pm_per_report_time;
+        for (int i = 0; i < pm.size(); i++){
+            pm_per_report_time.append(pm.at(i).at(j));
+        }
+        pm_transpose.append(pm_per_report_time);
+        pm_per_report_time.clear();
     }
 
     QList<double> pdis;
-    for (int i = 0; i < pm_list.size(); i++){
-        pdis.append(calcPdis(pm_list.at(i)));
+    for (int i = 0; i < pm_transpose.size(); i++){
+        pdis.append(calcPdis(pm_transpose.at(i)));
     }
 
     QList<double> qwi_per_pump;
@@ -207,12 +225,13 @@ double carbondioxidenpv::resolveCarbonDioxideCost(vector<double, allocator<doubl
 
     double cost_inj_system = npump_wi_*cost_per_pump_;
 
-    QList<double> pow_wt;
-    for (int i = 0; i < report_times.size(); i++){
-        pow_wt.append(calcPowWt(FWPR));
-    }
+    QList<double> pow_wt = calcPowWt(FWPR);
+    //for (int i = 0; i < report_times.size(); i++){
+    //    pow_wt.append(calcPowWt(FWPR));
+    //}
 
     double cost_op_wt = (FWPT.value(FWPT.size()-1) - FWPT.value(0)) * unit_cost_wt_ / pow(10.0, 6.0);
+
     QList<double> pow_demand;
     QList<double> Nturbine;
     QList<double> pow_generated;
@@ -232,7 +251,7 @@ double carbondioxidenpv::resolveCarbonDioxideCost(vector<double, allocator<doubl
     double cost_turbine = max_Nturbine * cost_per_turbine_;
 
     QList<double> co2_em_rate;
-    for (int i = 0; i < Nturbine.size(); i++){
+    for (int i = 0; i < pow_generated.size(); i++){
         co2_em_rate.append(calcCO2EmRate(pow_generated.value(i)));
     }
 
@@ -339,7 +358,7 @@ double carbondioxidenpv::value() const {
     return value+carbonCost;
   }
   catch (...) {
-    Printer::error("Failed to compute NPV. Returning 0.0");
+    Printer::error("Failed to compute carbondioxidenpv. Returning 0.0");
     return 0.0;
   }
 }

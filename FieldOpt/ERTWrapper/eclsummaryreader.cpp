@@ -447,8 +447,8 @@ const std::vector<double> ECLSummaryReader::wwit(const string well_name) const {
 const std::vector<double> ECLSummaryReader::wbhp(const string well_name) const {
     if (wells_.find(well_name) == wells_.end())
         throw SummaryVariableDoesNotExistException("The well " + well_name + " was not found in the summary.");
-    if (wwit_.at(well_name).back() == 0.0)
-        warnPropertyZero(well_name, "WWIT");
+    if (wbhp_.at(well_name).back() == 0.0)
+        warnPropertyZero(well_name, "WBHP");
     return wbhp_.at(well_name);
 }
 

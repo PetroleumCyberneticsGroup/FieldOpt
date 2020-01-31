@@ -26,6 +26,7 @@
 #include <Optimization/optimizers/RGARDD.h>
 #include <Optimization/hybrid_optimizer.h>
 #include <Optimization/optimizers/bayesian_optimization/EGO.h>
+#include <Optimization/objective/carbondioxidenpv.h>
 #include "Optimization/optimizers/PSO.h"
 #include "Optimization/optimizers/CMA_ES.h"
 #include "Optimization/optimizers/VFSA.h"
@@ -154,8 +155,8 @@ void AbstractRunner::InitializeObjectiveFunction()
             objective_function_ = new Optimization::Objective::NPV(settings_->optimizer(), simulator_->results(), model_);
             break;
         case Settings::Optimizer::ObjectiveType::carbondioxidenpv:
-            if (VERB_RUN >=1) Printer::ext_info("Using NPV-type objective function.", "Runner", "AbstractRunner");
-            objective_function_ = new Optimization::Objective::NPV(settings_->optimizer(), simulator_->results(), model_);
+            if (VERB_RUN >=1) Printer::ext_info("Using carbondioxidenpv-type objective function.", "Runner", "AbstractRunner");
+            objective_function_ = new Optimization::Objective::carbondioxidenpv(settings_->optimizer(), simulator_->results(), model_);
             break;
         default:
             throw std::runtime_error("Unable to initialize runner: objective function type not recognized.");

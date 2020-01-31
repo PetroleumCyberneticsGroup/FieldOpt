@@ -507,7 +507,7 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
                 obj.weighted_sum.append(component);
             }
         }
-        else if (QString::compare(objective_type, "NPV") == 0 || QString::compare(objective_type, "carbondioxidenpv")) {
+        else if (QString::compare(objective_type, "NPV") == 0 || QString::compare(objective_type, "carbondioxidenpv") == 0) {
             // -------------------------------------------------
             if (QString::compare(objective_type, "NPV") == 0){
                 obj.type = ObjectiveType::NPV;
@@ -531,11 +531,18 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
             }
 
             if (QString::compare(objective_type, "carbondioxidenpv") == 0){
+                obj.NPVCarbonComponents = QList<Objective::NPVCarbonComponent>();
                 QJsonArray json_carbon_components = json_objective["NPVCarbonComponents"].toArray();
-                Objective::NPVCarbonComponent carbonComponent;
+                //Objective::NPVCarbonComponent carbonComponent;
                 for (int i = 0; i < json_carbon_components.size(); ++i) {
-                    set_req_prop_double(carbonComponent.coefficient, json_carbon_components[i].toObject(), "Coefficient");
-                    set_req_prop_double(carbonComponent.coefficient, json_carbon_components[i].toObject(), "Capacity");
+                    Objective::NPVCarbonComponent carbonComponent;
+                    carbonComponent.property = json_carbon_components.at(i).toObject()["Property"].toString();
+                    carbonComponent.is_well_prop = json_carbon_components.at(i).toObject()["IsWellProp"].toBool();
+                    if (carbonComponent.is_well_prop == true) {
+                        carbonComponent.well = json_carbon_components[i].toObject()["Well"].toString();
+                    }
+                    //set_req_prop_double(carbonComponent.coefficient, json_carbon_components[i].toObject(), "Coefficient");
+                    //set_req_prop_double(carbonComponent.coefficient, json_carbon_components[i].toObject(), "Capacity");
                     obj.NPVCarbonComponents.append(carbonComponent);
                 }
             }
