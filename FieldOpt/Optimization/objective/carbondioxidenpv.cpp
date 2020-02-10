@@ -173,9 +173,9 @@ double carbondioxidenpv::resolveCarbonDioxideCost(vector<double, allocator<doubl
             well_bhps->push_back(carboncomponents_->at(j)->resolveValueVector(results_, report_times));
         } else if (carboncomponents_->at(j)->property_name == "CumulativeWaterProduction") {
             FWPT = carboncomponents_->at(j)->resolveValueVector(results_, report_times);
-        } else if (carboncomponents_->at(j)->property_name == "CumulativeWaterInjection") {
+        } else if (carboncomponents_->at(j)->property_name == "CumulativeWaterProduction") {
             FWIR = carboncomponents_->at(j)->resolveValueVector(results_, report_times);
-        } else if (carboncomponents_->at(j)->property_name == "WaterProductionRate") {
+        } else if (carboncomponents_->at(j)->property_name == "CumulativeWaterProduction") {
             FWPR = carboncomponents_->at(j)->resolveValueVector(results_, report_times);
         }
     }

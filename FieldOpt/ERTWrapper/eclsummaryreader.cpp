@@ -228,6 +228,7 @@ void ECLSummaryReader::initializeWellRates() {
     }
 }
 
+
 void ECLSummaryReader::initializeWellCumulatives() {
     const ecl_smspec_type * smspec = ecl_sum_get_smspec(ecl_sum_);
     for (auto wname : wells_) {
