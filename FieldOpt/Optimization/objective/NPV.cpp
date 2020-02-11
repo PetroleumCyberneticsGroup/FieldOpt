@@ -78,6 +78,7 @@ double NPV::value() const {
   auto report_times = results_->GetValueVector(results_->Time);
   auto NPV_times = new QList<double>;
   auto discount_factor_list = new QList<double>;
+
   for (int k = 0; k < components_->size(); ++k) {
     if (components_->at(k)->is_json_component == true) {
         continue;

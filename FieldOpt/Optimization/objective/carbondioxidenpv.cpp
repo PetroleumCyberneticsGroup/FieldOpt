@@ -44,18 +44,27 @@ carbondioxidenpv::carbondioxidenpv(Settings::Optimizer *settings,
   components_ = new QList<carbondioxidenpv::Component *>();
   carboncomponents_ = new QList<carbondioxidenpv::Component *>();
 
+
   for (int i = 0; i < settings->objective().NPV_sum.size(); ++i) {
+
       auto *comp = new carbondioxidenpv::Component();
       if (settings->objective().NPV_sum[i].property.compare(0, 4, "EXT-") == 0) {
           comp->is_json_component = true;
           Printer::ext_info("Adding external NPV component.", "Optimization", "carbondioxidenpv");
           comp->property_name = settings->objective().NPV_sum[i].property.substr(4, std::string::npos);
           comp->interval = settings->objective().NPV_sum[i].interval;
+
       } else {
+          Printer::ext_info("NOT adding external NPV component.", "Optimization", "carbondioxidenpv");
           comp->is_json_component = false;
           comp->property_name = settings->objective().NPV_sum.at(i).property;
+          cout << "comp->property_name: " << comp->property_name << endl;
+
           comp->property = results_->GetPropertyKeyFromString(QString::fromStdString(comp->property_name));
+
       }
+
+
       comp->coefficient = settings->objective().NPV_sum.at(i).coefficient;
       if (settings->objective().NPV_sum.at(i).usediscountfactor == true) {
           comp->interval = settings->objective().NPV_sum.at(i).interval;
@@ -66,6 +75,7 @@ carbondioxidenpv::carbondioxidenpv(Settings::Optimizer *settings,
           comp->discount = 0;
           comp->usediscountfactor = false;
       }
+
       components_->append(comp);
   }
 
@@ -168,16 +178,28 @@ double carbondioxidenpv::resolveCarbonDioxideCost(vector<double, allocator<doubl
     QList<double> FWPR;
     QList<double> FWPT;
     auto well_bhps = new QList<QList<double>>;
+
     for (int j = 0; j < carboncomponents_->size(); ++j) {
+        cout << "property_name:" << carboncomponents_->value(j)->property_name << endl;
+
         if (carboncomponents_->value(j)->is_well_property == true) {
             well_bhps->push_back(carboncomponents_->at(j)->resolveValueVector(results_, report_times));
+
+
+
         } else if (carboncomponents_->at(j)->property_name == "CumulativeWaterProduction") {
             FWPT = carboncomponents_->at(j)->resolveValueVector(results_, report_times);
-        } else if (carboncomponents_->at(j)->property_name == "CumulativeWaterProduction") {
+
+
+
+
+        } else if (carboncomponents_->at(j)->property_name == "WaterInjectionRate") {
             FWIR = carboncomponents_->at(j)->resolveValueVector(results_, report_times);
-        } else if (carboncomponents_->at(j)->property_name == "CumulativeWaterProduction") {
+
+        } else if (carboncomponents_->at(j)->property_name == "WaterProductionRate") {
             FWPR = carboncomponents_->at(j)->resolveValueVector(results_, report_times);
         }
+
     }
 
     QList<QList<double>> pm;
@@ -274,6 +296,7 @@ double carbondioxidenpv::value() const {
   auto report_times = results_->GetValueVector(results_->Time);
   auto NPV_times = new QList<double>;
   auto discount_factor_list = new QList<double>;
+
   for (int k = 0; k < components_->size(); ++k) {
     if (components_->at(k)->is_json_component == true) {
         continue;
@@ -388,19 +411,34 @@ double carbondioxidenpv::Component::yearlyToMonthly(double discount_factor) {
 
 }
 
-QList<double> carbondioxidenpv::Component::resolveValueVector(Simulation::Results::Results *results, vector<double, allocator<double>> NPVTimes){
+QList<double> carbondioxidenpv::Component::resolveValueVector(
+    Simulation::Results::Results *results,
+    vector<double, allocator<double>> NPVTimes){
+
     QList<double> property_value_vector;
+
     if (is_well_property == true){
         for (int i = 0; i < NPVTimes.size(); ++i) {
             int time_step_int = (int) NPVTimes.at(i);
             auto property_value_at_time = results->GetValue(property, well, time_step_int);
             property_value_vector.append(property_value_at_time);
         }
+
     } else {
+
+      auto property_vector = results->GetValueVector(property);
+      cout << "PROP:" << property << " size: " << property_vector.size() << endl;
+
         for (int i = 0; i < NPVTimes.size(); ++i) {
+
             int time_step_int = (int) NPVTimes.at(i);
+            cout << "PROP:" << property << " time_step_int: " << time_step_int << endl;
+
             auto property_value_at_time = results->GetValue(property, time_step_int);
+            cout << "property_value: " << property_value_at_time << endl;
+
             property_value_vector.append(property_value_at_time);
+
         }
     }
     return property_value_vector;
