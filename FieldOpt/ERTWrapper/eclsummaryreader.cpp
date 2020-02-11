@@ -146,8 +146,10 @@ void ECLSummaryReader::populateKeyLists() {
 
 void ECLSummaryReader::initializeVectors() {
     initializeTimeVector();
+    initializeWellPressure();
     initializeWellRates();
     initializeWellCumulatives();
+    initializeFieldRates();
     initializeFieldCumulatives();
 }
 
@@ -160,6 +162,23 @@ void ECLSummaryReader::initializeTimeVector() {
     }
     time_[0] = GetFirstReportStep();
     double_vector_free(time);
+}
+
+void ECLSummaryReader::initializeWellPressure() {
+    const ecl_smspec_type * smspec = ecl_sum_get_smspec(ecl_sum_);
+    for (auto wname : wells_) {
+        wbhp_[wname] = std::vector<double>(time_.size(), 0.0);
+        if (hasWellVar(wname,"WBHP")) {
+            int index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WBHP");
+            auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
+            assert(double_vector_size(data) == time_.size());
+            for (int i = 0; i < time_.size(); ++i) {
+                wbhp_[wname][i] = double_vector_safe_iget(data, i);
+            }
+            wbhp_[wname][0] = GetWellVar(wname,"WBHP",0);
+            double_vector_free(data);
+        }
+    }
 }
 
 void ECLSummaryReader::initializeWellRates() {
@@ -314,6 +333,38 @@ void ECLSummaryReader::initializeWellCumulatives() {
     }
 }
 
+void ECLSummaryReader::initializeFieldRates() {
+    const ecl_smspec_type * smspec = ecl_sum_get_smspec(ecl_sum_);
+
+    fwpr_ = std::vector<double>(time_.size(), 0.0);
+    if (hasFieldVar("FWPR")) {
+        int fwpr_index = ecl_smspec_get_field_var_params_index(smspec, "FWPR");
+        double_vector_type * fwpr = ecl_sum_alloc_data_vector(ecl_sum_, fwpr_index, true);
+        assert(double_vector_size(fwpr) == time_.size());
+        for (int i = 0; i < time_.size(); ++i) {
+            fwpr_[i] = double_vector_safe_iget(fwpr,i);
+        }
+        fwpr_[0] = GetFieldVar("FWPR",0.0);
+    }
+    else {
+        warnPropertyNotFound("FWPR");
+    }
+
+    fwir_ = std::vector<double>(time_.size(), 0.0);
+    if (hasFieldVar("FWIR")) {
+        int fwir_index = ecl_smspec_get_field_var_params_index(smspec, "FWIR");
+        double_vector_type * fwir = ecl_sum_alloc_data_vector(ecl_sum_, fwir_index, true);
+        assert(double_vector_size(fwir) == time_.size());
+        for (int i = 0; i < time_.size(); ++i) {
+            fwir_[i] = double_vector_safe_iget(fwir,i);
+        }
+        fwir_[0] = GetFieldVar("FWIR",0);
+    }
+    else {
+        warnPropertyNotFound("FWIR");
+    }
+}
+
 void ECLSummaryReader::initializeFieldCumulatives() {
     const ecl_smspec_type * smspec = ecl_sum_get_smspec(ecl_sum_);
 
@@ -445,14 +496,6 @@ const std::vector<double> ECLSummaryReader::wwit(const string well_name) const {
     return wwit_.at(well_name);
 }
 
-const std::vector<double> ECLSummaryReader::wbhp(const string well_name) const {
-    if (wells_.find(well_name) == wells_.end())
-        throw SummaryVariableDoesNotExistException("The well " + well_name + " was not found in the summary.");
-    if (wbhp_.at(well_name).back() == 0.0)
-        warnPropertyZero(well_name, "WBHP");
-    return wbhp_.at(well_name);
-}
-
 const std::vector<double> ECLSummaryReader::wgit(const string well_name) const {
     if (wells_.find(well_name) == wells_.end())
         throw SummaryVariableDoesNotExistException("The well " + well_name + " was not found in the summary.");
@@ -518,6 +561,12 @@ const std::vector<double> &ECLSummaryReader::fwpr() const {
     return fwpr_;
 }
 
+const std::vector<double> &ECLSummaryReader::fwir() const {
+    if (fwir_.back() == 0.0)
+        warnPropertyZero("FWIR");
+    return fwir_;
+}
+
 const std::vector<double> ECLSummaryReader::wopr(const string well_name) const {
     if (wells_.find(well_name) == wells_.end())
         throw SummaryVariableDoesNotExistException("The well " + well_name + " was not found in the summary.");
@@ -547,6 +596,15 @@ const std::vector<double> ECLSummaryReader::wgir(const string well_name) const {
         throw SummaryVariableDoesNotExistException("The well " + well_name + " was not found in the summary.");
     return wgir_.at(well_name);
 }
+
+const std::vector<double> ECLSummaryReader::wbhp(const string well_name) const {
+    if (wells_.find(well_name) == wells_.end())
+        throw SummaryVariableDoesNotExistException("The well " + well_name + " was not found in the summary.");
+    if (wbhp_.at(well_name).back() == 0.0)
+        warnPropertyZero(well_name, "WBHP");
+    return wbhp_.at(well_name);
+}
+
 vector<double> ECLSummaryReader::computeCumulativeFromRate(vector<double> rate) {
     assert(time_.size() == rate.size());
     auto cumulative = vector<double>(rate.size(), 0.0);

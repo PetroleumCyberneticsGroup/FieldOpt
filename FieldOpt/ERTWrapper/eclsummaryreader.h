@@ -87,6 +87,7 @@ class ECLSummaryReader
   const vector<double> &fwit() const;
   const vector<double> &fgit() const;
   const vector<double> &fwpr() const;
+  const vector<double> &fwir() const;
 
   const vector<double> wopt(const string well_name) const;
   const vector<double> wwpt(const string well_name) const;
@@ -119,6 +120,7 @@ class ECLSummaryReader
   vector<double> fwit_;
   vector<double> fgit_;
   vector<double> fwpr_;
+  vector<double> fwir_;
   map<string, vector<double> > wopt_;
   map<string, vector<double> > wwpt_;
   map<string, vector<double> > wgpt_;
@@ -133,8 +135,10 @@ class ECLSummaryReader
 
   void initializeVectors();
   void initializeTimeVector();
+  void initializeWellPressure();
   void initializeWellRates();
   void initializeWellCumulatives();
+  void initializeFieldRates();
   void initializeFieldCumulatives();
 
   void warnPropertyZero(string wname, string propname) const;

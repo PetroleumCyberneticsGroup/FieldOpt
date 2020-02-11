@@ -82,7 +82,8 @@ namespace Optimization {
                 double resolveValue(Simulation::Results::Results *results);
                 double resolveValueDiscount(Simulation::Results::Results *results, double time_step);
                 double yearlyToMonthly(double discount_factor);
-                QList<double> resolveValueVector(Simulation::Results::Results *results, vector<double, allocator<double>> report_times);
+                //QList<double> resolveValueVector(Simulation::Results::Results *results, vector<double, allocator<double>> report_times);
+                QList<double> resolveValueVector(Simulation::Results::Results *results, QList<int> Timestep);
                 std::string interval;
                 double discount;
                 bool usediscountfactor;

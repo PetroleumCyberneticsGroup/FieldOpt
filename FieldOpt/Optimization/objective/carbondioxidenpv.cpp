@@ -95,7 +95,7 @@ carbondioxidenpv::carbondioxidenpv(Settings::Optimizer *settings,
   rho_wi_ = 1000;
   g_ = 9.81;
   reservoir_depth_ = 2500;
-  npump_wi_ = 60;
+  npump_wi_ = 5;
   psuc_ = 1.01325;
   eff_mechanical_ = 0.95;
   max_pow_per_pump_ = 0.75;
@@ -174,32 +174,27 @@ return cum;
 
 double carbondioxidenpv::resolveCarbonDioxideCost(vector<double, allocator<double>> report_times) const {
 
+    QList<int> Timestep;
+    for (int i = 0; i < report_times.size(); ++i){
+        Timestep.append(i);
+    }
+
     QList<double> FWIR;
     QList<double> FWPR;
     QList<double> FWPT;
     auto well_bhps = new QList<QList<double>>;
-
     for (int j = 0; j < carboncomponents_->size(); ++j) {
         cout << "property_name:" << carboncomponents_->value(j)->property_name << endl;
 
-        if (carboncomponents_->value(j)->is_well_property == true) {
-            well_bhps->push_back(carboncomponents_->at(j)->resolveValueVector(results_, report_times));
-
-
-
+        if (carboncomponents_->at(j)->is_well_property == true) {
+            well_bhps->push_back(carboncomponents_->at(j)->resolveValueVector(results_, Timestep));
         } else if (carboncomponents_->at(j)->property_name == "CumulativeWaterProduction") {
-            FWPT = carboncomponents_->at(j)->resolveValueVector(results_, report_times);
-
-
-
-
+            FWPT = carboncomponents_->at(j)->resolveValueVector(results_, Timestep);
         } else if (carboncomponents_->at(j)->property_name == "WaterInjectionRate") {
-            FWIR = carboncomponents_->at(j)->resolveValueVector(results_, report_times);
-
+            FWIR = carboncomponents_->at(j)->resolveValueVector(results_, Timestep);
         } else if (carboncomponents_->at(j)->property_name == "WaterProductionRate") {
-            FWPR = carboncomponents_->at(j)->resolveValueVector(results_, report_times);
+            FWPR = carboncomponents_->at(j)->resolveValueVector(results_, Timestep);
         }
-
     }
 
     QList<QList<double>> pm;
@@ -228,7 +223,7 @@ double carbondioxidenpv::resolveCarbonDioxideCost(vector<double, allocator<doubl
         qwi_per_pump.append(FWIR.value(i)/npump_wi_);
         eff_hydraulic.append(calcEffHydraulic(qwi_per_pump.value(i)));
         if (eff_hydraulic.value(i) <= 0){
-            cout << "error" << endl;
+            cout << "non-positive eff_hydraulic" << endl;
         }
     }
 
@@ -236,7 +231,7 @@ double carbondioxidenpv::resolveCarbonDioxideCost(vector<double, allocator<doubl
     for (int i = 0; i < report_times.size(); i++){
         pow_per_pump.append(calcPowPerPump(pdis.value(i), qwi_per_pump.value(i), eff_hydraulic.value(i)));
         if (pow_per_pump.value(i) > max_pow_per_pump_){
-            cout << "error" << endl;
+            cout << "exceed max_pow_per_pump_" << endl;
         }
     }
 
@@ -411,7 +406,7 @@ double carbondioxidenpv::Component::yearlyToMonthly(double discount_factor) {
 
 }
 
-QList<double> carbondioxidenpv::Component::resolveValueVector(
+/*QList<double> carbondioxidenpv::Component::resolveValueVector(
     Simulation::Results::Results *results,
     vector<double, allocator<double>> NPVTimes){
 
@@ -443,7 +438,30 @@ QList<double> carbondioxidenpv::Component::resolveValueVector(
     }
     return property_value_vector;
 
-}
+}*/
+
+    QList<double> carbondioxidenpv::Component::resolveValueVector(
+            Simulation::Results::Results *results,
+            QList<int> Timestep){
+
+        QList<double> property_value_vector;
+
+        if (is_well_property == true){
+            for (int i = 0; i < Timestep.size(); ++i) {
+                auto property_value_at_time = results->GetValue(property, well, Timestep.at(i));
+                property_value_vector.append(property_value_at_time);
+            }
+
+        } else {
+            for (int i = 0; i < Timestep.size(); ++i) {
+                auto property_value_at_time = results->GetValue(property, Timestep.at(i));
+                property_value_vector.append(property_value_at_time);
+
+            }
+        }
+        return property_value_vector;
+
+    }
 }
 
 }
