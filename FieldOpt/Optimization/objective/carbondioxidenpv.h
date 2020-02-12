@@ -40,11 +40,11 @@ namespace Optimization {
 
             double value() const;
 
-            QList<double> calcPM(QList<double> WBHP) const;
+            std::vector<double> calcPM(std::vector<double> WBHP) const;
             double calcPdis(QList<double> pm) const;
             double calcEffHydraulic(double qwi_per_pump) const;
             double calcPowPerPump(double pdis, double qwi_per_pump, double eff_hydraulic) const;
-            QList<double> calcPowWt(QList<double> FWPR) const;
+            QList<double> calcPowWt(std::vector<double> FWPR) const;
             double calcNTurbine(double pow_demand) const;
             double calcCO2EmRate(double pow_generated) const;
             QList<double> calcCum(vector<double, allocator<double>> time, QList<double> rate) const;
@@ -82,8 +82,8 @@ namespace Optimization {
                 double resolveValue(Simulation::Results::Results *results);
                 double resolveValueDiscount(Simulation::Results::Results *results, double time_step);
                 double yearlyToMonthly(double discount_factor);
-                //QList<double> resolveValueVector(Simulation::Results::Results *results, vector<double, allocator<double>> report_times);
-                QList<double> resolveValueVector(Simulation::Results::Results *results, QList<int> Timestep);
+//                std::vector<double> resolveValueVector(Simulation::Results::Results *results, vector<double, allocator<double>> report_times);
+
                 std::string interval;
                 double discount;
                 bool usediscountfactor;
@@ -96,6 +96,7 @@ namespace Optimization {
             QList<Component *> *carboncomponents_;
             Simulation::Results::Results *results_;  //!< Object providing access to simulator results.
             Settings::Optimizer *settings_;
+            Model::Model *model_;
             Model::Model::Economy *well_economy_;
             double carbonCost;
         };

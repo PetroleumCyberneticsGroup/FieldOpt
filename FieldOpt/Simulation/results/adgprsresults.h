@@ -29,6 +29,7 @@ public:
     double GetValue(Property prop, int time_index);
     double GetValue(Property prop, QString well, int time_index);
     std::vector<double> GetValueVector(Property prop);
+    std::vector<double> GetValueVector(Property prop, QString well_name);
 
 private:
     QString file_path_;

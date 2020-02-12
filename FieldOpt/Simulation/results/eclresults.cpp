@@ -80,6 +80,7 @@ std::vector<double> ECLResults::GetValueVector(Results::Property prop)
         case CumulativeWaterProduction: return summary_reader_->fwpt();
         case CumulativeWaterInjection:  return summary_reader_->fwit();
         case CumulativeGasInjection:    return summary_reader_->fgit();
+        case OilProductionRate:         return summary_reader_->fopr();
         case WaterProductionRate:       return summary_reader_->fwpr();
         case WaterInjectionRate:        return summary_reader_->fwir();
         case Time:                      return summary_reader_->time();

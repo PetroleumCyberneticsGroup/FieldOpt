@@ -34,6 +34,7 @@ namespace Simulation {
                 CumulativeWellWaterProduction,
                 CumulativeWellWaterInjection,
                 CumulativeWellGasInjection,
+                OilProductionRate,
                 WaterProductionRate,
                 WaterInjectionRate,
                 WellBottomHolePressure,
@@ -48,6 +49,7 @@ namespace Simulation {
                 else if (prop == "CumulativeWellOilProduction") return CumulativeWellOilProduction;
                 else if (prop == "CumulativeWellGasProduction") return CumulativeWellGasProduction;
                 else if (prop == "CumulativeWellWaterProduction") return CumulativeWellWaterProduction;
+                else if (prop == "OilProductionRate") return OilProductionRate;
                 else if (prop == "WaterProductionRate") return WaterProductionRate;
                 else if (prop == "WaterInjectionRate") return WaterInjectionRate;
                 else if (prop == "WellBottomHolePressure") return WellBottomHolePressure;
@@ -79,6 +81,8 @@ namespace Simulation {
              * \param prop The property to be retrieved.
              */
             virtual std::vector<double> GetValueVector(Property prop) = 0;
+
+            virtual std::vector<double> GetValueVector(Property prop, QString well) = 0;
 
             /*!
              * \brief GetFinalValue Gets the value of the given property for the given well at the

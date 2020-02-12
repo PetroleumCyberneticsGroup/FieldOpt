@@ -65,6 +65,11 @@ double AdgprsResults::GetValue(Results::Property prop, QString well, int time_in
     throw std::runtime_error("Well properties are not available for ADGPRS results.");
 }
 
+std::vector<double> AdgprsResults::GetValueVector(Results::Property prop, QString well)
+{
+  throw std::runtime_error("Well properties are not available for ADGPRS results.");
+}
+
 std::vector<double> AdgprsResults::GetValueVector(Results::Property prop)
 {
     if (!isAvailable()) throw ResultsNotAvailableException();
