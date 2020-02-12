@@ -96,7 +96,7 @@ carbondioxidenpv::carbondioxidenpv(Settings::Optimizer *settings,
   rho_wi_ = 1000;
   g_ = 9.81;
   reservoir_depth_ = 2500;
-  npump_wi_ = 60;
+  npump_wi_ = 1;
   psuc_ = 1.01325;
   eff_mechanical_ = 0.95;
   max_pow_per_pump_ = 0.75;
@@ -133,7 +133,7 @@ double carbondioxidenpv::calcEffHydraulic(double qwi_per_pump) const {
                            + 2.62704*pow(10.0, -8.0)*pow(qwi_per_pump, 3.0)
                            - 7.18777*pow(10.0, -5.0)*pow(qwi_per_pump, 2.0)
                            + 1.08323*pow(10.0, -1.0)*qwi_per_pump
-                           - 9.43801*pow(10.0, -1))/100;
+                           - 9.43801*pow(10.0, -1.0))/100+0.2;
     return eff_hydraulic;
 
 }
@@ -229,8 +229,40 @@ double carbondioxidenpv::resolveCarbonDioxideCost(vector<double, allocator<doubl
 
     QList<double> qwi_per_pump;
     QList<double> eff_hydraulic;
+    QList<double> temp_qwi_per_pump;
+    QList<double> temp_eff_hydraulic;
+    double temp_n_pump = npump_wi_;
+    bool feasable = false;
+    bool temp_feasable;
+    while (!feasable) {
+        //cout << temp_n_pump << endl;
+        temp_qwi_per_pump.clear();
+        temp_eff_hydraulic.clear();
+        for (int i = 0; i < report_times.size(); i++){
+            if (FWIR[i] > 0){
+                temp_qwi_per_pump.append(FWIR[i]/temp_n_pump);
+                temp_eff_hydraulic.append(calcEffHydraulic(temp_qwi_per_pump.value(i)));
+            }
+        }
+        temp_feasable = true;
+        for (int i = 0; i < temp_eff_hydraulic.size(); i++){
+            //cout << temp_eff_hydraulic.value(i) << endl;
+            if (temp_eff_hydraulic.value(i) <= 0){
+                if (temp_feasable){
+                    temp_feasable = false;
+                }
+            }
+        }
+        feasable = temp_feasable;
+        if (!feasable){
+            temp_n_pump += 1;
+
+        }
+    }
+    cout << "Number of pumps" << endl;
+    cout << temp_n_pump << endl;
     for (int i = 0; i < report_times.size(); i++){
-        qwi_per_pump.append(FWIR[i]/npump_wi_);
+        qwi_per_pump.append(FWIR[i]/temp_n_pump);
         eff_hydraulic.append(calcEffHydraulic(qwi_per_pump.value(i)));
         if (eff_hydraulic.value(i) <= 0){
             cout << "error@eff_hydraulic" << endl;
