@@ -32,12 +32,12 @@
  */
 
 //                    Module
-#define VERB_MOD 0 // Model
-#define VERB_OPT 0 // Optimization
-#define VERB_WIC 0 // WellIndexCalculation
-#define VERB_SIM 0 // Simulation
+#define VERB_MOD 1 // Model
+#define VERB_OPT 1 // Optimization
+#define VERB_WIC 1 // WellIndexCalculation
+#define VERB_SIM 1 // Simulation
 #define VERB_RUN 1 // Runner
-#define VERB_RES 0 // Reservoir
-#define VERB_SET 0 // Settings
+#define VERB_RES 1 // Reservoir
+#define VERB_SET 1 // Settings
 
 #endif //FIELDOPT_VERBOSITY_H

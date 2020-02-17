@@ -57,10 +57,10 @@ carbondioxidenpv::carbondioxidenpv(Settings::Optimizer *settings,
           comp->interval = settings->objective().NPV_sum[i].interval;
 
       } else {
-          Printer::ext_info("NOT adding external NPV component.", "Optimization", "carbondioxidenpv");
+          //Printer::ext_info("NOT adding external NPV component.", "Optimization", "carbondioxidenpv");
           comp->is_json_component = false;
           comp->property_name = settings->objective().NPV_sum.at(i).property;
-          cout << "comp->property_name: " << comp->property_name << endl;
+          //cout << "comp->property_name: " << comp->property_name << endl;
 
           comp->property = results_->GetPropertyKeyFromString(QString::fromStdString(comp->property_name));
 
@@ -92,7 +92,7 @@ carbondioxidenpv::carbondioxidenpv(Settings::Optimizer *settings,
   }
 
   well_economy_ = model->wellCostConstructor();
-
+/*
   rho_wi_ = 1000;
   g_ = 9.81;
   reservoir_depth_ = 2500;
@@ -107,9 +107,24 @@ carbondioxidenpv::carbondioxidenpv(Settings::Optimizer *settings,
   pow_supply_per_turbine_ = 70;
   co2_em_per_enrg_unit_ = 0.75;
   co2_tax_rate_ = 500;
+*/
+  rho_wi_ = 1000;                           // Unit: kg/m3
+  g_ = 9.81;                                // Unit: m/s2
+  tvd_ = 1715;                              // Unit: m
+  npump_ = 3;                               // Unit: -
+  Psuc_ = 1.01325;                          // Unit: barsa
+  eff_mech_ = 0.95;                         // Unit: fraction
+  max_qwi_per_pump_ = 1000;                 // Unit: sm3/d
+  pen_max_qwi_per_pump_ = 1000000;          // Unit: USD/(sm3/d)
+  enrg_consump_water_treatment_ = 0.0005;   // Unit: MWh/m3 produced water
+  pow_gen_per_turbine_ = 0.35;              // Unit: MW/gas turbine
+  cost_per_turbine_ = 150000;               // Unit: USD/gas turbine
+  CO2_emit_per_unit_enrg_ = 0.57;           // Unit: ton CO2/MWh generated
+  CO2_tax_rate_ = 55;                       // Unit: USD/ton CO2
+  mult_add_cost_ = 25;                      // Unit: -
 
 }
-
+/*
 std::vector<double> carbondioxidenpv::calcPM(std::vector<double> WBHP) const {
   std::vector<double> pm;
   for( int i = 0; i < WBHP.size(); i++ ) {
@@ -117,7 +132,24 @@ std::vector<double> carbondioxidenpv::calcPM(std::vector<double> WBHP) const {
   }
   return pm;
 }
+*/
 
+std::vector<double> carbondioxidenpv::calc_Pwh(std::vector<double> wbhp) const {
+    // Assumptions:
+    //   No pressure loss due to friction
+    // Units:
+    //   Pwh: barsa
+    //   wbhp: barsa
+    //   rho_wi: kg/m3
+    //   g: m/s2
+    //   tvd: m
+    std::vector<double> Pwh;
+    for( int i = 0; i < wbhp.size(); i++ ) {
+        Pwh.push_back(wbhp[i] - rho_wi_ * g_ * tvd_ / pow(10.0,5.0));
+    }
+    return Pwh;
+}
+/*
 double carbondioxidenpv::calcPdis(QList<double> pm_per_report_time) const {
     double pdis = 0;
     for (int i = 0; i < pm_per_report_time.size(); i++) {
@@ -137,12 +169,38 @@ double carbondioxidenpv::calcEffHydraulic(double qwi_per_pump) const {
     return eff_hydraulic;
 
 }
+*/
 
+double carbondioxidenpv::calc_eff_hydraulic(double qwi_per_pump) const {
+    // Units:
+    //   eff_hydraulic: fraction
+    //   qwi_per_pump: sm3/d
+    double eff_hydraulic = 1.08974359 * pow(10.0, (-14.0)) * pow(qwi_per_pump, 5.0)
+                         - 2.791375291 * pow(10.0, (-11.0)) * pow(qwi_per_pump, 4.0)
+                         + 2.3650932401 * pow(10.0, (-8.0)) * pow(qwi_per_pump, 3.0)
+                         - 9.5099067599 * pow(10.0, (-6.0)) * pow(qwi_per_pump, 2.0)
+                         + 0.0028783682984 * qwi_per_pump
+                         + 0.0970629370629;
+    return eff_hydraulic;
+}
+/*
 double carbondioxidenpv::calcPowPerPump(double pdis, double qwi_per_pump, double eff_hydraulic) const {
         double pow_per_pump = (((pdis-psuc_)*pow(10.0,5.0)*qwi_per_pump/86400)/(eff_hydraulic*eff_mechanical_))/pow(10.0, 6.0);
         return pow_per_pump;
 }
-
+*/
+double carbondioxidenpv::calc_pow_per_pump(double Pdis, double qwi_per_pump, double eff_hydraulic) const {
+    // Units:
+    //   pow_per_pump: MW
+    //   Pdis: barsa
+    //   Psuc: barsa
+    //   qwi_per_pump: sm3/d
+    //   eff_hydraulic: fraction
+    //   eff_mechanical: fraction
+    double pow_per_pump = (((Pdis - Psuc_) * pow(10.0,5.0) * qwi_per_pump / 86400) / (eff_hydraulic * eff_mech_)) / pow(10.0, 6.0);
+    return pow_per_pump;
+}
+/*
 QList<double> carbondioxidenpv::calcPowWt(std::vector<double> FWPR) const {
     QList<double> pow_wt;
     for (int i = 0; i < FWPR.size(); i++){
@@ -170,7 +228,9 @@ QList<double> carbondioxidenpv::calcCum(vector<double, allocator<double>> time, 
 }
 return cum;
 }
+*/
 
+/*
 double carbondioxidenpv::resolveCarbonDioxideCost(vector<double, allocator<double>> report_times) const {
 
   std::vector<double> FWIR;
@@ -332,6 +392,154 @@ double carbondioxidenpv::resolveCarbonDioxideCost(vector<double, allocator<doubl
     return co2_tax+cost_turbine+cost_inj_system+cost_op_wt;
 
 }
+*/
+double carbondioxidenpv::resolveCarbonDioxideCost(vector<double, allocator<double>> report_times) const {
+
+    std::vector<std::vector<double>> inj_bhps;
+    std::vector<double> FWIR;
+    std::vector<double> FWPR;
+
+    for (int j = 0; j < carboncomponents_->size(); ++j) {
+        if(carboncomponents_->value(j)->is_well_property == true) {
+            //cout << "injector name: " << carboncomponents_->value(j)->well.toStdString() << endl;
+            inj_bhps.push_back(results_->GetValueVector(Simulation::Results::Results::Property::WellBottomHolePressure,
+                                                        carboncomponents_->value(j)->well));
+        }
+        else if (carboncomponents_->at(j)->property_name == "WaterInjectionRate") {
+            FWIR = results_->GetValueVector(carboncomponents_->at(j)->property);
+            //cout << "FWIR.size(): " << FWIR.size() << endl;
+
+        }
+        else if (carboncomponents_->at(j)->property_name == "WaterProductionRate") {
+            FWPR = results_->GetValueVector(carboncomponents_->at(j)->property);
+            //cout << "FWPR.size(): " << FWPR.size() << endl;
+        }
+    }
+
+    /*
+    for (int n = 0; n < inj_bhps.size(); ++n) {
+        cout << "inj_bhps.at(" << n << ").size: " << inj_bhps.at(n).size() << endl;
+        for (int t = 0; t < report_times.size(); ++t) {
+            cout << "inj_bhps.at(" << n << ").at(" << t << "): " << inj_bhps.at(n).at(t) << endl;
+        }
+    }
+
+    for (int t = 0; t < report_times.size(); ++t) {
+        cout << "FWIR.at(" << t << "): " << FWIR.at(t) << endl;
+    }
+    for (int t = 0; t < report_times.size(); ++t) {
+        cout << "FWPR.at(" << t << "): " << FWPR.at(t) << endl;
+    }
+    */
+
+    QList<std::vector<double>> Pwh;
+    for (int i = 0; i < inj_bhps.size(); i++){
+        Pwh.append(calc_Pwh(inj_bhps[i]));
+    }
+
+    std::vector<double> Pdis;
+    for (int t = 0; t < report_times.size(); ++t) {
+        double Pdis_temp = 0;
+        for (int w = 0; w < Pwh.size(); ++w) {
+            if (Pwh.at(w).at(t) > Pdis_temp) {
+                Pdis_temp = Pwh.at(w).at(t);
+            }
+        }
+        Pdis.push_back(Pdis_temp);
+    }
+
+    /*
+    cout << Pdis.size() << endl;
+    for (int t = 0; t < report_times.size(); ++t) {
+        cout << Pdis[t] << endl;
+    }
+    */
+
+    std::vector<double> qwi_per_pump;
+    std::vector<double> eff_hydraulic;
+    for (int t = 0; t < report_times.size(); ++t) {
+        qwi_per_pump.push_back(FWIR.at(t)/npump_);
+        if (qwi_per_pump.at(t) <= max_qwi_per_pump_) {
+            eff_hydraulic.push_back(calc_eff_hydraulic(qwi_per_pump.at(t)));
+        }
+        else {
+            eff_hydraulic.push_back(calc_eff_hydraulic(max_qwi_per_pump_));
+        }
+    }
+
+    /*
+    cout << qwi_per_pump.size() << endl;
+    for (int t = 0; t < report_times.size(); ++t) {
+        cout << qwi_per_pump[t] << endl;
+    }
+    */
+
+    double max_qwi_per_pump_list = 0;
+    for (int t = 0; t < report_times.size(); ++t) {
+        if (qwi_per_pump.at(t) > max_qwi_per_pump_list) {
+            max_qwi_per_pump_list = qwi_per_pump.at(t);
+        }
+    }
+    double penalty_exceed_max_qwi_per_pump = 0;
+    if (max_qwi_per_pump_list > max_qwi_per_pump_) {
+        penalty_exceed_max_qwi_per_pump = pen_max_qwi_per_pump_ * max_qwi_per_pump_list;
+        Printer::ext_warn("max(qwi_per_pump) > max_qwi_per_pump", "Optimization", "carbondioxidenpv");
+    }
+
+    std::vector<double> pow_per_pump;
+    std::vector<double> pow_all_pump;
+    for (int t = 0; t < report_times.size(); ++t) {
+        pow_per_pump.push_back(calc_pow_per_pump(Pdis.at(t), qwi_per_pump.at(t), eff_hydraulic.at(t)));
+        pow_all_pump.push_back(npump_ * pow_per_pump.at(t));
+    }
+
+    std::vector<double> pow_water_treatment;
+    for (int t = 0; t < report_times.size(); ++t) {
+        pow_water_treatment.push_back(enrg_consump_water_treatment_ * FWPR.at(t) / 24);
+    }
+
+    std::vector<double> pow_demand;
+    std::vector<double> nturbine;
+    std::vector<double> pow_generated;
+    for (int t = 0; t < report_times.size(); ++t) {
+        pow_demand.push_back(pow_all_pump.at(t) + pow_water_treatment.at(t));
+        nturbine.push_back( ceil((pow_demand.at(t)/pow_gen_per_turbine_)));
+        pow_generated.push_back(nturbine.at(t) * pow_gen_per_turbine_);
+    }
+
+    double max_nturbine_list = 0;
+    for (int t = 0; t < report_times.size(); ++t) {
+        if (nturbine.at(t) > max_nturbine_list) {
+            max_nturbine_list = nturbine.at(t);
+        }
+    }
+    double cost_all_turbine;
+    cost_all_turbine = max_nturbine_list * cost_per_turbine_;
+
+    std::vector<double> CO2_emit_rate;
+    for (int t = 0; t < report_times.size(); ++t) {
+        CO2_emit_rate.push_back(CO2_emit_per_unit_enrg_ * pow_generated.at(t) * 24);
+    }
+
+    std::vector<double> CO2_emit_cum;
+    CO2_emit_cum.push_back(0);
+    for (int t = 1; t < report_times.size(); ++t) {
+        CO2_emit_cum.push_back(CO2_emit_cum.at((t-1)) + CO2_emit_rate.at(t) * (report_times.at(t) - report_times.at((t-1))));
+    }
+
+    double CO2_tax;
+    CO2_tax = CO2_tax_rate_ * CO2_emit_cum.at((CO2_emit_cum.size()-1));
+
+    double add_cost;
+    add_cost = penalty_exceed_max_qwi_per_pump + cost_all_turbine + CO2_tax;
+
+    cout << "penalty_exceed_max_qwi_per_pump: ........." << penalty_exceed_max_qwi_per_pump << endl;
+    cout << "cost_all_turbine: ........................" << cost_all_turbine << endl;
+    cout << "CO2_tax: ................................." << CO2_tax << endl;
+    cout << "add_cost: ................................" << add_cost << endl;
+
+    return add_cost;
+}
 
 
 double carbondioxidenpv::value() const {
@@ -422,8 +630,14 @@ double carbondioxidenpv::value() const {
     for (int i = 0; i < NPV_times->size(); i++){
         NPVTimes.append(NPV_times->value(i));
     }
-    double carbonCost = resolveCarbonDioxideCost(report_times);
-    return value+carbonCost;
+    //double carbonCost = resolveCarbonDioxideCost(report_times);
+    //return value+carbonCost;
+    double add_cost_ = resolveCarbonDioxideCost(report_times);
+    double obj_value = value - mult_add_cost_ * add_cost_;
+    cout << "mult_add_cost_: .........................." << mult_add_cost_ << endl;
+    cout << "NPV: ....................................." << value << endl;
+    cout << "obj_value: ..............................." << obj_value << endl;
+    return obj_value;
   }
   catch (...) {
     Printer::error("Failed to compute carbondioxidenpv. Returning 0.0");

@@ -39,7 +39,7 @@ namespace Optimization {
                 Model::Model *model);
 
             double value() const;
-
+/*
             std::vector<double> calcPM(std::vector<double> WBHP) const;
             double calcPdis(QList<double> pm) const;
             double calcEffHydraulic(double qwi_per_pump) const;
@@ -48,12 +48,16 @@ namespace Optimization {
             double calcNTurbine(double pow_demand) const;
             double calcCO2EmRate(double pow_generated) const;
             QList<double> calcCum(vector<double, allocator<double>> time, QList<double> rate) const;
+*/
+            std::vector<double> calc_Pwh(std::vector<double> wbhp) const;
+            double calc_eff_hydraulic(double qwi_per_pump) const;
+            double calc_pow_per_pump(double Pdis, double qwi_per_pump, double eff_hydraulic) const;
 
 
 
 
             double resolveCarbonDioxideCost(vector<double, allocator<double>>) const;
-
+/*
         private:
             double rho_wi_;
             double g_;
@@ -69,6 +73,22 @@ namespace Optimization {
             double pow_supply_per_turbine_;
             double co2_em_per_enrg_unit_;
             double co2_tax_rate_;
+*/
+        private:
+            double rho_wi_;
+            double g_;
+            double tvd_;
+            double npump_;
+            double Psuc_;
+            double eff_mech_;
+            double max_qwi_per_pump_;
+            double pen_max_qwi_per_pump_;
+            double enrg_consump_water_treatment_;
+            double pow_gen_per_turbine_;
+            double cost_per_turbine_;
+            double CO2_emit_per_unit_enrg_;
+            double CO2_tax_rate_;
+            double mult_add_cost_;
 /*!
  * \brief The Component class is used for internal representation of the components of
  * NPV.
@@ -98,7 +118,7 @@ namespace Optimization {
             Settings::Optimizer *settings_;
             Model::Model *model_;
             Model::Model::Economy *well_economy_;
-            double carbonCost;
+            //double carbonCost;
         };
 
     }
