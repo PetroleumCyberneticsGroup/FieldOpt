@@ -121,7 +121,6 @@ carbondioxidenpv::carbondioxidenpv(Settings::Optimizer *settings,
   cost_per_turbine_ = 150000;               // Unit: USD/gas turbine
   CO2_emit_per_unit_enrg_ = 0.57;           // Unit: ton CO2/MWh generated
   CO2_tax_rate_ = 55;                       // Unit: USD/ton CO2
-  mult_add_cost_ = 25;                      // Unit: -
 
 }
 /*
@@ -633,8 +632,7 @@ double carbondioxidenpv::value() const {
     //double carbonCost = resolveCarbonDioxideCost(report_times);
     //return value+carbonCost;
     double add_cost_ = resolveCarbonDioxideCost(report_times);
-    double obj_value = value - mult_add_cost_ * add_cost_;
-    cout << "mult_add_cost_: .........................." << mult_add_cost_ << endl;
+    double obj_value = value - add_cost_;
     cout << "NPV: ....................................." << value << endl;
     cout << "obj_value: ..............................." << obj_value << endl;
     return obj_value;

@@ -88,7 +88,6 @@ namespace Optimization {
             double cost_per_turbine_;
             double CO2_emit_per_unit_enrg_;
             double CO2_tax_rate_;
-            double mult_add_cost_;
 /*!
  * \brief The Component class is used for internal representation of the components of
  * NPV.
