@@ -4,8 +4,10 @@
 - [Building a Docker or Singularity Container](#Containers)
 
 # Quickstart
-If you're on a Ubuntu 16.04 system with access to the package manager, the
-following should get you up and running. Navigate to wherever you want to place
+If you're on a Ubuntu 18.04 system with access to the package manager, the
+following should get you up and running. For Ubuntu 16.04, see the subsection below.
+
+Navigate to wherever you want to place
 the FieldOpt files and execute the following commands:
 
 ```bash
@@ -28,15 +30,23 @@ make
 make install
 
 # Compile FieldOpt
-cd ..
+cd ../..
 mkdir cmake-build-debug
 cd cmake-build-debug
 cmake ..
 make
 ```
 
-A more detailed description is given in the following section.
+A more detailed description is given in the Detailed section below.
 
+## Ubuntu 16.04
+
+If you are using Ubuntu 16.04, you first need to change a single line in the file find_polynomial_roots_jenkins_traub.cc:
+
+```bash
+cd FieldOpt/ThirdParty/RpolyPlusPlus/src/
+sed -i 's/static constexpr double kRootPairTolerance/static const double kRootPairTolerance/g' find_polynomial_roots_jenkins_traub.cc
+```
 
 # Detailed
 
