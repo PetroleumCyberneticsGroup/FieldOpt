@@ -43,10 +43,9 @@ A more detailed description is given in the Detailed section below.
 
 If you are using Ubuntu 16.04, you first need to change a single line in the file find_polynomial_roots_jenkins_traub.cc:
 
-```
+```bash
 cd FieldOpt/ThirdParty/RpolyPlusPlus/src/
 sed -i 's/static constexpr double kRootPairTolerance/static const double kRootPairTolerance/g' find_polynomial_roots_jenkins_traub.cc
-
 ```
 
 
