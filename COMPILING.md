@@ -48,8 +48,6 @@ cd FieldOpt/ThirdParty/RpolyPlusPlus/src/
 sed -i 's/static constexpr double kRootPairTolerance/static const double kRootPairTolerance/g' find_polynomial_roots_jenkins_traub.cc
 ```
 
-
-
 # Detailed
 
 Before compiling FieldOpt, ensure that it is properly cloned:
