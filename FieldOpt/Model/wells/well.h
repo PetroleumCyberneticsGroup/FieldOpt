@@ -75,6 +75,7 @@ class Well
   int heel_j() const { return heel_.j; }
   int heel_k() const { return heel_.k; }
   void Update();
+  void Update(Reservoir::Grid::Grid *updated_grid);
   int GetTimeSpentInWIC() const { return trajectory_->GetTimeSpentInWic(); }
 
   bool HasSimpleICVs() const { return icds_.size() > 0; }
@@ -90,6 +91,7 @@ class Well
   std::vector<Segment> GetICDSegments();
   std::vector<Segment> GetAnnulusSegments();
   std::vector<int> GetICDSegmentIndices();
+
 
  protected:
   Settings::Model::Well well_settings_;

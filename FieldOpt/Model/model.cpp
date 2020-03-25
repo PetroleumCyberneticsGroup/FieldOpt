@@ -80,10 +80,13 @@ void Model::ApplyCase(Optimization::Case *c)
     for (QUuid key : c->real_variables().keys()) {
         variable_container_->SetContinousVariableValue(key, c->real_variables()[key]);
     }
+
+    cout << "After ApplyCase: " << grid_->GetGridFilePath() << endl;
+
     int cumulative_wic_time = 0;
     bool wic_used = false;
     for (Wells::Well *w : *wells_) {
-        w->Update();
+        w->Update(grid_);
         if (w->trajectory()->GetDefinitionType() == Settings::Model::WellDefinitionType::WellSpline) {
             cumulative_wic_time += w->GetTimeSpentInWIC();
             wic_used = true;
@@ -101,6 +104,9 @@ void Model::ApplyCase(Optimization::Case *c)
     current_case_ = c;
 //    results_.clear();
 }
+
+
+
 
 void Model::verify()
 {
@@ -211,6 +217,7 @@ void Model::set_grid_path(const std::string &grid_path) {
         grid_ = new Reservoir::Grid::ECLGrid(grid_path);
         wic_->AddGrid(grid_);
         wic_->SetGridActive(grid_);
+        cout << "This is the current grid_path: " << grid_->GetGridFilePath() << endl;
     }
     else {
         if (VERB_MOD >= 2) Printer::ext_info("Getting existing grid object from WIC: " + grid_path, "Model", "Model");

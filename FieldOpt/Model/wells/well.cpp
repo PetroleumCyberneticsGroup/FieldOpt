@@ -95,7 +95,25 @@ bool Well::IsInjector()
 {
     return type_ == ::Settings::Model::WellType::Injector;
 }
+
 void Well::Update() {
+    if (trajectory_defined_) {
+        trajectory_->UpdateWellBlocks();
+        heel_.i = trajectory_->GetWellBlocks()->first()->i();
+        heel_.j = trajectory_->GetWellBlocks()->first()->j();
+        heel_.k = trajectory_->GetWellBlocks()->first()->k();
+
+        if (is_segmented_) {
+            for (auto compartment : compartments_) {
+                compartment.Update();
+            }
+        }
+    }
+}
+
+void Well::Update(Reservoir::Grid::Grid *updated_grid) {
+    //trajectory_->SetNewGrid(updated_grid)
+    trajectory_->UpdateGrid(updated_grid);
     if (trajectory_defined_) {
         trajectory_->UpdateWellBlocks();
         heel_.i = trajectory_->GetWellBlocks()->first()->i();

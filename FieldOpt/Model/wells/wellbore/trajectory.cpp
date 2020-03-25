@@ -71,6 +71,11 @@ Trajectory::Trajectory(Settings::Model::Well well_settings,
     }
 }
 
+void Trajectory::UpdateGrid(Reservoir::Grid::Grid *updated_grid) {
+    well_spline_->UpdateGrid(updated_grid);
+}
+
+
 int Trajectory::GetTimeSpentInWic() const {
     if (well_spline_ != 0) {
         return well_spline_->GetTimeSpentInWIC();

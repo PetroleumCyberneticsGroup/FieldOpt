@@ -106,6 +106,11 @@ WellSpline::WellSpline() {
     last_computed_grid_ = "";
     last_computed_spline_ = std::vector<Eigen::Vector3d>();
 }
+
+void WellSpline::UpdateGrid(Reservoir::Grid::Grid *updated_grid){
+    grid_ = updated_grid;
+}
+
 void WellSpline::spline_points_from_import(Settings::Model::Well &well_settings) {
     QString name_base = "SplinePoint#" + well_settings.name + "#";
     well_settings_.spline_points = QList<Settings::Model::Well::SplinePoint> ();
@@ -153,6 +158,7 @@ QList<WellBlock *> *WellSpline::computeWellBlocks() {
 
     last_computed_grid_ = grid_->GetGridFilePath();
     last_computed_spline_ = create_spline_point_vector();
+    cout << "This is the last grid_->GetGridFilePath()" << grid_->GetGridFilePath() << endl;
 
     WellDefinition welldef;
     welldef.wellname = well_settings_.name.toStdString();
@@ -337,7 +343,7 @@ vector<Eigen::Vector3d> WellSpline::convertExternalPointsToBezierSpline() const 
     QJsonDocument document;
     document.setObject(object);
     SaveJson(document, QString::fromStdString("src_python/from_fieldopt_to_python_"+to_string(rand_int)+".json"));
-    string string_syscall = "python src_python/ResDisp_apply.py "+to_string(rand_int);
+    string string_syscall = "python src_python/ResDisp_apply.py "+to_string(rand_int)+ " "+grid_->GetGridFilePath();
     cout << string_syscall << endl;
     system(string_syscall.c_str());
     auto d = LoadJson(QString::fromStdString("src_python/current_well_for_fieldopt_"+to_string(rand_int)+".json"));
@@ -361,16 +367,16 @@ vector<Eigen::Vector3d> WellSpline::convertExternalPointsToBezierSpline() const 
     }
 
 
-    Curve *curve = new Bezier();
-    curve->set_steps(50);
-    for (int j = 0; j < custom_spline_points.size(); ++j) {
-        curve->add_way_point(Vector(custom_spline_points[j]->x, custom_spline_points[j]->y, custom_spline_points[j]->z));
-    }
+    //Curve *curve = new Bezier();
+    //curve->set_steps(2);
+    //for (int j = 0; j < custom_spline_points.size(); ++j) {
+    //    curve->add_way_point(Vector(custom_spline_points[j]->x, custom_spline_points[j]->y, custom_spline_points[j]->z));
+    //
     vector<Eigen::Vector3d> bezier_points;
-    for (int i = 0; i < curve->node_count(); ++i) {
-        bezier_points.push_back(Eigen::Vector3d(curve->node(i).x, curve->node(i).y, curve->node(i).z));
+    for (int j = 0; j < custom_spline_points.size(); ++j) {
+        bezier_points.push_back(Eigen::Vector3d(custom_spline_points[j]->x, custom_spline_points[j]->y, custom_spline_points[j]->z));
     }
-    delete curve;
+    //delete curve;
     return bezier_points;
 
 }

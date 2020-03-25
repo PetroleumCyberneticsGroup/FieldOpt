@@ -61,6 +61,7 @@ class Trajectory
   QList<WellBlock *> *GetWellBlocks(); //!< Get a list containing all well blocks.
   void UpdateWellBlocks(); //!< Update the well blocks, in particular the ones defined by a spline.
   int GetTimeSpentInWic() const;
+  void UpdateGrid(Reservoir::Grid::Grid *updated_grid);
   Settings::Model::WellDefinitionType GetDefinitionType();
   double GetLength() const; //!< Get the length of the wellbore (measured depth from the heel to the toe)
   WellBlock *GetWellBlockByMd(double md) const; //!< Get the wellblock surrounding the given MD.

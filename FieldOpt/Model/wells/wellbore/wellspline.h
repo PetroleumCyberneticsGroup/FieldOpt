@@ -50,6 +50,7 @@ class WellSpline
   );
   WellSpline();
 
+
   /*!
    * \brief GetWellBlocks Get the set of well blocks with proper WI's defined by the spline.
    * \return
@@ -78,7 +79,9 @@ class WellSpline
 
 
   bool HasGridChanged() const;
+  bool HasGridChanged(std::string grid_path) const;
   bool HasSplineChanged() const;
+  void UpdateGrid(Reservoir::Grid::Grid *updated_grid);
 
   /*!
    * Get spline points (for debugging purposes).
@@ -86,9 +89,9 @@ class WellSpline
   QList<SplinePoint *> GetSplinePoints() const { return spline_points_; }
   QJsonDocument LoadJson(QString filename) const;
   void SaveJson(QJsonDocument document, QString fileName) const;
+  Reservoir::Grid::Grid *grid_;
 
  protected:
-  Reservoir::Grid::Grid *grid_;
   Reservoir::WellIndexCalculation::wicalc_rixx *wic_;
   Settings::Model::Well well_settings_;
   int seconds_spent_in_compute_wellblocks_; //!< Number of seconds spent in the ComputeWellBlocks() method.
