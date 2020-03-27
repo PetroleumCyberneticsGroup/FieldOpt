@@ -540,10 +540,21 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
                     carbonComponent.is_well_prop = json_carbon_components.at(i).toObject()["IsWellProp"].toBool();
                     if (carbonComponent.is_well_prop == true) {
                         carbonComponent.well = json_carbon_components[i].toObject()["Well"].toString();
+                        carbonComponent.well_tvd = json_carbon_components[i].toObject()["WellTVD"].toDouble();
                     }
                     //set_req_prop_double(carbonComponent.coefficient, json_carbon_components[i].toObject(), "Coefficient");
                     //set_req_prop_double(carbonComponent.coefficient, json_carbon_components[i].toObject(), "Capacity");
                     obj.NPVCarbonComponents.append(carbonComponent);
+                }
+
+                if (json_objective.contains("AdditionalComponents")) {
+                    QJsonObject json_additional_components = json_objective["AdditionalComponents"].toObject();
+                    if (json_additional_components.contains("NumberOfPumps")){
+                        obj.npump = json_additional_components["NumberOfPumps"].toInt();
+                    }
+                    if (json_additional_components.contains("CO2TaxRate")){
+                        obj.CO2_tax_rate = json_additional_components["CO2TaxRate"].toDouble();
+                    }
                 }
             }
         } else

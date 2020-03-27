@@ -49,7 +49,7 @@ namespace Optimization {
             double calcCO2EmRate(double pow_generated) const;
             QList<double> calcCum(vector<double, allocator<double>> time, QList<double> rate) const;
 */
-            std::vector<double> calc_Pwh(std::vector<double> wbhp) const;
+            std::vector<double> calc_Pwh(std::vector<double> wbhp, double well_tvd) const;
             double calc_eff_hydraulic(double qwi_per_pump) const;
             double calc_pow_per_pump(double Pdis, double qwi_per_pump, double eff_hydraulic) const;
 
@@ -77,7 +77,7 @@ namespace Optimization {
         private:
             double rho_wi_;
             double g_;
-            double tvd_;
+            // double tvd_;
             double npump_;
             double Psuc_;
             double eff_mech_;
@@ -109,6 +109,7 @@ namespace Optimization {
                 bool is_json_component;
                 bool is_well_property;
                 QString well;
+                double well_tvd;
             };
 
             QList<Component *> *components_; //!< List of gamma, k pairs.

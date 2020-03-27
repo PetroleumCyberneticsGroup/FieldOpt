@@ -175,7 +175,10 @@ class Optimizer
         QString property;
         bool is_well_prop;
         QString well;
+        double well_tvd;
     };
+    int npump;
+    double CO2_tax_rate;
     QList<WeightedSumComponent> weighted_sum; //!< The expression for the Objective function formulated as a weighted sum
     QList<NPVComponent> NPV_sum;  //!< The expression for the Objective function formulated as an NPV
     QList<NPVCarbonComponent> NPVCarbonComponents; //!< The expression for the CarbonComponent

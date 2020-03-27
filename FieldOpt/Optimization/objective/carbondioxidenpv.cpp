@@ -87,6 +87,7 @@ carbondioxidenpv::carbondioxidenpv(Settings::Optimizer *settings,
       carboncomp->is_well_property = settings->objective().NPVCarbonComponents.at(i).is_well_prop;
       if (carboncomp->is_well_property == true){
           carboncomp->well = settings->objective().NPVCarbonComponents.at(i).well;
+          carboncomp->well_tvd = settings->objective().NPVCarbonComponents.at(i).well_tvd;
       }
       carboncomponents_->append(carboncomp);
   }
@@ -110,8 +111,9 @@ carbondioxidenpv::carbondioxidenpv(Settings::Optimizer *settings,
 */
   rho_wi_ = 1000;                           // Unit: kg/m3
   g_ = 9.81;                                // Unit: m/s2
-  tvd_ = 1715;                              // Unit: m
-  npump_ = 3;                               // Unit: -
+  // tvd_ = 1715;                              // Unit: m
+  // npump_ = 3;                               // Unit: -
+  npump_ = settings->objective().npump;
   Psuc_ = 1.01325;                          // Unit: barsa
   eff_mech_ = 0.95;                         // Unit: fraction
   max_qwi_per_pump_ = 1000;                 // Unit: sm3/d
@@ -120,7 +122,8 @@ carbondioxidenpv::carbondioxidenpv(Settings::Optimizer *settings,
   pow_gen_per_turbine_ = 0.35;              // Unit: MW/gas turbine
   cost_per_turbine_ = 150000;               // Unit: USD/gas turbine
   CO2_emit_per_unit_enrg_ = 0.57;           // Unit: ton CO2/MWh generated
-  CO2_tax_rate_ = 55;                       // Unit: USD/ton CO2
+  // CO2_tax_rate_ = 55;                       // Unit: USD/ton CO2
+  CO2_tax_rate_ = settings->objective().CO2_tax_rate;
 
 }
 /*
@@ -133,7 +136,7 @@ std::vector<double> carbondioxidenpv::calcPM(std::vector<double> WBHP) const {
 }
 */
 
-std::vector<double> carbondioxidenpv::calc_Pwh(std::vector<double> wbhp) const {
+std::vector<double> carbondioxidenpv::calc_Pwh(std::vector<double> wbhp, double well_tvd) const {
     // Assumptions:
     //   No pressure loss due to friction
     // Units:
@@ -144,7 +147,7 @@ std::vector<double> carbondioxidenpv::calc_Pwh(std::vector<double> wbhp) const {
     //   tvd: m
     std::vector<double> Pwh;
     for( int i = 0; i < wbhp.size(); i++ ) {
-        Pwh.push_back(wbhp[i] - rho_wi_ * g_ * tvd_ / pow(10.0,5.0));
+        Pwh.push_back(wbhp[i] - rho_wi_ * g_ * well_tvd / pow(10.0,5.0));
     }
     return Pwh;
 }
@@ -395,6 +398,8 @@ double carbondioxidenpv::resolveCarbonDioxideCost(vector<double, allocator<doubl
 double carbondioxidenpv::resolveCarbonDioxideCost(vector<double, allocator<double>> report_times) const {
 
     std::vector<std::vector<double>> inj_bhps;
+    std::vector<double> inj_tvd;
+    std::vector<string> inj_name;
     std::vector<double> FWIR;
     std::vector<double> FWPR;
 
@@ -403,6 +408,8 @@ double carbondioxidenpv::resolveCarbonDioxideCost(vector<double, allocator<doubl
             //cout << "injector name: " << carboncomponents_->value(j)->well.toStdString() << endl;
             inj_bhps.push_back(results_->GetValueVector(Simulation::Results::Results::Property::WellBottomHolePressure,
                                                         carboncomponents_->value(j)->well));
+            inj_tvd.push_back(carboncomponents_->value(j)->well_tvd);
+            inj_name.push_back(carboncomponents_->value(j)->well.toStdString());
         }
         else if (carboncomponents_->at(j)->property_name == "WaterInjectionRate") {
             FWIR = results_->GetValueVector(carboncomponents_->at(j)->property);
@@ -433,7 +440,8 @@ double carbondioxidenpv::resolveCarbonDioxideCost(vector<double, allocator<doubl
 
     QList<std::vector<double>> Pwh;
     for (int i = 0; i < inj_bhps.size(); i++){
-        Pwh.append(calc_Pwh(inj_bhps[i]));
+        cout << "TVD of " << inj_name[i] << ": ............................." << inj_tvd[i] << endl;
+        Pwh.append(calc_Pwh(inj_bhps[i], inj_tvd[i]));
     }
 
     std::vector<double> Pdis;
@@ -532,6 +540,8 @@ double carbondioxidenpv::resolveCarbonDioxideCost(vector<double, allocator<doubl
     double add_cost;
     add_cost = penalty_exceed_max_qwi_per_pump + cost_all_turbine + CO2_tax;
 
+    cout << "n_pump: .................................." << npump_ << endl;
+    cout << "CO2_tax_rate: ............................" << CO2_tax_rate_ << endl;
     cout << "penalty_exceed_max_qwi_per_pump: ........." << penalty_exceed_max_qwi_per_pump << endl;
     cout << "cost_all_turbine: ........................" << cost_all_turbine << endl;
     cout << "CO2_tax: ................................." << CO2_tax << endl;
