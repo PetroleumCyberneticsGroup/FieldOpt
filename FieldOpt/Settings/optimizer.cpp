@@ -552,6 +552,12 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
                     if (json_additional_components.contains("NumberOfPumps")){
                         obj.npump = json_additional_components["NumberOfPumps"].toInt();
                     }
+                    if (json_additional_components.contains("PowerOfEachTurbine")){
+                        obj.pow_gen_per_turbine = json_additional_components["PowerOfEachTurbine"].toDouble();
+                    }
+                    if (json_additional_components.contains("CostOfEachTurbine")){
+                        obj.cost_per_turbine = json_additional_components["CostOfEachTurbine"].toDouble();
+                    }
                     if (json_additional_components.contains("CO2TaxRate")){
                         obj.CO2_tax_rate = json_additional_components["CO2TaxRate"].toDouble();
                     }

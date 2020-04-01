@@ -119,8 +119,10 @@ carbondioxidenpv::carbondioxidenpv(Settings::Optimizer *settings,
   max_qwi_per_pump_ = 1000;                 // Unit: sm3/d
   pen_max_qwi_per_pump_ = 1000000;          // Unit: USD/(sm3/d)
   enrg_consump_water_treatment_ = 0.0005;   // Unit: MWh/m3 produced water
-  pow_gen_per_turbine_ = 0.35;              // Unit: MW/gas turbine
-  cost_per_turbine_ = 150000;               // Unit: USD/gas turbine
+  // pow_gen_per_turbine_ = 0.35;              // Unit: MW/gas turbine
+  pow_gen_per_turbine_ = settings->objective().pow_gen_per_turbine;
+  // cost_per_turbine_ = 150000;               // Unit: USD/gas turbine
+  cost_per_turbine_ = settings->objective().cost_per_turbine;
   CO2_emit_per_unit_enrg_ = 0.57;           // Unit: ton CO2/MWh generated
   // CO2_tax_rate_ = 55;                       // Unit: USD/ton CO2
   CO2_tax_rate_ = settings->objective().CO2_tax_rate;
@@ -540,7 +542,9 @@ double carbondioxidenpv::resolveCarbonDioxideCost(vector<double, allocator<doubl
     double add_cost;
     add_cost = penalty_exceed_max_qwi_per_pump + cost_all_turbine + CO2_tax;
 
-    cout << "n_pump: .................................." << npump_ << endl;
+    cout << "npump: ..................................." << npump_ << endl;
+    cout << "pow_gen_per_turbine: ....................." << pow_gen_per_turbine_ << endl;
+    cout << "cost_per_turbine: ........................" << cost_per_turbine_ << endl;
     cout << "CO2_tax_rate: ............................" << CO2_tax_rate_ << endl;
     cout << "penalty_exceed_max_qwi_per_pump: ........." << penalty_exceed_max_qwi_per_pump << endl;
     cout << "cost_all_turbine: ........................" << cost_all_turbine << endl;

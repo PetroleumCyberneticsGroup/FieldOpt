@@ -178,6 +178,8 @@ class Optimizer
         double well_tvd;
     };
     int npump;
+    double pow_gen_per_turbine;
+    double cost_per_turbine;
     double CO2_tax_rate;
     QList<WeightedSumComponent> weighted_sum; //!< The expression for the Objective function formulated as a weighted sum
     QList<NPVComponent> NPV_sum;  //!< The expression for the Objective function formulated as an NPV
