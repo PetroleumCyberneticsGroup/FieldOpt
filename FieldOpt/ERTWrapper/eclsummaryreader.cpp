@@ -154,7 +154,7 @@ void ECLSummaryReader::initializeVectors() {
 
 void ECLSummaryReader::initializeTimeVector() {
     int days_var_index = ecl_sum_get_misc_var_index(ecl_sum_, "TIME");
-    double_vector_type * time = ecl_sum_alloc_data_vector(ecl_sum_, days_var_index, true);
+    double_vector_type * time = ecl_sum_alloc_data_vector(ecl_sum_, days_var_index, false);
     time_.resize(double_vector_size(time));
     for (int i = 0; i < double_vector_size(time); ++i) {
         time_[i] = (double_vector_safe_iget(time, i));
@@ -170,7 +170,7 @@ void ECLSummaryReader::initializeWellRates() {
         wopr_[wname] = std::vector<double>(time_.size(), 0.0);
         if (hasWellVar(wname, "WOPR")) {
             int index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WOPR");
-            auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
+            auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, false);
             assert(double_vector_size(data) == time_.size());
             for (int i = 0; i < time_.size(); ++i) {
                 wopr_[wname][i] = double_vector_safe_iget(data, i);
@@ -182,7 +182,7 @@ void ECLSummaryReader::initializeWellRates() {
         wwpr_[wname] = std::vector<double>(time_.size(), 0.0);
         if (hasWellVar(wname, "WWPR")) {
             int index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WWPR");
-            auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
+            auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, false);
             assert(double_vector_size(data) == time_.size());
             for (int i = 0; i < time_.size(); ++i) {
                 wwpr_[wname][i] = double_vector_safe_iget(data, i);
@@ -194,7 +194,7 @@ void ECLSummaryReader::initializeWellRates() {
         wgpr_[wname] = std::vector<double>(time_.size(), 0.0);
         if (hasWellVar(wname, "WGPR")) {
             int index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WGPR");
-            auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
+            auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, false);
             assert(double_vector_size(data) == time_.size());
             for (int i = 0; i < time_.size(); ++i) {
                 wgpr_[wname][i] = double_vector_safe_iget(data, i);
@@ -206,7 +206,7 @@ void ECLSummaryReader::initializeWellRates() {
         wwir_[wname] = std::vector<double>(time_.size(), 0.0);
         if (hasWellVar(wname, "WWIR")) {
             int index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WWIR");
-            auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
+            auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, false);
             assert(double_vector_size(data) == time_.size());
             for (int i = 0; i < time_.size(); ++i) {
                 wwir_[wname][i] = double_vector_safe_iget(data, i);
@@ -218,7 +218,7 @@ void ECLSummaryReader::initializeWellRates() {
         wgir_[wname] = std::vector<double>(time_.size(), 0.0);
         if (hasWellVar(wname, "WGIR")) {
             int index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WGIR");
-            auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
+            auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, false);
             assert(double_vector_size(data) == time_.size());
             for (int i = 0; i < time_.size(); ++i) {
                 wgir_[wname][i] = double_vector_safe_iget(data, i);
@@ -230,7 +230,7 @@ void ECLSummaryReader::initializeWellRates() {
       wbhp_[wname] = std::vector<double>(time_.size(), 0.0);
       if (hasWellVar(wname, "WBHP")) {
         int index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WBHP");
-        auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, true);
+        auto * data = ecl_sum_alloc_data_vector(ecl_sum_, index, false);
         assert(double_vector_size(data) == time_.size());
         for (int i = 0; i < time_.size(); ++i) {
           wbhp_[wname][i] = double_vector_safe_iget(data, i);
@@ -248,7 +248,7 @@ void ECLSummaryReader::initializeFieldRates() {
   fopr_ = std::vector<double>(time_.size(), 0.0);
   if (hasFieldVar("FOPR")) {
     int fopr_index = ecl_smspec_get_field_var_params_index(smspec, "FOPR");
-    double_vector_type * fopr = ecl_sum_alloc_data_vector(ecl_sum_, fopr_index, true);
+    double_vector_type * fopr = ecl_sum_alloc_data_vector(ecl_sum_, fopr_index, false);
     assert(double_vector_size(fopr) == time_.size());
     for (int i = 0; i < time_.size(); ++i) {
       fopr_[i] = double_vector_safe_iget(fopr, i);
@@ -267,7 +267,7 @@ void ECLSummaryReader::initializeFieldRates() {
   fwpr_ = std::vector<double>(time_.size(), 0.0);
   if (hasFieldVar("FWPR")) {
     int fwpr_index = ecl_smspec_get_field_var_params_index(smspec, "FWPR");
-    double_vector_type * fwpr = ecl_sum_alloc_data_vector(ecl_sum_, fwpr_index, true);
+    double_vector_type * fwpr = ecl_sum_alloc_data_vector(ecl_sum_, fwpr_index, false);
     assert(double_vector_size(fwpr) == time_.size());
     for (int i = 0; i < time_.size(); ++i) {
       fwpr_[i] = double_vector_safe_iget(fwpr, i);
@@ -286,7 +286,7 @@ void ECLSummaryReader::initializeFieldRates() {
   fwir_ = std::vector<double>(time_.size(), 0.0);
   if (hasFieldVar("FWIR")) {
     int fwir_index = ecl_smspec_get_field_var_params_index(smspec, "FWIR");
-    double_vector_type * fwir = ecl_sum_alloc_data_vector(ecl_sum_, fwir_index, true);
+    double_vector_type * fwir = ecl_sum_alloc_data_vector(ecl_sum_, fwir_index, false);
     assert(double_vector_size(fwir) == time_.size());
     for (int i = 0; i < time_.size(); ++i) {
       fwir_[i] = double_vector_safe_iget(fwir, i);
@@ -310,7 +310,7 @@ void ECLSummaryReader::initializeWellCumulatives() {
         wopt_[wname] = std::vector<double>(time_.size(), 0.0);
         if (hasWellVar(wname, "WOPT")) {
             int wopt_index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WOPT");
-            double_vector_type * wopt = ecl_sum_alloc_data_vector(ecl_sum_, wopt_index, true);
+            double_vector_type * wopt = ecl_sum_alloc_data_vector(ecl_sum_, wopt_index, false);
             assert(double_vector_size(wopt) == time_.size());
             for (int i = 0; i < time_.size(); ++i) {
                 wopt_[wname][i] = double_vector_safe_iget(wopt, i);
@@ -326,7 +326,7 @@ void ECLSummaryReader::initializeWellCumulatives() {
         wwpt_[wname] = std::vector<double>(time_.size(), 0.0);
         if (hasWellVar(wname, "WWPT")) {
             int wwpt_index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WWPT");
-            double_vector_type * wwpt = ecl_sum_alloc_data_vector(ecl_sum_, wwpt_index, true);
+            double_vector_type * wwpt = ecl_sum_alloc_data_vector(ecl_sum_, wwpt_index, false);
             assert(double_vector_size(wwpt) == time_.size());
             for (int i = 0; i < time_.size(); ++i) {
                 wwpt_[wname][i] = double_vector_safe_iget(wwpt, i);
@@ -342,7 +342,7 @@ void ECLSummaryReader::initializeWellCumulatives() {
         wgpt_[wname] = std::vector<double>(time_.size(), 0.0);
         if (hasWellVar(wname, "WGPT")) {
             int wgpt_index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WGPT");
-            double_vector_type * wgpt = ecl_sum_alloc_data_vector(ecl_sum_, wgpt_index, true);
+            double_vector_type * wgpt = ecl_sum_alloc_data_vector(ecl_sum_, wgpt_index, false);
             assert(double_vector_size(wgpt) == time_.size());
             for (int i = 0; i < time_.size(); ++i) {
                 wgpt_[wname][i] = double_vector_safe_iget(wgpt, i);
@@ -358,7 +358,7 @@ void ECLSummaryReader::initializeWellCumulatives() {
         wwit_[wname] = std::vector<double>(time_.size(), 0.0);
         if (hasWellVar(wname, "WWIT")) {
             int wwit_index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WWIT");
-            double_vector_type * wwit = ecl_sum_alloc_data_vector(ecl_sum_, wwit_index, true);
+            double_vector_type * wwit = ecl_sum_alloc_data_vector(ecl_sum_, wwit_index, false);
             assert(double_vector_size(wwit) == time_.size());
             for (int i = 0; i < time_.size(); ++i) {
                 wwit_[wname][i] = double_vector_safe_iget(wwit, i);
@@ -374,7 +374,7 @@ void ECLSummaryReader::initializeWellCumulatives() {
         wgit_[wname] = std::vector<double>(time_.size(), 0.0);
         if (hasWellVar(wname, "WGIT")) {
             int wgit_index = ecl_smspec_get_well_var_params_index(smspec, wname.c_str(), "WGIT");
-            double_vector_type * wgit = ecl_sum_alloc_data_vector(ecl_sum_, wgit_index, true);
+            double_vector_type * wgit = ecl_sum_alloc_data_vector(ecl_sum_, wgit_index, false);
             assert(double_vector_size(wgit) == time_.size());
             for (int i = 0; i < time_.size(); ++i) {
                 wgit_[wname][i] = double_vector_safe_iget(wgit, i);
@@ -395,7 +395,7 @@ void ECLSummaryReader::initializeFieldCumulatives() {
     fopt_ = std::vector<double>(time_.size(), 0.0);
     if (hasFieldVar("FOPT")) {
         int fopt_index = ecl_smspec_get_field_var_params_index(smspec, "FOPT");
-        double_vector_type * fopt = ecl_sum_alloc_data_vector(ecl_sum_, fopt_index, true);
+        double_vector_type * fopt = ecl_sum_alloc_data_vector(ecl_sum_, fopt_index, false);
         assert(double_vector_size(fopt) == time_.size());
         for (int i = 0; i < time_.size(); ++i) {
             fopt_[i] = double_vector_safe_iget(fopt, i);
@@ -414,7 +414,7 @@ void ECLSummaryReader::initializeFieldCumulatives() {
     fwpt_ = std::vector<double>(time_.size(), 0.0);
     if (hasFieldVar("FWPT")) {
         int fwpt_index = ecl_smspec_get_field_var_params_index(smspec, "FWPT");
-        double_vector_type * fwpt = ecl_sum_alloc_data_vector(ecl_sum_, fwpt_index, true);
+        double_vector_type * fwpt = ecl_sum_alloc_data_vector(ecl_sum_, fwpt_index, false);
         assert(double_vector_size(fwpt) == time_.size());
         for (int i = 0; i < time_.size(); ++i) {
             fwpt_[i] = double_vector_safe_iget(fwpt, i);
@@ -433,7 +433,7 @@ void ECLSummaryReader::initializeFieldCumulatives() {
     fgpt_ = std::vector<double>(time_.size(), 0.0);
     if (hasFieldVar("FGPT")) {
         int fgpt_index = ecl_smspec_get_field_var_params_index(smspec, "FGPT");
-        double_vector_type * fgpt = ecl_sum_alloc_data_vector(ecl_sum_, fgpt_index, true);
+        double_vector_type * fgpt = ecl_sum_alloc_data_vector(ecl_sum_, fgpt_index, false);
         assert(double_vector_size(fgpt) == time_.size());
         for (int i = 0; i < time_.size(); ++i) {
             fgpt_[i] = double_vector_safe_iget(fgpt, i);
@@ -452,7 +452,7 @@ void ECLSummaryReader::initializeFieldCumulatives() {
     fwit_ = std::vector<double>(time_.size(), 0.0);
     if (hasFieldVar("FWIT")) {
         int fwit_index = ecl_smspec_get_field_var_params_index(smspec, "FWIT");
-        double_vector_type * fwit = ecl_sum_alloc_data_vector(ecl_sum_, fwit_index, true);
+        double_vector_type * fwit = ecl_sum_alloc_data_vector(ecl_sum_, fwit_index, false);
         assert(double_vector_size(fwit) == time_.size());
         for (int i = 0; i < time_.size(); ++i) {
             fwit_[i] = double_vector_safe_iget(fwit, i);
@@ -471,7 +471,7 @@ void ECLSummaryReader::initializeFieldCumulatives() {
     fgit_ = std::vector<double>(time_.size(), 0.0);
     if (hasFieldVar("FGIT")) {
         int fgit_index = ecl_smspec_get_field_var_params_index(smspec, "FGIT");
-        double_vector_type * fgit = ecl_sum_alloc_data_vector(ecl_sum_, fgit_index, true);
+        double_vector_type * fgit = ecl_sum_alloc_data_vector(ecl_sum_, fgit_index, false);
         assert(double_vector_size(fgit) == time_.size());
         for (int i = 0; i < time_.size(); ++i) {
             fgit_[i] = double_vector_safe_iget(fgit, i);
