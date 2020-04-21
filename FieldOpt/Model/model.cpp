@@ -67,6 +67,8 @@ void Model::ApplyCase(Optimization::Case *c)
             realization_ofv_map_ = current_case_->GetRealizationOFVMap();
             ensemble_avg_ofv_ = current_case_->GetEnsembleExpectedOfv().first;
             ensemble_ofv_st_dev_ = current_case_->GetEnsembleExpectedOfv().second;
+            num_success_ = current_case_->GetSuccessRate().first;
+            num_ensemble_ = current_case_->GetSuccessRate().second;
         }
         logger_->AddEntry(this);
     }

@@ -226,6 +226,8 @@ map <string, vector<double>> Case::GetValues() {
     valmap["WicDur"] = vector<double>{wic_time_sec_};
     if (ensemble_ofvs_.size() > 1) {
         valmap["OFvSTD"] = vector<double>{GetEnsembleExpectedOfv().second};
+        valmap["SucsRt"] = vector<double>{GetSuccessRate().first};
+        valmap["NumEns"] = vector<double>{GetSuccessRate().second};
     }
     return valmap;
 }
@@ -260,7 +262,7 @@ string Case::StringRepresentation(Model::Properties::VariablePropertyContainer *
     }
     str << "|=========================================================|" << endl;
     return str.str();
-//    tringstream entry;
+//    stringstream entry;
 //    entry << setw(cas_log_col_widths_["TimeSt"]) << timestamp_string() << " ,";
 //    entry << setw(cas_log_col_widths_["EvalSt"]) << obj->GetState()["EvalSt"] << " ,";
 //    entry << setw(cas_log_col_widths_["ConsSt"]) << obj->GetState()["ConsSt"] << " ,";
@@ -320,6 +322,21 @@ QPair<double, double> Case::GetEnsembleExpectedOfv() const {
         list_of_ofvs.push_back(value);
     }
     auto pair = QPair<double, double>(calc_average(list_of_ofvs),calc_standard_deviation(list_of_ofvs));
+    return pair;
+}
+
+int Case::NumberOfSuccesses() const {
+    int success = 0;
+    for (double value : ensemble_ofvs_.values()){
+        if (value == 0.0001){
+            success += 1;
+        }
+    }
+    return success;
+}
+
+QPair<int, int> Case::GetSuccessRate() const {
+    auto pair = QPair<int, int>(NumberOfSuccesses(), ensemble_ofvs_.size());
     return pair;
 }
 

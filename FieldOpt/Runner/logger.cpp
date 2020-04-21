@@ -40,10 +40,11 @@ Logger::Logger(Runner::RuntimeSettings *rts,
     cas_log_path_ = output_dir_ + "/log_cases.csv";
     ext_log_path_ = output_dir_ + "/log_extended.json";
     run_state_path_ = output_dir_ + "/state_runner.txt";
+    debug_data_ = output_dir_ + "/debug_data.txt";
     summary_prerun_path_ = output_dir_ + output_subdir + "/summary_prerun.md";
     summary_postrun_path_ = output_dir_ + output_subdir + "/summary_postrun.md";
     QStringList log_paths = (QStringList() << cas_log_path_ << opt_log_path_ << ext_log_path_ << run_state_path_
-                                           << summary_prerun_path_ << summary_postrun_path_);
+                                           << summary_prerun_path_ << summary_postrun_path_ << debug_data_);
 
     // Delete existing logs if --force flag is on
     if (rts->overwrite_existing()) {
@@ -59,7 +60,7 @@ Logger::Logger(Runner::RuntimeSettings *rts,
         // Write CSV headers
         if (!is_worker_) {
             if (rts->paths().IsSet(Paths::ENSEMBLE_FILE)) { // Append OFV std. dev. to case log header if ensemble file path is set
-                cas_log_header_.append(" ,       OFvSTD");
+                cas_log_header_.append(" ,       OFvSTD,        SucsRt");
             }
             Utilities::FileHandling::WriteLineToFile(cas_log_header_, cas_log_path_);
             Utilities::FileHandling::WriteLineToFile(opt_log_header_, opt_log_path_);
@@ -109,6 +110,7 @@ void Logger::logCase(Loggable *obj) {
     entry << setw(cas_log_col_widths_["CaseId"]) << obj->GetId().toString().toStdString();
     if (obj->GetValues().count("OFvSTD") > 0) {
         entry << " , " << setw(cas_log_col_widths_["OFnVal"]) << scientific << obj->GetValues()["OFvSTD"][0];
+        entry << " , " << setw(cas_log_col_widths_["SucsRt"]) << obj->GetValues()["SucsRt"][0] << "/" << obj->GetValues()["NumEns"][0];
     }
     string str = entry.str();
     Utilities::FileHandling::WriteLineToFile(QString::fromStdString(str), cas_log_path_);

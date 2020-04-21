@@ -81,6 +81,7 @@ class Logger
   QString run_state_path_; //!< Path to the runner state file.
   QString summary_prerun_path_; //!< Path to the pre-run summary file.
   QString summary_postrun_path_; //!< Path to the pre-run summary file.
+  QString debug_data_; //!< Path to the debug file
 
   map<string, vector<double>> sum_mod_valmap_; //!< Model summary value map.
   map<string, vector<double>> sum_opt_valmap_; //!< Optimizer summary value map.

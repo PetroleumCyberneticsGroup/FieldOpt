@@ -240,8 +240,9 @@ class Case : public Loggable
    * Gets Ensemble Expected Objective Function Value (OFV). This includes the average
    * and standard deviation for all the OFVs in the ensemble that was previously run.
    */
-
+  int NumberOfSuccesses() const;
   QPair<double, double> GetEnsembleExpectedOfv() const;
+  QPair<int, int> GetSuccessRate() const;
   QHash<QString, double> GetRealizationOFVMap() const { return ensemble_ofvs_; }
 
  private:

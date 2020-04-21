@@ -112,6 +112,8 @@ class Model : public Loggable
   QHash<QString, double> realization_ofv_map_;
   double ensemble_ofv_st_dev_;
   double ensemble_avg_ofv_;
+  int num_success_;
+  int num_ensemble_;
 
   class Summary : public Loggable {
    public:
