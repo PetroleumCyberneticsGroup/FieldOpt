@@ -82,11 +82,13 @@ void WellControls::initializeTimeEntries(const QList<Model::Wells::Well *> *well
     time_entry.well_settings = QList<WellSetting>();
     time_entry.has_well_setting = false;
     for (auto well : *wells) {
-        for (auto control : *well->controls()) {
-            if (control->time_step() == timestep) {
-                time_entry.has_well_setting = true;
-                WellSetting well_setting = WellSetting(well->name(), well->IsInjector(), *control);
-                time_entry.well_settings.append(well_setting);
+        if (well->trajectory()->GetWellBlocks()->size() > 0){
+            for (auto control : *well->controls()) {
+                if (control->time_step() == timestep) {
+                    time_entry.has_well_setting = true;
+                    WellSetting well_setting = WellSetting(well->name(), well->IsInjector(), *control);
+                    time_entry.well_settings.append(well_setting);
+                }
             }
         }
     }

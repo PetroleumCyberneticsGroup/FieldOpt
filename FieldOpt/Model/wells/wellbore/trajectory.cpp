@@ -51,7 +51,11 @@ Trajectory::Trajectory(Settings::Model::Well well_settings,
         }
         well_spline_ = new WellSpline(well_settings, variable_container, grid, wic);
         well_blocks_ = well_spline_->GetWellBlocks();
-        calculateDirectionOfPenetration();
+        if (well_blocks_->size() > 0){
+            calculateDirectionOfPenetration();
+        } else {
+            cout << "No wellblocks" << endl;
+        }
         if (VERB_MOD >= 3) {
             printWellBlocks();
         }

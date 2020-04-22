@@ -210,7 +210,7 @@ QList<WellBlock *> *WellSpline::computeWellBlocks() {
         blocks->last()->setExitMd(block_data[i].get_segment_exit_md(0));
     }
     if (blocks->size() == 0) {
-        throw WellBlocksNotDefined("WIC could not compute.");
+        //throw WellBlocksNotDefined("WIC could not compute.");
     }
     if (VERB_MOD >= 2) {
         Printer::info("Done computing WIs after " + boost::lexical_cast<std::string>(seconds_spent_in_compute_wellblocks_) + " seconds");

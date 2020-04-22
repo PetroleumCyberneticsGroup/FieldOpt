@@ -39,7 +39,7 @@ Welspecs::Welspecs(QList<Model::Wells::Well *> *wells, int timestep) {
     head_ = "WELSPECS";
     foot_ = "/\n\n";
     for (auto well : *wells) {
-        if (well->controls()->first()->time_step() == timestep) {
+        if (well->controls()->first()->time_step() == timestep && well->trajectory()->GetWellBlocks()->size() > 0) {
             entries_.append(createWellEntry(well));
         }
     }

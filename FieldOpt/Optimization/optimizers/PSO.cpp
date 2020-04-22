@@ -64,6 +64,7 @@ PSO::PSO(Settings::Optimizer *settings,
     for (int i = 0; i < number_of_particles_; ++i) {
         auto new_case = generateRandomCase();
         swarm_.push_back(Particle(new_case ,gen_, v_max_, n_vars_));
+        constraint_handler_->SnapCaseToConstraints(new_case);
         case_handler_->AddNewCase(new_case);
     }
     if (VERB_OPT > 2) {
@@ -86,6 +87,7 @@ void PSO::iterate(){
         next_generation_swarm[i].ParticleAdapt(swarm_[i].rea_vars_velocity, swarm_[i].rea_vars);
     }
     for(int i = 0; i < number_of_particles_; i++){
+        //constraint_handler_->SnapCaseToConstraints(next_generation_swarm[i].case_pointer);
         case_handler_->AddNewCase(next_generation_swarm[i].case_pointer);
     }
     swarm_ = next_generation_swarm;
