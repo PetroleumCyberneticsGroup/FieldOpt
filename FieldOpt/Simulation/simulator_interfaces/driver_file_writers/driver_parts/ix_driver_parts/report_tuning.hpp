@@ -77,7 +77,7 @@ inline std::string XYPlotSummaryReport(bool use_segments=false, const std::vecto
     ss << "        add_property( property_name=\"GAS_INJECTION_RATE\""                    << std::endl;
     ss << "                      report_label=\"WGIR\" )"                                 << std::endl;
     ss << "        add_property ( property_name=\"LIQUID_PRODUCTION_RATE\""               << std::endl;
-    ss << "                       report_label=\"WLPR\""                                  << std::endl;
+    ss << "                       report_label=\"WLPR\")"                                 << std::endl;
     ss << "    }"                                                                         << std::endl;
     ss << "    FieldProperties \"Reservoir\" {"                                           << std::endl;
     ss << "        add_property( property_name=\"OIL_PRODUCTION_RATE\""                   << std::endl;
@@ -101,9 +101,9 @@ inline std::string XYPlotSummaryReport(bool use_segments=false, const std::vecto
     ss << "        add_property( property_name=\"GAS_INJECTION_CUML\""                    << std::endl;
     ss << "                      report_label=\"FGIT\" )"                                 << std::endl;
     ss << "        add_property ( property_name=\"LIQUID_PRODUCTION_RATE\""               << std::endl;
-    ss << "                       report_label=\"FLPR\""                                  << std::endl;
+    ss << "                       report_label=\"FLPR\")"                                 << std::endl;
     ss << "        add_property ( property_name=\"LIQUID_PRODUCTION_CUML\""               << std::endl;
-    ss << "                       report_label=\"FLPT\""                                  << std::endl;
+    ss << "                       report_label=\"FLPT\")"                                 << std::endl;
     ss << "    }"                                                                         << std::endl;
     if (use_segments) {
         ss << "    SegmentProperties \"Segments\" {"                                      << std::endl;
