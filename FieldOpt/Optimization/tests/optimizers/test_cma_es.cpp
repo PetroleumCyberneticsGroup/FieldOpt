@@ -53,6 +53,7 @@ namespace {
 //    test_case_2r_->set_objective_function_value(abs(Sphere(test_case_2r_->GetRealVarVector())));
 //    test_case_ga_spherical_30r_->set_objective_function_value(abs(Sphere(test_case_ga_spherical_30r_->GetRealVarVector())));
         test_case_ga_spherical_6r_->set_objective_function_value(abs(Sphere(test_case_ga_spherical_6r_->GetRealVarVector())));
+        settings_cma_es_min_->SetRngSeed(5);
         Optimization::Optimizer *minimizer = new CMA_ES(settings_cma_es_min_,
                                                      test_case_ga_spherical_6r_,
                                                      varcont_6r_,
@@ -73,8 +74,9 @@ namespace {
 
     TEST_F(CMA_ESTest, TestFunctionRosenbrock) {
         test_case_ga_spherical_6r_->set_objective_function_value(abs(Rosenbrock(test_case_ga_spherical_6r_->GetRealVarVector())));
-        settings_pso_min_->SetRngSeed(5);
-        Optimization::Optimizer *minimizer = new CMA_ES(settings_cma_es_min_, test_case_ga_spherical_6r_, varcont_6r_, grid_5spot_, logger_ );
+        settings_cma_es_min_->SetRngSeed(5);
+        Optimization::Optimizer *minimizer = new CMA_ES(settings_cma_es_min_,
+            test_case_ga_spherical_6r_, varcont_6r_, grid_5spot_, logger_ );
 
         while (!minimizer->IsFinished()) {
             auto next_case = minimizer->GetCaseForEvaluation();
