@@ -81,11 +81,25 @@ class PSO : public Optimizer {
    * @return
    */
   vector<PSO::Particle> update_velocity();
+
+    /*!
+   * @brief Updates the position, direction and velocity of a particle; given a ReservoirBoundary constraint.
+   * @return
+   */
+  vector<PSO::Particle> update_velocity_direction_position();
+
+  /*!
+   * @brief Find the last position inside the grid
+   */
+
+  Eigen::VectorXd LastPositionInsideGrid(Case *c);
+
   /*!
    * @brief Updates the position based on the updated velocities of the particles in the swarm.
    * @return
    */
   vector<PSO::Particle> update_position();
+
   /*!
    * @brief Prints the swarm and its current values in a readable format, calls print particle
    * @param swarm
@@ -109,6 +123,7 @@ class PSO : public Optimizer {
    * @return
    */
   bool is_stagnant();
+  bool contains_ReservoirBoundary_;
 
   double stagnation_limit_; //!< The stagnation criterion, standard deviation of all particle positions.
   vector<vector<Particle>> swarm_memory_; //!< The memory of the swarm at previous timesteps.

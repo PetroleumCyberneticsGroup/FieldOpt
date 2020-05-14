@@ -159,8 +159,10 @@ void Model::wellCost(Settings::Optimizer *settings) {
 
 void Model::verifyWellTrajectory(Wells::Well *w)
 {
-    for (Wells::Wellbore::WellBlock *wb : *w->trajectory()->GetWellBlocks()) {
-        verifyWellBlock(wb);
+    if (w->trajectory()->GetWellBlocks()->size() > 0){
+        for (Wells::Wellbore::WellBlock *wb : *w->trajectory()->GetWellBlocks()) {
+            verifyWellBlock(wb);
+        }
     }
 }
 

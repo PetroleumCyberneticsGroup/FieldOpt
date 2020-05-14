@@ -118,7 +118,9 @@ void Trajectory::UpdateWellBlocks()
         well_blocks_ = new QList<WellBlock *>();
         well_blocks_->append(pseudo_cont_vert_->GetWellBlock());
     }
-    calculateDirectionOfPenetration();
+    if (well_blocks_->size() > 0) {
+        calculateDirectionOfPenetration();
+    }
 }
 
 double Trajectory::GetLength() const {

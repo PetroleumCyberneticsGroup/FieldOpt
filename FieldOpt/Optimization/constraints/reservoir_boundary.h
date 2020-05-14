@@ -74,6 +74,7 @@ class ReservoirBoundary : public Constraint, WellSplineConstraint
   bool CaseSatisfiesConstraint(Case *c);
   void SnapCaseToConstraints(Case *c);
   bool IsBoundConstraint() const override { return true; }
+  Eigen::VectorXd DistanceTraveled(Case *c);
 
   /*!
    * @brief Initialize the normalizer parameters.

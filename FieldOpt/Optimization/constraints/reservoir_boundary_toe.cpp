@@ -62,6 +62,7 @@ void ReservoirBoundaryToe::SnapCaseToConstraints(Case *c) {
   c->set_real_variable_value(affected_well_.toe.z, projected_toe(2));
 
 }
+
 Eigen::VectorXd ReservoirBoundaryToe::GetLowerBounds(QList<QUuid> id_vector) const {
   auto cell_min = grid_->GetCell(imin_, jmin_, kmin_);
   auto cell_max = grid_->GetCell(imax_, jmax_, kmax_);

@@ -51,6 +51,7 @@ PSO::PSO(Settings::Optimizer *settings,
         lower_bound_.fill(settings->parameters().lower_bound);
         upper_bound_.fill(settings->parameters().upper_bound);
     }
+
     auto difference = upper_bound_ - lower_bound_;
     v_max_ = difference * settings->parameters().pso_velocity_scale;
     if (VERB_OPT > 2) {
@@ -64,11 +65,21 @@ PSO::PSO(Settings::Optimizer *settings,
     for (int i = 0; i < number_of_particles_; ++i) {
         auto new_case = generateRandomCase();
         swarm_.push_back(Particle(new_case ,gen_, v_max_, n_vars_));
-        constraint_handler_->SnapCaseToConstraints(new_case);
+        if (!constraint_handler_->CaseSatisfiesConstraints(new_case)) {
+            constraint_handler_->SnapCaseToConstraints(new_case);
+            swarm_[i].rea_vars = new_case->GetRealVarVector();
+        }
         case_handler_->AddNewCase(new_case);
     }
     if (VERB_OPT > 2) {
         printSwarm();
+    }
+    contains_ReservoirBoundary_ = false;
+    auto constraints = constraint_handler_->constraints();
+    for (auto constraint : constraints ) {
+        if (constraint->name() == "ReservoirBoundary"){
+            contains_ReservoirBoundary_ = true;
+        }
     }
 }
 
@@ -78,8 +89,16 @@ void PSO::iterate(){
     }
     swarm_memory_.push_back(swarm_);
     current_best_particle_global_=get_global_best();
-    swarm_ = update_velocity();
-    swarm_ = update_position();
+
+    if (contains_ReservoirBoundary_){
+        swarm_ = update_velocity_RB();
+        swarm_ = update_position_RB();
+    }else{
+        swarm_ = update_velocity();
+        swarm_ = update_position();
+    }
+
+
     vector<Particle> next_generation_swarm;
     for (int i = 0; i < number_of_particles_; ++i) {
         auto new_case = generateRandomCase();
@@ -87,7 +106,10 @@ void PSO::iterate(){
         next_generation_swarm[i].ParticleAdapt(swarm_[i].rea_vars_velocity, swarm_[i].rea_vars);
     }
     for(int i = 0; i < number_of_particles_; i++){
-        //constraint_handler_->SnapCaseToConstraints(next_generation_swarm[i].case_pointer);
+        if (!constraint_handler_->CaseSatisfiesConstraints(next_generation_swarm[i].case_pointer)) {
+            constraint_handler_->SnapCaseToConstraints(next_generation_swarm[i].case_pointer);
+            next_generation_swarm[i].rea_vars = next_generation_swarm[i].case_pointer->GetRealVarVector();
+        }
         case_handler_->AddNewCase(next_generation_swarm[i].case_pointer);
     }
     swarm_ = next_generation_swarm;
@@ -205,6 +227,7 @@ vector<PSO::Particle> PSO::update_velocity() {
     }
     return new_swarm;
 }
+
 vector<PSO::Particle> PSO::update_position() {
     for(int i = 0; i < swarm_.size(); i++){
         for(int j = 0; j < n_vars_; j++){
@@ -220,6 +243,30 @@ vector<PSO::Particle> PSO::update_position() {
     }
     return swarm_;
 }
+
+Eigen::VectorXd PSO::LastPositionInsideGrid(Case *c){
+
+}
+
+vector<PSO::Particle> PSO::update_velocity_direction_position() {
+    vector<Particle> new_swarm;
+    for(int i = 0; i < swarm_.size(); i++){
+        Particle best_in_particle_memory = find_best_in_particle_memory(i);
+        new_swarm.push_back(swarm_[i]);
+        for(int j = 0; j < n_vars_; j++){
+            double velocity_1 = learning_factor_1_ * random_double(gen_, 0, 1) * (best_in_particle_memory.rea_vars(j)-swarm_[i].rea_vars(j));
+            double velocity_2 = learning_factor_2_ * random_double(gen_, 0, 1) * (current_best_particle_global_.rea_vars(j)-swarm_[i].rea_vars(j));
+            new_swarm[i].rea_vars_velocity(j) = swarm_[i].rea_vars_velocity(j) + velocity_1 + velocity_2;
+            if (new_swarm[i].rea_vars_velocity(j) < -v_max_(j)){
+                new_swarm[i].rea_vars_velocity(j) = -v_max_(j);
+            }else if(new_swarm[i].rea_vars_velocity(j) > v_max_(j)){
+                new_swarm[i].rea_vars_velocity(j) = v_max_(j);
+            }
+        }
+    }
+    return new_swarm;
+}
+
 
 
 }

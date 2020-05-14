@@ -382,6 +382,10 @@ void ReservoirBoundary::SnapCaseToConstraints(Case *c) {
     c->set_real_variable_value(affected_well_.toe.z, projected_toe(2));
 }
 
+Eigen::VectorXd ReservoirBoundary::BouncyBoundary(Case *c) {
+
+}
+
 QList<int> ReservoirBoundary::getListOfCellIndices() {
     QList<int> index_list;
 
