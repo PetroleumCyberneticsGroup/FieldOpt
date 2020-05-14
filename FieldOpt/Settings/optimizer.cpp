@@ -357,6 +357,10 @@ Optimizer::Parameters Optimizer::parseParameters(QJsonObject &json_parameters) {
             params.pso_velocity_scale = json_parameters["PSO-VelocityScale"].toDouble();
         }else params.pso_velocity_scale = 1.0;
 
+        if(json_parameters.contains("TDLS-Resolution")){
+            params.TDLS_resolution_ = json_parameters["TDLS-Resolution"].toInt();
+        }
+
         // EGO Parameters
         if (json_parameters.contains("EGO-InitGuesses")) {
             params.ego_init_guesses = json_parameters["EGO-InitGuesses"].toInt();
@@ -608,6 +612,8 @@ Optimizer::OptimizerType Optimizer::parseType(QString &type) {
         opt_type = OptimizerType::ExhaustiveSearch2DVert;
     else if (QString::compare(type, "PSO") == 0)
         opt_type = OptimizerType::PSO;
+    else if (QString::compare(type, "TDLS") == 0)
+        opt_type = OptimizerType::TDLS;
     else if (QString::compare(type, "CMA_ES") == 0)
         opt_type = OptimizerType::CMA_ES;
     else if (QString::compare(type, "VFSA") == 0)
