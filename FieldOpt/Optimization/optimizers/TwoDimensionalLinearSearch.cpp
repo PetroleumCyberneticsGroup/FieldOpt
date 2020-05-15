@@ -68,6 +68,11 @@ namespace Optimization{
 
         }
 
+        Optimizer::TerminationCondition TwoDimensionalLinearSearch::IsFinished() {
+            if (iteration_ < max_iterations_) return NOT_FINISHED;
+            else return MAX_EVALS_REACHED;
+        }
+        
         void TwoDimensionalLinearSearch::iterate(){
             if(enable_logging_){
                 logger_->AddEntry(this);
@@ -87,12 +92,6 @@ namespace Optimization{
                     Printer::ext_info(ss.str(), "Optimization", "PSO");
                 }
             }
-        }
-
-        Optimizer::TerminationCondition TwoDimensionalLinearSearch::IsFinished() {
-            if (case_handler_->CasesBeingEvaluated().size() > 0) return NOT_FINISHED;
-            if (iteration_ < max_iterations_) return NOT_FINISHED;
-            else return MAX_EVALS_REACHED;
         }
 
         Case *TwoDimensionalLinearSearch::generateCase(double x, double y) {
