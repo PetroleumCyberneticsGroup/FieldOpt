@@ -67,32 +67,31 @@ namespace Optimization{
             }
 
         }
+        Optimizer::TerminationCondition TwoDimensionalLinearSearch::IsFinished() {
+            if (iteration_ < max_iterations_) return NOT_FINISHED;
+            else return MAX_EVALS_REACHED;
+        }
 
         void TwoDimensionalLinearSearch::iterate(){
             if(enable_logging_){
                 logger_->AddEntry(this);
             }
-
+            
             iteration_++;
         }
 
         void TwoDimensionalLinearSearch::handleEvaluatedCase(Case *c) {
-            if(isImprovement(c)){
+            if (isImprovement(c)) {
                 updateTentativeBestCase(c);
                 if (VERB_OPT > 1) {
                     stringstream ss;
                     ss.precision(6);
                     ss << scientific;
-                    ss << "New best in swarm, iteration " << Printer::num2str(iteration_) << ": OFV " << c->objective_function_value();
+                    ss << "New best in swarm, iteration " << Printer::num2str(iteration_) << ": OFV "
+                       << c->objective_function_value();
                     Printer::ext_info(ss.str(), "Optimization", "PSO");
                 }
             }
-        }
-
-        Optimizer::TerminationCondition TwoDimensionalLinearSearch::IsFinished() {
-            if (case_handler_->CasesBeingEvaluated().size() > 0) return NOT_FINISHED;
-            if (iteration_ < max_iterations_) return NOT_FINISHED;
-            else return MAX_EVALS_REACHED;
         }
 
         Case *TwoDimensionalLinearSearch::generateCase(double x, double y) {
