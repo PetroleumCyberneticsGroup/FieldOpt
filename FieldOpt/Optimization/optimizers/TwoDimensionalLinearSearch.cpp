@@ -51,10 +51,10 @@ namespace Optimization{
             auto difference = upper_bound_ - lower_bound_;
 
             if (n_vars_ == 2){
-                std::vector<double> x_axis = std::vector<double>(resolution_);
-                std::vector<double> y_axis = std::vector<double>(resolution_);
+                std::vector<double> x_axis = std::vector<double>(resolution_ + 1);
+                std::vector<double> y_axis = std::vector<double>(resolution_ + 1);
 
-                for (int i = 0; i < resolution_; ++i) {
+                for (int i = 0; i < resolution_ + 1; ++i) {
                     x_axis[i] = (difference[0]/resolution_)*i+lower_bound_[0];
                     y_axis[i] = (difference[1]/resolution_)*i+lower_bound_[1];
                 }
@@ -77,6 +77,9 @@ namespace Optimization{
             if(enable_logging_){
                 logger_->AddEntry(this);
             }
+
+            auto dummy_case = generateCase(lower_bound_[0], lower_bound_[1]);
+            case_handler_->AddNewCase(dummy_case);
 
             iteration_++;
         }

@@ -86,6 +86,24 @@ void Simulator::updateResultsInModel() {
     model_->SetResult("FGPT", results_->GetValueVector(Results::Results::Property::CumulativeGasProduction));
     model_->SetResult("FOPT", results_->GetValueVector(Results::Results::Property::CumulativeOilProduction));
     model_->SetResult("FWPT", results_->GetValueVector(Results::Results::Property::CumulativeWaterProduction));
+
+    if (settings_->optimizer()->type() == settings_->optimizer()->TDLS) {
+        model_->SetResult("FWPR", results_->GetValueVector(Results::Results::Property::WaterProductionRate));
+        model_->SetResult("FWIR", results_->GetValueVector(Results::Results::Property::WaterInjectionRate));
+        model_->SetResult("FWIT", results_->GetValueVector(Results::Results::Property::CumulativeWaterInjection));
+
+        for (int i = 0; i < model_->wells()->size(); ++i) {
+            auto wname = model_->wells()->at(i)->name().toStdString();
+            //std::cout << wname <<endl;
+            std::string well_key = "WBHP#" + wname;
+            //std::cout << well_key <<endl;
+            model_->SetResult(well_key, results_->GetValueVector(Results::Results::Property::WellBottomHolePressure, QString::fromStdString(wname)));
+        }
+    }
+    //auto well_pointer = model_->wells()->at(0);
+    //auto depointerized_well_pointer = *well_pointer;
+    //std::cout << well_pointer <<endl;
+    //std::cout << depointerized_well_pointer.name().toStdString() <<endl;
 }
 
 }
