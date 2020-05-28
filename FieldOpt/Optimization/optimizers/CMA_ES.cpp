@@ -41,7 +41,7 @@ CMA_ES::CMA_ES(Settings::Optimizer *settings,
     n_vars_ = variables->ContinousVariableSize();
     improve_base_case_ = settings->parameters().improve_base_case;
 
-    penalty_ = 1000;
+    penalty_ = 10;
     gen_ = get_random_generator(settings->parameters().rng_seed);
     max_iterations_ = settings->parameters().max_generations;
     population_size_ = settings->parameters().population_size;
