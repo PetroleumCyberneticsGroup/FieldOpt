@@ -52,7 +52,7 @@ class Optimizer
     PolarAzimuth, PolarElevation, PolarSplineBoundary
   };
   enum ConstraintWellSplinePointsType { MaxMin, Function};
-  enum ObjectiveType { WeightedSum, NPV, carbondioxidenpv };
+  enum ObjectiveType { WeightedSum, NPV, carbondioxidenpv, NPV_ET_V1 };
 
   struct Parameters {
     // Common parameters
@@ -184,6 +184,38 @@ class Optimizer
     double pow_gen_per_turbine;
     double cost_per_turbine;
     double CO2_tax_rate;
+
+    double p_atm;
+    double rho_wi;
+    double g;
+    std::string dir_h_req;
+    std::vector<double> h_req;
+    std::string dir_q_req;
+    std::vector<double> q_req;
+    std::string dir_opt_q_PS;
+    std::vector<std::vector<double>> table_opt_q_PS;
+    std::string dir_opt_np;
+    std::vector<std::vector<double>> table_opt_np;
+    std::string dir_opt_ns;
+    std::vector<std::vector<double>> table_opt_ns;
+    std::string dir_opt_h_PS;
+    std::vector<std::vector<double>> table_opt_h_PS;
+    std::string dir_opt_eff_hydraulic_PS;
+    std::vector<std::vector<double>> table_opt_eff_hydraulic_PS;
+    std::string dir_opt_P_PS;
+    std::vector<std::vector<double>> table_opt_P_PS;
+    double penalty_constant;
+    double p_PS_inlet;
+    double unit_cost_pump;
+    double e_water_treatment;
+    double P_turbine_full_load;
+    double unit_cost_turbine;
+    double eff_turbine_full_load;
+    double c_energy_fuel;
+    double p_gas;
+    double c_CO2_fuel;
+    double r_CO2;
+
     QList<WeightedSumComponent> weighted_sum; //!< The expression for the Objective function formulated as a weighted sum
     QList<NPVComponent> NPV_sum;  //!< The expression for the Objective function formulated as an NPV
     QList<NPVCarbonComponent> NPVCarbonComponents; //!< The expression for the CarbonComponent

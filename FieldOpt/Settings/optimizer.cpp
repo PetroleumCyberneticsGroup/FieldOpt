@@ -511,12 +511,14 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
                 obj.weighted_sum.append(component);
             }
         }
-        else if (QString::compare(objective_type, "NPV") == 0 || QString::compare(objective_type, "carbondioxidenpv") == 0) {
+        else if (QString::compare(objective_type, "NPV") == 0 || QString::compare(objective_type, "carbondioxidenpv") == 0 || QString::compare(objective_type, "NPV_ET_V1") == 0) {
             // -------------------------------------------------
             if (QString::compare(objective_type, "NPV") == 0){
                 obj.type = ObjectiveType::NPV;
             } else if (QString::compare(objective_type, "carbondioxidenpv") == 0){
                 obj.type = ObjectiveType::carbondioxidenpv;
+            } else if (QString::compare(objective_type, "NPV_ET_V1") == 0){
+                obj.type = ObjectiveType::NPV_ET_V1;
             }
 
             obj.NPV_sum = QList<Objective::NPVComponent>();
@@ -564,6 +566,120 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
                     }
                     if (json_additional_components.contains("CO2TaxRate")){
                         obj.CO2_tax_rate = json_additional_components["CO2TaxRate"].toDouble();
+                    }
+                }
+            }
+
+            if (QString::compare(objective_type, "NPV_ET_V1") == 0){
+                obj.NPVCarbonComponents = QList<Objective::NPVCarbonComponent>();
+                QJsonArray json_carbon_components = json_objective["NPVCarbonComponents"].toArray();
+                for (int i = 0; i < json_carbon_components.size(); ++i) {
+                    Objective::NPVCarbonComponent carbonComponent;
+                    carbonComponent.property = json_carbon_components.at(i).toObject()["Property"].toString();
+                    carbonComponent.is_well_prop = json_carbon_components.at(i).toObject()["IsWellProp"].toBool();
+                    if (carbonComponent.is_well_prop == true) {
+                        carbonComponent.well = json_carbon_components[i].toObject()["Well"].toString();
+                        carbonComponent.well_tvd = json_carbon_components[i].toObject()["WellTVD"].toDouble();
+                    }
+                    obj.NPVCarbonComponents.append(carbonComponent);
+                }
+
+                if (json_objective.contains("AdditionalComponents")) {
+                    QJsonObject json_additional_components = json_objective["AdditionalComponents"].toObject();
+                    if (json_additional_components.contains("p_atm")){
+                        obj.p_atm = json_additional_components["p_atm"].toDouble();
+                    }
+
+                    if (json_additional_components.contains("rho_wi")){
+                        obj.rho_wi = json_additional_components["rho_wi"].toDouble();
+                    }
+
+                    if (json_additional_components.contains("g")){
+                        obj.g = json_additional_components["g"].toDouble();
+                    }
+
+                    if (json_additional_components.contains("dir_h_req")){
+                        obj.dir_h_req = json_additional_components["dir_h_req"].toString().toStdString();
+                        obj.h_req = Utilities::FileHandling::LoadCSVFile_1DArray(obj.dir_h_req);
+                    }
+
+                    if (json_additional_components.contains("dir_q_req")){
+                        obj.dir_q_req = json_additional_components["dir_q_req"].toString().toStdString();
+                        obj.q_req = Utilities::FileHandling::LoadCSVFile_1DArray(obj.dir_q_req);
+                    }
+
+                    if (json_additional_components.contains("dir_opt_q_PS")){
+                        obj.dir_opt_q_PS = json_additional_components["dir_opt_q_PS"].toString().toStdString();
+                        obj.table_opt_q_PS = Utilities::FileHandling::LoadCSVFile_2DArray(obj.dir_opt_q_PS);
+                    }
+
+                    if (json_additional_components.contains("dir_opt_np")){
+                        obj.dir_opt_np = json_additional_components["dir_opt_np"].toString().toStdString();
+                        obj.table_opt_np = Utilities::FileHandling::LoadCSVFile_2DArray(obj.dir_opt_np);
+                    }
+
+                    if (json_additional_components.contains("dir_opt_ns")){
+                        obj.dir_opt_ns = json_additional_components["dir_opt_ns"].toString().toStdString();
+                        obj.table_opt_ns = Utilities::FileHandling::LoadCSVFile_2DArray(obj.dir_opt_ns);
+                    }
+
+                    if (json_additional_components.contains("dir_opt_h_PS")){
+                        obj.dir_opt_h_PS = json_additional_components["dir_opt_h_PS"].toString().toStdString();
+                        obj.table_opt_h_PS = Utilities::FileHandling::LoadCSVFile_2DArray(obj.dir_opt_h_PS);
+                    }
+
+                    if (json_additional_components.contains("dir_opt_eff_hydraulic_PS")){
+                        obj.dir_opt_eff_hydraulic_PS = json_additional_components["dir_opt_eff_hydraulic_PS"].toString().toStdString();
+                        obj.table_opt_eff_hydraulic_PS = Utilities::FileHandling::LoadCSVFile_2DArray(obj.dir_opt_eff_hydraulic_PS);
+                    }
+
+                    if (json_additional_components.contains("dir_opt_P_PS")){
+                        obj.dir_opt_P_PS = json_additional_components["dir_opt_P_PS"].toString().toStdString();
+                        obj.table_opt_P_PS = Utilities::FileHandling::LoadCSVFile_2DArray(obj.dir_opt_P_PS);
+                    }
+
+                    if (json_additional_components.contains("penalty_constant")){
+                        obj.penalty_constant = json_additional_components["penalty_constant"].toDouble();
+                    }
+
+                    if (json_additional_components.contains("p_PS_inlet")){
+                        obj.p_PS_inlet = json_additional_components["p_PS_inlet"].toDouble();
+                    }
+
+                    if (json_additional_components.contains("unit_cost_pump")){
+                        obj.unit_cost_pump = json_additional_components["unit_cost_pump"].toDouble();
+                    }
+
+                    if (json_additional_components.contains("e_water_treatment")){
+                        obj.e_water_treatment = json_additional_components["e_water_treatment"].toDouble();
+                    }
+
+                    if (json_additional_components.contains("P_turbine_full_load")){
+                        obj.P_turbine_full_load = json_additional_components["P_turbine_full_load"].toDouble();
+                    }
+
+                    if (json_additional_components.contains("unit_cost_turbine")){
+                        obj.unit_cost_turbine = json_additional_components["unit_cost_turbine"].toDouble();
+                    }
+
+                    if (json_additional_components.contains("eff_turbine_full_load")){
+                        obj.eff_turbine_full_load = json_additional_components["eff_turbine_full_load"].toDouble();
+                    }
+
+                    if (json_additional_components.contains("c_energy_fuel")){
+                        obj.c_energy_fuel = json_additional_components["c_energy_fuel"].toDouble();
+                    }
+
+                    if (json_additional_components.contains("p_gas")){
+                        obj.p_gas = json_additional_components["p_gas"].toDouble();
+                    }
+
+                    if (json_additional_components.contains("c_CO2_fuel")){
+                        obj.c_CO2_fuel = json_additional_components["c_CO2_fuel"].toDouble();
+                    }
+
+                    if (json_additional_components.contains("r_CO2")){
+                        obj.r_CO2 = json_additional_components["r_CO2"].toDouble();
                     }
                 }
             }

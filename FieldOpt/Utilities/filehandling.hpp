@@ -9,6 +9,7 @@
 #include <QDir>
 #include <stdexcept>
 #include <string>
+#include <sstream>
 #include <iostream>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/operations.hpp>
@@ -328,6 +329,43 @@ inline QString GetParentDirectoryPath(const QString &file_path) {
 
 inline std::string GetParentDirectoryPath(const std::string &file_path) {
     return GetParentDirectoryPath(QString::fromStdString(file_path)).toStdString();
+}
+
+inline std::vector<double> LoadCSVFile_1DArray(const std::string &file_path) {
+
+    std::ifstream data(file_path);
+
+    std::vector<double> array;
+
+    std::string line;
+    while(std::getline(data, line))
+    {
+        array.push_back(std::stod (line));
+    }
+
+    return array;
+}
+
+inline std::vector<std::vector<double>> LoadCSVFile_2DArray(const std::string &file_path) {
+
+    std::ifstream data(file_path);
+
+    std::vector<std::vector<double>> array;
+
+    std::string line;
+    while(std::getline(data, line))
+    {
+        std::stringstream lineStream(line);
+        std::string cell;
+        std::vector<double> temp;
+        while(std::getline(lineStream, cell, ','))
+        {
+            temp.push_back(std::stod (cell));
+        }
+        array.push_back(temp);
+    }
+
+    return array;
 }
 
 }
