@@ -55,15 +55,10 @@ namespace Optimization {
                     Printer::ext_info("Adding external NPV component.", "Optimization", "NPV_ET_V1");
                     comp->property_name = settings->objective().NPV_sum[i].property.substr(4, std::string::npos);
                     comp->interval = settings->objective().NPV_sum[i].interval;
-
                 } else {
-                    //Printer::ext_info("NOT adding external NPV component.", "Optimization", "carbondioxidenpv");
                     comp->is_json_component = false;
                     comp->property_name = settings->objective().NPV_sum.at(i).property;
-                    //cout << "comp->property_name: " << comp->property_name << endl;
-
                     comp->property = results_->GetPropertyKeyFromString(QString::fromStdString(comp->property_name));
-
                 }
 
                 comp->coefficient = settings->objective().NPV_sum.at(i).coefficient;
@@ -393,96 +388,110 @@ namespace Optimization {
 
         double NPV_ET_V1::calc_NPV() const
         {
-            double NPV = 0;
+            try {
+                double NPV = 0;
 
-            auto report_times = results_->GetValueVector(results_->Time);
-            auto NPV_times = new QList<double>;
-            auto discount_factor_list = new QList<double>;
+                auto report_times = results_->GetValueVector(results_->Time);
+                std::vector<std::vector<double>> NPV_times;
+                std::vector<std::vector<double>> discount_factor_list;
 
-            for (int k = 0; k < components_->size(); ++k) {
-                if (components_->at(k)->is_json_component == true) {
-                    continue;
-                }
-                if (components_->at(k)->interval == "Yearly") {
-                    double discount_factor;
-                    int j = 1;
-                    for (int i = 0; i < report_times.size(); i++) {
-                        if (i < report_times.size() - 1 &&  (report_times[i+1] - report_times[i]) > 365) {
-                            std::stringstream ss;
-                            ss << "Skipping assumed pre-simulation time step " << report_times[i]
-                               << ". Next time step: " << report_times[i+1] << ". Ignore if this is time 0 in a restart case.";
-                            Printer::ext_warn(ss.str(), "Optimization", "NPV");
-                            continue;
-                        }
-                        if (std::fmod(report_times.at(i), 365) == 0) {
-                            discount_factor = 1 / (1 * (pow(1 + components_->at(k)->discount, j - 1)));
-                            discount_factor_list->append(discount_factor);
-                            NPV_times->append(i);
+                for (int k = 0; k < components_->size(); ++k) {
+                    auto curr_comp = components_->at(k);
+                    std::vector<double> NPV_times_temp;
+                    std::vector<double> discount_factor_temp;
 
-                            j += 1;
-                        }
-                    }
-                }else if (components_->at(k)->interval == "Monthly") {
-                    double discount_factor;
-                    double discount_rate = components_->at(k)->discount;
-                    double monthly_discount = components_->at(k)->yearlyToMonthly(discount_rate);
-                    int j = 1;
-                    for (int i = 0; i < report_times.size(); i++) {
-                        if (std::fmod(report_times.at(i), 30) == 0) {
-                            NPV_times->append(i);
-                            discount_factor = 1 / (1 * (pow(1 + monthly_discount, j - 1)));
-                            discount_factor_list->append(discount_factor);
-                            j += 1;
+                    if (curr_comp->is_json_component) { continue; }
+
+                    if (curr_comp->interval == "Yearly") {
+                        double discount_factor;
+                        for (int i = 0; i < report_times.size(); i++) {
+                            if (i < report_times.size() - 1 &&  (report_times[i+1] - report_times[i]) > 365) {
+                                std::stringstream ss;
+                                ss << "Skipping assumed pre-simulation time step " << report_times[i]
+                                   << ". Next time step: " << report_times[i+1]
+                                   << ". Ignore if this is time 0 in a restart case.";
+                                Printer::ext_warn(ss.str(), "Optimization", "NPV_ET_V1");
+                                continue;
+                            }
+                            if (std::fmod(report_times.at(i), 365) == 0) {
+                                discount_factor = 1 / (pow(1 + curr_comp->discount, report_times.at(i) / 365));
+                                discount_factor_temp.push_back(discount_factor);
+                                NPV_times_temp.push_back(i);
+                            }
                         }
                     }
-                }
-            }
-            for (int i = 0; i < components_->size(); ++i) {
-                if (components_->at(i)->is_json_component == true) {
-                    continue;
-                }
-                if (components_->at(i)->usediscountfactor == true) {
-                    for (int j = 1; j < NPV_times->size(); ++j) {
-                        auto prod_difference = components_->at(i)->resolveValueDiscount(results_, NPV_times->at(j))
-                                               - components_->at(i)->resolveValueDiscount(results_, NPV_times->at(j - 1));
-                        NPV += prod_difference * components_->at(i)->coefficient * discount_factor_list->at(i);
-                    }
-                } else if (components_->at(i)->usediscountfactor == false) {
-                    NPV += components_->at(i)->resolveValue(results_);
-                    std::string prop_name = components_->at(i)->property_name;
-                }
-            }
-            if (well_economy_->use_well_cost) {
-                for (auto well: well_economy_->wells_pointer) {
-                    if (well_economy_->separate) {
-                        NPV -= well_economy_->costXY * well_economy_->well_xy[well->name().toStdString()];
-                        NPV -= well_economy_->costZ * well_economy_->well_z[well->name().toStdString()];
-                    } else {
-                        NPV -= well_economy_->cost * well_economy_->well_lengths[well->name().toStdString()];
-                    }
-                }
-            }
-            for (int j = 0; j < components_->size(); ++j) {
-                if (components_->at(j)->is_json_component == true) {
-                    if (components_->at(j)->interval == "Single" || components_->at(j)->interval == "None") {
-                        double extval = components_->at(j)->coefficient
-                                        * results_->GetJsonResults().GetSingleValue(components_->at(j)->property_name);
-                        NPV += extval;
 
+                    else if (curr_comp->interval == "Monthly") {
+                        double discount_factor;
+                        double discount_rate = curr_comp->discount;
+                        double monthly_discount_rate = components_->at(k)->yearlyToMonthly(discount_rate);
+                        for (int i = 0; i < report_times.size(); i++) {
+                            if (std::fmod(report_times.at(i), 30) == 0) {
+                                discount_factor = 1 / (pow(1 + monthly_discount_rate, report_times.at(i) / 30));
+                                discount_factor_temp.push_back(discount_factor);
+                                NPV_times_temp.push_back(i);
+                            }
+                        }
                     }
+
+                    NPV_times.push_back(NPV_times_temp);
+                    discount_factor_list.push_back(discount_factor_temp);
+                }
+
+                for (int i = 0; i < components_->size(); ++i) {
+                    auto curr_comp = components_->at(i);
+
+                    if (curr_comp->is_json_component) { continue; }
+
+                    if (curr_comp->usediscountfactor) {
+                        for (int j = 1; j < NPV_times[i].size(); ++j) {
+                            auto va = curr_comp->resolveValueDiscount(results_, NPV_times[i][j]);
+                            auto vb = curr_comp->resolveValueDiscount(results_, NPV_times[i][j - 1]);
+                            auto prod_difference = va - vb;
+                            NPV += prod_difference * curr_comp->coefficient * discount_factor_list[i][j];
+                        }
+                    }
+
                     else {
-                        Printer::ext_warn("Unable to parse external component.", "Optimization", "NPV");
+                        NPV += curr_comp->resolveValue(results_) * curr_comp->coefficient;
                     }
                 }
-            }
-            QList<double> NPVTimes;
-            for (int i = 0; i < NPV_times->size(); i++){
-                NPVTimes.append(NPV_times->value(i));
+
+                if (well_economy_->use_well_cost) {
+                    for (auto well: well_economy_->wells_pointer) {
+                        if (well_economy_->separate) {
+                            NPV -= well_economy_->costXY * well_economy_->well_xy[well->name().toStdString()];
+                            NPV -= well_economy_->costZ * well_economy_->well_z[well->name().toStdString()];
+                        }
+
+                        else {
+                            NPV -= well_economy_->cost * well_economy_->well_lengths[well->name().toStdString()];
+                        }
+                    }
+                }
+
+                for (int j = 0; j < components_->size(); ++j) {
+                    if (components_->at(j)->is_json_component) {
+                        if (components_->at(j)->interval == "Single" || components_->at(j)->interval == "None") {
+                            double extval = components_->at(j)->coefficient
+                                            * results_->GetJsonResults().GetSingleValue(components_->at(j)->property_name);
+                            NPV += extval;
+                        }
+
+                        else {
+                            Printer::ext_warn("Unable to parse external component.", "Optimization", "NPV_ET_V1");
+                        }
+                    }
+                }
+
+                std::cout << "NPV: .............................." << NPV << endl;
+                return NPV;
             }
 
-            std::cout << "NPV: .............................." << NPV << endl;
-
-            return NPV;
+            catch (std::exception const &ex) {
+                Printer::error("Failed to compute NPV: " + string(ex.what()) + ". Returning 0.0");
+                return 0.0;
+            }
         }
 
         double NPV_ET_V1::value() const {
@@ -504,29 +513,15 @@ namespace Optimization {
             }
         }
 
-        double NPV_ET_V1::Component::resolveValue(Simulation::Results::Results *results)
-        {
-            if (is_well_property) {
-                if (time_step < 0) { // Final time step well property
-                    return coefficient * results->GetValue(property, well);
-                }
-                else { // Non-final time step well property
-                    return coefficient * results->GetValue(property, well, time_step);
-                }
-            }
-            else {
-                return coefficient * results->GetValue(property);
-            }
+        double NPV_ET_V1::Component::resolveValue(Simulation::Results::Results *results) {
+            return results->GetValue(property);
         }
-
         double NPV_ET_V1::Component::resolveValueDiscount(Simulation::Results::Results *results, double time_step) {
             int time_step_int = (int) time_step;
             return results->GetValue(property, time_step_int);
         }
-
-        double NPV_ET_V1::Component::yearlyToMonthly(double discount_factor) {
-            return pow((1 + discount_factor), 0.083333) - 1;
-
+        double NPV_ET_V1::Component::yearlyToMonthly(double discount_rate) {
+            return pow((1 + discount_rate), (1.0 / 12)) - 1;
         }
 
     }
