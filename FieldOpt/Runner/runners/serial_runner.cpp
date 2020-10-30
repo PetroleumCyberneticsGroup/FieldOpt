@@ -53,6 +53,8 @@ void SerialRunner::Execute()
         else {
             if (VERB_RUN >= 3) Printer::ext_info("Getting case from Optimizer.", "Runner", "Serial Runner");
             new_case = optimizer_->GetCaseForEvaluation();
+            new_case->set_iteration(optimizer_->iteration());
+            new_case->set_variables_name(model_->variables());
             if (VERB_RUN >= 3) Printer::ext_info("Got case from Optimizer.", "Runner", "Serial Runner");
         }
 

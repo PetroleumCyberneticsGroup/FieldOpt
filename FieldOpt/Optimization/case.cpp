@@ -227,6 +227,10 @@ map <string, vector<double>> Case::GetValues() {
     if (ensemble_ofvs_.size() > 1) {
         valmap["OFvSTD"] = vector<double>{GetEnsembleExpectedOfv().second};
     }
+    valmap["IterNr"] = vector<double>{iteration_};
+    for (auto key : real_variables_.keys()){
+        valmap["Var#"+variables_name_.value(key)] = vector<double>{real_variables_.value(key)};
+    }
     return valmap;
 }
 string Case::StringRepresentation(Model::Properties::VariablePropertyContainer *varcont) {
@@ -327,4 +331,34 @@ void Case::set_objective_function_value(double objective_function_value) {
     objective_function_value_ = objective_function_value;
 }
 
+void Case::set_iteration(int iteration) {
+    iteration_ = iteration;
+}
+
+void Case::set_variables_name(Model::Properties::VariablePropertyContainer *varcont) {
+    QHash<QUuid, string> variables_name;
+
+    if (real_variables_.size() > 0) {
+        for (auto key : real_variables_.keys()) {
+            string varname = varcont->GetContinousVariables()->value(key)->name().toStdString();
+            variables_name.insert(key, varname);
+        }
+    }
+
+    if (integer_variables_.size() > 0) {
+        for (auto key : integer_variables_.keys()) {
+            string varname = varcont->GetDiscreteVariables()->value(key)->name().toStdString();
+            variables_name.insert(key, varname);
+        }
+    }
+
+    if (binary_variables_.size() > 0) {
+        for (auto key : binary_variables_.keys()) {
+            string varname = varcont->GetBinaryVariables()->value(key)->name().toStdString();
+            variables_name.insert(key, varname);
+        }
+    }
+
+    variables_name_ = variables_name;
+}
 }

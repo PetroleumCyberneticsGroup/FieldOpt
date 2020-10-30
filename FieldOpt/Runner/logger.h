@@ -77,6 +77,7 @@ class Logger
   QString output_dir_; //!< Directory in which the files will be written.
   QString opt_log_path_; //!< Path to the optimization log file.
   QString cas_log_path_; //!< Path to the case log file.
+  QString cas_ext_log_path_; //!< Path to the case extended log file.
   QString ext_log_path_; //!< Path to the extended log file.
   QString run_state_path_; //!< Path to the runner state file.
   QString summary_prerun_path_; //!< Path to the pre-run summary file.
@@ -101,9 +102,10 @@ class Logger
       {"ErrMsg", 7},
       {"SimDur", 9},
       {"OFnVal", 12},
-      {"CaseId", 39}
+      {"CaseId", 39},
+      {"IterNr", 6}
   };
-  QString cas_log_header_ = "             TimeSt , EvalSt , ConsSt , ErrMsg ,   SimDur ,   WicDur ,       OFnVal ,                                 CaseId";
+  QString cas_log_header_ = "             TimeSt , EvalSt , ConsSt , ErrMsg ,   SimDur ,   WicDur ,       OFnVal ,                                 CaseId , IterNr ";
   map<string, int> opt_log_col_widths_ {
       {"TimeSt", 19},
       {"TimeEl", 9},
@@ -120,6 +122,7 @@ class Logger
   const QString opt_log_header_ = "             TimeSt ,   TimeEl ,   TimeIt , IterNr , TotlNr , EvalNr , BkpdNr , TimONr , FailNr , InvlNr ,       CBOFnV ,                                 CurBst";
 
   void logCase(Loggable *obj);
+  void logCaseExtended(Loggable *obj);
   void logOptimizer(Loggable *obj);
   void logExtended(Loggable *obj);
   void logSummary(Loggable *obj);

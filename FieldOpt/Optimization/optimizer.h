@@ -113,6 +113,8 @@ class Optimizer : public Loggable
    */
   int GetSimulationDuration(Case *c);
 
+  int iteration() const { return iteration_; }
+
  protected:
   /*!
    * \brief Base constructor for optimizers. Initializes constraints and sets some member values.

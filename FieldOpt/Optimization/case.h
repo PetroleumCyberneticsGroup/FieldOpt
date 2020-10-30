@@ -117,6 +117,8 @@ class Case : public Loggable
 
   double objective_function_value() const; //!< Get the objective function value. Throws an exception if the value has not been defined.
   void set_objective_function_value(double objective_function_value);
+  void set_iteration(int iteration);
+  void set_variables_name(Model::Properties::VariablePropertyContainer *varcont);
 
   void set_integer_variable_value(const QUuid id, const int val); //!< Set the value of an integer variable in the case.
   void set_binary_variable_value(const QUuid id, const bool val); //!< Set the value of a boolean variable in the case.
@@ -250,6 +252,8 @@ class Case : public Loggable
   int wic_time_sec_; //!< The number of seconds spent computing the well index for this case.
 
   double objective_function_value_;
+  int iteration_;
+  QHash<QUuid, string> variables_name_;
   QHash<QUuid, bool> binary_variables_;
   QHash<QUuid, int> integer_variables_;
   QHash<QUuid, double> real_variables_;

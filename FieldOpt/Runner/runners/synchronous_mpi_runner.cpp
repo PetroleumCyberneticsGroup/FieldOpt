@@ -25,9 +25,8 @@ SynchronousMPIRunner::SynchronousMPIRunner(RuntimeSettings *rts) : MPIRunner(rts
     assert(world_.size() >= 2 && "The SynchronousMPIRunner requires at least two MPI processes.");
 
     if (world_.rank() == 0) {
-        InitializeSettings("rank" + QString::number(rank()));
-
         InitializeLogger();
+        InitializeSettings("rank" + QString::number(rank()));
         InitializeModel();
         InitializeSimulator();
         EvaluateBaseModel();
@@ -60,6 +59,8 @@ void SynchronousMPIRunner::Execute() {
       else {
           printMessage("Getting new case from optimizer.", 2);
           new_case = optimizer_->GetCaseForEvaluation();
+          new_case->set_iteration(optimizer_->iteration());
+          new_case->set_variables_name(model_->variables());
           if (is_ensemble_run_) {
               ensemble_helper_.SetActiveCase(new_case);
               new_case = ensemble_helper_.GetCaseForEval();
@@ -266,7 +267,11 @@ void SynchronousMPIRunner::initialDistribution() {
 
     if (!is_ensemble_run_) { // Single-realization run
         while (optimizer_->nr_queued_cases() > 0 && overseer_->NumberOfFreeWorkers() > 1) { // Leave one free worker
-            overseer_->AssignCase(optimizer_->GetCaseForEvaluation());
+            Optimization::Case *new_case;
+            new_case = optimizer_->GetCaseForEvaluation();
+            new_case->set_iteration(optimizer_->iteration());
+            new_case->set_variables_name(model_->variables());
+            overseer_->AssignCase(new_case);
         }
     }
     else { // Ensemble run
