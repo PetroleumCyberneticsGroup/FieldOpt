@@ -44,6 +44,11 @@ Model::Model(Settings::Settings settings, Logger *logger)
     }
 
     variable_container_->CheckVariableNameUniqueness();
+
+    if (settings.optimizer()->restart()) {
+        UpdateModel(settings);
+    }
+
     logger_ = logger;
     logger_->AddEntry(new Summary(this));
 }
@@ -250,6 +255,33 @@ void Model::verifyWellCompartments(Wells::Well *w) {
                                  + boost::lexical_cast<string>(w->GetCompartments().back().end_packer->md(well_length))
                                  + ")"
         );
+    }
+}
+
+void Model::UpdateModel(Settings::Settings settings) {
+    QHash<QUuid, Properties::ContinousProperty *> *continuos_variables = variable_container_->GetContinousVariables();
+    QHash<QString, double> restart_base_case_variables = settings.optimizer()->restart_base_case_variables();
+
+    if (continuos_variables->size() != restart_base_case_variables.size()) {
+        Printer::error("The base case has fewer/more variables than the RestartBaseCase");
+        exit(1);
+    }
+
+    for (int i = 0; i < continuos_variables->size(); ++i) {
+        QUuid variable_id = continuos_variables->keys()[i];
+        QString variable_name = continuos_variables->value(variable_id)->name();
+        for (int j = 0; j < restart_base_case_variables.size(); ++j) {
+            if (variable_name == restart_base_case_variables.keys()[j]) {
+                double variable_value = restart_base_case_variables.value(variable_name);
+                variable_container_->SetContinousVariableValue(variable_id, variable_value);
+                break;
+            }
+
+            if (j == restart_base_case_variables.size() - 1) {
+                Printer::error("A variable in the base case cannot be found in the RestartBaseCase: " + variable_name.toStdString());
+                exit(1);
+            }
+        }
     }
 }
 

@@ -246,6 +246,8 @@ class Case : public Loggable
   QPair<double, double> GetEnsembleExpectedOfv() const;
   QHash<QString, double> GetRealizationOFVMap() const { return ensemble_ofvs_; }
 
+  QHash<QUuid, string> variables_name() const { return variables_name_; }
+
  private:
   QUuid id_; //!< Unique ID for the case.
   int sim_time_sec_;

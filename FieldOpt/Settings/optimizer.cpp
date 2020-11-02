@@ -31,6 +31,11 @@ Optimizer::Optimizer(QJsonObject json_optimizer)
     QJsonObject json_objective = json_optimizer["Objective"].toObject();
     QJsonArray json_constraints = json_optimizer["Constraints"].toArray();
     QString type = json_optimizer["Type"].toString();
+    restart_ = json_optimizer["Restart"].toBool();
+
+    if (restart_){
+        parseRestart(json_optimizer);
+    }
 
     type_ = parseType(type);
 
@@ -782,4 +787,91 @@ Optimizer::Optimizer(Optimizer::HybridComponent hc) {
     parameters_ = hc.parameters;
 }
 
+void Optimizer::parseRestart(QJsonObject &json_optimizer) {
+    QString restart_file_path;
+    QString restart_base_case_id;
+    int restart_iteration_nr;
+
+    if (json_optimizer.contains("RestartFilePath")){
+        restart_file_path = json_optimizer["RestartFilePath"].toString();
+    }
+    else {
+        Printer::error("Missing RestartFilePath in json driver (optimizer section)");
+        exit(1);
+    }
+
+    if (json_optimizer.contains("RestartBaseCaseId")){
+        restart_base_case_id = json_optimizer["RestartBaseCaseId"].toString();
+    }
+    else {
+        Printer::error("Missing RestartBaseCaseId in json driver (optimizer section)");
+        exit(1);
+    }
+
+    if (json_optimizer.contains("RestartIterNr")){
+        restart_iteration_nr = json_optimizer["RestartIterNr"].toInt();
+    }
+    else {
+        Printer::error("Missing RestartIterNr in json driver (optimizer section)");
+        exit(1);
+    }
+
+    auto *restart_file = new QFile(restart_file_path);
+    if (!restart_file->open(QIODevice::ReadOnly)) {
+        Printer::error("Unable to open RestartFile");
+        exit(1);
+    }
+    QByteArray restart_data = restart_file->readAll();
+    QJsonObject restart_object = QJsonDocument::fromJson(restart_data).object();
+    restart_file->close();
+
+    QJsonArray case_array = restart_object["Cases"].toArray();
+
+    for (int i = 0; i < case_array.size(); ++i) {
+        QJsonObject case_object = case_array.at(i).toObject();
+        QString case_id = case_object["UUID"].toString();
+
+        if (restart_base_case_id == case_id) {
+            QHash<QString, double> restart_base_case_variables;
+            QJsonArray variable_array = case_object["Variables"].toArray();
+
+            for (int j = 0; j < variable_array.size(); ++j) {
+                QJsonObject variable_object = variable_array.at(j).toObject();
+                QString variable_name = variable_object.keys()[0];
+                double variable_value = variable_object[variable_name].toDouble();
+                variable_name.remove(0, 4);
+                restart_base_case_variables.insert(variable_name, variable_value);
+            }
+            restart_base_case_variables_ = restart_base_case_variables;
+            break;
+        }
+
+        if (i == case_array.size() - 1) {
+            Printer::error("Unable to find RestartBaseCaseId within RestartFile");
+            exit(1);
+        }
+    }
+
+    QList< QHash<QString, double> > restart_cases;
+
+    for (int i = 0; i < case_array.size(); ++i) {
+        QJsonObject case_object = case_array.at(i).toObject();
+        int case_iteration_nr = case_object["IterNr"].toInt();
+
+        if (restart_iteration_nr == case_iteration_nr) {
+            QHash<QString, double> restart_case_variables;
+            QJsonArray variable_array = case_object["Variables"].toArray();
+
+            for (int j = 0; j < variable_array.size(); ++j) {
+                QJsonObject variable_object = variable_array.at(j).toObject();
+                QString variable_name = variable_object.keys()[0];
+                double variable_value = variable_object[variable_name].toDouble();
+                variable_name.remove(0, 4);
+                restart_case_variables.insert(variable_name, variable_value);
+            }
+            restart_cases.append(restart_case_variables);
+        }
+    }
+    restart_cases_ = restart_cases;
+}
 }

@@ -23,8 +23,10 @@
 #include "settings.h"
 
 #include <QList>
+#include <QHash>
 #include <QString>
 #include <QStringList>
+#include <QJsonDocument>
 
 namespace Settings {
 
@@ -255,6 +257,9 @@ class Optimizer
   QList<Constraint> constraints() const { return constraints_; } //!< Get the optimizer constraints.
   QList<HybridComponent> HybridComponents() { return hybrid_components_; } // Get the list of hybrid-optimizer components when using the HYBRID type.
   void SetRngSeed(const int seed) { parameters_.rng_seed = seed; } //!< Change the RNG seed (used by HybridOptimizer).
+  bool restart() const { return restart_; }
+  QList< QHash<QString, double> > restart_cases() const { return restart_cases_; }
+  QHash<QString, double> restart_base_case_variables() const { return restart_base_case_variables_; }
 
 
  private:
@@ -264,6 +269,9 @@ class Optimizer
   Objective objective_;
   OptimizerMode mode_ = OptimizerMode::Maximize; //!< Optimization mode (maximize or minimize). Default: Maximize
   QList<HybridComponent> hybrid_components_;
+  bool restart_ = false;
+  QList< QHash<QString, double> > restart_cases_;
+  QHash<QString, double> restart_base_case_variables_;
 
   OptimizerType parseType(QString &type);
   Constraint parseSingleConstraint(QJsonObject json_constraint);
@@ -271,6 +279,7 @@ class Optimizer
   Parameters parseParameters(QJsonObject &json_parameters);
   Objective parseObjective(QJsonObject &json_objective);
   QList<HybridComponent> parseHybridComponents(QJsonObject &json_optimizer);
+  void parseRestart(QJsonObject &json_optimizer);
 };
 
 }

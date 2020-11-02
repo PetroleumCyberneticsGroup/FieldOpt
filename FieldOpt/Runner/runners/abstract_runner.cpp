@@ -189,6 +189,7 @@ void AbstractRunner::InitializeBaseCase()
     else{
         model_->wellCost(settings_->optimizer());
         base_case_->set_objective_function_value(objective_function_->value());
+        base_case_->set_variables_name(model_->variables());
     }
     if (VERB_RUN >= 1) Printer::ext_info("Base case objective function value set to " + Printer::num2str(base_case_->objective_function_value()), "Runner", "AbstractRunner");
 }

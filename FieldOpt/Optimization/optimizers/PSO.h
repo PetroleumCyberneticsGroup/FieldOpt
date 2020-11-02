@@ -61,6 +61,11 @@ class PSO : public Optimizer {
 
   /*!
    * @brief
+   * Generates a case based on the RestartFile input
+   */
+  Case *generateRestartCase(Settings::Optimizer *settings, Case *base_case, int particle_nr);
+  /*!
+   * @brief
    * Generates a random set of cases within their given upper and lower bounds. The function also generates an initial
    * velocity based on the vMax parameter given through the .json file.
    * @return

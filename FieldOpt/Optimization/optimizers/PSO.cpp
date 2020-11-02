@@ -61,8 +61,22 @@ PSO::PSO(Settings::Optimizer *settings,
         ss << vec_to_str(vector<double>(upper_bound_.data(), upper_bound_.data() + upper_bound_.size()));
         Printer::ext_info(ss.str(), "Optimization","PSO");
     }
+
+    if (settings->restart()) {
+        if (number_of_particles_ != settings->restart_cases().size()) {
+            Printer::error("The swarm has fewer/more particles than the number of restart cases available");
+            exit(1);
+        }
+    }
+
     for (int i = 0; i < number_of_particles_; ++i) {
-        auto new_case = generateRandomCase();
+        Case *new_case;
+        if (settings->restart()) {
+            new_case = generateRestartCase(settings, base_case, i);
+        }
+        else {
+            new_case = generateRandomCase();
+        }
         swarm_.push_back(Particle(new_case ,gen_, v_max_, n_vars_));
         case_handler_->AddNewCase(new_case);
     }
@@ -112,6 +126,37 @@ Optimizer::TerminationCondition PSO::IsFinished() {
     else return MAX_EVALS_REACHED;
 }
 
+Case *PSO::generateRestartCase(Settings::Optimizer *settings, Case *base_case, int particle_nr) {
+    Case *new_case;
+    new_case = new Case(GetTentativeBestCase());
+
+    QHash<QUuid, string> base_case_variables = base_case->variables_name();
+    QHash<QString, double> restart_case_variables = settings->restart_cases()[particle_nr];
+
+    if (base_case_variables.size() != restart_case_variables.size()) {
+        Printer::error("The base case has fewer/more variables than the restart case");
+        exit(1);
+    }
+
+    for (int i = 0; i < base_case_variables.size(); ++i) {
+        QUuid variable_id = base_case_variables.keys()[i];
+        QString variable_name = QString::fromStdString(base_case_variables.value(variable_id));
+        for (int j = 0; j < restart_case_variables.size(); ++j) {
+            if (variable_name == restart_case_variables.keys()[j]) {
+                double variable_value = restart_case_variables.value(variable_name);
+                new_case->set_real_variable_value(variable_id, variable_value);
+                break;
+            }
+
+            if (j == restart_case_variables.size() - 1) {
+                Printer::error("A variable in the base case cannot be found in the restart case: " + variable_name.toStdString());
+                exit(1);
+            }
+        }
+    }
+
+    return new_case;
+}
 Case *PSO::generateRandomCase() {
     Case *new_case;
     new_case = new Case(GetTentativeBestCase());

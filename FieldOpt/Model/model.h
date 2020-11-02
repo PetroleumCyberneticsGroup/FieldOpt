@@ -91,6 +91,8 @@ class Model : public Loggable
    */
   void Finalize();
 
+  void UpdateModel(Settings::Settings settings);
+
  private:
   Reservoir::Grid::Grid *grid_;
   Reservoir::WellIndexCalculation::wicalc_rixx *wic_;
