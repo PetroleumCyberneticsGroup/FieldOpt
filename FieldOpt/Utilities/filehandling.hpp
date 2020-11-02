@@ -331,6 +331,13 @@ inline std::string GetParentDirectoryPath(const std::string &file_path) {
     return GetParentDirectoryPath(QString::fromStdString(file_path)).toStdString();
 }
 
+inline double new_stod(const std::string &s) {
+    std::stringstream ss(s);
+    double d;
+    ss >> d;
+    return d;
+}
+
 inline std::vector<double> LoadCSVFile_1DArray(const std::string &file_path) {
 
     std::ifstream data(file_path);
@@ -340,7 +347,7 @@ inline std::vector<double> LoadCSVFile_1DArray(const std::string &file_path) {
     std::string line;
     while(std::getline(data, line))
     {
-        array.push_back(std::stod (line));
+        array.push_back(new_stod(line));
     }
 
     return array;
@@ -360,7 +367,7 @@ inline std::vector<std::vector<double>> LoadCSVFile_2DArray(const std::string &f
         std::vector<double> temp;
         while(std::getline(lineStream, cell, ','))
         {
-            temp.push_back(std::stod (cell));
+            temp.push_back(new_stod(cell));
         }
         array.push_back(temp);
     }
