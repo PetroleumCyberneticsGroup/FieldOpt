@@ -36,6 +36,7 @@ SET(OPTIMIZATION_HEADERS
 	optimizers/GSS.h
 	optimizers/GeneticAlgorithm.h
 	optimizers/PSO.h
+	optimizers/MPSO.h
 	optimizers/TwoDimensionalLinearSearch.h
 	optimizers/CMA_ES.h
 	optimizers/RGARDD.h
@@ -87,6 +88,7 @@ SET(OPTIMIZATION_SOURCES
 	optimizers/GSS.cpp
 	optimizers/GeneticAlgorithm.cpp
 	optimizers/PSO.cpp
+	optimizers/MPSO.cpp
 	optimizers/TwoDimensionalLinearSearch.cpp
 	optimizers/CMA_ES.cpp
 	optimizers/RGARDD.cpp

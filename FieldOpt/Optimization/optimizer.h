@@ -115,6 +115,12 @@ class Optimizer : public Loggable
 
   int iteration() const { return iteration_; }
 
+  virtual QHash<QUuid, double> mpso_id_r_CO2() { return QHash<QUuid, double> (); }
+
+  virtual QHash<QUuid, Case *> mpso_id_tentative_best_case() { return QHash<QUuid, Case *> (); }
+
+  virtual QHash<QUuid, int> mpso_id_tentative_best_case_iteration() { return QHash<QUuid, int> (); }
+
  protected:
   /*!
    * \brief Base constructor for optimizers. Initializes constraints and sets some member values.

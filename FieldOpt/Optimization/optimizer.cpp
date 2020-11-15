@@ -106,6 +106,9 @@ void Optimizer::SubmitEvaluatedCase(Case *c)
         c->set_objective_function_value(penalized_ofv);
     }
     case_handler_->UpdateCaseObjectiveFunctionValue(c->id(), c->objective_function_value());
+    if (c->mpso_id_ofv().size() > 0) {
+        case_handler_->UpdateCase_mpso_id_ofv(c->id(), c->mpso_id_ofv());
+    }
     case_handler_->SetCaseState(c->id(), c->state, c->GetWICTime(), c->GetSimTime());
     case_handler_->SetCaseEvaluated(c->id());
     handleEvaluatedCase(case_handler_->GetCase(c->id()));
@@ -177,7 +180,28 @@ Loggable::LogTarget Optimizer::GetLogTarget() {
     return Loggable::LogTarget::LOG_OPTIMIZER;
 }
 map<string, string> Optimizer::GetState() {
-    return map<string, string>();
+    map<string, string> statemap;
+    if (mpso_id_r_CO2().size() > 0) {
+        QHash<QUuid, double> mpso_id_r_CO2_ = mpso_id_r_CO2();
+        QHash<QUuid, Case *> mpso_id_tentative_best_case_ = mpso_id_tentative_best_case();
+        QHash<QUuid, int> mpso_id_tentative_best_case_iteration_ = mpso_id_tentative_best_case_iteration();
+
+        QList<QUuid> ObjFn_ids = mpso_id_r_CO2_.keys();
+        for (int i = 0; i < mpso_id_r_CO2_.size(); ++i) {
+            QUuid ObjFn_id = ObjFn_ids[i];
+
+            double r_CO2 = mpso_id_r_CO2_.value(ObjFn_id);
+            QUuid best_case_id = mpso_id_tentative_best_case_.value(ObjFn_id)->GetId();
+            int bast_case_iteration = mpso_id_tentative_best_case_iteration_.value(ObjFn_id);
+            double best_case_ObjFn_value = mpso_id_tentative_best_case_.value(ObjFn_id)->mpso_id_ofv().value(ObjFn_id);
+
+            statemap["r_CO2_" + to_string(i)] = QString::number(r_CO2, 'f', 1).toStdString();
+            statemap["BC_id_" + to_string(i)] = best_case_id.toString().toStdString();
+            statemap["BC_iteration_" + to_string(i)] = to_string(bast_case_iteration);
+            statemap["BC_ObjFn_value_" + to_string(i)] = QString::number(best_case_ObjFn_value, 'f', 2).toStdString();
+        }
+    }
+    return statemap;
 }
 QUuid Optimizer::GetId() {
     return tentative_best_case_->GetId();
@@ -194,6 +218,9 @@ map<string, vector<double>> Optimizer::GetValues() {
     valmap["FailNr"] = vector<double>{case_handler_->NumberFailed()};
     valmap["InvlNr"] = vector<double>{case_handler_->NumberInvalid()};
     valmap["CBOFnV"] = vector<double>{tentative_best_case_->objective_function_value()};
+    if (mpso_id_r_CO2().size() > 0) {
+        valmap["MPSO-NumberOfSwarms"] = vector<double>{mpso_id_r_CO2().size()};
+    }
     return valmap;
 }
 

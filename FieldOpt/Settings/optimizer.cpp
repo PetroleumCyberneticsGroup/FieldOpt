@@ -362,6 +362,22 @@ Optimizer::Parameters Optimizer::parseParameters(QJsonObject &json_parameters) {
             params.pso_velocity_scale = json_parameters["PSO-VelocityScale"].toDouble();
         }else params.pso_velocity_scale = 1.0;
 
+        // MPSO parameter
+        if (type_ == OptimizerType::MPSO) {
+            if (json_parameters.contains("MPSO-NumberOfSwarms")) {
+                params.mpso_nr_of_swarms = json_parameters["MPSO-NumberOfSwarms"].toInt();
+
+                std::cout << "###################################################################################" << std::endl;
+                std::cout << "Check parsed optimization parameter; Class: Settings/Optimizer" << std::endl;
+                std::cout << "mpso_nr_of_swarms: ... " << params.mpso_nr_of_swarms << std::endl;
+            }
+            else {
+                Printer::error("Missing MPSO-NumberOfSwarms in json driver (Optimizer/Parameters section)");
+                exit(1);
+            }
+        }
+
+        // TDLS parameter
         if(json_parameters.contains("TDLS-Resolution")){
             params.TDLS_resolution_ = json_parameters["TDLS-Resolution"].toInt();
         }
@@ -686,6 +702,38 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
                     if (json_additional_components.contains("r_CO2")){
                         obj.r_CO2 = json_additional_components["r_CO2"].toDouble();
                     }
+
+                    if (type_ == OptimizerType::MPSO) {
+                        if (json_additional_components.contains("r_CO2_list")) {
+                            if (!json_additional_components["r_CO2_list"].isArray()){
+                                Printer::error("Input for r_CO2_list must be an array");
+                                exit(1);
+                            }
+
+                            QJsonArray list = json_additional_components["r_CO2_list"].toArray();
+                            obj.r_CO2_list = QList<double>();
+                            for (int i = 0; i < list.size(); ++i) {
+                                if (!list.at(i).isDouble()){
+                                    Printer::error("Every element of r_CO2_list must be a double");
+                                    exit(1);
+                                }
+
+                                double r_CO2 = list.at(i).toDouble();
+                                obj.r_CO2_list.append(r_CO2);
+                            }
+
+                            std::cout<< "###################################################################################"<< std::endl;
+                            std::cout << "Check parsed optimization objective; Class: Settings/Optimizer" << std::endl;
+                            std::cout << "r_CO2_list.size: ... " << obj.r_CO2_list.size() << std::endl;
+                            for (int i = 0; i < obj.r_CO2_list.size(); ++i) {
+                                std::cout << "r_CO2_list[" << std::to_string(i) << "]: ... " << obj.r_CO2_list[i] << std::endl;
+                            }
+                        }
+                        else {
+                            Printer::error("Missing r_CO2_list in json driver (Optimizer/Objective/AdditionalComponents section)");
+                            exit(1);
+                        }
+                    }
                 }
             }
         } else
@@ -757,6 +805,13 @@ Optimizer::OptimizerType Optimizer::parseType(QString &type) {
         opt_type = OptimizerType::ExhaustiveSearch2DVert;
     else if (QString::compare(type, "PSO") == 0)
         opt_type = OptimizerType::PSO;
+    else if (QString::compare(type, "MPSO") == 0) {
+        opt_type = OptimizerType::MPSO;
+
+        std::cout<<"###################################################################################"<<std::endl;
+        std::cout<<"Check parsed optimizer type; Class: Settings/Optimizer"<<std::endl;
+        std::cout<<"OptimizerType: ... MPSO"<<std::endl;
+    }
     else if (QString::compare(type, "TDLS") == 0)
         opt_type = OptimizerType::TDLS;
     else if (QString::compare(type, "CMA_ES") == 0)

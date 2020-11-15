@@ -74,6 +74,8 @@ class CaseHandler
    */
   void UpdateCaseObjectiveFunctionValue(const QUuid id, const double ofv);
 
+  void UpdateCase_mpso_id_ofv(const QUuid &id, const QHash<QUuid, double> &mpso_id_ofv);
+
   /*!
    * @brief Update the evaluation status, error message, and WIC time for a case.
    * @param id The id of the case to set the status for.

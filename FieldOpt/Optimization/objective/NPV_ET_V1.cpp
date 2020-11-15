@@ -203,7 +203,7 @@ namespace Optimization {
             return eff_turbine_part_load;
         }
 
-        double NPV_ET_V1::calc_ET() const
+        QHash<QString, double> NPV_ET_V1::calc_ET() const
         {
             auto time = results_->GetValueVector(results_->Time);
 
@@ -376,14 +376,16 @@ namespace Optimization {
 
             double ET = penalty + cost_pump + cost_turbine + cost_fuel + t_CO2;
 
-            std::cout << "penalty: .........................." << penalty << endl;
-            std::cout << "cost_pump: ........................" << cost_pump << endl;
-            std::cout << "cost_turbine: ....................." << cost_turbine << endl;
-            std::cout << "cost_fuel: ........................" << cost_fuel << endl;
-            std::cout << "t_CO2: ............................" << t_CO2 << endl;
-            std::cout << "ET: ..............................." << ET << endl;
+            QHash<QString, double> calc_ET_results = QHash<QString, double> ();
+            calc_ET_results.insert("penalty", penalty);
+            calc_ET_results.insert("cost_pump", cost_pump);
+            calc_ET_results.insert("cost_turbine", cost_turbine);
+            calc_ET_results.insert("cost_fuel", cost_fuel);
+            calc_ET_results.insert("t_CO2", t_CO2);
+            calc_ET_results.insert("ET", ET);
+            calc_ET_results.insert("G_mass_CO2_last", G_mass_CO2[time.size() - 1]);
 
-            return ET;
+            return calc_ET_results;
         }
 
         double NPV_ET_V1::calc_NPV() const
@@ -484,7 +486,6 @@ namespace Optimization {
                     }
                 }
 
-                std::cout << "NPV: .............................." << NPV << endl;
                 return NPV;
             }
 
@@ -496,13 +497,26 @@ namespace Optimization {
 
         double NPV_ET_V1::value() const {
             try {
-                double ET = calc_ET();
+                QHash<QString, double> calc_ET_results = calc_ET();
+                double penalty = calc_ET_results.value("penalty");
+                double cost_pump = calc_ET_results.value("cost_pump");
+                double cost_turbine = calc_ET_results.value("cost_turbine");
+                double cost_fuel = calc_ET_results.value("cost_fuel");
+                double t_CO2 = calc_ET_results.value("t_CO2");
+                double ET = calc_ET_results.value("ET");
 
                 double NPV = calc_NPV();
 
                 double OFV = NPV - ET;
 
-                std::cout << "OFV: .............................." << OFV << endl;
+                std::cout << "penalty: .......................... " << penalty << endl;
+                std::cout << "cost_pump: ........................ " << cost_pump << endl;
+                std::cout << "cost_turbine: ..................... " << cost_turbine << endl;
+                std::cout << "cost_fuel: ........................ " << cost_fuel << endl;
+                std::cout << "t_CO2: ............................ " << t_CO2 << endl;
+                std::cout << "ET: ............................... " << ET << endl;
+                std::cout << "NPV: .............................. " << NPV << endl;
+                std::cout << "OFV: .............................. " << OFV << endl;
 
                 return OFV;
             }
@@ -510,6 +524,43 @@ namespace Optimization {
                 Printer::error("Failed to compute NPV_ET_V1. Returning 0.0");
 
                 return 0.0;
+            }
+        }
+
+        QHash<QUuid, double> NPV_ET_V1::mpso_id_ofv(const QHash<QUuid, double> &mpso_id_r_CO2) const {
+            try {
+                QHash<QString, double> calc_ET_results = calc_ET();
+                double penalty = calc_ET_results.value("penalty");
+                double cost_pump = calc_ET_results.value("cost_pump");
+                double cost_turbine = calc_ET_results.value("cost_turbine");
+                double cost_fuel = calc_ET_results.value("cost_fuel");
+                double G_mass_CO2_last = calc_ET_results.value("G_mass_CO2_last");
+
+                double NPV = calc_NPV();
+
+                QHash<QUuid, double> mpso_id_ofv_ = QHash<QUuid, double>();
+                QList<QUuid> ObjFn_ids = mpso_id_r_CO2.keys();
+                for (int i = 0; i < mpso_id_r_CO2.size(); ++i) {
+                    QUuid ObjFn_id = ObjFn_ids[i];
+                    double r_CO2_ = mpso_id_r_CO2.value(ObjFn_id);
+                    double t_CO2 = G_mass_CO2_last * r_CO2_;
+                    double ET = penalty + cost_pump + cost_turbine + cost_fuel + t_CO2;
+                    double ObjFn_value = NPV - ET;
+                    mpso_id_ofv_.insert(ObjFn_id, ObjFn_value);
+                }
+
+                for (int i = 0; i < mpso_id_r_CO2.size(); ++i) {
+                    QUuid ObjFn_id = ObjFn_ids[i];
+                    double r_CO2_ = mpso_id_r_CO2.value(ObjFn_id);
+                    double ObjFn_value = mpso_id_ofv_.value(ObjFn_id);
+                    std::cout << "NPV - ET (r_CO2 = " << r_CO2_ << " USD/ton CO2): ... " << ObjFn_value << std::endl;
+                }
+
+                return mpso_id_ofv_;
+            }
+            catch (...) {
+                Printer::error("Failed to get mpso_id_ofv. Returning an empty QHash map");
+                return QHash<QUuid, double> ();
             }
         }
 

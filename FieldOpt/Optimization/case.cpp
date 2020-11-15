@@ -231,6 +231,18 @@ map <string, vector<double>> Case::GetValues() {
     for (auto key : real_variables_.keys()){
         valmap["Var#"+variables_name_.value(key)] = vector<double>{real_variables_.value(key)};
     }
+    if (mpso_id_r_CO2_.size() > 0) {
+        valmap["Swarm's_r_CO2"] =vector<double>{mpso_id_r_CO2_.value(ObjFn_id_)};
+        valmap["MPSO-NumberOfSwarms"] = vector<double>{mpso_id_r_CO2_.size()};
+        QList<QUuid> ObjFn_ids = mpso_id_r_CO2_.keys();
+        for (int i = 0; i < mpso_id_r_CO2_.size(); ++i) {
+            QUuid ObjFn_id = ObjFn_ids[i];
+            double r_CO2 = mpso_id_r_CO2_.value(ObjFn_id);
+            double ObjFn_value = mpso_id_ofv_.value(ObjFn_id);
+            valmap["r_CO2_" + to_string(i)] = vector<double>{r_CO2};
+            valmap["ObjFn_value_"+to_string(i)] = vector<double>{ObjFn_value};
+        }
+    }
     return valmap;
 }
 string Case::StringRepresentation(Model::Properties::VariablePropertyContainer *varcont) {
@@ -360,5 +372,37 @@ void Case::set_variables_name(Model::Properties::VariablePropertyContainer *varc
     }
 
     variables_name_ = variables_name;
+}
+
+void Case::create_mpso_id_r_CO2(int mpso_nr_of_swarms, const QList<double> &r_CO2_list) {
+    mpso_id_r_CO2_ = QHash<QUuid, double> ();
+    for (int i = 0; i < mpso_nr_of_swarms; ++i) {
+        QUuid ObjFn_id = QUuid::createUuid();
+        double r_CO2 = r_CO2_list[i];
+        mpso_id_r_CO2_.insert(ObjFn_id, r_CO2);
+    }
+}
+
+void Case::set_mpso_id_r_CO2(const QHash<QUuid, double> &mpso_id_r_CO2) {
+    mpso_id_r_CO2_ = mpso_id_r_CO2;
+}
+
+void Case::set_mpso_id_name(const QHash<QUuid, double> &mpso_id_r_CO2) {
+    mpso_id_name_ = QHash<QUuid, QString> ();
+    QList<QUuid> ObjFn_ids = mpso_id_r_CO2.keys();
+    for (int i = 0; i < mpso_id_r_CO2.size(); ++i) {
+        QUuid ObjFn_id = ObjFn_ids[i];
+        double r_CO2 = mpso_id_r_CO2.value(ObjFn_id);
+        QString ObjFn_name = "NPV - ET (r_CO2 = " + QString::number(r_CO2, 'f', 1) + " USD/ton CO2)";
+        mpso_id_name_.insert(ObjFn_id, ObjFn_name);
+    }
+}
+
+void Case::set_mpso_id_ofv(const QHash<QUuid, double> &mpso_id_ofv) {
+    mpso_id_ofv_ = mpso_id_ofv;
+}
+
+void Case::set_ObjFn_id(const QUuid &ObjFn_id) {
+    ObjFn_id_ = ObjFn_id;
 }
 }

@@ -44,11 +44,13 @@ class NPV_ET_V1 : public Objective {
 
             double calc_eff_turbine_part_load (double P_turbine) const;
 
-            double calc_ET() const;
+            QHash<QString, double> calc_ET() const;
 
             double calc_NPV() const;
 
             double value() const;
+
+            QHash<QUuid, double> mpso_id_ofv(const QHash<QUuid, double> &mpso_id_r_CO2) const;
 
         private:
             double p_atm;

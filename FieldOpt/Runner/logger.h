@@ -105,7 +105,7 @@ class Logger
       {"CaseId", 39},
       {"IterNr", 6}
   };
-  QString cas_log_header_ = "             TimeSt , EvalSt , ConsSt , ErrMsg ,   SimDur ,   WicDur ,       OFnVal ,                                 CaseId , IterNr ";
+  QString cas_log_header_ = "             TimeSt , EvalSt , ConsSt , ErrMsg ,   SimDur ,   WicDur ,       OFnVal ,                                 CaseId , IterNr , Swarm's_r_CO2 ,      r_CO2 ,     ObjFn_value ,      r_CO2 ,     ObjFn_value ,      r_CO2 ,     ObjFn_value , ";
   map<string, int> opt_log_col_widths_ {
       {"TimeSt", 19},
       {"TimeEl", 9},
@@ -119,7 +119,7 @@ class Logger
       {"CBOFnV", 12},
       {"CurBst", 41}
   };
-  const QString opt_log_header_ = "             TimeSt ,   TimeEl ,   TimeIt , IterNr , TotlNr , EvalNr , BkpdNr , TimONr , FailNr , InvlNr ,       CBOFnV ,                                 CurBst";
+  const QString opt_log_header_ = "             TimeSt ,   TimeEl ,   TimeIt , IterNr , TotlNr , EvalNr , BkpdNr , TimONr , FailNr , InvlNr ,       CBOFnV ,                                 CurBst ,      r_CO2 ,                                  BC_id , BC_itr ,  BC_ObjFn_value ,      r_CO2 ,                                  BC_id , BC_itr ,  BC_ObjFn_value ,      r_CO2 ,                                  BC_id , BC_itr ,  BC_ObjFn_value , ";
 
   void logCase(Loggable *obj);
   void logCaseExtended(Loggable *obj);

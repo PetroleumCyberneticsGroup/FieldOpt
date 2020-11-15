@@ -96,6 +96,11 @@ void SerialRunner::Execute()
                 if (simulation_success) {
                     model_->wellCost(settings_->optimizer());
                     new_case->set_objective_function_value(objective_function_->value());
+                    if (settings_->optimizer()->type() == Settings::Optimizer::OptimizerType::MPSO) {
+                        QHash<QUuid, double> mpso_id_r_CO2_ = base_case_->mpso_id_r_CO2();
+                        QHash<QUuid, double> mpso_id_ofv_ = objective_function_->mpso_id_ofv(mpso_id_r_CO2_);
+                        new_case->set_mpso_id_ofv(mpso_id_ofv_);
+                    }
                     new_case->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
                     new_case->SetSimTime(sim_time);
                     simulation_times_.push_back((sim_time));

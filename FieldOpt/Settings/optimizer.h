@@ -42,7 +42,7 @@ class Optimizer
  public:
   Optimizer(){}
   Optimizer(QJsonObject json_optimizer);
-  enum OptimizerType { Compass, APPS, ExhaustiveSearch2DVert, GeneticAlgorithm, EGO, PSO, VFSA, SPSA, Hybrid, CMA_ES, TDLS };
+  enum OptimizerType { Compass, APPS, ExhaustiveSearch2DVert, GeneticAlgorithm, EGO, PSO, VFSA, SPSA, Hybrid, CMA_ES, TDLS, MPSO };
   enum OptimizerMode { Maximize, Minimize };
   enum ConstraintType { BHP, Rate, SplinePoints,
     WellSplineLength, WellSplineInterwellDistance, WellSplineDomain,
@@ -89,9 +89,12 @@ class Optimizer
     double pso_swarm_size; //!< The number of particles in the swarm. Default: 50
     double pso_velocity_scale; //!< Scaling factor for particle velocities. Default: 1.0
 
-    // TDLS
+    // MPSO parameter
+    int mpso_nr_of_swarms; //!< Number of swarms involved in the optimization
 
+    // TDLS parameter
     int TDLS_resolution_;
+
     // EGO Parameters
     int ego_init_guesses = -1; //!< Number of initial guesses to be made (default is two times the number of variables).
     std::string ego_init_sampling_method = "Random"; //!< Sampling method to be used for initial guesses (Random or Uniform)
@@ -217,6 +220,7 @@ class Optimizer
     double p_gas;
     double c_CO2_fuel;
     double r_CO2;
+    QList<double> r_CO2_list;
 
     QList<WeightedSumComponent> weighted_sum; //!< The expression for the Objective function formulated as a weighted sum
     QList<NPVComponent> NPV_sum;  //!< The expression for the Objective function formulated as an NPV

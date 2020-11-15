@@ -50,6 +50,8 @@ class CaseTransferObject {
       ar & integer_variables_;
       ar & real_variables_;
       ar & ensemble_realization_;
+      ar & mpso_id_r_CO2_;
+      ar & mpso_id_ofv_;
       ar & wic_time_secs_;
       ar & sim_time_secs_;
       ar & status_eval_;
@@ -98,6 +100,8 @@ class CaseTransferObject {
   map<uuid, double> real_variables_;
 
   string ensemble_realization_;
+  map<uuid, double> mpso_id_r_CO2_;
+  map<uuid, double> mpso_id_ofv_;
 
   int status_eval_;
   int status_cons_;

@@ -29,6 +29,7 @@
 #include <Optimization/objective/carbondioxidenpv.h>
 #include <Optimization/objective/NPV_ET_V1.h>
 #include "Optimization/optimizers/PSO.h"
+#include "Optimization/optimizers/MPSO.h"
 #include "Optimization/optimizers/CMA_ES.h"
 #include "Optimization/optimizers/VFSA.h"
 #include "Optimization/optimizers/SPSA.h"
@@ -190,6 +191,45 @@ void AbstractRunner::InitializeBaseCase()
         model_->wellCost(settings_->optimizer());
         base_case_->set_objective_function_value(objective_function_->value());
         base_case_->set_variables_name(model_->variables());
+
+        if (settings_->optimizer()->type() == Settings::Optimizer::OptimizerType::MPSO) {
+
+            int mpso_nr_of_swarms = settings_->optimizer()->parameters().mpso_nr_of_swarms;
+            QList<double> r_CO2_list = settings_->optimizer()->objective().r_CO2_list;
+
+            if (mpso_nr_of_swarms != r_CO2_list.size()) {
+                Printer::error("Input for MPSO-NumberOfSwarms and the size of r_CO2_list are not identical");
+                exit(1);
+            }
+
+            base_case_->create_mpso_id_r_CO2(mpso_nr_of_swarms, r_CO2_list);
+
+            QHash<QUuid, double> mpso_id_r_CO2_ = base_case_->mpso_id_r_CO2();
+
+            base_case_->set_mpso_id_name(mpso_id_r_CO2_);
+
+            QHash<QUuid, QString> mpso_id_name_ = base_case_->mpso_id_name();
+
+            QHash<QUuid, double> mpso_id_ofv_ = objective_function_->mpso_id_ofv(mpso_id_r_CO2_);
+
+            base_case_->set_mpso_id_ofv(mpso_id_ofv_);
+
+            std::cout<<"###################################################################################"<<std::endl;
+            std::cout<<"Check objective function id, associated r_CO2, name, value; class AbstractRunner"<<std::endl;
+            QList<QUuid> ObjFn_ids = mpso_id_r_CO2_.keys();
+            for (int i = 0; i < mpso_id_r_CO2_.size(); ++i) {
+                QUuid ObjFn_id = ObjFn_ids[i];
+                double r_CO2 = mpso_id_r_CO2_.value(ObjFn_id);
+                QString ObjFn_name = mpso_id_name_.value(ObjFn_id);
+                double ObjFn_value = mpso_id_ofv_.value(ObjFn_id);
+
+                std::cout << "ObjFn_id: ... " << ObjFn_id.toString().toStdString() << std::endl;
+                std::cout << "r_CO2: ... " << r_CO2 << std::endl;
+                std::cout << "ObjFn_name: ... " << ObjFn_name.toStdString() << std::endl;
+                std::cout << "ObjFn_value: ... " << ObjFn_value << std::endl;
+                std::cout << "" << std::endl;
+            }
+        }
     }
     if (VERB_RUN >= 1) Printer::ext_info("Base case objective function value set to " + Printer::num2str(base_case_->objective_function_value()), "Runner", "AbstractRunner");
 }
@@ -267,6 +307,16 @@ void AbstractRunner::InitializeOptimizer()
                                                        model_->variables(),
                                                        model_->grid(),
                                                        logger_
+            );
+            optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
+            break;
+        case Settings::Optimizer::OptimizerType::MPSO:
+            if (VERB_RUN >= 1) Printer::ext_info("Using MPSO optimization algorithm.", "Runner", "AbstractRunner");
+            optimizer_ = new Optimization::Optimizers::MPSO(settings_->optimizer(),
+                                                            base_case_,
+                                                            model_->variables(),
+                                                            model_->grid(),
+                                                            logger_
             );
             optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
             break;

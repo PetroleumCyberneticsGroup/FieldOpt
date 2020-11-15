@@ -35,6 +35,8 @@ CaseTransferObject::CaseTransferObject(Optimization::Case *c) {
     wic_time_secs_ = c->GetWICTime();
     sim_time_secs_ = c->GetSimTime();
     ensemble_realization_ = c->GetEnsembleRealization().toStdString();
+    mpso_id_r_CO2_ = qHashToStdMap(c->mpso_id_r_CO2());
+    mpso_id_ofv_ = qHashToStdMap(c->mpso_id_ofv());
 
     status_eval_ = c->state.eval;
     status_cons_ = c->state.cons;
@@ -52,6 +54,8 @@ Case *CaseTransferObject::CreateCase() {
     c->SetWICTime(wic_time_secs_);
     c->SetSimTime(sim_time_secs_);
     c->SetEnsembleRealization(QString::fromStdString(ensemble_realization_));
+    c->mpso_id_r_CO2_ = stdMapToQhash(mpso_id_r_CO2_);
+    c->mpso_id_ofv_ = stdMapToQhash(mpso_id_ofv_);
     c->state.eval = static_cast<Case::CaseState::EvalStatus>(status_eval_);
     c->state.cons = static_cast<Case::CaseState::ConsStatus>(status_cons_);
     c->state.queue = static_cast<Case::CaseState::QueueStatus>(status_queue_);

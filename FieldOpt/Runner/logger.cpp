@@ -116,8 +116,18 @@ void Logger::logCase(Loggable *obj) {
     entry << setw(cas_log_col_widths_["OFnVal"]) << scientific << obj->GetValues()["OFnVal"][0] << " ,";
     entry << setw(cas_log_col_widths_["CaseId"]) << obj->GetId().toString().toStdString() << " , ";
     entry.precision(0);
-    entry << fixed << setfill('0') << setw(cas_log_col_widths_["IterNr"]) << obj->GetValues()["IterNr"][0];
-    entry.precision(6);
+    entry << fixed << setfill('0') << setw(cas_log_col_widths_["IterNr"]) << obj->GetValues()["IterNr"][0] << " , ";
+    if (obj->GetValues()["MPSO-NumberOfSwarms"].size() > 0) {
+        entry.precision(1);
+        entry << fixed << setfill(' ') << setw(13) << obj->GetValues()["Swarm's_r_CO2"][0] << " , ";
+        int mpso_nr_of_swarms = obj->GetValues()["MPSO-NumberOfSwarms"][0];
+        for (int i = 0; i < mpso_nr_of_swarms; ++i) {
+            entry.precision(1);
+            entry << setw(10) << obj->GetValues()["r_CO2_" + to_string(i)][0] << " , ";
+            entry.precision(2);
+            entry << setw(15) << obj->GetValues()["ObjFn_value_" + to_string(i)][0] << " , ";
+        }
+    }
     if (obj->GetValues().count("OFvSTD") > 0) {
         entry << " , " << setw(cas_log_col_widths_["OFnVal"]) << scientific << obj->GetValues()["OFvSTD"][0];
     }
@@ -144,6 +154,10 @@ void Logger::logCaseExtended(Loggable *obj){
         }
     }
     new_entry.insert("Variables", vars);
+
+    if (obj->GetValues()["MPSO-NumberOfSwarms"].size() > 0) {
+        new_entry.insert("Swarm's_r_CO2", obj->GetValues()["Swarm's_r_CO2"][0]);
+    }
 
     // Open existing document
     QFile json_file(cas_ext_log_path_);
@@ -189,7 +203,16 @@ void Logger::logOptimizer(Loggable *obj) {
     entry.precision(6);
     entry << setw(opt_log_col_widths_["CBOFnV"]) << scientific << obj->GetValues()["CBOFnV"][0] << " , ";
     entry.precision(0);
-    entry << obj->GetId().toString().toStdString();
+    entry << obj->GetId().toString().toStdString() << " , ";
+    if (obj->GetValues()["MPSO-NumberOfSwarms"].size() > 0) {
+        int mpso_nr_of_swarms = obj->GetValues()["MPSO-NumberOfSwarms"][0];
+        for (int i = 0; i < mpso_nr_of_swarms; ++i) {
+            entry << fixed << setfill(' ') << setw(10) << obj->GetState()["r_CO2_" + to_string(i)] << " , ";
+            entry << setw(38) << obj->GetState()["BC_id_" + to_string(i)] << " , ";
+            entry << setw(6) << obj->GetState()["BC_iteration_" + to_string(i)] << " , ";
+            entry << setw(15) << obj->GetState()["BC_ObjFn_value_" + to_string(i)] << " , ";
+        }
+    }
     string str = entry.str();
     Utilities::FileHandling::WriteLineToFile(QString::fromStdString(str), opt_log_path_);
     return;

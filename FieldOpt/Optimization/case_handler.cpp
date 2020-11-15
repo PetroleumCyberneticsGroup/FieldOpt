@@ -95,6 +95,10 @@ void CaseHandler::UpdateCaseObjectiveFunctionValue(const QUuid id, const double 
     cases_[id]->set_objective_function_value(ofv);
 }
 
+void CaseHandler::UpdateCase_mpso_id_ofv(const QUuid &id, const QHash<QUuid, double> &mpso_id_ofv) {
+    cases_[id]->set_mpso_id_ofv(mpso_id_ofv);
+}
+
 void CaseHandler::SetCaseState(QUuid id, Case::CaseState state, int wic_time, int sim_time) {
     cases_[id]->state = state;
     cases_[id]->SetWICTime(wic_time);

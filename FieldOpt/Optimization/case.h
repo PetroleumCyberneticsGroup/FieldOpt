@@ -248,6 +248,22 @@ class Case : public Loggable
 
   QHash<QUuid, string> variables_name() const { return variables_name_; }
 
+  void create_mpso_id_r_CO2(int mpso_nr_of_swarms, const QList<double> &r_CO2_list);
+
+  void set_mpso_id_r_CO2(const QHash<QUuid, double> &mpso_id_r_CO2);
+
+  QHash<QUuid, double> mpso_id_r_CO2() const { return mpso_id_r_CO2_; }
+
+  void set_mpso_id_name(const QHash<QUuid, double> &mpso_id_r_CO2);
+
+  QHash<QUuid, QString> mpso_id_name() const { return mpso_id_name_; }
+
+  void set_mpso_id_ofv(const QHash<QUuid, double> &mpso_id_ofv);
+
+  QHash<QUuid, double> mpso_id_ofv() const { return mpso_id_ofv_; }
+
+  void set_ObjFn_id(const QUuid &ObjFn_id);
+
  private:
   QUuid id_; //!< Unique ID for the case.
   int sim_time_sec_;
@@ -270,6 +286,11 @@ class Case : public Loggable
   // Multiple realizations-support
   QString ensemble_realization_; //!< The realization to evaluate next. Used by workers when in parallel mode.
   QHash<QString, double> ensemble_ofvs_; //!< Map of objective function values from realization alias - value.
+
+  QHash<QUuid, double> mpso_id_r_CO2_; //!< Map of r_CO2 value from objective function id.
+  QHash<QUuid, QString> mpso_id_name_; //!< Map of objective function name from objective function id.
+  QHash<QUuid, double> mpso_id_ofv_; //!< Map of objective function value from objective function id.
+  QUuid ObjFn_id_; //!< This ID indicates that the case belongs to a swarm that optimizes an objective function uniquely marked by the ID.
 };
 
 }

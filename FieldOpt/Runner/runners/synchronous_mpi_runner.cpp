@@ -224,6 +224,11 @@ void SynchronousMPIRunner::Execute() {
                     printMessage("Setting objective function value.", 2);
                     model_->wellCost(settings_->optimizer());
                     worker_->GetCurrentCase()->set_objective_function_value(objective_function_->value());
+                    if (settings_->optimizer()->type() == Settings::Optimizer::OptimizerType::MPSO) {
+                        QHash<QUuid, double> mpso_id_r_CO2_ = worker_->GetCurrentCase()->mpso_id_r_CO2();
+                        QHash<QUuid, double> mpso_id_ofv_ = objective_function_->mpso_id_ofv(mpso_id_r_CO2_);
+                        worker_->GetCurrentCase()->set_mpso_id_ofv(mpso_id_ofv_);
+                    }
                     worker_->GetCurrentCase()->SetSimTime(sim_time);
                     worker_->GetCurrentCase()->state.eval = Optimization::Case::CaseState::EvalStatus::E_DONE;
                     simulation_times_.push_back(sim_time);

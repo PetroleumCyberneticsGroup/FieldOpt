@@ -46,6 +46,8 @@ public:
      */
     virtual double value() const = 0;
 
+    virtual QHash<QUuid, double> mpso_id_ofv(const QHash<QUuid, double> &mpso_id_r_CO2) const { return QHash<QUuid, double> (); }
+
 protected:
     Objective();
 
