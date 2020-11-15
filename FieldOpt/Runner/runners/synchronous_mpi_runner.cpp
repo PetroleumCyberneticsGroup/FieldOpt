@@ -25,8 +25,8 @@ SynchronousMPIRunner::SynchronousMPIRunner(RuntimeSettings *rts) : MPIRunner(rts
     assert(world_.size() >= 2 && "The SynchronousMPIRunner requires at least two MPI processes.");
 
     if (world_.rank() == 0) {
-        InitializeLogger();
         InitializeSettings("rank" + QString::number(rank()));
+        InitializeLogger();
         InitializeModel();
         InitializeSimulator();
         EvaluateBaseModel();
