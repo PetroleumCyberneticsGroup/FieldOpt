@@ -167,6 +167,14 @@ void Case::SetRealVarValues(Eigen::VectorXd vec) {
     }
 }
 
+void Case::SetRealVarVelocity(Eigen::VectorXd vec) {
+    for (int i = 0; i < vec.size(); ++i) {
+        QUuid real_var_id = real_id_index_map_[i];
+        double real_var_velocity = vec[i];
+        real_variables_velocity_.insert(real_var_id, real_var_velocity);
+    }
+}
+
 Eigen::VectorXi Case::GetIntegerVarVector() {
     Eigen::VectorXi vec(integer_id_index_map_.length());
     for (int i = 0; i < integer_id_index_map_.length(); ++i) {
@@ -230,6 +238,11 @@ map <string, vector<double>> Case::GetValues() {
     valmap["IterNr"] = vector<double>{iteration_};
     for (auto key : real_variables_.keys()){
         valmap["Var#"+variables_name_.value(key)] = vector<double>{real_variables_.value(key)};
+    }
+    if (real_variables_velocity_.size() > 0) {
+        for (auto key : real_variables_velocity_.keys()) {
+            valmap["VarVelocity#"+variables_name_.value(key)] = vector<double>{real_variables_velocity_.value(key)};
+        }
     }
     if (mpso_id_r_CO2_.size() > 0) {
         valmap["Swarm's_r_CO2"] =vector<double>{mpso_id_r_CO2_.value(ObjFn_id_)};

@@ -315,6 +315,7 @@ namespace Optimization{
             rea_vars=rea_vars_swap;
             case_pointer->SetRealVarValues(rea_vars);
             rea_vars_velocity = rea_vars_velocity_swap;
+            case_pointer->SetRealVarVelocity(rea_vars_velocity);
         }
 
         bool MPSO::isImprovement(const Case *c, const QUuid &ObjFn_id) {

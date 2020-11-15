@@ -165,6 +165,8 @@ class Case : public Loggable
    */
   void SetRealVarValues(Eigen::VectorXd vec);
 
+  void SetRealVarVelocity(Eigen::VectorXd vec);
+
   /*!
    * @brief Get a vector containing the variable UUIDs in the same order they appear
    * in in the vector from GetRealVarVector.
@@ -275,6 +277,7 @@ class Case : public Loggable
   QHash<QUuid, bool> binary_variables_;
   QHash<QUuid, int> integer_variables_;
   QHash<QUuid, double> real_variables_;
+  QHash<QUuid, double> real_variables_velocity_;
 
   QList<QUuid> real_id_index_map_;
   QList<QUuid> integer_id_index_map_;

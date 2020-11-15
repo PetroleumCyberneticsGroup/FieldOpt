@@ -146,14 +146,23 @@ void Logger::logCaseExtended(Loggable *obj){
     new_entry.insert("IterNr", obj->GetValues()["IterNr"][0]);
 
     QJsonArray vars;
+    QJsonArray vars_velocity;
     for (auto const a : obj->GetValues()) {
         if(a.first.compare(0, 4, "Var#") == 0) {
             QJsonObject var;
             var.insert(QString::fromStdString(a.first), a.second[0]);
             vars.append(var);
         }
+        if(a.first.compare(0, 12, "VarVelocity#") == 0) {
+            QJsonObject var_velocity;
+            var_velocity.insert(QString::fromStdString(a.first), a.second[0]);
+            vars_velocity.append(var_velocity);
+        }
     }
     new_entry.insert("Variables", vars);
+    if (vars_velocity.size() > 0) {
+        new_entry.insert("VariablesVelocity", vars_velocity);
+    }
 
     if (obj->GetValues()["MPSO-NumberOfSwarms"].size() > 0) {
         new_entry.insert("Swarm's_r_CO2", obj->GetValues()["Swarm's_r_CO2"][0]);

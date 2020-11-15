@@ -183,6 +183,7 @@ void PSO::Particle::ParticleAdapt(Eigen::VectorXd rea_vars_velocity_swap, Eigen:
     rea_vars=rea_vars_swap;
     case_pointer->SetRealVarValues(rea_vars);
     rea_vars_velocity = rea_vars_velocity_swap;
+    case_pointer->SetRealVarVelocity(rea_vars_velocity);
 }
 void PSO::printSwarm(vector<Particle> swarm) const {
     if (swarm.size() == 0)
