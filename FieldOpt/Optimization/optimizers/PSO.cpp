@@ -138,11 +138,13 @@ Case *PSO::generateRestartCase(Settings::Optimizer *settings, Case *base_case, i
         exit(1);
     }
 
+    QList<QUuid> base_case_variables_keys = base_case_variables.keys();
+    QList<QString> restart_case_variables_keys = restart_case_variables.keys();
     for (int i = 0; i < base_case_variables.size(); ++i) {
-        QUuid variable_id = base_case_variables.keys()[i];
+        QUuid variable_id = base_case_variables_keys[i];
         QString variable_name = QString::fromStdString(base_case_variables.value(variable_id));
         for (int j = 0; j < restart_case_variables.size(); ++j) {
-            if (variable_name == restart_case_variables.keys()[j]) {
+            if (variable_name == restart_case_variables_keys[j]) {
                 double variable_value = restart_case_variables.value(variable_name);
                 new_case->set_real_variable_value(variable_id, variable_value);
                 break;

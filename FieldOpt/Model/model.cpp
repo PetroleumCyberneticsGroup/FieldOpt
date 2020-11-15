@@ -267,11 +267,13 @@ void Model::UpdateModel(Settings::Settings settings) {
         exit(1);
     }
 
+    QList<QUuid> continuos_variables_keys = continuos_variables->keys();
+    QList<QString> restart_base_case_variables_keys = restart_base_case_variables.keys();
     for (int i = 0; i < continuos_variables->size(); ++i) {
-        QUuid variable_id = continuos_variables->keys()[i];
+        QUuid variable_id = continuos_variables_keys[i];
         QString variable_name = continuos_variables->value(variable_id)->name();
         for (int j = 0; j < restart_base_case_variables.size(); ++j) {
-            if (variable_name == restart_base_case_variables.keys()[j]) {
+            if (variable_name == restart_base_case_variables_keys[j]) {
                 double variable_value = restart_base_case_variables.value(variable_name);
                 variable_container_->SetContinousVariableValue(variable_id, variable_value);
                 break;
