@@ -329,6 +329,7 @@ namespace Optimization{
                     return true;
                 }
             }
+            return false;
         }
 
         void MPSO::updateTentativeBestCase(Case *c, const QUuid &ObjFn_id) {
