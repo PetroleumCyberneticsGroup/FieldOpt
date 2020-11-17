@@ -144,6 +144,7 @@ void Logger::logCaseExtended(Loggable *obj){
     new_entry.insert("UUID", obj->GetId().toString());
 
     new_entry.insert("IterNr", obj->GetValues()["IterNr"][0]);
+    int new_entry_IterNr = obj->GetValues()["IterNr"][0];
 
     QJsonArray vars;
     QJsonArray vars_velocity;
@@ -184,10 +185,20 @@ void Logger::logCaseExtended(Loggable *obj){
     // Deleting file contents in preparation to rewrite
     json_file.open(QFile::ReadWrite | QIODevice::Truncate);
 
-    // Add new case to JSON document
+    // Trimming restart cases. Only keep cases for the last 2 iterations
     QJsonArray case_array = json_obj["Cases"].toArray();
-    case_array.append(new_entry);
-    json_obj["Cases"] = case_array;
+    QJsonArray new_case_array;
+    for (auto case_ : case_array) {
+        QJsonObject case_object = case_.toObject();
+        int case_IterNr = case_object["IterNr"].toInt();
+        if (case_IterNr > new_entry_IterNr - 3) {
+            new_case_array.append(case_object);
+        }
+    }
+
+    // Add new case to JSON document
+    new_case_array.append(new_entry);
+    json_obj["Cases"] = new_case_array;
 
     // Write the updated log
     QJsonDocument json_doc = QJsonDocument(json_obj);
