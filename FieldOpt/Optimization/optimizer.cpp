@@ -181,6 +181,24 @@ Loggable::LogTarget Optimizer::GetLogTarget() {
 }
 map<string, string> Optimizer::GetState() {
     map<string, string> statemap;
+
+    QUuid best_case_id = tentative_best_case_->GetId();
+    int best_case_iteration = tentative_best_case_iteration_;
+    statemap["BC_id"] = best_case_id.toString().toStdString();
+    statemap["BC_iteration"] = to_string(best_case_iteration);
+    for (auto key : tentative_best_case_->real_variables().keys()){
+        std::string var_name = tentative_best_case_->variables_name().value(key);
+        double var_value = tentative_best_case_->real_variables().value(key);
+        statemap["BC_Var#"+var_name] = QString::number(var_value, 'f', 16).toStdString();
+    }
+    if (tentative_best_case_->real_variables_velocity().size() > 0) {
+        for (auto key : tentative_best_case_->real_variables_velocity().keys()) {
+            std::string var_name = tentative_best_case_->variables_name().value(key);
+            double var_velocity = tentative_best_case_->real_variables_velocity().value(key);
+            statemap["BC_VarVelocity#"+var_name] = QString::number(var_velocity, 'f', 16).toStdString();
+        }
+    }
+
     if (mpso_id_r_CO2().size() > 0) {
         QHash<QUuid, double> mpso_id_r_CO2_ = mpso_id_r_CO2();
         QHash<QUuid, Case *> mpso_id_tentative_best_case_ = mpso_id_tentative_best_case();
@@ -190,15 +208,26 @@ map<string, string> Optimizer::GetState() {
         for (int i = 0; i < mpso_id_r_CO2_.size(); ++i) {
             QUuid ObjFn_id = ObjFn_ids[i];
 
-            double r_CO2 = mpso_id_r_CO2_.value(ObjFn_id);
-            QUuid best_case_id = mpso_id_tentative_best_case_.value(ObjFn_id)->GetId();
-            int bast_case_iteration = mpso_id_tentative_best_case_iteration_.value(ObjFn_id);
-            double best_case_ObjFn_value = mpso_id_tentative_best_case_.value(ObjFn_id)->mpso_id_ofv().value(ObjFn_id);
-
-            statemap["r_CO2_" + to_string(i)] = QString::number(r_CO2, 'f', 1).toStdString();
-            statemap["BC_id_" + to_string(i)] = best_case_id.toString().toStdString();
-            statemap["BC_iteration_" + to_string(i)] = to_string(bast_case_iteration);
-            statemap["BC_ObjFn_value_" + to_string(i)] = QString::number(best_case_ObjFn_value, 'f', 2).toStdString();
+            double mpso_r_CO2 = mpso_id_r_CO2_.value(ObjFn_id);
+            QUuid mpso_best_case_id = mpso_id_tentative_best_case_.value(ObjFn_id)->GetId();
+            int mpso_bast_case_iteration = mpso_id_tentative_best_case_iteration_.value(ObjFn_id);
+            double mpso_best_case_ObjFn_value = mpso_id_tentative_best_case_.value(ObjFn_id)->mpso_id_ofv().value(ObjFn_id);
+            statemap["mpso_r_CO2_" + to_string(i)] = QString::number(mpso_r_CO2, 'f', 1).toStdString();
+            statemap["mpso_BC_id_" + to_string(i)] = mpso_best_case_id.toString().toStdString();
+            statemap["mpso_BC_iteration_" + to_string(i)] = to_string(mpso_bast_case_iteration);
+            statemap["mpso_BC_ObjFn_value_" + to_string(i)] = QString::number(mpso_best_case_ObjFn_value, 'f', 2).toStdString();
+            for (auto key : mpso_id_tentative_best_case_.value(ObjFn_id)->real_variables().keys()){
+                std::string var_name = mpso_id_tentative_best_case_.value(ObjFn_id)->variables_name().value(key);
+                double var_value = mpso_id_tentative_best_case_.value(ObjFn_id)->real_variables().value(key);
+                statemap["mpso_BC_" + to_string(i) + "_Var#" + var_name] = QString::number(var_value, 'f', 16).toStdString();
+            }
+            if (mpso_id_tentative_best_case_.value(ObjFn_id)->real_variables_velocity().size() > 0) {
+                for (auto key : mpso_id_tentative_best_case_.value(ObjFn_id)->real_variables_velocity().keys()) {
+                    std::string var_name = mpso_id_tentative_best_case_.value(ObjFn_id)->variables_name().value(key);
+                    double var_velocity = mpso_id_tentative_best_case_.value(ObjFn_id)->real_variables_velocity().value(key);
+                    statemap["mpso_BC_" + to_string(i) + "_VarVelocity#" + var_name] = QString::number(var_velocity, 'f', 16).toStdString();
+                }
+            }
         }
     }
     return statemap;

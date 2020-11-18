@@ -76,6 +76,7 @@ class Logger
   bool verbose_; //!< Whether or not new log entries should also be printed to the console.
   QString output_dir_; //!< Directory in which the files will be written.
   QString opt_log_path_; //!< Path to the optimization log file.
+  QString opt_ext_log_path_; //!< Path to the optimization extended log file.
   QString cas_log_path_; //!< Path to the case log file.
   QString cas_ext_log_path_; //!< Path to the case extended log file.
   QString ext_log_path_; //!< Path to the extended log file.
@@ -124,6 +125,7 @@ class Logger
   void logCase(Loggable *obj);
   void logCaseExtended(Loggable *obj);
   void logOptimizer(Loggable *obj);
+  void logOptimizerExtended(Loggable *obj);
   void logExtended(Loggable *obj);
   void logSummary(Loggable *obj);
   void logRunnerState(Loggable *obj);

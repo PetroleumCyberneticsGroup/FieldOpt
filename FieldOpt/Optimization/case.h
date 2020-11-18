@@ -111,6 +111,7 @@ class Case : public Loggable
   QHash<QUuid, bool> binary_variables() const { return binary_variables_; }
   QHash<QUuid, int> integer_variables() const { return integer_variables_; }
   QHash<QUuid, double> real_variables() const { return real_variables_; }
+  QHash<QUuid, double> real_variables_velocity() const { return real_variables_velocity_; }
   void set_binary_variables(const QHash<QUuid, bool> &binary_variables) { binary_variables_ = binary_variables; }
   void set_integer_variables(const QHash<QUuid, int> &integer_variables) { integer_variables_ = integer_variables; }
   void set_real_variables(const QHash<QUuid, double> &real_variables) { real_variables_ = real_variables; }

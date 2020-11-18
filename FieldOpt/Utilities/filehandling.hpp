@@ -331,6 +331,13 @@ inline std::string GetParentDirectoryPath(const std::string &file_path) {
     return GetParentDirectoryPath(QString::fromStdString(file_path)).toStdString();
 }
 
+inline int new_stoi(const std::string &s) {
+    std::stringstream ss(s);
+    int i;
+    ss >> i;
+    return i;
+}
+
 inline double new_stod(const std::string &s) {
     std::stringstream ss(s);
     double d;

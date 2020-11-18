@@ -37,14 +37,15 @@ Logger::Logger(Runner::RuntimeSettings *rts,
         Utilities::FileHandling::CreateDirectory(output_dir_);
     }
     opt_log_path_ = output_dir_ + "/log_optimization.csv";
+    opt_ext_log_path_ = output_dir_ + "/log_optimization_extended.json";
     cas_log_path_ = output_dir_ + "/log_cases.csv";
     cas_ext_log_path_ = output_dir_ + "/log_cases_extended.json";
     ext_log_path_ = output_dir_ + "/log_extended.json";
     run_state_path_ = output_dir_ + "/state_runner.txt";
     summary_prerun_path_ = output_dir_ + output_subdir + "/summary_prerun.md";
     summary_postrun_path_ = output_dir_ + output_subdir + "/summary_postrun.md";
-    QStringList log_paths = (QStringList() << cas_log_path_ << cas_ext_log_path_ << opt_log_path_ << ext_log_path_ << run_state_path_
-                                           << summary_prerun_path_ << summary_postrun_path_);
+    QStringList log_paths = (QStringList() << cas_log_path_ << cas_ext_log_path_ << opt_log_path_ << opt_ext_log_path_
+            << ext_log_path_ << run_state_path_ << summary_prerun_path_ << summary_postrun_path_);
 
     // Delete existing logs if --force flag is on
     if (rts->overwrite_existing()) {
@@ -76,17 +77,22 @@ Logger::Logger(Runner::RuntimeSettings *rts,
         json_file.close();
 
         if (!is_worker_) {
-            QFile another_json_file(cas_ext_log_path_);
-            another_json_file.open(QFile::WriteOnly);
-            another_json_file.write(json_doc.toJson(QJsonDocument::Indented));
-            another_json_file.close();
+            QFile case_json_file(cas_ext_log_path_);
+            case_json_file.open(QFile::WriteOnly);
+            case_json_file.write(json_doc.toJson(QJsonDocument::Indented));
+            case_json_file.close();
+
+            QFile opt_json_file(opt_ext_log_path_);
+            opt_json_file.open(QFile::WriteOnly);
+            opt_json_file.write(json_doc.toJson(QJsonDocument::Indented));
+            opt_json_file.close();
         }
     }
 }
 void Logger::AddEntry(Loggable *obj) {
     switch (obj->GetLogTarget()) {
         case Loggable::LogTarget::LOG_CASE: logCase(obj); logCaseExtended(obj); break;
-        case Loggable::LogTarget::LOG_OPTIMIZER: logOptimizer(obj); break;
+        case Loggable::LogTarget::LOG_OPTIMIZER: logOptimizer(obj); logOptimizerExtended(obj); break;
         case Loggable::LogTarget::LOG_EXTENDED: logExtended(obj); break;
         case Loggable::LogTarget::LOG_SUMMARY: logSummary(obj); break;
         case Loggable::LogTarget::STATE_RUNNER: logRunnerState(obj); break;
@@ -227,14 +233,109 @@ void Logger::logOptimizer(Loggable *obj) {
     if (obj->GetValues()["MPSO-NumberOfSwarms"].size() > 0) {
         int mpso_nr_of_swarms = obj->GetValues()["MPSO-NumberOfSwarms"][0];
         for (int i = 0; i < mpso_nr_of_swarms; ++i) {
-            entry << fixed << setfill(' ') << setw(10) << obj->GetState()["r_CO2_" + to_string(i)] << " , ";
-            entry << setw(38) << obj->GetState()["BC_id_" + to_string(i)] << " , ";
-            entry << setw(6) << obj->GetState()["BC_iteration_" + to_string(i)] << " , ";
-            entry << setw(15) << obj->GetState()["BC_ObjFn_value_" + to_string(i)] << " , ";
+            entry << fixed << setfill(' ') << setw(10) << obj->GetState()["mpso_r_CO2_" + to_string(i)] << " , ";
+            entry << setw(38) << obj->GetState()["mpso_BC_id_" + to_string(i)] << " , ";
+            entry << setw(6) << obj->GetState()["mpso_BC_iteration_" + to_string(i)] << " , ";
+            entry << setw(15) << obj->GetState()["mpso_BC_ObjFn_value_" + to_string(i)] << " , ";
         }
     }
     string str = entry.str();
     Utilities::FileHandling::WriteLineToFile(QString::fromStdString(str), opt_log_path_);
+    return;
+}
+void Logger::logOptimizerExtended(Loggable *obj) {
+    if (!write_logs_ || is_worker_)
+        return;
+
+    QJsonArray case_array;
+
+    QJsonObject entry;
+    entry.insert("UUID", QString::fromStdString(obj->GetState()["BC_id"]));
+    entry.insert("IterNr", new_stoi(obj->GetState()["BC_iteration"]));
+    QJsonArray vars;
+    QJsonArray vars_velocity;
+    for (auto const &a : obj->GetState()) {
+        if(a.first.compare(0, 7, "BC_Var#") == 0) {
+            QJsonObject var;
+            QString var_name = QString::fromStdString(a.first);
+            var_name.remove(0, 3);
+            double var_value = new_stod(a.second);
+            var.insert(var_name, var_value);
+            vars.append(var);
+        }
+        if(a.first.compare(0, 15, "BC_VarVelocity#") == 0) {
+            QJsonObject var_velocity;
+            QString var_velocity_name = QString::fromStdString(a.first);
+            var_velocity_name.remove(0, 3);
+            double var_velocity_value = new_stod(a.second);
+            var_velocity.insert(var_velocity_name, var_velocity_value);
+            vars_velocity.append(var_velocity);
+        }
+    }
+    entry.insert("Variables", vars);
+    if (vars_velocity.size() > 0) {
+        entry.insert("VariablesVelocity", vars_velocity);
+    }
+    case_array.append(entry);
+
+    if (obj->GetValues()["MPSO-NumberOfSwarms"].size() > 0) {
+        int mpso_nr_of_swarms = obj->GetValues()["MPSO-NumberOfSwarms"][0];
+        for (int i = 0; i < mpso_nr_of_swarms; ++i) {
+            QJsonObject new_entry;
+            new_entry.insert("UUID", QString::fromStdString(obj->GetState()["mpso_BC_id_" + to_string(i)]));
+            new_entry.insert("IterNr", new_stoi(obj->GetState()["mpso_BC_iteration_" + to_string(i)]));
+            QJsonArray new_vars;
+            QJsonArray new_vars_velocity;
+            for (auto const &a : obj->GetState()) {
+                if(a.first.compare(0, 13 + to_string(i).size(), "mpso_BC_" + to_string(i) + "_Var#") == 0) {
+                    QJsonObject var;
+                    QString var_name = QString::fromStdString(a.first);
+                    var_name.remove(0, 9 + to_string(i).size());
+                    double var_value = new_stod(a.second);
+                    var.insert(var_name, var_value);
+                    new_vars.append(var);
+                }
+                if(a.first.compare(0, 21 + to_string(i).size(), "mpso_BC_" + to_string(i) + "_VarVelocity#") == 0){
+                    QJsonObject var_velocity;
+                    QString var_velocity_name = QString::fromStdString(a.first);
+                    var_velocity_name.remove(0, 9 + to_string(i).size());
+                    double var_velocity_value = new_stod(a.second);
+                    var_velocity.insert(var_velocity_name, var_velocity_value);
+                    new_vars_velocity.append(var_velocity);
+                }
+            }
+            new_entry.insert("Variables", new_vars);
+            if (new_vars_velocity.size() > 0) {
+                new_entry.insert("VariablesVelocity", new_vars_velocity);
+            }
+            new_entry.insert("r_CO2", new_stod(obj->GetState()["mpso_r_CO2_" + to_string(i)]));
+            case_array.append(new_entry);
+        }
+    }
+
+    // Open existing document
+    QFile json_file(opt_ext_log_path_);
+
+    // First validating existing structure
+    json_file.open(QFile::ReadWrite);
+    QByteArray json_data = json_file.readAll();
+    QJsonObject json_obj = QJsonDocument::fromJson(json_data).object();
+    if (!json_obj.contains("Cases") || !json_obj["Cases"].isArray()) {
+        cout << "Invalid JSON log. Aborting." << endl;
+        exit(1);
+    }
+    json_file.close();
+
+    // Deleting file contents in preparation to rewrite
+    json_file.open(QFile::ReadWrite | QIODevice::Truncate);
+
+    // Add best case to JSON document
+    json_obj["Cases"] = case_array;
+
+    // Write the updated log
+    QJsonDocument json_doc = QJsonDocument(json_obj);
+    json_file.write(json_doc.toJson(QJsonDocument::Indented));
+    json_file.close();
     return;
 }
 void Logger::logExtended(Loggable *obj) {
