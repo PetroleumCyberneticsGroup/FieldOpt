@@ -128,7 +128,38 @@ namespace Optimization{
                 mpso_id_swarm_memory_.insert(ObjFn_id, swarm_memory);
             }
 
+            std::cout << "###################################################################################" << std::endl;
+            std::cout << "Print from 'mpso_id_tentative_best_case_'" << std::endl;
+            for (int i = 0; i < mpso_nr_of_swarms_; ++i) {
+                QUuid ObjFn_id = ObjFn_ids[i];
+                double r_CO2 = mpso_id_r_CO2_.value(ObjFn_id);
+                Case *BC = mpso_id_tentative_best_case_.value(ObjFn_id);
+                QUuid BC_id = BC->GetId();
+                QUuid BC_ObjFn_id = BC->ObjFn_id();
+                double BC_r_CO2 = mpso_id_r_CO2_.value(BC_ObjFn_id);
+                std::cout << "r_CO2: ... " << r_CO2 << std::endl;
+                std::cout << "BC_id: ... " << BC_id.toString().toStdString() << std::endl;
+                std::cout << "BC_ObjFn_id: ... " << BC_ObjFn_id.toString().toStdString() << std::endl;
+                std::cout << "BC_r_CO2: ... " << BC_r_CO2 << std::endl;
+            }
+
             mpso_id_current_global_best_particle_ = get_mpso_id_current_global_best_particle();
+
+            std::cout << "###################################################################################" << std::endl;
+            std::cout << "Print from 'mpso_id_current_global_best_particle_'" << std::endl;
+            for (int i = 0; i < mpso_nr_of_swarms_; ++i) {
+                QUuid ObjFn_id = ObjFn_ids[i];
+                double r_CO2 = mpso_id_r_CO2_.value(ObjFn_id);
+                Particle BP = mpso_id_current_global_best_particle_.value(ObjFn_id);
+                Case *BC = BP.case_pointer;
+                QUuid BC_id = BC->GetId();
+                QUuid BC_ObjFn_id = BC->ObjFn_id();
+                double BC_r_CO2 = mpso_id_r_CO2_.value(BC_ObjFn_id);
+                std::cout << "r_CO2: ... " << r_CO2 << std::endl;
+                std::cout << "BC_id: ... " << BC_id.toString().toStdString() << std::endl;
+                std::cout << "BC_ObjFn_id: ... " << BC_ObjFn_id.toString().toStdString() << std::endl;
+                std::cout << "BC_r_CO2: ... " << BC_r_CO2 << std::endl;
+            }
 
             //! Update particle's velocity (in each swarm)
             for (int i = 0; i < mpso_nr_of_swarms_; ++i) {

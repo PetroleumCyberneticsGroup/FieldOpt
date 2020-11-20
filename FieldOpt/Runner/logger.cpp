@@ -236,6 +236,7 @@ void Logger::logOptimizer(Loggable *obj) {
             entry << fixed << setfill(' ') << setw(10) << obj->GetState()["mpso_r_CO2_" + to_string(i)] << " , ";
             entry << setw(38) << obj->GetState()["mpso_BC_id_" + to_string(i)] << " , ";
             entry << setw(6) << obj->GetState()["mpso_BC_iteration_" + to_string(i)] << " , ";
+            entry << setw(10) << obj->GetState()["mpso_BC_r_CO2_" + to_string(i)] << " , ";
             entry << setw(15) << obj->GetState()["mpso_BC_ObjFn_value_" + to_string(i)] << " , ";
         }
     }

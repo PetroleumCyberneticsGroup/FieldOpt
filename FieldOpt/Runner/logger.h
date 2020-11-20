@@ -120,7 +120,7 @@ class Logger
       {"CBOFnV", 12},
       {"CurBst", 41}
   };
-  const QString opt_log_header_ = "             TimeSt ,   TimeEl ,   TimeIt , IterNr , TotlNr , EvalNr , BkpdNr , TimONr , FailNr , InvlNr ,       CBOFnV ,                                 CurBst ,      r_CO2 ,                                  BC_id , BC_itr ,  BC_ObjFn_value ,      r_CO2 ,                                  BC_id , BC_itr ,  BC_ObjFn_value ,      r_CO2 ,                                  BC_id , BC_itr ,  BC_ObjFn_value , ";
+  const QString opt_log_header_ = "             TimeSt ,   TimeEl ,   TimeIt , IterNr , TotlNr , EvalNr , BkpdNr , TimONr , FailNr , InvlNr ,       CBOFnV ,                                 CurBst ,      r_CO2 ,                                  BC_id , BC_itr ,   BC_r_CO2 ,  BC_ObjFn_value ,      r_CO2 ,                                  BC_id , BC_itr ,   BC_r_CO2 ,  BC_ObjFn_value ,      r_CO2 ,                                  BC_id , BC_itr ,   BC_r_CO2 ,  BC_ObjFn_value , ";
 
   void logCase(Loggable *obj);
   void logCaseExtended(Loggable *obj);

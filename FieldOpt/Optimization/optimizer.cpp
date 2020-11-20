@@ -212,9 +212,12 @@ map<string, string> Optimizer::GetState() {
             QUuid mpso_best_case_id = mpso_id_tentative_best_case_.value(ObjFn_id)->GetId();
             int mpso_bast_case_iteration = mpso_id_tentative_best_case_iteration_.value(ObjFn_id);
             double mpso_best_case_ObjFn_value = mpso_id_tentative_best_case_.value(ObjFn_id)->mpso_id_ofv().value(ObjFn_id);
+            QUuid mpso_best_case_ObjFn_id = mpso_id_tentative_best_case_.value(ObjFn_id)->ObjFn_id();
+            double mpso_best_case_r_CO2 = mpso_id_r_CO2_.value(mpso_best_case_ObjFn_id);
             statemap["mpso_r_CO2_" + to_string(i)] = QString::number(mpso_r_CO2, 'f', 1).toStdString();
             statemap["mpso_BC_id_" + to_string(i)] = mpso_best_case_id.toString().toStdString();
             statemap["mpso_BC_iteration_" + to_string(i)] = to_string(mpso_bast_case_iteration);
+            statemap["mpso_BC_r_CO2_" + to_string(i)] = QString::number(mpso_best_case_r_CO2, 'f', 1).toStdString();
             statemap["mpso_BC_ObjFn_value_" + to_string(i)] = QString::number(mpso_best_case_ObjFn_value, 'f', 2).toStdString();
             for (auto key : mpso_id_tentative_best_case_.value(ObjFn_id)->real_variables().keys()){
                 std::string var_name = mpso_id_tentative_best_case_.value(ObjFn_id)->variables_name().value(key);

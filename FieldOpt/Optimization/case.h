@@ -267,6 +267,8 @@ class Case : public Loggable
 
   void set_ObjFn_id(const QUuid &ObjFn_id);
 
+  QUuid ObjFn_id() const { return ObjFn_id_; }
+
  private:
   QUuid id_; //!< Unique ID for the case.
   int sim_time_sec_;
