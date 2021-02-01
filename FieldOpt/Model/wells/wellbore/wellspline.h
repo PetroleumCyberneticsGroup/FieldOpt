@@ -75,7 +75,12 @@ class WellSpline
       void FromEigenVector(const Eigen::Vector3d vec);
   };
 
-
+    struct HorizontalPoint {
+        ContinousProperty *x;
+        ContinousProperty *y;
+        Eigen::Vector3d ToEigenVector() const;
+        void FromEigenVector(const Eigen::Vector3d vec);
+    };
 
   bool HasGridChanged() const;
   bool HasSplineChanged() const;
@@ -84,8 +89,8 @@ class WellSpline
    * Get spline points (for debugging purposes).
    */
   QList<SplinePoint *> GetSplinePoints() const { return spline_points_; }
-  QJsonDocument LoadJson(QString filename) const;
-  void SaveJson(QJsonDocument document, QString fileName) const;
+  virtual QJsonDocument LoadJson(QString filename) const;
+  virtual void SaveJson(QJsonDocument document, QString fileName) const;
 
  protected:
   Reservoir::Grid::Grid *grid_;
@@ -99,14 +104,14 @@ class WellSpline
    * @brief Get compute the well blocks to be returned by GetWellBlocks.
    * @return
    */
-  QList<WellBlock *> *computeWellBlocks();
+  virtual QList<WellBlock *> *computeWellBlocks();
 
   /*!
    * @brief Get the vector of spline points to be used. Will return converted spline_points if not using 
    * bezier method; else will call convertToBezierSpline().
    * @return 
    */
-  vector<Eigen::Vector3d> getPoints() const;
+  virtual vector<Eigen::Vector3d> getPoints() const;
   
   /*!
    * @brief Use the current set of spline_points_ to generate a set of points representing a
@@ -117,6 +122,7 @@ class WellSpline
   vector<Eigen::Vector3d> convertExternalPointsToBezierSpline() const;
 
   QList<SplinePoint *> spline_points_;
+  QList<HorizontalPoint *> horizontal_point_;
 
   std::string last_computed_grid_; //!< Contains the path to the last grid used by WIC.
   std::vector<Eigen::Vector3d> last_computed_spline_; //!< Contains the last spline points used by WIC. Used to determine if the spline has changed.
@@ -128,7 +134,7 @@ class WellSpline
    * \param block_data
    * \return
    */
-  WellBlock *getWellBlock(Reservoir::WellIndexCalculation::IntersectedCell block_data);
+  virtual WellBlock *getWellBlock(Reservoir::WellIndexCalculation::IntersectedCell block_data);
 
   std::vector<Eigen::Vector3d> create_spline_point_vector() const;
 

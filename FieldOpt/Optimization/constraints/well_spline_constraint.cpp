@@ -92,6 +92,22 @@ WellSplineConstraint::Well WellSplineConstraint::initializeWell(QList<Model::Pro
             }
         }
     }
+    else if (vars.length() > 0 && vars[0]->propertyInfo().prop_type == Property::PropertyType::AWPSpline) {
+        if (VERB_OPT >= 2) Printer::ext_info("Using PolarSpline parameterization for well spline constraint", "Optimization", "WellSplineConstraint");
+        for (auto var : vars) {
+            if (var->propertyInfo().prop_type == Property::AWPSpline) {
+                if (var->propertyInfo().awp_prop == Property::AWPProp::xh)
+                    well.heel.x = var->id();
+                else if (var->propertyInfo().awp_prop == Property::AWPProp::yh)
+                    well.heel.y = var->id();
+                else if (var->propertyInfo().awp_prop == Property::AWPProp::xt)
+                    well.toe.x = var->id();
+                else if (var->propertyInfo().awp_prop == Property::AWPProp::yt)
+                    well.toe.y = var->id();
+                else throw std::runtime_error("Unable to parse variable " + var->name().toStdString());
+            } else throw std::runtime_error("Unable to parse variable " + var->name().toStdString());
+        }
+    }
     else {
         throw std::runtime_error("Incorrect number of variables (" + boost::lexical_cast<std::string>(vars.length())
                                      + ")passed to the initialize well method.");

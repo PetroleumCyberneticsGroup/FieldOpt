@@ -50,11 +50,13 @@ class ReservoirXYZBoundary : public Constraint, WellSplineConstraint {
   Eigen::VectorXd GetLowerBounds(QList<QUuid> id_vector) const override;
   Eigen::VectorXd GetUpperBounds(QList<QUuid> id_vector) const override;
 
+
  protected:
   double xmin_, xmax_, ymin_, ymax_, zmin_, zmax_; //!< Constraint limits for the box
   QList<int> index_list_; //!< Index list for the cells in the reservoir that are within the box
   Reservoir::Grid::Grid *grid_; //!< Grid, as defined in Reservoir/grid.h
   Well affected_well_; //!< The affected well
+  Settings::Optimizer::Constraint settings_; //!< Settings
 
 };
 }

@@ -49,7 +49,7 @@ class Optimizer
     ReservoirBoundary, PseudoContBoundary2D, PolarXYZBoundary,
     ReservoirXYZBoundary, ReservoirBoundaryToe,
     PackerConstraint, ICVConstraint, PolarWellLength,
-    PolarAzimuth, PolarElevation, PolarSplineBoundary
+    PolarAzimuth, PolarElevation, PolarSplineBoundary, TwoDimensionalBoundary
   };
   enum ConstraintWellSplinePointsType { MaxMin, Function};
   enum ObjectiveType { WeightedSum, NPV, carbondioxidenpv };

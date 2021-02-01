@@ -75,7 +75,8 @@ class Property
    * Info datastructure is set.
    */
   enum PropertyType : int {BHP=2001, Rate=2002, SplinePoint=2003, WellBlock=2004,
-    Transmissibility=2005, PseudoContVert=2006, Packer=2007, ICD=2008, PolarSpline=2009
+    Transmissibility=2005, PseudoContVert=2006, Packer=2007, ICD=2008, PolarSpline=2009,
+      AWPSpline=2010
   };
 
   /*!
@@ -95,6 +96,11 @@ class Property
    */
   enum Coordinate : int {x=4001, y=4002, z=4003, i=4004, j=4005, k=4006};
 
+    /*!
+   * \brief For AWPSpline and WellBlock type variables, this indicates which coordinate
+   * the property is for.
+   */
+  enum AWPProp : int {xh=6001, yh=6002, xt=6003, yt=6004};
   /*!
    * \brief The PropertyInfo struct contains information about what the property represents.
    *
@@ -108,6 +114,7 @@ class Property
     SplineEnd spline_end; //!< Which end of a spline is held.
     Coordinate coord; //!< Which coordinate (x/y/z/i/j/k) is held.
     PolarProp polar_prop; //!< PolarSpline properties
+    AWPProp awp_prop;
   };
 
   PropertyInfo propertyInfo() const; //!< Get an Info struc containing information about the variable. This is only set if the property is variable.
@@ -131,6 +138,7 @@ class Property
   int get_prop_index(const QString prop_name) const;
   Coordinate get_prop_coord(const QString prop_name) const;
   PolarProp get_polar_prop(const QString prop_name) const;
+  AWPProp  get_AWP_prop(const QString prop_name) const;
 };
 
 }

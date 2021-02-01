@@ -79,6 +79,14 @@ ConstraintHandler::ConstraintHandler(QList<Settings::Optimizer::Constraint> cons
                 constraints_.append(new PolarSplineBoundary(cons, variables, grid));
               }
               break;
+            case Settings::Optimizer::ConstraintType::TwoDimensionalBoundary:
+                for (auto wname : constraint.wells) {
+                    auto cons = Settings::Optimizer::Constraint(constraint);
+                    cons.well = wname;
+                    if (VERB_OPT >= 1) Printer::info("Adding TwoDimensionalBoundary constraint for " + cons.well.toStdString());
+                    constraints_.append(new TwoDimensionalBoundary(cons, variables, grid));
+                }
+                break;
             case Settings::Optimizer::ConstraintType::ICVConstraint:
                 for (auto wname : constraint.wells) {
                     auto cons = Settings::Optimizer::Constraint(constraint);

@@ -257,6 +257,29 @@ Model::Well Model::readSingleWell(QJsonObject json_well)
         }
         well.polar_spline = polar_spline;
     }
+    else if (QString::compare(definition_type, "AWPSpline") == 0) {
+        well.definition_type = WellDefinitionType::AWPSpline;
+        QJsonObject json_pspline = json_well["AWPSpline"].toObject();
+        if (!json_pspline.contains("Heel"))
+            throw UnableToParseWellsModelSectionException("No Heel was defined for this spline-type");
+        if (!json_pspline.contains("Toe"))
+            throw UnableToParseWellsModelSectionException("No Toe was defined for this spline-type");
+
+        QJsonObject json_heel = json_pspline["Heel"].toObject();
+        QJsonObject json_toe = json_pspline["Toe"].toObject();
+        Well::AWPSpline awp_spline;
+        awp_spline.xh = json_heel["x"].toDouble();
+        awp_spline.yh = json_heel["y"].toDouble();
+
+        awp_spline.xt = json_toe["x"].toDouble();
+        awp_spline.yt = json_toe["y"].toDouble();
+
+
+        if (json_pspline.contains("IsVariable") && json_pspline["IsVariable"].toBool()){
+            awp_spline.is_variable = true;
+        }
+        well.AWP_spline = awp_spline;
+    }
     else if (QString::compare(definition_type, "WellSpline") == 0) {
         well.definition_type = WellDefinitionType::WellSpline;
         if (json_well.contains("UseBezierSpline") && json_well["UseBezierSpline"].toBool() == true) {

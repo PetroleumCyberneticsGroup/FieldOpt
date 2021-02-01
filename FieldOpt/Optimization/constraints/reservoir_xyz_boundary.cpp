@@ -28,12 +28,13 @@ ReservoirXYZBoundary::ReservoirXYZBoundary(const Settings::Optimizer::Constraint
                                            Model::Properties::VariablePropertyContainer *variables,
                                            Reservoir::Grid::Grid *grid) {
 
-  xmin_ = settings.box_xyz_xmin;
-  xmax_ = settings.box_xyz_xmax;
-  ymin_ = settings.box_xyz_ymin;
-  ymax_ = settings.box_xyz_ymax;
-  zmin_ = settings.box_xyz_zmin;
-  zmax_ = settings.box_xyz_zmax;
+  settings_ = settings;
+  xmin_ = settings_.box_xyz_xmin;
+  xmax_ = settings_.box_xyz_xmax;
+  ymin_ = settings_.box_xyz_ymin;
+  ymax_ = settings_.box_xyz_ymax;
+  zmin_ = settings_.box_xyz_zmin;
+  zmax_ = settings_.box_xyz_zmax;
   grid_ = grid;
   penalty_weight_ = settings.penalty_weight;
 
@@ -53,20 +54,45 @@ bool ReservoirXYZBoundary::CaseSatisfiesConstraint(Case *c) {
   double toe_y_val = c->real_variables()[affected_well_.toe.y];
   double toe_z_val = c->real_variables()[affected_well_.toe.z];
 
-  bool heel_feasible = false;
-  bool toe_feasible = false;
+  bool heel_feasible = true;
+  bool toe_feasible = true;
 
-  for (int ii = 0; ii < index_list_.length(); ii++) {
-    if (grid_->GetCell(index_list_[ii]).EnvelopsPoint(
-        Eigen::Vector3d(heel_x_val, heel_y_val, heel_z_val))) {
-      heel_feasible = true;
-    }
-    if (grid_->GetCell(index_list_[ii]).EnvelopsPoint(
-        Eigen::Vector3d(toe_x_val, toe_y_val, toe_z_val))) {
-      toe_feasible = true;
-    }
+  if (settings_.box_xyz_xmax < heel_x_val){
+    heel_feasible = false;
   }
-
+  if (settings_.box_xyz_xmin > heel_x_val){
+    heel_feasible = false;
+  }
+  if (settings_.box_xyz_ymax < heel_y_val){
+    heel_feasible = false;
+  }
+  if (settings_.box_xyz_ymin > heel_y_val){
+    heel_feasible = false;
+  }
+  if (settings_.box_xyz_zmax < heel_z_val){
+    heel_feasible = false;
+  }
+  if (settings_.box_xyz_zmin > heel_z_val){
+    heel_feasible = false;
+  }
+  if (settings_.box_xyz_xmax < toe_x_val){
+    toe_feasible = false;
+  }
+  if (settings_.box_xyz_xmin > toe_x_val){
+    toe_feasible = false;
+  }
+  if (settings_.box_xyz_ymax < toe_y_val){
+    toe_feasible = false;
+  }
+  if (settings_.box_xyz_ymin > toe_y_val){
+    toe_feasible = false;
+  }
+  if (settings_.box_xyz_zmax < toe_z_val){
+    toe_feasible = false;
+  }
+  if (settings_.box_xyz_zmin > toe_z_val){
+    toe_feasible = false;
+  }
   return heel_feasible && toe_feasible;
 }
 
@@ -80,18 +106,52 @@ void ReservoirXYZBoundary::SnapCaseToConstraints(Case *c) {
   double toe_y_val = c->real_variables()[affected_well_.toe.y];
   double toe_z_val = c->real_variables()[affected_well_.toe.z];
 
-  Eigen::Vector3d projected_heel =
-      WellConstraintProjections::well_domain_constraint_indices(
-          Eigen::Vector3d(heel_x_val, heel_y_val, heel_z_val),
-          grid_,
-          index_list_
-      );
-  Eigen::Vector3d projected_toe =
-      WellConstraintProjections::well_domain_constraint_indices(
-          Eigen::Vector3d(toe_x_val, toe_y_val, toe_z_val),
-          grid_,
-          index_list_
-      );
+  cout << toe_x_val << endl;
+  cout << toe_y_val << endl;
+  cout << toe_z_val << endl;
+  cout << heel_x_val << endl;
+  cout << heel_y_val << endl;
+  cout << heel_z_val << endl;
+  if (settings_.box_xyz_xmax < heel_x_val){
+    heel_x_val = settings_.box_xyz_xmax;
+  }
+  if (settings_.box_xyz_xmin > heel_x_val){
+    heel_x_val = settings_.box_xyz_xmin;
+  }
+  if (settings_.box_xyz_ymax < heel_y_val){
+    heel_y_val = settings_.box_xyz_ymax;
+  }
+  if (settings_.box_xyz_ymin > heel_y_val){
+    heel_y_val = settings_.box_xyz_ymin;
+  }
+  if (settings_.box_xyz_zmax < heel_z_val){
+    heel_z_val = settings_.box_xyz_zmax;
+  }
+  if (settings_.box_xyz_zmin > heel_z_val){
+    heel_z_val = settings_.box_xyz_xmin;
+  }
+  if (settings_.box_xyz_xmax < toe_x_val){
+    toe_x_val = settings_.box_xyz_xmax;
+  }
+  if (settings_.box_xyz_xmin > toe_x_val){
+    toe_x_val = settings_.box_xyz_xmin;
+  }
+  if (settings_.box_xyz_ymax < toe_y_val){
+    toe_y_val = settings_.box_xyz_ymax;
+  }
+  if (settings_.box_xyz_ymin > toe_y_val){
+    toe_y_val = settings_.box_xyz_ymin;
+  }
+  if (settings_.box_xyz_zmax < toe_z_val){
+    toe_z_val = settings_.box_xyz_zmax;
+  }
+  if (settings_.box_xyz_zmin > toe_z_val){
+    toe_z_val = settings_.box_xyz_zmin;
+  }
+
+
+  Eigen::Vector3d projected_heel = Eigen::Vector3d(heel_x_val, heel_y_val, heel_z_val);
+  Eigen::Vector3d projected_toe = Eigen::Vector3d(toe_x_val, toe_y_val, toe_z_val);
 
   c->set_real_variable_value(affected_well_.heel.x, projected_heel(0));
   c->set_real_variable_value(affected_well_.heel.y, projected_heel(1));

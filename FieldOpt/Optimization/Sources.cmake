@@ -22,6 +22,7 @@ SET(OPTIMIZATION_HEADERS
 	constraints/polar_xyz_boundary.h
 	constraints/reservoir_boundary_toe.h
 	constraints/reservoir_xyz_boundary.h
+	constraints/two_dimensional_boundary.h
 	hybrid_optimizer.h
 	normalizer.h
 	objective/NPV.h
@@ -73,6 +74,7 @@ SET(OPTIMIZATION_SOURCES
 	constraints/polar_xyz_boundary.cpp
 	constraints/reservoir_boundary_toe.cpp
 	constraints/reservoir_xyz_boundary.cpp
+	constraints/two_dimensional_boundary.cpp
 	hybrid_optimizer.cpp
 	normalizer.cpp
 	objective/NPV.cpp

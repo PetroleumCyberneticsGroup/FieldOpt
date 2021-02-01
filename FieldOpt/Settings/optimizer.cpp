@@ -241,6 +241,13 @@ Optimizer::Constraint Optimizer::parseSingleConstraint(QJsonObject json_constrai
         optimizer_constraint.box_xyz_ymax = json_constraint["yMax"].toDouble();
         optimizer_constraint.box_xyz_zmax = json_constraint["zMax"].toDouble();
     }
+    else if (QString::compare(constraint_type, "TwoDimensionalBoundary") == 0){
+        optimizer_constraint.type = ConstraintType::TwoDimensionalBoundary;
+        optimizer_constraint.box_xyz_xmin = json_constraint["xMin"].toDouble();
+        optimizer_constraint.box_xyz_ymin = json_constraint["yMin"].toDouble();
+        optimizer_constraint.box_xyz_xmax = json_constraint["xMax"].toDouble();
+        optimizer_constraint.box_xyz_ymax = json_constraint["yMax"].toDouble();
+    }
     else if (QString::compare(constraint_type, "CombinedWellSplineLengthInterwellDistance") == 0) {
         optimizer_constraint.type = ConstraintType::CombinedWellSplineLengthInterwellDistance;
         optimizer_constraint.min_length = json_constraint["MinLength"].toDouble();

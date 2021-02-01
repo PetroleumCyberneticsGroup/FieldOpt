@@ -87,6 +87,7 @@ class VariablePropertyContainer
   QList<ContinousProperty *> GetWellBHPVariables(const QString well_name) const; //!< Get all BHP variables for a specific well.
   QList<ContinousProperty *> GetWellRateVariables(const QString well_name) const; //!< Get all BHP variables for a specific well.
   QList<ContinousProperty *> GetWellSplineVariables(const QString well_name) const; //!< Get all variables for the spline defining a well.
+  QList<ContinousProperty *> GetAWPSplineVariables(const QString well_name) const; //!< Get all variables for the spline defining a well.
   QList<ContinousProperty *> GetPolarSplineVariables(const QString well_name) const; //!< Get all variables defining a polar well spline.
   QList<DiscreteProperty *> GetWellBlockVariables() const; //!< Get well block position variables.
   QList<DiscreteProperty *> GetWellBlockVariables(const QString well_name) const; //!< Get well block position variables for a well.

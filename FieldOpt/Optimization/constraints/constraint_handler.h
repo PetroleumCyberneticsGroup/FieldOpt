@@ -41,6 +41,7 @@
 #include "Model/properties/variable_property_container.h"
 #include "Settings/optimizer.h"
 #include "Reservoir/grid/grid.h"
+#include "two_dimensional_boundary.h"
 
 #include <QList>
 

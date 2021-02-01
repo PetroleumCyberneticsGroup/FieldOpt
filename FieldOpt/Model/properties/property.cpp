@@ -59,6 +59,9 @@ void Property::set_property_info() {
         }
     }
 
+    if (info_.prop_type == AWPSpline) {
+        info_.awp_prop = get_AWP_prop(name_);
+    }
     if (info_.prop_type == SplinePoint || info_.prop_type == WellBlock || info_.prop_type == PseudoContVert)
         info_.coord = get_prop_coord(name_);
 
@@ -101,6 +104,8 @@ Property::PropertyType Property::get_prop_type_name(const QString prop_name) con
         return ICD;
     else if (QString::compare("PolarSpline", propstr) == 0)
         return PolarSpline;
+    else if (QString::compare("AWPSpline", propstr) == 0)
+        return AWPSpline;
     else throw std::runtime_error("Unable to recognize property type " + propstr.toStdString());
 }
 
@@ -127,6 +132,19 @@ Property::PolarProp Property::get_polar_prop(const QString prop_name) const {
     else if (QString::compare(propstr, "Midpoint") == 0)
         return Midpoint;
     else throw std::runtime_error("Unable to extract PolarSpline data from property name.");
+}
+
+Property::AWPProp Property::get_AWP_prop(const QString prop_name) const {
+    QString propstr = prop_name.split("#")[2];
+    if (QString::compare(propstr, "heel_x") == 0)
+        return xh;
+    else if (QString::compare(propstr, "heel_y") == 0)
+        return yh;
+    else if (QString::compare(propstr, "toe_x") == 0)
+        return xt;
+    else if (QString::compare(propstr, "toe_y") == 0)
+        return yt;
+    else throw std::runtime_error("Unable to extract AWPSpline data from property name.");
 }
 Property::Coordinate Property::get_prop_coord(const QString prop_name) const {
     QString cstr = prop_name.split("#").last();
