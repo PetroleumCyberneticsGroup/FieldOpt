@@ -28,6 +28,7 @@
 #include <Optimization/optimizers/bayesian_optimization/EGO.h>
 #include <Optimization/objective/carbondioxidenpv.h>
 #include <Optimization/objective/NPV_ET_V1.h>
+#include <Optimization/objective/NPV_ET_V2.h>
 #include "Optimization/optimizers/PSO.h"
 #include "Optimization/optimizers/MPSO.h"
 #include "Optimization/optimizers/CMA_ES.h"
@@ -164,6 +165,10 @@ void AbstractRunner::InitializeObjectiveFunction()
         case Settings::Optimizer::ObjectiveType::NPV_ET_V1:
             if (VERB_RUN >=1) Printer::ext_info("Using NPV_ET_V1-type objective function.", "Runner", "AbstractRunner");
             objective_function_ = new Optimization::Objective::NPV_ET_V1(settings_->optimizer(), simulator_->results(), model_);
+            break;
+        case Settings::Optimizer::ObjectiveType::NPV_ET_V2:
+            if (VERB_RUN >=1) Printer::ext_info("Using NPV_ET_V2-type objective function.", "Runner", "AbstractRunner");
+            objective_function_ = new Optimization::Objective::NPV_ET_V2(settings_->optimizer(), simulator_->results(), model_);
             break;
         default:
             throw std::runtime_error("Unable to initialize runner: objective function type not recognized.");

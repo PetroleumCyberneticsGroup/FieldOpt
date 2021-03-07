@@ -532,7 +532,10 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
                 obj.weighted_sum.append(component);
             }
         }
-        else if (QString::compare(objective_type, "NPV") == 0 || QString::compare(objective_type, "carbondioxidenpv") == 0 || QString::compare(objective_type, "NPV_ET_V1") == 0) {
+        else if (QString::compare(objective_type, "NPV") == 0
+              || QString::compare(objective_type, "carbondioxidenpv") == 0
+              || QString::compare(objective_type, "NPV_ET_V1") == 0
+              || QString::compare(objective_type, "NPV_ET_V2") == 0) {
             // -------------------------------------------------
             if (QString::compare(objective_type, "NPV") == 0){
                 obj.type = ObjectiveType::NPV;
@@ -540,6 +543,8 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
                 obj.type = ObjectiveType::carbondioxidenpv;
             } else if (QString::compare(objective_type, "NPV_ET_V1") == 0){
                 obj.type = ObjectiveType::NPV_ET_V1;
+            } else if (QString::compare(objective_type, "NPV_ET_V2") == 0){
+                obj.type = ObjectiveType::NPV_ET_V2;
             }
 
             obj.NPV_sum = QList<Objective::NPVComponent>();
@@ -591,7 +596,8 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
                 }
             }
 
-            if (QString::compare(objective_type, "NPV_ET_V1") == 0){
+            if (QString::compare(objective_type, "NPV_ET_V1") == 0
+             || QString::compare(objective_type, "NPV_ET_V2") == 0){
                 obj.NPVCarbonComponents = QList<Objective::NPVCarbonComponent>();
                 QJsonArray json_carbon_components = json_objective["NPVCarbonComponents"].toArray();
                 for (int i = 0; i < json_carbon_components.size(); ++i) {
@@ -673,6 +679,11 @@ Optimizer::Objective Optimizer::parseObjective(QJsonObject &json_objective) {
 
                     if (json_additional_components.contains("e_water_treatment")){
                         obj.e_water_treatment = json_additional_components["e_water_treatment"].toDouble();
+                    }
+
+                    if (QString::compare(objective_type, "NPV_ET_V2") == 0
+                     && json_additional_components.contains("e_inj_water_treatment")){
+                        obj.e_inj_water_treatment = json_additional_components["e_inj_water_treatment"].toDouble();
                     }
 
                     if (json_additional_components.contains("P_turbine_full_load")){

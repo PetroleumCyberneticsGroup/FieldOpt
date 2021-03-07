@@ -54,7 +54,7 @@ class Optimizer
     PolarAzimuth, PolarElevation, PolarSplineBoundary
   };
   enum ConstraintWellSplinePointsType { MaxMin, Function};
-  enum ObjectiveType { WeightedSum, NPV, carbondioxidenpv, NPV_ET_V1 };
+  enum ObjectiveType { WeightedSum, NPV, carbondioxidenpv, NPV_ET_V1 , NPV_ET_V2};
 
   struct Parameters {
     // Common parameters
@@ -213,6 +213,7 @@ class Optimizer
     double p_PS_inlet;
     double unit_cost_pump;
     double e_water_treatment;
+    double e_inj_water_treatment;
     double P_turbine_full_load;
     double unit_cost_turbine;
     double eff_turbine_full_load;
