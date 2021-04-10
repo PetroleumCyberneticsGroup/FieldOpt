@@ -110,7 +110,7 @@ CMA_ES::CMA_ES(Settings::Optimizer *settings,
     if (0 > sqrt((mueff_ - 1) / (n_vars_ + 1)) - 1) {
         damps_ = 1 + 2 * 0 + cs_;
     } else {
-        damps_ = 1 + 2 * sqrt((mueff_ - 1) / (n_vars_ + 1)) - 1 + cs_;
+        damps_ = 1 + 2 * (sqrt((mueff_ - 1) / (n_vars_ + 1)) - 1) + cs_;
     }
 
     // Initialize dynamic (internal) strategy parameters and constants
@@ -226,7 +226,7 @@ Optimizer::TerminationCondition CMA_ES::IsFinished() {
 
 void CMA_ES::updateEvolutionPath() {
     ps_ = (1.0 - cs_) * ps_ + sqrt(cs_ * (2.0 - cs_) * mueff_) * invsqrtC_ * (xmean_ - xold_) / sigma_;
-    hsig_ = ps_.norm() / sqrt(pow(1.0 - (1.0 - cs_), 2.0 * case_handler_->EvaluatedCases().size() / lambda_)) /
+    hsig_ = ps_.norm() / sqrt(1.0 - pow((1.0 - cs_), 2.0 * case_handler_->EvaluatedCases().size() / lambda_)) /
             chiN_ < 1.4 + 2.0 / (n_vars_ + 1);
     pc_ = (1.0 - cc_) * pc_ + hsig_ * sqrt(cc_ * (2.0 - cc_) * mueff_) * (xmean_ - xold_) / sigma_;
 }
@@ -243,7 +243,7 @@ void CMA_ES::adaptCovarianceMatrix() {
     for (int i = 0; i < weights_.size(); i++) {
         temp_weights(i) = weights_[i];
     }
-    auto artmp = (1 / sigma_) * (argument_matrix) - xold_.replicate(1, int(mu_));
+    auto artmp = (1 / sigma_) * (argument_matrix - xold_.replicate(1, int(mu_)));
     C_ = (1 - c1_ - cmu_) * C_ + c1_ * (pc_ * pc_.transpose() + (1 - hsig_) * cc_ * (2 - cc_) * C_) +
          cmu_ * artmp * temp_weights.asDiagonal() * artmp.transpose();
     sigma_ = sigma_ * exp((cs_ / damps_) * (ps_.norm() / chiN_ - 1));
