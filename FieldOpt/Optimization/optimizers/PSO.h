@@ -115,6 +115,10 @@ class PSO : public Optimizer {
   int number_of_particles_; //!< The number of particles in the swarm
   double learning_factor_1_; //!< Learning factor 1 (c1)
   double learning_factor_2_; //!< Learning factor 2 (c2)
+  double inertia_weight_; //!< Inertia weight
+  double inertia_weight_max_; //!< Inertia weight maximum
+  double inertia_weight_min_; //!< Inertia weight minimum
+  bool inertia_decay_; //!< Use inertia weight decay if true
   Eigen::VectorXd v_max_; //!< Max velocity of the particle
   int max_iterations_; //!< Max iterations
   vector<Particle> swarm_; //!< Current swarm of particles

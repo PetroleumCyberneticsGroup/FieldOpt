@@ -346,10 +346,22 @@ Optimizer::Parameters Optimizer::parseParameters(QJsonObject &json_parameters) {
         // PSO parameters
         if(json_parameters.contains("PSO-LearningFactor1")){
             params.pso_learning_factor_1 = json_parameters["PSO-LearningFactor1"].toDouble();
-        }else params.pso_learning_factor_1 = 2;
+        }else params.pso_learning_factor_1 = 1.5;
         if(json_parameters.contains("PSO-LearningFactor2")){
             params.pso_learning_factor_2 = json_parameters["PSO-LearningFactor2"].toDouble();
-        }else params.pso_learning_factor_2 = 2;
+        }else params.pso_learning_factor_2 = 1.5;
+        if(json_parameters.contains("PSO-InertiaWeight")){
+            params.pso_inertia_weight = json_parameters["PSO-InertiaWeight"].toDouble();
+        }else params.pso_inertia_weight = 0.73;
+        if(json_parameters.contains("PSO-InertiaWeightMax")){
+            params.pso_inertia_weight_max = json_parameters["PSO-InertiaWeightMax"].toDouble();
+        }else params.pso_inertia_weight_max = 0.9;
+        if(json_parameters.contains("PSO-InertiaWeightMin")){
+            params.pso_inertia_weight_min = json_parameters["PSO-InertiaWeightMin"].toDouble();
+        }else params.pso_inertia_weight_min = 0.5;
+        if(json_parameters.contains("PSO-InertiaDecay")){
+            params.pso_inertia_decay = json_parameters["PSO-InertiaDecay"].toBool();
+        }
         if(json_parameters.contains("PSO-SwarmSize")){
             params.pso_swarm_size = json_parameters["PSO-SwarmSize"].toDouble();
         }else params.pso_swarm_size = 50;
