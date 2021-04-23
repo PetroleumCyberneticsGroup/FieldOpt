@@ -82,8 +82,12 @@ class Optimizer
     double upper_bound;       //!< Simple upper bound. This is applied to _all_ variables. Default: +10.0.
 
     // PSO parameters
-    double pso_learning_factor_1; //!< Learning factor (c1), from the swarms best known perturbation. Default: 2
-    double pso_learning_factor_2; //!< Learning factor (c2), from the individual particle's best known perturbation. Default: 2
+    double pso_learning_factor_1; //!< Learning factor (c1), from the swarms best known perturbation. Default: 1.5
+    double pso_learning_factor_2; //!< Learning factor (c2), from the individual particle's best known perturbation. Default: 1.5
+    double pso_inertia_weight; //!< Particle inertia weight. Default: 0.73
+    double pso_inertia_weight_max; //!< Particle maximum inertia weight. Default: 0.9
+    double pso_inertia_weight_min; //!< Particle minimum inertia weight. Default: 0.5
+    bool pso_inertia_decay = false; //!< Particle inertia decay. Default: false
     double pso_swarm_size; //!< The number of particles in the swarm. Default: 50
     double pso_velocity_scale; //!< Scaling factor for particle velocities. Default: 1.0
 
