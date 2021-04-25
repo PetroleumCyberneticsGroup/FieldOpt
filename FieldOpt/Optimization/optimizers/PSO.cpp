@@ -191,12 +191,8 @@ PSO::Particle PSO::find_best_in_particle_memory(int particle_num){
 }
 vector<PSO::Particle> PSO::update_velocity() {
     vector<Particle> new_swarm;
-    double inertia_multiple = 0;
-    if (inertia_decay_) {
-        inertia_multiple = inertia_weight_max_ - ((iteration_*1.0/max_iterations_) * (inertia_weight_max_-inertia_weight_min_));
-    } else {
-        inertia_multiple = inertia_weight_;
-    }
+    double inertia_multiple = inertia_decay_ ?
+                            inertia_weight_max_ - ((iteration_*1.0/max_iterations_) * (inertia_weight_max_-inertia_weight_min_)) : inertia_weight_;
     for(int i = 0; i < swarm_.size(); i++){
         Particle best_in_particle_memory = find_best_in_particle_memory(i);
         new_swarm.push_back(swarm_[i]);

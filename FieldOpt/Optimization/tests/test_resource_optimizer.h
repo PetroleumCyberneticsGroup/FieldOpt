@@ -227,7 +227,10 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
           {"PSO-SwarmSize",          10},
           {"PSO-LearningFactor1",    2.2},
           {"PSO-LearningFactor2",    1.8},
-          {"PSO-InertiaWeight",    1.0},
+          {"PSO-InertiaWeight",      1.0},
+          //{"PSO-InertiaWeightMax",   0.9},
+          //{"PSO-InertiaWeightMin",   0.5},
+          //{"PSO-InertiaDecay",       true},
           {"PSO-VelocityScale",      0.025},
           {"LowerBound",            -5.0},
           {"UpperBound",             5.0}
