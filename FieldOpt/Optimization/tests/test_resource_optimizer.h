@@ -44,6 +44,7 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
       settings_ga_max_ = new Settings::Optimizer(get_json_settings_ga_maximize_);
       settings_ego_max_ = new Settings::Optimizer(get_json_settings_ego_maximize_);
       settings_pso_min_ = new Settings::Optimizer(get_json_settings_pso_minimize_);
+      settings_pso_decay_min_ = new Settings::Optimizer(get_json_settings_pso_decay_minimize_);
       settings_vfsa_min_ = new Settings::Optimizer(get_json_settings_vfsa_minimize_);
       settings_vfsa_max_ = new Settings::Optimizer(get_json_settings_vfsa_maximize_);
       settings_spsa_min_ = new Settings::Optimizer(get_json_settings_spsa_minimize_);
@@ -62,6 +63,7 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
   Settings::Optimizer *settings_spsa_min_;
   Settings::Optimizer *settings_spsa_max_;
   Settings::Optimizer *settings_pso_min_;
+  Settings::Optimizer *settings_pso_decay_min_;
   Settings::Optimizer *settings_ego_max_;
   Settings::Optimizer *settings_cma_es_min_;
 
@@ -228,9 +230,24 @@ class TestResourceOptimizer : public TestResourceModel, public TestResourceCases
           {"PSO-LearningFactor1",    2.2},
           {"PSO-LearningFactor2",    1.8},
           {"PSO-InertiaWeight",      1.0},
-          //{"PSO-InertiaWeightMax",   0.9},
-          //{"PSO-InertiaWeightMin",   0.5},
-          //{"PSO-InertiaDecay",       true},
+          {"PSO-VelocityScale",      0.025},
+          {"LowerBound",            -5.0},
+          {"UpperBound",             5.0}
+      }},
+      {"Objective", obj_fun_}
+  };
+
+  QJsonObject get_json_settings_pso_decay_minimize_ {
+      {"Type", "PSO"},
+      {"Mode", "Minimize"},
+      {"Parameters", QJsonObject{
+          {"MaxGenerations",        700},
+          {"PSO-SwarmSize",          10},
+          {"PSO-LearningFactor1",    2.2},
+          {"PSO-LearningFactor2",    1.8},
+          {"PSO-InertiaWeightMax",   1.1},
+          {"PSO-InertiaWeightMin",   0.9},
+          {"PSO-InertiaDecay",       true},
           {"PSO-VelocityScale",      0.025},
           {"LowerBound",            -5.0},
           {"UpperBound",             5.0}
