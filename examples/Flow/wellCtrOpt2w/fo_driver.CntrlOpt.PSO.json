@@ -216,8 +216,9 @@
         },
         "Parameters": {
             "MaxGenerations": 30,
-            "PSO-LearningFactor1": 2,
-            "PSO-LearningFactor2": 2,
+            "PSO-LearningFactor1": 1.5,
+            "PSO-LearningFactor2": 1.5,
+            "PSO-InertiaWeight": 0.73,
             "PSO-SwarmSize": 24,
             "PSO-VelocityScale": 0.25
         },

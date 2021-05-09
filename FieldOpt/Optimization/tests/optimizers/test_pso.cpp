@@ -86,4 +86,21 @@ TEST_F(PSOTest, TestFunctionRosenbrock) {
     EXPECT_NEAR(1.0, best_case->GetRealVarVector()[1], 0.5);
 }
 
+TEST_F(PSOTest, TestFunctionDecayRosenbrock) {
+    test_case_ga_spherical_6r_->set_objective_function_value(abs(Rosenbrock(test_case_ga_spherical_6r_->GetRealVarVector())));
+    settings_pso_decay_min_->SetRngSeed(5);
+    Optimization::Optimizer *minimizer = new PSO(settings_pso_decay_min_, test_case_ga_spherical_6r_, varcont_6r_, grid_5spot_, logger_ );
+
+    while (!minimizer->IsFinished()) {
+        auto next_case = minimizer->GetCaseForEvaluation();
+        next_case->set_objective_function_value(Rosenbrock(next_case->GetRealVarVector()));
+        minimizer->SubmitEvaluatedCase(next_case);
+    }
+    auto best_case = minimizer->GetTentativeBestCase();
+
+    EXPECT_NEAR(0.0, best_case->objective_function_value(), 1);
+    EXPECT_NEAR(1.0, best_case->GetRealVarVector()[0], 0.5);
+    EXPECT_NEAR(1.0, best_case->GetRealVarVector()[1], 0.5);
+}
+
 }
