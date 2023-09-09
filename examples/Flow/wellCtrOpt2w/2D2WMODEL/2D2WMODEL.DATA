@@ -58,8 +58,8 @@ UNIFIN
 -- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 GRID
 INIT
-GRIDFILE
-2 /
+
+
 -- Contains GRID, PROPS and REGIONS summary of data
 -- Request init and grid file, necessary for
 -- post processing of the simulation with floviz
