@@ -4,8 +4,8 @@
 - [Building a Docker or Singularity Container](#Containers)
 
 # Quickstart
-If you're on a Ubuntu 18.04 system with access to the package manager, the
-following should get you up and running. For Ubuntu 16.04, see the subsection below.
+If you're on a Ubuntu 22.04 system with access to the package manager, the
+following should get you up and running. 
 
 Navigate to wherever you want to place
 the FieldOpt files and execute the following commands:
@@ -13,8 +13,8 @@ the FieldOpt files and execute the following commands:
 ```bash
 # Install packages from repositories
 sudo apt-get install git build-essential cmake \
-    qt5-default libboost-all-dev libhdf5-dev \
-    libopenmpi-dev
+     libboost-all-dev libhdf5-dev libopenmpi-dev \
+    qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
 
 # Clone FieldOpt and submodules
 git clone https://github.com/PetroleumCyberneticsGroup/FieldOpt.git
@@ -39,15 +39,6 @@ make
 
 A more detailed description is given in the Detailed section below.
 
-## Ubuntu 16.04
-
-If you are using Ubuntu 16.04, you first need to change a single line in the file find_polynomial_roots_jenkins_traub.cc:
-
-```bash
-cd FieldOpt/ThirdParty/RpolyPlusPlus/src/
-sed -i 's/static constexpr double kRootPairTolerance/static const double kRootPairTolerance/g' find_polynomial_roots_jenkins_traub.cc
-```
-
 # Detailed
 
 Before compiling FieldOpt, ensure that it is properly cloned:
@@ -62,27 +53,29 @@ git submodule update --init --recursive
 
 ## Dependencies
 
-FieldOpt depends on a number of libraries. Some are included as
-submodules in `FieldOpt/FieldOpt/ThirdParty`, and the rest are available
-in Ubuntu 16.04 standard repositories. The version has been omitted for some of
-the modules only found in `ThirdParty`. Just use the code on the default branch
-on our forks. For the packages that have specified versions: these are the
-versions the code has been tested on, and are as such recommended. That does not
-mean that FieldOpt will not work with other versions.
+FieldOpt depends on a number of libraries. Some are included as submodules in `FieldOpt/FieldOpt/ThirdParty`,
+and the rest are available in Ubuntu 22.04 standard repositories except `qt5-default`,while we can install 
+all the dependencies of `qt5-default` package with package manager. The version has been omitted for some of
+the modules only found in `ThirdParty`. Just use the code on the default branchon our forks. 
+For the packages that have specified versions: these are theversions the code has been tested on,
+and are as such recommended. That does not mean that FieldOpt will not work with other versions.
 
-| Library         | ThirdParty Module | Ubuntu package name | Version     |
-| --------------- | ----------------- | ------------------- | ----------- |
-| gcc             |                   | `build-essential`   | `5.4.0`     |
-| cmake           |                   | `cmake`             | `3.5.1`     |
-| boost           |                   | `libboost-all-dev`  | `1.58.0`    |
-| HDF5            |                   | `libhdf5-dev`       | `1.8.16`    |
-| OpenMPI         |                   | `libopenmpi-dev`    | `1.10.2`    |
-| Eigen3          | `Eigen3`          | `libeigen3-dev`     | `3.3-beta1` |
-| Qt5 Base        | `qtbase`          | `qt5-default`       | `5.5.1`     |
-| Google test     | `googletest`      | `libgtest-dev`      | `1.7.0`     |
-| ECL (ERT)       | `libecl`          |                     |             |
-| GP              | `libgp`           |                     |             |
-| RpolyPlusPlus   | `RpolyPlusPlus`   |                     |             |
+
+| Library         | ThirdParty Module | Ubuntu package name | Version     |Package dependencies    |
+| --------------- | ----------------- | ------------------- | ----------- |------------------------|
+| gcc             |                   | `build-essential`   | `5.4.0`     |                        |   
+| cmake           |                   | `cmake`             | `3.5.1`     |                        |
+| boost           |                   | `libboost-all-dev`  | `1.58.0`    |                        |
+| HDF5            |                   | `libhdf5-dev`       | `1.8.16`    |                        |    
+| OpenMPI         |                   | `libopenmpi-dev`    | `1.10.2`    |                        |
+| Eigen3          | `Eigen3`          | `libeigen3-dev`     | `3.3-beta1` |                        |    
+| Qt5 Base        | `qtbase`          | `qt5-default`       | `5.5.1`     | `qtbase5-dev`          |
+|                 |                   |                     |             | `qtchooser`,`qt5-qmake`|  
+|                 |                   |                     |             | `qtbase5-dev-tools`    |             
+| Google test     | `googletest`      | `libgtest-dev`      | `1.7.0`     |                        |
+| ECL (ERT)       | `libecl`          |                     |             |                        |    
+| GP              | `libgp`           |                     |             |                        |
+| RpolyPlusPlus   | `RpolyPlusPlus`   |                     |             |                        |
 
 Generally, if a library is available both as a submodule in `ThirdParty`
 and in Ubuntu's repositories, we recommend that you use the package from
@@ -93,7 +86,9 @@ easily available, or where you do not have access to the package manager
 (such as on computing clusters).
 
 *Note:* While the Google Test Framework and Eigen libraries are available in the
-repositories, we recommend that you use the moudules packaged in `ThirdParty`.
+repositories.it had been tested that a compiling error will occur if you 
+install `libeigen3-dev(3.4.0-2ubuntu2)` from the repositories.Therefore,
+we aganin recommend that you use the moudules packaged in `ThirdParty`.
 
 ### Installing libraries from repositories
 
@@ -104,17 +99,20 @@ Recommended libraries for workstations:
 ```bash
 # Install packages from repositories
 sudo apt-get install git build-essential cmake \
-    qt5-default libboost-all-dev libhdf5-dev \
-    libopenmpi-dev
+    libboost-all-dev libhdf5-dev libopenmpi-dev \
+    qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
 ```
 
 All available libraries (not recommended):
 
 ```bash
 # Install packages from repositories
+# Install packages from repositories
 sudo apt-get install git build-essential cmake \
-    qt5-default libboost-all-dev libhdf5-dev \
-    libopenmpi-dev libeigen3-dev libgtest-dev
+    libboost-all-dev libhdf5-dev \
+    libopenmpi-dev libeigen3-dev libgtest-dev \
+    qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
+
 
 # Create a symlink so that CMake can find the Eigen libraries:
 sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
@@ -188,13 +186,13 @@ make
 (3) An educational account at Clion; follow instructions [here](https://www.jetbrains.com/clion/)
 
 
-## Step (1) - Enabling Windows to run WSL and downloading Ubuntu 16.04
+## Step (1) - Enabling Windows to run WSL and downloading Ubuntu 22.04
 
 ### 1.1 - Enabling WSL
 Navigate to Control Panel -> Programs and Feature / Programs -> Activate or deactivate Windows-features. In the pop-up window; check "Windows-subsystem for Linux" and restart your computer.
 
 ### 1.2 - Installing Ubuntu
-Navigate to Microsoft Store, search for "Ubuntu 16.04 LTS", download and install. When this is completed a bash terminal from Ubuntu will appare. If this is not the case, Windows-key and search for Ubuntu; relaunch. You will be prompted to set a username and a password, remember these. It will later be refered to as LINUX-USERNAME and LINUX-PASSWORD.
+Navigate to Microsoft Store, search for "Ubuntu 22.04 LTS", download and install. When this is completed a bash terminal from Ubuntu will appare. If this is not the case, Windows-key and search for Ubuntu; relaunch. You will be prompted to set a username and a password, remember these. It will later be refered to as LINUX-USERNAME and LINUX-PASSWORD.
 
 
 ## Step (2) - Download and install SmartGit and CLion
@@ -218,8 +216,9 @@ In this bash terminal from Ubuntu, navigate to your home folder. ("cd ~")
 ```bash
 # Install packages from repositories
 sudo apt-get install git build-essential cmake \
-    qt5-default libboost-all-dev libhdf5-dev \
-    libopenmpi-dev gcc clang gdb
+    libboost-all-dev libhdf5-dev \
+    libopenmpi-dev gcc clang gdb \
+    qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
 
 # Download and install ssh using CLion scripts
 
