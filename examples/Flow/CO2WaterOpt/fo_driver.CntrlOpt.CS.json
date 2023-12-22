@@ -1,0 +1,238 @@
+{
+    "Global": {
+        "BookkeeperTolerance": 1e-08,
+        "Name": "CO2OPTMODEL"
+    },
+    "Model": {
+        "ControlTimes": [
+            0,
+            365,
+            730,
+            1095,
+            1460,
+            1825,
+            2190,
+            2555,
+            2920,
+            3285,
+            3650,
+            4015, 
+            4380
+        ],
+        "Reservoir": {
+            "Type": "Flow"
+        },
+        "Wells": [
+            {
+                "Controls": [
+                    {
+                        "BHP": 220,
+                        "IsVariable": true,
+                        "Type": "Gas",
+                        "Mode": "Rate",
+                        "Rate": 4550,
+                        "TimeStep": 0
+                    },
+                    {
+                        "BHP": 220,
+                        "IsVariable": true,
+                        "Type": "Gas",
+                        "Mode": "Rate",
+                        "Rate": 4550,
+                        "TimeStep": 730
+                    },
+                    {
+                        "BHP": 220,
+                        "IsVariable": true,
+                        "Type": "Gas",
+                        "Mode": "Rate",
+                        "Rate": 4550,
+                        "TimeStep": 1460
+                    },
+                    {
+                        "BHP": 220,
+                        "IsVariable": true,
+                        "Type": "Gas",
+                        "Mode": "Rate",
+                        "Rate": 4550,
+                        "TimeStep": 2190
+                    },
+                    {
+                        "BHP": 220,
+                        "IsVariable": true,
+                        "Type": "Gas",
+                        "Mode": "Rate",
+                        "Rate": 4550,
+                        "TimeStep": 2920
+                    },
+                    {
+                        "BHP": 220,
+                        "IsVariable": true,
+                        "Type": "Gas",
+                        "Mode": "Rate",
+                        "Rate": 4550,
+                        "TimeStep": 3650
+                    }
+                ],
+                "DefinitionType": "WellSpline",
+                "Group": "G1",
+                "Name": "INJ1",
+                "PreferredPhase": "Gas",
+                "SplinePointArray": [
+                    {
+                        "IsVariable": false,
+                        "x": 33.0,
+                        "y": 33.0,
+                        "z": 1710.5
+                    },
+                    {
+                        "IsVariable": false,
+                        "x": 33.0,
+                        "y": 33.0,
+                        "z": 1722.5
+                    }
+                ],
+                "Type": "Injector",
+                "WellboreRadius": 0.1905
+            },
+            {
+                "Controls": [
+                    {
+                        "BHP": 150,
+                        "IsVariable": true,
+                        "Mode": "BHP",
+                        "Rate": 1000,
+                        "TimeStep": 0
+                    },
+                    {
+                        "BHP": 150,
+                        "IsVariable": true,
+                        "Mode": "BHP",
+                        "Rate": 1000,
+                        "TimeStep": 730
+                    },
+                    {
+                        "BHP": 150,
+                        "IsVariable": true,
+                        "Mode": "BHP",
+                        "Rate": 1000,
+                        "TimeStep": 1460
+                    },
+                    {
+                        "BHP": 150,
+                        "IsVariable": true,
+                        "Mode": "BHP",
+                        "Rate": 1000,
+                        "TimeStep": 2190
+                    },
+                    {
+                        "BHP": 150,
+                        "IsVariable": true,
+                        "Mode": "BHP",
+                        "Rate": 1000,
+                        "TimeStep": 2920
+                    },
+                    {
+                        "BHP": 150,
+                        "IsVariable": true,
+                        "Mode": "BHP",
+                        "Rate": 1000,
+                        "TimeStep": 3650
+                    }
+                ],
+                "DefinitionType": "WellSpline",
+                "Group": "G2",
+                "Name": "PROD1",
+                "PreferredPhase": "Oil",
+                "SplinePointArray": [
+                    {
+                        "IsVariable": false,
+                        "x": 253.0,
+                        "y": 256.0,
+                        "z": 1703.0
+                    },
+                    {
+                        "IsVariable": false,
+                        "x": 253.0,
+                        "y": 256.0,
+                        "z": 1718.0
+                    }
+                ],
+                "Type": "Producer",
+                "WellboreRadius": 0.1905
+            }
+        ]
+    },
+    "Optimizer": {
+        "Constraints": [
+            {
+                "Max": 4800,
+                "Min": 4500,
+                "Type": "Rate",
+                "Wells": [
+                    "INJ1"
+                ]
+            },
+            {
+                "Max": 180,
+                "Min": 80,
+                "Type": "BHP",
+                "Wells": [
+                    "PROD1"
+                ]
+            }
+        ],
+        "Mode": "Maximize",
+        "Objective": {
+            "NPVComponents": [
+                {
+                    "COMMENT": "Water disposal: -1.5 $/barrel * 6.2898 barrel/sm3 = -9.4347",
+                    "Coefficient": -10,
+                    "DiscountFactor": 0.08,
+                    "Interval": "Yearly",
+                    "Property": "CumulativeOilProduction",
+                    "TimeStep": -1,
+                    "UseDiscountFactor": true
+                },
+                {
+                    "COMMENT": "Assume:CO2 credit 100$/tone（2023 EU),  = 100$/tone * 1tone/560000sm3 =0.0002, we set it over water production cost ",
+                    "Coefficient": 15,
+                    "DiscountFactor": 0.08,
+                    "Interval": "Yearly",
+                    "Property": "CumulativeGasInjection",
+                    "TimeStep": -1,
+                    "UseDiscountFactor": true
+                },
+                {
+                    "COMMENT": "A penalty for CO2 production",
+                    "Coefficient": -200,
+                    "DiscountFactor": 0.08,
+                    "Interval": "Yearly",
+                    "Property": "CumulativeGasProduction",
+                    "TimeStep": -1,
+                    "UseDiscountFactor": true
+                }
+            ],
+            "SeparateHorizontalAndVertical": false,
+            "Type": "NPV",
+            "UseWellCost": true,
+            "WellCost": 7500,
+            "WellCostXY": 10000,
+            "WellCostZ": 5000
+        },
+        "Parameters": {
+            "MaxEvaluations": 1000,
+            "ExpansionFactor": 1.0,
+            "ContractionFactor": 0.5,
+            "InitialStepLength": 50,
+            "MinimumStepLength": 5
+        },
+        "Type": "Compass"
+    },
+    "Simulator": {
+        "ExecutionScript": "bash_flw-bin",
+        "FluidModel": "DeadOil",
+        "ScheduleFile": "include/CO2OPTMODEL_SCH.INC",
+        "Type": "Flow"
+    }
+}

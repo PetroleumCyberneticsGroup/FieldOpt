@@ -1,0 +1,285 @@
+RUNSPEC
+TITLE
+3 dimensional 3 well model 12x12
+
+PATHS
+'FLOWINC' './include/' /
+/
+
+-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+DIMENS
+12 12 2 /
+
+-- ____________________________________________________
+OIL
+GAS
+DISGAS
+
+CO2STORE
+-- IMPES: def. solution
+
+-- ____________________________________________________
+METRIC
+-- unit specification
+
+
+-- ____________________________________________________
+WELLDIMS
+-- 1) 2) 3) 4)
+   2  100  2  20 /
+-- 1) max # of wells in model (def. 0)
+-- 2) max # of connections per well (def. 0)
+-- 3) max # of groups in model (def. 0)
+-- 4) max # of wells in any one group (def. 0)
+
+TABDIMS
+--  1)  2)  3)  4)  5) 6)
+    1   1   20  50  1  20 /
+-- Describes size of saturation and PVT tables,
+-- also the # of fluids-in-place regions
+-- 1) # of sat tables entered (def. 1)
+-- 2) # of PVT tables entered (def. 1)
+-- 3) max # of sat nodes in any sat table (def. 20)
+-- 4) max # of pressure nodes in table (def. 20)
+-- 5) max # of FIP regions (def. 1)
+-- 6) max # of Rs nodes in live oil PVT table (def. 20)
+
+-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+START
+1 'FEB' 2023 /
+
+-- ____________________________________________________
+UNIFOUT
+UNIFIN
+
+-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+GRID
+INIT
+
+
+-- ____________________________________________________
+-- Size of cells in X direction
+DX
+144*24 
+144*24 /
+
+-- Size of cells in Y direction
+DY
+144*24 
+144*24 /
+
+-- Size of cells in Z direction
+DZ
+144*12
+144*12/
+
+TOPS
+144*1700/
+
+-- ____________________________________________________
+-- PERMX
+INCLUDE
+'$FLOWINC/PERMX.INC' /
+
+COPY
+ PERMX PERMY /
+/
+
+INCLUDE
+'$FLOWINC/PERMZ.INC' /
+
+
+-- ____________________________________________________
+-- PORO
+INCLUDE
+'$FLOWINC/PORO.INC' /
+
+
+-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+PROPS
+
+SGOF
+-- Column 1: gas saturation
+-- Column 2: gas relative permeability
+-- Column 3: oil relative permeability when oil,
+-- gas and connate water are present
+-- Column 4: oil-gas capillary pressure
+0.0	0.0	1.0 	0.025
+0.1	0.0   0.740	0.026
+0.2	0.009	0.528	0.027
+0.3	0.030	0.359	0.028
+0.4	0.070	0.230	0.030
+0.5	0.136	0.136	0.032
+0.6	0.230	0.070	0.035
+0.7	0.359	0.030	0.038
+0.8	0.528	0.009	0.044
+0.9	0.740	0.000	0.057 /
+
+
+
+ROCK
+-- PREF    ROCKCOMPR.
+1.000272   4.4088E-5 /
+
+-- The CO2STORE keyword require the salinity for all
+-- grid cells.
+SALINITY
+0.7 / --10E-3 M kg per kg
+
+RTEMP
+ 100 /
+/
+
+
+-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+SOLUTION
+-- initial state of solution variables
+
+SGAS
+ 288*0.0
+/
+
+RS
+--the initial equilibration gas-oil ratio values to each cell in the model
+ 288*0.0
+/
+
+PRESSURE
+ 288*200.0
+/
+
+
+-- -- ____________________________________________________
+-- EQUIL      
+-- -- Data for initialising fluids to potential equilibrium
+-- -- DATUM  DATUM OWC   OWC   GOC   GOC  RSVD  RVVD  SOLN
+-- -- DEPTH  PRESS DEPTH PCOW  DEPTH PCOG TABLE TABLE METH
+--     1700  200   3000  0     1700     0     0     0    0
+-- --    1)  2)    3)    4)    5)    6)    7)    8)   9)
+-- /
+-- -- 1) Datum depth
+-- -- 2) Pressure at datum depth
+-- -- 3) Depth of water oil contact, if no water 
+-- --    initially present it can be below reservoir
+-- -- 4) Oil-water capillary pressure at the water contact
+-- -- 5) Depth of the gas-oil contact
+-- -- 6) Gas-oil capillary pressure at the gas-oil contact
+-- -- 7) Integer selecting the type of 
+-- --    initialization for live black oil
+-- -- 8) Integer selecting the type of initialization 
+-- --    for black oil runs with wet gas
+-- -- 9) Integer (N) defining the accuracy of 
+-- --    the initial fluids in place calculation.
+
+-- -- ____________________________________________________
+-- RPTSOL
+-- 0 0 1 /
+
+-- 1: PRESSURE: Output of initial oil pressures
+
+-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+SUMMARY
+
+ALL
+TCPU
+
+-- SEPARATE
+-- RUNSUM
+-- --NARROW
+-- RPTSMRY
+-- 1 /
+
+-- SUMTHIN
+-- 50 /
+
+-- --SKIP
+
+-- -- ____________________________________________________
+-- -- PRESSURE
+-- FPR          Field pressure
+-- FPRH         Field reservoir pressure (hydrocarbon?)
+-- FPRP         Field pressure weighted by pore volume
+-- ALL
+-- -- ____________________________________________________
+-- -- PORE VOLUME
+-- FRPV         Pore Volume at Reservoir
+-- FOPV         Pore Volume containing Oil
+-- FHPV         Pore volume containing hydrocardon
+-- FORMW        Total stock tank oil produced by water influx
+
+-- -- ____________________________________________________
+-- -- INIT VOLUME
+-- -- FGIP         Gas init in place
+-- -- FGIPG        Gas init in place (gas phase)
+-- -- FGIPL        Gas init in place (liquid phase)
+-- FOIP         Oil init in place
+-- FOIPG        Oil init in place (gas phase)
+-- FOIPL        Oil init in place (liquid phase)
+-- FWIP         Water initially in place
+
+-- -- ____________________________________________________
+-- -- CURRENT CPU USAGE IN SECONDS
+
+-- TCPU         
+-- PERFORMA
+
+
+
+-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+SCHEDULE
+-- CONTROLS ON OUTPUT AT EACH REPORT TIME
+
+-- -- ____________________________________________________
+-- RPTSCHED
+-- RESTART=1
+-- /
+
+-- 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
+--   0 0 1 1 0 0 2 2 2 0  0  2  0  1  0
+--   0 0 0 0 0 0 0 0 0 0  0  0  0  0  0
+--   0 0 0 0 0 0 0 0 1 0  0  0  0  0  0 /
+
+-- 1: PRESSURE: Output of grid block pressures
+-- 14: WELSPECS
+
+-- RPTSCHED
+-- -- 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
+--   0 0 0 0 0 0 0 0 0 0  0  0  0  0  0
+--   0 0 0 0 0 0 0 0 0 0  0  0  0  0  0
+--   0 0 0 0 0 0 0 0 0 0  0  0  0  0  0 /
+
+-- RPTSCHED
+-- 1 1 1 1 1 0 0 0 1 0 0 2 0 1 2 0 0
+-- 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+-- 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 /
+
+-- ____________________________________________________
+-- REQUEST RESTART FILE
+RPTRST
+ 'BASIC=2'/
+
+-- WELL STREAM INJECTION COMPOSITION (OPM FLOW Keyword)
+--
+-- WELL -- WELL STREAM COMPOSITIONAL COMPONENT --
+-- STREAM -- MOLE FRACTIONS --
+--WELLSTRE
+--'C02STREAM' 1.000 0.000 /
+--/
+
+-- ____________________________________________________
+INCLUDE
+    'include/CO2OPTMODEL_SCH.INC' /
+-- ____________________________________________________
+-- ____________________________________________________
+
+TSTEP
+ 10*0.01 /
+
+
+TSTEP
+ 15*365 /
+ 
+ 
+ 
+
+END
