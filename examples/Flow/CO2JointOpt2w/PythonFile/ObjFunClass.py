@@ -74,22 +74,22 @@ class NPVCla(ObjFunCla):
         self.NPVdislist = []
 
         for i in range(0, len(self.npvcomdata)):
-            NPVpro = '{}_{}_{}'.format(self.npvcomdata[i]['wellname'].lower(), \
-                                       self.npvcomdata[i]['fluidtype'].lower(), \
-                                       self.npvcomdata[i]['flowtype'][:4].lower())
-            if self.npvcomdata[i]['datatype'][0].upper() == 'W':
-                NPVprokey = '{}{}{}T:{}'.format(self.npvcomdata[i]['datatype'][0].upper(), \
-                                                self.npvcomdata[i]['fluidtype'][0].upper(), \
-                                                self.npvcomdata[i]['flowtype'][0].upper(), \
-                                                self.npvcomdata[i]['wellname'])
+            NPVpro = '{}_{}_{}'.format(self.npvcomdata[i].wellname, \
+                                       self.npvcomdata[i].fluidtype.lower(), \
+                                       self.npvcomdata[i].flowtype[:4].lower())
+            if self.npvcomdata[i].datatype[0].upper() == 'W':
+                NPVprokey = '{}{}{}T:{}'.format(self.npvcomdata[i].datatype[0].upper(), \
+                                                self.npvcomdata[i].fluidtype[0].upper(), \
+                                                self.npvcomdata[i].flowtype[0].upper(), \
+                                                self.npvcomdata[i].wellname)
             else:
-                NPVprokey = '{}{}{}T'.format(self.npvcomdata[i]['datatype'][0].upper(), \
-                                             self.npvcomdata[i]['fluidtype'][0].upper(), \
-                                             self.npvcomdata[i]['flowtype'][0].upper())
+                NPVprokey = '{}{}{}T'.format(self.npvcomdata[i].datatype[0].upper(), \
+                                             self.npvcomdata[i].fluidtype[0].upper(), \
+                                             self.npvcomdata[i].flowtype[0].upper())
 
-            NPVint = '1{}'.format(self.npvcomdata[i]['interval'][0].upper())
-            NPVflupri = self.npvcomdata[i]['fluidprice']
-            NPVdis = self.npvcomdata[i]['discountfactor']
+            NPVint = '1{}'.format(self.npvcomdata[i].interval[0].upper())
+            NPVflupri = self.npvcomdata[i].fluidprice
+            NPVdis = self.npvcomdata[i].discountfactor
 
             self.NPVprolist.append(NPVpro)
             self.NPVprokeylist.append(NPVprokey)
@@ -140,6 +140,3 @@ class WelCosCla(ObjFunCla):
     def __init__(self, simsummary, npvcomponent, wellsimdata, wellcostdata, initaldata):
         super().__init__(simsummary, npvcomponent, wellsimdata, wellcostdata, initaldata)
         pass
-
-
-
