@@ -1,16 +1,28 @@
 import sys
 from ObjFunClass import ObjFunCla,NPVCla
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class NPVEntry:
+    datatype: str
+    wellname: str
+    fluidtype: str
+    flowtype: str
+    interval: str
+    fluidprice: float
+    discountfactor: float
+
 
 optimal_model_dir = sys.argv[1]
 py_result_dir = sys.argv[2]
 unsmary_dir = '{}/CO2OPT2W'.format(optimal_model_dir)
 
-NPVcomponent = ({'datatype': 'Field', 'wellname': 'INJ1', 'fluidtype': 'Gas', 'flowtype': 'Injection', \
-       'interval': 'yearly', 'fluidprice': 15, 'discountfactor': 0.08},
-      {'datatype': 'Field', 'wellname': 'PROD1', 'fluidtype': 'Oil', 'flowtype': 'Production', \
-       'interval': 'yearly', 'fluidprice': -10, 'discountfactor': 0.08}, \
-      {'datatype': 'Field', 'wellname': 'PROD1', 'fluidtype': 'Gas', 'flowtype': 'Production', \
-       'interval': 'yearly', 'fluidprice': -500, 'discountfactor': 0.08})
+NPVcomponent = (
+    NPVEntry('Field', 'INJ1', 'Gas',  'Injection',  'yearly',  15,   0.08),
+    NPVEntry('Field', 'PROD1', 'Oil', 'Production', 'yearly', -10,   0.08),
+    NPVEntry('Field', 'PROD1', 'Gas', 'Production', 'yearly', -500,  0.08)
+)
 
 
 thipar = foupar = fifpar = 0
